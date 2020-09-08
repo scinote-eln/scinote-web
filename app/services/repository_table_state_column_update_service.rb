@@ -44,18 +44,18 @@ class RepositoryTableStateColumnUpdateService
           end
         end
 
-        if state.dig('order', 0, 0) == old_column_index
+        if state.dig('order', 0, 0).to_i == old_column_index
           # Fallback to default order if user had table ordered by
           # the deleted column
           state['order'] = Constants::REPOSITORY_TABLE_DEFAULT_STATE['order']
-        elsif state.dig('order', 0, 0) > old_column_index
+        elsif state.dig('order', 0, 0).to_i > old_column_index
           state['order'][0][0] -= 1
         end
 
         state['length'] = (state['length'] - 1)
         state['time'] = (Time.now.to_f * 1_000).to_i
         table_state.save
-      rescue NoMethodError => e
+      rescue StandardError => e
         Rails.logger.error e.message
         RepositoryTableStateService.new(user, repository).create_default_state
       end

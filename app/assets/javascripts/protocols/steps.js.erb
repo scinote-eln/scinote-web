@@ -162,30 +162,18 @@
 
   // Set callback for click on move step
   function applyMoveStepCallBack() {
-    $("[data-action='move-step']").off("ajax:success");
-    $("[data-action='move-step']")
-    .on("ajax:success", function(e, data) {
-      var $step = $(this).closest(".step");
-      var stepUpPosition = data.step_up_position;
-      var stepDownPosition = data.step_down_position;
-      var $stepDown, $stepUp;
-      switch (data.move_direction) {
-        case "up":
-          $stepDown = $step.prev(".step");
-          $stepUp = $step;
-          break;
-        case "down":
-          $stepDown = $step;
-          $stepUp = $step.next(".step");
-      }
+    $('#steps').on('ajax:success', "[data-action='move-step']", function(e, data) {
+      if ($.isEmptyObject(data)) return;
 
-      // Switch position of top and bottom steps
-      if (!_.isUndefined($stepDown) && !_.isUndefined($stepUp)) {
-        $stepDown.insertAfter($stepUp);
-        $stepDown.find(".step-number").html(stepDownPosition + 1);
-        $stepUp.find(".step-number").html(stepUpPosition + 1);
-        $("html, body").animate({ scrollTop: $step.offset().top - window.innerHeight / 2 });
-      }
+      let $step = $(this).closest('.step');
+      let steps = $('#steps').find('.step');
+      $('#steps').append($.map(data.steps_order, function(step_data) {
+        let step = $('#steps').find(`.step[data-id=${step_data.id}]`);
+        step.find('.step-number').html(`${step_data.position + 1}.`);
+        return step;
+      }));
+
+      $('html, body').animate({ scrollTop: $step.offset().top - window.innerHeight / 2 });
 
       if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
     });
