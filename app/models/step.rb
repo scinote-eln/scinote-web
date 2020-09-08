@@ -140,7 +140,7 @@ class Step < ApplicationRecord
 
   def move_in_protocol(direction)
     transaction do
-      adjust_duplicated_step_positions
+      re_index_following_steps
 
       case direction
       when :up
@@ -165,32 +165,23 @@ class Step < ApplicationRecord
   end
 
   def adjust_positions_after_destroy
-    adjust_duplicated_step_positions
-    protocol.steps.where('position > ?', position).find_each do |step|
+    re_index_following_steps
+    protocol.steps.where('position > ?', position).order(:position).each do |step|
       step.update!(position: step.position - 1)
     end
   end
 
-  def adjust_duplicated_step_positions
-    duplicated_steps = protocol.steps.where(position: position)
-    return unless duplicated_steps.size > 1
-
-    # Shifting following steps
-    next_steps = protocol.steps.where(position: (position + 1)..).order(:position)
-    if next_steps.present?
-      shift_by = duplicated_steps.size - next_steps.first.position + position
-      if shift_by.positive?
-        next_steps.reverse_each do |step|
-          step.update!(position: step.position + shift_by)
-        end
-      end
+  def re_index_following_steps
+    steps = protocol.steps.where(position: position..).order(:position).where.not(id: id)
+    i = position
+    steps.each do |step|
+      i += 1
+      step.position = i
     end
 
-    # Re-index duplicated positions
-    duplicated_steps.each_with_index do |step, i|
-      step.update!(position: step.position + i)
+    steps.reverse_each do |step|
+      step.save! if step.position_changed?
     end
-    reload
   end
 
   def cascade_before_destroy
