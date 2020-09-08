@@ -4,6 +4,8 @@ require 'rails_helper'
 
 RSpec.describe 'Api::V1::TasksController', type: :request do
   before :all do
+    MyModuleStatusFlow.ensure_default
+
     @user = create(:user)
     @teams = create_list(:team, 2, created_by: @user)
     create(:user_team, user: @user, team: @teams.first, role: 2)
