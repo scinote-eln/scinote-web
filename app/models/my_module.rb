@@ -509,8 +509,6 @@ class MyModule < ApplicationRecord
     else
       self.state = 'uncompleted'
     end
-
-    set_completed_on
   end
 
   def set_completed_on
