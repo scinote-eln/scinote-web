@@ -44,18 +44,6 @@
         <% end %>
       </div>
     </div>
-    <div class="row">
-      <div class="col-xs-12">
-        <% if my_module.description.present? %>
-          <%= custom_auto_link(my_module.prepare_for_report(:description, for_export_all),
-                               team: current_team,
-                               simple_format: false,
-                               base64_encoded_imgs: for_export_all) %>
-        <% else %>
-           <em><%=t "projects.reports.elements.module.no_description" %></em>
-        <% end %>
-      </div>
-    </div>
     <p class="module-start-date">
       <% if my_module.started_on.present? %>
         <%= t('projects.reports.elements.module.started_on', started_on: l(my_module.started_on, format: :full)) %>
@@ -96,9 +84,10 @@
         <% if my_module.description.present? %>
           <%= custom_auto_link(my_module.prepare_for_report(:description, for_export_all),
                                team: current_team,
+                               simple_format: false,
                                base64_encoded_imgs: for_export_all) %>
         <% else %>
-           <em><%= t("projects.reports.elements.module.no_description") %></em>
+          <em><%= t("projects.reports.elements.module.no_description") %></em>
         <% end %>
       </div>
     </div>
