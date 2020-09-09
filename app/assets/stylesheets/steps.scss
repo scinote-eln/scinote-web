@@ -60,6 +60,10 @@
 
   .complete-step-btn {
     display: inline-block;
+
+    &.disabled {
+      pointer-events: none;
+    }
   }
 
   .step-heading {
