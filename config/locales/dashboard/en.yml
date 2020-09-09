@@ -36,11 +36,7 @@ en:
           title: "No results."
       due_date_html: "Due date: <b>%{date}</b>"
       due_date_overdue_html: "Due date: <b>%{date} (overdue)</b>"
-      progress_bar:
-        in_progress: "In progress"
-        overdue: "Overdue"
-        completed_steps: ": %{steps} / %{total_steps}"
-        completed: "Completed"
+      completed_on_html: "Completed on: <b>%{date}</b>"
     calendar:
       due_on: Due on
       dow:

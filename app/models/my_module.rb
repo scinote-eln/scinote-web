@@ -8,8 +8,9 @@ class MyModule < ApplicationRecord
 
   before_create :create_blank_protocol
   before_create :assign_default_status_flow
-  before_validation :set_completed_on, if: :state_changed?
 
+  before_validation :set_completed, if: :my_module_status_id_changed?
+  before_validation :set_completed_on, if: :state_changed?
   before_save :exec_status_consequences, if: :my_module_status_id_changed?
 
   auto_strip_attributes :name, :description, nullify: false
@@ -507,6 +508,16 @@ class MyModule < ApplicationRecord
   end
 
   private
+
+  def set_completed
+    return if my_module_status.blank?
+
+    if my_module_status.final_status?
+      self.state = 'completed'
+    else
+      self.state = 'uncompleted'
+    end
+  end
 
   def set_completed_on
     return if completed? && completed_on.present?
