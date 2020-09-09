@@ -1804,12 +1804,12 @@ th.custom-field .modal-tooltiptext {
 }
 
 .sa-type {
-  border: 1px solid $color-emperor;
-  border-radius: 4px;
+  font-size: 10px;
   font-weight: 600;
-  padding: 0 2px;
+  padding-left: 2px;
   text-decoration: none;
-  text-transform: capitalize;
+  text-transform: uppercase;
+  vertical-align: super;
 
   &:hover {
     text-decoration: none;

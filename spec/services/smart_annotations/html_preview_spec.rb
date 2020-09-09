@@ -18,8 +18,8 @@ describe SmartAnnotations::HtmlPreview do
     it 'returns a html snippet' do
       snippet = subject.html(nil, 'prj', project)
       expect(snippet).to eq(
-        "<span class='sa-type'>Prj</span> " \
-        "<a href='/projects/#{project.id}'>my project</a>"
+        "<a href='/projects/#{project.id}'>" \
+        "<span class='sa-type'>Prj</span>my project</a>"
       )
     end
   end
@@ -28,8 +28,8 @@ describe SmartAnnotations::HtmlPreview do
     it 'returns a html snippet' do
       snippet = subject.html(nil, 'exp', experiment)
       expect(snippet).to eq(
-        "<span class='sa-type'>Exp</span> " \
-        "<a href='/experiments/#{experiment.id}/canvas'>my experiment</a>"
+        "<a href='/experiments/#{experiment.id}/canvas'>" \
+        "<span class='sa-type'>Exp</span>my experiment</a>"
       )
     end
   end
@@ -38,8 +38,8 @@ describe SmartAnnotations::HtmlPreview do
     it 'returns a html snippet' do
       snippet = subject.html(nil, 'tsk', task)
       expect(snippet).to eq(
-        "<span class='sa-type'>Tsk</span> " \
-        "<a href='/modules/#{task.id}/protocols'>task</a>"
+        "<a href='/modules/#{task.id}/protocols'>" \
+        "<span class='sa-type'>Tsk</span>task</a>"
       )
     end
   end
