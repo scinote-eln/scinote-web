@@ -4,11 +4,11 @@
 module MyModuleStatusConditions
   class Active < MyModuleStatusCondition
     def call(my_module)
-      my_module.errors.add(:status_conditions, 'MyModule should be active') unless my_module.active?
+      my_module.errors.add(:status_conditions, I18n.t('my_module_statuses.conditions.error.my_module_not_active')) unless my_module.active?
     end
 
     def description
-      'MyModule should be active'
+      I18n.t('my_module_statuses.conditions.error.my_module_not_active')
     end
   end
 end

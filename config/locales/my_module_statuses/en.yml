@@ -8,3 +8,6 @@ en:
     update_status:
       error:
         no_permission: You dont have permission to change the status
+    conditions:
+      error:
+        my_module_not_active: 'Task should be active'
