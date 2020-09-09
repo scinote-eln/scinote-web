@@ -1,32 +1,23 @@
-<div class="my-modules-list-partial atwho-scroll-container">
+<div class="atwho-scroll-container">
   <% grouped_by_prj_exp(my_modules).each do |task_group| %>
-  <div class="task-group">
-    <div class="header">
-      <% if task_group[:project_archived]%>
-        <span class="archived"><%= t('general.archived') %></span>
-      <% end %>
-      <span class="project" title="<%= task_group[:project_name] %>"><%= task_group[:project_name] %></span>
+  <div class="item-group">
+    <div class="atwho-breadcrumbs">
+      <span class="atwho-breadcrumb" title="<%= task_group[:project_name] %>"><%= task_group[:project_name] %></span>
       <span class="slash">/</span>
-      <% if task_group[:experiment_archived] %>
-        <span class="archived"><%= t('general.archived') %></span>
-      <% end %>
-      <span class="experiment" title="<%= task_group[:experiment_name] %>"><%= task_group[:experiment_name] %></span>
+      <span class="atwho-breadcrumb" title="<%= task_group[:experiment_name] %>"><%= task_group[:experiment_name] %></span>
     </div>
-    <div class="tasks">
+    <div class="items">
       <% task_group[:tasks].each do |task| %>
-      <div class="task">
-        <%= draw_custom_icon('task-icon') %>
-        <% if task.archived %>
-          <span class="archived"><%= t('general.archived') %></span>
-        <% end %>
-        <li class="task-link" data-name="<%= task.name %>" data-id="<%= task.id.base62_encode %>" data-type="tsk"><%= task.name %></li>
-      </div>
+        <li class="item" data-name="<%= task.name %>" data-id="<%= task.id.base62_encode %>" data-type="tsk">
+          <span class='sa-type'>Tsk</span>
+          <span class="item-text"><%= task.name %></span>
+        </li>
       <% end %>
     </div>
   </div>
   <% end %>
+  <% if my_modules.empty? %>
+    <%= render partial: 'shared/smart_annotation/no_results.html.erb' %>
+  <% end %>
 </div>
-<% if my_modules.empty? %>
-  <%= render partial: 'shared/smart_annotation/no_results.html.erb' %>
-<% end %>
 <%= render partial: 'shared/smart_annotation/footer.html.erb' %>

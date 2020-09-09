@@ -1,7 +1,12 @@
-<% projects.each do |project| %>
-  <li data-name="<%= project.name %>" data-id="<%= project.id.base62_encode %>" data-type="prj"><%= project.name %></li>
-<% end %>
-<% if projects.empty? %>
-  <%= render partial: 'shared/smart_annotation/no_results.html.erb' %>
-<% end %>
+<div class="atwho-scroll-container">
+  <% projects.each do |project| %>
+    <li class="item" data-name="<%= project.name %>" data-id="<%= project.id.base62_encode %>" data-type="prj">
+      <span class='sa-type'>Prj</span>
+      <span class="item-text"><%= project.name %></span>
+    </li>
+  <% end %>
+  <% if projects.empty? %>
+    <%= render partial: 'shared/smart_annotation/no_results.html.erb' %>
+  <% end %>
+</div>
 <%= render partial: 'shared/smart_annotation/footer.html.erb' %>

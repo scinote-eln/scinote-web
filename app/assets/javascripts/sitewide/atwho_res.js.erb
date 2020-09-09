@@ -49,63 +49,26 @@ var SmartAnnotation = (function() {
         DEFAULT_SEARCH_FILTER = FilterTypeEnum.REPOSITORY,
         atWhoUpdating = false;
 
-    var defaultRepId;
+    function _matchHighlighter(html, query, filterType) {
+      var $html = $(html);
+      var $li_text = $html.find('.item-text');
 
-    // helper methods for AtWho callback
-    function _templateEval(_tpl, map) {
-      var res;
-      try {
-        res = generateTemplate(map);
-      } catch (_error) {
-        res = '';
-      }
-      return res;
-    }
+      if ($li_text.length === 0 || !query) return html;
 
-    function _matchHighlighter(li, query, filterType) {
-      var $li, re;
+      $.each($li_text, function(i, item) {
+        $(item).html($(item).text().replace(new RegExp(query, 'gi'), '<span class="atwho-highlight">$&</span>'));
+      })
 
-      function highlight(el, sel, re) {
-        var prevVal, newVal;
-        prevVal = el.find(sel).html();
-        newVal = prevVal.replace(re, '<strong>$&</strong>');
-        el.find(sel).html(newVal);
-      }
-
-      if (!query || $(li).data('no-results')) {
-        return li;
-      }
-
-      $li = $(li);
-      re = new RegExp(query, 'gi');
-      // search_filter is not passed for the user
-      if(filterType) {
-        highlight($li, '[data-val=name]', re);
-      } else {
-        highlight($li, '[data-val=full-name]', re);
-        highlight($li, '[data-val=email]', re);
-      }
-
-      return $li[0].outerHTML
+      return $html;
     }
 
     function _generateInputTag(value, li) {
       return `[#${li.attr('data-name')}~${li.attr('data-type')}~${li.attr('data-id')}]`;
     }
 
-    // initialise dropdown dismiss button
-    function initDismissButton($currentAtWho) {
-      $currentAtWho.find('.dismiss').off('click')
-                                    .on('click', function() {
-        $(field).atwho('destroy');
-        init();
-      });
-    }
-
     // Generates suggestion dropdown filter
     function generateFilterMenu(active, res_data) {
       var menu = '';
-      var rep_buttons = '';
       $.ajax({
         async: false,
         dataType: 'json',
@@ -115,17 +78,6 @@ var SmartAnnotation = (function() {
        }
       });
       return menu;
-    }
-
-    function noResultsTemplate() {
-      return `<div class="atwho-no-results" data-no-results="1">
-                <span><%= I18n.t("atwho.no_results") %></span>
-              </div>`;
-    }
-
-    // Generates resources list items
-    function generateTemplate(map) {
-      return map.name;
     }
 
     function atWhoSettings(at, defaultFilterType) {
@@ -138,7 +90,7 @@ var SmartAnnotation = (function() {
             var params = { query: query };
             filterType = FilterTypeEnum[$currentAtWho.find('.tab-pane.active').data('object-type')]
             if (!filterType) {
-              callback([{name: noResultsTemplate()}]);
+              callback([{name: ''}]);
               return false
             }
 
@@ -159,15 +111,11 @@ var SmartAnnotation = (function() {
               }
             });
           },
-          sorter: function(query, items, _searchKey) {
-            // Sorting is already done on server-side
-            return items;
-          },
-          tplEval: function(_tpl, map) {
-            return _templateEval(_tpl, map);
+          tplEval: function(_tpl, items) {
+            return items.name;
           },
           highlighter:  function(li, query) {
-            //return _matchHighlighter(li, query, true);
+            return _matchHighlighter(li, query, true);
             return li;
           },
           beforeInsert: function(value, li) {
@@ -258,7 +206,7 @@ var SmartAnnotation = (function() {
             var res;
             try {
               if (map.no_results) {
-                res = noResultsTemplate();
+                res = '';
               } else {
                 res = '';
                 res += '<li class="atwho-li atwho-li-user" ';
@@ -284,7 +232,7 @@ var SmartAnnotation = (function() {
             return res;
           },
           highlighter: function(li, query) {
-            return _matchHighlighter(li, query);
+            return li;//_matchHighlighter(li, query);
           },
           beforeInsert: function(value, li) {
             var res = '';

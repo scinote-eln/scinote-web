@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SmartAnnotation
   include ActionView::Helpers::SanitizeHelper
   include ActionView::Helpers::TextHelper
@@ -12,20 +14,24 @@ class SmartAnnotation
 
   def my_modules
     # Search tasks
-    task_ids = MyModule.search(@current_user, false, @query, 1, @current_team)
-                .limit(Constants::ATWHO_SEARCH_LIMIT).pluck(:id)
-    MyModule.where(id: task_ids)
+    MyModule.search_by_name(@current_user, @current_team, @query).active
+            .joins(experiment: :project)
+            .where(projects: { archived: false }, experiments: { archived: false })
+            .limit(Constants::ATWHO_SEARCH_LIMIT)
   end
 
   def projects
     # Search projects
-    Project.search(@current_user, false, @query, 1, @current_team)
+    Project.search_by_name(@current_user, @current_team, @query)
+           .where(archived: false)
            .limit(Constants::ATWHO_SEARCH_LIMIT)
   end
 
   def experiments
     # Search experiments
-    Experiment.search(@current_user, false, @query, 1, @current_team)
+    Experiment.search_by_name(@current_user, @current_team, @query)
+              .joins(:project)
+              .where(projects: { archived: false }, experiments: { archived: false })
               .limit(Constants::ATWHO_SEARCH_LIMIT)
   end
 
