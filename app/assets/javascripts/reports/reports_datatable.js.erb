@@ -114,14 +114,14 @@
     var editReportButton = $('#edit-report-btn');
     var deleteReportsButton = $('#delete-reports-btn');
     if (CHECKED_REPORTS.length === 0) {
-      editReportButton.addClass("disabled hidden");
-      deleteReportsButton.addClass("disabled hidden");
+      editReportButton.addClass('disabled hidden');
+      deleteReportsButton.addClass('disabled hidden');
     } else if (CHECKED_REPORTS.length === 1) {
-      editReportButton.removeClass("disabled hidden");
-      deleteReportsButton.removeClass("disabled hidden");
+      editReportButton.removeClass('disabled hidden');
+      deleteReportsButton.removeClass('disabled hidden');
     } else {
-      editReportButton.removeClass("hidden").addClass("disabled");
-      deleteReportsButton.removeClass("disabled hidden");
+      editReportButton.removeClass('hidden').addClass('disabled');
+      deleteReportsButton.removeClass('disabled hidden');
     }
   }
 
