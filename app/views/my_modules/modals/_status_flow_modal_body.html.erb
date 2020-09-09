@@ -15,7 +15,9 @@
         <%= status[:name] %>
       </div>
       <div class="status-comment">
-        <%= status.next_status&.my_module_status_conditions&.collect(&:description)&.join('<br>')&.html_safe %>
+        <% status.next_status&.my_module_status_conditions&.each do |condition| %>
+          <%= condition.description %><br>
+        <% end %>
       </div>
     </div>
   <% end %>
