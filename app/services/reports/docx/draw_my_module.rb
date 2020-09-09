@@ -46,6 +46,9 @@ module Reports::Docx::DrawMyModule
       text I18n.t('projects.reports.elements.module.status')
       text ' '
       text "[#{status.name}]", color: status.color.delete('#')
+      if my_module.completed?
+        text " #{I18n.t('my_modules.states.completed')} #{I18n.l(my_module.completed_on, format: :full)}"
+      end
     end
 
     @docx.p do
