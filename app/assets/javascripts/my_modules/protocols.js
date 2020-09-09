@@ -361,11 +361,11 @@ function loadFromRepository() {
         // Simply reload page
         location.reload();
       },
-      error: function(ev) {
-        if (ev.status === 403) {
+      error: function(response) {
+        if (response.status === 403) {
           HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
         } else {
-          alert(ev.responseJSON.message);
+          alert(response.responseJSON.message);
         }
 
         modal.modal('hide');

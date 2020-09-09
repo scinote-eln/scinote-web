@@ -635,11 +635,11 @@ var MyModuleRepositories = (function() {
         updateFullViewRowsCount(data.rows_count);
         renderFullViewAssignButtons();
       },
-      error: function(data) {
-        if (data.status === 403) {
+      error: function(response) {
+        if (response.status === 403) {
           HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
         } else {
-          HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
+          HelperModule.flashAlertMsg(response.responseJSON.flash, 'danger');
         }
         UPDATE_REPOSITORY_MODAL.modal('hide');
         SELECTED_ROWS = {};

@@ -245,12 +245,7 @@ function applyTaskStatusChangeCallBack() {
     $.ajax({
       url: list.data('link-url'),
       type: 'PATCH',
-      dataType: 'json',
       data: { my_module: { status_id: item.data('state-id') } },
-      success: function(data) {
-        container.html(data.content);
-        location.reload();
-      },
       error: function(e) {
         animateSpinner(null, false);
         if (e.status === 403) {
@@ -301,9 +296,9 @@ function initTagsSelector() {
       if (lastTagId > 0) {
         newTag = { my_module_tag: { tag_id: lastTagId } };
         $.post(selectElement.data('update-module-tags-url'), newTag)
-          .fail(function(r) {
+          .fail(function(response) {
             dropdownSelector.removeValue(myModuleTagsSelector, lastTagId, '', true);
-            if (r.status === 403) {
+            if (response.status === 403) {
               HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
             }
           });
