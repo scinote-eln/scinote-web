@@ -191,18 +191,6 @@
     });
   }
 
-  function applyCollapseLinkCallBack() {
-    $(".step-panel-collapse-link")
-      .on("ajax:success", function() {
-        var collapseIcon = $(this).find(".collapse-step-icon");
-        var collapsed = $(this).hasClass("collapsed");
-        // Toggle collapse button
-        collapseIcon.toggleClass("fa-chevron-up", !collapsed);
-        collapseIcon.toggleClass("fa-chevron-down", collapsed);
-
-      });
-  }
-
   function formCallback($form) {
     $form
     .on("fields_added.nested_form_fields", function(e, param) {
@@ -386,7 +374,6 @@
     applyStepCompletedCallBack();
     applyEditCallBack();
     applyMoveStepCallBack();
-    applyCollapseLinkCallBack();
     initDeleteStep();
     TinyMCE.highlight();
   }
@@ -647,17 +634,10 @@
     $(document).find("[data-role='step-hot-table']").each(function()  {
       renderTable($(this));
     });
-    $(document).find("span.collapse-step-icon").each(function()  {
-      $(this).addClass("fa-chevron-up");
-      $(this).removeClass("fa-chevron-down");
-    });
   }
 
   function expandStep(step) {
     $('.panel-collapse', step).collapse('show');
-    $(step).find("span.collapse-step-icon")
-      .addClass("fa-chevron-up")
-      .removeClass("fa-chevron-down");
     $(step).find("div.step-result-hot-table").each(function()  {
       renderTable($(this));
     });
@@ -705,10 +685,6 @@
   $(function () {
     $("[data-action='collapse-steps']").click(function () {
       $('.step .panel-collapse').collapse('hide');
-      $(document).find("span.collapse-step-icon").each(function()  {
-        $(this).addClass("fa-chevron-down");
-        $(this).removeClass("fa-chevron-up");
-      });
     });
     $("[data-action='expand-steps']").click(expandAllSteps);
   });
