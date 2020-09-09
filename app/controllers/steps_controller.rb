@@ -10,7 +10,7 @@ class StepsController < ApplicationController
   before_action :convert_table_contents_to_utf8, only: %i(create update)
 
   before_action :check_view_permissions, only: %i(show update_view_state)
-  before_action :check_manage_permissions, only: %i(new create edit update destroy move_up move_down)
+  before_action :check_manage_permissions, only: %i(new create edit update destroy move_up move_down toggle_step_state)
   before_action :check_complete_and_checkbox_permissions, only: %i(toggle_step_state checklistitem_state)
 
   def new

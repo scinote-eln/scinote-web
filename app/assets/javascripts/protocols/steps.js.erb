@@ -94,8 +94,10 @@
             button.find("button").html('<span class="fas fa-check"></span>&nbsp;' + data.new_title);
           }
         },
-        error: function (data) {
-          console.log ("error");
+        error: function(response) {
+          if (response.status === 403) {
+            HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+          }
         }
       });
     });
@@ -157,6 +159,11 @@
         tinyMCE.editors.step_description_textarea.remove();
         TinyMCE.init('#step_description_textarea');
       });
+    })
+    .on("ajax:error", function(e, response) {
+      if (response.status === 403) {
+          HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+      }
     });
   }
 
@@ -165,6 +172,7 @@
     $("[data-action='move-step']").off("ajax:success");
     $("[data-action='move-step']")
     .on("ajax:success", function(e, data) {
+        console.log('movearound')
       var $step = $(this).closest(".step");
       var stepUpPosition = data.step_up_position;
       var stepDownPosition = data.step_down_position;
@@ -188,6 +196,11 @@
       }
 
       if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
+    })
+    .on("ajax:error", function(e, xhr) {
+      if (xhr.status === 403) {
+        HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+      }
     });
   }
 
@@ -504,8 +517,11 @@
           });
 
         },
-        error: function() {
-          newStepHandler();
+        error: function(response) {
+          if (response.status === 403) {
+            HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+            animateSpinner(null, false);
+          }
         }
       })
     });

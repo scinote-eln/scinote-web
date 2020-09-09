@@ -361,11 +361,13 @@ function loadFromRepository() {
         // Simply reload page
         location.reload();
       },
-      error: function(ev) {
-        // Display error message in alert()
-        alert(ev.responseJSON.message);
+      error: function(response) {
+        if (response.status === 403) {
+          HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+        } else {
+          alert(response.responseJSON.message);
+        }
 
-        // Hide modal
         modal.modal('hide');
       }
     });

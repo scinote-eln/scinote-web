@@ -1,4 +1,4 @@
-/* global _ hljs tinyMCE SmartAnnotation I18n GLOBAL_CONSTANTS */
+/* global _ hljs tinyMCE SmartAnnotation I18n GLOBAL_CONSTANTS HelperModule */
 /* eslint-disable no-unused-vars */
 
 var TinyMCE = (function() {
@@ -278,6 +278,9 @@ var TinyMCE = (function() {
                 var model = editor.getElement().dataset.objectType;
                 $(this).renderFormErrors(model, data.responseJSON);
                 editor.setProgressState(0);
+                if (data.status === 403) {
+                  HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+                }
               });
 
             // Init Cancel button
