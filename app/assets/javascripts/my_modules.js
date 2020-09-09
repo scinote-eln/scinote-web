@@ -240,7 +240,6 @@ function applyTaskStatusChangeCallBack() {
   $('.task-flows').on('click', '#dropdownTaskFlowList > li[data-state-id]', function() {
     var list = $('#dropdownTaskFlowList');
     var item = $(this);
-    var container = list.closest('.task-flows');
     animateSpinner();
     $.ajax({
       url: list.data('link-url'),
