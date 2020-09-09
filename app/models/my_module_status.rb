@@ -47,6 +47,14 @@ class MyModuleStatus < ApplicationRecord
     ordered_statuses
   end
 
+  def conditions_fulfilled?(my_module)
+    my_module_status_conditions.each do |condition|
+      condition.call(my_module)
+    end
+
+    my_module.errors.blank?
+  end
+
   private
 
   def next_in_same_flow
