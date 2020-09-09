@@ -24,25 +24,6 @@
           <% end %>
         </h4>
       </div>
-
-      <div class="pull-right module-start-date">
-        <% if my_module.started_on.present? %>
-          <%= t('projects.reports.elements.module.started_on', started_on: l(my_module.started_on, format: :full)) %>
-        <% else %>
-          <em><%=t "projects.reports.elements.module.no_start_date" %></em>
-        <% end %>
-      </div>
-      <div class="pull-right module-due-date">
-        <% if my_module.due_date.present? %>
-          <%=t "projects.reports.elements.module.due_date", due_date: l(my_module.due_date, format: :full) %>
-        <% else %>
-          <em><%=t "projects.reports.elements.module.no_due_date" %></em>
-        <% end %>
-        <% if my_module.completed? %>
-          <%= t("my_modules.states.completed") %>
-          <%= l(my_module.completed_on, format: :full) %>
-        <% end %>
-      </div>
     </div>
     <p class="module-start-date">
       <% if my_module.started_on.present? %>
@@ -62,6 +43,12 @@
       <% status = my_module.my_module_status %>
       <%= t("projects.reports.elements.module.status") %>
       <span class="status-block" style="background: <%= status.color %>"><%= status.name %></span>
+      <% if my_module.completed? %>
+        <span style="margin-left: 10px;">
+          <%= t("my_modules.states.completed") %>
+          <%= l(my_module.completed_on, format: :full) %>
+        </span>
+      <% end %>
     </p>
     <div class="row module-tags">
       <div class="pull-left">
