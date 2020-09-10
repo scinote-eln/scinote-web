@@ -47,14 +47,15 @@ class MyModuleStatus < ApplicationRecord
     ordered_statuses
   end
 
-  def conditions_fulfilled?(my_module)
-    my_module.errors.clear
+  def conditions_errors(my_module)
+    mm_copy = my_module.clone
+    mm_copy.errors.clear
 
     my_module_status_conditions.each do |condition|
-      condition.call(my_module)
+      condition.call(mm_copy)
     end
 
-    my_module.errors.blank?
+    mm_copy.errors.messages&.values&.flatten
   end
 
   private
