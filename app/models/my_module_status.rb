@@ -48,6 +48,8 @@ class MyModuleStatus < ApplicationRecord
   end
 
   def conditions_fulfilled?(my_module)
+    my_module.errors.clear
+
     my_module_status_conditions.each do |condition|
       condition.call(my_module)
     end
