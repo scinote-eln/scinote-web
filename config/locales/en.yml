@@ -2278,12 +2278,7 @@ en:
     no_results: "No results found"
     users:
       title: "People"
-      navigate_1: "up/down"
-      navigate_2: "to navigate"
-      confirm_1: "enter/tab"
-      confirm_2: "to confirm"
-      dismiss_1: "esc"
-      dismiss_2: "to dismiss"
+      help: "Navigate: ↑ ↓    •    Submit: Enter / Tab    •    Dismiss: Esc"
       popover_html: "<span class='silver'>Team:</span>&nbsp;%{team} <br> <span class='silver'>Role:</span>&nbsp;%{role} <br> <span class='silver'>Joined:</span>&nbsp;%{time}"
     res:
       archived: "(archived)"

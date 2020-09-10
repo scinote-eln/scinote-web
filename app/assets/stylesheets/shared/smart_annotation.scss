@@ -1,0 +1,104 @@
+.atwho-view {
+  background: $color_white;
+  border-radius: $border-radius-default;
+  box-shadow: $modal-shadow;
+  display: none;
+  left: 0;
+  margin-top: 18px;
+  max-width: 700px;
+  min-width: 600px;
+  overflow: auto;
+  position: absolute;
+  top: 0;
+  z-index: 11110 !important;
+
+  .atwho-header-res {
+    .nav-tabs {
+      margin-bottom: 0;
+    }
+
+    .rep-tab.active {
+      border-bottom: $border-default;
+      display: flex;
+      padding: .25em;
+    }
+
+    .repository-object {
+      max-width: 250px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .atwho-view-ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  .atwho-footer {
+    @include font-small;
+    border-top: $border-default;
+    color: $color-silver-chalice;
+    padding: .5em;
+    white-space: pre;
+  }
+
+  .atwho-scroll-container {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: .5em;
+    position: relative;
+
+    .atwho-breadcrumbs {
+      @include font-small;
+      color: $color-silver-chalice;
+      display: flex;
+
+      .atwho-breadcrumb {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .slash {
+        margin: 0 .5em;
+      }
+    }
+
+    .sa-type {
+      font-size: 8px;
+    }
+
+    .item {
+      cursor: pointer;
+      margin-left: -.5em;
+      overflow: hidden;
+      padding: .25em .5em;
+      text-overflow: ellipsis;
+      width: calc(100% + 1em);
+      white-space: nowrap;
+
+      &.cur {
+        background: $color-concrete;
+      }
+
+      .atwho-highlight {
+        background: $brand-warning-light;
+      }
+    }
+  }
+}
+
+.sa-type {
+  font-size: 10px;
+  font-weight: 600;
+  padding-left: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  vertical-align: super;
+
+  &:hover {
+    text-decoration: none;
+  }
+}

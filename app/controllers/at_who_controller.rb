@@ -32,7 +32,7 @@ class AtWhoController < ApplicationController
   end
 
   def rep_items
-    repository = Repository.find_by_id(params[:repository_id])
+    repository = Repository.find_by_id(params[:repository_id]) || Repository.active.accessible_by_teams(@team).first
     items =
       if repository && can_read_repository?(repository)
         SmartAnnotation.new(current_user, current_team, @query)
@@ -43,25 +43,20 @@ class AtWhoController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          res: items,
+          res: [render_to_string(partial: 'shared/smart_annotation/repository_items.html.erb', locals: {
+                                 repository_rows: items
+                               })],
+          repository: repository.id,
           status: :ok
         }
       end
     end
   end
 
-  def repositories
+  def menu
     repositories = Repository.active.accessible_by_teams(@team)
-    respond_to do |format|
-      format.json do
-        render json: {
-          repositories: repositories.map do |r|
-            [r.id, escape_input(r.name.truncate(Constants::ATWHO_REP_NAME_LIMIT))]
-          end.to_h,
-          status: :ok
-        }
-      end
-    end
+    render json: { html: render_to_string({ partial: "shared/smart_annotation/menu.html.erb",
+                                            locals: { repositories: repositories } }) }
   end
 
   def projects
@@ -69,7 +64,9 @@ class AtWhoController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          res: res.projects,
+          res: [render_to_string(partial: 'shared/smart_annotation/project_items.html.erb', locals: {
+                                 projects: res.projects
+                               })],
           status: :ok
         }
       end
@@ -81,7 +78,9 @@ class AtWhoController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          res: res.experiments,
+          res: [render_to_string(partial: 'shared/smart_annotation/experiment_items.html.erb', locals: {
+                                 experiments: res.experiments
+                               })],
           status: :ok
         }
       end
@@ -93,7 +92,9 @@ class AtWhoController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          res: res.my_modules,
+          res: [render_to_string(partial: 'shared/smart_annotation/my_module_items.html.erb', locals: {
+                                 my_modules: res.my_modules
+                               })],
           status: :ok
         }
       end
