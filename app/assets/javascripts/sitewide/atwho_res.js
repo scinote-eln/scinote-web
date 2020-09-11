@@ -56,7 +56,7 @@ var SmartAnnotation = (function() {
       if ($li_text.length === 0 || !query) return html;
 
       $.each($li_text, function(i, item) {
-        $(item).html($(item).text().replace(new RegExp(query, 'gi'), '<span class="atwho-highlight">$&</span>'));
+        $(item).html($(item).text().replace(new RegExp(query.split(' ').join("|"), 'gi'), '<span class="atwho-highlight">$&</span>'));
       })
 
       return $html;
@@ -139,7 +139,6 @@ var SmartAnnotation = (function() {
           },
         },
         headerTpl: generateFilterMenu(defaultFilterType),
-        limit: <%= Constants::ATWHO_SEARCH_LIMIT %>,
         startWithSpace: true,
         acceptSpaceBar: true,
         displayTimeout: 120000
@@ -185,84 +184,20 @@ var SmartAnnotation = (function() {
         at: '@',
         callbacks: {
           remoteFilter: function(query, callback) {
-            $.getJSON(
-              FilterTypeEnum.USER.dataUrl,
-              {query: query},
-              function(data) {
-                if (data.users.length < 1) {
-                  callback([{no_results: 1}]);
-                } else {
-                  callback(data.users);
-                }
-                initDismissButton($('.atwho-view[style]'));
-              }
-            );
-          },
-          sorter: function(query, items, _searchKey) {
-            // Sorting is already done on server-side
-            return items;
+            $.getJSON(FilterTypeEnum.USER.dataUrl, {query: query}, function(data) {
+              callback(data.users);
+            });
           },
           tplEval: function(_tpl, map) {
-            var res;
-            try {
-              if (map.no_results) {
-                res = '';
-              } else {
-                res = '';
-                res += '<li class="atwho-li atwho-li-user" ';
-                res += 'data-id="' + map.id + '" ';
-                res += 'data-full-name="' + map.full_name + '">';
-                res += '<span class="global-avatar-container"><img src="' + map.img_url + '" class="avatar" /></span>';
-                res += '<span data-val="full-name">';
-                res += map.full_name;
-                res += '</span>';
-                res += '<small>';
-                res += '&nbsp;';
-                res += '&#183;';
-                res += '&nbsp;';
-                res += '<span data-val="email">';
-                res += map.email;
-                res += '</span>';
-                res += '</small>';
-                res += '</li>';
-              }
-            } catch (_error) {
-              res = '';
-            }
-            return res;
+            return map.name
           },
           highlighter: function(li, query) {
-            return li;//_matchHighlighter(li, query);
+            return _matchHighlighter(li, query);
           },
           beforeInsert: function(value, li) {
-            var res = '';
-            res += '[@' + li.attr('data-full-name');
-            res += '~' + li.attr('data-id') + ']';
-            return res;
+            return `[@${li.attr('data-full-name')}~${li.attr('data-id')}]`
           }
         },
-        headerTpl:
-          '<div class="atwho-header-res">' +
-          '<div class="title-user"><%= I18n.t("atwho.users.title") %></div>' +
-          '<div class="help">' +
-          '<div>' +
-          '<strong><%= I18n.t("atwho.users.navigate_1") %></strong> ' +
-          '<%= I18n.t("atwho.users.navigate_2") %>' +
-          '</div>' +
-          '<div>' +
-          '<strong><%= I18n.t("atwho.users.confirm_1") %></strong> ' +
-          '<%= I18n.t("atwho.users.confirm_2") %>' +
-          '</div>' +
-          '<div>' +
-          '<strong><%= I18n.t("atwho.users.dismiss_1") %></strong> ' +
-          '<%= I18n.t("atwho.users.dismiss_2") %>' +
-          '</div>' +
-          '</div>' +
-          '<div class="dismiss">' +
-          '<span class="fas fa-times"></span>' +
-          '</div>' +
-          '</div>',
-        limit: <%= Constants::ATWHO_SEARCH_LIMIT %>,
         startsWithSpace: true,
         acceptSpaceBar: true,
         displayTimeout: 120000

@@ -5,10 +5,11 @@ class AtWhoController < ApplicationController
   before_action :check_users_permissions
 
   def users
+    users = @team.search_users(@query).limit(Constants::ATWHO_SEARCH_LIMIT + 1)
     respond_to do |format|
       format.json do
         render json: {
-          users: generate_users_data,
+          users: [render_to_string(partial: 'shared/smart_annotation/users.html.erb', locals: {users: users})],
           status: :ok
         }
       end
@@ -111,24 +112,5 @@ class AtWhoController < ApplicationController
 
   def check_users_permissions
     render_403 unless can_read_team?(@team)
-  end
-
-  def generate_users_data
-    # Search users
-    res = @team.search_users(@query)
-               .limit(Constants::ATWHO_SEARCH_LIMIT)
-               .pluck(:id, :full_name, :email)
-
-    # Add avatars, Base62, convert to JSON
-    data = []
-    res.each do |obj|
-      tmp = {}
-      tmp['id'] = obj[0].base62_encode
-      tmp['full_name'] = escape_input(obj[1].truncate(Constants::NAME_TRUNCATION_LENGTH_DROPDOWN))
-      tmp['email'] = escape_input(obj[2])
-      tmp['img_url'] = avatar_path(obj[0], :icon_small)
-      data << tmp
-    end
-    data
   end
 end
