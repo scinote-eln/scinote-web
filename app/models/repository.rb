@@ -209,21 +209,6 @@ class Repository < RepositoryBase
     importer.run
   end
 
-  def provision_snapshot(my_module, created_by = nil)
-    created_by ||= self.created_by
-    repository_snapshot = dup.becomes(RepositorySnapshot)
-    repository_snapshot.assign_attributes(type: RepositorySnapshot.name,
-                                          original_repository: self,
-                                          my_module: my_module,
-                                          created_by: created_by,
-                                          team: my_module.experiment.project.team,
-                                          permission_level: Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:not_shared])
-    repository_snapshot.provisioning!
-    repository_snapshot.reload
-    RepositorySnapshotProvisioningJob.perform_later(repository_snapshot)
-    repository_snapshot
-  end
-
   def assigned_rows(my_module)
     repository_rows.joins(:my_module_repository_rows).where(my_module_repository_rows: { my_module_id: my_module.id })
   end

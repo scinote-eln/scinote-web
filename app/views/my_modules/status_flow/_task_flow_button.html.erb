@@ -1,13 +1,23 @@
 <% status = my_module.my_module_status %>
-<div class="status-label"><%= t('my_module_statuses.dropdown.status_label') %></div>
-<div class="dropdown sci-dropdown status-flow-dropdown">
-  <button class="btn btn-secondary dropdown-toggle"
+<div class="status-label">
+  <%= t('my_module_statuses.dropdown.status_label') %>
+</div>
+<div class="dropdown sci-dropdown status-flow-dropdown"
+     data-status-changing="<%= my_module.status_changing %>"
+     data-status-check-url="<%= status_state_my_module_path(my_module) %>">
+  <button class="btn btn-secondary dropdown-toggle <%= 'disabled' if my_module.status_changing %>"
           type="button"
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="true"
           style="<%= "background-color: #{status.color}" %>;">
-    <span><%= status.name %></span>
+    <span>
+      <% if my_module.status_changing %>
+        <i class="fas fa-spinner fa-spin"></i>
+        <span><%= t('my_module_statuses.dropdown.status_transitioning_label') %></span>
+      <% end %>
+      <%= status.name %>
+    </span>
     <span class="caret pull-right"></span>
   </button>
   <ul class="dropdown-menu" aria-labelledby="dropdownTaskFlow" id="dropdownTaskFlowList" data-link-url="<%= update_state_my_module_url(my_module) %>">

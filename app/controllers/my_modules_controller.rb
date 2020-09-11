@@ -11,8 +11,7 @@ class MyModulesController < ApplicationController
   before_action :load_projects_tree, only: %i(protocols results activities archive)
   before_action :check_archive_and_restore_permissions, only: %i(update)
   before_action :check_manage_permissions, only: %i(description due_date update_description update_protocol_description)
-  before_action :check_view_permissions, except: %i(update update_description update_protocol_description
-                                                    toggle_task_state)
+  before_action :check_view_permissions, except: %i(update update_description update_protocol_description)
   before_action :check_update_state_permissions, only: :update_state
   before_action :set_inline_name_editing, only: %i(protocols results activities archive)
 
@@ -43,6 +42,14 @@ class MyModulesController < ApplicationController
                    module: escape_input(@my_module.name))
         }
       }
+    end
+  end
+
+  def status_state
+    respond_to do |format|
+      format.json do
+        render json: { status_changing: @my_module.status_changing? }
+      end
     end
   end
 

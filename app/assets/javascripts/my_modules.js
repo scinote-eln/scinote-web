@@ -1,6 +1,8 @@
 /* global I18n dropdownSelector HelperModule animateSpinner */
 /* eslint-disable no-use-before-define */
 
+const STATUS_POLLING_INTERVAL = 5000;
+
 function initTaskCollapseState() {
   let taskView = '.my-modules-protocols-index';
   let taskSection = '.task-section-caret';
@@ -236,7 +238,20 @@ function bindEditTagsAjax() {
     });
 }
 
+function checkStatusState() {
+  $.getJSON($('.status-flow-dropdown').data('status-check-url'), (statusData) => {
+    if (statusData.status_changing) {
+      setTimeout(() => { checkStatusState(); }, STATUS_POLLING_INTERVAL);
+    } else {
+      location.reload();
+    }
+  });
+}
+
 function applyTaskStatusChangeCallBack() {
+  if ($('.status-flow-dropdown').data('status-changing')) {
+    setTimeout(() => { checkStatusState(); }, STATUS_POLLING_INTERVAL);
+  }
   $('.task-flows').on('click', '#dropdownTaskFlowList > li[data-state-id]', function() {
     var list = $('#dropdownTaskFlowList');
     var item = $(this);
