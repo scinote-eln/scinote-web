@@ -21,7 +21,7 @@
     &.open .dropdown-menu{
       align-items: center;
       display: grid;
-      grid-template-columns: max-content min-content minmax(0, auto);
+      grid-template-columns: minmax(0, auto) 12px minmax(0, auto);
       padding: .5em 0;
 
       li {
@@ -35,6 +35,14 @@
 
         &:hover > *{
           background: $color-concrete;
+        }
+
+        &.disabled {
+          pointer-events: none;
+
+          .status-name {
+            background: $color-alto !important;
+          }
         }
       }
 
@@ -64,7 +72,8 @@
         @include font-small;
         color: $color-silver-chalice;
         grid-column: span 3;
-        padding: .5em 1em;
+        line-height: 1em;
+        padding: 0em 1em .5em;
       }
 
       #viewTaskFlow {
