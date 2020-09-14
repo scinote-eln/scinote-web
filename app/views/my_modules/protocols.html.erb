@@ -26,7 +26,7 @@
       <%= render partial: 'my_module_details' %>
     </div>
     <div class="task-flows">
-      <%= render partial: 'my_modules/status_flow/task_flow_button', locals: { my_module: @my_module } if @my_module.my_module_status_flow && can_change_my_module_flow_status?(@my_module) %>
+      <%= render partial: 'my_modules/status_flow/task_flow_button', locals: { my_module: @my_module } if @my_module.my_module_status_flow %>
     </div>
   </div>
   <!-- Notes -->
