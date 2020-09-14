@@ -2,10 +2,10 @@
 /* eslint-disable no-param-reassign */
 
 var DasboardCurrentTasksWidget = (function() {
-  var sortFilter = '.curent-tasks-filters .sort-filter';
-  var statusFilter = '.curent-tasks-filters .view-filter';
-  var projectFilter = '.curent-tasks-filters .project-filter';
-  var experimentFilter = '.curent-tasks-filters .experiment-filter';
+  var sortFilter = '.current-tasks-filters .sort-filter';
+  var statusFilter = '.current-tasks-filters .view-filter';
+  var projectFilter = '.current-tasks-filters .project-filter';
+  var experimentFilter = '.current-tasks-filters .experiment-filter';
 
   function generateTasksListHtml(json, container) {
     $.each(json.data, (i, task) => {
@@ -22,6 +22,12 @@ var DasboardCurrentTasksWidget = (function() {
                                 </div>
                               </a>`;
       $(container).append(currentTaskItem);
+    });
+  }
+
+  function getDefaultStatusValues() {
+    return $.map($(statusFilter).find("option[data-final-status='false']"), function(option) {
+      return option.value;
     });
   }
 
@@ -46,7 +52,43 @@ var DasboardCurrentTasksWidget = (function() {
   function filtersEnabled() {
     return dropdownSelector.getValues(experimentFilter)
            || dropdownSelector.getValues(projectFilter)
-           || $('.current-tasks-widget .task-search-field').val().length > 0
+           || $('.current-tasks-widget .task-search-field').val().length > 0;
+  }
+
+  function filterStateSave() {
+    var teamId = $('.current-tasks-filters').data('team-id');
+    var filterState = {
+      sort: dropdownSelector.getValues(sortFilter),
+      statuses: dropdownSelector.getValues(statusFilter),
+      mode: $('.current-tasks-navbar .active').data('mode')
+    };
+
+    if (filterState) {
+      localStorage.setItem('current_tasks_filters_per_team/' + teamId, JSON.stringify(filterState));
+    }
+  }
+
+  function filterStateLoad() {
+    var teamId = $('.current-tasks-filters').data('team-id');
+    var filterState = localStorage.getItem('current_tasks_filters_per_team/' + teamId);
+    var parsedFilterState;
+    var allStatusValues = $.map($(statusFilter).find('option'), function(option) {
+      return option.value;
+    });
+
+    if (filterState !== null) {
+      parsedFilterState = JSON.parse(filterState);
+      dropdownSelector.selectValues(sortFilter, parsedFilterState.sort);
+      // Check if saved statuses are valid
+      if (parsedFilterState.statuses.every(savedStatus => allStatusValues.includes(savedStatus))) {
+        dropdownSelector.selectValues(statusFilter, parsedFilterState.statuses);
+      } else {
+        dropdownSelector.selectValues(statusFilter, getDefaultStatusValues());
+      }
+      // Select saved navbar state
+      $('.current-tasks-navbar .navbar-link').removeClass('active');
+      $('.current-tasks-navbar').find(`[data-mode='${parsedFilterState.mode}']`).addClass('active');
+    }
   }
 
   function loadCurrentTasksList(newList) {
@@ -79,11 +121,12 @@ var DasboardCurrentTasksWidget = (function() {
   }
 
   function initFilters() {
-    $('.curent-tasks-filters .clear-button').click((e) => {
+    $('.current-tasks-filters .clear-button').click((e) => {
       e.stopPropagation();
       e.preventDefault();
-      dropdownSelector.selectValue(sortFilter, 'date_asc');
-      dropdownSelector.selectValue(viewFilter, 'uncompleted');
+
+      dropdownSelector.selectValues(sortFilter, 'due_date');
+      dropdownSelector.selectValues(statusFilter, getDefaultStatusValues());
       dropdownSelector.clearData(projectFilter);
       dropdownSelector.clearData(experimentFilter);
     });
@@ -133,7 +176,7 @@ var DasboardCurrentTasksWidget = (function() {
       }
     });
 
-    $('.curent-tasks-filters').click((e) => {
+    $('.current-tasks-filters').click((e) => {
       // Prevent filter window close
       e.stopPropagation();
       e.preventDefault();
@@ -143,15 +186,17 @@ var DasboardCurrentTasksWidget = (function() {
       dropdownSelector.closeDropdown(experimentFilter);
     });
 
-    $('.curent-tasks-filters .apply-filters').click((e) => {
-      $('.curent-tasks-filters').dropdown('toggle');
+    $('.current-tasks-filters .apply-filters').click((e) => {
+      $('.current-tasks-filters').dropdown('toggle');
       e.stopPropagation();
       e.preventDefault();
       loadCurrentTasksList(true);
+      filterStateSave();
     });
 
     $('.filter-container').on('hide.bs.dropdown', () => {
       loadCurrentTasksList(true);
+      filterStateSave();
       $('.current-tasks-list').removeClass('disabled');
     });
 
@@ -165,6 +210,7 @@ var DasboardCurrentTasksWidget = (function() {
       $(this).parent().find('.navbar-link').removeClass('active');
       $(this).addClass('active');
       loadCurrentTasksList(true);
+      filterStateSave();
     });
   }
 
@@ -174,13 +220,13 @@ var DasboardCurrentTasksWidget = (function() {
     });
   }
 
-
   return {
     init: () => {
       if ($('.current-tasks-widget').length) {
         initNavbar();
         initFilters();
         initSearch();
+        filterStateLoad();
         loadCurrentTasksList();
         initInfiniteScroll();
       }
