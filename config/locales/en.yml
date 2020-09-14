@@ -989,6 +989,7 @@ en:
       full_zoom:
         due_date: "Due date"
         no_due_date: "not set"
+        status_transitioning_label: "Transitioning to:"
         modal_manage_users:
           modal_title: "Manage users for"
           no_users: "No users"

@@ -392,6 +392,7 @@ Rails.application.routes.draw do
         post 'activities'
         get 'activities_tab' # Activities in tab view for single module
         get 'due_date'
+        get 'status_state'
         patch 'description',
               to: 'my_modules#update_description',
               as: 'update_description'

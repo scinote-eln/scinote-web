@@ -26,6 +26,19 @@ class RepositorySnapshot < RepositoryBase
       .order(:parent_id, updated_at: :desc)
   }
 
+  def self.create_preliminary(repository, my_module, created_by = nil)
+    created_by ||= repository.created_by
+    repository_snapshot = repository.dup.becomes(RepositorySnapshot)
+    repository_snapshot.assign_attributes(type: RepositorySnapshot.name,
+                                          original_repository: repository,
+                                          my_module: my_module,
+                                          created_by: created_by,
+                                          team: my_module.experiment.project.team,
+                                          permission_level: Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:not_shared])
+    repository_snapshot.provisioning!
+    repository_snapshot.reload
+  end
+
   def default_columns_count
     Constants::REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['length']
   end

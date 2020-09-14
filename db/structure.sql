@@ -851,7 +851,9 @@ CREATE TABLE public.my_modules (
     state smallint DEFAULT 0,
     completed_on timestamp without time zone,
     started_on timestamp without time zone,
-    my_module_status_id bigint
+    my_module_status_id bigint,
+    status_changing boolean DEFAULT false,
+    changing_from_my_module_status_id bigint
 );
 
 
@@ -6398,6 +6400,14 @@ ALTER TABLE ONLY public.repository_number_values
 
 
 --
+-- Name: my_modules fk_rails_4768515e2e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_modules
+    ADD CONSTRAINT fk_rails_4768515e2e FOREIGN KEY (changing_from_my_module_status_id) REFERENCES public.my_module_statuses(id);
+
+
+--
 -- Name: projects fk_rails_47aee20018; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7626,6 +7636,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200709142830'),
 ('20200713142353'),
 ('20200714082503'),
-('20200826143431');
+('20200826143431'),
+('20200909121441');
 
 
