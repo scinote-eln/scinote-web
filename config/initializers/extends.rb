@@ -327,7 +327,7 @@ class Extends
 
   DEFAULT_FLOW_STATUSES = [
     { name: 'Not started', color: '#406d86' },
-    { name: 'In progress', color: '#0065ff' },
-    { name: 'Completed', color: '#00b900' }
+    { name: 'In progress', color: '#0065ff', consequences: ['MyModuleStatusConsequences::Uncompletion'] },
+    { name: 'Completed', color: '#00b900', consequences: ['MyModuleStatusConsequences::Completion'] }
   ]
 end

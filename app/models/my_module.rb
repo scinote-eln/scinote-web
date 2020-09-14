@@ -9,8 +9,6 @@ class MyModule < ApplicationRecord
   before_create :create_blank_protocol
   before_create :assign_default_status_flow
 
-  before_validation :set_completed, if: :my_module_status_id_changed?
-  before_validation :set_completed_on, if: :state_changed?
   before_save :exec_status_consequences, if: :my_module_status_id_changed?
 
   auto_strip_attributes :name, :description, nullify: false
@@ -477,18 +475,6 @@ class MyModule < ApplicationRecord
     { x: 0, y: positions.last[1] + HEIGHT }
   end
 
-  # Check if my_module is ready to become completed
-  def check_completness_status
-    if protocol && protocol.steps.count > 0
-      completed = true
-      protocol.steps.find_each do |step|
-        completed = false unless step.completed
-      end
-      return true if completed
-    end
-    false
-  end
-
   def assign_user(user, assigned_by = nil)
     user_my_modules.create(
       assigned_by: assigned_by || user,
@@ -505,22 +491,6 @@ class MyModule < ApplicationRecord
   end
 
   private
-
-  def set_completed
-    return if my_module_status.blank?
-
-    if my_module_status.final_status?
-      self.state = 'completed'
-    else
-      self.state = 'uncompleted'
-    end
-  end
-
-  def set_completed_on
-    return if completed? && completed_on.present?
-
-    self.completed_on = completed? ? DateTime.now : nil
-  end
 
   def create_blank_protocol
     protocols << Protocol.new_blank_for_module(self)
