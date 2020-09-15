@@ -35,10 +35,6 @@ var SmartAnnotation = (function() {
       return $html;
     }
 
-    function generateInputTag(value, li) {
-      return `[#${li.attr('data-name')}~${li.attr('data-type')}~${li.attr('data-id')}]`;
-    }
-
     // Generates suggestion dropdown filter
     function generateFilterMenu() {
       var menu = '';
@@ -53,7 +49,7 @@ var SmartAnnotation = (function() {
       return menu;
     }
 
-    function atWhoSettings(at, defaultFilterType) {
+    function atWhoSettings(at) {
       return {
         at: at,
         callbacks: {
@@ -75,7 +71,6 @@ var SmartAnnotation = (function() {
               }
             }
             $.getJSON(filterType.dataUrl, params, function(data) {
-              console.log(data.res)
               callback(data.res);
 
               if (data.repository) {
@@ -86,14 +81,13 @@ var SmartAnnotation = (function() {
             return true;
           },
           tplEval: function(_tpl, items) {
-            console.log(1)
             return items.name;
           },
           highlighter: function(li, query) {
-            return matchHighlighter(li, query, true);
+            return matchHighlighter(li, query);
           },
           beforeInsert: function(value, li) {
-            return generateInputTag(value, li);
+            return `[#${li.attr('data-name')}~${li.attr('data-type')}~${li.attr('data-id')}]`;
           },
           matcher: function(flag, subtext, shouldStartWithSpace) {
             var a;
@@ -114,10 +108,10 @@ var SmartAnnotation = (function() {
             return null;
           }
         },
-        headerTpl: generateFilterMenu(defaultFilterType),
+        headerTpl: generateFilterMenu(),
         startWithSpace: true,
         acceptSpaceBar: true,
-        displayTimeout: 120000,
+        displayTimeout: 120000
       };
     }
 
@@ -179,7 +173,7 @@ var SmartAnnotation = (function() {
           acceptSpaceBar: true,
           displayTimeout: 120000
         })
-        .atwho(atWhoSettings('#', DEFAULT_SEARCH_FILTER));
+        .atwho(atWhoSettings('#'));
       // .atwho(atWhoSettings('task#', FilterTypeEnum.TASK))   Waiting for better times
       // .atwho(atWhoSettings('project#', FilterTypeEnum.PROJECT))
       // .atwho(atWhoSettings('experiment#', FilterTypeEnum.EXPERIMENT))
