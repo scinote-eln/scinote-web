@@ -10,7 +10,7 @@
     </li>
   <% end %>
   <% if limit_reached %>
-    <div class="more-results">To get other results, please type more</div>
+    <div class="more-results"><%= t('atwho.more_results') %></div>
   <% end %>
   <% if users.empty? %>
     <%= render partial: 'shared/smart_annotation/no_results.html.erb' %>

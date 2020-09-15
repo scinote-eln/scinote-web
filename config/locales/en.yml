@@ -2276,6 +2276,11 @@ en:
         not_found: 'Element not found.'
   atwho:
     no_results: "No results found"
+    projects: PROJECTS
+    experiments: EXPERIMENTS
+    tasks: TASKS
+    inventories: INVENTORIES
+    more_results: To get other results, please type more
     users:
       title: "People"
       help: "Navigate: ↑ ↓    •    Submit: Enter / Tab    •    Dismiss: Esc"
