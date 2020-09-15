@@ -45,16 +45,14 @@
 
             button = step.find("[data-action='complete-step']");
             button.attr("data-action", "uncomplete-step");
-            button.find(".btn").removeClass("btn-toggle").addClass("btn-default");
-            button.find("button").html('<span class="fas fa-times"></span>&nbsp;' + data.new_title);
+            button.html('<span class="fas fa-times"></span>&nbsp;' + data.new_title);
           }
           else {
             step.addClass("not-completed").removeClass("completed");
 
             button = step.find("[data-action='uncomplete-step']");
             button.attr("data-action", "complete-step");
-            button.find(".btn").removeClass("btn-default").addClass("btn-toggle");
-            button.find("button").html('<span class="fas fa-check"></span>&nbsp;' + data.new_title);
+            button.html('<span class="fas fa-check"></span>&nbsp;' + data.new_title);
           }
         },
         error: function(response) {
