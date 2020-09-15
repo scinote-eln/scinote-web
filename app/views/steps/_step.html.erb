@@ -28,23 +28,21 @@
       </div>
       <div class="panel-options pull-right">
         <% if step.completed? %>
-          <div data-action="uncomplete-step"
-               class="complete-step-btn <%= 'disabled' unless can_complete_or_checkbox_step?(@protocol) && !(preview) %>"
-               data-link-url="<%= toggle_step_state_step_path(step)%>">
-            <button class="btn btn-secondary btn-block <%= 'disabled' unless can_complete_or_checkbox_step?(@protocol) && !(preview) %>">
-              <span class="fas fa-times"></span>
-              <%= t("protocols.steps.options.uncomplete_title") %>
-            </button>
-          </div>
+          <button data-action="uncomplete-step"
+                  data-link-url="<%= toggle_step_state_step_path(step)%>"
+                  class="btn btn-secondary"
+                  <%= 'disabled' if !can_complete_or_checkbox_step?(@protocol) || preview %>>
+            <span class="fas fa-times"></span>
+            <%= t("protocols.steps.options.uncomplete_title") %>
+          </button>
         <% else %>
-          <div data-action="complete-step"
-               class="complete-step-btn <%= 'disabled' unless can_complete_or_checkbox_step?(@protocol) && !(preview) %>"
-               data-link-url="<%= toggle_step_state_step_path(step)%>">
-            <button class="btn btn-secondary btn-block <%= 'disabled' unless can_complete_or_checkbox_step?(@protocol) && !(preview) %>">
-              <span class="fas fa-check"></span>
-              <%= t("protocols.steps.options.complete_title") %>
-            </button>
-          </div>
+          <button data-action="complete-step"
+                  data-link-url="<%= toggle_step_state_step_path(step)%>"
+                  class="btn btn-secondary"
+                  <%= 'disabled' if !can_complete_or_checkbox_step?(@protocol) || preview %>>
+            <span class="fas fa-check"></span>
+            <%= t("protocols.steps.options.complete_title") %>
+          </button>
         <% end %>
 
         <% if (can_manage_protocol_in_module?(@protocol) ||
