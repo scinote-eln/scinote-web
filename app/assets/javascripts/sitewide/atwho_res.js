@@ -71,6 +71,11 @@ var SmartAnnotation = (function() {
               }
             }
             $.getJSON(filterType.dataUrl, params, function(data) {
+              localStorage.setItem('smart_annotation_state_per_team/' + data.team, JSON.stringify({
+                tag: filterType.tag,
+                repository: data.repository
+              }));
+
               callback(data.res);
 
               if (data.repository) {
@@ -132,8 +137,16 @@ var SmartAnnotation = (function() {
           });
 
           if ($currentAtWho.find('.tab-pane.active').length === 0) {
-            let filterType = DEFAULT_SEARCH_FILTER;
-            $currentAtWho.find(`.${filterType.tag}`).click();
+            let filterType =  DEFAULT_SEARCH_FILTER.tag;
+            let teamId = $currentAtWho.find('.atwho-header-res').data('team-id');
+            let remeberedState = localStorage.getItem('smart_annotation_state_per_team/' + teamId);
+            if (remeberedState) {
+              remeberedState = JSON.parse(remeberedState);
+              filterType = remeberedState.tag;
+              $currentAtWho.find(`.repository-object[data-object-id=${remeberedState.repository}]`)
+                .addClass('btn-primary');
+            }
+            $currentAtWho.find(`.${filterType}`).click();
           }
         })
         .on('reposition.atwho', function(event, flag, query) {

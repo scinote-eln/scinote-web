@@ -1,5 +1,5 @@
 <% at_who_key = SecureRandom.hex %>
-<div class="atwho-header-res">
+<div class="atwho-header-res" data-team-id="<%= current_team.id %>">
   <div class="nav nav-tabs sci-nav-tabs">
     <a class="tab-button sa-projects" href="#prj-tab-<%= at_who_key %>" role="tab" data-toggle="tab"><%= t('atwho.projects') %></a>
     <a class="tab-button sa-experiments" href="#exp-tab-<%= at_who_key %>" data-toggle="tab"><%= t('atwho.experiments') %></a>

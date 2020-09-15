@@ -48,6 +48,7 @@ class AtWhoController < ApplicationController
                                  repository_rows: items
                                })],
           repository: repository.id,
+          team: current_team.id,
           status: :ok
         }
       end
@@ -68,6 +69,7 @@ class AtWhoController < ApplicationController
           res: [render_to_string(partial: 'shared/smart_annotation/project_items.html.erb', locals: {
                                  projects: res.projects
                                })],
+          team: current_team.id,
           status: :ok
         }
       end
@@ -82,6 +84,7 @@ class AtWhoController < ApplicationController
           res: [render_to_string(partial: 'shared/smart_annotation/experiment_items.html.erb', locals: {
                                  experiments: res.experiments
                                })],
+          team: current_team.id,
           status: :ok
         }
       end
@@ -96,6 +99,7 @@ class AtWhoController < ApplicationController
           res: [render_to_string(partial: 'shared/smart_annotation/my_module_items.html.erb', locals: {
                                  my_modules: res.my_modules
                                })],
+          team: current_team.id,
           status: :ok
         }
       end
