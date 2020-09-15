@@ -1,25 +1,7 @@
+/* global _ */
+
 var SmartAnnotation = (function() {
   'use strict';
-
-  // utilities
-  var Util = (function() {
-    // helper method that binds show/hidden action
-    function showHideBinding() {
-      $.each(['show', 'hide'], function (i, ev) {
-        var el = $.fn[ev];
-        $.fn[ev] = function () {
-          this.trigger(ev);
-          return el.apply(this, arguments);
-        };
-      });
-    }
-
-    var publicApi = {
-      showHideBinding: showHideBinding
-    };
-
-    return publicApi;
-  })();
 
   // stop the user annotation popover on click propagation
   function atwhoStopPropagation(element) {
@@ -29,53 +11,44 @@ var SmartAnnotation = (function() {
     });
   }
 
-  function setAtWho(field) {
+  function SetAtWho(field) {
     var FilterTypeEnum = Object.freeze({
-      USER:       {tag: "users",
-                   dataUrl: $(document.body).attr('data-atwho-users-url')},
-      TASK:       {tag: "sa-tasks",
-                   dataUrl: $(document.body).attr('data-atwho-task-url')},
-      PROJECT:    {tag: "sa-projects",
-                   dataUrl: $(document.body).attr('data-atwho-project-url')},
-      EXPERIMENT: {tag: "sa-experiments",
-                   dataUrl: $(document.body).attr('data-atwho-experiment-url')},
-      REPOSITORY: {tag: "sa-repositories",
-                   dataUrl: $(document.body).attr('data-atwho-rep-items-url')},
-      MENU:       {tag: "menu",
-                   dataUrl: $(document.body).attr('data-atwho-menu-items')}
+      USER: { tag: 'users', dataUrl: $(document.body).attr('data-atwho-users-url') },
+      TASK: { tag: 'sa-tasks', dataUrl: $(document.body).attr('data-atwho-task-url') },
+      PROJECT: { tag: 'sa-projects', dataUrl: $(document.body).attr('data-atwho-project-url') },
+      EXPERIMENT: { tag: 'sa-experiments', dataUrl: $(document.body).attr('data-atwho-experiment-url') },
+      REPOSITORY: { tag: 'sa-repositories', dataUrl: $(document.body).attr('data-atwho-rep-items-url') },
+      MENU: { tag: 'menu', dataUrl: $(document.body).attr('data-atwho-menu-items') }
     });
-    var prevAt,
-        // Default selected filter when using '#'
-        DEFAULT_SEARCH_FILTER = FilterTypeEnum.REPOSITORY,
-        atWhoUpdating = false;
+    var DEFAULT_SEARCH_FILTER = FilterTypeEnum.REPOSITORY;
 
-    function _matchHighlighter(html, query, filterType) {
+    function matchHighlighter(html, query) {
       var $html = $(html);
-      var $li_text = $html.find('.item-text');
+      var $liText = $html.find('.item-text');
+      if ($liText.length === 0 || !query) return html;
 
-      if ($li_text.length === 0 || !query) return html;
-
-      $.each($li_text, function(i, item) {
-        $(item).html($(item).text().replace(new RegExp(query.split(' ').join("|"), 'gi'), '<span class="atwho-highlight">$&</span>'));
-      })
+      $.each($liText, function(i, item) {
+        $(item).html($(item).text().replace(new RegExp(query.split(' ').join('|'), 'gi'),
+          '<span class="atwho-highlight">$&</span>'));
+      });
 
       return $html;
     }
 
-    function _generateInputTag(value, li) {
+    function generateInputTag(value, li) {
       return `[#${li.attr('data-name')}~${li.attr('data-type')}~${li.attr('data-id')}]`;
     }
 
     // Generates suggestion dropdown filter
-    function generateFilterMenu(active, res_data) {
+    function generateFilterMenu() {
       var menu = '';
       $.ajax({
         async: false,
         dataType: 'json',
         url: $(document.body).attr('data-atwho-repositories-url'),
         success: function(data) {
-          menu = data.html
-       }
+          menu = data.html;
+        }
       });
       return menu;
     }
@@ -88,121 +61,125 @@ var SmartAnnotation = (function() {
             var $currentAtWho = $('.atwho-view[style]');
             var filterType;
             var params = { query: query };
-            filterType = FilterTypeEnum[$currentAtWho.find('.tab-pane.active').data('object-type')]
+            filterType = FilterTypeEnum[$currentAtWho.find('.tab-pane.active').data('object-type')];
             if (!filterType) {
-              callback([{name: ''}]);
-              return false
+              callback([{ name: '' }]);
+              return false;
             }
 
-            if(filterType.tag === 'sa-repositories') {
-              let repositoryTab = $currentAtWho.find('[data-object-type="REPOSITORY"]')
+            if (filterType.tag === 'sa-repositories') {
+              let repositoryTab = $currentAtWho.find('[data-object-type="REPOSITORY"]');
               let activeRepository = repositoryTab.find('.btn-primary');
               if (activeRepository.length) {
-                params['repository_id'] =  activeRepository.data('object-id')
+                params.repository_id = activeRepository.data('object-id');
               }
-
             }
             $.getJSON(filterType.dataUrl, params, function(data) {
+              console.log(data.res)
               callback(data.res);
 
               if (data.repository) {
                 $currentAtWho.find(`.repository-object[data-object-id="${data.repository}"]`)
-                  .addClass('btn-primary').removeClass('btn-light')
+                  .addClass('btn-primary').removeClass('btn-light');
               }
             });
+            return true;
           },
           tplEval: function(_tpl, items) {
+            console.log(1)
             return items.name;
           },
-          highlighter:  function(li, query) {
-            return _matchHighlighter(li, query, true);
-            return li;
+          highlighter: function(li, query) {
+            return matchHighlighter(li, query, true);
           },
           beforeInsert: function(value, li) {
-            return _generateInputTag(value, li);
+            return generateInputTag(value, li);
           },
-          matcher:function(flag, subtext, should_startWithSpace, acceptSpaceBar) {
-            var _a, _y, match, regexp, space;
-            flag = flag.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
-            if (should_startWithSpace) {
-              flag = '(?:^|\\s)' + flag;
+          matcher: function(flag, subtext, shouldStartWithSpace) {
+            var a;
+            var y;
+            var match;
+            var regexp;
+            var cleanedFlag = flag.replace(/[-[]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+            if (shouldStartWithSpace) {
+              cleanedFlag = '(?:^|\\s)' + cleanedFlag;
             }
-            _a = decodeURI("%C3%80");
-            _y = decodeURI("%C3%BF");
-            regexp = new RegExp(flag + "([A-Za-z" + _a + "-" + _y + "0-9_/:\\s\+\-\]*)$|" + flag + "([^\\x00-\\xff]*)$", 'gi');
+            a = decodeURI('%C3%80');
+            y = decodeURI('%C3%BF');
+            regexp = new RegExp(cleanedFlag + `([A-Za-z${a}-${y}0-9_/:\\s+-]*)$|${cleanedFlag}([^\\x00-\\xff]*)$`, 'gi');
             match = regexp.exec(subtext);
             if (match) {
               return match[2] || match[1];
-            } else {
-              return null;
             }
-          },
+            return null;
+          }
         },
         headerTpl: generateFilterMenu(defaultFilterType),
         startWithSpace: true,
         acceptSpaceBar: true,
-        displayTimeout: 120000
-      }
+        displayTimeout: 120000,
+      };
     }
 
     function init() {
       $(field)
-      .on("shown.atwho", function() {
-        var $currentAtWho = $('.atwho-view[style]');
-        $currentAtWho.find('.tab-button').off().on('shown.bs.tab',  function() {
-          $(field).click().focus();
-          $(this).closest('.nav-tabs').find('.tab-button').removeClass('active');
-          $(this).addClass('active');
-        })
-        $currentAtWho.find('.repository-object').off().on('click',  function() {
-          $(this).parent().find('.repository-object').removeClass('btn-primary').addClass('btn-light');
-          $(this).addClass('btn-primary').removeClass('btn-light');
-          $(field).click().focus();
-        })
+        .on('shown.atwho', function() {
+          var $currentAtWho = $('.atwho-view[style]');
+          $currentAtWho.find('.tab-button').off().on('shown.bs.tab', function() {
+            $(field).click().focus();
+            $(this).closest('.nav-tabs').find('.tab-button').removeClass('active');
+            $(this).addClass('active');
+          });
+          $currentAtWho.find('.repository-object').off().on('click', function() {
+            $(this).parent().find('.repository-object').removeClass('btn-primary')
+              .addClass('btn-light');
+            $(this).addClass('btn-primary').removeClass('btn-light');
+            $(field).click().focus();
+          });
 
-        if ($currentAtWho.find('.tab-pane.active').length == 0) {
-          let filterType =  DEFAULT_SEARCH_FILTER;
-          $currentAtWho.find(`.${filterType.tag}`).click();
-        }
-      })
-      .on("reposition.atwho", function(event, flag, query) {
-        let inputFieldLeft = query.$inputor.offset().left;
-        if (inputFieldLeft > $(window).width()) {
-          let leftPosition;
-          if (inputFieldLeft < flag.left + $(window).scrollLeft()) {
-            leftPosition = inputFieldLeft;
-          } else {
-            leftPosition = flag.left + $(window).scrollLeft();
+          if ($currentAtWho.find('.tab-pane.active').length === 0) {
+            let filterType = DEFAULT_SEARCH_FILTER;
+            $currentAtWho.find(`.${filterType.tag}`).click();
           }
-          query.$el.find('.atwho-view').css('left', leftPosition + 'px');
-        }
-        if ($('.repository-show').length) {
-          query.$el.find('.atwho-view').css('top', flag.top + 'px');
-        }
-      })
-      .atwho({
-        at: '@',
-        callbacks: {
-          remoteFilter: function(query, callback) {
-            $.getJSON(FilterTypeEnum.USER.dataUrl, {query: query}, function(data) {
-              callback(data.users);
-            });
-          },
-          tplEval: function(_tpl, map) {
-            return map.name
-          },
-          highlighter: function(li, query) {
-            return _matchHighlighter(li, query);
-          },
-          beforeInsert: function(value, li) {
-            return `[@${li.attr('data-full-name')}~${li.attr('data-id')}]`
+        })
+        .on('reposition.atwho', function(event, flag, query) {
+          let inputFieldLeft = query.$inputor.offset().left;
+          if (inputFieldLeft > $(window).width()) {
+            let leftPosition;
+            if (inputFieldLeft < flag.left + $(window).scrollLeft()) {
+              leftPosition = inputFieldLeft;
+            } else {
+              leftPosition = flag.left + $(window).scrollLeft();
+            }
+            query.$el.find('.atwho-view').css('left', leftPosition + 'px');
           }
-        },
-        startsWithSpace: true,
-        acceptSpaceBar: true,
-        displayTimeout: 120000
-      })
-      .atwho(atWhoSettings('#', DEFAULT_SEARCH_FILTER))
+          if ($('.repository-show').length) {
+            query.$el.find('.atwho-view').css('top', flag.top + 'px');
+          }
+        })
+        .atwho({
+          at: '@',
+          callbacks: {
+            remoteFilter: function(query, callback) {
+              $.getJSON(FilterTypeEnum.USER.dataUrl, { query: query }, function(data) {
+                callback(data.users);
+              });
+            },
+            tplEval: function(_tpl, map) {
+              return map.name;
+            },
+            highlighter: function(li, query) {
+              return matchHighlighter(li, query);
+            },
+            beforeInsert: function(value, li) {
+              return `[@${li.attr('data-full-name')}~${li.attr('data-id')}]`;
+            }
+          },
+          startsWithSpace: true,
+          acceptSpaceBar: true,
+          displayTimeout: 120000
+        })
+        .atwho(atWhoSettings('#', DEFAULT_SEARCH_FILTER));
       // .atwho(atWhoSettings('task#', FilterTypeEnum.TASK))   Waiting for better times
       // .atwho(atWhoSettings('project#', FilterTypeEnum.PROJECT))
       // .atwho(atWhoSettings('experiment#', FilterTypeEnum.EXPERIMENT))
@@ -220,26 +197,23 @@ var SmartAnnotation = (function() {
   }
 
   function initialize(field) {
-    var atWho = new setAtWho(field);
+    var atWho = new SetAtWho(field);
     atWho.init();
   }
 
-  var publicApi = Object.freeze({
+  return Object.freeze({
     init: initialize,
     preventPropagation: atwhoStopPropagation,
     closePopup: closePopup
   });
-
-  return publicApi;
-
-})();
+}());
 
 
 // initialize the smart annotations
-(function initSmartAnnotation() {
+(function() {
   $(document).on('focus', '[data-atwho-edit]', function() {
-    if(_.isUndefined($(this).data('atwho'))) {
+    if (_.isUndefined($(this).data('atwho'))) {
       SmartAnnotation.init(this);
     }
   });
-})();
+}());
