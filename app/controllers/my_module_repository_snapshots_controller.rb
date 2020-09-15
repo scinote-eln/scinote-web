@@ -108,7 +108,7 @@ class MyModuleRepositorySnapshotsController < ApplicationController
       Activities::CreateActivityService.call(
         activity_type: :export_inventory_snapshot_items_assigned_to_task,
         owner: current_user,
-        subject: @repository_snapshot,
+        subject: @my_module,
         team: current_team,
         message_items: {
           my_module: @my_module.id,
