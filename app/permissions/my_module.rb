@@ -11,6 +11,7 @@ Canaid::Permissions.register_for(MyModule) do
     .each do |perm|
     can perm do |_, my_module|
       my_module.active? &&
+        !my_module.status_changing? &&
         my_module.experiment.active? &&
         my_module.experiment.project.active?
     end

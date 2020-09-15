@@ -24,38 +24,6 @@
     });
   }
 
-  // Complete mymodule
-  function complete_my_module_actions() {
-    var modal = $('#completed-task-modal');
-
-    modal.find('[data-action="complete"]')
-         .off().on().click(function(event) {
-        event.stopPropagation();
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        $.ajax({
-          url: modal.data('url'),
-          type: 'GET',
-          success: function(data) {
-            var task_button = $("[data-action='complete-task']");
-            task_button.attr('data-action', 'uncomplete-task');
-            task_button.find('.btn')
-              .removeClass('btn-toggle').addClass('btn-default');
-            $('.task-due-date').html(data.module_header_due_date);
-            $('.task-state-label').html(data.module_state_label);
-            task_button
-              .find('button')
-              .html('<span class="fas fa-times"></span>&nbsp;' +
-                    data.task_button_title);
-            modal.modal('hide');
-          },
-          error: function() {
-            modal.modal('hide');
-          }
-        });
-      });
-  }
-
   // Sets callback for completing/uncompleting step
   function applyStepCompletedCallBack() {
     // First, remove old event handlers, as we use turbolinks

@@ -321,10 +321,6 @@ class StepsController < ApplicationController
       @step.completed = completed
 
       if @step.save
-        if @protocol.in_module?
-          ready_to_complete = @protocol.my_module.check_completness_status
-        end
-
         # Create activity
         if changed
           completed_steps = @protocol.steps.where(completed: true).count
@@ -350,14 +346,7 @@ class StepsController < ApplicationController
                             t('protocols.steps.options.uncomplete_title')
                           end
         format.json do
-          if ready_to_complete && @protocol.my_module.uncompleted?
-            render json: {
-              task_ready_to_complete: true,
-              new_title: localized_title
-            }, status: :ok
-          else
-            render json: { new_title: localized_title }, status: :ok
-          end
+          render json: { new_title: localized_title }, status: :ok
         end
       else
         format.json { render json: {}, status: :unprocessable_entity }

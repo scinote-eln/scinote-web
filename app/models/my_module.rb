@@ -9,8 +9,6 @@ class MyModule < ApplicationRecord
   before_create :create_blank_protocol
   before_create :assign_default_status_flow
 
-  before_validation :set_completed, if: :my_module_status_id_changed?
-  before_validation :set_completed_on, if: :state_changed?
   before_save :exec_status_consequences, if: :my_module_status_id_changed?
 
   auto_strip_attributes :name, :description, nullify: false
@@ -27,11 +25,7 @@ class MyModule < ApplicationRecord
   validate :check_status, if: :my_module_status_id_changed?
   validate :check_status_conditions, if: :my_module_status_id_changed?
   validate :check_status_implications, unless: proc { |mm|
-    mm.my_module_status_id_changed? ||
-      mm.x_changed? ||
-      mm.y_changed? ||
-      mm.my_module_group_id_changed? ||
-      mm.workflow_order_changed?
+    (mm.changed_attributes.keys - %w(my_module_status_id x y my_module_group_id workflow_order status_changing)).blank?
   }
 
   belongs_to :created_by,
@@ -53,6 +47,7 @@ class MyModule < ApplicationRecord
   belongs_to :experiment, inverse_of: :my_modules, touch: true
   belongs_to :my_module_group, inverse_of: :my_modules, optional: true
   belongs_to :my_module_status, optional: true
+  belongs_to :changing_from_my_module_status, optional: true, class_name: 'MyModuleStatus'
   delegate :my_module_status_flow, to: :my_module_status, allow_nil: true
   has_many :results, inverse_of: :my_module, dependent: :destroy
   has_many :my_module_tags, inverse_of: :my_module, dependent: :destroy
@@ -480,18 +475,6 @@ class MyModule < ApplicationRecord
     { x: 0, y: positions.last[1] + HEIGHT }
   end
 
-  # Check if my_module is ready to become completed
-  def check_completness_status
-    if protocol && protocol.steps.count > 0
-      completed = true
-      protocol.steps.find_each do |step|
-        completed = false unless step.completed
-      end
-      return true if completed
-    end
-    false
-  end
-
   def assign_user(user, assigned_by = nil)
     user_my_modules.create(
       assigned_by: assigned_by || user,
@@ -508,22 +491,6 @@ class MyModule < ApplicationRecord
   end
 
   private
-
-  def set_completed
-    return if my_module_status.blank?
-
-    if my_module_status.final_status?
-      self.state = 'completed'
-    else
-      self.state = 'uncompleted'
-    end
-  end
-
-  def set_completed_on
-    return if completed? && completed_on.present?
-
-    self.completed_on = completed? ? DateTime.now : nil
-  end
 
   def create_blank_protocol
     protocols << Protocol.new_blank_for_module(self)
@@ -568,10 +535,17 @@ class MyModule < ApplicationRecord
   end
 
   def exec_status_consequences
-    return if my_module_status.blank?
+    return if my_module_status.blank? || status_changing
 
-    my_module_status.my_module_status_consequences.each do |consequence|
-      consequence.call(self)
+    self.changing_from_my_module_status_id = my_module_status_id_was if my_module_status_id_was.present?
+
+    if my_module_status.my_module_status_consequences.any?(&:runs_in_background?)
+      self.status_changing = true
+      MyModuleStatusConsequencesJob.perform_later(self, my_module_status.my_module_status_consequences.to_a)
+    else
+      my_module_status.my_module_status_consequences.each do |consequence|
+        consequence.call(self)
+      end
     end
   end
 end
