@@ -153,7 +153,7 @@ var SmartAnnotation = (function() {
 
     function init() {
       $(field)
-      .on("shown.atwho", function(event, flag, query) {
+      .on("shown.atwho", function() {
         var $currentAtWho = $('.atwho-view[style]:not(.old)');
         $currentAtWho.addClass('old');
         $(field).data('smart-annotation', $currentAtWho.attr('id'));
