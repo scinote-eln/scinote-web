@@ -12,10 +12,23 @@ module SearchableByNameModel
         .limit(Constants::SEARCH_LIMIT)
     end
 
+    def self.search_by_name_all(user, teams = [], query = nil)
+      return if user.blank? || teams.blank?
+
+      sql_q = viewable_by_user(user, teams)
+      # Remove non-breaking space, &nbsp
+      query_array = query.gsub(/[[:space:]]+/, ' ').split(' ')
+      if query_array.any?
+        sql_q = sql_q.where("LOWER(#{table_name}.name) like all (array[?])", query_array.map { |c| "%#{c.downcase}%" })
+      end
+      sql_q.limit(Constants::SEARCH_LIMIT)
+    end
+
     def self.filter_by_teams(teams = [])
       return self if teams.empty?
+
       if column_names.include? 'team_id'
-        return where(team_id: teams)
+        where(team_id: teams)
       else
         valid_subjects = Extends::ACTIVITY_SUBJECT_CHILDREN
         parent_array = [to_s.underscore]
@@ -38,7 +51,7 @@ module SearchableByNameModel
           query = child.to_s.camelize.constantize.where("#{last_parent}_id" => query)
           last_parent = child
         end
-        return where("#{last_parent}_id" => query)
+        where("#{last_parent}_id" => query)
       end
     end
   end
