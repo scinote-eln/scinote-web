@@ -85,7 +85,7 @@ var SmartAnnotation = (function() {
         at: at,
         callbacks: {
           remoteFilter: function(query, callback) {
-            var $currentAtWho = $('.atwho-view[style]');
+            var $currentAtWho = $('#' + $(field).data('smart-annotation'));
             var filterType;
             var params = { query: query };
             filterType = FilterTypeEnum[$currentAtWho.find('.tab-pane.active').data('object-type')]
@@ -153,8 +153,10 @@ var SmartAnnotation = (function() {
 
     function init() {
       $(field)
-      .on("shown.atwho", function() {
-        var $currentAtWho = $('.atwho-view[style]');
+      .on("shown.atwho", function(event, flag, query) {
+        var $currentAtWho = $('.atwho-view[style]:not(.old)');
+        $currentAtWho.addClass('old');
+        $(field).data('smart-annotation', $currentAtWho.attr('id'));
         $currentAtWho.find('.tab-button').off().on('shown.bs.tab',  function() {
           $(field).click().focus();
           $(this).closest('.nav-tabs').find('.tab-button').removeClass('active');
