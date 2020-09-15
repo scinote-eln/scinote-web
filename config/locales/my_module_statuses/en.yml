@@ -6,6 +6,7 @@ en:
       move_label: 'Move to'
       return_label: 'Return to'
       view_flow_label: 'View task flow'
+      no_permission_label: 'You don’t have permission to change the status of this task.'
     update_status:
       error:
         no_permission: 'You dont have permission to change the status'
