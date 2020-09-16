@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MyModule < ApplicationRecord
   include ArchivableModel
   include SearchableModel
@@ -9,7 +11,7 @@ class MyModule < ApplicationRecord
   before_create :create_blank_protocol
   before_create :assign_default_status_flow
 
-  before_save :exec_status_consequences, if: :my_module_status_id_changed?
+  around_save :exec_status_consequences, if: :my_module_status_id_changed?
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
@@ -538,14 +540,17 @@ class MyModule < ApplicationRecord
     return if my_module_status.blank? || status_changing
 
     self.changing_from_my_module_status_id = my_module_status_id_was if my_module_status_id_was.present?
+    self.status_changing = true
+
+    yield
 
     if my_module_status.my_module_status_consequences.any?(&:runs_in_background?)
-      self.status_changing = true
       MyModuleStatusConsequencesJob.perform_later(self, my_module_status.my_module_status_consequences.to_a)
     else
       my_module_status.my_module_status_consequences.each do |consequence|
         consequence.call(self)
       end
+      update!(status_changing: false)
     end
   end
 end
