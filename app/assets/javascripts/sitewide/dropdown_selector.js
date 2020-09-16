@@ -91,6 +91,9 @@ var dropdownSelector = (function() {
 
   // Get data in JSON from field
   function getCurrentData(container) {
+    if (!container.find('.data-field').val()) {
+      return '';
+    }
     return JSON.parse(container.find('.data-field').val());
   }
 

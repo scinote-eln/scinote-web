@@ -26,9 +26,16 @@ var DasboardCurrentTasksWidget = (function() {
   }
 
   function getDefaultStatusValues() {
-    return $.map($(statusFilter).find("option[data-final-status='false']"), function(option) {
-      return option.value;
+    // Select uncompleted status values
+    var values = [];
+    $(statusFilter).find('option').each(function(_, option) {
+      if ($(option).data('completionConsequence')) {
+        return false;
+      }
+      values.push(option.value);
+      return this;
     });
+    return values;
   }
 
   function initInfiniteScroll() {
@@ -60,6 +67,8 @@ var DasboardCurrentTasksWidget = (function() {
     var filterState = {
       sort: dropdownSelector.getValues(sortFilter),
       statuses: dropdownSelector.getValues(statusFilter),
+      project_id: dropdownSelector.getData(projectFilter),
+      experiment_id: dropdownSelector.getData(experimentFilter),
       mode: $('.current-tasks-navbar .active').data('mode')
     };
 
@@ -76,18 +85,26 @@ var DasboardCurrentTasksWidget = (function() {
       return option.value;
     });
 
-    if (filterState !== null) {
-      parsedFilterState = JSON.parse(filterState);
-      dropdownSelector.selectValues(sortFilter, parsedFilterState.sort);
-      // Check if saved statuses are valid
-      if (parsedFilterState.statuses.every(savedStatus => allStatusValues.includes(savedStatus))) {
-        dropdownSelector.selectValues(statusFilter, parsedFilterState.statuses);
-      } else {
+    if (filterState) {
+      try {
+        parsedFilterState = JSON.parse(filterState);
+        dropdownSelector.selectValues(sortFilter, parsedFilterState.sort);
+        // Check if saved statuses are valid
+        if (parsedFilterState.statuses.every(status => allStatusValues.includes(status))) {
+          dropdownSelector.selectValues(statusFilter, parsedFilterState.statuses);
+        } else {
+          dropdownSelector.selectValues(statusFilter, getDefaultStatusValues());
+        }
+        dropdownSelector.setData(projectFilter, parsedFilterState.project_id);
+        dropdownSelector.setData(experimentFilter, parsedFilterState.experiment_id);
+        // Select saved navbar state
+        $('.current-tasks-navbar .navbar-link').removeClass('active');
+        $('.current-tasks-navbar').find(`[data-mode='${parsedFilterState.mode}']`).addClass('active');
+      } catch (e) {
         dropdownSelector.selectValues(statusFilter, getDefaultStatusValues());
       }
-      // Select saved navbar state
-      $('.current-tasks-navbar .navbar-link').removeClass('active');
-      $('.current-tasks-navbar').find(`[data-mode='${parsedFilterState.mode}']`).addClass('active');
+    } else {
+      dropdownSelector.selectValues(statusFilter, getDefaultStatusValues());
     }
   }
 

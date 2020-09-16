@@ -30,8 +30,7 @@
               <% MyModuleStatusFlow.find_each do |status_flow| %>
                 <% status_flow.my_module_statuses.each do |status| %>
                   <option value="<%= status.id %>"
-                          data-final-status="<%= status.final_status? %>"
-                          <%= 'data-selected=true' unless status.final_status? %>>
+                          data-completion-consequence="<%= status.my_module_status_consequences.where(type: "MyModuleStatusConsequences::Completion").any? %>">
                     <%= status.name %>
                   </option>
                 <% end %>
