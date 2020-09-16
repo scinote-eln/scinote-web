@@ -6,6 +6,7 @@ AllCops:
   Exclude:
     - "vendor/**/*"
     - "db/schema.rb"
+  NewCops: enable
   UseCache: false
   TargetRubyVersion: 2.6
 
