@@ -696,7 +696,7 @@ Rails.application.routes.draw do
                           as: :cells
               end
             end
-            resources :projects, only: %i(index show) do
+            resources :projects, only: %i(index show create update) do
               resources :user_projects, only: %i(index show),
                 path: 'users', as: :users
               resources :project_comments, only: %i(index show),
