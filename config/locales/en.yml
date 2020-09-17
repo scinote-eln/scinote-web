@@ -108,8 +108,16 @@ en:
               same_team: "Inventory can't be shared to the same team as it belongs to"
         my_module:
           attributes:
+            my_module_status_id:
+              not_correct_order: "Status can be changed only on next or previous status."
             position:
-             not_unique: "X and Y position has already been taken by another task in the experiment."
+              not_unique: "X and Y position has already been taken by another task in the experiment."
+        my_module_status:
+          attributes:
+            next_status:
+              different_flow: "Should belong to the same flow"
+            previous_status:
+              different_flow: "Should belong to the same flow"
         asset:
           attributes:
             file:
@@ -527,6 +535,7 @@ en:
         module:
           user_time: "Task created on %{timestamp}."
           started_on: "Start date: %{started_on}"
+          status: "Status:"
           no_start_date: "No start date"
           due_date: "Due date: %{due_date}"
           no_due_date: "No due date"
@@ -658,12 +667,6 @@ en:
         import: "Import protocol"
         export: "Export protocol"
         save_to_repo: "Save to repository"
-    buttons:
-      complete: "Complete task"
-      uncomplete: "Uncomplete task"
-    complete_modal:
-      description: 'You have completed all steps in the task. Would you like to mark entire task as completed?'
-      leave_uncompleted: 'Leave task in progress'
     description:
       title: "Edit task %{module} description"
       label: "Description"
@@ -838,6 +841,10 @@ en:
         assign_and_unassign_from_task_and_downstream_html: "Successfully assigned <strong>%{assigned_items}</strong> and unassigned <strong>%{unassigned_items}</strong> item(s) from the task and downstream tasks."
         update_error: "There was an error in updating your item(s)."
     modals:
+      status_flow_modal:
+        title: "Task status flow"
+        current_status: "Current status"
+        done: "Done"
       update_repository_record:
         title: "Update %{repository_name} items to %{my_module_name} task"
         message: "Do you want to update %{size} items only from this task, or update them from this task & downstream tasks in the workflow also?"
@@ -982,6 +989,7 @@ en:
       full_zoom:
         due_date: "Due date"
         no_due_date: "not set"
+        status_transitioning_label: "Transitioning to:"
         modal_manage_users:
           modal_title: "Manage users for"
           no_users: "No users"
@@ -2129,14 +2137,12 @@ en:
         name_placeholder: "mRNA sequencing"
         description: "Description"
         description_placeholder: "Write what should be done here ..."
-        checklist_panel_title: "Checklist"
         checklist_name: "Checklist name"
         checklist_name_placeholder: "Checklist name"
         checklist_items: "Items"
         checklist_item_placeholder: "Task"
         checklist_add_item: "Add item"
         add_checklist: "Add checklist"
-        table_panel_title: "Table"
         table_name: "Table title"
         table_name_placeholder: "Table title"
         add_table: "Add table"
@@ -2238,8 +2244,6 @@ en:
     assign_user_to_team: "<i>%{assigned_user}</i> was added as %{role} to team <strong>%{team}</strong> by <i>%{assigned_by_user}</i>."
     unassign_user_from_team: "<i>%{unassigned_user}</i> was removed from team <strong>%{team}</strong> by <i>%{unassigned_by_user}</i>."
     task_completed: "%{user} completed task %{module}. %{date} | Project: %{project} | Experiment: %{experiment}"
-    start_work_on_next_task: "<i>%{user}</i> has completed the task <strong>%{module}</strong>. You can now start working on the next task in the workflow."
-    start_work_on_next_task_message: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
 
   assets:
     head_title:
@@ -2276,14 +2280,14 @@ en:
         not_found: 'Element not found.'
   atwho:
     no_results: "No results found"
+    projects: PROJECTS
+    experiments: EXPERIMENTS
+    tasks: TASKS
+    inventories: INVENTORIES
+    more_results: To get other results, please type more
     users:
       title: "People"
-      navigate_1: "up/down"
-      navigate_2: "to navigate"
-      confirm_1: "enter/tab"
-      confirm_2: "to confirm"
-      dismiss_1: "esc"
-      dismiss_2: "to dismiss"
+      help: "Navigate: ↑ ↓    •    Submit: Enter / Tab    •    Dismiss: Esc"
       popover_html: "<span class='silver'>Team:</span>&nbsp;%{team} <br> <span class='silver'>Role:</span>&nbsp;%{role} <br> <span class='silver'>Joined:</span>&nbsp;%{time}"
     res:
       archived: "(archived)"
@@ -2376,6 +2380,7 @@ en:
     busy: "The server is still processing your request. If you leave this page, the changes will be lost! Are you sure you want to continue?"
     no_name: "(no name)"
     error: "An error has occurred, please try again later."
+    no_permissions: "You don't have permission"
     filter: "Filter:"
     no_teams:
       title: "Your dashboard is empty!"

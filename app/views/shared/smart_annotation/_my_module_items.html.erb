@@ -1,0 +1,27 @@
+<% limit_reached = my_modules.length == Constants::ATWHO_SEARCH_LIMIT + 1 %>
+<div class="atwho-scroll-container">
+  <% grouped_by_prj_exp(my_modules.limit(Constants::ATWHO_SEARCH_LIMIT)).each do |task_group| %>
+  <div class="item-group">
+    <div class="atwho-breadcrumbs">
+      <span class="atwho-breadcrumb" title="<%= task_group[:project_name] %>"><%= task_group[:project_name] %></span>
+      <span class="slash">/</span>
+      <span class="atwho-breadcrumb" title="<%= task_group[:experiment_name] %>"><%= task_group[:experiment_name] %></span>
+    </div>
+    <div class="items">
+      <% task_group[:tasks].each do |task| %>
+        <li class="item" data-name="<%= task.name %>" data-id="<%= task.id.base62_encode %>" data-type="tsk">
+          <span class='sa-type'>Tsk</span>
+          <span class="item-text"><%= task.name %></span>
+        </li>
+      <% end %>
+    </div>
+  </div>
+  <% end %>
+  <% if limit_reached %>
+    <div class="more-results"><%= t('atwho.more_results') %></div>
+  <% end %>
+  <% if my_modules.empty? %>
+    <%= render partial: 'shared/smart_annotation/no_results.html.erb' %>
+  <% end %>
+</div>
+<%= render partial: 'shared/smart_annotation/footer.html.erb' %>

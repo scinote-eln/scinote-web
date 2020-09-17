@@ -123,39 +123,74 @@ describe MyModulesController, type: :controller do
     end
   end
 
-  describe 'POST toggle_task_state' do
-    let(:action) { post :toggle_task_state, params: params, format: :json }
-    let(:params) { { id: my_module.id } }
+  describe 'PUT update_state' do
+    let(:action) { put :update_state, params: params, format: :json }
+    let(:my_module_id) { my_module.id }
+    let(:status_id) { 'some-state-id' }
+    let(:params) do
+      {
+        id: my_module_id,
+        my_module: { status_id: status_id }
+      }
+    end
 
-    context 'when completing task' do
-      let(:my_module) do
-        create :my_module, state: 'uncompleted', experiment: experiment
+    before(:all) do
+      MyModuleStatusFlow.ensure_default
+    end
+
+    context 'when states updated' do
+      let(:status_id) { my_module.my_module_status.next_status.id }
+
+      it 'changes status' do
+        action
+
+        expect(my_module.reload.my_module_status.id).to be_eql(status_id)
       end
 
-      it 'calls create activity for completing task' do
-        expect(Activities::CreateActivityService)
-          .to(receive(:call)
-                .with(hash_including(activity_type: :complete_task)))
-        action
+      it 'creates activity' do
+        expect { action }.to(change { Activity.all.count }.by(1))
       end
     end
 
-    context 'when uncompleting task' do
-      let(:my_module) do
-        create :my_module, state: 'completed', experiment: experiment
-      end
+    context 'when status not exist' do
+      let(:status_id) { -1 }
 
-      it 'calls create activity for uncompleting task' do
-        expect(Activities::CreateActivityService)
-          .to(receive(:call)
-                .with(hash_including(activity_type: :uncomplete_task)))
+      it 'renders 422' do
+        my_module.my_module_status_flow
         action
+
+        expect(response).to have_http_status 422
       end
     end
 
-    it 'adds activity in DB' do
-      expect { action }
-        .to(change { Activity.count })
+    context 'when status not correct' do
+      let(:status_id) { my_module.my_module_status.next_status.next_status.id }
+
+      it 'renders 422' do
+        action
+
+        expect(response).to have_http_status 422
+      end
+    end
+
+    context 'when user does not have permissions' do
+      it 'renders 403' do
+        # Remove user from project
+        UserProject.where(user: user, project: project).destroy_all
+        action
+
+        expect(response).to have_http_status 403
+      end
+    end
+
+    context 'when my_module not found' do
+      let(:my_module_id) { -1 }
+
+      it 'renders 404' do
+        action
+
+        expect(response).to have_http_status 404
+      end
     end
   end
 end

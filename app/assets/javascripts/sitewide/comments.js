@@ -1,4 +1,4 @@
-/* global inlineEditing PerfectScrollbar */
+/* global inlineEditing PerfectScrollbar HelperModule I18n */
 /* eslint-disable no-restricted-globals, no-alert */
 var Comments = (function() {
   function changeCounter(comment, value) {
@@ -49,7 +49,11 @@ var Comments = (function() {
             $this.closest('.comment-container').remove();
           },
           error: (error) => {
-            alert(error.responseJSON.errors.message);
+            if (error.status === 403) {
+              HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+            } else {
+              alert(error.responseJSON.errors.message);
+            }
           }
         });
       }
@@ -85,6 +89,9 @@ var Comments = (function() {
           $el.find('textarea').focus().blur();
         })
           .error((error) => {
+            if (error.status === 403) {
+              HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+            }
             errorField.html(error.responseJSON.errors.message);
             newButton.disable = false;
           });

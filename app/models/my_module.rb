@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MyModule < ApplicationRecord
   include ArchivableModel
   include SearchableModel
@@ -7,7 +9,9 @@ class MyModule < ApplicationRecord
   enum state: Extends::TASKS_STATES
 
   before_create :create_blank_protocol
-  before_validation :set_completed_on, if: :state_changed?
+  before_create :assign_default_status_flow
+
+  around_save :exec_status_consequences, if: :my_module_status_id_changed?
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
@@ -19,6 +23,12 @@ class MyModule < ApplicationRecord
   validates :my_module_group, presence: true, if: proc { |mm| !mm.my_module_group_id.nil? }
   validate :coordinates_uniqueness_check, if: :active?
   validates :completed_on, presence: true, if: proc { |mm| mm.completed? }
+
+  validate :check_status, if: :my_module_status_id_changed?
+  validate :check_status_conditions, if: :my_module_status_id_changed?
+  validate :check_status_implications, unless: proc { |mm|
+    (mm.changed_attributes.keys - %w(my_module_status_id x y my_module_group_id workflow_order status_changing)).blank?
+  }
 
   belongs_to :created_by,
              foreign_key: 'created_by_id',
@@ -38,6 +48,9 @@ class MyModule < ApplicationRecord
              optional: true
   belongs_to :experiment, inverse_of: :my_modules, touch: true
   belongs_to :my_module_group, inverse_of: :my_modules, optional: true
+  belongs_to :my_module_status, optional: true
+  belongs_to :changing_from_my_module_status, optional: true, class_name: 'MyModuleStatus'
+  delegate :my_module_status_flow, to: :my_module_status, allow_nil: true
   has_many :results, inverse_of: :my_module, dependent: :destroy
   has_many :my_module_tags, inverse_of: :my_module, dependent: :destroy
   has_many :tags, through: :my_module_tags
@@ -76,16 +89,6 @@ class MyModule < ApplicationRecord
   end)
   scope :workflow_ordered, -> { order(workflow_order: :asc) }
   scope :uncomplete, -> { where(state: 'uncompleted') }
-  scope :with_step_statistics, (lambda do
-    left_outer_joins(protocols: :steps)
-    .group(:id)
-    .select('my_modules.*')
-    .select('COUNT(steps.id) AS steps_total')
-    .select('COUNT(steps.id) FILTER (where steps.completed = true) AS steps_completed')
-    .select('CASE COUNT(steps.id) WHEN 0 THEN 0 ELSE'\
-            '((COUNT(steps.id) FILTER (where steps.completed = true)) * 100 / COUNT(steps.id)) '\
-            'END AS steps_completed_percentage')
-  end)
 
   # A module takes this much space in canvas (x, y) in database
   WIDTH = 30
@@ -375,40 +378,6 @@ class MyModule < ApplicationRecord
     final
   end
 
-
-  # Generate the samples belonging to this module
-  # in JSON form, suitable for display in handsontable.js
-  def samples_json_hot(order)
-    data = []
-    samples.order(created_at: order).each do |sample|
-      sample_json = []
-      sample_json << sample.name
-      if sample.sample_type.present?
-        sample_json << sample.sample_type.name
-      else
-        sample_json << I18n.t("samples.table.no_type")
-      end
-      if sample.sample_group.present?
-        sample_json << sample.sample_group.name
-      else
-        sample_json << I18n.t("samples.table.no_group")
-      end
-      sample_json << I18n.l(sample.created_at, format: :full)
-      sample_json << sample.user.full_name
-      data << sample_json
-    end
-
-    # Prepare column headers
-    headers = [
-      I18n.t("samples.table.sample_name"),
-      I18n.t("samples.table.sample_type"),
-      I18n.t("samples.table.sample_group"),
-      I18n.t("samples.table.added_on"),
-      I18n.t("samples.table.added_by")
-    ]
-    { data: data, headers: headers }
-  end
-
   # Generate the repository rows belonging to this module
   # in JSON form, suitable for display in handsontable.js
   def repository_json_hot(repository, order)
@@ -508,18 +477,6 @@ class MyModule < ApplicationRecord
     { x: 0, y: positions.last[1] + HEIGHT }
   end
 
-  # Check if my_module is ready to become completed
-  def check_completness_status
-    if protocol && protocol.steps.count > 0
-      completed = true
-      protocol.steps.find_each do |step|
-        completed = false unless step.completed
-      end
-      return true if completed
-    end
-    false
-  end
-
   def assign_user(user, assigned_by = nil)
     user_my_modules.create(
       assigned_by: assigned_by || user,
@@ -537,12 +494,6 @@ class MyModule < ApplicationRecord
 
   private
 
-  def set_completed_on
-    return if completed? && completed_on.present?
-
-    self.completed_on = completed? ? DateTime.now : nil
-  end
-
   def create_blank_protocol
     protocols << Protocol.new_blank_for_module(self)
   end
@@ -550,6 +501,56 @@ class MyModule < ApplicationRecord
   def coordinates_uniqueness_check
     if experiment && experiment.my_modules.active.where(x: x, y: y).where.not(id: id).any?
       errors.add(:position, I18n.t('activerecord.errors.models.my_module.attributes.position.not_unique'))
+    end
+  end
+
+  def assign_default_status_flow
+    return if my_module_status.present? || MyModuleStatusFlow.global.blank?
+
+    self.my_module_status = MyModuleStatusFlow.global.first.initial_status
+  end
+
+  def check_status_conditions
+    return if my_module_status.blank?
+
+    my_module_status.my_module_status_conditions.each do |condition|
+      condition.call(self)
+    end
+  end
+
+  def check_status_implications
+    return if my_module_status.blank?
+
+    my_module_status.my_module_status_implications.each do |implication|
+      implication.call(self)
+    end
+  end
+
+  def check_status
+    return unless my_module_status_id_was
+
+    original_status = MyModuleStatus.find_by(id: my_module_status_id_was)
+    unless my_module_status && [original_status.next_status, original_status.previous_status].include?(my_module_status)
+      errors.add(:my_module_status_id,
+                 I18n.t('activerecord.errors.models.my_module.attributes.my_module_status_id.not_correct_order'))
+    end
+  end
+
+  def exec_status_consequences
+    return if my_module_status.blank? || status_changing
+
+    self.changing_from_my_module_status_id = my_module_status_id_was if my_module_status_id_was.present?
+    self.status_changing = true
+
+    yield
+
+    if my_module_status.my_module_status_consequences.any?(&:runs_in_background?)
+      MyModuleStatusConsequencesJob.perform_later(self, my_module_status.my_module_status_consequences.to_a)
+    else
+      my_module_status.my_module_status_consequences.each do |consequence|
+        consequence.call(self)
+      end
+      update!(status_changing: false)
     end
   end
 end

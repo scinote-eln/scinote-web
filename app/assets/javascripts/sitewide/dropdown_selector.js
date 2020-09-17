@@ -91,6 +91,9 @@ var dropdownSelector = (function() {
 
   // Get data in JSON from field
   function getCurrentData(container) {
+    if (!container.find('.data-field').val()) {
+      return '';
+    }
     return JSON.parse(container.find('.data-field').val());
   }
 
@@ -179,8 +182,19 @@ var dropdownSelector = (function() {
   }
 
   // Add selected option to value
-  function addSelectedOption(selector, container) {
-    setData(selector, [convertOptionToJson($(selector).find('option:selected')[0])], true);
+  function addSelectedOptions(selector, container) {
+    var selectedOptions = [];
+    var optionSelector = selector.data('config').noEmptyOption ? 'option:selected' : 'option[data-selected=true]';
+    $.each($(selector).find(optionSelector), function(i, option) {
+      selectedOptions.push(convertOptionToJson(option));
+      if (selector.data('config').singleSelect) return false;
+      return true;
+    });
+
+    if (!selectedOptions.length) return false;
+
+    setData(selector, selectedOptions, true);
+    return true;
   }
 
   // Prepare custom dropdown icon
@@ -422,8 +436,8 @@ var dropdownSelector = (function() {
     }
 
     // Select default value
-    if (config.noEmptyOption && config.singleSelect) {
-      addSelectedOption(selectElement, dropdownContainer);
+    if (!selectElement.data('ajax-url')) {
+      addSelectedOptions(selectElement, dropdownContainer);
     }
 
     // Enable simple mode for dropdown selector
@@ -849,17 +863,20 @@ var dropdownSelector = (function() {
       return this;
     },
 
-    // Select value
-    selectValue: function(selector, value) {
-      var $selector;
+    // Select values
+    selectValues: function(selector, values) {
+      var $selector = $(selector);
       var option;
+      var valuesArray = [].concat(values);
+      var options = [];
 
-      if ($(selector).length === 0) return false;
+      if ($selector.length === 0) return false;
 
-      $selector = $(selector);
-      option = $selector.find(`option[value="${value}"]`)[0];
-      setData($selector, [convertOptionToJson(option)]);
-
+      valuesArray.forEach(function(value) {
+        option = $selector.find(`option[value="${value}"]`)[0];
+        options.push(convertOptionToJson(option));
+      });
+      setData($selector, options);
       return this;
     },
 

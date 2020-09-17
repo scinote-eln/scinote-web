@@ -201,6 +201,10 @@ module Api
         @checklist_item = @checklist.checklist_items.find(params.require(key))
         raise PermissionError.new(Protocol, :read) unless can_read_protocol_in_module?(@step.protocol)
       end
+
+      def load_workflow(key = :workflow_id)
+        @workflow = MyModuleStatusFlow.find(params.require(key))
+      end
     end
   end
 end
