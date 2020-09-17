@@ -91,6 +91,9 @@ var dropdownSelector = (function() {
 
   // Get data in JSON from field
   function getCurrentData(container) {
+    if (!container.find('.data-field').val()) {
+      return '';
+    }
     return JSON.parse(container.find('.data-field').val());
   }
 
@@ -860,17 +863,20 @@ var dropdownSelector = (function() {
       return this;
     },
 
-    // Select value
-    selectValue: function(selector, value) {
-      var $selector;
+    // Select values
+    selectValues: function(selector, values) {
+      var $selector = $(selector);
       var option;
+      var valuesArray = [].concat(values);
+      var options = [];
 
-      if ($(selector).length === 0) return false;
+      if ($selector.length === 0) return false;
 
-      $selector = $(selector);
-      option = $selector.find(`option[value="${value}"]`)[0];
-      setData($selector, [convertOptionToJson(option)]);
-
+      valuesArray.forEach(function(value) {
+        option = $selector.find(`option[value="${value}"]`)[0];
+        options.push(convertOptionToJson(option));
+      });
+      setData($selector, options);
       return this;
     },
 
