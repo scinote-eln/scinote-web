@@ -19,28 +19,6 @@ Rails.application.routes.draw do
 
     root 'dashboards#show'
 
-    # # Client APP endpoints
-    # get '/settings', to: 'client_api/settings#index'
-    # get '/settings/*all', to: 'client_api/settings#index'
-    #
-    # namespace :client_api, defaults: { format: 'json' } do
-    #   post '/premissions', to: 'permissions#status'
-    #   %i(activities teams notifications users configurations).each do |path|
-    #     draw path
-    #   end
-    # end
-
-    # Save sample table state
-    # post '/state_save/:team_id/:user_id',
-    #      to: 'user_samples#save_samples_table_status',
-    #      as: 'save_samples_table_status',
-    #      defaults: { format: 'json' }
-    #
-    # post '/state_load/:team_id/:user_id',
-    #      to: 'user_samples#load_samples_table_status',
-    #      as: 'load_samples_table_status',
-    #      defaults: { format: 'json' }
-
     resources :activities, only: [:index]
 
     get 'forbidden', to: 'application#forbidden', as: 'forbidden'
@@ -188,18 +166,7 @@ Rails.application.routes.draw do
           end
         end
       end
-      # resources :samples, only: [:new, :create]
-      # resources :sample_types, except: [:show, :new] do
-      #   get 'sample_type_element', to: 'sample_types#sample_type_element'
-      #   get 'destroy_confirmation', to: 'sample_types#destroy_confirmation'
-      # end
-      # resources :sample_groups, except: [:show, :new] do
-      #   get 'sample_group_element', to: 'sample_groups#sample_group_element'
-      #   get 'destroy_confirmation', to: 'sample_groups#destroy_confirmation'
-      # end
-      # resources :custom_fields, only: [:create, :edit, :update, :destroy] do
-      #   get 'destroy_html'
-      # end
+
       member do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'export_repository', to: 'repositories#export_repository'
@@ -375,6 +342,9 @@ Rails.application.routes.draw do
           get :index_old
         end
       end
+
+      resource :status_flow, controller: :my_module_status_flow, only: :show
+
       resources :my_module_comments,
                 path: '/comments',
                 only: [:index, :create, :edit, :update, :destroy]
@@ -422,17 +392,17 @@ Rails.application.routes.draw do
         post 'activities'
         get 'activities_tab' # Activities in tab view for single module
         get 'due_date'
+        get 'status_state'
         patch 'description',
               to: 'my_modules#update_description',
               as: 'update_description'
         patch 'protocol_description',
               to: 'my_modules#update_protocol_description',
               as: 'update_protocol_description'
+        patch 'state', to: 'my_modules#update_state', as: 'update_state'
         get 'protocols' # Protocols view for single module
         get 'results' # Results view for single module
         get 'archive' # Archive view for single module
-        get 'complete_my_module'
-        post 'toggle_task_state'
       end
 
       # Those routes are defined outside of member block
@@ -737,6 +707,10 @@ Rails.application.routes.draw do
                       only: %i(index create show update destroy),
                       path: 'identities',
                       as: :identities
+          end
+
+          resources :workflows, only: %i(index show) do
+            resources :workflow_statuses, path: :statuses, only: %i(index)
           end
         end
       end

@@ -211,7 +211,7 @@ describe ProtocolsController, type: :controller do
     let(:protocol_source) do
       create :protocol, :in_public_repository, team: team, added_by: user
     end
-    let(:protocol) { create :protocol, team: team, added_by: user }
+    let(:protocol) { create :protocol, team: team, added_by: user, my_module: my_module }
     let(:action) { put :load_from_repository, params: params, format: :json }
     let(:params) do
       { source_id: protocol_source.id, id: protocol.id }

@@ -4,7 +4,7 @@
     <div class="actions-container">
       <div class="filter-container dropdown">
         <div class="btn btn-light icon-btn filter-button" data-toggle="dropdown"><i class="fas fa-filter"></i></div>
-        <div class="dropdown-menu curent-tasks-filters" role="menu">
+        <div class="dropdown-menu current-tasks-filters" role="menu" data-team-id="<%= current_team.id %>">
           <div class="header">
             <div class="title"><%= t("dashboard.current_tasks.filter.title") %></div>
             <div class="btn btn-light clear-button"><i class="fas fa-times-circle"></i><%= t("dashboard.current_tasks.filter.clear") %></div>
@@ -20,9 +20,21 @@
           </div>
           <div class="select-block">
             <label><%= t("dashboard.current_tasks.filter.display") %></label>
-            <select class="view-filter">
-              <option value="uncompleted" ><%= t("dashboard.current_tasks.filter.uncompleted_tasks") %></option>
-              <option value="completed" ><%= t("dashboard.current_tasks.filter.completed_tasks") %></option>
+            <select class="view-filter"
+                    data-combine-tags="true"
+                    data-placeholder="<%= t("dashboard.current_tasks.filter.statuses.placeholder") %>"
+                    data-select-multiple-all-selected="<%= t("dashboard.current_tasks.filter.statuses.all_selected") %>"
+                    data-select-multiple-name="<%= t("dashboard.current_tasks.filter.statuses.selected") %>"
+                    multiple
+            >
+              <% MyModuleStatusFlow.find_each do |status_flow| %>
+                <% status_flow.my_module_statuses.each do |status| %>
+                  <option value="<%= status.id %>"
+                          data-completion-consequence="<%= status.my_module_status_consequences.where(type: "MyModuleStatusConsequences::Completion").any? %>">
+                    <%= status.name %>
+                  </option>
+                <% end %>
+              <% end %>
             </select>
           </div>
           <div class="select-block">
@@ -59,8 +71,10 @@
   </div>
 
   <div class="widget-body">
-    <div class="current-tasks-list perfect-scrollbar"
-         data-tasks-list-url="<%= dashboard_current_tasks_path %>">
+    <div class="current-tasks-list-wrapper perfect-scrollbar">
+      <div class="current-tasks-list "
+           data-tasks-list-url="<%= dashboard_current_tasks_path %>">
+      </div>
     </div>
   </div>
 </div>

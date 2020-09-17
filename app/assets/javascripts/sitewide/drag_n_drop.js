@@ -434,7 +434,6 @@
             $.each($('[data-container="new-reports"]').find('.result'), function() {
               initFormSubmitLinks($(this));
               ResultAssets.applyEditResultAssetCallback();
-              Results.applyCollapseLinkCallBack();
               Results.toggleResultEditButtons(true);
               FilePreviewModal.init();
               Comments.init();

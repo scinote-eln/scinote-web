@@ -154,7 +154,7 @@ module ReportsHelper
       style = 'default'
       text = t('protocols.steps.uncompleted')
     end
-    "<span class=\"label label-#{style}\">#{text}</span>".html_safe
+    "<span class=\"label step-label-#{style}\">[#{text}]</span>".html_safe
   end
 
   # Fixes issues with avatar images in reports

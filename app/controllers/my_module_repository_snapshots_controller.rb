@@ -31,7 +31,8 @@ class MyModuleRepositorySnapshotsController < ApplicationController
   end
 
   def create
-    repository_snapshot = @repository.provision_snapshot(@my_module, current_user)
+    repository_snapshot = RepositorySnapshot.create_preliminary(@repository, @my_module, current_user)
+    RepositorySnapshotProvisioningJob.perform_later(repository_snapshot)
 
     render json: {
       html: render_to_string(partial: 'my_modules/repositories/full_view_version',

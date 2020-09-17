@@ -29,14 +29,23 @@
   </div>
 
   <div class="panel-body">
-    <% if !my_module.completed? && can_manage_module?(my_module) %>
-      <%= link_to due_date_my_module_path(my_module, format: :json), remote: true,
-                  class: "due-date-link due-date-refresh" do %>
+    <div>
+      <% if !my_module.completed? && can_manage_module?(my_module) %>
+        <%= link_to due_date_my_module_path(my_module, format: :json), remote: true,
+                    class: "due-date-link due-date-refresh" do %>
+          <%= render partial: "my_modules/card_due_date_label.html.erb", locals: { my_module: my_module, format: :full_date } %>
+        <% end %>
+      <% else %>
         <%= render partial: "my_modules/card_due_date_label.html.erb", locals: { my_module: my_module, format: :full_date } %>
       <% end %>
-    <% else %>
-      <%= render partial: "my_modules/card_due_date_label.html.erb", locals: { my_module: my_module, format: :full_date } %>
-    <% end %>
+    </div>
+    <div class="status-label" style="--state-color: <%= my_module.my_module_status.color %>">
+      <% if my_module.status_changing %>
+        <i class="fas fa-spinner fa-spin"></i>
+        <span><%= t('experiments.canvas.full_zoom.status_transitioning_label') %></span>
+      <% end %>
+      <%= my_module.my_module_status.name %>
+    </div>
   </div>
 
   <div class="panel-footer panel-footer-scinote buttons-container">

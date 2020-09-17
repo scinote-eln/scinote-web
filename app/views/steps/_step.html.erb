@@ -8,7 +8,7 @@
            href="#step-panel-<%= step.id || step.position %>"
            data-toggle="collapse"
            data-remote="true">
-          <span class="fas fa-caret-square-down collapse-step-icon"></span>
+          <span class="fas fa-caret-right"></span>
         </a>
 
         <span class="step-number"><%= step.position + 1 %>.</span>
@@ -27,26 +27,22 @@
         </a>
       </div>
       <div class="panel-options pull-right">
-        <% if can_complete_or_checkbox_step?(@protocol) && !(preview) %>
-          <% if step.completed? %>
-            <div data-action="uncomplete-step"
-                 class="complete-step-btn"
-                 data-link-url="<%= toggle_step_state_step_path(step)%>">
-              <button class="btn btn-secondary btn-block">
-                <span class="fas fa-times"></span>
-                <%= t("protocols.steps.options.uncomplete_title") %>
-              </button>
-            </div>
-          <% else %>
-            <div data-action="complete-step"
-                 class="complete-step-btn"
-                 data-link-url="<%= toggle_step_state_step_path(step)%>">
-              <button class="btn btn-secondary btn-block">
-                <span class="fas fa-check"></span>
-                <%= t("protocols.steps.options.complete_title") %>
-              </button>
-            </div>
-          <% end %>
+        <% if step.completed? %>
+          <button data-action="uncomplete-step"
+                  data-link-url="<%= toggle_step_state_step_path(step)%>"
+                  class="btn btn-secondary"
+                  <%= 'disabled' if !can_complete_or_checkbox_step?(@protocol) || preview %>>
+            <span class="fas fa-times"></span>
+            <%= t("protocols.steps.options.uncomplete_title") %>
+          </button>
+        <% else %>
+          <button data-action="complete-step"
+                  data-link-url="<%= toggle_step_state_step_path(step)%>"
+                  class="btn btn-secondary"
+                  <%= 'disabled' if !can_complete_or_checkbox_step?(@protocol) || preview %>>
+            <span class="fas fa-check"></span>
+            <%= t("protocols.steps.options.complete_title") %>
+          </button>
         <% end %>
 
         <% if (can_manage_protocol_in_module?(@protocol) || can_manage_protocol_in_repository?(@protocol)) && !(preview) %>

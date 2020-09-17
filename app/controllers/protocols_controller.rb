@@ -1140,7 +1140,7 @@ class ProtocolsController < ApplicationController
     @source = Protocol.find_by_id(params[:source_id])
 
     render_403 unless @protocol.present? && @source.present? &&
-                      (can_manage_protocol_in_module?(@protocol) ||
+                      (can_manage_protocol_in_module?(@protocol) &&
                        can_read_protocol_in_repository?(@source))
   end
 

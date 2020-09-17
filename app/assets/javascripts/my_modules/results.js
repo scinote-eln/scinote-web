@@ -47,17 +47,6 @@
       });
     }
 
-    function applyCollapseLinkCallBack() {
-      $('.panel-collapse')
-        .on('shown.bs.collapse hidden.bs.collapse', function() {
-          var collapseIcon = $(this).closest('.panel').find('.collapse-result-icon');
-          var collapsed = $(this).closest('.panel').find('.result-panel-collapse-link').hasClass('collapsed');
-          // Toggle collapse button
-          collapseIcon.toggleClass('fa-caret-up', !collapsed);
-          collapseIcon.toggleClass('fa-caret-down', collapsed);
-        });
-    }
-
     // Toggle editing buttons
     function toggleResultEditButtons(show) {
       if (show) {
@@ -80,10 +69,6 @@
     // Expand all results
     function expandAllResults() {
       $('.result .panel-collapse').collapse('show');
-      $(document).find('span.collapse-result-icon').each(function() {
-        $(this).addClass('fa-caret-up');
-        $(this).removeClass('fa-caret-down');
-      });
       $(document).find('div.step-result-hot-table').each(function() {
         renderTable(this);
       });
@@ -91,10 +76,6 @@
 
     function expandResult(result) {
       $('.panel-collapse', result).collapse('show');
-      $(result).find('span.collapse-result-icon').each(function() {
-        $(this).addClass('fa-caret-up');
-        $(this).removeClass('fa-caret-down');
-      });
       renderTable($(result).find('div.step-result-hot-table'));
       animateSpinner(null, false);
     }
@@ -135,7 +116,6 @@
                 $.each($('#results').find('.result'), function() {
                   initFormSubmitLinks($(this));
                   ResultAssets.applyEditResultAssetCallback();
-                  applyCollapseLinkCallBack();
                   applyCreateWopiFileCallback();
                   toggleResultEditButtons(true);
                   FilePreviewModal.init();
@@ -208,15 +188,11 @@
     function init() {
       initHandsOnTables($(document));
       expandAllResults();
-      applyCollapseLinkCallBack();
       applyCreateWopiFileCallback();
 
       $(function() {
         $('#results-collapse-btn').click(function() {
           $('.result .panel-collapse').collapse('hide');
-          $(document).find('span.collapse-result-icon')
-            .addClass('fa-caret-down')
-            .removeClass('fa-caret-square-up');
         });
 
         $('#results-expand-btn').click(expandAllResults);
@@ -233,7 +209,6 @@
     let publicAPI = Object.freeze({
       init: init,
       initHandsOnTables: initHandsOnTables,
-      applyCollapseLinkCallBack: applyCollapseLinkCallBack,
       toggleResultEditButtons: toggleResultEditButtons,
       expandResult: expandResult,
       processResult: processResult,

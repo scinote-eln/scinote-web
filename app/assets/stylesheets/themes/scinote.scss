@@ -133,6 +133,14 @@ body {
   font-size: $font-size-small;
 }
 
+.modal-body {
+  font-size: $font-size-base;
+
+  label {
+    @include font-small;
+  }
+}
+
 .jumbotron {
   background-color: inherit;
 }
@@ -742,6 +750,47 @@ ul.double-line > li {
   }
 }
 
+#canvas-container {
+  .panel-heading {
+    padding: 10px 15px 4px;
+  }
+
+  .panel-body {
+    padding: 6px 15px;
+
+    .status-label {
+      background-color: var(--state-color);
+      color: $color-white;
+      display: inline-block;
+      margin: 3px 0;
+      max-width: 100%;
+      overflow: hidden;
+      padding: 2px 8px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .panel-footer {
+    .nav > li > a {
+      padding: 6px 15px;
+    }
+
+    .btn {
+      height: 30px;
+    }
+
+    .badge-indicator {
+      background: transparent;
+      color: $color-silver-chalice;
+      font-size: 12px;
+      margin-left: 0;
+      padding: 0;
+      top: 0;
+    }
+  }
+}
+
 .panel-options {
   position: relative;
   bottom: 8px;
@@ -1112,6 +1161,15 @@ ul.content-activities {
 
   .result-panel-collapse-link {
     text-decoration: none;
+
+    &:not(.collapsed) .fas {
+      @include rotate(90deg);
+    }
+
+    .fas {
+      margin-right: 7px;
+      text-align: center;
+    }
   }
 
   .row {
