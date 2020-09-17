@@ -17,7 +17,7 @@
       margin-bottom: 0;
     }
 
-    .rep-tab.active {
+    .rep-tab.active:not(:empty) {
       border-bottom: $border-default;
       display: flex;
       padding: .25em;

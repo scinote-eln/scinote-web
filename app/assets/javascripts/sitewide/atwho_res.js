@@ -54,7 +54,7 @@ var SmartAnnotation = (function() {
         at: at,
         callbacks: {
           remoteFilter: function(query, callback) {
-            var $currentAtWho = $('.atwho-view[style]');
+            var $currentAtWho = $(`.atwho-view[data-at-who-id=${$(field).attr('data-smart-annotation')}]`);
             var filterType;
             var params = { query: query };
             filterType = FilterTypeEnum[$currentAtWho.find('.tab-pane.active').data('object-type')];
@@ -62,7 +62,6 @@ var SmartAnnotation = (function() {
               callback([{ name: '' }]);
               return false;
             }
-
             if (filterType.tag === 'sa-repositories') {
               let repositoryTab = $currentAtWho.find('[data-object-type="REPOSITORY"]');
               let activeRepository = repositoryTab.find('.btn-primary');
@@ -71,6 +70,11 @@ var SmartAnnotation = (function() {
               }
             }
             $.getJSON(filterType.dataUrl, params, function(data) {
+              localStorage.setItem('smart_annotation_states/teams/' + data.team, JSON.stringify({
+                tag: filterType.tag,
+                repository: data.repository
+              }));
+
               callback(data.res);
 
               if (data.repository) {
@@ -118,7 +122,11 @@ var SmartAnnotation = (function() {
     function init() {
       $(field)
         .on('shown.atwho', function() {
-          var $currentAtWho = $('.atwho-view[style]');
+          var $currentAtWho = $('.atwho-view[style]:not(.old)');
+          var atWhoId = $currentAtWho.find('.atwho-header-res').data('at-who-key')
+          $currentAtWho.addClass('old').attr('data-at-who-id', atWhoId);
+          $(field).attr('data-smart-annotation', atWhoId);
+
           $currentAtWho.find('.tab-button').off().on('shown.bs.tab', function() {
             $(field).click().focus();
             $(this).closest('.nav-tabs').find('.tab-button').removeClass('active');
@@ -132,8 +140,18 @@ var SmartAnnotation = (function() {
           });
 
           if ($currentAtWho.find('.tab-pane.active').length === 0) {
-            let filterType = DEFAULT_SEARCH_FILTER;
-            $currentAtWho.find(`.${filterType.tag}`).click();
+            let filterType =  DEFAULT_SEARCH_FILTER.tag;
+            let teamId = $currentAtWho.find('.atwho-header-res').data('team-id');
+            let remeberedState = localStorage.getItem('smart_annotation_states/teams/' + teamId);
+            if (remeberedState) {
+              try {
+                remeberedState = JSON.parse(remeberedState);
+                filterType = remeberedState.tag;
+                $currentAtWho.find(`.repository-object[data-object-id=${remeberedState.repository}]`)
+                  .addClass('btn-primary');
+              } catch {};
+            }
+            $currentAtWho.find(`.${filterType}`).click();
           }
         })
         .on('reposition.atwho', function(event, flag, query) {
