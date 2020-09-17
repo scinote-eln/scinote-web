@@ -1,5 +1,5 @@
 <% at_who_key = SecureRandom.hex %>
-<div class="atwho-header-res" data-team-id="<%= current_team.id %>">
+<div class="atwho-header-res" data-team-id="<%= current_team.id %>" data-at-who-key="<%= SecureRandom.hex %>">
   <div class="nav nav-tabs sci-nav-tabs">
     <a class="tab-button sa-projects" href="#prj-tab-<%= at_who_key %>" role="tab" data-toggle="tab"><%= t('atwho.projects') %></a>
     <a class="tab-button sa-experiments" href="#exp-tab-<%= at_who_key %>" data-toggle="tab"><%= t('atwho.experiments') %></a>
@@ -10,8 +10,7 @@
     <div class="tab-pane" role="tabpanel" id="prj-tab-<%= at_who_key %>" data-object-type="PROJECT"></div>
     <div class="tab-pane" role="tabpanel" id="exp-tab-<%= at_who_key %>" data-object-type="EXPERIMENT"></div>
     <div class="tab-pane" role="tabpanel" id="tsk-tab-<%= at_who_key %>" data-object-type="TASK"></div>
-    <div class="tab-pane rep-tab" role="tabpanel" id="rep-tab-<%= at_who_key %>" data-object-type="REPOSITORY">
-    <% if repositories.length > 1 %>
+    <div class="tab-pane rep-tab" role="tabpanel" id="rep-tab-<%= at_who_key %>" data-object-type="REPOSITORY"><% if repositories.length > 1 %>
       <div class=sci-btn-group>
       <% repositories.each do |repository| %>
         <button class="btn btn-light repository-object" data-object-id="<%= repository.id %>">
@@ -19,7 +18,6 @@
         </button>
       <% end %>
       </div>
-    <% end %>
-    </div>
+    <% end %></div>
   </div>
 </div>
