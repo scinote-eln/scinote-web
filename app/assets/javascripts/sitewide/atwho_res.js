@@ -58,7 +58,6 @@ var SmartAnnotation = (function() {
             var filterType;
             var params = { query: query };
             filterType = FilterTypeEnum[$currentAtWho.find('.tab-pane.active').data('object-type')];
-            console.log($currentAtWho.find('.tab-pane.active'))
             if (!filterType) {
               callback([{ name: '' }]);
               return false;
