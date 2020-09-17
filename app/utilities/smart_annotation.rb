@@ -17,14 +17,14 @@ class SmartAnnotation
     MyModule.search_by_name(@current_user, @current_team, @query).active
             .joins(experiment: :project)
             .where(projects: { archived: false }, experiments: { archived: false })
-            .limit(Constants::ATWHO_SEARCH_LIMIT)
+            .limit(Constants::ATWHO_SEARCH_LIMIT + 1)
   end
 
   def projects
     # Search projects
     Project.search_by_name(@current_user, @current_team, @query)
            .where(archived: false)
-           .limit(Constants::ATWHO_SEARCH_LIMIT)
+           .limit(Constants::ATWHO_SEARCH_LIMIT + 1)
   end
 
   def experiments
@@ -32,7 +32,7 @@ class SmartAnnotation
     Experiment.search_by_name(@current_user, @current_team, @query)
               .joins(:project)
               .where(projects: { archived: false }, experiments: { archived: false })
-              .limit(Constants::ATWHO_SEARCH_LIMIT)
+              .limit(Constants::ATWHO_SEARCH_LIMIT + 1)
   end
 
   def samples
@@ -63,7 +63,7 @@ class SmartAnnotation
           .active
           .where(repository: repository)
           .where_attributes_like('name', @query, at_search: true)
-          .limit(Constants::ATWHO_SEARCH_LIMIT)
+          .limit(Constants::ATWHO_SEARCH_LIMIT + 1)
     rep_items_list = []
     splitted_name = repository.name.gsub(/[^0-9a-z ]/i, '').split
     repository_tag =

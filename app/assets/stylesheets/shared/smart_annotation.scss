@@ -88,6 +88,47 @@
       }
     }
   }
+
+  .atwho-user {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    padding: .5em 0;
+
+    &.cur {
+      background: $color-concrete;
+    }
+
+    .atwho-highlight {
+      background: $brand-warning-light;
+    }
+
+    &:not:first-child {
+      border-top: $border-default;
+    }
+
+    .avatar {
+      display: inline-block;
+      height: 30px;
+      width: 30px;
+    }
+
+    .user-info {
+      display: inline-block;
+      margin-left: .5em;
+    }
+
+    .user-email {
+      @include font-small;
+      color: $color-silver-chalice;
+      line-height: 1em;
+    }
+  }
+
+  .more-results {
+    color: $color-silver-chalice;
+    padding: .5em 0;
+  }
 }
 
 .sa-type {

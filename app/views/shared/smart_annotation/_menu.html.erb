@@ -1,10 +1,10 @@
 <% at_who_key = SecureRandom.hex %>
 <div class="atwho-header-res">
   <div class="nav nav-tabs sci-nav-tabs">
-    <a class="tab-button sa-projects" href="#prj-tab-<%= at_who_key %>" role="tab" data-toggle="tab">PROJECTS</a>
-    <a class="tab-button sa-experiments" href="#exp-tab-<%= at_who_key %>" data-toggle="tab">EXPERIMENTS</a>
-    <a class="tab-button sa-tasks" href="#tsk-tab-<%= at_who_key %>" data-toggle="tab">TASKS</a>
-    <a class="tab-button sa-repositories" href="#rep-tab-<%= at_who_key %>" data-toggle="tab">INVENTORIES</a>
+    <a class="tab-button sa-projects" href="#prj-tab-<%= at_who_key %>" role="tab" data-toggle="tab"><%= t('atwho.projects') %></a>
+    <a class="tab-button sa-experiments" href="#exp-tab-<%= at_who_key %>" data-toggle="tab"><%= t('atwho.experiments') %></a>
+    <a class="tab-button sa-tasks" href="#tsk-tab-<%= at_who_key %>" data-toggle="tab"><%= t('atwho.tasks') %></a>
+    <a class="tab-button sa-repositories" href="#rep-tab-<%= at_who_key %>" data-toggle="tab"><%= t('atwho.inventories') %></a>
   </div>
   <div class="tab-content">
     <div class="tab-pane" role="tabpanel" id="prj-tab-<%= at_who_key %>" data-object-type="PROJECT"></div>
