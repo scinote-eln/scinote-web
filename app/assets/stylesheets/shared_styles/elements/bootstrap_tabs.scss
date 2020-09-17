@@ -1,0 +1,28 @@
+.sci-nav-tabs {
+  border-bottom: $border-default;
+  display: flex;
+
+  a {
+    color: $color-volcano;
+    padding: .5em;
+    position: relative;
+
+    &:hover {
+      text-decoration: none;
+    }
+
+    &.active {
+      color: initial;
+
+      &::after {
+        content: '';
+        background: $brand-primary;
+        bottom: 0;
+        height: .25em;
+        left: 0;
+        position:absolute;
+        width: 100%;
+      }
+    }
+  }
+}
