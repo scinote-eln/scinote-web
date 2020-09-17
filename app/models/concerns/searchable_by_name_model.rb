@@ -2,25 +2,22 @@
 
 module SearchableByNameModel
   extend ActiveSupport::Concern
-
+  # rubocop:disable Metrics/BlockLength
   included do
     def self.search_by_name(user, teams = [], query = nil, options = {})
       return if user.blank? || teams.blank?
 
-      viewable_by_user(user, teams)
-        .where_attributes_like("#{table_name}.name", query, options)
-        .limit(Constants::SEARCH_LIMIT)
-    end
-
-    def self.search_by_name_all(user, teams = [], query = nil)
-      return if user.blank? || teams.blank?
-
       sql_q = viewable_by_user(user, teams)
-      # Remove non-breaking space, &nbsp
-      query_array = query.gsub(/[[:space:]]+/, ' ').split(' ')
-      if query_array.any?
-        sql_q = sql_q.where("LOWER(#{table_name}.name) like all (array[?])", query_array.map { |c| "%#{c.downcase}%" })
+
+      if options[:intersect]
+        query_array = query.gsub(/[[:space:]]+/, ' ').split(' ')
+        query_array.each do |string|
+          sql_q = sql_q.where("trim_html_tags(#{table_name}.name) ILIKE ?", "%#{string}%")
+        end
+      else
+        sql_q = sql_q.where_attributes_like("#{table_name}.name", query, options)
       end
+
       sql_q.limit(Constants::SEARCH_LIMIT)
     end
 
@@ -55,4 +52,5 @@ module SearchableByNameModel
       end
     end
   end
+  # rubocop:enable Metrics/BlockLength
 end
