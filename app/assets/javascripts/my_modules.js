@@ -258,6 +258,12 @@
       animateSpinner();
       $.ajax({
         url: list.data('link-url'),
+        beforeSend: function(e, ajaxSettings) {
+          if (item.data('beforeSend') instanceof Function) {
+            return item.data('beforeSend')(item, ajaxSettings)
+          }
+          return true
+        },
         type: 'PATCH',
         data: { my_module: { status_id: item.data('state-id') } },
         error: function(e) {
