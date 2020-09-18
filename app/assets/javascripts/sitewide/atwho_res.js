@@ -138,6 +138,9 @@ var SmartAnnotation = (function() {
             $(this).addClass('btn-primary').removeClass('btn-light');
             $(field).click().focus();
           });
+          $currentAtWho.off().on('click', '.dismiss', function() {
+            $currentAtWho.hide();
+          });
 
           if ($currentAtWho.find('.tab-pane.active').length === 0) {
             let filterType =  DEFAULT_SEARCH_FILTER.tag;

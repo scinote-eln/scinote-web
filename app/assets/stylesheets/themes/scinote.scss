@@ -1709,38 +1709,6 @@ th.custom-field .modal-tooltiptext {
   pointer-events: none;
 }
 
-// AtWho (smart annotations)
-
-// <Custom atwho style>
-
-.atwho-user-container {
-  align-items: center;
-  display: inline-flex;
-
-  .global-avatar-container {
-    line-height: 30px;
-    margin: 0 2px 0 4px;
-
-    img {
-      position: relative;
-      top: -2px;
-    }
-  }
-}
-
-.atwho-user-popover {
-  cursor: pointer;
-  display: inline-block;
-}
-
-.atwho-user-img-popover {
-  cursor: default;
-}
-
-.atwho-no-results {
-  padding: 5px 10px;
-}
-
 .popover {
   border-radius: 3px;
   min-width: 450px;
