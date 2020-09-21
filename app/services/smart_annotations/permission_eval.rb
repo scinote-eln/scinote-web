@@ -12,25 +12,24 @@ module SmartAnnotations
       private
 
       def validate_prj_permissions(user, team, object)
-        object.team.id == team.id && can_read_project?(user, object)
+        object.archived = false
+        object.team.id == team.id && can_read_project?(user, object) && object.reload
       end
 
       def validate_exp_permissions(user, team, object)
-        object.project.team.id == team.id && can_read_experiment?(user, object)
+        object.archived = false
+        object.project.team.id == team.id && can_read_experiment?(user, object) && object.reload
       end
 
       def validate_tsk_permissions(user, team, object)
-        object.experiment.project.team.id == team.id &&
-          can_read_experiment?(user, object.experiment)
+        validate_exp_permissions(user, team, object.experiment)
       end
 
       def validate_rep_item_permissions(user, team, object)
-        if object.repository
-          return can_read_repository?(user, object.repository)
-        end
+        return can_read_repository?(user, object.repository) if object.repository
 
         # handles discarded repositories
-        repository = Repository.with_discarded.find_by_id(object.repository_id)
+        repository = Repository.with_discarded.find_by(id: object.repository_id)
         # evaluate to false if repository not found
         return false unless repository
 

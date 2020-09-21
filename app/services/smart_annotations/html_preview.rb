@@ -13,24 +13,21 @@ module SmartAnnotations
 
       def generate_prj_snippet(_, object)
         if object.archived?
-          return "<a href='#{ROUTES.projects_archive_path}'><span class='sa-type'>Prj</span>" \
-                 "#{object.name}</a>#{I18n.t('atwho.res.archived')}"
+          return "<span class='sa-type'>Prj</span>#{object.name} #{I18n.t('atwho.res.archived')}"
         end
         "<a href='#{ROUTES.project_path(object)}'><span class='sa-type'>Prj</span>#{object.name}</a>"
       end
 
       def generate_exp_snippet(_, object)
         if object.archived?
-          return "<a href='#{ROUTES.experiment_archive_project_path(object.project)}'>" \
-                 "<span class='sa-type'>Exp</span>#{object.name}</a> #{I18n.t('atwho.res.archived')}"
+          return "<span class='sa-type'>Exp</span>#{object.name} #{I18n.t('atwho.res.archived')}"
         end
         "<a href='#{ROUTES.canvas_experiment_path(object)}'><span class='sa-type'>Exp</span>#{object.name}</a>"
       end
 
       def generate_tsk_snippet(_, object)
         if object.archived?
-          return "<a href='#{ROUTES.module_archive_experiment_path(object.experiment
-                 )}'><span class='sa-type'>Tsk</span>#{object.name}</a> #{I18n.t('atwho.res.archived')}"
+          return "<span class='sa-type'>Tsk</span>#{object.name} #{I18n.t('atwho.res.archived')}"
         end
         "<a href='#{ROUTES.protocols_my_module_path(object)}'>" \
         "<span class='sa-type'>Tsk</span>#{object.name}</a>"
