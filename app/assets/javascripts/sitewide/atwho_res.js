@@ -149,7 +149,9 @@ var SmartAnnotation = (function() {
                 filterType = remeberedState.tag;
                 $currentAtWho.find(`.repository-object[data-object-id=${remeberedState.repository}]`)
                   .addClass('btn-primary');
-              } catch {};
+              } catch (error) {
+                console.error(error);
+              }
             }
             $currentAtWho.find(`.${filterType}`).click();
           }
