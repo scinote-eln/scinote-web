@@ -14,6 +14,9 @@
       <div class=sci-btn-group>
       <% repositories.each do |repository| %>
         <button class="btn btn-light repository-object" data-object-id="<%= repository.id %>">
+          <% if repository.shared_with?(current_team) %>
+            <i class="fas fa-user-friends"></i>
+          <% end %>
           <%= repository.name %>
         </button>
       <% end %>
