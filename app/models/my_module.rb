@@ -26,9 +26,7 @@ class MyModule < ApplicationRecord
 
   validate :check_status, if: :my_module_status_id_changed?
   validate :check_status_conditions, if: :my_module_status_id_changed?
-  validate :check_status_implications, unless: proc { |mm|
-    (mm.changed_attributes.keys - %w(my_module_status_id x y my_module_group_id workflow_order status_changing)).blank?
-  }
+  validate :check_status_implications
 
   belongs_to :created_by,
              foreign_key: 'created_by_id',
@@ -164,18 +162,19 @@ class MyModule < ApplicationRecord
     # Remove association with module group.
     self.my_module_group = nil
 
+    was_archived = false
+
     MyModule.transaction do
-      archived = super
+      was_archived = super
       # Unassociate all samples from module.
-      archived = SampleMyModule.where(my_module: self).destroy_all if archived
+      was_archived = SampleMyModule.where(my_module: self).destroy_all if was_archived
       # Remove all connection between modules.
-      archived = Connection.where(input_id: id).delete_all if archived
-      archived = Connection.where(output_id: id).delete_all if archived
-      unless archived
-        raise ActiveRecord::Rollback
-      end
+      was_archived = Connection.where(input_id: id).destroy_all if was_archived
+      was_archived = Connection.where(output_id: id).destroy_all if was_archived
+
+      raise ActiveRecord::Rollback unless was_archived
     end
-    archived
+    was_archived
   end
 
   # Similar as super restore, but also calculate new module position

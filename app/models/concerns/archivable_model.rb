@@ -15,7 +15,7 @@ module ArchivableModel
   # Helper for archiving project. Timestamp of archiving is handler by
   # before_save callback.
   # Sets the archived_by value to the current user.
-  def archive (current_user)
+  def archive(current_user)
     self.archived = true
     self.archived_by = current_user
     save
@@ -29,7 +29,7 @@ module ArchivableModel
 
   # Helper for restoring project from archive.
   # Sets the restored_by value to the current user.
-  def restore (current_user)
+  def restore(current_user)
     self.archived = false
     self.restored_by = current_user
     save
