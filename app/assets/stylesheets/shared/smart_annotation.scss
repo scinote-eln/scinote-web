@@ -27,9 +27,9 @@
     .dismiss {
       @include font-button;
       color: $color-silver-chalice;
-      flex-grow: 1;
-      padding-right: 10px;
-      text-align: right;
+      cursor: pointer;
+      margin-left: auto;
+      padding: .5em .75em;
     }
 
     .repository-object {
@@ -47,12 +47,12 @@
 
   .atwho-no-results {
     color: $color-silver-chalice;
-    padding: 22px 100px;
+    padding: 1.5em 7em;
     text-align: center;
 
     .description {
       @include font-main;
-      padding: 0 65px 38px;
+      padding: 0 4em 2.5em;
     }
   }
 
@@ -64,8 +64,9 @@
 
     .dismiss {
       @include font-button;
+      cursor: pointer;
       float: right;
-      padding-right: 4px;
+      padding: 0 .25em;
       position: relative;
     }
   }
