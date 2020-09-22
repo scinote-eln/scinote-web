@@ -1,4 +1,5 @@
- <div class="status-flow">
+<div class="status-flow">
+  <% implication_description = "" %>
   <% my_module_statuses.each_with_index do |status, i| %>
 
     <% unless i.zero? %>
@@ -15,12 +16,14 @@
         <%= status[:name] %>
       </div>
       <div class="status-comment">
+        <% status.my_module_status_implications&.each do |implication| %>
+          <% implication_description = implication.description if implication.description.present? %>
+        <% end %>
+        <%= implication_description %>
         <% status.next_status&.my_module_status_conditions&.each do |condition| %>
           <%= condition.description %><br>
         <% end %>
       </div>
     </div>
   <% end %>
-
-
-
+</div>
