@@ -13,7 +13,7 @@ class MyModule < ApplicationRecord
 
   around_save :exec_status_consequences, if: :my_module_status_id_changed?
 
-  auto_strip_attributes :name, :description, nullify: false, unless: :my_module_status_id_changed?
+  auto_strip_attributes :name, :description, nullify: false, if: proc { |mm| mm.name_changed? || mm.description_changed? }
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH }
