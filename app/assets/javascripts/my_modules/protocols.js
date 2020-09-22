@@ -13,6 +13,8 @@ function initEditMyModuleDescription() {
   var viewObject = $('#my_module_description_view');
   viewObject.on('click', function() {
     TinyMCE.init('#my_module_description_textarea');
+  }).on('click', 'a', function(e) {
+    e.stopPropagation();
   });
   TinyMCE.initIfHasDraft(viewObject);
 }
@@ -21,6 +23,8 @@ function initEditProtocolDescription() {
   var viewObject = $('#protocol_description_view');
   viewObject.on('click', function() {
     TinyMCE.init('#protocol_description_textarea', refreshProtocolStatusBar);
+  }).on('click', 'a', function(e) {
+    e.stopPropagation();
   });
   TinyMCE.initIfHasDraft(viewObject);
 }
