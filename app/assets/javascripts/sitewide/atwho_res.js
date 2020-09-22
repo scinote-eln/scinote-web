@@ -230,4 +230,8 @@ var SmartAnnotation = (function() {
       SmartAnnotation.init(this);
     }
   });
+
+  $(document).on('click', '.atwho-view .dismiss', function() {
+    $(this).closest('.atwho-view').hide();
+  });
 }());

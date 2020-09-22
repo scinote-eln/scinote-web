@@ -14,6 +14,7 @@
 
   .atwho-header-res {
     .nav-tabs {
+      align-items: center;
       margin-bottom: 0;
     }
 
@@ -21,6 +22,14 @@
       border-bottom: $border-default;
       display: flex;
       padding: .25em;
+    }
+
+    .dismiss {
+      @include font-button;
+      color: $color-silver-chalice;
+      cursor: pointer;
+      margin-left: auto;
+      padding: .5em .75em;
     }
 
     .repository-object {
@@ -34,6 +43,32 @@
   .atwho-view-ul {
     margin: 0;
     padding: 0;
+  }
+
+  .atwho-no-results {
+    color: $color-silver-chalice;
+    padding: 1.5em 7em;
+    text-align: center;
+
+    .description {
+      @include font-main;
+      padding: 0 4em 2.5em;
+    }
+  }
+
+  .atwho-header {
+    @include font-small;
+    border-bottom: $border-default;
+    color: $color-silver-chalice;
+    padding: .5em;
+
+    .dismiss {
+      @include font-button;
+      cursor: pointer;
+      float: right;
+      padding: 0 .25em;
+      position: relative;
+    }
   }
 
   .atwho-footer {
