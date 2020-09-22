@@ -158,10 +158,6 @@ class MyModuleTagsController < ApplicationController
     render_403 unless can_manage_module?(@my_module)
   end
 
-  def init_gui
-    @tags = @my_module.unassigned_tags
-  end
-
   def mt_params
     params.require(:my_module_tag).permit(:my_module_id, :tag_id)
   end

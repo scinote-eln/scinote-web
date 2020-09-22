@@ -121,10 +121,6 @@ class UserMyModulesController < ApplicationController
     render_403 unless can_manage_users_in_module?(@my_module)
   end
 
-  def init_gui
-    @users = @my_module.unassigned_users
-  end
-
   def um_params
     params.require(:user_my_module).permit(:user_id, :my_module_id)
   end
