@@ -35,12 +35,6 @@ var SmartAnnotation = (function() {
       return $html;
     }
 
-    function initAtWhoClose() {
-      $('.atwho-view').on('click', '.dismiss', function() {
-        $('.atwho-view').hide();
-      });
-    }
-
     // Generates suggestion dropdown filter
     function generateFilterMenu() {
       var menu = '';
@@ -205,8 +199,7 @@ var SmartAnnotation = (function() {
     }
 
     return {
-      init: init,
-      initAtWhoClose: initAtWhoClose
+      init: init
     };
   }
   // Closes the atwho popup * needed in repositories to close the popup
@@ -218,7 +211,6 @@ var SmartAnnotation = (function() {
   function initialize(field) {
     var atWho = new SetAtWho(field);
     atWho.init();
-    atWho.initAtWhoClose();
   }
 
   return Object.freeze({
@@ -235,5 +227,9 @@ var SmartAnnotation = (function() {
     if (_.isUndefined($(this).data('atwho'))) {
       SmartAnnotation.init(this);
     }
+  });
+
+  $(document).on('click', '.atwho-view .dismiss', function() {
+    $(this).closest('.atwho-view').hide();
   });
 }());
