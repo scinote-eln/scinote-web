@@ -85,7 +85,9 @@ var SmartAnnotation = (function() {
             return true;
           },
           tplEval: function(_tpl, items) {
-            return items.name;
+            var $items = $(items.name);
+            $items.find('li').data('item-data', []); // Emulate at.js insertContentFor method
+            return $items;
           },
           highlighter: function(li, query) {
             return matchHighlighter(li, query);
@@ -123,7 +125,7 @@ var SmartAnnotation = (function() {
       $(field)
         .on('shown.atwho', function() {
           var $currentAtWho = $('.atwho-view[style]:not(.old)');
-          var atWhoId = $currentAtWho.find('.atwho-header-res').data('at-who-key')
+          var atWhoId = $currentAtWho.find('.atwho-header-res').data('at-who-key');
           $currentAtWho.addClass('old').attr('data-at-who-id', atWhoId);
           $(field).attr('data-smart-annotation', atWhoId);
 
@@ -140,7 +142,7 @@ var SmartAnnotation = (function() {
           });
 
           if ($currentAtWho.find('.tab-pane.active').length === 0) {
-            let filterType =  DEFAULT_SEARCH_FILTER.tag;
+            let filterType = DEFAULT_SEARCH_FILTER.tag;
             let teamId = $currentAtWho.find('.atwho-header-res').data('team-id');
             let remeberedState = localStorage.getItem('smart_annotation_states/teams/' + teamId);
             if (remeberedState) {
@@ -179,8 +181,10 @@ var SmartAnnotation = (function() {
                 callback(data.users);
               });
             },
-            tplEval: function(_tpl, map) {
-              return map.name;
+            tplEval: function(_tpl, items) {
+              var $items = $(items.name);
+              $items.find('li').data('item-data', []); // Emulate at.js insertContentFor method
+              return $items;
             },
             highlighter: function(li, query) {
               return matchHighlighter(li, query);
