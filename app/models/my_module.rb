@@ -433,6 +433,8 @@ class MyModule < ApplicationRecord
 
     clone.save!
 
+    clone.assign_user(current_user)
+
     # Remove the automatically generated protocol,
     # & clone the protocol instead
     clone.protocol.destroy
