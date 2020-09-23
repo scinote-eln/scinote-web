@@ -448,49 +448,49 @@ function updateButtons() {
       editBtn.removeClass('disabled hidden');
       editBtn.off('click').on('click', function() { editSelectedProtocol(); });
     } else {
-      editBtn.addClass('disabled hidden');
+      editBtn.removeClass('hidden').addClass('disabled');
       editBtn.off('click');
     }
     if (row.is('[data-can-clone]')) {
       cloneBtn.removeClass('disabled hidden');
       cloneBtn.off('click').on('click', function() { cloneSelectedProtocol(); });
     } else {
-      cloneBtn.addClass('disabled hidden');
+      cloneBtn.removeClass('hidden').addClass('disabled');
       cloneBtn.off('click');
     }
     if (row.is('[data-can-make-private]')) {
       makePrivateBtn.removeClass('disabled hidden');
       makePrivateBtn.off('click').on('click', function() { processMoveButtonClick($(this)); });
     } else {
-      makePrivateBtn.addClass('disabled hidden');
+      makePrivateBtn.removeClass('hidden').addClass('disabled');
       makePrivateBtn.off('click');
     }
     if (row.is('[data-can-publish]')) {
       publishBtn.removeClass('disabled hidden');
       publishBtn.off('click').on('click', function() { processMoveButtonClick($(this)); });
     } else {
-      publishBtn.addClass('disabled hidden');
+      publishBtn.removeClass('hidden').addClass('disabled');
       publishBtn.off('click');
     }
     if (row.is('[data-can-archive]')) {
       archiveBtn.removeClass('disabled hidden');
       archiveBtn.off('click').on('click', function() { processMoveButtonClick($(this)); });
     } else {
-      archiveBtn.addClass('disabled hidden');
+      archiveBtn.removeClass('hidden').addClass('disabled');
       archiveBtn.off('click');
     }
     if (row.is('[data-can-restore]')) {
       restoreBtn.removeClass('disabled hidden');
       restoreBtn.off('click').on('click', function() { processMoveButtonClick($(this)); });
     } else {
-      restoreBtn.addClass('disabled hidden');
+      restoreBtn.removeClass('hidden').addClass('disabled');
       restoreBtn.off('click');
     }
     if (row.is('[data-can-export]')) {
       exportBtn.removeClass('disabled hidden');
       exportBtn.off('click').on('click', function() { exportProtocols(rowsSelected); });
     } else {
-      exportBtn.addClass('disabled hidden');
+      exportBtn.removeClass('hidden').addClass('disabled');
       exportBtn.off('click');
     }
   } else if (rowsSelected.length === 0) {
