@@ -106,10 +106,10 @@ var SmartAnnotation = (function() {
             }
             a = decodeURI('%C3%80');
             y = decodeURI('%C3%BF');
-            regexp = new RegExp(cleanedFlag + `([A-Za-z${a}-${y}0-9_/:\\s+-]*)$|${cleanedFlag}([^\\x00-\\xff]*)$`, 'gi');
+            regexp = new RegExp(`${cleanedFlag}$|${cleanedFlag}(\\S[A-Za-z${a}-${y}0-9_/:\\s+-]*)$|${cleanedFlag}(\\S[^\\x00-\\xff]*)$`, 'gi');
             match = regexp.exec(subtext);
             if (match) {
-              return match[2] || match[1];
+              return match[1] || '';
             }
             return null;
           }
