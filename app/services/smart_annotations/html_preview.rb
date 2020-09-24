@@ -37,7 +37,7 @@ module SmartAnnotations
       end
 
       def generate_rep_item_snippet(name, object)
-        if object
+        if object&.repository
           repository_name = fetch_repository_name(object)
           if object.archived?
             return "<span class='sa-type'>#{trim_repository_name(repository_name)}</span> " \
