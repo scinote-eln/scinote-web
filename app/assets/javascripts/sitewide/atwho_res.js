@@ -86,7 +86,7 @@ var SmartAnnotation = (function() {
           },
           tplEval: function(_tpl, items) {
             var $items = $(items.name);
-            $items.find('li').data('item-data', []); // Emulate at.js insertContentFor method
+            $items.find('li').data('item-data', {'atwho-at': at}); // Emulate at.js insertContentFor method
             return $items;
           },
           highlighter: function(li, query) {
@@ -183,7 +183,7 @@ var SmartAnnotation = (function() {
             },
             tplEval: function(_tpl, items) {
               var $items = $(items.name);
-              $items.find('li').data('item-data', []); // Emulate at.js insertContentFor method
+              $items.find('li').data('item-data', {'atwho-at': '@'}); // Emulate at.js insertContentFor method
               return $items;
             },
             highlighter: function(li, query) {
