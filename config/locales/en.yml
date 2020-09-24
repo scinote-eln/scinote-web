@@ -811,8 +811,8 @@ en:
       head_title: "%{project} | %{module} | Inventory %{repository}"
       export: 'Export'
       full_view:
-        modal_live_header: '%{repository_name}: Live version'
-        modal_snapshot_header: '%{repository_name}: Snapshot of %{snaphot_date}'
+        modal_live_header: ': Live version'
+        modal_snapshot_header: ': Snapshot of %{snaphot_date}'
         assign_modal_header: 'Assign from %{repository_name} inventory'
       snapshots:
         simple_view:
