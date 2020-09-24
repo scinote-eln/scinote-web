@@ -14,14 +14,14 @@ module SmartAnnotations
       def validate_prj_permissions(user, team, object)
         object.archived = false
         permission_check = object.team.id == team.id && can_read_project?(user, object)
-        object.reload
+        object.archived = true if object.archived_changed?
         permission_check
       end
 
       def validate_exp_permissions(user, team, object)
         object.archived = false
         permission_check = object.project.team.id == team.id && can_read_experiment?(user, object)
-        object.reload
+        object.archived = true if object.archived_changed?
         permission_check
       end
 
