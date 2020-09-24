@@ -11,9 +11,11 @@ var selectedRow = null;
 
 function initEditMyModuleDescription() {
   var viewObject = $('#my_module_description_view');
-  viewObject.on('click', function() {
+  viewObject.on('click', function(e) {
+    if ($(e.target).hasClass('record-info-link')) return;
     TinyMCE.init('#my_module_description_textarea');
   }).on('click', 'a', function(e) {
+    if ($(this).hasClass('record-info-link')) return;
     e.stopPropagation();
   });
   TinyMCE.initIfHasDraft(viewObject);
@@ -21,9 +23,11 @@ function initEditMyModuleDescription() {
 
 function initEditProtocolDescription() {
   var viewObject = $('#protocol_description_view');
-  viewObject.on('click', function() {
+  viewObject.on('click', function(e) {
+    if ($(e.target).hasClass('record-info-link')) return;
     TinyMCE.init('#protocol_description_textarea', refreshProtocolStatusBar);
   }).on('click', 'a', function(e) {
+    if ($(this).hasClass('record-info-link')) return;
     e.stopPropagation();
   });
   TinyMCE.initIfHasDraft(viewObject);
