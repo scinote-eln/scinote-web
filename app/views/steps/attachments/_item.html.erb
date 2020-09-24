@@ -1,7 +1,7 @@
-<% if wopi_enabled? && wopi_file?(asset) %>
+<% if wopi_enabled? && wopi_file?(asset) && asset.show_inline? %>
     <%= render partial: 'steps/attachments/inline_attachment.html.erb', locals: { asset: asset } %>
 <% else %>
-    <div class="attachment-container" style="order: <%= i %>">
+    <div class="attachment-container step-asset" style="order: <%= i %>" data-asset-id="<%= asset.id %>">
         <%= link_to rails_blob_path(asset.file, disposition: 'attachment'),
                 class: 'file-preview-link',
                 id: "modal_link#{asset.id}",

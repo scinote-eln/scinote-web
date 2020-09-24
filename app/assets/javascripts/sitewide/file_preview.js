@@ -18,6 +18,7 @@ var FilePreviewModal = (function() {
 
     $('.file-preview-link').off('click');
     $('.file-preview-link').click(function(e) {
+      if ($(e.target.offsetParent).hasClass('change-preview-type')) return;
       e.preventDefault();
       name = $(this).find('.attachment-label').text();
       url = $(this).data('preview-url');

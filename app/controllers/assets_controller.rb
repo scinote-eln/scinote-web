@@ -16,7 +16,7 @@ class AssetsController < ApplicationController
 
   before_action :load_vars, except: :create_wopi_file
   before_action :check_read_permission, except: :edit
-  before_action :check_edit_permission, only: :edit
+  before_action :check_edit_permission, only: [:edit, :toggle_view_mode]
 
   def file_preview
     file_type = @asset.file.metadata[:asset_type] || (@asset.previewable? ? 'previewable' : false)
@@ -98,16 +98,10 @@ class AssetsController < ApplicationController
   end
 
   def toggle_view_mode
-    # view_mode: card / inline
-    # @asset.update!(view_mode: toggle_view_mode_params[:view_mode])
-
-    html = if @asset.inline_card && wopi_enabled? && wopi_file?(@asset)
-             url = @asset.get_action_url(current_user, 'embedview')
-             "<iframe src=\"#{url}\" title=\"DocumentPreview\"></iframe>"
-           else
-             render_to_string(partial: 'shared/asset_placeholder.html.erb', locals: { asset: @asset, edit_page: false })
-           end
-
+    @asset.update!(view_mode: toggle_view_mode_params[:view_mode])
+    html = render_to_string(partial: 'steps/attachments/item.html.erb',
+             locals: { asset: @asset, i: 999, assets_count: 999, order_atoz: 999, order_ztoa: 999})
+    # Sorting will be refactored later
     respond_to do |format|
       format.json do
         render json: { html: html }, status: :ok

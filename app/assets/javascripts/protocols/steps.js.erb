@@ -381,18 +381,19 @@
   }
 
   function initPreviewToggle(){
-    $('.attachment-placeholder').on('click', '.dataPreviewAction', function (e) {
-      var view_mode = $(this).data('preview-type');
-      var asset_id = $(this).data('asset-id');
+    $('.attachments').on('click', '.change-preview-type', function (e) {
+      var viewMode = $(this).data('preview-type');
+      var assetId = $(this).data('asset-id');
       e.preventDefault();
-
+      e.stopPropagation();
       $.ajax({
-        url: `/files/${asset_id}/toggle_view_mode`,
+        url: `/files/${assetId}/toggle_view_mode`,
         type: "PATCH",
         dataType: "json",
-        data: { asset: { view_mode: view_mode }},
+        data: { asset: { view_mode: viewMode }},
         success: function (data) {
-          console.log(data);
+          $(`.step-asset[data-asset-id=${assetId}]`).replaceWith(data.html);
+          FilePreviewModal.init();
         },
         error: function (data) {
           console.log(data);
@@ -757,7 +758,8 @@ var StepInlineAttachments = (function() {
     setTimeout(() => {
       var iframeUrl = $(element).find('.iframe-placeholder').data('iframe-url');
       if (elementVisible(element) && iframeUrl) {
-        $(element).html(`<iframe class="active-iframe-preview" src="${iframeUrl}"></iframe>`);
+        $(element).find('.iframe-placeholder')
+          .replaceWith(`<iframe class="active-iframe-preview" src="${iframeUrl}"></iframe>`);
         $(element).addClass('active').attr('data-created-at', new Date().getTime());
       }
     },500)
@@ -766,7 +768,8 @@ var StepInlineAttachments = (function() {
   function hideElement(element) {
     var iframeUrl = $(element).find('.active-iframe-preview').attr('src');
     if (!elementVisible(element) && iframeUrl) {
-      $(element).html(`<div class="iframe-placeholder" data-iframe-url="${iframeUrl}"></div>`);
+      $(element).find('iframe')
+        .replaceWith(`<div class="iframe-placeholder" data-iframe-url="${iframeUrl}"></div>`);
       $(element).removeClass('active').attr('data-created-at', null)
       return true
     }

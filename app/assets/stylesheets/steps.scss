@@ -142,6 +142,19 @@
     width: 100%;
   }
 
+  .show-inline {
+    background: $color-white;
+    border-radius: $border-radius-default;
+    line-height: 1em;
+    padding: .5em;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 0;
+    width: 2em;
+    z-index: 10;
+  }
+
   .attachment-preview {
     border-radius: $border-radius-default;
     height: 170px;
@@ -330,7 +343,32 @@
 
   .active-iframe-preview {
     border: 0;
-    height: 100%;
+    height: calc(100% - 4em);
     width: 100%;
+  }
+
+  .header {
+    align-items: center;
+    display: flex;
+    height: 4em;
+    padding: 0 1em;
+
+    .show-as-thumbnail {
+      cursor: pointer;
+      margin-left: auto;
+    }
+
+    .file-name {
+      @include font-main;
+      color: $brand-primary;
+    }
+
+    .file-metadata {
+      @include font-small;
+      color: $color-silver-chalice;
+      display: grid;
+      grid-column-gap: 1em;
+      grid-template-columns: max-content max-content;
+    }
   }
 }
