@@ -16,7 +16,7 @@ class AssetsController < ApplicationController
 
   before_action :load_vars, except: :create_wopi_file
   before_action :check_read_permission, except: :edit
-  before_action :check_edit_permission, only: [:edit, :toggle_view_mode]
+  before_action :check_edit_permission, only: %i(edit toggle_view_mode)
 
   def file_preview
     file_type = @asset.file.metadata[:asset_type] || (@asset.previewable? ? 'previewable' : false)
@@ -98,13 +98,13 @@ class AssetsController < ApplicationController
   end
 
   def toggle_view_mode
-    @asset.update!(view_mode: toggle_view_mode_params[:view_mode])
-    html = render_to_string(partial: 'steps/attachments/item.html.erb',
-             locals: { asset: @asset, i: 999, assets_count: 999, order_atoz: 999, order_ztoa: 999})
-    # Sorting will be refactored later
-    respond_to do |format|
-      format.json do
-        render json: { html: html }, status: :ok
+    @asset.view_mode = toggle_view_mode_params[:view_mode]
+    if @asset.save(touch: false)
+      html = render_to_string(partial: 'assets/asset.html.erb', locals: { asset: @asset })
+      respond_to do |format|
+        format.json do
+          render json: { html: html }, status: :ok
+        end
       end
     end
   end
@@ -162,34 +162,10 @@ class AssetsController < ApplicationController
     @asset.post_process_file(@asset.team)
     @asset.step&.protocol&.update(updated_at: Time.now)
 
-    render_html = if @asset.step
-                    assets = @asset.step.assets
-                    order_atoz = az_ordered_assets_index(@asset.step, @asset.id)
-                    order_ztoa = assets.length - az_ordered_assets_index(@asset.step, @asset.id)
-                    asset_position = @asset.step.asset_position(@asset)
+    render_html = if @asset.step || @asset.result
                     render_to_string(
-                      partial: 'steps/attachments/item.html.erb',
-                      locals: {
-                        asset: @asset,
-                        i: asset_position[:pos],
-                        assets_count: asset_position[:count],
-                        step: @asset.step,
-                        order_atoz: order_atoz,
-                        order_ztoa: order_ztoa
-                      },
-                      formats: :html
-                    )
-                  elsif @asset.result
-                    render_to_string(
-                      partial: 'steps/attachments/item.html.erb',
-                      locals: {
-                        asset: @asset,
-                        i: 0,
-                        assets_count: 0,
-                        step: nil,
-                        order_atoz: 0,
-                        order_ztoa: 0
-                      },
+                      partial: 'assets/asset.html.erb',
+                      locals: { asset: @asset },
                       formats: :html
                     )
                   else
@@ -224,7 +200,7 @@ class AssetsController < ApplicationController
     unless asset.valid?(:wopi_file_creation)
       render json: {
         message: asset.errors
-      }, status: 400 and return
+      }, status: :bad_request and return
     end
 
     # Create file depending on the type
@@ -264,7 +240,7 @@ class AssetsController < ApplicationController
   private
 
   def load_vars
-    @asset = Asset.find_by_id(params[:id])
+    @asset = Asset.find_by(id: params[:id])
     return render_404 unless @asset
 
     @assoc ||= @asset.step

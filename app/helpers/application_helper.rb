@@ -216,6 +216,6 @@ module ApplicationHelper
   end
 
   def wopi_enabled?
-    ENV['WOPI_ENABLED'] == 'true'
+    ENV['WOPI_ENABLED'] == 'true' || true
   end
 end

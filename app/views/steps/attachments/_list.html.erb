@@ -1,4 +1,5 @@
-<% assets = ordered_assets(step) %>
+<% assets = step.assets %>
+<% current_order = step.current_view_state(current_user).state.dig('assets', 'sort') %>
 <div class="col-xs-12">
 <hr>
 </div>
@@ -15,23 +16,21 @@
       <% if !(preview) && (can_manage_protocol_in_module?(@protocol) ||
                            can_manage_protocol_in_repository?(@protocol)) %>
         <%= render partial: '/assets/marvinjs/create_marvin_sketch_button.html.erb',
-                   locals: {  element_id: step.id, element_type: 'Step',  sketch_container: ".attachments#att-#{step.id}" } %>
+                   locals: {  element_id: step.id, element_type: 'Step',  sketch_container: ".attachments[data-step-id=#{step.id}]" } %>
         <%= render partial: '/assets/wopi/create_wopi_file_button.html.erb',
                    locals: {  element_id: step.id, element_type: 'Step' } %>
       <% end %>
-      <div class="dropdown attachments-order" id="dd-att-step-<%= step.id %>">
-        <button class="btn btn-default dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-          <span id="dd-att-step-<%= step.id %>-label">
-            <%= t("general.sort.#{step.current_view_state(current_user).state.dig('assets', 'sort')}_html") %>
+      <div class="dropdown attachments-order" data-step-id="<%= step.id %>" data-state-save-path="<%= update_view_state_step_path(step.id) %>">
+        <button class="btn btn-light dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <span class="selected-order">
+            <%= t("general.sort.#{current_order}_html") %>
           </span>
           <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu" aria-labelledby="sortMenu" data-state-save-path="<%= update_view_state_step_path(step.id) %>">
+        <ul class="dropdown-menu" aria-labelledby="sortMenu" >
           <% ['new', 'old', 'atoz', 'ztoa'].each do |sort| %>
             <li>
-              <a data-order="<%= sort %>" onClick="reorderAttachments(this, '<%= step.id %>', '<%= sort %>')">
-                <%= t("general.sort.#{sort}_html") %>
-              </a>
+              <a data-order="<%= sort %>" class="change-order"><%= t("general.sort.#{sort}_html") %></a>
             </li>
           <% end %>
         </ul>
@@ -40,12 +39,9 @@
   </div>
 </div>
 
-<div class="col-xs-12 attachments" id="att-<%= step.id %>">
+<div class="col-xs-12 attachments" data-step-id="<%= step.id %>" data-order="<%= current_order %>">
   <% assets.each_with_index do |asset, i| %>
-    <% order_atoz = az_ordered_assets_index(step, asset.id) %>
-    <% order_ztoa = assets.length - az_ordered_assets_index(step, asset.id) %>
-    <%= render partial: 'steps/attachments/item.html.erb',
-      locals: { asset: asset, i: i, assets_count: assets.length, step: step, order_atoz: order_atoz, order_ztoa: order_ztoa } %>
+    <%= render partial: 'assets/asset.html.erb', locals: { asset: asset } %>
   <% end %>
 </div>
 <hr>
