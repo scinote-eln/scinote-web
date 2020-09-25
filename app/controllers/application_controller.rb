@@ -37,7 +37,7 @@ class ApplicationController < ActionController::Base
 
   # Sets current team for all controllers
   def current_team
-    Team.find_by_id(current_user.current_team_id)
+    @current_team ||= Team.find_by(id: current_user.current_team_id)
   end
 
   def to_user_date_format
