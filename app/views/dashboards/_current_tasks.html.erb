@@ -27,10 +27,10 @@
                     data-select-multiple-name="<%= t("dashboard.current_tasks.filter.statuses.selected") %>"
                     multiple
             >
-              <% MyModuleStatusFlow.find_each do |status_flow| %>
+              <% @my_module_status_flows.each do |status_flow| %>
                 <% status_flow.my_module_statuses.each do |status| %>
                   <option value="<%= status.id %>"
-                          data-completion-consequence="<%= status.my_module_status_consequences.where(type: "MyModuleStatusConsequences::Completion").any? %>">
+                          data-completion-consequence="<%= status.my_module_status_consequences.any? { |c| c.type == 'MyModuleStatusConsequences::Completion'} %>">
                     <%= status.name %>
                   </option>
                 <% end %>

@@ -26,7 +26,10 @@ Canaid::Permissions.register_for(Experiment) do
   #         assign/reassign/unassign tags
   can :manage_experiment do |user, experiment|
     user.is_user_or_higher_of_project?(experiment.project) &&
-      MyModule.joins(:experiment).where(experiment: experiment).all? do |my_module|
+      MyModule.joins(:experiment)
+              .where(experiment: experiment)
+              .preload(my_module_status: :my_module_status_implications)
+              .all? do |my_module|
         if my_module.my_module_status
           my_module.my_module_status.my_module_status_implications.all? { |implication| implication.call(my_module) }
         else

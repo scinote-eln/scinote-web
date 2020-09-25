@@ -38,7 +38,10 @@ Canaid::Permissions.register_for(Project) do
   # project: update/delete, assign/reassign/unassign users
   can :manage_project do |user, project|
     user.is_owner_of_project?(project) &&
-      MyModule.joins(experiment: :project).where(experiments: { project: project }).all? do |my_module|
+      MyModule.joins(experiment: :project)
+              .where(experiments: { project: project })
+              .preload(my_module_status: :my_module_status_implications)
+              .all? do |my_module|
         if my_module.my_module_status
           my_module.my_module_status.my_module_status_implications.all? { |implication| implication.call(my_module) }
         else
