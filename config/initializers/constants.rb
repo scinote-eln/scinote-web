@@ -318,7 +318,7 @@ class Constants
 
   WHITELISTED_ATTRIBUTES = [
     'href', 'src', 'width', 'height', 'alt', 'cite', 'datetime', 'title',
-    'class', 'name', 'xml:lang', 'abbr', 'style', 'target', :data, 'border'
+    'class', 'name', 'xml:lang', 'abbr', 'style', 'target', :data, 'border', 'contenteditable'
   ].freeze
 
   WHITELISTED_CSS_ATTRIBUTES = {
