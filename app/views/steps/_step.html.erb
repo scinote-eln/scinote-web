@@ -27,7 +27,7 @@
         </a>
       </div>
       <div class="panel-options pull-right">
-        <% unless preview %>
+        <% if !preview && @protocol.my_module %>
           <% if step.completed? %>
             <button data-action="uncomplete-step"
                     data-link-url="<%= toggle_step_state_step_path(step)%>"
