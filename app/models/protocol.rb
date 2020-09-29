@@ -524,12 +524,14 @@ class Protocol < ApplicationRecord
   end
 
   def update_parent(current_user)
-    # First, destroy parent's step contents
-    parent.destroy_contents
-    parent.reload
+    ActiveRecord::Base.no_touching do
+      # First, destroy parent's step contents
+      parent.destroy_contents
+      parent.reload
 
-    # Now, clone step contents
-    Protocol.clone_contents(self, parent, current_user, false)
+      # Now, clone step contents
+      Protocol.clone_contents(self, parent, current_user, false)
+    end
 
     # Lastly, update the metadata
     parent.reload
@@ -542,11 +544,13 @@ class Protocol < ApplicationRecord
   end
 
   def update_from_parent(current_user)
-    # First, destroy step contents
-    destroy_contents
+    ActiveRecord::Base.no_touching do
+      # First, destroy step contents
+      destroy_contents
 
-    # Now, clone parent's step contents
-    Protocol.clone_contents(parent, self, current_user, false)
+      # Now, clone parent's step contents
+      Protocol.clone_contents(parent, self, current_user, false)
+    end
 
     # Lastly, update the metadata
     reload
@@ -558,11 +562,13 @@ class Protocol < ApplicationRecord
   end
 
   def load_from_repository(source, current_user)
-    # First, destroy step contents
-    destroy_contents
+    ActiveRecord::Base.no_touching do
+      # First, destroy step contents
+      destroy_contents
 
-    # Now, clone source's step contents
-    Protocol.clone_contents(source, self, current_user, false)
+      # Now, clone source's step contents
+      Protocol.clone_contents(source, self, current_user, false)
+    end
 
     # Lastly, update the metadata
     reload
@@ -588,12 +594,14 @@ class Protocol < ApplicationRecord
     # Don't proceed further if clone is invalid
     return clone if clone.invalid?
 
-    # Okay, clone seems to be valid: let's clone it
-    clone = deep_clone(clone, current_user)
+    ActiveRecord::Base.no_touching do
+      # Okay, clone seems to be valid: let's clone it
+      clone = deep_clone(clone, current_user)
 
-    # If the above operation went well, update published_on
-    # timestamp
-    clone.update(published_on: Time.now) if clone.in_repository_public?
+      # If the above operation went well, update published_on
+      # timestamp
+      clone.update(published_on: Time.zone.now) if clone.in_repository_public?
+    end
 
     # Link protocols if neccesary
     if link_protocols

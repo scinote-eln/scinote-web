@@ -325,7 +325,7 @@ class ProtocolsController < ApplicationController
           @protocol.unlink
         rescue Exception
           transaction_error = true
-          raise ActiveRecord:: Rollback
+          raise ActiveRecord::Rollback
         end
       end
 
@@ -353,13 +353,11 @@ class ProtocolsController < ApplicationController
       if @protocol.can_destroy?
         transaction_error = false
         Protocol.transaction do
-          begin
-            # Revert is basically update from parent
-            @protocol.update_from_parent(current_user)
-          rescue Exception
-            transaction_error = true
-            raise ActiveRecord:: Rollback
-          end
+          # Revert is basically update from parent
+          @protocol.update_from_parent(current_user)
+        rescue StandardError
+          transaction_error = true
+          raise ActiveRecord::Rollback
         end
 
         if transaction_error
@@ -397,12 +395,10 @@ class ProtocolsController < ApplicationController
       if @protocol.parent.can_destroy?
         transaction_error = false
         Protocol.transaction do
-          begin
-            @protocol.update_parent(current_user)
-          rescue Exception
-            transaction_error = true
-            raise ActiveRecord:: Rollback
-          end
+          @protocol.update_parent(current_user)
+        rescue StandardError
+          transaction_error = true
+          raise ActiveRecord::Rollback
         end
 
         if transaction_error
@@ -440,12 +436,10 @@ class ProtocolsController < ApplicationController
       if @protocol.can_destroy?
         transaction_error = false
         Protocol.transaction do
-          begin
-            @protocol.update_from_parent(current_user)
-          rescue Exception
-            transaction_error = true
-            raise ActiveRecord:: Rollback
-          end
+          @protocol.update_from_parent(current_user)
+        rescue StandardError
+          transaction_error = true
+          raise ActiveRecord::Rollback
         end
 
         if transaction_error
@@ -483,12 +477,10 @@ class ProtocolsController < ApplicationController
       if @protocol.can_destroy?
         transaction_error = false
         Protocol.transaction do
-          begin
-            @protocol.load_from_repository(@source, current_user)
-          rescue Exception
-            transaction_error = true
-            raise ActiveRecord:: Rollback
-          end
+          @protocol.load_from_repository(@source, current_user)
+        rescue StandardError
+          transaction_error = true
+          raise ActiveRecord::Rollback
         end
 
         if transaction_error
