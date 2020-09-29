@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: https://github.com/biosistemika/yomu
-  revision: 8845246f3e6a6cbc49b902cd4b908ba70553cbdd
+  revision: 063b855d672e9dd9de1e6e585b349a9b63e120c3
   branch: master
   specs:
     yomu (0.2.4)
@@ -338,9 +338,9 @@ GEM
     marcel (0.3.3)
       mimemagic (~> 0.3.2)
     method_source (0.9.2)
-    mime-types (3.3)
+    mime-types (3.3.1)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2019.0904)
+    mime-types-data (3.2020.0512)
     mimemagic (0.3.5)
     mini_magick (4.9.5)
     mini_mime (1.0.2)
