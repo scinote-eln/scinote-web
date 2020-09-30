@@ -1,7 +1,7 @@
 /* eslint no-underscore-dangle: "off" */
 /* eslint no-use-before-define: "off" */
 /* eslint no-restricted-syntax: ["off", "BinaryExpression[operator='in']"] */
-/* global tinymce I18n GLOBAL_CONSTANTS HelperModule*/
+/* global tinymce I18n HelperModule validateFileSize */
 (function() {
   'use strict';
 
@@ -25,23 +25,18 @@
           let files = $('#tinymce_current_upload')[0].files;
 
           Array.from(files).forEach(file => formData.append('files[]', file, file.name));
-
           $.post({
-            url: '/tiny_mce_assets',
+            url: textAreaElement.data('tinymce-asset-path'),
             data: formData,
             processData: false,
             contentType: false,
             beforeSend: function(xhr) {
-              let sizeLimit = false;
-              Array.from(files).forEach(file => {
-                if (file.size > GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB * 1024 * 1024) {
-                  sizeLimit = true;
+              Array.from(files).every(file => {
+                if (!validateFileSize(file, true)) {
+                  xhr.abort();
+                  return false;
                 }
               });
-              if (sizeLimit) {
-                HelperModule.flashAlertMsg(I18n.t('general.file.size_exceeded', { file_size: GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB }), 'danger');
-                xhr.abort();
-              }
             },
             success: function(data) {
               handleResponse(data);
@@ -69,10 +64,9 @@
       }
 
       function buildHTML(image) {
-        var imgstr = "<img src='" + image.url + "'";
-        imgstr += " data-mce-token='" + image.token + "'";
-        imgstr += " alt='description-" + image.token + "' />";
-        return imgstr;
+        return `<img src="${image.url}" 
+                     data-mce-token="${image.token}" 
+                     alt="description-${image.token}" />`;
       }
 
       // Create hidden field for images
