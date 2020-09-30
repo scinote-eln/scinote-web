@@ -175,6 +175,7 @@ en:
       protocol_description_in_task_edited_html: "%{user} edited protocol description on task %{my_module}."
       export_inventory_items_assigned_to_task_html: "%{user} exported inventory item(s) assigned to task %{my_module} from inventory %{repository}: Live version."
       export_inventory_snapshot_items_assigned_to_task_html: "%{user} exported inventory item(s) assigned to task %{my_module} from inventory %{repository_snapshot}: Snapshot of %{created_at}."
+      change_status_on_task_flow_html: "%{user} changed status from <strong>%{my_module_status_old}</strong> to <strong>%{my_module_status_new}</strong> for task %{my_module}."
 
     activity_name:
       create_project: "Project created"
@@ -315,6 +316,7 @@ en:
       protocol_description_in_task_edited: "Protocol description in task edited"
       export_inventory_items_assigned_to_task: "Task-assigned inventory items exported (live version)"
       export_inventory_snapshot_items_assigned_to_task: "Task-assigned inventory items exported (snapshot)"
+      change_status_on_task_flow: "Task status changed"
 
     activity_group:
       projects: "Projects"

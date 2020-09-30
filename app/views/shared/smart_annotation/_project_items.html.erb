@@ -1,0 +1,16 @@
+<% limit_reached = projects.length == Constants::ATWHO_SEARCH_LIMIT + 1 %>
+<div class="atwho-scroll-container">
+  <% projects.limit(Constants::ATWHO_SEARCH_LIMIT).each do |project| %>
+    <li class="item" data-name="<%= project.name %>" data-id="<%= project.id.base62_encode %>" data-type="prj">
+      <span class='sa-type'>Prj</span>
+      <span class="item-text"><%= project.name %></span>
+    </li>
+  <% end %>
+  <% if limit_reached %>
+    <div class="more-results"><%= t('atwho.more_results') %></div>
+  <% end %>
+  <% if projects.empty? %>
+    <%= render partial: 'shared/smart_annotation/no_results.html.erb', locals: { object_type: 'projects' } %>
+  <% end %>
+</div>
+<%= render partial: 'shared/smart_annotation/footer.html.erb' %>

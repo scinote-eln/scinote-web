@@ -31,7 +31,8 @@ class MyModuleRepositorySnapshotsController < ApplicationController
   end
 
   def create
-    repository_snapshot = @repository.provision_snapshot(@my_module, current_user)
+    repository_snapshot = RepositorySnapshot.create_preliminary(@repository, @my_module, current_user)
+    RepositorySnapshotProvisioningJob.perform_later(repository_snapshot)
 
     render json: {
       html: render_to_string(partial: 'my_modules/repositories/full_view_version',
@@ -108,7 +109,7 @@ class MyModuleRepositorySnapshotsController < ApplicationController
       Activities::CreateActivityService.call(
         activity_type: :export_inventory_snapshot_items_assigned_to_task,
         owner: current_user,
-        subject: @repository_snapshot,
+        subject: @my_module,
         team: current_team,
         message_items: {
           my_module: @my_module.id,

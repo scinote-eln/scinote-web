@@ -2,7 +2,6 @@
   <%= t('my_modules.states.completed') %>
   <span class="due-date-label">
     <%= l(my_module.completed_on, format: :full_date) %>
-    <span class="fas fa-check"></span>
   </span>
 <% elsif my_module.is_one_day_prior? %>
   <%= t('my_modules.states.due_soon') %>

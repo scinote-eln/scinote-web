@@ -222,8 +222,7 @@ class Asset < ApplicationRecord
       Rails.logger.info "Asset #{id}: Creating extract text job"
       # The extract_asset_text also includes
       # estimated size calculation
-      Asset.delay(queue: :assets, run_at: 20.minutes.from_now)
-           .extract_asset_text_delayed(id, in_template)
+      Asset.delay(queue: :assets).extract_asset_text_delayed(id, in_template)
     elsif marvinjs?
       extract_asset_text
     else

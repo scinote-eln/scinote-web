@@ -14,11 +14,11 @@
             <span class="fas fa-plus" aria-hidden="true"></span>
             <span class="hidden-xs"><%=t "projects.reports.index.new" %></span>
           <% end %>
-          <%= link_to "", remote: true, class: "btn btn-secondary", id: "edit-report-btn" do %>
+          <%= link_to "", remote: true, class: "btn btn-light disabled hidden", id: "edit-report-btn" do %>
             <span class="fas fa-pencil-alt" aria-hidden="true"></span>
             <span class="hidden-xs"><%=t "projects.reports.index.edit" %></span>
           <% end %>
-          <%= link_to "", remote: true, class: "btn btn-secondary", id: "delete-reports-btn" do %>
+          <%= link_to "", remote: true, class: "btn btn-light disabled hidden", id: "delete-reports-btn" do %>
             <span class="fas fa-times" aria-hidden="true"></span>
             <span class="hidden-xs"><%=t "projects.reports.index.delete" %></span>
           <% end %>

@@ -33,32 +33,31 @@
               <span class="fas fa-plus"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.create_new") %></span>
             </button>
-            <button class="btn btn-secondary" data-action="edit" disabled>
+            <button class="btn btn-light disabled hidden" data-action="edit">
               <span class="fas fa-pencil-alt"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.edit") %></span>
             </button>
-            <button class="btn btn-secondary" data-action="clone" disabled>
+            <button class="btn btn-light disabled hidden" data-action="clone">
               <span class="fas fa-copy"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.clone_btn") %></span>
             </button>
             <% if @type == :public %>
-              <button class="btn btn-secondary" data-action="make-private" data-url="<%= make_private_protocols_path %>" disabled>
+              <button class="btn btn-light disabled hidden" data-action="make-private" data-url="<%= make_private_protocols_path %>">
                 <span class="fas fa-eye-slash"></span>
                 <span class="hidden-xs">&nbsp;<%= t("protocols.index.make_private") %></span>
               </button>
             <% elsif @type == :private %>
-              <button class="btn btn-secondary" data-action="publish" data-url="<%= publish_protocols_path %>" disabled>
+              <button class="btn btn-light disabled hidden" data-action="publish" data-url="<%= publish_protocols_path %>">
                 <span class="fas fa-eye"></span>
                 <span class="hidden-xs">&nbsp;<%= t("protocols.index.publish") %></span>
               </button>
             <% end %>
           </div>
           <div id="import-export-protocols" class="sci-btn-group" role="group">
-          <button class="btn btn-secondary btn-open-file"
-             data-toggle="dropdown"
-             aria-haspopup="true"
-             aria-expanded="false"
-             <%= 'disabled' unless can_create_protocols_in_repository?(@current_team) %>>
+          <button class="btn btn-light btn-open-file <%= 'disabled hidden' unless can_create_protocols_in_repository?(@current_team) %>"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false">
             <span class="fas fa-download"></span><span class="hidden-xs">&nbsp;<%= t("protocols.index.import") %></span></button>
             <% if can_create_protocols_in_repository?(@current_team) %>
               <ul class="dropdown-menu">
@@ -80,14 +79,14 @@
                 </li>
               </ul>
             <% end %>
-            <button class="btn btn-secondary" data-action="export" data-export-url="<%= export_protocols_path() %>" disabled>
+            <button class="btn btn-light disabled hidden" data-action="export" data-export-url="<%= export_protocols_path() %>">
               <span class="fas fa-upload"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.export") %></span>
             </button>
           </div>
 
           <div class="sci-btn-group" role="group">
-            <button class="btn btn-secondary" data-action="archive" data-url="<%= archive_protocols_path %>" disabled>
+            <button class="btn btn-light disabled hidden" data-action="archive" data-url="<%= archive_protocols_path %>">
               <span class="fas fa-archive"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.archive_action") %></span>
             </button>
@@ -97,7 +96,7 @@
             <%= t("protocols.index.archive.description") %>
           </div>
           <div class="sci-btn-group" role="group">
-            <button class="btn btn-secondary" data-action="restore" data-url="<%= restore_protocols_path %>" disabled>
+            <button class="btn btn-light disabled hidden" data-action="restore" data-url="<%= restore_protocols_path %>">
               <span class="fas fa-sync-alt"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.restore") %></span>
             </button>
@@ -140,4 +139,3 @@
 <%= javascript_include_tag "assets/wopi/create_wopi_file" %>
 <%= javascript_include_tag "protocols/index" %>
 <%= javascript_include_tag "protocols/steps" %>
-

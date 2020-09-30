@@ -1,6 +1,6 @@
 <% if project.active_experiments.present? %>
   <ul class="tree-child hidden" data-branch-id="pro<%= project.id %>">
-    <% project.sorted_active_experiments('atoz').each do |experiment| %>
+    <% project.sorted_active_experiments('atoz').preload(:active_my_modules).each do |experiment| %>
       <% cache [action_name, current_user, experiment] do %>
         <li data-parent="candidate" class="branch">
           <span class="tree-link first-indent" title="<%= experiment.name %>">

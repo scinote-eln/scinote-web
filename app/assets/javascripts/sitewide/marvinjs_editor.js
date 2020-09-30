@@ -168,6 +168,10 @@ var MarvinJsEditorApi = (function() {
       $(marvinJsModal).modal('hide');
       FilePreviewModal.init();
       config.button.dataset.inProgress = false;
+    }).error((response) => {
+      if (response.status === 403) {
+        HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+      }
     });
   }
 
@@ -196,6 +200,11 @@ var MarvinJsEditorApi = (function() {
         }
         $(marvinJsModal).modal('hide');
         config.button.dataset.inProgress = false;
+      },
+      error: function(response) {
+        if (response.status === 403) {
+          HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+        }
       }
     });
   }

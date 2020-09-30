@@ -24,38 +24,6 @@
     });
   }
 
-  // Complete mymodule
-  function complete_my_module_actions() {
-    var modal = $('#completed-task-modal');
-
-    modal.find('[data-action="complete"]')
-         .off().on().click(function(event) {
-        event.stopPropagation();
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        $.ajax({
-          url: modal.data('url'),
-          type: 'GET',
-          success: function(data) {
-            var task_button = $("[data-action='complete-task']");
-            task_button.attr('data-action', 'uncomplete-task');
-            task_button.find('.btn')
-              .removeClass('btn-toggle').addClass('btn-default');
-            $('.task-due-date').html(data.module_header_due_date);
-            $('.task-state-label').html(data.module_state_label);
-            task_button
-              .find('button')
-              .html('<span class="fas fa-times"></span>&nbsp;' +
-                    data.task_button_title);
-            modal.modal('hide');
-          },
-          error: function() {
-            modal.modal('hide');
-          }
-        });
-      });
-  }
-
   // Sets callback for completing/uncompleting step
   function applyStepCompletedCallBack() {
     // First, remove old event handlers, as we use turbolinks
@@ -77,25 +45,20 @@
 
             button = step.find("[data-action='complete-step']");
             button.attr("data-action", "uncomplete-step");
-            button.find(".btn").removeClass("btn-toggle").addClass("btn-default");
-            button.find("button").html('<span class="fas fa-times"></span>&nbsp;' + data.new_title);
-
-            if (data.task_ready_to_complete) {
-              $('#completed-task-modal').modal('show');
-              complete_my_module_actions();
-            }
+            button.html('<span class="fas fa-times"></span>&nbsp;' + data.new_title);
           }
           else {
             step.addClass("not-completed").removeClass("completed");
 
             button = step.find("[data-action='uncomplete-step']");
             button.attr("data-action", "complete-step");
-            button.find(".btn").removeClass("btn-default").addClass("btn-toggle");
-            button.find("button").html('<span class="fas fa-check"></span>&nbsp;' + data.new_title);
+            button.html('<span class="fas fa-check"></span>&nbsp;' + data.new_title);
           }
         },
-        error: function (data) {
-          console.log ("error");
+        error: function(response) {
+          if (response.status === 403) {
+            HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+          }
         }
       });
     });
@@ -157,6 +120,11 @@
         tinyMCE.editors.step_description_textarea.remove();
         TinyMCE.init('#step_description_textarea');
       });
+    })
+    .on("ajax:error", function(e, response) {
+      if (response.status === 403) {
+          HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+      }
     });
   }
 
@@ -176,19 +144,12 @@
       $('html, body').animate({ scrollTop: $step.offset().top - window.innerHeight / 2 });
 
       if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
+    })
+    .on("ajax:error", function(e, xhr) {
+      if (xhr.status === 403) {
+        HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+      }
     });
-  }
-
-  function applyCollapseLinkCallBack() {
-    $(".step-panel-collapse-link")
-      .on("ajax:success", function() {
-        var collapseIcon = $(this).find(".collapse-step-icon");
-        var collapsed = $(this).hasClass("collapsed");
-        // Toggle collapse button
-        collapseIcon.toggleClass("fa-chevron-up", !collapsed);
-        collapseIcon.toggleClass("fa-chevron-down", collapsed);
-
-      });
   }
 
   function formCallback($form) {
@@ -374,7 +335,6 @@
     applyStepCompletedCallBack();
     applyEditCallBack();
     applyMoveStepCallBack();
-    applyCollapseLinkCallBack();
     initDeleteStep();
     TinyMCE.highlight();
   }
@@ -505,8 +465,11 @@
           });
 
         },
-        error: function() {
-          newStepHandler();
+        error: function(response) {
+          if (response.status === 403) {
+            HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+            animateSpinner(null, false);
+          }
         }
       })
     });
@@ -635,17 +598,10 @@
     $(document).find("[data-role='step-hot-table']").each(function()  {
       renderTable($(this));
     });
-    $(document).find("span.collapse-step-icon").each(function()  {
-      $(this).addClass("fa-chevron-up");
-      $(this).removeClass("fa-chevron-down");
-    });
   }
 
   function expandStep(step) {
     $('.panel-collapse', step).collapse('show');
-    $(step).find("span.collapse-step-icon")
-      .addClass("fa-chevron-up")
-      .removeClass("fa-chevron-down");
     $(step).find("div.step-result-hot-table").each(function()  {
       renderTable($(this));
     });
@@ -693,10 +649,6 @@
   $(function () {
     $("[data-action='collapse-steps']").click(function () {
       $('.step .panel-collapse').collapse('hide');
-      $(document).find("span.collapse-step-icon").each(function()  {
-        $(this).addClass("fa-chevron-down");
-        $(this).removeClass("fa-chevron-up");
-      });
     });
     $("[data-action='expand-steps']").click(expandAllSteps);
   });

@@ -130,7 +130,7 @@
       </ul>
 
       <!-- Secondary navigation title -->
-      <h1 class="nav-name <%= @inline_editable_title_config.present? ? 'editable' : '' %>">
+      <h1 class="nav-name <%= @inline_editable_title_config.present? ? 'editable' : '' %>" data-hook="secondary-navigation-title-name">
         <% if @inline_editable_title_config.present? %>
           <%= render partial: "shared/inline_editing",
                      locals: {

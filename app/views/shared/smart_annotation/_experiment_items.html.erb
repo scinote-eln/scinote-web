@@ -1,0 +1,25 @@
+<% limit_reached = experiments.length == Constants::ATWHO_SEARCH_LIMIT + 1 %>
+<div class="atwho-scroll-container">
+  <% grouped_by_prj(experiments.limit(Constants::ATWHO_SEARCH_LIMIT)).each do |experiment_group| %>
+  <div class="item-group">
+    <div class="atwho-breadcrumbs">
+      <span class="atwho-breadcrumb" title="<%= experiment_group[:project_name] %>"><%= experiment_group[:project_name] %></span>
+    </div>
+    <div class="items">
+      <% experiment_group[:experiments].each do |experiment| %>
+        <li class="item" data-name="<%= experiment.name %>" data-id="<%= experiment.id.base62_encode %>" data-type="exp">
+          <span class='sa-type'>Exp</span>
+          <span class="item-text"><%= experiment.name %></span>
+        </li>
+      <% end %>
+    </div>
+  </div>
+  <% end %>
+  <% if limit_reached %>
+    <div class="more-results"><%= t('atwho.more_results') %></div>
+  <% end %>
+  <% if experiments.empty? %>
+    <%= render partial: 'shared/smart_annotation/no_results.html.erb', locals: { object_type: 'experiments' } %>
+  <% end %>
+</div>
+<%= render partial: 'shared/smart_annotation/footer.html.erb' %>

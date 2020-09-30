@@ -13,17 +13,6 @@ module Reports::Docx::DrawMyModule
     @docx.p do
       text I18n.t('projects.reports.elements.module.user_time',
                   timestamp: I18n.l(my_module.created_at, format: :full)), color: color[:gray]
-      text ' | '
-      if my_module.due_date.present?
-        text I18n.t('projects.reports.elements.module.due_date',
-                    due_date: I18n.l(my_module.due_date, format: :full)), color: color[:gray]
-      else
-        text I18n.t('projects.reports.elements.module.no_due_date'), color: color[:gray]
-      end
-      if my_module.completed?
-        text " #{I18n.t('my_modules.states.completed')}", bold: true, color: color[:green]
-        text " #{I18n.l(my_module.completed_on, format: :full)}", color: color[:gray]
-      end
       if my_module.archived?
         text ' | '
         text I18n.t('search.index.archived'), color: color[:gray]
@@ -33,15 +22,37 @@ module Reports::Docx::DrawMyModule
             scinote_url + Rails.application.routes.url_helpers.protocols_my_module_path(my_module),
             link_style
     end
-    if my_module.description.present?
-      html = custom_auto_link(my_module.description, team: @report_team)
-      html_to_word_converter(html)
-    else
-      @docx.p I18n.t 'projects.reports.elements.module.no_description'
+
+    @docx.p do
+      if my_module.started_on.present?
+        text I18n.t('projects.reports.elements.module.started_on',
+                    started_on: I18n.l(my_module.started_on, format: :full))
+      else
+        text I18n.t('projects.reports.elements.module.no_due_date')
+      end
     end
 
     @docx.p do
-      text I18n.t 'projects.reports.elements.module.tags_header'
+      if my_module.due_date.present?
+        text I18n.t('projects.reports.elements.module.due_date',
+                    due_date: I18n.l(my_module.due_date, format: :full))
+      else
+        text I18n.t('projects.reports.elements.module.no_due_date')
+      end
+    end
+
+    status = my_module.my_module_status
+    @docx.p do
+      text I18n.t('projects.reports.elements.module.status')
+      text ' '
+      text "[#{status.name}]", color: status.color.delete('#')
+      if my_module.completed?
+        text " #{I18n.t('my_modules.states.completed')} #{I18n.l(my_module.completed_on, format: :full)}"
+      end
+    end
+
+    @docx.p do
+      text I18n.t('projects.reports.elements.module.tags_header')
       if tags.any?
         my_module.tags.each do |tag|
           text ' '
@@ -49,8 +60,15 @@ module Reports::Docx::DrawMyModule
         end
       else
         text ' '
-        text I18n.t 'projects.reports.elements.module.no_tags'
+        text I18n.t('projects.reports.elements.module.no_tags')
       end
+    end
+
+    if my_module.description.present?
+      html = custom_auto_link(my_module.description, team: @report_team)
+      html_to_word_converter(html)
+    else
+      @docx.p I18n.t('projects.reports.elements.module.no_description')
     end
 
     @docx.p
