@@ -16,7 +16,6 @@ module Reports::Docx::PrivateMethods
       if elem[:type] == 'p'
         Reports::Docx.render_p_element(@docx, elem, scinote_url: @scinote_url, link_style: @link_style)
       elsif elem[:type] == 'table'
-        # tiny_mce_table(elem[:data])
         Reports::Docx.render_table_element(@docx, elem)
       elsif elem[:type] == 'newline'
         style = elem[:style] || {}
@@ -60,7 +59,7 @@ module Reports::Docx::PrivateMethods
   end
 
   # Convert HTML structure to plain text structure
-  def recursive_children(children, elements, _options = {})
+  def recursive_children(children, elements)
     children.each do |elem|
       if elem.class == Nokogiri::XML::Text
         next if elem.text.strip == ' ' # Invisible symbol
@@ -83,24 +82,8 @@ module Reports::Docx::PrivateMethods
         next
       end
 
-      if elem.name == 'img' && elem.attributes['data-mce-token']
-
-        image = TinyMceAsset.find_by(id: Base62.decode(elem.attributes['data-mce-token'].value))
-        next unless image
-
-        image_path = image_path(image.image)
-        dimension = FastImage.size(image_path)
-
-        next unless dimension
-
-        style = image_styling(elem, dimension)
-
-        elements.push(
-          type: 'image',
-          data: image_path.split('&')[0],
-          blob: image.blob,
-          style: style
-        )
+      if elem.name == 'img'
+        elements.push(img_element(elem))
         next
       end
 
@@ -110,11 +93,6 @@ module Reports::Docx::PrivateMethods
       end
 
       if elem.name == 'table'
-        # elem = tiny_mce_table(elem, nested_table: true) if options[:nested_tables]
-        # elements.push(
-        #   type: 'table',
-        #   data: elem
-        # )
         elements.push(tiny_mce_table_element(elem))
         next
       end
@@ -127,6 +105,22 @@ module Reports::Docx::PrivateMethods
       elements = recursive_children(elem.children, elements) if elem.children
     end
     elements
+  end
+
+  def img_element(elem)
+    return unless elem.attributes['data-mce-token']
+
+    image = TinyMceAsset.find_by(id: Base62.decode(elem.attributes['data-mce-token'].value))
+    return unless image
+
+    image_path = image_path(image.image)
+    dimension = FastImage.size(image_path)
+
+    return unless dimension
+
+    style = image_styling(elem, dimension)
+
+    { type: 'image', data: image_path.split('&')[0], blob: image.blob, style: style }
   end
 
   def link_element(elem)
@@ -145,7 +139,6 @@ module Reports::Docx::PrivateMethods
     }
   end
 
-  # rubocop:disable Metrics/BlockLength
   def list_element(list_element)
     data_array = list_element.children.select { |n| %w(li ul ol a img).include?(n.name) }.map do |li_child|
       li_child.children.map do |item|
@@ -156,35 +149,14 @@ module Reports::Docx::PrivateMethods
         elsif %w(a).include?(item.name)
           link_element(item)
         elsif %w(img).include?(item.name)
-
-          # this will be extracted to new method with code from line 85
-          next unless item.attributes['data-mce-token']
-
-          image = TinyMceAsset.find_by(id: Base62.decode(item.attributes['data-mce-token'].value))
-          next unless image
-
-          image_path = image_path(image.image)
-          dimension = FastImage.size(image_path)
-
-          next unless dimension
-
-          style = image_styling(item, dimension)
-
-          {
-            type: 'image',
-            data: image_path.split('&')[0],
-            blob: image.blob,
-            style: style,
-            bookmark_id: SecureRandom.hex
-          }
+          img_element(item).merge(bookmark_id: SecureRandom.hex)
         elsif %w(table).include?(item.name)
-          { type: 'table', data: tiny_mce_table_element(item)[:data], bookmark_id: SecureRandom.hex }
+          tiny_mce_table_element(item).merge(bookmark_id: SecureRandom.hex)
         end
       end.reject(&:blank?)
     end
     { type: list_element.name, data: data_array }
   end
-  # rubocop:enable Metrics/BlockLength
 
   def smart_annotation_check(elem)
     return "[#{elem.text}]" if elem.parent.attributes['class']&.value == 'sa-type'
@@ -340,46 +312,6 @@ module Reports::Docx::PrivateMethods
     end.reject(&:blank?)
     { type: 'table', data: rows }
   end
-
-  # def tiny_mce_table(table_data, options = {})
-  #   docx_table = []
-  #   scinote_url = @scinote_url
-  #   link_style = @link_style
-  #   table_data.css('tbody').first.children.each do |row|
-  #     docx_row = []
-  #     next unless row.name == 'tr'
-  #
-  #     row.children.each do |cell|
-  #       next unless cell.name == 'td'
-  #
-  #       # Parse cell content
-  #       formated_cell = recursive_children(cell.children, [], nested_tables: true)
-  #       # Combine text elements to single paragraph
-  #       formated_cell = combine_docx_elements(formated_cell)
-  #
-  #       docx_cell = Caracal::Core::Models::TableCellModel.new do |c|
-  #         formated_cell.each do |cell_content|
-  #           if cell_content[:type] == 'p'
-  #             Reports::Docx.render_p_element(c, cell_content,
-  #                                            scinote_url: scinote_url, link_style: link_style, skip_br: true)
-  #           elsif cell_content[:type] == 'table'
-  #             c.table formated_cell_content[:data], border_size: Constants::REPORT_DOCX_TABLE_BORDER_SIZE
-  #           elsif cell_content[:type] == 'image'
-  #             Reports::Docx.render_img_element(c, cell_content, table: { columns: row.children.length / 3 })
-  #           end
-  #         end
-  #       end
-  #       docx_row.push(docx_cell)
-  #     end
-  #     docx_table.push(docx_row)
-  #   end
-  #
-  #   if options[:nested_table]
-  #     docx_table
-  #   else
-  #     @docx.table docx_table, border_size: Constants::REPORT_DOCX_TABLE_BORDER_SIZE
-  #   end
-  # end
 
   def image_path(attachment)
     attachment.service_url

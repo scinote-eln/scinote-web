@@ -93,12 +93,18 @@ class Reports::Docx
     bookmark_items.each_with_index do |(key, item), index|
       if item[:type] == 'image'
         docx.bookmark_start id: index, name: key
+        docx.p do
+          br
+          text item[:blob]&.filename.to_s
+        end
         Reports::Docx.render_img_element(docx, item)
         docx.bookmark_end id: index
       elsif item[:type] == 'table'
         docx.bookmark_start id: index, name: key
 
+        # Bookmark won't work with table only, empty p element added
         docx.p do
+          br
           text ''
         end
         Reports::Docx.render_table_element(docx, item, options)
@@ -108,7 +114,6 @@ class Reports::Docx
   end
 
   # rubocop:disable Metrics/BlockLength
-
   def self.recursive_list_items_renderer(node, element, bookmark_items: {})
     node.public_send(element[:type]) do
       element[:data].each do |values_array|
@@ -122,7 +127,7 @@ class Reports::Docx
                 Reports::Docx.render_link_element(self, item)
               elsif %w(image).include?(item[:type])
                 bookmark_items[item[:bookmark_id]] = item
-                link 'Appended image', item[:bookmark_id] do
+                link "Appended image - #{item[:blob]&.filename}", item[:bookmark_id] do
                   internal true
                 end
               elsif %w(table).include?(item[:type])
@@ -140,6 +145,7 @@ class Reports::Docx
     end
     bookmark_items
   end
+  # rubocop:enable Metrics/BlockLength
 
   def self.render_table_element(docx, element, options = {})
     docx_table = []
@@ -163,46 +169,5 @@ class Reports::Docx
     end
     docx.table docx_table, border_size: Constants::REPORT_DOCX_TABLE_BORDER_SIZE
   end
-
-  # Testing renderer, will be removed
-  def self.render_list_element1(docx, _elem)
-    docx.ol do
-      li 'some'
-      li do
-        text 'kekec'
-        text 'kekec2'
-        text 'kekec3'
-        ul do
-          li 'nes1'
-          li 'nes2' do
-            ul do
-              li '3 level1'
-              li '3 leve 2' do
-                link 'Click Here', 'https://image.shutterstock.com/image-vector/example-stamp-260nw-426673501.jpg'
-                p do
-                  text 'Click Here', 'https://image.shutterstock.com/image-vector/example-stamp-260nw-426673501.jpg'
-                end
-              end
-            end
-          end
-          li 'nes3'
-          li do
-            bookmark_start id: 'img1', name: 'image1'
-            text 'bookmark is here'
-            bookmark_end id: 'img1'
-          end
-        end
-      end
-      li 'som3'
-      li 'some4'
-    end
-    docx.p do
-      bookmark_start id: 'img1', name: 'image1'
-      text 'bookmark is here'
-      bookmark_end id: 'img1'
-    end
-  end
 end
-
-# rubocop:enable Metrics/BlockLength
 # rubocop:enable  Style/ClassAndModuleChildren
