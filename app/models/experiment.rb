@@ -256,12 +256,6 @@ class Experiment < ApplicationRecord
 
   private
 
-  # Archive all modules. Receives an array of module integer IDs.
-  def archive_modules(module_ids)
-    my_modules.where(id: module_ids).each(&:archive!)
-    my_modules.reload
-  end
-
   # Archive all modules. Receives an array of module integer IDs
   # and current user.
   def archive_modules(module_ids, current_user)

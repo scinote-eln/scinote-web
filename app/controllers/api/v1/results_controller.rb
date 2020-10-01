@@ -104,10 +104,10 @@ module Api
         Result.transaction do
           @result = @task.results.create!(result_params.merge(user_id: current_user.id))
           if @form_multipart_upload
-            asset = Asset.create!(result_file_params)
+            asset = Asset.create!(result_file_params.merge({ team_id: @team.id }))
           else
             blob = create_blob_from_params
-            asset = Asset.create!(file: blob)
+            asset = Asset.create!(file: blob, team: @team)
           end
           ResultAsset.create!(asset: asset, result: @result)
         end

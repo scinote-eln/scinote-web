@@ -61,7 +61,7 @@ class Constants
   # Maximum number of users that can be invited in a single action
   INVITE_USERS_LIMIT = 20
   # Maximum nr. of search results for atwho (smart annotations)
-  ATWHO_SEARCH_LIMIT = 5
+  ATWHO_SEARCH_LIMIT = 10
   # Max characters for repository name in Atwho modal
   ATWHO_REP_NAME_LIMIT = 16
   # Results limited query/display elements for pages
@@ -318,7 +318,7 @@ class Constants
 
   WHITELISTED_ATTRIBUTES = [
     'href', 'src', 'width', 'height', 'alt', 'cite', 'datetime', 'title',
-    'class', 'name', 'xml:lang', 'abbr', 'style', 'target', :data, 'border'
+    'class', 'name', 'xml:lang', 'abbr', 'style', 'target', :data, 'border', 'contenteditable'
   ].freeze
 
   WHITELISTED_CSS_ATTRIBUTES = {

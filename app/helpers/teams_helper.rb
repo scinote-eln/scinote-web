@@ -4,6 +4,7 @@ module TeamsHelper
     if team != current_team
       current_user.current_team_id = team.id
       current_user.save
+      update_current_team
     end
   end
 

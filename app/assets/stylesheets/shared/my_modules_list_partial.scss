@@ -49,6 +49,8 @@
       }
 
       .task-link {
+        color: $brand-primary;
+        cursor: pointer;
         line-height: 24px;
         overflow: hidden;
         text-overflow: ellipsis;

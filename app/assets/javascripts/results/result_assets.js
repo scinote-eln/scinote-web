@@ -68,7 +68,6 @@
         initFormSubmitLinks($newResult);
         $(this).remove();
         applyEditResultAssetCallback();
-        Results.applyCollapseLinkCallBack();
 
         Results.toggleResultEditButtons(true);
         Results.expandResult($newResult);

@@ -87,4 +87,8 @@
       margin-right: .5em;
     }
   }
+
+  table > tbody > tr:first-child > td {
+    border-top: 0;
+  }
 }

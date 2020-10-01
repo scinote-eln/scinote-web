@@ -11,9 +11,8 @@ class MyModulesController < ApplicationController
   before_action :load_projects_tree, only: %i(protocols results activities archive)
   before_action :check_archive_and_restore_permissions, only: %i(update)
   before_action :check_manage_permissions, only: %i(description due_date update_description update_protocol_description)
-  before_action :check_view_permissions, except: %i(update update_description update_protocol_description
-                                                    toggle_task_state)
-  before_action :check_complete_module_permission, only: %i(complete_my_module toggle_task_state)
+  before_action :check_view_permissions, except: %i(update update_description update_protocol_description)
+  before_action :check_update_state_permissions, only: :update_state
   before_action :set_inline_name_editing, only: %i(protocols results activities archive)
 
   layout 'fluid'.freeze
@@ -43,6 +42,14 @@ class MyModulesController < ApplicationController
                    module: escape_input(@my_module.name))
         }
       }
+    end
+  end
+
+  def status_state
+    respond_to do |format|
+      format.json do
+        render json: { status_changing: @my_module.status_changing? }
+      end
     end
   end
 
@@ -127,6 +134,8 @@ class MyModulesController < ApplicationController
         log_activity(:restore_module)
       end
     else
+      render_403 && return unless can_manage_module?(@my_module)
+
       saved = @my_module.save
       if saved
         if description_changed
@@ -259,98 +268,22 @@ class MyModulesController < ApplicationController
 
   def archive
     @archived_results = @my_module.archived_results
-    current_team_switch(@my_module
-                                .experiment
-                                .project
-                                .team)
+    current_team_switch(@my_module.experiment.project.team)
   end
 
-  # Complete/uncomplete task
-  def toggle_task_state
-    respond_to do |format|
-      @my_module.completed? ? @my_module.uncompleted! : @my_module.completed!
-      task_completion_activity
+  def update_state
+    old_status_id = @my_module.my_module_status_id
+    if @my_module.update(my_module_status_id: update_status_params[:status_id])
+      log_activity(:change_status_on_task_flow, @my_module, my_module_status_old: old_status_id,
+                   my_module_status_new: @my_module.my_module_status.id)
 
-      # Render new button HTML
-      new_btn_partial = if @my_module.completed?
-                          'my_modules/state_button_uncomplete.html.erb'
-                        else
-                          'my_modules/state_button_complete.html.erb'
-                        end
-
-      format.json do
-        render json: {
-          new_btn: render_to_string(partial: new_btn_partial),
-          completed: @my_module.completed?,
-          module_header_due_date: render_to_string(
-            partial: 'my_modules/module_header_due_date.html.erb',
-            locals: { my_module: @my_module }
-          ),
-          module_state_label: render_to_string(
-            partial: 'my_modules/module_state_label.html.erb',
-            locals: { my_module: @my_module }
-          )
-        }
-      end
-    end
-  end
-
-  def complete_my_module
-    respond_to do |format|
-      if @my_module.uncompleted? && @my_module.check_completness_status
-        @my_module.completed!
-        task_completion_activity
-        format.json do
-          render json: {
-            task_button_title: t('my_modules.buttons.uncomplete'),
-            module_header_due_date: render_to_string(
-              partial: 'my_modules/module_header_due_date.html.erb',
-              locals: { my_module: @my_module }
-            ),
-            module_state_label: render_to_string(
-              partial: 'my_modules/module_state_label.html.erb',
-              locals: { my_module: @my_module }
-            )
-          }, status: :ok
-        end
-      else
-        format.json { render json: {}, status: :unprocessable_entity }
-      end
+      return redirect_to protocols_my_module_path(@my_module)
+    else
+      render json: { errors: @my_module.errors.messages.values.flatten.join('\n') }, status: :unprocessable_entity
     end
   end
 
   private
-
-  def task_completion_activity
-    completed = @my_module.completed?
-    log_activity(completed ? :complete_task : :uncomplete_task)
-    start_work_on_next_task_notification
-  end
-
-  def start_work_on_next_task_notification
-    if @my_module.completed?
-      title = t('notifications.start_work_on_next_task',
-                user: current_user.full_name,
-                module: @my_module.name)
-      message = t('notifications.start_work_on_next_task_message',
-                  project: link_to(@project.name, project_url(@project)),
-                  experiment: link_to(@experiment.name,
-                                      canvas_experiment_url(@experiment)),
-                  my_module: link_to(@my_module.name,
-                                     protocols_my_module_url(@my_module)))
-      notification = Notification.create(
-        type_of: :recent_changes,
-        title: sanitize_input(title, %w(strong a)),
-        message: sanitize_input(message, %w(strong a)),
-        generator_user_id: current_user.id
-      )
-      # create notification for all users on the next modules in the workflow
-      @my_module.my_modules.map(&:users).flatten.uniq.each do |target_user|
-        next if target_user == current_user || !target_user.recent_notification
-        UserNotification.create(notification: notification, user: target_user)
-      end
-    end
-  end
 
   def load_vars
     @my_module = MyModule.find_by_id(params[:id])
@@ -384,8 +317,9 @@ class MyModulesController < ApplicationController
     render_403 unless can_read_experiment?(@my_module.experiment)
   end
 
-  def check_complete_module_permission
-    render_403 unless can_complete_module?(@my_module)
+  def check_update_state_permissions
+    return render_403 unless can_change_my_module_flow_status?(@my_module)
+    render_404 unless @my_module.my_module_status
   end
 
   def set_inline_name_editing
@@ -412,6 +346,10 @@ class MyModulesController < ApplicationController
     end
 
     update_params
+  end
+
+  def update_status_params
+    params.require(:my_module).permit(:status_id)
   end
 
   def log_start_date_change_activity(start_date_changes)

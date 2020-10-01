@@ -11,16 +11,24 @@ var selectedRow = null;
 
 function initEditMyModuleDescription() {
   var viewObject = $('#my_module_description_view');
-  viewObject.on('click', function() {
+  viewObject.on('click', function(e) {
+    if ($(e.target).hasClass('record-info-link')) return;
     TinyMCE.init('#my_module_description_textarea');
+  }).on('click', 'a', function(e) {
+    if ($(this).hasClass('record-info-link')) return;
+    e.stopPropagation();
   });
   TinyMCE.initIfHasDraft(viewObject);
 }
 
 function initEditProtocolDescription() {
   var viewObject = $('#protocol_description_view');
-  viewObject.on('click', function() {
+  viewObject.on('click', function(e) {
+    if ($(e.target).hasClass('record-info-link')) return;
     TinyMCE.init('#protocol_description_textarea', refreshProtocolStatusBar);
+  }).on('click', 'a', function(e) {
+    if ($(this).hasClass('record-info-link')) return;
+    e.stopPropagation();
   });
   TinyMCE.initIfHasDraft(viewObject);
 }
@@ -361,11 +369,13 @@ function loadFromRepository() {
         // Simply reload page
         location.reload();
       },
-      error: function(ev) {
-        // Display error message in alert()
-        alert(ev.responseJSON.message);
+      error: function(response) {
+        if (response.status === 403) {
+          HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+        } else {
+          alert(response.responseJSON.message);
+        }
 
-        // Hide modal
         modal.modal('hide');
       }
     });
