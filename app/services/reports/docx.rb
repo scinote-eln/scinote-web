@@ -40,8 +40,6 @@ class Reports::Docx
   end
 
   def self.render_p_element(docx, element, options = {})
-    scinote_url = options[:scinote_url]
-    link_style = options[:link_style]
     docx.p do
       element[:children].each do |text_el|
         if text_el[:type] == 'text'
@@ -51,16 +49,23 @@ class Reports::Docx
         elsif text_el[:type] == 'br' && !options[:skip_br]
           br
         elsif text_el[:type] == 'a'
-          if text_el[:link]
-            link_url = Reports::Docx.link_prepare(scinote_url, text_el[:link])
-            link text_el[:value], link_url, link_style
-          else
-            text text_el[:value], link_style
-          end
-          text ' ' if text_el[:value] != ''
+          Reports::Docx.render_link_element(self, text_el, options)
         end
       end
     end
+  end
+
+  def self.render_link_element(node, link_item, options = {})
+    scinote_url = options[:scinote_url]
+    link_style = options[:link_style]
+
+    if link_item[:link]
+      link_url = Reports::Docx.link_prepare(scinote_url, link_item[:link])
+      node.link link_item[:value], link_url, link_style
+    else
+      node.text link_item[:value], link_style
+    end
+    node.text ' ' if link_item[:value] != ''
   end
 
   def self.render_img_element(docx, element, options = {})
@@ -81,6 +86,103 @@ class Reports::Docx
       align style[:align] || :left
     end
   end
+
+  def self.render_list_element(docx, element)
+    bookmark_items = Reports::Docx.recursive_list_items_renderer(docx, element)
+
+    bookmark_items.each_with_index do |(key, item), index|
+      if item[:type] == 'image'
+        docx.bookmark_start id: index, name: key
+        Reports::Docx.render_img_element(docx, item)
+        docx.bookmark_end id: index
+      elsif item[:type] == 'table'
+        docx.bookmark_start id: index, name: key
+        # How to draw table here?
+        # docx = Caracal::Document
+        # self = Reports::Docx
+        # But you have instance method on Reports::Docx. How to access Reports::Docx of current docx?
+        # docx.tiny_mce_table(item)
+        docx.p do
+          text 'Table here soon'
+        end
+        docx.bookmark_end id: index
+      end
+    end
+  end
+
+  # rubocop:disable Metrics/BlockLength
+
+  def self.recursive_list_items_renderer(node, element, bookmark_items: {})
+    node.public_send(element[:type]) do
+      element[:data].each do |values_array|
+        li do
+          values_array.each do |item|
+            case item
+            when Hash
+              if %w(ul ol li).include?(item[:type])
+                Reports::Docx.recursive_list_items_renderer(self, item, bookmark_items: bookmark_items)
+              elsif %w(a).include?(item[:type])
+                Reports::Docx.render_link_element(self, item)
+              elsif %w(image).include?(item[:type])
+                bookmark_items[item[:bookmark_id]] = item
+                link 'Appended image', item[:bookmark_id] do
+                  internal true
+                end
+              elsif %w(table).include?(item[:type])
+                bookmark_items[item[:bookmark_id]] = item
+                link 'Appended table', item[:bookmark_id] do
+                  internal true
+                end
+              end
+            else
+              text item
+            end
+          end
+        end
+      end
+    end
+    bookmark_items
+  end
+
+  # Testing renderer, will be removed
+  def self.render_list_element1(docx, _elem)
+    docx.ol do
+      li 'some'
+      li do
+        text 'kekec'
+        text 'kekec2'
+        text 'kekec3'
+        ul do
+          li 'nes1'
+          li 'nes2' do
+            ul do
+              li '3 level1'
+              li '3 leve 2' do
+                link 'Click Here', 'https://image.shutterstock.com/image-vector/example-stamp-260nw-426673501.jpg'
+                p do
+                  text 'Click Here', 'https://image.shutterstock.com/image-vector/example-stamp-260nw-426673501.jpg'
+                end
+              end
+            end
+          end
+          li 'nes3'
+          li do
+            bookmark_start id: 'img1', name: 'image1'
+            text 'bookmark is here'
+            bookmark_end id: 'img1'
+          end
+        end
+      end
+      li 'som3'
+      li 'some4'
+    end
+    docx.p do
+      bookmark_start id: 'img1', name: 'image1'
+      text 'bookmark is here'
+      bookmark_end id: 'img1'
+    end
+  end
 end
 
+# rubocop:enable Metrics/BlockLength
 # rubocop:enable  Style/ClassAndModuleChildren

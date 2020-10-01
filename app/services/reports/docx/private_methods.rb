@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Reports::Docx::PrivateMethods
-  private
+  # private #Commented out just for testing.
 
   # RTE fields support
   def html_to_word_converter(text)
@@ -33,15 +33,18 @@ module Reports::Docx::PrivateMethods
         end
       elsif elem[:type] == 'image'
         Reports::Docx.render_img_element(@docx, elem)
+      elsif %w(ul ol).include?(elem[:type])
+        Reports::Docx.render_list_element(@docx, elem)
       end
     end
   end
 
   def combine_docx_elements(raw_elements)
+    # Word does not support some nested elements, move some elements to root level
     elements = []
     temp_p = []
     raw_elements.each do |elem|
-      if %w(image newline table).include? elem[:type]
+      if %w(image newline table ol ul).include? elem[:type]
         unless temp_p.empty?
           elements.push(type: 'p', children: temp_p)
           temp_p = []
@@ -114,6 +117,11 @@ module Reports::Docx::PrivateMethods
         next
       end
 
+      if %w(ul ol).include?(elem.name)
+        elements.push(list_element(elem))
+        next
+      end
+
       elements = recursive_children(elem.children, elements) if elem.children
     end
     elements
@@ -134,6 +142,48 @@ module Reports::Docx::PrivateMethods
       link: link
     }
   end
+
+  # rubocop:disable Metrics/BlockLength
+  def list_element(list_element)
+    data_array = list_element.children.select { |n| %w(li ul ol a img).include?(n.name) }.map do |li_child|
+      li_child.children.map do |item|
+        if item.is_a? Nokogiri::XML::Text
+          item.text.chomp
+        elsif %w(ul ol).include?(item.name)
+          list_element(item)
+        elsif %w(a).include?(item.name)
+          link_element(item)
+        elsif %w(img).include?(item.name)
+
+          # this will be extracted to new method with code from line 85
+          next unless item.attributes['data-mce-token']
+
+          image = TinyMceAsset.find_by(id: Base62.decode(item.attributes['data-mce-token'].value))
+          next unless image
+
+          image_path = image_path(image.image)
+          dimension = FastImage.size(image_path)
+
+          next unless dimension
+
+          style = image_styling(item, dimension)
+
+          {
+            type: 'image',
+            data: image_path.split('&')[0],
+            blob: image.blob,
+            style: style,
+            bookmark_id: SecureRandom.hex
+          }
+        elsif %w(table).include?(item.name)
+          item = tiny_mce_table(item, nested_table: true)
+          { type: 'table', data: item, bookmark_id: SecureRandom.hex }
+        end
+      end.reject(&:blank?)
+    end
+    { type: list_element.name, data: data_array }
+  end
+  # rubocop:enable Metrics/BlockLength
 
   def smart_annotation_check(elem)
     return "[#{elem.text}]" if elem.parent.attributes['class']&.value == 'sa-type'
