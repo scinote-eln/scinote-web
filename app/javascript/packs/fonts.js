@@ -1,1 +1,1 @@
-require("typeface-lato");
+require('typeface-lato');
