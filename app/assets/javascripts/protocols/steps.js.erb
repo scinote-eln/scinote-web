@@ -39,20 +39,27 @@
         dataType: "json",
         data: {completed: completed},
         success: function (data) {
-          var button;
+          var icon_button;
+          var main_button;
           if (completed) {
             step.addClass("completed").removeClass("not-completed");
 
-            button = step.find("[data-action='complete-step']");
-            button.attr("data-action", "uncomplete-step");
-            button.html('<span class="fas fa-times"></span>&nbsp;' + data.new_title);
+            icon_button = step.find(".toggle-step-complete[data-action='complete-step']");
+            main_button = step.find(".button-step-complete[data-action='complete-step']");
+            icon_button.attr("data-action", "uncomplete-step");
+            main_button.attr("data-action", "uncomplete-step");
+            icon_button.html('<span class="fas fa-check-circle"></span>');
+            main_button.html('<span class="fas fa-undo"></span>&nbsp;' + data.new_title);
           }
           else {
             step.addClass("not-completed").removeClass("completed");
 
-            button = step.find("[data-action='uncomplete-step']");
-            button.attr("data-action", "complete-step");
-            button.html('<span class="fas fa-check"></span>&nbsp;' + data.new_title);
+            icon_button = step.find(".toggle-step-complete[data-action='uncomplete-step']");
+            main_button = step.find(".button-step-complete[data-action='uncomplete-step']");
+            icon_button.attr("data-action", "complete-step");
+            main_button.attr("data-action", "complete-step");
+            icon_button.html('<span class="far fa-check-circle"></span>');
+            main_button.html('<span class="far fa-check-circle"></span>&nbsp;' + data.new_title);
           }
         },
         error: function(response) {

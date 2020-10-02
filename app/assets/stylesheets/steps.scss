@@ -47,6 +47,10 @@
   .step {
     .panel {
       margin-left: 0;
+
+      .panel-body {
+        padding: 15px 5px;
+      }
     }
   }
 
@@ -63,8 +67,7 @@
     border: 0;
     display: flex;
     min-height: 46px;
-    padding-bottom: 0;
-    padding-top: 0;
+    padding: 0 17px;
 
     .panel-options {
       bottom: 0;
@@ -87,7 +90,21 @@
       max-width: 100%;
       min-height: inherit;
       overflow: hidden;
+      padding-left: 1px;
       padding-right: 15px;
+
+      .toggle-step-complete {
+        @include font-h1;
+        padding: 5px;
+
+        .fas {
+          color: $brand-success;
+        }
+
+        .far {
+          color: $color-alto;
+        }
+      }
 
       .step-name-link {
         display: flex;
