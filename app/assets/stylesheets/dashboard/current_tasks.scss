@@ -2,8 +2,6 @@
 // scss-lint:disable NestingDepth
 
 .dashboard-container .current-tasks-widget {
-  grid-column: 1 / span 9;
-  grid-row: 1 / span 6;
 
   .title {
     flex-shrink: 0;
@@ -238,8 +236,6 @@
 
 @media (max-width: 1250px) {
   .dashboard-container .current-tasks-widget {
-    grid-column: 1 / span 8;
-
     .task-progress-container {
       max-width: 150px;
     }
@@ -259,9 +255,6 @@
 
 @media (max-width: 1000px) {
   .dashboard-container .current-tasks-widget {
-    grid-column: 1 / span 12;
-    grid-row: 1 / span 4;
-
     .no-tasks .fas {
       margin-left: 500px;
     }
@@ -271,7 +264,6 @@
 @media (max-width: 700px) {
   .dashboard-container .current-tasks-widget {
     --widget-header-size: 72px;
-    grid-row: 1;
     min-height: 450px;
 
     .widget-title {

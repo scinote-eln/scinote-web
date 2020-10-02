@@ -123,6 +123,12 @@ class Extends
                                'Protocol' => :description,
                                'MyModule' => :description }
 
+  DEFAULT_DASHBOARD_CONFIGURATION = [
+    { partial: 'dashboards/current_tasks', visible: true, size: 'large-widget', position: 1 },
+    { partial: 'dashboards/calendar', visible: true, size: 'small-widget', position: 2 },
+    { partial: 'dashboards/recent_work', visible: true, size: 'medium-widget', position: 3 }
+  ]
+
   ACTIVITY_SUBJECT_TYPES = %w(
     Team RepositoryBase Project Experiment MyModule Result Protocol Report RepositoryRow
   ).freeze

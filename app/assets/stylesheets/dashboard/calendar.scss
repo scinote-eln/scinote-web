@@ -5,8 +5,6 @@
 
 .dashboard-container .calendar-widget {
   --calendar-day-size: 32px;
-  grid-column: 10 / span 3;
-  grid-row: 1 / span 6;
   min-height: 320px;
 
   .dashboard-calendar {
@@ -127,17 +125,8 @@
   }
 }
 
-@media (max-width: 1250px) {
+@media (max-width: 1600px) {
   .dashboard-container .calendar-widget {
-    grid-column: 9 / span 4;
-  }
-}
-
-@media (max-width: 1000px) {
-  .dashboard-container .calendar-widget {
-    grid-column: 1 / span 6;
-    grid-row: 5 / span 4;
-
     .clndr {
       .events-container {
         left: 0;
@@ -150,7 +139,5 @@
 @media (max-width: 700px) {
   .dashboard-container .calendar-widget {
     --calendar-day-size: 28px;
-    grid-column: 1 / span 12;
-    grid-row: 2;
   }
 }
