@@ -8,19 +8,19 @@ var DasboardQuickStartWidget = (function() {
   var newProjectsVisibility = '#create-task-modal .new-projects-visibility';
 
   function initNewReportLink() {
-    $('.quick-start-widget .new-report').click(() => {
+    $('.quick-start-buttons .new-report').click(() => {
       sessionStorage.setItem('scinote-dashboard-new-report', Math.floor(Date.now() / 1000));
     });
   }
 
   function initNewProtocolLink() {
-    $('.quick-start-widget .new-protocol').click(() => {
+    $('.quick-start-buttons .new-protocol').click(() => {
       sessionStorage.setItem('scinote-dashboard-new-protocol', Math.floor(Date.now() / 1000));
     });
   }
 
   function initNewTaskModal() {
-    $('.quick-start-widget .new-task').click(() => {
+    $('.quick-start-buttons .new-task').click(() => {
       $('#create-task-modal').modal('show');
       $('#create-task-modal .select-block').attr('data-error', '');
     });
@@ -118,7 +118,7 @@ var DasboardQuickStartWidget = (function() {
 
   return {
     init: () => {
-      if ($('.quick-start-widget').length) {
+      if ($('.quick-start-buttons').length) {
         initNewTaskModal();
         initNewProtocolLink();
         initNewReportLink();
