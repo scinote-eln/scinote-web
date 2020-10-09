@@ -87,7 +87,7 @@ class Reports::Docx
     end
   end
 
-  def self.render_list_element(docx, element)
+  def self.render_list_element(docx, element, options = {})
     bookmark_items = Reports::Docx.recursive_list_items_renderer(docx, element)
 
     bookmark_items.each_with_index do |(key, item), index|
@@ -97,14 +97,11 @@ class Reports::Docx
         docx.bookmark_end id: index
       elsif item[:type] == 'table'
         docx.bookmark_start id: index, name: key
-        # How to draw table here?
-        # docx = Caracal::Document
-        # self = Reports::Docx
-        # But you have instance method on Reports::Docx. How to access Reports::Docx of current docx?
-        # docx.tiny_mce_table(item)
+
         docx.p do
-          text 'Table here soon'
+          text ''
         end
+        Reports::Docx.render_table_element(docx, item, options)
         docx.bookmark_end id: index
       end
     end
@@ -142,6 +139,29 @@ class Reports::Docx
       end
     end
     bookmark_items
+  end
+
+  def self.render_table_element(docx, element, options = {})
+    docx_table = []
+    element[:data].each do |row|
+      docx_row = []
+      row[:data].each do |cell|
+        docx_cell = Caracal::Core::Models::TableCellModel.new do |c|
+          cell.each do |content|
+            if content[:type] == 'p'
+              Reports::Docx.render_p_element(c, content, options.merge({ skip_br: true }))
+            elsif content[:type] == 'table'
+              Reports::Docx.render_table_element(c, content, options)
+            elsif content[:type] == 'image'
+              Reports::Docx.render_img_element(c, content, table: { columns: row.children.length / 3 })
+            end
+          end
+        end
+        docx_row.push(docx_cell)
+      end
+      docx_table.push(docx_row)
+    end
+    docx.table docx_table, border_size: Constants::REPORT_DOCX_TABLE_BORDER_SIZE
   end
 
   # Testing renderer, will be removed

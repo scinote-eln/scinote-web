@@ -23,7 +23,41 @@ describe Reports::Docx do
       }
     end
     it '' do
-      expect(report.send(:list_element, xml_elements)).to be == result
+      expect(report.__send__(:list_element, xml_elements)).to be == result
+    end
+  end
+
+  describe '.tiny_mce_table_element' do
+    let(:text) do
+      # rubocop:disable Layout/LineLength
+      '<body><table style="border-collapse: collapse; width: 100%; height: 28px;" border="1" data-mce-style="border-collapse: collapse; width: 100%; height: 28px;"><tbody><tr style="height: 10px;"><td style="width: 50%; height: 10px;">1</td><td style="width: 50%; height: 10px;">2</td></tr><tr style="height: 18px;"><td style="width: 50%; height: 18px;">3</td><td style="width: 50%; height: 18px;">4</td></tr></tbody></table></body>'
+      # rubocop:enable Layout/LineLength
+    end
+    let(:xml_elements) { Nokogiri::HTML(text).css('body').children.first }
+    let(:result) do
+      {
+        data: [
+          {
+            data: [
+              [{ children: [{ style: {}, type: 'text', value: '1' }], type: 'p' }],
+              [{ children: [{ style: {}, type: 'text', value: '2' }], type: 'p' }]
+            ],
+            type: 'tr'
+          },
+          {
+            data: [
+              [{ children: [{ style: {}, type: 'text', value: '3' }], type: 'p' }],
+              [{ children: [{ style: {}, type: 'text', value: '4' }], type: 'p' }]
+            ],
+            type: 'tr'
+          }
+        ],
+        type: 'table'
+      }
+    end
+
+    it '' do
+      expect(report.__send__(:tiny_mce_table_element, xml_elements)).to be == result
     end
   end
 end
