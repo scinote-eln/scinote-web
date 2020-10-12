@@ -44,7 +44,9 @@
       <div class="created-by grid-block">
         <span class="fas fa-user fa-lg"></span>
         <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_created_by") %></span>
-        <b><%= t("users.settings.teams.edit.header_created_by_name_email", name: team_created_by(@team).name, email: team_created_by(@team).email) %></b>
+        <b>
+          <%= t('users.settings.teams.edit.header_created_by_name_email', name: @team.created_by.full_name, email: @team.created_by.email) if @team.created_by %>
+        </b>
       </div>
 
       <div class="space-usage grid-block">
