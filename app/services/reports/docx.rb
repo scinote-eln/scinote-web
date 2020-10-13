@@ -127,12 +127,13 @@ class Reports::Docx
                 Reports::Docx.render_link_element(self, item)
               elsif %w(image).include?(item[:type])
                 bookmark_items[item[:bookmark_id]] = item
-                link "Appended image - #{item[:blob]&.filename}", item[:bookmark_id] do
+                link I18n.t('projects.reports.renderers.lists.appended_image',
+                            name: item[:blob]&.filename), item[:bookmark_id] do
                   internal true
                 end
               elsif %w(table).include?(item[:type])
                 bookmark_items[item[:bookmark_id]] = item
-                link 'Appended table', item[:bookmark_id] do
+                link I18n.t('projects.reports.renderers.lists.appended_table'), item[:bookmark_id] do
                   internal true
                 end
               end
