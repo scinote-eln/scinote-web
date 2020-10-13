@@ -37,6 +37,7 @@ gem 'jsonapi-renderer', '~> 0.2.2'
 gem 'jwt', '~> 1.5'
 gem 'kaminari'
 gem 'rack-attack'
+gem 'rack-cors'
 
 # JS datetime library, requirement of datetime picker
 gem 'momentjs-rails', '~> 2.17.1'
