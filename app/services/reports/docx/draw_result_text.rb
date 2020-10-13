@@ -17,7 +17,7 @@ module Reports::Docx::DrawResultText
                   timestamp: I18n.l(timestamp, format: :full), user: result.user.full_name), color: color[:gray]
     end
     html = custom_auto_link(result_text.text, team: @report_team)
-    html_to_word_converter(html)
+    Reports::HtmlToWordConverter.new(@docx).html_to_word_converter(html)
 
     subject['children'].each do |child|
       public_send("draw_#{child['type_of']}", child, result)

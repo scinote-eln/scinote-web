@@ -27,7 +27,7 @@ module Reports::Docx::DrawStep
     end
     if step.description.present?
       html = custom_auto_link(step.description, team: @report_team)
-      html_to_word_converter(html)
+      Reports::HtmlToWordConverter.new(@docx).html_to_word_converter(html)
     else
       @docx.p I18n.t 'projects.reports.elements.step.no_description'
     end

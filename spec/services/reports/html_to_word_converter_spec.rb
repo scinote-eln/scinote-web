@@ -2,11 +2,11 @@
 
 require 'rails_helper'
 
-describe Reports::Docx do
+describe Reports::HtmlToWordConverter do
   let(:user) { create :user }
   let(:team) { create :team }
   let(:docx) { double('docx') }
-  let(:report) { described_class.new({}.to_json, docx, user: user, team: team, scinote_url: 'scinote.test') }
+  let(:report) { described_class.new(docx) }
 
   describe 'html_list' do
     let(:text) do
