@@ -66,7 +66,8 @@ module Reports::Docx::DrawMyModule
 
     if my_module.description.present?
       html = custom_auto_link(my_module.description, team: @report_team)
-      Reports::HtmlToWordConverter.new(@docx).html_to_word_converter(html)
+      Reports::HtmlToWordConverter.new(@docx, { scinote_url: scinote_url,
+                                                link_style: link_style }).html_to_word_converter(html)
     else
       @docx.p I18n.t('projects.reports.elements.module.no_description')
     end

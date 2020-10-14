@@ -2,13 +2,15 @@
 
 module Reports
   class HtmlToWordConverter
-    def initialize(document)
+    def initialize(document, options = {})
       @docx = document
+      @scinote_url = options[:scinote_url]
+      @link_style = options[:link_style]
     end
 
     def html_to_word_converter(text)
       html = Nokogiri::HTML(text)
-      raw_elements = recursive_children(html.css('body').children, [])
+      raw_elements = recursive_children(html.css('body').children, []).compact
 
       # Combined raw text blocks in paragraphs
       elements = combine_docx_elements(raw_elements)
@@ -106,7 +108,6 @@ module Reports
           elements.push(list_element(elem))
           next
         end
-
         elements = recursive_children(elem.children, elements) if elem.children
       end
       elements
