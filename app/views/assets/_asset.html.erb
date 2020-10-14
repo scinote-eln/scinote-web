@@ -1,0 +1,5 @@
+<% if wopi_enabled? && wopi_file?(asset) && asset.show_inline? %>
+    <%= render partial: 'assets/asset_inline.html.erb', locals: { asset: asset } %>
+<% else %>
+    <%= render partial: 'assets/asset_thumbnail.html.erb', locals: { edit_page: false, asset: asset } %>
+<% end %>

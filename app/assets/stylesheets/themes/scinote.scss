@@ -1400,31 +1400,6 @@ ul.content-activities {
   }
 }
 
-.attachment-thumbnail {
-  display: inline-block;
-  height: 160px;
-  margin: 16px 10px 5px;
-  overflow: hidden;
-  text-align: center;
-  width: 100%;
-
-  img {
-    border-radius: 5px;
-    max-height: 100%;
-    max-width: 100%;
-  }
-
-  .fas {
-    font-size: 100px;
-    line-height: 160px;
-  }
-
-  &.processing {
-    background-image: url("/images/medium/processing.gif");
-    background-position: center;
-    background-repeat: no-repeat;
-  }
-}
 
 // Image preview modal
 .modal-file-preview {

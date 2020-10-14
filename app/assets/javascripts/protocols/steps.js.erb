@@ -381,18 +381,20 @@
   }
 
   function initPreviewToggle(){
-    $('.attachment-placeholder').on('click', '.dataPreviewAction', function (e) {
-      var view_mode = $(this).data('preview-type');
-      var asset_id = $(this).data('asset-id');
+    $('.attachments').on('click', '.change-preview-type', function (e) {
+      var viewMode = $(this).data('preview-type');
+      var assetId = $(this).data('asset-id');
       e.preventDefault();
-
+      e.stopPropagation();
       $.ajax({
-        url: `/files/${asset_id}/toggle_view_mode`,
+        url: `/files/${assetId}/toggle_view_mode`,
         type: "PATCH",
         dataType: "json",
-        data: { asset: { view_mode: view_mode }},
+        data: { asset: { view_mode: viewMode }},
         success: function (data) {
-          console.log(data);
+          $(`.step-asset[data-asset-id=${assetId}]`).replaceWith(data.html);
+          FilePreviewModal.init();
+          $(`.step-asset[data-asset-id=${assetId}]`).closest('.attachments').trigger('reorder');
         },
         error: function (data) {
           console.log(data);
@@ -411,6 +413,7 @@
     initDeleteStep();
     TinyMCE.highlight();
     initPreviewToggle();
+    reorderAttachmentsInit();
   }
 
   /*
@@ -699,20 +702,50 @@
   }
 
   // Reorder attachments
-  global.reorderAttachments = function reorderAtt(elem, stepId, sortType) {
-    var label_value = $("#dd-att-step-" + stepId + "> .dropdown-menu > li > a[data-order=" + sortType + "]").html();
-    $("#dd-att-step-" + stepId + "-label").html(label_value);
-    $('#att-' + stepId + ' a.file-preview-link').each(function(){
-      var elm = $(this)
-      elm.parent().css('order', elm.attr('data-order-' + sortType));
-    });
+  function reorderAttachmentsInit() {
+    $('.attachments-order').on('click', '.change-order', function(e){
+      var orderDropdown = $(this).closest('.attachments-order');
+      var assetsContainer = $(`.attachments[data-step-id=${orderDropdown.data('step-id')}]`)
+      var order = $(this).data('order');
+      e.preventDefault();
+      orderDropdown.find('.selected-order').html($(this).text());
+      assetsContainer.data('order', order);
+      assetsContainer.trigger('reorder');
+      $.post(orderDropdown.data('state-save-path'), {
+        assets: { order: order }
+      });
+    })
 
-    $.post(
-      $(elem).closest('.dropdown-menu').data('stateSavePath'),
-      { assets: { order: sortType } },
-      null,
-      'json',
-    );
+    $('.attachments').on('reorder', function() {
+      var assets = $(`.attachments[data-step-id=${$(this).data('step-id')}] .step-asset`);
+      var order = $(this).data('order');
+      var sortedAssets = assets.sort(function(a, b) {
+        if (a.dataset.assetOrder == b.dataset.assetOrder) {
+          if (order == 'new') {
+            return b.dataset.assetUpdatedAt - a.dataset.assetUpdatedAt;
+          } if (order == 'old') {
+            return a.dataset.assetUpdatedAt - b.dataset.assetUpdatedAt;
+          } if (order == 'atoz') {
+            return a.dataset.assetFileName.toLowerCase() > b.dataset.assetFileName.toLowerCase() ? 1 : -1;
+          } if (order == 'ztoa') {
+            return b.dataset.assetFileName.toLowerCase() > a.dataset.assetFileName.toLowerCase() ? 1 : -1;
+          }
+        }
+
+        return a.dataset.assetOrder > b.dataset.assetOrder ? 1 : -1
+      })
+
+      $.each(sortedAssets, function(i, element){
+        element.style.order = i
+      })
+    })
+    $('.attachments').trigger('reorder');
+  }
+
+  function initInlineAttachment() {
+    $(document).on('scroll', 'body', function(){
+      console.log(1)
+    })
   }
 
     // On init
@@ -737,3 +770,61 @@
 
   global.initHandsOnTable = initHandsOnTable;
 })(window);
+
+
+var StepInlineAttachments = (function() {
+  function elementVisible(element) {
+    var elementRect = element.getBoundingClientRect();
+    var elementHeight = $(element).height()
+    return elementRect.top + (elementHeight / 2) >= 0 &&
+           elementRect.bottom <= (window.innerHeight || document.documentElement.clientHeight) + (elementHeight / 2)
+  }
+
+  function showElement(element) {
+    setTimeout(() => {
+      var iframeUrl = $(element).find('.iframe-placeholder').data('iframe-url');
+      if (elementVisible(element) && iframeUrl) {
+        $(element).find('.iframe-placeholder')
+          .replaceWith(`<iframe class="active-iframe-preview" src="${iframeUrl}"></iframe>`);
+        $(element).addClass('active').attr('data-created-at', new Date().getTime());
+      }
+    },500)
+  }
+
+  function hideElement(element) {
+    var iframeUrl = $(element).find('.active-iframe-preview').attr('src');
+    if (!elementVisible(element) && iframeUrl) {
+      $(element).find('iframe')
+        .replaceWith(`<div class="iframe-placeholder" data-iframe-url="${iframeUrl}"></div>`);
+      $(element).removeClass('active').attr('data-created-at', null)
+      return true
+    }
+    return false
+  }
+
+  function checkForAttachmentsState() {
+    $.each($('.inline-attachment-container'), function(i, element){
+      showElement(element)
+    })
+    if ($('.active-iframe-preview').length > 5){
+      let sortedIframes = $('.inline-attachment-container.active').sort(function(a, b) {
+        return +a.dataset.createdAt - +b.dataset.createdAt;
+      })
+      $.each(sortedIframes, function(i, element){
+        if (hideElement(element)) return false
+      })
+    }
+  }
+
+  return {
+    init: () => {
+      windowScrollEvents['StepInlineAttachments'] = StepInlineAttachments.scrollEvent;
+    },
+    scrollEvent: () => {
+      checkForAttachmentsState()
+    }
+  }
+
+})();
+
+StepInlineAttachments.init();
