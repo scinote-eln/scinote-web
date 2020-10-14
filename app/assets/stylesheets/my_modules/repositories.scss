@@ -119,14 +119,13 @@
 
       .assigned-repository-title {
         @include my-module-repository-title;
-        padding-right: 2.25em;
+        padding-right: 2.2em;
 
         &::after {
           color: $color-alto;
           content: '[' attr(data-rows-count) ']';
           display: inline-block;
-          line-height: 1.375em;
-          padding-right: .75em;
+          padding-right: .7em;
           position: absolute;
           right: 0;
         }
@@ -229,15 +228,13 @@
           .repository-version {
             @include font-h2;
             flex-shrink: 0;
-            line-height: 1.375em;
-            padding-right: .625em;
+            padding-right: .7em;
 
             &::after {
               color: $color-alto;
               content: '[' attr(data-rows-count) ']';
               display: inline-block;
-              line-height: 1.375em;
-              padding-left: .313em;
+              padding-left: .3em;
             }
           }
 
