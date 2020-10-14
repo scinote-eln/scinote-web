@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Report < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
@@ -58,7 +60,7 @@ class Report < ApplicationRecord
   end
 
   def root_elements
-    (report_elements.order(:position)).select { |el| el.parent.blank? }
+    report_elements.order(:position).select { |el| el.parent.blank? }
   end
 
   # Save the JSON represented contents to this report
@@ -66,7 +68,7 @@ class Report < ApplicationRecord
   def save_with_contents(json_contents)
     begin
       Report.transaction do
-        #First, save the report itself
+        # First, save the report itself
         save!
 
         # Secondly, delete existing report elements
@@ -80,15 +82,13 @@ class Report < ApplicationRecord
     rescue ActiveRecord::ActiveRecordError, ArgumentError
       return false
     end
-    return true
+    true
   end
 
   # Clean report elements from report
   # the function runs before the report is edit
   def cleanup_report
-    report_elements.each do |el|
-      el.clean_removed_or_archived_elements
-    end
+    report_elements.each(&:clean_removed_or_archived_elements)
   end
 
   def self.generate_whole_project_report(project, current_user, current_team)
@@ -130,8 +130,8 @@ class Report < ApplicationRecord
                   end
                   ids_hash["#{type}_id"] = obj.id if extra_id_needed
                 end,
-        'sort_order' => sort_order.present? ? sort_order : nil,
-        'children' => children.present? ? children : []
+        'sort_order' => sort_order.presence,
+        'children' => children.presence || []
       }
     end
 
@@ -182,19 +182,19 @@ class Report < ApplicationRecord
     steps
   end
 
-  def self.generate_step_assets_element(step, elements)
+  def self.generate_step_assets_element(step, _elements)
     gen_element_content(step, step.assets, 'step_asset')
   end
 
-  def self.generate_step_tables_element(step, elements)
+  def self.generate_step_tables_element(step, _elements)
     gen_element_content(step, step.tables, 'step_table')
   end
 
-  def self.generate_step_checklists_element(step, elements)
+  def self.generate_step_checklists_element(step, _elements)
     gen_element_content(step, step.checklists, 'step_checklist')
   end
 
-  def self.generate_step_comments_element(step, elements)
+  def self.generate_step_comments_element(step, _elements)
     gen_element_content(step, nil, 'step_comments', true, 'asc')
   end
 
@@ -217,15 +217,15 @@ class Report < ApplicationRecord
     results
   end
 
-  def self.generate_result_comments_element(result, elements)
+  def self.generate_result_comments_element(result, _elements)
     gen_element_content(result, nil, 'result_comments', true, 'asc')
   end
 
-  def self.generate_my_module_activities_element(my_module, elements)
+  def self.generate_my_module_activities_element(my_module, _elements)
     gen_element_content(my_module, nil, 'my_module_activity', true, 'asc')
   end
 
-  def self.generate_my_module_repositories_element(my_module, elements)
+  def self.generate_my_module_repositories_element(my_module, _elements)
     repositories = my_module.experiment.project.assigned_repositories_and_snapshots
     gen_element_content(my_module, repositories, 'my_module_repository', true, 'asc')
   end
