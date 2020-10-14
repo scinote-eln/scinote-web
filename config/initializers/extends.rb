@@ -41,13 +41,24 @@ class Extends
                            my_module_repository: 17,
                            my_module_protocol: 18 }
 
-  EXPORT_ALL_MY_MODULE_ELEMENTS = [
-    :protocol,
-    :steps,
-    :results,
-    :activities,
-    :repositories
-  ]
+  EXPORT_ALL_PROJECT_ELEMENTS = {
+    experiments: {
+      my_modules: {
+        my_module_protocol: {},
+        my_module_steps: {
+          step_assets: {},
+          step_tables: {},
+          step_checklists: {},
+          step_comments: {}
+        },
+        my_module_results: {
+          result_comments: {}
+        },
+        my_module_activities: {},
+        my_module_repositories: {}
+      }
+    }
+  }
 
   # Data type name should match corresponding model's name
   REPOSITORY_DATA_TYPES = { RepositoryTextValue: 0,

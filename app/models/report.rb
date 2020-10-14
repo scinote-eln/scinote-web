@@ -93,21 +93,8 @@ class Report < ApplicationRecord
 
   def self.generate_whole_project_report(project, current_user, current_team)
     report_contents = gen_element_content(project, nil, 'project_header', true)
-
-    project.experiments.each do |exp|
-      modules = []
-
-      exp.my_modules.each do |my_module|
-        module_children = []
-
-        Extends::EXPORT_ALL_MY_MODULE_ELEMENTS.each do |my_module_element|
-          module_children += public_send("generate_my_module_#{my_module_element}_element", my_module, project)
-        end
-        modules += gen_element_content(my_module, nil, 'my_module', true, nil, module_children)
-      end
-
-      report_contents +=
-        gen_element_content(exp, nil, 'experiment', true, nil, modules)
+    Extends::EXPORT_ALL_PROJECT_ELEMENTS.each do |report_element, children|
+      report_contents += public_send("generate_#{report_element}_element", project, children)
     end
 
     report = Report.new
@@ -151,27 +138,73 @@ class Report < ApplicationRecord
     elements
   end
 
-  def self.generate_my_module_protocol_element(my_module, _project)
-    gen_element_content(my_module, nil, 'my_module_protocol', true)
-  end
-
-  def self.generate_my_module_steps_element(my_module, _project)
-    my_module_steps = []
-    my_module.protocol.steps.each do |step|
-      step_children = gen_element_content(step, step.assets, 'step_asset')
-      step_children += gen_element_content(step, step.tables, 'step_table')
-      step_children += gen_element_content(step, step.checklists, 'step_checklist')
-      step_children += gen_element_content(step, nil, 'step_comments', true, 'asc')
-
-      my_module_steps += gen_element_content(step, nil, 'step', true, nil, step_children)
+  def self.generate_experiments_element(project, elements)
+    experiments = []
+    project.experiments.each do |experiment|
+      experiment_contents = []
+      elements.each do |report_element, children|
+        experiment_contents += public_send("generate_#{report_element}_element", experiment, children)
+      end
+      experiments += gen_element_content(experiment, nil, 'experiment', true, nil, experiment_contents)
     end
-    my_module_steps
+    experiments
   end
 
-  def self.generate_my_module_results_element(my_module, _project)
-    my_module_results = []
+  def self.generate_my_modules_element(experiment, elements)
+    my_modules = []
+    experiment.my_modules.each do |my_module|
+      my_module_contents = []
+      elements.each do |report_element, children|
+        my_module_contents += public_send("generate_#{report_element}_element", my_module, children)
+      end
+      my_modules += gen_element_content(my_module, nil, 'my_module', true, nil, my_module_contents)
+    end
+    my_modules
+  end
+
+  def self.generate_my_module_protocol_element(my_module, elements)
+    protcol_contents = []
+    elements.each do |report_element, children|
+      protcol_contents += public_send("generate_#{report_element}_element", my_module, children)
+    end
+    gen_element_content(my_module, nil, 'my_module_protocol', true, nil, protcol_contents)
+  end
+
+  def self.generate_my_module_steps_element(my_module, elements)
+    steps = []
+    my_module.protocol.steps.each do |step|
+      step_contents = []
+      elements.each do |report_element, children|
+        step_contents += public_send("generate_#{report_element}_element", step, children)
+      end
+      steps += gen_element_content(step, nil, 'step', true, nil, step_contents)
+    end
+    steps
+  end
+
+  def self.generate_step_assets_element(step, elements)
+    gen_element_content(step, step.assets, 'step_asset')
+  end
+
+  def self.generate_step_tables_element(step, elements)
+    gen_element_content(step, step.tables, 'step_table')
+  end
+
+  def self.generate_step_checklists_element(step, elements)
+    gen_element_content(step, step.checklists, 'step_checklist')
+  end
+
+  def self.generate_step_comments_element(step, elements)
+    gen_element_content(step, nil, 'step_comments', true, 'asc')
+  end
+
+  def self.generate_my_module_results_element(my_module, elements)
+    results = []
     my_module.results.each do |result|
-      result_children = gen_element_content(result, nil, 'result_comments', true, 'asc')
+      result_contents = []
+      elements.each do |report_element, children|
+        result_contents += public_send("generate_#{report_element}_element", result, children)
+      end
       result_type = if result.asset
                       'result_asset'
                     elsif result.table
@@ -179,17 +212,21 @@ class Report < ApplicationRecord
                     elsif result.result_text
                       'result_text'
                     end
-      my_module_results += gen_element_content(result, nil, result_type, true, nil, result_children)
+      results += gen_element_content(result, nil, result_type, true, nil, result_contents)
     end
-    my_module_results
+    results
   end
 
-  def self.generate_my_module_activities_element(my_module, _project)
+  def self.generate_result_comments_element(result, elements)
+    gen_element_content(result, nil, 'result_comments', true, 'asc')
+  end
+
+  def self.generate_my_module_activities_element(my_module, elements)
     gen_element_content(my_module, nil, 'my_module_activity', true, 'asc')
   end
 
-  def self.generate_my_module_repositories_element(my_module, project)
-    repositories = project.assigned_repositories_and_snapshots
+  def self.generate_my_module_repositories_element(my_module, elements)
+    repositories = my_module.experiment.project.assigned_repositories_and_snapshots
     gen_element_content(my_module, repositories, 'my_module_repository', true, 'asc')
   end
 
