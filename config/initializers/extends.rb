@@ -298,7 +298,7 @@ class Extends
     restore_inventory: 145,
     export_inventory_items_assigned_to_task: 146,
     export_inventory_snapshot_items_assigned_to_task: 147,
-    change_status_on_task_flow: 148 # 149, 150, 151 in AdddOn!
+    change_status_on_task_flow: 148 # 149..157 in AdddOn!
   }
 
   ACTIVITY_GROUPS = {
