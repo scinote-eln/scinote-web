@@ -15,6 +15,6 @@ module Reports::Docx::DrawStepAsset
                   timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
     end
 
-    asset_image_preparing(asset) if asset.image?
+    Reports::DocxRenderer.render_asset_image(@docx, asset) if asset.image?
   end
 end

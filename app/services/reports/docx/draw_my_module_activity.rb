@@ -20,7 +20,7 @@ module Reports::Docx::DrawMyModuleActivity
                         sanitize_input(generate_activity_content(activity, true))
                       end
       @docx.p I18n.l(activity_ts, format: :full), color: color[:gray]
-      html_to_word_converter(activity_text)
+      Reports::HtmlToWordConverter.new(@docx).html_to_word_converter(activity_text)
       @docx.p
     end
   end
