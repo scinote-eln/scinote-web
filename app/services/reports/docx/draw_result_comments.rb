@@ -17,7 +17,8 @@ module Reports::Docx::DrawResultComments
                      date: I18n.l(comment_ts, format: :full_date),
                      time: I18n.l(comment_ts, format: :time)), italic: true
       html = custom_auto_link(comment.message, team: @report_team)
-      html_to_word_converter(html)
+      Reports::HtmlToWordConverter.new(@docx, { scinote_url: @scinote_url,
+                                                link_style: @link_style }).html_to_word_converter(html)
       @docx.p
     end
   end

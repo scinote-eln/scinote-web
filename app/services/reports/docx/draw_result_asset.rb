@@ -17,7 +17,7 @@ module Reports::Docx::DrawResultAsset
                         user: result.user.full_name, timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
     end
 
-    asset_image_preparing(asset) if asset.image?
+    Reports::DocxRenderer.render_asset_image(@docx, asset) if asset.image?
 
     subject['children'].each do |child|
       public_send("draw_#{child['type_of']}", child, result)
