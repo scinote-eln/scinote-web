@@ -317,7 +317,7 @@ class Asset < ApplicationRecord
     file_ext = file_name.split('.').last
     action = get_action(file_ext, action)
     if !action.nil?
-      action_url = action.urlsrc
+      action_url = action[:urlsrc]
       if ENV['WOPI_BUSINESS_USERS'] && ENV['WOPI_BUSINESS_USERS'] == 'true'
         action_url = action_url.gsub(/<IsLicensedUser=BUSINESS_USER&>/,
                                      'IsLicensedUser=1&')
@@ -351,7 +351,7 @@ class Asset < ApplicationRecord
   def favicon_url(action)
     file_ext = file_name.split('.').last
     action = get_action(file_ext, action)
-    action.wopi_app.icon if action.try(:wopi_app)
+    action[:icon] if action[:icon]
   end
 
   # locked?, lock_asset and refresh_lock rely on the asset
@@ -400,14 +400,6 @@ class Asset < ApplicationRecord
 
   def generate_base64(style)
     return convert_variant_to_base64(medium_preview) if style == :medium
-  end
-
-  def small_card
-    false
-  end
-
-  def inline_card
-    !small_card
   end
 
   private
