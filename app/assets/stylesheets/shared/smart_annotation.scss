@@ -1,0 +1,180 @@
+.atwho-view {
+  background: $color_white;
+  border-radius: $border-radius-default;
+  box-shadow: $modal-shadow;
+  display: none;
+  left: 0;
+  margin-top: 18px;
+  max-width: 700px;
+  min-width: 600px;
+  overflow: auto;
+  position: absolute;
+  top: 0;
+  z-index: 11110 !important;
+
+  .atwho-header-res {
+    .nav-tabs {
+      align-items: center;
+      margin-bottom: 0;
+    }
+
+    .rep-tab.active:not(:empty) {
+      border-bottom: $border-default;
+      display: flex;
+      padding: .25em;
+    }
+
+    .dismiss {
+      @include font-button;
+      color: $color-silver-chalice;
+      cursor: pointer;
+      margin-left: auto;
+      padding: .5em .75em;
+    }
+
+    .repository-object {
+      max-width: 250px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .atwho-view-ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  .atwho-no-results {
+    color: $color-silver-chalice;
+    padding: 1.5em 4em;
+    text-align: center;
+
+    .description {
+      @include font-main;
+      padding: 0 4em 2.5em;
+    }
+  }
+
+  .atwho-header {
+    @include font-small;
+    border-bottom: $border-default;
+    color: $color-silver-chalice;
+    padding: .5em;
+
+    .dismiss {
+      @include font-button;
+      cursor: pointer;
+      float: right;
+      padding: 0 .25em;
+      position: relative;
+    }
+  }
+
+  .atwho-footer {
+    @include font-small;
+    border-top: $border-default;
+    color: $color-silver-chalice;
+    padding: .5em;
+    white-space: pre;
+  }
+
+  .atwho-scroll-container {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: .5em;
+    position: relative;
+
+    .atwho-breadcrumbs {
+      @include font-small;
+      color: $color-silver-chalice;
+      display: flex;
+
+      .atwho-breadcrumb {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .slash {
+        margin: 0 .5em;
+      }
+    }
+
+    .sa-type {
+      font-size: 8px;
+    }
+
+    .item {
+      cursor: pointer;
+      margin-left: -.5em;
+      overflow: hidden;
+      padding: .25em .5em;
+      text-overflow: ellipsis;
+      width: calc(100% + 1em);
+      white-space: nowrap;
+
+      &.cur {
+        background: $color-concrete;
+      }
+
+      .atwho-highlight {
+        background: $brand-warning-light;
+      }
+    }
+  }
+
+  .atwho-user {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    padding: .5em 0;
+
+    &.cur {
+      background: $color-concrete;
+    }
+
+    .atwho-highlight {
+      background: $brand-warning-light;
+    }
+
+    &:not:first-child {
+      border-top: $border-default;
+    }
+
+    .avatar {
+      display: inline-block;
+      height: 30px;
+      width: 30px;
+    }
+
+    .user-info {
+      display: inline-block;
+      margin-left: .5em;
+    }
+
+    .user-email {
+      @include font-small;
+      color: $color-silver-chalice;
+      line-height: 1em;
+    }
+  }
+
+  .more-results {
+    color: $color-silver-chalice;
+    padding: .5em 0;
+  }
+}
+
+.sa-type {
+  font-size: 10px;
+  font-weight: 600;
+  padding-left: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  vertical-align: super;
+
+  &:hover {
+    text-decoration: none;
+  }
+}

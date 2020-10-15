@@ -3,7 +3,7 @@ class MyModuleTagsController < ApplicationController
 
   before_action :load_vars, except: :canvas_index
   before_action :check_view_permissions, only: :index
-  before_action :check_manage_permissions, only: %i(create index_edit destroy)
+  before_action :check_manage_permissions, only: %i(create index_edit destroy destroy_by_tag_id)
 
   def index_edit
     @my_module_tags = @my_module.my_module_tags.order(:id)
@@ -155,11 +155,7 @@ class MyModuleTagsController < ApplicationController
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_tags?(@my_module.experiment.project)
-  end
-
-  def init_gui
-    @tags = @my_module.unassigned_tags
+    render_403 unless can_manage_module?(@my_module)
   end
 
   def mt_params

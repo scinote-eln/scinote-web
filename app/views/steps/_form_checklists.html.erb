@@ -1,20 +1,21 @@
 <div class="panel panel-default panel-step-attachment">
-  <div class="panel-heading">
-    <span class="fas fa-tasks"></span>
-    <%= t("protocols.steps.new.checklist_panel_title") %>
-    <div class="pull-right">
-      <%= ff.remove_nested_fields_link do %>
-        <span class="fas fa-times"></span>
-      <% end %>
-    </div>
-  </div>
   <div class="panel-body">
-    <%= ff.smart_text_area :name,
-                           label: t('protocols.steps.new.checklist_name'),
-                           class: 'checklist_name',
-                           autofocus: true,
-                           placeholder: t('protocols.steps.new.checklist_name_placeholder'),
-                           data: { 'atwho-edit' => '' } %>
+    <div class="row checklist-name-container">
+      <div class="col-xs-11">
+        <%= ff.smart_text_area :name,
+                               label: t('protocols.steps.new.checklist_name'),
+                               class: 'checklist_name',
+                               autofocus: true,
+                               single_line: true,
+                               placeholder: t('protocols.steps.new.checklist_name_placeholder'),
+                               data: { 'atwho-edit' => '' } %>
+      </div>
+      <div class="col-xs-1 remove-container">
+        <%= ff.remove_nested_fields_link do %>
+          <span class="fas fa-times"></span>
+        <% end %>
+      </div>
+    </div>
     <%= ff.label t("protocols.steps.new.checklist_items") %>
     <ul>
       <%= ff.nested_fields_for :checklist_items, ordered_checklist_items(ff.object) do |chkItems| %>

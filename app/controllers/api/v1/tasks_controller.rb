@@ -16,6 +16,7 @@ module Api
 
       def index
         tasks = @experiment.my_modules
+                           .includes(:my_module_status, :my_modules, :my_module_antecessors)
                            .page(params.dig(:page, :number))
                            .per(params.dig(:page, :size))
 
@@ -29,7 +30,7 @@ module Api
       def create
         raise PermissionError.new(MyModule, :create) unless can_manage_experiment?(@experiment)
 
-        my_module = @experiment.my_modules.create!(task_params)
+        my_module = @experiment.my_modules.create!(task_params_create)
 
         render jsonapi: my_module, serializer: TaskSerializer,
                                    rte_rendering: render_rte?,
@@ -37,7 +38,7 @@ module Api
       end
 
       def update
-        @task.assign_attributes(task_params)
+        @task.assign_attributes(task_params_update)
 
         if @task.changed? && @task.save!
           render jsonapi: @task, serializer: TaskSerializer, status: :ok
@@ -56,10 +57,16 @@ module Api
 
       private
 
-      def task_params
+      def task_params_create
         raise TypeError unless params.require(:data).require(:type) == 'tasks'
 
-        params.require(:data).require(:attributes).permit(%i(name x y description state))
+        params.require(:data).require(:attributes).permit(%i(name x y description))
+      end
+
+      def task_params_update
+        raise TypeError unless params.require(:data).require(:type) == 'tasks'
+
+        params.require(:data).require(:attributes).permit(%i(name x y description my_module_status_id))
       end
 
       def load_task_for_managing

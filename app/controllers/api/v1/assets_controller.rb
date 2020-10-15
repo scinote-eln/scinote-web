@@ -23,14 +23,14 @@ module Api
         raise PermissionError.new(Asset, :create) unless can_manage_protocol_in_module?(@protocol)
 
         if @form_multipart_upload
-          asset = @step.assets.new(asset_params)
+          asset = @step.assets.new(asset_params.merge({ team_id: @team.id }))
         else
           blob = ActiveStorage::Blob.create_after_upload!(
             io: StringIO.new(Base64.decode64(asset_params[:file_data])),
             filename: asset_params[:file_name],
             content_type: asset_params[:file_type]
           )
-          asset = @step.assets.new(file: blob)
+          asset = @step.assets.new(file: blob, team: @team)
         end
 
         asset.save!(context: :on_api_upload)

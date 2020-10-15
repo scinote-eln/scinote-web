@@ -1,5 +1,7 @@
 include UsersGenerator
 
+MyModuleStatusFlow.ensure_default
+
 if User.count.zero?
   if ENV['ADMIN_NAME'].present? &&
      ENV['ADMIN_EMAIL'].present? &&

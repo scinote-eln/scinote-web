@@ -6,7 +6,9 @@ class ActiveStorage::PreviewJob < ActiveStorage::BaseJob
 
   discard_on StandardError do |job, error|
     blob = ActiveStorage::Blob.find_by(id: job.arguments.first)
-    blob&.attachments&.take&.record&.update(file_processing: false)
+    ActiveRecord::Base.no_touching do
+      blob&.attachments&.take&.record&.update(file_processing: false)
+    end
     Rails.logger.error "Couldn't generate preview for Blob with id: #{job.arguments.first}. Error:\n #{error}"
   end
 
@@ -24,6 +26,8 @@ class ActiveStorage::PreviewJob < ActiveStorage::BaseJob
     Rails.logger.info "Preview for the Blod with id: #{blob.id} - successfully generated.\n" \
                       "Transformations applied: #{preview.variation.transformations}"
 
-    blob.attachments.take.record.update(file_processing: false)
+    ActiveRecord::Base.no_touching do
+      blob.attachments.take.record.update(file_processing: false)
+    end
   end
 end

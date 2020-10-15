@@ -1,5 +1,5 @@
 /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "initInlineEditing" }]*/
-/* global SmartAnnotation */
+/* global SmartAnnotation HelperModule I18n */
 
 var inlineEditing = (function() {
   const SIDEBAR_ITEM_TYPES = ['project', 'experiment', 'my_module', 'repository'];
@@ -103,6 +103,9 @@ var inlineEditing = (function() {
       },
       error: function(response) {
         var error = response.responseJSON[fieldToUpdate];
+        if (response.status === 403) {
+          HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+        }
         if (!error) error = response.responseJSON.errors[fieldToUpdate];
         container.addClass('error');
         container.find('.error-block').html(error.join(', '));

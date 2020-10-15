@@ -17,6 +17,7 @@
     <%= favicon_link_tag "favicon-16.png", type: "image/png", size: "16x16" %>
     <%= favicon_link_tag "favicon-32.png", type: "image/png", size: "32x32" %>
     <%= favicon_link_tag "favicon-48.png", type: "image/png", size: "48x48" %>
+    <%= stylesheet_pack_tag 'fonts' %>
     <%= stylesheet_pack_tag 'fontawesome' %>
 
     <%= csrf_meta_tags %>
@@ -34,7 +35,7 @@
     data-atwho-task-url="<%= atwho_my_modules_team_path(current_team) %>"
     data-atwho-project-url="<%= atwho_projects_team_path(current_team) %>"
     data-atwho-experiment-url="<%= atwho_experiments_team_path(current_team) %>"
-    data-atwho-repositories-url="<%= atwho_repositories_team_path(current_team) %>"
+    data-atwho-repositories-url="<%= atwho_menu_team_path(current_team) %>"
     data-atwho-rep-items-url="<%= atwho_rep_items_team_path(current_team) %>"
     data-atwho-menu-items="<%= atwho_menu_items_team_path(current_team) %>"
     <% end %>

@@ -10,7 +10,7 @@ class StepsController < ApplicationController
   before_action :convert_table_contents_to_utf8, only: %i(create update)
 
   before_action :check_view_permissions, only: %i(show update_view_state)
-  before_action :check_manage_permissions, only: %i(new create edit update destroy move_up move_down)
+  before_action :check_manage_permissions, only: %i(new create edit update destroy move_up move_down toggle_step_state)
   before_action :check_complete_and_checkbox_permissions, only: %i(toggle_step_state checklistitem_state)
 
   def new
@@ -80,9 +80,6 @@ class StepsController < ApplicationController
       else
         log_activity(:add_step_to_protocol_repository, nil, protocol: @protocol.id)
       end
-
-      # Update protocol timestamp
-      update_protocol_ts(@step)
     end
 
     respond_to do |format|
@@ -194,9 +191,6 @@ class StepsController < ApplicationController
           log_activity(:edit_step_in_protocol_repository, nil, protocol: @protocol.id)
         end
 
-        # Update protocol timestamp
-        update_protocol_ts(@step)
-
         format.json {
           render json: {
             html: render_to_string({
@@ -226,11 +220,6 @@ class StepsController < ApplicationController
 
   def destroy
     if @step.can_destroy?
-      # Update position on other steps of this module
-      @protocol.steps.where('position > ?', @step.position).each do |step|
-        step.position = step.position - 1
-        step.save
-      end
 
       # Calculate space taken by this step
       team = @protocol.team
@@ -249,9 +238,6 @@ class StepsController < ApplicationController
       # Release space taken by the step
       team.release_space(previous_size)
       team.save
-
-      # Update protocol timestamp
-      update_protocol_ts(@step)
 
       flash[:success] = t(
         'protocols.steps.destroy.success_flash',
@@ -321,10 +307,6 @@ class StepsController < ApplicationController
       @step.completed = completed
 
       if @step.save
-        if @protocol.in_module?
-          ready_to_complete = @protocol.my_module.check_completness_status
-        end
-
         # Create activity
         if changed
           completed_steps = @protocol.steps.where(completed: true).count
@@ -350,14 +332,7 @@ class StepsController < ApplicationController
                             t('protocols.steps.options.uncomplete_title')
                           end
         format.json do
-          if ready_to_complete && @protocol.my_module.uncompleted?
-            render json: {
-              task_ready_to_complete: true,
-              new_title: localized_title
-            }, status: :ok
-          else
-            render json: { new_title: localized_title }, status: :ok
-          end
+          render json: { new_title: localized_title }, status: :ok
         end
       else
         format.json { render json: {}, status: :unprocessable_entity }
@@ -367,57 +342,24 @@ class StepsController < ApplicationController
 
   def move_up
     respond_to do |format|
-      if @step.position.positive?
-        step_down = @step.protocol.steps.find_by(position: @step.position - 1)
-        @step.position -= 1
-        @step.save
+      format.json do
+        @step.move_up
 
-        if step_down
-          step_down.position += 1
-          step_down.save
-
-          # Update protocol timestamp
-          update_protocol_ts(@step)
-
-          format.json do
-            render json: { move_direction: 'up',
-                           step_up_position: @step.position,
-                           step_down_position: step_down.position },
-            status: :ok
-          end
-        else
-          format.json { render json: {}, status: :forbidden }
-        end
-      else
-        format.json { render json: {}, status: :forbidden }
+        render json: {
+          steps_order: @protocol.steps.order(:position).select(:id, :position)
+        }
       end
     end
   end
 
   def move_down
     respond_to do |format|
-      if @step.position < @step.protocol.steps.count - 1
-        step_up = @step.protocol.steps.find_by(position: @step.position + 1)
-        @step.position += 1
-        @step.save
+      format.json do
+        @step.move_down
 
-        if step_up
-          step_up.position -= 1
-          step_up.save
-
-          # Update protocol timestamp
-          update_protocol_ts(@step)
-
-          format.json do
-            render json: { move_direction: 'down',
-                           step_up_position: step_up.position,
-                           step_down_position: @step.position }
-          end
-        else
-          format.json { render json: {}, status: :forbidden }
-        end
-      else
-        format.json { render json: {}, status: :forbidden }
+        render json: {
+          steps_order: @protocol.steps.order(:position).select(:id, :position)
+        }
       end
     end
   end
@@ -517,12 +459,6 @@ class StepsController < ApplicationController
     end
   end
 
-  def update_protocol_ts(step)
-    if step.present? && step.protocol.present?
-      step.protocol.update(updated_at: Time.now)
-    end
-  end
-
   def update_checklist_items_without_callback(params)
     params.dig('checklists_attributes')&.values&.each do |cl|
       ck = @step.checklists.find_by(id: cl[:id])
@@ -533,6 +469,7 @@ class StepsController < ApplicationController
         item_record = ck.checklist_items.find_by(id: item[1][:id])
 
         next unless item_record
+
         item_record.update_attribute('position', item[1][:position])
       end
     end

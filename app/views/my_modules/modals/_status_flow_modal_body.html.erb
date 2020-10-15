@@ -1,0 +1,27 @@
+<div class="status-flow">
+  <% my_module_statuses.each_with_index do |status, i| %>
+
+    <% unless i.zero? %>
+      <div class="connector"></div>
+    <% end %>
+
+    <div class="status-container">
+      <div class="current-status">
+        <% if status.id == @my_module.my_module_status_id %>
+          <%= t('my_modules.modals.status_flow_modal.current_status') %><i class="fas fa-long-arrow-alt-right"></i>
+        <% end %>
+      </div>
+      <div class="status-block" style="background: <%= status[:color] %>">
+        <%= status[:name] %>
+      </div>
+      <div class="status-comment">
+        <% status.my_module_status_implications&.each do |implication| %>
+          <%= implication.description %>
+        <% end %>
+        <% status.next_status&.my_module_status_conditions&.each do |condition| %>
+          <%= condition.description %><br>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

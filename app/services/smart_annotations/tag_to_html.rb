@@ -39,7 +39,7 @@ module SmartAnnotations
     end
 
     def repository_item(name, user, team, type, object)
-      if object
+      if object&.repository
         return unless SmartAnnotations::PermissionEval.check(user, team, type, object)
 
         return SmartAnnotations::HtmlPreview.html(nil, type, object)

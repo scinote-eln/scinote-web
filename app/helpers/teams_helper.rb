@@ -1,9 +1,10 @@
 module TeamsHelper
   # resets the current team if needed
   def current_team_switch(team)
-    if team != current_team
+    if team != current_team && current_user.is_member_of_team?(team)
       current_user.current_team_id = team.id
       current_user.save
+      update_current_team
     end
   end
 
@@ -17,11 +18,7 @@ module TeamsHelper
     end
   end
 
-  def team_created_by(team)
-    User.find_by_id(team.created_by_id)
-  end
-
   def switch_team_with_param
-    current_team_switch(Team.find_by(id: params[:team])) if params[:team]
+    current_team_switch(current_user.teams.find_by(id: params[:team])) if params[:team]
   end
 end

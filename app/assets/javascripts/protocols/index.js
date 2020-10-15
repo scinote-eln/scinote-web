@@ -439,79 +439,78 @@ function updateButtons() {
   var archiveBtn = $("[data-action='archive']");
   var restoreBtn = $("[data-action='restore']");
   var exportBtn = $("[data-action='export']");
+  var row = $("tr[data-row-id='" + rowsSelected[0] + "']");
+  var rows = [];
 
-  if (rowsSelected.length == 1) {
+  if (rowsSelected.length === 1) {
     // 1 ROW SELECTED
-    var row = $("tr[data-row-id='" + rowsSelected[0] + "']");
-
-    if (row.is("[data-can-edit]")) {
-      editBtn.removeAttr("disabled");
-      editBtn.off("click").on("click", function() { editSelectedProtocol(); });
+    if (row.is('[data-can-edit]')) {
+      editBtn.removeClass('disabled hidden');
+      editBtn.off('click').on('click', function() { editSelectedProtocol(); });
     } else {
-      editBtn.attr("disabled", "disabled");
-      editBtn.off("click");
+      editBtn.removeClass('hidden').addClass('disabled');
+      editBtn.off('click');
     }
-    if (row.is("[data-can-clone]")) {
-      cloneBtn.removeAttr("disabled");
-      cloneBtn.off("click").on("click", function() { cloneSelectedProtocol(); });
+    if (row.is('[data-can-clone]')) {
+      cloneBtn.removeClass('disabled hidden');
+      cloneBtn.off('click').on('click', function() { cloneSelectedProtocol(); });
     } else {
-      cloneBtn.attr("disabled", "disabled");
-      cloneBtn.off("click");
+      cloneBtn.removeClass('hidden').addClass('disabled');
+      cloneBtn.off('click');
     }
-    if (row.is("[data-can-make-private]")) {
-      makePrivateBtn.removeAttr("disabled");
-      makePrivateBtn.off("click").on("click", function() { processMoveButtonClick($(this)); });
+    if (row.is('[data-can-make-private]')) {
+      makePrivateBtn.removeClass('disabled hidden');
+      makePrivateBtn.off('click').on('click', function() { processMoveButtonClick($(this)); });
     } else {
-      makePrivateBtn.attr("disabled", "disabled");
-      makePrivateBtn.off("click");
+      makePrivateBtn.removeClass('hidden').addClass('disabled');
+      makePrivateBtn.off('click');
     }
-    if (row.is("[data-can-publish]")) {
-      publishBtn.removeAttr("disabled");
-      publishBtn.off("click").on("click", function() { processMoveButtonClick($(this)); });
+    if (row.is('[data-can-publish]')) {
+      publishBtn.removeClass('disabled hidden');
+      publishBtn.off('click').on('click', function() { processMoveButtonClick($(this)); });
     } else {
-      publishBtn.attr("disabled", "disabled");
-      publishBtn.off("click");
+      publishBtn.removeClass('hidden').addClass('disabled');
+      publishBtn.off('click');
     }
-    if (row.is("[data-can-archive]")) {
-      archiveBtn.removeAttr("disabled");
-      archiveBtn.off("click").on("click", function() { processMoveButtonClick($(this)); });
+    if (row.is('[data-can-archive]')) {
+      archiveBtn.removeClass('disabled hidden');
+      archiveBtn.off('click').on('click', function() { processMoveButtonClick($(this)); });
     } else {
-      archiveBtn.attr("disabled", "disabled");
-      archiveBtn.off("click");
+      archiveBtn.removeClass('hidden').addClass('disabled');
+      archiveBtn.off('click');
     }
-    if (row.is("[data-can-restore]")) {
-      restoreBtn.removeAttr("disabled");
-      restoreBtn.off("click").on("click", function() { processMoveButtonClick($(this)); });
+    if (row.is('[data-can-restore]')) {
+      restoreBtn.removeClass('disabled hidden');
+      restoreBtn.off('click').on('click', function() { processMoveButtonClick($(this)); });
     } else {
-      restoreBtn.attr("disabled", "disabled");
-      restoreBtn.off("click");
+      restoreBtn.removeClass('hidden').addClass('disabled');
+      restoreBtn.off('click');
     }
-    if (row.is("[data-can-export]")) {
-      exportBtn.removeAttr("disabled");
-      exportBtn.off("click").on("click", function() { exportProtocols(rowsSelected); });
+    if (row.is('[data-can-export]')) {
+      exportBtn.removeClass('disabled hidden');
+      exportBtn.off('click').on('click', function() { exportProtocols(rowsSelected); });
     } else {
-      exportBtn.attr("disabled", "disabled");
-      exportBtn.off("click");
+      exportBtn.removeClass('hidden').addClass('disabled');
+      exportBtn.off('click');
     }
   } else if (rowsSelected.length === 0) {
     // 0 ROWS SELECTED
-    editBtn.attr("disabled", "disabled");
-    editBtn.off("click");
-    cloneBtn.attr("disabled", "disabled");
-    cloneBtn.off("click");
-    makePrivateBtn.attr("disabled", "disabled");
-    makePrivateBtn.off("click");
-    publishBtn.attr("disabled", "disabled");
-    publishBtn.off("click");
-    archiveBtn.attr("disabled", "disabled");
-    archiveBtn.off("click");
-    restoreBtn.attr("disabled", "disabled");
-    restoreBtn.off("click");
-    exportBtn.attr("disabled", "disabled");
-    exportBtn.off("click");
+    editBtn.addClass('disabled hidden');
+    editBtn.off('click');
+    cloneBtn.addClass('disabled hidden');
+    cloneBtn.off('click');
+    makePrivateBtn.addClass('disabled hidden');
+    makePrivateBtn.off('click');
+    publishBtn.addClass('disabled hidden');
+    publishBtn.off('click');
+    archiveBtn.addClass('disabled hidden');
+    archiveBtn.off('click');
+    restoreBtn.addClass('disabled hidden');
+    restoreBtn.off('click');
+    exportBtn.addClass('disabled hidden');
+    exportBtn.off('click');
   } else {
     // > 1 ROWS SELECTED
-    var rows = [];
     _.each(rowsSelected, function(rowId) {
       rows.push($("tr[data-row-id='" + rowId + "']")[0]);
     });
@@ -519,44 +518,44 @@ function updateButtons() {
 
     // Only enable button if all selected rows can
     // be published/archived/restored/exported
-    editBtn.attr("disabled", "disabled");
-    editBtn.off("click");
-    cloneBtn.attr("disabled", "disabled");
-    cloneBtn.off("click");
-    if (!rows.is(":not([data-can-make-private])")) {
-      makePrivateBtn.removeAttr("disabled");
-      makePrivateBtn.off("click").on("click", function() { processMoveButtonClick($(this)); });
+    editBtn.removeClass('hidden').addClass('disabled');
+    editBtn.off('click');
+    cloneBtn.removeClass('hidden').addClass('disabled');
+    cloneBtn.off('click');
+    if (!rows.is(':not([data-can-make-private])')) {
+      makePrivateBtn.removeClass('disabled hidden');
+      makePrivateBtn.off('click').on('click', function() { processMoveButtonClick($(this)); });
     } else {
-      makePrivateBtn.attr("disabled", "disabled");
-      makePrivateBtn.off("click");
+      makePrivateBtn.removeClass('hidden').addClass('disabled');
+      makePrivateBtn.off('click');
     }
-    if (!rows.is(":not([data-can-publish])")) {
-      publishBtn.removeAttr("disabled");
-      publishBtn.off("click").on("click", function() { processMoveButtonClick($(this)); });
+    if (!rows.is(':not([data-can-publish])')) {
+      publishBtn.removeClass('disabled hidden');
+      publishBtn.off('click').on('click', function() { processMoveButtonClick($(this)); });
     } else {
-      publishBtn.attr("disabled", "disabled");
-      publishBtn.off("click");
+      publishBtn.removeClass('hidden').addClass('disabled');
+      publishBtn.off('click');
     }
-    if (!rows.is(":not([data-can-archive])")) {
-      archiveBtn.removeAttr("disabled");
-      archiveBtn.off("click").on("click", function() { processMoveButtonClick($(this)); });
+    if (!rows.is(':not([data-can-archive])')) {
+      archiveBtn.removeClass('disabled hidden');
+      archiveBtn.off('click').on('click', function() { processMoveButtonClick($(this)); });
     } else {
-      archiveBtn.attr("disabled", "disabled");
-      archiveBtn.off("click");
+      archiveBtn.removeClass('hidden').addClass('disabled');
+      archiveBtn.off('click');
     }
-    if (!rows.is(":not([data-can-restore])")) {
-      restoreBtn.removeAttr("disabled");
-      restoreBtn.off("click").on("click", function() { processMoveButtonClick($(this)); });
+    if (!rows.is(':not([data-can-restore])')) {
+      restoreBtn.removeClass('disabled hidden');
+      restoreBtn.off('click').on('click', function() { processMoveButtonClick($(this)); });
     } else {
-      restoreBtn.attr("disabled", "disabled");
-      restoreBtn.off("click");
+      restoreBtn.removeClass('hidden').addClass('disabled');
+      restoreBtn.off('click');
     }
-    if (!rows.is(":not([data-can-export])")) {
-      exportBtn.removeAttr("disabled");
-      exportBtn.off("click").on("click", function() { exportProtocols(rowsSelected); });
+    if (!rows.is(':not([data-can-export])')) {
+      exportBtn.removeClass('disabled hidden');
+      exportBtn.off('click').on('click', function() { exportProtocols(rowsSelected); });
     } else {
-      exportBtn.attr("disabled", "disabled");
-      exportBtn.off("click");
+      exportBtn.removeClass('hidden').addClass('disabled');
+      exportBtn.off('click');
     }
   }
 }

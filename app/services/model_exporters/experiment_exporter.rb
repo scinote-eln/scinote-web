@@ -52,6 +52,7 @@ module ModelExporters
     def my_module(my_module)
       {
         my_module: my_module,
+        my_module_status_name: my_module.my_module_status&.name,
         outputs: my_module.outputs,
         my_module_tags: my_module.my_module_tags,
         task_comments: my_module.task_comments,
