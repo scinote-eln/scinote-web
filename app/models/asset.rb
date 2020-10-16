@@ -12,7 +12,7 @@ class Asset < ApplicationRecord
   # Lock duration set to 30 minutes
   LOCK_DURATION = 60 * 30
 
-  enum view_mode: { thumbnail: 0, inline: 1, list: 2}
+  enum view_mode: { thumbnail: 0, inline: 1, list: 2 }
 
   # ActiveStorage configuration
   has_one_attached :file
