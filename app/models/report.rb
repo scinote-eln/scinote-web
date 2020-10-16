@@ -92,10 +92,7 @@ class Report < ApplicationRecord
   end
 
   def self.generate_whole_project_report(project, current_user, current_team)
-    report_contents = gen_element_content(project, nil, 'project_header', true)
-    Extends::EXPORT_ALL_PROJECT_ELEMENTS.each do |report_element, children|
-      report_contents += public_send("generate_#{report_element}_element", project, children)
-    end
+    report_contents = gen_element_content(project, Extends::EXPORT_ALL_PROJECT_ELEMENTS)
 
     report = Report.new
     report.name = loop do
@@ -110,124 +107,30 @@ class Report < ApplicationRecord
     report
   end
 
-  def self.gen_element_content(parent_obj, association_objs, type_of,
-                               use_parent_id = false, sort_order = nil,
-                               children = nil)
-    parent_type = parent_obj.class.name.underscore
-    type = type_of.split('_').last.singularize
-    extra_id_needed = use_parent_id && !association_objs.nil?
+  def self.gen_element_content(parent, children)
     elements = []
 
-    association_objs ||= [nil]
-    association_objs.each do |obj|
-      elements << {
-        'type_of' => type_of,
-        'id' => {}.tap do |ids_hash|
-                  if use_parent_id
-                    ids_hash["#{parent_type}_id"] = parent_obj.id
-                  else
-                    ids_hash["#{type}_id"] = obj.id
-                  end
-                  ids_hash["#{type}_id"] = obj.id if extra_id_needed
-                end,
-        'sort_order' => sort_order.presence,
-        'children' => children.presence || []
+    children.each do |element|
+      element_hash = lambda { |object|
+        hash_object = {
+          'type_of' => element[:type_of] || element[:type_of_lambda].call(object),
+          'id' => { element[:id_key] => object.id },
+          'sort_order' => element[:sort_order],
+          'children' => gen_element_content(object, element[:children])
+        }
+        hash_object['id'][element[:parent_id_key]] = parent.id if element[:parent_id_key]
+        hash_object
       }
-    end
 
+      if element[:relation]
+        (element[:relation].inject(parent) { |p, method| p.public_send(method) }).each do |child|
+          elements.push(element_hash.call(child))
+        end
+      else
+        elements.push(element_hash.call(parent))
+      end
+    end
     elements
-  end
-
-  def self.generate_experiments_element(project, elements)
-    experiments = []
-    project.experiments.each do |experiment|
-      experiment_contents = []
-      elements.each do |report_element, children|
-        experiment_contents += public_send("generate_#{report_element}_element", experiment, children)
-      end
-      experiments += gen_element_content(experiment, nil, 'experiment', true, nil, experiment_contents)
-    end
-    experiments
-  end
-
-  def self.generate_my_modules_element(experiment, elements)
-    my_modules = []
-    experiment.my_modules.each do |my_module|
-      my_module_contents = []
-      elements.each do |report_element, children|
-        my_module_contents += public_send("generate_#{report_element}_element", my_module, children)
-      end
-      my_modules += gen_element_content(my_module, nil, 'my_module', true, nil, my_module_contents)
-    end
-    my_modules
-  end
-
-  def self.generate_my_module_protocol_element(my_module, elements)
-    protcol_contents = []
-    elements.each do |report_element, children|
-      protcol_contents += public_send("generate_#{report_element}_element", my_module, children)
-    end
-    gen_element_content(my_module, nil, 'my_module_protocol', true, nil, protcol_contents)
-  end
-
-  def self.generate_my_module_steps_element(my_module, elements)
-    steps = []
-    my_module.protocol.steps.each do |step|
-      step_contents = []
-      elements.each do |report_element, children|
-        step_contents += public_send("generate_#{report_element}_element", step, children)
-      end
-      steps += gen_element_content(step, nil, 'step', true, nil, step_contents)
-    end
-    steps
-  end
-
-  def self.generate_step_assets_element(step, _elements)
-    gen_element_content(step, step.assets, 'step_asset')
-  end
-
-  def self.generate_step_tables_element(step, _elements)
-    gen_element_content(step, step.tables, 'step_table')
-  end
-
-  def self.generate_step_checklists_element(step, _elements)
-    gen_element_content(step, step.checklists, 'step_checklist')
-  end
-
-  def self.generate_step_comments_element(step, _elements)
-    gen_element_content(step, nil, 'step_comments', true, 'asc')
-  end
-
-  def self.generate_my_module_results_element(my_module, elements)
-    results = []
-    my_module.results.each do |result|
-      result_contents = []
-      elements.each do |report_element, children|
-        result_contents += public_send("generate_#{report_element}_element", result, children)
-      end
-      result_type = if result.asset
-                      'result_asset'
-                    elsif result.table
-                      'result_table'
-                    elsif result.result_text
-                      'result_text'
-                    end
-      results += gen_element_content(result, nil, result_type, true, nil, result_contents)
-    end
-    results
-  end
-
-  def self.generate_result_comments_element(result, _elements)
-    gen_element_content(result, nil, 'result_comments', true, 'asc')
-  end
-
-  def self.generate_my_module_activities_element(my_module, _elements)
-    gen_element_content(my_module, nil, 'my_module_activity', true, 'asc')
-  end
-
-  def self.generate_my_module_repositories_element(my_module, _elements)
-    repositories = my_module.experiment.project.assigned_repositories_and_snapshots
-    gen_element_content(my_module, repositories, 'my_module_repository', true, 'asc')
   end
 
   private

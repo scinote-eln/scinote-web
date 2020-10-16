@@ -41,24 +41,92 @@ class Extends
                            my_module_repository: 17,
                            my_module_protocol: 18 }
 
-  EXPORT_ALL_PROJECT_ELEMENTS = {
-    experiments: {
-      my_modules: {
-        my_module_protocol: {},
-        my_module_steps: {
-          step_assets: {},
-          step_tables: {},
-          step_checklists: {},
-          step_comments: {}
-        },
-        my_module_results: {
-          result_comments: {}
-        },
-        my_module_activities: {},
-        my_module_repositories: {}
-      }
+  EXPORT_ALL_PROJECT_ELEMENTS = [
+    {
+      type_of: 'project_header',
+      id_key: 'project_id',
+      children: []
+    },
+    {
+      type_of: 'experiment',
+      id_key: 'experiment_id',
+      relation: %w(experiments),
+      children: [
+        {
+          type_of: 'my_module',
+          id_key: 'my_module_id',
+          relation: %w(my_modules),
+          children: [
+            {
+              type_of: 'my_module_protocol',
+              id_key: 'my_module_id',
+              children: []
+            },
+            {
+              type_of: 'step',
+              relation: %w(protocol steps),
+              id_key: 'step_id',
+              children: [
+                {
+                  type_of: 'step_asset',
+                  relation: %w(assets),
+                  id_key: 'asset_id',
+                  children: []
+                },
+                {
+                  type_of: 'step_table',
+                  relation: %w(tables),
+                  id_key: 'table_id',
+                  children: []
+                },
+                {
+                  type_of: 'step_checklist',
+                  relation: %w(checklists),
+                  id_key: 'checklist_id',
+                  children: []
+                },
+                {
+                  type_of: 'step_comments',
+                  id_key: 'step_id',
+                  sort_order: 'asc',
+                  children: []
+                }
+              ]
+            },
+            {
+              type_of_lambda: lambda { |result|
+                (result.result_asset ||
+                 result.result_table ||
+                 result.result_text).class.to_s.underscore
+              },
+              relation: %w(results),
+              id_key: 'result_id',
+              children: [{
+                type_of: 'result_comments',
+                id_key: 'result_id',
+                sort_order: 'asc',
+                children: []
+              }]
+            },
+            {
+              type_of: 'my_module_activity',
+              id_key: 'my_module_id',
+              sort_order: 'asc',
+              children: []
+            },
+            {
+              type_of: 'my_module_repository',
+              relation: %w(experiment project assigned_repositories_and_snapshots),
+              id_key: 'repository_id',
+              parent_id_key: 'my_module_id',
+              sort_order: 'asc',
+              children: []
+            }
+          ]
+        }
+      ]
     }
-  }
+  ]
 
   # Data type name should match corresponding model's name
   REPOSITORY_DATA_TYPES = { RepositoryTextValue: 0,
