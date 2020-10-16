@@ -332,18 +332,19 @@
   function initPreviewToggle(){
     $('.attachments').on('click', '.change-preview-type', function (e) {
       var viewMode = $(this).data('preview-type');
-      var assetId = $(this).data('asset-id');
+      var toggleUrl = $(this).data('toggle-view-url');
+      var assetId = $(this).closest('.asset').data('asset-id');
       e.preventDefault();
       e.stopPropagation();
       $.ajax({
-        url: `/files/${assetId}/toggle_view_mode`,
+        url: toggleUrl,
         type: "PATCH",
         dataType: "json",
         data: { asset: { view_mode: viewMode }},
         success: function (data) {
-          $(`.step-asset[data-asset-id=${assetId}]`).replaceWith(data.html);
+          $(`.asset[data-asset-id=${assetId}]`).replaceWith(data.html);
           FilePreviewModal.init();
-          $(`.step-asset[data-asset-id=${assetId}]`).closest('.attachments').trigger('reorder');
+          $(`.asset[data-asset-id=${assetId}]`).closest('.attachments').trigger('reorder');
         },
         error: function (data) {
           console.log(data);
@@ -661,7 +662,7 @@
     })
 
     $('.attachments').on('reorder', function() {
-      var assets = $(`.attachments[data-step-id=${$(this).data('step-id')}] .step-asset`);
+      var assets = $(`.attachments[data-step-id=${$(this).data('step-id')}] .asset`);
       var order = $(this).data('order');
       var sortedAssets = assets.sort(function(a, b) {
         if (a.dataset.assetOrder == b.dataset.assetOrder) {

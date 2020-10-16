@@ -11,8 +11,8 @@
 @import "mixins";
 
 :root {
-  --attachment-card-thumbnail-height: 280px;
-  --attachment-card-thumbnail-width: 220px;
+  --attachment-row-height: 3em;
+  --attachment-column-width: 16em;
 }
 
 
@@ -135,22 +135,26 @@
 
 .attachments {
   display: grid;
-  grid-auto-rows: var(--attachment-card-thumbnail-height);
+  grid-auto-rows: var(--attachment-row-height);
   grid-column-gap: 1em;
   grid-row-gap: 1em;
-  grid-template-columns: repeat(auto-fill, minmax(var(--attachment-card-thumbnail-width), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(var(--attachment-column-width), 1fr));
   justify-content: center;
   margin: 1em 0;
+
+  .nested_fields {
+    display: contents;
+  }
 }
 
 .attachment-container {
   @include md-card-style;
-  height: var(--attachment-card-thumbnail-height);
+  grid-row: span 6;
   justify-self: center;
   overflow: hidden;
   padding: 1em;
   position: relative;
-  width: var(--attachment-card-thumbnail-width);
+  width: var(--attachment-column-width);
 
 
   .file-preview-link {
@@ -174,7 +178,7 @@
 
   .attachment-preview {
     border-radius: $border-radius-default;
-    height: 170px;
+    height: 14em;
     position: relative;
     text-align: center;
     width: 100%;
@@ -343,12 +347,32 @@
 .inline-attachment-container {
   @include md-card-style;
   grid-column: 1/-1;
-  grid-row: span 2;
+  grid-row: span 12;
 
   .active-iframe-preview {
     border: 0;
     height: calc(100% - 4em);
     width: 100%;
+  }
+
+  .image-container,
+  .general-file-container {
+    background: $color-concrete;
+    align-items: center;
+    display: flex;
+    height: calc(100% - 4em);
+    justify-content: center;
+    padding: .5em;
+    width: 100%;
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .fas {
+      font-size: 10em;
+    }
   }
 
   .header {
@@ -374,5 +398,34 @@
       grid-column-gap: 1em;
       grid-template-columns: max-content max-content;
     }
+  }
+}
+
+.list-attachment-container {
+  @include md-card-style;
+  align-items: center;
+  display: flex;
+  grid-column: 1/-1;
+  padding: .5em;
+
+  .file-name {
+    @include font-main;
+  }
+
+  .file-name {
+    @include font-main;
+    color: $brand-primary;
+    margin: 0 .5em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .file-metadata {
+    @include font-small;
+    color: $color-silver-chalice;
+    display: grid;
+    grid-column-gap: 1em;
+    grid-template-columns: max-content max-content;
   }
 }
