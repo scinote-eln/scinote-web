@@ -212,13 +212,8 @@ class Experiment < ApplicationRecord
     true
   end
 
-  def generate_workflow_img
-    workflowimg.purge if workflowimg.attached?
-    Experiments::GenerateWorkflowImageService.delay.call(experiment_id: id)
-  end
-
   def workflowimg_exists?
-    workflowimg.service.exist?(workflowimg.blob.key)
+    workflowimg.attached? && workflowimg.service.exist?(workflowimg.blob.key)
   end
 
   # Get projects where user is either owner or user in the same team
@@ -345,9 +340,6 @@ class Experiment < ApplicationRecord
                                                experiment_new: experiment.id
                                              })
     end
-
-    # Generate workflow image for the experiment in which we moved the task
-    generate_workflow_img_for_moved_modules(to_move)
   end
 
   # Move module groups; this method accepts a map where keys
@@ -405,17 +397,6 @@ class Experiment < ApplicationRecord
         group.experiment = experiment
         group.save!
       end
-    end
-
-    # Generate workflow image for the experiment in which we moved the workflow
-    generate_workflow_img_for_moved_modules(to_move)
-  end
-
-  # Generates workflow img when the workflow or module is moved
-  # to other experiment
-  def generate_workflow_img_for_moved_modules(to_move)
-    Experiment.where(id: to_move.values.uniq).each do |exp|
-      exp.generate_workflow_img
     end
   end
 
@@ -485,7 +466,7 @@ class Experiment < ApplicationRecord
   def update_module_positions(positions)
     modules = my_modules.where(id: positions.keys)
     modules.each do |m|
-      m.update_columns(x: positions[m.id.to_s][:x], y: positions[m.id.to_s][:y])
+      m.update(x: positions[m.id.to_s][:x], y: positions[m.id.to_s][:y])
     end
     my_modules.reload
   end
@@ -498,7 +479,7 @@ class Experiment < ApplicationRecord
     y_diff = my_modules.pluck(:y).min
 
     my_modules.each do |m|
-      m.update_columns(x: m.x - x_diff, y: m.y - y_diff)
+      m.update(x: m.x - x_diff, y: m.y - y_diff)
     end
   end
 

@@ -616,7 +616,6 @@ class TeamImporter
       my_module_group.save!
       @my_module_group_mappings[orig_module_group_id] = my_module_group.id
     end
-    experiment.generate_workflow_img
     create_my_modules(experiment_json['my_modules'], experiment, user_id)
     experiment
   end
