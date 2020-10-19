@@ -220,8 +220,6 @@ function initProtocolPreviewModal() {
           modal.modal("show");
           ProtocolRepositoryHeader.init();
           initHandsOnTable(modalBody);
-          FilePreviewModal.init({ readOnly: true });
-        },
         error: function (error) {
           // TODO
         }

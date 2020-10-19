@@ -16,7 +16,6 @@
         $(this).find('.modal-body #repository_row-info-table').DataTable().destroy();
         $(this).remove();
       });
-      FilePreviewModal.init();
       $('#repository_row-info-table').DataTable({
         dom: 'RBltpi',
         stateSave: false,

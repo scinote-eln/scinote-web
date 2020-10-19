@@ -435,7 +435,6 @@
               initFormSubmitLinks($(this));
               ResultAssets.applyEditResultAssetCallback();
               Results.toggleResultEditButtons(true);
-              FilePreviewModal.init();
               Comments.init();
               ResultAssets.initNewResultAsset();
               Results.expandResult($(this));

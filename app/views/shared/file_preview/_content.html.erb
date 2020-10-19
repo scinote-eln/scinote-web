@@ -1,0 +1,24 @@
+<div class="modal-header">
+  <button type="button" class="preview-close" data-dismiss="modal"><span class="fas fa-times"></span></button>
+  <span class="file-name"><%= asset.file_name %></span>
+  <span class="file-wopi-controls"></span>
+  <a class="file-download-link" href="<%= asset_file_url_path(asset) %>" data-turbolinks="false">
+    <p><span class="fas fa-download"></span> <%= t('Download')%></p>
+  </a>
+  <a class="file-edit-link" style="display:none" href='#'>
+    <p><span class="fas fa-pencil-alt"></span> <%= t('Edit')%></p>
+  </a>
+</div>
+<div class="modal-body">
+  <div class="file-preview-container">
+    <% if asset.previewable? %>
+      <%= image_tag asset.large_preview,
+            onerror: 'ActiveStoragePreviews.reCheckPreview(event)',
+            onload: 'ActiveStoragePreviews.showPreview(event)',
+            style: 'opacity: 0' %>
+    <% else %>
+    <% end %>
+  </div>
+</div>
+<div class="modal-footer">
+</div>

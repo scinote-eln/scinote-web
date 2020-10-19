@@ -19,6 +19,25 @@ class AssetsController < ApplicationController
   before_action :check_edit_permission, only: %i(edit toggle_view_mode)
 
   def file_preview
+    can_edit = if @assoc.class == Step
+                 can_manage_protocol_in_module?(@protocol) || can_manage_protocol_in_repository?(@protocol)
+               elsif @assoc.class == Result
+                 can_manage_module?(@my_module)
+               elsif @assoc.class == RepositoryCell && !@repository.is_a?(RepositorySnapshot)
+                 can_manage_repository_rows?(@repository)
+               end
+
+    render json: {html: render_to_string(
+      {
+        partial: "shared/file_preview/content.html.erb",
+        locals: {
+          asset: @asset,
+          can_edit: can_edit
+        }
+      }
+    )}
+
+    return true
     file_type = @asset.file.metadata[:asset_type] || (@asset.previewable? ? 'previewable' : false)
     response_json = {
       'id' => @asset.id,
@@ -28,13 +47,7 @@ class AssetsController < ApplicationController
       'download-url' => asset_file_url_path(@asset)
     }
 
-    can_edit = if @assoc.class == Step
-                 can_manage_protocol_in_module?(@protocol) || can_manage_protocol_in_repository?(@protocol)
-               elsif @assoc.class == Result
-                 can_manage_module?(@my_module)
-               elsif @assoc.class == RepositoryCell && !@repository.is_a?(RepositorySnapshot)
-                 can_manage_repository_rows?(@repository)
-               end
+
     if response_json['type'] == 'previewable'
       if ['image/jpeg', 'image/pjpeg'].include? @asset.file.content_type
         response_json['quality'] = @asset.file_image_quality || 80

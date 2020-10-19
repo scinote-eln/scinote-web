@@ -118,7 +118,6 @@
                   ResultAssets.applyEditResultAssetCallback();
                   applyCreateWopiFileCallback();
                   toggleResultEditButtons(true);
-                  FilePreviewModal.init();
                   Comments.init();
                   ResultAssets.initNewResultAsset();
                   expandResult($(this));
