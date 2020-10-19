@@ -364,6 +364,10 @@ class Protocol < ApplicationRecord
     steps.where(completed: true)
   end
 
+  def first_step
+    steps.find_by(position: 0)
+  end
+
   def space_taken
     st = 0
     steps.find_each do |step|
