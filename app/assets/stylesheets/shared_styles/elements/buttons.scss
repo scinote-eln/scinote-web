@@ -128,6 +128,28 @@
     }
   }
 
+  &.btn-dark-background {
+    background: $color-white;
+    border: $border-default;
+    color: $brand-primary;
+
+    &:hover {
+      background: $color-concrete;
+      color: $brand-primary-hover;
+    }
+
+    &:active,
+    &.active {
+      background: $color-alto;
+      color: $brand-primary-press;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 1px $brand-focus;
+      color: $brand-primary;
+    }
+  }
+
   &.icon-btn {
     padding: 7px;
     width: 36px;
@@ -135,6 +157,12 @@
     .fas {
       margin: 0;
     }
+  }
+
+  &.btn-large {
+    font-size: $font-size-h2;
+    height: 3.1em;
+    padding: 1em 3em;
   }
 
   &.disabled,
@@ -155,7 +183,8 @@
     }
 
     &.btn-secondary,
-    &.btn-light {
+    &.btn-light,
+    &.btn-dark-background {
       background: $color-white;
 
       &:hover {
