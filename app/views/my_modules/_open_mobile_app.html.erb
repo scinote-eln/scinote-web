@@ -6,7 +6,7 @@
   <div class="open-mobile-app-buttons">
     <a type="button"
        class="btn btn-dark-background btn-large"
-       href="<%= pwa_mobile_app_url(@current_team.id, @project.id, @experiment.id, @my_module.id, @protocol.id, @protocol.first_step.id) %>">
+       href="<%= pwa_mobile_app_url(@current_team.id, @project.id, @experiment.id, @my_module.id, @protocol.id, @protocol.first_step.id, request.host) %>">
       <i class="fas fa-mobile-alt"></i>
       <%= t('my_modules.open_mobile_app.open_mobile_app') %>
     </a>
