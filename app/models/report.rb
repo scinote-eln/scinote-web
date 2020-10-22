@@ -116,7 +116,7 @@ class Report < ApplicationRecord
           'type_of' => element[:type_of] || element[:type_of_lambda].call(object),
           'id' => { element[:id_key] => object.id },
           'sort_order' => element[:sort_order],
-          'children' => gen_element_content(object, element[:children])
+          'children' => gen_element_content(object, element[:children] || [])
         }
         hash_object['id'][element[:parent_id_key]] = parent.id if element[:parent_id_key]
         hash_object

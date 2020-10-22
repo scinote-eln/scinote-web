@@ -45,7 +45,6 @@ class Extends
     {
       type_of: 'project_header',
       id_key: 'project_id',
-      children: []
     },
     {
       type_of: 'experiment',
@@ -60,7 +59,6 @@ class Extends
             {
               type_of: 'my_module_protocol',
               id_key: 'my_module_id',
-              children: []
             },
             {
               type_of: 'step',
@@ -71,25 +69,21 @@ class Extends
                   type_of: 'step_asset',
                   relation: %w(assets),
                   id_key: 'asset_id',
-                  children: []
                 },
                 {
                   type_of: 'step_table',
                   relation: %w(tables),
                   id_key: 'table_id',
-                  children: []
                 },
                 {
                   type_of: 'step_checklist',
                   relation: %w(checklists),
                   id_key: 'checklist_id',
-                  children: []
                 },
                 {
                   type_of: 'step_comments',
                   id_key: 'step_id',
                   sort_order: 'asc',
-                  children: []
                 }
               ]
             },
@@ -104,23 +98,20 @@ class Extends
               children: [{
                 type_of: 'result_comments',
                 id_key: 'result_id',
-                sort_order: 'asc',
-                children: []
+                sort_order: 'asc'
               }]
             },
             {
               type_of: 'my_module_activity',
               id_key: 'my_module_id',
-              sort_order: 'asc',
-              children: []
+              sort_order: 'asc'
             },
             {
               type_of: 'my_module_repository',
               relation: %w(experiment project assigned_repositories_and_snapshots),
               id_key: 'repository_id',
               parent_id_key: 'my_module_id',
-              sort_order: 'asc',
-              children: []
+              sort_order: 'asc'
             }
           ]
         }
