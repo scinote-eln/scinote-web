@@ -589,6 +589,175 @@ ALTER SEQUENCE public.my_module_repository_rows_id_seq OWNED BY public.my_module
 
 
 --
+-- Name: my_module_status_conditions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.my_module_status_conditions (
+    id bigint NOT NULL,
+    my_module_status_id bigint,
+    type character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: my_module_status_conditions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.my_module_status_conditions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: my_module_status_conditions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.my_module_status_conditions_id_seq OWNED BY public.my_module_status_conditions.id;
+
+
+--
+-- Name: my_module_status_consequences; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.my_module_status_consequences (
+    id bigint NOT NULL,
+    my_module_status_id bigint,
+    type character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: my_module_status_consequences_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.my_module_status_consequences_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: my_module_status_consequences_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.my_module_status_consequences_id_seq OWNED BY public.my_module_status_consequences.id;
+
+
+--
+-- Name: my_module_status_flows; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.my_module_status_flows (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    description character varying,
+    visibility integer DEFAULT 0,
+    team_id bigint,
+    created_by_id bigint,
+    last_modified_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: my_module_status_flows_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.my_module_status_flows_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: my_module_status_flows_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.my_module_status_flows_id_seq OWNED BY public.my_module_status_flows.id;
+
+
+--
+-- Name: my_module_status_implications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.my_module_status_implications (
+    id bigint NOT NULL,
+    my_module_status_id bigint,
+    type character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: my_module_status_implications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.my_module_status_implications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: my_module_status_implications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.my_module_status_implications_id_seq OWNED BY public.my_module_status_implications.id;
+
+
+--
+-- Name: my_module_statuses; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.my_module_statuses (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    description character varying,
+    color character varying NOT NULL,
+    my_module_status_flow_id bigint,
+    previous_status_id bigint,
+    created_by_id bigint,
+    last_modified_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: my_module_statuses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.my_module_statuses_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: my_module_statuses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.my_module_statuses_id_seq OWNED BY public.my_module_statuses.id;
+
+
+--
 -- Name: my_module_tags; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -645,7 +814,10 @@ CREATE TABLE public.my_modules (
     experiment_id bigint DEFAULT 0 NOT NULL,
     state smallint DEFAULT 0,
     completed_on timestamp without time zone,
-    started_on timestamp without time zone
+    started_on timestamp without time zone,
+    my_module_status_id bigint,
+    status_changing boolean DEFAULT false,
+    changing_from_my_module_status_id bigint
 );
 
 
@@ -2699,6 +2871,41 @@ ALTER TABLE ONLY public.my_module_repository_rows ALTER COLUMN id SET DEFAULT ne
 
 
 --
+-- Name: my_module_status_conditions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_status_conditions ALTER COLUMN id SET DEFAULT nextval('public.my_module_status_conditions_id_seq'::regclass);
+
+
+--
+-- Name: my_module_status_consequences id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_status_consequences ALTER COLUMN id SET DEFAULT nextval('public.my_module_status_consequences_id_seq'::regclass);
+
+
+--
+-- Name: my_module_status_flows id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_status_flows ALTER COLUMN id SET DEFAULT nextval('public.my_module_status_flows_id_seq'::regclass);
+
+
+--
+-- Name: my_module_status_implications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_status_implications ALTER COLUMN id SET DEFAULT nextval('public.my_module_status_implications_id_seq'::regclass);
+
+
+--
+-- Name: my_module_statuses id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_statuses ALTER COLUMN id SET DEFAULT nextval('public.my_module_statuses_id_seq'::regclass);
+
+
+--
 -- Name: my_module_tags id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3207,6 +3414,46 @@ ALTER TABLE ONLY public.my_module_groups
 
 ALTER TABLE ONLY public.my_module_repository_rows
     ADD CONSTRAINT my_module_repository_rows_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: my_module_status_conditions my_module_status_conditions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_status_conditions
+    ADD CONSTRAINT my_module_status_conditions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: my_module_status_consequences my_module_status_consequences_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_status_consequences
+    ADD CONSTRAINT my_module_status_consequences_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: my_module_status_flows my_module_status_flows_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_status_flows
+    ADD CONSTRAINT my_module_status_flows_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: my_module_status_implications my_module_status_implications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_status_implications
+    ADD CONSTRAINT my_module_status_implications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: my_module_statuses my_module_statuses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_statuses
+    ADD CONSTRAINT my_module_statuses_pkey PRIMARY KEY (id);
 
 
 --
@@ -3996,6 +4243,55 @@ CREATE INDEX index_my_module_repository_rows_on_repository_row_id ON public.my_m
 
 
 --
+-- Name: index_my_module_status_conditions_on_my_module_status_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_my_module_status_conditions_on_my_module_status_id ON public.my_module_status_conditions USING btree (my_module_status_id);
+
+
+--
+-- Name: index_my_module_status_consequences_on_my_module_status_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_my_module_status_consequences_on_my_module_status_id ON public.my_module_status_consequences USING btree (my_module_status_id);
+
+
+--
+-- Name: index_my_module_status_flows_on_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_my_module_status_flows_on_team_id ON public.my_module_status_flows USING btree (team_id);
+
+
+--
+-- Name: index_my_module_status_flows_on_visibility; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_my_module_status_flows_on_visibility ON public.my_module_status_flows USING btree (visibility);
+
+
+--
+-- Name: index_my_module_status_implications_on_my_module_status_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_my_module_status_implications_on_my_module_status_id ON public.my_module_status_implications USING btree (my_module_status_id);
+
+
+--
+-- Name: index_my_module_statuses_on_my_module_status_flow_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_my_module_statuses_on_my_module_status_flow_id ON public.my_module_statuses USING btree (my_module_status_flow_id);
+
+
+--
+-- Name: index_my_module_statuses_on_previous_status_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_my_module_statuses_on_previous_status_id ON public.my_module_statuses USING btree (previous_status_id);
+
+
+--
 -- Name: index_my_module_tags_on_created_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4056,6 +4352,13 @@ CREATE INDEX index_my_modules_on_last_modified_by_id ON public.my_modules USING 
 --
 
 CREATE INDEX index_my_modules_on_my_module_group_id ON public.my_modules USING btree (my_module_group_id);
+
+
+--
+-- Name: index_my_modules_on_my_module_status_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_my_modules_on_my_module_status_id ON public.my_modules USING btree (my_module_status_id);
 
 
 --
@@ -5491,6 +5794,14 @@ ALTER TABLE ONLY public.oauth_access_grants
 
 
 --
+-- Name: my_module_statuses fk_rails_357ee33309; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_statuses
+    ADD CONSTRAINT fk_rails_357ee33309 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: experiments fk_rails_35ad21e487; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5520,6 +5831,14 @@ ALTER TABLE ONLY public.step_assets
 
 ALTER TABLE ONLY public.repository_number_values
     ADD CONSTRAINT fk_rails_3df53c9b27 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: my_modules fk_rails_4768515e2e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_modules
+    ADD CONSTRAINT fk_rails_4768515e2e FOREIGN KEY (changing_from_my_module_status_id) REFERENCES public.my_module_statuses(id);
 
 
 --
@@ -5955,6 +6274,14 @@ ALTER TABLE ONLY public.results
 
 
 --
+-- Name: my_module_status_flows fk_rails_9c3936bd7a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_status_flows
+    ADD CONSTRAINT fk_rails_9c3936bd7a FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: repository_status_values fk_rails_9d357798c5; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6027,6 +6354,14 @@ ALTER TABLE ONLY public.repository_status_values
 
 
 --
+-- Name: my_module_statuses fk_rails_a3f7cd509a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_statuses
+    ADD CONSTRAINT fk_rails_a3f7cd509a FOREIGN KEY (previous_status_id) REFERENCES public.my_module_statuses(id);
+
+
+--
 -- Name: result_assets fk_rails_a418904d39; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6067,6 +6402,14 @@ ALTER TABLE ONLY public.repository_list_items
 
 
 --
+-- Name: my_module_statuses fk_rails_b024d15104; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_statuses
+    ADD CONSTRAINT fk_rails_b024d15104 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: protocols fk_rails_b2c86b4f11; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6104,6 +6447,14 @@ ALTER TABLE ONLY public.repository_asset_values
 
 ALTER TABLE ONLY public.repository_asset_values
     ADD CONSTRAINT fk_rails_bb983a4d66 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: my_module_status_flows fk_rails_c19dc6b9e9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_status_flows
+    ADD CONSTRAINT fk_rails_c19dc6b9e9 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
 --
@@ -6606,6 +6957,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200622140843'),
 ('20200622155632'),
 ('20200709142830'),
-('20200714082503');
+('20200713142353'),
+('20200714082503'),
+('20200826143431'),
+('20200909121441');
 
 

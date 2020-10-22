@@ -3,6 +3,7 @@ class ProjectsController < ApplicationController
   include TeamsHelper
   include InputSanitizeHelper
 
+  before_action :switch_team_with_param, only: :index
   before_action :load_vars, only: %i(show edit update
                                      notifications reports
                                      experiment_archive)
@@ -34,7 +35,6 @@ class ProjectsController < ApplicationController
         }
       end
       format.html do
-        current_team_switch(Team.find_by_id(params[:team])) if params[:team]
         @teams = current_user.teams
         # New project for create new project modal
         @project = Project.new

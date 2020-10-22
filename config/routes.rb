@@ -19,18 +19,6 @@ Rails.application.routes.draw do
 
     root 'dashboards#show'
 
-    # # Client APP endpoints
-    # get '/settings', to: 'client_api/settings#index'
-    # get '/settings/*all', to: 'client_api/settings#index'
-    #
-    # namespace :client_api, defaults: { format: 'json' } do
-    #   post '/premissions', to: 'permissions#status'
-    #   %i(activities teams notifications users configurations).each do |path|
-    #     draw path
-    #   end
-    # end
-
-
     resources :activities, only: [:index]
 
     get 'forbidden', to: 'application#forbidden', as: 'forbidden'
@@ -178,6 +166,7 @@ Rails.application.routes.draw do
           end
         end
       end
+
       member do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'export_repository', to: 'repositories#export_repository'
@@ -185,7 +174,7 @@ Rails.application.routes.draw do
         get 'export_projects_modal'
         # Used for atwho (smart annotations)
         get 'atwho_users', to: 'at_who#users'
-        get 'atwho_repositories', to: 'at_who#repositories'
+        get 'atwho_menu', to: 'at_who#menu'
         get 'atwho_rep_items', to: 'at_who#rep_items'
         get 'atwho_projects', to: 'at_who#projects'
         get 'atwho_experiments', to: 'at_who#experiments'
@@ -347,6 +336,9 @@ Rails.application.routes.draw do
           get :index_old
         end
       end
+
+      resource :status_flow, controller: :my_module_status_flow, only: :show
+
       resources :my_module_comments,
                 path: '/comments',
                 only: [:index, :create, :edit, :update, :destroy]
@@ -393,17 +385,17 @@ Rails.application.routes.draw do
         post 'activities'
         get 'activities_tab' # Activities in tab view for single module
         get 'due_date'
+        get 'status_state'
         patch 'description',
               to: 'my_modules#update_description',
               as: 'update_description'
         patch 'protocol_description',
               to: 'my_modules#update_protocol_description',
               as: 'update_protocol_description'
+        patch 'state', to: 'my_modules#update_state', as: 'update_state'
         get 'protocols' # Protocols view for single module
         get 'results' # Results view for single module
         get 'archive' # Archive view for single module
-        get 'complete_my_module'
-        post 'toggle_task_state'
       end
 
       # Those routes are defined outside of member block
@@ -635,8 +627,7 @@ Rails.application.routes.draw do
       if Rails.configuration.x.core_api_v1_enabled
         namespace :v1 do
           resources :teams, only: %i(index show) do
-            resources :inventories,
-                      only: %i(index create show update destroy) do
+            resources :inventories, only: %i(index create show update destroy) do
               resources :inventory_columns,
                         only: %i(index create show update destroy),
                         path: 'columns',
@@ -664,15 +655,12 @@ Rails.application.routes.draw do
                           as: :cells
               end
             end
-            resources :projects, only: %i(index show) do
-              resources :user_projects, only: %i(index show),
-                path: 'users', as: :users
-              resources :project_comments, only: %i(index show),
-                path: 'comments', as: :comments
+            resources :projects, only: %i(index show create update) do
+              resources :user_projects, only: %i(index show create update destroy), path: 'users', as: :users
+              resources :project_comments, only: %i(index show), path: 'comments', as: :comments
               get 'activities', to: 'projects#activities'
-              resources :reports, only: %i(index show),
-                path: 'reports', as: :reports
-              resources :experiments, only: %i(index show) do
+              resources :reports, only: %i(index show), path: 'reports', as: :reports
+              resources :experiments, only: %i(index show create update) do
                 resources :task_groups, only: %i(index show)
                 resources :connections, only: %i(index show)
                 resources :tasks, only: %i(index show create update) do
@@ -686,12 +674,15 @@ Rails.application.routes.draw do
                             path: 'tags',
                             as: :tags
                   resources :protocols, only: %i(index show) do
-                    resources :steps do
+                    resources :steps, only: %i(index show create update destroy) do
                       resources :assets, only: %i(index show create), path: 'attachments'
-                      resources :checklists, path: 'checklists' do
-                        resources :checklist_items, as: :items, path: 'items'
+                      resources :checklists, only: %i(index show create update destroy), path: 'checklists' do
+                        resources :checklist_items,
+                                  only: %i(index show create update destroy),
+                                  as: :items,
+                                  path: 'items'
                       end
-                      resources :tables, path: 'tables'
+                      resources :tables, only: %i(index show create update destroy), path: 'tables'
                     end
                   end
                   resources :results, only: %i(index create show update)
@@ -705,6 +696,10 @@ Rails.application.routes.draw do
                       only: %i(index create show update destroy),
                       path: 'identities',
                       as: :identities
+          end
+
+          resources :workflows, only: %i(index show) do
+            resources :workflow_statuses, path: :statuses, only: %i(index)
           end
         end
       end

@@ -453,7 +453,8 @@ var MyModuleRepositories = (function() {
 
     FULL_VIEW_MODAL.on('show.bs.modal', function() {
       FULL_VIEW_MODAL.find('.table-container').empty();
-      FULL_VIEW_MODAL.find('.repository-name').empty();
+      FULL_VIEW_MODAL.find('.repository-title').empty();
+      FULL_VIEW_MODAL.find('.repository-version').empty();
       updateFullViewRowsCount('');
     });
   }
@@ -518,29 +519,31 @@ var MyModuleRepositories = (function() {
 
   function updateFullViewRowsCount(value) {
     FULL_VIEW_MODAL.data('rows-count', value);
-    FULL_VIEW_MODAL.find('.repository-name').attr('data-rows-count', value);
+    FULL_VIEW_MODAL.find('.repository-version').attr('data-rows-count', value);
   }
 
   function renderFullViewRepositoryName(name, snapshotDate, assignMode) {
     var title;
-    var repositoryName = name || FULL_VIEW_MODAL.find('.repository-name').data('repository-name');
+    var version;
+    var repositoryName = name || FULL_VIEW_MODAL.find('.repository-title').data('repository-name');
 
     if (assignMode) {
       title = I18n.t('my_modules.repository.full_view.assign_modal_header', {
         repository_name: repositoryName
       });
+      version = '';
     } else if (snapshotDate) {
-      title = I18n.t('my_modules.repository.full_view.modal_snapshot_header', {
-        repository_name: repositoryName,
+      title = repositoryName;
+      version = I18n.t('my_modules.repository.full_view.modal_snapshot_header', {
         snaphot_date: snapshotDate
       });
     } else {
-      title = I18n.t('my_modules.repository.full_view.modal_live_header', {
-        repository_name: repositoryName
-      });
+      title = repositoryName;
+      version = I18n.t('my_modules.repository.full_view.modal_live_header');
     }
-    FULL_VIEW_MODAL.find('.repository-name').data('repository-name', repositoryName);
-    FULL_VIEW_MODAL.find('.repository-name').html(title);
+    FULL_VIEW_MODAL.find('.repository-title').data('repository-name', repositoryName);
+    FULL_VIEW_MODAL.find('.repository-title').html(title);
+    FULL_VIEW_MODAL.find('.repository-version').html(version);
   }
 
   function initRepoistoryAssignView() {
@@ -635,9 +638,13 @@ var MyModuleRepositories = (function() {
         updateFullViewRowsCount(data.rows_count);
         renderFullViewAssignButtons();
       },
-      error: function(data) {
+      error: function(response) {
+        if (response.status === 403) {
+          HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+        } else {
+          HelperModule.flashAlertMsg(response.responseJSON.flash, 'danger');
+        }
         UPDATE_REPOSITORY_MODAL.modal('hide');
-        HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
         SELECTED_ROWS = {};
         FULL_VIEW_TABLE.ajax.reload(null, false);
       }

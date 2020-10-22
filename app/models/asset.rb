@@ -32,16 +32,14 @@ class Asset < ApplicationRecord
              optional: true
   belongs_to :team, optional: true
   has_one :step_asset, inverse_of: :asset, dependent: :destroy
-  has_one :step, through: :step_asset, dependent: :nullify
+  has_one :step, through: :step_asset, touch: true, dependent: :nullify
   has_one :result_asset, inverse_of: :asset, dependent: :destroy
-  has_one :result, through: :result_asset, dependent: :nullify
+  has_one :result, through: :result_asset, touch: true, dependent: :nullify
   has_one :repository_asset_value, inverse_of: :asset, dependent: :destroy
   has_one :repository_cell, through: :repository_asset_value,
     dependent: :nullify
   has_many :report_elements, inverse_of: :asset, dependent: :destroy
   has_one :asset_text_datum, inverse_of: :asset, dependent: :destroy
-
-  after_save { result&.touch; step&.touch }
 
   attr_accessor :file_content, :file_info, :in_template
 
@@ -222,8 +220,7 @@ class Asset < ApplicationRecord
       Rails.logger.info "Asset #{id}: Creating extract text job"
       # The extract_asset_text also includes
       # estimated size calculation
-      Asset.delay(queue: :assets, run_at: 20.minutes.from_now)
-           .extract_asset_text_delayed(id, in_template)
+      Asset.delay(queue: :assets).extract_asset_text_delayed(id, in_template)
     elsif marvinjs?
       extract_asset_text
     else

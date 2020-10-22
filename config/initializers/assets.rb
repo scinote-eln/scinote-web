@@ -34,6 +34,7 @@ Rails.application.config.assets.precompile +=
 Rails.application.config.assets.precompile += %w(my_modules/activities.js)
 Rails.application.config.assets.precompile += %w(my_modules/protocols.js)
 Rails.application.config.assets.precompile += %w(my_modules/repositories.js)
+Rails.application.config.assets.precompile += %w(my_modules/status_flow.js)
 Rails.application.config.assets.precompile +=
   %w(my_modules/protocols/protocol_status_bar.js)
 Rails.application.config.assets.precompile += %w(my_modules/results.js)

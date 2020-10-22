@@ -624,7 +624,7 @@ class TeamImporter
   def create_my_modules(my_modules_json, experiment, user_id = nil)
     puts('Creating my_modules...')
     my_modules_json.each do |my_module_json|
-      my_module = MyModule.new(my_module_json['my_module'])
+      my_module = MyModule.new(my_module_json['my_module'].except('my_module_status_name'))
       orig_my_module_id = my_module.id
       my_module.id = nil
       my_module.my_module_group_id =
@@ -636,6 +636,16 @@ class TeamImporter
       my_module.archived_by_id = find_user(my_module.archived_by_id)
       my_module.restored_by_id = find_user(my_module.restored_by_id)
       my_module.experiment = experiment
+
+      # Find matching status from default flow
+      default_flow = MyModuleStatusFlow.global.first
+
+      if default_flow.present?
+        status = default_flow.my_module_statuses.find_by(name: my_module_json['my_module']['my_module_status_name'])
+        status ||= default_flow.initial_status
+        my_module.my_module_status = status
+      end
+
       my_module.save!
       @my_module_mappings[orig_my_module_id] = my_module.id
       @my_module_counter += 1

@@ -13,10 +13,10 @@ class Step < ApplicationRecord
   validates :completed, inclusion: { in: [true, false] }
   validates :user, :protocol, presence: true
   validates :completed_on, presence: true, if: proc { |s| s.completed? }
+  validates :position, uniqueness: { scope: :protocol }, if: :position_changed?
 
   before_validation :set_completed_on, if: :completed_changed?
   before_save :set_last_modified_by
-  around_save :adjust_positions_on_save, if: :position_changed?
   before_destroy :cascade_before_destroy
   after_destroy :adjust_positions_after_destroy
 
@@ -124,22 +124,63 @@ class Step < ApplicationRecord
     end
   end
 
+  def move_up
+    return if position.zero?
+
+    move_in_protocol(:up)
+  end
+
+  def move_down
+    return if position == protocol.steps.count - 1
+
+    move_in_protocol(:down)
+  end
+
   private
 
-  def adjust_positions_on_save
-    step_to_swap = protocol.steps.find_by(position: position)
+  def move_in_protocol(direction)
+    transaction do
+      re_index_following_steps
 
-    return yield unless step_to_swap
+      case direction
+      when :up
+        new_position = position - 1
+      when :down
+        new_position = position + 1
+      else
+        return
+      end
 
-    position_to_swap = position_was
-    step_to_swap.position = -1
-    yield
-    step_to_swap.update!(position: position_to_swap)
+      step_to_swap = protocol.steps.find_by(position: new_position)
+      position_to_swap = position
+
+      if step_to_swap
+        step_to_swap.update!(position: -1)
+        update!(position: new_position)
+        step_to_swap.update!(position: position_to_swap)
+      else
+        update!(position: new_position)
+      end
+    end
   end
 
   def adjust_positions_after_destroy
-    protocol.steps.where('position > ?', position).find_each do |step|
+    re_index_following_steps
+    protocol.steps.where('position > ?', position).order(:position).each do |step|
       step.update!(position: step.position - 1)
+    end
+  end
+
+  def re_index_following_steps
+    steps = protocol.steps.where(position: position..).order(:position).where.not(id: id)
+    i = position
+    steps.each do |step|
+      i += 1
+      step.position = i
+    end
+
+    steps.reverse_each do |step|
+      step.save! if step.position_changed?
     end
   end
 

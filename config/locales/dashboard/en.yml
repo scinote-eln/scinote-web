@@ -14,7 +14,11 @@ en:
         due_date: "Due date"
         atoz: "From A to Z"
         ztoa: "From Z to A"
-        display: "Display"
+        display: "Display statuses"
+        statuses:
+          placeholder: "Select statuses"
+          all_selected: "All selected"
+          selected: "selected"
         uncompleted_tasks: "Tasks in progress"
         completed_tasks: "Tasks completed"
         project: "Project"
@@ -30,12 +34,9 @@ en:
           title: "Your Team has no tasks at the moment."
         search_result:
           title: "No results."
-      due_date: "Due date: %{date}"
-      progress_bar:
-        in_progress: "In progress"
-        overdue: "Overdue"
-        completed_steps: ": %{steps} / %{total_steps}"
-        completed: "Completed"
+      due_date_html: "Due date: <b>%{date}</b>"
+      due_date_overdue_html: "Due date: <b>%{date} (overdue)</b>"
+      completed_on_html: "Completed on: <b>%{date}</b>"
     calendar:
       due_on: Due on
       dow:

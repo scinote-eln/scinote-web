@@ -5,10 +5,11 @@ class AtWhoController < ApplicationController
   before_action :check_users_permissions
 
   def users
+    users = @team.search_users(@query).limit(Constants::ATWHO_SEARCH_LIMIT + 1)
     respond_to do |format|
       format.json do
         render json: {
-          users: generate_users_data,
+          users: [render_to_string(partial: 'shared/smart_annotation/users.html.erb', locals: {users: users})],
           status: :ok
         }
       end
@@ -31,7 +32,7 @@ class AtWhoController < ApplicationController
   end
 
   def rep_items
-    repository = Repository.find_by_id(params[:repository_id])
+    repository = Repository.find_by_id(params[:repository_id]) || Repository.active.accessible_by_teams(@team).first
     items =
       if repository && can_read_repository?(repository)
         SmartAnnotation.new(current_user, current_team, @query)
@@ -42,25 +43,21 @@ class AtWhoController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          res: items,
+          res: [render_to_string(partial: 'shared/smart_annotation/repository_items.html.erb', locals: {
+                                 repository_rows: items
+                               })],
+          repository: repository.id,
+          team: current_team.id,
           status: :ok
         }
       end
     end
   end
 
-  def repositories
+  def menu
     repositories = Repository.active.accessible_by_teams(@team)
-    respond_to do |format|
-      format.json do
-        render json: {
-          repositories: repositories.map do |r|
-            [r.id, escape_input(r.name.truncate(Constants::ATWHO_REP_NAME_LIMIT))]
-          end.to_h,
-          status: :ok
-        }
-      end
-    end
+    render json: { html: render_to_string({ partial: "shared/smart_annotation/menu.html.erb",
+                                            locals: { repositories: repositories } }) }
   end
 
   def projects
@@ -68,7 +65,10 @@ class AtWhoController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          res: res.projects,
+          res: [render_to_string(partial: 'shared/smart_annotation/project_items.html.erb', locals: {
+                                 projects: res.projects
+                               })],
+          team: current_team.id,
           status: :ok
         }
       end
@@ -80,7 +80,10 @@ class AtWhoController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          res: res.experiments,
+          res: [render_to_string(partial: 'shared/smart_annotation/experiment_items.html.erb', locals: {
+                                 experiments: res.experiments
+                               })],
+          team: current_team.id,
           status: :ok
         }
       end
@@ -92,7 +95,10 @@ class AtWhoController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          res: res.my_modules,
+          res: [render_to_string(partial: 'shared/smart_annotation/my_module_items.html.erb', locals: {
+                                 my_modules: res.my_modules
+                               })],
+          team: current_team.id,
           status: :ok
         }
       end
@@ -109,24 +115,5 @@ class AtWhoController < ApplicationController
 
   def check_users_permissions
     render_403 unless can_read_team?(@team)
-  end
-
-  def generate_users_data
-    # Search users
-    res = @team.search_users(@query)
-               .limit(Constants::ATWHO_SEARCH_LIMIT)
-               .pluck(:id, :full_name, :email)
-
-    # Add avatars, Base62, convert to JSON
-    data = []
-    res.each do |obj|
-      tmp = {}
-      tmp['id'] = obj[0].base62_encode
-      tmp['full_name'] = escape_input(obj[1].truncate(Constants::NAME_TRUNCATION_LENGTH_DROPDOWN))
-      tmp['email'] = escape_input(obj[2])
-      tmp['img_url'] = avatar_path(obj[0], :icon_small)
-      data << tmp
-    end
-    data
   end
 end

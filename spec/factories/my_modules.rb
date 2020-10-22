@@ -14,5 +14,8 @@ FactoryBot.define do
     trait :with_due_date do
       due_date { Faker::Time.between(from: Date.today, to: Date.today + 10.days) }
     end
+    trait :with_status do
+      my_module_status
+    end
   end
 end

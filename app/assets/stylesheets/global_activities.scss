@@ -169,20 +169,6 @@
         .date-container {
           flex-shrink: 0;
           padding-right: 20px;
-
-          .activities-group-expand-button {
-            user-select: none;
-
-            &:hover,
-            &:visited,
-            &:focus {
-              text-decoration: none;
-            }
-
-            .fas {
-              margin-right: 3px;
-            }
-          }
         }
 
         .date-activities {
@@ -197,10 +183,23 @@
 
     .activities-group-expand-button {
       color: $color-emperor;
+      user-select: none;
+
+      &:hover,
+      &:visited,
+      &:focus {
+        text-decoration: none;
+      }
 
       .fas {
         display: inline-block;
+        margin-right: 3px;
+        text-align: center;
         width: 10px;
+      }
+
+      &:not(.collapsed) .fas {
+        @include rotate(90deg);
       }
     }
 

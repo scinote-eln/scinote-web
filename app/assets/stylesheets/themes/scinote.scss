@@ -133,6 +133,14 @@ body {
   font-size: $font-size-small;
 }
 
+.modal-body {
+  font-size: $font-size-base;
+
+  label {
+    @include font-small;
+  }
+}
+
 .jumbotron {
   background-color: inherit;
 }
@@ -742,6 +750,47 @@ ul.double-line > li {
   }
 }
 
+#canvas-container {
+  .panel-heading {
+    padding: 10px 15px 4px;
+  }
+
+  .panel-body {
+    padding: 6px 15px;
+
+    .status-label {
+      background-color: var(--state-color);
+      color: $color-white;
+      display: inline-block;
+      margin: 3px 0;
+      max-width: 100%;
+      overflow: hidden;
+      padding: 2px 8px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .panel-footer {
+    .nav > li > a {
+      padding: 6px 15px;
+    }
+
+    .btn {
+      height: 30px;
+    }
+
+    .badge-indicator {
+      background: transparent;
+      color: $color-silver-chalice;
+      font-size: 12px;
+      margin-left: 0;
+      padding: 0;
+      top: 0;
+    }
+  }
+}
+
 .panel-options {
   position: relative;
   bottom: 8px;
@@ -1112,6 +1161,15 @@ ul.content-activities {
 
   .result-panel-collapse-link {
     text-decoration: none;
+
+    &:not(.collapsed) .fas {
+      @include rotate(90deg);
+    }
+
+    .fas {
+      margin-right: 7px;
+      text-align: center;
+    }
   }
 
   .row {
@@ -1645,199 +1703,6 @@ th.custom-field .modal-tooltiptext {
 
 .disable-click {
   pointer-events: none;
-}
-
-// AtWho (smart annotations)
-
-// <Custom atwho style>
-.atwho-view {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: none;
-  margin-top: 18px;
-  background: $color-white;
-  color: $color-black;
-  border: 1px solid $color-emperor;
-  border-radius: 3px;
-  box-shadow: 0 0 5px $color-gainsboro;
-  max-width: 800px;
-  min-width: 700px;
-  overflow: auto;
-  z-index: 11110 !important;
-
-  small {
-    font-size: smaller;
-    color: $color-emperor;
-    font-weight: normal;
-  }
-
-  strong {
-    color: $brand-primary;
-  }
-
-  .cur {
-    background: $brand-primary;
-    color: $color-white;
-
-    small {
-      color: $color-white;
-    }
-
-    strong {
-      color: $color-white;
-      font: bold;
-    }
-
-    .res-description {
-      color: $color-white;
-    }
-
-    .res-type {
-      border-color: $color-white;
-    }
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: auto;
-
-    li {
-      align-items: center;
-      border-bottom: 1px solid $color-emperor;
-      cursor: pointer;
-      display: flex;
-      padding: 5px 10px;
-
-      .global-avatar-container {
-        margin-right: 5px;
-      }
-    }
-  }
-}
-// <End of overrides>
-
-.atwho-header-res {
-  background-color: $color-concrete;
-  border-bottom: 1px solid $color-emperor;
-  display: flex;
-  flex-wrap: wrap;
-  padding: 3px 5px;
-
-  .btn {
-    border-radius: 4px;
-    margin: 5px;
-    padding: 3px;
-  }
-
-  .btn-default {
-    background-color: transparent;
-  }
-
-  .title-user {
-    padding-top: 4px;
-  }
-
-  .help {
-    margin-left: auto;
-    margin-right: 15px;
-    order: 99;
-    padding: 4px;
-    white-space: nowrap;
-
-    div {
-      display: inline;
-      font-size: smaller;
-      margin-left: 15px;
-    }
-
-    strong {
-      color: $color-black;
-    }
-  }
-
-  .dismiss {
-    color: $color-emperor;
-    position: absolute;
-    right: 5px;
-    top: 5px;
-  }
-
-  .dismiss:hover {
-    color: $color-black;
-    cursor: pointer;
-  }
-}
-
-
-.atwho-li-res {
-
-  .fa-tint {
-    margin-left: 5px;
-    margin-right: 5px;
-  }
-
-  .res-type {
-    border: 1px solid $color-black;
-    border-radius: 4px;
-    font-weight: 600;
-    margin-left: 5px;
-    margin-right: 5px;
-    padding: 0 2px;
-    text-transform: capitalize;
-  }
-
-  .res-name {
-    font-weight: 600;
-    margin-right: 5px;
-  }
-
-  .res-description {
-    color: $color-emperor;
-    font-size: 10px;
-  }
-}
-
-.sa-type {
-  border: 1px solid $color-emperor;
-  border-radius: 4px;
-  font-weight: 600;
-  padding: 0 2px;
-  text-decoration: none;
-  text-transform: capitalize;
-
-  &:hover {
-    text-decoration: none;
-  }
-}
-
-.atwho-user-container {
-  align-items: center;
-  display: inline-flex;
-
-  .global-avatar-container {
-    line-height: 30px;
-    margin: 0 2px 0 4px;
-
-    img {
-      position: relative;
-      top: -2px;
-    }
-  }
-}
-
-.atwho-user-popover {
-  cursor: pointer;
-  display: inline-block;
-}
-
-.atwho-user-img-popover {
-  cursor: default;
-}
-
-.atwho-no-results {
-  padding: 5px 10px;
 }
 
 .popover {

@@ -75,6 +75,8 @@ class RepositoryChecklistValue < ApplicationRecord
   end
 
   def self.import_from_text(text, attributes, _options = {})
+    return nil if text.blank?
+
     value = new(attributes)
     column = attributes.dig(:repository_cell_attributes, :repository_column)
     RepositoryImportParser::Util.split_by_delimiter(text: text, delimiter: column.delimiter_char).each do |item_text|

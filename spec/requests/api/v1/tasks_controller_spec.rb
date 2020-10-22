@@ -4,6 +4,8 @@ require 'rails_helper'
 
 RSpec.describe 'Api::V1::TasksController', type: :request do
   before :all do
+    MyModuleStatusFlow.ensure_default
+
     @user = create(:user)
     @teams = create_list(:team, 2, created_by: @user)
     create(:user_team, user: @user, team: @teams.first, role: 2)
@@ -290,7 +292,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
       end
     end
 
-    context 'task completion, when has valid params' do
+    context 'direct task completion disabled, when has valid params' do
       let(:request_body) do
         {
           data: {
@@ -302,23 +304,10 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
         }
       end
 
-      it 'returns status 200' do
+      it 'returns status 204, no changes to task' do
         action
 
-        expect(response).to have_http_status 200
-      end
-
-      it 'returns well formated response' do
-        action
-
-        expect(json).to match(
-          hash_including(
-            data: hash_including(
-              type: 'tasks',
-              attributes: hash_including(state: 'completed')
-            )
-          )
-        )
+        expect(response).to have_http_status 204
       end
     end
 
