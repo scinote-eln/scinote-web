@@ -44,7 +44,7 @@ class Extends
   EXPORT_ALL_PROJECT_ELEMENTS = [
     {
       type_of: 'project_header',
-      id_key: 'project_id',
+      id_key: 'project_id'
     },
     {
       type_of: 'experiment',
@@ -58,7 +58,7 @@ class Extends
           children: [
             {
               type_of: 'my_module_protocol',
-              id_key: 'my_module_id',
+              id_key: 'my_module_id'
             },
             {
               type_of: 'step',
@@ -68,22 +68,22 @@ class Extends
                 {
                   type_of: 'step_asset',
                   relation: %w(assets),
-                  id_key: 'asset_id',
+                  id_key: 'asset_id'
                 },
                 {
                   type_of: 'step_table',
                   relation: %w(tables),
-                  id_key: 'table_id',
+                  id_key: 'table_id'
                 },
                 {
                   type_of: 'step_checklist',
                   relation: %w(checklists),
-                  id_key: 'checklist_id',
+                  id_key: 'checklist_id'
                 },
                 {
                   type_of: 'step_comments',
                   id_key: 'step_id',
-                  sort_order: 'asc',
+                  sort_order: 'asc'
                 }
               ]
             },
