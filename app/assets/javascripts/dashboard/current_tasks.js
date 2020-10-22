@@ -7,20 +7,9 @@ var DasboardCurrentTasksWidget = (function() {
   var projectFilter = '.current-tasks-filters .project-filter';
   var experimentFilter = '.current-tasks-filters .experiment-filter';
 
-  function generateTasksListHtml(json, container) {
+  function appendTasksList(json, container) {
     $.each(json.data, (i, task) => {
-      var currentTaskItem = ` <a class="current-task-item" href="${task.link}">
-                                <div class="current-task-breadcrumbs">${task.project}<span class="slash">/</span>${task.experiment}</div>
-                                <div class="task-name row-border">${task.name}</div>
-                                <div class="task-due-date row-border ${task.due_date.state}">
-                                  <span class="${task.due_date.text ? '' : 'hidden'}">
-                                    <i class="fas fa-calendar-day"></i> ${task.due_date.text}
-                                  </span>
-                                </div>
-                                <div class="task-status-container row-border">
-                                  <span class="task-status" style="background:${task.status_color}">${task.status_name}</span>
-                                </div>
-                              </a>`;
+      var currentTaskItem = task;
       $(container).append(currentTaskItem);
     });
   }
@@ -42,7 +31,7 @@ var DasboardCurrentTasksWidget = (function() {
     InfiniteScroll.init('.current-tasks-list', {
       url: $('.current-tasks-list').data('tasksListUrl'),
       customResponse: (json, container) => {
-        generateTasksListHtml(json, container);
+        appendTasksList(json, container);
       },
       customParams: (params) => {
         params.project_id = dropdownSelector.getValues(projectFilter);
@@ -130,7 +119,7 @@ var DasboardCurrentTasksWidget = (function() {
           $currentTasksList.find('.widget-placeholder').addClass($('.current-tasks-navbar .active').data('mode'));
         }
       }
-      generateTasksListHtml(result, $currentTasksList);
+      appendTasksList(result, $currentTasksList);
       PerfectSb().update_all();
       if (newList) InfiniteScroll.resetScroll('.current-tasks-list');
       animateSpinner($currentTasksList, false);

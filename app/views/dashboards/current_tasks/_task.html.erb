@@ -1,0 +1,15 @@
+<a class="current-task-item" href="<%= protocols_my_module_path(task.id) %>">
+  <div class="current-task-breadcrumbs"><%= task.experiment.project.name %>
+    <span class="slash">/</span><%= task.experiment.name %></div>
+  <div class="task-name row-border">
+    <%= task.name %>
+  </div>
+  <div class="task-due-date row-border <%= prepare_due_date(task)[:state ]%>">
+                                  <span class="<%= prepare_due_date(task)[:text] ? '' : 'hidden' %>">
+                                    <i class="fas fa-calendar-day"></i> <%= prepare_due_date(task)[:text] %>
+                                  </span>
+  </div>
+  <div class="task-status-container row-border">
+    <span class="task-status" style="background:<%= task.status_color %>"><%= task.status_name %></span>
+  </div>
+</a>
