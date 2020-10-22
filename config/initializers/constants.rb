@@ -207,7 +207,7 @@ class Constants
 
   ACADEMY_BL_LINK = 'https://scinote.net/academy/?utm_source=SciNote%20software%20BL&utm_medium=SciNote%20software%20BL'.freeze
 
-  PWA_URL = 'https://:pwa_domain/teams/:team_id/projects/:project_id/experiments/:experiment_id/tasks/:task_id/protocol/:protocol_id/:step_id'
+  PWA_URL = 'https://:pwa_domain/teams/:team_id/projects/:project_id/experiments/:experiment_id/tasks/:task_id/protocol/:protocol_id/:step_id?domain=:domain'.freeze
 
   TWO_FACTOR_URL = {
     google: {

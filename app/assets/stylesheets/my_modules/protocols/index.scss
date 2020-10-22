@@ -554,43 +554,41 @@
   }
 }
 
-@media (max-width:1020px) {
-  .open-mobile-app-container {
-    @include font-main;
-    background-color: $brand-focus;
-    border-radius: 8px 8px 0 0;
-    bottom: 0;
-    color: $color-white;
-    display: block;
-    left: .5em;
-    padding: 0 2em;
-    position: fixed;
-    right: .5em;
-    z-index: 1001;
-  }
+.open-mobile-app-container {
+  @include font-main;
+  background-color: $brand-focus;
+  border-radius: 8px 8px 0 0;
+  bottom: 0;
+  color: $color-white;
+  display: none;
+  left: .5em;
+  padding: 0 2em;
+  position: fixed;
+  right: .5em;
+  z-index: 1001;
+}
 
-  .open-mobile-app-buttons {
-    padding-bottom: 1em;
-  }
+.open-mobile-app-buttons {
+  padding-bottom: 1em;
+}
 
-  .open-mobile-app-text {
-    padding-bottom: 4em;
-  }
+.open-mobile-app-text {
+  padding-bottom: 4em;
+}
 
-  .dismiss-mobile-app-container {
+.dismiss-mobile-app-container {
+  color: $color-concrete;
+  cursor: pointer;
+  display: inline-block;
+  font-size: $font-size-h2;
+  height: 3.1em;
+  margin: .5em;
+  padding: 1em 3em;
+  width: fit-content;
+
+  &:hover {
     color: $color-concrete;
-    cursor: pointer;
-    display: inline-block;
-    font-size: $font-size-h2;
-    height: 3.1em;
-    margin: .5em;
-    padding: 1em 3em;
-    width: fit-content;
-
-    &:hover {
-      color: $color-concrete;
-      text-decoration: none;
-    }
+    text-decoration: none;
   }
 }
 
