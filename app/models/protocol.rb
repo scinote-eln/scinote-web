@@ -364,8 +364,8 @@ class Protocol < ApplicationRecord
     steps.where(completed: true)
   end
 
-  def first_step
-    steps.find_by(position: 0)
+  def first_step_id
+    steps.find_by(position: 0)&.id
   end
 
   def space_taken
