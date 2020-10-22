@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-class RemoveSamplesFromDb < ActiveRecord::Migration[5.1]
+class RemoveSamplesFromDb < ActiveRecord::Migration[6.0]
   def change
     # Revert 20171003082333_add_connections_and_sample_tasks_indexes
     remove_index :sample_my_modules, :my_module_id
 
     # Revert 20170407082423_update_indexes_for_faster_search
-    remove_index :samples, name: :index_samples_on_name
-    remove_index :samples, name: :index_sample_types_on_name
-    remove_index :samples, name: :index_sample_groups_on_name
-    remove_index :samples, name: :index_sample_custom_fields_on_value
+    remove_index :samples, name: :index_samples_on_name if index_exists?(:samples, :index_samples_on_name)
+    remove_index :samples, name: :index_sample_types_on_name if index_exists?(:samples, :index_sample_types_on_name)
+    remove_index :samples, name: :index_sample_groups_on_name if index_exists?(:samples, :index_sample_groups_on_name)
+    remove_index :samples, name: :index_sample_custom_fields_on_value if index_exists?(:samples, :index_sample_custom_fields_on_value)
 
     # Revert 20161123161514_create_samples_tables
     remove_index :samples_tables, :user_id
