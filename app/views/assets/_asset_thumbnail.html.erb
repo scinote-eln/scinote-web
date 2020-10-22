@@ -7,7 +7,12 @@
   <%= link_to rails_blob_path(asset.file, disposition: 'attachment'),
           class: "file-preview-link",
           id: "modal_link#{asset.id}",
-          data: { no_turbolink: true, id: true, 'preview-url': asset_file_preview_path(asset)} do %>
+          data: {
+            no_turbolink: true,
+            id: asset.id,
+            gallery_view_id: gallery_view_id,
+            preview_url: asset_file_preview_path(asset)
+          } do %>
       <div class="change-preview-type"
            data-preview-type="inline"
            data-toggle-view-url="<%= toggle_view_mode_path(asset) %>">

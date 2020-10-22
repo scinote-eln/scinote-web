@@ -2283,6 +2283,9 @@ en:
       errors:
         forbidden: 'You do not have permission to add files.'
         not_found: 'Element not found.'
+    file_preview:
+      edit_in_scinote: "Edit in SciNote"
+      edit_in_marvinjs: "Edit in Marvin JS"
   atwho:
     no_results:
       projects: "Projects with this name were not found"

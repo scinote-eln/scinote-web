@@ -41,7 +41,7 @@
 
 <div class="col-xs-12 attachments" data-step-id="<%= step.id %>" data-order="<%= current_order %>">
   <% assets.each_with_index do |asset, i| %>
-    <%= render partial: 'assets/asset.html.erb', locals: { asset: asset } %>
+    <%= render partial: 'assets/asset.html.erb', locals: { asset: asset, gallery_view_id: step.id } %>
   <% end %>
 </div>
 <hr>

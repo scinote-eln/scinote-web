@@ -361,12 +361,6 @@ var RepositoryDatatable = (function(global) {
       });
   }
 
-  function disableCheckboxToggleOnAssetDownload() {
-    $('.file-preview-link').on('click', function(ev) {
-      ev.stopPropagation();
-    });
-  }
-
   // Adjust columns width in table header
   function adjustTableHeader() {
     TABLE.columns.adjust();
@@ -546,7 +540,6 @@ var RepositoryDatatable = (function(global) {
         });
       },
       fnInitComplete: function() {
-        disableCheckboxToggleOnAssetDownload();
         initHeaderTooltip();
         disableCheckboxToggleOnCheckboxPreview();
 

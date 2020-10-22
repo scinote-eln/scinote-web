@@ -220,6 +220,7 @@ function initProtocolPreviewModal() {
           modal.modal("show");
           ProtocolRepositoryHeader.init();
           initHandsOnTable(modalBody);
+        },
         error: function (error) {
           // TODO
         }

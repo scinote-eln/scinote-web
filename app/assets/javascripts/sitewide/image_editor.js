@@ -1,3 +1,6 @@
+/* global animateSpinner fabric PerfectScrollbar refreshProtocolStatusBar tui Uint8Array*/
+/* eslint-disable no-underscore-dangle */
+
 var ImageEditorModal = (function() {
   function updateFabricControls() {
     fabric.Object.prototype.drawBorders = function(ctx, styleOverride = {}) {
@@ -139,17 +142,6 @@ var ImageEditorModal = (function() {
 
       return this;
     };
-  }
-
-  function preInitImageEditor(data) {
-    $.ajax({
-      url: data['download-url'],
-      type: 'get',
-      success: function(responseData) {
-        var fileUrl = responseData;
-        initImageEditor(data, fileUrl);
-      }
-    });
   }
 
   function initImageEditor(data, fileUrl) {
@@ -389,12 +381,10 @@ var ImageEditorModal = (function() {
         contentType: false,
         processData: false,
         success: function(res) {
-          $('#modal_link' + data.id).parent().html(res.html);
-          initPreviewModal();
+          $(`.step-asset[data-asset-id=${data.id}]`).replaceWith(res.html);
+          $(`.step-asset[data-asset-id=${data.id}]`).closest('.attachments').trigger('reorder');
+          closeEditor();
         }
-      }).done(function() {
-        closeEditor();
-
       });
       if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
     });
@@ -404,4 +394,27 @@ var ImageEditorModal = (function() {
     };
   }
 
+  function preInitImageEditor() {
+    $(document).on('click', '.image-edit-button', function() {
+      var editButton = $(this);
+      updateFabricControls();
+      $.get(editButton.data('image-url'), function(responseData) {
+        var fileUrl = responseData;
+        var data = {
+          id: editButton.data('image-id'),
+          quality: editButton.data('image-quality'),
+          filename: editButton.data('image-name'),
+          'mime-type': editButton.data('image-mime-type')
+        };
+        $('#filePreviewModal').modal('hide');
+        $.post(editButton.data('start-edit-url'));
+        initImageEditor(data, fileUrl);
+      });
+    });
+  }
+
+  return Object.freeze({
+    init: preInitImageEditor
+  });
 }());
+ImageEditorModal.init();
