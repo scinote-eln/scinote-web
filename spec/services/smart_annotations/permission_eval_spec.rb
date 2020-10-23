@@ -87,5 +87,15 @@ describe SmartAnnotations::PermissionEval do
       value = subject.__send__(:validate_rep_item_permissions, user, team, repository_item)
       expect(value).to be true
     end
+
+    context 'when user can access repository from another team, but not with the current' do
+      it do
+        # Add anoteher user also as a member of team whos owes repository with this item
+        create :user_team, team: team, user: another_user, role: :admin
+
+        value = subject.__send__(:validate_rep_item_permissions, another_user, another_team, repository_item)
+        expect(value).to be false
+      end
+    end
   end
 end
