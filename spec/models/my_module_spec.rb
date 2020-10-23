@@ -30,7 +30,6 @@ describe MyModule, type: :model do
     it { should have_db_column :archived_by_id }
     it { should have_db_column :restored_by_id }
     it { should have_db_column :restored_on }
-    it { should have_db_column :nr_of_assigned_samples }
     it { should have_db_column :workflow_order }
     it { should have_db_column :experiment_id }
     it { should have_db_column :state }
@@ -51,8 +50,6 @@ describe MyModule, type: :model do
     it { should have_many :tags }
     it { should have_many :task_comments }
     it { should have_many :my_modules }
-    it { should have_many :sample_my_modules }
-    it { should have_many :samples }
     it { should have_many :my_module_repository_rows }
     it { should have_many :repository_rows }
     it { should have_many :user_my_modules }

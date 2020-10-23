@@ -28,14 +28,14 @@ class Extends
                            result_table: 4,
                            result_text: 5,
                            my_module_activity: 6,
-                           my_module_samples: 7,
+                           my_module_samples: 7, # DEPRECATED in SCI-2228, kept b/c of integer enums
                            step_checklist: 8,
                            step_asset: 9,
                            step_table: 10,
                            step_comments: 11,
                            result_comments: 12,
-                           project_activity: 13, # TODO
-                           project_samples: 14, # TODO
+                           project_activity: 13, # NOT USED, kept b/c of integer enums
+                           project_samples: 14, # DEPRECATED in SCI-2228, kept b/c of integer enums
                            experiment: 15,
                            # Higher number because of addons
                            my_module_repository: 17,

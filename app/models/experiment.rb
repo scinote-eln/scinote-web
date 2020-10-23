@@ -113,14 +113,6 @@ class Experiment < ApplicationRecord
     my_modules.where(archived: true)
   end
 
-  def assigned_samples
-    Sample.joins(:my_modules).where(my_modules: { id: my_modules })
-  end
-
-  def unassigned_samples(assigned_samples)
-    Sample.where(team_id: team).where.not(id: assigned_samples)
-  end
-
   def update_canvas(
     to_archive,
     to_add,
@@ -470,24 +462,6 @@ class Experiment < ApplicationRecord
       Connection.create!(input_id: b, output_id: a)
     end
 
-    # Unassign samples from former downstream modules
-    # for all destroyed connections
-    unassign_samples_from_old_downstream_modules(previous_sources)
-
-    visited = []
-    # Assign samples to all new downstream modules
-    filtered_edges.each do |a, b|
-      source = my_modules.includes({ inputs: :from }, :samples).find(a.to_i)
-      target = my_modules.find(b.to_i)
-      # Do this only for new edges
-      next unless previous_sources[target.id].exclude?(source)
-      # Go as high upstream as new edges take us
-      # and then assign samples to all downsteam samples
-      assign_samples_to_new_downstream_modules(previous_sources,
-                                               visited,
-                                               source)
-    end
-
     # Save topological order of modules (for modules without workflow,
     # leave them unordered)
     my_modules.includes(:my_module_group).each do |m|
@@ -501,52 +475,8 @@ class Experiment < ApplicationRecord
     end
 
     # Make sure to reload my modules, which now have updated connections
-    # and samples
     my_modules.reload
     true
-  end
-
-  # When connections are deleted, unassign samples that
-  # are not inherited anymore
-  def unassign_samples_from_old_downstream_modules(sources)
-    my_modules.each do |my_module|
-      sources[my_module.id].each do |src|
-        # Only do this for newly deleted connections
-        next unless src.outputs.map(&:to).exclude? my_module
-        my_module.downstream_modules.each do |dm|
-          # Get unique samples for all upstream modules
-          um = dm.upstream_modules
-          um.shift # remove current module
-          ums = um.map(&:samples).flatten.uniq
-          src.samples.find_each do |sample|
-            dm.samples.destroy(sample) if ums.exclude? sample
-          end
-        end
-      end
-    end
-  end
-
-  # Assign samples to new connections recursively
-  def assign_samples_to_new_downstream_modules(sources, visited, my_module)
-    # If samples are already assigned for this module, stop going upstream
-    return if visited.include?(my_module)
-    visited << my_module
-    # Edge case, when module is source or it doesn't have any new input
-    # connections
-    if my_module.inputs.blank? ||
-       (my_module.inputs.map(&:from) - sources[my_module.id]).empty?
-      my_module.downstream_modules.each do |dm|
-        new_samples = my_module.samples.where.not(id: dm.samples)
-        dm.samples << new_samples
-      end
-    else
-      my_module.inputs.each do |input|
-        # Go upstream for new in connections
-        if sources[my_module.id].exclude?(input.from)
-          assign_samples_to_new_downstream_modules(sources, visited, input.from)
-        end
-      end
-    end
   end
 
   # Updates positions of modules.

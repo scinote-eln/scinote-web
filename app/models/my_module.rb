@@ -28,22 +28,10 @@ class MyModule < ApplicationRecord
   validate :check_status_conditions, if: :my_module_status_id_changed?
   validate :check_status_implications
 
-  belongs_to :created_by,
-             foreign_key: 'created_by_id',
-             class_name: 'User',
-             optional: true
-  belongs_to :last_modified_by,
-             foreign_key: 'last_modified_by_id',
-             class_name: 'User',
-             optional: true
-  belongs_to :archived_by,
-             foreign_key: 'archived_by_id',
-             class_name: 'User',
-             optional: true
-  belongs_to :restored_by,
-             foreign_key: 'restored_by_id',
-             class_name: 'User',
-             optional: true
+  belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User', optional: true
+  belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User', optional: true
+  belongs_to :archived_by, foreign_key: 'archived_by_id', class_name: 'User', optional: true
+  belongs_to :restored_by, foreign_key: 'restored_by_id', class_name: 'User', optional: true
   belongs_to :experiment, inverse_of: :my_modules, touch: true
   belongs_to :my_module_group, inverse_of: :my_modules, optional: true
   belongs_to :my_module_status, optional: true
@@ -53,22 +41,13 @@ class MyModule < ApplicationRecord
   has_many :my_module_tags, inverse_of: :my_module, dependent: :destroy
   has_many :tags, through: :my_module_tags
   has_many :task_comments, foreign_key: :associated_id, dependent: :destroy
-
   has_many :inputs, class_name: 'Connection', foreign_key: 'input_id', inverse_of: :to, dependent: :destroy
   has_many :outputs, class_name: 'Connection', foreign_key: 'output_id', inverse_of: :from, dependent: :destroy
   has_many :my_modules, through: :outputs, source: :to, class_name: 'MyModule'
   has_many :my_module_antecessors, through: :inputs, source: :from, class_name: 'MyModule'
-
-  has_many :sample_my_modules,
-           inverse_of: :my_module,
-           dependent: :destroy
-  has_many :samples, through: :sample_my_modules
-  has_many :my_module_repository_rows,
-           inverse_of: :my_module, dependent: :destroy
+  has_many :my_module_repository_rows, inverse_of: :my_module, dependent: :destroy
   has_many :repository_rows, through: :my_module_repository_rows
-  has_many :repository_snapshots,
-           dependent: :destroy,
-           inverse_of: :my_module
+  has_many :repository_snapshots, dependent: :destroy, inverse_of: :my_module
   has_many :user_my_modules, inverse_of: :my_module, dependent: :destroy
   has_many :users, through: :user_my_modules
   has_many :report_elements, inverse_of: :my_module, dependent: :destroy
@@ -154,8 +133,7 @@ class MyModule < ApplicationRecord
     !experiment.archived? && experiment.navigable?
   end
 
-  # Removes assigned samples from module and connections with other
-  # modules.
+  # Removes connections with other modules
   def archive(current_user)
     self.x = 0
     self.y = 0
@@ -166,12 +144,9 @@ class MyModule < ApplicationRecord
 
     MyModule.transaction do
       was_archived = super
-      # Unassociate all samples from module.
-      was_archived = SampleMyModule.where(my_module: self).destroy_all if was_archived
       # Remove all connection between modules.
       was_archived = Connection.where(input_id: id).destroy_all if was_archived
       was_archived = Connection.where(output_id: id).destroy_all if was_archived
-
       raise ActiveRecord::Rollback unless was_archived
     end
     was_archived
@@ -252,10 +227,6 @@ class MyModule < ApplicationRecord
     )
   end
 
-  def unassigned_samples
-    Sample.where(team_id: experiment.project.team).where.not(id: samples)
-  end
-
   def unassigned_tags
     Tag.find_by_sql(
       "SELECT DISTINCT tags.id, tags.name, tags.color FROM tags " +
@@ -296,14 +267,6 @@ class MyModule < ApplicationRecord
     # Temporary function (until we fully support
     # multiple protocols per module)
     protocols.count > 0 ? protocols.first : nil
-  end
-
-  def first_n_samples(count = Constants::SEARCH_LIMIT)
-    samples.order(name: :asc).limit(count)
-  end
-
-  def number_of_samples
-    samples.count
   end
 
   def is_overdue?(datetime = DateTime.current)

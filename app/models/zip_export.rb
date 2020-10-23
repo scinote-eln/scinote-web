@@ -99,11 +99,6 @@ class ZipExport < ApplicationRecord
     end
   end
 
-  def generate_samples_zip(tmp_dir, data, _options = {})
-    file = FileUtils.touch("#{tmp_dir}/export.csv").first
-    File.open(file, 'wb') { |f| f.write(data) }
-  end
-
   def generate_repositories_zip(tmp_dir, data, _options = {})
     file = FileUtils.touch("#{tmp_dir}/export.csv").first
     File.open(file, 'wb') { |f| f.write(data) }

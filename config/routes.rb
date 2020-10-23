@@ -290,9 +290,6 @@ Rails.application.routes.draw do
       member do
         # Notifications popup for individual project in projects index
         get 'notifications'
-        # get 'samples' # Samples for single project
-        # Renders sample datatable for single project (ajax action)
-        # post 'samples_index'
         get 'experiment_archive' # Experiment archive for single project
       end
 
@@ -318,11 +315,8 @@ Rails.application.routes.draw do
         post 'clone' # clone experiment
         get 'move_modal' # return modal with move options
         post 'move' # move experiment
-        # get 'samples' # Samples for single project
         get 'updated_img' # Checks if the workflow image is updated
         get 'fetch_workflow_img' # Get udated workflow img
-        # Renders sample datatable for single project (ajax action)
-      #   post 'samples_index'
       end
     end
 
@@ -380,7 +374,6 @@ Rails.application.routes.draw do
 
       post :select_default_snapshot, to: 'my_module_repository_snapshots#select'
 
-      # resources :sample_my_modules, path: '/samples_index', only: [:index]
       resources :result_texts, only: [:new, :create]
       resources :result_assets, only: [:new, :create]
       resources :result_tables, only: [:new, :create]
@@ -452,9 +445,6 @@ Rails.application.routes.draw do
                 path: '/comments',
                 only: [:create, :index, :edit, :update, :destroy]
     end
-
-    # resources :samples, only: [:edit, :update, :destroy]
-    # get 'samples/:id', to: 'samples#show'
 
     resources :result_texts, only: [:edit, :update, :destroy]
     get 'result_texts/:id/download' => 'result_texts#download',
