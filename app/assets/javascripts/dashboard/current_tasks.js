@@ -38,6 +38,17 @@ var DasboardCurrentTasksWidget = (function() {
     return values;
   }
 
+  function markAppliedFilters(state) {
+    if (state.statuses.sort().toString() === getDefaultStatusValues().sort().toString()
+      && (state.project_id.length === 0)
+      && (state.sort === 'due_date')
+      && (state.experiment_id.length === 0)) {
+      $('.filter-container').removeClass('filters-applied');
+    } else {
+      $('.filter-container').addClass('filters-applied');
+    }
+  }
+
   function initInfiniteScroll() {
     InfiniteScroll.init('.current-tasks-list', {
       url: $('.current-tasks-list').data('tasksListUrl'),
@@ -73,6 +84,7 @@ var DasboardCurrentTasksWidget = (function() {
     };
 
     if (filterState) {
+      markAppliedFilters(filterState);
       localStorage.setItem('current_tasks_filters_per_team/' + teamId, JSON.stringify(filterState));
     }
   }
@@ -100,6 +112,7 @@ var DasboardCurrentTasksWidget = (function() {
         // Select saved navbar state
         $('.current-tasks-navbar .navbar-link').removeClass('active');
         $('.current-tasks-navbar').find(`[data-mode='${parsedFilterState.mode}']`).addClass('active');
+        markAppliedFilters(parsedFilterState);
       } catch (e) {
         dropdownSelector.selectValues(statusFilter, getDefaultStatusValues());
       }
