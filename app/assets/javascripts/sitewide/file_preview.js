@@ -11,7 +11,7 @@ var FilePreviewModal = (function() {
       e.preventDefault();
       e.stopPropagation();
       params.gallery = $(`.file-preview-link[data-gallery-view-id=${galleryViewId}]`)
-        .toArray().sort((a, b) => $(a).closest('.step-asset').css('order') - $(b).closest('.step-asset').css('order'))
+        .toArray().sort((a, b) => $(a).closest('.asset').css('order') - $(b).closest('.asset').css('order'))
         .map(i => i.dataset.id);
       $.get($(this).data('preview-url'), params, function(result) {
         $('#filePreviewModal .modal-content').html(result.html);

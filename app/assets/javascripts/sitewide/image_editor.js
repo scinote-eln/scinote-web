@@ -381,8 +381,8 @@ var ImageEditorModal = (function() {
         contentType: false,
         processData: false,
         success: function(res) {
-          $(`.step-asset[data-asset-id=${data.id}]`).replaceWith(res.html);
-          $(`.step-asset[data-asset-id=${data.id}]`).closest('.attachments').trigger('reorder');
+          $(`.asset[data-asset-id=${data.id}]`).replaceWith(res.html);
+          $(`.asset[data-asset-id=${data.id}]`).closest('.attachments').trigger('reorder');
           closeEditor();
         }
       });

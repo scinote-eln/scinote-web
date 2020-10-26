@@ -34,7 +34,14 @@ class AssetsController < ApplicationController
   def toggle_view_mode
     @asset.view_mode = toggle_view_mode_params[:view_mode]
     if @asset.save(touch: false)
-      html = render_to_string(partial: 'assets/asset.html.erb', locals: { asset: @asset })
+      if @assoc.class == Step
+        gallery_view_id = @assoc.id
+      end
+
+      html = render_to_string(partial: 'assets/asset.html.erb', locals: {
+        asset: @asset,
+        gallery_view_id: gallery_view_id
+      })
       respond_to do |format|
         format.json do
           render json: { html: html }, status: :ok

@@ -9,7 +9,12 @@
       <%= link_to rails_blob_path(asset.file, disposition: 'attachment'),
         class: "file-preview-link file-name",
         id: "modal_link#{asset.id}",
-        data: { no_turbolink: true, id: true, 'preview-url': asset_file_preview_path(asset)} do %>
+        data: {
+            no_turbolink: true,
+            id: asset.id,
+            gallery_view_id: gallery_view_id,
+            preview_url: asset_file_preview_path(asset)
+          } do %>
         <%= asset.file_name %>
       <% end %>
       <div class="file-metadata">
