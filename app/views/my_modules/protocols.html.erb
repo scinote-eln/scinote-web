@@ -1,4 +1,12 @@
 <% provide(:head_title, t("my_modules.protocols.head_title", project: h(@project.name), module: h(@my_module.name)).html_safe) %>
+<% content_for :open_mobile_app_button do %>
+  <span class="open-mobile-app-container">
+    <%= link_to(pwa_mobile_app_url(@current_team.id, @project.id, @experiment.id, @my_module.id, @protocol.id, @protocol.first_step_id, request.host),
+              class: 'btn btn-light-link open-mobile-app-button') do %>
+      <%= t('my_modules.open_mobile_app') %>
+    <% end %>
+  </span>
+<% end %>
 
 <%= render partial: 'shared/drag_n_drop_overlay' %>
 <%= render partial: "shared/sidebar", locals: { current_task: @my_module, page: 'task' } %>
@@ -103,7 +111,6 @@
     </div>
   </div>
 </div>
-<%= render partial: "open_mobile_app" %>
 
 <!-- URL for status bar refreshing -->
 <div class="hidden" data-role="protocol-status-bar-url" data-url="<%= protocol_status_bar_protocol_path(@protocol) %>"></div>

@@ -869,11 +869,7 @@ en:
     unshared_inventory:
       title_html: The inventory <b>%{inventory_name}</b> is no longer shared with your team.
       body_html: This inventory has been ushared with your team by the inventory’s owner. To view the item/s that are assigned to your task/s contact the <b>%{team_name}</b> team administrator <b>%{admin_name}</b> (<b>%{admin_email}</b>).
-    open_mobile_app:
-      title: "Protocol step-by-step execution on your touch device"
-      description: "Try the improved touch experience"
-      open_mobile_app: "Open mobile app"
-      dismiss: "Dismiss"
+    open_mobile_app: "Open mobile app"
   experiments:
     new:
       create: 'New Experiment'
