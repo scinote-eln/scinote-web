@@ -65,14 +65,11 @@ describe ProjectsController, type: :controller do
   # rubocop:enable Style/EvalWithLocation
 
   describe '#index' do
-    context 'in JSON format' do
-      let(:params) { { team: team.id, sort: 'atoz' } }
+    let(:params) { { team: team.id, sort: 'atoz' } }
 
-      it 'returns success response' do
-        get :index, params: params, format: :json
-        expect(response).to have_http_status(:success)
-        expect(response.media_type).to eq 'application/json'
-      end
+    it 'returns success response' do
+      get :index, params: params
+      expect(response).to have_http_status(:success)
     end
   end
 
