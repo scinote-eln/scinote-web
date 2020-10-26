@@ -1,20 +1,28 @@
-<div class="attachment-container step-asset"
+<div class="attachment-container asset"
   data-asset-id="<%= asset.id %>"
   data-asset-file-name="<%= asset.file_name %>"
   data-asset-updated-at="<%= asset.updated_at.to_i %>"
-  data-asset-order="1"
+  data-asset-order="2"
 >
   <%= link_to rails_blob_path(asset.file, disposition: 'attachment'),
           class: "file-preview-link",
           id: "modal_link#{asset.id}",
           data: { no_turbolink: true, id: true, 'preview-url': asset_file_preview_path(asset)} do %>
-    <% if wopi_enabled? && wopi_file?(asset) %>
-      <div class="show-inline change-preview-type"
-           data-preview-type="show_inline"
-           data-asset-id="<%= asset.id %>">
-        <i class="fas fa-expand"></i>
+      <div class="change-preview-type"
+           data-preview-type="inline"
+           data-toggle-view-url="<%= toggle_view_mode_path(asset) %>">
+        <i class="fas fa-desktop"></i>
       </div>
-    <% end %>
+      <div class="change-preview-type"
+           data-preview-type="list"
+           data-toggle-view-url="<%= toggle_view_mode_path(asset) %>">
+        <i class="fas fa-list"></i>
+      </div>
+      <div class="change-preview-type"
+           data-preview-type="thumbnail"
+           data-toggle-view-url="<%= toggle_view_mode_path(asset) %>">
+        <i class="fas fa-th-large"></i>
+      </div>
     <div class="attachment-preview <%= asset.file.attached? ? asset.file.metadata['asset_type'] : '' %>">
       <% if asset.previewable? %>
         <%= image_tag asset.medium_preview,
