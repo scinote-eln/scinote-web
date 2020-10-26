@@ -3,7 +3,7 @@
 module Dashboard
   class CurrentTasksController < ApplicationController
     include InputSanitizeHelper
-    helper_method :prepare_due_date
+    helper_method :current_task_date
 
     before_action :load_project, only: %i(show experiment_filter)
     before_action :load_experiment, only: :show
@@ -86,24 +86,27 @@ module Dashboard
 
     private
 
-    def prepare_due_date(task)
-      if task.completed?
-        return { state: '', text: I18n.t('dashboard.current_tasks.completed_on_html',
-                                         date: I18n.l(task.completed_on, format: :full_date)).html_safe }
-      end
-      if task.due_date.present?
-        due_date_formatted = I18n.l(task.due_date, format: :full_date)
-        if task.is_overdue?
-          return { state: 'overdue', text: I18n.t('dashboard.current_tasks.due_date_overdue_html',
-                                                  date: due_date_formatted).html_safe }
-        elsif task.is_one_day_prior?
-          return { state: 'day-prior', text: I18n.t('dashboard.current_tasks.due_date_html',
-                                                    date: due_date_formatted).html_safe }
-        end
+    def current_task_date(task)
+      span_class, translation_key, date = nil
 
-        return { state: '', text: I18n.t('dashboard.current_tasks.due_date_html', date: due_date_formatted).html_safe }
+      if task.completed?
+        translation_key = 'completed_on_html'
+        date = task.completed_on
+      elsif task.due_date.present?
+        date = task.due_date
+
+        if task.is_overdue?
+          span_class = 'overdue'
+          translation_key = 'due_date_overdue_html'
+        elsif task.is_one_day_prior?
+          span_class = 'day-prior'
+          translation_key = 'due_date_html'
+        else
+          span_class = ''
+          translation_key = 'due_date_html'
+        end
       end
-      { state: nil, text: nil }
+      { span_class: span_class, translation_key: translation_key, date: date }
     end
 
     def task_filters
