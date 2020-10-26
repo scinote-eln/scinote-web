@@ -2266,6 +2266,7 @@ en:
       file_name_placeholder: 'Image'
     placeholder:
       modified_label: "Modified:"
+      size_label: "Size: %{size}"
     wopi_supported_text_formats_title: 'Only .docx, .docm, .odt file formats are supported for editing in Word Online.'
     wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel Online.'
     wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in Powerpoint Online.'
