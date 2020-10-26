@@ -1,0 +1,41 @@
+<div id="projects-toolbar">
+  <form class="form-inline" action="<%= projects_path %>">
+    <div class="form-group">
+      <% if can_create_projects?(current_team) %>
+        <!-- new project button -->
+        <a class="btn btn-primary new-project-btn">
+          <span class="fas fa-plus" aria-hidden="true"></span>
+          <span class="hidden-xs"><%= t "projects.index.new" %></span>
+        </a>
+      <% end %>
+
+      <!-- project sort -->
+      <div class="dropdown">
+        <button class="btn btn-light dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <span><%= t("general.sort.#{@current_sort}_html") %></span>
+          <span class="caret"></span>
+        </button>
+        <ul id="sortMenuDropdown" class="dropdown-menu" aria-labelledby="sortMenu">
+          <% ["new", "old", "atoz", "ztoa"].each do |sort| %>
+            <li>
+              <% if @current_sort != sort %>
+                <a href="#" data-sort="<%= sort %>"><%= t("general.sort.#{sort}_html") %></a>
+              <% else %>
+                <a class="disabled" href="#" data-sort="<%= sort %>"><%= t("general.sort.#{sort}_html") %></a>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+
+      <!-- export projects button -->
+      <button type="button" class="btn btn-secondary pull-right"
+              id="export-projects-button"
+              data-export-projects-modal-url="<%= export_projects_modal_team_path(current_team) %>"
+              disabled>
+        <span class="fas fa-file-export"></span>
+        <span class="hidden-xs-custom"><%= t("projects.export_projects.export_button") %></span>
+      </button>
+    </div>
+  </form>
+</div>
