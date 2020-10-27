@@ -22,10 +22,7 @@ module TokenAuthentication
 
     Extends::API_PLUGABLE_AUTH_METHODS.each do |auth_method|
       method(auth_method).call
-      if current_user
-        sign_in(current_user) if devise_controller?
-        return true
-      end
+      return true if current_user
     end
 
     # Default token implementation
@@ -36,7 +33,5 @@ module TokenAuthentication
     payload = Api::CoreJwt.decode(@token)
     @current_user = User.find_by(id: payload['sub'])
     raise JWT::InvalidPayload, I18n.t('api.core.no_user_mapping') unless current_user
-
-    sign_in(current_user) if devise_controller?
   end
 end
