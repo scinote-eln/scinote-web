@@ -35,7 +35,7 @@
         </button>
       <% end %>
     <% end %>
-     <a class="btn btn-light" href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>" data-turbolinks="false">
+     <a class="btn btn-light file-download-link" href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>" data-turbolinks="false">
       <span class="fas fa-download"></span> <%= t('Download')%>
     </a>
     <button type="button" class="btn icon-btn btn-light" data-dismiss="modal"><span class="fas fa-times"></span></button>
