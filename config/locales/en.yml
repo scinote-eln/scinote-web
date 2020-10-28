@@ -357,6 +357,24 @@ en:
         invite_users_link: "Invite users"
         invite_users_details: "to team %{team}."
         contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
+      filters_modal:
+        title: "Filters"
+        created_on:
+          label: "Created on"
+          from_placeholder: "From"
+          to_placeholder: "To"
+        assignee:
+          label: "Assignee"
+          placeholder: "Select a person assigned to a project"
+        folders:
+          label: "Look inside folders"
+          tooltip: "Hint should appear here"
+        show_btn:
+         many: "Show %{num} results"
+         none: "No results"
+         one: "Show result"
+        clear_btn: "Clear"
+
     export_projects:
       export_button: "Export"
       error_title: "Export denied"
