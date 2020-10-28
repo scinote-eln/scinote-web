@@ -94,8 +94,8 @@ div.print-report {
       color: $color-black;
     }
 
-    .file-image img {
-      max-width: 100%
+    img {
+      max-width: 100%;
     }
   }
 
@@ -213,8 +213,8 @@ div.print-report {
       }
     }
 
-    .file-image img {
-      max-width: 100%
+    img {
+      max-width: 100%;
     }
 
     &:hover > .report-element-header {
