@@ -66,6 +66,8 @@ class RepositoryListValue < ApplicationRecord
   end
 
   def self.import_from_text(text, attributes, _options = {})
+    return nil if text.blank?
+
     value = new(attributes)
     column = attributes.dig(:repository_cell_attributes, :repository_column)
     list_item = column.repository_list_items.find { |item| item.data == text }
