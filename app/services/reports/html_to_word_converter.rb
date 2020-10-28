@@ -121,7 +121,7 @@ module Reports
       image = TinyMceAsset.find_by(id: Base62.decode(elem.attributes['data-mce-token'].value))
       return unless image
 
-      image_path = Reports::Utils.image_path(image.image)
+      image_path = Reports::Utils.image_prepare(image).service_url
       dimension = FastImage.size(image_path)
 
       return unless dimension

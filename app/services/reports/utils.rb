@@ -6,8 +6,16 @@ module Reports
       link[0] == '/' ? scinote_url + link : link
     end
 
-    def self.image_path(attachment)
-      attachment.service_url
+    def self.image_prepare(asset)
+      if asset.class == Asset
+        if asset.inline?
+          asset.large_preview
+        else
+          asset.medium_preview
+        end
+      elsif asset.class == TinyMceAsset
+        asset.image
+      end
     end
 
     def self.calculate_color_hsp(color)
