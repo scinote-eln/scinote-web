@@ -8,7 +8,7 @@
 // - refactor view handling using library, ex. backbone.js
 
 /* global Comments CounterBadge animateSpinner initFormSubmitLinks HelperModule
-   I18n setupSidebarTree dropdownSelector */
+   I18n dropdownSelector */
 
 (function(global) {
   var newProjectModal = null;
