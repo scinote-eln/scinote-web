@@ -53,6 +53,7 @@ gem 'jquery-scrollto-rails',
     git: 'https://github.com/biosistemika/jquery-scrollto-rails'
 gem 'jquery-ui-rails'
 gem 'js_cookie_rails' # Simple JS API for cookies
+gem 'rails-timeago', '~> 2.0'
 gem 'spinjs-rails'
 
 gem 'activerecord-import'

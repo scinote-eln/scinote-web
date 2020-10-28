@@ -2194,6 +2194,9 @@ en:
       full_date: "%{date_format}"
       time: "%H:%M"
       short: "%H"
+  date:
+    formats:
+      full_date: "%{date_format}"
 
   notifications:
     title: "Notifications"
