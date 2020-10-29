@@ -1297,9 +1297,6 @@ module FirstTimeDataGenerator
       created_at: generate_random_time(my_modules[7].created_at, 3.days),
       file_name: 'result-ddCq.JPG'
     )
-
-    # create thumbnail
-    experiment.generate_workflow_img
   end
 
   # Used for delayed jobs

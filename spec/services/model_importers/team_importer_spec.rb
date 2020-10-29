@@ -33,7 +33,7 @@ describe TeamImporter do
         @exp = @team_importer.import_experiment_template_from_dir(TEMPLATE_DIR,
                                                                   PROJECT_ID,
                                                                   USER_ID)
-        Experiments::GenerateWorkflowImageService.call(experiment_id: @exp.id)
+        Experiments::GenerateWorkflowImageService.call(experiment: @exp)
         @exp.reload
       end
 

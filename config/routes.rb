@@ -315,7 +315,6 @@ Rails.application.routes.draw do
         post 'clone' # clone experiment
         get 'move_modal' # return modal with move options
         post 'move' # move experiment
-        get 'updated_img' # Checks if the workflow image is updated
         get 'fetch_workflow_img' # Get udated workflow img
       end
     end

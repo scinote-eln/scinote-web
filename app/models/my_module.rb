@@ -10,8 +10,9 @@ class MyModule < ApplicationRecord
 
   before_create :create_blank_protocol
   before_create :assign_default_status_flow
-
   around_save :exec_status_consequences, if: :my_module_status_id_changed?
+  after_save -> { experiment.workflowimg.purge },
+             if: -> { (saved_changes.keys & %w(x y experiment_id my_module_group_id input_id output_id archived)).any? }
 
   auto_strip_attributes :name, :description, nullify: false, if: proc { |mm| mm.name_changed? || mm.description_changed? }
   validates :name,
@@ -168,7 +169,6 @@ class MyModule < ApplicationRecord
         raise ActiveRecord::Rollback
       end
     end
-    experiment.generate_workflow_img
     restored
   end
 
