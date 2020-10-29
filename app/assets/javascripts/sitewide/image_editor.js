@@ -407,7 +407,7 @@ var ImageEditorModal = (function() {
           'mime-type': editButton.data('image-mime-type')
         };
         $('#filePreviewModal').modal('hide');
-        $.post(editButton.data('start-edit-url'));
+        $.post(editButton.data('image-start-edit-url'));
         initImageEditor(data, fileUrl);
       });
     });
