@@ -83,10 +83,10 @@
   }
 
   function renderCheckboxHTML(data) {
-    var html;
-    html = "<input data-action='toggle' data-report-id='";
-    html += data + "' type='checkbox'>";
-    return html;
+    return `<div class="sci-checkbox-container">
+              <input type="checkbox" class="sci-checkbox" data-action='toggle' data-report-id="${data}">
+              <span class="sci-checkbox-label"></span>
+            </div>`;
   }
 
   function appendEditPathToRow(row, data) {

@@ -1,8 +1,17 @@
 <% provide :head_title, t('nav.label.dashboard') %>
 
-<div class="dashboard-container">
-  <%= render "calendar" %>
-  <%= render "current_tasks" %>
-  <%= render "recent_work" %>
-  <%= render "quick_start" %>
-</div>
+<% if current_team %>
+  <div class="dashboard-view">
+    <div class="dashboard-background"></div>
+    <div class="dashboard-header">
+      <%= render partial: 'quick_start' %>
+    </div>
+    <div class="dashboard-container">
+      <% Extends::DEFAULT_DASHBOARD_CONFIGURATION.each do |widget| %>
+        <% if widget[:visible] %>
+          <%= render partial: widget[:partial], locals: {widget: widget} %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

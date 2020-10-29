@@ -1,5 +1,4 @@
 class MyModulesController < ApplicationController
-  include SampleActions
   include TeamsHelper
   include ActionView::Helpers::TextHelper
   include InputSanitizeHelper

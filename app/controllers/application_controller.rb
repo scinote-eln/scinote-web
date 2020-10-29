@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  acts_as_token_authentication_handler_for User
+  acts_as_token_authentication_handler_for User, unless: -> { current_user.present? }
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception, prepend: true
@@ -37,7 +37,7 @@ class ApplicationController < ActionController::Base
 
   # Sets current team for all controllers
   def current_team
-    @current_team ||= Team.find_by(id: current_user.current_team_id)
+    @current_team ||= current_user.teams.find_by(id: current_user.current_team_id)
   end
 
   def to_user_date_format
@@ -83,13 +83,12 @@ class ApplicationController < ActionController::Base
   private
 
   def update_current_team
-    @current_team = Team.find_by_id(current_user.current_team_id)
-    if (current_team.nil? || !current_user.is_member_of_team?(current_team)) &&
-       current_user.teams.count.positive?
+    return if current_team.present? && current_team.id == current_user.current_team_id
 
-      current_user.update(
-        current_team_id: current_user.teams.first.id
-      )
+    if current_user.current_team_id
+      @current_team = current_user.teams.find_by(id: current_user.current_team_id)
+    elsif current_user.teams.any?
+      current_user.update(current_team_id: current_user.teams.first.id)
     end
   end
 

@@ -229,14 +229,16 @@ class Protocol < ApplicationRecord
 
   # Deep-clone given array of assets
   def self.deep_clone_assets(assets_to_clone)
-    assets_to_clone.each do |src_id, dest_id|
-      src = Asset.find_by(id: src_id)
-      dest = Asset.find_by(id: dest_id)
-      dest.destroy! if src.blank? && dest.present?
-      next unless src.present? && dest.present?
+    ActiveRecord::Base.no_touching do
+      assets_to_clone.each do |src_id, dest_id|
+        src = Asset.find_by(id: src_id)
+        dest = Asset.find_by(id: dest_id)
+        dest.destroy! if src.blank? && dest.present?
+        next unless src.present? && dest.present?
 
-      # Clone file
-      src.duplicate_file(dest)
+        # Clone file
+        src.duplicate_file(dest)
+      end
     end
   end
 
@@ -360,6 +362,10 @@ class Protocol < ApplicationRecord
 
   def completed_steps
     steps.where(completed: true)
+  end
+
+  def first_step_id
+    steps.find_by(position: 0)&.id
   end
 
   def space_taken

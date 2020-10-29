@@ -1241,10 +1241,6 @@ ul.content-activities {
   }
 }
 
-#samples_length {
-  display: inline-block;
-}
-
 .toolbarButtons {
   display: inline-block;
 }
@@ -1784,7 +1780,7 @@ a.disabled-with-click-events {
   margin-bottom: 45px;
 
   .doorkeeper-scinote-logo {
-    background-image: asset-url("/images/scinote_icon.jpg");
+    background-image: asset-url("/images/doorkeeper_auth.png");
     background-position: center center;
     background-repeat: no-repeat;
     background-size: contain;
