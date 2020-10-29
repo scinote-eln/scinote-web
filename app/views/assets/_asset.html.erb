@@ -1,7 +1,8 @@
+<% gallery_view_id = nil unless defined? gallery_view_id %>
 <% if asset.inline? %>
-    <%= render partial: 'assets/asset_inline.html.erb', locals: { asset: asset } %>
+    <%= render partial: 'assets/asset_inline.html.erb', locals: { asset: asset, gallery_view_id: gallery_view_id } %>
 <% elsif asset.list? %>
-    <%= render partial: 'assets/asset_list.html.erb', locals: { asset: asset } %>
+    <%= render partial: 'assets/asset_list.html.erb', locals: { asset: asset, gallery_view_id: gallery_view_id } %>
 <% else %>
-    <%= render partial: 'assets/asset_thumbnail.html.erb', locals: { edit_page: false, asset: asset } %>
+    <%= render partial: 'assets/asset_thumbnail.html.erb', locals: { asset: asset, gallery_view_id: gallery_view_id } %>
 <% end %>

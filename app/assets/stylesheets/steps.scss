@@ -183,6 +183,12 @@
     text-align: center;
     width: 100%;
 
+    &.processing {
+      background-image: url("/images/medium/processing.gif");
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
     img {
       max-height: 100%;
       max-width: 100%;

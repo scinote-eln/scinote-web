@@ -79,7 +79,6 @@
 
       setTimeout(function() {
         initStepsComments();
-        FilePreviewModal.init();
         SmartAnnotation.preventPropagation('.atwho-user-popover');
         TinyMCE.destroyAll();
         DragNDropSteps.clearFiles();
@@ -107,7 +106,6 @@
       toggleButtons(false);
       initializeCheckboxSorting();
       animateSpinner(null, false);
-      FilePreviewModal.init();
       DragNDropSteps.clearFiles();
       if (tinyMCE.editors.step_description_textarea) tinyMCE.editors.step_description_textarea.remove();
       TinyMCE.init('#step_description_textarea');
@@ -183,8 +181,6 @@
       initCallBacks();
       initHandsOnTable($new_step);
       toggleButtons(true);
-      FilePreviewModal.init();
-
       TinyMCE.destroyAll();
       SmartAnnotation.preventPropagation('.atwho-user-popover');
       // Show the edited step
@@ -345,6 +341,7 @@
           $(`.asset[data-asset-id=${assetId}]`).replaceWith(data.html);
           FilePreviewModal.init();
           $(`.asset[data-asset-id=${assetId}]`).closest('.attachments').trigger('reorder');
+
         },
         error: function (data) {
           console.log(data);
@@ -592,7 +589,6 @@
             });
             animateSpinner(null, false);
             DragNDropSteps.clearFiles();
-            FilePreviewModal.init();
             if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
           },
           error: function(xhr) {
@@ -697,7 +693,6 @@
   initCallBacks();
   initHandsOnTable($(document));
   expandAllSteps();
-  FilePreviewModal.init();
   TinyMCE.highlight();
   SmartAnnotation.preventPropagation('.atwho-user-popover');
   newStepHandler();
