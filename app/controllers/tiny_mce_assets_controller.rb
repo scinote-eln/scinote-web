@@ -32,12 +32,12 @@ class TinyMceAssetsController < ApplicationController
         tiny_img.save!
         tiny_img.image.attach(io: image, filename: image.original_filename)
         response_json[:images] << { url: url_for(tiny_img.image), token: Base62.encode(tiny_img.id) }
-      rescue ActiveRecord::RecordInvalid
-        response_json = { errors: tiny_img.errors.full_messages.join(', ') }
-        status = :unprocessable_entity
-
-        raise ActiveRecord::Rollback
       end
+    rescue ActiveRecord::RecordInvalid => e
+      response_json = { errors: e.message }
+      status = :unprocessable_entity
+
+      raise ActiveRecord::Rollback
     end
 
     render json: response_json, status: status
