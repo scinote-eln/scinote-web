@@ -15,9 +15,9 @@
 
       function loadFiles() {
         let $fileInput;
+        let hitFileLimit;
         $('#tinymce_current_upload').remove();
-        $(editor.container).prepend('<input type="file" multiple accept="image/*" id="tinymce_current_upload" style="display: none;">');
-        $fileInput = $('#tinymce_current_upload');
+        $fileInput = $('<input type="file" multiple accept="image/*" id="tinymce_current_upload" style="display: none;">').prependTo(editor.container);
         $fileInput.click();
 
         $fileInput.change(function() {
@@ -25,19 +25,23 @@
           let files = $('#tinymce_current_upload')[0].files;
 
           Array.from(files).forEach(file => formData.append('files[]', file, file.name));
+
+          Array.from(files).every(file => {
+            if (!validateFileSize(file, true)) {
+              hitFileLimit = true;
+              return false;
+            }
+          });
+
+          if (hitFileLimit) {
+            return;
+          }
+
           $.post({
             url: textAreaElement.data('tinymce-asset-path'),
             data: formData,
             processData: false,
             contentType: false,
-            beforeSend: function(xhr) {
-              Array.from(files).every(file => {
-                if (!validateFileSize(file, true)) {
-                  xhr.abort();
-                  return false;
-                }
-              });
-            },
             success: function(data) {
               handleResponse(data);
               $('#tinymce_current_upload').remove();
