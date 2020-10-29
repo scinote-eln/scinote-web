@@ -228,16 +228,15 @@ class StepsController < ApplicationController
     ActiveRecord::Base.transaction do
       @step.assets_view_mode = params[:assets_view_mode]
       @step.save!(touch: false)
-      @step.assets.each do |asset|
-        asset.view_mode = @step.assets_view_mode
-        asset.save!(touch: false)
-        html += render_to_string(partial: 'assets/asset.html.erb', locals: { asset: asset })
-      end
+      @step.assets.update_all(view_mode: @step.assets_view_mode)
+    end
+    @step.assets.each do |asset|
+      html += render_to_string(partial: 'assets/asset.html.erb', locals: { asset: asset })
     end
     render json: { html: html }, status: :ok
-  rescue StandardError => e
+  rescue ActiveRecord::RecordInvalid => e
     Rails.logger.error(e.message)
-    render json: {}, status: :unprocessable_entity
+    render json: { errors: e.message }, status: :unprocessable_entity
   end
 
   def destroy
