@@ -30,6 +30,7 @@ class Project < ApplicationRecord
              class_name: 'User',
              optional: true
   belongs_to :team, inverse_of: :projects, touch: true
+  belongs_to :project_folder, inverse_of: :projects, optional: true
   has_many :user_projects, inverse_of: :project
   has_many :users, through: :user_projects
   has_many :experiments, inverse_of: :project
