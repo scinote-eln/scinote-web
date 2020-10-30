@@ -11,7 +11,8 @@ module Reports::Docx::DrawMyModuleProtocol
                    timestamp: I18n.l(protocol.created_at, format: :full)
     @docx.hr
     html = custom_auto_link(protocol.description, team: @report_team)
-    Reports::HtmlToWordConverter.new(@docx).html_to_word_converter(html)
+    Reports::HtmlToWordConverter.new(@docx, { scinote_url: @scinote_url,
+                                              link_style: @link_style }).html_to_word_converter(html)
     @docx.p
     @docx.p
   end
