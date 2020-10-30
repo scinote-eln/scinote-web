@@ -1,63 +1,42 @@
+# frozen_string_literal: true
+
 class ProjectsController < ApplicationController
   include RenamingUtil
   include TeamsHelper
   include InputSanitizeHelper
 
   before_action :switch_team_with_param, only: :index
-  before_action :load_vars, only: %i(show edit update
-                                     notifications reports
-                                     experiment_archive)
-  before_action :load_projects_tree, only: %i(sidebar show archive
-                                              experiment_archive)
-  before_action :check_view_permissions, only: %i(show reports notifications
-                                                  experiment_archive)
+  before_action :load_vars, only: %i(show edit update notifications experiment_archive)
+  before_action :load_projects_tree, only: %i(sidebar show experiment_archive index)
+  before_action :check_view_permissions, only: %i(show notifications experiment_archive)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
   before_action :set_inline_name_editing, only: %i(show experiment_archive)
 
-  # except parameter could be used but it is not working.
   layout 'fluid'
 
   def index
-    respond_to do |format|
-      format.json do
-        @current_team = current_team if current_team
-        @current_team ||= current_user.teams.first
-        @projects = ProjectsOverviewService
-                    .new(@current_team, current_user, params)
-                    .project_cards
-        render json: {
-          html: render_to_string(
-            partial: 'projects/index/team_projects.html.erb',
-                     locals: { projects: @projects }
-          ),
-          count: @projects.size
-        }
-      end
-      format.html do
-        @teams = current_user.teams
-        # New project for create new project modal
-        @project = Project.new
-        if current_team
-          view_state =
-            current_team.current_view_state(current_user)
-          @current_filter = view_state.state.dig('projects', 'filter')
-          @current_sort = view_state.state.dig('projects', 'cards', 'sort')
-        end
-        load_projects_tree
-      end
+    if current_team
+      view_state = current_team.current_view_state(current_user)
+      @current_filter = view_state.state.dig('projects', 'filter')
+      @current_sort = view_state.state.dig('projects', 'cards', 'sort')
     end
+  end
+
+  def cards
+    projects = ProjectsOverviewService.new(current_team, current_user, params).project_cards
+    render json: {
+      html: render_to_string(partial: 'projects/index/team_projects.html.erb', locals: { projects: projects }),
+      count: projects.size
+    }
   end
 
   def index_dt
     @draw = params[:draw].to_i
     respond_to do |format|
       format.json do
-        @current_team = current_team if current_team
-        @current_team ||= current_user.teams.first
-        @projects = ProjectsOverviewService
-                    .new(@current_team, current_user, params)
-                    .projects_datatable
+        team = current_team || current_user.teams.first
+        @projects = ProjectsOverviewService.new(team, current_user, params).projects_datatable
       end
     end
   end
@@ -84,10 +63,6 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def new
-    @project = Project.new
-  end
-
   def create
     @project = Project.new(project_params)
     @project.created_by = current_user
@@ -105,32 +80,24 @@ class ProjectsController < ApplicationController
 
       message = t('projects.create.success_flash', name: escape_input(@project.name))
       respond_to do |format|
-        format.json {
+        format.json do
           render json: { message: message }, status: :ok
-        }
+        end
       end
     else
       respond_to do |format|
-        format.json {
+        format.json do
           render json: @project.errors, status: :unprocessable_entity
-        }
+        end
       end
     end
   end
 
   def edit
-    respond_to do |format|
-      format.json {
-        render json: {
-          html: render_to_string({
-            partial: "edit.html.erb",
-            locals: { project: @project }
-          }),
-          title: t('projects.index.modal_edit_project.modal_title',
-                   project: escape_input(@project.name))
-        }
-      }
-    end
+    render json: {
+      html: render_to_string({ partial: 'edit.html.erb', locals: { project: @project } }),
+      title: t('projects.index.modal_edit_project.modal_title', project: escape_input(@project.name))
+    }
   end
 
   def update
@@ -258,6 +225,10 @@ class ProjectsController < ApplicationController
     current_team_switch(@project.team)
   end
 
+  def dt_state_load
+    render json: { state: current_team&.current_view_state(current_user)&.state&.dig('projects', 'table') }
+  end
+
   private
 
   def project_params
@@ -265,11 +236,9 @@ class ProjectsController < ApplicationController
   end
 
   def load_vars
-    @project = Project.find_by_id(params[:id])
+    @project = Project.find_by(id: params[:id])
 
-    unless @project
-      render_404
-    end
+    render_404 unless @project
   end
 
   def load_projects_tree
@@ -299,6 +268,7 @@ class ProjectsController < ApplicationController
 
   def set_inline_name_editing
     return unless can_manage_project?(@project)
+
     @inline_editable_title_config = {
       name: 'title',
       params_group: 'project',

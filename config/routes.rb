@@ -195,8 +195,7 @@ Rails.application.routes.draw do
 
     post 'projects/index_dt', to: 'projects#index_dt', as: 'projects_index_dt'
     get 'projects/sidebar', to: 'projects#sidebar', as: 'projects_sidebar'
-    get 'projects/dt_state_load', to: 'projects#dt_state_load',
-                                  as: 'projects_dt_state_load'
+    get 'projects/dt_state_load', to: 'projects#dt_state_load', as: 'projects_dt_state_load'
 
     resources :reports, only: :index
     get 'reports/datatable', to: 'reports#datatable'
@@ -296,6 +295,10 @@ Rails.application.routes.draw do
       # This route is defined outside of member block
       # to preserve original :project_id parameter in URL.
       get 'users/edit', to: 'user_projects#index_edit'
+
+      collection do
+        get 'cards'
+      end
     end
 
     resources :experiments do
