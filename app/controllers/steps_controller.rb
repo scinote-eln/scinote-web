@@ -324,16 +324,7 @@ class StepsController < ApplicationController
                          num_all: all_steps.to_s)
           end
         end
-
-        # Create localized title for complete/uncomplete button
-        localized_title = if !completed
-                            t('protocols.steps.options.complete_title')
-                          else
-                            t('protocols.steps.options.uncomplete_title')
-                          end
-        format.json do
-          render json: { new_title: localized_title }, status: :ok
-        end
+        format.json { render json: {}, status: :ok }
       else
         format.json { render json: {}, status: :unprocessable_entity }
       end

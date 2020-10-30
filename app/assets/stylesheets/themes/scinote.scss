@@ -937,19 +937,6 @@ ul.content-activities {
   }
 }
 
-.step {
-  .panel-heading a[data-toggle] {
-    color: inherit;
-  }
-
-  &.not-completed {
-    .badge-num > span.badge {
-      background-color: $color-silver;
-    }
-  }
-
-}
-
 .well {
   background-color: $color-white;
 }
