@@ -226,7 +226,7 @@ class ProjectsController < ApplicationController
   end
 
   def dt_state_load
-    render json: { state: current_team.current_view_state(current_user).state.dig('projects', 'table') }
+    render json: { state: current_team&.current_view_state(current_user)&.state&.dig('projects', 'table') }
   end
 
   private
