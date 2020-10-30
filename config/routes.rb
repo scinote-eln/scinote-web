@@ -421,6 +421,7 @@ Rails.application.routes.draw do
         put 'move_down'
         put 'move_up'
         post 'update_view_state'
+        post 'update_asset_view_mode'
       end
     end
 

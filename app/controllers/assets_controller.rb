@@ -18,7 +18,7 @@ class AssetsController < ApplicationController
 
   before_action :load_vars, except: :create_wopi_file
   before_action :check_read_permission, except: :edit
-  before_action :check_edit_permission, only: %i(edit toggle_view_mode)
+  before_action :check_edit_permission, only: :edit
 
   def file_preview
     render json: { html: render_to_string(

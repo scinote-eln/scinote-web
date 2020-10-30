@@ -325,29 +325,15 @@
     });
   }
 
-  function initPreviewToggle(){
-    $('.attachments').on('click', '.change-preview-type', function (e) {
-      var viewMode = $(this).data('preview-type');
-      var toggleUrl = $(this).data('toggle-view-url');
-      var assetId = $(this).closest('.asset').data('asset-id');
-      e.preventDefault();
-      e.stopPropagation();
-      $.ajax({
-        url: toggleUrl,
-        type: "PATCH",
-        dataType: "json",
-        data: { asset: { view_mode: viewMode }},
-        success: function (data) {
-          $(`.asset[data-asset-id=${assetId}]`).replaceWith(data.html);
-          FilePreviewModal.init();
-          $(`.asset[data-asset-id=${assetId}]`).closest('.attachments').trigger('reorder');
-
-        },
-        error: function (data) {
-          console.log(data);
-        }
-      });
-    });
+  function initAssetViewModeToggle(){
+    $('.attachments-actions').on('click', '.attachments-view-mode', function () {
+      var viewModeBtn = $(this);
+      $.post(viewModeBtn.data('url'), {
+        assets_view_mode: viewModeBtn.data('assets-view-mode')
+      }, function(result) {
+        viewModeBtn.closest('.step').find('.attachments').html(result.html)
+      })
+    })
   }
 
   function initCallBacks() {
@@ -358,8 +344,8 @@
     applyMoveStepCallBack();
     initDeleteStep();
     TinyMCE.highlight();
-    initPreviewToggle();
     reorderAttachmentsInit();
+    initAssetViewModeToggle();
   }
 
   /*
@@ -679,6 +665,9 @@
       $.each(sortedAssets, function(i, element){
         element.style.order = i
       })
+    })
+    .on('DOMSubtreeModified', function() {
+      $(this).trigger('reorder');
     })
     $('.attachments').trigger('reorder');
   }

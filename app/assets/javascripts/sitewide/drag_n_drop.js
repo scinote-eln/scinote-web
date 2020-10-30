@@ -324,7 +324,7 @@
     function listItems() {
       totalSize = 0;
       enableSubmitButton();
-      $('.attachment-placeholder.new').remove();
+      $('.attachment-container.new').remove();
       dragNdropAssetsOff();
 
       for (let i = 0; i < droppedFiles.length; i += 1) {
