@@ -143,28 +143,11 @@
   }
 }
 
-button.new-marvinjs-upload-button {
-  padding: 1px 16px !important;
-
+.new-marvinjs-upload-button {
   .new-marvinjs-upload-icon {
     display: inline-block;
-    height: 32px;
-    width: 32px;
-
-    img {
-      height: 100%;
-      width: 100%;
-    }
-  }
-}
-
-li.new-marvinjs-upload-button {
-
-  .new-marvinjs-upload-icon {
-    display: inline-block;
-    height: 24px;
-    margin-left: -9px;
-    width: 24px;
+    height: 1.5em;
+    width: 1.5em;
 
     img {
       height: 100%;

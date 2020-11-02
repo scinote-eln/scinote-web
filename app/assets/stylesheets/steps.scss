@@ -178,6 +178,7 @@
 
   .attachment-preview {
     border-radius: $border-radius-default;
+    color: $color-volcano;
     height: 14em;
     position: relative;
     text-align: center;
@@ -308,10 +309,6 @@
   }
 }
 
-.attachments-order {
-  display: inline-block;
-}
-
 .attachments-actions {
   align-items: center;
   display: flex;
@@ -322,18 +319,45 @@
     flex-shrink: 0;
   }
 
-  .attachments-order {
-    color: $color-silver-chalice;
-    min-width: 140px;
-  }
+  .dropdown-attachment-options {
+    @include font-button;
+    min-width: 200px;
 
-  .btn-default {
-    border: 0;
-    color: inherit;
-    margin-left: 10px;
+    .divider-label {
+      @include font-small;
+      color: $color-alto;
+      padding-left: 1em;
+    }
 
-    &:hover {
-      background: inherit;
+    a {
+      cursor: pointer;
+      padding: .5em 1em;
+    }
+
+    .change-order {
+      padding-left: 2.75em;
+
+      &.selected:after {
+        @include font-awesome;
+        content: $font-fas-check;
+        margin-left: auto;
+        position: absolute;
+        right: 1em;
+      }
+    }
+
+    .attachments-view-mode  {
+      .fas {
+        width: 1.5em;
+      }
+
+      &.selected:after {
+        @include font-awesome;
+        content: $font-fas-check;
+        margin-left: auto;
+        position: absolute;
+        right: 1em;
+      }
     }
   }
 }

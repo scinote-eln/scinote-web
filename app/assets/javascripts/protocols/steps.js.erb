@@ -328,9 +328,11 @@
   function initAssetViewModeToggle(){
     $('.attachments-actions').on('click', '.attachments-view-mode', function () {
       var viewModeBtn = $(this);
-      $.post(viewModeBtn.data('url'), {
+      $.post(viewModeBtn.closest('.dropdown-menu').data('view-mode-url'), {
         assets_view_mode: viewModeBtn.data('assets-view-mode')
       }, function(result) {
+        viewModeBtn.closest('.dropdown-menu').find('.attachments-view-mode').removeClass('selected');
+        viewModeBtn.addClass('selected');
         viewModeBtn.closest('.step').find('.attachments').html(result.html)
       })
     })
@@ -630,15 +632,16 @@
 
   // Reorder attachments
   function reorderAttachmentsInit() {
-    $('.attachments-order').on('click', '.change-order', function(e){
-      var orderDropdown = $(this).closest('.attachments-order');
+    $('.attachments-actions').on('click', '.change-order', function(e){
+      var orderDropdown = $(this).closest('.dropdown-menu');
       var assetsContainer = $(`.attachments[data-step-id=${orderDropdown.data('step-id')}]`)
       var order = $(this).data('order');
       e.preventDefault();
-      orderDropdown.find('.selected-order').html($(this).text());
       assetsContainer.data('order', order);
+      orderDropdown.find('.change-order').removeClass('selected');
+      $(this).addClass('selected');
       assetsContainer.trigger('reorder');
-      $.post(orderDropdown.data('state-save-path'), {
+      $.post(orderDropdown.data('state-save-url'), {
         assets: { order: order }
       });
     })

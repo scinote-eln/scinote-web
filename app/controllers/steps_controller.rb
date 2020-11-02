@@ -231,7 +231,10 @@ class StepsController < ApplicationController
       @step.assets.update_all(view_mode: @step.assets_view_mode)
     end
     @step.assets.each do |asset|
-      html += render_to_string(partial: 'assets/asset.html.erb', locals: { asset: asset })
+      html += render_to_string(partial: 'assets/asset.html.erb', locals: {
+        asset: asset,
+        gallery_view_id: @step.id
+      })
     end
     render json: { html: html }, status: :ok
   rescue ActiveRecord::RecordInvalid => e
