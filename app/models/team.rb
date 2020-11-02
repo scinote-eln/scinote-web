@@ -31,6 +31,7 @@ class Team < ApplicationRecord
   has_many :user_teams, inverse_of: :team, dependent: :destroy
   has_many :users, through: :user_teams
   has_many :projects, inverse_of: :team
+  has_many :project_folders, inverse_of: :team, dependent: :destroy
   has_many :protocols, inverse_of: :team, dependent: :destroy
   has_many :protocol_keywords, inverse_of: :team, dependent: :destroy
   has_many :tiny_mce_assets, inverse_of: :team, dependent: :destroy
