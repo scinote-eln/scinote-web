@@ -54,11 +54,8 @@ describe User, type: :model do
     it { should have_many :comments }
     it { should have_many :activities }
     it { should have_many :results }
-    it { should have_many :samples }
-    it { should have_many :samples_tables }
     it { should have_many :repository_table_states }
     it { should have_many :steps }
-    it { should have_many :custom_fields }
     it { should have_many :reports }
     it { should have_many :created_assets }
     it { should have_many :modified_assets }
@@ -67,7 +64,6 @@ describe User, type: :model do
     it { should have_many :created_checklist_items }
     it { should have_many :modified_checklist_items }
     it { should have_many :modified_comments }
-    it { should have_many :modified_custom_fields }
     it { should have_many :created_my_module_groups }
     it { should have_many :created_my_module_tags }
     it { should have_many :created_my_modules }
@@ -83,12 +79,6 @@ describe User, type: :model do
     it { should have_many :modified_reports }
     it { should have_many :archived_results }
     it { should have_many :restored_results }
-    it { should have_many :created_sample_groups }
-    it { should have_many :modified_sample_groups }
-    it { should have_many :assigned_sample_my_modules }
-    it { should have_many :created_sample_types }
-    it { should have_many :modified_sample_types }
-    it { should have_many :modified_samples }
     it { should have_many :created_tables }
     it { should have_many :modified_tables }
     it { should have_many :created_tags }

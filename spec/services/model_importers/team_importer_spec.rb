@@ -33,7 +33,7 @@ describe TeamImporter do
         @exp = @team_importer.import_experiment_template_from_dir(TEMPLATE_DIR,
                                                                   PROJECT_ID,
                                                                   USER_ID)
-        Experiments::GenerateWorkflowImageService.call(experiment_id: @exp.id)
+        Experiments::GenerateWorkflowImageService.call(experiment: @exp)
         @exp.reload
       end
 
@@ -156,8 +156,6 @@ describe TeamImporter do
 
             # Check for lonely tasks
             expect(db_module.my_module_group_id).to be_nil if json_module['my_module_group_id'].nil?
-
-            expect(db_module.nr_of_assigned_samples).to be_zero
 
             # Check if callbacks for protocols are turned off
             expect(db_module.protocols.count).to eq 1

@@ -389,41 +389,6 @@ ALTER SEQUENCE public.connections_id_seq OWNED BY public.connections.id;
 
 
 --
--- Name: custom_fields; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.custom_fields (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    user_id bigint NOT NULL,
-    team_id bigint NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    last_modified_by_id bigint
-);
-
-
---
--- Name: custom_fields_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.custom_fields_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: custom_fields_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.custom_fields_id_seq OWNED BY public.custom_fields.id;
-
-
---
 -- Name: teams; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -846,7 +811,6 @@ CREATE TABLE public.my_modules (
     archived_by_id bigint,
     restored_by_id bigint,
     restored_on timestamp without time zone,
-    nr_of_assigned_samples integer DEFAULT 0,
     workflow_order integer DEFAULT '-1'::integer NOT NULL,
     experiment_id bigint DEFAULT 0 NOT NULL,
     state smallint DEFAULT 0,
@@ -1990,216 +1954,6 @@ ALTER SEQUENCE public.results_id_seq OWNED BY public.results.id;
 
 
 --
--- Name: sample_custom_fields; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.sample_custom_fields (
-    id bigint NOT NULL,
-    value character varying NOT NULL,
-    custom_field_id bigint NOT NULL,
-    sample_id bigint,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: sample_custom_fields_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.sample_custom_fields_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: sample_custom_fields_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.sample_custom_fields_id_seq OWNED BY public.sample_custom_fields.id;
-
-
---
--- Name: sample_groups; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.sample_groups (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    color character varying DEFAULT '#ff0000'::character varying NOT NULL,
-    team_id bigint NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    created_by_id bigint,
-    last_modified_by_id bigint
-);
-
-
---
--- Name: sample_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.sample_groups_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: sample_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.sample_groups_id_seq OWNED BY public.sample_groups.id;
-
-
---
--- Name: sample_my_modules; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.sample_my_modules (
-    id bigint NOT NULL,
-    sample_id bigint NOT NULL,
-    my_module_id bigint NOT NULL,
-    assigned_by_id bigint,
-    assigned_on timestamp without time zone
-);
-
-
---
--- Name: sample_my_modules_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.sample_my_modules_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: sample_my_modules_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.sample_my_modules_id_seq OWNED BY public.sample_my_modules.id;
-
-
---
--- Name: sample_types; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.sample_types (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    team_id bigint NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    created_by_id bigint,
-    last_modified_by_id bigint
-);
-
-
---
--- Name: sample_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.sample_types_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: sample_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.sample_types_id_seq OWNED BY public.sample_types.id;
-
-
---
--- Name: samples; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.samples (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    user_id bigint NOT NULL,
-    team_id bigint NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    sample_group_id bigint,
-    sample_type_id bigint,
-    last_modified_by_id bigint,
-    nr_of_modules_assigned_to integer DEFAULT 0
-);
-
-
---
--- Name: samples_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.samples_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: samples_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.samples_id_seq OWNED BY public.samples.id;
-
-
---
--- Name: samples_tables; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.samples_tables (
-    id bigint NOT NULL,
-    status jsonb DEFAULT '{"time": 0, "order": [[2, "desc"]], "start": 0, "length": 10, "search": {"regex": false, "smart": true, "search": "", "caseInsensitive": true}, "columns": [{"search": {"regex": false, "smart": true, "search": "", "caseInsensitive": true}, "visible": true}, {"search": {"regex": false, "smart": true, "search": "", "caseInsensitive": true}, "visible": true}, {"search": {"regex": false, "smart": true, "search": "", "caseInsensitive": true}, "visible": true}, {"search": {"regex": false, "smart": true, "search": "", "caseInsensitive": true}, "visible": true}, {"search": {"regex": false, "smart": true, "search": "", "caseInsensitive": true}, "visible": true}, {"search": {"regex": false, "smart": true, "search": "", "caseInsensitive": true}, "visible": true}, {"search": {"regex": false, "smart": true, "search": "", "caseInsensitive": true}, "visible": true}], "assigned": "all", "ColReorder": [0, 1, 2, 3, 4, 5, 6]}'::jsonb NOT NULL,
-    user_id integer NOT NULL,
-    team_id integer NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: samples_tables_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.samples_tables_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: samples_tables_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.samples_tables_id_seq OWNED BY public.samples_tables.id;
-
-
---
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3091,13 +2845,6 @@ ALTER TABLE ONLY public.connections ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
--- Name: custom_fields id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.custom_fields ALTER COLUMN id SET DEFAULT nextval('public.custom_fields_id_seq'::regclass);
-
-
---
 -- Name: delayed_jobs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3392,48 +3139,6 @@ ALTER TABLE ONLY public.results ALTER COLUMN id SET DEFAULT nextval('public.resu
 
 
 --
--- Name: sample_custom_fields id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_custom_fields ALTER COLUMN id SET DEFAULT nextval('public.sample_custom_fields_id_seq'::regclass);
-
-
---
--- Name: sample_groups id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_groups ALTER COLUMN id SET DEFAULT nextval('public.sample_groups_id_seq'::regclass);
-
-
---
--- Name: sample_my_modules id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_my_modules ALTER COLUMN id SET DEFAULT nextval('public.sample_my_modules_id_seq'::regclass);
-
-
---
--- Name: sample_types id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_types ALTER COLUMN id SET DEFAULT nextval('public.sample_types_id_seq'::regclass);
-
-
---
--- Name: samples id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.samples ALTER COLUMN id SET DEFAULT nextval('public.samples_id_seq'::regclass);
-
-
---
--- Name: samples_tables id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.samples_tables ALTER COLUMN id SET DEFAULT nextval('public.samples_tables_id_seq'::regclass);
-
-
---
 -- Name: settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3679,14 +3384,6 @@ ALTER TABLE ONLY public.comments
 
 ALTER TABLE ONLY public.connections
     ADD CONSTRAINT connections_pkey PRIMARY KEY (id);
-
-
---
--- Name: custom_fields custom_fields_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.custom_fields
-    ADD CONSTRAINT custom_fields_pkey PRIMARY KEY (id);
 
 
 --
@@ -4023,54 +3720,6 @@ ALTER TABLE ONLY public.result_texts
 
 ALTER TABLE ONLY public.results
     ADD CONSTRAINT results_pkey PRIMARY KEY (id);
-
-
---
--- Name: sample_custom_fields sample_custom_fields_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_custom_fields
-    ADD CONSTRAINT sample_custom_fields_pkey PRIMARY KEY (id);
-
-
---
--- Name: sample_groups sample_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_groups
-    ADD CONSTRAINT sample_groups_pkey PRIMARY KEY (id);
-
-
---
--- Name: sample_my_modules sample_my_modules_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_my_modules
-    ADD CONSTRAINT sample_my_modules_pkey PRIMARY KEY (id);
-
-
---
--- Name: sample_types sample_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_types
-    ADD CONSTRAINT sample_types_pkey PRIMARY KEY (id);
-
-
---
--- Name: samples samples_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.samples
-    ADD CONSTRAINT samples_pkey PRIMARY KEY (id);
-
-
---
--- Name: samples_tables samples_tables_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.samples_tables
-    ADD CONSTRAINT samples_tables_pkey PRIMARY KEY (id);
 
 
 --
@@ -4523,27 +4172,6 @@ CREATE INDEX index_connections_on_input_id ON public.connections USING btree (in
 --
 
 CREATE INDEX index_connections_on_output_id ON public.connections USING btree (output_id);
-
-
---
--- Name: index_custom_fields_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_custom_fields_on_last_modified_by_id ON public.custom_fields USING btree (last_modified_by_id);
-
-
---
--- Name: index_custom_fields_on_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_custom_fields_on_team_id ON public.custom_fields USING btree (team_id);
-
-
---
--- Name: index_custom_fields_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_custom_fields_on_user_id ON public.custom_fields USING btree (user_id);
 
 
 --
@@ -5499,160 +5127,6 @@ CREATE INDEX index_results_on_user_id ON public.results USING btree (user_id);
 
 
 --
--- Name: index_sample_custom_fields_on_custom_field_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_custom_fields_on_custom_field_id ON public.sample_custom_fields USING btree (custom_field_id);
-
-
---
--- Name: index_sample_custom_fields_on_sample_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_custom_fields_on_sample_id ON public.sample_custom_fields USING btree (sample_id);
-
-
---
--- Name: index_sample_custom_fields_on_value; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_custom_fields_on_value ON public.sample_custom_fields USING gin (public.trim_html_tags((value)::text) public.gin_trgm_ops);
-
-
---
--- Name: index_sample_groups_on_created_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_groups_on_created_by_id ON public.sample_groups USING btree (created_by_id);
-
-
---
--- Name: index_sample_groups_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_groups_on_last_modified_by_id ON public.sample_groups USING btree (last_modified_by_id);
-
-
---
--- Name: index_sample_groups_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_groups_on_name ON public.sample_groups USING gin (public.trim_html_tags((name)::text) public.gin_trgm_ops);
-
-
---
--- Name: index_sample_groups_on_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_groups_on_team_id ON public.sample_groups USING btree (team_id);
-
-
---
--- Name: index_sample_my_modules_on_assigned_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_my_modules_on_assigned_by_id ON public.sample_my_modules USING btree (assigned_by_id);
-
-
---
--- Name: index_sample_my_modules_on_my_module_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_my_modules_on_my_module_id ON public.sample_my_modules USING btree (my_module_id);
-
-
---
--- Name: index_sample_my_modules_on_sample_id_and_my_module_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_my_modules_on_sample_id_and_my_module_id ON public.sample_my_modules USING btree (sample_id, my_module_id);
-
-
---
--- Name: index_sample_types_on_created_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_types_on_created_by_id ON public.sample_types USING btree (created_by_id);
-
-
---
--- Name: index_sample_types_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_types_on_last_modified_by_id ON public.sample_types USING btree (last_modified_by_id);
-
-
---
--- Name: index_sample_types_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_types_on_name ON public.sample_types USING gin (public.trim_html_tags((name)::text) public.gin_trgm_ops);
-
-
---
--- Name: index_sample_types_on_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_types_on_team_id ON public.sample_types USING btree (team_id);
-
-
---
--- Name: index_samples_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_samples_on_last_modified_by_id ON public.samples USING btree (last_modified_by_id);
-
-
---
--- Name: index_samples_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_samples_on_name ON public.samples USING gin (public.trim_html_tags((name)::text) public.gin_trgm_ops);
-
-
---
--- Name: index_samples_on_sample_group_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_samples_on_sample_group_id ON public.samples USING btree (sample_group_id);
-
-
---
--- Name: index_samples_on_sample_type_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_samples_on_sample_type_id ON public.samples USING btree (sample_type_id);
-
-
---
--- Name: index_samples_on_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_samples_on_team_id ON public.samples USING btree (team_id);
-
-
---
--- Name: index_samples_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_samples_on_user_id ON public.samples USING btree (user_id);
-
-
---
--- Name: index_samples_tables_on_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_samples_tables_on_team_id ON public.samples_tables USING btree (team_id);
-
-
---
--- Name: index_samples_tables_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_samples_tables_on_user_id ON public.samples_tables USING btree (user_id);
-
-
---
 -- Name: index_settings_on_type; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6122,14 +5596,6 @@ CREATE INDEX index_zip_exports_on_user_id ON public.zip_exports USING btree (use
 
 
 --
--- Name: sample_custom_fields fk_rails_01916e6992; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_custom_fields
-    ADD CONSTRAINT fk_rails_01916e6992 FOREIGN KEY (custom_field_id) REFERENCES public.custom_fields(id);
-
-
---
 -- Name: comments fk_rails_03de2dc08c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6159,14 +5625,6 @@ ALTER TABLE ONLY public.report_elements
 
 ALTER TABLE ONLY public.assets
     ADD CONSTRAINT fk_rails_0916329f9e FOREIGN KEY (created_by_id) REFERENCES public.users(id);
-
-
---
--- Name: sample_types fk_rails_09fe39ddcf; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_types
-    ADD CONSTRAINT fk_rails_09fe39ddcf FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
 
 
 --
@@ -6215,14 +5673,6 @@ ALTER TABLE ONLY public.team_repositories
 
 ALTER TABLE ONLY public.zip_exports
     ADD CONSTRAINT fk_rails_1952fc2261 FOREIGN KEY (user_id) REFERENCES public.users(id);
-
-
---
--- Name: sample_my_modules fk_rails_1d7ba4676d; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_my_modules
-    ADD CONSTRAINT fk_rails_1d7ba4676d FOREIGN KEY (sample_id) REFERENCES public.samples(id);
 
 
 --
@@ -6338,14 +5788,6 @@ ALTER TABLE ONLY public.my_modules
 
 
 --
--- Name: sample_types fk_rails_316e1b5e2c; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_types
-    ADD CONSTRAINT fk_rails_316e1b5e2c FOREIGN KEY (created_by_id) REFERENCES public.users(id);
-
-
---
 -- Name: oauth_access_grants fk_rails_330c32d8d9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6375,14 +5817,6 @@ ALTER TABLE ONLY public.experiments
 
 ALTER TABLE ONLY public.checklist_items
     ADD CONSTRAINT fk_rails_3605ca8e4d FOREIGN KEY (checklist_id) REFERENCES public.checklists(id);
-
-
---
--- Name: samples fk_rails_3637d0e265; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.samples
-    ADD CONSTRAINT fk_rails_3637d0e265 FOREIGN KEY (sample_group_id) REFERENCES public.sample_groups(id);
 
 
 --
@@ -6506,14 +5940,6 @@ ALTER TABLE ONLY public.projects
 
 
 --
--- Name: sample_groups fk_rails_69f6cb0677; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_groups
-    ADD CONSTRAINT fk_rails_69f6cb0677 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
-
-
---
 -- Name: projects fk_rails_6b025b17ca; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6527,14 +5953,6 @@ ALTER TABLE ONLY public.projects
 
 ALTER TABLE ONLY public.repository_rows
     ADD CONSTRAINT fk_rails_6b4114fff4 FOREIGN KEY (archived_by_id) REFERENCES public.users(id);
-
-
---
--- Name: sample_my_modules fk_rails_6c0db0045d; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_my_modules
-    ADD CONSTRAINT fk_rails_6c0db0045d FOREIGN KEY (my_module_id) REFERENCES public.my_modules(id);
 
 
 --
@@ -6650,14 +6068,6 @@ ALTER TABLE ONLY public.activities
 
 
 --
--- Name: sample_groups fk_rails_7e3aa99d56; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_groups
-    ADD CONSTRAINT fk_rails_7e3aa99d56 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
-
-
---
 -- Name: results fk_rails_7f0d5a2cd6; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6735,14 +6145,6 @@ ALTER TABLE ONLY public.protocols
 
 ALTER TABLE ONLY public.comments
     ADD CONSTRAINT fk_rails_8c4e16c503 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
-
-
---
--- Name: samples fk_rails_8e0800c2e2; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.samples
-    ADD CONSTRAINT fk_rails_8e0800c2e2 FOREIGN KEY (sample_type_id) REFERENCES public.sample_types(id);
 
 
 --
@@ -6946,14 +6348,6 @@ ALTER TABLE ONLY public.teams
 
 
 --
--- Name: custom_fields fk_rails_a25c0b1d1a; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.custom_fields
-    ADD CONSTRAINT fk_rails_a25c0b1d1a FOREIGN KEY (user_id) REFERENCES public.users(id);
-
-
---
 -- Name: repository_status_values fk_rails_a3a2aede5b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6999,14 +6393,6 @@ ALTER TABLE ONLY public.protocols
 
 ALTER TABLE ONLY public.tokens
     ADD CONSTRAINT fk_rails_ac8a5d0441 FOREIGN KEY (user_id) REFERENCES public.users(id);
-
-
---
--- Name: custom_fields fk_rails_acb71de8cc; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.custom_fields
-    ADD CONSTRAINT fk_rails_acb71de8cc FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
 
 
 --
@@ -7071,14 +6457,6 @@ ALTER TABLE ONLY public.repository_asset_values
 
 ALTER TABLE ONLY public.my_module_status_flows
     ADD CONSTRAINT fk_rails_c19dc6b9e9 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
-
-
---
--- Name: sample_types fk_rails_c227b918b2; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_types
-    ADD CONSTRAINT fk_rails_c227b918b2 FOREIGN KEY (team_id) REFERENCES public.teams(id);
 
 
 --
@@ -7226,43 +6604,11 @@ ALTER TABLE ONLY public.notifications
 
 
 --
--- Name: sample_custom_fields fk_rails_d58776cccd; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_custom_fields
-    ADD CONSTRAINT fk_rails_d58776cccd FOREIGN KEY (sample_id) REFERENCES public.samples(id);
-
-
---
 -- Name: experiments fk_rails_d683124fa4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.experiments
     ADD CONSTRAINT fk_rails_d683124fa4 FOREIGN KEY (restored_by_id) REFERENCES public.users(id);
-
-
---
--- Name: samples fk_rails_d699eb2564; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.samples
-    ADD CONSTRAINT fk_rails_d699eb2564 FOREIGN KEY (user_id) REFERENCES public.users(id);
-
-
---
--- Name: custom_fields fk_rails_d6c4b1818b; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.custom_fields
-    ADD CONSTRAINT fk_rails_d6c4b1818b FOREIGN KEY (team_id) REFERENCES public.teams(id);
-
-
---
--- Name: sample_my_modules fk_rails_d729ac6f8f; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_my_modules
-    ADD CONSTRAINT fk_rails_d729ac6f8f FOREIGN KEY (assigned_by_id) REFERENCES public.users(id);
 
 
 --
@@ -7298,14 +6644,6 @@ ALTER TABLE ONLY public.protocols
 
 
 --
--- Name: samples fk_rails_df64423f24; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.samples
-    ADD CONSTRAINT fk_rails_df64423f24 FOREIGN KEY (team_id) REFERENCES public.teams(id);
-
-
---
 -- Name: my_modules fk_rails_e21638fa54; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7335,14 +6673,6 @@ ALTER TABLE ONLY public.repository_text_values
 
 ALTER TABLE ONLY public.repository_rows
     ADD CONSTRAINT fk_rails_e7c4398649 FOREIGN KEY (restored_by_id) REFERENCES public.users(id);
-
-
---
--- Name: samples fk_rails_ea3d01785c; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.samples
-    ADD CONSTRAINT fk_rails_ea3d01785c FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
 
 
 --
@@ -7423,14 +6753,6 @@ ALTER TABLE ONLY public.tags
 
 ALTER TABLE ONLY public.team_repositories
     ADD CONSTRAINT fk_rails_f99472b670 FOREIGN KEY (team_id) REFERENCES public.teams(id);
-
-
---
--- Name: sample_groups fk_rails_fc2ab1a001; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_groups
-    ADD CONSTRAINT fk_rails_fc2ab1a001 FOREIGN KEY (team_id) REFERENCES public.teams(id);
 
 
 --
@@ -7611,6 +6933,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190613134100'),
 ('20190711125513'),
 ('20190715150326'),
+('20190726102200'),
 ('20190812065432'),
 ('20190812072649'),
 ('20190830141257'),

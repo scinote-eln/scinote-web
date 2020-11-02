@@ -118,6 +118,9 @@ Rails.application.configure do
   # Enable sign in with LinkedIn account
   config.x.linkedin_signin_enabled = ENV['LINKEDIN_SIGNIN_ENABLED'] == 'true'
 
+  # Set up domain for pwa SciNote mobile app
+  config.x.pwa_domain = ENV['PWA_DOMAIN'] || 'm.scinote.net'
+
   # Use a different logger for distributed setups.
   # require 'syslog/logger'
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')

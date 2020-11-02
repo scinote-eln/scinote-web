@@ -204,12 +204,6 @@ class Project < ApplicationRecord
     st
   end
 
-  def assigned_samples
-    Sample.joins(:my_modules).where(my_modules: {
-                                      id: my_modules_ids.split(',')
-                                    })
-  end
-
   def assigned_repositories_and_snapshots
     live_repositories = Repository.assigned_to_project(self)
     snapshots = RepositorySnapshot.of_unassigned_from_project(self)

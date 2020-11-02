@@ -108,7 +108,6 @@ module ReportActions
           end
         else
           file_name = contents.file_name
-          file_name = contents.element if contents.element == :samples
           res << generate_new_el(false)
           locals = contents.parse_locals([my_module, :asc])
           locals[:element_id] = el_id if el_id
