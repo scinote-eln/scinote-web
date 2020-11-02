@@ -5,7 +5,7 @@ en:
       status_transitioning_label: 'Transitioning to:'
       move_label: 'Move to'
       return_label: 'Return to'
-      view_flow_label: 'View task flow'
+      view_flow_label: 'View status flow'
       no_permission_label: 'You don’t have permission to change the status of this task.'
     update_status:
       error:

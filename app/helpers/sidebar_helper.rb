@@ -1,8 +1,6 @@
 module SidebarHelper
   def project_action_to_link_to(project)
     case action_name
-    when 'samples'
-      return samples_project_path(project)
     when 'archive', 'module_archive', 'experiment_archive'
       return experiment_archive_project_url(project)
     else
@@ -12,8 +10,6 @@ module SidebarHelper
 
   def experiment_action_to_link_to(experiment)
     case action_name
-    when 'samples'
-      return samples_experiment_path(experiment)
     when 'archive', 'module_archive', 'experiment_archive'
       return module_archive_experiment_url(experiment)
     else
@@ -26,8 +22,6 @@ module SidebarHelper
       results_my_module_url(my_module)
     elsif action_name == 'activities'
       activities_my_module_url(my_module)
-    elsif action_name == 'samples'
-      samples_my_module_url(my_module)
     elsif action_name.in?(%w(archive module_archive experiment_archive))
       archive_my_module_url(my_module)
     else

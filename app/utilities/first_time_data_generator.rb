@@ -532,8 +532,7 @@ module FirstTimeDataGenerator
       user: user,
       created_at: generate_random_time(my_modules[1].created_at, 4.days)
     )
-    temp_text = "There are many biological replicates we harvested " \
-                "for each type of sample (code-names):\n\n"
+    temp_text = 'There are many biological replicates we harvested for each type of sample.'
     repository_rows_to_assign.each do |s|
       temp_text << "* #{s.name}\n\n"
     end
@@ -1298,9 +1297,6 @@ module FirstTimeDataGenerator
       created_at: generate_random_time(my_modules[7].created_at, 3.days),
       file_name: 'result-ddCq.JPG'
     )
-
-    # create thumbnail
-    experiment.generate_workflow_img
   end
 
   # Used for delayed jobs

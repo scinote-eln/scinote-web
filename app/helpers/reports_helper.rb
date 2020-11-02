@@ -99,9 +99,9 @@ module ReportsHelper
 
   # "Hack" to omit file preview URL because of WKHTML issues
   def report_image_asset_url(asset)
-    image_tag(asset.medium_preview
-                   .processed
-                   .service_url(expires_in: Constants::URL_LONG_EXPIRE_TIME))
+    preview = asset.inline? ? asset.large_preview : asset.medium_preview
+    image_tag(preview.processed
+                     .service_url(expires_in: Constants::URL_LONG_EXPIRE_TIME))
   end
 
   # "Hack" to load Glyphicons css directly from the CDN

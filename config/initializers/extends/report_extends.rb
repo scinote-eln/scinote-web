@@ -148,9 +148,7 @@ module ReportExtends
   SET_ELEMENT_REFERENCES_LIST = [
     ElementReference.new(
       proc do |report_element|
-        report_element.project_header? ||
-          report_element.project_activity? ||
-          report_element.project_samples?
+        report_element.project_header?
       end,
       ['project_id']
     ),
@@ -159,8 +157,7 @@ module ReportExtends
       proc do |report_element|
         report_element.my_module? ||
           report_element.my_module_protocol? ||
-          report_element.my_module_activity? ||
-          report_element.my_module_samples?
+          report_element.my_module_activity?
       end,
       ['my_module_id']
     ),
@@ -194,9 +191,7 @@ module ReportExtends
   ELEMENT_REFERENCES = [
     ElementReference.new(
       proc do |report_element|
-        report_element.project_header? ||
-          report_element.project_activity? ||
-          report_element.project_samples?
+        report_element.project_header?
       end,
       ['project_id']
     ),
@@ -205,8 +200,7 @@ module ReportExtends
       proc do |report_element|
         report_element.my_module? ||
           report_element.my_module_protocol? ||
-          report_element.my_module_activity? ||
-          report_element.my_module_samples?
+          report_element.my_module_activity?
       end,
       ['my_module_id']
     ),

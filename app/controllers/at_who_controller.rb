@@ -25,7 +25,6 @@ class AtWhoController < ApplicationController
           prj: res.projects,
           exp: res.experiments,
           tsk: res.my_modules,
-          sam: res.samples,
           status: :ok
         }
       end

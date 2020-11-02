@@ -255,7 +255,7 @@ class RepositoriesController < ApplicationController
     render_403 unless can_create_repository_rows?(@repository)
 
     unless import_params[:file]
-      repository_response(t('teams.parse_sheet.errors.no_file_selected'))
+      repository_response(t('repositories.parse_sheet.errors.no_file_selected'))
       return
     end
     begin
@@ -276,7 +276,7 @@ class RepositoriesController < ApplicationController
         @import_data = parsed_file.data
 
         if @import_data.header.empty? || @import_data.columns.empty?
-          return repository_response(t('teams.parse_sheet.errors.empty_file'))
+          return repository_response(t('repositories.parse_sheet.errors.empty_file'))
         end
 
         if (@temp_file = parsed_file.generate_temp_file)
@@ -290,14 +290,14 @@ class RepositoriesController < ApplicationController
             end
           end
         else
-          repository_response(t('teams.parse_sheet.errors.temp_file_failure'))
+          repository_response(t('repositories.parse_sheet.errors.temp_file_failure'))
         end
       end
     rescue ArgumentError, CSV::MalformedCSVError
-      repository_response(t('teams.parse_sheet.errors.invalid_file',
+      repository_response(t('repositories.parse_sheet.errors.invalid_file',
                             encoding: ''.encoding))
     rescue TypeError
-      repository_response(t('teams.parse_sheet.errors.invalid_extension'))
+      repository_response(t('repositories.parse_sheet.errors.invalid_extension'))
     end
   end
 

@@ -121,7 +121,7 @@ module Reports
       image = TinyMceAsset.find_by(id: Base62.decode(elem.attributes['data-mce-token'].value))
       return unless image
 
-      image_path = Reports::Utils.image_path(image.image)
+      image_path = Reports::Utils.image_prepare(image).service_url
       dimension = FastImage.size(image_path)
 
       return unless dimension
@@ -148,7 +148,8 @@ module Reports
     end
 
     def list_element(list_element)
-      data_array = list_element.children.select { |n| %w(li ul ol a img).include?(n.name) }.map do |li_child|
+      allowed_elements = %w(li ul ol a img strong em h1 h2 h2 h3 h4 h5 span)
+      data_array = list_element.children.select { |n| allowed_elements.include?(n.name) }.map do |li_child|
         li_child.children.map do |item|
           if item.is_a? Nokogiri::XML::Text
             item.text.chomp
@@ -160,6 +161,10 @@ module Reports
             img_element(item)&.merge(bookmark_id: SecureRandom.hex)
           elsif %w(table).include?(item.name)
             tiny_mce_table_element(item).merge(bookmark_id: SecureRandom.hex)
+          elsif %w(strong em h1 h2 h2 h3 h4 h5 span).include?(item.name)
+            # Pass styles and extend renderer for li with style, some limitations on li items
+            # { type: 'text', value: item[:value], style: paragraph_styling(item) }
+            item.children.text
           end
         end.reject(&:blank?)
       end

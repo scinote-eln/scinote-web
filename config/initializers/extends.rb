@@ -28,18 +28,96 @@ class Extends
                            result_table: 4,
                            result_text: 5,
                            my_module_activity: 6,
-                           my_module_samples: 7,
+                           my_module_samples: 7, # DEPRECATED in SCI-2228, kept b/c of integer enums
                            step_checklist: 8,
                            step_asset: 9,
                            step_table: 10,
                            step_comments: 11,
                            result_comments: 12,
-                           project_activity: 13, # TODO
-                           project_samples: 14, # TODO
+                           project_activity: 13, # NOT USED, kept b/c of integer enums
+                           project_samples: 14, # DEPRECATED in SCI-2228, kept b/c of integer enums
                            experiment: 15,
                            # Higher number because of addons
                            my_module_repository: 17,
                            my_module_protocol: 18 }
+
+  EXPORT_ALL_PROJECT_ELEMENTS = [
+    {
+      type_of: 'project_header',
+      id_key: 'project_id'
+    },
+    {
+      type_of: 'experiment',
+      id_key: 'experiment_id',
+      relation: %w(experiments),
+      children: [
+        {
+          type_of: 'my_module',
+          id_key: 'my_module_id',
+          relation: %w(my_modules),
+          children: [
+            {
+              type_of: 'my_module_protocol',
+              id_key: 'my_module_id'
+            },
+            {
+              type_of: 'step',
+              relation: %w(protocol steps),
+              id_key: 'step_id',
+              children: [
+                {
+                  type_of: 'step_asset',
+                  relation: %w(assets),
+                  id_key: 'asset_id'
+                },
+                {
+                  type_of: 'step_table',
+                  relation: %w(tables),
+                  id_key: 'table_id'
+                },
+                {
+                  type_of: 'step_checklist',
+                  relation: %w(checklists),
+                  id_key: 'checklist_id'
+                },
+                {
+                  type_of: 'step_comments',
+                  id_key: 'step_id',
+                  sort_order: 'asc'
+                }
+              ]
+            },
+            {
+              type_of_lambda: lambda { |result|
+                (result.result_asset ||
+                 result.result_table ||
+                 result.result_text).class.to_s.underscore
+              },
+              relation: %w(results),
+              id_key: 'result_id',
+              children: [{
+                type_of: 'result_comments',
+                id_key: 'result_id',
+                sort_order: 'asc'
+              }]
+            },
+            {
+              type_of: 'my_module_activity',
+              id_key: 'my_module_id',
+              sort_order: 'asc'
+            },
+            {
+              type_of: 'my_module_repository',
+              relation: %w(experiment project assigned_repositories_and_snapshots),
+              id_key: 'repository_id',
+              parent_id_key: 'my_module_id',
+              sort_order: 'asc'
+            }
+          ]
+        }
+      ]
+    }
+  ]
 
   # Data type name should match corresponding model's name
   REPOSITORY_DATA_TYPES = { RepositoryTextValue: 0,
@@ -122,6 +200,12 @@ class Extends
                                'ResultText' => :text,
                                'Protocol' => :description,
                                'MyModule' => :description }
+
+  DEFAULT_DASHBOARD_CONFIGURATION = [
+    { partial: 'dashboards/current_tasks', visible: true, size: 'large-widget', position: 1 },
+    { partial: 'dashboards/calendar', visible: true, size: 'small-widget', position: 2 },
+    { partial: 'dashboards/recent_work', visible: true, size: 'medium-widget', position: 3 }
+  ]
 
   ACTIVITY_SUBJECT_TYPES = %w(
     Team RepositoryBase Project Experiment MyModule Result Protocol Report RepositoryRow
@@ -292,7 +376,7 @@ class Extends
     restore_inventory: 145,
     export_inventory_items_assigned_to_task: 146,
     export_inventory_snapshot_items_assigned_to_task: 147,
-    change_status_on_task_flow: 148 # 149, 150, 151 in AdddOn!
+    change_status_on_task_flow: 148 # 149..157 in AdddOn!
   }
 
   ACTIVITY_GROUPS = {
