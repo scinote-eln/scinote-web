@@ -372,7 +372,7 @@
     exportProjectsModal = $('#export-projects-modal');
     exportProjectsModalHeader = exportProjectsModal.find('.modal-title');
     exportProjectsModalBody = exportProjectsModal.find('.modal-body');
-    exportProjectsBtn = $('#export-projects-button');
+    exportProjectsBtn = $('.export-projects-btn');
     exportProjectsSubmit = $('#export-projects-modal-submit');
 
     updateSelectedCards();
@@ -385,8 +385,10 @@
     initEditProjectButton($('.panel-project'));
     initArchiveRestoreButton($('.panel-project'));
 
-    $('.project-card-selector').off('click').click(function() {
-      var projectId = $(this).closest('.panel-project').data('id');
+    $('#projects-cards-view').on('click', '.project-card-selector', function() {
+      var projectsToolbar = $('#projectsToolbar');
+      var projectCard = $(this).closest('.panel-project');
+      var projectId = projectCard.data('id');
       // Determine whether ID is in the list of selected project IDs
       var index = $.inArray(projectId, selectedProjects);
 
@@ -395,15 +397,30 @@
         $(this).closest('.panel-project').addClass('selected');
         selectedProjects.push(projectId);
         exportProjectsBtn.removeAttr('disabled');
+        $('projects-actions').addClass('hidden');
       // Otherwise, if checkbox is not checked and ID is in list of selected IDs
       } else if (!this.checked && index !== -1) {
         $(this).closest('.panel-project').removeClass('selected');
         selectedProjects.splice(index, 1);
-
-        if (selectedProjects.length === 0) {
-          exportProjectsBtn.attr('disabled', 'disabled');
-        }
       }
+
+      if (selectedProjects.length === 0) {
+        projectsToolbar.find('.single-project-action, .multiple-projects-action').addClass('hidden');
+        projectsToolbar.find('.new-project-actions').removeClass('hidden');
+      } else if (selectedProjects.length === 1) {
+        projectsToolbar.find('.new-project-actions').addClass('hidden');
+        projectsToolbar.find('.single-project-action, .multiple-projects-action').removeClass('hidden');
+      } else {
+        projectsToolbar.find('.new-project-actions').addClass('hidden');
+        projectsToolbar.find('.single-project-action').addClass('hidden');
+        projectsToolbar.find('.multiple-projects-action').removeClass('hidden');
+      }
+
+      selectedProjects.forEach(function(id) {
+        if ($('#projects-cards-view').find(`.panel-project[data-id="${id}"]`).hasClass('project-folder')) {
+          projectsToolbar.find('.project-only-action').attr('disabled', true);
+        }
+      });
     });
 
     // initialize project tab remote loading

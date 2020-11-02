@@ -55,7 +55,7 @@
       <li role="presentation">
         <a class="btn btn-link <%= 'disabled' unless active %>"
            href="/global_activities?<%= Activity.url_search_query(
-              {subjects: {Project: [project.id]}} 
+              {subjects: {Project: [project.id]}}
            ) %>"
            aria-controls="activities-<%= project.id %>" role="tab" >
           <span class="fas fa-list"></span>
