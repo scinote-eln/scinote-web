@@ -1955,7 +1955,7 @@ en:
         delete_title: "Delete step"
         duplicate_title: "Duplicate step"
         complete_title: "Complete step"
-        uncomplete_title: "Uncomplete step"
+        uncomplete_title: "Restart step"
       attachments:
         modified_label: "Modified:"
         sort:
