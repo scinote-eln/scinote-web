@@ -1,6 +1,6 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
-@import 'constants';
+@import "constants";
 @import "mixins";
 
 // Some color definitions
@@ -559,9 +559,16 @@ li.module-hover {
   .no-workflowimg {
     color: $color-alto;
     display: block;
-    font-size: 22px;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .no-tasks {
+    color: $color-alto;
+    display: block;
+    font-size: 1.5em;
     font-weight: bold;
-    margin: 15px 0;
+    margin: 1em 0;
     max-height: 200px;
     padding-bottom: 70px;
     padding-top: 50px;
@@ -574,6 +581,11 @@ li.module-hover {
   display: flex;
   height: 100%;
   justify-content: center;
+
+  .workflowimg-spinner {
+    color: $color-alto;
+    top: 50%;
+  }
 
   img {
     max-height: 190px;

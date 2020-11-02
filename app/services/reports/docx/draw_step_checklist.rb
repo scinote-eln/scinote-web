@@ -13,8 +13,8 @@ module Reports::Docx::DrawStepChecklist
     @docx.p
     @docx.p do
       text SmartAnnotations::TagToText.new(
-        @user,
-        @report_team,
+        user,
+        team,
         I18n.t('projects.reports.elements.step_checklist.checklist_name', name: checklist.name)
       ).text, italic: true
       text ' '

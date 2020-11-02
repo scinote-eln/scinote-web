@@ -29,10 +29,6 @@ module MyModulesHelper
         .index(asset_id) || 0
   end
 
-  def number_of_samples(my_module)
-    my_module.samples.count
-  end
-
   def get_task_alert_color(my_module)
     alert = ''
     unless my_module.completed?

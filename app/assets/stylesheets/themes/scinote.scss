@@ -937,19 +937,6 @@ ul.content-activities {
   }
 }
 
-.step {
-  .panel-heading a[data-toggle] {
-    color: inherit;
-  }
-
-  &.not-completed {
-    .badge-num > span.badge {
-      background-color: $color-silver;
-    }
-  }
-
-}
-
 .well {
   background-color: $color-white;
 }
@@ -1239,10 +1226,6 @@ ul.content-activities {
     top: 6px;
     max-width: 78%;
   }
-}
-
-#samples_length {
-  display: inline-block;
 }
 
 .toolbarButtons {
@@ -1581,7 +1564,7 @@ a.disabled-with-click-events {
   margin-bottom: 45px;
 
   .doorkeeper-scinote-logo {
-    background-image: asset-url("/images/scinote_icon.jpg");
+    background-image: asset-url("/images/doorkeeper_auth.png");
     background-position: center center;
     background-repeat: no-repeat;
     background-size: contain;

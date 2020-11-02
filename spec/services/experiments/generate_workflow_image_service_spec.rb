@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe Experiments::GenerateWorkflowImageService do
   let(:experiment) { create :experiment, :with_tasks }
-  let(:params) { { experiment_id: experiment.id } }
+  let(:params) { { experiment: experiment } }
 
   context 'when succeed' do
     it 'succeed? returns true' do

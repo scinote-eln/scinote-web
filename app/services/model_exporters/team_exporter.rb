@@ -49,7 +49,6 @@ module ModelExporters
           .includes(:user_notifications)
           .where('user_notifications.user_id': team.users)
           .map { |n| notification(n) },
-        custom_fields: team.custom_fields,
         repositories: team.repositories.map { |r| repository(r) },
         tiny_mce_assets: team.tiny_mce_assets.map { |tma| tiny_mce_asset_data(tma) },
         protocols: team.protocols.where(my_module: nil).map do |pr|

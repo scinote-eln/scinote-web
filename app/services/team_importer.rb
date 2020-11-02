@@ -7,7 +7,6 @@ class TeamImporter
     @user_mappings = {}
     @notification_mappings = {}
     @repository_mappings = {}
-    @custom_field_mappings = {}
     @project_mappings = {}
     @repository_column_mappings = {}
     @experiment_mappings = {}
@@ -77,7 +76,6 @@ class TeamImporter
         user_team.save!
       end
 
-      create_custom_fields(team_json['custom_fields'], team)
       create_protocol_keywords(team_json['protocol_keywords'], team)
       create_protocols(team_json['protocols'], nil, team)
       create_projects(team_json['projects'], team)
@@ -182,11 +180,6 @@ class TeamImporter
     ActiveRecord::Base.transaction do
       ActiveRecord::Base.no_touching do
         experiment = create_experiment(experiment_json, project, user_id)
-
-        experiment.my_modules.each do |my_module|
-          my_module.nr_of_assigned_samples = 0
-          my_module.save(touch: false)
-        end
 
         # Create connections for modules
         experiment_json['my_modules'].each do |my_module_json|
@@ -532,21 +525,6 @@ class TeamImporter
     end
   end
 
-  def create_custom_fields(custom_fields_json, team)
-    puts 'Creating custom fields...'
-    custom_fields_json.each do |custom_field_json|
-      custom_field = CustomField.new(custom_field_json)
-      orig_custom_field_id = custom_field.id
-      custom_field.id = nil
-      custom_field.team = team
-      custom_field.user_id = find_user(custom_field.user_id)
-      custom_field.last_modified_by_id =
-        find_user(custom_field.last_modified_by_id)
-      custom_field.save!
-      @custom_field_mappings[orig_custom_field_id] = custom_field.id
-    end
-  end
-
   def create_protocol_keywords(protocol_keywords_json, team)
     puts 'Creating keywords...'
     protocol_keywords_json.each do |protocol_keyword_json|
@@ -638,7 +616,6 @@ class TeamImporter
       my_module_group.save!
       @my_module_group_mappings[orig_module_group_id] = my_module_group.id
     end
-    experiment.generate_workflow_img
     create_my_modules(experiment_json['my_modules'], experiment, user_id)
     experiment
   end

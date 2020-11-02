@@ -99,6 +99,10 @@ module Reports
                   link I18n.t('projects.reports.renderers.lists.appended_table'), item[:bookmark_id] do
                     internal true
                   end
+                elsif %w(text).include?(item[:type])
+                  # TODO: Text with styles, not working yet.
+                  style = item[:style] || {}
+                  text item[:value], style
                 end
               else
                 text item

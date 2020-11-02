@@ -55,18 +55,24 @@
 
     <div class="panel-body">
       <% if experiment.active_modules.length > 0 %>
-        <%= link_to canvas_experiment_path(experiment) do %>
-          <div class="workflowimg-container"
-               data-check-img="<%= updated_img_experiment_url(experiment) %>"
-               data-updated-img="<%= fetch_workflow_img_experiment_url(experiment) %>"
-               data-timestamp="<%= experiment.updated_at %>" >
-          </div>
+        <%= link_to canvas_experiment_path(experiment), class: 'no-workflowimg' do %>
+          <% if experiment.workflowimg.attached? %>
+            <div class="workflowimg-container" data-workflowimg-present="true">
+              <%= render partial: 'projects/show/workflow_img.html.erb', locals: { experiment: experiment } %>
+            </div>
+          <% else %>
+            <div class="workflowimg-container"
+                 data-workflowimg-present="false"
+                 data-workflowimg-url="<%= fetch_workflow_img_experiment_url(experiment) %>" >
+              <i class="fas fa-spinner fa-spin fa-3x workflowimg-spinner hidden" aria-hidden="true"></i>
+            </div>
+          <% end %>
         <% end %>
       <% else %>
         <% if can_manage_experiment?(experiment) %>
           <%= link_to( t('experiments.edit.add_task'),
                        canvas_experiment_path(experiment, editMode: true),
-                       class: 'no-workflowimg') %>
+                       class: 'no-tasks') %>
         <% else %>
           <div class="no-workflowimg">
             <p><%= t('experiments.edit.no_workflowimg') %></p>
