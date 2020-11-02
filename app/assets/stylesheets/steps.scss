@@ -337,7 +337,7 @@
     .change-order {
       padding-left: 2.75em;
 
-      &.selected:after {
+      &.selected::after {
         @include font-awesome;
         content: $font-fas-check;
         margin-left: auto;
@@ -346,12 +346,12 @@
       }
     }
 
-    .attachments-view-mode  {
+    .attachments-view-mode {
       .fas {
         width: 1.5em;
       }
 
-      &.selected:after {
+      &.selected::after {
         @include font-awesome;
         content: $font-fas-check;
         margin-left: auto;

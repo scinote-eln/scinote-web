@@ -232,9 +232,9 @@ class StepsController < ApplicationController
     end
     @step.assets.each do |asset|
       html += render_to_string(partial: 'assets/asset.html.erb', locals: {
-        asset: asset,
-        gallery_view_id: @step.id
-      })
+                                 asset: asset,
+                                 gallery_view_id: @step.id
+                               })
     end
     render json: { html: html }, status: :ok
   rescue ActiveRecord::RecordInvalid => e
