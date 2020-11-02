@@ -365,6 +365,10 @@ label {
       margin-left: 15px;
     }
   }
+
+  img {
+    max-width: 100%;
+  }
 }
 
 // Result table element style
@@ -416,6 +420,11 @@ label {
     .attachment-icon {
       color: $color-emperor;
     }
+  }
+
+
+  img {
+    max-width: 100%;
   }
 
   .report-element-children {
