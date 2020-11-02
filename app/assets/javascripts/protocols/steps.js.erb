@@ -101,6 +101,9 @@
       DragNDropSteps.clearFiles();
       if (tinyMCE.editors.step_description_textarea) tinyMCE.editors.step_description_textarea.remove();
       TinyMCE.init('#step_description_textarea');
+      $form.on('change', '.checklist-item-text, .checklist-name', function() {
+        $form.addClass(GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME);
+      });
       $("#new-step-checklists fieldset.nested_step_checklists ul").each(function () {
         enableCheckboxSorting(this);
       });
@@ -279,7 +282,10 @@
         colHeaders: true,
         contextMenu: true,
         formulas: true,
-        preventOverflow: 'horizontal'
+        preventOverflow: 'horizontal',
+        afterChange: function() {
+          $container.addClass(GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME);
+        }
       });
 
       $container.attr("initialized", true);
@@ -390,6 +396,8 @@
         destroyName = destroyName.replace(/\[\d+\]\[_destroy\]/, "[" + itemPos + "][_destroy]");
         $destroyInput.attr("name", destroyName);
       }
+
+      $formGroup.addClass(GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME);
     });
   }
 

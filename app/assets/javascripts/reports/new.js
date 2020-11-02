@@ -1,3 +1,5 @@
+/* globals animateSpinner GLOBAL_CONSTANTS */
+
 var REPORT_CONTENT = '#report-content';
 var ADD_CONTENTS_FORM_ID = '#add-contents-form';
 var SAVE_REPORT_FORM_ID = '#save-report-form';
@@ -42,9 +44,12 @@ function initializeHandsonTable(el) {
       columnSorting: true,
       editor: false,
       copyPaste: false,
-      formulas: true
+      formulas: true,
+      afterChange: function() {
+        el.addClass(GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME);
+      }
     });
-    el.handsontable("getInstance").loadData(data);
+    el.handsontable('getInstance').loadData(data);
     el.handsontable('getInstance').getPlugin('columnSorting').sort(3, order);
 
     // "Hack" to disable user sorting rows by clicking on
@@ -61,7 +66,10 @@ function initializeHandsonTable(el) {
       colHeaders: true,
       editor: false,
       copyPaste: false,
-      formulas: true
+      formulas: true,
+      afterChange: function() {
+        el.addClass(GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME);
+      }
     });
     el.handsontable("getInstance").loadData(data);
   }

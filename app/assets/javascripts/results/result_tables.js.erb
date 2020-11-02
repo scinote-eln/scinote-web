@@ -22,7 +22,10 @@
             colHeaders: true,
             contextMenu: true,
             formulas: true,
-            preventOverflow: 'horizontal'
+            preventOverflow: 'horizontal',
+            afterChange: function() {
+              $container.addClass(GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME);
+            }
           });
         });
       }
