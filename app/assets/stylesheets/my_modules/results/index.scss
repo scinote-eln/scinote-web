@@ -17,14 +17,12 @@
 
       .fas {
         padding-right: .5em;
+        width: 1.75em;
       }
 
-      .create-wopi-file-btn {
+      .create-wopi-file-btn,
+      .new-marvinjs-upload-button {
         padding: 0;
-
-        img {
-          margin-left: -5px;
-        }
       }
     }
   }

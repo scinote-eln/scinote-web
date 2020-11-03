@@ -11,34 +11,48 @@
     </h4>
   </div>
 
-  <div>
-    <div class="attachemnts-header pull-right">
-      <% if !(preview) && (can_manage_protocol_in_module?(@protocol) ||
+  <div class="actions">
+    <div class="dropdown sci-dropdown">
+      <button class="btn btn-light dropdown-toggle" type="button" id="dropdownAttachmentsOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <span><%= t("protocols.steps.attachments.manage") %></span>
+        <span class="caret pull-right"></span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-right dropdown-attachment-options"
+          aria-labelledby="dropdownAttachmentsOptions"
+          data-view-mode-url="<%= update_asset_view_mode_step_path(step) %>"
+          data-step-id="<%= step.id %>"
+          data-state-save-url="<%= update_view_state_step_path(step.id) %>">
+        <% if !(preview) && (can_manage_protocol_in_module?(@protocol) ||
                            can_manage_protocol_in_repository?(@protocol)) %>
-        <%= render partial: '/assets/marvinjs/create_marvin_sketch_button.html.erb',
-                   locals: {  element_id: step.id, element_type: 'Step',  sketch_container: ".attachments[data-step-id=#{step.id}]" } %>
-        <%= render partial: '/assets/wopi/create_wopi_file_button.html.erb',
-                   locals: {  element_id: step.id, element_type: 'Step' } %>
-      <% end %>
-      <div class="dropdown attachments-order" data-step-id="<%= step.id %>" data-state-save-path="<%= update_view_state_step_path(step.id) %>">
-        <button class="btn btn-light dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-          <span class="selected-order">
-            <%= t("general.sort.#{current_order}_html") %>
-          </span>
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="sortMenu" >
-          <% ['new', 'old', 'atoz', 'ztoa'].each do |sort| %>
-            <li>
-              <a data-order="<%= sort %>" class="change-order"><%= t("general.sort.#{sort}_html") %></a>
-            </li>
-          <% end %>
-        </ul>
-      </div>
-
-      <i class="fas fa-desktop attachments-view-mode" data-url="<%= update_asset_view_mode_step_path(step) %>" data-assets-view-mode="inline"></i>
-      <i class="fas fa-list attachments-view-mode" data-url="<%= update_asset_view_mode_step_path(step) %>" data-assets-view-mode="list"></i>
-      <i class="fas fa-th-large attachments-view-mode" data-url="<%= update_asset_view_mode_step_path(step) %>" data-assets-view-mode="thumbnail"></i>
+          <li class="divider-label"><%= t("protocols.steps.attachments.add") %></li>
+          <li>
+            <%= render partial: '/assets/marvinjs/create_marvin_sketch_li.html.erb',
+                       locals: {  element_id: step.id, element_type: 'Step',  sketch_container: ".attachments[data-step-id=#{step.id}]" } %>
+          </li>
+          <li>
+            <%= render partial: '/assets/wopi/create_wopi_file_li.html.erb',
+                       locals: {  element_id: step.id, element_type: 'Step' } %>
+          </li>
+          <li role="separator" class="divider"></li>
+        <% end %>
+        <li class="divider-label"><%= t("protocols.steps.attachments.sort_by") %></li>
+        <% ['new', 'old', 'atoz', 'ztoa'].each do |sort| %>
+          <li>
+            <a data-order="<%= sort %>" class="action-link change-order <%= 'selected' if current_order == sort %>">
+              <%= t("general.sort_new.#{sort}") %>
+            </a>
+          </li>
+        <% end %>
+        <li role="separator" class="divider"></li>
+        <li class="divider-label"><%= t("protocols.steps.attachments.attachments_view_mode") %></li>
+        <% ['inline', 'thumbnail', 'list'].each do |view_mode| %>
+        <li>
+          <a class="attachments-view-mode action-link <%= 'selected' if view_mode == step.assets_view_mode %>"  data-assets-view-mode="<%= view_mode %>">
+            <%= t("protocols.steps.attachments.view_mode.#{view_mode}_html") %>
+          </a>
+        </li>
+        <% end %>
+      </ul>
     </div>
   </div>
 </div>

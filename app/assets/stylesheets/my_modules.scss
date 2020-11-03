@@ -57,9 +57,11 @@
 
 // Create wopi file
 .create-wopi-file-btn {
+  cursor: pointer;
+
   img {
-    margin-right: 5px;
-    height: 20px;
+    height: 1.5em;
+    width: 1.5em;
   }
 }
 
