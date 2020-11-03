@@ -1958,6 +1958,7 @@ en:
         uncomplete_title: "Restart step"
       attachments:
         modified_label: "Modified:"
+        manage: "Manage"
         add: "ADD"
         sort_by: "SORT BY"
         attachments_view_mode: "ALL ATTACHMENTS VIEW SIZE"

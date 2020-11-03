@@ -315,19 +315,6 @@
     });
   }
 
-  function initAssetViewModeToggle(){
-    $('.attachments-actions').on('click', '.attachments-view-mode', function () {
-      var viewModeBtn = $(this);
-      $.post(viewModeBtn.closest('.dropdown-menu').data('view-mode-url'), {
-        assets_view_mode: viewModeBtn.data('assets-view-mode')
-      }, function(result) {
-        viewModeBtn.closest('.dropdown-menu').find('.attachments-view-mode').removeClass('selected');
-        viewModeBtn.addClass('selected');
-        viewModeBtn.closest('.step').find('.attachments').html(result.html)
-      })
-    })
-  }
-
   function initCallBacks() {
     if (typeof(applyCreateWopiFileCallback) === 'function') applyCreateWopiFileCallback();
     applyCheckboxCallBack();
@@ -336,8 +323,6 @@
     applyMoveStepCallBack();
     initDeleteStep();
     TinyMCE.highlight();
-    reorderAttachmentsInit();
-    initAssetViewModeToggle();
   }
 
   /*
@@ -620,9 +605,84 @@
     Comments.init();
   }
 
-  // Reorder attachments
+    // On init
+  initCallBacks();
+  initHandsOnTable($(document));
+  expandAllSteps();
+  TinyMCE.highlight();
+  SmartAnnotation.preventPropagation('.atwho-user-popover');
+  newStepHandler();
+
+  $(function () {
+    $("[data-action='collapse-steps']").click(function () {
+      $('.step .panel-collapse').collapse('hide');
+    });
+    $("[data-action='expand-steps']").click(expandAllSteps);
+  });
+
+  global.initHandsOnTable = initHandsOnTable;
+})(window);
+
+
+(function() {
+  var StepInlineAttachments = (function() {
+    function elementVisible(element) {
+      var elementRect = element.getBoundingClientRect();
+      var elementHeight = $(element).height()
+      return elementRect.top + (elementHeight / 2) >= 0 &&
+             elementRect.bottom <= (window.innerHeight || document.documentElement.clientHeight) + (elementHeight / 2)
+    }
+
+    function showElement(element) {
+      setTimeout(() => {
+        var iframeUrl = $(element).find('.iframe-placeholder').data('iframe-url');
+        if (elementVisible(element) && iframeUrl) {
+          $(element).find('.iframe-placeholder')
+            .replaceWith(`<iframe class="active-iframe-preview" src="${iframeUrl}"></iframe>`);
+          $(element).addClass('active').attr('data-created-at', new Date().getTime());
+        }
+      },500)
+    }
+
+    function hideElement(element) {
+      var iframeUrl = $(element).find('.active-iframe-preview').attr('src');
+      if (!elementVisible(element) && iframeUrl) {
+        $(element).find('iframe')
+          .replaceWith(`<div class="iframe-placeholder" data-iframe-url="${iframeUrl}"></div>`);
+        $(element).removeClass('active').attr('data-created-at', null)
+        return true
+      }
+      return false
+    }
+
+    function checkForAttachmentsState() {
+      $.each($('.inline-attachment-container'), function(i, element){
+        showElement(element)
+      })
+      if ($('.active-iframe-preview').length > 5){
+        let sortedIframes = $('.inline-attachment-container.active').sort(function(a, b) {
+          return +a.dataset.createdAt - +b.dataset.createdAt;
+        })
+        $.each(sortedIframes, function(i, element){
+          if (hideElement(element)) return false
+        })
+      }
+    }
+
+    return {
+      init: () => {
+        windowScrollEvents['StepInlineAttachments'] = StepInlineAttachments.scrollEvent;
+      },
+      scrollEvent: () => {
+        checkForAttachmentsState()
+      }
+    }
+
+  })();
+
+    // Reorder attachments
   function reorderAttachmentsInit() {
-    $('.attachments-actions').on('click', '.change-order', function(e){
+    $('#steps').on('click', '.attachments-actions .change-order', function(e){
       var orderDropdown = $(this).closest('.dropdown-menu');
       var assetsContainer = $(`.attachments[data-step-id=${orderDropdown.data('step-id')}]`)
       var order = $(this).data('order');
@@ -636,7 +696,7 @@
       });
     })
 
-    $('.attachments').on('reorder', function() {
+    $('#steps').on('reorder', '.attachments', function() {
       var assets = $(`.attachments[data-step-id=${$(this).data('step-id')}] .asset`);
       var order = $(this).data('order');
       var sortedAssets = assets.sort(function(a, b) {
@@ -665,84 +725,20 @@
     $('.attachments').trigger('reorder');
   }
 
-  function initInlineAttachment() {
-    $(document).on('scroll', 'body', function(){
-      console.log(1)
+  function initAssetViewModeToggle(){
+    $('#steps').on('click', '.attachments-actions .attachments-view-mode', function () {
+      var viewModeBtn = $(this);
+      $.post(viewModeBtn.closest('.dropdown-menu').data('view-mode-url'), {
+        assets_view_mode: viewModeBtn.data('assets-view-mode')
+      }, function(result) {
+        viewModeBtn.closest('.dropdown-menu').find('.attachments-view-mode').removeClass('selected');
+        viewModeBtn.addClass('selected');
+        viewModeBtn.closest('.step').find('.attachments').html(result.html)
+      })
     })
   }
 
-    // On init
-  initCallBacks();
-  initHandsOnTable($(document));
-  expandAllSteps();
-  TinyMCE.highlight();
-  SmartAnnotation.preventPropagation('.atwho-user-popover');
-  newStepHandler();
-
-  $(function () {
-    $("[data-action='collapse-steps']").click(function () {
-      $('.step .panel-collapse').collapse('hide');
-    });
-    $("[data-action='expand-steps']").click(expandAllSteps);
-  });
-
-  global.initHandsOnTable = initHandsOnTable;
-})(window);
-
-
-var StepInlineAttachments = (function() {
-  function elementVisible(element) {
-    var elementRect = element.getBoundingClientRect();
-    var elementHeight = $(element).height()
-    return elementRect.top + (elementHeight / 2) >= 0 &&
-           elementRect.bottom <= (window.innerHeight || document.documentElement.clientHeight) + (elementHeight / 2)
-  }
-
-  function showElement(element) {
-    setTimeout(() => {
-      var iframeUrl = $(element).find('.iframe-placeholder').data('iframe-url');
-      if (elementVisible(element) && iframeUrl) {
-        $(element).find('.iframe-placeholder')
-          .replaceWith(`<iframe class="active-iframe-preview" src="${iframeUrl}"></iframe>`);
-        $(element).addClass('active').attr('data-created-at', new Date().getTime());
-      }
-    },500)
-  }
-
-  function hideElement(element) {
-    var iframeUrl = $(element).find('.active-iframe-preview').attr('src');
-    if (!elementVisible(element) && iframeUrl) {
-      $(element).find('iframe')
-        .replaceWith(`<div class="iframe-placeholder" data-iframe-url="${iframeUrl}"></div>`);
-      $(element).removeClass('active').attr('data-created-at', null)
-      return true
-    }
-    return false
-  }
-
-  function checkForAttachmentsState() {
-    $.each($('.inline-attachment-container'), function(i, element){
-      showElement(element)
-    })
-    if ($('.active-iframe-preview').length > 5){
-      let sortedIframes = $('.inline-attachment-container.active').sort(function(a, b) {
-        return +a.dataset.createdAt - +b.dataset.createdAt;
-      })
-      $.each(sortedIframes, function(i, element){
-        if (hideElement(element)) return false
-      })
-    }
-  }
-
-  return {
-    init: () => {
-      windowScrollEvents['StepInlineAttachments'] = StepInlineAttachments.scrollEvent;
-    },
-    scrollEvent: () => {
-      checkForAttachmentsState()
-    }
-  }
-
+  StepInlineAttachments.init();
+  reorderAttachmentsInit();
+  initAssetViewModeToggle();
 })();
-
-StepInlineAttachments.init();
