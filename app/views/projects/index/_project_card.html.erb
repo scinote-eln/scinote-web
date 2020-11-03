@@ -1,0 +1,50 @@
+<div class="card project-card">
+  <div class="checkbox-cell">
+    <div class="sci-checkbox-container">
+      <input value="1" type="checkbox" class="sci-checkbox select-all">
+      <span class="sci-checkbox-label"></span>
+    </div>
+  </div>
+  <div class="project-name-cell">
+    <a href="<%= project_url(project) %>">
+      <h3 class="name">
+        <%= project.name %>
+      </h3>
+    </a>
+  </div>
+
+  <div class="data-row start-date-row">
+    <div class="start-date-cell">
+      <span class="card-label"><%= t('projects.index.card.start_date') %></span>
+      <span class="value"> <%= l(project.created_at, format: :full_with_comma) %></span>
+    </div>
+    <div class="information information-cell"><i class="fas fa-info-circle"></i></div>
+  </div>
+
+  <div class="data-row visibility-cell">
+    <span class="card-label"><%= t('projects.index.card.visibility') %></span>
+    <span class="value">
+    <% if project.hidden? %>
+      <%= t('projects.index.hidden') %>
+    <% else %>
+      <%= t('projects.index.visible') %>
+    <% end %>
+    </span>
+  </div>
+
+  <div class="data-row user-cell">
+    <span class="card-label"><%= t('projects.index.card.users') %></span>
+    <div class="value">
+
+      <% project.users.each do |user| %>
+        <span class="global-avatar-container">
+          <%= image_tag avatar_path(user, :icon_small) %>
+        </span>
+      <% end %>
+
+      <span class="new-user">
+        <i class="fas fa-plus"></i>
+      </span>
+    </div>
+  </div>
+</div>

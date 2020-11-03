@@ -11,36 +11,20 @@
   <%= render partial: 'projects/index/modals/manage_users' %>
   <%= render partial: 'projects/index/modals/export_projects' %>
 
-  <div class="content-pane" id="projects-index">
-    <div id="projects-absent" style="display:none">
-      <div class="jumbotron text-center" style="margin-top:12%">
-        <strong><%= t 'projects.index.no_projects.text' %></strong>
-        <% if can_create_projects?(current_team) %>
-          <h2><strong><%= t 'projects.index.no_projects.title' %></strong></h2>
-          <br/>
-          <a class="btn btn-primary new-project-btn">
-            <span class="fas fa-plus"></span>
-            <span class="hidden-xs"><%= t('projects.index.no_projects.create_new_button') %></span>
-          </a>
-        <% else %>
-          <p><strong><%= t 'projects.index.no_projects.no_permission_title' %></strong></p>
-        <% end %>
-      </div>
-    </div>
-
-    <div id="projects-present" style="display:none">
-      <%= render partial: 'projects/index/toolbar' %>
-
-      <div class="tab-content">
-        <div class="tab-pane active"
-             id="projects-cards-view"
-             data-projects-url="<%= cards_projects_path %>"
-             data-projects-sidebar-url="<%= projects_sidebar_path %>">
+  <div class="projects-container">
+    <div class="cards-wrapper" id="cards-wrapper" data-projects-cards-url="<%= cards_projects_url %>">
+      <div class="table-header">
+        <div class="table-header-cell select-all-checkboxes">
+          <div class="sci-checkbox-container">
+            <input value="1" type="checkbox" class="sci-checkbox select-all">
+            <span class="sci-checkbox-label"></span>
+          </div>
         </div>
-
-        <div class="tab-pane" id="projects-table-view">
-          <%= render partial: "projects/index/team_projects_table" %>
-        </div>
+        <div class="table-header-cell"><%= t('.card.name') %></div>
+        <div class="table-header-cell"><%= t('.card.start_date') %></div>
+        <div class="table-header-cell"><%= t('.card.visibility') %></div>
+        <div class="table-header-cell"><%= t('.card.users') %></div>
+        <div class="table-header-cell"></div>
       </div>
     </div>
   </div>

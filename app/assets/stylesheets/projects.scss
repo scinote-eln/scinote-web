@@ -653,3 +653,259 @@ li.module-hover {
     }
   }
 }
+
+
+// New projects page
+.projects-container {
+  margin-top: 50px;
+
+  .cards-wrapper {
+    align-items: center;
+    display: grid;
+    grid-auto-rows: 11em;
+    grid-column-gap: 1em;
+    grid-row-gap: 1em;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    width: 100%;
+
+    .table-header {
+      display: none;
+    }
+
+    .card {
+      background-color: $color-white;
+      color: $color-volcano;
+      display: flex;
+      flex-wrap: wrap;
+      height: 100%;
+      padding: .5em 1em;
+      position: relative;
+      width: 100%;
+
+      .checkbox-cell {
+        align-items: center;
+        display: flex;
+        height: 2em;
+        justify-content: center;
+        left: 1em;
+        position: absolute;
+        top: .5em;
+        width: 2em;
+      }
+
+      .user-cell {
+        .global-avatar-container {
+          height: 28px;
+          margin-right: .25em;
+          width: 28px;
+        }
+
+        .value {
+          display: flex;
+          flex-wrap: wrap;
+        }
+
+      }
+
+      &.folder-card {
+        text-align: center;
+
+        .icon-folder {
+          color: $brand-primary-light;
+          font-size: 5em;
+          width: 100%;
+        }
+
+        .name {
+          color: $color-volcano;
+          font-weight: bold;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          width: 100%;
+        }
+
+        .description {
+          color: $color-volcano;
+          width: 100%;
+        }
+      }
+
+      &.project-card {
+        border-radius: 4px;
+        box-shadow: $flyout-shadow;
+
+        .project-name-cell {
+          align-items: center;
+          display: flex;
+          height: 2em;
+          margin: 0 .5em 0 2.5em;
+          overflow: hidden;
+
+          a {
+            color: inherit;
+            overflow: hidden;
+            white-space: nowrap;
+          }
+
+          .name {
+            line-height: 2em;
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+
+        .data-row {
+          @include font-button;
+          align-items: center;
+          color: $color-black;
+          display: flex;
+          flex-basis: 100%;
+          line-height: 2em;
+
+          .information {
+            margin-left: auto;
+          }
+
+          .card-label {
+            color: $color-volcano;
+            width: 5em;
+          }
+
+          .new-user {
+            align-items: center;
+            background: $color-concrete;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            height: 2em;
+            justify-content: center;
+            width: 2em;
+
+            fas.fa-plus {
+              color: $color-silver-chalice;
+            }
+          }
+        }
+      }
+    }
+
+    &.list {
+      grid-auto-flow: dense;
+      grid-auto-rows: 2em 1px;
+      grid-row-gap: .5em;
+      grid-template-columns: max-content 1fr 1fr 1fr 1fr max-content;
+
+      .card {
+        display: contents;
+
+        // Border element
+        &:after {
+          background: $color-concrete;
+          content: "";
+          display: inline-block;
+          grid-column: 1/-1;
+          height: 1px;
+        }
+
+        .card-label {
+          display: none;
+        }
+
+        .name {
+          @include font-button;
+          color: $brand-primary-light;
+          font-weight: normal;
+        }
+
+        .checkbox-cell {
+          position: initial;
+        }
+
+        &.folder-card {
+          text-align: left;
+
+          .icon-folder {
+            display: none;
+            font-size: 2em;
+            margin: 0;
+          }
+
+          .name {
+            grid-column: 5 span;
+
+            &:before {
+              @include font-awesome;
+              content: "\f07b";
+              margin-right: .25em;
+            }
+          }
+
+          .description {
+            display: none;
+          }
+        }
+
+        &.project-card {
+          .start-date-row {
+            display: contents;
+          }
+
+          .checkbox-cell {
+            grid-column: 1;
+          }
+
+          .project-name-cell {
+            grid-column: 2;
+            margin: 0;
+
+            a:hover {
+              color: $brand-primary-light;
+            }
+          }
+
+          .start-date-cell {
+            grid-column: 3;
+          }
+
+          .visibility-cell {
+            grid-column: 4;
+          }
+
+          .user-cell {
+            grid-column: 5;
+          }
+
+          .information-cell {
+            grid-column: 6;
+          }
+        }
+      }
+
+      .table-header {
+        display: contents;
+
+        .table-header-cell {
+          align-items: center;
+          border: 1px solid $color-white;
+          display: flex;
+          height: 3em;
+          margin: 0 0 2.5em -.5em;
+          padding: 0 .5em;
+          width: calc(100% + 1em);
+
+          &.select-all-checkboxes {
+            justify-content: center;
+            position: relative;
+          }
+        }
+
+        & > * {
+          background-color: $color-concrete;
+        }
+      }
+    }
+  }
+}
+

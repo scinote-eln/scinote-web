@@ -478,10 +478,11 @@
 
   function loadCardsView() {
     // Load HTML with projects list
-    var viewContainer = $('#projects-cards-view');
-    animateSpinner(viewContainer, true);
+    var viewContainer = $('#cards-wrapper');
+    // animateSpinner(viewContainer, true);
+
     $.ajax({
-      url: $('#projects-cards-view').data('projects-url'),
+      url: viewContainer.data('projects-cards-url'),
       type: 'GET',
       dataType: 'json',
       data: {
@@ -489,16 +490,16 @@
         sort: projectsViewSort
       },
       success: function(data) {
-        viewContainer.html(data.html);
-        if (data.count === 0 && projectsViewFilter !== 'archived') {
-          $('#projects-present').hide();
-          $('#projects-absent').show();
-        } else {
-          $('#projects-absent').hide();
-          $('#projects-present').show();
-        }
-        initFormSubmitLinks(viewContainer);
-        init();
+        viewContainer.append(data.html);
+        // if (data.count === 0 && projectsViewFilter !== 'archived') {
+        //   $('#projects-present').hide();
+        //   $('#projects-absent').show();
+        // } else {
+        //   $('#projects-absent').hide();
+        //   $('#projects-present').show();
+        // }
+        // initFormSubmitLinks(viewContainer);
+        // init();
       },
       error: function() {
         viewContainer.html('Error loading project list');
