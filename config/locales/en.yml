@@ -411,6 +411,9 @@ en:
     update:
       success_flash: "Project <strong>%{name}</strong> successfully updated."
       error_flash: "Project <strong>%{name}</strong> not updated."
+    move:
+      success_flash: "You have successfully moved the selected project(s)/folder(s) to another folder."
+      error_flash: "An error occurred. The selected project(s)/folder(s) have not been moved."
     archive:
       success_flash: "Project <strong>%{name}</strong> successfully archived."
       error_flash: "Project <strong>%{name}</strong> not archived."
