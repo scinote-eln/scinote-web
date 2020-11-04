@@ -186,4 +186,23 @@ module ApplicationHelper
   def wopi_enabled?
     ENV['WOPI_ENABLED'] == 'true'
   end
+
+  # Check whether the wopi file can be edited and return appropriate response
+  def wopi_file_edit_button_status(asset)
+    file_ext = asset.file_name.split('.').last
+    if Constants::WOPI_EDITABLE_FORMATS.include?(file_ext)
+      edit_supported = true
+      title = ''
+    else
+      edit_supported = false
+      title = if Constants::FILE_TEXT_FORMATS.include?(file_ext)
+                I18n.t('assets.wopi_supported_text_formats_title')
+              elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
+                I18n.t('assets.wopi_supported_table_formats_title')
+              else
+                I18n.t('assets.wopi_supported_presentation_formats_title')
+              end
+    end
+    return edit_supported, title
+  end
 end

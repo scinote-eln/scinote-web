@@ -603,6 +603,7 @@ Rails.application.routes.draw do
     patch 'files/:id/toggle_view_mode', to: 'assets#toggle_view_mode', as: 'toggle_view_mode'
     post 'files/:id/update_image', to: 'assets#update_image',
                                    as: 'update_asset_image'
+    delete 'files/:id/', to: 'assets#destroy', as: 'asset_destroy'
     post 'files/create_wopi_file',
          to: 'assets#create_wopi_file',
          as: 'create_wopi_file'
