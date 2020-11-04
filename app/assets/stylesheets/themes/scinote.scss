@@ -54,12 +54,12 @@ table {
   margin-left: 15px;
 }
 
-#projectsToolbar {
+.projects-toolbar {
   margin-bottom: 15px;
-}
 
-#projectsToolbar .form-group {
-  width: 100%;
+  .form-group {
+    width: 100%;
+  }
 }
 
 .form-inline {
