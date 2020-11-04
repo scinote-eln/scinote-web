@@ -18,9 +18,9 @@ class MarvinJsAssetsController < ApplicationController
     if result[:asset] && marvin_params[:object_type] == 'Step'
       render json: {
         html: render_to_string(partial: 'assets/asset.html.erb', locals: {
-          asset: result[:asset],
-          gallery_view_id: marvin_params[:object_id]
-        })
+                                 asset: result[:asset],
+                                 gallery_view_id: marvin_params[:object_id]
+                               })
       }
     elsif result[:asset] && marvin_params[:object_type] == 'Result'
       @my_module = result[:object].my_module
