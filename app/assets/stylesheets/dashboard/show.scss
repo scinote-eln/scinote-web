@@ -110,14 +110,12 @@
 }
 
 @media (max-width: 700px) {
-
   .dashboard-view {
     --dashboard-widgets-gap: 15px;
   }
 
   .dashboard-container {
     --widget-header-size: 72px;
-    grid-auto-rows: auto;
 
     .basic-widget {
       &.large-widget,
