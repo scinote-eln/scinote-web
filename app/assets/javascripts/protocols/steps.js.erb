@@ -203,10 +203,9 @@
 
   function toggleButtons(show) {
     if (show) {
-      $("[data-action='new-step']:first").show();
+      $("[data-action='new-step']").show();
       $("[data-action='edit-step']").show();
       if ($('#steps .step').length > 0) {
-        $("[data-action='new-step']:last").show();
         $(".expand-all-steps").show();
       }
     } else {
