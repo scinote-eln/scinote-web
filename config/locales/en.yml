@@ -2088,6 +2088,7 @@ en:
     task_completed: "%{user} completed task %{module}. %{date} | Project: %{project} | Experiment: %{experiment}"
 
   assets:
+    file_deleted: "File \"%{file_name}\" deleted"
     head_title:
       edit: "SciNote | %{file_name} | Edit"
       view: "SciNote | %{file_name} | View"

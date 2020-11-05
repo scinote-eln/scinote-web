@@ -178,7 +178,7 @@ class AssetsController < ApplicationController
 
   def destroy
     if @asset.destroy
-      render json: { flash: 'File deleted' }
+      render json: { flash: I18n.t("assets.file_deleted", file_name: @asset.file_name ) }
     else
       render json: {}, status: :unprocessable_entity
     end

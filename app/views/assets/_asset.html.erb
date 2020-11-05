@@ -1,17 +1,7 @@
 <%
 gallery_view_id = nil unless defined? gallery_view_id
-
-unless defined? deletable
-  deletable = if asset.step.present?
-                true
-              else
-                false
-              end
-end
-
-unless defined? editable
-  editable = true
-end
+deletable = true if asset.step.present?
+editable = true
 
 partial_locals = {
   asset: asset,
