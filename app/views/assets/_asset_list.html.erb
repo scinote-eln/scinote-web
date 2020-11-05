@@ -16,7 +16,11 @@
       gallery_view_id: gallery_view_id,
       preview_url: asset_file_preview_path(asset)
     } do %>
-    <%= asset.file_name %>
+    <% if asset.file.attached? && asset&.file&.metadata['asset_type'] %>
+      <%= asset.file.metadata['name'] %>
+    <% else %>
+      <%= asset.file_name %>
+    <% end %>
   <% end %>
   <div class="file-metadata">
     <span><%= t('assets.placeholder.modified_label') %> <%= l(asset.updated_at, format: :full_date) if asset.updated_at %></span>

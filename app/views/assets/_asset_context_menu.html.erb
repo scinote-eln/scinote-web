@@ -49,7 +49,7 @@
         <li role="separator" class="divider"></li>
       <% end %>
     <% end %>
-    <li class="divider-label"><%= t("protocols.steps.attachments.attachments_view_mode") %></li>
+    <li class="divider-label"><%= t("assets.context_menu.set_view_size") %></li>
     <% ['inline', 'thumbnail', 'list'].each do |view_mode| %>
       <li>
         <a class="change-preview-type <%= 'selected' if view_mode == asset.view_mode %>"  data-preview-type="<%= view_mode %>">

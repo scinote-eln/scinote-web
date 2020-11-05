@@ -15,7 +15,11 @@
             gallery_view_id: gallery_view_id,
             preview_url: asset_file_preview_path(asset)
           } do %>
-        <%= asset.file_name %>
+        <% if asset.file.attached? && asset&.file&.metadata['asset_type'] %>
+          <%= asset.file.metadata['name'] %>
+        <% else %>
+          <%= asset.file_name %>
+        <% end %>
       <% end %>
       <div class="file-metadata">
         <span><%= t('assets.placeholder.modified_label') %> <%= l(asset.updated_at, format: :full_date) if asset.updated_at %></span>
@@ -25,7 +29,7 @@
     <%= render partial: 'assets/asset_context_menu.html.erb', locals: { asset: asset, deletable: deletable, editable: editable } %>
   </div>
   <% if wopi_enabled? && wopi_file?(asset) %>
-    <div class="iframe-placeholder" data-iframe-url="<%= 'ya.ru' || asset.get_action_url(current_user, 'embedview') %>"></div>
+    <div class="iframe-placeholder" data-iframe-url="<%= asset.get_action_url(current_user, 'embedview') %>"></div>
   <% elsif asset.previewable? %>
     <div class="image-container">
       <%= image_tag asset.large_preview,

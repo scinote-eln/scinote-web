@@ -2125,7 +2125,7 @@ en:
       edit_in_scinote: "Edit in SciNote"
       edit_in_marvinjs: "Edit in Marvin JS"
     context_menu:
-      set_view_size: "Set view size"
+      set_view_size: "SET VIEW SIZE"
       delete: "Delete file"
       inline_html: "<i class=\"fas fa-desktop\"></i> Extra large"
       thumbnail_html: "<i class=\"fas fa-th-large\"></i> Medium"
