@@ -542,7 +542,7 @@
             expandStep($new_step);
             toggleButtons(true);
             SmartAnnotation.preventPropagation('.atwho-user-popover');
-
+            $new_step.find('.attachments').trigger('reorder');
             tinyMCE.editors.step_description_textarea.remove();
             MarvinJsEditor.initNewButton('.new-marvinjs-upload-button');
 
@@ -623,63 +623,7 @@
   global.initHandsOnTable = initHandsOnTable;
 })(window);
 
-
 (function() {
-  var StepInlineAttachments = (function() {
-    function elementVisible(element) {
-      var elementRect = element.getBoundingClientRect();
-      var elementHeight = $(element).height()
-      return elementRect.top + (elementHeight / 2) >= 0 &&
-             elementRect.bottom <= (window.innerHeight || document.documentElement.clientHeight) + (elementHeight / 2)
-    }
-
-    function showElement(element) {
-      setTimeout(() => {
-        var iframeUrl = $(element).find('.iframe-placeholder').data('iframe-url');
-        if (elementVisible(element) && iframeUrl) {
-          $(element).find('.iframe-placeholder')
-            .replaceWith(`<iframe class="active-iframe-preview" src="${iframeUrl}"></iframe>`);
-          $(element).addClass('active').attr('data-created-at', new Date().getTime());
-        }
-      },500)
-    }
-
-    function hideElement(element) {
-      var iframeUrl = $(element).find('.active-iframe-preview').attr('src');
-      if (!elementVisible(element) && iframeUrl) {
-        $(element).find('iframe')
-          .replaceWith(`<div class="iframe-placeholder" data-iframe-url="${iframeUrl}"></div>`);
-        $(element).removeClass('active').attr('data-created-at', null)
-        return true
-      }
-      return false
-    }
-
-    function checkForAttachmentsState() {
-      $.each($('.inline-attachment-container'), function(i, element){
-        showElement(element)
-      })
-      if ($('.active-iframe-preview').length > 5){
-        let sortedIframes = $('.inline-attachment-container.active').sort(function(a, b) {
-          return +a.dataset.createdAt - +b.dataset.createdAt;
-        })
-        $.each(sortedIframes, function(i, element){
-          if (hideElement(element)) return false
-        })
-      }
-    }
-
-    return {
-      init: () => {
-        windowScrollEvents['StepInlineAttachments'] = StepInlineAttachments.scrollEvent;
-      },
-      scrollEvent: () => {
-        checkForAttachmentsState()
-      }
-    }
-
-  })();
-
     // Reorder attachments
   function reorderAttachmentsInit() {
     $('#steps').on('click', '.attachments-actions .change-order', function(e){
@@ -719,7 +663,7 @@
         element.style.order = i
       })
     })
-    .on('DOMSubtreeModified', function() {
+    .on('DOMSubtreeModified', '.attachments', function() {
       $(this).trigger('reorder');
     })
     $('.attachments').trigger('reorder');
@@ -738,7 +682,6 @@
     })
   }
 
-  StepInlineAttachments.init();
   reorderAttachmentsInit();
   initAssetViewModeToggle();
 })();

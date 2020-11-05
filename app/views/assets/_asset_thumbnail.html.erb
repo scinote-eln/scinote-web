@@ -13,21 +13,6 @@
             gallery_view_id: gallery_view_id,
             preview_url: asset_file_preview_path(asset)
           } do %>
-      <div class="change-preview-type"
-           data-preview-type="inline"
-           data-toggle-view-url="<%= toggle_view_mode_path(asset) %>">
-        <i class="fas fa-desktop"></i>
-      </div>
-      <div class="change-preview-type"
-           data-preview-type="list"
-           data-toggle-view-url="<%= toggle_view_mode_path(asset) %>">
-        <i class="fas fa-list"></i>
-      </div>
-      <div class="change-preview-type"
-           data-preview-type="thumbnail"
-           data-toggle-view-url="<%= toggle_view_mode_path(asset) %>">
-        <i class="fas fa-th-large"></i>
-      </div>
     <div class="attachment-preview <%= asset.file.attached? ? asset.file.metadata['asset_type'] : '' %>">
       <% if asset.previewable? %>
         <%= image_tag asset.medium_preview,
@@ -50,4 +35,5 @@
       <%= number_to_human_size(asset.file_size) %>
     </div>
   <% end %>
+  <%= render partial: 'assets/asset_context_menu.html.erb', locals: { asset: asset, deletable: deletable, editable: editable } %>
 </div>

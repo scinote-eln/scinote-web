@@ -17,8 +17,8 @@ class AssetsController < ApplicationController
   helper_method :wopi_file_edit_button_status
 
   before_action :load_vars, except: :create_wopi_file
-  before_action :check_read_permission, except: :edit
-  before_action :check_edit_permission, only: :edit
+  before_action :check_read_permission, except: %i(edit destroy)
+  before_action :check_edit_permission, only: %i(edit destroy)
 
   def file_preview
     render json: { html: render_to_string(
@@ -176,6 +176,14 @@ class AssetsController < ApplicationController
     }, status: :ok
   end
 
+  def destroy
+    if @asset.destroy
+      render json: { flash: I18n.t('assets.file_deleted', file_name: @asset.file_name ) }
+    else
+      render json: {}, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def load_vars
@@ -201,25 +209,6 @@ class AssetsController < ApplicationController
 
   def check_edit_permission
     render_403 unless can_manage_asset?(@asset)
-  end
-
-  # Check whether the wopi file can be edited and return appropriate response
-  def wopi_file_edit_button_status(asset)
-    file_ext = asset.file_name.split('.').last
-    if Constants::WOPI_EDITABLE_FORMATS.include?(file_ext)
-      edit_supported = true
-      title = ''
-    else
-      edit_supported = false
-      title = if Constants::FILE_TEXT_FORMATS.include?(file_ext)
-                I18n.t('assets.wopi_supported_text_formats_title')
-              elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
-                I18n.t('assets.wopi_supported_table_formats_title')
-              else
-                I18n.t('assets.wopi_supported_presentation_formats_title')
-              end
-    end
-    return edit_supported, title
   end
 
   def append_wd_params(url)

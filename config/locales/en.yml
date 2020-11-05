@@ -2088,6 +2088,7 @@ en:
     task_completed: "%{user} completed task %{module}. %{date} | Project: %{project} | Experiment: %{experiment}"
 
   assets:
+    file_deleted: "File \"%{file_name}\" deleted"
     head_title:
       edit: "SciNote | %{file_name} | Edit"
       view: "SciNote | %{file_name} | View"
@@ -2124,6 +2125,13 @@ en:
     file_preview:
       edit_in_scinote: "Edit in SciNote"
       edit_in_marvinjs: "Edit in Marvin JS"
+    context_menu:
+      set_view_size: "SET VIEW SIZE"
+      delete: "Delete file"
+      inline_html: "<i class=\"fas fa-desktop\"></i> Extra large"
+      thumbnail_html: "<i class=\"fas fa-th-large\"></i> Medium"
+      list_html: "<i class=\"fas fa-list\"></i> List"
+
   atwho:
     no_results:
       projects: "Projects with this name were not found"

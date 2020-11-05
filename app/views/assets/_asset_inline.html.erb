@@ -15,28 +15,18 @@
             gallery_view_id: gallery_view_id,
             preview_url: asset_file_preview_path(asset)
           } do %>
-        <%= asset.file_name %>
+        <% if asset.file.attached? && asset&.file&.metadata['asset_type'] %>
+          <%= asset.file.metadata['name'] %>
+        <% else %>
+          <%= asset.file_name %>
+        <% end %>
       <% end %>
       <div class="file-metadata">
         <span><%= t('assets.placeholder.modified_label') %> <%= l(asset.updated_at, format: :full_date) if asset.updated_at %></span>
         <span><%= t('assets.placeholder.size_label', size: number_to_human_size(asset.file_size)) %></span>
       </div>
     </div>
-    <div class="change-preview-type"
-         data-preview-type="inline"
-         data-toggle-view-url="<%= toggle_view_mode_path(asset) %>">
-      <i class="fas fa-desktop"></i>
-    </div>
-    <div class="change-preview-type"
-         data-preview-type="list"
-         data-toggle-view-url="<%= toggle_view_mode_path(asset) %>">
-      <i class="fas fa-list"></i>
-    </div>
-    <div class="change-preview-type"
-         data-preview-type="thumbnail"
-         data-toggle-view-url="<%= toggle_view_mode_path(asset) %>">
-      <i class="fas fa-th-large"></i>
-    </div>
+    <%= render partial: 'assets/asset_context_menu.html.erb', locals: { asset: asset, deletable: deletable, editable: editable } %>
   </div>
   <% if wopi_enabled? && wopi_file?(asset) %>
     <div class="iframe-placeholder" data-iframe-url="<%= asset.get_action_url(current_user, 'embedview') %>"></div>
