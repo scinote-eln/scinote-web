@@ -87,7 +87,7 @@ function checklistsValidator(ev, checklists, editMode) {
         }
       })
 
-      var $checklistInput = $checklist.find(".checklist_name");
+      var $checklistInput = $checklist.find(".checklist-name");
       // In edit mode, checklist's name can't be blank if any items present
       var allowBlankChklstName = !(anyChecklistItemFilled || editMode);
       var textLimitMin = allowBlankChklstName ? 0 : 1;
