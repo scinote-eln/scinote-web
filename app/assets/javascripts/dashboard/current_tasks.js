@@ -32,10 +32,14 @@ var DasboardCurrentTasksWidget = (function() {
       && (state.project_id.length === 0)
       && (state.sort === 'due_date')
       && (state.experiment_id.length === 0)) {
-      $('.filter-container').removeClass('filters-applied');
+      resetMarkAppliedFilters();
     } else {
       $('.filter-container').addClass('filters-applied');
     }
+  }
+
+  function resetMarkAppliedFilters() {
+    $('.filter-container').removeClass('filters-applied');
   }
 
   function initInfiniteScroll() {
@@ -72,10 +76,8 @@ var DasboardCurrentTasksWidget = (function() {
       mode: $('.current-tasks-navbar .active').data('mode')
     };
 
-    if (filterState) {
-      markAppliedFilters(filterState);
-      localStorage.setItem('current_tasks_filters_per_team/' + teamId, JSON.stringify(filterState));
-    }
+    markAppliedFilters(filterState);
+    localStorage.setItem('current_tasks_filters_per_team/' + teamId, JSON.stringify(filterState));
   }
 
   function filterStateLoad() {
@@ -107,6 +109,7 @@ var DasboardCurrentTasksWidget = (function() {
       }
     } else {
       dropdownSelector.selectValues(statusFilter, getDefaultStatusValues());
+      resetMarkAppliedFilters();
     }
   }
 
@@ -136,6 +139,13 @@ var DasboardCurrentTasksWidget = (function() {
       PerfectSb().update_all();
       if (newList) InfiniteScroll.resetScroll('.current-tasks-list');
       animateSpinner($currentTasksList, false);
+    }).error(function(error) {
+      // If error is 403, it is possible that the user was removed from project/experiment,
+      // so clear local storage and re-init with default filter state
+      if (error.status === 403) {
+        localStorage.removeItem('current_tasks_filters_per_team/' + $('.current-tasks-filters').data('team-id'));
+        init();
+      }
     });
   }
 
@@ -239,17 +249,19 @@ var DasboardCurrentTasksWidget = (function() {
     });
   }
 
-  return {
-    init: () => {
-      if ($('.current-tasks-widget').length) {
-        initNavbar();
-        initFilters();
-        initSearch();
-        filterStateLoad();
-        loadCurrentTasksList();
-        initInfiniteScroll();
-      }
+  function init() {
+    if ($('.current-tasks-widget').length) {
+      initNavbar();
+      initFilters();
+      initSearch();
+      filterStateLoad();
+      loadCurrentTasksList();
+      initInfiniteScroll();
     }
+  }
+
+  return {
+    init: init
   };
 }());
 
