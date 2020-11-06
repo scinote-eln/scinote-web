@@ -31,11 +31,16 @@ var DasboardCurrentTasksWidget = (function() {
     $('.filter-container').removeClass('filters-applied');
   }
 
-  function markAppliedFilters(state) {
-    if (state.statuses.sort().toString() === getDefaultStatusValues().sort().toString()
-      && (state.project_id.length === 0)
-      && (state.sort === 'due_date')
-      && (state.experiment_id.length === 0)) {
+  function filtersEnabled() {
+    return dropdownSelector.getData(experimentFilter).length > 0
+           || dropdownSelector.getData(projectFilter).length > 0
+           || (dropdownSelector.getValues(sortFilter) !== 'due_date')
+           || dropdownSelector.getValues(statusFilter).sort().toString()
+              !== getDefaultStatusValues().sort().toString();
+  }
+
+  function markAppliedFilters() {
+    if (!filtersEnabled()) {
       resetMarkAppliedFilters();
     } else {
       $('.filter-container').addClass('filters-applied');
@@ -60,12 +65,6 @@ var DasboardCurrentTasksWidget = (function() {
     });
   }
 
-  function filtersEnabled() {
-    return dropdownSelector.getValues(experimentFilter)
-           || dropdownSelector.getValues(projectFilter)
-           || $('.current-tasks-widget .task-search-field').val().length > 0;
-  }
-
   function filterStateSave() {
     var teamId = $('.current-tasks-filters').data('team-id');
     var filterState = {
@@ -75,8 +74,7 @@ var DasboardCurrentTasksWidget = (function() {
       experiment_id: dropdownSelector.getData(experimentFilter),
       mode: $('.current-tasks-navbar .active').data('mode')
     };
-
-    markAppliedFilters(filterState);
+    markAppliedFilters();
     localStorage.setItem('current_tasks_filters_per_team/' + teamId, JSON.stringify(filterState));
   }
 
@@ -103,7 +101,7 @@ var DasboardCurrentTasksWidget = (function() {
         // Select saved navbar state
         $('.current-tasks-navbar .navbar-link').removeClass('active');
         $('.current-tasks-navbar').find(`[data-mode='${parsedFilterState.mode}']`).addClass('active');
-        markAppliedFilters(parsedFilterState);
+        markAppliedFilters();
       } catch (e) {
         dropdownSelector.selectValues(statusFilter, getDefaultStatusValues());
         resetMarkAppliedFilters();
@@ -129,7 +127,7 @@ var DasboardCurrentTasksWidget = (function() {
       $currentTasksList.empty();
       // Toggle empty state
       if (result.data.length === 0) {
-        if (filtersEnabled()) {
+        if (filtersEnabled() || $('.current-tasks-widget .task-search-field').val().length > 0) {
           $currentTasksList.append($('#dashboard-current-task-no-search-results').html());
         } else {
           $currentTasksList.append($('#dashboard-current-task-no-tasks').html());
