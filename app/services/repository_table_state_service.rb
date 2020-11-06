@@ -15,6 +15,7 @@ class RepositoryTableStateService
   def load_state
     loaded = RepositoryTableState.where(user: @user, repository: @repository).take
     loaded = create_default_state unless loaded&.state&.present? &&
+                                         loaded.state['length'].to_i < 1 &&
                                          loaded.state['order'] &&
                                          loaded.state['columns'] &&
                                          loaded.state['ColReorder'] &&
