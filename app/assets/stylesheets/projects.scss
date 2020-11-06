@@ -657,7 +657,7 @@ li.module-hover {
 
 // New projects page
 .projects-container {
-  margin-top: 50px;
+  margin-top: 35px;
 
   .cards-wrapper {
     align-items: center;
@@ -796,6 +796,7 @@ li.module-hover {
       grid-auto-rows: 2em 1px;
       grid-row-gap: .5em;
       grid-template-columns: max-content 1fr 1fr 1fr 1fr max-content;
+      margin: 40px 0 0 6px;
 
       .card {
         display: contents;

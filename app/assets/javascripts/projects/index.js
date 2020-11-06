@@ -385,9 +385,9 @@
     initEditProjectButton($('.panel-project'));
     initArchiveRestoreButton($('.panel-project'));
 
-    $('#projects-cards-view').on('click', '.project-card-selector', function() {
+    $('#cards-wrapper').on('click', '.card-selector', function() {
       var projectsToolbar = $('#projectsToolbar');
-      var projectCard = $(this).closest('.panel-project');
+      var projectCard = $(this).closest('.card');
       var projectId = projectCard.data('id');
       // Determine whether ID is in the list of selected project IDs
       var index = $.inArray(projectId, selectedProjects);
@@ -490,16 +490,9 @@
         sort: projectsViewSort
       },
       success: function(data) {
+        viewContainer.find('.card').remove();
         viewContainer.append(data.html);
-        // if (data.count === 0 && projectsViewFilter !== 'archived') {
-        //   $('#projects-present').hide();
-        //   $('#projects-absent').show();
-        // } else {
-        //   $('#projects-absent').hide();
-        //   $('#projects-present').show();
-        // }
-        // initFormSubmitLinks(viewContainer);
-        // init();
+        init();
       },
       error: function() {
         viewContainer.html('Error loading project list');
@@ -761,26 +754,10 @@
 
   $('.projects-view-mode-switch a').off().on('shown.bs.tab', function(event) {
     if ($(event.target).data('mode') === 'table') {
-      // table tab
-      $('#sortMenu').hide();
-      $('#projects-absent').hide();
-      $('#projects-present').show();
-      if ($.isEmptyObject(TABLE)) {
-        dataTableInit();
-      } else if (projectsViewFilterChanged) {
-        TABLE.draw();
-      } else {
-        updateSelectedRows();
-      }
+      $('#cards-wrapper').addClass('list');
     } else {
-      // cards tab
-      $('#sortMenu').show();
-      if (projectsViewFilterChanged) {
-        loadCardsView();
-      }
-      updateSelectedCards();
+      $('#cards-wrapper').removeClass('list');
     }
-    projectsViewFilterChanged = false;
   });
 
   initProjectsViewFilter();
