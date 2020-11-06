@@ -38,16 +38,15 @@ class Repository < RepositoryBase
   scope :archived, -> { where(archived: true) }
 
   scope :accessible_by_teams, lambda { |teams|
-    left_outer_joins(:team_repositories)
-      .where('repositories.team_id IN (?) '\
-             'OR team_repositories.team_id IN (?) '\
-             'OR repositories.permission_level = ? '\
-             'OR repositories.permission_level = ? ',
-             teams,
-             teams,
-             Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:shared_read],
-             Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:shared_write])
-      .distinct
+    accessible_repositories = left_outer_joins(:team_repositories)
+    accessible_repositories =
+      accessible_repositories
+      .where(team: teams)
+      .or(accessible_repositories.where(team_repositories: { team: teams }))
+      .or(accessible_repositories
+            .where(permission_level: [Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:shared_read],
+                                      Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:shared_write]]))
+    accessible_repositories.distinct
   }
 
   scope :assigned_to_project, lambda { |project|
@@ -75,7 +74,7 @@ class Repository < RepositoryBase
     repository = nil,
     options = {}
   )
-    repositories = repository&.id || Repository.accessible_by_teams(user.teams.pluck(:id)).pluck(:id)
+    repositories = repository&.id || Repository.accessible_by_teams(user.teams).pluck(:id)
 
     readable_rows = RepositoryRow.joins(:repository).where(repository_id: repositories)
 
