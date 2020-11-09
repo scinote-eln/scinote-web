@@ -298,6 +298,7 @@ Rails.application.routes.draw do
 
       collection do
         get 'cards'
+        get ':project_folder_id/cards', to: 'projects#cards'
       end
     end
 

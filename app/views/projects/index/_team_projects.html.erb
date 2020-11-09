@@ -4,6 +4,6 @@
   <% end %>
 <% end %>
 
-<% %w(FakeFolder#1 FakeFolder#2 FakeFolder#3 FakeFolder#4).each  do |folder| %>
+<% project_folders.each  do |folder| %>
   <%= render partial: 'projects/index/folder_card', locals: { folder: folder } %>
 <% end %>
