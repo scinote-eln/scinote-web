@@ -330,6 +330,13 @@ en:
       options_header: "Options"
       comment_placeholder: "Your Message"
       more_comments: "More Comments"
+      card:
+        start_date: "Start date"
+        visibility: "Visibility"
+        users: "Users"
+        name: "Name"
+      folder:
+        description: "%{projects_count} projects | %{folders_count} folders"
       modal_new_project:
         modal_title: "Create new project"
         create: "Create"

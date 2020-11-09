@@ -385,9 +385,9 @@
     initEditProjectButton($('.panel-project'));
     initArchiveRestoreButton($('.panel-project'));
 
-    $('#projects-cards-view').on('click', '.project-card-selector', function() {
+    $('#cards-wrapper').on('click', '.card-selector', function() {
       var projectsToolbar = $('#projectsToolbar');
-      var projectCard = $(this).closest('.panel-project');
+      var projectCard = $(this).closest('.card');
       var projectId = projectCard.data('id');
       // Determine whether ID is in the list of selected project IDs
       var index = $.inArray(projectId, selectedProjects);
@@ -478,10 +478,11 @@
 
   function loadCardsView() {
     // Load HTML with projects list
-    var viewContainer = $('#projects-cards-view');
-    animateSpinner(viewContainer, true);
+    var viewContainer = $('#cards-wrapper');
+    // animateSpinner(viewContainer, true);
+
     $.ajax({
-      url: $('#projects-cards-view').data('projects-url'),
+      url: viewContainer.data('projects-cards-url'),
       type: 'GET',
       dataType: 'json',
       data: {
@@ -489,15 +490,8 @@
         sort: projectsViewSort
       },
       success: function(data) {
-        viewContainer.html(data.html);
-        if (data.count === 0 && projectsViewFilter !== 'archived') {
-          $('#projects-present').hide();
-          $('#projects-absent').show();
-        } else {
-          $('#projects-absent').hide();
-          $('#projects-present').show();
-        }
-        initFormSubmitLinks(viewContainer);
+        viewContainer.find('.card').remove();
+        viewContainer.append(data.html);
         init();
       },
       error: function() {
@@ -760,26 +754,10 @@
 
   $('.projects-view-mode-switch a').off().on('shown.bs.tab', function(event) {
     if ($(event.target).data('mode') === 'table') {
-      // table tab
-      $('#sortMenu').hide();
-      $('#projects-absent').hide();
-      $('#projects-present').show();
-      if ($.isEmptyObject(TABLE)) {
-        dataTableInit();
-      } else if (projectsViewFilterChanged) {
-        TABLE.draw();
-      } else {
-        updateSelectedRows();
-      }
+      $('#cards-wrapper').addClass('list');
     } else {
-      // cards tab
-      $('#sortMenu').show();
-      if (projectsViewFilterChanged) {
-        loadCardsView();
-      }
-      updateSelectedCards();
+      $('#cards-wrapper').removeClass('list');
     }
-    projectsViewFilterChanged = false;
   });
 
   initProjectsViewFilter();

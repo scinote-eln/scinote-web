@@ -226,7 +226,7 @@
         user-select: none;
 
         &:hover {
-          background: $brand-primary-light;
+          background: $brand-focus-light;
         }
       }
 
@@ -240,7 +240,7 @@
           background: $color-concrete;
 
           &:hover {
-            background: $brand-primary-light;
+            background: $brand-focus-light;
           }
 
           &::before {
