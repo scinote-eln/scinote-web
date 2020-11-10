@@ -4,6 +4,10 @@
 /* Index page */
 .report-table {
   margin-top: 20px;
+
+  .report-row.selected {
+    background: $color-alto;
+  }
 }
 
 /* New page navbar */
