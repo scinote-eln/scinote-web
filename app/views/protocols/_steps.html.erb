@@ -15,7 +15,8 @@
         <a href="#"
            class="btn btn-primary"
            data-action="new-step"
-           data-href="<%= new_protocol_step_path(protocol_id: @protocol.id, format: :json) %>">
+           data-href="<%= new_protocol_step_path(protocol_id: @protocol.id, format: :json) %>"
+           style="<%= @protocol.steps.empty? ? 'display: none;' : '' %>">
           <span class="fas fa-plus" aria-hidden="true"></span>
           <span class="hidden-xs"><%=t "protocols.steps.new_step" %></span>
         </a>
@@ -34,8 +35,7 @@
       <a href="#"
          class="btn btn-primary"
          data-action="new-step"
-         data-href="<%= new_protocol_step_path(protocol_id: @protocol.id, format: :json) %>"
-         style="<%= @protocol.steps.empty? ? 'display: none;' : '' %>">
+         data-href="<%= new_protocol_step_path(protocol_id: @protocol.id, format: :json) %>">
         <span class="fas fa-plus" aria-hidden="true"></span>
         <span class="hidden-xs"><%=t "protocols.steps.new_step" %></span>
       </a>
