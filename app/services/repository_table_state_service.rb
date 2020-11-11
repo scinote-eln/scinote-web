@@ -15,6 +15,7 @@ class RepositoryTableStateService
   def load_state
     loaded = RepositoryTableState.where(user: @user, repository: @repository).take
     loaded = create_default_state unless loaded&.state&.present? &&
+                                         loaded.state['length'].to_i.positive? &&
                                          loaded.state['order'] &&
                                          loaded.state['columns'] &&
                                          loaded.state['ColReorder'] &&
@@ -46,16 +47,15 @@ class RepositoryTableStateService
   private
 
   def generate_default_state
-    default_columns_num = Constants::REPOSITORY_TABLE_DEFAULT_STATE['length']
+    default_columns_num = Constants::REPOSITORY_TABLE_DEFAULT_STATE['columns'].length
 
     # This state should be strings-only
     state = Constants::REPOSITORY_TABLE_DEFAULT_STATE.deep_dup
-    repository.repository_columns.each_with_index do |_, index|
+    @repository.repository_columns.each_with_index do |_, index|
       real_index = default_columns_num + index
       state['columns'][real_index] = Constants::REPOSITORY_TABLE_STATE_CUSTOM_COLUMN_TEMPLATE
       state['ColReorder'] << real_index
     end
-    state['length'] = state['columns'].length
     state['time'] = Time.new.to_i
     state
   end
