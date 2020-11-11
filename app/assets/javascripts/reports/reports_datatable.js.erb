@@ -63,9 +63,11 @@
     $('input[name="select_all"]').change(function() {
       if($(this).is(':checked')) {
         $("[data-action='toggle']").prop('checked', true);
+        $('.report-row').addClass('selected');
         addAllItems();
       } else {
         $("[data-action='toggle']").prop('checked', false);
+        $('.report-row').removeClass('selected');
         removeAllItems();
       }
       updateButtons();
@@ -99,9 +101,11 @@
     $("[data-action='toggle']").change(function() {
       var id = $(this).attr('data-report-id');
       if($(this).is(':checked')) {
+        $(this).closest('.report-row').addClass('selected');
         CHECKED_REPORTS.push(id);
       } else {
         var index = CHECKED_REPORTS.indexOf(id);
+        $(this).closest('.report-row').removeClass('selected');
         if(index != -1) {
         	CHECKED_REPORTS.splice(index, 1);
         }
