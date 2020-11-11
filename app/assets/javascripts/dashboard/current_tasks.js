@@ -27,6 +27,10 @@ var DasboardCurrentTasksWidget = (function() {
     return values;
   }
 
+  function resetMarkAppliedFilters() {
+    $('.filter-container').removeClass('filters-applied');
+  }
+
   function markAppliedFilters(state) {
     if (state.statuses.sort().toString() === getDefaultStatusValues().sort().toString()
       && (state.project_id.length === 0)
@@ -36,10 +40,6 @@ var DasboardCurrentTasksWidget = (function() {
     } else {
       $('.filter-container').addClass('filters-applied');
     }
-  }
-
-  function resetMarkAppliedFilters() {
-    $('.filter-container').removeClass('filters-applied');
   }
 
   function initInfiniteScroll() {
@@ -106,6 +106,7 @@ var DasboardCurrentTasksWidget = (function() {
         markAppliedFilters(parsedFilterState);
       } catch (e) {
         dropdownSelector.selectValues(statusFilter, getDefaultStatusValues());
+        resetMarkAppliedFilters();
       }
     } else {
       dropdownSelector.selectValues(statusFilter, getDefaultStatusValues());
@@ -141,10 +142,12 @@ var DasboardCurrentTasksWidget = (function() {
       animateSpinner($currentTasksList, false);
     }).error(function(error) {
       // If error is 403, it is possible that the user was removed from project/experiment,
-      // so clear local storage and re-init with default filter state
+      // so clear local storage and filter state
       if (error.status === 403) {
         localStorage.removeItem('current_tasks_filters_per_team/' + $('.current-tasks-filters').data('team-id'));
-        init();
+        $('.current-tasks-filters .clear-button').trigger('click');
+        resetMarkAppliedFilters();
+        loadCurrentTasksList();
       }
     });
   }
@@ -219,8 +222,6 @@ var DasboardCurrentTasksWidget = (function() {
       $('.current-tasks-filters').dropdown('toggle');
       e.stopPropagation();
       e.preventDefault();
-      loadCurrentTasksList(true);
-      filterStateSave();
     });
 
     $('.filter-container').on('hide.bs.dropdown', () => {
@@ -249,19 +250,17 @@ var DasboardCurrentTasksWidget = (function() {
     });
   }
 
-  function init() {
-    if ($('.current-tasks-widget').length) {
-      initNavbar();
-      initFilters();
-      initSearch();
-      filterStateLoad();
-      loadCurrentTasksList();
-      initInfiniteScroll();
-    }
-  }
-
   return {
-    init: init
+    init: () => {
+      if ($('.current-tasks-widget').length) {
+        initNavbar();
+        initFilters();
+        initSearch();
+        filterStateLoad();
+        loadCurrentTasksList();
+        initInfiniteScroll();
+      }
+    }
   };
 }());
 
