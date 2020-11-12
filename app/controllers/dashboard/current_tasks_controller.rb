@@ -122,8 +122,8 @@ module Dashboard
     end
 
     def check_task_view_permissions
-      render_403 if @project && !can_read_project?(@project)
-      render_403 if @experiment && !can_read_experiment?(@experiment)
+      render_403 && return if @project && !can_read_project?(@project)
+      render_403 && return if @experiment && !can_read_experiment?(@experiment)
     end
   end
 end

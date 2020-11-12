@@ -27,12 +27,16 @@ var DasboardCurrentTasksWidget = (function() {
     return values;
   }
 
+  function resetMarkAppliedFilters() {
+    $('.filter-container').removeClass('filters-applied');
+  }
+
   function markAppliedFilters(state) {
     if (state.statuses.sort().toString() === getDefaultStatusValues().sort().toString()
       && (state.project_id.length === 0)
       && (state.sort === 'due_date')
       && (state.experiment_id.length === 0)) {
-      $('.filter-container').removeClass('filters-applied');
+      resetMarkAppliedFilters();
     } else {
       $('.filter-container').addClass('filters-applied');
     }
@@ -72,10 +76,8 @@ var DasboardCurrentTasksWidget = (function() {
       mode: $('.current-tasks-navbar .active').data('mode')
     };
 
-    if (filterState) {
-      markAppliedFilters(filterState);
-      localStorage.setItem('current_tasks_filters_per_team/' + teamId, JSON.stringify(filterState));
-    }
+    markAppliedFilters(filterState);
+    localStorage.setItem('current_tasks_filters_per_team/' + teamId, JSON.stringify(filterState));
   }
 
   function filterStateLoad() {
@@ -104,9 +106,11 @@ var DasboardCurrentTasksWidget = (function() {
         markAppliedFilters(parsedFilterState);
       } catch (e) {
         dropdownSelector.selectValues(statusFilter, getDefaultStatusValues());
+        resetMarkAppliedFilters();
       }
     } else {
       dropdownSelector.selectValues(statusFilter, getDefaultStatusValues());
+      resetMarkAppliedFilters();
     }
   }
 
@@ -136,6 +140,15 @@ var DasboardCurrentTasksWidget = (function() {
       PerfectSb().update_all();
       if (newList) InfiniteScroll.resetScroll('.current-tasks-list');
       animateSpinner($currentTasksList, false);
+    }).error(function(error) {
+      // If error is 403, it is possible that the user was removed from project/experiment,
+      // so clear local storage and filter state
+      if (error.status === 403) {
+        localStorage.removeItem('current_tasks_filters_per_team/' + $('.current-tasks-filters').data('team-id'));
+        $('.current-tasks-filters .clear-button').trigger('click');
+        resetMarkAppliedFilters();
+        loadCurrentTasksList();
+      }
     });
   }
 
@@ -209,8 +222,6 @@ var DasboardCurrentTasksWidget = (function() {
       $('.current-tasks-filters').dropdown('toggle');
       e.stopPropagation();
       e.preventDefault();
-      loadCurrentTasksList(true);
-      filterStateSave();
     });
 
     $('.filter-container').on('hide.bs.dropdown', () => {
