@@ -17,7 +17,7 @@ class AssetsController < ApplicationController
   helper_method :wopi_file_edit_button_status
 
   before_action :load_vars, except: :create_wopi_file
-  before_action :check_read_permission, except: %i(edit destroy)
+  before_action :check_read_permission, except: %i(edit destroy create_wopi_file)
   before_action :check_edit_permission, only: %i(edit destroy)
 
   def file_preview
@@ -204,11 +204,11 @@ class AssetsController < ApplicationController
   end
 
   def check_read_permission
-    render_403 unless can_read_asset?(@asset)
+    render_403 and return unless can_read_asset?(@asset)
   end
 
   def check_edit_permission
-    render_403 unless can_manage_asset?(@asset)
+    render_403 and return unless can_manage_asset?(@asset)
   end
 
   def append_wd_params(url)

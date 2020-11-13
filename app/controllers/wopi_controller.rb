@@ -1,6 +1,4 @@
-# frozen_string_literal: true
-
-class WopiController < ApplicationController
+class WopiController < ActionController::Base
   include WopiUtil
 
   skip_before_action :verify_authenticity_token
