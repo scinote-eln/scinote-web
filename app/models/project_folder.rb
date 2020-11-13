@@ -18,6 +18,12 @@ class ProjectFolder < ApplicationRecord
 
   scope :top_level, -> { where(parent_folder: nil) }
 
+  def inner_projects
+    project_folders.map do |inner_folder|
+      projects + inner_folder.inner_projects
+    end.flatten
+  end
+
   private
 
   def inherit_team_from_parent_folder

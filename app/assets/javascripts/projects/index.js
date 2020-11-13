@@ -40,8 +40,9 @@
 
   var TABLE;
 
-  // Array with selected project IDs shared between both views
+  // Arrays with selected project and folder IDs shared between both views
   var selectedProjects = [];
+  var selectedProjectFolders = [];
 
   /**
    * Initialize the JS for new project modal to work.
@@ -227,7 +228,8 @@
         type: 'GET',
         dataType: 'json',
         data: {
-          project_ids: selectedProjects
+          project_ids: selectedProjects,
+          project_folder_ids: selectedProjectFolders
         },
         success: function(data) {
           // Update modal title
@@ -270,7 +272,8 @@
         type: 'POST',
         dataType: 'json',
         data: {
-          project_ids: selectedProjects
+          project_ids: selectedProjects,
+          project_folder_ids: selectedProjectFolders
         },
         success: function(data) {
           // Hide modal and show success flash
@@ -385,9 +388,24 @@
     initEditProjectButton($('.panel-project'));
     initArchiveRestoreButton($('.panel-project'));
 
-    $('#cards-wrapper').on('click', '.card-selector', function() {
+    $('#cards-wrapper').on('click', '.folder-card-selector', function() {
+      let folderCard = $(this).closest('.folder-card');
+      let folderId = folderCard.data('id');
+      let index = $.inArray(folderId, selectedProjectFolders);
+
+      // If checkbox is checked and row ID is not in list of selected folder IDs
+      if (this.checked && index === -1) {
+        selectedProjectFolders.push(folderId);
+        exportProjectsBtn.removeAttr('disabled');
+      // Otherwise, if checkbox is not checked and ID is in list of selected IDs
+      } else if (!this.checked && index !== -1) {
+        selectedProjectFolders.splice(index, 1);
+      }
+    });
+
+    $('#cards-wrapper').on('click', '.project-card-selector', function() {
       var projectsToolbar = $('#projectsToolbar');
-      var projectCard = $(this).closest('.card');
+      var projectCard = $(this).closest('.project-card');
       var projectId = projectCard.data('id');
       // Determine whether ID is in the list of selected project IDs
       var index = $.inArray(projectId, selectedProjects);

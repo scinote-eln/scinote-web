@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class TeamsController < ApplicationController
-before_action :load_vars, only: %i(export_projects export_projects_modal)
-before_action :check_export_projects_permissions, only: %i(export_projects_modal export_projects)
+  before_action :load_vars, only: %i(export_projects export_projects_modal)
+  before_action :check_export_projects_permissions, only: %i(export_projects_modal export_projects)
 
   def export_projects
     if current_user.has_available_exports?
@@ -64,22 +66,30 @@ before_action :check_export_projects_permissions, only: %i(export_projects_modal
   end
 
   def export_projects_params
-    params.permit(:id, project_ids: []).to_h
+    params.permit(:id, project_ids: [], project_folder_ids: [])
   end
 
   def check_export_projects_permissions
     render_403 unless can_read_team?(@team)
 
+    @exp_projects = []
     if export_projects_params[:project_ids]
-      @exp_projects = Project.where(id: export_projects_params[:project_ids])
-      @exp_projects.each do |project|
-        render_403 unless can_export_project?(current_user, project)
+      @exp_projects = @team.project.where(id: export_projects_params[:project_ids]).to_a
+    end
+    if export_projects_params[:project_folder_ids]
+      folders = @team.project_folders.where(id: export_projects_params[:project_folder_ids])
+      folders.each do |folder|
+        @exp_projects += folder.inner_projects
       end
+    end
+
+    @exp_projects.each do |project|
+      return render_403 unless can_export_project?(current_user, project)
     end
   end
 
   def generate_export_projects_zip
-    ids = @exp_projects.where(team_id: @team).index_by(&:id)
+    ids = @exp_projects.index_by(&:id)
 
     options = { team: @team }
     zip = TeamZipExport.create(user: current_user)
