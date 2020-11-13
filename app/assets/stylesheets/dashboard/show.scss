@@ -67,7 +67,6 @@
       width: 100%;
 
       .widget-placeholder {
-        color: $color-alto;
         padding: 24px;
 
         .widget-placeholder-title {
@@ -76,6 +75,7 @@
 
         .widget-placeholder-description {
           @include font-main;
+          color: $color-alto;
         }
       }
     }
