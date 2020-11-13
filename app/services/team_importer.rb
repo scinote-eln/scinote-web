@@ -7,6 +7,7 @@ class TeamImporter
     @user_mappings = {}
     @notification_mappings = {}
     @repository_mappings = {}
+    @project_folder_mappings = {}
     @project_mappings = {}
     @repository_column_mappings = {}
     @experiment_mappings = {}
@@ -78,6 +79,7 @@ class TeamImporter
 
       create_protocol_keywords(team_json['protocol_keywords'], team)
       create_protocols(team_json['protocols'], nil, team)
+      create_project_folders(team_json['project_folders'], team)
       create_projects(team_json['projects'], team)
       create_repositories(team_json['repositories'], team)
 
@@ -427,6 +429,9 @@ class TeamImporter
       repository.id = nil
       repository.team = team
       repository.created_by_id = find_user(repository.created_by_id)
+      repository.archived_by_id = find_user(repository.archived_by_id)
+      repository.restored_by_id = find_user(repository.restored_by_id)
+      repository.discarded_by_id = find_user(repository.discarded_by_id)
       repository.save!
       @repository_mappings[orig_repository_id] = repository.id
       @repository_counter += 1
@@ -494,6 +499,8 @@ class TeamImporter
       repository_row.id = nil
       repository_row.repository = repository
       repository_row.created_by_id = find_user(repository_row.created_by_id)
+      repository_row.archived_by_id = find_user(repository_row.archived_by_id)
+      repository_row.restored_by_id = find_user(repository_row.restored_by_id)
       repository_row.last_modified_by_id =
         find_user(repository_row.last_modified_by_id)
       repository_row.save!
@@ -537,6 +544,27 @@ class TeamImporter
     end
   end
 
+  def create_project_folders(project_folders_json, team)
+    puts 'Creating project folders...'
+    project_folders_json.each do |project_folder_json|
+      project_folder = ProjectFolder.new(project_folder_json)
+      orig_project_folder_id = project_folder.id
+      project_folder.id = nil
+      project_folder.parent_folder_id = nil
+      project_folder.team = team
+      project_folder.save!
+      @project_folder_mappings[orig_project_folder_id] = project_folder.id
+    end
+
+    # Update parent relations
+    project_folders_json.each do |project_folder_json|
+      next unless project_folder_json['parent_folder_id']
+
+      ProjectFolder.find(@project_folder_mappings[project_folder_json['id'].to_i])
+                   .update!(parent_folder_id: @project_folder_mappings[project_folder_json['parent_folder_id'].to_i])
+    end
+  end
+
   def create_projects(projects_json, team)
     puts 'Creating projects...'
     projects_json.each do |project_json|
@@ -548,6 +576,7 @@ class TeamImporter
       project.last_modified_by_id = find_user(project.last_modified_by_id)
       project.archived_by_id = find_user(project.archived_by_id)
       project.restored_by_id = find_user(project.restored_by_id)
+      project.project_folder_id = @project_folder_mappings[project.project_folder_id]
       project.save!
       @project_mappings[orig_project_id] = project.id
       @project_counter += 1
