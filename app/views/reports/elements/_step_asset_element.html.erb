@@ -10,13 +10,17 @@
       <div class="pull-left file-name">
         <% if defined? export_all and export_all %>
           <a href="<%= path %>">
-            <em><%=t 'projects.reports.elements.step_asset.file_name',
-                     file: filename %></em>
+            <em><%= t('projects.reports.elements.step_asset.file_name', file: filename) %></em>
           </a>
         <% else %>
-          <em><%=t 'projects.reports.elements.step_asset.file_name',
-                   file: truncate(asset.file_name,
-                                  length: Constants::FILENAME_TRUNCATION_LENGTH) %></em>
+          <em>
+            <%= t('projects.reports.elements.step_asset.file_name',
+                  file: truncate(asset.file_name, length: Constants::FILENAME_TRUNCATION_LENGTH)) %>
+            <a href="<%= asset_download_url(asset) %>" class="download-link">
+              <%= t('projects.reports.elements.download') %>
+            </a>
+          </em>
+
         <% end %>
       </div>
       <div class="pull-left user-time">

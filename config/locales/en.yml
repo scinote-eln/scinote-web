@@ -444,6 +444,7 @@ en:
           appended_image: "Appended image - %{name}"
           appended_table: "Appended table"
       elements:
+        download: "[Download]"
         modals:
           project_contents:
             head_title: "Add contents to report"
