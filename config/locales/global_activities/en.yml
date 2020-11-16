@@ -176,6 +176,7 @@ en:
       export_inventory_items_assigned_to_task_html: "%{user} exported inventory item(s) assigned to task %{my_module} from inventory %{repository}: Live version."
       export_inventory_snapshot_items_assigned_to_task_html: "%{user} exported inventory item(s) assigned to task %{my_module} from inventory %{repository_snapshot}: Snapshot of %{created_at}."
       change_status_on_task_flow_html: "%{user} changed status from <strong>%{my_module_status_old}</strong> to <strong>%{my_module_status_new}</strong> for task %{my_module}."
+      move_project_html: "%{user} moved %{project} project to <strong>%{project_folder_dest}</strong> folder from <strong>%{project_folder_src}</strong> folder"
 
     activity_name:
       create_project: "Project created"
@@ -317,6 +318,7 @@ en:
       export_inventory_items_assigned_to_task: "Task-assigned inventory items exported (live version)"
       export_inventory_snapshot_items_assigned_to_task: "Task-assigned inventory items exported (snapshot)"
       change_status_on_task_flow: "Task status changed"
+      move_project: "Project moved"
 
     activity_group:
       projects: "Projects"
