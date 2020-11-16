@@ -1,0 +1,10 @@
+<% projects_by_folder.each do |folder, projects| %>
+  <% if folder.present? %>
+    <h3><%= folder.name %></h3>
+  <% end %>
+  <% projects.each do |project| %>
+    <% cache [current_user, project] do %>
+      <%= render partial: 'projects/index/project_card', locals: { project: project } %>
+    <% end %>
+  <% end %>
+<% end %>
