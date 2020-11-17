@@ -133,7 +133,8 @@ module ReportActions
       end
     end
     if in_params? :step_assets
-      step.assets.each do |asset|
+      sort_value = step.current_view_state(current_user).state.dig('assets', 'sort')
+      step.assets.order(view_mode: :desc).sort_assets(sort_value).each do |asset|
         res << generate_new_el(false)
         res << generate_el(
           'reports/elements/step_asset_element.html.erb', asset: asset
