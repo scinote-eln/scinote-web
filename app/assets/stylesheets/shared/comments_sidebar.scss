@@ -1,0 +1,166 @@
+// scss-lint:disable SelectorDepth NestingDepth
+
+.comments-sidebar {
+  --comments-sidebar-width: 280px;
+  animation-timing-function: $timing-function-sharp;
+  height: calc(100vh - var(--navbar-height));
+  position: fixed;
+  right: 0;
+  top: var(--navbar-height);
+  transition: width .3s;
+  width: 0;
+  z-index: 1000;
+
+  &.open {
+    width: var(--comments-sidebar-width);
+  }
+
+  .sidebar-content {
+    background: $color-concrete;
+    border-left: 1px solid $color-white;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+    width: var(--comments-sidebar-width);
+
+    .sidebar-header {
+      align-items: center;
+      border-bottom: $border-default;
+      display: flex;
+      flex-basis: 5em;
+      flex-shrink: 0;
+      padding: 1em;
+
+      .comments-subject-title {
+        flex-grow: 1;
+        height: 2em;
+      }
+
+      .close-btn {
+        flex-shrink: 0;
+      }
+    }
+
+    .sidebar-body {
+      flex-basis: calc(100% - 10em);
+      flex-grow: 1;
+      overflow: auto;
+      padding: 1em;
+    }
+
+    .sidebar-footer {
+      border-top: $border-default;
+      flex-basis: 5em;
+      flex-grow: 1;
+      flex-shrink: 0;
+      padding: 1em;
+
+      .comment-input-container {
+        background: $color-white;
+        border-radius: $border-radius-tag;
+        padding-right: 2.5em;
+        position: relative;
+
+        .comment-input-field {
+          animation-timing-function: $timing-function-sharp;
+          border: 0;
+          display: block;
+          line-height: 1.25em;
+          max-height: 160px;
+          outline: none;
+          padding: .5em;
+          transition: height .3s;
+          width: 100%;
+        }
+
+        .send-comment {
+          color: $brand-primary;
+          display: inline-block;
+          line-height: 2.5em;
+          position: absolute;
+          right: 0;
+          text-align: center;
+          top: 0;
+          width: 2.5em;
+        }
+      }
+    }
+  }
+
+  .loading-placeholder {
+    display: none;
+
+    @mixin placeholder-avatar {
+      @include pulse-animation;
+      background: $color-alto;
+      border-radius: 50%;
+      content: "";
+      display: inline-block;
+      height: 1.5em;
+      width: 1.5em;
+    }
+
+    @mixin placeholder-name {
+      @include pulse-animation;
+      background: $color-alto;
+      content: "";
+      display: inline-block;
+      height: 1em;
+      margin: .25em;
+      width: 6em;
+    }
+
+    .comment-placeholder {
+      padding-bottom: 1em;
+
+      .comment-body-placeholder {
+        @include pulse-animation;
+        background: $color-alto;
+        height: 5em;
+      }
+
+      &.left {
+        margin-right: 1em;
+
+        .comment-user-placeholder {
+          &::before {
+            @include placeholder-avatar;
+          }
+
+          &::after {
+            @include placeholder-name;
+          }
+        }
+      }
+
+      &.right {
+        margin-left: 1em;
+
+        .comment-user-placeholder {
+          text-align: right;
+
+          &::before {
+            @include placeholder-name;
+          }
+
+          &::after {
+            @include placeholder-avatar;
+          }
+        }
+      }
+    }
+  }
+
+  &.loading {
+    .comments-subject-title {
+      @include pulse-animation;
+      background: $color-alto;
+    }
+
+    .loading-placeholder {
+      display: initial;
+    }
+  }
+}
+
