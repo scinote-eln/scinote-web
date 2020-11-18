@@ -4,21 +4,22 @@
   <div class="panel panel-default">
     <div class="panel-heading step-heading">
       <div class="left-floats">
-        <button data-action="uncomplete-step"
-                data-link-url="<%= toggle_step_state_step_path(step)%>"
-                class="btn icon-btn btn-light toggle-step-complete
-                <%= 'hidden' unless step.completed? %>"
-                <%= 'disabled' if !can_complete_or_checkbox_step?(@protocol) || preview %>>
-          <span class="fas fa-check-circle"></span>
-        </button>
-        <button data-action="complete-step"
-                data-link-url="<%= toggle_step_state_step_path(step)%>"
-                class="btn icon-btn btn-light toggle-step-complete
-                <%= 'hidden' if step.completed? %>"
-                <%= 'disabled' if !can_complete_or_checkbox_step?(@protocol) || preview %>>
-          <span class="far fa-check-circle"></span>
-        </button>
-
+        <% unless import %>
+          <button data-action="uncomplete-step"
+                  data-link-url="<%= toggle_step_state_step_path(step)%>"
+                  class="btn icon-btn btn-light toggle-step-complete
+                  <%= 'hidden' unless step.completed? %>"
+                  <%= 'disabled' if !can_complete_or_checkbox_step?(@protocol) || preview %>>
+            <span class="fas fa-check-circle"></span>
+          </button>
+          <button data-action="complete-step"
+                  data-link-url="<%= toggle_step_state_step_path(step)%>"
+                  class="btn icon-btn btn-light toggle-step-complete
+                  <%= 'hidden' if step.completed? %>"
+                  <%= 'disabled' if !can_complete_or_checkbox_step?(@protocol) || preview %>>
+            <span class="far fa-check-circle"></span>
+          </button>
+        <% end %>
         <a class="step-panel-collapse-link"
            href="#step-panel-<%= step.id || step.position %>"
            data-toggle="collapse"
