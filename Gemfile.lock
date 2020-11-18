@@ -195,7 +195,6 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    commit_param_routing (0.0.1)
     concurrent-ruby (1.1.6)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
@@ -623,7 +622,6 @@ DEPENDENCIES
   capybara
   capybara-email
   caracal-rails
-  commit_param_routing
   cucumber-rails (~> 1.8)
   database_cleaner
   deface (~> 1.0)

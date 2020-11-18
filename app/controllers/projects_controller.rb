@@ -1,5 +1,4 @@
 class ProjectsController < ApplicationController
-  include SampleActions
   include RenamingUtil
   include TeamsHelper
   include InputSanitizeHelper
@@ -7,13 +6,11 @@ class ProjectsController < ApplicationController
   before_action :switch_team_with_param, only: :index
   before_action :load_vars, only: %i(show edit update
                                      notifications reports
-                                     samples experiment_archive
-                                     delete_samples samples_index)
-  before_action :load_projects_tree, only: %i(sidebar show samples archive
+                                     experiment_archive)
+  before_action :load_projects_tree, only: %i(sidebar show archive
                                               experiment_archive)
   before_action :check_view_permissions, only: %i(show reports notifications
-                                                  samples experiment_archive
-                                                  samples_index)
+                                                  experiment_archive)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
   before_action :set_inline_name_editing, only: %i(show experiment_archive)
@@ -61,6 +58,17 @@ class ProjectsController < ApplicationController
         @projects = ProjectsOverviewService
                     .new(@current_team, current_user, params)
                     .projects_datatable
+      end
+    end
+  end
+
+  def dt_state_load
+    respond_to do |format|
+      format.json do
+        render json: {
+          state: current_team.current_view_state(current_user)
+            .state.dig('projects', 'table')
+        }
       end
     end
   end
@@ -257,40 +265,8 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def samples
-    @samples_index_link = samples_index_project_path(@project, format: :json)
-    @team = @project.team
-  end
-
   def experiment_archive
     current_team_switch(@project.team)
-  end
-
-  def samples_index
-    @team = @project.team
-    @user = current_user
-    respond_to do |format|
-      format.html
-      format.json do
-        render json: ::SampleDatatable.new(view_context,
-                                           @team,
-                                           @project,
-                                           nil,
-                                           nil,
-                                           @user)
-      end
-    end
-  end
-
-  def dt_state_load
-    respond_to do |format|
-      format.json do
-        render json: {
-          state: current_team.current_view_state(current_user)
-            .state.dig('projects', 'table')
-        }
-      end
-    end
   end
 
   private

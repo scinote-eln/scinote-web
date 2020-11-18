@@ -937,19 +937,6 @@ ul.content-activities {
   }
 }
 
-.step {
-  .panel-heading a[data-toggle] {
-    color: inherit;
-  }
-
-  &.not-completed {
-    .badge-num > span.badge {
-      background-color: $color-silver;
-    }
-  }
-
-}
-
 .well {
   background-color: $color-white;
 }
@@ -1239,10 +1226,6 @@ ul.content-activities {
     top: 6px;
     max-width: 78%;
   }
-}
-
-#samples_length {
-  display: inline-block;
 }
 
 .toolbarButtons {

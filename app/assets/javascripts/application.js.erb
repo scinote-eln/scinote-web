@@ -273,7 +273,19 @@ var HelperModule = (function(){
     /* Clean up TinyMCE */
     tinymce.remove();
   });
-})();
+
+  // Show warning if page has unsaved data
+  $(document).on('turbolinks:before-visit', () => {
+    let exit = true;
+    let editing = $(`.${GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME}`).length > 0;
+
+    if (editing) {
+      exit = confirm(I18n.t('general.leaving_unsaved_warning'));
+    }
+
+    return exit;
+  });
+}());
 
 // Check that loaded page, not turbolinks preview
 function notTurbolinksPreview() {

@@ -1,4 +1,4 @@
-<div class="recent-work-widget basic-widget">
+<div class="recent-work-widget basic-widget <%= widget[:size] %>" style="order: <%= widget[:position] %>">
   <div class="widget-header">
     <div class="widget-title">
       <%= t('dashboard.recent_work.title') %>
@@ -32,9 +32,6 @@
     <% else %>
       <p class="widget-placeholder-title"><%= t('dashboard.recent_work.no_results.title') %></p>
       <p class="widget-placeholder-description"><%= t('dashboard.recent_work.no_results.description') %></p>
-      <div class="no-results-arrow">
-        <i class="fas fa-angle-double-left"></i>
-      </div>
     <% end %>
    </div>
 </template>

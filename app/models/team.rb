@@ -30,12 +30,7 @@ class Team < ApplicationRecord
              optional: true
   has_many :user_teams, inverse_of: :team, dependent: :destroy
   has_many :users, through: :user_teams
-  has_many :samples, inverse_of: :team
-  has_many :samples_tables, inverse_of: :team, dependent: :destroy
-  has_many :sample_groups, inverse_of: :team
-  has_many :sample_types, inverse_of: :team
   has_many :projects, inverse_of: :team
-  has_many :custom_fields, inverse_of: :team
   has_many :protocols, inverse_of: :team, dependent: :destroy
   has_many :protocol_keywords, inverse_of: :team, dependent: :destroy
   has_many :tiny_mce_assets, inverse_of: :team, dependent: :destroy
@@ -72,84 +67,6 @@ class Team < ApplicationRecord
     a_query = "%#{query}%"
     users.where.not(confirmed_at: nil)
          .where('full_name ILIKE ? OR email ILIKE ?', a_query, a_query)
-  end
-
-  def to_csv(samples, headers)
-    require "csv"
-
-    # Parse headers (magic numbers should be refactored - see
-    # sample-datatable.js)
-    header_names = []
-    headers.each do |header|
-      if header == "-1"
-        header_names << I18n.t("samples.table.sample_name")
-      elsif header == "-2"
-        header_names << I18n.t("samples.table.sample_type")
-      elsif header == "-3"
-        header_names << I18n.t("samples.table.sample_group")
-      elsif header == "-4"
-        header_names << I18n.t("samples.table.added_by")
-      elsif header == "-5"
-        header_names << I18n.t("samples.table.added_on")
-      else
-        cf = CustomField.find_by_id(header)
-
-        if cf
-          header_names << cf.name
-        else
-          header_names << nil
-        end
-      end
-    end
-
-    CSV.generate do |csv|
-      csv << header_names
-      samples.each do |sample|
-        sample_row = []
-        headers.each do |header|
-          if header == "-1"
-            sample_row << sample.name
-          elsif header == "-2"
-            sample_row << (sample.sample_type.nil? ? I18n.t("samples.table.no_type") : sample.sample_type.name)
-          elsif header == "-3"
-            sample_row << (sample.sample_group.nil? ? I18n.t("samples.table.no_group") : sample.sample_group.name)
-          elsif header == "-4"
-            sample_row << sample.user.full_name
-          elsif header == "-5"
-            sample_row << I18n.l(sample.created_at, format: :full)
-          else
-            scf = SampleCustomField.where(
-              custom_field_id: header,
-              sample_id: sample.id
-            ).take
-
-            if scf
-              sample_row << scf.value
-            else
-              sample_row << nil
-            end
-          end
-        end
-        csv << sample_row
-      end
-    end
-  end
-
-  # Get all header fields for samples (used in importing for mappings - dropdowns)
-  def get_available_sample_fields
-    fields = {};
-
-    # First and foremost add sample name
-    fields["-1"] = I18n.t("samples.table.sample_name")
-    fields["-2"] = I18n.t("samples.table.sample_type")
-    fields["-3"] = I18n.t("samples.table.sample_group")
-
-    # Add all other custom fields
-    CustomField.where(team_id: id).order(:created_at).each do |cf|
-      fields[cf.id] = cf.name
-    end
-
-    fields
   end
 
   def storage_used

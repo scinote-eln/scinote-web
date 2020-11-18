@@ -29,7 +29,7 @@ en:
       no_tasks:
         assigned_tasks:
           title: "There are no tasks assigned to you at the moment."
-          description: "Why not use the Quick start section to create your next task."
+          description: "Use the  “+ New task” button above to create a new one, or assign yourself to an existing task."
         team_tasks:
           title: "Your Team has no tasks at the moment."
         search_result:
@@ -73,7 +73,7 @@ en:
       title: "Recent work"
       no_results:
         title: "You have not worked on anything recently."
-        description: "Use the Quick start section to begin creating."
+        description: "All tasks, projects, inventories protocols and reports, you last worked on will appear here, when you make some changes."
       no_results_guest:
         title: "No recent work."
         description: "As a guest in this team you cannot make or change anything."

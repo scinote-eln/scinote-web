@@ -116,10 +116,6 @@
           padding-right: 5px;
         }
       }
-
-      .dropdown {
-        margin-right: 5px;
-      }
     }
   }
 }
@@ -520,6 +516,11 @@
   .task-flows {
     grid-column: 2 / span 1;
     grid-row: 1 / span 2;
+
+    .status-label {
+      @include font-small;
+      font-weight: bold;
+    }
   }
 }
 

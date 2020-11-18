@@ -39,21 +39,11 @@
         dataType: "json",
         data: {completed: completed},
         success: function (data) {
-          var button;
-          if (completed) {
-            step.addClass("completed").removeClass("not-completed");
-
-            button = step.find("[data-action='complete-step']");
-            button.attr("data-action", "uncomplete-step");
-            button.html('<span class="fas fa-times"></span>&nbsp;' + data.new_title);
-          }
-          else {
-            step.addClass("not-completed").removeClass("completed");
-
-            button = step.find("[data-action='uncomplete-step']");
-            button.attr("data-action", "complete-step");
-            button.html('<span class="fas fa-check"></span>&nbsp;' + data.new_title);
-          }
+          step.toggleClass("completed");
+          step.find(".toggle-step-complete[data-action='complete-step']").toggleClass('hidden');
+          step.find(".toggle-step-complete[data-action='uncomplete-step']").toggleClass('hidden');
+          step.find(".button-step-complete[data-action='complete-step']").toggleClass('hidden');
+          step.find(".button-step-complete[data-action='uncomplete-step']").toggleClass('hidden');
         },
         error: function(response) {
           if (response.status === 403) {
@@ -111,6 +101,9 @@
       DragNDropSteps.clearFiles();
       if (tinyMCE.editors.step_description_textarea) tinyMCE.editors.step_description_textarea.remove();
       TinyMCE.init('#step_description_textarea');
+      $form.on('change', '.checklist-item-text, .checklist-name', function() {
+        $form.addClass(GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME);
+      });
       $("#new-step-checklists fieldset.nested_step_checklists ul").each(function () {
         enableCheckboxSorting(this);
       });
@@ -213,10 +206,9 @@
 
   function toggleButtons(show) {
     if (show) {
-      $("[data-action='new-step']:first").show();
+      $("[data-action='new-step']").show();
       $("[data-action='edit-step']").show();
       if ($('#steps .step').length > 0) {
-        $("[data-action='new-step']:last").show();
         $(".expand-all-steps").show();
       }
     } else {
@@ -289,7 +281,10 @@
         colHeaders: true,
         contextMenu: true,
         formulas: true,
-        preventOverflow: 'horizontal'
+        preventOverflow: 'horizontal',
+        afterChange: function() {
+          $container.addClass(GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME);
+        }
       });
 
       $container.attr("initialized", true);
@@ -400,6 +395,8 @@
         destroyName = destroyName.replace(/\[\d+\]\[_destroy\]/, "[" + itemPos + "][_destroy]");
         $destroyInput.attr("name", destroyName);
       }
+
+      $formGroup.addClass(GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME);
     });
   }
 

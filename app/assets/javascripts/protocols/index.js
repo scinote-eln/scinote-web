@@ -48,7 +48,10 @@ function initProtocolsTable() {
       orderable: false,
       sWidth: "1%",
       render: function (data, type, full, meta) {
-        return "<input type='checkbox'>";
+        return `<div class="sci-checkbox-container">
+                  <input type="checkbox" class="sci-checkbox">
+                  <span class="sci-checkbox-label"></span>
+                </div>`;
       }
     }, {
       targets: [ 1, 2, 3, 4, 5 ],

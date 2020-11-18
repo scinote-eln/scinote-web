@@ -7,20 +7,9 @@ var DasboardCurrentTasksWidget = (function() {
   var projectFilter = '.current-tasks-filters .project-filter';
   var experimentFilter = '.current-tasks-filters .experiment-filter';
 
-  function generateTasksListHtml(json, container) {
+  function appendTasksList(json, container) {
     $.each(json.data, (i, task) => {
-      var currentTaskItem = ` <a class="current-task-item" href="${task.link}">
-                                <div class="current-task-breadcrumbs">${task.project}<span class="slash">/</span>${task.experiment}</div>
-                                <div class="task-name row-border">${task.name}</div>
-                                <div class="task-due-date row-border ${task.due_date.state}">
-                                  <span class="${task.due_date.text ? '' : 'hidden'}">
-                                    <i class="fas fa-calendar-day"></i> ${task.due_date.text}
-                                  </span>
-                                </div>
-                                <div class="task-status-container row-border">
-                                  <span class="task-status" style="background:${task.status_color}">${task.status_name}</span>
-                                </div>
-                              </a>`;
+      var currentTaskItem = task;
       $(container).append(currentTaskItem);
     });
   }
@@ -38,11 +27,26 @@ var DasboardCurrentTasksWidget = (function() {
     return values;
   }
 
+  function resetMarkAppliedFilters() {
+    $('.filter-container').removeClass('filters-applied');
+  }
+
+  function markAppliedFilters(state) {
+    if (state.statuses.sort().toString() === getDefaultStatusValues().sort().toString()
+      && (state.project_id.length === 0)
+      && (state.sort === 'due_date')
+      && (state.experiment_id.length === 0)) {
+      resetMarkAppliedFilters();
+    } else {
+      $('.filter-container').addClass('filters-applied');
+    }
+  }
+
   function initInfiniteScroll() {
     InfiniteScroll.init('.current-tasks-list', {
       url: $('.current-tasks-list').data('tasksListUrl'),
       customResponse: (json, container) => {
-        generateTasksListHtml(json, container);
+        appendTasksList(json, container);
       },
       customParams: (params) => {
         params.project_id = dropdownSelector.getValues(projectFilter);
@@ -72,9 +76,8 @@ var DasboardCurrentTasksWidget = (function() {
       mode: $('.current-tasks-navbar .active').data('mode')
     };
 
-    if (filterState) {
-      localStorage.setItem('current_tasks_filters_per_team/' + teamId, JSON.stringify(filterState));
-    }
+    markAppliedFilters(filterState);
+    localStorage.setItem('current_tasks_filters_per_team/' + teamId, JSON.stringify(filterState));
   }
 
   function filterStateLoad() {
@@ -100,11 +103,14 @@ var DasboardCurrentTasksWidget = (function() {
         // Select saved navbar state
         $('.current-tasks-navbar .navbar-link').removeClass('active');
         $('.current-tasks-navbar').find(`[data-mode='${parsedFilterState.mode}']`).addClass('active');
+        markAppliedFilters(parsedFilterState);
       } catch (e) {
         dropdownSelector.selectValues(statusFilter, getDefaultStatusValues());
+        resetMarkAppliedFilters();
       }
     } else {
       dropdownSelector.selectValues(statusFilter, getDefaultStatusValues());
+      resetMarkAppliedFilters();
     }
   }
 
@@ -130,10 +136,19 @@ var DasboardCurrentTasksWidget = (function() {
           $currentTasksList.find('.widget-placeholder').addClass($('.current-tasks-navbar .active').data('mode'));
         }
       }
-      generateTasksListHtml(result, $currentTasksList);
+      appendTasksList(result, $currentTasksList);
       PerfectSb().update_all();
       if (newList) InfiniteScroll.resetScroll('.current-tasks-list');
       animateSpinner($currentTasksList, false);
+    }).error(function(error) {
+      // If error is 403, it is possible that the user was removed from project/experiment,
+      // so clear local storage and filter state
+      if (error.status === 403) {
+        localStorage.removeItem('current_tasks_filters_per_team/' + $('.current-tasks-filters').data('team-id'));
+        $('.current-tasks-filters .clear-button').trigger('click');
+        resetMarkAppliedFilters();
+        loadCurrentTasksList();
+      }
     });
   }
 
@@ -207,8 +222,6 @@ var DasboardCurrentTasksWidget = (function() {
       $('.current-tasks-filters').dropdown('toggle');
       e.stopPropagation();
       e.preventDefault();
-      loadCurrentTasksList(true);
-      filterStateSave();
     });
 
     $('.filter-container').on('hide.bs.dropdown', () => {

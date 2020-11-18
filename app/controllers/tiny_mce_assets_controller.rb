@@ -10,38 +10,37 @@ class TinyMceAssetsController < ApplicationController
   before_action :check_edit_permission, only: %i(marvinjs_update)
 
   def create
-    image = params.fetch(:file) { render_404 }
-    unless image.content_type.match?(%r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}})
-      return render json: {
-        errors: [I18n.t('tiny_mce.unsupported_image_format')]
-      }, status: :unprocessable_entity
+    status = :ok
+    response_json = { images: [] }
+
+    ActiveRecord::Base.transaction do
+      images_params.each_with_index do |image, _i|
+        unless image.content_type.match?(%r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}})
+          status = :unprocessable_entity
+          response_json = { errors: I18n.t('tiny_mce.unsupported_image_format') }
+        end
+
+        if image.size > Rails.configuration.x.file_max_size_mb.megabytes
+          status = :unprocessable_entity
+          response_json = { errors: t('general.file.size_exceeded', file_size: Rails.configuration.x.file_max_size_mb) }
+        end
+
+        raise ActiveRecord::Rollback if response_json[:errors]
+
+        tiny_img = TinyMceAsset.new(team_id: current_team.id, saved: false)
+
+        tiny_img.save!
+        tiny_img.image.attach(io: image, filename: image.original_filename)
+        response_json[:images] << { url: url_for(tiny_img.image), token: Base62.encode(tiny_img.id) }
+      end
+    rescue ActiveRecord::RecordInvalid => e
+      response_json = { errors: e.message }
+      status = :unprocessable_entity
+
+      raise ActiveRecord::Rollback
     end
 
-    if image.size > Rails.configuration.x.file_max_size_mb.megabytes
-      return render json: {
-        errors: [t('general.file.size_exceeded', file_size: Rails.configuration.x.file_max_size_mb)]
-      }, status: :unprocessable_entity
-    end
-
-    tiny_img = TinyMceAsset.new(team_id: current_team.id, saved: false)
-
-    tiny_img.transaction do
-      tiny_img.save!
-      tiny_img.image.attach(io: image, filename: image.original_filename)
-    end
-
-    if tiny_img.persisted?
-      render json: {
-        image: {
-          url: url_for(tiny_img.image),
-          token: Base62.encode(tiny_img.id)
-        }
-      }, content_type: 'text/html'
-    else
-      render json: {
-        errors: tiny_img.errors.full_messages
-      }, status: :unprocessable_entity
-    end
+    render json: response_json, status: status
   end
 
   def download
@@ -53,7 +52,7 @@ class TinyMceAssetsController < ApplicationController
   end
 
   def marvinjs_show
-    asset = current_team.tiny_mce_assets.find_by_id(Base62.decode(params[:id]))
+    asset = current_team.tiny_mce_assets.find_by(id: Base62.decode(params[:id]))
     return render_404 unless asset
 
     create_edit_marvinjs_activity(asset, current_user, :start_editing) if params[:show_action] == 'start_edit'
@@ -92,7 +91,7 @@ class TinyMceAssetsController < ApplicationController
   private
 
   def load_vars
-    @asset = current_team.tiny_mce_assets.find_by_id(Base62.decode(params[:id]))
+    @asset = current_team.tiny_mce_assets.find_by(id: Base62.decode(params[:id]))
     return render_404 unless @asset
 
     @assoc = @asset.object
@@ -136,5 +135,9 @@ class TinyMceAssetsController < ApplicationController
 
   def marvin_params
     params.permit(:id, :description, :object_id, :object_type, :name, :image)
+  end
+
+  def images_params
+    params.require(:files)
   end
 end

@@ -4,6 +4,10 @@
 /* Index page */
 .report-table {
   margin-top: 20px;
+
+  .report-row.selected {
+    background: $color-alto;
+  }
 }
 
 /* New page navbar */
@@ -524,25 +528,6 @@ label {
 /** Step comments element style */
 .report-step-comments-element {
 
-}
-
-/** Module samples element */
-.report-module-samples-element {
-  margin-bottom: 0;
-
-  .report-element-header {
-    border-bottom: none;
-
-    .samples-name {
-      margin-left: 5px;
-    }
-  }
-
-  &:hover > .report-element-header {
-    .samples-icon,.samples-name {
-      color: $brand-primary;
-    }
-  }
 }
 
 // Module repository element
