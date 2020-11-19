@@ -12,23 +12,24 @@ module SmartAnnotations
       ROUTES = Rails.application.routes.url_helpers
 
       def generate_prj_snippet(_, object)
-        if object.archived?
-          return "<span class='sa-type'>Prj</span>#{object.name} #{I18n.t('atwho.res.archived')}"
-        end
+        return "<span class='sa-type'>Prj</span>#{object.name} #{I18n.t('atwho.res.archived')}" if object.archived?
+
         "<a href='#{ROUTES.project_path(object)}'><span class='sa-type'>Prj</span>#{object.name}</a>"
       end
 
       def generate_exp_snippet(_, object)
-        if object.archived?
+        if object.archived? || object.project.archived?
           return "<span class='sa-type'>Exp</span>#{object.name} #{I18n.t('atwho.res.archived')}"
         end
+
         "<a href='#{ROUTES.canvas_experiment_path(object)}'><span class='sa-type'>Exp</span>#{object.name}</a>"
       end
 
       def generate_tsk_snippet(_, object)
-        if object.archived?
+        if object.archived? || object.experiment.archived? || object.experiment.project.archived?
           return "<span class='sa-type'>Tsk</span>#{object.name} #{I18n.t('atwho.res.archived')}"
         end
+
         "<a href='#{ROUTES.protocols_my_module_path(object)}'>" \
         "<span class='sa-type'>Tsk</span>#{object.name}</a>"
       end
@@ -52,18 +53,22 @@ module SmartAnnotations
         splited_name = name.split
         size = splited_name.size
         return name.strip.slice(0..2).capitalize if size == 1
+
         generate_name_from_array(splited_name, size).capitalize
       end
 
       def generate_name_from_array(names, size)
         return "#{names[0].slice(0..1)}#{names[1][0]}" if size == 2
+
         "#{names[0][0]}#{names[1][0]}#{names[2][0]}"
       end
 
       def fetch_repository_name(object)
         return object.repository.name if object.repository
-        repository = Repository.with_discarded.find_by_id(object.repository_id)
+
+        repository = Repository.with_discarded.find_by(id: object.repository_id)
         return 'Inv' unless repository
+
         repository.name
       end
     end
