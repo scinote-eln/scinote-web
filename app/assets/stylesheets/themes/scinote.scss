@@ -1303,6 +1303,7 @@ ul.content-activities {
   border-bottom: 1px dotted $color-alto;
   cursor: help;
   display: inline-block;
+  pointer-events: auto;
 
   .modal-tooltiptext {
     background-color: $color-alto;
