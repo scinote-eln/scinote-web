@@ -17,15 +17,10 @@ class MarvinJsAssetsController < ApplicationController
 
     if result[:asset] && marvin_params[:object_type] == 'Step'
       render json: {
-        html: render_to_string(
-          partial: 'steps/attachments/item.html.erb',
-             locals: { asset: result[:asset],
-                       i: 0,
-                       assets_count: 0,
-                       step: result[:object],
-                       order_atoz: 0,
-                       order_ztoa: 0 }
-        )
+        html: render_to_string(partial: 'assets/asset.html.erb', locals: {
+                                 asset: result[:asset],
+                                 gallery_view_id: marvin_params[:object_id]
+                               })
       }
     elsif result[:asset] && marvin_params[:object_type] == 'Result'
       @my_module = result[:object].my_module
@@ -63,7 +58,7 @@ class MarvinJsAssetsController < ApplicationController
   private
 
   def load_vars
-    @asset = current_team.assets.find_by_id(params[:id])
+    @asset = current_team.assets.find_by(id: params[:id])
     return render_404 unless @asset
 
     @assoc ||= @asset.step
@@ -77,8 +72,8 @@ class MarvinJsAssetsController < ApplicationController
   end
 
   def load_create_vars
-    @assoc = Step.find_by_id(marvin_params[:object_id]) if marvin_params[:object_type] == 'Step'
-    @assoc = MyModule.find_by_id(params[:object_id]) if marvin_params[:object_type] == 'Result'
+    @assoc = Step.find_by(id: marvin_params[:object_id]) if marvin_params[:object_type] == 'Step'
+    @assoc = MyModule.find_by(id: params[:object_id]) if marvin_params[:object_type] == 'Result'
 
     if @assoc.class == Step
       @protocol = @assoc.protocol

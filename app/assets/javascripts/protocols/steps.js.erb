@@ -69,7 +69,6 @@
 
       setTimeout(function() {
         initStepsComments();
-        FilePreviewModal.init();
         SmartAnnotation.preventPropagation('.atwho-user-popover');
         TinyMCE.destroyAll();
         DragNDropSteps.clearFiles();
@@ -97,7 +96,6 @@
       toggleButtons(false);
       initializeCheckboxSorting();
       animateSpinner(null, false);
-      FilePreviewModal.init();
       DragNDropSteps.clearFiles();
       if (tinyMCE.editors.step_description_textarea) tinyMCE.editors.step_description_textarea.remove();
       TinyMCE.init('#step_description_textarea');
@@ -176,8 +174,6 @@
       initCallBacks();
       initHandsOnTable($new_step);
       toggleButtons(true);
-      FilePreviewModal.init();
-
       TinyMCE.destroyAll();
       SmartAnnotation.preventPropagation('.atwho-user-popover');
       // Show the edited step
@@ -553,7 +549,7 @@
             expandStep($new_step);
             toggleButtons(true);
             SmartAnnotation.preventPropagation('.atwho-user-popover');
-
+            $new_step.find('.attachments').trigger('reorder');
             tinyMCE.editors.step_description_textarea.remove();
             MarvinJsEditor.initNewButton('.new-marvinjs-upload-button');
 
@@ -563,7 +559,6 @@
             });
             animateSpinner(null, false);
             DragNDropSteps.clearFiles();
-            FilePreviewModal.init();
             if (typeof refreshProtocolStatusBar === 'function') refreshProtocolStatusBar();
           },
           error: function(xhr) {
@@ -617,28 +612,10 @@
     Comments.init();
   }
 
-  // Reorder attachments
-  global.reorderAttachments = function reorderAtt(elem, stepId, sortType) {
-    var label_value = $("#dd-att-step-" + stepId + "> .dropdown-menu > li > a[data-order=" + sortType + "]").html();
-    $("#dd-att-step-" + stepId + "-label").html(label_value);
-    $('#att-' + stepId + ' a.file-preview-link').each(function(){
-      var elm = $(this)
-      elm.parent().css('order', elm.attr('data-order-' + sortType));
-    });
-
-    $.post(
-      $(elem).closest('.dropdown-menu').data('stateSavePath'),
-      { assets: { order: sortType } },
-      null,
-      'json',
-    );
-  }
-
     // On init
   initCallBacks();
   initHandsOnTable($(document));
   expandAllSteps();
-  FilePreviewModal.init();
   TinyMCE.highlight();
   SmartAnnotation.preventPropagation('.atwho-user-popover');
   newStepHandler();
@@ -652,3 +629,66 @@
 
   global.initHandsOnTable = initHandsOnTable;
 })(window);
+
+(function() {
+    // Reorder attachments
+  function reorderAttachmentsInit() {
+    $('#steps').on('click', '.attachments-actions .change-order', function(e){
+      var orderDropdown = $(this).closest('.dropdown-menu');
+      var assetsContainer = $(`.attachments[data-step-id=${orderDropdown.data('step-id')}]`)
+      var order = $(this).data('order');
+      e.preventDefault();
+      assetsContainer.data('order', order);
+      orderDropdown.find('.change-order').removeClass('selected');
+      $(this).addClass('selected');
+      assetsContainer.trigger('reorder');
+      $.post(orderDropdown.data('state-save-url'), {
+        assets: { order: order }
+      });
+    })
+
+    $('#steps').on('reorder', '.attachments', function() {
+      var assets = $(`.attachments[data-step-id=${$(this).data('step-id')}] .asset`);
+      var order = $(this).data('order');
+      var sortedAssets = assets.sort(function(a, b) {
+        if (a.dataset.assetOrder == b.dataset.assetOrder) {
+          if (order == 'new') {
+            return b.dataset.assetUpdatedAt - a.dataset.assetUpdatedAt;
+          } if (order == 'old') {
+            return a.dataset.assetUpdatedAt - b.dataset.assetUpdatedAt;
+          } if (order == 'atoz') {
+            return a.dataset.assetFileName.toLowerCase() > b.dataset.assetFileName.toLowerCase() ? 1 : -1;
+          } if (order == 'ztoa') {
+            return b.dataset.assetFileName.toLowerCase() > a.dataset.assetFileName.toLowerCase() ? 1 : -1;
+          }
+        }
+
+        return a.dataset.assetOrder > b.dataset.assetOrder ? 1 : -1
+      })
+
+      $.each(sortedAssets, function(i, element){
+        element.style.order = i
+      })
+    })
+    .on('DOMSubtreeModified', '.attachments', function() {
+      $(this).trigger('reorder');
+    })
+    $('.attachments').trigger('reorder');
+  }
+
+  function initAssetViewModeToggle(){
+    $('#steps').on('click', '.attachments-actions .attachments-view-mode', function () {
+      var viewModeBtn = $(this);
+      $.post(viewModeBtn.closest('.dropdown-menu').data('view-mode-url'), {
+        assets_view_mode: viewModeBtn.data('assets-view-mode')
+      }, function(result) {
+        viewModeBtn.closest('.dropdown-menu').find('.attachments-view-mode').removeClass('selected');
+        viewModeBtn.addClass('selected');
+        viewModeBtn.closest('.step').find('.attachments').html(result.html)
+      })
+    })
+  }
+
+  reorderAttachmentsInit();
+  initAssetViewModeToggle();
+})();

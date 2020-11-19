@@ -16,9 +16,10 @@
   transition: .3s;
   user-select: none;
 
-  .fas {
+  .fas,
+  img {
     color: inherit;
-    margin-right: 5px;
+    margin-right: .25em;
   }
 
   &:hover {

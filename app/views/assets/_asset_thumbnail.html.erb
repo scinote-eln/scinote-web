@@ -1,0 +1,39 @@
+<div class="attachment-container asset"
+  data-asset-id="<%= asset.id %>"
+  data-asset-file-name="<%= asset.file_name %>"
+  data-asset-updated-at="<%= asset.updated_at.to_i %>"
+  data-asset-order="2"
+>
+  <%= link_to rails_blob_path(asset.file, disposition: 'attachment'),
+          class: "file-preview-link",
+          id: "modal_link#{asset.id}",
+          data: {
+            no_turbolink: true,
+            id: asset.id,
+            gallery_view_id: gallery_view_id,
+            preview_url: asset_file_preview_path(asset)
+          } do %>
+    <div class="attachment-preview <%= asset.file.attached? ? asset.file.metadata['asset_type'] : '' %>">
+      <% if asset.previewable? %>
+        <%= image_tag asset.medium_preview,
+            onerror: 'ActiveStoragePreviews.reCheckPreview(event)',
+            onload: 'ActiveStoragePreviews.showPreview(event)',
+            style: 'opacity: 0' %>
+      <% else %>
+        <i class="fas <%= file_fa_icon_class(asset) if asset.file_name %>"></i>
+      <% end %>
+    </div>
+    <div class="attachment-label">
+      <% if asset.file.attached? && asset&.file&.metadata['asset_type'] %>
+        <%= asset.file.metadata['name'] %>
+      <% else %>
+        <%= asset.file_name %>
+      <% end %>
+    </div>
+    <div class="attachment-metadata">
+      <%= t('assets.placeholder.modified_label') %> <%= l(asset.updated_at, format: :full_date) if asset.updated_at %><br>
+      <%= number_to_human_size(asset.file_size) %>
+    </div>
+  <% end %>
+  <%= render partial: 'assets/asset_context_menu.html.erb', locals: { asset: asset, deletable: deletable, editable: editable } %>
+</div>

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WopiUtil
   require 'open-uri'
 
@@ -5,72 +7,101 @@ module WopiUtil
   UNIX_EPOCH_IN_CLR_TICKS = 621355968000000000
   CLR_TICKS_PER_SECOND = 10000000
 
-  DISCOVERY_TTL = 1.days
+  DISCOVERY_TTL = 1.day
   DISCOVERY_TTL.freeze
 
   # For more explanation see this:
   # http://stackoverflow.com/questions/11888053/
   # convert-net-datetime-ticks-property-to-date-in-objective-c
   def convert_to_unix_timestamp(timestamp)
-    Time.at((timestamp - UNIX_EPOCH_IN_CLR_TICKS) / CLR_TICKS_PER_SECOND)
+    Time.zone.at((timestamp - UNIX_EPOCH_IN_CLR_TICKS) / CLR_TICKS_PER_SECOND)
   end
 
-  def get_action(extension, activity)
-    current_wopi_discovery
-    WopiAction.find_action(extension, activity)
+  def get_action(extension, action)
+    discovery = current_wopi_discovery
+    discovery[:actions].find { |i| i[:extension] == extension && i[:action] == action }
   end
 
   def current_wopi_discovery
-    discovery = WopiDiscovery.first
-    return discovery if discovery && discovery.expires >= Time.now.to_i
-    initialize_discovery(discovery)
+    initialize_discovery
+  end
+
+  # Verifies if proof from headers, X-WOPI-Proof/X-WOPI-OldProof was encrypted
+  # with this discovery public key (two key possible old/new)
+  def wopi_verify_proof(token, timestamp, signed_proof, signed_proof_old, url)
+    discovery = current_wopi_discovery
+    token_length = [token.length].pack('>N').bytes
+    timestamp_bytes = [timestamp.to_i].pack('>Q').bytes.reverse
+    timestamp_length = [timestamp_bytes.length].pack('>N').bytes
+    url_length = [url.length].pack('>N').bytes
+
+    expected_proof = token_length + token.bytes +
+                     url_length + url.upcase.bytes +
+                     timestamp_length + timestamp_bytes
+
+    key = generate_key(discovery[:proof_key_mod], discovery[:proof_key_exp])
+    old_key = generate_key(discovery[:proof_key_old_mod], discovery[:proof_key_old_exp])
+
+    # Try all possible combiniations
+    try_verification(expected_proof, signed_proof, key) ||
+      try_verification(expected_proof, signed_proof_old, key) ||
+      try_verification(expected_proof, signed_proof, old_key)
   end
 
   private
 
   # Currently only saves Excel, Word and PowerPoint view and edit actions
-  def initialize_discovery(discovery)
-    Rails.logger.warn 'Initializing discovery'
-    discovery.destroy if discovery
+  def initialize_discovery
+    Rails.cache.fetch(:wopi_discovery, expires_in: DISCOVERY_TTL) do
+      @doc = Nokogiri::XML(Kernel.open(ENV['WOPI_DISCOVERY_URL']))
+      discovery_json = {}
+      key = @doc.xpath('//proof-key')
+      discovery_json[:proof_key_mod] = key.xpath('@modulus').first.value
+      discovery_json[:proof_key_exp] = key.xpath('@exponent').first.value
+      discovery_json[:proof_key_old_mod] = key.xpath('@oldmodulus').first.value
+      discovery_json[:proof_key_old_exp] = key.xpath('@oldexponent').first.value
+      discovery_json[:actions] = []
 
-    @doc = Nokogiri::XML(Kernel.open(ENV['WOPI_DISCOVERY_URL']))
+      @doc.xpath('//app').each do |app|
+        app_name = app.xpath('@name').first.value
+        next unless %w(Excel Word PowerPoint WopiTest).include?(app_name)
 
-    discovery = WopiDiscovery.new
-    discovery.expires = Time.now.to_i + DISCOVERY_TTL
-    key = @doc.xpath('//proof-key')
-    discovery.proof_key_mod = key.xpath('@modulus').first.value
-    discovery.proof_key_exp = key.xpath('@exponent').first.value
-    discovery.proof_key_old_mod = key.xpath('@oldmodulus').first.value
-    discovery.proof_key_old_exp = key.xpath('@oldexponent').first.value
-    discovery.save!
+        icon = app.xpath('@favIconUrl').first.value
 
-    @doc.xpath('//app').each do |app|
-      app_name = app.xpath('@name').first.value
-      next unless %w(Excel Word PowerPoint WopiTest).include?(app_name)
+        app.xpath('action').each do |action|
+          action_name = action.xpath('@name').first.value
+          next unless %w(view edit editnew embedview wopitest).include?(action_name)
 
-      wopi_app = WopiApp.new
-      wopi_app.name = app.xpath('@name').first.value
-      wopi_app.icon = app.xpath('@favIconUrl').first.value
-      wopi_app.wopi_discovery_id = discovery.id
-      wopi_app.save!
-      app.xpath('action').each do |action|
-        name = action.xpath('@name').first.value
-        next unless %w(view edit editnew wopitest).include?(name)
-
-        wopi_action = WopiAction.new
-        wopi_action.action = name
-        wopi_action.extension = action.xpath('@ext').first.value
-        wopi_action.urlsrc = action.xpath('@urlsrc').first.value
-        wopi_action.wopi_app_id = wopi_app.id
-        wopi_action.save!
+          action_json = {}
+          action_json[:icon] = icon
+          action_json[:action] = action_name
+          action_json[:extension] = action.xpath('@ext').first.value
+          action_json[:urlsrc] = action.xpath('@urlsrc').first.value
+          discovery_json[:actions].push(action_json)
+        end
       end
+      discovery_json
     end
-    discovery
-  rescue => e
+  rescue StandardError => e
     Rails.logger.warn 'WOPI: initialization failed: ' + e.message
     e.backtrace.each { |line| Rails.logger.error line }
-    discovery = WopiDiscovery.first
-    discovery.destroy if discovery
+  end
+
+  # Generates a public key from given modulus and exponent
+  def generate_key(modulus, exponent)
+    mod = Base64.decode64(modulus).unpack1('H*').to_i(16)
+    exp = Base64.decode64(exponent).unpack1('H*').to_i(16)
+
+    seq = OpenSSL::ASN1::Sequence.new([OpenSSL::ASN1::Integer.new(mod),
+                                       OpenSSL::ASN1::Integer.new(exp)])
+    OpenSSL::PKey::RSA.new(seq.to_der)
+  end
+
+  # Verify if decrypting signed_proof with public_key equals to expected_proof
+  def try_verification(expected_proof, signed_proof_b64, public_key)
+    signed_proof = Base64.decode64(signed_proof_b64)
+    public_key.verify(OpenSSL::Digest::SHA256.new, signed_proof,
+                      expected_proof.pack('c*'))
   end
 
   def create_wopi_file_activity(current_user, started_editing)

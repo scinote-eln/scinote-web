@@ -1,23 +1,26 @@
 <% asset ||= @asset %>
-<% is_image = asset.image? %>
 <% timestamp = asset.created_at %>
-<% icon_class = 'fas ' + (is_image ? 'fa-image' : 'fa-file') %>
+<% icon_class = file_fa_icon_class(asset) if asset.file_name %>
 <div class="report-element report-step-attachment-element report-step-asset-element" data-ts="<%= timestamp.to_i %>" data-type="step_asset" data-id='{ "asset_id": <%= asset.id %> }' data-scroll-id="<%= asset.id %>" data-name="<%=t "projects.reports.elements.step_asset.sidebar_name", file: asset.file_name %>" data-icon-class="<%= icon_class %>">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left attachment-icon">
-        <span class="<%= icon_class %>"></span>
+        <span class="fas <%= icon_class %>"></span>
       </div>
       <div class="pull-left file-name">
         <% if defined? export_all and export_all %>
           <a href="<%= path %>">
-            <em><%=t 'projects.reports.elements.step_asset.file_name',
-                     file: filename %></em>
+            <em><%= t('projects.reports.elements.step_asset.file_name', file: filename) %></em>
           </a>
         <% else %>
-          <em><%=t 'projects.reports.elements.step_asset.file_name',
-                   file: truncate(asset.file_name,
-                                  length: Constants::FILENAME_TRUNCATION_LENGTH) %></em>
+          <em>
+            <%= t('projects.reports.elements.step_asset.file_name',
+                  file: truncate(asset.file_name, length: Constants::FILENAME_TRUNCATION_LENGTH)) %>
+            <a href="<%= asset_download_url(asset) %>" class="download-link">
+              <%= t('projects.reports.elements.download') %>
+            </a>
+          </em>
+
         <% end %>
       </div>
       <div class="pull-left user-time">
@@ -29,7 +32,7 @@
     </div>
   </div>
   <div class="report-element-body">
-    <% if is_image %>
+    <% if asset.previewable? && !asset.list? %>
       <div class="row">
         <div class="col-xs-12 file-image">
           <% if defined?(export_all) && export_all %>

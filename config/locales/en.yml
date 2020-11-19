@@ -444,6 +444,7 @@ en:
           appended_image: "Appended image - %{name}"
           appended_table: "Appended table"
       elements:
+        download: "[Download]"
         modals:
           project_contents:
             head_title: "Add contents to report"
@@ -1957,11 +1958,19 @@ en:
         uncomplete_title: "Restart step"
       attachments:
         modified_label: "Modified:"
+        manage: "Manage"
+        add: "ADD"
+        sort_by: "SORT BY"
+        attachments_view_mode: "ALL ATTACHMENTS VIEW SIZE"
         sort:
           new_html: "Newest first &#8595;"
           old_html: "Oldest first &#8593;"
           atoz_html: "Name &#8595;"
           ztoa_html: "Name &#8593;"
+        view_mode:
+          inline_html: "<i class=\"fas fa-desktop\"></i> Extra large"
+          thumbnail_html: "<i class=\"fas fa-th-large\"></i> Medium"
+          list_html: "<i class=\"fas fa-list\"></i> List"
       new:
         add_step_title: "Add new step"
         tab_checklists: "Checklists"
@@ -2079,6 +2088,7 @@ en:
     task_completed: "%{user} completed task %{module}. %{date} | Project: %{project} | Experiment: %{experiment}"
 
   assets:
+    file_deleted: "File \"%{file_name}\" deleted"
     head_title:
       edit: "SciNote | %{file_name} | Edit"
       view: "SciNote | %{file_name} | View"
@@ -2095,6 +2105,7 @@ en:
       file_name_placeholder: 'Image'
     placeholder:
       modified_label: "Modified:"
+      size_label: "Size: %{size}"
     wopi_supported_text_formats_title: 'Only .docx, .docm, .odt file formats are supported for editing in Word Online.'
     wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel Online.'
     wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in Powerpoint Online.'
@@ -2111,6 +2122,16 @@ en:
       errors:
         forbidden: 'You do not have permission to add files.'
         not_found: 'Element not found.'
+    file_preview:
+      edit_in_scinote: "Edit in SciNote"
+      edit_in_marvinjs: "Edit in Marvin JS"
+    context_menu:
+      set_view_size: "SET VIEW SIZE"
+      delete: "Delete file"
+      inline_html: "<i class=\"fas fa-desktop\"></i> Extra large"
+      thumbnail_html: "<i class=\"fas fa-th-large\"></i> Medium"
+      list_html: "<i class=\"fas fa-list\"></i> List"
+
   atwho:
     no_results:
       projects: "Projects with this name were not found"

@@ -369,6 +369,10 @@ label {
       margin-left: 15px;
     }
   }
+
+  img {
+    max-width: 100%;
+  }
 }
 
 // Result table element style
@@ -422,6 +426,11 @@ label {
     }
   }
 
+
+  img {
+    max-width: 100%;
+  }
+
   .report-element-children {
     height: 0;
   }
@@ -453,6 +462,7 @@ label {
   .report-element-header {
     .file-name {
       margin-left: 5px;
+      white-space: nowrap;
     }
   }
 

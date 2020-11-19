@@ -1,9 +1,8 @@
 <% result ||= @result %>
 <% asset = result.asset %>
-<% is_image = result.asset.image? %>
 <% comments = result.result_comments %>
 <% timestamp = asset.created_at %>
-<% icon_class = 'fas ' + (is_image ? 'fa-image' : 'fa-file') %>
+<% icon_class = 'fas ' + file_fa_icon_class(asset) if asset.file_name %>
 <div class="report-element report-result-element report-result-asset-element"
      data-ts="<%= timestamp.to_i %>"
      data-type="result_asset"
@@ -29,8 +28,13 @@
             <em><%= t("projects.reports.elements.result_asset.file_name", file: filename) %></em>
           </a>
         <% else %>
-          <em><%= t("projects.reports.elements.result_asset.file_name",
-                    file: truncate(asset.file_name, length: Constants::FILENAME_TRUNCATION_LENGTH)) %></em>
+          <em>
+            <%= t("projects.reports.elements.result_asset.file_name",
+                    file: truncate(asset.file_name, length: Constants::FILENAME_TRUNCATION_LENGTH)) %>
+            <a href="<%= asset_download_url(asset) %>" class="download-link">
+              <%= t('projects.reports.elements.download') %>
+            </a>
+          </em>
         <% end %>
       </div>
       <div class="pull-left user-time">
@@ -42,7 +46,7 @@
     </div>
   </div>
   <div class="row"></div>
-  <% if is_image %>
+  <% if asset.previewable? && !asset.list? %>
     <div class="report-element-body">
         <div class="row">
           <div class="col-xs-12 file-image">

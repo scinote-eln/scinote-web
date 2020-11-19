@@ -1,0 +1,19 @@
+<%
+gallery_view_id = nil unless defined? gallery_view_id
+deletable = asset.step.present?
+editable = true
+
+partial_locals = {
+  asset: asset,
+  gallery_view_id: gallery_view_id,
+  deletable: deletable,
+  editable: editable
+}
+%>
+<% if asset.inline? %>
+    <%= render partial: 'assets/asset_inline.html.erb', locals: partial_locals %>
+<% elsif asset.list? %>
+    <%= render partial: 'assets/asset_list.html.erb', locals: partial_locals %>
+<% else %>
+    <%= render partial: 'assets/asset_thumbnail.html.erb', locals: partial_locals %>
+<% end %>

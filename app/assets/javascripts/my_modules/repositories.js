@@ -186,7 +186,6 @@ var MyModuleRepositories = (function() {
 
       drawCallback: function() {
         FULL_VIEW_TABLE.columns.adjust();
-        FilePreviewModal.init();
         renderFullViewRepositoryName(
           tableContainer.attr('data-repository-name'),
           tableContainer.attr('data-repository-snapshot-created'),

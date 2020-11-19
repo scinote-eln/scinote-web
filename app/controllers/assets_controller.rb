@@ -14,86 +14,38 @@ class AssetsController < ApplicationController
   include FileIconsHelper
   include MyModulesHelper
 
+  helper_method :wopi_file_edit_button_status
+
   before_action :load_vars, except: :create_wopi_file
-  before_action :check_read_permission, except: :edit
-  before_action :check_edit_permission, only: :edit
+  before_action :check_read_permission, except: %i(edit destroy create_wopi_file)
+  before_action :check_edit_permission, only: %i(edit destroy)
 
   def file_preview
-    file_type = @asset.file.metadata[:asset_type] || (@asset.previewable? ? 'previewable' : false)
-    response_json = {
-      'id' => @asset.id,
-      'type' => file_type,
-      'filename' => truncate(escape_input(@asset.file_name),
-                             length: Constants::FILENAME_TRUNCATION_LENGTH),
-      'download-url' => asset_file_url_path(@asset)
-    }
-
-    can_edit = if @assoc.class == Step
-                 can_manage_protocol_in_module?(@protocol) || can_manage_protocol_in_repository?(@protocol)
-               elsif @assoc.class == Result
-                 can_manage_module?(@my_module)
-               elsif @assoc.class == RepositoryCell && !@repository.is_a?(RepositorySnapshot)
-                 can_manage_repository_rows?(@repository)
-               end
-    if response_json['type'] == 'previewable'
-      if ['image/jpeg', 'image/pjpeg'].include? @asset.file.content_type
-        response_json['quality'] = @asset.file_image_quality || 80
-      end
-      response_json.merge!(
-        'editable' =>  @asset.editable_image? && can_edit,
-        'mime-type' => @asset.file.content_type,
-        'large-preview-url' => rails_representation_url(@asset.large_preview)
-      )
-    elsif response_json['type'] == 'marvinjs'
-      response_json.merge!(
-        'editable' => can_edit,
-        'large-preview-url' => rails_representation_url(@asset.large_preview),
-        'update-url' => marvin_js_asset_path(@asset.id),
-        'description' => @asset.file.metadata[:description],
-        'name' => @asset.file.metadata[:name]
-      )
-    else
-
-      response_json['preview-icon'] = render_to_string(partial: 'shared/file_preview_icon.html.erb',
-                                                       locals: { asset: @asset })
-    end
-
-    if wopi_enabled? && wopi_file?(@asset)
-      edit_supported, title = wopi_file_edit_button_status
-      response_json['wopi-controls'] = render_to_string(
-        partial: 'assets/wopi/file_wopi_controls.html.erb',
-        locals: {
-          asset: @asset,
-          can_edit: can_edit,
-          edit_supported: edit_supported,
-          title: title
-        }
-      )
-    end
-    respond_to do |format|
-      format.json do
-        render json: response_json
-      end
-    end
+    render json: { html: render_to_string(
+      partial: 'shared/file_preview/content.html.erb',
+      locals: {
+        asset: @asset,
+        can_edit: can_manage_asset?(@asset),
+        gallery: params[:gallery]
+      }
+    ) }
   end
 
-  # Check whether the wopi file can be edited and return appropriate response
-  def wopi_file_edit_button_status
-    file_ext = @asset.file_name.split('.').last
-    if Constants::WOPI_EDITABLE_FORMATS.include?(file_ext)
-      edit_supported = true
-      title = ''
-    else
-      edit_supported = false
-      title = if Constants::FILE_TEXT_FORMATS.include?(file_ext)
-                I18n.t('assets.wopi_supported_text_formats_title')
-              elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
-                I18n.t('assets.wopi_supported_table_formats_title')
-              else
-                I18n.t('assets.wopi_supported_presentation_formats_title')
-              end
+  def toggle_view_mode
+    @asset.view_mode = toggle_view_mode_params[:view_mode]
+    if @asset.save(touch: false)
+      gallery_view_id = @assoc.id if @assoc.class == Step
+
+      html = render_to_string(partial: 'assets/asset.html.erb', locals: {
+                                asset: @asset,
+                                gallery_view_id: gallery_view_id
+                              })
+      respond_to do |format|
+        format.json do
+          render json: { html: html }, status: :ok
+        end
+      end
     end
-    return edit_supported, title
   end
 
   def file_url
@@ -113,7 +65,7 @@ class AssetsController < ApplicationController
     tkn = current_user.get_wopi_token
     @token = tkn.token
     @ttl = (tkn.ttl * 1000).to_s
-    @asset.step&.protocol&.update(updated_at: Time.now)
+    @asset.step&.protocol&.update(updated_at: Time.zone.now)
 
     create_wopi_file_activity(current_user, true)
 
@@ -147,41 +99,17 @@ class AssetsController < ApplicationController
     @asset.team.release_space(orig_file_size)
     # Post process file here
     @asset.post_process_file(@asset.team)
-    @asset.step&.protocol&.update(updated_at: Time.now)
+    @asset.step&.protocol&.update(updated_at: Time.zone.now)
 
-    render_html = if @asset.step
-                    assets = @asset.step.assets
-                    order_atoz = az_ordered_assets_index(@asset.step, @asset.id)
-                    order_ztoa = assets.length - az_ordered_assets_index(@asset.step, @asset.id)
-                    asset_position = @asset.step.asset_position(@asset)
+    render_html = if @asset.step || @asset.result
                     render_to_string(
-                      partial: 'steps/attachments/item.html.erb',
-                      locals: {
-                        asset: @asset,
-                        i: asset_position[:pos],
-                        assets_count: asset_position[:count],
-                        step: @asset.step,
-                        order_atoz: order_atoz,
-                        order_ztoa: order_ztoa
-                      },
-                      formats: :html
-                    )
-                  elsif @asset.result
-                    render_to_string(
-                      partial: 'steps/attachments/item.html.erb',
-                      locals: {
-                        asset: @asset,
-                        i: 0,
-                        assets_count: 0,
-                        step: nil,
-                        order_atoz: 0,
-                        order_ztoa: 0
-                      },
+                      partial: 'assets/asset.html.erb',
+                      locals: { asset: @asset },
                       formats: :html
                     )
                   else
                     render_to_string(
-                      partial: 'shared/asset_link',
+                      partial: 'assets/asset_link.html.erb',
                       locals: { asset: @asset, display_image_tag: true },
                       formats: :html
                     )
@@ -211,7 +139,7 @@ class AssetsController < ApplicationController
     unless asset.valid?(:wopi_file_creation)
       render json: {
         message: asset.errors
-      }, status: 400 and return
+      }, status: :bad_request and return
     end
 
     # Create file depending on the type
@@ -220,7 +148,7 @@ class AssetsController < ApplicationController
       render_403 && return unless can_manage_protocol_in_module?(step.protocol) ||
                                   can_manage_protocol_in_repository?(step.protocol)
       step_asset = StepAsset.create!(step: step, asset: asset)
-      step.protocol&.update(updated_at: Time.now)
+      step.protocol&.update(updated_at: Time.zone.now)
 
       edit_url = edit_asset_url(step_asset.asset_id)
     elsif params[:element_type] == 'Result'
@@ -248,10 +176,18 @@ class AssetsController < ApplicationController
     }, status: :ok
   end
 
+  def destroy
+    if @asset.destroy
+      render json: { flash: I18n.t('assets.file_deleted', file_name: @asset.file_name ) }
+    else
+      render json: {}, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def load_vars
-    @asset = Asset.find_by_id(params[:id])
+    @asset = Asset.find_by(id: params[:id])
     return render_404 unless @asset
 
     @assoc ||= @asset.step
@@ -268,25 +204,11 @@ class AssetsController < ApplicationController
   end
 
   def check_read_permission
-    if @assoc.class == Step
-      render_403 && return unless can_read_protocol_in_module?(@protocol) ||
-                                  can_read_protocol_in_repository?(@protocol)
-    elsif @assoc.class == Result
-      render_403 and return unless can_read_experiment?(@my_module.experiment)
-    elsif @assoc.class == RepositoryCell
-      render_403 and return unless can_read_repository?(@repository)
-    end
+    render_403 and return unless can_read_asset?(@asset)
   end
 
   def check_edit_permission
-    if @assoc.class == Step
-      render_403 && return unless can_manage_protocol_in_module?(@protocol) ||
-                                  can_manage_protocol_in_repository?(@protocol)
-    elsif @assoc.class == Result
-      render_403 and return unless can_manage_module?(@my_module)
-    elsif @assoc.class == RepositoryCell
-      render_403 and return unless can_manage_repository_rows?(@repository)
-    end
+    render_403 and return unless can_manage_asset?(@asset)
   end
 
   def append_wd_params(url)
@@ -297,6 +219,10 @@ class AssetsController < ApplicationController
 
   def asset_params
     params.permit(:file)
+  end
+
+  def toggle_view_mode_params
+    params.require(:asset).permit(:view_mode)
   end
 
   def asset_data_type(asset)

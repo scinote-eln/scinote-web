@@ -5,11 +5,11 @@ class StepsController < ApplicationController
   include MarvinJsActions
 
   before_action :load_vars, only: %i(edit update destroy show toggle_step_state checklistitem_state update_view_state
-                                     move_up move_down)
+                                     move_up move_down update_asset_view_mode)
   before_action :load_vars_nested, only:  %i(new create)
   before_action :convert_table_contents_to_utf8, only: %i(create update)
 
-  before_action :check_view_permissions, only: %i(show update_view_state)
+  before_action :check_view_permissions, only: %i(show update_view_state update_asset_view_mode)
   before_action :check_manage_permissions, only: %i(new create edit update destroy move_up move_down toggle_step_state)
   before_action :check_complete_and_checkbox_permissions, only: %i(toggle_step_state checklistitem_state)
 
@@ -145,7 +145,12 @@ class StepsController < ApplicationController
       step_params_all[:assets_attributes]&.each do |key, value|
         next unless value[:signed_blob_id]
 
-        new_asset = @step.assets.create!(created_by: current_user, last_modified_by: current_user, team: current_team)
+        new_asset = @step.assets.create!(
+          created_by: current_user,
+          last_modified_by: current_user,
+          team: current_team,
+          view_mode: @step.assets_view_mode
+        )
         new_asset.file
                  .attach(value[:signed_blob_id])
         new_assets.push(new_asset.id)
@@ -216,6 +221,25 @@ class StepsController < ApplicationController
         render json: {}, status: :ok
       end
     end
+  end
+
+  def update_asset_view_mode
+    html = ''
+    ActiveRecord::Base.transaction do
+      @step.assets_view_mode = params[:assets_view_mode]
+      @step.save!(touch: false)
+      @step.assets.update_all(view_mode: @step.assets_view_mode)
+    end
+    @step.assets.each do |asset|
+      html += render_to_string(partial: 'assets/asset.html.erb', locals: {
+                                 asset: asset,
+                                 gallery_view_id: @step.id
+                               })
+    end
+    render json: { html: html }, status: :ok
+  rescue ActiveRecord::RecordInvalid => e
+    Rails.logger.error(e.message)
+    render json: { errors: e.message }, status: :unprocessable_entity
   end
 
   def destroy

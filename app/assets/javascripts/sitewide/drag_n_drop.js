@@ -288,14 +288,14 @@
     }
 
     function uploadedAssetPreview(asset, i) {
-      var html = `<div class="attachment-placeholder pull-left new">
-                    <div class="attachment-thumbnail no-shadow new %>">
+      var html = `<div class="attachment-container pull-left new">
+                    <div class="attachment-preview no-shadow new %>">
                       <i class="fas fa-image"></i>
                     </div>
                     <div class="attachment-label">
                       ${truncateLongString(asset.name, GLOBAL_CONSTANTS.FILENAME_TRUNCATION_LENGTH)}
                     </div>
-                    <div class="spencer-bonnet-modif"></div>
+                    <div class="attachment-metadata"></div>
                     <div class="remove-icon pull-right">
                       <a data-item-id="${i}" href="#">
                         <span class="fas fa-trash"></span>
@@ -324,7 +324,7 @@
     function listItems() {
       totalSize = 0;
       enableSubmitButton();
-      $('.attachment-placeholder.new').remove();
+      $('.attachment-container.new').remove();
       dragNdropAssetsOff();
 
       for (let i = 0; i < droppedFiles.length; i += 1) {
@@ -435,7 +435,6 @@
               initFormSubmitLinks($(this));
               ResultAssets.applyEditResultAssetCallback();
               Results.toggleResultEditButtons(true);
-              FilePreviewModal.init();
               Comments.init();
               ResultAssets.initNewResultAsset();
               Results.expandResult($(this));

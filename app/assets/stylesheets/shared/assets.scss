@@ -1,0 +1,302 @@
+// scss-lint:disable ImportantRule PropertyUnits NestingDepth SelectorDepth
+
+.attachment-container {
+  @include md-card-style;
+  grid-row: span 6;
+  height: 23em;
+  overflow: hidden;
+  padding: 1em;
+  position: relative;
+  width: var(--attachment-column-width);
+
+
+  .file-preview-link {
+    display: block;
+    height: 100%;
+    width: 100%;
+  }
+
+  .attachment-preview {
+    border-radius: $border-radius-default;
+    color: $color-volcano;
+    height: 14em;
+    position: relative;
+    text-align: center;
+    width: 100%;
+
+    &.processing {
+      background-image: url("/images/medium/processing.gif");
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    img {
+      max-height: 100%;
+      max-width: 100%;
+    }
+
+    &.marvinjs {
+
+      &::before,
+      &::after {
+        border-radius: 1em 0 0 1em;
+        bottom: 1em;
+        content: "";
+        display: block;
+        height: 2em;
+        line-height: 2em;
+        position: absolute;
+        right: -1em;
+        width: 2.25em;
+      }
+
+      &::before {
+        background: $marvinjs-color;
+      }
+
+      &::after {
+        background-image: url("/images/icon_small/marvinjs-white.svg");
+        height: 2.25em;
+        right: -.75em;
+        width: 2em;
+      }
+    }
+
+    .fas {
+      font-size: 100px;
+      line-height: 160px;
+    }
+  }
+
+  .no-shadow {
+    box-shadow: none;
+  }
+
+  .attachment-label,
+  .attachment-metadata {
+    background: $color-white;
+    overflow: hidden;
+    padding-top: 1em;
+    position: relative;
+    text-align: center;
+    text-overflow: ellipsis;
+    transition: $md-transaction;
+    white-space: nowrap;
+  }
+
+  .attachment-label {
+    @include font-main;
+    margin-top: 1.5em;
+    z-index: 2;
+  }
+
+  .attachment-metadata {
+    @include font-small;
+    color: $color-silver-chalice;
+    margin-top: -4em;
+  }
+
+  .remove-icon {
+    bottom: .5em;
+    cursor: pointer;
+    display: none;
+    position: absolute;
+    right: .5em;
+  }
+
+  &:hover {
+    box-shadow: $md-shadow;
+
+    .file-preview-link {
+      text-decoration: none;
+    }
+
+
+    .remove-icon {
+      display: inline-block;
+    }
+
+    .attachment-label,
+    .attachment-metadata {
+      margin-top: 0;
+
+    }
+  }
+
+  &.new {
+    border: 1px solid $brand-primary;
+
+    .dnd-error {
+      bottom: 15px;
+      float: left;
+      padding-left: 5px;
+      position: relative;
+    }
+
+    &::before {
+      background: $brand-primary;
+      border-radius: 0 $border-radius-default;
+      bottom: 0;
+      color: $color-white;
+      content: "NEW";
+      left: 0;
+      line-height: 20px;
+      position: absolute;
+      text-align: center;
+      width: 50px;
+      z-index: 2;
+    }
+  }
+
+  .asset-context-menu {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+}
+
+.inline-attachment-container {
+  @include md-card-style;
+  grid-column: 1/-1;
+  grid-row: span 12;
+  height: 47em;
+
+  .active-iframe-preview {
+    border: 0;
+    height: calc(100% - 4em);
+    width: 100%;
+  }
+
+  .image-container,
+  .general-file-container {
+    align-items: center;
+    background: $color-concrete;
+    display: flex;
+    height: calc(100% - 4em);
+    justify-content: center;
+    padding: .5em;
+    width: 100%;
+
+    img {
+      max-height: 100%;
+      max-width: 100%;
+    }
+
+    .fas {
+      font-size: 10em;
+    }
+  }
+
+  .header {
+    align-items: center;
+    display: flex;
+    height: 4em;
+    padding: 0 1em;
+
+    .show-as-thumbnail {
+      cursor: pointer;
+      margin-left: auto;
+    }
+
+    .file-name {
+      @include font-main;
+      color: $brand-primary;
+    }
+
+    .file-metadata {
+      @include font-small;
+      color: $color-silver-chalice;
+      display: grid;
+      grid-column-gap: 1em;
+      grid-template-columns: max-content max-content;
+    }
+
+    .asset-context-menu {
+      margin-left: auto;
+    }
+  }
+}
+
+.list-attachment-container {
+  @include md-card-style;
+  align-items: center;
+  display: flex;
+  grid-column: 1/-1;
+  height: 3em;
+  padding: .5em;
+
+  .file-icon {
+    @include font-main;
+  }
+
+  .file-name {
+    @include font-main;
+    color: $brand-primary;
+    margin: 0 .5em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .file-metadata {
+    @include font-small;
+    color: $color-silver-chalice;
+    display: grid;
+    grid-column-gap: 1em;
+    grid-template-columns: max-content max-content;
+  }
+
+  .asset-context-menu {
+    margin-left: auto;
+  }
+}
+
+.asset-context-menu {
+  display: inline-block;
+
+  #dropdownAssetContextMenu {
+    background: $color-white;
+
+    &:focus,
+    &:active {
+      box-shadow: none;
+    }
+
+    &:hover {
+      background: $color-concrete;
+    }
+  }
+
+  .dropdown-menu {
+    @include font-button;
+    min-width: 200px;
+    padding: .5em 0;
+
+    .divider-label {
+      @include font-small;
+      color: $color-alto;
+      padding-left: 1em;
+    }
+
+    a {
+      cursor: pointer;
+      padding: .5em 1em;
+      text-align: left;
+    }
+
+    .change-preview-type,
+    .delete-asset {
+      .fas {
+        width: 1.5em;
+      }
+
+      &.selected::after {
+        @include font-awesome;
+        content: $font-fas-check;
+        margin-left: auto;
+        position: absolute;
+        right: 1em;
+      }
+    }
+  }
+}

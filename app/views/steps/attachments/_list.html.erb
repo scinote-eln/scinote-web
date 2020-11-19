@@ -1,4 +1,5 @@
-<% assets = ordered_assets(step) %>
+<% assets = step.assets %>
+<% current_order = step.current_view_state(current_user).state.dig('assets', 'sort') %>
 <div class="col-xs-12">
 <hr>
 </div>
@@ -10,42 +11,55 @@
     </h4>
   </div>
 
-  <div>
-    <div class="attachemnts-header pull-right">
-      <% if !(preview) && (can_manage_protocol_in_module?(@protocol) ||
+  <div class="actions">
+    <div class="dropdown sci-dropdown">
+      <button class="btn btn-light dropdown-toggle" type="button" id="dropdownAttachmentsOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <span><%= t("protocols.steps.attachments.manage") %></span>
+        <span class="caret pull-right"></span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-right dropdown-attachment-options"
+          aria-labelledby="dropdownAttachmentsOptions"
+          data-view-mode-url="<%= update_asset_view_mode_step_path(step) %>"
+          data-step-id="<%= step.id %>"
+          data-state-save-url="<%= update_view_state_step_path(step.id) %>">
+        <% if !(preview) && (can_manage_protocol_in_module?(@protocol) ||
                            can_manage_protocol_in_repository?(@protocol)) %>
-        <%= render partial: '/assets/marvinjs/create_marvin_sketch_button.html.erb',
-                   locals: {  element_id: step.id, element_type: 'Step',  sketch_container: ".attachments#att-#{step.id}" } %>
-        <%= render partial: '/assets/wopi/create_wopi_file_button.html.erb',
-                   locals: {  element_id: step.id, element_type: 'Step' } %>
-      <% end %>
-      <div class="dropdown attachments-order" id="dd-att-step-<%= step.id %>">
-        <button class="btn btn-default dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-          <span id="dd-att-step-<%= step.id %>-label">
-            <%= t("general.sort.#{step.current_view_state(current_user).state.dig('assets', 'sort')}_html") %>
-          </span>
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="sortMenu" data-state-save-path="<%= update_view_state_step_path(step.id) %>">
-          <% ['new', 'old', 'atoz', 'ztoa'].each do |sort| %>
-            <li>
-              <a data-order="<%= sort %>" onClick="reorderAttachments(this, '<%= step.id %>', '<%= sort %>')">
-                <%= t("general.sort.#{sort}_html") %>
-              </a>
-            </li>
-          <% end %>
-        </ul>
-      </div>
+          <li class="divider-label"><%= t("protocols.steps.attachments.add") %></li>
+          <li>
+            <%= render partial: '/assets/marvinjs/create_marvin_sketch_li.html.erb',
+                       locals: {  element_id: step.id, element_type: 'Step',  sketch_container: ".attachments[data-step-id=#{step.id}]" } %>
+          </li>
+          <li>
+            <%= render partial: '/assets/wopi/create_wopi_file_li.html.erb',
+                       locals: {  element_id: step.id, element_type: 'Step' } %>
+          </li>
+          <li role="separator" class="divider"></li>
+        <% end %>
+        <li class="divider-label"><%= t("protocols.steps.attachments.sort_by") %></li>
+        <% ['new', 'old', 'atoz', 'ztoa'].each do |sort| %>
+          <li>
+            <a data-order="<%= sort %>" class="action-link change-order <%= 'selected' if current_order == sort %>">
+              <%= t("general.sort_new.#{sort}") %>
+            </a>
+          </li>
+        <% end %>
+        <li role="separator" class="divider"></li>
+        <li class="divider-label"><%= t("protocols.steps.attachments.attachments_view_mode") %></li>
+        <% ['inline', 'thumbnail', 'list'].each do |view_mode| %>
+        <li>
+          <a class="attachments-view-mode action-link <%= 'selected' if view_mode == step.assets_view_mode %>"  data-assets-view-mode="<%= view_mode %>">
+            <%= t("protocols.steps.attachments.view_mode.#{view_mode}_html") %>
+          </a>
+        </li>
+        <% end %>
+      </ul>
     </div>
   </div>
 </div>
 
-<div class="col-xs-12 attachments" id="att-<%= step.id %>">
+<div class="col-xs-12 attachments" data-step-id="<%= step.id %>" data-order="<%= current_order %>">
   <% assets.each_with_index do |asset, i| %>
-    <% order_atoz = az_ordered_assets_index(step, asset.id) %>
-    <% order_ztoa = assets.length - az_ordered_assets_index(step, asset.id) %>
-    <%= render partial: 'steps/attachments/item.html.erb',
-      locals: { asset: asset, i: i, assets_count: assets.length, step: step, order_atoz: order_atoz, order_ztoa: order_ztoa } %>
+    <%= render partial: 'assets/asset.html.erb', locals: { asset: asset, gallery_view_id: step.id } %>
   <% end %>
 </div>
 <hr>

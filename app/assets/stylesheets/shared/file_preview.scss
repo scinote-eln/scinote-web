@@ -1,0 +1,145 @@
+// scss-lint:disable ImportantRule PropertyUnits NestingDepth SelectorDepth
+
+// Image preview modal
+.modal-file-preview {
+  background: transparent;
+  font-size: $font-size-base;
+  padding: 0 !important;
+
+  .modal-dialog {
+    background: inherit;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+
+  .modal-content {
+    background: inherit;
+    border: 0;
+    border-radius: 0;
+    height: auto;
+    min-height: 100%;
+  }
+
+  .file-preview-container {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+
+    &.processing {
+      background-image: url("/images/medium/processing.gif");
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .wopi-file-preview {
+      height: 100%;
+      width: 100%;
+    }
+
+  }
+
+  img {
+    background: url(asset-path("custom/checkerboard-pattern.png"));
+    height: auto;
+    max-width: 100%;
+
+    @media (max-height: 520px) {
+      height: 80%;
+      max-width: 100%;
+    }
+  }
+
+  .modal-header {
+    align-items: center;
+    background: $color-white;
+    display: flex;
+    height: 4em;
+    padding: 0 1em;
+
+    .file-name {
+      font-weight: bold;
+      margin-right: auto;
+    }
+
+    .asset-context-menu {
+      float: left;
+    }
+  }
+
+  .modal-body {
+    align-items: center;
+    background: transparent;
+    display: flex;
+    height: calc(100vh - 8em);
+    justify-content: center;
+    overflow: hidden;
+    padding: 0;
+    width: 100%;
+  }
+
+  .modal-footer {
+    background: $color-white;
+    height: 4em;
+    padding: 0 1em;
+
+    .gallery {
+      align-items: center;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      height: 100%;
+      padding: 0 1em;
+      width: 100%;
+
+      img {
+        max-height: 2em;
+        max-width: 2em;
+      }
+
+
+      .file-counter {
+        font-weight: bold;
+        grid-column-start: 2;
+        margin: 0 auto;
+      }
+
+      .gallery-switcher {
+        align-items: center;
+        color: $color-black;
+        display: flex;
+
+        &:hover {
+          text-decoration: none;
+        }
+
+        .file-name {
+          display: inline-block;
+          max-width: 16em;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+
+        .fa-angle-right,
+        .fa-angle-left {
+          margin: 0 .5em;
+        }
+
+        &.previous-asset {
+          grid-column-start: 1;
+          margin-right: auto;
+        }
+
+        &.next-asset {
+          grid-column-start: 3;
+          margin-left: auto;
+        }
+      }
+    }
+  }
+}

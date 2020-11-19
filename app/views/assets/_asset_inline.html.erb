@@ -1,0 +1,45 @@
+<div class="inline-attachment-container asset"
+  data-asset-id="<%= asset.id %>"
+  data-asset-file-name="<%= asset.file_name %>"
+  data-asset-updated-at="<%= asset.updated_at.to_i %>"
+  data-asset-order="0"
+>
+  <div class="header">
+    <div class="file-info">
+      <%= link_to rails_blob_path(asset.file, disposition: 'attachment'),
+        class: "file-preview-link file-name",
+        id: "modal_link#{asset.id}",
+        data: {
+            no_turbolink: true,
+            id: asset.id,
+            gallery_view_id: gallery_view_id,
+            preview_url: asset_file_preview_path(asset)
+          } do %>
+        <% if asset.file.attached? && asset&.file&.metadata['asset_type'] %>
+          <%= asset.file.metadata['name'] %>
+        <% else %>
+          <%= asset.file_name %>
+        <% end %>
+      <% end %>
+      <div class="file-metadata">
+        <span><%= t('assets.placeholder.modified_label') %> <%= l(asset.updated_at, format: :full_date) if asset.updated_at %></span>
+        <span><%= t('assets.placeholder.size_label', size: number_to_human_size(asset.file_size)) %></span>
+      </div>
+    </div>
+    <%= render partial: 'assets/asset_context_menu.html.erb', locals: { asset: asset, deletable: deletable, editable: editable } %>
+  </div>
+  <% if wopi_enabled? && wopi_file?(asset) %>
+    <div class="iframe-placeholder" data-iframe-url="<%= asset.get_action_url(current_user, 'embedview') %>"></div>
+  <% elsif asset.previewable? %>
+    <div class="image-container">
+      <%= image_tag asset.large_preview,
+          onerror: 'ActiveStoragePreviews.reCheckPreview(event)',
+          onload: 'ActiveStoragePreviews.showPreview(event)',
+          style: 'opacity: 0' %>
+    </div>
+  <% else %>
+    <div class="general-file-container">
+      <i class="fas <%= file_fa_icon_class(asset) if asset.file_name %>"></i>
+    </div>
+  <% end %>
+</div>
