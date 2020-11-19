@@ -12,6 +12,7 @@
     <div class="row">
       <div class="pull-left user-time">
         <%=t "projects.reports.elements.experiment.user_time", timestamp: l(timestamp, format: :full) %>
+        <b><%= link_to t('projects.reports.elements.all.scinote_link'),canvas_experiment_url(experiment), target: :_blank %></b>
       </div>
       <div class="pull-right controls">
         <%= render partial: "reports/elements/element_controls.html.erb", locals: { show_sort: true } %>
