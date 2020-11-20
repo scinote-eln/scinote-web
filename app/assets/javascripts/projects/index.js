@@ -34,14 +34,14 @@
 
   var projectsViewMode = 'cards';
   var projectsViewFilter = $('.projects-view-filter.active').data('filter');
-  var projectsViewFilterChanged = false;
   var projectsChanged = false;
   var projectsViewSort = $('#sortMenuDropdown a.disabled').data('sort');
 
   var TABLE;
 
-  // Array with selected project IDs shared between both views
+  // Arrays with selected project and folder IDs shared between both views
   var selectedProjects = [];
+  var selectedProjectFolders = [];
 
   /**
    * Initialize the JS for new project modal to work.
@@ -227,7 +227,8 @@
         type: 'GET',
         dataType: 'json',
         data: {
-          project_ids: selectedProjects
+          project_ids: selectedProjects,
+          project_folder_ids: selectedProjectFolders
         },
         success: function(data) {
           // Update modal title
@@ -270,7 +271,8 @@
         type: 'POST',
         dataType: 'json',
         data: {
-          project_ids: selectedProjects
+          project_ids: selectedProjects,
+          project_folder_ids: selectedProjectFolders
         },
         success: function(data) {
           // Hide modal and show success flash
@@ -350,6 +352,22 @@
     });
   }
 
+  function refreshProjectsToolbar() {
+    let projectsToolbar = $('#projectsToolbar');
+
+    if (selectedProjects.length === 0 && selectedProjectFolders.length === 0) {
+      projectsToolbar.find('.single-project-action, .multiple-projects-action').addClass('hidden');
+      projectsToolbar.find('.new-project-actions').removeClass('hidden');
+    } else if (selectedProjects.length === 1 && selectedProjectFolders.length === 0) {
+      projectsToolbar.find('.new-project-actions').addClass('hidden');
+      projectsToolbar.find('.single-project-action, .multiple-projects-action').removeClass('hidden');
+    } else {
+      projectsToolbar.find('.new-project-actions').addClass('hidden');
+      projectsToolbar.find('.single-project-action').addClass('hidden');
+      projectsToolbar.find('.multiple-projects-action').removeClass('hidden');
+    }
+  }
+
   /**
    * Initializes cards view
    */
@@ -385,36 +403,42 @@
     initEditProjectButton($('.panel-project'));
     initArchiveRestoreButton($('.panel-project'));
 
-    $('#cards-wrapper').on('click', '.card-selector', function() {
-      var projectsToolbar = $('#projectsToolbar');
-      var projectCard = $(this).closest('.card');
-      var projectId = projectCard.data('id');
+    $('#cards-wrapper').on('click', '.folder-card-selector', function() {
+      let folderCard = $(this).closest('.folder-card');
+      let folderId = folderCard.data('id');
+      let index = $.inArray(folderId, selectedProjectFolders);
+
+      // If checkbox is checked and row ID is not in list of selected folder IDs
+      if (this.checked && index === -1) {
+        selectedProjectFolders.push(folderId);
+        exportProjectsBtn.removeAttr('disabled');
+      // Otherwise, if checkbox is not checked and ID is in list of selected IDs
+      } else if (!this.checked && index !== -1) {
+        selectedProjectFolders.splice(index, 1);
+      }
+
+      refreshProjectsToolbar();
+    });
+
+    $('#cards-wrapper').on('click', '.project-card-selector', function() {
+      let projectsToolbar = $('#projectsToolbar');
+      let projectCard = $(this).closest('.project-card');
+      let projectId = projectCard.data('id');
       // Determine whether ID is in the list of selected project IDs
-      var index = $.inArray(projectId, selectedProjects);
+      let index = $.inArray(projectId, selectedProjects);
 
       // If checkbox is checked and row ID is not in list of selected project IDs
       if (this.checked && index === -1) {
         $(this).closest('.panel-project').addClass('selected');
         selectedProjects.push(projectId);
         exportProjectsBtn.removeAttr('disabled');
-        $('projects-actions').addClass('hidden');
       // Otherwise, if checkbox is not checked and ID is in list of selected IDs
       } else if (!this.checked && index !== -1) {
         $(this).closest('.panel-project').removeClass('selected');
         selectedProjects.splice(index, 1);
       }
 
-      if (selectedProjects.length === 0) {
-        projectsToolbar.find('.single-project-action, .multiple-projects-action').addClass('hidden');
-        projectsToolbar.find('.new-project-actions').removeClass('hidden');
-      } else if (selectedProjects.length === 1) {
-        projectsToolbar.find('.new-project-actions').addClass('hidden');
-        projectsToolbar.find('.single-project-action, .multiple-projects-action').removeClass('hidden');
-      } else {
-        projectsToolbar.find('.new-project-actions').addClass('hidden');
-        projectsToolbar.find('.single-project-action').addClass('hidden');
-        projectsToolbar.find('.multiple-projects-action').removeClass('hidden');
-      }
+      refreshProjectsToolbar();
 
       selectedProjects.forEach(function(id) {
         if ($('#projects-cards-view').find(`.panel-project[data-id="${id}"]`).hasClass('project-folder')) {
