@@ -1,13 +1,16 @@
+# frozen_string_literal: true
+
 Canaid::Permissions.register_for(MyModule) do
   # Module, its experiment and its project must be active for all the specified
   # permissions
   %i(manage_module
+     archive_module
      manage_users_in_module
      assign_repository_rows_to_module
-     assign_sample_to_module
      create_comments_in_module
      create_my_module_repository_snapshot
-     manage_my_module_repository_snapshots)
+     manage_my_module_repository_snapshots
+     change_my_module_flow_status)
     .each do |perm|
     can perm do |_, my_module|
       my_module.active? &&
@@ -49,12 +52,6 @@ Canaid::Permissions.register_for(MyModule) do
   # module: assign/unassign repository record
   # NOTE: Use 'module_page? &&' before calling this permission!
   can :assign_repository_rows_to_module do |user, my_module|
-    user.is_technician_or_higher_of_project?(my_module.experiment.project)
-  end
-
-  # module: assign/unassign sample
-  # NOTE: Use 'module_page? &&' before calling this permission!
-  can :assign_sample_to_module do |user, my_module|
     user.is_technician_or_higher_of_project?(my_module.experiment.project)
   end
 
