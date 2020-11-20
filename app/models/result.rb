@@ -104,4 +104,9 @@ class Result < ApplicationRecord
 
     true
   end
+
+  def comments
+    result_comments
+  end
+
 end

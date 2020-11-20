@@ -33,8 +33,13 @@
       padding: 1em;
 
       .comments-subject-title {
+        @include font-h3;
         flex-grow: 1;
         height: 2em;
+        line-height: 2em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
 
       .close-btn {
@@ -76,6 +81,7 @@
 
         .send-comment {
           color: $brand-primary;
+          cursor: pointer;
           display: inline-block;
           line-height: 2.5em;
           position: absolute;
@@ -83,6 +89,63 @@
           text-align: center;
           top: 0;
           width: 2.5em;
+        }
+      }
+    }
+  }
+
+  .comment-container {
+    margin: 0 1em 2em 0;
+
+    .comment-header {
+      align-items: center;
+      display: flex;
+      margin-bottom: .5em;
+      min-height: 1.75em;
+
+      .user-name {
+        margin: 0 .5em;
+        order: 2;
+      }
+
+      .user-avatar {
+        max-width: 1.75em;
+      }
+    }
+
+    .comment-body {
+      background: $color-white;
+      border-radius: $border-radius-default;
+
+      .comment-message {
+        @include font-main;
+        color: $color-volcano;
+        padding: 1em;
+      }
+    }
+
+    .comment-footer {
+      padding: 0 1em 1em;
+
+      .comment-create-date {
+        @include font-small;
+        color: $color-volcano;
+        opacity: .5;
+      }
+    }
+
+    &.current-user {
+      margin: 0 0 2em 1em;
+
+      .comment-body {
+        background: $color-alto;
+      }
+
+      .comment-header {
+        justify-content: flex-end;
+
+        .user-avatar {
+          order: 3;
         }
       }
     }

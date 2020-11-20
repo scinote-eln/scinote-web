@@ -1,0 +1,19 @@
+<% user = comment.user %>
+<div class="comment-container <%= 'current-user' if user == current_user %>">
+  <div class="comment-header">
+    <%= image_tag avatar_path(comment.user, :icon_small), class: 'user-avatar' %>
+    <div class="user-name">
+      <%= user == current_user ? 'You' : comment.user.full_name %>
+    </div>
+  </div>
+  <div class="comment-body">
+    <div class="comment-message">
+      <%= comment.message %>
+    </div>
+    <div class="comment-footer">
+      <div class="comment-create-date">
+        <%= I18n.l(comment.created_at, format: :full_date) %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -136,6 +136,10 @@ class Step < ApplicationRecord
     move_in_protocol(:down)
   end
 
+  def comments
+    step_comments
+  end
+
   private
 
   def move_in_protocol(direction)

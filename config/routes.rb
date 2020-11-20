@@ -508,6 +508,8 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :comments, only: %i(index create update delete)
+
     resources :repositories do
       post 'repository_index',
            to: 'repository_rows#index',
