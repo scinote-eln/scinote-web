@@ -910,3 +910,116 @@ li.module-hover {
   }
 }
 
+.projects-toolbar {
+  .filter-container {
+    .current-tasks-filters {
+      padding: 0;
+      width: 230px;
+
+      .header {
+        align-items: center;
+        border-bottom: $border-default;
+        display: flex;
+        height: 2.75em;
+        margin-bottom: 1em;
+        padding: 0  .3em 0 1em;
+
+        .title {
+          @include font-h2;
+          flex-grow: 1;
+          user-select: none;
+
+        }
+      }
+
+      .select-block {
+        display: inline-block;
+        padding: 0 1em 1em;
+        position: relative;
+        width: 100%;
+
+        label {
+          @include font-small;
+          font-weight: bold;
+          margin-bottom: .3em;
+          user-select: none;
+        }
+
+        &.folders {
+          align-items: center;
+          display: flex;
+
+          .folder-search-label {
+            margin: 0 .3em;
+          }
+        }
+      }
+
+      .footer {
+        align-items: center;
+        border-top: $border-default;
+        display: flex;
+        height: 4.25em;
+        justify-content: center;
+        padding: 0 1em;
+        position: relative;
+        width: 100%;
+      }
+    }
+
+    &.filters-applied::after {
+      background: $brand-danger;
+      border: 1px solid $color-white;
+      border-radius: 50%;
+      content: "";
+      height: .5em;
+      left: 1.5em;
+      position: absolute;
+      top: .5em;
+      width: .5em;
+    }
+
+    .connect-line {
+      background: $input-border;
+      height: 10px;
+      margin: 5px auto;
+      width: 2px;
+    }
+
+    .datetime-picker-container {
+      .calendar-input {
+        padding-right: 40px;
+      }
+    }
+
+    @media (min-width: 768px) {
+
+      .current-tasks-filters {
+        width: 460px;
+      }
+
+      .footer {
+        .btn:last-child {
+          margin-left: auto;
+        }
+      }
+
+      .datetime-picker-container {
+        display: inline-block;
+      }
+
+      .connect-line {
+        display: inline-block;
+        margin: 0 12px;
+        position: relative;
+        top: 2px;
+        transform: rotate(90deg);
+      }
+
+      .created-on-label {
+        display: block;
+      }
+    }
+  }
+}
+

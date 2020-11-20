@@ -8,7 +8,7 @@
 // - refactor view handling using library, ex. backbone.js
 
 /* global Comments CounterBadge animateSpinner initFormSubmitLinks HelperModule
-   I18n setupSidebarTree */
+   I18n dropdownSelector */
 
 (function(global) {
   var newProjectModal = null;
@@ -552,6 +552,10 @@
     });
   }
 
+  function initCardsFilter() {
+    dropdownSelector.init($('.assignee-filter'));
+  }
+
   // Updates "Select all" control in a data table
   function updateDataTableSelectAllCtrl() {
     var $table = TABLE.table().node();
@@ -764,4 +768,5 @@
   initProjectsViewModeSwitch();
   initSorting();
   loadCardsView();
+  initCardsFilter();
 }(window));
