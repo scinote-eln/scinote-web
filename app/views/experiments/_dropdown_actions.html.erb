@@ -4,7 +4,7 @@
 
   <% if can_manage_experiment?(experiment) %>
   <li><%= link_to t('experiments.edit.label_title'),
-                edit_project_experiment_url(project, experiment),
+                edit_experiment_url(experiment),
                 remote: true,
                 type: 'button',
                 data: { id: experiment.id },

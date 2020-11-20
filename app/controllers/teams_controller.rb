@@ -1,8 +1,21 @@
 # frozen_string_literal: true
 
 class TeamsController < ApplicationController
-  before_action :load_vars, only: %i(export_projects export_projects_modal)
+  before_action :load_vars, only: %i(sidebar export_projects export_projects_modal)
+  before_action :check_read_permissions
   before_action :check_export_projects_permissions, only: %i(export_projects_modal export_projects)
+
+  def sidebar
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'shared/sidebar/projects.html.erb', locals: { team: @team }
+          )
+        }
+      end
+    end
+  end
 
   def export_projects
     if current_user.has_available_exports?
@@ -58,20 +71,19 @@ class TeamsController < ApplicationController
   private
 
   def load_vars
-    @team = Team.find_by_id(params[:id])
-
-    unless @team
-      render_404
-    end
+    @team = current_user.teams.find_by(id: params[:id])
+    render_404 unless @team
   end
 
   def export_projects_params
     params.permit(:id, project_ids: [], project_folder_ids: [])
   end
 
-  def check_export_projects_permissions
+  def check_read_permissions
     render_403 unless can_read_team?(@team)
+  end
 
+  def check_export_projects_permissions
     @exp_projects = []
     if export_projects_params[:project_ids]
       @exp_projects = @team.projects.where(id: export_projects_params[:project_ids]).to_a

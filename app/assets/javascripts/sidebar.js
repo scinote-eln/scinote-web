@@ -10,6 +10,13 @@ var Sidebar = (function() {
   const STORAGE_TREE_KEY = 'scinote-sidebar-tree-state';
   const STORAGE_SCROLL_TREE_KEY = 'scinote-sidebar-tree-scroll-state';
 
+  function reloadSidebar() {
+    let url = $('#wrapper').find('.sidebar-root').data('sidebar-url');
+    $.get(url, function(result) {
+      $('#sidebar-wrapper').html(result.html);
+    });
+  }
+
   function toggleTree($treeChildren) {
     $treeChildren.toggleClass('hidden');
     $.each($treeChildren, (i, treeChild) => {
@@ -81,9 +88,11 @@ var Sidebar = (function() {
         initSideBar();
       }
     },
-
     loadLastState: () => {
       loadLastState();
+    },
+    reload: () => {
+      reloadSidebar();
     }
   };
 }());

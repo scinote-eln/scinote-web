@@ -7,7 +7,6 @@ class MyModulesController < ApplicationController
   include ApplicationHelper
 
   before_action :load_vars
-  before_action :load_projects_tree, only: %i(protocols results activities archive)
   before_action :check_archive_and_restore_permissions, only: %i(update)
   before_action :check_manage_permissions, only: %i(description due_date update_description update_protocol_description)
   before_action :check_view_permissions, except: %i(update update_description update_protocol_description)
@@ -292,12 +291,6 @@ class MyModulesController < ApplicationController
     else
       render_404
     end
-  end
-
-  def load_projects_tree
-    # Switch to correct team
-    current_team_switch(@project.team) unless @project.nil?
-    @projects_tree = current_user.projects_tree(current_team, 'atoz')
   end
 
   def check_manage_permissions
