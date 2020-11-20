@@ -1,11 +1,16 @@
 # frozen_string_literal: true
 
 class CommentsController < ApplicationController
+  include ActionView::Helpers::TextHelper
+  include InputSanitizeHelper
+  include ApplicationHelper
+  include CommentHelper
+
   before_action :load_object, only: %i(index create)
-  before_action :load_comment, only: %i(update delete)
+  before_action :load_comment, only: %i(update destroy)
   before_action :check_view_permissions, only: :index
   before_action :check_create_permissions, only: :create
-  before_action :check_manage_permissions, only: %i(update delete)
+  before_action :check_manage_permissions, only: %i(update destroy)
 
   def index
     comments = @commentable.comments
@@ -17,11 +22,24 @@ class CommentsController < ApplicationController
     }
   end
 
-  def create; end
+  def create
+    @comment = @commentable.comments.new(
+      message: params[:message],
+      user: current_user,
+      associated_id: @commentable.id
+    )
+    comment_create_helper(@comment, 'comment')
+  end
 
-  def update; end
+  def update
+    old_text = @comment.message
+    @comment.message = params[:message]
+    comment_update_helper(@comment, old_text, 'comment')
+  end
 
-  def delete; end
+  def destroy
+    comment_destroy_helper(@comment)
+  end
 
   private
 
@@ -42,10 +60,14 @@ class CommentsController < ApplicationController
 
   def load_comment
     @comment = Comment.find_by(id: params[:id])
-    render_404 and return unless @commentable
+    render_404 and return unless @comment
 
     @commentable = @comment.commentable
     render_404 and return unless @commentable
+  end
+
+  def comment_params
+    params.permit(:message)
   end
 
   def check_view_permissions
@@ -79,12 +101,6 @@ class CommentsController < ApplicationController
   end
 
   def check_manage_permissions
-    if @commentable.class == Project
-      render_403 and return unless can_manage_comment_in_project?(@comment)
-    elsif [MyModule, Step, Result].include? @commentable.class
-      render_403 and return unless can_manage_comment_in_module?(@comment.becomes(Comment))
-    else
-      render_403 and return
-    end
+    comment_editable?(@comment)
   end
 end

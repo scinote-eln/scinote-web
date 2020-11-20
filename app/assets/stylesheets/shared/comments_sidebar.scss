@@ -91,6 +91,17 @@
           width: 2.5em;
         }
       }
+
+      .update-buttons {
+        display: none;
+        margin-top: .5em;
+      }
+
+      &.update {
+        .update-buttons {
+          display: block;
+        }
+      }
     }
   }
 
@@ -120,12 +131,37 @@
       .comment-message {
         @include font-main;
         color: $color-volcano;
-        padding: 1em;
+        padding: .5em 1em;
       }
     }
 
     .comment-footer {
-      padding: 0 1em 1em;
+      align-items: center;
+      display: flex;
+      padding: 0 1em .5em;
+
+      .comment-menu-container {
+        margin-left: auto;
+
+        .open-dropdown-btn {
+          cursor: pointer;
+          line-height: 2em;
+          text-align: center;
+          width: 2em;
+        }
+
+        .comment-dropdown-menu {
+          @include font-button;
+
+          a {
+            padding: .5em 1em;
+          }
+
+          .fas {
+            margin-right: .5em;
+          }
+        }
+      }
 
       .comment-create-date {
         @include font-small;

@@ -66,30 +66,6 @@ class StepCommentsController < ApplicationController
     params.require(:comment).permit(:message)
   end
 
-  def step_comment_annotation_notification(old_text = nil)
-    smart_annotation_notification(
-      old_text: old_text,
-      new_text: comment_params[:message],
-      title: t('notifications.step_comment_annotation_title',
-               step: @step.name,
-               user: current_user.full_name),
-      message: t('notifications.step_annotation_message_html',
-                 project: link_to(@step.my_module.experiment.project.name,
-                                  project_url(@step.my_module
-                                                   .experiment
-                                                   .project)),
-                 experiment: link_to(@step.my_module.experiment.name,
-                                     canvas_experiment_url(@step.my_module
-                                                                .experiment)),
-                 my_module: link_to(@step.my_module.name,
-                                    protocols_my_module_url(
-                                      @step.my_module
-                                    )),
-                 step: link_to(@step.name,
-                               protocols_my_module_url(@step.my_module)))
-    )
-  end
-
   def log_activity(type_of)
     Activities::CreateActivityService
       .call(activity_type: type_of,
