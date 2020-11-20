@@ -1,0 +1,22 @@
+<% results.each do |project_folder| %>
+  <h5>
+    <span class="fas fa-folder"></span>
+    <%= render partial: 'search/results/partials/project_folder_text.html.erb',
+               locals: { project_folder: project_folder, query: search_query, link_to_page: :show } %>
+  </h5>
+
+  <p>
+    <span>
+      <%= t('search.index.created_at') %>
+      <%= l(project_folder.created_at, format: :full) %>
+    </span>
+    <br>
+    <span>
+      <%= t('search.index.team') %>
+      <%= render partial: 'search/results/partials/team_text.html.erb', locals: { team: project_folder.team } %>
+    </span>
+    <span data-hook="search-result-project-folder"></span>
+  </p>
+
+  <hr>
+<% end %>
