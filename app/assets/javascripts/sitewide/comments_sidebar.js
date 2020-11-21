@@ -97,7 +97,7 @@ var CommentsSidebar = (function() {
   }
 
   function initInputField() {
-    $(document).on('ready', function() {
+    $(document).on('turbolinks:load', function() {
       SmartAnnotation.init($(SIDEBAR).find('.comment-input-field'));
     });
   }
