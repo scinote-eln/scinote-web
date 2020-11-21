@@ -108,5 +108,4 @@ class Result < ApplicationRecord
   def comments
     result_comments
   end
-
 end

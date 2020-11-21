@@ -9,6 +9,11 @@
     <div class="sidebar-body">
       <div class="comments-list">
       </div>
+      <div class="no-comments-placeholder">
+        <%= image_tag 'comments/placeholder.svg', class: 'no-comments-image' %>
+        <h1><%= t('comments.empty_state.title') %></h1>
+        <p class="description"><%= t('comments.empty_state.description') %></p>
+      </div>
       <div class="loading-placeholder">
         <% 5.times do |i| %>
           <div class="comment-placeholder <%= i.even? ? 'left' : 'right' %>">
@@ -23,9 +28,10 @@
         <textarea class="comment-input-field smart-text-area textarea-sm"></textarea>
         <i class="fas fa-paper-plane send-comment"></i>
       </div>
+      <div class="error-container"></div>
       <div class="update-buttons sci-btn-group">
-        <button class="btn btn-secondary cancel-button">Cancel</button>
-        <button class="btn btn-primary update-comment">Save changes</button>
+        <button class="btn btn-secondary cancel-button"><%= t('general.cancel') %></button>
+        <button class="btn btn-primary update-comment"><%= t('comments.save_changes') %></button>
       </div>
     </div>
   </div>

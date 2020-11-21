@@ -8,5 +8,4 @@ class StepComment < Comment
   def commentable
     step
   end
-
 end

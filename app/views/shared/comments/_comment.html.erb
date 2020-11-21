@@ -21,13 +21,13 @@
             <li>
               <a href="#" class="edit-comment" data-comment-raw="<%= comment.message %>" data-update-url="<%= comment_path(comment) %>" data-comment-id="<%= comment.id %>">
                 <i class="fas fa-pen"></i>
-                Edit
+                <%= t('general.edit') %>
               </a>
             </li>
             <li>
               <a href="#" data-delete-url="<%= comment_path(comment) %>" class="delete-comment">
                 <i class="fas fa-trash"></i>
-                Delete
+                <%= t('general.delete') %>
               </a>
             </li>
           </ul>

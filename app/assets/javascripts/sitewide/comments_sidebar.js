@@ -51,6 +51,10 @@ var CommentsSidebar = (function() {
           }
           $(SIDEBAR).find('.comment-input-field').val('');
           $(SIDEBAR).find('.sidebar-footer').removeClass('update');
+          $('.error-container').empty();
+        },
+        error: (result) => {
+          $('.error-container').text(result.responseJSON.errors.message);
         }
       });
     });
@@ -111,6 +115,7 @@ var CommentsSidebar = (function() {
       $(SIDEBAR).find('.comments-subject-title').empty();
       $(SIDEBAR).find('.comments-list').empty();
       $(SIDEBAR).find('.comment-input-field').val('');
+      $('.error-container').empty();
       $(SIDEBAR).find('.sidebar-footer').removeClass('update');
       $(SIDEBAR).data('object-type', objectType).data('object-id', objectId);
       $(SIDEBAR).addClass('open loading');

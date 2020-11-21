@@ -52,6 +52,25 @@
       flex-grow: 1;
       overflow: auto;
       padding: 1em;
+
+      .no-comments-placeholder {
+        display: none;
+        padding: 1em;
+
+        .no-comments-image {
+          display: block;
+          margin: 0 auto;
+        }
+
+        .description {
+          @include font-main;
+          color: $color-silver-chalice;
+        }
+      }
+
+      .comments-list:empty + .no-comments-placeholder {
+        display: block;
+      }
     }
 
     .sidebar-footer {
@@ -95,6 +114,11 @@
       .update-buttons {
         display: none;
         margin-top: .5em;
+      }
+
+      .error-container {
+        @include font-small;
+        color: $brand-danger;
       }
 
       &.update {

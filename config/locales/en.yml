@@ -270,6 +270,10 @@ en:
         result: "Result comment"
 
   comments:
+    save_changes: "Save changes"
+    empty_state:
+      title: "No comments here"
+      description: "Nobody has commented yet. Be the first by using the box below."
     options_dropdown:
       header: "Comment options"
       edit: "Edit"
@@ -2183,6 +2187,7 @@ en:
     save: "Save"
     update: "Update"
     edit: "Edit"
+    delete: "Delete"
     cancel: "Cancel"
     close: "Close"
     create: 'Create'
