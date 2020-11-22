@@ -113,15 +113,7 @@
     }
 
     &.filters-applied::after {
-      background: $brand-danger;
-      border: 1px solid $color-white;
-      border-radius: 50%;
-      content: "";
-      height: .5em;
-      left: 1.5em;
-      position: absolute;
-      top: .5em;
-      width: .5em;
+      @include red-dot;
     }
   }
 

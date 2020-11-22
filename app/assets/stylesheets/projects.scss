@@ -657,7 +657,7 @@ li.module-hover {
 
 // New projects page
 .projects-container {
-  margin-top: 35px;
+  margin: 35px 20px;
 
   .cards-wrapper {
     align-items: center;
@@ -687,7 +687,7 @@ li.module-hover {
         display: flex;
         height: 2em;
         justify-content: center;
-        left: 1em;
+        left: .5em;
         position: absolute;
         top: .5em;
         width: 2em;
@@ -735,11 +735,17 @@ li.module-hover {
         border-radius: 4px;
         box-shadow: $flyout-shadow;
 
+        .header-row {
+          display: flex;
+          width: 100%;
+        }
+
         .project-name-cell {
           align-items: center;
           display: flex;
+          flex-grow: 1;
           height: 2em;
-          margin: 0 .5em 0 2.5em;
+          margin: 0 .5em 0 1.7em;
           overflow: hidden;
 
           a {
@@ -756,6 +762,45 @@ li.module-hover {
           }
         }
 
+        .actions {
+          align-items: center;
+          display: flex;
+          flex-basis: 1.5em;
+          height: 2em;
+          justify-content: center;
+
+          .project-actions-menu {
+            position: absolute;
+            right: .2em;
+            top: .2em;
+
+            a {
+              @include font-button;
+              padding: .5em 1em;
+
+              .fas {
+                margin-right: .4em;
+              }
+            }
+
+            &.new-comments::after {
+              @include red-dot;
+            }
+
+            &.new-comments {
+              .fa-comment {
+                position: relative;
+
+                &::after {
+                  @include red-dot;
+                  left: .9em;
+                  top: -.3em;
+                }
+              }
+            }
+          }
+        }
+
         .data-row {
           @include font-button;
           align-items: center;
@@ -763,10 +808,6 @@ li.module-hover {
           display: flex;
           flex-basis: 100%;
           line-height: 2em;
-
-          .information {
-            margin-left: auto;
-          }
 
           .card-label {
             color: $color-volcano;
@@ -821,6 +862,7 @@ li.module-hover {
         }
 
         .checkbox-cell {
+          left: 1em;
           position: initial;
         }
 
@@ -849,6 +891,10 @@ li.module-hover {
         }
 
         &.project-card {
+          .header-row {
+            display: contents;
+          }
+
           .start-date-row {
             display: contents;
           }
@@ -878,8 +924,14 @@ li.module-hover {
             grid-column: 5;
           }
 
-          .information-cell {
+          .actions-cell {
             grid-column: 6;
+
+            .project-actions-menu {
+              position: relative;
+              right: 0;
+              top: 0;
+            }
           }
         }
       }
@@ -1022,4 +1074,3 @@ li.module-hover {
     }
   }
 }
-

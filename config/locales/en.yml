@@ -327,7 +327,8 @@ en:
       archive_option: "Archive"
       archive_confirm: "Are you sure you want to archive this project?"
       restore_option: "Restore"
-      options_header: "Options"
+      comments_option: "Show commments (%{comments_count})"
+      activities_option: "Open activities"
       comment_placeholder: "Your Message"
       more_comments: "More Comments"
       card:

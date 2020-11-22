@@ -12,6 +12,7 @@
   -o-transform: rotate($degrees);
   transform: rotate($degrees);
 }
+
 @mixin rotate-important($degrees) {
   -webkit-transform: rotate($degrees) !important;
   -moz-transform: rotate($degrees) !important;
@@ -49,6 +50,7 @@
   transition-property: transform !important;
   @include rotate-important($degrees);
 }
+
 @mixin rotate-animation($duration, $degrees) {
   -webkit-transition-duration: $duration;
   -moz-transition-duration: $duration;
@@ -61,6 +63,18 @@
   -o-transition-property: -o-transform;
   transition-property: transform;
   @include rotate($degrees);
+}
+
+@mixin red-dot {
+  background: $brand-danger;
+  border: 1px solid $color-white;
+  border-radius: 50%;
+  content: "";
+  height: .5em;
+  left: 1.6em;
+  position: absolute;
+  top: .4em;
+  width: .5em;
 }
 
 

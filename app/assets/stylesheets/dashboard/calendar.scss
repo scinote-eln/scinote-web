@@ -88,16 +88,10 @@
             }
           }
 
-
           &::after {
-            background: $brand-danger;
-            border-radius: 50%;
-            content: "";
-            height: 4px;
-            left: calc((var(--calendar-day-size) / 2) - 2px);
-            position: absolute;
-            top: calc((var(--calendar-day-size) / 2) + 8px);
-            width: 4px;
+            @include red-dot;
+            left: calc((var(--calendar-day-size) / 2) - 3px);
+            top: calc((var(--calendar-day-size) / 2) + 6px);
           }
         }
 
