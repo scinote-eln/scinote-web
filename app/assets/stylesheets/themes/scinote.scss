@@ -1264,20 +1264,20 @@ ul.content-activities {
   top: 0;
   z-index: 1000000000;
 
-  &:before {
+  &::before {
     background: $color-white;
-    content: '';
+    content: "";
     display: block;
     height: 100%;
     opacity: .5;
     width: 100%;
   }
 
-  &:after {
+  &::after {
     background-image: url("/images/medium/loading.svg");
     background-position: center;
     background-repeat: no-repeat;
-    content: '';
+    content: "";
     display: block;
     height: 100%;
     position: absolute;

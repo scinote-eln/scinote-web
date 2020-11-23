@@ -12,42 +12,31 @@
   repeatCount="indefinite"
   id="tlfade"
   />
-
-  <animate
-    xlink:href="#top_right"
-    attributeName="opacity"
-    from="0" to="1" dur="0.8s"
-    values="0; 0; 1; 1; 0; 0; 0; 0; 0"
-    keyTimes="0; 0.125; 0.25; 0.375; 0.5; 0.625; 0.75; 0.875; 1"
-    repeatCount="indefinite"
-    id="trfade"
-    />
-
-    <animate
-      xlink:href="#bottom_right"
-      attributeName="opacity"
-      from="0" to="1" dur="0.8s"
-      values="0; 0; 0; 0; 1; 1; 0; 0; 0"
-      keyTimes="0; 0.125; 0.25; 0.375; 0.5; 0.625; 0.75; 0.875; 1"
-      repeatCount="indefinite"
-      id="brfade"
-      />
-
-      <animate
-        xlink:href="#bottom_left"
-        attributeName="opacity"
-        from="0" to="1" dur="0.8s"
-        values="0; 0; 0; 0; 0; 0; 1; 1; 0"
-        keyTimes="0; 0.125; 0.25; 0.375; 0.5; 0.625; 0.75; 0.875; 1"
-        repeatCount="indefinite"
-        id="blfade"
-        />
-
-
-
-
-
-
-
-
+<animate
+  xlink:href="#top_right"
+  attributeName="opacity"
+  from="0" to="1" dur="0.8s"
+  values="0; 0; 1; 1; 0; 0; 0; 0; 0"
+  keyTimes="0; 0.125; 0.25; 0.375; 0.5; 0.625; 0.75; 0.875; 1"
+  repeatCount="indefinite"
+  id="trfade"
+/>
+<animate
+  xlink:href="#bottom_right"
+  attributeName="opacity"
+  from="0" to="1" dur="0.8s"
+  values="0; 0; 0; 0; 1; 1; 0; 0; 0"
+  keyTimes="0; 0.125; 0.25; 0.375; 0.5; 0.625; 0.75; 0.875; 1"
+  repeatCount="indefinite"
+  id="brfade"
+/>
+<animate
+  xlink:href="#bottom_left"
+  attributeName="opacity"
+  from="0" to="1" dur="0.8s"
+  values="0; 0; 0; 0; 0; 0; 1; 1; 0"
+  keyTimes="0; 0.125; 0.25; 0.375; 0.5; 0.625; 0.75; 0.875; 1"
+  repeatCount="indefinite"
+  id="blfade"
+/>
 </svg>
