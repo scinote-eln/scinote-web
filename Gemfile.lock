@@ -307,6 +307,9 @@ GEM
       json_schema
     json_schema (0.20.7)
     jsonapi-renderer (0.2.2)
+    jsonapi_parameters (2.2.0)
+      actionpack (>= 4.1.8)
+      activesupport (>= 4.1.8)
     jwt (1.5.6)
     kaminari (1.2.1)
       activesupport (>= 4.1.0)
@@ -648,6 +651,7 @@ DEPENDENCIES
   json-jwt
   json_matchers
   jsonapi-renderer (~> 0.2.2)
+  jsonapi_parameters
   jwt (~> 1.5)
   kaminari
   listen (~> 3.0)
