@@ -9,7 +9,7 @@ class ProjectsController < ApplicationController
   before_action :load_vars, only: %i(show edit update notifications experiment_archive)
   before_action :load_projects_tree, only: %i(sidebar show experiment_archive index)
   before_action :check_view_permissions, only: %i(show notifications experiment_archive)
-  before_action :check_create_permissions, only: %i(new create)
+  before_action :check_create_permissions, only: %i(create)
   before_action :check_manage_permissions, only: :edit
   before_action :set_inline_name_editing, only: %i(show experiment_archive)
 
@@ -24,10 +24,18 @@ class ProjectsController < ApplicationController
   end
 
   def cards
-    projects = ProjectsOverviewService.new(current_team, current_user, params).project_cards
+    if params[:project_folder_id].present?
+      current_folder = current_team.project_folders.find_by(id: params[:project_folder_id])
+    end
+    overview_service = ProjectsOverviewService.new(current_team, current_user, current_folder, params)
     render json: {
-      html: render_to_string(partial: 'projects/index/team_projects.html.erb', locals: { projects: projects }),
-      count: projects.size
+      html: render_to_string(
+        partial: 'projects/index/team_projects.html.erb',
+        locals: {
+          projects: overview_service.project_cards,
+          project_folders: overview_service.project_folder_cards
+        }
+      )
     }
   end
 

@@ -301,6 +301,10 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :project_folders, only: [] do
+      get 'cards', to: 'projects#cards'
+    end
+
     resources :experiments do
       member do
         get 'canvas' # Overview/structure for single experiment
