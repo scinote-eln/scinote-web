@@ -1256,20 +1256,34 @@ ul.content-activities {
 
 /* Overlay to disable interaction while loading ajax */
 .loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
   bottom: 0;
-  z-index: 1000000000;
   cursor: wait;
-}
-
-.loading-overlay-center {
-  position: fixed;
-  left:50%;
-  top:50%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
   z-index: 1000000000;
+
+  &:before {
+    background: $color-white;
+    content: '';
+    display: block;
+    height: 100%;
+    opacity: .5;
+    width: 100%;
+  }
+
+  &:after {
+    background-image: url("/images/medium/loading.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    content: '';
+    display: block;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
 }
 
 .turbolinks-progress-bar::before {

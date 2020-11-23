@@ -31,9 +31,10 @@
     width: 100%;
 
     &.processing {
-      background-image: url("/images/medium/processing.gif");
+      background-image: url("/images/medium/loading_white.svg");
       background-position: center;
       background-repeat: no-repeat;
+      background-size: 64px;
     }
 
     .wopi-file-preview {

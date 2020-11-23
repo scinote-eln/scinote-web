@@ -102,27 +102,11 @@ function animateLoading(start){
  * Shows spinner if start is true or not given, hides it if false.
  * Optional parameter options for spin.js options.
  */
-function animateSpinner(el, start, options) {
+function animateSpinner(el, start) {
   // If overlaying the whole page, put the spinner in the middle of the page
-  var overlayPage = false;
-  if (_.isUndefined(el) || el === null) {
-    overlayPage = true;
-    if ($(document.body).has('.loading-overlay-center').length === 0) {
-      $(document.body).append('<div class="loading-overlay-center" />');
-    }
-    el = $(document.body).find('.loading-overlay-center');
-  }
+  var overlayPage = _.isUndefined(el) || el === null;
 
-  if (_.isUndefined(start)) {
-    start = true;
-  }
-
-  if (start && options) {
-    $(el).spin(options);
-  }
-  else {
-    $(el).spin(start);
-  }
+  if (_.isUndefined(start)) start = true;
 
   if (start) {
     if (overlayPage) {
