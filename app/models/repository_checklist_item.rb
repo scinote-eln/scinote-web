@@ -18,7 +18,7 @@ class RepositoryChecklistItem < ApplicationRecord
 
   def validate_per_column_limit
     if repository_column &&
-       repository_column.repository_checklist_items.count > Constants::REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN
+       repository_column.repository_checklist_items.size > Constants::REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN
       errors.add(:base, :per_column_limit)
     end
   end
