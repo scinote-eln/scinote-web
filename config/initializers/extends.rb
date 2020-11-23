@@ -145,9 +145,9 @@ class Extends
 
   ACTIVITY_MESSAGE_ITEMS_TYPES =
     ACTIVITY_SUBJECT_TYPES + %w(
-      User Tag RepositoryColumn RepositoryRow Step Asset TinyMceAsset Repository MyModuleStatus RepositorySnapshot ProjectFolder
+      User Tag RepositoryColumn RepositoryRow Step Asset TinyMceAsset
+      Repository MyModuleStatus RepositorySnapshot ProjectFolder
     ).freeze
-
 
   ACTIVITY_TYPES = {
     create_project: 0,
