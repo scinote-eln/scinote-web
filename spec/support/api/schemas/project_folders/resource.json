@@ -1,9 +1,9 @@
 {
-  "id": "file:/resource.json#",
+  "id": "file:/project_folders/resource.json#",
   "type": "object",
   "properties":{
     "data": {
-      "$ref": "file:/item.json#"
+      "$ref": "file:/project_folders/item.json#"
     }
   },
   "required": ["data"]

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe "Api::V1::ProjectsController", type: :request do
+RSpec.describe 'Api::V1::ProjectsController', type: :request do
   before :all do
     @user = create(:user)
     @teams = create_list(:team, 2, created_by: @user)
@@ -147,6 +147,36 @@ RSpec.describe "Api::V1::ProjectsController", type: :request do
           )
         )
       end
+
+      context 'when includes folder relation' do
+        let(:request_body) do
+          {
+            data: {
+              type: 'projects',
+              attributes: {
+                name: 'Project name',
+                visibility: 'hidden'
+              },
+              relationships: {
+                project_folder: {
+                  data: {
+                    type: 'project_folders',
+                    id: folder.id
+                  }
+                }
+              }
+            }
+          }
+        end
+        let(:folder) { create :project_folder, team: @teams.first }
+
+        it 'renders 201' do
+          action
+
+          expect(response).to have_http_status(201)
+          expect(JSON.parse(response.body).dig('data', 'relationships', 'project_folder', 'data')).to be_truthy
+        end
+      end
     end
 
     context 'when has missing param' do
@@ -216,6 +246,33 @@ RSpec.describe "Api::V1::ProjectsController", type: :request do
             )
           )
         )
+      end
+
+      context 'when includes folder relation' do
+        let(:request_body) do
+          {
+            data: {
+              type: 'projects',
+              attributes: {},
+              relationships: {
+                project_folder: {
+                  data: {
+                    type: 'project_folders',
+                    id: folder.id
+                  }
+                }
+              }
+            }
+          }
+        end
+        let(:folder) { create :project_folder, team: @teams.first }
+
+        it 'renders 201' do
+          action
+
+          expect(response).to have_http_status(200)
+          expect(JSON.parse(response.body).dig('data', 'relationships', 'project_folder', 'data')).to be_truthy
+        end
       end
     end
 

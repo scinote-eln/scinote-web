@@ -1,5 +1,5 @@
 {
-  "id": "file:/item.json#",
+  "id": "file:/status_items/item.json#",
   "type": "object",
   "properties": {
     "id": {

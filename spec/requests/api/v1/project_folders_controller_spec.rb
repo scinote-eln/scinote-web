@@ -7,7 +7,7 @@ RSpec.describe 'Api::V1::ProjectFoldersController', type: :request do
   let(:valid_headers) { { 'Authorization': 'Bearer ' + generate_token(user.id) } }
   let(:team) { create :team, created_by: user }
   let!(:user_team) { create :user_team, team: team, user: user }
-  let(:folder) do
+  let(:project_folder) do
     create :project_folder, team: team
   end
 
@@ -37,9 +37,9 @@ RSpec.describe 'Api::V1::ProjectFoldersController', type: :request do
   end
 
   describe 'GET show' do
-    let(:params) { { team_id: team.id, id: folder_id } }
+    let(:params) { { team_id: team.id, id: project_folder_id } }
     let(:action) { get(api_v1_team_project_folder_path(params), headers: valid_headers) }
-    let(:folder_id) { folder.id }
+    let(:project_folder_id) { project_folder.id }
 
     context 'when project_folder found' do
       it do
@@ -51,7 +51,7 @@ RSpec.describe 'Api::V1::ProjectFoldersController', type: :request do
     end
 
     context 'when project_folder does not exists' do
-      let(:folder_id) { -1 }
+      let(:project_folder_id) { -1 }
 
       it do
         action
@@ -67,7 +67,7 @@ RSpec.describe 'Api::V1::ProjectFoldersController', type: :request do
         data: {
           type: 'project_folders',
           attributes: {
-            name: folder_name
+            name: project_folder_name
           },
           relationships: {
             parent_folder: {
@@ -81,12 +81,12 @@ RSpec.describe 'Api::V1::ProjectFoldersController', type: :request do
       }
     end
     let(:action) { post(api_v1_team_project_folders_path(team_id: team.id), params: params, headers: valid_headers) }
-    let(:folder_name) { 'MyNewFolder' }
+    let(:project_folder_name) { 'MyNewFolder' }
     let(:parent_folder_id) { nil }
 
-    context 'when folder can be created' do
-      context 'when root folder' do
-        it 'creates new folder' do
+    context 'when project_folder can be created' do
+      context 'when root project_folder' do
+        it 'creates new project_folder' do
           action
 
           expect(response).to have_http_status(201)
@@ -94,21 +94,22 @@ RSpec.describe 'Api::V1::ProjectFoldersController', type: :request do
         end
       end
 
-      context 'when nested folder' do
+      context 'when nested project_folder' do
         let(:parent_folder_id) { create(:project_folder, team: team).id }
 
-        it 'creates new folder inside existing folder' do
+        it 'creates new project_folder inside existing project_folder' do
           action
 
           expect(response).to have_http_status(201)
           expect(response).to match_json_schema('project_folders/resource')
+          expect(JSON.parse(response.body).dig('data', 'relationships', 'parent_folder', 'data')).to be_truthy
         end
       end
     end
 
-    context 'when folder cannot be created' do
+    context 'when project_folder cannot be created' do
       context 'when validation error' do
-        let(:folder_name) { '' }
+        let(:project_folder_name) { '' }
 
         it 'should returns validation error' do
           action
@@ -134,10 +135,10 @@ RSpec.describe 'Api::V1::ProjectFoldersController', type: :request do
     let(:params) do
       {
         data: {
-          id: folder.id,
+          id: project_folder.id,
           type: 'project_folders',
           attributes: {
-            name: folder_name
+            name: project_folder_name
           },
           relationships: {
             parent_folder: {
@@ -151,15 +152,17 @@ RSpec.describe 'Api::V1::ProjectFoldersController', type: :request do
       }
     end
     let(:action) do
-      patch(api_v1_team_project_folder_path(team_id: team.id, id: folder_id), params: params, headers: valid_headers)
+      patch(api_v1_team_project_folder_path(team_id: team.id, id: project_folder_id),
+            params: params,
+            headers: valid_headers)
     end
-    let(:folder_name) { 'MyUpdatedFolder' }
-    let(:folder_id) { folder.id }
+    let(:project_folder_name) { 'MyUpdatedFolder' }
+    let(:project_folder_id) { project_folder.id }
     let(:parent_folder_id) { nil }
 
-    context 'when folder can be updated' do
-      context 'when root folder' do
-        it 'updates folder' do
+    context 'when project_folder can be updated' do
+      context 'when root project_folder' do
+        it 'updates project_folder' do
           action
 
           expect(response).to have_http_status(200)
@@ -167,20 +170,21 @@ RSpec.describe 'Api::V1::ProjectFoldersController', type: :request do
         end
       end
 
-      context 'when update parent folder' do
+      context 'when update parent project_folder' do
         let(:parent_folder_id) { create(:project_folder, team: team).id }
 
-        it 'updates folder\'s parent with existing folder' do
+        it 'updates project_folder\'s parent with existing project_folder' do
           action
 
+          expect(JSON.parse(response.body).dig('data', 'relationships', 'parent_folder', 'data')).to be_truthy
           expect(response).to have_http_status(200)
         end
       end
 
       context 'when nothing to update' do
-        let(:folder_name) { folder.name }
+        let(:project_folder_name) { project_folder.name }
 
-        it 'do not update folder, returns 204' do
+        it 'do not update project_folder, returns 204' do
           action
 
           expect(response).to have_http_status(204)
@@ -188,9 +192,9 @@ RSpec.describe 'Api::V1::ProjectFoldersController', type: :request do
       end
     end
 
-    context 'when folder cannot be updated' do
+    context 'when project_folder cannot be updated' do
       context 'when validation error' do
-        let(:folder_name) { '' }
+        let(:project_folder_name) { '' }
 
         it 'returns validation error, returns 400' do
           action
@@ -211,7 +215,7 @@ RSpec.describe 'Api::V1::ProjectFoldersController', type: :request do
       end
 
       context 'when mismatch IDs' do
-        let(:folder_id) { create(:project_folder, team: team).id }
+        let(:project_folder_id) { create(:project_folder, team: team).id }
 
         it '' do
           action
