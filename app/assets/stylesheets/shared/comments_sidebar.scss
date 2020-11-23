@@ -284,6 +284,11 @@
     .loading-placeholder {
       display: initial;
     }
+    .sidebar-body {
+      .comments-list:empty + .no-comments-placeholder {
+        display: none;
+      }
+    }
   }
 }
 
