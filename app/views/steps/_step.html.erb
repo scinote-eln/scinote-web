@@ -4,7 +4,7 @@
   <div class="panel panel-default">
     <div class="panel-heading step-heading">
       <div class="left-floats">
-        <% unless import %>
+        <% if !import && !preview && @protocol.my_module %>
           <button data-action="uncomplete-step"
                   data-link-url="<%= toggle_step_state_step_path(step)%>"
                   class="btn icon-btn btn-light toggle-step-complete
