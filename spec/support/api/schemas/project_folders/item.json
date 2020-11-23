@@ -1,0 +1,43 @@
+{
+  "id": "file:/item.json#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "attributes": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ]
+    },
+    "relationships": {
+      "type": "object",
+      "properties": {
+        "team": {
+          "type": "object"
+        },
+        "parent_folder": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "required": ["team"]
+    }
+  },
+  "additionalProperties": false,
+  "required": ["id", "type", "attributes"]
+}
+
+
+
+

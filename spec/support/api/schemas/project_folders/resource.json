@@ -1,0 +1,14 @@
+{
+  "id": "file:/resource.json#",
+  "type": "object",
+  "properties":{
+    "data": {
+      "$ref": "file:/item.json#"
+    }
+  },
+  "required": ["data"]
+}
+
+
+
+
