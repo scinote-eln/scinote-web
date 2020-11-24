@@ -1020,6 +1020,15 @@ li.module-hover {
         display: block;
       }
     }
+
+    .users-dropdown-list {
+      img {
+        border-radius: 10px;
+        height: 20px;
+        margin: 0 .5em 0 0;
+        width: 20px;
+      }
+    }
   }
 }
 

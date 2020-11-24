@@ -92,12 +92,10 @@
             </div>
 
             <div class="select-block">
-              <label><%= t("projects.index.filters_modal.assignee.label") %></label>
-              <select class="assignee-filter">
-                <option value="user1"><%= "User 1" %></option>
-                <option value="user2"><%= "User 2" %></option>
-                <option value="user3"><%= "User 3" %></option>
-                <option value="user4"><%= "User 4" %></option>
+              <label><%= t("projects.index.filters_modal.members.label") %></label>
+              <select class="members-filter"
+                      data-ajax-url="<%= users_filter_projects_path %>"
+                      data-placeholder="<%= t('projects.index.filters_modal.members.placeholder') %>">
               </select>
             </div>
 

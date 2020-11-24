@@ -583,7 +583,17 @@
     let $createdOnFilter = $('#calendarStartDate', $projectsFilter);
     let $dueFilter = $('#calendarDueDate', $projectsFilter);
 
-    dropdownSelector.init($membersFilter);
+    dropdownSelector.init($membersFilter, {
+      optionClass: 'checkbox-icon users-dropdown-list',
+      optionLabel: (data) => {
+        return `<img src="${data.params.avatar_url}"/> ${data.label}`;
+      },
+      tagLabel: (data) => {
+        return `<img src="${data.params.avatar_url}"/> ${data.label}`;
+      },
+      labelHTML: true,
+      tagClass: 'users-dropdown-list'
+    });
 
     // Clear filters
     $('.clear-button', $projectsFilter).click((e) => {
