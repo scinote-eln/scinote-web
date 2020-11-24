@@ -284,6 +284,7 @@ en:
   projects:
     index:
       head_title: "Projects"
+      breadcrumbs_root: "Projects"
       archive: "Archive"
       archived: "Archived"
       active: "Active"

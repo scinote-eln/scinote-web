@@ -42,7 +42,8 @@ class ProjectsOverviewService
   end
 
   def project_and_folder_cards
-    cards = filter_project_records(fetch_project_records) + filter_project_folder_records(fetch_project_folder_records)
+    cards = filter_project_records(fetch_project_records.where(project_folder: @current_folder)) +
+            filter_project_folder_records(fetch_project_folder_records.where(parent_folder: @current_folder))
 
     mixed_sort_records(cards)
   end
