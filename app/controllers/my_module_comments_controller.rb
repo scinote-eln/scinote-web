@@ -65,36 +65,4 @@ class MyModuleCommentsController < ApplicationController
   def comment_params
     params.require(:comment).permit(:message)
   end
-
-  def my_module_comment_annotation_notification(old_text = nil)
-    smart_annotation_notification(
-      old_text: old_text,
-      new_text: @comment.message,
-      title: t('notifications.my_module_comment_annotation_title',
-               my_module: @my_module.name,
-               user: current_user.full_name),
-      message: t('notifications.my_module_annotation_message_html',
-                 project: link_to(@my_module.experiment.project.name,
-                                  project_url(@my_module
-                                              .experiment
-                                              .project)),
-                 experiment: link_to(@my_module.experiment.name,
-                                     canvas_experiment_url(@my_module
-                                                           .experiment)),
-                 my_module: link_to(@my_module.name,
-                                    protocols_my_module_url(
-                                      @my_module
-                                    )))
-    )
-  end
-
-  def log_activity(type_of)
-    Activities::CreateActivityService
-      .call(activity_type: type_of,
-            owner: current_user,
-            team: @my_module.experiment.project.team,
-            project: @my_module.experiment.project,
-            subject: @my_module,
-            message_items: { my_module: @my_module.id })
-  end
 end

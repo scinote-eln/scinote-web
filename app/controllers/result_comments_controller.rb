@@ -65,36 +65,4 @@ class ResultCommentsController < ApplicationController
   def comment_params
     params.require(:comment).permit(:message)
   end
-
-  def result_comment_annotation_notification(old_text = nil)
-    smart_annotation_notification(
-      old_text: old_text,
-      new_text: @comment.message,
-      title: t('notifications.result_comment_annotation_title',
-               result: @result.name,
-               user: current_user.full_name),
-      message: t('notifications.result_annotation_message_html',
-                 project: link_to(@result.my_module.experiment.project.name,
-                                  project_url(@result.my_module
-                                                   .experiment
-                                                   .project)),
-                 experiment: link_to(@result.my_module.experiment.name,
-                                     canvas_experiment_url(@result.my_module
-                                                                  .experiment)),
-                 my_module: link_to(@result.my_module.name,
-                                    protocols_my_module_url(
-                                      @result.my_module
-                                    )))
-    )
-  end
-
-  def log_activity(type_of)
-    Activities::CreateActivityService
-      .call(activity_type: type_of,
-            owner: current_user,
-            subject: @result,
-            team: @result.my_module.experiment.project.team,
-            project: @result.my_module.experiment.project,
-            message_items: { result: @result.id })
-  end
 end

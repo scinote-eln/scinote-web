@@ -248,6 +248,10 @@ class Project < ApplicationRecord
     res
   end
 
+  def comments
+    project_comments
+  end
+
   def generate_teams_export_report_html(
     user, team, html_title, obj_filenames = nil
   )

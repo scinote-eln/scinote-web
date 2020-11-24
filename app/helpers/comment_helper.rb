@@ -26,33 +26,33 @@ module CommentHelper
     }
   end
 
-  def comment_create_helper(comment)
+  def comment_create_helper(comment, partial = 'item')
     if comment.save
       case comment.type
       when 'StepComment'
-        step_comment_annotation_notification
-        log_activity(:add_comment_to_step)
+        step_comment_annotation_notification(comment)
+        log_step_activity(:add_comment_to_step, comment)
       when 'ResultComment'
-        result_comment_annotation_notification
-        log_activity(:add_comment_to_result)
+        result_comment_annotation_notification(comment)
+        log_result_activity(:add_comment_to_result, comment)
       when 'ProjectComment'
-        project_comment_annotation_notification
-        log_activity(:add_comment_to_project)
+        project_comment_annotation_notification(comment)
+        log_project_activity(:add_comment_to_project, comment)
       when 'TaskComment'
-        my_module_comment_annotation_notification
-        log_activity(:add_comment_to_module)
+        my_module_comment_annotation_notification(comment)
+        log_my_module_activity(:add_comment_to_module, comment)
       end
 
       render json: {
         html: render_to_string(
-          partial: '/shared/comments/item.html.erb',
+          partial: "/shared/comments/#{partial}.html.erb",
           locals: {
             comment: comment
           }
         )
       }
     else
-      render json: { errors: comment.errors.to_hash(true) }, status: :error
+      render json: { errors: comment.errors.to_hash(true) }, status: :unprocessable_entity
     end
   end
 
@@ -67,25 +67,36 @@ module CommentHelper
     end
   end
 
-  def comment_update_helper(comment, old_text)
+  def comment_update_helper(comment, old_text, partial = nil)
     if comment.save
       case comment.type
       when 'StepComment'
-        step_comment_annotation_notification(old_text)
-        log_activity(:edit_step_comment)
+        step_comment_annotation_notification(comment, old_text)
+        log_step_activity(:edit_step_comment, comment)
       when 'ResultComment'
-        result_comment_annotation_notification(old_text)
-        log_activity(:edit_result_comment)
+        result_comment_annotation_notification(comment, old_text)
+        log_result_activity(:edit_result_comment, comment)
       when 'ProjectComment'
-        project_comment_annotation_notification(old_text)
-        log_activity(:edit_project_comment)
+        project_comment_annotation_notification(comment, old_text)
+        log_project_activity(:edit_project_comment, comment)
       when 'TaskComment'
-        my_module_comment_annotation_notification(old_text)
-        log_activity(:edit_module_comment)
+        my_module_comment_annotation_notification(comment, old_text)
+        log_my_module_activity(:edit_module_comment, comment)
       end
 
-      message = custom_auto_link(comment.message, team: current_team, simple_format: true)
-      render json: { comment: message }, status: :ok
+      if partial
+        render json: {
+          html: render_to_string(
+            partial: "/shared/comments/#{partial}.html.erb",
+            locals: {
+              comment: comment
+            }
+          )
+        }
+      else
+        message = custom_auto_link(comment.message, team: current_team, simple_format: true)
+        render json: { comment: message }, status: :ok
+      end
     else
       render json: { errors: comment.errors.to_hash(true) },
                  status: :unprocessable_entity
@@ -96,18 +107,150 @@ module CommentHelper
     if comment.destroy
       case comment.type
       when 'StepComment'
-        log_activity(:delete_step_comment)
+        log_step_activity(:delete_step_comment, comment)
       when 'ResultComment'
-        log_activity(:delete_result_comment)
+        log_result_activity(:delete_result_comment, comment)
       when 'ProjectComment'
-        log_activity(:delete_project_comment)
+        log_project_activity(:delete_project_comment, comment)
       when 'TaskComment'
-        log_activity(:delete_module_comment)
+        log_my_module_activity(:delete_module_comment, comment)
       end
       render json: {}, status: :ok
     else
       render json: { message: I18n.t('comments.delete_error') },
                  status: :unprocessable_entity
     end
+  end
+
+  def result_comment_annotation_notification(comment, old_text = nil)
+    result = comment.result
+    smart_annotation_notification(
+      old_text: old_text,
+      new_text: comment.message,
+      title: t('notifications.result_comment_annotation_title',
+               result: result.name,
+               user: current_user.full_name),
+      message: t('notifications.result_annotation_message_html',
+                 project: link_to(result.my_module.experiment.project.name,
+                                  project_url(result.my_module
+                                                   .experiment
+                                                   .project)),
+                 experiment: link_to(result.my_module.experiment.name,
+                                     canvas_experiment_url(result.my_module
+                                                                  .experiment)),
+                 my_module: link_to(result.my_module.name,
+                                    protocols_my_module_url(
+                                      result.my_module
+                                    )))
+    )
+  end
+
+  def project_comment_annotation_notification(comment, old_text = nil)
+    project = comment.project
+    smart_annotation_notification(
+      old_text: old_text,
+      new_text: comment.message,
+      title: t('notifications.project_comment_annotation_title',
+               project: project.name,
+               user: current_user.full_name),
+      message: t('notifications.project_annotation_message_html',
+                 project: link_to(project.name, project_url(project)))
+    )
+  end
+
+  def step_comment_annotation_notification(comment, old_text = nil)
+    step = comment.step
+    smart_annotation_notification(
+      old_text: old_text,
+      new_text: comment.message,
+      title: t('notifications.step_comment_annotation_title',
+               step: step.name,
+               user: current_user.full_name),
+      message: t('notifications.step_annotation_message_html',
+                 project: link_to(step.my_module.experiment.project.name,
+                                  project_url(step.my_module
+                                                   .experiment
+                                                   .project)),
+                 experiment: link_to(step.my_module.experiment.name,
+                                     canvas_experiment_url(step.my_module
+                                                                .experiment)),
+                 my_module: link_to(step.my_module.name,
+                                    protocols_my_module_url(
+                                      step.my_module
+                                    )),
+                 step: link_to(step.name,
+                               protocols_my_module_url(step.my_module)))
+    )
+  end
+
+  def my_module_comment_annotation_notification(comment, old_text = nil)
+    my_module = comment.my_module
+    smart_annotation_notification(
+      old_text: old_text,
+      new_text: comment.message,
+      title: t('notifications.my_module_comment_annotation_title',
+               my_module: my_module.name,
+               user: current_user.full_name),
+      message: t('notifications.my_module_annotation_message_html',
+                 project: link_to(my_module.experiment.project.name,
+                                  project_url(my_module
+                                              .experiment
+                                              .project)),
+                 experiment: link_to(my_module.experiment.name,
+                                     canvas_experiment_url(my_module
+                                                           .experiment)),
+                 my_module: link_to(my_module.name,
+                                    protocols_my_module_url(
+                                      my_module
+                                    )))
+    )
+  end
+
+  def log_my_module_activity(type_of, comment)
+    my_module = comment.my_module
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            team: my_module.experiment.project.team,
+            project: my_module.experiment.project,
+            subject: my_module,
+            message_items: { my_module: my_module.id })
+  end
+
+  def log_project_activity(type_of, comment)
+    project = comment.project
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: project,
+            team: project.team,
+            project: project,
+            message_items: { project: project.id })
+  end
+
+  def log_step_activity(type_of, comment)
+    step = comment.step
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: step.protocol,
+            team: step.my_module.experiment.project.team,
+            project: step.my_module.experiment.project,
+            message_items: {
+              my_module: step.my_module.id,
+              step: step.id,
+              step_position: { id: step.id, value_for: 'position_plus_one' }
+            })
+  end
+
+  def log_result_activity(type_of, comment)
+    result = comment.result
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: result,
+            team: result.my_module.experiment.project.team,
+            project: result.my_module.experiment.project,
+            message_items: { result: result.id })
   end
 end
