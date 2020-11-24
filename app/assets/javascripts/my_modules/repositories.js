@@ -469,6 +469,7 @@ var MyModuleRepositories = (function() {
       $.getJSON($(this).data('table-url'), (data) => {
         FULL_VIEW_MODAL.find('.table-container').html(data.html);
         renderFullViewTable(FULL_VIEW_MODAL.find('.table'), { assigned: true, skipCheckbox: true });
+        FULL_VIEW_MODAL.focus();
       });
       e.stopPropagation();
     });
@@ -576,6 +577,8 @@ var MyModuleRepositories = (function() {
       submitUpdateRepositoryRecord({ downstream: true });
     }).on('click', '.task-action', function() {
       submitUpdateRepositoryRecord({ downstream: false });
+    }).on('hidden.bs.modal', function() {
+      FULL_VIEW_MODAL.focus();
     });
   }
 

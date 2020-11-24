@@ -479,8 +479,9 @@
 .task-details-dropdown-container {
   .task-details-button {
     @include font-h2;
-    cursor: pointer;
+    color: inherit;
     margin: 0 3px;
+    text-decoration: none;
   }
 
   .dropdown-menu {

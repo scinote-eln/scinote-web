@@ -418,3 +418,9 @@ var ImageEditorModal = (function() {
   });
 }());
 ImageEditorModal.init();
+
+$(document).on('keydown', function(e) {
+  if (e.keyCode === 27) {
+    $('#fileEditModal').modal('hide');
+  }
+});
