@@ -22,7 +22,14 @@
         </h2>
       </span>
       <span class="dropdown task-details-dropdown-container">
-        <span id="taskDetailsButton" class="fas block-icon fa-info-circle task-details-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></span>
+        <a href="#"
+           id="taskDetailsButton"
+           class="block-icon task-details-button dropdown-toggle"
+           data-toggle="dropdown"
+           aria-haspopup="true"
+           aria-expanded="true">
+          <i class="fas fa-info-circle"></i>
+        </a>
         <div class="dropdown-menu" aria-labelledby="taskDetailsButton">
           <%= render partial: "module_header_details_popover.html.erb" %>
         </div>
