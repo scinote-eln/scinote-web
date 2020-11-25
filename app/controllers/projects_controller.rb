@@ -28,15 +28,25 @@ class ProjectsController < ApplicationController
       current_folder = current_team.project_folders.find_by(id: params[:project_folder_id])
     end
     overview_service = ProjectsOverviewService.new(current_team, current_user, current_folder, params)
-    render json: {
-      html: render_to_string(
-        partial: 'projects/index/team_projects.html.erb',
-        locals: {
-          projects: overview_service.project_cards,
-          project_folders: overview_service.project_folder_cards
-        }
-      )
-    }
+
+    if params[:search].present?
+      render json: {
+        html: render_to_string(
+          partial: 'projects/index/team_projects_grouped_by_folder.html.erb',
+          locals: { projects_by_folder: overview_service.grouped_by_folder_project_cards }
+        )
+      }
+    else
+      render json: {
+        html: render_to_string(
+          partial: 'projects/index/team_projects.html.erb',
+          locals: {
+            projects: overview_service.project_cards,
+            project_folders: overview_service.project_folder_cards
+          }
+        )
+      }
+    end
   end
 
   def index_dt

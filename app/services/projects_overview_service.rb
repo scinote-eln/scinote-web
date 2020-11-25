@@ -15,11 +15,30 @@ class ProjectsOverviewService
   end
 
   def project_cards
-    sort_records(filter_project_records(fetch_project_records))
+    sort_records(
+      filter_project_records(
+        fetch_project_records.where(project_folder: @current_folder)
+      )
+    )
   end
 
   def project_folder_cards
-    sort_records(filter_project_folder_records(fetch_project_folder_records))
+    sort_records(
+      filter_project_folder_records(
+        fetch_project_folder_records.where(parent_folder: @current_folder)
+      )
+    )
+  end
+
+  def grouped_by_folder_project_cards
+    project_records =
+      if @current_folder.present?
+        fetch_project_records.where(project_folder: ProjectFolder.inner_folders(@team, @current_folder))
+      else
+        fetch_project_records
+      end
+    project_records = project_records.includes(:project_folder)
+    sort_records(filter_project_records(project_records)).group_by(&:project_folder)
   end
 
   def projects_datatable
@@ -73,8 +92,6 @@ class ProjectsOverviewService
       'LEFT OUTER JOIN user_projects ON user_projects.project_id = projects.id'
     ).left_outer_joins(:project_comments)
 
-    projects = projects.where(project_folder: @current_folder)
-
     # Only admins see all projects of the team
     unless @user.is_admin_of_team?(@team)
       projects = projects.where(
@@ -92,7 +109,6 @@ class ProjectsOverviewService
 
   def fetch_project_folder_records
     project_folders = @team.project_folders.left_outer_joins(:projects, :project_folders)
-    project_folders = project_folders.where(parent_folder: @current_folder)
     project_folders.select('project_folders.*')
                    .select('COUNT(DISTINCT projects.id) AS projects_count')
                    .select('COUNT(DISTINCT project_folders.id) AS folders_count')
