@@ -46,16 +46,6 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def index_dt
-    @draw = params[:draw].to_i
-    respond_to do |format|
-      format.json do
-        team = current_team || current_user.teams.first
-        @projects = ProjectsOverviewService.new(team, current_user, params).projects_datatable
-      end
-    end
-  end
-
   def sidebar
     current_task ||= current_task || nil
     current_experiment ||= current_experiment || current_task&.experiment || nil

@@ -47,29 +47,6 @@ class ProjectsOverviewService
     mixed_sort_records(cards)
   end
 
-  def projects_datatable
-    table_state = @view_state.state.dig('projects', 'table')
-    per_page = if @params[:length] && @params[:length] != '-1'
-                 @params[:length].to_i
-               else
-                 10
-               end
-    if table_state['length'] != per_page
-      table_state['length'] = per_page
-      table_state['time'] = Time.now.to_i
-      @view_state.state['projects']['table'] = table_state
-      @view_state.save!
-    end
-    page = @params[:start] ? (@params[:start].to_i / per_page) + 1 : 1
-    records = fetch_dt_records
-    records = records.where(archived: true) if @params[:filter] == 'archived'
-    records = records.where(archived: false) if @params[:filter] == 'active'
-    search_value = @params.dig(:search, :value)
-    records = search(records, search_value) if search_value.present?
-    records = sort(records).page(page).per(per_page)
-    records
-  end
-
   private
 
   def fetch_project_records
@@ -220,24 +197,5 @@ class ProjectsOverviewService
       '6' => 'experiment_count',
       '7' => 'task_count'
     }
-  end
-
-  def sort(records)
-    order_state = @view_state.state['projects']['table']['order'][0]
-    order = @params[:order]&.values&.first
-    if order
-      dir = order[:dir] == 'desc' ? 'DESC' : 'ASC'
-      column_index = order[:column]
-    else
-      dir = 'ASC'
-      column_index = '1'
-    end
-    if order_state != [column_index.to_i, dir.downcase]
-      @view_state.state['projects']['table']['order'][0] =
-        [column_index.to_i, dir.downcase]
-    end
-    sort_column = sortable_columns[column_index]
-    sort_column ||= sortable_columns['1']
-    records.order("#{sort_column} #{dir}")
   end
 end
