@@ -162,6 +162,12 @@
   .nested_fields {
     display: contents;
   }
+
+  &[data-preview="true"] {
+    .asset-context-menu {
+      display: none;
+    }
+  }
 }
 
 
