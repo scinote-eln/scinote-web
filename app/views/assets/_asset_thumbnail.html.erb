@@ -24,11 +24,7 @@
       <% end %>
     </div>
     <div class="attachment-label">
-      <% if asset.file.attached? && asset&.file&.metadata['asset_type'] %>
-        <%= asset.file.metadata['name'] %>
-      <% else %>
-        <%= asset.file_name %>
-      <% end %>
+      <%= asset.render_file_name %>
     </div>
     <div class="attachment-metadata">
       <%= t('assets.placeholder.modified_label') %> <%= l(asset.updated_at, format: :full_date) if asset.updated_at %><br>

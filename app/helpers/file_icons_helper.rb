@@ -56,11 +56,11 @@ module FileIconsHelper
   def file_application_icon(asset)
     file_ext = asset.file_name.split('.').last
     if Constants::FILE_TEXT_FORMATS.include?(file_ext)
-      image_link = 'office/Word-color_16x16x32.png'
+      image_link = 'icon_small/docx_file.svg'
     elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
-      image_link = 'office/Excel-color_16x16x32.png'
+      image_link = 'icon_small/xslx_file.svg'
     elsif Constants::FILE_PRESENTATION_FORMATS.include?(file_ext)
-      image_link = 'office/PowerPoint-Color_16x16x32.png'
+      image_link = 'icon_small/pptx_file.svg'
     end
 
     if image_link
