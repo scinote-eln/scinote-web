@@ -1286,6 +1286,10 @@ ul.content-activities {
   }
 }
 
+body > .loading-overlay {
+  position: fixed;
+}
+
 .turbolinks-progress-bar::before {
   background-color: $brand-primary;
 }

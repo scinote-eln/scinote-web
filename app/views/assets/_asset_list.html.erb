@@ -4,9 +4,7 @@
   data-asset-updated-at="<%= asset.updated_at.to_i %>"
   data-asset-order="1"
 >
-  <div class="file-icon">
-    <i class="fas <%= file_fa_icon_class(asset) if asset.file_name %>"></i>
-  </div>
+  <%= file_extension_icon_html(asset) %>
   <%= link_to rails_blob_path(asset.file, disposition: 'attachment'),
     class: "file-preview-link file-name",
     id: "modal_link#{asset.id}",

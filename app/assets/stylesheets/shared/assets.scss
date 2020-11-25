@@ -300,3 +300,19 @@
     }
   }
 }
+
+
+.asset-icon {
+  display: inline-block;
+  font-size: $font-size-h2;
+  text-align: center;
+  width: 24px;
+
+  &.fa-file-pdf {
+    color: $pdf-color;
+  }
+
+  &.fa-image {
+    color: $brand-primary;
+  }
+}
