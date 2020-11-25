@@ -101,12 +101,12 @@ class ProjectsOverviewService
   def filter_project_records(records)
     records = records.where(archived: true) if @params[:filter] == 'archived'
     records = records.where(archived: false) if @params[:filter] == 'active'
-    records = search_by_name(@user, @team, @params[:search]) if @params[:search].present?
+    records = Project.search_by_name(@user, @team, @params[:search]) if @params[:search].present?
     records
   end
 
   def filter_project_folder_records(records)
-    records = search_by_name(@user, @team, @params[:search]) if @params[:search].present?
+    records = ProjectFolder.search_by_name(@user, @team, @params[:search]) if @params[:search].present?
     records
   end
 
