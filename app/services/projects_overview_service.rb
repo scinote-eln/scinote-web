@@ -41,6 +41,12 @@ class ProjectsOverviewService
     sort_records(filter_project_records(project_records)).group_by(&:project_folder)
   end
 
+  def project_and_folder_cards
+    cards = filter_project_records(fetch_project_records) + filter_project_folder_records(fetch_project_folder_records)
+
+    mixed_sort_records(cards)
+  end
+
   def projects_datatable
     table_state = @view_state.state.dig('projects', 'table')
     per_page = if @params[:length] && @params[:length] != '-1'
@@ -144,6 +150,28 @@ class ProjectsOverviewService
       records.order(:name)
     when 'ztoa'
       records.order(name: :desc)
+    else
+      records
+    end
+  end
+
+  def mixed_sort_records(records)
+    cards_state = @view_state.state.dig('projects', 'cards')
+    if @params[:sort] && cards_state['sort'] != @params[:sort] && %w(new old atoz ztoa).include?(@params[:sort])
+      cards_state['sort'] = @params[:sort]
+      @view_state.state['projects']['cards'] = cards_state
+    end
+    @view_state.save! if @view_state.changed?
+
+    case cards_state['sort']
+    when 'new'
+      records.sort_by(&:created_at).reverse!
+    when 'old'
+      records.sort_by(&:created_at)
+    when 'atoz'
+      records.sort_by { |c| c.name.downcase }
+    when 'ztoa'
+      records.sort_by { |c| c.name.downcase }.reverse!
     else
       records
     end

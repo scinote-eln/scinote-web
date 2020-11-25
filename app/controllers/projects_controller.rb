@@ -40,10 +40,7 @@ class ProjectsController < ApplicationController
       render json: {
         html: render_to_string(
           partial: 'projects/index/team_projects.html.erb',
-          locals: {
-            projects: overview_service.project_cards,
-            project_folders: overview_service.project_folder_cards
-          }
+          locals: { cards: overview_service.project_and_folder_cards }
         )
       }
     end
