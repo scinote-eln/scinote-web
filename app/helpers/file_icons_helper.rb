@@ -74,11 +74,11 @@ module FileIconsHelper
   def wopi_button_text(asset, action)
     file_ext = asset.file_name.split('.').last
     if Constants::FILE_TEXT_FORMATS.include?(file_ext)
-      app = 'Word Online'
+      app = t('result_assets.wopi_word')
     elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
-      app = 'Excel Online'
+      app = t('result_assets.wopi_excel')
     elsif Constants::FILE_PRESENTATION_FORMATS.include?(file_ext)
-      app = 'PowerPoint Online'
+      app = t('result_assets.wopi_powerpoint')
     end
 
     if action == 'view'

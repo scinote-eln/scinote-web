@@ -279,9 +279,14 @@
     }
 
     a {
+      border-radius: unset;
       cursor: pointer;
       padding: .5em 1em;
       text-align: left;
+
+      &:hover {
+        background: $color-concrete;
+      }
     }
 
     .change-preview-type,

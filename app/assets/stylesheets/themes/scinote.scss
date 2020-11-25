@@ -1163,36 +1163,6 @@ ul.content-activities {
     padding: 0 20px;
   }
 
-  .badge-num {
-    position: absolute;
-
-    & > .badge {
-      background: $brand-primary;
-      border-radius: 2em;
-      float: left;
-      font-size: 23.4px;
-      padding: 6px 11px;
-      position: relative;
-      top: 2px;
-    }
-
-    .size-digit-2 {
-      font-size: 18px;
-      padding: 8px;
-    }
-
-    .size-digit-3 {
-      font-size: 14px;
-      padding: 10px 6px;
-    }
-
-    & > .badge.icon {
-      background-color: $color-silver;
-      font-size: 16.5px;
-      padding: 9px;
-    }
-  }
-
   .panel-heading a[data-toggle] {
     color: inherit;
   }

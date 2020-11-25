@@ -1,6 +1,5 @@
 <div class="result">
-  <div class="badge-num">
-    <span class="badge icon">
+  <div class="result-icon">
     <% if result.is_text %>
     <span class="fas fa-font"></span>
     <% elsif result.is_table %>
@@ -8,7 +7,6 @@
     <% elsif result.is_asset %>
     <span class="fas fa-paperclip"></span>
     <% end %>
-    </span>
   </div>
   <div class="panel panel-default">
     <div class="panel-heading">

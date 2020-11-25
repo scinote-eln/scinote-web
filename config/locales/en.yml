@@ -1046,6 +1046,9 @@ en:
       success_flash: "File result successfully deleted."
     wopi_open_file: "Open in %{app}"
     wopi_edit_file: "Edit in %{app}"
+    wopi_word: "Word for the web"
+    wopi_excel: "Excel for the web"
+    wopi_powerpoint: "Powerpoint for the web"
     error_flash: 'Something went wrong! Please try again later.'
 
   result_tables:

@@ -187,8 +187,13 @@
     }
 
     a {
+      border-radius: unset;
       cursor: pointer;
       padding: .5em 1em;
+
+      &:hover {
+        background: $color-concrete;
+      }
     }
 
     .change-order {
