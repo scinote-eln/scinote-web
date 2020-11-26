@@ -367,9 +367,9 @@ en:
           label: "Created on"
           from_placeholder: "From"
           to_placeholder: "To"
-        assignee:
-          label: "Assignee"
-          placeholder: "Select a person assigned to a project"
+        members:
+          label: "Members"
+          placeholder: "Select members of a project"
         folders:
           label: "Look inside folders"
           tooltip: "Hint should appear here"

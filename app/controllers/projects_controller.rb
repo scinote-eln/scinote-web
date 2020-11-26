@@ -234,6 +234,14 @@ class ProjectsController < ApplicationController
     render json: { state: current_team&.current_view_state(current_user)&.state&.dig('projects', 'table') }
   end
 
+  def users_filter
+    users = current_team.users.map do |u|
+      { value: u.id, label: sanitize_input(u.name), params: { avatar_url: avatar_path(u, :icon_small) } }
+    end
+
+    render json: users, status: :ok
+  end
+
   private
 
   def project_params

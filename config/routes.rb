@@ -298,6 +298,7 @@ Rails.application.routes.draw do
 
       collection do
         get 'cards'
+        get 'users_filter'
       end
     end
 

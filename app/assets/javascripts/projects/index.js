@@ -578,12 +578,22 @@
 
   function initProjectsFilter() {
     let $projectsFilter = $('#projectsToolbar .projects-filters');
-    let $membersFilter = $('.assignee-filter', $projectsFilter);
+    let $membersFilter = $('.members-filter', $projectsFilter);
     let $foldersCB = $('#folder_search', $projectsFilter);
     let $createdOnFilter = $('#calendarStartDate', $projectsFilter);
     let $dueFilter = $('#calendarDueDate', $projectsFilter);
 
-    dropdownSelector.init($membersFilter);
+    dropdownSelector.init($membersFilter, {
+      optionClass: 'checkbox-icon users-dropdown-list',
+      optionLabel: (data) => {
+        return `<img class="item-avatar" src="${data.params.avatar_url}"/> ${data.label}`;
+      },
+      tagLabel: (data) => {
+        return `<img class="item-avatar" src="${data.params.avatar_url}"/> ${data.label}`;
+      },
+      labelHTML: true,
+      tagClass: 'users-dropdown-list'
+    });
 
     // Clear filters
     $('.clear-button', $projectsFilter).click((e) => {
