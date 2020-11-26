@@ -12,7 +12,7 @@ class Asset < ApplicationRecord
   # Lock duration set to 30 minutes
   LOCK_DURATION = 60 * 30
 
-  enum view_mode: { thumbnail: 0, inline: 1, list: 2 }
+  enum view_mode: { thumbnail: 0, list: 1, inline: 2 }
 
   # ActiveStorage configuration
   has_one_attached :file
@@ -42,6 +42,17 @@ class Asset < ApplicationRecord
     dependent: :nullify
   has_many :report_elements, inverse_of: :asset, dependent: :destroy
   has_one :asset_text_datum, inverse_of: :asset, dependent: :destroy
+
+  scope :sort_assets, lambda { |sort_value = 'new'|
+    sort = case sort_value
+           when 'old' then { created_at: :asc }
+           when 'atoz' then { 'active_storage_blobs.filename': :asc }
+           when 'ztoa' then { 'active_storage_blobs.filename': :desc }
+           else { created_at: :desc }
+           end
+
+    joins(file_attachment: :blob).order(sort)
+  }
 
   attr_accessor :file_content, :file_info, :in_template
 

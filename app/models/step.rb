@@ -4,7 +4,7 @@ class Step < ApplicationRecord
   include TinyMceImages
   include ViewableModel
 
-  enum assets_view_mode: { thumbnail: 0, inline: 1, list: 2 }
+  enum assets_view_mode: { thumbnail: 0, list: 1, inline: 2 }
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
