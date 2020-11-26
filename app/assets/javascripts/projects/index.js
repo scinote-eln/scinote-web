@@ -34,10 +34,9 @@
 
   var projectsViewMode = 'cards';
   var projectsViewFilter = $('.projects-view-filter.active').data('filter');
+  var projectsViewSearch;
   var projectsChanged = false;
   var projectsViewSort = $('#sortMenuDropdown a.disabled').data('sort');
-
-  var TABLE;
 
   // Arrays with selected project and folder IDs shared between both views
   var selectedProjects = [];
@@ -483,11 +482,8 @@
   }
 
   function refreshCurrentView() {
-    if (projectsViewMode === 'cards') {
-      loadCardsView();
-    } else {
-      TABLE.draw();
-    }
+    loadCardsView();
+
     // Also refresh sidebar tree navigation
     $.ajax({
       url: $('#projects-cards-view').data('projects-sidebar-url'),
@@ -511,7 +507,8 @@
       dataType: 'json',
       data: {
         filter: projectsViewFilter,
-        sort: projectsViewSort
+        sort: projectsViewSort,
+        search: projectsViewSearch
       },
       success: function(data) {
         viewContainer.find('.card').remove();
@@ -535,12 +532,7 @@
       $(this).addClass('active');
       selectedProjects = [];
       projectsViewFilter = $(this).data('filter');
-      projectsViewFilterChanged = true;
-      if ($('#projects-cards-view').hasClass('active')) {
-        loadCardsView();
-      } else if (!$.isEmptyObject(TABLE)) {
-        TABLE.draw();
-      }
+      loadCardsView();
     });
   }
 
@@ -582,8 +574,71 @@
     let $foldersCB = $('#folder_search', $projectsFilter);
     let $createdOnFilter = $('#calendarStartDate', $projectsFilter);
     let $dueFilter = $('#calendarDueDate', $projectsFilter);
+    let $textFilter = $('#textSearchFilterInput', $projectsFilter);
 
     dropdownSelector.init($membersFilter);
+
+    $textFilter.click((e) => {
+      e.stopPropagation();
+      $('#textSearchFilterHistory').toggle();
+    }).on('input', () => {
+      $('#textSearchFilterHistory').hide();
+    });
+
+    $projectsFilter.on('click', '.projects-search-keyword', function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      $textFilter.val($(this).data('keyword'));
+      $('#textSearchFilterHistory').hide();
+    });
+
+    $('.project-filters-dropdown').on('show.bs.dropdown', function() {
+      let teamId = $projectsFilter.data('team-id');
+      $('#textSearchFilterHistory').find('li').remove();
+
+      try {
+        let storagePath = `project_filters_per_team/${teamId}/recent_search_keywords`;
+        let recentSearchKeywords = JSON.parse(localStorage.getItem(storagePath));
+        $.each(recentSearchKeywords, function(i, keyword) {
+          $('#textSearchFilterHistory').append($(
+            `<li class="dropdown-item">
+              <a class="projects-search-keyword" href="#" data-keyword="${keyword}">
+                <i class="fas fa-history"></i>
+                ${keyword}
+              </a>
+            </li>`
+          ));
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    });
+
+    $('#applyProjectFiltersButton').click((e) => {
+      e.stopPropagation();
+      e.preventDefault();
+
+      let teamId = $('.projects-filters').data('team-id');
+      projectsViewSearch = $('#textSearchFilterInput').closest('.select-block').find('input[type=text]').val();
+      try {
+        let storagePath = `project_filters_per_team/${teamId}/recent_search_keywords`;
+        let recentSearchKeywords = JSON.parse(localStorage.getItem(storagePath));
+        if (!Array.isArray(recentSearchKeywords)) recentSearchKeywords = [];
+        if (recentSearchKeywords.indexOf(projectsViewSearch) !== -1) {
+          recentSearchKeywords.splice(recentSearchKeywords.indexOf(projectsViewSearch), 1);
+        }
+        if (recentSearchKeywords.length > 4) {
+          recentSearchKeywords = recentSearchKeywords.slice(0, 4);
+        }
+        recentSearchKeywords.unshift(projectsViewSearch);
+        localStorage.setItem(storagePath, JSON.stringify(recentSearchKeywords));
+      } catch (error) {
+        console.error(error);
+      }
+
+      $('.projects-filters').dropdown('toggle');
+      refreshCurrentView();
+    });
 
     // Clear filters
     $('.clear-button', $projectsFilter).click((e) => {
@@ -594,6 +649,7 @@
       $createdOnFilter.data('DateTimePicker').clear();
       $dueFilter.data('DateTimePicker').clear();
       $foldersCB.prop('checked', false);
+      $textFilter.val('');
     });
 
     // Prevent filter window close
@@ -604,206 +660,6 @@
         dropdownSelector.closeDropdown($membersFilter);
       }
     });
-  }
-
-  // Updates "Select all" control in a data table
-  function updateDataTableSelectAllCtrl() {
-    var $table = TABLE.table().node();
-    var $header = TABLE.table().header();
-    var $chkboxAll = $('.project-row-selector', $table);
-    var $chkboxChecked = $('.project-row-selector:checked', $table);
-    var chkboxSelectAll = $('input[name="select_all"]', $header).get(0);
-
-    // If none of the checkboxes are checked
-    if ($chkboxChecked.length === 0) {
-      chkboxSelectAll.checked = false;
-      if ('indeterminate' in chkboxSelectAll) {
-        chkboxSelectAll.indeterminate = false;
-      }
-
-    // If all of the checkboxes are checked
-    } else if ($chkboxChecked.length === $chkboxAll.length) {
-      chkboxSelectAll.checked = true;
-      if ('indeterminate' in chkboxSelectAll) {
-        chkboxSelectAll.indeterminate = false;
-      }
-
-    // If some of the checkboxes are checked
-    } else {
-      chkboxSelectAll.checked = true;
-      if ('indeterminate' in chkboxSelectAll) {
-        chkboxSelectAll.indeterminate = true;
-      }
-    }
-  }
-
-  function initRowSelection() {
-    // Handle clicks on checkbox
-    $('.dt-body-center .project-row-selector').change(function(e) {
-      // Get row ID
-      var $row = $(this).closest('tr');
-      var data = TABLE.row($row).data();
-      var rowId = data.DT_RowId;
-
-      // Determine whether row ID is in the list of selected project IDs
-      var index = $.inArray(rowId, selectedProjects);
-
-      // If checkbox is checked and row ID is not in list of selected project IDs
-      if (this.checked && index === -1) {
-        selectedProjects.push(rowId);
-        exportProjectsBtn.removeAttr('disabled');
-      // Otherwise, if checkbox is not checked and ID is in list of selected IDs
-      } else if (!this.checked && index !== -1) {
-        selectedProjects.splice(index, 1);
-
-        if (selectedProjects.length === 0) {
-          exportProjectsBtn.attr('disabled', 'disabled');
-        }
-      }
-
-      updateDataTableSelectAllCtrl();
-      e.stopPropagation();
-    });
-
-    // Handle click on "Select all" control
-    $('.dataTables_scrollHead input[name="select_all"]').change(function(e) {
-      if (this.checked) {
-        $('.project-row-selector:not(:checked)').trigger('click');
-      } else {
-        $('.project-row-selector:checked').trigger('click');
-      }
-      // Prevent click event from propagating to parent
-      e.stopPropagation();
-    });
-  }
-
-  function updateSelectedRows() {
-    TABLE.rows().every(function() {
-      var rowSelector = $(this.node()).find('input[type="checkbox"]');
-      var rowId = this.data().DT_RowId;
-
-      if ($.inArray(rowId, selectedProjects) !== -1) {
-        rowSelector.prop('checked', true);
-      } else {
-        rowSelector.prop('checked', false);
-      }
-    });
-
-    updateDataTableSelectAllCtrl();
-  }
-
-  function dataTableInit() {
-    var TABLE_ID = '#projects-overview-table';
-    TABLE = $(TABLE_ID).DataTable({
-      dom: "R<'row'<'col-sm-9-custom toolbar'l><'col-sm-3-custom'f>><'row'<'col-sm-12't>><'row'<'col-sm-7'i><'col-sm-5'p>>",
-      stateSave: true,
-      stateDuration: 0,
-      processing: true,
-      serverSide: true,
-      scrollY: '64vh',
-      scrollCollapse: true,
-      destroy: true,
-      ajax: {
-        url: $(TABLE_ID).data('source'),
-        global: false,
-        type: 'POST',
-        data: function(params) {
-          params.filter = projectsViewFilter;
-          // return { ...params, ...{ filter: projectsViewFilter } };
-        }
-      },
-      colReorder: {
-        fixedColumnsLeft: 9
-      },
-      columnDefs: [{
-        // Checkbox column needs special handling
-        targets: 0,
-        searchable: false,
-        orderable: false,
-        className: 'dt-body-center',
-        sWidth: '1%',
-        render: function() {
-          return "<input class='project-row-selector' type='checkbox'>";
-        }
-      }, {
-        targets: 8,
-        searchable: false,
-        orderable: false,
-        className: 'dt-body-center',
-        sWidth: '1%'
-      }],
-      oLanguage: {
-        sSearch: I18n.t('general.filter')
-      },
-      rowCallback: function(row, data) {
-        // Get row ID
-        var rowId = data.DT_RowId;
-        var dropdown = $(row).find('.dropdown');
-        var dropdownCell = dropdown.closest('td');
-        // If row ID is in the list of selected row IDs
-        if ($.inArray(rowId, selectedProjects) !== -1) {
-          $(row).find('input[type="checkbox"]').prop('checked', true);
-        }
-
-        initEditProjectButton($(row));
-        initArchiveRestoreButton($(row));
-
-        dropdown.off().on('show.bs.dropdown', function() {
-          $('body').append(dropdown.css({
-            left: dropdown.offset().left,
-            position: 'absolute',
-            top: dropdown.offset().top
-          }).detach());
-        });
-        dropdown.off().on('hidden.bs.dropdown', function() {
-          dropdownCell.append(dropdown.removeAttr('style').detach());
-        });
-      },
-      order: [[2, 'asc']],
-      columns: [
-        { data: 'checkbox' },
-        { data: 'status' },
-        { data: 'name' },
-        { data: 'start' },
-        { data: 'visibility' },
-        { data: 'users' },
-        { data: 'experiments' },
-        { data: 'tasks' },
-        { data: 'actions' }
-      ],
-      fnDrawCallback: function() {
-        animateSpinner(this, false);
-        updateDataTableSelectAllCtrl();
-        initRowSelection();
-        initFormSubmitLinks($(this));
-      },
-      stateLoadCallback: function(settings, callback) {
-        $.ajax({
-          url: $(TABLE_ID).data('state-load-source'),
-          dataType: 'json',
-          type: 'GET',
-          success: function(json) {
-            callback(json.state);
-          }
-        });
-      },
-      stateSaveCallback: function() {
-        // Don't do anything, state will be updated at backend, based on params
-      }
-    });
-
-    // Handle click on table cells with checkboxes
-    $(TABLE_ID).off().on('click', 'tbody td', function(e) {
-      if ($(e.target).is(
-        '.project-row-selector, .active-project-link, button, span'
-      )) {
-        // Skip if clicking on selector checkbox, links and buttons
-        return;
-      }
-      $(this).parent().find('.project-row-selector').trigger('click');
-    });
-
-    return TABLE;
   }
 
   $('.projects-view-mode-switch a').off().on('shown.bs.tab', function(event) {

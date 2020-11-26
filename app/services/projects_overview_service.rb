@@ -101,12 +101,12 @@ class ProjectsOverviewService
   def filter_project_records(records)
     records = records.where(archived: true) if @params[:filter] == 'archived'
     records = records.where(archived: false) if @params[:filter] == 'active'
-    records = Project.search_by_name(@user, @team, @params[:search]) if @params[:search].present?
+    records = records.where_attributes_like('projects.name', @params[:search]) if @params[:search].present?
     records
   end
 
   def filter_project_folder_records(records)
-    records = ProjectFolder.search_by_name(@user, @team, @params[:search]) if @params[:search].present?
+    records = records.where_attributes_like('project_folders.name', @params[:search]) if @params[:search].present?
     records
   end
 
@@ -152,50 +152,5 @@ class ProjectsOverviewService
     else
       records
     end
-  end
-
-  def fetch_dt_records
-    projects = @team.projects.joins(
-      'LEFT OUTER JOIN user_projects ON user_projects.project_id = projects.id'
-    )
-    exp_join =
-      'LEFT OUTER JOIN experiments ON experiments.project_id = projects.id'\
-      ' AND ((projects.archived = true)'\
-      ' OR (projects.archived = false AND experiments.archived = false))'
-    task_join =
-      'LEFT OUTER JOIN my_modules ON my_modules.experiment_id = experiments.id'\
-      ' AND ((projects.archived = true)'\
-      ' OR (projects.archived = false AND my_modules.archived = false))'
-    projects = projects.joins(exp_join).joins(task_join)
-
-    # Only admins see all projects of the team
-    unless @user.is_admin_of_team?(@team)
-      projects = projects.where(
-        'visibility = 1 OR user_projects.user_id = :user_id', user_id: @user.id
-      )
-    end
-    projects
-      .select('projects.*')
-      .select('(SELECT COUNT(DISTINCT user_projects.id) FROM user_projects '\
-        'WHERE user_projects.project_id = projects.id) AS user_count')
-      .select('COUNT(DISTINCT experiments.id) AS experiment_count')
-      .select('COUNT(DISTINCT my_modules.id) AS task_count')
-      .group('projects.id')
-  end
-
-  def search(records, value)
-    records.where_attributes_like('projects.name', value)
-  end
-
-  def sortable_columns
-    {
-      '1' => 'projects.archived',
-      '2' => 'projects.name',
-      '3' => 'projects.created_at',
-      '4' => 'projects.visibility',
-      '5' => 'user_count',
-      '6' => 'experiment_count',
-      '7' => 'task_count'
-    }
   end
 end
