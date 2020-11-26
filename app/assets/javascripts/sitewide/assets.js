@@ -34,8 +34,10 @@ $(document).on('click', '.asset .delete-asset', function(e) {
       ajax.beforeSend = null;
       deleteModal.find('.asset-confirmation-description')
         .html(I18n.t('assets.delete_file_modal.description_1_html', { file_name: fileName }));
+      deleteModal.find('.confirm-button').attr('disabled', false);
       deleteModal.modal('show');
-      deleteModal.one('click', '.confirm-button', { ajax: ajax }, function(button) {
+      deleteModal.off('click', '.confirm-button').one('click', '.confirm-button', { ajax: ajax }, function(button) {
+        $(this).attr('disabled', true);
         $.ajax(button.data.ajax);
       });
       return false;
