@@ -36,7 +36,7 @@ $(document).on('click', '.asset .delete-asset', function(e) {
         .html(I18n.t('assets.delete_file_modal.description_1_html', { file_name: fileName }));
       deleteModal.modal('show');
       deleteModal.one('click', '.confirm-button', { ajax: ajax }, function(button) {
-        $.ajax(button.data.ajaxSettings);
+        $.ajax(button.data.ajax);
       });
       return false;
     },
