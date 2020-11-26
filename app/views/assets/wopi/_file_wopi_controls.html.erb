@@ -7,7 +7,7 @@
     <%= wopi_button_text(asset, 'edit') %>
   <% end %>
 <% else %>
-  <%= link_to edit_asset_url(id: asset),
+  <%= content_tag :div, '',
           id: 'wopi_file_edit_button',
           class: 'btn btn-light',
           target: '_blank',

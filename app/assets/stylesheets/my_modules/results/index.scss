@@ -48,3 +48,19 @@
     }
   }
 }
+
+.result {
+  .panel {
+    margin-left: 4.25em !important;
+  }
+
+  .result-icon {
+    @include font-main;
+    background: $color-concrete;
+    border-radius: 50%;
+    float: left;
+    line-height: 3em;
+    text-align: center;
+    width: 3em;
+  }
+}
