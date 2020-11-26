@@ -74,7 +74,7 @@ class TeamsController < ApplicationController
 
     @exp_projects = []
     if export_projects_params[:project_ids]
-      @exp_projects = @team.project.where(id: export_projects_params[:project_ids]).to_a
+      @exp_projects = @team.projects.where(id: export_projects_params[:project_ids]).to_a
     end
     if export_projects_params[:project_folder_ids]
       folders = @team.project_folders.where(id: export_projects_params[:project_folder_ids])
