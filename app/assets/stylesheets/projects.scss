@@ -912,7 +912,7 @@ li.module-hover {
 
 .projects-toolbar {
   .filter-container {
-    .current-tasks-filters {
+    .projects-filters {
       padding: 0;
       width: 230px;
 
@@ -994,7 +994,7 @@ li.module-hover {
 
     @media (min-width: 768px) {
 
-      .current-tasks-filters {
+      .projects-filters {
         width: 460px;
       }
 

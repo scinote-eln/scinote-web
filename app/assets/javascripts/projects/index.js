@@ -576,8 +576,34 @@
     });
   }
 
-  function initCardsFilter() {
-    dropdownSelector.init($('.assignee-filter'));
+  function initProjectsFilter() {
+    let $projectsFilter = $('#projectsToolbar .projects-filters');
+    let $membersFilter = $('.assignee-filter', $projectsFilter);
+    let $foldersCB = $('#folder_search', $projectsFilter);
+    let $createdOnFilter = $('#calendarStartDate', $projectsFilter);
+    let $dueFilter = $('#calendarDueDate', $projectsFilter);
+
+    dropdownSelector.init($membersFilter);
+
+    // Clear filters
+    $('.clear-button', $projectsFilter).click((e) => {
+      e.stopPropagation();
+      e.preventDefault();
+
+      dropdownSelector.clearData($membersFilter);
+      $createdOnFilter.data('DateTimePicker').clear();
+      $dueFilter.data('DateTimePicker').clear();
+      $foldersCB.prop('checked', false);
+    });
+
+    // Prevent filter window close
+    $($projectsFilter).click((e) => {
+      if (!$(e.target).is('input')) {
+        e.stopPropagation();
+        e.preventDefault();
+        dropdownSelector.closeDropdown($membersFilter);
+      }
+    });
   }
 
   // Updates "Select all" control in a data table
@@ -792,5 +818,5 @@
   initProjectsViewModeSwitch();
   initSorting();
   loadCardsView();
-  initCardsFilter();
+  initProjectsFilter();
 }(window));
