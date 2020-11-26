@@ -298,7 +298,12 @@ Rails.application.routes.draw do
 
       collection do
         get 'cards'
+        get 'users_filter'
       end
+    end
+
+    resources :project_folders, only: [] do
+      get 'cards', to: 'projects#cards'
     end
 
     resources :experiments do
@@ -507,6 +512,8 @@ Rails.application.routes.draw do
         get 'export', to: 'protocols#export'
       end
     end
+
+    resources :comments, only: %i(index create update destroy)
 
     resources :repositories do
       post 'repository_index',

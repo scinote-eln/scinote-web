@@ -2,3 +2,14 @@ $timing-function-deceleration: cubic-bezier(0, 0, .2, 1) !default;
 $timing-function-standard: cubic-bezier(.4, 0, .2, 1) !default;
 $timing-function-acceleration: cubic-bezier(.4, 0, 1, 1) !default;
 $timing-function-sharp: cubic-bezier(.4, 0, .6, 1) !default;
+
+@keyframes pulse {
+  0% {opacity: 1;}
+  50% {opacity: .7;}
+  100% {opacity: 1;}
+}
+
+@mixin pulse-animation {
+  animation: pulse 1s infinite;
+  animation-timing-function: ease-in-out;
+}

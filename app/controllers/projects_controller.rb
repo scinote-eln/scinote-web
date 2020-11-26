@@ -9,7 +9,7 @@ class ProjectsController < ApplicationController
   before_action :load_vars, only: %i(show edit update notifications experiment_archive)
   before_action :load_projects_tree, only: %i(sidebar show experiment_archive index)
   before_action :check_view_permissions, only: %i(show notifications experiment_archive)
-  before_action :check_create_permissions, only: %i(new create)
+  before_action :check_create_permissions, only: %i(create)
   before_action :check_manage_permissions, only: :edit
   before_action :set_inline_name_editing, only: %i(show experiment_archive)
 
@@ -24,20 +24,25 @@ class ProjectsController < ApplicationController
   end
 
   def cards
-    projects = ProjectsOverviewService.new(current_team, current_user, params).project_cards
-    render json: {
-      html: render_to_string(partial: 'projects/index/team_projects.html.erb', locals: { projects: projects }),
-      count: projects.size
-    }
-  end
+    if params[:project_folder_id].present?
+      current_folder = current_team.project_folders.find_by(id: params[:project_folder_id])
+    end
+    overview_service = ProjectsOverviewService.new(current_team, current_user, current_folder, params)
 
-  def index_dt
-    @draw = params[:draw].to_i
-    respond_to do |format|
-      format.json do
-        team = current_team || current_user.teams.first
-        @projects = ProjectsOverviewService.new(team, current_user, params).projects_datatable
-      end
+    if params[:search].present?
+      render json: {
+        html: render_to_string(
+          partial: 'projects/index/team_projects_grouped_by_folder.html.erb',
+          locals: { projects_by_folder: overview_service.grouped_by_folder_project_cards }
+        )
+      }
+    else
+      render json: {
+        html: render_to_string(
+          partial: 'projects/index/team_projects.html.erb',
+          locals: { cards: overview_service.project_and_folder_cards }
+        )
+      }
     end
   end
 
@@ -227,6 +232,14 @@ class ProjectsController < ApplicationController
 
   def dt_state_load
     render json: { state: current_team&.current_view_state(current_user)&.state&.dig('projects', 'table') }
+  end
+
+  def users_filter
+    users = current_team.users.map do |u|
+      { value: u.id, label: sanitize_input(u.name), params: { avatar_url: avatar_path(u, :icon_small) } }
+    end
+
+    render json: users, status: :ok
   end
 
   private

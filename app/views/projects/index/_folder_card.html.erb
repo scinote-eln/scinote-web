@@ -9,9 +9,9 @@
     <i class="fas fa-folder"></i>
   </div>
   <div class="name">
-    <%= folder %>
+    <%= folder.name %>
   </div>
   <div class="description">
-    <%= t('projects.index.folder.description', projects_count: 9999, folders_count: 12) %>
+    <%= t('projects.index.folder.description', projects_count: folder.projects_count, folders_count: folder.folders_count) %>
   </div>
 </div>

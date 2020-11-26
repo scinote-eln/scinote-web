@@ -456,6 +456,10 @@ class MyModule < ApplicationRecord
                              user_target: user.id })
   end
 
+  def comments
+    task_comments
+  end
+
   private
 
   def create_blank_protocol

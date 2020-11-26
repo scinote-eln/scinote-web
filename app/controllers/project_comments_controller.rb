@@ -63,26 +63,4 @@ class ProjectCommentsController < ApplicationController
   def comment_params
     params.require(:comment).permit(:message)
   end
-
-  def project_comment_annotation_notification(old_text = nil)
-    smart_annotation_notification(
-      old_text: old_text,
-      new_text: @comment.message,
-      title: t('notifications.project_comment_annotation_title',
-               project: @project.name,
-               user: current_user.full_name),
-      message: t('notifications.project_annotation_message_html',
-                 project: link_to(@project.name, project_url(@project)))
-    )
-  end
-
-  def log_activity(type_of)
-    Activities::CreateActivityService
-      .call(activity_type: type_of,
-            owner: current_user,
-            subject: @project,
-            team: @project.team,
-            project: @project,
-            message_items: { project: @project.id })
-  end
 end

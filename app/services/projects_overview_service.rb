@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class ProjectsOverviewService
-  def initialize(team, user, params)
+  def initialize(team, user, folder, params)
     @team = team
     @user = user
+    @current_folder = folder
     @params = params
     @view_state = @team.current_view_state(@user)
     if @view_state.state.dig('projects', 'filter') != @params[:filter] &&
@@ -14,57 +15,41 @@ class ProjectsOverviewService
   end
 
   def project_cards
-    cards_state = @view_state.state.dig('projects', 'cards')
-    records = fetch_records
-    records = records.where(archived: true) if @params[:filter] == 'archived'
-    records = records.where(archived: false) if @params[:filter] == 'active'
-    if @params[:sort] &&
-       cards_state['sort'] != @params[:sort] &&
-       %w(new old atoz ztoa).include?(@params[:sort])
-      cards_state['sort'] = @params[:sort]
-      @view_state.state['projects']['cards'] = cards_state
-    end
-    @view_state.save! if @view_state.changed?
-    case cards_state['sort']
-    when 'new'
-      records.order(created_at: :desc)
-    when 'old'
-      records.order(:created_at)
-    when 'atoz'
-      records.order(:name)
-    when 'ztoa'
-      records.order(name: :desc)
-    else
-      records
-    end
+    sort_records(
+      filter_project_records(
+        fetch_project_records.where(project_folder: @current_folder)
+      )
+    )
   end
 
-  def projects_datatable
-    table_state = @view_state.state.dig('projects', 'table')
-    per_page = if @params[:length] && @params[:length] != '-1'
-                 @params[:length].to_i
-               else
-                 10
-               end
-    if table_state['length'] != per_page
-      table_state['length'] = per_page
-      table_state['time'] = Time.now.to_i
-      @view_state.state['projects']['table'] = table_state
-      @view_state.save!
-    end
-    page = @params[:start] ? (@params[:start].to_i / per_page) + 1 : 1
-    records = fetch_dt_records
-    records = records.where(archived: true) if @params[:filter] == 'archived'
-    records = records.where(archived: false) if @params[:filter] == 'active'
-    search_value = @params.dig(:search, :value)
-    records = search(records, search_value) if search_value.present?
-    records = sort(records).page(page).per(per_page)
-    records
+  def project_folder_cards
+    sort_records(
+      filter_project_folder_records(
+        fetch_project_folder_records.where(parent_folder: @current_folder)
+      )
+    )
+  end
+
+  def grouped_by_folder_project_cards
+    project_records =
+      if @current_folder.present?
+        fetch_project_records.where(project_folder: ProjectFolder.inner_folders(@team, @current_folder))
+      else
+        fetch_project_records
+      end
+    project_records = project_records.includes(:project_folder)
+    sort_records(filter_project_records(project_records)).group_by(&:project_folder)
+  end
+
+  def project_and_folder_cards
+    cards = filter_project_records(fetch_project_records) + filter_project_folder_records(fetch_project_folder_records)
+
+    mixed_sort_records(cards)
   end
 
   private
 
-  def fetch_records
+  def fetch_project_records
     due_modules =
       MyModule.active
               .uncomplete
@@ -103,7 +88,70 @@ class ProjectsOverviewService
       .select('COUNT(DISTINCT comments.id) AS comment_count')
       .select('COUNT(DISTINCT due_modules.id) AS notification_count')
       .group('projects.id')
-      .limit(1_000_000)
+  end
+
+  def fetch_project_folder_records
+    project_folders = @team.project_folders.left_outer_joins(:projects, :project_folders)
+    project_folders.select('project_folders.*')
+                   .select('COUNT(DISTINCT projects.id) AS projects_count')
+                   .select('COUNT(DISTINCT project_folders.id) AS folders_count')
+                   .group('project_folders.id')
+  end
+
+  def filter_project_records(records)
+    records = records.where(archived: true) if @params[:filter] == 'archived'
+    records = records.where(archived: false) if @params[:filter] == 'active'
+    records = Project.search_by_name(@user, @team, @params[:search]) if @params[:search].present?
+    records
+  end
+
+  def filter_project_folder_records(records)
+    records = ProjectFolder.search_by_name(@user, @team, @params[:search]) if @params[:search].present?
+    records
+  end
+
+  def sort_records(records)
+    cards_state = @view_state.state.dig('projects', 'cards')
+    if @params[:sort] && cards_state['sort'] != @params[:sort] && %w(new old atoz ztoa).include?(@params[:sort])
+      cards_state['sort'] = @params[:sort]
+      @view_state.state['projects']['cards'] = cards_state
+    end
+    @view_state.save! if @view_state.changed?
+
+    case cards_state['sort']
+    when 'new'
+      records.order(created_at: :desc)
+    when 'old'
+      records.order(:created_at)
+    when 'atoz'
+      records.order(:name)
+    when 'ztoa'
+      records.order(name: :desc)
+    else
+      records
+    end
+  end
+
+  def mixed_sort_records(records)
+    cards_state = @view_state.state.dig('projects', 'cards')
+    if @params[:sort] && cards_state['sort'] != @params[:sort] && %w(new old atoz ztoa).include?(@params[:sort])
+      cards_state['sort'] = @params[:sort]
+      @view_state.state['projects']['cards'] = cards_state
+    end
+    @view_state.save! if @view_state.changed?
+
+    case cards_state['sort']
+    when 'new'
+      records.sort_by(&:created_at).reverse!
+    when 'old'
+      records.sort_by(&:created_at)
+    when 'atoz'
+      records.sort_by { |c| c.name.downcase }
+    when 'ztoa'
+      records.sort_by { |c| c.name.downcase }.reverse!
+    else
+      records
+    end
   end
 
   def fetch_dt_records
@@ -149,24 +197,5 @@ class ProjectsOverviewService
       '6' => 'experiment_count',
       '7' => 'task_count'
     }
-  end
-
-  def sort(records)
-    order_state = @view_state.state['projects']['table']['order'][0]
-    order = @params[:order]&.values&.first
-    if order
-      dir = order[:dir] == 'desc' ? 'DESC' : 'ASC'
-      column_index = order[:column]
-    else
-      dir = 'ASC'
-      column_index = '1'
-    end
-    if order_state != [column_index.to_i, dir.downcase]
-      @view_state.state['projects']['table']['order'][0] =
-        [column_index.to_i, dir.downcase]
-    end
-    sort_column = sortable_columns[column_index]
-    sort_column ||= sortable_columns['1']
-    records.order("#{sort_column} #{dir}")
   end
 end
