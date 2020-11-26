@@ -181,6 +181,14 @@ class Asset < ApplicationRecord
     file.blob&.filename&.sanitized
   end
 
+  def render_file_name
+    if file.attached? && file.metadata['asset_type']
+      file.metadata['name']
+    else
+      file_name
+    end
+  end
+
   def file_size
     return 0 unless file.attached?
 

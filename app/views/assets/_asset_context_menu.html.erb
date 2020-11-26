@@ -60,7 +60,7 @@
     <% if can_manage_asset?(asset) && deletable %>
       <li role="separator" class="divider"></li>
       <li>
-        <a class="delete-asset" href="<%= asset_destroy_path(asset) %>">
+        <a class="delete-asset" href="<%= asset_destroy_path(asset) %>" data-file-name="<%= asset.render_file_name %>">
           <i class="fas fa-trash"></i>
           <%= t("assets.context_menu.delete") %>
         </a>

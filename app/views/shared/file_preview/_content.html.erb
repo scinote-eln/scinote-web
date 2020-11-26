@@ -1,7 +1,7 @@
 <div class="modal-header">
   <span class="file-name"><%= asset.file_name %></span>
   <div class="sci-btn-group">
-    <% if can_edit %>
+    <% if can_edit && !preview %>
       <% if wopi_enabled? && wopi_file?(asset) %>
         <% edit_supported, title = wopi_file_edit_button_status(asset) %>
         <%= render partial: 'assets/wopi/file_wopi_controls.html.erb',
@@ -38,7 +38,7 @@
      <a class="btn btn-light file-download-link" href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>" data-turbolinks="false">
       <span class="fas fa-download"></span> <%= t('Download')%>
     </a>
-    <% if asset.step || asset.result %>
+    <% if (asset.step || asset.result) && !preview %>
       <%= render partial: 'assets/asset_context_menu.html.erb', locals: { asset: asset, deletable: false, editable: false } %>
     <% end %>
     <button type="button" class="btn icon-btn btn-light" data-dismiss="modal"><span class="fas fa-times"></span></button>

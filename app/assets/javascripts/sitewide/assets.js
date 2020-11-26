@@ -21,12 +21,27 @@ $(document).on('click', '.asset-context-menu .change-preview-type', function(e) 
 
 $(document).on('click', '.asset .delete-asset', function(e) {
   var asset = $(this).closest('.asset');
+  var fileName = $(this).data('file-name');
   e.preventDefault();
   e.stopPropagation();
   $.ajax({
     url: $(this).attr('href'),
     type: 'DELETE',
     dataType: 'json',
+    beforeSend: function(element, ajaxSettings) {
+      var deleteModal = $('.modal-file-delete');
+      var ajax = ajaxSettings;
+      ajax.beforeSend = null;
+      deleteModal.find('.asset-confirmation-description')
+        .html(I18n.t('assets.delete_file_modal.description_1_html', { file_name: fileName }));
+      deleteModal.find('.confirm-button').attr('disabled', false);
+      deleteModal.modal('show');
+      deleteModal.off('click', '.confirm-button').one('click', '.confirm-button', { ajax: ajax }, function(button) {
+        $(this).attr('disabled', true);
+        $.ajax(button.data.ajax);
+      });
+      return false;
+    },
     success: function(result) {
       asset.remove();
       HelperModule.flashAlertMsg(result.flash, 'success');
