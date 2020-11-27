@@ -47,7 +47,7 @@
         <% end %>
         <!-- Show comments -->
         <li>
-          <a href="#">
+          <a href="#" data-turbolinks="false" onclick="CommentsSidebar.open('Project', <%= project.id %>);">
             <i class="fas fa-comment"></i>
             <span><%= t('projects.index.comments_option', comments_count: project.comment_count) %></span>
           </a>
