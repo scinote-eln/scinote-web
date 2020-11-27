@@ -313,11 +313,12 @@ class MyModulesController < ApplicationController
   end
 
   def check_view_permissions
-    render_403 unless can_read_experiment?(@my_module.experiment)
+    render_403 unless can_read_protocol_in_module?(@my_module.protocol)
   end
 
   def check_update_state_permissions
     return render_403 unless can_change_my_module_flow_status?(@my_module)
+
     render_404 unless @my_module.my_module_status
   end
 

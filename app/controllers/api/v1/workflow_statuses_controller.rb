@@ -3,9 +3,7 @@
 module Api
   module V1
     class WorkflowStatusesController < BaseController
-      before_action only: :index do
-        load_workflow(:workflow_id)
-      end
+      before_action :load_workflow
 
       def index
         statuses = @workflow.my_module_statuses

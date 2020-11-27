@@ -152,15 +152,15 @@ module Api
 
       def load_inventory(key = :inventory_id)
         @inventory = @team.repositories.find(params.require(key))
+        raise PermissionError.new(Repository, :read) unless can_read_repository?(@inventory)
       end
 
       def load_inventory_column(key = :column_id)
-        @inventory_column = @inventory.repository_columns
-                                      .find(params.require(key))
+        @inventory_column = @inventory.repository_columns.find(params.require(key))
       end
 
       def load_inventory_item(key = :item_id)
-        @inventory_item = @inventory.repository_rows.find(params[key].to_i)
+        @inventory_item = @inventory.repository_rows.find(params[key])
       end
 
       def load_project(key = :project_id)
@@ -175,6 +175,7 @@ module Api
 
       def load_task(key = :task_id)
         @task = @experiment.my_modules.find(params.require(key))
+        raise PermissionError.new(MyModule, :read) unless can_read_protocol_in_module?(@task.protocol)
       end
 
       def load_protocol(key = :protocol_id)
