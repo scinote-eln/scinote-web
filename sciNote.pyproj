@@ -511,10 +511,10 @@
     <Folder Include="vendor\assets\stylesheets" />
   </ItemGroup>
   <ItemGroup>
-    <Interpreter Include="..\..\..\..\Envs\SciNote\SciNote\">
+    <Interpreter Include="..\..\..\..\Envs\SciNote\">
       <Id>SciNote</Id>
-      <Version>3.8</Version>
-      <Description>SciNote (Python 3.8 (64-bit))</Description>
+      <Version>3.9</Version>
+      <Description>SciNote (Python 3.9 (64-bit))</Description>
       <InterpreterPath>Scripts\python.exe</InterpreterPath>
       <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
       <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
