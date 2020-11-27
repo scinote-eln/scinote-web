@@ -1,12 +1,15 @@
 # Python 3.9.0 or higher
 
 # Created this file to test SciNote in W10 build.
+# https://github.com/biosistemika/scinote-web/wiki/Technical-overview
 
+ajax>=3.0.0                            # A simple framework for creating AJAX endpoints in Django.
 django-less>=0.7.2                     # Django template tags to compile LESS into CSS.
 Docker>=4.4.0                          # A Python library for the Docker Engine API.
-                                       # Using this to test as 'Docker Compose' for W10
+                                       # Using this to test as 'Docker Compose' for W10.
 docker-emperor>=0.2.2                  # Docker CLI that combine compose and machine for a full stack deployment.
-                                       # Gemfile>=     # Could not find W10 version? https://github.com/biosistemika/scinote-web/wiki/Technical-overview
+Gen-make>=1.0.1                        # A script generate basic Makefile.
+npm>=0.1.1                             # Python bindings and utils for npm.
 Rails>=0.0.5                           # Rails - python web framework.
 rubyenv>=0.3                           # manage ruby in your virtualenv.
                                        # rubygemsrecipe>=0.3.0    # Failed to install (Gemfile?)
@@ -15,4 +18,5 @@ puma>=0.0.0rc1                         # Python Unified Multi-tasking API (PUMA)
 setuptools>=50.3.2                     # Easily download, build, install, upgrade, and uninstall Python packages.
 virtualenvwrapper.gem>=0.1             # Plugin for virtualenvwrapper to automatically encapsulate inside the virtual environment any gems installed when the venv is activated.
 webpack>=6.0.0                         # Python bindings to Webpack.
-wheel>=0.35.1                          # A built-package format for Python
+wheel>=0.35.1                          # A built-package format for Python.
+yarn.build>=1.0.0                      # Build JS artifacts with yarn.
