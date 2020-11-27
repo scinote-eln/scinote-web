@@ -6,5 +6,9 @@ FactoryBot.define do
     repository_column { create :repository_column, :checklist_type }
     created_by { create :user }
     last_modified_by { created_by }
+
+    after(:create) do |item|
+      item.repository_column.reload
+    end
   end
 end

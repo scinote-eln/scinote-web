@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RepositoryChecklistItem < ApplicationRecord
-  belongs_to :repository_column
+  belongs_to :repository_column, inverse_of: :repository_checklist_items
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User',
              inverse_of: :created_repository_checklist_types
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User',
