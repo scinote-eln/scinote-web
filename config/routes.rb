@@ -297,12 +297,13 @@ Rails.application.routes.draw do
       get 'users/edit', to: 'user_projects#index_edit'
 
       collection do
-        get 'cards'
+        get 'cards', to: 'projects#cards'
         get 'users_filter'
       end
     end
 
     resources :project_folders, only: [] do
+      get '/', to: 'projects#index'
       get 'cards', to: 'projects#cards'
     end
 

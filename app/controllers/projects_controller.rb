@@ -7,6 +7,7 @@ class ProjectsController < ApplicationController
 
   before_action :switch_team_with_param, only: :index
   before_action :load_vars, only: %i(show edit update notifications experiment_archive)
+  before_action :load_current_folder, only: %i(index cards)
   before_action :load_projects_tree, only: %i(sidebar show experiment_archive index)
   before_action :check_view_permissions, only: %i(show notifications experiment_archive)
   before_action :check_create_permissions, only: %i(create)
@@ -24,21 +25,20 @@ class ProjectsController < ApplicationController
   end
 
   def cards
-    if params[:project_folder_id].present?
-      current_folder = current_team.project_folders.find_by(id: params[:project_folder_id])
-    end
-    overview_service = ProjectsOverviewService.new(current_team, current_user, current_folder, params)
+    overview_service = ProjectsOverviewService.new(current_team, current_user, @current_folder, params)
 
     if params[:search].present?
       render json: {
-        html: render_to_string(
+        cards_html: render_to_string(
           partial: 'projects/index/team_projects_grouped_by_folder.html.erb',
           locals: { projects_by_folder: overview_service.grouped_by_folder_project_cards }
         )
       }
     else
       render json: {
-        html: render_to_string(
+        projects_cards_url: @current_folder ? project_folder_cards_url(@current_folder) : cards_projects_url,
+        breadcrumbs_html: @current_folder ? render_to_string(partial: 'projects/index/breadcrumbs.html.erb') : '',
+        cards_html: render_to_string(
           partial: 'projects/index/team_projects.html.erb',
           locals: { cards: overview_service.project_and_folder_cards }
         )
@@ -252,6 +252,12 @@ class ProjectsController < ApplicationController
     @project = Project.find_by(id: params[:id])
 
     render_404 unless @project
+  end
+
+  def load_current_folder
+    if current_team && params[:project_folder_id].present?
+      @current_folder = current_team.project_folders.find_by(id: params[:project_folder_id])
+    end
   end
 
   def load_projects_tree

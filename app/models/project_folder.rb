@@ -59,6 +59,23 @@ class ProjectFolder < ApplicationRecord
     new_query.order(:parent_folder_id)
   end
 
+  def parent_folders
+    outer_folders_sql =
+      'WITH RECURSIVE outer_project_folders(id, parent_folder_id, selected_folders_ids) AS (
+        SELECT id, parent_folder_id, ARRAY[id]
+        FROM project_folders
+        WHERE team_id = ? AND id = ?
+        UNION ALL
+        SELECT project_folders.id, project_folders.parent_folder_id, selected_folders_ids || project_folders.id
+        FROM outer_project_folders
+        JOIN project_folders ON project_folders.id = outer_project_folders.parent_folder_id
+        WHERE NOT project_folders.id = ANY(selected_folders_ids)
+      )
+      SELECT id FROM outer_project_folders ORDER BY selected_folders_ids'.gsub(/\n|\t/, ' ').gsub(/ +/, ' ')
+
+    ProjectFolder.where("project_folders.id IN (#{outer_folders_sql})", team.id, id)
+  end
+
   def inner_projects
     project_folders.map do |inner_folder|
       projects + inner_folder.inner_projects

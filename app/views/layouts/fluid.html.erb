@@ -8,6 +8,9 @@
           <span class="fas fa-chevron-right"></span>
         </div>
       </div>
+      <div id="breadcrumbs-wrapper">
+        <%= yield :breadcrumbs %>
+      </div>
       <%= yield :secondary_navigation %>
       <div class="container-fluid <%= yield :container_class %>" id="fluid-content">
         <%= yield %>

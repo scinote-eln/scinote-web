@@ -9,7 +9,10 @@
     <i class="fas fa-folder"></i>
   </div>
   <div class="name">
-    <%= folder.name %>
+    <%= link_to(folder.name,
+                project_folder_path(folder),
+                class: 'project-folder-link',
+                data: { projects_cards_url: project_folder_cards_url(folder) }) %>
   </div>
   <div class="description">
     <%= t('projects.index.folder.description', projects_count: folder.projects_count, folders_count: folder.folders_count) %>
