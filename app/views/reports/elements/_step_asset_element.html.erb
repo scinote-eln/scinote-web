@@ -9,7 +9,7 @@
       </div>
       <div class="pull-left file-name">
         <% if defined? export_all and export_all %>
-          <a href="<%= path %>">
+          <a href="<%= path[:file] %>">
             <em><%= t('projects.reports.elements.step_asset.file_name', file: filename) %></em>
           </a>
         <% else %>
@@ -36,7 +36,7 @@
       <div class="row">
         <div class="col-xs-12 file-image">
           <% if defined?(export_all) && export_all %>
-            <img class="report-export-img" src="<%= path %>">
+            <img class="report-export-img" src="<%= path[:preview] %>">
           <% else %>
             <%= report_image_asset_url(asset) %>
           <% end %>

@@ -8,7 +8,7 @@
       </div>
       <div class="pull-left table-name">
         <% if defined? export_all and export_all %>
-          <a href="<%= path %>">
+          <a href="<%= path[:file] %>">
             <em><%=t 'projects.reports.elements.step_table.table_name',
                      name: filename %></em>
           </a>
