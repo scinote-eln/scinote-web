@@ -955,6 +955,16 @@ li.module-hover {
         }
       }
 
+      .recent-searches {
+        label {
+          @include font-small;
+          font-weight: bold;
+          margin-bottom: .3em;
+          padding: 0 1.5em;
+          user-select: none;
+        }
+      }
+
       .footer {
         align-items: center;
         border-top: $border-default;
@@ -1031,4 +1041,3 @@ li.module-hover {
     }
   }
 }
-

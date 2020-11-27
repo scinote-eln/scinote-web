@@ -363,6 +363,9 @@ en:
         contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
       filters_modal:
         title: "Filters"
+        text:
+          label: "Contains text"
+          placeholder: "Enter search terms..."
         created_on:
           label: "Created on"
           from_placeholder: "From"
@@ -373,6 +376,7 @@ en:
         folders:
           label: "Look inside folders"
           tooltip: "Hint should appear here"
+        recent_searches_label: "Recent searches"
         show_btn:
          many: "Show %{num} results"
          none: "No results"
