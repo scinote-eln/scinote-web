@@ -1,0 +1,5 @@
+Docker>=4.4.0
+Rails>=0.0.5
+rubyenv>=0.3
+pip>=20.2.4
+webpack>=6.0.0
