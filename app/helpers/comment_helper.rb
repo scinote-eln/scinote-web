@@ -254,4 +254,8 @@ module CommentHelper
             project: result.my_module.experiment.project,
             message_items: { result: result.id })
   end
+
+  def has_unseen_comments?(commentable)
+    commentable.comments.where('? = ANY (unseen_by)', current_user.id).any?
+  end
 end
