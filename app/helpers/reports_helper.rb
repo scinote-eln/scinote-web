@@ -77,10 +77,12 @@ module ReportsHelper
       end
 
       if obj_id
-        locals[:path] =
-          provided_locals[:obj_filenames][element['type_of'].to_sym][obj_id]
-          .sub(%r{/usr/src/app/tmp/temp-zip-\d+/}, '')
-        locals[:filename] = locals[:path].split('/').last
+        file = provided_locals[:obj_filenames][element['type_of'].to_sym][obj_id]
+        locals[:path] = {
+          file: file[:file].sub(%r{/usr/src/app/tmp/temp-zip-\d+/}, ''),
+          preview: file[:preview]&.sub(%r{/usr/src/app/tmp/temp-zip-\d+/}, '')
+        }
+        locals[:filename] = locals[:path][:file].split('/').last
       end
     end
 
