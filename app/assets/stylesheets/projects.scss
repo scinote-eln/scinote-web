@@ -667,7 +667,7 @@ li.module-hover {
   .cards-wrapper {
     align-items: center;
     display: grid;
-    grid-auto-rows: 11em;
+    grid-auto-rows: 2em;
     grid-column-gap: 1em;
     grid-row-gap: 1em;
     grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
@@ -675,6 +675,11 @@ li.module-hover {
 
     .table-header {
       display: none;
+    }
+
+    .projects-group {
+      grid-column: 1/-1;
+      margin: 0;
     }
 
     .card {
@@ -686,6 +691,7 @@ li.module-hover {
       padding: .5em 1em;
       position: relative;
       width: 100%;
+      grid-row: span 4;
 
       .checkbox-cell {
         align-items: center;
@@ -803,6 +809,23 @@ li.module-hover {
       grid-template-columns: max-content 1fr 1fr 1fr 1fr max-content;
       margin: 40px 0 0 6px;
 
+
+      .projects-group {
+        display: contents;
+
+        .projects-breadcrumbs {
+          grid-column: inherit;
+        }
+
+        &::after {
+          background: $color-concrete;
+          content: "";
+          display: inline-block;
+          grid-column: inherit;
+          height: 1px;
+        }
+      }
+
       .card {
         display: contents;
 
@@ -892,12 +915,17 @@ li.module-hover {
       .table-header {
         display: contents;
 
+        &::after {
+          content: "";
+          grid-column: 1/-1;
+        }
+
         .table-header-cell {
           align-items: center;
           border: 1px solid $color-white;
           display: flex;
           height: 3em;
-          margin: 0 0 2.5em -.5em;
+          margin-left: -.5em;
           padding: 0 .5em;
           width: calc(100% + 1em);
 
