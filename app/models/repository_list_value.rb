@@ -61,7 +61,7 @@ class RepositoryListValue < ApplicationRecord
     value.repository_list_item = value.repository_cell
                                       .repository_column
                                       .repository_list_items
-                                      .find(payload)
+                                      .find_by(id: payload)
     value
   end
 
