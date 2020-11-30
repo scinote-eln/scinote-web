@@ -6,4 +6,12 @@ class MyModuleStatusConsequence < ApplicationRecord
   def runs_in_background?
     false
   end
+
+  def forward_execution
+    true
+  end
+
+  def backward_execution
+    true
+  end
 end

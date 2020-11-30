@@ -506,13 +506,23 @@ class MyModule < ApplicationRecord
     self.changing_from_my_module_status_id = my_module_status_id_was if my_module_status_id_was.present?
     self.status_changing = true
 
+    status_changing_direction = if my_module_status.next_status&.id == my_module_status_id_was
+                                  :backward
+                                else
+                                  :forward
+                                end
+
     yield
 
     if my_module_status.my_module_status_consequences.any?(&:runs_in_background?)
-      MyModuleStatusConsequencesJob.perform_later(self, my_module_status.my_module_status_consequences.to_a)
+      MyModuleStatusConsequencesJob.perform_later(
+        self,
+        my_module_status.my_module_status_consequences.to_a,
+        status_changing_direction
+      )
     else
       my_module_status.my_module_status_consequences.each do |consequence|
-        consequence.call(self)
+        consequence.call(self) if consequence.public_send("#{status_changing_direction}_execution")
       end
       update!(status_changing: false)
     end

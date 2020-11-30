@@ -3,11 +3,11 @@
 class MyModuleStatusConsequencesJob < ApplicationJob
   queue_as :high_priority
 
-  def perform(my_module, my_module_status_consequences)
+  def perform(my_module, my_module_status_consequences, status_changing_direction)
     error_raised = false
     my_module.transaction do
       my_module_status_consequences.each do |consequence|
-        consequence.call(my_module)
+        consequence.call(my_module) if consequence.public_send("#{status_changing_direction}_execution")
       end
       my_module.update!(status_changing: false)
     rescue StandardError => e
