@@ -506,12 +506,10 @@ class MyModule < ApplicationRecord
     self.changing_from_my_module_status_id = my_module_status_id_was if my_module_status_id_was.present?
     self.status_changing = true
 
-    status_changing_direction = if my_module_status.next_status&.id == my_module_status_id_was
-                                  :backward
-                                else
-                                  :forward
-                                end
+    status_changing_direction = my_module_status.previous_status_id == my_module_status_id_was ? :forward : :backward
 
+    p 111111
+    p status_changing_direction
     yield
 
     if my_module_status.my_module_status_consequences.any?(&:runs_in_background?)
