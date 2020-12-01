@@ -55,6 +55,24 @@ class ProjectFoldersController < ApplicationController
     end
   end
 
+  def create
+    folder = current_team.project_folders.create(name: 'PF Name')
+
+    log_activity(:create_project_folder, folder, { project_folder: folder.id })
+  end
+
+  def update
+    folder = current_team.project_folders.find(params[:id])
+
+    log_activity(:rename_project_folder, folder, { project_folder: folder.id })
+  end
+
+  def archive
+    folder = current_team.project_folders.find(params[:id])
+
+    log_activity(:archive_project_folder, folder, { project_folder: folder.id })
+  end
+
   private
 
   def load_current_folder
@@ -85,13 +103,34 @@ class ProjectFoldersController < ApplicationController
     project_ids = move_params[:movables].collect { |movable| movable[:id] if movable[:type] == 'project' }.compact
     return if project_ids.blank?
 
-    current_team.projects.where(id: project_ids).each { |p| p.update!(project_folder: destination_folder) }
+    current_team.projects.where(id: project_ids).each do |p|
+      source_folder_name = p.project_folder&.name || I18n.t('global_activities.root_folder_level')
+      p.update!(project_folder: destination_folder)
+      destination_folder_name = p.project_folder&.name || I18n.t('global_activities.root_folder_level')
+
+      log_activity(:move_project, p, { project: p.id,
+                                       destination_folder: destination_folder_name,
+                                       source_folder: source_folder_name })
+    end
   end
 
   def move_folders(destination_folder)
     folder_ids = move_params[:movables].collect { |movable| movable[:id] if movable[:type] == 'project_folder' }.compact
     return if folder_ids.blank?
 
-    current_team.project_folders.where(id: folder_ids).each { |f| f.update!(parent_folder: destination_folder) }
+    current_team.project_folders.where(id: folder_ids).each do |f|
+      source_folder_name = f.parent_folder&.name || I18n.t('global_activities.root_folder_level')
+      f.update!(parent_folder: destination_folder)
+      destination_folder_name = f.parent_folder&.name || I18n.t('global_activities.root_folder_level')
+
+      log_activity(:move_project_folder, f, { project_folder: f.id,
+                                              destination_folder: destination_folder_name,
+                                              source_folder: source_folder_name })
+    end
+  end
+
+  def log_activity(type_of, subject, items = {})
+    Activities::CreateActivityService
+      .call(activity_type: type_of, owner: current_user, team: subject.team, subject: subject, message_items: items)
   end
 end
