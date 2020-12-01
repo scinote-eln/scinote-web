@@ -7,7 +7,7 @@ class MyModuleStatusConsequencesJob < ApplicationJob
     error_raised = false
     my_module.transaction do
       my_module_status_consequences.each do |consequence|
-        consequence.call(my_module) if consequence.public_send("#{status_changing_direction}_execution")
+        consequence.public_send(status_changing_direction, my_module)
       end
       my_module.update!(status_changing: false)
     rescue StandardError => e

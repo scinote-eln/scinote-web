@@ -3,7 +3,7 @@
 # Just an example, to be replaced with an actual implementation
 module MyModuleStatusConsequences
   class Uncompletion < MyModuleStatusConsequence
-    def call(my_module)
+    def backward(my_module)
       return unless my_module.state == 'completed'
 
       my_module.state = 'uncompleted'

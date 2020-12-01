@@ -518,7 +518,7 @@ class MyModule < ApplicationRecord
       )
     else
       my_module_status.my_module_status_consequences.each do |consequence|
-        consequence.call(self) if consequence.public_send("#{status_changing_direction}_execution")
+        consequence.public_send(status_changing_direction, self)
       end
       update!(status_changing: false)
     end
