@@ -342,6 +342,13 @@ en:
         name: "Name"
       folder:
         description: "%{projects_count} projects | %{folders_count} folders"
+      modal_new_project_folder:
+        description: "Give your folder a distinct name to recognize it faster."
+        modal_title: "Create folder"
+        name: "New folder name"
+        name_placeholder: "Name your folder"
+        create: "Create folder"
+        success_flash: "Project folder <strong>%{name}</strong> successfully created."
       modal_new_project:
         modal_title: "Create new project"
         create: "Create"

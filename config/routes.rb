@@ -302,10 +302,10 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :project_folders, only: [] do
-      get '/', to: 'projects#index'
+    resources :project_folders, only: %i(new create) do
       get 'cards', to: 'projects#cards'
     end
+    get 'project_folders/:project_folder_id', to: 'projects#index', as: :project_folder
 
     resources :experiments do
       member do

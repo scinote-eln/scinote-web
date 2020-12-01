@@ -407,6 +407,7 @@
     initManageUsersModal();
     initExportProjectsModal();
     initExportProjects();
+    $('.new-project-folder-btn').initSubmitModal('#new-project-folder-modal', 'project_folder');
 
     initEditProjectButton($('.panel-project'));
     initArchiveRestoreButton($('.panel-project'));
