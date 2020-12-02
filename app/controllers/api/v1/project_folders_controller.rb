@@ -44,7 +44,7 @@ module Api
       def folder_params
         raise TypeError unless params.require(:data).require(:type) == 'project_folders'
 
-        params.from_jsonapi.require(:project_folder).permit(:name, :parent_folder_id)
+        params.permit(data: { attributes: %i(name parent_folder_id) })[:data][:attributes]
       end
 
       def update_folder_params

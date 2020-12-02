@@ -148,27 +148,20 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
         )
       end
 
-      context 'when includes folder relation' do
+      context 'when includes project_folder relation' do
         let(:request_body) do
           {
             data: {
               type: 'projects',
               attributes: {
                 name: 'Project name',
-                visibility: 'hidden'
-              },
-              relationships: {
-                project_folder: {
-                  data: {
-                    type: 'project_folders',
-                    id: folder.id
-                  }
-                }
+                visibility: 'hidden',
+                project_folder_id: project_folder.id
               }
             }
           }
         end
-        let(:folder) { create :project_folder, team: @teams.first }
+        let(:project_folder) { create :project_folder, team: @teams.first }
 
         it 'renders 201' do
           action
@@ -248,24 +241,18 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
         )
       end
 
-      context 'when includes folder relation' do
+      context 'when includes project_folder relation' do
         let(:request_body) do
           {
             data: {
               type: 'projects',
-              attributes: {},
-              relationships: {
-                project_folder: {
-                  data: {
-                    type: 'project_folders',
-                    id: folder.id
-                  }
-                }
+              attributes: {
+                project_folder_id: project_folder.id
               }
             }
           }
         end
-        let(:folder) { create :project_folder, team: @teams.first }
+        let(:project_folder) { create :project_folder, team: @teams.first }
 
         it 'renders 201' do
           action

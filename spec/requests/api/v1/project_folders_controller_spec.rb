@@ -67,15 +67,8 @@ RSpec.describe 'Api::V1::ProjectFoldersController', type: :request do
         data: {
           type: 'project_folders',
           attributes: {
-            name: project_folder_name
-          },
-          relationships: {
-            parent_folder: {
-              data: {
-                type: 'project_folders',
-                id: parent_folder_id
-              }
-            }
+            name: project_folder_name,
+            parent_folder_id: parent_folder_id
           }
         }
       }
@@ -138,15 +131,8 @@ RSpec.describe 'Api::V1::ProjectFoldersController', type: :request do
           id: project_folder.id,
           type: 'project_folders',
           attributes: {
-            name: project_folder_name
-          },
-          relationships: {
-            parent_folder: {
-              data: {
-                type: 'project_folders',
-                id: parent_folder_id
-              }
-            }
+            name: project_folder_name,
+            parent_folder_id: parent_folder_id
           }
         }
       }
