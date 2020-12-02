@@ -8,6 +8,7 @@ module Api
 
       belongs_to :team, serializer: TeamSerializer
       belongs_to :parent_folder, serializer: ProjectFolderSerializer
+      has_many :projects, serializer: ProjectSerializer
     end
   end
 end

@@ -12,11 +12,11 @@ module Api
                                .page(params.dig(:page, :number))
                                .per(params.dig(:page, :size))
 
-        render jsonapi: project_folders, each_serializer: ProjectFolderSerializer, status: :ok
+        render jsonapi: project_folders, each_serializer: ProjectFolderSerializer
       end
 
       def show
-        render jsonapi: @project_folder, serializer: ProjectFolderSerializer, status: :ok
+        render jsonapi: @project_folder, serializer: ProjectFolderSerializer
       end
 
       def create
@@ -29,7 +29,7 @@ module Api
         @project_folder.attributes = update_folder_params
 
         if @project_folder.changed? && @project_folder.save!
-          render jsonapi: @project_folder, serializer: ProjectFolderSerializer, status: :ok
+          render jsonapi: @project_folder, serializer: ProjectFolderSerializer
         else
           render jsonapi: nil, status: :no_content
         end

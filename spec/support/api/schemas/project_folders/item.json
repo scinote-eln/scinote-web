@@ -28,6 +28,9 @@
         },
         "parent_folder": {
           "type": "object"
+        },
+        "projects": {
+          "type": "object"
         }
       },
       "additionalProperties": false,
