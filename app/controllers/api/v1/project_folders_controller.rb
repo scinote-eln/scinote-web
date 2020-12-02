@@ -5,7 +5,6 @@ module Api
     class ProjectFoldersController < BaseController
       before_action :load_team
       before_action :load_project_folder, only: %i(show update)
-      before_action :check_parent_folder, only: %i(create update)
 
       def index
         project_folders = @team.project_folders
@@ -51,10 +50,6 @@ module Api
         raise IDMismatchError unless params.require(:data).require(:id).to_i == params[:id].to_i
 
         folder_params
-      end
-
-      def check_parent_folder
-        @team.project_folders.find(folder_params[:parent_folder_id]) if folder_params[:parent_folder_id]
       end
     end
   end

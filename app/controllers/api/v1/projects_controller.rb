@@ -9,7 +9,6 @@ module Api
       end
       before_action :load_project, only: :activities
       before_action :load_project_for_managing, only: %i(update)
-      before_action :check_parent_folder, only: %i(create update)
 
       def index
         projects = @team.projects
@@ -68,10 +67,6 @@ module Api
       def load_project_for_managing
         @project = @team.projects.find(params.require(:id))
         raise PermissionError.new(Project, :manage) unless can_manage_project?(@project)
-      end
-
-      def check_parent_folder
-        @team.project_folders.find(project_params[:project_folder_id]) if project_params[:project_folder_id]
       end
     end
   end

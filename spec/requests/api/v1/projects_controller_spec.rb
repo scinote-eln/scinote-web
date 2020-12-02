@@ -169,6 +169,17 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
           expect(response).to have_http_status(201)
           expect(JSON.parse(response.body).dig('data', 'relationships', 'project_folder', 'data')).to be_truthy
         end
+
+        context 'when folder from a different team' do
+          let(:project_folder) { create :project_folder, team: @teams.last }
+
+          it do
+            action
+
+            expect(JSON.parse(response.body)['errors'].first['title']).to be_eql 'Validation error'
+            expect(response).to have_http_status 400
+          end
+        end
       end
     end
 

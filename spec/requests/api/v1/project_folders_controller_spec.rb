@@ -111,16 +111,6 @@ RSpec.describe 'Api::V1::ProjectFoldersController', type: :request do
           expect(JSON.parse(response.body)['errors'].first['title']).to be_eql 'Validation error'
         end
       end
-
-      context 'when parent_folder not found' do
-        let(:parent_folder_id) { -1 }
-
-        it do
-          action
-
-          expect(response).to have_http_status 404
-        end
-      end
     end
   end
 
@@ -190,13 +180,15 @@ RSpec.describe 'Api::V1::ProjectFoldersController', type: :request do
         end
       end
 
-      context 'when parent_folder not found' do
-        let(:parent_folder_id) { -1 }
+      context 'when parent_folder belongs to another team' do
+        let(:folder_from_another_team) { create(:project_folder) }
+        let(:parent_folder_id) { folder_from_another_team.id }
 
         it do
           action
 
-          expect(response).to have_http_status(404)
+          expect(JSON.parse(response.body)['errors'].first['title']).to be_eql 'Validation error'
+          expect(response).to have_http_status 400
         end
       end
 
