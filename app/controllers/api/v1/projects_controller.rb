@@ -61,7 +61,7 @@ module Api
       def project_params
         raise TypeError unless params.require(:data).require(:type) == 'projects'
 
-        params.require(:data).require(:attributes).permit(:name, :visibility, :archived)
+        params.require(:data).require(:attributes).permit(:name, :visibility, :archived, :project_folder_id)
       end
 
       def load_project_for_managing

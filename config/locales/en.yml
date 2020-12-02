@@ -96,6 +96,11 @@ en:
           attributes:
             name:
               taken: "This project name has to be unique inside a team (this includes the archive)."
+            project_folder:
+              team: "Project folder and project should belongs to the same team"
+        project_folder:
+          attributes:
+            parent_folder: "Parent folder and folder should belongs to the same team"
         view_state:
           attributes:
             viewable_id:

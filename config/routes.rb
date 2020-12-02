@@ -701,6 +701,7 @@ Rails.application.routes.draw do
                 end
               end
             end
+            resources :project_folders, only: %i(index show create update)
           end
           resources :users, only: %i(show) do
             resources :user_identities,

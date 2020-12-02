@@ -12,6 +12,7 @@ class Project < ApplicationRecord
             uniqueness: { scope: :team_id, case_sensitive: false }
   validates :visibility, presence: true
   validates :team, presence: true
+  validate :project_folder_team, if: -> { project_folder.present? }
 
   belongs_to :created_by,
              foreign_key: 'created_by_id',
@@ -320,5 +321,13 @@ class Project < ApplicationRecord
     )
   ensure
     report.destroy if report.present?
+  end
+
+  private
+
+  def project_folder_team
+    return if project_folder.team_id == team_id
+
+    errors.add(:project_folder, I18n.t('activerecord.errors.models.project.attributes.project_folder.team'))
   end
 end
