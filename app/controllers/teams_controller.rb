@@ -10,7 +10,7 @@ class TeamsController < ApplicationController
       format.json do
         render json: {
           html: render_to_string(
-            partial: 'shared/sidebar/projects.html.erb', locals: { team: @team }
+            partial: 'shared/sidebar/projects.html.erb', locals: { team: current_team }
           )
         }
       end
