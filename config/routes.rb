@@ -305,6 +305,10 @@ Rails.application.routes.draw do
     resources :project_folders, only: [] do
       get '/', to: 'projects#index'
       get 'cards', to: 'projects#cards'
+
+      member do
+        post 'move_to', to: 'project_folders#move_to', defaults: { format: 'json' }
+      end
     end
 
     resources :experiments do
