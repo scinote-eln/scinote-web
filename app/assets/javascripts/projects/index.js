@@ -44,7 +44,7 @@
 
   // Init new project folder modal function
   function initNewProjectFolderModal() {
-    var newProjectFolderModal = '#new-project-folder-modal'
+    var newProjectFolderModal = '#new-project-folder-modal';
     // Modal's submit handler function
     function newProjectFolderModalResponse() {
       $(newProjectFolderModal).find('form')
