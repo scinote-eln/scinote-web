@@ -1,10 +1,11 @@
+<% target_folder ||= @current_folder %>
 <div class="projects-breadcrumbs">
   <%= link_to(t('projects.index.breadcrumbs_root'),
               projects_path,
               class: 'project-folder-link',
               data: { projects_cards_url: cards_projects_url }) %>
   <span>/</span>
-  <% @current_folder.parent_folders.each do |project_folder| %>
+  <% target_folder&.parent_folders&.each do |project_folder| %>
     <%= link_to(project_folder.name,
                 project_folder_path(project_folder),
                 class: 'project-folder-link',
