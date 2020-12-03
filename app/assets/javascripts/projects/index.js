@@ -42,6 +42,37 @@
   var selectedProjects = [];
   var selectedProjectFolders = [];
 
+  // Init new project folder modal function
+  function initNewProjectFolderModal() {
+    var newProjectFolderModal = '#new-project-folder-modal'
+    // Modal's submit handler function
+    function newProjectFolderModalResponse() {
+      $(newProjectFolderModal).find('form')
+        .on('ajax:success', function(ev, data) {
+          refreshCurrentView();
+          $(newProjectFolderModal).modal('hide');
+          HelperModule.flashAlertMsg(data.message, 'success');
+        })
+        .on('ajax:error', function(e, data) {
+          $(this).renderFormErrors('project_folder', data.responseJSON);
+        });
+    }
+
+    $('.new-project-folder-btn')
+      .on('ajax:success', function(e, data) {
+        // Add and show modal
+        $('body').append($.parseHTML(data.html));
+        $(newProjectFolderModal).modal('show');
+        $(newProjectFolderModal).find("input[type='text']").focus();
+        newProjectFolderModalResponse();
+
+        // Remove modal when it gets closed
+        $(newProjectFolderModal).on('hidden.bs.modal', function() {
+          $(newProjectFolderModal).remove();
+        });
+      });
+  }
+
   /**
    * Initialize the JS for new project modal to work.
    */
@@ -402,12 +433,12 @@
     exportProjectsSubmit = $('#export-projects-modal-submit');
 
     updateSelectedCards();
+    initNewProjectFolderModal();
     initNewProjectModal();
     initEditProjectModal();
     initManageUsersModal();
     initExportProjectsModal();
     initExportProjects();
-    $('.new-project-folder-btn').initSubmitModal('#new-project-folder-modal', 'project_folder');
 
     initEditProjectButton($('.panel-project'));
     initArchiveRestoreButton($('.panel-project'));

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ProjectFoldersController < ApplicationController
+  include InputSanitizeHelper
+
   before_action :load_current_folder, only: %i(new)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: %i(move_to)
@@ -19,19 +21,17 @@ class ProjectFoldersController < ApplicationController
   end
 
   def create
-    @project_folder = ProjectFolder.new(team: current_team)
-    @project_folder.assign_attributes(project_folders_params)
+    project_folder = current_team.project_folders.new(project_folders_params)
 
     respond_to do |format|
       format.json do
-        if @project_folder.save
+        if project_folder.save
           # log_activity()
-          flash[:success] = t('projects.index.modal_new_project_folder.success_flash',
-                              name: @project_folder.name)
-          render json: { url: project_folder_path(@project_folder) },
-                 status: :ok
+          message = t('projects.index.modal_new_project_folder.success_flash',
+                      name: escape_input(project_folder.name))
+          render json: { message: message }
         else
-          render json: @project_folder.errors,
+          render json: project_folder.errors,
                  status: :unprocessable_entity
         end
       end
@@ -58,7 +58,7 @@ class ProjectFoldersController < ApplicationController
   private
 
   def load_current_folder
-    if current_team && params[:project_folder_id].present?
+    if params[:project_folder_id].present?
       @current_folder = current_team.project_folders.find_by(id: params[:project_folder_id])
     end
   end
