@@ -523,7 +523,7 @@
       success: function(data) {
         $('#breadcrumbs-wrapper').html(data.breadcrumbs_html);
         viewContainer.data('projects-cards-url', data.projects_cards_url);
-        viewContainer.find('.card').remove();
+        viewContainer.find('.card, .projects-group').remove();
         viewContainer.append(data.cards_html);
         init();
       },
@@ -549,20 +549,13 @@
   }
 
   function initProjectsViewModeSwitch() {
-    $('input[name=projects-view-mode-selector]').off()
-      .on('change', function() {
-        if ($(this).val() === projectsViewMode) {
-          return;
-        }
-        projectsViewMode = $(this).val();
-        if (projectsChanged) {
-          refreshCurrentView();
-        }
-        projectsChanged = false;
-      })
-      .on('click', function() {
-        $(this).next().click();
-      });
+    $('input[type=radio][name=projects-view-mode-selector]').change(function() {
+      if (this.value === 'cards') {
+        $('#cards-wrapper').removeClass('list');
+      } else if (this.value === 'list') {
+        $('#cards-wrapper').addClass('list');
+      }
+    });
   }
 
   function initSorting() {
@@ -668,8 +661,8 @@
       e.preventDefault();
 
       dropdownSelector.clearData($membersFilter);
-      $createdOnFilter.data('DateTimePicker').clear();
-      $dueFilter.data('DateTimePicker').clear();
+      if ($createdOnFilter.data('DateTimePicker')) $createdOnFilter.data('DateTimePicker').clear();
+      if ($dueFilter.data('DateTimePicker')) $dueFilter.data('DateTimePicker').clear();
       $foldersCB.prop('checked', false);
       $textFilter.val('');
     });
@@ -683,14 +676,6 @@
       }
     });
   }
-
-  $('.projects-view-mode-switch a').off().on('shown.bs.tab', function(event) {
-    if ($(event.target).data('mode') === 'table') {
-      $('#cards-wrapper').addClass('list');
-    } else {
-      $('#cards-wrapper').removeClass('list');
-    }
-  });
 
   initProjectsViewFilter();
   initProjectsViewModeSwitch();

@@ -188,13 +188,14 @@ Rails.application.routes.draw do
       get 'build_external_protocol', to: 'external_protocols#new'
       post 'import_external_protocol', to: 'external_protocols#create'
 
+      get 'sidebar', to: 'projects#sidebar', as: 'sidebar'
+
       match '*path',
             to: 'teams#routing_error',
             via: [:get, :post, :put, :patch]
     end
 
     post 'projects/index_dt', to: 'projects#index_dt', as: 'projects_index_dt'
-    get 'projects/sidebar', to: 'projects#sidebar', as: 'projects_sidebar'
     get 'projects/dt_state_load', to: 'projects#dt_state_load', as: 'projects_dt_state_load'
 
     resources :reports, only: :index
@@ -283,9 +284,7 @@ Rails.application.routes.draw do
                as: :save_modal
         end
       end
-      resources :experiments,
-                only: [:new, :create, :edit, :update],
-                defaults: { format: 'json' }
+      resources :experiments, only: %i(new create), defaults: { format: 'json' }
       member do
         # Notifications popup for individual project in projects index
         get 'notifications'
@@ -296,6 +295,8 @@ Rails.application.routes.draw do
       # to preserve original :project_id parameter in URL.
       get 'users/edit', to: 'user_projects#index_edit'
 
+      get 'sidebar', to: 'projects#sidebar', as: 'sidebar'
+
       collection do
         get 'cards', to: 'projects#cards'
         get 'users_filter'
@@ -304,10 +305,14 @@ Rails.application.routes.draw do
 
     resources :project_folders, only: %i(new create) do
       get 'cards', to: 'projects#cards'
+
+      member do
+        post 'move_to', to: 'project_folders#move_to', defaults: { format: 'json' }
+      end
     end
     get 'project_folders/:project_folder_id', to: 'projects#index', as: :project_folder
 
-    resources :experiments do
+    resources :experiments, only: %i(edit update) do
       member do
         get 'canvas' # Overview/structure for single experiment
         # AJAX-loaded canvas edit mode (from canvas)
@@ -327,6 +332,8 @@ Rails.application.routes.draw do
         get 'updated_img' # Checks if the workflow image is updated
         get 'fetch_workflow_img' # Get udated workflow img
       end
+
+      get 'sidebar', to: 'experiments#sidebar', as: 'sidebar'
     end
 
     # Show action is a popup (JSON) for individual module in full-zoom canvas,
@@ -701,6 +708,7 @@ Rails.application.routes.draw do
                 end
               end
             end
+            resources :project_folders, only: %i(index show create update)
           end
           resources :users, only: %i(show) do
             resources :user_identities,

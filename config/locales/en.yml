@@ -96,6 +96,11 @@ en:
           attributes:
             name:
               taken: "This project name has to be unique inside a team (this includes the archive)."
+            project_folder:
+              team: "Project folder and project should belongs to the same team"
+        project_folder:
+          attributes:
+            parent_folder: "Parent folder and folder should belongs to the same team"
         view_state:
           attributes:
             viewable_id:
@@ -418,6 +423,9 @@ en:
     update:
       success_flash: "Project <strong>%{name}</strong> successfully updated."
       error_flash: "Project <strong>%{name}</strong> not updated."
+    move:
+      success_flash: "You have successfully moved the selected project(s)/folder(s) to another folder."
+      error_flash: "An error occurred. The selected project(s)/folder(s) have not been moved."
     archive:
       success_flash: "Project <strong>%{name}</strong> successfully archived."
       error_flash: "Project <strong>%{name}</strong> not archived."
