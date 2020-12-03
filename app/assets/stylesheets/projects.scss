@@ -735,17 +735,11 @@ li.module-hover {
         border-radius: 4px;
         box-shadow: $flyout-shadow;
 
-        .header-row {
-          display: flex;
-          width: 100%;
-        }
-
         .project-name-cell {
           align-items: center;
           display: flex;
-          flex-grow: 1;
           height: 2em;
-          margin: 0 .5em 0 1.7em;
+          margin: 0 1.75em;
           overflow: hidden;
 
           a {
@@ -763,17 +757,11 @@ li.module-hover {
         }
 
         .actions {
-          align-items: center;
-          display: flex;
-          flex-basis: 1.5em;
-          height: 2em;
-          justify-content: center;
+          position: absolute;
+          right: .2em;
+          top: .2em;
 
           .project-actions-menu {
-            position: absolute;
-            right: .2em;
-            top: .2em;
-
             a {
               @include font-button;
               padding: .5em 1em;
@@ -785,6 +773,8 @@ li.module-hover {
 
             &.new-comments::after {
               @include red-dot;
+              right: .4em;
+              top: .4em;
             }
 
             &.new-comments {
@@ -793,7 +783,7 @@ li.module-hover {
 
                 &::after {
                   @include red-dot;
-                  left: .9em;
+                  right: -.4em;
                   top: -.3em;
                 }
               }
@@ -862,7 +852,6 @@ li.module-hover {
         }
 
         .checkbox-cell {
-          left: 1em;
           position: initial;
         }
 
@@ -891,10 +880,6 @@ li.module-hover {
         }
 
         &.project-card {
-          .header-row {
-            display: contents;
-          }
-
           .start-date-row {
             display: contents;
           }
@@ -926,12 +911,7 @@ li.module-hover {
 
           .actions-cell {
             grid-column: 6;
-
-            .project-actions-menu {
-              position: relative;
-              right: 0;
-              top: 0;
-            }
+            position: initial;
           }
         }
       }

@@ -90,7 +90,7 @@
 
           &::after {
             @include red-dot;
-            left: calc((var(--calendar-day-size) / 2) - 3px);
+            right: calc((var(--calendar-day-size) / 2) - 4px);
             top: calc((var(--calendar-day-size) / 2) + 6px);
           }
         }
@@ -100,8 +100,8 @@
 
           &.event {
             &::after {
-              left: 13px;
-              top: 23px;
+              left: 12px;
+              top: 21px;
             }
           }
         }

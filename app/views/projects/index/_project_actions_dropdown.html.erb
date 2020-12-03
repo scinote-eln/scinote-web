@@ -47,9 +47,15 @@
         <% end %>
         <!-- Show comments -->
         <li>
-          <a href="#" data-turbolinks="false" onclick="CommentsSidebar.open('Project', <%= project.id %>);">
+          <a href="#"
+             class="open-comments-sidebar"
+             data-turbolinks="false"
+             data-object-type="Project"
+             data-object-id="<%= project.id %>">
             <i class="fas fa-comment"></i>
-            <span><%= t('projects.index.comments_option', comments_count: project.comment_count) %></span>
+            <span class="comment-count">
+              <%= t('projects.index.comments_option', comments_count: project.comment_count) %>
+            </span>
           </a>
         </li>
         <!-- Open activities -->
