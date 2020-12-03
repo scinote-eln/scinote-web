@@ -42,7 +42,7 @@
         <% else %>
           <% if can_manage_experiment?(experiment) %>
             <%= link_to t('experiments.edit.add-description'),
-                        edit_project_experiment_url(@project, experiment),
+                        edit_experiment_url(experiment),
                         remote: true,
                         data: { id: experiment.id },
                         class: 'experiment-no-description' %>

@@ -6,10 +6,9 @@ class ProjectsController < ApplicationController
   include InputSanitizeHelper
 
   before_action :switch_team_with_param, only: :index
-  before_action :load_vars, only: %i(show edit update notifications experiment_archive)
+  before_action :load_vars, only: %i(show edit update notifications experiment_archive sidebar)
   before_action :load_current_folder, only: %i(index cards)
-  before_action :load_projects_tree, only: %i(sidebar show experiment_archive index)
-  before_action :check_view_permissions, only: %i(show notifications experiment_archive)
+  before_action :check_view_permissions, only: %i(show notifications experiment_archive sidebar)
   before_action :check_create_permissions, only: %i(create)
   before_action :check_manage_permissions, only: :edit
   before_action :set_inline_name_editing, only: %i(show experiment_archive)
@@ -47,21 +46,11 @@ class ProjectsController < ApplicationController
   end
 
   def sidebar
-    current_task ||= current_task || nil
-    current_experiment ||= current_experiment || current_task&.experiment || nil
-    current_project ||= current_experiment&.project || current_task&.experiment&.project || nil
-
     respond_to do |format|
       format.json do
         render json: {
           html: render_to_string(
-            partial: 'shared/sidebar/projects.html.erb',
-            locals: {
-              current_project: current_project,
-              current_experiment: current_experiment,
-              current_task: current_task
-            },
-            formats: :html
+            partial: 'shared/sidebar/experiments.html.erb', locals: { project: @project }
           )
         }
       end
@@ -257,19 +246,6 @@ class ProjectsController < ApplicationController
   def load_current_folder
     if current_team && params[:project_folder_id].present?
       @current_folder = current_team.project_folders.find_by(id: params[:project_folder_id])
-    end
-  end
-
-  def load_projects_tree
-    # Switch to correct team
-    current_team_switch(@project.team) unless @project.nil? || @project.new_record?
-    if current_user.teams.any?
-      @current_team = current_team if current_team
-      @current_team ||= current_user.teams.first
-      @current_sort ||= 'new'
-      @projects_tree = current_user.projects_tree(@current_team, 'atoz')
-    else
-      @projects_tree = []
     end
   end
 

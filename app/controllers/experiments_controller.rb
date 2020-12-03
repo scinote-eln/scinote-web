@@ -7,21 +7,17 @@ class ExperimentsController < ApplicationController
   include ApplicationHelper
   include Rails.application.routes.url_helpers
 
-  before_action :set_experiment,
-                except: %i(new create)
-  before_action :set_project,
-                only: %i(new create module_archive
-                         clone_modal move_modal)
-  before_action :load_projects_tree, only: %i(canvas module_archive)
-  before_action :check_view_permissions,
-                only: %i(canvas module_archive)
-  before_action :check_manage_permissions, only: :edit
+  before_action :load_project, only: %i(new create)
+  before_action :load_experiment, except: %i(new create)
+  before_action :check_view_permissions, except: %i(edit archive clone move)
+  before_action :check_create_permissions, only: %i(new create)
+  before_action :check_manage_permissions, only: %i(edit update)
   before_action :check_archive_permissions, only: :archive
   before_action :check_clone_permissions, only: %i(clone_modal clone)
   before_action :check_move_permissions, only: %i(move_modal move)
   before_action :set_inline_name_editing, only: %i(canvas module_archive)
 
-  layout 'fluid'.freeze
+  layout 'fluid'
 
   def new
     @experiment = Experiment.new
@@ -241,15 +237,27 @@ class ExperimentsController < ApplicationController
     end
   end
 
+  def sidebar
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'shared/sidebar/my_modules.html.erb', locals: { experiment: @experiment }
+          )
+        }
+      end
+    end
+  end
+
   private
 
-  def set_experiment
-    @experiment = Experiment.find_by_id(params[:id])
+  def load_experiment
+    @experiment = Experiment.find_by(id: params[:id])
     render_404 unless @experiment
   end
 
-  def set_project
-    @project = Project.find_by_id(params[:project_id]) || @experiment.project
+  def load_project
+    @project = Project.find_by(id: params[:project_id])
     render_404 unless @project
   end
 
@@ -261,14 +269,12 @@ class ExperimentsController < ApplicationController
     params.require(:experiment).require(:project_id)
   end
 
-  def load_projects_tree
-    # Switch to correct team
-    current_team_switch(@experiment.project.team) unless @experiment.project.nil?
-    @projects_tree = current_user.projects_tree(current_team, 'atoz')
-  end
-
   def check_view_permissions
     render_403 unless can_read_experiment?(@experiment)
+  end
+
+  def check_create_permissions
+    render_403 unless can_create_experiments?(@project)
   end
 
   def check_manage_permissions
