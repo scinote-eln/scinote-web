@@ -17,6 +17,7 @@ var Sidebar = (function() {
     });
   }
 
+  /**
   function toggleTree($treeChildren) {
     $treeChildren.toggleClass('hidden');
     $.each($treeChildren, (i, treeChild) => {
@@ -81,16 +82,13 @@ var Sidebar = (function() {
     $('#wrapper').show();
     loadLastState();
   }
+  **/
 
   return {
     init: () => {
-      if ($(SIDEBAR_ID).length) {
-        initSideBar();
-      }
+      $('#wrapper').show();
     },
-    loadLastState: () => {
-      loadLastState();
-    },
+
     reload: () => {
       reloadSidebar();
     }
