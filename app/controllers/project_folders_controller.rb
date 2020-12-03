@@ -75,6 +75,7 @@ class ProjectFoldersController < ApplicationController
 
   def check_create_permissions
     render_403 unless can_create_project_folders?(current_team)
+  end
 
   def check_manage_permissions
     render_403 unless can_update_team?(current_team)
