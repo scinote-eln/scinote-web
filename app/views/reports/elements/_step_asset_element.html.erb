@@ -16,9 +16,7 @@
           <em>
             <%= t('projects.reports.elements.step_asset.file_name',
                   file: truncate(asset.file_name, length: Constants::FILENAME_TRUNCATION_LENGTH)) %>
-            <a href="<%= asset_download_url(asset) %>" class="download-link">
-              <%= t('projects.reports.elements.download') %>
-            </a>
+            <%= link_to t('projects.reports.elements.download'), asset_download_url(asset, disposition: 'attachment'), class: 'download-link', target: :_blank %>
           </em>
 
         <% end %>
