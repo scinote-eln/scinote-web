@@ -303,14 +303,17 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :project_folders, only: %i(new create) do
+    resources :project_folders, only: %i(create new update) do
+      member do
+        post 'archive', to: 'project_folders#archive'
+      end
       get 'cards', to: 'projects#cards'
 
       member do
         post 'move_to', to: 'project_folders#move_to', defaults: { format: 'json' }
       end
     end
-    get 'project_folders/:project_folder_id', to: 'projects#index', as: :project_folder
+    get 'project_folders/:project_folder_id', to: 'projects#index', as: :project_folder_projects
 
     resources :experiments, only: %i(edit update) do
       member do
