@@ -1,0 +1,15 @@
+<% records.each do |record| %>
+  <% if record[:project] %>
+    <li>
+      <%= record[:project].name %>
+    </li>
+  <% else %>
+    <li>
+      <i class="fas fa-folder"></i>
+      <%= record[:folder].name %>
+      <ul>
+        <%= render partial: 'shared/sidebar/projects_tree_branch', locals: { records: record[:children] } %>
+      </ul>
+    </li>
+  <% end %>
+<% end %>
