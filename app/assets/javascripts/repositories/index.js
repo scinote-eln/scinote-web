@@ -100,10 +100,10 @@
           DataTableHelpers.initSearchField(dataTableWrapper, I18n.t('repositories.index.filter_inventory'));
           $('.content-body .toolbar').html($('#repositoriesListButtons').html());
           dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
-          $('#createRepoBtn').initializeModal('#create-repo-modal');
-          $('#deleteRepoBtn').initializeModal('#delete-repo-modal');
-          $('#renameRepoBtn').initializeModal('#rename-repo-modal');
-          $('#copyRepoBtn').initializeModal('#copy-repo-modal');
+          $('#createRepoBtn').initSubmitModal('#create-repo-modal', 'repository');
+          $('#deleteRepoBtn').initSubmitModal('#delete-repo-modal', 'repository');
+          $('#renameRepoBtn').initSubmitModal('#rename-repo-modal', 'repository');
+          $('#copyRepoBtn').initSubmitModal('#copy-repo-modal', 'repository');
         },
         drawCallback: function() {
           if (CHECKBOX_SELECTOR) CHECKBOX_SELECTOR.checkSelectAllStatus();
@@ -128,7 +128,7 @@
       archived: $('.repositories-index').hasClass('archived')
     }, function(data) {
       slidePanel.html(data.html);
-      $('.create-new-repository').initializeModal('#create-repo-modal');
+      $('.create-new-repository').initSubmitModal('#create-repo-modal', 'repository');
     });
   }
 
@@ -187,7 +187,7 @@
     }
   });
 
-  $('.create-new-repository').initializeModal('#create-repo-modal');
+  $('.create-new-repository').initSubmitModal('#create-repo-modal', 'repository');
   if (notTurbolinksPreview()) {
     initRepositoriesDataTable('#repositoriesList', $('.repositories-index').hasClass('archived'));
   }

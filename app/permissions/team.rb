@@ -21,6 +21,11 @@ Canaid::Permissions.register_for(Team) do
     true
   end
 
+  # project_folder: create
+  can :create_project_folders do |user, team|
+    user.is_admin_of_team?(team)
+  end
+
   # project: create
   can :create_projects do |user, team|
     user.is_normal_user_or_admin_of_team?(team)
