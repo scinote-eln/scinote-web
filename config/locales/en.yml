@@ -2135,7 +2135,7 @@ en:
       thumbnail_html: "<i class=\"fas fa-th-large\"></i> Medium"
       list_html: "<i class=\"fas fa-list\"></i> List"
     delete_file_modal:
-      title: "Delete attachement"
+      title: "Delete attachment"
       description_1_html: "You are about to delete <b>%{file_name}</b></p>"
       description_2: "Are you sure you want to continue?"
       confirm_button: "Delete attachment"
