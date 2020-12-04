@@ -61,7 +61,7 @@ describe ProjectFoldersController, type: :controller do
   end
 
   describe 'POST create' do
-    let(:action) { post :create, params: {}, format: :json }
+    let(:action) { post :create, params: { project_folder: { name: 'My Proejct Folder' } }, format: :json }
 
     it 'calls create activity for creating project folder' do
       expect(Activities::CreateActivityService)
@@ -72,6 +72,10 @@ describe ProjectFoldersController, type: :controller do
 
     it 'adds activity in DB' do
       expect { action }.to(change { Activity.count }.by(1))
+    end
+
+    it 'adds ProjectFolder in DB' do
+      expect { action }.to(change { ProjectFolder.count }.by(1))
     end
   end
 

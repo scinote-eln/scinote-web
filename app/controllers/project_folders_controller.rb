@@ -26,7 +26,7 @@ class ProjectFoldersController < ApplicationController
     respond_to do |format|
       format.json do
         if project_folder.save
-          # log_activity()
+          log_activity(:create_project_folder, project_folder, { project_folder: project_folder.id })
           message = t('projects.index.modal_new_project_folder.success_flash',
                       name: escape_input(project_folder.name))
           render json: { message: message }
@@ -53,12 +53,6 @@ class ProjectFoldersController < ApplicationController
     respond_to do |format|
       format.json { render json: { flash: I18n.t('projects.move.error_flash') }, status: :bad_request }
     end
-  end
-
-  def create
-    folder = current_team.project_folders.create(name: 'PF Name')
-
-    log_activity(:create_project_folder, folder, { project_folder: folder.id })
   end
 
   def update
@@ -103,14 +97,14 @@ class ProjectFoldersController < ApplicationController
     project_ids = move_params[:movables].collect { |movable| movable[:id] if movable[:type] == 'project' }.compact
     return if project_ids.blank?
 
-    current_team.projects.where(id: project_ids).each do |p|
-      source_folder_name = p.project_folder&.name || I18n.t('global_activities.root_folder_level')
-      p.update!(project_folder: destination_folder)
-      destination_folder_name = p.project_folder&.name || I18n.t('global_activities.root_folder_level')
+    current_team.projects.where(id: project_ids).each do |project|
+      source_folder_name = project.project_folder&.name || I18n.t('global_activities.root_folder_level')
+      project.update!(project_folder: destination_folder)
+      destination_folder_name = project.project_folder&.name || I18n.t('global_activities.root_folder_level')
 
-      log_activity(:move_project, p, { project: p.id,
-                                       destination_folder: destination_folder_name,
-                                       source_folder: source_folder_name })
+      log_activity(:move_project, project, { project: project.id,
+                                             destination_folder: destination_folder_name,
+                                             source_folder: source_folder_name })
     end
   end
 
@@ -118,14 +112,14 @@ class ProjectFoldersController < ApplicationController
     folder_ids = move_params[:movables].collect { |movable| movable[:id] if movable[:type] == 'project_folder' }.compact
     return if folder_ids.blank?
 
-    current_team.project_folders.where(id: folder_ids).each do |f|
-      source_folder_name = f.parent_folder&.name || I18n.t('global_activities.root_folder_level')
-      f.update!(parent_folder: destination_folder)
-      destination_folder_name = f.parent_folder&.name || I18n.t('global_activities.root_folder_level')
+    current_team.project_folders.where(id: folder_ids).each do |folder|
+      source_folder_name = folder.parent_folder&.name || I18n.t('global_activities.root_folder_level')
+      folder.update!(parent_folder: destination_folder)
+      destination_folder_name = folder.parent_folder&.name || I18n.t('global_activities.root_folder_level')
 
-      log_activity(:move_project_folder, f, { project_folder: f.id,
-                                              destination_folder: destination_folder_name,
-                                              source_folder: source_folder_name })
+      log_activity(:move_project_folder, folder, { project_folder: folder.id,
+                                                   destination_folder: destination_folder_name,
+                                                   source_folder: source_folder_name })
     end
   end
 
