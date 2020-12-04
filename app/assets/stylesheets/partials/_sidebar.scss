@@ -59,7 +59,8 @@
   .sidebar-body {
     flex-basis: calc(100% - 2.5em);
     flex-grow: 1;
-    padding: 1em;
+    overflow: auto;
+    padding: 0 1em;
   }
 
   .sidebar-footer {
@@ -82,6 +83,51 @@
       text-align: center;
       top: .5em;
       width: 2em;
+    }
+  }
+
+  .sidebar-branch {
+    list-style-type: none;
+    padding-left: 1em;
+  }
+
+  .sidebar-leaf {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1em .5em;
+
+    .toggle-branch {
+      cursor: pointer;
+      display: inline-block;
+      line-height: 1.5em;
+      margin-left: -2em;
+      margin-right: .5em;
+      text-align: center;
+      width: 1.5em;
+
+      &.collapsed ~ .sidebar-branch {
+        display: none;
+      }
+    }
+
+    .sidebar-link {
+      color: $color-black;
+      display: inline-block;
+      max-width: 200px;
+      overflow: hidden;
+      text-decoration: none;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      .fa-folder {
+        color: $brand-primary-light;
+        margin-right: .5em;
+      }
+    }
+
+    .sidebar-branch {
+      margin-bottom: -1em;
+      padding-top: 1em;
     }
   }
 }

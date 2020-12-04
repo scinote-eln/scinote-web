@@ -6,14 +6,18 @@
 /* global PerfectSb */
 
 var Sidebar = (function() {
-  const SIDEBAR_ID = '#slide-panel';
-  const STORAGE_TREE_KEY = 'scinote-sidebar-tree-state';
-  const STORAGE_SCROLL_TREE_KEY = 'scinote-sidebar-tree-scroll-state';
+  const SIDEBAR_CONTAINER = '.sidebar-container';
 
   function reloadSidebar() {
     let url = $('#wrapper').find('.sidebar-root').data('sidebar-url');
     $.get(url, function(result) {
-      $('#sidebar-wrapper').html(result.html);
+      $(SIDEBAR_CONTAINER).html(result.html);
+    });
+  }
+
+  function initSideBar() {
+    $(SIDEBAR_CONTAINER).on('click', '.toggle-branch', function() {
+      $(this).toggleClass('collapsed fa-caret-down fa-caret-right');
     });
   }
 
@@ -86,6 +90,7 @@ var Sidebar = (function() {
 
   return {
     init: () => {
+      initSideBar();
       $('#wrapper').show();
     },
 

@@ -1,13 +1,18 @@
 <% records.each do |record| %>
   <% if record[:project] %>
-    <li>
-      <%= record[:project].name %>
+    <li class="sidebar-leaf">
+      <%= link_to record[:project].name, project_url(record[:project]), class: 'sidebar-link' %>
     </li>
   <% else %>
-    <li>
-      <i class="fas fa-folder"></i>
-      <%= record[:folder].name %>
-      <ul>
+    <li class="sidebar-leaf">
+      <% unless record[:children].empty? %>
+        <i class="fas fa-caret-right toggle-branch collapsed"></i>
+      <% end %>
+      <%= link_to project_folder_path(record[:folder]), class: 'sidebar-link folder' do %>
+        <i class="fas fa-folder"></i>
+        <%= record[:folder].name %>
+      <% end%>
+      <ul class="sidebar-branch">
         <%= render partial: 'shared/sidebar/projects_tree_branch', locals: { records: record[:children] } %>
       </ul>
     </li>
