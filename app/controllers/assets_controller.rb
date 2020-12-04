@@ -35,9 +35,9 @@ class AssetsController < ApplicationController
   def toggle_view_mode
     @asset.view_mode = toggle_view_mode_params[:view_mode]
     if @asset.save(touch: false)
-      gallery_view_id = if @assoc.class == Step
+      gallery_view_id = if @assoc.is_a?(Step)
                           @assoc.id
-                        elsif @assoc.class == Result
+                        elsif @assoc.is_a?(Result)
                           @assoc.my_module.id
                         end
       html = render_to_string(partial: 'assets/asset.html.erb', locals: {
@@ -106,9 +106,9 @@ class AssetsController < ApplicationController
     @asset.step&.protocol&.update(updated_at: Time.zone.now)
 
     render_html = if [Result, Step].include?(@assoc.class)
-                    gallery_view_id = if @assoc.class == Step
+                    gallery_view_id = if @assoc.is_a?(Step)
                                         @assoc.id
-                                      elsif @assoc.class == Result
+                                      elsif @assoc.is_a?(Result)
                                         @assoc.my_module.id
                                       end
 
