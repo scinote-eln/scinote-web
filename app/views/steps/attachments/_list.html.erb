@@ -1,4 +1,4 @@
-<% assets = step.assets %>
+<% assets = step.assets.joins(file_attachment: :blob) %>
 <% current_order = step.current_view_state(current_user).state.dig('assets', 'sort') %>
 <div class="col-xs-12">
 <hr>
