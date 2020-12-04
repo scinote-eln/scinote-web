@@ -97,9 +97,6 @@
   // init project archive/restore function
   function initArchiveRestoreButton(el) {
     el.find('form.edit_project').off()
-      .on('ajax:beforeSend', function() {
-        animateSpinner($('#projects-cards-view').closest('.tab-content'));
-      })
       .on('ajax:success', function(ev, data) {
         projectsChanged = true;
         HelperModule.flashAlertMsg(data.message, 'success');
@@ -408,8 +405,9 @@
     initExportProjectsModal();
     initExportProjects();
 
-    initEditProjectButton($('.panel-project'));
-    initArchiveRestoreButton($('.panel-project'));
+    initFormSubmitLinks($('.project-card'));
+    initEditProjectButton($('.project-card'));
+    initArchiveRestoreButton($('.project-card'));
 
     $('#cards-wrapper').on('click', '.folder-card-selector', function() {
       let folderCard = $(this).closest('.folder-card');

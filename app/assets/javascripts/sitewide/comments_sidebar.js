@@ -2,12 +2,7 @@
 
 var CommentsSidebar = (function() {
   const SIDEBAR = '.comments-sidebar';
-
-  function initCloseButton() {
-    $(document).on('click', `${SIDEBAR} .close-btn`, function() {
-      CommentsSidebar.close();
-    });
-  }
+  var openBtn = null;
 
   function loadCommentsList() {
     var commentsUrl = $(SIDEBAR).data('comments-url');
@@ -18,6 +13,27 @@ var CommentsSidebar = (function() {
       $(SIDEBAR).removeClass('loading');
       $(SIDEBAR).find('.comments-subject-title').text(result.object_name);
       $(SIDEBAR).find('.comments-list').html(result.comments);
+    });
+  }
+
+  function updateCounter(commentCount) {
+    var commentCountElem = openBtn.find('.comment-count');
+    if (commentCountElem.length !== 0) {
+      // Replace the number in comment element
+      commentCountElem.text(commentCountElem.text().replace(/\d+/g, commentCount));
+    }
+  }
+
+  function initOpenButton() {
+    $(document).on('click', '.open-comments-sidebar', function() {
+      openBtn = $(this);
+      CommentsSidebar.open($(this).data('objectType'), $(this).data('objectId'));
+    });
+  }
+
+  function initCloseButton() {
+    $(document).on('click', `${SIDEBAR} .close-btn`, function() {
+      CommentsSidebar.close();
     });
   }
 
@@ -52,6 +68,7 @@ var CommentsSidebar = (function() {
           $(SIDEBAR).find('.comment-input-field').val('');
           $(SIDEBAR).find('.sidebar-footer').removeClass('update');
           $('.error-container').empty();
+          updateCounter(result.comment_count);
         },
         error: (result) => {
           $('.error-container').text(result.responseJSON.errors.message);
@@ -76,8 +93,9 @@ var CommentsSidebar = (function() {
         url: deleteUrl,
         type: 'DELETE',
         dataType: 'json',
-        success: () => {
+        success: (result) => {
           commentContainer.remove();
+          updateCounter(result.comment_count);
         }
       });
     });
@@ -104,6 +122,7 @@ var CommentsSidebar = (function() {
 
   return {
     init: function() {
+      initOpenButton();
       initCloseButton();
       initSendButton();
       initDeleteButton();

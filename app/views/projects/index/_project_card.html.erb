@@ -12,13 +12,16 @@
       </h3>
     </a>
   </div>
+  <div class="actions actions-cell">
+    <%= render partial: "projects/index/project_actions_dropdown.html.erb", locals: { project: project, view: 'cards' } %>
+  </div>
 
   <div class="data-row start-date-row">
     <div class="start-date-cell">
       <span class="card-label"><%= t('projects.index.card.start_date') %></span>
       <span class="value"> <%= l(project.created_at, format: :full_with_comma) %></span>
     </div>
-    <div class="information information-cell"><i class="fas fa-info-circle"></i></div>
+
   </div>
 
   <div class="data-row visibility-cell">

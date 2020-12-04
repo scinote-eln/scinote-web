@@ -662,7 +662,7 @@ li.module-hover {
 
 // New projects page
 .projects-container {
-  margin-top: 35px;
+  margin: 35px 20px;
 
   .cards-wrapper {
     align-items: center;
@@ -698,7 +698,7 @@ li.module-hover {
         display: flex;
         height: 2em;
         justify-content: center;
-        left: 1em;
+        left: .5em;
         position: absolute;
         top: .5em;
         width: 2em;
@@ -750,7 +750,7 @@ li.module-hover {
           align-items: center;
           display: flex;
           height: 2em;
-          margin: 0 .5em 0 2.5em;
+          margin: 0 1.75em;
           overflow: hidden;
 
           a {
@@ -767,6 +767,41 @@ li.module-hover {
           }
         }
 
+        .actions {
+          position: absolute;
+          right: .2em;
+          top: .2em;
+
+          .project-actions-menu {
+            a {
+              @include font-button;
+              padding: .5em 1em;
+
+              .fas {
+                margin-right: .4em;
+              }
+            }
+
+            &.new-comments::after {
+              @include red-dot;
+              right: .4em;
+              top: .4em;
+            }
+
+            &.new-comments {
+              .fa-comment {
+                position: relative;
+
+                &::after {
+                  @include red-dot;
+                  right: -.4em;
+                  top: -.3em;
+                }
+              }
+            }
+          }
+        }
+
         .data-row {
           @include font-button;
           align-items: center;
@@ -774,10 +809,6 @@ li.module-hover {
           display: flex;
           flex-basis: 100%;
           line-height: 2em;
-
-          .information {
-            margin-left: auto;
-          }
 
           .card-label {
             color: $color-volcano;
@@ -906,8 +937,9 @@ li.module-hover {
             grid-column: 5;
           }
 
-          .information-cell {
+          .actions-cell {
             grid-column: 6;
+            position: initial;
           }
         }
       }
