@@ -7,6 +7,7 @@ var Sidebar = (function() {
     let url = $(SIDEBAR_CONTAINER).data('sidebar-url');
     $.get(url, function(result) {
       $(SIDEBAR_CONTAINER).find('.sidebar-body').html(result.html);
+      showSelectedLeaf();
     });
   }
 
