@@ -1,5 +1,3 @@
-<%= content_for :sidebar do %>
-  <ul class="sidebar-branch">
-    <%= render partial: 'shared/sidebar/projects_tree_branch', locals: { records: sidebar_folders_tree(current_team) } %>
-  </ul>
-<% end %>
+ <ul class="sidebar-branch">
+  <%= render partial: 'shared/sidebar/projects_tree_branch.html.erb', locals: { records: sidebar_folders_tree(team, current_user) } %>
+</ul>

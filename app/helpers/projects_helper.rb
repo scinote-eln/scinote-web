@@ -13,8 +13,19 @@ module ProjectsHelper
     conns.to_s[1..-2]
   end
 
-  def sidebar_folders_tree(team)
-    records = team.projects + ProjectFolder.inner_folders(team)
+  def sidebar_folders_tree(team, user)
+    records = user.projects_tree(team) + ProjectFolder.inner_folders(team)
+    view_state = team.current_view_state(user)
+    records = case view_state.state.dig('projects', 'cards', 'sort')
+              when 'new'
+                records.sort_by(&:created_at).reverse!
+              when 'old'
+                records.sort_by(&:created_at)
+              when 'atoz'
+                records.sort_by { |c| c.name.downcase }
+              when 'ztoa'
+                records.sort_by { |c| c.name.downcase }.reverse!
+              end
     folders_recursive_builder(nil, records)
   end
 

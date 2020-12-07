@@ -524,6 +524,7 @@
         viewContainer.data('projects-cards-url', data.projects_cards_url);
         viewContainer.find('.card, .projects-group').remove();
         viewContainer.append(data.cards_html);
+        Sidebar.reload();
         init();
       },
       error: function() {

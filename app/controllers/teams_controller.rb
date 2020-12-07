@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 class TeamsController < ApplicationController
+  include ProjectsHelper
+
   before_action :load_vars, only: %i(sidebar export_projects export_projects_modal)
+  before_action :load_current_folder, only: :sidebar
   before_action :check_read_permissions
   before_action :check_export_projects_permissions, only: %i(export_projects_modal export_projects)
 
@@ -81,6 +84,12 @@ class TeamsController < ApplicationController
 
   def check_read_permissions
     render_403 unless can_read_team?(@team)
+  end
+
+  def load_current_folder
+    if current_team && params[:project_folder_id].present?
+      @current_folder = current_team.project_folders.find_by(id: params[:project_folder_id])
+    end
   end
 
   def check_export_projects_permissions
