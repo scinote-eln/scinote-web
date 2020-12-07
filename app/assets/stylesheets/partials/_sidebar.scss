@@ -4,6 +4,9 @@
  * For details, see http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
 @import "constants";
 @import "mixins";
 
@@ -57,12 +60,11 @@
   }
 
   .sidebar-body {
-    background:
-      linear-gradient($color-concrete 30%, hsla(0,0%,100%, 0)),
-      linear-gradient(rgba(0,0,0,0.1), transparent 70%);
-    background-repeat:no-repeat;
+    background: linear-gradient($color-concrete 30%, hsla(0, 0%, 100%, 0)),
+                linear-gradient(rgba(0, 0, 0, .1), transparent 70%);
+    background-attachment: local, scroll;
+    background-repeat: no-repeat;
     background-size: 100% 1em, 100% .5em;
-    background-attachment:local, scroll;
     flex-basis: calc(100% - 2.5em);
     flex-grow: 1;
     overflow: auto;
