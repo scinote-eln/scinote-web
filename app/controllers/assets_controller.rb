@@ -17,8 +17,8 @@ class AssetsController < ApplicationController
   helper_method :wopi_file_edit_button_status
 
   before_action :load_vars, except: :create_wopi_file
-  before_action :check_read_permission, except: %i(edit destroy create_wopi_file)
-  before_action :check_edit_permission, only: %i(edit destroy)
+  before_action :check_read_permission, except: %i(edit destroy create_wopi_file toggle_view_mode)
+  before_action :check_edit_permission, only: %i(edit destroy toggle_view_mode)
 
   def file_preview
     render json: { html: render_to_string(
@@ -191,7 +191,7 @@ class AssetsController < ApplicationController
 
   def destroy
     if @asset.destroy
-      render json: { flash: I18n.t('assets.file_deleted', file_name: @asset.file_name ) }
+      render json: { flash: I18n.t('assets.file_deleted', file_name: @asset.file_name) }
     else
       render json: {}, status: :unprocessable_entity
     end
