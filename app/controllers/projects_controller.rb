@@ -4,6 +4,7 @@ class ProjectsController < ApplicationController
   include RenamingUtil
   include TeamsHelper
   include InputSanitizeHelper
+  include ProjectsHelper
 
   before_action :switch_team_with_param, only: :index
   before_action :load_vars, only: %i(show edit update notifications experiment_archive sidebar)

@@ -12,7 +12,9 @@
     <%= link_to(folder.name,
                 project_folder_path(folder),
                 class: 'project-folder-link',
-                data: { projects_cards_url: project_folder_cards_url(folder) }) %>
+                data: { projects_cards_url: project_folder_cards_url(folder),
+                        sidebar_url: sidebar_team_path(current_team, project_folder_id: folder.id),
+                      }) %>
   </div>
   <div class="description">
     <%= t('projects.index.folder.description', projects_count: folder.projects_count, folders_count: folder.folders_count) %>

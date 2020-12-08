@@ -171,6 +171,7 @@ Rails.application.routes.draw do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'export_repository', to: 'repositories#export_repository'
         post 'export_projects'
+        get 'sidebar'
         get 'export_projects_modal'
         # Used for atwho (smart annotations)
         get 'atwho_users', to: 'at_who#users'
@@ -187,8 +188,6 @@ Rails.application.routes.draw do
       get 'show_external_protocol', to: 'external_protocols#show'
       get 'build_external_protocol', to: 'external_protocols#new'
       post 'import_external_protocol', to: 'external_protocols#create'
-
-      get 'sidebar', to: 'projects#sidebar', as: 'sidebar'
 
       match '*path',
             to: 'teams#routing_error',

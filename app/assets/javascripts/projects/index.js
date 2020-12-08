@@ -8,7 +8,7 @@
 // - refactor view handling using library, ex. backbone.js
 
 /* global Comments CounterBadge animateSpinner initFormSubmitLinks HelperModule
-   I18n dropdownSelector */
+   I18n dropdownSelector Sidebar */
 
 (function(global) {
   var newProjectModal = null;
@@ -401,6 +401,7 @@
     let viewContainer = $('#cards-wrapper');
     viewContainer.data('projects-cards-url', $(this).data('projectsCardsUrl'));
     history.replaceState({}, '', this.href);
+    $('.sidebar-container').data('sidebar-url', $(this).data('sidebar-url'));
     refreshCurrentView();
   });
 
@@ -530,7 +531,6 @@
       dataType: 'json',
       success: function(data) {
         $('#slide-panel .tree').html(data.html);
-        Sidebar.loadLastState();
       }
     });
   }
@@ -554,6 +554,7 @@
         viewContainer.data('projects-cards-url', data.projects_cards_url);
         viewContainer.find('.card, .projects-group').remove();
         viewContainer.append(data.cards_html);
+        Sidebar.reload();
         init();
       },
       error: function() {
