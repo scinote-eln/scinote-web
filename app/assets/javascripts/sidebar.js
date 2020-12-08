@@ -8,6 +8,7 @@ var Sidebar = (function() {
     $.get(url, function(result) {
       $(SIDEBAR_CONTAINER).find('.sidebar-body').html(result.html);
       showSelectedLeaf();
+      $(SIDEBAR_CONTAINER).data('scrollBar').update();
     });
   }
 
