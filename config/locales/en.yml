@@ -385,6 +385,10 @@ en:
           label: "Created on"
           from_placeholder: "From"
           to_placeholder: "To"
+        archived_on:
+          label: "Archived on"
+          from_placeholder: "From"
+          to_placeholder: "To"
         members:
           label: "Members"
           placeholder: "Select members of a project"
@@ -397,6 +401,13 @@ en:
          none: "No results"
          one: "Show result"
         clear_btn: "Clear"
+      sort:
+        new: "Started last"
+        old: "Started first"
+        atoz: "Name A - Z"
+        ztoa: "Name Z - A"
+        archived_first: "Archived first"
+        archived_last: "Archived last"
 
     export_projects:
       export_button: "Export"
