@@ -374,6 +374,9 @@
     viewContainer.data('projects-cards-url', $(this).data('projectsCardsUrl'));
     history.replaceState({}, '', this.href);
     refreshCurrentView();
+
+    $('.sidebar-container').data('sidebar-url', $(this).data('sidebar-url'));
+    Sidebar.reload();
   });
 
   /**
@@ -500,7 +503,6 @@
       dataType: 'json',
       success: function(data) {
         $('#slide-panel .tree').html(data.html);
-        Sidebar.loadLastState();
       }
     });
   }

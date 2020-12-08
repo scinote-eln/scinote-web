@@ -1,5 +1,5 @@
 <% provide(:head_title, t("projects.index.head_title")) %>
-<% provide(:sidebar_title, 'PROJECTS') %>
+<% provide(:sidebar_title, t("projects.index.navigation_title")) %>
 <% provide(:sidebar_url, sidebar_team_path(current_team, project_folder_id: @current_folder&.id)) %>
 
 <% if current_team %>

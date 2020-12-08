@@ -25,15 +25,6 @@ var SideBarToggle = (function() {
     })
   }
 
-  function toggle() {
-    var btn = $('#sidebar-arrow');
-    if (btn.is('[data-shown]')) {
-      hide();
-    } else {
-      show();
-    }
-  }
-
   function isToggledStorage() {
     var val = sessionStorage.getItem(STORAGE_TOGGLE_KEY);
     if (val === null) {
