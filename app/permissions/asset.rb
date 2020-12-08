@@ -23,7 +23,7 @@ Canaid::Permissions.register_for(Asset) do
       protocol = object.protocol
       can_manage_protocol_in_module?(user, protocol) || can_manage_protocol_in_repository?(user, protocol)
     when Result
-      can_manage_experiment?(user, object.my_module.experiment)
+      can_manage_module?(user, object.my_module)
     when RepositoryCell
       return false if object.repository_column.repository.is_a?(RepositorySnapshot)
 
