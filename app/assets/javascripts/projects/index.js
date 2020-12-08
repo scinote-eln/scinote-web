@@ -373,10 +373,8 @@
     let viewContainer = $('#cards-wrapper');
     viewContainer.data('projects-cards-url', $(this).data('projectsCardsUrl'));
     history.replaceState({}, '', this.href);
-    refreshCurrentView();
-
     $('.sidebar-container').data('sidebar-url', $(this).data('sidebar-url'));
-    Sidebar.reload();
+    refreshCurrentView();
   });
 
   /**
