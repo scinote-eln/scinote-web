@@ -112,6 +112,9 @@ Rails.application.configure do
   # Enable sign in with LinkedIn account
   config.x.linkedin_signin_enabled = ENV['LINKEDIN_SIGNIN_ENABLED'] == 'true'
 
+  # Enable RAP Selection in projects:
+  config.x.epa_rap_enabled = ENV['EPA_RAP_ENABLED'] == 'true'
+
   # Set up domain for pwa SciNote mobile app
   config.x.pwa_domain = ENV['PWA_DOMAIN'] || 'm.scinote.net'
 

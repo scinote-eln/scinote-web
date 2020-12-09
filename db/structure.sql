@@ -1006,6 +1006,7 @@ CREATE TABLE public.projects (
     restored_by_id bigint,
     restored_on timestamp without time zone,
     experiments_order character varying,
+    rap_task_level_id integer NOT NULL,
     template boolean,
     demo boolean DEFAULT false NOT NULL
 );
@@ -6777,6 +6778,288 @@ ALTER TABLE ONLY public.result_tables
 
 ALTER TABLE ONLY public.projects
     ADD CONSTRAINT fk_rails_ff595c9009 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+-- EPA RAP Specific stuff:
+--
+
+
+--
+-- Name: rap_program_levels; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rap_program_levels (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: rap_program_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rap_program_levels_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rap_program_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rap_program_levels_id_seq OWNED BY public.rap_program_levels.id;
+
+
+--
+-- Name: rap_project_levels; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rap_project_levels (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    rap_topic_level_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: rap_project_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rap_project_levels_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rap_project_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rap_project_levels_id_seq OWNED BY public.rap_project_levels.id;
+
+
+--
+-- Name: rap_task_levels; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rap_task_levels (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    rap_project_level_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: rap_task_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rap_task_levels_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rap_task_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rap_task_levels_id_seq OWNED BY public.rap_task_levels.id;
+
+
+--
+-- Name: rap_topic_levels; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rap_topic_levels (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    rap_program_level_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: rap_topic_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rap_topic_levels_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rap_topic_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rap_topic_levels_id_seq OWNED BY public.rap_topic_levels.id;
+
+
+--
+-- Name: rap_program_levels id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_program_levels ALTER COLUMN id SET DEFAULT nextval('public.rap_program_levels_id_seq'::regclass);
+
+
+--
+-- Name: rap_project_levels id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_project_levels ALTER COLUMN id SET DEFAULT nextval('public.rap_project_levels_id_seq'::regclass);
+
+
+--
+-- Name: rap_task_levels id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_task_levels ALTER COLUMN id SET DEFAULT nextval('public.rap_task_levels_id_seq'::regclass);
+
+
+--
+-- Name: rap_topic_levels id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_topic_levels ALTER COLUMN id SET DEFAULT nextval('public.rap_topic_levels_id_seq'::regclass);
+
+
+--
+-- Name: rap_program_levels rap_program_levels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_program_levels
+    ADD CONSTRAINT rap_program_levels_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rap_project_levels rap_project_levels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_project_levels
+    ADD CONSTRAINT rap_project_levels_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rap_task_levels rap_task_levels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_task_levels
+    ADD CONSTRAINT rap_task_levels_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rap_topic_levels rap_topic_levels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_topic_levels
+    ADD CONSTRAINT rap_topic_levels_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_projects_on_rap_task_level_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_projects_on_rap_task_level_id ON public.projects USING btree (rap_task_level_id);
+
+
+--
+-- Name: index_rap_program_levels_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_rap_program_levels_on_name ON public.rap_program_levels USING btree (name);
+
+
+--
+-- Name: index_rap_project_levels_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_rap_project_levels_on_name ON public.rap_project_levels USING btree (name);
+
+
+--
+-- Name: index_rap_project_levels_on_rap_topic_level_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rap_project_levels_on_rap_topic_level_id ON public.rap_project_levels USING btree (rap_topic_level_id);
+
+
+--
+-- Name: index_rap_task_levels_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_rap_task_levels_on_name ON public.rap_task_levels USING btree (name);
+
+
+--
+-- Name: index_rap_task_levels_on_rap_project_level_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rap_task_levels_on_rap_project_level_id ON public.rap_task_levels USING btree (rap_project_level_id);
+
+
+--
+-- Name: index_rap_topic_levels_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_rap_topic_levels_on_name ON public.rap_topic_levels USING btree (name);
+
+
+--
+-- Name: index_rap_topic_levels_on_rap_program_level_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rap_topic_levels_on_rap_program_level_id ON public.rap_topic_levels USING btree (rap_program_level_id);
+
+
+--
+-- Name: projects fk_rails_0710cff186; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.projects
+    ADD CONSTRAINT fk_rails_0710cff186 FOREIGN KEY (rap_task_level_id) REFERENCES public.rap_task_levels(id);
+
+
+--
+-- Name: rap_topic_levels fk_rails_474c9b818d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_topic_levels
+    ADD CONSTRAINT fk_rails_474c9b818d FOREIGN KEY (rap_program_level_id) REFERENCES public.rap_program_levels(id);
+
+
+--
+-- Name: rap_task_levels fk_rails_68120f8d8c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_task_levels
+    ADD CONSTRAINT fk_rails_68120f8d8c FOREIGN KEY (rap_project_level_id) REFERENCES public.rap_project_levels(id);
+
+
+--
+-- Name: rap_project_levels fk_rails_83bc72d987; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_project_levels
+    ADD CONSTRAINT fk_rails_83bc72d987 FOREIGN KEY (rap_topic_level_id) REFERENCES public.rap_topic_levels(id);
 
 
 --

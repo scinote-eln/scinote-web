@@ -130,7 +130,6 @@ class ProjectsController < ApplicationController
   end
 
   def edit
-<<<<<<< HEAD
     # From the project's RAP Task Level ID, cascade upwards to get each parent RAP Level ID.
     # Task Level < Project Level < Topic Level < Program Level
     t_rap_task_level_id = @project.rap_task_level_id
@@ -144,15 +143,13 @@ class ProjectsController < ApplicationController
     opt_rap_projects = RapProjectLevel.where(rap_topic_level_id: t_rap_topic_level_id)
     opt_rap_tasks = RapTaskLevel.where(rap_project_level_id: t_rap_project_level_id)
     puts "RAP IDs for this Project: #{t_rap_program_level_id} #{t_rap_topic_level_id} #{t_rap_project_level_id} #{t_rap_task_level_id}"
-
-=======
->>>>>>> Pulled latest release
     respond_to do |format|
       format.json {
         render json: {
           html: render_to_string({
             partial: "edit.html.erb",
-            locals: { project: @project }
+            locals: { project: @project, sel_rap_ids: sel_rap_ids, opt_rap_programs: opt_rap_programs,
+              opt_rap_topics: opt_rap_topics, opt_rap_projects: opt_rap_projects, opt_rap_tasks: opt_rap_tasks }
           }),
           title: t('projects.index.modal_edit_project.modal_title',
                    project: escape_input(@project.name))

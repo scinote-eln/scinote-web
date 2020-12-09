@@ -1,3 +1,25 @@
+<%- if Rails.configuration.x.epa_rap_enabled %>
+  <div id="rapProgramLevelSelect" class="form-group">
+    <label class="control-label" for="rap_program_level">TRUE - RAP Program Level</label>
+    <select id="rapProgramLevelSelector" class="form-control" onchange="selectRapProgramLevel(this, '', '')" required>
+      <option value=""></option>
+      <%= @programs.each do |program| %>
+        <option value="<%= program.id %>"><%= program.name %></option>
+      <% end %>
+    </select>
+  </div>
+  <%- else %>
+  <div id="rapProgramLevelSelect" class="form-group" hidden>
+    <label class="control-label" for="rap_program_level">Hidden - RAP Program Level</label>
+    <select id="rapProgramLevelSelector" class="form-control" onchange="selectRapProgramLevel(this, '', 'hidden')">
+      <%= @programs.each do |program| %>
+        <option value="<%= program.id %>"><%= program.name %></option>
+      <% end %>
+    </select>
+    <script>$(document).ready(function() { rapProgramLevelTrigger('', 'hidden') });</script>
+  </div>
+<% end -%>
+
 <div class="row">
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
     <%= form.text_field :name, label: t("projects.index.modal_new_project.name"), autofocus: true, placeholder: t("projects.index.modal_new_project.name_placeholder") %>
