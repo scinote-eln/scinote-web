@@ -37,8 +37,13 @@ class ProjectsOverviewService
       else
         fetch_project_records
       end
-    project_records = project_records.includes(:project_folder)
-    sort_records(filter_project_records(project_records)).group_by(&:project_folder)
+    project_records = sort_records(filter_project_records(project_records)).includes(:project_folder).to_a
+    folder_records = ProjectFolder.inner_folders(@team, @current_folder).includes(:parent_folder).to_a
+
+    sorted_results_by_folder = {}
+    build_folder_content(@current_folder, folder_records, project_records, sorted_results_by_folder)
+
+    sorted_results_by_folder
   end
 
   def project_and_folder_cards
@@ -49,6 +54,15 @@ class ProjectsOverviewService
   end
 
   private
+
+  def build_folder_content(folder, folder_records, project_records, sorted_results_by_folder)
+    projects_in_folder = project_records.select { |p| p.project_folder == folder }
+    sorted_results_by_folder[folder] = projects_in_folder if projects_in_folder.present?
+
+    folder_records.select { |f| f.parent_folder == folder }.each do |inner_folder|
+      build_folder_content(inner_folder, folder_records, project_records, sorted_results_by_folder)
+    end
+  end
 
   def fetch_project_records
     due_modules =

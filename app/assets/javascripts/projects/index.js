@@ -456,16 +456,7 @@
 
   function refreshCurrentView() {
     loadCardsView();
-
-    // Also refresh sidebar tree navigation
-    $.ajax({
-      url: $('#projects-cards-view').data('projects-sidebar-url'),
-      type: 'GET',
-      dataType: 'json',
-      success: function(data) {
-        $('#slide-panel .tree').html(data.html);
-      }
-    });
+    Sidebar.reload();
   }
 
   function initEditButton() {
@@ -522,7 +513,6 @@
         selectedProjects.length = 0;
         selectedProjectFolders.length = 0;
         refreshProjectsToolbar();
-        Sidebar.reload();
         init();
       },
       error: function() {
