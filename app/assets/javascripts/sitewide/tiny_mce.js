@@ -1,4 +1,4 @@
-/* global _ hljs tinyMCE SmartAnnotation I18n GLOBAL_CONSTANTS */
+/* global _ hljs tinyMCE SmartAnnotation I18n GLOBAL_CONSTANTS HelperModule */
 /* eslint-disable no-unused-vars */
 
 var TinyMCE = (function() {
@@ -33,26 +33,22 @@ var TinyMCE = (function() {
     var prefix = getAutoSavePrefix(editor);
     var lastDraftTime = parseInt(tinyMCE.util.LocalStorage.getItem(prefix + 'time'), 10);
     var lastUpdated = $(selector).data('last-updated');
-
-    var restoreBtn = $('<button class="btn restore-draft-btn pull-right">Restore Draft</button>');
-    var cancelBtn = $(`<div class="tinymce-cancel-notification-button pull-right">
-                        <button type="button">
-                          <span class="fas fa-times"></span>
-                        </button>
-                       </div>`);
+    var notificationBar;
+    var restoreBtn = $('<button class="btn restore-draft-btn">Restore Draft</button>');
+    var cancelBtn = $('<span class="fas fa-times"></span>');
 
     // Check whether we have draft stored
     if (editor.plugins.autosave.hasDraft()) {
-      var notificationBar = $('<div class="restore-draft-notification"></div>');
+      notificationBar = $('<div class="restore-draft-notification"></div>');
 
       if (lastDraftTime < lastUpdated) {
-        notificationBar.text(I18n.t('tiny_mce.older_version_available'));
+        notificationBar.html(`<span class="notification-text">${I18n.t('tiny_mce.older_version_available')}</span>`);
       } else {
-        notificationBar.text(I18n.t('tiny_mce.newer_version_available'));
+        notificationBar.html(`<span class="notification-text">${I18n.t('tiny_mce.newer_version_available')}</span>`);
       }
 
       // Add notification bar
-      $(notificationBar).append(cancelBtn).append(restoreBtn);
+      $(notificationBar).append(restoreBtn).append(cancelBtn);
       $(editor.contentAreaContainer).before(notificationBar);
 
       $(restoreBtn).click(function() {
@@ -69,23 +65,43 @@ var TinyMCE = (function() {
 
   function initImageToolBar(editor) {
     var editorIframe = $('#' + editor.id).prev().find('.mce-edit-area iframe');
-    editorIframe.contents().find('head').append('<style type="text/css">'
-      + 'img::-moz-selection{background:0 0}'
-      + 'img::selection{background:0 0}'
-      + '.mce-content-body img[data-mce-selected]{outline:2px solid #37a0d9}'
-      + '.mce-content-body div.mce-resizehandle{background:transparent;border-color:transparent;box-sizing:border-box;height:10px;width:10px}'
-      + '.mce-content-body div.mce-resizehandle:hover{background:transparent}'
-      + '.mce-content-body div#mceResizeHandlenw{border-left: 2px solid #37a0d9; border-top: 2px solid #37a0d9}'
-      + '.mce-content-body div#mceResizeHandlene{border-right: 2px solid #37a0d9; border-top: 2px solid #37a0d9}'
-      + '.mce-content-body div#mceResizeHandlesw{border-left: 2px solid #37a0d9; border-bottom: 2px solid #37a0d9}'
-      + '.mce-content-body div#mceResizeHandlese{border-right: 2px solid #37a0d9; border-bottom: 2px solid #37a0d9}'
-      + '</style>');
+    var primaryColor = '#104da9';
+    editorIframe.contents().find('head').append(`<style type="text/css">
+        img::-moz-selection{background:0 0}
+        img::selection{background:0 0}
+        .mce-content-body img[data-mce-selected]{outline:2px solid ${primaryColor}}
+        .mce-content-body div.mce-resizehandle{background:transparent;border-color:transparent;box-sizing:border-box;height:10px;width:10px}
+        .mce-content-body div.mce-resizehandle:hover{background:transparent}
+        .mce-content-body div#mceResizeHandlenw{border-left: 2px solid ${primaryColor}; border-top: 2px solid ${primaryColor}}
+        .mce-content-body div#mceResizeHandlene{border-right: 2px solid ${primaryColor}; border-top: 2px solid ${primaryColor}}
+        .mce-content-body div#mceResizeHandlesw{border-left: 2px solid ${primaryColor}; border-bottom: 2px solid ${primaryColor}}
+        .mce-content-body div#mceResizeHandlese{border-right: 2px solid ${primaryColor}; border-bottom: 2px solid ${primaryColor}}
+      </style>`);
   }
 
   function makeItDirty(editor) {
     var editorForm = $(editor.getContainer()).closest('form');
     editorForm.find('.tinymce-status-badge').addClass('hidden');
     $(editor.getContainer()).find('.tinymce-save-button').removeClass('hidden');
+  }
+
+  function draftLocation() {
+    return 'tinymce-drafts-' + document.location.pathname;
+  }
+
+  function removeDraft(editor, textAreaObject) {
+    var location = draftLocation();
+    var storedDrafts = JSON.parse(sessionStorage.getItem(location) || '[]');
+    var draftId = storedDrafts.indexOf(textAreaObject.data('tinymce-object'));
+    if (draftId > -1) {
+      storedDrafts.splice(draftId, 1);
+    }
+
+    if (storedDrafts.length) {
+      sessionStorage.setItem(location, JSON.stringify(storedDrafts));
+    } else {
+      sessionStorage.removeItem(location);
+    }
   }
 
   // returns a public API for TinyMCE editor
@@ -102,7 +118,7 @@ var TinyMCE = (function() {
         $(selector).closest('.form-group')
           .before('<div class="tinymce-placeholder" style="height:' + tinyMceInitSize + 'px"></div>');
         tinyMceContainer.addClass('hidden');
-        plugins = 'custom_image_toolbar autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor colorpicker textpattern placeholder';
+        plugins = 'custom_image_toolbar table autosave autoresize customimageuploader link advlist codesample autolink lists charmap hr anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality paste textcolor colorpicker textpattern placeholder';
         if (typeof (MarvinJsEditor) !== 'undefined') plugins += ' marvinjsplugin';
 
         if (textAreaObject.data('objectType') === 'step'
@@ -111,10 +127,11 @@ var TinyMCE = (function() {
         }
 
         tinyMCE.init({
-          cache_suffix: '?v=4.9.3', // This suffix should be changed any time library is updated
+          cache_suffix: '?v=4.9.10', // This suffix should be changed any time library is updated
           selector: selector,
-          menubar: 'file edit view insert format',
-          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader marvinjsplugin | codesample',
+          convert_urls: false,
+          menubar: 'file edit view insert format table',
+          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link | forecolor backcolor | customimageuploader marvinjsplugin | codesample',
           plugins: plugins,
           autoresize_bottom_margin: 20,
           codesample_languages: [
@@ -135,7 +152,8 @@ var TinyMCE = (function() {
           browser_spellcheck: true,
           branding: false,
           fixed_toolbar_container: '#mytoolbar',
-          autosave_interval: '15s',
+          autosave_restore_when_empty: false,
+          autosave_interval: '1s',
           autosave_retention: '1440m',
           removed_menuitems: 'newdocument',
           object_resizing: true,
@@ -253,11 +271,16 @@ var TinyMCE = (function() {
                 editorForm.find('.tinymce-status-badge').removeClass('hidden');
                 editor.remove();
                 editorForm.find('.tinymce-view').html(data.html).removeClass('hidden');
+                editor.plugins.autosave.removeDraft();
+                removeDraft(editor, textAreaObject);
                 if (onSaveCallback) { onSaveCallback(); }
               }).on('ajax:error', function(ev, data) {
                 var model = editor.getElement().dataset.objectType;
                 $(this).renderFormErrors(model, data.responseJSON);
                 editor.setProgressState(0);
+                if (data.status === 403) {
+                  HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+                }
               });
 
             // Init Cancel button
@@ -309,15 +332,36 @@ var TinyMCE = (function() {
               makeItDirty(editor);
             });
 
+            editor.on('StoreDraft', function() {
+              var location = draftLocation();
+              var storedDrafts = JSON.parse(sessionStorage.getItem(location) || '[]');
+              var draftName = textAreaObject.data('tinymce-object');
+              if (storedDrafts.includes(draftName) || !draftName) return;
+              storedDrafts.push(draftName);
+              sessionStorage.setItem(location, JSON.stringify(storedDrafts));
+            });
+
             editor.on('remove', function() {
               var menuBar = $(editor.getContainer()).find('.mce-menubar.mce-toolbar.mce-first .mce-flow-layout');
               menuBar.find('.tinymce-save-button').remove();
               menuBar.find('.tinymce-cancel-button').remove();
             });
 
-            /* editor.on('init', function(e) {
+            editor.on('blur', function(e) {
+              if ($('.atwho-view:visible').length || $('#MarvinJsModal:visible').length) return false;
+              setTimeout(() => {
+                if (editor.isNotDirty === false) {
+                  $(editor.container).find('.tinymce-save-button').click();
+                } else {
+                  $(editor.container).find('.tinymce-cancel-button').click();
+                }
+              }, 0);
+              return true;
+            });
+
+            editor.on('init', function(e) {
               restoreDraftNotification(selector, editor);
-            });*/
+            });
           },
           codesample_content_css: $(selector).data('highlightjs-path')
         });
@@ -350,7 +394,20 @@ var TinyMCE = (function() {
     makeItDirty: function(editor) {
       makeItDirty(editor);
     },
-    highlight: initHighlightjs
+    highlight: initHighlightjs,
+    initIfHasDraft: function(viewObject) {
+      var storedDrafts = sessionStorage.getItem(draftLocation());
+      var draftName = viewObject.data('tinymce-init');
+      if (storedDrafts && JSON.parse(storedDrafts)[0] === draftName) {
+        let top = viewObject.offset().top;
+        setTimeout(() => {
+          viewObject.click();
+        }, 0);
+        setTimeout(() => {
+          window.scrollTo(0, top - 150);
+        }, 2000);
+      }
+    }
   });
 }());
 

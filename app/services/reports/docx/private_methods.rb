@@ -5,6 +5,7 @@
 module Reports::Docx::PrivateMethods
   private
 
+<<<<<<< HEAD
 =======
 module PrivateMethods
 =======
@@ -230,6 +231,8 @@ module Reports::Docx::PrivateMethods
   end
 
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+>>>>>>> Pulled latest release
   def initial_document_load
     @docx.page_size do
       width   Constants::REPORT_DOCX_WIDTH
@@ -245,6 +248,7 @@ module Reports::Docx::PrivateMethods
 
     @docx.page_numbers true, align: :right
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     path = Rails.root.join('app', 'assets', 'images', 'logo.png')
 
@@ -277,42 +281,36 @@ module Reports::Docx::PrivateMethods
       name 'h1'
       bold true
       size 64
+=======
+    path = Rails.root.join('app', 'assets', 'images', 'logo.png')
+
+    @docx.img path.to_s do
+      height 20
+      width 100
+      align :left
+>>>>>>> Pulled latest release
+    end
+    @docx.p do
+      text I18n.t('projects.reports.new.generate_PDF.generated_on', timestamp: I18n.l(Time.zone.now, format: :full))
+      br
     end
 
-    @docx.style do
-      id 'h2'
-      name 'h2'
-      bold true
-      size 48
-    end
+    generate_html_styles
+  end
 
+  def generate_html_styles
     @docx.style do
-      id 'h3'
-      name 'h3'
-      bold true
+      id 'Heading1'
+      name 'heading 1'
+      font 'Arial'
       size 36
-    end
-
-    @docx.style do
-      id 'h4'
-      name 'h4'
+      bottom 120
       bold true
-      size 32
-    end
-
-    @docx.style do
-      id 'h5'
-      name 'h5'
-      bold true
-      size 26
-    end
-
-    @docx.style do
-      id 'h6'
-      name 'h6'
-      bold true
+<<<<<<< HEAD
       size 24
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+>>>>>>> Pulled latest release
     end
 
     @link_style = {
@@ -325,6 +323,7 @@ module Reports::Docx::PrivateMethods
       green: '2dbe61'
     }
   end
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 
@@ -344,4 +343,6 @@ module Reports::Docx::PrivateMethods
     )
   end
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+>>>>>>> Pulled latest release
 end

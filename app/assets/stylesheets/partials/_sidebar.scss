@@ -4,29 +4,26 @@
  * For details, see http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-@import 'constants';
+@import "constants";
 @import "mixins";
 
-$wrapper-width: 280px;
-$toggle-btn-size: 50px;
+:root {
+  --wrapper-width: 280px;
+}
 
 @mixin sidebar-shown {
   // This rule is always overriden (show()) in JS
   // after document is loaded
   display: none;
-  padding-left: $wrapper-width;
+  padding-left: var(--wrapper-width);
   padding-right: 0;
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
+  transition: .4s $timing-function-sharp;
 
   #sidebar-arrow {
-    background-color: $brand-default;
+    background-color: $color-concrete;
     border-bottom-right-radius: 10px;
     border-top-right-radius: 10px;
     bottom: 50%;
-    box-shadow: 2px 0 4px $color-alto;
     display: block;
     position: absolute;
     right: -18px;
@@ -53,27 +50,20 @@ $toggle-btn-size: 50px;
   }
 
   #sidebar-wrapper {
-    background-color: $color-white;
-    box-shadow: 1px 3px 6px $color-alto;
+    background-color: $color-concrete;
     height: 100%;
-    margin-left: -$wrapper-width;
+    left: 83px;
     position: fixed;
-    -moz-transition: all 0.5s ease;
-    -o-transition: all 0.5s ease;
-    -webkit-transition: all 0.5s ease;
-    transition: all 0.5s ease;
-    width: $wrapper-width;
+    transition: .4s $timing-function-sharp;
+    width: var(--wrapper-width);
     z-index: 999;
 
     #slide-panel {
       height: 100%;
+      overflow: hidden;
 
       .disabled {
         opacity: 1;
-      }
-
-      .fa-caret-right {
-        padding: 3px 5px;
       }
 
       .tree {
@@ -81,9 +71,9 @@ $toggle-btn-size: 50px;
         opacity: 1;
         overflow-y: auto;
         padding: 20px 0;
-
-        // Animations
-        @include transition(opacity 0.5s ease);
+        position: absolute;
+        right: 0;
+        width: var(--wrapper-width);
       }
     }
   }
@@ -93,14 +83,11 @@ $toggle-btn-size: 50px;
   padding-left: 0;
 
   #sidebar-wrapper {
-    margin-left: 0;
-    width: 0;
+    left: calc(83px - var(--wrapper-width));
 
     #slide-panel {
       .tree {
-        opacity: 0;
-
-        @include transition(opacity 0.5s ease);
+        @include transition(opacity .5s ease);
       }
     }
   }
@@ -110,9 +97,9 @@ $toggle-btn-size: 50px;
   border-left: 1px dotted $color-emperor;
   bottom: 20px;
   content: "";
+  left: 34px;
   position: absolute;
   top: 25px;
-  left: 34px;
 }
 
 #wrapper {

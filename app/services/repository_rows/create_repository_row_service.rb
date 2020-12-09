@@ -25,7 +25,11 @@ module RepositoryRows
 
         params[:repository_cells]&.each do |column_id, value|
           column = @repository.repository_columns.find_by(id: column_id)
+<<<<<<< HEAD
           next if !column || value.blank?
+=======
+          next if !column || value.empty?
+>>>>>>> Pulled latest release
 
           RepositoryCell.create_with_value!(@repository_row, column, value, @user)
         end

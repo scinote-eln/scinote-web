@@ -28,12 +28,7 @@ describe Team, type: :model do
     it { should belong_to(:last_modified_by).class_name('User').optional }
     it { should have_many :user_teams }
     it { should have_many :users }
-    it { should have_many :samples }
-    it { should have_many :samples_tables }
-    it { should have_many :sample_groups }
-    it { should have_many :sample_types }
     it { should have_many :projects }
-    it { should have_many :custom_fields }
     it { should have_many :protocols }
     it { should have_many :protocol_keywords }
     it { should have_many :tiny_mce_assets }
@@ -44,7 +39,6 @@ describe Team, type: :model do
   end
 
   describe 'Validations' do
-    it { should validate_presence_of :space_taken }
     it do
       should validate_length_of(:name)
         .is_at_least(Constants::NAME_MIN_LENGTH)

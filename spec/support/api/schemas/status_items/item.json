@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "id": "file:/status_items/item.json#",
+=======
+  "id": "file:/item.json#",
+>>>>>>> Pulled latest release
   "type": "object",
   "properties": {
     "id": {
@@ -16,12 +20,15 @@
         },
         "status": {
           "type": "string"
+<<<<<<< HEAD
         },
         "created_at": {
           "type": "string"
         },
         "updated_at": {
           "type": "string"
+=======
+>>>>>>> Pulled latest release
         }
       },
       "additionalProperties": false,
@@ -34,3 +41,10 @@
   "additionalProperties": false,
   "required": ["id", "type", "attributes"]
 }
+<<<<<<< HEAD
+=======
+
+
+
+
+>>>>>>> Pulled latest release

@@ -15,21 +15,15 @@
     <li><%= link_to t('experiments.clone.label_title'),
                     clone_modal_experiment_url(experiment),
                     remote: true, type: 'button',
-                    class: 'clone-experiment help_tooltips',
-                    data: {
-                      tooltiplink: I18n.t('tooltips.link.experiment.copy'),
-                      tooltipcontent: I18n.t('tooltips.text.experiment.copy')
-                    } %></li>
+                    class: 'clone-experiment' %>
+    </li>
   <% end %>
   <% if can_move_experiment?(experiment) %>
     <li><%= link_to t('experiments.move.label_title'),
                     move_modal_experiment_url(experiment),
                     remote: true, type: 'button',
-                    class: 'move-experiment help_tooltips',
-                    data: {
-                      tooltiplink: I18n.t('tooltips.link.experiment.move'),
-                      tooltipcontent: I18n.t('tooltips.text.experiment.move')
-                    } %></li>
+                    class: 'move-experiment'%>
+    </li>
   <% end %>
   <% if can_archive_experiment?(experiment) %>
   <li><%= link_to t('experiments.archive.label_title'),

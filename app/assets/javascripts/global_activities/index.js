@@ -1,4 +1,4 @@
-/* global animateSpinner GlobalActivitiesFilterPrepareArray */
+/* global animateSpinner globalActivities */
 
 'use strict';
 
@@ -14,20 +14,10 @@
     });
   }
 
-  function initExpandCollapseButton() {
-    $('.ga-activities-list').on('hidden.bs.collapse', function(ev) {
-      $(ev.target.dataset.buttonLink)
-        .find('.fas').removeClass('fa-caret-down').addClass('fa-caret-right');
-    });
-    $('.ga-activities-list').on('shown.bs.collapse', function(ev) {
-      $(ev.target.dataset.buttonLink)
-        .find('.fas').removeClass('fa-caret-right').addClass('fa-caret-down');
-    });
-  }
   function initShowMoreButton() {
     var moreButton = $('.btn-more-activities');
     moreButton.on('click', function(ev) {
-      var filters = GlobalActivitiesFilterPrepareArray();
+      var filters = globalActivities.getFilters();
       ev.preventDefault();
       animateSpinner(null, true);
       filters.page = moreButton.data('next-page');
@@ -70,6 +60,5 @@
   }
 
   initExpandCollapseAllButtons();
-  initExpandCollapseButton();
   initShowMoreButton();
 }());

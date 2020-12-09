@@ -1,7 +1,10 @@
+<<<<<<< HEAD
 // scss-lint:disable SelectorDepth, NestingDepth, ImportantRule
 
 @import "constants";
 
+=======
+>>>>>>> Pulled latest release
 .sci-dropdown {
   [data-toggle="dropdown"] {
     &:focus {
@@ -37,6 +40,7 @@
       }
     }
   }
+<<<<<<< HEAD
 }
 
 .dropdown-menu {
@@ -97,4 +101,7 @@
       }
     }
   }
+=======
+
+>>>>>>> Pulled latest release
 }

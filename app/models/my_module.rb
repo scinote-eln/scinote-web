@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MyModule < ApplicationRecord
   include ArchivableModel
   include SearchableModel
@@ -7,61 +9,46 @@ class MyModule < ApplicationRecord
   enum state: Extends::TASKS_STATES
 
   before_create :create_blank_protocol
+  before_create :assign_default_status_flow
+  around_save :exec_status_consequences, if: :my_module_status_id_changed?
+  after_save -> { experiment.workflowimg.purge },
+             if: -> { (saved_changes.keys & %w(x y experiment_id my_module_group_id input_id output_id archived)).any? }
 
-  auto_strip_attributes :name, :description, nullify: false
+  auto_strip_attributes :name, :description, nullify: false, if: proc { |mm| mm.name_changed? || mm.description_changed? }
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH }
   validates :description, length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
   validates :x, :y, :workflow_order, presence: true
   validates :experiment, presence: true
-  validates :my_module_group, presence: true,
-            if: proc { |mm| !mm.my_module_group_id.nil? }
+  validates :my_module_group, presence: true, if: proc { |mm| !mm.my_module_group_id.nil? }
+  validate :coordinates_uniqueness_check, if: :active?
+  validates :completed_on, presence: true, if: proc { |mm| mm.completed? }
 
-  belongs_to :created_by,
-             foreign_key: 'created_by_id',
-             class_name: 'User',
-             optional: true
-  belongs_to :last_modified_by,
-             foreign_key: 'last_modified_by_id',
-             class_name: 'User',
-             optional: true
-  belongs_to :archived_by,
-             foreign_key: 'archived_by_id',
-             class_name: 'User',
-             optional: true
-  belongs_to :restored_by,
-             foreign_key: 'restored_by_id',
-             class_name: 'User',
-             optional: true
+  validate :check_status, if: :my_module_status_id_changed?
+  validate :check_status_conditions, if: :my_module_status_id_changed?
+  validate :check_status_implications
+
+  belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User', optional: true
+  belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User', optional: true
+  belongs_to :archived_by, foreign_key: 'archived_by_id', class_name: 'User', optional: true
+  belongs_to :restored_by, foreign_key: 'restored_by_id', class_name: 'User', optional: true
   belongs_to :experiment, inverse_of: :my_modules, touch: true
   belongs_to :my_module_group, inverse_of: :my_modules, optional: true
+  belongs_to :my_module_status, optional: true
+  belongs_to :changing_from_my_module_status, optional: true, class_name: 'MyModuleStatus'
+  delegate :my_module_status_flow, to: :my_module_status, allow_nil: true
   has_many :results, inverse_of: :my_module, dependent: :destroy
   has_many :my_module_tags, inverse_of: :my_module, dependent: :destroy
   has_many :tags, through: :my_module_tags
   has_many :task_comments, foreign_key: :associated_id, dependent: :destroy
-  has_many :inputs,
-           class_name: 'Connection',
-           foreign_key: 'input_id',
-           inverse_of: :to,
-           dependent: :destroy
-  has_many :outputs,
-           class_name: 'Connection',
-           foreign_key: 'output_id',
-           inverse_of: :from,
-           dependent: :destroy
-  has_many :my_modules, through: :outputs, source: :to
-  has_many :my_module_antecessors,
-           through: :inputs,
-           source: :from,
-           class_name: 'MyModule'
-  has_many :sample_my_modules,
-           inverse_of: :my_module,
-           dependent: :destroy
-  has_many :samples, through: :sample_my_modules
-  has_many :my_module_repository_rows,
-           inverse_of: :my_module, dependent: :destroy
+  has_many :inputs, class_name: 'Connection', foreign_key: 'input_id', inverse_of: :to, dependent: :destroy
+  has_many :outputs, class_name: 'Connection', foreign_key: 'output_id', inverse_of: :from, dependent: :destroy
+  has_many :my_modules, through: :outputs, source: :to, class_name: 'MyModule'
+  has_many :my_module_antecessors, through: :inputs, source: :from, class_name: 'MyModule'
+  has_many :my_module_repository_rows, inverse_of: :my_module, dependent: :destroy
   has_many :repository_rows, through: :my_module_repository_rows
+  has_many :repository_snapshots, dependent: :destroy, inverse_of: :my_module
   has_many :user_my_modules, inverse_of: :my_module, dependent: :destroy
   has_many :users, through: :user_my_modules
   has_many :report_elements, inverse_of: :my_module, dependent: :destroy
@@ -147,26 +134,23 @@ class MyModule < ApplicationRecord
     !experiment.archived? && experiment.navigable?
   end
 
-  # Removes assigned samples from module and connections with other
-  # modules.
+  # Removes connections with other modules
   def archive(current_user)
     self.x = 0
     self.y = 0
     # Remove association with module group.
     self.my_module_group = nil
 
+    was_archived = false
+
     MyModule.transaction do
-      archived = super
-      # Unassociate all samples from module.
-      archived = SampleMyModule.where(my_module: self).destroy_all if archived
+      was_archived = super
       # Remove all connection between modules.
-      archived = Connection.where(input_id: id).delete_all if archived
-      archived = Connection.where(output_id: id).delete_all if archived
-      unless archived
-        raise ActiveRecord::Rollback
-      end
+      was_archived = Connection.where(input_id: id).destroy_all if was_archived
+      was_archived = Connection.where(output_id: id).destroy_all if was_archived
+      raise ActiveRecord::Rollback unless was_archived
     end
-    archived
+    was_archived
   end
 
   # Similar as super restore, but also calculate new module position
@@ -185,7 +169,6 @@ class MyModule < ApplicationRecord
         raise ActiveRecord::Rollback
       end
     end
-    experiment.generate_workflow_img
     restored
   end
 
@@ -193,6 +176,44 @@ class MyModule < ApplicationRecord
     my_module_repository_rows.joins(repository_row: :repository)
                              .where('repositories.id': repository.id)
                              .count
+  end
+
+  def assigned_repositories
+    team = experiment.project.team
+    Repository.accessible_by_teams(team)
+              .joins(repository_rows: :my_module_repository_rows)
+              .where(my_module_repository_rows: { my_module_id: id })
+              .group(:id)
+  end
+
+  def live_and_snapshot_repositories_list
+    snapshots = repository_snapshots.left_outer_joins(:original_repository)
+
+    selected_snapshots = snapshots.where(selected: true)
+                                  .or(snapshots.where(original_repositories_repositories: { id: nil }))
+                                  .or(snapshots.where.not(parent_id: assigned_repositories.select(:id)))
+                                  .select('DISTINCT ON ("repositories"."parent_id") "repositories".*')
+                                  .select('COUNT(repository_rows.id) AS assigned_rows_count')
+                                  .joins(:repository_rows)
+                                  .group(:parent_id, :id)
+                                  .order(:parent_id, updated_at: :desc)
+
+    live_repositories = assigned_repositories
+                        .select('repositories.*, COUNT(DISTINCT repository_rows.id) AS assigned_rows_count')
+                        .where.not(id: repository_snapshots.where(selected: true).select(:parent_id))
+
+    (live_repositories + selected_snapshots).sort_by { |r| r.name.downcase }
+  end
+
+  def update_report_repository_references(repository)
+    ids = if repository.is_a?(Repository)
+            RepositorySnapshot.where(parent_id: repository.id).pluck(:id)
+          else
+            Repository.where(id: repository.parent_id).pluck(:id) +
+              RepositorySnapshot.where(parent_id: repository.parent_id).pluck(:id)
+          end
+
+    report_elements.where(repository_id: ids).update(repository: repository)
   end
 
   def unassigned_users
@@ -204,10 +225,6 @@ class MyModule < ApplicationRecord
       " AND users.id NOT IN " +
       "(SELECT DISTINCT user_id FROM user_my_modules WHERE user_my_modules.my_module_id = #{id.to_s})"
     )
-  end
-
-  def unassigned_samples
-    Sample.where(team_id: experiment.project.team).where.not(id: samples)
   end
 
   def unassigned_tags
@@ -252,23 +269,15 @@ class MyModule < ApplicationRecord
     protocols.count > 0 ? protocols.first : nil
   end
 
-  def first_n_samples(count = Constants::SEARCH_LIMIT)
-    samples.order(name: :asc).limit(count)
-  end
-
-  def number_of_samples
-    samples.count
-  end
-
   def is_overdue?(datetime = DateTime.current)
-    due_date.present? && datetime.utc > due_date.end_of_day.utc
+    due_date.present? && datetime.utc > due_date.utc
   end
 
   def overdue_for_days(datetime = DateTime.current)
-    if due_date.blank? || due_date.end_of_day.utc > datetime.utc
+    if due_date.blank? || due_date.utc > datetime.utc
       0
     else
-      ((datetime.utc.to_i - due_date.end_of_day.utc.to_i) / 1.day.to_f).ceil
+      ((datetime.utc.to_i - due_date.utc.to_i) / 1.day.to_f).ceil
     end
   end
 
@@ -278,8 +287,8 @@ class MyModule < ApplicationRecord
 
   def is_due_in?(datetime, diff)
     due_date.present? &&
-      datetime.utc < due_date.end_of_day.utc &&
-      datetime.utc > (due_date.end_of_day.utc - diff)
+      datetime.utc < due_date.utc &&
+      datetime.utc > (due_date.utc - diff)
   end
 
   def space_taken
@@ -331,50 +340,15 @@ class MyModule < ApplicationRecord
     final
   end
 
-
-  # Generate the samples belonging to this module
-  # in JSON form, suitable for display in handsontable.js
-  def samples_json_hot(order)
-    data = []
-    samples.order(created_at: order).each do |sample|
-      sample_json = []
-      sample_json << sample.name
-      if sample.sample_type.present?
-        sample_json << sample.sample_type.name
-      else
-        sample_json << I18n.t("samples.table.no_type")
-      end
-      if sample.sample_group.present?
-        sample_json << sample.sample_group.name
-      else
-        sample_json << I18n.t("samples.table.no_group")
-      end
-      sample_json << I18n.l(sample.created_at, format: :full)
-      sample_json << sample.user.full_name
-      data << sample_json
-    end
-
-    # Prepare column headers
-    headers = [
-      I18n.t("samples.table.sample_name"),
-      I18n.t("samples.table.sample_type"),
-      I18n.t("samples.table.sample_group"),
-      I18n.t("samples.table.added_on"),
-      I18n.t("samples.table.added_by")
-    ]
-    { data: data, headers: headers }
-  end
-
   # Generate the repository rows belonging to this module
   # in JSON form, suitable for display in handsontable.js
-  def repository_json_hot(repository_id, order)
+  def repository_json_hot(repository, order)
     data = []
-    repository_rows
-      .where(repository_id: repository_id)
-      .order(created_at: order).find_each do |row|
+    rows = repository.assigned_rows(self).includes(:created_by).order(created_at: order)
+    rows.find_each do |row|
       row_json = []
-      row_json << row.id
-      row_json << row.name
+      row_json << (row.repository.is_a?(RepositorySnapshot) ? row.parent_id : row.id)
+      row_json << (row.archived ? "#{row.name} [#{I18n.t('general.archived')}]" : row.name)
       row_json << I18n.l(row.created_at, format: :full)
       row_json << row.created_by.full_name
       data << row_json
@@ -390,41 +364,39 @@ class MyModule < ApplicationRecord
     { data: data, headers: headers }
   end
 
-  def repository_json(repository_id, order, user)
+  def repository_docx_json(repository)
     headers = [
       I18n.t('repositories.table.id'),
       I18n.t('repositories.table.row_name'),
       I18n.t('repositories.table.added_on'),
       I18n.t('repositories.table.added_by')
     ]
-    repository = Repository.find_by_id(repository_id)
+    custom_columns = []
     return false unless repository
 
     repository.repository_columns.order(:id).each do |column|
       headers.push(column.name)
+      custom_columns.push(column.id)
     end
 
-    params = { assigned: 'assigned', search: {}, order: { values: { column: '1', dir: order } } }
-    records = RepositoryDatatableService.new(repository,
-                                             params,
-                                             user,
-                                             self)
-    { headers: headers, data: records }
+    records = repository.assigned_rows(self)
+                        .select(:id, :name, :created_at, :created_by_id, :repository_id, :parent_id, :archived)
+    { headers: headers, rows: records, custom_columns: custom_columns }
   end
 
   def deep_clone(current_user)
     deep_clone_to_experiment(current_user, experiment)
   end
 
-  def deep_clone_to_experiment(current_user, experiment)
+  def deep_clone_to_experiment(current_user, experiment_dest)
     # Copy the module
-    clone = MyModule.new(
-      name: self.name,
-      experiment: experiment,
-      description: self.description,
-      x: self.x,
-      y: self.y)
-    clone.save
+    clone = MyModule.new(name: name, experiment: experiment_dest, description: description, x: x, y: y)
+    # set new position if cloning in the same experiment
+    clone.attributes = get_new_position if clone.experiment == experiment
+
+    clone.save!
+
+    clone.assign_user(current_user)
 
     # Remove the automatically generated protocol,
     # & clone the protocol instead
@@ -433,17 +405,18 @@ class MyModule < ApplicationRecord
 
     # Update the cloned protocol if neccesary
     clone_tinymce_assets(clone, clone.experiment.project.team)
-    clone.protocols << self.protocol.deep_clone_my_module(self, current_user)
+    clone.protocols << protocol.deep_clone_my_module(self, current_user)
     clone.reload
 
     # fixes linked protocols
     clone.protocols.each do |protocol|
       next unless protocol.linked?
+
       protocol.updated_at = protocol.parent_updated_at
       protocol.save
     end
 
-    return clone
+    clone
   end
 
   # Find an empty position for the restored module. It's
@@ -468,35 +441,86 @@ class MyModule < ApplicationRecord
     { x: 0, y: positions.last[1] + HEIGHT }
   end
 
-  def completed?
-    state == 'completed'
-  end
-
-  # Check if my_module is ready to become completed
-  def check_completness_status
-    if protocol && protocol.steps.count > 0
-      completed = true
-      protocol.steps.find_each do |step|
-        completed = false unless step.completed
-      end
-      return true if completed
-    end
-    false
-  end
-
-  def complete
-    self.state = 'completed'
-    self.completed_on = DateTime.now
-  end
-
-  def uncomplete
-    self.state = 'uncompleted'
-    self.completed_on = nil
+  def assign_user(user, assigned_by = nil)
+    user_my_modules.create(
+      assigned_by: assigned_by || user,
+      user: user
+    )
+    Activities::CreateActivityService
+      .call(activity_type: :assign_user_to_module,
+            owner: assigned_by || user,
+            team: experiment.project.team,
+            project: experiment.project,
+            subject: self,
+            message_items: { my_module: id,
+                             user_target: user.id })
   end
 
   private
 
   def create_blank_protocol
     protocols << Protocol.new_blank_for_module(self)
+  end
+
+  def coordinates_uniqueness_check
+    if experiment && experiment.my_modules.active.where(x: x, y: y).where.not(id: id).any?
+      errors.add(:position, I18n.t('activerecord.errors.models.my_module.attributes.position.not_unique'))
+    end
+  end
+
+  def assign_default_status_flow
+    return if my_module_status.present? || MyModuleStatusFlow.global.blank?
+
+    self.my_module_status = MyModuleStatusFlow.global.first.initial_status
+  end
+
+  def check_status_conditions
+    return if my_module_status.blank?
+
+    my_module_status.my_module_status_conditions.each do |condition|
+      condition.call(self)
+    end
+  end
+
+  def check_status_implications
+    return if my_module_status.blank?
+
+    my_module_status.my_module_status_implications.each do |implication|
+      implication.call(self)
+    end
+  end
+
+  def check_status
+    return unless my_module_status_id_was
+
+    original_status = MyModuleStatus.find_by(id: my_module_status_id_was)
+    unless my_module_status && [original_status.next_status, original_status.previous_status].include?(my_module_status)
+      errors.add(:my_module_status_id,
+                 I18n.t('activerecord.errors.models.my_module.attributes.my_module_status_id.not_correct_order'))
+    end
+  end
+
+  def exec_status_consequences
+    return if my_module_status.blank? || status_changing
+
+    self.changing_from_my_module_status_id = my_module_status_id_was if my_module_status_id_was.present?
+    self.status_changing = true
+
+    status_changing_direction = my_module_status.previous_status_id == my_module_status_id_was ? :forward : :backward
+
+    yield
+
+    if my_module_status.my_module_status_consequences.any?(&:runs_in_background?)
+      MyModuleStatusConsequencesJob.perform_later(
+        self,
+        my_module_status.my_module_status_consequences.to_a,
+        status_changing_direction
+      )
+    else
+      my_module_status.my_module_status_consequences.each do |consequence|
+        consequence.public_send(status_changing_direction, self)
+      end
+      update!(status_changing: false)
+    end
   end
 end

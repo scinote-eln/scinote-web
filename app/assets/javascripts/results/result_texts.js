@@ -73,7 +73,6 @@
         initFormSubmitLinks(newResult);
         $(this).remove();
         applyEditResultTextCallback();
-        Results.applyCollapseLinkCallBack();
         Results.toggleResultEditButtons(true);
         Results.expandResult(newResult);
         TinyMCE.destroyAll();

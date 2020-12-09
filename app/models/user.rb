@@ -13,20 +13,11 @@ class User < ApplicationRecord
   acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
          :async, :recoverable, :rememberable, :trackable, :validatable,
-         :timeoutable, :omniauthable,
+         :timeoutable, :omniauthable, :lockable,
          omniauth_providers: Extends::OMNIAUTH_PROVIDERS,
          stretches: Constants::PASSWORD_STRETCH_FACTOR
 
   has_one_attached :avatar
-
-  # has_attached_file :avatar,
-  #                   styles: {
-  #                     medium: Constants::MEDIUM_PIC_FORMAT,
-  #                     thumb: Constants::THUMB_PIC_FORMAT,
-  #                     icon: Constants::ICON_PIC_FORMAT,
-  #                     icon_small: Constants::ICON_SMALL_PIC_FORMAT
-  #                   },
-  #                   default_url: Constants::DEFAULT_AVATAR_URL
 
   auto_strip_attributes :full_name, :initials, nullify: false
   validates :full_name,
@@ -39,10 +30,6 @@ class User < ApplicationRecord
             presence: true,
             length: { maximum: Constants::EMAIL_MAX_LENGTH }
 
-  # validates_attachment :avatar,
-  #   :content_type => { :content_type => ["image/jpeg", "image/png"] },
-  #   size: { less_than: Constants::AVATAR_MAX_SIZE_MB.megabyte,
-  #           message: I18n.t('client_api.user.avatar_too_big') }
   validate :time_zone_check
 
   store_accessor :settings, :time_zone, :notifications_settings
@@ -56,8 +43,7 @@ class User < ApplicationRecord
       recent: true,
       recent_email: false,
       system_message_email: false
-    },
-    tooltips_enabled: true
+    }
   )
 
   store_accessor :variables, :export_vars
@@ -80,12 +66,9 @@ class User < ApplicationRecord
   has_many :comments, inverse_of: :user
   has_many :activities, inverse_of: :owner, foreign_key: 'owner_id'
   has_many :results, inverse_of: :user
-  has_many :samples, inverse_of: :user
-  has_many :samples_tables, inverse_of: :user, dependent: :destroy
   has_many :repositories, inverse_of: :user
   has_many :repository_table_states, inverse_of: :user, dependent: :destroy
   has_many :steps, inverse_of: :user
-  has_many :custom_fields, inverse_of: :user
   has_many :reports, inverse_of: :user
   has_many :created_assets, class_name: 'Asset', foreign_key: 'created_by_id'
   has_many :modified_assets,
@@ -105,9 +88,6 @@ class User < ApplicationRecord
            foreign_key: 'last_modified_by_id'
   has_many :modified_comments,
            class_name: 'Comment',
-           foreign_key: 'last_modified_by_id'
-  has_many :modified_custom_fields,
-           class_name: 'CustomField',
            foreign_key: 'last_modified_by_id'
   has_many :created_my_module_groups,
            class_name: 'MyModuleGroup',
@@ -157,24 +137,6 @@ class User < ApplicationRecord
   has_many :restored_results,
            class_name: 'Result',
            foreign_key: 'restored_by_id'
-  has_many :created_sample_groups,
-           class_name: 'SampleGroup',
-           foreign_key: 'created_by_id'
-  has_many :modified_sample_groups,
-           class_name: 'SampleGroup',
-           foreign_key: 'last_modified_by_id'
-  has_many :assigned_sample_my_modules,
-           class_name: 'SampleMyModule',
-           foreign_key: 'assigned_by_id'
-  has_many :created_sample_types,
-           class_name: 'SampleType',
-           foreign_key: 'created_by_id'
-  has_many :modified_sample_types,
-           class_name: 'SampleType',
-           foreign_key: 'last_modified_by_id'
-  has_many :modified_samples,
-           class_name: 'Sample',
-           foreign_key: 'last_modified_by_id'
   has_many :modified_steps, class_name: 'Step', foreign_key: 'modified_by_id'
   has_many :created_tables, class_name: 'Table', foreign_key: 'created_by_id'
   has_many :modified_tables,
@@ -211,9 +173,99 @@ class User < ApplicationRecord
            class_name: 'Protocol',
            foreign_key: 'restored_by_id',
            inverse_of: :restored_by
+  has_many :archived_repositories,
+           class_name: 'Repository',
+           foreign_key: 'archived_by_id',
+           inverse_of: :archived_by,
+           dependent: :nullify
+  has_many :restored_repositories,
+           class_name: 'Repository',
+           foreign_key: 'restored_by_id',
+           inverse_of: :restored_by,
+           dependent: :nullify
+  has_many :archived_repository_rows,
+           class_name: 'RepositoryRow',
+           foreign_key: 'archived_by_id',
+           inverse_of: :archived_by,
+           dependent: :nullify
+  has_many :restored_repository_rows,
+           class_name: 'RepositoryRow',
+           foreign_key: 'restored_by_id',
+           inverse_of: :restored_by,
+           dependent: :nullify
   has_many :assigned_my_module_repository_rows,
            class_name: 'MyModuleRepositoryRow',
            foreign_key: 'assigned_by_id'
+  has_many :created_repository_status_types,
+           class_name: 'RepositoryStatusItem',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repository_status_types,
+           class_name: 'RepositoryStatusItem',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
+  has_many :created_repository_status_value,
+           class_name: 'RepositoryStatusValue',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repository_status_value,
+           class_name: 'RepositoryStatusValue',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
+  has_many :created_repository_date_time_values,
+           class_name: 'RepositoryDateTimeValue',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repository_date_time_values,
+           class_name: 'RepositoryDateTimeValue',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
+  has_many :created_repository_checklist_values,
+           class_name: 'RepositoryChecklistValue',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repository_checklist_values,
+           class_name: 'RepositoryChecklistValue',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
+  has_many :created_repository_checklist_types,
+           class_name: 'RepositoryChecklistItem',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repository_checklist_types,
+           class_name: 'RepositoryChecklistItem',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
+  has_many :created_repository_number_values,
+           class_name: 'RepositoryNumberValue',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repository_number_values,
+           class_name: 'RepositoryNumberValue',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
+  has_many :created_repository_text_values,
+           class_name: 'RepositoryTextValue',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repository_text_values,
+           class_name: 'RepositoryTextValue',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
 
   has_many :user_notifications, inverse_of: :user
   has_many :notifications, through: :user_notifications
@@ -243,13 +295,13 @@ class User < ApplicationRecord
   def avatar_remote_url=(url_value)
     self.avatar = URI.parse(url_value)
     # Assuming url_value is http://example.com/photos/face.png
-    # avatar_file_name == "face.png"
-    # avatar_content_type == "image/png"
+    # avatar.filename == "face.png"
+    # avatar.content_type == "image/png"
     @avatar_remote_url = url_value
   end
 
   def avatar_variant(style)
-    return Constants::DEFAULT_AVATAR_URL.gsub(':style', style) unless avatar.attached?
+    return Constants::DEFAULT_AVATAR_URL.gsub(':style', style.to_s) unless avatar.attached?
 
     format = case style.to_sym
              when :medium
@@ -323,13 +375,6 @@ class User < ApplicationRecord
     result
       .where_attributes_like([:full_name, :email], query)
       .distinct
-  end
-
-  def empty_avatar(name, size)
-    file_ext = name.split(".").last
-    self.avatar_file_name = name
-    self.avatar_content_type = Rack::Mime.mime_type(".#{file_ext}")
-    self.avatar_file_size = size.to_i
   end
 
   # Whether user is active (= confirmed) or not
@@ -486,7 +531,7 @@ class User < ApplicationRecord
     includes(:user_identities)
       .where(
         'user_identities.provider=? AND user_identities.uid=?',
-        Api.configuration.azure_ad_apps[token_payload[:aud]][:provider],
+        Rails.configuration.x.azure_ad_apps[token_payload[:aud]][:provider],
         token_payload[:sub]
       )
       .references(:user_identities)
@@ -563,7 +608,7 @@ class User < ApplicationRecord
     User.where(id: UserTeam.where(team_id: query_teams).select(:user_id))
         .search(false, search_query)
         .select(:full_name, :id)
-        .map { |i| { name: escape_input(i[:full_name]), id: i[:id] } }
+        .map { |i| { label: escape_input(i[:full_name]), value: i[:id] } }
   end
 
   def file_name
@@ -572,13 +617,46 @@ class User < ApplicationRecord
     avatar.blob&.filename&.sanitized
   end
 
-  def avatar_base64(style)
-    unless avatar.attached?
-      missing_link = File.open("#{Rails.root}/app/assets/images/#{style}/missing.png").to_a.join
-      return "data:image/png;base64,#{Base64.strict_encode64(missing_link)}"
+  def valid_otp?(otp)
+    raise StandardError, 'Missing otp_secret' unless otp_secret
+
+    totp = ROTP::TOTP.new(otp_secret, issuer: 'sciNote')
+    totp.verify(otp, drift_behind: 10)
+  end
+
+  def assign_2fa_token!
+    self.otp_secret = ROTP::Base32.random
+    save!
+  end
+
+  def enable_2fa!
+    recovery_codes = []
+    Constants::TWO_FACTOR_RECOVERY_CODE_COUNT.times do
+      recovery_codes.push(SecureRandom.hex(Constants::TWO_FACTOR_RECOVERY_CODE_LENGTH / 2))
     end
 
-    convert_variant_to_base64(avatar_variant(style))
+    update!(
+      two_factor_auth_enabled: true,
+      otp_recovery_codes: recovery_codes.map { |c| Devise::Encryptor.digest(self.class, c) }
+    )
+
+    recovery_codes
+  end
+
+  def disable_2fa!
+    update!(two_factor_auth_enabled: false, otp_secret: nil, otp_recovery_codes: nil)
+  end
+
+  def recover_2fa!(code)
+    return unless otp_recovery_codes
+
+    otp_recovery_codes.each do |recovery_code|
+      if Devise::Encryptor.compare(self.class, recovery_code, code)
+        update!(otp_recovery_codes: otp_recovery_codes.reject { |i| i == recovery_code })
+        return true
+      end
+    end
+    false
   end
 
   protected

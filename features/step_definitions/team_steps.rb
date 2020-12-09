@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 Given(/^I'm on "([^"]*)" team settings page$/) do |team_name|
-  team = Team.find_by_name(team_name)
+  team = Team.find_by(name: team_name)
   visit team_path(team)
 end
 
@@ -31,4 +33,17 @@ end
 
 Then(/^I click on team title$/) do
   find('#team-name').click
+end
+
+Given('the following users are registered with teams:') do |table|
+  table.hashes.each do |row|
+    team = Team.find_by(name: row[:team])
+    team ||= FactoryBot.create(:team, name: row[:team])
+    user = FactoryBot.create(:user, row.slice('name', 'email'))
+    FactoryBot.create(:user_team, user: user, team: team, role: row[:role])
+  end
+end
+
+Given('team settings page') do
+  visit teams_path
 end

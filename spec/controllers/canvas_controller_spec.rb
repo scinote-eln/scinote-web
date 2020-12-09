@@ -4,10 +4,24 @@ require 'rails_helper'
 
 describe CanvasController do
   login_user
+<<<<<<< HEAD
   include_context 'reference_project_structure', {
     skip_my_module: true
   }
 
+=======
+
+  let(:user) { subject.current_user }
+  let(:team) { create :team, created_by: user }
+  let!(:user_team) { create :user_team, :admin, user: user, team: team }
+  let!(:user_project) do
+    create :user_project, :owner, user: user, project: project
+  end
+  let(:project) do
+    create :project, team: team
+  end
+  let(:experiment) { create :experiment, project: project }
+>>>>>>> Pulled latest release
   let(:experiment2) { create :experiment, project: project }
 
   # Idea of this "end to end" test is to put a lot "work" on method `@experiment.udpate_canvas` and controller actipn
@@ -27,6 +41,7 @@ describe CanvasController do
 
     # Setup environment for "big change" request
     # Tasks in DB
+<<<<<<< HEAD
 
 
 
@@ -38,6 +53,16 @@ describe CanvasController do
     let!(:task6) { create :my_module, x: 0, y: 6, experiment: experiment, created_by: experiment.created_by }
     let!(:task7) { create :my_module, x: 0, y: 7, experiment: experiment, created_by: experiment.created_by }
     let!(:task8) { create :my_module, x: 0, y: 8, experiment: experiment, created_by: experiment.created_by }
+=======
+    let!(:task1) { create :my_module, x: 0, y: 1, experiment: experiment }
+    let!(:task2) { create :my_module, x: 0, y: 2, experiment: experiment }
+    let!(:task3) { create :my_module, x: 0, y: 3, experiment: experiment }
+    let!(:task4) { create :my_module, x: 0, y: 4, experiment: experiment }
+    let!(:task5) { create :my_module, x: 0, y: 5, experiment: experiment }
+    let!(:task6) { create :my_module, x: 0, y: 6, experiment: experiment }
+    let!(:task7) { create :my_module, x: 0, y: 7, experiment: experiment }
+    let!(:task8) { create :my_module, x: 0, y: 8, experiment: experiment }
+>>>>>>> Pulled latest release
 
     let!(:step_on_task5) { create :step, name: 'task5_step', protocol: task5.protocol }
     let!(:step_on_task6) { create :step, name: 'task6_step', protocol: task6.protocol }
@@ -83,6 +108,7 @@ describe CanvasController do
       }
     end
 
+<<<<<<< HEAD
     before do
       8.times do |i|
         create_user_assignment(public_send("task#{i+1}"), role, user)
@@ -90,6 +116,8 @@ describe CanvasController do
       create_user_assignment(experiment2, role, user)
     end
 
+=======
+>>>>>>> Pulled latest release
     context 'when have a lot changes on canvas' do
       it 'everything goes right, redirected to canvas' do
         action

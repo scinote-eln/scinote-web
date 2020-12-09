@@ -62,7 +62,10 @@
   .filter-container {
     height: 36px;
     margin-right: 4px;
+<<<<<<< HEAD
     position: relative;
+=======
+>>>>>>> Pulled latest release
     width: 36px;
 
     .current-tasks-filters {
@@ -112,9 +115,21 @@
     }
 
     &.filters-applied::after {
+<<<<<<< HEAD
       @include red-dot;
       right: .45em;
       top: .4em;
+=======
+      background: $brand-danger;
+      border: 1px solid $color-white;
+      border-radius: 50%;
+      content: "";
+      height: .5em;
+      left: 1.5em;
+      position: absolute;
+      top: .5em;
+      width: .5em;
+>>>>>>> Pulled latest release
     }
   }
 

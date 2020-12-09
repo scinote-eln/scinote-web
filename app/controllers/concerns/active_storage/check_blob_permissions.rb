@@ -67,10 +67,14 @@ module ActiveStorage
       elsif asset.repository_cell
         repository = asset.repository_cell.repository_column.repository
 <<<<<<< HEAD
+<<<<<<< HEAD
         render_403 unless can_read_repository?(repository)
 =======
         render_403 unless can_read_team?(repository.team)
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+        render_403 unless can_read_repository?(repository)
+>>>>>>> Pulled latest release
       else
         render_403
       end

@@ -31,7 +31,9 @@ module ActiveStorage
 
       unless processing
         ActiveStorage::PreviewJob.perform_later(@blob.id)
-        @blob.attachments.take.record.update(file_processing: true)
+        ActiveRecord::Base.no_touching do
+          @blob.attachments.take.record.update(file_processing: true)
+        end
       end
 
       false

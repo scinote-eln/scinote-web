@@ -138,7 +138,7 @@ CREATE TABLE public.activities (
     subject_id bigint,
     team_id bigint,
     group_type integer,
-    "values" json
+    "values" jsonb
 );
 
 
@@ -147,6 +147,7 @@ CREATE TABLE public.activities (
 --
 
 CREATE SEQUENCE public.activities_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -192,6 +193,7 @@ CREATE TABLE public.asset_text_data (
 --
 
 CREATE SEQUENCE public.asset_text_data_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -214,20 +216,16 @@ CREATE TABLE public.assets (
     id bigint NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    file_file_name character varying,
-    file_content_type character varying,
-    file_file_size bigint,
-    file_updated_at timestamp without time zone,
     created_by_id bigint,
     last_modified_by_id bigint,
     estimated_size integer DEFAULT 0 NOT NULL,
-    file_present boolean DEFAULT false NOT NULL,
     lock character varying(1024),
     lock_ttl integer,
     version integer DEFAULT 1,
     file_processing boolean,
     team_id integer,
-    file_image_quality integer
+    file_image_quality integer,
+    view_mode integer DEFAULT 0 NOT NULL
 );
 
 
@@ -236,6 +234,7 @@ CREATE TABLE public.assets (
 --
 
 CREATE SEQUENCE public.assets_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -272,6 +271,7 @@ CREATE TABLE public.checklist_items (
 --
 
 CREATE SEQUENCE public.checklist_items_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -306,6 +306,7 @@ CREATE TABLE public.checklists (
 --
 
 CREATE SEQUENCE public.checklists_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -341,6 +342,7 @@ CREATE TABLE public.comments (
 --
 
 CREATE SEQUENCE public.comments_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -371,6 +373,7 @@ CREATE TABLE public.connections (
 --
 
 CREATE SEQUENCE public.connections_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -383,40 +386,6 @@ CREATE SEQUENCE public.connections_id_seq
 --
 
 ALTER SEQUENCE public.connections_id_seq OWNED BY public.connections.id;
-
-
---
--- Name: custom_fields; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.custom_fields (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    user_id bigint NOT NULL,
-    team_id bigint NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    last_modified_by_id bigint
-);
-
-
---
--- Name: custom_fields_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.custom_fields_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: custom_fields_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.custom_fields_id_seq OWNED BY public.custom_fields.id;
 
 
 --
@@ -496,6 +465,7 @@ CREATE TABLE public.delayed_jobs (
 --
 
 CREATE SEQUENCE public.delayed_jobs_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -528,10 +498,6 @@ CREATE TABLE public.experiments (
     restored_on timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    workflowimg_file_name character varying,
-    workflowimg_content_type character varying,
-    workflowimg_file_size bigint,
-    workflowimg_updated_at timestamp without time zone,
     uuid uuid
 );
 
@@ -541,6 +507,7 @@ CREATE TABLE public.experiments (
 --
 
 CREATE SEQUENCE public.experiments_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -573,6 +540,7 @@ CREATE TABLE public.my_module_groups (
 --
 
 CREATE SEQUENCE public.my_module_groups_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -606,6 +574,7 @@ CREATE TABLE public.my_module_repository_rows (
 --
 
 CREATE SEQUENCE public.my_module_repository_rows_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -618,6 +587,175 @@ CREATE SEQUENCE public.my_module_repository_rows_id_seq
 --
 
 ALTER SEQUENCE public.my_module_repository_rows_id_seq OWNED BY public.my_module_repository_rows.id;
+
+
+--
+-- Name: my_module_status_conditions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.my_module_status_conditions (
+    id bigint NOT NULL,
+    my_module_status_id bigint,
+    type character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: my_module_status_conditions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.my_module_status_conditions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: my_module_status_conditions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.my_module_status_conditions_id_seq OWNED BY public.my_module_status_conditions.id;
+
+
+--
+-- Name: my_module_status_consequences; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.my_module_status_consequences (
+    id bigint NOT NULL,
+    my_module_status_id bigint,
+    type character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: my_module_status_consequences_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.my_module_status_consequences_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: my_module_status_consequences_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.my_module_status_consequences_id_seq OWNED BY public.my_module_status_consequences.id;
+
+
+--
+-- Name: my_module_status_flows; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.my_module_status_flows (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    description character varying,
+    visibility integer DEFAULT 0,
+    team_id bigint,
+    created_by_id bigint,
+    last_modified_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: my_module_status_flows_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.my_module_status_flows_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: my_module_status_flows_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.my_module_status_flows_id_seq OWNED BY public.my_module_status_flows.id;
+
+
+--
+-- Name: my_module_status_implications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.my_module_status_implications (
+    id bigint NOT NULL,
+    my_module_status_id bigint,
+    type character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: my_module_status_implications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.my_module_status_implications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: my_module_status_implications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.my_module_status_implications_id_seq OWNED BY public.my_module_status_implications.id;
+
+
+--
+-- Name: my_module_statuses; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.my_module_statuses (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    description character varying,
+    color character varying NOT NULL,
+    my_module_status_flow_id bigint,
+    previous_status_id bigint,
+    created_by_id bigint,
+    last_modified_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: my_module_statuses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.my_module_statuses_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: my_module_statuses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.my_module_statuses_id_seq OWNED BY public.my_module_statuses.id;
 
 
 --
@@ -637,6 +775,7 @@ CREATE TABLE public.my_module_tags (
 --
 
 CREATE SEQUENCE public.my_module_tags_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -672,11 +811,14 @@ CREATE TABLE public.my_modules (
     archived_by_id bigint,
     restored_by_id bigint,
     restored_on timestamp without time zone,
-    nr_of_assigned_samples integer DEFAULT 0,
     workflow_order integer DEFAULT '-1'::integer NOT NULL,
     experiment_id bigint DEFAULT 0 NOT NULL,
     state smallint DEFAULT 0,
-    completed_on timestamp without time zone
+    completed_on timestamp without time zone,
+    started_on timestamp without time zone,
+    my_module_status_id bigint,
+    status_changing boolean DEFAULT false,
+    changing_from_my_module_status_id bigint
 );
 
 
@@ -685,6 +827,7 @@ CREATE TABLE public.my_modules (
 --
 
 CREATE SEQUENCE public.my_modules_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -719,6 +862,7 @@ CREATE TABLE public.notifications (
 --
 
 CREATE SEQUENCE public.notifications_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -862,7 +1006,6 @@ CREATE TABLE public.projects (
     restored_by_id bigint,
     restored_on timestamp without time zone,
     experiments_order character varying,
-    rap_task_level_id integer NOT NULL,
     template boolean,
     demo boolean DEFAULT false NOT NULL
 );
@@ -873,6 +1016,7 @@ CREATE TABLE public.projects (
 --
 
 CREATE SEQUENCE public.projects_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -906,6 +1050,7 @@ CREATE TABLE public.protocol_keywords (
 --
 
 CREATE SEQUENCE public.protocol_keywords_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -936,6 +1081,7 @@ CREATE TABLE public.protocol_protocol_keywords (
 --
 
 CREATE SEQUENCE public.protocol_protocol_keywords_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -981,6 +1127,7 @@ CREATE TABLE public.protocols (
 --
 
 CREATE SEQUENCE public.protocols_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -993,133 +1140,6 @@ CREATE SEQUENCE public.protocols_id_seq
 --
 
 ALTER SEQUENCE public.protocols_id_seq OWNED BY public.protocols.id;
-
-
---
--- Name: rap_program_levels; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.rap_program_levels (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: rap_program_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.rap_program_levels_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: rap_program_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.rap_program_levels_id_seq OWNED BY public.rap_program_levels.id;
-
-
---
--- Name: rap_project_levels; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.rap_project_levels (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    rap_topic_level_id bigint,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: rap_project_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.rap_project_levels_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: rap_project_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.rap_project_levels_id_seq OWNED BY public.rap_project_levels.id;
-
-
---
--- Name: rap_task_levels; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.rap_task_levels (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    rap_project_level_id bigint,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: rap_task_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.rap_task_levels_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: rap_task_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.rap_task_levels_id_seq OWNED BY public.rap_task_levels.id;
-
-
---
--- Name: rap_topic_levels; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.rap_topic_levels (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    rap_program_level_id bigint,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: rap_topic_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.rap_topic_levels_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: rap_topic_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.rap_topic_levels_id_seq OWNED BY public.rap_topic_levels.id;
 
 
 --
@@ -1152,6 +1172,7 @@ CREATE TABLE public.report_elements (
 --
 
 CREATE SEQUENCE public.report_elements_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1188,6 +1209,7 @@ CREATE TABLE public.reports (
 --
 
 CREATE SEQUENCE public.reports_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1214,7 +1236,17 @@ CREATE TABLE public.repositories (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     discarded_at timestamp without time zone,
-    permission_level integer DEFAULT 0 NOT NULL
+    permission_level integer DEFAULT 0 NOT NULL,
+    type character varying,
+    parent_id bigint,
+    status integer,
+    selected boolean,
+    my_module_id bigint,
+    archived boolean DEFAULT false NOT NULL,
+    archived_on timestamp without time zone,
+    restored_on timestamp without time zone,
+    archived_by_id bigint,
+    restored_by_id bigint
 );
 
 
@@ -1223,6 +1255,7 @@ CREATE TABLE public.repositories (
 --
 
 CREATE SEQUENCE public.repositories_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1290,6 +1323,7 @@ CREATE TABLE public.repository_cells (
 --
 
 CREATE SEQUENCE public.repository_cells_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1305,6 +1339,104 @@ ALTER SEQUENCE public.repository_cells_id_seq OWNED BY public.repository_cells.i
 
 
 --
+-- Name: repository_checklist_items; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_checklist_items (
+    id bigint NOT NULL,
+    data character varying NOT NULL,
+    repository_column_id bigint NOT NULL,
+    created_by_id bigint,
+    last_modified_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_checklist_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_checklist_items_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_checklist_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_checklist_items_id_seq OWNED BY public.repository_checklist_items.id;
+
+
+--
+-- Name: repository_checklist_items_values; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_checklist_items_values (
+    id bigint NOT NULL,
+    repository_checklist_value_id bigint,
+    repository_checklist_item_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_checklist_items_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_checklist_items_values_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_checklist_items_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_checklist_items_values_id_seq OWNED BY public.repository_checklist_items_values.id;
+
+
+--
+-- Name: repository_checklist_values; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_checklist_values (
+    id bigint NOT NULL,
+    created_by_id bigint,
+    last_modified_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_checklist_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_checklist_values_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_checklist_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_checklist_values_id_seq OWNED BY public.repository_checklist_values.id;
+
+
+--
 -- Name: repository_columns; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1315,7 +1447,9 @@ CREATE TABLE public.repository_columns (
     name character varying,
     data_type integer NOT NULL,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    metadata jsonb DEFAULT '{}'::jsonb NOT NULL,
+    parent_id bigint
 );
 
 
@@ -1324,6 +1458,7 @@ CREATE TABLE public.repository_columns (
 --
 
 CREATE SEQUENCE public.repository_columns_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1339,24 +1474,26 @@ ALTER SEQUENCE public.repository_columns_id_seq OWNED BY public.repository_colum
 
 
 --
--- Name: repository_date_values; Type: TABLE; Schema: public; Owner: -
+-- Name: repository_date_time_range_values; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.repository_date_values (
+CREATE TABLE public.repository_date_time_range_values (
     id bigint NOT NULL,
-    data timestamp without time zone,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    created_by_id bigint NOT NULL,
-    last_modified_by_id bigint NOT NULL
+    start_time timestamp without time zone,
+    end_time timestamp without time zone,
+    last_modified_by_id bigint,
+    created_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    type character varying
 );
 
 
 --
--- Name: repository_date_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: repository_date_time_range_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.repository_date_values_id_seq
+CREATE SEQUENCE public.repository_date_time_range_values_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1365,10 +1502,45 @@ CREATE SEQUENCE public.repository_date_values_id_seq
 
 
 --
--- Name: repository_date_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: repository_date_time_range_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.repository_date_values_id_seq OWNED BY public.repository_date_values.id;
+ALTER SEQUENCE public.repository_date_time_range_values_id_seq OWNED BY public.repository_date_time_range_values.id;
+
+
+--
+-- Name: repository_date_time_values; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_date_time_values (
+    id bigint NOT NULL,
+    data timestamp without time zone,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    created_by_id bigint NOT NULL,
+    last_modified_by_id bigint NOT NULL,
+    type character varying
+);
+
+
+--
+-- Name: repository_date_time_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_date_time_values_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_date_time_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_date_time_values_id_seq OWNED BY public.repository_date_time_values.id;
 
 
 --
@@ -1377,7 +1549,6 @@ ALTER SEQUENCE public.repository_date_values_id_seq OWNED BY public.repository_d
 
 CREATE TABLE public.repository_list_items (
     id bigint NOT NULL,
-    repository_id bigint,
     repository_column_id bigint,
     data text NOT NULL,
     created_by_id bigint,
@@ -1440,6 +1611,39 @@ ALTER SEQUENCE public.repository_list_values_id_seq OWNED BY public.repository_l
 
 
 --
+-- Name: repository_number_values; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_number_values (
+    id bigint NOT NULL,
+    data numeric,
+    last_modified_by_id bigint,
+    created_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_number_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_number_values_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_number_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_number_values_id_seq OWNED BY public.repository_number_values.id;
+
+
+--
 -- Name: repository_rows; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1450,7 +1654,13 @@ CREATE TABLE public.repository_rows (
     last_modified_by_id bigint NOT NULL,
     name character varying,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    parent_id bigint,
+    archived boolean DEFAULT false NOT NULL,
+    archived_on timestamp without time zone,
+    restored_on timestamp without time zone,
+    archived_by_id bigint,
+    restored_by_id bigint
 );
 
 
@@ -1459,6 +1669,7 @@ CREATE TABLE public.repository_rows (
 --
 
 CREATE SEQUENCE public.repository_rows_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1471,6 +1682,74 @@ CREATE SEQUENCE public.repository_rows_id_seq
 --
 
 ALTER SEQUENCE public.repository_rows_id_seq OWNED BY public.repository_rows.id;
+
+
+--
+-- Name: repository_status_items; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_status_items (
+    id bigint NOT NULL,
+    status character varying NOT NULL,
+    icon character varying NOT NULL,
+    repository_column_id bigint NOT NULL,
+    created_by_id bigint,
+    last_modified_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_status_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_status_items_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_status_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_status_items_id_seq OWNED BY public.repository_status_items.id;
+
+
+--
+-- Name: repository_status_values; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_status_values (
+    id bigint NOT NULL,
+    created_by_id bigint,
+    last_modified_by_id bigint,
+    repository_status_item_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_status_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_status_values_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_status_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_status_values_id_seq OWNED BY public.repository_status_values.id;
 
 
 --
@@ -1492,6 +1771,7 @@ CREATE TABLE public.repository_table_states (
 --
 
 CREATE SEQUENCE public.repository_table_states_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1525,6 +1805,7 @@ CREATE TABLE public.repository_text_values (
 --
 
 CREATE SEQUENCE public.repository_text_values_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1555,6 +1836,7 @@ CREATE TABLE public.result_assets (
 --
 
 CREATE SEQUENCE public.result_assets_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1585,6 +1867,7 @@ CREATE TABLE public.result_tables (
 --
 
 CREATE SEQUENCE public.result_tables_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1615,6 +1898,7 @@ CREATE TABLE public.result_texts (
 --
 
 CREATE SEQUENCE public.result_texts_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1654,6 +1938,7 @@ CREATE TABLE public.results (
 --
 
 CREATE SEQUENCE public.results_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1666,210 +1951,6 @@ CREATE SEQUENCE public.results_id_seq
 --
 
 ALTER SEQUENCE public.results_id_seq OWNED BY public.results.id;
-
-
---
--- Name: sample_custom_fields; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.sample_custom_fields (
-    id bigint NOT NULL,
-    value character varying NOT NULL,
-    custom_field_id bigint NOT NULL,
-    sample_id bigint,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: sample_custom_fields_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.sample_custom_fields_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: sample_custom_fields_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.sample_custom_fields_id_seq OWNED BY public.sample_custom_fields.id;
-
-
---
--- Name: sample_groups; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.sample_groups (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    color character varying DEFAULT '#ff0000'::character varying NOT NULL,
-    team_id bigint NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    created_by_id bigint,
-    last_modified_by_id bigint
-);
-
-
---
--- Name: sample_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.sample_groups_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: sample_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.sample_groups_id_seq OWNED BY public.sample_groups.id;
-
-
---
--- Name: sample_my_modules; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.sample_my_modules (
-    id bigint NOT NULL,
-    sample_id bigint NOT NULL,
-    my_module_id bigint NOT NULL,
-    assigned_by_id bigint,
-    assigned_on timestamp without time zone
-);
-
-
---
--- Name: sample_my_modules_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.sample_my_modules_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: sample_my_modules_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.sample_my_modules_id_seq OWNED BY public.sample_my_modules.id;
-
-
---
--- Name: sample_types; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.sample_types (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    team_id bigint NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    created_by_id bigint,
-    last_modified_by_id bigint
-);
-
-
---
--- Name: sample_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.sample_types_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: sample_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.sample_types_id_seq OWNED BY public.sample_types.id;
-
-
---
--- Name: samples; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.samples (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    user_id bigint NOT NULL,
-    team_id bigint NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    sample_group_id bigint,
-    sample_type_id bigint,
-    last_modified_by_id bigint,
-    nr_of_modules_assigned_to integer DEFAULT 0
-);
-
-
---
--- Name: samples_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.samples_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: samples_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.samples_id_seq OWNED BY public.samples.id;
-
-
---
--- Name: samples_tables; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.samples_tables (
-    id bigint NOT NULL,
-    status jsonb DEFAULT '{"time": 0, "order": [[2, "desc"]], "start": 0, "length": 10, "search": {"regex": false, "smart": true, "search": "", "caseInsensitive": true}, "columns": [{"search": {"regex": false, "smart": true, "search": "", "caseInsensitive": true}, "visible": true}, {"search": {"regex": false, "smart": true, "search": "", "caseInsensitive": true}, "visible": true}, {"search": {"regex": false, "smart": true, "search": "", "caseInsensitive": true}, "visible": true}, {"search": {"regex": false, "smart": true, "search": "", "caseInsensitive": true}, "visible": true}, {"search": {"regex": false, "smart": true, "search": "", "caseInsensitive": true}, "visible": true}, {"search": {"regex": false, "smart": true, "search": "", "caseInsensitive": true}, "visible": true}, {"search": {"regex": false, "smart": true, "search": "", "caseInsensitive": true}, "visible": true}], "assigned": "all", "ColReorder": [0, 1, 2, 3, 4, 5, 6]}'::jsonb NOT NULL,
-    user_id integer NOT NULL,
-    team_id integer NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: samples_tables_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.samples_tables_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: samples_tables_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.samples_tables_id_seq OWNED BY public.samples_tables.id;
 
 
 --
@@ -1897,6 +1978,7 @@ CREATE TABLE public.settings (
 --
 
 CREATE SEQUENCE public.settings_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1927,6 +2009,7 @@ CREATE TABLE public.step_assets (
 --
 
 CREATE SEQUENCE public.step_assets_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1957,6 +2040,7 @@ CREATE TABLE public.step_tables (
 --
 
 CREATE SEQUENCE public.step_tables_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1986,7 +2070,8 @@ CREATE TABLE public.steps (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     last_modified_by_id bigint,
-    protocol_id bigint NOT NULL
+    protocol_id bigint NOT NULL,
+    assets_view_mode integer DEFAULT 0 NOT NULL
 );
 
 
@@ -1995,6 +2080,7 @@ CREATE TABLE public.steps (
 --
 
 CREATE SEQUENCE public.steps_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2069,6 +2155,7 @@ CREATE TABLE public.tables (
 --
 
 CREATE SEQUENCE public.tables_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2104,6 +2191,7 @@ CREATE TABLE public.tags (
 --
 
 CREATE SEQUENCE public.tags_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2156,6 +2244,7 @@ ALTER SEQUENCE public.team_repositories_id_seq OWNED BY public.team_repositories
 --
 
 CREATE SEQUENCE public.teams_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2178,11 +2267,7 @@ CREATE TABLE public.temp_files (
     id bigint NOT NULL,
     session_id character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    file_file_name character varying,
-    file_content_type character varying,
-    file_file_size bigint,
-    file_updated_at timestamp without time zone
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -2191,6 +2276,7 @@ CREATE TABLE public.temp_files (
 --
 
 CREATE SEQUENCE public.temp_files_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2211,10 +2297,6 @@ ALTER SEQUENCE public.temp_files_id_seq OWNED BY public.temp_files.id;
 
 CREATE TABLE public.tiny_mce_assets (
     id bigint NOT NULL,
-    image_file_name character varying,
-    image_content_type character varying,
-    image_file_size bigint,
-    image_updated_at timestamp without time zone,
     estimated_size integer DEFAULT 0 NOT NULL,
     team_id integer,
     created_at timestamp without time zone NOT NULL,
@@ -2230,6 +2312,7 @@ CREATE TABLE public.tiny_mce_assets (
 --
 
 CREATE SEQUENCE public.tiny_mce_assets_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2261,6 +2344,7 @@ CREATE TABLE public.tokens (
 --
 
 CREATE SEQUENCE public.tokens_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2294,6 +2378,7 @@ CREATE TABLE public.user_identities (
 --
 
 CREATE SEQUENCE public.user_identities_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2327,6 +2412,7 @@ CREATE TABLE public.user_my_modules (
 --
 
 CREATE SEQUENCE public.user_my_modules_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2360,6 +2446,7 @@ CREATE TABLE public.user_notifications (
 --
 
 CREATE SEQUENCE public.user_notifications_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2394,6 +2481,7 @@ CREATE TABLE public.user_projects (
 --
 
 CREATE SEQUENCE public.user_projects_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2447,6 +2535,7 @@ ALTER SEQUENCE public.user_system_notifications_id_seq OWNED BY public.user_syst
 --
 
 CREATE SEQUENCE public.user_teams_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2481,10 +2570,6 @@ CREATE TABLE public.users (
     last_sign_in_ip character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    avatar_file_name character varying,
-    avatar_content_type character varying,
-    avatar_file_size bigint,
-    avatar_updated_at timestamp without time zone,
     confirmation_token character varying,
     confirmed_at timestamp without time zone,
     confirmation_sent_at timestamp without time zone,
@@ -2500,7 +2585,13 @@ CREATE TABLE public.users (
     current_team_id bigint,
     authentication_token character varying(30),
     settings jsonb DEFAULT '{}'::jsonb NOT NULL,
-    variables jsonb DEFAULT '{}'::jsonb NOT NULL
+    variables jsonb DEFAULT '{}'::jsonb NOT NULL,
+    two_factor_auth_enabled boolean DEFAULT false NOT NULL,
+    otp_secret character varying,
+    otp_recovery_codes jsonb,
+    failed_attempts integer DEFAULT 0 NOT NULL,
+    locked_at timestamp without time zone,
+    unlock_token character varying
 );
 
 
@@ -2509,6 +2600,7 @@ CREATE TABLE public.users (
 --
 
 CREATE SEQUENCE public.users_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2575,6 +2667,7 @@ CREATE TABLE public.wopi_actions (
 --
 
 CREATE SEQUENCE public.wopi_actions_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2606,6 +2699,7 @@ CREATE TABLE public.wopi_apps (
 --
 
 CREATE SEQUENCE public.wopi_apps_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2639,6 +2733,7 @@ CREATE TABLE public.wopi_discoveries (
 --
 
 CREATE SEQUENCE public.wopi_discoveries_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2662,10 +2757,6 @@ CREATE TABLE public.zip_exports (
     user_id bigint,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    zip_file_file_name character varying,
-    zip_file_content_type character varying,
-    zip_file_file_size bigint,
-    zip_file_updated_at timestamp without time zone,
     type character varying
 );
 
@@ -2675,6 +2766,7 @@ CREATE TABLE public.zip_exports (
 --
 
 CREATE SEQUENCE public.zip_exports_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2753,13 +2845,6 @@ ALTER TABLE ONLY public.connections ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
--- Name: custom_fields id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.custom_fields ALTER COLUMN id SET DEFAULT nextval('public.custom_fields_id_seq'::regclass);
-
-
---
 -- Name: delayed_jobs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2785,6 +2870,41 @@ ALTER TABLE ONLY public.my_module_groups ALTER COLUMN id SET DEFAULT nextval('pu
 --
 
 ALTER TABLE ONLY public.my_module_repository_rows ALTER COLUMN id SET DEFAULT nextval('public.my_module_repository_rows_id_seq'::regclass);
+
+
+--
+-- Name: my_module_status_conditions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_status_conditions ALTER COLUMN id SET DEFAULT nextval('public.my_module_status_conditions_id_seq'::regclass);
+
+
+--
+-- Name: my_module_status_consequences id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_status_consequences ALTER COLUMN id SET DEFAULT nextval('public.my_module_status_consequences_id_seq'::regclass);
+
+
+--
+-- Name: my_module_status_flows id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_status_flows ALTER COLUMN id SET DEFAULT nextval('public.my_module_status_flows_id_seq'::regclass);
+
+
+--
+-- Name: my_module_status_implications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_status_implications ALTER COLUMN id SET DEFAULT nextval('public.my_module_status_implications_id_seq'::regclass);
+
+
+--
+-- Name: my_module_statuses id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_statuses ALTER COLUMN id SET DEFAULT nextval('public.my_module_statuses_id_seq'::regclass);
 
 
 --
@@ -2858,34 +2978,6 @@ ALTER TABLE ONLY public.protocols ALTER COLUMN id SET DEFAULT nextval('public.pr
 
 
 --
--- Name: rap_program_levels id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_program_levels ALTER COLUMN id SET DEFAULT nextval('public.rap_program_levels_id_seq'::regclass);
-
-
---
--- Name: rap_project_levels id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_project_levels ALTER COLUMN id SET DEFAULT nextval('public.rap_project_levels_id_seq'::regclass);
-
-
---
--- Name: rap_task_levels id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_task_levels ALTER COLUMN id SET DEFAULT nextval('public.rap_task_levels_id_seq'::regclass);
-
-
---
--- Name: rap_topic_levels id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_topic_levels ALTER COLUMN id SET DEFAULT nextval('public.rap_topic_levels_id_seq'::regclass);
-
-
---
 -- Name: report_elements id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2921,6 +3013,27 @@ ALTER TABLE ONLY public.repository_cells ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
+-- Name: repository_checklist_items id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_checklist_items ALTER COLUMN id SET DEFAULT nextval('public.repository_checklist_items_id_seq'::regclass);
+
+
+--
+-- Name: repository_checklist_items_values id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_checklist_items_values ALTER COLUMN id SET DEFAULT nextval('public.repository_checklist_items_values_id_seq'::regclass);
+
+
+--
+-- Name: repository_checklist_values id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_checklist_values ALTER COLUMN id SET DEFAULT nextval('public.repository_checklist_values_id_seq'::regclass);
+
+
+--
 -- Name: repository_columns id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2928,10 +3041,17 @@ ALTER TABLE ONLY public.repository_columns ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
--- Name: repository_date_values id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: repository_date_time_range_values id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.repository_date_values ALTER COLUMN id SET DEFAULT nextval('public.repository_date_values_id_seq'::regclass);
+ALTER TABLE ONLY public.repository_date_time_range_values ALTER COLUMN id SET DEFAULT nextval('public.repository_date_time_range_values_id_seq'::regclass);
+
+
+--
+-- Name: repository_date_time_values id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_date_time_values ALTER COLUMN id SET DEFAULT nextval('public.repository_date_time_values_id_seq'::regclass);
 
 
 --
@@ -2949,10 +3069,31 @@ ALTER TABLE ONLY public.repository_list_values ALTER COLUMN id SET DEFAULT nextv
 
 
 --
+-- Name: repository_number_values id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_number_values ALTER COLUMN id SET DEFAULT nextval('public.repository_number_values_id_seq'::regclass);
+
+
+--
 -- Name: repository_rows id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.repository_rows ALTER COLUMN id SET DEFAULT nextval('public.repository_rows_id_seq'::regclass);
+
+
+--
+-- Name: repository_status_items id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_status_items ALTER COLUMN id SET DEFAULT nextval('public.repository_status_items_id_seq'::regclass);
+
+
+--
+-- Name: repository_status_values id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_status_values ALTER COLUMN id SET DEFAULT nextval('public.repository_status_values_id_seq'::regclass);
 
 
 --
@@ -2995,48 +3136,6 @@ ALTER TABLE ONLY public.result_texts ALTER COLUMN id SET DEFAULT nextval('public
 --
 
 ALTER TABLE ONLY public.results ALTER COLUMN id SET DEFAULT nextval('public.results_id_seq'::regclass);
-
-
---
--- Name: sample_custom_fields id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_custom_fields ALTER COLUMN id SET DEFAULT nextval('public.sample_custom_fields_id_seq'::regclass);
-
-
---
--- Name: sample_groups id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_groups ALTER COLUMN id SET DEFAULT nextval('public.sample_groups_id_seq'::regclass);
-
-
---
--- Name: sample_my_modules id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_my_modules ALTER COLUMN id SET DEFAULT nextval('public.sample_my_modules_id_seq'::regclass);
-
-
---
--- Name: sample_types id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_types ALTER COLUMN id SET DEFAULT nextval('public.sample_types_id_seq'::regclass);
-
-
---
--- Name: samples id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.samples ALTER COLUMN id SET DEFAULT nextval('public.samples_id_seq'::regclass);
-
-
---
--- Name: samples_tables id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.samples_tables ALTER COLUMN id SET DEFAULT nextval('public.samples_tables_id_seq'::regclass);
 
 
 --
@@ -3288,14 +3387,6 @@ ALTER TABLE ONLY public.connections
 
 
 --
--- Name: custom_fields custom_fields_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.custom_fields
-    ADD CONSTRAINT custom_fields_pkey PRIMARY KEY (id);
-
-
---
 -- Name: delayed_jobs delayed_jobs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3325,6 +3416,46 @@ ALTER TABLE ONLY public.my_module_groups
 
 ALTER TABLE ONLY public.my_module_repository_rows
     ADD CONSTRAINT my_module_repository_rows_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: my_module_status_conditions my_module_status_conditions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_status_conditions
+    ADD CONSTRAINT my_module_status_conditions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: my_module_status_consequences my_module_status_consequences_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_status_consequences
+    ADD CONSTRAINT my_module_status_consequences_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: my_module_status_flows my_module_status_flows_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_status_flows
+    ADD CONSTRAINT my_module_status_flows_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: my_module_status_implications my_module_status_implications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_status_implications
+    ADD CONSTRAINT my_module_status_implications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: my_module_statuses my_module_statuses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_statuses
+    ADD CONSTRAINT my_module_statuses_pkey PRIMARY KEY (id);
 
 
 --
@@ -3408,38 +3539,6 @@ ALTER TABLE ONLY public.protocols
 
 
 --
--- Name: rap_program_levels rap_program_levels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_program_levels
-    ADD CONSTRAINT rap_program_levels_pkey PRIMARY KEY (id);
-
-
---
--- Name: rap_project_levels rap_project_levels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_project_levels
-    ADD CONSTRAINT rap_project_levels_pkey PRIMARY KEY (id);
-
-
---
--- Name: rap_task_levels rap_task_levels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_task_levels
-    ADD CONSTRAINT rap_task_levels_pkey PRIMARY KEY (id);
-
-
---
--- Name: rap_topic_levels rap_topic_levels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_topic_levels
-    ADD CONSTRAINT rap_topic_levels_pkey PRIMARY KEY (id);
-
-
---
 -- Name: report_elements report_elements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3480,6 +3579,30 @@ ALTER TABLE ONLY public.repository_cells
 
 
 --
+-- Name: repository_checklist_items repository_checklist_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_checklist_items
+    ADD CONSTRAINT repository_checklist_items_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repository_checklist_items_values repository_checklist_items_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_checklist_items_values
+    ADD CONSTRAINT repository_checklist_items_values_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repository_checklist_values repository_checklist_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_checklist_values
+    ADD CONSTRAINT repository_checklist_values_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: repository_columns repository_columns_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3488,11 +3611,19 @@ ALTER TABLE ONLY public.repository_columns
 
 
 --
--- Name: repository_date_values repository_date_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: repository_date_time_range_values repository_date_time_range_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.repository_date_values
-    ADD CONSTRAINT repository_date_values_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.repository_date_time_range_values
+    ADD CONSTRAINT repository_date_time_range_values_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repository_date_time_values repository_date_time_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_date_time_values
+    ADD CONSTRAINT repository_date_time_values_pkey PRIMARY KEY (id);
 
 
 --
@@ -3512,11 +3643,35 @@ ALTER TABLE ONLY public.repository_list_values
 
 
 --
+-- Name: repository_number_values repository_number_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_number_values
+    ADD CONSTRAINT repository_number_values_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: repository_rows repository_rows_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.repository_rows
     ADD CONSTRAINT repository_rows_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repository_status_items repository_status_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_status_items
+    ADD CONSTRAINT repository_status_items_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repository_status_values repository_status_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_status_values
+    ADD CONSTRAINT repository_status_values_pkey PRIMARY KEY (id);
 
 
 --
@@ -3565,54 +3720,6 @@ ALTER TABLE ONLY public.result_texts
 
 ALTER TABLE ONLY public.results
     ADD CONSTRAINT results_pkey PRIMARY KEY (id);
-
-
---
--- Name: sample_custom_fields sample_custom_fields_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_custom_fields
-    ADD CONSTRAINT sample_custom_fields_pkey PRIMARY KEY (id);
-
-
---
--- Name: sample_groups sample_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_groups
-    ADD CONSTRAINT sample_groups_pkey PRIMARY KEY (id);
-
-
---
--- Name: sample_my_modules sample_my_modules_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_my_modules
-    ADD CONSTRAINT sample_my_modules_pkey PRIMARY KEY (id);
-
-
---
--- Name: sample_types sample_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_types
-    ADD CONSTRAINT sample_types_pkey PRIMARY KEY (id);
-
-
---
--- Name: samples samples_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.samples
-    ADD CONSTRAINT samples_pkey PRIMARY KEY (id);
-
-
---
--- Name: samples_tables samples_tables_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.samples_tables
-    ADD CONSTRAINT samples_tables_pkey PRIMARY KEY (id);
 
 
 --
@@ -3858,6 +3965,13 @@ CREATE INDEX index_activities_on_created_at ON public.activities USING btree (cr
 
 
 --
+-- Name: index_activities_on_created_at_and_team_id_and_no_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_activities_on_created_at_and_team_id_and_no_project_id ON public.activities USING btree (created_at DESC, team_id) WHERE (project_id IS NULL);
+
+
+--
 -- Name: index_activities_on_experiment_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3932,13 +4046,6 @@ CREATE INDEX index_assets_on_created_at ON public.assets USING btree (created_at
 --
 
 CREATE INDEX index_assets_on_created_by_id ON public.assets USING btree (created_by_id);
-
-
---
--- Name: index_assets_on_file_file_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_assets_on_file_file_name ON public.assets USING gin (public.trim_html_tags((file_file_name)::text) public.gin_trgm_ops);
 
 
 --
@@ -4068,27 +4175,6 @@ CREATE INDEX index_connections_on_output_id ON public.connections USING btree (o
 
 
 --
--- Name: index_custom_fields_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_custom_fields_on_last_modified_by_id ON public.custom_fields USING btree (last_modified_by_id);
-
-
---
--- Name: index_custom_fields_on_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_custom_fields_on_team_id ON public.custom_fields USING btree (team_id);
-
-
---
--- Name: index_custom_fields_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_custom_fields_on_user_id ON public.custom_fields USING btree (user_id);
-
-
---
 -- Name: index_experiments_on_archived_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4159,6 +4245,55 @@ CREATE INDEX index_my_module_repository_rows_on_repository_row_id ON public.my_m
 
 
 --
+-- Name: index_my_module_status_conditions_on_my_module_status_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_my_module_status_conditions_on_my_module_status_id ON public.my_module_status_conditions USING btree (my_module_status_id);
+
+
+--
+-- Name: index_my_module_status_consequences_on_my_module_status_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_my_module_status_consequences_on_my_module_status_id ON public.my_module_status_consequences USING btree (my_module_status_id);
+
+
+--
+-- Name: index_my_module_status_flows_on_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_my_module_status_flows_on_team_id ON public.my_module_status_flows USING btree (team_id);
+
+
+--
+-- Name: index_my_module_status_flows_on_visibility; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_my_module_status_flows_on_visibility ON public.my_module_status_flows USING btree (visibility);
+
+
+--
+-- Name: index_my_module_status_implications_on_my_module_status_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_my_module_status_implications_on_my_module_status_id ON public.my_module_status_implications USING btree (my_module_status_id);
+
+
+--
+-- Name: index_my_module_statuses_on_my_module_status_flow_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_my_module_statuses_on_my_module_status_flow_id ON public.my_module_statuses USING btree (my_module_status_flow_id);
+
+
+--
+-- Name: index_my_module_statuses_on_previous_status_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_my_module_statuses_on_previous_status_id ON public.my_module_statuses USING btree (previous_status_id);
+
+
+--
 -- Name: index_my_module_tags_on_created_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4219,6 +4354,13 @@ CREATE INDEX index_my_modules_on_last_modified_by_id ON public.my_modules USING 
 --
 
 CREATE INDEX index_my_modules_on_my_module_group_id ON public.my_modules USING btree (my_module_group_id);
+
+
+--
+-- Name: index_my_modules_on_my_module_status_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_my_modules_on_my_module_status_id ON public.my_modules USING btree (my_module_status_id);
 
 
 --
@@ -4292,6 +4434,27 @@ CREATE UNIQUE INDEX index_oauth_applications_on_uid ON public.oauth_applications
 
 
 --
+-- Name: index_on_rep_status_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_on_rep_status_type_id ON public.repository_status_values USING btree (repository_status_item_id);
+
+
+--
+-- Name: index_on_repository_checklist_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_on_repository_checklist_item_id ON public.repository_checklist_items_values USING btree (repository_checklist_item_id);
+
+
+--
+-- Name: index_on_repository_checklist_value_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_on_repository_checklist_value_id ON public.repository_checklist_items_values USING btree (repository_checklist_value_id);
+
+
+--
 -- Name: index_projects_on_archived_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4317,13 +4480,6 @@ CREATE INDEX index_projects_on_last_modified_by_id ON public.projects USING btre
 --
 
 CREATE INDEX index_projects_on_name ON public.projects USING gin (public.trim_html_tags((name)::text) public.gin_trgm_ops);
-
-
---
--- Name: index_projects_on_rap_task_level_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_projects_on_rap_task_level_id ON public.projects USING btree (rap_task_level_id);
 
 
 --
@@ -4436,55 +4592,6 @@ CREATE INDEX index_protocols_on_restored_by_id ON public.protocols USING btree (
 --
 
 CREATE INDEX index_protocols_on_team_id ON public.protocols USING btree (team_id);
-
-
---
--- Name: index_rap_program_levels_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_rap_program_levels_on_name ON public.rap_program_levels USING btree (name);
-
-
---
--- Name: index_rap_project_levels_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_rap_project_levels_on_name ON public.rap_project_levels USING btree (name);
-
-
---
--- Name: index_rap_project_levels_on_rap_topic_level_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_rap_project_levels_on_rap_topic_level_id ON public.rap_project_levels USING btree (rap_topic_level_id);
-
-
---
--- Name: index_rap_task_levels_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_rap_task_levels_on_name ON public.rap_task_levels USING btree (name);
-
-
---
--- Name: index_rap_task_levels_on_rap_project_level_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_rap_task_levels_on_rap_project_level_id ON public.rap_task_levels USING btree (rap_project_level_id);
-
-
---
--- Name: index_rap_topic_levels_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_rap_topic_levels_on_name ON public.rap_topic_levels USING btree (name);
-
-
---
--- Name: index_rap_topic_levels_on_rap_program_level_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_rap_topic_levels_on_rap_program_level_id ON public.rap_topic_levels USING btree (rap_program_level_id);
 
 
 --
@@ -4607,6 +4714,13 @@ CREATE INDEX index_reports_on_user_id ON public.reports USING btree (user_id);
 
 
 --
+-- Name: index_repositories_on_archived_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repositories_on_archived_by_id ON public.repositories USING btree (archived_by_id);
+
+
+--
 -- Name: index_repositories_on_discarded_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4614,10 +4728,24 @@ CREATE INDEX index_repositories_on_discarded_at ON public.repositories USING btr
 
 
 --
+-- Name: index_repositories_on_my_module_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repositories_on_my_module_id ON public.repositories USING btree (my_module_id);
+
+
+--
 -- Name: index_repositories_on_permission_level; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_repositories_on_permission_level ON public.repositories USING btree (permission_level);
+
+
+--
+-- Name: index_repositories_on_restored_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repositories_on_restored_by_id ON public.repositories USING btree (restored_by_id);
 
 
 --
@@ -4670,10 +4798,80 @@ CREATE INDEX index_repository_cells_on_value_type_and_value_id ON public.reposit
 
 
 --
+-- Name: index_repository_checklist_items_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_checklist_items_on_created_by_id ON public.repository_checklist_items USING btree (created_by_id);
+
+
+--
+-- Name: index_repository_checklist_items_on_data; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_checklist_items_on_data ON public.repository_checklist_items USING gin (public.trim_html_tags((data)::text) public.gin_trgm_ops);
+
+
+--
+-- Name: index_repository_checklist_items_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_checklist_items_on_last_modified_by_id ON public.repository_checklist_items USING btree (last_modified_by_id);
+
+
+--
+-- Name: index_repository_checklist_items_on_repository_column_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_checklist_items_on_repository_column_id ON public.repository_checklist_items USING btree (repository_column_id);
+
+
+--
+-- Name: index_repository_checklist_values_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_checklist_values_on_created_by_id ON public.repository_checklist_values USING btree (created_by_id);
+
+
+--
+-- Name: index_repository_checklist_values_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_checklist_values_on_last_modified_by_id ON public.repository_checklist_values USING btree (last_modified_by_id);
+
+
+--
 -- Name: index_repository_columns_on_repository_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_repository_columns_on_repository_id ON public.repository_columns USING btree (repository_id);
+
+
+--
+-- Name: index_repository_date_time_range_values_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_range_values_on_created_by_id ON public.repository_date_time_range_values USING btree (created_by_id);
+
+
+--
+-- Name: index_repository_date_time_range_values_on_end_time; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_range_values_on_end_time ON public.repository_date_time_range_values USING btree (end_time);
+
+
+--
+-- Name: index_repository_date_time_range_values_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_range_values_on_last_modified_by_id ON public.repository_date_time_range_values USING btree (last_modified_by_id);
+
+
+--
+-- Name: index_repository_date_time_range_values_on_start_time; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_range_values_on_start_time ON public.repository_date_time_range_values USING btree (start_time);
 
 
 --
@@ -4705,13 +4903,6 @@ CREATE INDEX index_repository_list_items_on_repository_column_id ON public.repos
 
 
 --
--- Name: index_repository_list_items_on_repository_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repository_list_items_on_repository_id ON public.repository_list_items USING btree (repository_id);
-
-
---
 -- Name: index_repository_list_values_on_created_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4733,6 +4924,48 @@ CREATE INDEX index_repository_list_values_on_repository_list_item_id ON public.r
 
 
 --
+-- Name: index_repository_number_values_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_number_values_on_created_by_id ON public.repository_number_values USING btree (created_by_id);
+
+
+--
+-- Name: index_repository_number_values_on_data; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_number_values_on_data ON public.repository_number_values USING btree (data);
+
+
+--
+-- Name: index_repository_number_values_on_data_text; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_number_values_on_data_text ON public.repository_number_values USING gin (((data)::text) public.gin_trgm_ops);
+
+
+--
+-- Name: index_repository_number_values_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_number_values_on_last_modified_by_id ON public.repository_number_values USING btree (last_modified_by_id);
+
+
+--
+-- Name: index_repository_rows_on_archived_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_rows_on_archived_by_id ON public.repository_rows USING btree (archived_by_id);
+
+
+--
+-- Name: index_repository_rows_on_id_text; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_rows_on_id_text ON public.repository_rows USING gin (((id)::text) public.gin_trgm_ops);
+
+
+--
 -- Name: index_repository_rows_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4744,6 +4977,55 @@ CREATE INDEX index_repository_rows_on_name ON public.repository_rows USING gin (
 --
 
 CREATE INDEX index_repository_rows_on_repository_id ON public.repository_rows USING btree (repository_id);
+
+
+--
+-- Name: index_repository_rows_on_restored_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_rows_on_restored_by_id ON public.repository_rows USING btree (restored_by_id);
+
+
+--
+-- Name: index_repository_status_items_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_status_items_on_created_by_id ON public.repository_status_items USING btree (created_by_id);
+
+
+--
+-- Name: index_repository_status_items_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_status_items_on_last_modified_by_id ON public.repository_status_items USING btree (last_modified_by_id);
+
+
+--
+-- Name: index_repository_status_items_on_repository_column_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_status_items_on_repository_column_id ON public.repository_status_items USING btree (repository_column_id);
+
+
+--
+-- Name: index_repository_status_items_on_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_status_items_on_status ON public.repository_status_items USING gin (public.trim_html_tags((status)::text) public.gin_trgm_ops);
+
+
+--
+-- Name: index_repository_status_values_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_status_values_on_created_by_id ON public.repository_status_values USING btree (created_by_id);
+
+
+--
+-- Name: index_repository_status_values_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_status_values_on_last_modified_by_id ON public.repository_status_values USING btree (last_modified_by_id);
 
 
 --
@@ -4842,160 +5124,6 @@ CREATE INDEX index_results_on_restored_by_id ON public.results USING btree (rest
 --
 
 CREATE INDEX index_results_on_user_id ON public.results USING btree (user_id);
-
-
---
--- Name: index_sample_custom_fields_on_custom_field_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_custom_fields_on_custom_field_id ON public.sample_custom_fields USING btree (custom_field_id);
-
-
---
--- Name: index_sample_custom_fields_on_sample_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_custom_fields_on_sample_id ON public.sample_custom_fields USING btree (sample_id);
-
-
---
--- Name: index_sample_custom_fields_on_value; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_custom_fields_on_value ON public.sample_custom_fields USING gin (public.trim_html_tags((value)::text) public.gin_trgm_ops);
-
-
---
--- Name: index_sample_groups_on_created_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_groups_on_created_by_id ON public.sample_groups USING btree (created_by_id);
-
-
---
--- Name: index_sample_groups_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_groups_on_last_modified_by_id ON public.sample_groups USING btree (last_modified_by_id);
-
-
---
--- Name: index_sample_groups_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_groups_on_name ON public.sample_groups USING gin (public.trim_html_tags((name)::text) public.gin_trgm_ops);
-
-
---
--- Name: index_sample_groups_on_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_groups_on_team_id ON public.sample_groups USING btree (team_id);
-
-
---
--- Name: index_sample_my_modules_on_assigned_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_my_modules_on_assigned_by_id ON public.sample_my_modules USING btree (assigned_by_id);
-
-
---
--- Name: index_sample_my_modules_on_my_module_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_my_modules_on_my_module_id ON public.sample_my_modules USING btree (my_module_id);
-
-
---
--- Name: index_sample_my_modules_on_sample_id_and_my_module_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_my_modules_on_sample_id_and_my_module_id ON public.sample_my_modules USING btree (sample_id, my_module_id);
-
-
---
--- Name: index_sample_types_on_created_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_types_on_created_by_id ON public.sample_types USING btree (created_by_id);
-
-
---
--- Name: index_sample_types_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_types_on_last_modified_by_id ON public.sample_types USING btree (last_modified_by_id);
-
-
---
--- Name: index_sample_types_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_types_on_name ON public.sample_types USING gin (public.trim_html_tags((name)::text) public.gin_trgm_ops);
-
-
---
--- Name: index_sample_types_on_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sample_types_on_team_id ON public.sample_types USING btree (team_id);
-
-
---
--- Name: index_samples_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_samples_on_last_modified_by_id ON public.samples USING btree (last_modified_by_id);
-
-
---
--- Name: index_samples_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_samples_on_name ON public.samples USING gin (public.trim_html_tags((name)::text) public.gin_trgm_ops);
-
-
---
--- Name: index_samples_on_sample_group_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_samples_on_sample_group_id ON public.samples USING btree (sample_group_id);
-
-
---
--- Name: index_samples_on_sample_type_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_samples_on_sample_type_id ON public.samples USING btree (sample_type_id);
-
-
---
--- Name: index_samples_on_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_samples_on_team_id ON public.samples USING btree (team_id);
-
-
---
--- Name: index_samples_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_samples_on_user_id ON public.samples USING btree (user_id);
-
-
---
--- Name: index_samples_tables_on_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_samples_tables_on_team_id ON public.samples_tables USING btree (team_id);
-
-
---
--- Name: index_samples_tables_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_samples_tables_on_user_id ON public.samples_tables USING btree (user_id);
 
 
 --
@@ -5433,6 +5561,13 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING bt
 
 
 --
+-- Name: index_users_on_unlock_token; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_unlock_token ON public.users USING btree (unlock_token);
+
+
+--
 -- Name: index_view_states_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5461,14 +5596,6 @@ CREATE INDEX index_zip_exports_on_user_id ON public.zip_exports USING btree (use
 
 
 --
--- Name: sample_custom_fields fk_rails_01916e6992; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_custom_fields
-    ADD CONSTRAINT fk_rails_01916e6992 FOREIGN KEY (custom_field_id) REFERENCES public.custom_fields(id);
-
-
---
 -- Name: comments fk_rails_03de2dc08c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5493,27 +5620,11 @@ ALTER TABLE ONLY public.report_elements
 
 
 --
--- Name: projects fk_rails_0710cff186; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.projects
-    ADD CONSTRAINT fk_rails_0710cff186 FOREIGN KEY (rap_task_level_id) REFERENCES public.rap_task_levels(id);
-
-
---
 -- Name: assets fk_rails_0916329f9e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.assets
     ADD CONSTRAINT fk_rails_0916329f9e FOREIGN KEY (created_by_id) REFERENCES public.users(id);
-
-
---
--- Name: sample_types fk_rails_09fe39ddcf; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_types
-    ADD CONSTRAINT fk_rails_09fe39ddcf FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
 
 
 --
@@ -5530,6 +5641,14 @@ ALTER TABLE ONLY public.my_modules
 
 ALTER TABLE ONLY public.steps
     ADD CONSTRAINT fk_rails_0f28e70afa FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: repositories fk_rails_111f913cb7; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repositories
+    ADD CONSTRAINT fk_rails_111f913cb7 FOREIGN KEY (archived_by_id) REFERENCES public.users(id);
 
 
 --
@@ -5554,14 +5673,6 @@ ALTER TABLE ONLY public.team_repositories
 
 ALTER TABLE ONLY public.zip_exports
     ADD CONSTRAINT fk_rails_1952fc2261 FOREIGN KEY (user_id) REFERENCES public.users(id);
-
-
---
--- Name: sample_my_modules fk_rails_1d7ba4676d; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_my_modules
-    ADD CONSTRAINT fk_rails_1d7ba4676d FOREIGN KEY (sample_id) REFERENCES public.samples(id);
 
 
 --
@@ -5677,27 +5788,19 @@ ALTER TABLE ONLY public.my_modules
 
 
 --
--- Name: sample_types fk_rails_316e1b5e2c; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_types
-    ADD CONSTRAINT fk_rails_316e1b5e2c FOREIGN KEY (created_by_id) REFERENCES public.users(id);
-
-
---
--- Name: repository_list_items fk_rails_31e11a3b07; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_list_items
-    ADD CONSTRAINT fk_rails_31e11a3b07 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
-
-
---
 -- Name: oauth_access_grants fk_rails_330c32d8d9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.oauth_access_grants
     ADD CONSTRAINT fk_rails_330c32d8d9 FOREIGN KEY (resource_owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: my_module_statuses fk_rails_357ee33309; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_statuses
+    ADD CONSTRAINT fk_rails_357ee33309 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
 
 
 --
@@ -5717,14 +5820,6 @@ ALTER TABLE ONLY public.checklist_items
 
 
 --
--- Name: samples fk_rails_3637d0e265; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.samples
-    ADD CONSTRAINT fk_rails_3637d0e265 FOREIGN KEY (sample_group_id) REFERENCES public.sample_groups(id);
-
-
---
 -- Name: step_assets fk_rails_38ebde94cb; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5733,11 +5828,19 @@ ALTER TABLE ONLY public.step_assets
 
 
 --
--- Name: rap_topic_levels fk_rails_474c9b818d; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: repository_number_values fk_rails_3df53c9b27; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.rap_topic_levels
-    ADD CONSTRAINT fk_rails_474c9b818d FOREIGN KEY (rap_program_level_id) REFERENCES public.rap_program_levels(id);
+ALTER TABLE ONLY public.repository_number_values
+    ADD CONSTRAINT fk_rails_3df53c9b27 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: my_modules fk_rails_4768515e2e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_modules
+    ADD CONSTRAINT fk_rails_4768515e2e FOREIGN KEY (changing_from_my_module_status_id) REFERENCES public.my_module_statuses(id);
 
 
 --
@@ -5765,6 +5868,14 @@ ALTER TABLE ONLY public.experiments
 
 
 --
+-- Name: repository_status_values fk_rails_4cf67f9f1e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_status_values
+    ADD CONSTRAINT fk_rails_4cf67f9f1e FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: experiments fk_rails_4d671c16af; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5781,10 +5892,10 @@ ALTER TABLE ONLY public.repository_list_items
 
 
 --
--- Name: repository_date_values fk_rails_5d809fca2c; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: repository_date_time_values fk_rails_5d809fca2c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.repository_date_values
+ALTER TABLE ONLY public.repository_date_time_values
     ADD CONSTRAINT fk_rails_5d809fca2c FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
@@ -5813,11 +5924,11 @@ ALTER TABLE ONLY public.user_teams
 
 
 --
--- Name: rap_task_levels fk_rails_68120f8d8c; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: repository_checklist_items fk_rails_664f0498be; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.rap_task_levels
-    ADD CONSTRAINT fk_rails_68120f8d8c FOREIGN KEY (rap_project_level_id) REFERENCES public.rap_project_levels(id);
+ALTER TABLE ONLY public.repository_checklist_items
+    ADD CONSTRAINT fk_rails_664f0498be FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
 
 
 --
@@ -5829,14 +5940,6 @@ ALTER TABLE ONLY public.projects
 
 
 --
--- Name: sample_groups fk_rails_69f6cb0677; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_groups
-    ADD CONSTRAINT fk_rails_69f6cb0677 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
-
-
---
 -- Name: projects fk_rails_6b025b17ca; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5845,11 +5948,11 @@ ALTER TABLE ONLY public.projects
 
 
 --
--- Name: sample_my_modules fk_rails_6c0db0045d; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: repository_rows fk_rails_6b4114fff4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.sample_my_modules
-    ADD CONSTRAINT fk_rails_6c0db0045d FOREIGN KEY (my_module_id) REFERENCES public.my_modules(id);
+ALTER TABLE ONLY public.repository_rows
+    ADD CONSTRAINT fk_rails_6b4114fff4 FOREIGN KEY (archived_by_id) REFERENCES public.users(id);
 
 
 --
@@ -5917,6 +6020,14 @@ ALTER TABLE ONLY public.wopi_actions
 
 
 --
+-- Name: repository_status_items fk_rails_74e5e4cacc; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_status_items
+    ADD CONSTRAINT fk_rails_74e5e4cacc FOREIGN KEY (repository_column_id) REFERENCES public.repository_columns(id);
+
+
+--
 -- Name: results fk_rails_79fcaa8e37; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5941,19 +6052,19 @@ ALTER TABLE ONLY public.checklist_items
 
 
 --
+-- Name: repository_status_items fk_rails_7bc42f7363; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_status_items
+    ADD CONSTRAINT fk_rails_7bc42f7363 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: activities fk_rails_7e11bb717f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.activities
     ADD CONSTRAINT fk_rails_7e11bb717f FOREIGN KEY (owner_id) REFERENCES public.users(id);
-
-
---
--- Name: sample_groups fk_rails_7e3aa99d56; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_groups
-    ADD CONSTRAINT fk_rails_7e3aa99d56 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
 
 
 --
@@ -5989,11 +6100,19 @@ ALTER TABLE ONLY public.report_elements
 
 
 --
--- Name: rap_project_levels fk_rails_83bc72d987; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: repository_date_time_range_values fk_rails_87cdb60fa9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.rap_project_levels
-    ADD CONSTRAINT fk_rails_83bc72d987 FOREIGN KEY (rap_topic_level_id) REFERENCES public.rap_topic_levels(id);
+ALTER TABLE ONLY public.repository_date_time_range_values
+    ADD CONSTRAINT fk_rails_87cdb60fa9 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: repository_checklist_items fk_rails_885781d47e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_checklist_items
+    ADD CONSTRAINT fk_rails_885781d47e FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
 --
@@ -6029,14 +6148,6 @@ ALTER TABLE ONLY public.comments
 
 
 --
--- Name: samples fk_rails_8e0800c2e2; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.samples
-    ADD CONSTRAINT fk_rails_8e0800c2e2 FOREIGN KEY (sample_type_id) REFERENCES public.sample_types(id);
-
-
---
 -- Name: wopi_apps fk_rails_8e13eee4a9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6050,6 +6161,14 @@ ALTER TABLE ONLY public.wopi_apps
 
 ALTER TABLE ONLY public.reports
     ADD CONSTRAINT fk_rails_8e98747719 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: repository_number_values fk_rails_8f8a2f87f1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_number_values
+    ADD CONSTRAINT fk_rails_8f8a2f87f1 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
 
 
 --
@@ -6085,6 +6204,14 @@ ALTER TABLE ONLY public.tables
 
 
 --
+-- Name: repositories fk_rails_94481f7751; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repositories
+    ADD CONSTRAINT fk_rails_94481f7751 FOREIGN KEY (restored_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: steps fk_rails_954ff833e4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6109,6 +6236,14 @@ ALTER TABLE ONLY public.user_teams
 
 
 --
+-- Name: repository_checklist_values fk_rails_98a7704432; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_checklist_values
+    ADD CONSTRAINT fk_rails_98a7704432 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: activities fk_rails_992865be13; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6125,11 +6260,35 @@ ALTER TABLE ONLY public.reports
 
 
 --
+-- Name: repository_status_items fk_rails_9acc03f846; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_status_items
+    ADD CONSTRAINT fk_rails_9acc03f846 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: results fk_rails_9be849c454; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.results
     ADD CONSTRAINT fk_rails_9be849c454 FOREIGN KEY (archived_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: my_module_status_flows fk_rails_9c3936bd7a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_status_flows
+    ADD CONSTRAINT fk_rails_9c3936bd7a FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: repository_status_values fk_rails_9d357798c5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_status_values
+    ADD CONSTRAINT fk_rails_9d357798c5 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
 --
@@ -6157,6 +6316,14 @@ ALTER TABLE ONLY public.teams
 
 
 --
+-- Name: repository_checklist_items fk_rails_a08ff8e2ba; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_checklist_items
+    ADD CONSTRAINT fk_rails_a08ff8e2ba FOREIGN KEY (repository_column_id) REFERENCES public.repository_columns(id);
+
+
+--
 -- Name: my_module_groups fk_rails_a0acffc536; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6181,11 +6348,19 @@ ALTER TABLE ONLY public.teams
 
 
 --
--- Name: custom_fields fk_rails_a25c0b1d1a; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: repository_status_values fk_rails_a3a2aede5b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.custom_fields
-    ADD CONSTRAINT fk_rails_a25c0b1d1a FOREIGN KEY (user_id) REFERENCES public.users(id);
+ALTER TABLE ONLY public.repository_status_values
+    ADD CONSTRAINT fk_rails_a3a2aede5b FOREIGN KEY (repository_status_item_id) REFERENCES public.repository_status_items(id);
+
+
+--
+-- Name: my_module_statuses fk_rails_a3f7cd509a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_statuses
+    ADD CONSTRAINT fk_rails_a3f7cd509a FOREIGN KEY (previous_status_id) REFERENCES public.my_module_statuses(id);
 
 
 --
@@ -6221,19 +6396,19 @@ ALTER TABLE ONLY public.tokens
 
 
 --
--- Name: custom_fields fk_rails_acb71de8cc; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.custom_fields
-    ADD CONSTRAINT fk_rails_acb71de8cc FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
-
-
---
 -- Name: repository_list_items fk_rails_ace46bca57; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.repository_list_items
     ADD CONSTRAINT fk_rails_ace46bca57 FOREIGN KEY (repository_column_id) REFERENCES public.repository_columns(id);
+
+
+--
+-- Name: my_module_statuses fk_rails_b024d15104; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_statuses
+    ADD CONSTRAINT fk_rails_b024d15104 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
 --
@@ -6277,11 +6452,11 @@ ALTER TABLE ONLY public.repository_asset_values
 
 
 --
--- Name: sample_types fk_rails_c227b918b2; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: my_module_status_flows fk_rails_c19dc6b9e9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.sample_types
-    ADD CONSTRAINT fk_rails_c227b918b2 FOREIGN KEY (team_id) REFERENCES public.teams(id);
+ALTER TABLE ONLY public.my_module_status_flows
+    ADD CONSTRAINT fk_rails_c19dc6b9e9 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
 --
@@ -6373,10 +6548,10 @@ ALTER TABLE ONLY public.result_texts
 
 
 --
--- Name: repository_date_values fk_rails_cfb9b16b76; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: repository_date_time_values fk_rails_cfb9b16b76; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.repository_date_values
+ALTER TABLE ONLY public.repository_date_time_values
     ADD CONSTRAINT fk_rails_cfb9b16b76 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
 
 
@@ -6405,6 +6580,14 @@ ALTER TABLE ONLY public.user_notifications
 
 
 --
+-- Name: repository_checklist_values fk_rails_d2f015ade2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_checklist_values
+    ADD CONSTRAINT fk_rails_d2f015ade2 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: activities fk_rails_d3946086d2; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6421,43 +6604,11 @@ ALTER TABLE ONLY public.notifications
 
 
 --
--- Name: sample_custom_fields fk_rails_d58776cccd; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_custom_fields
-    ADD CONSTRAINT fk_rails_d58776cccd FOREIGN KEY (sample_id) REFERENCES public.samples(id);
-
-
---
 -- Name: experiments fk_rails_d683124fa4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.experiments
     ADD CONSTRAINT fk_rails_d683124fa4 FOREIGN KEY (restored_by_id) REFERENCES public.users(id);
-
-
---
--- Name: samples fk_rails_d699eb2564; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.samples
-    ADD CONSTRAINT fk_rails_d699eb2564 FOREIGN KEY (user_id) REFERENCES public.users(id);
-
-
---
--- Name: custom_fields fk_rails_d6c4b1818b; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.custom_fields
-    ADD CONSTRAINT fk_rails_d6c4b1818b FOREIGN KEY (team_id) REFERENCES public.teams(id);
-
-
---
--- Name: sample_my_modules fk_rails_d729ac6f8f; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_my_modules
-    ADD CONSTRAINT fk_rails_d729ac6f8f FOREIGN KEY (assigned_by_id) REFERENCES public.users(id);
 
 
 --
@@ -6493,14 +6644,6 @@ ALTER TABLE ONLY public.protocols
 
 
 --
--- Name: samples fk_rails_df64423f24; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.samples
-    ADD CONSTRAINT fk_rails_df64423f24 FOREIGN KEY (team_id) REFERENCES public.teams(id);
-
-
---
 -- Name: my_modules fk_rails_e21638fa54; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6525,11 +6668,11 @@ ALTER TABLE ONLY public.repository_text_values
 
 
 --
--- Name: samples fk_rails_ea3d01785c; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: repository_rows fk_rails_e7c4398649; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.samples
-    ADD CONSTRAINT fk_rails_ea3d01785c FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+ALTER TABLE ONLY public.repository_rows
+    ADD CONSTRAINT fk_rails_e7c4398649 FOREIGN KEY (restored_by_id) REFERENCES public.users(id);
 
 
 --
@@ -6554,6 +6697,14 @@ ALTER TABLE ONLY public.projects
 
 ALTER TABLE ONLY public.oauth_access_tokens
     ADD CONSTRAINT fk_rails_ee63f25419 FOREIGN KEY (resource_owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: repository_date_time_range_values fk_rails_efe428fafe; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_date_time_range_values
+    ADD CONSTRAINT fk_rails_efe428fafe FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
 
 
 --
@@ -6605,14 +6756,6 @@ ALTER TABLE ONLY public.team_repositories
 
 
 --
--- Name: sample_groups fk_rails_fc2ab1a001; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sample_groups
-    ADD CONSTRAINT fk_rails_fc2ab1a001 FOREIGN KEY (team_id) REFERENCES public.teams(id);
-
-
---
 -- Name: my_modules fk_rails_fd094f363d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6644,7 +6787,6 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20150713060702'),
-('20150713061603'),
 ('20150713063224'),
 ('20150713070738'),
 ('20150713071921'),
@@ -6728,7 +6870,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20160704110900'),
 ('20160722082700'),
 ('20160803082801'),
-('20160808083040'),
 ('20160809074757'),
 ('20160928114119'),
 ('20160928114915'),
@@ -6767,12 +6908,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180207095200'),
 ('20180308094354'),
 ('20180416114040'),
-('20180416171923'),
-('20180417062042'),
-('20180418123509'),
-('20180418123815'),
-('20180418124021'),
-('20180507160013'),
 ('20180524091143'),
 ('20180806115201'),
 ('20180813120338'),
@@ -6798,11 +6933,37 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190613134100'),
 ('20190711125513'),
 ('20190715150326'),
+('20190726102200'),
 ('20190812065432'),
 ('20190812072649'),
 ('20190830141257'),
+('20190903145834'),
 ('20190910125740'),
 ('20191001133557'),
-('20191009146101');
+('20191003091614'),
+('20191007144622'),
+('20191023162335'),
+('20191105143702'),
+('20191115143747'),
+('20191204112549'),
+('20191205133522'),
+('20191206105058'),
+('20191210103004'),
+('20191218072619'),
+('20200113143828'),
+('20200204100934'),
+('20200326114643'),
+('20200331183640'),
+('20200603125407'),
+('20200604210943'),
+('20200622140843'),
+('20200622155632'),
+('20200709142830'),
+('20200713142353'),
+('20200714082503'),
+('20200826143431'),
+('20200902093234'),
+('20200909121441'),
+('20201027133634');
 
 

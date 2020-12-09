@@ -10,7 +10,11 @@ var DasboardCurrentTasksWidget = (function() {
   function appendTasksList(json, container) {
     $.each(json.data, (i, task) => {
       var currentTaskItem = task;
+<<<<<<< HEAD
       $(container).find('.current-tasks-list').append(currentTaskItem);
+=======
+      $(container).append(currentTaskItem);
+>>>>>>> Pulled latest release
     });
   }
 
@@ -48,7 +52,11 @@ var DasboardCurrentTasksWidget = (function() {
   }
 
   function initInfiniteScroll() {
+<<<<<<< HEAD
     InfiniteScroll.init('.current-tasks-list-wrapper', {
+=======
+    InfiniteScroll.init('.current-tasks-list', {
+>>>>>>> Pulled latest release
       url: $('.current-tasks-list').data('tasksListUrl'),
       customResponse: (json, container) => {
         appendTasksList(json, container);
@@ -134,9 +142,15 @@ var DasboardCurrentTasksWidget = (function() {
           $currentTasksList.find('.widget-placeholder').addClass($('.current-tasks-navbar .active').data('mode'));
         }
       }
+<<<<<<< HEAD
       appendTasksList(result, '.current-tasks-list-wrapper');
       PerfectSb().update_all();
       if (newList) InfiniteScroll.resetScroll('.current-tasks-list-wrapper');
+=======
+      appendTasksList(result, $currentTasksList);
+      PerfectSb().update_all();
+      if (newList) InfiniteScroll.resetScroll('.current-tasks-list');
+>>>>>>> Pulled latest release
       animateSpinner($currentTasksList, false);
     }).error(function(error) {
       // If error is 403, it is possible that the user was removed from project/experiment,

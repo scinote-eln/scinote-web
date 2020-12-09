@@ -4,6 +4,7 @@ Feature: Log in
   So that I can use SciNote
 
 Background:
+  Given default screen size
   Given the "BioSistemika Process" team exists
   Given the following users are registered
     | email                     | password          | password_confirmation |
@@ -44,10 +45,10 @@ Scenario: Unsuccessful Log in
   And I click "Log in" button
   Then I should see "Invalid Email or password." flash message
 
-@javascript @wip
+@javascript
 Scenario: Successful Log out
   Given "night.slarker@gmail.com" is signed in with "mypassword1234"
-  And I'm on the home page of "BioSistemika Process" team
-  Then I click on "#user-account-dropdown" element
-  And I click "Log out" link within dropdown menu
+  And I'm on the projects page of "BioSistemika Process" team
+  And I click element with css "#user-account-dropdown"
+  And I click "Log out" link
   Then I should see "Logged out successfully." flash message

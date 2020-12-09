@@ -88,7 +88,9 @@ describe RepositoryTableStateService do
 
   describe '#update_state' do
     let!(:new_state) do
-      { 'my' => 'state' }
+      initial_state = RepositoryTableStateService.new(user, repository).create_default_state
+      initial_state.state['columns'][3]['visible'] = false
+      initial_state.state
     end
 
     it 'should update the state' do

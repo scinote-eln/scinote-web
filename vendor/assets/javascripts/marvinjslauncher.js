@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Pulled latest release
 (function (win) {
 	
 	function _getWrapperElement (id) {
@@ -118,6 +121,7 @@
 	
 	
 }(window));
+<<<<<<< HEAD
 =======
 (function (win) {
 	
@@ -239,4 +243,6 @@
 	
 }(window));
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+>>>>>>> Pulled latest release
 	 

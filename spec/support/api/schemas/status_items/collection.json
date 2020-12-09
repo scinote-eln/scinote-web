@@ -1,11 +1,19 @@
 {
+<<<<<<< HEAD
   "id": "file:/status_items/collection.json#",
+=======
+  "id": "file:/collection.json#",
+>>>>>>> Pulled latest release
   "type": "object",
   "properties": {
     "data": {
       "type": "array",
       "items": {
+<<<<<<< HEAD
         "$ref": "file:/status_items/item.json#"
+=======
+        "$ref": "file:/item.json#"
+>>>>>>> Pulled latest release
       }
     }
   },

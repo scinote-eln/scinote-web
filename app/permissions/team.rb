@@ -1,5 +1,5 @@
 Canaid::Permissions.register_for(Team) do
-  # team: leave, read users, read projects, read/export samples,
+  # team: leave, read users, read projects
   #       read protocols
   #
   can :read_team do |user, team|
@@ -16,6 +16,11 @@ Canaid::Permissions.register_for(Team) do
     user.is_admin_of_team?(team)
   end
 
+  # team: invite new users to the team
+  can :invite_team_users do
+    true
+  end
+
   # project: create
   can :create_projects do |user, team|
     user.is_normal_user_or_admin_of_team?(team)
@@ -26,25 +31,11 @@ Canaid::Permissions.register_for(Team) do
     user.is_normal_user_or_admin_of_team?(team)
   end
 
-  # sample: create, import
-  can :create_samples do |user, team|
-    user.is_normal_user_or_admin_of_team?(team)
-  end
-
-  # sample: create field
-  can :create_sample_columns do |user, team|
-    user.is_normal_user_or_admin_of_team?(team)
-  end
-
-  # create/update/delete sample type/group
-  can :manage_sample_types_and_groups do |user, team|
-    user.is_normal_user_or_admin_of_team?(team)
-  end
-
   # repository: create, copy
   can :create_repositories do |user, team|
-    user.is_admin_of_team?(team) &&
-      team.repositories.count < Rails.configuration.x.repositories_limit
+    within_limits = Repository.within_global_limits?
+    within_limits = Repository.within_team_limits?(team) if within_limits
+    within_limits && user.is_admin_of_team?(team)
   end
 
   # this permission is scattered around the application
@@ -85,19 +76,5 @@ Canaid::Permissions.register_for(Protocol) do
   can :clone_protocol_in_repository do |user, protocol|
     can_read_protocol_in_repository?(user, protocol) &&
       can_create_protocols_in_repository?(user, protocol.team)
-  end
-end
-
-Canaid::Permissions.register_for(Sample) do
-  # sample: update, delete
-  can :manage_sample do |user, sample|
-    can_create_samples?(user, sample.team)
-  end
-end
-
-Canaid::Permissions.register_for(CustomField) do
-  # sample: update/delete field
-  can :manage_sample_column do |user, custom_field|
-    can_create_sample_columns?(user, custom_field.team)
   end
 end

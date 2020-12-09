@@ -12,10 +12,14 @@ module TinyMceImages
     before_save :clean_tiny_mce_image_urls
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     def prepare_for_report(field, base64_encoded_imgs = false)
 =======
     def prepare_for_report(field)
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+    def prepare_for_report(field, base64_encoded_imgs = false)
+>>>>>>> Pulled latest release
       description = self[field]
 
       # Check tinymce for old format
@@ -39,8 +43,17 @@ module TinyMceImages
 =======
         next unless tm_asset&.image&.attached?
 
+<<<<<<< HEAD
         new_tm_asset_src = tm_asset.convert_variant_to_base64(tm_asset.preview)
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+        new_tm_asset_src =
+          if base64_encoded_imgs
+            tm_asset.convert_variant_to_base64(tm_asset.preview)
+          else
+            tm_asset.preview.processed.service_url(expires_in: Constants::URL_LONG_EXPIRE_TIME)
+          end
+>>>>>>> Pulled latest release
         html_description = Nokogiri::HTML(description)
         tm_asset_to_update = html_description.css(
           "img[data-mce-token=\"#{Base62.encode(tm_asset.id)}\"]"
@@ -188,9 +201,18 @@ module TinyMceImages
 =======
 >>>>>>> Initial commit of 1.17.2 merge
         else
-          # We need implement size and type checks here
-          new_image = URI.parse(image['src']).open
-          new_image_filename = asset.class.generate_unique_secure_token + '.jpg'
+          url = image['src']
+          image_type = FastImage.type(url).to_s
+          next unless image_type
+
+          begin
+            new_image = Down.download(url, max_size: Rails.configuration.x.file_max_size_mb.megabytes)
+          rescue Down::TooLarge => e
+            Rails.logger.error e.message
+            next
+          end
+
+          new_image_filename = Asset.generate_unique_secure_token + '.' + image_type
         end
 
         new_asset = TinyMceAsset.create(

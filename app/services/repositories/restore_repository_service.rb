@@ -11,7 +11,11 @@ module Repositories
 
           log_activity(:restore_inventory, repository)
         end
+<<<<<<< HEAD
       rescue ActiveRecord::RecordInvalid
+=======
+      rescue ActiveRecord::RecordNotSaved
+>>>>>>> Pulled latest release
         @errors[:restoring_error] = I18n.t('repositories.restore_inventories.unsuccess_flash')
         raise ActiveRecord::Rollback
       end

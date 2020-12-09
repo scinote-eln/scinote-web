@@ -49,7 +49,6 @@ module ModelExporters
           .includes(:user_notifications)
           .where('user_notifications.user_id': team.users)
           .map { |n| notification(n) },
-        custom_fields: team.custom_fields,
         repositories: team.repositories.map { |r| repository(r) },
         tiny_mce_assets: team.tiny_mce_assets.map { |tma| tiny_mce_asset_data(tma) },
         protocols: team.protocols.where(my_module: nil).map do |pr|
@@ -115,7 +114,7 @@ module ModelExporters
     end
 
     def repository(repository)
-      {
+      result = {
         repository: repository,
         repository_columns: repository.repository_columns.map do |c|
           repository_column(c)
@@ -124,6 +123,10 @@ module ModelExporters
           repository_row(r)
         end
       }
+      unless repository.is_a?(RepositorySnapshot)
+        result[:repository_snapshots] = repository.repository_snapshots.map { |r| repository(r) }
+      end
+      result
     end
 
     def repository_row(repository_row)
@@ -140,14 +143,17 @@ module ModelExporters
       {
         repository_cell: cell,
         repository_value: cell.value,
-        repository_value_asset: get_cell_value_asset(cell)
+        repository_value_asset: get_cell_value_asset(cell),
+        repository_value_checklist: get_cell_value_checklist(cell)
       }
     end
 
     def repository_column(column)
       {
         repository_column: column,
-        repository_list_items: column.repository_list_items
+        repository_list_items: column.repository_list_items,
+        repository_checklist_items: column.repository_checklist_items,
+        repository_status_items: column.repository_status_items
       }
     end
 
@@ -166,6 +172,12 @@ module ModelExporters
         asset: cell.value.asset,
         asset_blob: cell.value.asset.blob
       }
+    end
+
+    def get_cell_value_checklist(cell)
+      return unless cell.value_type == 'RepositoryChecklistValue'
+
+      cell.value.repository_checklist_items_values
     end
   end
 end

@@ -1,27 +1,23 @@
-<div class="custom-fixed-top">
+<nav class="navbar navbar-default navbar-fixed-top" id="main-nav">
+  <div class="container-fluid">
 
-  <header class="custom-fixed-top masthead clearfix solid-white" role="banner">
-    <img class="site-logo" src="/images/logo.png" alt="">
-    <hgroup class="site-name-and-slogan">
-      <h1 class="site-name"><a href="https://www.epa.gov/" title="Go to the home page" rel="home"><span>US EPA</span></a></h1>
-      <div class="site-slogan">United States Environmental Protection Agency</div>
-    </hgroup>
-  </header>
-  <% # @@@20180627JS Add main-nav to use css from EPA template %>
-  <nav class="navbar navbar-default custom-navbar-fixed-top main-nav" id="main-nav">
-    <div class="container-fluid">
-      <!-- header -->
-      <div class="navbar-header">
+    <!-- header -->
+    <div class="navbar-header">
+      <% if user_signed_in? %>
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu" aria-expanded="false">
           <span class="sr-only">Toggle navigation</span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" title="SciNote" href="/">
-          <img id="logo" src="/images/logo.png" alt="Logo">
-        </a>
-      </div>
+      <% end %>
+      <%= link_to(root_path, class: 'navbar-brand', title: t('nav.label.scinote')) do %>
+        <span class="hidden-lg"><%= image_tag('/images/sn-icon.svg', id: 'logo') %></span>
+        <span class="visible-lg-block"><%= image_tag('/images/scinote_icon.svg', id: 'logo') %></span>
+      <% end %>
+      <%= yield :open_mobile_app_button %>
+
+    </div>
 
     <% if user_signed_in? %>
     <div class="collapse navbar-collapse" id="main-menu">
@@ -62,8 +58,8 @@
         <% if current_user.teams.length > 0 %>
           <li id="team-switch">
             <div class="btn-group">
-              <button type="button" class="btn btn-default" data-toggle="dropdown">
-                <%= truncate_team_name(current_team.name) %>
+              <button type="button" class="btn btn-default selected-team" data-toggle="dropdown">
+                <%= current_team.name %>
               </button>
               <button type="button"
                       class="btn btn-default dropdown-toggle"
@@ -74,7 +70,6 @@
                 <span class="caret"></span>
                 <span class="sr-only">Toggle Dropdown</span>
               </button>
-              <% if current_user.teams.length > 1 || can_create_teams? %>
               <ul class="dropdown-menu">
                 <%= form_for(current_user,
                              url: user_current_team_path,
@@ -82,7 +77,7 @@
                   <%= hidden_field(:user, :current_team_id) %>
                   <div class="dropdown-header"><%= t('nav.team_switch_title') %></div>
                   <div class="team-container">
-                    <% current_user.teams.each do |team| %>
+                    <% current_user.teams.ordered.each do |team| %>
                       <li class="team-name-item">
                         <a href="#"
                           data-id="<%= team.id %>"
@@ -98,7 +93,7 @@
                     <% end %>
                   </div>
                 <% end %>
-                <% if current_user.teams.length > 1 && can_create_teams? %>
+                <% if can_create_teams? %>
                   <li class="new-team">
                     <%= link_to new_team_path do %>
                       <span class="fas fa-plus"></span>
@@ -107,7 +102,6 @@
                   </li>
                 <% end %>
               </ul>
-              <% end %>
             </div>
           </li>
         <% end %>
@@ -185,55 +179,18 @@
             </span>
           </a>
           <ul class="dropdown-menu" data-hook="navigation-user-menu">
-            <li>
+            <li data-hook="navigation-user-menu-logout">
               <%= link_to t('nav.user.logout'),
                           destroy_user_session_path,
                           method: :delete %>
             </li>
-            <li role="separator" class="divider">
-            <li>
-              <%= link_to '#', data: { trigger: 'about-modal' } do %>
-                <%= t('nav.user.about') %>
-              <% end %>
-            </li>
           </ul>
         </li>
-
-        <!-- help -->
-        <li class="dropdown">
-          <a href="#"
-            id="help-link"
-            class="dropdown-toggle"
-            title="<%= t('nav.label.info') %>"
-            data-toggle="dropdown"
-            role="button"
-            aria-haspopup="true"
-            aria-expanded="false">
-            <span class="glyphicon glyphicon-info-sign"></span>
-            <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.info') %></span>
-          </a>
-        <ul class="dropdown-menu" data-hook="navigation-help-menu">
-          <li href="<%= contact_path %>">
-            <%= link_to t('nav.help.contact'), contact_path %>
-          </li>
-          <li role="separator" class="divider"></li>
-          <li href=""
-            <%= about_path %>">
-            <%= link_to t('nav.help.about'), about_path %>
-          </li>
-          <li role="separator" class="divider"></li>
-          <li href="<%= training_path %>">
-            <%= link_to t('nav.help.training'), training_path %>
-          </li>
-        </ul>
-      </li>
-
       </ul>
     </div>
     <% end %>
   </div>
 </nav>
-</div>
 <div id="loading-animation"></div>
 
 <%= javascript_include_tag("system_notifications/index") %>

@@ -3,6 +3,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 module Reports::Docx::DrawMyModuleRepository
+<<<<<<< HEAD
   def draw_my_module_repository(subject)
     my_module = subject.my_module
     repository = subject.repository
@@ -23,27 +24,18 @@ module Reports::Docx::DrawMyModuleRepository
 >>>>>>> Initial commit of 1.17.2 merge
   def draw_my_module_repository(subject)
     my_module = MyModule.find_by_id(subject['id']['my_module_id'])
+=======
+  def draw_my_module_repository(subject, my_module)
+>>>>>>> Pulled latest release
     return unless my_module
 
-    repository_data = my_module.repository_json(subject['id']['repository_id'], subject['sort_order'], @user)
-    return false unless repository_data[:data].assigned_rows.count.positive?
+    repository_id = subject['id']['repository_id']
+    repository = ::RepositoryBase.find(repository_id)
+    repository_data = my_module.repository_docx_json(repository)
 
-    records = repository_data[:data]
-    assigned_rows = records.assigned_rows
-    columns_mappings = records.mappings
-    repository = ::Repository.find_by_id(subject['id']['repository_id'])
-    repository_rows = records.repository_rows
-                             .preload(
-                               :repository_columns,
-                               :created_by,
-                               repository_cells: :value
-                             )
-    data = prepare_row_columns(repository_rows,
-                               repository,
-                               columns_mappings,
-                               repository.team,
-                               assigned_rows)
+    return false unless repository_data[:rows].any? && can_read_repository?(@user, repository)
 
+<<<<<<< HEAD
     data.map! do |row|
       row.select do |key, _value|
         true if Float(key.to_s) > 1
@@ -62,6 +54,9 @@ module Reports::Docx::DrawMyModuleRepository
     end
     table.unshift(repository_data[:headers])
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+    table = prepare_row_columns(repository_data)
+>>>>>>> Pulled latest release
 
     @docx.p
     @docx.p I18n.t('projects.reports.elements.module_repository.name',

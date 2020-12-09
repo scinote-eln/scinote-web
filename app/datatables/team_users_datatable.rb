@@ -54,7 +54,7 @@ class TeamUsersDatatable < CustomDatatable
 
   private
 
-  # Returns json of current samples (already paginated)
+  # Returns json of current items (already paginated)
   def data
     records.map do |record|
       {

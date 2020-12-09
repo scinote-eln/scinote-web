@@ -2,16 +2,21 @@
 /* eslint no-use-before-define: "off" */
 /* eslint no-restricted-syntax: ["off", "BinaryExpression[operator='in']"] */
 <<<<<<< HEAD
+<<<<<<< HEAD
 /* global tinymce I18n HelperModule validateFileSize */
 =======
 /* global tinymce I18n */
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+/* global tinymce I18n HelperModule validateFileSize */
+>>>>>>> Pulled latest release
 (function() {
   'use strict';
 
   tinymce.PluginManager.requireLangPack('customimageuploader');
 
   tinymce.create('tinymce.plugins.CustomImageUploader', {
+<<<<<<< HEAD
 <<<<<<< HEAD
     CustomImageUploader: function(ed) {
       var iframe;
@@ -68,205 +73,59 @@
 =======
     CustomImageUploader: function(ed, url) {
       var form;
+=======
+    CustomImageUploader: function(ed) {
+>>>>>>> Pulled latest release
       var iframe;
-      var win;
-      var throbber;
       var editor = ed;
       var textAreaElement = $('#' + ed.id);
-      function showDialog() {
-        var ctrl;
-        var cycle;
-        var el;
-        var body;
-        var containers;
-        var inputs;
-        win = editor.windowManager.open({
-          title: I18n.t('tiny_mce.upload_window_title'),
-          width: 520 + parseInt(editor.getLang(
-            'customimageuploader.delta_width', 0
-          ), 10),
-          height: 180 + parseInt(editor.getLang(
-            'customimageuploader.delta_height', 0
-          ), 10),
-          body: [
-            { type: 'iframe', url: 'javascript:void(0)' },
-            {
-              type: 'textbox',
-              name: 'file',
-              classes: 'image-loader',
-              label: I18n.t('tiny_mce.upload_window_label'),
-              subtype: 'file'
-            },
-            {
-              type: 'container',
-              classes: 'error',
-              html: "<p style='color: #b94a48;'>&nbsp;</p>"
-            },
-            { type: 'container', classes: 'throbber' }
-          ],
-          buttons: [
-            {
-              text: I18n.t('tiny_mce.insert_btn'),
-              onclick: insertImage,
-              subtype: 'primary'
-            },
-            {
-              text: I18n.t('general.cancel'),
-              onclick: editor.windowManager.close
-            }
-          ]
-        }, {
-          plugin_url: url
-        });
-        // Let's make image selection looks fancy
-        $('<div class="image-selection-container">'
-          + '<div class="select_button btn btn-primary">' + I18n.t('tiny_mce.choose_file') + '</div>'
-          + '<input type="text" placeholder="' + I18n.t('tiny_mce.no_image_chosen') + '" disabled></input>'
-        + '</div>').insertAfter('.mce-image-loader')
-          .click(() => { $('.mce-image-loader').click(); })
-          .parent()
-          .css('height', '32px');
 
-        $('.mce-image-loader')
-          .change(e => {
-            $(e.target).next().find('input[type=text]')[0].value = e.target.value.split(/(\\|\/)/g).pop();
-          })
-          .parent().find('label')
-          .css('line-height', '32px')
-          .css('height', '32px');
+      function loadFiles() {
+        let $fileInput;
+        let hitFileLimit;
+        $('#tinymce_current_upload').remove();
+        $fileInput = $('<input type="file" multiple accept="image/*" id="tinymce_current_upload" style="display: none;">').prependTo(editor.container);
+        $fileInput.click();
 
-        el = win.getEl();
-        body = document.getElementById(el.id + '-body');
-        containers = body.getElementsByClassName('mce-container');
+        $fileInput.change(function() {
+          let formData = new FormData();
+          let files = $('#tinymce_current_upload')[0].files;
 
-        win.off('submit');
-        win.on('submit', insertImage);
+          Array.from(files).forEach(file => formData.append('files[]', file, file.name));
 
-        iframe = win.find('iframe')[0];
-        form = createElement('form', {
-          action: editor.getParam(
-            'customimageuploader_form_url',
-            '/tiny_mce_assets'
-          ),
-          target: iframe._id,
-          method: 'POST',
-          enctype: 'multipart/form-data',
-          accept_charset: 'UTF-8'
-        });
-        inputs = form.getElementsByTagName('input');
-        iframe.getEl().name = iframe._id;
+          Array.from(files).every(file => {
+            if (!validateFileSize(file, true)) {
+              hitFileLimit = true;
+              return false;
+            }
+          });
 
-        // Create some needed hidden inputs
-        form.appendChild(
-          createElement(
-            'input',
-            {
-              type: 'hidden',
-              name: 'utf8',
-              value: '✓'
-            }
-          )
-        );
-        form.appendChild(
-          createElement(
-            'input',
-            {
-              type: 'hidden',
-              name: 'authenticity_token',
-              value: getMetaContents('csrf-token')
-            }
-          )
-        );
-        form.appendChild(
-          createElement(
-            'input',
-            {
-              type: 'hidden',
-              name: 'object_type',
-              value: $(editor.getElement()).data('object-type')
-            }
-          )
-        );
-        form.appendChild(
-          createElement(
-            'input',
-            {
-              type: 'hidden',
-              name: 'object_id',
-              value: $(editor.getElement()).data('object-id')
-            }
-          )
-        );
-        form.appendChild(
-          createElement(
-            'input',
-            {
-              type: 'hidden',
-              name: 'hint',
-              value: editor.getParam('uploadimage_hint', '')
-            }
-          )
-        );
-        for (cycle = 0; cycle < containers.length; cycle += 1) {
-          form.appendChild(containers[cycle]);
-        }
-        for (cycle = 0; cycle < inputs.length; cycle += 1) {
-          ctrl = inputs[cycle];
-
-          if (ctrl.tagName.toLowerCase() === 'input' && ctrl.type !== 'hidden') {
-            if (ctrl.type === 'file') {
-              ctrl.name = 'file';
-
-              tinymce.DOM.setStyles(ctrl, {
-                border: 0,
-                boxShadow: 'none',
-                webkitBoxShadow: 'none'
-              });
-            } else {
-              ctrl.name = 'alt';
-            }
+          if (hitFileLimit) {
+            return;
           }
-        }
 
-        body.appendChild(form);
+          $.post({
+            url: textAreaElement.data('tinymce-asset-path'),
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+              handleResponse(data);
+              $('#tinymce_current_upload').remove();
+            },
+            error: function(response) {
+              HelperModule.flashAlertMsg(response.responseJSON.errors, 'danger');
+              $('#tinymce_current_upload').remove();
+            }
+          });
+        });
       }
 
-      function insertImage() {
-        var target = iframe.getEl();
-        if (getInputValue('file') === '') {
-          return handleError(I18n.t('tiny_mce.error_message'));
-        }
-
-        throbber = new top.tinymce.ui.Throbber(win.getEl());
-        throbber.show(throbber);
-        clearErrors();
-
-        /* Add event listeners.
-         * We remove the existing to avoid them being called twice in case
-         * of errors and re-submitting afterwards.
-         */
-        if (target.attachEvent) {
-          target.detachEvent('onload', uploadDone);
-          target.attachEvent('onload', uploadDone);
+      function handleResponse(response) {
+        if (response.errors) {
+          handleError(response.errors.join('<br>'));
         } else {
-          target.removeEventListener('load', uploadDone);
-          target.addEventListener('load', uploadDone, false);
-        }
-
-        form.submit();
-        return true;
-      }
-
-      function uploadDone() {
-        var target = iframe.getEl();
-        var doc;
-        if (throbber) {
-          throbber.hide();
-        }
-        if (target.document || target.contentDocument) {
-          doc = target.contentDocument || target.contentWindow.document;
-          handleResponse(doc.getElementsByTagName('body')[0].innerHTML);
-        } else {
+<<<<<<< HEAD
           handleError(I18n.t('tiny_mce.server_not_respond'));
         }
       }
@@ -297,10 +156,15 @@
         if (message) {
           message.getElementsByTagName('p')[0].innerHTML = '&nbsp;';
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+          response.images.forEach(el => editor.execCommand('mceInsertContent', false, buildHTML(el)));
+          updateActiveImages(ed);
+>>>>>>> Pulled latest release
         }
       }
 
       function handleError(error) {
+<<<<<<< HEAD
 <<<<<<< HEAD
         HelperModule.flashAlertMsg(error, 'danger');
       }
@@ -360,6 +224,15 @@
 
         return null;
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+        HelperModule.flashAlertMsg(error, 'danger');
+      }
+
+      function buildHTML(image) {
+        return `<img src="${image.url}" 
+                     data-mce-token="${image.token}" 
+                     alt="description-${image.token}" />`;
+>>>>>>> Pulled latest release
       }
 
       // Create hidden field for images
@@ -401,10 +274,14 @@
         tooltip: I18n.t('tiny_mce.upload_window_label'),
         icon: 'image',
 <<<<<<< HEAD
+<<<<<<< HEAD
         onclick: loadFiles
 =======
         onclick: showDialog
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+        onclick: loadFiles
+>>>>>>> Pulled latest release
       });
 
       // Adds a menu item to the tools menu
@@ -413,10 +290,14 @@
         icon: 'image',
         context: 'insert',
 <<<<<<< HEAD
+<<<<<<< HEAD
         onclick: loadFiles
 =======
         onclick: showDialog
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+        onclick: loadFiles
+>>>>>>> Pulled latest release
       });
 
       ed.on('NodeChange', function() {

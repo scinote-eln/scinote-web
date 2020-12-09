@@ -3,6 +3,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 module Reports::Docx::DrawMyModule
+<<<<<<< HEAD
 =======
 module DrawMyModule
 >>>>>>> Finished merging. Test on dev machine (iMac).
@@ -19,6 +20,13 @@ module Reports::Docx::DrawMyModule
     return unless can_read_my_module?(@user, my_module)
 =======
     my_module = MyModule.find_by_id(subject['id']['my_module_id'])
+=======
+  def draw_my_module(subject, experiment)
+    color = @color
+    link_style = @link_style
+    scinote_url = @scinote_url
+    my_module = experiment.my_modules.find_by(id: subject['id']['my_module_id'])
+>>>>>>> Pulled latest release
     tags = my_module.tags
     return unless my_module
 >>>>>>> Finished merging. Test on dev machine (iMac).
@@ -27,6 +35,7 @@ module Reports::Docx::DrawMyModule
     @docx.p do
       text I18n.t('projects.reports.elements.module.user_time',
                   timestamp: I18n.l(my_module.created_at, format: :full)), color: color[:gray]
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
       text ' | '
@@ -41,6 +50,8 @@ module Reports::Docx::DrawMyModule
         text " #{I18n.l(my_module.completed_on, format: :full)}", color: color[:gray]
       end
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+>>>>>>> Pulled latest release
       if my_module.archived?
         text ' | '
         text I18n.t('search.index.archived'), color: color[:gray]
@@ -51,6 +62,9 @@ module Reports::Docx::DrawMyModule
             link_style
     end
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Pulled latest release
 
     @docx.p do
       if my_module.started_on.present?
@@ -59,6 +73,7 @@ module Reports::Docx::DrawMyModule
       else
         text I18n.t('projects.reports.elements.module.no_due_date')
       end
+<<<<<<< HEAD
     end
 
     @docx.p do
@@ -93,6 +108,31 @@ module Reports::Docx::DrawMyModule
     @docx.p do
       text I18n.t 'projects.reports.elements.module.tags_header'
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+    end
+
+    @docx.p do
+      if my_module.due_date.present?
+        text I18n.t('projects.reports.elements.module.due_date',
+                    due_date: I18n.l(my_module.due_date, format: :full))
+      else
+        text I18n.t('projects.reports.elements.module.no_due_date')
+      end
+    end
+
+    status = my_module.my_module_status
+    @docx.p do
+      text I18n.t('projects.reports.elements.module.status')
+      text ' '
+      text "[#{status.name}]", color: status.color.delete('#')
+      if my_module.completed?
+        text " #{I18n.t('my_modules.states.completed')} #{I18n.l(my_module.completed_on, format: :full)}"
+      end
+    end
+
+    @docx.p do
+      text I18n.t('projects.reports.elements.module.tags_header')
+>>>>>>> Pulled latest release
       if tags.any?
         my_module.tags.each do |tag|
           text ' '
@@ -100,6 +140,7 @@ module Reports::Docx::DrawMyModule
         end
       else
         text ' '
+<<<<<<< HEAD
 <<<<<<< HEAD
         text I18n.t('projects.reports.elements.module.no_tags')
       end
@@ -129,7 +170,18 @@ module Reports::Docx::DrawMyModule
 =======
         text I18n.t 'projects.reports.elements.module.no_tags'
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+        text I18n.t('projects.reports.elements.module.no_tags')
+>>>>>>> Pulled latest release
       end
+    end
+
+    if my_module.description.present?
+      html = custom_auto_link(my_module.description, team: @report_team)
+      Reports::HtmlToWordConverter.new(@docx, { scinote_url: scinote_url,
+                                                link_style: link_style }).html_to_word_converter(html)
+    else
+      @docx.p I18n.t('projects.reports.elements.module.no_description')
     end
 
     @docx.p
@@ -141,7 +193,7 @@ module Reports::Docx::DrawMyModule
     draw_my_module_activity(my_module) if @settings.dig('task', 'activities')
 =======
     subject['children'].each do |child|
-      public_send("draw_#{child['type_of']}", child)
+      public_send("draw_#{child['type_of']}", child, my_module)
     end
 >>>>>>> Finished merging. Test on dev machine (iMac).
   end

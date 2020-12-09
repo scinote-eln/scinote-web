@@ -7,17 +7,18 @@
       <%= ff.tiny_mce_editor(:text,
                              id: :result_text_attributes_textarea,
                              value: @result.result_text.tinymce_render(:text),
+                             autocomplete: 'off',
                              data: { object_type: 'result_text',
                                      object_id: @result.result_text.id,
                                      highlightjs_path: asset_path('highlightjs-github-theme.css'),
                                      last_updated: @result.updated_at.to_i * 1000 }) %>
     <% end %><br />
     <div class="align-right">
-      <button type="button" class="btn btn-default cancel-edit">
+      <button type="button" class="btn btn-secondary cancel-edit">
         <%= t("general.cancel")%>
       </button>
-      <%= f.submit t("general.save"),
-                   class: 'btn btn-success save-result',
+      <%= f.button t("general.save"),
+                   class: 'btn btn-primary save-result',
                    onclick: "Results.processResult(event, Results.ResultTypeEnum.TEXT);" %>
     </div>
   <% end %>

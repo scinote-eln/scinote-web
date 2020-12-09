@@ -50,7 +50,6 @@
           $form.remove();
           applyEditResultAssetCallback();
           Results.toggleResultEditButtons(true);
-          FilePreviewModal.init();
         });
 
         Results.toggleResultEditButtons(false);
@@ -68,11 +67,9 @@
         initFormSubmitLinks($newResult);
         $(this).remove();
         applyEditResultAssetCallback();
-        Results.applyCollapseLinkCallBack();
 
         Results.toggleResultEditButtons(true);
         Results.expandResult($newResult);
-        FilePreviewModal.init();
         Comments.init();
         initNewResultAsset();
       }).on('ajax:error', function(e, xhr) {
@@ -98,5 +95,4 @@
 
   ResultAssets.initNewResultAsset();
   ResultAssets.applyEditResultAssetCallback();
-  FilePreviewModal.init();
 }(window));

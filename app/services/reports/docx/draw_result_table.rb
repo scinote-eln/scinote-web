@@ -3,6 +3,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 module Reports::Docx::DrawResultTable
+<<<<<<< HEAD
   def draw_result_table(result)
 =======
 module DrawResultTable
@@ -11,6 +12,10 @@ module Reports::Docx::DrawResultTable
 >>>>>>> Initial commit of 1.17.2 merge
   def draw_result_table(subject)
     result = Result.find_by_id(subject['id']['result_id'])
+=======
+  def draw_result_table(subject, my_module)
+    result = my_module.results.find_by(id: subject['id']['result_id'])
+>>>>>>> Pulled latest release
     return unless result
 
 >>>>>>> Finished merging. Test on dev machine (iMac).
@@ -33,7 +38,7 @@ module Reports::Docx::DrawResultTable
     draw_result_comments(result) if @settings.dig('task', 'result_comments')
 =======
     subject['children'].each do |child|
-      public_send("draw_#{child['type_of']}", child)
+      public_send("draw_#{child['type_of']}", child, result)
     end
 >>>>>>> Finished merging. Test on dev machine (iMac).
   end

@@ -2,6 +2,7 @@ class TagsController < ApplicationController
   before_action :load_vars, only: [:create, :update, :destroy]
   before_action :load_vars_nested, only: [:update, :destroy]
   before_action :check_manage_permissions, only: %i(create update destroy)
+  before_action :check_manage_my_module_permissions, only: %i(create)
 
   def create
     @tag = Tag.new(tag_params)
@@ -151,6 +152,12 @@ class TagsController < ApplicationController
     unless @tag
       render_404
     end
+  end
+
+  def check_manage_my_module_permissions
+    my_module = MyModule.find_by id: params[:my_module_id]
+
+    render_403 if my_module && !can_manage_module?(my_module)
   end
 
   def check_manage_permissions

@@ -21,8 +21,8 @@
 <% else %>
   <div class="ga-breadcrumb">
     <span class="fas fa-edit"></span>
-    <span title="<%= breadcrumbs[:protocol] %>">
-      <%= breadcrumbs[:protocol]&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
+    <span title="<%= breadcrumbs['protocol'] %>">
+      <%= breadcrumbs['protocol']&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
     </span>
   </div>
 <% end %>

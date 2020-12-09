@@ -1,9 +1,13 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 /* global TinyMCE, ChemicalizeMarvinJs, MarvinJSUtil, I18n, tinymce, HelperModule */
 =======
 /* global TinyMCE, ChemicalizeMarvinJs, MarvinJSUtil, I18n, FilePreviewModal, tinymce */
 /* global Results, Comments */
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+/* global TinyMCE, ChemicalizeMarvinJs, MarvinJSUtil, I18n, tinymce, HelperModule */
+>>>>>>> Pulled latest release
 /* eslint-disable no-param-reassign */
 /* eslint-disable wrap-iife */
 /* eslint-disable no-use-before-define */
@@ -169,18 +173,23 @@ var MarvinJsEditorApi = (function() {
         }, 200);
       } else if (config.objectType === 'Result') {
 <<<<<<< HEAD
+<<<<<<< HEAD
         location.reload();
 =======
         newAsset.prependTo($(config.container));
         Results.expandResult(newAsset);
         Comments.init();
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+        location.reload();
+>>>>>>> Pulled latest release
       } else if (config.objectType === 'TinyMceAsset') {
         json = tinymce.util.JSON.parse(result);
         config.editor.execCommand('mceInsertContent', false, TinyMceBuildHTML(json));
         TinyMCE.updateImages(config.editor);
       }
       $(marvinJsModal).modal('hide');
+<<<<<<< HEAD
 <<<<<<< HEAD
       config.button.dataset.inProgress = false;
     }).error((response) => {
@@ -191,6 +200,13 @@ var MarvinJsEditorApi = (function() {
       FilePreviewModal.init();
       config.button.dataset.inProgress = false;
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+      config.button.dataset.inProgress = false;
+    }).error((response) => {
+      if (response.status === 403) {
+        HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+      }
+>>>>>>> Pulled latest release
     });
   }
 
@@ -220,13 +236,19 @@ var MarvinJsEditorApi = (function() {
         $(marvinJsModal).modal('hide');
         config.button.dataset.inProgress = false;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Pulled latest release
       },
       error: function(response) {
         if (response.status === 403) {
           HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
         }
+<<<<<<< HEAD
 =======
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+>>>>>>> Pulled latest release
       }
     });
   }
@@ -342,6 +364,9 @@ var MarvinJsEditorApi = (function() {
 
 // Initialization
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Pulled latest release
 $(document).on('click', '.marvinjs-edit-button', function() {
   var editButton = $(this);
   $.post(editButton.data('sketch-start-edit-url'));
@@ -353,18 +378,25 @@ $(document).on('click', '.marvinjs-edit-button', function() {
     marvinUrl: editButton.data('update-url')
   });
 });
+<<<<<<< HEAD
 =======
 
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+>>>>>>> Pulled latest release
 
 $(document).on('turbolinks:load', function() {
   MarvinJsEditor = MarvinJsEditorApi();
   if (MarvinJsEditor.enabled()) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     if ($('#marvinjs-editor')[0].dataset.marvinjsMode === 'remote' && typeof(ChemicalizeMarvinJs) !== 'undefined') {
 =======
     if ($('#marvinjs-editor')[0].dataset.marvinjsMode === 'remote') {
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+    if ($('#marvinjs-editor')[0].dataset.marvinjsMode === 'remote' && typeof(ChemicalizeMarvinJs) !== 'undefined') {
+>>>>>>> Pulled latest release
       ChemicalizeMarvinJs.createEditor('#marvinjs-sketch').then(function(marvin) {
         marvin.setDisplaySettings({ toolbars: 'reporting' });
         marvinJsRemoteEditor = marvin;

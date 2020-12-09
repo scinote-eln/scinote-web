@@ -11,7 +11,7 @@
         <%= form.check_box :project, label: project.name %>
         <ul>
 
-          <% project.experiments.is_archived(false).each do |experiment| %>
+          <% project.experiments.includes(:my_module_groups).is_archived(false).each do |experiment| %>
             <% next unless experiment.my_modules.is_archived(false).exists? %>
             <li>
               <%= form.check_box "experiment_#{experiment.id}", label: experiment.name %>

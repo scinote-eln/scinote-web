@@ -20,7 +20,6 @@ describe Asset, type: :model do
     it { should have_db_column :created_by_id }
     it { should have_db_column :last_modified_by_id }
     it { should have_db_column :estimated_size }
-    it { should have_db_column :file_present }
     it { should have_db_column :lock }
     it { should have_db_column :lock_ttl }
     it { should have_db_column :version }

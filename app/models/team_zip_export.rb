@@ -59,17 +59,13 @@ class TeamZipExport < ZipExport
       inventories = "#{project_path}/Inventories"
       FileUtils.mkdir_p(inventories)
 
-      # Find all assigned inventories through all tasks in the project
-      task_ids = p.project_my_modules
-      repo_rows = RepositoryRow.joins(:my_modules)
-                               .where(my_modules: { id: task_ids })
-                               .distinct
+      repositories = p.assigned_repositories_and_snapshots
 
       # Iterate through every inventory repo and save it to CSV
-      repo_rows.map(&:repository).uniq.each_with_index do |repo, repo_idx|
-        curr_repo_rows = repo_rows.select { |x| x.repository_id == repo.id }
-        obj_filenames[:my_module_repository][repo.id] =
-          save_inventories_to_csv(inventories, repo, curr_repo_rows, repo_idx)
+      repositories.each_with_index do |repo, repo_idx|
+        obj_filenames[:my_module_repository][repo.id] = {
+          file: save_inventories_to_csv(inventories, repo, repo_idx)
+        }
       end
 
       # Include all experiments
@@ -194,18 +190,48 @@ class TeamZipExport < ZipExport
     asset_indexes = {}
     elements.each_with_index do |element, i|
       asset = element.asset
-
+      preview = prepare_preview(asset)
       if type == :step
         name = "#{directory}/" \
                "#{append_file_suffix(asset.file_name, "_#{i}_Step#{element.step.position_plus_one}")}"
+        if preview
+          preview_name = "#{directory}/" \
+                         "#{append_file_suffix(preview[:file_name], "_#{i}_Step#{element.step.position_plus_one}_preview")}"
+        end
       elsif type == :result
         name = "#{directory}/#{append_file_suffix(asset.file_name, "_#{i}")}"
+        preview_name = "#{directory}/#{append_file_suffix(preview[:file_name], "_#{i}_preview")}" if preview
       end
-      File.open(name, 'wb') { |f| f.write(asset.file.download) } if asset.file.attached?
-      asset_indexes[asset.id] = name
+      if asset.file.attached?
+        File.open(name, 'wb') { |f| f.write(asset.file.download) }
+        File.open(preview_name, 'wb') { |f| f.write(preview[:file_data]) } if preview
+      end
+      asset_indexes[asset.id] = {
+        file: name,
+        preview: preview_name
+      }
     end
-
     asset_indexes
+  end
+
+  def prepare_preview(asset)
+    if asset.previewable? && !asset.list?
+      preview = asset.inline? ? asset.large_preview : asset.medium_preview
+      if preview.is_a?(ActiveStorage::Preview)
+        return unless preview.image.attached?
+
+        file_name = preview.image.filename.to_s
+        file_data = preview.image.download
+      else
+        file_name = preview.filename.to_s
+        file_data = preview.processed.service.download(preview.key)
+      end
+
+      {
+        file_name: file_name,
+        file_data: file_data
+      }
+    end
   end
 
   # Helper method to extract given tables to the directory
@@ -226,14 +252,16 @@ class TeamZipExport < ZipExport
       end
       file = FileUtils.touch(name).first
       File.open(file, 'wb') { |f| f.write(table.to_csv) }
-      table_indexes[table.id] = name
+      table_indexes[table.id] = {
+        file: name
+      }
     end
 
     table_indexes
   end
 
   # Helper method for saving inventories to CSV
-  def save_inventories_to_csv(path, repo, repo_rows, idx)
+  def save_inventories_to_csv(path, repo, idx)
     repo_name = "#{to_filesystem_name(repo.name)} (#{idx})"
 
     # Attachment folder
@@ -263,13 +291,14 @@ class TeamZipExport < ZipExport
     end
 
     # Generate CSV
-    csv_data = RepositoryZipExport.to_csv(repo_rows, col_ids, @user, @team,
-                                          handle_name_func)
+    csv_data = RepositoryZipExport.to_csv(repo.repository_rows, col_ids, @user, @team, handle_name_func)
     File.open(csv_file, 'wb') { |f| f.write(csv_data) }
 
     # Save all attachments (it doesn't work directly in callback function
     assets.each do |asset, asset_path|
-      asset.file.copy_to_local_file(:original, asset_path)
+      asset.file.open do |file|
+        FileUtils.cp(file.path, asset_path)
+      end
     end
 
     csv_file_path

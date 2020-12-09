@@ -77,10 +77,12 @@ module ReportsHelper
       end
 
       if obj_id
-        locals[:path] =
-          provided_locals[:obj_filenames][element['type_of'].to_sym][obj_id]
-          .sub(%r{/usr/src/app/tmp/temp-zip-\d+/}, '')
-        locals[:filename] = locals[:path].split('/').last
+        file = provided_locals[:obj_filenames][element['type_of'].to_sym][obj_id]
+        locals[:path] = {
+          file: file[:file].sub(%r{/usr/src/app/tmp/temp-zip-\d+/}, ''),
+          preview: file[:preview]&.sub(%r{/usr/src/app/tmp/temp-zip-\d+/}, '')
+        }
+        locals[:filename] = locals[:path][:file].split('/').last
       end
     end
 
@@ -98,8 +100,10 @@ module ReportsHelper
   end
 
   # "Hack" to omit file preview URL because of WKHTML issues
-  def report_image_asset_url(asset, _type = :asset, klass = nil)
-    image_tag(asset.generate_base64(:medium), class: klass)
+  def report_image_asset_url(asset)
+    preview = asset.inline? ? asset.large_preview : asset.medium_preview
+    image_tag(preview.processed
+                     .service_url(expires_in: Constants::URL_LONG_EXPIRE_TIME))
   end
 
   # "Hack" to load Glyphicons css directly from the CDN
@@ -115,9 +119,33 @@ module ReportsHelper
 
   def font_awesome_cdn_link_tag
     stylesheet_link_tag(
-      'https://maxcdn.bootstrapcdn.com/font-awesome' \
-      '/4.6.3/css/font-awesome.min.css'
+      'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/fontawesome.min.css',
+      'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/regular.min.css',
+      'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/solid.min.css'
     )
+  end
+
+  def assigned_repository_or_snapshot(my_module, element_id, snapshot, repository)
+    if element_id
+      repository = Repository.accessible_by_teams(my_module.experiment.project.team).find_by(id: element_id)
+      # Check for default set snapshots when repository still exists
+      if repository
+        selected_snapshot = repository.repository_snapshots.where(my_module: my_module).find_by(selected: true)
+        repository = selected_snapshot if selected_snapshot
+      end
+      repository ||= RepositorySnapshot.joins(my_module: { experiment: :project })
+                                       .where(my_module: { experiments: { project: my_module.experiment.project } })
+                                       .find_by(id: element_id)
+    end
+    repository || snapshot
+  end
+
+  def assigned_repositories_in_project_list(project)
+    live_repositories = Repository.assigned_to_project(project)
+    snapshots = RepositorySnapshot.of_unassigned_from_project(project)
+
+    snapshots.each { |snapshot| snapshot.name = "#{snapshot.name} #{t('projects.reports.index.deleted')}" }
+    (live_repositories + snapshots).sort_by { |r| r.name.downcase }
   end
 
   def step_status_label(step)
@@ -128,7 +156,7 @@ module ReportsHelper
       style = 'default'
       text = t('protocols.steps.uncompleted')
     end
-    "<span class=\"label label-#{style}\">#{text}</span>".html_safe
+    "<span class=\"label step-label-#{style}\">[#{text}]</span>".html_safe
   end
 
   # Fixes issues with avatar images in reports

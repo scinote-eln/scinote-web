@@ -29,11 +29,7 @@ class Project < ApplicationRecord
              foreign_key: 'restored_by_id',
              class_name: 'User',
              optional: true
-  belongs_to :rap_task_level,
-            foreign_key: 'rap_task_level_id',
-            class_name: 'RapTaskLevel',
-            optional: false
-  belongs_to :team, inverse_of: :projects, touch: true, optional: true
+  belongs_to :team, inverse_of: :projects, touch: true
   has_many :user_projects, inverse_of: :project
   has_many :users, through: :user_projects
   has_many :experiments, inverse_of: :project
@@ -208,10 +204,10 @@ class Project < ApplicationRecord
     st
   end
 
-  def assigned_samples
-    Sample.joins(:my_modules).where(my_modules: {
-                                      id: my_modules_ids.split(',')
-                                    })
+  def assigned_repositories_and_snapshots
+    live_repositories = Repository.assigned_to_project(self)
+    snapshots = RepositorySnapshot.of_unassigned_from_project(self)
+    (live_repositories + snapshots).sort_by { |r| r.name.downcase }
   end
 
   def my_modules_ids

@@ -122,10 +122,10 @@ module Users
             Activities::CreateActivityService
               .call(activity_type: :invite_user_to_team,
                     owner: current_user,
-                    subject: current_team,
-                    team: current_team,
+                    subject: @team,
+                    team: @team,
                     message_items: {
-                      team: current_team.id,
+                      team: @team.id,
                       user_invited: user.id,
                       role: user_team.role_str
                     })

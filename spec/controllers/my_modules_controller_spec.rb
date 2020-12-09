@@ -63,7 +63,7 @@ describe MyModulesController, type: :controller do
 
     context 'when setting due_date' do
       let(:params) do
-        { id: my_module.id, my_module: { due_date: '03/21/2019' } }
+        { id: my_module.id, my_module: { due_date: '03/21/2019 23:59' } }
       end
 
       it 'calls create activity for setting due date' do
@@ -102,7 +102,7 @@ describe MyModulesController, type: :controller do
 
     context 'when updating due_date' do
       let(:params) do
-        { id: my_module.id, my_module: { due_date: '02/21/2019' } }
+        { id: my_module.id, my_module: { due_date: '02/21/2019 23:59' } }
       end
       let(:my_module) do
         create :my_module, :with_due_date, experiment: experiment
@@ -123,132 +123,74 @@ describe MyModulesController, type: :controller do
     end
   end
 
-  describe 'POST assign_repository_records' do
+  describe 'PUT update_state' do
+    let(:action) { put :update_state, params: params, format: :json }
+    let(:my_module_id) { my_module.id }
+    let(:status_id) { 'some-state-id' }
     let(:params) do
-      { id: my_module.id,
-        repository_id: repository.id,
-        selected_rows: [repository_row.id],
-        downstream: false }
-    end
-    let(:action) do
-      post :assign_repository_records, params: params, format: :json
+      {
+        id: my_module_id,
+        my_module: { status_id: status_id }
+      }
     end
 
-    it 'calls create activity for assign_repository_record' do
-      expect(Activities::CreateActivityService)
-        .to(receive(:call)
-              .with(hash_including(activity_type:
-                                     :assign_repository_record)))
-      action
+    before(:all) do
+      MyModuleStatusFlow.ensure_default
     end
 
-    it 'adds activity in DB' do
-      expect { action }
-        .to(change { Activity.count })
-    end
-  end
+    context 'when states updated' do
+      let(:status_id) { my_module.my_module_status.next_status.id }
 
-  describe 'POST assign_repository_records_downstream' do
-    it 'adds activity id DB' do
-      parent_my_module = my_module
-      params_downstream = { id: parent_my_module.id,
-                            repository_id: repository.id,
-                            selected_rows: [repository_row.id],
-                            downstream: true }
-      3.times do |_i|
-        child_module = create :my_module, experiment: experiment
-        Connection.create(output_id: parent_my_module.id, input_id: child_module.id)
-      end
-      expect { post :assign_repository_records, params: params_downstream, format: :json }
-        .to change { Activity.count }.by(4)
-    end
-  end
-
-  describe 'POST unassign_repository_records' do
-    let!(:mm_repository_row) do
-      create :mm_repository_row, repository_row: repository_row,
-                                 my_module: my_module,
-                                 assigned_by: user
-    end
-    let(:params) do
-      { id: my_module.id,
-        repository_id: repository.id,
-        selected_rows: [repository_row.id],
-        downstream: false }
-    end
-    let(:action) do
-      post :unassign_repository_records, params: params, format: :json
-    end
-
-    it 'calls create activity for unassign_repository_record' do
-      expect(Activities::CreateActivityService)
-        .to(receive(:call)
-              .with(hash_including(activity_type:
-                                     :unassign_repository_record)))
-      action
-    end
-
-    it 'adds activity in DB' do
-      expect { action }
-        .to(change { Activity.count })
-    end
-  end
-
-  describe 'POST unassign_repository_records_downstream' do
-    it 'adds activity id DB' do
-      parent_my_module = my_module
-      create :mm_repository_row, repository_row: repository_row,
-                                 my_module: parent_my_module,
-                                 assigned_by: user
-      params_downstream = { id: parent_my_module.id,
-                            repository_id: repository.id,
-                            selected_rows: [repository_row.id],
-                            downstream: true }
-      3.times do |_i|
-        child_module = create :my_module, experiment: experiment
-        Connection.create(output_id: parent_my_module.id, input_id: child_module.id)
-        create :mm_repository_row, repository_row: repository_row,
-                                 my_module: child_module,
-                                 assigned_by: user
-      end
-      post :unassign_repository_records, params: params_downstream, format: :json
-      expect(Activity.count).to eq 4
-    end
-  end
-
-  describe 'POST toggle_task_state' do
-    let(:action) { post :toggle_task_state, params: params, format: :json }
-    let(:params) { { id: my_module.id } }
-
-    context 'when completing task' do
-      let(:my_module) do
-        create :my_module, state: 'uncompleted', experiment: experiment
-      end
-
-      it 'calls create activity for completing task' do
-        expect(Activities::CreateActivityService)
-          .to(receive(:call)
-                .with(hash_including(activity_type: :complete_task)))
+      it 'changes status' do
         action
+
+        expect(my_module.reload.my_module_status.id).to be_eql(status_id)
+      end
+
+      it 'creates activity' do
+        expect { action }.to(change { Activity.all.count }.by(1))
       end
     end
 
-    context 'when uncompleting task' do
-      let(:my_module) do
-        create :my_module, state: 'completed', experiment: experiment
-      end
+    context 'when status not exist' do
+      let(:status_id) { -1 }
 
-      it 'calls create activity for uncompleting task' do
-        expect(Activities::CreateActivityService)
-          .to(receive(:call)
-                .with(hash_including(activity_type: :uncomplete_task)))
+      it 'renders 422' do
+        my_module.my_module_status_flow
         action
+
+        expect(response).to have_http_status 422
       end
     end
 
-    it 'adds activity in DB' do
-      expect { action }
-        .to(change { Activity.count })
+    context 'when status not correct' do
+      let(:status_id) { my_module.my_module_status.next_status.next_status.id }
+
+      it 'renders 422' do
+        action
+
+        expect(response).to have_http_status 422
+      end
+    end
+
+    context 'when user does not have permissions' do
+      it 'renders 403' do
+        # Remove user from project
+        UserProject.where(user: user, project: project).destroy_all
+        action
+
+        expect(response).to have_http_status 403
+      end
+    end
+
+    context 'when my_module not found' do
+      let(:my_module_id) { -1 }
+
+      it 'renders 404' do
+        action
+
+        expect(response).to have_http_status 404
+      end
     end
   end
 end

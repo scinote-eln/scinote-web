@@ -1,14 +1,19 @@
+<<<<<<< HEAD
 // scss-lint:disable SelectorDepth SelectorFormat
 // scss-lint:disable NestingDepth QualifyingElement
 
 .content-pane {
   --content-header-size: 9.5em;
+=======
+.content-pane {
+>>>>>>> Pulled latest release
   background-color: $color-white;
   margin: 20px 0;
   padding: 25px 20px;
 
   &.flexible {
     margin: 0;
+<<<<<<< HEAD
     padding: 0 1em;
   }
 
@@ -108,12 +113,51 @@
           &:focus,
           &:active {
             box-shadow: none;
+=======
+    padding: 0 .5em;
+  }
+
+  .content-header {
+    align-items: center;
+    border-bottom: $border-tertiary;
+    display: flex;
+    height: 5em;
+
+    h1 {
+      margin: 0;
+    }
+
+    .view-switch {
+      margin-left: auto;
+
+      .caret {
+          margin: 8px 0 8px 8px;
+        }
+      &.open {
+        .caret {
+          transform: rotateX(180deg)
+        }
+      }
+
+      .dropdown-menu {
+        @include font-button;
+        min-width: auto;
+
+        li {
+          cursor: pointer;
+          padding: 1em;
+          white-space: nowrap;
+
+          .button-icon {
+            margin-right: .5em;
+>>>>>>> Pulled latest release
           }
 
           &:hover {
             background: $color-concrete;
           }
         }
+<<<<<<< HEAD
 
         .dropdown-menu {
           @include font-button;
@@ -162,5 +206,13 @@
     .toolbar-row {
       display: none;
     }
+=======
+      }
+    }
+  }
+
+  .content-body {
+
+>>>>>>> Pulled latest release
   }
 }

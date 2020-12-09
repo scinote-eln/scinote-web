@@ -11,11 +11,17 @@ class RepositoryNumberValue < ApplicationRecord
   validates :repository_cell, :data, presence: true
 
   SORTABLE_COLUMN_NAME = 'repository_number_values.data'
+<<<<<<< HEAD
+=======
+  SORTABLE_VALUE_INCLUDE = :repository_number_value
+  PRELOAD_INCLUDE = :repository_number_value
+>>>>>>> Pulled latest release
 
   def formatted
     data.to_s
   end
 
+<<<<<<< HEAD
   def self.add_filter_condition(repository_rows, join_alias, filter_element)
     parameters = filter_element.parameters
     if filter_element.operator == 'between'
@@ -51,6 +57,14 @@ class RepositoryNumberValue < ApplicationRecord
 
   def update_data!(new_data, user)
     self.data = BigDecimal(new_data.to_s)
+=======
+  def data_changed?(new_data)
+    BigDecimal(new_data) != data
+  end
+
+  def update_data!(new_data, user)
+    self.data = BigDecimal(new_data)
+>>>>>>> Pulled latest release
     self.last_modified_by = user
     save!
   end
@@ -67,12 +81,20 @@ class RepositoryNumberValue < ApplicationRecord
 
   def self.new_with_payload(payload, attributes)
     value = new(attributes)
+<<<<<<< HEAD
     value.data = BigDecimal(payload.to_s)
+=======
+    value.data = BigDecimal(payload)
+>>>>>>> Pulled latest release
     value
   end
 
   def self.import_from_text(text, attributes, _options = {})
+<<<<<<< HEAD
     new(attributes.merge(data: BigDecimal(text.to_s)))
+=======
+    new(attributes.merge(data: BigDecimal(text)))
+>>>>>>> Pulled latest release
   rescue ArgumentError
     nil
   end

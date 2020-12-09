@@ -26,7 +26,7 @@ class Reports::Docx
     @report_team = report.project.team
 =======
   include GlobalActivitiesHelper
-  include RepositoryDatatableHelper
+  include Canaid::Helpers::PermissionsHelper
 
   Dir[File.join(File.dirname(__FILE__), 'docx') + '**/*.rb'].each do |file|
     include_module = File.basename(file).gsub('.rb', '').split('_').map(&:capitalize).join
@@ -60,12 +60,10 @@ end
     end
     @docx
   end
-
-
-  def self.link_prepare(scinote_url, link)
-    link[0] == '/' ? scinote_url + link : link
-  end
 end
+<<<<<<< HEAD
 
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+>>>>>>> Pulled latest release
 # rubocop:enable  Style/ClassAndModuleChildren

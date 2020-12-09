@@ -26,27 +26,14 @@ class ResultAssetsController < ApplicationController
 
   def create
     obj = create_multiple_results
-    respond_to do |format|
-      if obj.fetch(:status)
-        format.html do
-          flash[:success] = t('result_assets.create.success_flash',
-                              module: @my_module.name)
-          redirect_to results_my_module_path(@my_module)
-        end
-        format.json do
-          render json: {
-            html: render_to_string(
-              partial: 'my_modules/results.html.erb',
-                       locals: { results: obj.fetch(:results) }
-            )
-          }, status: :ok
-        end
-      else
-        flash[:error] = t('result_assets.error_flash')
-        format.json do
-          render json: {}, status: :bad_request
-        end
-      end
+    if obj.fetch(:status)
+      flash[:success] = t('result_assets.create.success_flash',
+                          module: @my_module.name)
+        p params.as_json
+      redirect_to results_my_module_path(@my_module, page: params[:page], order: params[:order])
+    else
+      flash[:error] = t('result_assets.error_flash')
+      render json: {}, status: :bad_request
     end
   end
 
@@ -65,7 +52,7 @@ class ResultAssetsController < ApplicationController
     saved = false
 
     @result.transaction do
-      update_params = result_params
+      update_params = result_params.reject { |_, v| v.blank? }
       previous_size = @result.space_taken
 
       if update_params.dig(:asset_attributes, :signed_blob_id)
@@ -96,17 +83,18 @@ class ResultAssetsController < ApplicationController
           raise ActiveRecord:: Rollback
         end
         # Asset (file) and/or name has been changed
+        asset_changed = @result.asset.changed?
         saved = @result.save
 
         if saved
           # Release team's space taken due to
           # previous asset being removed
           team = @result.my_module.experiment.project.team
-          team.release_space(previous_size)
+          team.release_space(previous_size) if asset_changed
           team.save
 
           # Post process new file if neccesary
-          @result.asset.post_process_file(team) if @result.asset.present?
+          @result.asset.post_process_file(team) if asset_changed && @result.asset.present?
 
           log_activity(:edit_result)
         end
@@ -174,12 +162,12 @@ class ResultAssetsController < ApplicationController
     results = []
 
     ActiveRecord::Base.transaction do
-      params[:results_files].values.each_with_index do |file, index|
+      params[:results_files].each do |index, file|
         asset = Asset.create!(created_by: current_user, last_modified_by: current_user, team: current_team)
         asset.file.attach(file[:signed_blob_id])
         result = Result.create!(user: current_user,
                                 my_module: @my_module,
-                                name: params[:results_names][index.to_s],
+                                name: params[:results_names][index],
                                 asset: asset,
                                 last_modified_by: current_user)
         results << result

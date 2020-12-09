@@ -14,7 +14,11 @@ describe RepositoryTimeRangeValue, type: :model do
     end
   end
 
+<<<<<<< HEAD
   describe '.data_different?' do
+=======
+  describe '.data_changed?' do
+>>>>>>> Pulled latest release
     context 'when has different time value' do
       let(:new_values) do
         {
@@ -24,7 +28,11 @@ describe RepositoryTimeRangeValue, type: :model do
       end
 
       it do
+<<<<<<< HEAD
         expect(time_range_value.data_different?(new_values)).to be_truthy
+=======
+        expect(time_range_value.data_changed?(new_values)).to be_truthy
+>>>>>>> Pulled latest release
       end
     end
 
@@ -37,7 +45,11 @@ describe RepositoryTimeRangeValue, type: :model do
       end
 
       it do
+<<<<<<< HEAD
         expect(time_range_value.data_different?(new_values)).to be_falsey
+=======
+        expect(time_range_value.data_changed?(new_values)).to be_falsey
+>>>>>>> Pulled latest release
       end
     end
   end

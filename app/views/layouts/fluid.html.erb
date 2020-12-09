@@ -1,7 +1,5 @@
 <% content_for :content do %>
     <div class="container-fluid" id="wrapper">
-      <%= render partial: 'shared/flash_alerts',
-                 locals: { flash: flash, notice: notice, alert: alert } %>
       <div id="sidebar-wrapper" class="<%= yield :sidebar_wrapper_class %>">
         <%= yield :sidebar %>
         <div id="sidebar-arrow"

@@ -6,16 +6,21 @@
 
   + .image-selection-container {
 <<<<<<< HEAD
+<<<<<<< HEAD
     height: 36px;
 =======
     height: 28px;
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+    height: 36px;
+>>>>>>> Pulled latest release
     left: 140px;
     position: absolute;
     top: 0;
     width: 338px;
 
     .select_button {
+<<<<<<< HEAD
 <<<<<<< HEAD
       background-color: $brand-primary;
       border-color: $brand-primary;
@@ -29,6 +34,13 @@
       cursor: pointer;
       line-height: 20px;
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+      background-color: $brand-primary;
+      border-color: $brand-primary;
+      color: $color-white;
+      cursor: pointer;
+      line-height: 18px;
+>>>>>>> Pulled latest release
       padding: 6px 12px;
       position: relative;
       text-align: center;
@@ -38,10 +50,14 @@
 
     input[type=text] {
 <<<<<<< HEAD
+<<<<<<< HEAD
       border: 1px solid $color-concrete;
 =======
       border: 1px solid $color-gainsboro;
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+      border: 1px solid $color-concrete;
+>>>>>>> Pulled latest release
       border-radius: 4px;
       height: 30px;
       left: -5px;
@@ -50,6 +66,9 @@
       width: calc(100% - 100px);
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Pulled latest release
 
     &.error {
       &::after {
@@ -60,6 +79,7 @@
         top: 40px;
       }
     }
+<<<<<<< HEAD
   }
 }
 
@@ -79,6 +99,22 @@
 }
 
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+  }
+}
+
+.mce-primary {
+  background-color: $brand-primary !important;
+  border-color: $brand-primary !important;
+  border-radius: $border-radius-default !important;
+  color: $color-white !important;
+}
+
+.mce-primary .mce-txt:hover {
+  color: $color-white !important;
+}
+
+>>>>>>> Pulled latest release
 .ql-editor {
   font-size: 16px;
 }
@@ -134,8 +170,12 @@
   transition: $md-transaction;
 =======
 .mce-widget.mce-btn {
+<<<<<<< HEAD
   border-color: $color-white !important;
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+  border-color: transparent !important;
+>>>>>>> Pulled latest release
 
   &:not(.mce-active):hover,
   &:not(.mce-active):active {

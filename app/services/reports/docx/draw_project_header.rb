@@ -4,6 +4,7 @@
 <<<<<<< HEAD
 module Reports::Docx::DrawProjectHeader
   def draw_project_header(subject)
+<<<<<<< HEAD
     project = subject.project
     return unless project && can_read_project?(@user, project)
 =======
@@ -15,6 +16,10 @@ module Reports::Docx::DrawProjectHeader
     project = Project.find_by_id(subject['id']['project_id'])
     return unless project
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+    project = Project.find_by(id: subject['id']['project_id'])
+    return unless project && can_read_project?(@user, project)
+>>>>>>> Pulled latest release
 
     @docx.p I18n.t('projects.reports.elements.project_header.user_time',
                    timestamp: I18n.l(project.created_at, format: :full))

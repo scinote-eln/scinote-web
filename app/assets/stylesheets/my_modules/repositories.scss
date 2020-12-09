@@ -10,6 +10,83 @@
   white-space: nowrap;
 }
 
+<<<<<<< HEAD
+=======
+.my-module-inventories {
+
+  .main-actions {
+    align-items: center;
+    display: flex;
+
+    .filter-container {
+      flex-grow: 1;
+    }
+  }
+
+  .dataTables_scroll {
+    .dataTables_scrollBody {
+      thead {
+        opacity: 0;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      .assigned-column {
+        .repository-row-lock-icon {
+          display: none !important;
+        }
+      }
+    }
+
+    tr:hover {
+      .assigned-column {
+        .repository-row-edit-icon {
+          display: none !important;
+        }
+
+        .circle-icon {
+          margin-left: 30px !important;
+        }
+      }
+    }
+  }
+
+  .pagination-row {
+    align-items: center;
+    display: flex;
+
+    .pagination-info,
+    .pagination-actions {
+      flex-grow: 1;
+    }
+
+    .pagination-info {
+      align-items: center;
+      display: flex;
+
+      .dataTables_info {
+        padding-top: 0;
+      }
+
+      .dataTables_length {
+        margin-right: 24px;
+        width: 170px;
+
+        .dropdown-selector-container {
+          width: inherit;
+        }
+
+        label {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+>>>>>>> Pulled latest release
 #assigned-items-container {
   padding-top: 10px;
 
@@ -420,6 +497,7 @@
 
 .update-repository-record-modal {
   .rows-list-container {
+<<<<<<< HEAD
     display: grid;
     grid-template-columns: 1fr;
     margin: 0 -10px;
@@ -428,6 +506,11 @@
       grid-template-columns: 1fr 1fr;
     }
 
+=======
+    display: flex;
+    margin: 0 -10px;
+
+>>>>>>> Pulled latest release
     .header {
       font-weight: bold;
 
@@ -464,6 +547,7 @@
     }
 
   }
+<<<<<<< HEAD
 
   .my-modules-to-assign {
     @include font-button;
@@ -494,6 +578,8 @@
       color: $brand-warning;
     }
   }
+=======
+>>>>>>> Pulled latest release
 }
 
 

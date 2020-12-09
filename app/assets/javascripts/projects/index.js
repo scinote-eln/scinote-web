@@ -453,8 +453,8 @@
       type: 'GET',
       dataType: 'json',
       success: function(data) {
-        $('#slide-panel .tree').html('<ul>' + data.html + '</ul>');
-        setupSidebarTree();
+        $('#slide-panel .tree').html(data.html);
+        Sidebar.loadLastState();
       }
     });
   }
@@ -510,16 +510,20 @@
   }
 
   function initProjectsViewModeSwitch() {
-    $('input[name=projects-view-mode-selector]').off().on('change', function() {
-      if ($(this).val() === projectsViewMode) {
-        return;
-      }
-      projectsViewMode = $(this).val();
-      if (projectsChanged) {
-        refreshCurrentView();
-      }
-      projectsChanged = false;
-    });
+    $('input[name=projects-view-mode-selector]').off()
+      .on('change', function() {
+        if ($(this).val() === projectsViewMode) {
+          return;
+        }
+        projectsViewMode = $(this).val();
+        if (projectsChanged) {
+          refreshCurrentView();
+        }
+        projectsChanged = false;
+      })
+      .on('click', function() {
+        $(this).next().click();
+      });
   }
 
   function initSorting() {

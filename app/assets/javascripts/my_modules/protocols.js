@@ -21,6 +21,7 @@ var selectedRow = null;
 
 function initEditMyModuleDescription() {
 <<<<<<< HEAD
+<<<<<<< HEAD
   var viewObject = $('#my_module_description_view');
   viewObject.on('click', function(e) {
     if ($(e.target).hasClass('record-info-link')) return;
@@ -44,15 +45,33 @@ function initEditProtocolDescription() {
   TinyMCE.initIfHasDraft(viewObject);
 =======
   $('#my_module_description_view').on('click', function() {
+=======
+  var viewObject = $('#my_module_description_view');
+  viewObject.on('click', function(e) {
+    if ($(e.target).hasClass('record-info-link')) return;
+>>>>>>> Pulled latest release
     TinyMCE.init('#my_module_description_textarea');
+  }).on('click', 'a', function(e) {
+    if ($(this).hasClass('record-info-link')) return;
+    e.stopPropagation();
   });
+  TinyMCE.initIfHasDraft(viewObject);
 }
 
 function initEditProtocolDescription() {
-  $('#protocol_description_view').on('click', function() {
+  var viewObject = $('#protocol_description_view');
+  viewObject.on('click', function(e) {
+    if ($(e.target).hasClass('record-info-link')) return;
     TinyMCE.init('#protocol_description_textarea', refreshProtocolStatusBar);
+  }).on('click', 'a', function(e) {
+    if ($(this).hasClass('record-info-link')) return;
+    e.stopPropagation();
   });
+<<<<<<< HEAD
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+  TinyMCE.initIfHasDraft(viewObject);
+>>>>>>> Pulled latest release
 }
 
 // Initialize edit description modal window
@@ -95,6 +114,9 @@ function initEditDescription() {
 
 function initCopyToRepository() {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Pulled latest release
   var link = "[data-action='copy-to-repository']";
   var modal = '#copy-to-repository-modal';
   var modalBody = '.modal-body';
@@ -103,6 +125,7 @@ function initCopyToRepository() {
     .on('ajax:success', link, function(e, data) {
       $(modal).find(modalBody).html(data.html);
       $(modal).find(modalBody).find("[data-role='copy-to-repository']")
+<<<<<<< HEAD
 =======
   var link = $("[data-action='copy-to-repository']");
   var modal = $('#copy-to-repository-modal');
@@ -115,6 +138,8 @@ function initCopyToRepository() {
 
       modalBody.find("[data-role='copy-to-repository']")
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+>>>>>>> Pulled latest release
         .on('ajax:success', function(e2, data2) {
           if (data2.refresh !== null) {
             // Reload page
@@ -122,19 +147,27 @@ function initCopyToRepository() {
           } else {
             // Simply hide the modal
 <<<<<<< HEAD
+<<<<<<< HEAD
             $(modal).modal('hide');
 =======
             modal.modal('hide');
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+            $(modal).modal('hide');
+>>>>>>> Pulled latest release
           }
         })
         .on('ajax:error', function(e2, data2) {
           // Display errors in form
 <<<<<<< HEAD
+<<<<<<< HEAD
           $(modal).find(submitBtn)[0].disabled = false;
 =======
           submitBtn[0].disabled = false;
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+          $(modal).find(submitBtn)[0].disabled = false;
+>>>>>>> Pulled latest release
           if (data2.status === 422) {
             $(this).renderFormErrors('protocol', data2.responseJSON);
           } else {
@@ -143,6 +176,7 @@ function initCopyToRepository() {
           }
         });
 
+<<<<<<< HEAD
 <<<<<<< HEAD
       $(modal).modal('show');
       $(modal).find(submitBtn)[0].disabled = false;
@@ -159,17 +193,25 @@ function initCopyToRepository() {
 =======
       modal.modal('show');
       submitBtn[0].disabled = false;
+=======
+      $(modal).modal('show');
+      $(modal).find(submitBtn)[0].disabled = false;
+>>>>>>> Pulled latest release
     })
     .on('ajax:error', function() {});
 
-  submitBtn.on('click', function() {
+  $(modal).on('click', submitBtn, function() {
     // Submit the embedded form
-    submitBtn[0].disabled = true;
-    modalBody.find('form').submit();
+    $(modal).find(submitBtn)[0].disabled = true;
+    $(modal).find('form').submit();
   });
 
+<<<<<<< HEAD
   modalBody.on('click', "[data-role='link-check']", function() {
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+  $(modal).find(modalBody).on('click', "[data-role='link-check']", function() {
+>>>>>>> Pulled latest release
     var text = $(this).closest('.modal-body').find("[data-role='link-text']");
     if ($(this).prop('checked')) {
       text.show();
@@ -178,6 +220,7 @@ function initCopyToRepository() {
     }
   });
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   $(modal).on('hidden.bs.modal', function() {
     $(modal).find(modalBody).find("[data-role='copy-to-repository']")
@@ -191,6 +234,13 @@ function initCopyToRepository() {
 
     modalBody.html('');
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+  $(modal).on('hidden.bs.modal', function() {
+    $(modal).find(modalBody).find("[data-role='copy-to-repository']")
+      .off('ajax:success ajax:error');
+
+    $(modal).find(modalBody).html('');
+>>>>>>> Pulled latest release
   });
 }
 
@@ -253,12 +303,17 @@ function initLoadFromRepository() {
       modal.modal('show');
 
 <<<<<<< HEAD
+<<<<<<< HEAD
       // Init Datatable on recent tab
       initLoadFromRepositoryTable(modalBody.find('#recent-tab'));
 =======
       // Init Datatable on public tab
       initLoadFromRepositoryTable(modalBody.find('#public-tab'));
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+      // Init Datatable on recent tab
+      initLoadFromRepositoryTable(modalBody.find('#recent-tab'));
+>>>>>>> Pulled latest release
 
       modalBody.find("a[data-toggle='tab']")
         .on('hide.bs.tab', function(el) {
@@ -292,12 +347,16 @@ function initLoadFromRepository() {
 function initLoadFromRepositoryTable(content) {
   var tableEl = content.find("[data-role='datatable']");
 <<<<<<< HEAD
+<<<<<<< HEAD
   var datatable = tableEl.DataTable({
 =======
 
   var datatable = tableEl.DataTable({
     order: [[1, 'asc']],
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+  var datatable = tableEl.DataTable({
+>>>>>>> Pulled latest release
     dom: "RBfl<'row'<'col-sm-12't>><'row'<'col-sm-7'i><'col-sm-5'p>>",
     sScrollX: '100%',
     sScrollXInner: '100%',
@@ -306,9 +365,13 @@ function initLoadFromRepositoryTable(content) {
     serverSide: true,
     responsive: true,
 <<<<<<< HEAD
+<<<<<<< HEAD
     order: tableEl.data('default-order') || [[1, 'asc']],
 =======
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+    order: tableEl.data('default-order') || [[1, 'asc']],
+>>>>>>> Pulled latest release
     ajax: {
       url: tableEl.data('source'),
       type: 'POST'
@@ -450,12 +513,16 @@ function loadFromRepository() {
         location.reload();
       },
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Pulled latest release
       error: function(response) {
         if (response.status === 403) {
           HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
         } else {
           alert(response.responseJSON.message);
         }
+<<<<<<< HEAD
 
 =======
       error: function(ev) {
@@ -464,6 +531,9 @@ function loadFromRepository() {
 
         // Hide modal
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+
+>>>>>>> Pulled latest release
         modal.modal('hide');
       }
     });
@@ -481,10 +551,14 @@ function refreshProtocolStatusBar() {
     dataType: 'json',
     success: function(data) {
 <<<<<<< HEAD
+<<<<<<< HEAD
       $('.my-module-protocol-status').replaceWith(data.html);
 =======
       $("[data-role='protocol-status-bar']").html(data.html);
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+      $('.my-module-protocol-status').replaceWith(data.html);
+>>>>>>> Pulled latest release
       initLinkUpdate();
     }
   });
@@ -541,6 +615,7 @@ function initImport() {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
 function initProtocolSectionOpenEvent() {
@@ -574,12 +649,11 @@ function initRecentProtocols() {
       });
     });
   });
+=======
+>>>>>>> Pulled latest release
 
-  $('.protocol-description-content').on('ajax:success', () => {
-    updateRecentProtocolsStatus();
-  });
-}
 
+<<<<<<< HEAD
 function updateRecentProtocolsStatus() {
   var recentProtocolContainer = $('.my-module-recent-protocols');
   var steps = $('.step');
@@ -590,6 +664,16 @@ function updateRecentProtocolsStatus() {
     recentProtocolContainer.css('display', 'none');
   }
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+function initProtocolSectionOpenEvent() {
+  $('#protocol-container').on('shown.bs.collapse', function() {
+    $(this).find("[data-role='hot-table']").each(function() {
+      var $container = $(this).find("[data-role='step-hot-table']");
+      var hot = $container.handsontable('getInstance');
+      hot.render();
+    });
+  });
+>>>>>>> Pulled latest release
 }
 
 /**
@@ -605,10 +689,14 @@ function init() {
   refreshProtocolStatusBar();
   initImport();
 <<<<<<< HEAD
+<<<<<<< HEAD
   initProtocolSectionOpenEvent();
 =======
   initRecentProtocols();
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+  initProtocolSectionOpenEvent();
+>>>>>>> Pulled latest release
 }
 
 init();

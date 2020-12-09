@@ -87,7 +87,7 @@ function checklistsValidator(ev, checklists, editMode) {
         }
       })
 
-      var $checklistInput = $checklist.find(".checklist_name");
+      var $checklistInput = $checklist.find(".checklist-name");
       // In edit mode, checklist's name can't be blank if any items present
       var allowBlankChklstName = !(anyChecklistItemFilled || editMode);
       var textLimitMin = allowBlankChklstName ? 0 : 1;
@@ -194,6 +194,14 @@ function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
     filesSizeValid = enoughSpaceValidator(ev, fileInputs);
   }
   return filesSizeValid;
+}
+
+function numberMinMaxValidator(value, min, max) {
+  if(parseInt(value) < min || isNaN(value))
+    return min;
+  else if(parseInt(value) > max)
+    return max;
+  else return value;
 }
 
 /*

@@ -28,39 +28,37 @@
           <div class="protocols-description">
             <%= t(@type == :public ? "protocols.index.public_description" : "protocols.index.private_description") %>
           </div>
-          <div class="btn-group" role="group">
-            <a class="btn btn-primary" <%= can_create_protocols_in_repository?(@current_team) ? "data-action=create-new" : "disabled=disabled" %> data-url="<%= create_new_modal_protocols_path(team: @current_team, type: @type) %>">
+          <div class="sci-btn-group" role="group">
+            <button class="btn btn-primary" <%= can_create_protocols_in_repository?(@current_team) ? "data-action=create-new" : "disabled" %> data-url="<%= create_new_modal_protocols_path(team: @current_team, type: @type) %>">
               <span class="fas fa-plus"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.create_new") %></span>
-            </a>
-            <a class="btn btn-default" data-action="edit">
+            </button>
+            <button class="btn btn-light disabled hidden" data-action="edit">
               <span class="fas fa-pencil-alt"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.edit") %></span>
-            </a>
-            <a class="btn btn-default" data-action="clone">
+            </button>
+            <button class="btn btn-light disabled hidden" data-action="clone">
               <span class="fas fa-copy"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.clone_btn") %></span>
-            </a>
+            </button>
             <% if @type == :public %>
-              <a class="btn btn-default" data-action="make-private" data-url="<%= make_private_protocols_path %>">
+              <button class="btn btn-light disabled hidden" data-action="make-private" data-url="<%= make_private_protocols_path %>">
                 <span class="fas fa-eye-slash"></span>
                 <span class="hidden-xs">&nbsp;<%= t("protocols.index.make_private") %></span>
-              </a>
+              </button>
             <% elsif @type == :private %>
-              <a class="btn btn-default" data-action="publish" data-url="<%= publish_protocols_path %>">
+              <button class="btn btn-light disabled hidden" data-action="publish" data-url="<%= publish_protocols_path %>">
                 <span class="fas fa-eye"></span>
                 <span class="hidden-xs">&nbsp;<%= t("protocols.index.publish") %></span>
-              </a>
+              </button>
             <% end %>
           </div>
-          <div id="import-export-protocols" class="btn-group" role="group">
-          <a class="btn btn-default btn-open-file"
-             data-toggle="dropdown"
-             aria-haspopup="true"
-             aria-expanded="false"
-             href="#"
-             <%= 'disabled' unless can_create_protocols_in_repository?(@current_team) %>>
-            <span class="fas fa-download"></span><span class="hidden-xs">&nbsp;<%= t("protocols.index.import") %></span></a>
+          <div id="import-export-protocols" class="sci-btn-group" role="group">
+          <button class="btn btn-light btn-open-file <%= 'disabled hidden' unless can_create_protocols_in_repository?(@current_team) %>"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false">
+            <span class="fas fa-download"></span><span class="hidden-xs">&nbsp;<%= t("protocols.index.import") %></span></button>
             <% if can_create_protocols_in_repository?(@current_team) %>
               <ul class="dropdown-menu">
                 <li>
@@ -81,27 +79,27 @@
                 </li>
               </ul>
             <% end %>
-            <a class="btn btn-default" data-action="export" data-export-url="<%= export_protocols_path() %>">
+            <button class="btn btn-light disabled hidden" data-action="export" data-export-url="<%= export_protocols_path() %>">
               <span class="fas fa-upload"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.export") %></span>
-            </a>
+            </button>
           </div>
 
-          <div class="btn-group" role="group">
-            <a class="btn btn-default" data-action="archive" data-url="<%= archive_protocols_path %>">
+          <div class="sci-btn-group" role="group">
+            <button class="btn btn-light disabled hidden" data-action="archive" data-url="<%= archive_protocols_path %>">
               <span class="fas fa-archive"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.archive_action") %></span>
-            </a>
+            </button>
           </div>
         <% elsif @type == :archive %>
           <div class="protocols-description">
             <%= t("protocols.index.archive.description") %>
           </div>
-          <div class="btn-group" role="group">
-            <a class="btn btn-default" data-action="restore" data-url="<%= restore_protocols_path %>">
+          <div class="sci-btn-group" role="group">
+            <button class="btn btn-light disabled hidden" data-action="restore" data-url="<%= restore_protocols_path %>">
               <span class="fas fa-sync-alt"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.restore") %></span>
-            </a>
+            </button>
           </div>
         <% end %>
 
@@ -141,4 +139,3 @@
 <%= javascript_include_tag "assets/wopi/create_wopi_file" %>
 <%= javascript_include_tag "protocols/index" %>
 <%= javascript_include_tag "protocols/steps" %>
-

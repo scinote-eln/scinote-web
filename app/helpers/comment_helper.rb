@@ -15,6 +15,7 @@ module CommentHelper
   end
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   def comment_index_helper(comments, more_url, partial = nil)
     partial ||= 'shared/comments/list.html.erb'
     render json: {
@@ -23,6 +24,11 @@ module CommentHelper
     partial ||= 'shared/comments/list.html.erb'
     render  json: {
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+  def comment_index_helper(comments, more_url, partial = nil)
+    partial ||= 'shared/comments/list.html.erb'
+    render json: {
+>>>>>>> Pulled latest release
       perPage: @per_page,
       resultsNumber: comments.size,
       moreUrl: more_url,
@@ -147,6 +153,17 @@ module CommentHelper
       end
 =======
       render json: { errors: comment.errors.to_hash(true) }, status: :error
+    end
+  end
+
+  def comment_editable?(comment)
+    case comment.type
+    when 'TaskComment', 'StepComment', 'ResultComment'
+      can_manage_comment_in_module?(comment.becomes(Comment))
+    when 'ProjectComment'
+      can_manage_comment_in_project?(comment)
+    else
+      false
     end
   end
 

@@ -1,21 +1,11 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
-@import 'constants';
+@import "constants";
 @import "mixins";
 
 // Some color definitions
 $color-group-hover: $color-alabaster;
 $color-module-hover: $brand-primary;
-
-#new-project-modal,
-#edit-project-modal,
-#copy-to-repository-modal {
-  .btn-group label.btn-toggle:not(.active) {
-    background-color: $color-white;
-    border-color: $color-silver;
-    color: $color-emperor;
-  }
-}
 
 #sortMenu {
   border-color: $color-white;
@@ -32,15 +22,8 @@ $color-module-hover: $brand-primary;
 /* Secondary navigation */
 
 .navbar-nav {
-
-  .btn-group .btn-toggle:not(.active) {
-    background-color: $color-white;
-    border-color: $color-silver;
-    color: $color-emperor;
-  }
-
   .projects-view-mode-switch {
-    margin: 10px;
+    margin: 8px 10px 12px;
   }
 
 }
@@ -48,26 +31,38 @@ $color-module-hover: $brand-primary;
 /* Canvas index page */
 
 #canvas-container:not(.canvas-container-edit-mode) {
-  margin-top: 20px;
+  margin-top: 5px;
 }
 
 /**********************************
  * jsPlumb CANVAS RELATED STYLING *
  *********************************/
 #diagram-buttons {
-  margin-bottom: 10px;
+  align-items: center;
+  display: flex;
+
+  #edit-canvas-button {
+    margin-right: 5px;
+  }
+
+  .actions-button {
+    margin-right: 15px;
+  }
+
+  .toolbarButtons {
+    align-items: center;
+    display: flex;
+
+    .zoom-text {
+      margin-right: 5px;
+    }
+  }
 }
 
 #update-canvas {
-  #canvas-new-module {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .btn-group > .btn:first-child {
-    border-bottom-left-radius: 0;
-  }
-  .btn-group > .btn:last-child {
-    border-bottom-right-radius: 0;
+
+  .canvas-header {
+    margin-bottom: 5px;
   }
 }
 
@@ -242,6 +237,7 @@ path, ._jsPlumb_endpoint {
 
   .panel-body .due-date-link {
     color: $color-emperor;
+    display: block;
   }
 
   .panel-body .due-date-label {
@@ -321,10 +317,10 @@ path, ._jsPlumb_endpoint {
 
 .module-large .tags-container,
 .module-medium .tags-container {
-  padding-top: 2px;
+  padding-top: 4px;
 
   div {
-    font-size: 22pt;
+    font-size: 20px;
     width: 4px;
     height: 0px;
     display: inline-block;
@@ -340,9 +336,9 @@ path, ._jsPlumb_endpoint {
   }
 
   & span.badge {
-    margin-left: -8px;
-    margin-top: -10px;
+    margin-left: -12px;
     margin-right: 4px;
+    margin-top: -7px;
   }
 }
 
@@ -495,7 +491,6 @@ li.module-hover {
   height: 400px;
   margin: 0 auto;
   margin-bottom: 35px;
-  // @@@20191105JS - This was 45px previously. Not sure if EPA or Bio change...
   margin-top: 15px;
   max-width: 700px;
 
@@ -553,9 +548,9 @@ li.module-hover {
   }
 
   .experiment-no-description {
+    @include font-h3;
     color: $color-alto;
     display: block;
-    font-size: $font-size-large;
     font-weight: bold;
     margin-top: 10px;
     text-align: center;
@@ -564,9 +559,16 @@ li.module-hover {
   .no-workflowimg {
     color: $color-alto;
     display: block;
-    font-size: 22px;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .no-tasks {
+    color: $color-alto;
+    display: block;
+    font-size: 1.5em;
     font-weight: bold;
-    margin: 15px 0;
+    margin: 1em 0;
     max-height: 200px;
     padding-bottom: 70px;
     padding-top: 50px;
@@ -579,6 +581,11 @@ li.module-hover {
   display: flex;
   height: 100%;
   justify-content: center;
+
+  .workflowimg-spinner {
+    color: $color-alto;
+    top: 50%;
+  }
 
   img {
     max-height: 190px;

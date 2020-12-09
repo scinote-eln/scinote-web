@@ -16,10 +16,6 @@ module SecondaryNavigationHelper
     action_name == 'show'
   end
 
-  def is_project_samples?
-    action_name == 'samples'
-  end
-
   def is_project_reports?
     controller_name == 'reports' && action_name == 'index'
   end
@@ -36,10 +32,6 @@ module SecondaryNavigationHelper
     action_name == 'module_archive'
   end
 
-  def is_experiment_samples?
-    action_name == 'samples'
-  end
-
   def is_module_info?
     action_name == 'show'
   end
@@ -54,10 +46,6 @@ module SecondaryNavigationHelper
 
   def is_module_activities?
     action_name == 'activities'
-  end
-
-  def is_module_samples?
-    action_name == 'samples'
   end
 
   def is_module_archive?

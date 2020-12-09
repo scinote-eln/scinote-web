@@ -63,3 +63,7 @@ Delayed::Worker.max_attempts = DelayedWorkerConfig.max_attempts
 Delayed::Worker.max_run_time = DelayedWorkerConfig.max_run_time
 Delayed::Worker.read_ahead = DelayedWorkerConfig.read_ahead
 Delayed::Worker.default_queue_name = DelayedWorkerConfig.default_queue_name
+Delayed::Worker.queue_attributes = {
+  high_priority: { priority: -10 },
+  low_priority: { priority: 10 }
+}

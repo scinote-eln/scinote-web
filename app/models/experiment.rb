@@ -19,7 +19,7 @@ class Experiment < ApplicationRecord
 
   has_many :my_modules, inverse_of: :experiment, dependent: :destroy
   has_many :active_my_modules,
-           -> { where(archived: false).order(:workflow_order) },
+           -> { where(archived: false).order(:name) },
            class_name: 'MyModule'
   has_many :my_module_groups, inverse_of: :experiment, dependent: :destroy
   has_many :report_elements, inverse_of: :experiment, dependent: :destroy
@@ -113,14 +113,6 @@ class Experiment < ApplicationRecord
     my_modules.where(archived: true)
   end
 
-  def assigned_samples
-    Sample.joins(:my_modules).where(my_modules: { id: my_modules })
-  end
-
-  def unassigned_samples(assigned_samples)
-    Sample.where(team_id: team).where.not(id: assigned_samples)
-  end
-
   def update_canvas(
     to_archive,
     to_add,
@@ -132,14 +124,23 @@ class Experiment < ApplicationRecord
     positions,
     current_user
   )
-    cloned_modules = []
     begin
       with_lock do
-        # First, add new modules
+        # Start with archiving to release positions for new tasks
+        archive_modules(to_archive, current_user) if to_archive.any?
+
+        # Update only existing tasks positions to release positions for new tasks
+        existing_positions = positions.slice(*positions.keys.map { |k| k unless k.to_s.start_with?('n') }.compact)
+        update_module_positions(existing_positions) if existing_positions.any?
+
+        # Move only existing tasks to release positions for new tasks
+        existing_to_move = to_move.slice(*to_move.keys.map { |k| k unless k.to_s.start_with?('n') }.compact)
+        move_modules(existing_to_move, current_user) if existing_to_move.any?
+
+        # add new modules
         new_ids, cloned_pairs, originals = add_modules(
           to_add, to_clone, current_user
         )
-        cloned_modules = cloned_pairs.collect { |mn, _| mn }
 
         # Rename modules
         rename_modules(to_rename, current_user)
@@ -160,9 +161,6 @@ class Experiment < ApplicationRecord
                   message_items: { my_module_original: mo.id,
                                    my_module_new: mn.id })
         end
-
-        # Then, archive modules that need to be archived
-        archive_modules(to_archive, current_user) if to_archive.any?
 
         # Update connections, positions & module group variables
         # with actual IDs retrieved from the new modules creation
@@ -214,13 +212,8 @@ class Experiment < ApplicationRecord
     true
   end
 
-  def generate_workflow_img
-    workflowimg.purge if workflowimg.attached?
-    Experiments::GenerateWorkflowImageService.delay.call(experiment_id: id)
-  end
-
   def workflowimg_exists?
-    workflowimg.service.exist?(workflowimg.blob.key)
+    workflowimg.attached? && workflowimg.service.exist?(workflowimg.blob.key)
   end
 
   # Get projects where user is either owner or user in the same team
@@ -249,12 +242,6 @@ class Experiment < ApplicationRecord
   end
 
   private
-
-  # Archive all modules. Receives an array of module integer IDs.
-  def archive_modules(module_ids)
-    my_modules.where(id: module_ids).each(&:archive!)
-    my_modules.reload
-  end
 
   # Archive all modules. Receives an array of module integer IDs
   # and current user.
@@ -293,6 +280,8 @@ class Experiment < ApplicationRecord
       my_module.last_modified_by = current_user
       my_module.save!
 
+      my_module.assign_user(current_user)
+
       ids_map[m[:id]] = my_module.id.to_s
     end
     my_modules.reload
@@ -323,9 +312,9 @@ class Experiment < ApplicationRecord
     to_move.each do |id, experiment_id|
       my_module = my_modules.find_by_id(id)
       experiment = project.experiments.find_by_id(experiment_id)
-      experiment_org = my_module.experiment
       next unless my_module.present? && experiment.present?
 
+      experiment_original = my_module.experiment
       my_module.experiment = experiment
 
       # Calculate new module position
@@ -347,13 +336,10 @@ class Experiment < ApplicationRecord
                                              message_items: {
                                                my_module: my_module.id,
                                                experiment_original:
-                                                 experiment_org.id,
+                                                 experiment_original.id,
                                                experiment_new: experiment.id
                                              })
     end
-
-    # Generate workflow image for the experiment in which we moved the task
-    generate_workflow_img_for_moved_modules(to_move)
   end
 
   # Move module groups; this method accepts a map where keys
@@ -412,17 +398,6 @@ class Experiment < ApplicationRecord
         group.save!
       end
     end
-
-    # Generate workflow image for the experiment in which we moved the workflow
-    generate_workflow_img_for_moved_modules(to_move)
-  end
-
-  # Generates workflow img when the workflow or module is moved
-  # to other experiment
-  def generate_workflow_img_for_moved_modules(to_move)
-    Experiment.where(id: to_move.values.uniq).each do |exp|
-      exp.generate_workflow_img
-    end
   end
 
   # Update connections for all modules in this project.
@@ -468,24 +443,6 @@ class Experiment < ApplicationRecord
       Connection.create!(input_id: b, output_id: a)
     end
 
-    # Unassign samples from former downstream modules
-    # for all destroyed connections
-    unassign_samples_from_old_downstream_modules(previous_sources)
-
-    visited = []
-    # Assign samples to all new downstream modules
-    filtered_edges.each do |a, b|
-      source = my_modules.includes({ inputs: :from }, :samples).find(a.to_i)
-      target = my_modules.find(b.to_i)
-      # Do this only for new edges
-      next unless previous_sources[target.id].exclude?(source)
-      # Go as high upstream as new edges take us
-      # and then assign samples to all downsteam samples
-      assign_samples_to_new_downstream_modules(previous_sources,
-                                               visited,
-                                               source)
-    end
-
     # Save topological order of modules (for modules without workflow,
     # leave them unordered)
     my_modules.includes(:my_module_group).each do |m|
@@ -499,52 +456,8 @@ class Experiment < ApplicationRecord
     end
 
     # Make sure to reload my modules, which now have updated connections
-    # and samples
     my_modules.reload
     true
-  end
-
-  # When connections are deleted, unassign samples that
-  # are not inherited anymore
-  def unassign_samples_from_old_downstream_modules(sources)
-    my_modules.each do |my_module|
-      sources[my_module.id].each do |src|
-        # Only do this for newly deleted connections
-        next unless src.outputs.map(&:to).exclude? my_module
-        my_module.downstream_modules.each do |dm|
-          # Get unique samples for all upstream modules
-          um = dm.upstream_modules
-          um.shift # remove current module
-          ums = um.map(&:samples).flatten.uniq
-          src.samples.find_each do |sample|
-            dm.samples.destroy(sample) if ums.exclude? sample
-          end
-        end
-      end
-    end
-  end
-
-  # Assign samples to new connections recursively
-  def assign_samples_to_new_downstream_modules(sources, visited, my_module)
-    # If samples are already assigned for this module, stop going upstream
-    return if visited.include?(my_module)
-    visited << my_module
-    # Edge case, when module is source or it doesn't have any new input
-    # connections
-    if my_module.inputs.blank? ||
-       (my_module.inputs.map(&:from) - sources[my_module.id]).empty?
-      my_module.downstream_modules.each do |dm|
-        new_samples = my_module.samples.where.not(id: dm.samples)
-        dm.samples << new_samples
-      end
-    else
-      my_module.inputs.each do |input|
-        # Go upstream for new in connections
-        if sources[my_module.id].exclude?(input.from)
-          assign_samples_to_new_downstream_modules(sources, visited, input.from)
-        end
-      end
-    end
   end
 
   # Updates positions of modules.
@@ -553,7 +466,7 @@ class Experiment < ApplicationRecord
   def update_module_positions(positions)
     modules = my_modules.where(id: positions.keys)
     modules.each do |m|
-      m.update_columns(x: positions[m.id.to_s][:x], y: positions[m.id.to_s][:y])
+      m.update(x: positions[m.id.to_s][:x], y: positions[m.id.to_s][:y])
     end
     my_modules.reload
   end
@@ -566,7 +479,7 @@ class Experiment < ApplicationRecord
     y_diff = my_modules.pluck(:y).min
 
     my_modules.each do |m|
-      m.update_columns(x: m.x - x_diff, y: m.y - y_diff)
+      m.update(x: m.x - x_diff, y: m.y - y_diff)
     end
   end
 

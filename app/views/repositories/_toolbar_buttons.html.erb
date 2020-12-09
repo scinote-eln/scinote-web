@@ -60,6 +60,7 @@
         <%= t("repositories.cancel_save") %>
       </button>
     </span>
+<<<<<<< HEAD
   <% elsif @repository.shared_with_read?(current_team) %>
     <p class="view-only-label"><%= t('repositories.index.view_only_permission_label') %></p>
   <% end %>
@@ -69,6 +70,12 @@
     <%= t('repository_row.modal_print_label.print_label') %>
 
   </button>
+=======
+  <% elsif @repository.shared_with?(current_team) %>
+    <p class="view-only-label"><%= t('repositories.index.view_only_permission_label') %></p>
+  <% end %>
+<% end %>
+>>>>>>> Pulled latest release
   <div class="archived-label" data-view-mode="archived">
     <% if @repository.active? %>
       <%= t('repositories.show.archived_view_label.active', repository_name: @repository.name) %>
@@ -85,6 +92,7 @@
       </table>
     <% end %>
   </div>
+<<<<<<< HEAD
 
   <% if can_manage_repository_filters?(@repository) %>
     <div class="repository-cog dropdown hidden" id="saveRepositoryFilters">
@@ -158,3 +166,6 @@
       </button>
     <% end %>
   <% end %>
+=======
+</div>
+>>>>>>> Pulled latest release

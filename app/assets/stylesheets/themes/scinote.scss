@@ -12,10 +12,6 @@ body,
   min-width: 320px;
 }
 
-#content-wrapper .container #notifications {
-  margin-left: -15px;
-}
-
 // Word wrapping everywhere, except for table header of "datatables.js"
 body,
 table.dataTable td {
@@ -30,7 +26,20 @@ table {
 }
 
 .btn-toggle {
-  @include button-variant($btn-toggle-color, $btn-toggle-bg, $btn-toggle-border);
+  background: $color-white;
+  border: $border-default;
+  color: $color-volcano;
+
+  &.active {
+    background: $brand-primary;
+    border: 1px solid $brand-primary;
+    box-shadow: none;
+    color: $color-white;
+
+    &.focus {
+      outline: 0;
+    }
+  }
 }
 
 #no-teams-jumbotron {
@@ -63,12 +72,6 @@ table {
   padding-left: 15px;
   padding-right: 15px;
   padding-top: 50px;
-}
-
-.content-pane {
-  background-color: $color-white;
-  margin: 20px 0;
-  padding: 25px 20px;
 }
 
 .spacer {
@@ -128,6 +131,14 @@ table {
 
 body {
   font-size: $font-size-small;
+}
+
+.modal-body {
+  font-size: $font-size-base;
+
+  label {
+    @include font-small;
+  }
 }
 
 .jumbotron {
@@ -284,11 +295,9 @@ a[data-toggle="tooltip"] {
 }
 
 .navbar-secondary {
-  background: $color-concrete !important;
   margin-left: -280px;
-  // padding-left: 294px;
   padding-left: 280px;
-  padding-right: 97px;
+  padding-right: 82px;
   margin-bottom: 0;
   border-color: transparent;
   border-bottom: 0;
@@ -311,7 +320,8 @@ a[data-toggle="tooltip"] {
   #secondary-menu {
     background: $color-white;
     border-bottom: 1px solid $color-gainsboro;
-    margin-top: 15px;
+    padding-left: 29px;
+    padding-top: 15px;
 
     .open > a,
     .open > a:hover,
@@ -347,6 +357,7 @@ a[data-toggle="tooltip"] {
 
       &.active {
         @include box-shadow(0 4px 0 $brand-primary);
+        line-height: 24px;
         margin-bottom: 4px;
 
         & > a,
@@ -381,20 +392,24 @@ a[data-toggle="tooltip"] {
   width: 100%;
 }
 
+.azure-sign-in-actions {
+  margin-bottom: 10px;
+  margin-top: 10px;
+
+  .btn-azure-ad {
+    background-color: $office-ms-word;
+    color: $color-white;
+  }
+}
+
 .navbar-secondary {
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
+  transition: .4s $timing-function-sharp;
 }
 
 .navbar-without-sidebar{
-  padding-left: 15px;
   margin-left: 0px;
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
+  padding-left: 0;
+  transition: .4s $timing-function-sharp;
 }
 
 /** Chat bubble */
@@ -413,9 +428,6 @@ a[data-toggle="tooltip"] {
 .tab-pane-settings {
   background-color: $color-white;
   padding: 15px;
-  border-left: 1px solid $color-alto;
-  border-right: 1px solid $color-alto;
-  border-bottom: 1px solid $color-alto;
 }
 
 .breadcrumb-teams {
@@ -464,34 +476,11 @@ a[data-toggle="tooltip"] {
   padding-bottom: 0;
 }
 
-.users-datatable {
-  margin-bottom: 20px;
-
-  #users-table_filter {
-    float: right;
-    margin-top: 19px;
-  }
-
-  #users-table_paginate {
-    float: right;
-  }
-
-  .dropdown-teams-user {
-    .dropdown-menu li.user-team-role {
-      & > :first-child {
-        padding-left: 10px;
-      }
-
-      &:not(.disabled) span.fas {
-        color: transparent !important;
-      }
-    }
-  }
-}
-
 .user-statistics {
+  margin-top: 1em;
+
   .list-inline {
-    margin-left: 15px;
+    margin-left: 0;
   }
 
   .label {
@@ -500,10 +489,8 @@ a[data-toggle="tooltip"] {
 
   li {
     height: 100px;
-    margin: 15px;
-    padding-bottom: 15px;
-    padding-left: 10px;
-    padding-right: 10px;
+    margin-bottom: 1em;
+    margin-right: 2em;
     width: 100px;
   }
 }
@@ -514,7 +501,7 @@ a[data-toggle="tooltip"] {
     margin-bottom: 15px;
   }
 
-  & > .btn-group {
+  > .sci-btn-group {
     margin-right: 30px;
   }
 }
@@ -532,15 +519,18 @@ a[data-toggle="tooltip"] {
 
 .protocols-datatable {
   .dataTables_wrapper {
-    margin-top: 15px;
     clear: both;
 
-    .dataTables_length {
-      float: left;
+    .main-actions,
+    .pagination-row {
+      display: flex;
     }
 
-    .dataTables_filter {
-      float: right;
+    .dataTables_filter,
+    .dataTables_info,
+    .dataTables_paginate,
+    .dataTables_length {
+      flex-grow: 1;
     }
   }
 
@@ -760,9 +750,50 @@ ul.double-line > li {
   }
 }
 
+#canvas-container {
+  .panel-heading {
+    padding: 10px 15px 4px;
+  }
+
+  .panel-body {
+    padding: 6px 15px;
+
+    .status-label {
+      background-color: var(--state-color);
+      color: $color-white;
+      display: inline-block;
+      margin: 3px 0;
+      max-width: 100%;
+      overflow: hidden;
+      padding: 2px 8px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .panel-footer {
+    .nav > li > a {
+      padding: 6px 15px;
+    }
+
+    .btn {
+      height: 30px;
+    }
+
+    .badge-indicator {
+      background: transparent;
+      color: $color-silver-chalice;
+      font-size: 12px;
+      margin-left: 0;
+      padding: 0;
+      top: 0;
+    }
+  }
+}
+
 .panel-options {
   position: relative;
-  bottom: 6px;
+  bottom: 8px;
 }
 
 .panel-footer {
@@ -906,19 +937,6 @@ ul.content-activities {
   }
 }
 
-.step {
-  .panel-heading a[data-toggle] {
-    color: inherit;
-  }
-
-  &.not-completed {
-    .badge-num > span.badge {
-      background-color: $color-silver;
-    }
-  }
-
-}
-
 .well {
   background-color: $color-white;
 }
@@ -933,14 +951,9 @@ ul.content-activities {
   flex-wrap: wrap;
   margin-bottom: 5px;
 
-  .protocol-button {
-    margin-bottom: 5px;
-  }
-
   .protocol-status-bar {
     display: flex;
-    height: 33px;
-    margin-bottom: 5px;
+    height: 40px;
     margin-right: 15px;
   }
 
@@ -948,7 +961,8 @@ ul.content-activities {
     border-color: $color-silver;
     box-shadow: none;
     display: inline-block;
-    height: 33px;
+    height: 36px;
+    margin: 2px 0;
 
     & > .panel-body {
       padding: 0 0 0 15px;
@@ -960,7 +974,7 @@ ul.content-activities {
 
     .link-button,
     .link-toggle {
-      height: 33px;
+      height: 36px;
       position: relative;
       right: -1px;
       top: -1px;
@@ -1132,38 +1146,21 @@ ul.content-activities {
     margin-left: 38px;
   }
 
-  .row {
-    padding: 0 20px;
+  .result-panel-collapse-link {
+    text-decoration: none;
+
+    &:not(.collapsed) .fas {
+      @include rotate(90deg);
+    }
+
+    .fas {
+      margin-right: 7px;
+      text-align: center;
+    }
   }
 
-  .badge-num {
-    position: absolute;
-
-    & > .badge {
-      background: $brand-primary;
-      border-radius: 2em;
-      float: left;
-      font-size: 23.4px;
-      padding: 6px 11px;
-      position: relative;
-      top: 2px;
-    }
-
-    .size-digit-2 {
-      font-size: 18px;
-      padding: 8px;
-    }
-
-    .size-digit-3 {
-      font-size: 14px;
-      padding: 10px 6px;
-    }
-
-    & > .badge.icon {
-      background-color: $color-silver;
-      font-size: 16.5px;
-      padding: 9px;
-    }
+  .row {
+    padding: 0 20px;
   }
 
   .panel-heading a[data-toggle] {
@@ -1187,51 +1184,6 @@ ul.content-activities {
   width: 100%;
 }
 
-/* Data table */
-
-table.dataTable {
-  background-color: $color-alabaster;
-  table-layout: initial;
-  text-overflow: initial;
-  width: 100%;
-  word-break: initial;
-
-  thead {
-    background-color: $color-silver-chalice;
-  }
-
-  thead > tr > th {
-    border-bottom-width: 0;
-    border-left: 2px solid $color-alabaster;
-    color: $color-white;
-    font-weight: normal;
-  }
-
-  thead > tr > th:first-child {
-    border-left: none;
-  }
-
-  thead > tr > th,
-  thead > tr > td {
-    padding: 8px;
-  }
-
-  tbody > tr.selected,
-  tbody > tr > .selected {
-    background-color: $color-alto !important;
-    color: $color-emperor !important;
-
-    a {
-      color: $brand-primary !important;
-    }
-  }
-
-  .sorting_desc,
-  .sorting_asc {
-    background-color: $brand-primary;
-  }
-}
-
 /* Helpers */
 .line-wrap {
   overflow: hidden;
@@ -1244,10 +1196,6 @@ table.dataTable {
     top: 6px;
     max-width: 78%;
   }
-}
-
-#samples_length {
-  display: inline-block;
 }
 
 .toolbarButtons {
@@ -1278,20 +1226,38 @@ table.dataTable {
 
 /* Overlay to disable interaction while loading ajax */
 .loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
   bottom: 0;
-  z-index: 1000000000;
   cursor: wait;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1000000000;
+
+  &::before {
+    background: $color-white;
+    content: "";
+    display: block;
+    height: 100%;
+    opacity: .5;
+    width: 100%;
+  }
+
+  &::after {
+    background-image: url("/images/medium/loading.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    content: "";
+    display: block;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
 }
 
-.loading-overlay-center {
+body > .loading-overlay {
   position: fixed;
-  left:50%;
-  top:50%;
-  z-index: 1000000000;
 }
 
 .turbolinks-progress-bar::before {
@@ -1325,6 +1291,7 @@ table.dataTable {
   border-bottom: 1px dotted $color-alto;
   cursor: help;
   display: inline-block;
+  pointer-events: auto;
 
   .modal-tooltiptext {
     background-color: $color-alto;
@@ -1384,41 +1351,46 @@ table.dataTable {
 //edit avatar
 .avatar-container {
   background-color: lighten($color-concrete, 2%);
-  height: 100px;
+  border-radius: 50%;
+  height: 5em;
   position: relative;
-  width: 100px;
-}
+  width: 5em;
 
-.avatar-container:hover .avatar-edit {
-  display: block;
-}
-
-.avatar-image {
-  left: 50%;
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.avatar-edit {
-  display: none;
-  margin-top: 70%;
-  opacity: .8;
-  position: absolute;
-  z-index: 10;
-
-  .btn-grey {
+  .avatar-edit {
     background-color: $color-silver-chalice;
-    border-color: $color-silver-chalice;
-    border-radius: 0;
-    color: $color-white;
-    width: 100px;
+    border-radius: inherit;
+    cursor: pointer;
+    display: none;
+    height: inherit;
+    opacity: .8;
+    position: absolute;
+    width: inherit;
+  }
 
-    &:hover,
-    &:focus {
-      background-color: darken($color-silver-chalice, 15%);
-      border-color: darken($color-silver-chalice, 15%);
-      color: $color-white;
+  .avatar-edit-text {
+    color: $color-white;
+    cursor: pointer;
+    display: none;
+    padding-top: 40%;
+    position: absolute;
+    text-align: center;
+    width: inherit;
+  }
+
+  &:hover {
+    .avatar-edit,
+    .avatar-edit-text {
+      display: block;
+    }
+  }
+
+  .avatar-image {
+    position: absolute;
+
+    img {
+      border-radius: 50%;
+      height: 100%;
+      width: 100%;
     }
   }
 }
@@ -1458,208 +1430,6 @@ table.dataTable {
   }
 }
 
-.attachment-thumbnail {
-  display: inline-block;
-  height: 160px;
-  margin: 16px 10px 5px;
-  overflow: hidden;
-  text-align: center;
-  width: 100%;
-
-  img {
-    border-radius: 5px;
-    max-height: 100%;
-    max-width: 100%;
-  }
-
-  .fas {
-    font-size: 100px;
-    line-height: 160px;
-  }
-
-  &.processing {
-    background-image: url("/images/medium/processing.gif");
-    background-position: center;
-    background-repeat: no-repeat;
-  }
-}
-
-// Image preview modal
-.modal-file-preview {
-  background: transparent;
-  font-size: $font-size-large;
-  padding-right: 0 !important;
-  z-index: 1060;
-
-  .preview-close {
-    background: transparent;
-    border: 0;
-    color: $color-white;
-    display: inline-block;
-    float: right;
-  }
-
-  .file-wopi-controls {
-    display: inline-block;
-
-    .btn {
-      margin: 0 15px;
-    }
-  }
-
-  .modal-dialog {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    width: auto;
-  }
-
-  .modal-content {
-    background: transparent;
-    border: 0;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-    color: $color-white;
-    height: 100%;
-    width: auto;
-  }
-
-  .file-preview-container {
-    align-items: center;
-    color: $gray-dark;
-    display: -moz-flex;
-    display: -webkit-flex;
-    display: flex;
-    height: 100%;
-    justify-content: center;
-    text-align: center;
-    width: 60%;
-
-    &.processing {
-      background-image: url("/images/medium/processing.gif");
-      background-position: center;
-      background-repeat: no-repeat;
-    }
-
-    .file-name {
-      color: $color-black;
-      margin: 30px 0;
-    }
-  }
-
-  img {
-    height: auto;
-    max-width: 100%;
-
-    @media (max-height: 520px) {
-      height: 80%;
-      max-width: 100%;
-    }
-  }
-
-  .modal-header {
-    background: $color-black;
-    border: 0;
-    height: 60px;
-    line-height: 40px;
-    text-align: center;
-
-    .file-name {
-      float: left;
-    }
-  }
-
-  .modal-body {
-    align-items: center;
-    display: -moz-flex;
-    display: -webkit-flex;
-    display: flex;
-    height: calc(100% - 120px);
-    justify-content: center;
-    overflow: hidden;
-    padding: 0;
-  }
-
-  .modal-footer {
-    background: $color-black;
-    border: 0;
-    bottom: 0;
-    height: 60px;
-    position: absolute;
-    text-align: center;
-    width: 100%;
-  }
-
-  .file-download-link {
-    color: $color-white;
-    display: inline-block;
-    float: right;
-    margin-right: 20px;
-  }
-
-  .file-edit-link {
-    color: $color-white;
-    display: inline-block;
-    float: right;
-    margin-right: 20px;
-  }
-}
-
-// Image edit modal
-.modal-file-edit {
-  background: transparent;
-  font-size: $font-size-large;
-  padding: 0 !important;
-
-  .preview-close {
-    background: transparent;
-    border: 0;
-    color: $color-white;
-    display: inline-block;
-    float: right;
-  }
-
-  .modal-dialog {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    width: auto;
-  }
-
-  .modal-content {
-    background: transparent;
-    border: 0;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-    color: $color-white;
-    height: 100%;
-    width: auto;
-  }
-
-  .modal-header {
-    background: $color-black;
-    border: 0;
-    height: 60px;
-    text-align: center;
-
-    .file-name {
-      float: left;
-    }
-  }
-
-  .modal-body {
-    height: calc(100% - 60px);
-    padding: 0;
-  }
-
-  .file-save-link {
-    color: $color-white;
-    display: inline-block;
-    float: right;
-    margin-right: 20px;
-  }
-}
-
 // Disable textarea resizing throughout application
 // (will be done via autosize JS plugin)
 textarea {
@@ -1671,7 +1441,7 @@ textarea.textarea-sm {
   min-height: 34px;
 
   &.form-control {
-    height: 34px;
+    height: 36px;
   }
 }
 
@@ -1695,120 +1465,6 @@ textarea.textarea-sm {
   }
 }
 
-// new smart dropdown styles
-
-.smart-dropdown {
-  overflow-y: auto;
-  padding: 0;
-  width: 300px;
-
-  .modal-tooltiptext {
-    margin-left: 0;
-    z-index: 99999999;
-  }
-
-  li:not(.dropdown-header) {
-    background: $color-white;
-    border: 1px solid $color-alto;
-    padding: 10px 10px 10px 0;
-    vertical-align: middle;
-  }
-
-  li.dropdown-header {
-    padding-left: 30px;
-  }
-
-  [data-position] {
-    cursor: -webkit-grab;
-    cursor: grab;
-  }
-
-  .ui-sortable-helper {
-    cursor: -webkit-grabbing;
-    cursor: grabbing;
-  }
-
-  .form-group {
-    margin-bottom: 0;
-    margin-left: 10px;
-  }
-
-  .grippy {
-    background-repeat: none;
-    display: inline-block;
-    height: 19px;
-    margin-top: 5px;
-    width: 10px;
-  }
-
-  li:not(.editing) .grippy-img {
-    background: url(asset-path('custom/grippy.png'));
-  }
-
-  .text {
-    display: inline-block;
-    padding-left: 15px;
-    padding-top: 5px;
-    position: absolute;
-  }
-
-  .text-edit {
-    display: inline-block;
-    margin-left: 2px;
-    margin-top: -2.5px;
-    position: absolute;
-    width: 180px;
-  }
-
-  .col-invisible {
-    color: $color-alto;
-  }
-
-  .controls {
-    display: inline-block;
-    margin-top: 5px;
-
-    span {
-      cursor: pointer;
-
-      &.disabled {
-        visibility: hidden;
-      }
-
-      &:hover {
-        color: $color-emperor;
-      }
-    }
-
-    .ok {
-      color: $brand-default;
-      margin-right: 5px;
-    }
-
-    .cancel {
-      margin-left: 5px;
-      margin-right: 15px;
-    }
-
-    .vis {
-      margin-right: 5px;
-    }
-
-    .edit {
-      margin-right: 5px;
-    }
-
-    .del {
-    }
-  }
-
-  .help-block {
-    display: inline-block;
-    margin-bottom: 0;
-    margin-left: 25px;
-  }
-}
-
 .add-new-column-form .help-block {
   margin-left: 0;
 }
@@ -1820,191 +1476,6 @@ th.custom-field .modal-tooltiptext {
 
 .disable-click {
   pointer-events: none;
-}
-
-// AtWho (smart annotations)
-
-// <Custom atwho style>
-.atwho-view {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: none;
-  margin-top: 18px;
-  background: $color-white;
-  color: $color-black;
-  border: 1px solid $color-emperor;
-  border-radius: 3px;
-  box-shadow: 0 0 5px $color-gainsboro;
-  max-width: 800px;
-  min-width: 700px;
-  overflow: auto;
-  z-index: 11110 !important;
-
-  small {
-    font-size: smaller;
-    color: $color-emperor;
-    font-weight: normal;
-  }
-
-  strong {
-    color: $brand-primary;
-  }
-
-  .cur {
-    background: $brand-primary;
-    color: $color-white;
-
-    small {
-      color: $color-white;
-    }
-
-    strong {
-      color: $color-white;
-      font: bold;
-    }
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: auto;
-
-    li {
-      align-items: center;
-      border-bottom: 1px solid $color-emperor;
-      cursor: pointer;
-      display: flex;
-      padding: 5px 10px;
-
-      .global-avatar-container {
-        margin-right: 5px;
-      }
-    }
-  }
-}
-// <End of overrides>
-
-.atwho-header-res {
-  background-color: $color-concrete;
-  border-bottom: 1px solid $color-emperor;
-  display: flex;
-  flex-wrap: wrap;
-  padding: 3px 5px;
-
-  .btn {
-    border-radius: 4px;
-    margin: 5px;
-    padding: 3px;
-  }
-
-  .btn-default {
-    background-color: transparent;
-  }
-
-  .title-user {
-    padding-top: 4px;
-  }
-
-  .help {
-    margin-left: auto;
-    margin-right: 15px;
-    order: 99;
-    padding: 4px;
-    white-space: nowrap;
-
-    div {
-      display: inline;
-      font-size: smaller;
-      margin-left: 15px;
-    }
-
-    strong {
-      color: $color-black;
-    }
-  }
-
-  .dismiss {
-    color: $color-emperor;
-    position: absolute;
-    right: 5px;
-    top: 5px;
-  }
-
-  .dismiss:hover {
-    color: $color-black;
-    cursor: pointer;
-  }
-}
-
-
-.atwho-li-res {
-
-  .fa-tint {
-    margin-left: 5px;
-    margin-right: 5px;
-  }
-
-  .res-type {
-    border: 1px solid $color-black;
-    border-radius: 4px;
-    font-weight: 600;
-    margin-left: 5px;
-    margin-right: 5px;
-    padding: 0 2px;
-    text-transform: capitalize;
-  }
-
-  .res-name {
-    font-weight: 600;
-    margin-right: 5px;
-  }
-
-  .res-description {
-    color: $color-emperor;
-    font-size: 10px;
-  }
-}
-
-.sa-type {
-  border: 1px solid $color-emperor;
-  border-radius: 4px;
-  font-weight: 600;
-  padding: 0 2px;
-  text-decoration: none;
-  text-transform: capitalize;
-
-  &:hover {
-    text-decoration: none;
-  }
-}
-
-.atwho-user-container {
-  align-items: center;
-  display: inline-flex;
-
-  .global-avatar-container {
-    line-height: 30px;
-    margin: 0 2px 0 4px;
-
-    img {
-      position: relative;
-      top: -2px;
-    }
-  }
-}
-
-.atwho-user-popover {
-  cursor: pointer;
-  display: inline-block;
-}
-
-.atwho-user-img-popover {
-  cursor: not-allowed;
-}
-
-.atwho-no-results {
-  padding: 5px 10px;
 }
 
 .popover {
@@ -2054,10 +1525,6 @@ th.custom-field .modal-tooltiptext {
   background-color: $color-alto;
 }
 
-.my_module-state-buttons {
-  padding-top: 6px;
-}
-
 .parse-records-table {
   max-height: 200px;
 }
@@ -2073,28 +1540,6 @@ a.disabled-with-click-events {
   cursor: not-allowed;
 }
 
-#alert-flash {
-
-  button {
-    margin-right: 400px;
-  }
-
-  .fas {
-    margin-left: 100px;
-  }
-
-  @media(max-width:768px) {
-
-    button {
-      display: none;
-    }
-
-    .fas {
-      margin-left: 10px;
-    }
-  }
-}
-
 .linkedin-signin-button {
   margin: 15px 0;
 }
@@ -2108,7 +1553,7 @@ a.disabled-with-click-events {
   margin-bottom: 45px;
 
   .doorkeeper-scinote-logo {
-    background-image: asset-url("/images/scinote_icon.jpg");
+    background-image: asset-url("/images/doorkeeper_auth.png");
     background-position: center center;
     background-repeat: no-repeat;
     background-size: contain;
@@ -2123,9 +1568,4 @@ a.disabled-with-click-events {
     padding-left: 3px;
   }
 
-}
-
-/* 2018JS Add this to overwrite default bootstrap behavior */
-.navbar-default .navbar-nav > li > a {
-  color: #ffffff;
 }

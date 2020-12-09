@@ -1,28 +1,22 @@
 class ProjectsController < ApplicationController
-  include SampleActions
   include RenamingUtil
   include TeamsHelper
   include InputSanitizeHelper
-  include RapProgramLevelHelper
 
+  before_action :switch_team_with_param, only: :index
   before_action :load_vars, only: %i(show edit update
                                      notifications reports
-                                     samples experiment_archive
-                                     delete_samples samples_index)
-  before_action :load_projects_tree, only: %i(sidebar show samples archive
+                                     experiment_archive)
+  before_action :load_projects_tree, only: %i(sidebar show archive
                                               experiment_archive)
   before_action :check_view_permissions, only: %i(show reports notifications
-                                                  samples experiment_archive
-                                                  samples_index)
+                                                  experiment_archive)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
   before_action :set_inline_name_editing, only: %i(show experiment_archive)
 
   # except parameter could be used but it is not working.
   layout 'fluid'
-
-  # Action defined in SampleActions
-  DELETE_SAMPLES = 'Delete'.freeze
 
   def index
     respond_to do |format|
@@ -41,12 +35,9 @@ class ProjectsController < ApplicationController
         }
       end
       format.html do
-        current_team_switch(Team.find_by_id(params[:team])) if params[:team]
         @teams = current_user.teams
         # New project for create new project modal
         @project = Project.new
-        # Get all RAP Program Level values for dropdown.
-        @programs = RapProgramLevel.all
         if current_team
           view_state =
             current_team.current_view_state(current_user)
@@ -71,12 +62,32 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def dt_state_load
+    respond_to do |format|
+      format.json do
+        render json: {
+          state: current_team.current_view_state(current_user)
+            .state.dig('projects', 'table')
+        }
+      end
+    end
+  end
+
   def sidebar
+    current_task ||= current_task || nil
+    current_experiment ||= current_experiment || current_task&.experiment || nil
+    current_project ||= current_experiment&.project || current_task&.experiment&.project || nil
+
     respond_to do |format|
       format.json do
         render json: {
           html: render_to_string(
             partial: 'shared/sidebar/projects.html.erb',
+            locals: {
+              current_project: current_project,
+              current_experiment: current_experiment,
+              current_task: current_task
+            },
             formats: :html
           )
         }
@@ -86,13 +97,9 @@ class ProjectsController < ApplicationController
 
   def new
     @project = Project.new
-    # Get all RAP Program Level values for dropdown.
-    @programs = RapProgramLevel.all
   end
 
   def create
-    # Get all RAP Program Level values for dropdown.
-    @programs = RapProgramLevel.all
     @project = Project.new(project_params)
     @project.created_by = current_user
     @project.last_modified_by = current_user
@@ -123,6 +130,7 @@ class ProjectsController < ApplicationController
   end
 
   def edit
+<<<<<<< HEAD
     # From the project's RAP Task Level ID, cascade upwards to get each parent RAP Level ID.
     # Task Level < Project Level < Topic Level < Program Level
     t_rap_task_level_id = @project.rap_task_level_id
@@ -137,13 +145,14 @@ class ProjectsController < ApplicationController
     opt_rap_tasks = RapTaskLevel.where(rap_project_level_id: t_rap_project_level_id)
     puts "RAP IDs for this Project: #{t_rap_program_level_id} #{t_rap_topic_level_id} #{t_rap_project_level_id} #{t_rap_task_level_id}"
 
+=======
+>>>>>>> Pulled latest release
     respond_to do |format|
       format.json {
         render json: {
           html: render_to_string({
             partial: "edit.html.erb",
-            locals: { project: @project, sel_rap_ids: sel_rap_ids, opt_rap_programs: opt_rap_programs,
-              opt_rap_topics: opt_rap_topics, opt_rap_projects: opt_rap_projects, opt_rap_tasks: opt_rap_tasks }
+            locals: { project: @project }
           }),
           title: t('projects.index.modal_edit_project.modal_title',
                    project: escape_input(@project.name))
@@ -273,46 +282,14 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def samples
-    @samples_index_link = samples_index_project_path(@project, format: :json)
-    @team = @project.team
-  end
-
   def experiment_archive
     current_team_switch(@project.team)
-  end
-
-  def samples_index
-    @team = @project.team
-    @user = current_user
-    respond_to do |format|
-      format.html
-      format.json do
-        render json: ::SampleDatatable.new(view_context,
-                                           @team,
-                                           @project,
-                                           nil,
-                                           nil,
-                                           @user)
-      end
-    end
-  end
-
-  def dt_state_load
-    respond_to do |format|
-      format.json do
-        render json: {
-          state: current_team.current_view_state(current_user)
-            .state.dig('projects', 'table')
-        }
-      end
-    end
   end
 
   private
 
   def project_params
-    params.require(:project).permit(:name, :team_id, :visibility, :archived, :rap_task_level_id)
+    params.require(:project).permit(:name, :team_id, :visibility, :archived)
   end
 
   def load_vars
@@ -330,7 +307,7 @@ class ProjectsController < ApplicationController
       @current_team = current_team if current_team
       @current_team ||= current_user.teams.first
       @current_sort ||= 'new'
-      @projects_tree = current_user.projects_tree(@current_team, @current_sort)
+      @projects_tree = current_user.projects_tree(@current_team, 'atoz')
     else
       @projects_tree = []
     end
@@ -353,6 +330,7 @@ class ProjectsController < ApplicationController
     @inline_editable_title_config = {
       name: 'title',
       params_group: 'project',
+      item_id: @project.id,
       field_to_udpate: 'name',
       path_to_update: project_path(@project)
     }

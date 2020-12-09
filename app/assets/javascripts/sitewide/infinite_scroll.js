@@ -47,6 +47,11 @@ var InfiniteScroll = (function() {
 
     if (config.loadFirstPage) {
       loadData($container, 1);
+<<<<<<< HEAD
+=======
+    } else if (scrollNotVisible($container)) {
+      loadData($container, $container.data('next-page'));
+>>>>>>> Pulled latest release
     }
 
     $container.on('scroll', () => {

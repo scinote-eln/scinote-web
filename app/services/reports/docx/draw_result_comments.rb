@@ -3,6 +3,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 module Reports::Docx::DrawResultComments
+<<<<<<< HEAD
   def draw_result_comments(result)
     comments = result.result_comments.order(created_at: :desc)
     return if comments.blank?
@@ -13,6 +14,9 @@ module Reports::Docx::DrawResultComments
 >>>>>>> Initial commit of 1.17.2 merge
   def draw_result_comments(subject)
     result = Result.find_by_id(subject['id']['result_id'])
+=======
+  def draw_result_comments(subject, result)
+>>>>>>> Pulled latest release
     return unless result
 
     comments = result.result_comments.order(created_at: subject['sort_order'])
@@ -30,11 +34,16 @@ module Reports::Docx::DrawResultComments
                      time: I18n.l(comment_ts, format: :time)), italic: true
       html = custom_auto_link(comment.message, team: @report_team)
 <<<<<<< HEAD
+<<<<<<< HEAD
       Reports::HtmlToWordConverter.new(@docx, { scinote_url: @scinote_url,
                                                 link_style: @link_style }).html_to_word_converter(html)
 =======
       html_to_word_converter(html)
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+      Reports::HtmlToWordConverter.new(@docx, { scinote_url: @scinote_url,
+                                                link_style: @link_style }).html_to_word_converter(html)
+>>>>>>> Pulled latest release
       @docx.p
     end
   end

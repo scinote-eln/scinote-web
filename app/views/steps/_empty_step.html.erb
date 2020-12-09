@@ -33,6 +33,7 @@
                             id: :step_description_textarea,
                             hide_label: false,
                             value: sanitize_input(@step.tinymce_render(:description)),
+                            autocomplete: 'off',
                             data: {
                               object_type: 'step',
                               object_id: @step.id,
@@ -51,9 +52,7 @@
   </div>
   <div class="tab-pane" role="tabpanel" id="new-step-assets">
     <div class="text-center new-asset-box">
-      <span class="help_tooltips"
-            data-tooltiplink="<%= I18n.t('tooltips.link.protocol.step_add_files') %>"
-            data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.step_add_files') %>">
+      <span>
       <%=t 'assets.drag_n_drop.label_html' %>
       <label>
         <span class="btn btn-default new-asset-upload-button">
@@ -73,8 +72,8 @@
     <div id="new-step-assets-group" class="form-group">
       <div class="col-xs-12 attachments edit">
         <%= f.nested_fields_for :assets do |ff| %>
-          <%= render partial: 'shared/asset_placeholder.html.erb',
-                     locals: { edit_page: true, asset: ff.object, ff: ff } %>
+            <%= render partial: 'steps/attachments/edit_item.html.erb',
+                       locals: { asset: ff.object, ff: ff } %>
       <% end %>
       </div>
     </div>

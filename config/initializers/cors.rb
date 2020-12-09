@@ -6,6 +6,9 @@
 # Read more: https://github.com/cyu/rack-cors
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Pulled latest release
 if ENV['SCINOTE_PWA_DOMAIN_NAME'].present?
   Rails.application.config.middleware.insert_before 0, Rack::Cors do
     allow do
@@ -25,6 +28,7 @@ if ENV['SCINOTE_PWA_DOMAIN_NAME'].present?
     end
   end
 end
+<<<<<<< HEAD
 =======
 # Rails.application.config.middleware.insert_before 0, Rack::Cors do
 #   allow do
@@ -36,3 +40,5 @@ end
 #   end
 # end
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+>>>>>>> Pulled latest release

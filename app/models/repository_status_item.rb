@@ -11,6 +11,7 @@ class RepositoryStatusItem < ApplicationRecord
              inverse_of: :modified_repository_status_types
   has_many :repository_status_values, inverse_of: :repository_status_item, dependent: :destroy
 
+<<<<<<< HEAD
   before_destroy :update_table_fiter_elements
 
   def data
@@ -25,4 +26,9 @@ class RepositoryStatusItem < ApplicationRecord
       filter_element.parameters['item_ids'].blank? ? filter_element.destroy! : filter_element.save!
     end
   end
+=======
+  def data
+    "#{icon} #{status}"
+  end
+>>>>>>> Pulled latest release
 end

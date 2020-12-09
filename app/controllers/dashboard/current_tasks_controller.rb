@@ -15,11 +15,17 @@ module Dashboard
               elsif @project
                 MyModule.active.where(projects: { id: @project.id })
               else
+<<<<<<< HEAD
                 MyModule.active
               end
 
       tasks = tasks.viewable_by_user(current_user, current_team)
 
+=======
+                MyModule.active.viewable_by_user(current_user, current_team)
+              end
+
+>>>>>>> Pulled latest release
       tasks = tasks.joins(experiment: :project)
                    .where(experiments: { archived: false })
                    .where(projects: { archived: false })
@@ -28,7 +34,11 @@ module Dashboard
         tasks = tasks.left_outer_joins(:user_my_modules).where(user_my_modules: { user_id: current_user.id })
       end
 
+<<<<<<< HEAD
       tasks = tasks.where(my_module_status_id: task_filters[:statuses]) if task_filters[:statuses].present?
+=======
+      tasks = tasks.where(my_module_status_id: task_filters[:statuses])
+>>>>>>> Pulled latest release
 
       case task_filters[:sort]
       when 'start_date'

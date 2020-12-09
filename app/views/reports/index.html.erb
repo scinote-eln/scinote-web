@@ -14,11 +14,11 @@
             <span class="fas fa-plus" aria-hidden="true"></span>
             <span class="hidden-xs"><%=t "projects.reports.index.new" %></span>
           <% end %>
-          <%= link_to "", remote: true, class: "btn btn-default", id: "edit-report-btn" do %>
+          <%= link_to "", remote: true, class: "btn btn-light disabled hidden", id: "edit-report-btn" do %>
             <span class="fas fa-pencil-alt" aria-hidden="true"></span>
             <span class="hidden-xs"><%=t "projects.reports.index.edit" %></span>
           <% end %>
-          <%= link_to "", remote: true, class: "btn btn-default", id: "delete-reports-btn" do %>
+          <%= link_to "", remote: true, class: "btn btn-light disabled hidden", id: "delete-reports-btn" do %>
             <span class="fas fa-times" aria-hidden="true"></span>
             <span class="hidden-xs"><%=t "projects.reports.index.delete" %></span>
           <% end %>
@@ -34,7 +34,12 @@
                  data-source="<%= reports_datatable_path(format: :json) %>">
             <thead>
               <tr>
-                <th id="select-all"><input name="select_all" type="checkbox"></th>
+                <th id="select-all">
+                  <div class="sci-checkbox-container">
+                    <input name="select_all" type="checkbox" class="sci-checkbox">
+                    <span class="sci-checkbox-label"></span>
+                  </div>
+                </th>
                 <th id="project-name"><%=t 'projects.reports.index.thead_project_name' %></th>
                 <th id="report-name"><%=t 'projects.reports.index.thead_name' %></th>
                 <th id="report-created-by"><%=t 'projects.reports.index.thead_created_by' %></th>
@@ -97,9 +102,9 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
         <button id="new-report-reports-btn"
-                class="btn btn-success"
+                class="btn btn-primary"
                 data-new-report-path="<%= @visible_projects.first.path if @visible_projects.first %>"
                 <%= 'disabled' unless @visible_projects&.length > 0 %>
                 ><%=t 'projects.reports.index.modal_new.create' %></button>

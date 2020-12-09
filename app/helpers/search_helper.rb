@@ -25,11 +25,11 @@ module SearchHelper
     if search_team != current_team
       link_to text,
               path,
-              class: 'btn btn-success',
+              class: 'btn btn-primary',
               data: { confirm: t('users.settings.changed_team_in_search',
                                  team: search_team.name) }
     else
-      link_to text, path, class: 'btn btn-success'
+      link_to text, path, class: 'btn btn-primary'
     end
   end
 end

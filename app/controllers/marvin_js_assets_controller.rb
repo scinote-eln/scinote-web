@@ -3,9 +3,13 @@
 class MarvinJsAssetsController < ApplicationController
   include MarvinJsActions
 <<<<<<< HEAD
+<<<<<<< HEAD
   include ActiveStorage::SetCurrent
 =======
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+  include ActiveStorage::SetCurrent
+>>>>>>> Pulled latest release
 
   before_action :load_vars, except: :create
   before_action :load_create_vars, only: :create
@@ -21,10 +25,14 @@ class MarvinJsAssetsController < ApplicationController
     if result[:asset] && marvin_params[:object_type] == 'Step'
       render json: {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Pulled latest release
         html: render_to_string(partial: 'assets/asset.html.erb', locals: {
                                  asset: result[:asset],
                                  gallery_view_id: marvin_params[:object_id]
                                })
+<<<<<<< HEAD
 =======
         html: render_to_string(
           partial: 'steps/attachments/item.html.erb',
@@ -36,6 +44,8 @@ class MarvinJsAssetsController < ApplicationController
                        order_ztoa: 0 }
         )
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+>>>>>>> Pulled latest release
       }
     elsif result[:asset] && marvin_params[:object_type] == 'Result'
       @my_module = result[:object].my_module
@@ -74,10 +84,14 @@ class MarvinJsAssetsController < ApplicationController
 
   def load_vars
 <<<<<<< HEAD
+<<<<<<< HEAD
     @asset = current_team.assets.find_by(id: params[:id])
 =======
     @asset = current_team.assets.find_by_id(params[:id])
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+    @asset = current_team.assets.find_by(id: params[:id])
+>>>>>>> Pulled latest release
     return render_404 unless @asset
 
     @assoc ||= @asset.step
@@ -92,12 +106,17 @@ class MarvinJsAssetsController < ApplicationController
 
   def load_create_vars
 <<<<<<< HEAD
+<<<<<<< HEAD
     @assoc = Step.find_by(id: marvin_params[:object_id]) if marvin_params[:object_type] == 'Step'
     @assoc = MyModule.find_by(id: params[:object_id]) if marvin_params[:object_type] == 'Result'
 =======
     @assoc = Step.find_by_id(marvin_params[:object_id]) if marvin_params[:object_type] == 'Step'
     @assoc = MyModule.find_by_id(params[:object_id]) if marvin_params[:object_type] == 'Result'
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+    @assoc = Step.find_by(id: marvin_params[:object_id]) if marvin_params[:object_type] == 'Step'
+    @assoc = MyModule.find_by(id: params[:object_id]) if marvin_params[:object_type] == 'Result'
+>>>>>>> Pulled latest release
 
     if @assoc.class == Step
       @protocol = @assoc.protocol

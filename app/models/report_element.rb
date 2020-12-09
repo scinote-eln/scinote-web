@@ -33,7 +33,8 @@ class ReportElement < ApplicationRecord
   belongs_to :checklist, inverse_of: :report_elements, optional: true
   belongs_to :asset, inverse_of: :report_elements, optional: true
   belongs_to :table, inverse_of: :report_elements, optional: true
-  belongs_to :repository, inverse_of: :report_elements, optional: true
+  belongs_to :repository, inverse_of: :report_elements, optional: true,
+             foreign_key: :repository_id, class_name: 'RepositoryBase'
 
   def has_children?
     children.length > 0

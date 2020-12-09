@@ -177,12 +177,15 @@ function expandAllSteps() {
     renderTable($(this));
   });
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   $(document).find('span.collapse-step-icon').each(function() {
     $(this).addClass('fa-caret-square-up');
     $(this).removeClass('fa-caret-square-down');
   });
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+>>>>>>> Pulled latest release
 }
 
 function handleFormSubmit(modal) {

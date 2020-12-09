@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 class RepositoryDateTimeRangeValue < RepositoryDateTimeRangeValueBase
+<<<<<<< HEAD
   def data_different?(new_data)
+=======
+  PRELOAD_INCLUDE = :repository_date_time_range_value
+
+  def data_changed?(new_data)
+>>>>>>> Pulled latest release
     data = new_data.is_a?(String) ? JSON.parse(new_data).symbolize_keys : new_data
     st = Time.zone.parse(data[:start_time])
     et = Time.zone.parse(data[:end_time])
@@ -12,6 +18,7 @@ class RepositoryDateTimeRangeValue < RepositoryDateTimeRangeValueBase
     super(:full_with_comma)
   end
 
+<<<<<<< HEAD
   def self.add_filter_condition(repository_rows, join_alias, filter_element)
     parameters = filter_element.parameters
     case filter_element.operator
@@ -38,6 +45,8 @@ class RepositoryDateTimeRangeValue < RepositoryDateTimeRangeValueBase
     end
   end
 
+=======
+>>>>>>> Pulled latest release
   def self.new_with_payload(payload, attributes)
     data = payload.is_a?(String) ? JSON.parse(payload).symbolize_keys : payload
 

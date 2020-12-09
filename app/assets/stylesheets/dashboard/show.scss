@@ -12,20 +12,33 @@
 
 .dashboard-view {
   --dashboard-widgets-gap: 30px;
+<<<<<<< HEAD
   padding: 15px
            var(--dashboard-widgets-gap)
            15px
+=======
+  padding: calc(var(--dashboard-widgets-gap) / 2)
+           calc(var(--dashboard-widgets-gap) / 2)
+>>>>>>> Pulled latest release
            var(--dashboard-widgets-gap);
 }
 
 .dashboard-header {
+<<<<<<< HEAD
   padding-bottom: 15px;
+=======
+  padding-bottom: calc(var(--dashboard-widgets-gap) / 2);
+>>>>>>> Pulled latest release
 }
 
 .dashboard-container {
   --widget-header-size: 44px;
   display: grid;
+<<<<<<< HEAD
   grid-auto-rows: 26em;
+=======
+  grid-auto-rows: 30em;
+>>>>>>> Pulled latest release
   grid-column-gap: var(--dashboard-widgets-gap);
   grid-row-gap: var(--dashboard-widgets-gap);
   grid-template-columns: repeat(auto-fit, minmax(7em, 1fr));
@@ -100,6 +113,7 @@
 
 @media (max-height: 800px) {
   .dashboard-container {
+<<<<<<< HEAD
     grid-auto-rows: 20em;
   }
 
@@ -111,10 +125,25 @@
 @media (min-height: 1080px) {
   .dashboard-container {
     grid-auto-rows: 32em;
+=======
+    grid-auto-rows: 24em;
+  }
+}
+
+@media (min-height: 1300px) {
+  .dashboard-container {
+    grid-auto-rows: 36em;
+>>>>>>> Pulled latest release
   }
 }
 
 @media (max-width: 700px) {
+<<<<<<< HEAD
+=======
+  .dashboard-view {
+    --dashboard-widgets-gap: 15px;
+  }
+>>>>>>> Pulled latest release
 
   .dashboard-container {
     --widget-header-size: 72px;

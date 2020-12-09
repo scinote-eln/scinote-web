@@ -12,7 +12,7 @@ module Api
 
       def index
         cells = @inventory_item.repository_cells
-                               .includes(Extends::REPOSITORY_SEARCH_INCLUDES)
+                               .preload(@inventory.cell_preload_includes)
                                .page(params.dig(:page, :number))
                                .per(params.dig(:page, :size))
         render jsonapi: cells, each_serializer: InventoryCellSerializer

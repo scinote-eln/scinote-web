@@ -7,11 +7,14 @@
       $('#wrapper').removeClass('hidden2');
       $('#wrapper').css('paddingLeft', '280px');
       $('.navbar-secondary').css(
-        <%# @@@20180627JS Get rid of this padding, from 294px to 280px %>
         { 'margin-left': '-280px', 'padding-left': '280px' }
       );
       $('#sidebar-arrow').attr('data-shown', '');
       sessionStorage.setItem(STORAGE_TOGGLE_KEY, "un-toggled");
+      $('#wrapper').trigger('sideBar::show');
+      $('#wrapper').one("transitionend", function() {
+        $('#wrapper').trigger('sideBar::shown');
+      })
     }
 
     function hide() {
@@ -19,11 +22,14 @@
       $('#wrapper').css('paddingLeft', '0');
       $('.navbar-secondary').css({
         'margin-left': '0',
-        <%# @@@20180627JS Get rid of this padding, from 14px to 0px %>
         'padding-left': '0'
       });
       $('#sidebar-arrow').removeAttr('data-shown');
       sessionStorage.setItem(STORAGE_TOGGLE_KEY, "toggled");
+      $('#wrapper').trigger('sideBar::hide');
+      $('#wrapper').one("transitionend", function() {
+        $('#wrapper').trigger('sideBar::hidden');
+      })
     }
 
     function toggle() {
@@ -58,6 +64,6 @@
   })();
 
   if (SideBarToggle.isToggledStorage()) {
-    SideBarToggle.hide();;
+    SideBarToggle.hide();
   }
 })(window);

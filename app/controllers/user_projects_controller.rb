@@ -3,7 +3,7 @@ class UserProjectsController < ApplicationController
   include InputSanitizeHelper
 
   before_action :load_vars
-  before_action :load_up_var, only: %i(update destroy)
+  before_action :load_user_project, only: %i(update destroy)
   before_action :check_view_permissions, only: :index
   before_action :check_manage_users_permissions, only: :index_edit
   before_action :check_create_permissions, only: :create
@@ -26,9 +26,9 @@ class UserProjectsController < ApplicationController
   end
 
   def index_edit
-    @users = @project.user_projects
+    @user_projects = @project.user_projects
     @unassigned_users = @project.unassigned_users
-    @up = UserProject.new(project: @project)
+    @new_user_project = UserProject.new(project: @project)
 
     respond_to do |format|
       format.json do
@@ -48,10 +48,10 @@ class UserProjectsController < ApplicationController
   end
 
   def create
-    @up = UserProject.new(up_params.merge(project: @project))
-    @up.assigned_by = current_user
+    @user_project = @project.user_projects.new(user_project_params)
+    @user_project.assigned_by = current_user
 
-    if @up.save
+    if @user_project.save
       log_activity(:assign_user_to_project)
 
       respond_to do |format|
@@ -61,23 +61,23 @@ class UserProjectsController < ApplicationController
       end
     else
       error = t('user_projects.create.can_add_user_to_project')
-      error = t('user_projects.create.select_user_role') unless @up.role
+      error = t('user_projects.create.select_user_role') unless @user_project.role
 
       respond_to do |format|
-        format.json {
-          render :json => {
+        format.json do
+          render json: {
             status: 'error',
             error: error
           }
-        }
+        end
       end
     end
   end
 
   def update
-    @up.role = up_params[:role]
+    @user_project.role = user_project_params[:role]
 
-    if @up.save
+    if @user_project.save
       log_activity(:change_user_role_on_project)
 
       respond_to do |format|
@@ -90,7 +90,7 @@ class UserProjectsController < ApplicationController
         format.json do
           render json: {
             status: 'error',
-            errors: @up.errors
+            errors: @user_project.errors
           }
         end
       end
@@ -98,20 +98,20 @@ class UserProjectsController < ApplicationController
   end
 
   def destroy
-    if @up.destroy
+    if @user_project.destroy
       log_activity(:unassign_user_from_project)
       respond_to do |format|
         format.json do
           redirect_to project_users_edit_path(format: :json),
                       turbolinks: false,
-                      status: 303
+                      status: :see_other
         end
       end
     else
       respond_to do |format|
         format.json do
           render json: {
-            errors: @up.errors
+            errors: @user_project.errors
           }
         end
       end
@@ -121,13 +121,13 @@ class UserProjectsController < ApplicationController
   private
 
   def load_vars
-    @project = Project.find_by_id(params[:project_id])
+    @project = Project.find_by(id: params[:project_id])
     render_404 unless @project
   end
 
-  def load_up_var
-    @up = UserProject.find(params[:id])
-    render_404 unless @up
+  def load_user_project
+    @user_project = @project.user_projects.find(params[:id])
+    render_404 unless @user_project
   end
 
   def check_view_permissions
@@ -139,19 +139,14 @@ class UserProjectsController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 unless can_create_projects?(current_team)
+    render_403 unless can_manage_project?(@project)
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_project?(@project) &&
-                      @up.user_id != current_user.id
+    render_403 unless can_manage_project?(@project) && @user_project.user_id != current_user.id
   end
 
-  def init_gui
-    @users = @project.unassigned_users
-  end
-
-  def up_params
+  def user_project_params
     params.require(:user_project).permit(:user_id, :project_id, :role)
   end
 
@@ -163,7 +158,7 @@ class UserProjectsController < ApplicationController
             team: @project.team,
             project: @project,
             message_items: { project: @project.id,
-                             user_target: @up.user.id,
-                             role: @up.role_str })
+                             user_target: @user_project.user.id,
+                             role: @user_project.role_str })
   end
 end

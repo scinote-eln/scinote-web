@@ -25,12 +25,6 @@ var renderFormError = function(ev, input, errMsgs, clearErr, errAttributes) {
       $form.clearFormErrors();
     }
 
-    // Mark error form group
-    var $formGroup = $(input).closest('.form-group');
-    if (!$formGroup.hasClass('has-error')) {
-      $formGroup.addClass('has-error');
-    }
-
     // Add error message/s
     var errorText = ($.makeArray(errMsgs).map(function(m) {
       if( m instanceof Array ) {
@@ -40,9 +34,16 @@ var renderFormError = function(ev, input, errMsgs, clearErr, errAttributes) {
       }
 
     })).join('<br />');
+
+    // Mark error form group
+    var $formGroup = $(input).closest('.form-group');
+    if (!$formGroup.hasClass('has-error')) {
+      $formGroup.addClass('has-error');
+    }
+
     var $errSpan = "<span class='help-block'" +
       errAttributes + '>' + errorText + '</span>';
-    $formGroup.append($errSpan);
+    $(input).after($errSpan);
   }
 
   var $parent;

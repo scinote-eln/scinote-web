@@ -63,8 +63,12 @@ tinymce.PluginManager.add('placeholder', function(editor) {
 >>>>>>> Finished merging. Test on dev machine (iMac).
 =======
 
+<<<<<<< HEAD
       // calculatePlaceholderPosition();
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+      calculatePlaceholderPosition();
+>>>>>>> Pulled latest release
     }
 
     function onKeydown() {

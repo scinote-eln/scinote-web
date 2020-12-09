@@ -1,8 +1,12 @@
 @import 'constants';
 @import "mixins";
 
+:root {
+  --navbar-height: 51px;
+}
+
 #main-nav {
-  box-shadow: 0 3px 6px $color-alto;
+  box-shadow: $flyout-shadow;
   margin-bottom: 0;
 }
 
@@ -11,7 +15,7 @@
   padding-left: 15px;
 
   .fa-bell {
-    font-size: $font-size-large;
+    font-size: 16px;
   }
 
   #count-notifications {
@@ -40,12 +44,21 @@
 }
 
 .navbar-default .navbar-brand {
-  & > img {
-    // @@@20180627JS Increase to mt-5 w162 h50
-    margin-top: -5px;
-    max-width: 162px;
-    max-height: 50px;
+  align-items: center;
+  display: flex;
+  padding: 0 .3em 0 .8em;
+
+  #logo {
+    max-height: 22px;
   }
+}
+
+.open-mobile-app-container {
+  display: none;
+}
+
+.open-mobile-app-button {
+  margin-top: 8px;
 }
 
 .dropdown-notifications {
@@ -145,7 +158,7 @@
 
 #search-container {
   padding-left: 45px;
-  
+
   .mce-i-marvinjs {
     position: relative;
 
@@ -295,10 +308,13 @@
     border-bottom: 0;
   }
 
-  .btn-default:not(.dropdown-toggle) {
+  .selected-team {
     margin-left: 15px;
+    overflow: hidden;
     text-align: right;
-    width: 300px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 230px;
   }
 
   .btn-group {
@@ -307,8 +323,10 @@
 
   .dropdown-menu {
     border-radius: 0;
+    height: auto;
     margin-top: 0;
     max-height: calc(100vh - 50px);
+    overflow: auto;
     padding-bottom: 0;
     padding-top: 0;
     width: 100%;
@@ -363,28 +381,6 @@
   padding: 10px 0 10px 30px;
 }
 
-// Alert
-.alert {
-  border-radius: 0;
-  margin-bottom: 0;
-  opacity: .86;
-  width: 100%;
-
-  &.alert-hidden {
-    display: none;
-  }
-
-  a#hide-alert {
-    margin-left: 15px;
-  }
-
-  &.alert-floating {
-    position: fixed;
-    top: 50px;
-    z-index: 1000;
-  }
-}
-
 #content-wrapper {
   margin-top: 50px;
   margin-left: 83px;
@@ -392,10 +388,6 @@
 
 #search-bar {
   padding-right: 0;
-
-  .btn-default[type="submit"] {
-    height: 34px;
-  }
 }
 
 @media (max-width: 768px) {
@@ -417,7 +409,7 @@
 #system-notifications-dropdown {
 
   .fa-gift {
-    font-size: $font-size-large;
+    font-size: 16px;
   }
 
   #count-system-notifications {
@@ -462,34 +454,6 @@
     a {
       font-size: $font-size-small;
       font-weight: $headings-font-weight;
-    }
-  }
-}
-
-.academy-link.flag {
-  background: $brand-academy;
-  border: 16px solid $brand-academy;
-  border-bottom: 10px solid $color-white;
-  display: inline-block;
-  height: 0;
-  margin: 0 6px 8px;
-  padding: 12px 0 0;
-  position: relative;
-  width: 0;
-
-  .icon-container {
-    align-items: center;
-    display: flex;
-    height: 28px;
-    justify-content: center;
-    left: -16px;
-    position: absolute;
-    top: -16px;
-    width: 32px;
-
-    .fas {
-      color: $color-white;
-      font-size: 16px;
     }
   }
 }

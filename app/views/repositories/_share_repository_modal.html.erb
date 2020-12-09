@@ -18,10 +18,14 @@
             <div class="all-teams">
               <span class="team-selector" title="<%= t("repositories.index.modal_share.all_teams_tooltip") %>">
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Pulled latest release
                 <span class="sci-checkbox-container">
                   <%= check_box_tag 'select_all_teams', 0, @repository.shared_read? || @repository.shared_write?, { class: 'sci-checkbox' } %>
                   <span class="sci-checkbox-label"></span>
                 </span>
+<<<<<<< HEAD
                 <%= t("repositories.index.modal_share.all_teams") %>
               </span>
               <span class="permission-selector">
@@ -38,6 +42,15 @@
                 <%= check_box_tag 'select_all_write_permission', 0, @repository.shared_write?, { class: 'hidden trigger-checkbox' }%>
                 <span class="checkbox-label"></span>
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+                <%= t("repositories.index.modal_share.all_teams") %>
+              </span>
+              <span class="permission-selector">
+                <span class="sci-toggle-checkbox-container">
+                  <%= check_box_tag 'select_all_write_permission', 0, @repository.shared_write?, { class: 'hidden sci-toggle-checkbox' }%>
+                  <span class="sci-toggle-checkbox-label"></span>
+                </span>
+>>>>>>> Pulled latest release
               </span>
             </div>
             <div class="teams-list">
@@ -45,10 +58,14 @@
               <div class="team-container">
                 <div class="team-selector">
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Pulled latest release
                   <span class="sci-checkbox-container">
                     <%= check_box_tag 'share_team_ids[]', t.id, @repository.private_shared_with?(t), {id: "shared_#{t.id}", class: "sci-checkbox"} %>
                     <span class="sci-checkbox-label"></span>
                   </span>
+<<<<<<< HEAD
                   <%= t.name %>
                 </div>
                 <div class="permission-selector">
@@ -71,6 +88,18 @@
                   }.compact %>
                   <span class="checkbox-label"></span>
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+                  <%= t.name %>
+                </div>
+                <div class="permission-selector">
+                  <span class="sci-toggle-checkbox-container">
+                    <%= check_box_tag 'write_permissions[]', t.id, @repository.private_shared_with_write?(t), {
+                      id: "editable_#{t.id}",
+                      class: (@repository.private_shared_with?(t) ? 'sci-toggle-checkbox' : 'sci-toggle-checkbox hidden')
+                    }.compact %>
+                    <span class="sci-toggle-checkbox-label"></span>
+                  </span>
+>>>>>>> Pulled latest release
                 </div>
               </div>
               <% end %>

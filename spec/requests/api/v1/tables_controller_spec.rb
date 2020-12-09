@@ -12,7 +12,11 @@ RSpec.describe 'Api::V1::TablesController', type: :request do
     @protocol = create(:protocol, my_module: @task)
     @step = create(:step, protocol: @protocol)
     create(:user_team, user: @user, team: @team)
+<<<<<<< HEAD
     create_user_assignment(@task, UserRole.find_by(name: I18n.t('user_roles.predefined.owner')), @user)
+=======
+    create(:user_project, :normal_user, user: @user, project: @project)
+>>>>>>> Pulled latest release
 
     @valid_headers = {
       'Authorization': 'Bearer ' + generate_token(@user.id),
@@ -70,6 +74,27 @@ RSpec.describe 'Api::V1::TablesController', type: :request do
         expect(response).to have_http_status(200)
       end
     end
+<<<<<<< HEAD
+=======
+
+    context 'when experiment is archived and permission checks fails' do
+      it 'renders 403' do
+        @experiment.update_attribute(:archived, true)
+
+        get api_v1_team_project_experiment_task_protocol_step_table_path(
+          team_id: @team.id,
+          project_id: @project.id,
+          experiment_id: @experiment.id,
+          task_id: @task.id,
+          protocol_id: @protocol.id,
+          step_id: @step.id,
+          id: table.id
+        ), headers: @valid_headers
+
+        expect(response).to have_http_status(403)
+      end
+    end
+>>>>>>> Pulled latest release
   end
 
   describe 'POST table, #create' do

@@ -12,10 +12,7 @@ module Api
         task_groups = @experiment.my_module_groups
                                  .page(params.dig(:page, :number))
                                  .per(params.dig(:page, :size))
-        incl = params[:include] == 'tasks' ? :tasks : nil
-        render jsonapi: task_groups,
-               each_serializer: TaskGroupSerializer,
-               include: incl
+        render jsonapi: task_groups, each_serializer: TaskGroupSerializer, include: include_params
       end
 
       def show
@@ -28,6 +25,10 @@ module Api
 
       def load_task_group
         @task_group = @experiment.my_module_groups.find(params.require(:id))
+      end
+
+      def permitted_includes
+        %w(tasks)
       end
     end
   end

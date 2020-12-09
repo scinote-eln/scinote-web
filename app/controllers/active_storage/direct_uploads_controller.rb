@@ -5,7 +5,11 @@ module ActiveStorage
     before_action :check_file_size, only: :create
 
     def create
+<<<<<<< HEAD
       blob = ActiveStorage::Blob.create_before_direct_upload!(**blob_args)
+=======
+      blob = ActiveStorage::Blob.create_before_direct_upload!(blob_args)
+>>>>>>> Pulled latest release
       render json: direct_upload_json(blob)
     end
 
@@ -13,7 +17,11 @@ module ActiveStorage
 
     def blob_args
       args = params.require(:blob)
+<<<<<<< HEAD
                    .permit(:filename, :byte_size, :checksum, :content_type, metadata: {})
+=======
+                   .permit(:filename, :byte_size, :checksum, :content_type, :metadata)
+>>>>>>> Pulled latest release
                    .to_h
                    .symbolize_keys
       args[:content_type] = 'application/octet-stream' if args[:content_type].blank?

@@ -41,12 +41,19 @@ RSpec.describe 'Api::V1::InventoryChecklistItemsController', type: :request do
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
+<<<<<<< HEAD
         JSON.parse(
           ActiveModelSerializers::SerializableResource
             .new(@checklist_column.repository_checklist_items.limit(10),
                  each_serializer: Api::V1::InventoryChecklistItemSerializer)
             .to_json
         )['data']
+=======
+        ActiveModelSerializers::SerializableResource
+          .new(@checklist_column.repository_checklist_items.limit(10),
+               each_serializer: Api::V1::InventoryChecklistItemSerializer)
+          .as_json[:data]
+>>>>>>> Pulled latest release
       )
     end
 
@@ -110,12 +117,19 @@ RSpec.describe 'Api::V1::InventoryChecklistItemsController', type: :request do
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
+<<<<<<< HEAD
         JSON.parse(
           ActiveModelSerializers::SerializableResource
             .new(@checklist_column.repository_checklist_items.first,
                  serializer: Api::V1::InventoryChecklistItemSerializer)
             .to_json
         )['data']
+=======
+        ActiveModelSerializers::SerializableResource
+          .new(@checklist_column.repository_checklist_items.first,
+               serializer: Api::V1::InventoryChecklistItemSerializer)
+          .as_json[:data]
+>>>>>>> Pulled latest release
       )
     end
 
@@ -167,11 +181,18 @@ RSpec.describe 'Api::V1::InventoryChecklistItemsController', type: :request do
       expect(response).to have_http_status 201
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
+<<<<<<< HEAD
         JSON.parse(
           ActiveModelSerializers::SerializableResource
             .new(RepositoryChecklistItem.last, serializer: Api::V1::InventoryChecklistItemSerializer)
             .to_json
         )['data']
+=======
+        ActiveModelSerializers::SerializableResource
+          .new(RepositoryChecklistItem.last,
+               serializer: Api::V1::InventoryChecklistItemSerializer)
+          .as_json[:data]
+>>>>>>> Pulled latest release
       )
     end
 
@@ -278,12 +299,19 @@ RSpec.describe 'Api::V1::InventoryChecklistItemsController', type: :request do
       expect(response).to have_http_status 200
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
+<<<<<<< HEAD
         JSON.parse(
           ActiveModelSerializers::SerializableResource
             .new(@checklist_column.repository_checklist_items.find(item_id),
                  serializer: Api::V1::InventoryChecklistItemSerializer)
             .to_json
         )['data']
+=======
+        ActiveModelSerializers::SerializableResource
+          .new(@checklist_column.repository_checklist_items.find(item_id),
+               serializer: Api::V1::InventoryChecklistItemSerializer)
+          .as_json[:data]
+>>>>>>> Pulled latest release
       )
       expect(@checklist_column.repository_checklist_items.find(item_id).data).to match('Updated')
     end

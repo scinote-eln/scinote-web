@@ -19,7 +19,7 @@ class Table < ApplicationRecord
              class_name: 'User',
              optional: true
   belongs_to :team, optional: true
-  has_one :step_table, inverse_of: :table
+  has_one :step_table, inverse_of: :table, dependent: :destroy
   has_one :step, through: :step_table
 
   has_one :result_table, inverse_of: :table

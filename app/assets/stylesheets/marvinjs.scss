@@ -11,11 +11,15 @@
 .modal-marvin-js {
   background: transparent;
 <<<<<<< HEAD
+<<<<<<< HEAD
   font-size: $font-size-base;
   padding: 0 !important;
 
 =======
   font-size: $font-size-large;
+=======
+  font-size: $font-size-base;
+>>>>>>> Pulled latest release
   padding: 0 !important;
 
   .preview-close {
@@ -53,7 +57,11 @@
 =======
     background: $color-black;
     border: 0;
+<<<<<<< HEAD
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+    display: flex;
+>>>>>>> Pulled latest release
     height: 60px;
     line-height: 40px;
     padding: 10px 15px;
@@ -61,9 +69,13 @@
 
     .file-save-link {
 <<<<<<< HEAD
+<<<<<<< HEAD
       flex-shrink: 0;
 =======
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+      flex-shrink: 0;
+>>>>>>> Pulled latest release
       margin: 0 20px 0 0;
     }
 
@@ -71,12 +83,18 @@
       align-items: center;
       display: flex;
 <<<<<<< HEAD
+<<<<<<< HEAD
       flex-shrink: 0;
       float: left;
       margin-right: auto;
 =======
       float: left;
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+      flex-shrink: 0;
+      float: left;
+      margin-right: auto;
+>>>>>>> Pulled latest release
 
       input {
         border-radius: 5px;
@@ -168,6 +186,7 @@
 
 .new-marvinjs-upload-button {
 <<<<<<< HEAD
+<<<<<<< HEAD
   .new-marvinjs-upload-icon {
     display: inline-block;
     height: 1.5em;
@@ -179,6 +198,12 @@
     height: 32px;
     width: 32px;
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+  .new-marvinjs-upload-icon {
+    display: inline-block;
+    height: 1.5em;
+    width: 1.5em;
+>>>>>>> Pulled latest release
 
     img {
       height: 100%;

@@ -40,7 +40,10 @@ Rails.application.configure do
     authentication: Rails.application.secrets.mailer_authentication,
     enable_starttls_auto: true,
     user_name: Rails.application.secrets.mailer_user_name,
-    password: Rails.application.secrets.mailer_password
+    password: Rails.application.secrets.mailer_password,
+    openssl_verify_mode: Rails.application.secrets.mailer_openssl_verify_mode,
+    ca_path: Rails.application.secrets.mailer_openssl_ca_path,
+    ca_file: Rails.application.secrets.mailer_openssl_ca_file
   }
 
   #config.action_mailer.perform_deliveries = false
@@ -115,8 +118,8 @@ Rails.application.configure do
   # Enable sign in with LinkedIn account
   config.x.linkedin_signin_enabled = ENV['LINKEDIN_SIGNIN_ENABLED'] == 'true'
 
-  # Enable RAP Selection in projects:
-  config.x.epa_rap_enabled = ENV['EPA_RAP_ENABLED'] == 'true'
+  # Set up domain for pwa SciNote mobile app
+  config.x.pwa_domain = ENV['PWA_DOMAIN'] || 'm.scinote.net'
 
   # Use a different logger for distributed setups.
   # require 'syslog/logger'

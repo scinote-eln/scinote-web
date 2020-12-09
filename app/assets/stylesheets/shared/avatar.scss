@@ -1,9 +1,15 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 // scss-lint:disable SelectorDepth SelectorFormat QualifyingElement
 // scss-lint:disable NestingDepth ImportantRule
 
 =======
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+// scss-lint:disable SelectorDepth SelectorFormat QualifyingElement
+// scss-lint:disable NestingDepth ImportantRule
+
+>>>>>>> Pulled latest release
 @import "constants";
 @import "mixins";
 
@@ -23,6 +29,14 @@
   }
 }
 
+.task-assigned-users .global-avatar-container {
+  margin: 2px;
+
+  img {
+    vertical-align: baseline;
+  }
+}
+
 .new-avatar-preview-container {
   height: 200px;
   margin-bottom: 45px;
@@ -30,6 +44,9 @@
   width: 100%;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Pulled latest release
 
 .modal-user-avatar {
   .modal-dialog {
@@ -103,5 +120,8 @@
     text-align: center;
   }
 }
+<<<<<<< HEAD
 =======
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+>>>>>>> Pulled latest release

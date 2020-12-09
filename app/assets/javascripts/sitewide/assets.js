@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* global windowScrollEvents HelperModule I18n PdfPreview */
+=======
+/* global windowScrollEvents HelperModule I18n */
+>>>>>>> Pulled latest release
 $(document).on('click', '.asset-context-menu .change-preview-type', function(e) {
   var viewModeBtn = $(this);
   var viewMode = viewModeBtn.data('preview-type');
@@ -15,7 +19,10 @@ $(document).on('click', '.asset-context-menu .change-preview-type', function(e) 
       viewModeBtn.closest('.dropdown-menu').find('.change-preview-type').removeClass('selected');
       viewModeBtn.addClass('selected');
       $(`.asset[data-asset-id=${assetId}]`).replaceWith(data.html);
+<<<<<<< HEAD
       PdfPreview.initCanvas();
+=======
+>>>>>>> Pulled latest release
     }
   });
 });
@@ -97,19 +104,25 @@ var InlineAttachments = (function() {
     }
   }
 
+<<<<<<< HEAD
   function initReloadButtons() {
     $(document).on('ajax:success', '.asset .reload-asset', function(e, data) {
       $(this).closest('.asset').replaceWith(data.html);
     });
   }
 
+=======
+>>>>>>> Pulled latest release
   return {
     init: () => {
       windowScrollEvents.InlineAttachments = InlineAttachments.scrollEvent;
     },
+<<<<<<< HEAD
     initReloadButtons: () => {
       initReloadButtons();
     },
+=======
+>>>>>>> Pulled latest release
     scrollEvent: () => {
       checkForAttachmentsState();
     }
@@ -120,4 +133,7 @@ $(document).on('turbolinks:load', function() {
   InlineAttachments.init();
   InlineAttachments.scrollEvent();
 });
+<<<<<<< HEAD
 InlineAttachments.initReloadButtons();
+=======
+>>>>>>> Pulled latest release

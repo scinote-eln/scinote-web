@@ -5,16 +5,26 @@ require 'csv'
 module RepositoryZipExport
   def self.generate_zip(params, repository, current_user)
     # Fetch rows in the same order as in the currently viewed datatable
-    ordered_row_ids = params[:row_ids]
-    id_row_map = RepositoryRow.where(id: ordered_row_ids,
-                                     repository: repository)
-                              .index_by(&:id)
-    ordered_rows = ordered_row_ids.collect { |id| id_row_map[id.to_i] }
+    if params[:my_module_id]
+      rows = if repository.is_a?(RepositorySnapshot)
+               repository.repository_rows
+             else
+               repository.repository_rows
+                         .joins(:my_module_repository_rows)
+                         .where(my_module_repository_rows: { my_module_id: params[:my_module_id] })
+             end
+    else
+      ordered_row_ids = params[:row_ids]
+      id_row_map = RepositoryRow.where(id: ordered_row_ids,
+                                       repository: repository)
+                                .index_by(&:id)
+      rows = ordered_row_ids.collect { |id| id_row_map[id.to_i] }
+    end
 
     zip = ZipExport.create(user: current_user)
     zip.generate_exportable_zip(
       current_user,
-      to_csv(ordered_rows, params[:header_ids], current_user, repository.team),
+      to_csv(rows, params[:header_ids], current_user, repository.team),
       :repositories
     )
   end
@@ -34,6 +44,10 @@ module RepositoryZipExport
                       I18n.t('repositories.table.added_by')
                     when -6
                       I18n.t('repositories.table.added_on')
+                    when -7
+                      I18n.t('repositories.table.archived_by')
+                    when -8
+                      I18n.t('repositories.table.archived_on')
                     else
                       column = RepositoryColumn.find_by_id(c_id)
                       column ? column.name : nil
@@ -56,6 +70,10 @@ module RepositoryZipExport
                        row.created_by.full_name
                      when -6
                        I18n.l(row.created_at, format: :full)
+                     when -7
+                       row.archived_by.full_name
+                     when -8
+                       I18n.l(row.archived_on, format: :full)
                      else
                        cell = row.repository_cells
                                  .find_by(repository_column_id: c_id)
@@ -66,7 +84,7 @@ module RepositoryZipExport
                            handle_file_name_func.call(cell.value.asset)
                          else
                            SmartAnnotations::TagToText.new(
-                             user, team, cell.value.formatted
+                             user, team, cell.value.export_formatted
                            ).text
                          end
                        end

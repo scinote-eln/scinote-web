@@ -21,6 +21,10 @@ class MyModuleStatusFlowController < ApplicationController
   end
 
   def check_view_permissions
+<<<<<<< HEAD
     render_403 unless can_read_my_module?(@my_module)
+=======
+    render_403 unless can_read_experiment?(@my_module.experiment)
+>>>>>>> Pulled latest release
   end
 end

@@ -229,29 +229,49 @@ var DateTimeHelper = (function() {
     let $startSpan = $cell.find('span').first();
     let startDate = $startSpan.data('date');
     let startTime = getTimeOrDefault($startSpan, mode);
+<<<<<<< HEAD
     let startDatetime = getDateOrDefault($startSpan, mode);
+=======
+    let startDatetime = $startSpan.data('datetime');
+>>>>>>> Pulled latest release
     let startDateDataValue = getDateOrDefault($startSpan, mode);
     let $endSpan = $cell.find('span').last();
     let endDate = $endSpan.data('date');
     let endTime = getTimeOrDefault($endSpan, mode);
+<<<<<<< HEAD
     let endDatetime = getDateOrDefault($endSpan, mode);
     let endDateDataValue = getDateOrDefault($endSpan, mode);
 
     let inputFields = `
     <div class="form-group datetime-container range-type ${mode}"
+=======
+    let endDatetime = $endSpan.data('datetime');
+    let endDateDataValue = getDateOrDefault($endSpan, mode);
+
+    let inputFields = `
+    <div class="form-group datetime-container range-type"
+>>>>>>> Pulled latest release
          data-form-id="${formId}"
          data-column-id="${columnId}"
          data-type="${columnType}"
          >
       <div class="start-time ${mode}"
            data-current-datetime="${startDatetime}">
+<<<<<<< HEAD
         ${dateInputField(startDate, startDatetime)}
+=======
+        ${dateInputField(startDate, startDateDataValue)}
+>>>>>>> Pulled latest release
         ${timeInputField(startTime)}
       </div>
       <div class="separator">—</div>
       <div class="end-time ${mode}"
            data-current-datetime="${endDatetime}">
+<<<<<<< HEAD
         ${dateInputField(endDate, endDatetime)}
+=======
+        ${dateInputField(endDate, endDateDataValue)}
+>>>>>>> Pulled latest release
         ${timeInputField(endTime)}
       </div>
     </div>

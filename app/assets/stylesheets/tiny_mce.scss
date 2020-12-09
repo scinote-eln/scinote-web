@@ -110,30 +110,37 @@
   }
 =======
 
-.tinymce-cancel-notification-button {
-  cursor: pointer;
 
-  .fas {
-    color: $color-silver-chalice;
-    font-family: 'Font Awesome 5 Free';
-    font-weight: 501;
-    margin-left: 10px;
-    margin-top: 4px;
-  }
-}
 
 .restore-draft-notification {
+  align-items: center;
   background: $state-info-bg !important;
-  height: 25px !important;
-  padding: 5px 10px 0 !important;
+  display: flex;
+  height: 30px !important;
+  padding: 0 10px !important;
+
+  .notification-text {
+    flex-grow: 1;
+  }
 
   .restore-draft-btn {
     border: 1px solid $color-silver-chalice;
+    cursor: pointer;
     font-size: 12px;
-    margin-top: -2px;
     padding: 3px 10px 3px 10px;
   }
+<<<<<<< HEAD
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+
+  .fas {
+    color: $color-silver-chalice;
+    cursor: pointer;
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 501;
+    margin-left: 10px;
+  }
+>>>>>>> Pulled latest release
 }
 
 .mce-stack-layout {
@@ -190,6 +197,7 @@
   .mce-container-body.mce-abs-layout {
     background: $brand-primary;
 <<<<<<< HEAD
+<<<<<<< HEAD
     position: relative;
     top: -10px;
 =======
@@ -197,6 +205,10 @@
     position: relative;
     top: -45px;
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+    position: relative;
+    top: -10px;
+>>>>>>> Pulled latest release
 
     .mce-container,
     .mce-widget {
@@ -214,6 +226,9 @@
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Pulled latest release
 .mce-window {
 
   .mce-abs-layout {
@@ -234,8 +249,11 @@
   }
 }
 
+<<<<<<< HEAD
 =======
 >>>>>>> Finished merging. Test on dev machine (iMac).
 =======
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+>>>>>>> Pulled latest release
 // scss-lint:enable ImportantRule

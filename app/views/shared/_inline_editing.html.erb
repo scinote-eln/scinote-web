@@ -1,10 +1,14 @@
 <div
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Pulled latest release
   class="inline-editing-container inline-init-handler"
   data-field-to-update="<%= config[:field_to_udpate] %>"
   data-params-group="<%= config[:params_group] %>"
   data-item-id="<%= config[:item_id] %>"
   data-path-to-update="<%= config[:path_to_update] %>"
+<<<<<<< HEAD
   data-original-name="<%= initial_value %>"
   data-label-after='<%= config[:label_after]&.html_safe %>'
   data-placeholder='<%= config[:placeholder] %>'
@@ -16,13 +20,20 @@
   data-field-to-update="<%= @inline_editable_title_config[:field_to_udpate] %>"
   data-params-group="<%= @inline_editable_title_config[:params_group] %>"
   data-path-to-update="<%= @inline_editable_title_config[:path_to_update] %>"
+=======
+>>>>>>> Pulled latest release
   data-original-name="<%= initial_value %>"
-  data-label-after='<%= @inline_editable_title_config[:label_after]&.html_safe %>'
-  error="false"
+  data-label-after='<%= config[:label_after]&.html_safe %>'
+  data-placeholder='<%= config[:placeholder] %>'
 >
+<<<<<<< HEAD
   <div class="view-mode"><%= initial_value %></div>
   <input class="hidden" type="text" value="<%= initial_value %>" disabled/>
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+  <div class="view-mode" data-placeholder="<%= config[:placeholder] %>"><%= initial_value %></div>
+  <input placeholder="<%= config[:placeholder] %>" class="hidden input-field" type="text" value="<%= initial_value %>" disabled/>
+>>>>>>> Pulled latest release
   <div class="button-container">
     <span class="save-button"><i class="fas fa-check"></i></span>
     <span class="cancel-button"><i class="fas fa-times"></i></span>
@@ -30,8 +41,11 @@
   <span class="error-block"></span>
 </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <script>
   initInlineEditing('<%= @inline_editable_title_config[:name] %>')
 </script>
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+>>>>>>> Pulled latest release

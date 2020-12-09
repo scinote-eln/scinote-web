@@ -20,30 +20,25 @@
     <%= csrf_meta_tags %>
   </head>
   <body class="<%= yield :body_class %>">
-  <% # @@@20180627JS Add main-nav to use css from EPA template %>
-    <nav class="navbar navbar-default navbar-fixed-top navbar-sign-in-halt main-nav" id="main-nav">
+    <nav class="navbar navbar-default navbar-fixed-top navbar-sign-in-halt" id="main-nav">
       <div class="container-fluid">
         <div class="navbar-header">
           <span class="navbar-brand" title="<% t('nav.label.scinote') %>">
-            <img id="logo" src="/images/logo.png" alt="Logo">
+            <%= image_tag('/images/scinote_icon.svg', id: 'logo') %>
           </span>
         </div>
-        <div class="pull-right sign-in-halt-logout-button">
-          <%= link_to main_app.destroy_user_session_path, class: 'btn btn-default', method: :delete do %>
-            <%= t('nav.user.logout') %>
-          <% end %>
-        </div>
+        <% if user_signed_in? %>
+          <div class="pull-right sign-in-halt-logout-button">
+            <%= link_to main_app.destroy_user_session_path, class: 'btn btn-default', method: :delete do %>
+              <%= t('nav.user.logout') %>
+            <% end %>
+          </div>
+        <% end %>
       </div>
     </nav>
-    <% if flash[:error]%>
-      <div class="alert alert-danger alert-dismissable alert-floating">
-        <div class="container">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-          <span class="fas fa-exclamation-circle"></span>
-          <span><%= sanitize_input(flash[:error]) %></span>
-        </div>
-      </div>
-    <% end %>
+
+    <%= render partial: 'shared/flash_alerts', locals: { flash: flash, notice: notice, alert: alert } %>
+
     <div class="container sign-in-halt-container">
       <%= yield %>
     </div>

@@ -1,7 +1,6 @@
 class UserDataDeletion
   def self.delete_team_data(team)
     ActiveRecord::Base.logger = Logger.new(STDOUT)
-    Step.skip_callback(:destroy, :after, :cascade_after_destroy)
     team.transaction do
       # Destroy tiny_mce_assets
       if team.tiny_mce_assets.present?
@@ -45,7 +44,6 @@ class UserDataDeletion
             my_module.my_module_repository_rows.destroy_all
             my_module.user_my_modules.destroy_all
             my_module.report_elements.destroy_all
-            my_module.sample_my_modules.destroy_all
             my_module.protocols.each { |p| p.update(parent_id: nil) }
             my_module.protocols.each do |protocol|
               destroy_protocol(protocol)
@@ -72,11 +70,6 @@ class UserDataDeletion
       team.protocols.where(my_module: nil).each do |protocol|
         destroy_protocol(protocol)
       end
-      team.samples.destroy_all
-      team.samples_tables.destroy_all
-      team.sample_groups.destroy_all
-      team.sample_types.destroy_all
-      team.custom_fields.destroy_all
       team.protocol_keywords.destroy_all
       team.user_teams.delete_all
       User.where(current_team_id: team).each do |user|
@@ -86,7 +79,6 @@ class UserDataDeletion
       team.destroy!
       # raise ActiveRecord::Rollback
     end
-    Step.set_callback(:destroy, :after, :cascade_after_destroy)
   end
 
   def self.destroy_protocol(protocol)

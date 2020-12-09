@@ -25,10 +25,14 @@ tinymce.PluginManager.add('custom_image_toolbar', function(editor) {
 
   function isImage(elem) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     return editor.dom.is(elem, 'img') && elem.dataset.mceToken;
 =======
     return editor.dom.is(elem, 'img');
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+    return editor.dom.is(elem, 'img') && elem.dataset.mceToken;
+>>>>>>> Pulled latest release
   }
   function isMarvinJs(elem) {
     return elem.dataset.sourceType === 'marvinjs';

@@ -12,6 +12,8 @@ class Asset < ApplicationRecord
   # Lock duration set to 30 minutes
   LOCK_DURATION = 60 * 30
 
+  enum view_mode: { thumbnail: 0, list: 1, inline: 2 }
+
   # ActiveStorage configuration
   has_one_attached :file
 
@@ -19,8 +21,8 @@ class Asset < ApplicationRecord
   # This could cause some problems if you create empty asset and want to
   # assign it to result
   validate :step_or_result_or_repository_asset_value
-  validate :wopi_filename_valid,
-           on: :wopi_file_creation
+  validate :wopi_filename_valid, on: :wopi_file_creation
+  validate :check_file_size, on: :on_api_upload
 
   belongs_to :created_by,
              foreign_key: 'created_by_id',
@@ -32,16 +34,25 @@ class Asset < ApplicationRecord
              optional: true
   belongs_to :team, optional: true
   has_one :step_asset, inverse_of: :asset, dependent: :destroy
-  has_one :step, through: :step_asset, dependent: :nullify
+  has_one :step, through: :step_asset, touch: true, dependent: :nullify
   has_one :result_asset, inverse_of: :asset, dependent: :destroy
-  has_one :result, through: :result_asset, dependent: :nullify
+  has_one :result, through: :result_asset, touch: true, dependent: :nullify
   has_one :repository_asset_value, inverse_of: :asset, dependent: :destroy
   has_one :repository_cell, through: :repository_asset_value,
     dependent: :nullify
   has_many :report_elements, inverse_of: :asset, dependent: :destroy
   has_one :asset_text_datum, inverse_of: :asset, dependent: :destroy
 
-  after_save { result&.touch; step&.touch }
+  scope :sort_assets, lambda { |sort_value = 'new'|
+    sort = case sort_value
+           when 'old' then { created_at: :asc }
+           when 'atoz' then { 'active_storage_blobs.filename': :asc }
+           when 'ztoa' then { 'active_storage_blobs.filename': :desc }
+           else { created_at: :desc }
+           end
+
+    joins(file_attachment: :blob).order(sort)
+  }
 
   attr_accessor :file_content, :file_info, :in_template
 
@@ -170,6 +181,14 @@ class Asset < ApplicationRecord
     file.blob&.filename&.sanitized
   end
 
+  def render_file_name
+    if file.attached? && file.metadata['asset_type']
+      file.metadata['name']
+    else
+      file_name
+    end
+  end
+
   def file_size
     return 0 unless file.attached?
 
@@ -217,16 +236,12 @@ class Asset < ApplicationRecord
   end
 
   def post_process_file(team = nil)
-    # Update self.empty
-    update(file_present: true)
-
     # Extract asset text if it's of correct type
     if text?
       Rails.logger.info "Asset #{id}: Creating extract text job"
       # The extract_asset_text also includes
       # estimated size calculation
-      Asset.delay(queue: :assets, run_at: 20.minutes.from_now)
-           .extract_asset_text_delayed(id, in_template)
+      Asset.delay(queue: :assets).extract_asset_text_delayed(id, in_template)
     elsif marvinjs?
       extract_asset_text
     else
@@ -321,7 +336,7 @@ class Asset < ApplicationRecord
     file_ext = file_name.split('.').last
     action = get_action(file_ext, action)
     if !action.nil?
-      action_url = action.urlsrc
+      action_url = action[:urlsrc]
       if ENV['WOPI_BUSINESS_USERS'] && ENV['WOPI_BUSINESS_USERS'] == 'true'
         action_url = action_url.gsub(/<IsLicensedUser=BUSINESS_USER&>/,
                                      'IsLicensedUser=1&')
@@ -355,7 +370,7 @@ class Asset < ApplicationRecord
   def favicon_url(action)
     file_ext = file_name.split('.').last
     action = get_action(file_ext, action)
-    action.wopi_app.icon if action.try(:wopi_app)
+    action[:icon] if action[:icon]
   end
 
   # locked?, lock_asset and refresh_lock rely on the asset
@@ -446,6 +461,14 @@ class Asset < ApplicationRecord
           limit: Constants::FILENAME_MAX_LENGTH
         )
       )
+    end
+  end
+
+  def check_file_size
+    if file.attached?
+      if file.blob.byte_size > Rails.application.config.x.file_max_size_mb.megabytes
+        errors.add(:file, I18n.t('activerecord.errors.models.asset.attributes.file.too_big'))
+      end
     end
   end
 end

@@ -7,15 +7,15 @@ module Api
       if expires_at
         payload[:exp] = expires_at
       else
-        payload[:exp] = Api.configuration.core_api_token_ttl.from_now.to_i
+        payload[:exp] = Rails.configuration.x.core_api_token_ttl.from_now.to_i
       end
-      payload[:iss] = Api.configuration.core_api_token_iss
-      JWT.encode(payload, KEY_SECRET, Api.configuration.core_api_sign_alg)
+      payload[:iss] = Rails.configuration.x.core_api_token_iss
+      JWT.encode(payload, KEY_SECRET, Rails.configuration.x.core_api_sign_alg)
     end
 
     def self.decode(token)
       HashWithIndifferentAccess.new(
-        JWT.decode(token, KEY_SECRET, Api.configuration.core_api_sign_alg)[0]
+        JWT.decode(token, KEY_SECRET, Rails.configuration.x.core_api_sign_alg)[0]
       )
     end
 

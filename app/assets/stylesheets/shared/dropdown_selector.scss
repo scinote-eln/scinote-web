@@ -3,6 +3,7 @@
 
 @import "constants";
 
+<<<<<<< HEAD
 .select-container--with-search .dropdown-selector-container {
   &.active,
   &.open {
@@ -18,13 +19,22 @@
 
 .dropdown-selector-container {
   display: inline-block;
+=======
+.dropdown-selector-container {
+  display: inline-block;
+  float: left;
+>>>>>>> Pulled latest release
   position: relative;
   width: 100%;
 
   .input-field {
     align-items: center;
     background: $color-white;
+<<<<<<< HEAD
     border: 1px solid $color-silver-chalice;
+=======
+    border: 1px solid $color-alto;
+>>>>>>> Pulled latest release
     border-radius: 4px;
     display: flex;
     flex-wrap: wrap;
@@ -45,7 +55,11 @@
       top: 8px;
       width: 18px;
 
+<<<<<<< HEAD
       &.fa-search.simple-dropdown {
+=======
+      &.fa-search {
+>>>>>>> Pulled latest release
         color: $brand-focus;
         display: none;
       }
@@ -87,7 +101,10 @@
       flex-shrink: 0;
       line-height: 13px;
       margin: 2px 3px;
+<<<<<<< HEAD
       max-height: 24px;
+=======
+>>>>>>> Pulled latest release
       max-width: calc(100% - 11px);
       overflow: hidden;
       padding: 5px 8px;
@@ -103,9 +120,15 @@
       .tag-label {
         display: inline-block;
         margin-right: 5px;
+<<<<<<< HEAD
         max-width: 240px;
         overflow: hidden;
         text-align: left;
+=======
+        margin-top: 1px;
+        max-width: 240px;
+        overflow: hidden;
+>>>>>>> Pulled latest release
         text-overflow: ellipsis;
         white-space: nowrap;
         width: auto;
@@ -113,12 +136,15 @@
         &[data-ds-tag-id=""] {
           opacity: .7;
         }
+<<<<<<< HEAD
 
         .item-avatar {
           height: 16px;
           margin-right: 8px;
           width: 16px;
         }
+=======
+>>>>>>> Pulled latest release
       }
 
       .fas {
@@ -152,6 +178,7 @@
       text-align: center;
     }
 
+<<<<<<< HEAD
     .dropdown-hint {
       opacity: .6;
       padding: 7px;
@@ -162,6 +189,12 @@
       background: $color-concrete;
       height: 1px;
       margin: 5px 0;
+=======
+    .delimiter {
+      background: $color-alto;
+      height: 1px;
+      margin: 5px 16px;
+>>>>>>> Pulled latest release
     }
 
     .dropdown-select-all {
@@ -180,6 +213,7 @@
       z-index: 5;
     }
 
+<<<<<<< HEAD
     .dropdown-blank {
       border-radius: 0;
       padding-left: 7px;
@@ -192,6 +226,8 @@
       }
     }
 
+=======
+>>>>>>> Pulled latest release
     .dropdown-option {
       align-items: center;
       cursor: pointer;
@@ -226,10 +262,14 @@
         border-radius: 1px;
         color: $color-white;
         content: "";
+<<<<<<< HEAD
         flex-shrink: 0;
         font-size: calc(
           var(--sci-checkbox-size) - var(--sci-checkbox-size) * .375
         );
+=======
+        font-size: calc(var(--sci-checkbox-size) - var(--sci-checkbox-size) * .375);
+>>>>>>> Pulled latest release
         height: var(--sci-checkbox-size);
         line-height: calc(var(--sci-checkbox-size) - 2px);
         margin-right: 8px;
@@ -266,7 +306,11 @@
         user-select: none;
 
         &:hover {
+<<<<<<< HEAD
           background: $brand-focus-light;
+=======
+          background: $brand-primary-light;
+>>>>>>> Pulled latest release
         }
       }
 
@@ -275,11 +319,19 @@
       }
 
       &.select {
+<<<<<<< HEAD
+=======
+
+>>>>>>> Pulled latest release
         .group-name.checkbox-icon {
           background: $color-concrete;
 
           &:hover {
+<<<<<<< HEAD
             background: $brand-focus-light;
+=======
+            background: $brand-primary-light;
+>>>>>>> Pulled latest release
           }
 
           &::before {
@@ -315,7 +367,10 @@
       .ds-simple {
         .tag-label {
           overflow: hidden;
+<<<<<<< HEAD
           text-align: left;
+=======
+>>>>>>> Pulled latest release
           text-overflow: ellipsis;
           white-space: nowrap;
 
@@ -332,6 +387,10 @@
   }
 
   &.open {
+<<<<<<< HEAD
+=======
+
+>>>>>>> Pulled latest release
     .input-field {
       border-radius: 4px 4px 0 0;
       z-index: 12;
@@ -354,6 +413,10 @@
     }
 
     &.inverse {
+<<<<<<< HEAD
+=======
+
+>>>>>>> Pulled latest release
       .input-field {
         border-bottom: 1px solid $color-alto;
         border-radius: 0 0 4px 4px;
@@ -403,6 +466,10 @@
   }
 
   &.disabled {
+<<<<<<< HEAD
+=======
+
+>>>>>>> Pulled latest release
     .input-field {
       background: $color-concrete;
 

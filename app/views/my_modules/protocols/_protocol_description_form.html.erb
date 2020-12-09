@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <%= bootstrap_form_for protocol, url: update_url, remote: :true, html: {class: 'tiny-mce-editor'} do |f| %>
   <%= render partial: 'shared/tiny_mce_extra_buttons.html.erb' %>
   <div id="protocol_description_view"
@@ -27,12 +28,25 @@
          data-placeholder="<%= t('my_modules.protocols.protocol_status_bar.empty_description_edit_label') %>"></div>
   <% end %>
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+<%= bootstrap_form_for protocol, url: update_url, remote: :true, html: {class: 'tiny-mce-editor'} do |f| %>
+  <%= render partial: 'shared/tiny_mce_extra_buttons.html.erb' %>
+  <div id="protocol_description_view"
+       class="ql-editor tinymce-view"
+       data-placeholder="<%= t('my_modules.protocols.protocol_status_bar.empty_description_edit_label') %>"
+       data-tinymce-init="tinymce-protocol-description-<%= protocol.id %>"
+  ><%= custom_auto_link(protocol.tinymce_render(:description),
+                        simple_format: false,
+                        tags: %w(img),
+                        team: current_team) if protocol.description.present? %></div>
+>>>>>>> Pulled latest release
   <%= f.tiny_mce_editor(:description,
                         id: :protocol_description_textarea,
                         class: 'hidden',
                         placeholder: t('my_modules.protocols.protocol_status_bar.empty_description_edit_label'),
                         hide_label: true,
                         value: sanitize_input(protocol.tinymce_render(:description)),
+<<<<<<< HEAD
 <<<<<<< HEAD
                         autocomplete: 'off',
                         data: {
@@ -42,7 +56,11 @@
                           highlightjs_path: asset_path('highlightjs-github-theme.css'),
                           last_updated: protocol.updated_at.to_i * 1000 } ) %>
 =======
+=======
+                        autocomplete: 'off',
+>>>>>>> Pulled latest release
                         data: {
+                          tinymce_object: "tinymce-protocol-description-#{protocol.id}",
                           object_type: 'protocol',
                           object_id: protocol.id,
 <<<<<<< HEAD

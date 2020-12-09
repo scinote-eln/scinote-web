@@ -18,11 +18,18 @@ RSpec.describe 'Api::V1::WrokflowStatusesController', type: :request do
       get api_v1_workflow_workflow_statuses_path(workflow_id: MyModuleStatusFlow.first.id), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
+<<<<<<< HEAD
         JSON.parse(
           ActiveModelSerializers::SerializableResource
             .new(MyModuleStatusFlow.first.my_module_statuses, each_serializer: Api::V1::WorkflowStatusSerializer)
             .to_json
         )['data']
+=======
+        ActiveModelSerializers::SerializableResource
+          .new(MyModuleStatusFlow.first.my_module_statuses,
+               each_serializer: Api::V1::WorkflowStatusSerializer)
+          .as_json[:data]
+>>>>>>> Pulled latest release
       )
     end
   end

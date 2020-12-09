@@ -29,21 +29,11 @@ module MyModulesHelper
         .index(asset_id) || 0
   end
 
-  def number_of_samples(my_module)
-    my_module.samples.count
-  end
-
-  def ordered_result_of(my_module)
-    my_module.results.where(archived: false).order(created_at: :desc)
-  end
-
   def get_task_alert_color(my_module)
     alert = ''
-    if !my_module.completed?
+    unless my_module.completed?
       alert = ' alert-yellow' if my_module.is_one_day_prior?
       alert = ' alert-red' if my_module.is_overdue?
-    elsif my_module.completed?
-      alert = ' alert-green'
     end
     alert
   end
@@ -54,5 +44,50 @@ module MyModulesHelper
 
   def is_results_page?
     action_name == 'results'
+  end
+
+  def grouped_by_prj_exp(my_modules)
+    ungrouped_tasks = my_modules.joins(experiment: :project)
+                                .select('experiments.name as experiment_name,
+                                         experiments.archived as experiment_archived,
+                                         projects.name as project_name,
+                                         projects.archived as project_archived,
+                                         my_modules.*')
+    ungrouped_tasks.group_by { |i| [i[:project_name], i[:experiment_name]] }.map do |group, tasks|
+      {
+        project_name: group[0],
+        project_archived: tasks[0]&.project_archived,
+        experiment_name: group[1],
+        experiment_archived: tasks[0]&.experiment_archived,
+        tasks: tasks
+      }
+    end
+  end
+
+  def assigned_repository_full_view_table_path(my_module, repository)
+    if repository.is_a?(RepositorySnapshot)
+      return full_view_table_my_module_repository_snapshot_path(my_module, repository)
+    end
+
+    full_view_table_my_module_repository_path(my_module, repository)
+  end
+
+  def assigned_repository_simple_view_index_path(my_module, repository)
+    return index_dt_my_module_repository_snapshot_path(my_module, repository) if repository.is_a?(RepositorySnapshot)
+
+    index_dt_my_module_repository_path(my_module, repository)
+  end
+
+  def assigned_repository_simple_view_footer_label(repository)
+    if repository.is_a?(RepositorySnapshot)
+      return t('my_modules.repository.snapshots.simple_view.snapshot_bottom_label',
+               date_time: l(repository.created_at, format: :full))
+    end
+
+    t('my_modules.repository.snapshots.simple_view.live_bottom_label')
+  end
+
+  def assigned_repository_simple_view_name_column_id(repository)
+    repository.is_a?(RepositorySnapshot) ? 2 : 3
   end
 end

@@ -36,17 +36,17 @@ describe RepositoryRowsController, type: :controller do
 
   describe '#show' do
     it 'unsuccessful response with non existing id' do
-      get :show, format: :json, params: { id: -1 }
+      get :show, format: :json, params: { repository_id: repository.id, id: -1 }
       expect(response).to have_http_status(:not_found)
     end
 
-    it 'unsuccessful response with unpermitted id' do
-      get :show, format: :json, params: { id: repository_row_two.id }
-      expect(response).to have_http_status(:forbidden)
+    it 'unsuccessful response with id from another repository' do
+      get :show, format: :json, params: { repository_id: repository.id, id: repository_row_two.id }
+      expect(response).to have_http_status(:not_found)
     end
 
     it 'successful response' do
-      get :show, format: :json, params: { id: repository_row.id }
+      get :show, format: :json, params: { repository_id: repository.id, id: repository_row.id }
       expect(response).to have_http_status(:success)
     end
   end
@@ -84,7 +84,8 @@ describe RepositoryRowsController, type: :controller do
                    search: { value: '' },
                    length: '10',
                    start: '1',
-                   repository_id: repository.id }
+                   repository_id: repository.id,
+                   archived: false }
         get :index, params: params, format: :json
         response_body = JSON.parse(response.body)
         expect(response_body['data'].length).to eq 10
@@ -97,7 +98,8 @@ describe RepositoryRowsController, type: :controller do
                    search: { value: '' },
                    length: '10',
                    start: '11',
-                   repository_id: repository.id }
+                   repository_id: repository.id,
+                   archived: false }
         get :index, params: params, format: :json
         response_body = JSON.parse(response.body)
         expect(response_body['data'].length).to eq 10
@@ -110,7 +112,8 @@ describe RepositoryRowsController, type: :controller do
                    search: { value: '' },
                    length: '25',
                    start: '1',
-                   repository_id: repository.id }
+                   repository_id: repository.id,
+                   archived: false }
         get :index, params: params, format: :json
         response_body = JSON.parse(response.body)
         expect(response_body['data'].length).to eq 25
@@ -129,7 +132,7 @@ describe RepositoryRowsController, type: :controller do
   describe 'POST create' do
     let(:action) { post :create, params: params, format: :json }
     let(:params) do
-      { repository_id: repository.id, repository_row_name: 'row_name' }
+      { repository_id: repository.id, repository_row: { name: 'row_name' } }
     end
 
     it 'calls create activity for creating inventory item' do
@@ -152,7 +155,7 @@ describe RepositoryRowsController, type: :controller do
       {
         repository_id: repository.id,
         id: repository_row.id,
-        repository_row_name: 'row_name'
+        repository_row: { name: 'row_name' }
       }
     end
 
@@ -187,6 +190,143 @@ describe RepositoryRowsController, type: :controller do
     it 'adds activity in DB' do
       expect { action }
         .to(change { Activity.count })
+    end
+  end
+
+  describe 'POST archive_rows' do
+    let(:action) { post :archive_records, params: params, format: :json }
+    let(:params) do
+      { repository_id: repository.id, selected_rows: [repository_row.id] }
+    end
+
+    context 'when has permission' do
+      context 'when archiving passes' do
+        it 'change archived boolean to true' do
+          action
+
+          expect(repository_row.reload.archived).to be_truthy
+        end
+
+        it 'renders 200' do
+          action
+
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      context 'when archiving fails' do
+        before do
+          # Make invalid row record
+          repository_row.name = ''
+          repository_row.save(validate: false)
+        end
+
+        it 'does not change archived boolean to true' do
+          action
+
+          expect(repository_row.reload.archived).to be_falsey
+        end
+
+        it 'renders 422' do
+          action
+
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+      end
+    end
+
+    context 'when does not have permission' do
+      let!(:user_team) { create :user_team, :guest, team: second_team, user: user }
+      let(:second_team) { create :team, created_by: second_user }
+      let(:second_user) { create :user }
+      let(:repository) { create :repository, team: second_team, created_by: second_user }
+
+      context 'when guest' do
+        it 'renders 403' do
+          action
+
+          expect(response).to have_http_status(:forbidden)
+        end
+      end
+
+      context 'when does not see repository' do
+        let(:repository) { create :repository, team: (create :team), created_by: second_user }
+
+        it 'renders 404' do
+          action
+
+          expect(response).to have_http_status(:not_found)
+        end
+      end
+    end
+  end
+
+  describe 'POST restore_rows' do
+    let(:repository_row) { create :repository_row, :archived, repository: repository, created_by: user }
+    let(:action) { post :restore_records, params: params, format: :json }
+    let(:params) do
+      { repository_id: repository.id, selected_rows: [repository_row.id] }
+    end
+
+    context 'when has permission' do
+      context 'when restoring passes' do
+        it 'change archived boolean to false' do
+          action
+
+          expect(repository_row.reload.archived).to be_falsey
+        end
+
+        it 'renders 200' do
+          action
+
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      context 'when restoring fails' do
+        before do
+          # Make invalid row record
+          repository_row.name = ''
+          repository_row.save(validate: false)
+        end
+
+        it 'does not change archived boolean to false' do
+          action
+
+          expect(repository_row.reload.archived).to be_truthy
+        end
+
+        it 'renders 422' do
+          action
+
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+      end
+    end
+
+    context 'when does not have permission' do
+      let!(:user_team) { create :user_team, :guest, team: second_team, user: user }
+      let(:second_team) { create :team, created_by: second_user }
+      let(:second_user) { create :user }
+      let(:repository) { create :repository, team: second_team, created_by: second_user }
+
+      context 'when guest' do
+        it 'renders 403' do
+          action
+
+          expect(response).to have_http_status(:forbidden)
+        end
+      end
+
+      context 'when does not see repository' do
+        let(:repository) { create :repository, team: (create :team), created_by: second_user }
+
+        it 'renders 404' do
+          action
+
+          expect(response).to have_http_status(:not_found)
+        end
+      end
     end
   end
 end

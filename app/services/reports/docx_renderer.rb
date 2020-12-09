@@ -143,7 +143,11 @@ module Reports
 
       asset_preview = Reports::Utils.image_prepare(asset)
 
+<<<<<<< HEAD
       dimension = FastImage.size(asset_preview.processed.service_url)
+=======
+      dimension = FastImage.size(asset_preview.service_url)
+>>>>>>> Pulled latest release
       return unless dimension
 
       x = dimension[0]
@@ -152,21 +156,32 @@ module Reports
         y = y * 300 / x
         x = 300
       end
+<<<<<<< HEAD
 
       blob_data = if asset_preview.instance_of? ActiveStorage::Preview
+=======
+      blob_data = if asset_preview.class == ActiveStorage::Preview
+>>>>>>> Pulled latest release
                     asset_preview.image.download
                   else
                     asset_preview.blob.download
                   end
 
+<<<<<<< HEAD
       docx.img asset_preview.processed.service_url.split('&')[0] do
+=======
+      docx.img asset_preview.service_url.split('&')[0] do
+>>>>>>> Pulled latest release
         data blob_data
         width x
         height y
       end
+<<<<<<< HEAD
     rescue SocketError, Caracal::Errors::InvalidModelError => e # invalid URL or broken image
       Rails.logger.warn("Unable to render docx image due to #{e.class}: #{e}")
       nil
+=======
+>>>>>>> Pulled latest release
     end
   end
 end

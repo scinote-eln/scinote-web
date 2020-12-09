@@ -7,6 +7,7 @@
 @import "mixins";
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 .content-pane.my-modules-protocols-index {
   padding: 10px;
 }
@@ -221,95 +222,231 @@
       }
 =======
 #manage-module-tags-modal {
+=======
+.content-pane.my-modules-protocols-index {
+  padding: 10px;
+}
+>>>>>>> Pulled latest release
 
-  .well {
-    border: 0;
-    box-shadow: none;
-  }
+.content-pane.protocols-repository-edit-view {
+  margin: 0;
 }
 
-.protocol-info,
-.module-header {
-    .well {
-    border: 0;
-    box-shadow: none;
-    font-size: 14px;
-    padding-left: 0;
-    padding-right: 0;
-  }
+.task-section {
+  border-left: 3px solid $color-concrete;
+  margin: 16px 0;
+  padding-left: 16px;
 
-  .badge-icon {
-    background: transparent;
-    color: $color-silver;
-    padding-left: 0;
-    padding-right: 5px;
+  .task-section-caret {
+    color: $color-volcano;
+    display: inline-block;
+    text-decoration: none;
 
-    + .well-sm {
-      margin-bottom: 5px;
-      margin-left: 0;
+    .fas {
+      margin-right: 5px;
+    }
+
+    &:not(.collapsed) .fas {
+      @include rotate(90deg);
     }
   }
-}
 
-.module-header {
-  display: inline-block;
-  position: relative;
-  width: 100%;
+  .task-section-title {
+    display: inline-block;
 
-  + .protocol-title {
-    font-size: 22px;
-    font-weight: bold;
-    margin: 10px 0 15px;
-  }
+    h2 {
+      margin: 10px 0;
 
-  .header-container {
-    display: flex;
-    flex-wrap: wrap;
-    float: left;
-    //@@@20191105JS - This was 180px, not sure if EPA or Bio change...
-    width: calc(100% - 280px);
-
-    .flex-block {
-      display: flex;
-      flex-grow: 1;
-
-      .well-sm {
-        display: inline-block;
+      &.assigned-items-title {
+        &::after {
+          @include font-h3;
+          color: $color-alto;
+          content: '[' attr(data-assigned-items-count) ']';
+          display: inline;
+          line-height: 22px;
+          padding-left: 5px;
+        }
       }
     }
   }
 
-  .complete-button-container {
-    float: right;
-    //@@@20191105JS - This was 165px, not sure if EPA or Bio change...
-    width: 260px;
+  .task-section-header {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
 
-    .my_module-state-buttons {
-      padding-top: 0;
+    .actions-block {
+      display: flex;
+      flex-grow: 1;
+      justify-content: flex-end;
+
+      .caret {
+        margin-left: 25px;
+      }
+
+      .repositories-assign-container {
+        flex-grow: 1;
+        max-width: 200px;
+
+        .btn {
+          text-align: left;
+
+          .caret {
+            margin: 8px 0;
+          }
+        }
+
+        .repositories-dropdown-menu {
+          .repository {
+            @include font-button;
+            cursor: pointer;
+            display: flex;
+            padding: 8px 16px;
+
+            .assigned-items,
+            .shared-icon {
+              flex-shrink: 0;
+
+              .fas {
+                padding-right: 5px;
+              }
+            }
+
+            .assigned-items {
+              color: $color-alto;
+            }
+
+            .name {
+              flex-grow: 1;
+            }
+          }
+        }
+      }
+
+      .dropdown-menu {
+        @include font-button;
+
+        a {
+          padding: 8px 20px;
+        }
+
+        .fas {
+          padding-right: 5px;
+        }
+      }
+    }
+  }
+}
+
+.complete-button-container {
+  display: inline;
+  float: right;
+  width: 260px;
+
+  .my_module-state-buttons {
+    padding-top: 0;
+  }
+}
+
+.task-details {
+  .fas.block-icon {
+    margin-right: 8px;
+  }
+
+  .flex-block {
+    align-items: center;
+    display: flex;
+    line-height: 34px;
+
+    .flex-block-label {
+      align-items: center;
+      display: flex;
+      margin-right: 4px;
     }
   }
 
-  .module-description {
-    float: left;
-    width: 100%;
+  .empty-label {
+    color: $color-silver-chalice;
+    font-weight: normal;
+  }
 
-    .no-description {
-      font-size: 16px;
-    }
+  .datetime-container {
+    align-items: center;
+    display: inline-flex;
 
-    .title {
-      font-size: 22px;
+    .date-text {
+      border: 1px solid transparent;
       font-weight: bold;
-      padding: 20px 0 5px;
+      line-height: 32px;
+      margin-right: 25px;
+      padding: 0 4px;
+      position: relative;
+
+      .alert-green {
+        color: $brand-success;
+      }
+
+      .alert-yellow {
+        color: $brand-warning;
+      }
+
+      .alert-red {
+        color: $brand-danger;
+      }
+
+      .clear-date {
+        color: $color-silver;
+        cursor: pointer;
+        display: none;
+        font-size: 20px;
+        left: 100%;
+        line-height: 34px;
+        margin-left: 5px;
+        position: absolute;
+        top: 0;
+      }
     }
 
+<<<<<<< HEAD
     .my-module-description-content {
       margin-left: 10px;
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+    .datetime-picker-container {
+      color: $color-emperor;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+
+      #calendarDueDate {
+        opacity: 0;
+      }
+
+      #calendarStartDate {
+        opacity: 0;
+      }
+
+      .fa-calendar-alt {
+        display: none;
+      }
+    }
+
+    &:hover {
+      .date-text[data-editable=true] {
+        background-color: $color-concrete;
+        border-radius: 4px;
+
+        .clear-date {
+          display: inline;
+        }
+      }
+>>>>>>> Pulled latest release
     }
   }
 
   .module-tags {
+<<<<<<< HEAD
 <<<<<<< HEAD
     .tags-wrapper {
       align-items: center;
@@ -319,11 +456,18 @@
 
     #module-tags {
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+    #module-tags {
+      align-items: center;
+>>>>>>> Pulled latest release
       display: flex;
       width: 100%;
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Pulled latest release
     .dropdown-selector-container {
       .my-module-white-tags {
         color: $color-white;
@@ -359,8 +503,11 @@
       }
     }
 
+<<<<<<< HEAD
 =======
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+>>>>>>> Pulled latest release
     .badge-icon {
       display: inline-block;
       line-height: 32px;
@@ -373,6 +520,7 @@
       font-size: 14px;
       line-height: 32px;
 <<<<<<< HEAD
+<<<<<<< HEAD
       margin-right: 4px;
     }
 
@@ -381,6 +529,9 @@
 =======
       padding-right: 3px;
       width: 37px;
+=======
+      margin-right: 4px;
+>>>>>>> Pulled latest release
     }
 
     .select-container {
@@ -390,11 +541,16 @@
       flex-grow: 1;
       flex-shrink: 1;
 <<<<<<< HEAD
+<<<<<<< HEAD
       max-width: 100%;
 =======
       max-width: calc(100% - 65px);
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+      max-width: 100%;
+>>>>>>> Pulled latest release
       position: relative;
+      z-index: 110;
 
       select {
         display: none;
@@ -402,22 +558,31 @@
 
       .edit-button-container {
 <<<<<<< HEAD
+<<<<<<< HEAD
         height: 36px;
         padding-right: 10px;
 =======
         height: 32px;
         padding-right: 5px;
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+        height: 36px;
+        padding-right: 10px;
+>>>>>>> Pulled latest release
         position: absolute;
         right: 0;
         text-align: right;
         top: 0;
         width: 120px;
 <<<<<<< HEAD
+<<<<<<< HEAD
         z-index: 20;
 =======
         z-index: 2;
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+        z-index: 20;
+>>>>>>> Pulled latest release
 
         &.hidden {
           display: none;
@@ -427,10 +592,14 @@
           color: inherit;
           display: inline-block;
 <<<<<<< HEAD
+<<<<<<< HEAD
           line-height: 36px;
 =======
           line-height: 32px;
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+          line-height: 36px;
+>>>>>>> Pulled latest release
           opacity: .7;
           text-decoration: none;
 
@@ -438,16 +607,21 @@
             float: left;
             font-size: 16px;
 <<<<<<< HEAD
+<<<<<<< HEAD
             line-height: 36px;
 =======
             line-height: 32px;
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+            line-height: 36px;
+>>>>>>> Pulled latest release
             margin-right: 5px;
             padding-top: 1px;
           }
 
           span {
             float: left;
+<<<<<<< HEAD
 <<<<<<< HEAD
             line-height: 36px;
           }
@@ -597,87 +771,173 @@
       padding: 16px;
 =======
             line-height: 32px;
-          }
-
-        }
-      }
-
-      .select2-selection {
-
-        input[disabled] {
-          pointer-events: none;
-        }
-
-        .select2-selection__rendered {
-          cursor: pointer;
-          float: left;
-          padding-left: 2px;
-          padding-right: 130px;
-
-          input {
-            cursor: pointer;
-            line-height: 30px;
-            margin-top: 0;
-          }
-        }
-
-        .select2-selection__choice {
-          border: 1px solid transparent;
-          border-radius: 3px;
-          color: $color-white;
-
-          .select2-selection__choice__remove {
-            color: $color-white;
+=======
+            line-height: 36px;
+>>>>>>> Pulled latest release
           }
         }
       }
+    }
+  }
 
-      .select2-container--disabled {
+  #manage-module-tags-modal {
+    .well {
+      border: 0;
+      box-shadow: none;
+    }
+  }
 
-        .select2-selection__rendered {
-          padding-right: 10px;
-        }
-      }
+  .task-assigned-users {
+    align-items: center;
+    border-radius: 17px;
+    display: flex;
+
+    &.empty {
+      border-radius: 4px;
+      padding: 0 4px;
+    }
+
+    &:hover {
+      background-color: $color-concrete;
+      text-decoration: none;
+    }
+  }
+
+  .assign-new-user {
+    background-color: $color-alto;
+    color: $color-volcano;
+    text-align: center;
+
+    .fa-plus {
+      font-size: 16px;
     }
   }
 }
 
+.task-notes {
+  display: inline-block;
+  position: relative;
+  width: 100%;
 
-.select2-dropdown.module-tags-selector-dropdown {
-
-  .loading-results {
-    display: none;
+  .no-description {
+    font-size: 16px;
   }
 
-  .select2-results__option {
-    padding-left: 5px !important;
+  .task-notes-content {
+    margin-left: 10px;
+  }
+}
 
-    .add-tags {
-      align-items: center;
-      display: flex;
+.my-module-protocol-status {
+  position: relative;
+
+  .status-label {
+    @include font-h3;
+    color: $color-alto;
+    float: left;
+    margin: 0 3px;
+
+    &.linked {
+      color: $brand-primary;
+    }
+  }
+
+  .status-info {
+    @include font-h2;
+    color: inherit;
+    text-decoration: none;
+
+    &:hover,
+    &:active {
+      color: inherit;
+      text-decoration: none;
     }
 
-    .create-new {
-      opacity: .6;
+    &.protocol-newer {
+      color: $brand-focus;
     }
 
-    .tag-color {
-      border-radius: 3px;
-      display: inline-block;
-      height: 14px;
-      margin-right: 5px;
-      margin-top: 1px;
-      width: 14px;
+    &.parent-newer {
+      color: $brand-warning;
     }
+  }
 
+  .status-info-dropdown {
+    left: -125px;
+    max-width: 100vw;
+    width: 650px;
+
+    .dropdown-body {
+      border-bottom: $border-tertiary;
+      padding: 10px 32px;
+
+      .info-line {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        margin: 9px 0;
+
+        .description {
+          @include font-button;
+          flex-grow: 1;
+          min-width: 120px;
+        }
+
+        .value {
+          @include font-h3;
+          flex-shrink: 0;
+        }
+
+        &.new-parent-version {
+          .value {
+            color: $brand-warning;
+
+            &::before {
+              @include font-awesome;
+              content: "\f2f1";
+              margin-right: 5px;
+            }
+          }
+        }
+      }
+
+      .notification-line {
+        @include font-button;
+        color: $color-silver-chalice;
+        display: flex;
+        margin: 8px 0;
+
+<<<<<<< HEAD
     &::before {
       display: none;
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+        .fas {
+          line-height: 21px;
+          margin-right: 3px;
+        }
+
+        &.new-parent-version {
+          color: $brand-warning;
+        }
+
+        &.new-protocol-version {
+          color: $brand-focus;
+        }
+      }
+    }
+
+    .dropdown-footer {
+      padding: 16px;
+>>>>>>> Pulled latest release
     }
   }
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Pulled latest release
 .task-details-dropdown-container {
   .task-details-button {
     @include font-h2;
@@ -685,6 +945,7 @@
     margin: 0 3px;
     text-decoration: none;
   }
+<<<<<<< HEAD
 
   .dropdown-menu {
     @include font-button;
@@ -767,45 +1028,84 @@
   flex-grow: 1;
   margin-bottom: 5px;
   position: relative;
-
-  .btn-group {
-    align-items: center;
-    display: flex;
-    float: right;
-    height: 33px;
-  }
-
-  .title {
-    font-size: 14px;
-  }
-
-  .dropdown-button {
-    cursor: pointer;
-    padding: 10px 5px;
-  }
+=======
+>>>>>>> Pulled latest release
 
   .dropdown-menu {
-    left: auto;
-    padding: 0;
-    right: 0;
-    width: 402px;
+    @include font-button;
+    min-width: 500px;
+    padding: 1em 2em;
 
-    .protocol {
-      cursor: pointer;
-      display: inline-block;
-      float: left;
-      padding: 5px 10px;
-      transition: $md-transaction;
-      width: 200px;
+    .task-details-value {
+      @include font-h3;
+    }
 
-      &:hover {
-        background: $color-gainsboro;
+    .row-v-margin {
+      margin-bottom: .5em;
+      margin-top: .5em;
+    }
+  }
+}
+
+.task-information {
+  column-gap: 1em;
+  display: grid;
+  grid-template-columns: auto minmax(max-content, 18em);
+
+  .task-section-header {
+    grid-column: 1 / span 1;
+  }
+
+  .task-details {
+    grid-column: 1 / span 1;
+    grid-row: 2 / span 1;
+  }
+
+  .task-flows {
+    grid-column: 2 / span 1;
+    grid-row: 1 / span 2;
+
+    .status-label {
+      @include font-small;
+      font-weight: bold;
+    }
+  }
+}
+
+@media (max-width: 700px) {
+  .my-module-protocol-status {
+    .status-info-dropdown {
+      left: -75px;
+      width: 300px;
+
+      .dropdown-footer {
+        .btn {
+          float: left !important;
+          margin: 5px 0;
+          width: auto;
+        }
       }
+    }
+  }
 
+<<<<<<< HEAD
       .fas {
         margin-right: 5px;
       }
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+  .task-information {
+    grid-template-columns: auto;
+    row-gap: .5em;
+
+    .task-details {
+      grid-row: 3 / span 1;
+    }
+
+    .task-flows {
+      grid-column: unset;
+      grid-row: 2 / span 1;
+>>>>>>> Pulled latest release
     }
   }
 }

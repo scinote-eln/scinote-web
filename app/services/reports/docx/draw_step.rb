@@ -3,6 +3,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 module Reports::Docx::DrawStep
+<<<<<<< HEAD
   def draw_step(step)
     color = @color
     step_type_str = step.completed ? 'completed' : 'uncompleted'
@@ -14,8 +15,11 @@ module DrawStep
 module Reports::Docx::DrawStep
 >>>>>>> Initial commit of 1.17.2 merge
   def draw_step(subject)
+=======
+  def draw_step(subject, my_module)
+>>>>>>> Pulled latest release
     color = @color
-    step = Step.find_by_id(subject['id']['step_id'])
+    step = my_module.protocols.first.steps.find_by(id: subject['id']['step_id'])
     return unless step
 
     step_type_str = step.completed ? 'completed' : 'uncompleted'
@@ -41,11 +45,16 @@ module Reports::Docx::DrawStep
     if step.description.present?
       html = custom_auto_link(step.description, team: @report_team)
 <<<<<<< HEAD
+<<<<<<< HEAD
       Reports::HtmlToWordConverter.new(@docx, { scinote_url: @scinote_url,
                                                 link_style: @link_style }).html_to_word_converter(html)
 =======
       html_to_word_converter(html)
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+      Reports::HtmlToWordConverter.new(@docx, { scinote_url: @scinote_url,
+                                                link_style: @link_style }).html_to_word_converter(html)
+>>>>>>> Pulled latest release
     else
       @docx.p I18n.t 'projects.reports.elements.step.no_description'
     end
@@ -70,7 +79,7 @@ module Reports::Docx::DrawStep
 
 =======
     subject['children'].each do |child|
-      public_send("draw_#{child['type_of']}", child)
+      public_send("draw_#{child['type_of']}", child, step)
     end
 >>>>>>> Finished merging. Test on dev machine (iMac).
     @docx.p

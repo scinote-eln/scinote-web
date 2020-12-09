@@ -2,12 +2,12 @@
 <% provide(:container_class, "no-second-nav-container") %>
 
 <%= render partial: 'users/settings/sidebar.html.erb' %>
-<div class="tab-content">
+<div class="tab-content user-account-addons">
   <div class="tab-pane content-pane active" role="tabpanel">
 
     <div class="row">
       <div class="col-xs-12 col-sm-12">
-        <h4><%= t('users.settings.account.addons.title') %></h4>
+        <h1 class="addons-title"><%= t('users.settings.account.addons.title') %></h1>
         <div data-hook="settings-addons-container">
           <em data-hook="settings-addons-no-addons">
             <%= t('users.settings.account.addons.no_addons') %>

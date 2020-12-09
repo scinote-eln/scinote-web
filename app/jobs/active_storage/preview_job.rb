@@ -7,12 +7,18 @@ class ActiveStorage::PreviewJob < ActiveStorage::BaseJob
   discard_on StandardError do |job, error|
     blob = ActiveStorage::Blob.find_by(id: job.arguments.first)
 <<<<<<< HEAD
+<<<<<<< HEAD
     ActiveRecord::Base.no_touching do
       blob&.attachments&.take&.record&.update(file_processing: false)
     end
 =======
     blob&.attachments&.take&.record&.update(file_processing: false)
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+    ActiveRecord::Base.no_touching do
+      blob&.attachments&.take&.record&.update(file_processing: false)
+    end
+>>>>>>> Pulled latest release
     Rails.logger.error "Couldn't generate preview for Blob with id: #{job.arguments.first}. Error:\n #{error}"
   end
 
@@ -31,11 +37,17 @@ class ActiveStorage::PreviewJob < ActiveStorage::BaseJob
                       "Transformations applied: #{preview.variation.transformations}"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     ActiveRecord::Base.no_touching do
       blob.attachments.take.record.update(file_processing: false)
     end
 =======
     blob.attachments.take.record.update(file_processing: false)
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+    ActiveRecord::Base.no_touching do
+      blob.attachments.take.record.update(file_processing: false)
+    end
+>>>>>>> Pulled latest release
   end
 end

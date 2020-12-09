@@ -54,7 +54,11 @@ var RepositoryStatusColumnType = (function() {
         var picker = new EmojiButton({ rootElement: document.getElementById('manage-repository-column') });
         var iconElement = this;
         picker.on('emoji', emoji => {
+<<<<<<< HEAD
           $(iconElement).attr('emoji', emoji.emoji).html(twemoji.parse(emoji.emoji));
+=======
+          $(iconElement).attr('emoji', emoji).html(twemoji.parse(emoji));
+>>>>>>> Pulled latest release
           validateForm();
         });
 
@@ -63,9 +67,13 @@ var RepositoryStatusColumnType = (function() {
         } else {
           picker.showPicker(iconElement);
         }
+<<<<<<< HEAD
         $.each($('.emoji-picker__emojis').last().find('.emoji-picker__container'), function(i, container) {
           twemoji.parse(container);
         });
+=======
+        twemoji.parse($('.emoji-picker').last().find('.emoji-picker__tab-body')[1]);
+>>>>>>> Pulled latest release
       })
       .on('click', '.emoji-picker__tab-body.active .emoji-picker__emoji', function() {
         if ($('.emoji-picker__variant-popup').length) {
@@ -75,7 +83,11 @@ var RepositoryStatusColumnType = (function() {
       .on('click', '.emoji-picker__tab', function() {
         $.each($('.emoji-picker__tab'), (i, tab) => {
           if ($(tab).hasClass('active')) {
+<<<<<<< HEAD
             twemoji.parse($('.emoji-picker__container')[i]);
+=======
+            twemoji.parse($('.emoji-picker__tab-body')[i]);
+>>>>>>> Pulled latest release
           }
         });
       });

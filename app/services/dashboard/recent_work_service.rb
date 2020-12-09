@@ -2,7 +2,10 @@
 
 module Dashboard
   class RecentWorkService
+<<<<<<< HEAD
     include PermissionExtends
+=======
+>>>>>>> Pulled latest release
     include InputSanitizeHelper
     include Rails.application.routes.url_helpers
 
@@ -13,6 +16,7 @@ module Dashboard
     end
 
     def call
+<<<<<<< HEAD
       all_activities = @team.activities.where(owner_id: @user.id)
       all_activities = join_project_user_roles(all_activities)
       all_activities = join_report_project_user_roles(all_activities)
@@ -60,6 +64,20 @@ module Dashboard
                              .select('MAX(activities.created_at) AS last_change', :subject_id, :subject_type)
                              .group(:subject_id, :subject_type)
                              .order(last_change: :desc)
+=======
+      visible_projects = Project.viewable_by_user(@user, @team)
+
+      activities = Activity.where(owner_id: @user.id)
+                           .where('((project_id IS NULL AND team_id = ?) OR project_id IN (?))',
+                                  @team.id,
+                                  visible_projects.pluck(:id))
+                           .where.not(type_of: Extends::DASHBOARD_BLACKLIST_ACTIVITY_TYPES)
+                           .select('MAX(created_at) AS last_change',
+                                   :subject_id,
+                                   :subject_type)
+                           .group(:subject_id, :subject_type)
+                           .order(last_change: :desc)
+>>>>>>> Pulled latest release
 
       query = Activity.from("(#{activities.to_sql}) AS activities")
                       .results_joins
@@ -139,6 +157,7 @@ module Dashboard
 
     private
 
+<<<<<<< HEAD
     def join_project_user_roles(activities)
       activities.joins("LEFT OUTER JOIN projects project_subjects
                         ON project_subjects.id = activities.subject_id AND activities.subject_type='Project'")
@@ -217,6 +236,8 @@ module Dashboard
                         ON step_my_module_user_roles.id = step_my_module_user_assignments.user_role_id")
     end
 
+=======
+>>>>>>> Pulled latest release
     def generate_url(recent_object)
       object_id = recent_object[:group_id].gsub(/[^0-9]/, '')
 

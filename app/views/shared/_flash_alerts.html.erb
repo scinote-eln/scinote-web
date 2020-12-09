@@ -1,29 +1,23 @@
 <div id="notifications">
   <% if flash[:success] %>
   <div id="alert-flash" class="alert alert-success alert-dismissable alert-floating">
-    <div>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
       <span class="fas fa-check-circle"></span>
-      <span><%= sanitize_input(flash[:success]) %></span>
-    </div>
+      <span class="message"><%= sanitize_input(flash[:success]) %></span>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
   </div>
   <% end %>
   <% if notice %>
   <div id="alert-flash" class="alert alert-info alert-dismissable alert-floating">
-    <div>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
       <span class="fas fa-info-circle"></span>
-      <span><%= notice %></span>
-    </div>
+      <span class="message"><%= notice %></span>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
   </div>
   <% end %>
   <% if alert and !alert.empty? or flash[:error]%>
   <div id="alert-flash" class="alert alert-danger alert-dismissable alert-floating">
-    <div>
+      <span class="fas fa-exclamation-triangle"></span>
+      <span class="message"><%= alert || sanitize_input(flash[:error]) %></span>
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-      <span class="fas fa-exclamation-circle"></span>
-      <span><%= alert || sanitize_input(flash[:error]) %></span>
-    </div>
   </div>
   <% end %>
 </div>

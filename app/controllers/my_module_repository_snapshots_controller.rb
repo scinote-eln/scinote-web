@@ -5,8 +5,12 @@ class MyModuleRepositorySnapshotsController < ApplicationController
   before_action :load_repository, only: :create
   before_action :load_repository_snapshot, except: %i(create full_view_sidebar select)
   before_action :check_view_permissions, except: %i(create destroy select)
+<<<<<<< HEAD
   before_action :check_create_permissions, only: %i(create)
   before_action :check_manage_permissions, only: %i(destroy select)
+=======
+  before_action :check_manage_permissions, only: %i(create destroy select)
+>>>>>>> Pulled latest release
 
   def index_dt
     @draw = params[:draw].to_i
@@ -20,11 +24,18 @@ class MyModuleRepositorySnapshotsController < ApplicationController
       repository_rows = datatable_service.repository_rows
       rows_view = 'repository_rows/simple_view_index.json'
     else
+<<<<<<< HEAD
       repository_rows =
         datatable_service.repository_rows
                          .preload(:repository_columns,
                                   :created_by,
                                   repository_cells: { value: @repository_snapshot.cell_preload_includes })
+=======
+      repository_rows = datatable_service.repository_rows
+                                         .preload(:repository_columns,
+                                                  :created_by,
+                                                  repository_cells: @repository_snapshot.cell_preload_includes)
+>>>>>>> Pulled latest release
       rows_view = 'repository_rows/snapshot_index.json'
     end
     @repository_rows = repository_rows.page(page).per(per_page)
@@ -145,11 +156,15 @@ class MyModuleRepositorySnapshotsController < ApplicationController
   end
 
   def check_view_permissions
+<<<<<<< HEAD
     render_403 unless can_read_my_module?(@my_module)
   end
 
   def check_create_permissions
     render_403 unless can_create_my_module_repository_snapshots?(@my_module)
+=======
+    render_403 unless can_read_experiment?(@my_module.experiment)
+>>>>>>> Pulled latest release
   end
 
   def check_manage_permissions

@@ -2,7 +2,11 @@
 
 var DataTableHelpers = (function() {
   return {
+<<<<<<< HEAD
     initLengthAppearance: function(dataTableWraper) {
+=======
+    initLengthApearance: function(dataTableWraper) {
+>>>>>>> Pulled latest release
       var tableLengthSelect = $(dataTableWraper).find('.dataTables_length select');
       if (tableLengthSelect.val() == null) {
         tableLengthSelect.val(10).change();
@@ -25,10 +29,17 @@ var DataTableHelpers = (function() {
     initSearchField: function(dataTableWraper, searchText) {
       var tableFilterInput = $(dataTableWraper).find('.dataTables_filter input');
       tableFilterInput.attr('placeholder', searchText)
+<<<<<<< HEAD
         .addClass('sci-input-field search-field')
         .css('margin', 0);
       $('.dataTables_filter').append(`
           <div class="sci-input-container left-icon search-container">
+=======
+        .addClass('sci-input-field')
+        .css('margin', 0);
+      $('.dataTables_filter').append(`
+          <div class="sci-input-container left-icon">
+>>>>>>> Pulled latest release
             <i class="fas fa-search"></i>
           </div>`).find('.sci-input-container').prepend(tableFilterInput);
       $('.dataTables_filter').find('label').remove();

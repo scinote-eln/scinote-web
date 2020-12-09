@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # frozen_string_literal: true
 
 Given(/^I'm on the Results page of a "([^"]*)" task$/) do |task_name|
@@ -7,6 +8,12 @@ Given(/^I'm on the Results page of a "([^"]*)" task$/) do |task_name|
 Given(/^I'm on the Results page of a "([^"]*)" task$/) do |task_name|
   task = MyModule.find_by_name(task_name)
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+# frozen_string_literal: true
+
+Given(/^I'm on the Results page of a "([^"]*)" task$/) do |task_name|
+  task = MyModule.find_by(name: task_name)
+>>>>>>> Pulled latest release
   visit results_my_module_path(task)
 end
 
@@ -14,6 +21,9 @@ Given(/^I click edit "(.+)" result icon$/) do |result_name|
   find('.panel-heading', text: result_name).find('.edit-result-asset').click
 end
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Pulled latest release
 
 Then('I input {string} in cell') do |input|
   find('.handsontableInput').set(input)
@@ -34,5 +44,8 @@ end
 Given('I am on Task results page') do
   visit '/modules/1/results'
 end
+<<<<<<< HEAD
 =======
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+>>>>>>> Pulled latest release

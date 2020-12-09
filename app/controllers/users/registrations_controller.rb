@@ -37,10 +37,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
       else
         temp_file = Tempfile.new('avatar', Rails.root.join('tmp'))
         begin
+          check_extension = params[:avatar].split(';')[0].split('/')[1]
           temp_file.binmode
-          temp_file.write(Base64.decode64(params[:avatar].sub(%r{^data:image\/jpeg\;base64,}, '')))
+          temp_file.write(Base64.decode64(params[:avatar].split(',')[1]))
           temp_file.rewind
-          resource.avatar.attach(io: temp_file, filename: 'avatar.jpg')
+          resource.avatar.attach(io: temp_file, filename: "avatar.#{check_extension}")
         ensure
           temp_file.close
           temp_file.unlink
@@ -71,7 +72,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       yield resource if block_given?
       if resource_updated
         # Set "needs confirmation" flash if neccesary
-        if is_flashing_format?
+        if is_flashing_format? || account_update_params['change_avatar']
           flash_key = update_needs_confirmation?(resource, prev_unconfirmed_email) ?
             :update_needs_confirmation : :updated
           set_flash_message :notice, flash_key
@@ -179,6 +180,31 @@ class Users::RegistrationsController < Devise::RegistrationsController
     else
       render :new_with_provider
     end
+  end
+
+  def two_factor_enable
+    if current_user.valid_otp?(params[:submit_code])
+      recovery_codes = current_user.enable_2fa!
+      render json: { recovery_codes: recovery_codes }
+    else
+      render json: { error: t('users.registrations.edit.2fa_errors.wrong_submit_code') }, status: :unprocessable_entity
+    end
+  end
+
+  def two_factor_disable
+    if current_user.valid_password?(params[:password])
+      current_user.disable_2fa!
+      redirect_to edit_user_registration_path
+    else
+      render json: { error: t('users.registrations.edit.2fa_errors.wrong_password') }, status: :forbidden
+    end
+  end
+
+  def two_factor_qr_code
+    current_user.assign_2fa_token!
+    qr_code_url = ROTP::TOTP.new(current_user.otp_secret, issuer: 'SciNote').provisioning_uri(current_user.email)
+    qr_code = RQRCode::QRCode.new(qr_code_url)
+    render json: { qr_code: qr_code.as_svg(module_size: 4) }
   end
 
   protected

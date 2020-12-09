@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 class RepositoryDateTimeValue < RepositoryDateTimeValueBase
+<<<<<<< HEAD
   def data_different?(new_data)
+=======
+  PRELOAD_INCLUDE = :repository_date_time_value
+
+  def data_changed?(new_data)
+>>>>>>> Pulled latest release
     new_time = Time.zone.parse(new_data)
     new_time.to_i != data.to_i
   end
@@ -10,6 +16,7 @@ class RepositoryDateTimeValue < RepositoryDateTimeValueBase
     super(:full_with_comma)
   end
 
+<<<<<<< HEAD
   def self.add_filter_condition(repository_rows, join_alias, filter_element)
     parameters = filter_element.parameters
     case filter_element.operator
@@ -47,6 +54,8 @@ class RepositoryDateTimeValue < RepositoryDateTimeValueBase
     end
   end
 
+=======
+>>>>>>> Pulled latest release
   def export_formatted
     I18n.l(data, format: :full)
   end

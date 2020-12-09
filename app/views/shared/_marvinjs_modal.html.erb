@@ -10,6 +10,7 @@
       <div class="modal-content">
         <div class="modal-header">
 <<<<<<< HEAD
+<<<<<<< HEAD
           <span class="file-name">
             <div class="sci-input-container ">
               <%= text_field_tag :sketch_name, '', placeholder: t('marvinjs.structure_placeholder'), class: 'sci-input-field' %>
@@ -24,12 +25,18 @@
           </button>
 =======
           <button type="button" class="preview-close" data-dismiss="modal"><span class="fas fa-times"></span></button>
+=======
+>>>>>>> Pulled latest release
           <span class="file-name">
             <%= t('marvinjs.modal_name_title') %>
             <%= text_field_tag :sketch_name, '', placeholder: t('marvinjs.structure_placeholder') %>
           </span>
           <p class="file-save-link"><span class="fas fa-save"></span> <%= t('SaveClose')%></p>
+<<<<<<< HEAD
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+          <button type="button" class="preview-close" data-dismiss="modal"><span class="fas fa-times"></span></button>
+>>>>>>> Pulled latest release
         </div>
         <div class="modal-body">
           <div id="marvinjs-editor" data-marvinjs-mode="<%= ENV['MARVINJS_API_KEY'] ? 'remote' : 'local' %>">

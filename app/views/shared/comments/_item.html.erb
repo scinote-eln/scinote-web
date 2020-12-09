@@ -1,6 +1,7 @@
 <% report = false unless defined?(report) %>
 <% readonly = false unless defined?(readonly) %>
 <<<<<<< HEAD
+<<<<<<< HEAD
 <% edit_mode = (!readonly && comment_editable?(comment)) %>
   <div
     class="comment-container <%= edit_mode ? 'inline-init-handler' : '' %> <%= report ? 'report' : '' %>"
@@ -9,6 +10,11 @@
   <div 
     class="comment-container <%= edit_mode ? 'comment-editable-field' : '' %> <%= report ? 'report' : '' %>" 
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+<% edit_mode = (!readonly && comment_editable?(comment)) %>
+  <div
+    class="comment-container <%= edit_mode ? 'inline-init-handler' : '' %> <%= report ? 'report' : '' %>"
+>>>>>>> Pulled latest release
     data-field-to-update="message"
     data-params-group="comment"
     data-path-to-update="<%= comment_action_url(comment) %>"
@@ -16,20 +22,29 @@
     data-response-field="comment"
     data-smart-annotation="true"
 <<<<<<< HEAD
+<<<<<<< HEAD
     data-edit-mode="0"
 =======
     error="false"
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+    data-edit-mode="0"
+>>>>>>> Pulled latest release
   >
     <div class="avatar-placehodler">
       <span class='global-avatar-container'>
         <% if report %>
+<<<<<<< HEAD
 <<<<<<< HEAD
           <% base64_encoded = defined?(export_all) && export_all %>
           <%= image_tag user_avatar_absolute_url(comment.user, :icon_small, base64_encoded), class: 'avatar' %>
 =======
           <%= image_tag comment.user.avatar_base64(:icon_small), class: 'avatar' %>
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+          <% base64_encoded = defined?(export_all) && export_all %>
+          <%= image_tag user_avatar_absolute_url(comment.user, :icon_small, base64_encoded), class: 'avatar' %>
+>>>>>>> Pulled latest release
         <% else %>
           <%= image_tag avatar_path(comment.user, :icon_small), class: 'avatar' %>
         <% end %>
@@ -68,6 +83,9 @@
     </div>
   </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+>>>>>>> Pulled latest release

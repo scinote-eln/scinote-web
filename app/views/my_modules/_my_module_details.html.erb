@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 <% my_module_editable = can_manage_my_module?(@my_module) %>
+=======
+<% my_module_editable = can_manage_module?(@my_module) %>
+>>>>>>> Pulled latest release
 
 <div class="flex-block date-block">
   <div class="flex-block-label">
@@ -20,6 +24,7 @@
   </div>
 </div>
 
+<<<<<<< HEAD
 <div class="module-tags">
   <div class="tags-wrapper">
     <span class="fas block-icon fa-users"></span>
@@ -30,6 +35,18 @@
 
 <div class="module-tags">
   <div class="tags-wrapper" id="module-tags" data-module-tags-url="<%= my_module_my_module_tags_url(@my_module, format: :json) %>">
+=======
+<div class="flex-block">
+  <div class="flex-block-label">
+    <span class="fas block-icon fa-users"></span>
+    <span class="hidden-xs hidden-sm"><%= t('my_modules.details.assigned_users') %></span>
+  </div>
+  <%= render partial: "user_my_modules/index" %>
+</div>
+
+<div class="module-tags">
+  <div id="module-tags" data-module-tags-url="<%= my_module_my_module_tags_url(@my_module, format: :json) %>">
+>>>>>>> Pulled latest release
     <span class="fas block-icon fa-tags"></span>
     <span class="hidden-xs hidden-sm tags-title"><%=t "my_modules.details.tags" %></span>
     <%= render partial: "my_modules/tags", locals: { my_module: @my_module, editable: my_module_editable } %>

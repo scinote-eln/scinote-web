@@ -1,9 +1,17 @@
 {
+<<<<<<< HEAD
   "id": "file:/status_items/resource.json#",
   "type": "object",
   "properties":{
     "data": {
       "$ref": "file:/status_items/item.json#"
+=======
+  "id": "file:/resource.json#",
+  "type": "object",
+  "properties":{
+    "data": {
+      "$ref": "file:/item.json#"
+>>>>>>> Pulled latest release
     }
   },
   "required": ["data"]

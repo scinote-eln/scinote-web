@@ -1,9 +1,7 @@
 <div class="well">
   <%= form_for(@result, url: my_module_result_assets_path(format: :json), data: { type: :json }) do |f| %>
     <div id="new-result-assets-select" class="text-center new-asset-box">
-      <span class="help_tooltips"
-            data-tooltiplink="<%= I18n.t('tooltips.link.protocol.step_add_files') %>"
-            data-tooltipcontent="<%= I18n.t('tooltips.text.protocol.step_add_files') %>">
+      <span>
         <%= t('assets.drag_n_drop.label_html') %>
         <label>
           <span class="btn btn-default new-asset-upload-button">
@@ -21,14 +19,14 @@
     </div>
     <br />
     <div class="align-right">
-      <%= f.submit t('general.cancel'),
-                   class: 'btn btn-default cancel-new',
+      <%= f.button t('general.cancel'),
+                   class: 'btn btn-secondary cancel-new',
                    onclick: 'DragNDropResults.destroyAll();' %>
-      <%= f.submit t('result_assets.new.create'),
-                   class: 'btn btn-success save-result',
+      <%= f.button t('result_assets.new.create'),
+                   class: 'btn btn-primary save-result',
                    onclick: 'DragNDropResults.processResult(event);',
                    disabled: true,
-                   data: { href: my_module_result_assets_path(format: :json) } %>
+                   data: { href: my_module_result_assets_path(page: params[:page], order: params[:order], format: :json) } %>
     </div>
   <% end %>
 </div>

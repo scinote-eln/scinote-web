@@ -17,7 +17,11 @@ module RepositoryRows
     def call
       return self unless valid?
 
+<<<<<<< HEAD
       @repository_row.with_lock do
+=======
+      ActiveRecord::Base.transaction do
+>>>>>>> Pulled latest release
         # Update invetory row's cells
         params[:repository_cells]&.each do |column_id, value|
           column = @repository_row.repository.repository_columns.find_by(id: column_id)
@@ -37,7 +41,11 @@ module RepositoryRows
             next
           end
 
+<<<<<<< HEAD
           if cell.value.data_different?(value)
+=======
+          if cell.value.data_changed?(value)
+>>>>>>> Pulled latest release
             cell.value.update_data!(value, @user)
             @record_updated = true
           end

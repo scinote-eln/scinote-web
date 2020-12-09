@@ -26,12 +26,15 @@ class RepositorySnapshot < RepositoryBase
       .order(:parent_id, updated_at: :desc)
   }
 
+<<<<<<< HEAD
   scope :assigned_to_project, lambda { |project|
     where(team: project.team)
       .joins(my_module: { experiment: :project })
       .where(my_module: { experiments: { project: project } })
   }
 
+=======
+>>>>>>> Pulled latest release
   def self.create_preliminary(repository, my_module, created_by = nil)
     created_by ||= repository.created_by
     repository_snapshot = repository.dup.becomes(RepositorySnapshot)
@@ -45,8 +48,13 @@ class RepositorySnapshot < RepositoryBase
     repository_snapshot.reload
   end
 
+<<<<<<< HEAD
   def default_table_state
     Constants::REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE
+=======
+  def default_columns_count
+    Constants::REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['columns'].length
+>>>>>>> Pulled latest release
   end
 
   def assigned_rows(my_module)
@@ -55,10 +63,13 @@ class RepositorySnapshot < RepositoryBase
     repository_rows
   end
 
+<<<<<<< HEAD
   def default_search_fileds
     ['repository_rows.name', "('#{RepositoryRow::ID_PREFIX}' || repository_rows.parent_id)", 'users.full_name']
   end
 
+=======
+>>>>>>> Pulled latest release
   private
 
   def only_one_selected_for_my_module

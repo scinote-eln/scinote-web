@@ -2,6 +2,7 @@
 @import "mixins";
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 .inline-editing-container {
   line-height: 32px;
   position: relative;
@@ -11,14 +12,19 @@
     font-size: 16px;
 =======
 
+=======
+>>>>>>> Pulled latest release
 .inline-editing-container {
-  display: flex;
-  flex-grow: 1;
-  max-width: 100%;
+  line-height: 32px;
   position: relative;
+  width: 100%;
 
   .button-container {
+<<<<<<< HEAD
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+    font-size: 16px;
+>>>>>>> Pulled latest release
     height: 32px;
     line-height: 32px;
     overflow: hidden;
@@ -32,9 +38,13 @@
       cursor: pointer;
       display: inline-block;
 <<<<<<< HEAD
+<<<<<<< HEAD
       line-height: 32px;
 =======
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+      line-height: 32px;
+>>>>>>> Pulled latest release
       position: absolute;
       text-align: center;
       width: 36px;
@@ -56,20 +66,28 @@
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   &.error {
 =======
   &[data-error="true"] {
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+  &.error {
+>>>>>>> Pulled latest release
 
     .error-block {
       display: block;
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     .input-field {
 =======
     input {
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+    .input-field {
+>>>>>>> Pulled latest release
       font-size: 16px;
       line-height: 20px;
       padding-bottom: 10px;
@@ -91,6 +109,7 @@
     border: 1px solid transparent;
     cursor: pointer;
 <<<<<<< HEAD
+<<<<<<< HEAD
     line-height: 26px;
     margin-left: -5px;
     min-height: 30px;
@@ -99,6 +118,11 @@
     line-height: 26px;
     margin-left: -5px;
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+    line-height: 26px;
+    margin-left: -5px;
+    min-height: 30px;
+>>>>>>> Pulled latest release
     overflow: hidden;
     padding: 2px 4px;
     padding-right: 36px;
@@ -106,14 +130,20 @@
     white-space: nowrap;
     width: calc(100% - 32px);
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Pulled latest release
 
     &:empty:not(:focus):before {
       color: $color-silver-chalice;
       content: attr(data-placeholder);
       font-weight: normal;
     }
+<<<<<<< HEAD
 =======
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+>>>>>>> Pulled latest release
   }
 
   input {
@@ -121,9 +151,13 @@
     border-radius: $border-radius-small;
     cursor: pointer;
 <<<<<<< HEAD
+<<<<<<< HEAD
     display: block;
 =======
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+    display: block;
+>>>>>>> Pulled latest release
     line-height: 26px;
     margin-left: -5px;
     padding: 2px 4px;
@@ -131,13 +165,19 @@
     width: calc(100% - 32px);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Pulled latest release
     &::placeholder {
       color: $color-silver-chalice;
       font-weight: normal;
     }
 
+<<<<<<< HEAD
 =======
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+>>>>>>> Pulled latest release
     &:focus {
       outline: 0;
     }

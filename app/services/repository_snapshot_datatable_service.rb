@@ -13,6 +13,7 @@ class RepositorySnapshotDatatableService < RepositoryDatatableService
   end
 
   def process_query
+<<<<<<< HEAD
     search_value = @params[:search][:value]
     order_params = @params[:order].first
     order_by_column = { column: order_params[:column].to_i, dir: order_params[:dir] }
@@ -20,6 +21,16 @@ class RepositorySnapshotDatatableService < RepositoryDatatableService
     repository_rows = fetch_rows(search_value).preload(Extends::REPOSITORY_ROWS_PRELOAD_RELATIONS)
 
     sort_rows(order_by_column, repository_rows)
+=======
+    search_value = build_conditions(@params)[:search_value]
+    order_obj = build_conditions(@params)[:order_by_column]
+
+    repository_rows = fetch_rows(search_value)
+
+    repository_rows = repository_rows.preload(Extends::REPOSITORY_ROWS_PRELOAD_RELATIONS)
+
+    @repository_rows = sort_rows(order_obj, repository_rows)
+>>>>>>> Pulled latest release
   end
 
   def fetch_rows(search_value)
@@ -28,6 +39,7 @@ class RepositorySnapshotDatatableService < RepositoryDatatableService
     @all_count = repository_rows.count
 
     if search_value.present?
+<<<<<<< HEAD
       repository_row_matches = repository_rows.where_attributes_like(@repository.default_search_fileds, search_value)
       results = repository_rows.where(id: repository_row_matches)
 
@@ -38,6 +50,18 @@ class RepositorySnapshotDatatableService < RepositoryDatatableService
 
         custom_cell_matches = repository_rows.joins(config[:includes])
                                              .where_attributes_like(config[:field], search_value)
+=======
+      matched_by_user = repository_rows.joins(:created_by).where_attributes_like('users.full_name', search_value)
+
+      repository_row_matches = repository_rows
+                               .where_attributes_like(['repository_rows.name', 'repository_rows.id'], search_value)
+      results = repository_rows.where(id: repository_row_matches)
+      results = results.or(repository_rows.where(id: matched_by_user))
+
+      Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each do |field, include_hash|
+        custom_cell_matches = repository_rows.joins(repository_cells: include_hash)
+                                             .where_attributes_like(field, search_value)
+>>>>>>> Pulled latest release
         results = results.or(repository_rows.where(id: custom_cell_matches))
       end
 

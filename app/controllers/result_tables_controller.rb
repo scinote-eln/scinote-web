@@ -41,28 +41,12 @@ class ResultTablesController < ApplicationController
     )
     @result.last_modified_by = current_user
 
-    respond_to do |format|
-      if (@result.save and @table.save) then
-        log_activity(:add_result)
-
-        format.html {
-          flash[:success] = t(
-            "result_tables.create.success_flash",
-            module: @my_module.name)
-          redirect_to results_my_module_path(@my_module)
-        }
-        format.json {
-          render json: {
-            html: render_to_string({
-              partial: "my_modules/result.html.erb", locals: {result: @result}
-            })
-          }, status: :ok
-        }
-      else
-        format.json {
-          render json: @result.errors, status: :bad_request
-        }
-      end
+    if @result.save && @table.save
+      log_activity(:add_result)
+      flash[:success] = t('result_tables.create.success_flash', module: @my_module.name)
+      redirect_to results_my_module_path(@my_module, page: params[:page], order: params[:order])
+    else
+      render json: @result.errors, status: :bad_request
     end
   end
 

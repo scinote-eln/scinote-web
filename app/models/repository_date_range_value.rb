@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class RepositoryDateRangeValue < RepositoryDateTimeRangeValueBase
+<<<<<<< HEAD
   self.skip_time_zone_conversion_for_attributes = %i(start_time end_time)
 
   before_save -> { self.start_time = start_time.to_date }, if: :start_time_changed?
@@ -10,6 +11,14 @@ class RepositoryDateRangeValue < RepositoryDateTimeRangeValueBase
     data = new_data.is_a?(String) ? JSON.parse(new_data).symbolize_keys : new_data
     st = Date.parse(data[:start_time])
     et = Date.parse(data[:end_time])
+=======
+  PRELOAD_INCLUDE = :repository_date_range_value
+
+  def data_changed?(new_data)
+    data = new_data.is_a?(String) ? JSON.parse(new_data).symbolize_keys : new_data
+    st = Time.zone.parse(data[:start_time])
+    et = Time.zone.parse(data[:end_time])
+>>>>>>> Pulled latest release
     st.to_date != start_time.to_date || et.to_date != end_time.to_date
   end
 
@@ -17,6 +26,7 @@ class RepositoryDateRangeValue < RepositoryDateTimeRangeValueBase
     super(:full_date)
   end
 
+<<<<<<< HEAD
   def self.add_filter_condition(repository_rows, join_alias, filter_element)
     parameters = filter_element.parameters
     case filter_element.operator
@@ -42,10 +52,13 @@ class RepositoryDateRangeValue < RepositoryDateTimeRangeValueBase
     end
   end
 
+=======
+>>>>>>> Pulled latest release
   def self.new_with_payload(payload, attributes)
     data = payload.is_a?(String) ? JSON.parse(payload).symbolize_keys : payload
 
     value = new(attributes)
+<<<<<<< HEAD
     value.start_time = Date.parse(data[:start_time])
     value.end_time = Date.parse(data[:end_time])
     value
@@ -59,5 +72,12 @@ class RepositoryDateRangeValue < RepositoryDateTimeRangeValueBase
     save!
   end
 
+=======
+    value.start_time = Time.zone.parse(data[:start_time])
+    value.end_time = Time.zone.parse(data[:end_time])
+    value
+  end
+
+>>>>>>> Pulled latest release
   alias export_formatted formatted
 end

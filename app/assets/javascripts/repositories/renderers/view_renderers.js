@@ -26,8 +26,12 @@ $.fn.dataTable.render.defaultRepositoryAssetValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryTextValue = function(data) {
+<<<<<<< HEAD
   var text = $(`<span class="text-value">${data.value.view}</span>`);
   text.attr('data-edit-value', data.value.edit);
+=======
+  var text = $(`<span class="text-value" data-edit-value="${data.value.edit}">${data.value.view}</span>`);
+>>>>>>> Pulled latest release
   return text.prop('outerHTML');
 };
 
@@ -61,8 +65,12 @@ $.fn.dataTable.render.defaultRepositoryDateValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryDateValue = function(data) {
+<<<<<<< HEAD
   return `<span data-datetime="${data.value.datetime}"
                 data-date="${data.value.formatted}">${data.value.formatted}</span>`;
+=======
+  return `<span data-datetime="${data.value.datetime}" data-date="${data.value.formatted}">${data.value.formatted}</span>`;
+>>>>>>> Pulled latest release
 };
 
 $.fn.dataTable.render.defaultRepositoryDateTimeValue = function() {

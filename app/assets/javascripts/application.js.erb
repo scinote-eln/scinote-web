@@ -28,27 +28,31 @@
 //= require nested_form_fields
 //= require highlight.pack
 //= require tinymce-jquery
+//= require_tree ./tinymce/plugins
 //= require jsPlumb-2.0.4-min
 //= require jsnetworkx
 //= require bootstrap-select
-//= require_directory ./sitewide
+//= require_directory ./repository_columns/columns_initializers
 //= require datatables
+//= require clndr.min
 //= require ajax-bootstrap-select.min
 //= require underscore
 //= require i18n.js
 //= require i18n/translations
 //= require users/settings/teams/invite_users_modal
-//= require select2.min
+//= require repository_columns/index
 //= require perfect-scrollbar.min
-//= require select2_customization
 //= require shared/inline_editing
 //= require activestorage
-//= require rap_program_level.js
-//= require rap_project_level.js
-//= require rap_task_level.js
-//= require rap_topic_level.js
-//= require turbolinks
+//= require global_activities/side_pane
+//= require protocols/header
 //= require marvinjslauncher
+//= require_tree ./repositories/renderers
+//= require_directory ./repositories/validators
+//= require_directory ./dashboard
+//= require_directory ./sitewide
+//= require sidebar
+//= require turbolinks
 
 
 // Initialize links for submitting forms. This is useful for submitting
@@ -100,27 +104,11 @@ function animateLoading(start){
  * Shows spinner if start is true or not given, hides it if false.
  * Optional parameter options for spin.js options.
  */
-function animateSpinner(el, start, options) {
+function animateSpinner(el, start) {
   // If overlaying the whole page, put the spinner in the middle of the page
-  var overlayPage = false;
-  if (_.isUndefined(el) || el === null) {
-    overlayPage = true;
-    if ($(document.body).has('.loading-overlay-center').length === 0) {
-      $(document.body).append('<div class="loading-overlay-center" />');
-    }
-    el = $(document.body).find('.loading-overlay-center');
-  }
+  var overlayPage = _.isUndefined(el) || el === null;
 
-  if (_.isUndefined(start)) {
-    start = true;
-  }
-
-  if (start && options) {
-    $(el).spin(options);
-  }
-  else {
-    $(el).spin(start);
-  }
+  if (_.isUndefined(start)) start = true;
 
   if (start) {
     if (overlayPage) {
@@ -193,15 +181,6 @@ var HelperModule = (function(){
 
   var helpers = {};
 
-  helpers.treeLinkTruncation = function() {
-    $('.tree-link a').each( function(){
-      truncateLongString( $(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
-    });
-    $(".tree-link span").each( function(){
-      truncateLongString( $(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
-    });
-  }
-
   helpers.hideFlashMsg =  function() {
     var flash = $('.alert');
     if (flash.length > 0) {
@@ -228,31 +207,28 @@ var HelperModule = (function(){
       fasSign = ' fa-check-circle ';
     } else if (type === 'danger') {
       alertType = ' alert-danger ';
-      fasSign = ' fa-exclamation-circle ';
+      fasSign = ' fa-exclamation-triangle ';
     } else if (type === 'info') {
       alertType = ' alert-info ';
-      fasSign = ' fa-exclamation-circle ';
+      fasSign = ' fa-info-circle ';
     } else if (type === 'warning') {
       alertType = ' alert-warning ';
-      fasSign = ' fa-exclamation-circle ';
+      fasSign = ' fa-exclamation-triangle ';
     }
     var htmlSnippet = '<div id="alert-flash" class="alert alert' + alertType +
                       'alert-dismissable alert-floating">' +
-                        '<div>' +
+                        '<span class="fas' + fasSign + '"></span>&nbsp;' +
+                        '<span class="message">' + message + '</span>' +
                         '<button type="button" class="close" ' +
-                        'data-dismiss="alert" aria-label="Close">' +
+                          'data-dismiss="alert" aria-label="Close">' +
                           '<span aria-hidden="true">×</span></button>' +
-                            '<span class="fas' + fasSign + '"></span>&nbsp;' +
-                            '<span>' + message + '</span>' +
-                          '</div>' +
-                        '</div>';
+                      '</div>';
     $('#notifications').html(htmlSnippet);
     helpers.hideFlashMsg();
     helpers.dismissAlert();
   }
 
   $(document).on('turbolinks:load', function() {
-    helpers.treeLinkTruncation();
     helpers.hideFlashMsg();
     helpers.dismissAlert();
   });
@@ -283,4 +259,28 @@ var HelperModule = (function(){
     /* Clean up TinyMCE */
     tinymce.remove();
   });
-})();
+
+  // Show warning if page has unsaved data
+  $(document).on('turbolinks:before-visit', () => {
+    let exit = true;
+    let editing = $(`.${GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME}`).length > 0;
+
+    if (editing) {
+      exit = confirm(I18n.t('general.leaving_unsaved_warning'));
+    }
+
+    return exit;
+  });
+}());
+
+// Check that loaded page, not turbolinks preview
+function notTurbolinksPreview() {
+  return !document.documentElement.hasAttribute("data-turbolinks-preview");
+}
+
+const windowScrollEvents = {};
+$(window).scroll(function() {
+  $.each(windowScrollEvents, function(key, scroll_function){
+    scroll_function();
+  })
+})

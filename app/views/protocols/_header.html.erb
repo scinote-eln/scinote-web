@@ -1,93 +1,57 @@
-<div class="page-header">
-  <% if can_manage_protocol_in_repository?(@protocol) %>
-    <a class="edit-name-link" data-action="edit-name" data-role="name-refresh" data-remote="true" href="<%= edit_name_modal_protocol_path(@protocol, format: :json) %>" style="color: inherit;">
+<div class="protocol-repository-header">
+  <% unless preview %>
+    <h1 class="page-header repository-protocol-name">
       <%= render partial: "protocols/header/name_label.html.erb" %>
-    </a>
-  <% else %>
-    <%= render partial: "protocols/header/name_label.html.erb" %>
+    </h1>
   <% end %>
-</div>
 
-<div class="row protocol-info">
-  <div class="col-xs-6 col-sm-4 col-md-4">
-    <div class="badge-icon">
-      <span class="fas fa-calendar-alt"></span>
-    </div>
-    <div class="well well-sm">
+  <div class="protocol-info">
+    <div class="created-at-block">
+      <span class="fas block-icon fa-calendar-alt"></span>
       <span class="hidden-xs hidden-sm hidden-md"><%=t "protocols.header.created_at" %>:</span>
-      <strong><%= l(@protocol.created_at, format: :full) %></strong>
+      <b><%= l(@protocol.created_at, format: :full) %></b>
     </div>
-  </div>
 
-  <div class="col-xs-6 col-sm-4 col-md-4">
-    <div class="badge-icon">
-      <span class="fas fa-calendar-alt"></span>
-    </div>
-    <div class="well well-sm">
+    <div class="last-modified-block">
+      <span class="fas block-icon fa-calendar-alt"></span>
       <span class="hidden-xs hidden-sm hidden-md"><%=t "protocols.header.updated_at" %>:</span>
-      <strong data-role="updated-at-refresh"><%= render partial: "protocols/header/updated_at_label.html.erb" %></strong>
+      <b data-role="updated-at-refresh"><%= render partial: "protocols/header/updated_at_label.html.erb" %></b>
     </div>
-  </div>
 
-  <div class="col-xs-12 col-sm-4 col-md-4">
-    <div class="badge-icon">
-      <span class="fas fa-user"></span>
-    </div>
-    <div class="well well-sm">
+    <div class="added-by-block">
+      <span class="fas block-icon fa-user"></span>
       <span class="hidden-xs hidden-sm hidden-md"><%=t "protocols.header.added_by" %>:</span>
-      <strong><%= @protocol.added_by.full_name %></strong>
+      <b><%= @protocol.added_by.full_name %></b>
     </div>
-  </div>
 
-  <div class="col-xs-12 col-sm-8 col-md-8">
-    <div class="badge-icon">
-      <% if can_manage_protocol_in_repository?(@protocol) %>
-        <a data-action="edit-keywords" data-remote="true" href="<%= edit_keywords_modal_protocol_path(@protocol, format: :json) %>" style="color: inherit;">
-          <span class="fas fa-font"></span>
-        </a>
-      <% else %>
-        <span class="fas fa-font"></span>
-      <% end %>
+    <div class="edit-authors-block">
+      <div class="block-label">
+        <span class="fas block-icon fa-graduation-cap"></span>
+        <span class="hidden-xs hidden-sm hidden-md"><%=t "protocols.header.authors" %>:</span>
+      </div>
+      <div class="edit-authors-container">
+        <%= render partial: "protocols/header/authors_label.html.erb", locals: {editable: !preview} %>
+      </div>
     </div>
-    <div class="well well-sm">
-      <span class="hidden-xs hidden-sm hidden-md"><%=t "protocols.header.keywords" %>:</span>
-      <% if can_manage_protocol_in_repository?(@protocol) %>
-        <%= link_to edit_keywords_modal_protocol_path(@protocol, format: :json), remote: true, style: "color: inherit;", data: { action: "edit-keywords", role: "keywords-refresh" } do %>
-          <%= render partial: "protocols/header/keywords_label.html.erb" %>
-        <% end %>
-      <% else %>
-        <%= render partial: "protocols/header/keywords_label.html.erb" %>
-      <% end %>
-    </div>
-  </div>
 
-  <div class="col-xs-12 col-sm-4 col-md-4">
-    <div class="badge-icon">
-      <% if can_manage_protocol_in_repository?(@protocol) %>
-        <a data-action="edit-authors" data-remote="true" href="<%= edit_authors_modal_protocol_path(@protocol, format: :json) %>" style="color: inherit;">
-          <span class="fas fa-graduation-cap"></span>
-        </a>
-      <% else %>
-        <span class="fas fa-graduation-cap"></span>
-      <% end %>
+    <div class="keywords-block">
+      <div class="block-label">
+        <span class="fas block-icon fa-font"></span>
+        <span class="hidden-xs hidden-sm hidden-md"><%=t "protocols.header.keywords" %>:</span>
+      </div>
+      <div class="key-words-container">
+        <%= select_tag "keyword-input-field",  options_for_select(@protocol.protocol_keywords.map{|i| i.name}),{
+          'data-placeholder': t("protocols.no_keywords"),
+          'data-update-url': keywords_protocol_path(@protocol, format: :json),
+          'data-view-mode': !can_manage_protocol_in_repository?(@protocol) || preview,
+          class: 'hidden'
+        } %>
+      </div>
     </div>
-    <div class="well well-sm">
-      <span class="hidden-xs hidden-sm hidden-md"><%=t "protocols.header.authors" %>:</span>
-      <% if can_manage_protocol_in_repository?(@protocol) %>
-        <%= link_to edit_authors_modal_protocol_path(@protocol, format: :json), remote: true, style: "color: inherit;", data: { action: "edit-authors", role: "authors-refresh" } do %>
-          <%= render partial: "protocols/header/authors_label.html.erb" %>
-        <% end %>
-      <% else %>
-        <%= render partial: "protocols/header/authors_label.html.erb" %>
-      <% end %>
-    </div>
-  </div>
 
-  <div class="col-xs-12 col-sm-12 col-md-12 protocol-description">
-    <%= render partial: "protocols/header/description_label.html.erb", locals: {edit_mode: true} %>
+
+    <div class="protocol-description">
+      <%= render partial: "protocols/header/description_label.html.erb", locals: {edit_mode: !preview} %>
+    </div>
   </div>
 </div>
-
-<%= render partial: "protocols/header/edit_metadata_modal.html.erb" %>
-
-<%= javascript_include_tag "protocols/header" %>

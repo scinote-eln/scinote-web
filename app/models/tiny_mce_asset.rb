@@ -103,7 +103,7 @@ class TinyMceAsset < ApplicationRecord
     asset.team.save
   end
 
-  def self.update_old_tinymce(description, obj = nil)
+  def self.update_old_tinymce(description, obj = nil, import = false)
     return description unless description
 
     description.scan(/\[~tiny_mce_id:(\w+)\]/).flatten.each do |token|
@@ -130,7 +130,12 @@ class TinyMceAsset < ApplicationRecord
     if exists?
       order(:id).each do |tiny_mce_asset|
         asset_guid = get_guid(tiny_mce_asset.id)
-        asset_file_name = "rte-#{asset_guid}.#{tiny_mce_asset.image.blob.filename.extension}"
+        extension = tiny_mce_asset.image.blob.filename.extension
+        asset_file_name = if extension.empty?
+                            "rte-#{asset_guid}"
+                          else
+                            "rte-#{asset_guid}.#{tiny_mce_asset.image.blob.filename.extension}"
+                          end
         ostream.put_next_entry("#{dir}/#{asset_file_name}")
         ostream.print(tiny_mce_asset.image.download)
       end

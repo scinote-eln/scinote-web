@@ -7,7 +7,7 @@ class TemplatesService
     @experiment_templates = {}
     Dir.glob(templates_dir_pattern).each do |tmplt_dir|
       id = /[0-9]+/.match(tmplt_dir.split('/').last)[0]
-      uuid = /\"uuid\":\"([a-fA-F0-9\-]{36})\"/
+      uuid = /\"uuid\": \"([a-fA-F0-9\-]{36})\"/
              .match(File.read(tmplt_dir + 'experiment.json'))[1]
       @experiment_templates[uuid] = id.to_i
     end
