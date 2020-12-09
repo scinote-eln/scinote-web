@@ -1,5 +1,4 @@
-/* global TinyMCE, ChemicalizeMarvinJs, MarvinJSUtil, I18n, FilePreviewModal, tinymce */
-/* global Results, Comments */
+/* global TinyMCE, ChemicalizeMarvinJs, MarvinJSUtil, I18n, tinymce, HelperModule */
 /* eslint-disable no-param-reassign */
 /* eslint-disable wrap-iife */
 /* eslint-disable no-use-before-define */
@@ -166,7 +165,6 @@ var MarvinJsEditorApi = (function() {
         TinyMCE.updateImages(config.editor);
       }
       $(marvinJsModal).modal('hide');
-      FilePreviewModal.init();
       config.button.dataset.inProgress = false;
     }).error((response) => {
       if (response.status === 403) {
@@ -319,7 +317,17 @@ var MarvinJsEditorApi = (function() {
 })();
 
 // Initialization
-
+$(document).on('click', '.marvinjs-edit-button', function() {
+  var editButton = $(this);
+  $.post(editButton.data('sketch-start-edit-url'));
+  $('#filePreviewModal').modal('hide');
+  MarvinJsEditor.open({
+    mode: 'edit',
+    data: editButton.data('sketch-description'),
+    name: editButton.data('sketch-name'),
+    marvinUrl: editButton.data('update-url')
+  });
+});
 
 $(document).on('turbolinks:load', function() {
   MarvinJsEditor = MarvinJsEditorApi();

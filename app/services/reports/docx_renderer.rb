@@ -141,9 +141,9 @@ module Reports
     def self.render_asset_image(docx, asset)
       return unless asset
 
-      image_path = Reports::Utils.image_path(asset.file)
+      asset_preview = Reports::Utils.image_prepare(asset)
 
-      dimension = FastImage.size(image_path)
+      dimension = FastImage.size(asset_preview.service_url)
       return unless dimension
 
       x = dimension[0]
@@ -152,8 +152,14 @@ module Reports
         y = y * 300 / x
         x = 300
       end
-      docx.img image_path.split('&')[0] do
-        data asset.blob.download
+      blob_data = if asset_preview.class == ActiveStorage::Preview
+                    asset_preview.image.download
+                  else
+                    asset_preview.blob.download
+                  end
+
+      docx.img asset_preview.service_url.split('&')[0] do
+        data blob_data
         width x
         height y
       end

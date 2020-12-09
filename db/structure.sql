@@ -224,7 +224,8 @@ CREATE TABLE public.assets (
     version integer DEFAULT 1,
     file_processing boolean,
     team_id integer,
-    file_image_quality integer
+    file_image_quality integer,
+    view_mode integer DEFAULT 0 NOT NULL
 );
 
 
@@ -2069,7 +2070,8 @@ CREATE TABLE public.steps (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     last_modified_by_id bigint,
-    protocol_id bigint NOT NULL
+    protocol_id bigint NOT NULL,
+    assets_view_mode integer DEFAULT 0 NOT NULL
 );
 
 
@@ -6960,6 +6962,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200713142353'),
 ('20200714082503'),
 ('20200826143431'),
-('20200909121441');
+('20200902093234'),
+('20200909121441'),
+('20201027133634');
 
 

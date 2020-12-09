@@ -1163,36 +1163,6 @@ ul.content-activities {
     padding: 0 20px;
   }
 
-  .badge-num {
-    position: absolute;
-
-    & > .badge {
-      background: $brand-primary;
-      border-radius: 2em;
-      float: left;
-      font-size: 23.4px;
-      padding: 6px 11px;
-      position: relative;
-      top: 2px;
-    }
-
-    .size-digit-2 {
-      font-size: 18px;
-      padding: 8px;
-    }
-
-    .size-digit-3 {
-      font-size: 14px;
-      padding: 10px 6px;
-    }
-
-    & > .badge.icon {
-      background-color: $color-silver;
-      font-size: 16.5px;
-      padding: 9px;
-    }
-  }
-
   .panel-heading a[data-toggle] {
     color: inherit;
   }
@@ -1256,20 +1226,38 @@ ul.content-activities {
 
 /* Overlay to disable interaction while loading ajax */
 .loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
   bottom: 0;
-  z-index: 1000000000;
   cursor: wait;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1000000000;
+
+  &::before {
+    background: $color-white;
+    content: "";
+    display: block;
+    height: 100%;
+    opacity: .5;
+    width: 100%;
+  }
+
+  &::after {
+    background-image: url("/images/medium/loading.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    content: "";
+    display: block;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
 }
 
-.loading-overlay-center {
+body > .loading-overlay {
   position: fixed;
-  left:50%;
-  top:50%;
-  z-index: 1000000000;
 }
 
 .turbolinks-progress-bar::before {
@@ -1303,6 +1291,7 @@ ul.content-activities {
   border-bottom: 1px dotted $color-alto;
   cursor: help;
   display: inline-block;
+  pointer-events: auto;
 
   .modal-tooltiptext {
     background-color: $color-alto;
@@ -1438,209 +1427,6 @@ ul.content-activities {
 
   .g-recaptcha {
     margin-top: 20px;
-  }
-}
-
-.attachment-thumbnail {
-  display: inline-block;
-  height: 160px;
-  margin: 16px 10px 5px;
-  overflow: hidden;
-  text-align: center;
-  width: 100%;
-
-  img {
-    border-radius: 5px;
-    max-height: 100%;
-    max-width: 100%;
-  }
-
-  .fas {
-    font-size: 100px;
-    line-height: 160px;
-  }
-
-  &.processing {
-    background-image: url("/images/medium/processing.gif");
-    background-position: center;
-    background-repeat: no-repeat;
-  }
-}
-
-// Image preview modal
-.modal-file-preview {
-  background: transparent;
-  font-size: $font-size-large;
-  padding-right: 0 !important;
-  z-index: 1060;
-
-  .preview-close {
-    background: transparent;
-    border: 0;
-    color: $color-white;
-    display: inline-block;
-    float: right;
-  }
-
-  .file-wopi-controls {
-    display: inline-block;
-
-    .btn {
-      margin: 0 15px;
-    }
-  }
-
-  .modal-dialog {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    width: auto;
-  }
-
-  .modal-content {
-    background: transparent;
-    border: 0;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-    color: $color-white;
-    height: 100%;
-    width: auto;
-  }
-
-  .file-preview-container {
-    align-items: center;
-    color: $gray-dark;
-    display: -moz-flex;
-    display: -webkit-flex;
-    display: flex;
-    height: 100%;
-    justify-content: center;
-    text-align: center;
-    width: 60%;
-
-    &.processing {
-      background-image: url("/images/medium/processing.gif");
-      background-position: center;
-      background-repeat: no-repeat;
-    }
-
-    .file-name {
-      color: $color-black;
-      margin: 30px 0;
-    }
-  }
-
-  img {
-    background: url(asset-path("custom/checkerboard-pattern.png"));
-    height: auto;
-    max-width: 100%;
-
-    @media (max-height: 520px) {
-      height: 80%;
-      max-width: 100%;
-    }
-  }
-
-  .modal-header {
-    background: $color-black;
-    border: 0;
-    height: 60px;
-    line-height: 40px;
-    text-align: center;
-
-    .file-name {
-      float: left;
-    }
-  }
-
-  .modal-body {
-    align-items: center;
-    display: -moz-flex;
-    display: -webkit-flex;
-    display: flex;
-    height: calc(100% - 120px);
-    justify-content: center;
-    overflow: hidden;
-    padding: 0;
-  }
-
-  .modal-footer {
-    background: $color-black;
-    border: 0;
-    bottom: 0;
-    height: 60px;
-    position: absolute;
-    text-align: center;
-    width: 100%;
-  }
-
-  .file-download-link {
-    color: $color-white;
-    display: inline-block;
-    float: right;
-    margin-right: 20px;
-  }
-
-  .file-edit-link {
-    color: $color-white;
-    display: inline-block;
-    float: right;
-    margin-right: 20px;
-  }
-}
-
-// Image edit modal
-.modal-file-edit {
-  background: transparent;
-  font-size: $font-size-large;
-  padding: 0 !important;
-
-  .preview-close {
-    background: transparent;
-    border: 0;
-    color: $color-white;
-    display: inline-block;
-    float: right;
-  }
-
-  .modal-dialog {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    width: auto;
-  }
-
-  .modal-content {
-    background: transparent;
-    border: 0;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-    color: $color-white;
-    height: 100%;
-    width: auto;
-  }
-
-  .modal-header {
-    background: $color-black;
-    border: 0;
-    height: 60px;
-    text-align: center;
-
-    .file-name {
-      float: left;
-    }
-  }
-
-  .modal-body {
-    height: calc(100% - 60px);
-    padding: 0;
-  }
-
-  .file-save-link {
-    color: $color-white;
-    display: inline-block;
-    float: right;
-    margin-right: 20px;
   }
 }
 

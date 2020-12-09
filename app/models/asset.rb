@@ -12,6 +12,8 @@ class Asset < ApplicationRecord
   # Lock duration set to 30 minutes
   LOCK_DURATION = 60 * 30
 
+  enum view_mode: { thumbnail: 0, list: 1, inline: 2 }
+
   # ActiveStorage configuration
   has_one_attached :file
 
@@ -40,6 +42,17 @@ class Asset < ApplicationRecord
     dependent: :nullify
   has_many :report_elements, inverse_of: :asset, dependent: :destroy
   has_one :asset_text_datum, inverse_of: :asset, dependent: :destroy
+
+  scope :sort_assets, lambda { |sort_value = 'new'|
+    sort = case sort_value
+           when 'old' then { created_at: :asc }
+           when 'atoz' then { 'active_storage_blobs.filename': :asc }
+           when 'ztoa' then { 'active_storage_blobs.filename': :desc }
+           else { created_at: :desc }
+           end
+
+    joins(file_attachment: :blob).order(sort)
+  }
 
   attr_accessor :file_content, :file_info, :in_template
 
@@ -166,6 +179,14 @@ class Asset < ApplicationRecord
     return '' unless file.attached?
 
     file.blob&.filename&.sanitized
+  end
+
+  def render_file_name
+    if file.attached? && file.metadata['asset_type']
+      file.metadata['name']
+    else
+      file_name
+    end
   end
 
   def file_size
@@ -315,7 +336,7 @@ class Asset < ApplicationRecord
     file_ext = file_name.split('.').last
     action = get_action(file_ext, action)
     if !action.nil?
-      action_url = action.urlsrc
+      action_url = action[:urlsrc]
       if ENV['WOPI_BUSINESS_USERS'] && ENV['WOPI_BUSINESS_USERS'] == 'true'
         action_url = action_url.gsub(/<IsLicensedUser=BUSINESS_USER&>/,
                                      'IsLicensedUser=1&')
@@ -349,7 +370,7 @@ class Asset < ApplicationRecord
   def favicon_url(action)
     file_ext = file_name.split('.').last
     action = get_action(file_ext, action)
-    action.wopi_app.icon if action.try(:wopi_app)
+    action[:icon] if action[:icon]
   end
 
   # locked?, lock_asset and refresh_lock rely on the asset

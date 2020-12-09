@@ -1,0 +1,24 @@
+<div class="modal modal-file-delete" role="dialog" aria-hidden="true" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h2 class="modal-title"><%= t('assets.delete_file_modal.title') %></h2>
+      </div>
+      <div class="modal-body">
+        <p class="asset-confirmation-description"></p>
+        <p><%= t('assets.delete_file_modal.description_2') %></p>
+      </div>
+      <div class="modal-footer">
+        <button type='button' class='btn btn-default' data-dismiss='modal'>
+          <%= t('general.cancel')%>
+        </button>
+        <button type='button' class='btn btn-danger confirm-button' data-dismiss='modal'>
+          <%= t('assets.delete_file_modal.confirm_button') %>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

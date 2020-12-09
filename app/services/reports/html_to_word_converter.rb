@@ -25,7 +25,7 @@ module Reports
           style = elem[:style] || {}
           # print heading if its heading
           # Mixing heading with other style setting causes problems for Word
-          if %w(h1 h2 h3 h4 h5).include?(style[:style])
+          if %w(h1 h2 h3 h4 h5 h6).include?(style[:style])
             @docx.public_send(style[:style], elem[:value])
           else
             @docx.p elem[:value] do
@@ -121,7 +121,7 @@ module Reports
       image = TinyMceAsset.find_by(id: Base62.decode(elem.attributes['data-mce-token'].value))
       return unless image
 
-      image_path = Reports::Utils.image_path(image.image)
+      image_path = Reports::Utils.image_prepare(image).service_url
       dimension = FastImage.size(image_path)
 
       return unless dimension

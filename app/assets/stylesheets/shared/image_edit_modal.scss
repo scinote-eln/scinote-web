@@ -1,0 +1,37 @@
+// Image edit modal
+.modal-file-edit {
+  background: transparent;
+  font-size: $font-size-base;
+  padding: 0 !important;
+
+  .modal-dialog {
+    height: 100%;
+    margin: 0;
+    width: auto;
+  }
+
+  .modal-content {
+    border: 0;
+    height: 100%;
+  }
+
+  .modal-header {
+    align-items: center;
+    background: $color-white;
+    display: flex;
+    height: 4em;
+    padding: 0 1em;
+
+    .file-name {
+      font-weight: bold;
+      margin-right: auto;
+    }
+  }
+
+  .modal-body {
+    height: calc(100% - 4em);
+    padding: 0;
+  }
+}
+
+

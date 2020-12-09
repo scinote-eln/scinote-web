@@ -17,7 +17,7 @@
         </div>
         <% if defined? export_all and export_all %>
           <div class="pull-left table-name">
-              <a href="<%= path %>">
+              <a href="<%= path[:file] %>">
                 <em><%=t "projects.reports.elements.result_table.table_name",
                          name: filename %></em>
 
