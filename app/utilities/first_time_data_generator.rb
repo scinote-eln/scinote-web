@@ -29,6 +29,9 @@ module FirstTimeDataGenerator
       end
     end
 
+    # rap_task_level_id = RapTaskLevel.where(name: projectLevelName).take.id
+    rap_task_level_id = RapTaskLevel.minimum(:id)
+
     project = Project.create(
       visibility: 0,
       name: name,
@@ -39,7 +42,8 @@ module FirstTimeDataGenerator
       last_modified_by: user,
       archived: false,
       template: false,
-      demo: true
+      demo: true,
+      rap_task_level_id: rap_task_level_id
     )
 
     # check if samples repo already exist, then create custom repository samples

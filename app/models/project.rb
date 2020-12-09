@@ -29,6 +29,10 @@ class Project < ApplicationRecord
              foreign_key: 'restored_by_id',
              class_name: 'User',
              optional: true
+  belongs_to :rap_task_level,
+            foreign_key: 'rap_task_level_id',
+            class_name: 'RapTaskLevel',
+            optional: false
   belongs_to :team, inverse_of: :projects, touch: true
   has_many :user_projects, inverse_of: :project
   has_many :users, through: :user_projects

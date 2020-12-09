@@ -19,6 +19,33 @@ Rails.application.routes.draw do
 
     root 'dashboards#show'
 
+    # # EPA Help routes: about, contact, and training pages
+    # get 'help/about', to: 'help#about', as: 'about'
+    # get 'help/contact', to: 'help#contact', as: 'contact'
+    # get 'help/training', to: 'help#training', as: 'training'
+    # # Routes to methods for downloading the Fact Sheet and Manual
+    # # get 'help/download_manual', to: 'help#download_manual', as 'manual'
+    # # get 'help/download_manual' => 'help#download_manual', as 'manual'
+    # get 'help/download_manual'
+    # # get 'users/download_factsheet' => 'users/sessions#download_factsheet', as: 'factsheet'
+
+    # EPA RAP Information JSON results
+    get '/rap_program_level/',
+        to: 'rap_program_level#show',
+        as: 'rap_program_level'
+
+    get 'rap_topic_level/:rap_program_level_id',
+        to: 'rap_topic_level#show',
+        as: 'rap_topic_level'
+
+    get 'rap_project_level/:rap_topic_level_id',
+        to: 'rap_project_level#show',
+        as: 'rap_project_level'
+
+    get 'rap_task_level/:rap_project_level_id',
+        to: 'rap_task_level#show',
+        as: 'rap_task_level'
+
     resources :activities, only: [:index]
 
     get 'forbidden', to: 'application#forbidden', as: 'forbidden'
