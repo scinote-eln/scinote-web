@@ -133,12 +133,13 @@
       margin-left: -2.5em;
       max-width: var(--wrapper-width);
       overflow: hidden;
-      padding: 1em 1em 1em 2.5em;
+      padding: 1em 2.5em;
       text-decoration: none;
       text-overflow: ellipsis;
       white-space: nowrap;
 
-      &:hover {
+      &:hover,
+      &.module-hover {
         background: $color-alto;
       }
 
@@ -151,6 +152,28 @@
       .fa-folder {
         color: $brand-primary-light;
         margin-right: .5em;
+      }
+
+      &.back-button::before {
+        @include font-awesome;
+        content: "\f060";
+        left: 1em;
+        line-height: 26px;
+        position: absolute;
+      }
+    }
+
+    .canvas-center-on {
+      cursor: pointer;
+      display: inline-block;
+      line-height: 4em;
+      margin-left: -2.5em;
+      position: relative;
+      text-align: center;
+      width: 2.5em;
+
+      &:hover {
+        color: $brand-primary;
       }
     }
   }

@@ -1,6 +1,26 @@
-<%= content_for :sidebar do %>
-  <div id="slide-panel" class="visible">
-    <ul class="sidebar-root">
-    </ul>
-  </div>
-<% end %>
+<ul class="sidebar-branch">
+  <li class="sidebar-leaf">
+    <%= link_to t('sidebar.my_module.back_button'), canvas_experiment_path(@my_module.experiment), class: 'sidebar-link back-button' %>
+  </li>
+  <li class="sidebar-leaf">
+    <%= link_to t('sidebar.my_module.steps'),
+        protocols_my_module_url(@my_module),
+        class: "sidebar-link #{'selected' if is_module_protocols?}" %>
+  </li>
+  <li class="sidebar-leaf">
+    <%= link_to t('sidebar.my_module.results'),
+        results_my_module_url(@my_module),
+        class: "sidebar-link #{'selected' if is_module_results?}" %>
+  </li>
+  <li class="sidebar-leaf">
+    <%= link_to t('sidebar.my_module.activities'),
+        activities_my_module_url(@my_module),
+        class: "sidebar-link #{'selected' if is_module_activities?}" %>
+  </li>
+  <li data-hook="sidebar-my-module"></li>
+  <li class="sidebar-leaf">
+    <%= link_to t('sidebar.my_module.archive'),
+        archive_my_module_url(@my_module),
+        class: "sidebar-link #{'selected' if is_module_archive?}" %>
+  </li>
+</ul>

@@ -3,6 +3,13 @@
 var Sidebar = (function() {
   const SIDEBAR_CONTAINER = '.sidebar-container';
 
+  function showSelectedLeaf() {
+    var branchSelectors = $(SIDEBAR_CONTAINER).find('.sidebar-link.selected')
+      .parents('.sidebar-leaf')
+      .find('> .toggle-branch');
+    branchSelectors.removeClass('collapsed fa-caret-right').addClass('fa-caret-down');
+  }
+
   function reloadSidebar() {
     let url = $(SIDEBAR_CONTAINER).data('sidebar-url');
     $.get(url, function(result) {
@@ -24,18 +31,13 @@ var Sidebar = (function() {
     });
   }
 
-  function showSelectedLeaf() {
-    var branchSelectors = $(SIDEBAR_CONTAINER).find('.sidebar-link.selected')
-      .parents('.sidebar-leaf')
-      .find('> .toggle-branch');
-    branchSelectors.removeClass('collapsed fa-caret-right').addClass('fa-caret-down');
-  }
-
   return {
     init: () => {
-      initSideBar();
-      showSelectedLeaf();
-      $('#wrapper').show();
+      if ($(SIDEBAR_CONTAINER).length) {
+        initSideBar();
+        showSelectedLeaf();
+        $('#wrapper').show();
+      }
     },
 
     reload: () => {

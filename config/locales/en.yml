@@ -208,6 +208,19 @@ en:
     branch_expand: "Expand this branch"
     branch_collapse: "Collapse this branch"
     no_module_group: "No workflow"
+    experiments:
+      sidebar_title: "EXPERIMENTS"
+      back_button: "Back to projects"
+    my_modules:
+      sidebar_title: "TASKS"
+      back_button: "Back to experiments"
+    my_module:
+      sidebar_title: "TASK"
+      back_button: "Back to all tasks"
+      steps: "Protocols"
+      results: "Results"
+      activities: "Activity"
+      archive: "Archived results"
 
   nav2:
     all_projects:
@@ -226,7 +239,6 @@ en:
       steps: "Protocols"
       results: "Results"
       activities: "Activity"
-      repositories: "Inventories"
       archive: "Archived results"
 
   search:
@@ -863,7 +875,6 @@ en:
       no_activities: "There are no activities for this task."
       more_activities: "More activities"
     repository:
-      head_title: "%{project} | %{module} | Inventory %{repository}"
       export: 'Export'
       full_view:
         modal_live_header: ': Live version'
@@ -1301,8 +1312,6 @@ en:
     columns_delete: "Delete"
     columns_changed: "Someone removed/added a new column to the inventory in use. To prevent data inconsistency we will reload this page for you."
     columns_visibility: "Visible columns"
-    view_all_records: "View All Items"
-    view_assigned_records: "View Assigned Items"
     modal_delete_record:
       title: "Delete items"
       notice: "Are you sure you want to delete the selected item(s)?"

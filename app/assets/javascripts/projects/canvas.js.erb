@@ -169,9 +169,10 @@ function initializeEdit() {
   $("#canvas-container").addClass("canvas-container-edit-mode");
 
   // Hide sidebar & also its toggle button
-  $("#wrapper").addClass("hidden2");
+  $(".sidebar-container").addClass("collapsed");
+  $("#wrapper").css("paddingLeft", "0");
   $(".navbar-secondary").addClass("navbar-without-sidebar");
-  $("#sidebar-arrow").addClass("invisible");
+  $(".show-sidebar").addClass("invisible");
 
   // Also, hide zoom levels button group
   $("#diagram-buttons").hide();
@@ -309,8 +310,8 @@ function initializeFullZoom() {
   bindEditDueDateAjax();
   bindEditTagsAjax($("div.module-large"));
   bindFullZoomAjaxTabs();
-  initModulesHover($("div.module-large"), $("#slide-panel"));
-  initSidebarClicks($("div.module-large"), $("#slide-panel"), $("#diagram"), $("#canvas-container"), 20);
+  initModulesHover($("div.module-large"), $("#sidebar-wrapper"));
+  initSidebarClicks($("div.module-large"), $("#sidebar-wrapper"), $("#diagram"), $("#canvas-container"), 20);
 
   // Restore draggable position
   restoreDraggablePosition($("#diagram"), $("#canvas-container"));
@@ -356,8 +357,8 @@ function initializeMediumZoom() {
   positionModules(".diagram .module-medium", GRID_DIST_MEDIUM_X, GRID_DIST_MEDIUM_Y);
   initJsPlumb("#diagram-container", "#diagram", "div.module-medium", { scrollEnabled: true, gridDistX: GRID_DIST_MEDIUM_X, gridDistY: GRID_DIST_MEDIUM_Y });
   bindEditTagsAjax($("div.module-medium"));
-  initModulesHover($("div.module-medium"), $("#slide-panel"));
-  initSidebarClicks($("div.module-medium"), $("#slide-panel"), $("#diagram"), $("#canvas-container"), 20);
+  initModulesHover($("div.module-medium"), $("#sidebar-wrapper"));
+  initSidebarClicks($("div.module-medium"), $("#sidebar-wrapper"), $("#diagram"), $("#canvas-container"), 20);
 
   // Restore draggable position
   restoreDraggablePosition($("#diagram"), $("#canvas-container"));
@@ -383,8 +384,8 @@ function initializeSmallZoom() {
 
   positionModules(".diagram .module-small", GRID_DIST_SMALL_X, GRID_DIST_SMALL_Y);
   initJsPlumb("#diagram-container", "#diagram", "div.module-small", { scrollEnabled: true, gridDistX: GRID_DIST_SMALL_X, gridDistY: GRID_DIST_SMALL_Y });
-  initModulesHover($("div.module-small"), $("#slide-panel"));
-  initSidebarClicks($("div.module-small"), $("#slide-panel"), $("#diagram"), $("#canvas-container"), 20);
+  initModulesHover($("div.module-small"), $("#sidebar-wrapper"));
+  initSidebarClicks($("div.module-small"), $("#sidebar-wrapper"), $("#diagram"), $("#canvas-container"), 20);
 
   // Restore draggable position
   restoreDraggablePosition($("#diagram"), $("#canvas-container"));
@@ -2513,44 +2514,31 @@ function restoreDraggablePosition(draggable, parent) {
 }
 
 /**
- * Initialize the modules group hover animation.
+ * Initialize the modules hover animation.
  * @param modules - The modules jQuery selector.
  * @param sidebar - The sidebar jQuery selector.
  */
 function initModulesHover(modules, sidebar) {
   function handlerIn() {
-    var groupId = $(this).data("module-group");
-    var groupModules = modules.filter("[data-module-group='" + groupId + "']");
-    var groupMenu = sidebar.find("li[data-module-group='" + groupId + "']");
-    groupModules.addClass("group-hover");
-    groupMenu.addClass("group-hover");
-
     var moduleId = $(this).data("module-id");
     if (!_.isUndefined(moduleId)) {
       var currentModule = modules.filter("[data-module-id='" + moduleId + "']");
-      var currentMenu = sidebar.find("li[data-module-id='" + moduleId + "']");
+      var currentMenu = sidebar.find("[data-module-id='" + moduleId + "']");
       currentModule.addClass("module-hover");
       currentMenu.addClass("module-hover");
     }
   }
   function handlerOut() {
-    var groupId = $(this).data("module-group");
-    var groupModules = modules.filter("[data-module-group='" + groupId + "']");
-    var groupMenu = $("li[data-module-group='" + groupId + "']");
-    groupModules.removeClass("group-hover");
-    groupMenu.removeClass("group-hover");
-
     var moduleId = $(this).data("module-id");
     if (!_.isUndefined(moduleId)) {
       var currentModule = modules.filter("[data-module-id='" + moduleId + "']");
-      var currentMenu = sidebar.find("li[data-module-id='" + moduleId + "']");
+      var currentMenu = sidebar.find("[data-module-id='" + moduleId + "']");
       currentModule.removeClass("module-hover");
       currentMenu.removeClass("module-hover");
     }
   }
   modules.hover(handlerIn, handlerOut);
-  sidebar.find("li[data-module-id]").hover(handlerIn, handlerOut);
-  sidebar.find("li[data-module-group]").hover(handlerIn, handlerOut);
+  sidebar.find("[data-module-id]").hover(handlerIn, handlerOut);
 }
 
 /**
@@ -2587,8 +2575,8 @@ function calculateModuleGroupSize(modules) {
 }
 
 /**
- * Initialize the modules & groups click action on sidebar
- * so the modules/groups are then centered in canvas.
+ * Initialize the modules click action on sidebar
+ * so the modules are then centered in canvas.
  * @param modules - The modules jQuery selector.
  * @param sidebar - The sidebar jQuery selector.
  * @param draggable - The canvas draggable jQuery selector.
@@ -2597,7 +2585,7 @@ function calculateModuleGroupSize(modules) {
  */
 function initSidebarClicks(modules, sidebar, draggable, parent, modulePadding) {
   function moduleHandler(event) {
-    var moduleId = $(this).closest("li").data("module-id");
+    var moduleId = $(this).data("module-id");
     var module = modules.filter("[data-module-id='" + moduleId + "']");
     var centerX = parent.width() / 2;
     var centerY = parent.height() / 2;
@@ -2609,28 +2597,7 @@ function initSidebarClicks(modules, sidebar, draggable, parent, modulePadding) {
     animateReposition(draggable, left, top);
     return false;
   }
-  function moduleGroupHandler(event) {
-    var groupId = $(this).closest("li").data("module-group");
-    var groupModules = modules.filter("[data-module-group='" + groupId + "']");
-    var groupSize = calculateModuleGroupSize(groupModules);
-    var centerX = parent.width() / 2;
-    var centerY = parent.height() / 2;
-    var left, top;
-    if (groupSize.width > parent.width() || groupSize.height > parent.height()) {
-      left = -groupSize.left + modulePadding;
-      top = -groupSize.top + modulePadding;
-    } else {
-      left = centerX - groupSize.left - (groupSize.width / 2);
-      top = centerY - groupSize.top - (groupSize.height / 2);
-    }
-
-    event.preventDefault();
-    event.stopPropagation();
-    animateReposition(draggable, left, top);
-    return false;
-  }
-  sidebar.find("li[data-module-id] > span > a.canvas-center-on").click(moduleHandler);
-  sidebar.find("li[data-module-group] > span > a.canvas-center-on").click(moduleGroupHandler);
+  sidebar.find(".canvas-center-on").click(moduleHandler);
 }
 
 /**
