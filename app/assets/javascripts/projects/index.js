@@ -562,10 +562,10 @@
   }
 
   function initProjectsViewModeSwitch() {
-    let projectsPageSelector = '.projects-index ';
+    let projectsPageSelector = '.projects-index';
 
     // list/cards switch
-    $(projectsPageSelector + '.projects-view-mode').click(function() {
+    $(projectsPageSelector).on('click', '.projects-view-mode', function() {
       let $btn = $(this);
       $('.projects-view-mode').removeClass('active');
       if ($btn.hasClass('view-switch-cards')) {
@@ -577,16 +577,9 @@
     });
 
     // active/archived switch
-    $(projectsPageSelector + '.archive-switch').click(function() {
-      let $btn = $(this);
-      let mode = $btn.data('mode');
-      let $projectsPageSelector = $(projectsPageSelector);
-      if (mode === 'active') {
-        $projectsPageSelector.removeClass('archived').addClass('active').data('mode', 'active');
-      } else {
-        $projectsPageSelector.removeClass('active').addClass('archived').data('mode', 'archived');
-      }
-      loadCardsView();
+    $(projectsPageSelector).on('click', '.archive-switch', function() {
+      $(projectsPageSelector).toggleClass('archived active').data('mode', $(this).data('mode'));
+      refreshCurrentView();
     });
   }
 

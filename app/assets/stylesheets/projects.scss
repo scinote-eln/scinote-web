@@ -665,13 +665,13 @@ li.module-hover {
 .projects-index {
   &.active {
     [data-view-mode="archived"] {
-      display: none !important;
+      display: none;
     }
   }
 
   &.archived {
     [data-view-mode="active"] {
-      display: none !important;
+      display: none;
     }
   }
 
@@ -829,7 +829,7 @@ li.module-hover {
       grid-auto-rows: 2em;
       grid-column-gap: 1em;
       grid-row-gap: 1em;
-      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
       width: 100%;
 
       .table-header {

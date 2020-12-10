@@ -288,6 +288,11 @@ en:
 
   projects:
     index:
+      header:
+        cards: "Cards"
+        table: "Table"
+        active_projects: "Go to Active projects"
+        archived_projects: "Go to Archived projects"
       head_title: "Projects"
       navigation_title: "PROJECTS"
       breadcrumbs_root: "Projects"

@@ -143,21 +143,21 @@
         </ul>
       </div>
     </div>
-    <%= render layout: "shared/view_switch", locals: { disabled: false } do %>
+    <%= render layout: 'shared/view_switch', locals: { disabled: false } do %>
       <li class="view-switch-cards projects-view-mode active">
-        <i class="fas fa-th-large button-icon"></i> <%= "Cards" %>
+        <i class="fas fa-th-large button-icon"></i> <%= t('projects.index.header.cards') %>
       </li>
 
       <li class="view-switch-list projects-view-mode ">
-        <i class="fas fa-list button-icon"></i> <%= "Table" %>
+        <i class="fas fa-list button-icon"></i> <%= t('projects.index.header.table') %>
       </li>
 
       <li class="view-switch-active archive-switch" data-view-mode="archived" data-mode="active">
-        <i class="fas fa-rocket button-icon"></i> <%= "Go to Active projects" %>
+        <i class="fas fa-rocket button-icon"></i> <%= t('projects.index.header.active_projects') %>
       </li>
 
       <li class="view-switch-archived archive-switch" data-view-mode="active" data-mode="archived">
-        <i class="fas fa-archive button-icon"></i> <%= "Go to Archived projects" %>
+        <i class="fas fa-archive button-icon"></i> <%= t('projects.index.header.archived_projects') %>
       </li>
     <% end %>
   </div>

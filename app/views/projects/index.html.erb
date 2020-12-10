@@ -12,7 +12,7 @@
   <%= render partial: 'projects/index/breadcrumbs' if @current_folder %>
 <% end %>
 
-<div class="content-pane flexible <%= mode %> projects-index" data-mode="<%= mode %>">
+<div class="content-pane flexible projects-index <%= mode %>" data-mode="<%= mode %>">
   <%= render partial: 'projects/index/header' %>
 
   <span style="display: none;" data-hook="projects-index-html"></span>
