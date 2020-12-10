@@ -7,7 +7,8 @@ Canaid::Permissions.register_for(MyModule) do
      assign_sample_to_module
      create_comments_in_module
      create_my_module_repository_snapshot
-     manage_my_module_repository_snapshots)
+     manage_my_module_repository_snapshots
+     change_my_module_flow_status)
     .each do |perm|
     can perm do |_, my_module|
       my_module.active? &&
