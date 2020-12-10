@@ -32,8 +32,6 @@
   var exportProjectsBtn = null;
   var exportProjectsSubmit = null;
 
-  var projectsViewMode = 'cards';
-  var projectsViewFilter = $('.projects-view-filter.active').data('filter');
   var projectsViewSearch;
   var projectsChanged = false;
   var projectsViewSort = $('#sortMenuDropdown a.disabled').data('sort');
@@ -545,7 +543,7 @@
       type: 'GET',
       dataType: 'json',
       data: {
-        filter: projectsViewFilter,
+        filter: $('.projects-index').data('mode'),
         sort: projectsViewSort,
         search: projectsViewSearch
       },
@@ -563,28 +561,25 @@
     });
   }
 
-  function initProjectsViewFilter() {
-    $('.projects-view-filter').click(function(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      if ($(this).data('filter') === projectsViewFilter) {
-        return;
-      }
-      $('.projects-view-filter').removeClass('active');
-      $(this).addClass('active');
-      selectedProjects = [];
-      projectsViewFilter = $(this).data('filter');
-      loadCardsView();
-    });
-  }
-
   function initProjectsViewModeSwitch() {
-    $('input[type=radio][name=projects-view-mode-selector]').change(function() {
-      if (this.value === 'cards') {
+    let projectsPageSelector = '.projects-index';
+
+    // list/cards switch
+    $(projectsPageSelector).on('click', '.projects-view-mode', function() {
+      let $btn = $(this);
+      $('.projects-view-mode').removeClass('active');
+      if ($btn.hasClass('view-switch-cards')) {
         $('#cards-wrapper').removeClass('list');
-      } else if (this.value === 'list') {
+      } else if ($btn.hasClass('view-switch-list')) {
         $('#cards-wrapper').addClass('list');
       }
+      $btn.addClass('active');
+    });
+
+    // active/archived switch
+    $(projectsPageSelector).on('click', '.archive-switch', function() {
+      $(projectsPageSelector).toggleClass('archived active').data('mode', $(this).data('mode'));
+      refreshCurrentView();
     });
   }
 
@@ -604,11 +599,13 @@
   }
 
   function initProjectsFilter() {
-    let $projectsFilter = $('#projectsToolbar .projects-filters');
+    let $projectsFilter = $('.projects-index .projects-filters');
     let $membersFilter = $('.members-filter', $projectsFilter);
     let $foldersCB = $('#folder_search', $projectsFilter);
-    let $createdOnFilter = $('#calendarStartDate', $projectsFilter);
-    let $dueFilter = $('#calendarDueDate', $projectsFilter);
+    let $createdOnStartFilter = $('#createdOnStartDate', $projectsFilter);
+    let $createdOnEndFilter = $('#createdOnEndDate', $projectsFilter);
+    let $archivedOnStartFilter = $('#archivedOnStartDate', $projectsFilter);
+    let $archivedOnEndFilter = $('#archivedOnEndDate', $projectsFilter);
     let $textFilter = $('#textSearchFilterInput', $projectsFilter);
 
     dropdownSelector.init($membersFilter, {
@@ -682,7 +679,8 @@
       }
 
       $('.projects-filters').dropdown('toggle');
-      refreshCurrentView();
+
+      loadCardsView();
     });
 
     // Clear filters
@@ -691,8 +689,10 @@
       e.preventDefault();
 
       dropdownSelector.clearData($membersFilter);
-      if ($createdOnFilter.data('DateTimePicker')) $createdOnFilter.data('DateTimePicker').clear();
-      if ($dueFilter.data('DateTimePicker')) $dueFilter.data('DateTimePicker').clear();
+      if ($createdOnStartFilter.data('DateTimePicker')) $createdOnStartFilter.data('DateTimePicker').clear();
+      if ($createdOnEndFilter.data('DateTimePicker')) $createdOnEndFilter.data('DateTimePicker').clear();
+      if ($archivedOnStartFilter.data('DateTimePicker')) $archivedOnStartFilter.data('DateTimePicker').clear();
+      if ($archivedOnEndFilter.data('DateTimePicker')) $archivedOnEndFilter.data('DateTimePicker').clear();
       $foldersCB.prop('checked', false);
       $textFilter.val('');
     });
@@ -707,7 +707,6 @@
     });
   }
 
-  initProjectsViewFilter();
   initProjectsViewModeSwitch();
   initSorting();
   loadCardsView();
