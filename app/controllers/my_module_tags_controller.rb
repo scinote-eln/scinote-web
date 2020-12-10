@@ -2,8 +2,8 @@ class MyModuleTagsController < ApplicationController
   include InputSanitizeHelper
 
   before_action :load_vars, except: :canvas_index
-  before_action :check_view_permissions, only: :index
-  before_action :check_manage_permissions, only: %i(create index_edit destroy destroy_by_tag_id)
+  before_action :check_view_permissions, only: %i(index index_edit)
+  before_action :check_manage_permissions, only: %i(create destroy destroy_by_tag_id)
 
   def index_edit
     @my_module_tags = @my_module.my_module_tags.order(:id)

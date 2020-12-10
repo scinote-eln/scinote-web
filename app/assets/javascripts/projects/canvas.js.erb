@@ -138,11 +138,16 @@ var hammertime;
  * Initializes page
  */
 function init() {
-  bindModeChange();
-  bindAjax();
-  bindWindowResizeEvent();
-  initializeGraph(".diagram .module-large");
-  initializeFullZoom();
+  if($('#module-archive').length) {
+    bindFullZoomAjaxTabs();
+    bindEditTagsAjax($("div.module-large"));
+  } else {
+    bindModeChange();
+    bindAjax();
+    bindWindowResizeEvent();
+    initializeGraph(".diagram .module-large");
+    initializeFullZoom();
+  }
 }
 
 jsPlumb.ready(function () {
@@ -2951,6 +2956,10 @@ var preventCanvasReloadOnSave = (function() {
     $('#canvas-save').on('click', function() {
       fun();
     })
+  }
+
+  function initArchivedView() {
+
   }
 
   return function() { bindToCanvasSave(preventCanvasReload) };

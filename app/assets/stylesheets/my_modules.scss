@@ -242,6 +242,13 @@
       .nav {
         border: 0;
       }
+
+      .tab-content {
+        background-color: $color-concrete;
+        .tab-pane > .text-center {
+          margin-top: 5px;
+        }
+      }
     }
   }
 }
