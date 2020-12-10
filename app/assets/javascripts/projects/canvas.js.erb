@@ -717,6 +717,10 @@ function bindFullZoomAjaxTabs() {
     target.addClass("active");
     $this.parents(".module-large").addClass("expanded");
 
+    // Add class to bring it in front on archived tasks page (hover other cards when open comments/users)
+    $this.parents('#module-archive').find('.module-container').removeClass('active-card');
+    $this.parents('.module-container').addClass('active-card');
+
     // Call scrollBotton after the comments are displayed
     // so that the scrollHight can be calculated
     if ( targetContents === 'comments' ) {

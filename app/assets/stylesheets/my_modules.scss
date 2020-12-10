@@ -203,6 +203,10 @@
 
   .module-container {
     min-width: 220px;
+
+    &.active-card {
+      z-index: 1000;
+    }
   }
 
   .panel-default {
@@ -245,6 +249,8 @@
 
       .tab-content {
         background-color: $color-concrete;
+        box-shadow: $flyout-shadow;
+
         .tab-pane > .text-center {
           margin-top: 5px;
         }
