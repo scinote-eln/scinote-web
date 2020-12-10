@@ -107,6 +107,8 @@ class ProjectsOverviewService
   end
 
   def filter_project_folder_records(records)
+    records = records.where(archived: true) if @params[:filter] == 'archived'
+    records = records.where(archived: false) if @params[:filter] == 'active'
     records = records.where_attributes_like('project_folders.name', @params[:search]) if @params[:search].present?
     records
   end

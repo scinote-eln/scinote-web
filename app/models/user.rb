@@ -125,6 +125,14 @@ class User < ApplicationRecord
   has_many :restored_projects,
            class_name: 'Project',
            foreign_key: 'restored_by_id'
+  has_many :archived_project_folders,
+           class_name: 'ProjectFolder',
+           foreign_key: 'archived_by_id',
+           inverse_of: :arhived_by
+  has_many :restored_project_folders,
+           class_name: 'ProjectFolder',
+           foreign_key: 'restored_by_id',
+           inverse_of: :restored_by
   has_many :modified_reports,
            class_name: 'Report',
            foreign_key: 'last_modified_by_id'
