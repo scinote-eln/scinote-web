@@ -30,6 +30,13 @@
     </a>
   </div>
 
+  <div class="task-selector-container pull-left" data-view-mode="archived" data-task-id="<%= my_module.id %>">
+    <div class="sci-checkbox-container">
+      <input value="1" type="checkbox" class="sci-checkbox task-selector">
+      <span class="sci-checkbox-label"></span>
+    </div>
+  </div>
+
   <div class="panel-heading">
     <h3 class="panel-title">
       <%= link_to_if can_read_experiment?(my_module.experiment), my_module.name, protocols_my_module_path(my_module) %>

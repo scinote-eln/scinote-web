@@ -215,9 +215,17 @@
     position: unset;
     width: unset;
 
+    .task-selector-container {
+      padding: 11px 10px 0 16px;
+    }
+
     .panel-heading {
       background-color: $color-concrete;
       border-color: $color-white;
+
+      .panel-title {
+        color: $color-volcano;
+      }
     }
 
     .panel-body {
