@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <ul class="sidebar-branch">
   <li class="sidebar-leaf">
     <%= link_to t('sidebar.experiments.back_button'), projects_path, class: 'sidebar-link back-button' %>
@@ -8,3 +9,31 @@
     </li>
   <% end %>
 </ul>
+=======
+<%= content_for :sidebar do %>
+  <div id="slide-panel" class="visible">
+    <ul class="sidebar-root" data-sidebar-url="<%= project_sidebar_path(project) %>">
+      <% if project.active_experiments.present? %>
+        <ul class="tree-child hidden" data-branch-id="pro<%= project.id %>">
+          <% project.sorted_experiments('atoz').preload(:active_my_modules).each do |experiment| %>
+            <% cache [action_name, current_user, experiment] do %>
+              <li data-parent="candidate" class="branch">
+                <span class="tree-link first-indent" title="<%= experiment.name %>">
+                  <% if experiment.active_my_modules.any? %>
+                    <i class="fas fa-caret-right tree-toggle"></i>
+                  <% end %>
+                  <%= link_to experiment.name,
+                              experiment_action_to_link_to(experiment),
+                              class: 'overview_exp_label line-wrap',
+                              data: { type: 'experiment', id: experiment.id }
+                  %>
+                </span>
+              </li>
+            <% end %>
+          <% end %>
+        </ul>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+>>>>>>> Change experiment archived card [SCI-5270]

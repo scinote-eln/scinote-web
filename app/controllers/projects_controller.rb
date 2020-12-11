@@ -199,6 +199,8 @@ class ProjectsController < ApplicationController
     # This is the "info" view
     current_team_switch(@project.team)
     @current_sort = @project.experiments_order || :new
+
+    render :experiment_archive if @project.archived?
   end
 
   def notifications

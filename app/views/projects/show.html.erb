@@ -14,24 +14,6 @@
          data-project-id="<%= @project.id %>">
       <div class="row">
         <div class="col-sm-12">
-          <!-- experiment sort -->
-          <div class="dropdown pull-left">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              <span><%= t("general.sort.#{@current_sort}_html") %></span>
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="sortMenu">
-              <% ["new", "old", "atoz", "ztoa"].each do |sort| %>
-                <li>
-                  <% if @current_sort != sort %>
-                    <a href="?<%= {sort: sort}.reject{|v| v.to_s == "0"}.to_query %>"><%= t("general.sort.#{sort}_html") %></a>
-                  <% else %>
-                    <a class="disabled" href="#"><%= t("general.sort.#{sort}_html") %></a>
-                  <% end %>
-                </li>
-              <% end %>
-            </ul>
-          </div>
           <% if can_create_experiments?(@project) %>
             <%= link_to new_project_experiment_url(@project),
                         remote: true,
@@ -47,7 +29,7 @@
     </div>
   </div>
   <div class="row">
-    <% @project.sorted_active_experiments(@current_sort).each_with_index do |experiment, index| %>
+    <% @project.sorted_experiments(@current_sort).each_with_index do |experiment, index| %>
       <%= render partial: 'projects/show/experiment',
                  locals: { experiment: experiment } %>
     <% end %>

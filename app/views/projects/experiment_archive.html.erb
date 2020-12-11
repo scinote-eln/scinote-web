@@ -10,19 +10,8 @@
 <div class="content-pane" id="experiment-archive">
   <% if @project.experiments.archived.present? %>
     <div class="row" style="margin-top: 10px;">
-      <% @project.experiments.archived.each_with_index do |experiment, i| %>
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-          <%= render partial: "projects/experiment_archive/experiment.html.erb", locals: { experiment: experiment} %>
-        </div>
-        <% if (i+1) % 6 == 0 %>
-        <div class="clearfix visible-lg-block"></div>
-        <% end %>
-        <% if (i+1) % 4 == 0 %>
-        <div class="clearfix visible-md-block"></div>
-        <% end %>
-        <% if (i+1) % 3 == 0 %>
-        <div class="clearfix visible-sm-block"></div>
-        <% end %>
+      <% @project.sorted_experiments(@current_sort, true).each_with_index do |experiment, i| %>
+          <%= render partial: "projects/show/experiment.html.erb", locals: { experiment: experiment} %>
       <% end %>
     </div>
   <% else %>
