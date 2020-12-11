@@ -13,7 +13,7 @@
     </a>
   </div>
   <div class="actions actions-cell">
-    <%= render partial: "projects/index/project_actions_dropdown.html.erb", locals: { project: project, view: 'cards' } %>
+    <%= render partial: 'projects/index/project_actions_dropdown.html.erb', locals: { project: project, view: 'cards' } %>
   </div>
 
   <div class="data-row start-date-row">
@@ -21,7 +21,6 @@
       <span class="card-label"><%= t('projects.index.card.start_date') %></span>
       <span class="value"> <%= l(project.created_at, format: :full_with_comma) %></span>
     </div>
-
   </div>
 
   <div class="data-row visibility-cell">
@@ -45,9 +44,14 @@
         </span>
       <% end %>
 
-      <span class="new-user">
-        <i class="fas fa-plus"></i>
-      </span>
+      <%= link_to project_users_edit_path(project),
+                  class: 'manage-users-link',
+                  remote: true,
+                  data: { 'view-mode': 'active' } do %>
+        <span class="new-user">
+          <i class="fas fa-plus"></i>
+        </span>
+      <% end %>
     </div>
   </div>
 </div>
