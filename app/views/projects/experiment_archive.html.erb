@@ -8,9 +8,9 @@
 <%= render partial: "shared/secondary_navigation" %>
 
 <div class="content-pane" id="experiment-archive">
-  <% if @project.archived_experiments.count > 0 %>
+  <% if @project.experiments.archived.present? %>
     <div class="row" style="margin-top: 10px;">
-      <% @project.archived_experiments.each_with_index do |experiment, i| %>
+      <% @project.experiments.archived.each_with_index do |experiment, i| %>
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
           <%= render partial: "projects/experiment_archive/experiment.html.erb", locals: { experiment: experiment} %>
         </div>

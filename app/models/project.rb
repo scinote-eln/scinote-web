@@ -187,11 +187,7 @@ class Project < ApplicationRecord
            when 'ztoa' then { name: :desc }
            else { created_at: :desc }
            end
-    experiments.is_archived(false).order(sort)
-  end
-
-  def archived_experiments
-    experiments.is_archived(true)
+    experiments.active.order(sort)
   end
 
   def project_my_modules

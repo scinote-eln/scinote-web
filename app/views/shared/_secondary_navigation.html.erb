@@ -69,24 +69,6 @@
             </li>
           <% end %>
 
-        <% elsif experiment_page? %>
-          <% if can_read_experiment?(@experiment) %>
-            <li id="canvas-nav-tab" class="<%= "active" if is_experiment_canvas? %>">
-              <a href="<%= canvas_experiment_url(@experiment) %>" title="<%=t "nav2.experiments.canvas" %>">
-                <span class="hidden-sm hidden-md"><%=t "nav2.experiments.canvas" %></span>
-                <span class="hidden-xs hidden-lg fas fa-folder"></span>
-              </a>
-            </li>
-          <% end %>
-          <% if can_read_project?(@experiment.project) %>
-              <li id="project-archive-nav-tab" class="<%= "active" if is_experiment_archive? %>">
-                <a href="<%= module_archive_experiment_url(@experiment) %>" title="<%=t "nav2.experiments.archive" %>">
-                  <span class="hidden-sm hidden-md"><%=t "nav2.experiments.archive" %></span>
-                  <span class="hidden-xs hidden-lg fas fa-briefcase"></span>
-                </a>
-              </li>
-          <% end %>
-
         <% elsif module_page? %>
           <% if can_read_experiment?(@my_module.experiment) %>
             <li id="steps-nav-tab" class="<%= "active" if is_module_protocols? %>">

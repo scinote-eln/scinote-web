@@ -54,7 +54,7 @@
     </div>
 
     <div class="panel-body">
-      <% if experiment.active_modules.length > 0 %>
+      <% if experiment.my_modules.active.exists? %>
         <%= link_to canvas_experiment_path(experiment) do %>
           <div class="workflowimg-container"
                data-check-img="<%= updated_img_experiment_url(experiment) %>"

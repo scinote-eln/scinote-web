@@ -40,7 +40,7 @@ class MyModuleTagsController < ApplicationController
     experiment = Experiment.find(params[:id])
     render_403 unless can_read_experiment?(experiment)
     res = []
-    experiment.active_my_modules.each do |my_module|
+    experiment.my_modules.active.each do |my_module|
       res << {
         id: my_module.id,
         tags_html: render_to_string(
