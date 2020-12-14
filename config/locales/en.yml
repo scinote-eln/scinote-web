@@ -399,11 +399,11 @@ en:
           label: "Contains text"
           placeholder: "Enter search terms..."
         created_on:
-          label: "Created on"
+          label: "Start date"
           from_placeholder: "From"
           to_placeholder: "To"
         archived_on:
-          label: "Archived on"
+          label: "Archived date"
           from_placeholder: "From"
           to_placeholder: "To"
         members:
@@ -411,12 +411,12 @@ en:
           placeholder: "Select members of a project"
         folders:
           label: "Look inside folders"
-          tooltip: "Hint should appear here"
+          popover_html: "When <strong>“Look inside folders”</strong> is active, the filters will also take all folders and their content into account."
         recent_searches_label: "Recent searches"
         show_btn:
-         many: "Show %{num} results"
-         none: "No results"
-         one: "Show result"
+         many: "Show %{num} projects"
+         none: "No projects"
+         one: "Show project"
         clear_btn: "Clear"
       sort:
         new: "Started last"
