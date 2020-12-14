@@ -108,25 +108,6 @@ Canaid::Permissions.register_for(Protocol) do
   end
 end
 
-Canaid::Permissions.register_for(Result) do
-  # Module, its experiment and its project must be active for all the specified
-  # permissions
-  %i(manage_result).each do |perm|
-    can perm do |_, result|
-      my_module = result.my_module
-      my_module.active? &&
-        my_module.experiment.active? &&
-        my_module.experiment.project.active?
-    end
-  end
-
-  # result: delete, archive
-  can :manage_result do |user, result|
-    result.unlocked?(result) &&
-      user.is_owner_of_project?(result.my_module.experiment.project)
-  end
-end
-
 Canaid::Permissions.register_for(Comment) do
   # Module, its experiment and its project must be active for all the specified
   # permissions
