@@ -385,6 +385,11 @@ en:
       modal_edit_project:
         modal_title: "Edit project %{project}"
         submit: "Save"
+      modal_edit_folder:
+        title: "Edit folder %{folder}"
+        description: "Rename your folder"
+        folder_name_field: "Folder name"
+        submit: "Save"
       modal_manage_users:
         modal_title_html: "Manage users for <span id='manage-users-modal-project'>%{name}</span>"
         no_users: "No users!"

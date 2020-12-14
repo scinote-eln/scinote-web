@@ -15,6 +15,7 @@
         <% if active && can_manage_project?(project) %>
           <li>
             <a href="<%= edit_project_path(project, format: :json) %>"
+               class="edit-project-btn"
                data-action="edit"
                data-remote="true">
               <i class="fas fa-pen"></i>

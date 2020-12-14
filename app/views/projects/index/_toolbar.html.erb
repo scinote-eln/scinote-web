@@ -4,7 +4,7 @@
 
     <div class="form-group">
 
-      <div class="new-project-actions pull-left">
+      <div class="new-object-actions pull-left">
         <!-- new project button -->
         <% if current_team && can_create_projects?(current_team) %>
           <a href="#" class="btn btn-primary new-project-btn" data-view-mode="active">
@@ -24,20 +24,20 @@
       </div>
 
       <div class="project-actions pull-left">
-        <a href="#" class="btn btn-secondary edit-project-btn single-project-action hidden" data-view-mode="active">
+        <a href="#" class="btn btn-secondary edit-btn single-object-action hidden"  data-view-mode="active">
           <span class="fas fa-folder" aria-hidden="true"></span>
           <span class="hidden-xs"><%= t('projects.index.edit_button') %></span>
         </a>
-        <a href="#" class="btn btn-secondary move-projects-btn multiple-projects-action hidden" >
+        <a href="#" class="btn btn-secondary move-projects-btn multiple-object-action hidden">
           <span class="fas fa-arrow-right" aria-hidden="true"></span>
           <span class="hidden-xs"><%= t('projects.index.move_button') %></span>
         </a>
-        <a href="#" class="btn btn-secondary archive-projects-btn multiple-projects-action project-only-action hidden" data-view-mode="active">
+        <a href="#" class="btn btn-secondary archive-projects-btn multiple-object-action project-only-action hidden" data-view-mode="active">
           <span class="fas fa-archive" aria-hidden="true"></span>
           <span class="hidden-xs"><%= t('projects.index.archive_button') %></span>
         </a>
         <!-- export projects button -->
-        <a href="#" class="btn btn-secondary export-projects-btn multiple-projects-action project-only-action hidden"
+        <a href="#" class="btn btn-secondary export-projects-btn multiple-object-action project-only-action hidden"
                     data-export-projects-modal-url="<%= export_projects_modal_team_path(current_team) %>">
           <span class="fas fa-file-export"></span>
           <span class="hidden-xs-custom"><%= t('projects.export_projects.export_button') %></span>

@@ -90,8 +90,9 @@ class ProjectsController < ApplicationController
 
   def edit
     render json: {
-      html: render_to_string({ partial: 'edit.html.erb', locals: { project: @project } }),
-      title: t('projects.index.modal_edit_project.modal_title', project: escape_input(@project.name))
+      html: render_to_string(partial: 'projects/index/modals/edit_project_contents.html.erb',
+                             locals: { project: @project })
+
     }
   end
 

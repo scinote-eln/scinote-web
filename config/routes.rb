@@ -302,7 +302,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :project_folders, only: %i(create new update) do
+    resources :project_folders, only: %i(create new update edit) do
       member do
         post 'archive', to: 'project_folders#archive'
       end
