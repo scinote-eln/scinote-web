@@ -41,7 +41,7 @@ class Experiment < ApplicationRecord
     experiment.validates :archived_on, presence: true
   end
 
-  scope :is_archived, lambda(is_archived) {
+  scope :is_archived, lambda { |is_archived|
     if is_archived
       joins(:project).where('experiments.archived = TRUE OR projects.archived = TRUE')
     else

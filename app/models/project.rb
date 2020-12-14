@@ -185,6 +185,8 @@ class Project < ApplicationRecord
            when 'old' then { created_at: :asc }
            when 'atoz' then { name: :asc }
            when 'ztoa' then { name: :desc }
+           when 'arch_new' then { archived_on: :desc }
+           when 'arch_old' then { archived_on: :asc }
            else { created_at: :desc }
            end
     experiments.is_archived(archived).order(sort)

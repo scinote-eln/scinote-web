@@ -7,18 +7,6 @@
 $color-group-hover: $color-alabaster;
 $color-module-hover: $brand-primary;
 
-#sortMenu {
-  border-color: $color-white;
-
-  &:not(:focus) {
-    color: $color-silver-chalice;
-  }
-
-  &:hover {
-    color: inherit;
-  }
-}
-
 // Breadcrumbs
 .projects-breadcrumbs {
   padding: .5em 1em;

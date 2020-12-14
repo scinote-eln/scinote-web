@@ -2268,10 +2268,12 @@ en:
     comment_placeholder_new: "Add new comment…"
     archived: "Archived"
     sort:
-      new_html: " <i class=\"fas fa-sort-amount-down\"></i>"
-      old_html: "<i class=\"fas fa-sort-amount-up\"></i>"
-      atoz_html: "<i class=\"fas fa-sort-alpha-up\"></i>"
-      ztoa_html: "<i class=\"fas fa-sort-alpha-down\"></i>"
+      new_html: "Started last"
+      old_html: "Started first"
+      atoz_html: "Name A to Z"
+      ztoa_html: "Name Z to A"
+      arch_new_html: "Archived last"
+      arch_old_html: "Archived first"
     sort_new:
       new: "Newest"
       old: "Oldest"
