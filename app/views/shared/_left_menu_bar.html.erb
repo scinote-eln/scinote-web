@@ -1,15 +1,15 @@
-<div id="left-menu-bar" class="menu-bar">
+<div id="left-menu-bar" class="menu-bar shift-down">
   <div class="scroll-wrapper">
     <ul class="nav">
       <% if current_user.teams.empty? %>
-      <li class="disabled">
-          <span>
-            <span class="fas fa-thumbtack"></span>
-            <span><%= t('left_menu_bar.dashboard') %></span>
-          </span>
-        </li>
         <li class="disabled">
           <span>
+          <span class="fas fa-thumbtack"></span>
+          <span><%= t('left_menu_bar.dashboard') %></span>
+        </span>
+      </li>
+      <li class="disabled">
+        <span>
             <span class="fas fa-folder"></span>
             <span><%= t('left_menu_bar.projects') %></span>
           </span>
@@ -33,12 +33,12 @@
           </span>
         </li>
       <% else %>
-        <li class="<%= "active" if dashboard_are_selected? %>">
-          <%= link_to dashboard_path, id: "dashboard-link", title: t('left_menu_bar.dashboard') do %>
-            <span class="fas fa-thumbtack"></span>
-            <span><%= t('left_menu_bar.dashboard') %></span>
-          <% end %>
-        </li>
+      <li class="<%= "active" if dashboard_are_selected? %>">
+        <%= link_to dashboard_path, id: "dashboard-link", title: t('left_menu_bar.dashboard') do %>
+          <span class="fas fa-thumbtack"></span>
+          <span><%= t('left_menu_bar.dashboard') %></span>
+        <% end %>
+      </li>
         <li class="<%= "active" if projects_are_selected? %>">
           <%= link_to projects_path, id: "projects-link", title: t('left_menu_bar.projects') do %>
             <span class="fas fa-folder"></span>
@@ -94,19 +94,16 @@
           <span><%= t('left_menu_bar.support') %></span>
         </a>
         <ul class="dropdown-menu" data-hook="support-dropdown">
-          <li><%= link_to t('left_menu_bar.support_links.support'),
-                            Constants::SUPPORT_URL,
-                            target: "_blank" %></li>
-          <li><%= link_to t('left_menu_bar.support_links.tutorials'),
-                            Constants::TUTORIALS_URL,
-                            target: "_blank" %></li>
-          <li role="separator" class="divider" data-hook="support-dropdown-separator">
-          <li>
-            <%= link_to '#', class: "about-scinote", data: { toggle: 'modal', target: '#aboutModal' } do %>
-              <span class="core-version"><%= t('left_menu_bar.support_links.core_version', version: Scinote::Application::VERSION ) %></span>
-              <%= t('left_menu_bar.support_links.about') %>
-            <% end %>
-          </li>
+        <li href="<%= contact_path %>">
+          <%= link_to t('nav.help.contact'), contact_path %>
+        </li>
+        <li href=""
+          <%= about_path %>">
+          <%= link_to t('nav.help.about'), about_path %>
+        </li>
+        <li href="<%= training_path %>">
+          <%= link_to t('nav.help.training'), training_path %>
+        </li>
         </ul>
       </li>
       <!-- academy -->

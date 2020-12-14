@@ -7,6 +7,7 @@
       $('#wrapper').removeClass('hidden2');
       $('#wrapper').css('paddingLeft', '280px');
       $('.navbar-secondary').css(
+        <%# @@@20180627JS Get rid of this padding, from 294px to 280px %>
         { 'margin-left': '-280px', 'padding-left': '280px' }
       );
       $('#sidebar-arrow').attr('data-shown', '');
@@ -22,6 +23,7 @@
       $('#wrapper').css('paddingLeft', '0');
       $('.navbar-secondary').css({
         'margin-left': '0',
+        <%# @@@20180627JS Get rid of this padding, from 14px to 0px %>
         'padding-left': '0'
       });
       $('#sidebar-arrow').removeAttr('data-shown');

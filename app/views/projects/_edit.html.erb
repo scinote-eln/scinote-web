@@ -1,7 +1,7 @@
 <%= bootstrap_form_for @project, url: project_path(@project ,format: :json), method: :put, remote: true do |f| %>
-
+  
   <%- if Rails.configuration.x.epa_rap_enabled %>
-
+  
     <div id="rapProgramLevelSelectEdit" class="form-group">
       <!-- opt_rap_programs dropdown -->
       <label class="control-label" for="rap_program_level">RAP Program Level</label>
@@ -43,7 +43,7 @@
         <% end %>
       </select>
     </div>
-
+  
     <div id="rapTaskLevelSelectEdit" class="form-group">
       <!-- opt_rap_tasks dropdown -->
       <label class="control-label" for="rap_task_level">RAP Task Level</label>
@@ -57,7 +57,7 @@
         <% end %>
       </select>
     </div>
-
+  
   <% end -%>
 
   <div class="row">

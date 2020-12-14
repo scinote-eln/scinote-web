@@ -10,6 +10,9 @@
   position: fixed;
   width: 83px;
   z-index: 1001;
+  // @@@20180627JS shift the bar down
+  // margin-top: 50px;
+  padding-bottom: 50px;
 
   .scroll-wrapper {
     height: 100%;

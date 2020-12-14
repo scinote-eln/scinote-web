@@ -1569,3 +1569,8 @@ a.disabled-with-click-events {
   }
 
 }
+
+/* 2018JS Add this to overwrite default bootstrap behavior */
+.navbar-default .navbar-nav > li > a {
+  color: #ffffff;
+}

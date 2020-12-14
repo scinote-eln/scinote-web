@@ -2,6 +2,7 @@ class ProjectsController < ApplicationController
   include RenamingUtil
   include TeamsHelper
   include InputSanitizeHelper
+  include RapProgramLevelHelper
 
   before_action :switch_team_with_param, only: :index
   before_action :load_vars, only: %i(show edit update
@@ -38,6 +39,8 @@ class ProjectsController < ApplicationController
         @teams = current_user.teams
         # New project for create new project modal
         @project = Project.new
+        # Get all RAP Program Level values for dropdown.
+        @programs = RapProgramLevel.all
         if current_team
           view_state =
             current_team.current_view_state(current_user)
@@ -97,9 +100,13 @@ class ProjectsController < ApplicationController
 
   def new
     @project = Project.new
+    # Get all RAP Program Level values for dropdown.
+    @programs = RapProgramLevel.all
   end
 
   def create
+    # Get all RAP Program Level values for dropdown.
+    @programs = RapProgramLevel.all
     @project = Project.new(project_params)
     @project.created_by = current_user
     @project.last_modified_by = current_user
@@ -286,7 +293,7 @@ class ProjectsController < ApplicationController
   private
 
   def project_params
-    params.require(:project).permit(:name, :team_id, :visibility, :archived)
+    params.require(:project).permit(:name, :team_id, :visibility, :archived, :rap_task_level_id)
   end
 
   def load_vars

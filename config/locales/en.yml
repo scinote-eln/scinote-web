@@ -161,6 +161,15 @@ en:
     user:
       settings: "Settings"
       logout: "Log out"
+      about: "About SciNote"
+    help:
+      tutorials: "Tutorials"
+      release_notes: "Release notes"
+      support: "Customer support"
+      premium: "Premium"
+      contact: "Contact us"
+      about: "About SciNote"
+      training: "Training"
     activities:
       none: "No activities!"
     label:
@@ -193,7 +202,7 @@ en:
     academy: "Academy"
     support: "Support"
     support_links:
-      support: "Knowledge center"
+      support: "Support Center"
       tutorials: "Video tutorials"
       core_version: "SciNote Core ver. %{version} |"
       about: "about"
@@ -276,6 +285,14 @@ en:
       delete: "Delete"
     delete_confirm: "Are you sure you wish to delete this comment?"
     delete_error: "Error occured while deleting comment."
+
+  help:
+    contact:
+      head_title: "Contact"
+    about:
+      head_title: "About"
+    training:
+      head_title: "Training"
 
   projects:
     index:
@@ -1375,7 +1392,7 @@ en:
       destroy:
         success_flash: "Column %{name} was successfully deleted."
         error_flash: "Something went wrong! Please try again later."
-    index:
+      index:
       head_title: "Inventories"
       head_title_archived: "Archived Inventories"
       table:

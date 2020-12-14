@@ -19,15 +19,17 @@ Rails.application.routes.draw do
 
     root 'dashboards#show'
 
-    # # EPA Help routes: about, contact, and training pages
-    # get 'help/about', to: 'help#about', as: 'about'
-    # get 'help/contact', to: 'help#contact', as: 'contact'
-    # get 'help/training', to: 'help#training', as: 'training'
-    # # Routes to methods for downloading the Fact Sheet and Manual
-    # # get 'help/download_manual', to: 'help#download_manual', as 'manual'
-    # # get 'help/download_manual' => 'help#download_manual', as 'manual'
-    # get 'help/download_manual'
-    # # get 'users/download_factsheet' => 'users/sessions#download_factsheet', as: 'factsheet'
+    root 'projects#index'
+
+    # EPA Help routes: about, contact, and training pages
+    get 'help/about', to: 'help#about', as: 'about'
+    get 'help/contact', to: 'help#contact', as: 'contact'
+    get 'help/training', to: 'help#training', as: 'training'
+    # Routes to methods for downloading the Fact Sheet and Manual
+    # get 'help/download_manual', to: 'help#download_manual', as 'manual'
+    # get 'help/download_manual' => 'help#download_manual', as 'manual'
+    get 'help/download_manual'
+    # get 'users/download_factsheet' => 'users/sessions#download_factsheet', as: 'factsheet'
 
     # EPA RAP Information JSON results
     get '/rap_program_level/',
@@ -68,12 +70,12 @@ Rails.application.routes.draw do
     get 'users/settings/account/addons',
         to: 'users/settings/account/addons#index',
         as: 'addons'
-    get 'users/settings/account/connected_accounts',
-        to: 'users/settings/account/connected_accounts#index',
-        as: 'connected_accounts'
-    delete 'users/settings/account/connected_accounts',
-           to: 'users/settings/account/connected_accounts#destroy',
-           as: 'unlink_connected_account'
+        get 'users/settings/account/connected_accounts',
+            to: 'users/settings/account/connected_accounts#index',
+            as: 'connected_accounts'
+        delete 'users/settings/account/connected_accounts',
+               to: 'users/settings/account/connected_accounts#destroy',
+               as: 'unlink_connected_account'
     put 'users/settings/account/preferences',
         to: 'users/settings/account/preferences#update',
         as: 'update_preferences'
@@ -418,7 +420,7 @@ Rails.application.routes.draw do
         patch 'protocol_description',
               to: 'my_modules#update_protocol_description',
               as: 'update_protocol_description'
-        patch 'state', to: 'my_modules#update_state', as: 'update_state'
+              patch 'state', to: 'my_modules#update_state', as: 'update_state'
         get 'protocols' # Protocols view for single module
         get 'results' # Results view for single module
         get 'archive' # Archive view for single module
@@ -537,9 +539,9 @@ Rails.application.routes.draw do
            to: 'repository_rows#index',
            as: 'table_index',
            defaults: { format: 'json' }
-      member do
-        get :load_table
-      end
+           member do
+             get :load_table
+           end
       # Save repository table state
       post 'state_save',
            to: 'user_repositories#save_table_state',
@@ -558,12 +560,12 @@ Rails.application.routes.draw do
       post 'copy_records',
            to: 'repository_rows#copy_records',
            defaults: { format: 'json' }
-      post 'archive_records',
-           to: 'repository_rows#archive_records',
-           defaults: { format: 'json' }
-      post 'restore_records',
-           to: 'repository_rows#restore_records',
-           defaults: { format: 'json' }
+           post 'archive_records',
+                to: 'repository_rows#archive_records',
+                defaults: { format: 'json' }
+           post 'restore_records',
+                to: 'repository_rows#restore_records',
+                defaults: { format: 'json' }
       get 'repository_columns/:id/destroy_html',
           to: 'repository_columns#destroy_html',
           as: 'columns_destroy_html'
@@ -571,20 +573,20 @@ Rails.application.routes.draw do
           to: 'repository_columns#available_columns',
           as: 'available_columns',
           defaults: { format: 'json' }
-      get :table_toolbar
-      get :status
+          get :table_toolbar
+          get :status
 
-      resources :repository_columns, only: %i(index new edit destroy)
-      resources :repository_rows, only: %i(create show update) do
-        member do
-          get :assigned_task_list
-        end
-      end
+          resources :repository_columns, only: %i(index new edit destroy)
+          resources :repository_rows, only: %i(create show update) do
+            member do
+              get :assigned_task_list
+            end
+          end
 
-      collection do
-        get :sidebar
-        post 'available_rows', to: 'repository_rows#available_rows', defaults: { format: 'json' }
-      end
+          collection do
+            get :sidebar
+            post 'available_rows', to: 'repository_rows#available_rows', defaults: { format: 'json' }
+          end
 
       member do
         post 'parse_sheet', defaults: { format: 'json' }
@@ -599,20 +601,20 @@ Rails.application.routes.draw do
         resources :list_columns, only: %i(create update) do
           member do
             get 'items'
-          end
-        end
-        resources :checklist_columns, only: %i(create update) do
-          member do
-            get 'items'
-          end
-        end
-        resources :status_columns, only: %i(create update) do
-          member do
-            get 'items'
-          end
-        end
-      end
     end
+  end
+  resources :checklist_columns, only: %i(create update) do
+    member do
+      get 'items'
+    end
+  end
+  resources :status_columns, only: %i(create update) do
+    member do
+      get 'items'
+    end
+  end
+end
+end
 
     get 'search' => 'search#index'
     get 'search/new' => 'search#new', as: :new_search
@@ -668,14 +670,14 @@ Rails.application.routes.draw do
                           only: %i(index create show update destroy),
                           path: 'list_items',
                           as: :list_items
-                resources :inventory_checklist_items,
-                          only: %i(index create show update destroy),
-                          path: 'checklist_items',
-                          as: :checklist_items
-                resources :inventory_status_items,
-                          only: %i(index create show update destroy),
-                          path: 'status_items',
-                          as: :status_items
+                          resources :inventory_checklist_items,
+                                    only: %i(index create show update destroy),
+                                    path: 'checklist_items',
+                                    as: :checklist_items
+                          resources :inventory_status_items,
+                                    only: %i(index create show update destroy),
+                                    path: 'status_items',
+                                    as: :status_items
               end
               resources :inventory_items,
                         only: %i(index create show update destroy),
