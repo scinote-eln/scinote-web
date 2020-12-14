@@ -1,3 +1,8 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+// scss-lint:disable SelectorFormat
+// scss-lint:disable IdSelector
+
 // EXPERIMENT PANEL
 .experiment-panel {
   @include box-shadow(0 4px 8px 0 $color-dove-gray);
