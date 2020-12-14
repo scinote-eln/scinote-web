@@ -211,6 +211,8 @@ en:
     experiments:
       sidebar_title: "EXPERIMENTS"
       back_button: "Back to projects"
+      back_active_experiments: "Back to active experiments"
+      archived_experiments: "Archived experiments"
     my_modules:
       sidebar_title: "TASKS"
       back_button: "Back to experiments"
