@@ -18,8 +18,7 @@ Rails.application.routes.draw do
                                       passwords: 'users/passwords' }
 
     root 'dashboards#show'
-
-    root 'projects#index'
+    # root 'projects#index'
 
     # EPA Help routes: about, contact, and training pages
     get 'help/about', to: 'help#about', as: 'about'
