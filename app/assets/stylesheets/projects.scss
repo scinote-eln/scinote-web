@@ -524,7 +524,7 @@ li.module-hover {
 .projects-index {
   &.active {
     [data-view-mode="archived"] {
-      display: none;
+      display: none !important;
     }
   }
 
@@ -544,7 +544,7 @@ li.module-hover {
 
   &.archived {
     [data-view-mode="active"] {
-      display: none;
+      display: none !important;
     }
   }
 
