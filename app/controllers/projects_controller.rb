@@ -21,7 +21,8 @@ class ProjectsController < ApplicationController
     if current_team
       view_state = current_team.current_view_state(current_user)
       @current_filter = view_state.state.dig('projects', 'filter')
-      @current_sort = view_state.state.dig('projects', 'cards', 'sort')
+      @current_view_mode = params[:mode] || view_state.state.dig('projects', 'view_mode')
+      @current_sort = view_state.state.dig('projects', @current_view_mode, 'sort')
     end
   end
 

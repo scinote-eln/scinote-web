@@ -8,7 +8,7 @@
 // - refactor view handling using library, ex. backbone.js
 
 /* global Comments CounterBadge animateSpinner initFormSubmitLinks HelperModule
-   I18n dropdownSelector Sidebar */
+   I18n dropdownSelector Sidebar Turbolinks */
 
 (function(global) {
   var newProjectModal = null;
@@ -31,7 +31,7 @@
 
   var projectsViewSearch;
   var projectsChanged = false;
-  var projectsViewSort = $('#sortMenuDropdown a.disabled').data('sort');
+  var projectsCurrentSort;
 
   // Arrays with selected project and folder IDs shared between both views
   var selectedProjects = [];
@@ -473,7 +473,6 @@
   }
 
   function loadCardsView() {
-    // Load HTML with projects list
     var viewContainer = $('#cards-wrapper');
     // animateSpinner(viewContainer, true);
 
@@ -483,7 +482,7 @@
       dataType: 'json',
       data: {
         filter: $('.projects-index').data('mode'),
-        sort: projectsViewSort,
+        sort: projectsCurrentSort,
         search: projectsViewSearch
       },
       success: function(data) {
@@ -517,23 +516,22 @@
       $btn.addClass('active');
     });
 
-    // active/archived switch
+    // Active/Archived switch
+    // We have different sorting, filters for active/archived views.
+    // With turbolinks visit all those elements are updated.
     $(projectsPageSelector).on('click', '.archive-switch', function() {
-      $(projectsPageSelector).toggleClass('archived active').data('mode', $(this).data('mode'));
-      refreshCurrentView();
+      $(projectsPageSelector).find('.projects-container').remove();
+      Turbolinks.visit($(this).data('url'))
     });
   }
 
   function initSorting() {
-    $('#sortMenuDropdown a').click(function(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      if (projectsViewSort !== $(this).data('sort')) {
-        $('#sortMenuDropdown a').removeClass('disabled');
-        projectsViewSort = $(this).data('sort');
-        $('#sortMenu').html(I18n.t('general.sort.' + projectsViewSort + '_html'));
+    $('#sortMenuDropdown li').click(function() {
+      if (projectsCurrentSort !== $(this).data('sort')) {
+        $('#sortMenuDropdown li').removeClass('active');
+        projectsCurrentSort = $(this).data('sort');
         loadCardsView();
-        $(this).addClass('disabled');
+        $(this).addClass('active');
         $('#sortMenu').dropdown('toggle');
       }
     });

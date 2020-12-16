@@ -129,19 +129,18 @@
       </div>
     </div>
 
-    <div class="dropdown">
+    <div class="dropdown view-switch sort-switch">
       <button class="btn btn-light dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-        <span><%= t("general.sort.#{@current_sort}_html") %></span>
+        <span><i class="fas fa-sort-amount-down"></i></span>
         <span class="caret"></span>
       </button>
-      <ul id="sortMenuDropdown" class="dropdown-menu" aria-labelledby="sortMenu">
+      <ul id="sortMenuDropdown" class="dropdown-menu sort-projects-menu" aria-labelledby="sortMenu">
         <% %w(new old atoz ztoa archived_first archived_last).each do |sort| %>
-          <li <%= %w(archived_first archived_last).include?(sort) ? 'data-view-mode=archived' : '' %>>
-            <% if @current_sort != sort %>
-              <a href="#" data-sort="<%= sort %>"><%= t("projects.index.sort.#{sort}") %></a>
-            <% else %>
-              <a class="disabled" href="#" data-sort="<%= sort %>"><%= t("projects.index.sort.#{sort}") %></a>
-            <% end %>
+          <li data-sort="<%= sort %>"
+              <%= %w(archived_first archived_last).include?(sort) ? 'data-view-mode=archived' : '' %>
+              class="<%= @current_sort == sort ? 'active' : '' %>">
+
+            <%= t("projects.index.sort.#{sort}") %>
           </li>
         <% end %>
       </ul>
@@ -156,11 +155,11 @@
         <i class="fas fa-list button-icon"></i> <%= t('projects.index.header.table') %>
       </li>
 
-      <li class="view-switch-active archive-switch" data-view-mode="archived" data-mode="active">
+      <li class="view-switch-active archive-switch" data-view-mode="archived" data-url="<%= projects_path(mode: 'active') %>">
         <i class="fas fa-rocket button-icon"></i> <%= t('projects.index.header.active_projects') %>
       </li>
 
-      <li class="view-switch-archived archive-switch" data-view-mode="active" data-mode="archived">
+      <li class="view-switch-archived archive-switch" data-view-mode="active" data-url="<%= projects_path(mode: 'archived') %>">
         <i class="fas fa-archive button-icon"></i> <%= t('projects.index.header.archived_projects') %>
       </li>
     <% end %>

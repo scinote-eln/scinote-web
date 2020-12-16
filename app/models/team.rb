@@ -47,19 +47,20 @@ class Team < ApplicationRecord
   after_create :generate_intro_demo
 
   def default_view_state
-    { 'projects' =>
-      { 'cards' => { 'sort' => 'new' },
-        'table' =>
-          { 'time' => Time.now.to_i,
-            'order' => [[2, 'asc']],
-            'start' => 0,
-            'length' => 10 },
-        'filter' => 'active' } }
+    {
+      projects: {
+        active: { sort: 'new' },
+        archived: { sort: 'new' },
+        view_mode: 'active'
+      }
+    }
   end
 
   def validate_view_state(view_state)
-    unless %w(new old atoz ztoa).include?(view_state.state.dig('projects', 'cards', 'sort')) &&
-           %w(all active archived).include?(view_state.state.dig('projects', 'filter'))
+    if %w(new old atoz ztoa).exclude?(view_state.state.dig('projects', 'active', 'sort')) ||
+       %w(new old atoz ztoa archived_first archived_last)
+       .exclude?(view_state.state.dig('projects', 'archived', 'sort')) ||
+       %w(active archived).exclude?(view_state.state.dig('projects', 'view_mode'))
       view_state.errors.add(:state, :wrong_state)
     end
   end

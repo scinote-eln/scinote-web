@@ -7,11 +7,14 @@ class ProjectsOverviewService
     @current_folder = folder
     @params = params
     @view_state = @team.current_view_state(@user)
-    if @view_state.state.dig('projects', 'filter') != @params[:filter] &&
-       %w(active archived all).include?(@params[:filter])
-      @view_state.state['projects']['filter'] = @params[:filter]
+
+    if @view_state.state.dig('projects', 'view_mode') != @params[:filter] &&
+       %w(active archived).include?(@params[:filter])
+      @view_state.state['projects']['view_mode'] = @params[:filter]
       @view_state.save!
     end
+
+    @view_mode = @view_state.state.dig('projects', 'view_mode')
   end
 
   def project_cards
@@ -144,20 +147,29 @@ class ProjectsOverviewService
       records.order(:name)
     when 'ztoa'
       records.order(name: :desc)
+    when 'archived_first'
+      records.order(archived_on: :asc)
+    when 'archived_last'
+      records.order(archived_on: :desc)
     else
       records
     end
   end
 
   def mixed_sort_records(records)
-    cards_state = @view_state.state.dig('projects', 'cards')
-    if @params[:sort] && cards_state['sort'] != @params[:sort] && %w(new old atoz ztoa).include?(@params[:sort])
-      cards_state['sort'] = @params[:sort]
-      @view_state.state['projects']['cards'] = cards_state
-    end
-    @view_state.save! if @view_state.changed?
+    sort = @view_state.state.dig('projects', @view_mode, 'sort')
 
-    case cards_state['sort']
+    if @params[:sort] && sort != @params[:sort] &&
+       %w(new old atoz ztoa archived_first archived_last).include?(@params[:sort])
+      @view_state.state['projects'].merge!(Hash[@view_mode, { 'sort': @params[:sort] }.stringify_keys])
+    end
+
+    if @view_state.changed?
+      @view_state.save!
+      sort = @view_state.state.dig('projects', @view_mode, 'sort')
+    end
+
+    case sort
     when 'new'
       records.sort_by(&:created_at).reverse!
     when 'old'
@@ -166,8 +178,10 @@ class ProjectsOverviewService
       records.sort_by { |c| c.name.downcase }
     when 'ztoa'
       records.sort_by { |c| c.name.downcase }.reverse!
-    else
-      records
+    when 'archived_first'
+      records.sort_by { |c| [c.class.to_s, c.archived_on] }
+    when 'archived_last'
+      records.sort_by { |c| [c.class.to_s, -c.archived_on.to_i] }
     end
   end
 end

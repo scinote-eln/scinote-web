@@ -2,7 +2,6 @@
 <% provide(:sidebar_title, t("projects.index.navigation_title")) %>
 <% provide(:sidebar_url, sidebar_team_path(current_team, project_folder_id: @current_folder&.id)) %>
 <% provide(:container_class, 'no-second-nav-container') %>
-<% mode = params[:archived] ? :archived : :active %>
 
 <%= content_for :sidebar do %>
   <%= render partial: 'shared/sidebar/projects', locals: { team: current_team } if current_team %>
@@ -12,7 +11,7 @@
   <%= render partial: 'projects/index/breadcrumbs' if @current_folder %>
 <% end %>
 
-<div class="content-pane flexible projects-index <%= mode %>" data-mode="<%= mode %>">
+<div class="content-pane flexible projects-index <%= @current_view_mode %>" data-mode="<%= @current_view_mode %>">
   <%= render partial: 'projects/index/header' %>
 
   <span style="display: none;" data-hook="projects-index-html"></span>

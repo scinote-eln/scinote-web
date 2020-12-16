@@ -557,6 +557,15 @@ li.module-hover {
     }
   }
 
+  .sort-projects-menu {
+    li.active::after {
+      @include font-awesome;
+      content: "\f00c";
+      position: absolute;
+      right: 1em;
+    }
+  }
+
   .header-actions {
     align-items: center;
     display: flex;
