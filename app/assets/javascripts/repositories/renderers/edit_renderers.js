@@ -13,11 +13,12 @@ $.fn.dataTable.render.editRowName = function(formId, cell) {
              form="${formId}"
              type="text"
              name="repository_row[name]"
-             value="${text}"
+             value=""
              placeholder="${I18n.t('repositories.table.enter_row_name')}"
              data-type="RowName">
     </div>
   `);
+  $cell.find('input').val(text);
 };
 
 $.fn.dataTable.render.editRepositoryAssetValue = function(formId, columnId, cell) {
@@ -34,11 +35,11 @@ $.fn.dataTable.render.editRepositoryTextValue = function(formId, columnId, cell)
              form="${formId}"
              type="text"
              name="repository_cells[${columnId}]"
-             value="${text}"
+             value=""
              placeholder="${I18n.t('repositories.table.text.enter_text')}"
              data-type="RepositoryTextValue">
     </div>`);
-
+  $cell.find('input').val(text);
   SmartAnnotation.init($cell.find('input'));
 };
 
