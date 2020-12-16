@@ -988,6 +988,39 @@ ALTER SEQUENCE public.oauth_applications_id_seq OWNED BY public.oauth_applicatio
 
 
 --
+-- Name: project_folders; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.project_folders (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    team_id bigint NOT NULL,
+    parent_folder_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: project_folders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.project_folders_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: project_folders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.project_folders_id_seq OWNED BY public.project_folders.id;
+
+
+--
 -- Name: projects; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1008,7 +1041,8 @@ CREATE TABLE public.projects (
     restored_on timestamp without time zone,
     experiments_order character varying,
     template boolean,
-    demo boolean DEFAULT false NOT NULL
+    demo boolean DEFAULT false NOT NULL,
+    project_folder_id bigint
 );
 
 
@@ -2951,6 +2985,13 @@ ALTER TABLE ONLY public.oauth_applications ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+-- Name: project_folders id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_folders ALTER COLUMN id SET DEFAULT nextval('public.project_folders_id_seq'::regclass);
+
+
+--
 -- Name: projects id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3505,6 +3546,14 @@ ALTER TABLE ONLY public.oauth_access_tokens
 
 ALTER TABLE ONLY public.oauth_applications
     ADD CONSTRAINT oauth_applications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: project_folders project_folders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_folders
+    ADD CONSTRAINT project_folders_pkey PRIMARY KEY (id);
 
 
 --
@@ -4456,6 +4505,27 @@ CREATE INDEX index_on_repository_checklist_value_id ON public.repository_checkli
 
 
 --
+-- Name: index_project_folders_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_folders_on_name ON public.project_folders USING gin (public.trim_html_tags((name)::text) public.gin_trgm_ops);
+
+
+--
+-- Name: index_project_folders_on_parent_folder_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_folders_on_parent_folder_id ON public.project_folders USING btree (parent_folder_id);
+
+
+--
+-- Name: index_project_folders_on_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_folders_on_team_id ON public.project_folders USING btree (team_id);
+
+
+--
 -- Name: index_projects_on_archived_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4481,6 +4551,13 @@ CREATE INDEX index_projects_on_last_modified_by_id ON public.projects USING btre
 --
 
 CREATE INDEX index_projects_on_name ON public.projects USING gin (public.trim_html_tags((name)::text) public.gin_trgm_ops);
+
+
+--
+-- Name: index_projects_on_project_folder_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_projects_on_project_folder_id ON public.projects USING btree (project_folder_id);
 
 
 --
@@ -5621,6 +5698,14 @@ ALTER TABLE ONLY public.report_elements
 
 
 --
+-- Name: project_folders fk_rails_05fe6e31fe; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_folders
+    ADD CONSTRAINT fk_rails_05fe6e31fe FOREIGN KEY (parent_folder_id) REFERENCES public.project_folders(id);
+
+
+--
 -- Name: assets fk_rails_0916329f9e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6026,6 +6111,14 @@ ALTER TABLE ONLY public.wopi_actions
 
 ALTER TABLE ONLY public.repository_status_items
     ADD CONSTRAINT fk_rails_74e5e4cacc FOREIGN KEY (repository_column_id) REFERENCES public.repository_columns(id);
+
+
+--
+-- Name: project_folders fk_rails_795296de66; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_folders
+    ADD CONSTRAINT fk_rails_795296de66 FOREIGN KEY (team_id) REFERENCES public.teams(id);
 
 
 --
@@ -6757,6 +6850,14 @@ ALTER TABLE ONLY public.team_repositories
 
 
 --
+-- Name: projects fk_rails_fbf93d1a3d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.projects
+    ADD CONSTRAINT fk_rails_fbf93d1a3d FOREIGN KEY (project_folder_id) REFERENCES public.project_folders(id);
+
+
+--
 -- Name: my_modules fk_rails_fd094f363d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6966,6 +7067,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200902093234'),
 ('20200909121441'),
 ('20201027133634'),
+('20201028103608'),
 ('20201215161050');
 
 

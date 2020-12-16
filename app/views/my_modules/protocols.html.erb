@@ -149,5 +149,38 @@
 <%= javascript_include_tag("my_modules/protocols") %>
 <%= javascript_include_tag("my_modules/status_flow") %>
 <%= javascript_pack_tag 'emoji_button' %>
+<%= javascript_pack_tag 'custom/pdf_js' %>
 <%= javascript_include_tag("my_modules/repositories") %>
 <%= javascript_include_tag("my_modules/pwa_mobile_app") %>
+
+<canvas id='theCanvas'></canvas>
+
+<script type="text/javascript">
+  var pdfPath = '/report.pdf'
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+  '<%= asset_pack_path('custom/pdf_js_worker.js') %>'
+  var loadingTask = pdfjsLib.getDocument(pdfPath);
+  loadingTask.promise
+    .then(function (pdfDocument) {
+      // Request a first page
+      return pdfDocument.getPage(1).then(function (pdfPage) {
+        // Display page on the existing canvas with 100% scale.
+        var viewport = pdfPage.getViewport({ scale: 1.0 });
+        console.log(pdfDocument)
+        console.log(pdfPage)
+        console.log(viewport)
+        var canvas = document.getElementById("theCanvas");
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        var ctx = canvas.getContext("2d");
+        var renderTask = pdfPage.render({
+          canvasContext: ctx,
+          viewport: viewport,
+        });
+        return renderTask.promise;
+      });
+    })
+    .catch(function (reason) {
+      console.error("Error: " + reason);
+    });
+</script>

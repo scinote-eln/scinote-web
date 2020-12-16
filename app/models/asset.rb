@@ -246,6 +246,10 @@ class Asset < ApplicationRecord
     false
   end
 
+  def pdf?
+    content_type == "application/pdf"
+  end
+
   def post_process_file(team = nil)
     # Extract asset text if it's of correct type
     if text?
