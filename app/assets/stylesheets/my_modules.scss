@@ -216,7 +216,7 @@
     width: unset;
 
     .task-selector-container {
-      padding: 11px 10px 0 16px;
+      padding: .75em .75em 0 1em;
     }
 
     .panel-heading {
@@ -249,7 +249,7 @@
     .panel-footer-scinote {
       background: $color-concrete;
       border-color: $color-white;
-      height: 34px;
+      height: 2.5em;
 
       .nav {
         border: 0;
@@ -260,7 +260,7 @@
         box-shadow: $flyout-shadow;
 
         .tab-pane > .text-center {
-          margin-top: 5px;
+          margin-top: .3em;
         }
       }
     }
