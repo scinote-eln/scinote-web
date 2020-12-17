@@ -1,0 +1,23 @@
+.pdf-viewer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1em;
+  position: relative;
+  width: 100%;
+
+  .page-container {
+    flex-grow: 1;
+    overflow: auto;
+    max-width: 100%;
+  }
+
+  .pdf-toolbar {
+    align-items: center;
+    background: $color-white;
+    display: inline-flex;
+    justify-content: center;
+    padding: 1em;
+    margin-top: 1em;
+  }
+}

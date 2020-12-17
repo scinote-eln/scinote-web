@@ -49,8 +49,8 @@
     <% if asset.previewable? %>
       <% if wopi_enabled? && wopi_file?(asset) %>
         <iframe class="wopi-file-preview" src="<%= asset.get_action_url(current_user, 'embedview') %>"></iframe>
-      <% elsif asset.pdf? %>
-        <canvas class="pdf-file-preview" data-pdf-url="/report.pdf" data-pdf-worker-url="<%= asset_pack_path('custom/pdf_js_worker.js') %>"></canvas>
+      <% elsif asset.pdf? || wopi_file?(asset) %>
+        <%= render partial: 'shared/pdf_viewer.html.erb', locals: { asset: asset } %>
       <% else %>
         <%= image_tag asset.large_preview,
             onerror: 'ActiveStoragePreviews.reCheckPreview(event)',

@@ -15,6 +15,7 @@ $(document).on('click', '.asset-context-menu .change-preview-type', function(e) 
       viewModeBtn.closest('.dropdown-menu').find('.change-preview-type').removeClass('selected');
       viewModeBtn.addClass('selected');
       $(`.asset[data-asset-id=${assetId}]`).replaceWith(data.html);
+      PdfPreview.initCanvas();
     }
   });
 });

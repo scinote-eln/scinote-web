@@ -1,0 +1,28 @@
+<% pdf_url = wopi_file?(asset) ? asset_pdf_preview_path(asset) : asset_download_path(asset) %>
+<div class="pdf-viewer">
+  <div class="page-container">
+    <canvas class="pdf-canvas"
+      data-pdf-url="<%= pdf_url %>"
+      data-pdf-worker-url="<%= asset_pack_path('custom/pdf_js_worker.js') %>"
+    ></canvas>
+  </div>
+  <div class="pdf-toolbar">
+    <div class="btn btn-secondary prev-page">Prev page</div>
+    <div class="btn btn-secondary next-page">Next page</div>
+    <div class="zoom-page">
+      Zoom:
+      <select class="zoom-page-selector">
+        <option value="">Auto</option>
+        <option value="0.25">25%</option>
+        <option value="0.5">50%</option>
+        <option value="0.75">75%</option>
+        <option value="1.0" selected>100%</option>
+        <option value="1.25">125%</option>
+        <option value="1.5">150%</option>
+        <option value="1.75">175%</option>
+        <option value="2.0">200%</option>
+      </select>
+    </div>
+    <div class="page-counter"></div>
+  </div>
+</div>
