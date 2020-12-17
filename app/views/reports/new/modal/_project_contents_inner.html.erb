@@ -4,22 +4,21 @@
   </em>
 </div>
 
-<% if project.project_my_modules.is_archived(false).exists? %>
+<% if project.project_my_modules.active.exists? %>
   <div class="checkbox-tree">
     <ul>
       <li>
         <%= form.check_box :project, label: project.name %>
         <ul>
 
-          <% project.experiments.includes(:my_module_groups).is_archived(false).each do |experiment| %>
-            <% next unless experiment.my_modules.is_archived(false).exists? %>
+          <% project.experiments.includes(:my_module_groups).active.each do |experiment| %>
+            <% next unless experiment.my_modules.active.exists? %>
             <li>
               <%= form.check_box "experiment_#{experiment.id}", label: experiment.name %>
               <ul>
 
                 <% experiment.my_module_groups.each do |my_module_group| %>
-                  <% next unless my_module_group.my_modules.is_archived(false).exists? %>
-                  <% my_module_group.my_modules.workflow_ordered.is_archived(false).each do |my_module| %>
+                  <% my_module_group.my_modules.workflow_ordered.active.each do |my_module| %>
                     <li>
                       <%= form.check_box "modules[#{my_module.id}]", label: my_module.name %>
                     </li>

@@ -3,14 +3,14 @@
 <% provide(:sidebar_url, experiment_sidebar_path(@experiment)) %>
 
 <%= content_for :sidebar do %>
-  <%= render partial: 'shared/sidebar/my_modules.html.erb', locals: { experiment: @experiment } %>
+  <%= render partial: 'shared/sidebar/archived_my_modules.html.erb', locals: { experiment: @experiment, my_modules: @my_modules } %>
 <% end %>
 <%= render partial: "shared/secondary_navigation" %>
 
 <div class="content-pane" id="module-archive">
-  <% if @experiment.archived_modules.count > 0 %>
+  <% if @my_modules.present? %>
     <div class="row" style="margin-top: 10px;">
-      <% @experiment.archived_modules.each_with_index do |my_module, i| %>
+      <% @my_modules.each_with_index do |my_module, i| %>
         <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6">
           <%= render partial: "experiments/module_archive/my_module.html.erb", locals: { my_module: my_module} %>
         </div>
@@ -28,7 +28,7 @@
   <% else %>
     <div class="row">
       <div class="col-xs-12">
-        <em><%=t "experiments.module_archive.no_archived_modules" %></em>
+        <em><%= t('experiments.module_archive.no_archived_modules') %></em>
       </div>
     </div>
   <% end %>

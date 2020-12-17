@@ -1,7 +1,6 @@
 Canaid::Permissions.register_for(Experiment) do
   # Experiment and its project must be active for all the specified permissions
-  %i(read_experiment
-     manage_experiment
+  %i(manage_experiment
      archive_experiment
      clone_experiment
      move_experiment)

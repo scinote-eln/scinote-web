@@ -3,7 +3,7 @@
 <% provide(:sidebar_url, experiment_sidebar_path(@experiment)) %>
 
 <%= content_for :sidebar do %>
-  <%= render partial: 'shared/sidebar/my_modules.html.erb', locals: { experiment: @experiment } %>
+  <%= render partial: 'shared/sidebar/my_modules.html.erb', locals: { experiment: @experiment, my_modules: @active_modules } %>
 <% end %>
 <%= render partial: "shared/secondary_navigation" %>
 

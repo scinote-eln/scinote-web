@@ -58,8 +58,7 @@ class ExperimentsController < ApplicationController
 
   def canvas
     @project = @experiment.project
-    @active_modules = @experiment.active_modules
-                                 .includes(:tags, :inputs, :outputs)
+    @active_modules = @experiment.my_modules.active.includes(:tags, :inputs, :outputs)
     current_team_switch(@project.team)
   end
 
@@ -207,6 +206,7 @@ class ExperimentsController < ApplicationController
   end
 
   def module_archive
+    @my_modules = @experiment.archived_branch? ? @experiment.my_modules : @experiment.my_modules.archived
   end
 
   def updated_img
