@@ -524,7 +524,7 @@ li.module-hover {
 .projects-index {
   &.active {
     [data-view-mode="archived"] {
-      display: none;
+      display: none !important;
     }
   }
 
@@ -544,7 +544,79 @@ li.module-hover {
 
   &.archived {
     [data-view-mode="active"] {
-      display: none;
+      display: none !important;
+    }
+
+    .projects-container {
+      .project-actions-menu {
+        .btn-light:hover {
+          background: $color-alto;
+        }
+      }
+
+      .cards-wrapper {
+        grid-auto-rows: 2.5em;
+
+        .card.project-card {
+          background: $color-concrete;
+          box-shadow: none;
+
+          .data-row {
+            color: $color-silver-chalice;
+
+            .card-label {
+              color: $color-silver-chalice;
+            }
+
+            &.archived-date-cell {
+              color: $color-volcano;
+
+              .card-label {
+                color: $color-volcano;
+              }
+            }
+          }
+        }
+
+        &.list {
+          grid-template-columns: max-content repeat(5, minmax(100px, auto)) max-content;
+
+          .card::after {
+            background: $color-white;
+          }
+
+          .card.folder-card {
+            .name {
+              grid-column: 6 span;
+            }
+          }
+
+          .card.project-card {
+            .checkbox-cell,
+            .project-name-cell,
+            .actions-cell,
+            .data-row {
+              align-items: center;
+              background: $color-concrete;
+              color: $color-volcano;
+              display: flex;
+              height: 3em;
+              margin-left: -.5em;
+              padding-left: .5em;
+              width: calc(100% + 1em);
+            }
+
+            .archived-date-cell {
+              grid-column: 6;
+            }
+
+            .actions-cell {
+              grid-column: 7;
+              position: initial;
+            }
+          }
+        }
+      }
     }
   }
 
@@ -848,11 +920,17 @@ li.module-hover {
             color: $color-black;
             display: flex;
             flex-basis: 100%;
+            font-weight: bold;
             line-height: 2em;
 
             .card-label {
               color: $color-volcano;
-              width: 5em;
+              font-weight: normal;
+              width: 5.5em;
+            }
+
+            .cell-value {
+              display: none;
             }
 
             .new-user {
@@ -873,7 +951,7 @@ li.module-hover {
         grid-auto-flow: dense;
         grid-auto-rows: 2em 1px;
         grid-row-gap: .5em;
-        grid-template-columns: max-content 1fr 1fr 1fr 1fr max-content;
+        grid-template-columns: max-content repeat(4, minmax(100px, auto)) max-content;
         margin: 40px 0 0 6px;
 
 
@@ -905,13 +983,22 @@ li.module-hover {
             height: 1px;
           }
 
+          .data-row {
+            font-weight: normal;
+            line-height: 1.25em;
+          }
+
           .card-label {
             display: none;
           }
 
+          .cell-value {
+            display: block !important;
+          }
+
           .name {
             @include font-button;
-            color: $brand-primary-light;
+            color: $brand-primary;
             font-weight: normal;
           }
 
@@ -944,8 +1031,8 @@ li.module-hover {
           }
 
           &.project-card {
-            .start-date-row {
-              display: contents;
+            .card-value {
+              display: none;
             }
 
             .checkbox-cell {
