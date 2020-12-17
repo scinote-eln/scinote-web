@@ -7,18 +7,6 @@
 $color-group-hover: $color-alabaster;
 $color-module-hover: $brand-primary;
 
-#sortMenu {
-  border-color: $color-white;
-
-  &:not(:focus) {
-    color: $color-silver-chalice;
-  }
-
-  &:hover {
-    color: inherit;
-  }
-}
-
 // Breadcrumbs
 .projects-breadcrumbs {
   padding: .5em 1em;
@@ -479,135 +467,6 @@ li.module-hover {
 }
 
 
-#project-show {
-  @media (min-width: 1400px) {
-    .col-md-6 {
-      width: 33.33%; // fallback if needed
-      width: calc(100% / 3);
-    }
-  }
-}
-
-// EXPERIMENT PANEL
-.experiment-panel {
-  @include box-shadow(0 4px 8px 0 $color-dove-gray);
-  display: flex;
-  flex-direction: column;
-  height: 400px;
-  margin: 0 auto;
-  margin-bottom: 35px;
-  margin-top: 15px;
-  max-width: 700px;
-
-  .panel-title {
-    margin-bottom: 14px;
-  }
-
-  .panel-heading .clone-experiment,
-  .panel-heading .dropdown {
-    display: none;
-  }
-
-  &:hover .clone-experiment,
-  &:hover .dropdown {
-    display: block;
-  }
-
-  .panel-date {
-    color: $color-silver-chalice;
-  }
-
-  .panel-heading > .clone-experiment {
-    color: $color-silver-chalice;
-    padding-left: 4px;
-    padding-top: 2px;
-  }
-
-  .dropdown {
-    color: $color-silver-chalice;
-
-    button {
-      padding-left: 6px;
-    }
-  }
-
-  .panel-body {
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-    height: 100%;
-
-    a {
-      height: 100%;
-    }
-  }
-
-  .experiment-description {
-    margin-top: 10px;
-    max-height: 86px;
-    overflow-x: hidden;
-
-    p {
-      margin: 0;
-    }
-  }
-
-  .experiment-no-description {
-    @include font-h3;
-    color: $color-alto;
-    display: block;
-    font-weight: bold;
-    margin-top: 10px;
-    text-align: center;
-  }
-
-  .no-workflowimg {
-    color: $color-alto;
-    display: block;
-    font-size: 22px;
-    font-weight: bold;
-    margin: 15px 0;
-    max-height: 200px;
-    padding-bottom: 70px;
-    padding-top: 50px;
-    text-align: center;
-  }
-}
-
-.workflowimg-container {
-  align-items: center;
-  display: flex;
-  height: 100%;
-  justify-content: center;
-
-  img {
-    max-height: 190px;
-    max-width: 100%;
-  }
-}
-
-// SHOW
-.center-btn {
-  display: block;
-  margin: 0 auto;
-  max-width: 200px;
-}
-
-.big-plus {
-  color: $color-gainsboro;
-  display: block;
-  font-size: 180px;
-  margin: 20px 0;
-  text-align: center;
-
-  &:hover {
-    color: $color-alto;
-  }
-
-  &:focus {
-    color: $color-alto;
-  }
-}
 
 /// icon override
 
@@ -665,6 +524,20 @@ li.module-hover {
 .projects-index {
   &.active {
     [data-view-mode="archived"] {
+      display: none;
+    }
+  }
+
+  .cards-wrapper {
+    align-items: center;
+    display: grid;
+    grid-auto-rows: 2em;
+    grid-column-gap: 1em;
+    grid-row-gap: 1em;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    width: 100%;
+
+    .table-header {
       display: none;
     }
   }
@@ -912,6 +785,14 @@ li.module-hover {
 
         }
 
+        .manage-users-link {
+          color: $color-silver-chalice;
+
+          &:hover {
+            text-decoration: none;
+          }
+        }
+
         &.folder-card {
           text-align: center;
 
@@ -1018,10 +899,6 @@ li.module-hover {
               height: 2em;
               justify-content: center;
               width: 2em;
-
-              fas.fa-plus {
-                color: $color-silver-chalice;
-              }
             }
           }
         }

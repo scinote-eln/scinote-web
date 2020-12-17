@@ -5,11 +5,14 @@ module ArchivableModel
     validates :archived, inclusion: { in: [true, false] }
     before_save :set_archive_timestamp
     before_save :set_restore_timestamp
+
+    scope :active, -> { where(archived: false) }
+    scope :archived, -> { where(archived: true) }
   end
 
   # Not archived
   def active?
-    not archived?
+    !archived?
   end
 
   # Helper for archiving project. Timestamp of archiving is handler by

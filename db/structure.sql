@@ -332,7 +332,8 @@ CREATE TABLE public.comments (
     updated_at timestamp without time zone NOT NULL,
     last_modified_by_id bigint,
     type character varying,
-    associated_id integer
+    associated_id integer,
+    unseen_by bigint[] DEFAULT '{}'::bigint[]
 );
 
 
@@ -995,7 +996,12 @@ CREATE TABLE public.project_folders (
     team_id bigint NOT NULL,
     parent_folder_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    archived boolean DEFAULT false,
+    archived_by_id bigint,
+    archived_on timestamp without time zone,
+    restored_by_id bigint,
+    restored_on timestamp without time zone
 );
 
 
@@ -6111,6 +6117,14 @@ ALTER TABLE ONLY public.repository_status_items
 
 
 --
+-- Name: project_folders fk_rails_7931975dd0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_folders
+    ADD CONSTRAINT fk_rails_7931975dd0 FOREIGN KEY (restored_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: project_folders fk_rails_795296de66; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6807,6 +6821,14 @@ ALTER TABLE ONLY public.protocol_protocol_keywords
 
 
 --
+-- Name: project_folders fk_rails_f27fa590f4; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_folders
+    ADD CONSTRAINT fk_rails_f27fa590f4 FOREIGN KEY (archived_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: report_elements fk_rails_f36eac136b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7062,6 +7084,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200714082503'),
 ('20200826143431'),
 ('20200909121441'),
-('20201028103608');
-
-
+('20201028103608'),
+('20201126203713'),
+('20201209165626');

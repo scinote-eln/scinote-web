@@ -10,7 +10,7 @@
           <div class="col-xs-6 col-lg-8">
             <h4><%= tag.name %></h4>
           </div>
-            <div class="pull-right">
+            <div class="pull-right" data-view-mode="active">
               <%= link_to "", remote: true, class: 'btn btn-link edit-tag-link', title: t("experiments.canvas.modal_manage_tags.edit_tag") do %>
                 <span class="fas fa-pencil-alt"></span>
               <% end %>
@@ -49,8 +49,8 @@
   </ul>
 <% end %>
 
-<hr>
-<div class="row">
+<hr data-view-mode="active">
+<div class="row" data-view-mode="active">
     <%= bootstrap_form_for [@my_module, @new_mmt], remote: true, format: :json, html: { class: 'add-tag-form' } do |f| %>
       <div>
         <div class="well well-sm">

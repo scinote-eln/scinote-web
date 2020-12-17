@@ -23,16 +23,18 @@
   </div>
 
   <div class="panel-body">
-    <div class="row">
-      <div class="col-xs-6">
-        <%=t "experiments.module_archive.archived_on" %>
+    <% if my_module.archived? %>
+      <div class="row">
+        <div class="col-xs-6">
+          <%=t "experiments.module_archive.archived_on" %>
+        </div>
+        <div class="col-xs-6">
+          <span title="<%=t "experiments.module_archive.archived_on_title", date: l(my_module.archived_on, format: :full_date), time: l(my_module.archived_on, format: :time) %>">
+            <%= l(my_module.archived_on, format: :full_date) %>
+          </span>
+        </div>
       </div>
-      <div class="col-xs-6">
-        <span title="<%=t "experiments.module_archive.archived_on_title", date: l(my_module.archived_on, format: :full_date), time: l(my_module.archived_on, format: :time) %>">
-          <%=l my_module.archived_on, format: :full_date %>
-        </span>
-      </div>
-    </div>
+    <% end %>
   </div>
 
 </div>

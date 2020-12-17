@@ -16,10 +16,7 @@
   var newProjectModalBody = null;
   var newProjectBtn = null;
 
-  var editProjectModal = null;
-  var editProjectModalTitle = null;
-  var editProjectModalBody = null;
-  var editProjectBtn = null;
+  var editProjectModal = '#edit-modal';
 
   var projectActionsModal = null;
   var projectActionsModalHeader = null;
@@ -140,83 +137,10 @@
       });
   }
 
-  function initEditProjectButton(el) {
-    el.find(".dropdown-menu a[data-action='edit']").off()
-      .on('ajax:success', function(ev, data) {
-        // Update modal title
-        editProjectModalTitle.html(data.title);
-
-        // Set modal body
-        editProjectModalBody.html(data.html);
-
-        // Add modal body's submit handler
-        editProjectModal.find('form').off()
-          .on('ajax:beforeSend', function() {
-            animateSpinner(this);
-          })
-          .on('ajax:success', function(ev2, data2) {
-            projectsChanged = true;
-            // Hide modal
-            editProjectModal.modal('hide');
-
-            HelperModule.flashAlertMsg(data2.message, 'success');
-
-            // Project saved, reload view
-            refreshCurrentView();
-          })
-          .on('ajax:error', function(ev2, data2) {
-            $(this).renderFormErrors('project', data2.responseJSON.errors);
-          })
-          .on('ajax:complete', function() {
-            animateSpinner(this, false);
-          });
-
-        // Show the modal
-        editProjectModal.modal('show');
-      })
-      .on('ajax:error', function() {
-        // TODO
-      });
-  }
-
-  /**
-   * Initialize the JS for edit project modal to work.
-   */
-  function initEditProjectModal() {
-    // Edit button click handler
-    editProjectBtn.off().click(function() {
-      // Submit the modal body's form
-      editProjectModalBody.find('form').submit();
-    });
-
-    // On hide modal handler
-    editProjectModal.off().on('hidden.bs.modal', function() {
-      editProjectModalBody.html('');
-    });
-  }
-
   function initManageUsersModal() {
     // Reload users tab HTML element when modal is closed
     projectActionsModal.off('hide.bs.modal').on('hide.bs.modal', function() {
-      var projectEl = $('#' + $(this).attr('data-project-id'));
-
-      // Load HTML to refresh users list
-      $.ajax({
-        url: projectEl.attr('data-project-users-tab-url'),
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-          projectEl.find('#users-' + projectEl.attr('id')).html(data.html);
-          CounterBadge.updateCounterBadge(
-            data.counter, data.project_id, 'users'
-          );
-          initUsersEditLink(projectEl);
-          projectsChanged = true;
-        },
-        error: function() {
-          // TODO
-        }
-      });
+      refreshCurrentView();
     });
 
     // Remove modal content when modal window is closed.
@@ -231,8 +155,6 @@
   global.initUsersEditLink = function($el) {
     $el.find('.manage-users-link').off()
       .on('ajax:before', function() {
-        var projectId = $(this).closest('.panel-default').attr('id');
-        projectActionsModal.attr('data-project-id', projectId);
         projectActionsModal.modal('show');
       })
       .on('ajax:success', function(e, data) {
@@ -381,15 +303,15 @@
     let projectsToolbar = $('#projectsToolbar');
 
     if (selectedProjects.length === 0 && selectedProjectFolders.length === 0) {
-      projectsToolbar.find('.single-project-action, .multiple-projects-action').addClass('hidden');
-      projectsToolbar.find('.new-project-actions').removeClass('hidden');
-    } else if (selectedProjects.length === 1 && selectedProjectFolders.length === 0) {
-      projectsToolbar.find('.new-project-actions').addClass('hidden');
-      projectsToolbar.find('.single-project-action, .multiple-projects-action').removeClass('hidden');
+      projectsToolbar.find('.single-object-action, .multiple-object-action').addClass('hidden');
+      projectsToolbar.find('.new-object-actions').removeClass('hidden');
+    } else if (selectedProjects.length + selectedProjectFolders.length === 1) {
+      projectsToolbar.find('.new-object-actions').addClass('hidden');
+      projectsToolbar.find('.single-object-action, .multiple-object-action').removeClass('hidden');
     } else {
-      projectsToolbar.find('.new-project-actions').addClass('hidden');
-      projectsToolbar.find('.single-project-action').addClass('hidden');
-      projectsToolbar.find('.multiple-projects-action').removeClass('hidden');
+      projectsToolbar.find('.new-object-actions').addClass('hidden');
+      projectsToolbar.find('.single-object-action').addClass('hidden');
+      projectsToolbar.find('.multiple-object-action').removeClass('hidden');
     }
   }
 
@@ -412,11 +334,6 @@
     newProjectModalBody = newProjectModal.find('.modal-body');
     newProjectBtn = $('.new-project-btn');
 
-    editProjectModal = $('#edit-project-modal');
-    editProjectModalTitle = editProjectModal.find('#edit-project-modal-label');
-    editProjectModalBody = editProjectModal.find('.modal-body');
-    editProjectBtn = editProjectModal.find(".btn[data-action='submit']");
-
     projectActionsModal = $('#project-actions-modal');
     projectActionsModalHeader = projectActionsModal.find('.modal-title');
     projectActionsModalBody = projectActionsModal.find('.modal-body');
@@ -431,14 +348,13 @@
     updateSelectedCards();
     initNewProjectFolderModal();
     initNewProjectModal();
-    initEditProjectModal();
     initManageUsersModal();
     initExportProjectsModal();
     initExportProjects();
 
     initFormSubmitLinks($('.project-card'));
-    initEditProjectButton($('.project-card'));
     initArchiveRestoreButton($('.project-card'));
+    initUsersEditLink($('.project-card'));
 
     $('#cards-wrapper').on('click', '.folder-card-selector', function() {
       let folderCard = $(this).closest('.folder-card');
@@ -521,15 +437,38 @@
 
   function refreshCurrentView() {
     loadCardsView();
+    Sidebar.reload();
+  }
 
-    // Also refresh sidebar tree navigation
-    $.ajax({
-      url: $('#projects-cards-view').data('projects-sidebar-url'),
-      type: 'GET',
-      dataType: 'json',
-      success: function(data) {
-        $('#slide-panel .tree').html(data.html);
-      }
+  function initEditButton() {
+    function loadEditModal(url) {
+      $.get(url, function(result) {
+        $(editProjectModal).find('.modal-content').html(result.html);
+        $(editProjectModal).modal('show');
+        $(editProjectModal).find('form')
+          .on('ajax:success', function(ev, data) {
+            $(editProjectModal).modal('hide');
+            HelperModule.flashAlertMsg(data.message, 'success');
+            refreshCurrentView();
+          }).on('ajax:error', function(ev, data) {
+            HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+            $(this).renderFormErrors('project', data.responseJSON.errors);
+            $(this).renderFormErrors('project_folder', data.responseJSON.errors);
+          });
+      });
+    }
+
+    $('.project-actions .edit-btn').on('click', function(e) {
+      var editUrl = $(`.project-card[data-id=${selectedProjects[0]}]`).data('edit-url') ||
+        $(`.folder-card[data-id=${selectedProjectFolders[0]}]`).data('edit-url');
+      e.preventDefault();
+      loadEditModal(editUrl);
+    });
+
+    $('.projects-container').on('click', '.edit-project-btn', function(e) {
+      var editUrl = $(this).attr('href');
+      e.preventDefault();
+      loadEditModal(editUrl);
     });
   }
 
@@ -552,7 +491,9 @@
         viewContainer.data('projects-cards-url', data.projects_cards_url);
         viewContainer.find('.card, .projects-group').remove();
         viewContainer.append(data.cards_html);
-        Sidebar.reload();
+        selectedProjects.length = 0;
+        selectedProjectFolders.length = 0;
+        refreshProjectsToolbar();
         init();
       },
       error: function() {
@@ -722,6 +663,7 @@
     });
   }
 
+  initEditButton();
   initProjectsViewModeSwitch();
   initSorting();
   loadCardsView();

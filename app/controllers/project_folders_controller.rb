@@ -4,6 +4,7 @@ class ProjectFoldersController < ApplicationController
   include InputSanitizeHelper
 
   before_action :load_current_folder, only: %i(new)
+  before_action :load_folder, only: %i(edit update)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: %i(move_to)
 
@@ -26,7 +27,7 @@ class ProjectFoldersController < ApplicationController
     respond_to do |format|
       format.json do
         if project_folder.save
-          log_activity(:create_project_folder, project_folder, { project_folder: project_folder.id })
+          log_activity(:create_project_folder, project_folder, project_folder: project_folder.id)
           message = t('projects.index.modal_new_project_folder.success_flash',
                       name: escape_input(project_folder.name))
           render json: { message: message }
@@ -55,19 +56,37 @@ class ProjectFoldersController < ApplicationController
     end
   end
 
-  def update
-    folder = current_team.project_folders.find(params[:id])
+  def edit
+    render json: {
+      html: render_to_string(partial: 'projects/index/modals/edit_folder_contents.html.erb',
+                               locals: { folder: @folder })
 
-    log_activity(:rename_project_folder, folder, { project_folder: folder.id })
+    }
+  end
+
+  def update
+    if @folder.update(project_folders_params)
+      log_activity(:rename_project_folder, @folder, project_folder: @folder.id)
+      render json: { message: t('projects.update.success_flash', name: escape_input(@folder.name)) }
+    else
+      render json: { message: t('projects.update.error_flash', name: escape_input(@folder.name)),
+                     errors: @folder.errors }, status: :unprocessable_entity
+    end
   end
 
   def archive
     folder = current_team.project_folders.find(params[:id])
 
-    log_activity(:archive_project_folder, folder, { project_folder: folder.id })
+    log_activity(:archive_project_folder, folder, project_folder: folder.id)
   end
 
   private
+
+  def load_folder
+    @folder = current_team.project_folders.find_by(id: params[:id])
+
+    render_404 unless @folder
+  end
 
   def load_current_folder
     if params[:project_folder_id].present?
@@ -102,9 +121,9 @@ class ProjectFoldersController < ApplicationController
       project.update!(project_folder: destination_folder)
       destination_folder_name = project.project_folder&.name || I18n.t('global_activities.root_folder_level')
 
-      log_activity(:move_project, project, { project: project.id,
+      log_activity(:move_project, project, project: project.id,
                                              destination_folder: destination_folder_name,
-                                             source_folder: source_folder_name })
+                                             source_folder: source_folder_name)
     end
   end
 
@@ -117,9 +136,9 @@ class ProjectFoldersController < ApplicationController
       folder.update!(parent_folder: destination_folder)
       destination_folder_name = folder.parent_folder&.name || I18n.t('global_activities.root_folder_level')
 
-      log_activity(:move_project_folder, folder, { project_folder: folder.id,
+      log_activity(:move_project_folder, folder, project_folder: folder.id,
                                                    destination_folder: destination_folder_name,
-                                                   source_folder: source_folder_name })
+                                                   source_folder: source_folder_name)
     end
   end
 

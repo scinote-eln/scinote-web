@@ -18,9 +18,6 @@ class Experiment < ApplicationRecord
              optional: true
 
   has_many :my_modules, inverse_of: :experiment, dependent: :destroy
-  has_many :active_my_modules,
-           -> { where(archived: false).order(:name) },
-           class_name: 'MyModule'
   has_many :my_module_groups, inverse_of: :experiment, dependent: :destroy
   has_many :report_elements, inverse_of: :experiment, dependent: :destroy
   # Associations for old activity type
@@ -44,7 +41,13 @@ class Experiment < ApplicationRecord
     experiment.validates :archived_on, presence: true
   end
 
-  scope :is_archived, ->(is_archived) { where("archived = ?", is_archived) }
+  scope :is_archived, lambda { |is_archived|
+    if is_archived
+      joins(:project).where('experiments.archived = TRUE OR projects.archived = TRUE')
+    else
+      joins(:project).where('experiments.archived = FALSE AND projects.archived = FALSE')
+    end
+  }
 
   def self.search(
     user,
@@ -73,7 +76,7 @@ class Experiment < ApplicationRecord
         Experiment
         .where('experiments.project_id IN (?)', projects_ids)
         .where_attributes_like([:name, :description], query, options)
-      return include_archived ? new_query : new_query.is_archived(false)
+      return include_archived ? new_query : new_query.active
     elsif include_archived
       new_query =
         Experiment
@@ -82,7 +85,7 @@ class Experiment < ApplicationRecord
     else
       new_query =
         Experiment
-        .is_archived(false)
+        .active
         .where(project: project_ids)
         .where_attributes_like([:name, :description], query, options)
     end
@@ -101,16 +104,12 @@ class Experiment < ApplicationRecord
     where(project: Project.viewable_by_user(user, teams))
   end
 
+  def archived_branch?
+    archived? || project.archived?
+  end
+
   def navigable?
     !project.archived?
-  end
-
-  def active_modules
-    my_modules.where(archived: false)
-  end
-
-  def archived_modules
-    my_modules.where(archived: true)
   end
 
   def update_canvas(
@@ -368,12 +367,13 @@ class Experiment < ApplicationRecord
 
         # Find the lowest point for current modules(max_y) and the leftmost
         # module(min_x)
-        if experiment.active_modules.empty?
+        active_modules = experiment.my_modules.active
+        if active_modules.blank?
           max_y = 0
           min_x = 0
         else
-          max_y = experiment.active_modules.maximum(:y) + MyModule::HEIGHT
-          min_x = experiment.active_modules.minimum(:x)
+          max_y = active_modules.maximum(:y) + MyModule::HEIGHT
+          min_x = active_modules.minimum(:x)
         end
 
         # Set new positions
@@ -511,7 +511,7 @@ class Experiment < ApplicationRecord
 
     dg = RGL::DirectedAdjacencyGraph[]
     group_ids = Set.new
-    active_modules.includes(:my_module_group, outputs: :to).each do |m|
+    my_modules.active.includes(:my_module_group, outputs: :to).each do |m|
       group_ids << m.my_module_group.id unless m.my_module_group.blank?
       dg.add_vertex m.id unless dg.has_vertex? m.id
       m.outputs.each do |o|

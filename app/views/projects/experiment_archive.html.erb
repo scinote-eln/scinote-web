@@ -1,28 +1,18 @@
 <% provide(:head_title, t("projects.experiment_archive.head_title", project: h(@project.name)).html_safe) %>
 <% provide(:sidebar_title, t("sidebar.experiments.sidebar_title")) %>
 <% provide(:sidebar_url, project_sidebar_path(@project)) %>
-
+<% provide(:container_class, 'no-second-nav-container') %>
 <%= content_for :sidebar do %>
-  <%= render partial: 'shared/sidebar/experiments.html.erb', locals: { project: @project } %>
+  <%= render partial: 'shared/sidebar/experiments.html.erb', locals: { project: @project, archived: true } %>
 <% end %>
-<%= render partial: "shared/secondary_navigation" %>
 
-<div class="content-pane" id="experiment-archive">
+
+<div class="content-pane flexible" id="project-show-archive">
+  <%= render partial: 'projects/show/header' %>
   <% if @project.archived_experiments.count > 0 %>
     <div class="row" style="margin-top: 10px;">
-      <% @project.archived_experiments.each_with_index do |experiment, i| %>
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-          <%= render partial: "projects/experiment_archive/experiment.html.erb", locals: { experiment: experiment} %>
-        </div>
-        <% if (i+1) % 6 == 0 %>
-        <div class="clearfix visible-lg-block"></div>
-        <% end %>
-        <% if (i+1) % 4 == 0 %>
-        <div class="clearfix visible-md-block"></div>
-        <% end %>
-        <% if (i+1) % 3 == 0 %>
-        <div class="clearfix visible-sm-block"></div>
-        <% end %>
+      <% @project.sorted_experiments(@current_sort, true).each_with_index do |experiment, i| %>
+          <%= render partial: "projects/show/experiment.html.erb", locals: { experiment: experiment} %>
       <% end %>
     </div>
   <% else %>

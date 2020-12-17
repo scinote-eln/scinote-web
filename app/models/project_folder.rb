@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ProjectFolder < ApplicationRecord
+  include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
 
@@ -14,6 +15,14 @@ class ProjectFolder < ApplicationRecord
 
   belongs_to :team, inverse_of: :project_folders, touch: true
   belongs_to :parent_folder, class_name: 'ProjectFolder', optional: true
+  belongs_to :archived_by, foreign_key: 'archived_by_id',
+                           class_name: 'User',
+                           inverse_of: :archived_project_folders,
+                           optional: true
+  belongs_to :restored_by, foreign_key: 'restored_by_id',
+                           class_name: 'User',
+                           inverse_of: :restored_project_folders,
+                           optional: true
   has_many :projects, inverse_of: :project_folder, dependent: :nullify
   has_many :project_folders, foreign_key: 'parent_folder_id', inverse_of: :parent_folder, dependent: :destroy
 
@@ -51,13 +60,11 @@ class ProjectFolder < ApplicationRecord
       )
       SELECT id FROM inner_project_folders ORDER BY selected_folders_ids".gsub(/\n|\t/, ' ').gsub(/ +/, ' ')
 
-    new_query =
-      if project_folder.present?
-        where("project_folders.id IN (#{inner_folders_sql})", team.id, project_folder.id)
-      else
-        where("project_folders.id IN (#{inner_folders_sql})", team.id)
-      end
-    new_query.order(:parent_folder_id)
+    if project_folder.present?
+      where("project_folders.id IN (#{inner_folders_sql})", team.id, project_folder.id)
+    else
+      where("project_folders.id IN (#{inner_folders_sql})", team.id)
+    end
   end
 
   def parent_folders

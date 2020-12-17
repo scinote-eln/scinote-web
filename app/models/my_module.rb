@@ -55,8 +55,6 @@ class MyModule < ApplicationRecord
   # Associations for old activity type
   has_many :activities, inverse_of: :my_module
 
-  scope :is_archived, ->(is_archived) { where('archived = ?', is_archived) }
-  scope :active, -> { where(archived: false) }
   scope :overdue, -> { where('my_modules.due_date < ?', Time.current.utc) }
   scope :without_group, -> { active.where(my_module_group: nil) }
   scope :one_day_prior, (lambda do
@@ -129,8 +127,8 @@ class MyModule < ApplicationRecord
     where(experiment: Experiment.viewable_by_user(user, teams))
   end
 
-  def navigable?
-    !experiment.archived? && experiment.navigable?
+  def archived_branch?
+    archived? || experiment.archived_branch?
   end
 
   # Removes connections with other modules
@@ -249,7 +247,7 @@ class MyModule < ApplicationRecord
                           .where('comments.id <  ?', last_id)
                           .order(created_at: :desc)
                           .limit(per_page)
-    comments.reverse
+    TaskComment.from(comments, :comments).order(created_at: :asc)
   end
 
   def last_activities(last_id = 1,
@@ -426,7 +424,7 @@ class MyModule < ApplicationRecord
 
     # Get all modules position that overlap with first column, [0, WIDTH) and
     # sort them by y coordinate.
-    positions = experiment.active_modules.collect { |m| [m.x, m.y] }
+    positions = experiment.my_modules.active.collect { |m| [m.x, m.y] }
                           .select { |x, _| x >= 0 && x < WIDTH }
                           .sort_by { |_, y| y }
     return { x: 0, y: 0 } if positions.empty? || positions.first[1] >= HEIGHT

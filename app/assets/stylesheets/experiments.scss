@@ -1,0 +1,209 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+// scss-lint:disable SelectorFormat
+// scss-lint:disable IdSelector
+
+// EXPERIMENT PANEL
+.experiment-panel {
+  @include box-shadow(0 4px 8px 0 $color-dove-gray);
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+  margin: 0 auto;
+  margin-bottom: 35px;
+  margin-top: 15px;
+  max-width: 700px;
+
+  .panel-title {
+    margin-bottom: 14px;
+  }
+
+  .panel-heading .clone-experiment,
+  .panel-heading .dropdown {
+    display: none;
+  }
+
+  &:hover .clone-experiment,
+  &:hover .dropdown {
+    display: block;
+  }
+
+  .panel-date {
+    color: $color-silver-chalice;
+
+    .fas {
+      display: inline-block;
+      width: 1em;
+    }
+  }
+
+  .panel-heading > .clone-experiment {
+    color: $color-silver-chalice;
+    padding-left: 4px;
+    padding-top: 2px;
+  }
+
+  .dropdown {
+    color: $color-silver-chalice;
+
+    button {
+      padding-left: 6px;
+    }
+  }
+
+  .panel-body {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    height: 100%;
+
+    a {
+      height: 100%;
+    }
+  }
+
+  .experiment-description {
+    margin-top: 10px;
+    max-height: 86px;
+    overflow-x: hidden;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .experiment-no-description {
+    @include font-h3;
+    color: $color-alto;
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  .no-workflowimg {
+    color: $color-alto;
+    display: block;
+    font-size: 22px;
+    font-weight: bold;
+    margin: 15px 0;
+    max-height: 200px;
+    padding-bottom: 70px;
+    padding-top: 50px;
+    text-align: center;
+  }
+}
+
+.workflowimg-container {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+
+  img {
+    max-height: 190px;
+    max-width: 100%;
+  }
+}
+
+// SHOW
+.center-btn {
+  display: block;
+  margin: 0 auto;
+  max-width: 200px;
+}
+
+.big-plus {
+  color: $color-gainsboro;
+  display: block;
+  font-size: 180px;
+  margin: 20px 0;
+  text-align: center;
+
+  &:hover {
+    color: $color-alto;
+  }
+
+  &:focus {
+    color: $color-alto;
+  }
+}
+
+#project-show-archive {
+  .experiment-panel {
+    background: $color-concrete;
+
+    .panel-heading {
+      background: unset;
+    }
+
+    .panel-date {
+      color: $color-black;
+    }
+  }
+}
+
+#project-show,
+#project-show-archive {
+  .content-header {
+    .project-name {
+      max-width: calc(100% - 2em);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      .fas {
+        margin-right: .5em;
+      }
+    }
+  }
+  .header-actions {
+    margin-left: auto;
+
+    .experiment-sort-menu {
+      display: inline-block;
+
+      #sortMenu {
+        background: $color-white;
+
+        &:focus,
+        &:active {
+          box-shadow: none;
+        }
+
+        &:hover {
+          background: $color-concrete;
+        }
+      }
+
+      .dropdown-menu {
+        @include font-button;
+        min-width: 200px;
+        padding: .5em 0;
+
+        a {
+          border-radius: unset;
+          cursor: pointer;
+          padding: .5em 1em;
+          text-align: left;
+
+          &:hover {
+            background: $color-concrete;
+          }
+
+          &.selected::after {
+            @include font-awesome;
+            content: $font-fas-check;
+            margin-left: auto;
+            position: absolute;
+            right: 1em;
+          }
+        }
+      }
+    }
+  }
+
+  .project-show-toolbar {
+    margin-top: 1em;
+  }
+}

@@ -1,5 +1,7 @@
 <span class="due-date-label <%= get_task_alert_color(my_module) %>">
-  <% if my_module.completed? %>
+  <% if my_module.archived? %>
+    <%= l(my_module.due_date, format: :full) %>
+  <% elsif my_module.completed? %>
     <%= t('my_modules.states.completed') %>
       <%= l(my_module.completed_on, format: :full) %>
   <% elsif my_module.is_one_day_prior? %>

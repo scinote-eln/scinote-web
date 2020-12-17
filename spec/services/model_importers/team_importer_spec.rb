@@ -79,7 +79,7 @@ describe TeamImporter do
         it do
           expect(@exp.my_modules.where(my_module_group: nil).count).to eq 2
         end
-        it { expect(@exp.archived_modules.count).to eq 1 }
+        it { expect(@exp.my_modules.archived.count).to eq 1 }
       end
 
       describe 'Connections' do

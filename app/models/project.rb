@@ -164,7 +164,7 @@ class Project < ApplicationRecord
                              .where('comments.id <  ?', last_id)
                              .order(created_at: :desc)
                              .limit(per_page)
-    comments.reverse
+    ProjectComment.from(comments, :comments).order(created_at: :asc)
   end
 
   def unassigned_users
@@ -180,14 +180,16 @@ class Project < ApplicationRecord
     user_projects.find_by_user_id(user)&.role
   end
 
-  def sorted_active_experiments(sort_by = :new)
+  def sorted_experiments(sort_by = :new, archived = false)
     sort = case sort_by
            when 'old' then { created_at: :asc }
            when 'atoz' then { name: :asc }
            when 'ztoa' then { name: :desc }
+           when 'arch_new' then { archived_on: :desc }
+           when 'arch_old' then { archived_on: :asc }
            else { created_at: :desc }
            end
-    experiments.is_archived(false).order(sort)
+    experiments.is_archived(archived).order(sort)
   end
 
   def archived_experiments

@@ -1,7 +1,7 @@
 <% cache [current_user, project] do %>
   <% active = !project.archived %>
   <% if (active && (can_manage_project?(project) || can_archive_project?(project))) || (!active && can_restore_project?(project)) %>
-    <div class="dropdown project-actions-menu new-comments">
+    <div class="dropdown project-actions-menu <%= 'new-comments' if has_unseen_comments?(project) %>">
       <button class="btn btn-light dropdown-toggle icon-btn" type="button" id="projectActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
         <i class="fas fa-ellipsis-h"></i>
       </button>
@@ -15,6 +15,7 @@
         <% if active && can_manage_project?(project) %>
           <li>
             <a href="<%= edit_project_path(project, format: :json) %>"
+               class="edit-project-btn"
                data-action="edit"
                data-remote="true">
               <i class="fas fa-pen"></i>

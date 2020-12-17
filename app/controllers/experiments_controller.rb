@@ -9,7 +9,7 @@ class ExperimentsController < ApplicationController
 
   before_action :load_project, only: %i(new create)
   before_action :load_experiment, except: %i(new create)
-  before_action :check_view_permissions, except: %i(edit archive clone move)
+  before_action :check_view_permissions, except: %i(edit archive clone move new create)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: %i(edit update)
   before_action :check_archive_permissions, only: :archive
@@ -58,8 +58,7 @@ class ExperimentsController < ApplicationController
 
   def canvas
     @project = @experiment.project
-    @active_modules = @experiment.active_modules
-                                 .includes(:tags, :inputs, :outputs)
+    @active_modules = @experiment.my_modules.active.includes(:tags, :inputs, :outputs)
     current_team_switch(@project.team)
   end
 
@@ -207,6 +206,7 @@ class ExperimentsController < ApplicationController
   end
 
   def module_archive
+    @my_modules = @experiment.archived_branch? ? @experiment.my_modules : @experiment.my_modules.archived
   end
 
   def updated_img

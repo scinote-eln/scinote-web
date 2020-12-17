@@ -1,7 +1,6 @@
 Canaid::Permissions.register_for(Experiment) do
   # Experiment and its project must be active for all the specified permissions
-  %i(read_experiment
-     manage_experiment
+  %i(manage_experiment
      archive_experiment
      clone_experiment
      move_experiment)
@@ -77,8 +76,7 @@ Canaid::Permissions.register_for(Protocol) do
 
   # Module, its experiment and its project must be active for all the specified
   # permissions
-  %i(read_protocol_in_module
-     manage_protocol_in_module
+  %i(manage_protocol_in_module
      complete_or_checkbox_step)
     .each do |perm|
     can perm do |_, protocol|

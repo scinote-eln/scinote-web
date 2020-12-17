@@ -31,7 +31,7 @@ module MyModulesHelper
 
   def get_task_alert_color(my_module)
     alert = ''
-    unless my_module.completed?
+    if my_module.active? && !my_module.completed?
       alert = ' alert-yellow' if my_module.is_one_day_prior?
       alert = ' alert-red' if my_module.is_overdue?
     end
