@@ -14,6 +14,7 @@ class ProjectsController < ApplicationController
   before_action :check_manage_permissions, only: :edit
   before_action :set_inline_name_editing, only: %i(show)
   before_action :load_exp_sort_var, only: %i(show experiment_archive)
+  before_action :reset_invalid_view_state, only: %i(index cards)
 
   layout 'fluid'
 
@@ -284,6 +285,11 @@ class ProjectsController < ApplicationController
   def filters_included?
     %i(search created_on_from created_on_to members archived_on_from archived_on_to folders_search)
       .any? { |param_name| params.dig(param_name).present? }
+  end
+
+  def reset_invalid_view_state
+    view_state = current_team.current_view_state(current_user)
+    view_state.destroy unless view_state.valid?
   end
 
   def log_activity(type_of, message_items = {})

@@ -8,12 +8,6 @@ class ProjectsOverviewService
     @params = params
     @view_state = @team.current_view_state(@user)
 
-    # Default state changed, reset invalid state
-    unless @view_state.valid?
-      @view_state.destroy
-      @view_state = @team.current_view_state(@user)
-    end
-
     # Update view_mode if changed
     if @view_state.state.dig('projects', 'view_mode') != @params[:filter] &&
        %w(active archived).include?(@params[:filter])
