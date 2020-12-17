@@ -564,6 +564,8 @@ li.module-hover {
   }
 
   .filter-container {
+    position: initial;
+
     .projects-filters {
       padding: 0;
       width: 230px;
@@ -602,18 +604,56 @@ li.module-hover {
           display: flex;
 
           .folder-search-label {
+            @include font-button;
             margin: 0 .3em;
+          }
+
+          .fas {
+            color: inherit;
+            cursor: pointer;
+            text-decoration: none;
+          }
+
+          .folder-search-popover {
+            @include font-button;
+            left: -140px;
+            padding: 1.25em;
+            width: 220px;
           }
         }
       }
 
+      .text-search-filter {
+        &.open {
+          border-bottom-left-radius: 0;
+          border-bottom-right-radius: 0;
+        }
+      }
+
       .recent-searches {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        left: auto;
+        margin-top: -1px;
+        top: auto;
+        width: calc(100% - 2em);
+
         label {
           @include font-small;
+          color: $color-silver-chalice;
           font-weight: bold;
           margin-bottom: .3em;
           padding: 0 1.5em;
           user-select: none;
+        }
+
+        .projects-search-keyword {
+          @include font-button;
+          padding: .5em 1.25em;
+
+          .keyword-text {
+            margin-left: .25em;
+          }
         }
       }
 
@@ -648,12 +688,6 @@ li.module-hover {
       width: 2px;
     }
 
-    .datetime-picker-container {
-      .calendar-input {
-        padding-right: 40px;
-      }
-    }
-
     @media (min-width: 768px) {
 
       .projects-filters {
@@ -668,11 +702,12 @@ li.module-hover {
 
       .datetime-picker-container {
         display: inline-block;
+        width: 46%;
       }
 
       .connect-line {
         display: inline-block;
-        margin: 0 12px;
+        margin: 0 11px;
         position: relative;
         top: 2px;
         transform: rotate(90deg);

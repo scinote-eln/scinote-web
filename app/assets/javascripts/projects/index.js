@@ -564,8 +564,10 @@
     $textFilter.click((e) => {
       e.stopPropagation();
       $('#textSearchFilterHistory').toggle();
+      $textFilter.closest('.dropdown').toggleClass('open');
     }).on('input', () => {
       $('#textSearchFilterHistory').hide();
+      $textFilter.closest('.dropdown').removeClass('open');
     });
 
     $projectsFilter.on('click', '.projects-search-keyword', function(e) {
@@ -573,6 +575,12 @@
       e.preventDefault();
       $textFilter.val($(this).data('keyword'));
       $('#textSearchFilterHistory').hide();
+      $textFilter.closest('.dropdown').removeClass('open');
+    });
+
+    $projectsFilter.on('click', '#folderSearchInfoBtn', function(e) {
+      e.stopPropagation();
+      $('#folderSearchInfo').toggle();
     });
 
     $('.project-filters-dropdown').on('show.bs.dropdown', function() {
@@ -587,7 +595,7 @@
             `<li class="dropdown-item">
               <a class="projects-search-keyword" href="#" data-keyword="${keyword}">
                 <i class="fas fa-history"></i>
-                ${keyword}
+                <span class="keyword-text">${keyword}</span>
               </a>
             </li>`
           ));
@@ -595,6 +603,10 @@
       } catch (error) {
         console.error(error);
       }
+    }).on('hide.bs.dropdown', function() {
+      $('#textSearchFilterHistory').hide();
+      $textFilter.closest('.dropdown').removeClass('open');
+      $('#folderSearchInfo').hide();
     });
 
     $('#applyProjectFiltersButton').click((e) => {
@@ -640,10 +652,13 @@
 
     // Prevent filter window close
     $($projectsFilter).click((e) => {
-      if (!$(e.target).is('input')) {
+      if (!$(e.target).is('input,a')) {
         e.stopPropagation();
         e.preventDefault();
+        $('#textSearchFilterHistory').hide();
+        $textFilter.closest('.dropdown').removeClass('open');
         dropdownSelector.closeDropdown($membersFilter);
+        $('#folderSearchInfo').hide();
       }
     });
   }
