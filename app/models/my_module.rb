@@ -249,7 +249,7 @@ class MyModule < ApplicationRecord
                           .where('comments.id <  ?', last_id)
                           .order(created_at: :desc)
                           .limit(per_page)
-    comments.reverse
+    TaskComment.from(comments, :comments).order(created_at: :asc)
   end
 
   def last_activities(last_id = 1,

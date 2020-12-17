@@ -164,7 +164,7 @@ class Project < ApplicationRecord
                              .where('comments.id <  ?', last_id)
                              .order(created_at: :desc)
                              .limit(per_page)
-    comments.reverse
+    ProjectComment.from(comments, :comments).order(created_at: :asc)
   end
 
   def unassigned_users

@@ -332,7 +332,8 @@ CREATE TABLE public.comments (
     updated_at timestamp without time zone NOT NULL,
     last_modified_by_id bigint,
     type character varying,
-    associated_id integer
+    associated_id integer,
+    unseen_by bigint[] DEFAULT '{}'::bigint[]
 );
 
 
@@ -7062,6 +7063,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200714082503'),
 ('20200826143431'),
 ('20200909121441'),
-('20201028103608');
+('20201028103608'),
+('20201126203713');
 
 
