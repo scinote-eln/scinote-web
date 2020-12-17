@@ -750,6 +750,14 @@ li.module-hover {
 
         }
 
+        .manage-users-link {
+          color: $color-silver-chalice;
+
+          &:hover {
+            text-decoration: none;
+          }
+        }
+
         &.folder-card {
           text-align: center;
 
@@ -856,10 +864,6 @@ li.module-hover {
               height: 2em;
               justify-content: center;
               width: 2em;
-
-              fas.fa-plus {
-                color: $color-silver-chalice;
-              }
             }
           }
         }

@@ -140,25 +140,7 @@
   function initManageUsersModal() {
     // Reload users tab HTML element when modal is closed
     projectActionsModal.off('hide.bs.modal').on('hide.bs.modal', function() {
-      var projectEl = $('#' + $(this).attr('data-project-id'));
-
-      // Load HTML to refresh users list
-      $.ajax({
-        url: projectEl.attr('data-project-users-tab-url'),
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-          projectEl.find('#users-' + projectEl.attr('id')).html(data.html);
-          CounterBadge.updateCounterBadge(
-            data.counter, data.project_id, 'users'
-          );
-          initUsersEditLink(projectEl);
-          projectsChanged = true;
-        },
-        error: function() {
-          // TODO
-        }
-      });
+      refreshCurrentView();
     });
 
     // Remove modal content when modal window is closed.
@@ -173,8 +155,6 @@
   global.initUsersEditLink = function($el) {
     $el.find('.manage-users-link').off()
       .on('ajax:before', function() {
-        var projectId = $(this).closest('.panel-default').attr('id');
-        projectActionsModal.attr('data-project-id', projectId);
         projectActionsModal.modal('show');
       })
       .on('ajax:success', function(e, data) {
@@ -374,6 +354,7 @@
 
     initFormSubmitLinks($('.project-card'));
     initArchiveRestoreButton($('.project-card'));
+    initUsersEditLink($('.project-card'));
 
     $('#cards-wrapper').on('click', '.folder-card-selector', function() {
       let folderCard = $(this).closest('.folder-card');
