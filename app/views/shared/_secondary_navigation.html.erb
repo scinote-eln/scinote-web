@@ -97,6 +97,9 @@
                         config: @inline_editable_title_config
                      } %>
         <% else %>
+          <% if title_element.archived? %>
+            <i class="fas fa-archive"></i>&nbsp;
+          <% end %>
           <%= title_element.name %>
         <% end %>
       </h1>
