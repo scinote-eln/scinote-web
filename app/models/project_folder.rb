@@ -51,13 +51,11 @@ class ProjectFolder < ApplicationRecord
       )
       SELECT id FROM inner_project_folders ORDER BY selected_folders_ids".gsub(/\n|\t/, ' ').gsub(/ +/, ' ')
 
-    new_query =
-      if project_folder.present?
-        where("project_folders.id IN (#{inner_folders_sql})", team.id, project_folder.id)
-      else
-        where("project_folders.id IN (#{inner_folders_sql})", team.id)
-      end
-    new_query.order(:parent_folder_id)
+    if project_folder.present?
+      where("project_folders.id IN (#{inner_folders_sql})", team.id, project_folder.id)
+    else
+      where("project_folders.id IN (#{inner_folders_sql})", team.id)
+    end
   end
 
   def parent_folders
