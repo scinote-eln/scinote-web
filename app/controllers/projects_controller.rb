@@ -29,7 +29,7 @@ class ProjectsController < ApplicationController
   def cards
     overview_service = ProjectsOverviewService.new(current_team, current_user, @current_folder, params)
 
-    if params[:search].present?
+    if filters_included?
       render json: {
         cards_html: render_to_string(
           partial: 'projects/index/team_projects_grouped_by_folder.html.erb',
@@ -279,6 +279,11 @@ class ProjectsController < ApplicationController
     end
     @current_sort = @project.experiments_order || 'new'
     @current_sort = 'new' if @current_sort.include?('arch') && action_name != 'experiment_archive'
+  end
+
+  def filters_included?
+    %i(search created_on_from created_on_to members archived_on_from archived_on_to folders_search)
+      .any? { |param_name| params.dig(param_name).present? }
   end
 
   def log_activity(type_of, message_items = {})

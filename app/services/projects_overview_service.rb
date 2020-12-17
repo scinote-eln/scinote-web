@@ -8,13 +8,28 @@ class ProjectsOverviewService
     @params = params
     @view_state = @team.current_view_state(@user)
 
+    # Default state changed, reset invalid state
+    unless @view_state.valid?
+      @view_state.destroy
+      @view_state = @team.current_view_state(@user)
+    end
+
+    # Update view_mode if changed
     if @view_state.state.dig('projects', 'view_mode') != @params[:filter] &&
        %w(active archived).include?(@params[:filter])
       @view_state.state['projects']['view_mode'] = @params[:filter]
       @view_state.save!
     end
-
     @view_mode = @view_state.state.dig('projects', 'view_mode')
+
+    # Update sort if chanhed
+    @sort = @view_state.state.dig('projects', @view_mode, 'sort')
+    if @params[:sort] && @sort != @params[:sort] &&
+       %w(new old atoz ztoa archived_first archived_last).include?(@params[:sort])
+      @view_state.state['projects'].merge!(Hash[@view_mode, { 'sort': @params[:sort] }.stringify_keys])
+      @view_state.save!
+      @sort = @view_state.state.dig('projects', @view_mode, 'sort')
+    end
   end
 
   def project_cards
@@ -35,13 +50,24 @@ class ProjectsOverviewService
 
   def grouped_by_folder_project_cards
     project_records =
-      if @current_folder.present?
-        fetch_project_records.where(project_folder: ProjectFolder.inner_folders(@team, @current_folder))
-      else
+      if @current_folder
+        folders = if @params[:folders_search] == 'true'
+                    ProjectFolder.inner_folders(@team, @current_folder).or(ProjectFolder.where(id: @current_folder.id))
+                  else
+                    ProjectFolder.where(id: @current_folder.id)
+                  end
+
+        fetch_project_records.where(project_folder: folders)
+      elsif @params[:folders_search] == 'true'
+        folders = ProjectFolder.inner_folders(@team, nil).or(ProjectFolder.where(id: nil))
         fetch_project_records
+      else
+        folders = ProjectFolder.where(id: nil)
+        fetch_project_records.where(project_folder: nil, team: @team)
       end
+
     project_records = sort_records(filter_project_records(project_records)).includes(:project_folder).to_a
-    folder_records = ProjectFolder.inner_folders(@team, @current_folder).includes(:parent_folder).to_a
+    folder_records = folders.includes(:parent_folder).to_a
 
     sorted_results_by_folder = {}
     build_folder_content(@current_folder, folder_records, project_records, sorted_results_by_folder)
@@ -120,6 +146,14 @@ class ProjectsOverviewService
     records = records.where(archived: true) if @params[:filter] == 'archived'
     records = records.where(archived: false) if @params[:filter] == 'active'
     records = records.where_attributes_like('projects.name', @params[:search]) if @params[:search].present?
+    records = records.where_attributes_like('projects.name', @params[:search]) if @params[:search].present?
+    records = records.where('user_projects.user_id IN (?)', @params[:members]) if @params[:members]&.any?
+    records = records.where('projects.created_at > ?', @params[:created_on_from]) if @params[:created_on_from].present?
+    records = records.where('projects.created_at < ?', @params[:created_on_to]) if @params[:created_on_to].present?
+    records = records.where('projects.archived_on < ?', @params[:archived_on_to]) if @params[:archived_on_to].present?
+    if @params[:archived_on_from].present?
+      records = records.where('projects.archived_on > ?', @params[:archived_on_from])
+    end
     records
   end
 
@@ -131,14 +165,7 @@ class ProjectsOverviewService
   end
 
   def sort_records(records)
-    cards_state = @view_state.state.dig('projects', 'cards')
-    if @params[:sort] && cards_state['sort'] != @params[:sort] && %w(new old atoz ztoa).include?(@params[:sort])
-      cards_state['sort'] = @params[:sort]
-      @view_state.state['projects']['cards'] = cards_state
-    end
-    @view_state.save! if @view_state.changed?
-
-    case cards_state['sort']
+    case @sort
     when 'new'
       records.order(created_at: :desc)
     when 'old'
@@ -157,19 +184,7 @@ class ProjectsOverviewService
   end
 
   def mixed_sort_records(records)
-    sort = @view_state.state.dig('projects', @view_mode, 'sort')
-
-    if @params[:sort] && sort != @params[:sort] &&
-       %w(new old atoz ztoa archived_first archived_last).include?(@params[:sort])
-      @view_state.state['projects'].merge!(Hash[@view_mode, { 'sort': @params[:sort] }.stringify_keys])
-    end
-
-    if @view_state.changed?
-      @view_state.save!
-      sort = @view_state.state.dig('projects', @view_mode, 'sort')
-    end
-
-    case sort
+    case @sort
     when 'new'
       records.sort_by(&:created_at).reverse!
     when 'old'
