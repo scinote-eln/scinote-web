@@ -12,7 +12,8 @@ class ProjectsController < ApplicationController
   before_action :check_view_permissions, only: %i(show notifications experiment_archive sidebar)
   before_action :check_create_permissions, only: %i(create)
   before_action :check_manage_permissions, only: :edit
-  before_action :set_inline_name_editing, only: %i(show experiment_archive)
+  before_action :set_inline_name_editing, only: %i(show)
+  before_action :load_exp_sort_var, only: %i(show experiment_archive)
 
   layout 'fluid'
 
@@ -191,14 +192,9 @@ class ProjectsController < ApplicationController
   end
 
   def show
-    # save experiments order
-    if params[:sort]
-      @project.experiments_order = params[:sort].to_s
-      @project.save
-    end
+    redirect_to action: :experiment_archive if @project.archived?
     # This is the "info" view
     current_team_switch(@project.team)
-    @current_sort = @project.experiments_order || :new
   end
 
   def notifications
@@ -273,6 +269,15 @@ class ProjectsController < ApplicationController
       field_to_udpate: 'name',
       path_to_update: project_path(@project)
     }
+  end
+
+  def load_exp_sort_var
+    if params[:sort]
+      @project.experiments_order = params[:sort].to_s
+      @project.save
+    end
+    @current_sort = @project.experiments_order || 'new'
+    @current_sort = 'new' if @current_sort.include?('arch') && action_name != 'experiment_archive'
   end
 
   def log_activity(type_of, message_items = {})

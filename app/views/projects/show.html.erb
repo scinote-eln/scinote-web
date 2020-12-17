@@ -1,53 +1,28 @@
 <% provide(:head_title, t("projects.show.head_title", project: h(@project.name)).html_safe) %>
 <% provide(:sidebar_title, t("sidebar.experiments.sidebar_title")) %>
 <% provide(:sidebar_url, project_sidebar_path(@project)) %>
+<% provide(:container_class, 'no-second-nav-container') %>
 
 <%= content_for :sidebar do %>
-  <%= render partial: 'shared/sidebar/experiments.html.erb', locals: { project: @project } %>
+  <%= render partial: 'shared/sidebar/experiments.html.erb', locals: { project: @project, archived: false } %>
 <% end %>
-<%= render partial: "shared/secondary_navigation" %>
 
-<div class="content-pane" id="project-show">
-  <div class="row">
-    <div class="col-sm-12"
-         id="data-holder"
-         data-project-id="<%= @project.id %>">
-      <div class="row">
-        <div class="col-sm-12">
-          <!-- experiment sort -->
-          <div class="dropdown pull-left">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              <span><%= t("general.sort.#{@current_sort}_html") %></span>
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="sortMenu">
-              <% ["new", "old", "atoz", "ztoa"].each do |sort| %>
-                <li>
-                  <% if @current_sort != sort %>
-                    <a href="?<%= {sort: sort}.reject{|v| v.to_s == "0"}.to_query %>"><%= t("general.sort.#{sort}_html") %></a>
-                  <% else %>
-                    <a class="disabled" href="#"><%= t("general.sort.#{sort}_html") %></a>
-                  <% end %>
-                </li>
-              <% end %>
-            </ul>
-          </div>
-          <% if can_create_experiments?(@project) %>
-            <%= link_to new_project_experiment_url(@project),
-                        remote: true,
-                        type: "button",
-                        id: 'new-experiment',
-                        class: 'btn btn-primary pull-right' do %>
-              <span class="fas fa-plus"></span>
-              <span class="hidden-xs"><%=t 'experiments.new.create' %></span>
-            <% end %>
-          <% end %>
-        </div>
-      </div>
-    </div>
+<div class="content-pane flexible" id="project-show">
+  <%= render partial: 'projects/show/header' %>
+  <div class="project-show-toolbar">
+    <% if can_create_experiments?(@project) %>
+      <%= link_to new_project_experiment_url(@project),
+                  remote: true,
+                  type: "button",
+                  id: 'new-experiment',
+                  class: 'btn btn-primary' do %>
+        <span class="fas fa-plus"></span>
+        <span class="hidden-xs"><%=t 'experiments.new.create' %></span>
+      <% end %>
+    <% end %>
   </div>
   <div class="row">
-    <% @project.sorted_active_experiments(@current_sort).each_with_index do |experiment, index| %>
+    <% @project.sorted_experiments(@current_sort).each_with_index do |experiment, index| %>
       <%= render partial: 'projects/show/experiment',
                  locals: { experiment: experiment } %>
     <% end %>

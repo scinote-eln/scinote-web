@@ -6,16 +6,6 @@
       <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
         <span class="caret"></span>
       </button>
-      <% experiment_form = nil %>
-      <%= form_for experiment, method: :patch, format: :html do |f| %>
-        <% experiment_form = f %>
-        <%= f.hidden_field :archived, value: false %>
-      <% end %>
-      <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
-        <% if can_restore_experiment?(experiment) %>
-          <li><a href="#" class="form-submit-link" data-turbolinks="false" data-submit-form="<%= experiment_form.options[:html][:id] %>"><%= t "projects.experiment_archive.restore_option" %></a></li>
-        <% end %>
-      </ul>
     </div>
 
     <h3 class="panel-title"><%= experiment.name %></h3>

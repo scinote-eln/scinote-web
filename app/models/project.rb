@@ -180,14 +180,20 @@ class Project < ApplicationRecord
     user_projects.find_by_user_id(user)&.role
   end
 
-  def sorted_active_experiments(sort_by = :new)
+  def sorted_experiments(sort_by = :new, archived = false)
     sort = case sort_by
            when 'old' then { created_at: :asc }
            when 'atoz' then { name: :asc }
            when 'ztoa' then { name: :desc }
+           when 'arch_new' then { archived_on: :desc }
+           when 'arch_old' then { archived_on: :asc }
            else { created_at: :desc }
            end
-    experiments.active.order(sort)
+    experiments.is_archived(archived).order(sort)
+  end
+
+  def archived_experiments
+    experiments.is_archived(true)
   end
 
   def project_my_modules
