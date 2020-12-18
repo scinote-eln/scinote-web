@@ -34,7 +34,7 @@
           </div>
           <div class="datetime-picker-container" id="from-date">
             <span class="fas fa-calendar-alt"></span>
-            <input id="createdOnStartDate"
+            <input id="createdOnFromDate"
                    type="datetime"
                    data-toggle='date-time-picker'
                    class="form-control calendar-input"
@@ -50,7 +50,7 @@
 
           <div class="datetime-picker-container" id="to-date">
             <span class="fas fa-calendar-alt"></span>
-            <input id="createdOnEndDate"
+            <input id="createdOnToDate"
                    type="datetime"
                    data-toggle='date-time-picker'
                    class="form-control calendar-input"
@@ -78,7 +78,7 @@
           </div>
           <div class="datetime-picker-container" id="from-date">
             <span class="fas fa-calendar-alt"></span>
-            <input id="archivedOnStartDate"
+            <input id="archivedOnFromDate"
                    type="datetime"
                    data-toggle='date-time-picker'
                    class="form-control calendar-input"
@@ -94,7 +94,7 @@
 
           <div class="datetime-picker-container" id="to-date">
             <span class="fas fa-calendar-alt"></span>
-            <input id="archivedOnEndDate"
+            <input id="archivedOnToDate"
                    type="datetime"
                    data-toggle='date-time-picker'
                    class="form-control calendar-input"
@@ -129,19 +129,21 @@
       </div>
     </div>
 
-    <div class="dropdown">
+    <div class="dropdown projects-sort-menu">
       <button class="btn btn-light dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-        <span><%= t("general.sort.#{@current_sort}_html") %></span>
+        <span><i class="fas fa-sort-amount-down"></i></span>
         <span class="caret"></span>
       </button>
-      <ul id="sortMenuDropdown" class="dropdown-menu" aria-labelledby="sortMenu">
-        <% %w(new old atoz ztoa archived_first archived_last).each do |sort| %>
-          <li <%= %w(archived_first archived_last).include?(sort) ? 'data-view-mode=archived' : '' %>>
-            <% if @current_sort != sort %>
-              <a href="#" data-sort="<%= sort %>"><%= t("projects.index.sort.#{sort}") %></a>
-            <% else %>
-              <a class="disabled" href="#" data-sort="<%= sort %>"><%= t("projects.index.sort.#{sort}") %></a>
-            <% end %>
+      <ul id="sortMenuDropdown" class="dropdown-menu sort-projects-menu" aria-labelledby="sortMenu">
+        <% %w(new old atoz ztoa arch_new arch_old).each_with_index do |sort, i| %>
+          <% if i.even? && i.positive? %>
+            <li class="divider" <%= i > 3 ? 'data-view-mode=archived' : '' %>></li>
+          <% end %>
+          <li <%= %w(arch_new arch_old).include?(sort) ? 'data-view-mode=archived' : '' %>>
+            <a class="<%= 'selected' if @current_sort == sort %>"
+               data-sort="<%= sort %>" >
+              <%= t("general.sort.#{sort}_html") %>
+            </a>
           </li>
         <% end %>
       </ul>
@@ -156,11 +158,11 @@
         <i class="fas fa-list button-icon"></i> <%= t('projects.index.header.table') %>
       </li>
 
-      <li class="view-switch-active archive-switch" data-view-mode="archived" data-mode="active">
+      <li class="view-switch-active archive-switch" data-view-mode="archived" data-url="<%= projects_path(mode: 'active') %>">
         <i class="fas fa-rocket button-icon"></i> <%= t('projects.index.header.active_projects') %>
       </li>
 
-      <li class="view-switch-archived archive-switch" data-view-mode="active" data-mode="archived">
+      <li class="view-switch-archived archive-switch" data-view-mode="active" data-url="<%= projects_path(mode: 'archived') %>">
         <i class="fas fa-archive button-icon"></i> <%= t('projects.index.header.archived_projects') %>
       </li>
     <% end %>

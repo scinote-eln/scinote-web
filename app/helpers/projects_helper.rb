@@ -16,7 +16,7 @@ module ProjectsHelper
   def sidebar_folders_tree(team, user)
     records = user.projects_tree(team) + ProjectFolder.inner_folders(team)
     view_state = team.current_view_state(user)
-    records = case view_state.state.dig('projects', 'cards', 'sort')
+    records = case view_state.state.dig('projects', 'active', 'sort')
               when 'new'
                 records.sort_by(&:created_at).reverse!
               when 'old'
@@ -25,6 +25,10 @@ module ProjectsHelper
                 records.sort_by { |c| c.name.downcase }
               when 'ztoa'
                 records.sort_by { |c| c.name.downcase }.reverse!
+              when 'arch_old'
+                records.sort_by(&:archived_on)
+              when 'arch_new'
+                records.sort_by(&:archived_on).reverse!
               end
     folders_recursive_builder(nil, records)
   end

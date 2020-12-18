@@ -14,6 +14,7 @@ class ProjectsController < ApplicationController
   before_action :check_manage_permissions, only: :edit
   before_action :set_inline_name_editing, only: %i(show)
   before_action :load_exp_sort_var, only: %i(show experiment_archive)
+  before_action :reset_invalid_view_state, only: %i(index cards)
 
   layout 'fluid'
 
@@ -21,14 +22,15 @@ class ProjectsController < ApplicationController
     if current_team
       view_state = current_team.current_view_state(current_user)
       @current_filter = view_state.state.dig('projects', 'filter')
-      @current_sort = view_state.state.dig('projects', 'cards', 'sort')
+      @current_view_mode = params[:mode] || view_state.state.dig('projects', 'view_mode')
+      @current_sort = view_state.state.dig('projects', @current_view_mode, 'sort')
     end
   end
 
   def cards
     overview_service = ProjectsOverviewService.new(current_team, current_user, @current_folder, params)
 
-    if params[:search].present?
+    if filters_included?
       render json: {
         cards_html: render_to_string(
           partial: 'projects/index/team_projects_grouped_by_folder.html.erb',
@@ -278,6 +280,16 @@ class ProjectsController < ApplicationController
     end
     @current_sort = @project.experiments_order || 'new'
     @current_sort = 'new' if @current_sort.include?('arch') && action_name != 'experiment_archive'
+  end
+
+  def filters_included?
+    %i(search created_on_from created_on_to members archived_on_from archived_on_to folders_search)
+      .any? { |param_name| params.dig(param_name).present? }
+  end
+
+  def reset_invalid_view_state
+    view_state = current_team.current_view_state(current_user)
+    view_state.destroy unless view_state.valid?
   end
 
   def log_activity(type_of, message_items = {})

@@ -8,7 +8,7 @@
 // - refactor view handling using library, ex. backbone.js
 
 /* global Comments CounterBadge animateSpinner initFormSubmitLinks HelperModule
-   I18n dropdownSelector Sidebar */
+   dropdownSelector Sidebar Turbolinks */
 
 (function(global) {
   var newProjectModal = null;
@@ -28,10 +28,16 @@
   var exportProjectsModalBody = null;
   var exportProjectsBtn = null;
   var exportProjectsSubmit = null;
-
-  var projectsViewSearch;
   var projectsChanged = false;
-  var projectsViewSort = $('#sortMenuDropdown a.disabled').data('sort');
+
+  let projectsCurrentSort;
+  let projectsViewSearch;
+  let createdOnFromFilter;
+  let createdOnToFilter;
+  let membersFilter;
+  let lookInsideFolders;
+  let archivedOnFromFilter;
+  let archivedOnToFilter;
 
   // Arrays with selected project and folder IDs shared between both views
   var selectedProjects = [];
@@ -473,7 +479,6 @@
   }
 
   function loadCardsView() {
-    // Load HTML with projects list
     var viewContainer = $('#cards-wrapper');
     // animateSpinner(viewContainer, true);
 
@@ -483,8 +488,14 @@
       dataType: 'json',
       data: {
         filter: $('.projects-index').data('mode'),
-        sort: projectsViewSort,
-        search: projectsViewSearch
+        sort: projectsCurrentSort,
+        search: projectsViewSearch,
+        members: membersFilter,
+        created_on_from: createdOnFromFilter,
+        created_on_to: createdOnToFilter,
+        folders_search: lookInsideFolders,
+        archived_on_from: archivedOnFromFilter,
+        archived_on_to: archivedOnToFilter
       },
       success: function(data) {
         $('#breadcrumbs-wrapper').html(data.breadcrumbs_html);
@@ -517,36 +528,35 @@
       $btn.addClass('active');
     });
 
-    // active/archived switch
+    // Active/Archived switch
+    // We have different sorting, filters for active/archived views.
+    // With turbolinks visit all those elements are updated.
     $(projectsPageSelector).on('click', '.archive-switch', function() {
-      $(projectsPageSelector).toggleClass('archived active').data('mode', $(this).data('mode'));
-      refreshCurrentView();
+      $(projectsPageSelector).find('.projects-container').remove();
+      Turbolinks.visit($(this).data('url'));
     });
   }
 
   function initSorting() {
-    $('#sortMenuDropdown a').click(function(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      if (projectsViewSort !== $(this).data('sort')) {
-        $('#sortMenuDropdown a').removeClass('disabled');
-        projectsViewSort = $(this).data('sort');
-        $('#sortMenu').html(I18n.t('general.sort.' + projectsViewSort + '_html'));
+    $('#sortMenuDropdown a').click(function() {
+      if (projectsCurrentSort !== $(this).data('sort')) {
+        $('#sortMenuDropdown a').removeClass('selected');
+        projectsCurrentSort = $(this).data('sort');
         loadCardsView();
-        $(this).addClass('disabled');
+        $(this).addClass('selected');
         $('#sortMenu').dropdown('toggle');
       }
     });
   }
 
-  function initProjectsFilter() {
+  function initProjectsFilters() {
     let $projectsFilter = $('.projects-index .projects-filters');
     let $membersFilter = $('.members-filter', $projectsFilter);
     let $foldersCB = $('#folder_search', $projectsFilter);
-    let $createdOnStartFilter = $('#createdOnStartDate', $projectsFilter);
-    let $createdOnEndFilter = $('#createdOnEndDate', $projectsFilter);
-    let $archivedOnStartFilter = $('#archivedOnStartDate', $projectsFilter);
-    let $archivedOnEndFilter = $('#archivedOnEndDate', $projectsFilter);
+    let $createdOnFromFilter = $('#createdOnFromDate', $projectsFilter);
+    let $createdOnToFilter = $('#createdOnToDate', $projectsFilter);
+    let $archivedOnFromFilter = $('#archivedOnFromDate', $projectsFilter);
+    let $archivedOnToFilter = $('#archivedOnToDate', $projectsFilter);
     let $textFilter = $('#textSearchFilterInput', $projectsFilter);
 
     dropdownSelector.init($membersFilter, {
@@ -631,9 +641,17 @@
         console.error(error);
       }
 
-      $('.projects-filters').dropdown('toggle');
+      $(e.target).closest('.dropdown').removeClass('open');
 
-      loadCardsView();
+
+      createdOnFromFilter = $createdOnFromFilter.val();
+      createdOnToFilter = $createdOnToFilter.val();
+      membersFilter = dropdownSelector.getValues($('.members-filter'));
+      lookInsideFolders = $foldersCB.prop('checked');
+      archivedOnFromFilter = $archivedOnFromFilter.val();
+      archivedOnToFilter = $archivedOnToFilter.val();
+
+      refreshCurrentView();
     });
 
     // Clear filters
@@ -642,10 +660,10 @@
       e.preventDefault();
 
       dropdownSelector.clearData($membersFilter);
-      if ($createdOnStartFilter.data('DateTimePicker')) $createdOnStartFilter.data('DateTimePicker').clear();
-      if ($createdOnEndFilter.data('DateTimePicker')) $createdOnEndFilter.data('DateTimePicker').clear();
-      if ($archivedOnStartFilter.data('DateTimePicker')) $archivedOnStartFilter.data('DateTimePicker').clear();
-      if ($archivedOnEndFilter.data('DateTimePicker')) $archivedOnEndFilter.data('DateTimePicker').clear();
+      if ($createdOnFromFilter.data('DateTimePicker')) $createdOnFromFilter.data('DateTimePicker').clear();
+      if ($createdOnToFilter.data('DateTimePicker')) $createdOnToFilter.data('DateTimePicker').clear();
+      if ($archivedOnFromFilter.data('DateTimePicker')) $archivedOnFromFilter.data('DateTimePicker').clear();
+      if ($archivedOnToFilter.data('DateTimePicker')) $archivedOnToFilter.data('DateTimePicker').clear();
       $foldersCB.prop('checked', false);
       $textFilter.val('');
     });
@@ -667,5 +685,5 @@
   initProjectsViewModeSwitch();
   initSorting();
   loadCardsView();
-  initProjectsFilter();
+  initProjectsFilters();
 }(window));
