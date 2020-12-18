@@ -16,11 +16,10 @@
     <%= render partial: 'projects/index/project_actions_dropdown.html.erb', locals: { project: project, view: 'cards' } %>
   </div>
 
-  <div class="data-row start-date-row">
-    <div class="start-date-cell">
-      <span class="card-label"><%= t('projects.index.card.start_date') %></span>
-      <span class="value"> <%= l(project.created_at, format: :full_with_comma) %></span>
-    </div>
+  <div class="data-row start-date-cell">
+    <span class="card-label"><%= t('projects.index.card.start_date') %></span>
+    <span class="value card-value"> <%= l(project.created_at, format: :full_date) %></span>
+    <span class="value cell-value"> <%= l(project.created_at, format: :full_with_comma) %></span>
   </div>
 
   <div class="data-row visibility-cell">
@@ -44,14 +43,24 @@
         </span>
       <% end %>
 
-      <%= link_to project_users_edit_path(project),
-                  class: 'manage-users-link',
-                  remote: true,
-                  data: { 'view-mode': 'active' } do %>
-        <span class="new-user">
-          <i class="fas fa-plus"></i>
-        </span>
+      <% if project.active? %>
+        <%= link_to project_users_edit_path(project),
+                    class: 'manage-users-link',
+                    remote: true,
+                    data: { 'view-mode': 'active' } do %>
+          <span class="new-user">
+            <i class="fas fa-plus"></i>
+          </span>
+        <% end %>
       <% end %>
     </div>
   </div>
+
+  <% if project.archived? %>
+    <div class="data-row archived-date-cell">
+      <span class="card-label"><%= t('projects.index.card.archived_date') %></span>
+      <span class="value card-value"> <%= l(project.archived_on, format: :full_date) %></span>
+      <span class="value cell-value"> <%= l(project.archived_on, format: :full_with_comma) %></span>
+    </div>
+  <% end %>
 </div>
