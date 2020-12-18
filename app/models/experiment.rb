@@ -29,10 +29,7 @@ class Experiment < ApplicationRecord
   has_one_attached :workflowimg
 
   auto_strip_attributes :name, :description, nullify: false
-  validates :name,
-            length: { minimum: Constants::NAME_MIN_LENGTH,
-                      maximum: Constants::NAME_MAX_LENGTH },
-            uniqueness: { scope: :project, case_sensitive: false }
+  validates :name, length: { minimum: Constants::NAME_MIN_LENGTH, maximum: Constants::NAME_MAX_LENGTH }
   validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
   validates :project, presence: true
   validates :created_by, presence: true

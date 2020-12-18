@@ -55,13 +55,7 @@ module Experiments
         return false
       end
 
-      e = Experiment.find_by(name: @exp.name, project: @project)
-
-      if e
-        @errors[:project_with_exp] =
-          ['Project already contains experiment with this name']
-        false
-      elsif !@exp.moveable_projects(@user).include?(@project)
+      if !@exp.moveable_projects(@user).include?(@project)
         @errors[:target_project_not_valid] =
           ['Experiment cannot be moved to this project']
         false
