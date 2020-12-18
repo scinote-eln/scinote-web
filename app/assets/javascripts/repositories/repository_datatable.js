@@ -118,7 +118,6 @@ var RepositoryDatatable = (function(global) {
     currentMode = 'viewMode';
     // Table specific stuff
     TABLE.button(0).enable(true);
-    FilePreviewModal.init();
     $(TABLE_WRAPPER_ID).find('tr').removeClass('blocked');
     updateButtons();
     disableCheckboxToggleOnCheckboxPreview();
@@ -362,12 +361,6 @@ var RepositoryDatatable = (function(global) {
       });
   }
 
-  function disableCheckboxToggleOnAssetDownload() {
-    $('.file-preview-link').on('click', function(ev) {
-      ev.stopPropagation();
-    });
-  }
-
   // Adjust columns width in table header
   function adjustTableHeader() {
     TABLE.columns.adjust();
@@ -502,7 +495,6 @@ var RepositoryDatatable = (function(global) {
         animateSpinner(this, false);
         changeToViewMode();
         updateDataTableSelectAllCtrl();
-        FilePreviewModal.init();
 
         // Prevent row toggling when selecting user smart annotation link
         SmartAnnotation.preventPropagation('.atwho-user-popover');
@@ -548,8 +540,6 @@ var RepositoryDatatable = (function(global) {
         });
       },
       fnInitComplete: function() {
-        disableCheckboxToggleOnAssetDownload();
-        FilePreviewModal.init();
         initHeaderTooltip();
         disableCheckboxToggleOnCheckboxPreview();
 

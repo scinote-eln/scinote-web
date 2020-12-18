@@ -47,7 +47,7 @@
             <div class="status-name" style="<%= "background-color: #{next_s.color}" %>"><%= next_s.name %></div>
           </div>
         </li>
-        <span class="error-message"><% next_s_errors.each do |error| %>
+        <span class="error-message" data-errors-for="next-status"><% next_s_errors.each do |error| %>
             <%= error %><br>
           <% end %></span>
       <% end %>

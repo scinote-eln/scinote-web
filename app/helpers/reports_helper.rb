@@ -77,10 +77,12 @@ module ReportsHelper
       end
 
       if obj_id
-        locals[:path] =
-          provided_locals[:obj_filenames][element['type_of'].to_sym][obj_id]
-          .sub(%r{/usr/src/app/tmp/temp-zip-\d+/}, '')
-        locals[:filename] = locals[:path].split('/').last
+        file = provided_locals[:obj_filenames][element['type_of'].to_sym][obj_id]
+        locals[:path] = {
+          file: file[:file].sub(%r{/usr/src/app/tmp/temp-zip-\d+/}, ''),
+          preview: file[:preview]&.sub(%r{/usr/src/app/tmp/temp-zip-\d+/}, '')
+        }
+        locals[:filename] = locals[:path][:file].split('/').last
       end
     end
 
@@ -99,9 +101,9 @@ module ReportsHelper
 
   # "Hack" to omit file preview URL because of WKHTML issues
   def report_image_asset_url(asset)
-    image_tag(asset.medium_preview
-                   .processed
-                   .service_url(expires_in: Constants::URL_LONG_EXPIRE_TIME))
+    preview = asset.inline? ? asset.large_preview : asset.medium_preview
+    image_tag(preview.processed
+                     .service_url(expires_in: Constants::URL_LONG_EXPIRE_TIME))
   end
 
   # "Hack" to load Glyphicons css directly from the CDN

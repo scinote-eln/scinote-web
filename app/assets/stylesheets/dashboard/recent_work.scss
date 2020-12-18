@@ -2,9 +2,6 @@
 // scss-lint:disable NestingDepth
 
 .dashboard-container .recent-work-widget {
-  grid-column: 3 / span 7;
-  grid-row: 7 / span 6;
-
   .widget-title {
     flex-grow: 1;
   }
@@ -58,24 +55,9 @@
   }
 }
 
-@media (max-width: 1700px) {
-  .dashboard-container .recent-work-widget {
-    grid-column: 4 / span 6;
-  }
-}
-
-
-@media (max-width: 1300px) {
-  .dashboard-container .recent-work-widget {
-    grid-column: 5 / span 8;
-  }
-}
 
 @media (max-width: 1000px) {
   .dashboard-container .recent-work-widget {
-    grid-column: 1 / span 12;
-    grid-row: 9 / span 4;
-
     .no-results {
       .no-results-arrow {
         display: none;
@@ -84,14 +66,9 @@
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 1100px) {
   .dashboard-container .recent-work-widget {
-    --widget-header-size: 72px;
-    grid-row: 3;
-    min-height: 450px;
-
     .widget-title {
-      flex-basis: 100%;
       line-height: 36px;
     }
 

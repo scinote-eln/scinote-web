@@ -11,7 +11,7 @@ class MyModuleRepositoriesController < ApplicationController
 
   def index_dt
     @draw = params[:draw].to_i
-    per_page = params[:length] == '-1' ? Constants::REPOSITORY_DEFAULT_PAGE_SIZE : params[:length].to_i
+    per_page = params[:length].to_i < 1 ? Constants::REPOSITORY_DEFAULT_PAGE_SIZE : params[:length].to_i
     page = (params[:start].to_i / per_page) + 1
     datatable_service = RepositoryDatatableService.new(@repository, params, current_user, @my_module)
 

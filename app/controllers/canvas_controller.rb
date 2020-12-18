@@ -171,9 +171,6 @@ class CanvasController < ApplicationController
       next if my_module.blank?
     end
 
-    # Create workflow image
-    @experiment.generate_workflow_img
-
     flash[:success] = t('experiments.canvas.update.success_flash')
     redirect_to canvas_experiment_path(@experiment)
   end

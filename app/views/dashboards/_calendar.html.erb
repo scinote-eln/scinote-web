@@ -1,4 +1,4 @@
-<div class="calendar-widget basic-widget">
+<div class="calendar-widget basic-widget <%= widget[:size] %>" style="order: <%= widget[:position] %>">
   <div class="dashboard-calendar"
        data-month-events-url="<%= dashboard_calendar_path %>"
        data-day-events-url="<%= day_dashboard_calendar_path %>"

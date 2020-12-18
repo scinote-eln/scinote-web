@@ -254,7 +254,12 @@ module BootstrapFormHelper
 
     # Returns <textarea> helper tag for tinyMCE editor
     def tiny_mce_editor(name, options = {})
-      options.merge!(cols: 120, rows: 10)
+      options.deep_merge!(cols: 120,
+                          rows: 10,
+                          data: {
+                            tinymce_asset_path:
+                              Rails.application.routes.url_helpers.tiny_mce_assets_path
+                          })
       text_area(name, options)
     end
   end

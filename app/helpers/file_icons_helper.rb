@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module FileIconsHelper
   def wopi_file?(asset)
     file_ext = asset.file_name.split('.').last
@@ -9,21 +11,21 @@ module FileIconsHelper
     file_ext = asset.file_name.split('.').last
 
     if Extends::FILE_FA_ICON_MAPPINGS[file_ext] # Check for custom mappings or possible overrides
-      return Extends::FILE_FA_ICON_MAPPINGS[file_ext]
+      Extends::FILE_FA_ICON_MAPPINGS[file_ext]
     elsif Constants::FILE_TEXT_FORMATS.include?(file_ext)
-      return 'fa-file-word'
+      'fa-file-word'
     elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
-      return 'fa-file-excel'
+      'fa-file-excel'
     elsif Constants::FILE_PRESENTATION_FORMATS.include?(file_ext)
-      return 'fa-file-powerpoint'
+      'fa-file-powerpoint'
     elsif %w(pdf).include?(file_ext)
-      return 'fa-file-pdf'
+      'fa-file-pdf'
     elsif %w(txt csv tab tex).include?(file_ext)
-      return 'fa-file-alt'
+      'far fa-file-alt'
     elsif Constants::WHITELISTED_IMAGE_TYPES.include?(file_ext)
-      return 'fa-image'
+      'fa-image'
     else
-      return 'fa-paperclip'
+      'fa-paperclip'
     end
   end
 
@@ -31,11 +33,13 @@ module FileIconsHelper
   def file_extension_icon(asset)
     file_ext = asset.file_name.split('.').last
     if Constants::FILE_TEXT_FORMATS.include?(file_ext)
-      image_link = 'office/Word-docx_20x20x32.png'
+      image_link = 'icon_small/docx_file.svg'
     elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
-      image_link = 'office/Excel-xlsx_20x20x32.png'
+      image_link = 'icon_small/xslx_file.svg'
     elsif Constants::FILE_PRESENTATION_FORMATS.include?(file_ext)
-      image_link = 'office/PowerPoint-pptx_20x20x32.png'
+      image_link = 'icon_small/pptx_file.svg'
+    elsif asset.file.attached? && asset.file.metadata['asset_type'] == 'marvinjs'
+      image_link = 'icon_small/marvinjs_file.svg'
     end
 
     # Now check for custom mappings or possible overrides
@@ -52,11 +56,11 @@ module FileIconsHelper
   def file_application_icon(asset)
     file_ext = asset.file_name.split('.').last
     if Constants::FILE_TEXT_FORMATS.include?(file_ext)
-      image_link = 'office/Word-color_16x16x32.png'
+      image_link = 'icon_small/docx_file.svg'
     elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
-      image_link = 'office/Excel-color_16x16x32.png'
+      image_link = 'icon_small/xslx_file.svg'
     elsif Constants::FILE_PRESENTATION_FORMATS.include?(file_ext)
-      image_link = 'office/PowerPoint-Color_16x16x32.png'
+      image_link = 'icon_small/pptx_file.svg'
     end
 
     if image_link
@@ -70,11 +74,11 @@ module FileIconsHelper
   def wopi_button_text(asset, action)
     file_ext = asset.file_name.split('.').last
     if Constants::FILE_TEXT_FORMATS.include?(file_ext)
-      app = 'Word Online'
+      app = t('result_assets.wopi_word')
     elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
-      app = 'Excel Online'
+      app = t('result_assets.wopi_excel')
     elsif Constants::FILE_PRESENTATION_FORMATS.include?(file_ext)
-      app = 'PowerPoint Online'
+      app = t('result_assets.wopi_powerpoint')
     end
 
     if action == 'view'
@@ -98,7 +102,13 @@ module FileIconsHelper
 
   def file_extension_icon_html(asset)
     html = file_extension_icon(asset)
-    html = "<i class='fas #{file_fa_icon_class(asset)}'></i>" if html.blank?
+    if html.blank?
+      html = ActionController::Base.helpers.content_tag(
+        :i,
+        '',
+        class: ['fas', 'asset-icon', file_fa_icon_class(asset)]
+      )
+    end
     html
   end
 

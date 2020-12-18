@@ -93,6 +93,10 @@ div.print-report {
     &:hover > .report-element-header .attachment-icon {
       color: $color-black;
     }
+
+    img {
+      max-width: 100%;
+    }
   }
 
   .report-step-table-element {
@@ -193,6 +197,10 @@ div.print-report {
         color: $color-black !important;
         white-space: nowrap;
       }
+    }
+
+    img {
+      max-width: 100%;
     }
 
     &:hover > .report-element-header {

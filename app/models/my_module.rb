@@ -10,8 +10,9 @@ class MyModule < ApplicationRecord
 
   before_create :create_blank_protocol
   before_create :assign_default_status_flow
-
   around_save :exec_status_consequences, if: :my_module_status_id_changed?
+  after_save -> { experiment.workflowimg.purge },
+             if: -> { (saved_changes.keys & %w(x y experiment_id my_module_group_id input_id output_id archived)).any? }
 
   auto_strip_attributes :name, :description, nullify: false, if: proc { |mm| mm.name_changed? || mm.description_changed? }
   validates :name,
@@ -166,7 +167,6 @@ class MyModule < ApplicationRecord
         raise ActiveRecord::Rollback
       end
     end
-    experiment.generate_workflow_img
     restored
   end
 
@@ -508,13 +508,19 @@ class MyModule < ApplicationRecord
     self.changing_from_my_module_status_id = my_module_status_id_was if my_module_status_id_was.present?
     self.status_changing = true
 
+    status_changing_direction = my_module_status.previous_status_id == my_module_status_id_was ? :forward : :backward
+
     yield
 
     if my_module_status.my_module_status_consequences.any?(&:runs_in_background?)
-      MyModuleStatusConsequencesJob.perform_later(self, my_module_status.my_module_status_consequences.to_a)
+      MyModuleStatusConsequencesJob.perform_later(
+        self,
+        my_module_status.my_module_status_consequences.to_a,
+        status_changing_direction
+      )
     else
       my_module_status.my_module_status_consequences.each do |consequence|
-        consequence.call(self)
+        consequence.public_send(status_changing_direction, self)
       end
       update!(status_changing: false)
     end

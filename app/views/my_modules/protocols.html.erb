@@ -1,4 +1,13 @@
 <% provide(:head_title, t("my_modules.protocols.head_title", project: h(@project.name), module: h(@my_module.name)).html_safe) %>
+<% content_for :open_mobile_app_button do %>
+  <span class="open-mobile-app-container">
+    <%= link_to(pwa_mobile_app_url(@current_team.id, @project.id, @experiment.id, @my_module.id, @protocol.id, @protocol.first_step_id, request.host),
+              class: 'btn btn-light-link open-mobile-app-button') do %>
+      <%= t('my_modules.open_mobile_app') %>
+    <% end %>
+  </span>
+<% end %>
+
 <% provide(:sidebar_title, t("sidebar.my_module.sidebar_title")) %>
 
 <%= content_for :sidebar do %>
@@ -17,7 +26,14 @@
         </h2>
       </span>
       <span class="dropdown task-details-dropdown-container">
-        <span id="taskDetailsButton" class="fas block-icon fa-info-circle task-details-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></span>
+        <a href="#"
+           id="taskDetailsButton"
+           class="block-icon task-details-button dropdown-toggle"
+           data-toggle="dropdown"
+           aria-haspopup="true"
+           aria-expanded="true">
+          <i class="fas fa-info-circle"></i>
+        </a>
         <div class="dropdown-menu" aria-labelledby="taskDetailsButton">
           <%= render partial: "module_header_details_popover.html.erb" %>
         </div>
@@ -88,8 +104,7 @@
         </div>
       </a>
       <%= render partial: "my_modules/protocols/protocol_status_bar" %>
-      <div class="actions-block">
-        <%= render partial: "my_modules/protocols/protocol_options_dropdown" %>
+      <div class="sci-btn-group actions-block">
         <% if can_manage_protocol_in_module?(@protocol) %>
           <a href="#"
              class="btn btn-primary"
@@ -99,6 +114,7 @@
               <span><%=t "protocols.steps.new_step" %></span>
           </a>
         <% end %>
+        <%= render partial: "my_modules/protocols/protocol_options_dropdown" %>
       </div>
     </div>
     <div class="collapse in" id="protocol-container" aria-expanded="true">
@@ -130,8 +146,12 @@
 <!-- Create new office file modal -->
 <%= render partial: 'assets/wopi/create_wopi_file_modal.html.erb' %>
 
+<!-- Delete file modal -->
+<%= render partial: 'assets/asset_delete_modal.html.erb' %>
+
 <%= stylesheet_link_tag 'datatables' %>
 <%= javascript_include_tag("my_modules/protocols") %>
 <%= javascript_include_tag("my_modules/status_flow") %>
 <%= javascript_pack_tag 'emoji_button' %>
 <%= javascript_include_tag("my_modules/repositories") %>
+<%= javascript_include_tag("my_modules/pwa_mobile_app") %>

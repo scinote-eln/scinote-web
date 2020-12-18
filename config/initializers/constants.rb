@@ -207,6 +207,8 @@ class Constants
 
   ACADEMY_BL_LINK = 'https://scinote.net/academy/?utm_source=SciNote%20software%20BL&utm_medium=SciNote%20software%20BL'.freeze
 
+  PWA_URL = 'https://:pwa_domain/teams/:team_id/projects/:project_id/experiments/:experiment_id/tasks/:task_id/protocol/:protocol_id/:step_id?domain=:domain'.freeze
+
   TWO_FACTOR_URL = {
     google: {
       android: 'https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2',
@@ -318,7 +320,8 @@ class Constants
 
   WHITELISTED_ATTRIBUTES = [
     'href', 'src', 'width', 'height', 'alt', 'cite', 'datetime', 'title',
-    'class', 'name', 'xml:lang', 'abbr', 'style', 'target', :data, 'border', 'contenteditable'
+    'class', 'name', 'xml:lang', 'abbr', 'style', 'target', :data, 'border', 'contenteditable',
+    'colspan', 'rowspan'
   ].freeze
 
   WHITELISTED_CSS_ATTRIBUTES = {
@@ -955,11 +958,17 @@ class Constants
     ]
   }.freeze
 
+  REPOSITORY_DEFAULT_PAGE_SIZE = 10
+  REPOSITORY_LIST_ITEMS_PER_COLUMN = 500
+  REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN = 50
+  REPOSITORY_NUMBER_TYPE_DEFAULT_DECIMALS = 2
+  REPOSITORY_NUMBER_TYPE_MAX_DECIMALS = 10
+
   # Repository default table state
   REPOSITORY_TABLE_DEFAULT_STATE = {
     'time' => 0,
     'start' => 0,
-    'length' => 8,
+    'length' => REPOSITORY_DEFAULT_PAGE_SIZE,
     'order' => [[2, 'asc']], # Default sorting by 'ID' column
     'columns' => [],
     'assigned' => 'assigned',
@@ -981,7 +990,7 @@ class Constants
   REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE = {
     'time' => 0,
     'start' => 0,
-    'length' => 5,
+    'length' => REPOSITORY_DEFAULT_PAGE_SIZE,
     'order' => [[1, 'asc']], # Default sorting by 'ID' column
     'columns' => [],
     'assigned' => 'assigned',
@@ -999,12 +1008,6 @@ class Constants
                                                 .freeze
 
   EXPORTABLE_ZIP_EXPIRATION_DAYS = 7
-
-  REPOSITORY_DEFAULT_PAGE_SIZE = 10
-  REPOSITORY_LIST_ITEMS_PER_COLUMN = 500
-  REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN = 50
-  REPOSITORY_NUMBER_TYPE_DEFAULT_DECIMALS = 2
-  REPOSITORY_NUMBER_TYPE_MAX_DECIMALS = 10
 
   REPOSITORY_LIST_ITEMS_DELIMITERS_MAP = {
     return: "\n",

@@ -12,8 +12,11 @@
         </button>
       <% end %>
       <%= link_to(root_path, class: 'navbar-brand', title: t('nav.label.scinote')) do %>
-        <%= image_tag('/images/scinote_icon.svg', id: 'logo') %>
+        <span class="hidden-lg"><%= image_tag('/images/sn-icon.svg', id: 'logo') %></span>
+        <span class="visible-lg-block"><%= image_tag('/images/scinote_icon.svg', id: 'logo') %></span>
       <% end %>
+      <%= yield :open_mobile_app_button %>
+
     </div>
 
     <% if user_signed_in? %>

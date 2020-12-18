@@ -283,8 +283,9 @@
   }
 
   .image-icon {
-    height: 18px;
-    width: 18px;
+    flex-shrink: 0;
+    height: 24px;
+    width: 24px;
   }
 
   .file-preview-link {

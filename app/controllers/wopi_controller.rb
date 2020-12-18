@@ -334,7 +334,7 @@ class WopiController < ActionController::Base
     url = request.original_url.upcase.encode('utf-8')
 
     if convert_to_unix_timestamp(timestamp) + 20.minutes >= Time.now
-      if current_wopi_discovery.verify_proof(token, timestamp, signed_proof, signed_proof_old, url)
+      if wopi_verify_proof(token, timestamp, signed_proof, signed_proof_old, url)
         logger.warn 'WOPI: proof verification: successful'
       else
         logger.warn 'WOPI: proof verification: not verified'

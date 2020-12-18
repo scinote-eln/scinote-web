@@ -118,7 +118,6 @@
                   ResultAssets.applyEditResultAssetCallback();
                   applyCreateWopiFileCallback();
                   toggleResultEditButtons(true);
-                  FilePreviewModal.init();
                   Comments.init();
                   ResultAssets.initNewResultAsset();
                   expandResult($(this));
@@ -149,6 +148,9 @@
           handleResultFileSubmit($form, ev);
           break;
         case ResultTypeEnum.TABLE:
+          $form
+            .find(`.${GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME}`)
+            .removeClass(GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME);
           break;
         case ResultTypeEnum.TEXT:
           textValidator(

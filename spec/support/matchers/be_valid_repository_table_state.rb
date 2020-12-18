@@ -17,7 +17,7 @@ RSpec::Matchers.define :be_valid_repository_table_state do
 
     expect(state['start']).to eq 0
 
-    cols_length = state['length']
+    cols_length = state['columns'].length
 
     # There should always be at least 6 columns
     expect(cols_length).to be >= 6

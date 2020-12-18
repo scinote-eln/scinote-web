@@ -3,6 +3,5 @@
 <% elsif result.is_table %>
   <%= render partial: "results/result_table.html.erb", locals: {result: result} %>
 <% elsif result.is_asset %>
-  <%= render partial: 'steps/attachments/item.html.erb',
-      locals: { asset: result.asset, i: 0, assets_count: 0, step: nil, order_atoz: 0, order_ztoa: 0 } %>
+  <%= render partial: 'assets/asset.html.erb', locals: { asset: result.asset, gallery_view_id: result.my_module.id } %>
 <% end %>

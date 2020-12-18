@@ -209,28 +209,19 @@ class ExperimentsController < ApplicationController
     @my_modules = @experiment.archived_branch? ? @experiment.my_modules : @experiment.my_modules.archived
   end
 
-  def updated_img
-    if @experiment.workflowimg.attached? && !@experiment.workflowimg_exists?
-      @experiment.workflowimg.purge
-      @experiment.generate_workflow_img
-    end
-    respond_to do |format|
-      format.json do
-        if @experiment.workflowimg.attached?
-          render json: {}, status: 200
-        else
-          render json: {}, status: 404
-        end
+  def fetch_workflow_img
+    unless @experiment.workflowimg_exists?
+      Experiment.no_touching do
+        Experiments::GenerateWorkflowImageService.call(experiment: @experiment)
       end
     end
-  end
 
-  def fetch_workflow_img
     respond_to do |format|
       format.json do
         render json: {
           workflowimg: render_to_string(
-            partial: 'projects/show/workflow_img.html.erb'
+            partial: 'projects/show/workflow_img.html.erb',
+            locals: { experiment: @experiment }
           )
         }
       end

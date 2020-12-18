@@ -49,6 +49,17 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def dt_state_load
+    respond_to do |format|
+      format.json do
+        render json: {
+          state: current_team.current_view_state(current_user)
+            .state.dig('projects', 'table')
+        }
+      end
+    end
+  end
+
   def sidebar
     respond_to do |format|
       format.json do

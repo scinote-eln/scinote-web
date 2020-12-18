@@ -1,0 +1,42 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<path id="bottom_left" fill-rule="evenodd" clip-rule="evenodd" d="M16 32L2.09393 32C0.937155 32 3.51904e-07 31.1293 4.4579e-07 30.0554L1.67455e-06 16L16 32Z" fill="#ffffff"/>
+<path id="bottom_right" fill-rule="evenodd" clip-rule="evenodd" d="M32 16L32 29.9061C32 31.0628 31.1294 32 30.0554 32L16 32L32 16Z" fill="#ffffff"/>
+<path id="top_right" fill-rule="evenodd" clip-rule="evenodd" d="M16 0H29.9061C31.0628 0 32 0.870649 32 1.94458V16L16 0Z" fill="#ffffff"/>
+<path id="top_left" fill-rule="evenodd" clip-rule="evenodd" d="M0 16L-6.07854e-07 2.09393C-6.58418e-07 0.937155 0.870648 2.37732e-07 1.94458 1.90789e-07L16 -4.23593e-07L0 16Z" fill="#ffffff"/>
+<animate
+  xlink:href="#top_left"
+  attributeName="opacity"
+  from="1" to="0" dur="0.8s"
+  values="1; 1; 0; 0; 0; 0; 0; 0; 1"
+  keyTimes="0; 0.125; 0.25; 0.375; 0.5; 0.625; 0.75; 0.875;  1"
+  repeatCount="indefinite"
+  id="tlfade"
+/>
+<animate
+  xlink:href="#top_right"
+  attributeName="opacity"
+  from="0" to="1" dur="0.8s"
+  values="0; 0; 1; 1; 0; 0; 0; 0; 0"
+  keyTimes="0; 0.125; 0.25; 0.375; 0.5; 0.625; 0.75; 0.875; 1"
+  repeatCount="indefinite"
+  id="trfade"
+/>
+<animate
+  xlink:href="#bottom_right"
+  attributeName="opacity"
+  from="0" to="1" dur="0.8s"
+  values="0; 0; 0; 0; 1; 1; 0; 0; 0"
+  keyTimes="0; 0.125; 0.25; 0.375; 0.5; 0.625; 0.75; 0.875; 1"
+  repeatCount="indefinite"
+  id="brfade"
+/>
+<animate
+  xlink:href="#bottom_left"
+  attributeName="opacity"
+  from="0" to="1" dur="0.8s"
+  values="0; 0; 0; 0; 0; 0; 1; 1; 0"
+  keyTimes="0; 0.125; 0.25; 0.375; 0.5; 0.625; 0.75; 0.875; 1"
+  repeatCount="indefinite"
+  id="blfade"
+/>
+</svg>

@@ -9,16 +9,18 @@ class RepositoryTableStateColumnUpdateService
   def update_states_with_new_column(repository)
     raise ArgumentError, 'repository is empty' if repository.blank?
 
+    columns_num = Constants::REPOSITORY_TABLE_DEFAULT_STATE['columns'].length + repository.repository_columns.count
     RepositoryTableState.where(
       repository: repository
     ).find_each do |table_state|
       state = table_state.state
-      index = state['columns'].count
+      next if state['columns'].length == columns_num
+
+      index = state['columns'].length
 
       # Add new columns, ColReorder, length entries
       state['columns'][index] = Constants::REPOSITORY_TABLE_STATE_CUSTOM_COLUMN_TEMPLATE
       state['ColReorder'] << index
-      state['length'] = (index + 1)
       state['time'] = (Time.now.to_f * 1_000).to_i
       table_state.save
     end
@@ -52,7 +54,6 @@ class RepositoryTableStateColumnUpdateService
           state['order'][0][0] -= 1
         end
 
-        state['length'] = (state['length'] - 1)
         state['time'] = (Time.now.to_f * 1_000).to_i
         table_state.save
       rescue StandardError => e

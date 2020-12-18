@@ -7,7 +7,7 @@ var RepositoryDatatableRowEditor = (function() {
   const NAME_COLUMN_ID = 'row-name';
   const TABLE_ROW = '<tr></tr>';
   const TABLE_CELL = '<td></td>';
-  const EDIT_FORM_CLASS_NAME = GLOBAL_CONSTANTS.REPOSITORY_ROW_EDITOR_FORM_CLASS_NAME;
+  const EDIT_FORM_CLASS_NAME = 'repository-row-edit-form';
 
   var TABLE;
 
@@ -125,7 +125,7 @@ var RepositoryDatatableRowEditor = (function() {
     let rowForm = $(`
       <td>
         <form id="${formId}"
-              class="${EDIT_FORM_CLASS_NAME}"
+              class="${EDIT_FORM_CLASS_NAME} ${GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME}"
               action="${actionUrl}"
               method="post"
               data-remote="true">
@@ -174,7 +174,7 @@ var RepositoryDatatableRowEditor = (function() {
     let requestUrl = $(TABLE.table().node()).data('current-uri');
     let rowForm = $(`
       <form id="${formId}"
-            class="${EDIT_FORM_CLASS_NAME}"
+            class="${EDIT_FORM_CLASS_NAME} ${GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME}"
             action="${row.data().recordUpdateUrl}"
             method="patch"
             data-remote="true"

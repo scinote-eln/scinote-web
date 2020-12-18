@@ -1,0 +1,10 @@
+// scss-lint:disable ImportantRule
+
+@media (max-height: 650px) {
+  .menu-bar {
+    .nav-bottom {
+      bottom: unset !important;
+      position: relative !important;
+    }
+  }
+}

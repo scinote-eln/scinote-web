@@ -34,7 +34,12 @@
                  data-source="<%= reports_datatable_path(format: :json) %>">
             <thead>
               <tr>
-                <th id="select-all"><input name="select_all" type="checkbox"></th>
+                <th id="select-all">
+                  <div class="sci-checkbox-container">
+                    <input name="select_all" type="checkbox" class="sci-checkbox">
+                    <span class="sci-checkbox-label"></span>
+                  </div>
+                </th>
                 <th id="project-name"><%=t 'projects.reports.index.thead_project_name' %></th>
                 <th id="report-name"><%=t 'projects.reports.index.thead_name' %></th>
                 <th id="report-created-by"><%=t 'projects.reports.index.thead_created_by' %></th>

@@ -46,11 +46,19 @@
 .navbar-default .navbar-brand {
   align-items: center;
   display: flex;
-  padding: 0 15px;
+  padding: 0 .3em 0 .8em;
 
   #logo {
     max-height: 22px;
   }
+}
+
+.open-mobile-app-container {
+  display: none;
+}
+
+.open-mobile-app-button {
+  margin-top: 8px;
 }
 
 .dropdown-notifications {
@@ -306,7 +314,7 @@
     text-align: right;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: 250px;
+    width: 230px;
   }
 
   .btn-group {

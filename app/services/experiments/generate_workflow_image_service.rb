@@ -7,8 +7,8 @@ module Experiments
 
     attr_reader :errors
 
-    def initialize(experiment_id:)
-      @exp = Experiment.find experiment_id
+    def initialize(experiment:)
+      @exp = experiment
       @graph = GraphViz.new(:G, type: :digraph, use: :neato)
 
       @graph[:size] = '4,4'
@@ -75,10 +75,14 @@ module Experiments
 
     def save_file
       file = Tempfile.open(%w(wimg .png), Rails.root.join('tmp'))
-      @graph.output(png: file.path)
-      @exp.workflowimg.attach(io: file, filename: File.basename(file.path))
-      file.close
-      file.unlink
+      begin
+        @graph.output(png: file.path)
+        file.rewind
+        @exp.workflowimg.attach(io: file, filename: File.basename(file.path))
+      ensure
+        file.close
+        file.unlink
+      end
     end
   end
 end

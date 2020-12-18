@@ -529,6 +529,7 @@ en:
           appended_image: "Appended image - %{name}"
           appended_table: "Appended table"
       elements:
+        download: "[Download]"
         modals:
           project_contents:
             head_title: "Add contents to report"
@@ -932,6 +933,7 @@ en:
     unshared_inventory:
       title_html: The inventory <b>%{inventory_name}</b> is no longer shared with your team.
       body_html: This inventory has been ushared with your team by the inventory’s owner. To view the item/s that are assigned to your task/s contact the <b>%{team_name}</b> team administrator <b>%{admin_name}</b> (<b>%{admin_email}</b>).
+    open_mobile_app: "Open mobile app"
   experiments:
     new:
       create: 'New Experiment'
@@ -1128,6 +1130,9 @@ en:
       success_flash: "File result successfully deleted."
     wopi_open_file: "Open in %{app}"
     wopi_edit_file: "Edit in %{app}"
+    wopi_word: "Word for the web"
+    wopi_excel: "Excel for the web"
+    wopi_powerpoint: "Powerpoint for the web"
     error_flash: 'Something went wrong! Please try again later.'
 
   result_tables:
@@ -1339,7 +1344,6 @@ en:
       not_found_error: "This inventory item does not exist."
       column_added: "New column was sucessfully created."
       empty_column_name: "Please enter column name."
-      leaving_warning: "You have made some changes, are you sure you want to leave this page?"
     create:
       success_flash: "Successfully added item <strong>%{record}</strong> to inventory <strong>%{repository}</strong>"
     update:
@@ -2036,14 +2040,22 @@ en:
         delete_title: "Delete step"
         duplicate_title: "Duplicate step"
         complete_title: "Complete step"
-        uncomplete_title: "Uncomplete step"
+        uncomplete_title: "Restart step"
       attachments:
         modified_label: "Modified:"
+        manage: "Manage"
+        add: "ADD"
+        sort_by: "SORT BY"
+        attachments_view_mode: "ALL ATTACHMENTS VIEW SIZE"
         sort:
           new_html: "Newest first &#8595;"
           old_html: "Oldest first &#8593;"
           atoz_html: "Name &#8595;"
           ztoa_html: "Name &#8593;"
+        view_mode:
+          inline_html: "<i class=\"fas fa-desktop\"></i> Extra large"
+          thumbnail_html: "<i class=\"fas fa-th-large\"></i> Medium"
+          list_html: "<i class=\"fas fa-list\"></i> List"
       new:
         add_step_title: "Add new step"
         tab_checklists: "Checklists"
@@ -2161,6 +2173,7 @@ en:
     task_completed: "%{user} completed task %{module}. %{date} | Project: %{project} | Experiment: %{experiment}"
 
   assets:
+    file_deleted: "File \"%{file_name}\" deleted"
     head_title:
       edit: "SciNote | %{file_name} | Edit"
       view: "SciNote | %{file_name} | View"
@@ -2177,6 +2190,7 @@ en:
       file_name_placeholder: 'Image'
     placeholder:
       modified_label: "Modified:"
+      size_label: "Size: %{size}"
     wopi_supported_text_formats_title: 'Only .docx, .docm, .odt file formats are supported for editing in Word Online.'
     wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel Online.'
     wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in Powerpoint Online.'
@@ -2193,6 +2207,21 @@ en:
       errors:
         forbidden: 'You do not have permission to add files.'
         not_found: 'Element not found.'
+    file_preview:
+      edit_in_scinote: "Edit in SciNote"
+      edit_in_marvinjs: "Edit in Marvin JS"
+    context_menu:
+      set_view_size: "SET VIEW SIZE"
+      delete: "Delete file"
+      inline_html: "<i class=\"fas fa-desktop\"></i> Extra large"
+      thumbnail_html: "<i class=\"fas fa-th-large\"></i> Medium"
+      list_html: "<i class=\"fas fa-list\"></i> List"
+    delete_file_modal:
+      title: "Delete attachment"
+      description_1_html: "You are about to delete <b>%{file_name}</b></p>"
+      description_2: "Are you sure you want to continue?"
+      confirm_button: "Delete attachment"
+
   atwho:
     no_results:
       projects: "Projects with this name were not found"
@@ -2258,6 +2287,7 @@ en:
     close: "Close"
     create: 'Create'
     change: "Change"
+    leaving_unsaved_warning: "You have made some changes, are you sure you want to leave this page?"
     no_comments: "No comments!"
     more_comments: "More comments"
     comment_placeholder: "Your Message"

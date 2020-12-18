@@ -89,8 +89,8 @@ RSpec.describe RepositoryListValue, type: :model do
   describe 'self.new_with_payload' do
     let(:user) { create :user }
     let(:column) { create :repository_column }
-    let(:cell) { build :repository_cell, repository_column: column }
     let(:list_item) { create :repository_list_item, repository_column: column }
+    let(:cell) { build :repository_cell, repository_column: column }
     let(:attributes) do
       {
         repository_cell: cell,
