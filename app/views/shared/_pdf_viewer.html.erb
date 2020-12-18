@@ -1,28 +1,54 @@
-<% pdf_url = wopi_file?(asset) ? asset_pdf_preview_path(asset) : asset_download_path(asset) %>
-<div class="pdf-viewer">
+<% pdf_url = wopi_file?(asset) ? asset_pdf_preview_path(asset) : asset_download_path(asset)
+   pdf_size = wopi_file?(asset) ? asset.file_pdf_preview.blob&.byte_size : asset.file_size
+   blocked = pdf_size.to_f / 2**20 > Constants::PDF_PREVIEW_MAX_SIZE_MB
+%>
+<div class="pdf-viewer <%= 'blocked' if blocked %> ">
   <div class="page-container">
-    <canvas class="pdf-canvas"
-      data-pdf-url="<%= pdf_url %>"
-      data-pdf-worker-url="<%= asset_pack_path('custom/pdf_js_worker.js') %>"
-    ></canvas>
+    <div class="layers-container">
+      <canvas class="pdf-canvas <%= 'ready' unless blocked %>"
+        data-pdf-url="<%= pdf_url %>"
+        data-pdf-worker-url="<%= asset_pack_path('pdfjs/pdf_js_worker.js') %>"
+      ></canvas>
+      <div class="textLayer"></div>
+    </div>
   </div>
   <div class="pdf-toolbar">
-    <div class="btn btn-secondary prev-page">Prev page</div>
-    <div class="btn btn-secondary next-page">Next page</div>
+    <button class="btn btn-light icon-btn prev-page">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <div class="page-counter sci-input-container">
+      <input type="text" class="sci-input-field current-page" value=1>
+      of
+      <span class="total-page">...</span>
+    </div>
+    <button class="btn btn-light icon-btn next-page">
+      <i class="fas fa-arrow-right"></i>
+    </button>
+    <div class="divider"></div>
     <div class="zoom-page">
-      Zoom:
       <select class="zoom-page-selector">
-        <option value="">Auto</option>
-        <option value="0.25">25%</option>
-        <option value="0.5">50%</option>
-        <option value="0.75">75%</option>
-        <option value="1.0" selected>100%</option>
-        <option value="1.25">125%</option>
-        <option value="1.5">150%</option>
-        <option value="1.75">175%</option>
-        <option value="2.0">200%</option>
+        <option value="auto">Fit to screen</option>
+        <% 12.times.each do |i| %>
+          <option value="<%= ((i + 1).to_f * 0.25).to_s.sub(/\.?0+$/, '') %>" <%= 'selected' if (i + 1) * 25 == 100 %>><%= (i + 1) * 25 %>%</option>
+        <% end %>
       </select>
     </div>
-    <div class="page-counter"></div>
+    <div class="sci-btn-group">
+      <button class="btn btn-light icon-btn zoom-out">
+        <i class="fas fa-search-minus"></i>
+      </button>
+      <button class="btn btn-light icon-btn zoom-in">
+        <i class="fas fa-search-plus"></i>
+      </button>
+    </div>
+  </div>
+  <div class="blocked-screen">
+    <%= image_tag 'pdf_js/blocked.svg', class: 'image' %>
+    <p class="title">The file you’re trying to view is very large.</p>
+    <p class="description">To ensure the optimal performance of SciNote, we did not load it automatically.</p>
+    <button class="btn btn-primary load-blocked-pdf">
+      <i class="fas fa-cloud-download-alt"></i>
+      Load anyway
+    </button>
   </div>
 </div>

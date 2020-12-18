@@ -168,7 +168,6 @@
   }
 
   .image-container,
-  .pdf-viewer,
   .general-file-container {
     align-items: center;
     background: $color-concrete;
@@ -186,6 +185,15 @@
     .fas {
       font-size: 10em;
     }
+  }
+
+  .pdf-viewer {
+    align-items: center;
+    background: $color-silver-chalice;
+    display: flex;
+    height: calc(100% - 4em);
+    justify-content: center;
+    width: 100%;
   }
 
   .header {

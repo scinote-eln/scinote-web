@@ -76,7 +76,7 @@ class Constants
   # Max uploaded user picture avatar size in MB
   AVATAR_MAX_SIZE_MB = 0.2
   # PDF preview file limit in MB
-  PDF_PREVIEW_MAX_SIZE_MB = 15
+  PDF_PREVIEW_MAX_SIZE_MB = 10
 
 
   #=============================================================================

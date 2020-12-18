@@ -2,22 +2,95 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 1em;
   position: relative;
   width: 100%;
 
   .page-container {
+    display: flex;
     flex-grow: 1;
+    justify-content: center;
     overflow: auto;
-    max-width: 100%;
+    padding: 1em;
+    position: relative;
+    width: 100%;
+
+    .layers-container {
+      position: relative;
+    }
   }
 
   .pdf-toolbar {
     align-items: center;
-    background: $color-white;
+    background: $color-concrete;
     display: inline-flex;
+    flex-wrap: wrap;
     justify-content: center;
-    padding: 1em;
-    margin-top: 1em;
+    padding: .5em;
+    width: 100%;
+
+    .page-counter {
+      width: auto;
+      padding: 0 .25em;
+    }
+
+    .current-page {
+      max-width: 3em;
+      margin-right: .25em;
+    }
+
+    .total-page {
+      margin-left: .25em;
+    }
+
+    .divider {
+      background: $color-alto;
+      height: 2em;
+      margin: 0 1em;
+      width: 2px
+    }
+
+    .zoom-page {
+      width: 10em;
+      margin-right: .5em;
+    }
+
+    .btn:disabled {
+      background: $color-concrete;
+    }
+  }
+
+  .blocked-screen {
+    align-items: center;
+    color: $color-white;
+    display: none;
+    justify-content: center;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+
+    .title {
+      @include font-h1;
+    }
+
+    .description {
+      @include font-main;
+      margin-bottom: 2em;
+    }
+
+    .image {
+      background: unset;
+      margin-bottom: 2em;
+    }
+  }
+
+  &.blocked {
+    .pdf-toolbar {
+      display: none;
+    }
+
+    .blocked-screen {
+      display: flex;
+      flex-direction: column;
+    }
   }
 }
