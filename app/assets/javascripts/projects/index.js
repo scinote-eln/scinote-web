@@ -538,12 +538,12 @@
   }
 
   function initSorting() {
-    $('#sortMenuDropdown li').click(function() {
+    $('#sortMenuDropdown a').click(function() {
       if (projectsCurrentSort !== $(this).data('sort')) {
-        $('#sortMenuDropdown li').removeClass('active');
+        $('#sortMenuDropdown a').removeClass('selected');
         projectsCurrentSort = $(this).data('sort');
         loadCardsView();
-        $(this).addClass('active');
+        $(this).addClass('selected');
         $('#sortMenu').dropdown('toggle');
       }
     });

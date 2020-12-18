@@ -129,18 +129,21 @@
       </div>
     </div>
 
-    <div class="dropdown view-switch sort-switch">
+    <div class="dropdown projects-sort-menu">
       <button class="btn btn-light dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
         <span><i class="fas fa-sort-amount-down"></i></span>
         <span class="caret"></span>
       </button>
       <ul id="sortMenuDropdown" class="dropdown-menu sort-projects-menu" aria-labelledby="sortMenu">
-        <% %w(new old atoz ztoa archived_first archived_last).each do |sort| %>
-          <li data-sort="<%= sort %>"
-              <%= %w(archived_first archived_last).include?(sort) ? 'data-view-mode=archived' : '' %>
-              class="<%= @current_sort == sort ? 'active' : '' %>">
-
-            <%= t("projects.index.sort.#{sort}") %>
+        <% %w(new old atoz ztoa arch_new arch_old).each_with_index do |sort, i| %>
+          <% if i.even? && i.positive? %>
+            <li class="divider" <%= i > 3 ? 'data-view-mode=archived' : '' %>></li>
+          <% end %>
+          <li <%= %w(arch_new arch_old).include?(sort) ? 'data-view-mode=archived' : '' %>>
+            <a class="<%= 'selected' if @current_sort == sort %>"
+               data-sort="<%= sort %>" >
+              <%= t("general.sort.#{sort}_html") %>
+            </a>
           </li>
         <% end %>
       </ul>

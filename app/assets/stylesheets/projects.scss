@@ -1,5 +1,8 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
+// scss-lint:disable SelectorFormat
+// scss-lint:disable IdSelector
+
 @import 'constants';
 @import "mixins";
 
@@ -557,19 +560,52 @@ li.module-hover {
     }
   }
 
-  .sort-projects-menu {
-    li.active::after {
-      @include font-awesome;
-      content: "\f00c";
-      position: absolute;
-      right: 1em;
-    }
-  }
-
   .header-actions {
     align-items: center;
     display: flex;
     margin-left: auto;
+
+    .projects-sort-menu {
+      display: inline-block;
+
+      #sortMenu {
+        background: $color-white;
+
+        &:focus,
+        &:active {
+          box-shadow: none;
+        }
+
+        &:hover {
+          background: $color-concrete;
+        }
+      }
+
+      .dropdown-menu {
+        @include font-button;
+        min-width: 150px;
+        padding: .5em 0;
+
+        a {
+          border-radius: unset;
+          cursor: pointer;
+          padding: .5em 1em;
+          text-align: left;
+
+          &:hover {
+            background: $color-concrete;
+          }
+
+          &.selected::after {
+            @include font-awesome;
+            content: $font-fas-check;
+            margin-left: auto;
+            position: absolute;
+            right: 1em;
+          }
+        }
+      }
+    }
   }
 
   .filter-container {

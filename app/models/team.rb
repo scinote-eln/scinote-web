@@ -58,7 +58,7 @@ class Team < ApplicationRecord
 
   def validate_view_state(view_state)
     if %w(new old atoz ztoa).exclude?(view_state.state.dig('projects', 'active', 'sort')) ||
-       %w(new old atoz ztoa archived_first archived_last)
+       %w(new old atoz ztoa arch_new arch_old)
        .exclude?(view_state.state.dig('projects', 'archived', 'sort')) ||
        %w(active archived).exclude?(view_state.state.dig('projects', 'view_mode'))
       view_state.errors.add(:state, :wrong_state)

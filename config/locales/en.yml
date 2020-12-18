@@ -425,13 +425,6 @@ en:
          none: "No projects"
          one: "Show project"
         clear_btn: "Clear"
-      sort:
-        new: "Started last"
-        old: "Started first"
-        atoz: "Name A - Z"
-        ztoa: "Name Z - A"
-        archived_first: "Archived first"
-        archived_last: "Archived last"
 
     export_projects:
       export_button: "Export"
