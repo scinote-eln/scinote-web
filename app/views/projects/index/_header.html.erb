@@ -2,147 +2,153 @@
   <h1 data-view-mode="active"><%= t('projects.index.head_title') %></h1>
   <h1 data-view-mode="archived"><i class="fas fa-archive"></i>&nbsp;<%= t('projects.index.head_title') %></h1>
 
-  <div class="header-actions">
-    <div>
-      <div class="filter-container dropdown project-filters-dropdown">
-        <div class="btn btn-light icon-btn filter-button" data-toggle="dropdown"><i class="fas fa-filter"></i></div>
-        <div class="dropdown-menu dropdown-menu-right projects-filters" role="menu" data-team-id="<%= current_team.id %>">
-          <div class="header">
-            <div class="title"><%= t("projects.index.filters_modal.title") %></div>
-            <div class="btn btn-light clear-button">
-              <i class="fas fa-times-circle"></i><%= t("projects.index.filters_modal.clear_btn") %></div>
+  <div class="sci-btn-group header-actions">
+    <div class="filter-container dropdown project-filters-dropdown">
+      <button class="btn btn-light icon-btn filter-button" data-toggle="dropdown"><i class="fas fa-filter"></i></button>
+      <div class="dropdown-menu dropdown-menu-right projects-filters" role="menu" data-team-id="<%= current_team.id %>">
+        <div class="header">
+          <div class="title"><%= t("projects.index.filters_modal.title") %></div>
+          <div class="btn btn-light clear-button">
+            <i class="fas fa-times-circle"></i><%= t("projects.index.filters_modal.clear_btn") %></div>
+        </div>
+
+        <div class="select-block dropdown-selector-container">
+          <label><%= t('projects.index.filters_modal.text.label') %></label>
+          <div class="input-field dropdown text-search-filter">
+            <input id="textSearchFilterInput"
+                   class="dropdown-toggle search-field"
+                   type="text"
+                   name="search"
+                   autocomplete="off"
+                   data-toggle="dropdown"
+                   placeholder="<%= t('projects.index.filters_modal.text.placeholder') %>">
+          </div>
+          <div id="textSearchFilterHistory" class="dropdown-menu recent-searches" aria-labelledby="textSearchFilterInput">
+            <label><%= t("projects.index.filters_modal.recent_searches_label") %></label>
+          </div>
+        </div>
+
+        <div class="select-block">
+          <div class="created-on-label">
+            <label><%= t("projects.index.filters_modal.created_on.label") %></label>
+          </div>
+          <div class="datetime-picker-container" id="from-date">
+            <span class="fas fa-calendar-alt"></span>
+            <input id="createdOnFromDate"
+                   type="datetime"
+                   data-toggle='date-time-picker'
+                   class="form-control calendar-input"
+                   readonly
+                   placeholder="<%= t('projects.index.filters_modal.created_on.from_placeholder') %>"
+                   data-date-format="<%= datetime_picker_format_full %>"
+                   data-date-locale="<%= I18n.locale %>"
+                   data-date-use-current="false"
+                   value=""/>
           </div>
 
-          <div class="select-block dropdown-selector-container">
-            <label><%= t('projects.index.filters_modal.text.label') %></label>
-            <div class="input-field dropdown">
-              <input id="textSearchFilterInput"
-                     class="dropdown-toggle search-field"
-                     type="text"
-                     name="search"
-                     autocomplete="off"
-                     data-toggle="dropdown"
-                     data-placeholder="<%= t('projects.index.filters_modal.text.placeholder') %>">
-            </div>
-            <div id="textSearchFilterHistory" class="dropdown-menu recent-searches" aria-labelledby="textSearchFilterInput2">
-              <label><%= t("projects.index.filters_modal.recent_searches_label") %></label>
-            </div>
+          <div class="connect-line"></div>
+
+          <div class="datetime-picker-container" id="to-date">
+            <span class="fas fa-calendar-alt"></span>
+            <input id="createdOnToDate"
+                   type="datetime"
+                   data-toggle='date-time-picker'
+                   class="form-control calendar-input"
+                   readonly
+                   placeholder="<%= t('projects.index.filters_modal.created_on.to_placeholder') %>"
+                   data-date-format="<%= datetime_picker_format_full %>"
+                   data-date-locale="<%= I18n.locale %>"
+                   data-date-use-current="false"
+                   data-date-orientation="left"
+                   value=""/>
+          </div>
+        </div>
+
+        <div class="select-block">
+          <label><%= t("projects.index.filters_modal.members.label") %></label>
+          <select class="members-filter"
+                  data-ajax-url="<%= users_filter_projects_path %>"
+                  data-placeholder="<%= t('projects.index.filters_modal.members.placeholder') %>">
+          </select>
+        </div>
+
+        <div class="select-block" data-view-mode="archived">
+          <div class="created-on-label">
+            <label><%= t("projects.index.filters_modal.archived_on.label") %></label>
+          </div>
+          <div class="datetime-picker-container" id="from-date">
+            <span class="fas fa-calendar-alt"></span>
+            <input id="archivedOnFromDate"
+                   type="datetime"
+                   data-toggle='date-time-picker'
+                   class="form-control calendar-input"
+                   readonly
+                   placeholder="<%= t('projects.index.filters_modal.created_on.from_placeholder') %>"
+                   data-date-format="<%= datetime_picker_format_full %>"
+                   data-date-locale="<%= I18n.locale %>"
+                   data-date-use-current="false"
+                   value=""/>
           </div>
 
-          <div class="select-block">
-            <div class="created-on-label">
-              <label><%= t("projects.index.filters_modal.created_on.label") %></label>
-            </div>
-            <div class="datetime-picker-container" id="from-date">
-              <span class="fas fa-calendar-alt"></span>
-              <input id="createdOnStartDate"
-                     type="datetime"
-                     data-toggle='date-time-picker'
-                     class="form-control calendar-input"
-                     readonly
-                     placeholder="<%= t('projects.index.filters_modal.created_on.from_placeholder') %>"
-                     data-date-format="<%= datetime_picker_format_full %>"
-                     data-date-locale="<%= I18n.locale %>"
-                     data-date-use-current="false"
-                     value=""/>
-            </div>
+          <div class="connect-line"></div>
 
-            <div class="connect-line"></div>
-
-            <div class="datetime-picker-container" id="to-date">
-              <span class="fas fa-calendar-alt"></span>
-              <input id="createdOnEndDate"
-                     type="datetime"
-                     data-toggle='date-time-picker'
-                     class="form-control calendar-input"
-                     readonly
-                     placeholder="<%= t('projects.index.filters_modal.created_on.to_placeholder') %>"
-                     data-date-format="<%= datetime_picker_format_full %>"
-                     data-date-locale="<%= I18n.locale %>"
-                     data-date-use-current="false"
-                     data-date-orientation="left"
-                     value=""/>
-            </div>
+          <div class="datetime-picker-container" id="to-date">
+            <span class="fas fa-calendar-alt"></span>
+            <input id="archivedOnToDate"
+                   type="datetime"
+                   data-toggle='date-time-picker'
+                   class="form-control calendar-input"
+                   readonly
+                   placeholder="<%= t('projects.index.filters_modal.created_on.to_placeholder') %>"
+                   data-date-format="<%= datetime_picker_format_full %>"
+                   data-date-locale="<%= I18n.locale %>"
+                   data-date-use-current="false"
+                   data-date-orientation="left"
+                   value=""/>
           </div>
+        </div>
 
-          <div class="select-block">
-            <label><%= t("projects.index.filters_modal.members.label") %></label>
-            <select class="members-filter"
-                    data-ajax-url="<%= users_filter_projects_path %>"
-                    data-placeholder="<%= t('projects.index.filters_modal.members.placeholder') %>">
-            </select>
-          </div>
-
-          <div class="select-block" data-view-mode="archived">
-            <div class="created-on-label">
-              <label><%= t("projects.index.filters_modal.archived_on.label") %></label>
-            </div>
-            <div class="datetime-picker-container" id="from-date">
-              <span class="fas fa-calendar-alt"></span>
-              <input id="archivedOnStartDate"
-                     type="datetime"
-                     data-toggle='date-time-picker'
-                     class="form-control calendar-input"
-                     readonly
-                     placeholder="<%= t('projects.index.filters_modal.created_on.from_placeholder') %>"
-                     data-date-format="<%= datetime_picker_format_full %>"
-                     data-date-locale="<%= I18n.locale %>"
-                     data-date-use-current="false"
-                     value=""/>
-            </div>
-
-            <div class="connect-line"></div>
-
-            <div class="datetime-picker-container" id="to-date">
-              <span class="fas fa-calendar-alt"></span>
-              <input id="archivedOnEndDate"
-                     type="datetime"
-                     data-toggle='date-time-picker'
-                     class="form-control calendar-input"
-                     readonly
-                     placeholder="<%= t('projects.index.filters_modal.created_on.to_placeholder') %>"
-                     data-date-format="<%= datetime_picker_format_full %>"
-                     data-date-locale="<%= I18n.locale %>"
-                     data-date-use-current="false"
-                     data-date-orientation="left"
-                     value=""/>
-            </div>
-          </div>
-
-          <div class="select-block folders">
+        <div class="select-block folders">
           <span class="sci-checkbox-container">
             <%= check_box_tag :folder_search, 'accepted', false, {class: "sci-checkbox"} %>
             <span class="sci-checkbox-label"></span>
           </span>
-            <span class="folder-search-label"><%= t("projects.index.filters_modal.folders.label") %></span>
-            <i class="fas fa-info-circle" title="<%= t("projects.index.filters_modal.folders.tooltip") %>"></i>
+          <span class="folder-search-label"><%= t("projects.index.filters_modal.folders.label") %></span>
+          <div class="dropdown folder-search-info">
+            <a class="fas fa-info-circle" id="folderSearchInfoBtn" data-toggle="dropdown"></a>
+            <div id="folderSearchInfo" class="dropdown-menu folder-search-popover" aria-labelledby="folderSearchInfo">
+              <%= t("projects.index.filters_modal.folders.popover_html") %>
+            </div>
           </div>
 
-          <div class="footer">
-            <div id="applyProjectFiltersButton" class="btn btn-primary"><%= t("projects.index.filters_modal.show_btn.one") %></div>
-          </div>
+        </div>
+
+        <div class="footer">
+          <div id="applyProjectFiltersButton" class="btn btn-primary"><%= t("projects.index.filters_modal.show_btn.one") %></div>
         </div>
       </div>
     </div>
-    <div>
-      <div class="dropdown">
-        <button class="btn btn-light dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-          <span><%= t("general.sort.#{@current_sort}_html") %></span>
-          <span class="caret"></span>
-        </button>
-        <ul id="sortMenuDropdown" class="dropdown-menu" aria-labelledby="sortMenu">
-          <% %w(new old atoz ztoa archived_first archived_last).each do |sort| %>
-            <li <%= %w(archived_first archived_last).include?(sort) ? 'data-view-mode=archived' : '' %>>
-              <% if @current_sort != sort %>
-                <a href="#" data-sort="<%= sort %>"><%= t("projects.index.sort.#{sort}") %></a>
-              <% else %>
-                <a class="disabled" href="#" data-sort="<%= sort %>"><%= t("projects.index.sort.#{sort}") %></a>
-              <% end %>
-            </li>
+
+    <div class="dropdown projects-sort-menu">
+      <button class="btn btn-light dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <span><i class="fas fa-sort-amount-down"></i></span>
+        <span class="caret"></span>
+      </button>
+      <ul id="sortMenuDropdown" class="dropdown-menu sort-projects-menu" aria-labelledby="sortMenu">
+        <% %w(new old atoz ztoa arch_new arch_old).each_with_index do |sort, i| %>
+          <% if i.even? && i.positive? %>
+            <li class="divider" <%= i > 3 ? 'data-view-mode=archived' : '' %>></li>
           <% end %>
-        </ul>
-      </div>
+          <li <%= %w(arch_new arch_old).include?(sort) ? 'data-view-mode=archived' : '' %>>
+            <a class="<%= 'selected' if @current_sort == sort %>"
+               data-sort="<%= sort %>" >
+              <%= t("general.sort.#{sort}_html") %>
+            </a>
+          </li>
+        <% end %>
+      </ul>
     </div>
+
     <%= render layout: 'shared/view_switch', locals: { disabled: false } do %>
       <li class="view-switch-cards projects-view-mode active">
         <i class="fas fa-th-large button-icon"></i> <%= t('projects.index.header.cards') %>
@@ -152,11 +158,11 @@
         <i class="fas fa-list button-icon"></i> <%= t('projects.index.header.table') %>
       </li>
 
-      <li class="view-switch-active archive-switch" data-view-mode="archived" data-mode="active">
+      <li class="view-switch-active archive-switch" data-view-mode="archived" data-url="<%= projects_path(mode: 'active') %>">
         <i class="fas fa-rocket button-icon"></i> <%= t('projects.index.header.active_projects') %>
       </li>
 
-      <li class="view-switch-archived archive-switch" data-view-mode="active" data-mode="archived">
+      <li class="view-switch-archived archive-switch" data-view-mode="active" data-url="<%= projects_path(mode: 'archived') %>">
         <i class="fas fa-archive button-icon"></i> <%= t('projects.index.header.archived_projects') %>
       </li>
     <% end %>
