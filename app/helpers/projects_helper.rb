@@ -26,9 +26,9 @@ module ProjectsHelper
               when 'ztoa'
                 records.sort_by { |c| c.name.downcase }.reverse!
               when 'arch_old'
-                records.sort_by { |c| [c.class.to_s, c.archived_on] }
+                records.sort_by(&:archived_on)
               when 'arch_new'
-                records.sort_by { |c| [c.class.to_s, -c.archived_on.to_i] }
+                records.sort_by(&:archived_on).reverse!
               end
     folders_recursive_builder(nil, records)
   end

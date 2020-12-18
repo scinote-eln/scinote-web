@@ -90,12 +90,6 @@ class ProjectFolder < ApplicationRecord
     end.flatten
   end
 
-  # projects_overview_service.rb needs archived_on for sorting. ProjectFolder does not have archived_on,
-  # we will use created_at instead.
-  def archived_on
-    created_at
-  end
-
   private
 
   def inherit_team_from_parent_folder

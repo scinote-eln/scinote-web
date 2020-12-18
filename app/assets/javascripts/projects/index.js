@@ -8,7 +8,7 @@
 // - refactor view handling using library, ex. backbone.js
 
 /* global Comments CounterBadge animateSpinner initFormSubmitLinks HelperModule
-   I18n dropdownSelector Sidebar Turbolinks */
+   dropdownSelector Sidebar Turbolinks */
 
 (function(global) {
   var newProjectModal = null;
@@ -533,7 +533,7 @@
     // With turbolinks visit all those elements are updated.
     $(projectsPageSelector).on('click', '.archive-switch', function() {
       $(projectsPageSelector).find('.projects-container').remove();
-      Turbolinks.visit($(this).data('url'))
+      Turbolinks.visit($(this).data('url'));
     });
   }
 

@@ -25,13 +25,6 @@
       .caret {
         margin: 8px 0 8px 8px;
       }
-
-      &.sort-switch {
-        .caret {
-          margin: unset;
-        }
-      }
-
       &.open {
         .caret {
           transform: rotateX(180deg)
@@ -54,10 +47,6 @@
           &:hover {
             background: $color-concrete;
           }
-        }
-
-        &.sort-projects-menu {
-          min-width: 140px;
         }
       }
     }
