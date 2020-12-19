@@ -7,7 +7,7 @@ class MyModulesController < ApplicationController
   include ApplicationHelper
 
   before_action :load_vars
-  before_action :check_archive_and_restore_permissions, only: %i(update)
+  before_action :check_archive_permissions, only: %i(update)
   before_action :check_manage_permissions, only: %i(description due_date update_description update_protocol_description)
   before_action :check_view_permissions, except: %i(update update_description update_protocol_description)
   before_action :check_update_state_permissions, only: :update_state
@@ -125,12 +125,6 @@ class MyModulesController < ApplicationController
 
     if @my_module.archived_changed?(from: false, to: true)
       saved = @my_module.archive(current_user)
-    elsif @my_module.archived_changed?(from: true, to: false)
-      saved = @my_module.restore(current_user)
-      if saved
-        restored = true
-        log_activity(:restore_module)
-      end
     else
       render_403 && return unless can_manage_module?(@my_module)
 
@@ -147,15 +141,7 @@ class MyModulesController < ApplicationController
       end
     end
     respond_to do |format|
-      if restored
-        format.html do
-          flash[:success] = t(
-            'my_modules.module_archive.restored_flash',
-            module: @my_module.name
-          )
-          redirect_to module_archive_experiment_path(@my_module.experiment)
-        end
-      elsif saved
+      if saved
         format.json do
           alerts = []
           alerts << 'alert-green' if @my_module.completed?
@@ -297,12 +283,8 @@ class MyModulesController < ApplicationController
     render_403 && return unless can_manage_module?(@my_module)
   end
 
-  def check_archive_and_restore_permissions
-    render_403 && return unless if my_module_params[:archived] == 'false'
-                                  can_restore_module?(@my_module)
-                                else
-                                  can_archive_module?(@my_module)
-                                end
+  def check_archive_permissions
+    render_403 && return unless can_archive_module?(@my_module)
   end
 
   def check_view_permissions

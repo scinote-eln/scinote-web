@@ -22,26 +22,6 @@ describe MyModulesController, type: :controller do
   describe 'PUT update' do
     let(:action) { put :update, params: params, format: :json }
 
-    context 'when restoring task from archive' do
-      let(:params) { { id: my_module.id, my_module: { archived: false } } }
-      let(:my_module) do
-        create :my_module, archived: true, experiment: experiment
-      end
-
-      it 'calls create activity for restoring task from archive' do
-        expect(Activities::CreateActivityService)
-          .to(receive(:call)
-                .with(hash_including(activity_type: :restore_module)))
-
-        put :update, params: params
-      end
-
-      it 'adds activity in DB' do
-        expect { put :update, params: params }
-          .to(change { Activity.count })
-      end
-    end
-
     context 'when changing task description' do
       let(:params) do
         { id: my_module.id, my_module: { description: 'description changed' } }

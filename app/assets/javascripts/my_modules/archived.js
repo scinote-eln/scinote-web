@@ -1,7 +1,9 @@
+/* global HelperModule I18n*/
+
 (function() {
   let selectedTasks = [];
 
-  $('#module-archive').on('click', '.restore-button', function(e) {
+  $('#module-archive').on('click', '.restore-button', function() {
     let resoteTasksButtonContainer = $(this).closest('.restore-button-container');
 
     $.ajax({
@@ -9,7 +11,7 @@
       type: 'PATCH',
       dataType: 'json',
       data: {
-        restore_task_ids: selectedTasks,
+        restore_task_ids: selectedTasks
       },
       success: function(data) {
         HelperModule.flashAlertMsg(data.message, 'success');
@@ -17,14 +19,13 @@
           $(`.module-container [data-task-id=${id}]`).closest('.module-container').remove();
         });
         selectedTasks = [];
-        resoteTasksButtonContainer.collapse('hide')
+        resoteTasksButtonContainer.collapse('hide');
       },
       error: function(response) {
         if (response.status === 403) {
           HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
         } else {
-          HelperModule.flashAlertMsg(
-            response.responseJSON.message + ' ' + response.responseJSON.errors, 'danger');
+          HelperModule.flashAlertMsg(response.responseJSON.message + ' ' + response.responseJSON.errors, 'danger');
         }
       }
     });
