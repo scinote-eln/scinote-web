@@ -332,6 +332,7 @@ Rails.application.routes.draw do
         get 'move_modal' # return modal with move options
         post 'move' # move experiment
         get 'fetch_workflow_img' # Get udated workflow img
+        patch 'restore_tasks'
       end
 
       get 'sidebar', to: 'experiments#sidebar', as: 'sidebar'

@@ -9,7 +9,7 @@ class ExperimentsController < ApplicationController
 
   before_action :load_project, only: %i(new create)
   before_action :load_experiment, except: %i(new create)
-  before_action :check_view_permissions, except: %i(edit archive clone move new create)
+  before_action :check_view_permissions, except: %i(edit archive clone move new create restore_tasks)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: %i(edit update)
   before_action :check_archive_permissions, only: :archive
@@ -209,6 +209,35 @@ class ExperimentsController < ApplicationController
     @my_modules = @experiment.archived_branch? ? @experiment.my_modules : @experiment.my_modules.archived
   end
 
+  def restore_tasks
+    tasks = @experiment.my_modules.where(id: params[:restore_task_ids])
+
+    render_403 && return unless tasks.all? { |task| can_restore_module?(task) }
+
+    tasks.transaction do
+      tasks.each do |task|
+        task.archived = false
+        task.restored_by = current_user
+        task.save!
+
+        log_restore_task_activity(task)
+      end
+    end
+
+    message = I18n.t('my_modules.module_archive.restored_many_tasks_flash',
+                     count: tasks.count,
+                     subject: 'task'.pluralize(tasks.count))
+    render json: { message: message }, status: :ok
+  rescue ActiveRecord::RecordInvalid => e
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace.join("\n")
+
+    message = I18n.t('my_modules.module_archive.restored_many_tasks_unsucessful_flash', record_id: e.record.id)
+    errors = e.record.errors.full_messages.join(',')
+
+    render json: { message: message, errors: errors }, status: :unprocessable_entity
+  end
+
   def fetch_workflow_img
     unless @experiment.workflowimg_exists?
       Experiment.no_touching do
@@ -318,5 +347,15 @@ class ExperimentsController < ApplicationController
             project: @experiment.project,
             subject: @experiment,
             message_items: { experiment: @experiment.id })
+  end
+
+  def log_restore_task_activity(task)
+    Activities::CreateActivityService
+      .call(activity_type: :restore_module,
+            owner: current_user,
+            team: task.experiment.project.team,
+            project: task.experiment.project,
+            subject: task,
+            message_items: { my_module: task.id })
   end
 end

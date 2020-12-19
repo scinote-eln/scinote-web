@@ -762,6 +762,8 @@ en:
       no_archived_results: "No archived results!"
       archive_timelabel: "archived on %{date}"
       restored_flash: "Task %{module} restored successfully!"
+      restored_many_tasks_flash: "%{count} %{subject} restored successfully!"
+      restored_many_tasks_unsucessful_flash: "Task %{record_id} cannot be restored."
     protocols:
       head_title: "%{project} | %{module} | Protocols"
       protocol_status_bar:
