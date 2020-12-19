@@ -10,10 +10,10 @@
 <div class="content-pane" id="module-archive">
   <% if @my_modules.present? %>
     <div class="restore-button-container collapse">
-      <a href="#" class="btn btn-light">
+      <button class="btn btn-light restore-button" data-archive-tasks-url="<%= restore_tasks_experiment_url(@experiment) %>">
         <span class="fas fa-undo"></span>
         <%= t('experiments.module_archive.restore_option') %>
-      </a>
+      </button>
     </div>
 
     <div class="row" style="margin-top: 10px;">
