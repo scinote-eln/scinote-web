@@ -170,6 +170,15 @@ class MyModule < ApplicationRecord
     restored
   end
 
+  def restore!(current_user)
+    self.archived = false
+    self.restored_by = current_user
+    new_pos = get_new_position
+    self.x = new_pos[:x]
+    self.y = new_pos[:y]
+    save!
+  end
+
   def repository_rows_count(repository)
     my_module_repository_rows.joins(repository_row: :repository)
                              .where('repositories.id': repository.id)

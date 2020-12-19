@@ -214,12 +214,9 @@ class ExperimentsController < ApplicationController
 
     render_403 && return unless tasks.all? { |task| can_restore_module?(task) }
 
-    tasks.transaction do
+    ActiveRecord::Base.transaction do
       tasks.each do |task|
-        task.archived = false
-        task.restored_by = current_user
-        task.save!
-
+        task.restore!(current_user)
         log_restore_task_activity(task)
       end
     end
