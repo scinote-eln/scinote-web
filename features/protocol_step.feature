@@ -13,7 +13,7 @@ Given the following users are registered
    | name        | email              | password       | password_confirmation |
    | Karli Novak | nonadmin@myorg.com | mypassword1234 | mypassword1234 |
 And "nonadmin@myorg.com" is in "BioSistemika Process" team as a "admin"
-Given Demo project exists for the "BioSistemika Process" team
+Given Templates project exists for the "BioSistemika Process" team
 And "nonadmin@myorg.com" is signed in with "mypassword1234"
 
 @javascript @wip

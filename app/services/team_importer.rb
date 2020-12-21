@@ -57,7 +57,6 @@ class TeamImporter
       team_last_modified_by = team.last_modified_by_id
       team.last_modified_by_id = nil
       team.without_templates = true
-      team.without_intro_demo = true
       team.save!
 
       create_users(team_json['users'], team)
