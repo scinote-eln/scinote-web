@@ -222,6 +222,7 @@ en:
     my_module:
       sidebar_title: "TASK"
       back_button: "Back to all tasks"
+      back_button_archived: "Back to all archived tasks"
       steps: "Protocols"
       results: "Results"
       activities: "Activity"
