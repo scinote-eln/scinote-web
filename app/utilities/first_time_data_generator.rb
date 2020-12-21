@@ -1,7 +1,4 @@
 module FirstTimeDataGenerator
-  # Default inventory repository
-  REPO_SAMPLES_NAME = 'Samples'.freeze
-
   # Create data for demo for new users
   def seed_demo_data(user, team, asset_queue = :demo)
     @user = user
@@ -35,115 +32,11 @@ module FirstTimeDataGenerator
       due_date: nil,
       team: team,
       created_by: user,
-      created_at: generate_random_time(1.week.ago),
       last_modified_by: user,
       archived: false,
       template: false,
       demo: true
     )
-
-    # check if samples repo already exist, then create custom repository samples
-    repository = Repository.where(team: team).where(name: REPO_SAMPLES_NAME).take
-    repository ||= Repository.create(name: REPO_SAMPLES_NAME, team: team, created_by: user)
-
-    # create list value column for sample types
-    repo_columns = []
-    ['Sample Types', 'Sample Groups'].each do |repo_name|
-      repo_column = repository.repository_columns.where(name: repo_name)
-
-      repo_columns <<
-        if repo_column.blank?
-          RepositoryColumn.create(
-            repository: repository,
-            created_by: user,
-            data_type: :RepositoryListValue,
-            name: repo_name
-          )
-        else
-          repo_column.first
-        end
-    end
-
-    # Maintain old names
-    repository_column_sample_types, repository_column_sample_groups =
-      repo_columns
-
-    # create few list items for sample types
-    repository_items_sample_types = []
-    ['Potato leaves', 'Tea leaves', 'Potato bug'].each do |name|
-      item = RepositoryListItem.create(
-        data: name,
-        created_by: user,
-        last_modified_by: user,
-        repository_column: repository_column_sample_types
-      )
-
-      # Check if it already exists
-      if item.persisted?
-        repository_items_sample_types << item
-      else
-        repository_items_sample_types << repository_column_sample_types
-                                         .repository_list_items
-                                         .where(data: name).first
-      end
-    end
-
-    # create few list items for sample groups
-    repository_items_sample_groups = []
-    %i(Fodder Nutrient Seed).each do |name|
-      item = RepositoryListItem.create(
-        data: name,
-        created_by: user,
-        last_modified_by: user,
-        repository_column: repository_column_sample_groups
-      )
-
-      # Check if it already exists
-      if item.persisted?
-        repository_items_sample_groups << item
-      else
-        repository_items_sample_groups << repository_column_sample_groups
-                                          .repository_list_items
-                                          .where(data: name).first
-      end
-    end
-
-    repository_rows_to_assign = []
-    # Generate random custom respository sample names and assign sample types
-    # and groups
-
-    repository_sample_name = (0...3).map { 65.+(rand(26)).chr }.join << '/'
-    (1..5).each do |index|
-      repository_row = RepositoryRow.create(
-        repository: repository,
-        created_by: user,
-        last_modified_by: user,
-        name: repository_sample_name + index.to_s
-      )
-      RepositoryListValue.create(
-        created_by: user,
-        last_modified_by: user,
-        repository_list_item: repository_items_sample_types[
-          rand(0..(repository_items_sample_types.length - 1))
-        ],
-        repository_cell_attributes: {
-          repository_row: repository_row,
-          repository_column: repository_column_sample_types
-        }
-      )
-      RepositoryListValue.create(
-        created_by: user,
-        last_modified_by: user,
-        repository_list_item: repository_items_sample_groups[
-          rand(0..(repository_items_sample_groups.length - 1))
-        ],
-        repository_cell_attributes: {
-          repository_row: repository_row,
-          repository_column: repository_column_sample_groups
-        }
-      )
-      repository_rows_to_assign << repository_row
-    end
 
     experiment_description =
       'Polymerase chain reaction (PCR) monitors the amplification of DNA ' \
@@ -178,13 +71,6 @@ module FirstTimeDataGenerator
       created_at: generate_random_time(1.week.ago)
     )
 
-    # Add a comment
-    generate_project_comment(
-      project,
-      user,
-      'I\'ve created a demo project'
-    )
-
     # Create a module group
     my_module_group = MyModuleGroup.create(
       experiment: experiment
@@ -209,15 +95,14 @@ module FirstTimeDataGenerator
       Yellowstone park, USA) amplifies a short specific part of
       the template DNA (amplicon) in cycles. In every cycle the
       number of short specific sections of DNA is doubled, leading
-      to an exponential amplification of targets. More on how
-      conventional PCR works can be found here.'
+      to an exponential amplification of targets.'
 
     my_module_names.each_with_index do |name, i|
       my_module = MyModule.create(
         name: name,
         created_by: user,
         created_at: generate_random_time(6.days.ago),
-        due_date: Time.now + (2 * i + 1).weeks,
+        due_date: nil,
         description: i == 5 ? qpcr_module_description : nil,
         x: (i < 4 ? i % 4 : 7 - i) * 32,
         y: (i / 4) * 16,
@@ -243,176 +128,6 @@ module FirstTimeDataGenerator
         created_at: generate_random_time(my_module.created_at, 2.minutes)
       )
     end
-
-    # Create an archived module
-    archived_module = MyModule.create(
-      name: 'Data analysis - Pfaffl method',
-      created_by: user,
-      created_at: generate_random_time(6.days.ago),
-      due_date: Time.now + 1.week,
-      description: nil,
-      x: -1,
-      y: -1,
-      experiment: experiment,
-      workflow_order: -1,
-      my_module_group: nil,
-      archived: true,
-      archived_on: generate_random_time(3.days.ago),
-      archived_by: user
-    )
-
-    # Assign new user to archived module
-    UserMyModule.create(
-      user: user,
-      my_module: archived_module,
-      assigned_by: user,
-      created_at: generate_random_time(archived_module.created_at, 2.minutes)
-    )
-
-    my_modules[1].downstream_modules.each do |mm|
-      repository_rows_to_assign.each do |repository_row|
-        MyModuleRepositoryRow.create!(
-          repository_row: repository_row,
-          my_module: mm,
-          assigned_by: user
-        )
-      end
-    end
-
-    # Add comments to modules
-    generate_module_comment(
-      my_modules[0],
-      user,
-      'We should have a meeting to discuss sampling parametrs soon.'
-    )
-    generate_module_comment(
-      my_modules[0],
-      user,
-      'I agree.'
-    )
-
-    generate_module_comment(
-      my_modules[1],
-      user,
-      'The samples have arrived.'
-    )
-
-    generate_module_comment(
-      my_modules[2],
-      user,
-      'Due date has been postponed for a day.'
-    )
-
-    generate_module_comment(
-      my_modules[4],
-      user,
-      'Please show Steve the RT procedure.'
-    )
-
-    generate_module_comment(
-      my_modules[5],
-      user,
-      'The results must be very definitive.'
-    )
-
-    generate_module_comment(
-      my_modules[7],
-      user,
-      'The due date here is flexible.'
-    )
-
-    # Create tags and add them to module
-    drylab_tag = Tag.create(
-      name: 'Dry lab',
-      color: Constants::TAG_COLORS[0],
-      project: project,
-      created_by: user,
-      last_modified_by: user
-    )
-    wetlab_tag = Tag.create(
-      name: 'Wet lab',
-      color: Constants::TAG_COLORS[12],
-      project: project,
-      created_by: user,
-      last_modified_by: user
-    )
-    plant_tag = Tag.create(
-      name: 'Plant',
-      color: Constants::TAG_COLORS[5],
-      project: project,
-      created_by: user,
-      last_modified_by: user
-    )
-    virus_tag = Tag.create(
-      name: 'Pathogenic virus',
-      color: Constants::TAG_COLORS[13],
-      project: project,
-      created_by: user,
-      last_modified_by: user
-    )
-    infectious_tag = Tag.create(
-      name: 'Infectious sample',
-      color: Constants::TAG_COLORS[2],
-      project: project,
-      created_by: user,
-      last_modified_by: user
-    )
-    bacteria_tag = Tag.create(
-      name: 'Bacteria',
-      color: Constants::TAG_COLORS[14],
-      project: project,
-      created_by: user,
-      last_modified_by: user
-    )
-    patent_tag = Tag.create(
-      name: 'Results for patent',
-      color: Constants::TAG_COLORS[3],
-      project: project,
-      created_by: user,
-      last_modified_by: user
-    )
-    identifires_tag = Tag.create(
-      name: 'Assign unique identifires',
-      color: Constants::TAG_COLORS[15],
-      project: project,
-      created_by: user,
-      last_modified_by: user
-    )
-    plasmid_tag = Tag.create(
-      name: 'Plasmid A',
-      color: Constants::TAG_COLORS[1],
-      project: project,
-      created_by: user,
-      last_modified_by: user
-    )
-
-    # Add tags to module
-    my_modules[0].tags << drylab_tag
-
-    my_modules[1].tags << wetlab_tag
-    my_modules[1].tags << plant_tag
-    my_modules[1].tags << virus_tag
-
-    my_modules[2].tags << plant_tag
-    my_modules[2].tags << infectious_tag
-
-    my_modules[3].tags << wetlab_tag
-
-    my_modules[4].tags << wetlab_tag
-    my_modules[4].tags << bacteria_tag
-
-    my_modules[5].tags << wetlab_tag
-    my_modules[5].tags << bacteria_tag
-    my_modules[5].tags << virus_tag
-    my_modules[5].tags << patent_tag
-    my_modules[5].tags << identifires_tag
-
-    my_modules[6].tags << drylab_tag
-    my_modules[6].tags << plasmid_tag
-
-    my_modules[7].tags << drylab_tag
-    my_modules[7].tags << plasmid_tag
-    my_modules[7].save
 
     # Load table contents yaml file
     tab_content = YAML.load_file(
@@ -448,30 +163,11 @@ module FirstTimeDataGenerator
       'Collection of potatoes'
     ]
 
-    second_rep_item = smart_annotate_rep_item(repository_rows_to_assign.second)
-    third_rep_item = smart_annotate_rep_item(repository_rows_to_assign.third)
-    fifth_rep_item = smart_annotate_rep_item(repository_rows_to_assign.fifth)
     module_step_descriptions = [
-      '<html>
-        <body>
-          <p>50% of samples should be mock inoculated
-          <span class=\"atwho-inserted\"contenteditable=\"false\"
-            data-atwho-at-query=\"#\">[#' + third_rep_item + ']</span>
-          <span class=\"atwho-inserted\" contenteditable=\"false\"
-            data-atwho-at-query=\"#\">[#' + fifth_rep_item + ']</span>
-          while other 50% with PVY NTN virus
-          <span class=\"atwho-inserted\" contenteditable=\"false\"
-            data-atwho-at-query=\"#\">[#' + third_rep_item + ']</span>
-          <span class=\"atwho-inserted\" contenteditable=\"false\"
-            data-atwho-at-query=\"#\">[#' + fifth_rep_item + ']</span>.
-          </p>
-        </body>
-      </html>',
       'Collect samples in <strong>2ml tubes</strong> and put them in '\
-      '<strong>liquid nitrogen</strong> and store at <strong>80°C</strong>.',
-      '50% of PVYNTN inoculated potatos and 50% of Mock inoculated potatos ' \
-      'collect 1 day post inocullation while other halph of samples collect ' \
-      '6 days post inoculation.'
+      '<strong>liquid nitrogen</strong> or store at <strong>-80°C</strong>.',
+      '50% of all samples are PVYNTN inoculated potatoes and the other 50% are mock-inoculated potatoes. '\
+      'Collect the samples twice: 1 day post-inoculation and 6 days post-inoculation.'
     ]
     generate_module_steps(my_modules[1],
                           module_step_names,
@@ -492,54 +188,6 @@ module FirstTimeDataGenerator
       current_team: team,
       file_name: 'PVY-inoculated_plant_symptoms.JPG'
     )
-    # Add comment to step 1
-    user_annotation = user.name
-    generate_step_comment(
-      step,
-      user,
-      "#{user_annotation} I have used different sample [##{second_rep_item}]"
-    )
-    # Add comment to step 3
-    step = my_modules[1].protocol.steps.where('position = 2').take
-    generate_step_comment(
-      step,
-      user,
-      user_annotation + ' Please complete this by Monday.'
-    )
-    # Results
-    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
-      my_module: my_modules[1],
-      current_user: user,
-      current_team: team,
-      result_name: 'Mock inoculated plant',
-      created_at: generate_random_time(my_modules[1].created_at, 2.days),
-      file_name: 'mock-inoculated-plant.JPG'
-    )
-
-    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
-      my_module: my_modules[1],
-      current_user: user,
-      current_team: team,
-      result_name: 'Plant',
-      created_at: generate_random_time(my_modules[1].created_at, 3.days),
-      file_name: '6dpi_height.JPG'
-    )
-
-    # Add a text result
-    temp_result = Result.new(
-      name: 'Number of samples',
-      my_module: my_modules[1],
-      user: user,
-      created_at: generate_random_time(my_modules[1].created_at, 4.days)
-    )
-    temp_text = 'There are many biological replicates we harvested for each type of sample.'
-    repository_rows_to_assign.each do |s|
-      temp_text << "* #{s.name}\n\n"
-    end
-    temp_result.result_text = ResultText.new(
-      text: temp_text
-    )
-    temp_result.save
 
     # ----------------- Module 3 ------------------
     module_step_names = [
@@ -581,51 +229,18 @@ module FirstTimeDataGenerator
       'RNeasy Mini spin column (pink) in a 2 mL collection tube (supplied). ' \
       'Close the lid, and centrifuge for 15 s at ≥8000 x g (≥10,000 rpm). ' \
       'Discard the flowthrough.',
-      'Close the lid, andcentrifuge for 15 s at ≥8000 x g. Discard the ' \
+      'Close the lid, and centrifuge for 15 s at ≥8000 x g. Discard the ' \
       'flow-through.',
       'Add 500 μL Buffer RPE to the RNeasy spin column. Close the lid, and ' \
       'centrifuge for 2 min at ≥8000 x g.',
       'Add 30–50 μL RNase-free water directly to the spin column membrane. ' \
       'Close the lid, and centrifuge for 1 min at ≥8000 x g to elute the RNA.',
-      '<html><body><p>If the expected RNA yield is &gt;30 μg, repeat step 9 ' \
+      '<html><body><p>If the expected RNA yield is &gt;30 μg, repeat Step 9 ' \
       'using another 30–50 μL of RNase-free water.<br>Alternatively, use the ' \
-      'eluate from step 9 (if high RNA concentration is required). Reuse the ' \
-      'collection tube from step 12.</p></body></html>'
+      'eluate from Step 9 (if high RNA concentration is required). Reuse the ' \
+      'collection tube from Step 12.</p></body></html>'
     ]
     generate_module_steps(my_modules[2], module_step_names, module_step_descriptions)
-
-    # Results
-    temp_result = Result.new(
-      name: 'Nanodrop results',
-      my_module: my_modules[2],
-      created_at: generate_random_time(my_modules[2].created_at, 1.days),
-      user: user
-    )
-    qpcr_id = MyModule.where(name: 'qPCR').last.id.base62_encode
-    DelayedUploaderDemo.generate_result_comment(
-      temp_result,
-      user,
-      user_annotation + ' Please check if results match results in ' \
-      '[#qPCR~tsk~' + qpcr_id + ']',
-      generate_random_time(temp_result.created_at, 1.days)
-    )
-    temp_result.table = Table.new(
-      created_by: user,
-      team: team,
-      contents: tab_content['module3']['nanodrop']
-    )
-    temp_result.save
-
-    # Second result
-    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
-      my_module: my_modules[2],
-      current_user: user,
-      current_team: team,
-      result_name: 'Agarose gel electrophoresis of totRNA samples',
-      created_at: generate_random_time(my_modules[2].created_at, 3.days),
-      file_name: 'totRNA_gel.jpg',
-      comment: user_annotation + ' Could you check if this is okay?'
-    )
 
     # ----------------- Module 4 ------------------
     module_step_names = [
@@ -644,7 +259,7 @@ module FirstTimeDataGenerator
       'Place the RNeasy spin column in a new 1.5 mL collection tube (supplied)'
     ]
     module_step_descriptions = [
-      'Follow the guidelines bellow.',
+      'Follow the guidelines below.',
       '<html><body><p>Remove RNAlater stabilized tissues from the reagent ' \
       'using forceps. Determine the amount of tissue. Do not use more than ' \
       '30 mg.<br>Weighing tissue is the most accurate way to determine the ' \
@@ -813,28 +428,6 @@ module FirstTimeDataGenerator
     end
     checklist.save
 
-    # Results
-    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
-      my_module: my_modules[3],
-      current_user: user,
-      current_team: team,
-      result_name: 'Result of RNA integrity',
-      created_at: generate_random_time(my_modules[3].created_at, 2.days),
-      file_name: 'Bioanalyser_result.JPG'
-    )
-    temp_result = Result.new(
-      name: 'DNA q results',
-      my_module: my_modules[3],
-      created_at: generate_random_time(my_modules[3].created_at, 1.days),
-      user: user
-    )
-    temp_result.table = Table.new(
-      created_by: user,
-      team: team,
-      contents: tab_content['module4']['dna_q']
-    )
-    temp_result.save
-
     # ----------------- Module 5 ------------------
     module_step_names = [
       'RNA denaturation',
@@ -842,9 +435,9 @@ module FirstTimeDataGenerator
       'RT reaction'
     ]
     module_step_descriptions = [
-      '1 ug of RNA denature at 80°C for 5 min --> ice',
+      'Denature 1 µg of RNA at -80°C for 5 min --> ice',
       'High Capacity cDNA Reverse Transcription Kit (Applied Biosystems)',
-      '25°C for 10 min 37°C for 2 h'
+      '25°C for 10 min, 37°C for 2 h'
     ]
     generate_module_steps(my_modules[4],
                           module_step_names,
@@ -884,7 +477,7 @@ module FirstTimeDataGenerator
       'DNA Polymerase, dNTPs, MgCl2 and reaction buffers at optimal ' \
       'concentrations for efficient amplification of DNA templates by PCR.',
       '<html><body><p>It is recommended to use pre-defined Excel templates ' \
-      'or PlatR Pietting Assistant to customize pipetting scheme. Make sure ' \
+      'or PlatR Pipetting Assistant to customize pipetting scheme. Make sure ' \
       'to always include all necessary controls.&nbsp;Especially the ' \
       'negative controls.<br><br>Template of the 96-well plate.' \
       '</p></body></html>',
@@ -920,9 +513,9 @@ module FirstTimeDataGenerator
     )
     module_checklist_items = [
       'Make sure the UV light was on at least for 20 minutes before you ' \
-      'started to work',
-      'Write down LOT numbers of reagents used',
-      'Use tips with filtes for pipetting samples; use tips without filters ' \
+      'started working',
+      'Write down the LOT numbers of reagents used',
+      'Use tips with filters for pipetting samples; use tips without filters ' \
       'for pipetting reagents',
       'Always use designated separate chambers for pipetting samples and ' \
       'reagents',
@@ -971,178 +564,6 @@ module FirstTimeDataGenerator
       file_name: 'Dual_Labeled_Fluorescent_Probes.jpg'
     )
 
-    # Results
-    # Add a hard-coded table result
-    temp_result = Result.new(
-      name: 'Sample distribution on the plate',
-      my_module: my_modules[5],
-      user: user,
-      created_at: generate_random_time(my_modules[5].created_at, 1.days)
-    )
-    temp_result.table = Table.new(
-      created_by: user,
-      team: team,
-      contents: tab_content['module6']['distribution'] % {
-        sample0: repository_rows_to_assign[0].name,
-        sample1: repository_rows_to_assign[1].name,
-        sample2: repository_rows_to_assign[2].name,
-        sample3: repository_rows_to_assign[3].name
-      }
-    )
-    temp_result.save
-
-    # Results
-    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
-      my_module: my_modules[5],
-      current_user: user,
-      current_team: team,
-      result_name: 'Results',
-      created_at: generate_random_time(my_modules[5].created_at, 2.days),
-      file_name: '1505745387970-1058053257.jpg'
-    )
-
-    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
-      my_module: my_modules[5],
-      current_user: user,
-      current_team: team,
-      result_name: 'Cromatogram',
-      created_at: generate_random_time(my_modules[5].created_at, 3.days),
-      file_name: 'chromatogram.png'
-    )
-
-    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
-      my_module: my_modules[5],
-      current_user: user,
-      current_team: team,
-      result_name: 'All results - curves',
-      created_at: generate_random_time(my_modules[5].created_at, 4.days),
-      file_name: 'curves.JPG'
-    )
-
-    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
-      my_module: my_modules[5],
-      current_user: user,
-      current_team: team,
-      result_name: 'Bacteria plates YPGA',
-      created_at: generate_random_time(my_modules[5].created_at, 2.days),
-      file_name: 'Bacterial_colonies.jpg',
-      comment: user_annotation + ' please check the results again. ' \
-          '<span class=\"atwho-inserted\" contenteditable=\"false\"' \
-          'data-atwho-at-query=\"#\">[#' + fifth_rep_item + ']</span>' \
-          ' seems to be acting strange?'
-    )
-
-    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
-      my_module: my_modules[5],
-      current_user: user,
-      current_team: team,
-      result_name: 'Article',
-      created_at: generate_random_time(my_modules[5].created_at, 4.days),
-      file_name: 'Recent_attempts_to_detect_Ebola_virus.docx'
-    )
-
-    # Add a text result
-    temp_result = Result.new(
-      name: 'Data analysis',
-      my_module: my_modules[5],
-      user: user,
-      created_at: generate_random_time(my_modules[5].created_at, 4.days)
-    )
-
-    temp_result.result_text = ResultText.new(
-      text: <<~FOO
-        <html><body><pre class='hljs  language-python'>
-        <code># Read PCR data into a pandas DataFrame. You want a data file where each
-        # row corresponds to a separate well, with columns for the sample name,
-        # target name, and Cq value. NTC wells should have the sample name set to
-        # a value like 'NTC'.
-        &gt;&gt; df = pd.read_csv('my_data.csv')
-
-        # If your Sample, Target, and Cq columns are called other things, they
-        # should be renamed to Sample, Target, and Cq.
-        &gt;&gt; df = df.rename(columns={'Gene': 'Target', 'Ct': 'Cq'})
-
-        # Drop the wells that are too close to the NTC for that target.
-        &gt;&gt; censored = eleven.censor_background(df)
-
-        # Rank your candidate reference genes.
-        &gt;&gt; ranked = eleven.rank_targets(censored, ['Gapdh', 'Rn18s', 'Hprt',
-            'Ubc', 'Actb'], 'Control')
-
-        # Normalize your data by your most stable genes and compute normalization
-        # factors (NFs).
-        &gt;&gt; nf = eleven.calculate_nf(censored, ranked.ix['Target', 0:3], 'Control')
-
-        # Now, normalize all of your expression data.
-        &gt;&gt; censored['RelExp'] = eleven.expression_nf(censored, nf, 'Control')</code>
-        </pre></body></html>
-      FOO
-    )
-    temp_result.save
-
-    # Add a text result
-    temp_result = Result.new(
-      name: 'Immunofluorescence summary',
-      my_module: my_modules[5],
-      user: user,
-      created_at: generate_random_time(my_modules[5].created_at, 4.days)
-    )
-
-    temp_result.result_text = ResultText.new(
-      text: 'Immunofluorescence is a technique used for light microscopy ' \
-      'with a fluorescence microscope and is used primarily on ' \
-      'microbiological samples. This technique uses the specificity of ' \
-      'antibodies to their antigen to target fluorescent dyes to specific ' \
-      'biomolecule targets within a cell, and therefore allows visualization ' \
-      'of the distribution of the target molecule through the sample. The ' \
-      'specific region an antibody recognizes on an antigen is called an ' \
-      'epitope. There have been.'
-    )
-    temp_result.save
-
-    # Add a text result
-    temp_result = Result.new(
-      name: 'Discussion',
-      my_module: my_modules[5],
-      user: user,
-      created_at: generate_random_time(my_modules[5].created_at, 4.days)
-    )
-
-    temp_result.result_text = ResultText.new(
-      text: 'Immunofluorescence is a technique used for light microscopy ' \
-      'with a fluorescence microscope and is used primarily on ' \
-      'microbiological samples. this technique uses the specificity of ' \
-      'antibodies to their antigen to target fluorescent dyes to specific ' \
-      'biomolecule targets within a cell, and therefore allows visualization ' \
-      'of the distribution of the target molecule through the sample. the ' \
-      'specific region an antibody recognizes on an antigen is called an ' \
-      'epitope. There have been efforts in epitope mapping since many ' \
-      'antibodies can bind the same epitope and levels of binding between ' \
-      'antibodies that recognize the same epitope can vary. Additionally, ' \
-      'the binding of the fluorophore to the antibody itself cannot ' \
-      'interfere with the immunological specificity of the antibody or the ' \
-      'binding capacity of its antigen. Immunofluorescence is a widely used ' \
-      'example of immunostaining (using antibodies to stain proteins) and ' \
-      'is a specific example of immunohistochemistry(the use of the ' \
-      'antibody-antigen relationship in tissues). this technique primarily ' \
-      'makes use of fluorophores to visualise the location of the antibodies.'
-    )
-    temp_result.save
-
-    # Add table result
-    temp_result = Result.new(
-      name: 'qPCR raw data',
-      my_module: my_modules[5],
-      user: user,
-      created_at: generate_random_time(my_modules[5].created_at, 1.days)
-    )
-    temp_result.table = Table.new(
-      created_by: user,
-      team: team,
-      contents: tab_content['module6']['qpcr_raw_data']
-    )
-    temp_result.save
-
     # ----------------- Module 7 ------------------
     module_step_names = [
       'Native PAGE protocol',
@@ -1153,9 +574,9 @@ module FirstTimeDataGenerator
       'Excel results'
     ]
     module_step_descriptions = [
-      'Protein electrophoresis is a method for analysing the proteins in a ' \
+      'Protein electrophoresis is a method for analysing proteins in a ' \
       'fluid or an extract. The electrophoresis may be performed with a ' \
-      'small volume of sample in a number of alternative ways with or ' \
+      'small volume of a sample in a number of alternative ways with or ' \
       'without a supporting medium: SDS polyacrylamide gel electrophoresis ' \
       '(in short: gel electrophoresis, PAGE, or SDS-electrophoresis), ' \
       'free-flow electrophoresis, electrofocusing, isotachophoresis, ' \
@@ -1163,20 +584,20 @@ module FirstTimeDataGenerator
       'counterelectrophoresis, and capillary electrophoresis. Each method ' \
       'has many variations with individual advantages and limitations. Gel ' \
       'electrophoresis is often performed in combination with ' \
-      'electroblotting immunoblotting to give additional information about a ' \
+      'electroblotting/immunoblotting to give additional information about a ' \
       'specific protein. Because of practical limitations, protein ' \
       'electrophoresis is generally not suited as a preparative method.',
       'Please perform the following checklist before and after you start ' \
       'working.',
       '<html><body><div class="row">They have to be negative when using ' \
-      'TaqMan assays.<br><ul><li class="col-xs-12">If they are positive when ' \
+      'TaqMan assays.<br><ul><li class="col-xs-12">If they are positive, when ' \
       'using SYBR assays check also melitng curve where signal comes ' \
-      'from</li><li class="col-xs-12">If it is primer dimer result is ' \
-      'negative</li><li class="col-xs-12">If it is specific signal it is ' \
+      'from.</li><li class="col-xs-12">If it is primer dimer, result is ' \
+      'negative.</li><li class="col-xs-12">If it is specific signal, it is ' \
       'positive.</li></ul></div></body></html>',
       'And repeat procedure.',
-      'Follow a Nature protocol attached and a PDF.',
-      'Write results in excel file.'
+      'Follow the Nature protocol attached.',
+      'Write results in the excel file.'
     ]
     generate_module_steps(my_modules[6],
                           module_step_names,
@@ -1220,21 +641,6 @@ module FirstTimeDataGenerator
     end
     checklist.save
 
-    # Results
-    # Add table result
-    temp_result = Result.new(
-      name: 'qPCR results',
-      my_module: my_modules[6],
-      user: user,
-      created_at: generate_random_time(my_modules[6].created_at, 1.days)
-    )
-    temp_result.table = Table.new(
-      created_by: user,
-      team: team,
-      contents: tab_content['module7']['qpcr_results']
-    )
-    temp_result.save
-
     # ----------------- Module 8 ------------------
     module_step_names = [
       'Template for ddCq analysis'
@@ -1260,42 +666,6 @@ module FirstTimeDataGenerator
       current_user: user,
       current_team: team,
       file_name: 'SDHACOX1Beta-Actin-Kits-ab123545-1.gif'
-    )
-
-    # Add comment to step 3
-    step = my_modules[7].protocol.steps.where('position = 0').take
-    generate_step_comment(
-      step,
-      user,
-      'I actually ran it for 15 minutes and not 10.'
-    )
-
-    # Add result
-    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
-      my_module: my_modules[7],
-      current_user: user,
-      current_team: team,
-      result_name: 'Template for ddCq analysis',
-      created_at: generate_random_time(my_modules[7].created_at, 1.days),
-      file_name: 'ddCq-quantification_diagnostics-results.xls'
-    )
-
-    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
-      my_module: my_modules[7],
-      current_user: user,
-      current_team: team,
-      result_name: 'Dilution curve and efficiency',
-      created_at: generate_random_time(my_modules[7].created_at, 2.days),
-      file_name: 'dilution_curve-efficiency.JPG'
-    )
-
-    DelayedUploaderDemo.delay(queue: asset_queue).generate_result_asset(
-      my_module: my_modules[7],
-      current_user: user,
-      current_team: team,
-      result_name: 'Relative quantification results',
-      created_at: generate_random_time(my_modules[7].created_at, 3.days),
-      file_name: 'result-ddCq.JPG'
     )
   end
 
@@ -1336,85 +706,16 @@ module FirstTimeDataGenerator
   def generate_module_steps(my_module, step_names, step_descriptions)
     step_names.each_with_index do |name, i|
       created_at = generate_random_time(my_module.created_at, 5.hours)
-      completed = rand <= 0.3
-      completed_on = nil
-      completed_on = generate_random_time(created_at, 10.hours) if completed
 
-      step = Step.create(
+      Step.create(
         created_at: created_at,
         name: name,
         description: step_descriptions[i],
         position: i,
-        completed: completed,
+        completed: false,
         user: @user,
-        protocol: my_module.protocol,
-        completed_on: completed_on
+        protocol: my_module.protocol
       )
-
-      if completed
-        # Also add random comments to completed steps
-        if rand < 0.3
-          polite_comment = 'This looks well.'
-        elsif rand < 0.4
-          polite_comment = 'Great job!'
-        elsif rand < 0.4
-          polite_comment = 'Thanks for getting this done.'
-        end
-        if polite_comment
-          commented_on = generate_random_time(completed_on)
-          generate_step_comment(
-            step,
-            @user,
-            polite_comment,
-            commented_on
-          )
-        end
-      end
     end
-  end
-
-  def generate_project_comment(project, user, message, created_at = nil)
-    created_at ||= generate_random_time(project.created_at, 1.week)
-    ProjectComment.create(
-      user: user,
-      message: message,
-      created_at: created_at,
-      project: project
-    )
-  end
-
-  def generate_module_comment(my_module, user, message, created_at = nil)
-    created_at ||= generate_random_time(my_module.created_at, 1.day)
-    TaskComment.create(
-      user: user,
-      message: message,
-      created_at: created_at,
-      my_module: my_module
-    )
-  end
-
-
-  def generate_result_comment(result, user, message, created_at = nil)
-    created_at ||= generate_random_time(result.created_at, 1.days)
-    ResultComment.create(
-      user: user,
-      message: message,
-      created_at: created_at,
-      result: result
-    )
-  end
-
-  def generate_step_comment(step, user, message, created_at = nil)
-    created_at ||= generate_random_time(step.created_at, 2.hours)
-    StepComment.create(
-      user: user,
-      message: message,
-      created_at: created_at,
-      step: step
-    )
-  end
-
-  def smart_annotate_rep_item(item)
-    "#{item.name}~rep_item~#{Base62.encode(item.id)}"
   end
 end
