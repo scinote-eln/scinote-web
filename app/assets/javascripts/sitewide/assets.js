@@ -1,4 +1,4 @@
-/* global windowScrollEvents HelperModule I18n */
+/* global windowScrollEvents HelperModule I18n PdfPreview */
 $(document).on('click', '.asset-context-menu .change-preview-type', function(e) {
   var viewModeBtn = $(this);
   var viewMode = viewModeBtn.data('preview-type');

@@ -1,5 +1,6 @@
-<% pdf_url = wopi_file?(asset) ? asset_pdf_preview_path(asset) : asset_download_path(asset)
-   pdf_size = wopi_file?(asset) ? asset.file_pdf_preview.blob&.byte_size : asset.file_size
+<%
+   pdf_url = wopi_file?(asset) ? asset_pdf_preview_path(asset) : asset_download_path(asset)
+   pdf_size = wopi_file?(asset) && asset.pdf_preview_ready? ? asset.file_pdf_preview&.blob&.byte_size : asset.file_size
    blocked = pdf_size.to_f / 2**20 > Constants::PDF_PREVIEW_MAX_SIZE_MB
 %>
 <div class="pdf-viewer <%= 'blocked' if blocked %> ">
@@ -27,7 +28,7 @@
     <div class="divider"></div>
     <div class="zoom-page">
       <select class="zoom-page-selector">
-        <option value="auto">Fit to screen</option>
+        <option value="auto"><%= t('pdf_preview.fit_to_screen') %></option>
         <% 12.times.each do |i| %>
           <option value="<%= ((i + 1).to_f * 0.25).to_s.sub(/\.?0+$/, '') %>" <%= 'selected' if (i + 1) * 25 == 100 %>><%= (i + 1) * 25 %>%</option>
         <% end %>
@@ -44,11 +45,11 @@
   </div>
   <div class="blocked-screen">
     <%= image_tag 'pdf_js/blocked.svg', class: 'image' %>
-    <p class="title">The file you’re trying to view is very large.</p>
-    <p class="description">To ensure the optimal performance of SciNote, we did not load it automatically.</p>
+    <p class="title"><%= t('pdf_preview.blocked.title') %></p>
+    <p class="description"><%= t('pdf_preview.blocked.description') %></p>
     <button class="btn btn-primary load-blocked-pdf">
       <i class="fas fa-cloud-download-alt"></i>
-      Load anyway
+      <%= t('pdf_preview.blocked.submit_button') %>
     </button>
   </div>
 </div>

@@ -8,13 +8,13 @@
   .page-container {
     display: flex;
     flex-grow: 1;
-    justify-content: center;
     overflow: auto;
     padding: 1em;
     position: relative;
     width: 100%;
 
     .layers-container {
+      margin: 0 auto;
       position: relative;
     }
   }
@@ -29,13 +29,13 @@
     width: 100%;
 
     .page-counter {
-      width: auto;
       padding: 0 .25em;
+      width: auto;
     }
 
     .current-page {
-      max-width: 3em;
       margin-right: .25em;
+      max-width: 3em;
     }
 
     .total-page {
@@ -46,12 +46,12 @@
       background: $color-alto;
       height: 2em;
       margin: 0 1em;
-      width: 2px
+      width: 2px;
     }
 
     .zoom-page {
-      width: 10em;
       margin-right: .5em;
+      width: 10em;
     }
 
     .btn:disabled {
@@ -63,8 +63,8 @@
     align-items: center;
     color: $color-white;
     display: none;
-    justify-content: center;
     height: 100%;
+    justify-content: center;
     position: absolute;
     width: 100%;
 

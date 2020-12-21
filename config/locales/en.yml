@@ -2363,6 +2363,13 @@ en:
     modal_name_title: "Chemical Drawing name:"
     checmical_drawing: "Chemical drawings"
 
+  pdf_preview:
+    fit_to_screen: 'Fit to screen'
+    blocked:
+      title: 'The file you’re trying to view is very large.'
+      description: 'To ensure the optimal performance of SciNote, we did not load it automatically.'
+      submit_button: 'Load anyway'
+
   views:
     pagination:
       first: "First"

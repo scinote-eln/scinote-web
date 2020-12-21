@@ -2,6 +2,8 @@
 /* eslint-disable no-param-reassign, no-use-before-define */
 
 var PdfPreview = (function() {
+  var pageRendering = false;
+
   function initActionButtons() {
     $(document)
       // Next page
@@ -90,8 +92,7 @@ var PdfPreview = (function() {
     $viewer.find('.zoom-in').attr('disabled', zoomSelector.val() === '3');
   }
 
-  function renderPdfPreview(canvas, page = 1) {
-    var loadingPdf;
+  function renderPdfPreview(canvas) {
     $(canvas).removeClass('ready');
     initZoomDropdown($(canvas));
     animateSpinner($(canvas).closest('.pdf-viewer'), true);
@@ -100,17 +101,22 @@ var PdfPreview = (function() {
       new PerfectScrollbar($(canvas).closest('.page-container')[0])
     );
     pdfjsLib.GlobalWorkerOptions.workerSrc = canvas.dataset.pdfWorkerUrl;
-    loadingPdf = pdfjsLib.getDocument(canvas.dataset.pdfUrl);
+    loadPdfDocument(canvas);
+  }
+
+
+  function loadPdfDocument(canvas, page = 1) {
+    var loadingPdf = pdfjsLib.getDocument(canvas.dataset.pdfUrl);
     loadingPdf.promise
       .then(function(pdfDocument) {
         $(canvas).data('pdfDocument', pdfDocument);
         return renderPdfPage(canvas, page);
       })
       .catch(function(reason) {
+        pageRendering = false;
         if (reason.status === 202) {
           setTimeout(function() {
-            animateSpinner($(canvas).closest('.pdf-viewer'), false);
-            renderPdfPreview(canvas);
+            loadPdfDocument(canvas, page);
           }, 5000);
         }
       });
@@ -118,10 +124,13 @@ var PdfPreview = (function() {
 
   function renderPdfPage(canvas, page = 1) {
     var pdfDocument = $(canvas).data('pdfDocument');
+    if (pageRendering) return false;
+    pageRendering = true;
     pdfDocument.getPage(page).then(function(pdfPage) {
       var ctx;
       var renderTask;
       var userScale = $(canvas).closest('.pdf-viewer').find('.zoom-page-selector').val();
+      var $layersContainer = $(canvas).closest('.pdf-viewer').find('.layers-container');
       var scale = userScale === 'auto' ? 1.0 : userScale;
       var viewport = pdfPage.getViewport({ scale: scale });
       var previewContainer = $(canvas).closest('.page-container')[0];
@@ -139,7 +148,7 @@ var PdfPreview = (function() {
       });
 
       // Text layer draw
-      $textLayer.css({
+      $layersContainer.css({
         height: viewport.height + 'px',
         width: viewport.width + 'px'
       });
@@ -162,8 +171,11 @@ var PdfPreview = (function() {
       animateSpinner($(canvas).closest('.pdf-viewer'), false);
       refreshPageCounter(canvas);
       refreshZoomButtons(canvas);
+      pageRendering = false;
       return renderTask.promise;
     });
+
+    return true;
   }
 
   return {
