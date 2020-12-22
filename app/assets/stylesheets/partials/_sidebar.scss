@@ -101,6 +101,12 @@
     padding-left: 2.5em;
   }
 
+  .delimiter {
+    background: $color-alto;
+    height: 1px;
+    margin: .5em 2.5em .5em 0;
+  }
+
   .sidebar-leaf {
     align-items: center;
     display: flex;

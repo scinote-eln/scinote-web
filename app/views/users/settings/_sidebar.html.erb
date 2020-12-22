@@ -1,69 +1,36 @@
+<%= content_for :sidebar_title, t('sidebar.settings.sidebar_title') %>
 <%= content_for :sidebar do %>
- <div id="slide-panel" class="visible">
-   <div class="tree">
-     <ul id="settings" class="sidebar-root" data-hook="user-settings-navigation-html">
-       <!-- Account -->
-       <li class="parent_li branch" >
-         <span class="tree-link line-wrap no-indent">
-           <i title="<%= t('sidebar.branch_expand') %>"
-              class="fas fa-caret-right tree-toggle"
-              aria-hidden="true"
-           ></i>
-           <%= link_to t("users.settings.sidebar.account"),
-                       edit_user_registration_path,
-                       class: "line-wrap",
-                       style: (on_settings_account_page? ? 'font-weight: bold' : ''),
-                       data: { 'no-turbolink' => 'true' } %>
-         </span>
-
-         <ul class="tree-child hidden accountNavigation" data-active="<%= on_settings_account_page? %>" data-hook="user-settings-account-navigation-html">
-           <li class="leaf <%= 'active' if on_settings_account_profile_page? %>" >
-             <span class="tree-link first-indent">
-               <%= link_to t("users.settings.sidebar.account_nav.profile"),
-                             edit_user_registration_path,
-                             class: "line-wrap #{'disabled' if on_settings_account_profile_page?}",
-                             data: { 'no-turbolink' => 'true' } %>
-             </span>
-           </li>
-           <li class="leaf <%= 'active' if on_settings_account_preferences_page? %>" >
-             <span class="tree-link first-indent">
-               <%= link_to t("users.settings.sidebar.account_nav.preferences"),
-                             preferences_path,
-                             class: "line-wrap #{'disabled' if on_settings_account_preferences_page?}",
-                             data: { 'no-turbolink' => 'true' } %>
-             </span>
-           </li>
-           <li class="leaf <%= 'active' if on_settings_account_addons_page? %>" >
-             <span class="tree-link first-indent">
-               <%= link_to t("users.settings.sidebar.account_nav.addons"),
-                             addons_path,
-                             class: "line-wrap #{'disabled' if on_settings_account_addons_page?}",
-                             data: { 'no-turbolink' => 'true' } %>
-             </span>
-           </li>
-           <!-- Connected accounts -->
-           <li class="leaf <%= 'active' if on_settings_account_connected_accounts_page? %>" >
-             <span class="tree-link first-indent">
-               <%= link_to t("users.settings.sidebar.account_nav.connected_accounts"),
-                             connected_accounts_path,
-                             class: "line-wrap #{'disabled' if on_settings_account_connected_accounts_page?}",
-                             data: { 'no-turbolink' => 'true' } %>
-             </span>
-           </li>
-         </ul>
-       </li>
-
-       <!-- Teams -->
-       <li class="branch <%= 'active' if on_settings_team_page? %>" >
-         <span class="tree-link no-indent">
-             <%= link_to t("users.settings.sidebar.teams"),
-                         teams_path,
-                         class: "line-wrap #{'all-teams-navigation-link' if on_settings_team_page?}",
-                         data: { 'no-turbolink' => 'true' } %>
-         </span>
-       </li>
-
-     </ul>
-   </div>
- </div>
+<ul class="sidebar-branch" data-hook="user-settings-navigation-html">
+  <li class="sidebar-leaf" >
+    <%= link_to t("users.settings.sidebar.account_nav.profile"),
+                edit_user_registration_path,
+                class: "sidebar-link #{'selected' if on_settings_account_profile_page?}"
+    %>
+  </li>
+  <li class="sidebar-leaf" >
+    <%= link_to t("users.settings.sidebar.account_nav.preferences"),
+                preferences_path,
+                class: "sidebar-link #{'selected' if on_settings_account_preferences_page?}"
+    %>
+  </li>
+  <li class="sidebar-leaf" >
+    <%= link_to t("users.settings.sidebar.account_nav.addons"),
+                addons_path,
+                class: "sidebar-link #{'selected' if on_settings_account_addons_page?}"
+    %>
+  </li>
+  <li class="sidebar-leaf" >
+    <%= link_to t("users.settings.sidebar.account_nav.connected_accounts"),
+                connected_accounts_path,
+                class: "sidebar-link #{'selected' if on_settings_account_connected_accounts_page?}"
+    %>
+  </li>
+  <li class="delimiter"></li>
+  <li class="sidebar-leaf" >
+    <%= link_to t("users.settings.sidebar.teams"),
+                teams_path,
+                class: "sidebar-link #{'selected' if on_settings_team_page?}"
+    %>
+  </li>
+</ul>
 <% end %>

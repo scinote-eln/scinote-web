@@ -208,6 +208,8 @@ en:
     branch_expand: "Expand this branch"
     branch_collapse: "Collapse this branch"
     no_module_group: "No workflow"
+    settings:
+      sidebar_title: "SETTINGS"
     experiments:
       sidebar_title: "EXPERIMENTS"
       back_button: "Back to projects"
