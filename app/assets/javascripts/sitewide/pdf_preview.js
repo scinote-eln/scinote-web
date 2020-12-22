@@ -2,6 +2,11 @@
 /* eslint-disable no-param-reassign, no-use-before-define */
 
 var PdfPreview = (function() {
+  const MIN_ZOOM = 0.25;
+  const MAX_ZOOM = 3;
+  const DEFAULT_ZOOM = 1;
+  const ZOOM_STEP = 0.25;
+
   var pageRendering = false;
 
   function initActionButtons() {
@@ -30,9 +35,9 @@ var PdfPreview = (function() {
         var zoomSelector = $(this).closest('.pdf-viewer').find('.zoom-page-selector');
         var $canvas = $(this).closest('.pdf-viewer').find('.pdf-canvas');
         if (zoomSelector.val() === 'auto') {
-          dropdownSelector.selectValues(zoomSelector, 1.0);
+          dropdownSelector.selectValues(zoomSelector, DEFAULT_ZOOM);
         } else {
-          dropdownSelector.selectValues(zoomSelector, parseFloat(zoomSelector.val()) - 0.25);
+          dropdownSelector.selectValues(zoomSelector, parseFloat(zoomSelector.val()) - ZOOM_STEP);
         }
         renderPdfPage($canvas[0], $canvas.data('current-page'));
       })
@@ -41,9 +46,9 @@ var PdfPreview = (function() {
         var zoomSelector = $(this).closest('.pdf-viewer').find('.zoom-page-selector');
         var $canvas = $(this).closest('.pdf-viewer').find('.pdf-canvas');
         if (zoomSelector.val() === 'auto') {
-          dropdownSelector.selectValues(zoomSelector, 1.0);
+          dropdownSelector.selectValues(zoomSelector, DEFAULT_ZOOM);
         } else {
-          dropdownSelector.selectValues(zoomSelector, parseFloat(zoomSelector.val()) + 0.25);
+          dropdownSelector.selectValues(zoomSelector, parseFloat(zoomSelector.val()) + ZOOM_STEP);
         }
         renderPdfPage($canvas[0], $canvas.data('current-page'));
       })
@@ -88,8 +93,8 @@ var PdfPreview = (function() {
   function refreshZoomButtons(canvas) {
     var $viewer = $(canvas).closest('.pdf-viewer');
     var zoomSelector = $viewer.find('.zoom-page-selector');
-    $viewer.find('.zoom-out').attr('disabled', zoomSelector.val() === '0.25');
-    $viewer.find('.zoom-in').attr('disabled', zoomSelector.val() === '3');
+    $viewer.find('.zoom-out').attr('disabled', parseFloat(zoomSelector.val()) === MIN_ZOOM);
+    $viewer.find('.zoom-in').attr('disabled', parseFloat(zoomSelector.val()) === MAX_ZOOM);
   }
 
   function renderPdfPreview(canvas) {
@@ -131,7 +136,7 @@ var PdfPreview = (function() {
       var renderTask;
       var userScale = $(canvas).closest('.pdf-viewer').find('.zoom-page-selector').val();
       var $layersContainer = $(canvas).closest('.pdf-viewer').find('.layers-container');
-      var scale = userScale === 'auto' ? 1.0 : userScale;
+      var scale = userScale === 'auto' ? DEFAULT_ZOOM : userScale;
       var viewport = pdfPage.getViewport({ scale: scale });
       var previewContainer = $(canvas).closest('.page-container')[0];
       var $textLayer = $(canvas).closest('.pdf-viewer').find('.textLayer');

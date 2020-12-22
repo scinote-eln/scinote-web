@@ -2365,6 +2365,8 @@ en:
 
   pdf_preview:
     fit_to_screen: 'Fit to screen'
+    pages:
+      of: 'of'
     blocked:
       title: 'The file you’re trying to view is very large.'
       description: 'To ensure the optimal performance of SciNote, we did not load it automatically.'

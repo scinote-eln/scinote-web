@@ -246,9 +246,12 @@ class Asset < ApplicationRecord
     false
   end
 
-  def pdf_preview?
-    content_type == 'application/pdf' ||
-      (previewable_document?(blob) && Rails.application.config.x.enable_pdf_previews)
+  def pdf?
+    content_type == 'application/pdf'
+  end
+
+  def pdf_previewable?
+    pdf? || (previewable_document?(blob) && Rails.application.config.x.enable_pdf_previews)
   end
 
   def post_process_file(team = nil)

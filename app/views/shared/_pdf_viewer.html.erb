@@ -1,7 +1,7 @@
 <%
-   pdf_url = wopi_file?(asset) ? asset_pdf_preview_path(asset) : asset_download_path(asset)
-   pdf_size = wopi_file?(asset) && asset.pdf_preview_ready? ? asset.file_pdf_preview&.blob&.byte_size : asset.file_size
-   blocked = pdf_size.to_f / 2**20 > Constants::PDF_PREVIEW_MAX_SIZE_MB
+   pdf_url = asset.pdf? ? asset_download_path(asset) : asset_pdf_preview_path(asset)
+   pdf_size = !asset.pdf? && asset.pdf_preview_ready? ? asset.file_pdf_preview&.blob&.byte_size : asset.file_size
+   blocked = pdf_size > Constants::PDF_PREVIEW_MAX_SIZE_MB.megabyte
 %>
 <div class="pdf-viewer <%= 'blocked' if blocked %> ">
   <div class="page-container">
@@ -19,7 +19,7 @@
     </button>
     <div class="page-counter sci-input-container">
       <input type="text" class="sci-input-field current-page" value=1>
-      of
+      <%= t('pdf_preview.pages.of') %>
       <span class="total-page">...</span>
     </div>
     <button class="btn btn-light icon-btn next-page">
