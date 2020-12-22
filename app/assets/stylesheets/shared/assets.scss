@@ -187,6 +187,15 @@
     }
   }
 
+  .pdf-viewer {
+    align-items: center;
+    background: $color-silver-chalice;
+    display: flex;
+    height: calc(100% - 4em);
+    justify-content: center;
+    width: 100%;
+  }
+
   .header {
     align-items: center;
     display: flex;

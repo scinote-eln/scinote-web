@@ -246,6 +246,14 @@ class Asset < ApplicationRecord
     false
   end
 
+  def pdf?
+    content_type == 'application/pdf'
+  end
+
+  def pdf_previewable?
+    pdf? || (previewable_document?(blob) && Rails.application.config.x.enable_pdf_previews)
+  end
+
   def post_process_file(team = nil)
     # Extract asset text if it's of correct type
     if text?
