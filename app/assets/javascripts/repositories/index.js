@@ -123,11 +123,11 @@
   }
 
   function reloadSidebar() {
-    var slidePanel = $('#slide-panel');
+    var slidePanel = $('.sidebar-container');
     $.get(slidePanel.data('sidebar-url'), {
       archived: $('.repositories-index').hasClass('archived')
     }, function(data) {
-      slidePanel.html(data.html);
+      slidePanel.find('.sidebar-body').html(data.html);
       $('.create-new-repository').initSubmitModal('#create-repo-modal', 'repository');
     });
   }

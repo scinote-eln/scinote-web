@@ -1,9 +1,24 @@
- <%= content_for :sidebar do %>
-  <div id="slide-panel" class="visible" data-sidebar-url="<%= sidebar_repositories_path %>">
-    <%= render partial: "sidebar_list", locals: { repositories: repositories, archived: archived} %>
-  </div>
-<% end %>
-
-<script>
-  $('#wrapper').show();
-</script>
+<ul class="sidebar-branch">
+  <% if can_create_repositories?(current_team) && !archived %>
+    <li class="sidebar-leaf">
+      <a class="btn btn-secondary create-new-repository" data-remote="true"
+        href="<%= create_modal_team_repositories_path(current_team) %>">
+        <i class="fas fa-plus"></i>
+        <%= t('libraries.index.no_libraries.create_new_button') %>
+      </a>
+    </li>
+  <% end %>
+  <% repositories.each do |repository| %>
+    <li class="sidebar-leaf" title="<%= repository.name %>">
+      <%= link_to repository_path(repository),
+          class: "sidebar-link repository-link #{ 'selected' if current_page?(repository_path(repository)) }",
+          data: {type: 'repository', id: repository.id } do %>
+        <% if repository.archived? %>
+          <i class="fas fa-archive"></i>&nbsp;
+        <% end %>
+        <%= repository.name  %>
+        <%= inventory_shared_status_icon(repository, current_team) %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>
