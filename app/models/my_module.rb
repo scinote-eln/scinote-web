@@ -128,6 +128,10 @@ class MyModule < ApplicationRecord
     where(experiment: Experiment.viewable_by_user(user, teams))
   end
 
+  def navigable?
+    !experiment.archived? && experiment.navigable?
+  end
+
   def archived_branch?
     archived? || experiment.archived_branch?
   end
