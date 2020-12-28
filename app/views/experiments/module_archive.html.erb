@@ -9,12 +9,14 @@
 
 <div class="content-pane" id="module-archive">
   <% if @my_modules.present? %>
-    <div class="restore-button-container collapse">
-      <a href="#" class="btn btn-light">
-        <span class="fas fa-undo"></span>
-        <%= t('experiments.module_archive.restore_option') %>
-      </a>
-    </div>
+    <% if can_manage_experiment?(@experiment) %>
+      <div class="restore-button-container collapse">
+        <%= button_to restore_my_modules_experiment_path, class: 'btn btn-light', method: :post do %>
+          <span class="fas fa-undo"></span>
+          <%= t('experiments.module_archive.restore_option') %>
+        <% end %>
+      </div>
+    <% end %>
 
     <div class="row" style="margin-top: 10px;">
       <% @my_modules.each_with_index do |my_module, i| %>

@@ -762,6 +762,9 @@ en:
       no_archived_results: "No archived results!"
       archive_timelabel: "archived on %{date}"
       restored_flash: "Task %{module} restored successfully!"
+    restore_group:
+      success_flash: "<strong>%{number}</strong> task(s) successfully restored."
+      error_flash: "Failed to restore task(s)."
     protocols:
       head_title: "%{project} | %{module} | Protocols"
       protocol_status_bar:

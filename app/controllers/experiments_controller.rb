@@ -11,7 +11,7 @@ class ExperimentsController < ApplicationController
   before_action :load_experiment, except: %i(new create)
   before_action :check_view_permissions, except: %i(edit archive clone move new create)
   before_action :check_create_permissions, only: %i(new create)
-  before_action :check_manage_permissions, only: %i(edit update)
+  before_action :check_manage_permissions, only: %i(edit)
   before_action :check_archive_permissions, only: :archive
   before_action :check_clone_permissions, only: %i(clone_modal clone)
   before_action :check_move_permissions, only: %i(move_modal move)

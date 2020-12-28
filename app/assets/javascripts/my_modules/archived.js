@@ -3,7 +3,16 @@
 
   $('#module-archive').on('click', '.restore-button-container', function(e) {
     e.preventDefault();
-    alert('woop! Not implemented yet!')
+    let restoreForm = $('.restore-button-container').find('form');
+
+    selectedTasks.forEach(function(id) {
+      $('<input>').attr({
+        type: 'hidden',
+        name: 'my_modules_ids[]',
+        value: id
+      }).appendTo(restoreForm);
+    });
+    restoreForm.submit();
   });
 
   $('#module-archive').on('click', '.task-selector', function() {
