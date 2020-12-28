@@ -11,11 +11,7 @@
    dropdownSelector Sidebar Turbolinks */
 
 (function(global) {
-  var newProjectModal = null;
-  var newProjectModalForm = null;
-  var newProjectModalBody = null;
-  var newProjectBtn = null;
-
+  var toolbarWrapper = '#toolbarWrapper';
   var editProjectModal = '#edit-modal';
 
   var projectActionsModal = null;
@@ -26,9 +22,8 @@
   var exportProjectsModal = null;
   var exportProjectsModalHeader = null;
   var exportProjectsModalBody = null;
-  var exportProjectsBtn = null;
-  var exportProjectsSubmit = null;
-  var projectsChanged = false;
+  var exportProjectsBtn = '.export-projects-btn';
+  var exportProjectsSubmit = '#export-projects-modal-submit';
 
   let projectsCurrentSort;
   let projectsViewSearch;
@@ -46,27 +41,24 @@
   // Init new project folder modal function
   function initNewProjectFolderModal() {
     var newProjectFolderModal = '#new-project-folder-modal';
-    // Modal's submit handler function
-    function newProjectFolderModalResponse() {
-      $(newProjectFolderModal).find('form')
-        .on('ajax:success', function(ev, data) {
-          refreshCurrentView();
-          $(newProjectFolderModal).modal('hide');
-          HelperModule.flashAlertMsg(data.message, 'success');
-        })
-        .on('ajax:error', function(e, data) {
-          $(this).renderFormErrors('project_folder', data.responseJSON);
-        });
-    }
 
-    $('.new-project-folder-btn')
-      .on('ajax:success', function(e, data) {
+    // Modal's submit handler function
+    $(toolbarWrapper)
+      .on('ajax:success', newProjectFolderModal, function(ev, data) {
+        $(newProjectFolderModal).modal('hide');
+        HelperModule.flashAlertMsg(data.message, 'success');
+        refreshCurrentView();
+      })
+      .on('ajax:error', function(e, data) {
+        $(this).renderFormErrors('project_folder', data.responseJSON);
+      });
+
+    $(toolbarWrapper)
+      .on('ajax:success', '.new-project-folder-btn', function(e, data) {
         // Add and show modal
-        $('body').append($.parseHTML(data.html));
+        $(toolbarWrapper).append($.parseHTML(data.html));
         $(newProjectFolderModal).modal('show');
         $(newProjectFolderModal).find("input[type='text']").focus();
-        newProjectFolderModalResponse();
-
         // Remove modal when it gets closed
         $(newProjectFolderModal).on('hidden.bs.modal', function() {
           $(newProjectFolderModal).remove();
@@ -78,59 +70,60 @@
    * Initialize the JS for new project modal to work.
    */
   function initNewProjectModal() {
-    newProjectModal.off().on('hidden.bs.modal', function() {
-      var teamSelect = newProjectModalForm.find('select#project_team_id');
-      var teamHidden = newProjectModalForm.find('input#project_visibility_hidden');
-      var teamVisible = newProjectModalForm.find('input#project_visibility_visible');
-      // When closing the new project modal, clear its input vals
-      // and potential errors
-      newProjectModalForm.clearFormErrors();
+    var newProjectModal = '#new-project-modal';
 
-      // Clear input fields
-      newProjectModalForm.clearFormFields();
-      teamSelect.val(0);
-      teamSelect.selectpicker('refresh');
-
-      teamHidden.prop('checked', true);
-      teamHidden.attr('checked', 'checked');
-      teamHidden.parent().addClass('active');
-      teamVisible.prop('checked', false);
-      teamVisible.parent().removeClass('active');
-    }).on('show.bs.modal', function() {
-      var teamSelect = newProjectModalForm.find('select#project_team_id');
-      teamSelect.selectpicker('refresh');
-    });
-
-    newProjectModalForm.off()
-      .on('ajax:beforeSend', function() {
-        animateSpinner(newProjectModalBody);
-      })
-      .on('ajax:success', function(ev, data) {
-        projectsChanged = true;
-        refreshCurrentView();
-        newProjectModal.modal('hide');
+    // Modal's submit handler function
+    $(toolbarWrapper)
+      .on('ajax:success', newProjectModal, function(ev, data) {
+        $(newProjectModal).modal('hide');
         HelperModule.flashAlertMsg(data.message, 'success');
+        refreshCurrentView();
       })
-      .on('ajax:error', function(jqxhr, status) {
-        $(this).renderFormErrors('project', status.responseJSON);
-      })
-      .on('ajax:complete', function() {
-        animateSpinner(newProjectModalBody, false);
+      .on('ajax:error', function(ev, data) {
+        $(this).renderFormErrors('project', data.responseJSON);
       });
 
-    newProjectBtn.off().click(function() {
-      // Show the modal
-      newProjectModal.modal('show');
-
-      return false;
-    });
+    $(toolbarWrapper)
+      .on('ajax:success', '.new-project-btn', function(ev, data) {
+        // Add and show modal
+        $(toolbarWrapper).append($.parseHTML(data.html));
+        $(newProjectModal).modal('show');
+        $(newProjectModal).find("input[type='text']").focus();
+        // Remove modal when it gets closed
+        $(newProjectModal).on('hidden.bs.modal', function() {
+          $(newProjectModal).remove();
+        });
+      });
   }
 
-  // init project archive/restore function
+  // init project toolbar archive/restore function
+  function initArchiveToolbarButton() {
+    $(toolbarWrapper)
+      .on('ajax:before', '.archive-projects-form', function() {
+        let archiveForm = $(this);
+        archiveForm.find('input[name="projects_ids[]"]').remove();
+        selectedProjects.forEach(function(id) {
+          $('<input>').attr({
+            type: 'hidden',
+            name: 'projects_ids[]',
+            value: id
+          }).appendTo(archiveForm);
+        });
+      })
+      .on('ajax:success', '.archive-projects-form', function(ev, data) {
+        HelperModule.flashAlertMsg(data.message, 'success');
+        // Project saved, reload view
+        refreshCurrentView();
+      })
+      .on('ajax:error', '.archive-projects-form', function(ev, data) {
+        HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+      });
+  }
+
+  // init project card archive/restore function
   function initArchiveRestoreButton(el) {
     el.find('form.edit_project').off()
       .on('ajax:success', function(ev, data) {
-        projectsChanged = true;
         HelperModule.flashAlertMsg(data.message, 'success');
         // Project saved, reload view
         refreshCurrentView();
@@ -173,10 +166,12 @@
    * Initialize the JS for export projects modal to work.
    */
   function initExportProjectsModal() {
-    exportProjectsBtn.off('click').click(function() {
+    $(toolbarWrapper).on('click', exportProjectsBtn, function(ev) {
+      ev.stopPropagation();
+      ev.preventDefault();
       // Load HTML to refresh users list
       $.ajax({
-        url: exportProjectsBtn.data('export-projects-modal-url'),
+        url: $(exportProjectsBtn).data('export-projects-modal-url'),
         type: 'GET',
         dataType: 'json',
         data: {
@@ -194,11 +189,11 @@
           if (data.status === 'error') {
             $('#export-projects-modal-close').show();
             $('#export-projects-modal-cancel').hide();
-            exportProjectsSubmit.hide();
+            $(exportProjectsSubmit).hide();
           } else {
             $('#export-projects-modal-close').hide();
             $('#export-projects-modal-cancel').show();
-            exportProjectsSubmit.show();
+            $(exportProjectsSubmit).show();
           }
           // Show the modal
           exportProjectsModal.modal('show');
@@ -218,9 +213,9 @@
 
   function initExportProjects() {
     // Submit the export projects
-    exportProjectsSubmit.off('click').click(function() {
+    $(exportProjectsSubmit).off('click').click(function() {
       $.ajax({
-        url: exportProjectsSubmit.data('export-projects-submit-url'),
+        url: $(exportProjectsSubmit).data('export-projects-submit-url'),
         type: 'POST',
         dataType: 'json',
         data: {
@@ -305,7 +300,7 @@
     });
   }
 
-  function refreshProjectsToolbar() {
+  function updateProjectsToolbar() {
     let projectsToolbar = $('#projectsToolbar');
 
     if (selectedProjects.length === 0 && selectedProjectFolders.length === 0) {
@@ -314,17 +309,23 @@
     } else if (selectedProjects.length + selectedProjectFolders.length === 1) {
       projectsToolbar.find('.new-object-actions').addClass('hidden');
       projectsToolbar.find('.single-object-action, .multiple-object-action').removeClass('hidden');
+      if (selectedProjectFolders.length === 1) {
+        projectsToolbar.find('.project-only-action').addClass('hidden');
+      }
     } else {
       projectsToolbar.find('.new-object-actions').addClass('hidden');
       projectsToolbar.find('.single-object-action').addClass('hidden');
       projectsToolbar.find('.multiple-object-action').removeClass('hidden');
+      if (selectedProjectFolders.length > 0) {
+        projectsToolbar.find('.project-only-action').addClass('hidden');
+      }
     }
   }
 
   $('#wrapper').on('click', '.project-folder-link', function(event) {
     event.preventDefault();
     event.stopPropagation();
-    let viewContainer = $('#cards-wrapper');
+    let viewContainer = $('#cardsWrapper');
     viewContainer.data('projects-cards-url', $(this).data('projectsCardsUrl'));
     history.replaceState({}, '', this.href);
     $('.sidebar-container').data('sidebar-url', $(this).data('sidebar-url'));
@@ -335,11 +336,6 @@
    * Initializes cards view
    */
   function init() {
-    newProjectModal = $('#new-project-modal');
-    newProjectModalForm = newProjectModal.find('form');
-    newProjectModalBody = newProjectModal.find('.modal-body');
-    newProjectBtn = $('.new-project-btn');
-
     projectActionsModal = $('#project-actions-modal');
     projectActionsModalHeader = projectActionsModal.find('.modal-title');
     projectActionsModalBody = projectActionsModal.find('.modal-body');
@@ -348,8 +344,6 @@
     exportProjectsModal = $('#export-projects-modal');
     exportProjectsModalHeader = exportProjectsModal.find('.modal-title');
     exportProjectsModalBody = exportProjectsModal.find('.modal-body');
-    exportProjectsBtn = $('.export-projects-btn');
-    exportProjectsSubmit = $('#export-projects-modal-submit');
 
     updateSelectedCards();
     initNewProjectFolderModal();
@@ -357,12 +351,12 @@
     initManageUsersModal();
     initExportProjectsModal();
     initExportProjects();
+    initArchiveToolbarButton();
 
     initFormSubmitLinks($('.project-card'));
     initArchiveRestoreButton($('.project-card'));
-    initUsersEditLink($('.project-card'));
 
-    $('#cards-wrapper').on('click', '.folder-card-selector', function() {
+    $('#cardsWrapper').on('click', '.folder-card-selector', function() {
       let folderCard = $(this).closest('.folder-card');
       let folderId = folderCard.data('id');
       let index = $.inArray(folderId, selectedProjectFolders);
@@ -370,16 +364,16 @@
       // If checkbox is checked and row ID is not in list of selected folder IDs
       if (this.checked && index === -1) {
         selectedProjectFolders.push(folderId);
-        exportProjectsBtn.removeAttr('disabled');
+        $(exportProjectsBtn).removeAttr('disabled');
       // Otherwise, if checkbox is not checked and ID is in list of selected IDs
       } else if (!this.checked && index !== -1) {
         selectedProjectFolders.splice(index, 1);
       }
 
-      refreshProjectsToolbar();
+      updateProjectsToolbar();
     });
 
-    $('#cards-wrapper').on('click', '.project-card-selector', function() {
+    $('#cardsWrapper').on('click', '.project-card-selector', function() {
       let projectsToolbar = $('#projectsToolbar');
       let projectCard = $(this).closest('.project-card');
       let projectId = projectCard.data('id');
@@ -390,14 +384,14 @@
       if (this.checked && index === -1) {
         $(this).closest('.panel-project').addClass('selected');
         selectedProjects.push(projectId);
-        exportProjectsBtn.removeAttr('disabled');
+        $(exportProjectsBtn).removeAttr('disabled');
       // Otherwise, if checkbox is not checked and ID is in list of selected IDs
       } else if (!this.checked && index !== -1) {
         $(this).closest('.panel-project').removeClass('selected');
         selectedProjects.splice(index, 1);
       }
 
-      refreshProjectsToolbar();
+      updateProjectsToolbar();
 
       selectedProjects.forEach(function(id) {
         if ($('#projects-cards-view').find(`.panel-project[data-id="${id}"]`).hasClass('project-folder')) {
@@ -464,22 +458,24 @@
       });
     }
 
-    $('.project-actions .edit-btn').on('click', function(e) {
+    $(toolbarWrapper).on('click', '.edit-btn', function(ev) {
       var editUrl = $(`.project-card[data-id=${selectedProjects[0]}]`).data('edit-url') ||
         $(`.folder-card[data-id=${selectedProjectFolders[0]}]`).data('edit-url');
-      e.preventDefault();
+      ev.stopPropagation();
+      ev.preventDefault();
       loadEditModal(editUrl);
     });
 
-    $('.projects-container').on('click', '.edit-project-btn', function(e) {
+    $('.projects-container').on('click', '.edit-project-btn', function(ev) {
       var editUrl = $(this).attr('href');
-      e.preventDefault();
+      ev.stopPropagation();
+      ev.preventDefault();
       loadEditModal(editUrl);
     });
   }
 
   function loadCardsView() {
-    var viewContainer = $('#cards-wrapper');
+    var viewContainer = $('#cardsWrapper');
     // animateSpinner(viewContainer, true);
 
     $.ajax({
@@ -498,13 +494,14 @@
         archived_on_to: archivedOnToFilter
       },
       success: function(data) {
-        $('#breadcrumbs-wrapper').html(data.breadcrumbs_html);
+        $('#breadcrumbsWrapper').html(data.breadcrumbs_html);
+        $('#toolbarWrapper').html(data.toolbar_html);
         viewContainer.data('projects-cards-url', data.projects_cards_url);
         viewContainer.find('.card, .projects-group').remove();
         viewContainer.append(data.cards_html);
         selectedProjects.length = 0;
         selectedProjectFolders.length = 0;
-        refreshProjectsToolbar();
+        updateProjectsToolbar();
         init();
       },
       error: function() {
@@ -521,9 +518,9 @@
       let $btn = $(this);
       $('.projects-view-mode').removeClass('active');
       if ($btn.hasClass('view-switch-cards')) {
-        $('#cards-wrapper').removeClass('list');
+        $('#cardsWrapper').removeClass('list');
       } else if ($btn.hasClass('view-switch-list')) {
-        $('#cards-wrapper').addClass('list');
+        $('#cardsWrapper').addClass('list');
       }
       $btn.addClass('active');
     });

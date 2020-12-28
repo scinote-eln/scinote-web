@@ -16,14 +16,14 @@
 
   <span style="display: none;" data-hook="projects-index-html"></span>
 
-  <%= render partial: 'projects/index/modals/new_project' %>
   <%= render partial: 'projects/index/modals/edit_modal' %>
   <%= render partial: 'projects/index/modals/manage_users' %>
   <%= render partial: 'projects/index/modals/export_projects' %>
 
   <div class="projects-container">
-    <%= render partial: 'projects/index/toolbar' %>
-    <div class="cards-wrapper" id="cards-wrapper" data-projects-cards-url="<%= @current_folder ? project_folder_cards_url(@current_folder) : cards_projects_url %>">
+    <div id="toolbarWrapper">
+    </div>
+    <div class="cards-wrapper" id="cardsWrapper" data-projects-cards-url="<%= @current_folder ? project_folder_cards_url(@current_folder) : cards_projects_url %>">
       <div class="table-header">
         <div class="table-header-cell select-all-checkboxes">
           <div class="sci-checkbox-container">

@@ -227,7 +227,7 @@ Rails.application.routes.draw do
       resource :recent_works, module: 'dashboard', only: [:show]
     end
 
-    resources :projects, except: [:new, :destroy] do
+    resources :projects, except: [:destroy] do
       resources :user_projects, path: '/users',
                 only: [:create, :index, :update, :destroy]
       resources :project_comments,
@@ -296,6 +296,7 @@ Rails.application.routes.draw do
       collection do
         get 'cards', to: 'projects#cards'
         get 'users_filter'
+        post 'archive_group'
       end
     end
 

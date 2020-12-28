@@ -1,5 +1,4 @@
 <% cache [current_user, project] do %>
-  <% active = !project.archived %>
   <div class="dropdown project-actions-menu <%= 'new-comments' if has_unseen_comments?(project) %>">
     <button class="btn btn-light dropdown-toggle icon-btn" type="button" id="projectActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
       <i class="fas fa-ellipsis-h"></i>
@@ -41,7 +40,7 @@
             data-turbolinks="false"
             data-submit-form="<%= project_form.options[:html][:id] %>">
             <i class="fas fa-undo"></i>
-            <span><%= t ('projects.index.restore_option') %></span>
+            <span><%= t('projects.index.restore_option') %></span>
           </a>
         </li>
       <% end %>

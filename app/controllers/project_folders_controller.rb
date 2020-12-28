@@ -4,12 +4,12 @@ class ProjectFoldersController < ApplicationController
   include InputSanitizeHelper
 
   before_action :load_current_folder, only: %i(new)
-  before_action :load_folder, only: %i(edit update)
+  before_action :load_project_folder, only: %i(edit update)
   before_action :check_create_permissions, only: %i(new create)
-  before_action :check_manage_permissions, only: %i(move_to)
+  before_action :check_manage_permissions, only: %i(archive move_to)
 
   def new
-    @project_folder = ProjectFolder.new
+    @project_folder = current_team.project_folders.new(parent_folder: @current_folder)
     respond_to do |format|
       format.json do
         render json: {
@@ -59,18 +59,18 @@ class ProjectFoldersController < ApplicationController
   def edit
     render json: {
       html: render_to_string(partial: 'projects/index/modals/edit_folder_contents.html.erb',
-                               locals: { folder: @folder })
+                               locals: { folder: @project_folder })
 
     }
   end
 
   def update
-    if @folder.update(project_folders_params)
-      log_activity(:rename_project_folder, @folder, project_folder: @folder.id)
-      render json: { message: t('projects.update.success_flash', name: escape_input(@folder.name)) }
+    if @project_folder.update(project_folders_params)
+      log_activity(:rename_project_folder, @project_folder, project_folder: @project_folder.id)
+      render json: { message: t('projects.update.success_flash', name: escape_input(@project_folder.name)) }
     else
-      render json: { message: t('projects.update.error_flash', name: escape_input(@folder.name)),
-                     errors: @folder.errors }, status: :unprocessable_entity
+      render json: { message: t('projects.update.error_flash', name: escape_input(@project_folder.name)),
+                     errors: @project_folder.errors }, status: :unprocessable_entity
     end
   end
 
@@ -82,10 +82,10 @@ class ProjectFoldersController < ApplicationController
 
   private
 
-  def load_folder
-    @folder = current_team.project_folders.find_by(id: params[:id])
+  def load_project_folder
+    @project_folder = current_team.project_folders.find_by(id: params[:id])
 
-    render_404 unless @folder
+    render_404 unless @project_folder
   end
 
   def load_current_folder
