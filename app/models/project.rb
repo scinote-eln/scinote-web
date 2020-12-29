@@ -46,10 +46,8 @@ class Project < ApplicationRecord
   scope :visible_to, (lambda do |user, team|
                         unless user.is_admin_of_team?(team)
                           left_outer_joins(:user_projects)
-                          .where(
-                            'visibility = 1 OR user_projects.user_id = :id',
-                            id: user.id
-                          ).group(:id)
+                          .where('visibility = 1 OR user_projects.user_id = :id', id: user.id)
+                          .group(:id)
                         end
                       end)
 
