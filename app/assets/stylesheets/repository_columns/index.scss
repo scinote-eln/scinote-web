@@ -101,6 +101,7 @@
   }
 
   .repo-columns-list {
+    @include font-button;
     height: 390px;
     margin-bottom: 0;
     overflow-y: auto;
