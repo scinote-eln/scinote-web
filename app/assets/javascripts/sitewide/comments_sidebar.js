@@ -13,6 +13,11 @@ var CommentsSidebar = (function() {
       $(SIDEBAR).removeClass('loading');
       $(SIDEBAR).find('.comments-subject-title').text(result.object_name);
       $(SIDEBAR).find('.comments-list').html(result.comments);
+      if (result.comment_addable) {
+        $(SIDEBAR).find('.comment-input-container').removeClass('hidden');
+      } else {
+        $(SIDEBAR).find('.comment-input-container').addClass('hidden');
+      }
     });
   }
 

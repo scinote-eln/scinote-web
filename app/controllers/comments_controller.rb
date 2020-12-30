@@ -17,6 +17,7 @@ class CommentsController < ApplicationController
 
     render json: {
       object_name: @commentable.name,
+      comment_addable: comment_addable?(@commentable),
       comments: render_to_string(partial: 'shared/comments/comments_list.html.erb',
                                  locals: { comments: comments })
     }
