@@ -135,11 +135,11 @@
         <span class="caret"></span>
       </button>
       <ul id="sortMenuDropdown" class="dropdown-menu sort-projects-menu" aria-labelledby="sortMenu">
-        <% %w(new old atoz ztoa arch_new arch_old).each_with_index do |sort, i| %>
+        <% %w(new old atoz ztoa archived_new archived_old).each_with_index do |sort, i| %>
           <% if i.even? && i.positive? %>
             <li class="divider" <%= i > 3 ? 'data-view-mode=archived' : '' %>></li>
           <% end %>
-          <li <%= %w(arch_new arch_old).include?(sort) ? 'data-view-mode=archived' : '' %>>
+          <li <%= %w(archived_new archived_old).include?(sort) ? 'data-view-mode=archived' : '' %>>
             <a class="<%= 'selected' if @current_sort == sort %>"
                data-sort="<%= sort %>" >
               <%= t("general.sort.#{sort}_html") %>
@@ -158,7 +158,7 @@
         <i class="fas fa-list button-icon"></i> <%= t('projects.index.header.table') %>
       </li>
 
-      <li class="view-switch-active archive-switch" data-view-mode="archived" data-url="<%= projects_path(mode: 'active') %>">
+      <li class="view-switch-active archive-switch" data-view-mode="archived" data-url="<%= projects_path %>">
         <i class="fas fa-rocket button-icon"></i> <%= t('projects.index.header.active_projects') %>
       </li>
 

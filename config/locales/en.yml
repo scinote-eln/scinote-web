@@ -438,14 +438,6 @@ en:
       modal_text_p3_html: "Please note that the number of exports is limited to %{limit} requests per day. After you confirm this export you will have %{num} left."
       modal_submit: "Export"
       success_flash: "Export request received. Your export request is being processed."
-    table:
-      status: "Status"
-      name: "Project name"
-      start: "Start date"
-      visibility: "Visible to"
-      users: "Users"
-      experiments: "Experiments"
-      tasks: "Tasks"
     activity:
       visibility_hidden: "Project members only"
       visibility_visible: "All team members"
@@ -2298,8 +2290,8 @@ en:
       old_html: "Started first"
       atoz_html: "Name A to Z"
       ztoa_html: "Name Z to A"
-      arch_new_html: "Archived last"
-      arch_old_html: "Archived first"
+      archived_new_html: "Archived last"
+      archived_old_html: "Archived first"
     sort_new:
       new: "Newest"
       old: "Oldest"
