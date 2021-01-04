@@ -57,6 +57,19 @@ module CommentHelper
     end
   end
 
+  def comment_addable?(object)
+    case object.class.name
+    when 'MyModule'
+      can_create_comments_in_module?(object)
+    when 'Step', 'Result'
+      can_create_comments_in_module?(object.my_module)
+    when 'Project'
+      can_create_comments_in_project?(object)
+    else
+      false
+    end
+  end
+
   def comment_editable?(comment)
     case comment.type
     when 'TaskComment', 'StepComment', 'ResultComment'
