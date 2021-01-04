@@ -68,7 +68,6 @@ class Users::SessionsController < Devise::SessionsController
     flash[:system_notification_modal] = true
   end
 
-
   def authenticate_with_two_factor
     user = User.find_by(id: session[:otp_user_id])
 
@@ -83,7 +82,7 @@ class Users::SessionsController < Devise::SessionsController
       sign_in(user)
       generate_demo_project
       flash[:notice] = t('devise.sessions.signed_in')
-      redirect_to root_path
+      redirect_to stored_location_for(:user) || root_path
     else
       flash.now[:alert] = t('devise.sessions.2fa.error_message')
       render :two_factor_auth
@@ -126,6 +125,7 @@ class Users::SessionsController < Devise::SessionsController
 
     if user&.two_factor_auth_enabled?
       session[:otp_user_id] = user.id
+      store_location_for(:user, request.original_fullpath) if request.get?
       render :two_factor_auth
     end
   end
