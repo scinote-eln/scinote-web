@@ -7,19 +7,12 @@ class ProjectsOverviewService
     @current_folder = folder
     @params = params
     @view_state = @team.current_view_state(@user)
-
-    # Update view_mode if changed
-    if @view_state.state.dig('projects', 'view_mode') != @params[:filter] &&
-       %w(active archived).include?(@params[:filter])
-      @view_state.state['projects']['view_mode'] = @params[:filter]
-      @view_state.save!
-    end
     @view_mode = @view_state.state.dig('projects', 'view_mode')
 
     # Update sort if chanhed
     @sort = @view_state.state.dig('projects', @view_mode, 'sort')
     if @params[:sort] && @sort != @params[:sort] &&
-       %w(new old atoz ztoa arch_old arch_new).include?(@params[:sort])
+       %w(new old atoz ztoa archived_old archived_new).include?(@params[:sort])
       @view_state.state['projects'].merge!(Hash[@view_mode, { 'sort': @params[:sort] }.stringify_keys])
       @view_state.save!
       @sort = @view_state.state.dig('projects', @view_mode, 'sort')
@@ -88,44 +81,12 @@ class ProjectsOverviewService
   end
 
   def fetch_project_records
-    due_modules =
-      MyModule.active
-              .uncomplete
-              .overdue
-              .or(MyModule.one_day_prior)
-              .distinct
-              .joins(experiment: :project)
-              .joins('LEFT OUTER JOIN user_projects ON '\
-                'user_projects.project_id = projects.id')
-              .left_outer_joins(:user_my_modules)
-              .where('projects.id': @team.projects)
-              .where('user_my_modules.user_id = :user_id '\
-                'OR (user_projects.role = 0 '\
-                'AND user_projects.user_id = :user_id)', user_id: @user.id)
-              .select('my_modules.id', 'my_modules.experiment_id')
-    projects = @team.projects.joins(
-      'LEFT OUTER JOIN experiments ON experiments.project_id = projects.id '\
-      'AND experiments.archived = false'
-    ).joins(
-      "LEFT OUTER JOIN (#{due_modules.to_sql}) due_modules "\
-      "ON due_modules.experiment_id = experiments.id"
-    ).joins(
-      'LEFT OUTER JOIN user_projects ON user_projects.project_id = projects.id'
-    ).left_outer_joins(:project_comments)
-
-    # Only admins see all projects of the team
-    unless @user.is_admin_of_team?(@team)
-      projects = projects.where(
-        'visibility = 1 OR user_projects.user_id = :user_id', user_id: @user.id
-      )
-    end
-    projects
-      .select('projects.*')
-      .select('(SELECT COUNT(DISTINCT user_projects.id) FROM user_projects '\
-        'WHERE user_projects.project_id = projects.id) AS user_count')
-      .select('COUNT(DISTINCT comments.id) AS comment_count')
-      .select('COUNT(DISTINCT due_modules.id) AS notification_count')
-      .group('projects.id')
+    @team.projects
+         .visible_to(@user, @team)
+         .left_outer_joins(:project_comments)
+         .select('projects.*')
+         .select('COUNT(DISTINCT comments.id) AS comment_count')
+         .group('projects.id')
   end
 
   def fetch_project_folder_records
@@ -168,9 +129,9 @@ class ProjectsOverviewService
       records.order(:name)
     when 'ztoa'
       records.order(name: :desc)
-    when 'arch_old'
+    when 'archived_old'
       records.order(archived_on: :asc)
-    when 'arch_new'
+    when 'archived_new'
       records.order(archived_on: :desc)
     else
       records
@@ -187,9 +148,9 @@ class ProjectsOverviewService
       records.sort_by { |c| c.name.downcase }
     when 'ztoa'
       records.sort_by { |c| c.name.downcase }.reverse!
-    when 'arch_old'
+    when 'archived_old'
       records.sort_by(&:archived_on)
-    when 'arch_new'
+    when 'archived_new'
       records.sort_by(&:archived_on).reverse!
     end
   end

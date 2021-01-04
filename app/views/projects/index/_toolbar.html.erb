@@ -16,7 +16,8 @@
         <% if current_team && can_create_project_folders?(current_team) %>
           <a href="<%= new_project_folder_path(project_folder_id: @current_folder) %>"
              data-remote="true"
-             class="btn btn-secondary new-project-folder-btn">
+             class="btn btn-secondary new-project-folder-btn"
+             data-view-mode="active">
             <span class="fas fa-folder" aria-hidden="true"></span>
             <span class="hidden-xs"><%= t('projects.index.new_folder') %></span>
           </a>
