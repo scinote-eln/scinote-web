@@ -3,13 +3,17 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title"><%= t('repository_row.modal_info.head_title', repository_row: @repository_row.name) %></h4>
+        <h4 class="modal-title">
+          <%= t('repository_row.modal_info.head_title', repository_row: @repository_row.name) %>
+          <%= @repository_row.archived? ? I18n.t('atwho.res.archived') : '' %>
+        </h4>
       </div>
 
       <div class="modal-body">
         <ol class="breadcrumb breadcrumb-repository">
           <span class="fas fa-list-alt" aria-hidden="true"></span>
           <%= t('repositories.repository', name: @repository_row.repository.name) %>
+          <%= @repository_row.repository.archived? ? I18n.t('atwho.res.archived') : '' %>
         </ol>
         <p>
           <span>
