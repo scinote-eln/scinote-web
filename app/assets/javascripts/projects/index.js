@@ -543,6 +543,21 @@
     });
   }
 
+  function appliedFiltersMark() {
+    let filtersEnabled = projectsViewSearch
+      || createdOnFromFilter
+      || createdOnToFilter
+      || (membersFilter && membersFilter.length !== 0)
+      || lookInsideFolders
+      || archivedOnFromFilter
+      || archivedOnToFilter;
+    if (filtersEnabled) {
+      $('.filter-container').addClass('filters-applied');
+    } else {
+      $('.filter-container').removeClass('filters-applied');
+    }
+  }
+
   function initProjectsFilters() {
     let $projectsFilter = $('.projects-index .projects-filters');
     let $membersFilter = $('.members-filter', $projectsFilter);
@@ -645,6 +660,7 @@
       archivedOnFromFilter = $archivedOnFromFilter.val();
       archivedOnToFilter = $archivedOnToFilter.val();
 
+      appliedFiltersMark();
       refreshCurrentView();
     });
 
