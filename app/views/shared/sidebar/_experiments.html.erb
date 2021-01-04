@@ -8,7 +8,7 @@
   </li>
   <% project.sorted_experiments(@current_sort, archived).each do |experiment| %>
     <li class="sidebar-leaf">
-      <%= link_to experiment.name, experiment_action_to_link_to(experiment), class: 'sidebar-link' %>
+      <%= link_to experiment.name, canvas_experiment_path(experiment), class: 'sidebar-link' %>
     </li>
   <% end %>
   <% unless archived %>
