@@ -10,6 +10,7 @@ class MyModule < ApplicationRecord
 
   before_create :create_blank_protocol
   before_create :assign_default_status_flow
+  before_validation :archiving_and_restoring_extras, on: :update, if: :archived_changed?
   around_save :exec_status_consequences, if: :my_module_status_id_changed?
   after_save -> { experiment.workflowimg.purge },
              if: -> { (saved_changes.keys & %w(x y experiment_id my_module_group_id input_id output_id archived)).any? }
@@ -130,44 +131,6 @@ class MyModule < ApplicationRecord
 
   def archived_branch?
     archived? || experiment.archived_branch?
-  end
-
-  # Removes connections with other modules
-  def archive(current_user)
-    self.x = 0
-    self.y = 0
-    # Remove association with module group.
-    self.my_module_group = nil
-
-    was_archived = false
-
-    MyModule.transaction do
-      was_archived = super
-      # Remove all connection between modules.
-      was_archived = Connection.where(input_id: id).destroy_all if was_archived
-      was_archived = Connection.where(output_id: id).destroy_all if was_archived
-      raise ActiveRecord::Rollback unless was_archived
-    end
-    was_archived
-  end
-
-  # Similar as super restore, but also calculate new module position
-  def restore(current_user)
-    restored = false
-
-    # Calculate new module position
-    new_pos = get_new_position
-    self.x = new_pos[:x]
-    self.y = new_pos[:y]
-
-    MyModule.transaction do
-      restored = super
-
-      unless restored
-        raise ActiveRecord::Rollback
-      end
-    end
-    restored
   end
 
   def repository_rows_count(repository)
@@ -523,6 +486,24 @@ class MyModule < ApplicationRecord
         consequence.public_send(status_changing_direction, self)
       end
       update!(status_changing: false)
+    end
+  end
+
+  def archiving_and_restoring_extras
+    if archived?
+      # Removes connections with other modules
+      self.x = 0
+      self.y = 0
+      # Remove association with module group.
+      self.my_module_group = nil
+      # Remove all connection between modules.
+      Connection.where(input_id: id).destroy_all
+      Connection.where(output_id: id).destroy_all
+    else
+      # Calculate new module position
+      new_pos = get_new_position
+      self.x = new_pos[:x]
+      self.y = new_pos[:y]
     end
   end
 end

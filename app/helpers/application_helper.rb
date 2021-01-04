@@ -40,6 +40,28 @@ module ApplicationHelper
     controller_name == 'my_modules' && !@repository.nil?
   end
 
+  def flash_alert_class(type)
+    case type
+    when 'success'
+      'alert-success'
+    when 'warning'
+      'alert-warning'
+    when 'error'
+      'alert-danger'
+    else
+      'alert-info'
+    end
+  end
+
+  def flash_icon_class(type)
+    case type
+    when 'error', 'warning'
+      'fa-exclamation-triangle'
+    else
+      'fa-check-circle'
+    end
+  end
+
   def smart_annotation_notification(options = {})
     title = options.fetch(:title) { :title_must_be_present }
     message = options.fetch(:message) { :message_must_be_present }

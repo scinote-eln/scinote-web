@@ -763,7 +763,8 @@ en:
       archive_timelabel: "archived on %{date}"
       restored_flash: "Task %{module} restored successfully!"
     restore_group:
-      success_flash: "<strong>%{number}</strong> task(s) successfully restored."
+      success_flash_html: "<strong>%{number}</strong> task(s) successfully restored."
+      partial_success_flash_html: "Only restored <strong>%{number}</strong> task(s)."
       error_flash: "Failed to restore task(s)."
     protocols:
       head_title: "%{project} | %{module} | Protocols"
@@ -1069,7 +1070,7 @@ en:
           invite_users_details: "to team %{team}."
           contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
       update:
-        success_flash: "Project successfully updated."
+        success_flash: "Experiment successfully updated."
     module_archive:
       head_title: "%{experiment} | Archived tasks"
       no_archived_modules: "No archived tasks!"
