@@ -28,6 +28,7 @@ var FilePreviewModal = (function() {
       e.stopPropagation();
       $.get($(this).attr('href'), { gallery: $(this).data('gallery-elements') }, function(result) {
         $('#filePreviewModal .modal-content').html(result.html);
+        PdfPreview.initCanvas();
       });
     });
   }
