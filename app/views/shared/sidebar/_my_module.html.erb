@@ -1,6 +1,10 @@
 <ul class="sidebar-branch">
   <li class="sidebar-leaf">
-    <%= link_to t('sidebar.my_module.back_button'), canvas_experiment_path(@my_module.experiment), class: 'sidebar-link back-button' %>
+    <% if @my_module.archived_branch? %>
+      <%= link_to t('sidebar.my_module.back_button_archived'), module_archive_experiment_url(@my_module.experiment), class: 'sidebar-link back-button' %>
+    <% else %>
+      <%= link_to t('sidebar.my_module.back_button'), canvas_experiment_path(@my_module.experiment), class: 'sidebar-link back-button' %>
+    <% end %>
   </li>
   <li class="sidebar-leaf">
     <%= link_to t('sidebar.my_module.steps'),
@@ -18,9 +22,11 @@
         class: "sidebar-link #{'selected' if is_module_activities?}" %>
   </li>
   <li data-hook="sidebar-my-module"></li>
-  <li class="sidebar-leaf">
-    <%= link_to t('sidebar.my_module.archive'),
-        archive_my_module_url(@my_module),
-        class: "sidebar-link #{'selected' if is_module_archive?}" %>
-  </li>
+  <% unless @my_module.archived_branch? %>
+    <li class="sidebar-leaf">
+      <%= link_to t('sidebar.my_module.archive'),
+          archive_my_module_url(@my_module),
+          class: "sidebar-link #{'selected' if is_module_archive?}" %>
+    </li>
+  <% end %>
 </ul>
