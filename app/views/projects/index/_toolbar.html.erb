@@ -1,49 +1,49 @@
 <div id="projectsToolbar" class="projects-toolbar">
-
-  <form class="form-inline" action="<%= projects_path %>">
-
-    <div class="form-group">
-
-      <div class="new-object-actions pull-left">
-        <!-- new project button -->
-        <% if current_team && can_create_projects?(current_team) %>
-          <a href="#" class="btn btn-primary new-project-btn" data-view-mode="active">
-            <span class="fas fa-plus" aria-hidden="true"></span>
-            <span class="hidden-xs"><%= t('projects.index.new') %></span>
-          </a>
+  <div class="form-inline">
+    <div class="new-object-actions">
+      <!-- new project button -->
+      <% if current_team && can_create_projects?(current_team) %>
+        <%= link_to new_project_path(project_folder_id: @current_folder),
+                    class: 'btn btn-primary new-project-btn',
+                    remote: true do %>
+          <span class="fas fa-plus" aria-hidden="true"></span>
+          <span class="hidden-xs"><%= t('projects.index.new') %></span>
         <% end %>
-        <!-- new project folder button -->
-        <% if current_team && can_create_project_folders?(current_team) %>
-          <a href="<%= new_project_folder_path(project_folder_id: @current_folder) %>"
-             data-remote="true"
-             class="btn btn-secondary new-project-folder-btn"
-             data-view-mode="active">
-            <span class="fas fa-folder" aria-hidden="true"></span>
-            <span class="hidden-xs"><%= t('projects.index.new_folder') %></span>
-          </a>
-        <% end %>
-      </div>
-
-      <div class="project-actions pull-left">
-        <a href="#" class="btn btn-secondary edit-btn single-object-action hidden"  data-view-mode="active">
+      <% end %>
+      <!-- new project folder button -->
+      <% if current_team && can_create_project_folders?(current_team) %>
+        <%= link_to new_project_folder_path(project_folder_id: @current_folder),
+                    class: 'btn btn-secondary new-project-folder-btn',
+                    remote: true do %>
           <span class="fas fa-folder" aria-hidden="true"></span>
-          <span class="hidden-xs"><%= t('projects.index.edit_button') %></span>
-        </a>
-        <a href="#" class="btn btn-secondary move-projects-btn multiple-object-action hidden">
-          <span class="fas fa-arrow-right" aria-hidden="true"></span>
-          <span class="hidden-xs"><%= t('projects.index.move_button') %></span>
-        </a>
-        <a href="#" class="btn btn-secondary archive-projects-btn multiple-object-action project-only-action hidden" data-view-mode="active">
-          <span class="fas fa-archive" aria-hidden="true"></span>
-          <span class="hidden-xs"><%= t('projects.index.archive_button') %></span>
-        </a>
-        <!-- export projects button -->
-        <a href="#" class="btn btn-secondary export-projects-btn multiple-object-action project-only-action hidden"
-                    data-export-projects-modal-url="<%= export_projects_modal_team_path(current_team) %>">
-          <span class="fas fa-file-export"></span>
-          <span class="hidden-xs-custom"><%= t('projects.export_projects.export_button') %></span>
-        </a>
-      </div>
+          <span class="hidden-xs"><%= t('projects.index.new_folder') %></span>
+        <% end %>
+      <% end %>
     </div>
-  </form>
+
+    <div class="project-actions">
+      <a href="#" class="btn btn-secondary edit-btn single-object-action hidden" data-view-mode="active">
+        <span class="fas fa-folder" aria-hidden="true"></span>
+        <span class="hidden-xs"><%= t('projects.index.edit_button') %></span>
+      </a>
+      <a href="#" class="btn btn-secondary move-projects-btn multiple-object-action hidden">
+        <span class="fas fa-arrow-right" aria-hidden="true"></span>
+        <span class="hidden-xs"><%= t('projects.index.move_button') %></span>
+      </a>
+      <%= button_to archive_group_projects_path,
+                    class: 'btn btn-secondary archive-projects-btn multiple-object-action project-only-action hidden',
+                    form_class: 'archive-projects-form',
+                    remote: true,
+                    method: :post do %>
+        <span class="fas fa-archive" aria-hidden="true"></span>
+        <span class="hidden-xs"><%= t('projects.index.archive_button') %></span>
+      <% end %>
+      <!-- export projects button -->
+      <a href="#" class="btn btn-secondary export-projects-btn multiple-object-action hidden"
+                  data-export-projects-modal-url="<%= export_projects_modal_team_path(current_team) %>">
+        <span class="fas fa-file-export"></span>
+        <span class="hidden-xs-custom"><%= t('projects.export_projects.export_button') %></span>
+      </a>
+    </div>
+  </div>
 </div>

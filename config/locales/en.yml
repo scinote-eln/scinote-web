@@ -455,6 +455,9 @@ en:
     archive:
       success_flash: "Project <strong>%{name}</strong> successfully archived."
       error_flash: "Project <strong>%{name}</strong> not archived."
+    archive_group:
+      success_flash: "<strong>%{number}</strong> project(s) successfully archived."
+      error_flash: "Failed to arhive project(s)."
     restore:
       success_flash: "Project <strong>%{name}</strong> successfully restored."
       error_flash: "Project <strong>%{name}</strong> not restored."

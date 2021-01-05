@@ -8,9 +8,9 @@ class ProjectsController < ApplicationController
 
   before_action :switch_team_with_param, only: :index
   before_action :load_vars, only: %i(show edit update notifications experiment_archive sidebar)
-  before_action :load_current_folder, only: %i(index cards)
+  before_action :load_current_folder, only: %i(index cards new)
   before_action :check_view_permissions, only: %i(show notifications experiment_archive sidebar)
-  before_action :check_create_permissions, only: %i(create)
+  before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
   before_action :set_inline_name_editing, only: %i(show)
   before_action :load_exp_sort_var, only: %i(show experiment_archive)
@@ -32,6 +32,7 @@ class ProjectsController < ApplicationController
 
     if filters_included?
       render json: {
+        toolbar_html: render_to_string(partial: 'projects/index/toolbar.html.erb'),
         cards_html: render_to_string(
           partial: 'projects/index/team_projects_grouped_by_folder.html.erb',
           locals: { projects_by_folder: overview_service.grouped_by_folder_project_cards }
@@ -41,6 +42,7 @@ class ProjectsController < ApplicationController
       render json: {
         projects_cards_url: @current_folder ? project_folder_cards_url(@current_folder) : cards_projects_url,
         breadcrumbs_html: @current_folder ? render_to_string(partial: 'projects/index/breadcrumbs.html.erb') : '',
+        toolbar_html: render_to_string(partial: 'projects/index/toolbar.html.erb'),
         cards_html: render_to_string(
           partial: 'projects/index/team_projects.html.erb',
           locals: { cards: overview_service.project_and_folder_cards }
@@ -61,19 +63,31 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def new
+    @project = current_team.projects.new(project_folder: @current_folder)
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'projects/index/modals/new_project.html.erb'
+          )
+        }
+      end
+    end
+  end
+
   def create
-    @project = Project.new(project_params)
+    @project = current_team.projects.new(project_params)
     @project.created_by = current_user
     @project.last_modified_by = current_user
-    if current_team.id == project_params[:team_id].to_i &&
-       @project.save
+    if @project.save
       # Create user-project association
-      up = UserProject.new(
+      user_project = UserProject.new(
         role: :owner,
         user: current_user,
         project: @project
       )
-      up.save
+      user_project.save
       log_activity(:create_project)
 
       message = t('projects.create.success_flash', name: escape_input(@project.name))
@@ -137,7 +151,7 @@ class ProjectsController < ApplicationController
     if !return_error && @project.update(project_params)
       # Add activities if needed
 
-      log_activity(:change_project_visibility, visibility: message_visibility) if message_visibility.present?
+      log_activity(:change_project_visibility, @project, visibility: message_visibility) if message_visibility.present?
       log_activity(:rename_project) if message_renamed.present?
       log_activity(:archive_project) if project_params[:archived] == 'true'
       log_activity(:restore_project) if project_params[:archived] == 'false'
@@ -193,6 +207,28 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def archive_group
+    projects = current_team.projects.active.where(id: params[:projects_ids])
+    counter = 0
+    projects.each do |project|
+      next unless can_archive_project?(project)
+
+      project.transaction do
+        project.archive!(current_user)
+        log_activity(:archive_project, project)
+        counter += 1
+      rescue StandardError => e
+        Rails.logger.error e.message
+        raise ActiveRecord::Rollback
+      end
+    end
+    if counter.positive?
+      render json: { message: t('projects.archive_group.success_flash', number: counter) }
+    else
+      render json: { message: t('projects.archive_group.error_flash') }, status: :unprocessable_entity
+    end
+  end
+
   def show
     redirect_to action: :experiment_archive if @project.archived?
     # This is the "info" view
@@ -230,7 +266,7 @@ class ProjectsController < ApplicationController
   private
 
   def project_params
-    params.require(:project).permit(:name, :team_id, :visibility, :archived)
+    params.require(:project).permit(:name, :team_id, :visibility, :archived, :project_folder_id)
   end
 
   def load_vars
@@ -288,15 +324,16 @@ class ProjectsController < ApplicationController
     view_state.destroy unless view_state.valid?
   end
 
-  def log_activity(type_of, message_items = {})
-    message_items = { project: @project.id }.merge(message_items)
+  def log_activity(type_of, project = nil, message_items = {})
+    project ||= @project
+    message_items = { project: project.id }.merge(message_items)
 
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
-            subject: @project,
-            team: @project.team,
-            project: @project,
+            subject: project,
+            team: project.team,
+            project: project,
             message_items: message_items)
   end
 end
