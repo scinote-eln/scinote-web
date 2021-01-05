@@ -10,7 +10,7 @@ class ProjectsOverviewService
     @view_mode = @view_state.state.dig('projects', 'view_mode')
 
     # Update sort if chanhed
-    @sort = @view_state.state.dig('projects', @view_mode, 'sort')
+    @sort = @view_state.state.dig('projects', @view_mode, 'sort') || 'atoz'
     if @params[:sort] && @sort != @params[:sort] &&
        %w(new old atoz ztoa archived_old archived_new).include?(@params[:sort])
       @view_state.state['projects'].merge!(Hash[@view_mode, { 'sort': @params[:sort] }.stringify_keys])
