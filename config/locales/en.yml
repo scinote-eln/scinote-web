@@ -314,6 +314,8 @@ en:
         archived_projects: "Go to Archived projects"
       head_title: "Projects"
       navigation_title: "PROJECTS"
+      navigation_archived_projects: "Archived projects"
+      back_to_active_projects: "Back to active projects"
       breadcrumbs_root: "Projects"
       archive: "Archive"
       archived: "Archived"

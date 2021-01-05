@@ -23,7 +23,7 @@ class ProjectsController < ApplicationController
       view_state = current_team.current_view_state(current_user)
       @current_filter = view_state.state.dig('projects', 'filter')
       @current_view_mode = params[:mode] || :active
-      @current_sort = view_state.state.dig('projects', @current_view_mode, 'sort')
+      @current_sort = view_state.state.dig('projects', @current_view_mode.to_s, 'sort') || 'atoz'
     end
   end
 

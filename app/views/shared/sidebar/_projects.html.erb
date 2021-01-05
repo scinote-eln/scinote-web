@@ -1,3 +1,18 @@
  <ul class="sidebar-branch">
+  <% if params[:mode] == 'archived' %>
+    <li class="sidebar-leaf">
+      <%= link_to projects_path, class: "sidebar-link back-button" do %>
+        <%= t("projects.index.back_to_active_projects") %>
+      <% end %>
+    </li>
+  <% end %>
   <%= render partial: 'shared/sidebar/projects_tree_branch.html.erb', locals: { records: sidebar_folders_tree(team, current_user) } %>
+  <% if params[:mode] != 'archived' %>
+    <li class="sidebar-leaf">
+      <%= link_to projects_path(mode: :archived), class: "sidebar-link" do %>
+        <span class="fas fa-archive"></span>
+        <%= t("projects.index.navigation_archived_projects") %>
+      <% end %>
+    </li>
+  <% end %>
 </ul>

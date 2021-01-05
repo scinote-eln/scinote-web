@@ -7,6 +7,14 @@ class ProjectsOverviewService
     @current_folder = folder
     @params = params
     @view_state = @team.current_view_state(@user)
+
+    # Update view_mode if changed
+    if @view_state.state.dig('projects', 'view_mode') != @params[:filter] &&
+       %w(active archived).include?(@params[:filter])
+      @view_state.state['projects']['view_mode'] = @params[:filter]
+      @view_state.save!
+    end
+
     @view_mode = @view_state.state.dig('projects', 'view_mode')
 
     # Update sort if chanhed
