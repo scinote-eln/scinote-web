@@ -1,6 +1,6 @@
 <div id="projectsToolbar" class="projects-toolbar">
   <div class="form-inline">
-    <div class="new-object-actions">
+    <div class="project-actions">
       <!-- new project button -->
       <% if current_team && can_create_projects?(current_team) %>
         <%= link_to new_project_path(project_folder_id: @current_folder),
@@ -19,9 +19,6 @@
           <span class="hidden-xs"><%= t('projects.index.new_folder') %></span>
         <% end %>
       <% end %>
-    </div>
-
-    <div class="project-actions">
       <a href="#" class="btn btn-secondary edit-btn single-object-action hidden" data-view-mode="active">
         <span class="fas fa-folder" aria-hidden="true"></span>
         <span class="hidden-xs"><%= t('projects.index.edit_button') %></span>

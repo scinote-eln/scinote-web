@@ -305,15 +305,12 @@
 
     if (selectedProjects.length === 0 && selectedProjectFolders.length === 0) {
       projectsToolbar.find('.single-object-action, .multiple-object-action').addClass('hidden');
-      projectsToolbar.find('.new-object-actions').removeClass('hidden');
     } else if (selectedProjects.length + selectedProjectFolders.length === 1) {
-      projectsToolbar.find('.new-object-actions').addClass('hidden');
       projectsToolbar.find('.single-object-action, .multiple-object-action').removeClass('hidden');
       if (selectedProjectFolders.length === 1) {
         projectsToolbar.find('.project-only-action').addClass('hidden');
       }
     } else {
-      projectsToolbar.find('.new-object-actions').addClass('hidden');
       projectsToolbar.find('.single-object-action').addClass('hidden');
       projectsToolbar.find('.multiple-object-action').removeClass('hidden');
       if (selectedProjectFolders.length > 0) {
