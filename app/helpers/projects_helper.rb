@@ -6,11 +6,11 @@ module ProjectsHelper
   end
 
   def user_names_with_roles(user_projects)
-    user_projects.map { |up| user_name_with_role(up) }.join('&#013;')
+    user_projects.map { |up| user_name_with_role(up) }.join('&#013;').html_safe
   end
 
   def user_name_with_role(user_project)
-    "#{user_project.user.name} - #{I18n.t("user_projects.enums.role.#{user_project.role}")}"
+    sanitize_input("#{user_project.user.name} - #{I18n.t("user_projects.enums.role.#{user_project.role}")}")
   end
 
   def construct_module_connections(my_module)
