@@ -91,10 +91,14 @@ class ProjectsOverviewService
   end
 
   def fetch_project_folder_records
-    project_folders = @team.project_folders.preload(team: :user_teams).left_outer_joins(:projects, :project_folders)
+    project_folders = @team.project_folders
+                           .preload(team: :user_teams)
+                           .joins('LEFT OUTER JOIN project_folders child_folders
+                                   ON child_folders.parent_folder_id = project_folders.id')
+                           .left_outer_joins(:projects)
     project_folders.select('project_folders.*')
                    .select('COUNT(DISTINCT projects.id) AS projects_count')
-                   .select('COUNT(DISTINCT project_folders.id) AS folders_count')
+                   .select('COUNT(DISTINCT child_folders.id) AS folders_count')
                    .group('project_folders.id')
   end
 
