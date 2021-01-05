@@ -438,17 +438,6 @@ class User < ApplicationRecord
     result || []
   end
 
-  def projects_tree(team)
-    result = team.projects
-    unless is_admin_of_team?(team)
-      # Only admins see all projects of the team
-      result = result.joins(:user_projects).where(
-        'visibility=1 OR user_projects.user_id=:user_id', user_id: id
-      )
-    end
-    result.where(archived: false)
-  end
-
   # Finds all activities of user that is assigned to project. If user
   # is not an owner of the project, user must be also assigned to
   # module.

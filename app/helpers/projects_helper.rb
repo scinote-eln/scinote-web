@@ -14,7 +14,7 @@ module ProjectsHelper
   end
 
   def sidebar_folders_tree(team, user)
-    records = user.projects_tree(team) + ProjectFolder.inner_folders(team)
+    records = team.projects.active.visible_to(user, team) + ProjectFolder.inner_folders(team)
     view_state = team.current_view_state(user)
     records = case view_state.state.dig('projects', 'active', 'sort')
               when 'new'
