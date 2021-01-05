@@ -6,10 +6,10 @@ class MyModulesController < ApplicationController
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
 
-  before_action :load_vars
-  before_action :check_archive_and_restore_permissions, only: %i(update)
+  before_action :load_vars, except: %i(restore_group)
+  before_action :check_archive_permissions, only: %i(update)
   before_action :check_manage_permissions, only: %i(description due_date update_description update_protocol_description)
-  before_action :check_view_permissions, except: %i(update update_description update_protocol_description)
+  before_action :check_view_permissions, except: %i(update update_description update_protocol_description restore_group)
   before_action :check_update_state_permissions, only: :update_state
   before_action :set_inline_name_editing, only: %i(protocols results activities archive)
 
@@ -125,12 +125,6 @@ class MyModulesController < ApplicationController
 
     if @my_module.archived_changed?(from: false, to: true)
       saved = @my_module.archive(current_user)
-    elsif @my_module.archived_changed?(from: true, to: false)
-      saved = @my_module.restore(current_user)
-      if saved
-        restored = true
-        log_activity(:restore_module)
-      end
     else
       render_403 && return unless can_manage_module?(@my_module)
 
@@ -147,15 +141,7 @@ class MyModulesController < ApplicationController
       end
     end
     respond_to do |format|
-      if restored
-        format.html do
-          flash[:success] = t(
-            'my_modules.module_archive.restored_flash',
-            module: @my_module.name
-          )
-          redirect_to module_archive_experiment_path(@my_module.experiment)
-        end
-      elsif saved
+      if saved
         format.json do
           alerts = []
           alerts << 'alert-green' if @my_module.completed?
@@ -269,6 +255,34 @@ class MyModulesController < ApplicationController
     current_team_switch(@my_module.experiment.project.team)
   end
 
+  def restore_group
+    experiment = Experiment.find(params[:id])
+    return render_403 unless can_read_experiment?(experiment)
+
+    my_modules = experiment.my_modules.archived.where(id: params[:my_modules_ids])
+    counter = 0
+    my_modules.each do |my_module|
+      next unless can_restore_module?(my_module)
+
+      my_module.transaction do
+        my_module.restore!(current_user)
+        log_activity(:restore_module, my_module)
+        counter += 1
+      rescue StandardError => e
+        Rails.logger.error e.message
+        raise ActiveRecord::Rollback
+      end
+    end
+    if counter == my_modules.size
+      flash[:success] = t('my_modules.restore_group.success_flash_html', number: counter)
+    elsif counter.positive?
+      flash[:warning] = t('my_modules.restore_group.partial_success_flash_html', number: counter)
+    else
+      flash[:error] = t('my_modules.restore_group.error_flash')
+    end
+    redirect_to module_archive_experiment_path(experiment)
+  end
+
   def update_state
     old_status_id = @my_module.my_module_status_id
     if @my_module.update(my_module_status_id: update_status_params[:status_id])
@@ -297,12 +311,8 @@ class MyModulesController < ApplicationController
     render_403 && return unless can_manage_module?(@my_module)
   end
 
-  def check_archive_and_restore_permissions
-    render_403 && return unless if my_module_params[:archived] == 'false'
-                                  can_restore_module?(@my_module)
-                                else
-                                  can_archive_module?(@my_module)
-                                end
+  def check_archive_permissions
+    return render_403 if my_module_params[:archived] == 'true' && !can_archive_module?(@my_module)
   end
 
   def check_view_permissions
