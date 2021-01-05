@@ -1,13 +1,4 @@
 <ul class="sidebar-branch">
-  <% if can_create_repositories?(current_team) && !archived %>
-    <li class="sidebar-leaf">
-      <a class="btn btn-secondary create-new-repository" data-remote="true"
-        href="<%= create_modal_team_repositories_path(current_team) %>">
-        <i class="fas fa-plus"></i>
-        <%= t('libraries.index.no_libraries.create_new_button') %>
-      </a>
-    </li>
-  <% end %>
   <% repositories.each do |repository| %>
     <li class="sidebar-leaf" title="<%= repository.name %>">
       <%= link_to repository_path(repository),
