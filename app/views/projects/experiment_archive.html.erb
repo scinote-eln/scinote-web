@@ -1,5 +1,5 @@
 <% provide(:head_title, t("projects.experiment_archive.head_title", project: h(@project.name)).html_safe) %>
-<% provide(:sidebar_title, t("sidebar.experiments.sidebar_title")) %>
+<% provide(:sidebar_title, t("sidebar.experiments.sidebar_title_archived")) %>
 <% provide(:sidebar_url, project_sidebar_path(@project)) %>
 <% provide(:container_class, 'no-second-nav-container') %>
 <%= content_for :sidebar do %>

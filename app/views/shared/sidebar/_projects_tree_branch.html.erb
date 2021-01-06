@@ -1,7 +1,11 @@
 <% records.each do |record| %>
   <% if record[:project] %>
     <li class="sidebar-leaf">
-      <%= link_to record[:project].name, project_url(record[:project]), class: 'sidebar-link' %>
+      <% if record[:project].archived? %>
+        <%= link_to record[:project].name, experiment_archive_project_url(record[:project]), class: 'sidebar-link' %>
+      <% else %>
+        <%= link_to record[:project].name, project_url(record[:project]), class: 'sidebar-link' %>
+      <% end %>
     </li>
   <% else %>
     <li class="sidebar-leaf">
