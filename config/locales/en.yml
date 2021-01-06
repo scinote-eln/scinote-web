@@ -217,6 +217,7 @@ en:
       archived_experiments: "Archived experiments"
     my_modules:
       sidebar_title: "TASKS"
+      sidebar_title_archived: "ARCHIVED TASKS"
       back_button: "Back to experiments"
       back_to_archived_button: "Back to archived experiments"
       archived_button: "Archived tasks"
@@ -225,7 +226,7 @@ en:
       sidebar_title: "TASK"
       back_button: "Back to all tasks"
       back_button_archived: "Back to all archived tasks"
-      steps: "Protocols"
+      steps: "Protocol"
       results: "Results"
       activities: "Activity"
       archive: "Archived results"

@@ -14,7 +14,9 @@
     </li>
   <% end %>
   <li class="sidebar-leaf">
-    <i class="fas fa-archive"></i>&nbsp;
-    <%= link_to t('sidebar.my_modules.archived_button'), module_archive_experiment_url(experiment), class: 'sidebar-link' %>
+    <%= link_to module_archive_experiment_url(experiment), class: 'sidebar-link' do %>
+      <i class="fas fa-archive"></i>&nbsp;
+      <%= t('sidebar.my_modules.archived_button') %>
+    <% end%>
   </li>
 </ul>
