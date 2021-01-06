@@ -1,4 +1,9 @@
-<div class="card folder-card" data-id="<%= folder.id %>" data-edit-url="<%= edit_project_folder_path(folder) %>">
+<div class="card folder-card"
+     data-id="<%= folder.id %>"
+     data-edit-url="<%= edit_project_folder_path(folder) %>"
+     data-editable="<%= can_update_team?(current_team) %>"
+     data-archivable="<%= folder.active? && can_update_team?(current_team) %>"
+     data-restorable="<%= folder.archived? && can_update_team?(current_team) %>">
   <div class="checkbox-cell">
     <div class="sci-checkbox-container">
       <input value="1" type="checkbox" class="sci-checkbox folder-card-selector">
