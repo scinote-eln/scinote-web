@@ -6,7 +6,7 @@
       <% end %>
     </li>
   <% end %>
-  <%= render partial: 'shared/sidebar/projects_tree_branch.html.erb', locals: { records: sidebar_folders_tree(team, current_user) } %>
+  <%= render partial: 'shared/sidebar/projects_tree_branch.html.erb', locals: { records: sidebar_folders_tree(team, current_user, sort) } %>
   <% if params[:mode] != 'archived' %>
     <li class="sidebar-leaf">
       <%= link_to projects_path(mode: :archived), class: "sidebar-link" do %>

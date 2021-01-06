@@ -10,9 +10,9 @@ var Sidebar = (function() {
     branchSelectors.removeClass('collapsed fa-caret-right').addClass('fa-caret-down');
   }
 
-  function reloadSidebar() {
+  function reloadSidebar(params) {
     let url = $(SIDEBAR_CONTAINER).data('sidebar-url');
-    $.get(url, function(result) {
+    $.get(url, params, function(result) {
       $(SIDEBAR_CONTAINER).find('.sidebar-body').html(result.html);
       showSelectedLeaf();
       $(SIDEBAR_CONTAINER).data('scrollBar').update();
@@ -40,8 +40,8 @@ var Sidebar = (function() {
       }
     },
 
-    reload: () => {
-      reloadSidebar();
+    reload: (params = {}) => {
+      reloadSidebar(params);
     }
   };
 }());

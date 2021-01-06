@@ -433,9 +433,8 @@
   }
 
   function refreshCurrentView() {
-    loadCardsView().then(() => {
-      Sidebar.reload();
-    });
+    loadCardsView();
+    Sidebar.reload({ sort: projectsCurrentSort });
   }
 
   function initEditButton() {
@@ -480,7 +479,7 @@
       type: 'GET',
       dataType: 'json',
       data: {
-        filter: $('.projects-index').data('mode'),
+        view_mode: $('.projects-index').data('mode'),
         sort: projectsCurrentSort,
         search: projectsViewSearch,
         members: membersFilter,
