@@ -434,7 +434,10 @@
 
   function refreshCurrentView() {
     loadCardsView();
-    Sidebar.reload({ sort: projectsCurrentSort });
+    Sidebar.reload({
+      sort: projectsCurrentSort,
+      view_mode: $('.projects-index').data('mode'),
+    });
   }
 
   function initEditButton() {
