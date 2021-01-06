@@ -10,7 +10,7 @@ module ProjectsHelper
   end
 
   def user_name_with_role(user_project)
-    sanitize_input("#{user_project.user.name} - #{I18n.t("user_projects.enums.role.#{user_project.role}")}")
+    "#{sanitize_input(user_project.user.name)} - #{I18n.t("user_projects.enums.role.#{user_project.role}")}"
   end
 
   def construct_module_connections(my_module)
