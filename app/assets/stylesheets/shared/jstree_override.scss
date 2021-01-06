@@ -5,30 +5,30 @@
   height: 250px;
   overflow: auto;
   padding: .5em;
-}
 
-.jstree-icon {
-  &.root-folder {
-    color: $color-volcano;
+  .jstree-wholerow-hovered {
+    background: $color-alto;
+    border-radius: 4px;
   }
 
-  &.icon-folder {
-    color: $brand-primary-light;
+  .jstree-wholerow-clicked {
+    background: $color-white;
+    border-radius: 4px;
   }
-}
 
-.jstree-wholerow-hovered {
-  background: $color-alto !important;
-  border-radius: 4px;
-}
+  .jstree-search {
+    color: unset;
+    font-style: unset;
+    font-weight: unset;
+  }
 
-.jstree-wholerow-clicked {
-  background: $color-white !important;
-  border-radius: 4px;
-}
+  .jstree-icon {
+    &.root-folder {
+      color: $color-volcano;
+    }
 
-.jstree-search {
-  color: unset !important;
-  font-style: unset !important;
-  font-weight: unset !important;
+    &.icon-folder {
+      color: $brand-primary-light;
+    }
+  }
 }
