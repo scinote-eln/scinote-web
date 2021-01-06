@@ -349,6 +349,7 @@
     initExportProjectsModal();
     initExportProjects();
     initArchiveToolbarButton();
+    initUsersEditLink($('.project-card'));
 
     initFormSubmitLinks($('.project-card'));
     initArchiveRestoreButton($('.project-card'));
