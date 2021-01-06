@@ -100,7 +100,8 @@ en:
               team: "Project folder and project should belongs to the same team"
         project_folder:
           attributes:
-            parent_folder: "Parent folder and folder should belongs to the same team"
+            parent_folder_team: "Parent folder and folder should belongs to the same team"
+            parent_folder: "Folder cannot be parent to itself"
         view_state:
           attributes:
             viewable_id:
@@ -402,6 +403,14 @@ en:
         description: "Rename your folder"
         folder_name_field: "Folder name"
         submit: "Save"
+      modal_move_folder:
+        title: "Move %{items}"
+        description: "Select where you want to move your %{items}"
+        submit: "Move"
+        items:
+          projects: 'projects'
+          folders: 'folders'
+          projects_and_folders: 'projects & folders'
       modal_manage_users:
         modal_title_html: "Manage users for <span id='manage-users-modal-project'>%{name}</span>"
         no_users: "No users!"

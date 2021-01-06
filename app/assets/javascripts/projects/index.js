@@ -14,6 +14,7 @@
   const PERMISSIONS = ['editable', 'archivable', 'restorable'];
   var toolbarWrapper = '#toolbarWrapper';
   var editProjectModal = '#edit-modal';
+  var moveToModal = '#move-to-modal';
 
   var projectActionsModal = null;
   var projectActionsModalHeader = null;
@@ -38,6 +39,7 @@
   // Arrays with selected project and folder IDs shared between both views
   var selectedProjects = [];
   var selectedProjectFolders = [];
+  var destinationFolder;
 
   // Init new project folder modal function
   function initNewProjectFolderModal() {
@@ -489,9 +491,90 @@
     });
   }
 
+  function initMoveButton() {
+    function initializeJSTree(folders_tree) {
+      var timeOut = false;
+
+      folders_tree.jstree(
+        {
+          "core": {
+            'multiple': false,
+            "themes": {
+              "dots": false,
+              "variant": "large"
+            }
+          },
+          "search": {
+            "show_only_matches": true,
+            "show_only_matches_children": true
+          },
+          "plugins" : [ "wholerow", "search" ]
+        }
+      );
+
+      folders_tree.on('changed.jstree', function (e, data) {
+        destinationFolder = data.instance.get_node(data.selected[0]).id.replace('folder_', '');
+      });
+
+      // Search timeout
+      $('#searchFolderTree').keyup(function () {
+        if(timeOut) { clearTimeout(timeOut); }
+        timeOut = setTimeout(function () {
+          folders_tree.jstree(true).search($('#searchFolderTree').val());
+        }, 250);
+      });
+    }
+
+    function loadMoveToModal(url) {
+      let items;
+      let projects;
+      let folders;
+
+      if ((selectedProjects.length) && (selectedProjectFolders.length)) {
+        items = 'project_and_folders';
+      } else if (selectedProjectFolders.length) {
+        items = 'folders';
+      } else {
+        items = 'projects';
+      }
+      projects = selectedProjects.map(e => ({id: e, type: 'project'}));
+      folders = selectedProjectFolders.map(e => ({id: e, type: 'project_folder'}));
+      let movables = projects.concat(folders);
+
+      $.get(url, {items: items}, function(result) {
+        $(moveToModal).find('.modal-content').html(result.html);
+        $(moveToModal).modal('show');
+        initializeJSTree($(moveToModal).find("#moveToFolders"));
+
+        $(moveToModal).find('form')
+          .on('ajax:before', function() {
+            $('<input>').attr({ type: 'hidden',
+              name: 'destination_folder_id',
+              value: destinationFolder}).appendTo($(moveToModal).find('form'));
+
+            $('<input>').attr({ type: 'hidden',
+              name: 'movables',
+              value: JSON.stringify(movables)}).appendTo($(moveToModal).find('form'));
+          })
+          .on('ajax:success', function(ev, data) {
+            $(moveToModal).modal('hide');
+            HelperModule.flashAlertMsg(data.flash, 'success');
+            refreshCurrentView();
+          }).on('ajax:error', function(ev, data) {
+            $(moveToModal).modal('hide');
+            HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
+          });
+      });
+    }
+
+    $('.project-actions .move-projects-btn').on('click', function(e) {
+      e.preventDefault();
+      loadMoveToModal($(this).data('url'));
+    });
+  }
+
   function loadCardsView() {
     var viewContainer = $('#cardsWrapper');
-    // animateSpinner(viewContainer, true);
     $.ajax({
       url: viewContainer.data('projects-cards-url'),
       type: 'GET',
@@ -709,6 +792,7 @@
   }
 
   initEditButton();
+  initMoveButton();
   initProjectsViewModeSwitch();
   initSorting();
   loadCardsView();

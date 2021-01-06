@@ -21,13 +21,15 @@ module ProjectsHelper
     conns.to_s[1..-2]
   end
 
-  def sidebar_folders_tree(team, user, sort, view_mode)
+  def sidebar_folders_tree(team, user, sort, view_mode, folders_only: false)
     records = if view_mode == 'archived'
-                team.projects.archived.visible_to(user, team) +
-                  ProjectFolder.archived.inner_folders(team)
+                items = ProjectFolder.archived.inner_folders(team)
+                items += team.projects.archived.visible_to(user, team) unless folders_only
+                items
               else
-                team.projects.active.visible_to(user, team) +
-                  ProjectFolder.active.inner_folders(team)
+                items = ProjectFolder.active.inner_folders(team)
+                items += team.projects.active.visible_to(user, team) unless folders_only
+                items
               end
     sort ||= team.current_view_state(user).state.dig('projects', 'active', 'sort')
     records = case sort
