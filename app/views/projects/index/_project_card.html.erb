@@ -37,10 +37,17 @@
     <span class="card-label"><%= t('projects.index.card.users') %></span>
     <div class="value">
 
-      <% project.users.each do |user| %>
+      <% project.user_projects[0..3].each do |user_project| %>
         <span class="global-avatar-container">
-          <%= image_tag avatar_path(user, :icon_small) %>
+          <%= image_tag(avatar_path(user_project.user, :icon_small), title: user_name_with_role(user_project)) %>
         </span>
+      <% end %>
+
+      <% more_users = project.user_projects[4..-1].to_a %>
+      <% if more_users.any? %>
+        <a href="" class="more-users" title="<%= user_names_with_roles(more_users) %>">
+           +<%= more_users.size %>
+        </a>
       <% end %>
 
       <% if project.active? %>

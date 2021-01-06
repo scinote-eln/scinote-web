@@ -528,7 +528,7 @@ li.module-hover {
     grid-auto-rows: 2em;
     grid-column-gap: 1em;
     grid-row-gap: 1em;
-    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
     width: 100%;
 
     .table-header {
@@ -771,7 +771,7 @@ li.module-hover {
       grid-auto-rows: 2em;
       grid-column-gap: 1em;
       grid-row-gap: 1em;
-      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
       width: 100%;
 
       .table-header {
@@ -928,6 +928,23 @@ li.module-hover {
 
             .cell-value {
               display: none;
+            }
+
+            .more-users {
+              align-items: center;
+              background: $color-volcano;
+              border-radius: 50%;
+              color: $color-white;
+              cursor: pointer;
+              display: flex;
+              height: 2em;
+              justify-content: center;
+              margin-right: .25em;
+              width: 2em;
+
+              &:hover {
+                text-decoration: none;
+              }
             }
 
             .new-user {
