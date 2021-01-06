@@ -182,6 +182,30 @@
         color: $brand-primary;
       }
     }
+
+    .repository-link {
+      padding-right: 3em;
+      position: relative;
+
+      .repository-share-status {
+        display: contents !important;
+        position: absolute;
+        right: -3em;
+
+        &.hidden {
+          display: none !important;
+        }
+      }
+
+      .fas-custom {
+        height: 4em;
+        padding: 1.25em .75em;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 3em;
+      }
+    }
   }
 }
 

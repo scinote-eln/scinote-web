@@ -229,6 +229,8 @@ en:
       results: "Results"
       activities: "Activity"
       archive: "Archived results"
+    repositories:
+      sidebar_title: "INVENTORIES"
 
   nav2:
     all_projects:

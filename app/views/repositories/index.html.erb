@@ -2,7 +2,11 @@
 <% provide(:container_class, "no-second-nav-container") %>
 
 <% if current_team %>
-  <%= render partial: "sidebar", locals: { repositories: @repositories, archived: params[:archived] } %>
+  <% provide(:sidebar_url, sidebar_repositories_path) %>
+  <% provide(:sidebar_title, t('sidebar.repositories.sidebar_title')) %>
+  <%= content_for :sidebar do %>
+   <%= render partial: "sidebar", locals: { repositories: @repositories, archived: params[:archived] } %>
+  <% end %>
   <div class="content-pane flexible <%= params[:archived] ? :archived : :active %> repositories-index"
        data-readonly="<%= !current_user.is_admin_of_team?(current_team) %>">
     <div class="content-header">
