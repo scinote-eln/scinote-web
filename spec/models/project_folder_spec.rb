@@ -37,7 +37,7 @@ describe ProjectFolder, type: :model do
                          .is_at_most(Constants::NAME_MAX_LENGTH))
       end
       it do
-        expect(project_folder).to validate_uniqueness_of(:name).scoped_to(:team_id).case_insensitive
+        expect(project_folder).to validate_uniqueness_of(:name).scoped_to(%i(team_id parent_folder_id)).case_insensitive
       end
     end
 
@@ -60,6 +60,72 @@ describe ProjectFolder, type: :model do
         project_folder.parent_folder = parent_folder
 
         expect { project_folder.save }.to(change { project_folder.team })
+      end
+    end
+
+    describe 'ensure_uniqueness_name_on_moving' do
+      let(:team) { create :team }
+      let(:parent_folder) { create :project_folder, team: team }
+
+      context 'when folder with same name already exists' do
+        before do
+          create :project_folder, name: 'FolderOne (some)', parent_folder: parent_folder, team: parent_folder.team
+          create :project_folder, name: 'FolderOne (test)', parent_folder: parent_folder, team: parent_folder.team
+          create :project_folder, name: 'FolderOne (111)', parent_folder: parent_folder, team: parent_folder.team
+          create :project_folder, name: 'FolderOne (41)', parent_folder: parent_folder, team: parent_folder.team
+          create :project_folder, name: 'FolderOne (1)', parent_folder: parent_folder, team: parent_folder.team
+          create :project_folder, name: 'FolderOne (0)', parent_folder: parent_folder, team: parent_folder.team
+          create :project_folder, name: 'FolderOne', parent_folder: parent_folder, team: parent_folder.team
+        end
+
+        it 'appends number to name' do
+          folder = create :project_folder, team: team, name: 'FolderOne'
+          folder.update!(parent_folder: parent_folder)
+
+          expect(folder.name).to be_eql('FolderOne (112)')
+        end
+
+        it 'keeps number if number is between already existing numbers, but is available' do
+          folder = create :project_folder, team: team, name: 'FolderOne (40)'
+          folder.update!(parent_folder: parent_folder)
+
+          expect(folder.name).to be_eql('FolderOne (40)')
+        end
+      end
+
+      context 'when folder with same name does not exsits yet' do
+        it do
+          folder = create :project_folder, team: team, name: 'FolderOne'
+          folder.update!(parent_folder: parent_folder)
+
+          expect(folder.name).to be_eql('FolderOne')
+        end
+      end
+
+      context 'when new name parenthesises with text' do
+        before do
+          create :project_folder, name: 'FolderOne (some)', parent_folder: parent_folder, team: parent_folder.team
+        end
+
+        it do
+          folder = create :project_folder, team: team, name: 'FolderOne (some)'
+          folder.update!(parent_folder: parent_folder)
+
+          expect(folder.name).to be_eql('FolderOne (some) (1)')
+        end
+      end
+
+      context 'when new name parenthesises with numbers' do
+        before do
+          create :project_folder, name: 'FolderOne (1)', parent_folder: parent_folder, team: parent_folder.team
+        end
+
+        it do
+          folder = create :project_folder, team: team, name: 'FolderOne (1)'
+          folder.update!(parent_folder: parent_folder)
+
+          expect(folder.name).to be_eql('FolderOne (1) (1)')
+        end
       end
     end
   end

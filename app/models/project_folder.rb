@@ -8,10 +8,11 @@ class ProjectFolder < ApplicationRecord
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH },
-            uniqueness: { scope: :team_id, case_sensitive: false }
+            uniqueness: { scope: %i(team_id parent_folder_id), case_sensitive: false }
   validate :parent_folder_team, if: -> { parent_folder.present? }
 
   before_validation :inherit_team_from_parent_folder, on: :create, if: -> { parent_folder.present? }
+  before_validation :ensure_uniqueness_name_on_moving, on: :update, if: -> { parent_folder_id_changed? }
 
   belongs_to :team, inverse_of: :project_folders, touch: true
   belongs_to :parent_folder, class_name: 'ProjectFolder', optional: true
@@ -100,5 +101,21 @@ class ProjectFolder < ApplicationRecord
     return if parent_folder.team_id == team_id
 
     errors.add(:parent_folder, I18n.t('activerecord.errors.models.project_folder.attributes.parent_folder'))
+  end
+
+  def ensure_uniqueness_name_on_moving
+    return unless self.class.where(parent_folder: parent_folder).where('name ILIKE ?', name).any?
+
+    regex = /\((\d+)\)/
+    max_number = self.class
+                     .where(parent_folder: parent_folder)
+                     .where('name ILIKE ?', "#{name} (%)")
+                     .order(name: :desc)
+                     .pluck(:name)
+                     .select { |s| s.match(regex) }
+                     .map { |s| s.match(regex)[1].to_i }
+                     .max || 0
+
+    self.name = name + " (#{max_number + 1})"
   end
 end
