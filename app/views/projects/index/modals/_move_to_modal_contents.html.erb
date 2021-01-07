@@ -20,7 +20,7 @@
         <li class="jstree-open" id="root_folder" data-jstree='{"icon":"fas fa-folder root-folder"}'>
           <a class="jstree-clicked" href="#">Projects</a>
           <%= render partial: 'projects/index/modals/move_to_folders_tree.html.erb',
-                     locals: { records: sidebar_folders_tree(current_team, current_user, folders_only: true) } %>
+                     locals: { records: sidebar_folders_tree(current_team, current_user, @current_sort, @current_view_mode, folders_only: true) } %>
         </li>
       </ul>
     </div>

@@ -539,7 +539,7 @@
       folders = selectedProjectFolders.map(e => ({ id: e, type: 'project_folder' }));
       let movables = projects.concat(folders);
 
-      $.get(url, { items: items }, function(result) {
+      $.get(url, { items: items, sort: projectsCurrentSort, mode: $('.projects-index').data('mode') }, function(result) {
         $(moveToModal).find('.modal-content').html(result.html);
         $(moveToModal).modal('show');
         initializeJSTree($(moveToModal).find('#moveToFolders'));
