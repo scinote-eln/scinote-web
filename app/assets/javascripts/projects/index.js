@@ -49,8 +49,9 @@
         HelperModule.flashAlertMsg(data.message, 'success');
         refreshCurrentView();
       })
-      .on('ajax:error', function(e, data) {
-        $(this).renderFormErrors('project_folder', data.responseJSON);
+      .on('ajax:error', newProjectFolderModal, function(e, data) {
+        let form = $(this).find('form#new_project_folder');
+        form.renderFormErrors('project_folder', data.responseJSON);
       });
 
     $(toolbarWrapper)
@@ -79,7 +80,7 @@
         HelperModule.flashAlertMsg(data.message, 'success');
         refreshCurrentView();
       })
-      .on('ajax:error', function(ev, data) {
+      .on('ajax:error', newProjectModal, function(ev, data) {
         $(this).renderFormErrors('project', data.responseJSON);
       });
 
