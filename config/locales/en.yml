@@ -244,7 +244,7 @@ en:
       reports: "Reports"
       archive: "Archived experiments"
     modules:
-      steps: "Protocols"
+      steps: "Protocol"
       results: "Results"
       activities: "Activity"
       archive: "Archived results"
