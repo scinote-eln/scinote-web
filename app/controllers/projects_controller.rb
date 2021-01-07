@@ -256,7 +256,7 @@ class ProjectsController < ApplicationController
   end
 
   def users_filter
-    users = current_team.users.map do |u|
+    users = current_team.users.search(false, params[:query]).map do |u|
       { value: u.id, label: sanitize_input(u.name), params: { avatar_url: avatar_path(u, :icon_small) } }
     end
 
