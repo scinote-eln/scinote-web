@@ -11,6 +11,7 @@
    dropdownSelector Sidebar Turbolinks */
 
 (function(global) {
+  const PERMISSIONS = ['editable', 'archivable', 'restorable'];
   var toolbarWrapper = '#toolbarWrapper';
   var editProjectModal = '#edit-modal';
 
@@ -300,22 +301,35 @@
     });
   }
 
+  function checkActionPermission(permission) {
+    return selectedProjects.every(function(projectId) {
+      return $(`.project-card[data-id="${projectId}"]`).data(permission);
+    });
+  }
+
   function updateProjectsToolbar() {
     let projectsToolbar = $('#projectsToolbar');
 
     if (selectedProjects.length === 0 && selectedProjectFolders.length === 0) {
       projectsToolbar.find('.single-object-action, .multiple-object-action').addClass('hidden');
-    } else if (selectedProjects.length + selectedProjectFolders.length === 1) {
-      projectsToolbar.find('.single-object-action, .multiple-object-action').removeClass('hidden');
-      if (selectedProjectFolders.length === 1) {
-        projectsToolbar.find('.project-only-action').addClass('hidden');
-      }
     } else {
-      projectsToolbar.find('.single-object-action').addClass('hidden');
-      projectsToolbar.find('.multiple-object-action').removeClass('hidden');
-      if (selectedProjectFolders.length > 0) {
-        projectsToolbar.find('.project-only-action').addClass('hidden');
+      if (selectedProjects.length + selectedProjectFolders.length === 1) {
+        projectsToolbar.find('.single-object-action, .multiple-object-action').removeClass('hidden');
+        if (selectedProjectFolders.length === 1) {
+          projectsToolbar.find('.project-only-action').addClass('hidden');
+        }
+      } else {
+        projectsToolbar.find('.single-object-action').addClass('hidden');
+        projectsToolbar.find('.multiple-object-action').removeClass('hidden');
+        if (selectedProjectFolders.length > 0) {
+          projectsToolbar.find('.project-only-action').addClass('hidden');
+        }
       }
+      PERMISSIONS.forEach((permission) => {
+        if (!checkActionPermission(permission)) {
+          projectsToolbar.find(`.btn[data-for="${permission}"]`).addClass('hidden');
+        }
+      });
     }
   }
 
