@@ -11,11 +11,19 @@
     </div>
   </div>
   <div class="project-name-cell">
-    <a href="<%= project_url(project) %>">
-      <h3 class="name" title="<%= project.name %>">
-        <%= project.name %>
-      </h3>
-    </a>
+    <% if project.archived? %>
+      <%= link_to experiment_archive_project_url(project) do %>
+        <h3 class="name" title="<%= project.name %>">
+          <%= project.name %>
+        </h3>
+      <% end %>
+    <% else %>
+      <%= link_to project_url(project) do %>
+        <h3 class="name" title="<%= project.name %>">
+          <%= project.name %>
+        </h3>
+      <% end %>
+    <% end %>
   </div>
   <div class="actions actions-cell">
     <%= render partial: 'projects/index/project_actions_dropdown.html.erb', locals: { project: project, view: 'cards' } %>
