@@ -7,7 +7,7 @@
 // - refresh project users tab after manage user modal is closed
 // - refactor view handling using library, ex. backbone.js
 
-/* global Comments CounterBadge animateSpinner initFormSubmitLinks HelperModule
+/* global Comments Promise CounterBadge animateSpinner initFormSubmitLinks HelperModule
    dropdownSelector Sidebar Turbolinks */
 
 (function(global) {
@@ -435,7 +435,10 @@
 
   function refreshCurrentView() {
     loadCardsView();
-    Sidebar.reload();
+    Sidebar.reload({
+      sort: projectsCurrentSort,
+      view_mode: $('.projects-index').data('mode')
+    });
   }
 
   function initEditButton() {
@@ -475,13 +478,12 @@
   function loadCardsView() {
     var viewContainer = $('#cardsWrapper');
     // animateSpinner(viewContainer, true);
-
     $.ajax({
       url: viewContainer.data('projects-cards-url'),
       type: 'GET',
       dataType: 'json',
       data: {
-        filter: $('.projects-index').data('mode'),
+        view_mode: $('.projects-index').data('mode'),
         sort: projectsCurrentSort,
         search: projectsViewSearch,
         members: membersFilter,
@@ -537,7 +539,7 @@
       if (projectsCurrentSort !== $(this).data('sort')) {
         $('#sortMenuDropdown a').removeClass('selected');
         projectsCurrentSort = $(this).data('sort');
-        loadCardsView();
+        refreshCurrentView();
         $(this).addClass('selected');
         $('#sortMenu').dropdown('toggle');
       }

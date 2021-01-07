@@ -4,7 +4,7 @@
 <% provide(:container_class, 'no-second-nav-container') %>
 
 <%= content_for :sidebar do %>
-  <%= render partial: 'shared/sidebar/projects', locals: { team: current_team } if current_team %>
+  <%= render partial: 'shared/sidebar/projects', locals: { team: current_team, sort: nil, view_mode: @current_view_mode } if current_team %>
 <% end %>
 
 <% content_for :breadcrumbs do %>

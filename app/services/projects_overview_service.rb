@@ -7,7 +7,7 @@ class ProjectsOverviewService
     @current_folder = folder
     @params = params
     @view_state = @team.current_view_state(@user)
-    @view_mode = @view_state.state.dig('projects', 'view_mode')
+    @view_mode = params[:view_mode]
 
     # Update sort if chanhed
     @sort = @view_state.state.dig('projects', @view_mode, 'sort') || 'atoz'
@@ -98,8 +98,8 @@ class ProjectsOverviewService
   end
 
   def filter_project_records(records)
-    records = records.where(archived: true) if @params[:filter] == 'archived'
-    records = records.where(archived: false) if @params[:filter] == 'active'
+    records = records.where(archived: true) if @params[:view_mode] == 'archived'
+    records = records.where(archived: false) if @params[:view_mode] == 'active'
     records = records.where_attributes_like('projects.name', @params[:search]) if @params[:search].present?
     records = records.where_attributes_like('projects.name', @params[:search]) if @params[:search].present?
     records = records.where('user_projects.user_id IN (?)', @params[:members]) if @params[:members]&.any?
@@ -113,8 +113,8 @@ class ProjectsOverviewService
   end
 
   def filter_project_folder_records(records)
-    records = records.where(archived: true) if @params[:filter] == 'archived'
-    records = records.where(archived: false) if @params[:filter] == 'active'
+    records = records.where(archived: true) if @params[:view_mode] == 'archived'
+    records = records.where(archived: false) if @params[:view_mode] == 'active'
     records = records.where_attributes_like('project_folders.name', @params[:search]) if @params[:search].present?
     records
   end

@@ -21,10 +21,16 @@ module ProjectsHelper
     conns.to_s[1..-2]
   end
 
-  def sidebar_folders_tree(team, user)
-    records = team.projects.active.visible_to(user, team) + ProjectFolder.inner_folders(team)
-    view_state = team.current_view_state(user)
-    records = case view_state.state.dig('projects', 'active', 'sort')
+  def sidebar_folders_tree(team, user, sort, view_mode)
+    records = if view_mode == 'archived'
+                team.projects.archived.visible_to(user, team) +
+                  ProjectFolder.archived.inner_folders(team)
+              else
+                team.projects.active.visible_to(user, team) +
+                  ProjectFolder.active.inner_folders(team)
+              end
+    sort ||= team.current_view_state(user).state.dig('projects', 'active', 'sort')
+    records = case sort
               when 'new'
                 records.sort_by(&:created_at).reverse!
               when 'old'
