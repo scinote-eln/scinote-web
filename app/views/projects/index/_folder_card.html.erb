@@ -10,17 +10,19 @@
       <span class="sci-checkbox-label"></span>
     </div>
   </div>
-  <div class="icon-folder">
-    <i class="fas fa-folder"></i>
-  </div>
-  <div class="name" title="<%= folder.name %>">
-    <%= link_to(folder.name,
-                project_folder_path(folder),
-                class: 'project-folder-link',
-                data: { projects_cards_url: project_folder_cards_url(folder),
-                        sidebar_url: sidebar_team_path(current_team, project_folder_id: folder.id),
-                      }) %>
-  </div>
+  <%= link_to project_folder_path(folder),
+              class: 'project-folder-link',
+              data: {
+                projects_cards_url: project_folder_cards_url(folder),
+                sidebar_url: sidebar_team_path(current_team, project_folder_id: folder.id)
+              } do %>
+    <div class="icon-folder">
+      <i class="fas fa-folder"></i>
+    </div>
+    <div class="name">
+      <%= folder.name %>
+    </div>
+  <% end %>
   <div class="description">
     <%= t('projects.index.folder.description', projects_count: folder.projects_count, folders_count: folder.folders_count) %>
   </div>

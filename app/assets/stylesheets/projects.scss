@@ -849,6 +849,12 @@ li.module-hover {
             color: $color-volcano;
             width: 100%;
           }
+
+          .project-folder-link {
+            color: $color-volcano;
+            display: contents;
+            text-decoration: none;
+          }
         }
 
         &.project-card {
