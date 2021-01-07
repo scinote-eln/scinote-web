@@ -26,7 +26,13 @@
             <% end %>
           <% end %>
         <% end %>
-      <div class="panel-title"><%= link_to experiment.name, canvas_experiment_path(experiment) %></div>
+      <div class="panel-title">
+        <% if experiment.archived_branch? %>
+          <%= link_to experiment.name, module_archive_experiment_path(experiment) %>
+        <% else %>
+          <%= link_to experiment.name, canvas_experiment_path(experiment) %>
+        <% end %>
+      </div>
 
       <% if experiment.archived? %>
         <div class="panel-date">

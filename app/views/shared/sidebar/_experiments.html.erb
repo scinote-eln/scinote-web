@@ -10,7 +10,11 @@
   </li>
   <% project.sorted_experiments(@current_sort, archived).each do |experiment| %>
     <li class="sidebar-leaf">
-      <%= link_to experiment.name, canvas_experiment_path(experiment), class: 'sidebar-link' %>
+      <% if archived %>
+        <%= link_to experiment.name, module_archive_experiment_path(experiment), class: 'sidebar-link' %>
+      <% else %>
+        <%= link_to experiment.name, canvas_experiment_path(experiment), class: 'sidebar-link' %>
+      <% end %>
     </li>
   <% end %>
   <% unless archived %>
