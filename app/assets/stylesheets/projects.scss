@@ -1,5 +1,6 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
+// scss-lint:disable IdSelector
 @import "constants";
 @import "mixins";
 
@@ -1207,3 +1208,15 @@ li.module-hover {
     }
   }
 }
+
+#move-to-modal {
+  .button-to-inline-form {
+    display: inline;
+    position: relative;
+  }
+
+  .sci-input-container.left-icon {
+    margin: 1em 0;
+  }
+}
+

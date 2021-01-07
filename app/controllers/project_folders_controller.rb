@@ -2,6 +2,7 @@
 
 class ProjectFoldersController < ApplicationController
   include InputSanitizeHelper
+  include ProjectFoldersHelper
 
   before_action :load_current_folder, only: %i(new)
   before_action :load_project_folder, only: %i(edit update)
@@ -40,8 +41,14 @@ class ProjectFoldersController < ApplicationController
   end
 
   def move_to
-    destination_folder = current_team.project_folders.find(move_params[:id])
-    destination_folder.transaction do
+    destination_folder =
+      if move_params[:destination_folder_id] == 'root_folder'
+        nil
+      else
+        current_team.project_folders.find(move_params[:destination_folder_id])
+      end
+
+    ActiveRecord::Base.transaction do
       move_projects(destination_folder)
       move_folders(destination_folder)
     end
@@ -54,6 +61,17 @@ class ProjectFoldersController < ApplicationController
     respond_to do |format|
       format.json { render json: { flash: I18n.t('projects.move.error_flash') }, status: :bad_request }
     end
+  end
+
+  def move_to_modal
+    view_state = current_team.current_view_state(current_user)
+    @current_view_mode = params[:mode] || :active
+    @current_sort = view_state.state.dig('projects', @current_view_mode.to_s, 'sort') || 'atoz'
+
+    render json: {
+      html: render_to_string(partial: 'projects/index/modals/move_to_modal_contents.html.erb',
+                             locals: { items_label: items_label(params[:items]) })
+    }
   end
 
   def edit
@@ -99,9 +117,13 @@ class ProjectFoldersController < ApplicationController
   end
 
   def move_params
-    params.require(:id)
-    params.require(:movables)
-    params.permit(:id, movables: %i(type id))
+    parsed_params = ActionController::Parameters.new(
+      movables: JSON.parse(params[:movables]),
+      destination_folder_id: params[:destination_folder_id]
+    )
+    parsed_params.require(:destination_folder_id)
+    parsed_params.require(:movables)
+    parsed_params.permit(:destination_folder_id, movables: %i(id type))
   end
 
   def check_create_permissions

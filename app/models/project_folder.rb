@@ -10,6 +10,7 @@ class ProjectFolder < ApplicationRecord
                       maximum: Constants::NAME_MAX_LENGTH },
             uniqueness: { scope: :team_id, case_sensitive: false }
   validate :parent_folder_team, if: -> { parent_folder.present? }
+  validate :parent_folder_validation, if: -> { parent_folder.present? }
 
   before_validation :inherit_team_from_parent_folder, on: :create, if: -> { parent_folder.present? }
 
@@ -98,6 +99,12 @@ class ProjectFolder < ApplicationRecord
 
   def parent_folder_team
     return if parent_folder.team_id == team_id
+
+    errors.add(:parent_folder, I18n.t('activerecord.errors.models.project_folder.attributes.parent_folder_team'))
+  end
+
+  def parent_folder_validation
+    return if parent_folder.id != id
 
     errors.add(:parent_folder, I18n.t('activerecord.errors.models.project_folder.attributes.parent_folder'))
   end

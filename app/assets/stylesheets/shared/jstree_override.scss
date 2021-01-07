@@ -1,0 +1,34 @@
+@import "constants";
+
+.folders-tree-container {
+  background-color: $color-concrete;
+  height: 250px;
+  overflow: auto;
+  padding: .5em;
+
+  .jstree-wholerow-hovered {
+    background: $color-alto;
+    border-radius: 4px;
+  }
+
+  .jstree-wholerow-clicked {
+    background: $color-white;
+    border-radius: 4px;
+  }
+
+  .jstree-search {
+    color: unset;
+    font-style: unset;
+    font-weight: unset;
+  }
+
+  .jstree-icon {
+    &.root-folder {
+      color: $color-volcano;
+    }
+
+    &.icon-folder {
+      color: $brand-primary-light;
+    }
+  }
+}

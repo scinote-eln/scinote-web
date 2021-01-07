@@ -35,11 +35,11 @@ describe ProjectFoldersController, type: :controller do
       let(:action) { post :move_to, params: params, format: :json }
       let(:params) do
         {
-          id: project_folder_1.id,
+          destination_folder_id: project_folder_1.id,
           movables: [
             { id: project_1.id, type: :project },
             { id: project_folder_2.id, type: :project_folder }
-          ]
+          ].to_json
         }
       end
 
@@ -80,7 +80,10 @@ describe ProjectFoldersController, type: :controller do
   end
 
   describe 'PATCH update' do
-    let(:action) { patch :update, params: { id: project_folder.id }, format: :json }
+    let(:action) do
+      patch :update,
+            params: { project_folder: { name: 'new name' }, id: project_folder.id }, format: :json
+    end
 
     it 'calls create activity for creating project folder' do
       expect(Activities::CreateActivityService)
