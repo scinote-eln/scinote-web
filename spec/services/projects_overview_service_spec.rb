@@ -59,7 +59,7 @@ describe ProjectsOverviewService do
     end
 
     context "with request parameters { filter: 'active' }" do
-      let(:params) { { filter: 'active' } }
+      let(:params) { { view_mode: 'active' } }
 
       it 'returns all active projects' do
         projects = @projects_overview.project_cards
@@ -128,7 +128,7 @@ describe ProjectsOverviewService do
     end
 
     context "with request parameters { filter: 'archived' }" do
-      let(:params) { super().merge(filter: 'archived') }
+      let(:params) { super().merge(view_mode: 'archived') }
 
       it 'returns all archived projects' do
         projects = @projects_overview.project_cards
