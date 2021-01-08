@@ -1,0 +1,38 @@
+<div class="comments-sidebar" data-comments-url="<%= comments_path %>">
+  <div class="sidebar-content">
+    <div class="sidebar-header">
+      <div class="comments-subject-title"></div>
+      <div class="btn btn-light icon-btn close-btn">
+        <i class="fas fa-times"></i>
+      </div>
+    </div>
+    <div class="sidebar-body">
+      <div class="comments-list">
+      </div>
+      <div class="no-comments-placeholder">
+        <%= image_tag 'comments/placeholder.svg', class: 'no-comments-image' %>
+        <h1><%= t('comments.empty_state.title') %></h1>
+        <p class="description"><%= t('comments.empty_state.description') %></p>
+      </div>
+      <div class="loading-placeholder">
+        <% 5.times do |i| %>
+          <div class="comment-placeholder <%= i.even? ? 'left' : 'right' %>">
+            <div class="comment-user-placeholder"></div>
+            <div class="comment-body-placeholder"></div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="comment-input-container">
+        <textarea class="comment-input-field smart-text-area textarea-sm"></textarea>
+        <i class="fas fa-paper-plane send-comment"></i>
+      </div>
+      <div class="error-container"></div>
+      <div class="update-buttons sci-btn-group">
+        <button class="btn btn-secondary cancel-button"><%= t('general.cancel') %></button>
+        <button class="btn btn-primary update-comment"><%= t('comments.save_changes') %></button>
+      </div>
+    </div>
+  </div>
+</div>

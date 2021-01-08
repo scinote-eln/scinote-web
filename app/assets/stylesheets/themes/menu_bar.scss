@@ -1,6 +1,10 @@
 @import "constants";
 @import "mixins";
 
+:root {
+  --menu-bar-width: 83px;
+}
+
 .menu-bar {
   background-color: $color-white;
   box-shadow: $flyout-shadow;
@@ -8,13 +12,13 @@
   left: 0;
   padding-bottom: 50px;
   position: fixed;
-  width: 83px;
+  width: var(--menu-bar-width);
   z-index: 1001;
 
   .scroll-wrapper {
     height: 100%;
     padding-top: 16px;
-    width: 83px;
+    width: var(--menu-bar-width);
     overflow-x: hidden;
   }
 

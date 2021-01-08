@@ -17,7 +17,6 @@
         <span class="fas fa-caret-down" aria-hidden="true"></span>
       </a>
       <ul class="dropdown-menu custom-dropdown-menu no-scale" aria-labelledby="<%= my_module.id %>_options">
-        <li class="dropdown-header"><%= t('projects.index.options_header') %></li>
         <% if can_manage_module?(my_module) %>
           <li>
             <a class="edit-module" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.edit_module') %></a>

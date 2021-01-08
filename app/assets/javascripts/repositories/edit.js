@@ -1,8 +1,8 @@
 (function() {
   'use strict';
 
-  $('.delete-repo-option').initializeModal('#delete-repo-modal');
-  $('.rename-repo-option').initializeModal('#rename-repo-modal');
-  $('.share-repo-option').initializeModal('.share-repo-modal');
-  $('.copy-repo-option').initializeModal('#copy-repo-modal');
+  $('.delete-repo-option').initSubmitModal('#delete-repo-modal', 'repository');
+  $('.rename-repo-option').initSubmitModal('#rename-repo-modal', 'repository');
+  $('.share-repo-option').initSubmitModal('.share-repo-modal', 'repository');
+  $('.copy-repo-option').initSubmitModal('#copy-repo-modal', 'repository');
 })();

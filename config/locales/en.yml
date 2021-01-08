@@ -96,6 +96,12 @@ en:
           attributes:
             name:
               taken: "This project name has to be unique inside a team (this includes the archive)."
+            project_folder:
+              team: "Project folder and project should belongs to the same team"
+        project_folder:
+          attributes:
+            parent_folder_team: "Parent folder and folder should belongs to the same team"
+            parent_folder: "Folder cannot be parent to itself"
         view_state:
           attributes:
             viewable_id:
@@ -190,7 +196,7 @@ en:
     reports: "Reports"
     settings: "Settings"
     activities: "Activities"
-    academy: "Academy"
+    academy: "Courses"
     support: "Support"
     support_links:
       support: "Knowledge center"
@@ -203,6 +209,32 @@ en:
     branch_expand: "Expand this branch"
     branch_collapse: "Collapse this branch"
     no_module_group: "No workflow"
+    settings:
+      sidebar_title: "SETTINGS"
+    experiments:
+      sidebar_title: "EXPERIMENTS"
+      sidebar_title_archived: "ARCHIVED EXPERIMENTS"
+      back_button: "Back to projects"
+      back_active_experiments: "Back to active experiments"
+      back_archived_projects: "Back to archived projects"
+      archived_experiments: "Archived experiments"
+    my_modules:
+      sidebar_title: "TASKS"
+      sidebar_title_archived: "ARCHIVED TASKS"
+      back_button: "Back to experiments"
+      back_to_archived_button: "Back to archived experiments"
+      archived_button: "Archived tasks"
+      back_to_active_button: "Back to active tasks"
+    my_module:
+      sidebar_title: "TASK"
+      back_button: "Back to all tasks"
+      back_button_archived: "Back to all archived tasks"
+      steps: "Protocol"
+      results: "Results"
+      activities: "Activity"
+      archive: "Archived results"
+    repositories:
+      sidebar_title: "INVENTORIES"
 
   nav2:
     all_projects:
@@ -214,14 +246,10 @@ en:
       activities: "Activity"
       reports: "Reports"
       archive: "Archived experiments"
-    experiments:
-      canvas: "Tasks"
-      archive: "Archived tasks"
     modules:
-      steps: "Protocols"
+      steps: "Protocol"
       results: "Results"
       activities: "Activity"
-      repositories: "Inventories"
       archive: "Archived results"
 
   search:
@@ -270,6 +298,10 @@ en:
         result: "Result comment"
 
   comments:
+    save_changes: "Save changes"
+    empty_state:
+      title: "No comments here"
+      description: "Nobody has commented yet. Be the first by using the box below."
     options_dropdown:
       header: "Comment options"
       edit: "Edit"
@@ -279,7 +311,16 @@ en:
 
   projects:
     index:
+      header:
+        cards: "Cards"
+        table: "Table"
+        active_projects: "Go to Active projects"
+        archived_projects: "Go to Archived projects"
       head_title: "Projects"
+      navigation_title: "PROJECTS"
+      navigation_archived_projects: "Archived projects"
+      back_to_active_projects: "Back to active projects"
+      breadcrumbs_root: "Projects"
       archive: "Archive"
       archived: "Archived"
       active: "Active"
@@ -291,6 +332,7 @@ en:
         create_new_button: "New Project"
         no_permission_title: "You don't have permission to create new project. Please contact your team administrator."
       new: "New Project"
+      new_folder: "Create folder"
       visibility_private: "Project is visible to project members only."
       visibility_public: "Project is visible to all team members."
       user_project: "%{user} joined on %{timestamp}."
@@ -318,13 +360,33 @@ en:
       comment_tab: "Comments"
       new_comment: "New comment"
       content_loading: "Loading..."
+      edit_button: "Edit"
+      move_button: "Move"
+      archive_button: "Archive"
+      restore_button: "Restore"
       edit_option: "Edit"
       archive_option: "Archive"
       archive_confirm: "Are you sure you want to archive this project?"
       restore_option: "Restore"
-      options_header: "Options"
+      comments_option: "Show commments (%{comments_count})"
+      activities_option: "Open activities"
       comment_placeholder: "Your Message"
       more_comments: "More Comments"
+      card:
+        start_date: "Start date"
+        visibility: "Visible to"
+        users: "Members"
+        name: "Project name"
+        archived_date: "Archived"
+      folder:
+        description: "%{projects_count} projects | %{folders_count} folders"
+      modal_new_project_folder:
+        description: "Give your folder a distinct name to recognize it faster."
+        modal_title: "Create folder"
+        name: "New folder name"
+        name_placeholder: "Name your folder"
+        create: "Create folder"
+        success_flash: "Project folder <strong>%{name}</strong> successfully created."
       modal_new_project:
         modal_title: "Create new project"
         create: "Create"
@@ -337,6 +399,19 @@ en:
       modal_edit_project:
         modal_title: "Edit project %{project}"
         submit: "Save"
+      modal_edit_folder:
+        title: "Edit folder %{folder}"
+        description: "Rename your folder"
+        folder_name_field: "Folder name"
+        submit: "Save"
+      modal_move_folder:
+        title: "Move %{items}"
+        description: "Select where you want to move your %{items}"
+        submit: "Move"
+        items:
+          projects: 'projects'
+          folders: 'folders'
+          projects_and_folders: 'projects & folders'
       modal_manage_users:
         modal_title_html: "Manage users for <span id='manage-users-modal-project'>%{name}</span>"
         no_users: "No users!"
@@ -345,8 +420,34 @@ en:
         invite_users_link: "Invite users"
         invite_users_details: "to team %{team}."
         contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
+      filters_modal:
+        title: "Filters"
+        text:
+          label: "Contains text"
+          placeholder: "Enter search terms..."
+        created_on:
+          label: "Start date"
+          from_placeholder: "From"
+          to_placeholder: "To"
+        archived_on:
+          label: "Archived date"
+          from_placeholder: "From"
+          to_placeholder: "To"
+        members:
+          label: "Members"
+          placeholder: "Select members of a project"
+        folders:
+          label: "Look inside folders"
+          popover_html: "When <strong>“Look inside folders”</strong> is active, the filters will also take all folders and their content into account."
+        recent_searches_label: "Recent searches"
+        show_btn:
+         many: "Show %{num} projects"
+         none: "No projects"
+         one: "Show project"
+        clear_btn: "Clear"
+
     export_projects:
-      export_button: "Export projects"
+      export_button: "Export"
       error_title: "Export denied"
       error_text_p1_html: "It looks like you have exceeded your daily export limit. The number of exports is <strong>limited to %{limit} requests per day </strong>- you currently have 0 export requests left."
       error_text_p2_html: "Please repeat the desired action <strong>tomorrow</strong>, when your daily limit will reset back to %{limit} export requests."
@@ -356,14 +457,6 @@ en:
       modal_text_p3_html: "Please note that the number of exports is limited to %{limit} requests per day. After you confirm this export you will have %{num} left."
       modal_submit: "Export"
       success_flash: "Export request received. Your export request is being processed."
-    table:
-      status: "Status"
-      name: "Project name"
-      start: "Start date"
-      visibility: "Visible to"
-      users: "Users"
-      experiments: "Experiments"
-      tasks: "Tasks"
     activity:
       visibility_hidden: "Project members only"
       visibility_visible: "All team members"
@@ -372,9 +465,15 @@ en:
     update:
       success_flash: "Project <strong>%{name}</strong> successfully updated."
       error_flash: "Project <strong>%{name}</strong> not updated."
+    move:
+      success_flash: "You have successfully moved the selected project(s)/folder(s) to another folder."
+      error_flash: "An error occurred. The selected project(s)/folder(s) have not been moved."
     archive:
       success_flash: "Project <strong>%{name}</strong> successfully archived."
       error_flash: "Project <strong>%{name}</strong> not archived."
+    archive_group:
+      success_flash: "<strong>%{number}</strong> project(s) successfully archived."
+      error_flash: "Failed to arhive project(s)."
     restore:
       success_flash: "Project <strong>%{name}</strong> successfully restored."
       error_flash: "Project <strong>%{name}</strong> not restored."
@@ -677,6 +776,10 @@ en:
       no_archived_results: "No archived results!"
       archive_timelabel: "archived on %{date}"
       restored_flash: "Task %{module} restored successfully!"
+    restore_group:
+      success_flash_html: "<strong>%{number}</strong> task(s) successfully restored."
+      partial_success_flash_html: "Only restored <strong>%{number}</strong> task(s)."
+      error_flash: "Failed to restore task(s)."
     protocols:
       head_title: "%{project} | %{module} | Protocols"
       protocol_status_bar:
@@ -792,7 +895,6 @@ en:
       no_activities: "There are no activities for this task."
       more_activities: "More activities"
     repository:
-      head_title: "%{project} | %{module} | Inventory %{repository}"
       export: 'Export'
       full_view:
         modal_live_header: ': Live version'
@@ -982,7 +1084,7 @@ en:
           invite_users_details: "to team %{team}."
           contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
       update:
-        success_flash: "Project successfully updated."
+        success_flash: "Experiment successfully updated."
     module_archive:
       head_title: "%{experiment} | Archived tasks"
       no_archived_modules: "No archived tasks!"
@@ -1234,8 +1336,6 @@ en:
     columns_delete: "Delete"
     columns_changed: "Someone removed/added a new column to the inventory in use. To prevent data inconsistency we will reload this page for you."
     columns_visibility: "Visible columns"
-    view_all_records: "View All Items"
-    view_assigned_records: "View Assigned Items"
     modal_delete_record:
       title: "Delete items"
       notice: "Are you sure you want to delete the selected item(s)?"
@@ -2200,6 +2300,7 @@ en:
     save: "Save"
     update: "Update"
     edit: "Edit"
+    delete: "Delete"
     cancel: "Cancel"
     close: "Close"
     create: 'Create'
@@ -2211,10 +2312,12 @@ en:
     comment_placeholder_new: "Add new comment…"
     archived: "Archived"
     sort:
-      new_html: "Newest first &#8595;"
-      old_html: "Oldest first &#8593;"
-      atoz_html: "Name &#8595;"
-      ztoa_html: "Name &#8593;"
+      new_html: "Started last"
+      old_html: "Started first"
+      atoz_html: "Name A to Z"
+      ztoa_html: "Name Z to A"
+      archived_new_html: "Archived last"
+      archived_old_html: "Archived first"
     sort_new:
       new: "Newest"
       old: "Oldest"
@@ -2316,6 +2419,7 @@ en:
   Modules: "Tasks"
   Project: "Project"
   Projects: "Projects"
+  ProjectFolders: "Folders"
   Experiments: "Experiments"
   Result: "Result"
   Results: "Results"

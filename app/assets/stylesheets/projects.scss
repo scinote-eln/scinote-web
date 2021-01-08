@@ -1,5 +1,6 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
+// scss-lint:disable IdSelector
 @import "constants";
 @import "mixins";
 
@@ -7,16 +8,9 @@
 $color-group-hover: $color-alabaster;
 $color-module-hover: $brand-primary;
 
-#sortMenu {
-  border-color: $color-white;
-
-  &:not(:focus) {
-    color: $color-silver-chalice;
-  }
-
-  &:hover {
-    color: inherit;
-  }
+// Breadcrumbs
+.projects-breadcrumbs {
+  padding: .5em 1em;
 }
 
 /* Secondary navigation */
@@ -474,147 +468,6 @@ li.module-hover {
 }
 
 
-#project-show {
-  @media (min-width: 1400px) {
-    .col-md-6 {
-      width: 33.33%; // fallback if needed
-      width: calc(100% / 3);
-    }
-  }
-}
-
-// EXPERIMENT PANEL
-.experiment-panel {
-  @include box-shadow(0 4px 8px 0 $color-dove-gray);
-  display: flex;
-  flex-direction: column;
-  height: 400px;
-  margin: 0 auto;
-  margin-bottom: 35px;
-  margin-top: 15px;
-  max-width: 700px;
-
-  .panel-title {
-    margin-bottom: 14px;
-  }
-
-  .panel-heading .clone-experiment,
-  .panel-heading .dropdown {
-    display: none;
-  }
-
-  &:hover .clone-experiment,
-  &:hover .dropdown {
-    display: block;
-  }
-
-  .panel-date {
-    color: $color-silver-chalice;
-  }
-
-  .panel-heading > .clone-experiment {
-    color: $color-silver-chalice;
-    padding-left: 4px;
-    padding-top: 2px;
-  }
-
-  .dropdown {
-    color: $color-silver-chalice;
-
-    button {
-      padding-left: 6px;
-    }
-  }
-
-  .panel-body {
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-    height: 100%;
-
-    a {
-      height: 100%;
-    }
-  }
-
-  .experiment-description {
-    margin-top: 10px;
-    max-height: 86px;
-    overflow-x: hidden;
-
-    p {
-      margin: 0;
-    }
-  }
-
-  .experiment-no-description {
-    @include font-h3;
-    color: $color-alto;
-    display: block;
-    font-weight: bold;
-    margin-top: 10px;
-    text-align: center;
-  }
-
-  .no-workflowimg {
-    color: $color-alto;
-    display: block;
-    text-align: center;
-    text-decoration: none;
-  }
-
-  .no-tasks {
-    color: $color-alto;
-    display: block;
-    font-size: 1.5em;
-    font-weight: bold;
-    margin: 1em 0;
-    max-height: 200px;
-    padding-bottom: 70px;
-    padding-top: 50px;
-    text-align: center;
-  }
-}
-
-.workflowimg-container {
-  align-items: center;
-  display: flex;
-  height: 100%;
-  justify-content: center;
-
-  .workflowimg-spinner {
-    color: $color-alto;
-    top: 50%;
-  }
-
-  img {
-    max-height: 190px;
-    max-width: 100%;
-  }
-}
-
-// SHOW
-.center-btn {
-  display: block;
-  margin: 0 auto;
-  max-width: 200px;
-}
-
-.big-plus {
-  color: $color-gainsboro;
-  display: block;
-  font-size: 180px;
-  margin: 20px 0;
-  text-align: center;
-
-  &:hover {
-    color: $color-alto;
-  }
-
-  &:focus {
-    color: $color-alto;
-  }
-}
 
 /// icon override
 
@@ -665,3 +518,705 @@ li.module-hover {
     }
   }
 }
+
+
+// New projects page
+
+.projects-index {
+  .cards-wrapper {
+    align-items: center;
+    display: grid;
+    grid-auto-rows: 2em;
+    grid-column-gap: 1em;
+    grid-row-gap: 1em;
+    grid-template-columns: repeat(auto-fill, minmax(291px, 1fr));
+    width: 100%;
+
+    .table-header {
+      display: none;
+    }
+  }
+
+  .projects-view-mode {
+    &.active::after {
+      @include font-awesome;
+      content: "\f00c";
+      position: absolute;
+      right: 1em;
+    }
+  }
+
+  .archive-projects-form {
+    display: inline-block;
+  }
+
+  .header-actions {
+    align-items: center;
+    display: flex;
+    margin-left: auto;
+
+    .projects-sort-menu {
+      display: inline-block;
+
+      #sortMenu {
+        background: $color-white;
+
+        &:focus,
+        &:active {
+          box-shadow: none;
+        }
+
+        &:hover {
+          background: $color-concrete;
+        }
+      }
+
+      .dropdown-menu {
+        @include font-button;
+        min-width: 150px;
+        padding: .5em 0;
+
+        a {
+          border-radius: unset;
+          cursor: pointer;
+          padding: .5em 1em;
+          text-align: left;
+
+          &:hover {
+            background: $color-concrete;
+          }
+
+          &.selected::after {
+            @include font-awesome;
+            content: $font-fas-check;
+            margin-left: auto;
+            position: absolute;
+            right: 1em;
+          }
+        }
+      }
+    }
+  }
+
+  .filter-container {
+    position: initial;
+
+    .projects-filters {
+      padding: 0;
+      width: 230px;
+
+      .header {
+        align-items: center;
+        border-bottom: $border-default;
+        display: flex;
+        height: 2.75em;
+        margin-bottom: 1em;
+        padding: 0  .3em 0 1em;
+
+        .title {
+          @include font-h2;
+          flex-grow: 1;
+          user-select: none;
+
+        }
+      }
+
+      .select-block {
+        display: inline-block;
+        padding: 0 1em 1em;
+        position: relative;
+        width: 100%;
+
+        label {
+          @include font-small;
+          font-weight: bold;
+          margin-bottom: .3em;
+          user-select: none;
+        }
+
+        &.folders {
+          align-items: center;
+          display: flex;
+
+          .folder-search-label {
+            @include font-button;
+            margin: 0 .3em;
+          }
+
+          .fas {
+            color: inherit;
+            cursor: pointer;
+            text-decoration: none;
+          }
+
+          .folder-search-popover {
+            @include font-button;
+            left: -140px;
+            padding: 1.25em;
+            width: 220px;
+          }
+        }
+      }
+
+      .text-search-filter {
+        &.open {
+          border-bottom-left-radius: 0;
+          border-bottom-right-radius: 0;
+        }
+      }
+
+      .recent-searches {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        left: auto;
+        margin-top: -1px;
+        top: auto;
+        width: calc(100% - 2em);
+
+        label {
+          @include font-small;
+          color: $color-silver-chalice;
+          font-weight: bold;
+          margin-bottom: .3em;
+          padding: 0 1.5em;
+          user-select: none;
+        }
+
+        .projects-search-keyword {
+          @include font-button;
+          padding: .5em 1.25em;
+
+          .keyword-text {
+            margin-left: .25em;
+          }
+        }
+      }
+
+      .footer {
+        align-items: center;
+        border-top: $border-default;
+        display: flex;
+        height: 4.25em;
+        justify-content: center;
+        padding: 0 1em;
+        position: relative;
+        width: 100%;
+      }
+    }
+
+    &.filters-applied::after {
+      background: $brand-danger;
+      border: 1px solid $color-white;
+      border-radius: 50%;
+      content: "";
+      height: .5em;
+      left: 1.5em;
+      position: absolute;
+      top: .5em;
+      width: .5em;
+    }
+
+    .connect-line {
+      background: $input-border;
+      height: 10px;
+      margin: 5px auto;
+      width: 2px;
+    }
+
+    @media (min-width: 768px) {
+
+      .projects-filters {
+        width: 460px;
+      }
+
+      .footer {
+        .btn:last-child {
+          margin-left: auto;
+        }
+      }
+
+      .datetime-picker-container {
+        display: inline-block;
+        width: 46%;
+      }
+
+      .connect-line {
+        display: inline-block;
+        margin: 0 11px;
+        position: relative;
+        top: 2px;
+        transform: rotate(90deg);
+      }
+
+      .created-on-label {
+        display: block;
+      }
+    }
+
+    .users-dropdown-list {
+      .item-avatar {
+        border-radius: 50%;
+        height: 20px;
+        margin: 0 .5em 0 0;
+        width: 20px;
+      }
+    }
+  }
+
+  .projects-container {
+    margin: 35px 20px;
+
+    .cards-wrapper {
+      align-items: center;
+      display: grid;
+      grid-auto-rows: 2em;
+      grid-column-gap: 1em;
+      grid-row-gap: 1em;
+      grid-template-columns: repeat(auto-fill, minmax(291px, 1fr));
+      width: 100%;
+
+      .table-header {
+        display: none;
+      }
+
+      .projects-group {
+        grid-column: 1/-1;
+        margin: 0;
+      }
+
+      .card {
+        background-color: $color-white;
+        color: $color-volcano;
+        display: flex;
+        flex-wrap: wrap;
+        grid-row: span 4;
+        height: 100%;
+        padding: .5em 1em;
+        position: relative;
+        width: 100%;
+
+        .checkbox-cell {
+          align-items: center;
+          display: flex;
+          height: 2em;
+          justify-content: center;
+          left: .5em;
+          position: absolute;
+          top: .5em;
+          width: 2em;
+        }
+
+        .user-cell {
+          .global-avatar-container {
+            height: 28px;
+            margin-right: .25em;
+            width: 28px;
+          }
+
+          .value {
+            display: flex;
+            flex-wrap: wrap;
+          }
+
+        }
+
+        .manage-users-link {
+          color: $color-silver-chalice;
+
+          &:hover {
+            text-decoration: none;
+          }
+        }
+
+        &.folder-card {
+          text-align: center;
+
+          .icon-folder {
+            color: $brand-primary-light;
+            font-size: 5em;
+            width: 100%;
+          }
+
+          .name {
+            color: $color-volcano;
+            font-weight: bold;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 100%;
+          }
+
+          .description {
+            color: $color-volcano;
+            width: 100%;
+          }
+
+          .project-folder-link {
+            color: $color-volcano;
+            display: contents;
+            text-decoration: none;
+          }
+        }
+
+        &.project-card {
+          border-radius: 4px;
+          box-shadow: $flyout-shadow;
+
+          .project-name-cell {
+            align-items: center;
+            display: flex;
+            height: 2em;
+            margin: 0 1.75em;
+            overflow: hidden;
+
+            a {
+              color: inherit;
+              overflow: hidden;
+              white-space: nowrap;
+            }
+
+            .name {
+              line-height: 2em;
+              margin: 0;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+
+          .actions {
+            position: absolute;
+            right: .2em;
+            top: .2em;
+
+            .project-actions-menu {
+              a {
+                @include font-button;
+                padding: .5em 1em;
+
+                .fas {
+                  margin-right: .4em;
+                }
+              }
+
+              &.new-comments::after {
+                @include red-dot;
+                right: .4em;
+                top: .4em;
+              }
+
+              &.new-comments {
+                .fa-comment {
+                  position: relative;
+
+                  &::after {
+                    @include red-dot;
+                    right: -.4em;
+                    top: -.3em;
+                  }
+                }
+              }
+            }
+          }
+
+          .data-row {
+            @include font-button;
+            align-items: center;
+            color: $color-black;
+            display: flex;
+            flex-basis: 100%;
+            font-weight: bold;
+            line-height: 2em;
+
+            .card-label {
+              color: $color-volcano;
+              font-weight: normal;
+              width: 5.5em;
+            }
+
+            .cell-value {
+              display: none;
+            }
+
+            .more-users {
+              align-items: center;
+              background: $color-volcano;
+              border-radius: 50%;
+              color: $color-white;
+              cursor: pointer;
+              display: flex;
+              height: 2em;
+              justify-content: center;
+              margin-right: .25em;
+              width: 2em;
+
+              &:hover {
+                text-decoration: none;
+              }
+            }
+
+            .new-user {
+              align-items: center;
+              background: $color-concrete;
+              border-radius: 50%;
+              cursor: pointer;
+              display: flex;
+              height: 2em;
+              justify-content: center;
+              width: 2em;
+            }
+          }
+        }
+      }
+
+      &.list {
+        grid-auto-flow: dense;
+        grid-auto-rows: 2em 1px;
+        grid-row-gap: .5em;
+        grid-template-columns: max-content repeat(3, minmax(100px, auto)) max-content max-content;
+        margin: 40px 0 0 6px;
+
+
+        .projects-group {
+          display: contents;
+
+          .projects-breadcrumbs {
+            grid-column: inherit;
+          }
+
+          &::after {
+            background: $color-concrete;
+            content: "";
+            display: inline-block;
+            grid-column: inherit;
+            height: 1px;
+          }
+        }
+
+        .card {
+          display: contents;
+
+          // Border element
+          &:after {
+            background: $color-concrete;
+            content: "";
+            display: inline-block;
+            grid-column: 1/-1;
+            height: 1px;
+          }
+
+          .data-row {
+            font-weight: normal;
+            line-height: 1.25em;
+          }
+
+          .card-label {
+            display: none;
+          }
+
+          .cell-value {
+            display: block !important;
+          }
+
+          .name {
+            @include font-button;
+            color: $brand-primary;
+            font-weight: normal;
+          }
+
+          .checkbox-cell {
+            position: initial;
+          }
+
+          &.folder-card {
+            text-align: left;
+
+            .icon-folder {
+              display: none;
+              font-size: 2em;
+              margin: 0;
+            }
+
+            .name {
+              grid-column: 5 span;
+
+              &:before {
+                @include font-awesome;
+                content: "\f07b";
+                margin-right: .25em;
+              }
+            }
+
+            .description {
+              display: none;
+            }
+          }
+
+          &.project-card {
+            .card-value {
+              display: none;
+            }
+
+            .checkbox-cell {
+              grid-column: 1;
+            }
+
+            .project-name-cell {
+              grid-column: 2;
+              margin: 0;
+
+              a:hover {
+                color: $brand-primary-light;
+              }
+            }
+
+            .start-date-cell {
+              grid-column: 3;
+            }
+
+            .visibility-cell {
+              grid-column: 4;
+            }
+
+            .user-cell {
+              grid-column: 5;
+            }
+
+            .actions-cell {
+              grid-column: 6;
+              position: initial;
+            }
+          }
+        }
+
+        .table-header {
+          display: contents;
+
+          &::after {
+            content: "";
+            grid-column: 1/-1;
+          }
+
+          .table-header-cell {
+            align-items: center;
+            border: 1px solid $color-white;
+            display: flex;
+            height: 3em;
+            margin-left: -.5em;
+            padding: 0 .5em;
+            width: calc(100% + 1em);
+
+            &.select-all-checkboxes {
+              justify-content: center;
+              position: relative;
+            }
+          }
+
+          & > * {
+            background-color: $color-concrete;
+          }
+        }
+      }
+    }
+  }
+
+  &.active {
+    [data-view-mode="archived"] {
+      display: none !important;
+    }
+  }
+
+  &.archived {
+    [data-view-mode="active"] {
+      display: none !important;
+    }
+
+    .projects-container {
+      .project-actions-menu {
+        .btn-light:hover {
+          background: $color-alto;
+        }
+      }
+
+      .cards-wrapper {
+        grid-auto-rows: 2.5em;
+
+        .card.project-card {
+          background: $color-concrete;
+          box-shadow: none;
+
+          .data-row {
+            color: $color-silver-chalice;
+
+            .card-label {
+              color: $color-silver-chalice;
+            }
+
+            &.archived-date-cell {
+              color: $color-volcano;
+
+              .card-label {
+                color: $color-volcano;
+              }
+            }
+          }
+        }
+
+        &.list {
+          grid-auto-rows: 2em 1px;
+          grid-template-columns: max-content repeat(5, minmax(100px, auto)) max-content;
+
+          .card::after {
+            background: $color-white;
+          }
+
+          .card.folder-card {
+            .name {
+              grid-column: 6 span;
+            }
+          }
+
+          .card.project-card {
+            .checkbox-cell,
+            .project-name-cell,
+            .actions-cell,
+            .data-row {
+              align-items: center;
+              background: $color-concrete;
+              color: $color-volcano;
+              display: flex;
+              height: 3em;
+              margin-left: -.5em;
+              padding-left: .5em;
+              width: calc(100% + 1em);
+            }
+
+            .checkbox-cell {
+              padding-left: 0;
+            }
+
+            .archived-date-cell {
+              grid-column: 6;
+            }
+
+            .actions-cell {
+              grid-column: 7;
+              position: initial;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+#move-to-modal {
+  .button-to-inline-form {
+    display: inline;
+    position: relative;
+  }
+
+  .sci-input-container.left-icon {
+    margin: 1em 0;
+  }
+}
+
