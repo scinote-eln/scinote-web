@@ -29,7 +29,7 @@ class CommentsController < ApplicationController
       user: current_user,
       associated_id: @commentable.id
     )
-    comment_create_helper(@comment, 'comment', @commentable.comments.size)
+    comment_create_helper(@comment, 'comment')
   end
 
   def update
@@ -39,7 +39,7 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-    comment_destroy_helper(@comment, @commentable.comments.size - 1)
+    comment_destroy_helper(@comment)
   end
 
   private
