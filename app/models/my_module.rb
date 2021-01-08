@@ -137,6 +137,26 @@ class MyModule < ApplicationRecord
     archived? || experiment.archived_branch?
   end
 
+  def my_module_archived?
+    self[:archived]
+  end
+
+  def archived
+    my_module_archived? || experiment&.archived?
+  end
+
+  def archived?
+    my_module_archived? ? super : experiment&.archived?
+  end
+
+  def archived_by
+    my_module_archived? ? super : experiment&.archived_by
+  end
+
+  def archived_on
+    my_module_archived? ? super : experiment&.archived_on
+  end
+
   def repository_rows_count(repository)
     my_module_repository_rows.joins(repository_row: :repository)
                              .where('repositories.id': repository.id)

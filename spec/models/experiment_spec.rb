@@ -75,6 +75,118 @@ describe Experiment, type: :model do
     end
   end
 
+  describe '.archived' do
+    context 'when archived' do
+      let(:experiment) { build :experiment, :archived }
+      it 'returns true' do
+        expect(experiment.archived).to be_truthy
+      end
+    end
+
+    context 'when not archived' do
+      context 'when parent not archived' do
+        let(:experiment) { build :experiment }
+
+        it 'returns false' do
+          expect(experiment.archived).to be_falsey
+        end
+      end
+
+      context 'when parent archived' do
+        let(:experiment) { build :experiment, project: archived_project }
+        let(:archived_project) { create :project, :archived }
+
+        it 'returns true' do
+          expect(experiment.archived).to be_truthy
+        end
+      end
+    end
+  end
+
+  describe '.archived?' do
+    context 'when archived' do
+      let(:experiment) { build :experiment, :archived }
+      it 'returns true' do
+        expect(experiment.archived?).to be_truthy
+      end
+    end
+
+    context 'when not archived' do
+      context 'when parent not archived' do
+        let(:experiment) { build :experiment }
+
+        it 'returns false' do
+          expect(experiment.archived?).to be_falsey
+        end
+      end
+
+      context 'when parent archived' do
+        let(:experiment) { build :experiment, project: archived_project }
+        let(:archived_project) { create :project, :archived }
+
+        it 'returns true' do
+          expect(experiment.archived?).to be_truthy
+        end
+      end
+    end
+  end
+
+  describe '.archived_by' do
+    context 'when archived' do
+      let(:experiment) { build :experiment, :archived }
+      it 'returns user' do
+        expect(experiment.archived_by).to be_instance_of User
+      end
+    end
+
+    context 'when not archived' do
+      context 'when parent not archived' do
+        let(:experiment) { build :experiment }
+
+        it 'returns nil' do
+          expect(experiment.archived_by).to be_nil
+        end
+      end
+
+      context 'when parent archived' do
+        let(:experiment) { build :experiment, project: archived_project }
+        let(:archived_project) { create :project, :archived }
+
+        it 'returns project archived_by user' do
+          expect(experiment.archived_by).to be_eql(archived_project.archived_by)
+        end
+      end
+    end
+  end
+
+  describe '.archived_on' do
+    context 'when archived' do
+      let(:experiment) { build :experiment, :archived }
+      it 'returns time' do
+        expect(experiment.archived_on).not_to be_nil
+      end
+    end
+
+    context 'when not archived' do
+      context 'when parent not archived' do
+        let(:experiment) { build :experiment }
+
+        it 'returns nil' do
+          expect(experiment.archived_on).to be_nil
+        end
+      end
+
+      context 'when parent archived' do
+        let(:experiment) { create :experiment, project: archived_project }
+        let(:archived_project) { create :project, :archived }
+
+        it 'returns times of archiving parent' do
+          expect(experiment.archived_on).to be_eql(archived_project.archived_on)
+        end
+      end
+    end
+  end
+
   describe '.update_canvas' do
     let(:experiment) { create :experiment, :with_tasks }
     let(:user) { experiment.created_by }
