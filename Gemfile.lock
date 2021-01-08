@@ -343,7 +343,7 @@ GEM
     mimemagic (0.3.5)
     mini_magick (4.9.5)
     mini_mime (1.0.2)
-    mini_portile2 (2.4.0)
+    mini_portile2 (2.5.0)
     minitest (5.14.1)
     momentjs-rails (2.17.1)
       railties (>= 3.1)
@@ -358,8 +358,9 @@ GEM
       rails (>= 3.2.0)
     newrelic_rpm (6.6.0.358)
     nio4r (2.5.2)
-    nokogiri (1.10.9)
-      mini_portile2 (~> 2.4.0)
+    nokogiri (1.11.0)
+      mini_portile2 (~> 2.5.0)
+      racc (~> 1.4)
     nokogumbo (2.0.2)
       nokogiri (~> 1.8, >= 1.8.4)
     oauth2 (1.4.1)
@@ -406,6 +407,7 @@ GEM
     puma (4.3.5)
       nio4r (~> 2.0)
     raabro (1.1.6)
+    racc (1.5.2)
     rack (2.2.3)
     rack-attack (6.1.0)
       rack (>= 1.0, < 3)
@@ -655,7 +657,7 @@ DEPENDENCIES
   momentjs-rails (~> 2.17.1)
   nested_form_fields
   newrelic_rpm
-  nokogiri (~> 1.10.8)
+  nokogiri (~> 1.11.0)
   omniauth
   omniauth-azure-activedirectory
   omniauth-linkedin-oauth2
