@@ -297,6 +297,7 @@ Rails.application.routes.draw do
         get 'cards', to: 'projects#cards'
         get 'users_filter'
         post 'archive_group'
+        post 'restore_group'
       end
     end
 

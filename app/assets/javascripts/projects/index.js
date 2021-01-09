@@ -100,26 +100,26 @@
       });
   }
 
-  // init project toolbar archive/restore function
-  function initArchiveToolbarButton() {
+  // init project toolbar archive/restore functions
+  function initArchiveRestoreToolbarButtons() {
     $(toolbarWrapper)
-      .on('ajax:before', '.archive-projects-form', function() {
-        let archiveForm = $(this);
-        archiveForm.find('input[name="projects_ids[]"]').remove();
+      .on('ajax:before', '.archive-projects-form, .restore-projects-form', function() {
+        let buttonForm = $(this);
+        buttonForm.find('input[name="projects_ids[]"]').remove();
         selectedProjects.forEach(function(id) {
           $('<input>').attr({
             type: 'hidden',
             name: 'projects_ids[]',
             value: id
-          }).appendTo(archiveForm);
+          }).appendTo(buttonForm);
         });
       })
-      .on('ajax:success', '.archive-projects-form', function(ev, data) {
+      .on('ajax:success', '.archive-projects-form, .restore-projects-form', function(ev, data) {
         HelperModule.flashAlertMsg(data.message, 'success');
         // Project saved, reload view
         refreshCurrentView();
       })
-      .on('ajax:error', '.archive-projects-form', function(ev, data) {
+      .on('ajax:error', '.archive-projects-form, .restore-projects-form', function(ev, data) {
         HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
       });
   }
@@ -365,7 +365,7 @@
     initManageUsersModal();
     initExportProjectsModal();
     initExportProjects();
-    initArchiveToolbarButton();
+    initArchiveRestoreToolbarButtons();
     initUsersEditLink($('.project-card'));
 
     initFormSubmitLinks($('.project-card'));
