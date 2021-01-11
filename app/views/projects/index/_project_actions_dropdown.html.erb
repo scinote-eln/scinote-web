@@ -52,7 +52,7 @@
            data-object-type="Project"
            data-object-id="<%= project.id %>">
           <i class="fas fa-comment"></i>
-          <span class="comment-count">
+          <span id="comment-count-<%= project.id %>">
             <%= t('projects.index.comments_option', comments_count: project.comment_count) %>
           </span>
         </a>

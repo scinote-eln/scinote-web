@@ -26,7 +26,7 @@ module CommentHelper
     }
   end
 
-  def comment_create_helper(comment, partial = 'item', comment_count)
+  def comment_create_helper(comment, partial = 'item')
     if comment.save
       case comment.type
       when 'StepComment'
@@ -44,7 +44,6 @@ module CommentHelper
       end
 
       render json: {
-        comment_count: comment_count,
         html: render_to_string(
           partial: "/shared/comments/#{partial}.html.erb",
           locals: {
@@ -117,7 +116,7 @@ module CommentHelper
     end
   end
 
-  def comment_destroy_helper(comment, comment_count)
+  def comment_destroy_helper(comment)
     if comment.destroy
       case comment.type
       when 'StepComment'
@@ -129,7 +128,7 @@ module CommentHelper
       when 'TaskComment'
         log_my_module_activity(:delete_module_comment, comment)
       end
-      render json: { comment_count: comment_count }, status: :ok
+      render json: {}, status: :ok
     else
       render json: { message: I18n.t('comments.delete_error') },
                  status: :unprocessable_entity

@@ -2,7 +2,7 @@
 
 var CommentsSidebar = (function() {
   const SIDEBAR = '.comments-sidebar';
-  var openBtn = null;
+  var commentsCounter;
 
   function loadCommentsList() {
     var commentsUrl = $(SIDEBAR).data('comments-url');
@@ -21,17 +21,17 @@ var CommentsSidebar = (function() {
     });
   }
 
-  function updateCounter(commentCount) {
-    var commentCountElem = openBtn.find('.comment-count');
-    if (commentCountElem.length !== 0) {
+  function updateCounter() {
+    var commentsAmount = $(SIDEBAR).find('.comments-list .comment-container').length;
+    if (commentsCounter.length) {
       // Replace the number in comment element
-      commentCountElem.text(commentCountElem.text().replace(/\d+/g, commentCount));
+      commentsCounter.text(commentsCounter.text().replace(/\d+/g, commentsAmount));
     }
   }
 
   function initOpenButton() {
     $(document).on('click', '.open-comments-sidebar', function() {
-      openBtn = $(this);
+      commentsCounter = $(`#comment-count-${$(this).data('objectId')}`);
       CommentsSidebar.open($(this).data('objectType'), $(this).data('objectId'));
     });
   }
@@ -73,7 +73,7 @@ var CommentsSidebar = (function() {
           $(SIDEBAR).find('.comment-input-field').val('');
           $(SIDEBAR).find('.sidebar-footer').removeClass('update');
           $('.error-container').empty();
-          updateCounter(result.comment_count);
+          updateCounter();
         },
         error: (result) => {
           $('.error-container').text(result.responseJSON.errors.message);
@@ -98,9 +98,9 @@ var CommentsSidebar = (function() {
         url: deleteUrl,
         type: 'DELETE',
         dataType: 'json',
-        success: (result) => {
+        success: () => {
           commentContainer.remove();
-          updateCounter(result.comment_count);
+          updateCounter();
         }
       });
     });
