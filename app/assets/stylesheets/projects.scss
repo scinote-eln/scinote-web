@@ -763,8 +763,17 @@ li.module-hover {
     }
   }
 
+  .projects-toolbar {
+    margin-bottom: 1em;
+
+    .form-group {
+      width: 100%;
+    }
+}
+
+
   .projects-container {
-    margin: 35px 20px;
+    margin: 1.5em 20px;
 
     .cards-wrapper {
       align-items: center;

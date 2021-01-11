@@ -317,6 +317,7 @@ en:
         active_projects: "Go to Active projects"
         archived_projects: "Go to Archived projects"
       head_title: "Projects"
+      head_title_archived: "Archived projects"
       navigation_title: "PROJECTS"
       navigation_archived_projects: "Archived projects"
       back_to_active_projects: "Back to active projects"
