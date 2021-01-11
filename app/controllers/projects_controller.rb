@@ -213,6 +213,7 @@ class ProjectsController < ApplicationController
       next unless can_archive_project?(project)
 
       project.transaction do
+        project.project_folder = nil
         project.archive!(current_user)
         log_activity(:archive_project, project)
         counter += 1
