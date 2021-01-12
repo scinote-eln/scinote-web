@@ -16,7 +16,7 @@ class ProjectFolder < ApplicationRecord
   before_validation :ensure_uniqueness_name_on_moving, on: :update, if: -> { parent_folder_id_changed? }
 
   belongs_to :team, inverse_of: :project_folders, touch: true
-  belongs_to :parent_folder, class_name: 'ProjectFolder', optional: true
+  belongs_to :parent_folder, class_name: 'ProjectFolder', optional: true, touch: true
   belongs_to :archived_by, foreign_key: 'archived_by_id',
                            class_name: 'User',
                            inverse_of: :archived_project_folders,
