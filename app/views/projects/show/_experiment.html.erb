@@ -34,10 +34,10 @@
         <% end %>
       </div>
 
-      <% if experiment.archived? %>
+      <% if experiment.archived_branch? %>
         <div class="panel-date">
           <span class="fas fa-archive" aria-hidden="true"></span>
-          <%= l(experiment.archived_on, format: :full_date) %>
+          <%= l(experiment_archived_on(experiment), format: :full_date) %>
         </div>
       <% end %>
 

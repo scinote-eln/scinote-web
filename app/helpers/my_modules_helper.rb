@@ -90,4 +90,14 @@ module MyModulesHelper
   def assigned_repository_simple_view_name_column_id(repository)
     repository.is_a?(RepositorySnapshot) ? 2 : 3
   end
+
+  def my_module_archived_on(my_module)
+    if my_module.archived?
+      my_module.archived_on
+    elsif my_module.experiment.archived?
+      my_module.experiment.archived_on
+    elsif my_module.experiment.project.archived?
+      my_module.experiment.project.archived_on
+    end
+  end
 end
