@@ -31,6 +31,9 @@
         },
         "projects": {
           "type": "object"
+        },
+        "project_folders": {
+          "type": "object"
         }
       },
       "additionalProperties": false,
