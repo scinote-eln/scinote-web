@@ -31,4 +31,12 @@
       color: $brand-primary-light;
     }
   }
+
+  .jstree-default-large .jstree-icon {
+    background-image: image-url("32px.png");
+  }
+
+  .jstree-default-large>.jstree-container-ul .jstree-loading>.jstree-ocl {
+    background: image-url("throbber.gif") center no-repeat;
+  }
 }
