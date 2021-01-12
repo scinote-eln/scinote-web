@@ -63,7 +63,7 @@
         </a>
       <% end %>
 
-      <% if project.active? %>
+      <% if can_manage_project?(project) %>
         <%= link_to project_users_edit_path(project),
                     class: 'manage-users-link',
                     remote: true,
