@@ -5,6 +5,7 @@
       <% if current_team && can_create_projects?(current_team) %>
         <%= link_to new_project_path(project_folder_id: @current_folder),
                     class: 'btn btn-primary new-project-btn',
+                    data: { view_mode: 'active' },
                     remote: true do %>
           <span class="fas fa-plus" aria-hidden="true"></span>
           <span class="hidden-xs"><%= t('projects.index.new') %></span>
@@ -14,6 +15,7 @@
       <% if current_team && can_create_project_folders?(current_team) %>
         <%= link_to new_project_folder_path(project_folder_id: @current_folder),
                     class: 'btn btn-light new-project-folder-btn',
+                    data: { view_mode: 'active' },
                     remote: true do %>
           <span class="fas fa-folder" aria-hidden="true"></span>
           <span class="hidden-xs"><%= t('projects.index.new_folder') %></span>
@@ -30,11 +32,20 @@
       <%= button_to archive_group_projects_path,
                     class: 'btn btn-light archive-projects-btn multiple-object-action project-only-action hidden',
                     form_class: 'archive-projects-form',
-                    data: { for: :archivable },
+                    data: { for: :archivable, view_mode: 'active' },
                     remote: true,
                     method: :post do %>
         <span class="fas fa-archive" aria-hidden="true"></span>
         <span class="hidden-xs"><%= t('projects.index.archive_button') %></span>
+      <% end %>
+      <%= button_to restore_group_projects_path,
+                    class: 'btn btn-light restore-projects-btn multiple-object-action project-only-action hidden',
+                    form_class: 'restore-projects-form',
+                    data: { for: :restorable, view_mode: 'archived' },
+                    remote: true,
+                    method: :post do %>
+        <span class="fas fa-undo" aria-hidden="true"></span>
+        <span class="hidden-xs"><%= t('projects.index.restore_button') %></span>
       <% end %>
       <!-- export projects button -->
       <a href="#" class="btn btn-light export-projects-btn multiple-object-action hidden"

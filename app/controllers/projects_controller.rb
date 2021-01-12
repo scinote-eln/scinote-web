@@ -21,8 +21,8 @@ class ProjectsController < ApplicationController
   def index
     if current_team
       view_state = current_team.current_view_state(current_user)
-      @current_view_mode = params[:mode] || :active
-      @current_sort = view_state.state.dig('projects', @current_view_mode.to_s, 'sort') || 'atoz'
+      @current_view_mode = params[:mode] || 'active'
+      @current_sort = view_state.state.dig('projects', @current_view_mode, 'sort') || 'atoz'
     end
   end
 
@@ -225,6 +225,28 @@ class ProjectsController < ApplicationController
       render json: { message: t('projects.archive_group.success_flash', number: counter) }
     else
       render json: { message: t('projects.archive_group.error_flash') }, status: :unprocessable_entity
+    end
+  end
+
+  def restore_group
+    projects = current_team.projects.archived.where(id: params[:projects_ids])
+    counter = 0
+    projects.each do |project|
+      next unless can_restore_project?(project)
+
+      project.transaction do
+        project.restore!(current_user)
+        log_activity(:restore_project, project)
+        counter += 1
+      rescue StandardError => e
+        Rails.logger.error e.message
+        raise ActiveRecord::Rollback
+      end
+    end
+    if counter.positive?
+      render json: { message: t('projects.restore_group.success_flash', number: counter) }
+    else
+      render json: { message: t('projects.restore_group.error_flash') }, status: :unprocessable_entity
     end
   end
 

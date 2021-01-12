@@ -48,6 +48,9 @@ class ProjectsOverviewService
       elsif @params[:folders_search] == 'true'
         folders = ProjectFolder.inner_folders(@team, nil).or(ProjectFolder.where(id: nil))
         fetch_project_records
+      elsif @view_mode == 'archived'
+        folders = ProjectFolder.where(id: nil)
+        fetch_project_records.where(team: @team)
       else
         folders = ProjectFolder.where(id: nil)
         fetch_project_records.where(project_folder: nil, team: @team)
@@ -63,8 +66,13 @@ class ProjectsOverviewService
   end
 
   def project_and_folder_cards
-    cards = filter_project_records(fetch_project_records.where(project_folder: @current_folder)) +
-            filter_project_folder_records(fetch_project_folder_records.where(parent_folder: @current_folder))
+    cards =
+      if @view_mode == 'archived'
+        filter_project_records(fetch_project_records) + filter_project_folder_records(fetch_project_folder_records)
+      else
+        filter_project_records(fetch_project_records.where(project_folder: @current_folder)) +
+          filter_project_folder_records(fetch_project_folder_records.where(parent_folder: @current_folder))
+      end
 
     mixed_sort_records(cards)
   end
@@ -103,8 +111,8 @@ class ProjectsOverviewService
   end
 
   def filter_project_records(records)
-    records = records.where(archived: true) if @params[:view_mode] == 'archived'
-    records = records.where(archived: false) if @params[:view_mode] == 'active'
+    records = records.archived if @view_mode == 'archived'
+    records = records.active if @view_mode == 'active'
     records = records.where_attributes_like('projects.name', @params[:search]) if @params[:search].present?
     records = records.where_attributes_like('projects.name', @params[:search]) if @params[:search].present?
     records = records.where('user_projects.user_id IN (?)', @params[:members]) if @params[:members]&.any?
@@ -118,8 +126,8 @@ class ProjectsOverviewService
   end
 
   def filter_project_folder_records(records)
-    records = records.where(archived: true) if @params[:view_mode] == 'archived'
-    records = records.where(archived: false) if @params[:view_mode] == 'active'
+    records = records.archived if @view_mode == 'archived'
+    records = records.active if @view_mode == 'active'
     records = records.where_attributes_like('project_folders.name', @params[:search]) if @params[:search].present?
     records
   end

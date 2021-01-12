@@ -65,8 +65,8 @@ class ProjectFoldersController < ApplicationController
 
   def move_to_modal
     view_state = current_team.current_view_state(current_user)
-    @current_view_mode = params[:mode] || :active
-    @current_sort = view_state.state.dig('projects', @current_view_mode.to_s, 'sort') || 'atoz'
+    @current_view_mode = params[:mode] || 'active'
+    @current_sort = view_state.state.dig('projects', @current_view_mode, 'sort') || 'atoz'
 
     render json: {
       html: render_to_string(partial: 'projects/index/modals/move_to_modal_contents.html.erb',
