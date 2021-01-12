@@ -1,5 +1,5 @@
 <span class="due-date-label <%= get_task_alert_color(my_module) %>">
-  <% if my_module.archived? %>
+  <% if my_module.archived? && my_module.due_date %>
     <%= l(my_module.due_date, format: :full) %>
   <% elsif my_module.completed? %>
     <%= t('my_modules.states.completed') %>
@@ -14,7 +14,7 @@
       <span class="fas fa-exclamation-triangle"></span>
   <% elsif my_module.due_date %>
       <%= l(my_module.due_date, format: :full) %>
-  <% else %>
+  <% elsif my_module_editable %>
     <span class="empty-label">
       <%= t('my_modules.details.no_due_date_placeholder') %>
     </span>
