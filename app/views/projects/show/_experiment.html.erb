@@ -4,7 +4,7 @@
        data-canvas-link="<%= canvas_experiment_url(experiment) %>"
        >
     <div class="panel-heading">
-        <% if @project.active? %>
+        <% if can_manage_experiment?(experiment) %>
           <div class="dropdown pull-right">
             <button class="btn btn-link dropdown-toggle"
                     type="button"
