@@ -14,11 +14,7 @@ class TeamsController < ApplicationController
         render json: {
           html: render_to_string(
             partial: 'shared/sidebar/projects.html.erb',
-            locals: {
-              team: current_team,
-              sort: params[:sort],
-              view_mode: params[:view_mode]
-            }
+            locals: { team: current_team, sort: params[:sort] }
           )
         }
       end

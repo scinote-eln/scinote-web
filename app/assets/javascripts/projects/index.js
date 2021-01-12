@@ -454,7 +454,7 @@
     loadCardsView();
     Sidebar.reload({
       sort: projectsCurrentSort,
-      view_mode: $('.projects-index').data('mode')
+      view_mode: $('.projects-index').data('view-mode')
     });
   }
 
@@ -540,7 +540,7 @@
       folders = selectedProjectFolders.map(e => ({ id: e, type: 'project_folder' }));
       let movables = projects.concat(folders);
 
-      $.get(url, { items: items, sort: projectsCurrentSort, mode: $('.projects-index').data('mode') }, function(result) {
+      $.get(url, { items: items, sort: projectsCurrentSort, view_mode: $('.projects-index').data('view-mode') }, function(result) {
         $(moveToModal).find('.modal-content').html(result.html);
         $(moveToModal).modal('show');
         initializeJSTree($(moveToModal).find('#moveToFolders'));
@@ -584,7 +584,7 @@
       type: 'GET',
       dataType: 'json',
       data: {
-        view_mode: $('.projects-index').data('mode'),
+        view_mode: $('.projects-index').data('view-mode'),
         sort: projectsCurrentSort,
         search: projectsViewSearch,
         members: membersFilter,

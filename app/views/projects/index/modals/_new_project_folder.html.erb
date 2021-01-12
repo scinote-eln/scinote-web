@@ -12,6 +12,7 @@
           <p><%= t('projects.index.modal_new_project_folder.description') %></p>
           <div class="form-group sci-input-container">
             <%= f.hidden_field :parent_folder_id %>
+            <%= f.hidden_field :archived %>
             <%= f.text_field :name, label: t('projects.index.modal_new_project_folder.name'), placeholder: t('projects.index.modal_new_project_folder.name_placeholder') %>
           </div>
         </div>

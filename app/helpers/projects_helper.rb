@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
 module ProjectsHelper
+  def projects_view_mode
+    params[:view_mode] == 'archived' ? 'archived' : 'active'
+  end
+
+  def projects_view_mode_archived?
+    params[:view_mode] == 'archived'
+  end
+
   def user_project_role_to_s(user_project)
     t('user_projects.enums.role.' + user_project.role)
   end
@@ -21,16 +29,14 @@ module ProjectsHelper
     conns.to_s[1..-2]
   end
 
-  def sidebar_folders_tree(team, user, sort, view_mode, folders_only: false)
-    records = if view_mode == 'archived'
-                items = ProjectFolder.archived.inner_folders(team)
-                items += team.projects.archived.visible_to(user, team) unless folders_only
-                items
-              else
-                items = ProjectFolder.active.inner_folders(team)
-                items += team.projects.active.visible_to(user, team) unless folders_only
-                items
-              end
+  def sidebar_folders_tree(team, user, sort, folders_only: false)
+    if projects_view_mode_archived?
+      records = ProjectFolder.archived.inner_folders(team)
+      records += team.projects.archived.visible_to(user, team) unless folders_only
+    else
+      records = ProjectFolder.active.inner_folders(team)
+      records += team.projects.active.visible_to(user, team) unless folders_only
+    end
     sort ||= team.current_view_state(user).state.dig('projects', 'active', 'sort')
     records = case sort
               when 'new'
