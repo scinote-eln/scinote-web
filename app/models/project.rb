@@ -13,6 +13,7 @@ class Project < ApplicationRecord
   validates :visibility, presence: true
   validates :team, presence: true
   validate :project_folder_team, if: -> { project_folder.present? }
+  before_validation :remove_project_folder, on: :update, if: :archived_changed?
 
   belongs_to :created_by,
              foreign_key: 'created_by_id',
@@ -329,5 +330,9 @@ class Project < ApplicationRecord
     return if project_folder.team_id == team_id
 
     errors.add(:project_folder, I18n.t('activerecord.errors.models.project.attributes.project_folder.team'))
+  end
+
+  def remove_project_folder
+    self.project_folder = nil if archived?
   end
 end
