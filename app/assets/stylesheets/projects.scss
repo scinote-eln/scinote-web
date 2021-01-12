@@ -775,6 +775,30 @@ li.module-hover {
       grid-template-columns: repeat(auto-fill, minmax(291px, 1fr));
       width: 100%;
 
+      &.no-results {
+        display: block;
+        margin-top: 100px;
+
+        .no-results-img {
+          display: block;
+          margin: auto;
+          max-height: 230px;
+        }
+
+        .no-results-title {
+          @include font-h1;
+          margin-bottom: .25em;
+          margin-top: 1.25em;
+          text-align: center;
+        }
+
+        .no-results-description {
+          @include font-main;
+          color: $color-silver-chalice;
+          text-align: center;
+        }
+      }
+
       .table-header {
         display: none;
       }
@@ -1219,4 +1243,3 @@ li.module-hover {
     margin: 1em 0;
   }
 }
-

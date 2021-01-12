@@ -598,8 +598,12 @@
         $('#breadcrumbsWrapper').html(data.breadcrumbs_html);
         $('#toolbarWrapper').html(data.toolbar_html);
         viewContainer.data('projects-cards-url', data.projects_cards_url);
-        viewContainer.find('.card, .projects-group').remove();
+        viewContainer.removeClass('no-results');
+        viewContainer.find('.card, .projects-group, .no-results-container').remove();
         viewContainer.append(data.cards_html);
+        if (viewContainer.find('.no-results-container').length) {
+          viewContainer.addClass('no-results');
+        }
         selectedProjects.length = 0;
         selectedProjectFolders.length = 0;
         updateProjectsToolbar();
@@ -755,7 +759,6 @@
       }
 
       $(e.target).closest('.dropdown').removeClass('open');
-
 
       createdOnFromFilter = $createdOnFromFilter.val();
       createdOnToFilter = $createdOnToFilter.val();
