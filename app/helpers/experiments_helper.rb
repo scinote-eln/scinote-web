@@ -14,4 +14,12 @@ module ExperimentsHelper
       }
     end
   end
+
+  def experiment_archived_on(experiment)
+    if experiment.archived?
+      experiment.archived_on
+    elsif experiment.project.archived?
+      experiment.project.archived_on
+    end
+  end
 end

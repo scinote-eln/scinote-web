@@ -64,7 +64,7 @@
       <div>
         <span class="date-label"><%= t('experiments.module_archive.archived_on') %></span>
         <span class="date-value">
-          <%= my_module.archived_on ? l(my_module.archived_on, format: :full_date) : t('experiments.canvas.full_zoom.no_due_date') %>
+          <%= my_module.archived_branch? ? l(my_module_archived_on(my_module), format: :full_date) : t('experiments.canvas.full_zoom.no_due_date') %>
         </span>
       </div>
     </div>

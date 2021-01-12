@@ -105,26 +105,6 @@ class Experiment < ApplicationRecord
     archived? || project.archived?
   end
 
-  def experiment_archived?
-    self[:archived]
-  end
-
-  def archived
-    experiment_archived? || project&.archived?
-  end
-
-  def archived?
-    experiment_archived? ? super : project&.archived?
-  end
-
-  def archived_by
-    experiment_archived? ? super : project&.archived_by
-  end
-
-  def archived_on
-    experiment_archived? ? super : project&.archived_on
-  end
-
   def navigable?
     !project.archived?
   end
