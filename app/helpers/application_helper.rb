@@ -40,6 +40,10 @@ module ApplicationHelper
     controller_name == 'my_modules' && !@repository.nil?
   end
 
+  def displayable_flash_type?(type)
+    %w(success warning error notice).include?(type)
+  end
+
   def flash_alert_class(type)
     case type
     when 'success'

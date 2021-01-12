@@ -1,5 +1,7 @@
 <div id="notifications">
   <% flash.each do |type, message| %>
+    <% next unless displayable_flash_type?(type) %>
+
     <div id="alert-flash" class="alert <%= flash_alert_class(type) %> alert-dismissable alert-floating">
         <span class="fas <%= flash_icon_class(type) %>"></span>
         <span class="message"><%= sanitize_input(message) %></span>
