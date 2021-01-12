@@ -13,7 +13,7 @@
       <% end %>
       <!-- new project folder button -->
       <% if current_team && can_create_project_folders?(current_team) %>
-        <%= link_to new_project_folder_path(project_folder_id: @current_folder),
+        <%= link_to new_project_folder_path(project_folder_id: @current_folder, view_mode: projects_view_mode),
                     class: 'btn btn-light new-project-folder-btn',
                     data: { view_mode: 'active' },
                     remote: true do %>

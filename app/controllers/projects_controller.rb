@@ -21,8 +21,7 @@ class ProjectsController < ApplicationController
   def index
     if current_team
       view_state = current_team.current_view_state(current_user)
-      @current_view_mode = params[:mode] || 'active'
-      @current_sort = view_state.state.dig('projects', @current_view_mode, 'sort') || 'atoz'
+      @current_sort = view_state.state.dig('projects', projects_view_mode, 'sort') || 'atoz'
     end
   end
 

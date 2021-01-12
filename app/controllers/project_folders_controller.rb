@@ -2,6 +2,7 @@
 
 class ProjectFoldersController < ApplicationController
   include InputSanitizeHelper
+  include ProjectsHelper
   include ProjectFoldersHelper
 
   before_action :load_current_folder, only: %i(new)
@@ -10,7 +11,8 @@ class ProjectFoldersController < ApplicationController
   before_action :check_manage_permissions, only: %i(archive move_to)
 
   def new
-    @project_folder = current_team.project_folders.new(parent_folder: @current_folder)
+    @project_folder =
+      current_team.project_folders.new(parent_folder: @current_folder, archived: projects_view_mode_archived?)
     respond_to do |format|
       format.json do
         render json: {
@@ -65,8 +67,7 @@ class ProjectFoldersController < ApplicationController
 
   def move_to_modal
     view_state = current_team.current_view_state(current_user)
-    @current_view_mode = params[:mode] || 'active'
-    @current_sort = view_state.state.dig('projects', @current_view_mode, 'sort') || 'atoz'
+    @current_sort = view_state.state.dig('projects', projects_view_mode, 'sort') || 'atoz'
 
     render json: {
       html: render_to_string(partial: 'projects/index/modals/move_to_modal_contents.html.erb',
@@ -113,7 +114,7 @@ class ProjectFoldersController < ApplicationController
   end
 
   def project_folders_params
-    params.require(:project_folder).permit(:name, :parent_folder_id)
+    params.require(:project_folder).permit(:name, :parent_folder_id, :archived)
   end
 
   def move_params

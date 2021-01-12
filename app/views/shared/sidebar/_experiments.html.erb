@@ -1,7 +1,7 @@
 <ul class="sidebar-branch">
   <li class="sidebar-leaf">
     <% if @project.archived? %>
-      <%= link_to t('sidebar.experiments.back_archived_projects'), projects_path(mode: :archived), class: 'sidebar-link back-button' %>
+      <%= link_to t('sidebar.experiments.back_archived_projects'), projects_path(view_mode: :archived), class: 'sidebar-link back-button' %>
     <% elsif archived %>
       <%= link_to t('sidebar.experiments.back_active_experiments'), project_url(@project), class: 'sidebar-link back-button' %>
     <% else %>

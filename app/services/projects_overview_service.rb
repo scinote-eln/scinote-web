@@ -48,12 +48,9 @@ class ProjectsOverviewService
       elsif @params[:folders_search] == 'true'
         folders = ProjectFolder.inner_folders(@team, nil).or(ProjectFolder.where(id: nil))
         fetch_project_records
-      elsif @view_mode == 'archived'
-        folders = ProjectFolder.where(id: nil)
-        fetch_project_records.where(team: @team)
       else
         folders = ProjectFolder.where(id: nil)
-        fetch_project_records.where(project_folder: nil, team: @team)
+        fetch_project_records.where(project_folder: @current_folder, team: @team)
       end
 
     project_records = sort_records(filter_project_records(project_records)).includes(:project_folder).to_a
@@ -66,13 +63,8 @@ class ProjectsOverviewService
   end
 
   def project_and_folder_cards
-    cards =
-      if @view_mode == 'archived'
-        filter_project_records(fetch_project_records) + filter_project_folder_records(fetch_project_folder_records)
-      else
-        filter_project_records(fetch_project_records.where(project_folder: @current_folder)) +
-          filter_project_folder_records(fetch_project_folder_records.where(parent_folder: @current_folder))
-      end
+    cards = filter_project_records(fetch_project_records.where(project_folder: @current_folder)) +
+            filter_project_folder_records(fetch_project_folder_records.where(parent_folder: @current_folder))
 
     mixed_sort_records(cards)
   end
