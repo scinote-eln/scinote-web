@@ -6,6 +6,7 @@
   height: 250px;
   overflow: auto;
   padding: .5em;
+  --row-height: 36px;
 
   .jstree-wholerow-hovered {
     background: $color-alto;
@@ -21,6 +22,26 @@
     color: unset;
     font-style: unset;
     font-weight: unset;
+  }
+
+  .jstree-leaf {
+    height: var(--row-height);
+
+    .jstree-clicked {
+      height: var(--row-height);
+    }
+
+    .jstree-hovered {
+      height: var(--row-height);
+    }
+  }
+
+  .jstree-closed {
+    line-height: var(--row-height);
+  }
+
+  .jstree-open {
+    line-height: var(--row-height);
   }
 
   .jstree-icon {
