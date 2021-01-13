@@ -7,20 +7,17 @@
 // - refresh project users tab after manage user modal is closed
 // - refactor view handling using library, ex. backbone.js
 
-/* global Comments Promise CounterBadge animateSpinner initFormSubmitLinks HelperModule
-   dropdownSelector Sidebar Turbolinks */
+/* global animateSpinner initFormSubmitLinks HelperModule dropdownSelector Sidebar Turbolinks */
 
-(function(global) {
+(function() {
   const PERMISSIONS = ['editable', 'archivable', 'restorable'];
+  var projectsWrapper = '#projectsWrapper';
   var toolbarWrapper = '#toolbarWrapper';
+  var cardsWrapper = '#cardsWrapper';
   var editProjectModal = '#edit-modal';
   var moveToModal = '#move-to-modal';
 
-  var projectActionsModal = null;
-  var projectActionsModalHeader = null;
-  var projectActionsModalBody = null;
-  var projectActionsModalFooter = null;
-
+  var manageProjectUsersModal = null;
   var exportProjectsModal = null;
   var exportProjectsModalHeader = null;
   var exportProjectsModalBody = null;
@@ -46,7 +43,7 @@
     var newProjectFolderModal = '#new-project-folder-modal';
 
     // Modal's submit handler function
-    $(toolbarWrapper)
+    $(projectsWrapper)
       .on('ajax:success', newProjectFolderModal, function(ev, data) {
         $(newProjectFolderModal).modal('hide');
         HelperModule.flashAlertMsg(data.message, 'success');
@@ -57,7 +54,7 @@
         form.renderFormErrors('project_folder', data.responseJSON);
       });
 
-    $(toolbarWrapper)
+    $(projectsWrapper)
       .on('ajax:success', '.new-project-folder-btn', function(e, data) {
         // Add and show modal
         $(toolbarWrapper).append($.parseHTML(data.html));
@@ -77,7 +74,7 @@
     var newProjectModal = '#new-project-modal';
 
     // Modal's submit handler function
-    $(toolbarWrapper)
+    $(projectsWrapper)
       .on('ajax:success', newProjectModal, function(ev, data) {
         $(newProjectModal).modal('hide');
         HelperModule.flashAlertMsg(data.message, 'success');
@@ -87,7 +84,7 @@
         $(this).renderFormErrors('project', data.responseJSON);
       });
 
-    $(toolbarWrapper)
+    $(projectsWrapper)
       .on('ajax:success', '.new-project-btn', function(ev, data) {
         // Add and show modal
         $(toolbarWrapper).append($.parseHTML(data.html));
@@ -102,7 +99,7 @@
 
   // init project toolbar archive/restore functions
   function initArchiveRestoreToolbarButtons() {
-    $(toolbarWrapper)
+    $(projectsWrapper)
       .on('ajax:before', '.archive-projects-form, .restore-projects-form', function() {
         let buttonForm = $(this);
         buttonForm.find('input[name="projects_ids[]"]').remove();
@@ -125,52 +122,33 @@
   }
 
   // init project card archive/restore function
-  function initArchiveRestoreButton(el) {
-    el.find('form.edit_project').off()
-      .on('ajax:success', function(ev, data) {
+  function initArchiveRestoreButton() {
+    $(projectsWrapper)
+      .on('ajax:success', 'form.edit_project', function(ev, data) {
         HelperModule.flashAlertMsg(data.message, 'success');
         // Project saved, reload view
         refreshCurrentView();
       })
-      .on('ajax:error', function(ev, data) {
+      .on('ajax:error', 'form.edit_project', function(ev, data) {
         HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
       })
-      .on('ajax:complete', function() {
+      .on('ajax:complete', 'form.edit_project', function() {
         animateSpinner($('#projects-cards-view').closest('.tab-content'), false);
       });
   }
 
   function initManageUsersModal() {
     // Reload users tab HTML element when modal is closed
-    projectActionsModal.off('hide.bs.modal').on('hide.bs.modal', function() {
+    manageProjectUsersModal.on('hide.bs.modal', function() {
       refreshCurrentView();
     });
-
-    // Remove modal content when modal window is closed.
-    projectActionsModal.off('hidden.bs.modal').on('hidden.bs.modal', function() {
-      projectActionsModalHeader.html('');
-      projectActionsModalBody.html('');
-      projectActionsModalFooter.html('');
-    });
-  }
-
-  // Initialize users editing modal remote loading.
-  global.initUsersEditLink = function($el) {
-    $el.find('.manage-users-link').off()
-      .on('ajax:before', function() {
-        projectActionsModal.modal('show');
-      })
-      .on('ajax:success', function(e, data) {
-        $('#manage-users-modal-project').text(data.project.name);
-        initUsersModalBody(data);
-      });
   }
 
   /**
    * Initialize the JS for export projects modal to work.
    */
   function initExportProjectsModal() {
-    $(toolbarWrapper).on('click', exportProjectsBtn, function(ev) {
+    $(projectsWrapper).on('click', exportProjectsBtn, function(ev) {
       ev.stopPropagation();
       ev.preventDefault();
       // Load HTML to refresh users list
@@ -209,7 +187,7 @@
     });
 
     // Remove modal content when modal window is closed.
-    exportProjectsModal.off().on('hidden.bs.modal', function() {
+    exportProjectsModal.on('hidden.bs.modal', function() {
       exportProjectsModalHeader.html('');
       exportProjectsModalBody.html('');
     });
@@ -217,7 +195,7 @@
 
   function initExportProjects() {
     // Submit the export projects
-    $(exportProjectsSubmit).off('click').click(function() {
+    $(exportProjectsSubmit).click(function() {
       $.ajax({
         url: $(exportProjectsSubmit).data('export-projects-submit-url'),
         type: 'POST',
@@ -238,14 +216,29 @@
     });
   }
 
+  // Initialize ajax listeners and elements style on modal body. This
+  // function must be called when modal body is changed.
+  function initManageProjectUsersModalBody(data) {
+    manageProjectUsersModal.find('.modal-title').html(data.html_title);
+    manageProjectUsersModal.find('.modal-body').html(data.html_body).find('.selectpicker').selectpicker();
+    manageProjectUsersModal.find('.modal-footer').html(data.html_footer);
+  }
+
+  // Initialize manage project users modal remote loading.
+  function initManageProjectUsersLink() {
+    $(projectsWrapper).on('ajax:success', '.manage-project-users-link', function(e, data) {
+      initManageProjectUsersModalBody(data);
+      manageProjectUsersModal.modal('show');
+    });
+  }
+
   // Initialize reloading manage user modal content after posting new
   // user.
-
   function initAddUserForm() {
-    projectActionsModalBody.find('.add-user-form').off()
-      .on('ajax:success', function(e, data) {
+    manageProjectUsersModal
+      .on('ajax:success', '.add-user-form', function(e, data) {
         var errorBlock;
-        initUsersModalBody(data);
+        initManageProjectUsersModalBody(data);
         if (data.status === 'error') {
           $(this).addClass('has-error');
           errorBlock = $(this).find('span.help-block');
@@ -260,47 +253,32 @@
 
   // Initialize remove user from project links.
   function initRemoveUserLinks() {
-    projectActionsModalBody.find('.remove-user-link').off()
-      .on('ajax:success', function(e, data) {
-        initUsersModalBody(data);
-      });
+    manageProjectUsersModal.on('ajax:success', '.remove-user-link', function(e, data) {
+      initManageProjectUsersModalBody(data);
+    });
   }
 
   //
   function initUserRoleForms() {
-    projectActionsModalBody.find('.update-user-form select').off()
-      .on('change', function() {
+    manageProjectUsersModal
+      .on('change', '.update-user-form select', function() {
         $(this).parents('form').submit();
       });
 
-    projectActionsModalBody.find('.update-user-form').off()
-      .on('ajax:success', function(e, data) {
-        initUsersModalBody(data);
+    manageProjectUsersModal
+      .on('ajax:success', '.update-user-form', function(e, data) {
+        initManageProjectUsersModalBody(data);
       })
       .on('ajax:error', function() {
         // TODO
       });
   }
 
-  // Initialize ajax listeners and elements style on modal body. This
-  // function must be called when modal body is changed.
-  function initUsersModalBody(data) {
-    projectActionsModalHeader.html(data.html_header);
-    projectActionsModalBody.html(data.html_body);
-    projectActionsModalFooter.html(data.html_footer);
-    projectActionsModalBody.find('.selectpicker').selectpicker();
-    initAddUserForm();
-    initRemoveUserLinks();
-    initUserRoleForms();
-  }
-
   function updateSelectedCards() {
-    $('.panel-project').removeClass('selected');
-    $('.project-card-selector').prop('checked', false);
+    $('.project-card').removeClass('selected');
     $.each(selectedProjects, function(index, value) {
-      var selectedCard = $('.panel-project[id=' + value + ']');
+      let selectedCard = $('.project-card[data-id="' + value + '"]');
       selectedCard.addClass('selected');
-      selectedCard.find('.project-card-selector').prop('checked', true);
     });
   }
 
@@ -336,125 +314,21 @@
     }
   }
 
-  $('#wrapper').on('click', '.project-folder-link', function(event) {
+  $(projectsWrapper).on('click', '.project-folder-link', function(event) {
     event.preventDefault();
     event.stopPropagation();
-    let viewContainer = $('#cardsWrapper');
+    let viewContainer = $(cardsWrapper);
     viewContainer.data('projects-cards-url', $(this).data('projectsCardsUrl'));
     history.replaceState({}, '', this.href);
     $('.sidebar-container').data('sidebar-url', $(this).data('sidebar-url'));
     refreshCurrentView();
   });
 
-  /**
-   * Initializes cards view
-   */
-  function init() {
-    projectActionsModal = $('#project-actions-modal');
-    projectActionsModalHeader = projectActionsModal.find('.modal-title');
-    projectActionsModalBody = projectActionsModal.find('.modal-body');
-    projectActionsModalFooter = projectActionsModal.find('.modal-footer');
-
-    exportProjectsModal = $('#export-projects-modal');
-    exportProjectsModalHeader = exportProjectsModal.find('.modal-title');
-    exportProjectsModalBody = exportProjectsModal.find('.modal-body');
-
-    updateSelectedCards();
-    initNewProjectFolderModal();
-    initNewProjectModal();
-    initManageUsersModal();
-    initExportProjectsModal();
-    initExportProjects();
-    initArchiveRestoreToolbarButtons();
-    initUsersEditLink($('.project-card'));
-
-    initFormSubmitLinks($('.project-card'));
-    initArchiveRestoreButton($('.project-card'));
-
-    $('#cardsWrapper').on('click', '.folder-card-selector', function() {
-      let folderCard = $(this).closest('.folder-card');
-      let folderId = folderCard.data('id');
-      let index = $.inArray(folderId, selectedProjectFolders);
-
-      // If checkbox is checked and row ID is not in list of selected folder IDs
-      if (this.checked && index === -1) {
-        selectedProjectFolders.push(folderId);
-        $(exportProjectsBtn).removeAttr('disabled');
-      // Otherwise, if checkbox is not checked and ID is in list of selected IDs
-      } else if (!this.checked && index !== -1) {
-        selectedProjectFolders.splice(index, 1);
-      }
-
-      updateProjectsToolbar();
-    });
-
-    $('#cardsWrapper').on('click', '.project-card-selector', function() {
-      let projectsToolbar = $('#projectsToolbar');
-      let projectCard = $(this).closest('.project-card');
-      let projectId = projectCard.data('id');
-      // Determine whether ID is in the list of selected project IDs
-      let index = $.inArray(projectId, selectedProjects);
-
-      // If checkbox is checked and row ID is not in list of selected project IDs
-      if (this.checked && index === -1) {
-        $(this).closest('.panel-project').addClass('selected');
-        selectedProjects.push(projectId);
-        $(exportProjectsBtn).removeAttr('disabled');
-      // Otherwise, if checkbox is not checked and ID is in list of selected IDs
-      } else if (!this.checked && index !== -1) {
-        $(this).closest('.panel-project').removeClass('selected');
-        selectedProjects.splice(index, 1);
-      }
-
-      updateProjectsToolbar();
-
-      selectedProjects.forEach(function(id) {
-        if ($('#projects-cards-view').find(`.panel-project[data-id="${id}"]`).hasClass('project-folder')) {
-          projectsToolbar.find('.project-only-action').attr('disabled', true);
-        }
-      });
-    });
-
-    // initialize project tab remote loading
-    $('.panel-project .active').removeClass('active');
-    $('.panel-project .panel-footer [role=tab]').off()
-      .on('ajax:before', function() {
-        var $this = $(this);
-        var parentNode = $this.parents('li');
-        var targetId = $this.attr('aria-controls');
-
-        if (parentNode.hasClass('active')) {
-          // TODO move to fn
-          parentNode.removeClass('active');
-          $('#' + targetId).removeClass('active');
-          return false;
-        }
-        return true;
-      })
-      .on('ajax:success', function(e, data) {
-        var $this = $(this);
-        var targetId = $this.attr('aria-controls');
-        var target = $('#' + targetId);
-        var parentNode = $this.parents('ul').parent();
-
-        target.html(data.html);
-        initUsersEditLink(parentNode);
-        parentNode.find('.active').removeClass('active');
-        $this.parents('li').addClass('active');
-        target.addClass('active');
-
-        Comments.init('simple')
-      })
-      .on('ajax:error', function() {
-        // TODO
-      });
-  }
-
   function refreshCurrentView() {
     loadCardsView();
     Sidebar.reload({
       sort: projectsCurrentSort,
-      view_mode: $('.projects-index').data('view-mode')
+      view_mode: $('.projects-index').data('mode')
     });
   }
 
@@ -571,14 +445,14 @@
       });
     }
 
-    $(toolbarWrapper).on('click', '.move-projects-btn', function(e) {
+    $(projectsWrapper).on('click', '.move-projects-btn', function(e) {
       e.preventDefault();
       loadMoveToModal($(this).data('url'));
     });
   }
 
   function loadCardsView() {
-    var viewContainer = $('#cardsWrapper');
+    var viewContainer = $(cardsWrapper);
     $.ajax({
       url: viewContainer.data('projects-cards-url'),
       type: 'GET',
@@ -596,7 +470,7 @@
       },
       success: function(data) {
         $('#breadcrumbsWrapper').html(data.breadcrumbs_html);
-        $('#toolbarWrapper').html(data.toolbar_html);
+        $(toolbarWrapper).html(data.toolbar_html);
         viewContainer.data('projects-cards-url', data.projects_cards_url);
         viewContainer.removeClass('no-results');
         viewContainer.find('.card, .projects-group, .no-results-container').remove();
@@ -607,7 +481,6 @@
         selectedProjects.length = 0;
         selectedProjectFolders.length = 0;
         updateProjectsToolbar();
-        init();
       },
       error: function() {
         viewContainer.html('Error loading project list');
@@ -623,9 +496,9 @@
       let $btn = $(this);
       $('.projects-view-mode').removeClass('active');
       if ($btn.hasClass('view-switch-cards')) {
-        $('#cardsWrapper').removeClass('list');
+        $(cardsWrapper).removeClass('list');
       } else if ($btn.hasClass('view-switch-list')) {
-        $('#cardsWrapper').addClass('list');
+        $(cardsWrapper).addClass('list');
       }
       $btn.addClass('active');
     });
@@ -798,10 +671,70 @@
     });
   }
 
-  initEditButton();
-  initMoveButton();
-  initProjectsViewModeSwitch();
-  initSorting();
-  loadCardsView();
-  initProjectsFilters();
-}(window));
+  /**
+   * Initializes cards view
+   */
+  function init() {
+    manageProjectUsersModal = $('#manageProjectUsersModal');
+    exportProjectsModal = $('#export-projects-modal');
+    exportProjectsModalHeader = exportProjectsModal.find('.modal-title');
+    exportProjectsModalBody = exportProjectsModal.find('.modal-body');
+
+    updateSelectedCards();
+    initNewProjectFolderModal();
+    initNewProjectModal();
+    initManageUsersModal();
+    initExportProjectsModal();
+    initExportProjects();
+    initArchiveRestoreToolbarButtons();
+    initManageProjectUsersLink();
+    initAddUserForm();
+    initRemoveUserLinks();
+    initUserRoleForms();
+    initEditButton();
+    initMoveButton();
+    initProjectsViewModeSwitch();
+    initSorting();
+    initProjectsFilters();
+    initFormSubmitLinks($('.project-card'));
+    initArchiveRestoreButton();
+    loadCardsView();
+
+    $(projectsWrapper).on('click', '.folder-card-selector', function() {
+      let folderCard = $(this).closest('.folder-card');
+      let folderId = folderCard.data('id');
+      let index = $.inArray(folderId, selectedProjectFolders);
+
+      // If checkbox is checked and row ID is not in list of selected folder IDs
+      if (this.checked && index === -1) {
+        selectedProjectFolders.push(folderId);
+      // Otherwise, if checkbox is not checked and ID is in list of selected IDs
+      } else if (!this.checked && index !== -1) {
+        selectedProjectFolders.splice(index, 1);
+      }
+
+      updateProjectsToolbar();
+    });
+
+    $(projectsWrapper).on('click', '.project-card-selector', function() {
+      let projectCard = $(this).closest('.project-card');
+      let projectId = projectCard.data('id');
+      // Determine whether ID is in the list of selected project IDs
+      let index = $.inArray(projectId, selectedProjects);
+
+      // If checkbox is checked and row ID is not in list of selected project IDs
+      if (this.checked && index === -1) {
+        $(this).closest('.project-card').addClass('selected');
+        selectedProjects.push(projectId);
+      // Otherwise, if checkbox is not checked and ID is in list of selected IDs
+      } else if (!this.checked && index !== -1) {
+        $(this).closest('.project-card').removeClass('selected');
+        selectedProjects.splice(index, 1);
+      }
+
+      updateProjectsToolbar();
+    });
+  }
+
+  init();
+}());

@@ -11,7 +11,7 @@
   <%= render partial: 'projects/index/breadcrumbs' if @current_folder %>
 <% end %>
 
-<div class="content-pane flexible projects-index <%= projects_view_mode %>" data-view-mode="<%= projects_view_mode %>">
+<div id="projectsWrapper" class="content-pane flexible projects-index <%= projects_view_mode %>" data-view-mode="<%= projects_view_mode %>">
   <%= render partial: 'projects/index/header' %>
 
   <span style="display: none;" data-hook="projects-index-html"></span>

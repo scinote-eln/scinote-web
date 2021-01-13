@@ -34,14 +34,9 @@ class UserProjectsController < ApplicationController
       format.json do
         render json: {
           project: @project,
-          html_header: t('projects.index.modal_manage_users.modal_title_html',
-                         name: @project.name),
-          html_body: render_to_string(
-            partial: 'index_edit.html.erb'
-          ),
-          html_footer: render_to_string(
-            partial: 'index_edit_footer.html.erb'
-          )
+          html_title: t('projects.index.modal_manage_users.modal_title', name: @project.name),
+          html_body: render_to_string(partial: 'index_edit.html.erb'),
+          html_footer: render_to_string(partial: 'index_edit_footer.html.erb')
         }
       end
     end
