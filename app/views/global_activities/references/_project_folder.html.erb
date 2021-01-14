@@ -4,7 +4,7 @@
   <span class="fas fa-folder"></span>
 
   <% if subject %>
-    <% path = projects_path(team: team) %>
+    <% path = project_folder_path(subject, team: team) %>
     <%= route_to_other_team(path,
                             team,
                             subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),

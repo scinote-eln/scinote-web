@@ -88,7 +88,7 @@ module GlobalActivitiesHelper
     when Report
       path = reports_path(team: obj.team.id)
     when ProjectFolder
-      path = projects_path
+      path = project_folder_path(obj, team: obj.team.id)
     else
       return current_value
     end
