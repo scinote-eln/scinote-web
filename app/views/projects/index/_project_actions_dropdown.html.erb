@@ -1,4 +1,4 @@
-<% cache [current_user, project, has_unseen_comments?(project)] do %>
+<% cache [current_user, project] do %>
   <div class="dropdown project-actions-menu <%= 'new-comments' if has_unseen_comments?(project) %>">
     <button class="btn btn-light dropdown-toggle icon-btn" type="button" id="projectActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
       <i class="fas fa-ellipsis-h"></i>

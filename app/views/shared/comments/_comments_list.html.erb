@@ -2,4 +2,5 @@
   <%= render partial: 'shared/comments/comment.html.erb',
              locals: { comment: comment } %>
 <% end %>
+<% @commentable.touch %>
 <% comments.mark_as_seen_by(current_user) %>
