@@ -1,8 +1,10 @@
 <% cards.each  do |card| %>
-  <% cache [current_user, card] do %>
-    <% if card.is_a? Project %>
+  <% if card.is_a? Project %>
+    <% cache [current_user, card, has_unseen_comments?(card)] do %>
       <%= render partial: 'projects/index/project_card', locals: { project: card } %>
-    <% else %>
+    <% end %>
+  <% else %>
+    <% cache [current_user, card] do %>
       <%= render partial: 'projects/index/folder_card', locals: { folder: card } %>
     <% end %>
   <% end %>

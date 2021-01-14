@@ -13,7 +13,7 @@ class CommentsController < ApplicationController
   before_action :check_manage_permissions, only: %i(update destroy)
 
   def index
-    comments = @commentable.comments
+    comments = @commentable.comments.order(created_at: :asc)
 
     render json: {
       object_name: @commentable.name,
