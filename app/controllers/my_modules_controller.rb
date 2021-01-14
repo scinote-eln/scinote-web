@@ -239,8 +239,9 @@ class MyModulesController < ApplicationController
                                 .project
                                 .team)
     @results_order = params[:order] || 'new'
-    @results = @my_module.results.where(archived: false).page(params[:page])
-                         .per(Constants::RESULTS_PER_PAGE_LIMIT)
+
+    @results = @my_module.archived_branch? ? @my_module.results : @my_module.results.active
+    @results = @results.page(params[:page]).per(Constants::RESULTS_PER_PAGE_LIMIT)
 
     @results = case @results_order
                when 'old' then @results.order(created_at: :asc)
