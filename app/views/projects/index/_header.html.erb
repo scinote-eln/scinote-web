@@ -1,8 +1,25 @@
 <div class="content-header">
   <h1 data-view-mode="active"><%= t('projects.index.head_title') %></h1>
-  <h1 data-view-mode="archived"><i class="fas fa-archive"></i>&nbsp;<%= t('projects.index.head_title') %></h1>
+  <h1 data-view-mode="archived"><i class="fas fa-archive"></i>&nbsp;<%= t('projects.index.head_title_archived') %></h1>
 
   <div class="sci-btn-group header-actions">
+    <%= render layout: 'shared/view_switch', locals: { disabled: false } do %>
+      <li class="view-switch-cards projects-view-mode active">
+        <i class="fas fa-th-large button-icon"></i> <%= t('projects.index.header.cards') %>
+      </li>
+
+      <li class="view-switch-list projects-view-mode ">
+        <i class="fas fa-list button-icon"></i> <%= t('projects.index.header.table') %>
+      </li>
+
+      <li class="view-switch-active archive-switch" data-view-mode="archived" data-url="<%= projects_path %>">
+        <i class="fas fa-rocket button-icon"></i> <%= t('projects.index.header.active_projects') %>
+      </li>
+
+      <li class="view-switch-archived archive-switch" data-view-mode="active" data-url="<%= projects_path(mode: 'archived') %>">
+        <i class="fas fa-archive button-icon"></i> <%= t('projects.index.header.archived_projects') %>
+      </li>
+    <% end %>
     <div class="filter-container dropdown project-filters-dropdown">
       <button class="btn btn-light icon-btn filter-button" data-toggle="dropdown"><i class="fas fa-filter"></i></button>
       <div class="dropdown-menu dropdown-menu-right projects-filters" role="menu" data-team-id="<%= current_team.id %>">
@@ -11,7 +28,6 @@
           <div class="btn btn-light clear-button">
             <i class="fas fa-times-circle"></i><%= t("projects.index.filters_modal.clear_btn") %></div>
         </div>
-
         <div class="select-block dropdown-selector-container">
           <label><%= t('projects.index.filters_modal.text.label') %></label>
           <div class="input-field dropdown text-search-filter">
@@ -148,23 +164,5 @@
         <% end %>
       </ul>
     </div>
-
-    <%= render layout: 'shared/view_switch', locals: { disabled: false } do %>
-      <li class="view-switch-cards projects-view-mode active">
-        <i class="fas fa-th-large button-icon"></i> <%= t('projects.index.header.cards') %>
-      </li>
-
-      <li class="view-switch-list projects-view-mode ">
-        <i class="fas fa-list button-icon"></i> <%= t('projects.index.header.table') %>
-      </li>
-
-      <li class="view-switch-active archive-switch" data-view-mode="archived" data-url="<%= projects_path %>">
-        <i class="fas fa-rocket button-icon"></i> <%= t('projects.index.header.active_projects') %>
-      </li>
-
-      <li class="view-switch-archived archive-switch" data-view-mode="active" data-url="<%= projects_path(mode: 'archived') %>">
-        <i class="fas fa-archive button-icon"></i> <%= t('projects.index.header.archived_projects') %>
-      </li>
-    <% end %>
   </div>
 </div>
