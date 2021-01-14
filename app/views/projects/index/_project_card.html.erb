@@ -65,7 +65,7 @@
 
       <% if can_manage_project?(project) %>
         <%= link_to project_users_edit_path(project),
-                    class: 'manage-users-link',
+                    class: 'manage-users-link manage-project-users-link',
                     remote: true,
                     data: { 'view-mode': 'active' } do %>
           <span class="new-user">
