@@ -328,7 +328,7 @@
     loadCardsView();
     Sidebar.reload({
       sort: projectsCurrentSort,
-      view_mode: $('.projects-index').data('mode')
+      view_mode: $('.projects-index').data('view-mode')
     });
   }
 
