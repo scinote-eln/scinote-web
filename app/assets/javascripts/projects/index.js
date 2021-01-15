@@ -57,7 +57,7 @@
     $(projectsWrapper)
       .on('ajax:success', '.new-project-folder-btn', function(e, data) {
         // Add and show modal
-        $(toolbarWrapper).append($.parseHTML(data.html));
+        $(projectsWrapper).append($.parseHTML(data.html));
         $(newProjectFolderModal).modal('show');
         $(newProjectFolderModal).find("input[type='text']").focus();
         // Remove modal when it gets closed
@@ -87,7 +87,7 @@
     $(projectsWrapper)
       .on('ajax:success', '.new-project-btn', function(ev, data) {
         // Add and show modal
-        $(toolbarWrapper).append($.parseHTML(data.html));
+        $(projectsWrapper).append($.parseHTML(data.html));
         $(newProjectModal).modal('show');
         $(newProjectModal).find("input[type='text']").focus();
         // Remove modal when it gets closed
