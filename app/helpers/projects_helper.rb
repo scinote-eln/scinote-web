@@ -2,11 +2,11 @@
 
 module ProjectsHelper
   def projects_view_mode
-    params[:view_mode] == 'archived' ? 'archived' : 'active'
+    params[:mode] == 'archived' ? 'archived' : 'active'
   end
 
   def projects_view_mode_archived?
-    params[:view_mode] == 'archived'
+    params[:mode] == 'archived'
   end
 
   def user_project_role_to_s(user_project)
