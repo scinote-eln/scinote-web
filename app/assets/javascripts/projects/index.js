@@ -540,6 +540,38 @@
   }
 
   function initProjectsFilters() {
+    function applyFilters() {
+      let teamId = $('.projects-filters').data('team-id');
+      projectsViewSearch = $('#textSearchFilterInput').closest('.select-block').find('input[type=text]').val();
+      try {
+        let storagePath = `project_filters_per_team/${teamId}/recent_search_keywords`;
+        let recentSearchKeywords = JSON.parse(localStorage.getItem(storagePath));
+        if (!Array.isArray(recentSearchKeywords)) recentSearchKeywords = [];
+        if (recentSearchKeywords.indexOf(projectsViewSearch) !== -1) {
+          recentSearchKeywords.splice(recentSearchKeywords.indexOf(projectsViewSearch), 1);
+        }
+        if (recentSearchKeywords.length > 4) {
+          recentSearchKeywords = recentSearchKeywords.slice(0, 4);
+        }
+        recentSearchKeywords.unshift(projectsViewSearch);
+        localStorage.setItem(storagePath, JSON.stringify(recentSearchKeywords));
+      } catch (error) {
+        console.error(error);
+      }
+
+      $('#applyProjectFiltersButton').closest('.dropdown').removeClass('open');
+
+      createdOnFromFilter = $createdOnFromFilter.val();
+      createdOnToFilter = $createdOnToFilter.val();
+      membersFilter = dropdownSelector.getValues($('.members-filter'));
+      lookInsideFolders = $foldersCB.prop('checked') ? 'true' : '';
+      archivedOnFromFilter = $archivedOnFromFilter.val();
+      archivedOnToFilter = $archivedOnToFilter.val();
+
+      appliedFiltersMark();
+      refreshCurrentView();
+    }
+
     let $projectsFilter = $('.projects-index .projects-filters');
     let $membersFilter = $('.members-filter', $projectsFilter);
     let $foldersCB = $('#folder_search', $projectsFilter);
@@ -607,41 +639,13 @@
       $('#textSearchFilterHistory').hide();
       $textFilter.closest('.dropdown').removeClass('open');
       $('#folderSearchInfo').hide();
+      applyFilters();
     });
 
     $('#applyProjectFiltersButton').click((e) => {
       e.stopPropagation();
       e.preventDefault();
-
-      let teamId = $('.projects-filters').data('team-id');
-      projectsViewSearch = $('#textSearchFilterInput').closest('.select-block').find('input[type=text]').val();
-      try {
-        let storagePath = `project_filters_per_team/${teamId}/recent_search_keywords`;
-        let recentSearchKeywords = JSON.parse(localStorage.getItem(storagePath));
-        if (!Array.isArray(recentSearchKeywords)) recentSearchKeywords = [];
-        if (recentSearchKeywords.indexOf(projectsViewSearch) !== -1) {
-          recentSearchKeywords.splice(recentSearchKeywords.indexOf(projectsViewSearch), 1);
-        }
-        if (recentSearchKeywords.length > 4) {
-          recentSearchKeywords = recentSearchKeywords.slice(0, 4);
-        }
-        recentSearchKeywords.unshift(projectsViewSearch);
-        localStorage.setItem(storagePath, JSON.stringify(recentSearchKeywords));
-      } catch (error) {
-        console.error(error);
-      }
-
-      $(e.target).closest('.dropdown').removeClass('open');
-
-      createdOnFromFilter = $createdOnFromFilter.val();
-      createdOnToFilter = $createdOnToFilter.val();
-      membersFilter = dropdownSelector.getValues($('.members-filter'));
-      lookInsideFolders = $foldersCB.prop('checked');
-      archivedOnFromFilter = $archivedOnFromFilter.val();
-      archivedOnToFilter = $archivedOnToFilter.val();
-
-      appliedFiltersMark();
-      refreshCurrentView();
+      applyFilters();
     });
 
     // Clear filters
