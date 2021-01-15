@@ -6,7 +6,7 @@
               data: { projects_cards_url: cards_projects_url,
                       sidebar_url: sidebar_team_path(current_team) }) %>
   <span>/</span>
-  <% target_folder&.parent_folders&.each do |project_folder| %>
+  <% tree_ordered_parent_folders(target_folder)&.each do |project_folder| %>
     <%= link_to(project_folder.name,
                 project_folder_path(project_folder),
                 class: 'project-folder-link',
