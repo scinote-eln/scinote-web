@@ -10,7 +10,7 @@
 /* global animateSpinner initFormSubmitLinks HelperModule dropdownSelector Sidebar Turbolinks */
 
 (function() {
-  const PERMISSIONS = ['editable', 'archivable', 'restorable'];
+  const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable'];
   var projectsWrapper = '#projectsWrapper';
   var toolbarWrapper = '#toolbarWrapper';
   var cardsWrapper = '#cardsWrapper';
