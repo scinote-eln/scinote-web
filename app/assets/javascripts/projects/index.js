@@ -193,6 +193,15 @@
     });
   }
 
+  function initSelectAllCheckbox() {
+    $(projectsWrapper).on('click', '.sci-checkbox.select-all', function() {
+      var selectAll = this.checked
+      $.each($('.folder-card-selector, .project-card-selector'), function(checkbox) {
+        if (this.checked != selectAll) this.click();
+      })
+    })
+  }
+
   function initExportProjects() {
     // Submit the export projects
     $(exportProjectsSubmit).click(function() {
@@ -699,6 +708,7 @@
     initMoveButton();
     initProjectsViewModeSwitch();
     initSorting();
+    initSelectAllCheckbox();
     initProjectsFilters();
     initFormSubmitLinks($('.project-card'));
     initArchiveRestoreButton();
