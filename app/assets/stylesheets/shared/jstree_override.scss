@@ -1,21 +1,25 @@
 @import "constants";
 
 .folders-tree-container {
+  --row-height: 36px;
   background-color: $color-concrete;
   border-radius: 4px;
   height: 250px;
   overflow: auto;
   padding: .5em;
-  --row-height: 36px;
 
   .jstree-wholerow-hovered {
     background: $color-alto;
     border-radius: 4px;
+    height: var(--row-height);
+    margin-top: -2px;
   }
 
   .jstree-wholerow-clicked {
     background: $color-white;
     border-radius: 4px;
+    height: var(--row-height);
+    margin-top: -2px;
   }
 
   .jstree-search {
