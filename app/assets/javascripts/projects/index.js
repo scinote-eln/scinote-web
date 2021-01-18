@@ -344,8 +344,11 @@
             refreshCurrentView();
           }).on('ajax:error', function(ev, data) {
             HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
-            $(this).renderFormErrors('project', data.responseJSON.errors);
-            $(this).renderFormErrors('project_folder', data.responseJSON.errors);
+            if ($(this).hasClass('edit_project')) {
+              $(this).renderFormErrors('project', data.responseJSON.errors);
+            } else {
+              $(this).renderFormErrors('project_folder', data.responseJSON.errors);
+            }
           });
       });
     }
