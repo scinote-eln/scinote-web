@@ -195,11 +195,11 @@
 
   function initSelectAllCheckbox() {
     $(projectsWrapper).on('click', '.sci-checkbox.select-all', function() {
-      var selectAll = this.checked
-      $.each($('.folder-card-selector, .project-card-selector'), function(checkbox) {
-        if (this.checked != selectAll) this.click();
-      })
-    })
+      var selectAll = this.checked;
+      $.each($('.folder-card-selector, .project-card-selector'), function() {
+        if (this.checked !== selectAll) this.click();
+      });
+    });
   }
 
   function initExportProjects() {
