@@ -46,8 +46,10 @@ Canaid::Permissions.register_for(Experiment) do
   # active
   # experiment: restore
   can :restore_experiment do |user, experiment|
-    user.is_user_or_higher_of_project?(experiment.project) &&
-      experiment.archived?
+    project = experiment.project
+    user.is_user_or_higher_of_project?(project) &&
+      experiment.archived? &&
+      project.active?
   end
 
   # experiment: copy

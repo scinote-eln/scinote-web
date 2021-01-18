@@ -16,7 +16,7 @@
         <i class="fas fa-rocket button-icon"></i> <%= t('projects.index.header.active_projects') %>
       </li>
 
-      <li class="view-switch-archived archive-switch" data-view-mode="active" data-url="<%= projects_path(mode: 'archived') %>">
+      <li class="view-switch-archived archive-switch" data-view-mode="active" data-url="<%= projects_path(view_mode: 'archived') %>">
         <i class="fas fa-archive button-icon"></i> <%= t('projects.index.header.archived_projects') %>
       </li>
     <% end %>
@@ -150,7 +150,7 @@
         <span><i class="fas fa-sort-amount-down"></i></span>
         <span class="caret"></span>
       </button>
-      <ul id="sortMenuDropdown" class="dropdown-menu sort-projects-menu" aria-labelledby="sortMenu">
+      <ul id="sortMenuDropdown" class="dropdown-menu sort-projects-menu dropdown-menu-right" aria-labelledby="sortMenu">
         <% %w(new old atoz ztoa archived_new archived_old).each_with_index do |sort, i| %>
           <% if i.even? && i.positive? %>
             <li class="divider" <%= i > 3 ? 'data-view-mode=archived' : '' %>></li>
