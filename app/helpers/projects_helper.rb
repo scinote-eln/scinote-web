@@ -8,9 +8,7 @@ module ProjectsHelper
   end
 
   def projects_view_mode_archived?
-    return true if current_folder&.archived?
-
-    params[:view_mode] == 'archived'
+    projects_view_mode == 'archived'
   end
 
   def user_project_role_to_s(user_project)
