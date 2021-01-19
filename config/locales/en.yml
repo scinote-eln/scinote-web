@@ -461,6 +461,7 @@ en:
       modal_text_p3_html: "Please note that the number of exports is limited to %{limit} requests per day. After you confirm this export you will have %{num} left."
       modal_submit: "Export"
       success_flash: "Export request received. Your export request is being processed."
+      zero_projects_flash: "You have to select at least one project"
     activity:
       visibility_hidden: "Project members only"
       visibility_visible: "All team members"

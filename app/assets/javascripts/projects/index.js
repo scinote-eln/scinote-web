@@ -180,8 +180,8 @@
           // Show the modal
           exportProjectsModal.modal('show');
         },
-        error: function() {
-          // TODO
+        error: function(data) {
+          HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
         }
       });
     });
