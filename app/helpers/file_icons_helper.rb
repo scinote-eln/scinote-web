@@ -30,7 +30,7 @@ module FileIconsHelper
   end
 
   # For showing next to file
-  def file_extension_icon(asset)
+  def file_extension_icon(asset, report = false)
     file_ext = asset.file_name.split('.').last
     if Constants::FILE_TEXT_FORMATS.include?(file_ext)
       image_link = 'icon_small/docx_file.svg'
@@ -46,7 +46,14 @@ module FileIconsHelper
     image_link = Extends::FILE_ICON_MAPPINGS[file_ext] if Extends::FILE_ICON_MAPPINGS[file_ext]
 
     if image_link
-      ActionController::Base.helpers.image_tag(image_link, class: 'image-icon')
+      if report
+        content_tag(:span) do
+          concat ActionController::Base.helpers.image_tag(image_link, class: 'image-icon preview')
+          concat wicked_pdf_image_tag(image_link, class: 'image-icon report')
+        end
+      else
+        ActionController::Base.helpers.image_tag(image_link, class: 'image-icon')
+      end
     else
       ''
     end
@@ -100,8 +107,8 @@ module FileIconsHelper
     end
   end
 
-  def file_extension_icon_html(asset)
-    html = file_extension_icon(asset)
+  def file_extension_icon_html(asset, report = false)
+    html = file_extension_icon(asset, report)
     if html.blank?
       html = ActionController::Base.helpers.content_tag(
         :i,
