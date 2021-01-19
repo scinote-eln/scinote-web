@@ -65,6 +65,8 @@ class TeamsController < ApplicationController
           status: 'error'
         }
       end
+    else
+      render json: { flash: I18n.t('projects.export_projects.zero_projects_flash') }, status: :unprocessable_entity
     end
   end
 

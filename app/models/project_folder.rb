@@ -87,9 +87,7 @@ class ProjectFolder < ApplicationRecord
   end
 
   def inner_projects
-    project_folders.map do |inner_folder|
-      projects + inner_folder.inner_projects
-    end.flatten
+    Project.where(project_folder: ProjectFolder.inner_folders(team, self) + [self])
   end
 
   private
