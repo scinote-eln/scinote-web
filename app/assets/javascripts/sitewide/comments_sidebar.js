@@ -120,9 +120,9 @@ var CommentsSidebar = (function() {
   }
 
   function initInputField() {
-    $(document).on('turbolinks:load', function() {
+    if ($(SIDEBAR).find('.comment-input-field').length) {
       SmartAnnotation.init($(SIDEBAR).find('.comment-input-field'));
-    });
+    }
   }
 
   return {
@@ -131,7 +131,6 @@ var CommentsSidebar = (function() {
       initCloseButton();
       initSendButton();
       initDeleteButton();
-      initInputField();
       initEditButton();
       initCancelButton();
     },
@@ -143,6 +142,7 @@ var CommentsSidebar = (function() {
       $(SIDEBAR).find('.sidebar-footer').removeClass('update');
       $(SIDEBAR).data('object-type', objectType).data('object-id', objectId);
       $(SIDEBAR).addClass('open loading');
+      initInputField();
       loadCommentsList();
     },
     close: function() {
