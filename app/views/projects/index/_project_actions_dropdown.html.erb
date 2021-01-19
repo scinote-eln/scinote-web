@@ -23,25 +23,29 @@
       <% end %>
       <!-- Archive/restore project -->
       <% if project.active? && can_archive_project?(project) %>
-        <li>
-          <a href="#"
-             class="form-submit-link"
-             data-turbolinks="false"
-             data-submit-form="<%= project_form.options[:html][:id] %>"
-             data-confirm-form="<%= t("projects.index.archive_confirm") %>">
-             <i class="fas fa-archive"></i>
-             <span><%= t ('projects.index.archive_option') %></span>
-           </a>
+        <li class="form-dropdown-item">
+          <%= button_to(project_path(project, format: :json),
+                        method: :put,
+                        remote: true,
+                        class: 'btn btn-light',
+                        form_class: 'project-archive-restore-form',
+                        data: { confirm: t('projects.index.archive_confirm') },
+                        params: { project: { archived: true } }) do %>
+            <i class="fas fa-archive"></i>
+            <span><%= t('projects.index.archive_option') %></span>
+        <% end %>
         </li>
       <% elsif project.archived? && can_restore_project?(project) %>
-        <li>
-          <a href="#"
-            class="form-submit-link"
-            data-turbolinks="false"
-            data-submit-form="<%= project_form.options[:html][:id] %>">
+        <li class="form-dropdown-item">
+          <%= button_to(project_path(project, format: :json),
+                        method: :put,
+                        remote: true,
+                        class: 'btn btn-light',
+                        form_class: 'project-archive-restore-form',
+                        params: { project: { archived: false } }) do %>
             <i class="fas fa-undo"></i>
             <span><%= t('projects.index.restore_option') %></span>
-          </a>
+          <% end %>
         </li>
       <% end %>
       <!-- Show comments -->
