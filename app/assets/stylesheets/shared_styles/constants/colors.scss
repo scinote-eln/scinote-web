@@ -52,3 +52,6 @@ $brand-info: $brand-focus;
 $brand-other: $brand-success;
 $brand-extra: $brand-focus;
 $brand-light-blue: $brand-focus-light;
+
+// This color was removed from constants, but it is still in use for DD hover. Need it for button in DD
+$color-dd-hover: #f5f5f5;

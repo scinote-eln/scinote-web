@@ -7,7 +7,7 @@
 // - refresh project users tab after manage user modal is closed
 // - refactor view handling using library, ex. backbone.js
 
-/* global animateSpinner initFormSubmitLinks HelperModule dropdownSelector Sidebar Turbolinks */
+/* global animateSpinner HelperModule dropdownSelector Sidebar Turbolinks */
 
 (function() {
   const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable'];
@@ -124,16 +124,12 @@
   // init project card archive/restore function
   function initArchiveRestoreButton() {
     $(projectsWrapper)
-      .on('ajax:success', 'form.edit_project', function(ev, data) {
+      .on('ajax:success', '.project-archive-restore-form', function(ev, data) {
         HelperModule.flashAlertMsg(data.message, 'success');
-        // Project saved, reload view
         refreshCurrentView();
       })
-      .on('ajax:error', 'form.edit_project', function(ev, data) {
+      .on('ajax:error', '.project-archive-restore-form', function(ev, data) {
         HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
-      })
-      .on('ajax:complete', 'form.edit_project', function() {
-        animateSpinner($('#projects-cards-view').closest('.tab-content'), false);
       });
   }
 
@@ -721,7 +717,6 @@
     initSorting();
     initSelectAllCheckbox();
     initProjectsFilters();
-    initFormSubmitLinks($('.project-card'));
     initArchiveRestoreButton();
     loadCardsView();
 
