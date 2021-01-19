@@ -103,7 +103,7 @@ class TeamsController < ApplicationController
     if export_projects_params[:project_folder_ids]
       folders = @team.project_folders.where(id: export_projects_params[:project_folder_ids])
       folders.each do |folder|
-        @exp_projects += folder.inner_projects
+        @exp_projects += folder.inner_projects.visible_to(current_user, @team)
       end
     end
 
