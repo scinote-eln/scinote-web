@@ -41,7 +41,7 @@ module ApplicationHelper
   end
 
   def displayable_flash_type?(type)
-    %w(success warning error notice).include?(type)
+    %w(success warning alert error notice).include?(type)
   end
 
   def flash_alert_class(type)
@@ -50,7 +50,7 @@ module ApplicationHelper
       'alert-success'
     when 'warning'
       'alert-warning'
-    when 'error'
+    when 'error', 'alert'
       'alert-danger'
     else
       'alert-info'
