@@ -3,6 +3,9 @@
 class TeamsController < ApplicationController
   include ProjectsHelper
 
+  attr_reader :current_folder
+  helper_method :current_folder
+
   before_action :load_vars, only: %i(sidebar export_projects export_projects_modal)
   before_action :load_current_folder, only: :sidebar
   before_action :check_read_permissions

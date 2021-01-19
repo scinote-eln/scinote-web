@@ -1,5 +1,5 @@
 <% provide(:sidebar_title, t("projects.index.navigation_title")) %>
-<% provide(:sidebar_url, sidebar_team_path(current_team, project_folder_id: @current_folder&.id)) %>
+<% provide(:sidebar_url, sidebar_team_path(current_team, project_folder_id: current_folder&.id)) %>
 <% provide(:container_class, 'no-second-nav-container') %>
 
 <%= content_for :sidebar do %>
@@ -7,7 +7,7 @@
 <% end %>
 
 <% content_for :breadcrumbs do %>
-  <%= render partial: 'projects/index/breadcrumbs' if @current_folder %>
+  <%= render partial: 'projects/index/breadcrumbs' if current_folder %>
 <% end %>
 
 <div id="projectsWrapper" class="content-pane flexible projects-index <%= projects_view_mode %>" data-view-mode="<%= projects_view_mode %>">
@@ -23,7 +23,7 @@
   <div class="projects-container">
     <div id="toolbarWrapper">
     </div>
-    <div class="cards-wrapper" id="cardsWrapper" data-projects-cards-url="<%= @current_folder ? project_folder_cards_url(@current_folder) : cards_projects_url %>">
+    <div class="cards-wrapper" id="cardsWrapper" data-projects-cards-url="<%= current_folder ? project_folder_cards_url(current_folder) : cards_projects_url %>">
       <div class="table-header">
         <div class="table-header-cell select-all-checkboxes">
           <div class="sci-checkbox-container">

@@ -3,7 +3,7 @@
     <div class="project-actions">
       <!-- new project button -->
       <% if current_team && can_create_projects?(current_team) %>
-        <%= link_to new_project_path(project_folder_id: @current_folder),
+        <%= link_to new_project_path(project_folder_id: current_folder),
                     class: 'btn btn-primary new-project-btn',
                     data: { view_mode: 'active' },
                     remote: true do %>
@@ -13,7 +13,7 @@
       <% end %>
       <!-- new project folder button -->
       <% if current_team && can_create_project_folders?(current_team) %>
-        <%= link_to new_project_folder_path(project_folder_id: @current_folder, view_mode: projects_view_mode),
+        <%= link_to new_project_folder_path(project_folder_id: current_folder, view_mode: projects_view_mode),
                     class: 'btn btn-light new-project-folder-btn',
                     remote: true do %>
           <span class="fas fa-folder" aria-hidden="true"></span>

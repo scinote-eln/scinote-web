@@ -314,13 +314,12 @@
     }
   }
 
-  $(projectsWrapper).on('click', '.project-folder-link', function(event) {
+  $('#content-wrapper').on('click', '.project-folder-link', function(event) {
     event.preventDefault();
     event.stopPropagation();
-    let viewContainer = $(cardsWrapper);
-    viewContainer.data('projects-cards-url', $(this).data('projectsCardsUrl'));
+    $(cardsWrapper).data('projectsCardsUrl', $(this).data('projectsCardsUrl'));
     history.replaceState({}, '', this.href);
-    $('.sidebar-container').data('sidebar-url', $(this).data('sidebar-url'));
+    $('.sidebar-container').data('sidebarUrl', $(this).data('sidebarUrl'));
     refreshCurrentView();
   });
 
