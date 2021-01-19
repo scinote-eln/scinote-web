@@ -6,6 +6,9 @@ class ProjectsController < ApplicationController
   include InputSanitizeHelper
   include ProjectsHelper
 
+  attr_reader :current_folder
+  helper_method :current_folder
+
   before_action :switch_team_with_param, only: :index
   before_action :load_vars, only: %i(show edit update notifications experiment_archive sidebar)
   before_action :load_current_folder, only: %i(index cards new)
@@ -26,7 +29,7 @@ class ProjectsController < ApplicationController
   end
 
   def cards
-    overview_service = ProjectsOverviewService.new(current_team, current_user, @current_folder, params)
+    overview_service = ProjectsOverviewService.new(current_team, current_user, current_folder, params)
 
     if filters_included?
       render json: {
@@ -38,8 +41,8 @@ class ProjectsController < ApplicationController
       }
     else
       render json: {
-        projects_cards_url: @current_folder ? project_folder_cards_url(@current_folder) : cards_projects_url,
-        breadcrumbs_html: @current_folder ? render_to_string(partial: 'projects/index/breadcrumbs.html.erb') : '',
+        projects_cards_url: current_folder ? project_folder_cards_url(current_folder) : cards_projects_url,
+        breadcrumbs_html: current_folder ? render_to_string(partial: 'projects/index/breadcrumbs.html.erb') : '',
         toolbar_html: render_to_string(partial: 'projects/index/toolbar.html.erb'),
         cards_html: render_to_string(
           partial: 'projects/index/team_projects.html.erb',
@@ -62,7 +65,7 @@ class ProjectsController < ApplicationController
   end
 
   def new
-    @project = current_team.projects.new(project_folder: @current_folder)
+    @project = current_team.projects.new(project_folder: current_folder)
     respond_to do |format|
       format.json do
         render json: {

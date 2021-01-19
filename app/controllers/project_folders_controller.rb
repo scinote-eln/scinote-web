@@ -5,6 +5,9 @@ class ProjectFoldersController < ApplicationController
   include ProjectsHelper
   include ProjectFoldersHelper
 
+  attr_reader :current_folder
+  helper_method :current_folder
+
   before_action :load_current_folder, only: %i(new)
   before_action :load_project_folder, only: %i(edit update)
   before_action :check_create_permissions, only: %i(new create)
@@ -12,7 +15,7 @@ class ProjectFoldersController < ApplicationController
 
   def new
     @project_folder =
-      current_team.project_folders.new(parent_folder: @current_folder, archived: projects_view_mode_archived?)
+      current_team.project_folders.new(parent_folder: current_folder, archived: projects_view_mode_archived?)
     respond_to do |format|
       format.json do
         render json: {

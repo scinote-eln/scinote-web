@@ -13,7 +13,7 @@
         <i class="fas fa-caret-right toggle-branch collapsed"></i>
       <% end %>
       <%= link_to project_folder_path(record[:folder]),
-          class: "sidebar-link project-folder-link folder #{'selected' if @current_folder == record[:folder]}",
+          class: "sidebar-link project-folder-link folder #{'selected' if current_folder == record[:folder]}",
           data: {
             sidebar_url: sidebar_team_path(current_team, project_folder_id: record[:folder].id),
             projects_cards_url: project_folder_cards_url(record[:folder])
