@@ -105,9 +105,11 @@ class ProjectFolder < ApplicationRecord
   end
 
   def parent_folder_validation
-    return if parent_folder.id != id
-
-    errors.add(:parent_folder, I18n.t('activerecord.errors.models.project_folder.attributes.parent_folder'))
+    if parent_folder.id == id
+      errors.add(:parent_folder, I18n.t('activerecord.errors.models.project_folder.attributes.parent_folder'))
+    elsif ProjectFolder.inner_folders(team, self).where(id: parent_folder_id).exists?
+      errors.add(:parent_folder, I18n.t('activerecord.errors.models.project_folder.attributes.parent_folder_child'))
+    end
   end
 
   def ensure_uniqueness_name_on_moving
