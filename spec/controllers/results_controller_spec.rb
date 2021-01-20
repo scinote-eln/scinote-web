@@ -14,7 +14,7 @@ describe ResultsController, type: :controller do
   let(:experiment) { create :experiment, project: project }
   let(:task) { create :my_module, name: 'test task', experiment: experiment }
   let(:result) do
-    create :result, name: 'test result', my_module: task, user: user
+    create :result, :archived, name: 'test result', my_module: task, user: user
   end
   let!(:result_text) do
     create :result_text, text: 'test text result', result: result
