@@ -356,7 +356,6 @@
             HelperModule.flashAlertMsg(data.message, 'success');
             refreshCurrentView();
           }).on('ajax:error', function(ev, data) {
-            HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
             if ($(this).hasClass('edit_project')) {
               $(this).renderFormErrors('project', data.responseJSON.errors);
             } else {
