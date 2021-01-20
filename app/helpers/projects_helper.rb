@@ -32,14 +32,15 @@ module ProjectsHelper
   end
 
   def sidebar_folders_tree(team, user, sort, folders_only: false)
+    sort ||= team.current_view_state(user).state.dig('projects', 'active', 'sort')
     if projects_view_mode_archived?
       records = ProjectFolder.archived.inner_folders(team)
       records += team.projects.archived.visible_to(user, team) unless folders_only
     else
       records = ProjectFolder.active.inner_folders(team)
       records += team.projects.active.visible_to(user, team) unless folders_only
+      sort = 'new' if %w(archived_old archived_new).include?(sort)
     end
-    sort ||= team.current_view_state(user).state.dig('projects', 'active', 'sort')
     records = case sort
               when 'new'
                 records.sort_by(&:created_at).reverse!

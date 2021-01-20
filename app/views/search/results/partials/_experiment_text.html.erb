@@ -2,18 +2,10 @@
 <% text = query.present? ? highlight(experiment.name, query.strip.split(/\s+/)) : experiment.name %>
 
 <% if experiment.archived? %>
-  <span class="label label-warning"><%=t 'search.index.archived' %></span>
-  <% if can_read_experiment?(experiment) && can_restore_experiment?(experiment.project) %>
-    <%= route_to_other_team root_path, experiment.project.team, text %>
-  <% else %>
-    <%= text %>
-  <% end %>
+  <span class="label label-warning"><%= t('search.index.archived') %></span>
+<% end %>
+<% if can_read_experiment?(experiment) %>
+  <%= route_to_other_team(canvas_experiment_path(experiment), experiment.project.team, text) %>
 <% else %>
-  <% if can_read_experiment?(experiment) %>
-    <%= route_to_other_team canvas_experiment_path(experiment),
-                            experiment.project.team,
-                            text %>
-  <% else %>
-    <%= text %>
-  <% end %>
+  <%= text %>
 <% end %>
