@@ -783,8 +783,11 @@ li.module-hover {
       width: 100%;
 
       &.no-results {
-        display: block;
-        margin-top: 100px;
+
+        .no-results-container {
+          grid-row: 8;
+          grid-column: 1 / -1;
+        }
 
         .no-results-img {
           display: block;
@@ -1006,6 +1009,10 @@ li.module-hover {
         grid-template-columns: max-content repeat(3, minmax(100px, auto)) max-content max-content;
         margin: 40px 0 0 6px;
 
+        .no-results-container {
+          grid-row: 12;
+          grid-column: 1 / -1;
+        }
 
         .projects-group {
           display: contents;
