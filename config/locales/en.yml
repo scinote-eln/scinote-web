@@ -368,6 +368,7 @@ en:
       move_button: "Move"
       archive_button: "Archive"
       restore_button: "Restore"
+      delete_button: "Delete"
       edit_option: "Edit"
       archive_option: "Archive"
       archive_confirm: "Are you sure you want to archive this project?"
@@ -416,6 +417,11 @@ en:
           projects: 'projects'
           folders: 'folders'
           projects_and_folders: 'projects & folders'
+      modal_delete_folders:
+        title: "Delete project folder(s)"
+        description_1: "You are about to delete <strong>%{number}</strong> selected project folder(s)"
+        description_2: "Are you sure you want to continue?"
+        confirm_button: "Delete folder(s)"
       modal_manage_users:
         modal_title: "Manage users for %{name}"
         no_users: "No users!"
@@ -485,6 +491,9 @@ en:
     restore:
       success_flash: "Project <strong>%{name}</strong> successfully restored."
       error_flash: "Project <strong>%{name}</strong> not restored."
+    delete_folders:
+      success_flash: "<strong>%{number}</strong> project folder(s) successfully deleted."
+      error_flash: "Failed to delete project folder(s)."
     show:
       head_title: "%{project}"
     reports:

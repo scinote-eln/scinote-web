@@ -46,6 +46,16 @@
         <span class="fas fa-undo" aria-hidden="true"></span>
         <span class="hidden-xs"><%= t('projects.index.restore_button') %></span>
       <% end %>
+      <%= button_to destroy_project_folders_path,
+                    class: 'btn btn-light delete-folders-btn multiple-object-action folders-only-action hidden',
+                    form_class: 'delete-folders-form',
+                    data: { for: :deletable },
+                    remote: true,
+                    method: :delete do %>
+        <span class="fas fa-trash" aria-hidden="true"></span>
+        <span class="hidden-xs"><%= t('projects.index.delete_button') %></span>
+      <% end %>
+
       <!-- export projects button -->
       <a href="#" class="btn btn-light export-projects-btn multiple-object-action hidden"
                   data-export-projects-modal-url="<%= export_projects_modal_team_path(current_team) %>">

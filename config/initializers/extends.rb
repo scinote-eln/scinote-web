@@ -381,7 +381,7 @@ class Extends
     create_project_folder: 159,
     move_project_folder: 160,
     rename_project_folder: 161,
-    archive_project_folder: 162
+    delete_project_folder: 162
   }
 
   ACTIVITY_GROUPS = {

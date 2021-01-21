@@ -102,6 +102,28 @@ class ProjectFoldersController < ApplicationController
     log_activity(:archive_project_folder, folder, project_folder: folder.id)
   end
 
+  def destroy
+    project_folders = current_team.project_folders.where(id: params[:project_folders_ids])
+    counter = 0
+    project_folders.each do |folder|
+      next if folder.projects.exists? || folder.project_folders.exists? || !can_update_team?(current_team)
+
+      folder.transaction do
+        log_activity(:delete_project_folder, folder, project_folder: folder.id)
+        folder.destroy!
+        counter += 1
+      rescue StandardError => e
+        Rails.logger.error e.message
+        raise ActiveRecord::Rollback
+      end
+    end
+    if counter.positive?
+      render json: { message: t('projects.delete_folders.success_flash', number: counter) }
+    else
+      render json: { message: t('projects.delete_folders.error_flash') }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def load_project_folder

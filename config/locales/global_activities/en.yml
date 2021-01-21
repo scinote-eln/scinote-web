@@ -179,7 +179,7 @@ en:
       move_project_html: "%{user} moved project %{project} from folder <strong>%{source_folder}</strong> to folder <strong>%{destination_folder}</strong>."
       create_project_folder_html: "%{user} created project folder %{project_folder}."
       rename_project_folder_html: "%{user} renamed project folder %{project_folder}."
-      archive_project_folder_html: "%{user} archived project folder %{project_folder}."
+      delete_project_folder_html: "%{user} deleted project folder %{project_folder}."
       move_project_folder_html: "%{user} moved folder %{project_folder} from folder <strong>%{source_folder}</strong> to folder <strong>%{destination_folder}</strong>."
 
     activity_name:
@@ -325,7 +325,7 @@ en:
       move_project: "Project moved"
       create_project_folder: "Project folder created"
       rename_project_folder: "Project folder renamed"
-      archive_project_folder: "Project folder archived"
+      delete_project_folder: "Project folder deleted"
       move_project_folder: "Project folder moved"
 
     activity_group:

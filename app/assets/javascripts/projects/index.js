@@ -7,10 +7,10 @@
 // - refresh project users tab after manage user modal is closed
 // - refactor view handling using library, ex. backbone.js
 
-/* global animateSpinner HelperModule dropdownSelector Sidebar Turbolinks */
+/* global animateSpinner HelperModule dropdownSelector Sidebar Turbolinks I18n*/
 
 (function() {
-  const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable'];
+  const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable', 'deletable'];
   var projectsWrapper = '#projectsWrapper';
   var toolbarWrapper = '#toolbarWrapper';
   var cardsWrapper = '#cardsWrapper';
@@ -95,6 +95,41 @@
           $(newProjectModal).remove();
         });
       });
+  }
+
+  // init project toolbar delete folders function
+  function initDeleteFoldersToolbarButton() {
+    $(projectsWrapper).on('click', '.delete-folders-form', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      $.ajax({
+        url: $(this).attr('action'),
+        type: 'POST',
+        dataType: 'json',
+        data: { project_folders_ids: selectedProjectFolders },
+        beforeSend: function(element, ajaxSettings) {
+          var deleteModal = $('.modal-project-folder-delete');
+          var ajax = ajaxSettings;
+          ajax.beforeSend = null;
+          deleteModal.find('.folder-confirmation-description')
+            .html(I18n.t('projects.index.modal_delete_folders.description_1', { number: selectedProjectFolders.length }));
+          deleteModal.find('.confirm-button').attr('disabled', false);
+          deleteModal.modal('show');
+          deleteModal.off('click', '.confirm-button').one('click', '.confirm-button', { ajax: ajax }, function(button) {
+            $(this).attr('disabled', true);
+            $.ajax(button.data.ajax);
+          });
+          return false;
+        },
+        success: function(data) {
+          HelperModule.flashAlertMsg(data.message, 'success');
+          refreshCurrentView();
+        },
+        error: function(data) {
+          HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+        }
+      });
+    });
   }
 
   // init project toolbar archive/restore functions
@@ -312,12 +347,17 @@
         projectsToolbar.find('.single-object-action, .multiple-object-action').removeClass('hidden');
         if (selectedProjectFolders.length === 1) {
           projectsToolbar.find('.project-only-action').addClass('hidden');
+        } else {
+          projectsToolbar.find('.folders-only-action').addClass('hidden');
         }
       } else {
         projectsToolbar.find('.single-object-action').addClass('hidden');
         projectsToolbar.find('.multiple-object-action').removeClass('hidden');
         if (selectedProjectFolders.length > 0) {
           projectsToolbar.find('.project-only-action').addClass('hidden');
+        }
+        if (selectedProjects.length > 0) {
+          projectsToolbar.find('.folder-only-action').addClass('hidden');
         }
       }
       PERMISSIONS.forEach((permission) => {
@@ -705,6 +745,7 @@
     initManageUsersModal();
     initExportProjectsModal();
     initExportProjects();
+    initDeleteFoldersToolbarButton();
     initArchiveRestoreToolbarButtons();
     initManageProjectUsersLink();
     initAddUserForm();
