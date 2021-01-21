@@ -14,133 +14,134 @@
 
 <div class="content-pane repository-show <%=  @repository.active? ? "active" : "archived" %>" data-table-url="<%= load_table_repository_path(@repository) %>">
   <div id="repository-toolbar" class="content-header">
-    <% if @repository.active? %>
-      <div class="repository-title-name" data-view-mode="active">
-        <h1 class="name-container">
-          <% if @inline_editable_title_config.present? %>
-            <%= render partial: "shared/inline_editing",
-                       locals: {
-                          initial_value: @repository.name,
-                          config: @inline_editable_title_config
-                       } %>
-          <% else %>
-            <div class="read-only-name">
-              <%= @repository.name %>
-            </div>
-            <span class="repository-share-icon">
-              <%= inventory_shared_status_icon(@repository, current_team) %>
-            </span>
+    <div class="title-row">
+      <% if @repository.active? %>
+        <div class="repository-title-name" data-view-mode="active">
+          <h1 class="name-container">
+            <% if @inline_editable_title_config.present? %>
+              <%= render partial: "shared/inline_editing",
+                         locals: {
+                            initial_value: @repository.name,
+                            config: @inline_editable_title_config
+                         } %>
+            <% else %>
+              <div class="read-only-name">
+                <%= @repository.name %>
+              </div>
+              <span class="repository-share-icon">
+                <%= inventory_shared_status_icon(@repository, current_team) %>
+              </span>
+            <% end %>
+          </h1>
+          <% if @repository.shared_with_anybody? %>
+            <% team_name = @repository.team == current_team ? t('repositories.show.your_team') : @repository.team.name %>
+            <div class="repository-subtitle"><%= t('repositories.show.subtitle', team_name: team_name) %></div>
           <% end %>
-        </h1>
-        <% if @repository.shared_with_anybody? %>
-          <% team_name = @repository.team == current_team ? t('repositories.show.your_team') : @repository.team.name %>
-          <div class="repository-subtitle"><%= t('repositories.show.subtitle', team_name: team_name) %></div>
-        <% end %>
-      </div>
-    <% end %>
-    <div class="repository-archived-title-name" data-view-mode="archived">
-      <% if @repository.archived? %>
-        <i class="fas fa-archive"></i>&nbsp;
-        <%= t('repositories.show.archived_inventory', repository_name: @repository.name) %>
-      <% else %>
-        <%= t('repositories.show.archived_inventory_items', repository_name: @repository.name) %>
+        </div>
       <% end %>
-    </div>
-    <div class="repo-datatables-buttons">
-      <div class="share-repository-button" data-view-mode="active">
-        <% if can_share_repository?(@repository) && current_user.teams.count > 1 %>
-          <%= link_to team_repository_share_modal_path(current_team, repository_id: @repository),
-                      class: 'btn btn-secondary share-repo-option', remote: true, id: 'shareRepoBtn' do %>
-            <span class="fas fa-user-plus"></span>
-            <span class="hidden-xs"><%= t('repositories.index.share_inventory') %></span>
-          <% end %>
+      <div class="repository-archived-title-name" data-view-mode="archived">
+        <% if @repository.archived? %>
+          <i class="fas fa-archive"></i>&nbsp;
+          <%= t('repositories.show.archived_inventory', repository_name: @repository.name) %>
+        <% else %>
+          <%= t('repositories.show.archived_inventory_items', repository_name: @repository.name) %>
         <% end %>
       </div>
+      <div class="repo-datatables-buttons">
+        <div class="share-repository-button" data-view-mode="active">
+          <% if can_share_repository?(@repository) && current_user.teams.count > 1 %>
+            <%= link_to team_repository_share_modal_path(current_team, repository_id: @repository),
+                        class: 'btn btn-secondary share-repo-option', remote: true, id: 'shareRepoBtn' do %>
+              <span class="fas fa-user-plus"></span>
+              <span class="hidden-xs"><%= t('repositories.index.share_inventory') %></span>
+            <% end %>
+          <% end %>
+        </div>
 
-      <button class="btn btn-secondary manage-repo-column-index"
-              data-modal-url="<%= repository_repository_columns_path(@repository) %>"
-              data-action="new">
-        <span class="fas fa-wrench"></span>&nbsp;<%= t('repositories.index.columns') %>
-      </button>
-
-      <div class="repository-cog dropdown">
-        <button id="repository-acitons-dropdown"
-                class="btn btn-secondary"
-                type="button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="true"
-                <%= "disabled" unless can_perform_repository_actions(@repository) %>>
-          <span class="fas fa-pencil-alt"></span>
-          <span class="hidden-xs"><%= t('repositories.index.edit_inventory') %></span>
-          <span class="caret"></span>
+        <button class="btn btn-secondary manage-repo-column-index"
+                data-modal-url="<%= repository_repository_columns_path(@repository) %>"
+                data-action="new">
+          <span class="fas fa-wrench"></span>&nbsp;<%= t('repositories.index.columns') %>
         </button>
 
-        <% if can_perform_repository_actions(@repository) %>
-          <ul class="dropdown-menu pull-right">
-            <% if can_create_repository_rows?(@repository) %>
-              <li data-view-mode="active">
-                <a href="#" id="importRecordsButton" data-turbolinks="false">
-                  <%= t('repositories.index.options_dropdown.import_items') %>
-                </a>
-              </li>
-            <% end %>
-            <% if can_read_repository?(@repository) %>
-              <li >
-                <a href="#"  id="exportRepositoriesButton" data-turbolinks="false">
-                  <%= t("repositories.index.options_dropdown.export_items") %>
-                </a>
-              </li>
-            <% end %>
-            <% if can_create_repositories?(current_team) && !@repository.shared_with?(current_team) %>
-              <li data-view-mode="active">
-                <%= link_to t('repositories.index.options_dropdown.copy'),
-                            team_repository_copy_modal_path(current_team, repository_id: @repository),
-                            class: "copy-repo-option",
-                            remote: true %>
-              </li>
-            <% end %>
-            <% if can_archive_repository?(@repository) %>
-              <li data-view-mode="active" role="separator" class="divider"></li>
-              <li  data-view-mode="active">
-                <%= link_to t('repositories.index.options_dropdown.archive'),
-                            archive_team_repositories_path(current_team),
-                            class: "archive-repository-option",
-                            data: { repository_id: @repository.id } %>
-              </li>
-              <% if @repository.archived? %>
-                <li data-view-mode="archived">
-                  <%= link_to t('repositories.index.options_dropdown.restore'),
-                              restore_team_repositories_path(current_team),
+        <div class="repository-cog dropdown">
+          <button id="repository-acitons-dropdown"
+                  class="btn btn-secondary"
+                  type="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="true"
+                  <%= "disabled" unless can_perform_repository_actions(@repository) %>>
+            <span class="fas fa-pencil-alt"></span>
+            <span class="hidden-xs"><%= t('repositories.index.edit_inventory') %></span>
+            <span class="caret"></span>
+          </button>
+
+          <% if can_perform_repository_actions(@repository) %>
+            <ul class="dropdown-menu pull-right">
+              <% if can_create_repository_rows?(@repository) %>
+                <li data-view-mode="active">
+                  <a href="#" id="importRecordsButton" data-turbolinks="false">
+                    <%= t('repositories.index.options_dropdown.import_items') %>
+                  </a>
+                </li>
+              <% end %>
+              <% if can_read_repository?(@repository) %>
+                <li >
+                  <a href="#"  id="exportRepositoriesButton" data-turbolinks="false">
+                    <%= t("repositories.index.options_dropdown.export_items") %>
+                  </a>
+                </li>
+              <% end %>
+              <% if can_create_repositories?(current_team) && !@repository.shared_with?(current_team) %>
+                <li data-view-mode="active">
+                  <%= link_to t('repositories.index.options_dropdown.copy'),
+                              team_repository_copy_modal_path(current_team, repository_id: @repository),
+                              class: "copy-repo-option",
+                              remote: true %>
+                </li>
+              <% end %>
+              <% if can_archive_repository?(@repository) %>
+                <li data-view-mode="active" role="separator" class="divider"></li>
+                <li  data-view-mode="active">
+                  <%= link_to t('repositories.index.options_dropdown.archive'),
+                              archive_team_repositories_path(current_team),
                               class: "archive-repository-option",
                               data: { repository_id: @repository.id } %>
                 </li>
+                <% if @repository.archived? %>
+                  <li data-view-mode="archived">
+                    <%= link_to t('repositories.index.options_dropdown.restore'),
+                                restore_team_repositories_path(current_team),
+                                class: "archive-repository-option",
+                                data: { repository_id: @repository.id } %>
+                  </li>
+                <% end %>
               <% end %>
-            <% end %>
-            <% if can_manage_repository?(@repository) && @repository.archived? %>
-              <li data-view-mode="archived" data-hook="destroy-repository-option">
-                <%= link_to t('repositories.index.options_dropdown.delete'),
-                            team_repository_destroy_modal_path(current_team, repository_id: @repository),
-                            class: "delete-repo-option",
-                            remote: true %>
-              </li>
-            <% end %>
-          </ul>
-        <% end %>
+              <% if can_manage_repository?(@repository) && @repository.archived? %>
+                <li data-view-mode="archived" data-hook="destroy-repository-option">
+                  <%= link_to t('repositories.index.options_dropdown.delete'),
+                              team_repository_destroy_modal_path(current_team, repository_id: @repository),
+                              class: "delete-repo-option",
+                              remote: true %>
+                </li>
+              <% end %>
+            </ul>
+          <% end %>
+        </div>
+          <%= render layout: "shared/view_switch", locals: {disabled: @repository.archived?} do %>
+            <li class="view-switch-archived" data-view-mode="active">
+              <i class="fas fa-archive button-icon"></i>
+              <%= t('repositories.show.show_archived_items') %>
+            </li>
+            <li class="view-switch-active" data-view-mode="archived">
+              <i class="fas fa-rocket button-icon"></i>
+              <%= t('repositories.show.show_active_items') %>
+            </li>
+          <% end %>
       </div>
-        <%= render layout: "shared/view_switch", locals: {disabled: @repository.archived?} do %>
-          <li class="view-switch-archived" data-view-mode="active">
-            <i class="fas fa-archive button-icon"></i>
-            <%= t('repositories.show.show_archived_items') %>
-          </li>
-          <li class="view-switch-active" data-view-mode="archived">
-            <i class="fas fa-rocket button-icon"></i>
-            <%= t('repositories.show.show_active_items') %>
-          </li>
-        <% end %>
+      <div class="toolbar-delimiter"></div>
     </div>
-
-    <div class="toolbar-delimiter"></div>
   </div>
 
   <!-- These buttons are appended to table in javascript, after table initialization -->
