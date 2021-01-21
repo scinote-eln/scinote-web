@@ -157,7 +157,7 @@ class MyModulesController < ApplicationController
             ),
             due_date_label: render_to_string(
               partial: 'my_modules/due_date_label.html.erb',
-              locals: { my_module: @my_module }
+              locals: { my_module: @my_module, my_module_editable: true }
             ),
             card_due_date_label: render_to_string(
               partial: 'my_modules/card_due_date_label.html.erb',
