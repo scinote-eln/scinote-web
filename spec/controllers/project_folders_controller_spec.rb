@@ -54,8 +54,8 @@ describe ProjectFoldersController, type: :controller do
       end
 
       it 'adds 1 move_porject and 1 move_project_folder activity in DB' do
-        expect { action }.to(change { Activity.where(type_of: :move_project).count }.by(1)
-                               .and(change { Activity.where(type_of: :move_project_folder).count }.by(1)))
+        expect { action }.to(change { Activity.where(type_of: :new_move_project).count }.by(1)
+                               .and(change { Activity.where(type_of: :new_move_project_folder).count }.by(1)))
       end
     end
   end

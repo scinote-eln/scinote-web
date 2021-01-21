@@ -28,7 +28,12 @@ module GlobalActivitiesHelper
   end
 
   def generate_link(message_item, activity)
-    obj = message_item['type'].constantize.find_by_id(message_item['id'])
+    obj = if Activity::STATIC_MESSAGE_ITEMS_LIST.include?(message_item['type'])
+            message_item['type'].constantize
+          else
+            message_item['type'].constantize.find_by(id: message_item['id'])
+          end
+
     return message_item['value'] unless obj
 
     current_value = generate_name(message_item)
@@ -89,6 +94,8 @@ module GlobalActivitiesHelper
       path = reports_path(team: obj.team.id)
     when ProjectFolder
       path = project_folder_path(obj, team: obj.team.id)
+    when Activity::ROOT_PROJECT_FOLDER
+      path = projects_path(team: activity.team.id)
     else
       return current_value
     end
@@ -96,6 +103,8 @@ module GlobalActivitiesHelper
   end
 
   def generate_name(message_item)
+    return message_item['type'].constantize[:name] if Activity::STATIC_MESSAGE_ITEMS_LIST.include?(message_item['type'])
+
     obj = message_item['type'].constantize.find_by_id(message_item['id'])
     return message_item['value'] unless obj
 

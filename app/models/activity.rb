@@ -5,6 +5,9 @@ class Activity < ApplicationRecord
 
   enum type_of: Extends::ACTIVITY_TYPES
 
+  ROOT_PROJECT_FOLDER = { name: I18n.t('projects.index.breadcrumbs_root') }.freeze
+  STATIC_MESSAGE_ITEMS_LIST = %w(Activity::ROOT_PROJECT_FOLDER).freeze
+
   belongs_to :owner, inverse_of: :activities, class_name: 'User'
   belongs_to :subject, polymorphic: true, optional: true
 

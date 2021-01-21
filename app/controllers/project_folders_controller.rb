@@ -143,13 +143,15 @@ class ProjectFoldersController < ApplicationController
     return if project_ids.blank?
 
     current_team.projects.where(id: project_ids).each do |project|
-      source_folder_name = project.project_folder&.name || I18n.t('global_activities.root_folder_level')
+      source_folder_id = project.project_folder&.id || 'Activity::ROOT_PROJECT_FOLDER'
       project.update!(project_folder: destination_folder)
-      destination_folder_name = project.project_folder&.name || I18n.t('global_activities.root_folder_level')
+      destination_folder_id = project.project_folder&.id || 'Activity::ROOT_PROJECT_FOLDER'
 
-      log_activity(:move_project, project, project: project.id,
-                                             destination_folder: destination_folder_name,
-                                             source_folder: source_folder_name)
+      log_activity(:new_move_project,
+                   project,
+                   project: project.id,
+                   project_folder_to: destination_folder_id,
+                   project_folder_from: source_folder_id)
     end
   end
 
@@ -158,13 +160,15 @@ class ProjectFoldersController < ApplicationController
     return if folder_ids.blank?
 
     current_team.project_folders.where(id: folder_ids).each do |folder|
-      source_folder_name = folder.parent_folder&.name || I18n.t('global_activities.root_folder_level')
+      source_folder_id = folder.parent_folder&.id || 'Activity::ROOT_PROJECT_FOLDER'
       folder.update!(parent_folder: destination_folder)
-      destination_folder_name = folder.parent_folder&.name || I18n.t('global_activities.root_folder_level')
+      destination_folder_id = folder.parent_folder&.id || 'Activity::ROOT_PROJECT_FOLDER'
 
-      log_activity(:move_project_folder, folder, project_folder: folder.id,
-                                                   destination_folder: destination_folder_name,
-                                                   source_folder: source_folder_name)
+      log_activity(:new_move_project_folder,
+                   folder,
+                   project_folder: folder.id,
+                   project_folder_to: destination_folder_id,
+                   project_folder_from: source_folder_id)
     end
   end
 

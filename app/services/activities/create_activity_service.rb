@@ -50,7 +50,9 @@ module Activities
 
         k = k.to_s.sub('tiny_mce_asset', 'asset').to_sym if k.to_s.include? 'tiny_mce_asset'
 
-        if const
+        if Activity::STATIC_MESSAGE_ITEMS_LIST.include?(v)
+          @activity.message_items[k] = { type: v }
+        elsif const
           if v.is_a?(Hash) # Value is array, so you have getter specified
             id = v[:id]
             getter_method = v[:value_for]
