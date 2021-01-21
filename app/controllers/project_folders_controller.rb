@@ -137,9 +137,9 @@ class ProjectFoldersController < ApplicationController
     return if project_ids.blank?
 
     current_team.projects.where(id: project_ids).each do |project|
-      source_folder_id = project.project_folder&.id || 'Activity::ROOT_PROJECT_FOLDER'
+      source_folder_id = project.project_folder&.id
       project.update!(project_folder: destination_folder)
-      destination_folder_id = project.project_folder&.id || 'Activity::ROOT_PROJECT_FOLDER'
+      destination_folder_id = project.project_folder&.id
 
       log_activity(:move_project,
                    project,
@@ -154,9 +154,9 @@ class ProjectFoldersController < ApplicationController
     return if folder_ids.blank?
 
     current_team.project_folders.where(id: folder_ids).each do |folder|
-      source_folder_id = folder.parent_folder&.id || 'Activity::ROOT_PROJECT_FOLDER'
+      source_folder_id = folder.parent_folder&.id
       folder.update!(parent_folder: destination_folder)
-      destination_folder_id = folder.parent_folder&.id || 'Activity::ROOT_PROJECT_FOLDER'
+      destination_folder_id = folder.parent_folder&.id
 
       log_activity(:move_project_folder,
                    folder,

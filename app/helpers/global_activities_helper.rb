@@ -28,10 +28,10 @@ module GlobalActivitiesHelper
   end
 
   def generate_link(message_item, activity)
-    obj = if Activity::STATIC_MESSAGE_ITEMS_LIST.include?(message_item['type'])
-            message_item['type'].constantize
-          else
+    obj = if message_item['id']
             message_item['type'].constantize.find_by(id: message_item['id'])
+          else
+            message_item['type'].constantize.new
           end
 
     return message_item['value'] unless obj
@@ -93,9 +93,11 @@ module GlobalActivitiesHelper
     when Report
       path = reports_path(team: obj.team.id)
     when ProjectFolder
-      path = project_folder_path(obj, team: obj.team.id)
-    when Activity::ROOT_PROJECT_FOLDER
-      path = projects_path(team: activity.team.id)
+      path = if obj.new_record?
+               projects_path(team: activity.team.id)
+             else
+               project_folder_path(obj, team: obj.team.id)
+             end
     else
       return current_value
     end
@@ -103,9 +105,14 @@ module GlobalActivitiesHelper
   end
 
   def generate_name(message_item)
-    return message_item['type'].constantize[:name] if Activity::STATIC_MESSAGE_ITEMS_LIST.include?(message_item['type'])
+    obj = if message_item['id']
+            message_item['type'].constantize.find_by(id: message_item['id'])
+          else
+            message_item['type'].constantize.new
+          end
 
-    obj = message_item['type'].constantize.find_by_id(message_item['id'])
+    return I18n.t('projects.index.breadcrumbs_root') if obj.is_a?(ProjectFolder) && obj.new_record?
+
     return message_item['value'] unless obj
 
     value = obj.public_send(message_item['value_for'] || 'name')

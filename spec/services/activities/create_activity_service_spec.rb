@@ -141,18 +141,18 @@ describe Activities::CreateActivityService do
     end
   end
 
-  context 'when message item is a constant' do
-    it 'adds project_folder_from to message items as constant name string' do
+  context 'when message item is nil' do
+    it 'adds project_folder_from to message items with value nil' do
       activity = Activities::CreateActivityService.call(activity_type: :move_project_folder,
                                                         owner: user,
                                                         subject: project,
                                                         team: team,
                                                         message_items: {
-                                                          project_folder_from: 'Activity::ROOT_PROJECT_FOLDER'
+                                                          project_folder_from: nil
                                                         }).activity
 
       expect(activity.message_items['project_folder_from'].symbolize_keys)
-        .to(include({ type: 'Activity::ROOT_PROJECT_FOLDER' }))
+        .to(include({ type: 'ProjectFolder', value: nil }))
     end
   end
 end

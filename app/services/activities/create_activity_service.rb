@@ -50,9 +50,7 @@ module Activities
 
         k = k.to_s.sub('tiny_mce_asset', 'asset').to_sym if k.to_s.include? 'tiny_mce_asset'
 
-        if Activity::STATIC_MESSAGE_ITEMS_LIST.include?(v)
-          @activity.message_items[k] = { type: v }
-        elsif const
+        if const
           if v.is_a?(Hash) # Value is array, so you have getter specified
             id = v[:id]
             getter_method = v[:value_for]
@@ -62,10 +60,14 @@ module Activities
             getter_method = 'name'
           end
 
-          obj = const.find id
-          @activity.message_items[k] = { type: const.to_s, value: obj.public_send(getter_method).to_s, id: id }
-          @activity.message_items[k][:value_for] = getter_method
-          @activity.message_items[k][:value_type] = value_type unless value_type.nil?
+          if id
+            obj = const.find id
+            @activity.message_items[k] = { type: const.to_s, value: obj.public_send(getter_method).to_s, id: id }
+            @activity.message_items[k][:value_for] = getter_method
+            @activity.message_items[k][:value_type] = value_type unless value_type.nil?
+          else
+            @activity.message_items[k] = { type: const.to_s, value: nil }
+          end
         else
           @activity.message_items[k] = v.to_s
         end
