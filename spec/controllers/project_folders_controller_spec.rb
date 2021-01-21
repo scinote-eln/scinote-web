@@ -54,8 +54,8 @@ describe ProjectFoldersController, type: :controller do
       end
 
       it 'adds 1 move_porject and 1 move_project_folder activity in DB' do
-        expect { action }.to(change { Activity.where(type_of: :new_move_project).count }.by(1)
-                               .and(change { Activity.where(type_of: :new_move_project_folder).count }.by(1)))
+        expect { action }.to(change { Activity.where(type_of: :move_project).count }.by(1)
+                               .and(change { Activity.where(type_of: :move_project_folder).count }.by(1)))
       end
     end
   end
@@ -88,21 +88,6 @@ describe ProjectFoldersController, type: :controller do
     it 'calls create activity for creating project folder' do
       expect(Activities::CreateActivityService)
         .to(receive(:call).with(hash_including(activity_type: :rename_project_folder)))
-
-      action
-    end
-
-    it 'adds activity in DB' do
-      expect { action }.to(change { Activity.count }.by(1))
-    end
-  end
-
-  describe 'POST archive' do
-    let(:action) { post :archive, params: { id: project_folder.id }, format: :json }
-
-    it 'calls create activity for creating project folder' do
-      expect(Activities::CreateActivityService)
-        .to(receive(:call).with(hash_including(activity_type: :archive_project_folder)))
 
       action
     end

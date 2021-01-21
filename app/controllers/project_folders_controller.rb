@@ -96,12 +96,6 @@ class ProjectFoldersController < ApplicationController
     end
   end
 
-  def archive
-    folder = current_team.project_folders.find(params[:id])
-
-    log_activity(:archive_project_folder, folder, project_folder: folder.id)
-  end
-
   private
 
   def load_project_folder
@@ -147,7 +141,7 @@ class ProjectFoldersController < ApplicationController
       project.update!(project_folder: destination_folder)
       destination_folder_id = project.project_folder&.id || 'Activity::ROOT_PROJECT_FOLDER'
 
-      log_activity(:new_move_project,
+      log_activity(:move_project,
                    project,
                    project: project.id,
                    project_folder_to: destination_folder_id,
@@ -164,7 +158,7 @@ class ProjectFoldersController < ApplicationController
       folder.update!(parent_folder: destination_folder)
       destination_folder_id = folder.parent_folder&.id || 'Activity::ROOT_PROJECT_FOLDER'
 
-      log_activity(:new_move_project_folder,
+      log_activity(:move_project_folder,
                    folder,
                    project_folder: folder.id,
                    project_folder_to: destination_folder_id,

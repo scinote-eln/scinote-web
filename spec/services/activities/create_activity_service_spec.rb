@@ -143,7 +143,7 @@ describe Activities::CreateActivityService do
 
   context 'when message item is a constant' do
     it 'adds project_folder_from to message items as constant name string' do
-      activity = Activities::CreateActivityService.call(activity_type: :new_move_project_folder,
+      activity = Activities::CreateActivityService.call(activity_type: :move_project_folder,
                                                         owner: user,
                                                         subject: project,
                                                         team: team,

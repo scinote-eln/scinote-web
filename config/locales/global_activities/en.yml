@@ -176,14 +176,11 @@ en:
       export_inventory_items_assigned_to_task_html: "%{user} exported inventory item(s) assigned to task %{my_module} from inventory %{repository}: Live version."
       export_inventory_snapshot_items_assigned_to_task_html: "%{user} exported inventory item(s) assigned to task %{my_module} from inventory %{repository_snapshot}: Snapshot of %{created_at}."
       change_status_on_task_flow_html: "%{user} changed status from <strong>%{my_module_status_old}</strong> to <strong>%{my_module_status_new}</strong> for task %{my_module}."
-      move_project_html: "%{user} moved project %{project} from folder <strong>%{source_folder}</strong> to folder <strong>%{destination_folder}</strong>."
-      new_move_project_html: "%{user} moved project %{project} from folder %{project_folder_from} to folder %{project_folder_to}."
+      move_project_html: "%{user} moved project %{project} from folder %{project_folder_from} to folder %{project_folder_to}."
 
       create_project_folder_html: "%{user} created project folder %{project_folder}."
       rename_project_folder_html: "%{user} renamed project folder %{project_folder}."
-      archive_project_folder_html: "%{user} archived project folder %{project_folder}."
-      move_project_folder_html: "%{user} moved folder %{project_folder} from folder <strong>%{source_folder}</strong> to folder <strong>%{destination_folder}</strong>."
-      new_move_project_folder_html: "%{user} moved folder %{project_folder} from folder %{project_folder_from}</strong> to folder %{project_folder_to}."
+      move_project_folder_html: "%{user} moved folder %{project_folder} from folder %{project_folder_from}</strong> to folder %{project_folder_to}."
 
     activity_name:
       create_project: "Project created"
@@ -328,7 +325,6 @@ en:
       move_project: "Project moved"
       create_project_folder: "Project folder created"
       rename_project_folder: "Project folder renamed"
-      archive_project_folder: "Project folder archived"
       move_project_folder: "Project folder moved"
 
     activity_group:
