@@ -1,3 +1,6 @@
+// scss-lint:disable SelectorDepth SelectorFormat
+// scss-lint:disable NestingDepth QualifyingElement
+
 .content-pane {
   background-color: $color-white;
   margin: 20px 0;
@@ -37,9 +40,10 @@
         .caret {
           margin: 8px 0 8px 8px;
         }
+
         &.open {
           .caret {
-            transform: rotateX(180deg)
+            transform: rotateX(180deg);
           }
         }
 
@@ -71,9 +75,5 @@
       padding-left: 2em;
       width: calc(100% + 4em);
     }
-  }
-
-  .content-body {
-
   }
 }
