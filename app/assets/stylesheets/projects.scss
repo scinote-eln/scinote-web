@@ -1002,8 +1002,8 @@ li.module-hover {
       &.list {
         grid-auto-flow: dense;
         grid-auto-rows: 3em 1px;
-        grid-row-gap: 0;
         grid-column-gap: 0;
+        grid-row-gap: 0;
         grid-template-columns: max-content repeat(3, minmax(100px, auto)) max-content max-content;
         margin: 40px 0 0 6px;
 
@@ -1036,7 +1036,7 @@ li.module-hover {
             height: 1px;
           }
 
-          &:hover{
+          &:hover {
             .table-cell {
               background: $color-concrete;
             }
@@ -1211,16 +1211,28 @@ li.module-hover {
           grid-auto-rows: 3em 1px;
           grid-template-columns: max-content repeat(5, minmax(100px, auto)) max-content;
 
-          .card.folder-card {
-            .name {
-              grid-column: 6 span;
+          .card {
+            &::after {
+              background: $color-white;
             }
-          }
 
-          .card.project-card {
-            .table-cell {
-              background: $color-concrete;
-              color: $color-volcano;
+            &.project-card {
+              .table-cell {
+                background: $color-concrete;
+                color: $color-volcano;
+              }
+            }
+
+            &:hover {
+              .table-cell {
+                background: $color-alto;
+              }
+            }
+
+            &.folder-card {
+              .name {
+                grid-column: 6 span;
+              }
             }
 
             .archived-date-cell {
@@ -1230,18 +1242,6 @@ li.module-hover {
             .actions-cell {
               grid-column: 7;
               position: initial;
-            }
-          }
-
-          .card {
-            &::after {
-              background: $color-white;
-            }
-
-            &:hover {
-              .table-cell {
-                background: $color-alto;
-              }
             }
           }
         }
