@@ -74,4 +74,9 @@
       margin-top: 2px;
     }
   }
+
+  // Not in use but needs to be defined for proper compiling
+  .jstree-default-responsive .jstree-icon {
+    background-image: image-url("40px.png");
+  }
 }
