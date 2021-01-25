@@ -7,6 +7,10 @@
   <%= render partial: 'shared/sidebar/experiments.html.erb', locals: { project: @project, archived: false } %>
 <% end %>
 
+<% content_for :breadcrumbs do %>
+  <%= render partial: 'projects/index/breadcrumbs', locals: { target_folder: @project.project_folder } %>
+<% end %>
+
 <div class="content-pane flexible" id="project-show">
   <%= render partial: 'projects/show/header' %>
   <div class="project-show-toolbar">

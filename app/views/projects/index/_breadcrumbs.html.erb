@@ -1,7 +1,7 @@
 <% target_folder ||= current_folder %>
 <div class="projects-breadcrumbs">
   <%= link_to(t('projects.index.breadcrumbs_root'),
-              projects_path,
+              projects_path(view_mode: projects_view_mode),
               class: 'project-folder-link',
               data: { projects_cards_url: cards_projects_url,
                       sidebar_url: sidebar_team_path(current_team) }) %>

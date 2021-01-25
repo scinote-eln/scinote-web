@@ -11,7 +11,7 @@ class ProjectsController < ApplicationController
 
   before_action :switch_team_with_param, only: :index
   before_action :load_vars, only: %i(show edit update notifications experiment_archive sidebar)
-  before_action :load_current_folder, only: %i(index cards new)
+  before_action :load_current_folder, only: %i(index cards new show experiment_archive)
   before_action :check_view_permissions, only: %i(show notifications experiment_archive sidebar)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
@@ -301,6 +301,8 @@ class ProjectsController < ApplicationController
   def load_current_folder
     if current_team && params[:project_folder_id].present?
       @current_folder = current_team.project_folders.find_by(id: params[:project_folder_id])
+    elsif @project&.project_folder
+      @current_folder = @project&.project_folder
     end
   end
 
