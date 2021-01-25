@@ -1004,8 +1004,9 @@ li.module-hover {
 
       &.list {
         grid-auto-flow: dense;
-        grid-auto-rows: 2em 1px;
-        grid-row-gap: .5em;
+        grid-auto-rows: 3em 1px;
+        grid-column-gap: 0;
+        grid-row-gap: 0;
         grid-template-columns: max-content repeat(3, minmax(100px, auto)) max-content max-content;
         margin: 40px 0 0 6px;
 
@@ -1042,6 +1043,19 @@ li.module-hover {
             height: 1px;
           }
 
+          &:hover {
+            .table-cell {
+              background: $color-concrete;
+            }
+          }
+
+          .table-cell {
+            height: 100%;
+            padding: 0 .5em;
+            width: 100%;
+          }
+
+
           .data-row {
             font-weight: normal;
             line-height: 1.25em;
@@ -1076,6 +1090,7 @@ li.module-hover {
 
             .name {
               grid-column: 5 span;
+              line-height: 3em;
 
               &:before {
                 @include font-awesome;
@@ -1120,6 +1135,8 @@ li.module-hover {
             }
 
             .actions-cell {
+              align-items: center;
+              display: flex;
               grid-column: 6;
               position: initial;
             }
@@ -1139,9 +1156,7 @@ li.module-hover {
             border: 1px solid $color-white;
             display: flex;
             height: 3em;
-            margin-left: -.5em;
             padding: 0 .5em;
-            width: calc(100% + 1em);
 
             &.select-all-checkboxes {
               justify-content: center;
@@ -1200,36 +1215,31 @@ li.module-hover {
         }
 
         &.list {
-          grid-auto-rows: 2em 1px;
+          grid-auto-rows: 3em 1px;
           grid-template-columns: max-content repeat(5, minmax(100px, auto)) max-content;
 
-          .card::after {
-            background: $color-white;
-          }
-
-          .card.folder-card {
-            .name {
-              grid-column: 6 span;
-            }
-          }
-
-          .card.project-card {
-            .checkbox-cell,
-            .project-name-cell,
-            .actions-cell,
-            .data-row {
-              align-items: center;
-              background: $color-concrete;
-              color: $color-volcano;
-              display: flex;
-              height: 3em;
-              margin-left: -.5em;
-              padding-left: .5em;
-              width: calc(100% + 1em);
+          .card {
+            &::after {
+              background: $color-white;
             }
 
-            .checkbox-cell {
-              padding-left: 0;
+            &.project-card {
+              .table-cell {
+                background: $color-concrete;
+                color: $color-volcano;
+              }
+            }
+
+            &:hover {
+              .table-cell {
+                background: $color-alto;
+              }
+            }
+
+            &.folder-card {
+              .name {
+                grid-column: 6 span;
+              }
             }
 
             .archived-date-cell {
