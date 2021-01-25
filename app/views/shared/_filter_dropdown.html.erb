@@ -1,0 +1,16 @@
+<div class="filter-container dropdown <%= container_class %>">
+      <button class="btn btn-light icon-btn filter-button" data-toggle="dropdown"><i class="fas fa-filter"></i></button>
+      <div class="dropdown-menu dropdown-menu-right projects-filters" role="menu" data-team-id="<%= current_team.id %>">
+        <div class="header">
+          <div class="title"><%= t("projects.index.filters_modal.title") %></div>
+          <div class="btn btn-light clear-button">
+            <i class="fas fa-times-circle"></i><%= dropdown_title %></div>
+        </div>
+        <div class="body">
+          <%= yield %>
+        </div>
+        <div class="footer">
+          <div id="applyProjectFiltersButton" class="btn btn-primary"><%= t("projects.index.filters_modal.show_btn.one") %></div>
+        </div>
+      </div>
+    </div>

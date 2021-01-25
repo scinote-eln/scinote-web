@@ -1,0 +1,15 @@
+<div class="select-block dropdown-selector-container <%= container_class %> %>">
+  <label><%= t('projects.index.filters_modal.text.label') %></label>
+  <div class="input-field dropdown text-search-filter">
+    <input id="textSearchFilterInput"
+           class="dropdown-toggle search-field"
+           type="text"
+           name="search"
+           autocomplete="off"
+           data-toggle="dropdown"
+           placeholder="<%= t('projects.index.filters_modal.text.placeholder') %>">
+  </div>
+  <div id="textSearchFilterHistory" class="dropdown-menu recent-searches" aria-labelledby="textSearchFilterInput">
+    <label><%= t("projects.index.filters_modal.recent_searches_label") %></label>
+  </div>
+</div>
