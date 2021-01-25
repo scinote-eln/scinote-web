@@ -762,8 +762,6 @@ li.module-hover {
   }
 
   .projects-toolbar {
-    margin-bottom: 1em;
-
     .form-group {
       width: 100%;
     }
@@ -1157,10 +1155,14 @@ li.module-hover {
             display: flex;
             height: 3em;
             padding: 0 .5em;
+            position: sticky;
+            position: -webkit-sticky;
+            top: 13em;
+            width: calc(100% + 1em);
+            z-index: 2;
 
             &.select-all-checkboxes {
               justify-content: center;
-              position: relative;
             }
           }
 

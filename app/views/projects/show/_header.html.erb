@@ -1,35 +1,37 @@
 <div class="content-header">
-  <h1 class="project-name">
-    <% if @inline_editable_title_config.present? %>
-            <%= render partial: "shared/inline_editing",
-                       locals: {
-                          initial_value: @project.name,
-                          config: @inline_editable_title_config
-                       } %>
-    <% else %>
-      <% if action_name == 'experiment_archive' %>
-        <i class="fas fa-archive"></i>
-      <% end %>
-      <%= @project.name %>
-    <% end %>
-  </h1>
-  <div class="header-actions">
-    <div class="dropdown experiment-sort-menu">
-      <button class="btn btn-light icon-btn dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-        <i class="fas fa-sort-amount-up"></i>
-      </button>
-      <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="sortMenu">
-        <% ["new", "old", "atoz", "ztoa", "archived_new", "archived_old"].each_with_index do |sort, i| %>
-          <% unless action_name != 'experiment_archive' && sort.include?('arch') %>
-            <% if i.even? && i.positive? %>
-              <li class="divider"></li>
-            <% end %>
-            <li>
-              <a class="<%= 'selected' if @current_sort == sort %>" href="?<%= {sort: sort}.reject{|v| v.to_s == "0"}.to_query %>"><%= t("general.sort.#{sort}_html") %></a>
-            </li>
-          <% end %>
+  <div class="title-row">
+    <h1 class="project-name">
+      <% if @inline_editable_title_config.present? %>
+              <%= render partial: "shared/inline_editing",
+                         locals: {
+                            initial_value: @project.name,
+                            config: @inline_editable_title_config
+                         } %>
+      <% else %>
+        <% if action_name == 'experiment_archive' %>
+          <i class="fas fa-archive"></i>
         <% end %>
-      </ul>
+        <%= @project.name %>
+      <% end %>
+    </h1>
+    <div class="header-actions">
+      <div class="dropdown experiment-sort-menu">
+        <button class="btn btn-light icon-btn dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <i class="fas fa-sort-amount-up"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="sortMenu">
+          <% ["new", "old", "atoz", "ztoa", "archived_new", "archived_old"].each_with_index do |sort, i| %>
+            <% unless action_name != 'experiment_archive' && sort.include?('arch') %>
+              <% if i.even? && i.positive? %>
+                <li class="divider"></li>
+              <% end %>
+              <li>
+                <a class="<%= 'selected' if @current_sort == sort %>" href="?<%= {sort: sort}.reject{|v| v.to_s == "0"}.to_query %>"><%= t("general.sort.#{sort}_html") %></a>
+              </li>
+            <% end %>
+          <% end %>
+        </ul>
+      </div>
     </div>
   </div>
 </div>
