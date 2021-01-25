@@ -37,6 +37,7 @@
       border: 0;
       display: flex;
       left: var(--repository-sidebar-margin);
+      margin-left: 0em;
       padding: 0 2em;
       position: fixed;
       transition: .4s $timing-function-sharp;
@@ -46,8 +47,9 @@
       .toolbar-delimiter {
         border-bottom: $border-tertiary;
         bottom: 0;
+        margin-left: -2em;
         position: absolute;
-        width: calc(100% - 4em);
+        width: 100%;
       }
 
       .repository-share-icon {
