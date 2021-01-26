@@ -15,6 +15,7 @@
       <% end %>
     </h1>
     <div class="sci-btn-group header-actions">
+<<<<<<< HEAD
       <!-- View switch dropdown -->
       <%= render layout: 'shared/view_switch', locals: { disabled: false } do %>
         <li class="view-switch-cards cards-switch active">
@@ -38,6 +39,17 @@
       <div class="filter-container dropdown">
         <button class="btn btn-light icon-btn filter-button" data-toggle="dropdown"><i class="fas fa-filter"></i></button>
       </div>
+      <%= render layout: 'shared/filter_dropdown', locals: {
+        container_class: 'experiments-filters',
+        dropdown_title: t("filters_modal.title"),
+        search_field_history_key: 'experiment_filters_per_team'
+      } do %>
+        <%= render partial: 'shared/filter_dropdown/text_search', locals: {container_class: ''} %>
+        <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'started-on-filter', label: t("filters_modal.created_on.label"), view_mode: nil } %>
+        <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'modified-on-filter', label: t("filters_modal.updated_on.label"), view_mode: nil } %>
+        <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'archived-on-filter', label: t("filters_modal.archived_on.label"), view_mode: 'archived' } %>
+
+      <% end %>
       <!-- Sort menu dropdown -->
       <div class="dropdown sort-menu">
         <button class="btn btn-light icon-btn dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -49,9 +61,6 @@
               <% if i.even? && i.positive? %>
                 <li class="divider"></li>
               <% end %>
-              <li>
-                <a class="<%= 'selected' if @current_sort == sort %>" href="?<%= {sort: sort}.reject{|v| v.to_s == "0"}.to_query %>"><%= t("general.sort.#{sort}_html") %></a>
-              </li>
             <% end %>
           <% end %>
         </ul>
