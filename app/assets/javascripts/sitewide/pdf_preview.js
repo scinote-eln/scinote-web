@@ -178,6 +178,11 @@ var PdfPreview = (function() {
       refreshZoomButtons(canvas);
       pageRendering = false;
       return renderTask.promise;
+    }).catch(function() {
+      pageRendering = false;
+      setTimeout(function() {
+        loadPdfDocument(canvas, page);
+      }, 5000);
     });
 
     return true;
