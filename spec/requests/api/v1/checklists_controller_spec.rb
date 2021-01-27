@@ -70,24 +70,6 @@ RSpec.describe 'Api::V1::ChecklistsController', type: :request do
         expect(response).to have_http_status(200)
       end
     end
-
-    context 'when experiment is archived and permission checks fails' do
-      it 'renders 403' do
-        @experiment.update_attribute(:archived, true)
-
-        get api_v1_team_project_experiment_task_protocol_step_path(
-          team_id: @team.id,
-          project_id: @project.id,
-          experiment_id: @experiment.id,
-          task_id: @task.id,
-          protocol_id: @protocol.id,
-          step_id: @step.id,
-          id: checklist.id
-        ), headers: @valid_headers
-
-        expect(response).to have_http_status(403)
-      end
-    end
   end
 
   describe 'POST checklist, #create' do

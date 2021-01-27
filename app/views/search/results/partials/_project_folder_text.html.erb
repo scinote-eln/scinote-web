@@ -1,0 +1,12 @@
+<% query ||= nil %>
+<% text = query.present? ? highlight(project_folder.name, query.strip.split(/\s+/)) : project_folder.name %>
+
+<% if can_read_team?(project_folder.team) %>
+  <% if link_to_page == :show %>
+    <%= route_to_other_team(projects_path, project_folder.team, text) %>
+  <%  else %>
+    <%= route_to_other_team(projects_path, project_folder.team, text) %>
+  <% end %>
+<% else %>
+  <%= text %>
+<% end %>

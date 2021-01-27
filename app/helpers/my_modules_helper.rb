@@ -31,7 +31,7 @@ module MyModulesHelper
 
   def get_task_alert_color(my_module)
     alert = ''
-    unless my_module.completed?
+    if my_module.active? && !my_module.completed?
       alert = ' alert-yellow' if my_module.is_one_day_prior?
       alert = ' alert-red' if my_module.is_overdue?
     end
@@ -89,5 +89,15 @@ module MyModulesHelper
 
   def assigned_repository_simple_view_name_column_id(repository)
     repository.is_a?(RepositorySnapshot) ? 2 : 3
+  end
+
+  def my_module_archived_on(my_module)
+    if my_module.archived?
+      my_module.archived_on
+    elsif my_module.experiment.archived?
+      my_module.experiment.archived_on
+    elsif my_module.experiment.project.archived?
+      my_module.experiment.project.archived_on
+    end
   end
 end

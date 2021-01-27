@@ -12,6 +12,8 @@ class Project < ApplicationRecord
             uniqueness: { scope: :team_id, case_sensitive: false }
   validates :visibility, presence: true
   validates :team, presence: true
+  validate :project_folder_team, if: -> { project_folder.present? }
+  before_validation :remove_project_folder, on: :update, if: :archived_changed?
 
   belongs_to :created_by,
              foreign_key: 'created_by_id',
@@ -30,6 +32,7 @@ class Project < ApplicationRecord
              class_name: 'User',
              optional: true
   belongs_to :team, inverse_of: :projects, touch: true
+  belongs_to :project_folder, inverse_of: :projects, optional: true, touch: true
   has_many :user_projects, inverse_of: :project
   has_many :users, through: :user_projects
   has_many :experiments, inverse_of: :project
@@ -44,10 +47,8 @@ class Project < ApplicationRecord
   scope :visible_to, (lambda do |user, team|
                         unless user.is_admin_of_team?(team)
                           left_outer_joins(:user_projects)
-                          .where(
-                            'visibility = 1 OR user_projects.user_id = :id',
-                            id: user.id
-                          ).distinct
+                          .where('visibility = 1 OR user_projects.user_id = :id', id: user.id)
+                          .group(:id)
                         end
                       end)
 
@@ -162,7 +163,7 @@ class Project < ApplicationRecord
                              .where('comments.id <  ?', last_id)
                              .order(created_at: :desc)
                              .limit(per_page)
-    comments.reverse
+    ProjectComment.from(comments, :comments).order(created_at: :asc)
   end
 
   def unassigned_users
@@ -178,14 +179,16 @@ class Project < ApplicationRecord
     user_projects.find_by_user_id(user)&.role
   end
 
-  def sorted_active_experiments(sort_by = :new)
+  def sorted_experiments(sort_by = :new, archived = false)
     sort = case sort_by
            when 'old' then { created_at: :asc }
            when 'atoz' then { name: :asc }
            when 'ztoa' then { name: :desc }
+           when 'archived_new' then { archived_on: :desc }
+           when 'archived_old' then { archived_on: :asc }
            else { created_at: :desc }
            end
-    experiments.is_archived(false).order(sort)
+    experiments.is_archived(archived).order(sort)
   end
 
   def archived_experiments
@@ -245,6 +248,10 @@ class Project < ApplicationRecord
       res += 1 if (t.is_overdue? || t.is_one_day_prior?) && !t.completed?
     end
     res
+  end
+
+  def comments
+    project_comments
   end
 
   def generate_teams_export_report_html(
@@ -315,5 +322,17 @@ class Project < ApplicationRecord
     )
   ensure
     report.destroy if report.present?
+  end
+
+  private
+
+  def project_folder_team
+    return if project_folder.team_id == team_id
+
+    errors.add(:project_folder, I18n.t('activerecord.errors.models.project.attributes.project_folder.team'))
+  end
+
+  def remove_project_folder
+    self.project_folder = nil if archived?
   end
 end

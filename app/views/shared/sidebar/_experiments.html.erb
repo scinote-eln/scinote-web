@@ -1,21 +1,28 @@
-<% if project.active_experiments.present? %>
-  <ul class="tree-child hidden" data-branch-id="pro<%= project.id %>">
-    <% project.sorted_active_experiments('atoz').preload(:active_my_modules).each do |experiment| %>
-      <% cache [action_name, current_user, experiment] do %>
-        <li data-parent="candidate" class="branch">
-          <span class="tree-link first-indent" title="<%= experiment.name %>">
-            <% if experiment.active_my_modules.any? %>
-              <i class="fas fa-caret-right tree-toggle"></i>
-            <% end %>
-            <%= link_to experiment.name,
-                        experiment_action_to_link_to(experiment),
-                        class: 'overview_exp_label line-wrap',
-                        data: { type: 'experiment', id: experiment.id }
-            %>
-          </span>
-          <%= render partial: 'shared/sidebar/my_modules', locals: { experiment: experiment } %>
-        </li>
-      <% end %>
+<ul class="sidebar-branch">
+  <li class="sidebar-leaf">
+    <% if @project.archived? %>
+      <%= link_to t('sidebar.experiments.back_archived_projects'), projects_path(view_mode: :archived), class: 'sidebar-link back-button' %>
+    <% elsif archived %>
+      <%= link_to t('sidebar.experiments.back_active_experiments'), project_url(@project), class: 'sidebar-link back-button' %>
+    <% else %>
+      <%= link_to t('sidebar.experiments.back_button'), projects_path, class: 'sidebar-link back-button' %>
     <% end %>
-  </ul>
-<% end %>
+  </li>
+  <% project.sorted_experiments(@current_sort, archived).each do |experiment| %>
+    <li class="sidebar-leaf">
+      <% if archived %>
+        <%= link_to experiment.name, module_archive_experiment_path(experiment), class: 'sidebar-link' %>
+      <% else %>
+        <%= link_to experiment.name, canvas_experiment_path(experiment), class: 'sidebar-link' %>
+      <% end %>
+    </li>
+  <% end %>
+  <% unless archived %>
+    <li class="sidebar-leaf">
+      <%= link_to experiment_archive_project_url(@project), class: 'sidebar-link' do %>
+        <i class="fas fa-archive"></i>
+        <%= t('sidebar.experiments.archived_experiments') %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>

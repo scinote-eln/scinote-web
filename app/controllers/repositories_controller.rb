@@ -35,7 +35,7 @@ class RepositoriesController < ApplicationController
 
   def sidebar
     render json: {
-      html: render_to_string(partial: 'repositories/sidebar_list.html.erb', locals: {
+      html: render_to_string(partial: 'repositories/sidebar.html.erb', locals: {
                                repositories: @repositories,
                                archived: params[:archived] == 'true'
                              })

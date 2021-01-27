@@ -12,6 +12,7 @@ $color-black: #231f20;
 $brand-primary: #104da9;
 $brand-primary-hover: #0c3a80;
 $brand-primary-press: #07244f;
+$brand-primary-light: #7094cb;
 
 $brand-academy: #a52068;
 $brand-academy-dark: #8c1b58;
@@ -40,8 +41,6 @@ $marvinjs-color: #29999c;
 
 $pdf-color: #f40f02;
 
-
-
 // Don't use them
 $color-alabaster: $color-concrete;
 $color-gainsboro: $color-concrete;
@@ -52,6 +51,7 @@ $brand-default: $color-white;
 $brand-info: $brand-focus;
 $brand-other: $brand-success;
 $brand-extra: $brand-focus;
-$brand-primary-light: $brand-focus-light;
 $brand-light-blue: $brand-focus-light;
 
+// This color was removed from constants, but it is still in use for DD hover. Need it for button in DD
+$color-dd-hover: #f5f5f5;

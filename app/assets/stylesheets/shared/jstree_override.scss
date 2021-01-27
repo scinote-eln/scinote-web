@@ -1,0 +1,82 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+// scss-lint:disable IdSelector
+@import "constants";
+
+.folders-tree-container {
+  --row-height: 36px;
+  background-color: $color-concrete;
+  border-radius: 4px;
+  height: 250px;
+  overflow: auto;
+  padding: .5em;
+
+  .jstree-wholerow {
+    border-radius: 4px;
+    height: var(--row-height);
+  }
+
+  .jstree-wholerow-hovered {
+    background: $color-alto;
+  }
+
+  .jstree-wholerow-clicked {
+    background: $color-white;
+  }
+
+  .jstree-search {
+    color: unset;
+    font-style: unset;
+    font-weight: unset;
+  }
+
+  .jstree-leaf {
+    height: var(--row-height);
+
+    .jstree-clicked {
+      height: var(--row-height);
+    }
+
+    .jstree-hovered {
+      height: var(--row-height);
+    }
+  }
+
+  .jstree-closed {
+    line-height: var(--row-height);
+  }
+
+  .jstree-open {
+    line-height: var(--row-height);
+  }
+
+  .jstree-icon {
+    &.root-folder {
+      color: $color-volcano;
+    }
+
+    &.icon-folder {
+      color: $brand-primary-light;
+    }
+  }
+
+  .jstree-default-large .jstree-icon {
+    background-image: image-url("32px.png");
+  }
+
+  .jstree-default-large>.jstree-container-ul .jstree-loading>.jstree-ocl {
+    background: image-url("throbber.gif") center no-repeat;
+  }
+
+  li.jstree-node {
+    i.jstree-ocl,
+    a.jstree-anchor {
+      margin-top: 2px;
+    }
+  }
+
+  // Not in use but needs to be defined for proper compiling
+  .jstree-default-responsive .jstree-icon {
+    background-image: image-url("40px.png");
+  }
+}

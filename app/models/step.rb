@@ -104,7 +104,7 @@ class Step < ApplicationRecord
                           .where('comments.id <  ?', last_id)
                           .order(created_at: :desc)
                           .limit(per_page)
-    comments.reverse
+    StepComment.from(comments, :comments).order(created_at: :asc)
   end
 
   def save(current_user=nil)
@@ -136,6 +136,10 @@ class Step < ApplicationRecord
     return if position == protocol.steps.count - 1
 
     move_in_protocol(:down)
+  end
+
+  def comments
+    step_comments
   end
 
   private

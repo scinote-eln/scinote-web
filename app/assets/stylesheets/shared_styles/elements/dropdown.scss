@@ -1,3 +1,7 @@
+// scss-lint:disable SelectorDepth, NestingDepth, ImportantRule
+
+@import "constants";
+
 .sci-dropdown {
   [data-toggle="dropdown"] {
     &:focus {
@@ -33,5 +37,20 @@
       }
     }
   }
+}
 
+.dropdown-menu {
+  .form-dropdown-item {
+    button {
+      border-radius: 0;
+      color: $color-black !important;
+      padding-left: .9em;
+      text-align: left;
+      width: 100%;
+
+      &:hover {
+        background-color: $color-dd-hover !important;
+      }
+    }
+  }
 }

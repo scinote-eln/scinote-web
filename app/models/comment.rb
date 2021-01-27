@@ -60,4 +60,10 @@ class Comment < ApplicationRecord
         .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
+
+  def self.mark_as_seen_by(user)
+    # rubocop:disable Rails/SkipsModelValidations
+    all.where('? = ANY (unseen_by)', user.id).update_all("unseen_by = array_remove(unseen_by, #{user.id.to_i}::bigint)")
+    # rubocop:enable Rails/SkipsModelValidations
+  end
 end

@@ -12,7 +12,7 @@ describe ProjectsController, type: :controller do
   let!(:team) { create :team, created_by: user }
   let!(:user_team) { create :user_team, team: team, user: user }
   before do
-    @projects_overview = ProjectsOverviewService.new(team, user, params)
+    @projects_overview = ProjectsOverviewService.new(team, user, nil, params)
   end
 
   let!(:project_1) do
@@ -65,28 +65,11 @@ describe ProjectsController, type: :controller do
   # rubocop:enable Style/EvalWithLocation
 
   describe '#index' do
-    context 'in JSON format' do
-      let(:params) { { team: team.id, sort: 'atoz' } }
+    let(:params) { { team: team.id, sort: 'atoz' } }
 
-      it 'returns success response' do
-        get :index, params: params, format: :json
-        expect(response).to have_http_status(:success)
-        expect(response.media_type).to eq 'application/json'
-      end
-    end
-  end
-
-  describe '#index_dt' do
-    context 'in JSON format' do
-      let(:params) do
-        { start: 1, length: 2, order: { '0': { dir: 'ASC', column: '2' } } }
-      end
-
-      it 'returns success response' do
-        get :index_dt, params: params, format: :json
-        expect(response).to have_http_status(:success)
-        expect(response.media_type).to eq 'application/json'
-      end
+    it 'returns success response' do
+      get :index, params: params
+      expect(response).to have_http_status(:success)
     end
   end
 

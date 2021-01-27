@@ -1,94 +1,63 @@
+# frozen_string_literal: true
+
 class ProjectsController < ApplicationController
   include RenamingUtil
   include TeamsHelper
   include InputSanitizeHelper
+  include ProjectsHelper
+
+  attr_reader :current_folder
+  helper_method :current_folder
 
   before_action :switch_team_with_param, only: :index
-  before_action :load_vars, only: %i(show edit update
-                                     notifications reports
-                                     experiment_archive)
-  before_action :load_projects_tree, only: %i(sidebar show archive
-                                              experiment_archive)
-  before_action :check_view_permissions, only: %i(show reports notifications
-                                                  experiment_archive)
+  before_action :load_vars, only: %i(show edit update notifications experiment_archive sidebar)
+  before_action :load_current_folder, only: %i(index cards new)
+  before_action :check_view_permissions, only: %i(show notifications experiment_archive sidebar)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
-  before_action :set_inline_name_editing, only: %i(show experiment_archive)
+  before_action :set_inline_name_editing, only: %i(show)
+  before_action :load_exp_sort_var, only: %i(show experiment_archive)
+  before_action :reset_invalid_view_state, only: %i(index cards)
 
-  # except parameter could be used but it is not working.
   layout 'fluid'
 
   def index
-    respond_to do |format|
-      format.json do
-        @current_team = current_team if current_team
-        @current_team ||= current_user.teams.first
-        @projects = ProjectsOverviewService
-                    .new(@current_team, current_user, params)
-                    .project_cards
-        render json: {
-          html: render_to_string(
-            partial: 'projects/index/team_projects.html.erb',
-                     locals: { projects: @projects }
-          ),
-          count: @projects.size
-        }
-      end
-      format.html do
-        @teams = current_user.teams
-        # New project for create new project modal
-        @project = Project.new
-        if current_team
-          view_state =
-            current_team.current_view_state(current_user)
-          @current_filter = view_state.state.dig('projects', 'filter')
-          @current_sort = view_state.state.dig('projects', 'cards', 'sort')
-        end
-        load_projects_tree
-      end
+    if current_team
+      view_state = current_team.current_view_state(current_user)
+      @current_sort = view_state.state.dig('projects', projects_view_mode, 'sort') || 'atoz'
     end
   end
 
-  def index_dt
-    @draw = params[:draw].to_i
-    respond_to do |format|
-      format.json do
-        @current_team = current_team if current_team
-        @current_team ||= current_user.teams.first
-        @projects = ProjectsOverviewService
-                    .new(@current_team, current_user, params)
-                    .projects_datatable
-      end
-    end
-  end
+  def cards
+    overview_service = ProjectsOverviewService.new(current_team, current_user, current_folder, params)
 
-  def dt_state_load
-    respond_to do |format|
-      format.json do
-        render json: {
-          state: current_team.current_view_state(current_user)
-            .state.dig('projects', 'table')
-        }
-      end
+    if filters_included?
+      render json: {
+        toolbar_html: render_to_string(partial: 'projects/index/toolbar.html.erb'),
+        cards_html: render_to_string(
+          partial: 'projects/index/team_projects_grouped_by_folder.html.erb',
+          locals: { projects_by_folder: overview_service.grouped_by_folder_project_cards }
+        )
+      }
+    else
+      render json: {
+        projects_cards_url: current_folder ? project_folder_cards_url(current_folder) : cards_projects_url,
+        breadcrumbs_html: current_folder ? render_to_string(partial: 'projects/index/breadcrumbs.html.erb') : '',
+        toolbar_html: render_to_string(partial: 'projects/index/toolbar.html.erb'),
+        cards_html: render_to_string(
+          partial: 'projects/index/team_projects.html.erb',
+          locals: { cards: overview_service.project_and_folder_cards }
+        )
+      }
     end
   end
 
   def sidebar
-    current_task ||= current_task || nil
-    current_experiment ||= current_experiment || current_task&.experiment || nil
-    current_project ||= current_experiment&.project || current_task&.experiment&.project || nil
-
     respond_to do |format|
       format.json do
         render json: {
           html: render_to_string(
-            partial: 'shared/sidebar/projects.html.erb',
-            locals: {
-              current_project: current_project,
-              current_experiment: current_experiment,
-              current_task: current_task
-            },
-            formats: :html
+            partial: 'shared/sidebar/experiments.html.erb', locals: { project: @project }
           )
         }
       end
@@ -96,52 +65,53 @@ class ProjectsController < ApplicationController
   end
 
   def new
-    @project = Project.new
+    @project = current_team.projects.new(project_folder: current_folder)
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'projects/index/modals/new_project.html.erb'
+          )
+        }
+      end
+    end
   end
 
   def create
-    @project = Project.new(project_params)
+    @project = current_team.projects.new(project_params)
     @project.created_by = current_user
     @project.last_modified_by = current_user
-    if current_team.id == project_params[:team_id].to_i &&
-       @project.save
+    if @project.save
       # Create user-project association
-      up = UserProject.new(
+      user_project = UserProject.new(
         role: :owner,
         user: current_user,
         project: @project
       )
-      up.save
+      user_project.save
       log_activity(:create_project)
 
       message = t('projects.create.success_flash', name: escape_input(@project.name))
       respond_to do |format|
-        format.json {
+        format.json do
           render json: { message: message }, status: :ok
-        }
+        end
       end
     else
       respond_to do |format|
-        format.json {
+        format.json do
           render json: @project.errors, status: :unprocessable_entity
-        }
+        end
       end
     end
   end
 
   def edit
-    respond_to do |format|
-      format.json {
-        render json: {
-          html: render_to_string({
-            partial: "edit.html.erb",
-            locals: { project: @project }
-          }),
-          title: t('projects.index.modal_edit_project.modal_title',
-                   project: escape_input(@project.name))
-        }
-      }
-    end
+    render json: {
+      html: render_to_string(partial: 'projects/index/modals/edit_project_contents.html.erb',
+                             locals: { project: @project })
+
+    }
   end
 
   def update
@@ -182,7 +152,7 @@ class ProjectsController < ApplicationController
     if !return_error && @project.update(project_params)
       # Add activities if needed
 
-      log_activity(:change_project_visibility, visibility: message_visibility) if message_visibility.present?
+      log_activity(:change_project_visibility, @project, visibility: message_visibility) if message_visibility.present?
       log_activity(:rename_project) if message_renamed.present?
       log_activity(:archive_project) if project_params[:archived] == 'true'
       log_activity(:restore_project) if project_params[:archived] == 'false'
@@ -238,15 +208,54 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def show
-    # save experiments order
-    if params[:sort]
-      @project.experiments_order = params[:sort].to_s
-      @project.save
+  def archive_group
+    projects = current_team.projects.active.where(id: params[:projects_ids])
+    counter = 0
+    projects.each do |project|
+      next unless can_archive_project?(project)
+
+      project.transaction do
+        project.archive!(current_user)
+        log_activity(:archive_project, project)
+        counter += 1
+      rescue StandardError => e
+        Rails.logger.error e.message
+        raise ActiveRecord::Rollback
+      end
     end
+    if counter.positive?
+      render json: { message: t('projects.archive_group.success_flash', number: counter) }
+    else
+      render json: { message: t('projects.archive_group.error_flash') }, status: :unprocessable_entity
+    end
+  end
+
+  def restore_group
+    projects = current_team.projects.archived.where(id: params[:projects_ids])
+    counter = 0
+    projects.each do |project|
+      next unless can_restore_project?(project)
+
+      project.transaction do
+        project.restore!(current_user)
+        log_activity(:restore_project, project)
+        counter += 1
+      rescue StandardError => e
+        Rails.logger.error e.message
+        raise ActiveRecord::Rollback
+      end
+    end
+    if counter.positive?
+      render json: { message: t('projects.restore_group.success_flash', number: counter) }
+    else
+      render json: { message: t('projects.restore_group.error_flash') }, status: :unprocessable_entity
+    end
+  end
+
+  def show
+    redirect_to action: :experiment_archive if @project.archived?
     # This is the "info" view
     current_team_switch(@project.team)
-    @current_sort = @project.experiments_order || :new
   end
 
   def notifications
@@ -269,30 +278,29 @@ class ProjectsController < ApplicationController
     current_team_switch(@project.team)
   end
 
+  def users_filter
+    users = current_team.users.search(false, params[:query]).map do |u|
+      { value: u.id, label: sanitize_input(u.name), params: { avatar_url: avatar_path(u, :icon_small) } }
+    end
+
+    render json: users, status: :ok
+  end
+
   private
 
   def project_params
-    params.require(:project).permit(:name, :team_id, :visibility, :archived)
+    params.require(:project).permit(:name, :team_id, :visibility, :archived, :project_folder_id)
   end
 
   def load_vars
-    @project = Project.find_by_id(params[:id])
+    @project = Project.find_by(id: params[:id])
 
-    unless @project
-      render_404
-    end
+    render_404 unless @project
   end
 
-  def load_projects_tree
-    # Switch to correct team
-    current_team_switch(@project.team) unless @project.nil? || @project.new_record?
-    if current_user.teams.any?
-      @current_team = current_team if current_team
-      @current_team ||= current_user.teams.first
-      @current_sort ||= 'new'
-      @projects_tree = current_user.projects_tree(@current_team, 'atoz')
-    else
-      @projects_tree = []
+  def load_current_folder
+    if current_team && params[:project_folder_id].present?
+      @current_folder = current_team.project_folders.find_by(id: params[:project_folder_id])
     end
   end
 
@@ -310,6 +318,7 @@ class ProjectsController < ApplicationController
 
   def set_inline_name_editing
     return unless can_manage_project?(@project)
+
     @inline_editable_title_config = {
       name: 'title',
       params_group: 'project',
@@ -319,15 +328,35 @@ class ProjectsController < ApplicationController
     }
   end
 
-  def log_activity(type_of, message_items = {})
-    message_items = { project: @project.id }.merge(message_items)
+  def load_exp_sort_var
+    if params[:sort]
+      @project.experiments_order = params[:sort].to_s
+      @project.save
+    end
+    @current_sort = @project.experiments_order || 'new'
+    @current_sort = 'new' if @current_sort.include?('arch') && action_name != 'experiment_archive'
+  end
+
+  def filters_included?
+    %i(search created_on_from created_on_to members archived_on_from archived_on_to folders_search)
+      .any? { |param_name| params.dig(param_name).present? }
+  end
+
+  def reset_invalid_view_state
+    view_state = current_team.current_view_state(current_user)
+    view_state.destroy unless view_state.valid?
+  end
+
+  def log_activity(type_of, project = nil, message_items = {})
+    project ||= @project
+    message_items = { project: project.id }.merge(message_items)
 
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
-            subject: @project,
-            team: @project.team,
-            project: @project,
+            subject: project,
+            team: project.team,
+            project: project,
             message_items: message_items)
   end
 end

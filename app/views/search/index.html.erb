@@ -61,6 +61,20 @@
           </li>
           <li role="presentation"
             class="
+            <%= "active" if @search_category.present? and @search_category == :project_folders %>
+            <%= "disabled" if @project_folder_search_count == 0 %>"
+          >
+            <a href="?<%= { category: 'project_folders', q: @search_query,
+                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
+                            match_case: @search_case, utf8: '✓',
+                            search_id: @search_id }.to_query %>">
+              <span class="badge pull-right"><%= @project_folder_search_count %></span>
+              <span class="fas fa-folder"></span>
+              <%= t('ProjectFolders') %>
+            </a>
+          </li>
+          <li role="presentation"
+            class="
             <%= "active" if @search_category.present? and @search_category == :experiments %>
             <%= "disabled" if @experiment_search_count == 0 %>"
           >
@@ -216,7 +230,7 @@
           </li>
 
           <% @repository_search_count.each do |team, results| %>
-            <li class="repositories-team <%= 'active' if results[:count] > 0 %>">
+            <li class="repositories-team <%= 'active' if results[:count].positive? %>">
               <i class="fas fa-list-alt"></i>
               <%= t('Repositories_team', team: team) %>
             </li>
@@ -251,43 +265,46 @@
 
         <hr class="visible-xs">
 
-        <% if @search_category == :projects and @project_search_count > 0 %>
+        <% if @search_category == :projects and @project_search_count.positive? %>
           <%= render 'search/results/projects', search_query: @search_query, results: @project_results %>
         <% end %>
-        <% if @search_category == :experiments and @experiment_search_count > 0 %>
+        <% if @search_category == :project_folders and @project_folder_search_count.positive? %>
+          <%= render 'search/results/project_folders', search_query: @search_query, results: @project_folder_results %>
+        <% end %>
+        <% if @search_category == :experiments and @experiment_search_count.positive? %>
           <%= render 'search/results/experiments', search_query: @search_query, results: @experiment_results %>
         <% end %>
-        <% if @search_category == :modules and @module_search_count > 0 %>
+        <% if @search_category == :modules and @module_search_count.positive? %>
           <%= render 'search/results/modules', search_query: @search_query, results: @module_results %>
         <% end %>
-        <% if @search_category == :results and @result_search_count > 0 %>
+        <% if @search_category == :results and @result_search_count.positive? %>
           <%= render 'search/results/results', search_query: @search_query, results: @result_results %>
         <% end %>
-        <% if @search_category == :tags and @tag_search_count > 0 %>
+        <% if @search_category == :tags and @tag_search_count.positive? %>
           <%= render 'search/results/tags', search_query: @search_query, results: @tag_results %>
         <% end %>
-        <% if @search_category == :reports and @report_search_count > 0 %>
+        <% if @search_category == :reports and @report_search_count.positive? %>
           <%= render 'search/results/reports', search_query: @search_query, results: @report_results %>
         <% end %>
-        <% if @search_category == :protocols and @protocol_search_count > 0 %>
+        <% if @search_category == :protocols and @protocol_search_count.positive? %>
           <%= render 'search/results/protocols', search_query: @search_query, results: @protocol_results %>
         <% end %>
-        <% if @search_category == :steps and @step_search_count > 0 %>
+        <% if @search_category == :steps and @step_search_count.positive? %>
           <%= render 'search/results/steps', search_query: @search_query, results: @step_results %>
         <% end %>
-        <% if @search_category == :checklists and @checklist_search_count > 0 %>
+        <% if @search_category == :checklists and @checklist_search_count.positive? %>
           <%= render 'search/results/checklists', search_query: @search_query, results: @checklist_results %>
         <% end %>
-        <% if @search_category == :repositories and @repository_search_count_total > 0 %>
+        <% if @search_category == :repositories and @repository_search_count_total.positive? %>
           <%= render 'search/results/repositories', search_query: @search_query, results: @repository_results, repository: @repository %>
         <% end %>
-        <% if @search_category == :assets and @asset_search_count > 0 %>
+        <% if @search_category == :assets and @asset_search_count.positive? %>
           <%= render 'search/results/assets', search_query: @search_query, results: @asset_results %>
         <% end %>
-        <% if @search_category == :tables and @table_search_count > 0 %>
+        <% if @search_category == :tables and @table_search_count.positive? %>
           <%= render 'search/results/tables', search_query: @search_query, results: @table_results %>
         <% end %>
-        <% if @search_category == :comments and @comment_search_count > 0 %>
+        <% if @search_category == :comments and @comment_search_count.positive? %>
           <%= render 'search/results/comments', search_query: @search_query, results: @comment_results %>
         <% end %>
 

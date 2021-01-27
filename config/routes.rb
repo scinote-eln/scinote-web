@@ -171,6 +171,7 @@ Rails.application.routes.draw do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'export_repository', to: 'repositories#export_repository'
         post 'export_projects'
+        get 'sidebar'
         get 'export_projects_modal'
         # Used for atwho (smart annotations)
         get 'atwho_users', to: 'at_who#users'
@@ -192,11 +193,6 @@ Rails.application.routes.draw do
             to: 'teams#routing_error',
             via: [:get, :post, :put, :patch]
     end
-
-    post 'projects/index_dt', to: 'projects#index_dt', as: 'projects_index_dt'
-    get 'projects/sidebar', to: 'projects#sidebar', as: 'projects_sidebar'
-    get 'projects/dt_state_load', to: 'projects#dt_state_load',
-                                  as: 'projects_dt_state_load'
 
     resources :reports, only: :index
     get 'reports/datatable', to: 'reports#datatable'
@@ -231,7 +227,7 @@ Rails.application.routes.draw do
       resource :recent_works, module: 'dashboard', only: [:show]
     end
 
-    resources :projects, except: [:new, :destroy] do
+    resources :projects, except: [:destroy] do
       resources :user_projects, path: '/users',
                 only: [:create, :index, :update, :destroy]
       resources :project_comments,
@@ -284,9 +280,7 @@ Rails.application.routes.draw do
                as: :save_modal
         end
       end
-      resources :experiments,
-                only: [:new, :create, :edit, :update],
-                defaults: { format: 'json' }
+      resources :experiments, only: %i(new create), defaults: { format: 'json' }
       member do
         # Notifications popup for individual project in projects index
         get 'notifications'
@@ -296,9 +290,28 @@ Rails.application.routes.draw do
       # This route is defined outside of member block
       # to preserve original :project_id parameter in URL.
       get 'users/edit', to: 'user_projects#index_edit'
+
+      get 'sidebar', to: 'projects#sidebar', as: 'sidebar'
+
+      collection do
+        get 'cards', to: 'projects#cards'
+        get 'users_filter'
+        post 'archive_group'
+        post 'restore_group'
+      end
     end
 
-    resources :experiments do
+    resources :project_folders, only: %i(create new update edit) do
+      get 'cards', to: 'projects#cards'
+
+      collection do
+        post 'move_to', to: 'project_folders#move_to', defaults: { format: 'json' }
+        get 'move_to_modal', to: 'project_folders#move_to_modal', defaults: { format: 'json' }
+      end
+    end
+    get 'project_folders/:project_folder_id', to: 'projects#index', as: :project_folder_projects
+
+    resources :experiments, only: %i(edit update) do
       member do
         get 'canvas' # Overview/structure for single experiment
         # AJAX-loaded canvas edit mode (from canvas)
@@ -316,7 +329,10 @@ Rails.application.routes.draw do
         get 'move_modal' # return modal with move options
         post 'move' # move experiment
         get 'fetch_workflow_img' # Get udated workflow img
+        post 'restore_my_modules', to: 'my_modules#restore_group'
       end
+
+      get 'sidebar', to: 'experiments#sidebar', as: 'sidebar'
     end
 
     # Show action is a popup (JSON) for individual module in full-zoom canvas,
@@ -505,6 +521,8 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :comments, only: %i(index create update destroy)
+
     resources :repositories do
       post 'repository_index',
            to: 'repository_rows#index',
@@ -692,6 +710,7 @@ Rails.application.routes.draw do
                 end
               end
             end
+            resources :project_folders, only: %i(index show create update)
           end
           resources :users, only: %i(show) do
             resources :user_identities,

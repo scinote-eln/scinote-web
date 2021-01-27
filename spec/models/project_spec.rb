@@ -67,5 +67,15 @@ describe Project, type: :model do
         expect(project).to validate_uniqueness_of(:name).scoped_to(:team_id).case_insensitive
       end
     end
+
+    describe '#project_folder_team' do
+      it 'should validate equals of team and project_folder team' do
+        project_folder = create(:project_folder, name: 'Folder from another team')
+        project.project_folder = project_folder
+        project.save
+
+        expect(project.errors).to have_key(:project_folder)
+      end
+    end
   end
 end

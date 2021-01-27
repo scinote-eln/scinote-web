@@ -1,0 +1,13 @@
+{
+  "id": "file:/project_folders/collection.json#",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "array",
+      "items": {
+        "$ref": "file:/project_folders/item.json#"
+      }
+    }
+  },
+  "required": ["data", "links"]
+}

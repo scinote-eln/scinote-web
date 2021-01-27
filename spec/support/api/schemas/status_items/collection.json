@@ -1,11 +1,11 @@
 {
-  "id": "file:/collection.json#",
+  "id": "file:/status_items/collection.json#",
   "type": "object",
   "properties": {
     "data": {
       "type": "array",
       "items": {
-        "$ref": "file:/item.json#"
+        "$ref": "file:/status_items/item.json#"
       }
     }
   },
