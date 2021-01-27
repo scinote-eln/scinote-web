@@ -968,6 +968,16 @@ en:
       completed_value: "%{completed}/%{all} tasks"
       description: "Description"
       more: "more"
+    index:
+      edit_option: "Edit details"
+      clone_option: "Duplicate (as template)"
+      move_option: "Move"
+      archive_option: "Archive"
+      archive_confirm: "Are you sure you want to archive this project?"
+      restore_option: "Restore"
+      more_link: "More"
+      details_modal:
+        description: "%{name} description"
     new:
       create: 'New Experiment'
       modal_title: 'Create new experiment'

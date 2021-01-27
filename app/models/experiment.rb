@@ -33,10 +33,6 @@ class Experiment < ApplicationRecord
   validates :last_modified_by, presence: true
   validates :uuid, uniqueness: { scope: :project },
                    unless: proc { |e| e.uuid.blank? }
-  with_options if: :archived do |experiment|
-    experiment.validates :archived_by, presence: true
-    experiment.validates :archived_on, presence: true
-  end
 
   scope :is_archived, lambda { |is_archived|
     if is_archived

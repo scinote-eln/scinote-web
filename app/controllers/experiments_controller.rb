@@ -56,6 +56,12 @@ class ExperimentsController < ApplicationController
     end
   end
 
+  def show
+    render json: {
+      html: render_to_string(partial: 'experiments/details_modal.html.erb')
+    }
+  end
+
   def canvas
     redirect_to module_archive_experiment_path(@experiment) if @experiment.archived_branch?
     @project = @experiment.project
@@ -105,8 +111,7 @@ class ExperimentsController < ApplicationController
           render json: {}, status: :ok
         end
         format.html do
-          flash[:success] = t('experiments.update.success_flash',
-                              experiment: @experiment.name)
+          flash[:success] = t('experiments.update.success_flash', experiment: @experiment.name)
           redirect_to project_path(@experiment.project)
         end
       end
@@ -124,9 +129,7 @@ class ExperimentsController < ApplicationController
   end
 
   def archive
-    @experiment.archived = true
-    @experiment.archived_by = current_user
-    @experiment.archived_on = DateTime.now
+    @experiment.archive(current_user)
     if @experiment.save
       log_activity(:archive_experiment, @experiment)
       flash[:success] = t('experiments.archive.success_flash',
