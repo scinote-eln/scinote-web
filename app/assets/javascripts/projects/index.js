@@ -507,9 +507,9 @@
     let projectsPageSelector = '.projects-index';
 
     // list/cards switch
-    $(projectsPageSelector).on('click', '.projects-view-mode', function() {
+    $(projectsPageSelector).on('click', '.cards-switch', function() {
       let $btn = $(this);
-      $('.projects-view-mode').removeClass('active');
+      $('.cards-switch').removeClass('active');
       if ($btn.hasClass('view-switch-cards')) {
         $(cardsWrapper).removeClass('list');
       } else if ($btn.hasClass('view-switch-list')) {

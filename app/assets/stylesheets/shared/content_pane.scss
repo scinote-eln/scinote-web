@@ -22,6 +22,7 @@
 
     .title-row {
       align-items: center;
+      background: $color-white;
       border-bottom: $border-tertiary;
       display: flex;
       height: 5em;
@@ -32,6 +33,12 @@
       h1 {
         flex-grow: 1;
         margin: 0;
+      }
+
+      .header-actions {
+        align-items: center;
+        display: flex;
+        margin-left: auto;
       }
 
       .view-switch {
@@ -51,6 +58,12 @@
           @include font-button;
           min-width: auto;
 
+          .divider-label {
+            @include font-small;
+            color: $color-silver-chalice;
+            padding: .25em 1em;
+          }
+
           li {
             cursor: pointer;
             padding: 1em;
@@ -65,10 +78,62 @@
             }
           }
         }
+
+        .cards-switch {
+          &.active::after {
+            @include font-awesome;
+            content: "\f00c";
+            position: absolute;
+            right: 1em;
+          }
+        }
+      }
+
+      .sort-menu {
+        display: inline-block;
+
+        #sortMenu {
+          background: $color-white;
+
+          &:focus,
+          &:active {
+            box-shadow: none;
+          }
+
+          &:hover {
+            background: $color-concrete;
+          }
+        }
+
+        .dropdown-menu {
+          @include font-button;
+          min-width: 150px;
+          padding: .5em 0;
+
+          a {
+            border-radius: unset;
+            cursor: pointer;
+            padding: .5em 1em;
+            text-align: left;
+
+            &:hover {
+              background: $color-concrete;
+            }
+
+            &.selected::after {
+              @include font-awesome;
+              content: $font-fas-check;
+              margin-left: auto;
+              position: absolute;
+              right: 1em;
+            }
+          }
+        }
       }
     }
 
     .toolbar-row {
+      background: $color-white;
       border-bottom: $border-tertiary;
       margin-left: -2em;
       padding: 1em 0;

@@ -1,4 +1,4 @@
-<div class="content-header">
+<div class="content-header sticky-header">
   <div class="title-row">
     <h1 class="project-name">
       <% if @inline_editable_title_config.present? %>
@@ -14,8 +14,32 @@
         <%= @project.name %>
       <% end %>
     </h1>
-    <div class="header-actions">
-      <div class="dropdown experiment-sort-menu">
+    <div class="sci-btn-group header-actions">
+      <!-- View switch dropdown -->
+      <%= render layout: 'shared/view_switch', locals: { disabled: false } do %>
+        <li class="view-switch-cards cards-switch active">
+          <i class="fas fa-th-large button-icon"></i> <%= t('experiments.header.cards') %>
+        </li>
+
+        <li class="view-switch-list cards-switch ">
+          <i class="fas fa-list button-icon"></i> <%= t('experiments.header.table') %>
+        </li>
+
+        <div role="separator" class="divider"></div>
+        <li class="view-switch-active archive-switch" data-view-mode="archived" data-url="<%= project_path(@project) %>">
+          <i class="fas fa-rocket button-icon"></i> <%= t('experiments.header.active_experiments') %>
+        </li>
+
+        <li class="view-switch-archived archive-switch" data-view-mode="active" data-url="<%= project_path(@project, view_mode: 'archived') %>">
+          <i class="fas fa-archive button-icon"></i> <%= t('experiments.header.archived_experiments') %>
+        </li>
+      <% end %>
+      <!-- TODO: add filters dropdown -->
+      <div class="filter-container dropdown">
+        <button class="btn btn-light icon-btn filter-button" data-toggle="dropdown"><i class="fas fa-filter"></i></button>
+      </div>
+      <!-- Sort menu dropdown -->
+      <div class="dropdown sort-menu">
         <button class="btn btn-light icon-btn dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           <i class="fas fa-sort-amount-up"></i>
         </button>
@@ -33,5 +57,8 @@
         </ul>
       </div>
     </div>
+  </div>
+  <div id="toolbarWrapper" class="toolbar-row">
+    <%= render partial: 'projects/show/toolbar' %>
   </div>
 </div>

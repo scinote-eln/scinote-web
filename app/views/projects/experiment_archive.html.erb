@@ -10,7 +10,6 @@
   <%= render partial: 'projects/index/breadcrumbs', locals: { target_folder: @project.project_folder } %>
 <% end %>
 
-
 <div class="content-pane flexible" id="project-show-archive">
   <%= render partial: 'projects/show/header' %>
   <% if @project.archived_experiments.count > 0 %>
