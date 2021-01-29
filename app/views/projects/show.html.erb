@@ -7,28 +7,36 @@
   <%= render partial: 'shared/sidebar/experiments.html.erb', locals: { project: @project, archived: false } %>
 <% end %>
 
-<div class="content-pane flexible" id="project-show">
+<% content_for :breadcrumbs do %>
+  <%= render partial: 'projects/index/breadcrumbs', locals: { target_folder: @project.project_folder } %>
+<% end %>
+
+<div id="projectShowWrapper" class="content-pane flexible projects-show">
   <%= render partial: 'projects/show/header' %>
-  <div class="project-show-toolbar">
-    <% if can_create_experiments?(@project) %>
-      <%= link_to new_project_experiment_url(@project),
-                  remote: true,
-                  type: "button",
-                  id: 'new-experiment',
-                  class: 'btn btn-primary' do %>
-        <span class="fas fa-plus"></span>
-        <span class="hidden-xs"><%=t 'experiments.new.create' %></span>
+
+  <div class="project-show-container">
+    <div class="cards-wrapper" id="cardsWrapper">
+      <!-- list -->
+      <div class="table-header">
+        <div class="table-header-cell select-all-checkboxes">
+          <div class="sci-checkbox-container">
+            <input value="1" type="checkbox" class="sci-checkbox select-all">
+            <span class="sci-checkbox-label"></span>
+          </div>
+        </div>
+        <div class="table-header-cell"><%= t('experiments.card.name') %></div>
+        <div class="table-header-cell"><%= t('experiments.card.start_date') %></div>
+        <div class="table-header-cell"><%= t('experiments.card.modified_date') %></div>
+        <div class="table-header-cell"><%= t('experiments.card.completed_task') %></div>
+        <div class="table-header-cell"><%= t('experiments.card.description') %></div>
+        <div class="table-header-cell"></div>
+      </div>
+      <!-- cards -->
+      <% @project.sorted_experiments(@current_sort).each do |experiment| %>
+        <%= render partial: 'projects/show/experiment_card',
+                   locals: { experiment: experiment } %>
       <% end %>
-    <% end %>
-  </div>
-  <div class="row">
-    <% @project.sorted_experiments(@current_sort).each_with_index do |experiment, index| %>
-      <%= render partial: 'projects/show/experiment',
-                 locals: { experiment: experiment } %>
-    <% end %>
-    <% if can_create_experiments?(@project) %>
-      <%= render 'projects/show/new_experiment' %>
-    <% end %>
+    </div>
   </div>
 </div>
 

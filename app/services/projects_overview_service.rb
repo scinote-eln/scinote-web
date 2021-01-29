@@ -110,8 +110,9 @@ class ProjectsOverviewService
     records = records.archived if @view_mode == 'archived'
     records = records.active if @view_mode == 'active'
     records = records.where_attributes_like('projects.name', @params[:search]) if @params[:search].present?
-    records = records.where_attributes_like('projects.name', @params[:search]) if @params[:search].present?
-    records = records.joins(:user_projects).where('user_projects.user_id IN (?)', @params[:members]) if @params[:members]&.any?
+    if @params[:members].present?
+      records = records.joins(:user_projects).where('user_projects.user_id IN (?)', @params[:members])
+    end
     records = records.where('projects.created_at > ?', @params[:created_on_from]) if @params[:created_on_from].present?
     records = records.where('projects.created_at < ?', @params[:created_on_to]) if @params[:created_on_to].present?
     records = records.where('projects.archived_on < ?', @params[:archived_on_to]) if @params[:archived_on_to].present?

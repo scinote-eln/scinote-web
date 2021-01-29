@@ -7,7 +7,7 @@
 // - refresh project users tab after manage user modal is closed
 // - refactor view handling using library, ex. backbone.js
 
-/* global animateSpinner HelperModule dropdownSelector Sidebar Turbolinks */
+/* global animateSpinner HelperModule dropdownSelector Sidebar Turbolinks filterDropdown */
 
 (function() {
   const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable'];
@@ -507,9 +507,9 @@
     let projectsPageSelector = '.projects-index';
 
     // list/cards switch
-    $(projectsPageSelector).on('click', '.projects-view-mode', function() {
+    $(projectsPageSelector).on('click', '.cards-switch', function() {
       let $btn = $(this);
-      $('.projects-view-mode').removeClass('active');
+      $('.cards-switch').removeClass('active');
       if ($btn.hasClass('view-switch-cards')) {
         $(cardsWrapper).removeClass('list');
       } else if ($btn.hasClass('view-switch-list')) {
@@ -539,62 +539,27 @@
     });
   }
 
-  function appliedFiltersMark() {
-    let filtersEnabled = projectsViewSearch
-      || createdOnFromFilter
-      || createdOnToFilter
-      || (membersFilter && membersFilter.length !== 0)
-      || lookInsideFolders
-      || archivedOnFromFilter
-      || archivedOnToFilter;
-    if (filtersEnabled) {
-      $('.filter-container').addClass('filters-applied');
-    } else {
-      $('.filter-container').removeClass('filters-applied');
-    }
-  }
-
   function initProjectsFilters() {
-    function applyFilters() {
-      let teamId = $('.projects-filters').data('team-id');
-      projectsViewSearch = $('#textSearchFilterInput').closest('.select-block').find('input[type=text]').val();
-      try {
-        let storagePath = `project_filters_per_team/${teamId}/recent_search_keywords`;
-        let recentSearchKeywords = JSON.parse(localStorage.getItem(storagePath));
-        if (!Array.isArray(recentSearchKeywords)) recentSearchKeywords = [];
-        if (recentSearchKeywords.indexOf(projectsViewSearch) !== -1) {
-          recentSearchKeywords.splice(recentSearchKeywords.indexOf(projectsViewSearch), 1);
-        }
-        if (recentSearchKeywords.length > 4) {
-          recentSearchKeywords = recentSearchKeywords.slice(0, 4);
-        }
-        recentSearchKeywords.unshift(projectsViewSearch);
-        localStorage.setItem(storagePath, JSON.stringify(recentSearchKeywords));
-      } catch (error) {
-        console.error(error);
-      }
-
-      $('#applyProjectFiltersButton').closest('.dropdown').removeClass('open');
-
-      createdOnFromFilter = $createdOnFromFilter.val();
-      createdOnToFilter = $createdOnToFilter.val();
-      membersFilter = dropdownSelector.getValues($('.members-filter'));
-      lookInsideFolders = $foldersCB.prop('checked') ? 'true' : '';
-      archivedOnFromFilter = $archivedOnFromFilter.val();
-      archivedOnToFilter = $archivedOnToFilter.val();
-
-      appliedFiltersMark();
-      refreshCurrentView();
-    }
-
+    var $filterDropdown = filterDropdown.init();
     let $projectsFilter = $('.projects-index .projects-filters');
     let $membersFilter = $('.members-filter', $projectsFilter);
     let $foldersCB = $('#folder_search', $projectsFilter);
-    let $createdOnFromFilter = $('#createdOnFromDate', $projectsFilter);
-    let $createdOnToFilter = $('#createdOnToDate', $projectsFilter);
-    let $archivedOnFromFilter = $('#archivedOnFromDate', $projectsFilter);
-    let $archivedOnToFilter = $('#archivedOnToDate', $projectsFilter);
+    let $createdOnFromFilter = $('.created-on-filter .from-date', $projectsFilter);
+    let $createdOnToFilter = $('.created-on-filter .to-date', $projectsFilter);
+    let $archivedOnFromFilter = $('.archived-on-filter .from-date', $projectsFilter);
+    let $archivedOnToFilter = $('.archived-on-filter .to-date', $projectsFilter);
     let $textFilter = $('#textSearchFilterInput', $projectsFilter);
+
+    function appliedFiltersMark() {
+      let filtersEnabled = projectsViewSearch
+        || createdOnFromFilter
+        || createdOnToFilter
+        || (membersFilter && membersFilter.length !== 0)
+        || lookInsideFolders
+        || archivedOnFromFilter
+        || archivedOnToFilter;
+      filterDropdown.toggleFilterMark($filterDropdown, filtersEnabled);
+    }
 
     dropdownSelector.init($membersFilter, {
       optionClass: 'checkbox-icon users-dropdown-list',
@@ -608,66 +573,26 @@
       tagClass: 'users-dropdown-list'
     });
 
-    $textFilter.click((e) => {
-      e.stopPropagation();
-      $('#textSearchFilterHistory').toggle();
-      $textFilter.closest('.dropdown').toggleClass('open');
-    }).on('input', () => {
-      $('#textSearchFilterHistory').hide();
-      $textFilter.closest('.dropdown').removeClass('open');
-    });
-
-    $projectsFilter.on('click', '.projects-search-keyword', function(e) {
-      e.stopPropagation();
-      e.preventDefault();
-      $textFilter.val($(this).data('keyword'));
-      $('#textSearchFilterHistory').hide();
-      $textFilter.closest('.dropdown').removeClass('open');
-    });
-
     $projectsFilter.on('click', '#folderSearchInfoBtn', function(e) {
       e.stopPropagation();
       $('#folderSearchInfo').toggle();
     });
 
-    $('.project-filters-dropdown').on('show.bs.dropdown', function() {
-      let teamId = $projectsFilter.data('team-id');
-      $('#textSearchFilterHistory').find('li').remove();
+    $filterDropdown.on('filter:apply', function() {
+      createdOnFromFilter = $createdOnFromFilter.val();
+      createdOnToFilter = $createdOnToFilter.val();
+      membersFilter = dropdownSelector.getValues($('.members-filter'));
+      lookInsideFolders = $foldersCB.prop('checked') ? 'true' : '';
+      archivedOnFromFilter = $archivedOnFromFilter.val();
+      archivedOnToFilter = $archivedOnToFilter.val();
+      projectsViewSearch = $textFilter.val();
 
-      try {
-        let storagePath = `project_filters_per_team/${teamId}/recent_search_keywords`;
-        let recentSearchKeywords = JSON.parse(localStorage.getItem(storagePath));
-        $.each(recentSearchKeywords, function(i, keyword) {
-          $('#textSearchFilterHistory').append($(
-            `<li class="dropdown-item">
-              <a class="projects-search-keyword" href="#" data-keyword="${keyword}">
-                <i class="fas fa-history"></i>
-                <span class="keyword-text">${keyword}</span>
-              </a>
-            </li>`
-          ));
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    }).on('hide.bs.dropdown', function() {
-      $('#textSearchFilterHistory').hide();
-      $textFilter.closest('.dropdown').removeClass('open');
-      $('#folderSearchInfo').hide();
-      applyFilters();
-    });
-
-    $('#applyProjectFiltersButton').click((e) => {
-      e.stopPropagation();
-      e.preventDefault();
-      applyFilters();
+      appliedFiltersMark();
+      refreshCurrentView();
     });
 
     // Clear filters
-    $('.clear-button', $projectsFilter).click((e) => {
-      e.stopPropagation();
-      e.preventDefault();
-
+    $filterDropdown.on('filter:clear', function() {
       dropdownSelector.clearData($membersFilter);
       if ($createdOnFromFilter.data('DateTimePicker')) $createdOnFromFilter.data('DateTimePicker').clear();
       if ($createdOnToFilter.data('DateTimePicker')) $createdOnToFilter.data('DateTimePicker').clear();
@@ -678,15 +603,11 @@
     });
 
     // Prevent filter window close
-    $($projectsFilter).click((e) => {
-      if (!$(e.target).is('input,a')) {
-        e.stopPropagation();
-        e.preventDefault();
-        $('#textSearchFilterHistory').hide();
-        $textFilter.closest('.dropdown').removeClass('open');
-        dropdownSelector.closeDropdown($membersFilter);
-        $('#folderSearchInfo').hide();
-      }
+    $filterDropdown.on('filter:clickBody', function() {
+      $('#textSearchFilterHistory').hide();
+      $textFilter.closest('.dropdown').removeClass('open');
+      dropdownSelector.closeDropdown($membersFilter);
+      $('#folderSearchInfo').hide();
     });
   }
 
