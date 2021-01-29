@@ -5,14 +5,15 @@
 
     <div class="sci-btn-group header-actions">
       <%= render layout: 'shared/view_switch', locals: { disabled: false } do %>
-        <li class="view-switch-cards projects-view-mode active">
+        <li class="view-switch-cards cards-switch active">
           <i class="fas fa-th-large button-icon"></i> <%= t('projects.index.header.cards') %>
         </li>
 
-        <li class="view-switch-list projects-view-mode ">
+        <li class="view-switch-list cards-switch ">
           <i class="fas fa-list button-icon"></i> <%= t('projects.index.header.table') %>
         </li>
 
+        <div role="separator" class="divider"></div>
         <li class="view-switch-active archive-switch" data-view-mode="archived" data-url="<%= projects_path %>">
           <i class="fas fa-rocket button-icon"></i> <%= t('projects.index.header.active_projects') %>
         </li>
@@ -146,7 +147,7 @@
         </div>
       </div>
 
-      <div class="dropdown projects-sort-menu">
+      <div class="dropdown sort-menu">
         <button class="btn btn-light dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           <span><i class="fas fa-sort-amount-down"></i></span>
           <span class="caret"></span>

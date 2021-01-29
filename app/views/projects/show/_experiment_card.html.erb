@@ -1,0 +1,28 @@
+<div class="card experiment-card">
+  <div class="checkbox-cell table-cell">
+    <div class="sci-checkbox-container">
+      <input value="1" type="checkbox" class="sci-checkbox experiment-card-selector">
+      <span class="sci-checkbox-label"></span>
+    </div>
+  </div>
+  <div class="experiment-name-cell table-cell">
+    <%= experiment.name %>
+  </div>
+  <div class="actions actions-cell table-cell">
+    <i class="fas fa-ellipsis-h"></i>
+  </div>
+  <div class="data-row start-date-cell table-cell">
+    <span class="card-label"><%= t('experiments.card.start_date') %></span>
+    <span class="value card-value"><%= l(experiment.created_at, format: :full_date) %></span>
+  </div>
+  <div class="data-row modified-date-cell table-cell">
+    <span class="card-label"><%= t('experiments.card.modified_date') %></span>
+    <span class="value card-value"><%= l(experiment.updated_at, format: :full_date) %></span>
+  </div>
+  <div class="data-row completed-task-cell table-cell">
+    <span class="card-label"><%= t('experiments.card.completed_task') %></span>
+  </div>
+  <div class="data-row description-cell table-cell">
+    <span class="card-label"><%= t('experiments.card.description') %></span>
+  </div>
+</div>
