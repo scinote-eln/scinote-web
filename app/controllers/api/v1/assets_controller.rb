@@ -25,7 +25,7 @@ module Api
         if @form_multipart_upload
           asset = @step.assets.new(asset_params.merge({ team_id: @team.id }))
         else
-          blob = ActiveStorage::Blob.create_after_upload!(
+          blob = ActiveStorage::Blob.create_and_upload!(
             io: StringIO.new(Base64.decode64(asset_params[:file_data])),
             filename: asset_params[:file_name],
             content_type: asset_params[:file_type]

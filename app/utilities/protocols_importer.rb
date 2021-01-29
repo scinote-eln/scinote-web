@@ -157,7 +157,7 @@ module ProtocolsImporter
 
       # Decode the file bytes
       file = StringIO.new(Base64.decode64(tiny_mce_img_json['bytes']))
-      to_blob = ActiveStorage::Blob.create_after_upload!(io: file,
+      to_blob = ActiveStorage::Blob.create_and_upload!(io: file,
                                 filename: tiny_mce_img_json['fileName'],
                                 content_type: tiny_mce_img_json['fileType'],
                                 metadata: JSON.parse(tiny_mce_img_json['fileMetadata'] || '{}'))

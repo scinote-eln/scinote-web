@@ -25,7 +25,7 @@ describe RepositoryImportParser::Importer do
   end
 
   let(:sheet) do
-    SpreadsheetParser.open_spreadsheet(fixture_file_upload('files/export.csv'))
+    SpreadsheetParser.open_spreadsheet(file_fixture('export.csv').open)
   end
   let(:mappings) do
     { '0' => '-1',
