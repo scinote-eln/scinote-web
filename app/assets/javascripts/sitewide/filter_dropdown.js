@@ -32,14 +32,14 @@ var filterDropdown = (function() {
         let storagePath = `${$filterDropdown.data('search-field-history-key')}/${teamId}/recent_search_keywords`;
         let recentSearchKeywords = JSON.parse(localStorage.getItem(storagePath));
         $.each(recentSearchKeywords, function(i, keyword) {
-          $('#textSearchFilterHistory').append($(
-            `<li class="dropdown-item">
+          $('#textSearchFilterHistory').append(
+            $(`<li class="dropdown-item">
               <a class="projects-search-keyword" href="#" data-keyword="${keyword}">
                 <i class="fas fa-history"></i>
                 <span class="keyword-text">${keyword}</span>
               </a>
-            </li>`
-          ));
+            </li>`)
+          );
         });
       } catch (error) {
         console.error(error);
