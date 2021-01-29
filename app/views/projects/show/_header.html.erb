@@ -34,10 +34,17 @@
           <i class="fas fa-archive button-icon"></i> <%= t('experiments.header.archived_experiments') %>
         </li>
       <% end %>
-      <!-- TODO: add filters dropdown -->
-      <div class="filter-container dropdown">
-        <button class="btn btn-light icon-btn filter-button" data-toggle="dropdown"><i class="fas fa-filter"></i></button>
-      </div>
+      <%= render layout: 'shared/filter_dropdown', locals: {
+        container_class: 'experiments-filters',
+        dropdown_title: t("filters_modal.title"),
+        search_field_history_key: 'experiment_filters_per_team'
+      } do %>
+        <%= render partial: 'shared/filter_dropdown/text_search', locals: {container_class: ''} %>
+        <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'started-on-filter', label: t("filters_modal.created_on.label"), view_mode: nil } %>
+        <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'modified-on-filter', label: t("filters_modal.updated_on.label"), view_mode: nil } %>
+        <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'archived-on-filter', label: t("filters_modal.archived_on.label"), view_mode: 'archived' } %>
+
+      <% end %>
       <!-- Sort menu dropdown -->
       <div class="dropdown sort-menu">
         <button class="btn btn-light icon-btn dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">

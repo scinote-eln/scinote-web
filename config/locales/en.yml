@@ -425,30 +425,12 @@ en:
         invite_users_details: "to team %{team}."
         contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
       filters_modal:
-        title: "Filters"
-        text:
-          label: "Contains text"
-          placeholder: "Enter search terms..."
-        created_on:
-          label: "Start date"
-          from_placeholder: "From"
-          to_placeholder: "To"
-        archived_on:
-          label: "Archived date"
-          from_placeholder: "From"
-          to_placeholder: "To"
         members:
           label: "Members"
           placeholder: "Select members of a project"
         folders:
           label: "Look inside folders"
           popover_html: "When <strong>“Look inside folders”</strong> is active, the filters will also take all folders and their content into account."
-        recent_searches_label: "Recent searches"
-        show_btn:
-         many: "Show %{num} projects"
-         none: "No projects"
-         one: "Show project"
-        clear_btn: "Clear"
 
     export_projects:
       export_button: "Export"
@@ -2501,3 +2483,21 @@ en:
       previous: "Previous"
       next: "Next"
       truncate: "&hellip;"
+
+  filters_modal:
+    title: "Filters"
+    text:
+      label: "Contains text"
+      placeholder: "Enter search terms..."
+    from_placeholder: "From"
+    to_placeholder: "To"
+    created_on:
+      label: "Start date"
+    updated_on:
+      label: "Modified date"
+    archived_on:
+      label: "Archived date"
+    recent_searches_label: "Recent searches"
+    show_btn:
+     one: "Show results"
+    clear_btn: "Clear"
