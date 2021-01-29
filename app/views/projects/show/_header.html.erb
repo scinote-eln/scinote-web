@@ -15,7 +15,6 @@
       <% end %>
     </h1>
     <div class="sci-btn-group header-actions">
-<<<<<<< HEAD
       <!-- View switch dropdown -->
       <%= render layout: 'shared/view_switch', locals: { disabled: false } do %>
         <li class="view-switch-cards cards-switch active">
@@ -35,10 +34,6 @@
           <i class="fas fa-archive button-icon"></i> <%= t('experiments.header.archived_experiments') %>
         </li>
       <% end %>
-      <!-- TODO: add filters dropdown -->
-      <div class="filter-container dropdown">
-        <button class="btn btn-light icon-btn filter-button" data-toggle="dropdown"><i class="fas fa-filter"></i></button>
-      </div>
       <%= render layout: 'shared/filter_dropdown', locals: {
         container_class: 'experiments-filters',
         dropdown_title: t("filters_modal.title"),
@@ -61,6 +56,9 @@
               <% if i.even? && i.positive? %>
                 <li class="divider"></li>
               <% end %>
+              <li>
+                <a class="<%= 'selected' if @current_sort == sort %>" href="?<%= {sort: sort}.reject{|v| v.to_s == "0"}.to_query %>"><%= t("general.sort.#{sort}_html") %></a>
+              </li>
             <% end %>
           <% end %>
         </ul>
