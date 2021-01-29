@@ -6,6 +6,7 @@ var PdfPreview = (function() {
   const MAX_ZOOM = 3;
   const DEFAULT_ZOOM = 1;
   const ZOOM_STEP = 0.25;
+  const MAX_LOAD_ATTEMPTS = 5;
 
   var pageRendering = false;
 
@@ -104,7 +105,7 @@ var PdfPreview = (function() {
     $(canvas).data(
       'custom-scrollbar',
       new PerfectScrollbar($(canvas).closest('.page-container')[0])
-    );
+    ).data('load-attempts', 0);
     pdfjsLib.GlobalWorkerOptions.workerSrc = canvas.dataset.pdfWorkerUrl;
     loadPdfDocument(canvas);
   }
@@ -112,6 +113,7 @@ var PdfPreview = (function() {
 
   function loadPdfDocument(canvas, page = 1) {
     var loadingPdf = pdfjsLib.getDocument(canvas.dataset.pdfUrl);
+    $(canvas).data('load-attempts', $(canvas).data('load-attempts') + 1);
     loadingPdf.promise
       .then(function(pdfDocument) {
         $(canvas).data('pdfDocument', pdfDocument);
@@ -178,6 +180,13 @@ var PdfPreview = (function() {
       refreshZoomButtons(canvas);
       pageRendering = false;
       return renderTask.promise;
+    }).catch(function() {
+      pageRendering = false;
+      if ($(canvas).data('load-attempts') <= MAX_LOAD_ATTEMPTS) {
+        setTimeout(function() {
+          loadPdfDocument(canvas, page);
+        }, 5000);
+      }
     });
 
     return true;
