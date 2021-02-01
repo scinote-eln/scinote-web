@@ -21,33 +21,35 @@
           <i class="fas fa-archive button-icon"></i> <%= t('projects.index.header.archived_projects') %>
         </li>
       <% end %>
-    <%= render layout: 'shared/filter_dropdown', locals: {
-      container_class: 'projects-filters',
-      dropdown_title: t("filters_modal.title"),
-      search_field_history_key: 'project_filters_per_team'
-    } do %>
-      <%= render partial: 'shared/filter_dropdown/text_search', locals: {container_class: ''} %>
-      <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'created-on-filter', label: t("filters_modal.created_on.label"), view_mode: nil } %>
-      <div class="select-block">
-        <label><%= t("projects.index.filters_modal.members.label") %></label>
-        <select class="members-filter"
-                data-ajax-url="<%= users_filter_projects_path %>"
-                data-placeholder="<%= t('projects.index.filters_modal.members.placeholder') %>">
-        </select>
-      </div>
-      <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'archived-on-filter', label: t("filters_modal.archived_on.label"), view_mode: 'archived' } %>
-      <div class="select-block folders">
-        <span class="sci-checkbox-container">
-          <%= check_box_tag :folder_search, 'accepted', false, {class: "sci-checkbox"} %>
-          <span class="sci-checkbox-label"></span>
-        </span>
-        <span class="folder-search-label"><%= t("projects.index.filters_modal.folders.label") %></span>
-        <div class="dropdown folder-search-info">
-          <a class="fas fa-info-circle" id="folderSearchInfoBtn" data-toggle="dropdown"></a>
-          <div id="folderSearchInfo" class="dropdown-menu folder-search-popover" aria-labelledby="folderSearchInfo">
-            <%= t("projects.index.filters_modal.folders.popover_html") %>
+      <%= render layout: 'shared/filter_dropdown', locals: {
+        container_class: 'projects-filters',
+        dropdown_title: t("filters_modal.title"),
+        search_field_history_key: 'project_filters_per_team'
+      } do %>
+        <%= render partial: 'shared/filter_dropdown/text_search', locals: {container_class: ''} %>
+        <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'created-on-filter', label: t("filters_modal.created_on.label"), view_mode: nil } %>
+        <div class="select-block">
+          <label><%= t("projects.index.filters_modal.members.label") %></label>
+          <select class="members-filter"
+                  data-ajax-url="<%= users_filter_projects_path %>"
+                  data-placeholder="<%= t('projects.index.filters_modal.members.placeholder') %>">
+          </select>
+        </div>
+        <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'archived-on-filter', label: t("filters_modal.archived_on.label"), view_mode: 'archived' } %>
+        <div class="select-block folders">
+          <span class="sci-checkbox-container">
+            <%= check_box_tag :folder_search, 'accepted', false, {class: "sci-checkbox"} %>
+            <span class="sci-checkbox-label"></span>
+          </span>
+          <span class="folder-search-label"><%= t("projects.index.filters_modal.folders.label") %></span>
+          <div class="dropdown folder-search-info">
+            <a class="fas fa-info-circle" id="folderSearchInfoBtn" data-toggle="dropdown"></a>
+            <div id="folderSearchInfo" class="dropdown-menu folder-search-popover" aria-labelledby="folderSearchInfo">
+              <%= t("projects.index.filters_modal.folders.popover_html") %>
+            </div>
           </div>
         </div>
+      <% end %>
 
       <div class="dropdown sort-menu">
         <button class="btn btn-light dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
