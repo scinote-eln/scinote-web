@@ -285,13 +285,13 @@ Rails.application.routes.draw do
         # Notifications popup for individual project in projects index
         get 'notifications'
         get 'experiment_archive' # Experiment archive for single project
+        get 'experiments_cards'
+        get 'sidebar'
       end
 
       # This route is defined outside of member block
       # to preserve original :project_id parameter in URL.
       get 'users/edit', to: 'user_projects#index_edit'
-
-      get 'sidebar', to: 'projects#sidebar', as: 'sidebar'
 
       collection do
         get 'cards', to: 'projects#cards'

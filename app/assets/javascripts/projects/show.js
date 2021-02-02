@@ -1,5 +1,9 @@
 /* global filterDropdown */
 (function() {
+  var cardsWrapper = '#cardsWrapper'
+
+  var selectedExperiments = [];
+
   let experimentsCurrentSort;
   let experimentsViewSearch;
   let startedOnFromFilter;
@@ -41,7 +45,7 @@
       archivedOnToFilter = $archivedOnToFilter.val();
       experimentsViewSearch = $textFilter.val();
       appliedFiltersMark();
-      //refreshCurrentView();
+      refreshCurrentView();
     });
 
     // Clear filters
@@ -53,6 +57,59 @@
       if ($archivedOnFromFilter.data('DateTimePicker')) $archivedOnFromFilter.data('DateTimePicker').clear();
       if ($archivedOnToFilter.data('DateTimePicker')) $archivedOnToFilter.data('DateTimePicker').clear();
       $textFilter.val('');
+    });
+  }
+
+  function updateExperimentsToolbar() {
+
+  }
+
+  function initSorting() {
+    $('#sortMenuDropdown a').click(function() {
+      if (experimentsCurrentSort !== $(this).data('sort')) {
+        $('#sortMenuDropdown a').removeClass('selected');
+        experimentsCurrentSort = $(this).data('sort');
+        refreshCurrentView();
+        $(this).addClass('selected');
+        $('#sortMenu').dropdown('toggle');
+      }
+    });
+  }
+
+  function refreshCurrentView() {
+    loadCardsView();
+    Sidebar.reload({
+      sort: experimentsCurrentSort,
+      view_mode: 'active'
+    });
+  }
+
+  function loadCardsView() {
+    var viewContainer = $(cardsWrapper);
+    $.ajax({
+      url: viewContainer.data('experiments-cards-url'),
+      type: 'GET',
+      dataType: 'json',
+      data: {
+        view_mode: 'active',
+        sort: experimentsCurrentSort,
+        search: experimentsViewSearch,
+        created_on_from: startedOnFromFilter,
+        created_on_to: startedOnToFilter,
+        updated_on_from: modifiedOnFromFilter,
+        updated_on_to: modifiedOnToFilter,
+        archived_on_from: archivedOnFromFilter,
+        archived_on_to: archivedOnToFilter
+      },
+      success: function(data) {
+        viewContainer.find('.card').remove();
+        viewContainer.append(data.cards_html);
+        selectedExperiments.length = 0;
+        updateExperimentsToolbar();
+      },
+      error: function() {
+        viewContainer.html('Error loading project list');
+      }
     });
   }
 
@@ -77,6 +134,8 @@
     });
 
     initExperimentsFilters();
+    initSorting()
+    loadCardsView();
   }
 
   init();
