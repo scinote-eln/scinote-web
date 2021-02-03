@@ -4,14 +4,14 @@
 <% provide(:container_class, 'no-second-nav-container') %>
 
 <%= content_for :sidebar do %>
-  <%= render partial: 'shared/sidebar/experiments.html.erb', locals: { project: @project, archived: false } %>
+  <%= render partial: 'shared/sidebar/experiments.html.erb', locals: { project: @project, view_mode: experiments_view_mode(@project)} %>
 <% end %>
 
 <% content_for :breadcrumbs do %>
   <%= render partial: 'projects/index/breadcrumbs', locals: { target_folder: @project.project_folder } %>
 <% end %>
 
-<div id="projectShowWrapper" class="content-pane flexible projects-show">
+<div id="projectShowWrapper" class="content-pane flexible projects-show <%= experiments_view_mode(@project) %>" data-view-mode="<%= experiments_view_mode(@project) %>">
   <%= render partial: 'projects/show/header' %>
 
   <div class="project-show-container">

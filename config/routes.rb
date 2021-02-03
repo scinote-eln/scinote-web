@@ -280,7 +280,12 @@ Rails.application.routes.draw do
                as: :save_modal
         end
       end
-      resources :experiments, only: %i(new create), defaults: { format: 'json' }
+      resources :experiments, only: %i(new create), defaults: { format: 'json' } do
+        collection do
+          post 'archive_group' # archive group of experements
+          post 'restore_group' # restore group of experements
+        end
+      end
       member do
         # Notifications popup for individual project in projects index
         get 'notifications'

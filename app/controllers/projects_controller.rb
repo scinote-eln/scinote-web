@@ -5,6 +5,7 @@ class ProjectsController < ApplicationController
   include TeamsHelper
   include InputSanitizeHelper
   include ProjectsHelper
+  include ExperimentsHelper
 
   attr_reader :current_folder
   helper_method :current_folder
@@ -58,7 +59,7 @@ class ProjectsController < ApplicationController
       html: render_to_string(
         partial: 'shared/sidebar/experiments.html.erb', locals: {
           project: @project,
-          archived: params[:view_mode] == 'archived'
+          view_mode: experiments_view_mode(@project)
         }
       )
     }

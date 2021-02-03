@@ -1,6 +1,7 @@
 <div class="content-header sticky-header">
   <div class="title-row">
     <h1 class="project-name">
+      <i class="fas fa-archive" data-view-mode="archived"></i>
       <% if @inline_editable_title_config.present? %>
               <%= render partial: "shared/inline_editing",
                          locals: {
@@ -8,9 +9,6 @@
                             config: @inline_editable_title_config
                          } %>
       <% else %>
-        <% if action_name == 'experiment_archive' %>
-          <i class="fas fa-archive"></i>
-        <% end %>
         <%= @project.name %>
       <% end %>
     </h1>

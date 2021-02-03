@@ -7,9 +7,9 @@ class ExperimentsController < ApplicationController
   include ApplicationHelper
   include Rails.application.routes.url_helpers
 
-  before_action :load_project, only: %i(new create)
-  before_action :load_experiment, except: %i(new create)
-  before_action :check_view_permissions, except: %i(edit archive clone move new create)
+  before_action :load_project, only: %i(new create archive_group restore_group)
+  before_action :load_experiment, except: %i(new create archive_group restore_group)
+  before_action :check_view_permissions, except: %i(edit archive clone move new create archive_group restore_group)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: %i(edit)
   before_action :check_archive_permissions, only: :archive
@@ -39,7 +39,7 @@ class ExperimentsController < ApplicationController
     @experiment.project = @project
     if @experiment.save
       experiment_annotation_notification
-      log_activity(:create_experiment)
+      log_activity(:create_experiment, @experiment)
       flash[:success] = t('experiments.create.success_flash',
                           experiment: @experiment.name)
       respond_to do |format|
@@ -98,7 +98,7 @@ class ExperimentsController < ApplicationController
                       else
                         :edit_experiment
                       end
-      log_activity(activity_type)
+      log_activity(activity_type, @experiment)
 
       respond_to do |format|
         format.json do
@@ -106,7 +106,7 @@ class ExperimentsController < ApplicationController
         end
         format.html do
           flash[:success] = t('experiments.update.success_flash',
-                          experiment: @experiment.name)
+                              experiment: @experiment.name)
           redirect_to project_path(@experiment.project)
         end
       end
@@ -128,7 +128,7 @@ class ExperimentsController < ApplicationController
     @experiment.archived_by = current_user
     @experiment.archived_on = DateTime.now
     if @experiment.save
-      log_activity(:archive_experiment)
+      log_activity(:archive_experiment, @experiment)
       flash[:success] = t('experiments.archive.success_flash',
                           experiment: @experiment.name)
 
@@ -136,6 +136,51 @@ class ExperimentsController < ApplicationController
     else
       flash[:alert] = t('experiments.archive.error_flash')
       redirect_back(fallback_location: root_path)
+    end
+  end
+
+  def archive_group
+    experiments = @project.experiments.active.where(id: params[:experiments_ids])
+    counter = 0
+    experiments.each do |experiment|
+      next unless can_archive_experiment?(experiment)
+
+      experiment.transaction do
+        experiment.archived_on = DateTime.now
+        experiment.archive!(current_user)
+        log_activity(:archive_experiment, experiment)
+        counter += 1
+      rescue StandardError => e
+        Rails.logger.error e.message
+        raise ActiveRecord::Rollback
+      end
+    end
+    if counter.positive?
+      render json: { message: t('experiments.archive_group.success_flash', number: counter) }
+    else
+      render json: { message: t('experiments.archive_group.error_flash') }, status: :unprocessable_entity
+    end
+  end
+
+  def restore_group
+    experiments = @project.experiments.archived.where(id: params[:experiments_ids])
+    counter = 0
+    experiments.each do |experiment|
+      next unless can_restore_experiment?(experiment)
+
+      experiment.transaction do
+        experiment.restore!(current_user)
+        log_activity(:restore_experiment, experiment)
+        counter += 1
+      rescue StandardError => e
+        Rails.logger.error e.message
+        raise ActiveRecord::Rollback
+      end
+    end
+    if counter.positive?
+      render json: { message: t('experiments.restore_group.success_flash', number: counter) }
+    else
+      render json: { message: t('experiments.restore_group.error_flash') }, status: :unprocessable_entity
     end
   end
 
@@ -287,6 +332,7 @@ class ExperimentsController < ApplicationController
 
   def set_inline_name_editing
     return unless can_manage_experiment?(@experiment)
+
     @inline_editable_title_config = {
       name: 'title',
       params_group: 'experiment',
@@ -311,13 +357,13 @@ class ExperimentsController < ApplicationController
     )
   end
 
-  def log_activity(type_of)
+  def log_activity(type_of, experiment)
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
-            team: @experiment.project.team,
-            project: @experiment.project,
-            subject: @experiment,
-            message_items: { experiment: @experiment.id })
+            team: experiment.project.team,
+            project: experiment.project,
+            subject: experiment,
+            message_items: { experiment: experiment.id })
   end
 end

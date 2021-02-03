@@ -954,6 +954,7 @@ en:
       duplicate_button: "Duplicate"
       move_button: "Move"
       archive_button: "Archive"
+      restore_button: "Restore"
     card:
       name: "Experiment"
       start_date: "Start date"
@@ -987,6 +988,12 @@ en:
       success_flash: "Successfully archived experiment %{experiment}"
       error_flash: 'Could not archive the experiment.'
       label_title: 'Archive'
+    archive_group:
+      success_flash: "<strong>%{number}</strong> experiment(s) successfully archived."
+      error_flash: 'Could not archive experiments.'
+    restore_group:
+      success_flash: "<strong>%{number}</strong> experiment(s) successfully restored."
+      error_flash: "Failed to restore experiment(s)."
     clone:
       modal_title: 'Copy experiment %{experiment} as template'
       label_title: 'Copy as template'
