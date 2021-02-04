@@ -368,7 +368,7 @@ GEM
     minitest (5.14.3)
     momentjs-rails (2.17.1)
       railties (>= 3.1)
-    msgpack (1.4.1)
+    msgpack (1.4.2)
     multi_json (1.15.0)
     multi_test (0.1.2)
     multi_xml (0.6.0)
