@@ -1,3 +1,7 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+// scss-lint:disable SelectorFormat
+
 .cards-wrapper {
   --card-min-width: 200px;
   --list-columns-number: 5;
@@ -15,8 +19,8 @@
 
   &.no-results {
     .no-results-container {
-      grid-row: 8;
       grid-column: 1 / -1;
+      grid-row: 8;
     }
 
     .no-results-img {
@@ -62,24 +66,33 @@
     }
   }
 
+  &:not(.list) {
+    [list-render="true"] {
+      display: none !important;
+    }
+  }
+
   &.list {
     grid-auto-flow: dense;
     grid-auto-rows: 3em 1px;
     grid-column-gap: 0;
     grid-row-gap: 0;
     grid-template-columns: repeat(var(--list-columns-number), minmax(100px, auto));
-    margin: 40px 0 0 6px;
+
+    [cards-render="true"] {
+      display: none !important;
+    }
 
     .no-results-container {
-      grid-row: 12;
       grid-column: 1 / -1;
+      grid-row: 12;
     }
 
     .card {
       display: contents;
 
       // Border element
-      &:after {
+      &::after {
         background: $color-concrete;
         content: "";
         display: inline-block;
@@ -122,7 +135,6 @@
         position: sticky;
         position: -webkit-sticky;
         top: 13em;
-        width: calc(100% + 1em);
         z-index: 2;
 
         &.select-all-checkboxes {
@@ -132,6 +144,42 @@
 
       & > * {
         background-color: $color-concrete;
+      }
+    }
+  }
+}
+
+.content-pane.archived {
+  .cards-wrapper {
+    .card {
+      background: $color-concrete;
+      box-shadow: none;
+
+      .data-row {
+        color: $color-silver-chalice;
+
+        .card-label {
+          color: $color-silver-chalice;
+        }
+      }
+    }
+
+    &.list {
+      .card {
+        &::after {
+          background: $color-white;
+        }
+
+        .table-cell {
+          background: $color-concrete;
+          color: $color-volcano;
+        }
+
+        &:hover {
+          .table-cell {
+            background: $color-alto;
+          }
+        }
       }
     }
   }

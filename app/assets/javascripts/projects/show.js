@@ -44,6 +44,17 @@
   }
 
   function initProjectsViewModeSwitch() {
+    $(experimentsPage).on('click', '.cards-switch', function() {
+      let $btn = $(this);
+      $('.cards-switch').removeClass('active');
+      if ($btn.hasClass('view-switch-cards')) {
+        $(cardsWrapper).removeClass('list');
+      } else if ($btn.hasClass('view-switch-list')) {
+        $(cardsWrapper).addClass('list');
+      }
+      $btn.addClass('active');
+    });
+
     $(experimentsPage).on('click', '.archive-switch', function() {
       Turbolinks.visit($(this).data('url'));
     });
@@ -165,6 +176,15 @@
     });
   }
 
+  function initSelectAllCheckbox() {
+    $(experimentsPage).on('click', '.sci-checkbox.select-all', function() {
+      var selectAll = this.checked;
+      $.each($('.experiment-card-selector'), function() {
+        if (this.checked !== selectAll) this.click();
+      });
+    });
+  }
+
   function initArchiveRestoreToolbarButtons() {
     $(experimentsPage)
       .on('ajax:before', '.archive-experiments-form, .restore-experiments-form', function() {
@@ -238,6 +258,7 @@
     initProjectsViewModeSwitch();
     initExperimentsSelector();
     initArchiveRestoreToolbarButtons();
+    initSelectAllCheckbox();
   }
 
   init();
