@@ -16,8 +16,6 @@ require 'capybara/email'
 # require 'capybara/poltergeist'
 Capybara.javascript_driver = :poltergeist
 
-include FirstTimeDataGenerator
-
 Capybara.default_max_wait_time = 30
 #Capybara.asset_host = 'http://localhost:3001'
 Capybara.server_port = ENV['CAPYBARA_SERVER_PORT'] || 3000

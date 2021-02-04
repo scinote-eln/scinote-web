@@ -1201,6 +1201,9 @@ en:
     index:
       head_title: "Inventories"
       title: "Inventories"
+      empty_title: "Your team has no inventories yet"
+      empty_description_no_create: "It would be a shame to waste all this space. Sadly you don’t have permission to add inventories. You can ask your team admin to grant you that permission."
+      empty_description_with_create: "It would be a shame to waste all this space. Create your first inventory now"
       add_new_repository_tab: "Add inventory"
       delete_flash: "\"%{name}\" inventory was successfully deleted!"
       rename_flash: "\"%{old_name}\" inventory was successfully renamed to \"%{new_name}\"!"
