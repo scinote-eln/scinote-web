@@ -960,7 +960,9 @@ en:
       modified_date: "Modified date"
       archived_date: "Archived date"
       completed_task: "Completed"
+      completed_value: "%{completed}/%{all} tasks"
       description: "Description"
+      more: "more"
     new:
       create: 'New Experiment'
       modal_title: 'Create new experiment'
