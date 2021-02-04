@@ -46,6 +46,11 @@ class ExperimentsOverviewService
       records = records.where('experiments.created_at > ?', @params[:created_on_from])
     end
     records = records.where('experiments.created_at < ?', @params[:created_on_to]) if @params[:created_on_to].present?
+    if @params[:updated_on_from].present?
+      records = records.where('experiments.updated_at > ?', @params[:updated_on_from])
+    end
+    records = records.where('experiments.updated_at < ?', @params[:updated_on_to]) if @params[:updated_on_to].present?
+
     if @params[:archived_on_from].present?
       records = records.where('COALESCE(experiments.archived_on, projects.archived_on) > ?', @params[:archived_on_from])
     end

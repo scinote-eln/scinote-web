@@ -7,13 +7,37 @@
 // New experiments page
 
 .projects-show {
+
+  &.active {
+    [data-view-mode="archived"] {
+      display: none !important;
+    }
+  }
+
+  &.archived {
+    [data-view-mode="active"] {
+      display: none !important;
+    }
+  }
+
   .content-header {
     .project-name {
+      align-items: center;
+      display: flex;
       max-width: calc(100% - 7em);
+
+      .inline-editing-container {
+        width: calc(100% - 3em);
+      }
 
       .fas {
         margin-right: .5em;
       }
+    }
+
+    .archive-experiments-form,
+    .restore-experiments-form {
+      display: inline-block;
     }
   }
 

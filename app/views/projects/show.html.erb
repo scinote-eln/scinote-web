@@ -1,21 +1,21 @@
 <% provide(:head_title, t("projects.show.head_title", project: h(@project.name)).html_safe) %>
 <% provide(:sidebar_title, t("sidebar.experiments.sidebar_title")) %>
-<% provide(:sidebar_url, project_sidebar_path(@project)) %>
+<% provide(:sidebar_url, sidebar_project_path(@project)) %>
 <% provide(:container_class, 'no-second-nav-container') %>
 
 <%= content_for :sidebar do %>
-  <%= render partial: 'shared/sidebar/experiments.html.erb', locals: { project: @project, archived: false } %>
+  <%= render partial: 'shared/sidebar/experiments.html.erb', locals: { project: @project, view_mode: experiments_view_mode(@project)} %>
 <% end %>
 
 <% content_for :breadcrumbs do %>
   <%= render partial: 'projects/index/breadcrumbs', locals: { target_folder: @project.project_folder } %>
 <% end %>
 
-<div id="projectShowWrapper" class="content-pane flexible projects-show">
+<div id="projectShowWrapper" class="content-pane flexible projects-show <%= experiments_view_mode(@project) %>" data-view-mode="<%= experiments_view_mode(@project) %>">
   <%= render partial: 'projects/show/header' %>
 
   <div class="project-show-container">
-    <div class="cards-wrapper" id="cardsWrapper">
+    <div class="cards-wrapper" id="cardsWrapper" data-experiments-cards-url="<%= experiments_cards_project_path(@project) %>">
       <!-- list -->
       <div class="table-header">
         <div class="table-header-cell select-all-checkboxes">
@@ -31,11 +31,6 @@
         <div class="table-header-cell"><%= t('experiments.card.description') %></div>
         <div class="table-header-cell"></div>
       </div>
-      <!-- cards -->
-      <% @project.sorted_experiments(@current_sort).each do |experiment| %>
-        <%= render partial: 'projects/show/experiment_card',
-                   locals: { experiment: experiment } %>
-      <% end %>
     </div>
   </div>
 </div>

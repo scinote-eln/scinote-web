@@ -5,14 +5,15 @@ class ProjectsController < ApplicationController
   include TeamsHelper
   include InputSanitizeHelper
   include ProjectsHelper
+  include ExperimentsHelper
 
   attr_reader :current_folder
   helper_method :current_folder
 
   before_action :switch_team_with_param, only: :index
-  before_action :load_vars, only: %i(show edit update notifications experiment_archive sidebar)
+  before_action :load_vars, only: %i(show edit update notifications experiment_archive sidebar experiments_cards)
   before_action :load_current_folder, only: %i(index cards new show experiment_archive)
-  before_action :check_view_permissions, only: %i(show notifications experiment_archive sidebar)
+  before_action :check_view_permissions, only: %i(show notifications experiment_archive sidebar experiments_cards)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
   before_action :set_inline_name_editing, only: %i(show)
@@ -53,15 +54,15 @@ class ProjectsController < ApplicationController
   end
 
   def sidebar
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'shared/sidebar/experiments.html.erb', locals: { project: @project }
-          )
+    @current_sort = @project.current_view_state(current_user).state.dig('experiments', params[:view_mode], 'sort')
+    render json: {
+      html: render_to_string(
+        partial: 'shared/sidebar/experiments.html.erb', locals: {
+          project: @project,
+          view_mode: experiments_view_mode(@project)
         }
-      end
-    end
+      )
+    }
   end
 
   def new
@@ -256,6 +257,17 @@ class ProjectsController < ApplicationController
     redirect_to action: :experiment_archive if @project.archived?
     # This is the "info" view
     current_team_switch(@project.team)
+  end
+
+  def experiments_cards
+    overview_service = ExperimentsOverviewService.new(@project, current_user, params)
+    render json: {
+      cards_html: render_to_string(
+        partial: 'projects/show/experiments_list.html.erb',
+        locals: { cards: overview_service.experiments }
+      )
+    }
+
   end
 
   def notifications

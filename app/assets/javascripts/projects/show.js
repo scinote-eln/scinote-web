@@ -1,5 +1,11 @@
-/* global filterDropdown */
+/* global filterDropdown Sidebar Turbolinks HelperModule */
 (function() {
+  const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable'];
+  var cardsWrapper = '#cardsWrapper';
+  var experimentsPage = '#projectShowWrapper';
+
+  var selectedExperiments = [];
+
   let experimentsCurrentSort;
   let experimentsViewSearch;
   let startedOnFromFilter;
@@ -8,6 +14,77 @@
   let modifiedOnToFilter;
   let archivedOnFromFilter;
   let archivedOnToFilter;
+
+
+  function checkActionPermission(permission) {
+    return selectedExperiments.every(function(experimentId) {
+      return $(`.experiment-card[data-id="${experimentId}"]`).data(permission);
+    });
+  }
+
+  function updateExperimentsToolbar() {
+    let experimentsToolbar = $('#projectShowToolbar');
+
+    if (selectedExperiments.length === 0) {
+      experimentsToolbar.find('.single-object-action, .multiple-object-action').addClass('hidden');
+      return;
+    }
+
+    if (selectedExperiments.length === 1) {
+      experimentsToolbar.find('.single-object-action, .multiple-object-action').removeClass('hidden');
+    } else {
+      experimentsToolbar.find('.single-object-action').addClass('hidden');
+      experimentsToolbar.find('.multiple-object-action').removeClass('hidden');
+    }
+    PERMISSIONS.forEach((permission) => {
+      if (!checkActionPermission(permission)) {
+        experimentsToolbar.find(`.btn[data-for="${permission}"]`).addClass('hidden');
+      }
+    });
+  }
+
+  function initProjectsViewModeSwitch() {
+    $(experimentsPage).on('click', '.archive-switch', function() {
+      Turbolinks.visit($(this).data('url'));
+    });
+  }
+
+  function loadCardsView() {
+    var viewContainer = $(cardsWrapper);
+    $.ajax({
+      url: viewContainer.data('experiments-cards-url'),
+      type: 'GET',
+      dataType: 'json',
+      data: {
+        view_mode: $(experimentsPage).data('view-mode'),
+        sort: experimentsCurrentSort,
+        search: experimentsViewSearch,
+        created_on_from: startedOnFromFilter,
+        created_on_to: startedOnToFilter,
+        updated_on_from: modifiedOnFromFilter,
+        updated_on_to: modifiedOnToFilter,
+        archived_on_from: archivedOnFromFilter,
+        archived_on_to: archivedOnToFilter
+      },
+      success: function(data) {
+        viewContainer.find('.card').remove();
+        viewContainer.append(data.cards_html);
+        selectedExperiments.length = 0;
+        updateExperimentsToolbar();
+      },
+      error: function() {
+        viewContainer.html('Error loading project list');
+      }
+    });
+  }
+
+  function refreshCurrentView() {
+    loadCardsView();
+    Sidebar.reload({
+      sort: experimentsCurrentSort,
+      view_mode: $(experimentsPage).data('view-mode')
+    });
+  }
 
   function initExperimentsFilters() {
     var $filterDropdown = filterDropdown.init();
@@ -41,7 +118,7 @@
       archivedOnToFilter = $archivedOnToFilter.val();
       experimentsViewSearch = $textFilter.val();
       appliedFiltersMark();
-      //refreshCurrentView();
+      refreshCurrentView();
     });
 
     // Clear filters
@@ -54,6 +131,61 @@
       if ($archivedOnToFilter.data('DateTimePicker')) $archivedOnToFilter.data('DateTimePicker').clear();
       $textFilter.val('');
     });
+  }
+
+  function initSorting() {
+    $('#sortMenuDropdown a').click(function() {
+      if (experimentsCurrentSort !== $(this).data('sort')) {
+        $('#sortMenuDropdown a').removeClass('selected');
+        experimentsCurrentSort = $(this).data('sort');
+        refreshCurrentView();
+        $(this).addClass('selected');
+        $('#sortMenu').dropdown('toggle');
+      }
+    });
+  }
+
+  function initExperimentsSelector() {
+    $(cardsWrapper).on('click', '.experiment-card-selector', function() {
+      let card = $(this).closest('.experiment-card');
+      let experimentId = card.data('id');
+      // Determine whether ID is in the list of selected project IDs
+      let index = $.inArray(experimentId, selectedExperiments);
+
+      // If checkbox is checked and row ID is not in list of selected project IDs
+      if (this.checked && index === -1) {
+        $(this).closest('.experiment-card').addClass('selected');
+        selectedExperiments.push(experimentId);
+      // Otherwise, if checkbox is not checked and ID is in list of selected IDs
+      } else if (!this.checked && index !== -1) {
+        $(this).closest('.experiment-card').removeClass('selected');
+        selectedExperiments.splice(index, 1);
+      }
+      updateExperimentsToolbar();
+    });
+  }
+
+  function initArchiveRestoreToolbarButtons() {
+    $(experimentsPage)
+      .on('ajax:before', '.archive-experiments-form, .restore-experiments-form', function() {
+        let buttonForm = $(this);
+        buttonForm.find('input[name="experiments_ids[]"]').remove();
+        selectedExperiments.forEach(function(id) {
+          $('<input>').attr({
+            type: 'hidden',
+            name: 'experiments_ids[]',
+            value: id
+          }).appendTo(buttonForm);
+        });
+      })
+      .on('ajax:success', '.archive-experiments-form, .restore-experiments-form', function(ev, data) {
+        HelperModule.flashAlertMsg(data.message, 'success');
+        // Project saved, reload view
+        refreshCurrentView();
+      })
+      .on('ajax:error', '.archive-experiments-form, .restore-experiments-form', function(ev, data) {
+        HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+      });
   }
 
   function init() {
@@ -77,6 +209,11 @@
     });
 
     initExperimentsFilters();
+    initSorting();
+    loadCardsView();
+    initProjectsViewModeSwitch();
+    initExperimentsSelector();
+    initArchiveRestoreToolbarButtons();
   }
 
   init();

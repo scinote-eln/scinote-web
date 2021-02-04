@@ -280,18 +280,23 @@ Rails.application.routes.draw do
                as: :save_modal
         end
       end
-      resources :experiments, only: %i(new create), defaults: { format: 'json' }
+      resources :experiments, only: %i(new create), defaults: { format: 'json' } do
+        collection do
+          post 'archive_group' # archive group of experements
+          post 'restore_group' # restore group of experements
+        end
+      end
       member do
         # Notifications popup for individual project in projects index
         get 'notifications'
         get 'experiment_archive' # Experiment archive for single project
+        get 'experiments_cards'
+        get 'sidebar'
       end
 
       # This route is defined outside of member block
       # to preserve original :project_id parameter in URL.
       get 'users/edit', to: 'user_projects#index_edit'
-
-      get 'sidebar', to: 'projects#sidebar', as: 'sidebar'
 
       collection do
         get 'cards', to: 'projects#cards'
