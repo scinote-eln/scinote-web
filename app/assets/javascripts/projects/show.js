@@ -1,4 +1,4 @@
-/* global filterDropdown Sidebar Turbolinks HelperModule */
+/* global animateSpinner filterDropdown Sidebar Turbolinks HelperModule */
 (function() {
   const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable'];
   var cardsWrapper = '#cardsWrapper';
@@ -207,6 +207,30 @@
         });
       }
     });
+
+    $('#content-wrapper').on('ajax:success', '.experiment-action-link', function(ev, data) {
+      // Add and show modal
+      let modal = $(data.html);
+      $('#content-wrapper').append(modal);
+      modal.modal('show');
+      modal.find('.selectpicker').selectpicker();
+      // Remove modal when it gets closed
+      modal.on('hidden.bs.modal', function() {
+        $(this).remove();
+      });
+    });
+
+    $('#content-wrapper')
+      .on('ajax:beforeSend', '.experiment-action-form', function() {
+        animateSpinner();
+      })
+      .on('ajax:success', '.experiment-action-form', function() {
+        location.reload();
+      })
+      .on('ajax:error', '.experiment-action-form', function(ev, data) {
+        animateSpinner(null, false);
+        $(this).renderFormErrors('experiment', data.responseJSON);
+      });
 
     initExperimentsFilters();
     initSorting();

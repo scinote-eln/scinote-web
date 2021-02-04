@@ -1,24 +1,21 @@
-<!-- Edit experiment modal -->
-<div class="modal"
-     id="edit-experiment-modal-<%= @experiment.id %>"
-     tabindex="-1"
-     role="dialog"
-     aria-labelledby="edit-experiment-modal-label">
-  <%= bootstrap_form_for [@project, @experiment], remote: true do |f| %>
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
+<div class="modal" id="edit-experiment-modal-<%= @experiment.id %>" tabindex="-1" role="dialog" aria-labelledby="edit-experiment-modal-label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <%= bootstrap_form_for [@project, @experiment], remote: true, html: { class: 'experiment-action-form' } do |f| %>
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="edit-eperiment-modal-label"><%= t("experiments.edit.modal_title", experiment: @experiment.name ) %></h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="edit-eperiment-modal-label">
+            <%= t('experiments.edit.modal_title', experiment: @experiment.name ) %>
+          </h4>
         </div>
         <div class="modal-body">
-          <%= render partial: "form.html.erb", locals: { form: f } %>
+          <%= render partial: 'form.html.erb', locals: { form: f } %>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
-          <%= f.submit t("experiments.edit.modal_create"), class: "btn btn-primary" %>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.cancel') %></button>
+          <%= f.submit t('experiments.edit.modal_create'), class: 'btn btn-primary' %>
         </div>
-      </div>
+      <% end %>
     </div>
-  <% end %>
+  </div>
 </div>
