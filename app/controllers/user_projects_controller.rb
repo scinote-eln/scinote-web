@@ -10,16 +10,13 @@ class UserProjectsController < ApplicationController
   before_action :check_manage_permissions, only: %i(update destroy)
 
   def index
-    @users = @project.user_projects
+    @user_projects = @project.user_projects
 
     respond_to do |format|
       format.json do
         render json: {
-          html: render_to_string(
-            partial: 'index.html.erb'
-          ),
-          project_id: @project.id,
-          counter: @project.users.count # Used for counter badge
+          html_title: t('projects.index.modal_view_users.modal_title', name: @project.name),
+          html_body: render_to_string(partial: 'index.html.erb')
         }
       end
     end
@@ -33,7 +30,6 @@ class UserProjectsController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          project: @project,
           html_title: t('projects.index.modal_manage_users.modal_title', name: @project.name),
           html_body: render_to_string(partial: 'index_edit.html.erb'),
           html_footer: render_to_string(partial: 'index_edit_footer.html.erb')
@@ -51,7 +47,7 @@ class UserProjectsController < ApplicationController
 
       respond_to do |format|
         format.json do
-          redirect_to project_users_edit_path(format: :json), turbolinks: false
+          redirect_to edit_project_users_path(format: :json), turbolinks: false
         end
       end
     else
@@ -77,7 +73,7 @@ class UserProjectsController < ApplicationController
 
       respond_to do |format|
         format.json do
-          redirect_to project_users_edit_path(format: :json), turbolinks: false
+          redirect_to edit_project_users_path(format: :json), turbolinks: false
         end
       end
     else
@@ -97,7 +93,7 @@ class UserProjectsController < ApplicationController
       log_activity(:unassign_user_from_project)
       respond_to do |format|
         format.json do
-          redirect_to project_users_edit_path(format: :json),
+          redirect_to edit_project_users_path(format: :json),
                       turbolinks: false,
                       status: :see_other
         end

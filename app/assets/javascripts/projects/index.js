@@ -237,6 +237,16 @@
     });
   }
 
+  // Initialize view project users modal remote loading.
+  function initViewProjectUsersLink() {
+    $('#cardsWrapper').on('ajax:success', '.view-project-users-link', function(e, data) {
+      let viewProjectUsersModal = $('#viewProjectUsersModal');
+      viewProjectUsersModal.find('.modal-title').html(data.html_title);
+      viewProjectUsersModal.find('.modal-body').html(data.html_body);
+      viewProjectUsersModal.modal('show');
+    });
+  }
+
   // Initialize reloading manage user modal content after posting new
   // user.
   function initAddUserForm() {
@@ -627,6 +637,7 @@
     initExportProjectsModal();
     initExportProjects();
     initArchiveRestoreToolbarButtons();
+    initViewProjectUsersLink();
     initManageProjectUsersLink();
     initAddUserForm();
     initRemoveUserLinks();

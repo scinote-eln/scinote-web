@@ -50,28 +50,16 @@
   <div class="data-row user-cell table-cell">
     <span class="card-label"><%= t('projects.index.card.users') %></span>
     <div class="value">
-
-      <% project.user_projects[0..3].each do |user_project| %>
-        <span class="global-avatar-container">
-          <%= image_tag(avatar_path(user_project.user, :icon_small), title: user_name_with_role(user_project)) %>
-        </span>
-      <% end %>
-
-      <% more_users = project.user_projects[4..-1].to_a %>
-      <% if more_users.any? %>
-        <a href="" class="more-users" title="<%= user_names_with_roles(more_users) %>">
-           +<%= more_users.size %>
-        </a>
-      <% end %>
-
       <% if can_manage_project?(project) %>
-        <%= link_to project_users_edit_path(project),
-                    class: 'manage-users-link manage-project-users-link',
-                    remote: true,
-                    data: { 'view-mode': 'active' } do %>
-          <span class="new-user">
+        <%= link_to edit_project_users_path(project), class: 'project-users-link manage-project-users-link', remote: true do %>
+          <%= render partial: 'projects/index/users_list.html.erb', locals: { project: project } %>
+          <span class="new-user global-avatar-container">
             <i class="fas fa-plus"></i>
           </span>
+        <% end %>
+      <% else %>
+        <%= link_to project_users_path(project), class: 'project-users-link view-project-users-link', remote: true do %>
+          <%= render partial: 'projects/index/users_list.html.erb', locals: { project: project } %>
         <% end %>
       <% end %>
     </div>

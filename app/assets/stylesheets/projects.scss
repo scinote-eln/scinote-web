@@ -460,6 +460,12 @@ li.module-hover {
 }
 
 .projects-index {
+  .project-users-list {
+    hr {
+      margin: .5em 0;
+    }
+  }
+
   .filter-container {
     .projects-filters {
       .select-block {
@@ -525,6 +531,15 @@ li.module-hover {
       }
 
       .card {
+        .project-users-link {
+          color: $color-silver-chalice;
+          display: inline;
+
+          &:hover {
+            text-decoration: none;
+          }
+        }
+
         &.folder-card {
           text-align: center;
 
@@ -664,15 +679,8 @@ li.module-hover {
               }
 
               .new-user {
-                align-items: center;
                 background: $color-concrete;
-                border-radius: 50%;
-                color: $color-silver-chalice;
-                cursor: pointer;
-                display: flex;
-                height: 2em;
-                justify-content: center;
-                width: 2em;
+                text-align: center;
               }
             }
           }

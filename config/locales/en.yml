@@ -424,6 +424,10 @@ en:
         invite_users_link: "Invite users"
         invite_users_details: "to team %{team}."
         contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
+      modal_view_users:
+        modal_title: "Members of %{name}"
+        no_users: "No users!"
+        current_user_label: "(you)"
       filters_modal:
         members:
           label: "Members"

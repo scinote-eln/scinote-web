@@ -228,8 +228,11 @@ Rails.application.routes.draw do
     end
 
     resources :projects, except: [:destroy] do
-      resources :user_projects, path: '/users',
-                only: [:create, :index, :update, :destroy]
+      resources :user_projects, path: '/users', only: %i(create index update destroy), as: :users do
+        collection do
+          get 'edit', to: 'user_projects#index_edit'
+        end
+      end
       resources :project_comments,
                 path: '/comments',
                 only: [:create, :index, :edit, :update, :destroy]
@@ -293,10 +296,6 @@ Rails.application.routes.draw do
         get 'experiments_cards'
         get 'sidebar'
       end
-
-      # This route is defined outside of member block
-      # to preserve original :project_id parameter in URL.
-      get 'users/edit', to: 'user_projects#index_edit'
 
       collection do
         get 'cards', to: 'projects#cards'
