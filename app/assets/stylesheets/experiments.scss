@@ -14,22 +14,23 @@
     }
   }
 
-.experiment-actions-menu {
-  .dropdown-menu {
-    a,
-    button {
-      @include font-button;
-      padding: .5em 1em;
-
-      .fas {
-        margin-right: .4em;
-      }
-    }
-  }
-
   &.archived {
     [data-view-mode="active"] {
       display: none !important;
+    }
+  }
+
+  .experiment-actions-menu {
+    .dropdown-menu {
+      a,
+      button {
+        @include font-button;
+        padding: .5em 1em;
+
+        .fas {
+          margin-right: .4em;
+        }
+      }
     }
   }
 
