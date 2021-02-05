@@ -1,7 +1,10 @@
 <div class="content-header sticky-header">
   <div class="title-row">
-    <h1 data-view-mode="active"><%= t('projects.index.head_title') %></h1>
-    <h1 data-view-mode="archived"><i class="fas fa-archive"></i>&nbsp;<%= t('projects.index.head_title_archived') %></h1>
+    <h1 data-view-mode="active" class="projects-title"><%= current_folder&.name || t('projects.index.head_title') %></h1>
+    <h1 data-view-mode="archived">
+      <i class="fas fa-archive"></i>&nbsp;
+      <span class="projects-title"><%= current_folder&.name || t('projects.index.head_title_archived') %></span>
+    </h1>
 
     <div class="sci-btn-group header-actions">
       <%= render layout: 'shared/view_switch', locals: { disabled: false } do %>

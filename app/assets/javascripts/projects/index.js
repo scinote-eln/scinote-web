@@ -495,6 +495,7 @@
       },
       success: function(data) {
         $('#breadcrumbsWrapper').html(data.breadcrumbs_html);
+        $(projectsWrapper).find('.projects-title').html(data.title);
         $(toolbarWrapper).html(data.toolbar_html);
         viewContainer.data('projects-cards-url', data.projects_cards_url);
         viewContainer.removeClass('no-results');

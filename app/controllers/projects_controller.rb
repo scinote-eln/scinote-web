@@ -31,6 +31,7 @@ class ProjectsController < ApplicationController
 
   def cards
     overview_service = ProjectsOverviewService.new(current_team, current_user, current_folder, params)
+    title = params[:view_mode] == 'archived' ? t('projects.index.head_title_archived') : t('projects.index.head_title')
 
     if filters_included?
       render json: {
@@ -44,6 +45,7 @@ class ProjectsController < ApplicationController
       render json: {
         projects_cards_url: current_folder ? project_folder_cards_url(current_folder) : cards_projects_url,
         breadcrumbs_html: current_folder ? render_to_string(partial: 'projects/index/breadcrumbs.html.erb') : '',
+        title: current_folder ? current_folder&.name : title,
         toolbar_html: render_to_string(partial: 'projects/index/toolbar.html.erb'),
         cards_html: render_to_string(
           partial: 'projects/index/team_projects.html.erb',
