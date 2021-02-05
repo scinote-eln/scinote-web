@@ -812,16 +812,7 @@ li.module-hover {
         grid-auto-rows: 2.5em;
 
         .card.project-card {
-          background: $color-concrete;
-          box-shadow: none;
-
           .data-row {
-            color: $color-silver-chalice;
-
-            .card-label {
-              color: $color-silver-chalice;
-            }
-
             &.archived-date-cell {
               color: $color-volcano;
 
@@ -838,23 +829,6 @@ li.module-hover {
           grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 2), minmax(100px, auto)) max-content;
 
           .card {
-            &::after {
-              background: $color-white;
-            }
-
-            &.project-card {
-              .table-cell {
-                background: $color-concrete;
-                color: $color-volcano;
-              }
-            }
-
-            &:hover {
-              .table-cell {
-                background: $color-alto;
-              }
-            }
-
             &.folder-card {
               .name {
                 grid-column: 6 span;

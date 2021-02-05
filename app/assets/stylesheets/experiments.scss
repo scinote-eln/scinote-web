@@ -14,12 +14,6 @@
     }
   }
 
-  &.archived {
-    [data-view-mode="active"] {
-      display: none !important;
-    }
-  }
-
   .experiment-actions-menu {
     .dropdown-menu {
       a,
@@ -65,9 +59,17 @@
       .card {
         grid-row: span 6;
 
+
         &.experiment-card {
           border-radius: 4px;
           box-shadow: $flyout-shadow;
+
+          .workflow-img-container {
+            background-color: $color-concrete;
+            border-radius: 4px;
+            height: 76px;
+            width: 76px;
+          }
 
           .experiment-name-cell {
             @include font-h3;
@@ -91,20 +93,13 @@
             top: .2em;
           }
 
-          .dates-and-img-container{
+          .dates-and-img-container {
             display: flex;
             height: 6em;
             width: 100%;
 
             .dates-container {
               flex-grow: 1;
-            }
-
-            .workflow-img-container {
-              background-color: $color-concrete;
-              border-radius: 4px;
-              height: 76px;
-              width: 76px;
             }
           }
 
@@ -131,6 +126,10 @@
             }
           }
 
+          .completed-task-cell {
+            width: 100%;
+          }
+
           .description-cell {
             .description-text {
               -webkit-box-orient: vertical;
@@ -138,7 +137,7 @@
               height: 3em;
               -webkit-line-clamp: 2;
               overflow: hidden;
-              padding-top: 0.25em;
+              padding-top: .25em;
 
               &::after {
                 background: linear-gradient(to right, transparent, $color-white 50%);
@@ -162,12 +161,43 @@
       }
 
       &.list {
+        grid-auto-rows: 1px 5em;
         grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 2), minmax(100px, auto)) max-content;
+        grid-template-rows: 3em;
 
         .card {
           &.experiment-card {
+
+            .card-value {
+              font-weight: normal;
+              line-height: 2em;
+            }
+
+            .workflow-img-container {
+              height: 3.5em;
+              margin: .25em 1em .25em 0;
+              width: 3.5em;
+            }
+
+            .dates-and-img-container,
+            .dates-container {
+              display: contents;
+            }
+
+            .checkbox-cell {
+              align-items: normal;
+              padding-top: .5em;
+            }
+
             .experiment-name-cell {
+              @include font-button;
+              color: $brand-primary;
+              display: flex;
+              font-weight: normal;
               grid-column: 2;
+              height: 100%;
+              margin: 0;
+              padding: .25em 0;
             }
 
             .start-date-cell {
@@ -184,10 +214,79 @@
 
             .description-cell {
               grid-column: 6;
+              position: relative;
+
+              .description-text::after {
+                bottom: 1.5em;
+                right: .5em;
+              }
+
+              .more-button {
+                bottom: 1.9em;
+              }
             }
 
             .actions-cell {
               grid-column: 7;
+              position: initial;
+            }
+          }
+
+          &:hover {
+            .description-text::after {
+              background: linear-gradient(to right, transparent, $color-concrete 50%);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &.archived {
+    [data-view-mode="active"] {
+      display: none !important;
+    }
+
+    .project-show-container {
+      .cards-wrapper {
+        .card.experiment-card {
+          grid-row: span 7;
+
+          .dates-and-img-container {
+            height: 9em;
+          }
+
+          .description-cell {
+            .description-text::after {
+              background: linear-gradient(to right, transparent, $color-concrete 50%);
+            }
+          }
+        }
+
+        &.list {
+          --list-columns-number: 8;
+
+          .card.experiment-card {
+            .archived-date-cell {
+              grid-column: 5;
+            }
+
+            .completed-task-cell {
+              grid-column: 6;
+            }
+
+            .description-cell {
+              grid-column: 7;
+            }
+
+            .actions-cell {
+              grid-column: 8;
+            }
+
+            &:hover {
+              .description-text::after {
+                background: linear-gradient(to right, transparent, $color-alto 50%);
+              }
             }
           }
         }
