@@ -7,9 +7,7 @@ class ProjectFolder < ApplicationRecord
 
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
-                      maximum: Constants::NAME_MAX_LENGTH },
-            validates :name, length: { minimum: Constants::NAME_MIN_LENGTH,
-                             maximum: Constants::NAME_MAX_LENGTH }
+                      maximum: Constants::NAME_MAX_LENGTH }
   validates :name, uniqueness: { scope: %i(team_id parent_folder_id), case_sensitive: false },
                    if: -> { parent_folder.present? }
   validates :name, uniqueness: { scope: %i(team_id archived), case_sensitive: false },
