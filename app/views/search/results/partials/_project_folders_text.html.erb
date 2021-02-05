@@ -1,0 +1,4 @@
+<% tree_ordered_parent_folders(folder)&.each do |project_folder| %>
+    <%= route_to_other_team(project_folder_path(project_folder), project_folder.team, project_folder.name) %>
+  <span>/</span>
+<% end %>

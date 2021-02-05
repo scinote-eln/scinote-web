@@ -273,6 +273,7 @@ en:
       description: "Description: "
       no_description: "No description"
       team: "Team: "
+      folder: "Folders: "
       repository: "Inventory: "
       repository_row: "Inventory item: "
       project: "Project: "

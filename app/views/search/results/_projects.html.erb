@@ -11,6 +11,14 @@
       <%=l project.created_at, format: :full %>
     </span>
     <br>
+    <% if project.project_folder %>
+      <span>
+        <%=t "search.index.folder" %>
+        <%= render partial: "search/results/partials/project_folders_text.html.erb",
+                   locals: { folder: project.project_folder } %>
+      </span>
+      <br>
+    <% end %>
     <span>
       <%=t 'search.index.team' %>
       <%= render partial: 'search/results/partials/team_text.html.erb',
