@@ -17,6 +17,14 @@
                   locals: { project: experiment.project, link_to_page: :show } %>
     </span>
     <br>
+    <% if experiment.project.project_folder %>
+      <span>
+        <%=t "search.index.folder" %>
+        <%= render partial: "search/results/partials/project_folders_text.html.erb",
+                   locals: { folder: experiment.project.project_folder } %>
+      </span>
+      <br>
+    <% end %>
     <span>
       <%=t "search.index.team" %>
       <%= render partial: "search/results/partials/team_text.html.erb",
