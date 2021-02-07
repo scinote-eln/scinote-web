@@ -96,19 +96,4 @@ describe ProjectFoldersController, type: :controller do
       expect { action }.to(change { Activity.count }.by(1))
     end
   end
-
-  describe 'POST archive' do
-    let(:action) { post :archive, params: { id: project_folder.id }, format: :json }
-
-    it 'calls create activity for creating project folder' do
-      expect(Activities::CreateActivityService)
-        .to(receive(:call).with(hash_including(activity_type: :archive_project_folder)))
-
-      action
-    end
-
-    it 'adds activity in DB' do
-      expect { action }.to(change { Activity.count }.by(1))
-    end
-  end
 end

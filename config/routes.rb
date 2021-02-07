@@ -228,8 +228,11 @@ Rails.application.routes.draw do
     end
 
     resources :projects, except: [:destroy] do
-      resources :user_projects, path: '/users',
-                only: [:create, :index, :update, :destroy]
+      resources :user_projects, path: '/users', only: %i(create index update destroy), as: :users do
+        collection do
+          get 'edit', to: 'user_projects#index_edit'
+        end
+      end
       resources :project_comments,
                 path: '/comments',
                 only: [:create, :index, :edit, :update, :destroy]
@@ -280,18 +283,19 @@ Rails.application.routes.draw do
                as: :save_modal
         end
       end
-      resources :experiments, only: %i(new create), defaults: { format: 'json' }
+      resources :experiments, only: %i(new create), defaults: { format: 'json' } do
+        collection do
+          post 'archive_group' # archive group of experements
+          post 'restore_group' # restore group of experements
+        end
+      end
       member do
         # Notifications popup for individual project in projects index
         get 'notifications'
         get 'experiment_archive' # Experiment archive for single project
+        get 'experiments_cards'
+        get 'sidebar'
       end
-
-      # This route is defined outside of member block
-      # to preserve original :project_id parameter in URL.
-      get 'users/edit', to: 'user_projects#index_edit'
-
-      get 'sidebar', to: 'projects#sidebar', as: 'sidebar'
 
       collection do
         get 'cards', to: 'projects#cards'
@@ -312,7 +316,7 @@ Rails.application.routes.draw do
     end
     get 'project_folders/:project_folder_id', to: 'projects#index', as: :project_folder_projects
 
-    resources :experiments, only: %i(edit update) do
+    resources :experiments, only: %i(show edit update) do
       member do
         get 'canvas' # Overview/structure for single experiment
         # AJAX-loaded canvas edit mode (from canvas)
@@ -324,7 +328,7 @@ Rails.application.routes.draw do
         post 'canvas', to: 'canvas#update' # Save updated canvas action
         get 'module_archive' # Module archive for single experiment
         get 'my_module_tags', to: 'my_module_tags#canvas_index'
-        get 'archive' # archive experiment
+        post 'archive' # archive experiment
         get 'clone_modal' # return modal with clone options
         post 'clone' # clone experiment
         get 'move_modal' # return modal with move options

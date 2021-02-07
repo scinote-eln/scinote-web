@@ -1,0 +1,49 @@
+<div id="projectShowToolbar" class="project-show-toolbar">
+  <!-- new experiment button -->
+  <% if can_create_experiments?(@project) %>
+    <%= link_to new_project_experiment_url(@project),
+                remote: true,
+                type: "button",
+                data: {view_mode: :active},
+                id: 'new-experiment',
+                class: 'btn btn-primary' do %>
+      <span class="fas fa-plus" aria-hidden="true"></span>
+      <span class="hidden-xs"><%= t('experiments.toolbar.new_button') %></span>
+    <% end %>
+  <% end %>
+
+  <a href="#" class="btn btn-light edit-experiment-btn single-object-action hidden" data-for="editable" data-view-mode="active" data-url="">
+    <span class="fas fa-pencil-alt" aria-hidden="true"></span>
+    <span class="hidden-xs"><%= t('experiments.toolbar.edit_button') %></span>
+  </a>
+
+  <a href="#" class="btn btn-light duplicate-experiment-btn multiple-object-action hidden" data-view-mode="active" data-for="duplicable" data-url="">
+    <span class="fas fa-copy" aria-hidden="true"></span>
+    <span class="hidden-xs"><%= t('experiments.toolbar.duplicate_button') %></span>
+  </a>
+
+  <a href="#" class="btn btn-light move-experiments-btn multiple-object-action hidden" data-view-mode="active" data-for="moveable" data-url="">
+    <span class="fas fa-arrow-right" aria-hidden="true"></span>
+    <span class="hidden-xs"><%= t('experiments.toolbar.move_button') %></span>
+  </a>
+
+  <%= button_to archive_group_project_experiments_path(@project),
+                class: 'btn btn-light archive-experiments-btn multiple-object-action hidden',
+                form_class: 'archive-experiments-form',
+                data: { for: :archivable, view_mode: 'active' },
+                remote: true,
+                method: :post do %>
+    <span class="fas fa-archive" aria-hidden="true"></span>
+    <span class="hidden-xs"><%= t('projects.index.archive_button') %></span>
+  <% end %>
+
+  <%= button_to restore_group_project_experiments_path(@project),
+                class: 'btn btn-light restore-experiments-btn multiple-object-action hidden',
+                form_class: 'restore-experiments-form',
+                data: { for: :restorable, view_mode: 'archived' },
+                remote: true,
+                method: :post do %>
+    <span class="fas fa-undo" aria-hidden="true"></span>
+    <span class="hidden-xs"><%= t('experiments.toolbar.restore_button') %></span>
+  <% end %>
+</div>

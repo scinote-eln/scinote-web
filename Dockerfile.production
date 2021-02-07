@@ -1,4 +1,4 @@
-FROM ruby:2.6.4-buster
+FROM ruby:2.7.2-buster
 MAINTAINER BioSistemika <info@biosistemika.com>
 
 ARG WKHTMLTOPDF_PACKAGE_URL=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb

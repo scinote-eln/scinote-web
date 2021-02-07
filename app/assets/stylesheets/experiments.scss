@@ -3,207 +3,294 @@
 // scss-lint:disable SelectorFormat
 // scss-lint:disable IdSelector
 
-// EXPERIMENT PANEL
-.experiment-panel {
-  @include box-shadow(0 4px 8px 0 $color-dove-gray);
-  display: flex;
-  flex-direction: column;
-  height: 400px;
-  margin: 0 auto;
-  margin-bottom: 35px;
-  margin-top: 15px;
-  max-width: 700px;
 
-  .panel-title {
-    margin-bottom: 14px;
-  }
+// New experiments page
 
-  .panel-heading .clone-experiment,
-  .panel-heading .dropdown {
-    display: none;
-  }
+.projects-show {
 
-  &:hover .clone-experiment,
-  &:hover .dropdown {
-    display: block;
-  }
-
-  .panel-date {
-    color: $color-silver-chalice;
-
-    .fas {
-      display: inline-block;
-      width: 1em;
+  &.active {
+    [data-view-mode="archived"] {
+      display: none !important;
     }
   }
 
-  .panel-heading > .clone-experiment {
-    color: $color-silver-chalice;
-    padding-left: 4px;
-    padding-top: 2px;
-  }
+  .experiment-actions-menu {
+    .dropdown-menu {
+      a,
+      button {
+        @include font-button;
+        padding: .5em 1em;
 
-  .dropdown {
-    color: $color-silver-chalice;
-
-    button {
-      padding-left: 6px;
+        .fas {
+          margin-right: .4em;
+        }
+      }
     }
   }
 
-  .panel-body {
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-    height: 100%;
-
-    a {
-      height: 100%;
-    }
-  }
-
-  .experiment-description {
-    margin-top: 10px;
-    max-height: 86px;
-    overflow-x: hidden;
-
-    p {
-      margin: 0;
-    }
-  }
-
-  .experiment-no-description {
-    @include font-h3;
-    color: $color-alto;
-    display: block;
-    font-weight: bold;
-    margin-top: 10px;
-    text-align: center;
-  }
-
-  .no-workflowimg {
-    color: $color-alto;
-    display: block;
-    font-size: 22px;
-    font-weight: bold;
-    margin: 15px 0;
-    max-height: 200px;
-    padding-bottom: 70px;
-    padding-top: 50px;
-    text-align: center;
-  }
-}
-
-.workflowimg-container {
-  align-items: center;
-  display: flex;
-  height: 100%;
-  justify-content: center;
-
-  img {
-    max-height: 190px;
-    max-width: 100%;
-  }
-}
-
-// SHOW
-.center-btn {
-  display: block;
-  margin: 0 auto;
-  max-width: 200px;
-}
-
-.big-plus {
-  color: $color-gainsboro;
-  display: block;
-  font-size: 180px;
-  margin: 20px 0;
-  text-align: center;
-
-  &:hover {
-    color: $color-alto;
-  }
-
-  &:focus {
-    color: $color-alto;
-  }
-}
-
-#project-show-archive {
-  .experiment-panel {
-    background: $color-concrete;
-
-    .panel-heading {
-      background: unset;
-    }
-
-    .panel-date {
-      color: $color-black;
-    }
-  }
-}
-
-#project-show,
-#project-show-archive {
   .content-header {
     .project-name {
-      max-width: calc(100% - 2em);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      align-items: center;
+      display: flex;
+      max-width: calc(100% - 7em);
+
+      .inline-editing-container {
+        width: calc(100% - 3em);
+      }
 
       .fas {
         margin-right: .5em;
       }
     }
-  }
-  .header-actions {
-    margin-left: auto;
 
-    .experiment-sort-menu {
+    .archive-experiments-form,
+    .restore-experiments-form {
       display: inline-block;
+    }
+  }
 
-      #sortMenu {
-        background: $color-white;
+  .project-show-container {
+    margin: 1.5em 0;
 
-        &:focus,
-        &:active {
-          box-shadow: none;
-        }
+    .cards-wrapper {
+      --card-min-width: 350px;
+      --list-columns-number: 7;
 
-        &:hover {
-          background: $color-concrete;
+      .card {
+        grid-row: span 6;
+
+
+        &.experiment-card {
+          border-radius: 4px;
+          box-shadow: $flyout-shadow;
+
+          .workflow-img-container {
+            background-color: $color-concrete;
+            border-radius: 4px;
+            height: 76px;
+            width: 76px;
+          }
+
+          .experiment-name-cell {
+            @include font-h3;
+            -webkit-box-orient: vertical;
+            display: -webkit-box;
+            height: 3em;
+            -webkit-line-clamp: 2;
+            margin: .25em 1.75em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+
+            a {
+              color: inherit;
+            }
+          }
+
+          .actions {
+            position: absolute;
+            right: .2em;
+            top: .2em;
+          }
+
+          .dates-and-img-container {
+            display: flex;
+            height: 6em;
+            width: 100%;
+
+            .dates-container {
+              flex-grow: 1;
+            }
+          }
+
+          .data-row {
+            display: flex;
+            line-height: 2.25em;
+
+            .card-label {
+              width: 7em;
+            }
+
+            .card-value {
+              font-weight: 600;
+            }
+          }
+
+          .progress {
+            height: 4px;
+            margin-bottom: 0;
+            width: 100%;
+
+            .progress-bar {
+              min-width: 0 !important;
+            }
+          }
+
+          .completed-task-cell {
+            width: 100%;
+          }
+
+          .description-cell {
+            .description-text {
+              -webkit-box-orient: vertical;
+              display: -webkit-box;
+              height: 3em;
+              -webkit-line-clamp: 2;
+              overflow: hidden;
+              padding-top: .25em;
+
+              &::after {
+                background: linear-gradient(to right, transparent, $color-white 50%);
+                bottom: .75em;
+                content: "";
+                height: 1.75em;
+                position: absolute;
+                right: 0;
+                text-align: right;
+                width: 25%;
+              }
+            }
+
+            .more-button {
+              bottom: 1.1em;
+              position: absolute;
+              right: 1em;
+            }
+          }
         }
       }
 
-      .dropdown-menu {
-        @include font-button;
-        min-width: 200px;
-        padding: .5em 0;
+      &.list {
+        grid-auto-rows: 1px 5em;
+        grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 2), minmax(100px, auto)) max-content;
+        grid-template-rows: 3em;
 
-        a {
-          border-radius: unset;
-          cursor: pointer;
-          padding: .5em 1em;
-          text-align: left;
+        .card {
+          &.experiment-card {
 
-          &:hover {
-            background: $color-concrete;
+            .card-value {
+              font-weight: normal;
+              line-height: 2em;
+            }
+
+            .workflow-img-container {
+              height: 3.5em;
+              margin: .25em 1em .25em 0;
+              width: 3.5em;
+            }
+
+            .dates-and-img-container,
+            .dates-container {
+              display: contents;
+            }
+
+            .checkbox-cell {
+              align-items: normal;
+              padding-top: .5em;
+            }
+
+            .experiment-name-cell {
+              @include font-button;
+              color: $brand-primary;
+              display: flex;
+              font-weight: normal;
+              grid-column: 2;
+              height: 100%;
+              margin: 0;
+              padding: .25em 0;
+            }
+
+            .start-date-cell {
+              grid-column: 3;
+            }
+
+            .modified-date-cell {
+              grid-column: 4;
+            }
+
+            .completed-task-cell {
+              grid-column: 5;
+            }
+
+            .description-cell {
+              grid-column: 6;
+              position: relative;
+
+              .description-text::after {
+                bottom: 1.5em;
+                right: .5em;
+              }
+
+              .more-button {
+                bottom: 1.9em;
+              }
+            }
+
+            .actions-cell {
+              grid-column: 7;
+              position: initial;
+            }
           }
 
-          &.selected::after {
-            @include font-awesome;
-            content: $font-fas-check;
-            margin-left: auto;
-            position: absolute;
-            right: 1em;
+          &:hover {
+            .description-text::after {
+              background: linear-gradient(to right, transparent, $color-concrete 50%);
+            }
           }
         }
       }
     }
   }
 
-  .project-show-toolbar {
-    margin-top: 1em;
+  &.archived {
+    [data-view-mode="active"] {
+      display: none !important;
+    }
+
+    .project-show-container {
+      .cards-wrapper {
+        .card.experiment-card {
+          grid-row: span 7;
+
+          .dates-and-img-container {
+            height: 9em;
+          }
+
+          .description-cell {
+            .description-text::after {
+              background: linear-gradient(to right, transparent, $color-concrete 50%);
+            }
+          }
+        }
+
+        &.list {
+          --list-columns-number: 8;
+
+          .card.experiment-card {
+            .archived-date-cell {
+              grid-column: 5;
+            }
+
+            .completed-task-cell {
+              grid-column: 6;
+            }
+
+            .description-cell {
+              grid-column: 7;
+            }
+
+            .actions-cell {
+              grid-column: 8;
+            }
+
+            &:hover {
+              .description-text::after {
+                background: linear-gradient(to right, transparent, $color-alto 50%);
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }

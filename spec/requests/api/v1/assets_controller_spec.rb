@@ -139,7 +139,7 @@ RSpec.describe 'Api::V1::AssetsController', type: :request do
 
     context 'when has valid params' do
       context 'when multipart form' do
-        let(:file) { fixture_file_upload('files/test.jpg', 'image/jpg') }
+        let(:file) { Rack::Test::UploadedFile.new(file_fixture('test.jpg').open) }
         let(:attributes) { { file: file } }
 
         it 'creates new asset' do

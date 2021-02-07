@@ -33,10 +33,6 @@ class Experiment < ApplicationRecord
   validates :last_modified_by, presence: true
   validates :uuid, uniqueness: { scope: :project },
                    unless: proc { |e| e.uuid.blank? }
-  with_options if: :archived do |experiment|
-    experiment.validates :archived_by, presence: true
-    experiment.validates :archived_on, presence: true
-  end
 
   scope :is_archived, lambda { |is_archived|
     if is_archived
@@ -472,12 +468,13 @@ class Experiment < ApplicationRecord
   def normalize_module_positions
     # This method normalizes module positions so x-s and y-s
     # are all positive
-    x_diff = my_modules.pluck(:x).min
-    y_diff = my_modules.pluck(:y).min
+    x_diff = my_modules.active.pluck(:x).min
+    y_diff = my_modules.active.pluck(:y).min
 
-    my_modules.each do |m|
-      m.update(x: m.x - x_diff, y: m.y - y_diff)
+    my_modules.active.each do |m|
+      m.update!(x: m.x - x_diff, y: m.y - y_diff)
     end
+    my_modules.reload
   end
 
   # Recalculate module groups in this project. Input is

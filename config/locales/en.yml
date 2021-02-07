@@ -273,6 +273,7 @@ en:
       description: "Description: "
       no_description: "No description"
       team: "Team: "
+      folder: "Folders: "
       repository: "Inventory: "
       repository_row: "Inventory item: "
       project: "Project: "
@@ -430,31 +431,17 @@ en:
         invite_users_link: "Invite users"
         invite_users_details: "to team %{team}."
         contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
+      modal_view_users:
+        modal_title: "Members of %{name}"
+        no_users: "No users!"
+        current_user_label: "(you)"
       filters_modal:
-        title: "Filters"
-        text:
-          label: "Contains text"
-          placeholder: "Enter search terms..."
-        created_on:
-          label: "Start date"
-          from_placeholder: "From"
-          to_placeholder: "To"
-        archived_on:
-          label: "Archived date"
-          from_placeholder: "From"
-          to_placeholder: "To"
         members:
           label: "Members"
           placeholder: "Select members of a project"
         folders:
           label: "Look inside folders"
           popover_html: "When <strong>“Look inside folders”</strong> is active, the filters will also take all folders and their content into account."
-        recent_searches_label: "Recent searches"
-        show_btn:
-         many: "Show %{num} projects"
-         none: "No projects"
-         one: "Show project"
-        clear_btn: "Clear"
 
     export_projects:
       export_button: "Export"
@@ -970,6 +957,37 @@ en:
       body_html: This inventory has been ushared with your team by the inventory’s owner. To view the item/s that are assigned to your task/s contact the <b>%{team_name}</b> team administrator <b>%{admin_name}</b> (<b>%{admin_email}</b>).
     open_mobile_app: "Open mobile app"
   experiments:
+    header:
+      cards: "Cards"
+      table: "Table"
+      active_experiments: "Go to Active experiments"
+      archived_experiments: "Go to Archived experiments"
+    toolbar:
+      new_button: "New experiment"
+      edit_button: "Edit details"
+      duplicate_button: "Duplicate"
+      move_button: "Move"
+      archive_button: "Archive"
+      restore_button: "Restore"
+    card:
+      name: "Experiment"
+      start_date: "Start date"
+      modified_date: "Modified date"
+      archived_date: "Archived date"
+      completed_task: "Completed"
+      completed_value: "%{completed}/%{all} tasks"
+      description: "Description"
+      more: "more"
+    index:
+      edit_option: "Edit details"
+      clone_option: "Duplicate (as template)"
+      move_option: "Move"
+      archive_option: "Archive"
+      archive_confirm: "Are you sure you want to archive this project?"
+      restore_option: "Restore"
+      more_link: "More"
+      details_modal:
+        description: "%{name} description"
     new:
       create: 'New Experiment'
       modal_title: 'Create new experiment'
@@ -996,6 +1014,12 @@ en:
       success_flash: "Successfully archived experiment %{experiment}"
       error_flash: 'Could not archive the experiment.'
       label_title: 'Archive'
+    archive_group:
+      success_flash: "<strong>%{number}</strong> experiment(s) successfully archived."
+      error_flash: 'Could not archive experiments.'
+    restore_group:
+      success_flash: "<strong>%{number}</strong> experiment(s) successfully restored."
+      error_flash: "Failed to restore experiment(s)."
     clone:
       modal_title: 'Copy experiment %{experiment} as template'
       label_title: 'Copy as template'
@@ -1197,6 +1221,9 @@ en:
     index:
       head_title: "Inventories"
       title: "Inventories"
+      empty_title: "Your team has no inventories yet"
+      empty_description_no_create: "It would be a shame to waste all this space. Sadly you don’t have permission to add inventories. You can ask your team admin to grant you that permission."
+      empty_description_with_create: "It would be a shame to waste all this space. Create your first inventory now"
       add_new_repository_tab: "Add inventory"
       delete_flash: "\"%{name}\" inventory was successfully deleted!"
       rename_flash: "\"%{old_name}\" inventory was successfully renamed to \"%{new_name}\"!"
@@ -2346,6 +2373,7 @@ en:
     public: "public"
     private: "private"
     view: "View"
+    set_view_type: "SET VIEW TYPE"
     search: "Search"
     file:
       choose: "Choose File"
@@ -2491,3 +2519,21 @@ en:
       previous: "Previous"
       next: "Next"
       truncate: "&hellip;"
+
+  filters_modal:
+    title: "Filters"
+    text:
+      label: "Contains text"
+      placeholder: "Enter search terms..."
+    from_placeholder: "From"
+    to_placeholder: "To"
+    created_on:
+      label: "Start date"
+    updated_on:
+      label: "Modified date"
+    archived_on:
+      label: "Archived date"
+    recent_searches_label: "Recent searches"
+    show_btn:
+     one: "Show results"
+    clear_btn: "Clear"

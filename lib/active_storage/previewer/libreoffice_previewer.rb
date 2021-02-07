@@ -11,7 +11,7 @@ module ActiveStorage
         end
       end
 
-      def preview
+      def preview(**_options)
         download_blob_to_tempfile do |input|
           work_dir = File.dirname(input.path)
           basename = File.basename(input.path, '.*')

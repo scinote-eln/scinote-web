@@ -80,7 +80,7 @@ describe ProtocolsController, type: :controller do
       {
         team_id: team.id,
         type: 'public',
-        # protocol: fixture_file_upload('files/my_test_protocol.eln',
+        # protocol: file_fixture('files/my_test_protocol.eln',
         #   'application/json'),
         # Not sure where should I attache file?
         protocol: {
