@@ -153,15 +153,7 @@
   .cards-wrapper {
     .card {
       background: $color-concrete;
-      box-shadow: none;
-
-      .data-row {
-        color: $color-silver-chalice;
-
-        .card-label {
-          color: $color-silver-chalice;
-        }
-      }
+      box-shadow: none !important;
     }
 
     &.list {

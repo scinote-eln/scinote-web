@@ -813,6 +813,12 @@ li.module-hover {
 
         .card.project-card {
           .data-row {
+            color: $color-silver-chalice;
+
+            .card-label {
+              color: $color-silver-chalice;
+            }
+
             &.archived-date-cell {
               color: $color-volcano;
 
