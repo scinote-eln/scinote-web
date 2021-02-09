@@ -208,6 +208,37 @@
       });
   }
 
+  function appendActionModal(modal) {
+    $('#content-wrapper').append(modal);
+    modal.modal('show');
+    modal.find('.selectpicker').selectpicker();
+    // Remove modal when it gets closed
+    modal.on('hidden.bs.modal', function() {
+      $(this).remove();
+    });
+  }
+
+
+  function initEditMoveDuplicateToolbarButton() {
+    let forms = '.edit-experiments-form, .move-experiments-form, .clone-experiments-form';
+    $(experimentsPage)
+      .on('ajax:before', forms, function() {
+        let buttonForm = $(this);
+        buttonForm.find('input[name="id"]').remove();
+        $('<input>').attr({
+          type: 'hidden',
+          name: 'id',
+          value: selectedExperiments[0]
+        }).appendTo(buttonForm);
+      })
+      .on('ajax:success', forms, function(ev, data) {
+        appendActionModal($(data.html));
+      })
+      .on('ajax:error', forms, function(ev, data) {
+        HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+      });
+  }
+
   function init() {
     $('.workflowimg-container').each(function() {
       let container = $(this);
@@ -229,15 +260,7 @@
     });
 
     $('#content-wrapper').on('ajax:success', '.experiment-action-link', function(ev, data) {
-      // Add and show modal
-      let modal = $(data.html);
-      $('#content-wrapper').append(modal);
-      modal.modal('show');
-      modal.find('.selectpicker').selectpicker();
-      // Remove modal when it gets closed
-      modal.on('hidden.bs.modal', function() {
-        $(this).remove();
-      });
+      appendActionModal($(data.html));
     });
 
     $('#content-wrapper')
@@ -245,7 +268,9 @@
         animateSpinner();
       })
       .on('ajax:success', '.experiment-action-form', function() {
-        location.reload();
+        $(this).closest('.modal').modal('hide');
+        refreshCurrentView();
+        animateSpinner(null, false);
       })
       .on('ajax:error', '.experiment-action-form', function(ev, data) {
         animateSpinner(null, false);
@@ -258,6 +283,7 @@
     initProjectsViewModeSwitch();
     initExperimentsSelector();
     initArchiveRestoreToolbarButtons();
+    initEditMoveDuplicateToolbarButton();
     initSelectAllCheckbox();
   }
 
