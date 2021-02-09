@@ -7,13 +7,6 @@
 // New experiments page
 
 .projects-show {
-
-  &.active {
-    [data-view-mode="archived"] {
-      display: none !important;
-    }
-  }
-
   .experiment-actions-menu {
     .dropdown-menu {
       a,
@@ -95,7 +88,7 @@
 
           .dates-and-img-container {
             display: flex;
-            height: 6em;
+            height: 7em;
             width: 100%;
 
             .dates-container {
@@ -105,7 +98,7 @@
 
           .data-row {
             display: flex;
-            line-height: 2.25em;
+            line-height: 34px;
 
             .card-label {
               width: 7em;
@@ -152,7 +145,7 @@
             }
 
             .more-button {
-              bottom: 1.1em;
+              bottom: .8em;
               position: absolute;
               right: 1em;
             }
@@ -228,6 +221,7 @@
 
             .actions-cell {
               grid-column: 7;
+              padding-top: 3px;
               position: initial;
             }
           }
@@ -242,18 +236,38 @@
     }
   }
 
+  &.active {
+    [data-view-mode="archived"] {
+      display: none !important;
+    }
+  }
+
   &.archived {
     [data-view-mode="active"] {
       display: none !important;
     }
 
     .project-show-container {
+      .experiment-actions-menu {
+        .btn-light:hover {
+          background: $color-alto;
+        }
+      }
+
       .cards-wrapper {
         .card.experiment-card {
-          grid-row: span 7;
+          .workflow-img-container {
+            background-color: $color-alto;
+          }
 
           .dates-and-img-container {
-            height: 9em;
+            .data-row {
+              line-height: 26px;
+            }
+          }
+
+          .progress-bar {
+            background-color: $color-silver-chalice;
           }
 
           .description-cell {
