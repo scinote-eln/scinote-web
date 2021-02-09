@@ -40,6 +40,14 @@
         <%= render partial: "search/results/partials/project_text.html.erb",
                    locals: { project: step.protocol.my_module.experiment.project, link_to_page: :show } %>
       </span>
+      <% if step.protocol.my_module.experiment.project.project_folder %>
+        <br>
+        <span>
+          <%=t "search.index.folder" %>
+          <%= render partial: "search/results/partials/project_folders_text.html.erb",
+                     locals: { folder: step.protocol.my_module.experiment.project.project_folder } %>
+        </span>
+      <% end %>
     <% else %>
       <span>
         <%=t "search.index.protocol" %>
