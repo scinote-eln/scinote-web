@@ -2,6 +2,7 @@ class Experiment < ApplicationRecord
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
+  include PermissionCheckableModel
 
   belongs_to :project, inverse_of: :experiments, touch: true
   belongs_to :created_by,
@@ -24,8 +25,9 @@ class Experiment < ApplicationRecord
   has_many :activities, inverse_of: :experiment
   has_many :user_assignments, as: :assignable, dependent: :destroy
   has_many :users, through: :user_assignments
-
   has_one_attached :workflowimg
+
+  alias_attribute :project, :permission_parent
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name, length: { minimum: Constants::NAME_MIN_LENGTH, maximum: Constants::NAME_MAX_LENGTH }
@@ -35,6 +37,8 @@ class Experiment < ApplicationRecord
   validates :last_modified_by, presence: true
   validates :uuid, uniqueness: { scope: :project },
                    unless: proc { |e| e.uuid.blank? }
+
+  default_scope { includes(user_assignments: :user_role) }
 
   scope :is_archived, lambda { |is_archived|
     if is_archived

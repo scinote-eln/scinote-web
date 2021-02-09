@@ -3,6 +3,7 @@ class Project < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
   include ViewableModel
+  include PermissionCheckableModel
 
   enum visibility: { hidden: 0, visible: 1 }
 
@@ -45,6 +46,8 @@ class Project < ApplicationRecord
   has_many :tags, inverse_of: :project
   has_many :reports, inverse_of: :project, dependent: :destroy
   has_many :report_elements, inverse_of: :project, dependent: :destroy
+
+  default_scope { includes(user_assignments: :user_role) }
 
   scope :visible_to, (lambda do |user, team|
                         unless user.is_admin_of_team?(team)
@@ -150,6 +153,10 @@ class Project < ApplicationRecord
                   '(user_teams.user_id = :user_id AND user_teams.role = 2)',
                   user_id: user.id)
            .distinct
+  end
+
+  def permission_parent
+    nil
   end
 
   def default_view_state

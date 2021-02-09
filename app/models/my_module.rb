@@ -5,6 +5,7 @@ class MyModule < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
   include TinyMceImages
+  include PermissionCheckableModel
 
   enum state: Extends::TASKS_STATES
 
@@ -57,6 +58,10 @@ class MyModule < ApplicationRecord
   has_many :protocols, inverse_of: :my_module, dependent: :destroy
   # Associations for old activity type
   has_many :activities, inverse_of: :my_module
+
+  alias_attribute :experiment, :permission_parent
+
+  default_scope { includes(user_assignments: :user_role) }
 
   scope :overdue, -> { where('my_modules.due_date < ?', Time.current.utc) }
   scope :without_group, -> { active.where(my_module_group: nil) }

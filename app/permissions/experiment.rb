@@ -16,7 +16,7 @@ Canaid::Permissions.register_for(Experiment) do
   # module: read (read users, read comments, read archive)
   # result: read (read comments)
   can :read_experiment do |user, experiment|
-    can_read_project?(user, experiment.project)
+    experiment.permission_granted?(user, ExperimentPermissions::READ)
   end
 
   # experiment: create/update/delete
@@ -24,7 +24,7 @@ Canaid::Permissions.register_for(Experiment) do
   # module: create, copy, reposition, create/update/delete connection,
   #         assign/reassign/unassign tags
   can :manage_experiment do |user, experiment|
-    user.is_user_or_higher_of_project?(experiment.project) &&
+    experiment.permission_granted?(user, ExperimentPermissions::MANAGE) &&
       MyModule.joins(:experiment)
               .where(experiment: experiment)
               .preload(my_module_status: :my_module_status_implications)
@@ -39,7 +39,7 @@ Canaid::Permissions.register_for(Experiment) do
 
   # experiment: archive
   can :archive_experiment do |user, experiment|
-    can_manage_experiment?(user, experiment)
+    experiment.permission_granted?(user, ExperimentPermissions::ARCHIVE)
   end
 
   # NOTE: Must not be dependent on canaid parmision for which we check if it's
@@ -47,15 +47,14 @@ Canaid::Permissions.register_for(Experiment) do
   # experiment: restore
   can :restore_experiment do |user, experiment|
     project = experiment.project
-    user.is_user_or_higher_of_project?(project) &&
+    experiment.permission_granted?(user, ExperimentPermissions::RESTORE) &&
       experiment.archived? &&
       project.active?
   end
 
   # experiment: copy
   can :clone_experiment do |user, experiment|
-    user.is_user_or_higher_of_project?(experiment.project) &&
-      user.is_normal_user_or_admin_of_team?(experiment.project.team)
+    experiment.permission_granted?(user, ExperimentPermissions::CLONE)
   end
 
   # experiment: move
