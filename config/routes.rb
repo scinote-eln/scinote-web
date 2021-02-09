@@ -286,7 +286,7 @@ Rails.application.routes.draw do
       resources :experiments, only: %i(new create), defaults: { format: 'json' } do
         collection do
           post 'archive_group' # archive group of experements
-          post 'restore_group' # restore group of experements
+          post 'restore_group' # restore group of experementss
         end
       end
       member do
@@ -316,6 +316,11 @@ Rails.application.routes.draw do
     get 'project_folders/:project_folder_id', to: 'projects#index', as: :project_folder_projects
 
     resources :experiments, only: %i(show edit update) do
+      collection do
+        get 'edit', action: :edit
+        get 'clone_modal', action: :clone_modal
+        get 'move_modal', action: :move_modal
+      end
       member do
         get 'canvas' # Overview/structure for single experiment
         # AJAX-loaded canvas edit mode (from canvas)
