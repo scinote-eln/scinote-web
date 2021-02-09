@@ -49,6 +49,14 @@
                  locals: { project: result.my_module.experiment.project, link_to_page: :show } %>
     </span>
     <br>
+    <% if result.my_module.experiment.project.project_folder %>
+      <span>
+        <%=t "search.index.folder" %>
+        <%= render partial: "search/results/partials/project_folders_text.html.erb",
+                   locals: { folder: result.my_module.experiment.project.project_folder } %>
+      </span>
+      <br>
+    <% end %>
     <span>
       <%=t "search.index.team" %>
       <%= render partial: "search/results/partials/team_text.html.erb",
