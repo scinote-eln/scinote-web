@@ -256,7 +256,6 @@ class ProjectsController < ApplicationController
   end
 
   def show
-    redirect_to action: :experiment_archive if @project.archived?
     # This is the "info" view
     current_team_switch(@project.team)
   end
