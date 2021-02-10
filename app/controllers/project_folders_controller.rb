@@ -96,6 +96,12 @@ class ProjectFoldersController < ApplicationController
     end
   end
 
+  def destroy_modal
+    render json: {
+      html: render_to_string(partial: 'projects/index/modals/project_folder_delete.html.erb')
+    }
+  end
+
   def destroy
     project_folders = current_team.project_folders.where(id: params[:project_folders_ids])
     counter = 0

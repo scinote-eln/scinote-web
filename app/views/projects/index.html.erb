@@ -20,7 +20,6 @@
   <%= render partial: 'projects/index/modals/view_users' %>
   <%= render partial: 'projects/index/modals/manage_users' %>
   <%= render partial: 'projects/index/modals/export_projects' %>
-  <%= render partial: 'projects/index/modals/project_folder_delete' %>
 
   <div class="projects-container">
     <div class="cards-wrapper" id="cardsWrapper" data-projects-cards-url="<%= @current_folder ? project_folder_cards_url(@current_folder) : cards_projects_url %>">

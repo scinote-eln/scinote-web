@@ -7,7 +7,7 @@
 // - refresh project users tab after manage user modal is closed
 // - refactor view handling using library, ex. backbone.js
 
-/* global animateSpinner HelperModule dropdownSelector Sidebar Turbolinks filterDropdown I18n */
+/* global HelperModule dropdownSelector Sidebar Turbolinks filterDropdown I18n */
 
 (function() {
   const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable', 'deletable'];
@@ -97,39 +97,42 @@
       });
   }
 
-  // init project toolbar delete folders function
+  // init delete project folders
   function initDeleteFoldersToolbarButton() {
-    $(projectsWrapper).on('click', '.delete-folders-form', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      $.ajax({
-        url: $(this).attr('action'),
-        type: 'POST',
-        dataType: 'json',
-        data: { project_folders_ids: selectedProjectFolders },
-        beforeSend: function(element, ajaxSettings) {
-          var deleteModal = $('.modal-project-folder-delete');
-          var ajax = ajaxSettings;
-          ajax.beforeSend = null;
-          deleteModal.find('.folder-confirmation-description')
-            .html(I18n.t('projects.index.modal_delete_folders.description_1', { number: selectedProjectFolders.length }));
-          deleteModal.find('.confirm-button').attr('disabled', false);
-          deleteModal.modal('show');
-          deleteModal.off('click', '.confirm-button').one('click', '.confirm-button', { ajax: ajax }, function(button) {
-            $(this).attr('disabled', true);
-            $.ajax(button.data.ajax);
-          });
-          return false;
-        },
-        success: function(data) {
-          HelperModule.flashAlertMsg(data.message, 'success');
-          refreshCurrentView();
-        },
-        error: function(data) {
-          HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
-        }
+    $(projectsWrapper).on('ajax:success', '.delete-folders-btn', function(ev, data) {
+      // Add and show modal
+      let deleteModal = $(data.html);
+      $(projectsWrapper).append(deleteModal);
+      deleteModal.find('.folder-confirmation-description')
+        .html(I18n.t('projects.index.modal_delete_folders.description_1',
+          { number: selectedProjectFolders.length }));
+      deleteModal.modal('show');
+      // Remove modal when it gets closed
+      deleteModal.on('hidden.bs.modal', function() {
+        $(this).remove();
       });
     });
+
+    $(projectsWrapper)
+      .on('ajax:before', '.delete-folders-form', function() {
+        let buttonForm = $(this);
+        buttonForm.find('input[name="project_folders_ids[]"]').remove();
+        selectedProjectFolders.forEach(function(id) {
+          $('<input>').attr({
+            type: 'hidden',
+            name: 'project_folders_ids[]',
+            value: id
+          }).appendTo(buttonForm);
+        });
+      })
+      .on('ajax:success', '.delete-folders-form', function(ev, data) {
+        $('.modal-project-folder-delete').modal('hide');
+        HelperModule.flashAlertMsg(data.message, 'success');
+        refreshCurrentView();
+      })
+      .on('ajax:error', '.delete-folders-form', function(ev, data) {
+        HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+      });
   }
 
   // init project toolbar archive/restore functions

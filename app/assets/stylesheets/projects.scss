@@ -466,6 +466,10 @@ li.module-hover {
     }
   }
 
+  .delete-folders-form {
+    display: inline-block;
+  }
+
   .filter-container {
     .projects-filters {
       .select-block {
@@ -514,10 +518,6 @@ li.module-hover {
     }
 
     .restore-projects-form {
-      display: inline-block;
-    }
-    
-    .delete-folders-form {
       display: inline-block;
     }
   }
