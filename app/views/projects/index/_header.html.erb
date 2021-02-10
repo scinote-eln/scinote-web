@@ -1,4 +1,7 @@
 <div class="content-header sticky-header">
+  <div id="breadcrumbsWrapper">
+    <%= render partial: 'projects/index/breadcrumbs' if current_folder %>
+  </div>
   <div class="title-row">
     <h1 data-view-mode="active" class="projects-title"><%= current_folder&.name || t('projects.index.head_title') %></h1>
     <h1 data-view-mode="archived">

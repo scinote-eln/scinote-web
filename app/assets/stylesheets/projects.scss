@@ -455,8 +455,17 @@ li.module-hover {
 
 // New projects page
 
-.projects-breadcrumbs {
-  padding: .5em 1em;
+#breadcrumbsWrapper {
+  background: $color-white;
+  height: 1em;
+  margin-left: -2em;
+  padding: 0 2em;
+  width: calc(100% + 4em);
+
+  .projects-breadcrumbs {
+    @include font-small;
+    padding: .75em 0;
+  }
 }
 
 .projects-index {
