@@ -37,7 +37,7 @@
       <% if experiment.archived_branch? %>
         <div class="data-row archived-date-cell table-cell">
           <span class="card-label" cards-render="true"><%= t('experiments.card.archived_date') %></span>
-          <span class="card-value"><%= l(experiment.archived_on, format: :full_date) %></span>
+          <span class="card-value"><%= l(experiment.archived_on || @project.archived_on, format: :full_date) %></span>
         </div>
       <% end %>
       <div class="data-row" cards-render="true">
