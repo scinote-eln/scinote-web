@@ -34,6 +34,12 @@ class ExperimentsOverviewService
 
   def fetch_records
     @project.experiments.joins(:project)
+            .left_joins(:my_modules)
+            .select('experiments.*')
+            .where('(my_modules.archived = FALSE OR my_modules.id IS NULL)')
+            .select('COUNT(DISTINCT my_modules.id) AS task_count')
+            .select('SUM(CASE WHEN my_modules.state = 1 THEN 1 ELSE 0 END) as completed_task_count')
+            .group('experiments.id, projects.archived_on')
   end
 
   def filter_records(records)

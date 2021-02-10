@@ -263,17 +263,13 @@
             background-color: $color-alto;
           }
 
-          .dates-and-img-container {
-            .data-row {
-              line-height: 26px;
-            }
-          }
-
           .progress-bar {
             background-color: $color-silver-chalice;
           }
 
           .description-cell {
+            width: 100%;
+
             .description-text::after {
               background: linear-gradient(to right, transparent, $color-concrete 50%);
             }
@@ -281,23 +277,10 @@
         }
 
         &.list {
-          --list-columns-number: 8;
 
           .card.experiment-card {
             .archived-date-cell {
               grid-column: 5;
-            }
-
-            .completed-task-cell {
-              grid-column: 6;
-            }
-
-            .description-cell {
-              grid-column: 7;
-            }
-
-            .actions-cell {
-              grid-column: 8;
             }
 
             &:hover {
