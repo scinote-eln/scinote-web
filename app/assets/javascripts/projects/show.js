@@ -239,6 +239,17 @@
       });
   }
 
+  function initNewExperimentToolbarButton() {
+    let forms = '.new-experiment-form';
+    $(experimentsPage)
+      .on('ajax:success', forms, function(ev, data) {
+        appendActionModal($(data.html));
+      })
+      .on('ajax:error', forms, function(ev, data) {
+        HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+      });
+  }
+
   function init() {
     $('.workflowimg-container').each(function() {
       let container = $(this);
@@ -284,6 +295,7 @@
     initExperimentsSelector();
     initArchiveRestoreToolbarButtons();
     initEditMoveDuplicateToolbarButton();
+    initNewExperimentToolbarButton();
     initSelectAllCheckbox();
   }
 
