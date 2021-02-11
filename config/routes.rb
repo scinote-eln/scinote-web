@@ -294,6 +294,7 @@ Rails.application.routes.draw do
         get 'notifications'
         get 'experiments_cards'
         get 'sidebar'
+        put 'view_type'
       end
 
       collection do
@@ -301,6 +302,7 @@ Rails.application.routes.draw do
         get 'users_filter'
         post 'archive_group'
         post 'restore_group'
+        put 'view_type', to: 'teams#view_type'
       end
     end
 
