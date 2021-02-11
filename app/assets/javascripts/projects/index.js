@@ -7,7 +7,7 @@
 // - refresh project users tab after manage user modal is closed
 // - refactor view handling using library, ex. backbone.js
 
-/* global HelperModule dropdownSelector Sidebar Turbolinks filterDropdown I18n */
+/* global HelperModule dropdownSelector Sidebar Turbolinks filterDropdown */
 
 (function() {
   const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable', 'deletable'];
