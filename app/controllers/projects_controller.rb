@@ -349,7 +349,7 @@ class ProjectsController < ApplicationController
       @project.save
     end
     @current_sort = @project.experiments_order || 'new'
-    @current_sort = 'new' if @current_sort.include?('arch') && action_name != 'experiment_archive'
+    @current_sort = 'new' if @current_sort.include?('arch')
   end
 
   def filters_included?
