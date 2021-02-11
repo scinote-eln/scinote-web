@@ -11,13 +11,13 @@ class ProjectsController < ApplicationController
   helper_method :current_folder
 
   before_action :switch_team_with_param, only: :index
-  before_action :load_vars, only: %i(show edit update notifications experiment_archive sidebar experiments_cards)
-  before_action :load_current_folder, only: %i(index cards new show experiment_archive)
-  before_action :check_view_permissions, only: %i(show notifications experiment_archive sidebar experiments_cards)
+  before_action :load_vars, only: %i(show edit update notifications sidebar experiments_cards)
+  before_action :load_current_folder, only: %i(index cards new show)
+  before_action :check_view_permissions, only: %i(show notifications sidebar experiments_cards)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
   before_action :set_inline_name_editing, only: %i(show)
-  before_action :load_exp_sort_var, only: %i(show experiment_archive)
+  before_action :load_exp_sort_var, only: %i(show)
   before_action :reset_invalid_view_state, only: %i(index cards)
 
   layout 'fluid'
@@ -258,6 +258,9 @@ class ProjectsController < ApplicationController
   def show
     # This is the "info" view
     current_team_switch(@project.team)
+
+    view_state = @project.current_view_state(current_user)
+    @current_sort = view_state.state.dig('experiments', experiments_view_mode(@project), 'sort') || 'atoz'
   end
 
   def experiments_cards
@@ -285,10 +288,6 @@ class ProjectsController < ApplicationController
         }
       }
     end
-  end
-
-  def experiment_archive
-    current_team_switch(@project.team)
   end
 
   def users_filter
@@ -349,7 +348,6 @@ class ProjectsController < ApplicationController
       @project.save
     end
     @current_sort = @project.experiments_order || 'new'
-    @current_sort = 'new' if @current_sort.include?('arch') && action_name != 'experiment_archive'
   end
 
   def filters_included?

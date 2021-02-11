@@ -13,7 +13,7 @@
   </div>
   <div class="project-name-cell table-cell">
     <% if project.archived? %>
-      <%= link_to project_url(project, archived: :true) do %>
+      <%= link_to project_url(project, view_mode: :archived) do %>
         <h3 class="name" title="<%= project.name %>">
           <%= project.name %>
         </h3>

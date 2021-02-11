@@ -63,7 +63,7 @@ module GlobalActivitiesHelper
     when Experiment
       return current_value unless obj.navigable?
 
-      path = obj.archived? ? experiment_archive_project_path(obj.project) : canvas_experiment_path(obj)
+      path = obj.archived? ? project_path(obj.project, view_mode: :archived) : canvas_experiment_path(obj)
     when MyModule
       return current_value unless obj.navigable?
 

@@ -292,7 +292,6 @@ Rails.application.routes.draw do
       member do
         # Notifications popup for individual project in projects index
         get 'notifications'
-        get 'experiment_archive' # Experiment archive for single project
         get 'experiments_cards'
         get 'sidebar'
       end
