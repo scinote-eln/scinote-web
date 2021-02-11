@@ -420,7 +420,7 @@ en:
           projects_and_folders: 'projects & folders'
       modal_delete_folders:
         title: "Delete project folder(s)"
-        description_1: "You are about to delete <strong>%{number}</strong> selected project folder(s)"
+        description_1_html: "You are about to delete <strong>%{number}</strong> selected project folder(s)"
         description_2: "Are you sure you want to continue?"
         confirm_button: "Delete folder(s)"
       modal_manage_users:

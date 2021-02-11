@@ -99,22 +99,8 @@
 
   // init delete project folders
   function initDeleteFoldersToolbarButton() {
-    $(projectsWrapper).on('ajax:success', '.delete-folders-btn', function(ev, data) {
-      // Add and show modal
-      let deleteModal = $(data.html);
-      $(projectsWrapper).append(deleteModal);
-      deleteModal.find('.folder-confirmation-description')
-        .html(I18n.t('projects.index.modal_delete_folders.description_1',
-          { number: selectedProjectFolders.length }));
-      deleteModal.modal('show');
-      // Remove modal when it gets closed
-      deleteModal.on('hidden.bs.modal', function() {
-        $(this).remove();
-      });
-    });
-
     $(projectsWrapper)
-      .on('ajax:before', '.delete-folders-form', function() {
+      .on('ajax:before', '.delete-folders-btn', function() {
         let buttonForm = $(this);
         buttonForm.find('input[name="project_folders_ids[]"]').remove();
         selectedProjectFolders.forEach(function(id) {
@@ -125,6 +111,18 @@
           }).appendTo(buttonForm);
         });
       })
+      .on('ajax:success', '.delete-folders-btn', function(ev, data) {
+        // Add and show modal
+        let deleteModal = $(data.html);
+        $(projectsWrapper).append(deleteModal);
+        deleteModal.modal('show');
+        // Remove modal when it gets closed
+        deleteModal.on('hidden.bs.modal', function() {
+          $(this).remove();
+        });
+      });
+
+    $(projectsWrapper)
       .on('ajax:success', '.delete-folders-form', function(ev, data) {
         $('.modal-project-folder-delete').modal('hide');
         HelperModule.flashAlertMsg(data.message, 'success');

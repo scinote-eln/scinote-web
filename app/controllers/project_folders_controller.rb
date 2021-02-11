@@ -98,7 +98,8 @@ class ProjectFoldersController < ApplicationController
 
   def destroy_modal
     render json: {
-      html: render_to_string(partial: 'projects/index/modals/project_folder_delete.html.erb')
+      html: render_to_string(partial: 'projects/index/modals/project_folder_delete.html.erb',
+                             locals: { project_folders_ids: params[:project_folders_ids] })
     }
   end
 
