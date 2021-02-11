@@ -1,12 +1,13 @@
 <div id="projectShowToolbar" class="project-show-toolbar">
   <!-- new experiment button -->
   <% if can_create_experiments?(@project) %>
-    <%= link_to new_project_experiment_url(@project),
-                remote: true,
-                type: "button",
-                data: {view_mode: :active},
-                id: 'new-experiment',
-                class: 'btn btn-primary' do %>
+    <%= button_to new_project_experiment_url(@project),
+                  remote: true,
+                  form_class: 'new-experiment-form',
+                  data: {view_mode: :active},
+                  id: 'new-experiment',
+                  method: :get,
+                  class: 'btn btn-primary' do %>
       <span class="fas fa-plus" aria-hidden="true"></span>
       <span class="hidden-xs"><%= t('experiments.toolbar.new_button') %></span>
     <% end %>
