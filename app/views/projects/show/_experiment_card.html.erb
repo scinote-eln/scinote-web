@@ -68,7 +68,7 @@
     <% if experiment.description.present? %>
       <%= link_to t('experiments.card.more'),
             experiment_path(experiment),
-            class: 'more-button',
+            class: 'more-button experiment-action-link',
             remote: true %>
     <% end %>
   </div>
