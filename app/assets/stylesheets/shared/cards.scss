@@ -134,7 +134,7 @@
         padding: 0 .5em;
         position: sticky;
         position: -webkit-sticky;
-        top: 13em;
+        top: calc(var(--content-header-size) + var(--navbar-height));
         z-index: 2;
 
         &.select-all-checkboxes {
