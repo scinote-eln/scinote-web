@@ -1,6 +1,6 @@
 /* global animateSpinner filterDropdown Sidebar Turbolinks HelperModule */
 (function() {
-  const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable'];
+  const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable', 'duplicable'];
   var cardsWrapper = '#cardsWrapper';
   var experimentsPage = '#projectShowWrapper';
 

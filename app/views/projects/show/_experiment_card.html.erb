@@ -5,6 +5,7 @@
      data-moveable="<%= can_move_experiment?(experiment) %>"
      data-archivable="<%= experiment.active? && can_archive_experiment?(experiment) %>"
      data-restorable="<%= experiment.archived? && can_restore_experiment?(experiment) %>"
+     data-duplicable="<%= can_clone_experiment?(experiment) %>"
 >
   <div class="checkbox-cell table-cell">
     <div class="sci-checkbox-container">
