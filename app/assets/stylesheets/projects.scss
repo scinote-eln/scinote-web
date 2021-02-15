@@ -475,6 +475,11 @@ li.module-hover {
     }
   }
 
+  .delete-folders-form,
+  .delete-folders-btn {
+    display: inline-block;
+  }
+
   .filter-container {
     .projects-filters {
       .select-block {

@@ -7,10 +7,10 @@
 // - refresh project users tab after manage user modal is closed
 // - refactor view handling using library, ex. backbone.js
 
-/* global animateSpinner HelperModule dropdownSelector Sidebar Turbolinks filterDropdown */
+/* global HelperModule dropdownSelector Sidebar Turbolinks filterDropdown */
 
 (function() {
-  const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable'];
+  const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable', 'deletable'];
   var projectsWrapper = '#projectsWrapper';
   var toolbarWrapper = '#toolbarWrapper';
   var cardsWrapper = '#cardsWrapper';
@@ -94,6 +94,42 @@
         $(newProjectModal).on('hidden.bs.modal', function() {
           $(newProjectModal).remove();
         });
+      });
+  }
+
+  // init delete project folders
+  function initDeleteFoldersToolbarButton() {
+    $(projectsWrapper)
+      .on('ajax:before', '.delete-folders-btn', function() {
+        let buttonForm = $(this);
+        buttonForm.find('input[name="project_folders_ids[]"]').remove();
+        selectedProjectFolders.forEach(function(id) {
+          $('<input>').attr({
+            type: 'hidden',
+            name: 'project_folders_ids[]',
+            value: id
+          }).appendTo(buttonForm);
+        });
+      })
+      .on('ajax:success', '.delete-folders-btn', function(ev, data) {
+        // Add and show modal
+        let deleteModal = $(data.html);
+        $(projectsWrapper).append(deleteModal);
+        deleteModal.modal('show');
+        // Remove modal when it gets closed
+        deleteModal.on('hidden.bs.modal', function() {
+          $(this).remove();
+        });
+      });
+
+    $(projectsWrapper)
+      .on('ajax:success', '.delete-folders-form', function(ev, data) {
+        $('.modal-project-folder-delete').modal('hide');
+        HelperModule.flashAlertMsg(data.message, 'success');
+        refreshCurrentView();
+      })
+      .on('ajax:error', '.delete-folders-form', function(ev, data) {
+        HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
       });
   }
 
@@ -322,12 +358,17 @@
         projectsToolbar.find('.single-object-action, .multiple-object-action').removeClass('hidden');
         if (selectedProjectFolders.length === 1) {
           projectsToolbar.find('.project-only-action').addClass('hidden');
+        } else {
+          projectsToolbar.find('.folders-only-action').addClass('hidden');
         }
       } else {
         projectsToolbar.find('.single-object-action').addClass('hidden');
         projectsToolbar.find('.multiple-object-action').removeClass('hidden');
         if (selectedProjectFolders.length > 0) {
           projectsToolbar.find('.project-only-action').addClass('hidden');
+        }
+        if (selectedProjects.length > 0) {
+          projectsToolbar.find('.folder-only-action').addClass('hidden');
         }
       }
       PERMISSIONS.forEach((permission) => {
@@ -637,6 +678,7 @@
     initManageUsersModal();
     initExportProjectsModal();
     initExportProjects();
+    initDeleteFoldersToolbarButton();
     initArchiveRestoreToolbarButtons();
     initViewProjectUsersLink();
     initManageProjectUsersLink();

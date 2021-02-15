@@ -97,3 +97,10 @@ Canaid::Permissions.register_for(ProjectComment) do
       user.is_owner_of_project?(project_comment.project))
   end
 end
+
+Canaid::Permissions.register_for(ProjectFolder) do
+  # ProjectFolder: delete
+  can :delete_project_folder do |_, project_folder|
+    !project_folder.projects.exists? && !project_folder.project_folders.exists?
+  end
+end
