@@ -268,10 +268,10 @@ class ProjectsController < ApplicationController
     render json: {
       cards_html: render_to_string(
         partial: 'projects/show/experiments_list.html.erb',
-        locals: { cards: overview_service.experiments }
+        locals: { cards: overview_service.experiments,
+                  filters_included: filters_included? }
       )
     }
-
   end
 
   def notifications
@@ -351,7 +351,8 @@ class ProjectsController < ApplicationController
   end
 
   def filters_included?
-    %i(search created_on_from created_on_to members archived_on_from archived_on_to folders_search)
+    %i(search created_on_from created_on_to updated_on_from updated_on_to members
+       archived_on_from archived_on_to folders_search)
       .any? { |param_name| params.dig(param_name).present? }
   end
 

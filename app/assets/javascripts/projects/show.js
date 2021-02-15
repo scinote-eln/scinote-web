@@ -78,8 +78,12 @@
         archived_on_to: archivedOnToFilter
       },
       success: function(data) {
-        viewContainer.find('.card').remove();
+        viewContainer.find('.card, .no-results-container').remove();
+        viewContainer.removeClass('no-results');
         viewContainer.append(data.cards_html);
+        if (viewContainer.find('.no-results-container').length) {
+          viewContainer.addClass('no-results');
+        }
         selectedExperiments.length = 0;
         updateExperimentsToolbar();
       },
