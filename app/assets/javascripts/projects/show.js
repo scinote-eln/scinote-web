@@ -24,15 +24,15 @@
 
   function updateExperimentsToolbar() {
     let experimentsToolbar = $('#projectShowToolbar');
+    let toolbarVisible = false;
 
     if (selectedExperiments.length === 0) {
       experimentsToolbar.find('.single-object-action, .multiple-object-action').addClass('hidden');
-      return;
     }
 
     if (selectedExperiments.length === 1) {
       experimentsToolbar.find('.single-object-action, .multiple-object-action').removeClass('hidden');
-    } else {
+    } else if (selectedExperiments.length > 1) {
       experimentsToolbar.find('.single-object-action').addClass('hidden');
       experimentsToolbar.find('.multiple-object-action').removeClass('hidden');
     }
@@ -41,6 +41,13 @@
         experimentsToolbar.find(`.btn[data-for="${permission}"]`).addClass('hidden');
       }
     });
+
+    $.each($('#projectShowToolbar').find('.btn'), (i, btn) => {
+      if (window.getComputedStyle(btn).display !== 'none') {
+        toolbarVisible = true;
+      }
+    });
+    $(experimentsPage).attr('data-toolbar-visible', toolbarVisible);
   }
 
   function initProjectsViewModeSwitch() {

@@ -2,6 +2,7 @@
 // scss-lint:disable NestingDepth QualifyingElement
 
 .content-pane {
+  --content-header-size: 9.5em;
   background-color: $color-white;
   margin: 20px 0;
   padding: 25px 20px;
@@ -139,6 +140,14 @@
       padding: 1em 0;
       padding-left: 2em;
       width: calc(100% + 4em);
+    }
+  }
+
+  &[data-toolbar-visible="false"] {
+    --content-header-size: 5em;
+
+    .toolbar-row {
+      display: none;
     }
   }
 }
