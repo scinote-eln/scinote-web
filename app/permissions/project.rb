@@ -62,8 +62,12 @@ Canaid::Permissions.register_for(Project) do
   end
 
   # experiment: create
-  can :create_experiments do |user, project|
-    user.is_user_or_higher_of_project?(project)
+  %i(create_experiments
+     manage_experiments)
+    .each do |perm|
+    can perm do |user, project|
+      user.is_user_or_higher_of_project?(project)
+    end
   end
 
   # project: create comment

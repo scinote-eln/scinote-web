@@ -233,6 +233,12 @@
           }
         }
       }
+
+      &.readonly {
+        .experiment-name-cell {
+          margin-left: 0 !important;
+        }
+      }
     }
   }
 
