@@ -201,7 +201,7 @@ class Constants
 
   HTTP = 'http://'.freeze
   TUTORIALS_URL = (HTTP + 'goo.gl/YH3fXA').freeze
-  SUPPORT_URL = (HTTP + 'goo.gl/Jb9WXx').freeze
+  SUPPORT_URL = 'https://scinote-3850750.hs-sites.com/en/knowledge'.freeze
   # Default user picture avatar
   DEFAULT_AVATAR_URL = '/images/:style/missing.png'.freeze
 
