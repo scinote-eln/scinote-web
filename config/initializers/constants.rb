@@ -66,6 +66,8 @@ class Constants
   ATWHO_REP_NAME_LIMIT = 16
   # Results limited query/display elements for pages
   RESULTS_PER_PAGE_LIMIT = 10
+  #Experiments more button appears
+  EXPERIMENT_LONG_DESCRIPTION = 80
 
   #=============================================================================
   # File and data memory size
