@@ -16,7 +16,8 @@
       <% end %>
     </div>
   <div class="experiment-name-cell table-cell">
-    <div class="workflow-img-container" list-render="true">
+    <div class="workflow-img-wrapper" list-render="true">
+      <%= render partial: 'projects/show/experiment_workflow_image_container', locals: { experiment: experiment } %>
     </div>
     <% if experiment.archived_branch? %>
       <%= link_to experiment.name, module_archive_experiment_path(experiment), title: experiment.name, class: 'name-link' %>
@@ -50,7 +51,8 @@
         <span class="card-value"><%= t('experiments.card.completed_value', completed: experiment.completed_task_count, all: experiment.task_count) %></span>
       </div>
     </div>
-    <div class="workflow-img-container" cards-render="true">
+    <div class="workflow-img-wrapper" cards-render="true">
+      <%= render partial: 'projects/show/experiment_workflow_image_container', locals: { experiment: experiment } %>
     </div>
   </div>
   <div class="completed-task-cell table-cell" data-view-mode="active">

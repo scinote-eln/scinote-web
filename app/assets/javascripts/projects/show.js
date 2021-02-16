@@ -93,6 +93,7 @@
         }
         selectedExperiments.length = 0;
         updateExperimentsToolbar();
+        loadExperimentWorkflowImages();
       },
       error: function() {
         viewContainer.html('Error loading project list');
@@ -261,7 +262,7 @@
       });
   }
 
-  function init() {
+  function loadExperimentWorkflowImages() {
     $('.workflowimg-container').each(function() {
       let container = $(this);
       if (container.data('workflowimg-present') === false) {
@@ -280,7 +281,9 @@
         });
       }
     });
+  }
 
+  function init() {
     $('#content-wrapper').on('ajax:success', '.experiment-action-link', function(ev, data) {
       appendActionModal($(data.html));
     });
