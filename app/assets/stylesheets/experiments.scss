@@ -7,6 +7,10 @@
 // New experiments page
 
 .projects-show {
+  .experiments-filters {
+    max-height: calc(100vh - var(--navbar-height) - var(--content-header-size));
+    overflow: auto;
+  }
   .experiment-actions-menu {
     .dropdown-menu {
       a,
