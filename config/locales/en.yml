@@ -915,7 +915,7 @@ en:
           live_description: 'Regularly updated from the inventory'
           no_live_version: 'Inventory was deleted'
           no_assigned_items: 'No items assigned'
-          no_snapshots_label: 'You have not created any snapshots yet. To do so click the button bellow.'
+          no_snapshots_label: 'You have not created any snapshots yet. To do so click the button below.'
           versions_sidebar_button: 'View versions'
           export_button: "Export items"
           create_button: 'Create snapshot'
@@ -1669,7 +1669,7 @@ en:
         2fa_modal:
           step_1:
             title: "1. Install an Authenticator App on your mobile device"
-            description: "Use your phone to download an authenticator app. It is needed to enable the 2FA in SciNote. Bellow you can see the most commonly used ones."
+            description: "Use your phone to download an authenticator app. It is needed to enable the 2FA in SciNote. Below you can see the most commonly used ones."
             google_auth: "Google authenticator"
             microsoft_auth: "Microsoft authenticator"
             2fa_auth: "2FA authenticator"
@@ -1682,17 +1682,17 @@ en:
             next: "Next"
           step_3:
             title: "3. Enter the code given by your authenticator app"
-            description: "Enter the generated code into the fields bellow to finalize the setup of the two-factor authorisation."
+            description: "Enter the generated code into the fields below to finalize the setup of the two-factor authorisation."
             enter_code: "Enter authenticator code"
             verify: "Verify"
           step_4:
             title: "4. Save your bypass codes"
             verified: "2FA Verified"
-            description: "Your 2FA is now verified. Save these one-time codes bellow to access your account in case you lose your device. This way you will be able to reset the authorization."
+            description: "Your 2FA is now verified. Save these one-time codes below to access your account in case you lose your device. This way you will be able to reset the authorization."
             download_codes: "Download codes"
           disable:
             title: "Disable two-factor authentication"
-            description: "Enter your password bellow to confirm disableing 2FA. This will remove authentication, from your account and make you more vulnerable to potential attacks."
+            description: "Enter your password below to confirm disableing 2FA. This will remove authentication, from your account and make you more vulnerable to potential attacks."
             password_label: "Enter password"
             disable_2fa: "Disable 2FA"
         2fa_errors:
