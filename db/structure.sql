@@ -922,7 +922,7 @@ CREATE TABLE public.oauth_access_grants (
     redirect_uri text NOT NULL,
     created_at timestamp without time zone NOT NULL,
     revoked_at timestamp without time zone,
-    scopes character varying
+    scopes character varying DEFAULT ''::character varying NOT NULL
 );
 
 
@@ -4927,10 +4927,10 @@ CREATE INDEX index_repository_cells_on_repository_row_id ON public.repository_ce
 
 
 --
--- Name: index_repository_cells_on_value_type_and_value_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_repository_cells_on_value; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_repository_cells_on_value_type_and_value_id ON public.repository_cells USING btree (value_type, value_id);
+CREATE INDEX index_repository_cells_on_value ON public.repository_cells USING btree (value_type, value_id);
 
 
 --
@@ -5711,10 +5711,10 @@ CREATE INDEX index_view_states_on_user_id ON public.view_states USING btree (use
 
 
 --
--- Name: index_view_states_on_viewable_type_and_viewable_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_view_states_on_viewable; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_view_states_on_viewable_type_and_viewable_id ON public.view_states USING btree (viewable_type, viewable_id);
+CREATE INDEX index_view_states_on_viewable ON public.view_states USING btree (viewable_type, viewable_id);
 
 
 --
@@ -7153,6 +7153,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201126203713'),
 ('20201209165626'),
 ('20210128105457'),
-('20210128105458');
+('20210128105458'),
+('20210217114042');
 
 
