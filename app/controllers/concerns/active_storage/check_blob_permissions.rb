@@ -11,7 +11,10 @@ module ActiveStorage
     private
 
     def check_read_permissions
-      case @blob.attachments.first.record_type
+      attachment = @blob.attachments.take
+      return render_404 if attachment.blank?
+
+      case attachment.record_type
       when 'Asset'
         check_asset_read_permissions
       when 'TinyMceAsset'
