@@ -80,9 +80,11 @@ class ExperimentsOverviewService
     when 'ztoa'
       records.order(name: :desc)
     when 'archived_old'
-      records.order(Arel.sql('COALESCE(experiments.archived_on, projects.archived_on) ASC'))
+      records.group('projects.archived_on')
+             .order(Arel.sql('COALESCE(experiments.archived_on, projects.archived_on) ASC'))
     when 'archived_new'
-      records.order(Arel.sql('COALESCE(experiments.archived_on, projects.archived_on) DESC'))
+      records.group('projects.archived_on')
+             .order(Arel.sql('COALESCE(experiments.archived_on, projects.archived_on) DESC'))
     else
       records
     end
