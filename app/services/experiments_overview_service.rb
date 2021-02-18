@@ -33,13 +33,16 @@ class ExperimentsOverviewService
   private
 
   def fetch_records
-    @project.experiments.joins(:project)
-            .left_joins(:my_modules)
+    @project.experiments
+            .joins(:project)
+            .joins('LEFT OUTER JOIN my_modules AS active_tasks ON active_tasks.experiment_id = experiments.id ' \
+                   'AND active_tasks.archived = FALSE')
+            .joins('LEFT OUTER JOIN my_modules AS active_completed_tasks ON active_completed_tasks.experiment_id '\
+                   '= experiments.id AND active_completed_tasks.archived = FALSE AND active_completed_tasks.state = 1')
             .select('experiments.*')
-            .where('(my_modules.archived = FALSE OR my_modules.id IS NULL)')
-            .select('COUNT(DISTINCT my_modules.id) AS task_count')
-            .select('SUM(CASE WHEN my_modules.state = 1 THEN 1 ELSE 0 END) as completed_task_count')
-            .group('experiments.id, projects.archived_on')
+            .select('COUNT(DISTINCT active_tasks.id) AS task_count')
+            .select('COUNT(DISTINCT active_completed_tasks.id) AS completed_task_count')
+            .group('experiments.id')
   end
 
   def filter_records(records)
@@ -77,9 +80,11 @@ class ExperimentsOverviewService
     when 'ztoa'
       records.order(name: :desc)
     when 'archived_old'
-      records.order(Arel.sql('COALESCE(experiments.archived_on, projects.archived_on) ASC'))
+      records.group('projects.archived_on')
+             .order(Arel.sql('COALESCE(experiments.archived_on, projects.archived_on) ASC'))
     when 'archived_new'
-      records.order(Arel.sql('COALESCE(experiments.archived_on, projects.archived_on) DESC'))
+      records.group('projects.archived_on')
+             .order(Arel.sql('COALESCE(experiments.archived_on, projects.archived_on) DESC'))
     else
       records
     end
