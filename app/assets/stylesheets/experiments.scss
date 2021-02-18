@@ -171,6 +171,7 @@
             }
 
             .workflow-img-container {
+              flex-shrink: 0;
               height: 3.5em;
               margin: .25em 1em .25em 0;
               width: 3.5em;
@@ -195,6 +196,10 @@
               height: 100%;
               margin: 0;
               padding: .25em 0;
+
+              a {
+                overflow: hidden;
+              }
             }
 
             .start-date-cell {
@@ -213,13 +218,18 @@
               grid-column: 6;
               position: relative;
 
-              .description-text::after {
-                bottom: 1.5em;
-                right: .5em;
+              .description-text {
+                height: 4.5em;
+                -webkit-line-clamp: 3;
+
+                &::after {
+                  bottom: .5em;
+                  right: .5em;
+                }
               }
 
               .more-button {
-                bottom: 1.9em;
+                bottom: .5em;
               }
             }
 
