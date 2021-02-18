@@ -61,11 +61,27 @@
           border-radius: 4px;
           box-shadow: $flyout-shadow;
 
-          .workflow-img-container {
+          .workflow-img-wrapper {
             background-color: $color-concrete;
             border-radius: 4px;
             height: 76px;
             width: 76px;
+
+            .archived-icon-plceholder {
+              color: $color-silver-chalice;
+              font-size: 3.5em;
+              line-height: 76px;
+              text-align: center;
+            }
+
+            .workflowimg-container {
+              text-align: center;
+
+              img {
+                border-radius: 4px;
+                max-height: 76px;
+              }
+            }
           }
 
           .experiment-name-cell {
@@ -170,11 +186,24 @@
               line-height: 2em;
             }
 
-            .workflow-img-container {
+            .workflow-img-wrapper {
               flex-shrink: 0;
               height: 3.5em;
-              margin: .25em 1em .25em 0;
+              margin: .25em 1em .25em .5em;
               width: 3.5em;
+
+              .archived-icon-plceholder {
+                font-size: 2em;
+                line-height: 1.75em;
+              }
+
+              .workflowimg-container {
+                text-align: center;
+
+                img {
+                  max-height: 3em;
+                }
+              }
             }
 
             .dates-and-img-container,
@@ -276,7 +305,7 @@
 
       .cards-wrapper {
         .card.experiment-card {
-          .workflow-img-container {
+          .workflow-img-wrapper {
             background-color: $color-alto;
           }
 
@@ -287,6 +316,13 @@
           .description-cell {
             width: 100%;
 
+            .description-text::before {
+              background: $color-alto;
+              content: "";
+              display: block;
+              height: 4px;
+            }
+
             .description-text::after {
               background: linear-gradient(to right, transparent, $color-concrete 50%);
             }
@@ -294,10 +330,14 @@
         }
 
         &.list {
-
           .card.experiment-card {
             .archived-date-cell {
               grid-column: 5;
+            }
+            .description-cell {
+              .description-text::before {
+                content: unset;
+              }
             }
 
             &:hover {
