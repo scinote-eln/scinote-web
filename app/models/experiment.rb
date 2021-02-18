@@ -22,6 +22,8 @@ class Experiment < ApplicationRecord
   has_many :report_elements, inverse_of: :experiment, dependent: :destroy
   # Associations for old activity type
   has_many :activities, inverse_of: :experiment
+  has_many :user_assignments, as: :assignable, dependent: :destroy
+  has_many :users, through: :user_assignments
 
   has_one_attached :workflowimg
 
