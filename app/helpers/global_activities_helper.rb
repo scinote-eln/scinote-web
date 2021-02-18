@@ -12,7 +12,7 @@ module GlobalActivitiesHelper
         if value.is_a? String
           value
         elsif value['type'] == 'Time' # use saved date for printing
-          l(Time.at(value['value']), format: :full)
+          I18n.l(Time.zone.at(value['value']), format: :full)
         else
           no_links ? generate_name(value) : generate_link(value, activity)
         end
