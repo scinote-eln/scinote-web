@@ -5,7 +5,6 @@ class User < ApplicationRecord
   include SettingsModel
   include VariablesModel
   include User::TeamRoles
-  include User::ProjectRoles
   include TeamBySubjectModel
   include InputSanitizeHelper
   include ActiveStorageConcerns

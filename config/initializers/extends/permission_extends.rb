@@ -10,8 +10,7 @@ module PermissionExtends
       RESTORE
       CREATE_EXPERIMENTS
       CREATE_COMMENTS
-      EDIT_COMMENTS
-      DELETE_COMMENTS
+      MANAGE_COMMENTS
       MANAGE_TAGS
     ).each { |permission| const_set(permission, permission.underscore) }
   end
@@ -24,11 +23,13 @@ module PermissionExtends
       RESTORE
       CLONE
       MOVE
+      CREATE_TASKS
     ).each { |permission| const_set(permission, permission.underscore) }
   end
 
   module MyModulePermissions
     %w(
+      READ
       MANAGE
       ARCHIVE
       RESTORE
@@ -37,6 +38,7 @@ module PermissionExtends
       ASSIGN_REPOSITORY_ROWS
       CHANGE_FLOW_STATUS
       CREATE_COMMENTS
+      MANAGE_COMMENTS
       CREATE_REPOSITORY_SNAPSHOT
       MANAGE_REPOSITORY_SNAPSHOT
     ).each { |permission| const_set(permission, permission.underscore) }

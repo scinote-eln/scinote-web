@@ -4,6 +4,7 @@ class CreateUserRolesAndAssignments < ActiveRecord::Migration[6.1]
   def change
     create_table :user_roles do |t|
       t.string :name
+      t.boolean :predefined, default: false
       t.string :permissions, array: true, default: []
       t.references :created_by, foreign_key: { to_table: :users }, null: false
       t.references :last_modified_by, foreign_key: { to_table: :users }, null: false

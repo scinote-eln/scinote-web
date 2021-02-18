@@ -2609,6 +2609,7 @@ ALTER SEQUENCE public.user_projects_id_seq OWNED BY public.user_projects.id;
 CREATE TABLE public.user_roles (
     id bigint NOT NULL,
     name character varying,
+    predefined boolean DEFAULT false,
     permissions character varying[] DEFAULT '{}'::character varying[],
     created_by_id bigint NOT NULL,
     last_modified_by_id bigint NOT NULL,
