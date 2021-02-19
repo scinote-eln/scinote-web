@@ -151,4 +151,14 @@ namespace :data do
       end
     end
   end
+
+  desc 'Purge all experiment workflow images'
+  task purge_experiment_workflow_images: :environment do
+    ActiveStorage::Attachment.where(name: 'workflowimg').delete_all
+  end
+
+  desc 'Purge all experiment workflow images'
+  task cleanup_blobs: :environment do
+    ActiveStorage::Blob.unattached.find_each(&:purge_later)
+  end
 end
