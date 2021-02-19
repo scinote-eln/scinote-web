@@ -471,7 +471,11 @@ class Experiment < ApplicationRecord
     x_diff = my_modules.active.pluck(:x).min
     y_diff = my_modules.active.pluck(:y).min
 
-    my_modules.active.each do |m|
+    moving_direction = {
+      x: x_diff.positive? ? :asc : :desc,
+      y: y_diff.positive? ? :asc : :desc
+    }
+    my_modules.active.order(moving_direction).each do |m|
       m.update!(x: m.x - x_diff, y: m.y - y_diff)
     end
     my_modules.reload
