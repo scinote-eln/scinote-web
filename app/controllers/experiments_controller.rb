@@ -65,7 +65,7 @@ class ExperimentsController < ApplicationController
   def canvas
     redirect_to module_archive_experiment_path(@experiment) if @experiment.archived_branch?
     @project = @experiment.project
-    @active_modules = @experiment.my_modules.active.includes(:tags, :inputs, :outputs)
+    @active_modules = @experiment.my_modules.active.order(:name).includes(:tags, :inputs, :outputs)
     current_team_switch(@project.team)
   end
 
