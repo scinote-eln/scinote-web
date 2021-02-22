@@ -148,7 +148,7 @@
   <div class="toolbar-filter-buttons" style="display:none">
   </div>
 
-  <%= render partial: "repositories/repository_table.html.erb",
+  <%= render partial: "repositories/repository_table",
              locals: {
                repository: @repository,
                repository_index_link: repository_table_index_path(@repository)
@@ -156,14 +156,14 @@
   %>
 </div>
 
-<%= render partial: 'repositories/import_repository_records_modal.html.erb',
+<%= render partial: 'repositories/import_repository_records_modal',
                     locals: { repository: @repository } %>
 
-<%= render partial: "repositories/delete_record_modal.html.erb" %>
-<%= render partial: 'repositories/export_repository_modal.html.erb',
+<%= render partial: "repositories/delete_record_modal" %>
+<%= render partial: 'repositories/export_repository_modal',
            locals: { repository: @repository } %>
 
-<%= render partial: 'repository_columns/manage_column_modal.html.erb', locals: { my_module_page: false } %>
+<%= render partial: 'repository_columns/manage_column_modal', locals: { my_module_page: false } %>
 
 <%= javascript_include_tag 'repositories/edit' %>
 <%= javascript_include_tag 'repositories/repository_datatable' %>
