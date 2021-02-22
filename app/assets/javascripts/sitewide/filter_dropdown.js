@@ -11,7 +11,7 @@ var filterDropdown = (function() {
 
   function preventDropdownClose() {
     $('.dropdown-menu', $filterContainer).click((e) => {
-      if (!$(e.target).is('input,a')) {
+      if (!$(e.target).is('input,a,.keyword-text,.keyword-icon')) {
         e.stopPropagation();
         e.preventDefault();
         $('#textSearchFilterHistory').hide();
@@ -35,7 +35,7 @@ var filterDropdown = (function() {
           $('#textSearchFilterHistory').append(
             $(`<li class="dropdown-item">
               <a class="projects-search-keyword" href="#" data-keyword="${keyword}">
-                <i class="fas fa-history"></i>
+                <i class="fas fa-history keyword-icon"></i>
                 <span class="keyword-text">${keyword}</span>
               </a>
             </li>`)
