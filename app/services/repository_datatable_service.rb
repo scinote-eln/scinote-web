@@ -10,7 +10,7 @@ class RepositoryDatatableService
     @params = params
     @sortable_columns = build_sortable_columns
     create_columns_mappings
-    process_query
+    @repository_rows = process_query
   end
 
   private
@@ -57,7 +57,7 @@ class RepositoryDatatableService
                       .select('COUNT(DISTINCT experiments.project_id) AS "assigned_projects_count"')
     repository_rows = repository_rows.preload(Extends::REPOSITORY_ROWS_PRELOAD_RELATIONS)
 
-    @repository_rows = sort_rows(order_obj, repository_rows)
+    sort_rows(order_obj, repository_rows)
   end
 
   def fetch_rows(search_value)
