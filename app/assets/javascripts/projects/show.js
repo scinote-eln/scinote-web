@@ -109,6 +109,14 @@
     });
   }
 
+  function selectDate($field) {
+    var datePicker = $field.data('DateTimePicker');
+    if (datePicker && datePicker.date()) {
+      return datePicker.date()._d.toUTCString();
+    }
+    return null;
+  }
+
   function initExperimentsFilters() {
     var $filterDropdown = filterDropdown.init();
 
@@ -133,12 +141,12 @@
     }
 
     $filterDropdown.on('filter:apply', function() {
-      startedOnFromFilter = $startedOnFromFilter.val();
-      startedOnToFilter = $startedOnToFilter.val();
-      modifiedOnFromFilter = $modifiedOnFromFilter.val();
-      modifiedOnToFilter = $modifiedOnToFilter.val();
-      archivedOnFromFilter = $archivedOnFromFilter.val();
-      archivedOnToFilter = $archivedOnToFilter.val();
+      startedOnFromFilter = selectDate($startedOnFromFilter);
+      startedOnToFilter = selectDate($startedOnToFilter);
+      modifiedOnFromFilter = selectDate($modifiedOnFromFilter);
+      modifiedOnToFilter = selectDate($modifiedOnToFilter);
+      archivedOnFromFilter = selectDate($archivedOnFromFilter);
+      archivedOnToFilter = selectDate($archivedOnToFilter);
       experimentsViewSearch = $textFilter.val();
       appliedFiltersMark();
       refreshCurrentView();
