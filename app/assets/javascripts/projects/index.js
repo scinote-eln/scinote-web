@@ -591,6 +591,14 @@
     });
   }
 
+  function selectDate($field) {
+    var datePicker = $field.data('DateTimePicker');
+    if (datePicker && datePicker.date()) {
+      return datePicker.date()._d.toUTCString();
+    }
+    return null;
+  }
+
   function initProjectsFilters() {
     var $filterDropdown = filterDropdown.init();
     let $projectsFilter = $('.projects-index .projects-filters');
@@ -631,12 +639,12 @@
     });
 
     $filterDropdown.on('filter:apply', function() {
-      createdOnFromFilter = $createdOnFromFilter.val();
-      createdOnToFilter = $createdOnToFilter.val();
+      createdOnFromFilter = selectDate($createdOnFromFilter);
+      createdOnToFilter = selectDate($createdOnToFilter);
       membersFilter = dropdownSelector.getValues($('.members-filter'));
       lookInsideFolders = $foldersCB.prop('checked') ? 'true' : '';
-      archivedOnFromFilter = $archivedOnFromFilter.val();
-      archivedOnToFilter = $archivedOnToFilter.val();
+      archivedOnFromFilter = selectDate($archivedOnFromFilter);
+      archivedOnToFilter = selectDate($archivedOnToFilter);
       projectsViewSearch = $textFilter.val();
 
       appliedFiltersMark();
