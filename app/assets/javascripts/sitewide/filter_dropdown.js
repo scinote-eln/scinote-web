@@ -58,6 +58,10 @@ var filterDropdown = (function() {
       $(this).closest('.dropdown').removeClass('open');
     });
 
+    $textFilter.on('focusout', function() {
+      $filterContainer.trigger('filter:clickBody');
+    });
+
     $filterContainer.on('click', '.projects-search-keyword', function(e) {
       e.stopPropagation();
       e.preventDefault();
