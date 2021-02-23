@@ -9,7 +9,7 @@
 
 /* global HelperModule dropdownSelector Sidebar Turbolinks filterDropdown */
 
-(function() {
+var ProjectsIndex = (function() {
   const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable', 'deletable'];
   var projectsWrapper = '#projectsWrapper';
   var toolbarWrapper = '#toolbarWrapper';
@@ -275,11 +275,14 @@
 
   // Initialize view project users modal remote loading.
   function initViewProjectUsersLink() {
-    $('#cardsWrapper').on('ajax:success', '.view-project-users-link', function(e, data) {
-      let viewProjectUsersModal = $('#viewProjectUsersModal');
-      viewProjectUsersModal.find('.modal-title').html(data.html_title);
-      viewProjectUsersModal.find('.modal-body').html(data.html_body);
+    $(projectsWrapper).on('ajax:success', '.view-project-users-link', function(e, data) {
+      let viewProjectUsersModal = $(data.html);
+      $(projectsWrapper).append(viewProjectUsersModal);
       viewProjectUsersModal.modal('show');
+      // Remove modal when it gets closed
+      viewProjectUsersModal.on('hidden.bs.modal', function() {
+        viewProjectUsersModal.remove();
+      });
     });
   }
 
@@ -739,4 +742,8 @@
   }
 
   init();
+
+  return {
+    loadCardsView: loadCardsView
+  };
 }());
