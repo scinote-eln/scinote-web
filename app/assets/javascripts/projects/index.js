@@ -641,6 +641,10 @@ var ProjectsIndex = (function() {
       $('#folderSearchInfo').toggle();
     });
 
+    $projectsFilter.on('click', '#folder_search', function(e) {
+      e.stopPropagation();
+    });
+
     $filterDropdown.on('filter:apply', function() {
       createdOnFromFilter = selectDate($createdOnFromFilter);
       createdOnToFilter = selectDate($createdOnToFilter);

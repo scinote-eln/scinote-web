@@ -10,8 +10,8 @@ var filterDropdown = (function() {
   }
 
   function preventDropdownClose() {
-    $('.dropdown-menu', $filterContainer).click((e) => {
-      if (!$(e.target).is('input,a,.keyword-text,.keyword-icon')) {
+    $filterContainer.on('click', '.dropdown-menu', function(e) {
+      if (!$(e.target).is('input,a')) {
         e.stopPropagation();
         e.preventDefault();
         $('#textSearchFilterHistory').hide();
@@ -35,7 +35,7 @@ var filterDropdown = (function() {
           $('#textSearchFilterHistory').append(
             $(`<li class="dropdown-item">
               <a class="projects-search-keyword" href="#" data-keyword="${keyword}">
-                <i class="fas fa-history keyword-icon"></i>
+                <i class="fas fa-history"></i>
                 <span class="keyword-text">${keyword}</span>
               </a>
             </li>`)
@@ -56,10 +56,6 @@ var filterDropdown = (function() {
     }).on('input', () => {
       $('#textSearchFilterHistory').hide();
       $(this).closest('.dropdown').removeClass('open');
-    });
-
-    $textFilter.on('focusout', function() {
-      $filterContainer.trigger('filter:clickBody');
     });
 
     $filterContainer.on('click', '.projects-search-keyword', function(e) {
