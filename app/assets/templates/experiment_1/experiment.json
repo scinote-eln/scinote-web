@@ -1,0 +1,2920 @@
+{
+  "experiment": {
+    "id": 1,
+    "name": "Polymerase chain reaction",
+    "description": "Polymerase chain reaction (PCR) monitors the amplification of DNA in real time (qPCR cyclers constantly scan qPCR plates). It is, in contrast to the conventional PCR, quantitative, meaning that it enables us to determine the exact concentration (relative or absolute) of the amplified DNA in the sample. Conversely, in conventional PCR we can see the result of amplification only after the PCR is completed (end-point detection).\n\n       Apart from DNA, RNA can also be used as a template (e.g. in case of gene expression studies or detection of RNA viruses). In this case, the RNA needs to be reverse transcribed into DNA (also termed complementary DNA or cDNA) before it is amplified with real-time PCR. There is a term for this combined method: real-time reverse transcription PCR or qRT-PCR (sometimes RT-qPCR) for short.",
+    "project_id": 1,
+    "created_by_id": 1,
+    "last_modified_by_id": 1,
+    "archived": false,
+    "archived_by_id": null,
+    "archived_on": null,
+    "restored_by_id": null,
+    "restored_on": null,
+    "created_at": "2020-12-21T15:59:04.093Z",
+    "updated_at": "2020-12-21T15:54:04.500Z",
+    "uuid": "0bfd6305-8ede-46d9-9d53-df6d6c6c22ec"
+  },
+  "my_modules": [
+    {
+      "my_module": {
+        "id": 1,
+        "name": "Experiment design",
+        "due_date": null,
+        "description": null,
+        "x": 0,
+        "y": 0,
+        "my_module_group_id": 1,
+        "created_at": "2020-12-19T15:31:51.299Z",
+        "updated_at": "2020-12-21T15:54:04.262Z",
+        "archived": false,
+        "archived_on": null,
+        "created_by_id": 1,
+        "last_modified_by_id": null,
+        "archived_by_id": null,
+        "restored_by_id": null,
+        "restored_on": null,
+        "workflow_order": 0,
+        "experiment_id": 1,
+        "state": "uncompleted",
+        "completed_on": null,
+        "started_on": null
+      },
+      "my_module_status_name": "Not started",
+      "outputs": [
+        {
+          "id": 1,
+          "input_id": 2,
+          "output_id": 1
+        }
+      ],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+        {
+          "id": 1,
+          "user_id": 1,
+          "my_module_id": 1,
+          "created_at": "2020-12-19T15:32:31.060Z",
+          "updated_at": "2020-12-21T15:54:04.259Z",
+          "assigned_by_id": 1
+        }
+      ],
+      "protocols": [
+        {
+          "protocol": {
+            "id": 1,
+            "name": null,
+            "authors": null,
+            "description": null,
+            "added_by_id": null,
+            "my_module_id": 1,
+            "team_id": 1,
+            "protocol_type": "unlinked",
+            "parent_id": null,
+            "parent_updated_at": null,
+            "archived_by_id": null,
+            "archived_on": null,
+            "restored_by_id": null,
+            "restored_on": null,
+            "created_at": "2020-12-21T15:54:04.231Z",
+            "updated_at": "2020-12-21T15:54:04.563Z",
+            "published_on": null,
+            "nr_of_linked_children": 0
+          },
+          "protocol_protocol_keywords": [
+
+          ],
+          "steps": [
+            {
+              "step": {
+                "id": 1,
+                "name": "Gene expression",
+                "description": "Compare response of PVYNTN, cab4 and PR1 genes in mock/virus inoculated potatoes & in time",
+                "position": 0,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-19T17:12:35.961Z",
+                "updated_at": "2020-12-21T15:54:04.550Z",
+                "last_modified_by_id": null,
+                "protocol_id": 1,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+                {
+                  "id": 1,
+                  "step_id": 1,
+                  "table_id": 1
+                }
+              ],
+              "tables": [
+                {
+                  "id": 1,
+                  "created_at": "2020-12-21T15:54:04.546Z",
+                  "updated_at": "2020-12-21T15:54:04.546Z",
+                  "created_by_id": 1,
+                  "last_modified_by_id": null,
+                  "name": "Experiment design table",
+                  "team_id": 1,
+                  "contents": "eyJkYXRhIjpbWyJncm91cC90aW1lIiwiMSBkcGkiLCI2IGRwaSIsIiIsIiJd\nLFsiUFZZTlROIiwiMSIsIjEiLCIiLCIiXSxbIm1vY2siLCIxIiwiMSIsIiIs\nIiJdLFsiIiwiIiwiIiwiIiwiIl1dfQ==\n",
+                  "data_vector": "JzEnOjIsNyw4LDEwLDExICc2Jzo0ICdkcGknOjMsNSAnZ3JvdXAvdGltZSc6\nMSAnbW9jayc6OSAncHZ5bnRuJzo2\n"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "results": [
+
+      ]
+    },
+    {
+      "my_module": {
+        "id": 2,
+        "name": "Sampling biological material",
+        "due_date": null,
+        "description": null,
+        "x": 32,
+        "y": 0,
+        "my_module_group_id": 1,
+        "created_at": "2020-12-19T15:18:34.579Z",
+        "updated_at": "2020-12-21T15:54:04.303Z",
+        "archived": false,
+        "archived_on": null,
+        "created_by_id": 1,
+        "last_modified_by_id": null,
+        "archived_by_id": null,
+        "restored_by_id": null,
+        "restored_on": null,
+        "workflow_order": 1,
+        "experiment_id": 1,
+        "state": "uncompleted",
+        "completed_on": null,
+        "started_on": null
+      },
+      "my_module_status_name": "Not started",
+      "outputs": [
+        {
+          "id": 2,
+          "input_id": 3,
+          "output_id": 2
+        }
+      ],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+        {
+          "id": 2,
+          "user_id": 1,
+          "my_module_id": 2,
+          "created_at": "2020-12-19T15:20:30.100Z",
+          "updated_at": "2020-12-21T15:54:04.301Z",
+          "assigned_by_id": 1
+        }
+      ],
+      "protocols": [
+        {
+          "protocol": {
+            "id": 2,
+            "name": null,
+            "authors": null,
+            "description": null,
+            "added_by_id": null,
+            "my_module_id": 2,
+            "team_id": 1,
+            "protocol_type": "unlinked",
+            "parent_id": null,
+            "parent_updated_at": null,
+            "archived_by_id": null,
+            "archived_on": null,
+            "restored_by_id": null,
+            "restored_on": null,
+            "created_at": "2020-12-21T15:54:04.279Z",
+            "updated_at": "2020-12-21T15:54:29.457Z",
+            "published_on": null,
+            "nr_of_linked_children": 0
+          },
+          "protocol_protocol_keywords": [
+
+          ],
+          "steps": [
+            {
+              "step": {
+                "id": 2,
+                "name": "Inoculation of potatoes",
+                "description": "50% of samples should be mock inoculated and the other 50% should be inoculated with the PVY NTN virus.",
+                "position": 0,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-19T17:37:03.784Z",
+                "updated_at": "2020-12-21T15:54:29.453Z",
+                "last_modified_by_id": null,
+                "protocol_id": 2,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+                {
+                  "id": 29,
+                  "step_id": 2,
+                  "asset_id": 29
+                }
+              ],
+              "assets": [
+                {
+                  "asset": {
+                    "id": 29,
+                    "created_at": "2020-12-21T15:54:25.500Z",
+                    "updated_at": "2020-12-21T15:56:01.790Z",
+                    "created_by_id": 1,
+                    "last_modified_by_id": 1,
+                    "estimated_size": 534404,
+                    "lock": null,
+                    "lock_ttl": null,
+                    "version": 1,
+                    "file_processing": false,
+                    "team_id": 1,
+                    "file_image_quality": 99,
+                    "view_mode": "thumbnail"
+                  },
+                  "asset_blob": {
+                    "id": 29,
+                    "key": "6wol5jk3dzvafi45ko3g7fv62e5t",
+                    "filename": "PVY-inoculated_plant_symptoms.JPG",
+                    "content_type": "image/jpeg",
+                    "metadata": {
+                      "identified": true,
+                      "width": 922,
+                      "height": 691,
+                      "analyzed": true
+                    },
+                    "byte_size": 485822,
+                    "checksum": "5gb8tpP/lu8GwheRVvzq9w==",
+                    "created_at": "2020-12-21T15:54:25.518Z",
+                    "attachable_sgid": "BAh7CEkiCGdpZAY6BkVUSSI0Z2lkOi8vc2Npbm90ZS9BY3RpdmVTdG9yYWdlOjpCbG9iLzI5P2V4cGlyZXNfaW4GOwBUSSIMcHVycG9zZQY7AFRJIg9hdHRhY2hhYmxlBjsAVEkiD2V4cGlyZXNfYXQGOwBUMA==--30e4eafada7bea0dad5c712624d9163aee60ec42"
+                  }
+                }
+              ],
+              "step_tables": [
+                {
+                  "id": 2,
+                  "step_id": 2,
+                  "table_id": 2
+                }
+              ],
+              "tables": [
+                {
+                  "id": 2,
+                  "created_at": "2020-12-21T15:54:04.580Z",
+                  "updated_at": "2020-12-21T15:54:04.580Z",
+                  "created_by_id": 1,
+                  "last_modified_by_id": null,
+                  "name": "",
+                  "team_id": 1,
+                  "contents": "eyJkYXRhIjpbWyJOYW1lIiwiU2FtcGxlIHR5cGUiXSxbIk1vY2sgMWRwaSIs\nInBvdGF0byBsZWF2ZXMiXSxbIk1vY2sgNmRwaSIsInBvdGF0byBsZWF2ZXMi\nXSxbIlBWWSBOVE4gMWRwaSIsInBvdGF0byBsZWF2ZXMiXSxbIlBWWSBOVE4g\nNmRwaSIsInBvdGF0byBsZWF2ZXMiXV19\n",
+                  "data_vector": "JzFkcGknOjUsMTQgJzZkcGknOjksMTkgJ2xlYXYnOjcsMTEsMTYsMjEgJ21v\nY2snOjQsOCAnbmFtZSc6MSAnbnRuJzoxMywxOCAncG90YXRvJzo2LDEwLDE1\nLDIwICdwdmknOjEyLDE3ICdzYW1wbCc6MiAndHlwZSc6Mw==\n"
+                }
+              ]
+            },
+            {
+              "step": {
+                "id": 4,
+                "name": "Collection of potatoes",
+                "description": "50% of PVY NTN inoculated potatoes and 50% of mock inoculated potatoes collect 1 day post inoculation, while the other half of the samples collect 6 days post inoculation.",
+                "position": 2,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-19T16:55:32.221Z",
+                "updated_at": "2020-12-21T15:54:04.576Z",
+                "last_modified_by_id": null,
+                "protocol_id": 2,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 3,
+                "name": "Store samples",
+                "description": "Collect samples in <strong>2ml tubes</strong> and put them in <strong>liquid nitrogen</strong> or store at <strong>-80°C</strong>.",
+                "position": 1,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-19T18:26:29.177Z",
+                "updated_at": "2020-12-21T15:54:04.572Z",
+                "last_modified_by_id": null,
+                "protocol_id": 2,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            }
+          ]
+        }
+      ],
+      "results": [
+
+      ]
+    },
+    {
+      "my_module": {
+        "id": 3,
+        "name": "RNA isolation",
+        "due_date": null,
+        "description": null,
+        "x": 64,
+        "y": 0,
+        "my_module_group_id": 1,
+        "created_at": "2020-12-21T06:01:31.860Z",
+        "updated_at": "2020-12-21T15:54:04.341Z",
+        "archived": false,
+        "archived_on": null,
+        "created_by_id": 1,
+        "last_modified_by_id": null,
+        "archived_by_id": null,
+        "restored_by_id": null,
+        "restored_on": null,
+        "workflow_order": 2,
+        "experiment_id": 1,
+        "state": "uncompleted",
+        "completed_on": null,
+        "started_on": null
+      },
+      "my_module_status_name": "Not started",
+      "outputs": [
+        {
+          "id": 3,
+          "input_id": 4,
+          "output_id": 3
+        }
+      ],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+        {
+          "id": 3,
+          "user_id": 1,
+          "my_module_id": 3,
+          "created_at": "2020-12-21T06:02:59.486Z",
+          "updated_at": "2020-12-21T15:54:04.337Z",
+          "assigned_by_id": 1
+        }
+      ],
+      "protocols": [
+        {
+          "protocol": {
+            "id": 3,
+            "name": null,
+            "authors": null,
+            "description": null,
+            "added_by_id": null,
+            "my_module_id": 3,
+            "team_id": 1,
+            "protocol_type": "unlinked",
+            "parent_id": null,
+            "parent_updated_at": null,
+            "archived_by_id": null,
+            "archived_on": null,
+            "restored_by_id": null,
+            "restored_on": null,
+            "created_at": "2020-12-21T15:54:04.322Z",
+            "updated_at": "2020-12-21T15:54:04.657Z",
+            "published_on": null,
+            "nr_of_linked_children": 0
+          },
+          "protocol_protocol_keywords": [
+
+          ],
+          "steps": [
+            {
+              "step": {
+                "id": 16,
+                "name": "If the expected RNA yield is >30 μg",
+                "description": "<html><body><p>If the expected RNA yield is &gt;30 μg, repeat Step 9 using another 30–50 μL of RNase-free water.<br>Alternatively, use the eluate from Step 9 (if high RNA concentration is required). Reuse the collection tube from Step 12.</p></body></html>",
+                "position": 11,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-21T09:20:11.351Z",
+                "updated_at": "2020-12-21T15:54:04.656Z",
+                "last_modified_by_id": null,
+                "protocol_id": 3,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 15,
+                "name": "Place the RNeasy spin column in a new 1.5 ml collection tube",
+                "description": "Add 30–50 μL RNase-free water directly to the spin column membrane. Close the lid, and centrifuge for 1 min at ≥8000 x g to elute the RNA.",
+                "position": 10,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-21T10:06:12.906Z",
+                "updated_at": "2020-12-21T15:54:04.652Z",
+                "last_modified_by_id": null,
+                "protocol_id": 3,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 14,
+                "name": "Addition of buffer",
+                "description": "Add 500 μL Buffer RPE to the RNeasy spin column. Close the lid, and centrifuge for 2 min at ≥8000 x g.",
+                "position": 9,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-21T10:49:57.729Z",
+                "updated_at": "2020-12-21T15:54:04.648Z",
+                "last_modified_by_id": null,
+                "protocol_id": 3,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 13,
+                "name": "Add 700 μL Buffer RW1 to the RNeasy spin column.",
+                "description": "Close the lid, and centrifuge for 15 s at ≥8000 x g. Discard the flow-through.",
+                "position": 8,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-21T06:12:38.398Z",
+                "updated_at": "2020-12-21T15:54:04.644Z",
+                "last_modified_by_id": null,
+                "protocol_id": 3,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 12,
+                "name": "Transfer the sample",
+                "description": "Transfer the sample (usually 650 μl), with any precipitate, to an RNeasy Mini spin column (pink) in a 2 mL collection tube (supplied). Close the lid, and centrifuge for 15 s at ≥8000 x g (≥10,000 rpm). Discard the flowthrough.",
+                "position": 7,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-21T10:42:31.056Z",
+                "updated_at": "2020-12-21T15:54:04.640Z",
+                "last_modified_by_id": null,
+                "protocol_id": 3,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 11,
+                "name": "Addition of ethanol",
+                "description": "Add 0.5 volume of ethanol (96–100%) to the cleared lysate, and mix immediately by pipetting. Do not centrifuge.",
+                "position": 6,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-21T08:54:08.994Z",
+                "updated_at": "2020-12-21T15:54:04.636Z",
+                "last_modified_by_id": null,
+                "protocol_id": 3,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 10,
+                "name": "Transfer the lysate to a QIAshredder spin column",
+                "description": "Transfer the lysate to a QIAshredder spin column placed in a 2 mL collection tube. Centrifuge for 2 min at full speed. Transfer the supernatant of the flow-through to a new microcentrifuge tube (not supplied) without disturbing the cell-debris pellet.",
+                "position": 5,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-21T09:50:20.299Z",
+                "updated_at": "2020-12-21T15:54:04.631Z",
+                "last_modified_by_id": null,
+                "protocol_id": 3,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 9,
+                "name": "Buffer addition",
+                "description": "Add 450 μL Buffer RLT or Buffer RLC to a maximum of 100 mg tissue powder. Vortex vigorously.",
+                "position": 4,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-21T09:10:51.182Z",
+                "updated_at": "2020-12-21T15:54:04.627Z",
+                "last_modified_by_id": null,
+                "protocol_id": 3,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 8,
+                "name": "Disruption",
+                "description": "<html><body><p>Disruption using the TissueLyser II, TissueLyser LT, or TissueRuptor.<br><br>For detailed information on disruption of plant tissues for purification of RNA, see TissueLyser Handbook, TissueLyser LT Handbook, or TissueRuptor Handbook. (The RNeasy Mini Handbook will be updated with this option.)</p></body></html>",
+                "position": 3,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-21T07:50:13.585Z",
+                "updated_at": "2020-12-21T15:54:04.620Z",
+                "last_modified_by_id": null,
+                "protocol_id": 3,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 7,
+                "name": "Disruption with mortar and pestle",
+                "description": "Immediately place tissue in liquid nitrogen. Grind thoroughly. Decant tissue powder and liquid nitrogen into RNase-free, liquid-nitrogen–cooled, 2 mL microcentrifuge tube (not supplied). Allow the liquid nitrogen to evaporate, but do not allow the tissue to thaw. Proceed immediately to step 5.",
+                "position": 2,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-21T07:46:29.882Z",
+                "updated_at": "2020-12-21T15:54:04.612Z",
+                "last_modified_by_id": null,
+                "protocol_id": 3,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 6,
+                "name": "Isolation of RNA with RNeasy plant mini kit",
+                "description": "Disrupt a maximum of 100 mg plant material according to step 3 or 4.",
+                "position": 1,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-21T09:24:02.300Z",
+                "updated_at": "2020-12-21T15:54:04.607Z",
+                "last_modified_by_id": null,
+                "protocol_id": 3,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 5,
+                "name": "Homogenization of the material",
+                "description": "Use tissue lyser: 1 min on step 3.",
+                "position": 0,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-21T06:34:41.820Z",
+                "updated_at": "2020-12-21T15:54:04.598Z",
+                "last_modified_by_id": null,
+                "protocol_id": 3,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            }
+          ]
+        }
+      ],
+      "results": [
+
+      ]
+    },
+    {
+      "my_module": {
+        "id": 4,
+        "name": "RNA quality & quantity - BIOANALYSER",
+        "due_date": null,
+        "description": null,
+        "x": 96,
+        "y": 0,
+        "my_module_group_id": 1,
+        "created_at": "2020-12-19T10:13:41.984Z",
+        "updated_at": "2020-12-21T15:54:04.377Z",
+        "archived": false,
+        "archived_on": null,
+        "created_by_id": 1,
+        "last_modified_by_id": null,
+        "archived_by_id": null,
+        "restored_by_id": null,
+        "restored_on": null,
+        "workflow_order": 3,
+        "experiment_id": 1,
+        "state": "uncompleted",
+        "completed_on": null,
+        "started_on": null
+      },
+      "my_module_status_name": "Not started",
+      "outputs": [
+        {
+          "id": 4,
+          "input_id": 5,
+          "output_id": 4
+        }
+      ],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+        {
+          "id": 4,
+          "user_id": 1,
+          "my_module_id": 4,
+          "created_at": "2020-12-19T10:14:47.709Z",
+          "updated_at": "2020-12-21T15:54:04.373Z",
+          "assigned_by_id": 1
+        }
+      ],
+      "protocols": [
+        {
+          "protocol": {
+            "id": 4,
+            "name": null,
+            "authors": null,
+            "description": null,
+            "added_by_id": null,
+            "my_module_id": 4,
+            "team_id": 1,
+            "protocol_type": "unlinked",
+            "parent_id": null,
+            "parent_updated_at": null,
+            "archived_by_id": null,
+            "archived_on": null,
+            "restored_by_id": null,
+            "restored_on": null,
+            "created_at": "2020-12-21T15:54:04.359Z",
+            "updated_at": "2020-12-21T15:54:32.134Z",
+            "published_on": null,
+            "nr_of_linked_children": 0
+          },
+          "protocol_protocol_keywords": [
+
+          ],
+          "steps": [
+            {
+              "step": {
+                "id": 24,
+                "name": "Transfer up to 700 µL of the sample",
+                "description": "<html><body><p>Transfer up to 700 µL of the sample, including any precipitate that may have formed, to an RNeasy spin column placed in a 2 mL collection tube (supplied).<br>Close the lid gently, and centrifuge for 15 s at ≥8000 x g (≥10,000 rpm). Discard the flow-through. If the sample volume exceeds 700 µL, centrifuge successive aliquots in the same RNeasy spin column. Discard the flow-through after each centrifugation.</p></body></html>",
+                "position": 7,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-19T13:10:05.378Z",
+                "updated_at": "2020-12-21T15:54:04.775Z",
+                "last_modified_by_id": null,
+                "protocol_id": 4,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+                {
+                  "checklist": {
+                    "id": 3,
+                    "name": "Optional",
+                    "step_id": 24,
+                    "created_at": "2020-12-21T15:54:04.774Z",
+                    "updated_at": "2020-12-21T15:54:04.774Z",
+                    "created_by_id": null,
+                    "last_modified_by_id": null
+                  },
+                  "checklist_items": [
+                    {
+                      "id": 11,
+                      "text": "If performing optional on-column DNase digestion (see “Eliminating genomic DNA contamination”, page 21), follow steps D1–D4 (page 67) after performing this step.",
+                      "checked": false,
+                      "checklist_id": 3,
+                      "created_at": "2020-12-21T15:54:04.775Z",
+                      "updated_at": "2020-12-21T15:54:04.775Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 0
+                    }
+                  ]
+                }
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 20,
+                "name": "Disrupt the tissue and homogenize the lysate in Buffer RLT",
+                "description": "<html><body><p>See “Disrupting and homogenizing starting material”, pages 18–21, for more details on disruption and homogenization.<br><br><strong>Note</strong>: Ensure that β-ME is added to Buffer RLT before use (see “Things to do before starting”).<br><br>After storage in RNAlater RNA Stabilization Reagent, tissues may become slightly harder than fresh or thawed tissues. Disruption and homogenization using standard methods is usually not a problem. For easier disruption and homogenization, we recommend using 600 µl Buffer RLT.<br><br><strong>Note</strong>: Incomplete homogenization leads to significantly reduced RNA yields and can cause clogging of the RNeasy spin column. Homogenization with the TissueLyser LT, TissueLyser II, and rotor–stator homogenizers generally results in higher RNA yields than with other methods.</p></body></html>",
+                "position": 3,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-19T10:41:12.251Z",
+                "updated_at": "2020-12-21T15:54:04.766Z",
+                "last_modified_by_id": null,
+                "protocol_id": 4,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+                {
+                  "id": 3,
+                  "step_id": 20,
+                  "table_id": 3
+                }
+              ],
+              "tables": [
+                {
+                  "id": 3,
+                  "created_at": "2020-12-21T15:54:04.764Z",
+                  "updated_at": "2020-12-21T15:54:04.764Z",
+                  "created_by_id": 1,
+                  "last_modified_by_id": null,
+                  "name": "Volumes of Buffer RLT for tissue disruption and homogenization",
+                  "team_id": 1,
+                  "contents": "eyJkYXRhIjpbWyJBbW91bnQgb2Ygc3RhcnRpbmcgbWF0ZXJpYWwgKG1nKSIs\nIlZvbHVtZSBvZiBCdWZmZXIgUkxUICjCtWwpIl0sWyI8MjAiLCIzNTAiXSxb\nIjIwIC0gMzAiLCI2MDAiXV19\n",
+                  "data_vector": "JzIwJzoxMiwxNCAnMjY1bCc6MTEgJzMwJzoxNSAnMzAyJzoxMCAnMzUwJzox\nMyAnNjAwJzoxNiAnYW1vdW50JzoxICdidWZmZXInOjggJ21hdGVyaSc6NCAn\nbWcnOjUgJ3JsdCc6OSAnc3RhcnQnOjMgJ3ZvbHVtJzo2\n"
+                }
+              ]
+            },
+            {
+              "step": {
+                "id": 17,
+                "name": "Before you start",
+                "description": "Follow the guidelines below.",
+                "position": 0,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-19T12:16:40.373Z",
+                "updated_at": "2020-12-21T15:54:32.130Z",
+                "last_modified_by_id": null,
+                "protocol_id": 4,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+                {
+                  "checklist": {
+                    "id": 1,
+                    "name": "If using the RNeasy Kit for the first time, read \"Important Notes\" in the attached file",
+                    "step_id": 17,
+                    "created_at": "2020-12-21T15:54:04.738Z",
+                    "updated_at": "2020-12-21T15:54:04.738Z",
+                    "created_by_id": null,
+                    "last_modified_by_id": null
+                  },
+                  "checklist_items": [
+                    {
+                      "id": 1,
+                      "text": "For optimal results, stabilize harvested tissues immediately in RNAlater RNA Stabilization Reagent (see protocol on page 34). Tissues can be stored in the reagent for up to 1 day at 37°C, 7 days at 15–25°C, or 4 weeks at 2–8°C, or archived at –20°C or –80°C.",
+                      "checked": false,
+                      "checklist_id": 1,
+                      "created_at": "2020-12-21T15:54:04.742Z",
+                      "updated_at": "2020-12-21T15:54:04.742Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 0
+                    },
+                    {
+                      "id": 2,
+                      "text": "Fresh, frozen, or RNAlater stabilized tissues can be used. Tissues can be stored at –70°C for several months. Flash-freeze tissues in liquid nitrogen, and immediately transfer to –70°C. Do not allow tissues to thaw during weighing or handling prior to disruption in Buffer RLT. Homogenized tissue lysates from step 4 can also be stored at –70°C for several months. Incubate frozen lysates at 37°C in a water bath until completely thawed and salts are dissolved before continuing with step 5. Avoid prolonged incubation, which may compromise RNA integrity.",
+                      "checked": false,
+                      "checklist_id": 1,
+                      "created_at": "2020-12-21T15:54:04.743Z",
+                      "updated_at": "2020-12-21T15:54:04.743Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 1
+                    },
+                    {
+                      "id": 3,
+                      "text": "If desired, more than 30 mg tissue can be disrupted and homogenized at the start of the procedure (increase the volume of Buffer RLT proportionately). Use a portion of the homogenate corresponding to no more than 30 mg tissue for RNA purification, and store the rest at –80°C.",
+                      "checked": false,
+                      "checklist_id": 1,
+                      "created_at": "2020-12-21T15:54:04.745Z",
+                      "updated_at": "2020-12-21T15:54:04.745Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 2
+                    },
+                    {
+                      "id": 4,
+                      "text": "Buffer RLT may form a precipitate upon storage. If necessary, redissolve by warming, and then place at room temperature (15–25°C).",
+                      "checked": false,
+                      "checklist_id": 1,
+                      "created_at": "2020-12-21T15:54:04.746Z",
+                      "updated_at": "2020-12-21T15:54:04.746Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 3
+                    },
+                    {
+                      "id": 5,
+                      "text": "Buffer RLT and Buffer RW1 contain a guanidine salt and are therefore not compatible with disinfecting reagents containing bleach. See page 6 for safety information.",
+                      "checked": false,
+                      "checklist_id": 1,
+                      "created_at": "2020-12-21T15:54:04.747Z",
+                      "updated_at": "2020-12-21T15:54:04.747Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 4
+                    },
+                    {
+                      "id": 6,
+                      "text": "Perform all steps of the procedure at room temperature. During the procedure, work quickly.",
+                      "checked": false,
+                      "checklist_id": 1,
+                      "created_at": "2020-12-21T15:54:04.749Z",
+                      "updated_at": "2020-12-21T15:54:04.749Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 5
+                    },
+                    {
+                      "id": 7,
+                      "text": "Perform all centrifugation steps at 20–25°C in a standard microcentrifuge. Ensure that the centrifuge does not cool below 20°C.",
+                      "checked": false,
+                      "checklist_id": 1,
+                      "created_at": "2020-12-21T15:54:04.750Z",
+                      "updated_at": "2020-12-21T15:54:04.750Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 6
+                    }
+                  ]
+                },
+                {
+                  "checklist": {
+                    "id": 2,
+                    "name": "Things to do before starting",
+                    "step_id": 17,
+                    "created_at": "2020-12-21T15:54:04.755Z",
+                    "updated_at": "2020-12-21T15:54:04.755Z",
+                    "created_by_id": null,
+                    "last_modified_by_id": null
+                  },
+                  "checklist_items": [
+                    {
+                      "id": 8,
+                      "text": "β-Mercaptoethanol (β-ME) must be added to Buffer RLT before use. Add 10 µl β-ME per 1 mL Buffer RLT. Dispense in a fume hood and wear appropriate protective clothing. Buffer RLT containing β-ME can be stored at room temperature (15–25°C) for up to 1 month. Alternatively, add 20 µL of 2 M dithiothreitol (DTT) per 1 mL Buffer RLT. The stock solution of 2 M DTT in water should be prepared fresh or frozen in single-use aliquots. Buffer RLT containing DTT can be stored at room temperature for up to 1 month.",
+                      "checked": false,
+                      "checklist_id": 2,
+                      "created_at": "2020-12-21T15:54:04.757Z",
+                      "updated_at": "2020-12-21T15:54:04.757Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 0
+                    },
+                    {
+                      "id": 9,
+                      "text": "Buffer RPE is supplied as a concentrate. Before using for the first time, add 4 volumes of ethanol (96–100%) as indicated on the bottle to obtain a working solution.",
+                      "checked": false,
+                      "checklist_id": 2,
+                      "created_at": "2020-12-21T15:54:04.758Z",
+                      "updated_at": "2020-12-21T15:54:04.758Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 1
+                    },
+                    {
+                      "id": 10,
+                      "text": "If performing optional on-column DNase digestion, prepare DNase I stock solution as described in Appendix D (page 67).",
+                      "checked": false,
+                      "checklist_id": 2,
+                      "created_at": "2020-12-21T15:54:04.760Z",
+                      "updated_at": "2020-12-21T15:54:04.760Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 2
+                    }
+                  ]
+                }
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+                {
+                  "id": 30,
+                  "step_id": 17,
+                  "asset_id": 30
+                }
+              ],
+              "assets": [
+                {
+                  "asset": {
+                    "id": 30,
+                    "created_at": "2020-12-21T15:54:25.615Z",
+                    "updated_at": "2020-12-21T15:55:50.580Z",
+                    "created_by_id": 1,
+                    "last_modified_by_id": 1,
+                    "estimated_size": 121482,
+                    "lock": null,
+                    "lock_ttl": null,
+                    "version": 1,
+                    "file_processing": false,
+                    "team_id": 1,
+                    "file_image_quality": null,
+                    "view_mode": "thumbnail"
+                  },
+                  "asset_blob": {
+                    "id": 30,
+                    "key": "erkb72fl783gw4ib6j3a7ej7ru42",
+                    "filename": "important_notes.pdf",
+                    "content_type": "application/pdf",
+                    "metadata": {
+                      "identified": true,
+                      "analyzed": true
+                    },
+                    "byte_size": 110439,
+                    "checksum": "2PvyGeD2DKSyxEowMvOcBg==",
+                    "created_at": "2020-12-21T15:54:25.634Z",
+                    "attachable_sgid": "BAh7CEkiCGdpZAY6BkVUSSI0Z2lkOi8vc2Npbm90ZS9BY3RpdmVTdG9yYWdlOjpCbG9iLzMwP2V4cGlyZXNfaW4GOwBUSSIMcHVycG9zZQY7AFRJIg9hdHRhY2hhYmxlBjsAVEkiD2V4cGlyZXNfYXQGOwBUMA==--2cd8ab86a33e914005379c2fe0b63f5d9f2bd43a"
+                  }
+                }
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 27,
+                "name": "Place the RNeasy spin column in a new 1.5 mL collection tube (supplied)",
+                "description": "Add 30–50 µL RNase-free water directly to the spin column membrane. Close the lid gently, and centrifuge for 1 min at ≥8000 x g (≥10,000 rpm) to elute the RNA.",
+                "position": 10,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-19T13:45:09.668Z",
+                "updated_at": "2020-12-21T15:54:04.702Z",
+                "last_modified_by_id": null,
+                "protocol_id": 4,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 26,
+                "name": "Add 500 µL Buffer RPE to the RNeasy spin column",
+                "description": "<html><body><p>Close the lid gently, and centrifuge for 2 min at ≥8000 x g (≥10,000 rpm) to wash the spin column membrane.<br><br>The long centrifugation dries the spin column membrane, ensuring that no ethanol is carried over during RNA elution. Residual ethanol may interfere with downstream reactions.<br><br><strong>Note</strong>: After centrifugation, carefully remove the RNeasy spin column from the collection tube so that the column does not contact the flow-through. Otherwise, carryover of ethanol will occur.</p></body></html>",
+                "position": 9,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-19T10:23:46.825Z",
+                "updated_at": "2020-12-21T15:54:04.698Z",
+                "last_modified_by_id": null,
+                "protocol_id": 4,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 25,
+                "name": "Add 700 µL Buffer RW1 to the RNeasy spin column",
+                "description": "Close the lid gently, and centrifuge for 15 s at ≥8000 x g (≥10,000 rpm) to wash the spin column membrane. Discard the flow-through.",
+                "position": 8,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-19T10:30:11.394Z",
+                "updated_at": "2020-12-21T15:54:04.694Z",
+                "last_modified_by_id": null,
+                "protocol_id": 4,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 23,
+                "name": "Add 1 volume of 70% ethanol* to the cleared lysate, and mix immediately by pipetting",
+                "description": "<html><body><span style=\"text-decoration: underline;\">Do not centrifuge.</span><br><br><strong>Note</strong>: The volume of lysate may be less than 350 µL or 600 µL due to loss during homogenization and centrifugation in steps 3 and 4.<br><br><strong>Note</strong>: Precipitates may be visible after addition of ethanol. This does not affect the procedure.</body></html>",
+                "position": 6,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-19T12:42:04.949Z",
+                "updated_at": "2020-12-21T15:54:04.686Z",
+                "last_modified_by_id": null,
+                "protocol_id": 4,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 22,
+                "name": "Centrifuge the lysate for 3 min at full speed",
+                "description": "<html><body><p>Carefully remove the supernatant by pipetting, and transfer it to a new microcentrifuge tube (not supplied).<br><br>Use only this supernatant (lysate) in subsequent steps. In some preparations, very small amounts of insoluble material will be present after the 3 min centrifugation, making the pellet invisible.</p></body></html>",
+                "position": 5,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-19T11:39:01.368Z",
+                "updated_at": "2020-12-21T15:54:04.682Z",
+                "last_modified_by_id": null,
+                "protocol_id": 4,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 21,
+                "name": "Disruption and homogenization using a rotor–stator homogenizer",
+                "description": "Place the weighed (fresh, frozen, or RNAlater stabilized) tissue in a suitably sized vessel. Add the appropriate volume of Buffer RLT (see Table 8). Immediately disrupt and homogenize the tissue using a conventional rotor–stator homogenizer until it is uniformly homogeneous (usually 20–40 s).",
+                "position": 4,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-19T14:42:02.806Z",
+                "updated_at": "2020-12-21T15:54:04.677Z",
+                "last_modified_by_id": null,
+                "protocol_id": 4,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 19,
+                "name": "Weigh the piece to be used, and place it into a suitably sized vessel for disruption and homogenization.",
+                "description": "<html><body><p>RNA in harvested tissues is not protected until the tissues are treated with RNAlater RNA Stabilization Reagent, flash-frozen, or disrupted and homogenized in step 3. Frozen tissues should not be allowed to thaw during handling. The relevant procedures should be carried out as quickly as possible.<br><br>Note: Remaining fresh tissues can be placed into RNAlater RNA Stabilization Reagent to stabilize RNA (see protocol on page 34). However, previously frozen tissues thaw too slowly in the reagent, preventing the reagent from diffusing into the tissues quickly enough to prevent RNA degradation.</p></body></html>",
+                "position": 2,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-19T12:21:19.364Z",
+                "updated_at": "2020-12-21T15:54:04.669Z",
+                "last_modified_by_id": null,
+                "protocol_id": 4,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 18,
+                "name": "Excise the tissue sample from the animal or remove it from storage.",
+                "description": "<html><body><p>Remove RNAlater stabilized tissues from the reagent using forceps. Determine the amount of tissue. Do not use more than 30 mg.<br>Weighing tissue is the most accurate way to determine the amount.<br>Note: If the tissues were stored in RNAlater Reagent at –20°C, be sure to remove any crystals that may have formed.</p></body></html>",
+                "position": 1,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-19T11:34:22.317Z",
+                "updated_at": "2020-12-21T15:54:04.665Z",
+                "last_modified_by_id": null,
+                "protocol_id": 4,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            }
+          ]
+        }
+      ],
+      "results": [
+
+      ]
+    },
+    {
+      "my_module": {
+        "id": 5,
+        "name": "Reverse transcription",
+        "due_date": null,
+        "description": null,
+        "x": 96,
+        "y": 16,
+        "my_module_group_id": 1,
+        "created_at": "2020-12-19T12:12:45.640Z",
+        "updated_at": "2020-12-21T15:54:04.410Z",
+        "archived": false,
+        "archived_on": null,
+        "created_by_id": 1,
+        "last_modified_by_id": null,
+        "archived_by_id": null,
+        "restored_by_id": null,
+        "restored_on": null,
+        "workflow_order": 4,
+        "experiment_id": 1,
+        "state": "uncompleted",
+        "completed_on": null,
+        "started_on": null
+      },
+      "my_module_status_name": "Not started",
+      "outputs": [
+        {
+          "id": 5,
+          "input_id": 6,
+          "output_id": 5
+        }
+      ],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+        {
+          "id": 5,
+          "user_id": 1,
+          "my_module_id": 5,
+          "created_at": "2020-12-19T12:13:11.766Z",
+          "updated_at": "2020-12-21T15:54:04.407Z",
+          "assigned_by_id": 1
+        }
+      ],
+      "protocols": [
+        {
+          "protocol": {
+            "id": 5,
+            "name": null,
+            "authors": null,
+            "description": null,
+            "added_by_id": null,
+            "my_module_id": 5,
+            "team_id": 1,
+            "protocol_type": "unlinked",
+            "parent_id": null,
+            "parent_updated_at": null,
+            "archived_by_id": null,
+            "archived_on": null,
+            "restored_by_id": null,
+            "restored_on": null,
+            "created_at": "2020-12-21T15:54:04.395Z",
+            "updated_at": "2020-12-21T15:54:04.806Z",
+            "published_on": null,
+            "nr_of_linked_children": 0
+          },
+          "protocol_protocol_keywords": [
+
+          ],
+          "steps": [
+            {
+              "step": {
+                "id": 29,
+                "name": "Prepare mastermix for RT",
+                "description": "High Capacity cDNA Reverse Transcription Kit (Applied Biosystems)",
+                "position": 1,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-19T13:56:38.158Z",
+                "updated_at": "2020-12-21T15:54:04.806Z",
+                "last_modified_by_id": null,
+                "protocol_id": 5,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+                {
+                  "checklist": {
+                    "id": 4,
+                    "name": "Mastermix",
+                    "step_id": 29,
+                    "created_at": "2020-12-21T15:54:04.804Z",
+                    "updated_at": "2020-12-21T15:54:04.804Z",
+                    "created_by_id": null,
+                    "last_modified_by_id": null
+                  },
+                  "checklist_items": [
+                    {
+                      "id": 12,
+                      "text": "H2O to 12.5 uL",
+                      "checked": false,
+                      "checklist_id": 4,
+                      "created_at": "2020-12-21T15:54:04.806Z",
+                      "updated_at": "2020-12-21T15:54:04.806Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 0
+                    },
+                    {
+                      "id": 13,
+                      "text": "Optional: Luciferase mRNA (denatured)",
+                      "checked": false,
+                      "checklist_id": 4,
+                      "created_at": "2020-12-21T15:54:04.807Z",
+                      "updated_at": "2020-12-21T15:54:04.807Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 1
+                    },
+                    {
+                      "id": 14,
+                      "text": "Reverse transcriptase",
+                      "checked": false,
+                      "checklist_id": 4,
+                      "created_at": "2020-12-21T15:54:04.808Z",
+                      "updated_at": "2020-12-21T15:54:04.808Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 2
+                    },
+                    {
+                      "id": 15,
+                      "text": "RNase inhibitor",
+                      "checked": false,
+                      "checklist_id": 4,
+                      "created_at": "2020-12-21T15:54:04.810Z",
+                      "updated_at": "2020-12-21T15:54:04.810Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 3
+                    },
+                    {
+                      "id": 16,
+                      "text": "Random Primers",
+                      "checked": false,
+                      "checklist_id": 4,
+                      "created_at": "2020-12-21T15:54:04.811Z",
+                      "updated_at": "2020-12-21T15:54:04.811Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 4
+                    },
+                    {
+                      "id": 17,
+                      "text": "dNTP mix",
+                      "checked": false,
+                      "checklist_id": 4,
+                      "created_at": "2020-12-21T15:54:04.812Z",
+                      "updated_at": "2020-12-21T15:54:04.812Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 5
+                    },
+                    {
+                      "id": 18,
+                      "text": "RT buffer",
+                      "checked": false,
+                      "checklist_id": 4,
+                      "created_at": "2020-12-21T15:54:04.813Z",
+                      "updated_at": "2020-12-21T15:54:04.813Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 6
+                    }
+                  ]
+                }
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 30,
+                "name": "RT reaction",
+                "description": "25°C for 10 min, 37°C for 2 h",
+                "position": 2,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-19T12:57:28.142Z",
+                "updated_at": "2020-12-21T15:54:04.789Z",
+                "last_modified_by_id": null,
+                "protocol_id": 5,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 28,
+                "name": "RNA denaturation",
+                "description": "Denature 1 µg of RNA at -80°C for 5 min --> ice",
+                "position": 0,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-19T16:32:33.828Z",
+                "updated_at": "2020-12-21T15:54:04.780Z",
+                "last_modified_by_id": null,
+                "protocol_id": 5,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            }
+          ]
+        }
+      ],
+      "results": [
+
+      ]
+    },
+    {
+      "my_module": {
+        "id": 6,
+        "name": "qPCR",
+        "due_date": null,
+        "description": "PCR is a method where an enzyme\n      (thermostable DNA polymerase, originally isolated in 1960s\n      from bacterium Thermus aquaticus, growing in hot lakes of\n      Yellowstone park, USA) amplifies a short specific part of\n      the template DNA (amplicon) in cycles. In every cycle the\n      number of short specific sections of DNA is doubled, leading\n      to an exponential amplification of targets.",
+        "x": 64,
+        "y": 16,
+        "my_module_group_id": 1,
+        "created_at": "2020-12-17T01:30:44.268Z",
+        "updated_at": "2020-12-21T15:54:04.464Z",
+        "archived": false,
+        "archived_on": null,
+        "created_by_id": 1,
+        "last_modified_by_id": null,
+        "archived_by_id": null,
+        "restored_by_id": null,
+        "restored_on": null,
+        "workflow_order": 5,
+        "experiment_id": 1,
+        "state": "uncompleted",
+        "completed_on": null,
+        "started_on": null
+      },
+      "my_module_status_name": "Not started",
+      "outputs": [
+        {
+          "id": 6,
+          "input_id": 7,
+          "output_id": 6
+        }
+      ],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+        {
+          "id": 6,
+          "user_id": 1,
+          "my_module_id": 6,
+          "created_at": "2020-12-17T01:31:07.736Z",
+          "updated_at": "2020-12-21T15:54:04.462Z",
+          "assigned_by_id": 1
+        }
+      ],
+      "protocols": [
+        {
+          "protocol": {
+            "id": 6,
+            "name": null,
+            "authors": null,
+            "description": null,
+            "added_by_id": null,
+            "my_module_id": 6,
+            "team_id": 1,
+            "protocol_type": "unlinked",
+            "parent_id": null,
+            "parent_updated_at": null,
+            "archived_by_id": null,
+            "archived_on": null,
+            "restored_by_id": null,
+            "restored_on": null,
+            "created_at": "2020-12-21T15:54:04.429Z",
+            "updated_at": "2020-12-21T15:54:33.642Z",
+            "published_on": null,
+            "nr_of_linked_children": 0
+          },
+          "protocol_protocol_keywords": [
+
+          ],
+          "steps": [
+            {
+              "step": {
+                "id": 31,
+                "name": "Master Mix Preparation",
+                "description": "PCR Master Mix includes Nuclease-Free Water and PCR Master Mix, 2X. PCR Master Mix is a premixed, ready-to-use solution containing Taq DNA Polymerase, dNTPs, MgCl2 and reaction buffers at optimal concentrations for efficient amplification of DNA templates by PCR.",
+                "position": 0,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-17T05:10:58.180Z",
+                "updated_at": "2020-12-21T15:54:32.945Z",
+                "last_modified_by_id": null,
+                "protocol_id": 6,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+                {
+                  "checklist": {
+                    "id": 5,
+                    "name": "QA checklist",
+                    "step_id": 31,
+                    "created_at": "2020-12-21T15:54:04.850Z",
+                    "updated_at": "2020-12-21T15:54:04.850Z",
+                    "created_by_id": null,
+                    "last_modified_by_id": null
+                  },
+                  "checklist_items": [
+                    {
+                      "id": 19,
+                      "text": "Make sure the UV light was on at least for 20 minutes before you started working",
+                      "checked": false,
+                      "checklist_id": 5,
+                      "created_at": "2020-12-21T15:54:04.852Z",
+                      "updated_at": "2020-12-21T15:54:04.852Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 0
+                    },
+                    {
+                      "id": 20,
+                      "text": "Write down the LOT numbers of reagents used",
+                      "checked": false,
+                      "checklist_id": 5,
+                      "created_at": "2020-12-21T15:54:04.854Z",
+                      "updated_at": "2020-12-21T15:54:04.854Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 1
+                    },
+                    {
+                      "id": 21,
+                      "text": "Use tips with filters for pipetting samples; use tips without filters for pipetting reagents",
+                      "checked": false,
+                      "checklist_id": 5,
+                      "created_at": "2020-12-21T15:54:04.855Z",
+                      "updated_at": "2020-12-21T15:54:04.855Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 2
+                    },
+                    {
+                      "id": 22,
+                      "text": "Always use designated separate chambers for pipetting samples and reagents",
+                      "checked": false,
+                      "checklist_id": 5,
+                      "created_at": "2020-12-21T15:54:04.857Z",
+                      "updated_at": "2020-12-21T15:54:04.857Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 3
+                    },
+                    {
+                      "id": 23,
+                      "text": "Change lab coats when switching chambers",
+                      "checked": false,
+                      "checklist_id": 5,
+                      "created_at": "2020-12-21T15:54:04.858Z",
+                      "updated_at": "2020-12-21T15:54:04.858Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 4
+                    },
+                    {
+                      "id": 24,
+                      "text": "Clean surfaces with 70% ethanol or RNA remover",
+                      "checked": false,
+                      "checklist_id": 5,
+                      "created_at": "2020-12-21T15:54:04.859Z",
+                      "updated_at": "2020-12-21T15:54:04.859Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 5
+                    },
+                    {
+                      "id": 25,
+                      "text": "Turn on the UV light",
+                      "checked": false,
+                      "checklist_id": 5,
+                      "created_at": "2020-12-21T15:54:04.860Z",
+                      "updated_at": "2020-12-21T15:54:04.860Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 6
+                    }
+                  ]
+                }
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+                {
+                  "id": 31,
+                  "step_id": 31,
+                  "asset_id": 31
+                }
+              ],
+              "assets": [
+                {
+                  "asset": {
+                    "id": 31,
+                    "created_at": "2020-12-21T15:54:25.696Z",
+                    "updated_at": "2020-12-21T15:55:00.181Z",
+                    "created_by_id": 1,
+                    "last_modified_by_id": 1,
+                    "estimated_size": 39261,
+                    "lock": null,
+                    "lock_ttl": null,
+                    "version": 1,
+                    "file_processing": false,
+                    "team_id": 1,
+                    "file_image_quality": null,
+                    "view_mode": "thumbnail"
+                  },
+                  "asset_blob": {
+                    "id": 31,
+                    "key": "si6478nnauxrgdymvjky4zr3qh4u",
+                    "filename": "Mixes_Templats.xlsx",
+                    "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "metadata": {
+                      "identified": true,
+                      "analyzed": true
+                    },
+                    "byte_size": 28994,
+                    "checksum": "6zABObZVmyrwpVg4QV7ujQ==",
+                    "created_at": "2020-12-21T15:54:25.711Z",
+                    "attachable_sgid": "BAh7CEkiCGdpZAY6BkVUSSI0Z2lkOi8vc2Npbm90ZS9BY3RpdmVTdG9yYWdlOjpCbG9iLzMxP2V4cGlyZXNfaW4GOwBUSSIMcHVycG9zZQY7AFRJIg9hdHRhY2hhYmxlBjsAVEkiD2V4cGlyZXNfYXQGOwBUMA==--a37538f9251dabb3c50e15b9b20787d7ee53f0f5"
+                  }
+                }
+              ],
+              "step_tables": [
+                {
+                  "id": 4,
+                  "step_id": 31,
+                  "table_id": 4
+                }
+              ],
+              "tables": [
+                {
+                  "id": 4,
+                  "created_at": "2020-12-21T15:54:04.830Z",
+                  "updated_at": "2020-12-21T15:54:04.830Z",
+                  "created_by_id": 1,
+                  "last_modified_by_id": null,
+                  "name": "Realtime mastermix preparation - gene expression",
+                  "team_id": 1,
+                  "contents": "eyJkYXRhIjpbWyJEYXRlOiIsIiIsIiIsIiIsIiIsIiIsIiIsIiIsIiIsIiIs\nIiIsIiIsIiJdLFsiUmVhY3Rpb24gdm9sdW1lOiIsIjIwIHVsIiwiIiwiIiwi\nIiwiIiwiIiwiIiwiIiwiIiwiIiwiIiwiIl0sWyJVTU0vcmVhY3Rpb246Iiwi\nMTAgwrVsIiwiIiwiIiwiIiwiIiwiIiwiIiwiIiwiIiwiIiwiIiwiIl0sWyJz\nYW1wbGUvcmVhY3Rpb246IiwiNiDCtWwiLCIiLCIiLCIiLCIiLCIiLCIiLCIi\nLCIiLCIiLCIiLCIiXSxbIiIsIiIsIiIsIiIsIiIsIiIsIiIsIiIsIiIsIiIs\nIiIsIiIsIiJdLFsiQ2hlbWlzdHJ5IiwiVGFxTWFuIiwiIiwiIiwiU1lCUiBH\ncmVlbiBJIiwiIiwiIiwiVGFxTWFuIiwiIiwiIiwiU1lCUiBHcmVlbiBJIiwi\nIiwiIl0sWyJHZW5lIiwiY294IiwiIiwiIiwiY2FiNCIsIiIsIiIsIlBWWS1O\nVE4iLCIiLCIiLCJQUi0xIiwiIiwiIl0sWyIiLCJjb25jLioiLCJmaW5hbCBj\nb25jLioqIiwiwrVsL3JlYWN0aW9uIiwiY29uYy4qIiwiZmluYWwgY29uYy4q\nKiIsIsK1bC9yZWFjdGlvbiIsImNvbmMuKiIsImZpbmFsIGNvbmMuKioiLCLC\ntWwvcmVhY3Rpb24iLCJjb25jLioiLCJmaW5hbCBjb25jLioqIiwiwrVsL3Jl\nYWN0aW9uIl0sWyJQcm9iZSIsIjEwIMK1TSIsIjE1MCBuTSIsIjAuMyIsIi8i\nLCIvIiwiLyIsIjUgwrVNIiwiMTUwIG5NIiwiMC42IiwiLyIsIi8iLCIvIl0s\nWyJGUCIsIjMwIMK1TSIsIjMwMCBuTSIsIjAuMiIsIjMwIMK1TSIsIjMwMCBu\nTSAiLCIwLjIiLCIxMCDCtU0iLCIyNTAgbk0iLCIwLjUiLCIzMCDCtU0iLCIz\nMDAgbk0gIiwiMC4yIl0sWyJSUCIsIjMwIMK1TSIsIjMwMCBuTSIsIjAuMiIs\nIjMwIMK1TSIsIjMwMCBuTSAiLCIwLjIiLCIxMCDCtU0iLCIyNTAgbk0iLCIw\nLjUiLCIzMCDCtU0iLCIzMDAgbk0gIiwiMC4yIl1dfQ==\n",
+                  "data_vector": "Jy0xJzozMCAnMC4yJzo3MCw3Niw4OCw5NSwxMDEsMTEzICcwLjMnOjU3ICcw\nLjUnOjgyLDEwNyAnMC42Jzo2MyAnMTAnOjcsNTIsNzcsMTAyICcxNTAnOjU1\nLDYxICcyMCc6NCAnMjUwJzo4MCwxMDUgJzI2NWwnOjksMTMgJzI2NWwvcmVh\nY3Rpb24nOjM1LDQwLDQ1LDUwICcyNjVtJzo1NCw2MCw2Nyw3Myw3OSw4NSw5\nMiw5OCwxMDQsMTEwICczMCc6NjUsNzEsODMsOTAsOTYsMTA4ICczMDAnOjY4\nLDc0LDg2LDkzLDk5LDExMSAnMzAyJzo4LDEyLDM0LDM5LDQ0LDQ5LDUzLDU5\nLDY2LDcyLDc4LDg0LDkxLDk3LDEwMywxMDkgJzUnOjU4ICc2JzoxMSAnY2Fi\nNCc6MjUgJ2NoZW1pc3RyaSc6MTQgJ2NvbmMnOjMxLDMzLDM2LDM4LDQxLDQz\nLDQ2LDQ4ICdjb3gnOjI0ICdkYXRlJzoxICdmaW5hbCc6MzIsMzcsNDIsNDcg\nJ2ZwJzo2NCAnZ2VuZSc6MjMgJ2dyZWVuJzoxNywyMSAnbm0nOjU2LDYyLDY5\nLDc1LDgxLDg3LDk0LDEwMCwxMDYsMTEyICdudG4nOjI4ICdwcic6MjkgJ3By\nb2JlJzo1MSAncHZpJzoyNyAncHZ5LW50bic6MjYgJ3JlYWN0aW9uJzoyICdy\ncCc6ODkgJ3NhbXBsZS9yZWFjdGlvbic6MTAgJ3N5YnInOjE2LDIwICd0YXFt\nYW4nOjE1LDE5ICd1bCc6NSAndW1tL3JlYWN0aW9uJzo2ICd2b2x1bSc6Mw==\n"
+                }
+              ]
+            },
+            {
+              "step": {
+                "id": 33,
+                "name": "Reaction setup - NEW TITLE",
+                "description": "<html><body><p>The Applied Biosystems 7900HT Fast Real-Time PCR System (7900HT Fast System) uses fluorescent-based PCR chemistries to provide:</p><ul><li>Quantitative detection of nucleic acid sequences using real-time analysis</li><li>Qualitative detection of nucleic acid sequences using end-point and dissociation-curve analysis</li></ul><p>You can perform several assay types on the 7900HT Fast System using reactions plates in the 96-well, 384-well, or TaqMan® Low Density Array format. This guide describes the allelic discrimination assay.</p></body></html>",
+                "position": 2,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-17T01:50:44.346Z",
+                "updated_at": "2020-12-21T15:54:33.628Z",
+                "last_modified_by_id": null,
+                "protocol_id": 6,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+                {
+                  "id": 34,
+                  "step_id": 33,
+                  "asset_id": 34
+                },
+                {
+                  "id": 35,
+                  "step_id": 33,
+                  "asset_id": 35
+                }
+              ],
+              "assets": [
+                {
+                  "asset": {
+                    "id": 34,
+                    "created_at": "2020-12-21T15:54:25.908Z",
+                    "updated_at": "2020-12-21T15:55:00.300Z",
+                    "created_by_id": 1,
+                    "last_modified_by_id": 1,
+                    "estimated_size": 57335,
+                    "lock": null,
+                    "lock_ttl": null,
+                    "version": 1,
+                    "file_processing": false,
+                    "team_id": 1,
+                    "file_image_quality": 79,
+                    "view_mode": "thumbnail"
+                  },
+                  "asset_blob": {
+                    "id": 34,
+                    "key": "fq6hnix2dpt1t9o8hjerdpn5a4nt",
+                    "filename": "cycling_conditions.JPG",
+                    "content_type": "image/jpeg",
+                    "metadata": {
+                      "identified": true,
+                      "width": 541,
+                      "height": 450,
+                      "analyzed": true
+                    },
+                    "byte_size": 52123,
+                    "checksum": "3cjp5lQbp4Zsjz+kjq+vpg==",
+                    "created_at": "2020-12-21T15:54:25.959Z",
+                    "attachable_sgid": "BAh7CEkiCGdpZAY6BkVUSSI0Z2lkOi8vc2Npbm90ZS9BY3RpdmVTdG9yYWdlOjpCbG9iLzM0P2V4cGlyZXNfaW4GOwBUSSIMcHVycG9zZQY7AFRJIg9hdHRhY2hhYmxlBjsAVEkiD2V4cGlyZXNfYXQGOwBUMA==--5c757507ef70fe28f46aa75848b8c138b0dec88e"
+                  }
+                },
+                {
+                  "asset": {
+                    "id": 35,
+                    "created_at": "2020-12-21T15:54:26.015Z",
+                    "updated_at": "2020-12-21T15:55:01.220Z",
+                    "created_by_id": 1,
+                    "last_modified_by_id": 1,
+                    "estimated_size": 210623,
+                    "lock": null,
+                    "lock_ttl": null,
+                    "version": 1,
+                    "file_processing": false,
+                    "team_id": 1,
+                    "file_image_quality": 99,
+                    "view_mode": "thumbnail"
+                  },
+                  "asset_blob": {
+                    "id": 35,
+                    "key": "a7frqj4fa6itniqf7yvf4feuyu12",
+                    "filename": "Dual_Labeled_Fluorescent_Probes.jpg",
+                    "content_type": "image/jpeg",
+                    "metadata": {
+                      "identified": true,
+                      "width": 692,
+                      "height": 399,
+                      "analyzed": true
+                    },
+                    "byte_size": 191476,
+                    "checksum": "dsVECMgNQg1jrYHACtcVnA==",
+                    "created_at": "2020-12-21T15:54:26.028Z",
+                    "attachable_sgid": "BAh7CEkiCGdpZAY6BkVUSSI0Z2lkOi8vc2Npbm90ZS9BY3RpdmVTdG9yYWdlOjpCbG9iLzM1P2V4cGlyZXNfaW4GOwBUSSIMcHVycG9zZQY7AFRJIg9hdHRhY2hhYmxlBjsAVEkiD2V4cGlyZXNfYXQGOwBUMA==--23e328e57c6cbe586fab734500658d2bca3f7b19"
+                  }
+                }
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 32,
+                "name": "Setup of the 96-well Plate",
+                "description": "<html><body><p>It is recommended to use pre-defined Excel templates or PlatR Pipetting Assistant to customize pipetting scheme. Make sure to always include all necessary controls.&nbsp;Especially the negative controls.<br><br>Template of the 96-well plate.</p></body></html>",
+                "position": 1,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-17T04:41:40.849Z",
+                "updated_at": "2020-12-21T15:54:33.436Z",
+                "last_modified_by_id": null,
+                "protocol_id": 6,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+                {
+                  "id": 32,
+                  "step_id": 32,
+                  "asset_id": 32
+                },
+                {
+                  "id": 33,
+                  "step_id": 32,
+                  "asset_id": 33
+                }
+              ],
+              "assets": [
+                {
+                  "asset": {
+                    "id": 33,
+                    "created_at": "2020-12-21T15:54:25.841Z",
+                    "updated_at": "2020-12-21T15:55:00.759Z",
+                    "created_by_id": 1,
+                    "last_modified_by_id": 1,
+                    "estimated_size": 15137,
+                    "lock": null,
+                    "lock_ttl": null,
+                    "version": 1,
+                    "file_processing": false,
+                    "team_id": 1,
+                    "file_image_quality": null,
+                    "view_mode": "thumbnail"
+                  },
+                  "asset_blob": {
+                    "id": 33,
+                    "key": "1m7wmel8cmlymtb78zgy7xtap3e9",
+                    "filename": "96plate.docx",
+                    "content_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    "metadata": {
+                      "identified": true,
+                      "analyzed": true
+                    },
+                    "byte_size": 13041,
+                    "checksum": "F3OAkhM6+1pHv97GNEuGPA==",
+                    "created_at": "2020-12-21T15:54:25.853Z",
+                    "attachable_sgid": "BAh7CEkiCGdpZAY6BkVUSSI0Z2lkOi8vc2Npbm90ZS9BY3RpdmVTdG9yYWdlOjpCbG9iLzMzP2V4cGlyZXNfaW4GOwBUSSIMcHVycG9zZQY7AFRJIg9hdHRhY2hhYmxlBjsAVEkiD2V4cGlyZXNfYXQGOwBUMA==--7b66f9f4a7d202e88e6c49303552fe9fb30c6e55"
+                  }
+                },
+                {
+                  "asset": {
+                    "id": 32,
+                    "created_at": "2020-12-21T15:54:25.769Z",
+                    "updated_at": "2020-12-21T15:55:01.030Z",
+                    "created_by_id": 1,
+                    "last_modified_by_id": 1,
+                    "estimated_size": 84197,
+                    "lock": null,
+                    "lock_ttl": null,
+                    "version": 1,
+                    "file_processing": false,
+                    "team_id": 1,
+                    "file_image_quality": 92,
+                    "view_mode": "thumbnail"
+                  },
+                  "asset_blob": {
+                    "id": 32,
+                    "key": "bt86e3qwifpmw9infgcy2ic8rz0i",
+                    "filename": "qPCR_template.jpg",
+                    "content_type": "image/jpeg",
+                    "metadata": {
+                      "identified": true,
+                      "width": 800,
+                      "height": 502,
+                      "analyzed": true
+                    },
+                    "byte_size": 76543,
+                    "checksum": "VNaANAfCoJcN8s4DGNV5ww==",
+                    "created_at": "2020-12-21T15:54:25.779Z",
+                    "attachable_sgid": "BAh7CEkiCGdpZAY6BkVUSSI0Z2lkOi8vc2Npbm90ZS9BY3RpdmVTdG9yYWdlOjpCbG9iLzMyP2V4cGlyZXNfaW4GOwBUSSIMcHVycG9zZQY7AFRJIg9hdHRhY2hhYmxlBjsAVEkiD2V4cGlyZXNfYXQGOwBUMA==--6e999432b2e4d870664e20a6fb243be992dbdbdc"
+                  }
+                }
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            }
+          ]
+        }
+      ],
+      "results": [
+
+      ]
+    },
+    {
+      "my_module": {
+        "id": 7,
+        "name": "Data quality control",
+        "due_date": null,
+        "description": null,
+        "x": 32,
+        "y": 16,
+        "my_module_group_id": 1,
+        "created_at": "2020-12-20T01:27:05.163Z",
+        "updated_at": "2020-12-21T15:54:04.484Z",
+        "archived": false,
+        "archived_on": null,
+        "created_by_id": 1,
+        "last_modified_by_id": null,
+        "archived_by_id": null,
+        "restored_by_id": null,
+        "restored_on": null,
+        "workflow_order": 6,
+        "experiment_id": 1,
+        "state": "uncompleted",
+        "completed_on": null,
+        "started_on": null
+      },
+      "my_module_status_name": "Not started",
+      "outputs": [
+        {
+          "id": 7,
+          "input_id": 8,
+          "output_id": 7
+        }
+      ],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+        {
+          "id": 7,
+          "user_id": 1,
+          "my_module_id": 7,
+          "created_at": "2020-12-20T01:27:42.173Z",
+          "updated_at": "2020-12-21T15:54:04.482Z",
+          "assigned_by_id": 1
+        }
+      ],
+      "protocols": [
+        {
+          "protocol": {
+            "id": 7,
+            "name": null,
+            "authors": null,
+            "description": null,
+            "added_by_id": null,
+            "my_module_id": 7,
+            "team_id": 1,
+            "protocol_type": "unlinked",
+            "parent_id": null,
+            "parent_updated_at": null,
+            "archived_by_id": null,
+            "archived_on": null,
+            "restored_by_id": null,
+            "restored_on": null,
+            "created_at": "2020-12-21T15:54:04.475Z",
+            "updated_at": "2020-12-21T15:54:34.836Z",
+            "published_on": null,
+            "nr_of_linked_children": 0
+          },
+          "protocol_protocol_keywords": [
+
+          ],
+          "steps": [
+            {
+              "step": {
+                "id": 35,
+                "name": "QA Checklist",
+                "description": "Please perform the following checklist before and after you start working.",
+                "position": 1,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-20T04:41:37.230Z",
+                "updated_at": "2020-12-21T15:54:04.965Z",
+                "last_modified_by_id": null,
+                "protocol_id": 7,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+                {
+                  "checklist": {
+                    "id": 6,
+                    "name": "QA Native PAGE",
+                    "step_id": 35,
+                    "created_at": "2020-12-21T15:54:04.964Z",
+                    "updated_at": "2020-12-21T15:54:04.964Z",
+                    "created_by_id": null,
+                    "last_modified_by_id": null
+                  },
+                  "checklist_items": [
+                    {
+                      "id": 26,
+                      "text": "Check buffer stock & prepare new stock if needed.",
+                      "checked": false,
+                      "checklist_id": 6,
+                      "created_at": "2020-12-21T15:54:04.966Z",
+                      "updated_at": "2020-12-21T15:54:04.966Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 0
+                    },
+                    {
+                      "id": 27,
+                      "text": "Check stock of reagents & order new stock if needed.",
+                      "checked": false,
+                      "checklist_id": 6,
+                      "created_at": "2020-12-21T15:54:04.967Z",
+                      "updated_at": "2020-12-21T15:54:04.967Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 1
+                    },
+                    {
+                      "id": 28,
+                      "text": "Use gloves at all times.",
+                      "checked": false,
+                      "checklist_id": 6,
+                      "created_at": "2020-12-21T15:54:04.968Z",
+                      "updated_at": "2020-12-21T15:54:04.968Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null,
+                      "position": 2
+                    }
+                  ]
+                }
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 39,
+                "name": "Excel results",
+                "description": "Write results in the excel file.",
+                "position": 5,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-20T02:43:21.335Z",
+                "updated_at": "2020-12-21T15:54:34.832Z",
+                "last_modified_by_id": null,
+                "protocol_id": 7,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+                {
+                  "id": 38,
+                  "step_id": 39,
+                  "asset_id": 38
+                }
+              ],
+              "assets": [
+                {
+                  "asset": {
+                    "id": 38,
+                    "created_at": "2020-12-21T15:54:26.224Z",
+                    "updated_at": "2020-12-21T15:54:48.354Z",
+                    "created_by_id": 1,
+                    "last_modified_by_id": 1,
+                    "estimated_size": 10133,
+                    "lock": null,
+                    "lock_ttl": null,
+                    "version": 1,
+                    "file_processing": false,
+                    "team_id": 1,
+                    "file_image_quality": null,
+                    "view_mode": "thumbnail"
+                  },
+                  "asset_blob": {
+                    "id": 38,
+                    "key": "3tr2wzsdgtxcvfc78khqqgmdvf40",
+                    "filename": "results.xlsx",
+                    "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "metadata": {
+                      "identified": true,
+                      "analyzed": true
+                    },
+                    "byte_size": 8980,
+                    "checksum": "yTDAegv4lpmMloLIHSTcKQ==",
+                    "created_at": "2020-12-21T15:54:26.234Z",
+                    "attachable_sgid": "BAh7CEkiCGdpZAY6BkVUSSI0Z2lkOi8vc2Npbm90ZS9BY3RpdmVTdG9yYWdlOjpCbG9iLzM4P2V4cGlyZXNfaW4GOwBUSSIMcHVycG9zZQY7AFRJIg9hdHRhY2hhYmxlBjsAVEkiD2V4cGlyZXNfYXQGOwBUMA==--d6b244dd891c3c7df100707b99a781ffb98685f7"
+                  }
+                }
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 38,
+                "name": "Native-Page Protocol",
+                "description": "Follow the Nature protocol attached.",
+                "position": 4,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-20T05:20:16.968Z",
+                "updated_at": "2020-12-21T15:54:34.699Z",
+                "last_modified_by_id": null,
+                "protocol_id": 7,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+                {
+                  "id": 37,
+                  "step_id": 38,
+                  "asset_id": 37
+                }
+              ],
+              "assets": [
+                {
+                  "asset": {
+                    "id": 37,
+                    "created_at": "2020-12-21T15:54:26.153Z",
+                    "updated_at": "2020-12-21T15:54:47.957Z",
+                    "created_by_id": 1,
+                    "last_modified_by_id": 1,
+                    "estimated_size": 409902,
+                    "lock": null,
+                    "lock_ttl": null,
+                    "version": 1,
+                    "file_processing": false,
+                    "team_id": 1,
+                    "file_image_quality": null,
+                    "view_mode": "thumbnail"
+                  },
+                  "asset_blob": {
+                    "id": 37,
+                    "key": "6183wuq5golyo29031kqgu5zd30m",
+                    "filename": "Native-PAGE-Nature_protocols.pdf",
+                    "content_type": "application/pdf",
+                    "metadata": {
+                      "identified": true,
+                      "analyzed": true
+                    },
+                    "byte_size": 261175,
+                    "checksum": "WfsLJOLwl+/j4WHQ8ghF5g==",
+                    "created_at": "2020-12-21T15:54:26.163Z",
+                    "attachable_sgid": "BAh7CEkiCGdpZAY6BkVUSSI0Z2lkOi8vc2Npbm90ZS9BY3RpdmVTdG9yYWdlOjpCbG9iLzM3P2V4cGlyZXNfaW4GOwBUSSIMcHVycG9zZQY7AFRJIg9hdHRhY2hhYmxlBjsAVEkiD2V4cGlyZXNfYXQGOwBUMA==--1a1d44543d40543100af41adc977e21b19292dbd"
+                  }
+                }
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 37,
+                "name": "Eliminate results that have positive NTCs",
+                "description": "And repeat procedure.",
+                "position": 3,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-20T04:07:35.854Z",
+                "updated_at": "2020-12-21T15:54:04.931Z",
+                "last_modified_by_id": null,
+                "protocol_id": 7,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 36,
+                "name": "Check negative controls NTC",
+                "description": "<html><body><div class=\"row\">They have to be negative when using TaqMan assays.<br><ul><li class=\"col-xs-12\">If they are positive, when using SYBR assays check also melitng curve where signal comes from.</li><li class=\"col-xs-12\">If it is primer dimer, result is negative.</li><li class=\"col-xs-12\">If it is specific signal, it is positive.</li></ul></div></body></html>",
+                "position": 2,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-20T03:26:13.472Z",
+                "updated_at": "2020-12-21T15:54:04.926Z",
+                "last_modified_by_id": null,
+                "protocol_id": 7,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            },
+            {
+              "step": {
+                "id": 34,
+                "name": "Native PAGE protocol",
+                "description": "Protein electrophoresis is a method for analysing proteins in a fluid or an extract. The electrophoresis may be performed with a small volume of a sample in a number of alternative ways with or without a supporting medium: SDS polyacrylamide gel electrophoresis (in short: gel electrophoresis, PAGE, or SDS-electrophoresis), free-flow electrophoresis, electrofocusing, isotachophoresis, affinity electrophoresis, immunoelectrophoresis, counterelectrophoresis, and capillary electrophoresis. Each method has many variations with individual advantages and limitations. Gel electrophoresis is often performed in combination with electroblotting/immunoblotting to give additional information about a specific protein. Because of practical limitations, protein electrophoresis is generally not suited as a preparative method.",
+                "position": 0,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-20T05:22:32.582Z",
+                "updated_at": "2020-12-21T15:54:33.804Z",
+                "last_modified_by_id": null,
+                "protocol_id": 7,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+                {
+                  "id": 36,
+                  "step_id": 34,
+                  "asset_id": 36
+                }
+              ],
+              "assets": [
+                {
+                  "asset": {
+                    "id": 36,
+                    "created_at": "2020-12-21T15:54:26.084Z",
+                    "updated_at": "2020-12-21T15:54:48.583Z",
+                    "created_by_id": 1,
+                    "last_modified_by_id": 1,
+                    "estimated_size": 133004,
+                    "lock": null,
+                    "lock_ttl": null,
+                    "version": 1,
+                    "file_processing": false,
+                    "team_id": 1,
+                    "file_image_quality": 88,
+                    "view_mode": "thumbnail"
+                  },
+                  "asset_blob": {
+                    "id": 36,
+                    "key": "lqlcf30es6zqd7orvam7pi6jgi7e",
+                    "filename": "Native_SDS-PAGE_for_complex_analysis.jpg",
+                    "content_type": "image/jpeg",
+                    "metadata": {
+                      "identified": true,
+                      "width": 1269,
+                      "height": 795,
+                      "analyzed": true
+                    },
+                    "byte_size": 120913,
+                    "checksum": "P42JviqW216B72OSAkPh6A==",
+                    "created_at": "2020-12-21T15:54:26.097Z",
+                    "attachable_sgid": "BAh7CEkiCGdpZAY6BkVUSSI0Z2lkOi8vc2Npbm90ZS9BY3RpdmVTdG9yYWdlOjpCbG9iLzM2P2V4cGlyZXNfaW4GOwBUSSIMcHVycG9zZQY7AFRJIg9hdHRhY2hhYmxlBjsAVEkiD2V4cGlyZXNfYXQGOwBUMA==--98146db3b89a0e6e304c50528cf1eadb3c3ea1ab"
+                  }
+                }
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            }
+          ]
+        }
+      ],
+      "results": [
+
+      ]
+    },
+    {
+      "my_module": {
+        "id": 8,
+        "name": "Data analysis - ddCq",
+        "due_date": null,
+        "description": null,
+        "x": 0,
+        "y": 16,
+        "my_module_group_id": 1,
+        "created_at": "2020-12-20T05:31:28.280Z",
+        "updated_at": "2020-12-21T15:54:04.500Z",
+        "archived": false,
+        "archived_on": null,
+        "created_by_id": 1,
+        "last_modified_by_id": null,
+        "archived_by_id": null,
+        "restored_by_id": null,
+        "restored_on": null,
+        "workflow_order": 7,
+        "experiment_id": 1,
+        "state": "uncompleted",
+        "completed_on": null,
+        "started_on": null
+      },
+      "my_module_status_name": "Not started",
+      "outputs": [
+
+      ],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+        {
+          "id": 8,
+          "user_id": 1,
+          "my_module_id": 8,
+          "created_at": "2020-12-20T05:32:44.188Z",
+          "updated_at": "2020-12-21T15:54:04.499Z",
+          "assigned_by_id": 1
+        }
+      ],
+      "protocols": [
+        {
+          "protocol": {
+            "id": 8,
+            "name": null,
+            "authors": null,
+            "description": null,
+            "added_by_id": null,
+            "my_module_id": 8,
+            "team_id": 1,
+            "protocol_type": "unlinked",
+            "parent_id": null,
+            "parent_updated_at": null,
+            "archived_by_id": null,
+            "archived_on": null,
+            "restored_by_id": null,
+            "restored_on": null,
+            "created_at": "2020-12-21T15:54:04.492Z",
+            "updated_at": "2020-12-21T15:54:35.308Z",
+            "published_on": null,
+            "nr_of_linked_children": 0
+          },
+          "protocol_protocol_keywords": [
+
+          ],
+          "steps": [
+            {
+              "step": {
+                "id": 40,
+                "name": "Template for ddCq analysis",
+                "description": "Sample information here.",
+                "position": 0,
+                "completed": false,
+                "completed_on": null,
+                "user_id": 1,
+                "created_at": "2020-12-20T10:24:40.166Z",
+                "updated_at": "2020-12-21T15:54:35.304Z",
+                "last_modified_by_id": null,
+                "protocol_id": 8,
+                "assets_view_mode": "thumbnail"
+              },
+              "checklists": [
+
+              ],
+              "step_comments": [
+
+              ],
+              "step_assets": [
+                {
+                  "id": 39,
+                  "step_id": 40,
+                  "asset_id": 39
+                },
+                {
+                  "id": 40,
+                  "step_id": 40,
+                  "asset_id": 40
+                }
+              ],
+              "assets": [
+                {
+                  "asset": {
+                    "id": 40,
+                    "created_at": "2020-12-21T15:54:26.349Z",
+                    "updated_at": "2020-12-21T15:54:41.492Z",
+                    "created_by_id": 1,
+                    "last_modified_by_id": 1,
+                    "estimated_size": 24285,
+                    "lock": null,
+                    "lock_ttl": null,
+                    "version": 1,
+                    "file_processing": false,
+                    "team_id": 1,
+                    "file_image_quality": null,
+                    "view_mode": "thumbnail"
+                  },
+                  "asset_blob": {
+                    "id": 40,
+                    "key": "n3iaszm695l9v5ralxsioagn2hz9",
+                    "filename": "SDHACOX1Beta-Actin-Kits-ab123545-1.gif",
+                    "content_type": "image/gif",
+                    "metadata": {
+                      "identified": true,
+                      "width": 307,
+                      "height": 229,
+                      "analyzed": true
+                    },
+                    "byte_size": 22078,
+                    "checksum": "FJtWynKu1unHM8fXVE3I7Q==",
+                    "created_at": "2020-12-21T15:54:26.391Z",
+                    "attachable_sgid": "BAh7CEkiCGdpZAY6BkVUSSI0Z2lkOi8vc2Npbm90ZS9BY3RpdmVTdG9yYWdlOjpCbG9iLzQwP2V4cGlyZXNfaW4GOwBUSSIMcHVycG9zZQY7AFRJIg9hdHRhY2hhYmxlBjsAVEkiD2V4cGlyZXNfYXQGOwBUMA==--fdd4792429432e518c2d5cd21efe484b500c4c9a"
+                  }
+                },
+                {
+                  "asset": {
+                    "id": 39,
+                    "created_at": "2020-12-21T15:54:26.286Z",
+                    "updated_at": "2020-12-21T15:54:42.008Z",
+                    "created_by_id": 1,
+                    "last_modified_by_id": 1,
+                    "estimated_size": 54659,
+                    "lock": null,
+                    "lock_ttl": null,
+                    "version": 1,
+                    "file_processing": false,
+                    "team_id": 1,
+                    "file_image_quality": null,
+                    "view_mode": "thumbnail"
+                  },
+                  "asset_blob": {
+                    "id": 39,
+                    "key": "u6gy5ne9pt0wm6big1c2slkeuyjr",
+                    "filename": "ddCq-quantification_diagnostics-template.xls",
+                    "content_type": "application/vnd.ms-excel",
+                    "metadata": {
+                      "identified": true,
+                      "analyzed": true
+                    },
+                    "byte_size": 46592,
+                    "checksum": "HrK+ZS3L1R4zE0xexGWj+Q==",
+                    "created_at": "2020-12-21T15:54:26.298Z",
+                    "attachable_sgid": "BAh7CEkiCGdpZAY6BkVUSSI0Z2lkOi8vc2Npbm90ZS9BY3RpdmVTdG9yYWdlOjpCbG9iLzM5P2V4cGlyZXNfaW4GOwBUSSIMcHVycG9zZQY7AFRJIg9hdHRhY2hhYmxlBjsAVEkiD2V4cGlyZXNfYXQGOwBUMA==--15fcdb094b4112e277b50fa510aad875df6989d6"
+                  }
+                }
+              ],
+              "step_tables": [
+
+              ],
+              "tables": [
+
+              ]
+            }
+          ]
+        }
+      ],
+      "results": [
+
+      ]
+    }
+  ],
+  "my_module_groups": [
+    {
+      "id": 1,
+      "created_at": "2020-12-21T15:54:04.158Z",
+      "updated_at": "2020-12-21T15:54:04.158Z",
+      "created_by_id": null,
+      "experiment_id": 1
+    }
+  ]
+}

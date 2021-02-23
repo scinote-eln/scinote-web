@@ -7,10 +7,10 @@
 // - refresh project users tab after manage user modal is closed
 // - refactor view handling using library, ex. backbone.js
 
-/* global animateSpinner HelperModule dropdownSelector Sidebar Turbolinks */
+/* global HelperModule dropdownSelector Sidebar Turbolinks filterDropdown */
 
-(function() {
-  const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable'];
+var ProjectsIndex = (function() {
+  const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable', 'deletable'];
   var projectsWrapper = '#projectsWrapper';
   var toolbarWrapper = '#toolbarWrapper';
   var cardsWrapper = '#cardsWrapper';
@@ -94,6 +94,42 @@
         $(newProjectModal).on('hidden.bs.modal', function() {
           $(newProjectModal).remove();
         });
+      });
+  }
+
+  // init delete project folders
+  function initDeleteFoldersToolbarButton() {
+    $(projectsWrapper)
+      .on('ajax:before', '.delete-folders-btn', function() {
+        let buttonForm = $(this);
+        buttonForm.find('input[name="project_folders_ids[]"]').remove();
+        selectedProjectFolders.forEach(function(id) {
+          $('<input>').attr({
+            type: 'hidden',
+            name: 'project_folders_ids[]',
+            value: id
+          }).appendTo(buttonForm);
+        });
+      })
+      .on('ajax:success', '.delete-folders-btn', function(ev, data) {
+        // Add and show modal
+        let deleteModal = $(data.html);
+        $(projectsWrapper).append(deleteModal);
+        deleteModal.modal('show');
+        // Remove modal when it gets closed
+        deleteModal.on('hidden.bs.modal', function() {
+          $(this).remove();
+        });
+      });
+
+    $(projectsWrapper)
+      .on('ajax:success', '.delete-folders-form', function(ev, data) {
+        $('.modal-project-folder-delete').modal('hide');
+        HelperModule.flashAlertMsg(data.message, 'success');
+        refreshCurrentView();
+      })
+      .on('ajax:error', '.delete-folders-form', function(ev, data) {
+        HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
       });
   }
 
@@ -237,6 +273,19 @@
     });
   }
 
+  // Initialize view project users modal remote loading.
+  function initViewProjectUsersLink() {
+    $(projectsWrapper).on('ajax:success', '.view-project-users-link', function(e, data) {
+      let viewProjectUsersModal = $(data.html);
+      $(projectsWrapper).append(viewProjectUsersModal);
+      viewProjectUsersModal.modal('show');
+      // Remove modal when it gets closed
+      viewProjectUsersModal.on('hidden.bs.modal', function() {
+        viewProjectUsersModal.remove();
+      });
+    });
+  }
+
   // Initialize reloading manage user modal content after posting new
   // user.
   function initAddUserForm() {
@@ -312,12 +361,17 @@
         projectsToolbar.find('.single-object-action, .multiple-object-action').removeClass('hidden');
         if (selectedProjectFolders.length === 1) {
           projectsToolbar.find('.project-only-action').addClass('hidden');
+        } else {
+          projectsToolbar.find('.folders-only-action').addClass('hidden');
         }
       } else {
         projectsToolbar.find('.single-object-action').addClass('hidden');
         projectsToolbar.find('.multiple-object-action').removeClass('hidden');
         if (selectedProjectFolders.length > 0) {
           projectsToolbar.find('.project-only-action').addClass('hidden');
+        }
+        if (selectedProjects.length > 0) {
+          projectsToolbar.find('.folder-only-action').addClass('hidden');
         }
       }
       PERMISSIONS.forEach((permission) => {
@@ -485,6 +539,7 @@
       },
       success: function(data) {
         $('#breadcrumbsWrapper').html(data.breadcrumbs_html);
+        $(projectsWrapper).find('.projects-title').html(data.title);
         $(toolbarWrapper).html(data.toolbar_html);
         viewContainer.data('projects-cards-url', data.projects_cards_url);
         viewContainer.removeClass('no-results');
@@ -507,9 +562,9 @@
     let projectsPageSelector = '.projects-index';
 
     // list/cards switch
-    $(projectsPageSelector).on('click', '.projects-view-mode', function() {
+    $(projectsPageSelector).on('click', '.cards-switch', function() {
       let $btn = $(this);
-      $('.projects-view-mode').removeClass('active');
+      $('.cards-switch').removeClass('active');
       if ($btn.hasClass('view-switch-cards')) {
         $(cardsWrapper).removeClass('list');
       } else if ($btn.hasClass('view-switch-list')) {
@@ -539,62 +594,35 @@
     });
   }
 
-  function appliedFiltersMark() {
-    let filtersEnabled = projectsViewSearch
-      || createdOnFromFilter
-      || createdOnToFilter
-      || (membersFilter && membersFilter.length !== 0)
-      || lookInsideFolders
-      || archivedOnFromFilter
-      || archivedOnToFilter;
-    if (filtersEnabled) {
-      $('.filter-container').addClass('filters-applied');
-    } else {
-      $('.filter-container').removeClass('filters-applied');
+  function selectDate($field) {
+    var datePicker = $field.data('DateTimePicker');
+    if (datePicker && datePicker.date()) {
+      return datePicker.date()._d.toUTCString();
     }
+    return null;
   }
 
   function initProjectsFilters() {
-    function applyFilters() {
-      let teamId = $('.projects-filters').data('team-id');
-      projectsViewSearch = $('#textSearchFilterInput').closest('.select-block').find('input[type=text]').val();
-      try {
-        let storagePath = `project_filters_per_team/${teamId}/recent_search_keywords`;
-        let recentSearchKeywords = JSON.parse(localStorage.getItem(storagePath));
-        if (!Array.isArray(recentSearchKeywords)) recentSearchKeywords = [];
-        if (recentSearchKeywords.indexOf(projectsViewSearch) !== -1) {
-          recentSearchKeywords.splice(recentSearchKeywords.indexOf(projectsViewSearch), 1);
-        }
-        if (recentSearchKeywords.length > 4) {
-          recentSearchKeywords = recentSearchKeywords.slice(0, 4);
-        }
-        recentSearchKeywords.unshift(projectsViewSearch);
-        localStorage.setItem(storagePath, JSON.stringify(recentSearchKeywords));
-      } catch (error) {
-        console.error(error);
-      }
-
-      $('#applyProjectFiltersButton').closest('.dropdown').removeClass('open');
-
-      createdOnFromFilter = $createdOnFromFilter.val();
-      createdOnToFilter = $createdOnToFilter.val();
-      membersFilter = dropdownSelector.getValues($('.members-filter'));
-      lookInsideFolders = $foldersCB.prop('checked') ? 'true' : '';
-      archivedOnFromFilter = $archivedOnFromFilter.val();
-      archivedOnToFilter = $archivedOnToFilter.val();
-
-      appliedFiltersMark();
-      refreshCurrentView();
-    }
-
+    var $filterDropdown = filterDropdown.init();
     let $projectsFilter = $('.projects-index .projects-filters');
     let $membersFilter = $('.members-filter', $projectsFilter);
     let $foldersCB = $('#folder_search', $projectsFilter);
-    let $createdOnFromFilter = $('#createdOnFromDate', $projectsFilter);
-    let $createdOnToFilter = $('#createdOnToDate', $projectsFilter);
-    let $archivedOnFromFilter = $('#archivedOnFromDate', $projectsFilter);
-    let $archivedOnToFilter = $('#archivedOnToDate', $projectsFilter);
+    let $createdOnFromFilter = $('.created-on-filter .from-date', $projectsFilter);
+    let $createdOnToFilter = $('.created-on-filter .to-date', $projectsFilter);
+    let $archivedOnFromFilter = $('.archived-on-filter .from-date', $projectsFilter);
+    let $archivedOnToFilter = $('.archived-on-filter .to-date', $projectsFilter);
     let $textFilter = $('#textSearchFilterInput', $projectsFilter);
+
+    function appliedFiltersMark() {
+      let filtersEnabled = projectsViewSearch
+        || createdOnFromFilter
+        || createdOnToFilter
+        || (membersFilter && membersFilter.length !== 0)
+        || lookInsideFolders
+        || archivedOnFromFilter
+        || archivedOnToFilter;
+      filterDropdown.toggleFilterMark($filterDropdown, filtersEnabled);
+    }
 
     dropdownSelector.init($membersFilter, {
       optionClass: 'checkbox-icon users-dropdown-list',
@@ -608,66 +636,30 @@
       tagClass: 'users-dropdown-list'
     });
 
-    $textFilter.click((e) => {
-      e.stopPropagation();
-      $('#textSearchFilterHistory').toggle();
-      $textFilter.closest('.dropdown').toggleClass('open');
-    }).on('input', () => {
-      $('#textSearchFilterHistory').hide();
-      $textFilter.closest('.dropdown').removeClass('open');
-    });
-
-    $projectsFilter.on('click', '.projects-search-keyword', function(e) {
-      e.stopPropagation();
-      e.preventDefault();
-      $textFilter.val($(this).data('keyword'));
-      $('#textSearchFilterHistory').hide();
-      $textFilter.closest('.dropdown').removeClass('open');
-    });
-
     $projectsFilter.on('click', '#folderSearchInfoBtn', function(e) {
       e.stopPropagation();
       $('#folderSearchInfo').toggle();
     });
 
-    $('.project-filters-dropdown').on('show.bs.dropdown', function() {
-      let teamId = $projectsFilter.data('team-id');
-      $('#textSearchFilterHistory').find('li').remove();
-
-      try {
-        let storagePath = `project_filters_per_team/${teamId}/recent_search_keywords`;
-        let recentSearchKeywords = JSON.parse(localStorage.getItem(storagePath));
-        $.each(recentSearchKeywords, function(i, keyword) {
-          $('#textSearchFilterHistory').append($(
-            `<li class="dropdown-item">
-              <a class="projects-search-keyword" href="#" data-keyword="${keyword}">
-                <i class="fas fa-history"></i>
-                <span class="keyword-text">${keyword}</span>
-              </a>
-            </li>`
-          ));
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    }).on('hide.bs.dropdown', function() {
-      $('#textSearchFilterHistory').hide();
-      $textFilter.closest('.dropdown').removeClass('open');
-      $('#folderSearchInfo').hide();
-      applyFilters();
+    $projectsFilter.on('click', '#folder_search', function(e) {
+      e.stopPropagation();
     });
 
-    $('#applyProjectFiltersButton').click((e) => {
-      e.stopPropagation();
-      e.preventDefault();
-      applyFilters();
+    $filterDropdown.on('filter:apply', function() {
+      createdOnFromFilter = selectDate($createdOnFromFilter);
+      createdOnToFilter = selectDate($createdOnToFilter);
+      membersFilter = dropdownSelector.getValues($('.members-filter'));
+      lookInsideFolders = $foldersCB.prop('checked') ? 'true' : '';
+      archivedOnFromFilter = selectDate($archivedOnFromFilter);
+      archivedOnToFilter = selectDate($archivedOnToFilter);
+      projectsViewSearch = $textFilter.val();
+
+      appliedFiltersMark();
+      refreshCurrentView();
     });
 
     // Clear filters
-    $('.clear-button', $projectsFilter).click((e) => {
-      e.stopPropagation();
-      e.preventDefault();
-
+    $filterDropdown.on('filter:clear', function() {
       dropdownSelector.clearData($membersFilter);
       if ($createdOnFromFilter.data('DateTimePicker')) $createdOnFromFilter.data('DateTimePicker').clear();
       if ($createdOnToFilter.data('DateTimePicker')) $createdOnToFilter.data('DateTimePicker').clear();
@@ -678,15 +670,11 @@
     });
 
     // Prevent filter window close
-    $($projectsFilter).click((e) => {
-      if (!$(e.target).is('input,a')) {
-        e.stopPropagation();
-        e.preventDefault();
-        $('#textSearchFilterHistory').hide();
-        $textFilter.closest('.dropdown').removeClass('open');
-        dropdownSelector.closeDropdown($membersFilter);
-        $('#folderSearchInfo').hide();
-      }
+    $filterDropdown.on('filter:clickBody', function() {
+      $('#textSearchFilterHistory').hide();
+      $textFilter.closest('.dropdown').removeClass('open');
+      dropdownSelector.closeDropdown($membersFilter);
+      $('#folderSearchInfo').hide();
     });
   }
 
@@ -705,7 +693,9 @@
     initManageUsersModal();
     initExportProjectsModal();
     initExportProjects();
+    initDeleteFoldersToolbarButton();
     initArchiveRestoreToolbarButtons();
+    initViewProjectUsersLink();
     initManageProjectUsersLink();
     initAddUserForm();
     initRemoveUserLinks();
@@ -756,4 +746,8 @@
   }
 
   init();
+
+  return {
+    loadCardsView: loadCardsView
+  };
 }());

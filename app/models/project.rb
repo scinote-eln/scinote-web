@@ -2,6 +2,7 @@ class Project < ApplicationRecord
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
+  include ViewableModel
 
   enum visibility: { hidden: 0, visible: 1 }
 
@@ -148,6 +149,22 @@ class Project < ApplicationRecord
                   '(user_teams.user_id = :user_id AND user_teams.role = 2)',
                   user_id: user.id)
            .distinct
+  end
+
+  def default_view_state
+    {
+      experiments: {
+        active: { sort: 'new' },
+        archived: { sort: 'new' }
+      }
+    }
+  end
+
+  def validate_view_state(view_state)
+    if %w(new old atoz ztoa).exclude?(view_state.state.dig('experiments', 'active', 'sort')) ||
+       %w(new old atoz ztoa archived_new archived_old).exclude?(view_state.state.dig('experiments', 'archived', 'sort'))
+      view_state.errors.add(:state, :wrong_state)
+    end
   end
 
   def last_activities(count = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)

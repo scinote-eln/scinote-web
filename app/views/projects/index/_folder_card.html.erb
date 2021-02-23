@@ -4,8 +4,9 @@
      data-editable="<%= can_update_team?(current_team) %>"
      data-moveable="<%= can_update_team?(current_team) %>"
      data-archivable="false"
-     data-restorable="false">
-  <div class="checkbox-cell">
+     data-restorable="false"
+     data-deletable="<%= can_delete_project_folder?(folder) && can_update_team?(current_team) %>">
+  <div class="checkbox-cell table-cell">
     <div class="sci-checkbox-container">
       <input value="1" type="checkbox" class="sci-checkbox folder-card-selector">
       <span class="sci-checkbox-label"></span>
@@ -20,7 +21,7 @@
     <div class="icon-folder">
       <i class="fas fa-folder"></i>
     </div>
-    <div class="name" title="<%= folder.name %>">
+    <div class="name table-cell" title="<%= folder.name %>">
       <%= folder.name %>
     </div>
   <% end %>

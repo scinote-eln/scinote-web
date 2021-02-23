@@ -2,7 +2,7 @@
   <% if record[:project] %>
     <li class="sidebar-leaf">
       <% if record[:project].archived? %>
-        <%= link_to record[:project].name, experiment_archive_project_url(record[:project]), class: 'sidebar-link' %>
+        <%= link_to record[:project].name, project_url(record[:project], view_mode: :archived), class: 'sidebar-link' %>
       <% else %>
         <%= link_to record[:project].name, project_url(record[:project]), class: 'sidebar-link' %>
       <% end %>

@@ -66,6 +66,8 @@ class Constants
   ATWHO_REP_NAME_LIMIT = 16
   # Results limited query/display elements for pages
   RESULTS_PER_PAGE_LIMIT = 10
+  #Experiments more button appears
+  EXPERIMENT_LONG_DESCRIPTION = 80
 
   #=============================================================================
   # File and data memory size
@@ -201,7 +203,7 @@ class Constants
 
   HTTP = 'http://'.freeze
   TUTORIALS_URL = (HTTP + 'goo.gl/YH3fXA').freeze
-  SUPPORT_URL = (HTTP + 'goo.gl/Jb9WXx').freeze
+  SUPPORT_URL = 'https://scinote-3850750.hs-sites.com/en/knowledge'.freeze
   # Default user picture avatar
   DEFAULT_AVATAR_URL = '/images/:style/missing.png'.freeze
 

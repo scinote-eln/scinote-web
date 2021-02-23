@@ -129,7 +129,7 @@ module Api
       end
 
       def create_blob_from_params
-        blob = ActiveStorage::Blob.create_after_upload!(
+        blob = ActiveStorage::Blob.create_and_upload!(
           io: StringIO.new(Base64.decode64(result_file_params[:file_data])),
           filename: result_file_params[:file_name],
           content_type: result_file_params[:file_type]

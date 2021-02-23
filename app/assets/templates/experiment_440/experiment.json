@@ -88,7 +88,7 @@
               "step": {
                 "id": 4533,
                 "name": "Examine the plates",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the guidelines bellow. </p></body></html>",
+                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the guidelines below. </p></body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -863,7 +863,7 @@
               "step": {
                 "id": 5495,
                 "name": "Slide test",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the guidelines bellow. </p></body></html>",
+                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the guidelines below. </p></body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -1020,7 +1020,7 @@
               "step": {
                 "id": 5492,
                 "name": "Oxidase test",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the guidelines bellow: </p></body></html>",
+                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the guidelines below: </p></body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -1604,7 +1604,7 @@
               "step": {
                 "id": 5475,
                 "name": "Reagents",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Reagents bellow can be made or purchased.<br><strong><br>Crystal Violet Staining Reagent:<br></strong><span style=\"text-decoration: underline;\"><br>Solution A for crystal violet staining reagent</span></p>\n<ul>\n<li>Crystal violet (certified 90% dye content), 2g </li>\n<li>Ethanol, 95% (vol/vol), 20 mL</li>\n</ul>\n<span style=\"text-decoration: underline;\">Solution B for crystal violet staining reagent<br></span>\n<ul>\n<li>Ammonium oxalate, 0.8 g</li>\n<li>Distilled water, 80 mL</li>\n</ul>\nMix A and B to obtain crystal violet staining reagent. Store for<strong> 24 h</strong> and filter through paper prior to use.<br><br><strong>Gram's Iodine:<br></strong><br>\n<ul>\n<li>Iodine, 1.0 g</li>\n<li>Potassium iodide, 2.0 g</li>\n<li>Distilled water, 300 mL</li>\n</ul>\nGrind the iodine and potassium iodide in a mortar and add water slowly with continuous grinding until the iodine is dissolved. Store in amber bottles.<br><br><strong>Safranin:<br><br></strong><span style=\"text-decoration-line: underline;\">Stock solution:</span><br>\n<ul>\n<li>2.5g Safranin O</li>\n<li>100 ml 95% Ethanol</li>\n</ul>\n<p><span style=\"text-decoration: underline;\">Working Solution:</span></p>\n<ul>\n<li>10 mL Stock Solution </li>\n<li>90 mL Distilled water</li>\n</ul>\n</body></html>",
+                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Reagents below can be made or purchased.<br><strong><br>Crystal Violet Staining Reagent:<br></strong><span style=\"text-decoration: underline;\"><br>Solution A for crystal violet staining reagent</span></p>\n<ul>\n<li>Crystal violet (certified 90% dye content), 2g </li>\n<li>Ethanol, 95% (vol/vol), 20 mL</li>\n</ul>\n<span style=\"text-decoration: underline;\">Solution B for crystal violet staining reagent<br></span>\n<ul>\n<li>Ammonium oxalate, 0.8 g</li>\n<li>Distilled water, 80 mL</li>\n</ul>\nMix A and B to obtain crystal violet staining reagent. Store for<strong> 24 h</strong> and filter through paper prior to use.<br><br><strong>Gram's Iodine:<br></strong><br>\n<ul>\n<li>Iodine, 1.0 g</li>\n<li>Potassium iodide, 2.0 g</li>\n<li>Distilled water, 300 mL</li>\n</ul>\nGrind the iodine and potassium iodide in a mortar and add water slowly with continuous grinding until the iodine is dissolved. Store in amber bottles.<br><br><strong>Safranin:<br><br></strong><span style=\"text-decoration-line: underline;\">Stock solution:</span><br>\n<ul>\n<li>2.5g Safranin O</li>\n<li>100 ml 95% Ethanol</li>\n</ul>\n<p><span style=\"text-decoration: underline;\">Working Solution:</span></p>\n<ul>\n<li>10 mL Stock Solution </li>\n<li>90 mL Distilled water</li>\n</ul>\n</body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,

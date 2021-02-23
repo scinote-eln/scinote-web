@@ -43,8 +43,6 @@ class Team < ApplicationRecord
   has_many :shared_repositories, through: :team_repositories, source: :repository
 
   attr_accessor :without_templates
-  attr_accessor :without_intro_demo
-  after_create :generate_intro_demo
 
   def default_view_state
     {
@@ -167,16 +165,5 @@ class Team < ApplicationRecord
   def generate_template_project
     return if without_templates
     TemplatesService.new.delay(queue: :templates).update_team(self)
-  end
-
-  include FirstTimeDataGenerator
-
-  def generate_intro_demo
-    return if without_intro_demo
-
-    user = User.find(created_by_id)
-    if user.created_teams.order(:created_at).first == self
-      seed_demo_data(user, self)
-    end
   end
 end

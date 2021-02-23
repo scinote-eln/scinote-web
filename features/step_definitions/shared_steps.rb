@@ -85,12 +85,11 @@ Given(/^the "([^"]*)" team exists$/) do |team_name|
   FactoryBot.create(:team, name: team_name)
 end
 
-Given(/^Demo project exists for the "([^"]*)" team$/) do |team_name|
+Given(/^Templates project exists for the "([^"]*)" team$/) do |team_name|
   team = Team.find_by(name: team_name)
   user = team.user_teams.where(role: :admin).take.user
-  seed_demo_data(user, team)
+  TemplatesService.new.schedule_creation_for_user(user)
 end
-
 Given(/^I'm on the projects page of "([^"]*)" team$/) do |team_name|
   team = Team.find_by(name: team_name)
   @current_user.update(current_team_id: team.id)
@@ -238,5 +237,3 @@ Then('I delete downloaded file {string}') do |file_name|
   sleep 3
   FileUtils.rm_f(Rails.root.join(file_name))
 end
-
-

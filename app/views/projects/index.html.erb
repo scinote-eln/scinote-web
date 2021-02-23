@@ -6,12 +6,8 @@
   <%= render partial: 'shared/sidebar/projects', locals: { team: current_team, sort: nil, view_mode: projects_view_mode } if current_team %>
 <% end %>
 
-<% content_for :breadcrumbs do %>
-  <%= render partial: 'projects/index/breadcrumbs' if current_folder %>
-<% end %>
-
 <div id="projectsWrapper" class="content-pane flexible projects-index <%= projects_view_mode %>" data-view-mode="<%= projects_view_mode %>">
-  <%= render partial: 'projects/index/header' %>
+  <%= render partial: 'projects/index/header', locals: { current_folder: current_folder} %>
 
   <span style="display: none;" data-hook="projects-index-html"></span>
 
@@ -21,9 +17,7 @@
   <%= render partial: 'projects/index/modals/export_projects' %>
 
   <div class="projects-container">
-    <div id="toolbarWrapper">
-    </div>
-    <div class="cards-wrapper" id="cardsWrapper" data-projects-cards-url="<%= current_folder ? project_folder_cards_url(current_folder) : cards_projects_url %>">
+    <div class="cards-wrapper" id="cardsWrapper" data-projects-cards-url="<%= @current_folder ? project_folder_cards_url(@current_folder) : cards_projects_url %>">
       <div class="table-header">
         <div class="table-header-cell select-all-checkboxes">
           <div class="sci-checkbox-container">

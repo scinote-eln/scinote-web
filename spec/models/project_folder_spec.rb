@@ -37,7 +37,8 @@ describe ProjectFolder, type: :model do
                          .is_at_most(Constants::NAME_MAX_LENGTH))
       end
       it do
-        expect(project_folder).to validate_uniqueness_of(:name).scoped_to(%i(team_id parent_folder_id)).case_insensitive
+        expect(project_folder)
+          .to validate_uniqueness_of(:name).scoped_to(%i(team_id parent_folder_id archived)).case_insensitive
       end
     end
 

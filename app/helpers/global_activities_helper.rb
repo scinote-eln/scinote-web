@@ -12,7 +12,7 @@ module GlobalActivitiesHelper
         if value.is_a? String
           value
         elsif value['type'] == 'Time' # use saved date for printing
-          l(Time.at(value['value']), format: :full)
+          I18n.l(Time.zone.at(value['value']), format: :full)
         else
           no_links ? generate_name(value) : generate_link(value, activity)
         end
@@ -63,7 +63,7 @@ module GlobalActivitiesHelper
     when Experiment
       return current_value unless obj.navigable?
 
-      path = obj.archived? ? experiment_archive_project_path(obj.project) : canvas_experiment_path(obj)
+      path = obj.archived? ? project_path(obj.project, view_mode: :archived) : canvas_experiment_path(obj)
     when MyModule
       return current_value unless obj.navigable?
 
