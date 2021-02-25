@@ -11,7 +11,7 @@ module GenerateNotificationModel
   def generate_notification_from_activity
     return if notification_recipients.none?
 
-    message = generate_activity_content(self, true, true)
+    message = generate_activity_content(self, no_links: true, no_sanitization: true)
     description = generate_notification_description_elements(subject).reverse.join(' | ')
 
     notification = Notification.create(
@@ -58,10 +58,10 @@ module GenerateNotificationModel
     case object
     when Project
       path = Rails.application.routes.url_helpers.project_path(object)
-      elements << "Project: <a href='#{path}'>#{object.name}</a>"
+      elements << "#{I18n.t('search.index.project')} <a href='#{path}'>#{object.name}</a>"
     when Experiment
       path = Rails.application.routes.url_helpers.canvas_experiment_path(object)
-      elements << "Experiment: <a href='#{path}'>#{object.name}</a>"
+      elements << "#{I18n.t('search.index.experiment')} <a href='#{path}'>#{object.name}</a>"
       generate_notification_description_elements(object.project, elements)
     when MyModule
       path = if object.archived?
@@ -69,12 +69,12 @@ module GenerateNotificationModel
              else
                Rails.application.routes.url_helpers.protocols_my_module_path(object)
              end
-      elements << "Task: <a href='#{path}'>#{object.name}</a>"
+      elements << "#{I18n.t('search.index.module')} <a href='#{path}'>#{object.name}</a>"
       generate_notification_description_elements(object.experiment, elements)
     when Protocol
       if object.in_repository?
         path = Rails.application.routes.url_helpers.protocols_path(team: object.team.id)
-        elements << "Protocol: <a href='#{path}'>#{object.name}</a>"
+        elements << "#{I18n.t('search.index.protocol')} <a href='#{path}'>#{object.name}</a>"
         generate_notification_description_elements(object.team, elements)
       else
         generate_notification_description_elements(object.my_module, elements)
@@ -83,14 +83,14 @@ module GenerateNotificationModel
       generate_notification_description_elements(object.my_module, elements)
     when Repository
       path = Rails.application.routes.url_helpers.repository_path(object, team: object.team.id)
-      elements << "Repository: <a href='#{path}'>#{object.name}</a>"
+      elements << "#{I18n.t('search.index.repository')} <a href='#{path}'>#{object.name}</a>"
       generate_notification_description_elements(object.team, elements)
     when Team
       path = Rails.application.routes.url_helpers.projects_path(team: object.id)
-      elements << "Team: <a href='#{path}'>#{object.name}</a>"
+      elements << "#{I18n.t('search.index.team')} <a href='#{path}'>#{object.name}</a>"
     when Report
       path = Rails.application.routes.url_helpers.reports_path(team: object.team.id)
-      elements << "Report: <a href='#{path}'>#{object.name}</a>"
+      elements << "#{I18n.t('search.index.report')} <a href='#{path}'>#{object.name}</a>"
       generate_notification_description_elements(object.team, elements)
     when ProjectFolder
       generate_notification_description_elements(object.team, elements)
@@ -99,12 +99,14 @@ module GenerateNotificationModel
     elements
   end
 
-  def generate_notification
-    CreateNotificationFromActivityJob.perform_later(self) if notifiable?
-  end
-
   def notifiable?
     # send notifications for all activity types for now
     true
+  end
+
+  private
+
+  def generate_notification
+    CreateNotificationFromActivityJob.perform_later(self) if notifiable?
   end
 end
