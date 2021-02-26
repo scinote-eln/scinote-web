@@ -16,9 +16,9 @@ class TeamUsersDatatable < CustomDatatable
     @sortable_columns ||= [
       'User.full_name',
       'User.email',
-      'UserTeam.created_at',
+      'UserTeam.role',
       'User.confirmed_at',
-      'UserTeam.role'
+      'User.confirmed_at',
     ]
   end
 
