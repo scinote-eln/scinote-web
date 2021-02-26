@@ -205,12 +205,13 @@ describe ProjectsController, type: :controller do
     context 'in HTML format' do
       let(:params) do
         { id: project_1.id,
+          view_mode: :archived,
           project: { name: 'test project A1', team_id: team.id,
                      visibility: 'visible' } }
       end
 
       it 'returns success response' do
-        get :experiment_archive, params: params
+        get :show, params: params
         expect(response).to have_http_status(:success)
         expect(response.media_type).to eq 'text/html'
       end
