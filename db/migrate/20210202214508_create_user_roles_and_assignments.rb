@@ -6,8 +6,8 @@ class CreateUserRolesAndAssignments < ActiveRecord::Migration[6.1]
       t.string :name
       t.boolean :predefined, default: false
       t.string :permissions, array: true, default: []
-      t.references :created_by, foreign_key: { to_table: :users }, null: false
-      t.references :last_modified_by, foreign_key: { to_table: :users }, null: false
+      t.references :created_by, foreign_key: { to_table: :users }, null: true
+      t.references :last_modified_by, foreign_key: { to_table: :users }, null: true
 
       t.timestamps
     end
@@ -16,7 +16,7 @@ class CreateUserRolesAndAssignments < ActiveRecord::Migration[6.1]
       t.references :assignable, polymorphic: true, null: false
       t.references :user, foreign_key: true, null: false
       t.references :user_role, foreign_key: true, null: false
-      t.references :assigned_by, foreign_key: { to_table: :users }, null: false
+      t.references :assigned_by, foreign_key: { to_table: :users }, null: true
 
       t.timestamps
     end

@@ -19,7 +19,9 @@ class UserRole < ApplicationRecord
   def self.owner_role
     new(
       name: I18n.t('user_roles.predefined.owner'),
-      permissions: ProjectPermissions.constants + ExperimentPermissions.constants + MyModulePermissions.constants,
+      permissions: ProjectPermissions.constants.map { |const| ProjectPermissions.const_get(const) } +
+                   ExperimentPermissions.constants.map { |const| ExperimentPermissions.const_get(const) } +
+                   MyModulePermissions.constants.map { |const| MyModulePermissions.const_get(const) },
       predefined: true
     )
   end
@@ -76,7 +78,8 @@ class UserRole < ApplicationRecord
         ProjectPermissions::READ,
         ExperimentPermissions::READ,
         MyModulePermissions::READ
-      ]
+      ],
+      predefined: true
     )
   end
 
