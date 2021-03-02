@@ -308,7 +308,7 @@ class Constants
   PREVIEWABLE_FILE_TYPES = TEXT_EXTRACT_FILE_TYPES
 
   WHITELISTED_IMAGE_TYPES = [
-    'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp', 'tiff'
+    'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp', 'tiff', 'jpg'
   ].freeze
 
   WHITELISTED_IMAGE_TYPES_EDITABLE = %w(
