@@ -1,10 +1,10 @@
 <div class="ga-breadcrumb">
   <span class="fas fa-users"></span>
-  <% if subject %>
-    <%= route_to_other_team projects_path(team: subject.id),
-                            subject,
-                            subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
-                            title: subject.name %>
+  <% if team %>
+    <%= route_to_other_team projects_path(team: team.id),
+                            team,
+                            team.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
+                            title: team.name %>
   <% else %>
     <span title="<%= breadcrumbs['team'] %>">
       <%= breadcrumbs['team']&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
