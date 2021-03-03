@@ -33,9 +33,10 @@ module Experiments
         end
 
         @exp.save!
+      rescue
+        @errors.merge!(@exp.errors.to_hash) unless @exp.valid?
+        raise ActiveRecord::Rollback
       end
-
-      @errors.merge!(@exp.errors.to_hash) unless @exp.valid?
 
       track_activity if succeed?
       self

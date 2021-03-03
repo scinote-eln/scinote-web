@@ -471,6 +471,8 @@ class Experiment < ApplicationRecord
     x_diff = my_modules.active.pluck(:x).min
     y_diff = my_modules.active.pluck(:y).min
 
+    return unless x_diff && y_diff
+
     moving_direction = {
       x: x_diff.positive? ? :asc : :desc,
       y: y_diff.positive? ? :asc : :desc
