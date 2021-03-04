@@ -320,6 +320,10 @@ a[data-toggle="tooltip"] {
     .open > a:focus {
       background-color: $color-white;
     }
+
+    &.with-breadcrumbs {
+      padding-top: 0;
+    }
   }
 
   .nav-name {

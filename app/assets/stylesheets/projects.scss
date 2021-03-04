@@ -466,6 +466,13 @@ li.module-hover {
     @include font-small;
     padding: .75em 0;
   }
+
+  &.breadcrumbs-in-secondary-navigation {
+    .projects-breadcrumbs {
+      margin-left: 3em;
+      padding-bottom: 0;
+    }
+  }
 }
 
 .projects-index {

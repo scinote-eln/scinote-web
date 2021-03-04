@@ -6,6 +6,9 @@ class MyModulesController < ApplicationController
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
 
+  # attr_reader :current_folder
+  # helper_method :current_folder
+
   before_action :load_vars, except: %i(restore_group)
   before_action :check_archive_permissions, only: %i(update)
   before_action :check_manage_permissions, only: %i(description due_date update_description update_protocol_description)
@@ -307,6 +310,10 @@ class MyModulesController < ApplicationController
       render_404
     end
   end
+
+  # def load_current_folder
+  #   @current_folder = @my_module.experiment.project.project_folder
+  # end
 
   def check_manage_permissions
     render_403 && return unless can_manage_module?(@my_module)

@@ -1,7 +1,10 @@
-<% target_folder ||= current_folder %>
+<% target_folder ||= nil %>
+<% experiment ||= nil %>
+<% project ||= nil %>
+
 <div class="projects-breadcrumbs">
   <%= link_to(t('projects.index.breadcrumbs_root'),
-              projects_path(view_mode: projects_view_mode),
+              projects_path(view_mode: projects_view_mode(project: project)),
               class: 'project-folder-link',
               data: { projects_cards_url: cards_projects_url,
                       sidebar_url: sidebar_team_path(current_team) }) %>
@@ -14,6 +17,16 @@
                         sidebar_url: sidebar_team_path(current_team, project_folder_id: project_folder.id),
                       }
                 ) %>
+    <span>/</span>
+  <% end %>
+
+  <% if project %>
+    <%= link_to(project.name, project_path(project), class: 'project-folder-link') %>
+    <span>/</span>
+  <% end %>
+
+  <% if experiment %>
+    <%= link_to(experiment.name, canvas_experiment_path(experiment), class: 'project-folder-link') %>
     <span>/</span>
   <% end %>
 </div>
