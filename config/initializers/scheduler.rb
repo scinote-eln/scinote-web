@@ -4,9 +4,9 @@ require 'rufus-scheduler'
 
 scheduler = Rufus::Scheduler.singleton
 
-if ENV['ENABLE_TEMPLATES_SYNC'] && ARGV[0] == 'jobs:work'
+if ENV['ENABLE_TEMPLATES_SYNC']
   # Templates sync periodic task
-  scheduler.every '1h' do
+  scheduler.every '12h' do
     Rails.logger.info('Templates, syncing all template projects')
     updated, total = TemplatesService.new.update_all_templates
     Rails.logger.info(
@@ -17,11 +17,10 @@ if ENV['ENABLE_TEMPLATES_SYNC'] && ARGV[0] == 'jobs:work'
 end
 
 if Rails.application.secrets.system_notifications_uri.present? &&
-   Rails.application.secrets.system_notifications_channel.present? &&
-   ARGV[0] == 'jobs:work'
+   Rails.application.secrets.system_notifications_channel.present?
 
   # System notifications periodic task
-  scheduler.every '5m' do
+  scheduler.every '1h' do
     Rails.logger.info('System Notifications syncing')
     Rails.logger.info(Process.pid)
     result = Notifications::SyncSystemNotificationsService.call
