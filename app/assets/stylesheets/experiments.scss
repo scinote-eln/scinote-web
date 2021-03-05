@@ -93,6 +93,8 @@
 
             a {
               color: inherit;
+              display: inline-block;
+              line-height: 21px;
             }
           }
 
@@ -126,6 +128,7 @@
           }
 
           .progress {
+            box-shadow: none;
             height: 4px;
             margin-bottom: 0;
             width: 100%;
