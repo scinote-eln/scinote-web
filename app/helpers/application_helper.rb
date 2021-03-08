@@ -202,6 +202,13 @@ module ApplicationHelper
       return user.convert_variant_to_base64(avatar_link) if base64_encoded_imgs
 
       avatar_link.processed.service_url(expires_in: Constants::URL_LONG_EXPIRE_TIME)
+    elsif base64_encoded_imgs
+      file_path = Rails.root.join('app', 'assets', *avatar_link.split('/'))
+      encoded_data =
+        File.open(file_path) do |file|
+          Base64.strict_encode64(file.read)
+        end
+      "data:#{avatar_link.split('.').last};base64,#{encoded_data}"
     else
       avatar_link
     end
