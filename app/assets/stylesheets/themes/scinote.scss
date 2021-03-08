@@ -322,13 +322,12 @@ a[data-toggle="tooltip"] {
     }
 
     &.with-breadcrumbs {
-      padding-top: 0;
+      padding-top: .5em;
     }
   }
 
   .nav-name {
     align-items: center;
-    display: flex;
     height: 54px;
     line-height: 44px;
     margin: 0;
