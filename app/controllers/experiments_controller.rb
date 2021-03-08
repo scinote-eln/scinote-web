@@ -7,9 +7,6 @@ class ExperimentsController < ApplicationController
   include ApplicationHelper
   include Rails.application.routes.url_helpers
 
-  # attr_reader :current_folder
-  # helper_method :current_folder
-
   before_action :load_project, only: %i(new create archive_group restore_group)
   before_action :load_experiment, except: %i(new create archive_group restore_group)
   before_action :check_view_permissions, except: %i(edit archive clone move new create archive_group restore_group)
@@ -19,7 +16,6 @@ class ExperimentsController < ApplicationController
   before_action :check_clone_permissions, only: %i(clone_modal clone)
   before_action :check_move_permissions, only: %i(move_modal move)
   before_action :set_inline_name_editing, only: %i(canvas module_archive)
-  # before_action :load_current_folder, only: %i(canvas module_archive)
 
   layout 'fluid'
 
@@ -304,10 +300,6 @@ class ExperimentsController < ApplicationController
     @project = Project.find_by(id: params[:project_id])
     render_404 unless @project
   end
-
-  # def load_current_folder
-  #   @current_folder = @experiment.project.project_folder
-  # end
 
   def experiment_params
     params.require(:experiment).permit(:name, :description, :archived)
