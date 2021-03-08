@@ -3,12 +3,12 @@
 class AssetsController < ApplicationController
   include WopiUtil
   include AssetsActions
-  # include ActionView::Helpers
   include ActiveStorage::SetCurrent
   include ActionView::Helpers::AssetTagHelper
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::UrlHelper
   include ActionView::Context
+  include ActiveStorageFileUtil
   include ApplicationHelper
   include InputSanitizeHelper
   include FileIconsHelper
@@ -84,6 +84,13 @@ class AssetsController < ApplicationController
     @ttl = (tkn.ttl * 1000).to_s
 
     render layout: false
+  end
+
+  def pdf_preview
+    return render plain: '', status: :not_acceptable unless previewable_document?(@asset.blob)
+    return render plain: '', status: :accepted unless @asset.pdf_preview_ready?
+
+    redirect_to @asset.file_pdf_preview.service_url
   end
 
   def create_start_edit_image_activity

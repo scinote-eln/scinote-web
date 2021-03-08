@@ -26,6 +26,8 @@
   </div>
   <% if wopi_enabled? && wopi_file?(asset) %>
     <div class="iframe-placeholder" data-iframe-url="<%= asset.get_action_url(current_user, 'embedview') %>"></div>
+  <% elsif asset.pdf_previewable? %>
+    <%= render partial: 'shared/pdf_viewer.html.erb', locals: { asset: asset } %>
   <% elsif asset.previewable? %>
     <div class="image-container">
       <%= image_tag asset.large_preview,
