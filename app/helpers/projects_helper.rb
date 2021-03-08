@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 module ProjectsHelper
-  def projects_view_mode
+  def projects_view_mode(project: nil)
+    return (project.archived? ? 'archived' : 'active') if project
+
     return 'archived' if current_folder&.archived?
 
     params[:view_mode] == 'archived' ? 'archived' : 'active'

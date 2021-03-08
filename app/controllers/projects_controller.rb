@@ -44,10 +44,20 @@ class ProjectsController < ApplicationController
         )
       }
     else
+      if current_folder
+        breadcrumbs_html = render_to_string(partial: 'projects/index/breadcrumbs.html.erb',
+                                            locals: { target_folder: current_folder })
+        projects_cards_url = project_folder_cards_url(current_folder)
+        title = current_folder.name
+      else
+        breadcrumbs_html = ''
+        projects_cards_url = cards_projects_url
+      end
+
       render json: {
-        projects_cards_url: current_folder ? project_folder_cards_url(current_folder) : cards_projects_url,
-        breadcrumbs_html: current_folder ? render_to_string(partial: 'projects/index/breadcrumbs.html.erb') : '',
-        title: current_folder ? current_folder&.name : title,
+        projects_cards_url: projects_cards_url,
+        breadcrumbs_html: breadcrumbs_html,
+        title: title,
         toolbar_html: render_to_string(partial: 'projects/index/toolbar.html.erb'),
         cards_html: render_to_string(
           partial: 'projects/index/team_projects.html.erb',

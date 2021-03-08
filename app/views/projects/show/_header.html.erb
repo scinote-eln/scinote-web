@@ -1,6 +1,6 @@
 <div class="content-header sticky-header">
   <div id="breadcrumbsWrapper">
-    <%= render partial: 'projects/index/breadcrumbs', locals: { target_folder: @project.project_folder } %>
+    <%= render partial: 'projects/index/breadcrumbs', locals: { target_folder: @project.project_folder, project: @project } %>
   </div>
   <div class="title-row">
     <h1 class="project-name">
