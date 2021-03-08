@@ -11,6 +11,7 @@
   <% my_modules.each do |my_module| %>
     <li class="sidebar-leaf">
       <%= link_to my_module.name,
+                  title: my_module.name,
                   protocols_my_module_url(my_module),
                   class: 'sidebar-link',
                   data: { module_id: my_module.id } %>

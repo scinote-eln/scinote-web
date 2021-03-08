@@ -2,9 +2,9 @@
   <% if record[:project] %>
     <li class="sidebar-leaf">
       <% if record[:project].archived? %>
-        <%= link_to record[:project].name, project_url(record[:project], view_mode: :archived), class: 'sidebar-link' %>
+        <%= link_to record[:project].name, project_url(record[:project], view_mode: :archived), title: record[:project].name, class: 'sidebar-link' %>
       <% else %>
-        <%= link_to record[:project].name, project_url(record[:project]), class: 'sidebar-link' %>
+        <%= link_to record[:project].name, project_url(record[:project]), title: record[:project].name, class: 'sidebar-link' %>
       <% end %>
     </li>
   <% else %>
@@ -14,6 +14,7 @@
       <% end %>
       <%= link_to project_folder_path(record[:folder]),
           class: "sidebar-link project-folder-link folder #{'selected' if current_folder == record[:folder]}",
+          title: record[:folder].name,
           data: {
             sidebar_url: sidebar_team_path(current_team, project_folder_id: record[:folder].id),
             projects_cards_url: project_folder_cards_url(record[:folder])
