@@ -140,8 +140,7 @@ describe RepositoriesController, type: :controller do
     end
 
     it 'adds activity in DB' do
-      ImportRepository::ImportRecords.any_instance.stub(:import!)
-                                     .and_return(status: :ok)
+      allow_any_instance_of(ImportRepository::ImportRecords).to receive(:import!).and_return(status: :ok)
 
       expect { action }
         .to(change { Activity.count })

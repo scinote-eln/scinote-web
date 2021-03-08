@@ -5,7 +5,6 @@
 
 .dashboard-container .calendar-widget {
   --calendar-day-size: 32px;
-  min-height: 320px;
 
   .dashboard-calendar {
     height: 100%;
@@ -40,9 +39,9 @@
       flex-basis: calc(100% - 42px);
       flex-grow: 1;
       grid-column-gap: 6px;
-      grid-row-gap: 6px;
+      grid-row-gap: 2px;
       grid-template-columns: repeat(7, 1fr);
-      grid-template-rows: repeat(7, 1fr);
+      grid-template-rows: repeat(auto-fit, minmax(1em, 1fr));
       justify-items: center;
       padding: 6px;
 
@@ -86,16 +85,10 @@
             }
           }
 
-
           &::after {
-            background: $brand-danger;
-            border-radius: 50%;
-            content: "";
-            height: 4px;
-            left: calc((var(--calendar-day-size) / 2) - 2px);
-            position: absolute;
-            top: calc((var(--calendar-day-size) / 2) + 8px);
-            width: 4px;
+            @include red-dot;
+            right: calc((var(--calendar-day-size) / 2) - 4px);
+            top: calc((var(--calendar-day-size) / 2) + 6px);
           }
         }
 
@@ -104,8 +97,8 @@
 
           &.event {
             &::after {
-              left: 13px;
-              top: 23px;
+              left: 12px;
+              top: 21px;
             }
           }
         }

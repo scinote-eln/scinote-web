@@ -201,7 +201,7 @@ class CanvasController < ApplicationController
       end
     end
 
-    @my_modules = @experiment.active_modules
+    @my_modules = @experiment.my_modules.active
   end
 
   def check_edit_canvas

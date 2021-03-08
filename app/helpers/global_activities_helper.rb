@@ -12,7 +12,7 @@ module GlobalActivitiesHelper
         if value.is_a? String
           value
         elsif value['type'] == 'Time' # use saved date for printing
-          l(Time.at(value['value']), format: :full)
+          I18n.l(Time.zone.at(value['value']), format: :full)
         else
           no_links ? generate_name(value) : generate_link(value, activity)
         end
@@ -28,7 +28,12 @@ module GlobalActivitiesHelper
   end
 
   def generate_link(message_item, activity)
-    obj = message_item['type'].constantize.find_by_id(message_item['id'])
+    obj = if message_item['id']
+            message_item['type'].constantize.find_by(id: message_item['id'])
+          else
+            message_item['type'].constantize.new
+          end
+
     return message_item['value'] unless obj
 
     current_value = generate_name(message_item)
@@ -58,7 +63,7 @@ module GlobalActivitiesHelper
     when Experiment
       return current_value unless obj.navigable?
 
-      path = obj.archived? ? experiment_archive_project_path(obj.project) : canvas_experiment_path(obj)
+      path = obj.archived? ? project_path(obj.project, view_mode: :archived) : canvas_experiment_path(obj)
     when MyModule
       return current_value unless obj.navigable?
 
@@ -87,6 +92,12 @@ module GlobalActivitiesHelper
       return current_value
     when Report
       path = reports_path(team: obj.team.id)
+    when ProjectFolder
+      path = if obj.new_record?
+               projects_path(team: activity.team.id)
+             else
+               project_folder_path(obj, team: obj.team.id)
+             end
     else
       return current_value
     end
@@ -94,7 +105,14 @@ module GlobalActivitiesHelper
   end
 
   def generate_name(message_item)
-    obj = message_item['type'].constantize.find_by_id(message_item['id'])
+    obj = if message_item['id']
+            message_item['type'].constantize.find_by(id: message_item['id'])
+          else
+            message_item['type'].constantize.new
+          end
+
+    return I18n.t('projects.index.breadcrumbs_root') if obj.is_a?(ProjectFolder) && obj.new_record?
+
     return message_item['value'] unless obj
 
     value = obj.public_send(message_item['value_for'] || 'name')

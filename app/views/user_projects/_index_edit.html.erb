@@ -16,16 +16,17 @@
         </span>
       </div>
 
-      <div class="col-xs-10 col-sm-4" style="line-height: 15px">
+      <div class="col-xs-10 col-sm-4">
         <span><%= user.full_name %></span>
-        <br><span class="text-muted"><%= t('user_projects.enums.role.'<< user_project.role) %></span>
+        <br>
+        <small class="text-muted"><%= t('user_projects.enums.role.'<< user_project.role) %></small>
       </div>
 
       <% unless user.id == current_user.id %>
       <div class="visible-xs">&nbsp;</div>
       <div class="col-xs-7 col-xs-offset-2 col-sm-4 col-sm-offset-0">
         <%= form_for user_project,
-                     url: project_user_project_path(@project, user_project.id),
+                     url: project_user_path(@project, user_project.id),
                      format: :json,
                      method: 'put',
                      remote: true,
@@ -43,7 +44,7 @@
         <% end %>
       </div>
       <div class="col-xs-3 col-sm-2">
-        <%= link_to project_user_project_path(@project, user_project, format: :json), method: :delete, remote: true, class: 'btn btn-link remove-user-link' do %>
+        <%= link_to project_user_path(@project, user_project, format: :json), method: :delete, remote: true, class: 'btn btn-link remove-user-link' do %>
         <span class="fas fa-times"></span>
         <% end %>
       </div>
@@ -58,10 +59,9 @@
   <li>
     <hr>
     <div class="row">
-    <%= bootstrap_form_for [@project, @new_user_project], remote: true, format: :json, html: { class: 'add-user-form' } do |f| %>
-      <%= hidden_field_tag :project_id, @project.id %>
+    <%= bootstrap_form_for [@project, @new_user_project], url: project_users_path(@project), remote: true, format: :json, html: { class: 'add-user-form' } do |f| %>
       <div class="col-xs-12 col-sm-4">
-      <%= collection_select(:user_project, :user_id, @unassigned_users, :id, :full_name, {}, { class: 'selectpicker' }) %>
+        <%= collection_select(:user_project, :user_id, @unassigned_users, :id, :full_name, {}, { class: 'selectpicker' }) %>
       </div>
       <div class="visible-xs">&nbsp;</div>
       <div class="col-xs-8 col-sm-4">
@@ -75,10 +75,10 @@
       </select>
     </div>
     <div class="col-xs-4 col-sm-2">
-    <%= f.button class: 'btn btn-primary' do %>
-      <span class="fas fa-plus"></span>
-      <span class="hidden-xs"><%= t("projects.index.modal_manage_users.create") %></span>
-    <% end %>
+      <%= f.button class: 'btn btn-primary' do %>
+        <span class="fas fa-plus"></span>
+        <span class="hidden-xs"><%= t('projects.index.modal_manage_users.create') %></span>
+      <% end %>
     </div>
   <% end %>
   </div>

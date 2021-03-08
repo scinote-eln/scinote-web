@@ -75,6 +75,7 @@
       flex-shrink: 0;
       line-height: 13px;
       margin: 2px 3px;
+      max-height: 24px;
       max-width: calc(100% - 11px);
       overflow: hidden;
       padding: 5px 8px;
@@ -227,7 +228,7 @@
         user-select: none;
 
         &:hover {
-          background: $brand-primary-light;
+          background: $brand-focus-light;
         }
       }
 
@@ -241,7 +242,7 @@
           background: $color-concrete;
 
           &:hover {
-            background: $brand-primary-light;
+            background: $brand-focus-light;
           }
 
           &::before {

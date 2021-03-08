@@ -31,66 +31,70 @@
 
 
   #repository-toolbar {
-    align-items: center;
-    background-color: $color-white;
-    border: 0;
-    display: flex;
-    left: var(--repository-sidebar-margin);
-    padding: 0 2em;
-    position: fixed;
-    transition: .4s $timing-function-sharp;
-    width: calc(100% - var(--repository-sidebar-margin));
-    z-index: 100;
-
-    .toolbar-delimiter {
-      border-bottom: $border-tertiary;
-      bottom: 0;
-      position: absolute;
-      width: calc(100% - 4em);
-    }
-
-    .repository-share-icon {
-      flex-shrink: 0;
-      margin-top: -2px;
-
-      .fas-custom {
-        margin-left: 5px;
-      }
-    }
-
-    .dropdown-menu {
-      @include font-button;
-    }
-
-    .repository-title-name {
-      @include font-h2;
+    .title-row {
+      align-items: center;
+      background-color: $color-white;
+      border: 0;
       display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-      line-height: 32px;
-      margin-right: 20px;
-      overflow: hidden;
-      padding-left: 5px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      left: var(--repository-sidebar-margin);
+      margin-left: 0em;
+      padding: 0 2em;
+      position: fixed;
+      transition: .4s $timing-function-sharp;
+      width: calc(100% - var(--repository-sidebar-margin));
+      z-index: 100;
 
-      .name-container {
-        align-items: center;
-        display: inline-flex;
-        height: 32px;
-        margin: 0;
+      .toolbar-delimiter {
+        border-bottom: $border-tertiary;
+        bottom: 0;
+        margin-left: -2em;
+        position: absolute;
+        width: 100%;
+      }
 
-        .read-only-name {
-          display: inline-block;
-          line-height: 32px;
-          max-width: calc(100% - 30px);
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
+      .repository-share-icon {
+        flex-shrink: 0;
+        margin-top: -2px;
+
+        .fas-custom {
+          margin-left: 5px;
         }
+      }
 
-        .inline-editing-container {
-          width: 100%;
+      .dropdown-menu {
+        @include font-button;
+      }
+
+      .repository-title-name {
+        @include font-h2;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        line-height: 32px;
+        margin-right: 20px;
+        overflow: hidden;
+        padding-left: 5px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        .name-container {
+          align-items: center;
+          display: inline-flex;
+          height: 32px;
+          margin: 0;
+
+          .read-only-name {
+            display: inline-block;
+            line-height: 32px;
+            max-width: calc(100% - 30px);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          .inline-editing-container {
+            width: 100%;
+          }
         }
       }
     }
@@ -246,14 +250,6 @@
         }
       }
     }
-  }
-}
-
-.repository-share-status {
-  display: contents !important;
-
-  &.hidden {
-    display: none !important;
   }
 }
 

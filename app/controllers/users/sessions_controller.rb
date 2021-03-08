@@ -25,7 +25,7 @@ class Users::SessionsController < Devise::SessionsController
   def create
     super
 
-    generate_demo_project
+    generate_templates_project
   end
 
   def two_factor_recovery
@@ -68,7 +68,6 @@ class Users::SessionsController < Devise::SessionsController
     flash[:system_notification_modal] = true
   end
 
-
   def authenticate_with_two_factor
     user = User.find_by(id: session[:otp_user_id])
 
@@ -81,9 +80,9 @@ class Users::SessionsController < Devise::SessionsController
       session.delete(:otp_user_id)
 
       sign_in(user)
-      generate_demo_project
+      generate_templates_project
       flash[:notice] = t('devise.sessions.signed_in')
-      redirect_to root_path
+      redirect_to stored_location_for(:user) || root_path
     else
       flash.now[:alert] = t('devise.sessions.2fa.error_message')
       render :two_factor_auth
@@ -101,7 +100,7 @@ class Users::SessionsController < Devise::SessionsController
     session.delete(:otp_user_id)
     if user.recover_2fa!(params[:recovery_code])
       sign_in(user)
-      generate_demo_project
+      generate_templates_project
       flash[:notice] = t('devise.sessions.signed_in')
       redirect_to root_path
     else
@@ -126,21 +125,14 @@ class Users::SessionsController < Devise::SessionsController
 
     if user&.two_factor_auth_enabled?
       session[:otp_user_id] = user.id
+      store_location_for(:user, request.original_fullpath) if request.get?
       render :two_factor_auth
     end
   end
 
-  def generate_demo_project
+  def generate_templates_project
     # Schedule templates creation for user
     TemplatesService.new.schedule_creation_for_user(current_user)
-
-    # Schedule demo project creation for user
-    current_user.created_teams.each do |team|
-      FirstTimeDataGenerator.delay(
-        queue: :new_demo_project,
-        priority: 10
-      ).seed_demo_data_with_id(current_user.id, team.id)
-    end
   rescue StandardError => e
     Rails.logger.fatal("User ID #{current_user.id}: Error creating inital projects on sign_in: #{e.message}")
   end

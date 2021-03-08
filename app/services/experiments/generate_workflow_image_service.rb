@@ -9,17 +9,28 @@ module Experiments
 
     def initialize(experiment:)
       @exp = experiment
-      @graph = GraphViz.new(:G, type: :digraph, use: :neato)
-
-      @graph[:size] = '4,4'
-      @graph.node[color: Constants::COLOR_ALTO,
+      graph_params = {
+        type: :digraph,
+        use: :neato,
+        inputscale: 3,
+        size: '2,2',
+        pad: '0.4',
+        ratio: 'fill',
+        splines: true,
+        center: true,
+        pack: true,
+        bgcolor: Constants::COLOR_CONCRETE,
+        mode: 'ipsep'
+      }
+      @graph = GraphViz.new(:G, graph_params)
+      @graph.node[color: Constants::COLOR_VOLCANO,
                   style: :filled,
                   fontcolor: Constants::COLOR_VOLCANO,
                   shape: 'circle',
                   fontname: 'Arial',
                   fontsize: '16.0']
 
-      @graph.edge[color: Constants::COLOR_ALTO]
+      @graph.edge[color: Constants::COLOR_VOLCANO, penwidth: '3.0']
       @errors = []
     end
 
@@ -36,20 +47,11 @@ module Experiments
     private
 
     def draw_diagram
-      # Draw orphan nodes
-      @exp.my_modules.without_group.each do |my_module|
-        @graph.subgraph(rank: 'same').add_nodes(
-          "Orphan-#{my_module.id}",
-          label: '',
-          pos: "#{my_module.x / 10},-#{my_module.y / 10}!"
-        )
-      end
-
       # Draw grouped modules
       subg = {}
       @exp.my_module_groups.each_with_index do |group, gindex|
         subgraph_id = "cluster-#{gindex}"
-        subg[subgraph_id] = @graph.subgraph(rank: 'same')
+        subg[subgraph_id] = @graph.subgraph
         nodes = {}
 
         group.my_modules.workflow_ordered.each_with_index do |my_module, index|
@@ -70,6 +72,15 @@ module Experiments
             subg[subgraph_id].add_edges(parent_node, child_node)
           end
         end
+      end
+
+      # Draw orphan nodes
+      @exp.my_modules.without_group.each do |my_module|
+        @graph.subgraph.add_nodes(
+          "Orphan-#{my_module.id}",
+          label: '',
+          pos: "#{my_module.x / 10},-#{my_module.y / 10}!"
+        )
       end
     end
 

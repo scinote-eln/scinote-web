@@ -18,9 +18,6 @@ class Experiment < ApplicationRecord
              optional: true
 
   has_many :my_modules, inverse_of: :experiment, dependent: :destroy
-  has_many :active_my_modules,
-           -> { where(archived: false).order(:name) },
-           class_name: 'MyModule'
   has_many :my_module_groups, inverse_of: :experiment, dependent: :destroy
   has_many :report_elements, inverse_of: :experiment, dependent: :destroy
   # Associations for old activity type
@@ -29,22 +26,21 @@ class Experiment < ApplicationRecord
   has_one_attached :workflowimg
 
   auto_strip_attributes :name, :description, nullify: false
-  validates :name,
-            length: { minimum: Constants::NAME_MIN_LENGTH,
-                      maximum: Constants::NAME_MAX_LENGTH },
-            uniqueness: { scope: :project, case_sensitive: false }
+  validates :name, length: { minimum: Constants::NAME_MIN_LENGTH, maximum: Constants::NAME_MAX_LENGTH }
   validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
   validates :project, presence: true
   validates :created_by, presence: true
   validates :last_modified_by, presence: true
   validates :uuid, uniqueness: { scope: :project },
                    unless: proc { |e| e.uuid.blank? }
-  with_options if: :archived do |experiment|
-    experiment.validates :archived_by, presence: true
-    experiment.validates :archived_on, presence: true
-  end
 
-  scope :is_archived, ->(is_archived) { where("archived = ?", is_archived) }
+  scope :is_archived, lambda { |is_archived|
+    if is_archived
+      joins(:project).where('experiments.archived = TRUE OR projects.archived = TRUE')
+    else
+      joins(:project).where('experiments.archived = FALSE AND projects.archived = FALSE')
+    end
+  }
 
   def self.search(
     user,
@@ -73,7 +69,7 @@ class Experiment < ApplicationRecord
         Experiment
         .where('experiments.project_id IN (?)', projects_ids)
         .where_attributes_like([:name, :description], query, options)
-      return include_archived ? new_query : new_query.is_archived(false)
+      return include_archived ? new_query : new_query.active
     elsif include_archived
       new_query =
         Experiment
@@ -82,7 +78,7 @@ class Experiment < ApplicationRecord
     else
       new_query =
         Experiment
-        .is_archived(false)
+        .active
         .where(project: project_ids)
         .where_attributes_like([:name, :description], query, options)
     end
@@ -101,16 +97,12 @@ class Experiment < ApplicationRecord
     where(project: Project.viewable_by_user(user, teams))
   end
 
+  def archived_branch?
+    archived? || project.archived?
+  end
+
   def navigable?
     !project.archived?
-  end
-
-  def active_modules
-    my_modules.where(archived: false)
-  end
-
-  def archived_modules
-    my_modules.where(archived: true)
   end
 
   def update_canvas(
@@ -360,12 +352,13 @@ class Experiment < ApplicationRecord
 
         # Find the lowest point for current modules(max_y) and the leftmost
         # module(min_x)
-        if experiment.active_modules.empty?
+        active_modules = experiment.my_modules.active
+        if active_modules.blank?
           max_y = 0
           min_x = 0
         else
-          max_y = experiment.active_modules.maximum(:y) + MyModule::HEIGHT
-          min_x = experiment.active_modules.minimum(:x)
+          max_y = active_modules.maximum(:y) + MyModule::HEIGHT
+          min_x = active_modules.minimum(:x)
         end
 
         # Set new positions
@@ -475,12 +468,19 @@ class Experiment < ApplicationRecord
   def normalize_module_positions
     # This method normalizes module positions so x-s and y-s
     # are all positive
-    x_diff = my_modules.pluck(:x).min
-    y_diff = my_modules.pluck(:y).min
+    x_diff = my_modules.active.pluck(:x).min
+    y_diff = my_modules.active.pluck(:y).min
 
-    my_modules.each do |m|
-      m.update(x: m.x - x_diff, y: m.y - y_diff)
+    return unless x_diff && y_diff
+
+    moving_direction = {
+      x: x_diff.positive? ? :asc : :desc,
+      y: y_diff.positive? ? :asc : :desc
+    }
+    my_modules.active.order(moving_direction).each do |m|
+      m.update!(x: m.x - x_diff, y: m.y - y_diff)
     end
+    my_modules.reload
   end
 
   # Recalculate module groups in this project. Input is
@@ -492,7 +492,7 @@ class Experiment < ApplicationRecord
 
     dg = RGL::DirectedAdjacencyGraph[]
     group_ids = Set.new
-    active_modules.includes(:my_module_group, outputs: :to).each do |m|
+    my_modules.active.includes(:my_module_group, outputs: :to).each do |m|
       group_ids << m.my_module_group.id unless m.my_module_group.blank?
       dg.add_vertex m.id unless dg.has_vertex? m.id
       m.outputs.each do |o|

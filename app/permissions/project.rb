@@ -1,7 +1,6 @@
 Canaid::Permissions.register_for(Project) do
   # Project must be active for all the specified permissions
-  %i(read_project
-     manage_project
+  %i(manage_project
      archive_project
      create_experiments
      create_comments_in_project
@@ -63,8 +62,12 @@ Canaid::Permissions.register_for(Project) do
   end
 
   # experiment: create
-  can :create_experiments do |user, project|
-    user.is_user_or_higher_of_project?(project)
+  %i(create_experiments
+     manage_experiments)
+    .each do |perm|
+    can perm do |user, project|
+      user.is_user_or_higher_of_project?(project)
+    end
   end
 
   # project: create comment
@@ -92,5 +95,12 @@ Canaid::Permissions.register_for(ProjectComment) do
   can :manage_comment_in_project do |user, project_comment|
     project_comment.project.present? && (project_comment.user == user ||
       user.is_owner_of_project?(project_comment.project))
+  end
+end
+
+Canaid::Permissions.register_for(ProjectFolder) do
+  # ProjectFolder: delete
+  can :delete_project_folder do |_, project_folder|
+    !project_folder.projects.exists? && !project_folder.project_folders.exists?
   end
 end

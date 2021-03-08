@@ -595,7 +595,7 @@
               "step": {
                 "id": 4382,
                 "name": "Prepare antibiotic dilutions",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Prepare antibiotic dilutions following steps bellow.</p></body></html>",
+                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Prepare antibiotic dilutions following steps below.</p></body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -808,7 +808,7 @@
               "step": {
                 "id": 4370,
                 "name": "Prepare agar plates",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Prepare agar plates following guidelines bellow.</p></body></html>",
+                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Prepare agar plates following guidelines below.</p></body></html>",
                 "position": 3,
                 "completed": false,
                 "completed_on": null,
@@ -1401,7 +1401,7 @@
               "step": {
                 "id": 4362,
                 "name": "Isolate preparation",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow steps bellow for isolate preparation.</p></body></html>",
+                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow steps below for isolate preparation.</p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,

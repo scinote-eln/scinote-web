@@ -168,6 +168,7 @@ class AssetsController < ApplicationController
       render_403 && return unless can_manage_protocol_in_module?(step.protocol) ||
                                   can_manage_protocol_in_repository?(step.protocol)
       step_asset = StepAsset.create!(step: step, asset: asset)
+      asset.update!(view_mode: step.assets_view_mode)
       step.protocol&.update(updated_at: Time.zone.now)
 
       edit_url = edit_asset_url(step_asset.asset_id)

@@ -76,7 +76,7 @@ class Result < ApplicationRecord
                             .where('comments.id <  ?', last_id)
                             .order(created_at: :desc)
                             .limit(per_page)
-    comments.reverse
+    ResultComment.from(comments, :comments).order(created_at: :asc)
   end
 
   def is_text
@@ -103,5 +103,9 @@ class Result < ApplicationRecord
     return false if is_asset && asset.file.metadata['asset_type'] == 'marvinjs'
 
     true
+  end
+
+  def comments
+    result_comments
   end
 end

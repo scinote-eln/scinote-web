@@ -2,7 +2,7 @@
 
 source 'http://rubygems.org'
 
-ruby '2.6.4'
+ruby '2.7.2'
 
 gem 'bootsnap', require: false
 gem 'bootstrap-sass', '~> 3.4.1'
@@ -12,7 +12,7 @@ gem 'devise_invitable'
 gem 'figaro'
 gem 'pg', '~> 1.1'
 gem 'pg_search' # PostgreSQL full text search
-gem 'rails', '~> 6.0.0'
+gem 'rails', '~> 6.1.1'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 5.2'
 gem 'sassc-rails'
@@ -66,12 +66,12 @@ gem 'deface', '~> 1.0'
 gem 'down', '~> 5.0'
 gem 'faker' # Generate fake data
 gem 'fastimage' # Light gem to get image resolution
-gem 'httparty', '~> 0.13.1'
+gem 'httparty', '~> 0.17.3'
 gem 'i18n-js', '~> 3.6' # Localization in javascript files
 gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'logging', '~> 2.0.0'
 gem 'nested_form_fields'
-gem 'nokogiri', '~> 1.10.8' # HTML/XML parser
+gem 'nokogiri', '~> 1.11.0' # HTML/XML parser
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'rgl' # Graph framework for project diagram calculations
 gem 'roo', '~> 2.8.2' # Spreadsheet parser

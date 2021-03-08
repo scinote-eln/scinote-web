@@ -208,7 +208,7 @@ class Extends
   ]
 
   ACTIVITY_SUBJECT_TYPES = %w(
-    Team RepositoryBase Project Experiment MyModule Result Protocol Report RepositoryRow
+    Team RepositoryBase Project Experiment MyModule Result Protocol Report RepositoryRow ProjectFolder
   ).freeze
 
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
@@ -229,9 +229,9 @@ class Extends
 
   ACTIVITY_MESSAGE_ITEMS_TYPES =
     ACTIVITY_SUBJECT_TYPES + %w(
-      User Tag RepositoryColumn RepositoryRow Step Asset TinyMceAsset Repository MyModuleStatus RepositorySnapshot
+      User Tag RepositoryColumn RepositoryRow Step Asset TinyMceAsset
+      Repository MyModuleStatus RepositorySnapshot
     ).freeze
-
 
   ACTIVITY_TYPES = {
     create_project: 0,
@@ -376,11 +376,16 @@ class Extends
     restore_inventory: 145,
     export_inventory_items_assigned_to_task: 146,
     export_inventory_snapshot_items_assigned_to_task: 147,
-    change_status_on_task_flow: 148 # 149..157 in AdddOn!
+    change_status_on_task_flow: 148, # 149..157 in AdddOn!
+    move_project: 158,
+    create_project_folder: 159,
+    move_project_folder: 160,
+    rename_project_folder: 161,
+    delete_project_folder: 162
   }
 
   ACTIVITY_GROUPS = {
-    projects: [*0..7, 32, 33, 34, 95, 108, 65, 109],
+    projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162],
     task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128],
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
            *146..148],

@@ -10,8 +10,8 @@ module RepositoryActions
           row.archive!(@user)
           log_activity(:archive_inventory_item, row) if @log_activities
         end
-      rescue ActiveRecord::RecordNotSaved
-        @errors[:archiving_error] = I18n.t('repositories.archive_records.unsuccess_flash', @repository.name)
+      rescue ActiveRecord::RecordInvalid
+        @errors[:archiving_error] = I18n.t('repositories.archive_records.unsuccess_flash', repository: @repository.name)
         raise ActiveRecord::Rollback
       end
 

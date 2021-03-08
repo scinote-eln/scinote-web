@@ -11,7 +11,7 @@ module ActiveStorage
         end
       end
 
-      def preview
+      def preview(**_options)
         download_blob_to_tempfile do |input|
           work_dir = File.dirname(input.path)
           basename = File.basename(input.path, '.*')
@@ -21,7 +21,7 @@ module ActiveStorage
 
           begin
             success = system(
-              "#{libreoffice_path} --headless --invisible --convert-to png --outdir #{work_dir} #{input.path}"
+              libreoffice_path, '--headless', '--invisible', '--convert-to', 'png', '--outdir', work_dir, input.path
             )
 
             unless success && File.file?(preview_file)

@@ -231,8 +231,7 @@ RSpec.describe 'Api::V1::InventoryStatusItemsController', type: :request do
 
     context 'when user does not has manage permissions' do
       it 'renders 403' do
-        @user_team.role = :guest
-        @user_team.save
+        @user_team.reload.update!(role: :guest)
 
         action
 
@@ -240,8 +239,7 @@ RSpec.describe 'Api::V1::InventoryStatusItemsController', type: :request do
       end
 
       it 'does not creats an item' do
-        @user_team.role = :guest
-        @user_team.save
+        @user_team.reload.update!(role: :guest)
 
         expect { action }.not_to(change { RepositoryStatusItem.count })
       end
@@ -369,8 +367,7 @@ RSpec.describe 'Api::V1::InventoryStatusItemsController', type: :request do
 
     context 'when user does not has manage permissions' do
       it 'renders 403' do
-        @user_team.role = :guest
-        @user_team.save
+        @user_team.reload.update!(role: :guest)
 
         action
 
@@ -447,8 +444,7 @@ RSpec.describe 'Api::V1::InventoryStatusItemsController', type: :request do
 
     context 'when user does not has manage permissions' do
       it 'renders 403' do
-        @user_team.role = :guest
-        @user_team.save
+        @user_team.reload.update!(role: :guest)
 
         action
 
@@ -456,8 +452,7 @@ RSpec.describe 'Api::V1::InventoryStatusItemsController', type: :request do
       end
 
       it 'does not delets any item' do
-        @user_team.role = :guest
-        @user_team.save
+        @user_team.reload.update!(role: :guest)
 
         expect { action }.not_to(change { RepositoryStatusItem.count })
       end

@@ -17,5 +17,10 @@ FactoryBot.define do
     trait :with_status do
       my_module_status
     end
+    trait :archived do
+      archived { true }
+      archived_on { Time.zone.now }
+      archived_by { create(:user) }
+    end
   end
 end

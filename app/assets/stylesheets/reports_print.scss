@@ -97,6 +97,14 @@ div.print-report {
     img {
       max-width: 100%;
     }
+
+    .image-icon.preview {
+      display: none;
+    }
+
+    .image-icon.report {
+      display: initial !important;
+    }
   }
 
   .report-step-table-element {
@@ -197,6 +205,14 @@ div.print-report {
         color: $color-black !important;
         white-space: nowrap;
       }
+    }
+
+    .image-icon.preview {
+      display: none;
+    }
+
+    .image-icon.report {
+      display: initial !important;
     }
 
     img {

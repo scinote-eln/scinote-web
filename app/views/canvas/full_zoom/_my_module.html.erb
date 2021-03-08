@@ -12,14 +12,31 @@
   data-module-users-tab-url="<%=  index_old_my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>"
   data-module-tags-url="<%= my_module_tags_experiment_path(my_module.experiment, format: :json) %>">
 
-  <% if can_manage_module?(my_module) %>
+  <div data-view-mode="active">
+    <% if can_manage_module?(my_module) %>
+      <a class="edit-tags-link pull-right" data-remote="true" href="<%= my_module_tags_edit_url(my_module, format: :json) %>">
+        <%= render partial: "canvas/tags.html.erb", locals: { my_module: my_module } %>
+      </a>
+    <% else %>
+      <span class="edit-tags-link pull-right">
+        <%= render partial: "canvas/tags.html.erb", locals: { my_module: my_module } %>
+      </span>
+    <% end %>
+  </div>
+
+  <div data-view-mode="archived">
     <a class="edit-tags-link pull-right" data-remote="true" href="<%= my_module_tags_edit_url(my_module, format: :json) %>">
       <%= render partial: "canvas/tags.html.erb", locals: { my_module: my_module } %>
     </a>
-  <% else %>
-    <span class="edit-tags-link pull-right">
-      <%= render partial: "canvas/tags.html.erb", locals: { my_module: my_module } %>
-    </span>
+  </div>
+
+  <% unless my_module.experiment.archived_branch? %>
+    <div class="task-selector-container pull-left " data-view-mode="archived" data-task-id="<%= my_module.id %>">
+      <div class="sci-checkbox-container">
+        <input value="1" type="checkbox" class="sci-checkbox task-selector">
+        <span class="sci-checkbox-label"></span>
+      </div>
+    </div>
   <% end %>
 
   <div class="panel-heading">
@@ -29,7 +46,7 @@
   </div>
 
   <div class="panel-body">
-    <div>
+    <div class="overdue-date" data-view-mode="active">
       <% if !my_module.completed? && can_manage_module?(my_module) %>
         <%= link_to due_date_my_module_path(my_module, format: :json), remote: true,
                     class: "due-date-link due-date-refresh" do %>
@@ -39,6 +56,21 @@
         <%= render partial: "my_modules/card_due_date_label.html.erb", locals: { my_module: my_module, format: :full_date } %>
       <% end %>
     </div>
+
+    <div class="archived-overdue-date" data-view-mode="archived">
+      <span class="date-label"><%= t('experiments.canvas.full_zoom.due_date') %></span>
+      <span class="date-value">
+        <%= my_module.due_date ? l(my_module.due_date, format: :full_date) : t('experiments.canvas.full_zoom.no_due_date') %>
+      </span>
+
+      <div>
+        <span class="date-label"><%= t('experiments.module_archive.archived_on') %></span>
+        <span class="date-value">
+          <%= my_module.archived_branch? ? l(my_module_archived_on(my_module), format: :full_date) : t('experiments.canvas.full_zoom.no_due_date') %>
+        </span>
+      </div>
+    </div>
+
     <div class="status-label" style="--state-color: <%= my_module.my_module_status.color %>">
       <% if my_module.status_changing %>
         <i class="fas fa-spinner fa-spin"></i>

@@ -1,0 +1,13 @@
+<% if filters_included && cards.blank? %>
+  <div class="no-results-container">
+    <%= image_tag('/images/no_search_results.png', class: 'no-results-img') %>
+    <div class="no-results-title"><%= t('projects.index.no_results_found') %></div>
+    <div class="no-results-description"><%= t('projects.index.no_results_description') %></div>
+  </div>
+<% else %>
+  <% cards.each  do |card| %>
+    <% cache [current_user, card] do %>
+      <%= render partial: 'projects/show/experiment_card', locals: { experiment: card } %>
+    <% end %>
+  <% end %>
+<% end %>

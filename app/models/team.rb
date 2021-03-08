@@ -31,6 +31,7 @@ class Team < ApplicationRecord
   has_many :user_teams, inverse_of: :team, dependent: :destroy
   has_many :users, through: :user_teams
   has_many :projects, inverse_of: :team
+  has_many :project_folders, inverse_of: :team, dependent: :destroy
   has_many :protocols, inverse_of: :team, dependent: :destroy
   has_many :protocol_keywords, inverse_of: :team, dependent: :destroy
   has_many :tiny_mce_assets, inverse_of: :team, dependent: :destroy
@@ -42,23 +43,19 @@ class Team < ApplicationRecord
   has_many :shared_repositories, through: :team_repositories, source: :repository
 
   attr_accessor :without_templates
-  attr_accessor :without_intro_demo
-  after_create :generate_intro_demo
 
   def default_view_state
-    { 'projects' =>
-      { 'cards' => { 'sort' => 'new' },
-        'table' =>
-          { 'time' => Time.now.to_i,
-            'order' => [[2, 'asc']],
-            'start' => 0,
-            'length' => 10 },
-        'filter' => 'active' } }
+    {
+      projects: {
+        active: { sort: 'new' },
+        archived: { sort: 'new' }
+      }
+    }
   end
 
   def validate_view_state(view_state)
-    unless %w(new old atoz ztoa).include?(view_state.state.dig('projects', 'cards', 'sort')) &&
-           %w(all active archived).include?(view_state.state.dig('projects', 'filter'))
+    if %w(new old atoz ztoa).exclude?(view_state.state.dig('projects', 'active', 'sort')) ||
+       %w(new old atoz ztoa archived_new archived_old).exclude?(view_state.state.dig('projects', 'archived', 'sort'))
       view_state.errors.add(:state, :wrong_state)
     end
   end
@@ -168,16 +165,5 @@ class Team < ApplicationRecord
   def generate_template_project
     return if without_templates
     TemplatesService.new.delay(queue: :templates).update_team(self)
-  end
-
-  include FirstTimeDataGenerator
-
-  def generate_intro_demo
-    return if without_intro_demo
-
-    user = User.find(created_by_id)
-    if user.created_teams.order(:created_at).first == self
-      seed_demo_data(user, self)
-    end
   end
 end

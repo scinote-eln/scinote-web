@@ -172,7 +172,7 @@
     initShareModal();
   });
 
-  $('.create-new-repository').initializeModal('#create-repo-modal');
+  $('.create-new-repository').initSubmitModal('#create-repo-modal', 'repository');
 
   function initArchivingActionsInDropdown() {
     $('.archive-repository-option').on('click', function(event) {

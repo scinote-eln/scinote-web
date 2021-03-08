@@ -190,3 +190,81 @@
     }
   }
 }
+
+
+#experiment-canvas {
+  [data-view-mode="archived"] {
+    display: none;
+  }
+}
+
+#module-archive {
+  [data-view-mode="active"] {
+    display: none;
+  }
+
+  .module-container {
+    min-width: 220px;
+
+    &.active-card {
+      z-index: 1000;
+    }
+  }
+
+  .panel-default {
+    border: 0;
+    box-shadow: unset;
+    position: unset;
+    width: unset;
+
+    .task-selector-container {
+      padding: .75em .75em 0 1em;
+    }
+
+    .panel-heading {
+      background-color: $color-concrete;
+      border-color: $color-white;
+
+      .panel-title {
+        color: $color-volcano;
+      }
+    }
+
+    .panel-body {
+      background-color: $color-concrete;
+      font-weight: normal;
+
+      .archived-overdue-date {
+        .date-label {
+          color: $color-volcano;
+          display: inline-block;
+          font-weight: normal;
+          width: 90px;
+        }
+
+        .date-value {
+          color: $color-black;
+        }
+      }
+    }
+
+    .panel-footer-scinote {
+      background: $color-concrete;
+      border-color: $color-white;
+      height: 2.5em;
+
+      .nav {
+        border: 0;
+      }
+
+      .tab-content {
+        background-color: $color-concrete;
+        box-shadow: $flyout-shadow;
+
+        .tab-pane > .text-center {
+          margin-top: .3em;
+        }
+      }
+    }
+  }
+}

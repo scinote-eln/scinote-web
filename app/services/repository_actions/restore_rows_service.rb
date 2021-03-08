@@ -10,8 +10,8 @@ module RepositoryActions
           row.restore!(@user)
           log_activity(:restore_inventory_item, row) if @log_activities
         end
-      rescue ActiveRecord::RecordNotSaved
-        @errors[:restoring_error] = I18n.t('repositories.restore_records.unsuccess_flash', @repository.name)
+      rescue ActiveRecord::RecordInvalid
+        @errors[:restoring_error] = I18n.t('repositories.restore_records.unsuccess_flash', repository: @repository.name)
         raise ActiveRecord::Rollback
       end
 

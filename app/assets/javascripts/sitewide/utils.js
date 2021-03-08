@@ -88,10 +88,11 @@ $.fn.checkboxTreeLogic = function(dependencies, checkAll) {
  * submit gets JSON response, displays errors if any or either refreshes the
  * page or redirects it (if 'url' parameter is specified in JSON response).
  * @param  {string} modalID Modal ID
+ * @param  {string} modelName Modal Name
  * @param  {object} $fn     Link objects for opening the modal (can have more
  *         links for same modal)
  */
-$.fn.initializeModal = function(modalID) {
+$.fn.initSubmitModal = function(modalID, modelName) {
   /**
    * Popup modal validator
    * @param  {object} $modal Modal object
@@ -107,7 +108,7 @@ $.fn.initializeModal = function(modalID) {
         }
       })
       .on('ajax:error', function(e, data) {
-        $(this).renderFormErrors('repository', data.responseJSON);
+        $(this).renderFormErrors(modelName, data.responseJSON);
       })
       .animateSpinner(true);
   }

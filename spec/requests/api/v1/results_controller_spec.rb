@@ -316,7 +316,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
       end
 
       context 'when sending multipart form' do
-        let(:attributes) { { file: fixture_file_upload('files/test.jpg', 'image/jpg') } }
+        let(:attributes) { { file: Rack::Test::UploadedFile.new(file_fixture('test.jpg').open) } }
 
         it 'creates new asset' do
           expect { action }.to change { ResultAsset.count }.by(1)
@@ -395,7 +395,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
   describe 'PUT result, #update' do
     context 'when resultType is file' do
       let(:result_file) { @valid_task.results.last }
-      let(:file) { fixture_file_upload('files/test.jpg', 'image/jpg') }
+      let(:file) { Rack::Test::UploadedFile.new(file_fixture('test.jpg').open) }
       let(:request_body) do
         {
           data: {
@@ -477,7 +477,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
         end
 
         context 'when sending multipart form' do
-          let(:attributes) { { file: fixture_file_upload('files/apple.jpg', 'image/jpg') } }
+          let(:attributes) { { file: Rack::Test::UploadedFile.new(file_fixture('apple.jpg').open) } }
 
           it 'returns status 200' do
             action

@@ -43,17 +43,4 @@ class Tag < ApplicationRecord
         .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
-
-  def clone_to_project_or_return_existing(project)
-    tag = Tag.find_by(project: project, name: name, color: color)
-    return tag if tag
-
-    Tag.create(
-      name: name,
-      color: color,
-      created_by: created_by,
-      last_modified_by: last_modified_by,
-      project: project
-    )
-  end
 end

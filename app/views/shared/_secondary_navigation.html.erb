@@ -46,47 +46,13 @@
                   <div class="projects-view-mode-switch sci-toggles-group" data-toggle="buttons">
                     <input type="radio" name="projects-view-mode-selector" value="cards" class="sci-toggle-item" checked>
                     <a href="#projects-cards-view" data-toggle="tab" data-mode="cards" class="sci-toggle-item-label"><i class="fas fa-th-large"></i></a>
-                    <input type="radio" name="projects-view-mode-selector" class="sci-toggle-item">
+                    <input type="radio" name="projects-view-mode-selector" value="list" class="sci-toggle-item">
                     <a class="sci-toggle-item-label" href="#projects-table-view" data-toggle="tab" data-mode="table"><i class="fas fa-th-list"></i></a>
                   </div>
                 </li>
               </ul>
             </li>
           <% end %>
-        <% elsif project_page? %>
-          <% if can_read_project?(@project) then %>
-            <li id="canvas-nav-tab" class="<%= "active" if is_project_show? %>">
-              <a href="<%= project_url(@project) %>" title="<%=t "nav2.projects.show" %>">
-                <span class="hidden-sm hidden-md"><%=t "nav2.projects.show" %></span>
-                <span class="hidden-xs hidden-lg fas fa-folder"></span>
-              </a>
-            </li>
-            <li id="project-archive-nav-tab" class="<%= "active" if is_project_archive? %>">
-              <a href="<%= experiment_archive_project_url(@project) %>" title="<%=t "nav2.projects.archive" %>">
-                <span class="hidden-sm hidden-md"><%=t "nav2.projects.archive" %></span>
-                <span class="hidden-xs hidden-lg fas fa-briefcase"></span>
-              </a>
-            </li>
-          <% end %>
-
-        <% elsif experiment_page? %>
-          <% if can_read_experiment?(@experiment) %>
-            <li id="canvas-nav-tab" class="<%= "active" if is_experiment_canvas? %>">
-              <a href="<%= canvas_experiment_url(@experiment) %>" title="<%=t "nav2.experiments.canvas" %>">
-                <span class="hidden-sm hidden-md"><%=t "nav2.experiments.canvas" %></span>
-                <span class="hidden-xs hidden-lg fas fa-folder"></span>
-              </a>
-            </li>
-          <% end %>
-          <% if can_read_project?(@experiment.project) %>
-              <li id="project-archive-nav-tab" class="<%= "active" if is_experiment_archive? %>">
-                <a href="<%= module_archive_experiment_url(@experiment) %>" title="<%=t "nav2.experiments.archive" %>">
-                  <span class="hidden-sm hidden-md"><%=t "nav2.experiments.archive" %></span>
-                  <span class="hidden-xs hidden-lg fas fa-briefcase"></span>
-                </a>
-              </li>
-          <% end %>
-
         <% elsif module_page? %>
           <% if can_read_experiment?(@my_module.experiment) %>
             <li id="steps-nav-tab" class="<%= "active" if is_module_protocols? %>">
@@ -110,7 +76,7 @@
           <% end %>
 
           <li data-hook="secondary-navigation-tabs"></li>
-          <% if can_read_experiment?(@my_module.experiment) then %>
+          <% if can_read_experiment?(@my_module.experiment) && !@my_module.archived_branch? %>
             <li id="archive-nav-tab" class="<%= "active" if is_module_archive? %>">
               <a href="<%= archive_my_module_url(@my_module) %>" title="<%= t'nav2.modules.archive' %>">
                 <span class="hidden-sm hidden-md"><%=t "nav2.modules.archive" %></span>
@@ -131,6 +97,9 @@
                         config: @inline_editable_title_config
                      } %>
         <% else %>
+          <% if title_element.archived_branch? %>
+            <i class="fas fa-archive"></i>&nbsp;
+          <% end %>
           <%= title_element.name %>
         <% end %>
       </h1>
