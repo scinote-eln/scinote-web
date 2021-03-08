@@ -546,8 +546,9 @@ li.module-hover {
 
       .card {
         .project-users-link {
+          align-items: center;
           color: $color-silver-chalice;
-          display: inline;
+          display: flex;
 
           &:hover {
             text-decoration: none;
@@ -674,21 +675,21 @@ li.module-hover {
               }
 
               .global-avatar-container {
-                height: 28px;
+                height: 2em;
+                line-height: 2em;
                 margin-right: .25em;
-                width: 28px;
+                width: 2em;
               }
 
               .more-users {
-                align-items: center;
                 background: $color-volcano;
                 border-radius: 50%;
                 color: $color-white;
-                cursor: pointer;
-                display: flex;
                 height: 2em;
-                justify-content: center;
+                line-height: 2em;
                 margin-right: .25em;
+                text-align: center;
+                text-decoration: none;
                 width: 2em;
               }
 
