@@ -2290,6 +2290,9 @@ en:
       description_1_html: "You are about to delete <b>%{file_name}</b></p>"
       description_2: "Are you sure you want to continue?"
       confirm_button: "Delete attachment"
+    empty_office_file:
+      description: "The file is empty. Please add some data before saving the file."
+      reload: "Reload file"
 
   atwho:
     no_results:

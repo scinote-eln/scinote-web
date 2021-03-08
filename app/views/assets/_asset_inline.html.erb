@@ -25,7 +25,20 @@
     <%= render partial: 'assets/asset_context_menu.html.erb', locals: { asset: asset, deletable: deletable, editable: editable } %>
   </div>
   <% if wopi_enabled? && wopi_file?(asset) %>
-    <div class="iframe-placeholder" data-iframe-url="<%= asset.get_action_url(current_user, 'embedview') %>"></div>
+    <% if asset.file_size.positive? %>
+      <div class="iframe-placeholder" data-iframe-url="<%= asset.get_action_url(current_user, 'embedview') %>"></div>
+    <% else %>
+      <div class="empty-office-file">
+        <h2><%= t('assets.empty_office_file.description') %></h2>
+        <%= button_to(toggle_view_mode_path(asset),
+                        method: :patch,
+                        remote: true,
+                        class: 'btn btn-primary',
+                        params: { asset: {view_mode: asset.view_mode }}) do %>
+            <%= t('assets.empty_office_file.reload') %>
+          <% end %>
+      </div>
+    <% end %>
   <% elsif asset.pdf_previewable? %>
     <%= render partial: 'shared/pdf_viewer.html.erb', locals: { asset: asset } %>
   <% elsif asset.previewable? %>
