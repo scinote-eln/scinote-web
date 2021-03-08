@@ -2,13 +2,13 @@
 
 class TeamsController < ApplicationController
   include ProjectsHelper
-
+  include CardsViewHelper
   attr_reader :current_folder
   helper_method :current_folder
 
   before_action :load_vars, only: %i(sidebar export_projects export_projects_modal)
   before_action :load_current_folder, only: :sidebar
-  before_action :check_read_permissions
+  before_action :check_read_permissions, except: :view_type
   before_action :check_export_projects_permissions, only: %i(export_projects_modal export_projects)
 
   def sidebar
@@ -77,6 +77,14 @@ class TeamsController < ApplicationController
     redirect_to root_path
   end
 
+  def view_type
+    view_state = current_team.current_view_state(current_user)
+    view_state.state['projects']['view_type'] = view_type_params
+    view_state.save!
+
+    render json: { cards_view_type_class: cards_view_type_class(view_type_params) }, status: :ok
+  end
+
   private
 
   def load_vars
@@ -86,6 +94,10 @@ class TeamsController < ApplicationController
 
   def export_projects_params
     params.permit(:id, project_ids: [], project_folder_ids: [])
+  end
+
+  def view_type_params
+    params.require(:projects).require(:view_type)
   end
 
   def check_read_permissions

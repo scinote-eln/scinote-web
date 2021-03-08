@@ -155,13 +155,15 @@ class Project < ApplicationRecord
     {
       experiments: {
         active: { sort: 'new' },
-        archived: { sort: 'new' }
+        archived: { sort: 'new' },
+        view_type: 'cards'
       }
     }
   end
 
   def validate_view_state(view_state)
-    if %w(new old atoz ztoa).exclude?(view_state.state.dig('experiments', 'active', 'sort')) ||
+    if %w(cards table).exclude?(view_state.state.dig('experiments', 'view_type')) ||
+       %w(new old atoz ztoa).exclude?(view_state.state.dig('experiments', 'active', 'sort')) ||
        %w(new old atoz ztoa archived_new archived_old).exclude?(view_state.state.dig('experiments', 'archived', 'sort'))
       view_state.errors.add(:state, :wrong_state)
     end

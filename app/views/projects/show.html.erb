@@ -11,7 +11,7 @@
   <%= render partial: 'projects/show/header' %>
 
   <div class="project-show-container">
-    <div class="cards-wrapper <%= 'readonly' unless can_manage_experiments?(@project) %>"
+    <div class="cards-wrapper <%= 'readonly' unless can_manage_experiments?(@project) %> <%= cards_view_type_class(@current_view_type) %>"
          id="cardsWrapper"
          data-experiments-cards-url="<%= experiments_cards_project_path(@project) %>">
       <!-- list -->
