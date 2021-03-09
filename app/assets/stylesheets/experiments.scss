@@ -14,179 +14,180 @@
     }
   }
 
-.experiment-actions-menu {
-  .dropdown-menu {
-    a,
-    button {
-      @include font-button;
-      padding: .5em 1em;
+  .experiment-actions-menu {
+    .dropdown-menu {
+      a,
+      button {
+        @include font-button;
+        padding: .5em 1em;
 
-      .fas {
-        margin-right: .4em;
-      }
-    }
-  }
-
-  &.archived {
-    [data-view-mode="active"] {
-      display: none !important;
-    }
-  }
-
-  .content-header {
-    .project-name {
-      align-items: center;
-      display: flex;
-      max-width: calc(100% - 7em);
-
-      .inline-editing-container {
-        width: calc(100% - 3em);
-      }
-
-      .fas {
-        margin-right: .5em;
+        .fas {
+          margin-right: .4em;
+        }
       }
     }
 
-    .archive-experiments-form,
-    .restore-experiments-form {
-      display: inline-block;
+    &.archived {
+      [data-view-mode="active"] {
+        display: none !important;
+      }
     }
-  }
 
-  .project-show-container {
-    margin: 1.5em 0;
+    .content-header {
+      .project-name {
+        align-items: center;
+        display: flex;
+        max-width: calc(100% - 7em);
 
-    .cards-wrapper {
-      --card-min-width: 350px;
-      --list-columns-number: 7;
+        .inline-editing-container {
+          width: calc(100% - 3em);
+        }
 
-      .card {
-        grid-row: span 6;
+        .fas {
+          margin-right: .5em;
+        }
+      }
 
-        &.experiment-card {
-          border-radius: 4px;
-          box-shadow: $flyout-shadow;
+      .archive-experiments-form,
+      .restore-experiments-form {
+        display: inline-block;
+      }
+    }
 
-          .experiment-name-cell {
-            @include font-h3;
-            -webkit-box-orient: vertical;
-            display: -webkit-box;
-            height: 3em;
-            -webkit-line-clamp: 2;
-            margin: .25em 1.75em;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 100%;
+    .project-show-container {
+      margin: 1.5em 0;
 
-            a {
-              color: inherit;
-            }
-          }
+      .cards-wrapper {
+        --card-min-width: 350px;
+        --list-columns-number: 7;
 
-          .actions {
-            position: absolute;
-            right: .2em;
-            top: .2em;
-          }
+        .card {
+          grid-row: span 6;
 
-          .dates-and-img-container{
-            display: flex;
-            height: 6em;
-            width: 100%;
+          &.experiment-card {
+            border-radius: 4px;
+            box-shadow: $flyout-shadow;
 
-            .dates-container {
-              flex-grow: 1;
-            }
-
-            .workflow-img-container {
-              background-color: $color-concrete;
-              border-radius: 4px;
-              height: 76px;
-              width: 76px;
-            }
-          }
-
-          .data-row {
-            display: flex;
-            line-height: 2.25em;
-
-            .card-label {
-              width: 7em;
-            }
-
-            .card-value {
-              font-weight: 600;
-            }
-          }
-
-          .progress {
-            height: 4px;
-            margin-bottom: 0;
-            width: 100%;
-
-            .progress-bar {
-              min-width: 0 !important;
-            }
-          }
-
-          .description-cell {
-            .description-text {
+            .experiment-name-cell {
+              @include font-h3;
               -webkit-box-orient: vertical;
               display: -webkit-box;
               height: 3em;
               -webkit-line-clamp: 2;
+              margin: .25em 1.75em;
               overflow: hidden;
-              padding-top: 0.25em;
+              text-overflow: ellipsis;
+              width: 100%;
 
-              &::after {
-                background: linear-gradient(to right, transparent, $color-white 50%);
-                bottom: .75em;
-                content: "";
-                height: 1.75em;
-                position: absolute;
-                right: 0;
-                text-align: right;
-                width: 25%;
+              a {
+                color: inherit;
               }
             }
 
-            .more-button {
-              bottom: 1.1em;
+            .actions {
               position: absolute;
-              right: 1em;
-            }
-          }
-        }
-      }
-
-      &.list {
-        grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 2), minmax(100px, auto)) max-content;
-
-        .card {
-          &.experiment-card {
-            .experiment-name-cell {
-              grid-column: 2;
+              right: .2em;
+              top: .2em;
             }
 
-            .start-date-cell {
-              grid-column: 3;
+            .dates-and-img-container{
+              display: flex;
+              height: 6em;
+              width: 100%;
+
+              .dates-container {
+                flex-grow: 1;
+              }
+
+              .workflow-img-container {
+                background-color: $color-concrete;
+                border-radius: 4px;
+                height: 76px;
+                width: 76px;
+              }
             }
 
-            .modified-date-cell {
-              grid-column: 4;
+            .data-row {
+              display: flex;
+              line-height: 2.25em;
+
+              .card-label {
+                width: 7em;
+              }
+
+              .card-value {
+                font-weight: 600;
+              }
             }
 
-            .completed-task-cell {
-              grid-column: 5;
+            .progress {
+              height: 4px;
+              margin-bottom: 0;
+              width: 100%;
+
+              .progress-bar {
+                min-width: 0 !important;
+              }
             }
 
             .description-cell {
-              grid-column: 6;
-            }
+              .description-text {
+                -webkit-box-orient: vertical;
+                display: -webkit-box;
+                height: 3em;
+                -webkit-line-clamp: 2;
+                overflow: hidden;
+                padding-top: 0.25em;
 
-            .actions-cell {
-              grid-column: 7;
+                &::after {
+                  background: linear-gradient(to right, transparent, $color-white 50%);
+                  bottom: .75em;
+                  content: "";
+                  height: 1.75em;
+                  position: absolute;
+                  right: 0;
+                  text-align: right;
+                  width: 25%;
+                }
+              }
+
+              .more-button {
+                bottom: 1.1em;
+                position: absolute;
+                right: 1em;
+              }
+            }
+          }
+        }
+
+        &.list {
+          grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 2), minmax(100px, auto)) max-content;
+
+          .card {
+            &.experiment-card {
+              .experiment-name-cell {
+                grid-column: 2;
+              }
+
+              .start-date-cell {
+                grid-column: 3;
+              }
+
+              .modified-date-cell {
+                grid-column: 4;
+              }
+
+              .completed-task-cell {
+                grid-column: 5;
+              }
+
+              .description-cell {
+                grid-column: 6;
+              }
+
+              .actions-cell {
+                grid-column: 7;
+              }
             }
           }
         }
