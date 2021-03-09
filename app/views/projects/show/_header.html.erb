@@ -12,7 +12,9 @@
                             config: @inline_editable_title_config
                          } %>
       <% else %>
-        <%= @project.name %>
+        <div class="name-readonly-placeholder">
+          <%= @project.name %>
+        </div>
       <% end %>
     </h1>
     <div class="sci-btn-group header-actions">

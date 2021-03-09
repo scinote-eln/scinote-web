@@ -3,10 +3,10 @@
     <%= render partial: 'projects/index/breadcrumbs', locals: { target_folder: current_folder } if current_folder %>
   </div>
   <div class="title-row">
-    <h1 data-view-mode="active" class="projects-title"><%= current_folder&.name || t('projects.index.head_title') %></h1>
+    <h1 data-view-mode="active" class="projects-title name-readonly-placeholder"><%= current_folder&.name || t('projects.index.head_title') %></h1>
     <h1 data-view-mode="archived">
       <i class="fas fa-archive"></i>&nbsp;
-      <span class="projects-title"><%= current_folder&.name || t('projects.index.head_title_archived') %></span>
+      <span class="projects-title name-readonly-placeholder"><%= current_folder&.name || t('projects.index.head_title_archived') %></span>
     </h1>
 
     <div class="sci-btn-group header-actions">
