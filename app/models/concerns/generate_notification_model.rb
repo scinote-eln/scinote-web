@@ -11,7 +11,7 @@ module GenerateNotificationModel
   def generate_notification_from_activity
     return if notification_recipients.none?
 
-    message = generate_activity_content(self, no_links: true, no_sanitization: true)
+    message = generate_activity_content(self, no_links: true, no_custom_links: true)
     description = generate_notification_description_elements(subject).reverse.join(' | ')
 
     notification = Notification.create(
@@ -54,6 +54,7 @@ module GenerateNotificationModel
     users - [owner]
   end
 
+  # This method returns unsanitized elements. They must be sanitized before saving to DB
   def generate_notification_description_elements(object, elements = [])
     case object
     when Project

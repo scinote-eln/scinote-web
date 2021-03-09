@@ -5,7 +5,7 @@ module GlobalActivitiesHelper
   include ActionView::Helpers::UrlHelper
   include InputSanitizeHelper
 
-  def generate_activity_content(activity, no_links: false, no_sanitization: false)
+  def generate_activity_content(activity, no_links: false, no_custom_links: false)
     parameters = {}
     activity.message_items.each do |key, value|
       parameters[key] =
@@ -18,7 +18,7 @@ module GlobalActivitiesHelper
         end
     end
 
-    if no_sanitization
+    if no_custom_links
       I18n.t("global_activities.content.#{activity.type_of}_html", parameters.symbolize_keys)
     else
       custom_auto_link(
