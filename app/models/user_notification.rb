@@ -6,7 +6,7 @@ class UserNotification < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :notification, optional: true
 
-  after_save :send_email
+  after_create :send_email
 
   def self.last_notifications(
     user,
@@ -37,27 +37,6 @@ class UserNotification < ApplicationRecord
   end
 
   def send_email
-    case notification.type_of
-    when 'system_message'
-      send_email_notification(
-        user,
-        notification
-      ) if user.system_message_email_notification
-    when 'assignment'
-      send_email_notification(
-        user,
-        notification
-      ) if user.assignments_email_notification
-    when 'recent_changes'
-      send_email_notification(
-        user,
-        notification
-      ) if user.recent_email_notification
-    when 'deliver'
-      send_email_notification(
-        user,
-        notification
-      )
-    end
+    send_email_notification(user, notification) if user.enabled_notifications_for?(notification.type_of.to_sym, :email)
   end
 end

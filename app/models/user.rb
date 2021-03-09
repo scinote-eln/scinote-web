@@ -556,6 +556,19 @@ class User < ApplicationRecord
     end
   end
 
+  def enabled_notifications_for?(notification_type, channel)
+    return true if notification_type == :deliver
+
+    case channel
+    when :web
+      notification_type == :recent_changes && recent_notification ||
+        notification_type == :assignment && assignments_notification
+    when :email
+      notification_type == :recent_changes && recent_email_notification ||
+        notification_type == :assignment && assignments_email_notification
+    end
+  end
+
   def increase_daily_exports_counter!
     range = Time.now.utc.beginning_of_day.to_i..Time.now.utc.end_of_day.to_i
     last_export = export_vars[:last_export_timestamp] || 0

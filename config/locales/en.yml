@@ -291,6 +291,7 @@ en:
       module: "Task: "
       step: "Step: "
       result: "Result: "
+      report: "Report: "
       no_name: "(no name)"
       error:
         no_results: "No results for %{q}."

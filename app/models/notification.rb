@@ -10,4 +10,10 @@ class Notification < ApplicationRecord
                     .pluck(:checked)
                     .first
   end
+
+  def create_user_notification(user)
+    return if user == generator_user
+
+    user_notifications.create!(user: user) if user.enabled_notifications_for?(type_of.to_sym, :web)
+  end
 end

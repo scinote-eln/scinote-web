@@ -23,7 +23,7 @@ module Api
         if object.old_activity?
           object.message
         else
-          generate_activity_content(object, true)
+          generate_activity_content(object, no_links: true)
         end
       end
     end
