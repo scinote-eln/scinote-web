@@ -98,12 +98,14 @@ div.print-report {
       max-width: 100%;
     }
 
-    .image-icon.preview {
-      display: none;
-    }
+    & > .report-element-header .export-all-icons {
+      .image-icon.preview {
+        display: none;
+      }
 
-    .image-icon.report {
-      display: initial !important;
+      .image-icon.report {
+        display: initial !important;
+      }
     }
   }
 
