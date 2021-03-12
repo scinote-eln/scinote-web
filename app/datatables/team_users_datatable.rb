@@ -17,7 +17,7 @@ class TeamUsersDatatable < CustomDatatable
       'User.full_name',
       'User.email',
       'UserTeam.role',
-      'User.confirmed_at',
+      'UserTeam.created_at',
       'User.confirmed_at',
     ]
   end
