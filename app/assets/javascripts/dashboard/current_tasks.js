@@ -134,7 +134,7 @@ var DasboardCurrentTasksWidget = (function() {
           $currentTasksList.find('.widget-placeholder').addClass($('.current-tasks-navbar .active').data('mode'));
         }
       }
-      appendTasksList(result, $currentTasksList);
+      appendTasksList(result, '.current-tasks-list-wrapper');
       PerfectSb().update_all();
       if (newList) InfiniteScroll.resetScroll('.current-tasks-list-wrapper');
       animateSpinner($currentTasksList, false);
