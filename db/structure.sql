@@ -1272,7 +1272,9 @@ CREATE TABLE public.reports (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     last_modified_by_id bigint,
-    team_id bigint
+    team_id bigint,
+    pdf_file_processing boolean DEFAULT false,
+    docx_file_processing boolean DEFAULT false
 );
 
 
@@ -7156,6 +7158,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201215161050'),
 ('20210128105457'),
 ('20210128105458'),
-('20210217114042');
+('20210217114042'),
+('20210312185911');
 
 
