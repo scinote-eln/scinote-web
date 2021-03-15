@@ -4,6 +4,10 @@ class Report < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
 
+  # ActiveStorage configuration
+  has_one_attached :pdf_file
+  has_one_attached :docx_file
+
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
