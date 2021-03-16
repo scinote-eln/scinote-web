@@ -198,9 +198,6 @@ GEM
       nokogiri (~> 1.6)
       rubyzip (~> 1.1)
       tilt (>= 1.4)
-    caracal-rails (1.0.2)
-      caracal (~> 1.0)
-      rails (>= 3.2)
     case_transform (0.2)
       activesupport
     childprocess (3.0.0)
@@ -647,7 +644,7 @@ DEPENDENCIES
   canaid!
   capybara
   capybara-email
-  caracal-rails
+  caracal
   cucumber-rails (~> 1.8)
   database_cleaner
   deface (~> 1.0)

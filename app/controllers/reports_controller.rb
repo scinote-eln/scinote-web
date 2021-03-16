@@ -22,7 +22,7 @@ class ReportsController < ApplicationController
     result_contents
   ).freeze
 
-  before_action :load_vars, only: %i(edit update document_preview)
+  before_action :load_vars, only: %i(edit update document_preview generate)
   before_action :load_vars_nested, only: BEFORE_ACTION_METHODS
   before_action :load_visible_projects, only: %i(new edit)
   before_action :load_available_repositories,
@@ -167,15 +167,20 @@ class ReportsController < ApplicationController
   end
 
   # Generation action
-  # Currently, only .PDF is supported
   def generate
     respond_to do |format|
-      format.docx do
-        @user = current_user
-        @team = current_team
-        @scinote_url = root_url
-        @data = params[:data]
-        headers["Content-Disposition"] = 'attachment; filename="scinote_report.docx"'
+      format.pdf do
+        render pdf: 'report', header: { html: { template: 'reports/header.pdf.erb' }},
+                              footer: { html: { template: 'reports/footer.pdf.erb',
+                                                locals: { current_time: I18n.l(Time.zone.now, format: :full) }}},
+                              locals: { content: content },
+                              template: 'reports/report.pdf.erb',
+                              disable_javascript: true
+      end
+      format.json do
+        @report.update!(docx_file_processing: true)
+        Reports::DocxJob.perform_now(@report, params[:data], current_user, current_team, root_url)
+        render json: {}, status: :accepted
       end
     end
   end
