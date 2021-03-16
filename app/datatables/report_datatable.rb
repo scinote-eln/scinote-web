@@ -35,10 +35,12 @@ class ReportDatatable < CustomDatatable
         '0' => record.id,
         '1' => sanitize_input(record.project_name),
         '2' => sanitize_input(record.name),
-        '3' => sanitize_input(record.created_by),
-        '4' => sanitize_input(record.modified_by),
-        '5' => I18n.l(record.created_at, format: :full),
-        '6' => I18n.l(record.updated_at, format: :full),
+        '3' => '',
+        '4' => '',
+        '5' => sanitize_input(record.created_by),
+        '6' => sanitize_input(record.modified_by),
+        '7' => I18n.l(record.created_at, format: :full),
+        '8' => I18n.l(record.updated_at, format: :full),
         'edit' => edit_project_report_path(record.project_id, record.id)
       }
     end

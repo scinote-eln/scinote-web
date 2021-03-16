@@ -134,27 +134,34 @@
   function initDatatable() {
     var $table = $('#reports-table')
     DATATABLE = $table.dataTable({
-      'order': [[2, 'desc']],
-      'processing': true,
-      'serverSide': true,
-      'ajax': $table.data('source'),
-      'pagingType': 'simple_numbers',
-      'colReorder': {
-        'fixedColumnsLeft': 1000000 // Disable reordering
+      dom: "Rt<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
+      order: [[2, 'desc']],
+      sScrollX: '100%',
+      sScrollXInner: '100%',
+      processing: true,
+      serverSide: true,
+      ajax: $table.data('source'),
+      pagingType: 'simple_numbers',
+      colReorder: {
+        fixedColumnsLeft: 1000000 // Disable reordering
       },
-      'columnDefs': [{
-        'targets': 0,
-        'searchable': false,
-        'orderable': false,
-        'className': 'dt-body-center',
-        'sWidth': '1%',
-        'render': renderCheckboxHTML
+      columnDefs: [{
+        targets: 0,
+        searchable: false,
+        orderable: false,
+        className: 'dt-body-center',
+        sWidth: '1%',
+        render: renderCheckboxHTML
       }],
-      'oLanguage': {
-        'sSearch': I18n.t('general.filter')
+      oLanguage: {
+        sSearch: I18n.t('general.filter')
       },
-      'fnDrawCallback': tableDrowCallback,
-      'createdRow': appendEditPathToRow
+      fnDrawCallback: tableDrowCallback,
+      createdRow: appendEditPathToRow,
+      fnInitComplete: function() {
+        DataTableHelpers.initLengthApearance($table.closest('.dataTables_wrapper'));
+        $('.pagination-row').removeClass('hidden');
+      }
     });
   }
 

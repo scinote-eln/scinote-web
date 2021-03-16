@@ -1,0 +1,25 @@
+.reports-datatable {
+  height: calc(100vh - var(--navbar-height) - var(--content-header-size));
+
+  #reports-table_wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .dataTables_scroll {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      height: calc(100% - var(--datatable-pagination-row));
+
+      .dataTables_scrollHead {
+        flex-shrink: 0;
+      }
+    }
+
+    .pagination-row {
+      flex-shrink: 0;
+    }
+  }
+
+}
