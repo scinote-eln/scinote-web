@@ -2,30 +2,11 @@
   <meta name="turbolinks-cache-control" content="no-cache">
 <% end %>
 
-<% provide(:head_title, t('projects.reports.index.head_title').html_safe) %>
 <%= stylesheet_link_tag 'datatables' %>
 
-<div class="content-pane">
+<div class="content-pane flexible reports-index">
+  <%= render partial: 'reports/index_header' %>
   <div id="content-reports-index">
-    <div class="row">
-      <div class="col-md-12">
-        <% if can_manage_reports?(current_team) %>
-          <%= link_to '#', remote: true, class: 'btn btn-primary', id: 'new-report-btn' do %>
-            <span class="fas fa-plus" aria-hidden="true"></span>
-            <span class="hidden-xs"><%=t "projects.reports.index.new" %></span>
-          <% end %>
-          <%= link_to "", remote: true, class: "btn btn-light disabled hidden", id: "edit-report-btn" do %>
-            <span class="fas fa-pencil-alt" aria-hidden="true"></span>
-            <span class="hidden-xs"><%=t "projects.reports.index.edit" %></span>
-          <% end %>
-          <%= link_to "", remote: true, class: "btn btn-light disabled hidden", id: "delete-reports-btn" do %>
-            <span class="fas fa-times" aria-hidden="true"></span>
-            <span class="hidden-xs"><%=t "projects.reports.index.delete" %></span>
-          <% end %>
-        <% end %>
-      </div>
-    </div>
-    <br />
     <div class="row">
       <div class="col-md-12">
         <div class="reports-datatable">
@@ -40,12 +21,14 @@
                     <span class="sci-checkbox-label"></span>
                   </div>
                 </th>
-                <th id="project-name"><%=t 'projects.reports.index.thead_project_name' %></th>
-                <th id="report-name"><%=t 'projects.reports.index.thead_name' %></th>
-                <th id="report-created-by"><%=t 'projects.reports.index.thead_created_by' %></th>
-                <th id="report-last-modified-by"><%=t 'projects.reports.index.thead_last_modified_by' %></th>
-                <th id="report-created-at"><%=t 'projects.reports.index.thead_created_at' %></th>
-                <th id="report-updated-at"><%=t 'projects.reports.index.thead_updated_at' %></th>
+                <th id="project-name"><%= t('projects.reports.index.thead_project_name') %></th>
+                <th id="report-name"><%= t('projects.reports.index.thead_name') %></th>
+                <th id="report-pdf"><%= t('projects.reports.index.pdf') %></th>
+                <th id="report-docx"><%= t('projects.reports.index.docx') %></th>
+                <th id="report-created-by"><%= t('projects.reports.index.thead_created_by') %></th>
+                <th id="report-last-modified-by"><%= t('projects.reports.index.thead_last_modified_by') %></th>
+                <th id="report-created-at"><%= t('projects.reports.index.thead_created_at') %></th>
+                <th id="report-updated-at"><%= t('projects.reports.index.thead_updated_at') %></th>
               </tr>
             </thead>
             <tbody></tbody>

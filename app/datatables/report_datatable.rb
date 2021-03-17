@@ -2,10 +2,13 @@
 
 class ReportDatatable < CustomDatatable
   include InputSanitizeHelper
+  include Rails.application.routes.url_helpers
 
   TABLE_COLUMNS = %w(
     Report.project_name
     Report.name
+    Report.pdf_file
+    Report.docx_file
     Report.created_by
     Report.modified_by
     Report.created_at
@@ -27,6 +30,22 @@ class ReportDatatable < CustomDatatable
     @searchable_columns ||= TABLE_COLUMNS
   end
 
+  def sort_records(records)
+    case sort_column(order_params)
+    when 'reports.docx_file'
+      records.left_joins(:docx_file_attachment)
+             .order(active_storage_attachments: sort_direction(order_params))
+             .order(docx_file_processing: sort_direction(order_params) == 'ASC' ? :desc : :asc)
+    when 'reports.pdf_file'
+      records.left_joins(:pdf_file_attachment)
+             .order(active_storage_attachments: sort_direction(order_params))
+             .order(pdf_file_processing: sort_direction(order_params) == 'ASC' ? :desc : :asc)
+    else
+      sort_by = "#{sort_column(order_params)} #{sort_direction(order_params)}"
+      records.order(sort_by)
+    end
+  end
+
   private
 
   def data
@@ -35,13 +54,33 @@ class ReportDatatable < CustomDatatable
         '0' => record.id,
         '1' => sanitize_input(record.project_name),
         '2' => sanitize_input(record.name),
-        '3' => sanitize_input(record.created_by),
-        '4' => sanitize_input(record.modified_by),
-        '5' => I18n.l(record.created_at, format: :full),
-        '6' => I18n.l(record.updated_at, format: :full),
+        '3' => pdf_file(record),
+        '4' => docx_file(record),
+        '5' => sanitize_input(record.created_by),
+        '6' => sanitize_input(record.modified_by),
+        '7' => I18n.l(record.created_at, format: :full),
+        '8' => I18n.l(record.updated_at, format: :full),
         'edit' => edit_project_report_path(record.project_id, record.id)
       }
     end
+  end
+
+  def docx_file(report)
+    docx = rails_blob_path(report.docx_file, disposition: 'attachment') if report.docx_file.attached?
+    {
+      processing: report.docx_file_processing,
+      file: docx,
+      error: false
+    }
+  end
+
+  def pdf_file(report)
+    pdf = rails_blob_path(report.pdf_file, disposition: 'attachment') if report.pdf_file.attached?
+    {
+      processing: report.pdf_file_processing,
+      file: pdf,
+      error: false
+    }
   end
 
   def get_raw_records

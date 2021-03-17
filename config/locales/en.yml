@@ -490,8 +490,13 @@ en:
     reports:
       print_title: "%{project} | Report"
       index:
-        head_title: " Reports"
+        head_title: "Reports"
         new: "New report"
+        report_button: "Report"
+        update_pdf: "Update PDF"
+        save_pdf_to_inventory: "Save PDF to Inventory"
+        request_docx: "Request DOCX"
+        update_docx: "Update DOCX"
         edit: "Edit"
         delete: "Delete"
         deleted: "(Deleted)"
@@ -502,6 +507,11 @@ en:
         thead_created_at: "Created at"
         thead_updated_at: "Last updated at"
         no_reports: "No reports!"
+        pdf: "PDF"
+        docx: "DOCX"
+        error: "Error"
+        generating: "Generating"
+        generate: "Generate"
         modal_new:
           projects: "Projects"
           head_title: "Create new report"
