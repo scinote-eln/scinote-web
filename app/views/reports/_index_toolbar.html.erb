@@ -1,14 +1,49 @@
 <% if can_manage_reports?(current_team) %>
-  <%= link_to '#', remote: true, class: 'btn btn-primary', id: 'new-report-btn' do %>
-    <span class="fas fa-plus" aria-hidden="true"></span>
-    <span class="hidden-xs"><%=t "projects.reports.index.new" %></span>
-  <% end %>
-  <%= link_to "", remote: true, class: "btn btn-light disabled hidden", id: "edit-report-btn" do %>
-    <span class="fas fa-pencil-alt" aria-hidden="true"></span>
-    <span class="hidden-xs"><%=t "projects.reports.index.edit" %></span>
-  <% end %>
-  <%= link_to "", remote: true, class: "btn btn-light disabled hidden", id: "delete-reports-btn" do %>
-    <span class="fas fa-times" aria-hidden="true"></span>
-    <span class="hidden-xs"><%=t "projects.reports.index.delete" %></span>
-  <% end %>
+  <div class="sci-btn-group">
+    <%= link_to '#', remote: true, class: 'btn btn-primary', id: 'new-report-btn' do %>
+      <span class="fas fa-plus" aria-hidden="true"></span>
+      <span class="hidden-xs"><%= t("projects.reports.index.new") %></span>
+    <% end %>
+    <div class="report-actions-dropdown sci-dropdown">
+      <button class="btn btn-light dropdown-toggle single-object-action disabled hidden" type="button" id="reportMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <i class="fas fa-file"></i>
+        <%= t("projects.reports.index.report_button") %>
+        <span class="caret pull-right"></span>
+      </button>
+      <ul id="reportMenuDropdown" class="dropdown-menu report-actions-menu" aria-labelledby="reportMenu">
+        <li>
+          <%= link_to '#', remote: true, id: 'updatePdf' do %>
+            <i class="fas fa-file-pdf"></i>
+            <%= t("projects.reports.index.update_pdf") %>
+          <% end %>
+        </li>
+        <li>
+          <%= link_to '#', remote: true, id: 'savePdfToInventory' do %>
+            <i class="fas fa-save"></i>
+            <%= t("projects.reports.index.save_pdf_to_inventory") %>
+          <% end %>
+        </li>
+        <li>
+          <%= link_to '#', remote: true, id: 'requestDocx' do %>
+            <i class="fas fa-file-word"></i>
+            <%= t("projects.reports.index.request_docx") %>
+          <% end %>
+        </li>
+        <li>
+          <%= link_to '#', remote: true, id: 'updateDocx' do %>
+            <i class="fas fa-file-word"></i>
+            <%= t("projects.reports.index.update_docx") %>
+          <% end %>
+        </li>
+      </ul>
+    </div>
+    <%= link_to "", remote: true, class: "btn btn-light disabled hidden single-object-action", id: "edit-report-btn" do %>
+      <span class="fas fa-pencil-alt" aria-hidden="true"></span>
+      <span class="hidden-xs"><%=t "projects.reports.index.edit" %></span>
+    <% end %>
+    <%= link_to "", remote: true, class: "btn btn-light disabled hidden multiple-object-action", id: "delete-reports-btn" do %>
+      <span class="fas fa-times" aria-hidden="true"></span>
+      <span class="hidden-xs"><%=t "projects.reports.index.delete" %></span>
+    <% end %>
+  </div>
 <% end %>

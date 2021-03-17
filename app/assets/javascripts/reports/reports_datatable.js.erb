@@ -1,3 +1,5 @@
+/* global I18n DataTableHelpers */
+
 (function(global) {
   'use strict';
 
@@ -91,6 +93,54 @@
             </div>`;
   }
 
+  function renderDocxFile(data) {
+    if (data.error) {
+      return `<span class="processing-error">
+                <i class="fas fa-exclamation-triangle"></i>
+                ${I18n.t('projects.reports.index.error')}
+              </span>`;
+    }
+
+    if (data.processing) {
+      return `<span class="processing docx">
+                ${I18n.t('projects.reports.index.generating')}
+              </span>`;
+    }
+
+    if (data.file) {
+      return `<a href="${data.file}">
+                <i class="fas fa-file-word"></i>
+                ${I18n.t('projects.reports.index.docx')}
+              </a>`;
+    }
+
+    return `<a href="#" class="generate-docx">${I18n.t('projects.reports.index.generate')}</a>`;
+  }
+
+  function renderPdfFile(data) {
+    if (data.error) {
+      return `<span class="processing-error">
+                <i class="fas fa-exclamation-triangle"></i>
+                ${I18n.t('projects.reports.index.error')}
+              </span>`;
+    }
+
+    if (data.processing) {
+      return `<span class="processing pdf">
+                ${I18n.t('projects.reports.index.generating')}
+              </span>`;
+    }
+
+    if (data.file) {
+      return `<a href="${data.file}">
+                <i class="fas fa-file-pdf"></i>
+                ${I18n.t('projects.reports.index.pdf')}
+              </a>`;
+    }
+
+    return '';
+  }
+
   function appendEditPathToRow(row, data) {
     $(row).addClass('report-row')
           .attr('data-edit-path', data['edit'])
@@ -115,17 +165,38 @@
   }
 
   function updateButtons() {
-    var editReportButton = $('#edit-report-btn');
-    var deleteReportsButton = $('#delete-reports-btn');
     if (CHECKED_REPORTS.length === 0) {
-      editReportButton.addClass('disabled hidden');
-      deleteReportsButton.addClass('disabled hidden');
+      $('.single-object-action, .multiple-object-action').addClass('disabled hidden');
     } else if (CHECKED_REPORTS.length === 1) {
-      editReportButton.removeClass('disabled hidden');
-      deleteReportsButton.removeClass('disabled hidden');
+      $('.single-object-action, .multiple-object-action').removeClass('disabled hidden');
+
+      let $row = $(`.report-row[data-id=${CHECKED_REPORTS[0]}]`);
+      let pdfProcessing = $row.has('.processing.pdf').length > 0;
+      let docxProcessing = $row.has('.processing.docx').length > 0;
+      let docxGenerate = $row.has('.generate-docx').length > 0;
+
+      if (pdfProcessing) {
+        $('#updatePdf').addClass('disabled');
+      } else {
+        $('#updatePdf').removeClass('disabled');
+      }
+
+      if (docxGenerate) {
+        $('#requestDocx').removeClass('hidden');
+        $('#updateDocx').addClass('hidden');
+      } else {
+        $('#requestDocx').addClass('hidden');
+        $('#updateDocx').removeClass('hidden');
+
+        if (docxProcessing) {
+          $('#updateDocx').addClass('disabled');
+        } else {
+          $('#updateDocx').removeClass('disabled');
+        }
+      }
     } else {
-      editReportButton.removeClass('hidden').addClass('disabled');
-      deleteReportsButton.removeClass('disabled hidden');
+      $('.single-object-action').removeClass('hidden').addClass('disabled');
+      $('.multiple-object-action').removeClass('disabled hidden');
     }
   }
 
@@ -152,6 +223,18 @@
         className: 'dt-body-center',
         sWidth: '1%',
         render: renderCheckboxHTML
+      },
+      {
+        targets: 3,
+        searchable: false,
+        sWidth: '60',
+        render: renderPdfFile
+      },
+      {
+        targets: 4,
+        searchable: false,
+        sWidth: '60',
+        render: renderDocxFile
       }],
       oLanguage: {
         sSearch: I18n.t('general.filter')

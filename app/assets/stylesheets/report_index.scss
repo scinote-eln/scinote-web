@@ -1,3 +1,25 @@
+// scss-lint:disable SelectorDepth NestingDepth IdSelector SelectorFormat
+
+.reports-index {
+  .report-actions-dropdown {
+    display: inline-block;
+    float: left;
+    position: relative;
+
+    .report-actions-menu {
+      width: 200px;
+
+      li {
+        padding: 0;
+      }
+
+      a {
+        padding: .5em 1em;
+      }
+    }
+  }
+}
+
 .reports-datatable {
   height: calc(100vh - var(--navbar-height) - var(--content-header-size));
 
@@ -19,6 +41,22 @@
 
     .pagination-row {
       flex-shrink: 0;
+    }
+  }
+
+  .report-row {
+    .processing-error {
+      color: $brand-danger;
+    }
+
+    .generate-docx {
+      display: none;
+    }
+
+    &:hover {
+      .generate-docx {
+        display: initial;
+      }
     }
   }
 
