@@ -332,6 +332,7 @@ en:
       navigation_archived_projects: "Archived projects"
       back_to_active_projects: "Back to active projects"
       breadcrumbs_root: "Projects"
+      breadcrumbs_collapsed: "Click to show hidden levels"
       archive: "Archive"
       archived: "Archived"
       active: "Active"
