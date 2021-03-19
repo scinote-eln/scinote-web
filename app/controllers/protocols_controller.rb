@@ -192,11 +192,13 @@ class ProtocolsController < ApplicationController
   end
 
   def update_description
+    old_description = @protocol.description
     respond_to do |format|
       format.json do
         if @protocol.update(description: params.require(:protocol)[:description])
           log_activity(:edit_description_in_protocol_repository, nil, protocol: @protocol.id)
           TinyMceAsset.update_images(@protocol, params[:tiny_mce_images], current_user)
+          protocol_annotation_notification(old_description)
           render json: {
             html: custom_auto_link(
               @protocol.tinymce_render(:description),
@@ -1199,5 +1201,17 @@ class ProtocolsController < ApplicationController
             team: current_team,
             project: project,
             message_items: message_items)
+  end
+
+  def protocol_annotation_notification(old_text)
+    smart_annotation_notification(
+      old_text: old_text,
+      new_text: @protocol.description,
+      title: t('notifications.protocol_description_annotation_title',
+               user: current_user.full_name,
+               protocol: @protocol.name),
+      message: t('notifications.protocol_description_annotation_message_html',
+                 protocol: link_to(@protocol.name, edit_protocol_url(@protocol)))
+    )
   end
 end
