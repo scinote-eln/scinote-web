@@ -66,19 +66,19 @@ class ReportDatatable < CustomDatatable
   end
 
   def docx_file(report)
-    docx = rails_blob_path(report.docx_file, disposition: 'attachment') if report.docx_file.attached?
+    docx = document_preview_report_path(report, report_type: :docx) if report.docx_file.attached?
     {
       processing: report.docx_file_processing,
-      file: docx,
+      preview_url: docx,
       error: false
     }
   end
 
   def pdf_file(report)
-    pdf = rails_blob_path(report.pdf_file, disposition: 'attachment') if report.pdf_file.attached?
+    pdf = document_preview_report_path(report, report_type: :pdf) if report.pdf_file.attached?
     {
       processing: report.pdf_file_processing,
-      file: pdf,
+      preview_url: pdf,
       error: false
     }
   end

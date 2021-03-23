@@ -194,7 +194,12 @@ Rails.application.routes.draw do
             via: [:get, :post, :put, :patch]
     end
 
-    resources :reports, only: [:index, :new]
+
+    resources :reports, only: [:index, :new] do
+      member do
+        get :document_preview
+      end
+    end
     get 'reports/datatable', to: 'reports#datatable'
     post 'reports/visible_projects', to: 'reports#visible_projects',
                                      defaults: { format: 'json' }

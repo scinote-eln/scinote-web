@@ -23,7 +23,7 @@ class ReportsController < ApplicationController
     result_contents
   ).freeze
 
-  before_action :load_vars, only: %i(edit update)
+  before_action :load_vars, only: %i(edit update document_preview)
   before_action :load_vars_nested, only: BEFORE_ACTION_METHODS
   before_action :load_visible_projects, only: :new
   before_action :load_available_repositories,
@@ -453,6 +453,16 @@ class ReportsController < ApplicationController
 
   def available_repositories
     render json: { results: @available_repositories }, status: :ok
+  end
+
+  def document_preview
+    render json: { html: render_to_string(
+      partial: 'reports/content_document_preview.html.erb',
+      locals: {
+        report: @report,
+        report_type: params[:report_type]
+      }
+    ) }
   end
 
   private
