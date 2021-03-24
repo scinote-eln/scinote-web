@@ -9,7 +9,7 @@
       </div>
       <div class="modal-body">
         <p>
-          <%= @experiment.description %>
+          <%= custom_auto_link(@experiment.description, team: current_team) %>
         </p>
       </div>
       <div class="modal-footer">
