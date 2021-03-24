@@ -6,13 +6,14 @@
 
   .delimiter {
     @include font-button;
+    color: $color-silver-chalice;
     font-weight: bold;
     padding: 0 .5em;
   }
 
   .breadcrumbs-link {
     display: inline-block;
-    max-width: 150px;
+    max-width: 180px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
