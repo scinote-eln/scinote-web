@@ -352,6 +352,6 @@ class Project < ApplicationRecord
   end
 
   def remove_project_folder
-    self.project_folder = nil if archived?
+    self.project_folder = nil
   end
 end
