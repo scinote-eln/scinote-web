@@ -39,31 +39,6 @@ class Users::SessionsController < Devise::SessionsController
   #   super
   # end
 
-  # Singing in with authentication token (needed when signing in automatically
-  # from another website). NOTE: For some reason URL needs to end with '/'.
-  def auth_token_create
-    user = User.find_by_email(params[:user_email])
-    user_token = params[:user_token]
-    # Remove trailing slash if present
-    user_token.chop! if !user_token.nil? && user_token.end_with?('/')
-
-    if user && user.authentication_token == user_token
-      sign_in(:user, user)
-      # This will cause new token to be generated
-      user.update(authentication_token: nil)
-      redirect_url = root_path
-    else
-      flash[:error] = t('devise.sessions.auth_token_create.wrong_credentials')
-      redirect_url = new_user_session_path
-    end
-
-    respond_to do |format|
-      format.html do
-        redirect_to redirect_url
-      end
-    end
-  end
-
   def after_sign_in
     flash[:system_notification_modal] = true
   end

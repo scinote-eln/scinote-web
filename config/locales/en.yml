@@ -49,8 +49,6 @@ en:
         not_correct_code: "Not correct recovery code"
       create:
         team_name: "%{user}'s projects"
-      auth_token_create:
-        wrong_credentials: "Failed to automatically sign in (wrong credentials)."
     unlocks:
       new:
         head_title: "Resend unlock instructions"
