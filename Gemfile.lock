@@ -295,6 +295,8 @@ GEM
     gherkin (5.1.0)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
+    graphviz (1.2.1)
+      process-pipeline
     hammerjs-rails (2.0.8)
     hashdiff (1.0.1)
     hashie (4.1.0)
@@ -416,6 +418,12 @@ GEM
       activerecord (>= 5.2)
       activesupport (>= 5.2)
     polyglot (0.3.5)
+    process-group (1.2.3)
+      process-terminal (~> 0.2.0)
+    process-pipeline (1.0.2)
+      process-group
+    process-terminal (0.2.0)
+      ffi
     pry (0.13.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -529,8 +537,6 @@ GEM
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 0.82.0)
-    ruby-graphviz (1.2.5)
-      rexml
     ruby-progressbar (1.11.0)
     ruby-vips (2.0.17)
       ffi (~> 1.9)
@@ -656,6 +662,7 @@ DEPENDENCIES
   faker
   fastimage
   figaro
+  graphviz
   hammerjs-rails
   httparty (~> 0.17.3)
   i18n-js (~> 3.6)
@@ -702,7 +709,6 @@ DEPENDENCIES
   rubocop (= 0.83.0)
   rubocop-performance
   rubocop-rails
-  ruby-graphviz (~> 1.2)
   rubyzip
   rufus-scheduler (~> 3.5)
   sanitize (~> 5.2)
