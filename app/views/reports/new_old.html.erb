@@ -1,0 +1,88 @@
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+  <meta name="turbolinks-visit-control" content="reload">
+<% end %>
+
+<% provide(:head_title, t("projects.reports.new.head_title", project: h(@project.name)).html_safe) %>
+
+<%= render partial: "reports/new/report_navigation" %>
+
+<div class="content-pane" id="report-new">
+  <div class="report-container">
+    <div
+      id="data-holder"
+      class="hidden"
+      data-project-modal-title="<%=t "projects.reports.elements.modals.project_contents.head_title" %>"
+      data-add-project-contents-url="<%= project_contents_modal_project_reports_url(@project) %>"
+      data-add-experiment-contents-url="<%= experiment_contents_modal_project_reports_url(@project) %>"
+      data-add-module-contents-url="<%= module_contents_modal_project_reports_url(@project) %>"
+      data-add-step-contents-url="<%= step_contents_modal_project_reports_url(@project) %>"
+      data-add-result-contents-url="<%= result_contents_modal_project_reports_url(@project) %>"
+      data-stylesheet-url="<%= stylesheet_path "application" %>"
+      data-print-title="<%=t "projects.reports.print_title", project: @project.name %>"
+      data-project-id="<%= @project.id %>"
+      data-save-report-url="<%= save_modal_project_reports_url(@project) %>"
+      data-report-id="<%= @report.present? ? @report.id : "" %>"
+      data-unsaved-work-text="<%=t "projects.reports.new.unsaved_work" %>"
+      data-global-sort-text="<%=t "projects.reports.new.global_sort" %>"></div>
+
+    <!-- Report "preview" -->
+    <div id="report-content">
+
+    <% if @report.present? %>
+      <% @report.root_elements.each do |el| %>
+        <%= render_report_element(el, local_assigns) %>
+        <%= render_new_element(false) %>
+      <% end %>
+    <% else %>
+      <%= render partial: "reports/elements/project_header_element", locals: { project: @project } %>
+      <%= render partial: "reports/elements/new_element", locals: { initial: true } %>
+    <% end %>
+    </div>
+
+    <!-- Add elements modal -->
+    <div class="modal" id="add-contents-modal" tabindex="-1" role="dialog" aria-labelledby="add-contents-modal-label">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="add-contents-modal-label"></h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
+              <button type="button" data-action="add" class="btn btn-primary"><%=t "projects.reports.elements.modals.add" %></button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- Save report modal -->
+    <div class="modal" id="save-report-modal" tabindex="-1" role="dialog" aria-labelledby="save-report-modal-label">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="save-report-modal-label"><%=t "projects.reports.elements.modals.save_report.head_title" %></h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
+            <button type="button" data-action="save" class="btn btn-primary"><%=t "projects.reports.elements.modals.save_report.save" %></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<%= render partial: 'reports/new/save_PDF_to_inventory_modal' %>
+
+<%= javascript_include_tag "handsontable.full.min" %>
+
+<!-- Libraries for formulas -->
+<%= render partial: "shared/formulas_libraries.html.erb" %>
+
+<%= javascript_include_tag("reports/new") %>
+<%= javascript_include_tag 'reports/save_pdf_to_inventory' %>

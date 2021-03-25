@@ -194,7 +194,7 @@ Rails.application.routes.draw do
             via: [:get, :post, :put, :patch]
     end
 
-    resources :reports, only: :index
+    resources :reports, only: [:index, :new]
     get 'reports/datatable', to: 'reports#datatable'
     post 'reports/visible_projects', to: 'reports#visible_projects',
                                      defaults: { format: 'json' }
@@ -247,7 +247,6 @@ Rails.application.routes.draw do
           # The posts following here should in theory be gets,
           # but are posts because of parameters payload
           post 'generate', to: 'reports#generate', format: %w(docx pdf)
-          get 'new/', to: 'reports#new'
           get 'new/project_contents_modal',
               to: 'reports#project_contents_modal',
               as: :project_contents_modal

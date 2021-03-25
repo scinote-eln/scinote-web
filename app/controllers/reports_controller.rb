@@ -6,7 +6,6 @@ class ReportsController < ApplicationController
   protect_from_forgery with: :exception, except: :generate
 
   BEFORE_ACTION_METHODS = %i(
-    new
     create
     edit
     update
@@ -26,7 +25,7 @@ class ReportsController < ApplicationController
 
   before_action :load_vars, only: %i(edit update)
   before_action :load_vars_nested, only: BEFORE_ACTION_METHODS
-  before_action :load_visible_projects, only: %i(index visible_projects)
+  before_action :load_visible_projects, only: :visible_projects
   before_action :load_available_repositories,
                 only: %i(new edit available_repositories)
 
@@ -50,7 +49,6 @@ class ReportsController < ApplicationController
 
   # Report grouped by modules
   def new
-    @report = nil
   end
 
   # Creating new report from the _save modal of the new page

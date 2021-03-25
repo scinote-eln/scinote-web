@@ -1,0 +1,216 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
+.reports-new {
+  height: calc(100vh - var(--navbar-height));
+
+  @mixin step-dot-active {
+    border: 2px solid $brand-primary;
+  }
+
+  @mixin step-dot-completed {
+    background: $brand-primary;
+  }
+
+  .reports-new-header {
+    align-items: center;
+    display: flex;
+    height: 4em;
+
+    .report-name-container {
+      width: 50%;
+
+      .report-name {
+        @include font-h1;
+      }
+    }
+
+    .cancel-button {
+      margin-left: auto;
+    }
+  }
+
+  .reports-new-body {
+    background: $color-concrete;
+    height: calc(100% - 10em);
+    margin-left: calc(-1em - 15px);
+    overflow-y: auto;
+    width: calc(100% + 2em + 30px);
+  }
+
+  .reports-new-footer {
+    align-items: center;
+    display: flex;
+    height: 6em;
+
+    .back-container {
+      flex-basis: 25%;
+    }
+
+    .wizard-status {
+      display: flex;
+      flex-basis: 50%;
+      justify-content: center;
+      position: relative;
+    }
+
+    .wizard-steps {
+      --wizard-step-dot-size: 8px;
+      color: $color-silver-chalice;
+      flex: 1;
+      font-weight: bold;
+      position: relative;
+      text-align: center;
+      user-select: none;
+      z-index: 2;
+
+      .step-id {
+        @include font-h3;
+        display: inline-block;
+        line-height: 1.5em;
+        text-align: center;
+        width: calc(2 * var(--wizard-step-dot-size));
+      }
+
+      .step-dot {
+        background: $color-concrete;
+        border-radius: 50%;
+        display: inline-block;
+        height: var(--wizard-step-dot-size);
+        margin: 0 calc(var(--wizard-step-dot-size) / 2);
+        width: var(--wizard-step-dot-size);
+      }
+
+      .step-name {
+        display: inline-block;
+        white-space: nowrap;
+      }
+
+
+
+      &.wizard-step-1 {
+        text-align: left;
+
+        .name-wrapper {
+          margin-left: calc(-50% + 2 * var(--wizard-step-dot-size));
+        }
+      }
+
+      &.wizard-step-3 {
+        text-align: right;
+
+        .name-wrapper {
+          margin-right: calc(-50% + 2 * var(--wizard-step-dot-size));
+        }
+      }
+    }
+
+    .progress-line {
+      background: $color-concrete;
+      height: 4px;
+      margin: 12px 0;
+      position: absolute;
+      top: 1.5em;
+      width: calc(50% - 8px);
+      z-index: 1;
+
+      &.progress-step-1 {
+        left: 8px;
+      }
+
+      &.progress-step-2 {
+        right: 8px;
+      }
+    }
+
+    .generate-button {
+      display: none;
+    }
+
+    .next-button-container {
+      flex-basis: 25%;
+      margin-left: auto;
+      text-align: right;
+    }
+
+    &[data-step="1"] {
+      .wizard-step-1 {
+        color: initial;
+
+        .step-dot {
+          @include step-dot-active;
+        }
+      }
+
+      .back-button {
+        display: none;
+      }
+    }
+
+
+    &[data-step="2"] {
+      .wizard-step-1 {
+        .step-dot {
+          @include step-dot-completed;
+        }
+      }
+
+      .wizard-step-2 {
+        color: initial;
+
+        .step-dot {
+          @include step-dot-active;
+        }
+      }
+
+      .progress-step-1 {
+        background: $brand-primary;
+      }
+    }
+
+    &[data-step="3"] {
+      .wizard-step-1 {
+        .step-dot {
+          @include step-dot-completed;
+        }
+      }
+
+      .wizard-step-2 {
+        .step-dot {
+          @include step-dot-completed;
+        }
+      }
+
+      .wizard-step-3 {
+        color: initial;
+
+        .step-dot {
+          @include step-dot-active;
+        }
+      }
+
+      .continue-button {
+        display: none;
+      }
+
+      .generate-button {
+        display: initial;
+      }
+
+      .progress-step-1,
+      .progress-step-2 {
+        background: $brand-primary;
+      }
+    }
+  }
+}
+
+@media (max-width: 960px) {
+  .reports-new {
+    .reports-new-footer {
+      .wizard-status {
+        display: none;
+      }
+    }
+  }
+}

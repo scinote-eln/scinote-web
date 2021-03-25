@@ -523,6 +523,14 @@ en:
           message: "Are you sure to delete selected report/s?"
           delete: "Delete"
       new:
+        report_name_placeholder: "Name your report"
+        wizard_statuses:
+          step_1: "Select project"
+          step_2: "Select tasks"
+          step_3: "Select task contents"
+        continue_button: "Continue"
+        generate_button: "Start generating"
+
         head_title: "%{project} | New report"
         nav_title: "Report for: "
         nav_print: "Print"
@@ -2371,6 +2379,7 @@ en:
     edit: "Edit"
     delete: "Delete"
     cancel: "Cancel"
+    back: "Back"
     close: "Close"
     create: 'Create'
     change: "Change"

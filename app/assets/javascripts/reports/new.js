@@ -966,3 +966,29 @@ function reportHandsonTableConverter() {
     });
   }, 0);
 }
+
+(function() {
+  function initReportWizard() {
+    function nextStep() {
+      var currentStep = parseInt($('.reports-new-footer').attr('data-step'), 10);
+      $(`[href="#new-report-step-${currentStep + 1}"]`).tab('show');
+      $('.reports-new-footer').attr('data-step', currentStep + 1);
+    }
+
+    function previousStep() {
+      var currentStep = parseInt($('.reports-new-footer').attr('data-step'), 10);
+      $(`[href="#new-report-step-${currentStep - 1}"]`).tab('show');
+      $('.reports-new-footer').attr('data-step', currentStep - 1);
+    }
+
+    $('.continue-button').on('click', function() {
+      nextStep();
+    });
+
+    $('.back-button').on('click', function() {
+      previousStep();
+    });
+  }
+
+  initReportWizard();
+}());
