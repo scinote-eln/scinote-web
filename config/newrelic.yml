@@ -45,3 +45,13 @@ staging:
 
 production:
   <<: *default_settings
+
+  log_level: error
+  error_collector:
+    enabled: true
+  analytics_events:
+    enabled: false
+  transaction_tracer:
+    enabled: false
+  slow_sql:
+    enabled: true
