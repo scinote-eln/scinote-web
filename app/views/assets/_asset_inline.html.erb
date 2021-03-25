@@ -30,10 +30,9 @@
     <% else %>
       <div class="empty-office-file">
         <h2><%= t('assets.empty_office_file.description') %></h2>
-        <%= button_to(toggle_view_mode_path(asset),
-                        method: :patch,
+        <%= link_to(load_asset_path(asset),
                         remote: true,
-                        class: 'btn btn-primary',
+                        class: 'btn btn-primary reload-asset',
                         params: { asset: {view_mode: asset.view_mode }}) do %>
             <%= t('assets.empty_office_file.reload') %>
           <% end %>

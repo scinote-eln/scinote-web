@@ -97,9 +97,18 @@ var InlineAttachments = (function() {
     }
   }
 
+  function initReloadButtons() {
+    $(document).on('ajax:success', '.asset .reload-asset', function(e, data) {
+      $(this).closest('.asset').replaceWith(data.html);
+    });
+  }
+
   return {
     init: () => {
       windowScrollEvents.InlineAttachments = InlineAttachments.scrollEvent;
+    },
+    initReloadButtons: () => {
+      initReloadButtons();
     },
     scrollEvent: () => {
       checkForAttachmentsState();
@@ -111,3 +120,4 @@ $(document).on('turbolinks:load', function() {
   InlineAttachments.init();
   InlineAttachments.scrollEvent();
 });
+InlineAttachments.initReloadButtons();
