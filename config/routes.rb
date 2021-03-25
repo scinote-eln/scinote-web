@@ -641,7 +641,6 @@ Rails.application.routes.draw do
 
     devise_scope :user do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'
-      get 'users/auth_token_sign_in' => 'users/sessions#auth_token_create'
       get 'users/sign_up_provider' => 'users/registrations#new_with_provider'
       get 'users/two_factor_recovery' => 'users/sessions#two_factor_recovery'
       post 'users/authenticate_with_two_factor' => 'users/sessions#authenticate_with_two_factor'

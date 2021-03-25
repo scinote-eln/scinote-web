@@ -561,10 +561,6 @@ GEM
     shoulda-matchers (4.5.1)
       activesupport (>= 4.2.0)
     silencer (1.0.1)
-    simple_token_authentication (1.16.0)
-      actionmailer (>= 3.2.6, < 7)
-      actionpack (>= 3.2.6, < 7)
-      devise (>= 3.2, < 6)
     simplecov (0.21.2)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -716,7 +712,6 @@ DEPENDENCIES
   selenium-webdriver
   shoulda-matchers
   silencer
-  simple_token_authentication (~> 1.16.0)
   simplecov
   sneaky-save!
   spinjs-rails
