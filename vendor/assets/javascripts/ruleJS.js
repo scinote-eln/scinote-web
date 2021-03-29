@@ -1,4 +1,5 @@
 // * Licensed under the MIT license
+// * Copyright (c) 2012-2014 Marcin Warpechowski <hello@handsontable.com>
 
 var ruleJS = (function (root) {
   'use strict';
