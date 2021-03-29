@@ -103,4 +103,27 @@ describe Activity, type: :model do
       end
     end
   end
+  describe '.notifiable?' do
+    context 'Creating notifiable activity' do
+      let(:activity) do
+        create  :activity,
+                subject: (create :task_comment),
+        type_of: 'add_comment_to_module', subject_type: 'MyModule'
+      end
+      it 'is notifiable when when creating comment' do
+        expect(activity.__send__(:notifiable?)).to be true
+      end
+    end
+
+    context 'Creating non-notifiable activity' do
+      let(:activity) do
+        create  :activity,
+                subject: (create :my_module),
+        type_of: 'create_module', subject_type: 'MyModule'
+      end
+      it 'is not notifiable when when creating new task' do
+        expect(activity.__send__(:notifiable?)).to be false
+      end
+    end
+  end
 end
