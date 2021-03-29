@@ -420,7 +420,6 @@ class Extends
     { name: 'Completed', color: '#00b900', consequences: ['MyModuleStatusConsequences::Completion'] }
   ]
 
-
   NOTIFIABLE_ACTIVITIES = %w(
     assign_user_to_project
     change_user_role_on_project
@@ -447,5 +446,4 @@ class Extends
     delete_individual_signature_request
     delete_group_signature_request
   ).freeze
-
 end
