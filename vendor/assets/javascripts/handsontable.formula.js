@@ -1,4 +1,7 @@
-// * Licensed under the MIT license
+/*
+  Licensed under the MIT license
+  Copyright (c) 2014 handsontable
+*/
 (function(Handsontable) {
   'use strict';
 

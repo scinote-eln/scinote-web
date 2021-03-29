@@ -1,4 +1,5 @@
 // * Licensed under the MIT license
+// * Copyright (c) 2013 jStat
 
 this.j$ = this.jStat = (function(Math, undefined) {
 
