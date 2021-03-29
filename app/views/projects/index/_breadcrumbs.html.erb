@@ -1,8 +1,10 @@
 <% target_folder ||= nil %>
 <% experiment ||= nil %>
 <% project ||= nil %>
+<% folder_page ||= false %>
 <% links = [] %>
 <% folders = tree_ordered_parent_folders(target_folder) %>
+<% folders = folders&.take(folders.size - 1) if folder_page %>
 
 <div class="projects-breadcrumbs breadcrumbs-container">
   <%
@@ -13,7 +15,7 @@
       data: { projects_cards_url: cards_projects_url, sidebar_url: sidebar_team_path(current_team) }
     })
 
-    folders&.take(folders.size - 1)&.each do |project_folder|
+    folders&.each do |project_folder|
       links.push({
         label: project_folder.name,
         url: project_folder_path(project_folder),

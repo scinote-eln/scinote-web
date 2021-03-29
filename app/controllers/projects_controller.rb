@@ -46,7 +46,7 @@ class ProjectsController < ApplicationController
     else
       if current_folder
         breadcrumbs_html = render_to_string(partial: 'projects/index/breadcrumbs.html.erb',
-                                            locals: { target_folder: current_folder })
+                                            locals: { target_folder: current_folder, folder_page: true })
         projects_cards_url = project_folder_cards_url(current_folder)
         title = current_folder.name
       else
