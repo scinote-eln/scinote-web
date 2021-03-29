@@ -445,5 +445,5 @@ class Extends
     create_individual_signature_request
     delete_individual_signature_request
     delete_group_signature_request
-  ).freeze
+  )
 end
