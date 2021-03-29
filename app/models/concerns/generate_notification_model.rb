@@ -101,8 +101,7 @@ module GenerateNotificationModel
   end
 
   def notifiable?
-    # send notifications for all activity types for now
-    true
+    type_of.in? ::Extends::NOTIFIABLE_ACTIVITIES
   end
 
   private
