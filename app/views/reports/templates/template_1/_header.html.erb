@@ -1,61 +1,52 @@
-<!doctype html>
-<html>
-<head>
-  <meta charset='utf-8' />
+<style>
+  body {
+    height: 95px;
+  }
 
-  <style>
-    body {
-      height: 95px;
-    }
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    height: 80px;
+    table-layout: fixed;
+    width: 100%
+  }
 
-    table {
-      border-collapse: collapse;
-      border-spacing: 0;
-      height: 80px;
-      table-layout: fixed;
-      width: 100%
-    }
+  table td {
+    border: 2px solid black;
+    font-size: 12px;
+    padding: .25em;
+    text-align: left;
+    vertical-align: top;
+  }
 
-    table td {
-      border: 2px solid black;
-      font-size: 12px;
-      padding: .25em;
-      text-align: left;
-      vertical-align: top;
-    }
-
-    table td.title {
-      font-size: 14px;
-      font-weight: bold;
-      text-align: center;
-      vertical-align: middle;
-      white-space: nowrap;
-    }
-  </style>
-</head>
-<body>
-  <table>
-    <tr>
-      <td class="title " class="topage">
-        GENERAL CONTINUATION SHEET
-      </td>
-      <td>
-        <div class="cell-label">
-          <b>PRODUCT</b>
-        </div>
-        <div class="cell-value">
-          <%= template[:product] %>
-        </div>
-      </td>
-      <td>
-        <div class="cell-label">
-          <b>SAMPLE NUMBER</b>
-        </div>
-        <div class="cell-value">
-          <%= template[:sample_number] %>
-        </div>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>
+  table td.title {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+</style>
+<table>
+  <tr>
+    <td class="title " class="topage">
+      GENERAL CONTINUATION SHEET
+    </td>
+    <td>
+      <div class="cell-label">
+        <b>PRODUCT</b>
+      </div>
+      <div class="cell-value">
+        <%= template[:product] %>
+      </div>
+    </td>
+    <td>
+      <div class="cell-label">
+        <b>SAMPLE NUMBER</b>
+      </div>
+      <div class="cell-value">
+        <%= template[:sample_number] %>
+      </div>
+    </td>
+  </tr>
+</table>

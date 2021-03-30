@@ -151,8 +151,12 @@ class ReportsController < ApplicationController
 
     respond_to do |format|
       format.pdf do
-        render pdf: 'report', header: { html: { template: 'reports/templates/template_1/_header.html.erb', locals: {template: template} }},
-                              footer: { html: { template: 'reports/templates/template_1/_footer.html.erb', locals: {template: template} }},
+        render pdf: 'report', header: { html: { template: 'reports/templates/template_1/_header.html.erb',
+                                                locals: {template: template},
+                                                layout: 'reports/footer_header.html.erb'}},
+                              footer: { html: { template: 'reports/templates/template_1/_footer.html.erb',
+                                                locals: {template: template},
+                                                layout: 'reports/footer_header.html.erb'}},
                               locals: { content: content },
                               cover: render_to_string(partial: 'reports/templates/template_1/report.html.erb',
                                                       locals: {
