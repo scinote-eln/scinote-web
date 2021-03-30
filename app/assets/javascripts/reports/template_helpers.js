@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 function pageNumbers() {
   var vars = {};
   var paramsKey = ['frompage', 'topage', 'page', 'webpage', 'section', 'subsection', 'subsubsection'];
@@ -9,7 +10,8 @@ function pageNumbers() {
   });
   paramsKey.forEach(function(key) {
     var elements = document.getElementsByClassName(key);
-    for(var i = 0; i < elements.length; i += 1) {
+    var i;
+    for (i = 0; i < elements.length; i += 1) {
       elements[i].textContent = vars[key];
     }
   });
