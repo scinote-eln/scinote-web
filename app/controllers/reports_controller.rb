@@ -146,14 +146,20 @@ class ReportsController < ApplicationController
   def generate
     content = params[:data]
     content = I18n.t('projects.reports.new.no_content_for_PDF_html') if content.blank?
+
+    template = {}
+
     respond_to do |format|
       format.pdf do
-        render pdf: 'report', header: { html: { template: 'reports/header.pdf.erb' }},
-                              footer: { html: { template: 'reports/footer.pdf.erb',
-                                                locals: { current_time: I18n.l(Time.zone.now, format: :full) }}},
+        render pdf: 'report', header: { html: { template: 'reports/templates/template_1/_header.html.erb', locals: {template: template} }},
+                              footer: { html: { template: 'reports/templates/template_1/_footer.html.erb', locals: {template: template} }},
                               locals: { content: content },
-                              template: 'reports/report.pdf.erb',
-                              disable_javascript: true
+                              cover: render_to_string(partial: 'reports/templates/template_1/report.html.erb',
+                                                      locals: {
+                                                        template: template
+                                                      }),
+                              disable_javascript: true,
+                              template: 'reports/report.pdf.erb'
       end
       format.docx do
         @user = current_user
