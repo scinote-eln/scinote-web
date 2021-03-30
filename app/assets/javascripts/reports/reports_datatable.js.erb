@@ -12,31 +12,6 @@
     updateButtons();
   }
 
-  function initSelectPicker() {
-    $('.selectpicker').selectpicker({liveSearch: true})
-      .ajaxSelectPicker({
-        ajax: {
-          url: '<%= Rails.application.routes.url_helpers.reports_visible_projects_path %>',
-          type: 'POST',
-          dataType: 'json',
-          data: function () {
-            return { q: '{{{q}}}' };
-          }
-        },
-        locale: {
-          emptyTitle: 'Nothing selected'
-        },
-        preprocessData: appendSearchResults,
-        emptyRequest: true,
-        clearOnEmpty: false,
-        preserveSelected: false
-    }).on('change.bs.select', function(el) {
-      $('#new-report-reports-btn').attr('data-new-report-path', el.target.value);
-    }).on('loaded.bs.select', function(el) {
-      $('#new-report-reports-btn').attr('data-new-report-path', el.target.value);
-    });
-  }
-
   function appendSearchResults(data) {
     var items = [];
     if(data.hasOwnProperty('projects')){
@@ -51,14 +26,6 @@
       });
     }
     return items;
-  }
-
-  function initRedirectToNewReportPage() {
-    $('#new-report-reports-btn').on('click', function() {
-      animateSpinner();
-      var url = $(this).attr('data-new-report-path');
-      $(location).attr('href', url);
-    });
   }
 
   function initToggleAllCheckboxes() {
@@ -274,22 +241,7 @@
     });
   }
 
-  function initNewReportModal() {
-    var newReport = parseInt(sessionStorage.getItem('scinote-dashboard-new-report'), 10);
-    $('#new-report-btn').on('click', function() {
-      $('#new-report-modal').modal('show');
-      initSelectPicker();
-      initRedirectToNewReportPage();
-    });
-
-    if (Math.floor(Date.now() / 1000) - newReport < 15) {
-      $('#new-report-btn').click();
-      sessionStorage.removeItem('scinote-dashboard-new-report');
-    }
-  }
-
   initDatatable();
   initEditReport();
   initDeleteReports();
-  initNewReportModal();
 })(window);

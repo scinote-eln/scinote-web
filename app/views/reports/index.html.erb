@@ -61,39 +61,4 @@
   <% end %>
 </div>
 
-
-<div class="modal" id="new-report-modal" tabindex="-1" role="dialog" aria-labelledby="create-reports-modal-label">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="new-report-modal-label"><%=t "projects.reports.index.modal_new.head_title" %></h4>
-      </div>
-      <div class="modal-body">
-        <p><%=t "projects.reports.index.modal_new.message" %></p>
-        <div class="form-group">
-          <label><%=t "projects.reports.index.modal_new.projects" %></label>
-          <% if @visible_projects&.length > 0 %>
-            <select class="form-control selectpicker" data-abs-min-length="2" data-live-search="true">
-              <% @visible_projects.each do |project| %>
-                <option value="<%= project.path %>"><%= project.name %></option>
-              <% end %>
-            </select>
-          <% else %>
-            <p><%=t 'projects.reports.index.modal_new.no_projects' %></p>
-          <% end %>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
-        <button id="new-report-reports-btn"
-                class="btn btn-primary"
-                data-new-report-path="<%= @visible_projects.first.path if @visible_projects.first %>"
-                <%= 'disabled' unless @visible_projects&.length > 0 %>
-                ><%=t 'projects.reports.index.modal_new.create' %></button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <%= javascript_include_tag("reports/reports_datatable") %>
