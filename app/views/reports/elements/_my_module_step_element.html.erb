@@ -1,7 +1,7 @@
 <% if step.blank? and @step.present? then step = @step end %>
 <% step_type_str = step.completed ? 'completed' : 'uncompleted' %>
-<% user = step.completed || !step.changed? ? step.user : step.last_modified_by %>
-<% timestamp = step.completed ? step.completed_on : step.updated_at %>
+<% user = step.completed? ? step.last_modified_by : step.user %>
+<% timestamp = step.completed ? step.completed_on : step.created_at %>
 <% tables = step.tables %>
 <% assets = step.assets %>
 <% checklists = step.checklists %>

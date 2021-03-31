@@ -26,7 +26,7 @@ module Dashboard
         tasks = tasks.left_outer_joins(:user_my_modules).where(user_my_modules: { user_id: current_user.id })
       end
 
-      tasks = tasks.where(my_module_status_id: task_filters[:statuses])
+      tasks = tasks.where(my_module_status_id: task_filters[:statuses]) if task_filters[:statuses].present?
 
       case task_filters[:sort]
       when 'start_date'

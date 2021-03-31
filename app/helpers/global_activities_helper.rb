@@ -5,7 +5,7 @@ module GlobalActivitiesHelper
   include ActionView::Helpers::UrlHelper
   include InputSanitizeHelper
 
-  def generate_activity_content(activity, no_links = false)
+  def generate_activity_content(activity, no_links: false, no_custom_links: false)
     parameters = {}
     activity.message_items.each do |key, value|
       parameters[key] =
@@ -17,10 +17,15 @@ module GlobalActivitiesHelper
           no_links ? generate_name(value) : generate_link(value, activity)
         end
     end
-    custom_auto_link(
-      I18n.t("global_activities.content.#{activity.type_of}_html", parameters.symbolize_keys),
-      team: activity.team
-    )
+
+    if no_custom_links
+      I18n.t("global_activities.content.#{activity.type_of}_html", parameters.symbolize_keys)
+    else
+      custom_auto_link(
+        I18n.t("global_activities.content.#{activity.type_of}_html", parameters.symbolize_keys),
+        team: activity.team
+      )
+    end
   rescue StandardError => e
     Rails.logger.error(e.message)
     Rails.logger.error(e.backtrace.join("\n"))

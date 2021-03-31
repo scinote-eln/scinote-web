@@ -5,20 +5,21 @@ class ProjectsController < ApplicationController
   include TeamsHelper
   include InputSanitizeHelper
   include ProjectsHelper
+  include CardsViewHelper
   include ExperimentsHelper
 
   attr_reader :current_folder
   helper_method :current_folder
 
   before_action :switch_team_with_param, only: :index
-  before_action :load_vars, only: %i(show edit update notifications sidebar experiments_cards)
+  before_action :load_vars, only: %i(show edit update notifications sidebar experiments_cards view_type)
   before_action :load_current_folder, only: %i(index cards new show)
-  before_action :check_view_permissions, only: %i(show notifications sidebar experiments_cards)
+  before_action :check_view_permissions, only: %i(show notifications sidebar experiments_cards view_type)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
   before_action :set_inline_name_editing, only: %i(show)
-  before_action :load_exp_sort_var, only: %i(show)
-  before_action :reset_invalid_view_state, only: %i(index cards)
+  before_action :load_exp_sort_var, only: :show
+  before_action :reset_invalid_view_state, only: %i(index cards show)
 
   layout 'fluid'
 
@@ -26,6 +27,7 @@ class ProjectsController < ApplicationController
     if current_team
       view_state = current_team.current_view_state(current_user)
       @current_sort = view_state.state.dig('projects', projects_view_mode, 'sort') || 'atoz'
+      @current_view_type = view_state.state.dig('projects', 'view_type')
     end
   end
 
@@ -42,10 +44,20 @@ class ProjectsController < ApplicationController
         )
       }
     else
+      if current_folder
+        breadcrumbs_html = render_to_string(partial: 'projects/index/breadcrumbs.html.erb',
+                                            locals: { target_folder: current_folder, folder_page: true })
+        projects_cards_url = project_folder_cards_url(current_folder)
+        title = current_folder.name
+      else
+        breadcrumbs_html = ''
+        projects_cards_url = cards_projects_url
+      end
+
       render json: {
-        projects_cards_url: current_folder ? project_folder_cards_url(current_folder) : cards_projects_url,
-        breadcrumbs_html: current_folder ? render_to_string(partial: 'projects/index/breadcrumbs.html.erb') : '',
-        title: current_folder ? current_folder&.name : title,
+        projects_cards_url: projects_cards_url,
+        breadcrumbs_html: breadcrumbs_html,
+        title: title,
         toolbar_html: render_to_string(partial: 'projects/index/toolbar.html.erb'),
         cards_html: render_to_string(
           partial: 'projects/index/team_projects.html.erb',
@@ -261,6 +273,7 @@ class ProjectsController < ApplicationController
 
     view_state = @project.current_view_state(current_user)
     @current_sort = view_state.state.dig('experiments', experiments_view_mode(@project), 'sort') || 'atoz'
+    @current_view_type = view_state.state.dig('experiments', 'view_type')
   end
 
   def experiments_cards
@@ -298,10 +311,22 @@ class ProjectsController < ApplicationController
     render json: users, status: :ok
   end
 
+  def view_type
+    view_state = @project.current_view_state(current_user)
+    view_state.state['experiments']['view_type'] = view_type_params
+    view_state.save!
+
+    render json: { cards_view_type_class: cards_view_type_class(view_type_params) }, status: :ok
+  end
+
   private
 
   def project_params
     params.require(:project).permit(:name, :team_id, :visibility, :archived, :project_folder_id)
+  end
+
+  def view_type_params
+    params.require(:project).require(:view_type)
   end
 
   def load_vars
@@ -357,7 +382,12 @@ class ProjectsController < ApplicationController
   end
 
   def reset_invalid_view_state
-    view_state = current_team.current_view_state(current_user)
+    view_state = if action_name == 'show'
+                   @project.current_view_state(current_user)
+                 else
+                   current_team.current_view_state(current_user)
+                 end
+
     view_state.destroy unless view_state.valid?
   end
 

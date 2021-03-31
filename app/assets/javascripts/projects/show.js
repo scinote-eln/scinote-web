@@ -51,16 +51,16 @@
   }
 
   function initProjectsViewModeSwitch() {
-    $(experimentsPage).on('click', '.cards-switch', function() {
-      let $btn = $(this);
-      $('.cards-switch').removeClass('active');
-      if ($btn.hasClass('view-switch-cards')) {
-        $(cardsWrapper).removeClass('list');
-      } else if ($btn.hasClass('view-switch-list')) {
-        $(cardsWrapper).addClass('list');
-      }
-      $btn.addClass('active');
-    });
+    $(experimentsPage)
+      .on('ajax:success', '.change-experiments-view-type-form', function(ev, data) {
+        $(cardsWrapper).removeClass('list').addClass(data.cards_view_type_class);
+        $(experimentsPage).find('.cards-switch .button-to').removeClass('selected');
+        $(ev.target).find('.button-to').addClass('selected');
+        $(ev.target).parents('.dropdown.view-switch').removeClass('open');
+      })
+      .on('ajax:error', '.change-projects-view-type-form', function(ev, data) {
+        HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
+      });
 
     $(experimentsPage).on('click', '.archive-switch', function() {
       Turbolinks.visit($(this).data('url'));
@@ -271,20 +271,21 @@
   }
 
   function loadExperimentWorkflowImages() {
-    $('.workflowimg-container').each(function() {
-      let container = $(this);
+    $('.experiment-card').each(function() {
+      let card = $(this);
+      let container = $(this).find('.workflowimg-container').first();
       if (container.data('workflowimg-present') === false) {
         let imgUrl = container.data('workflowimg-url');
-        container.find('.workflowimg-spinner').removeClass('hidden');
+        card.find('.workflowimg-spinner').removeClass('hidden');
         $.ajax({
           url: imgUrl,
           type: 'GET',
           dataType: 'json',
           success: function(data) {
-            container.html(data.workflowimg);
+            card.find('.workflowimg-container').html(data.workflowimg);
           },
           error: function() {
-            container.find('.workflowimg-spinner').addClass('hidden');
+            card.find('.workflowimg-spinner').addClass('hidden');
           }
         });
       }

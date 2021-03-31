@@ -47,8 +47,6 @@ var InfiniteScroll = (function() {
 
     if (config.loadFirstPage) {
       loadData($container, 1);
-    } else if (scrollNotVisible($container)) {
-      loadData($container, $container.data('next-page'));
     }
 
     $container.on('scroll', () => {

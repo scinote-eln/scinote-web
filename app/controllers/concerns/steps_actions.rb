@@ -62,20 +62,19 @@ module StepsActions
                                       new_checklists,
                                       old_checklists)
     step_description_annotation(step, old_description)
-    new_checklists.each do |e|
+    new_checklists.each do |new_checklist|
       # generates smart annotaion if the checklist is new
-      add_new_checklist(step, e) if e.id.zero?
-      checklist_name_annotation(step, e) unless e.id
+      add_new_checklist(step, new_checklist) and next if new_checklist.id.zero?
       # else check if checklist is not deleted and generates
       # new notifications
-      next unless old_checklists.map(&:id).include?(e.id)
-      old_checklist = old_checklists.select { |i| i.id == e.id }.first
-      checklist_name_annotation(step, e, old_checklist.name)
-      e.items.each do |ci|
-        old_list = old_checklists.select { |i| i.id == e.id }.first
-        old_item = old_list.items.select { |i| i.id == ci.id }.first if old_list
-        text = old_item ? old_item.text : ''
-        checklist_item_annotation(step, ci, text)
+      next unless old_checklists.map(&:id).include?(new_checklist.id)
+
+      old_checklist = old_checklists.find { |i| i.id == new_checklist.id }
+      checklist_name_annotation(step, new_checklist, old_checklist.name)
+      new_checklist.items.each do |new_checklist_item|
+        old_checklist_item = old_checklist.items.find { |i| i.id == new_checklist_item.id } if old_checklist
+        text = old_checklist_item ? old_checklist_item.text : ''
+        checklist_item_annotation(step, new_checklist_item, text)
       end
     end
   end

@@ -36,9 +36,16 @@
         margin: 0;
       }
 
+      .name-readonly-placeholder {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
       .header-actions {
         align-items: center;
         display: flex;
+        flex-shrink: 0;
         margin-left: auto;
       }
 

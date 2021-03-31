@@ -17,7 +17,7 @@ module Reports::Docx::DrawMyModuleActivity
       activity_text = if activity.old_activity?
                         sanitize_input(activity.message)
                       else
-                        sanitize_input(generate_activity_content(activity, true))
+                        sanitize_input(generate_activity_content(activity, no_links: true))
                       end
       @docx.p I18n.l(activity_ts, format: :full), color: color[:gray]
       Reports::HtmlToWordConverter.new(@docx).html_to_word_converter(activity_text)

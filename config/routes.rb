@@ -294,6 +294,7 @@ Rails.application.routes.draw do
         get 'notifications'
         get 'experiments_cards'
         get 'sidebar'
+        put 'view_type'
       end
 
       collection do
@@ -301,6 +302,7 @@ Rails.application.routes.draw do
         get 'users_filter'
         post 'archive_group'
         post 'restore_group'
+        put 'view_type', to: 'teams#view_type'
       end
     end
 
@@ -623,12 +625,13 @@ Rails.application.routes.draw do
     get 'files/:id/preview',
         to: 'assets#file_preview',
         as: 'asset_file_preview'
-    get 'files/:id/preview', to: 'assets#preview', as: 'preview_asset'
+    get 'files/:id/pdf_preview', to: 'assets#pdf_preview', as: 'asset_pdf_preview'
     get 'files/:id/view', to: 'assets#view', as: 'view_asset'
     get 'files/:id/file_url', to: 'assets#file_url', as: 'asset_file_url'
     get 'files/:id/download', to: 'assets#download', as: 'asset_download'
     get 'files/:id/edit', to: 'assets#edit', as: 'edit_asset'
     patch 'files/:id/toggle_view_mode', to: 'assets#toggle_view_mode', as: 'toggle_view_mode'
+    get 'files/:id/load_asset', to: 'assets#load_asset', as: 'load_asset'
     post 'files/:id/update_image', to: 'assets#update_image',
                                    as: 'update_asset_image'
     delete 'files/:id/', to: 'assets#destroy', as: 'asset_destroy'
@@ -639,7 +642,6 @@ Rails.application.routes.draw do
 
     devise_scope :user do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'
-      get 'users/auth_token_sign_in' => 'users/sessions#auth_token_create'
       get 'users/sign_up_provider' => 'users/registrations#new_with_provider'
       get 'users/two_factor_recovery' => 'users/sessions#two_factor_recovery'
       post 'users/authenticate_with_two_factor' => 'users/sessions#authenticate_with_two_factor'

@@ -12,18 +12,36 @@
                             config: @inline_editable_title_config
                          } %>
       <% else %>
-        <%= @project.name %>
+        <div class="name-readonly-placeholder">
+          <%= @project.name %>
+        </div>
       <% end %>
     </h1>
     <div class="sci-btn-group header-actions">
       <!-- View switch dropdown -->
       <%= render layout: 'shared/view_switch', locals: { disabled: false } do %>
-        <li class="view-switch-cards cards-switch active">
-          <i class="fas fa-th-large button-icon"></i> <%= t('experiments.header.cards') %>
+        <li class="view-switch-list cards-switch form-dropdown-item">
+          <%= button_to(view_type_project_path(@project, format: :json),
+                        method: :put,
+                        remote: true,
+                        class: "btn btn-light button-to #{ @current_view_type == 'cards' ? 'selected' : ''}",
+                        form_class: 'change-experiments-view-type-form',
+                        params: { project: { view_type: 'cards', project_id: @project.id } }) do %>
+            <i class="fas fa-th-large"></i>
+            <%= t('projects.index.header.cards') %>
+          <% end %>
         </li>
 
-        <li class="view-switch-list cards-switch ">
-          <i class="fas fa-list button-icon"></i> <%= t('experiments.header.table') %>
+        <li class="view-switch-list cards-switch form-dropdown-item">
+          <%= button_to(view_type_project_path(@project, format: :json),
+                        method: :put,
+                        remote: true,
+                        class: "btn btn-light button-to #{ @current_view_type == 'table' ? 'selected' : ''}",
+                        form_class: 'change-experiments-view-type-form',
+                        params: { project: { view_type: 'table', project_id: @project.id } }) do %>
+            <i class="fas fa-list"></i>
+            <%= t('projects.index.header.table') %>
+          <% end %>
         </li>
 
         <div role="separator" class="divider"></div>

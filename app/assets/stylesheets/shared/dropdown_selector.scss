@@ -94,6 +94,7 @@
         margin-top: 1px;
         max-width: 240px;
         overflow: hidden;
+        text-align: left;
         text-overflow: ellipsis;
         white-space: nowrap;
         width: auto;
@@ -277,6 +278,7 @@
       .ds-simple {
         .tag-label {
           overflow: hidden;
+          text-align: left;
           text-overflow: ellipsis;
           white-space: nowrap;
 

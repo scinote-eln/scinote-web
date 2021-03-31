@@ -49,8 +49,6 @@ en:
         not_correct_code: "Not correct recovery code"
       create:
         team_name: "%{user}'s projects"
-      auth_token_create:
-        wrong_credentials: "Failed to automatically sign in (wrong credentials)."
     unlocks:
       new:
         head_title: "Resend unlock instructions"
@@ -291,6 +289,7 @@ en:
       module: "Task: "
       step: "Step: "
       result: "Result: "
+      report: "Report: "
       no_name: "(no name)"
       error:
         no_results: "No results for %{q}."
@@ -331,6 +330,7 @@ en:
       navigation_archived_projects: "Archived projects"
       back_to_active_projects: "Back to active projects"
       breadcrumbs_root: "Projects"
+      breadcrumbs_collapsed: "Click to show hidden levels"
       archive: "Archive"
       archived: "Archived"
       active: "Active"
@@ -1231,6 +1231,10 @@ en:
       empty_title: "Your team has no inventories yet"
       empty_description_no_create: "It would be a shame to waste all this space. Sadly you don’t have permission to add inventories. You can ask your team admin to grant you that permission."
       empty_description_with_create: "It would be a shame to waste all this space. Create your first inventory now"
+      sidebar_instructions: "This is where a list of inventories will appear once they are created. This list will allow you to quickly jump from one inventory to another"
+      sidebar_repo1: "Reagents"
+      sidebar_repo2: "Samples"
+      sidebar_repo3: "Devices"
       add_new_repository_tab: "Add inventory"
       delete_flash: "\"%{name}\" inventory was successfully deleted!"
       rename_flash: "\"%{old_name}\" inventory was successfully renamed to \"%{new_name}\"!"
@@ -2224,8 +2228,12 @@ en:
     experiment_annotation_message_html: "Project: %{project} | Experiment: %{experiment}"
     project_comment_annotation_title: "%{user} mentioned you in a comment on project %{project}."
     project_annotation_message_html: "Project: %{project}"
+    my_module_description_annotation_title: "%{user} mentioned you in a description on task %{my_module}."
+    my_module_description_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
     my_module_comment_annotation_title: "%{user} mentioned you in a comment on task %{my_module}."
-    my_module_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
+    my_module_comment_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
+    my_module_protocol_annotation_title: "%{user} mentioned you in a protocol description on task %{my_module}."
+    my_module_protocol_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
     step_comment_annotation_title: "%{user} mentioned you in a comment on step %{step}."
     step_description_title: "%{user} mentioned you in a description on step %{step}."
     checklist_title: "%{user} mentioned you in a checklist on step %{step}."
@@ -2235,6 +2243,8 @@ en:
     result_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
     repository_annotation_title: "%{user} mentioned you in Column: %{column} of Item %{record} in Inventory %{repository}"
     repository_annotation_message_html: "Item: %{record} | Column: %{column}"
+    protocol_description_annotation_title: "%{user} mentioned you in a description on protocol %{protocol}."
+    protocol_description_annotation_message_html: "Protocol: %{protocol}"
     protocol_step_annotation_message_html: "Protocol: %{protocol}"
     email_title: "You've received a SciNote notification!"
     assign_user_to_team: "<i>%{assigned_user}</i> was added as %{role} to team <strong>%{team}</strong> by <i>%{assigned_by_user}</i>."
@@ -2290,6 +2300,9 @@ en:
       description_1_html: "You are about to delete <b>%{file_name}</b></p>"
       description_2: "Are you sure you want to continue?"
       confirm_button: "Delete attachment"
+    empty_office_file:
+      description: "The file is empty. Please add some data before saving the file."
+      reload: "Reload file"
 
   atwho:
     no_results:
@@ -2518,6 +2531,15 @@ en:
     structure_placeholder: "Click here to enter Chemical Drawing name"
     modal_name_title: "Chemical Drawing name:"
     checmical_drawing: "Chemical drawings"
+
+  pdf_preview:
+    fit_to_screen: 'Fit to screen'
+    pages:
+      of: 'of'
+    blocked:
+      title: 'The file you’re trying to view is very large.'
+      description: 'To ensure the optimal performance of SciNote, we did not load it automatically.'
+      submit_button: 'Load anyway'
 
   views:
     pagination:

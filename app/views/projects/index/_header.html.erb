@@ -1,22 +1,38 @@
 <div class="content-header sticky-header">
   <div id="breadcrumbsWrapper">
-    <%= render partial: 'projects/index/breadcrumbs' if current_folder %>
+    <%= render partial: 'projects/index/breadcrumbs', locals: { target_folder: current_folder, folder_page: true } if current_folder %>
   </div>
   <div class="title-row">
-    <h1 data-view-mode="active" class="projects-title"><%= current_folder&.name || t('projects.index.head_title') %></h1>
+    <h1 data-view-mode="active" class="projects-title name-readonly-placeholder"><%= current_folder&.name || t('projects.index.head_title') %></h1>
     <h1 data-view-mode="archived">
       <i class="fas fa-archive"></i>&nbsp;
-      <span class="projects-title"><%= current_folder&.name || t('projects.index.head_title_archived') %></span>
+      <span class="projects-title name-readonly-placeholder"><%= current_folder&.name || t('projects.index.head_title_archived') %></span>
     </h1>
 
     <div class="sci-btn-group header-actions">
       <%= render layout: 'shared/view_switch', locals: { disabled: false } do %>
-        <li class="view-switch-cards cards-switch active">
-          <i class="fas fa-th-large button-icon"></i> <%= t('projects.index.header.cards') %>
+        <li class="view-switch-list cards-switch form-dropdown-item">
+          <%= button_to(view_type_projects_path(format: :json),
+                        method: :put,
+                        remote: true,
+                        class: "btn btn-light button-to #{ @current_view_type == 'cards' ? 'selected' : ''}",
+                        form_class: 'change-projects-view-type-form',
+                        params: { projects: { view_type: 'cards' } }) do %>
+            <i class="fas fa-th-large"></i>
+            <%= t('projects.index.header.cards') %>
+          <% end %>
         </li>
 
-        <li class="view-switch-list cards-switch ">
-          <i class="fas fa-list button-icon"></i> <%= t('projects.index.header.table') %>
+        <li class="view-switch-list cards-switch form-dropdown-item">
+          <%= button_to(view_type_projects_path(format: :json),
+                        method: :put,
+                        remote: true,
+                        class: "btn btn-light button-to #{ @current_view_type == 'table' ? 'selected' : ''}",
+                        form_class: 'change-projects-view-type-form',
+                        params: { projects: { view_type: 'table' } }) do %>
+            <i class="fas fa-list"></i>
+            <%= t('projects.index.header.table') %>
+          <% end %>
         </li>
         <div role="separator" class="divider"></div>
         <li class="view-switch-active archive-switch" data-view-mode="archived" data-url="<%= projects_path %>">
@@ -58,7 +74,6 @@
         <div class="dropdown sort-menu">
           <button class="btn btn-light dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <span><i class="fas fa-sort-amount-down"></i></span>
-            <span class="caret"></span>
           </button>
           <ul id="sortMenuDropdown" class="dropdown-menu sort-projects-menu dropdown-menu-right" aria-labelledby="sortMenu">
             <% %w(new old atoz ztoa archived_new archived_old).each_with_index do |sort, i| %>

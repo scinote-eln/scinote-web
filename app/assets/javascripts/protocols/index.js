@@ -1,5 +1,5 @@
 //= require protocols/import_export/import
-/* global ProtocolRepositoryHeader */
+/* global ProtocolRepositoryHeader PdfPreview */
 
 // Global variables
 var rowsSelected = [];
@@ -223,6 +223,7 @@ function initProtocolPreviewModal() {
           modal.modal("show");
           ProtocolRepositoryHeader.init();
           initHandsOnTable(modalBody);
+          PdfPreview.initCanvas();
         },
         error: function (error) {
           // TODO

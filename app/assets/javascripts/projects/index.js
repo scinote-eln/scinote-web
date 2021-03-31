@@ -561,17 +561,16 @@ var ProjectsIndex = (function() {
   function initProjectsViewModeSwitch() {
     let projectsPageSelector = '.projects-index';
 
-    // list/cards switch
-    $(projectsPageSelector).on('click', '.cards-switch', function() {
-      let $btn = $(this);
-      $('.cards-switch').removeClass('active');
-      if ($btn.hasClass('view-switch-cards')) {
-        $(cardsWrapper).removeClass('list');
-      } else if ($btn.hasClass('view-switch-list')) {
-        $(cardsWrapper).addClass('list');
-      }
-      $btn.addClass('active');
-    });
+    $(projectsPageSelector)
+      .on('ajax:success', '.change-projects-view-type-form', function(ev, data) {
+        $(cardsWrapper).removeClass('list').addClass(data.cards_view_type_class);
+        $(projectsPageSelector).find('.cards-switch .button-to').removeClass('selected');
+        $(ev.target).find('.button-to').addClass('selected');
+        $(ev.target).parents('.dropdown.view-switch').removeClass('open');
+      })
+      .on('ajax:error', '.change-projects-view-type-form', function(ev, data) {
+        HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
+      });
 
     // Active/Archived switch
     // We have different sorting, filters for active/archived views.

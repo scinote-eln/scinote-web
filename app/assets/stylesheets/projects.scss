@@ -463,8 +463,14 @@ li.module-hover {
   width: calc(100% + 4em);
 
   .projects-breadcrumbs {
-    @include font-small;
     padding: .75em 0;
+  }
+
+  &.breadcrumbs-in-secondary-navigation {
+    .projects-breadcrumbs {
+      margin-left: 3em;
+      padding-bottom: 0;
+    }
   }
 }
 
@@ -546,8 +552,9 @@ li.module-hover {
 
       .card {
         .project-users-link {
+          align-items: center;
           color: $color-silver-chalice;
-          display: inline;
+          display: flex;
 
           &:hover {
             text-decoration: none;
@@ -674,21 +681,21 @@ li.module-hover {
               }
 
               .global-avatar-container {
-                height: 28px;
+                height: 2em;
+                line-height: 2em;
                 margin-right: .25em;
-                width: 28px;
+                width: 2em;
               }
 
               .more-users {
-                align-items: center;
                 background: $color-volcano;
                 border-radius: 50%;
                 color: $color-white;
-                cursor: pointer;
-                display: flex;
                 height: 2em;
-                justify-content: center;
+                line-height: 2em;
                 margin-right: .25em;
+                text-align: center;
+                text-decoration: none;
                 width: 2em;
               }
 
