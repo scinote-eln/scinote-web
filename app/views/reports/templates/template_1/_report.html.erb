@@ -1,0 +1,300 @@
+
+<div class="report-template-index">
+  <style type="text/css" scoped>
+    .report-template-index .template-table {
+      height: 297mm;
+      width: 100%;
+      font-size: 12px;
+      border-collapse: collapse;
+      border-spacing: 0;
+      table-layout: fixed;
+    }
+
+    .report-template-index .template-checkbox {
+      border: 1px solid black;
+      display: inline-block;
+      height: 16px;
+      margin-bottom: -3px;
+      margin-right: .25em;
+      position: relative;
+      width: 16px;
+    }
+
+    .report-template-index .template-checkbox.selected {
+      background: black;
+    }
+
+    .report-template-index .template-table > tbody > tr > td {
+      border: 2px solid black;
+      padding: .25em;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .report-template-index .cell-label {
+      font-weight: bold;
+    }
+
+    .report-template-index .template-table > tbody > tr > td.title {
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    .report-template-index tr.fixed-height {
+      height: 5em;
+    }
+
+    .report-template-index .seals-table {
+      height: 100%;
+      width: 100%;
+    }
+
+    .report-template-index .seals-table td {
+      font-size: 12px;
+      line-height: 16px;
+      vertical-align: top;
+    }
+
+    .report-template-index .net-contents-table {
+      font-size: 12px;
+      height: 100%;
+      width: 100%;
+    }
+
+    .report-template-index .template-table > tbody > tr > td.pagination-cell {
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+
+  </style>
+  <table class="template-table">
+    <tr class="fixed-height">
+      <td colspan=4 class="title">
+        ANALYST WORKSHEET
+      </td>
+      <td colspan=7>
+        <div class="cell-label">
+          1. PRODUCT
+        </div>
+        <div class="cell-value">
+          <%= template[:product] %>
+        </div>
+      </td>
+      <td colspan=5>
+        <div class="cell-label">
+          2. SAMPLE NUMBER
+        </div>
+        <div class="cell-value">
+          <%= template[:sample_number] %>
+        </div>
+      </td>
+    </tr>
+    <tr class="fixed-height">
+      <td colspan=4>
+        <table class="seals-table">
+          <tr>
+            <td>
+              <div class="cell-label">
+                3. SEALS
+              </div>
+            </td>
+            <td>
+              <span class="template-checkbox <%= 'selected' if template.dig(:seals, :intact) %>"></span>
+              INTACT
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <span class="template-checkbox <%= 'selected' if template.dig(:seals, :none) %>"></span>
+              NONE
+            </td>
+            <td>
+              <span class="template-checkbox <%= 'selected' if template.dig(:seals, :broken) %>"></span>
+              BROKEN
+            </td>
+          </tr>
+          <tr></tr>
+        </table>
+      </td>
+      <td colspan=3>
+        <div class="cell-label">
+          4. DATE RECEIVED
+        </div>
+        <div class="cell-value">
+          <%= template[:date_recieved] %>
+        </div>
+      </td>
+      <td colspan=4>
+        <div class="cell-label">
+          5.RECEIVED FROM
+        </div>
+        <div class="cell-value">
+          <%= template[:recieved_from] %>
+        </div>
+      </td>
+      <td colspan=5>
+        <div class="cell-label">
+          6. DISTRICT OR LABORATORY
+        </div>
+        <div class="cell-value">
+          <%= template[:district_laboratory] %>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td colspan=16>
+        <div class="cell-label">
+          7. DESCRIPTION OF SAMPLE
+        </div>
+        <div class="cell-value">
+          <%= template[:sample_description] %>
+        </div>
+      </td>
+    </tr>
+    <tr class="fixed-height">
+      <td colspan=2>
+        <div class="cell-label">
+          8. NET CONTENTS
+        </div>
+      </td>
+      <td colspan=7>
+        <table class="net-contents-table">
+          <tr>
+            <td>
+              <span class="template-checkbox <%= 'selected' if template.dig(:net_contents, :not_applicable) %>"></span>
+              NOT APPLICABLE
+            </td>
+            <td>DECLARE/UNIT <b><%= template.dig(:net_contents, :declare_unit) %></b></td>
+          </tr>
+          <tr>
+            <td>
+              <span class="template-checkbox <%= 'selected' if template.dig(:net_contents, :not_determined) %>"></span>
+              NOT DETERMINED
+            </td>
+            <td>AMOUNT FOUND <b><%= template.dig(:net_contents, :amount_found) %></b></td>
+          </tr>
+          <tr>
+            <td><b><%= template.dig(:net_contents, :units_examined) %></b> UNITS EXAMINED</td>
+            <td>% of DECLARED <b><%= template.dig(:net_contents, :declared_percent) %></b></td>
+          </tr>
+        </table>
+      </td>
+      <td colspan=2>
+        <div class="cell-label">
+          9. LABELING
+        </div>
+      </td>
+      <td colspan=5>
+        <table class="net-contents-table">
+          <tr>
+            <td>
+              <b><%= template.dig(:labeling, :originals_submitted) %></b> ORIGINAL(S) SUBMITTED
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <b><%= template.dig(:labeling, :copies_submitted) %></b> COPIES SUBMITTED
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <span class="template-checkbox <%= 'selected' if template.dig(:labeling, :none) %>"></span>
+              NONE
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan=16>
+        <div class="cell-label">
+          10. SUMMARY OF ANALYSIS
+        </div>
+        <div class="cell-value">
+          <%= template[:analysis_summary] %>
+        </div>
+      </td>
+    </tr>
+    <tr class="fixed-height">
+      <td colspan=16>
+        <div class="cell-label">
+          11. RESERVE SAMPLE
+        </div>
+        <div class="cell-value">
+          <%= template[:reserve_sample] %>
+        </div>
+      </td>
+    </tr>
+    <tr class="fixed-height">
+      <td colspan=8 rowspan=2>
+        <div class="cell-label">
+          12. a. ANALYST SIGNATURE (Broke Seal <span class="template-checkbox <%= 'selected' if template.dig(:analyst_signature, :broke) %>"></span>)
+        </div>
+        <div class="cell-value">
+          <%= template.dig(:analyst_signature, :a) %>
+        </div>
+      </td>
+      <td colspan=3 rowspan=2>
+        <div class="cell-label">
+           13. WORKSHEET CHECK
+        </div>
+      </td>
+      <td colspan=5>
+        <div class="cell-label">
+           a. BY
+        </div>
+        <div class="cell-value">
+          <%= template.dig(:worksheet_check, :by) %>
+        </div>
+      </td>
+    </tr>
+    <tr class="fixed-height">
+      <td colspan=5>
+        <div class="cell-label">
+           b. DATE
+        </div>
+        <div class="cell-value">
+          <%= template.dig(:worksheet_check, :date) %>
+        </div>
+      </td>
+    </tr>
+    <tr class="fixed-height">
+      <td colspan=8>
+        <div class="cell-label">
+           b.
+        </div>
+        <div class="cell-value">
+          <%= template.dig(:analyst_signature, :b) %>
+        </div>
+      </td>
+      <td colspan=8>
+        <div class="cell-label">
+           13. DATE REPORTED
+        </div>
+        <div class="cell-value">
+          <%= template[:date_reported] %>
+        </div>
+      </td>
+    </tr>
+    <tr class="fixed-height">
+      <td colspan=8>
+        <div class="cell-label">
+           c.
+        </div>
+        <div class="cell-value">
+          <%= template.dig(:analyst_signature, :c) %>
+        </div>
+      </td>
+      <td colspan=8 class="pagination-cell">
+        PAGE 1 OF
+      </td>
+    </tr>
+  </table>
+</div>

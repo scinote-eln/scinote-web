@@ -1,0 +1,73 @@
+<style>
+  body {
+    height: 95px;
+  }
+
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    height: 80px;
+    table-layout: fixed;
+    width: 100%
+  }
+
+  table td {
+    border: 2px solid black;
+    font-size: 12px;
+    padding: .25em;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  table td.pagination {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  .info-row {
+    height: 15px;
+  }
+
+  .info-row td {
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+  }
+</style>
+<table>
+  <tr>
+    <td colspan=3>
+      <div class="cell-label">
+        <b>ANALYST(S)</b>
+      </div>
+      <div class="cell-value">
+        <%= template[:analysts] %>
+      </div>
+    </td>
+    <td colspan=2>
+      <div class="cell-label">
+        <b>ANALYST EMPLOYEE NO.</b>
+      </div>
+      <div class="cell-value">
+        <%= template[:analyst_number] %>
+      </div>
+    </td>
+    <td colspan=3>
+      <div class="cell-label">
+        <b>CHECKED BY:</b>
+      </div>
+      <div class="cell-value">
+        <%= template[:checked_by] %>
+      </div>
+    </td>
+    <td colspan=2 class="pagination">
+      PAGE <span class="page"></span> OF <span class="topage"></span>
+    </td>
+  </tr>
+  <tr class="info-row">
+    <td colspan="10">Single-Sided</td>
+  </tr>
+</table>
