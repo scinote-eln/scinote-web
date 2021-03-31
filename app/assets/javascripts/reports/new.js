@@ -1,4 +1,4 @@
-/* globals animateSpinner GLOBAL_CONSTANTS */
+/* globals animateSpinner GLOBAL_CONSTANTS dropdownSelector */
 
 var REPORT_CONTENT = '#report-content';
 var ADD_CONTENTS_FORM_ID = '#add-contents-form';
@@ -990,5 +990,25 @@ function reportHandsonTableConverter() {
     });
   }
 
+  function initDropdowns() {
+    dropdownSelector.init('#projectSelector', {
+      singleSelect: true,
+      closeOnSelect: true,
+      selectAppearance: 'simple',
+      onChange: function() {
+        $('.continue-button').attr('disabled', false);
+      }
+    });
+
+    dropdownSelector.init('#templateSelector', {
+      singleSelect: true,
+      closeOnSelect: true,
+      noEmptyOption: true,
+      selectAppearance: 'simple',
+      disableSearch: true
+    });
+  }
+
   initReportWizard();
+  initDropdowns();
 }());

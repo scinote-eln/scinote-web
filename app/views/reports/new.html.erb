@@ -16,7 +16,7 @@
     </ul>
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane active" id="new-report-step-1">
-        Step 1
+        <%= render partial: 'reports/report_wizard/project_template_selector' %>
       </div>
       <div role="tabpanel" class="tab-pane" id="new-report-step-2">
         Step 2
@@ -50,7 +50,7 @@
       <% end %>
     </div>
     <div class="next-button-container">
-      <button class="btn btn-primary continue-button">
+      <button class="btn btn-primary continue-button" disabled>
         <%= t("projects.reports.new.continue_button") %>
       </button>
       <button class="btn btn-primary generate-button">
