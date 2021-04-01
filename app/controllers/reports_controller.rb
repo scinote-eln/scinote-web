@@ -25,7 +25,7 @@ class ReportsController < ApplicationController
 
   before_action :load_vars, only: %i(edit update)
   before_action :load_vars_nested, only: BEFORE_ACTION_METHODS
-  before_action :load_visible_projects, only: :visible_projects
+  before_action :load_visible_projects, only: :new
   before_action :load_available_repositories,
                 only: %i(new edit available_repositories)
 
@@ -49,6 +49,7 @@ class ReportsController < ApplicationController
 
   # Report grouped by modules
   def new
+    @templates = [['Scinote Template', 1]]
   end
 
   # Creating new report from the _save modal of the new page
@@ -457,7 +458,6 @@ class ReportsController < ApplicationController
   private
 
   include StringUtility
-  VisibleProject = Struct.new(:path, :name)
   AvailableRepository = Struct.new(:id, :name)
 
   def load_vars
@@ -477,13 +477,9 @@ class ReportsController < ApplicationController
 
   def load_visible_projects
     render_404 unless current_team
-    projects = Project.visible_from_user_by_name(
-      current_user, current_team, search_params[:q]
-    ).limit(Constants::SEARCH_LIMIT).select(:id, :name)
-    @visible_projects = projects.collect do |project|
-      VisibleProject.new(new_project_reports_path(project),
-                         ellipsize(project.name, 50, 40))
-    end
+    @visible_projects = Project.viewable_by_user(
+      current_user, current_team
+    ).select(:id, :name)
   end
 
   def load_available_repositories

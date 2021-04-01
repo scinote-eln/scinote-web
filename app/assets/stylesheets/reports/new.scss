@@ -203,6 +203,34 @@
       }
     }
   }
+
+  .project-selector-container {
+    background: $color-white;
+    box-shadow: $modal-shadow;
+    margin: 2em 20%;
+    padding: 1em 2em;
+    width: 60%;
+
+    .description {
+      @include font-main;
+    }
+
+    .project-selector,
+    .template-selector {
+      display: inline-block;
+      margin-bottom: 1em;
+      width: 100%;
+
+      label {
+        @include font-small;
+      }
+    }
+
+    #projectDescription {
+      height: 110px;
+      padding: .5em;
+    }
+  }
 }
 
 @media (max-width: 960px) {
@@ -211,6 +239,11 @@
       .wizard-status {
         display: none;
       }
+    }
+
+    .project-selector-container {
+      margin: 2em 1em;
+      width: calc(100% - 2em);
     }
   }
 }

@@ -1,0 +1,26 @@
+<div class="project-selector-container">
+  <h1><%= t('projects.reports.new.select_project_title') %></h1>
+  <p class="description">
+    <%= t('projects.reports.new.select_project_description') %>
+  </p>
+  <div class="row">
+    <div class="col-md-6">
+      <div class='project-selector'>
+        <%= label_tag :projectSelector, t('projects.reports.new.select_project') %>
+        <%= select_tag :projectSelector, options_from_collection_for_select(@visible_projects, :id, :name), data: { placeholder: t('projects.reports.new.select_project') } %>
+      </div>
+
+      <div class='template-selector'>
+        <%= label_tag :templateSelector, t('projects.reports.new.select_template') %>
+        <%= select_tag :templateSelector, options_for_select(@templates), data: { placeholder: t('projects.reports.new.select_template') } %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="sci-input-container">
+        <%= label_tag :projectDescription, t('projects.reports.new.report_description') %>
+        <%= text_area_tag :projectDescription, '', placeholder: t('projects.reports.new.report_description_placeholder'), class: 'sci-input-field' %>
+      </div>
+    </div>
+  </div>
+
+</div>
