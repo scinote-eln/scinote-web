@@ -271,6 +271,160 @@
     .divider {
       background: $color-alto;
       height: 1px;
+    }
+
+    .experiment-element {
+      .experiment-block {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        margin: 1em 0;
+      }
+
+      .content-element-title {
+        @include font-h1;
+        margin-bottom: 1em;
+      }
+    }
+
+    .all-results-container {
+      align-items: flex-start;
+      display: flex;
+
+      .results-order-contaner {
+        margin-top: .5em;
+
+        .move-down {
+          float: right;
+        }
+      }
+    }
+  }
+
+  .project-contents-container {
+    background: $color-white;
+    box-shadow: $modal-shadow;
+    margin: 2em 20%;
+    padding: 1em 2em;
+    width: 60%;
+
+    ul {
+      list-style-type: none;
+      padding-left: 1em;
+    }
+
+    .sci-checkbox-container {
+      margin-right: .25em;
+    }
+
+    .header {
+      align-items: center;
+      display: flex;
+      flex-wrap: wrap;
+      margin: .5em 0 1em;
+
+      .title {
+        @include font-h1;
+        margin-right: auto;
+      }
+    }
+
+    .select-all-my-modules {
+      @include font-h2;
+      align-items: center;
+      display: flex;
+      padding: 1em 0;
+    }
+
+    .hide-unchecked {
+      align-items: center;
+      display: flex;
+    }
+
+    .divider {
+      background: $color-alto;
+      height: 1px;
+    }
+
+    .experiment-element {
+      .experiment-block {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        margin: 1em 0;
+      }
+
+      .experiment-name {
+        @include font-h1;
+      }
+
+      .experiment-contents {
+        flex-basis: 100%;
+      }
+
+      .fa-caret-down {
+        margin: 0 .5em;
+      }
+
+      .move-buttons {
+        margin-left: auto;
+
+        .btn {
+          @include font-h2;
+        }
+
+        .move-down {
+          float: right;
+        }
+      }
+    }
+
+    .experiment-my-module {
+      @include font-h2;
+      align-items: center;
+      background: $color-white;
+      border-bottom: $border-default;
+      cursor: pointer;
+      display: flex;
+      padding: 1em 0;
+
+      &.ui-sortable-helper {
+        box-shadow: $flyout-shadow;
+      }
+
+      .sci-checkbox-container {
+        margin-right: .4em;
+      }
+
+      .fa-grip-vertical {
+        color: $color-silver-chalice;
+        margin-left: auto;
+      }
+    }
+
+    .experiment-element:first-child {
+      .move-up {
+        display: none;
+      }
+    }
+
+    .experiment-element:last-child {
+      .move-down {
+        display: none;
+      }
+    }
+  }
+
+  .task-contents-container {
+    background: $color-white;
+    box-shadow: $modal-shadow;
+    margin: 2em 20%;
+    padding: 1em 2em;
+    width: 60%;
+
+    .divider {
+      background: $color-alto;
+      height: 1px;
       margin-top: 1em;
       width: 100%;
     }
