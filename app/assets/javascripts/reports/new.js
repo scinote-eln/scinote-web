@@ -1005,7 +1005,13 @@ function reportHandsonTableConverter() {
       closeOnSelect: true,
       noEmptyOption: true,
       selectAppearance: 'simple',
-      disableSearch: true
+      disableSearch: true,
+      onChange: function() {
+        let template = $('#templateSelector').val();
+        $.get($('#templateSelector').data('valuesEditorPath'), { template: template }, function(result) {
+          $('.report-template-values-container').html(result.html);
+        });
+      }
     });
   }
 

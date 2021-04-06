@@ -24,6 +24,7 @@ class Report < ApplicationRecord
              foreign_key: 'last_modified_by_id',
              class_name: 'User',
              optional: true
+  has_many :report_template_values, dependent: :destroy
 
   # Report either has many report elements (if grouped by timestamp),
   # or many module elements (if grouped by module)

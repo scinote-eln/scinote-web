@@ -419,4 +419,8 @@ class Extends
     { name: 'In progress', color: '#0065ff', consequences: ['MyModuleStatusConsequences::Uncompletion'] },
     { name: 'Completed', color: '#00b900', consequences: ['MyModuleStatusConsequences::Completion'] }
   ]
+
+  REPORT_TEMPLATES = {
+    template_1: 'template_1'
+  }
 end

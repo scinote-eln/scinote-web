@@ -37,7 +37,7 @@
         <b>PRODUCT</b>
       </div>
       <div class="cell-value">
-        <%= template[:product] %>
+        <%= render Reports::TextInputComponent.new(report: report, name: :product, label: 'Product', editing: false) %>
       </div>
     </td>
     <td>
@@ -45,7 +45,7 @@
         <b>SAMPLE NUMBER</b>
       </div>
       <div class="cell-value">
-        <%= template[:sample_number] %>
+        <%= render Reports::TextInputComponent.new(report: report, name: :sample_number, label: 'Sample number', editing: false) %>
       </div>
     </td>
   </tr>

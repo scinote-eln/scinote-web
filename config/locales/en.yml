@@ -512,32 +512,34 @@ en:
         error: "Error"
         generating: "Generating"
         generate: "Generate"
-        modal_new:
-          projects: "Projects"
-          head_title: "Create new report"
-          no_projects: "No projects available."
-          message: "You are about to create a new report. Please select a project from which you would like to create a report."
-          create: "Create"
         modal_delete:
           head_title: "Delete report/s"
           message: "Are you sure to delete selected report/s?"
           delete: "Delete"
-      new:
-        report_name_placeholder: "Name your report"
-        wizard_statuses:
+      wizard:
+        statuses:
           step_1: "Select project"
           step_2: "Select tasks"
           step_3: "Select task contents"
+        first_step:
+          select_project_title: "Select project and report template"
+          select_project_description: "You are about to create a new report. Please select a project from which you would like to create a report, and a report template to define the desing of the report. Only projects with at least 1 task are displayed."
+          select_project: "Select project"
+          select_template: "Select template"
+          report_description: "Report description (optional)"
+          report_description_placeholder: "In this report you can see..."
+          values_editor:
+            title: "Enter template data"
+            description: "This template requires you to fill out additional information about this project. This is the only place you will be able to do so."
+            header: "Header"
+            cover: "Title page"
+            footer: "Footer"
+            no_values_title: "No additional data requiered"
+            no_values_description: "SciNote template doesn’t need any additional input for it to be succesfully generated."
+      new:
+        report_name_placeholder: "Name your report"
         continue_button: "Continue"
         generate_button: "Start generating"
-        select_project_title: "Select project and report template"
-        select_project_description: "You are about to create a new report. Please select a project from which you would like to create a report, and a report template to define the desing of the report. Only projects with at least 1 task are displayed."
-        select_project: "Select project"
-        select_template: "Select template"
-        report_description: "Report description (optional)"
-        report_description_placeholder: "In this report you can see..."
-
-
         head_title: "%{project} | New report"
         nav_title: "Report for: "
         nav_print: "Print"
