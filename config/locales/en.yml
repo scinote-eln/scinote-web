@@ -536,6 +536,12 @@ en:
             footer: "Footer"
             no_values_title: "No additional data requiered"
             no_values_description: "SciNote template doesn’t need any additional input for it to be succesfully generated."
+        second_step:
+          select_project_content: "Select and reorder experiments and tasks"
+          collapse_all: "Collapse all"
+          expand_all: "Expand all"
+          hide_unchecked: "Hide unchecked"
+          select_all_tasks: "Select all tasks"
         third_step:
           title: "Select task contents"
           select_all: "Select all content"
@@ -568,7 +574,6 @@ en:
         report_name_placeholder: "Name your report"
         continue_button: "Continue"
         generate_button: "Start generating"
-
         head_title: "%{project} | New report"
         nav_title: "Report for: "
         nav_print: "Print"

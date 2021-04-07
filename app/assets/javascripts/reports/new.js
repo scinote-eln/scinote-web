@@ -1026,7 +1026,7 @@ function reportHandsonTableConverter() {
     }
 
     $('.reports-new').on('change', '.report-experiment-checkbox', function() {
-      $(this).closest('li').find('.report-my-module-checkbox').prop('checked', this.checked)
+      $(this).closest('li').find('.report-my-module-checkbox').prop('checked', this.checked);
       selectAllState();
       hideUnchekedElements($('.hide-unchecked-checkbox').prop('checked'));
     })

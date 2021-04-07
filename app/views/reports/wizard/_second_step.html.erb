@@ -1,16 +1,16 @@
 <div class="project-contents-container">
   <div class="header">
     <div class="title">
-      Select and reorder experiments and tasks
+      <%= t("projects.reports.wizard.second_step.select_project_content") %>
     </div>
     <div class="collapse-buttons sci-btn-group">
        <button class="btn btn-light collapse-all">
           <i class="fas fa-caret-up"></i>
-          Collapse all
+          <%= t("projects.reports.wizard.second_step.collapse_all") %>
        </button>
        <button class="btn btn-light expand-all">
           <i class="fas fa-caret-down"></i>
-          Expand all
+          <%= t("projects.reports.wizard.second_step.expand_all") %>
        </button>
     </div>
   </div>
@@ -19,14 +19,14 @@
       <input type="checkbox" class="sci-checkbox hide-unchecked-checkbox" />
       <span class="sci-checkbox-label"></span>
     </span>
-    Hide unchecked
+    <%= t("projects.reports.wizard.second_step.hide_unchecked") %>
   </div>
   <div class="select-all-my-modules">
     <span class="sci-checkbox-container">
       <input type="checkbox" class="sci-checkbox select-all-my-modules-checkbox" checked/>
       <span class="sci-checkbox-label"></span>
     </span>
-    Select all tasks
+    <%= t("projects.reports.wizard.second_step.select_all_tasks") %>
   </div>
   <div class="divider"></div>
   <ul>
