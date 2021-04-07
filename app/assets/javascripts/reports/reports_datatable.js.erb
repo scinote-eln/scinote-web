@@ -74,8 +74,8 @@
               </span>`;
     }
 
-    if (data.file) {
-      return `<a href="${data.file}">
+    if (data.preview_url) {
+      return `<a href="#" class="file-preview-link" data-preview-url="${data.preview_url}">
                 <i class="fas fa-file-word"></i>
                 ${I18n.t('projects.reports.index.docx')}
               </a>`;
@@ -98,8 +98,8 @@
               </span>`;
     }
 
-    if (data.file) {
-      return `<a href="${data.file}">
+    if (data.preview_url) {
+      return `<a href="#" class="file-preview-link" data-preview-url="${data.preview_url}">
                 <i class="fas fa-file-pdf"></i>
                 ${I18n.t('projects.reports.index.pdf')}
               </a>`;

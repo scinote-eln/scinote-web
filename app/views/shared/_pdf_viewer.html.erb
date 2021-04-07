@@ -1,7 +1,12 @@
 <%
-   pdf_url = asset.pdf? ? asset_download_path(asset) : asset_pdf_preview_path(asset)
-   pdf_size = !asset.pdf? && asset.pdf_preview_ready? ? asset.file_pdf_preview&.blob&.byte_size : asset.file_size
-   blocked = pdf_size > Constants::PDF_PREVIEW_MAX_SIZE_MB.megabyte
+  unless report_document
+    pdf_url = asset.pdf? ? asset_download_path(asset) : asset_pdf_preview_path(asset)
+    pdf_size = !asset.pdf? && asset.pdf_preview_ready? ? asset.file_pdf_preview&.blob&.byte_size : asset.file_size
+  else
+    pdf_url = rails_blob_path(asset, disposition: 'attachment')
+    pdf_size = asset.blob.byte_size
+  end
+  blocked = pdf_size > Constants::PDF_PREVIEW_MAX_SIZE_MB.megabyte
 %>
 <div class="pdf-viewer <%= 'blocked' if blocked %> ">
   <div class="page-container">
