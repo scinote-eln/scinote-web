@@ -105,20 +105,18 @@
                 3. SEALS
               </div>
             </td>
-            <td>
-              <span class="template-checkbox <%= 'selected' if template.dig(:seals, :intact) %>"></span>
-              INTACT
-            </td>
           </tr>
           <tr>
-            <td>
-              <span class="template-checkbox <%= 'selected' if template.dig(:seals, :none) %>"></span>
-              NONE
-            </td>
-            <td>
-              <span class="template-checkbox <%= 'selected' if template.dig(:seals, :broken) %>"></span>
-              BROKEN
-            </td>
+            <%= render Reports::MultiCheckboxInputComponent.new(
+              report: report,
+              name: :seals,
+              label: 'Seals',
+              items: {
+                intact: 'INTACT',
+                broken: 'BROKEN',
+                none: 'NONE'
+              }
+            ) %>
           </tr>
           <tr></tr>
         </table>
@@ -128,7 +126,7 @@
           4. DATE RECEIVED
         </div>
         <div class="cell-value">
-          <%= template[:date_recieved] %>
+          <%= render Reports::DateInputComponent.new(report: report, name: :date_recieved, label: 'Date recieved', editing: false) %>
         </div>
       </td>
       <td colspan=4>
@@ -136,7 +134,7 @@
           5.RECEIVED FROM
         </div>
         <div class="cell-value">
-          <%= template[:recieved_from] %>
+          <%= render Reports::TextInputComponent.new(report: report, name: :recieved_from, label: 'Received from', editing: false) %>
         </div>
       </td>
       <td colspan=5>
@@ -144,7 +142,7 @@
           6. DISTRICT OR LABORATORY
         </div>
         <div class="cell-value">
-          <%= template[:district_laboratory] %>
+          <%= render Reports::TextInputComponent.new(report: report, name: :district_laboratory, label: 'District or laboratory', editing: false) %>
         </div>
       </td>
     </tr>
@@ -154,7 +152,7 @@
           7. DESCRIPTION OF SAMPLE
         </div>
         <div class="cell-value">
-          <%= template[:sample_description] %>
+          <%= render Reports::LargeTextInputComponent.new(report: report, name: :sample_description, label: 'Descripton of sample', editing: false) %>
         </div>
       </td>
     </tr>
@@ -168,21 +166,37 @@
         <table class="net-contents-table">
           <tr>
             <td>
-              <span class="template-checkbox <%= 'selected' if template.dig(:net_contents, :not_applicable) %>"></span>
+              <%= render Reports::CheckboxInputComponent.new(report: report, name: :not_applicable, label: 'Not applicable', editing: false) %>
               NOT APPLICABLE
             </td>
-            <td>DECLARE/UNIT <b><%= template.dig(:net_contents, :declare_unit) %></b></td>
+            <td>
+              DECLARE/UNIT <b>
+                <%= render Reports::TextInputComponent.new(report: report, name: :declare_unit, label: 'Declare unit', editing: false) %>
+              </b>
+            </td>
           </tr>
           <tr>
             <td>
-              <span class="template-checkbox <%= 'selected' if template.dig(:net_contents, :not_determined) %>"></span>
+              <%= render Reports::CheckboxInputComponent.new(report: report, name: :not_determined, label: 'Not determined', editing: false) %>
               NOT DETERMINED
             </td>
-            <td>AMOUNT FOUND <b><%= template.dig(:net_contents, :amount_found) %></b></td>
+            <td>AMOUNT FOUND
+              <b>
+                <%= render Reports::TextInputComponent.new(report: report, name: :amount_found, label: 'Amount found', editing: false) %>
+              </b>
+            </td>
           </tr>
           <tr>
-            <td><b><%= template.dig(:net_contents, :units_examined) %></b> UNITS EXAMINED</td>
-            <td>% of DECLARED <b><%= template.dig(:net_contents, :declared_percent) %></b></td>
+            <td>
+              <b>
+                <%= render Reports::TextInputComponent.new(report: report, name: :units_examined, label: 'Units examined', editing: false) %>
+              </b> UNITS EXAMINED
+            </td>
+            <td>% of DECLARED
+              <b>
+                <%= render Reports::TextInputComponent.new(report: report, name: :percent_of_declared, label: 'Percent of declared', editing: false) %>
+              </b>
+            </td>
           </tr>
         </table>
       </td>
@@ -195,17 +209,21 @@
         <table class="net-contents-table">
           <tr>
             <td>
-              <b><%= template.dig(:labeling, :originals_submitted) %></b> ORIGINAL(S) SUBMITTED
+              <b>
+                <%= render Reports::TextInputComponent.new(report: report, name: :originals_submitted, label: 'Original(s) submitted', editing: false) %>
+              </b> ORIGINAL(S) SUBMITTED
             </td>
           </tr>
           <tr>
             <td>
-              <b><%= template.dig(:labeling, :copies_submitted) %></b> COPIES SUBMITTED
+              <b>
+                <%= render Reports::TextInputComponent.new(report: report, name: :copies_submitted, label: 'Copies submitted', editing: false) %>
+              </b> COPIES SUBMITTED
             </td>
           </tr>
           <tr>
             <td>
-              <span class="template-checkbox <%= 'selected' if template.dig(:labeling, :none) %>"></span>
+              <%= render Reports::CheckboxInputComponent.new(report: report, name: :labeling_none, label: 'None', editing: false) %>
               NONE
             </td>
           </tr>
@@ -218,7 +236,7 @@
           10. SUMMARY OF ANALYSIS
         </div>
         <div class="cell-value">
-          <%= template[:analysis_summary] %>
+          <%= render Reports::LargeTextInputComponent.new(report: report, name: :analysis_summary, label: 'Summary of analysis', editing: false) %>
         </div>
       </td>
     </tr>
@@ -235,10 +253,10 @@
     <tr class="fixed-height">
       <td colspan=8 rowspan=2>
         <div class="cell-label">
-          12. a. ANALYST SIGNATURE (Broke Seal <span class="template-checkbox <%= 'selected' if template.dig(:analyst_signature, :broke) %>"></span>)
+          12. a. ANALYST SIGNATURE (Broke Seal <%= render Reports::CheckboxInputComponent.new(report: report, name: :analyst_signature_broke, label: 'Broke seal', editing: false) %>)
         </div>
         <div class="cell-value">
-          <%= template.dig(:analyst_signature, :a) %>
+          <%= render Reports::TextInputComponent.new(report: report, name: :analyst_signature_a, label: 'Analyst signature A', editing: false) %>
         </div>
       </td>
       <td colspan=3 rowspan=2>
@@ -251,7 +269,7 @@
            a. BY
         </div>
         <div class="cell-value">
-          <%= template.dig(:worksheet_check, :by) %>
+          <%= render Reports::TextInputComponent.new(report: report, name: :worksheet_check_by, label: 'Worksheet check by', editing: false) %>
         </div>
       </td>
     </tr>
@@ -261,7 +279,7 @@
            b. DATE
         </div>
         <div class="cell-value">
-          <%= template.dig(:worksheet_check, :date) %>
+          <%= render Reports::DateInputComponent.new(report: report, name: :worksheet_check_date, label: 'Worksheet check date', editing: false) %>
         </div>
       </td>
     </tr>
@@ -271,7 +289,7 @@
            b.
         </div>
         <div class="cell-value">
-          <%= template.dig(:analyst_signature, :b) %>
+          <%= render Reports::TextInputComponent.new(report: report, name: :analyst_signature_b, label: 'Analyst signature B', editing: false) %>
         </div>
       </td>
       <td colspan=8>
@@ -279,7 +297,7 @@
            13. DATE REPORTED
         </div>
         <div class="cell-value">
-          <%= template[:date_reported] %>
+          <%= render Reports::DateInputComponent.new(report: report, name: :date_reported, label: 'Date reported', editing: false) %>
         </div>
       </td>
     </tr>
@@ -289,7 +307,7 @@
            c.
         </div>
         <div class="cell-value">
-          <%= template.dig(:analyst_signature, :c) %>
+          <%= render Reports::TextInputComponent.new(report: report, name: :analyst_signature_c, label: 'Analyst signature C', editing: false) %>
         </div>
       </td>
       <td colspan=8 class="pagination-cell">

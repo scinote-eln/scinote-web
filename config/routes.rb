@@ -201,8 +201,7 @@ Rails.application.routes.draw do
       end
     end
     get 'reports/datatable', to: 'reports#datatable'
-    post 'reports/visible_projects', to: 'reports#visible_projects',
-                                     defaults: { format: 'json' }
+    get 'reports/new_template_values', to: 'reports#new_template_values', defaults: { format: 'json' }
     post 'reports/available_repositories', to: 'reports#available_repositories',
                                            defaults: { format: 'json' }
     post 'reports/save_pdf_to_inventory_item',

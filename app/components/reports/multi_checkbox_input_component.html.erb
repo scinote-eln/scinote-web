@@ -1,0 +1,11 @@
+<div>
+  <%= label_tag "#{@name}[]", @label %>
+  <ul>
+  <% @items.each do |key, value| %>
+    <li>
+      <%= check_box_tag "#{@name}[]", key %>
+      <%= value %>
+    </li>
+  <% end %>
+  </ul>
+</div>

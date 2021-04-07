@@ -1,0 +1,8 @@
+<% if @editing %>
+  <div class="sci-input-container">
+    <%= label_tag @name, @label %>
+    <%= select_tag @name, options_from_collection_for_select(@team_members, :id, :name), placeholder: @placeholder, class: 'sci-input-field' %>
+  </div>
+<% else %>
+  <%= @value %>
+<% end %>

@@ -25,7 +25,7 @@ class ReportsController < ApplicationController
 
   before_action :load_vars, only: %i(edit update document_preview)
   before_action :load_vars_nested, only: BEFORE_ACTION_METHODS
-  before_action :load_visible_projects, only: :new
+  before_action :load_visible_projects, only: %i(new edit)
   before_action :load_available_repositories,
                 only: %i(new edit available_repositories)
 
@@ -49,7 +49,30 @@ class ReportsController < ApplicationController
 
   # Report grouped by modules
   def new
-    @templates = [['Scinote Template', 1]]
+    @templates = Extends::REPORT_TEMPLATES
+  end
+
+  def new_template_values
+    template = Extends::REPORT_TEMPLATES[params[:template].to_sym]
+    return render_404 if template.blank?
+
+    respond_to do |format|
+      format.json do
+        if lookup_context.template_exists?("reports/templates/#{template}/edit.html.erb")
+          render json: {
+            html: render_to_string(
+              template: "reports/templates/#{template}/edit.html.erb",
+              layout: 'reports/template_values_editor',
+              locals: { report: Report.new }
+            )
+          }
+        else
+          render json: {
+            html: render_to_string(partial: 'reports/wizard/no_template_values.html.erb')
+          }
+        end
+      end
+    end
   end
 
   # Creating new report from the _save modal of the new page
@@ -88,6 +111,7 @@ class ReportsController < ApplicationController
     # cleans all the deleted report
     current_team_switch(@report.project.team)
     @report.cleanup_report
+    @templates = Extends::REPORT_TEMPLATES
     render 'reports/new.html.erb'
   end
 
@@ -445,10 +469,6 @@ class ReportsController < ApplicationController
         end
       end
     end
-  end
-
-  def visible_projects
-    render json: { projects: @visible_projects }, status: :ok
   end
 
   def available_repositories

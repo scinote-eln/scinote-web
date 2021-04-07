@@ -21,6 +21,8 @@ module ActiveStorage
         check_tinymce_asset_read_permissions
       when 'Experiment'
         check_experiment_read_permissions
+      when 'Report'
+        check_report_read_permissions
       when 'User'
         # No read restrictions for avatars
         true
@@ -72,6 +74,10 @@ module ActiveStorage
 
     def check_experiment_read_permissions
       render_403 && return unless can_read_experiment?(@blob.attachments.first.record)
+    end
+
+    def check_report_read_permissions
+      render_403 && return unless can_read_project?(@blob.attachments.first.record.project)
     end
 
     def check_zip_export_read_permissions

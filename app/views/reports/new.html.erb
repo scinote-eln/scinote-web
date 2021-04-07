@@ -16,7 +16,7 @@
     </ul>
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane active" id="new-report-step-1">
-        <%= render partial: 'reports/report_wizard/project_template_selector' %>
+        <%= render partial: 'reports/wizard/first_step' %>
       </div>
       <div role="tabpanel" class="tab-pane" id="new-report-step-2">
         Step 2
@@ -43,7 +43,7 @@
           <div class="step-dot"></div><br>
           <div class="step-name">
             <span class=name-wrapper>
-              <%= t("projects.reports.new.wizard_statuses.step_#{i + 1}") %>
+              <%= t("projects.reports.wizard.statuses.step_#{i + 1}") %>
             </span>
           </div>
         </div>
