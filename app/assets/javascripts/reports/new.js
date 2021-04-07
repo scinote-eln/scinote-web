@@ -1015,6 +1015,31 @@ function reportHandsonTableConverter() {
     });
   }
 
+  function initTaskContents() {
+    dropdownSelector.init('.task-contents-container .order-results', {
+      singleSelect: true,
+      closeOnSelect: true,
+      noEmptyOption: true,
+      selectAppearance: 'simple',
+      disableSearch: true
+    });
+
+    $('.task-contents-container')
+      .on('change', '.select-all-task-contents', function() {
+        $('.content-element .sci-checkbox:not(.skip-select-all)')
+          .prop('checked', this.checked);
+      })
+      .on('change', '.protocol-steps-checkbox', function() {
+        $('.step-contents .sci-checkbox')
+          .prop('checked', this.checked);
+      })
+      .on('change', '.all-results-checkbox', function() {
+        $('.results-type-contents .sci-checkbox:not(.skip-select-all)')
+          .prop('checked', this.checked);
+      });
+  }
+
   initReportWizard();
   initDropdowns();
+  initTaskContents();
 }());
