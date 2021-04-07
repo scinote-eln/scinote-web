@@ -232,6 +232,7 @@
     }
   }
 
+
   .report-template-values-container {
     background: $color-white;
     box-shadow: $modal-shadow;
@@ -259,6 +260,88 @@
       padding: .5em;
     }
   }
+
+  .task-contents-container {
+    background: $color-white;
+    box-shadow: $modal-shadow;
+    margin: 2em 20%;
+    padding: 1em 2em;
+    width: 60%;
+
+    .divider {
+      background: $color-alto;
+      height: 1px;
+      margin-top: 1em;
+      width: 100%;
+    }
+
+    .select-all-container {
+      @include font-h2;
+      line-height: 1em;
+    }
+
+    ul {
+      list-style-type: none;
+      padding-left: 1em;
+
+      li {
+        @include font-h2;
+        line-height: 1em;
+        padding-top: 1em;
+      }
+
+      .content-element-title {
+        @include font-h1;
+        margin-bottom: 1em;
+      }
+    }
+
+    .all-results-container {
+      align-items: flex-start;
+      display: flex;
+
+      .results-order-contaner {
+        margin-top: .5em;
+
+        label {
+          @include font-small;
+        }
+      }
+    }
+
+    .file-result-title-container {
+      align-items: flex-start;
+      display: flex;
+
+      .include-pages-container {
+        @include font-button;
+        font-weight: normal;
+        line-height: 1.2em;
+        margin-top: 1em;
+
+        .fa-exclamation-triangle {
+          color: $brand-warning;
+          margin-top: .5em;
+        }
+      }
+    }
+
+    .sci-checkbox-container {
+      float: left;
+      margin-right: .25em;
+    }
+
+    .title {
+      @include font-h1;
+      margin-bottom: 1em;
+    }
+
+    .protocol-contents,
+    .result-contents,
+    .additional-contents {
+      margin-top: 1em;
+    }
+  }
 }
 
 @media (max-width: 960px) {
@@ -270,6 +353,11 @@
     }
 
     .project-selector-container {
+      margin: 2em 1em;
+      width: calc(100% - 2em);
+    }
+
+    .task-contents-container {
       margin: 2em 1em;
       width: calc(100% - 2em);
     }
