@@ -49,6 +49,7 @@ class ReportsController < ApplicationController
   # Report grouped by modules
   def new
     @templates = Extends::REPORT_TEMPLATES
+    @report = current_team.reports.new
   end
 
   def new_template_values
@@ -342,11 +343,11 @@ class ReportsController < ApplicationController
 
   def project_contents
     render json: {
-        html: render_to_string(
-          partial: 'reports/wizard/second_step.html.erb',
-          locals: { project: @project }
-        )
-      }
+      html: render_to_string(
+        partial: 'reports/wizard/project_contents.html.erb',
+        locals: { project: @project }
+      )
+    }
   end
 
   def experiment_contents

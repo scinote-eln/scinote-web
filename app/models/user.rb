@@ -34,7 +34,7 @@ class User < ApplicationRecord
 
   store_accessor :settings, :time_zone, :notifications_settings
 
-  default_settings(
+  DEFAULT_SETTINGS = {
     time_zone: 'UTC',
     date_format: Constants::DEFAULT_DATE_FORMAT,
     notifications_settings: {
@@ -44,7 +44,7 @@ class User < ApplicationRecord
       recent_email: false,
       system_message_email: false
     }
-  )
+  }.freeze
 
   store_accessor :variables, :export_vars
 
