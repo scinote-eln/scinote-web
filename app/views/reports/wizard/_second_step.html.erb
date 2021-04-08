@@ -1,0 +1,68 @@
+<div class="project-contents-container">
+  <div class="header">
+    <div class="title">
+      <%= t("projects.reports.wizard.second_step.select_project_content") %>
+    </div>
+    <div class="collapse-buttons sci-btn-group">
+       <button class="btn btn-light collapse-all">
+          <i class="fas fa-caret-up"></i>
+          <%= t("projects.reports.wizard.second_step.collapse_all") %>
+       </button>
+       <button class="btn btn-light expand-all">
+          <i class="fas fa-caret-down"></i>
+          <%= t("projects.reports.wizard.second_step.expand_all") %>
+       </button>
+    </div>
+  </div>
+  <div class="hide-unchecked">
+    <span class="sci-checkbox-container">
+      <input type="checkbox" class="sci-checkbox hide-unchecked-checkbox" />
+      <span class="sci-checkbox-label"></span>
+    </span>
+    <%= t("projects.reports.wizard.second_step.hide_unchecked") %>
+  </div>
+  <div class="select-all-my-modules">
+    <span class="sci-checkbox-container">
+      <input type="checkbox" class="sci-checkbox select-all-my-modules-checkbox" checked/>
+      <span class="sci-checkbox-label"></span>
+    </span>
+    <%= t("projects.reports.wizard.second_step.select_all_tasks") %>
+  </div>
+  <div class="divider"></div>
+  <ul>
+    <% project.experiments.includes(:my_modules).active.each do |experiment| %>
+      <li class="experiment-element">
+        <div class="experiment-block">
+          <span class="sci-checkbox-container">
+            <input type="checkbox" value="<%= experiment.id %>" class="sci-checkbox report-experiment-checkbox" checked/>
+            <span class="sci-checkbox-label"></span>
+          </span>
+          <i class="fas fa-caret-down " data-toggle="collapse" href="#experimentContentContainer<%= experiment.id %>" aria-expanded="false"></i>
+          <span class="experiment-name">
+            <%= experiment.name %>
+          </span>
+          <div class="move-buttons sci-btn-group">
+             <button class="btn btn-light icon-btn move-up">
+                <i class="fas fa-arrow-up"></i>
+             </button>
+             <button class="btn btn-light icon-btn move-down">
+                <i class="fas fa-arrow-down"></i>
+             </button>
+          </div>
+        </div>
+        <ul class="experiment-contents collapse in" id="experimentContentContainer<%= experiment.id %>">
+          <% experiment.my_modules.active.each do |my_module| %>
+            <li class="experiment-my-module">
+              <span class="sci-checkbox-container">
+                <input type="checkbox" value="<%= my_module.id %>" class="sci-checkbox report-my-module-checkbox" checked/>
+                <span class="sci-checkbox-label"></span>
+              </span>
+              <%= my_module.name %>
+              <i class="fas fa-grip-vertical"></i>
+            </li>
+          <% end %>
+        </ul>
+      </li>
+    <% end %>
+  </ul>
+</div>

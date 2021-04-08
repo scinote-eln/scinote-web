@@ -988,6 +988,88 @@ function reportHandsonTableConverter() {
     $('.back-button').on('click', function() {
       previousStep();
     });
+
+    $('.reports-new-body [href="#new-report-step-2"]').on('show.bs.tab', function() {
+      var projectId = dropdownSelector.getValues('#projectSelector');
+      var containerStep2 = $('#new-report-step-2');
+      animateSpinner('.reports-new-body');
+      $.get(containerStep2.data('project-content-url'), { project_id: projectId }, function(data) {
+        animateSpinner('.reports-new-body', false);
+        containerStep2.html(data.html);
+        $('.experiment-contents').sortable();
+      });
+    });
+  }
+
+  function initProjectContents() {
+    function hideUnchekedElements(hide) {
+      $('.report-experiment-checkbox,.report-my-module-checkbox')
+        .closest('li').css('display', '');
+      if (hide) {
+        $(`.report-experiment-checkbox:not(:checked):not(:indeterminate),
+           .report-my-module-checkbox:not(:checked):not(:indeterminate)`)
+          .closest('li').css('display', 'none');
+      }
+    }
+
+    function selectAllState() {
+      var selectAll = $('.select-all-my-modules-checkbox');
+      var all = $('.report-my-module-checkbox').length;
+      var checked = $('.report-my-module-checkbox:checked').length;
+      selectAll.prop('indeterminate', false);
+      if (all === checked) {
+        selectAll.prop('checked', true);
+      } else {
+        selectAll.prop('checked', false);
+        if (checked > 0) selectAll.prop('indeterminate', true);
+      }
+    }
+
+    $('.reports-new').on('change', '.report-experiment-checkbox', function() {
+      $(this).closest('li').find('.report-my-module-checkbox').prop('checked', this.checked);
+      selectAllState();
+      hideUnchekedElements($('.hide-unchecked-checkbox').prop('checked'));
+    })
+      .on('change', '.select-all-my-modules-checkbox', function() {
+        $('.report-experiment-checkbox, .report-my-module-checkbox')
+          .prop('checked', this.checked)
+          .prop('indeterminate', false);
+        hideUnchekedElements($('.hide-unchecked-checkbox').prop('checked'));
+      })
+      .on('change', '.report-my-module-checkbox', function() {
+        var experimentElement = $(this).closest('.experiment-element');
+        var experiment = experimentElement.find('.report-experiment-checkbox');
+        var all = experimentElement.find('.report-my-module-checkbox').length;
+        var checked = experimentElement.find('.report-my-module-checkbox:checked').length;
+
+        experiment.prop('indeterminate', false);
+        if (all === checked) {
+          experiment.prop('checked', true);
+        } else {
+          experiment.prop('checked', false);
+          if (checked > 0) experiment.prop('indeterminate', true);
+        }
+
+        selectAllState();
+        hideUnchekedElements($('.hide-unchecked-checkbox').prop('checked'));
+      })
+      .on('click', '.experiment-element .move-up', function() {
+        var experiment = $(this).closest('.experiment-element');
+        experiment.insertBefore(experiment.prev());
+      })
+      .on('click', '.experiment-element .move-down', function() {
+        var experiment = $(this).closest('.experiment-element');
+        experiment.insertAfter(experiment.next());
+      })
+      .on('change', '.hide-unchecked-checkbox', function() {
+        hideUnchekedElements(this.checked);
+      })
+      .on('click', '.collapse-all', function() {
+        $('.experiment-contents').collapse('hide');
+      })
+      .on('click', '.expand-all', function() {
+        $('.experiment-contents').collapse('show');
+      });
   }
 
   function initDropdowns() {
@@ -1042,4 +1124,5 @@ function reportHandsonTableConverter() {
   initReportWizard();
   initDropdowns();
   initTaskContents();
+  initProjectContents();
 }());

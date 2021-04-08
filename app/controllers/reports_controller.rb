@@ -11,12 +11,11 @@ class ReportsController < ApplicationController
     update
     generate
     save_modal
-    project_contents_modal
+    project_contents
     experiment_contents_modal
     module_contents_modal
     step_contents_modal
     result_contents_modal
-    project_contents
     experiment_contents
     module_contents
     step_contents
@@ -250,20 +249,6 @@ class ReportsController < ApplicationController
     end
   end
 
-  # Modal for adding contents into project element
-  def project_contents_modal
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'reports/new/modal/project_contents.html.erb',
-            locals: { project: @project }
-          )
-        }
-      end
-    end
-  end
-
   # Experiment for adding contents into experiment element
   def experiment_contents_modal
     experiment = @project.experiments.find_by_id(params[:experiment_id])
@@ -356,20 +341,12 @@ class ReportsController < ApplicationController
   end
 
   def project_contents
-    respond_to do |format|
-      elements = generate_project_contents_json
-
-      if elements_empty? elements
-        format.json { render json: {}, status: :no_content }
-      else
-        format.json do
-          render json: {
-            status: :ok,
-            elements: elements
-          }
-        end
-      end
-    end
+    render json: {
+        html: render_to_string(
+          partial: 'reports/wizard/second_step.html.erb',
+          locals: { project: @project }
+        )
+      }
   end
 
   def experiment_contents
