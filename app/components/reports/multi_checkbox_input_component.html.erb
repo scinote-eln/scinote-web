@@ -3,7 +3,10 @@
   <ul>
   <% @items.each do |key, value| %>
     <li>
-      <%= check_box_tag "#{@name}[]", key %>
+      <div class="sci-checkbox-container">
+        <%= check_box_tag "#{@name}[]", key, false ,class: 'sci-checkbox' %>
+        <span class="sci-checkbox-label"></span>
+      </div>
       <%= value %>
     </li>
   <% end %>

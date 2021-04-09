@@ -968,6 +968,74 @@ function reportHandsonTableConverter() {
 }
 
 (function() {
+  function getReportData() {
+    var reportData = {};
+
+    // Report name
+    reportData.name = $('.report-name').val();
+
+    // Project
+    reportData.project_id = dropdownSelector.getValues('#projectSelector');
+
+    // Template
+    reportData.template_id = dropdownSelector.getValues('#templateSelector');
+
+    // Template values
+    reportData.template_values = {};
+    $.each($('.report-template-values-container').find('.sci-input-field, select'), function(i, field) {
+      reportData.template_values[field.name] = field.value;
+    });
+
+    $.each($('.report-template-values-container .sci-checkbox'), function(i, checkbox) {
+      if (checkbox.name.includes('[]')) {
+        let name = checkbox.name.replace('[]', '');
+        if (!reportData.template_values[name]) {
+          reportData.template_values[name] = {};
+        }
+        reportData
+          .template_values[name][checkbox.value] = checkbox.checked;
+      } else {
+        reportData.template_values[checkbox.name] = checkbox.checked;
+      }
+    });
+
+    // Project content
+    reportData.project_content = [];
+    $.each($('.project-contents-container .experiment-element'), function(i, experiment) {
+      let experimentHash = {};
+
+      if (!$(experiment).find('.report-experiment-checkbox').prop('checked')) return;
+
+      experimentHash.experiment_id = $(experiment).find('.report-experiment-checkbox').val();
+      experimentHash.my_modules = [];
+      $.each($(experiment).find('.report-my-module-checkbox:checked'), function(j, myModule) {
+        experimentHash.my_modules.push(myModule.value);
+      });
+      reportData.project_content.push(experimentHash);
+    });
+
+    // Settings
+    reportData.settings = { task: { protocol: {} } };
+    reportData.settings.all_tasks = $('.task-contents-container .select-all-task-contents').prop('checked');
+    $.each($('.task-contents-container .content-element .protocol-setting'), function(i, e) {
+      reportData.settings.task.protocol[e.value] = e.checked;
+    });
+    $.each($('.task-contents-container .content-element .task-setting'), function(i, e) {
+      reportData.settings.task[e.value] = e.checked;
+    });
+    reportData.settings.task.result_order = dropdownSelector.getValues('#taskResultsOrder');
+
+    return reportData;
+  }
+
+  function initGenerateButton() {
+    $('.reports-new').on('click', '.generate-button', function() {
+      $.post(this.dataset.createUrl, getReportData(), function() {
+        // TODO
+      });
+    });
+  }
+
   function initReportWizard() {
     function nextStep() {
       var currentStep = parseInt($('.reports-new-footer').attr('data-step'), 10);
@@ -996,17 +1064,19 @@ function reportHandsonTableConverter() {
     });
 
     $('.reports-new-body [href="#new-report-step-2"]').on('show.bs.tab', function() {
-      var projectId = dropdownSelector.getValues('#projectSelector');
       var projectContents = $('#new-report-step-2').find('.project-contents');
-      animateSpinner('.reports-new-body');
-      $.get(projectContents.data('project-content-url'), { project_id: projectId }, function(data) {
-        animateSpinner('.reports-new-body', false);
-        projectContents.html(data.html);
-        if ($('.select-all-my-modules-checkbox').prop('checked')) {
-          $('.select-all-my-modules-checkbox').trigger('change');
-        }
-        $('.experiment-contents').sortable();
-      });
+      if (projectContents.is(':empty')) {
+        let projectId = dropdownSelector.getValues('#projectSelector');
+        animateSpinner('.reports-new-body');
+        $.get(projectContents.data('project-content-url'), { project_id: projectId }, function(data) {
+          animateSpinner('.reports-new-body', false);
+          projectContents.html(data.html);
+          if ($('.select-all-my-modules-checkbox').prop('checked')) {
+            $('.select-all-my-modules-checkbox').trigger('change');
+          }
+          $('.experiment-contents').sortable();
+        });
+      }
     });
 
     $('.reports-new-body [href="#new-report-step-3"]').on('show.bs.tab', function() {
@@ -1093,6 +1163,7 @@ function reportHandsonTableConverter() {
       closeOnSelect: true,
       selectAppearance: 'simple',
       onChange: function() {
+        $('#new-report-step-2 .project-contents').empty();
         $('.continue-button').attr('disabled', false);
       }
     });
@@ -1136,6 +1207,7 @@ function reportHandsonTableConverter() {
       });
   }
 
+  initGenerateButton();
   initReportWizard();
   initDropdowns();
   initTaskContents();

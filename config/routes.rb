@@ -194,7 +194,7 @@ Rails.application.routes.draw do
             via: [:get, :post, :put, :patch]
     end
 
-    resources :reports, only: [:index, :new] do
+    resources :reports, only: [:index, :new, :create] do
       member do
         get :document_preview
       end
