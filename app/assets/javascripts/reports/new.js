@@ -981,6 +981,12 @@ function reportHandsonTableConverter() {
       $('.reports-new-footer').attr('data-step', currentStep - 1);
     }
 
+    function allCheckboxesSelected(container) {
+      let checked = container.find('.sci-checkbox:not(.skip-select-all):checked');
+      let all = container.find('.sci-checkbox:not(.skip-select-all)');
+      return checked.length === all.length;
+    }
+
     $('.continue-button').on('click', function() {
       nextStep();
     });
@@ -991,13 +997,22 @@ function reportHandsonTableConverter() {
 
     $('.reports-new-body [href="#new-report-step-2"]').on('show.bs.tab', function() {
       var projectId = dropdownSelector.getValues('#projectSelector');
-      var containerStep2 = $('#new-report-step-2');
+      var projectContents = $('#new-report-step-2').find('.project-contents');
       animateSpinner('.reports-new-body');
-      $.get(containerStep2.data('project-content-url'), { project_id: projectId }, function(data) {
+      $.get(projectContents.data('project-content-url'), { project_id: projectId }, function(data) {
         animateSpinner('.reports-new-body', false);
-        containerStep2.html(data.html);
+        projectContents.html(data.html);
+        if ($('.select-all-my-modules-checkbox').prop('checked')) {
+          $('.select-all-my-modules-checkbox').trigger('change');
+        }
         $('.experiment-contents').sortable();
       });
+    });
+
+    $('.reports-new-body [href="#new-report-step-3"]').on('show.bs.tab', function() {
+      $('.protocol-steps-checkbox').prop('checked', allCheckboxesSelected($('.report-protocol-settings')));
+      $('.all-results-checkbox').prop('checked', allCheckboxesSelected($('.report-result-settings')));
+      $('.select-all-task-contents').prop('checked', allCheckboxesSelected($('.report-task-settings')));
     });
   }
 

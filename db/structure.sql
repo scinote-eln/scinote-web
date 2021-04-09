@@ -1308,7 +1308,8 @@ CREATE TABLE public.reports (
     last_modified_by_id bigint,
     team_id bigint,
     pdf_file_processing boolean DEFAULT false,
-    docx_file_processing boolean DEFAULT false
+    docx_file_processing boolean DEFAULT false,
+    settings jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -7231,6 +7232,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210128105458'),
 ('20210217114042'),
 ('20210312185911'),
-('20210325152257');
+('20210325152257'),
+('20210407143303');
 
 

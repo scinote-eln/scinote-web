@@ -18,10 +18,11 @@
       <div role="tabpanel" class="tab-pane active" id="new-report-step-1">
         <%= render partial: 'reports/wizard/first_step' %>
       </div>
-      <div role="tabpanel" class="tab-pane" id="new-report-step-2" data-project-content-url="<%= project_contents_reports_path %>">
+      <div role="tabpanel" class="tab-pane" id="new-report-step-2">
+        <%= render partial: 'reports/wizard/second_step', locals: { report: @report } %>
       </div>
       <div role="tabpanel" class="tab-pane" id="new-report-step-3">
-        <%= render partial: 'reports/wizard/third_step' %>
+        <%= render partial: 'reports/wizard/third_step', locals: { report: @report } %>
       </div>
     </div>
   </div>
