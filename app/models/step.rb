@@ -107,11 +107,6 @@ class Step < ApplicationRecord
     StepComment.from(comments, :comments).order(created_at: :asc)
   end
 
-  def save(current_user=nil)
-    @current_user = current_user
-    super()
-  end
-
   def space_taken
     st = 0
     assets.each do |asset|
@@ -202,21 +197,36 @@ class Step < ApplicationRecord
   end
 
   def set_last_modified_by
-    if @current_user&.is_a?(User)
-      self.tables.each do |t|
-        t.created_by ||= @current_user
-        t.last_modified_by = @current_user if t.changed?
+    self.last_modified_by_id ||= user_id
+
+    tables.each do |t|
+      t.created_by ||= last_modified_by_id
+      if t.changed?
+        t.last_modified_by = last_modified_by_id
+        t.save!
       end
-      self.assets.each do |a|
-        a.created_by ||= @current_user
-        a.last_modified_by = @current_user if a.changed?
+    end
+
+    assets.each do |a|
+      a.created_by ||= last_modified_by_id
+      if a.changed?
+        a.last_modified_by = last_modified_by_id
+        a.save!
       end
-      self.checklists.each do |checklist|
-        checklist.created_by ||= @current_user
-        checklist.last_modified_by = @current_user if checklist.changed?
-        checklist.checklist_items.each do |checklist_item|
-          checklist_item.created_by ||= @current_user
-          checklist_item.last_modified_by = @current_user if checklist_item.changed?
+    end
+
+    checklists.each do |checklist|
+      checklist.created_by ||= last_modified_by_id
+      if checklist.changed?
+        checklist.last_modified_by = last_modified_by_id
+        checklist.save!
+      end
+
+      checklist.checklist_items.each do |checklist_item|
+        checklist_item.created_by ||= last_modified_by_id
+        if checklist_item.changed?
+          checklist_item.last_modified_by = last_modified_by_id
+          checklist_item.save!
         end
       end
     end
