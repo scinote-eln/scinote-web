@@ -3,6 +3,7 @@
 module Reports
   class PdfJob < ApplicationJob
     include InputSanitizeHelper
+    include ReportsHelper
 
     queue_as :reports
 
@@ -12,9 +13,6 @@ module Reports
         template_name = Extends::REPORT_TEMPLATES[template.to_sym]
 
         raise StandardError if template_name.blank?
-
-        # TODO, replace with actual content generation
-        content = I18n.t('projects.reports.new.no_content_for_PDF_html')
 
         ActionController::Renderer::RACK_KEY_TRANSLATION['warden'] ||= 'warden'
         proxy = Warden::Proxy.new({}, Warden::Manager.new({}))
@@ -31,8 +29,8 @@ module Reports
                          footer: { html: { template: "reports/templates/#{template_name}/footer",
                                            locals: { report: report },
                                            layout: 'reports/footer_header.html.erb' } },
-                         locals: { content: content },
-                         disable_javascript: true,
+                         locals: { report: report },
+                         disable_javascript: false,
                          template: 'reports/report.pdf.erb'
         )
 
