@@ -24,7 +24,8 @@ module ProtocolImporters
         s = Step.new(step_params
                        .symbolize_keys
                        .slice(:name, :position, :description, :tables_attributes)
-                       .merge(user: @user, completed: false))
+                       .merge(user: @user, completed: false)
+                       .merge(last_modified_by_id: @user.id))
 
         # 'Manually' create assets here. "Accept nasted attributes" won't work for assets
         s.assets << AttachmentsBuilder.generate(step_params.deep_symbolize_keys, user: @user, team: @team)
