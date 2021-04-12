@@ -15,7 +15,7 @@ class FixLastChangedByOnSteps < ActiveRecord::Migration[6.1]
   # because we're not recording the changes to last_modified_by_id
 
   def up
-    Step.where(last_modified_by_id: nil).each do |step|
+    Step.where(last_modified_by_id: nil).find_each do |step|
       # Try to find corresponding activity, if step was changed activity should exist
       # we cannot completely rely on that, so for the fallback we use the step user
       activity = Activity
