@@ -208,7 +208,7 @@ class Step < ApplicationRecord
     end
 
     assets.each do |a|
-      a.created_by.id ||= last_modified_by_id
+      a.created_by_id ||= last_modified_by_id
       if a.changed?
         a.last_modified_by_id = last_modified_by_id
         a.save!
