@@ -200,32 +200,32 @@ class Step < ApplicationRecord
     self.last_modified_by_id ||= user_id
 
     tables.each do |t|
-      t.created_by ||= last_modified_by_id
+      t.created_by_id ||= last_modified_by_id
       if t.changed?
-        t.last_modified_by = last_modified_by_id
+        t.last_modified_by_id = last_modified_by_id
         t.save!
       end
     end
 
     assets.each do |a|
-      a.created_by ||= last_modified_by_id
+      a.created_by.id ||= last_modified_by_id
       if a.changed?
-        a.last_modified_by = last_modified_by_id
+        a.last_modified_by_id = last_modified_by_id
         a.save!
       end
     end
 
     checklists.each do |checklist|
-      checklist.created_by ||= last_modified_by_id
+      checklist.created_by_id ||= last_modified_by_id
       if checklist.changed?
-        checklist.last_modified_by = last_modified_by_id
+        checklist.last_modified_by_id = last_modified_by_id
         checklist.save!
       end
 
       checklist.checklist_items.each do |checklist_item|
-        checklist_item.created_by ||= last_modified_by_id
+        checklist_item.created_by_id ||= last_modified_by_id
         if checklist_item.changed?
-          checklist_item.last_modified_by = last_modified_by_id
+          checklist_item.last_modified_by_id = last_modified_by_id
           checklist_item.save!
         end
       end
