@@ -3,7 +3,13 @@
     <li class="experiment-element">
       <div class="experiment-block">
         <span class="sci-checkbox-container">
-          <input type="checkbox" value="<%= experiment.id %>" class="sci-checkbox report-experiment-checkbox"/>
+          <input type="checkbox" value="<%= experiment.id %>" class="sci-checkbox report-experiment-checkbox"
+          <%= if report
+                'checked' if @project_contents[:experiments].include?(experiment.id)
+              else
+                'checked'
+              end
+          %>/>
           <span class="sci-checkbox-label"></span>
         </span>
         <i class="fas fa-caret-down " data-toggle="collapse" href="#experimentContentContainer<%= experiment.id %>" aria-expanded="false"></i>
@@ -23,7 +29,13 @@
         <% experiment.my_modules.active.each do |my_module| %>
           <li class="experiment-my-module">
             <span class="sci-checkbox-container">
-              <input type="checkbox" value="<%= my_module.id %>" class="sci-checkbox report-my-module-checkbox"/>
+              <input type="checkbox" value="<%= my_module.id %>" class="sci-checkbox report-my-module-checkbox"
+              <%= if report
+                    'checked' if @project_contents[:my_modules].include?(my_module.id)
+                  else
+                    'checked'
+                  end
+              %>/>
               <span class="sci-checkbox-label"></span>
             </span>
             <%= my_module.name %>

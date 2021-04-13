@@ -1,7 +1,7 @@
 <div class="content-pane flexible reports-new">
   <div class="reports-new-header">
     <div class="sci-input-container report-name-container">
-      <input type="text" class="sci-input-field report-name" placeholder="<%= t("projects.reports.new.report_name_placeholder") %>"></input>
+      <input type="text" class="sci-input-field report-name" placeholder="<%= t("projects.reports.new.report_name_placeholder") %>" value="<%= @report.name %>"></input>
 
     </div>
     <button class="btn btn-secondary cancel-button">
@@ -16,7 +16,7 @@
     </ul>
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane active" id="new-report-step-1">
-        <%= render partial: 'reports/wizard/first_step' %>
+        <%= render partial: 'reports/wizard/first_step', locals: { report: @report } %>
       </div>
       <div role="tabpanel" class="tab-pane" id="new-report-step-2">
         <%= render partial: 'reports/wizard/second_step', locals: { report: @report } %>
@@ -46,6 +46,10 @@
               <%= t("projects.reports.wizard.statuses.step_#{i + 1}") %>
             </span>
           </div>
+          <% if @edit %>
+            <div class="change-step" data-step-id="<%= i + 1 %>">
+            </div>
+          <% end %>
         </div>
       <% end %>
     </div>
@@ -53,9 +57,32 @@
       <button class="btn btn-primary continue-button" disabled>
         <%= t("projects.reports.new.continue_button") %>
       </button>
-      <button class="btn btn-primary generate-button" data-create-url="<%= reports_path %>">
-        <%= t("projects.reports.new.generate_button") %>
-      </button>
+      <% if @edit %>
+        <div class="report-generate-actions-dropdown sci-dropdown dropup">
+          <button class="btn btn-primary dropdown-toggle single-object-action" type="button" id="reportGenerateMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <%= t("projects.reports.new.generate_as_button") %>
+            <span class="caret pull-right"></span>
+          </button>
+          <ul id="reportGenerateMenuDropdown" class="dropdown-menu dropdown-menu-right" aria-labelledby="reportGenerateMenu">
+            <li>
+              <%= link_to '#', remote: true, id: 'createNewReport' do %>
+                <i class="fas fa-plus-circle"></i>
+                <%= t("projects.reports.new.save_as_new_report") %>
+              <% end %>
+            </li>
+            <li>
+              <%= link_to '#', remote: true, id: 'UpdateReport' do %>
+                <i class="fas fa-redo-alt"></i>
+                <%= t("projects.reports.new.update_report") %>
+              <% end %>
+            </li>
+          </ul>
+        </div>
+      <% else %>
+        <button class="btn btn-primary generate-button"  data-create-url="<%= reports_path %>">
+          <%= t("projects.reports.new.generate_button") %>
+        </button>
+      <% end %>
     </div>
   </div>
 </div>

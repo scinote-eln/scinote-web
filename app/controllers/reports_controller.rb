@@ -63,7 +63,7 @@ class ReportsController < ApplicationController
             html: render_to_string(
               template: "reports/templates/#{template}/edit.html.erb",
               layout: 'reports/template_values_editor',
-              locals: { report: Report.new }
+              locals: { report: Report.find_by(id: params[:report_id]) || Report.new }
             )
           }
         else
@@ -108,11 +108,13 @@ class ReportsController < ApplicationController
   end
 
   def edit
-    # cleans all the deleted report
-    current_team_switch(@report.project.team)
-    @report.cleanup_report
+    @edit = true
     @templates = Extends::REPORT_TEMPLATES
-    render 'reports/new.html.erb'
+    @project_contents = {
+      experiments: @report.report_elements.where(type_of: 'experiment').pluck(:experiment_id),
+      my_modules: @report.report_elements.where(type_of: 'my_module').pluck(:my_module_id)
+    }
+    render :new
   end
 
   # Updating existing report from the _save modal of the new page
@@ -325,7 +327,7 @@ class ReportsController < ApplicationController
     render json: {
       html: render_to_string(
         partial: 'reports/wizard/project_contents.html.erb',
-        locals: { project: @project }
+        locals: { project: @project, report: nil}
       )
     }
   end
