@@ -24,9 +24,9 @@ class FixLastChangedByOnSteps < ActiveRecord::Migration[6.1]
                  .order(created_at: :desc)
                  .first
       if activity && user_id = activity.values.dig('message_items', 'user', 'id')
-        step.update!(last_modified_by_id: user_id)
+        step.update_column(:last_modified_by_id, user_id)
       else
-        step.update!(last_modified_by_id: step.user_id)
+        step.update_column(:last_modified_by_id, step.user_id)
       end
     end
   end
