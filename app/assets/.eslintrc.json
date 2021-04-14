@@ -27,6 +27,7 @@
       {
         "beforeLineComment": false
       }
-    ]
+    ],
+    "max-len": ["error", { "code": 120 }]
   }
 }

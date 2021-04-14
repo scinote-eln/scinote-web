@@ -251,6 +251,7 @@ Rails.application.routes.draw do
                 only: %i(edit update create) do
         member do
           post 'generate', to: 'reports#generate', format: %w(pdf json)
+          get 'status', to: 'reports#status', format: %w(json)
         end
 
         collection do
