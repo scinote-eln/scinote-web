@@ -48,6 +48,7 @@ class Report < ApplicationRecord
       table_results: true,
       text_results: true,
       result_comments: true,
+      result_order: "atoz",
       activities: true
     }
   }.freeze
