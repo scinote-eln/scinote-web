@@ -1063,6 +1063,11 @@ function reportHandsonTableConverter() {
       previousStep();
     });
 
+    $('.change-step').on('click', function() {
+      $(`[href="#new-report-step-${this.dataset.stepId}"]`).tab('show');
+      $('.reports-new-footer').attr('data-step', this.dataset.stepId);
+    });
+
     $('.reports-new-body [href="#new-report-step-2"]').on('show.bs.tab', function() {
       var projectContents = $('#new-report-step-2').find('.project-contents');
       if (projectContents.is(':empty')) {
@@ -1161,6 +1166,7 @@ function reportHandsonTableConverter() {
     dropdownSelector.init('#projectSelector', {
       singleSelect: true,
       closeOnSelect: true,
+      noEmptyOption: true,
       selectAppearance: 'simple',
       onChange: function() {
         $('#new-report-step-2 .project-contents').empty();

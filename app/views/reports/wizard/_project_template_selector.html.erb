@@ -6,7 +6,7 @@
   <div class="col-md-6">
     <div class='project-selector'>
       <%= label_tag :projectSelector, t('projects.reports.wizard.first_step.select_project') %>
-      <%= select_tag :projectSelector, options_from_collection_for_select(@visible_projects, :id, :name), data: { placeholder: t('projects.reports.wizard.first_step.select_project') } %>
+      <%= select_tag :projectSelector, options_from_collection_for_select(@visible_projects, :id, :name, report.project_id), data: { placeholder: t('projects.reports.wizard.first_step.select_project') } %>
     </div>
 
     <div class='template-selector'>
@@ -15,14 +15,14 @@
                      options_for_select(@templates),
                      data: {
                        placeholder: t('projects.reports.wizard.first_step.select_template'),
-                       values_editor_path: reports_new_template_values_path
+                       values_editor_path: reports_new_template_values_path(report_id: report.id)
                      } %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="sci-input-container">
       <%= label_tag :projectDescription, t('projects.reports.wizard.first_step.report_description') %>
-      <%= text_area_tag :projectDescription, '', placeholder: t('projects.reports.wizard.first_step.report_description_placeholder'), class: 'sci-input-field' %>
+      <%= text_area_tag :projectDescription, report.description, placeholder: t('projects.reports.wizard.first_step.report_description_placeholder'), class: 'sci-input-field' %>
     </div>
   </div>
 </div>
