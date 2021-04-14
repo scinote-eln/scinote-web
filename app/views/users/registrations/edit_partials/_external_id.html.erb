@@ -1,0 +1,12 @@
+<span class="settings-external-id user-settings-block">
+  <label><%= t("users.registrations.edit.external_id_label") %></label>
+  <%= render partial: "shared/inline_editing",
+             locals: {
+               initial_value: @user.external_id,
+               config: {
+                 params_group: 'user',
+                 field_to_udpate: 'external_id',
+                 path_to_update: registration_path(resource_name, format: :json)
+               }
+             } %>
+</span>
