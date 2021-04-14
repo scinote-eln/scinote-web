@@ -1,9 +1,10 @@
-/* global I18n DataTableHelpers */
+/* global I18n DataTableHelpers animateSpinner */
 
-(function(global) {
+(function() {
   'use strict';
 
-  var DATATABLE;
+  const RETRY_COUNT = 25;
+  const START_POLLING_INTERVAL = 10000;
   var CHECKED_REPORTS = [];
 
   function tableDrowCallback() {
@@ -14,13 +15,13 @@
 
   function appendSearchResults(data) {
     var items = [];
-    if(data.hasOwnProperty('projects')){
+    if (data.hasOwnProperty('projects')) {
       $.each(data.projects, function(index, el) {
         items.push(
           {
-            'value': el.path,
-            'text': el.name,
-            'disabled': false
+            value: el.path,
+            text: el.name,
+            disabled: false
           }
         )
       });
@@ -30,7 +31,7 @@
 
   function initToggleAllCheckboxes() {
     $('input[name="select_all"]').change(function() {
-      if($(this).is(':checked')) {
+      if ($(this).is(':checked')) {
         $("[data-action='toggle']").prop('checked', true);
         $('.report-row').addClass('selected');
         addAllItems();
@@ -45,7 +46,7 @@
 
   function addAllItems() {
     $.each($("[data-action='toggle']"), function(i, el) {
-      CHECKED_REPORTS.push($(el).attr('data-report-id'));
+      CHECKED_REPORTS.push($(el).data('report-id'));
     })
   }
 
@@ -108,23 +109,28 @@
     return '';
   }
 
-  function appendEditPathToRow(row, data) {
+  function addAttributesToRow(row, data) {
     $(row).addClass('report-row')
-          .attr('data-edit-path', data['edit'])
-          .attr('data-id', data['0']);
+      .attr('data-edit-path', data.edit)
+      .attr('data-status-path', data.status)
+      .attr('data-retry-count', 0)
+      .attr('data-id', data['0']);
+    if (data['3'].processing || data['4'].processing) {
+      $(row).addClass('processing');
+    }
   }
 
   function checkboxToggleCallback() {
     $("[data-action='toggle']").change(function() {
-      var id = $(this).attr('data-report-id');
-      if($(this).is(':checked')) {
+      var id = $(this).data('report-id');
+      if ($(this).is(':checked')) {
         $(this).closest('.report-row').addClass('selected');
         CHECKED_REPORTS.push(id);
       } else {
-        var index = CHECKED_REPORTS.indexOf(id);
+        let index = CHECKED_REPORTS.indexOf(id);
         $(this).closest('.report-row').removeClass('selected');
-        if(index != -1) {
-        	CHECKED_REPORTS.splice(index, 1);
+        if (index !== -1) {
+          CHECKED_REPORTS.splice(index, 1);
         }
       }
       updateButtons();
@@ -167,11 +173,31 @@
     }
   }
 
+  function checkProcessingStatus(reportId) {
+    let $row = $('#reports-table').find(`tr[data-id="${reportId}"]`);
+
+    if ($row.length === 0) return;
+
+    $.getJSON($row.data('status-path'), (statusData) => {
+      $row.find('.docx').parent().html(renderDocxFile(statusData.docx));
+      $row.find('.pdf').parent().html(renderPdfFile(statusData.pdf));
+
+      if (statusData.docx.processing || statusData.pdf.processing) {
+        if ($row.data('retry-count') >= RETRY_COUNT) return;
+
+        $row.data('retry-count', $row.data('retry-count') + 1);
+        setTimeout(() => { checkProcessingStatus(reportId); }, START_POLLING_INTERVAL * $row.data('retry-count'));
+      } else {
+        $row.removeClass('processing');
+      }
+    });
+  }
+
   // INIT
 
   function initDatatable() {
-    var $table = $('#reports-table')
-    DATATABLE = $table.dataTable({
+    var $table = $('#reports-table');
+    $table.dataTable({
       dom: "Rt<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
       order: [[2, 'desc']],
       sScrollX: '100%',
@@ -207,10 +233,13 @@
         sSearch: I18n.t('general.filter')
       },
       fnDrawCallback: tableDrowCallback,
-      createdRow: appendEditPathToRow,
+      createdRow: addAttributesToRow,
       fnInitComplete: function() {
         DataTableHelpers.initLengthApearance($table.closest('.dataTables_wrapper'));
         $('.pagination-row').removeClass('hidden');
+        $('.report-row.processing').each(function() {
+          setTimeout(() => { checkProcessingStatus($(this).data('id')); }, START_POLLING_INTERVAL);
+        });
       }
     });
   }
@@ -220,23 +249,23 @@
       e.preventDefault();
       animateSpinner();
       if (CHECKED_REPORTS.length === 1) {
-        var id = CHECKED_REPORTS[0];
-        var row = $(".report-row[data-id='" + id + "']");
-        var url = row.attr('data-edit-path');
+        let id = CHECKED_REPORTS[0];
+        let row = $(".report-row[data-id='" + id + "']");
+        let url = row.attr('data-edit-path');
         $(location).attr('href', url);
       }
     });
   }
 
   function initDeleteReports() {
-    $('#delete-reports-btn').click(function(e) {
+    $('#delete-reports-btn').click(function() {
       if (CHECKED_REPORTS.length > 0) {
-         $('#report-ids').attr("value", "[" + CHECKED_REPORTS + "]");
-        $('#delete-reports-modal').modal("show");
+        $('#report-ids').attr('value', '[' + CHECKED_REPORTS + ']');
+        $('#delete-reports-modal').modal('show');
       }
     });
 
-    $("#confirm-delete-reports-btn").click(function(e) {
+    $('#confirm-delete-reports-btn').click(function() {
       animateLoading();
     });
   }
@@ -244,4 +273,4 @@
   initDatatable();
   initEditReport();
   initDeleteReports();
-})(window);
+}());

@@ -22,7 +22,7 @@ class ReportsController < ApplicationController
     result_contents
   ).freeze
 
-  before_action :load_vars, only: %i(edit update document_preview generate)
+  before_action :load_vars, only: %i(edit update document_preview generate status)
   before_action :load_vars_nested, only: BEFORE_ACTION_METHODS
   before_action :load_visible_projects, only: %i(new edit)
   before_action :load_available_repositories,
@@ -164,6 +164,28 @@ class ReportsController < ApplicationController
     end
 
     redirect_to reports_path
+  end
+
+  def status
+    docx = @report.docx_file.attached? ? document_preview_report_path(@report, report_type: :docx) : nil
+    pdf = @report.pdf_file.attached? ? document_preview_report_path(@report, report_type: :pdf) : nil
+
+    respond_to do |format|
+      format.json do
+        render json: {
+          docx: {
+            processing: @report.docx_file_processing,
+            preview_url: docx,
+            error: false
+          },
+          pdf: {
+            processing: @report.pdf_file_processing,
+            preview_url: pdf,
+            error: false
+          }
+        }
+      end
+    end
   end
 
   # Generation action
@@ -458,6 +480,7 @@ class ReportsController < ApplicationController
   def load_vars
     @report = current_team.reports.find_by(id: params[:id])
     render_404 unless @report
+    render_403 unless can_read_project?(@report.project)
   end
 
   def load_vars_nested
