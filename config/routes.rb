@@ -250,7 +250,8 @@ Rails.application.routes.draw do
                 path: '/reports',
                 only: %i(edit update create) do
         member do
-          post 'generate', to: 'reports#generate', format: %w(pdf json)
+          post 'generate_pdf', to: 'reports#generate_pdf'
+          post 'generate_docx', to: 'reports#generate_docx'
           get 'status', to: 'reports#status', format: %w(json)
         end
 

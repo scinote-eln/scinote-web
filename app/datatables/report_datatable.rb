@@ -61,7 +61,9 @@ class ReportDatatable < CustomDatatable
         '7' => I18n.l(record.created_at, format: :full),
         '8' => I18n.l(record.updated_at, format: :full),
         'edit' => edit_project_report_path(record.project_id, record.id),
-        'status' => status_project_report_path(record.project_id, record.id)
+        'status' => status_project_report_path(record.project_id, record.id),
+        'generate_pdf' => generate_pdf_project_report_path(record.project_id, record.id),
+        'generate_docx' => generate_docx_project_report_path(record.project_id, record.id)
       }
     end
   end

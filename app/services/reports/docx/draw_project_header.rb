@@ -2,7 +2,7 @@
 
 module Reports::Docx::DrawProjectHeader
   def draw_project_header(subject)
-    project = Project.find_by(id: subject['id']['project_id'])
+    project = Project.find_by(id: subject.project_id)
     return unless project && can_read_project?(@user, project)
 
     @docx.p I18n.t('projects.reports.elements.project_header.user_time',

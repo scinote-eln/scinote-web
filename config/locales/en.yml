@@ -512,6 +512,10 @@ en:
         error: "Error"
         generating: "Generating"
         generate: "Generate"
+        generation:
+          accepted_message: "Your report is succesfully added to the generator queue. We will notify you when it is done!"
+          completed_notification_title: "Your report .DOCX was generated successfully."
+          completed_notification_message: "Report: %{report_link} | Team: %{team_name}"
         modal_delete:
           head_title: "Delete report/s"
           message: "Are you sure to delete selected report/s?"

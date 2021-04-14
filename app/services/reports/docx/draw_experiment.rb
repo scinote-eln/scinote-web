@@ -5,7 +5,7 @@ module Reports::Docx::DrawExperiment
     color = @color
     link_style = @link_style
     scinote_url = @scinote_url
-    experiment = Experiment.find_by(id: subject['id']['experiment_id'])
+    experiment = Experiment.find_by(id: subject.experiment_id)
     return unless experiment && can_read_experiment?(@user, experiment)
 
     @docx.h2 experiment.name, size: Constants::REPORT_DOCX_EXPERIMENT_TITLE_SIZE
@@ -25,8 +25,8 @@ module Reports::Docx::DrawExperiment
     Reports::HtmlToWordConverter.new(@docx, { scinote_url: scinote_url,
                                               link_style: link_style }).html_to_word_converter(html)
     @docx.p
-    subject['children'].each do |child|
-      public_send("draw_#{child['type_of']}", child, experiment)
+    subject.children.each do |child|
+      public_send("draw_#{child.type_of}", child, experiment)
     end
   end
 end

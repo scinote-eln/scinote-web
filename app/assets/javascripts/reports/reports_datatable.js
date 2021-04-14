@@ -1,4 +1,4 @@
-/* global I18n DataTableHelpers animateSpinner */
+/* global I18n DataTableHelpers animateSpinner HelperModule */
 
 (function() {
   'use strict';
@@ -113,6 +113,8 @@
     $(row).addClass('report-row')
       .attr('data-edit-path', data.edit)
       .attr('data-status-path', data.status)
+      .attr('data-generate-pdf-path', data.generate_pdf)
+      .attr('data-generate-docx-path', data.generate_docx)
       .attr('data-retry-count', 0)
       .attr('data-id', data['0']);
     if (data['3'].processing || data['4'].processing) {
@@ -244,6 +246,38 @@
     });
   }
 
+  function initGeneratePDFReport() {
+    $('.generate-pdf').click(function(ev) {
+      ev.stopPropagation();
+      ev.preventDefault();
+      animateSpinner();
+      if (CHECKED_REPORTS.length === 1) {
+        let row = $(".report-row[data-id='" + CHECKED_REPORTS[0] + "']");
+        $.post(row.data('generate-pdf-path'), function(response) {
+          animateSpinner(null, false);
+          HelperModule.flashAlertMsg(response.message, 'success');
+          setTimeout(() => { checkProcessingStatus(row.data('id')); }, START_POLLING_INTERVAL);
+        });
+      }
+    });
+  }
+
+  function initGenerateDocxReport() {
+    $('.generate-docx').click(function(ev) {
+      ev.stopPropagation();
+      ev.preventDefault();
+      animateSpinner();
+      if (CHECKED_REPORTS.length === 1) {
+        let row = $(".report-row[data-id='" + CHECKED_REPORTS[0] + "']");
+        $.post(row.data('generate-docx-path'), function(response) {
+          animateSpinner(null, false);
+          HelperModule.flashAlertMsg(response.message, 'success');
+          setTimeout(() => { checkProcessingStatus(row.data('id')); }, START_POLLING_INTERVAL);
+        });
+      }
+    });
+  }
+
   function initEditReport() {
     $('#edit-report-btn').click(function(e) {
       e.preventDefault();
@@ -271,6 +305,8 @@
   }
 
   initDatatable();
+  initGeneratePDFReport();
+  initGenerateDocxReport();
   initEditReport();
   initDeleteReports();
 }());

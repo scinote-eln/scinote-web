@@ -3,7 +3,7 @@
 module Reports::Docx::DrawStep
   def draw_step(subject, my_module)
     color = @color
-    step = my_module.protocols.first.steps.find_by(id: subject['id']['step_id'])
+    step = my_module.protocols.first.steps.find_by(id: subject.step_id)
     return unless step
 
     step_type_str = step.completed ? 'completed' : 'uncompleted'
@@ -33,8 +33,8 @@ module Reports::Docx::DrawStep
       @docx.p I18n.t 'projects.reports.elements.step.no_description'
     end
 
-    subject['children'].each do |child|
-      public_send("draw_#{child['type_of']}", child, step)
+    subject.children.each do |child|
+      public_send("draw_#{child.type_of}", child, step)
     end
     @docx.p
     @docx.p

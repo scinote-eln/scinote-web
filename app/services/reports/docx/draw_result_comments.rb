@@ -4,7 +4,7 @@ module Reports::Docx::DrawResultComments
   def draw_result_comments(subject, result)
     return unless result
 
-    comments = result.result_comments.order(created_at: subject['sort_order'])
+    comments = result.result_comments.order(created_at: subject.sort_order)
     return if comments.count.zero?
 
     @docx.p

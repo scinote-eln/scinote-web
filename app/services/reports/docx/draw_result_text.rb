@@ -2,7 +2,7 @@
 
 module Reports::Docx::DrawResultText
   def draw_result_text(subject, my_module)
-    result = my_module.results.find_by(id: subject['id']['result_id'])
+    result = my_module.results.find_by(id: subject.result_id)
     return unless result
 
     result_text = result.result_text
@@ -20,8 +20,8 @@ module Reports::Docx::DrawResultText
     Reports::HtmlToWordConverter.new(@docx, { scinote_url: @scinote_url,
                                               link_style: @link_style }).html_to_word_converter(html)
 
-    subject['children'].each do |child|
-      public_send("draw_#{child['type_of']}", child, result)
+    subject.children.each do |child|
+      public_send("draw_#{child.type_of}", child, result)
     end
   end
 end

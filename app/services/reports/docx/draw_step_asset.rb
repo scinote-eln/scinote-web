@@ -2,7 +2,7 @@
 
 module Reports::Docx::DrawStepAsset
   def draw_step_asset(subject, step)
-    asset = step.assets.find_by(id: subject['id']['asset_id'])
+    asset = step.assets.find_by(id: subject.asset_id)
     return unless asset
 
     timestamp = asset.created_at

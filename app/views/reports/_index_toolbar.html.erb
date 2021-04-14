@@ -12,7 +12,7 @@
       </button>
       <ul id="reportMenuDropdown" class="dropdown-menu report-actions-menu" aria-labelledby="reportMenu">
         <li>
-          <%= link_to '#', remote: true, id: 'updatePdf' do %>
+          <%= link_to '#', remote: true, id: 'updatePdf', class: 'generate-pdf' do %>
             <i class="fas fa-file-pdf"></i>
             <%= t("projects.reports.index.update_pdf") %>
           <% end %>
@@ -24,13 +24,13 @@
           <% end %>
         </li>
         <li>
-          <%= link_to '#', remote: true, id: 'requestDocx' do %>
+          <%= link_to '#', remote: true, id: 'requestDocx', class: 'generate-docx' do %>
             <i class="fas fa-file-word"></i>
             <%= t("projects.reports.index.request_docx") %>
           <% end %>
         </li>
         <li>
-          <%= link_to '#', remote: true, id: 'updateDocx' do %>
+          <%= link_to '#', remote: true, id: 'updateDocx', class: 'generate-docx' do %>
             <i class="fas fa-file-word"></i>
             <%= t("projects.reports.index.update_docx") %>
           <% end %>
