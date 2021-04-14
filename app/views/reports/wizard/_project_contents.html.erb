@@ -4,11 +4,7 @@
       <div class="experiment-block">
         <span class="sci-checkbox-container">
           <input type="checkbox" value="<%= experiment.id %>" class="sci-checkbox report-experiment-checkbox"
-          <%= if report
-                'checked' if @project_contents[:experiments].include?(experiment.id)
-              else
-                'checked'
-              end
+          <%= 'checked' if !report || @project_contents[:experiments].include?(experiment.id)
           %>/>
           <span class="sci-checkbox-label"></span>
         </span>
@@ -30,11 +26,7 @@
           <li class="experiment-my-module">
             <span class="sci-checkbox-container">
               <input type="checkbox" value="<%= my_module.id %>" class="sci-checkbox report-my-module-checkbox"
-              <%= if report
-                    'checked' if @project_contents[:my_modules].include?(my_module.id)
-                  else
-                    'checked'
-                  end
+              <%= 'checked' if !report || @project_contents[:my_modules].include?(my_module.id)
               %>/>
               <span class="sci-checkbox-label"></span>
             </span>
