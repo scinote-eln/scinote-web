@@ -4,7 +4,7 @@ module Reports::Docx::DrawStepChecklist
   def draw_step_checklist(subject, step)
     team = @report_team
     user = @user
-    checklist = step.checklists.find_by(id: subject['id']['checklist_id'])
+    checklist = step.checklists.find_by(id: subject.checklist_id)
     return unless checklist
 
     items = checklist.checklist_items

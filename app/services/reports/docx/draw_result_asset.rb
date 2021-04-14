@@ -2,7 +2,7 @@
 
 module Reports::Docx::DrawResultAsset
   def draw_result_asset(subject, my_module)
-    result = my_module.results.find_by(id: subject['id']['result_id'])
+    result = my_module.results.find_by(id: subject.result_id)
     return unless result
 
     asset = result.asset
@@ -24,8 +24,8 @@ module Reports::Docx::DrawResultAsset
 
     Reports::DocxRenderer.render_asset_image(@docx, asset) if asset.previewable? && !asset.list?
 
-    subject['children'].each do |child|
-      public_send("draw_#{child['type_of']}", child, result)
+    subject.children.each do |child|
+      public_send("draw_#{child.type_of}", child, result)
     end
   end
 end

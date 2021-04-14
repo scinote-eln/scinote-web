@@ -16,8 +16,8 @@ class Reports::Docx
     include "Reports::Docx::#{include_module}".constantize
   end
 
-  def initialize(json, docx, options)
-    @json = JSON.parse(json)
+  def initialize(report, docx, options)
+    @report = report
     @docx = docx
     @user = options[:user]
     @report_team = options[:team]
@@ -29,8 +29,8 @@ class Reports::Docx
   def draw
     initial_document_load
 
-    @json.each do |subject|
-      public_send("draw_#{subject['type_of']}", subject)
+    @report.root_elements.each do |subject|
+      public_send("draw_#{subject.type_of}", subject)
     end
     @docx
   end

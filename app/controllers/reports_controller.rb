@@ -1,15 +1,13 @@
 class ReportsController < ApplicationController
   include TeamsHelper
   include ReportActions
-  # Ignore CSRF protection just for PDF generation (because it's
-  # used via target='_blank')
-  protect_from_forgery with: :exception, except: :generate
 
   BEFORE_ACTION_METHODS = %i(
     create
     edit
     update
-    generate
+    generate_pdf
+    generate_docx
     save_modal
     project_contents
     experiment_contents_modal
@@ -22,7 +20,7 @@ class ReportsController < ApplicationController
     result_contents
   ).freeze
 
-  before_action :load_vars, only: %i(edit update document_preview generate status)
+  before_action :load_vars, only: %i(edit update document_preview generate_pdf generate_docx status)
   before_action :load_vars_nested, only: BEFORE_ACTION_METHODS
   before_action :load_visible_projects, only: %i(new edit)
   before_action :load_available_repositories,
@@ -188,21 +186,27 @@ class ReportsController < ApplicationController
     end
   end
 
-  # Generation action
-  def generate
+  # Generation actions
+  def generate_pdf
     respond_to do |format|
-      format.pdf do
-        render pdf: 'report', header: { html: { template: 'reports/header.pdf.erb' }},
-                              footer: { html: { template: 'reports/footer.pdf.erb',
-                                                locals: { current_time: I18n.l(Time.zone.now, format: :full) }}},
-                              locals: { content: content },
-                              template: 'reports/report.pdf.erb',
-                              disable_javascript: true
+      format.json do
+        @report.update!(pdf_file_processing: true)
+        Reports::PdfJob.perform_later(@report, 'template_1', current_user)
+        render json: {
+          message: I18n.t('projects.reports.index.generation.accepted_message')
+        }
       end
+    end
+  end
+
+  def generate_docx
+    respond_to do |format|
       format.json do
         @report.update!(docx_file_processing: true)
-        Reports::DocxJob.perform_now(@report, params[:data], current_user, current_team, root_url)
-        render json: {}, status: :accepted
+        Reports::DocxJob.perform_later(@report, current_user, current_team, root_url)
+        render json: {
+          message: I18n.t('projects.reports.index.generation.accepted_message')
+        }
       end
     end
   end
