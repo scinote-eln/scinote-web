@@ -972,8 +972,10 @@ function reportHandsonTableConverter() {
     var reportData = {};
 
     // Report name
-    reportData.name = $('.report-name').val();
-
+    reportData.report= {
+      name: $('.report-name').val(),
+      description: $('#projectDescription').val()
+    }
     // Project
     reportData.project_id = dropdownSelector.getValues('#projectSelector');
 

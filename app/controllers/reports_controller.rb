@@ -1,6 +1,11 @@
 class ReportsController < ApplicationController
   include TeamsHelper
   include ReportActions
+  include ReportsHelper
+  # Ignore CSRF protection just for PDF generation (because it's
+  # used via target='_blank')
+  protect_from_forgery with: :exception, except: :generate
+
 
   BEFORE_ACTION_METHODS = %i(
     create
@@ -75,12 +80,9 @@ class ReportsController < ApplicationController
 
   # Creating new report from the _save modal of the new page
   def create
-    continue = true
-    begin
-      report_contents = JSON.parse(params.delete(:report_contents))
-    rescue
-      continue = false
-    end
+    report_contents = ReportActions::ReportContent
+                      .new(params[:project_content], params[:settings], current_user)
+                      .generate_content
 
     @report = Report.new(report_params)
     @report.project = @project
@@ -88,25 +90,18 @@ class ReportsController < ApplicationController
     @report.team = current_team
     @report.last_modified_by = current_user
 
-    if continue && @report.save_with_contents(report_contents)
+    if @report.save_with_contents(report_contents)
       log_activity(:create_report)
 
-      respond_to do |format|
-        format.json do
-          render json: { url: reports_path }, status: :ok
-        end
-      end
+      redirect_to reports_path
     else
-      respond_to do |format|
-        format.json do
-          render json: @report.errors, status: :unprocessable_entity
-        end
-      end
+      render json: @report.errors, status: :unprocessable_entity
     end
   end
 
   def edit
     @edit = true
+    current_team_switch(@report.project.team)
     @templates = Extends::REPORT_TEMPLATES
     @project_contents = {
       experiments: @report.report_elements.where(type_of: 'experiment').pluck(:experiment_id),
