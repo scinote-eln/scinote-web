@@ -25,7 +25,7 @@ module Reports
         report_path = Rails.application.routes.url_helpers.reports_path
         notification = Notification.create(
           type_of: :deliver,
-          title: I18n.t('projects.reports.index.generation.completed_notification_title'),
+          title: I18n.t('projects.reports.index.generation.completed_docx_notification_title'),
           message: I18n.t('projects.reports.index.generation.completed_notification_message',
                           report_link: "<a href='#{report_path}'>#{sanitize_input(report.name)}</a>",
                           team_name: sanitize_input(report.team.name))
