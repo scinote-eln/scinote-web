@@ -20,11 +20,11 @@ class ReportsController < ApplicationController
     result_contents
   ).freeze
 
-  before_action :load_vars, only: %i(edit update document_preview generate_pdf generate_docx status)
+  before_action :load_vars, only: %i(edit update document_preview generate_pdf generate_docx status
+                                     save_pdf_to_inventory_modal save_pdf_to_inventory_item)
   before_action :load_vars_nested, only: BEFORE_ACTION_METHODS
   before_action :load_visible_projects, only: %i(new edit)
-  before_action :load_available_repositories,
-                only: %i(new edit available_repositories)
+  before_action :load_available_repositories, only: %i(index save_pdf_to_inventory_modal available_repositories)
 
   before_action :check_manage_permissions, only: BEFORE_ACTION_METHODS
   before_action :switch_team_with_param, only: :index
@@ -211,9 +211,21 @@ class ReportsController < ApplicationController
     end
   end
 
+  def save_pdf_to_inventory_modal
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(partial: 'reports/save_PDF_to_inventory_modal.html.erb')
+        }
+      end
+    end
+  end
+
   def save_pdf_to_inventory_item
+    return render_404 unless @report.pdf_file.attached?
+
     save_pdf_to_inventory_item = ReportActions::SavePdfToInventoryItem.new(
-      current_user, current_team, save_PDF_params
+      @report, current_user, current_team, save_pdf_params
     )
     if save_pdf_to_inventory_item.save
       render json: {
@@ -225,12 +237,10 @@ class ReportsController < ApplicationController
       render json: { message: save_pdf_to_inventory_item.error_messages },
              status: :unprocessable_entity
     end
-  rescue ReportActions::RepositoryPermissionError => error
-    render json: { message: error },
-           status: :forbidden
-  rescue Exception => error
-    render json: { message: error.message },
-           status: :internal_server_error
+  rescue ReportActions::RepositoryPermissionError => e
+    render json: { message: e.message }, status: :forbidden
+  rescue StandardError => e
+    render json: { message: e.message }, status: :internal_server_error
   end
 
   # Modal for saving the existsing/new report
@@ -528,11 +538,8 @@ class ReportsController < ApplicationController
     params.permit(:q)
   end
 
-  def save_PDF_params
-    params.permit(:repository_id,
-                  :respository_column_id,
-                  :repository_item_id,
-                  :html)
+  def save_pdf_params
+    params.permit(:repository_id, :respository_column_id, :repository_item_id)
   end
 
   def log_activity(type_of, report = @report)

@@ -600,6 +600,7 @@ en:
         no_content_for_PDF_html: "<h1>No content</h1>"
         no_permissions: "You don't have permission to manage this column"
         save_PDF_to_inventory_modal:
+          pdf_not_ready: "The PDF of this report isn't ready yet, please try again in a minute"
           description_one: "Here you can save PDF report to an inventory item."
           description_two: "First select an inventory, then a column and finally the item within the inventory to which you would like to save the PDF report to. Note that the column has to be of type \"file\"."
           inventory: "Select inventory:"

@@ -116,6 +116,7 @@
       .attr('data-generate-pdf-path', data.generate_pdf)
       .attr('data-generate-docx-path', data.generate_docx)
       .attr('data-retry-count', 0)
+      .attr('data-save-to-inventory-path', data.save_to_inventory)
       .attr('data-id', data['0']);
     if (data['3'].processing || data['4'].processing) {
       $(row).addClass('processing');
@@ -291,6 +292,26 @@
     });
   }
 
+  function initSaveReportPDFToInventory() {
+    $('#savePdfToInventoryButton').click(function(ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+
+      let id = CHECKED_REPORTS[0];
+      let row = $(`.report-row[data-id='${id}']`);
+      let url = row.attr('data-save-to-inventory-path');
+      $.get(url, function(result) {
+        let modal = $(result.html);
+        $('#content-reports-index').append(modal);
+        modal.modal('show');
+        // Remove modal when it gets closed
+        modal.on('hidden.bs.modal', function() {
+          $(this).remove();
+        });
+      });
+    });
+  }
+
   function initDeleteReports() {
     $('#delete-reports-btn').click(function() {
       if (CHECKED_REPORTS.length > 0) {
@@ -308,5 +329,6 @@
   initGeneratePDFReport();
   initGenerateDocxReport();
   initEditReport();
+  initSaveReportPDFToInventory();
   initDeleteReports();
 }());

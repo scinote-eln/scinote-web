@@ -63,7 +63,8 @@ class ReportDatatable < CustomDatatable
         'edit' => edit_project_report_path(record.project_id, record.id),
         'status' => status_project_report_path(record.project_id, record.id),
         'generate_pdf' => generate_pdf_project_report_path(record.project_id, record.id),
-        'generate_docx' => generate_docx_project_report_path(record.project_id, record.id)
+        'generate_docx' => generate_docx_project_report_path(record.project_id, record.id),
+        'save_to_inventory' => save_pdf_to_inventory_modal_report_path(record.id)
       }
     end
   end
