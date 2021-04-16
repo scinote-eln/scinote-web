@@ -4,13 +4,12 @@ module ReportActions
   class ReportContent
     include Canaid::Helpers::PermissionsHelper
 
-    MY_MODULE_ADDITIONAL_ELEMENTS = ['my_module_activity']
+    MY_MODULE_ADDITIONAL_ELEMENTS = []
 
     def initialize(content, setting, user)
       @content = content
       @setting = setting
       @user = user
-
     end
 
     def generate_content
@@ -42,21 +41,32 @@ module ReportActions
     def generate_my_module_content(my_module)
       children = []
       protocol = my_module.protocols.first
-      children << {
-        'type_of' => 'my_module_protocol',
-        'id' => { 'my_module_id' => my_module.id }
-      }
+
+      if @setting.dig('task', 'protocol', 'description')
+        children << {
+          'type_of' => 'my_module_protocol',
+          'id' => { 'my_module_id' => my_module.id }
+        }
+      end
+
       protocol.steps do |step|
-        children << generate_step_content(step)
+        if step.completed && @setting.dig('task', 'protocol', 'completed_steps')
+          children << generate_step_content(step)
+        elsif @setting.dig('task', 'protocol', 'uncompleted_steps')
+          children << generate_step_content(step)
+        end
       end
 
       my_module.results do |result|
-        children << generate_result_content(result)
+        result_type = (result.result_asset || result.result_table || result.result_text).class.to_s.underscore
+        next unless @setting.dig('task', result_type)
+
+        children << generate_result_content(result, result_type)
       end
 
-      MY_MODULE_ADDITIONAL_ELEMENTS.each do |e|
+      if @setting.dig('task', 'activities')
         children << {
-          'type_of' => e,
+          'type_of' => 'my_module_activity',
           'id' => { 'my_module_id' => my_module.id }
         }
       end
@@ -71,6 +81,10 @@ module ReportActions
         }
       end
 
+      MY_MODULE_ADDITIONAL_ELEMENTS.each do |e|
+        children << send("generate_#{e}_content", my_module)
+      end
+
       {
         'id' => { 'my_module_id' => my_module.id },
         'type_of' => 'my_module',
@@ -81,32 +95,39 @@ module ReportActions
     def generate_step_content(step)
       children = []
 
-      step.step_checklists.each do |checklist|
-        children << {
-          'id' => { 'checklist_id' => checklist.id },
-          'type_of' => 'step_checklist'
-        }
+      if @setting.dig('task', 'protocol', 'step_checklists')
+        step.step_checklists.each do |checklist|
+          children << {
+            'id' => { 'checklist_id' => checklist.id },
+            'type_of' => 'step_checklist'
+          }
+        end
       end
 
-      step.step_tables.each do |table|
-        children << {
-          'id' => { 'table_id' => table.id },
-          'type_of' => 'step_table'
-        }
+      if @setting.dig('task', 'protocol', 'step_tables')
+        step.step_tables.each do |table|
+          children << {
+            'id' => { 'table_id' => table.id },
+            'type_of' => 'step_table'
+          }
+        end
       end
 
-      step.step_checklists.each do |asset|
-        children << {
-          'id' => { 'asset_id' => asset.id },
-          'type_of' => 'step_asset'
-        }
+      if @setting.dig('task', 'protocol', 'step_files')
+        step.step_assets.each do |asset|
+          children << {
+            'id' => { 'asset_id' => asset.id },
+            'type_of' => 'step_asset'
+          }
+        end
       end
 
-      children << {
-        'id' => { 'step_id' => step.id },
-        'type_of' => 'step_comments'
-      }
-
+      if @setting.dig('task', 'protocol', 'step_comments')
+        children << {
+          'id' => { 'step_id' => step.id },
+          'type_of' => 'step_comments'
+        }
+      end
       {
         'id' => { 'step_id' => step.id },
         'type_of' => 'step',
@@ -114,15 +135,20 @@ module ReportActions
       }
     end
 
-    def generate_result_content(result)
-      {
-        'type_of' => (result.result_asset || result.result_table || result.result_text).class.to_s.underscore,
+    def generate_result_content(result, result_type)
+      result = {
+        'type_of' => result_type,
         'id' => { 'result_id' => result.id },
-        'children' => [{
-          'id' => { 'result_id' => result.id },
-          'type_of' => 'result_comments'
-        }]
+        'children' => []
       }
+
+      if @setting.dig('task', 'result_comments')
+        result.push({
+                      'id' => { 'result_id' => result.id },
+                      'type_of' => 'result_comments'
+                    })
+      end
+      result
     end
   end
 end

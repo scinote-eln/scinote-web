@@ -29,7 +29,7 @@
     <%= t("projects.reports.wizard.second_step.select_all_tasks") %>
   </div>
   <div class="divider"></div>
-  <div class="project-contents" data-project-content-url="<%= project_contents_reports_path %>">
+  <div class="project-contents" data-project-id="<%= report.project&.id %>" data-project-content-url="<%= project_contents_reports_path %>">
     <% if report.id %>
       <%= render partial: 'reports/wizard/project_contents.html.erb',
         locals: { project: report.project, report: report } %>

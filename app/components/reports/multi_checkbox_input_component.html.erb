@@ -4,7 +4,7 @@
   <% @items.each do |key, value| %>
     <li>
       <div class="sci-checkbox-container">
-        <%= check_box_tag "#{@name}[]", key, false ,class: 'sci-checkbox' %>
+        <%= check_box_tag "#{@name}[]", key, (@value && @value[key.to_s] == 'true') ,class: 'sci-checkbox', data: {type: 'MultiCheckboxInputComponent'} %>
         <span class="sci-checkbox-label"></span>
       </div>
       <%= value %>

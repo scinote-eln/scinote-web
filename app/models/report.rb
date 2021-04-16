@@ -48,7 +48,7 @@ class Report < ApplicationRecord
       table_results: true,
       text_results: true,
       result_comments: true,
-      result_order: "atoz",
+      result_order: 'atoz',
       activities: true
     }
   }.freeze
@@ -93,7 +93,7 @@ class Report < ApplicationRecord
 
   # Save the JSON represented contents to this report
   # (this action will overwrite any existing report elements)
-  def save_with_contents(json_contents)
+  def save_with_contents(json_contents, template_values)
     begin
       Report.transaction do
         # First, save the report itself
@@ -106,6 +106,11 @@ class Report < ApplicationRecord
         json_contents.each_with_index do |json_el, i|
           save_json_element(json_el, i, nil)
         end
+
+        report_template_values.destroy_all
+
+        formatted_template_values = template_values.as_json.map { |k, v| v['name'] = k; v }
+        report_template_values.create!(formatted_template_values)
       end
     rescue ActiveRecord::ActiveRecordError, ArgumentError
       return false
