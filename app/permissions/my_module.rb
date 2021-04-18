@@ -23,57 +23,56 @@ Canaid::Permissions.register_for(MyModule) do
   # module: update
   # result: create, update
   can :manage_module do |user, my_module|
-    can_manage_experiment?(user, my_module.experiment)
+    my_module.permission_granted?(user, MyModulePermissions::MANAGE)
   end
 
   # module: archive
   can :archive_module do |user, my_module|
-    can_manage_experiment?(user, my_module.experiment)
+    my_module.permission_granted?(user, MyModulePermissions::ARCHIVE)
   end
 
   # NOTE: Must not be dependent on canaid parmision for which we check if it's
   # active
   # module: restore
   can :restore_module do |user, my_module|
-    user.is_user_or_higher_of_project?(my_module.experiment.project) &&
-      my_module.archived?
+    my_module.archived? && my_module.permission_granted?(user, MyModulePermissions::RESTORE)
   end
 
   # module: move
   can :move_module do |user, my_module|
-    can_manage_experiment?(user, my_module.experiment)
+    my_module.permission_granted?(user, MyModulePermissions::MOVE)
   end
 
   # module: assign/reassign/unassign users
   can :manage_users_in_module do |user, my_module|
-    user.is_owner_of_project?(my_module.experiment.project)
+    my_module.permission_granted?(user, MyModulePermissions::MANAGE_USERS)
   end
 
   # module: assign/unassign repository record
   # NOTE: Use 'module_page? &&' before calling this permission!
   can :assign_repository_rows_to_module do |user, my_module|
-    user.is_technician_or_higher_of_project?(my_module.experiment.project)
+    my_module.permission_granted?(user, MyModulePermissions::ASSIGN_REPOSITORY_ROWS)
   end
 
   # module: change_flow_status
   can :change_my_module_flow_status do |user, my_module|
-    user.is_technician_or_higher_of_project?(my_module.experiment.project)
+    my_module.permission_granted?(user, MyModulePermissions::CHANGE_FLOW_STATUS)
   end
 
   # module: create comment
   # result: create comment
   # step: create comment
   can :create_comments_in_module do |user, my_module|
-    can_create_comments_in_project?(user, my_module.experiment.project)
+    my_module.permission_granted?(user, MyModulePermissions::CREATE_COMMENTS)
   end
 
   # module: create a snapshot of repository item
   can :create_my_module_repository_snapshot do |user, my_module|
-    user.is_technician_or_higher_of_project?(my_module.experiment.project)
+    my_module.permission_granted?(user, MyModulePermissions::CREATE_REPOSITORY_SNAPSHOT)
   end
 
   # module: make a repository snapshot selected
   can :manage_my_module_repository_snapshots do |user, my_module|
-    user.is_technician_or_higher_of_project?(my_module.experiment.project)
+    my_module.permission_granted?(user, MyModulePermissions::MANAGE_REPOSITORY_SNAPSHOT)
   end
 end

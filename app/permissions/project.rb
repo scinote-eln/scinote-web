@@ -76,7 +76,7 @@ Canaid::Permissions.register_for(Project) do
   # project: create/update/delete tag
   # module: assign/reassign/unassign tag
   can :manage_tags do |user, project|
-    user.is_user_or_higher_of_project?(project)
+    project.permission_granted?(user, ProjectPermissions::MANAGE_TAGS)
   end
 end
 
@@ -92,6 +92,6 @@ Canaid::Permissions.register_for(ProjectComment) do
   # project: update/delete comment
   can :manage_comment_in_project do |user, project_comment|
     project_comment.project.present? && (project_comment.user == user ||
-      project.permission_granted?(user, ProjectPermissions::EDIT_COMMENTS))
+      project.permission_granted?(user, ProjectPermissions::MANAGE_COMMENTS))
   end
 end

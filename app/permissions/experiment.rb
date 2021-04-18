@@ -59,7 +59,7 @@ Canaid::Permissions.register_for(Experiment) do
 
   # experiment: move
   can :move_experiment do |user, experiment|
-    can_clone_experiment?(user, experiment)
+    experiment.permission_granted?(user, ExperimentPermissions::MOVE)
   end
 end
 
@@ -125,9 +125,6 @@ Canaid::Permissions.register_for(Comment) do
   # step: update/delete comment
   can :manage_comment_in_module do |user, comment|
     my_module = ::PermissionsUtil.get_comment_module(comment)
-    project = my_module.experiment.project
-    # Same check as in `can_manage_comment_in_project?`
-    project.present? &&
-      (user.is_owner_of_project?(project) || comment.user == user)
+    comment.user == user || my_module.permission_granted?(user, MyModulePermissions::MANAGE_COMMENTS)
   end
 end
