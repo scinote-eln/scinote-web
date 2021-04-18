@@ -227,6 +227,10 @@ Rails.application.routes.draw do
       resource :recent_works, module: 'dashboard', only: [:show]
     end
 
+    namespace :access_permissions do
+      resources :projects, only: [:edit, :update, :destroy]
+    end
+
     resources :projects, except: [:destroy] do
       resources :user_projects, path: '/users', only: %i(create index update destroy), as: :users do
         collection do

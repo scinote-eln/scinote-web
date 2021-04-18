@@ -48,6 +48,18 @@
           <% end %>
         </li>
       <% end %>
+      <!-- Project members access -->
+      <% if can_read_project?(project) %>
+        <li class="form-dropdown-item">
+          <%= button_to access_permissions_project_path(project, format: :json),
+                        method: :put,
+                        remote: true,
+                        class: 'btn btn-light' do %>
+            <span class="fas fa-plus"></span>
+            <%= I18n.t('projects.index.project_members_access') %>
+          <% end  %>
+        </li>
+      <% end %>
       <!-- Show comments -->
       <li>
         <a href="#"

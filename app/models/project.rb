@@ -59,6 +59,8 @@ class Project < ApplicationRecord
 
   scope :templates, -> { where(template: true) }
 
+  after_create :assign_project_ownership
+
   def self.visible_from_user_by_name(user, team, name)
     projects = where(team: team).distinct
     if user.is_admin_of_team?(team)
@@ -359,5 +361,13 @@ class Project < ApplicationRecord
 
   def remove_project_folder
     self.project_folder = nil if archived?
+  end
+
+  def assign_project_ownership
+    UserAssignment.create(
+      user: created_by,
+      assignable: self,
+      user_role: UserRole.owner_role
+    )
   end
 end
