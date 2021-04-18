@@ -49,6 +49,10 @@ class Project < ApplicationRecord
 
   default_scope { includes(user_assignments: :user_role) }
 
+  accepts_nested_attributes_for :user_assignments,
+                                allow_destroy: true,
+                                reject_if: :all_blank
+
   scope :visible_to, (lambda do |user, team|
                         unless user.is_admin_of_team?(team)
                           left_outer_joins(:user_projects)

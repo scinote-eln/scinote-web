@@ -1,0 +1,31 @@
+<% # frozen_string_literal: true %>
+
+<% user_assignment = f.object %>
+
+<div class="col-xs-2">
+  <span class="global-avatar-container">
+    <%= image_tag avatar_path(user_assignment.user, :icon_small), title: current_assignee_name(user_assignment.user), class: 'img-circle pull-left' %>
+  </span>
+</div>
+
+<div class="col-xs-3">
+  <span><%= current_assignee_name(user_assignment.user) %></span>
+  <br>
+  <small class="text-muted"><%= user_assignment.user_role.name %></small>
+</div>
+
+<div class="col-xs-7">
+  <div class="row">
+    <div class="col-xs-7">
+      <% unless user_assignment.user == current_user %>
+        <%= f.select :user_role_id, options_for_select(user_roles_collection), {}, class: 'form-control selectpicker' %>
+      <% end %>
+    </div>
+    <div class="col-xs-5">
+      <%= f.remove_nested_fields_link class: 'btn btn-link' do %>
+        <span class="fas fa-times"></span>
+        <%= t 'general.remove' %>
+      <% end %>
+    </div>
+  </div>
+</div>

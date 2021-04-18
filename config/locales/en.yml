@@ -90,6 +90,10 @@ en:
         terms: "%{client_name} terms may apply."
 
   activerecord:
+    models:
+      project: "Project"
+      my_module: "Task"
+      experiment: "Experiment"
     errors:
       models:
         project:
@@ -150,7 +154,6 @@ en:
         full_name: "Full name"
         initials: "Initials"
         avatar: "Avatar"
-
 
   head:
     title: "SciNote | %{title}"
@@ -2312,6 +2315,15 @@ en:
   create_task_service:
     default_task_name: "New Task"
 
+  user_assignment:
+    current_assignee: "(you)"
+  access_permissions:
+    modals:
+      edit_modal:
+        title: "Manage access for to %{resource_name}"
+        new_resource_assignments: "Grant new access to %{resource}"
+      show_modal:
+        title: "Access to %{resource_name}"
   zip_export:
     modal_label: 'Export inventory'
     notification_title: 'Your requested export package is ready!'
@@ -2348,6 +2360,7 @@ en:
     close: "Close"
     create: 'Create'
     change: "Change"
+    remove: "Remove"
     leaving_unsaved_warning: "You have made some changes, are you sure you want to leave this page?"
     no_comments: "No comments!"
     more_comments: "More comments"

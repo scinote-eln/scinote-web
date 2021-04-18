@@ -228,7 +228,7 @@ Rails.application.routes.draw do
     end
 
     namespace :access_permissions do
-      resources :projects, only: [:edit, :update, :destroy]
+      resources :projects
     end
 
     resources :projects, except: [:destroy] do
