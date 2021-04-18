@@ -2440,7 +2440,7 @@ CREATE TABLE public.user_assignments (
     assignable_id bigint NOT NULL,
     user_id bigint NOT NULL,
     user_role_id bigint NOT NULL,
-    assigned_by_id bigint NOT NULL,
+    assigned_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -2609,9 +2609,10 @@ ALTER SEQUENCE public.user_projects_id_seq OWNED BY public.user_projects.id;
 CREATE TABLE public.user_roles (
     id bigint NOT NULL,
     name character varying,
+    predefined boolean DEFAULT false,
     permissions character varying[] DEFAULT '{}'::character varying[],
-    created_by_id bigint NOT NULL,
-    last_modified_by_id bigint NOT NULL,
+    created_by_id bigint,
+    last_modified_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -7335,6 +7336,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201209165626'),
 ('20210128105457'),
 ('20210128105458'),
-('20210202214508');
+('20210202214508'),
+('20210222123823');
 
 

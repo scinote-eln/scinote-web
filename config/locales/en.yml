@@ -1828,6 +1828,14 @@ en:
         destroy_uo_confirm: "Remove"
         leave_flash: "Successfuly left team %{team}."
 
+  user_roles:
+    predefined:
+      owner: "Owner"
+      normal_user: "User"
+      technician: "Technician"
+      viewer: "Viewer"
+      unchangable_error_message: "Predefined roles can not be changed!"
+
   protocols:
     protocols_io_import:
       title_too_long: "... Text is too long so we had to cut it off."
