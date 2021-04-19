@@ -4,151 +4,154 @@ module ReportActions
   class ReportContent
     include Canaid::Helpers::PermissionsHelper
 
-    MY_MODULE_ADDONS_ELEMENTS = []
+    MY_MODULE_ADDONS_ELEMENTS = [].freeze
 
-    def initialize(content, settings, user)
+    def initialize(report, content, template_values, user)
       @content = content
-      @settings = settings
+      @settings = report.settings
       @user = user
+      @element_position = 0
+      @report = report
+      @template_values = template_values
     end
 
-    def generate_content
-      report_content = []
-      @content.each do |_i, exp|
-        report_content << generate_experiment_content(exp)
+    def save_with_content
+      Report.transaction do
+        # Save the report itself
+        @report.save!
+
+        # Delete existing report elements
+        @report.report_elements.destroy_all
+
+        # Save new report elements
+        generate_content
+
+        # Delete existing template values
+        @report.report_template_values.destroy_all
+
+        formatted_template_values = @template_values.as_json.map { |k, v| v['name'] = k; v }
+        # Save new template values
+        @report.report_template_values.create!(formatted_template_values)
       end
-      report_content
+
+      @report
+    rescue ActiveRecord::ActiveRecordError, ArgumentError => e
+      Rails.logger.error e.message
+      raise ActiveRecord::Rollback
     end
 
     private
+
+    def generate_content
+      @content.each do |_i, exp|
+        generate_experiment_content(exp)
+      end
+    end
 
     def generate_experiment_content(exp)
       experiment = Experiment.find_by(id: exp[:experiment_id])
       return if !experiment && !can_read_experiment?(experiment, @user)
 
-      children = []
-      experiment.my_modules.where(id: exp[:my_modules]).each do |my_module|
-        children << generate_my_module_content(my_module)
-      end
-
-      {
-        'type_of' => 'experiment',
-        'id' => { 'experiment_id' => experiment.id },
-        'children' => children
-      }
+      experiment_element = save_element({ 'experiment_id' => experiment.id }, :experiment, nil)
+      generate_my_modules_content(experiment, experiment_element, exp[:my_modules])
     end
 
-    def generate_my_module_content(my_module)
-      children = []
-      protocol = my_module.protocols.first
+    def generate_my_modules_content(experiment, experiment_element, selected_my_modules)
+      my_modules = experiment.my_modules
+                             .active
+                             .includes(:results, protocols: [:steps])
+                             .where(id: selected_my_modules)
+      my_modules.sort_by { |m| selected_my_modules.index m.id }.each do |my_module|
+        my_module_element = save_element({ 'my_module_id' => my_module.id }, :my_module, experiment_element)
 
-      if @settings.dig('task', 'protocol', 'description')
-        children << {
-          'type_of' => 'my_module_protocol',
-          'id' => { 'my_module_id' => my_module.id }
-        }
-      end
+        if @settings.dig('task', 'protocol', 'description') == 'true'
+          save_element({ 'my_module_id' => my_module.id }, :my_module_protocol, my_module_element)
+        end
 
-      protocol.steps do |step|
-        if step.completed && @settings.dig('task', 'protocol', 'completed_steps')
-          children << generate_step_content(step)
-        elsif @settings.dig('task', 'protocol', 'uncompleted_steps')
-          children << generate_step_content(step)
+        generate_steps_content(my_module, my_module_element)
+
+        generate_results_content(my_module, my_module_element)
+
+        if @settings.dig('task', 'activities') == 'true'
+          save_element({ 'my_module_id' => my_module.id }, :my_module_activity, my_module_element)
+
+        end
+
+        my_module.experiment.project.assigned_repositories_and_snapshots.each do |repository|
+          save_element(
+            { 'my_module_id' => my_module.id, 'repository_id' => repository.id },
+            :my_module_repository,
+            my_module_element
+          )
+        end
+
+        MY_MODULE_ADDONS_ELEMENTS.each do |e|
+          send("generate_#{e}_content", my_module, my_module_element)
         end
       end
+    end
 
+    def generate_steps_content(my_module, my_module_element)
+      my_module.protocols.first.steps
+               .includes(:checklists, :step_tables, :step_assets, :step_comments)
+               .order(:position).each do |step|
+        step_element = nil
+        if step.completed && @settings.dig('task', 'protocol', 'completed_steps') == 'true'
+          step_element = save_element({ 'step_id' => step.id }, :step, my_module_element)
+        elsif @settings.dig('task', 'protocol', 'uncompleted_steps') == 'true'
+          step_element = save_element({ 'step_id' => step.id }, :step, my_module_element)
+        end
+
+        next unless step_element
+
+        if @settings.dig('task', 'protocol', 'step_checklists') == 'true'
+          step.checklists.each do |checklist|
+            save_element({ 'checklist_id' => checklist.id }, :step_checklist, step_element)
+          end
+        end
+
+        if @settings.dig('task', 'protocol', 'step_tables') == 'true'
+          step.step_tables.each do |table|
+            save_element({ 'table_id' => table.id }, :step_table, step_element)
+          end
+        end
+
+        if @settings.dig('task', 'protocol', 'step_files') == 'true'
+          step.step_assets.each do |asset|
+            save_element({ 'asset_id' => asset.id }, :step_asset, step_element)
+          end
+        end
+
+        if @settings.dig('task', 'protocol', 'step_comments') == 'true'
+          save_element({ 'step_id' => step.id }, :step_comments, step_element)
+        end
+      end
+    end
+
+    def generate_results_content(my_module, my_module_element)
       my_module.results do |result|
         result_type = (result.result_asset || result.result_table || result.result_text).class.to_s.underscore
-        next unless @settings.dig('task', result_type)
 
-        children << generate_result_content(result, result_type)
+        next unless @settings.dig('task', result_type) == 'true'
+
+        result_element = save_element({ 'result_id' => result.id }, result_type, my_module_element)
+
+        save_element({ 'result_id' => result.id }, :result_comments, result_element)
       end
-
-      if @settings.dig('task', 'activities')
-        children << {
-          'type_of' => 'my_module_activity',
-          'id' => { 'my_module_id' => my_module.id }
-        }
-      end
-
-      my_module.experiment.project.assigned_repositories_and_snapshots.each do |repository|
-        children << {
-          'type_of' => 'my_module_repository',
-          'id' => {
-            'repository_id' => repository.id,
-            'my_module_id' => my_module.id
-          }
-        }
-      end
-
-      MY_MODULE_ADDONS_ELEMENTS.each do |e|
-        children << send("generate_#{e}_content", my_module)
-      end
-
-      {
-        'id' => { 'my_module_id' => my_module.id },
-        'type_of' => 'my_module',
-        'children' => children
-      }
     end
 
-    def generate_step_content(step)
-      children = []
+    def save_element(reference, type_of, parent)
+      el = ReportElement.new
+      el.position = @element_position
+      el.report = @report
+      el.parent = parent
+      el.type_of = type_of
+      el.set_element_references(reference)
+      el.save!
 
-      if @settings.dig('task', 'protocol', 'step_checklists')
-        step.step_checklists.each do |checklist|
-          children << {
-            'id' => { 'checklist_id' => checklist.id },
-            'type_of' => 'step_checklist'
-          }
-        end
-      end
+      @element_position += 1
 
-      if @settings.dig('task', 'protocol', 'step_tables')
-        step.step_tables.each do |table|
-          children << {
-            'id' => { 'table_id' => table.id },
-            'type_of' => 'step_table'
-          }
-        end
-      end
-
-      if @settings.dig('task', 'protocol', 'step_files')
-        step.step_assets.each do |asset|
-          children << {
-            'id' => { 'asset_id' => asset.id },
-            'type_of' => 'step_asset'
-          }
-        end
-      end
-
-      if @settings.dig('task', 'protocol', 'step_comments')
-        children << {
-          'id' => { 'step_id' => step.id },
-          'type_of' => 'step_comments'
-        }
-      end
-      {
-        'id' => { 'step_id' => step.id },
-        'type_of' => 'step',
-        'children' => children
-      }
-    end
-
-    def generate_result_content(result, result_type)
-      result = {
-        'type_of' => result_type,
-        'id' => { 'result_id' => result.id },
-        'children' => []
-      }
-
-      if @settings.dig('task', 'result_comments')
-        result.push({
-                      'id' => { 'result_id' => result.id },
-                      'type_of' => 'result_comments'
-                    })
-      end
-      result
+      el
     end
   end
 end

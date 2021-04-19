@@ -30,7 +30,6 @@ class ReportsController < ApplicationController
   before_action :check_manage_permissions, only: BEFORE_ACTION_METHODS
   before_action :switch_team_with_param, only: :index
 
-  before_action :prepare_report_content, only: %i(create update)
   after_action :generate_pdf_report, only: %i(create update)
 
   # Index showing all reports of a single project
@@ -85,7 +84,14 @@ class ReportsController < ApplicationController
     @report.team = current_team
     @report.last_modified_by = current_user
 
-    if ReportActions::SaveReport.new(@report, @report_contents, params[:template_values]).save_with_contents
+    @report = ReportActions::ReportContent.new(
+      @report,
+      params[:project_content],
+      params[:template_values],
+      current_user
+    ).save_with_content
+
+    if @report
       log_activity(:create_report)
 
       redirect_to reports_path
@@ -109,7 +115,14 @@ class ReportsController < ApplicationController
     @report.last_modified_by = current_user
     @report.assign_attributes(report_params)
 
-    if ReportActions::SaveReport.new(@report, @report_contents, params[:template_values]).save_with_contents
+    @report = ReportActions::ReportContent.new(
+      @report,
+      params[:project_content],
+      params[:template_values],
+      current_user
+    ).save_with_content
+
+    if @report
       log_activity(:edit_report)
 
       redirect_to reports_path
@@ -524,14 +537,6 @@ class ReportsController < ApplicationController
             team: report.team,
             project: report.project,
             message_items: { report: report.id })
-  end
-
-  def prepare_report_content
-    if params[:project_content]
-      @report_contents = ReportActions::ReportContent
-                         .new(params[:project_content], report_params[:settings], current_user)
-                         .generate_content
-    end
   end
 
   def generate_pdf_report

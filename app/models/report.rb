@@ -32,24 +32,24 @@ class Report < ApplicationRecord
   has_many :report_elements, inverse_of: :report, dependent: :delete_all
 
   DEFAULT_SETTINGS = {
-    all_tasks: true,
+    all_tasks: 'true',
     task: {
       protocol: {
-        description: true,
-        completed_steps: true,
-        uncompleted_steps: true,
-        step_checklists: true,
-        step_files: true,
-        step_tables: true,
-        step_comments: true
+        description: 'true',
+        completed_steps: 'true',
+        uncompleted_steps: 'true',
+        step_checklists: 'true',
+        step_files: 'true',
+        step_tables: 'true',
+        step_comments: 'true'
       },
-      file_results: false,
-      file_results_previews: false,
-      table_results: true,
-      text_results: true,
-      result_comments: true,
+      file_results: 'false',
+      file_results_previews: 'false',
+      table_results: 'true',
+      text_results: 'true',
+      result_comments: 'true',
       result_order: 'atoz',
-      activities: true
+      activities: 'true'
     }
   }.freeze
 
