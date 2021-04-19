@@ -1220,8 +1220,20 @@ function reportHandsonTableConverter() {
       disableSearch: true,
       onChange: function() {
         let template = $('#templateSelector').val();
-        $.get($('#templateSelector').data('valuesEditorPath'), { template: template }, function(result) {
+        let params = {
+          project_id: dropdownSelector.getValues('#projectSelector'),
+          template: template
+        };
+        $.get($('#templateSelector').data('valuesEditorPath'), params, function(result) {
           $('.report-template-values-container').html(result.html);
+          $('.report-template-value-dropdown').each(function() {
+            dropdownSelector.init($(this), {
+              singleSelect: false,
+              closeOnSelect: true,
+              noEmptyOption: true,
+              selectAppearance: 'simple'
+            });
+          });
         });
       }
     });

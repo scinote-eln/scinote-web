@@ -10,6 +10,7 @@ class ReportsController < ApplicationController
     generate_pdf
     generate_docx
     save_modal
+    new_template_values
     project_contents
     experiment_contents_modal
     module_contents_modal
@@ -57,6 +58,9 @@ class ReportsController < ApplicationController
     template = Extends::REPORT_TEMPLATES[params[:template].to_sym]
     return render_404 if template.blank?
 
+    report = current_team.reports.where(project: @project).find_by(id: params[:report_id])
+    report ||= current_team.reports.new(project: @project)
+
     respond_to do |format|
       format.json do
         if lookup_context.template_exists?("reports/templates/#{template}/edit.html.erb")
@@ -64,7 +68,7 @@ class ReportsController < ApplicationController
             html: render_to_string(
               template: "reports/templates/#{template}/edit.html.erb",
               layout: 'reports/template_values_editor',
-              locals: { report: Report.find_by(id: params[:report_id]) || Report.new }
+              locals: { report: report }
             )
           }
         else

@@ -84,7 +84,10 @@
           1. PRODUCT
         </div>
         <div class="cell-value">
-          <%# template[:product] %> %>
+          <% report_experiment_descriptions(report).each do |description| %>
+            <%= description %>
+            <br>
+          <% end %>
         </div>
       </td>
       <td colspan=5>
@@ -92,7 +95,7 @@
           2. SAMPLE NUMBER
         </div>
         <div class="cell-value">
-          <%# template[:sample_number] %>
+          <%= assigned_to_report_repository_items(report, 'Samples').pluck(:name).join(', ') %>
         </div>
       </td>
     </tr>
@@ -246,7 +249,7 @@
           11. RESERVE SAMPLE
         </div>
         <div class="cell-value">
-          <%# template[:reserve_sample] %>
+          <%= render Reports::TextInputComponent.new(report: report, name: :reserve_sample, label: 'Reserve sample', editing: false) %>
         </div>
       </td>
     </tr>

@@ -1,0 +1,11 @@
+<% if @editing %>
+  <div class="sci-input-container">
+    <%= label_tag @name, @label %>
+    <%= select_tag @name, options_from_collection_for_select(@project_members, :id, :name), placeholder: @placeholder, class: 'sci-input-field report-template-value-dropdown', data: { type: 'ProjectMembersInputComponent' } %>
+  </div>
+<% else %>
+  <% @project_members.where(id: @value).pluck(@displayed_field).each do |field| %>
+    <%= field %>
+    <br>
+  <% end %>
+<% end %>
