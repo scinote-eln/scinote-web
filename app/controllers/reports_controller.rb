@@ -85,7 +85,7 @@ class ReportsController < ApplicationController
     @report.team = current_team
     @report.last_modified_by = current_user
 
-    if @report_contents && @report.save_with_contents(@report_contents, params[:template_values])
+    if ReportActions::SaveReport.new(@report, @report_contents, params[:template_values]).save_with_contents
       log_activity(:create_report)
 
       redirect_to reports_path
@@ -109,7 +109,7 @@ class ReportsController < ApplicationController
     @report.last_modified_by = current_user
     @report.assign_attributes(report_params)
 
-    if @report_contents && @report.save_with_contents(@report_contents, params[:template_values])
+    if ReportActions::SaveReport.new(@report, @report_contents, params[:template_values]).save_with_contents
       log_activity(:edit_report)
 
       redirect_to reports_path
@@ -505,7 +505,7 @@ class ReportsController < ApplicationController
 
   def report_params
     params.require(:report)
-          .permit(:name, :description, :grouped_by, :report_contents)
+          .permit(:name, :description, :grouped_by, :report_contents, settings: {})
   end
 
   def search_params
@@ -529,12 +529,12 @@ class ReportsController < ApplicationController
   def prepare_report_content
     if params[:project_content]
       @report_contents = ReportActions::ReportContent
-                         .new(params[:project_content], params[:settings], current_user)
+                         .new(params[:project_content], report_params[:settings], current_user)
                          .generate_content
     end
   end
 
   def generate_pdf_report
-    Reports::PdfJob.perform_later(@report, 'template_1', current_user) if @report.id
+    Reports::PdfJob.perform_later(@report, 'template_1', current_user) if @report.persisted?
   end
 end

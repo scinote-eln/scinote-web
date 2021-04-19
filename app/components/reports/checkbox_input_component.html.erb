@@ -1,6 +1,6 @@
 <div>
   <div class="sci-checkbox-container">
-    <%= check_box_tag @name, true, (@value && @value == 'true'), class: 'sci-checkbox', data: {type: 'CheckboxInputComponent'} %>
+    <%= check_box_tag @name, true, (@value == 'true'), class: 'sci-checkbox', data: { type: 'CheckboxInputComponent' } %>
     <span class="sci-checkbox-label"></span>
   </div>
   <%= @label %>

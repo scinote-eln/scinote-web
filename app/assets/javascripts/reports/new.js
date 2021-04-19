@@ -974,7 +974,8 @@ function reportHandsonTableConverter() {
     // Report name
     reportData.report = {
       name: $('.report-name').val(),
-      description: $('#projectDescription').val()
+      description: $('#projectDescription').val(),
+      settings: { task: { protocol: {} } }
     };
     // Project
     reportData.project_id = dropdownSelector.getValues('#projectSelector');
@@ -1028,15 +1029,14 @@ function reportHandsonTableConverter() {
     });
 
     // Settings
-    reportData.settings = { task: { protocol: {} } };
-    reportData.settings.all_tasks = $('.project-contents-container .select-all-my-modules-checkbox').prop('checked');
+    reportData.report.settings.all_tasks = $('.project-contents-container .select-all-my-modules-checkbox').prop('checked');
     $.each($('.task-contents-container .content-element .protocol-setting'), function(i, e) {
-      reportData.settings.task.protocol[e.value] = e.checked;
+      reportData.report.settings.task.protocol[e.value] = e.checked;
     });
     $.each($('.task-contents-container .content-element .task-setting'), function(i, e) {
-      reportData.settings.task[e.value] = e.checked;
+      reportData.report.settings.task[e.value] = e.checked;
     });
-    reportData.settings.task.result_order = dropdownSelector.getValues('#taskResultsOrder');
+    reportData.report.settings.task.result_order = dropdownSelector.getValues('#taskResultsOrder');
 
     return reportData;
   }
@@ -1103,7 +1103,7 @@ function reportHandsonTableConverter() {
     $('.reports-new-body [href="#new-report-step-2"]').on('show.bs.tab', function() {
       var projectContents = $('#new-report-step-2').find('.project-contents');
       var projectId = dropdownSelector.getValues('#projectSelector');
-      if (projectContents.data('project-id') !== projectId) {
+      if (projectContents.data('project-id') !== parseInt(projectId, 10)) {
         animateSpinner('.reports-new-body');
         $.get(projectContents.data('project-content-url'), { project_id: projectId }, function(data) {
           animateSpinner('.reports-new-body', false);

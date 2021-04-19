@@ -4,11 +4,11 @@ module ReportActions
   class ReportContent
     include Canaid::Helpers::PermissionsHelper
 
-    MY_MODULE_ADDITIONAL_ELEMENTS = []
+    MY_MODULE_ADDONS_ELEMENTS = []
 
-    def initialize(content, setting, user)
+    def initialize(content, settings, user)
       @content = content
-      @setting = setting
+      @settings = settings
       @user = user
     end
 
@@ -42,7 +42,7 @@ module ReportActions
       children = []
       protocol = my_module.protocols.first
 
-      if @setting.dig('task', 'protocol', 'description')
+      if @settings.dig('task', 'protocol', 'description')
         children << {
           'type_of' => 'my_module_protocol',
           'id' => { 'my_module_id' => my_module.id }
@@ -50,21 +50,21 @@ module ReportActions
       end
 
       protocol.steps do |step|
-        if step.completed && @setting.dig('task', 'protocol', 'completed_steps')
+        if step.completed && @settings.dig('task', 'protocol', 'completed_steps')
           children << generate_step_content(step)
-        elsif @setting.dig('task', 'protocol', 'uncompleted_steps')
+        elsif @settings.dig('task', 'protocol', 'uncompleted_steps')
           children << generate_step_content(step)
         end
       end
 
       my_module.results do |result|
         result_type = (result.result_asset || result.result_table || result.result_text).class.to_s.underscore
-        next unless @setting.dig('task', result_type)
+        next unless @settings.dig('task', result_type)
 
         children << generate_result_content(result, result_type)
       end
 
-      if @setting.dig('task', 'activities')
+      if @settings.dig('task', 'activities')
         children << {
           'type_of' => 'my_module_activity',
           'id' => { 'my_module_id' => my_module.id }
@@ -81,7 +81,7 @@ module ReportActions
         }
       end
 
-      MY_MODULE_ADDITIONAL_ELEMENTS.each do |e|
+      MY_MODULE_ADDONS_ELEMENTS.each do |e|
         children << send("generate_#{e}_content", my_module)
       end
 
@@ -95,7 +95,7 @@ module ReportActions
     def generate_step_content(step)
       children = []
 
-      if @setting.dig('task', 'protocol', 'step_checklists')
+      if @settings.dig('task', 'protocol', 'step_checklists')
         step.step_checklists.each do |checklist|
           children << {
             'id' => { 'checklist_id' => checklist.id },
@@ -104,7 +104,7 @@ module ReportActions
         end
       end
 
-      if @setting.dig('task', 'protocol', 'step_tables')
+      if @settings.dig('task', 'protocol', 'step_tables')
         step.step_tables.each do |table|
           children << {
             'id' => { 'table_id' => table.id },
@@ -113,7 +113,7 @@ module ReportActions
         end
       end
 
-      if @setting.dig('task', 'protocol', 'step_files')
+      if @settings.dig('task', 'protocol', 'step_files')
         step.step_assets.each do |asset|
           children << {
             'id' => { 'asset_id' => asset.id },
@@ -122,7 +122,7 @@ module ReportActions
         end
       end
 
-      if @setting.dig('task', 'protocol', 'step_comments')
+      if @settings.dig('task', 'protocol', 'step_comments')
         children << {
           'id' => { 'step_id' => step.id },
           'type_of' => 'step_comments'
@@ -142,7 +142,7 @@ module ReportActions
         'children' => []
       }
 
-      if @setting.dig('task', 'result_comments')
+      if @settings.dig('task', 'result_comments')
         result.push({
                       'id' => { 'result_id' => result.id },
                       'type_of' => 'result_comments'
