@@ -1,7 +1,7 @@
 <% if @editing %>
   <div class="sci-input-container">
     <%= label_tag @name, @label %>
-    <%= date_field_tag @name, @value, placeholder: @placeholder, class: 'sci-input-field', data: {type: 'DateInputComponent'} %>
+    <%= date_field_tag @name, @value, placeholder: @placeholder, class: 'sci-input-field', data: { type: 'DateInputComponent' } %>
   </div>
 <% else %>
   <%= @value %>
