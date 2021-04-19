@@ -278,24 +278,72 @@
     padding: 1em 2em;
     width: 60%;
 
-    .description {
-      @include font-main;
-    }
-
-    .project-selector,
-    .template-selector {
-      display: inline-block;
+    .template-editor-header {
+      align-items: center;
+      display: flex;
       margin-bottom: 1em;
-      width: 100%;
 
-      label {
-        @include font-small;
+      .title {
+        margin: 0 auto 0 0;
       }
     }
 
-    #projectDescription {
-      height: 110px;
-      padding: .5em;
+    .template-editor-description {
+      @include font-main;
+    }
+
+    .fa-caret-down {
+      cursor: pointer;
+      margin-right: .25em;
+
+      &.collapsed {
+        @include rotate(-90deg);
+      }
+    }
+
+    .values-container {
+
+      .checkbox-value-container {
+        margin-bottom: 1em;
+      }
+
+      .sci-input-container {
+        margin-bottom: 1em;
+
+        input[type="text"] {
+          display: block;
+          max-width: 40%;
+        }
+
+        textarea {
+          height: 10em;
+        }
+
+        input[type="date"] {
+          display: block;
+          max-width: 40%;
+        }
+      }
+
+      .sci-checkbox-container {
+        float: left;
+        margin-right: .5em;
+      }
+
+      ul {
+        list-style-type: none;
+        padding-left: 0;
+
+        li {
+          padding: .25em 0;
+        }
+      }
+
+      .sci-select-container {
+        display: inline-block;
+        margin-bottom: 1em;
+        width: 40%;
+      }
     }
   }
 
