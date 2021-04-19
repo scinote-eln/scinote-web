@@ -30,10 +30,9 @@ module ReportActions
       end
 
       @report
-    #rescue ActiveRecord::ActiveRecordError, ArgumentError => e
-    #  Rails.logger.error e.message
-    #  raise ActiveRecord::Rollback
-    #  return false
+    rescue ActiveRecord::ActiveRecordError, ArgumentError => e
+      Rails.logger.error e.message
+      raise ActiveRecord::Rollback
     end
 
     private

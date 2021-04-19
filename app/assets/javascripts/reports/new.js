@@ -1029,7 +1029,8 @@ function reportHandsonTableConverter() {
     });
 
     // Settings
-    reportData.report.settings.all_tasks = $('.project-contents-container .select-all-my-modules-checkbox').prop('checked');
+    reportData.report.settings.all_tasks = $('.project-contents-container .select-all-my-modules-checkbox')
+      .prop('checked');
     $.each($('.task-contents-container .content-element .protocol-setting'), function(i, e) {
       reportData.report.settings.task.protocol[e.value] = e.checked;
     });
