@@ -96,9 +96,9 @@ module ReportActions
                .includes(:checklists, :step_tables, :step_assets, :step_comments)
                .order(:position).each do |step|
         step_element = nil
-        if step.completed && @settings.dig('task', 'protocol', 'completed_steps') == 'true'
+        if step.completed && @settings.dig('task', 'protocol', 'completed_steps')
           step_element = save_element({ 'step_id' => step.id }, :step, my_module_element)
-        elsif @settings.dig('task', 'protocol', 'uncompleted_steps') == 'true'
+        elsif @settings.dig('task', 'protocol', 'uncompleted_steps')
           step_element = save_element({ 'step_id' => step.id }, :step, my_module_element)
         end
 
