@@ -25,7 +25,7 @@ class PdfPreviewJob < ApplicationJob
 
       ActiveRecord::Base.transaction do
         success = system(
-          "#{libreoffice_path} --headless --invisible --convert-to pdf --outdir #{work_dir} #{input.path}"
+          libreoffice_path, '--headless', '--invisible', '--convert-to', 'pdf', '--outdir', work_dir, input.path
         )
         unless success && File.file?(preview_file)
           raise StandardError, "There was an error generating PDF preview, blob id: #{blob.id}"
