@@ -82,8 +82,8 @@ class ReportsController < ApplicationController
     @report.project = @project
     @report.user = current_user
     @report.team = current_team
+    @report.settings = report_params[:settings]
     @report.last_modified_by = current_user
-
     @report = ReportActions::ReportContent.new(
       @report,
       params[:project_content],

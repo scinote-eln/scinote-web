@@ -1029,13 +1029,19 @@ function reportHandsonTableConverter() {
     });
 
     // Settings
-    reportData.report.settings.all_tasks = $('.project-contents-container .select-all-my-modules-checkbox')
-      .prop('checked');
+    if ($('.project-contents-container .select-all-my-modules-checkbox').prop('checked')) {
+      reportData.report.settings.all_tasks = $('.project-contents-container .select-all-my-modules-checkbox')
+        .prop('checked');
+    }
     $.each($('.task-contents-container .content-element .protocol-setting'), function(i, e) {
-      reportData.report.settings.task.protocol[e.value] = e.checked;
+      if (e.checked) {
+        reportData.report.settings.task.protocol[e.value] = e.checked;
+      };
     });
     $.each($('.task-contents-container .content-element .task-setting'), function(i, e) {
-      reportData.report.settings.task[e.value] = e.checked;
+      if (e.checked) {
+        reportData.report.settings.task[e.value] = e.checked;
+      }
     });
     reportData.report.settings.task.result_order = dropdownSelector.getValues('#taskResultsOrder');
 

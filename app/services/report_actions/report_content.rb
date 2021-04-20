@@ -4,7 +4,7 @@ module ReportActions
   class ReportContent
     include Canaid::Helpers::PermissionsHelper
 
-    MY_MODULE_ADDONS_ELEMENTS = [].freeze
+    MY_MODULE_ADDONS_ELEMENTS = []
 
     def initialize(report, content, template_values, user)
       @content = content
@@ -64,7 +64,7 @@ module ReportActions
       my_modules.sort_by { |m| selected_my_modules.index m.id }.each do |my_module|
         my_module_element = save_element({ 'my_module_id' => my_module.id }, :my_module, experiment_element)
 
-        if @settings.dig('task', 'protocol', 'description') == 'true'
+        if @settings.dig('task', 'protocol', 'description')
           save_element({ 'my_module_id' => my_module.id }, :my_module_protocol, my_module_element)
         end
 
@@ -72,7 +72,7 @@ module ReportActions
 
         generate_results_content(my_module, my_module_element)
 
-        if @settings.dig('task', 'activities') == 'true'
+        if @settings.dig('task', 'activities')
           save_element({ 'my_module_id' => my_module.id }, :my_module_activity, my_module_element)
 
         end
@@ -104,25 +104,25 @@ module ReportActions
 
         next unless step_element
 
-        if @settings.dig('task', 'protocol', 'step_checklists') == 'true'
+        if @settings.dig('task', 'protocol', 'step_checklists')
           step.checklists.each do |checklist|
             save_element({ 'checklist_id' => checklist.id }, :step_checklist, step_element)
           end
         end
 
-        if @settings.dig('task', 'protocol', 'step_tables') == 'true'
+        if @settings.dig('task', 'protocol', 'step_tables')
           step.step_tables.each do |table|
             save_element({ 'table_id' => table.id }, :step_table, step_element)
           end
         end
 
-        if @settings.dig('task', 'protocol', 'step_files') == 'true'
+        if @settings.dig('task', 'protocol', 'step_files')
           step.step_assets.each do |asset|
             save_element({ 'asset_id' => asset.id }, :step_asset, step_element)
           end
         end
 
-        if @settings.dig('task', 'protocol', 'step_comments') == 'true'
+        if @settings.dig('task', 'protocol', 'step_comments')
           save_element({ 'step_id' => step.id }, :step_comments, step_element)
         end
       end
@@ -132,7 +132,7 @@ module ReportActions
       my_module.results do |result|
         result_type = (result.result_asset || result.result_table || result.result_text).class.to_s.underscore
 
-        next unless @settings.dig('task', result_type) == 'true'
+        next unless @settings.dig('task', result_type)
 
         result_element = save_element({ 'result_id' => result.id }, result_type, my_module_element)
 
