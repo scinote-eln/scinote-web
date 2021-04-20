@@ -48,7 +48,7 @@ class Report < ApplicationRecord
       table_results: true,
       text_results: true,
       result_comments: true,
-      result_order: "atoz",
+      result_order: 'atoz',
       activities: true
     }
   }.freeze
@@ -89,28 +89,6 @@ class Report < ApplicationRecord
 
   def root_elements
     report_elements.order(:position).select { |el| el.parent.blank? }
-  end
-
-  # Save the JSON represented contents to this report
-  # (this action will overwrite any existing report elements)
-  def save_with_contents(json_contents)
-    begin
-      Report.transaction do
-        # First, save the report itself
-        save!
-
-        # Secondly, delete existing report elements
-        report_elements.destroy_all
-
-        # Lastly, iterate through contents
-        json_contents.each_with_index do |json_el, i|
-          save_json_element(json_el, i, nil)
-        end
-      end
-    rescue ActiveRecord::ActiveRecordError, ArgumentError
-      return false
-    end
-    true
   end
 
   # Clean report elements from report
@@ -159,25 +137,5 @@ class Report < ApplicationRecord
       end
     end
     elements
-  end
-
-  private
-
-  # Recursively save a single JSON element
-  def save_json_element(json_element, index, parent)
-    el = ReportElement.new
-    el.position = index
-    el.report = self
-    el.parent = parent
-    el.type_of = json_element['type_of']
-    el.sort_order = json_element['sort_order']
-    el.set_element_references(json_element['id'])
-    el.save!
-
-    if json_element['children'].present?
-      json_element['children'].each_with_index do |child, i|
-        save_json_element(child, i, el)
-      end
-    end
   end
 end

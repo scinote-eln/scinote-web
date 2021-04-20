@@ -3,9 +3,8 @@
 <% repository ||= nil %>
 <% repository_snapshot ||= nil %>
 <% repository = assigned_repository_or_snapshot(my_module, element_id, repository, repository_snapshot) %>
-<% order ||= @order %>
 <% timestamp = Time.current + 1.year - 1.days %>
-<% rows_json = my_module.repository_json_hot(repository, order) %>
+<% rows_json = my_module.repository_json_hot(repository, :desc) %>
 <div class="report-element report-module-repository-element"
      data-sort-hot="1"
      data-ts="<%= timestamp.to_i %>"

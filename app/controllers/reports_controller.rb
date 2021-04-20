@@ -1,6 +1,7 @@
 class ReportsController < ApplicationController
   include TeamsHelper
   include ReportActions
+  include ReportsHelper
 
   BEFORE_ACTION_METHODS = %i(
     create
@@ -28,6 +29,8 @@ class ReportsController < ApplicationController
 
   before_action :check_manage_permissions, only: BEFORE_ACTION_METHODS
   before_action :switch_team_with_param, only: :index
+
+  after_action :generate_pdf_report, only: %i(create update)
 
   # Index showing all reports of a single project
   def index; end
@@ -75,33 +78,25 @@ class ReportsController < ApplicationController
 
   # Creating new report from the _save modal of the new page
   def create
-    continue = true
-    begin
-      report_contents = JSON.parse(params.delete(:report_contents))
-    rescue
-      continue = false
-    end
-
     @report = Report.new(report_params)
     @report.project = @project
     @report.user = current_user
     @report.team = current_team
+    @report.settings = report_params[:settings]
     @report.last_modified_by = current_user
+    @report = ReportActions::ReportContent.new(
+      @report,
+      params[:project_content],
+      params[:template_values],
+      current_user
+    ).save_with_content
 
-    if continue && @report.save_with_contents(report_contents)
+    if @report
       log_activity(:create_report)
 
-      respond_to do |format|
-        format.json do
-          render json: { url: reports_path }, status: :ok
-        end
-      end
+      redirect_to reports_path
     else
-      respond_to do |format|
-        format.json do
-          render json: @report.errors, status: :unprocessable_entity
-        end
-      end
+      render json: @report.errors, status: :unprocessable_entity
     end
   end
 
@@ -117,30 +112,22 @@ class ReportsController < ApplicationController
 
   # Updating existing report from the _save modal of the new page
   def update
-    continue = true
-    begin
-      report_contents = JSON.parse(params.delete(:report_contents))
-    rescue
-      continue = false
-    end
-
     @report.last_modified_by = current_user
     @report.assign_attributes(report_params)
 
-    if continue && @report.save_with_contents(report_contents)
+    @report = ReportActions::ReportContent.new(
+      @report,
+      params[:project_content],
+      params[:template_values],
+      current_user
+    ).save_with_content
+
+    if @report
       log_activity(:edit_report)
 
-      respond_to do |format|
-        format.json do
-          render json: { url: reports_path }, status: :ok
-        end
-      end
+      redirect_to reports_path
     else
-      respond_to do |format|
-        format.json do
-          render json: @report.errors, status: :unprocessable_entity
-        end
-      end
+      render json: @report.errors, status: :unprocessable_entity
     end
   end
 
@@ -531,7 +518,7 @@ class ReportsController < ApplicationController
 
   def report_params
     params.require(:report)
-          .permit(:name, :description, :grouped_by, :report_contents)
+          .permit(:name, :description, :grouped_by, :report_contents, settings: {})
   end
 
   def search_params
@@ -550,5 +537,9 @@ class ReportsController < ApplicationController
             team: report.team,
             project: report.project,
             message_items: { report: report.id })
+  end
+
+  def generate_pdf_report
+    Reports::PdfJob.perform_later(@report, 'template_1', current_user) if @report.persisted?
   end
 end
