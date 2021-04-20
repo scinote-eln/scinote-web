@@ -1036,7 +1036,7 @@ function reportHandsonTableConverter() {
     $.each($('.task-contents-container .content-element .protocol-setting'), function(i, e) {
       if (e.checked) {
         reportData.report.settings.task.protocol[e.value] = e.checked;
-      };
+      }
     });
     $.each($('.task-contents-container .content-element .task-setting'), function(i, e) {
       if (e.checked) {
