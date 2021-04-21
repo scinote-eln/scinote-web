@@ -5,7 +5,7 @@ PAPERCLIP_HASH_SECRET=$(shell openssl rand -base64 128 | tr -d '\n')
 define PRODUCTION_CONFIG_BODY
 SECRET_KEY_BASE=$(shell openssl rand -hex 64)
 PAPERCLIP_HASH_SECRET=$(shell openssl rand -base64 128 | tr -d '\n')
-DATABASE_URL=postgresql://postgres@db/scinote_production
+DATABASE_URL=postgresql://postgres:mysecretpassword@db/scinote_production
 PAPERCLIP_STORAGE=filesystem
 ENABLE_RECAPTCHA=false
 ENABLE_USER_CONFIRMATION=false
