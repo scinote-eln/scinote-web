@@ -421,6 +421,7 @@ class Extends
   ]
 
   REPORT_TEMPLATES = {
-    template_1: 'template_1'
+    template_1: 'template_1',
+    template_2: 'template_2'
   }
 end
