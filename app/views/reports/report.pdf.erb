@@ -2,24 +2,24 @@
 <html>
   <head>
     <meta charset='utf-8' />
-    <%= wicked_pdf_stylesheet_link_tag "application" %>
-    <%= wicked_pdf_stylesheet_link_tag "reports_pdf" %>
+    <%= stylesheet_link_tag wicked_pdf_asset_base64("application") %>
+    <%= stylesheet_link_tag wicked_pdf_asset_base64("reports_pdf") %>
     <%= bootstrap_cdn_link_tag %>
     <%= font_awesome_cdn_link_tag %>
-    <%= wicked_pdf_javascript_include_tag "jquery" %>
-    <%= wicked_pdf_javascript_include_tag "handsontable.full.min" %>
+    <%= javascript_include_tag wicked_pdf_asset_base64("jquery") %>
+    <%= javascript_include_tag wicked_pdf_asset_base64("handsontable.full.min") %>
     <!-- Libraries for formulas -->
-    <%= wicked_pdf_javascript_include_tag "lodash" %>
-    <%= wicked_pdf_javascript_include_tag "numeral" %>
-    <%= wicked_pdf_javascript_include_tag "numeric" %>
-    <%= wicked_pdf_javascript_include_tag "md5" %>
-    <%= wicked_pdf_javascript_include_tag "jstat" %>
-    <%= wicked_pdf_javascript_include_tag "formula" %>
-    <%= wicked_pdf_javascript_include_tag "parser" %>
-    <%= wicked_pdf_javascript_include_tag "ruleJS" %>
-    <%= wicked_pdf_javascript_include_tag "big.min" %>
-    <%= wicked_pdf_javascript_include_tag "handsontable.formula" %>
-    <%= wicked_pdf_stylesheet_link_tag "handsontable.formula" %>
+    <%= javascript_include_tag wicked_pdf_asset_base64("lodash") %>
+    <%= javascript_include_tag wicked_pdf_asset_base64("numeral") %>
+    <%= javascript_include_tag wicked_pdf_asset_base64("numeric") %>
+    <%= javascript_include_tag wicked_pdf_asset_base64("md5") %>
+    <%= javascript_include_tag wicked_pdf_asset_base64("jstat") %>
+    <%= javascript_include_tag wicked_pdf_asset_base64("formula") %>
+    <%= javascript_include_tag wicked_pdf_asset_base64("parser") %>
+    <%= javascript_include_tag wicked_pdf_asset_base64("ruleJS") %>
+    <%= javascript_include_tag wicked_pdf_asset_base64("big.min") %>
+    <%= javascript_include_tag wicked_pdf_asset_base64("handsontable.formula") %>
+    <%= stylesheet_link_tag wicked_pdf_asset_base64("handsontable.formula") %>
   </head>
   <body class="print-report-body">
     <div class="print-report">
@@ -29,6 +29,6 @@
       <% end %>
     </div>
 
-    <%= wicked_pdf_javascript_include_tag "reports/content" %>
+    <%= javascript_include_tag wicked_pdf_asset_base64("reports/content") %>
   </body>
 </html>

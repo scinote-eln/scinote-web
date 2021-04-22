@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset='utf-8' />
-    <%= wicked_pdf_javascript_include_tag "reports/template_helpers" %>
+    <%= javascript_include_tag wicked_pdf_asset_base64("reports/template_helpers") %>
   </head>
   <body onload="pageNumbers()">
     <%= yield %>
