@@ -7,6 +7,16 @@ module Reports
 
     queue_as :reports
 
+    discard_on StandardError do |job, error|
+      report = Report.find_by(id: job.arguments.first)
+      ActiveRecord::Base.no_touching do
+        report&.update(pdf_file_processing: false)
+      end
+      Rails.logger.error("Couldn't generate PDF for Report with id: #{job.arguments.first}. Error:\n #{error}")
+    end
+
+    PREVIEW_EXTENSIONS = %w(docx pdf).freeze
+
     def perform(report, template, user)
       file = Tempfile.new(['report', '.pdf'], binmode: true)
       begin
@@ -36,6 +46,7 @@ module Reports
         )
 
         file.rewind
+        file = append_result_asset_previews(report, file) if report.settings.dig(:task, :file_results_previews)
         report.pdf_file.attach(io: file, filename: 'report.pdf')
         report.update!(pdf_file_processing: false)
 
@@ -52,6 +63,43 @@ module Reports
         file.close
         file.unlink
       end
+    end
+
+    private
+
+    def append_result_asset_previews(report, report_file)
+      Dir.mktmpdir do |tmp_dir|
+        report.report_elements.my_module.each do |my_module_element|
+          my_module_element.my_module.results.each do |result|
+            next unless result.is_asset && PREVIEW_EXTENSIONS.include?(result.asset.file.blob.filename.extension)
+
+            asset = result.asset
+            unless asset.file_pdf_preview.attached?
+              PdfPreviewJob.perform_now(asset.id)
+              asset.reload
+            end
+            asset.file_pdf_preview.open(tmpdir: tmp_dir) do |file|
+              report_file = merge_pdf_files(file, report_file)
+            end
+          end
+        end
+      end
+      report_file
+    end
+
+    def merge_pdf_files(file, report_file)
+      merged_file = Tempfile.new(['report', '.pdf'], binmode: true)
+      success = system(
+        'pdfunite', report_file.path, file.path, merged_file.path
+      )
+
+      unless success && File.file?(merged_file)
+        raise StandardError, 'There was an error merging report and PDF file preview'
+      end
+
+      report_file.close
+      report_file.unlink
+      merged_file
     end
   end
 end

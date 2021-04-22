@@ -728,6 +728,7 @@ en:
         result_asset:
           file_name: "[ %{file} ]"
           user_time: "Uploaded by %{user} on %{timestamp}."
+          full_preview_attached: "[full document attached to report]"
         result_table:
           table_name: "[ %{name} ]"
           user_time: "Created by %{user} on %{timestamp}."
