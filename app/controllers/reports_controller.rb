@@ -50,6 +50,7 @@ class ReportsController < ApplicationController
   # Report grouped by modules
   def new
     @templates = Extends::REPORT_TEMPLATES
+    @repositories = Repository.accessible_by_teams(current_team).active.select(:id, :name)
     @report = current_team.reports.new
   end
 
@@ -103,6 +104,8 @@ class ReportsController < ApplicationController
   def edit
     @edit = true
     @templates = Extends::REPORT_TEMPLATES
+    @repositories = Repository.accessible_by_teams(current_team).active.select(:id, :name)
+
     @project_contents = {
       experiments: @report.report_elements.where(type_of: 'experiment').pluck(:experiment_id),
       my_modules: @report.report_elements.where(type_of: 'my_module').pluck(:my_module_id)

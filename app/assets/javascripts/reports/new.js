@@ -975,7 +975,7 @@ function reportHandsonTableConverter() {
     reportData.report = {
       name: $('.report-name').val(),
       description: $('#projectDescription').val(),
-      settings: { task: { protocol: {} } }
+      settings: { task: { protocol: {}, repositories: [] } }
     };
     // Project
     reportData.project_id = dropdownSelector.getValues('#projectSelector');
@@ -1014,34 +1014,29 @@ function reportHandsonTableConverter() {
     });
 
     // Project content
-    reportData.project_content = [];
+    reportData.project_content = {};
     $.each($('.project-contents-container .experiment-element'), function(i, experiment) {
-      let experimentHash = {};
       let expCheckbox = $(experiment).find('.report-experiment-checkbox');
       if (!expCheckbox.prop('checked') && !expCheckbox.prop('indeterminate')) return;
 
-      experimentHash.experiment_id = $(experiment).find('.report-experiment-checkbox').val();
-      experimentHash.my_modules = [];
+      let experimentId = $(experiment).find('.report-experiment-checkbox').val();
+      reportData.project_content[experimentId] = [];
       $.each($(experiment).find('.report-my-module-checkbox:checked'), function(j, myModule) {
-        experimentHash.my_modules.push(myModule.value);
+        reportData.project_content[experimentId].push(myModule.value);
       });
-      reportData.project_content.push(experimentHash);
     });
 
     // Settings
-    if ($('.project-contents-container .select-all-my-modules-checkbox').prop('checked')) {
-      reportData.report.settings.all_tasks = $('.project-contents-container .select-all-my-modules-checkbox')
-        .prop('checked');
-    }
+    reportData.report.settings.all_tasks = $('.project-contents-container .select-all-my-modules-checkbox')
+      .prop('checked');
     $.each($('.task-contents-container .content-element .protocol-setting'), function(i, e) {
-      if (e.checked) {
-        reportData.report.settings.task.protocol[e.value] = e.checked;
-      }
+      reportData.report.settings.task.protocol[e.value] = e.checked;
     });
     $.each($('.task-contents-container .content-element .task-setting'), function(i, e) {
-      if (e.checked) {
-        reportData.report.settings.task[e.value] = e.checked;
-      }
+      reportData.report.settings.task[e.value] = e.checked;
+    });
+    $.each($('.task-contents-container .repositories-contents .sci-checkbox:checked'), function(i, e) {
+      reportData.report.settings.task.repositories.push(parseInt(e.value, 10));
     });
     reportData.report.settings.task.result_order = dropdownSelector.getValues('#taskResultsOrder');
 
@@ -1050,8 +1045,12 @@ function reportHandsonTableConverter() {
 
   function initGenerateButton() {
     $('.reports-new').on('click', '.generate-button', function() {
-      $.post(this.dataset.createUrl, getReportData(), function() {
-        // TODO
+      $.ajax({
+        url: this.dataset.createUrl,
+        type: 'POST',
+        data: JSON.stringify(getReportData()),
+        contentType: 'application/json; charset=utf-8',
+        success: function() {}
       });
     });
 
@@ -1059,8 +1058,13 @@ function reportHandsonTableConverter() {
       var params = getReportData();
       params.report.name = 'New ' + params.report.name;
       e.preventDefault();
-      $.post(this.dataset.createUrl, params, function() {
-        // TODO
+      $.ajax({
+        url: this.dataset.createUrl,
+        type: 'POST',
+        data: JSON.stringify(getReportData()),
+        contentType: 'application/json; charset=utf-8',
+
+        success: function() {}
       });
     });
 
@@ -1070,7 +1074,9 @@ function reportHandsonTableConverter() {
       $.ajax({
         type: 'PUT',
         url: this.dataset.updateUrl,
-        data: getReportData()
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(getReportData()),
+        success: function() {}
       });
     });
   }
@@ -1236,6 +1242,19 @@ function reportHandsonTableConverter() {
       disableSearch: true
     });
 
+    function SelectAllRepositoriesStatus() {
+      var selectAll = $('.task-contents-container .select-all-repositories');
+      var all = $('.repositories-contents .sci-checkbox').length;
+      var checked = $('.repositories-contents .sci-checkbox:checked').length;
+      selectAll.prop('indeterminate', false);
+      if (all === checked) {
+        selectAll.prop('checked', true);
+      } else {
+        selectAll.prop('checked', false);
+        if (checked > 0) selectAll.prop('indeterminate', true);
+      }
+    }
+
     $('.task-contents-container')
       .on('change', '.select-all-task-contents', function() {
         $('.content-element .sci-checkbox:not(.skip-select-all)')
@@ -1248,7 +1267,16 @@ function reportHandsonTableConverter() {
       .on('change', '.all-results-checkbox', function() {
         $('.results-type-contents .sci-checkbox:not(.skip-select-all)')
           .prop('checked', this.checked);
+      })
+      .on('change', '.select-all-repositories', function() {
+        $('.repositories-contents .sci-checkbox')
+          .prop('checked', this.checked);
+      })
+      .on('change', '.repositories-contents .sci-checkbox', function() {
+        SelectAllRepositoriesStatus();
       });
+
+    SelectAllRepositoriesStatus();
   }
 
   initGenerateButton();

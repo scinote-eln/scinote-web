@@ -50,6 +50,39 @@
     <li class="content-element">
       <i class="fas fa-caret-down " data-toggle="collapse" href="#resultContents" aria-expanded="false"></i>
       <span class="content-element-title">
+        <%= t("projects.reports.wizard.third_step.assigned_items") %>
+      </span><br>
+      <span class="repositories-items-description">
+        <i class="fas fa-info-circle"></i>
+        <%= t("projects.reports.wizard.third_step.assigned_items_description") %>
+      </span>
+      <div class="divider"></div>
+      <ul class="collapse in" id="resultContents">
+        <li>
+          <span class="sci-checkbox-container">
+            <input type="checkbox" class="sci-checkbox select-all-repositories"/>
+            <span class="sci-checkbox-label"></span>
+          </span>
+          <%= t("projects.reports.wizard.third_step.include_all_assigned_iitems") %>
+          <div class="divider"></div>
+          <ul class="repositories-contents">
+            <% @repositories.each do |repository| %>
+              <li>
+                <span class="sci-checkbox-container">
+                  <input type="checkbox" class="sci-checkbox repositories-setting" value="<%= repository.id %>" <%= 'checked' if report.new_record? || report.settings.dig(:task, :repositories)&.include?(repository.id) %> />
+                  <span class="sci-checkbox-label"></span>
+                </span>
+                <%= repository.name %>
+                <div class="divider"></div>
+              </li>
+            <% end %>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li class="content-element">
+      <i class="fas fa-caret-down " data-toggle="collapse" href="#resultContents" aria-expanded="false"></i>
+      <span class="content-element-title">
         <%= t("projects.reports.wizard.third_step.results") %>
       </span>
       <ul class="result-contents collapse in" id="resultContents">

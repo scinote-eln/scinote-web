@@ -43,6 +43,7 @@ class Report < ApplicationRecord
         step_tables: true,
         step_comments: true
       },
+      repositories: [],
       file_results: false,
       file_results_previews: false,
       table_results: true,
