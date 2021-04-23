@@ -44,7 +44,7 @@
         <b>ANALYST(S)</b>
       </div>
       <div class="cell-value">
-        <%= render Reports::TeamMemberInputComponent.new(report: report, name: :analyst, label: 'Analyst', editing: false, team: current_team) %>
+        <%= render Reports::ProjectMembersInputComponent.new(report: report, name: :analyst, label: 'Analyst', editing: false) %>
       </div>
     </td>
     <td colspan=2>
@@ -52,7 +52,7 @@
         <b>ANALYST EMPLOYEE NO.</b>
       </div>
       <div class="cell-value">
-        <%= render Reports::TextInputComponent.new(report: report, name: :analyst_number, label: 'Employee number', editing: false) %>
+        <%= render Reports::ProjectMembersInputComponent.new(report: report, name: :analyst_number, label: 'Employee number', editing: false, displayed_field: :external_id) %>
       </div>
     </td>
     <td colspan=3>
@@ -60,7 +60,7 @@
         <b>CHECKED BY:</b>
       </div>
       <div class="cell-value">
-        <%= render Reports::TeamMemberInputComponent.new(report: report, name: :checked_by, label: 'Checked by', editing: false, team: current_team) %>
+        <%= render Reports::ProjectMembersInputComponent.new(report: report, name: :checked_by, label: 'Checked by', editing: false) %>
       </div>
     </td>
     <td colspan=2 class="pagination">

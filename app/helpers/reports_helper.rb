@@ -173,6 +173,19 @@ module ReportsHelper
     html_doc.to_s
   end
 
+  def report_experiment_descriptions(report)
+    report.report_elements.experiment.pluck(:description)
+  end
+
+  def assigned_to_report_repository_items(report, repository_name)
+    repository = Repository.accessible_by_teams(report.team).where(name: repository_name).take
+    return RepositoryRow.none if repository.blank?
+
+    my_modules = MyModule.where(experiment: { project: report.project })
+                         .where(id: report.report_elements.my_module.select(:my_module_id))
+    repository.repository_rows.joins(:my_modules).where(my_modules: my_modules)
+  end
+
   private
 
   def obj_name_to_filename(obj, filename_suffix = '')
