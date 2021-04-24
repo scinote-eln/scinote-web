@@ -1,7 +1,7 @@
 <% # frozen_string_literal: true %>
 
 <div class="modal fade" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content" id="user_assignments_modal">
       <%= form_with(model: resource, url: update_path, remote: true, html: { data: { action: 'autosave-form' } }) do |f| %>
         <div class="modal-header">
@@ -10,7 +10,7 @@
         </div>
         <div class="modal-body">
           <%= f.nested_fields_for :user_assignments, resource.user_assignments, wrapper_options: { class: 'row' } do |user_assignment_form| %>
-            <%= render('access_permissions/partials/user_assignment_field.html.erb', f: user_assignment_form) if user_assignment_form.object.persisted? %>
+            <%= render('access_permissions/partials/user_permission_field.html.erb', f: user_assignment_form) if user_assignment_form.object.persisted? %>
           <% end %>
         </div>
         <div class="modal-footer">

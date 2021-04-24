@@ -2,17 +2,21 @@
   'use strict';
 
   function initSwapRemoteContainerListeners() {
-    $(document).on('click', 'a[data-action="swap-remote-container"]', function(el) {
-      let element = el.target;
-      el.stopPropagation();
-      el.preventDefault();
+    $(document).on('click', 'a[data-action="swap-remote-container"]', function(ev) {
+      let element = ev.currentTarget;
+      ev.stopImmediatePropagation();
+      ev.stopPropagation();
+      ev.preventDefault();
 
       $.get(element.getAttribute('href')).then(function({html}) {
-        let target = element.getAttribute('data-target')
-        document.getElementById(target).insertAdjacentHTML(html)
+        let targetID = element.getAttribute('data-target')
+        let targetElement = $(element).closest(targetID)
+        let newContainer = $(html)
+        targetElement.replaceWith(newContainer)
+        newContainer.find('.selectpicker').selectpicker();
       })
     })
   }
 
-  $(document).on('turbolinks:load', initSwapRemoteContainerListeners);
+  $(document).one('turbolinks:load', initSwapRemoteContainerListeners);
 })();

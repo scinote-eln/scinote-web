@@ -1,7 +1,7 @@
 <% # frozen_string_literal: true %>
 
 <div class="modal fade" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content" id="user_assignments_modal">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -11,7 +11,12 @@
         <%= render partial: 'access_permissions/partials/user_assignment', collection: resource.user_assignments, cached: ->(user_assignment) { [user_assignment. resource, current_user] } %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
+        <% if can_manage_resource %>
+          <%= link_to new_resource_path, class: 'btn btn-default pull-left', data: { action: 'swap-remote-container', target: '#user_assignments_modal' } do %>
+            <i class="fas fa-plus"></i>
+            <%= t '.new_resource_assignments', resource: resource.model_name.human.downcase %>
+          <% end %>
+        <% end %>
       </div>
     </div>
   </div>

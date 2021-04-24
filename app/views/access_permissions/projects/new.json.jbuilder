@@ -1,0 +1,14 @@
+# frozen_string_literal: true
+
+json.html controller.render_to_string(
+  partial: 'access_permissions/partials/new_assignments_form',
+  formats: [:html],
+  locals: {
+    resource: @project,
+    form_object: @form,
+    create_path: access_permissions_projects_path(id: @project.id, format: :json),
+    resource_path: edit_access_permissions_project_path(@project, format: :json)
+  },
+  layout: false
+)
+

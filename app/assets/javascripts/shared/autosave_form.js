@@ -7,5 +7,5 @@
     })
   }
 
-  $(document).on('turbolinks:load', initAutosaveListeners);
+  $(document).one('turbolinks:load', initAutosaveListeners);
 })();

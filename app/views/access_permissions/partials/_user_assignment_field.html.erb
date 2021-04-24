@@ -1,31 +1,28 @@
 <% # frozen_string_literal: true %>
 
-<% user_assignment = f.object %>
+<% project_member = f.object %>
+<% user = project_member.user %>
 
-<div class="col-xs-2">
-  <span class="global-avatar-container">
-    <%= image_tag avatar_path(user_assignment.user, :icon_small), title: current_assignee_name(user_assignment.user), class: 'img-circle pull-left' %>
-  </span>
-</div>
+<div class="row">
+  <%= f.hidden_field :user_id, value: user.id, name:"access_permissions_new_user_project_form[resource_members][#{user.id}][user_id]"  %>
+  <div class="col-xs-1 checkbox text-center">
+    <label>
+      <%= f.check_box :assign, name: "access_permissions_new_user_project_form[resource_members][#{user.id}][assign]" %>
+    </label>
+  </div>
+  <div class="col-xs-1">
+    <span class="global-avatar-container">
+      <%= image_tag avatar_path(user, :icon_small), title: current_assignee_name(user), class: 'img-circle pull-left' %>
+    </span>
+  </div>
+  <div class="col-xs-6">
+    <span><%= current_assignee_name(user) %></span>
+  </div>
 
-<div class="col-xs-3">
-  <span><%= current_assignee_name(user_assignment.user) %></span>
-  <br>
-  <small class="text-muted"><%= user_assignment.user_role.name %></small>
-</div>
-
-<div class="col-xs-7">
-  <div class="row">
-    <div class="col-xs-7">
-      <% unless user_assignment.user == current_user %>
-        <%= f.select :user_role_id, options_for_select(user_roles_collection), {}, class: 'form-control selectpicker' %>
-      <% end %>
-    </div>
-    <div class="col-xs-5">
-      <%= f.remove_nested_fields_link class: 'btn btn-link' do %>
-        <span class="fas fa-times"></span>
-        <%= t 'general.remove' %>
-      <% end %>
-    </div>
+  <div class="col-xs-4 form-group">
+    <% unless user == current_user %>
+      <%= f.select :user_role_id, options_for_select(user_roles_collection), {}, name: "access_permissions_new_user_project_form[resource_members][#{user.id}][user_role_id]", class: 'form-control selectpicker pull-right' %>
+    <% end %>
   </div>
 </div>
+<hr />

@@ -3,6 +3,10 @@
 json.modal controller.render_to_string(
   partial: 'access_permissions/modals/edit_modal',
   formats: [:html],
-  locals: { resource: @project, update_path: access_permissions_project_path(@project, format: :json), new_resource_path: new_access_permissions_project_path  },
+  locals: {
+    resource: @project,
+    update_path: access_permissions_project_path(@project, format: :json),
+    new_resource_path: new_access_permissions_project_path(id: @project, format: :json)
+  },
   layout: false
 )
