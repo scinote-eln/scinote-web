@@ -108,7 +108,8 @@ class ReportsController < ApplicationController
 
     @project_contents = {
       experiments: @report.report_elements.where(type_of: 'experiment').pluck(:experiment_id),
-      my_modules: @report.report_elements.where(type_of: 'my_module').pluck(:my_module_id)
+      my_modules: @report.report_elements.where(type_of: 'my_module').pluck(:my_module_id),
+      repositories: @report.report_elements.where(type_of: 'my_module_repository').pluck(:repository_id).uniq
     }
     render :new
   end

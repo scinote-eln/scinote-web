@@ -43,7 +43,7 @@ module ReportActions
     private
 
     def generate_content
-      @content.each do |exp_id, my_modules|
+      @content['experiments'].each do |exp_id, my_modules|
         generate_experiment_content(exp_id, my_modules)
       end
     end
@@ -78,7 +78,7 @@ module ReportActions
         end
 
         my_module.experiment.project.assigned_repositories_and_snapshots.each do |repository|
-          next unless @settings.dig('task', 'repositories')&.include?(repository.id)
+          next unless @content['repositories'].include?(repository.id)
 
           save_element(
             { 'my_module_id' => my_module.id, 'repository_id' => repository.id },

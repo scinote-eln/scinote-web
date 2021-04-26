@@ -975,7 +975,7 @@ function reportHandsonTableConverter() {
     reportData.report = {
       name: $('.report-name').val(),
       description: $('#projectDescription').val(),
-      settings: { task: { protocol: {}, repositories: [] } }
+      settings: { task: { protocol: {} } }
     };
     // Project
     reportData.project_id = dropdownSelector.getValues('#projectSelector');
@@ -1014,16 +1014,19 @@ function reportHandsonTableConverter() {
     });
 
     // Project content
-    reportData.project_content = {};
+    reportData.project_content = { experiments: {}, repositories: [] };
     $.each($('.project-contents-container .experiment-element'), function(i, experiment) {
       let expCheckbox = $(experiment).find('.report-experiment-checkbox');
       if (!expCheckbox.prop('checked') && !expCheckbox.prop('indeterminate')) return;
 
       let experimentId = $(experiment).find('.report-experiment-checkbox').val();
-      reportData.project_content[experimentId] = [];
+      reportData.project_content.experiments[experimentId] = [];
       $.each($(experiment).find('.report-my-module-checkbox:checked'), function(j, myModule) {
-        reportData.project_content[experimentId].push(myModule.value);
+        reportData.project_content.experiments[experimentId].push(myModule.value);
       });
+    });
+    $.each($('.task-contents-container .repositories-contents .sci-checkbox:checked'), function(i, e) {
+      reportData.project_content.repositories.push(parseInt(e.value, 10));
     });
 
     // Settings
@@ -1035,9 +1038,7 @@ function reportHandsonTableConverter() {
     $.each($('.task-contents-container .content-element .task-setting'), function(i, e) {
       reportData.report.settings.task[e.value] = e.checked;
     });
-    $.each($('.task-contents-container .repositories-contents .sci-checkbox:checked'), function(i, e) {
-      reportData.report.settings.task.repositories.push(parseInt(e.value, 10));
-    });
+
     reportData.report.settings.task.result_order = dropdownSelector.getValues('#taskResultsOrder');
 
     return reportData;

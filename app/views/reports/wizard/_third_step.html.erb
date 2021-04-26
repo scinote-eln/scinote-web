@@ -69,7 +69,7 @@
             <% @repositories.each do |repository| %>
               <li>
                 <span class="sci-checkbox-container">
-                  <input type="checkbox" class="sci-checkbox repositories-setting" value="<%= repository.id %>" <%= 'checked' if report.new_record? || report.settings.dig(:task, :repositories)&.include?(repository.id) %> />
+                  <input type="checkbox" class="sci-checkbox repositories-setting" value="<%= repository.id %>" <%= 'checked' if report.new_record? || @project_contents[:repositories].include?(repository.id) %> />
                   <span class="sci-checkbox-label"></span>
                 </span>
                 <%= repository.name %>
