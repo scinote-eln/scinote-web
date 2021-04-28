@@ -174,7 +174,9 @@ module ReportsHelper
   end
 
   def report_experiment_descriptions(report)
-    report.report_elements.experiment.pluck(:description)
+    report.report_elements.experiment.collect do |experiment_element|
+      experiment_element.experiment.description
+    end
   end
 
   def assigned_to_report_repository_items(report, repository_name)
