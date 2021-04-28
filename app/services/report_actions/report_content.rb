@@ -43,17 +43,17 @@ module ReportActions
     private
 
     def generate_content
-      @content.each do |_i, exp|
-        generate_experiment_content(exp)
+      @content['experiments'].each do |exp_id, my_modules|
+        generate_experiment_content(exp_id, my_modules)
       end
     end
 
-    def generate_experiment_content(exp)
-      experiment = Experiment.find_by(id: exp[:experiment_id])
+    def generate_experiment_content(exp_id, my_modules)
+      experiment = Experiment.find_by(id: exp_id)
       return if !experiment && !can_read_experiment?(experiment, @user)
 
       experiment_element = save_element({ 'experiment_id' => experiment.id }, :experiment, nil)
-      generate_my_modules_content(experiment, experiment_element, exp[:my_modules])
+      generate_my_modules_content(experiment, experiment_element, my_modules)
     end
 
     def generate_my_modules_content(experiment, experiment_element, selected_my_modules)
@@ -78,6 +78,8 @@ module ReportActions
         end
 
         my_module.experiment.project.assigned_repositories_and_snapshots.each do |repository|
+          next unless @content['repositories'].include?(repository.id)
+
           save_element(
             { 'my_module_id' => my_module.id, 'repository_id' => repository.id },
             :my_module_repository,

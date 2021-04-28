@@ -488,6 +488,16 @@
       }
     }
 
+    .repositories-items-description {
+      @include font-button;
+      display: inline-block;
+      margin-top: 1em;
+
+      .fas {
+        color: $brand-focus;
+      }
+    }
+
     .all-results-container {
       align-items: flex-start;
       display: flex;
