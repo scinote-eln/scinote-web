@@ -29,6 +29,7 @@ module Reports
                          footer: { html: { template: "reports/templates/#{template_name}/footer",
                                            locals: { report: report },
                                            layout: 'reports/footer_header.html.erb' } },
+                         assigns: { settings: report.settings },
                          locals: { report: report },
                          disable_javascript: false,
                          template: 'reports/report.pdf.erb'

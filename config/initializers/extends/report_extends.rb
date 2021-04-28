@@ -57,6 +57,8 @@ module ReportExtends
     end
   end
 
+  ACTIVE_REPORT_ELEMENTS = %i(project_header my_module project_activity experiment my_module_repository)
+
   # Module contents element
   MODULE_CONTENTS = [
     ModuleElement.new([:protocol],

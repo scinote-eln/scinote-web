@@ -173,8 +173,35 @@ module ReportsHelper
     html_doc.to_s
   end
 
+  def filter_steps_for_report(steps, settings)
+    include_completed_steps = settings.dig('task', 'protocol', 'completed_steps')
+    include_uncompleted_steps = settings.dig('task', 'protocol', 'uncompleted_steps')
+    if include_completed_steps && include_uncompleted_steps
+      steps
+    elsif include_completed_steps
+      steps.where(completed: true)
+    elsif include_uncompleted_steps
+      steps.where(completed: false)
+    else
+      steps.none
+    end
+  end
+
+  def order_results_for_report(results, order)
+    case order
+    when 'atoz'
+      results.order(name: :asc)
+    when 'ztoa'
+      results.order(name: :desc)
+    when 'new'
+      results.order(updated_at: :desc)
+    else
+      results.order(updated_at: :asc)
+    end
+  end
+
   def report_experiment_descriptions(report)
-    report.report_elements.experiment.collect do |experiment_element|
+    report.report_elements.experiment.map do |experiment_element|
       experiment_element.experiment.description
     end
   end
