@@ -371,7 +371,7 @@ class Project < ApplicationRecord
     UserAssignment.create(
       user: created_by,
       assignable: self,
-      user_role: UserRole.owner_role
+      user_role: UserRole.find_by(name: 'Owner')
     )
   end
 end

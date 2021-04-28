@@ -2316,18 +2316,16 @@ en:
     default_task_name: "New Task"
 
   user_assignment:
-    select:
-      default_option: "Select User role"
     current_assignee: "(you)"
   access_permissions:
     partials:
+      edit_assignments_content:
+        title: "Manage access for to %{resource_name}"
+        new_resource_assignments: "Grant new access to %{resource}"
       new_assignments_form:
         title: "Select members"
         submit: "Grand access"
     modals:
-      edit_modal:
-        title: "Manage access for to %{resource_name}"
-        new_resource_assignments: "Grant new access to %{resource}"
       show_modal:
         title: "Access to %{resource_name}"
         new_resource_assignments: "Grant new access to %{resource}"

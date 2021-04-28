@@ -32,13 +32,12 @@ module AccessPermissions
     end
 
     def update
+      @form = AccessPermissions::EditUserProjectForm.new(current_user, @project)
+      @form.update(permitted_update_params)
+
       respond_to do |format|
         format.json do
-          if @project.update(permitted_update_params)
-            head :no_content
-          else
-            render :edit
-          end
+          render :project_member
         end
       end
     end
@@ -47,18 +46,32 @@ module AccessPermissions
       @form = AccessPermissions::NewUserProjectForm.new(current_user, @project)
       @form.resource_members = permitted_create_params
 
-      flash[:notice] = "Success" if @form.save
+      respond_to do |format|
+        if @form.save
+          format.json { render :edit }
+        else
+          format.json { render :new }
+        end
+      end
+    end
+
+    def destroy
+      user = @project.users.find(params[:user_id])
+      project_member = ProjectMember.new(user, @project)
+      project_member.destroy
 
       respond_to do |format|
-        format.json :new
+        format.json do
+          render json: { status: :ok }
+        end
       end
     end
 
     private
 
     def permitted_update_params
-      params.require(:project)
-            .permit(user_assignments_attributes: %i[user_role_id _destroy id])
+      params.require(:project_member)
+            .permit(%i[user_role_id user_id])
     end
 
     def permitted_create_params
@@ -67,7 +80,7 @@ module AccessPermissions
     end
 
     def set_project
-      @project = Project.includes(user_assignments: [:user, :user_role]).find_by(id: params[:id])
+      @project = current_team.projects.includes(user_assignments: [:user, :user_role]).find_by(id: params[:id])
 
       render_404 unless @project
     end

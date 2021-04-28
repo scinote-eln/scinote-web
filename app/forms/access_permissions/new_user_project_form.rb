@@ -19,7 +19,7 @@ module AccessPermissions
       if @error
         false
       else
-        @resource_members.map(&:save)
+        @resource_members.map(&:create)
         true
       end
     end
@@ -31,7 +31,6 @@ module AccessPermissions
         project_member = ProjectMember.new(user, @project, current_user)
         project_member.assign = resource_member[:assign]
         project_member.user_role_id = resource_member[:user_role_id]
-        byebug
         @error = true unless project_member.valid?
 
         @resource_members << project_member

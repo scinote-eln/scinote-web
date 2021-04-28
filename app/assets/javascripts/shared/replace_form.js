@@ -2,9 +2,15 @@
   'use strict';
 
   function initReplaceFormListeners() {
-    $(document).on('ajax:success', 'form[data-action="replace-form"]', function({ form }) {
+    $(document).on('ajax:success', 'form[data-action*="replace-form"]', function(_, {form}) {
       let newForm = $(form)
-      $(this).replaceWith(newForm);
+      let target = this.getAttribute('data-target');
+
+      if (target) {
+        $(target).replaceWith(newForm);
+      } else {
+        $(this).replaceWith(newForm);
+      }
       newForm.find('.selectpicker').selectpicker();
     })
   }

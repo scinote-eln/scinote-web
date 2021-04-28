@@ -4,25 +4,46 @@ class ProjectMember
   include ActiveModel::Model
 
   attr_accessor :user, :project, :assign, :user_role_id, :user_id
-  attr_reader :current_user
+  attr_reader :current_user, :user_assignment, :user_role
 
-  validates :user, :project, :user_role_id, presence: true
-  validate :role_presence
-  validate :validate_user_project_relation_presence
-  validate :validate_user_project_assignment_presence
+  delegate :user_role, to: :user_assignment, allow_nil: true
 
-  def initialize(user, project, current_user)
+  validates :user, :project, presence: true, if: -> { assign }
+  validates :user_role_id, presence: true, if: -> { assign }
+  validate :validate_role_presence, if: -> { assign }
+  validate :validate_user_project_relation_presence, if: -> { assign }
+  validate :validate_user_project_assignment_presence, if: -> { assign }
+
+  def initialize(user, project, current_user = nil)
     @user = user
     @project = project
     @current_user = current_user
+    @user_assignment = UserAssignment.find_by(assignable: @project, user: @user)
   end
 
-  def save
+  def create
     return unless assign
 
     ActiveRecord::Base.transaction do
       UserProject.create!(project: @project, user: @user)
       UserAssignment.create!(assignable: @project, user: @user, user_role: set_user_role, assigned_by: current_user)
+    end
+  end
+
+  def update
+    validate_role_presence
+    return false unless valid?
+    user_assignment = UserAssignment.find_by!(assignable: @project, user: @user)
+    user_assignment.update(user_role: set_user_role)
+  end
+
+  def destroy
+    user_assignment = UserAssignment.find_by!(assignable: @project, user: @user)
+    user_project = UserProject.find_by!(project: @project, user: @user)
+
+    ActiveRecord::Base.transaction do
+      user_assignment.destroy!
+      user_project.destroy!
     end
   end
 
@@ -33,11 +54,11 @@ class ProjectMember
   private
 
   def set_user_role
-    UserRole.find!(user_role_id)
+    UserRole.find(user_role_id)
   end
 
-  def role_presence
-    errors.add(:user_role_id) if UserRole.find(user_role_id).nil?
+  def validate_role_presence
+    errors.add(:user_role_id, :not_found) if UserRole.find_by(id: user_role_id).nil?
   end
 
   def validate_user_project_relation_presence
@@ -48,7 +69,7 @@ class ProjectMember
 
   def validate_user_project_assignment_presence
     if UserAssignment.find_by(assignable: @project, user: @user).present?
-      errors.add(:user_role_id)
+      errors.add(:user_role_id, :already_present)
     end
   end
 end
