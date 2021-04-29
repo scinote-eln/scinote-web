@@ -12,7 +12,7 @@
     <div class='template-selector'>
       <%= label_tag :templateSelector, t('projects.reports.wizard.first_step.select_template') %>
       <%= select_tag :templateSelector,
-                     options_for_select(@templates),
+                     options_for_select(@templates, report.settings[:template]),
                      data: {
                        placeholder: t('projects.reports.wizard.first_step.select_template'),
                        values_editor_path: reports_new_template_values_path(report_id: report.id)

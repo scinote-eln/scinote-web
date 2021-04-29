@@ -980,9 +980,6 @@ function reportHandsonTableConverter() {
     // Project
     reportData.project_id = dropdownSelector.getValues('#projectSelector');
 
-    // Template
-    reportData.template_id = dropdownSelector.getValues('#templateSelector');
-
     // Template values
     reportData.template_values = {};
     $.each($('.report-template-values-container').find('.sci-input-field, select'), function(i, field) {
@@ -1030,6 +1027,7 @@ function reportHandsonTableConverter() {
     });
 
     // Settings
+    reportData.report.settings.template = dropdownSelector.getValues('#templateSelector');
     reportData.report.settings.all_tasks = $('.project-contents-container .select-all-my-modules-checkbox')
       .prop('checked');
     $.each($('.task-contents-container .content-element .protocol-setting'), function(i, e) {
