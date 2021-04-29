@@ -17,10 +17,6 @@
       height: 170mm;
     }
 
-    .table-of-contents {
-      height: 250mm;
-    }
-
     ul {
       list-style-type: none;
       padding: 0;
@@ -44,7 +40,7 @@
       <td colspan=2></td>
     </tr>
     <tr>
-      <td colspan=4 class="align-center"><b>Technical Report</b></td>
+      <td colspan=4 class="align-center"><b>OTR-Short Form Report</b></td>
     </tr>
     <tr>
       <td colspan=4><div class="divider"></div></td>
@@ -74,44 +70,20 @@
     </tr>
     <tr class="executive-summary">
       <td colspan=4 style="vertical-align: top;">
-        <b>EXECUTIVE SUMMARY</b>
         <ul>
           <li><b>Report file name:&nbsp;</b><%= render Reports::TextInputComponent.new(report: report, name: :report_file_name, label: 'Report file name', editing: false) %></li>
-          <li><b>Personnel:&nbsp;</b><%= render Reports::TextInputComponent.new(report: report, name: :report_from, label: 'From', editing: false) %></li>
           <li><b>Associated Protocol:&nbsp;</b><%= render Reports::TextInputComponent.new(report: report, name: :associated_protocol, label: 'Associated Protocol', editing: false) %></li>
-          <li><b>Background:&nbsp;</b><%= render Reports::LargeTextInputComponent.new(report: report, name: :report_background, label: 'Summary background', editing: false) %></li>
-          <li><b>Outcome/Impact:&nbsp;</b><%= render Reports::LargeTextInputComponent.new(report: report, name: :outcome_impact, label: 'Outcome/Impact', editing: false) %></li>
-          <li><b>Conclusion:&nbsp;</b><%= render Reports::LargeTextInputComponent.new(report: report, name: :outcome_impact, label: 'Conclusion', editing: false) %></li>
+          <li><b>Background:&nbsp;</b><%= render Reports::LargeTextInputComponent.new(report: report, name: :report_background, label: 'Background', editing: false) %></li>
+          <li><b>Conclusions:&nbsp;</b><%= render Reports::LargeTextInputComponent.new(report: report, name: :outcome_impact, label: 'Conclusions', editing: false) %></li>
+          <li><b>Results and Discussion&nbsp;</b><%= render Reports::LargeTextInputComponent.new(report: report, name: :results, label: 'Results and Discussion', editing: false) %></li>
+          <li><b>References (if needed)&nbsp;</b><%= render Reports::LargeTextInputComponent.new(report: report, name: :references, label: 'References (if needed)', editing: false) %></li>
+          <li><b>Records Management Project Name:&nbsp;</b><%= render Reports::LargeTextInputComponent.new(report: report, name: :management_project_name, label: 'Records Management Project Name', editing: false) %></li>
         </ul>
       </td>
     </tr>
     <tr style="height: 30px">
       <td colspan=1><%= render Reports::TextInputComponent.new(report: report, name: :report_file_name, label: 'Report file name', editing: false) %></td>
       <td colspan=2 class="align-center">Page 1 of</td>
-      <td colspan=1><%= render Reports::DateInputComponent.new(report: report, name: :report_date, label: 'Date', editing: false) %></td>
-    </tr>
-  </table>
-  <div style="page-break-before: always"></div>
-  <table class="template-table">
-    <tr>
-      <td colspan=2 class="logo"></td>
-      <td colspan=2></td>
-    </tr>
-    <tr class="table-of-contents">
-      <td colspan=4 style="vertical-align: top;">
-        <ul>
-          <li><b>Objective&nbsp;</b><%= render Reports::LargeTextInputComponent.new(report: report, name: :objective, label: 'Objective', editing: false) %></li>
-          <li><b>Background&nbsp;</b><%= render Reports::LargeTextInputComponent.new(report: report, name: :background, label: 'Background ', editing: false) %></li>
-          <li><b>Materials and Methods&nbsp;</b><%= render Reports::LargeTextInputComponent.new(report: report, name: :materials_and_methods, label: 'Materials and Methods', editing: false) %></li>
-          <li><b>Results and Discussion&nbsp;</b><%= render Reports::LargeTextInputComponent.new(report: report, name: :results, label: 'Results and Discussion', editing: false) %></li>
-          <li><b>References&nbsp;</b><%= render Reports::LargeTextInputComponent.new(report: report, name: :references, label: 'References', editing: false) %></li>
-          <li><b>Records Management Project Name:&nbsp;</b><%= render Reports::LargeTextInputComponent.new(report: report, name: :management_project_name, label: 'Records Management Project Name', editing: false) %></li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td colspan=1><%= render Reports::TextInputComponent.new(report: report, name: :report_file_name, label: 'Report file name', editing: false) %></td>
-      <td colspan=2 class="align-center">Page 2 of</td>
       <td colspan=1><%= render Reports::DateInputComponent.new(report: report, name: :report_date, label: 'Date', editing: false) %></td>
     </tr>
   </table>
