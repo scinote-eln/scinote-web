@@ -1,0 +1,18 @@
+<% content_for :cover do %>
+  <%= render Reports::DateInputComponent.new(report: report, name: :report_date, label: 'Date') %>
+  <%= render Reports::TextInputComponent.new(report: report, name: :report_from, label: 'From') %>
+  <%= render Reports::TextInputComponent.new(report: report, name: :report_through, label: 'Through') %>
+  <%= render Reports::TextInputComponent.new(report: report, name: :report_to, label: 'To') %>
+  <%= render Reports::TextInputComponent.new(report: report, name: :report_subject, label: 'Subject') %>
+  <%= render Reports::TextInputComponent.new(report: report, name: :report_file_name, label: 'Report file name') %>
+  <%= render Reports::TextInputComponent.new(report: report, name: :associated_protocol, label: 'Associated Protocol') %>
+  <%= render Reports::LargeTextInputComponent.new(report: report, name: :report_background, label: 'Summary background') %>
+  <%= render Reports::LargeTextInputComponent.new(report: report, name: :outcome_impact, label: 'Outcome/Impact') %>
+  <%= render Reports::LargeTextInputComponent.new(report: report, name: :outcome_impact, label: 'Conclusion') %>
+  <%= render Reports::LargeTextInputComponent.new(report: report, name: :objective, label: 'Objective') %>
+  <%= render Reports::LargeTextInputComponent.new(report: report, name: :background, label: 'Background ') %>
+  <%= render Reports::LargeTextInputComponent.new(report: report, name: :materials_and_methods, label: 'Materials and Methods') %>
+  <%= render Reports::LargeTextInputComponent.new(report: report, name: :results, label: 'Results and Discussion') %>
+  <%= render Reports::LargeTextInputComponent.new(report: report, name: :references, label: 'References') %>
+  <%= render Reports::TextInputComponent.new(report: report, name: :management_project_name, label: 'Records Management Project Name') %>
+<% end %>
