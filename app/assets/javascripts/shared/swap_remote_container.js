@@ -8,14 +8,18 @@
       ev.stopPropagation();
       ev.preventDefault();
 
-      $.get(element.getAttribute('href')).then(function({html}) {
-        let targetID = element.getAttribute('data-target')
-        let targetElement = $(element).closest(targetID)
-        let newContainer = $(html)
-        targetElement.replaceWith(newContainer)
+      $.get(element.getAttribute('href')).then(function({html, flash}) {
+        let targetID = element.getAttribute('data-target');
+        let targetElement = $(element).closest(targetID);
+        let newContainer = $(html);
+        targetElement.replaceWith(newContainer);
         newContainer.find('.selectpicker').selectpicker();
-      })
-    })
+
+        if (flash) {
+          HelperModule.flashAlertMsg(flash, 'success');
+        }
+      });
+    });
   }
 
   $(document).one('turbolinks:load', initSwapRemoteContainerListeners);

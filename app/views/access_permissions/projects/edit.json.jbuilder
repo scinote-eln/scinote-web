@@ -24,3 +24,5 @@ modal_container = controller.render_to_string(
 
 json.html modal_container
 json.form modal_container
+
+json.flash @message

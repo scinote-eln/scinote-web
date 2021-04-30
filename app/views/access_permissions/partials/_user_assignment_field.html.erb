@@ -1,13 +1,19 @@
 <% # frozen_string_literal: true %>
 
-<% project_member = f.object %>
-<% user = project_member.user %>
+<%
+  project_member = f.object
+  user = project_member.user
+  id = dom_id(user, :new_project_member)
+%>
 
 <div class="row">
   <%= f.hidden_field :user_id, value: user.id, name:"access_permissions_new_user_project_form[resource_members][#{user.id}][user_id]"  %>
   <div class="col-xs-1 checkbox text-center">
     <label>
-      <%= f.check_box :assign, name: "access_permissions_new_user_project_form[resource_members][#{user.id}][assign]" %>
+      <%= f.check_box :assign,
+                      name: "access_permissions_new_user_project_form[resource_members][#{user.id}][assign]",
+                      data: { action: 'toggle-visibility', target: id}
+      %>
     </label>
   </div>
   <div class="col-xs-1">
@@ -19,10 +25,7 @@
     <span><%= current_assignee_name(user) %></span>
   </div>
 
-  <div class="col-xs-4 form-group">
-    <% unless user == current_user %>
-      <%= f.select :user_role_id, options_for_select(user_roles_collection), {}, name: "access_permissions_new_user_project_form[resource_members][#{user.id}][user_role_id]", class: 'form-control selectpicker pull-right' %>
-    <% end %>
+  <div class="col-xs-4 form-group hidden" id="<%= id %>">
+    <%= f.select :user_role_id, options_for_select(new_user_roles_collection), {}, name: "access_permissions_new_user_project_form[resource_members][#{user.id}][user_role_id]", class: 'form-control selectpicker pull-right' %>
   </div>
 </div>
-<hr />

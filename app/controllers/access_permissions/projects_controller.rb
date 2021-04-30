@@ -45,11 +45,12 @@ module AccessPermissions
     def create
       @form = AccessPermissions::NewUserProjectForm.new(current_user, @project)
       @form.resource_members = permitted_create_params
-
       respond_to do |format|
         if @form.save
+          @message = t('access_permissions.create.success', count: @form.resource_members.count)
           format.json { render :edit }
         else
+          @message = t('access_permissions.create.failure')
           format.json { render :new }
         end
       end
@@ -58,11 +59,18 @@ module AccessPermissions
     def destroy
       user = @project.users.find(params[:user_id])
       project_member = ProjectMember.new(user, @project)
-      project_member.destroy
 
       respond_to do |format|
-        format.json do
-          render json: { status: :ok }
+        if project_member.destroy
+          format.json do
+            render json: { flash: t('access_permissions.destroy.success', member_name: user.full_name) },
+                   status: :ok
+          end
+        else
+          format.json do
+            render json: { flash: t('access_permissions.destroy.failure') },
+                   status: :unprocessable_entity
+          end
         end
       end
     end

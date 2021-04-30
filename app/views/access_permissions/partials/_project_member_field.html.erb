@@ -1,6 +1,9 @@
 <% # frozen_string_literal: true %>
-<% project_member = ProjectMember.new(user, project) %>
-<% item_id = "project-member-#{user.id}" %>
+
+<%
+  project_member = ProjectMember.new(user, project)
+  item_id = dom_id(user, :project_member)
+%>
 
 <%= form_with(model: project_member, url: update_path, method: :put, remote: true, html: { id: item_id, data: { action: 'replace-form autosave-form' } }) do |f| %>
   <%= f.hidden_field :user_id, value: f.object.user.id %>
@@ -15,20 +18,22 @@
       <br>
       <small class="text-muted"><%= project_member.user_role.name %></small>
     </div>
-    <div class="col-xs-7">
-      <div class="row">
-        <div class="col-xs-7">
-          <% unless user == current_user %>
+    <% unless user == current_user %>
+      <div class="col-xs-7">
+        <div class="row">
+          <div class="col-xs-7">
             <%= f.select :user_role_id, options_for_select(user_roles_collection, selected: f.object.user_role.id), {}, class: 'form-control selectpicker' %>
-          <% end %>
-        </div>
-        <div class="col-xs-5">
-          <%= link_to access_permissions_project_path(project, user_id: user, format: :json), remote: true, method: :delete, class: 'btn btn-link', data: { action: 'remote-destroy', target: "##{item_id}" } do %>
-            <span class="fas fa-times"></span>
-            <%= t 'general.remove' %>
-          <% end %>
+          </div>
+          <div class="col-xs-5">
+            <% unless project_member.last_project_owner? %>
+              <%= link_to access_permissions_project_path(project, user_id: user, format: :json), remote: true, method: :delete, class: 'btn btn-link', data: { action: 'remote-destroy', target: "##{item_id}" } do %>
+                <span class="fas fa-times"></span>
+                <%= t 'general.remove' %>
+              <% end %>
+            <% end %>
+          </div>
         </div>
       </div>
-    </div>
+    <% end %>
   </div>
 <% end %>

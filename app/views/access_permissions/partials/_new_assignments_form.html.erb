@@ -4,13 +4,13 @@
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     <h4 class="modal-title">
-      <%= link_to resource_path, remote: true, class: 'pull-left', data: { action: 'swap-remote-container', target: '#user_assignments_modal' } do %>
+      <%= link_to resource_path, remote: true, class: 'pull-left spacer', data: { action: 'swap-remote-container', target: '#user_assignments_modal' } do %>
         <i class="fas fa-arrow-left"></i>
       <% end %>
       <%= t '.title', resource_name: resource.name %>
     </h4>
   </div>
-  <%= form_with(model: form_object, url: create_path, method: :post, remote: true, html: { data: { action: 'replace-form', target: '#user_assignments_modal' } }) do |f| %>
+  <%= form_with(model: form_object, url: create_path, method: :post, remote: true, html: { id: 'new-user-assignment-to-project-form', data: { action: 'replace-form', target: '#user_assignments_modal' } }) do |f| %>
     <div class="modal-body">
       <% f.object.resource_members.each do |member| %>
         <%= f.fields_for :resource_members, member do |member_form| %>
@@ -19,7 +19,7 @@
       <% end %>
     </div>
     <div class="modal-footer">
-      <%= f.submit t('.submit'), class: "btn btn-primary" %>
+      <%= f.submit t('.submit'), class: "btn btn-primary", disabled: true, data: { 'label-default' =>  t('.submit'),  'label-singular' => t('.submit_singular'), 'label-plural' => t('.submit_plural') }%>
     </div>
   <% end %>
 </div>

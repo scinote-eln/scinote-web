@@ -6,4 +6,8 @@ module UserRolesHelper
       @user_roles_collection ||= UserRole.all.pluck(:name, :id)
     end
   end
+
+  def new_user_roles_collection
+    [[t('user_assignment.select_role'), nil]] + user_roles_collection
+  end
 end

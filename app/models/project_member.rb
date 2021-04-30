@@ -40,7 +40,7 @@ class ProjectMember
   def destroy
     user_assignment = UserAssignment.find_by!(assignable: @project, user: @user)
     user_project = UserProject.find_by!(project: @project, user: @user)
-
+    return false if last_project_owner?
     ActiveRecord::Base.transaction do
       user_assignment.destroy!
       user_project.destroy!
@@ -49,6 +49,10 @@ class ProjectMember
 
   def assign=(value)
     @assign = ActiveModel::Type::Boolean.new.cast(value)
+  end
+
+  def last_project_owner?
+    project_owners.count == 1 && user_role.owner?
   end
 
   private
@@ -71,5 +75,11 @@ class ProjectMember
     if UserAssignment.find_by(assignable: @project, user: @user).present?
       errors.add(:user_role_id, :already_present)
     end
+  end
+
+  def project_owners
+    @project_owners ||= @project.user_assignments
+                                .includes(:user_role)
+                                .where(user_roles: { name: 'Owner' })
   end
 end

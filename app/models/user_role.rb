@@ -83,6 +83,10 @@ class UserRole < ApplicationRecord
     )
   end
 
+  def owner?
+    self.name == 'Owner'
+  end
+
   private
 
   def prevent_update
