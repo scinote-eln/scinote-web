@@ -2336,6 +2336,7 @@ en:
         submit: "Grand access"
         submit_singular: "Grand access to 1 user"
         submit_plural: "Grand access to {num} users"
+        find_people_html: "&#128269; Find people"
     modals:
       show_modal:
         title: "Access to %{resource_name}"
