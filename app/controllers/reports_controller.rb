@@ -87,6 +87,7 @@ class ReportsController < ApplicationController
     @report.project = @project
     @report.user = current_user
     @report.team = current_team
+    @report.pdf_file_processing = true
     @report.settings = report_params[:settings]
     @report.last_modified_by = current_user
     @report = ReportActions::ReportContent.new(
@@ -121,6 +122,7 @@ class ReportsController < ApplicationController
   # Updating existing report from the _save modal of the new page
   def update
     @report.last_modified_by = current_user
+    @report.pdf_file_processing = true
     @report.assign_attributes(report_params)
 
     @report = ReportActions::ReportContent.new(
