@@ -83,7 +83,7 @@
     </tr>
     <tr style="height: 30px">
       <td colspan=1><%= render Reports::TextInputComponent.new(report: report, name: :report_file_name, label: 'Report file name', editing: false) %></td>
-      <td colspan=2 class="align-center">Page 1 of</td>
+      <td colspan=2 class="align-center">Page 1 of <%= total_pages + 1 %></td>
       <td colspan=1><%= render Reports::DateInputComponent.new(report: report, name: :report_date, label: 'Date', editing: false) %></td>
     </tr>
   </table>

@@ -63,8 +63,8 @@
         <%= render Reports::ProjectMembersInputComponent.new(report: report, name: :checked_by, label: 'Checked by', editing: false) %>
       </div>
     </td>
-    <td colspan=2 class="pagination">
-      PAGE <span class="page"></span> OF <span class="topage"></span>
+    <td colspan=2 class="pagination" data-page-offset="1">
+      PAGE <span class="page"></span> OF <span class="topage" ></span>
     </td>
   </tr>
   <tr class="info-row">

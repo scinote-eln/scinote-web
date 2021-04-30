@@ -33,9 +33,6 @@ module Reports
           pdf: 'report', header: { html: { template: "reports/templates/#{template_name}/header",
                                            locals: { report: report },
                                            layout: 'reports/footer_header.html.erb' } },
-                         cover: renderer.render_to_string("reports/templates/#{template_name}/cover.html.erb",
-                                                          layout: false,
-                                                          locals: { report: report }),
                          footer: { html: { template: "reports/templates/#{template_name}/footer",
                                            locals: { report: report },
                                            layout: 'reports/footer_header.html.erb' } },
@@ -46,7 +43,11 @@ module Reports
         )
 
         file.rewind
+
+        file = prepend_title_page(file, template_name, report, renderer)
+
         file = append_result_asset_previews(report, file) if report.settings.dig(:task, :file_results_previews)
+
         report.pdf_file.attach(io: file, filename: 'report.pdf')
         report.update!(pdf_file_processing: false)
 
@@ -99,6 +100,43 @@ module Reports
 
       report_file.close
       report_file.unlink
+      merged_file
+    end
+
+    def prepend_title_page(file, template_name, report, renderer)
+      total_pages = 0
+
+      IO.popen(['pdfinfo', file.path], 'r+') do |f|
+        total_pages = f.read.split("\n")
+                       .find { |i| i.split(':')[0] == 'Pages' }
+                       .gsub(/[^0-9]/, '')
+      end
+
+      title_page = Tempfile.new(['title_page', '.pdf'], binmode: true)
+      merged_file = Tempfile.new(['report', '.pdf'], binmode: true)
+
+      title_page << renderer.render(
+        pdf: 'report', inline: renderer.render_to_string("reports/templates/#{template_name}/cover.html.erb",
+                                                         layout: false,
+                                                         locals: { report: report, total_pages: total_pages.to_i }),
+                       disable_javascript: false,
+                       template: 'reports/report.pdf.erb'
+      )
+
+      title_page.rewind
+
+      success = system(
+        'pdfunite', title_page.path, file.path, merged_file.path
+      )
+
+      raise StandardError, 'There was an error merging report and title page' unless success && File.file?(merged_file)
+
+      file.close
+      file.unlink
+
+      title_page.close
+      title_page.unlink
+
       merged_file
     end
   end
