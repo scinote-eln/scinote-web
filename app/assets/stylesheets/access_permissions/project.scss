@@ -1,0 +1,11 @@
+@import "constants";
+
+.project-member-item {
+  border-bottom: .1rem solid $btn-default-border;
+  padding: 10px;
+  margin: 10px 0;
+
+  &:last-child {
+    border: none;
+  }
+}

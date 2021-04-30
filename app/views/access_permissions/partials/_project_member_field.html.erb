@@ -5,13 +5,12 @@
   item_id = dom_id(user, :project_member)
 %>
 
-<%= form_with(model: project_member, url: update_path, method: :put, remote: true, html: { id: item_id, data: { action: 'replace-form autosave-form' } }) do |f| %>
+<%= form_with(model: project_member, url: update_path, method: :put, remote: true, html: { class: 'row project-member-item', id: item_id, data: { action: 'replace-form autosave-form' } }) do |f| %>
   <%= f.hidden_field :user_id, value: f.object.user.id %>
-  <div class="row">
     <div class="col-xs-2">
-    <span class="global-avatar-container">
-      <%= image_tag avatar_path(user, :icon_small), title: current_assignee_name(user), class: 'img-circle pull-left' %>
-    </span>
+      <span class="global-avatar-container">
+        <%= image_tag avatar_path(user, :icon_small), title: current_assignee_name(user), class: 'img-circle pull-left' %>
+      </span>
     </div>
     <div class="col-xs-3">
       <span><%= current_assignee_name(user) %></span>
@@ -35,5 +34,4 @@
         </div>
       </div>
     <% end %>
-  </div>
 <% end %>
