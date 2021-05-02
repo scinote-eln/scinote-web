@@ -47,7 +47,7 @@ module AccessPermissions
       @form.resource_members = permitted_create_params
       respond_to do |format|
         if @form.save
-          @message = t('access_permissions.create.success', count: @form.resource_members.count)
+          @message = t('access_permissions.create.success', count: @form.new_members_count)
           format.json { render :edit }
         else
           @message = t('access_permissions.create.failure')
@@ -58,7 +58,7 @@ module AccessPermissions
 
     def destroy
       user = @project.users.find(params[:user_id])
-      project_member = ProjectMember.new(user, @project)
+      project_member = ProjectMember.new(user, @project, current_user)
 
       respond_to do |format|
         if project_member.destroy

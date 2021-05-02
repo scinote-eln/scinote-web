@@ -26,24 +26,36 @@ class ProjectMember
 
     ActiveRecord::Base.transaction do
       UserProject.create!(project: @project, user: @user)
-      UserAssignment.create!(assignable: @project, user: @user, user_role: set_user_role, assigned_by: current_user)
+      @user_assignment = UserAssignment.create!(
+        assignable: @project,
+        user: @user,
+        user_role: set_user_role,
+        assigned_by: current_user
+      )
+      log_activity(:assign_user_to_project)
     end
   end
 
   def update
     validate_role_presence
     return false unless valid?
-    user_assignment = UserAssignment.find_by!(assignable: @project, user: @user)
-    user_assignment.update(user_role: set_user_role)
+
+    ActiveRecord::Base.transaction do
+      user_assignment = UserAssignment.find_by!(assignable: @project, user: @user)
+      user_assignment.update!(user_role: set_user_role)
+      log_activity(:change_user_role_on_project)
+    end
   end
 
   def destroy
     user_assignment = UserAssignment.find_by!(assignable: @project, user: @user)
     user_project = UserProject.find_by!(project: @project, user: @user)
     return false if last_project_owner?
+
     ActiveRecord::Base.transaction do
       user_assignment.destroy!
       user_project.destroy!
+      log_activity(:unassign_user_from_project)
     end
   end
 
@@ -56,6 +68,18 @@ class ProjectMember
   end
 
   private
+
+  def log_activity(type_of)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: project,
+            team: project.team,
+            project: project,
+            message_items: { project: project.id,
+                             user_target: user.id,
+                             role: user_role.name })
+  end
 
   def set_user_role
     UserRole.find(user_role_id)

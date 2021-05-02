@@ -80,6 +80,8 @@ describe Project, type: :model do
   end
 
   describe 'after create hooks' do
+    let!(:owner_role) { create :owner_role }
+
     it 'grands owner permissions to project creator' do
       user = create(:user)
       project.created_by = user
