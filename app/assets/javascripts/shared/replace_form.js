@@ -21,4 +21,4 @@
   }
 
   $(document).one('turbolinks:load', initReplaceFormListeners);
-})();
+}());

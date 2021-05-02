@@ -84,7 +84,7 @@ class UserRole < ApplicationRecord
   end
 
   def owner?
-    self.name == 'Owner'
+    name == 'Owner'
   end
 
   private

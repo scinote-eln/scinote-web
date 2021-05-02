@@ -16,4 +16,4 @@
   }
 
   $(document).one('turbolinks:load', initRemoteDestroyListeners);
-})();
+}());

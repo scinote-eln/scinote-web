@@ -17,4 +17,4 @@
   }
 
   $(document).one('turbolinks:load', initFilterListListeners);
-})();
+}());

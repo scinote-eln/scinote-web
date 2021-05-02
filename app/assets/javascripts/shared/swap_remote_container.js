@@ -23,4 +23,4 @@
   }
 
   $(document).one('turbolinks:load', initSwapRemoteContainerListeners);
-})();
+}());

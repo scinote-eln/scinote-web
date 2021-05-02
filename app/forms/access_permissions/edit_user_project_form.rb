@@ -20,4 +20,3 @@ module AccessPermissions
     end
   end
 end
-

@@ -11,4 +11,3 @@ json.html controller.render_to_string(
   },
   layout: false
 )
-

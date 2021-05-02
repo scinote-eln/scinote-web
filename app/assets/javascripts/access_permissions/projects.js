@@ -5,7 +5,7 @@
     $(document).on('change', 'form#new-user-assignment-to-project-form', function() {
       let values = [];
       let count = 0;
-      let submitBtn = $(this).find('input[type="submit"]')
+      let submitBtn = $(this).find('input[type="submit"]');
 
       $(this).find('input:checked').each((_, el) => {
         let select = $(el).closest('.row').find('select');
@@ -42,4 +42,4 @@
   }
 
   $(document).one('turbolinks:load', initNewUserAssignmentFormListener);
-})();
+}());

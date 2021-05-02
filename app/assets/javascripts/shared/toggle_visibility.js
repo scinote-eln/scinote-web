@@ -15,4 +15,4 @@
   }
 
   $(document).one('turbolinks:load', initToggleVisibilityListeners);
-})();
+}());

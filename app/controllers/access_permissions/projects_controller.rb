@@ -3,8 +3,8 @@
 module AccessPermissions
   class ProjectsController < ApplicationController
     before_action :set_project
-    before_action :check_read_permissions, only: %i[show]
-    before_action :check_manage_permissions, only: %i[new create edit update destroy]
+    before_action :check_read_permissions, only: %i(show)
+    before_action :check_manage_permissions, only: %i(new create edit update destroy)
 
     def new
       available_users = current_team.users.where.not(id: @project.users.pluck(:id))
@@ -79,16 +79,16 @@ module AccessPermissions
 
     def permitted_update_params
       params.require(:project_member)
-            .permit(%i[user_role_id user_id])
+            .permit(%i(user_role_id user_id))
     end
 
     def permitted_create_params
       params.require(:access_permissions_new_user_project_form)
-            .permit(resource_members: %i[assign user_id user_role_id])
+            .permit(resource_members: %i(assign user_id user_role_id))
     end
 
     def set_project
-      @project = current_team.projects.includes(user_assignments: [:user, :user_role]).find_by(id: params[:id])
+      @project = current_team.projects.includes(user_assignments: %i(user user_role)).find_by(id: params[:id])
 
       render_404 unless @project
     end

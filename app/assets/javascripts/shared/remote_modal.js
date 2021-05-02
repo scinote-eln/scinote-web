@@ -10,10 +10,10 @@
         $(modal).modal('show')
                 .on("shown.bs.modal", function() {
           $(this).find(".selectpicker").selectpicker();
-        })
-      })
-    })
+        });
+      });
+    });
   }
 
   $(document).one('turbolinks:load', initRemoteModalListeners);
-})();
+}());

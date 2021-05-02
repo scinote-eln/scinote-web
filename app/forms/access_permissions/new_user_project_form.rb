@@ -11,7 +11,7 @@ module AccessPermissions
       @project = project
       @users = attributes[:users]
       @current_user = current_user
-      set_resource_members if @users
+      default_resource_members if @users
       @error = false
       @new_members_count = 0
     end
@@ -27,7 +27,7 @@ module AccessPermissions
 
     def resource_members=(attributes)
       @resource_members ||= []
-      attributes.fetch(:resource_members).each do |i, resource_member|
+      attributes.fetch(:resource_members).each do |_, resource_member|
         user = User.find(resource_member[:user_id])
         project_member = ProjectMember.new(user, @project, current_user)
         project_member.assign = resource_member[:assign]
@@ -40,7 +40,7 @@ module AccessPermissions
 
     private
 
-    def set_resource_members
+    def default_resource_members
       @resource_members ||= @users.order(:full_name).map { |u| ProjectMember.new(u, @project, current_user) }
     end
   end
