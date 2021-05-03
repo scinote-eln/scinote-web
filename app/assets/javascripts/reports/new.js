@@ -1159,7 +1159,7 @@ function reportHandsonTableConverter() {
       }
     }
 
-    $('.reports-new').on('change', '.report-experiment-checkbox', function() {
+    $('.project-contents-container').on('change', '.report-experiment-checkbox', function() {
       $(this).closest('li').find('.report-my-module-checkbox').prop('checked', this.checked);
       selectAllState();
       hideUnchekedElements($('.hide-unchecked-checkbox').prop('checked'));
@@ -1290,9 +1290,19 @@ function reportHandsonTableConverter() {
     SelectAllRepositoriesStatus();
   }
 
+  function initTemplateValuesContainer() {
+    $('.report-template-values-container').on('click', '.collapse-all', function() {
+      $('.report-template-values-container .values-container').collapse('hide');
+    })
+      .on('click', '.expand-all', function() {
+        $('.report-template-values-container .values-container').collapse('show');
+      });
+  }
+
   initGenerateButton();
   initReportWizard();
   initDropdowns();
   initTaskContents();
   initProjectContents();
+  initTemplateValuesContainer();
 }());
