@@ -6,6 +6,14 @@ module Reports
 
     queue_as :reports
 
+    discard_on StandardError do |job, error|
+      report = Report.find_by(id: job.arguments.first)
+      ActiveRecord::Base.no_touching do
+        report&.update(docx_file_processing: false)
+      end
+      Rails.logger.error("Couldn't generate DOCX for Report with id: #{job.arguments.first}. Error:\n #{error}")
+    end
+
     def perform(report, user, team, root_url)
       file = Tempfile.new(['report', '.docx'])
       begin
