@@ -30,7 +30,7 @@
 <table>
   <tr>
     <td colspan=1><%= render Reports::TextInputComponent.new(report: report, name: :report_file_name, label: 'Report file name', editing: false) %></td>
-    <td colspan=2 class="pagination">Page <span class="page"></span> of <span class="topage"></span></td>
+    <td colspan=2 class="pagination" data-page-offset="1">Page <span class="page"></span> of <span class="topage"></span></td>
     <td colspan=1><%= render Reports::DateInputComponent.new(report: report, name: :report_date, label: 'Date', editing: false) %></td>
   </tr>
 </table>
