@@ -1099,6 +1099,18 @@ function reportHandsonTableConverter() {
       return checked.length === all.length;
     }
 
+    function validateGenerateButtons() {
+      var validName = ($('.report-name').val().length >= GLOBAL_CONSTANTS.NAME_MIN_LENGTH);
+      var validContent = Object.keys(getReportData().project_content.experiments).length > 0;
+      if (validName && validContent) {
+        $('.generate-button').prop('disabled', false);
+        $(' #saveAsNewReport, #UpdateReport').removeClass('disabled');
+      } else {
+        $('.generate-button').prop('disabled', true);
+        $(' #saveAsNewReport, #UpdateReport').addClass('disabled');
+      }
+    }
+
     $('.continue-button').on('click', function() {
       nextStep();
     });
@@ -1132,6 +1144,11 @@ function reportHandsonTableConverter() {
       $('.protocol-steps-checkbox').prop('checked', allCheckboxesSelected($('.report-protocol-settings')));
       $('.all-results-checkbox').prop('checked', allCheckboxesSelected($('.report-result-settings')));
       $('.select-all-task-contents').prop('checked', allCheckboxesSelected($('.report-task-settings')));
+      validateGenerateButtons();
+    });
+
+    $('.report-name').on('change', function() {
+      validateGenerateButtons();
     });
   }
 
