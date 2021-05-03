@@ -1299,6 +1299,8 @@ function reportHandsonTableConverter() {
       });
   }
 
+  $('#reportWizardEditWarning').modal('show');
+
   initGenerateButton();
   initReportWizard();
   initDropdowns();
