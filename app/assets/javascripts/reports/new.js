@@ -1100,7 +1100,7 @@ function reportHandsonTableConverter() {
     }
 
     function validateGenerateButtons() {
-      var validName = ($('.report-name').val().length >= 2);
+      var validName = ($('.report-name').val().length >= GLOBAL_CONSTANTS.NAME_MIN_LENGTH);
       var validContent = Object.keys(getReportData().project_content.experiments).length > 0;
       if (validName && validContent) {
         $('.generate-button').prop('disabled', false);
