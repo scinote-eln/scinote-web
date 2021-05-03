@@ -9,9 +9,10 @@ describe ReportsController, type: :controller do
   let!(:team) { create :team, created_by: user }
   let!(:user_team) { create :user_team, team: team, user: user }
   let(:user_project) { create :user_project, :owner, user: user }
-  let(:project) do
-    create :project, team: team, user_projects: [user_project]
-  end
+  let(:project) { create :project, team: team, user_projects: [user_project] }
+  let(:experiment) { create :experiment, project: project }
+  let(:my_module1) { create :my_module, experiment: experiment }
+  let(:my_module2) { create :my_module, experiment: experiment }
   let(:report) do
     create :report, user: user, project: project, team: team,
                     name: 'test repot A1', description: 'test description A1'
@@ -23,9 +24,10 @@ describe ReportsController, type: :controller do
       let(:params) do
         { project_id: project.id,
           report: { name: 'test report created',
-                    description: 'test description created' },
-          report_contents: '[{"type_of":"project_header","id":{"project_id":' +
-            project.id.to_s + '},"sort_order":null,"children":[]}]' }
+                    description: 'test description created',
+                    settings: Report::DEFAULT_SETTINGS },
+          project_content: { experiments: { experiment.id => [my_module1.id] } },
+          template_values: [] }
       end
 
       it 'calls create activity service' do
@@ -49,8 +51,8 @@ describe ReportsController, type: :controller do
           id: report.id,
           report: { name: 'test report update',
                     description: 'test description update' },
-          report_contents: '[{"type_of":"project_header","id":{"project_id":' +
-            project.id.to_s + '},"sort_order":null,"children":[]}]' }
+          project_content: { experiments: { experiment.id => [my_module2.id] } },
+          template_values: [] }
       end
       it 'calls create activity service' do
         expect(Activities::CreateActivityService).to receive(:call)
