@@ -1,3 +1,4 @@
+<% protocol ||= my_module.protocol %>
 <% my_module = protocol.my_module %>
 <% for_export_all = defined?(export_all) && export_all %>
 <div class="report-element report-module-protocol-element" data-ts="<%= protocol.created_at %>" data-type="my_module_protocol" data-id='{ "my_module_id": <%= my_module.id %> }' data-scroll-id="<%= protocol.id %>">

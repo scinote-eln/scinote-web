@@ -17,12 +17,12 @@ module Reports
 
     PREVIEW_EXTENSIONS = %w(docx pdf).freeze
 
-    def perform(report, template, user)
+    def perform(report, user)
       file = Tempfile.new(['report', '.pdf'], binmode: true)
       begin
-        template_name = Extends::REPORT_TEMPLATES[template.to_sym]
+        template_name = Extends::REPORT_TEMPLATES[report.settings[:template]&.to_sym]
 
-        raise StandardError if template_name.blank?
+        raise StandardError, 'Report template not found!' if template_name.blank?
 
         ActionController::Renderer::RACK_KEY_TRANSLATION['warden'] ||= 'warden'
         proxy = Warden::Proxy.new({}, Warden::Manager.new({}))
