@@ -1,4 +1,4 @@
-/* global I18n DataTableHelpers animateSpinner HelperModule */
+/* global I18n DataTableHelpers animateSpinner HelperModule  Promise */
 
 (function() {
   'use strict';
@@ -76,7 +76,7 @@
     }
 
     if (data.preview_url) {
-      return `<a href="#" class="file-preview-link" data-preview-url="${data.preview_url}">
+      return `<a href="#" class="file-preview-link docx" data-preview-url="${data.preview_url}">
                 <i class="fas fa-file-word"></i>
                 ${I18n.t('projects.reports.index.docx')}
               </a>`;
@@ -100,7 +100,7 @@
     }
 
     if (data.preview_url) {
-      return `<a href="#" class="file-preview-link" data-preview-url="${data.preview_url}">
+      return `<a href="#" class="file-preview-link pdf" data-preview-url="${data.preview_url}">
                 <i class="fas fa-file-pdf"></i>
                 ${I18n.t('projects.reports.index.pdf')}
               </a>`;
@@ -247,35 +247,63 @@
     });
   }
 
-  function initGeneratePDFReport() {
-    $('.generate-pdf').click(function(ev) {
+  function generateReportRequest(pathAttrName) {
+    if (CHECKED_REPORTS.length === 1) {
+      let row = $(".report-row[data-id='" + CHECKED_REPORTS[0] + "']");
+      animateSpinner();
+      $.post(row.data(pathAttrName), function(response) {
+        animateSpinner(null, false);
+        HelperModule.flashAlertMsg(response.message, 'success');
+        checkProcessingStatus(row.data('id'));
+      });
+    }
+  }
+
+  function initUpdatePDFReport() {
+    $('#updatePdf').click(function(ev) {
       ev.stopPropagation();
       ev.preventDefault();
-      animateSpinner();
-      if (CHECKED_REPORTS.length === 1) {
-        let row = $(".report-row[data-id='" + CHECKED_REPORTS[0] + "']");
-        $.post(row.data('generate-pdf-path'), function(response) {
-          animateSpinner(null, false);
-          HelperModule.flashAlertMsg(response.message, 'success');
-          setTimeout(() => { checkProcessingStatus(row.data('id')); }, START_POLLING_INTERVAL);
+
+      new Promise(function(resolve, reject) {
+        $('#regenerate-report-modal').modal('show');
+        $('#regenerate-report-modal .btn-confirm').click(function() {
+          resolve();
         });
-      }
+        $('#regenerate-report-modal').on('hidden.bs.modal', function() {
+          reject();
+        });
+      }).then(function() {
+        $('#regenerate-report-modal').modal('hide');
+        generateReportRequest('generate-pdf-path');
+      }).catch(function() {});
     });
   }
 
   function initGenerateDocxReport() {
-    $('.generate-docx').click(function(ev) {
+    $('#requestDocx').click(function(ev) {
       ev.stopPropagation();
       ev.preventDefault();
-      animateSpinner();
-      if (CHECKED_REPORTS.length === 1) {
-        let row = $(".report-row[data-id='" + CHECKED_REPORTS[0] + "']");
-        $.post(row.data('generate-docx-path'), function(response) {
-          animateSpinner(null, false);
-          HelperModule.flashAlertMsg(response.message, 'success');
-          setTimeout(() => { checkProcessingStatus(row.data('id')); }, START_POLLING_INTERVAL);
+      generateReportRequest('generate-docx-path');
+    });
+  }
+
+  function initUpdateDocxReport() {
+    $('#updateDocx').click(function(ev) {
+      ev.stopPropagation();
+      ev.preventDefault();
+
+      new Promise(function(resolve, reject) {
+        $('#regenerate-report-modal').modal('show');
+        $('#regenerate-report-modal .btn-confirm').click(function() {
+          resolve();
         });
-      }
+        $('#regenerate-report-modal').on('hidden.bs.modal', function() {
+          reject();
+        });
+      }).then(function() {
+        $('#regenerate-report-modal').modal('hide');
+        generateReportRequest('generate-docx-path');
+      }).catch(function() {});
     });
   }
 
@@ -326,8 +354,9 @@
   }
 
   initDatatable();
-  initGeneratePDFReport();
+  initUpdatePDFReport();
   initGenerateDocxReport();
+  initUpdateDocxReport();
   initEditReport();
   initSaveReportPDFToInventory();
   initDeleteReports();

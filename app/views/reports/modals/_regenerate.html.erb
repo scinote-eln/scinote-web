@@ -1,0 +1,26 @@
+<div class="modal" id="regenerate-report-modal" tabindex="-1" role="dialog" aria-labelledby="regenerate-report-modal-label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="regenerate-report-modal-label">
+          <%= t('projects.reports.index.generation.regeneration_modal_title') %>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <%= t('projects.reports.index.generation.regeneration_modal_body') %>
+            <h4>
+              <%= t('projects.reports.index.generation.regeneration_modal_confirmation') %>
+            </h4>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.no_button') %></button>
+        <button type="button" class="btn btn-primary btn-confirm"><%= t('general.yes_button') %></button>
+      </div>
+    </div>
+  </div>
+</div>
