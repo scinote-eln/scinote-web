@@ -186,7 +186,7 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.json do
         @report.update!(pdf_file_processing: true)
-        Reports::PdfJob.perform_later(@report, @report.settings[:template], current_user)
+        Reports::PdfJob.perform_later(@report, current_user)
         render json: {
           message: I18n.t('projects.reports.index.generation.accepted_message')
         }
@@ -548,6 +548,6 @@ class ReportsController < ApplicationController
   end
 
   def generate_pdf_report
-    Reports::PdfJob.perform_later(@report, @report.settings[:template], current_user) if @report.persisted?
+    Reports::PdfJob.perform_later(@report, current_user) if @report.persisted?
   end
 end
