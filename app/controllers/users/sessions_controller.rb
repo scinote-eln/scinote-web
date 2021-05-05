@@ -2,7 +2,6 @@
 
 class Users::SessionsController < Devise::SessionsController
   layout :session_layout
-
   after_action :after_sign_in, only: %i(create authenticate_with_two_factor)
   before_action :remove_authenticate_mesasge_if_root_path, only: :new
 
@@ -23,7 +22,7 @@ class Users::SessionsController < Devise::SessionsController
   # POST /resource/sign_in
   def create
     super do |user|
-      if user.two_factor_auth_enabled?
+      if user.two_factor_auth_enabled? && !bypass_two_factor_auth?
         sign_out
         session[:otp_user_id] = user.id
         store_location_for(:user, request.original_fullpath) if request.get?
@@ -110,5 +109,9 @@ class Users::SessionsController < Devise::SessionsController
     else
       'layouts/main'
     end
+  end
+
+  def bypass_two_factor_auth?
+    false
   end
 end
