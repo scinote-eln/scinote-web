@@ -1060,7 +1060,7 @@ function reportHandsonTableConverter() {
       $.ajax({
         url: this.dataset.createUrl,
         type: 'POST',
-        data: JSON.stringify(getReportData()),
+        data: JSON.stringify(params),
         contentType: 'application/json; charset=utf-8',
 
         success: function() {}
