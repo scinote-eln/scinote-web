@@ -31,10 +31,10 @@ module Reports
 
         file << renderer.render(
           pdf: 'report', header: { html: { template: "reports/templates/#{template_name}/header",
-                                           locals: { report: report },
+                                           locals: { report: report, user: user },
                                            layout: 'reports/footer_header.html.erb' } },
                          footer: { html: { template: "reports/templates/#{template_name}/footer",
-                                           locals: { report: report },
+                                           locals: { report: report, user: user },
                                            layout: 'reports/footer_header.html.erb' } },
                          assigns: { settings: report.settings },
                          locals: { report: report },
@@ -104,6 +104,11 @@ module Reports
     end
 
     def prepend_title_page(file, template_name, report, renderer)
+
+      unless File.exists?(Rails.root.join('app', 'views', 'reports', 'templates', template_name, 'cover.html.erb'))
+        return file
+      end
+
       total_pages = 0
 
       IO.popen(['pdfinfo', file.path], 'r+') do |f|
