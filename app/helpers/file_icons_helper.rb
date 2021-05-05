@@ -48,7 +48,7 @@ module FileIconsHelper
     if image_link
       if report
         image_tag("data:image/svg+xml;base64,#{
-          Base64.encode64(File.read('app/assets/images/' + image_link))
+          Base64.encode64(File.read(Rails.root.join('app/assets/images/', image_link)))
         }", class: 'image-icon')
       else
         ActionController::Base.helpers.image_tag(image_link, class: 'image-icon')
