@@ -5,7 +5,6 @@ class Users::SessionsController < Devise::SessionsController
 
   after_action :after_sign_in, only: %i(create authenticate_with_two_factor)
   before_action :remove_authenticate_mesasge_if_root_path, only: :new
-  prepend_before_action :redirect_2fa, only: :create
 
   rescue_from ActionController::InvalidAuthenticityToken do
     redirect_to new_user_session_path
@@ -23,8 +22,15 @@ class Users::SessionsController < Devise::SessionsController
 
   # POST /resource/sign_in
   def create
-    super
-
+    super do |user|
+      if user.two_factor_auth_enabled?
+        sign_out
+        session[:otp_user_id] = user.id
+        store_location_for(:user, request.original_fullpath) if request.get?
+        redirect_to users_two_factor_auth_path
+        return
+      end
+    end
     generate_templates_project
   end
 
@@ -34,10 +40,8 @@ class Users::SessionsController < Devise::SessionsController
     end
   end
 
-  # DELETE /resource/sign_out
-  # def destroy
-  #   super
-  # end
+  def two_factor_auth
+  end
 
   def after_sign_in
     flash[:system_notification_modal] = true
@@ -90,18 +94,6 @@ class Users::SessionsController < Devise::SessionsController
   def remove_authenticate_mesasge_if_root_path
     if session[:user_return_to] == root_path && flash[:alert] == I18n.t('devise.failure.unauthenticated')
       flash[:alert] = nil
-    end
-  end
-
-  def redirect_2fa
-    user = User.find_by(email: params[:user][:email])
-
-    return unless user&.valid_password?(params[:user][:password])
-
-    if user&.two_factor_auth_enabled?
-      session[:otp_user_id] = user.id
-      store_location_for(:user, request.original_fullpath) if request.get?
-      render :two_factor_auth
     end
   end
 
