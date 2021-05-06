@@ -353,6 +353,8 @@
     });
   }
 
+  $('#show_report_preview').click();
+
   initDatatable();
   initUpdatePDFReport();
   initGenerateDocxReport();
