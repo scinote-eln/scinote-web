@@ -421,6 +421,7 @@ class Extends
   ]
 
   REPORT_TEMPLATES = {
+    scinote_template: 'scinote_template',
     template_1: 'template_1',
     template_2: 'template_2',
     template_3: 'template_3'
