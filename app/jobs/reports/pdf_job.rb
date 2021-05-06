@@ -20,9 +20,10 @@ module Reports
     def perform(report, user)
       file = Tempfile.new(['report', '.pdf'], binmode: true)
       begin
-        template_name = Extends::REPORT_TEMPLATES[report.settings[:template]&.to_sym]
+        template = Extends::REPORT_TEMPLATES[report.settings[:template]&.to_sym]
+        template ||= Extends::REPORT_TEMPLATES.values.first
 
-        raise StandardError, 'Report template not found!' if template_name.blank?
+        raise StandardError, 'Report template not found!' if template.blank?
 
         ActionController::Renderer::RACK_KEY_TRANSLATION['warden'] ||= 'warden'
         proxy = Warden::Proxy.new({}, Warden::Manager.new({}))
@@ -30,10 +31,10 @@ module Reports
         renderer = ApplicationController.renderer.new(warden: proxy)
 
         file << renderer.render(
-          pdf: 'report', header: { html: { template: "reports/templates/#{template_name}/header",
+          pdf: 'report', header: { html: { template: "reports/templates/#{template}/header",
                                            locals: { report: report, user: user },
                                            layout: 'reports/footer_header.html.erb' } },
-                         footer: { html: { template: "reports/templates/#{template_name}/footer",
+                         footer: { html: { template: "reports/templates/#{template}/footer",
                                            locals: { report: report, user: user },
                                            layout: 'reports/footer_header.html.erb' } },
                          assigns: { settings: report.settings },
@@ -44,7 +45,7 @@ module Reports
 
         file.rewind
 
-        file = prepend_title_page(file, template_name, report, renderer)
+        file = prepend_title_page(file, template, report, renderer)
 
         file = append_result_asset_previews(report, file) if report.settings.dig(:task, :file_results_previews)
 
@@ -103,9 +104,8 @@ module Reports
       merged_file
     end
 
-    def prepend_title_page(file, template_name, report, renderer)
-
-      unless File.exists?(Rails.root.join('app', 'views', 'reports', 'templates', template_name, 'cover.html.erb'))
+    def prepend_title_page(file, template, report, renderer)
+      unless File.exist?(Rails.root.join('app', 'views', 'reports', 'templates', template, 'cover.html.erb'))
         return file
       end
 
@@ -121,7 +121,7 @@ module Reports
       merged_file = Tempfile.new(['report', '.pdf'], binmode: true)
 
       title_page << renderer.render(
-        pdf: 'report', inline: renderer.render_to_string("reports/templates/#{template_name}/cover.html.erb",
+        pdf: 'report', inline: renderer.render_to_string("reports/templates/#{template}/cover.html.erb",
                                                          layout: false,
                                                          locals: { report: report, total_pages: total_pages.to_i }),
                        disable_javascript: false,
