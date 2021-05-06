@@ -1,4 +1,4 @@
-/* globals animateSpinner GLOBAL_CONSTANTS dropdownSelector */
+/* globals animateSpinner GLOBAL_CONSTANTS dropdownSelector HelperModule */
 
 var REPORT_CONTENT = '#report-content';
 var ADD_CONTENTS_FORM_ID = '#add-contents-form';
@@ -1049,7 +1049,10 @@ function reportHandsonTableConverter() {
         type: 'POST',
         data: JSON.stringify(getReportData()),
         contentType: 'application/json; charset=utf-8',
-        success: function() {}
+        success: function() {},
+        error: function(jqxhr) {
+          HelperModule.flashAlertMsg(jqxhr.responseJSON.join(' '), 'danger');
+        }
       });
     });
 
@@ -1062,8 +1065,10 @@ function reportHandsonTableConverter() {
         type: 'POST',
         data: JSON.stringify(getReportData()),
         contentType: 'application/json; charset=utf-8',
-
-        success: function() {}
+        success: function() {},
+        error: function(jqxhr) {
+          HelperModule.flashAlertMsg(jqxhr.responseJSON.join(' '), 'danger');
+        }
       });
     });
 
@@ -1075,7 +1080,10 @@ function reportHandsonTableConverter() {
         url: this.dataset.updateUrl,
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(getReportData()),
-        success: function() {}
+        success: function() {},
+        error: function(jqxhr) {
+          HelperModule.flashAlertMsg(jqxhr.responseJSON.join(' '), 'danger');
+        }
       });
     });
   }

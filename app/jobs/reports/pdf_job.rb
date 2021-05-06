@@ -17,7 +17,8 @@ module Reports
 
     PREVIEW_EXTENSIONS = %w(docx pdf).freeze
 
-    def perform(report, user)
+    def perform(report_id, user)
+      report = Report.find(report_id)
       file = Tempfile.new(['report', '.pdf'], binmode: true)
       begin
         template_name = Extends::REPORT_TEMPLATES[report.settings[:template]&.to_sym]
@@ -61,8 +62,7 @@ module Reports
         )
         notification.create_user_notification(user)
       ensure
-        file.close
-        file.unlink
+        file.close(true)
       end
     end
 
@@ -98,8 +98,9 @@ module Reports
         raise StandardError, 'There was an error merging report and PDF file preview'
       end
 
-      report_file.close
-      report_file.unlink
+      file.close(true)
+      report_file.close(true)
+
       merged_file
     end
 
@@ -131,11 +132,8 @@ module Reports
 
       raise StandardError, 'There was an error merging report and title page' unless success && File.file?(merged_file)
 
-      file.close
-      file.unlink
-
-      title_page.close
-      title_page.unlink
+      file.close(true)
+      title_page.close(true)
 
       merged_file
     end
