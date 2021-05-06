@@ -6,6 +6,7 @@
   const RETRY_COUNT = 25;
   const START_POLLING_INTERVAL = 10000;
   var CHECKED_REPORTS = [];
+  var REPORTS_TABLE;
 
   function tableDrowCallback() {
     checkboxToggleCallback();
@@ -200,7 +201,7 @@
 
   function initDatatable() {
     var $table = $('#reports-table');
-    $table.dataTable({
+    REPORTS_TABLE = $table.DataTable({
       dom: "Rt<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
       order: [[2, 'desc']],
       sScrollX: '100%',
@@ -245,6 +246,12 @@
         });
       }
     });
+  }
+
+  function reloadTable() {
+    REPORTS_TABLE.ajax.reload(null, false);
+    removeAllItems();
+    updateButtons();
   }
 
   function generateReportRequest(pathAttrName) {
