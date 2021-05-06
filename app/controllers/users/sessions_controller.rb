@@ -22,7 +22,7 @@ class Users::SessionsController < Devise::SessionsController
   # POST /resource/sign_in
   def create
     super do |user|
-      if user.two_factor_auth_enabled? && !bypass_two_factor_auth?
+      if redirect_to_two_factor_auth?(user)
         sign_out
         session[:otp_user_id] = user.id
         store_location_for(:user, request.original_fullpath) if request.get?
@@ -113,5 +113,9 @@ class Users::SessionsController < Devise::SessionsController
 
   def bypass_two_factor_auth?
     false
+  end
+
+  def redirect_to_two_factor_auth?(user)
+    user.two_factor_auth_enabled? && !bypass_two_factor_auth?
   end
 end
