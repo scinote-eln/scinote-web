@@ -22,7 +22,8 @@ module Reports
         docx.save
         report.docx_file.attach(io: file, filename: 'report.docx')
         report.update!(docx_file_processing: false)
-        report_path = Rails.application.routes.url_helpers.reports_path
+        report_path = Rails.application.routes.url_helpers
+                           .reports_path(team: report.team.id, preview_report_id: report.id, preview_type: :docx)
         notification = Notification.create(
           type_of: :deliver,
           title: I18n.t('projects.reports.index.generation.completed_docx_notification_title'),
