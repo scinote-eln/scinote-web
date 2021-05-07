@@ -35,6 +35,7 @@ class Report < ApplicationRecord
            dependent: :delete_all
 
   DEFAULT_SETTINGS = {
+    template: 'scinote_template',
     all_tasks: true,
     task: {
       protocol: {

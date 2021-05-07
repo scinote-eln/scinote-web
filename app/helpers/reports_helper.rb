@@ -93,7 +93,6 @@ module ReportsHelper
       element.element_references.each do |el_ref|
         locals[el_ref.class.name.underscore.to_sym] = el_ref
       end
-      locals[:order] = element.sort_order if type.in? ReportExtends::SORTED_ELEMENTS
     end
 
     (render partial: view, locals: locals).html_safe
@@ -102,8 +101,9 @@ module ReportsHelper
   # "Hack" to omit file preview URL because of WKHTML issues
   def report_image_asset_url(asset)
     preview = asset.inline? ? asset.large_preview : asset.medium_preview
-    image_tag(preview.processed
-                     .service_url(expires_in: Constants::URL_LONG_EXPIRE_TIME))
+    image_tag(preview.processed.service_url(expires_in: Constants::URL_LONG_EXPIRE_TIME))
+  rescue ActiveStorage::FileNotFoundError
+    image_tag('icon_small/missing.png')
   end
 
   # "Hack" to load Glyphicons css directly from the CDN

@@ -110,6 +110,7 @@ class ReportsController < ApplicationController
     @edit = true
     @templates = Extends::REPORT_TEMPLATES
     @repositories = Repository.accessible_by_teams(current_team).active.select(:id, :name)
+    @report.settings = Report::DEFAULT_SETTINGS if @report.settings.blank?
 
     @project_contents = {
       experiments: @report.report_elements.where(type_of: 'experiment').pluck(:experiment_id),

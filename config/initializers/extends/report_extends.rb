@@ -112,12 +112,6 @@ module ReportExtends
   # path: app/helpers/reports_helpers.rb
   # method: render_report_element
 
-  # adds :order local to listed elements views
-  # ADD REPORT ELEMENT TYPE WHICH YOU WANT TO PASS 'ORDER' LOCAL IN THE PARTIAL
-  SORTED_ELEMENTS = %w(my_module_activity
-                       my_module_repository
-                       step_comments
-                       result_comments)
   # sets local :my_module to the listed my_module child elements
   MY_MODULE_ELEMENTS = %w(my_module
                           my_module_protocol
