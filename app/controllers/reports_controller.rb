@@ -188,6 +188,7 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.json do
         @report.update!(pdf_file_processing: true)
+        log_activity(:generate_pdf_report)
         Reports::PdfJob.perform_later(@report, current_user)
         render json: {
           message: I18n.t('projects.reports.index.generation.accepted_message')
@@ -200,6 +201,7 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.json do
         @report.update!(docx_file_processing: true)
+        log_activity(:generate_docx_report)
         Reports::DocxJob.perform_later(@report, current_user, current_team, root_url)
         render json: {
           message: I18n.t('projects.reports.index.generation.accepted_message')
@@ -550,6 +552,7 @@ class ReportsController < ApplicationController
   end
 
   def generate_pdf_report
+    log_activity(:generate_pdf_report)
     Reports::PdfJob.perform_later(@report, current_user) if @report.persisted?
   end
 end
