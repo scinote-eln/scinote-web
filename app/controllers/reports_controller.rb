@@ -510,9 +510,12 @@ class ReportsController < ApplicationController
 
   def load_visible_projects
     render_404 unless current_team
-    @visible_projects = Project.viewable_by_user(
-      current_user, current_team
-    ).select(:id, :name)
+    @visible_projects = Project.active
+                               .viewable_by_user(current_user, current_team)
+                               .joins(experiments: :my_modules)
+                               .merge(Experiment.active)
+                               .merge(MyModule.active)
+                               .select(:id, :name)
   end
 
   def load_available_repositories
