@@ -90,19 +90,20 @@ class ReportsController < ApplicationController
     @report.pdf_file_processing = true
     @report.settings = report_params[:settings]
     @report.last_modified_by = current_user
-    @report = ReportActions::ReportContent.new(
+
+    ReportActions::ReportContent.new(
       @report,
       params[:project_content],
       params[:template_values],
       current_user
     ).save_with_content
 
-    if @report
+    if @report.errors.blank?
       log_activity(:create_report)
 
       redirect_to reports_path
     else
-      render json: @report.errors, status: :unprocessable_entity
+      render json: @report.errors.full_messages, status: :unprocessable_entity
     end
   end
 
@@ -126,19 +127,19 @@ class ReportsController < ApplicationController
     @report.pdf_file_processing = true
     @report.assign_attributes(report_params)
 
-    @report = ReportActions::ReportContent.new(
+    ReportActions::ReportContent.new(
       @report,
       params[:project_content],
       params[:template_values],
       current_user
     ).save_with_content
 
-    if @report
+    if @report.errors.blank?
       log_activity(:edit_report)
 
       redirect_to reports_path
     else
-      render json: @report.errors, status: :unprocessable_entity
+      render json: @report.errors.full_messages, status: :unprocessable_entity
     end
   end
 

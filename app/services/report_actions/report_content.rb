@@ -13,6 +13,9 @@ module ReportActions
       @element_position = 0
       @report = report
       @template_values = template_values
+      @assigned_repositories = report.project.assigned_repositories_and_snapshots.select do |repository|
+        @content['repositories'].include?(repository.id)
+      end
     end
 
     def save_with_content
@@ -24,7 +27,13 @@ module ReportActions
         @report.report_elements.destroy_all
 
         # Save new report elements
-        generate_content
+        begin
+          generate_content
+        rescue StandardError => e
+          @report.errors.add(:content_error, I18n.t('projects.reports.index.generation.content_generation_error'))
+          Rails.logger.error e.message
+          raise ActiveRecord::Rollback
+        end
 
         # Delete existing template values
         @report.report_template_values.destroy_all
@@ -34,12 +43,10 @@ module ReportActions
           # Save new template values
           @report.report_template_values.create!(formatted_template_values)
         end
+      rescue ActiveRecord::ActiveRecordError, ArgumentError => e
+        Rails.logger.error e.message
+        raise ActiveRecord::Rollback
       end
-
-      @report
-    rescue ActiveRecord::ActiveRecordError, ArgumentError => e
-      Rails.logger.error e.message
-      raise ActiveRecord::Rollback
     end
 
     private
@@ -54,22 +61,19 @@ module ReportActions
       experiment = Experiment.find_by(id: exp_id)
       return if !experiment && !can_read_experiment?(experiment, @user)
 
-      experiment_element = save_element({ 'experiment_id' => experiment.id }, :experiment, nil)
+      experiment_element = save_element!({ 'experiment_id' => experiment.id }, :experiment, nil)
       generate_my_modules_content(experiment, experiment_element, my_modules)
     end
 
     def generate_my_modules_content(experiment, experiment_element, selected_my_modules)
       my_modules = experiment.my_modules
                              .active
-                             .includes(:results, protocols: [:steps])
                              .where(id: selected_my_modules)
       my_modules.sort_by { |m| selected_my_modules.index m.id }.each do |my_module|
-        my_module_element = save_element({ 'my_module_id' => my_module.id }, :my_module, experiment_element)
+        my_module_element = save_element!({ 'my_module_id' => my_module.id }, :my_module, experiment_element)
 
-        my_module.experiment.project.assigned_repositories_and_snapshots.each do |repository|
-          next unless @content['repositories'].include?(repository.id)
-
-          save_element(
+        @assigned_repositories.each do |repository|
+          save_element!(
             { 'my_module_id' => my_module.id, 'repository_id' => repository.id },
             :my_module_repository,
             my_module_element
@@ -82,7 +86,7 @@ module ReportActions
       end
     end
 
-    def save_element(reference, type_of, parent)
+    def save_element!(reference, type_of, parent)
       el = ReportElement.new
       el.position = @element_position
       el.report = @report
