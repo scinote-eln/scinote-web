@@ -1060,7 +1060,7 @@ function reportHandsonTableConverter() {
       $.ajax({
         url: this.dataset.createUrl,
         type: 'POST',
-        data: JSON.stringify(getReportData()),
+        data: JSON.stringify(params),
         contentType: 'application/json; charset=utf-8',
 
         success: function() {}
@@ -1127,10 +1127,11 @@ function reportHandsonTableConverter() {
     $('.reports-new-body [href="#new-report-step-2"]').on('show.bs.tab', function() {
       var projectContents = $('#new-report-step-2').find('.project-contents');
       var projectId = dropdownSelector.getValues('#projectSelector');
-      if (projectContents.data('project-id') !== parseInt(projectId, 10)) {
+      if (parseInt(projectContents.attr('data-project-id'), 10) !== parseInt(projectId, 10)) {
         animateSpinner('.reports-new-body');
         $.get(projectContents.data('project-content-url'), { project_id: projectId }, function(data) {
           animateSpinner('.reports-new-body', false);
+          projectContents.attr('data-project-id', projectId);
           projectContents.html(data.html);
           if ($('.select-all-my-modules-checkbox').prop('checked')) {
             $('.select-all-my-modules-checkbox').trigger('change');
@@ -1230,6 +1231,12 @@ function reportHandsonTableConverter() {
       noEmptyOption: true,
       selectAppearance: 'simple',
       onChange: function() {
+        let projectContents = $('#new-report-step-2').find('.project-contents');
+        let loadedProjectId = parseInt(projectContents.attr('data-project-id'), 10);
+        let projectId = parseInt(dropdownSelector.getValues('#projectSelector'), 10);
+        if (!Number.isNaN(loadedProjectId) && loadedProjectId !== projectId) {
+          $('#projectReportWarningModal').modal('show');
+        }
         $('.continue-button').attr('disabled', false);
       }
     });
@@ -1241,23 +1248,38 @@ function reportHandsonTableConverter() {
       selectAppearance: 'simple',
       disableSearch: true,
       onChange: function() {
-        let template = $('#templateSelector').val();
-        let params = {
-          project_id: dropdownSelector.getValues('#projectSelector'),
-          template: template
-        };
-        $.get($('#templateSelector').data('valuesEditorPath'), params, function(result) {
-          $('.report-template-values-container').html(result.html);
-          $('.report-template-value-dropdown').each(function() {
-            dropdownSelector.init($(this), {
-              singleSelect: false,
-              closeOnSelect: true,
-              noEmptyOption: true,
-              selectAppearance: 'simple'
-            });
-          });
-        });
+        let filledFieldsCount = $('.report-template-values-container')
+          .find('input.sci-input-field, textarea.sci-input-field').filter(function () {
+            return !!this.value;
+          }).length;
+
+        if (filledFieldsCount === 0) {
+          loadTemplate();
+        } else {
+          $('#templateReportWarningModal').modal('show');
+        }
       }
+    });
+  }
+
+  function loadTemplate() {
+    let template = $('#templateSelector').val();
+    let params = {
+      project_id: dropdownSelector.getValues('#projectSelector'),
+      template: template
+    };
+
+    $('#templateSelector').data('selected-template', template);
+    $.get($('#templateSelector').data('valuesEditorPath'), params, function(result) {
+      $('.report-template-values-container').html(result.html);
+      $('.report-template-value-dropdown').each(function() {
+        dropdownSelector.init($(this), {
+          singleSelect: false,
+          closeOnSelect: true,
+          noEmptyOption: true,
+          selectAppearance: 'simple'
+        });
+      });
     });
   }
 
@@ -1315,6 +1337,23 @@ function reportHandsonTableConverter() {
         $('.report-template-values-container .values-container').collapse('show');
       });
   }
+
+  $('#templateReportWarningModal')
+    .on('click', '#loadSelectedTemplate', function() {
+      loadTemplate();
+      $('#templateReportWarningModal').modal('hide');
+    })
+    .on('click', '#cancelTemplateChange', function() {
+      let previousTemplate = $('#templateSelector').data('selected-template');
+      dropdownSelector.selectValues('#templateSelector', previousTemplate);
+      $('#templateReportWarningModal').modal('hide');
+    });
+
+  $('#projectReportWarningModal').on('click', '#cancelProjectChange', function() {
+    let loadedProjectId = $('#new-report-step-2').find('.project-contents').attr('data-project-id');
+    dropdownSelector.selectValues('#projectSelector', loadedProjectId);
+    $('#projectReportWarningModal').modal('hide');
+  });
 
   $('#reportWizardEditWarning').modal('show');
 
