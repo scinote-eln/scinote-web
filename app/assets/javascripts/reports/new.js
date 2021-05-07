@@ -1060,7 +1060,7 @@ function reportHandsonTableConverter() {
       $.ajax({
         url: this.dataset.createUrl,
         type: 'POST',
-        data: JSON.stringify(getReportData()),
+        data: JSON.stringify(params),
         contentType: 'application/json; charset=utf-8',
 
         success: function() {}
@@ -1099,6 +1099,18 @@ function reportHandsonTableConverter() {
       return checked.length === all.length;
     }
 
+    function validateGenerateButtons() {
+      var validName = ($('.report-name').val().length >= GLOBAL_CONSTANTS.NAME_MIN_LENGTH);
+      var validContent = Object.keys(getReportData().project_content.experiments).length > 0;
+      if (validName && validContent) {
+        $('.generate-button').prop('disabled', false);
+        $(' #saveAsNewReport, #UpdateReport').removeClass('disabled');
+      } else {
+        $('.generate-button').prop('disabled', true);
+        $(' #saveAsNewReport, #UpdateReport').addClass('disabled');
+      }
+    }
+
     $('.continue-button').on('click', function() {
       nextStep();
     });
@@ -1115,10 +1127,11 @@ function reportHandsonTableConverter() {
     $('.reports-new-body [href="#new-report-step-2"]').on('show.bs.tab', function() {
       var projectContents = $('#new-report-step-2').find('.project-contents');
       var projectId = dropdownSelector.getValues('#projectSelector');
-      if (projectContents.data('project-id') !== parseInt(projectId, 10)) {
+      if (parseInt(projectContents.attr('data-project-id'), 10) !== parseInt(projectId, 10)) {
         animateSpinner('.reports-new-body');
         $.get(projectContents.data('project-content-url'), { project_id: projectId }, function(data) {
           animateSpinner('.reports-new-body', false);
+          projectContents.attr('data-project-id', projectId);
           projectContents.html(data.html);
           if ($('.select-all-my-modules-checkbox').prop('checked')) {
             $('.select-all-my-modules-checkbox').trigger('change');
@@ -1132,6 +1145,11 @@ function reportHandsonTableConverter() {
       $('.protocol-steps-checkbox').prop('checked', allCheckboxesSelected($('.report-protocol-settings')));
       $('.all-results-checkbox').prop('checked', allCheckboxesSelected($('.report-result-settings')));
       $('.select-all-task-contents').prop('checked', allCheckboxesSelected($('.report-task-settings')));
+      validateGenerateButtons();
+    });
+
+    $('.report-name').on('change', function() {
+      validateGenerateButtons();
     });
   }
 
@@ -1159,7 +1177,7 @@ function reportHandsonTableConverter() {
       }
     }
 
-    $('.reports-new').on('change', '.report-experiment-checkbox', function() {
+    $('.project-contents-container').on('change', '.report-experiment-checkbox', function() {
       $(this).closest('li').find('.report-my-module-checkbox').prop('checked', this.checked);
       selectAllState();
       hideUnchekedElements($('.hide-unchecked-checkbox').prop('checked'));
@@ -1213,6 +1231,12 @@ function reportHandsonTableConverter() {
       noEmptyOption: true,
       selectAppearance: 'simple',
       onChange: function() {
+        let projectContents = $('#new-report-step-2').find('.project-contents');
+        let loadedProjectId = parseInt(projectContents.attr('data-project-id'), 10);
+        let projectId = parseInt(dropdownSelector.getValues('#projectSelector'), 10);
+        if (!Number.isNaN(loadedProjectId) && loadedProjectId !== projectId) {
+          $('#projectReportWarningModal').modal('show');
+        }
         $('.continue-button').attr('disabled', false);
       }
     });
@@ -1224,23 +1248,38 @@ function reportHandsonTableConverter() {
       selectAppearance: 'simple',
       disableSearch: true,
       onChange: function() {
-        let template = $('#templateSelector').val();
-        let params = {
-          project_id: dropdownSelector.getValues('#projectSelector'),
-          template: template
-        };
-        $.get($('#templateSelector').data('valuesEditorPath'), params, function(result) {
-          $('.report-template-values-container').html(result.html);
-          $('.report-template-value-dropdown').each(function() {
-            dropdownSelector.init($(this), {
-              singleSelect: false,
-              closeOnSelect: true,
-              noEmptyOption: true,
-              selectAppearance: 'simple'
-            });
-          });
-        });
+        let filledFieldsCount = $('.report-template-values-container')
+          .find('input.sci-input-field, textarea.sci-input-field').filter(function () {
+            return !!this.value;
+          }).length;
+
+        if (filledFieldsCount === 0) {
+          loadTemplate();
+        } else {
+          $('#templateReportWarningModal').modal('show');
+        }
       }
+    });
+  }
+
+  function loadTemplate() {
+    let template = $('#templateSelector').val();
+    let params = {
+      project_id: dropdownSelector.getValues('#projectSelector'),
+      template: template
+    };
+
+    $('#templateSelector').data('selected-template', template);
+    $.get($('#templateSelector').data('valuesEditorPath'), params, function(result) {
+      $('.report-template-values-container').html(result.html);
+      $('.report-template-value-dropdown').each(function() {
+        dropdownSelector.init($(this), {
+          singleSelect: false,
+          closeOnSelect: true,
+          noEmptyOption: true,
+          selectAppearance: 'simple'
+        });
+      });
     });
   }
 
@@ -1290,9 +1329,38 @@ function reportHandsonTableConverter() {
     SelectAllRepositoriesStatus();
   }
 
+  function initTemplateValuesContainer() {
+    $('.report-template-values-container').on('click', '.collapse-all', function() {
+      $('.report-template-values-container .values-container').collapse('hide');
+    })
+      .on('click', '.expand-all', function() {
+        $('.report-template-values-container .values-container').collapse('show');
+      });
+  }
+
+  $('#templateReportWarningModal')
+    .on('click', '#loadSelectedTemplate', function() {
+      loadTemplate();
+      $('#templateReportWarningModal').modal('hide');
+    })
+    .on('click', '#cancelTemplateChange', function() {
+      let previousTemplate = $('#templateSelector').data('selected-template');
+      dropdownSelector.selectValues('#templateSelector', previousTemplate);
+      $('#templateReportWarningModal').modal('hide');
+    });
+
+  $('#projectReportWarningModal').on('click', '#cancelProjectChange', function() {
+    let loadedProjectId = $('#new-report-step-2').find('.project-contents').attr('data-project-id');
+    dropdownSelector.selectValues('#projectSelector', loadedProjectId);
+    $('#projectReportWarningModal').modal('hide');
+  });
+
+  $('#reportWizardEditWarning').modal('show');
+
   initGenerateButton();
   initReportWizard();
   initDropdowns();
   initTaskContents();
   initProjectContents();
+  initTemplateValuesContainer();
 }());

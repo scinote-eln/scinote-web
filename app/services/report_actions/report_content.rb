@@ -29,9 +29,11 @@ module ReportActions
         # Delete existing template values
         @report.report_template_values.destroy_all
 
-        formatted_template_values = @template_values.as_json.map { |k, v| v['name'] = k; v }
-        # Save new template values
-        @report.report_template_values.create!(formatted_template_values)
+        if @template_values.present?
+          formatted_template_values = @template_values.as_json.map { |k, v| v['name'] = k; v }
+          # Save new template values
+          @report.report_template_values.create!(formatted_template_values)
+        end
       end
 
       @report

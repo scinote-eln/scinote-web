@@ -6,6 +6,14 @@ module Reports
 
     queue_as :reports
 
+    discard_on StandardError do |job, error|
+      report = Report.find_by(id: job.arguments.first)
+      ActiveRecord::Base.no_touching do
+        report&.update(docx_file_processing: false)
+      end
+      Rails.logger.error("Couldn't generate DOCX for Report with id: #{job.arguments.first}. Error:\n #{error}")
+    end
+
     def perform(report, user, team, root_url)
       file = Tempfile.new(['report', '.docx'])
       begin
@@ -17,7 +25,7 @@ module Reports
         report_path = Rails.application.routes.url_helpers.reports_path
         notification = Notification.create(
           type_of: :deliver,
-          title: I18n.t('projects.reports.index.generation.completed_notification_title'),
+          title: I18n.t('projects.reports.index.generation.completed_docx_notification_title'),
           message: I18n.t('projects.reports.index.generation.completed_notification_message',
                           report_link: "<a href='#{report_path}'>#{sanitize_input(report.name)}</a>",
                           team_name: sanitize_input(report.team.name))

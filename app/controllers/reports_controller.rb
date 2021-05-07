@@ -87,6 +87,7 @@ class ReportsController < ApplicationController
     @report.project = @project
     @report.user = current_user
     @report.team = current_team
+    @report.pdf_file_processing = true
     @report.settings = report_params[:settings]
     @report.last_modified_by = current_user
     @report = ReportActions::ReportContent.new(
@@ -121,6 +122,7 @@ class ReportsController < ApplicationController
   # Updating existing report from the _save modal of the new page
   def update
     @report.last_modified_by = current_user
+    @report.pdf_file_processing = true
     @report.assign_attributes(report_params)
 
     @report = ReportActions::ReportContent.new(
@@ -186,7 +188,7 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.json do
         @report.update!(pdf_file_processing: true)
-        Reports::PdfJob.perform_later(@report, @report.settings[:template], current_user)
+        Reports::PdfJob.perform_later(@report, current_user)
         render json: {
           message: I18n.t('projects.reports.index.generation.accepted_message')
         }
@@ -548,6 +550,6 @@ class ReportsController < ApplicationController
   end
 
   def generate_pdf_report
-    Reports::PdfJob.perform_later(@report, @report.settings[:template], current_user) if @report.persisted?
+    Reports::PdfJob.perform_later(@report, current_user) if @report.persisted?
   end
 end
