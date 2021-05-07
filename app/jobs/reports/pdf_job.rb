@@ -53,7 +53,8 @@ module Reports
         report.pdf_file.attach(io: file, filename: 'report.pdf')
         report.update!(pdf_file_processing: false)
 
-        report_path = Rails.application.routes.url_helpers.reports_path
+        report_path = Rails.application.routes.url_helpers
+                           .reports_path(team: report.team.id, preview_report_id: report.id, preview_type: :pdf)
         notification = Notification.create(
           type_of: :deliver,
           title: I18n.t('projects.reports.index.generation.completed_pdf_notification_title'),
