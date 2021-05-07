@@ -100,6 +100,7 @@ class ReportsController < ApplicationController
 
     if @report.errors.blank?
       log_activity(:create_report)
+      flash[:success] = t('projects.reports.index.generation.accepted_message')
 
       redirect_to reports_path
     else
@@ -136,6 +137,7 @@ class ReportsController < ApplicationController
 
     if @report.errors.blank?
       log_activity(:edit_report)
+      flash[:success] = t('projects.reports.index.generation.accepted_message')
 
       redirect_to reports_path
     else
