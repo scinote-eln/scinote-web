@@ -25,9 +25,8 @@ class Experiment < ApplicationRecord
   has_many :activities, inverse_of: :experiment
   has_many :user_assignments, as: :assignable, dependent: :destroy
   has_many :users, through: :user_assignments
-  has_one_attached :workflowimg
 
-  alias_attribute :project, :permission_parent
+  has_one_attached :workflowimg
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name, length: { minimum: Constants::NAME_MIN_LENGTH, maximum: Constants::NAME_MAX_LENGTH }
@@ -237,6 +236,10 @@ class Experiment < ApplicationRecord
       arr
     end
     projects - [project]
+  end
+
+  def permission_parent
+    project
   end
 
   private

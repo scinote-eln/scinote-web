@@ -59,8 +59,6 @@ class MyModule < ApplicationRecord
   # Associations for old activity type
   has_many :activities, inverse_of: :my_module
 
-  alias_attribute :experiment, :permission_parent
-
   default_scope { includes(user_assignments: :user_role) }
 
   scope :overdue, -> { where('my_modules.due_date < ?', Time.current.utc) }
@@ -429,6 +427,10 @@ class MyModule < ApplicationRecord
 
   def comments
     task_comments
+  end
+
+  def permission_parent
+    experiment
   end
 
   private

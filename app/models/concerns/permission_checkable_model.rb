@@ -21,7 +21,7 @@ module PermissionCheckableModel
       end
 
     if user_role_permissions.blank? && permission_parent.present?
-      user_role_permissions = permission_parent.load_user_role_permissions(user)
+      user_role_permissions = permission_parent.send :load_user_role_permissions, user
     end
 
     user_role_permissions
