@@ -8,7 +8,11 @@
         <h4 class="modal-title"><%= t '.title', resource_name: resource.name %></h4>
       </div>
       <div class="modal-body">
-        <%= render partial: 'access_permissions/partials/user_assignment', collection: resource.user_assignments, cached: ->(user_assignment) { [user_assignment. resource, current_user] } %>
+        <% resource.user_assignments.each do |user_assignment| %>
+          <% cache [user_assignment, resource, current_user, user_assignment.user] do %>
+            <%= render partial: 'access_permissions/partials/user_assignment', locals: { user_assignment: user_assignment, user: user_assignment.user, resource: resource } %>
+          <% end %>
+        <% end %>
       </div>
       <div class="modal-footer">
         <% if can_manage_resource %>

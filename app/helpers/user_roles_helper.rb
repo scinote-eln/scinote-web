@@ -10,4 +10,8 @@ module UserRolesHelper
   def new_user_roles_collection
     [[t('user_assignment.select_role'), nil]] + user_roles_collection
   end
+
+  def experiment_user_roles_collection
+    [[t('user_assignment.select_role'), nil]] + user_roles_collection
+  end
 end

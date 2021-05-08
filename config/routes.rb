@@ -228,7 +228,9 @@ Rails.application.routes.draw do
     end
 
     namespace :access_permissions do
-      resources :projects
+      resources :projects, defaults: { format: 'json' } do
+        resources :experiments, only: %i(show update edit)
+      end
     end
 
     resources :projects, except: [:destroy] do

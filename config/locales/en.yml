@@ -2318,6 +2318,8 @@ en:
   user_assignment:
     current_assignee: "(you)"
     select_role: "Select role"
+    from_project: "%{user_role} [from project]"
+    experiment_select_role: "Change experiment role"
   access_permissions:
     create:
       success:
@@ -2337,10 +2339,17 @@ en:
         submit_singular: "Grand access to 1 user"
         submit_plural: "Grand access to {num} users"
         find_people_html: "&#128269; Find people"
-    modals:
-      show_modal:
-        title: "Access to %{resource_name}"
-        new_resource_assignments: "Grant new access to %{resource}"
+    projects:
+      modals:
+        show_modal:
+          title: "Access to %{resource_name}"
+          new_resource_assignments: "Grant new access to %{resource}"
+    experiments:
+      modals:
+        show_modal:
+          title: "Access to %{resource_name}"
+        edit_modal:
+          title: "Manage access for %{resource_name}"
   zip_export:
     modal_label: 'Export inventory'
     notification_title: 'Your requested export package is ready!'

@@ -9,4 +9,23 @@ module UserAssignmentsHelper
                    end
     sanitize_input(display_name)
   end
+
+  def user_assignment_resource_role_name(user_assignment, user, resource)
+    # Triggers N+1 but the partial is cached
+
+    if resource.is_a?(Experiment)
+      project_user_assignment = resource.permission_parent.user_assignments.find_by(user: user)
+      current_user_assignment_name = user_assignment&.user_role&.name
+
+      [
+        t('user_assignment.from_project', user_role: project_user_assignment.user_role.name),
+        current_user_assignment_name
+      ].compact.join(' / ')
+    elsif resource.is_a?(MyModule)
+      # TODO
+    else
+      user_assignment.user_role.name
+    end
+  end
 end
+

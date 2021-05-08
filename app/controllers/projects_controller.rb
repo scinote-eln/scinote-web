@@ -264,7 +264,7 @@ class ProjectsController < ApplicationController
     render json: {
       cards_html: render_to_string(
         partial: 'projects/show/experiments_list.html.erb',
-        locals: { cards: overview_service.experiments }
+        locals: { cards: overview_service.experiments, project: @project }
       )
     }
 
