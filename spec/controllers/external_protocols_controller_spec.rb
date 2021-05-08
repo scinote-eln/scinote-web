@@ -71,7 +71,7 @@ describe ExternalProtocolsController, type: :controller do
 
     let(:action) { get :show, params: params }
 
-    let(:html_preview) { double('html_preview') }
+    let(:html_preview) { double('html_preview', body: '<html></html>') }
 
     before do
       allow(html_preview).to(receive(:as_json).and_return('<html></html>'))

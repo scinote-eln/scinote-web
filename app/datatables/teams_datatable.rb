@@ -63,6 +63,15 @@ class TeamsDatatable < CustomDatatable
       elsif order_params['dir'] == 'desc'
         return records.reverse
       end
+    elsif sort_column(order_params) == 'user_teams.role'
+      records_with_role = records.where(user: @user).order(role: :asc)
+      records_with_no_role = records.where.not(user: @user)
+      records = records_with_no_role + records_with_role
+      if order_params['dir'] == 'asc'
+        records
+      else
+        records.reverse
+      end
     else
       super(records)
     end

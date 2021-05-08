@@ -1,6 +1,6 @@
 /* global animateSpinner filterDropdown Sidebar Turbolinks HelperModule */
 (function() {
-  const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable'];
+  const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable', 'duplicable'];
   var cardsWrapper = '#cardsWrapper';
   var experimentsPage = '#projectShowWrapper';
 
@@ -24,15 +24,15 @@
 
   function updateExperimentsToolbar() {
     let experimentsToolbar = $('#projectShowToolbar');
+    let toolbarVisible = false;
 
     if (selectedExperiments.length === 0) {
       experimentsToolbar.find('.single-object-action, .multiple-object-action').addClass('hidden');
-      return;
     }
 
     if (selectedExperiments.length === 1) {
       experimentsToolbar.find('.single-object-action, .multiple-object-action').removeClass('hidden');
-    } else {
+    } else if (selectedExperiments.length > 1) {
       experimentsToolbar.find('.single-object-action').addClass('hidden');
       experimentsToolbar.find('.multiple-object-action').removeClass('hidden');
     }
@@ -41,9 +41,27 @@
         experimentsToolbar.find(`.btn[data-for="${permission}"]`).addClass('hidden');
       }
     });
+
+    $.each($('#projectShowToolbar').find('.btn'), (i, btn) => {
+      if (window.getComputedStyle(btn).display !== 'none') {
+        toolbarVisible = true;
+      }
+    });
+    $(experimentsPage).attr('data-toolbar-visible', toolbarVisible);
   }
 
   function initProjectsViewModeSwitch() {
+    $(experimentsPage)
+      .on('ajax:success', '.change-experiments-view-type-form', function(ev, data) {
+        $(cardsWrapper).removeClass('list').addClass(data.cards_view_type_class);
+        $(experimentsPage).find('.cards-switch .button-to').removeClass('selected');
+        $(ev.target).find('.button-to').addClass('selected');
+        $(ev.target).parents('.dropdown.view-switch').removeClass('open');
+      })
+      .on('ajax:error', '.change-projects-view-type-form', function(ev, data) {
+        HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
+      });
+
     $(experimentsPage).on('click', '.archive-switch', function() {
       Turbolinks.visit($(this).data('url'));
     });
@@ -67,10 +85,15 @@
         archived_on_to: archivedOnToFilter
       },
       success: function(data) {
-        viewContainer.find('.card').remove();
+        viewContainer.find('.card, .no-results-container').remove();
+        viewContainer.removeClass('no-results');
         viewContainer.append(data.cards_html);
+        if (viewContainer.find('.no-results-container').length) {
+          viewContainer.addClass('no-results');
+        }
         selectedExperiments.length = 0;
         updateExperimentsToolbar();
+        loadExperimentWorkflowImages();
       },
       error: function() {
         viewContainer.html('Error loading project list');
@@ -84,6 +107,14 @@
       sort: experimentsCurrentSort,
       view_mode: $(experimentsPage).data('view-mode')
     });
+  }
+
+  function selectDate($field) {
+    var datePicker = $field.data('DateTimePicker');
+    if (datePicker && datePicker.date()) {
+      return datePicker.date()._d.toUTCString();
+    }
+    return null;
   }
 
   function initExperimentsFilters() {
@@ -110,12 +141,12 @@
     }
 
     $filterDropdown.on('filter:apply', function() {
-      startedOnFromFilter = $startedOnFromFilter.val();
-      startedOnToFilter = $startedOnToFilter.val();
-      modifiedOnFromFilter = $modifiedOnFromFilter.val();
-      modifiedOnToFilter = $modifiedOnToFilter.val();
-      archivedOnFromFilter = $archivedOnFromFilter.val();
-      archivedOnToFilter = $archivedOnToFilter.val();
+      startedOnFromFilter = selectDate($startedOnFromFilter);
+      startedOnToFilter = selectDate($startedOnToFilter);
+      modifiedOnFromFilter = selectDate($modifiedOnFromFilter);
+      modifiedOnToFilter = selectDate($modifiedOnToFilter);
+      archivedOnFromFilter = selectDate($archivedOnFromFilter);
+      archivedOnToFilter = selectDate($archivedOnToFilter);
       experimentsViewSearch = $textFilter.val();
       appliedFiltersMark();
       refreshCurrentView();
@@ -165,6 +196,15 @@
     });
   }
 
+  function initSelectAllCheckbox() {
+    $(experimentsPage).on('click', '.sci-checkbox.select-all', function() {
+      var selectAll = this.checked;
+      $.each($('.experiment-card-selector'), function() {
+        if (this.checked !== selectAll) this.click();
+      });
+    });
+  }
+
   function initArchiveRestoreToolbarButtons() {
     $(experimentsPage)
       .on('ajax:before', '.archive-experiments-form, .restore-experiments-form', function() {
@@ -188,36 +228,73 @@
       });
   }
 
-  function init() {
-    $('.workflowimg-container').each(function() {
-      let container = $(this);
+  function appendActionModal(modal) {
+    $('#content-wrapper').append(modal);
+    modal.modal('show');
+    modal.find('.selectpicker').selectpicker();
+    // Remove modal when it gets closed
+    modal.on('hidden.bs.modal', function() {
+      $(this).remove();
+    });
+  }
+
+
+  function initEditMoveDuplicateToolbarButton() {
+    let forms = '.edit-experiments-form, .move-experiments-form, .clone-experiments-form';
+    $(experimentsPage)
+      .on('ajax:before', forms, function() {
+        let buttonForm = $(this);
+        buttonForm.find('input[name="id"]').remove();
+        $('<input>').attr({
+          type: 'hidden',
+          name: 'id',
+          value: selectedExperiments[0]
+        }).appendTo(buttonForm);
+      })
+      .on('ajax:success', forms, function(ev, data) {
+        appendActionModal($(data.html));
+      })
+      .on('ajax:error', forms, function(ev, data) {
+        HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+      });
+  }
+
+  function initNewExperimentToolbarButton() {
+    let forms = '.new-experiment-form';
+    $(experimentsPage)
+      .on('ajax:success', forms, function(ev, data) {
+        appendActionModal($(data.html));
+      })
+      .on('ajax:error', forms, function(ev, data) {
+        HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+      });
+  }
+
+  function loadExperimentWorkflowImages() {
+    $('.experiment-card').each(function() {
+      let card = $(this);
+      let container = $(this).find('.workflowimg-container').first();
       if (container.data('workflowimg-present') === false) {
         let imgUrl = container.data('workflowimg-url');
-        container.find('.workflowimg-spinner').removeClass('hidden');
+        card.find('.workflowimg-spinner').removeClass('hidden');
         $.ajax({
           url: imgUrl,
           type: 'GET',
           dataType: 'json',
           success: function(data) {
-            container.html(data.workflowimg);
+            card.find('.workflowimg-container').html(data.workflowimg);
           },
           error: function() {
-            container.find('.workflowimg-spinner').addClass('hidden');
+            card.find('.workflowimg-spinner').addClass('hidden');
           }
         });
       }
     });
+  }
 
+  function init() {
     $('#content-wrapper').on('ajax:success', '.experiment-action-link', function(ev, data) {
-      // Add and show modal
-      let modal = $(data.html);
-      $('#content-wrapper').append(modal);
-      modal.modal('show');
-      modal.find('.selectpicker').selectpicker();
-      // Remove modal when it gets closed
-      modal.on('hidden.bs.modal', function() {
-        $(this).remove();
-      });
+      appendActionModal($(data.html));
     });
 
     $('#content-wrapper')
@@ -225,7 +302,9 @@
         animateSpinner();
       })
       .on('ajax:success', '.experiment-action-form', function() {
-        location.reload();
+        $(this).closest('.modal').modal('hide');
+        refreshCurrentView();
+        animateSpinner(null, false);
       })
       .on('ajax:error', '.experiment-action-form', function(ev, data) {
         animateSpinner(null, false);
@@ -238,6 +317,9 @@
     initProjectsViewModeSwitch();
     initExperimentsSelector();
     initArchiveRestoreToolbarButtons();
+    initEditMoveDuplicateToolbarButton();
+    initNewExperimentToolbarButton();
+    initSelectAllCheckbox();
   }
 
   init();

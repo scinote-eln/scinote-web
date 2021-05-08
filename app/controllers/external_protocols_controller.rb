@@ -30,15 +30,15 @@ class ExternalProtocolsController < ApplicationController
                                                   .split('/').map(&:to_sym))
     api_client = "ProtocolImporters::#{endpoint_name}::ApiClient".constantize.new
 
-    html_preview = api_client.protocol_html_preview(show_params[:protocol_id])
-    base_uri = URI.parse(html_preview.request.last_uri.to_s)
+    html_preview_request = api_client.protocol_html_preview(show_params[:protocol_id])
+    base_uri = URI.parse(html_preview_request.request.last_uri.to_s)
     base_uri = "#{base_uri.scheme}://#{base_uri.host}"
 
     render json: {
       protocol_source: show_params[:protocol_source],
       protocol_id: show_params[:protocol_id],
       base_uri: base_uri,
-      html: html_preview
+      html: html_preview_request.body
     }
   rescue StandardError => e
     render json: {

@@ -229,7 +229,7 @@
               "step": {
                 "id": 2,
                 "name": "Inoculation of potatoes",
-                "description": "Collect samples in <strong>2ml tubes</strong> and put them in <strong>liquid nitrogen</strong> or store at <strong>-80°C</strong>.",
+                "description": "50% of samples should be mock inoculated and the other 50% should be inoculated with the PVY NTN virus.",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -313,7 +313,7 @@
               "step": {
                 "id": 4,
                 "name": "Collection of potatoes",
-                "description": null,
+                "description": "50% of PVY NTN inoculated potatoes and 50% of mock inoculated potatoes collect 1 day post inoculation, while the other half of the samples collect 6 days post inoculation.",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -347,7 +347,7 @@
               "step": {
                 "id": 3,
                 "name": "Store samples",
-                "description": "50% of all samples are PVYNTN inoculated potatoes and the other 50% are mock-inoculated potatoes. Collect the samples twice: 1 day post-inoculation and 6 days post-inoculation.",
+                "description": "Collect samples in <strong>2ml tubes</strong> and put them in <strong>liquid nitrogen</strong> or store at <strong>-80°C</strong>.",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -2390,7 +2390,7 @@
                   "checklist_items": [
                     {
                       "id": 26,
-                      "text": "Check buffer stock & prepare new stock if needed",
+                      "text": "Check buffer stock & prepare new stock if needed.",
                       "checked": false,
                       "checklist_id": 6,
                       "created_at": "2020-12-21T15:54:04.966Z",
@@ -2401,7 +2401,7 @@
                     },
                     {
                       "id": 27,
-                      "text": "Check stock of reagents & order new stock if needed",
+                      "text": "Check stock of reagents & order new stock if needed.",
                       "checked": false,
                       "checklist_id": 6,
                       "created_at": "2020-12-21T15:54:04.967Z",
@@ -2412,7 +2412,7 @@
                     },
                     {
                       "id": 28,
-                      "text": "Use gloves at all times",
+                      "text": "Use gloves at all times.",
                       "checked": false,
                       "checklist_id": 6,
                       "created_at": "2020-12-21T15:54:04.968Z",

@@ -368,6 +368,10 @@ label {
     .file-name {
       margin-left: 15px;
     }
+
+    .image-icon.report {
+      display: none;
+    }
   }
 
   img {
@@ -463,6 +467,10 @@ label {
     .file-name {
       margin-left: 5px;
       white-space: nowrap;
+    }
+
+    .image-icon.report {
+      display: none;
     }
   }
 

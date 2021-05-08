@@ -2,13 +2,13 @@
 
 module FileIconsHelper
   def wopi_file?(asset)
-    file_ext = asset.file_name.split('.').last
+    file_ext = asset.file_name.split('.').last&.downcase
     %w(csv ods xls xlsb xlsm xlsx odp pot potm potx pps ppsm
        ppsx ppt pptm pptx doc docm docx dot dotm dotx odt rtf).include?(file_ext)
   end
 
   def file_fa_icon_class(asset)
-    file_ext = asset.file_name.split('.').last
+    file_ext = asset.file_name.split('.').last&.downcase
 
     if Extends::FILE_FA_ICON_MAPPINGS[file_ext] # Check for custom mappings or possible overrides
       Extends::FILE_FA_ICON_MAPPINGS[file_ext]
@@ -30,8 +30,8 @@ module FileIconsHelper
   end
 
   # For showing next to file
-  def file_extension_icon(asset)
-    file_ext = asset.file_name.split('.').last
+  def file_extension_icon(asset, report = false)
+    file_ext = asset.file_name.split('.').last&.downcase
     if Constants::FILE_TEXT_FORMATS.include?(file_ext)
       image_link = 'icon_small/docx_file.svg'
     elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
@@ -46,7 +46,13 @@ module FileIconsHelper
     image_link = Extends::FILE_ICON_MAPPINGS[file_ext] if Extends::FILE_ICON_MAPPINGS[file_ext]
 
     if image_link
-      ActionController::Base.helpers.image_tag(image_link, class: 'image-icon')
+      if report
+        image_tag("data:image/svg+xml;base64,#{
+          Base64.encode64(File.read(Rails.root.join('app/assets/images/', image_link)))
+        }", class: 'image-icon')
+      else
+        ActionController::Base.helpers.image_tag(image_link, class: 'image-icon')
+      end
     else
       ''
     end
@@ -100,8 +106,8 @@ module FileIconsHelper
     end
   end
 
-  def file_extension_icon_html(asset)
-    html = file_extension_icon(asset)
+  def file_extension_icon_html(asset, report = false)
+    html = file_extension_icon(asset, report)
     if html.blank?
       html = ActionController::Base.helpers.content_tag(
         :i,

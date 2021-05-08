@@ -1,19 +1,38 @@
-<% target_folder ||= current_folder %>
-<div class="projects-breadcrumbs">
-  <%= link_to(t('projects.index.breadcrumbs_root'),
-              projects_path(view_mode: projects_view_mode),
-              class: 'project-folder-link',
-              data: { projects_cards_url: cards_projects_url,
-                      sidebar_url: sidebar_team_path(current_team) }) %>
-  <span>/</span>
-  <% tree_ordered_parent_folders(target_folder)&.each do |project_folder| %>
-    <%= link_to(project_folder.name,
-                project_folder_path(project_folder),
-                class: 'project-folder-link',
-                data: { projects_cards_url: project_folder_cards_url(project_folder),
-                        sidebar_url: sidebar_team_path(current_team, project_folder_id: project_folder.id),
-                      }
-                ) %>
-    <span>/</span>
-  <% end %>
+<% target_folder ||= nil %>
+<% experiment ||= nil %>
+<% project ||= nil %>
+<% folder_page ||= false %>
+<% links = [] %>
+<% folders = tree_ordered_parent_folders(target_folder) %>
+<% folders = folders&.take(folders.size - 1) if folder_page %>
+
+<div class="projects-breadcrumbs breadcrumbs-container">
+  <%
+    links.push({
+      label: t('projects.index.breadcrumbs_root'),
+      url: projects_path(view_mode: projects_view_mode(project: project)),
+      class: 'project-folder-link',
+      data: { projects_cards_url: cards_projects_url, sidebar_url: sidebar_team_path(current_team) }
+    })
+
+    folders&.each do |project_folder|
+      links.push({
+        label: project_folder.name,
+        url: project_folder_path(project_folder),
+        class: 'project-folder-link',
+        data: { projects_cards_url: project_folder_cards_url(project_folder), sidebar_url: sidebar_team_path(current_team, project_folder_id: project_folder.id)}
+      })
+    end
+
+    links.push({
+      label: project.name,
+      url: project_path(project)
+    }) if project
+
+    links.push({
+      label: experiment.name,
+      url: canvas_experiment_path(experiment)
+    }) if experiment
+  %>
+  <%= render partial: 'shared/breadcrumbs', locals: {links: links} %>
 </div>

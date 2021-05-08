@@ -64,7 +64,12 @@ Canaid::Permissions.register_for(Project) do
   end
 
   # experiment: create
+
   can :create_experiments do |user, project|
+    project.permission_granted?(user, ProjectPermissions::CREATE_EXPERIMENTS)
+  end
+
+  can :manage_experiments do |user, project|
     project.permission_granted?(user, ProjectPermissions::CREATE_EXPERIMENTS)
   end
 
@@ -93,5 +98,12 @@ Canaid::Permissions.register_for(ProjectComment) do
   can :manage_comment_in_project do |user, project_comment|
     project_comment.project.present? && (project_comment.user == user ||
       project.permission_granted?(user, ProjectPermissions::MANAGE_COMMENTS))
+  end
+end
+
+Canaid::Permissions.register_for(ProjectFolder) do
+  # ProjectFolder: delete
+  can :delete_project_folder do |_, project_folder|
+    !project_folder.projects.exists? && !project_folder.project_folders.exists?
   end
 end

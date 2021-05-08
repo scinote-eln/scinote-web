@@ -7,7 +7,6 @@
 // New experiments page
 
 .projects-show {
-
   &.active {
     [data-view-mode="archived"] {
       display: none !important;
@@ -48,7 +47,11 @@
         }
       }
 
+      .edit-experiments-form,
+      .clone-experiments-form,
+      .move-experiments-form,
       .archive-experiments-form,
+      .new-experiment-form,
       .restore-experiments-form {
         display: inline-block;
       }
@@ -67,6 +70,29 @@
           &.experiment-card {
             border-radius: 4px;
             box-shadow: $flyout-shadow;
+
+            .workflow-img-wrapper {
+              background-color: $color-concrete;
+              border-radius: 4px;
+              height: 76px;
+              width: 76px;
+
+              .archived-icon-plceholder {
+                color: $color-silver-chalice;
+                font-size: 3.5em;
+                line-height: 76px;
+                text-align: center;
+              }
+
+              .workflowimg-container {
+                text-align: center;
+
+                img {
+                  border-radius: 4px;
+                  max-height: 76px;
+                }
+              }
+            }
 
             .experiment-name-cell {
               @include font-h3;
@@ -90,7 +116,7 @@
               top: .2em;
             }
 
-            .dates-and-img-container{
+            .dates-and-img-container {
               display: flex;
               height: 6em;
               width: 100%;
@@ -130,6 +156,10 @@
               }
             }
 
+            .completed-task-cell {
+              width: 100%;
+            }
+
             .description-cell {
               .description-text {
                 -webkit-box-orient: vertical;
@@ -161,12 +191,60 @@
         }
 
         &.list {
+          grid-auto-rows: 1px 5em;
           grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 2), minmax(100px, auto)) max-content;
+          grid-template-rows: 3em;
 
           .card {
             &.experiment-card {
+              .card-value {
+                font-weight: normal;
+                line-height: 2em;
+              }
+
+              .workflow-img-wrapper {
+                flex-shrink: 0;
+                height: 3.5em;
+                margin: .25em 1em .25em .5em;
+                width: 3.5em;
+
+                .archived-icon-plceholder {
+                  font-size: 2em;
+                  line-height: 1.75em;
+                }
+
+                .workflowimg-container {
+                  text-align: center;
+
+                  img {
+                    max-height: 3em;
+                  }
+                }
+              }
+
+              .dates-and-img-container,
+              .dates-container {
+                display: contents;
+              }
+
+              .checkbox-cell {
+                align-items: normal;
+                padding-top: .5em;
+              }
+
               .experiment-name-cell {
+                @include font-button;
+                color: $brand-primary;
+                display: flex;
+                font-weight: normal;
                 grid-column: 2;
+                height: 100%;
+                margin: 0;
+                padding: .25em 0;
+
+                a {
+                  overflow: hidden;
+                }
               }
 
               .start-date-cell {
@@ -183,15 +261,119 @@
 
               .description-cell {
                 grid-column: 6;
+                position: relative;
+
+                .description-text {
+                  height: 4.5em;
+                  -webkit-line-clamp: 3;
+
+                  &::after {
+                    bottom: .5em;
+                    right: .5em;
+                  }
+                }
+
+                .more-button {
+                  bottom: .5em;
+                }
               }
 
               .actions-cell {
                 grid-column: 7;
+                padding-top: 3px;
+                position: initial;
+              }
+            }
+
+            &:hover {
+              .description-text::after {
+                background: linear-gradient(to right, transparent, $color-concrete 50%);
+              }
+            }
+          }
+        }
+
+        &.readonly {
+          .experiment-name-cell {
+            margin-left: 0 !important;
+          }
+        }
+      }
+    }
+  }
+
+  &.active {
+    [data-view-mode="archived"] {
+      display: none !important;
+    }
+  }
+
+  &.archived {
+    [data-view-mode="active"] {
+      display: none !important;
+    }
+
+    .project-show-container {
+      .experiment-actions-menu {
+        .btn-light:hover {
+          background: $color-alto;
+        }
+      }
+
+      .cards-wrapper {
+        .card.experiment-card {
+          .workflow-img-wrapper {
+            background-color: $color-alto;
+          }
+
+          .progress-bar {
+            background-color: $color-silver-chalice;
+          }
+
+          .description-cell {
+            width: 100%;
+
+            .description-text::before {
+              background: $color-alto;
+              content: "";
+              display: block;
+              height: 4px;
+            }
+
+            .description-text::after {
+              background: linear-gradient(to right, transparent, $color-concrete 50%);
+            }
+          }
+        }
+
+        &.list {
+          .card.experiment-card {
+            .archived-date-cell {
+              grid-column: 5;
+            }
+            .description-cell {
+              .description-text::before {
+                content: unset;
+              }
+            }
+
+            &:hover {
+              .description-text::after {
+                background: linear-gradient(to right, transparent, $color-alto 50%);
               }
             }
           }
         }
       }
+    }
+}
+}
+
+@media (max-height: 700px) {
+  .projects-show {
+    .experiments-filters {
+      max-height: calc(100vh - var(--navbar-height) - var(--content-header-size));
+      overflow: auto;
     }
   }
 }

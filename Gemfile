@@ -16,7 +16,6 @@ gem 'rails', '~> 6.1.1'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 5.2'
 gem 'sassc-rails'
-gem 'simple_token_authentication', '~> 1.16.0' # Token authentication for Devise
 gem 'webpacker', '~> 4.0.0'
 gem 'yomu', git: 'https://github.com/biosistemika/yomu', branch: 'master'
 
@@ -98,7 +97,7 @@ gem 'rufus-scheduler', '~> 3.5'
 
 gem 'discard', '~> 1.0'
 
-gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails
+gem 'graphviz'
 gem 'tinymce-rails', '~> 4.9.10' # Rich text editor - SEE BELOW
 # Any time you update tinymce-rails Gem, also update the cache_suffix parameter
 # in sitewide/tiny_mce.js - to prevent browsers from loading old, cached .js

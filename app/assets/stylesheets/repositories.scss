@@ -133,12 +133,12 @@
     display: flex;
     flex-grow: 1;
     flex-wrap: nowrap;
-    height: 5em;
+    height: 6em;
     left: var(--repository-sidebar-margin);
     overflow: hidden;
-    padding: 0 2em;
+    padding: 1em 2em 0;
     position: fixed;
-    top: calc(5em + var(--navbar-height));
+    top: calc(4em + var(--navbar-height));
     transition: .4s $timing-function-sharp;
     width: calc(100% - var(--repository-sidebar-margin));
     z-index: 90;
@@ -517,5 +517,65 @@
 #repository_row-info-table {
   .fas {
     color: $color-silver-chalice;
+  }
+}
+
+.empty-sidebar-container {
+  padding: 1em 2.5em 2em 2em;
+
+  .repo-template {
+    border-radius: $border-radius-modal;
+    box-shadow: $modal-shadow;
+    font-weight: bold;
+    list-style-type: none;
+    padding-inline-start: 0;
+
+    li {
+      padding: 1em;
+    }
+
+    .fas-custom {
+      float: right;
+    }
+  }
+
+  .instructions {
+    @include font-main;
+    padding: .75em .25em;
+  }
+}
+
+.empty-repositories {
+  .content-header {
+    align-items: center;
+    border-bottom: $border-tertiary;
+    display: flex;
+    height: 4em;
+    margin-left: -2em;
+    padding-left: 2em;
+    width: calc(100% + 4em);
+
+    h1 {
+      margin: 0;
+    }
+  }
+
+  .content-body {
+    text-align: center;
+
+    .description {
+      @include font-main;
+      color: $color-silver-chalice;
+      margin: auto;
+      margin-bottom: 2em;
+      max-width: 570px;
+    }
+  }
+
+  .empty-inventory-img {
+    display: block;
+    margin: auto;
+    margin-top: 60px;
+    max-height: 290px;
   }
 }

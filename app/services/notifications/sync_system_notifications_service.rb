@@ -6,6 +6,8 @@ module Notifications
     include HTTParty
     base_uri Rails.application.secrets.system_notifications_uri
 
+    SYNC_TIMESTAMP_CACHE_KEY = 'system_notifications_last_sync_timestamp'
+
     attr_reader :errors
 
     def initialize
@@ -35,7 +37,10 @@ module Notifications
     private
 
     def call_api
-      last_sync = SystemNotification.last_sync_timestamp
+      last_sync =
+        Rails.cache.fetch(SYNC_TIMESTAMP_CACHE_KEY, expires_in: 24.hours, skip_nil: true) do
+          SystemNotification.last_sync_timestamp
+        end
       channel = Rails.application.secrets.system_notifications_channel
 
       unless last_sync
@@ -70,30 +75,27 @@ module Notifications
     end
 
     def save_new_notifications
-      @api_call.parsed_response['notifications'].each do |sn|
+      received_notifications = @api_call.parsed_response['notifications']
+      return if received_notifications.blank?
+
+      received_notifications.each do |received_notification|
         # Save new notification if not exists or override old 1
-        attrs =
-          sn.slice('title',
-                   'description',
-                   'modal_title',
-                   'modal_body',
-                   'show_on_login',
-                   'source_id')
-            .merge('source_created_at':
-                     Time.parse(sn['source_created_at']),
-                   'last_time_changed_at':
-                     Time.parse(sn['last_time_changed_at']))
-            .symbolize_keys
+        attrs = received_notification
+                .slice('title', 'description', 'modal_title', 'modal_body', 'show_on_login', 'source_id')
+                .merge('source_created_at': Time.zone.parse(received_notification['source_created_at']),
+                       'last_time_changed_at': Time.zone.parse(received_notification['last_time_changed_at']))
+                .symbolize_keys
 
-        n = SystemNotification
-            .where(source_id: attrs[:source_id]).first_or_initialize(attrs)
+        notification = SystemNotification.where(source_id: attrs[:source_id]).first_or_initialize(attrs)
 
-        if n.new_record?
-          save_notification n
-        elsif n.last_time_changed_at < attrs[:last_time_changed_at]
-          n.update!(attrs)
+        if notification.new_record?
+          save_notification(notification)
+        elsif notification.last_time_changed_at < attrs[:last_time_changed_at]
+          notification.update!(attrs)
         end
       end
+
+      Rails.cache.delete(SYNC_TIMESTAMP_CACHE_KEY)
     end
 
     def save_notification(notification)

@@ -9,7 +9,6 @@ class User < ApplicationRecord
   include InputSanitizeHelper
   include ActiveStorageConcerns
 
-  acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
          :async, :recoverable, :rememberable, :trackable, :validatable,
          :timeoutable, :omniauthable, :lockable,
@@ -553,6 +552,19 @@ class User < ApplicationRecord
     define_method("#{name}=") do |value|
       attr_name = name.gsub('_notification', '').to_sym
       notifications_settings[attr_name] = value
+    end
+  end
+
+  def enabled_notifications_for?(notification_type, channel)
+    return true if notification_type == :deliver
+
+    case channel
+    when :web
+      notification_type == :recent_changes && recent_notification ||
+        notification_type == :assignment && assignments_notification
+    when :email
+      notification_type == :recent_changes && recent_email_notification ||
+        notification_type == :assignment && assignments_email_notification
     end
   end
 

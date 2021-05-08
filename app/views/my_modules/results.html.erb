@@ -74,9 +74,10 @@
 <!-- Libraries for formulas -->
 <%= render partial: "shared/formulas_libraries.html.erb" %>
 
-<%= javascript_include_tag("canvas-to-blob.min") %>
 <%= javascript_include_tag "assets/wopi/create_wopi_file" %>
 <%= javascript_include_tag "my_modules/results" %>
 <%= javascript_include_tag "results/result_texts" %>
 <%= javascript_include_tag "results/result_tables" %>
 <%= javascript_include_tag "results/result_assets" %>
+<%= javascript_pack_tag 'pdfjs/pdf_js' %>
+<%= stylesheet_pack_tag 'pdfjs/pdf_js_styles' %>

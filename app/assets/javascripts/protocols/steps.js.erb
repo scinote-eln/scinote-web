@@ -1,5 +1,4 @@
 //= require Sortable.min
-//= require canvas-to-blob.min
 
 (function(global) {
   'use strict';
@@ -552,6 +551,7 @@
             $new_step.find('.attachments').trigger('reorder');
             tinyMCE.editors.step_description_textarea.remove();
             MarvinJsEditor.initNewButton('.new-marvinjs-upload-button');
+            PdfPreview.initCanvas();
 
             //Rerender tables
             $new_step.find("div.step-result-hot-table").each(function()  {
@@ -684,7 +684,8 @@
       }, function(result) {
         viewModeBtn.closest('.dropdown-menu').find('.attachments-view-mode').removeClass('selected');
         viewModeBtn.addClass('selected');
-        viewModeBtn.closest('.step').find('.attachments').html(result.html)
+        viewModeBtn.closest('.step').find('.attachments').html(result.html);
+        PdfPreview.initCanvas();
       })
     })
   }
