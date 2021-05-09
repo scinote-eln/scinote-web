@@ -1057,6 +1057,7 @@ en:
         drag_connections: "Drag connection/s from here"
         options_header: "Options"
         edit_module: "Rename task"
+        task_access: "Task access"
         clone_module: "Copy task as template (only Protocols steps copied)"
         clone_module_group: "Copy workflow as template (only Protocols steps copied)"
         move_module: "Move task to another experiment"
@@ -2319,6 +2320,7 @@ en:
     current_assignee: "(you)"
     select_role: "Select role"
     from_project: "%{user_role} [from project]"
+    from_experiment: "%{user_role} [from experiment]"
     experiment_select_role: "Change experiment role"
   access_permissions:
     create:
@@ -2350,6 +2352,14 @@ en:
           title: "Access to %{resource_name}"
         edit_modal:
           title: "Manage access for %{resource_name}"
+          description: "Changing roles will not take away any permissions from previous levels. Permissions can only be added with a new role. New permissions apply only to this concrete experiment."
+    my_modules:
+      modals:
+        show_modal:
+          title: "Access to %{resource_name}"
+        edit_modal:
+          title: "Manage access for %{resource_name}"
+          description: "Changing roles will not take away any permissions from previous levels. Permissions can only be added with a new role. New permissions apply only to this concrete task."
   zip_export:
     modal_label: 'Export inventory'
     notification_title: 'Your requested export package is ready!'

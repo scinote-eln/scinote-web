@@ -56,8 +56,8 @@
     </div>
   </div>
   <div class="description-cell table-cell">
-    <%= link_to 'Experiment Accesss', edit_access_permissions_project_experiment_path(project, experiment), remote: true, data: { action: 'remote-modal'} %>
-    <%= link_to 'Show Experiment Accesss', access_permissions_project_experiment_path(project, experiment), remote: true, data: { action: 'remote-modal'} %>
+    <%= link_to 'Experiment Accesss', edit_access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'} %>
+    <%= link_to 'Show Experiment Accesss', access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'} %>
     <div class="description-text">
       <%= custom_auto_link(experiment.description, team: current_team) %>
     </div>

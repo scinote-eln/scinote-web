@@ -229,7 +229,9 @@ Rails.application.routes.draw do
 
     namespace :access_permissions do
       resources :projects, defaults: { format: 'json' } do
-        resources :experiments, only: %i(show update edit)
+        resources :experiments, only: %i(show update edit) do
+          resources :my_modules, only: %i(show update edit)
+        end
       end
     end
 
