@@ -43,6 +43,11 @@ Canaid::Permissions.register_for(MyModule) do
     my_module.permission_granted?(user, MyModulePermissions::MOVE)
   end
 
+  # module: read
+  can :read_module do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::READ)
+  end
+
   # module: assign/reassign/unassign users
   can :manage_users_in_module do |user, my_module|
     my_module.permission_granted?(user, MyModulePermissions::MANAGE_USERS)
