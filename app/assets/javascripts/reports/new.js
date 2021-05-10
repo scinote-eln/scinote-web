@@ -1349,12 +1349,18 @@ function reportHandsonTableConverter() {
   $('#templateReportWarningModal')
     .on('click', '#loadSelectedTemplate', function() {
       loadTemplate();
+      $('#templateReportWarningModal').addClass('skip-hide-event');
       $('#templateReportWarningModal').modal('hide');
     })
     .on('click', '#cancelTemplateChange', function() {
-      let previousTemplate = $('#templateSelector').data('selected-template');
-      dropdownSelector.selectValues('#templateSelector', previousTemplate);
       $('#templateReportWarningModal').modal('hide');
+    })
+    .on('hide.bs.modal', function (e) {
+      if (!$('#templateReportWarningModal').hasClass('skip-hide-event')) {
+        let previousTemplate = $('#templateSelector').data('selected-template');
+        dropdownSelector.selectValues('#templateSelector', previousTemplate);
+      }
+      $('#templateReportWarningModal').removeClass('skip-hide-event');
     });
 
   $('#projectReportWarningModal').on('click', '#cancelProjectChange', function() {
