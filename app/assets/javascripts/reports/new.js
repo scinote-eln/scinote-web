@@ -1156,7 +1156,7 @@ function reportHandsonTableConverter() {
       validateGenerateButtons();
     });
 
-    $('.report-name').on('change', function() {
+    $('.report-name').on('keyup', function() {
       validateGenerateButtons();
     });
   }
