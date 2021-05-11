@@ -295,6 +295,8 @@ GEM
     gherkin (5.1.0)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
+    graphviz (1.2.1)
+      process-pipeline
     hammerjs-rails (2.0.8)
     hashdiff (1.0.1)
     hashie (4.1.0)
@@ -361,7 +363,8 @@ GEM
     mime-types (3.3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2020.1104)
-    mimemagic (0.3.5)
+    mimemagic (0.3.8)
+      nokogiri (~> 1)
     mini_magick (4.11.0)
     mini_mime (1.0.2)
     mini_portile2 (2.5.0)
@@ -416,6 +419,12 @@ GEM
       activerecord (>= 5.2)
       activesupport (>= 5.2)
     polyglot (0.3.5)
+    process-group (1.2.3)
+      process-terminal (~> 0.2.0)
+    process-pipeline (1.0.2)
+      process-group
+    process-terminal (0.2.0)
+      ffi
     pry (0.13.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -487,7 +496,7 @@ GEM
     responders (3.0.1)
       actionpack (>= 5.0)
       railties (>= 5.0)
-    rexml (3.2.4)
+    rexml (3.2.5)
     rgl (0.5.7)
       lazy_priority_queue (~> 0.1.0)
       stream (~> 0.5.3)
@@ -529,8 +538,6 @@ GEM
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 0.82.0)
-    ruby-graphviz (1.2.5)
-      rexml
     ruby-progressbar (1.11.0)
     ruby-vips (2.0.17)
       ffi (~> 1.9)
@@ -561,10 +568,6 @@ GEM
     shoulda-matchers (4.5.1)
       activesupport (>= 4.2.0)
     silencer (1.0.1)
-    simple_token_authentication (1.16.0)
-      actionmailer (>= 3.2.6, < 7)
-      actionpack (>= 3.2.6, < 7)
-      devise (>= 3.2, < 6)
     simplecov (0.21.2)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -660,6 +663,7 @@ DEPENDENCIES
   faker
   fastimage
   figaro
+  graphviz
   hammerjs-rails
   httparty (~> 0.17.3)
   i18n-js (~> 3.6)
@@ -706,7 +710,6 @@ DEPENDENCIES
   rubocop (= 0.83.0)
   rubocop-performance
   rubocop-rails
-  ruby-graphviz (~> 1.2)
   rubyzip
   rufus-scheduler (~> 3.5)
   sanitize (~> 5.2)
@@ -716,7 +719,6 @@ DEPENDENCIES
   selenium-webdriver
   shoulda-matchers
   silencer
-  simple_token_authentication (~> 1.16.0)
   simplecov
   sneaky-save!
   spinjs-rails

@@ -286,15 +286,15 @@ Rails.application.routes.draw do
       resources :experiments, only: %i(new create), defaults: { format: 'json' } do
         collection do
           post 'archive_group' # archive group of experements
-          post 'restore_group' # restore group of experements
+          post 'restore_group' # restore group of experementss
         end
       end
       member do
         # Notifications popup for individual project in projects index
         get 'notifications'
-        get 'experiment_archive' # Experiment archive for single project
         get 'experiments_cards'
         get 'sidebar'
+        put 'view_type'
       end
 
       collection do
@@ -302,6 +302,7 @@ Rails.application.routes.draw do
         get 'users_filter'
         post 'archive_group'
         post 'restore_group'
+        put 'view_type', to: 'teams#view_type'
       end
     end
 
@@ -311,11 +312,18 @@ Rails.application.routes.draw do
       collection do
         post 'move_to', to: 'project_folders#move_to', defaults: { format: 'json' }
         get 'move_to_modal', to: 'project_folders#move_to_modal', defaults: { format: 'json' }
+        post 'destroy', to: 'project_folders#destroy', as: 'destroy', defaults: { format: 'json' }
+        post 'destroy_modal', to: 'project_folders#destroy_modal', defaults: { format: 'json' }
       end
     end
     get 'project_folders/:project_folder_id', to: 'projects#index', as: :project_folder_projects
 
     resources :experiments, only: %i(show edit update) do
+      collection do
+        get 'edit', action: :edit
+        get 'clone_modal', action: :clone_modal
+        get 'move_modal', action: :move_modal
+      end
       member do
         get 'canvas' # Overview/structure for single experiment
         # AJAX-loaded canvas edit mode (from canvas)
@@ -617,12 +625,13 @@ Rails.application.routes.draw do
     get 'files/:id/preview',
         to: 'assets#file_preview',
         as: 'asset_file_preview'
-    get 'files/:id/preview', to: 'assets#preview', as: 'preview_asset'
+    get 'files/:id/pdf_preview', to: 'assets#pdf_preview', as: 'asset_pdf_preview'
     get 'files/:id/view', to: 'assets#view', as: 'view_asset'
     get 'files/:id/file_url', to: 'assets#file_url', as: 'asset_file_url'
     get 'files/:id/download', to: 'assets#download', as: 'asset_download'
     get 'files/:id/edit', to: 'assets#edit', as: 'edit_asset'
     patch 'files/:id/toggle_view_mode', to: 'assets#toggle_view_mode', as: 'toggle_view_mode'
+    get 'files/:id/load_asset', to: 'assets#load_asset', as: 'load_asset'
     post 'files/:id/update_image', to: 'assets#update_image',
                                    as: 'update_asset_image'
     delete 'files/:id/', to: 'assets#destroy', as: 'asset_destroy'
@@ -633,9 +642,9 @@ Rails.application.routes.draw do
 
     devise_scope :user do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'
-      get 'users/auth_token_sign_in' => 'users/sessions#auth_token_create'
       get 'users/sign_up_provider' => 'users/registrations#new_with_provider'
       get 'users/two_factor_recovery' => 'users/sessions#two_factor_recovery'
+      get 'users/two_factor_auth' => 'users/sessions#two_factor_auth'
       post 'users/authenticate_with_two_factor' => 'users/sessions#authenticate_with_two_factor'
       post 'users/authenticate_with_recovery_code' => 'users/sessions#authenticate_with_recovery_code'
       post 'users/complete_sign_up_provider' => 'users/registrations#create_with_provider'

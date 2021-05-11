@@ -16,10 +16,10 @@ class ActivitiesService
       subjects_with_children = load_subjects_children(filters[:subjects])
       if subjects_with_children['Project']
         query = query.where('project_id IN (?)', subjects_with_children['Project'])
-        subjects_with_children.except!('Project')
+        subjects_with_children = subjects_with_children.except('Project')
       end
-      where_condition = subjects_with_children.map { '(subject_type = ? AND subject_id IN(?))' }.join(' OR ')
-      where_arguments = subjects_with_children.flatten
+      where_condition = subjects_with_children.to_h.map { '(subject_type = ? AND subject_id IN(?))' }.join(' OR ')
+      where_arguments = subjects_with_children.to_h.flatten
       if subjects_with_children[:my_module]
         where_condition = where_condition.concat(' OR (my_module_id IN(?))')
         where_arguments << subjects_with_children[:my_module]
@@ -28,7 +28,8 @@ class ActivitiesService
     end
 
     query = query.where(owner_id: filters[:users]) if filters[:users]
-    query = query.where(type_of: filters[:types]) if filters[:types]
+    query = query.where(type_of: filters[:types].map(&:to_i)) if filters[:types]
+
     query = query.where('created_at <= ?', Time.at(filters[:starting_timestamp].to_i)) if filters[:starting_timestamp]
 
     activities =
@@ -71,8 +72,8 @@ class ActivitiesService
     subjects_with_children = load_subjects_children('MyModule': [my_module.id])
     query = Activity.where(project: my_module.experiment.project)
     query.where(
-      subjects_with_children.map { '(subject_type = ? AND subject_id IN(?))' }.join(' OR '),
-      *subjects_with_children.flatten
+      subjects_with_children.to_h.map { '(subject_type = ? AND subject_id IN(?))' }.join(' OR '),
+      *subjects_with_children.to_h.flatten
     )
   end
 end

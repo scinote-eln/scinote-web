@@ -18,6 +18,10 @@ module ActiveStorage
       end
     end
 
+    def path_for(key)
+      subfolder.present? ? File.join(subfolder, key) : key
+    end
+
     private
 
     def object_for(key)

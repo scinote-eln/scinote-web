@@ -13,14 +13,6 @@
   font-size: $font-size-base;
   padding: 0 !important;
 
-  .preview-close {
-    background: transparent;
-    border: 0;
-    color: $color-white;
-    display: inline-block;
-    float: right;
-  }
-
   .modal-dialog {
     height: 100%;
     margin: 0;
@@ -32,14 +24,12 @@
     background: transparent;
     border: 0;
     box-shadow: none;
-    color: $color-white;
     height: 100%;
     width: auto;
   }
 
   .modal-header {
-    background: $color-black;
-    border: 0;
+    background: $color-white;
     display: flex;
     height: 60px;
     line-height: 40px;
@@ -122,14 +112,6 @@
         text-align: center;
       }
     }
-  }
-
-  .file-save-link {
-    color: $color-white;
-    cursor: pointer;
-    display: inline-block;
-    float: right;
-    margin-right: 20px;
   }
 }
 

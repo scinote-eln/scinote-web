@@ -1,0 +1,41 @@
+<% collapsed = links.length > 4 %>
+
+<% if collapsed %>
+  <% first_link = links.shift
+     last_links = links.pop(2) %>
+  <%= link_to(first_link[:label], first_link[:url],
+                class: "breadcrumbs-link #{first_link[:class]}",
+                title: first_link[:label],
+                data: first_link[:data]) %>
+  <span class="delimiter">/</span>
+  <span class="breadcrumbs-collapsed-container">
+      <span class="show-breadcrumbs" data-toggle="dropdown" title="<%= t('projects.index.breadcrumbs_collapsed') %>">
+        •••
+        <span class="caret pull-right"></span>
+      </span>
+      <ul class="dropdown-menu breadcrumbs-dropdown" role="menu">
+        <% links.each do |link| %>
+          <li>
+            <%= link_to(link[:label] + ' /', link[:url],
+                        data: link[:data]) %>
+          </li>
+        <% end %>
+      </ul>
+  </span>
+  <span class="delimiter">/</span>
+   <% last_links.each do |link| %>
+    <%= link_to(link[:label], link[:url],
+                class: "breadcrumbs-link #{link[:class]}",
+                title: link[:label],
+                data: link[:data]) %>
+    <span class="delimiter">/</span>
+  <% end %>
+<% else %>
+  <% links.each do |link| %>
+    <%= link_to(link[:label], link[:url],
+                class: "breadcrumbs-link #{link[:class]}",
+                title: link[:label],
+                data: link[:data]) %>
+    <span class="delimiter">/</span>
+  <% end %>
+<% end %>

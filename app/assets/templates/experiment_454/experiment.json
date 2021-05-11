@@ -1210,7 +1210,7 @@
               "step": {
                 "id": 5154,
                 "name": "Elution and collection of samples",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow elution and collection guidelines bellow.</p></body></html>",
+                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow elution and collection guidelines below.</p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,

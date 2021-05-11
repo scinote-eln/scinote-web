@@ -1,5 +1,6 @@
 class SearchController < ApplicationController
   include IconsHelper
+  include ProjectFoldersHelper
   before_action :load_vars, only: :index
 
   def index

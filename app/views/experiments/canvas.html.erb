@@ -5,7 +5,7 @@
 <%= content_for :sidebar do %>
   <%= render partial: 'shared/sidebar/my_modules.html.erb', locals: { experiment: @experiment, my_modules: @active_modules } %>
 <% end %>
-<%= render partial: "shared/secondary_navigation" %>
+<%= render partial: 'shared/secondary_navigation', locals: { render_breadcrumbs: true, project: @experiment.project } %>
 
 <div class="content-pane" id="experiment-canvas">
   <div class="row">

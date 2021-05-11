@@ -2,6 +2,7 @@
 
 class Activity < ApplicationRecord
   include ActivityValuesModel
+  include GenerateNotificationModel
 
   enum type_of: Extends::ACTIVITY_TYPES
 

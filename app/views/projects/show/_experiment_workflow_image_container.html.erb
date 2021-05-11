@@ -1,0 +1,17 @@
+<% if experiment.archived_branch? %>
+  <div class="archived-icon-plceholder">
+    <i class="fas fa-archive"></i>
+  </div>
+<% elsif experiment.my_modules.active.any? %>
+  <% if experiment.workflowimg.attached? %>
+    <div class="workflowimg-container" data-workflowimg-present="true">
+      <%= render partial: 'projects/show/workflow_img.html.erb', locals: { experiment: experiment } %>
+    </div>
+  <% else %>
+    <div class="workflowimg-container"
+         data-workflowimg-present="false"
+         data-workflowimg-url="<%= fetch_workflow_img_experiment_url(experiment) %>" >
+      <i class="fas fa-spinner fa-spin fa-3x workflowimg-spinner" aria-hidden="true"></i>
+    </div>
+  <% end %>
+<% end %>

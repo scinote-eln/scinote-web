@@ -1,7 +1,14 @@
+<% render_breadcrumbs ||= nil %>
+<% experiment ||= nil %>
+<% project ||= nil %>
 <% content_for :secondary_navigation do %>
 <nav class="navbar navbar-default navbar-secondary">
   <div class="container-fluid">
-
+    <% if render_breadcrumbs %>
+      <div id="breadcrumbsWrapper" class="breadcrumbs-in-secondary-navigation">
+        <%= render partial: 'projects/index/breadcrumbs', locals: {target_folder: project.project_folder, project: project, experiment: experiment} %>
+      </div>
+    <% end %>
     <div class="navbar-header">
       <!-- Small devices dropdown button -->
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#secondary-menu" aria-expanded="false">
@@ -13,7 +20,7 @@
     </div>
 
     <!-- buttons -->
-    <div class="collapse navbar-collapse" id="secondary-menu">
+    <div class="collapse navbar-collapse <%= render_breadcrumbs ? 'with-breadcrumbs' : '' %>" id="secondary-menu">
 
       <!-- True secondary navigation (buttons on the right side) -->
       <ul class="nav navbar-nav navbar-right" style="vertical-align: bottom">

@@ -4,6 +4,9 @@ require 'active_storage/previewer/libreoffice_previewer'
 require 'active_storage/analyzer/custom_image_analyzer'
 require 'active_storage/downloader'
 
+# Enable PDF previews for files
+Rails.application.config.x.enable_pdf_previews = ENV['ACTIVESTORAGE_ENABLE_PDF_PREVIEWS'] == 'true'
+
 Rails.application.config.active_storage.previewers = [ActiveStorage::Previewer::PopplerPDFPreviewer,
                                                       ActiveStorage::Previewer::LibreofficePreviewer]
 

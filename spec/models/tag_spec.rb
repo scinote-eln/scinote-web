@@ -46,27 +46,4 @@ describe Tag, type: :model do
       it { is_expected.to validate_presence_of :project }
     end
   end
-
-  describe '.clone_to_project_or_return_existing' do
-    let(:project) { create :project }
-    let(:tag) { create :tag }
-
-    context 'when tag does not exits' do
-      it 'does create new tag for project' do
-        expect do
-          tag.clone_to_project_or_return_existing(project)
-        end.to(change { Tag.where(project_id: project.id).count })
-      end
-    end
-
-    context 'when tag already exists' do
-      it 'return existing tag for project' do
-        Tag.create(name: tag.name, color: tag.color, project: project)
-
-        expect do
-          tag.clone_to_project_or_return_existing(project)
-        end.to_not(change { Tag.where(project_id: project.id).count })
-      end
-    end
-  end
 end

@@ -256,7 +256,8 @@ CREATE TABLE public.assets (
     file_processing boolean,
     team_id integer,
     file_image_quality integer,
-    view_mode integer DEFAULT 0 NOT NULL
+    view_mode integer DEFAULT 0 NOT NULL,
+    pdf_preview_processing boolean DEFAULT false
 );
 
 
@@ -922,7 +923,7 @@ CREATE TABLE public.oauth_access_grants (
     redirect_uri text NOT NULL,
     created_at timestamp without time zone NOT NULL,
     revoked_at timestamp without time zone,
-    scopes character varying
+    scopes character varying DEFAULT ''::character varying NOT NULL
 );
 
 
@@ -7334,9 +7335,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201028103608'),
 ('20201126203713'),
 ('20201209165626'),
+('20201215161050'),
 ('20210128105457'),
 ('20210128105458'),
 ('20210202214508'),
-('20210222123823');
+('20210217114042'),
+('20210222123823'),
+('20210410100006');
 
 

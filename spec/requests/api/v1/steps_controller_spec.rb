@@ -133,6 +133,12 @@ RSpec.describe 'Api::V1::StepsController', type: :request do
           )
         )
       end
+
+      it 'sets the last_changed_by' do
+        action
+
+        expect(Step.find(json['data']['id']).last_modified_by_id).to be @user.id
+      end
     end
 
     context 'when has missing param' do
@@ -204,6 +210,11 @@ RSpec.describe 'Api::V1::StepsController', type: :request do
             )
           )
         )
+      end
+
+      it 'sets the last_changed_by' do
+        action
+        expect(Step.find(json['data']['id']).last_modified_by_id).to be @user.id
       end
     end
 

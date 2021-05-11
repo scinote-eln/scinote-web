@@ -49,11 +49,12 @@ RSpec.describe Users::SessionsController, type: :controller do
       end
 
       context 'when user has 2FA enabled' do
-        it 'renders 2FA page' do
+        it 'redirects to 2fa code form, sets the session and does not sign in the user' do
           user.two_factor_auth_enabled = true
           user.save!
-
-          expect(action).to render_template('users/sessions/two_factor_auth')
+          expect(action).to redirect_to(users_two_factor_auth_path)
+          expect(action.request.session[:otp_user_id]).to eq user.id
+          expect { action }.not_to(change { subject.current_user })
         end
       end
     end

@@ -1,0 +1,55 @@
+<%
+   pdf_url = asset.pdf? ? asset_download_path(asset) : asset_pdf_preview_path(asset)
+   pdf_size = !asset.pdf? && asset.pdf_preview_ready? ? asset.file_pdf_preview&.blob&.byte_size : asset.file_size
+   blocked = pdf_size > Constants::PDF_PREVIEW_MAX_SIZE_MB.megabyte
+%>
+<div class="pdf-viewer <%= 'blocked' if blocked %> ">
+  <div class="page-container">
+    <div class="layers-container">
+      <canvas class="pdf-canvas <%= 'ready' unless blocked %>"
+        data-pdf-url="<%= pdf_url %>"
+        data-pdf-worker-url="<%= asset_pack_path('pdfjs/pdf_js_worker.js') %>"
+      ></canvas>
+      <div class="textLayer"></div>
+    </div>
+  </div>
+  <div class="pdf-toolbar">
+    <button class="btn btn-light icon-btn prev-page">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <div class="page-counter sci-input-container">
+      <input type="text" class="sci-input-field current-page" value=1>
+      <%= t('pdf_preview.pages.of') %>
+      <span class="total-page">...</span>
+    </div>
+    <button class="btn btn-light icon-btn next-page">
+      <i class="fas fa-arrow-right"></i>
+    </button>
+    <div class="divider"></div>
+    <div class="zoom-page">
+      <select class="zoom-page-selector">
+        <option value="auto"><%= t('pdf_preview.fit_to_screen') %></option>
+        <% 12.times.each do |i| %>
+          <option value="<%= ((i + 1).to_f * 0.25).to_s.sub(/\.?0+$/, '') %>" <%= 'selected' if (i + 1) * 25 == 100 %>><%= (i + 1) * 25 %>%</option>
+        <% end %>
+      </select>
+    </div>
+    <div class="sci-btn-group">
+      <button class="btn btn-light icon-btn zoom-out">
+        <i class="fas fa-search-minus"></i>
+      </button>
+      <button class="btn btn-light icon-btn zoom-in">
+        <i class="fas fa-search-plus"></i>
+      </button>
+    </div>
+  </div>
+  <div class="blocked-screen">
+    <%= image_tag 'pdf_js/blocked.svg', class: 'image' %>
+    <p class="title"><%= t('pdf_preview.blocked.title') %></p>
+    <p class="description"><%= t('pdf_preview.blocked.description') %></p>
+    <button class="btn btn-primary load-blocked-pdf">
+      <i class="fas fa-cloud-download-alt"></i>
+      <%= t('pdf_preview.blocked.submit_button') %>
+    </button>
+  </div>
+</div>

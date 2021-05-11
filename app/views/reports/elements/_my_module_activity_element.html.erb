@@ -33,7 +33,7 @@
                   <% if activity.old_activity?  %>
                     <%= sanitize_input(activity.message) %>
                   <% else %>
-                    <%= sanitize_input(generate_activity_content(activity, true)) %>
+                    <%= sanitize_input(generate_activity_content(activity, no_links: true)) %>
                   <% end %>
                 </span>
               </li>

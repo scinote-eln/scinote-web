@@ -4,64 +4,79 @@
      data-editable="<%= can_manage_experiment?(experiment) %>"
      data-moveable="<%= can_move_experiment?(experiment) %>"
      data-archivable="<%= experiment.active? && can_archive_experiment?(experiment) %>"
-     data-restorable="<%= experiment.archived? && can_restore_experiment?(experiment) %>">
+     data-restorable="<%= experiment.archived? && can_restore_experiment?(experiment) %>"
+     data-duplicable="<%= can_clone_experiment?(experiment) %>"
 >
-  <div class="checkbox-cell table-cell">
-    <div class="sci-checkbox-container">
-      <input value="1" type="checkbox" class="sci-checkbox experiment-card-selector">
-      <span class="sci-checkbox-label"></span>
+    <div class="checkbox-cell table-cell">
+      <% if can_manage_experiments?(experiment.project) %>
+        <div class="sci-checkbox-container">
+          <input value="1" type="checkbox" class="sci-checkbox experiment-card-selector">
+          <span class="sci-checkbox-label"></span>
+        </div>
+      <% end %>
     </div>
-  </div>
   <div class="experiment-name-cell table-cell">
+    <div class="workflow-img-wrapper" list-render="true">
+      <%= render partial: 'projects/show/experiment_workflow_image_container', locals: { experiment: experiment } %>
+    </div>
     <% if experiment.archived_branch? %>
-      <%= link_to experiment.name, module_archive_experiment_path(experiment), title: experiment.name %>
+      <%= link_to experiment.name, module_archive_experiment_path(experiment), title: experiment.name, class: 'name-link' %>
     <% else %>
-      <%= link_to experiment.name, canvas_experiment_path(experiment), title: experiment.name %>
+      <%= link_to experiment.name, canvas_experiment_path(experiment), title: experiment.name, class: 'name-link' %>
     <% end %>
   </div>
-  <div class="actions actions-cell table-cell">
-    <div class="dropdown experiment-actions-menu">
-      <button class="btn btn-light dropdown-toggle icon-btn">
-        <i class="fas fa-ellipsis-h"></i>
-      </button>
+    <div class="actions actions-cell table-cell">
+      <% if can_manage_experiments?(experiment.project) %>
+        <%= render partial: 'projects/show/experiment_actions_dropdown.html.erb', locals: { experiment: experiment } %>
+      <% end %>
     </div>
-  </div>
   <div class="dates-and-img-container">
     <div class="dates-container">
       <div class="data-row start-date-cell table-cell">
-        <span class="card-label"><%= t('experiments.card.start_date') %></span>
+        <span class="card-label" cards-render="true"><%= t('experiments.card.start_date') %></span>
         <span class="card-value"><%= l(experiment.created_at, format: :full_date) %></span>
       </div>
       <div class="data-row modified-date-cell table-cell">
-        <span class="card-label"><%= t('experiments.card.modified_date') %></span>
+        <span class="card-label" cards-render="true"><%= t('experiments.card.modified_date') %></span>
         <span class="card-value"><%= l(experiment.updated_at, format: :full_date) %></span>
       </div>
-      <div class="data-row completed-task-cell table-cell">
+      <% if experiment.archived_branch? %>
+        <div class="data-row archived-date-cell table-cell">
+          <span class="card-label" cards-render="true"><%= t('experiments.card.archived_date') %></span>
+          <span class="card-value"><%= l(experiment.archived_on || @project.archived_on, format: :full_date) %></span>
+        </div>
+      <% end %>
+      <div class="data-row" cards-render="true" data-view-mode="active">
         <span class="card-label"><%= t('experiments.card.completed_task') %></span>
-        <span class="card-value"><%= t('experiments.card.completed_value', completed: 12, all: 16) %></span>
+        <span class="card-value"><%= t('experiments.card.completed_value', completed: experiment.completed_task_count, all: experiment.task_count) %></span>
       </div>
     </div>
-    <div class="workflow-img-container">
+    <div class="workflow-img-wrapper" cards-render="true">
+      <%= render partial: 'projects/show/experiment_workflow_image_container', locals: { experiment: experiment } %>
     </div>
   </div>
-  <div class="progress-bar-container progress">
-    <% percentage = 40 %>
-    <div class="progress-bar"
-         role="progressbar"
-         aria-valuenow="<%= percentage %>%"
-         aria-valuemin="0"
-         aria-valuemax="100"
-         style="width:<%= percentage %>%; min-width: 2em;">
+  <div class="completed-task-cell table-cell" data-view-mode="active">
+    <span class="card-value" list-render="true"><%= t('experiments.card.completed_value', completed: experiment.completed_task_count, all: experiment.task_count) %></span>
+    <div class="progress-bar-container progress  ">
+      <% percentage = experiment.task_count.positive? ? ((100/experiment.task_count) * experiment.completed_task_count) : 0 %>
+      <div class="progress-bar"
+           role="progressbar"
+           aria-valuenow="<%= percentage %>%"
+           aria-valuemin="0"
+           aria-valuemax="100"
+           style="width:<%= percentage %>%; min-width: 2em;">
+      </div>
     </div>
   </div>
   <div class="description-cell table-cell">
     <div class="description-text">
       <%= custom_auto_link(experiment.description, team: current_team) %>
     </div>
-    <%= link_to t('experiments.card.more'),
-          experiment_path(experiment),
-          class: 'more-button',
-          remote: true %>
-
+    <% if experiment.description.present? && experiment.description.length > Constants::EXPERIMENT_LONG_DESCRIPTION %>
+      <%= link_to t('experiments.card.more'),
+            experiment_path(experiment),
+            class: 'more-button experiment-action-link',
+            remote: true %>
+    <% end %>
   </div>
 </div>

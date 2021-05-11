@@ -15,8 +15,7 @@ class UserProjectsController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          html_title: t('projects.index.modal_view_users.modal_title', name: @project.name),
-          html_body: render_to_string(partial: 'index.html.erb')
+          html: render_to_string(partial: 'index.html.erb')
         }
       end
     end

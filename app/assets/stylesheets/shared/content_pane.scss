@@ -2,6 +2,7 @@
 // scss-lint:disable NestingDepth QualifyingElement
 
 .content-pane {
+  --content-header-size: 9.5em;
   background-color: $color-white;
   margin: 20px 0;
   padding: 25px 20px;
@@ -25,7 +26,7 @@
       background: $color-white;
       border-bottom: $border-tertiary;
       display: flex;
-      height: 5em;
+      height: 4em;
       margin-left: -2em;
       padding: 0 2em;
       width: calc(100% + 4em);
@@ -35,9 +36,16 @@
         margin: 0;
       }
 
+      .name-readonly-placeholder {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
       .header-actions {
         align-items: center;
         display: flex;
+        flex-shrink: 0;
         margin-left: auto;
       }
 
@@ -139,6 +147,14 @@
       padding: 1em 0;
       padding-left: 2em;
       width: calc(100% + 4em);
+    }
+  }
+
+  &[data-toolbar-visible="false"] {
+    --content-header-size: 5em;
+
+    .toolbar-row {
+      display: none;
     }
   }
 }

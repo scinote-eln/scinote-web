@@ -19,11 +19,11 @@ class RepositoryNumberValue < ApplicationRecord
   end
 
   def data_changed?(new_data)
-    BigDecimal(new_data) != data
+    BigDecimal(new_data.to_s) != data
   end
 
   def update_data!(new_data, user)
-    self.data = BigDecimal(new_data)
+    self.data = BigDecimal(new_data.to_s)
     self.last_modified_by = user
     save!
   end
@@ -40,12 +40,12 @@ class RepositoryNumberValue < ApplicationRecord
 
   def self.new_with_payload(payload, attributes)
     value = new(attributes)
-    value.data = BigDecimal(payload)
+    value.data = BigDecimal(payload.to_s)
     value
   end
 
   def self.import_from_text(text, attributes, _options = {})
-    new(attributes.merge(data: BigDecimal(text)))
+    new(attributes.merge(data: BigDecimal(text.to_s)))
   rescue ArgumentError
     nil
   end

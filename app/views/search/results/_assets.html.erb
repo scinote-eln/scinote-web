@@ -43,6 +43,14 @@
           <%= render partial: "search/results/partials/project_text.html.erb",
                      locals: { project: asset.step.protocol.my_module.experiment.project, link_to_page: :show } %>
         </span>
+        <% if asset.step.protocol.my_module.experiment.project.project_folder %>
+          <br>
+          <span>
+            <%=t "search.index.folder" %>
+            <%= render partial: "search/results/partials/project_folders_text.html.erb",
+                       locals: { folder: asset.step.protocol.my_module.experiment.project.project_folder } %>
+          </span>
+        <% end %>
       <% else %>
         <span>
           <%=t "search.index.protocol" %>
@@ -80,6 +88,14 @@
         <%= render partial: "search/results/partials/project_text.html.erb",
                    locals: { project: asset.result.my_module.experiment.project, link_to_page: :show } %>
       </span>
+      <% if asset.result.my_module.experiment.project.project_folder %>
+        <br>
+        <span>
+          <%=t "search.index.folder" %>
+          <%= render partial: "search/results/partials/project_folders_text.html.erb",
+                     locals: { folder: asset.result.my_module.experiment.project.project_folder } %>
+        </span>
+      <% end %>
       <br>
       <span>
         <%=t "search.index.team" %>
