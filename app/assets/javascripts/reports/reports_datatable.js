@@ -203,7 +203,7 @@
     var $table = $('#reports-table');
     REPORTS_TABLE = $table.DataTable({
       dom: "Rt<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
-      order: [[2, 'desc']],
+      order: [[8, 'desc']],
       sScrollX: '100%',
       sScrollXInner: '100%',
       processing: true,
