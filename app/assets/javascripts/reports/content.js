@@ -52,6 +52,6 @@
 
   $('.hot-table-container').each(function() {
     initializeHandsonTable($(this));
-    reportHandsonTableConverter();
   });
+  reportHandsonTableConverter();
 }());
