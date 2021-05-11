@@ -436,12 +436,15 @@
       .experiment-block {
         align-items: center;
         display: flex;
-        flex-wrap: wrap;
         margin: 1em 0;
       }
 
       .experiment-name {
         @include font-h1;
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
 
       .experiment-contents {
@@ -490,6 +493,14 @@
       .fa-grip-vertical {
         color: $color-silver-chalice;
         margin-left: auto;
+      }
+
+      .my-module-name {
+        display: inline-block;
+        overflow: hidden;
+        padding-right: 1em;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
     }
 
