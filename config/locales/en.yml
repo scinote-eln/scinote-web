@@ -2318,6 +2318,7 @@ en:
 
   user_assignment:
     current_assignee: "(you)"
+    change_role: "Change role"
     select_role: "Select role"
     from_project: "%{user_role} [from project]"
     from_experiment: "%{user_role} [from experiment]"
