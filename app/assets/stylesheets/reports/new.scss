@@ -449,7 +449,12 @@
       }
 
       .fa-caret-down {
+        cursor: pointer;
         margin: 0 .5em;
+
+        &.collapsed {
+          @include rotate(-90deg);
+        }
       }
 
       .move-buttons {
@@ -518,6 +523,15 @@
     .select-all-container {
       @include font-h2;
       line-height: 1em;
+    }
+
+    .fa-caret-down {
+      cursor: pointer;
+      margin: 0 .5em;
+
+      &.collapsed {
+        @include rotate(-90deg);
+      }
     }
 
     ul {
