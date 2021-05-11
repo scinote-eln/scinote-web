@@ -3,8 +3,8 @@
 class AddProcessingFlagsToReport < ActiveRecord::Migration[6.1]
   def change
     change_table :reports, bulk: true do |t|
-      t.boolean :pdf_file_processing, default: false
-      t.boolean :docx_file_processing, default: false
+      t.integer :pdf_file_status, default: 0
+      t.integer :docx_file_status, default: 0
     end
   end
 end

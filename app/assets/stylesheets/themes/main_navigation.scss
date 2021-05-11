@@ -116,6 +116,17 @@
     width: 45px;
   }
 
+  .deliver-error {
+    background-color: $brand-danger;
+    border-radius: 50%;
+    color: $color-concrete;
+    display: block;
+    font-size: $font-size-h3;
+    height: 45px;
+    padding-top: 5px;
+    width: 45px;
+  }
+
   .system-message {
     background-color: $brand-success;
     border-radius: 50%;

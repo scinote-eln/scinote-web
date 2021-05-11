@@ -2,6 +2,7 @@
 
 module Reports
   class PdfJob < ApplicationJob
+    extend InputSanitizeHelper
     include InputSanitizeHelper
     include ReportsHelper
 
@@ -9,10 +10,28 @@ module Reports
 
     discard_on StandardError do |job, error|
       report = Report.find_by(id: job.arguments.first)
+      return if report.blank?
+
       ActiveRecord::Base.no_touching do
-        report&.update(pdf_file_processing: false)
+        report.pdf_error!
       end
-      Rails.logger.error("Couldn't generate PDF for Report with id: #{job.arguments.first}. Error:\n #{error}")
+      report_path =
+        if report.pdf_file.attached?
+          Rails.application.routes.url_helpers
+               .reports_path(team: report.team.id, preview_report_id: report.id, preview_type: :pdf)
+        else
+          Rails.application.routes.url_helpers.reports_path(team: report.team.id)
+        end
+      user = job.arguments.second
+      notification = Notification.create(
+        type_of: :deliver_error,
+        title: I18n.t('projects.reports.index.generation.error_pdf_notification_title'),
+        message: I18n.t('projects.reports.index.generation.error_notification_message',
+                        report_link: "<a href='#{report_path}'>#{sanitize_input(report.name)}</a>",
+                        team_name: sanitize_input(report.team.name))
+      )
+      notification.create_user_notification(user)
+      Rails.logger.error("Couldn't generate PDF for Report with id: #{report.id}. Error:\n #{error}")
     end
 
     PREVIEW_EXTENSIONS = %w(docx pdf).freeze
@@ -51,7 +70,7 @@ module Reports
         file = append_result_asset_previews(report, file) if report.settings.dig(:task, :file_results_previews)
 
         report.pdf_file.attach(io: file, filename: 'report.pdf')
-        report.update!(pdf_file_processing: false)
+        report.pdf_ready!
 
         report_path = Rails.application.routes.url_helpers
                            .reports_path(team: report.team.id, preview_report_id: report.id, preview_type: :pdf)

@@ -35,11 +35,11 @@ class ReportDatatable < CustomDatatable
     when 'reports.docx_file'
       records.left_joins(:docx_file_attachment)
              .order(active_storage_attachments: sort_direction(order_params))
-             .order(docx_file_processing: sort_direction(order_params) == 'ASC' ? :desc : :asc)
+             .order(docx_file_status: sort_direction(order_params) == 'ASC' ? :desc : :asc)
     when 'reports.pdf_file'
       records.left_joins(:pdf_file_attachment)
              .order(active_storage_attachments: sort_direction(order_params))
-             .order(pdf_file_processing: sort_direction(order_params) == 'ASC' ? :desc : :asc)
+             .order(pdf_file_status: sort_direction(order_params) == 'ASC' ? :desc : :asc)
     else
       sort_by = "#{sort_column(order_params)} #{sort_direction(order_params)}"
       records.order(sort_by)
@@ -72,18 +72,18 @@ class ReportDatatable < CustomDatatable
   def docx_file(report)
     docx = document_preview_report_path(report, report_type: :docx) if report.docx_file.attached?
     {
-      processing: report.docx_file_processing,
+      processing: report.docx_processing?,
       preview_url: docx,
-      error: false
+      error: report.docx_error?
     }
   end
 
   def pdf_file(report)
     pdf = document_preview_report_path(report, report_type: :pdf) if report.pdf_file.attached?
     {
-      processing: report.pdf_file_processing,
+      processing: report.pdf_processing?,
       preview_url: pdf,
-      error: false
+      error: report.pdf_error?
     }
   end
 

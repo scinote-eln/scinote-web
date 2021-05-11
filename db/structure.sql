@@ -1307,8 +1307,8 @@ CREATE TABLE public.reports (
     updated_at timestamp without time zone NOT NULL,
     last_modified_by_id bigint,
     team_id bigint,
-    pdf_file_processing boolean DEFAULT false,
-    docx_file_processing boolean DEFAULT false,
+    pdf_file_status integer DEFAULT 0,
+    docx_file_status integer DEFAULT 0,
     settings jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
