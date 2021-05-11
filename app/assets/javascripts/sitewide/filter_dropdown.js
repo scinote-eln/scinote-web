@@ -10,7 +10,7 @@ var filterDropdown = (function() {
   }
 
   function preventDropdownClose() {
-    $('.dropdown-menu', $filterContainer).click((e) => {
+    $filterContainer.on('click', '.dropdown-menu', function(e) {
       if (!$(e.target).is('input,a')) {
         e.stopPropagation();
         e.preventDefault();

@@ -41,15 +41,40 @@
 
 .dropdown-menu {
   .form-dropdown-item {
+    padding: 0 !important;
+
     button {
       border-radius: 0;
       color: $color-black !important;
       padding-left: .9em;
       text-align: left;
       width: 100%;
+    }
 
-      &:hover {
-        background-color: $color-dd-hover !important;
+    .project-archive-restore-form {
+      .button-to {
+        &:hover {
+          background-color: $color-dd-hover !important;
+        }
+      }
+    }
+
+    .change-projects-view-type-form,
+    .change-experiments-view-type-form {
+      .button-to {
+        float: unset !important;
+        height: 48px;
+        margin: 0;
+
+        &:active {
+          background-color: inherit;
+        }
+
+        &.selected::after {
+          @include font-awesome;
+          content: $font-fas-check;
+          float: right;
+        }
       }
     }
   }

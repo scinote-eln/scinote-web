@@ -380,7 +380,8 @@ class Extends
     move_project: 158,
     create_project_folder: 159,
     move_project_folder: 160,
-    rename_project_folder: 161
+    rename_project_folder: 161,
+    delete_project_folder: 162
   }
 
   ACTIVITY_GROUPS = {
@@ -418,4 +419,31 @@ class Extends
     { name: 'In progress', color: '#0065ff', consequences: ['MyModuleStatusConsequences::Uncompletion'] },
     { name: 'Completed', color: '#00b900', consequences: ['MyModuleStatusConsequences::Completion'] }
   ]
+
+  NOTIFIABLE_ACTIVITIES = %w(
+    assign_user_to_project
+    change_user_role_on_project
+    edit_module_comment
+    delete_module_comment
+    add_comment_to_module
+    assign_user_to_module
+    unassign_user_from_module
+    set_task_due_date
+    change_task_due_date
+    remove_task_due_date
+    invite_user_to_team
+    remove_user_from_team
+    change_users_role_on_team
+    set_task_start_date
+    change_task_start_date
+    remove_task_start_date
+    change_status_on_task_flow
+    sign_task
+    revoke_one_signature
+    reject_signature
+    create_group_signature_request
+    create_individual_signature_request
+    delete_individual_signature_request
+    delete_group_signature_request
+  )
 end

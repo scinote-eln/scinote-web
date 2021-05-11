@@ -33,7 +33,7 @@
                         params: { project: { archived: true } }) do %>
             <i class="fas fa-archive"></i>
             <span><%= t('projects.index.archive_option') %></span>
-        <% end %>
+          <% end %>
         </li>
       <% elsif project.archived? && can_restore_project?(project) %>
         <li class="form-dropdown-item">

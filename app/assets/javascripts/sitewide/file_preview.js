@@ -1,6 +1,7 @@
 /* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }]*/
 /* eslint no-use-before-define: ["error", { "functions": false }]*/
 /* eslint-disable no-underscore-dangle */
+/* global PdfPreview */
 var FilePreviewModal = (function() {
   'use strict';
 
@@ -18,6 +19,7 @@ var FilePreviewModal = (function() {
         $('#filePreviewModal .modal-content').html(result.html);
         $('#filePreviewModal').modal('show');
         $('.modal-backdrop').last().css('z-index', $('#filePreviewModal').css('z-index') - 1);
+        PdfPreview.initCanvas();
       });
     });
 
@@ -26,6 +28,7 @@ var FilePreviewModal = (function() {
       e.stopPropagation();
       $.get($(this).attr('href'), { gallery: $(this).data('gallery-elements') }, function(result) {
         $('#filePreviewModal .modal-content').html(result.html);
+        PdfPreview.initCanvas();
       });
     });
   }

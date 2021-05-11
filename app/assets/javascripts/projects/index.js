@@ -7,10 +7,10 @@
 // - refresh project users tab after manage user modal is closed
 // - refactor view handling using library, ex. backbone.js
 
-/* global animateSpinner HelperModule dropdownSelector Sidebar Turbolinks filterDropdown */
+/* global HelperModule dropdownSelector Sidebar Turbolinks filterDropdown */
 
-(function() {
-  const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable'];
+var ProjectsIndex = (function() {
+  const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable', 'deletable'];
   var projectsWrapper = '#projectsWrapper';
   var toolbarWrapper = '#toolbarWrapper';
   var cardsWrapper = '#cardsWrapper';
@@ -94,6 +94,42 @@
         $(newProjectModal).on('hidden.bs.modal', function() {
           $(newProjectModal).remove();
         });
+      });
+  }
+
+  // init delete project folders
+  function initDeleteFoldersToolbarButton() {
+    $(projectsWrapper)
+      .on('ajax:before', '.delete-folders-btn', function() {
+        let buttonForm = $(this);
+        buttonForm.find('input[name="project_folders_ids[]"]').remove();
+        selectedProjectFolders.forEach(function(id) {
+          $('<input>').attr({
+            type: 'hidden',
+            name: 'project_folders_ids[]',
+            value: id
+          }).appendTo(buttonForm);
+        });
+      })
+      .on('ajax:success', '.delete-folders-btn', function(ev, data) {
+        // Add and show modal
+        let deleteModal = $(data.html);
+        $(projectsWrapper).append(deleteModal);
+        deleteModal.modal('show');
+        // Remove modal when it gets closed
+        deleteModal.on('hidden.bs.modal', function() {
+          $(this).remove();
+        });
+      });
+
+    $(projectsWrapper)
+      .on('ajax:success', '.delete-folders-form', function(ev, data) {
+        $('.modal-project-folder-delete').modal('hide');
+        HelperModule.flashAlertMsg(data.message, 'success');
+        refreshCurrentView();
+      })
+      .on('ajax:error', '.delete-folders-form', function(ev, data) {
+        HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
       });
   }
 
@@ -229,6 +265,26 @@
     manageProjectUsersModal.find('.modal-footer').html(data.html_footer);
   }
 
+  // Initialize manage project users modal remote loading.
+  function initManageProjectUsersLink() {
+    $(projectsWrapper).on('ajax:success', '.manage-project-users-link', function(e, data) {
+      initManageProjectUsersModalBody(data);
+      manageProjectUsersModal.modal('show');
+    });
+  }
+
+  // Initialize view project users modal remote loading.
+  function initViewProjectUsersLink() {
+    $(projectsWrapper).on('ajax:success', '.view-project-users-link', function(e, data) {
+      let viewProjectUsersModal = $(data.html);
+      $(projectsWrapper).append(viewProjectUsersModal);
+      viewProjectUsersModal.modal('show');
+      // Remove modal when it gets closed
+      viewProjectUsersModal.on('hidden.bs.modal', function() {
+        viewProjectUsersModal.remove();
+      });
+    });
+  }
 
   // Initialize reloading manage user modal content after posting new
   // user.
@@ -305,12 +361,17 @@
         projectsToolbar.find('.single-object-action, .multiple-object-action').removeClass('hidden');
         if (selectedProjectFolders.length === 1) {
           projectsToolbar.find('.project-only-action').addClass('hidden');
+        } else {
+          projectsToolbar.find('.folders-only-action').addClass('hidden');
         }
       } else {
         projectsToolbar.find('.single-object-action').addClass('hidden');
         projectsToolbar.find('.multiple-object-action').removeClass('hidden');
         if (selectedProjectFolders.length > 0) {
           projectsToolbar.find('.project-only-action').addClass('hidden');
+        }
+        if (selectedProjects.length > 0) {
+          projectsToolbar.find('.folder-only-action').addClass('hidden');
         }
       }
       PERMISSIONS.forEach((permission) => {
@@ -478,6 +539,7 @@
       },
       success: function(data) {
         $('#breadcrumbsWrapper').html(data.breadcrumbs_html);
+        $(projectsWrapper).find('.projects-title').html(data.title);
         $(toolbarWrapper).html(data.toolbar_html);
         viewContainer.data('projects-cards-url', data.projects_cards_url);
         viewContainer.removeClass('no-results');
@@ -499,17 +561,16 @@
   function initProjectsViewModeSwitch() {
     let projectsPageSelector = '.projects-index';
 
-    // list/cards switch
-    $(projectsPageSelector).on('click', '.cards-switch', function() {
-      let $btn = $(this);
-      $('.cards-switch').removeClass('active');
-      if ($btn.hasClass('view-switch-cards')) {
-        $(cardsWrapper).removeClass('list');
-      } else if ($btn.hasClass('view-switch-list')) {
-        $(cardsWrapper).addClass('list');
-      }
-      $btn.addClass('active');
-    });
+    $(projectsPageSelector)
+      .on('ajax:success', '.change-projects-view-type-form', function(ev, data) {
+        $(cardsWrapper).removeClass('list').addClass(data.cards_view_type_class);
+        $(projectsPageSelector).find('.cards-switch .button-to').removeClass('selected');
+        $(ev.target).find('.button-to').addClass('selected');
+        $(ev.target).parents('.dropdown.view-switch').removeClass('open');
+      })
+      .on('ajax:error', '.change-projects-view-type-form', function(ev, data) {
+        HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
+      });
 
     // Active/Archived switch
     // We have different sorting, filters for active/archived views.
@@ -530,6 +591,14 @@
         $('#sortMenu').dropdown('toggle');
       }
     });
+  }
+
+  function selectDate($field) {
+    var datePicker = $field.data('DateTimePicker');
+    if (datePicker && datePicker.date()) {
+      return datePicker.date()._d.toUTCString();
+    }
+    return null;
   }
 
   function initProjectsFilters() {
@@ -571,13 +640,17 @@
       $('#folderSearchInfo').toggle();
     });
 
+    $projectsFilter.on('click', '#folder_search', function(e) {
+      e.stopPropagation();
+    });
+
     $filterDropdown.on('filter:apply', function() {
-      createdOnFromFilter = $createdOnFromFilter.val();
-      createdOnToFilter = $createdOnToFilter.val();
+      createdOnFromFilter = selectDate($createdOnFromFilter);
+      createdOnToFilter = selectDate($createdOnToFilter);
       membersFilter = dropdownSelector.getValues($('.members-filter'));
       lookInsideFolders = $foldersCB.prop('checked') ? 'true' : '';
-      archivedOnFromFilter = $archivedOnFromFilter.val();
-      archivedOnToFilter = $archivedOnToFilter.val();
+      archivedOnFromFilter = selectDate($archivedOnFromFilter);
+      archivedOnToFilter = selectDate($archivedOnToFilter);
       projectsViewSearch = $textFilter.val();
 
       appliedFiltersMark();
@@ -619,6 +692,7 @@
     initManageUsersModal();
     initExportProjectsModal();
     initExportProjects();
+    initDeleteFoldersToolbarButton();
     initArchiveRestoreToolbarButtons();
     initAddUserForm();
     initRemoveUserLinks();
@@ -669,4 +743,8 @@
   }
 
   init();
+
+  return {
+    loadCardsView: loadCardsView
+  };
 }());

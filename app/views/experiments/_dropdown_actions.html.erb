@@ -29,6 +29,7 @@
     <li><%= link_to t('experiments.archive.label_title'),
                   archive_experiment_url(experiment),
                   type: 'button',
+                  method: :post,
                   data: { confirm: t('experiments.canvas.archive_confirm') } %></li>
   <% end %>
   <% if can_restore_experiment?(experiment) %>

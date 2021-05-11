@@ -204,7 +204,7 @@ module CommentHelper
       title: t('notifications.my_module_comment_annotation_title',
                my_module: my_module.name,
                user: current_user.full_name),
-      message: t('notifications.my_module_annotation_message_html',
+      message: t('notifications.my_module_comment_annotation_message_html',
                  project: link_to(my_module.experiment.project.name,
                                   project_url(my_module
                                               .experiment

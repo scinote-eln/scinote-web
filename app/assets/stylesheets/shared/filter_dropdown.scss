@@ -102,7 +102,7 @@
       width: 460px;
     }
 
-    .footer {
+    .footer:not(.center) {
       .btn:last-child {
         margin-left: auto;
       }

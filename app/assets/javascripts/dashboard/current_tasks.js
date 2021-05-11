@@ -10,7 +10,7 @@ var DasboardCurrentTasksWidget = (function() {
   function appendTasksList(json, container) {
     $.each(json.data, (i, task) => {
       var currentTaskItem = task;
-      $(container).append(currentTaskItem);
+      $(container).find('.current-tasks-list').append(currentTaskItem);
     });
   }
 
@@ -48,7 +48,7 @@ var DasboardCurrentTasksWidget = (function() {
   }
 
   function initInfiniteScroll() {
-    InfiniteScroll.init('.current-tasks-list', {
+    InfiniteScroll.init('.current-tasks-list-wrapper', {
       url: $('.current-tasks-list').data('tasksListUrl'),
       customResponse: (json, container) => {
         appendTasksList(json, container);
@@ -134,9 +134,9 @@ var DasboardCurrentTasksWidget = (function() {
           $currentTasksList.find('.widget-placeholder').addClass($('.current-tasks-navbar .active').data('mode'));
         }
       }
-      appendTasksList(result, $currentTasksList);
+      appendTasksList(result, '.current-tasks-list-wrapper');
       PerfectSb().update_all();
-      if (newList) InfiniteScroll.resetScroll('.current-tasks-list');
+      if (newList) InfiniteScroll.resetScroll('.current-tasks-list-wrapper');
       animateSpinner($currentTasksList, false);
     }).error(function(error) {
       // If error is 403, it is possible that the user was removed from project/experiment,

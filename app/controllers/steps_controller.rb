@@ -330,6 +330,7 @@ class StepsController < ApplicationController
       completed = params[:completed] == 'true'
       changed = @step.completed != completed
       @step.completed = completed
+      @step.last_modified_by = current_user
 
       if @step.save
         # Create activity

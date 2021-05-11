@@ -66,6 +66,8 @@ class Constants
   ATWHO_REP_NAME_LIMIT = 16
   # Results limited query/display elements for pages
   RESULTS_PER_PAGE_LIMIT = 10
+  #Experiments more button appears
+  EXPERIMENT_LONG_DESCRIPTION = 80
 
   #=============================================================================
   # File and data memory size
@@ -75,6 +77,9 @@ class Constants
   TABLE_JSON_MAX_SIZE_MB = 20
   # Max uploaded user picture avatar size in MB
   AVATAR_MAX_SIZE_MB = 0.2
+  # PDF preview file limit in MB
+  PDF_PREVIEW_MAX_SIZE_MB = 10
+
 
   #=============================================================================
   # Application space
@@ -201,7 +206,7 @@ class Constants
 
   HTTP = 'http://'.freeze
   TUTORIALS_URL = (HTTP + 'goo.gl/YH3fXA').freeze
-  SUPPORT_URL = (HTTP + 'goo.gl/Jb9WXx').freeze
+  SUPPORT_URL = 'https://scinote-3850750.hs-sites.com/en/knowledge'.freeze
   # Default user picture avatar
   DEFAULT_AVATAR_URL = '/images/:style/missing.png'.freeze
 
@@ -306,7 +311,7 @@ class Constants
   PREVIEWABLE_FILE_TYPES = TEXT_EXTRACT_FILE_TYPES
 
   WHITELISTED_IMAGE_TYPES = [
-    'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp', 'tiff'
+    'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp', 'tiff', 'jpg'
   ].freeze
 
   WHITELISTED_IMAGE_TYPES_EDITABLE = %w(

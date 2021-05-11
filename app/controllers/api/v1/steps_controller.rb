@@ -32,13 +32,16 @@ module Api
 
         step = @protocol.steps.create!(step_params.merge!(completed: false,
                                                           user: current_user,
-                                                          position: @protocol.number_of_steps))
+                                                          position: @protocol.number_of_steps,
+                                                          last_modified_by_id: current_user.id))
 
         render jsonapi: step, serializer: StepSerializer, status: :created
       end
 
       def update
-        @step.assign_attributes(step_params)
+        @step.assign_attributes(
+          step_params.merge!(last_modified_by_id: current_user.id)
+        )
 
         if @step.changed? && @step.save!
           if @step.saved_change_to_attribute?(:completed)
