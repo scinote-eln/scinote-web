@@ -1355,7 +1355,7 @@ function reportHandsonTableConverter() {
     .on('click', '#cancelTemplateChange', function() {
       $('#templateReportWarningModal').modal('hide');
     })
-    .on('hide.bs.modal', function (e) {
+    .on('hide.bs.modal', function() {
       if (!$('#templateReportWarningModal').hasClass('skip-hide-event')) {
         let previousTemplate = $('#templateSelector').data('selected-template');
         dropdownSelector.selectValues('#templateSelector', previousTemplate);
