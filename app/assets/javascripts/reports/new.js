@@ -1019,7 +1019,7 @@ function reportHandsonTableConverter() {
       let experimentId = $(experiment).find('.report-experiment-checkbox').val();
       reportData.project_content.experiments[experimentId] = [];
       $.each($(experiment).find('.report-my-module-checkbox:checked'), function(j, myModule) {
-        reportData.project_content.experiments[experimentId].push(myModule.value);
+        reportData.project_content.experiments[experimentId].push(parseInt(myModule.value, 10));
       });
     });
     $.each($('.task-contents-container .repositories-contents .sci-checkbox:checked'), function(i, e) {
@@ -1364,6 +1364,7 @@ function reportHandsonTableConverter() {
   });
 
   $('#reportWizardEditWarning').modal('show');
+  $('.experiment-contents').sortable();
 
   initGenerateButton();
   initReportWizard();

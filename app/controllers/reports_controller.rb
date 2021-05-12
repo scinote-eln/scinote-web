@@ -115,8 +115,8 @@ class ReportsController < ApplicationController
     @report.settings = Report::DEFAULT_SETTINGS if @report.settings.blank?
 
     @project_contents = {
-      experiments: @report.report_elements.experiment.pluck(:experiment_id),
-      my_modules: @report.report_elements.my_module.pluck(:my_module_id),
+      experiments: @report.report_elements.order(:position).experiment.pluck(:experiment_id),
+      my_modules: @report.report_elements.order(:position).my_module.pluck(:my_module_id),
       repositories: @report.report_elements.my_module_repository.distinct(:repository_id).pluck(:repository_id)
     }
     render :new
