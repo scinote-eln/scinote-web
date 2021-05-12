@@ -22,6 +22,14 @@
 
       .report-name {
         @include font-h1;
+
+        &:placeholder-shown {
+          border: 1px solid $brand-danger;
+
+          &::placeholder {
+            color: $brand-danger;
+          }
+        }
       }
     }
 
