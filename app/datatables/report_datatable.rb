@@ -103,5 +103,10 @@ class ReportDatatable < CustomDatatable
     Report.from(res, :reports)
   end
 
+  def filter_records(records)
+    records.where('project_name ILIKE :q OR reports.name ILIKE :q OR reports.description ILIKE :q',
+                  { q: "%#{dt_params.dig(:search, :value)}%" })
+  end
+
   # ==== Insert 'presenter'-like methods below if necessary
 end

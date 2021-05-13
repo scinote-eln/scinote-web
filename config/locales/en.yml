@@ -495,6 +495,7 @@ en:
         report_button: "Report"
         update_pdf: "Update PDF"
         save_pdf_to_inventory: "Save PDF to Inventory"
+        search_reports: "Find Reports"
         request_docx: "Generate DOCX"
         update_docx: "Update DOCX"
         edit: "Edit"
