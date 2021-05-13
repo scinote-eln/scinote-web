@@ -1232,20 +1232,35 @@ function reportHandsonTableConverter() {
       });
   }
 
+  function reCheckContinueButton() {
+    if (dropdownSelector.getValues('#projectSelector').length > 0
+          && dropdownSelector.getValues('#templateSelector').length > 0) {
+      $('.continue-button').attr('disabled', false);
+    } else {
+      $('.continue-button').attr('disabled', true);
+    }
+  }
+
   function initDropdowns() {
     dropdownSelector.init('#projectSelector', {
       singleSelect: true,
       closeOnSelect: true,
       noEmptyOption: true,
       selectAppearance: 'simple',
-      onChange: function() {
+      onSelect: function() {
         let projectContents = $('#new-report-step-2').find('.project-contents');
         let loadedProjectId = parseInt(projectContents.attr('data-project-id'), 10);
         let projectId = parseInt(dropdownSelector.getValues('#projectSelector'), 10);
         if (!Number.isNaN(loadedProjectId) && loadedProjectId !== projectId) {
           $('#projectReportWarningModal').modal('show');
         }
-        $('.continue-button').attr('disabled', false);
+        if (dropdownSelector.getValues('#projectSelector').length > 0) {
+          dropdownSelector.enableSelector('#templateSelector');
+        } else {
+          dropdownSelector.selectValues('#templateSelector', '');
+          dropdownSelector.disableSelector('#templateSelector');
+        }
+        reCheckContinueButton();
       }
     });
 
@@ -1255,9 +1270,15 @@ function reportHandsonTableConverter() {
       noEmptyOption: true,
       selectAppearance: 'simple',
       disableSearch: true,
-      onChange: function() {
+      onSelect: function() {
+        if (dropdownSelector.getValues('#templateSelector').length === 0) {
+          $('.report-template-values-container').html('').addClass('hidden');
+          reCheckContinueButton();
+          return;
+        }
+
         let filledFieldsCount = $('.report-template-values-container')
-          .find('input.sci-input-field, textarea.sci-input-field').filter(function () {
+          .find('input.sci-input-field, textarea.sci-input-field').filter(function() {
             return !!this.value;
           }).length;
 
@@ -1266,8 +1287,13 @@ function reportHandsonTableConverter() {
         } else {
           $('#templateReportWarningModal').modal('show');
         }
+        reCheckContinueButton();
       }
     });
+
+    if (dropdownSelector.getValues('#templateSelector').length > 0) {
+      loadTemplate();
+    }
   }
 
   function loadTemplate() {
@@ -1279,6 +1305,7 @@ function reportHandsonTableConverter() {
 
     $('#templateSelector').data('selected-template', template);
     $.get($('#templateSelector').data('valuesEditorPath'), params, function(result) {
+      $('.report-template-values-container').removeClass('hidden');
       $('.report-template-values-container').html(result.html);
       $('.report-template-value-dropdown').each(function() {
         dropdownSelector.init($(this), {
