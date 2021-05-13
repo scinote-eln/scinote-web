@@ -422,10 +422,5 @@ class Extends
     { name: 'Completed', color: '#00b900', consequences: ['MyModuleStatusConsequences::Completion'] }
   ]
 
-  REPORT_TEMPLATES = {
-    scinote_template: 'scinote_template',
-    template_1: 'template_1',
-    template_2: 'template_2',
-    template_3: 'template_3'
-  }
+  REPORT_TEMPLATES = {}
 end
