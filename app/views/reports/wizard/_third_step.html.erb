@@ -99,12 +99,14 @@
                 <label>
                   <%= t("projects.reports.wizard.third_step.order_results") %>
                 </label>
-                <select class="order-results" id="taskResultsOrder">
-                  <option value="atoz"><%= t("projects.reports.wizard.third_step.atoz") %></option>
-                  <option value="ztoa"><%= t("projects.reports.wizard.third_step.ztoa") %></option>
-                  <option value="new"><%= t("projects.reports.wizard.third_step.new_results") %></option>
-                  <option value="old"><%= t("projects.reports.wizard.third_step.old_results") %></option>
-                </select>
+                <%= select_tag :taskResultsOrder,
+                               options_for_select([
+                                 [t('projects.reports.wizard.third_step.atoz'), 'atoz'],
+                                 [t('projects.reports.wizard.third_step.ztoa'), 'ztoa'],
+                                 [t('projects.reports.wizard.third_step.new_results'), 'new'],
+                                 [t('projects.reports.wizard.third_step.old_results'), 'old']
+                               ], selected: report.settings.dig(:task, :result_order)),
+                               class: 'order-results' %>
               </div>
             </span>
           </div>
