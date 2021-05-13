@@ -11,9 +11,9 @@
 
     // Special handling if this is a repository table
     if (input.hasClass('hot-repository-items')) {
-      var headers = inputObj.headers;
-      var parentEl = el.closest('.report-module-repository-element');
-      var order = parentEl.attr('data-order') === 'asc';
+      let headers = inputObj.headers;
+      let parentEl = el.closest('.report-module-repository-element');
+      let order = parentEl.attr('data-order') === 'asc';
 
       el.handsontable({
         disableVisualSelection: true,
