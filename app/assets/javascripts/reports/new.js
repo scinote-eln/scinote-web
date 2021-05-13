@@ -1057,13 +1057,11 @@ function reportHandsonTableConverter() {
     });
 
     $('.reports-new').on('click', '#saveAsNewReport', function(e) {
-      var params = getReportData();
-      params.report.name = 'New ' + params.report.name;
       e.preventDefault();
       $.ajax({
         url: this.dataset.createUrl,
         type: 'POST',
-        data: JSON.stringify(params),
+        data: JSON.stringify(getReportData()),
         contentType: 'application/json; charset=utf-8',
         success: function() {},
         error: function(jqxhr) {

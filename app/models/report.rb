@@ -12,8 +12,7 @@ class Report < ApplicationRecord
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
-                      maximum: Constants::NAME_MAX_LENGTH },
-            uniqueness: { scope: %i(user_id project_id), case_sensitive: false }
+                      maximum: Constants::NAME_MAX_LENGTH }
   validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
   validates :project, presence: true
   validates :user, presence: true
