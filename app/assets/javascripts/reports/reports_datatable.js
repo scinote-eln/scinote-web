@@ -89,7 +89,6 @@
                 ${I18n.t('projects.reports.index.docx')}
               </a>`;
     }
-
     return `<a href="#" class="generate-docx">${I18n.t('projects.reports.index.generate')}</a>`;
   }
 
@@ -268,14 +267,15 @@
     updateButtons();
   }
 
-  function generateReportRequest(pathAttrName) {
-    if (CHECKED_REPORTS.length === 1) {
-      let row = $(".report-row[data-id='" + CHECKED_REPORTS[0] + "']");
+  function generateReportRequest(pathAttrName, id) {
+    if (CHECKED_REPORTS.length === 1 || id) {
+      let row = $(".report-row[data-id='" + (id || CHECKED_REPORTS[0]) + "']");
       animateSpinner();
       $.post(row.data(pathAttrName), function(response) {
         animateSpinner(null, false);
         HelperModule.flashAlertMsg(response.message, 'success');
         checkProcessingStatus(row.data('id'));
+        reloadTable();
       });
     }
   }
@@ -374,8 +374,16 @@
     });
   }
 
+
   $('.reports-index').on('change', '.report-search', function() {
     REPORTS_TABLE.search($(this).val()).draw();
+  });
+
+  $('.reports-index').on('click', '.generate-docx', function(e) {
+    var reportId = $(this).closest('.report-row').attr('data-id');
+    e.preventDefault();
+    e.stopPropagation();
+    generateReportRequest('generate-docx-path', reportId);
   });
 
   $('#show_report_preview').click();
