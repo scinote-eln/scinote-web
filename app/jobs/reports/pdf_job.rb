@@ -21,8 +21,12 @@ module Reports
       report = Report.find(report_id)
       file = Tempfile.new(['report', '.pdf'], binmode: true)
       begin
-        template = Extends::REPORT_TEMPLATES[report.settings[:template]&.to_sym]
-        template ||= Extends::REPORT_TEMPLATES.values.first
+        template =
+          if Extends::REPORT_TEMPLATES.key?(report.settings[:template]&.to_sym)
+            report.settings[:template]
+          else
+            Extends::REPORT_TEMPLATES.keys.first
+          end
 
         raise StandardError, 'Report template not found!' if template.blank?
 
@@ -77,7 +81,7 @@ module Reports
             next unless result.is_asset && PREVIEW_EXTENSIONS.include?(result.asset.file.blob.filename.extension)
 
             asset = result.asset
-            unless asset.file_pdf_preview.attached?
+            if !asset.file_pdf_preview.attached? || (asset.file.created_at > asset.file_pdf_preview.created_at)
               PdfPreviewJob.perform_now(asset.id)
               asset.reload
             end

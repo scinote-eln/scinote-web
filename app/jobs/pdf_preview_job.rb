@@ -36,9 +36,9 @@ class PdfPreviewJob < ApplicationJob
           asset.update(pdf_preview_processing: false)
         end
         Rails.logger.info("Finished preparing PDF preview for file #{blob.filename.sanitized}.")
-      ensure
-        File.delete(preview_file) if File.file?(preview_file)
       end
+    ensure
+      File.delete(preview_file) if File.file?(preview_file)
     end
   end
 
