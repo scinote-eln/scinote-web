@@ -46,7 +46,7 @@ class Report < ApplicationRecord
         step_tables: true,
         step_comments: true
       },
-      file_results: false,
+      file_results: true,
       file_results_previews: false,
       table_results: true,
       text_results: true,
