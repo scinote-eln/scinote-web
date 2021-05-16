@@ -712,12 +712,6 @@ en:
         admin: "Administrator"
 
   user_projects:
-    enums:
-      role:
-        owner: "Owner"
-        normal_user: "User"
-        technician: "Technician"
-        viewer: "Viewer"
     view_users:
       modal_title: "Members of %{name}"
       no_users: "No users!"
