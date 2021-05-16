@@ -4,7 +4,9 @@ class MyModuleMember
   include ActiveModel::Model
 
   attr_accessor :user_id, :user_role_id
-  attr_reader :current_user, :my_module, :experiment, :user, :project, :user_role
+  attr_reader :current_user, :my_module,
+              :experiment, :user, :project,
+              :user_role, :user_assignment
 
 
   def initialize(current_user, my_module, experiment, project, user = nil)
@@ -26,9 +28,9 @@ class MyModuleMember
     ActiveRecord::Base.transaction do
       @user = @project.users.find(user_id)
       @user_role = UserRole.find_by(id: user_role_id)
-      user_assignment = UserAssignment.find_by(assignable: my_module, user: user)
+      @user_assignment = UserAssignment.find_by(assignable: my_module, user: user)
 
-      if user_assignment.present? && user_role.nil?
+      if destroy_role?
         user_assignment.destroy
       elsif user_assignment.present?
         user_assignment.update!(user_role: user_role)
@@ -41,5 +43,14 @@ class MyModuleMember
         )
       end
     end
+  end
+
+  private
+
+  def destroy_role?
+    experiment_role = UserAssignment.find_by(assignable: experiment, user: user)&.user_role
+    (user_assignment.present? && user_role.nil?) ||
+      (experiment_role == user_role) ||
+      (experiment_role.nil? && UserAssignment.find_by(assignable: project, user: user)&.user_role == user_role)
   end
 end

@@ -26,9 +26,7 @@
     <% end %>
   </div>
     <div class="actions actions-cell table-cell">
-      <% if can_manage_experiments?(experiment.project) %>
-        <%= render partial: 'projects/show/experiment_actions_dropdown.html.erb', locals: { experiment: experiment } %>
-      <% end %>
+      <%= render partial: 'projects/show/experiment_actions_dropdown.html.erb', locals: { experiment: experiment, project: project } %>
     </div>
   <div class="dates-and-img-container">
     <div class="dates-container">
@@ -43,7 +41,7 @@
       <% if experiment.archived_branch? %>
         <div class="data-row archived-date-cell table-cell">
           <span class="card-label" cards-render="true"><%= t('experiments.card.archived_date') %></span>
-          <span class="card-value"><%= l(experiment.archived_on || @project.archived_on, format: :full_date) %></span>
+          <span class="card-value"><%= l(experiment.archived_on || project.archived_on, format: :full_date) %></span>
         </div>
       <% end %>
       <div class="data-row" cards-render="true" data-view-mode="active">
@@ -69,8 +67,6 @@
     </div>
   </div>
   <div class="description-cell table-cell">
-    <%= link_to 'Experiment Accesss', edit_access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'} %>
-    <%= link_to 'Show Experiment Accesss', access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'} %>
     <div class="description-text">
       <%= custom_auto_link(experiment.description, team: current_team) %>
     </div>

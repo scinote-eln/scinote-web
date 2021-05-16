@@ -997,6 +997,7 @@ en:
       archive_confirm: "Are you sure you want to archive this project?"
       restore_option: "Restore"
       more_link: "More"
+      experiment_access: "Experiment access"
       details_modal:
         description: "%{name} description"
     new:
@@ -2348,7 +2349,9 @@ en:
 
   user_assignment:
     current_assignee: "(you)"
-    change_role: "Change role"
+    change_project_role: "Change project role"
+    change_experiment_role: "Change experiment role"
+    change_my_module_role: "Change task role"
     select_role: "Select role"
     from_project: "%{user_role} [from project]"
     from_experiment: "%{user_role} [from experiment]"
