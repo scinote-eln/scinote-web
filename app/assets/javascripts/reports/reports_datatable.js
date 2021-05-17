@@ -89,7 +89,7 @@
                 ${I18n.t('projects.reports.index.docx')}
               </a>`;
     }
-    return `<a href="#" class="generate-docx">${I18n.t('projects.reports.index.generate')}</a>`;
+    return `<a href="#" class="generate-docx docx">${I18n.t('projects.reports.index.generate')}</a>`;
   }
 
   function renderPdfFile(data) {
@@ -192,7 +192,6 @@
 
   function checkProcessingStatus(reportId) {
     let $row = $('#reports-table').find(`tr[data-id="${reportId}"]`);
-
     if ($row.length === 0) return;
 
     $.getJSON($row.data('status-path'), (statusData) => {
@@ -275,7 +274,6 @@
         animateSpinner(null, false);
         HelperModule.flashAlertMsg(response.message, 'success');
         checkProcessingStatus(row.data('id'));
-        reloadTable();
       });
     }
   }
