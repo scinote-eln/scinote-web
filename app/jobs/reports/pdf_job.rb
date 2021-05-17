@@ -100,7 +100,7 @@ module Reports
             next unless result.is_asset && PREVIEW_EXTENSIONS.include?(result.asset.file.blob.filename.extension)
 
             asset = result.asset
-            unless asset.file_pdf_preview.attached?
+            if !asset.file_pdf_preview.attached? || (asset.file.created_at > asset.file_pdf_preview.created_at)
               PdfPreviewJob.perform_now(asset.id)
               asset.reload
             end
