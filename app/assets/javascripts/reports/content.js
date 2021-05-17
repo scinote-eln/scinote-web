@@ -8,12 +8,15 @@
     var input = el.siblings('input.hot-table-contents');
     var inputObj = JSON.parse(input.attr('value'));
     var data = inputObj.data;
+    var headers;
+    var parentEl;
+    var order;
 
     // Special handling if this is a repository table
     if (input.hasClass('hot-repository-items')) {
-      let headers = inputObj.headers;
-      let parentEl = el.closest('.report-module-repository-element');
-      let order = parentEl.attr('data-order') === 'asc';
+      headers = inputObj.headers;
+      parentEl = el.closest('.report-module-repository-element');
+      order = parentEl.attr('data-order') === 'asc';
 
       el.handsontable({
         disableVisualSelection: true,

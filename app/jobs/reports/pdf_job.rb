@@ -40,8 +40,12 @@ module Reports
       report = Report.find(report_id)
       file = Tempfile.new(['report', '.pdf'], binmode: true)
       begin
-        template = Extends::REPORT_TEMPLATES[report.settings[:template]&.to_sym]
-        template ||= Extends::REPORT_TEMPLATES.values.first
+        template =
+          if Extends::REPORT_TEMPLATES.key?(report.settings[:template]&.to_sym)
+            report.settings[:template]
+          else
+            Extends::REPORT_TEMPLATES.keys.first
+          end
 
         raise StandardError, 'Report template not found!' if template.blank?
 
