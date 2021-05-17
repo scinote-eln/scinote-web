@@ -374,6 +374,10 @@
     });
   }
 
+  $('.reports-index').on('change', '.report-search', function() {
+    REPORTS_TABLE.search($(this).val()).draw();
+  });
+
   $('#show_report_preview').click();
 
   initDatatable();

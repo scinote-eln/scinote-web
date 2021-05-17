@@ -103,5 +103,12 @@ class ReportDatatable < CustomDatatable
     Report.from(res, :reports)
   end
 
+  def filter_records(records)
+    records.where_attributes_like(
+      ['project_name', 'reports.name', 'reports.description'],
+      dt_params.dig(:search, :value)
+    )
+  end
+
   # ==== Insert 'presenter'-like methods below if necessary
 end
