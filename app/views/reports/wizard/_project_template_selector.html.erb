@@ -6,16 +6,20 @@
   <div class="col-md-6">
     <div class='project-selector'>
       <%= label_tag :projectSelector, t('projects.reports.wizard.first_step.select_project') %>
-      <%= select_tag :projectSelector, options_from_collection_for_select(@visible_projects, :id, :name, report.project_id), data: { placeholder: t('projects.reports.wizard.first_step.select_project') } %>
+      <%= select_tag :projectSelector,
+                     options_from_collection_for_select(@visible_projects, :id, :name, report.project_id),
+                     prompt: t('projects.reports.wizard.first_step.select_project') %>
     </div>
 
     <div class='template-selector'>
       <%= label_tag :templateSelector, t('projects.reports.wizard.first_step.select_template') %>
       <%= select_tag :templateSelector,
                      options_for_select(@templates.invert, report.settings[:template]),
+                     prompt: t('projects.reports.wizard.first_step.select_template'),
                      data: {
+                       disable_on_load: report.settings[:template].blank?,
                        placeholder: t('projects.reports.wizard.first_step.select_template'),
-                       selected_template: report.settings[:template] || @templates.first[0],
+                       selected_template: report.settings[:template],
                        values_editor_path: reports_new_template_values_path(report_id: report.id)
                      } %>
     </div>
