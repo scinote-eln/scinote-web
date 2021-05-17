@@ -559,7 +559,7 @@ class User < ApplicationRecord
   end
 
   def enabled_notifications_for?(notification_type, channel)
-    return true if notification_type == :deliver
+    return true if %i(deliver deliver_error).include?(notification_type)
 
     case channel
     when :web

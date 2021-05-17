@@ -64,9 +64,16 @@
 
   function renderDocxFile(data) {
     if (data.error) {
+      let oldLink = '';
+      if (data.preview_url) {
+        oldLink = `<a href="#" class="file-preview-link docx" data-preview-url="${data.preview_url}">
+                  (<i class="fas fa-file-docx"></i>
+                  ${I18n.t('projects.reports.index.previous_docx')})
+                </a>`;
+      }
       return `<span class="processing-error">
                 <i class="fas fa-exclamation-triangle"></i>
-                ${I18n.t('projects.reports.index.error')}
+                ${I18n.t('projects.reports.index.error')}${oldLink}
               </span>`;
     }
 
@@ -88,9 +95,16 @@
 
   function renderPdfFile(data) {
     if (data.error) {
+      let oldLink = '';
+      if (data.preview_url) {
+        oldLink = `<a href="#" class="file-preview-link pdf" data-preview-url="${data.preview_url}">
+                  (<i class="fas fa-file-pdf"></i>
+                  ${I18n.t('projects.reports.index.previous_pdf')})
+                </a>`;
+      }
       return `<span class="processing-error">
                 <i class="fas fa-exclamation-triangle"></i>
-                ${I18n.t('projects.reports.index.error')}
+                ${I18n.t('projects.reports.index.error')}${oldLink}
               </span>`;
     }
 

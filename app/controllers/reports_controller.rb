@@ -87,7 +87,6 @@ class ReportsController < ApplicationController
     @report.project = @project
     @report.user = current_user
     @report.team = current_team
-    @report.pdf_file_processing = true
     @report.settings = report_params[:settings]
     @report.last_modified_by = current_user
 
@@ -99,6 +98,7 @@ class ReportsController < ApplicationController
     ).save_with_content
 
     if @report.errors.blank?
+      @report.pdf_processing!
       log_activity(:create_report)
       flash[:success] = t('projects.reports.index.generation.accepted_message')
 
@@ -125,7 +125,6 @@ class ReportsController < ApplicationController
   # Updating existing report from the _save modal of the new page
   def update
     @report.last_modified_by = current_user
-    @report.pdf_file_processing = true
     @report.assign_attributes(report_params)
 
     ReportActions::ReportContent.new(
@@ -136,6 +135,7 @@ class ReportsController < ApplicationController
     ).save_with_content
 
     if @report.errors.blank?
+      @report.pdf_processing!
       log_activity(:edit_report)
       flash[:success] = t('projects.reports.index.generation.accepted_message')
 
@@ -173,14 +173,14 @@ class ReportsController < ApplicationController
       format.json do
         render json: {
           docx: {
-            processing: @report.docx_file_processing,
+            processing: @report.docx_processing?,
             preview_url: docx,
-            error: false
+            error: @report.docx_error?
           },
           pdf: {
-            processing: @report.pdf_file_processing,
+            processing: @report.pdf_processing?,
             preview_url: pdf,
-            error: false
+            error: @report.pdf_error?
           }
         }
       end
@@ -191,7 +191,7 @@ class ReportsController < ApplicationController
   def generate_pdf
     respond_to do |format|
       format.json do
-        @report.update!(pdf_file_processing: true)
+        @report.pdf_processing!
         log_activity(:generate_pdf_report)
         Reports::PdfJob.perform_later(@report.id, current_user)
         render json: {
@@ -204,7 +204,7 @@ class ReportsController < ApplicationController
   def generate_docx
     respond_to do |format|
       format.json do
-        @report.update!(docx_file_processing: true)
+        @report.docx_processing!
         log_activity(:generate_docx_report)
         Reports::DocxJob.perform_later(@report, current_user, current_team, root_url)
         render json: {
