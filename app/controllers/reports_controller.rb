@@ -56,8 +56,11 @@ class ReportsController < ApplicationController
   end
 
   def new_template_values
-    template = params[:template]
-    return render_404 if template.blank?
+    if Extends::REPORT_TEMPLATES.key?(params[:template]&.to_sym)
+      template = params[:template]
+    else
+      return render_404
+    end
 
     report = current_team.reports.where(project: @project).find_by(id: params[:report_id])
     report ||= current_team.reports.new(project: @project)
