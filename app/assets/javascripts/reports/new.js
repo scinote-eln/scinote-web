@@ -1403,4 +1403,5 @@ function reportHandsonTableConverter() {
   initTaskContents();
   initProjectContents();
   initTemplateValuesContainer();
+  reCheckContinueButton();
 }());
