@@ -982,11 +982,20 @@ function reportHandsonTableConverter() {
 
     // Template values
     reportData.template_values = {};
-    $.each($('.report-template-values-container').find('.sci-input-field, select'), function(i, field) {
+    $.each($('.report-template-values-container').find('.sci-input-field'), function(i, field) {
       if (field.value.length === 0) return;
 
       reportData.template_values[field.name] = {
         value: field.value,
+        view_component: field.dataset.type
+      };
+    });
+
+    $.each($('.report-template-values-container').find('select'), function(i, field) {
+      if (dropdownSelector.getValues(field).length === 0) return;
+
+      reportData.template_values[field.name] = {
+        value: dropdownSelector.getValues(field),
         view_component: field.dataset.type
       };
     });
@@ -1307,10 +1316,7 @@ function reportHandsonTableConverter() {
       $('.report-template-values-container').html(result.html);
       $('.report-template-value-dropdown').each(function() {
         dropdownSelector.init($(this), {
-          singleSelect: false,
-          closeOnSelect: true,
-          noEmptyOption: true,
-          selectAppearance: 'simple'
+          noEmptyOption: true
         });
       });
     });
