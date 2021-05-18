@@ -5,8 +5,8 @@ class Report < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
 
-  enum pdf_file_status: { pdf_processing: 0, pdf_ready: 1, pdf_error: 2 }
-  enum docx_file_status: { docx_processing: 0, docx_ready: 1, docx_error: 2 }
+  enum pdf_file_status: { pdf_empty: 0, pdf_processing: 1, pdf_ready: 2, pdf_error: 3 }
+  enum docx_file_status: { docx_empty: 0, docx_processing: 1, docx_ready: 2, docx_error: 3 }
 
   # ActiveStorage configuration
   has_one_attached :pdf_file
