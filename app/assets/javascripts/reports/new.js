@@ -1331,10 +1331,7 @@ function reportHandsonTableConverter() {
       disableSearch: true
     });
 
-    function SelectAllRepositoriesStatus() {
-      var selectAll = $('.task-contents-container .select-all-repositories');
-      var all = $('.repositories-contents .sci-checkbox').length;
-      var checked = $('.repositories-contents .sci-checkbox:checked').length;
+    function selectAllCheckboxState(selectAll, all, checked) {
       selectAll.prop('indeterminate', false);
       if (all === checked) {
         selectAll.prop('checked', true);
@@ -1343,6 +1340,35 @@ function reportHandsonTableConverter() {
         if (checked > 0) selectAll.prop('indeterminate', true);
       }
     }
+
+    function SelectAllRepositoriesStatus() {
+      var selectAll = $('.task-contents-container .select-all-repositories');
+      var all = $('.repositories-contents .sci-checkbox').length;
+      var checked = $('.repositories-contents .sci-checkbox:checked').length;
+      selectAllCheckboxState(selectAll, all, checked);
+    }
+
+    function SelectAllProtocolStatus() {
+      var selectAll = $('.task-contents-container .protocol-steps-checkbox');
+      var all = $('.step-contents .sci-checkbox').length;
+      var checked = $('.step-contents .sci-checkbox:checked').length;
+      selectAllCheckboxState(selectAll, all, checked);
+    }
+
+    function SelectAllResultsStatus() {
+      var selectAll = $('.task-contents-container .all-results-checkbox');
+      var all = $('.results-type-contents .sci-checkbox:not(.skip-select-all)').length;
+      var checked = $('.results-type-contents .sci-checkbox:not(.skip-select-all):checked').length;
+      selectAllCheckboxState(selectAll, all, checked);
+    }
+
+    function SelectAllTaskContentStatus() {
+      var selectAll = $('.task-contents-container .select-all-task-contents');
+      var all = $('.report-task-settings .sci-checkbox:not(.skip-select-all)').length;
+      var checked = $('.report-task-settings .sci-checkbox:not(.skip-select-all):checked').length;
+      selectAllCheckboxState(selectAll, all, checked);
+    }
+
 
     $('.task-contents-container')
       .on('change', '.select-all-task-contents', function() {
@@ -1363,6 +1389,15 @@ function reportHandsonTableConverter() {
       })
       .on('change', '.repositories-contents .sci-checkbox', function() {
         SelectAllRepositoriesStatus();
+      })
+      .on('change', '.step-contents .sci-checkbox', function() {
+        SelectAllProtocolStatus();
+      })
+      .on('change', '.results-type-contents .sci-checkbox:not(.skip-select-all)', function() {
+        SelectAllResultsStatus();
+      })
+      .on('change', '.report-task-settings .sci-checkbox:not(.skip-select-all)', function() {
+        SelectAllTaskContentStatus();
       });
 
     SelectAllRepositoriesStatus();
