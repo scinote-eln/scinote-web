@@ -539,8 +539,8 @@ en:
         first_step:
           select_project_title: "Select project and report template"
           select_project_description: "You are about to create a new report. Please select a project for which you would like to create a report, and choose the report design template. Only projects with at least 1 task are displayed."
-          select_project: "Select project"
-          select_template: "Select template"
+          select_project: "Select a project"
+          select_template: "Select your template"
           report_description: "Report description (optional)"
           report_description_placeholder: "In this report you can see..."
           values_editor:
