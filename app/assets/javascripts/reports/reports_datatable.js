@@ -184,6 +184,13 @@
           $('#updateDocx').removeClass('disabled');
         }
       }
+
+      if (pdfProcessing || docxProcessing) {
+        $('#edit-report-btn').addClass('disabled');
+      } else {
+        $('#edit-report-btn').removeClass('disabled');
+      }
+
     } else {
       $('.single-object-action').removeClass('hidden').addClass('disabled');
       $('.multiple-object-action').removeClass('disabled hidden');
