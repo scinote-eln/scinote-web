@@ -96,7 +96,8 @@ module Reports
     def append_result_asset_previews(report, report_file)
       Dir.mktmpdir do |tmp_dir|
         report.report_elements.my_module.each do |my_module_element|
-          my_module_element.my_module.results.each do |result|
+          results = my_module_element.my_module.results
+          order_results_for_report(results, report.settings.dig(:task, :result_order)).each do |result|
             next unless result.is_asset && PREVIEW_EXTENSIONS.include?(result.asset.file.blob.filename.extension)
 
             asset = result.asset
