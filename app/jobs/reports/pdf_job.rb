@@ -44,7 +44,7 @@ module Reports
           if Extends::REPORT_TEMPLATES.key?(report.settings[:template]&.to_sym)
             report.settings[:template]
           else
-            Extends::REPORT_TEMPLATES.keys.first
+            Extends::REPORT_TEMPLATES.keys.first.to_s
           end
 
         raise StandardError, 'Report template not found!' if template.blank?
