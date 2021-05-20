@@ -373,7 +373,7 @@
   }
 
 
-  $('.reports-index').on('change', '.report-search', function() {
+  $('.reports-index').on('keyup', '.report-search', function() {
     REPORTS_TABLE.search($(this).val()).draw();
   });
 
