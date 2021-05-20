@@ -31,7 +31,7 @@ class ReportsController < ApplicationController
   before_action :check_manage_permissions, only: BEFORE_ACTION_METHODS
   before_action :switch_team_with_param, only: :index
 
-  after_action :generate_pdf_report, only: %i(create update)
+  after_action :generate_pdf_report, only: %i(create update generate_pdf)
 
   # Index showing all reports of a single project
   def index; end
@@ -101,7 +101,6 @@ class ReportsController < ApplicationController
     ).save_with_content
 
     if @report.errors.blank?
-      @report.pdf_processing!
       log_activity(:create_report)
       flash[:success] = t('projects.reports.index.generation.accepted_message')
 
@@ -138,7 +137,6 @@ class ReportsController < ApplicationController
     ).save_with_content
 
     if @report.errors.blank?
-      @report.pdf_processing!
       log_activity(:edit_report)
       flash[:success] = t('projects.reports.index.generation.accepted_message')
 
@@ -194,9 +192,6 @@ class ReportsController < ApplicationController
   def generate_pdf
     respond_to do |format|
       format.json do
-        @report.pdf_processing!
-        log_activity(:generate_pdf_report)
-        Reports::PdfJob.perform_later(@report.id, current_user)
         render json: {
           message: I18n.t('projects.reports.index.generation.accepted_message')
         }
@@ -562,7 +557,10 @@ class ReportsController < ApplicationController
   end
 
   def generate_pdf_report
+    return unless @report.persisted?
+
+    @report.pdf_processing!
     log_activity(:generate_pdf_report)
-    Reports::PdfJob.perform_later(@report.id, current_user) if @report.persisted?
+    Reports::PdfJob.perform_later(@report.id, current_user)
   end
 end
