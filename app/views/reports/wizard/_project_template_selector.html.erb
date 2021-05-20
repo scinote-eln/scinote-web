@@ -14,7 +14,7 @@
     <div class='template-selector'>
       <%= label_tag :templateSelector, t('projects.reports.wizard.first_step.select_template') %>
       <%= select_tag :templateSelector,
-                     options_for_select(@templates.invert, report.settings[:template]),
+                     options_for_select(@templates.invert, @active_template),
                      prompt: t('projects.reports.wizard.first_step.select_template'),
                      data: {
                        disable_on_load: report.settings[:template].blank?,
