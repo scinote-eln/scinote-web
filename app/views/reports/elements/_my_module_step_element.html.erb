@@ -68,7 +68,9 @@
       <%= render partial: 'reports/elements/step_comments_element.html.erb', locals: { step: step } %>
     <% end %>
   </div>
-  <div class="report-element-children">
-    <%= children if (defined? children and children.present?) %>
-  </div>
+  <% if defined?(children) %>
+    <div class="report-element-children">
+      <%= children %>
+    </div>
+  <% end %>
 </div>

@@ -99,9 +99,13 @@
       <% end %>
     <% end %>
   </div>
-  <div class="report-element-children">
-    <%= children if (defined? children and children.present?) %>
-  </div>
+
+  <% if defined?(children) %>
+    <div class="report-element-children">
+      <%= children %>
+    </div>
+  <% end %>
+
   <% if @settings.dig('task', 'activities') %>
     <div class="report-element-children">
       <%= render partial: 'reports/elements/my_module_activity_element.html.erb', locals: { my_module: my_module } %>
