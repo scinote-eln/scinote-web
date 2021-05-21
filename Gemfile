@@ -13,6 +13,7 @@ gem 'figaro'
 gem 'pg', '~> 1.1'
 gem 'pg_search' # PostgreSQL full text search
 gem 'rails', '~> 6.1.1'
+gem 'view_component', require: 'view_component/engine'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 5.2'
 gem 'sassc-rails'
@@ -60,7 +61,7 @@ gem 'ajax-datatables-rails', '~> 0.3.1'
 gem 'aspector' # Aspect-oriented programming for Rails
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces AR
 gem 'bcrypt', '~> 3.1.10'
-gem 'caracal-rails' # Build docx report
+gem 'caracal' # Build docx report
 gem 'deface', '~> 1.0'
 gem 'down', '~> 5.0'
 gem 'faker' # Generate fake data

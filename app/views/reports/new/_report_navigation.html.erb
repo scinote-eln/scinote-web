@@ -26,8 +26,8 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-        <li><%= link_to t("projects.reports.new.nav_pdf"), generate_project_reports_path(@project, format: :pdf), id: "get-report-pdf" %></li>
-        <li><%= link_to t("projects.reports.new.nav_docx"), generate_project_reports_path(@project, format: :docx), id: "get-report-docx" %></li>
+        <li><%= link_to t("projects.reports.new.nav_pdf"), generate_pdf_project_report_path(@project, @report), id: "get-report-pdf" %></li>
+        <li><%= link_to t("projects.reports.new.nav_docx"), generate_docx_project_report_path(@project, @report), id: "get-report-docx" %></li>
       </ul>
     </div>
 

@@ -36,6 +36,13 @@
     </div>
   </div>
   <div class="report-element-children">
-    <%= children if (defined? children and children.present?) %>
+    <% if @settings.dig('task', 'result_comments') %>
+      <%= render partial: 'reports/elements/result_comments_element.html.erb', locals: { result: result } %>
+    <% end %>
   </div>
+  <% if defined?(children) %>
+    <div class="report-element-children">
+      <%= children %>
+    </div>
+  <% end %>
 </div>

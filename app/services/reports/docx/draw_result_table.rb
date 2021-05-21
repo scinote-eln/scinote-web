@@ -2,7 +2,7 @@
 
 module Reports::Docx::DrawResultTable
   def draw_result_table(subject, my_module)
-    result = my_module.results.find_by(id: subject['id']['result_id'])
+    result = my_module.results.find_by(id: subject.result_id)
     return unless result
 
     table = result.table
@@ -19,8 +19,8 @@ module Reports::Docx::DrawResultTable
                   timestamp: I18n.l(timestamp, format: :full), user: result.user.full_name), color: color[:gray]
     end
     @docx.table JSON.parse(table.contents_utf_8)['data'], border_size: Constants::REPORT_DOCX_TABLE_BORDER_SIZE
-    subject['children'].each do |child|
-      public_send("draw_#{child['type_of']}", child, result)
+    subject.children.each do |child|
+      public_send("draw_#{child.type_of}", child, result)
     end
   end
 end

@@ -19,8 +19,8 @@
   }
 
   #count-notifications {
-    background-color: $brand-primary;
-    border-radius: 5px;
+    background-color: $brand-accent;
+    border-radius: 8px;
     color: $color-concrete;
     display: none;
     font-size: 11px;
@@ -107,6 +107,17 @@
 
   .deliver {
     background-color: $brand-warning;
+    border-radius: 50%;
+    color: $color-concrete;
+    display: block;
+    font-size: $font-size-h3;
+    height: 45px;
+    padding-top: 5px;
+    width: 45px;
+  }
+
+  .deliver-error {
+    background-color: $brand-danger;
     border-radius: 50%;
     color: $color-concrete;
     display: block;

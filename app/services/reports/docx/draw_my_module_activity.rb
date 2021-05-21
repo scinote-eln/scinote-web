@@ -4,7 +4,7 @@ module Reports::Docx::DrawMyModuleActivity
   def draw_my_module_activity(subject, my_module)
     return unless my_module
 
-    activities = ActivitiesService.my_module_activities(my_module).order(created_at: subject['sort_order'])
+    activities = ActivitiesService.my_module_activities(my_module).order(created_at: subject.sort_order)
 
     return false unless activities.any?
 

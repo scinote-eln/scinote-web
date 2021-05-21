@@ -194,15 +194,20 @@ Rails.application.routes.draw do
             via: [:get, :post, :put, :patch]
     end
 
-    resources :reports, only: :index
+    resources :reports, only: [:index, :new, :create, :update] do
+      member do
+        get :document_preview
+        get :save_pdf_to_inventory_modal, defaults: { format: 'json' }
+        post :save_pdf_to_inventory_item, defaults: { format: 'json' }
+      end
+      collection do
+        get :project_contents
+      end
+    end
     get 'reports/datatable', to: 'reports#datatable'
-    post 'reports/visible_projects', to: 'reports#visible_projects',
-                                     defaults: { format: 'json' }
+    get 'reports/new_template_values', to: 'reports#new_template_values', defaults: { format: 'json' }
     post 'reports/available_repositories', to: 'reports#available_repositories',
                                            defaults: { format: 'json' }
-    post 'reports/save_pdf_to_inventory_item',
-         to: 'reports#save_pdf_to_inventory_item',
-         defaults: { format: 'json' }
     post 'available_asset_type_columns',
           to: 'repository_columns#available_asset_type_columns',
           defaults: { format: 'json' }
@@ -243,10 +248,15 @@ Rails.application.routes.draw do
       resources :reports,
                 path: '/reports',
                 only: %i(edit update create) do
+        member do
+          post 'generate_pdf', to: 'reports#generate_pdf'
+          post 'generate_docx', to: 'reports#generate_docx'
+          get 'status', to: 'reports#status', format: %w(json)
+        end
+
         collection do
           # The posts following here should in theory be gets,
           # but are posts because of parameters payload
-          post 'generate', to: 'reports#generate', format: %w(docx pdf)
           get 'new/', to: 'reports#new'
           get 'new/project_contents_modal',
               to: 'reports#project_contents_modal',

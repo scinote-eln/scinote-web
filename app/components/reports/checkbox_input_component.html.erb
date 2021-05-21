@@ -1,0 +1,11 @@
+<% if @editing %>
+<div class="checkbox-value-container">
+  <div class="sci-checkbox-container">
+    <%= check_box_tag @name, true, @value, class: 'sci-checkbox', data: { type: 'CheckboxInputComponent' } %>
+    <span class="sci-checkbox-label"></span>
+  </div>
+  <%= @label %>
+</div>
+<% else %>
+  <div class="template-checkbox <%= 'selected' if @value %>"></div>
+<% end %>

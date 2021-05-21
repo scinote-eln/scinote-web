@@ -5,7 +5,7 @@ module Reports::Docx::DrawMyModule
     color = @color
     link_style = @link_style
     scinote_url = @scinote_url
-    my_module = experiment.my_modules.find_by(id: subject['id']['my_module_id'])
+    my_module = experiment.my_modules.find_by(id: subject.my_module_id)
     tags = my_module.tags
     return unless my_module
 
@@ -73,8 +73,8 @@ module Reports::Docx::DrawMyModule
     end
 
     @docx.p
-    subject['children'].each do |child|
-      public_send("draw_#{child['type_of']}", child, my_module)
+    subject.children.each do |child|
+      public_send("draw_#{child.type_of}", child, my_module)
     end
   end
 end

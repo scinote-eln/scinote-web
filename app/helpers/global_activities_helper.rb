@@ -96,7 +96,8 @@ module GlobalActivitiesHelper
     when Step
       return current_value
     when Report
-      path = reports_path(team: obj.team.id)
+      preview_type = activity.type_of == 'generate_docx_report' ? :docx : :pdf
+      path = reports_path(team: obj.team.id, preview_report_id: obj.id, preview_type: preview_type)
     when ProjectFolder
       path = if obj.new_record?
                projects_path(team: activity.team.id)
