@@ -309,6 +309,7 @@
     $('#requestDocx').click(function(ev) {
       ev.stopPropagation();
       ev.preventDefault();
+      $(this).closest('.dropdown-menu').dropdown('toggle');
       generateReportRequest('generate-docx-path');
     });
   }
