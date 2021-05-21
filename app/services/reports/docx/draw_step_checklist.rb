@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 module Reports::Docx::DrawStepChecklist
-  def draw_step_checklist(subject, step)
+  def draw_step_checklist(checklist)
     team = @report_team
     user = @user
-    checklist = step.checklists.find_by(id: subject.checklist_id)
-    return unless checklist
 
     items = checklist.checklist_items
     timestamp = checklist.created_at

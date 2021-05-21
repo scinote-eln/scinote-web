@@ -33,11 +33,12 @@ module Reports
       Rails.logger.error("Couldn't generate DOCX for Report with id: #{report.id}. Error:\n #{error}")
     end
 
-    def perform(report, user, team, root_url)
+    def perform(report_id, user, root_url)
+      report = Report.find(report_id)
       file = Tempfile.new(['report', '.docx'])
       begin
         docx = Caracal::Document.new(file.path)
-        Reports::Docx.new(report, docx, user: user, team: team, scinote_url: root_url).draw
+        Reports::Docx.new(report, docx, user: user, scinote_url: root_url).draw
         docx.save
         report.docx_file.attach(io: file, filename: 'report.docx')
         report.docx_ready!

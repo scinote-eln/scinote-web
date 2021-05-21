@@ -8,6 +8,7 @@ class Reports::Docx
   include ApplicationHelper
   include InputSanitizeHelper
   include TeamsHelper
+  include ReportsHelper
   include GlobalActivitiesHelper
   include Canaid::Helpers::PermissionsHelper
 
@@ -18,9 +19,10 @@ class Reports::Docx
 
   def initialize(report, docx, options)
     @report = report
+    @settings = report.settings
     @docx = docx
     @user = options[:user]
-    @report_team = options[:team]
+    @report_team = report.project.team
     @link_style = {}
     @color = {}
     @scinote_url = options[:scinote_url][0..-2]

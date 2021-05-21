@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
 module Reports::Docx::DrawResultAsset
-  def draw_result_asset(subject, my_module)
-    result = my_module.results.find_by(id: subject.result_id)
-    return unless result
-
+  def draw_result_asset(result)
     asset = result.asset
     timestamp = asset.created_at
     asset_url = Rails.application.routes.url_helpers.asset_download_url(asset)
@@ -24,8 +21,6 @@ module Reports::Docx::DrawResultAsset
 
     Reports::DocxRenderer.render_asset_image(@docx, asset) if asset.previewable? && !asset.list?
 
-    subject.children.each do |child|
-      public_send("draw_#{child.type_of}", child, result)
-    end
+    draw_result_comments(result) if @settings.dig('task', 'result_comments')
   end
 end
