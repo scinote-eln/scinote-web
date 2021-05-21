@@ -184,11 +184,13 @@ class MyModulesController < ApplicationController
   end
 
   def update_description
+    old_description = @my_module.description
     respond_to do |format|
       format.json do
         if @my_module.update(description: params.require(:my_module)[:description])
           log_activity(:change_module_description)
           TinyMceAsset.update_images(@my_module, params[:tiny_mce_images], current_user)
+          my_module_annotation_notification(old_description)
           render json: {
             html: custom_auto_link(
               @my_module.tinymce_render(:description),
@@ -206,12 +208,15 @@ class MyModulesController < ApplicationController
 
   def update_protocol_description
     protocol = @my_module.protocol
+    old_description = protocol.description
     return render_404 unless protocol
+
     respond_to do |format|
       format.json do
         if protocol.update(description: params.require(:protocol)[:description])
           log_activity(:protocol_description_in_task_edited)
           TinyMceAsset.update_images(protocol, params[:tiny_mce_images], current_user)
+          protocol_annotation_notification(old_description)
           render json: {
             html: custom_auto_link(
               protocol.tinymce_render(:description),
@@ -400,6 +405,34 @@ class MyModulesController < ApplicationController
   def activity_filters
     params.permit(
       :page, :starting_timestamp, :from_date, :to_date, types: [], users: [], subjects: {}
+    )
+  end
+
+  def my_module_annotation_notification(old_text = nil)
+    smart_annotation_notification(
+      old_text: old_text,
+      new_text: @my_module.description,
+      title: t('notifications.my_module_description_annotation_title',
+               my_module: @my_module.name,
+               user: current_user.full_name),
+      message: t('notifications.my_module_description_annotation_message_html',
+                 project: link_to(@my_module.experiment.project.name, project_url(@my_module.experiment.project)),
+                 experiment: link_to(@my_module.experiment.name, canvas_experiment_url(@my_module.experiment)),
+                 my_module: link_to(@my_module.name, protocols_my_module_url(@my_module)))
+    )
+  end
+
+  def protocol_annotation_notification(old_text = nil)
+    smart_annotation_notification(
+      old_text: old_text,
+      new_text: @my_module.protocol.description,
+      title: t('notifications.my_module_protocol_annotation_title',
+               my_module: @my_module.name,
+               user: current_user.full_name),
+      message: t('notifications.my_module_protocol_annotation_message_html',
+                 project: link_to(@my_module.experiment.project.name, project_url(@my_module.experiment.project)),
+                 experiment: link_to(@my_module.experiment.name, canvas_experiment_url(@my_module.experiment)),
+                 my_module: link_to(@my_module.name, protocols_my_module_url(@my_module)))
     )
   end
 end

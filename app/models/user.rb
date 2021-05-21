@@ -10,7 +10,6 @@ class User < ApplicationRecord
   include InputSanitizeHelper
   include ActiveStorageConcerns
 
-  acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
          :async, :recoverable, :rememberable, :trackable, :validatable,
          :timeoutable, :omniauthable, :lockable,

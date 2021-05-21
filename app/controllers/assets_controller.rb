@@ -52,6 +52,19 @@ class AssetsController < ApplicationController
     end
   end
 
+  def load_asset
+    gallery_view_id = if @assoc.is_a?(Step)
+                        @assoc.id
+                      elsif @assoc.is_a?(Result)
+                        @assoc.my_module.id
+                      end
+    render json: { html: render_to_string(partial: 'assets/asset.html.erb',
+                                          locals: {
+                                            asset: @asset,
+                                            gallery_view_id: gallery_view_id
+                                          }) }
+  end
+
   def file_url
     return render_404 unless @asset.file.attached?
 

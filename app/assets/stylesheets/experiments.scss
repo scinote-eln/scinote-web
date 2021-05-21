@@ -86,7 +86,7 @@
             display: -webkit-box;
             height: 3em;
             -webkit-line-clamp: 2;
-            margin: .25em 1.75em 0;
+            margin: .25em 1.75em -.25em;
             overflow: hidden;
             text-overflow: ellipsis;
             width: 100%;

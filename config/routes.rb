@@ -641,6 +641,7 @@ Rails.application.routes.draw do
     get 'files/:id/download', to: 'assets#download', as: 'asset_download'
     get 'files/:id/edit', to: 'assets#edit', as: 'edit_asset'
     patch 'files/:id/toggle_view_mode', to: 'assets#toggle_view_mode', as: 'toggle_view_mode'
+    get 'files/:id/load_asset', to: 'assets#load_asset', as: 'load_asset'
     post 'files/:id/update_image', to: 'assets#update_image',
                                    as: 'update_asset_image'
     delete 'files/:id/', to: 'assets#destroy', as: 'asset_destroy'
@@ -651,9 +652,9 @@ Rails.application.routes.draw do
 
     devise_scope :user do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'
-      get 'users/auth_token_sign_in' => 'users/sessions#auth_token_create'
       get 'users/sign_up_provider' => 'users/registrations#new_with_provider'
       get 'users/two_factor_recovery' => 'users/sessions#two_factor_recovery'
+      get 'users/two_factor_auth' => 'users/sessions#two_factor_auth'
       post 'users/authenticate_with_two_factor' => 'users/sessions#authenticate_with_two_factor'
       post 'users/authenticate_with_recovery_code' => 'users/sessions#authenticate_with_recovery_code'
       post 'users/complete_sign_up_provider' => 'users/registrations#create_with_provider'

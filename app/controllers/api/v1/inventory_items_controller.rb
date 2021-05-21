@@ -17,6 +17,7 @@ module Api
                           .preload(repository_cells: @inventory.cell_preload_includes)
                           .page(params.dig(:page, :number))
                           .per(params.dig(:page, :size))
+                          .order(:id)
         render jsonapi: items, each_serializer: InventoryItemSerializer, include: include_params
       end
 

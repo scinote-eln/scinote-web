@@ -271,20 +271,21 @@
   }
 
   function loadExperimentWorkflowImages() {
-    $('.workflowimg-container').each(function() {
-      let container = $(this);
+    $('.experiment-card').each(function() {
+      let card = $(this);
+      let container = $(this).find('.workflowimg-container').first();
       if (container.data('workflowimg-present') === false) {
         let imgUrl = container.data('workflowimg-url');
-        container.find('.workflowimg-spinner').removeClass('hidden');
+        card.find('.workflowimg-spinner').removeClass('hidden');
         $.ajax({
           url: imgUrl,
           type: 'GET',
           dataType: 'json',
           success: function(data) {
-            container.html(data.workflowimg);
+            card.find('.workflowimg-container').html(data.workflowimg);
           },
           error: function() {
-            container.find('.workflowimg-spinner').addClass('hidden');
+            card.find('.workflowimg-spinner').addClass('hidden');
           }
         });
       }

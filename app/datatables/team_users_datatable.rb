@@ -17,8 +17,8 @@ class TeamUsersDatatable < CustomDatatable
       'User.full_name',
       'User.email',
       'UserTeam.role',
-      'User.confirmed_at',
-      'User.confirmed_at',
+      'UserTeam.created_at',
+      'User.status'
     ]
   end
 
@@ -82,6 +82,16 @@ class TeamUsersDatatable < CustomDatatable
     end
   end
 
+  # Overwrite default pagination method as here
+  # we need to be able work also with arrays
+  def paginate_records(records)
+    records.to_a.drop(offset).first(per_page)
+  end
+
+  def load_paginator
+    self
+  end
+
   # Query database for records (this will be later paginated and filtered)
   # after that "data" function will return json
   def get_raw_records
@@ -90,5 +100,17 @@ class TeamUsersDatatable < CustomDatatable
       .references(:user)
       .where(team: @team)
       .distinct
+  end
+
+  def sort_records(records)
+    if sort_column(order_params) == 'users.status'
+      records = records.sort_by { |record| record.user.active_status_str }
+      order_params['dir'] == 'asc' ? records : records.reverse
+    elsif sort_column(order_params) == 'user_teams.role'
+      records = records.sort_by(&:role_str)
+      order_params['dir'] == 'asc' ? records : records.reverse
+    else
+      super(records)
+    end
   end
 end

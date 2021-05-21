@@ -28,7 +28,8 @@ class ActivitiesService
     end
 
     query = query.where(owner_id: filters[:users]) if filters[:users]
-    query = query.where(type_of: filters[:types]) if filters[:types]
+    query = query.where(type_of: filters[:types].map(&:to_i)) if filters[:types]
+
     query = query.where('created_at <= ?', Time.at(filters[:starting_timestamp].to_i)) if filters[:starting_timestamp]
 
     activities =
