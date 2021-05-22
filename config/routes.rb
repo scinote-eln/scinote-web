@@ -697,9 +697,11 @@ Rails.application.routes.draw do
               get 'activities', to: 'projects#activities'
               resources :reports, only: %i(index show), path: 'reports', as: :reports
               resources :experiments, only: %i(index show create update) do
+                resources :experiment_user_assignments, only: %i(index show create update)
                 resources :task_groups, only: %i(index show)
                 resources :connections, only: %i(index show)
                 resources :tasks, only: %i(index show create update) do
+                  resources :tasks_user_assignments, only: %i(index show create update)
                   resources :task_inventory_items, only: %i(index show),
                             path: 'items',
                             as: :items

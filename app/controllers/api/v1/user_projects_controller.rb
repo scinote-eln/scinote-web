@@ -27,22 +27,34 @@ module Api
       def create
         raise PermissionError.new(Project, :manage) unless can_manage_project?(@project)
 
-        user_project = @project.user_projects.create!(user_project_params.merge!(assigned_by: current_user))
+        # internally we reuse the same logic as for user project assignment
+        user_role = UserRole.find_by_name user_project_params[:role]
+        user = @team.users.find(user_project_params[:user_id])
 
-        render jsonapi: user_project, serializer: UserProjectSerializer, status: :created
+        project_member = ProjectMember.new(user, @project, current_user)
+        project_member.assign = true
+        project_member.user_role_id = user_role.id
+        project_member.create
+
+        render jsonapi: project_member.user_project, serializer: UserProjectSerializer, status: :created
       end
 
       def update
-        @user_project.role = user_project_params[:role]
-        return render body: nil, status: :no_content unless @user_project.changed?
+        user_role = UserRole.find_by_name user_project_params[:role]
+        project_member = ProjectMember.new(@user_project.user, @project, current_user)
 
-        @user_project.assigned_by = current_user
-        @user_project.save!
+        if project_member.user_assignment&.user_role == user_role
+          return render body: nil, status: :no_content
+        end
+
+        project_member.user_role_id = user_role.id
+        project_member.update
         render jsonapi: @user_project, serializer: UserProjectSerializer, status: :ok
       end
 
       def destroy
-        @user_project.destroy!
+        project_member = ProjectMember.new(@user_project.user, @project, current_user)
+        project_member.destroy
         render body: nil
       end
 

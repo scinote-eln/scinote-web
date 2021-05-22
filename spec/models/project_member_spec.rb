@@ -10,7 +10,7 @@ describe ProjectMember, type: :model do
 
   let(:subject) { described_class.new(user, project, user) }
 
-  describe 'create' do
+  describe '#create' do
     it 'create a user_assignment and user_project records' do
       subject.assign = true
       subject.user_role_id = owner_role.id
@@ -30,7 +30,7 @@ describe ProjectMember, type: :model do
     end
   end
 
-  describe 'update' do
+  describe '#update' do
     let!(:user_project) { create :user_project, user: user, project: project }
     let!(:user_assignment) {
       create :user_assignment,
@@ -55,7 +55,7 @@ describe ProjectMember, type: :model do
     end
   end
 
-  describe 'destroy' do
+  describe '#destroy' do
     let!(:user_two) { create :user }
     let!(:user_project_two) { create :user_project, user: user_two, project: project }
     let!(:user_assignment_two) {

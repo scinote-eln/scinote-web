@@ -4,7 +4,7 @@ class ProjectMember
   include ActiveModel::Model
 
   attr_accessor :user, :project, :assign, :user_role_id, :user_id
-  attr_reader :current_user, :user_assignment, :user_role
+  attr_reader :current_user, :user_assignment, :user_role, :user_project
 
   delegate :user_role, to: :user_assignment, allow_nil: true
 
@@ -25,7 +25,7 @@ class ProjectMember
     return unless assign
 
     ActiveRecord::Base.transaction do
-      UserProject.create!(project: @project, user: @user)
+      @user_project = UserProject.create!(project: @project, user: @user)
       @user_assignment = UserAssignment.create!(
         assignable: @project,
         user: @user,
