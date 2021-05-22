@@ -13,11 +13,22 @@ describe AccessPermissions::ProjectsController, type: :controller do
   let!(:normal_user_role) { create :normal_user_role }
   let!(:technician_role) { create :technician_role }
   let!(:user_project) { create :user_project, user: user, project: project }
-  let!(:user_assignment) { create :user_assignment, assignable: project, user: user, user_role: owner_role, assigned_by: user }
+  let!(:user_assignment) {
+    create :user_assignment,
+           assignable: project,
+           user: user,
+           user_role: owner_role,
+           assigned_by: user
+  }
   let!(:normal_user) { create :user, confirmed_at: Time.zone.now }
-  let!(:normal_user_team) { create :user_team, :normal_user, user: normal_user, team: team }
+  let!(:normal_user_team) {
+    create :user_team,
+           :normal_user,
+           user: normal_user,
+           team: team
+  }
 
-  describe "GET #new" do
+  describe 'GET #new' do
     it 'returns a http success response' do
       get :new, params: { id: project.id }, format: :json
       expect(response).to have_http_status :success
@@ -40,7 +51,7 @@ describe AccessPermissions::ProjectsController, type: :controller do
     end
   end
 
-  describe "GET #show" do
+  describe 'GET #show' do
     it 'returns a http success response' do
       get :show, params: { id: project.id }, format: :json
       expect(response).to have_http_status :success
@@ -63,7 +74,7 @@ describe AccessPermissions::ProjectsController, type: :controller do
     end
   end
 
-  describe "GET #edit" do
+  describe 'GET #edit' do
     it 'returns a http success response' do
       get :edit, params: { id: project.id }, format: :json
       expect(response).to have_http_status :success
@@ -85,9 +96,15 @@ describe AccessPermissions::ProjectsController, type: :controller do
     end
   end
 
-  describe "PUT #update" do
+  describe 'PUT #update' do
     let!(:normal_user_project) { create :user_project, user: normal_user, project: project }
-    let!(:normal_user_assignment) { create :user_assignment, assignable: project, user: normal_user, user_role: normal_user_role, assigned_by: user }
+    let!(:normal_user_assignment) {
+      create :user_assignment,
+             assignable: project,
+             user: normal_user,
+             user_role: normal_user_role,
+             assigned_by: user
+    }
 
     let(:valid_params) {
       {
@@ -135,7 +152,7 @@ describe AccessPermissions::ProjectsController, type: :controller do
       expect {
         post :create, params: valid_params, format: :json
       }.to change(UserProject, :count).by(1).and \
-           change(UserAssignment, :count).by(1)
+        change(UserAssignment, :count).by(1)
     end
 
     it 'does not create an assigment if user is already assigned' do
@@ -144,7 +161,7 @@ describe AccessPermissions::ProjectsController, type: :controller do
       expect {
         post :create, params: valid_params, format: :json
       }.to change(UserProject, :count).by(0).and \
-           change(UserAssignment, :count).by(0)
+        change(UserAssignment, :count).by(0)
     end
 
     it 'does not create an assigment when the user is already assigned with different permission' do
@@ -154,7 +171,7 @@ describe AccessPermissions::ProjectsController, type: :controller do
       expect {
         post :create, params: valid_params, format: :json
       }.to change(UserProject, :count).by(0).and \
-           change(UserAssignment, :count).by(0)
+        change(UserAssignment, :count).by(0)
     end
 
     it 'renders 403 if user does not have manage permissions on project' do
@@ -165,9 +182,15 @@ describe AccessPermissions::ProjectsController, type: :controller do
     end
   end
 
-  describe "DELETE #destroy" do
+  describe 'DELETE #destroy' do
     let!(:normal_user_project) { create :user_project, user: normal_user, project: project }
-    let!(:normal_user_assignment) { create :user_assignment, assignable: project, user: normal_user, user_role: normal_user_role, assigned_by: user }
+    let!(:normal_user_assignment) {
+      create :user_assignment,
+             assignable: project,
+             user: normal_user,
+             user_role: normal_user_role,
+             assigned_by: user
+    }
 
     let(:valid_params) {
       {
@@ -180,7 +203,7 @@ describe AccessPermissions::ProjectsController, type: :controller do
       expect {
         delete :destroy, params: valid_params, format: :json
       }.to change(UserProject, :count).by(-1).and \
-           change(UserAssignment, :count).by(-1)
+        change(UserAssignment, :count).by(-1)
     end
 
     it 'renders 403 if user does not have manage permissions on project' do

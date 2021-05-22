@@ -8,7 +8,6 @@ class ExperimentMember
               :user, :project, :user_role,
               :user_assignment
 
-
   def initialize(current_user, experiment, project, user = nil)
     @experiment = experiment
     @current_user = current_user

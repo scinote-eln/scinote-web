@@ -6,7 +6,7 @@ module AccessPermissions
     before_action :set_experiment
     before_action :set_my_module
     before_action :check_read_permissions, only: %i(show)
-    before_action :check_manage_permissions, only: %i(create edit update)
+    before_action :check_manage_permissions, only: %i(edit update)
 
     def show
       respond_to do |format|

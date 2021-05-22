@@ -10,7 +10,6 @@ describe ProjectMember, type: :model do
 
   let(:subject) { described_class.new(user, project, user) }
 
-
   describe 'create' do
     it 'create a user_assignment and user_project records' do
       subject.assign = true
@@ -33,7 +32,13 @@ describe ProjectMember, type: :model do
 
   describe 'update' do
     let!(:user_project) { create :user_project, user: user, project: project }
-    let!(:user_assignment) { create :user_assignment, assignable: project, user: user, user_role: owner_role, assigned_by: user }
+    let!(:user_assignment) {
+      create :user_assignment,
+             assignable: project,
+             user: user,
+             user_role: owner_role,
+             assigned_by: user
+    }
 
     it 'updates only the user assignment role' do
       subject.user_role_id = normal_user_role.id
@@ -53,9 +58,21 @@ describe ProjectMember, type: :model do
   describe 'destroy' do
     let!(:user_two) { create :user }
     let!(:user_project_two) { create :user_project, user: user_two, project: project }
-    let!(:user_assignment_two) { create :user_assignment, assignable: project, user: user_two, user_role: owner_role, assigned_by: user }
+    let!(:user_assignment_two) {
+      create :user_assignment,
+             assignable: project,
+             user: user_two,
+             user_role: owner_role,
+             assigned_by: user
+    }
     let!(:user_project) { create :user_project, user: user, project: project }
-    let!(:user_assignment) { create :user_assignment, assignable: project, user: user, user_role: owner_role, assigned_by: user }
+    let!(:user_assignment) {
+      create :user_assignment,
+             assignable: project,
+             user: user,
+             user_role: owner_role,
+             assigned_by: user
+    }
 
     it 'removes the user_assignment and user_project' do
       expect {

@@ -5,7 +5,7 @@ module AccessPermissions
     before_action :set_project
     before_action :set_experiment
     before_action :check_read_permissions, only: %i(show)
-    before_action :check_manage_permissions, only: %i(create edit update)
+    before_action :check_manage_permissions, only: %i(edit update)
 
     def show
       respond_to do |format|
@@ -20,7 +20,7 @@ module AccessPermissions
     end
 
     def update
-      @experiment_member = ExperimentMember.new(current_user, @experiment,  @project)
+      @experiment_member = ExperimentMember.new(current_user, @experiment, @project)
       @experiment_member.update(permitted_update_params)
 
       respond_to do |format|

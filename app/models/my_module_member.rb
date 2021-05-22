@@ -8,7 +8,6 @@ class MyModuleMember
               :experiment, :user, :project,
               :user_role, :user_assignment
 
-
   def initialize(current_user, my_module, experiment, project, user = nil)
     @experiment = experiment
     @current_user = current_user

@@ -32,7 +32,6 @@ FactoryBot.define do
       predefined { true }
     end
 
-
     factory :technician_role do
       name { I18n.t('user_roles.predefined.technician') }
       permissions {

@@ -7,7 +7,13 @@ describe ExperimentMember, type: :model do
   let!(:user) { create :user }
   let!(:project) { create :project }
   let!(:user_project) { create :user_project, user: user, project: project }
-  let!(:user_assignment) { create :user_assignment, assignable: project, user: user, user_role: owner_role, assigned_by: user }
+  let!(:user_assignment) {
+    create :user_assignment,
+           assignable: project,
+           user: user,
+           user_role: owner_role,
+           assigned_by: user
+  }
   let!(:experiment) { create :experiment, project: project }
   let(:normal_user_role) { create :normal_user_role }
 

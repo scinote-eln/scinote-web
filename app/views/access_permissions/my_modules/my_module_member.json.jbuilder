@@ -8,7 +8,9 @@ json.form controller.render_to_string(
     experiment: @my_module_member.experiment,
     my_module: @my_module_member.my_module,
     project: @my_module_member.project,
-    update_path: access_permissions_project_experiment_my_module_path(@my_module_member.project, @my_module_member.experiment, @my_module_member.my_module)
+    update_path: access_permissions_project_experiment_my_module_path(@my_module_member.project,
+                                                                      @my_module_member.experiment,
+                                                                      @my_module_member.my_module)
   },
   layout: false
 )

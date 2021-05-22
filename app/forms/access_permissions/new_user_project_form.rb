@@ -4,7 +4,7 @@ module AccessPermissions
   class NewUserProjectForm
     include ActiveModel::Model
 
-    attr_accessor :project,:resource_members
+    attr_accessor :project, :resource_members
     attr_reader :current_user, :new_members_count
 
     def initialize(current_user, project, attributes = {})
@@ -45,4 +45,3 @@ module AccessPermissions
     end
   end
 end
-

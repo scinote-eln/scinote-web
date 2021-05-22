@@ -1,4 +1,4 @@
-(function () {
+(function() {
   'use strict';
 
   function initRemoteModalListeners() {
@@ -8,11 +8,10 @@
       ev.preventDefault();
 
       animateSpinner();
-      $.get(ev.currentTarget.getAttribute('href')).then(function({modal}) {
-        $(modal).modal('show')
-                .on("shown.bs.modal", function() {
+      $.get(ev.currentTarget.getAttribute('href')).then(function({ modal }) {
+        $(modal).on("shown.bs.modal", function() {
           $(this).find(".selectpicker").selectpicker();
-        });
+        }).modal('show');
         animateSpinner(null, false);
       });
     });

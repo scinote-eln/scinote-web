@@ -90,15 +90,13 @@ class ProjectMember
   end
 
   def validate_user_project_relation_presence
-    if UserProject.find_by(project: @project, user: @user).present?
-      errors.add(:user)
-    end
+    return if UserProject.find_by(project: @project, user: @user).nil?
+    errors.add(:user)
   end
 
   def validate_user_project_assignment_presence
-    if UserAssignment.find_by(assignable: @project, user: @user).present?
-      errors.add(:user_role_id, :already_present)
-    end
+    return if  UserAssignment.find_by(assignable: @project, user: @user).nil?
+    errors.add(:user_role_id, :already_present)
   end
 
   def project_owners

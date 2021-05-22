@@ -1,4 +1,4 @@
-(function () {
+(function() {
   'use strict';
 
   function initSwapRemoteContainerListeners() {
@@ -8,7 +8,7 @@
       ev.stopPropagation();
       ev.preventDefault();
 
-      $.get(element.getAttribute('href')).then(function({html, flash}) {
+      $.get(element.getAttribute('href')).then(function({ html, flash }) {
         let targetID = element.getAttribute('data-target');
         let targetElement = $(element).closest(targetID);
         let newContainer = $(html);

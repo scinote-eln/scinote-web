@@ -27,8 +27,10 @@ module UserAssignmentsHelper
       current_user_assignment_name = user_assignment&.user_role&.name
 
       [
-        t('user_assignment.from_project', user_role: project_user_assignment.user_role.name),
-        (t('user_assignment.from_experiment', user_role: experiment_user_assignment.user_role.name) if experiment_user_assignment.present?),
+        t('user_assignment.from_project',
+          user_role: project_user_assignment.user_role.name),
+        (t('user_assignment.from_experiment',
+           user_role: experiment_user_assignment.user_role.name) if experiment_user_assignment.present?),
         current_user_assignment_name
       ].compact.join(' / ')
     else
@@ -36,4 +38,3 @@ module UserAssignmentsHelper
     end
   end
 end
-
