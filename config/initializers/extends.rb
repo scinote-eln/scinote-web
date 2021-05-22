@@ -381,7 +381,9 @@ class Extends
     create_project_folder: 159,
     move_project_folder: 160,
     rename_project_folder: 161,
-    delete_project_folder: 162
+    delete_project_folder: 162,
+    change_user_role_on_experiment: 163,
+    change_user_role_on_my_module: 164
   }
 
   ACTIVITY_GROUPS = {
@@ -445,5 +447,7 @@ class Extends
     create_individual_signature_request
     delete_individual_signature_request
     delete_group_signature_request
+    change_user_role_on_experiment
+    change_user_role_on_my_module
   )
 end

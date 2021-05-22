@@ -41,10 +41,26 @@ class ExperimentMember
           assigned_by: current_user
         )
       end
+      log_change_activity
     end
   end
 
   private
+
+  def log_change_activity
+    Activities::CreateActivityService.call(
+      activity_type: :change_user_role_on_experiment,
+      owner: current_user,
+      subject: experiment,
+      team: project.team,
+      project: project,
+      message_items: {
+        experiment: experiment.id,
+        user_target: user.id,
+        role: user_role.name
+      }
+    )
+  end
 
   def destroy_role?
     (user_assignment.present? && user_role.nil?) ||

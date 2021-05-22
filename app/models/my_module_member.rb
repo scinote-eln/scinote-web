@@ -42,10 +42,26 @@ class MyModuleMember
           assigned_by: current_user
         )
       end
+      log_change_activity
     end
   end
 
   private
+
+  def log_change_activity
+    Activities::CreateActivityService.call(
+      activity_type: :change_user_role_on_my_module,
+      owner: current_user,
+      subject: my_module,
+      team: project.team,
+      project: project,
+      message_items: {
+        my_module: my_module.id,
+        user_target: user.id,
+        role: user_role.name
+      }
+    )
+  end
 
   def destroy_role?
     experiment_role = UserAssignment.find_by(assignable: experiment, user: user)&.user_role

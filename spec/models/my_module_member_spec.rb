@@ -51,5 +51,12 @@ describe MyModuleMember, type: :model do
       subject.update(valid_params)
       expect(assigment.reload.user_role).to eq normal_user_role
     end
+
+    it 'logs a change_user_role_on_my_module activity' do
+      expect {
+        subject.update(valid_params)
+      }.to change(Activity, :count).by(1)
+      expect(Activity.last.type_of).to eq 'change_user_role_on_my_module'
+    end
   end
 end

@@ -27,7 +27,6 @@ describe ExperimentMember, type: :model do
       }.to change(UserAssignment, :count).by(1)
     end
 
-
     it 'removes the user assigment if the project role is the same as selected one' do
       create :user_assignment, assignable: experiment, user: user, user_role: owner_role, assigned_by: user
       create :user_assignment, assignable: project, user: user, user_role: normal_user_role, assigned_by: user
@@ -41,6 +40,13 @@ describe ExperimentMember, type: :model do
       assigment = create :user_assignment, assignable: experiment, user: user, user_role: owner_role, assigned_by: user
       subject.update(valid_params)
       expect(assigment.reload.user_role).to eq normal_user_role
+    end
+
+    it 'logs a change_user_role_on_experiment activity' do
+      expect {
+        subject.update(valid_params)
+      }.to change(Activity, :count).by(1)
+      expect(Activity.last.type_of).to eq 'change_user_role_on_experiment'
     end
   end
 end
