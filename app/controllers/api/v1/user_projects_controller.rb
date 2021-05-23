@@ -9,7 +9,7 @@ module Api
       before_action :load_user_project_for_managing, only: %i(update destroy)
 
       def index
-        user_projects = @project.user_projects
+        user_projects = @project.user_projects.includes(:user, project: [user_assignments: :user_role])
                                 .page(params.dig(:page, :number))
                                 .per(params.dig(:page, :size))
 
@@ -28,7 +28,7 @@ module Api
         raise PermissionError.new(Project, :manage) unless can_manage_project?(@project)
 
         # internally we reuse the same logic as for user project assignment
-        user_role = UserRole.find_by_name user_project_params[:role]
+        user_role = UserRole.find_by_name incoming_role_name(user_project_params[:role])
         user = @team.users.find(user_project_params[:user_id])
 
         project_member = ProjectMember.new(user, @project, current_user)
@@ -36,11 +36,11 @@ module Api
         project_member.user_role_id = user_role.id
         project_member.create
 
-        render jsonapi: project_member.user_project, serializer: UserProjectSerializer, status: :created
+        render jsonapi: project_member.user_project.reload, serializer: UserProjectSerializer, status: :created
       end
 
       def update
-        user_role = UserRole.find_by_name user_project_params[:role]
+        user_role = UserRole.find_by_name incoming_role_name(user_project_params[:role])
         project_member = ProjectMember.new(@user_project.user, @project, current_user)
 
         if project_member.user_assignment&.user_role == user_role
@@ -49,7 +49,7 @@ module Api
 
         project_member.user_role_id = user_role.id
         project_member.update
-        render jsonapi: @user_project, serializer: UserProjectSerializer, status: :ok
+        render jsonapi: @user_project.reload, serializer: UserProjectSerializer, status: :ok
       end
 
       def destroy
@@ -59,6 +59,8 @@ module Api
       end
 
       private
+
+      include Api::V1::UserRoleSanitizer
 
       def load_user_project
         @user_project = @project.user_projects.find(params.require(:id))

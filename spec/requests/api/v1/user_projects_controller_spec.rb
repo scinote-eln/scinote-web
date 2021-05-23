@@ -13,6 +13,8 @@ RSpec.describe "Api::V1::UserProjectsController", type: :request do
     @invalid_project =
       create(:project, name: Faker::Name.unique.name, created_by: @another_user, team: @team, visibility: :hidden)
     create(:user_project, role: :owner, user: @user, project: @own_project)
+    create :user_assignment, assignable: @own_project, user: @user, user_role: create(:owner_role), assigned_by: @user
+    @normal_user_role = create :normal_user_role
 
     @valid_headers = { 'Authorization': 'Bearer ' + generate_token(@user.id) }
   end
@@ -177,7 +179,13 @@ RSpec.describe "Api::V1::UserProjectsController", type: :request do
   describe 'PATCH user_project, #update' do
     before :all do
       @valid_headers['Content-Type'] = 'application/json'
-      @user_project = create(:user_project, role: :normal_user, user: @another_user, project: @own_project)
+      @user_project = create(:user_project, user: @another_user, project: @own_project)
+      create :user_assignment,
+             assignable: @own_project,
+             user: @another_user,
+             user_role: @normal_user_role,
+             assigned_by: @user
+      create :technician_role
     end
 
     let(:action) do
