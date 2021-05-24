@@ -272,7 +272,7 @@ class Project < ApplicationRecord
     report = Report.generate_whole_project_report(self, user, team)
 
     page_html_string =
-      renderer.render 'reports/new.html.erb',
+      renderer.render 'reports/new_old.html.erb',
                       locals: { export_all: true,
                                 obj_filenames: obj_filenames },
                       assigns: { project: self, report: report }

@@ -103,7 +103,14 @@ class Report < ApplicationRecord
   end
 
   def self.generate_whole_project_report(project, current_user, current_team)
-    report_contents = gen_element_content(project, Extends::EXPORT_ALL_PROJECT_ELEMENTS)
+    # report_contents = gen_element_content(project, Extends::EXPORT_ALL_PROJECT_ELEMENTS)
+    content = {
+      'experiments' => {},
+      'repositories' => Repository.accessible_by_teams(project.team).pluck(:id)
+    }
+    project.experiments.includes(:my_modules).each do |experiment|
+      content['experiments'][experiment.id] = experiment.my_modules.pluck(:id)
+    end
 
     report = Report.new
     report.name = loop do
@@ -114,7 +121,8 @@ class Report < ApplicationRecord
     report.user = current_user
     report.team = current_team
     report.last_modified_by = current_user
-    report.save_with_contents(report_contents)
+    ReportActions::ReportContent.new(report, content, {}, current_user).save_with_content
+    # report.save_with_contents(report_contents)
     report
   end
 

@@ -3,6 +3,9 @@
   <meta name="turbolinks-visit-control" content="reload">
 <% end %>
 
+<% @settings = @report.settings %>
+
+
 <% provide(:head_title, t("projects.reports.new.head_title", project: h(@project.name)).html_safe) %>
 
 <%= render partial: "reports/new/report_navigation" %>
@@ -77,7 +80,6 @@
   </div>
 </div>
 
-<%= render partial: 'reports/new/save_PDF_to_inventory_modal' %>
 
 <%= javascript_include_tag "handsontable.full" %>
 
