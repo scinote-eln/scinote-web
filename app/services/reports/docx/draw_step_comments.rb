@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 module Reports::Docx::DrawStepComments
-  def draw_step_comments(_subject, step)
-    return unless step
-
-    comments = step.step_comments
-    return if comments.count.zero?
+  def draw_step_comments(step)
+    comments = step.step_comments.order(created_at: :desc)
+    return if comments.blank?
 
     @docx.p
     @docx.p I18n.t('projects.reports.elements.step_comments.name', step: step.name),

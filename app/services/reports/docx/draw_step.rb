@@ -1,11 +1,8 @@
 # frozen_string_literal: true
 
 module Reports::Docx::DrawStep
-  def draw_step(subject, my_module)
+  def draw_step(step)
     color = @color
-    step = my_module.protocols.first.steps.find_by(id: subject.step_id)
-    return unless step
-
     step_type_str = step.completed ? 'completed' : 'uncompleted'
     user = step.completed? ? step.last_modified_by : step.user
     timestamp = step.completed ? step.completed_on : step.created_at
@@ -33,9 +30,23 @@ module Reports::Docx::DrawStep
       @docx.p I18n.t 'projects.reports.elements.step.no_description'
     end
 
-    subject.children.each do |child|
-      public_send("draw_#{child.type_of}", child, step)
+    if @settings.dig('task', 'protocol', 'step_tables')
+      step.tables.each do |table|
+        draw_step_table(table)
+      end
     end
+    if @settings.dig('task', 'protocol', 'step_files')
+      step.assets.each do |asset|
+        draw_step_asset(asset)
+      end
+    end
+    if @settings.dig('task', 'protocol', 'step_checklists')
+      step.checklists.each do |checklist|
+        draw_step_checklist(checklist)
+      end
+    end
+    draw_step_comments(step) if @settings.dig('task', 'protocol', 'step_comments')
+
     @docx.p
     @docx.p
   end

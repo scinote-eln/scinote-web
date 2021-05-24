@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
 module Reports::Docx::DrawMyModuleActivity
-  def draw_my_module_activity(subject, my_module)
-    return unless my_module
-
-    activities = ActivitiesService.my_module_activities(my_module).order(created_at: subject.sort_order)
-
-    return false unless activities.any?
+  def draw_my_module_activity(my_module)
+    activities = ActivitiesService.my_module_activities(my_module).order(created_at: :desc)
+    return false if activities.blank?
 
     color = @color
     @docx.p

@@ -206,7 +206,7 @@ class ReportsController < ApplicationController
       format.json do
         @report.docx_processing!
         log_activity(:generate_docx_report)
-        Reports::DocxJob.perform_later(@report, current_user, current_team, root_url)
+        Reports::DocxJob.perform_later(@report, current_user, root_url)
         render json: {
           message: I18n.t('projects.reports.index.generation.accepted_message')
         }
