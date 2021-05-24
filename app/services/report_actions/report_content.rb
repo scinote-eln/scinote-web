@@ -13,9 +13,8 @@ module ReportActions
       @element_position = 0
       @report = report
       @template_values = template_values
-      @assigned_repositories = report.project.assigned_repositories_and_snapshots.select do |repository|
-        @content['repositories'].include?(repository.id)
-      end
+      @repositories = Repository.accessible_by_teams(report.project.team)
+                                .where(id: @content['repositories']).active
     end
 
     def save_with_content
@@ -72,7 +71,7 @@ module ReportActions
       my_modules.sort_by { |m| selected_my_modules.index m.id }.each do |my_module|
         my_module_element = save_element!({ 'my_module_id' => my_module.id }, :my_module, experiment_element)
 
-        @assigned_repositories.each do |repository|
+        @repositories.each do |repository|
           save_element!(
             { 'my_module_id' => my_module.id, 'repository_id' => repository.id },
             :my_module_repository,
