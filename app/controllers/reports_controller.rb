@@ -51,8 +51,7 @@ class ReportsController < ApplicationController
   # Report grouped by modules
   def new
     @templates = Extends::REPORT_TEMPLATES
-    @active_template = @templates.one? ? @templates.keys[0] : nil
-    @repositories = Repository.accessible_by_teams(current_team).active.select(:id, :name)
+    @repositories = Repository.accessible_by_teams(current_team).active.select(:id, :name).order(:name)
     @report = current_team.reports.new
   end
 
@@ -115,7 +114,7 @@ class ReportsController < ApplicationController
     @edit = true
     @templates = Extends::REPORT_TEMPLATES
     @active_template = @report.settings[:template]
-    @repositories = Repository.accessible_by_teams(current_team).active.select(:id, :name)
+    @repositories = Repository.accessible_by_teams(current_team).active.select(:id, :name).order(:name)
     @report.settings = Report::DEFAULT_SETTINGS if @report.settings.blank?
 
     @project_contents = {
