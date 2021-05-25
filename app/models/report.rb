@@ -11,6 +11,7 @@ class Report < ApplicationRecord
   # ActiveStorage configuration
   has_one_attached :pdf_file
   has_one_attached :docx_file
+  has_one_attached :docx_preview_file
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
@@ -94,6 +95,16 @@ class Report < ApplicationRecord
 
   def root_elements
     report_elements.order(:position).select { |el| el.parent.blank? }
+  end
+
+  def docx_preview_ready?
+    return false if docx_preview_processing
+
+    return true if docx_preview_file.attached?
+
+    Reports::DocxPreviewJob.perform_later(id)
+    ActiveRecord::Base.no_touching { update(docx_preview_processing: true) }
+    false
   end
 
   # Clean report elements from report

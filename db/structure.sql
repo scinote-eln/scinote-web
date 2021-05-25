@@ -1307,9 +1307,10 @@ CREATE TABLE public.reports (
     updated_at timestamp without time zone NOT NULL,
     last_modified_by_id bigint,
     team_id bigint,
-    pdf_file_status integer DEFAULT 0,
-    docx_file_status integer DEFAULT 0,
-    settings jsonb DEFAULT '{}'::jsonb NOT NULL
+    pdf_file_status integer,
+    docx_file_status integer,
+    settings jsonb DEFAULT '{}'::jsonb NOT NULL,
+    docx_preview_processing boolean DEFAULT false NOT NULL
 );
 
 
@@ -7234,6 +7235,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210312185911'),
 ('20210325152257'),
 ('20210407143303'),
-('20210506125657');
+('20210410100006'),
+('20210506125657'),
+('20210525143303');
 
 
