@@ -35,14 +35,17 @@
       </div>
     </div>
   </div>
-  <div class="report-element-children">
-    <% if @settings.dig('task', 'result_comments') %>
-      <%= render partial: 'reports/elements/result_comments_element.html.erb', locals: { result: result } %>
+  <% if for_export_all %>
+    <% if defined?(children) %>
+      <div class="report-element-children">
+        <%= children %>
+      </div>
     <% end %>
-  </div>
-  <% if defined?(children) %>
+  <% else %>
     <div class="report-element-children">
-      <%= children %>
+      <% if @settings.dig('task', 'result_comments') %>
+        <%= render partial: 'reports/elements/result_comments_element.html.erb', locals: { result: result } %>
+      <% end %>
     </div>
   <% end %>
 </div>

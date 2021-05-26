@@ -32,7 +32,7 @@ class Report < ApplicationRecord
   # Report either has many report elements (if grouped by timestamp),
   # or many module elements (if grouped by module)
   has_many :report_elements,
-           -> { where(type_of: ReportExtends::ACTIVE_REPORT_ELEMENTS) },
+           #-> { where(type_of: ReportExtends::ACTIVE_REPORT_ELEMENTS) },
            inverse_of: :report,
            dependent: :delete_all
 
@@ -103,14 +103,7 @@ class Report < ApplicationRecord
   end
 
   def self.generate_whole_project_report(project, current_user, current_team)
-    # report_contents = gen_element_content(project, Extends::EXPORT_ALL_PROJECT_ELEMENTS)
-    content = {
-      'experiments' => {},
-      'repositories' => Repository.accessible_by_teams(project.team).pluck(:id)
-    }
-    project.experiments.includes(:my_modules).each do |experiment|
-      content['experiments'][experiment.id] = experiment.my_modules.pluck(:id)
-    end
+    report_contents = gen_element_content(project, Extends::EXPORT_ALL_PROJECT_ELEMENTS)
 
     report = Report.new
     report.name = loop do
@@ -121,9 +114,30 @@ class Report < ApplicationRecord
     report.user = current_user
     report.team = current_team
     report.last_modified_by = current_user
-    ReportActions::ReportContent.new(report, content, {}, current_user).save_with_content
-    # report.save_with_contents(report_contents)
+
+    report.save_with_contents(report_contents)
     report
+  end
+
+  # Still used by Export All
+  def save_with_contents(json_contents)
+    begin
+      Report.transaction do
+        # First, save the report itself
+        save!
+
+        # Secondly, delete existing report elements
+        report_elements.destroy_all
+
+        # Lastly, iterate through contents
+        json_contents.each_with_index do |json_el, i|
+          save_json_element(json_el, i, nil)
+        end
+      end
+    rescue ActiveRecord::ActiveRecordError, ArgumentError
+      return false
+    end
+    true
   end
 
   def self.gen_element_content(parent, children)
@@ -150,5 +164,23 @@ class Report < ApplicationRecord
       end
     end
     elements
+  end
+
+  # Still used by export all
+  def save_json_element(json_element, index, parent)
+    el = ReportElement.new
+    el.position = index
+    el.report = self
+    el.parent = parent
+    el.type_of = json_element['type_of']
+    el.sort_order = json_element['sort_order']
+    el.set_element_references(json_element['id'])
+    el.save!
+
+    if json_element['children'].present?
+      json_element['children'].each_with_index do |child, i|
+        save_json_element(child, i, el)
+      end
+    end
   end
 end

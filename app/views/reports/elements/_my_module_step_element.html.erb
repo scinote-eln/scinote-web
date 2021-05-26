@@ -48,29 +48,32 @@
       </div>
     </div>
   </div>
-  <div class="report-element-children">
-    <% if @settings.dig('task', 'protocol', 'step_tables') %>
-      <% tables.each do |table| %>
-        <%= render partial: 'reports/elements/step_table_element.html.erb', locals: { table: table } %>
-      <% end %>
+  <% if for_export_all %>
+    <% if defined?(children) %>
+      <div class="report-element-children">
+        <%= children %>
+      </div>
     <% end %>
-    <% if @settings.dig('task', 'protocol', 'step_files') %>
-      <% assets.each do |asset| %>
-        <%= render partial: 'reports/elements/step_asset_element.html.erb', locals: { asset: asset } %>
-      <% end %>
-    <% end %>
-    <% if @settings.dig('task', 'protocol', 'step_checklists') %>
-      <% checklists.each do |checklist| %>
-        <%= render partial: 'reports/elements/step_checklist_element.html.erb', locals: { checklist: checklist } %>
-      <% end %>
-    <% end %>
-    <% if @settings.dig('task', 'protocol', 'step_comments') %>
-      <%= render partial: 'reports/elements/step_comments_element.html.erb', locals: { step: step } %>
-    <% end %>
-  </div>
-  <% if defined?(children) %>
+  <% else %>
     <div class="report-element-children">
-      <%= children %>
+      <% if @settings.dig('task', 'protocol', 'step_tables') %>
+        <% tables.each do |table| %>
+          <%= render partial: 'reports/elements/step_table_element.html.erb', locals: { table: table } %>
+        <% end %>
+      <% end %>
+      <% if @settings.dig('task', 'protocol', 'step_files') %>
+        <% assets.each do |asset| %>
+          <%= render partial: 'reports/elements/step_asset_element.html.erb', locals: { asset: asset } %>
+        <% end %>
+      <% end %>
+      <% if @settings.dig('task', 'protocol', 'step_checklists') %>
+        <% checklists.each do |checklist| %>
+          <%= render partial: 'reports/elements/step_checklist_element.html.erb', locals: { checklist: checklist } %>
+        <% end %>
+      <% end %>
+      <% if @settings.dig('task', 'protocol', 'step_comments') %>
+        <%= render partial: 'reports/elements/step_comments_element.html.erb', locals: { step: step } %>
+      <% end %>
     </div>
   <% end %>
 </div>

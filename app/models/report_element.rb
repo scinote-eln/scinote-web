@@ -18,7 +18,8 @@ class ReportElement < ApplicationRecord
 
   # Hierarchical structure representation
   has_many :children,
-           -> { where(type_of: ReportExtends::ACTIVE_REPORT_ELEMENTS).order(:position) },
+           -> { order(:position) },
+           #-> { where(type_of: ReportExtends::ACTIVE_REPORT_ELEMENTS).order(:position) },
            class_name: 'ReportElement',
            foreign_key: 'parent_id',
            dependent: :destroy
