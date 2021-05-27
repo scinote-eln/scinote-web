@@ -89,7 +89,7 @@ module Reports::Docx::DrawMyModule
     end
 
     @docx.p
-    subject.children.each do |child|
+    subject.children.active.each do |child|
       public_send("draw_#{child.type_of}", child)
     end
 

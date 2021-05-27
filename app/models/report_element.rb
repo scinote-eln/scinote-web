@@ -18,7 +18,7 @@ class ReportElement < ApplicationRecord
 
   # Hierarchical structure representation
   has_many :children,
-           -> { where(type_of: ReportExtends::ACTIVE_REPORT_ELEMENTS).order(:position) },
+           -> { order(:position) },
            class_name: 'ReportElement',
            foreign_key: 'parent_id',
            dependent: :destroy
@@ -36,9 +36,7 @@ class ReportElement < ApplicationRecord
   belongs_to :repository, inverse_of: :report_elements, optional: true,
              foreign_key: :repository_id, class_name: 'RepositoryBase'
 
-  def has_children?
-    children.length > 0
-  end
+  scope :active, -> { where(type_of: ReportExtends::ACTIVE_REPORT_ELEMENTS) }
 
   def result?
     result_asset? or result_table? or result_text?

@@ -31,10 +31,7 @@ class Report < ApplicationRecord
 
   # Report either has many report elements (if grouped by timestamp),
   # or many module elements (if grouped by module)
-  has_many :report_elements,
-           -> { where(type_of: ReportExtends::ACTIVE_REPORT_ELEMENTS) },
-           inverse_of: :report,
-           dependent: :delete_all
+  has_many :report_elements, inverse_of: :report, dependent: :delete_all
 
   DEFAULT_SETTINGS = {
     all_tasks: true,
@@ -93,7 +90,7 @@ class Report < ApplicationRecord
   end
 
   def root_elements
-    report_elements.order(:position).select { |el| el.parent.blank? }
+    report_elements.active.where(parent: nil).order(:position)
   end
 
   # Clean report elements from report
