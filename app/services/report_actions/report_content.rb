@@ -51,8 +51,8 @@ module ReportActions
     private
 
     def generate_content
-      @content['experiments'].each do |exp_id, my_modules|
-        generate_experiment_content(exp_id, my_modules)
+      @content['experiments'].each do |exp_id|
+        generate_experiment_content(exp_id, @content['tasks'][exp_id])
       end
     end
 

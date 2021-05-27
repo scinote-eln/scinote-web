@@ -105,11 +105,13 @@ class Report < ApplicationRecord
   def self.generate_whole_project_report(project, current_user, current_team)
     # report_contents = gen_element_content(project, Extends::EXPORT_ALL_PROJECT_ELEMENTS)
     content = {
-      'experiments' => {},
+      'experiments' => [],
+      'tasks' => {},
       'repositories' => Repository.accessible_by_teams(project.team).pluck(:id)
     }
     project.experiments.includes(:my_modules).each do |experiment|
-      content['experiments'][experiment.id] = experiment.my_modules.pluck(:id)
+      content['experiments'].push(experiment.id)
+      content['tasks'][experiment.id] = experiment.my_modules.pluck(:id)
     end
 
     report = Report.new
