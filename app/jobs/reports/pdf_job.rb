@@ -52,6 +52,7 @@ module Reports
         ActionController::Renderer::RACK_KEY_TRANSLATION['warden'] ||= 'warden'
         proxy = Warden::Proxy.new({}, Warden::Manager.new({}))
         proxy.set_user(user, scope: :user, store: false)
+        ApplicationController.renderer.defaults[:http_host] = Rails.application.routes.default_url_options[:host]
         renderer = ApplicationController.renderer.new(warden: proxy)
 
         file << renderer.render(
