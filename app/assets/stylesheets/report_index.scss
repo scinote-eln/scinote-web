@@ -56,12 +56,14 @@
       color: $brand-danger;
     }
 
-    .generate-docx {
+    .generate-docx,
+    .generate-pdf {
       display: none;
     }
 
     &:hover {
-      .generate-docx {
+      .generate-docx,
+      .generate-pdf {
         display: initial;
       }
     }

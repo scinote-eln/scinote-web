@@ -120,7 +120,7 @@
               </a>`;
     }
 
-    return '';
+    return `<a href="#" class="generate-pdf pdf">${I18n.t('projects.reports.index.generate')}</a>`;
   }
 
   function addAttributesToRow(row, data) {
@@ -390,6 +390,13 @@
     e.preventDefault();
     e.stopPropagation();
     generateReportRequest('generate-docx-path', reportId);
+  });
+
+  $('.reports-index').on('click', '.generate-pdf', function(e) {
+    var reportId = $(this).closest('.report-row').attr('data-id');
+    e.preventDefault();
+    e.stopPropagation();
+    generateReportRequest('generate-pdf-path', reportId);
   });
 
   $('#show_report_preview').click();
