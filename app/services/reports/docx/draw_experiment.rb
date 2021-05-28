@@ -25,7 +25,7 @@ module Reports::Docx::DrawExperiment
     Reports::HtmlToWordConverter.new(@docx, { scinote_url: scinote_url,
                                               link_style: link_style }).html_to_word_converter(html)
     @docx.p
-    subject.children.each do |child|
+    subject.children.active.each do |child|
       public_send("draw_#{child.type_of}", child)
     end
   end

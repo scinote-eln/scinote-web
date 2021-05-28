@@ -26,9 +26,9 @@ module ReportsHelper
       # Render no children
     elsif element.result?
       # Special handling for result comments
-      if element.has_children?
+      if element.children.active.present?
         children_html.safe_concat render_new_element(true)
-        element.children.each do |child|
+        element.children.active.each do |child|
           children_html
             .safe_concat render_report_element(child, provided_locals)
         end
@@ -36,8 +36,8 @@ module ReportsHelper
         children_html.safe_concat render_new_element(false)
       end
     else
-      if element.has_children?
-        element.children.each do |child|
+      if element.children.active.present?
+        element.children.active.each do |child|
           children_html.safe_concat render_new_element(false)
           children_html
             .safe_concat render_report_element(child, provided_locals)
