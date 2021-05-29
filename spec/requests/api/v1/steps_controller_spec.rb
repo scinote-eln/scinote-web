@@ -14,7 +14,7 @@ RSpec.describe 'Api::V1::StepsController', type: :request do
     create :user_assignment,
            assignable: @project,
            user: @user,
-           user_role: create(:normal_user_role),
+           user_role: create(:owner_role),
            assigned_by: @user
 
     @valid_headers =

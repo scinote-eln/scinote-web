@@ -12,8 +12,13 @@ describe MyModuleTagsController, type: :controller do
   let!(:user_project) do
     create :user_project, user: user, project: project
   end
-  let(:normal_user_role) { create :normal_user_role }
-  let!(:user_assignment) { create :user_assignment, assignable: project, user: user, user_role: normal_user_role, assigned_by: user }
+  let!(:user_assignment) do
+    create :user_assignment,
+           assignable: project,
+           user: user,
+           user_role: create(:owner_role),
+           assigned_by: user
+  end
   let(:experiment) { create :experiment, project: project }
   let(:my_module) { create :my_module, experiment: experiment }
 

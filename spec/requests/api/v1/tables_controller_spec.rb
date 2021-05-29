@@ -12,11 +12,11 @@ RSpec.describe 'Api::V1::TablesController', type: :request do
     @protocol = create(:protocol, my_module: @task)
     @step = create(:step, protocol: @protocol)
     create(:user_team, user: @user, team: @team)
-    create(:user_project, :normal_user, user: @user, project: @project)
+    create(:user_project, user: @user, project: @project)
     create :user_assignment,
            assignable: @project,
            user: @user,
-           user_role: create(:normal_user_role),
+           user_role: create(:owner_role),
            assigned_by: @user
 
     @valid_headers = {

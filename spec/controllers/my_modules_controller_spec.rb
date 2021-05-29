@@ -9,11 +9,15 @@ describe MyModulesController, type: :controller do
   let(:team) { create :team, created_by: user }
   let!(:user_team) { create :user_team, :admin, user: user, team: team }
   let(:project) { create :project, team: team, created_by: user }
-  let!(:user_project) do
-    create :user_project, user: user, project: project
+  let!(:user_project) { create :user_project, user: user, project: project }
+  let(:owner_role) { create :owner_role }
+  let!(:user_assignment) do
+    create :user_assignment,
+           assignable: project,
+           user: user,
+           user_role: owner_role,
+           assigned_by: user
   end
-  let(:normal_user_role) { create :normal_user_role }
-  let!(:user_assignment) { create :user_assignment, assignable: project, user: user, user_role: normal_user_role, assigned_by: user }
   let!(:repository) { create :repository, created_by: user, team: team }
   let!(:repository_row) do
     create :repository_row, created_by: user, repository: repository
@@ -159,6 +163,7 @@ describe MyModulesController, type: :controller do
       it 'renders 403' do
         # Remove user from project
         UserProject.where(user: user, project: project).destroy_all
+        UserAssignment.where(user: user, assignable: project).destroy_all
         action
 
         expect(response).to have_http_status 403
@@ -194,7 +199,7 @@ describe MyModulesController, type: :controller do
       create :user_assignment,
              assignable: experiment.project,
              user: user,
-             user_role: create(:owner_role),
+             user_role: owner_role,
              assigned_by: user
     end
 

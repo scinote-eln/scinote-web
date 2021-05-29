@@ -10,14 +10,13 @@ describe 'ResultPermissions' do
   let(:result) { create :result, user: user, my_module: my_module }
   let(:my_module) { create :my_module, experiment: experiment }
   let(:experiment) { create :experiment, user: user }
-  let(:normal_user_role) { create :normal_user_role }
 
   before do
     create :user_project, user: user, project: experiment.project
     create :user_assignment,
            assignable: experiment.project,
            user: user,
-           user_role: normal_user_role,
+           user_role: create(:owner_role),
            assigned_by: user
   end
 
