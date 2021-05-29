@@ -73,7 +73,7 @@
           </div>
         </div>
       <% else %>
-        <span class="view-mode disable-select"><%= @team.description.empty? ? t('users.settings.teams.edit.header_no_description') : sanitize_input(@team.description)  %></span>
+        <span class="view-mode disable-select"><%= @team.description.blank? ? t('users.settings.teams.edit.header_no_description') : sanitize_input(@team.description)  %></span>
       <% end %>
     </div>
     <!-- End of HEADER -->
