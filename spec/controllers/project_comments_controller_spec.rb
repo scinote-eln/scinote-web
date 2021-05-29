@@ -13,7 +13,13 @@ describe ProjectCommentsController, type: :controller do
     create :project, team: team, user_projects: [user_project]
   end
   let(:owner_user_role) { create :owner_role }
-  let!(:user_assignment) { create :user_assignment, assignable: project, user: user, user_role: owner_user_role, assigned_by: user }
+  let!(:user_assignment) do
+    create :user_assignment,
+           assignable: project,
+           user: user,
+           user_role: owner_user_role,
+           assigned_by: user
+  end
   let(:project_comment) do
     create :project_comment, project: project, user: user
   end

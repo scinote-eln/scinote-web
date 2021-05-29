@@ -37,10 +37,10 @@ RSpec.describe "Api::V1::ExperimentUserAssignmentsController", type: :request do
     it 'Response with correct user assignments' do
       hash_body = nil
       get api_v1_team_project_experiment_user_assignments_path(
-            team_id: @team.id,
-            project_id: @own_project.id,
-            experiment_id: @own_experiment.id
-          ), headers: @valid_headers
+        team_id: @team.id,
+        project_id: @own_project.id,
+        experiment_id: @own_experiment.id
+      ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
                                     ActiveModelSerializers::SerializableResource
@@ -52,10 +52,10 @@ RSpec.describe "Api::V1::ExperimentUserAssignmentsController", type: :request do
     it 'When invalid request, user in not an owner of the experiment' do
       hash_body = nil
       get api_v1_team_project_experiment_user_assignments_path(
-            team_id: @team.id,
-            project_id: @invalid_project.id,
-            experiment_id: @invalid_experiment.id),
-          headers: @valid_headers
+        team_id: @team.id,
+        project_id: @invalid_project.id,
+        experiment_id: @invalid_experiment.id
+      ), headers: @valid_headers
       expect(response).to have_http_status(403)
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body['errors'][0]).to include('status': 403)
@@ -64,10 +64,10 @@ RSpec.describe "Api::V1::ExperimentUserAssignmentsController", type: :request do
     it 'When invalid request, non existing experiment' do
       hash_body = nil
       get api_v1_team_project_experiment_user_assignments_path(
-            team_id: @team.id,
-            project_id: @own_project.id,
-            experiment_id: -1
-          ), headers: @valid_headers
+        team_id: @team.id,
+        project_id: @own_project.id,
+        experiment_id: -1
+      ), headers: @valid_headers
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body['errors'][0]).to include('status': 404)
@@ -78,11 +78,11 @@ RSpec.describe "Api::V1::ExperimentUserAssignmentsController", type: :request do
     it 'When valid request, user can read user assignment' do
       hash_body = nil
       get api_v1_team_project_experiment_user_assignment_path(
-            team_id: @team.id,
-            project_id: @own_project.id,
-            experiment_id: @own_experiment.id,
-            id: @own_experiment.user_assignments.first.id
-          ), headers: @valid_headers
+        team_id: @team.id,
+        project_id: @own_project.id,
+        experiment_id: @own_experiment.id,
+        id: @own_experiment.user_assignments.first.id
+      ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
                                     ActiveModelSerializers::SerializableResource
@@ -94,11 +94,11 @@ RSpec.describe "Api::V1::ExperimentUserAssignmentsController", type: :request do
     it 'When invalid request, user in not member of the project' do
       hash_body = nil
       get api_v1_team_project_experiment_user_assignment_path(
-            team_id: @team.id,
-            project_id: @invalid_project.id,
-            experiment_id: @invalid_experiment.id,
-            id: -1
-          ), headers: @valid_headers
+        team_id: @team.id,
+        project_id: @invalid_project.id,
+        experiment_id: @invalid_experiment.id,
+        id: -1
+      ), headers: @valid_headers
       expect(response).to have_http_status(403)
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body['errors'][0]).to include('status': 403)
@@ -107,11 +107,11 @@ RSpec.describe "Api::V1::ExperimentUserAssignmentsController", type: :request do
     it 'When invalid request, non existing project' do
       hash_body = nil
       get api_v1_team_project_experiment_user_assignment_path(
-            team_id: @team.id,
-            project_id: -1,
-            experiment_id: -1,
-            id: -1
-          ), headers: @valid_headers
+        team_id: @team.id,
+        project_id: -1,
+        experiment_id: -1,
+        id: -1
+      ), headers: @valid_headers
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body['errors'][0]).to include('status': 404)
@@ -129,11 +129,11 @@ RSpec.describe "Api::V1::ExperimentUserAssignmentsController", type: :request do
     end
 
     let(:action) do
-      post(api_v1_team_project_experiment_user_assignments_path(
-             team_id: @team.id,
-             project_id: @own_project.id,
-             experiment_id: @own_experiment.id),
-           params: request_body.to_json, headers: @valid_headers)
+      post api_v1_team_project_experiment_user_assignments_path(
+        team_id: @team.id,
+        project_id: @own_project.id,
+        experiment_id: @own_experiment.id
+      ), params: request_body.to_json, headers: @valid_headers
     end
 
     context 'when has valid params' do

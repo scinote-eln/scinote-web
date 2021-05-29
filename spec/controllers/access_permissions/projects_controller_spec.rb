@@ -13,20 +13,20 @@ describe AccessPermissions::ProjectsController, type: :controller do
   let!(:normal_user_role) { create :normal_user_role }
   let!(:technician_role) { create :technician_role }
   let!(:user_project) { create :user_project, user: user, project: project }
-  let!(:user_assignment) {
+  let!(:user_assignment) do
     create :user_assignment,
            assignable: project,
            user: user,
            user_role: owner_role,
            assigned_by: user
-  }
+  end
   let!(:normal_user) { create :user, confirmed_at: Time.zone.now }
-  let!(:normal_user_team) {
+  let!(:normal_user_team) do
     create :user_team,
            :normal_user,
            user: normal_user,
            team: team
-  }
+  end
 
   describe 'GET #new' do
     it 'returns a http success response' do
@@ -98,15 +98,15 @@ describe AccessPermissions::ProjectsController, type: :controller do
 
   describe 'PUT #update' do
     let!(:normal_user_project) { create :user_project, user: normal_user, project: project }
-    let!(:normal_user_assignment) {
+    let!(:normal_user_assignment) do
       create :user_assignment,
              assignable: project,
              user: normal_user,
              user_role: normal_user_role,
              assigned_by: user
-    }
+    end
 
-    let(:valid_params) {
+    let(:valid_params) do
       {
         id: project.id,
         project_member: {
@@ -114,7 +114,7 @@ describe AccessPermissions::ProjectsController, type: :controller do
           user_id: normal_user.id
         }
       }
-    }
+    end
 
     it 'updates the user role' do
       put :update, params: valid_params, format: :json
@@ -132,8 +132,8 @@ describe AccessPermissions::ProjectsController, type: :controller do
     end
   end
 
-  describe "POST #create" do
-    let(:valid_params) {
+  describe 'POST #create' do
+    let(:valid_params) do
       {
         id: project.id,
         access_permissions_new_user_project_form: {
@@ -146,7 +146,7 @@ describe AccessPermissions::ProjectsController, type: :controller do
           }
         }
       }
-    }
+    end
 
     it 'creates new project user and user assignment' do
       expect {
@@ -184,20 +184,20 @@ describe AccessPermissions::ProjectsController, type: :controller do
 
   describe 'DELETE #destroy' do
     let!(:normal_user_project) { create :user_project, user: normal_user, project: project }
-    let!(:normal_user_assignment) {
+    let!(:normal_user_assignment) do
       create :user_assignment,
              assignable: project,
              user: normal_user,
              user_role: normal_user_role,
              assigned_by: user
-    }
+    end
 
-    let(:valid_params) {
+    let(:valid_params) do
       {
         id: project.id,
         user_id: normal_user.id
       }
-    }
+    end
 
     it 'removes the user project and user assigment record' do
       expect {

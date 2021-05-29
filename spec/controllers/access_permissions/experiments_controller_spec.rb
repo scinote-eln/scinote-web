@@ -14,13 +14,13 @@ describe AccessPermissions::ExperimentsController, type: :controller do
   let!(:viewer_user_role) { create :viewer_role }
   let!(:technician_role) { create :technician_role }
   let!(:user_project) { create :user_project, user: user, project: project }
-  let!(:user_assignment) {
+  let!(:user_assignment) do
     create :user_assignment,
            assignable: project,
            user: user,
            user_role: owner_role,
            assigned_by: user
-  }
+  end
   let!(:viewer_user) { create :user, confirmed_at: Time.zone.now }
   let!(:normal_user_team) { create :user_team, :normal_user, user: viewer_user, team: team }
   let!(:viewer_user_project) { create :user_project, user: viewer_user, project: project }
@@ -63,22 +63,22 @@ describe AccessPermissions::ExperimentsController, type: :controller do
   end
 
   describe 'PUT #update' do
-    let!(:viewer_project_assignment) {
+    let!(:viewer_project_assignment) do
       create :user_assignment,
              assignable: project,
              user: viewer_user,
              user_role: viewer_user_role,
              assigned_by: user
-    }
-    let!(:viewer_user_assignment) {
+    end
+    let!(:viewer_user_assignment) do
       create :user_assignment,
              assignable: experiment,
              user: viewer_user,
              user_role: viewer_user_role,
              assigned_by: user
-    }
+    end
 
-    let(:valid_params) {
+    let(:valid_params) do
       {
         id: experiment.id,
         project_id: project.id,
@@ -87,7 +87,7 @@ describe AccessPermissions::ExperimentsController, type: :controller do
           user_id: viewer_user.id
         }
       }
-    }
+    end
 
     it 'updates the user role' do
       put :update, params: valid_params, format: :json

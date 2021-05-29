@@ -14,7 +14,7 @@ describe ProjectMember, type: :model do
     it 'create a user_assignment and user_project records' do
       subject.assign = true
       subject.user_role_id = owner_role.id
-      expect{
+      expect {
         subject.create
       }.to change(UserProject, :count).by(1).and \
            change(UserAssignment, :count).by(1)
@@ -23,7 +23,7 @@ describe ProjectMember, type: :model do
     it 'logs a assign_user_to_project activity' do
       subject.assign = true
       subject.user_role_id = owner_role.id
-      expect{
+      expect {
         subject.create
       }.to change(Activity, :count).by(1)
       expect(Activity.last.type_of).to eq 'assign_user_to_project'
@@ -32,13 +32,13 @@ describe ProjectMember, type: :model do
 
   describe '#update' do
     let!(:user_project) { create :user_project, user: user, project: project }
-    let!(:user_assignment) {
+    let!(:user_assignment) do
       create :user_assignment,
              assignable: project,
              user: user,
              user_role: owner_role,
              assigned_by: user
-    }
+    end
 
     it 'updates only the user assignment role' do
       subject.user_role_id = normal_user_role.id
@@ -48,7 +48,7 @@ describe ProjectMember, type: :model do
 
     it 'logs a change_user_role_on_project activity' do
       subject.user_role_id = normal_user_role.id
-      expect{
+      expect {
         subject.update
       }.to change(Activity, :count).by(1)
       expect(Activity.last.type_of).to eq 'change_user_role_on_project'
@@ -58,21 +58,21 @@ describe ProjectMember, type: :model do
   describe '#destroy' do
     let!(:user_two) { create :user }
     let!(:user_project_two) { create :user_project, user: user_two, project: project }
-    let!(:user_assignment_two) {
+    let!(:user_assignment_two) do
       create :user_assignment,
              assignable: project,
              user: user_two,
              user_role: owner_role,
              assigned_by: user
-    }
+    end
     let!(:user_project) { create :user_project, user: user, project: project }
-    let!(:user_assignment) {
+    let!(:user_assignment) do
       create :user_assignment,
              assignable: project,
              user: user,
              user_role: owner_role,
              assigned_by: user
-    }
+    end
 
     it 'removes the user_assignment and user_project' do
       expect {
@@ -91,7 +91,7 @@ describe ProjectMember, type: :model do
     end
 
     it 'logs a unassign_user_from_project activity' do
-      expect{
+      expect {
         subject.destroy
       }.to change(Activity, :count).by(1)
       expect(Activity.last.type_of).to eq 'unassign_user_from_project'

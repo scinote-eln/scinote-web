@@ -9,8 +9,8 @@
 
       animateSpinner();
       $.get(ev.currentTarget.getAttribute('href')).then(function({ modal }) {
-        $(modal).on("shown.bs.modal", function() {
-          $(this).find(".selectpicker").selectpicker();
+        $(modal).on('shown.bs.modal', function() {
+          $(this).find('.selectpicker').selectpicker();
         }).modal('show');
         animateSpinner(null, false);
       });

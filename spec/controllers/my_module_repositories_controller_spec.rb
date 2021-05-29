@@ -13,7 +13,13 @@ describe MyModuleRepositoriesController, type: :controller do
     create :user_project, user: user, project: project
   end
   let(:normal_user_role) { create :normal_user_role }
-  let!(:user_assignment) { create :user_assignment, assignable: project, user: user, user_role: normal_user_role, assigned_by: user }
+  let!(:user_assignment) do
+    create :user_assignment,
+           assignable: project,
+           user: user,
+           user_role: normal_user_role,
+           assigned_by: user
+  end
   let!(:repository) { create :repository, created_by: user, team: team }
   let!(:repository_row) do
     create :repository_row, created_by: user, repository: repository

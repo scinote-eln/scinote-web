@@ -36,7 +36,9 @@ module Api
         project_member.user_role_id = user_project_params[:user_role_id]
         project_member.create
 
-        render jsonapi: project_member.user_assignment.reload, serializer: ProjectUserAssignmentSerializer, status: :created
+        render jsonapi: project_member.user_assignment.reload,
+               serializer: ProjectUserAssignmentSerializer,
+               status: :created
       end
 
       def update

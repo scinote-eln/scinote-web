@@ -35,7 +35,10 @@ module Api
           user_role_id: user_assignment_params[:user_role_id],
           user_id: user_assignment_params[:user_id]
         )
-        render jsonapi: my_module_member.user_assignment.reload, serializer: TaskUserAssignmentSerializer, status: :created
+
+        render jsonapi: my_module_member.user_assignment.reload,
+               serializer: TaskUserAssignmentSerializer,
+               status: :created
       end
 
       def update
@@ -53,7 +56,10 @@ module Api
         return render body: nil, status: :no_content if @user_assignment.user_role == user_role
 
         my_module_member.update(user_role_id: user_role.id, user_id: user.id)
-        render jsonapi: my_module_member.user_assignment.reload, serializer: TaskUserAssignmentSerializer, status: :ok
+
+        render jsonapi: my_module_member.user_assignment.reload,
+               serializer: TaskUserAssignmentSerializer,
+               status: :ok
       end
 
       def destroy

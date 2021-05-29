@@ -12,7 +12,13 @@ describe ExperimentsController, type: :controller do
     create :user_project, user: user, project: project
   end
   let(:owner_role) { create :owner_role }
-  let!(:user_assignment) { create :user_assignment, assignable: project, user: user, user_role: owner_role, assigned_by: user }
+  let!(:user_assignment) do
+    create :user_assignment,
+           assignable: project,
+           user: user,
+           user_role: owner_role,
+           assigned_by: user
+  end
   let(:experiment) { create :experiment, project: project }
 
   describe 'POST create' do

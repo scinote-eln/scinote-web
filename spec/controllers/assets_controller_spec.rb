@@ -13,7 +13,13 @@ describe AssetsController, type: :controller do
     create :project, team: team, user_projects: [user_project]
   end
   let(:owner_role) { create :owner_role }
-  let!(:user_assignment) { create :user_assignment, assignable: project, user: user, user_role: owner_role, assigned_by: user }
+  let!(:user_assignment) do
+    create :user_assignment,
+           assignable: project,
+           user: user,
+           user_role: owner_role,
+           assigned_by: user
+  end
   let(:experiment) { create :experiment, project: project }
   let(:my_module) { create :my_module, name: 'test task', experiment: experiment }
   let(:protocol) do

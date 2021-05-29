@@ -11,7 +11,7 @@ module AccessPermissions
       @project = project
       @users = attributes[:users]
       @current_user = current_user
-      default_resource_members if @users
+      set_default_resource_members if @users
       @error = false
       @new_members_count = 0
     end
@@ -40,8 +40,8 @@ module AccessPermissions
 
     private
 
-    def default_resource_members
-      @resource_members ||= @users.order(:full_name).map { |u| ProjectMember.new(u, @project, current_user) }
+    def set_default_resource_members
+      @resource_members = @users.order(:full_name).map { |u| ProjectMember.new(u, @project, current_user) }
     end
   end
 end

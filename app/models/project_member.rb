@@ -91,11 +91,13 @@ class ProjectMember
 
   def validate_user_project_relation_presence
     return if UserProject.find_by(project: @project, user: @user).nil?
+
     errors.add(:user)
   end
 
   def validate_user_project_assignment_presence
     return if  UserAssignment.find_by(assignable: @project, user: @user).nil?
+
     errors.add(:user_role_id, :already_present)
   end
 

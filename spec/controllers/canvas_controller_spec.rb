@@ -15,7 +15,13 @@ describe CanvasController do
     create :project, team: team
   end
   let(:owner_role) { create :owner_role }
-  let!(:user_assignment) { create :user_assignment, assignable: project, user: user, user_role: owner_role, assigned_by: user }
+  let!(:user_assignment) do
+    create :user_assignment,
+           assignable: project,
+           user: user,
+           user_role: owner_role,
+           assigned_by: user
+  end
   let(:experiment) { create :experiment, project: project }
   let(:experiment2) { create :experiment, project: project }
 
