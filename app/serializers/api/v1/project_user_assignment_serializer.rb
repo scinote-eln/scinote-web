@@ -2,8 +2,8 @@
 
 module Api
   module V1
-    class ExperimentUserAssignmentSerializer < ActiveModel::Serializer
-      type :experiment_user_assignments
+    class ProjectUserAssignmentSerializer < ActiveModel::Serializer
+      type :user_projects
       attributes :id
 
       belongs_to :user, serializer: UserSerializer

@@ -660,7 +660,7 @@ Rails.application.routes.draw do
     namespace :api, defaults: { format: 'json' } do
       get 'health', to: 'api#health'
       get 'status', to: 'api#status'
-      if Rails.configuration.x.core_api_v1_enabled
+      if true #Rails.configuration.x.core_api_v1_enabled
         namespace :v1 do
           resources :teams, only: %i(index show) do
             resources :inventories, only: %i(index create show update destroy) do
@@ -692,7 +692,11 @@ Rails.application.routes.draw do
               end
             end
             resources :projects, only: %i(index show create update) do
-              resources :user_projects, only: %i(index show create update destroy), path: 'users', as: :users
+              resources :user_assignments,
+                        only: %i(index show create update destroy),
+                        controller: :project_user_assignments,
+                        path: 'users',
+                        as: :users
               resources :project_comments, only: %i(index show), path: 'comments', as: :comments
               get 'activities', to: 'projects#activities'
               resources :reports, only: %i(index show), path: 'reports', as: :reports
@@ -741,6 +745,7 @@ Rails.application.routes.draw do
                       as: :identities
           end
 
+          resources :user_roles, only: :index
           resources :workflows, only: %i(index show) do
             resources :workflow_statuses, path: :statuses, only: %i(index)
           end

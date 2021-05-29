@@ -6,8 +6,8 @@ module Api
       before_action :load_team
       before_action :load_project
       before_action :load_experiment
-      before_action :load_user_assignment, only: :show
-      before_action :load_user_assignment_for_managing, only: %i(update destroy)
+      before_action :load_user_assignment, only: %i(update show destroy)
+      before_action :load_user_assignment_for_managing, only: %i(update show destroy)
 
       def index
         user_assignments = @experiment.user_assignments
@@ -17,22 +17,21 @@ module Api
 
         render jsonapi: user_assignments,
                each_serializer: ExperimentUserAssignmentSerializer,
-               include: :user
+               include: %i(user user_role)
       end
 
       def show
         render jsonapi: @user_assignment,
                serializer: ExperimentUserAssignmentSerializer,
-               include: :user
+               include: %i(user user_role)
       end
 
       def create
         raise PermissionError.new(Experiment, :manage) unless can_manage_experiment?(@experiment)
 
-        user_role = UserRole.find_by_name incoming_role_name(user_assignment_params[:role])
         experiment_member = ExperimentMember.new(current_user, @experiment, @project)
         experiment_member.create(
-          user_role_id: user_role.id,
+          user_role_id: user_assignment_params[:user_role_id],
           user_id: user_assignment_params[:user_id]
         )
 
@@ -40,7 +39,7 @@ module Api
       end
 
       def update
-        user_role = UserRole.find_by_name incoming_role_name(user_assignment_params[:role])
+        user_role = UserRole.find user_assignment_params[:user_role_id]
         user = @user_assignment.user
         experiment_member = ExperimentMember.new(
           current_user,
@@ -70,21 +69,18 @@ module Api
 
       private
 
-      include Api::V1::UserRoleSanitizer
-
       def load_user_assignment
         @user_assignment = @experiment.user_assignments.find(params.require(:id))
       end
 
       def load_user_assignment_for_managing
-        @user_assignment = @experiment.user_assignments.find(params.require(:id))
         raise PermissionError.new(Experiment, :manage) unless can_manage_experiment?(@experiment)
       end
 
       def user_assignment_params
         raise TypeError unless params.require(:data).require(:type) == 'experiment_user_assignments'
 
-        params.require(:data).require(:attributes).permit(:user_id, :role)
+        params.require(:data).require(:attributes).permit(:user_id, :user_role_id)
       end
     end
   end

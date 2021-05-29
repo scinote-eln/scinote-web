@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe "Api::V1::UserProjectsController", type: :request do
+RSpec.describe "Api::V1::ProjectUserAssignmentsController", type: :request do
   before :all do
     @user = create(:user)
     @another_user = create(:user)
@@ -19,15 +19,15 @@ RSpec.describe "Api::V1::UserProjectsController", type: :request do
     @valid_headers = { 'Authorization': 'Bearer ' + generate_token(@user.id) }
   end
 
-  describe 'GET user_projects, #index' do
-    it 'Response with correct user project roles' do
+  describe 'GET #index' do
+    it 'Response with correct user project assignments' do
       hash_body = nil
       get api_v1_team_project_users_path(team_id: @team.id, project_id: @own_project.id),
           headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
         ActiveModelSerializers::SerializableResource
-          .new(@own_project.user_projects, each_serializer: Api::V1::UserProjectSerializer)
+          .new(@own_project.user_assignments, each_serializer: Api::V1::ProjectUserAssignmentSerializer)
           .as_json[:data]
       )
     end
@@ -50,16 +50,16 @@ RSpec.describe "Api::V1::UserProjectsController", type: :request do
     end
   end
 
-  describe 'GET user_project, #show' do
+  describe 'GET #show' do
     it 'When valid request, user can read project users' do
       hash_body = nil
       get api_v1_team_project_user_path(
-        team_id: @team.id, project_id: @own_project.id, id: @own_project.user_projects.first.id
+        team_id: @team.id, project_id: @own_project.id, id: @own_project.user_assignments.first.id
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
         ActiveModelSerializers::SerializableResource
-          .new(@own_project.user_projects.first, serializer: Api::V1::UserProjectSerializer)
+          .new(@own_project.user_assignments.first, serializer: Api::V1::ProjectUserAssignmentSerializer)
           .as_json[:data]
       )
     end
@@ -83,7 +83,7 @@ RSpec.describe "Api::V1::UserProjectsController", type: :request do
     end
   end
 
-  describe 'POST user_project, #create' do
+  describe 'POST #create' do
     before :all do
       @valid_headers['Content-Type'] = 'application/json'
     end
@@ -100,14 +100,14 @@ RSpec.describe "Api::V1::UserProjectsController", type: :request do
             type: 'user_projects',
             attributes: {
               user_id: @another_user.id,
-              role: 'normal_user'
+              user_role_id: @normal_user_role.id
             }
           }
         }
       end
 
-      it 'creates new user_project' do
-        expect { action }.to change { UserProject.count }.by(1)
+      it 'creates new user project and user assignment' do
+        expect { action }.to change { UserAssignment.count }.by(1).and(change { UserProject.count }.by(1))
       end
 
       it 'returns status 201' do
@@ -123,8 +123,10 @@ RSpec.describe "Api::V1::UserProjectsController", type: :request do
           hash_including(
             data: hash_including(
               type: 'user_projects',
-              attributes: hash_including(role: 'normal_user'),
-              relationships: hash_including(user: hash_including(data: hash_including(id: @another_user.id.to_s)))
+              relationships: hash_including(
+                user: hash_including(data: hash_including(id: @another_user.id.to_s)),
+                user_role: hash_including(data: hash_including(id: @normal_user_role.id.to_s))
+              )
             )
           )
         )
@@ -155,7 +157,7 @@ RSpec.describe "Api::V1::UserProjectsController", type: :request do
             type: 'user_projects',
             attributes: {
               user_id: @another_user.id,
-              role: 'normal_user'
+              user_role_id: @normal_user_role.id
             }
           }
         }
@@ -176,16 +178,16 @@ RSpec.describe "Api::V1::UserProjectsController", type: :request do
     end
   end
 
-  describe 'PATCH user_project, #update' do
+  describe 'PATCH #update' do
     before :all do
       @valid_headers['Content-Type'] = 'application/json'
-      @user_project = create(:user_project, user: @another_user, project: @own_project)
-      create :user_assignment,
-             assignable: @own_project,
-             user: @another_user,
-             user_role: @normal_user_role,
-             assigned_by: @user
-      create :technician_role
+      create(:user_project, user: @another_user, project: @own_project)
+      @user_assignment = create :user_assignment,
+                                 assignable: @own_project,
+                                 user: @another_user,
+                                 user_role: @normal_user_role,
+                                 assigned_by: @user
+      @technician_user_role = create :technician_role
     end
 
     let(:action) do
@@ -193,7 +195,7 @@ RSpec.describe "Api::V1::UserProjectsController", type: :request do
         api_v1_team_project_user_path(
           team_id: @own_project.team.id,
           project_id: @own_project.id,
-          id: @user_project.id
+          id: @user_assignment.id
         ),
         params: request_body.to_json,
         headers: @valid_headers
@@ -206,7 +208,7 @@ RSpec.describe "Api::V1::UserProjectsController", type: :request do
           data: {
             type: 'user_projects',
             attributes: {
-              role: :technician
+              user_role_id: @technician_user_role.id
             }
           }
         }
@@ -225,10 +227,14 @@ RSpec.describe "Api::V1::UserProjectsController", type: :request do
           hash_including(
             data: hash_including(
               type: 'user_projects',
-              attributes: hash_including(role: 'technician')
+              relationships: hash_including(
+                user: hash_including(data: hash_including(id: @another_user.id.to_s)),
+                user_role: hash_including(data: hash_including(id: @technician_user_role.id.to_s))
+              )
             )
           )
         )
+
       end
     end
 
@@ -263,12 +269,18 @@ RSpec.describe "Api::V1::UserProjectsController", type: :request do
       end
 
       it 'renders 403' do
-        user_project = create(:user_project, role: :normal_user, user: @another_user, project: @invalid_project)
+        create(:user_project, user: @another_user, project: @invalid_project)
+        user_assignment = create :user_assignment,
+                                  assignable: @invalid_project,
+                                  user: @another_user,
+                                  user_role: @normal_user_role,
+                                  assigned_by: @user
+
         patch(
           api_v1_team_project_user_path(
             team_id: @invalid_project.team.id,
             project_id: @invalid_project.id,
-            id: user_project.id
+            id: user_assignment.id
           ),
           params: request_body.to_json,
           headers: @valid_headers

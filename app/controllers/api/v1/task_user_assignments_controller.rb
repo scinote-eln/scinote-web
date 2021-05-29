@@ -7,8 +7,8 @@ module Api
       before_action :load_project
       before_action :load_experiment
       before_action :load_task
-      before_action :load_user_assignment, only: :show
-      before_action :load_user_assignment_for_managing, only: %i(update destroy)
+      before_action :load_user_assignment, only: %i(update show destroy)
+      before_action :load_user_assignment_for_managing, only: %i(update show destroy)
 
       def index
         user_assignments = @task.user_assignments
@@ -18,29 +18,28 @@ module Api
 
         render jsonapi: user_assignments,
                each_serializer: TaskUserAssignmentSerializer,
-               include: :user
+               include: %i(user user_role)
       end
 
       def show
         render jsonapi: @user_assignment,
                serializer: TaskUserAssignmentSerializer,
-               include: :user
+               include: %i(user user_role)
       end
 
       def create
         raise PermissionError.new(MyModule, :read) unless can_manage_module?(@task)
 
-        user_role = UserRole.find_by_name incoming_role_name(user_assignment_params[:role])
         my_module_member = MyModuleMember.new(current_user, @task, @experiment, @project)
         my_module_member.create(
-          user_role_id: user_role.id,
+          user_role_id: user_assignment_params[:user_role_id],
           user_id: user_assignment_params[:user_id]
         )
         render jsonapi: my_module_member.user_assignment.reload, serializer: TaskUserAssignmentSerializer, status: :created
       end
 
       def update
-        user_role = UserRole.find_by_name incoming_role_name(user_assignment_params[:role])
+        user_role = UserRole.find user_assignment_params[:user_role_id]
         user = @user_assignment.user
         my_module_member = MyModuleMember.new(
           current_user,
@@ -72,21 +71,18 @@ module Api
 
       private
 
-      include Api::V1::UserRoleSanitizer
-
       def load_user_assignment
         @user_assignment = @task.user_assignments.find(params.require(:id))
       end
 
       def load_user_assignment_for_managing
-        @user_assignment = @task.user_assignments.find(params.require(:id))
         raise PermissionError.new(MyModule, :manage) unless can_manage_module?(@task)
       end
 
       def user_assignment_params
         raise TypeError unless params.require(:data).require(:type) == 'task_user_assignments'
 
-        params.require(:data).require(:attributes).permit(:user_id, :role)
+        params.require(:data).require(:attributes).permit(:user_id, :user_role_id)
       end
     end
   end
