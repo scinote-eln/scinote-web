@@ -15,9 +15,10 @@ RSpec.describe UserRole, type: :model do
   end
 
   describe 'Relations' do
+    before { allow(subject).to receive(:predefined?).and_return(true) }
     it { should have_many :user_assignments }
-    it { should belong_to :created_by }
-    it { should belong_to :last_modified_by }
+    it { should belong_to(:created_by).class_name('User').optional }
+    it { should belong_to(:last_modified_by).class_name('User').optional }
   end
 
   describe 'Should be a valid object' do

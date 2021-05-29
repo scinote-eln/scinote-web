@@ -14,6 +14,11 @@ RSpec.describe 'Api::V1::AssetsController', type: :request do
 
     create(:user_team, user: @user, team: @team)
     create(:user_project, :normal_user, user: @user, project: @project)
+    create :user_assignment,
+           assignable: @project,
+           user: @user,
+           user_role: create(:normal_user_role),
+           assigned_by: @user
 
     @valid_headers =
       { 'Authorization': 'Bearer ' + generate_token(@user.id) }

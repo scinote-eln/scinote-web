@@ -265,27 +265,6 @@ var ProjectsIndex = (function() {
     manageProjectUsersModal.find('.modal-footer').html(data.html_footer);
   }
 
-  // Initialize manage project users modal remote loading.
-  function initManageProjectUsersLink() {
-    $(projectsWrapper).on('ajax:success', '.manage-project-users-link', function(e, data) {
-      initManageProjectUsersModalBody(data);
-      manageProjectUsersModal.modal('show');
-    });
-  }
-
-  // Initialize view project users modal remote loading.
-  function initViewProjectUsersLink() {
-    $(projectsWrapper).on('ajax:success', '.view-project-users-link', function(e, data) {
-      let viewProjectUsersModal = $(data.html);
-      $(projectsWrapper).append(viewProjectUsersModal);
-      viewProjectUsersModal.modal('show');
-      // Remove modal when it gets closed
-      viewProjectUsersModal.on('hidden.bs.modal', function() {
-        viewProjectUsersModal.remove();
-      });
-    });
-  }
-
   // Initialize reloading manage user modal content after posting new
   // user.
   function initAddUserForm() {

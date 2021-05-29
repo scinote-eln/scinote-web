@@ -12,7 +12,7 @@ RSpec.describe "Api::V1::ProjectUserAssignmentsController", type: :request do
     @own_project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @team)
     @invalid_project =
       create(:project, name: Faker::Name.unique.name, created_by: @another_user, team: @team, visibility: :hidden)
-    create(:user_project, role: :owner, user: @user, project: @own_project)
+    create(:user_project, user: @user, project: @own_project)
     create :user_assignment, assignable: @own_project, user: @user, user_role: create(:owner_role), assigned_by: @user
     @normal_user_role = create :normal_user_role
 

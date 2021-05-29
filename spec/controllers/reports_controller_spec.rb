@@ -8,9 +8,17 @@ describe ReportsController, type: :controller do
   let(:user) { subject.current_user }
   let!(:team) { create :team, created_by: user }
   let!(:user_team) { create :user_team, team: team, user: user }
-  let(:user_project) { create :user_project, :owner, user: user }
+  let(:user_project) { create :user_project, user: user }
   let(:project) do
     create :project, team: team, user_projects: [user_project]
+  end
+  let(:owner_user_role) { create :owner_role }
+  let!(:user_assignment) do
+    create :user_assignment,
+           assignable: project,
+           user: user,
+           user_role: owner_user_role,
+           assigned_by: user
   end
   let(:report) do
     create :report, user: user, project: project, team: team,

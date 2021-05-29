@@ -7,9 +7,17 @@ describe ResultTextsController, type: :controller do
 
   let(:user) { subject.current_user }
   let!(:team) { create :team, :with_members }
-  let!(:user_project) { create :user_project, :owner, user: user }
+  let!(:user_project) { create :user_project, user: user }
   let(:project) do
     create :project, team: team, user_projects: [user_project]
+  end
+  let(:owner_user_role) { create :owner_role }
+  let!(:user_assignment) do
+    create :user_assignment,
+           assignable: project,
+           user: user,
+           user_role: owner_user_role,
+           assigned_by: user
   end
   let(:experiment) { create :experiment, project: project }
   let(:task) { create :my_module, name: 'test task', experiment: experiment }

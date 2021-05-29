@@ -10,8 +10,10 @@ describe MyModulesController, type: :controller do
   let!(:user_team) { create :user_team, :admin, user: user, team: team }
   let(:project) { create :project, team: team, created_by: user }
   let!(:user_project) do
-    create :user_project, :normal_user, user: user, project: project
+    create :user_project, user: user, project: project
   end
+  let(:normal_user_role) { create :normal_user_role }
+  let!(:user_assignment) { create :user_assignment, assignable: project, user: user, user_role: normal_user_role, assigned_by: user }
   let!(:repository) { create :repository, created_by: user, team: team }
   let!(:repository_row) do
     create :repository_row, created_by: user, repository: repository
@@ -187,7 +189,14 @@ describe MyModulesController, type: :controller do
     let(:task2) { create :my_module, :archived, experiment: experiment }
     let(:task3) { create :my_module, :archived, experiment: experiment }
     let(:user) { controller.current_user }
-    let!(:user_project) { create :user_project, user: user, project: experiment.project, role: 0 }
+    let!(:user_project) { create :user_project, user: user, project: experiment.project }
+    let!(:user_assignment) do
+      create :user_assignment,
+             assignable: experiment.project,
+             user: user,
+             user_role: create(:owner_role),
+             assigned_by: user
+    end
 
     context 'when tasks are restored' do
       it 'tasks are active' do

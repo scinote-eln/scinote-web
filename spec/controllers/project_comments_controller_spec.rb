@@ -8,10 +8,12 @@ describe ProjectCommentsController, type: :controller do
   let(:user) { subject.current_user }
   let(:team) { create :team, created_by: user }
   let(:user_team) { create :user_team, team: team, user: user }
-  let(:user_project) { create :user_project, :owner, user: user }
+  let(:user_project) { create :user_project, user: user }
   let(:project) do
     create :project, team: team, user_projects: [user_project]
   end
+  let(:owner_user_role) { create :owner_role }
+  let!(:user_assignment) { create :user_assignment, assignable: project, user: user, user_role: owner_user_role, assigned_by: user }
   let(:project_comment) do
     create :project_comment, project: project, user: user
   end
