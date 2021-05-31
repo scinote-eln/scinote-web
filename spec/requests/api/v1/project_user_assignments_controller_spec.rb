@@ -97,7 +97,7 @@ RSpec.describe "Api::V1::ProjectUserAssignmentsController", type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'user_projects',
+            type: 'project_user_assignments',
             attributes: {
               user_id: @another_user.id,
               user_role_id: @normal_user_role.id
@@ -122,7 +122,7 @@ RSpec.describe "Api::V1::ProjectUserAssignmentsController", type: :request do
         expect(json).to match(
           hash_including(
             data: hash_including(
-              type: 'user_projects',
+              type: 'project_user_assignments',
               relationships: hash_including(
                 user: hash_including(data: hash_including(id: @another_user.id.to_s)),
                 user_role: hash_including(data: hash_including(id: @normal_user_role.id.to_s))
@@ -137,7 +137,7 @@ RSpec.describe "Api::V1::ProjectUserAssignmentsController", type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'user_projects',
+            type: 'project_user_assignments',
             attributes: {}
           }
         }
@@ -154,7 +154,7 @@ RSpec.describe "Api::V1::ProjectUserAssignmentsController", type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'user_projects',
+            type: 'project_user_assignments',
             attributes: {
               user_id: @another_user.id,
               user_role_id: @normal_user_role.id
@@ -206,7 +206,7 @@ RSpec.describe "Api::V1::ProjectUserAssignmentsController", type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'user_projects',
+            type: 'project_user_assignments',
             attributes: {
               user_role_id: @technician_user_role.id
             }
@@ -226,7 +226,7 @@ RSpec.describe "Api::V1::ProjectUserAssignmentsController", type: :request do
         expect(json).to match(
           hash_including(
             data: hash_including(
-              type: 'user_projects',
+              type: 'project_user_assignments',
               relationships: hash_including(
                 user: hash_including(data: hash_including(id: @another_user.id.to_s)),
                 user_role: hash_including(data: hash_including(id: @technician_user_role.id.to_s))
@@ -242,7 +242,7 @@ RSpec.describe "Api::V1::ProjectUserAssignmentsController", type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'user_projects',
+            type: 'project_user_assignments',
             attributes: {
             }
           }
@@ -260,7 +260,7 @@ RSpec.describe "Api::V1::ProjectUserAssignmentsController", type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'user_projects',
+            type: 'project_user_assignments',
             attributes: {
               role: :technician
             }

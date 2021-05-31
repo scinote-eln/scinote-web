@@ -71,7 +71,7 @@ module Api
       end
 
       def user_project_params
-        raise TypeError unless params.require(:data).require(:type) == 'user_projects'
+        raise TypeError unless params.require(:data).require(:type) == 'project_user_assignments'
 
         params.require(:data).require(:attributes).permit(:user_id, :user_role_id)
       end
