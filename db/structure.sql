@@ -194,6 +194,39 @@ ALTER SEQUENCE public.activities_id_seq OWNED BY public.activities.id;
 
 
 --
+-- Name: activity_filters; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.activity_filters (
+    id integer NOT NULL,
+    name character varying NOT NULL,
+    filter jsonb NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: activity_filters_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.activity_filters_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: activity_filters_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.activity_filters_id_seq OWNED BY public.activity_filters.id;
+
+
+--
 -- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2919,6 +2952,13 @@ ALTER TABLE ONLY public.activities ALTER COLUMN id SET DEFAULT nextval('public.a
 
 
 --
+-- Name: activity_filters id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.activity_filters ALTER COLUMN id SET DEFAULT nextval('public.activity_filters_id_seq'::regclass);
+
+
+--
 -- Name: asset_text_data id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3466,6 +3506,14 @@ ALTER TABLE ONLY public.active_storage_variant_records
 
 ALTER TABLE ONLY public.activities
     ADD CONSTRAINT activities_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: activity_filters activity_filters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.activity_filters
+    ADD CONSTRAINT activity_filters_pkey PRIMARY KEY (id);
 
 
 --
@@ -7234,6 +7282,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210312185911'),
 ('20210325152257'),
 ('20210407143303'),
-('20210506125657');
+('20210410100006'),
+('20210506125657'),
+('20210531114633');
 
 

@@ -761,6 +761,7 @@ Rails.application.routes.draw do
       get :protocol_filter
       get :team_filter
       get :user_filter
+      post :save_activity_filter
     end
   end
 

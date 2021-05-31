@@ -8,5 +8,9 @@ module Organization
     can :create_teams do |_|
       true
     end
+
+    can :create_acitivity_filters do
+      ENV['WEBHOOKS_ENABLED'] == 'true'
+    end
   end
 end

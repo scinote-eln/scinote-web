@@ -1682,6 +1682,7 @@ en:
       activities_counter_label: " activities"
       expand_all: "Expand all"
       collapse_all: "Collapse all"
+
     modal:
       modal_title: "Activities"
     result_type:
