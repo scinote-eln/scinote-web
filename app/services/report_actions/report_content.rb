@@ -39,6 +39,12 @@ module ReportActions
 
         if @template_values.present?
           formatted_template_values = @template_values.as_json.map { |k, v| v['name'] = k; v }
+          formatted_template_values.each do |template_value|
+            if template_value['view_component'] == 'DateInputComponent'
+              template_value['value'] =
+                Date.strptime(template_value['value'], I18n.backend.date_format.dup.gsub(/%-/, '%')).iso8601
+            end
+          end
           # Save new template values
           @report.report_template_values.create!(formatted_template_values)
         end
