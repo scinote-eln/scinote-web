@@ -2,5 +2,6 @@
 
 module Reports
   class DateInputComponent < TemplateValueComponent
+    include BootstrapFormHelper
   end
 end

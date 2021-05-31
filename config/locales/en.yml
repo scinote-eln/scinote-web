@@ -2291,6 +2291,9 @@ en:
       user_invalid: "Invalid email."
       too_many_emails: "Only invited first %{nr} emails. To invite more users, "
 
+  date:
+    formats:
+      full: "%{date_format}"
   time:
     formats:
       full_js: "D.M.YYYY HH:mm"
