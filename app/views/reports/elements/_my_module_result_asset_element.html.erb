@@ -37,6 +37,9 @@
       </div>
       <div class="pull-left user-time">
         <%= t("projects.reports.elements.result_asset.user_time", user: result.user.full_name, timestamp: l(timestamp, format: :full)) %>
+        <% if report.settings.dig(:task, :file_results_previews) %>
+          <%= t('projects.reports.elements.result_asset.full_preview_attached') %>
+        <% end %>
       </div>
       <div class="pull-right controls">
         <%= render partial: "reports/elements/element_controls.html.erb" %>
@@ -58,6 +61,13 @@
     </div>
   <% end %>
   <div class="report-element-children">
-    <%= children if (defined? children and children.present?) %>
+    <% if @settings.dig('task', 'result_comments') %>
+      <%= render partial: 'reports/elements/result_comments_element.html.erb', locals: { result: result } %>
+    <% end %>
   </div>
+  <% if defined?(children) %>
+    <div class="report-element-children">
+      <%= children %>
+    </div>
+  <% end %>
 </div>

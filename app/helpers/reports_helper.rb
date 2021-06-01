@@ -26,9 +26,9 @@ module ReportsHelper
       # Render no children
     elsif element.result?
       # Special handling for result comments
-      if element.has_children?
+      if element.children.active.present?
         children_html.safe_concat render_new_element(true)
-        element.children.each do |child|
+        element.children.active.each do |child|
           children_html
             .safe_concat render_report_element(child, provided_locals)
         end
@@ -36,8 +36,8 @@ module ReportsHelper
         children_html.safe_concat render_new_element(false)
       end
     else
-      if element.has_children?
-        element.children.each do |child|
+      if element.children.active.present?
+        element.children.active.each do |child|
           children_html.safe_concat render_new_element(false)
           children_html
             .safe_concat render_report_element(child, provided_locals)
@@ -93,7 +93,6 @@ module ReportsHelper
       element.element_references.each do |el_ref|
         locals[el_ref.class.name.underscore.to_sym] = el_ref
       end
-      locals[:order] = element.sort_order if type.in? ReportExtends::SORTED_ELEMENTS
     end
 
     (render partial: view, locals: locals).html_safe
@@ -102,8 +101,9 @@ module ReportsHelper
   # "Hack" to omit file preview URL because of WKHTML issues
   def report_image_asset_url(asset)
     preview = asset.inline? ? asset.large_preview : asset.medium_preview
-    image_tag(preview.processed
-                     .service_url(expires_in: Constants::URL_LONG_EXPIRE_TIME))
+    image_tag(preview.processed.service_url(expires_in: Constants::URL_LONG_EXPIRE_TIME))
+  rescue ActiveStorage::FileNotFoundError
+    image_tag('icon_small/missing.png')
   end
 
   # "Hack" to load Glyphicons css directly from the CDN
@@ -171,6 +171,49 @@ module ReportsHelper
       el.replace(tag)
     end
     html_doc.to_s
+  end
+
+  def filter_steps_for_report(steps, settings)
+    include_completed_steps = settings.dig('task', 'protocol', 'completed_steps')
+    include_uncompleted_steps = settings.dig('task', 'protocol', 'uncompleted_steps')
+    if include_completed_steps && include_uncompleted_steps
+      steps
+    elsif include_completed_steps
+      steps.where(completed: true)
+    elsif include_uncompleted_steps
+      steps.where(completed: false)
+    else
+      steps.none
+    end
+  end
+
+  def order_results_for_report(results, order)
+    case order
+    when 'atoz'
+      results.order(name: :asc)
+    when 'ztoa'
+      results.order(name: :desc)
+    when 'new'
+      results.order(updated_at: :desc)
+    else
+      results.order(updated_at: :asc)
+    end
+  end
+
+  def report_experiment_descriptions(report)
+    report.report_elements.experiment.map do |experiment_element|
+      experiment_element.experiment.description
+    end
+  end
+
+  def assigned_to_report_repository_items(report, repository_name)
+    repository = Repository.accessible_by_teams(report.team).where(name: repository_name).take
+    return RepositoryRow.none if repository.blank?
+
+    my_modules = MyModule.joins(:experiment)
+                         .where(experiment: { project: report.project })
+                         .where(id: report.report_elements.my_module.select(:my_module_id))
+    repository.repository_rows.joins(:my_modules).where(my_modules: my_modules)
   end
 
   private

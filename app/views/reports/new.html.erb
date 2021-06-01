@@ -1,88 +1,124 @@
-<% content_for :head do %>
-  <meta name="turbolinks-cache-control" content="no-cache">
-  <meta name="turbolinks-visit-control" content="reload">
-<% end %>
+<div class="content-pane flexible reports-new">
+  <div class="reports-new-header">
+    <div class="sci-input-container report-name-container">
+      <input type="text" class="sci-input-field report-name" placeholder="<%= t("projects.reports.new.report_name_placeholder") %>" value="<%= @report.name %>"></input>
 
-<% provide(:head_title, t("projects.reports.new.head_title", project: h(@project.name)).html_safe) %>
-
-<%= render partial: "reports/new/report_navigation" %>
-
-<div class="content-pane" id="report-new">
-  <div class="report-container">
-    <div
-      id="data-holder"
-      class="hidden"
-      data-project-modal-title="<%=t "projects.reports.elements.modals.project_contents.head_title" %>"
-      data-add-project-contents-url="<%= project_contents_modal_project_reports_url(@project) %>"
-      data-add-experiment-contents-url="<%= experiment_contents_modal_project_reports_url(@project) %>"
-      data-add-module-contents-url="<%= module_contents_modal_project_reports_url(@project) %>"
-      data-add-step-contents-url="<%= step_contents_modal_project_reports_url(@project) %>"
-      data-add-result-contents-url="<%= result_contents_modal_project_reports_url(@project) %>"
-      data-stylesheet-url="<%= stylesheet_path "application" %>"
-      data-print-title="<%=t "projects.reports.print_title", project: @project.name %>"
-      data-project-id="<%= @project.id %>"
-      data-save-report-url="<%= save_modal_project_reports_url(@project) %>"
-      data-report-id="<%= @report.present? ? @report.id : "" %>"
-      data-unsaved-work-text="<%=t "projects.reports.new.unsaved_work" %>"
-      data-global-sort-text="<%=t "projects.reports.new.global_sort" %>"></div>
-
-    <!-- Report "preview" -->
-    <div id="report-content">
-
-    <% if @report.present? %>
-      <% @report.root_elements.each do |el| %>
-        <%= render_report_element(el, local_assigns) %>
-        <%= render_new_element(false) %>
-      <% end %>
-    <% else %>
-      <%= render partial: "reports/elements/project_header_element", locals: { project: @project } %>
-      <%= render partial: "reports/elements/new_element", locals: { initial: true } %>
-    <% end %>
     </div>
-
-    <!-- Add elements modal -->
-    <div class="modal" id="add-contents-modal" tabindex="-1" role="dialog" aria-labelledby="add-contents-modal-label">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="add-contents-modal-label"></h4>
-            </div>
-            <div class="modal-body"></div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
-              <button type="button" data-action="add" class="btn btn-primary"><%=t "projects.reports.elements.modals.add" %></button>
-            </div>
-          </div>
-        </div>
-    </div>
-
-    <!-- Save report modal -->
-    <div class="modal" id="save-report-modal" tabindex="-1" role="dialog" aria-labelledby="save-report-modal-label">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="save-report-modal-label"><%=t "projects.reports.elements.modals.save_report.head_title" %></h4>
-          </div>
-          <div class="modal-body"></div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
-            <button type="button" data-action="save" class="btn btn-primary"><%=t "projects.reports.elements.modals.save_report.save" %></button>
-          </div>
-        </div>
+    <button class="btn btn-secondary cancel-button" data-toggle="modal" data-target="#reportWizardExitWarning">
+      <%= t("general.cancel") %>
+    </button>
+  </div>
+  <div class="reports-new-body">
+    <ul class="nav nav-tabs hidden">
+      <li role="presentation"><a href="#new-report-step-1" data-toggle="tab" data-no-turbolink="true"></a></li>
+      <li role="presentation"><a href="#new-report-step-2" data-toggle="tab" data-no-turbolink="true"></a></li>
+      <li role="presentation"><a href="#new-report-step-3" data-toggle="tab" data-no-turbolink="true"></a></li>
+    </ul>
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="new-report-step-1">
+        <%= render partial: 'reports/wizard/first_step', locals: { report: @report } %>
+      </div>
+      <div role="tabpanel" class="tab-pane" id="new-report-step-2">
+        <%= render partial: 'reports/wizard/second_step', locals: { report: @report } %>
+      </div>
+      <div role="tabpanel" class="tab-pane" id="new-report-step-3">
+        <%= render partial: 'reports/wizard/third_step', locals: { report: @report } %>
       </div>
     </div>
-
+  </div>
+  <div class="reports-new-footer" data-step="1">
+    <div class="back-container">
+      <button class="btn btn-secondary back-button">
+        <%= t("general.back") %>
+      </button>
+    </div>
+    <div class="wizard-status">
+      <div class="progress-line progress-step-1"></div>
+      <div class="progress-line progress-step-2"></div>
+      <% 3.times do |i| %>
+        <div class="wizard-steps wizard-step-<%= i + 1 %>">
+          <div class="step-id">
+            <%= i + 1 %>
+          </div><br>
+          <div class="step-dot"></div><br>
+          <div class="step-name">
+            <span class=name-wrapper>
+              <%= t("projects.reports.wizard.statuses.step_#{i + 1}") %>
+            </span>
+          </div>
+          <% if @edit %>
+            <div class="change-step" data-step-id="<%= i + 1 %>">
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+    <div class="next-button-container">
+      <button class="btn btn-primary continue-button" disabled>
+        <%= t("projects.reports.new.continue_button") %>
+      </button>
+      <% if @edit %>
+        <div class="report-generate-actions-dropdown sci-dropdown dropup">
+          <button class="btn btn-primary dropdown-toggle single-object-action" type="button" id="reportGenerateMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <%= t("projects.reports.new.generate_as_button") %>
+            <span class="caret pull-right"></span>
+          </button>
+          <ul id="reportGenerateMenuDropdown" class="dropdown-menu dropdown-menu-right" aria-labelledby="reportGenerateMenu">
+            <li>
+              <%= link_to reports_path, remote: true, id: 'saveAsNewReport', class: "disabled", data: { create_url: reports_path } do %>
+                <i class="fas fa-plus-circle"></i>
+                <%= t("projects.reports.new.save_as_new_report") %>
+              <% end %>
+            </li>
+            <li>
+              <%= link_to '#', remote: true, id: 'UpdateReport', class: "disabled", data: { update_url: report_path(@report) }  do %>
+                <i class="fas fa-redo-alt"></i>
+                <%= t("projects.reports.new.update_report") %>
+              <% end %>
+            </li>
+          </ul>
+        </div>
+      <% else %>
+        <button class="btn btn-primary generate-button"  data-create-url="<%= reports_path %>" disabled>
+          <%= t("projects.reports.new.generate_button") %>
+        </button>
+      <% end %>
+    </div>
   </div>
 </div>
 
-<%= render partial: 'reports/new/save_PDF_to_inventory_modal' %>
+<div class="modal" id="reportWizardExitWarning" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">
+          <%= t("projects.reports.new.exit_modal.title_#{@edit ? 'edit' : 'new'}") %>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <p>
+          <%= t("projects.reports.new.exit_modal.description_#{@edit ? 'edit' : 'new'}") %>
+        </p>
+        <p>
+          <b><%= t("projects.reports.new.exit_modal.description_2") %></b>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          <%= t('general.no') %>
+        </button>
+        <%= link_to t('general.yes'), reports_path, class: "btn btn-primary" %>
+      </div>
+    </div>
+  </div>
+</div>
 
-<%= javascript_include_tag "handsontable.full.min" %>
+<%= render partial: 'reports/modals/project_change_warning' %>
+<%= render partial: 'reports/modals/template_change_warning' %>
 
-<!-- Libraries for formulas -->
-<%= render partial: "shared/formulas_libraries.html.erb" %>
+<% if @edit %>
+  <%= render partial: 'report_edit_warning_modal' %>
+<% end %>
 
 <%= javascript_include_tag("reports/new") %>
-<%= javascript_include_tag 'reports/save_pdf_to_inventory' %>

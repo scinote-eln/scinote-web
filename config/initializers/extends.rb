@@ -16,7 +16,8 @@ class Extends
   NOTIFICATIONS_TYPES = { assignment: 0,
                           recent_changes: 1,
                           system_message: 2, # DEPRECATED
-                          deliver: 5 }
+                          deliver: 5,
+                          deliver_error: 7 }
 
   TASKS_STATES = { uncompleted: 0,
                    completed: 1 }
@@ -381,7 +382,9 @@ class Extends
     create_project_folder: 159,
     move_project_folder: 160,
     rename_project_folder: 161,
-    delete_project_folder: 162
+    delete_project_folder: 162,
+    generate_pdf_report: 163,
+    generate_docx_report: 164
   }
 
   ACTIVITY_GROUPS = {
@@ -392,7 +395,7 @@ class Extends
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137],
     task_inventory: [55, 56, 146, 147],
     experiment: [*27..31, 57],
-    reports: [48, 50, 49],
+    reports: [48, 50, 49, 163, 164],
     inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77, 78, 96, 107, 113, 114, *133..136],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131],
@@ -419,6 +422,8 @@ class Extends
     { name: 'In progress', color: '#0065ff', consequences: ['MyModuleStatusConsequences::Uncompletion'] },
     { name: 'Completed', color: '#00b900', consequences: ['MyModuleStatusConsequences::Completion'] }
   ]
+
+  REPORT_TEMPLATES = {}
 
   NOTIFIABLE_ACTIVITIES = %w(
     assign_user_to_project

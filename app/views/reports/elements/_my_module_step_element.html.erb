@@ -1,11 +1,10 @@
-<% if step.blank? and @step.present? then step = @step end %>
+<% step ||= @step %>
 <% step_type_str = step.completed ? 'completed' : 'uncompleted' %>
 <% user = step.completed? ? step.last_modified_by : step.user %>
 <% timestamp = step.completed ? step.completed_on : step.created_at %>
 <% tables = step.tables %>
 <% assets = step.assets %>
 <% checklists = step.checklists %>
-<% comments = step.step_comments %>
 <% for_export_all = defined?(export_all) && export_all %>
 <div class="report-element report-step-element"
      data-ts="<%= timestamp.to_i %>"
@@ -50,6 +49,28 @@
     </div>
   </div>
   <div class="report-element-children">
-    <%= children if (defined? children and children.present?) %>
+    <% if @settings.dig('task', 'protocol', 'step_tables') %>
+      <% tables.each do |table| %>
+        <%= render partial: 'reports/elements/step_table_element.html.erb', locals: { table: table } %>
+      <% end %>
+    <% end %>
+    <% if @settings.dig('task', 'protocol', 'step_files') %>
+      <% assets.each do |asset| %>
+        <%= render partial: 'reports/elements/step_asset_element.html.erb', locals: { asset: asset } %>
+      <% end %>
+    <% end %>
+    <% if @settings.dig('task', 'protocol', 'step_checklists') %>
+      <% checklists.each do |checklist| %>
+        <%= render partial: 'reports/elements/step_checklist_element.html.erb', locals: { checklist: checklist } %>
+      <% end %>
+    <% end %>
+    <% if @settings.dig('task', 'protocol', 'step_comments') %>
+      <%= render partial: 'reports/elements/step_comments_element.html.erb', locals: { step: step } %>
+    <% end %>
   </div>
+  <% if defined?(children) %>
+    <div class="report-element-children">
+      <%= children %>
+    </div>
+  <% end %>
 </div>

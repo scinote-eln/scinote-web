@@ -8,10 +8,11 @@ class MyModule < ApplicationRecord
 
   enum state: Extends::TASKS_STATES
 
+  before_validation :archiving_and_restoring_extras, on: :update, if: :archived_changed?
+  before_save -> { report_elements.destroy_all }, if: -> { !new_record? && experiment_id_changed? }
+  around_save :exec_status_consequences, if: :my_module_status_id_changed?
   before_create :create_blank_protocol
   before_create :assign_default_status_flow
-  before_validation :archiving_and_restoring_extras, on: :update, if: :archived_changed?
-  around_save :exec_status_consequences, if: :my_module_status_id_changed?
   after_save -> { experiment.workflowimg.purge },
              if: -> { (saved_changes.keys & %w(x y experiment_id my_module_group_id input_id output_id archived)).any? }
 

@@ -20,7 +20,9 @@
       </div>
     </div>
   </div>
-  <div class="report-element-children">
-    <%= children if (defined? children and children.present?) %>
-  </div>
+  <% if defined?(children) %>
+    <div class="report-element-children">
+      <%= children %>
+    </div>
+  <% end %>
 </div>

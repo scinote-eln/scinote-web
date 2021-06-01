@@ -145,7 +145,9 @@ var dropdownSelector = (function() {
   function disableEnableDropdown(selector, container, mode) {
     var searchFieldValue = container.find('.search-field');
     if (mode) {
-      updateCurrentData(container, []);
+      if ($(selector).data('ajax-url')) {
+        updateCurrentData(container, []);
+      }
       updateTags(selector, container, { skipChange: true });
       searchFieldValue.attr('placeholder', selector.data('disable-placeholder') || '');
       container.addClass('disabled').removeClass('open')

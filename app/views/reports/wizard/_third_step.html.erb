@@ -1,0 +1,183 @@
+<div class="task-contents-container">
+  <div class="title">
+    <%= t("projects.reports.wizard.third_step.title") %>
+  </div>
+  <div class="select-all-container">
+    <span class="sci-checkbox-container">
+      <input type="checkbox" class="sci-checkbox select-all-task-contents"/>
+      <span class="sci-checkbox-label"></span>
+    </span>
+    <%= t("projects.reports.wizard.third_step.select_all") %>
+  </div>
+  <div class="divider"></div>
+  <ul class="report-task-settings">
+    <li class="content-element">
+      <i class="fas fa-caret-down " data-toggle="collapse" href="#protocolContents" aria-expanded="false"></i>
+      <span class="content-element-title">
+        <%= t("projects.reports.wizard.third_step.task_protocol") %>
+      </span>
+      <ul class="protocol-contents collapse in" id="protocolContents">
+        <li>
+          <span class="sci-checkbox-container">
+            <input type="checkbox" class="sci-checkbox protocol-setting" value="description" <%= 'checked' if report.settings.dig(:task, :protocol, :description) %>/>
+            <span class="sci-checkbox-label"></span>
+          </span>
+          <%= t("projects.reports.wizard.third_step.protocol_description") %>
+          <div class="divider"></div>
+        </li>
+        <li>
+          <span class="sci-checkbox-container">
+            <input type="checkbox" class="sci-checkbox protocol-steps-checkbox" value="protocol_steps"/>
+            <span class="sci-checkbox-label"></span>
+          </span>
+          <%= t("projects.reports.wizard.third_step.protocol_step") %>
+          <div class="divider"></div>
+          <ul class="step-contents report-protocol-settings">
+            <% %i(completed_steps uncompleted_steps step_checklists step_files step_tables step_comments).each do |step_content| %>
+              <li>
+                <span class="sci-checkbox-container">
+                  <input type="checkbox" class="sci-checkbox protocol-setting" value="<%= step_content %>" <%= 'checked' if report.settings.dig(:task, :protocol, step_content) %> />
+                  <span class="sci-checkbox-label"></span>
+                </span>
+                <%= t("projects.reports.wizard.third_step.#{step_content}") %>
+                <div class="divider"></div>
+              </li>
+            <% end %>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <div class="divider"></div>
+    <li class="content-element">
+      <i class="fas fa-caret-down " data-toggle="collapse" href="#repositoriesContents" aria-expanded="false"></i>
+      <span class="content-element-title">
+        <%= t("projects.reports.wizard.third_step.assigned_items") %>
+      </span><br>
+      <span class="repositories-items-description">
+        <i class="fas fa-info-circle"></i>
+        <%= t("projects.reports.wizard.third_step.assigned_items_description") %>
+      </span>
+      <ul class="collapse in" id="repositoriesContents">
+        <li>
+          <span class="sci-checkbox-container">
+            <input type="checkbox" class="sci-checkbox select-all-repositories"/>
+            <span class="sci-checkbox-label"></span>
+          </span>
+          <%= t("projects.reports.wizard.third_step.include_all_assigned_iitems") %>
+          <div class="divider"></div>
+          <ul class="repositories-contents">
+            <% @repositories.each do |repository| %>
+              <li>
+                <span class="sci-checkbox-container">
+                  <input type="checkbox" class="sci-checkbox repositories-setting" value="<%= repository.id %>" <%= 'checked' if report.new_record? || @project_contents[:repositories].include?(repository.id) %> />
+                  <span class="sci-checkbox-label"></span>
+                </span>
+                <%= repository.name %>
+                <div class="divider"></div>
+              </li>
+            <% end %>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <div class="divider"></div>
+    <li class="content-element">
+      <i class="fas fa-caret-down " data-toggle="collapse" href="#resultContents" aria-expanded="false"></i>
+      <span class="content-element-title">
+        <%= t("projects.reports.wizard.third_step.results") %>
+      </span>
+      <ul class="result-contents collapse in" id="resultContents">
+        <li>
+          <div class="all-results-container">
+            <span class="sci-checkbox-container">
+              <input type="checkbox" class="sci-checkbox all-results-checkbox" value="all_results"/>
+              <span class="sci-checkbox-label"></span>
+            </span>
+            <span>
+              <%= t("projects.reports.wizard.third_step.all_results") %>
+              <div class="results-order-contaner">
+                <label>
+                  <%= t("projects.reports.wizard.third_step.order_results") %>
+                </label>
+                <%= select_tag :taskResultsOrder,
+                               options_for_select([
+                                 [t('projects.reports.wizard.third_step.atoz'), 'atoz'],
+                                 [t('projects.reports.wizard.third_step.ztoa'), 'ztoa'],
+                                 [t('projects.reports.wizard.third_step.new_results'), 'new'],
+                                 [t('projects.reports.wizard.third_step.old_results'), 'old']
+                               ], selected: report.settings.dig(:task, :result_order)),
+                               class: 'order-results' %>
+              </div>
+            </span>
+          </div>
+          <div class="divider"></div>
+          <ul class="results-type-contents report-result-settings">
+            <li>
+              <div class="file-result-title-container">
+                <span class="sci-checkbox-container">
+                  <input type="checkbox" class="sci-checkbox task-setting" value="file_results" <%= 'checked' if report.settings.dig(:task, :file_results) %>/>
+                  <span class="sci-checkbox-label"></span>
+                </span>
+                <span>
+                  <%= t("projects.reports.wizard.third_step.file_results") %>
+                  <div class="include-pages-container">
+                    <span class="sci-checkbox-container">
+                      <input type="checkbox" class="sci-checkbox task-setting skip-select-all" value="file_results_previews" <%= 'checked' if report.settings.dig(:task, :file_results_previews) %>/>
+                      <span class="sci-checkbox-label"></span>
+                    </span>
+                    <%= t("projects.reports.wizard.third_step.insert_pages_from_pdf") %><br>
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <%= t("projects.reports.wizard.third_step.pdf_warning") %>
+                  </div>
+                </span>
+              </div>
+              <div class="divider"></div>
+            </li>
+            <li>
+              <span class="sci-checkbox-container">
+                <input type="checkbox" class="sci-checkbox task-setting " value="table_results" <%= 'checked' if report.settings.dig(:task, :table_results) %>/>
+                <span class="sci-checkbox-label"></span>
+              </span>
+              <%= t("projects.reports.wizard.third_step.table_results") %>
+              <div class="divider"></div>
+            </li>
+            <li>
+              <span class="sci-checkbox-container">
+                <input type="checkbox" class="sci-checkbox task-setting" value="text_results" <%= 'checked' if report.settings.dig(:task, :text_results) %>/>
+                <span class="sci-checkbox-label"></span>
+              </span>
+              <%= t("projects.reports.wizard.third_step.text_results") %>
+              <div class="divider"></div>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <span class="sci-checkbox-container">
+            <input type="checkbox" class="sci-checkbox task-setting" value="result_comments" <%= 'checked' if report.settings.dig(:task, :result_comments) %>/>
+            <span class="sci-checkbox-label"></span>
+          </span>
+          <%= t("projects.reports.wizard.third_step.results_comments") %>
+          <div class="divider"></div>
+        </li>
+      </ul>
+      <div class="divider"></div>
+    </li>
+    <li class="content-element">
+      <i class="fas fa-caret-down " data-toggle="collapse" href="#additionalContents" aria-expanded="false"></i>
+      <span class="content-element-title">
+        <%= t("projects.reports.wizard.third_step.additional_content") %>
+      </span>
+      <ul class="additional-contents collapse in" id="additionalContents">
+        <li>
+          <div class="select-all-container">
+            <span class="sci-checkbox-container">
+              <input type="checkbox" class="sci-checkbox task-setting" value="activities" <%= 'checked' if report.settings.dig(:task, :activities) %>/>
+              <span class="sci-checkbox-label"></span>
+            </span>
+            <%= t("projects.reports.wizard.third_step.task_activity") %>
+            <div class="divider"></div>
+          </div>
+        </li>
+      </ul>
+  </ul>
+</div>

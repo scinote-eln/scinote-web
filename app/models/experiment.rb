@@ -3,6 +3,8 @@ class Experiment < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
 
+  before_save -> { report_elements.destroy_all }, if: -> { !new_record? && project_id_changed? }
+
   belongs_to :project, inverse_of: :experiments, touch: true
   belongs_to :created_by,
              foreign_key: :created_by_id,
