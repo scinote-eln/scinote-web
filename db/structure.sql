@@ -198,11 +198,11 @@ ALTER SEQUENCE public.activities_id_seq OWNED BY public.activities.id;
 --
 
 CREATE TABLE public.activity_filters (
-    id integer NOT NULL,
+    id bigint NOT NULL,
     name character varying NOT NULL,
     filter jsonb NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -211,7 +211,6 @@ CREATE TABLE public.activity_filters (
 --
 
 CREATE SEQUENCE public.activity_filters_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE

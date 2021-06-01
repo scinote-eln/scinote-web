@@ -10,7 +10,7 @@ module Organization
     end
 
     can :create_acitivity_filters do
-      ENV['WEBHOOKS_ENABLED'] == 'true'
+      true
     end
   end
 end
