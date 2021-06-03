@@ -94,9 +94,12 @@
           <span><%= t('left_menu_bar.support') %></span>
         </a>
         <ul class="dropdown-menu" data-hook="support-dropdown">
-          <li><%= link_to t('left_menu_bar.support_links.support'),
-                            Constants::SUPPORT_URL,
-                            target: "_blank" %></li>
+          <li>
+            <%= link_to  Constants::SUPPORT_URL, target: "_blank", id: "knowledge-center-link" do %>
+             <i class="fas fa-question-circle"></i>
+              <%= t('left_menu_bar.support_links.support') %>
+            <% end %>
+          </li>
           <li><%= link_to t('left_menu_bar.support_links.tutorials'),
                             Constants::TUTORIALS_URL,
                             target: "_blank" %></li>
