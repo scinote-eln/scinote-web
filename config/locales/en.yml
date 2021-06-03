@@ -1839,6 +1839,7 @@ en:
       sidebar:
         account: "Account"
         teams: "Teams"
+        webhooks: "Webhooks"
         account_nav:
           profile: "Profile"
           preferences: "Preferences"
@@ -2449,6 +2450,16 @@ en:
     repository_footer_html: 'Inventory will be exported in a .csv file format. You will receive <strong>email with a link</strong> where you can download it.'
     export_request_success: "Export request received!"
     export_error: "Error when creating zip export."
+
+  webhooks:
+    index:
+      title: 'Webhooks'
+      description: 'Saved activity filters are listed below as collapsible sections. You can add more saved filters on the Activities page. Each saved filter can hold several webhooks.'
+      new_webhook: "New webhook"
+      applied_filters: "Applied activity filters"
+      delete_filter_modal:
+        title: "Delete filter"
+        description_html: "Are you sure you want to delete <b></b>?"
 
   # This section contains general words that can be used in any parts of
   # application.

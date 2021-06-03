@@ -104,6 +104,18 @@ Rails.application.routes.draw do
            to: 'users/settings/user_teams#destroy',
            as: 'destroy_user_team'
 
+    namespace :users do
+      namespace :settings do
+        resources :webhooks, only: :index do
+          collection do
+            post :destroy_filter
+            get :filter_info
+          end
+        end
+      end
+    end
+
+
     # Invite users
     devise_scope :user do
       post '/invite',
