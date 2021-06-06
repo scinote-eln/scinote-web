@@ -20,10 +20,6 @@ module PermissionCheckableModel
         user_assignments.find_by(user: user)&.user_role&.permissions
       end
 
-    if user_role_permissions.blank? && permission_parent.present?
-      user_role_permissions = permission_parent.send :load_user_role_permissions, user
-    end
-
     user_role_permissions
   end
 end

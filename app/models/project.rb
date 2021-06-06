@@ -55,8 +55,8 @@ class Project < ApplicationRecord
 
   scope :visible_to, (lambda do |user, team|
                         unless user.is_admin_of_team?(team)
-                          left_outer_joins(:user_projects)
-                          .where('visibility = 1 OR user_projects.user_id = :id', id: user.id)
+                          left_outer_joins(:user_assignments)
+                          .where('visibility = 1 OR user_assignments.user_id = :id', id: user.id)
                           .group(:id)
                         end
                       end)
@@ -70,8 +70,8 @@ class Project < ApplicationRecord
     if user.is_admin_of_team?(team)
       projects.where('projects.archived IS FALSE AND projects.name ILIKE ?', "%#{name}%")
     else
-      projects.joins(:user_projects)
-              .where('user_projects.user_id = ? OR projects.visibility = 1', user.id)
+      projects.joins(:user_assignments)
+              .where('user_assignments.user_id = ? OR projects.visibility = 1', user.id)
               .where('projects.archived IS FALSE AND projects.name ILIKE ?',
                      "%#{name}%")
     end
@@ -90,12 +90,12 @@ class Project < ApplicationRecord
       new_query =
         Project
         .distinct
-        .joins(:user_projects)
+        .joins(:user_assignments)
         .where('projects.team_id = ?', current_team.id)
       unless user.user_teams.find_by(team: current_team).try(:admin?)
         # Admins see all projects in the team
         new_query = new_query.where(
-          'projects.visibility = 1 OR user_projects.user_id = ?',
+          'projects.visibility = 1 OR user_assignments.user_id = ?',
           user.id
         )
       end
@@ -115,10 +115,10 @@ class Project < ApplicationRecord
       if include_archived
         new_query =
           new_query
-          .joins(:user_projects)
+          .joins(:user_assignments)
           .where(
             'user_teams.role = 2 OR projects.visibility = 1 OR ' \
-            'user_projects.user_id = ?',
+            'user_assignments.user_id = ?',
             user.id
           )
           .where_attributes_like('projects.name', query, options)
@@ -126,10 +126,10 @@ class Project < ApplicationRecord
       else
         new_query =
           new_query
-          .joins(:user_projects)
+          .joins(:user_assignments)
           .where(
             'user_teams.role = 2 OR projects.visibility = 1 OR ' \
-            'user_projects.user_id = ?',
+            'user_assignments.user_id = ?',
             user.id
           )
           .where_attributes_like('projects.name', query, options)
@@ -153,9 +153,9 @@ class Project < ApplicationRecord
     # If project is visible everyone from the team can view it
     Project.where(team: teams)
            .left_outer_joins(team: :user_teams)
-           .left_outer_joins(:user_projects)
+           .left_outer_joins(:user_assignments)
            .where('projects.visibility = 1 OR '\
-                  'user_projects.user_id = :user_id OR '\
+                  'user_assignments.user_id = :user_id OR '\
                   '(user_teams.user_id = :user_id AND user_teams.role = 2)',
                   user_id: user.id)
            .distinct
@@ -209,7 +209,7 @@ class Project < ApplicationRecord
   end
 
   def user_role(user)
-    user_projects.find_by_user_id(user)&.role
+    user_assignments.find_by_user_id(user)&.user_role.name
   end
 
   def sorted_experiments(sort_by = :new, archived = false)
