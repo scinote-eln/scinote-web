@@ -702,13 +702,13 @@ Rails.application.routes.draw do
               resources :reports, only: %i(index show), path: 'reports', as: :reports
               resources :experiments, only: %i(index show create update) do
                 resources :user_assignments,
-                          only: %i(index show create update),
+                          only: %i(index show update),
                           controller: :experiment_user_assignments
                 resources :task_groups, only: %i(index show)
                 resources :connections, only: %i(index show)
                 resources :tasks, only: %i(index show create update) do
                   resources :user_assignments,
-                            only: %i(index show create update),
+                            only: %i(index show update),
                             controller: :task_user_assignments
                   resources :task_inventory_items, only: %i(index show),
                             path: 'items',

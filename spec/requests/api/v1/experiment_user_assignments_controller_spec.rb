@@ -118,113 +118,15 @@ RSpec.describe "Api::V1::ExperimentUserAssignmentsController", type: :request do
     end
   end
 
-  describe 'POST user_assignment, #create' do
-    before :all do
-      @valid_headers['Content-Type'] = 'application/json'
-      create :user_assignment,
-             assignable: @own_project,
-             user: @another_user,
-             user_role: @owner_role,
-             assigned_by: @user
-    end
-
-    let(:action) do
-      post api_v1_team_project_experiment_user_assignments_path(
-        team_id: @team.id,
-        project_id: @own_project.id,
-        experiment_id: @own_experiment.id
-      ), params: request_body.to_json, headers: @valid_headers
-    end
-
-    context 'when has valid params' do
-      let(:request_body) do
-        {
-          data: {
-            type: 'experiment_user_assignments',
-            attributes: {
-              user_id: @another_user.id,
-              user_role_id: @normal_user_role.id
-            }
-          }
-        }
-      end
-
-      it 'creates new user_assignment' do
-        expect { action }.to change { UserAssignment.count }.by(1)
-      end
-
-      it 'returns status 201' do
-        action
-
-        expect(response).to have_http_status 201
-      end
-
-      it 'returns well formated response' do
-        action
-
-        expect(json).to match(
-                          hash_including(
-                            data: hash_including(
-                              type: 'experiment_user_assignments',
-                              relationships: hash_including(
-                                user: hash_including(data: hash_including(id: @another_user.id.to_s)),
-                                user_role: hash_including(data: hash_including(id: @normal_user_role.id.to_s))
-                              )
-                            )
-                          )
-                        )
-      end
-    end
-
-    context 'when has missing param' do
-      let(:request_body) do
-        {
-          data: {
-            type: 'experiment_user_assignments',
-            attributes: {}
-          }
-        }
-      end
-
-      it 'renders 400' do
-        action
-
-        expect(response).to have_http_status(400)
-      end
-    end
-
-    context 'when user is not an owner of the project' do
-      let(:request_body) do
-        {
-          data: {
-            type: 'experiment_user_assignments',
-            attributes: {
-              user_id: @another_user.id,
-              user_role_id: @normal_user_role.id
-            }
-          }
-        }
-      end
-
-      it 'renders 403' do
-        post(
-          api_v1_team_project_experiment_user_assignments_path(
-            team_id: @invalid_project.team.id,
-            project_id: @invalid_project.id,
-            experiment_id: @invalid_experiment.id
-          ),
-          params: request_body.to_json,
-          headers: @valid_headers
-        )
-
-        expect(response).to have_http_status(403)
-      end
-    end
-  end
-
   describe 'PATCH user_assignment, #update' do
     before :all do
       @valid_headers['Content-Type'] = 'application/json'
+      create :user_project, user: @another_user, project: @own_project
+      create :user_assignment,
+             assignable: @own_project,
+             user: @another_user,
+             user_role: @normal_user_role,
+             assigned_by: @user
       @user_assignment = create :user_assignment,
                                 assignable: @own_experiment,
                                 user: @another_user,

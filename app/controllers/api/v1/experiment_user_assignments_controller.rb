@@ -6,8 +6,8 @@ module Api
       before_action :load_team
       before_action :load_project
       before_action :load_experiment
-      before_action :load_user_assignment, only: %i(update show destroy)
-      before_action :load_user_assignment_for_managing, only: %i(update show destroy)
+      before_action :load_user_assignment, only: %i(update show)
+      before_action :load_user_assignment_for_managing, only: %i(update show)
 
       def index
         user_assignments = @experiment.user_assignments
@@ -24,20 +24,6 @@ module Api
         render jsonapi: @user_assignment,
                serializer: ExperimentUserAssignmentSerializer,
                include: %i(user user_role)
-      end
-
-      def create
-        raise PermissionError.new(Experiment, :manage) unless can_manage_experiment?(@experiment)
-
-        experiment_member = ExperimentMember.new(current_user, @experiment, @project)
-        experiment_member.create(
-          user_role_id: user_assignment_params[:user_role_id],
-          user_id: user_assignment_params[:user_id]
-        )
-
-        render jsonapi: experiment_member.user_assignment.reload,
-               serializer: ExperimentUserAssignmentSerializer,
-               status: :created
       end
 
       def update
@@ -57,18 +43,6 @@ module Api
         render jsonapi: experiment_member.user_assignment.reload,
                serializer: ExperimentUserAssignmentSerializer,
                status: :ok
-      end
-
-      def destroy
-        experiment_member = ExperimentMember.new(
-          current_user,
-          @experiment,
-          @project,
-          @user_assignment.user,
-          @user_assignment
-        )
-        experiment_member.destroy
-        render body: nil
       end
 
       private

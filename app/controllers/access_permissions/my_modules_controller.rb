@@ -22,7 +22,7 @@ module AccessPermissions
 
     def update
       @my_module_member = MyModuleMember.new(current_user, @my_module, @experiment, @project)
-      @my_module_member.handle_change(permitted_update_params)
+      @my_module_member.update(permitted_update_params)
 
       respond_to do |format|
         format.json do

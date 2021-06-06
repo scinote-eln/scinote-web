@@ -28,6 +28,16 @@ describe ProjectMember, type: :model do
       }.to change(Activity, :count).by(1)
       expect(Activity.last.type_of).to eq 'assign_user_to_project'
     end
+
+    it 'triggers the UserAssignments::PropagateAssignmentJob job' do
+      subject.assign = true
+      subject.user_role_id = owner_role.id
+
+      expect(UserAssignments::PropagateAssignmentJob).to receive(:perform_later).with(
+        project, user, owner_role, user
+      )
+      subject.create
+    end
   end
 
   describe '#update' do
@@ -52,6 +62,14 @@ describe ProjectMember, type: :model do
         subject.update
       }.to change(Activity, :count).by(1)
       expect(Activity.last.type_of).to eq 'change_user_role_on_project'
+    end
+
+    it 'triggers the UserAssignments::PropagateAssignmentJob job' do
+      subject.user_role_id = normal_user_role.id
+      expect(UserAssignments::PropagateAssignmentJob).to receive(:perform_later).with(
+        project, user, normal_user_role, user
+      )
+      subject.update
     end
   end
 
@@ -95,6 +113,13 @@ describe ProjectMember, type: :model do
         subject.destroy
       }.to change(Activity, :count).by(1)
       expect(Activity.last.type_of).to eq 'unassign_user_from_project'
+    end
+
+    it 'triggers the UserAssignments::PropagateAssignmentJob job' do
+      expect(UserAssignments::PropagateAssignmentJob).to receive(:perform_later).with(
+        project, user, owner_role, user, destroy: true
+      )
+      subject.destroy
     end
   end
 

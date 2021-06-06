@@ -20,51 +20,11 @@ class ExperimentMember
     end
   end
 
-  def handle_change(params)
-    prepare_data(params)
-    ActiveRecord::Base.transaction do
-      if destroy_role?
-        user_assignment.destroy
-      elsif user_assignment.present?
-        user_assignment.update!(user_role: user_role)
-      else
-        UserAssignment.create!(
-          assignable: experiment,
-          user: user,
-          user_role: user_role,
-          assigned_by: current_user
-        )
-      end
-      log_change_activity
-    end
-  end
-
   def update(params)
     prepare_data(params)
 
     ActiveRecord::Base.transaction do
       user_assignment.update!(user_role: user_role)
-      log_change_activity
-    end
-  end
-
-  def create(params)
-    prepare_data(params)
-
-    ActiveRecord::Base.transaction do
-      @user_assignment = UserAssignment.create!(
-        assignable: experiment,
-        user: user,
-        user_role: user_role,
-        assigned_by: current_user
-      )
-      log_change_activity
-    end
-  end
-
-  def destroy
-    ActiveRecord::Base.transaction do
-      user_assignment.destroy
       log_change_activity
     end
   end
@@ -93,10 +53,5 @@ class ExperimentMember
         role: user_role.name
       }
     )
-  end
-
-  def destroy_role?
-    (user_assignment.present? && user_role.nil?) ||
-      UserAssignment.find_by(assignable: project, user: user)&.user_role == user_role
   end
 end

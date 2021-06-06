@@ -7,8 +7,8 @@ module Api
       before_action :load_project
       before_action :load_experiment
       before_action :load_task
-      before_action :load_user_assignment, only: %i(update show destroy)
-      before_action :load_user_assignment_for_managing, only: %i(update show destroy)
+      before_action :load_user_assignment, only: %i(update show)
+      before_action :load_user_assignment_for_managing, only: %i(update show)
 
       def index
         user_assignments = @task.user_assignments
@@ -25,20 +25,6 @@ module Api
         render jsonapi: @user_assignment,
                serializer: TaskUserAssignmentSerializer,
                include: %i(user user_role)
-      end
-
-      def create
-        raise PermissionError.new(MyModule, :read) unless can_manage_module?(@task)
-
-        my_module_member = MyModuleMember.new(current_user, @task, @experiment, @project)
-        my_module_member.create(
-          user_role_id: user_assignment_params[:user_role_id],
-          user_id: user_assignment_params[:user_id]
-        )
-
-        render jsonapi: my_module_member.user_assignment.reload,
-               serializer: TaskUserAssignmentSerializer,
-               status: :created
       end
 
       def update
@@ -60,19 +46,6 @@ module Api
         render jsonapi: my_module_member.user_assignment.reload,
                serializer: TaskUserAssignmentSerializer,
                status: :ok
-      end
-
-      def destroy
-        my_module_member = MyModuleMember.new(
-          current_user,
-          @task,
-          @experiment,
-          @project,
-          @user_assignment.user,
-          @user_assignment
-        )
-        my_module_member.destroy
-        render body: nil
       end
 
       private

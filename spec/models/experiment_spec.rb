@@ -273,4 +273,14 @@ describe Experiment, type: :model do
       end
     end
   end
+
+  describe 'after_create_commit' do
+    it 'triggers the UserAssignments::GenerateUserAssignmentsJob job' do
+      experiment.created_by = create(:user)
+      expect(UserAssignments::GenerateUserAssignmentsJob).to receive(:perform_later).with(
+        experiment, experiment.created_by
+      )
+      experiment.save!
+    end
+  end
 end

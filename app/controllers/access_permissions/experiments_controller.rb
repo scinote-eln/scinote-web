@@ -21,7 +21,7 @@ module AccessPermissions
 
     def update
       @experiment_member = ExperimentMember.new(current_user, @experiment, @project)
-      @experiment_member.handle_change(permitted_update_params)
+      @experiment_member.update(permitted_update_params)
 
       respond_to do |format|
         format.json do
