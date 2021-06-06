@@ -4,18 +4,14 @@ module UserAssignments
   class PropagateAssignmentJob < ApplicationJob
     queue_as :high_priority
 
-    def perform(object, user, user_role, assigned_by, destroy: false)
+    def perform(project, user, user_role, assigned_by, destroy: false)
       @user = user
       @user_role = user_role
       @assigned_by = assigned_by
       @destroy = destroy
 
       ActiveRecord::Base.transaction do
-        if object.is_a? Project
-          sync_experiments_user_associations(object)
-        elsif object.is_a? Experiment
-          sync_my_modules_user_assignments(object)
-        end
+        sync_experiments_user_associations(project)
       end
     end
 
@@ -51,7 +47,7 @@ module UserAssignments
     end
 
     def destroy_user_assignment(object)
-      UserAssignment.find_by(user: @user, assignable: object).destroy_all
+      UserAssignment.where(user: @user, assignable: object).destroy_all
     end
   end
 end
