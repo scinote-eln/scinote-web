@@ -100,7 +100,6 @@ class Report < ApplicationRecord
   end
 
   def self.generate_whole_project_report(project, current_user, current_team)
-    # report_contents = gen_element_content(project, Extends::EXPORT_ALL_PROJECT_ELEMENTS)
     content = {
       'experiments' => [],
       'tasks' => {},
@@ -114,40 +113,13 @@ class Report < ApplicationRecord
     report = Report.new
     report.name = loop do
       dummy_name = SecureRandom.hex(10)
-      break dummy_name unless Report.where(name: dummy_name).exists?
+      break dummy_name unless Report.exists?(name: dummy_name)
     end
     report.project = project
     report.user = current_user
     report.team = current_team
     report.last_modified_by = current_user
     ReportActions::ReportContent.new(report, content, {}, current_user).save_with_content
-    # report.save_with_contents(report_contents)
     report
-  end
-
-  def self.gen_element_content(parent, children)
-    elements = []
-
-    children.each do |element|
-      element_hash = lambda { |object|
-        hash_object = {
-          'type_of' => element[:type_of] || element[:type_of_lambda].call(object),
-          'id' => { element[:id_key] => object.id },
-          'sort_order' => element[:sort_order],
-          'children' => gen_element_content(object, element[:children] || [])
-        }
-        hash_object['id'][element[:parent_id_key]] = parent.id if element[:parent_id_key]
-        hash_object
-      }
-
-      if element[:relation]
-        (element[:relation].inject(parent) { |p, method| p.public_send(method) }).each do |child|
-          elements.push(element_hash.call(child))
-        end
-      else
-        elements.push(element_hash.call(parent))
-      end
-    end
-    elements
   end
 end

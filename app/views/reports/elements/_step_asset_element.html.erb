@@ -9,8 +9,9 @@
       </div>
       <div class="pull-left file-name">
         <% if defined? export_all and export_all %>
-          <a href="<%= path[:file] %>">
-            <em><%= t('projects.reports.elements.step_asset.file_name', file: filename) %></em>
+          <% file_link = @obj_filenames.dig(:assets, asset.id, :file) %>
+          <a href="<%= file_link %>">
+            <em><%= t('projects.reports.elements.step_asset.file_name', file: file_link&.split('/').last) %></em>
           </a>
         <% else %>
           <em>
@@ -18,7 +19,6 @@
                   file: truncate(asset.file_name, length: Constants::FILENAME_TRUNCATION_LENGTH)) %>
             <%= link_to t('projects.reports.elements.download'), asset_download_url(asset, disposition: 'attachment'), class: 'download-link', target: :_blank %>
           </em>
-
         <% end %>
       </div>
       <div class="pull-left user-time">
@@ -34,7 +34,7 @@
       <div class="row">
         <div class="col-xs-12 file-image">
           <% if defined?(export_all) && export_all %>
-            <img class="report-export-img" src="<%= path[:preview] %>">
+            <img class="report-export-img" src="<%= @obj_filenames.dig(:assets, asset.id, :preview) %>">
           <% else %>
             <%= report_image_asset_url(asset) %>
           <% end %>

@@ -75,15 +75,6 @@ module ReportsHelper
                    end
         end
       end
-
-      if obj_id
-        file = provided_locals[:obj_filenames][element['type_of'].to_sym][obj_id]
-        locals[:path] = {
-          file: file[:file].sub(%r{/usr/src/app/tmp/temp-zip-\d+/}, ''),
-          preview: file[:preview]&.sub(%r{/usr/src/app/tmp/temp-zip-\d+/}, '')
-        }
-        locals[:filename] = locals[:path][:file].split('/').last
-      end
     end
 
     # ReportExtends is located in config/initializers/extends/report_extends.rb
@@ -130,7 +121,10 @@ module ReportsHelper
       repository = Repository.accessible_by_teams(my_module.experiment.project.team).find_by(id: element_id)
       # Check for default set snapshots when repository still exists
       if repository
-        selected_snapshot = repository.repository_snapshots.where(my_module: my_module).find_by(selected: true)
+        selected_snapshot = repository.repository_snapshots
+                                      .joins(repository_rows: { my_module_repository_rows: :my_module })
+                                      .where(repository_rows: { my_module_repository_rows: { my_module: my_module } })
+                                      .find_by(selected: true)
         repository = selected_snapshot if selected_snapshot
       end
       repository ||= RepositorySnapshot.joins(my_module: { experiment: :project })
