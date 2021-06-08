@@ -226,26 +226,24 @@
     clearDropdownResultsCallback(INVENTORY_PICKER);
   }
 
-  function initializeSubmitAction() {
-    $('#content-reports-index').on('click', '#savePDFtoInventorySubmit', function() {
-      animateSpinner();
-      $.ajax({
-        url: $('#savePDFtoInventorySubmit').data('target-url'),
-        data: SELECTED_IDS,
-        type: 'POST',
-        success: function(data) {
-          animateSpinner(null, false);
-          HelperModule.flashAlertMsg(data.message, 'success');
-          $('#savePDFtoInventory').modal('hide');
-        },
-        error: function(xhr) {
-          animateSpinner(null, false);
-          HelperModule.flashAlertMsg(xhr.responseJSON.message, 'danger');
-          $('#savePDFtoInventory').modal('hide');
-        }
-      });
+  $('#content-reports-index').on('click', '#savePDFtoInventorySubmit', function() {
+    animateSpinner();
+    $.ajax({
+      url: $('#savePDFtoInventorySubmit').data('target-url'),
+      data: SELECTED_IDS,
+      type: 'POST',
+      success: function(data) {
+        animateSpinner(null, false);
+        HelperModule.flashAlertMsg(data.message, 'success');
+        $('#savePDFtoInventory').modal('hide');
+      },
+      error: function(xhr) {
+        animateSpinner(null, false);
+        HelperModule.flashAlertMsg(xhr.responseJSON.message, 'danger');
+        $('#savePDFtoInventory').modal('hide');
+      }
     });
-  }
+  });
 
   /*
    * INITIALIZERS
@@ -254,7 +252,6 @@
   function initializeSavePDFtoInventoryModal() {
     $('#content-reports-index').on('shown.bs.modal', '#savePDFtoInventory', function() {
       initInventoriesSelectPicker();
-      initializeSubmitAction();
       clearErrors();
       // refresh the dropdown state
       $('#selectInventory').parent().find('input').trigger('keyup');
