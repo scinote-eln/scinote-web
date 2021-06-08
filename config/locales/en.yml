@@ -548,7 +548,7 @@ en:
             header: "Header"
             cover: "Title page"
             footer: "Footer"
-            no_values_title: "No additional data requiered"
+            no_values_title: "No additional data required"
             no_values_description: "SciNote template doesn’t need any additional input for it to be succesfully generated."
         second_step:
           select_project_content: "Select and reorder experiments and tasks"

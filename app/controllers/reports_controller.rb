@@ -128,7 +128,9 @@ class ReportsController < ApplicationController
   # Updating existing report from the _save modal of the new page
   def update
     @report.last_modified_by = current_user
-    @report.assign_attributes(report_params)
+    @report.assign_attributes(
+      report_params.merge(project_id: @project.id)
+    )
 
     ReportActions::ReportContent.new(
       @report,
