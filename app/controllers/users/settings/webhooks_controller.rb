@@ -6,11 +6,12 @@ module Users
       layout 'fluid'
 
       before_action :can_manage_filters
-      before_action :load_filter, only: %i(destroy_filter filter_info)
-      before_action :set_sort, only: %i(destroy_filter index)
+      before_action :load_filter, except: :index
+      before_action :load_webhook, only: %i(update destroy)
+      before_action :set_sort, except: :filter_info
 
       def index
-        @activity_filters = ActivityFilter.order(name: (@current_sort == 'atoz' ? :asc : :desc))
+        @activity_filters = ActivityFilter.includes(:webhooks).order(name: (@current_sort == 'atoz' ? :asc : :desc))
       end
 
       def destroy_filter
@@ -20,6 +21,32 @@ module Users
 
       def filter_info
         render json: { filter_elements: load_filter_elements(@filter) }
+      end
+
+      def create
+        @webhook = @filter.webhooks.create(webhook_params)
+        if @webhook.errors.any?
+          render json: { errors: @webhook.errors.messages }, status: :unprocessable_entity
+        else
+          flash[:success] = t('webhooks.index.webhook_created')
+          redirect_to users_settings_webhooks_path(sort: @current_sort)
+        end
+      end
+
+      def update
+        @webhook.update(webhook_params)
+        if @webhook.errors.any?
+          render json: { errors: @webhook.errors.messages }, status: :unprocessable_entity
+        else
+          flash[:success] = t('webhooks.index.webhook_updated')
+          redirect_to users_settings_webhooks_path(sort: @current_sort)
+        end
+      end
+
+      def destroy
+        @webhook.destroy
+        flash[:success] = t('webhooks.index.webhook_deleted')
+        redirect_to users_settings_webhooks_path(sort: @current_sort)
       end
 
       private
@@ -36,6 +63,16 @@ module Users
         @filter = ActivityFilter.find_by(id: params[:filter_id])
 
         render_404 && return unless @filter
+      end
+
+      def load_webhook
+        @webhook = Webhook.find_by(id: params[:id])
+
+        render_404 && return unless @webhook
+      end
+
+      def webhook_params
+        params.require(:webhook).permit(:method, :url, :active)
       end
 
       def load_filter_elements(filter)

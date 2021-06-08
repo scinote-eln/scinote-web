@@ -1,3 +1,5 @@
+/* global dropdownSelector */
+
 (function() {
   function initDeleteFilterModal() {
     $('.activity-filters-list').on('click', '.delete-filter', function() {
@@ -21,6 +23,47 @@
       }
     });
   }
+  $('.activity-filters-list').on('ajax:error', '.webhook-form', function(e, data) {
+    $(this).renderFormErrors('webhook', data.responseJSON.errors);
+  });
+
+  $('.activity-filters-list').on('click', '.create-webhook', function() {
+    let filterElement = $(this).closest('.filter-element');
+    filterElement.find('.webhooks-list').collapse('show');
+    filterElement.find('.create-webhook-container').removeClass('hidden');
+  });
+
+  $('.activity-filters-list').on('click', '.create-webhook-container .cancel-action', function(e) {
+    let webhookContainer = $(this).closest('.create-webhook-container');
+    e.preventDefault();
+    webhookContainer.addClass('hidden');
+    webhookContainer.find('.url-input').val('');
+  });
+
+  $('.activity-filters-list').on('click', '.edit-webhook', function(e) {
+    let webhookContainer = $(this).closest('.webhook');
+    e.preventDefault();
+    webhookContainer.find('.view-mode').addClass('hidden');
+    webhookContainer.find('.edit-webhook-container').removeClass('hidden');
+  });
+
+  $('.activity-filters-list').on('click', '.edit-webhook-container .cancel-action', function(e) {
+    let webhookContainer = $(this).closest('.webhook');
+    e.preventDefault();
+    webhookContainer.find('.view-mode').removeClass('hidden');
+    webhookContainer.find('.edit-webhook-container').addClass('hidden');
+  });
+
+
+  $('.webhook-method-container select').each(function() {
+    dropdownSelector.init($(this), {
+      singleSelect: true,
+      closeOnSelect: true,
+      noEmptyOption: true,
+      selectAppearance: 'simple',
+      disableSearch: true
+    });
+  });
 
   initDeleteFilterModal();
   initFilterInfoDropdown();

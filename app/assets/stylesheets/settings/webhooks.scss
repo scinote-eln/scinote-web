@@ -65,6 +65,79 @@
     }
   }
 
+  .webhooks-list {
+    list-style: none;
+  }
+
+  .webhook-form {
+    align-items: center;
+    display: flex;
+
+    .form-group {
+      margin: 0;
+    }
+
+    .form-text {
+      flex-shrink: 0;
+    }
+
+    .webhook-method-container {
+      margin: .5em;
+    }
+
+    .url-input-container {
+      margin: .5em;
+    }
+  }
+
+  .webhook {
+    .view-mode {
+      align-items: center;
+      display: flex;
+
+      .method {
+        margin: 0 .5em;
+      }
+
+      .webhook-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .active-webhook,
+      .disabled-webhook {
+        flex-basis: 110px;
+        flex-shrink: 0;
+        margin-left: auto;
+        padding: 0 1em;
+        text-align: right;
+
+        .fas {
+          margin-right: .25em;
+        }
+      }
+
+      .active-webhook {
+        color: $brand_success;
+      }
+
+      .dropdown-menu {
+        @include font-button;
+
+        .fas {
+          margin-right: .25em;
+        }
+      }
+    }
+
+    &:not(.active) {
+      .view-mode {
+        color: $color-silver-chalice;
+      }
+    }
+  }
+
   #deleteFilterModal {
     .delete-filter-form {
       display: inline-block;

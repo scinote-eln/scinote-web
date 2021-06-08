@@ -146,6 +146,10 @@ en:
           attributes:
             base:
               per_column_limit: "Too many items in the column"
+        webhook:
+          attributes:
+            url:
+              not_valid: 'Not valid URL'
 
   helpers:
     label:
@@ -2460,7 +2464,18 @@ en:
       delete_filter_modal:
         title: "Delete filter"
         description_html: "Are you sure you want to delete <b></b>?"
-
+      webhook_text_html: "Trigger <b class=\"method\">%{method}</b> target <b>%{url}</b>"
+      enable: "Enable"
+      disable: "Disable"
+      active: "Active"
+      disabled: "Disabled"
+      webhook_trigger: "Webhook trigger"
+      target: "target"
+      url_placeholder: "Enter url or other html target"
+      webhook_created: "Webhook successfully created"
+      webhook_updated: "Webhook successfully updated"
+      webhook_deleted: "Webhook successfully deleted"
+      delete_webhook_confimration: "Are you sure you want to delete the webhook?"
   # This section contains general words that can be used in any parts of
   # application.
   tiny_mce:
