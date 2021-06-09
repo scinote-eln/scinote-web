@@ -6,8 +6,9 @@ module Reports
     queue_as :reports
 
     discard_on StandardError do |job, error|
-      report = Report.find_by(id: job.arguments.first)
-      Rails.logger.error("Couldn't generate PDF preview for DOCX Report with id: #{job.arguments.first}. Error:\n #{error}")
+      Rails.logger.error(
+        "Couldn't generate PDF preview for DOCX Report with id: #{job.arguments.first}. Error:\n #{error}"
+      )
     end
 
     discard_on ActiveRecord::RecordNotFound
