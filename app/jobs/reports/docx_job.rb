@@ -52,7 +52,7 @@ module Reports
                           team_name: sanitize_input(report.team.name))
         )
 
-        Reports::DocxPreviewJob.perform_later(report.id)
+        Reports::DocxPreviewJob.perform_now(report.id)
         notification.create_user_notification(user)
       ensure
         file.close

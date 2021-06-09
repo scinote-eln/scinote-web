@@ -7,9 +7,6 @@ module Reports
 
     discard_on StandardError do |job, error|
       report = Report.find_by(id: job.arguments.first)
-      ActiveRecord::Base.no_touching do
-        report&.update(docx_preview_processing: false)
-      end
       Rails.logger.error("Couldn't generate PDF preview for DOCX Report with id: #{job.arguments.first}. Error:\n #{error}")
     end
 
@@ -34,7 +31,6 @@ module Reports
 
           ActiveRecord::Base.no_touching do
             report.docx_preview_file.attach(io: File.open(preview_file), filename: "#{blob.filename.base}.pdf")
-            report.update(docx_preview_processing: false)
           end
           Rails.logger.info("Finished preparing PDF preview for file #{blob.filename.sanitized}.")
         end
