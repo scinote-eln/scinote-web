@@ -2791,6 +2791,40 @@ ALTER SEQUENCE public.view_states_id_seq OWNED BY public.view_states.id;
 
 
 --
+-- Name: webhooks; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.webhooks (
+    id bigint NOT NULL,
+    activity_filter_id bigint NOT NULL,
+    active boolean DEFAULT true NOT NULL,
+    url character varying NOT NULL,
+    method integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: webhooks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.webhooks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: webhooks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.webhooks_id_seq OWNED BY public.webhooks.id;
+
+
+--
 -- Name: wopi_actions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3448,6 +3482,13 @@ ALTER TABLE ONLY public.view_states ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: webhooks id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.webhooks ALTER COLUMN id SET DEFAULT nextval('public.webhooks_id_seq'::regclass);
+
+
+--
 -- Name: wopi_actions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4089,6 +4130,14 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.view_states
     ADD CONSTRAINT view_states_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: webhooks webhooks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.webhooks
+    ADD CONSTRAINT webhooks_pkey PRIMARY KEY (id);
 
 
 --
@@ -5832,6 +5881,13 @@ CREATE INDEX index_view_states_on_viewable ON public.view_states USING btree (vi
 
 
 --
+-- Name: index_webhooks_on_activity_filter_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_webhooks_on_activity_filter_id ON public.webhooks USING btree (activity_filter_id);
+
+
+--
 -- Name: index_wopi_actions_on_extension_and_action; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6171,6 +6227,14 @@ ALTER TABLE ONLY public.repository_date_time_values
 
 ALTER TABLE ONLY public.tags
     ADD CONSTRAINT fk_rails_5f245fd6a7 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: webhooks fk_rails_61458d031d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.webhooks
+    ADD CONSTRAINT fk_rails_61458d031d FOREIGN KEY (activity_filter_id) REFERENCES public.activity_filters(id);
 
 
 --
@@ -7283,6 +7347,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210407143303'),
 ('20210410100006'),
 ('20210506125657'),
-('20210531114633');
+('20210531114633'),
+('20210603152345');
 
 
