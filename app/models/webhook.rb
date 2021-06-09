@@ -11,9 +11,8 @@ class Webhook < ApplicationRecord
   private
 
   def valid_url
-    parsed_url = URI.parse(url)
-    raise URI::InvalidURIError unless parsed_url.host
-  rescue URI::InvalidURIError
-    errors.add(:url, I18n.t('activerecord.errors.models.webhook.attributes.url.not_valid'))
+    unless /\A#{URI::DEFAULT_PARSER.make_regexp(%w(http https))}\z/.match?(url)
+      errors.add(:url, I18n.t('activerecord.errors.models.webhook.attributes.url.not_valid'))
+    end
   end
 end

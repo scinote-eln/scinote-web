@@ -106,7 +106,7 @@ Rails.application.routes.draw do
 
     namespace :users do
       namespace :settings do
-        resources :webhooks, only: [:index, :create, :update, :destroy] do
+        resources :webhooks, only: %i(index create update destroy) do
           collection do
             post :destroy_filter
             get :filter_info
