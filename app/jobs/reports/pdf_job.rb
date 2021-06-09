@@ -6,6 +6,8 @@ module Reports
     include InputSanitizeHelper
     include ReportsHelper
 
+    PDFUNITE_ENCRYPTED_PDF_ERROR_STRING = 'Unimplemented Feature: Could not merge encrypted files'
+
     queue_as :reports
 
     discard_on StandardError do |job, error|
@@ -119,12 +121,22 @@ module Reports
 
     def merge_pdf_files(file, report_file)
       merged_file = Tempfile.new(['report', '.pdf'], binmode: true)
-      success = system(
+
+      _output, error, status = Open3.capture3(
         'pdfunite', report_file.path, file.path, merged_file.path
       )
 
-      unless success && File.file?(merged_file)
-        raise StandardError, 'There was an error merging report and PDF file preview'
+      # don't raise error if the issue was an encrypted pdf, which pdfunite doesn't support
+      if error.include?(PDFUNITE_ENCRYPTED_PDF_ERROR_STRING)
+        Rails.logger.warn("Cannot merge encrypted PDF #{file.path}, skipping!")
+
+        file.close(true)
+        merged_file.close(true)
+
+        # return the report file unchanged, as no merge was done
+        return report_file
+      elsif !status.success? || !File.file?(merged_file)
+        raise StandardError, "There was an error merging report and PDF file preview (#{error})"
       end
 
       file.close(true)
