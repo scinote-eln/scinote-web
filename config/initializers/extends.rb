@@ -65,16 +65,25 @@ class Extends
   REPOSITORY_IMPORT_COLUMN_PRELOADS = %i(repository_list_items repository_status_items repository_checklist_items)
 
   # Extra attributes used for search in repositories, 'filed_name' => include_hash
-  REPOSITORY_EXTRA_SEARCH_ATTR = {'repository_text_values.data' => :repository_text_value,
-                                  'repository_number_values.data' => :repository_number_value,
-                                  'repository_list_items.data' => { repository_list_value: :repository_list_item },
-                                  'repository_checklist_items.data' =>
-                                    { repository_checklist_value:
-                                      { repository_checklist_items_values: :repository_checklist_item } },
-                                  'repository_status_items.status' =>
-                                    { repository_status_value: :repository_status_item },
-                                  'active_storage_blobs.filename' =>
-                                    { repository_asset_value: { asset: { file_attachment: :blob } } } }
+  REPOSITORY_EXTRA_SEARCH_ATTR = {
+    RepositoryTextValue: {
+      field: 'repository_text_values.data', includes: :repository_text_value
+    }, RepositoryNumberValue: {
+      field: 'repository_number_values.data', includes: :repository_number_value
+    }, RepositoryListValue: {
+      field: 'repository_list_items.data',
+      includes: { repository_list_value: :repository_list_item }
+    }, RepositoryChecklistValue: {
+      field: 'repository_checklist_items.data',
+      includes: { repository_checklist_value: { repository_checklist_items_values: :repository_checklist_item } }
+    }, RepositoryStatusValue: {
+      field: 'repository_status_items.status',
+      includes: { repository_status_value: :repository_status_item }
+    }, RepositoryAssetValue: {
+      field: 'active_storage_blobs.filename',
+      includes: { repository_asset_value: { asset: { file_attachment: :blob } } }
+    }
+  }
 
   # Array of includes used in search query for repository rows
   REPOSITORY_SEARCH_INCLUDES = [:repository_text_value,
