@@ -11,6 +11,7 @@ class Report < ApplicationRecord
   # ActiveStorage configuration
   has_one_attached :pdf_file
   has_one_attached :docx_file
+  has_one_attached :docx_preview_file
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,

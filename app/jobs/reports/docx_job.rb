@@ -52,6 +52,8 @@ module Reports
                           report_link: "<a href='#{report_path}'>#{sanitize_input(report.name)}</a>",
                           team_name: sanitize_input(report.team.name))
         )
+
+        Reports::DocxPreviewJob.perform_now(report.id)
         notification.create_user_notification(user)
       ensure
         I18n.backend.date_format = nil
