@@ -8,9 +8,9 @@
       </div>
       <div class="pull-left table-name">
         <% if defined? export_all and export_all %>
-          <a href="<%= path[:file] %>">
-            <em><%=t 'projects.reports.elements.step_table.table_name',
-                     name: filename %></em>
+          <% file_link = @obj_filenames.dig(:tables, table.id, :file) %>
+          <a href="<%= file_link %>">
+            <em><%=t 'projects.reports.elements.step_table.table_name', name: file_link&.split('/').last %></em>
           </a>
         <% else %>
           <% if table.try(:name) %>

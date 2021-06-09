@@ -1,7 +1,7 @@
 <% if my_module.blank? and @my_module.present? then my_module = @my_module end %>
 <% timestamp = my_module.created_at %>
 <% name = my_module.name %>
-<% for_export_all = defined?(export_all) && export_all %>
+<% export_all = defined?(export_all) && export_all %>
 <div class="report-element report-module-element" data-ts="<%= timestamp.to_i %>" data-type="my_module" data-id='{ "my_module_id": <%= my_module.id %> }' data-scroll-id="<%= my_module.id %>" data-modal-title="<%=t "projects.reports.elements.modals.module_contents.head_title", module: my_module.name %>" data-name="<%= name %>" data-icon-class="fas fa-credit-card">
   <div class="report-element-header">
     <div class="row">
@@ -70,10 +70,10 @@
     <div class="row">
       <div class="col-xs-12">
         <% if my_module.description.present? %>
-          <%= custom_auto_link(my_module.prepare_for_report(:description, for_export_all),
+          <%= custom_auto_link(my_module.prepare_for_report(:description, export_all),
                                team: current_team,
                                simple_format: false,
-                               base64_encoded_imgs: for_export_all) %>
+                               base64_encoded_imgs: export_all) %>
         <% else %>
           <em><%= t("projects.reports.elements.module.no_description") %></em>
         <% end %>
@@ -86,16 +86,16 @@
     <% end %>
 
     <% filter_steps_for_report(my_module.protocol.steps, @settings).order(:position).each do |step| %>
-      <%= render partial: 'reports/elements/my_module_step_element.html.erb', locals: { step: step } %>
+      <%= render partial: 'reports/elements/my_module_step_element.html.erb', locals: { step: step, export_all: export_all } %>
     <% end %>
 
     <% order_results_for_report(my_module.results, @settings.dig('task', 'result_order')).each do |result| %>
       <% if result.is_asset && @settings.dig('task', 'file_results') %>
-        <%= render partial: 'reports/elements/my_module_result_asset_element.html.erb', locals: { result: result, report: report } %>
+        <%= render partial: 'reports/elements/my_module_result_asset_element.html.erb', locals: { result: result, report: report, export_all: export_all } %>
       <% elsif result.is_table && @settings.dig('task', 'table_results') %>
-        <%= render partial: 'reports/elements/my_module_result_table_element.html.erb', locals: { result: result } %>
+        <%= render partial: 'reports/elements/my_module_result_table_element.html.erb', locals: { result: result, export_all: export_all } %>
       <% elsif result.is_text && @settings.dig('task', 'text_results') %>
-        <%= render partial: 'reports/elements/my_module_result_text_element.html.erb', locals: { result: result } %>
+        <%= render partial: 'reports/elements/my_module_result_text_element.html.erb', locals: { result: result, export_all: export_all } %>
       <% end %>
     <% end %>
   </div>
@@ -108,7 +108,7 @@
 
   <% if @settings.dig('task', 'activities') %>
     <div class="report-element-children">
-      <%= render partial: 'reports/elements/my_module_activity_element.html.erb', locals: { my_module: my_module } %>
+      <%= render partial: 'reports/elements/my_module_activity_element.html.erb', locals: { my_module: my_module, export_all: export_all } %>
     </div>
   <% end %>
 </div>

@@ -1,0 +1,21 @@
+<div class="content-pane" id="report-new">
+  <div class="report-container">
+    <!-- Report "preview" -->
+    <div id="report-content">
+
+    <% report.root_elements.each do |el| %>
+      <%= render_report_element(el, local_assigns) %>
+      <%= render_new_element(false) %>
+    <% end %>
+    </div>
+  </div>
+</div>
+
+
+<%= javascript_include_tag "handsontable.full" %>
+
+<!-- Libraries for formulas -->
+<%= render partial: "shared/formulas_libraries.html.erb" %>
+
+<%= javascript_include_tag("reports/new") %>
+<%= javascript_include_tag 'reports/save_pdf_to_inventory' %>

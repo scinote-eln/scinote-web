@@ -84,10 +84,6 @@ module ReportActions
             my_module_element
           )
         end
-
-        MY_MODULE_ADDONS_ELEMENTS.each do |e|
-          public_send("generate_#{e}_content", my_module, my_module_element)
-        end
       end
     end
 

@@ -1,8 +1,7 @@
 <% my_module ||= @my_module %>
-<% repository ||= nil %>
 <% element_id ||= repository&.id %>
 <% repository_snapshot ||= nil %>
-<% repository = assigned_repository_or_snapshot(my_module, element_id, repository, repository_snapshot) %>
+<% repository ||= assigned_repository_or_snapshot(my_module, element_id, repository, repository_snapshot) %>
 <% timestamp = Time.current + 1.year - 1.days %>
 <% rows_json = my_module.repository_json_hot(repository, :desc) %>
 <div class="report-element report-module-repository-element"
@@ -24,8 +23,10 @@
       </div>
       <% if defined?(export_all) && export_all %>
         <div class="pull-left table-name">
-            <a href="<%= path[:file] %>">
-              <em><%= t('projects.reports.elements.module_repository.table_name', name: filename) %></em>
+            <% file_link = @obj_filenames.dig(:repositories, repository.id, :file) %>
+            <% byebug if file_link.nil? %>
+            <a href="<%= file_link %>">
+              <em><%= t('projects.reports.elements.module_repository.table_name', name: file_link&.split('/').last) %></em>
             </a>
         </div>
       <% end %>

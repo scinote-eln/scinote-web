@@ -49,8 +49,7 @@ class TeamZipExport < ZipExport
       project_path = make_model_dir(team_path, p, idx)
       project_name = project_path.split('/')[-1]
 
-      obj_filenames = { my_module_repository: {}, step_asset: {},
-                        step_table: {}, result_asset: {}, result_table: {} }
+      obj_filenames = { repositories: {}, assets: {}, tables: {} }
 
       # Change current dir for correct generation of relative links
       Dir.chdir(project_path)
@@ -63,7 +62,9 @@ class TeamZipExport < ZipExport
 
       # Iterate through every inventory repo and save it to CSV
       repositories.each_with_index do |repo, repo_idx|
-        obj_filenames[:my_module_repository][repo.id] = {
+        next if obj_filenames[:repositories][repo.id].present?
+
+        obj_filenames[:repositories][repo.id] = {
           file: save_inventories_to_csv(inventories, repo, repo_idx)
         }
       end
@@ -88,16 +89,16 @@ class TeamZipExport < ZipExport
 
           # Export protocols
           steps = my_module.protocols.map(&:steps).flatten
-          obj_filenames[:step_asset].merge!(
+          obj_filenames[:assets].merge!(
             export_assets(StepAsset.where(step: steps), :step, protocol_path)
           )
-          obj_filenames[:step_table].merge!(
+          obj_filenames[:tables].merge!(
             export_tables(StepTable.where(step: steps), :step, protocol_path)
           )
 
           # Export results
           [false, true].each do |archived|
-            obj_filenames[:result_asset].merge!(
+            obj_filenames[:assets].merge!(
               export_assets(
                 ResultAsset.where(result: my_module.results.where(archived: archived)),
                 :result,
@@ -108,7 +109,7 @@ class TeamZipExport < ZipExport
           end
 
           [false, true].each do |archived|
-            obj_filenames[:result_table].merge!(
+            obj_filenames[:tables].merge!(
               export_tables(
                 ResultTable.where(result: my_module.results.where(archived: archived)),
                 :result,
