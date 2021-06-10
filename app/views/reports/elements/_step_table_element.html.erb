@@ -1,30 +1,29 @@
-<% table ||= @table %>
+<% table ||= report_element.table %>
 <% timestamp = table.created_at %>
-<div class="report-element report-step-attachment-element report-step-table-element" data-ts="<%= timestamp.to_i %>" data-type="step_table" data-id='{ "table_id": <%= table.id %> }' data-scroll-id="<%= table.id %>" data-name="<%= table.name %>" data-icon-class="fas fa-table">
+<div class="report-element report-step-attachment-element report-step-table-element">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left attachment-icon">
-          <span class="fas fa-table"></span>
+        <span class="fas fa-table"></span>
       </div>
       <div class="pull-left table-name">
         <% if defined? export_all and export_all %>
           <% file_link = @obj_filenames.dig(:tables, table.id, :file) %>
           <a href="<%= file_link %>">
-            <em><%=t 'projects.reports.elements.step_table.table_name', name: file_link&.split('/')&.last %></em>
+            <em>
+              <%= t('projects.reports.elements.step_table.table_name', name: file_link&.split('/')&.last) %>
+            </em>
           </a>
         <% else %>
           <% if table.try(:name) %>
-            <em><%=t 'projects.reports.elements.step_table.table_name',
-                     name: truncate(table.name,
-                                    length: Constants::FILENAME_TRUNCATION_LENGTH) %></em>
+            <em>
+              <%= t('projects.reports.elements.step_table.table_name', name: truncate(table.name, length: Constants::FILENAME_TRUNCATION_LENGTH)) %>
+            </em>
           <% end %>
         <% end %>
       </div>
       <div class="pull-left user-time">
-        <%=t 'projects.reports.elements.step_table.user_time', timestamp: l(timestamp, format: :full) %>
-      </div>
-      <div class="pull-right controls">
-        <%= render partial: 'reports/elements/element_controls.html.erb' %>
+        <%= t('projects.reports.elements.step_table.user_time', timestamp: l(timestamp, format: :full)) %>
       </div>
     </div>
   </div>

@@ -61,24 +61,24 @@ module ReportActions
     def generate_content
       save_element!({ 'project_id' => @report.project_id }, :project_header, nil)
 
-      @content['experiments'].each do |exp_id|
-        generate_experiment_content(exp_id, @content['tasks'][exp_id])
+      @content['experiments'].each do |experiment|
+        generate_experiment_content(experiment[:id], experiment[:my_module_ids])
       end
     end
 
-    def generate_experiment_content(exp_id, my_modules)
-      experiment = Experiment.find_by(id: exp_id)
+    def generate_experiment_content(experiment_id, my_module_ids)
+      experiment = Experiment.find_by(id: experiment_id)
       return if !experiment && !can_read_experiment?(experiment, @user)
 
       experiment_element = save_element!({ 'experiment_id' => experiment.id }, :experiment, nil)
-      generate_my_modules_content(experiment, experiment_element, my_modules)
+      generate_my_modules_content(experiment, experiment_element, my_module_ids)
     end
 
-    def generate_my_modules_content(experiment, experiment_element, selected_my_modules)
+    def generate_my_modules_content(experiment, experiment_element, my_module_ids)
       my_modules = experiment.my_modules
                              .active
-                             .where(id: selected_my_modules)
-      my_modules.sort_by { |m| selected_my_modules.index m.id }.each do |my_module|
+                             .where(id: my_module_ids)
+      my_modules.sort_by { |m| my_module_ids.index m.id }.each do |my_module|
         my_module_element = save_element!({ 'my_module_id' => my_module.id }, :my_module, experiment_element)
 
         @repositories.each do |repository|
@@ -94,13 +94,13 @@ module ReportActions
       end
     end
 
-    def save_element!(reference, type_of, parent)
+    def save_element!(references, type_of, parent)
       el = ReportElement.new
       el.position = @element_position
       el.report = @report
       el.parent = parent
       el.type_of = type_of
-      el.set_element_references(reference)
+      el.assign_attributes(references)
       el.save!
 
       @element_position += 1

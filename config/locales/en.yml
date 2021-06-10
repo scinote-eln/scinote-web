@@ -654,71 +654,6 @@ en:
           appended_table: "Appended table"
       elements:
         download: "[Download]"
-        modals:
-          project_contents:
-            head_title: "Add contents to report"
-            tasks_tab: "Choose tasks"
-            content_tab: "Choose content"
-          project_contents_inner:
-            instructions: "To create a project report select one or multiple experiment. You can include an entire experiment or individual experimental tasks."
-            no_modules: "The project contains no tasks"
-            no_module_group: "No workflow"
-          module_contents:
-            head_title: "Add contents to task %{module}"
-            module_tab: "Task content"
-            steps_tab: "Protocols content"
-            results_tab: "Results content"
-          module_contents_inner:
-            instructions: "Select the information from your task that you would like to include to your report."
-            check_all: "All tasks content"
-            protocol: "Protocol"
-            steps: "Steps"
-            completed_steps: "Completed"
-            uncompleted_steps: "Uncompleted"
-            no_steps: "Task has no steps"
-            results: "Results"
-            result_assets: "Files"
-            result_tables: "Tables"
-            result_texts: "Texts"
-            no_results: "Task contains no results"
-            activity: "Activity"
-          experiment_contents:
-            head_title: "Add contents to experiment %{experiment}"
-            experiment_tab: "Experiment content"
-            module_tab: "Task content"
-            steps_tab: "Protocols content"
-            results_tab: "Results content"
-          experiment_contents_inner:
-            instructions: "Select tasks to include in the report"
-            no_modules: "The experiment contains no tasks"
-          step_contents:
-            head_title: "Add contents to step %{step}"
-            step_tab: "Step content"
-            results_tab: "Results content"
-          step_contents_inner:
-            instructions: "Select the information from task protocol step/s to include in the report"
-            check_all: "All protocols steps content"
-            tables: "Tables"
-            no_tables: "Step contains no tables"
-            assets: "Files"
-            no_assets: "Step contains no uploaded files"
-            checklists: "Checklists"
-            no_checklists: "Step contains no checklists"
-            comments: "Comments"
-          result_contents:
-            head_title: "Add contents to result %{result}"
-          result_contents_inner:
-            instructions: "Include result/s comments in the report?"
-            check_all: "All results content"
-            comments: "Comments"
-          add: "Add"
-          save_report:
-            head_title: "Save report"
-            name: "Report name"
-            name_placeholder: "My report"
-            description: "Report description"
-            description_placeholder: "My report description..."
-            save: "Save"
         all:
           sort_asc: "Sort report element contents by oldest on top"
           sort_desc: "Sort report element contents by newest on top"
@@ -726,8 +661,6 @@ en:
           move_down: "Move report element down"
           remove: "Remove report element from the report"
           scinote_link: "SciNote link"
-        new_element:
-          title: "Add new report element/s here"
         project_header:
           user_time: "Project created on %{timestamp}."
           title: "Report for project %{project}"

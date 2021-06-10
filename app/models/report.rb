@@ -94,12 +94,6 @@ class Report < ApplicationRecord
     report_elements.active.where(parent: nil).order(:position)
   end
 
-  # Clean report elements from report
-  # the function runs before the report is edit
-  def cleanup_report
-    report_elements.each(&:clean_removed_or_archived_elements)
-  end
-
   def self.generate_whole_project_report(project, current_user, current_team)
     content = {
       'experiments' => [],

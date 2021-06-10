@@ -1,16 +1,12 @@
-<% if my_module.blank? and @my_module.present? then my_module = @my_module end %>
+<% my_module ||= report_element.my_module %>
 <% timestamp = my_module.created_at %>
-<% name = my_module.name %>
 <% export_all = defined?(export_all) && export_all %>
-<div class="report-element report-module-element" data-ts="<%= timestamp.to_i %>" data-type="my_module" data-id='{ "my_module_id": <%= my_module.id %> }' data-scroll-id="<%= my_module.id %>" data-modal-title="<%=t "projects.reports.elements.modals.module_contents.head_title", module: my_module.name %>" data-name="<%= name %>" data-icon-class="fas fa-credit-card">
+<div class="report-element report-module-element">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left user-time">
-        <%= t("projects.reports.elements.module.user_time", timestamp: l(timestamp, format: :full)) %>
+        <%= t('projects.reports.elements.module.user_time', timestamp: l(timestamp, format: :full)) %>
         <b><%= link_to t('projects.reports.elements.all.scinote_link'), protocols_my_module_url(my_module), target: :_blank %></b>
-      </div>
-      <div class="pull-right controls">
-        <%= render partial: "reports/elements/element_controls.html.erb", locals: { show_sort: true } %>
       </div>
     </div>
   </div>
@@ -19,9 +15,9 @@
       <div class="pull-left module-name">
         <h4>
           <span class="fas fa-credit-card"></span>
-          <%= name %>
+          <%= my_module.name %>
           <% if my_module.archived? %>
-            <span class="label label-warning"><%=t 'search.index.archived' %></span>
+            <span class="label label-warning"><%= t('search.index.archived') %></span>
           <% end %>
         </h4>
       </div>
@@ -30,32 +26,34 @@
       <% if my_module.started_on.present? %>
         <%= t('projects.reports.elements.module.started_on', started_on: l(my_module.started_on, format: :full)) %>
       <% else %>
-        <em><%= t("projects.reports.elements.module.no_start_date") %></em>
+        <em><%= t('projects.reports.elements.module.no_start_date') %></em>
       <% end %>
     </p>
     <p class="module-due-date">
       <% if my_module.due_date.present? %>
-        <%= t("projects.reports.elements.module.due_date", due_date: l(my_module.due_date, format: :full)) %>
+        <%= t('projects.reports.elements.module.due_date', due_date: l(my_module.due_date, format: :full)) %>
       <% else %>
-        <em><%= t("projects.reports.elements.module.no_due_date") %></em>
+        <em><%= t('projects.reports.elements.module.no_due_date') %></em>
       <% end %>
     </p>
     <p class="module-status">
       <% status = my_module.my_module_status %>
-      <%= t("projects.reports.elements.module.status") %>
-      <span class="status-block" style="background: <%= status.color %>"><%= status.name %></span>
+      <%= t('projects.reports.elements.module.status') %>
+      <span class="status-block" style="background: <%= status.color %>">
+        <%= status.name %>
+      </span>
       <% if my_module.completed? %>
         <span style="margin-left: 10px;">
-          <%= t("my_modules.states.completed") %>
+          <%= t('my_modules.states.completed') %>
           <%= l(my_module.completed_on, format: :full) %>
         </span>
       <% end %>
     </p>
     <div class="row module-tags">
       <div class="pull-left">
-        <%= t("projects.reports.elements.module.tags_header") %>
+        <%= t('projects.reports.elements.module.tags_header') %>
       </div>
-      <% if my_module.tags.any? %>
+      <% if my_module.tags.present? %>
         <% my_module.tags.each do |tag| %>
           <div class="pull-left module-tag" style="background-color: <%= tag.color %>;">
             <%= tag.name %>
@@ -63,7 +61,7 @@
         <% end %>
       <% else %>
         <div class="pull-left module-no-tag">
-          <em><%= t("projects.reports.elements.module.no_tags") %></em>
+          <em><%= t('projects.reports.elements.module.no_tags') %></em>
         </div>
       <% end %>
     </div>
@@ -75,7 +73,7 @@
                                simple_format: false,
                                base64_encoded_imgs: export_all) %>
         <% else %>
-          <em><%= t("projects.reports.elements.module.no_description") %></em>
+          <em><%= t('projects.reports.elements.module.no_description') %></em>
         <% end %>
       </div>
     </div>
