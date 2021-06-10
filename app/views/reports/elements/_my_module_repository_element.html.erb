@@ -24,7 +24,6 @@
       <% if defined?(export_all) && export_all %>
         <div class="pull-left table-name">
             <% file_link = @obj_filenames.dig(:repositories, repository.id, :file) %>
-            <% byebug if file_link.nil? %>
             <a href="<%= file_link %>">
               <em><%= t('projects.reports.elements.module_repository.table_name', name: file_link&.split('/').last) %></em>
             </a>
