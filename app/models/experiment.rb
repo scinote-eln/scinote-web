@@ -330,6 +330,9 @@ class Experiment < ApplicationRecord
       end
 
       next unless my_module.save
+      # regenerate user assignments
+      my_module.user_assignments.destroy_all
+      UserAssignments::GenerateUserAssignmentsJob.perform_later(my_module, current_user)
 
       Activities::CreateActivityService.call(activity_type: :move_task,
                                              owner: current_user,
