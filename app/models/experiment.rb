@@ -1,4 +1,8 @@
+# frozen_string_literal: true
+
 class Experiment < ApplicationRecord
+  SEARCHABLE_ATTRIBUTES = %i(name description).freeze
+
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
@@ -77,13 +81,13 @@ class Experiment < ApplicationRecord
                   current_team)
           .select('id'),
         user
-      ).where_attributes_like([:name, :description], query, options)
+      ).where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
       return include_archived ? new_query : new_query.active
     elsif include_archived
-      new_query = experiment_scope.where_attributes_like([:name, :description], query, options)
+      new_query = experiment_scope.where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
     else
       new_query = experiment_scope.active
-                                  .where_attributes_like([:name, :description], query, options)
+                                  .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
     end
 
     # Show all results if needed

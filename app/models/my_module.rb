@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class MyModule < ApplicationRecord
+  SEARCHABLE_ATTRIBUTES = %i(name description).freeze
+
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
@@ -105,7 +107,7 @@ class MyModule < ApplicationRecord
                   current_team)
           .select('id'),
         user
-      ).where_attributes_like([:name, :description], query, options)
+      ).where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
 
       if include_archived
         return new_query
@@ -113,10 +115,10 @@ class MyModule < ApplicationRecord
         return new_query.where('my_modules.archived = ?', false)
       end
     elsif include_archived
-      new_query = my_module_scope.where_attributes_like([:name, :description], query, options)
+      new_query = my_module_scope.where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
     else
       new_query = my_module_scope.where('my_modules.archived = ?', false)
-                                 .where_attributes_like([:name, :description], query, options)
+                                 .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
     end
 
     # Show all results if needed
