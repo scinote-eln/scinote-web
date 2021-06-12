@@ -26,7 +26,9 @@
     <% end %>
   </div>
     <div class="actions actions-cell table-cell">
-      <%= render partial: 'projects/show/experiment_actions_dropdown.html.erb', locals: { experiment: experiment, project: project } %>
+      <% if can_manage_experiment?(experiment) %>
+        <%= render partial: 'projects/show/experiment_actions_dropdown.html.erb', locals: { experiment: experiment, project: project } %>
+      <% end %>
     </div>
   <div class="dates-and-img-container">
     <div class="dates-container">
