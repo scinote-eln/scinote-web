@@ -37,6 +37,7 @@ module UserAssignments
       new_user_assignment = UserAssignment.find_or_initialize_by(user: user, assignable: object)
       new_user_assignment.user_role = user_role
       new_user_assignment.assigned_by = @assigned_by
+      new_user_assignment.assigned = :automatically
       new_user_assignment.save!
     end
   end

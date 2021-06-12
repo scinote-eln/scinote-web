@@ -41,8 +41,11 @@ module UserAssignments
 
     def create_or_update_user_assignment(object)
       user_assignment = UserAssignment.find_or_initialize_by(user: @user, assignable: object)
+      return if user_assignment.manually_assigned?
+
       user_assignment.user_role = @user_role
       user_assignment.assigned_by = @assigned_by
+      user_assignment.assigned = :automatically
       user_assignment.save!
     end
 

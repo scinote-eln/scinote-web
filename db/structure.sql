@@ -2443,7 +2443,8 @@ CREATE TABLE public.user_assignments (
     user_role_id bigint NOT NULL,
     assigned_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    assigned integer DEFAULT 0 NOT NULL
 );
 
 
@@ -7341,6 +7342,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210202214508'),
 ('20210217114042'),
 ('20210222123823'),
-('20210410100006');
+('20210410100006'),
+('20210612070220');
 
 

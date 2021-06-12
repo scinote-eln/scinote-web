@@ -3,7 +3,7 @@ require 'rails_helper'
 
 module UserAssignments
   RSpec.describe PropagateAssignmentJob, type: :job do
-    let!(:owner_role) { create :owner_role }+
+    let!(:owner_role) { create :owner_role }
     let!(:technician_role) { create :technician_role }
 
     let!(:user_one) { create :user }
@@ -57,6 +57,12 @@ module UserAssignments
         expect {
           described_class.perform_now(project, user_two, technician_role, user_one, destroy: true)
         }.to change(UserAssignment, :count).by(-4)
+      end
+
+      it 'does not propagate the user assignment if the object was manually assigned' do
+        experiment_assignment = create :user_assignment, assignable: experiment_one, user: user_two, user_role: owner_role, assigned_by: user_one, assigned: :manually
+        described_class.perform_now(project, user_two, technician_role, user_one)
+        expect(experiment_assignment.reload.user_role).to eq owner_role
       end
     end
   end

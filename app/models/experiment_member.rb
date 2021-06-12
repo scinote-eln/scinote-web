@@ -24,7 +24,7 @@ class ExperimentMember
     prepare_data(params)
 
     ActiveRecord::Base.transaction do
-      user_assignment.update!(user_role: user_role)
+      user_assignment.update!(user_role: user_role, assigned: :manually)
       log_change_activity
     end
   end

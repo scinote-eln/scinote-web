@@ -32,7 +32,8 @@ class ProjectMember
         assignable: @project,
         user: @user,
         user_role: user_role,
-        assigned_by: current_user
+        assigned_by: current_user,
+        assigned: :manually
       )
       log_activity(:assign_user_to_project)
 
@@ -52,7 +53,7 @@ class ProjectMember
     ActiveRecord::Base.transaction do
       user_role = set_user_role
       user_assignment = UserAssignment.find_by!(assignable: @project, user: @user)
-      user_assignment.update!(user_role: user_role)
+      user_assignment.update!(user_role: user_role, assigned: :manually)
       log_activity(:change_user_role_on_project)
 
       UserAssignments::PropagateAssignmentJob.perform_later(
