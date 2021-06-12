@@ -35,6 +35,8 @@ module UserAssignments
       user_role = parent_user_assignment.user_role
       user = parent_user_assignment.user
       new_user_assignment = UserAssignment.find_or_initialize_by(user: user, assignable: object)
+      return if new_user_assignment.manually_assigned?
+
       new_user_assignment.user_role = user_role
       new_user_assignment.assigned_by = @assigned_by
       new_user_assignment.assigned = :automatically

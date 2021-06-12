@@ -69,6 +69,13 @@ class MyModule < ApplicationRecord
   scope :workflow_ordered, -> { order(workflow_order: :asc) }
   scope :uncomplete, -> { where(state: 'uncompleted') }
 
+  scope :my_module_search_scope, lambda { |experiment_ids, user|
+    joins(:user_assignments).where(
+      experiment: experiment_ids,
+      user_assignments: { user: user }
+    ).distinct
+  }
+
   # A module takes this much space in canvas (x, y) in database
   WIDTH = 30
   HEIGHT = 14
@@ -81,23 +88,24 @@ class MyModule < ApplicationRecord
     current_team = nil,
     options = {}
   )
-    exp_ids =
+    my_module_scope = my_module_search_scope(
       Experiment
-      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .pluck(:id)
+        .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
+        .pluck(:id),
+      user
+    )
 
     if current_team
-      experiments_ids = Experiment
-                        .search(user,
-                                include_archived,
-                                nil,
-                                1,
-                                current_team)
-                        .select('id')
-      new_query = MyModule
-                  .distinct
-                  .where('my_modules.experiment_id IN (?)', experiments_ids)
-                  .where_attributes_like([:name, :description], query, options)
+      new_query = my_module_search_scope(
+        Experiment
+          .search(user,
+                  include_archived,
+                  nil,
+                  1,
+                  current_team)
+          .select('id'),
+        user
+      ).where_attributes_like([:name, :description], query, options)
 
       if include_archived
         return new_query
@@ -105,16 +113,10 @@ class MyModule < ApplicationRecord
         return new_query.where('my_modules.archived = ?', false)
       end
     elsif include_archived
-      new_query = MyModule
-                  .distinct
-                  .where('my_modules.experiment_id IN (?)', exp_ids)
-                  .where_attributes_like([:name, :description], query, options)
+      new_query = my_module_scope.where_attributes_like([:name, :description], query, options)
     else
-      new_query = MyModule
-                  .distinct
-                  .where('my_modules.experiment_id IN (?)', exp_ids)
-                  .where('my_modules.archived = ?', false)
-                  .where_attributes_like([:name, :description], query, options)
+      new_query = my_module_scope.where('my_modules.archived = ?', false)
+                                 .where_attributes_like([:name, :description], query, options)
     end
 
     # Show all results if needed

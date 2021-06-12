@@ -45,6 +45,13 @@ class Experiment < ApplicationRecord
     end
   }
 
+  scope :experiment_search_scope, lambda { |project_ids, user|
+    joins(:user_assignments).where(
+      project: project_ids,
+      user_assignments: { user: user }
+    )
+  }
+
   def self.search(
     user,
     include_archived,
@@ -53,37 +60,30 @@ class Experiment < ApplicationRecord
     current_team = nil,
     options = {}
   )
-    project_ids =
+    experiment_scope = experiment_search_scope(
       Project
-      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .pluck(:id)
+        .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
+        .pluck(:id),
+      user
+    )
 
     if current_team
-      projects_ids =
+      new_query = experiment_search_scope(
         Project
-        .search(user,
-                include_archived,
-                nil,
-                1,
-                current_team)
-        .select('id')
-
-      new_query =
-        Experiment
-        .where('experiments.project_id IN (?)', projects_ids)
-        .where_attributes_like([:name, :description], query, options)
+          .search(user,
+                  include_archived,
+                  nil,
+                  1,
+                  current_team)
+          .select('id'),
+        user
+      ).where_attributes_like([:name, :description], query, options)
       return include_archived ? new_query : new_query.active
     elsif include_archived
-      new_query =
-        Experiment
-        .where(project: project_ids)
-        .where_attributes_like([:name, :description], query, options)
+      new_query = experiment_scope.where_attributes_like([:name, :description], query, options)
     else
-      new_query =
-        Experiment
-        .active
-        .where(project: project_ids)
-        .where_attributes_like([:name, :description], query, options)
+      new_query = experiment_scope.active
+                                  .where_attributes_like([:name, :description], query, options)
     end
 
     # Show all results if needed

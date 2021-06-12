@@ -60,9 +60,25 @@ module UserAssignments
       end
 
       it 'does not propagate the user assignment if the object was manually assigned' do
-        experiment_assignment = create :user_assignment, assignable: experiment_one, user: user_two, user_role: owner_role, assigned_by: user_one, assigned: :manually
+        experiment_assignment = create :user_assignment,
+                                       assignable: experiment_one,
+                                       user: user_two,
+                                       user_role: owner_role,
+                                       assigned_by: user_one,
+                                       assigned: :manually
         described_class.perform_now(project, user_two, technician_role, user_one)
         expect(experiment_assignment.reload.user_role).to eq owner_role
+      end
+
+      it 'does propagate the user assignment if the object was automatically assigned' do
+        experiment_assignment = create :user_assignment,
+                                       assignable: experiment_one,
+                                       user: user_two,
+                                       user_role: owner_role,
+                                       assigned_by: user_one,
+                                       assigned: :automatically
+        described_class.perform_now(project, user_two, technician_role, user_one)
+        expect(experiment_assignment.reload.user_role).to eq technician_role
       end
     end
   end
