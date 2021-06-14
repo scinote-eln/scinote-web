@@ -57,6 +57,8 @@ module ReportActions
     private
 
     def generate_content
+      save_element!({ 'project_id' => @report.project_id }, :project_header, nil)
+
       @content['experiments'].each do |exp_id|
         generate_experiment_content(exp_id, @content['tasks'][exp_id])
       end
