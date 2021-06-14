@@ -46,7 +46,7 @@
               <%= t("projects.reports.wizard.statuses.step_#{i + 1}") %>
             </span>
           </div>
-          <% if @edit %>
+          <% if @edit && @report.settings["template"].present? %>
             <div class="change-step" data-step-id="<%= i + 1 %>">
             </div>
           <% end %>
