@@ -71,7 +71,7 @@
                   ${I18n.t('projects.reports.index.previous_docx')})
                 </a>`;
       }
-      return `<span class="processing-error">
+      return `<span class="processing-error docx">
                 <i class="fas fa-exclamation-triangle"></i>
                 ${I18n.t('projects.reports.index.error')}${oldLink}
               </span>`;
