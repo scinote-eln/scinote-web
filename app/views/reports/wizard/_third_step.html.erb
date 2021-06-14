@@ -73,6 +73,24 @@
                   <span class="sci-checkbox-label"></span>
                 </span>
                 <%= repository.name %>
+                <% unless repository.active? %>
+                  <span class="arhived">
+                    <%= t("projects.reports.wizard.third_step.archived") %>
+                  </span>
+                <% end %>
+                <div class="divider"></div>
+              </li>
+            <% end %>
+            <% @deleted_repositories.each do |repository| %>
+              <li>
+                <span class="sci-checkbox-container">
+                  <input type="checkbox" class="sci-checkbox deleted-repositories-setting" value="<%= repository.parent_id %>" <%= 'checked' if report.new_record? || report.settings.dig(:deleted_repositories).include?(repository.parent_id) %> />
+                  <span class="sci-checkbox-label"></span>
+                </span>
+                <%= repository.name %>
+                <span class="deleted">
+                  <%= t("projects.reports.wizard.third_step.deleted") %>
+                </span>
                 <div class="divider"></div>
               </li>
             <% end %>
