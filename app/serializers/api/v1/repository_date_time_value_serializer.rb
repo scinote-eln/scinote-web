@@ -3,7 +3,11 @@
 module Api
   module V1
     class RepositoryDateTimeValueSerializer < ActiveModel::Serializer
-      attribute :formatted, key: :date_time
+      attribute :date_time
+
+      def date_time
+        object.data
+      end
     end
   end
 end
