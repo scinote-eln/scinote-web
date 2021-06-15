@@ -2635,6 +2635,9 @@ en:
     invite_users:
       permission_error: "You don't have permission to invite additional users to this team. Contact its administrator/s."
 
+  bio_eddie:
+    new_molecule: "New Molecule"
+
   marvinjs:
     new_sketch: "New Chemical Drawing"
     new_button: "Create Chemical Drawing"
