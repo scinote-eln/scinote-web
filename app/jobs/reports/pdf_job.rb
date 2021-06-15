@@ -60,10 +60,10 @@ module Reports
 
         file << renderer.render(
           pdf: 'report', header: { html: { template: "reports/templates/#{template}/header",
-                                           locals: { report: report, user: user },
+                                           locals: { report: report, user: user, logo: report_logo },
                                            layout: 'reports/footer_header.html.erb' } },
                          footer: { html: { template: "reports/templates/#{template}/footer",
-                                           locals: { report: report, user: user },
+                                           locals: { report: report, user: user, logo: report_logo },
                                            layout: 'reports/footer_header.html.erb' } },
                          assigns: { settings: report.settings },
                          locals: { report: report },
@@ -164,7 +164,7 @@ module Reports
       title_page << renderer.render(
         pdf: 'report', inline: renderer.render_to_string("reports/templates/#{template}/cover.html.erb",
                                                          layout: false,
-                                                         locals: { report: report, total_pages: total_pages.to_i }),
+                                                         locals: { report: report, total_pages: total_pages.to_i, logo: report_logo }),
                        disable_javascript: false,
                        template: 'reports/report.pdf.erb'
       )
@@ -182,5 +182,10 @@ module Reports
 
       merged_file
     end
+
+    def report_logo
+      'logo.png'
+    end
+
   end
 end
