@@ -13,6 +13,10 @@
       <script src="https://marvinjs.chemicalize.com/v1/client.js"></script>
     <% end %>
 
+    <% if BioEddieService.enabled? %>
+      <script src="<%= BioEddieService.url %>"></script>
+    <% end %>
+
     <%= favicon_link_tag "favicon.ico" %>
     <%= favicon_link_tag "favicon-16.png", type: "image/png", size: "16x16" %>
     <%= favicon_link_tag "favicon-32.png", type: "image/png", size: "32x32" %>

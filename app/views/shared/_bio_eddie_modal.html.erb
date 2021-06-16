@@ -1,0 +1,33 @@
+<% if BioEddieService.enabled? %>
+  <div id="bioEddieModal"
+       class="modal modal-bio-eddie"
+       role="dialog"
+       aria-labelledby="bioEddieModal"
+       aria-hidden="true"
+       data-backdrop="static"
+       data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="file-name">
+            <div class="sci-input-container ">
+              <%= text_field_tag :module_name, '', placeholder: t('bio_eddie.molecule_name_placeholder'), class: 'sci-input-field' %>
+            </div>
+          </span>
+          <button class="file-save-link btn btn-light">
+            <i class="fas fa-save"></i>
+            <%= t('SaveClose')%>
+          </button>
+          <button class="preview-close btn btn-light icon-btn" data-dismiss="modal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="bio-eddie-editor">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%= javascript_include_tag "assets/bio_eddie" %>
+<% end %>

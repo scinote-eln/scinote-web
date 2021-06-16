@@ -2637,6 +2637,7 @@ en:
 
   bio_eddie:
     new_molecule: "New Molecule"
+    molecule_name_placeholder: "Click here to enter Molecule name"
 
   marvinjs:
     new_sketch: "New Chemical Drawing"
