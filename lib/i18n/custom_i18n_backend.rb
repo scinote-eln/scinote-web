@@ -14,7 +14,7 @@ class CustomI18nBackend < I18n::Backend::Simple
   end
 
   def localize(locale, object, format = :default, options = {})
-    options[:date_format] = date_format
+    options[:date_format] ||= date_format
     super(locale, object, format, options)
   end
 end
