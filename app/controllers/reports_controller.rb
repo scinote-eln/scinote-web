@@ -30,6 +30,7 @@ class ReportsController < ApplicationController
 
   before_action :check_manage_permissions, only: BEFORE_ACTION_METHODS
   before_action :switch_team_with_param, only: :index
+  before_action :load_repositories, only: %i(new edit)
 
   after_action :generate_pdf_report, only: %i(create update generate_pdf)
 
@@ -51,7 +52,6 @@ class ReportsController < ApplicationController
   # Report grouped by modules
   def new
     @templates = Extends::REPORT_TEMPLATES
-    @repositories = Repository.accessible_by_teams(current_team).active.select(:id, :name).order(:name)
     @report = current_team.reports.new
   end
 
@@ -114,7 +114,6 @@ class ReportsController < ApplicationController
     @edit = true
     @templates = Extends::REPORT_TEMPLATES
     @active_template = @report.settings[:template]
-    @repositories = Repository.accessible_by_teams(current_team).active.select(:id, :name).order(:name)
     @report.settings = Report::DEFAULT_SETTINGS if @report.settings.blank?
 
     @project_contents = {
@@ -494,6 +493,16 @@ class ReportsController < ApplicationController
 
   include StringUtility
   AvailableRepository = Struct.new(:id, :name)
+
+  def load_repositories
+    @repositories = Repository.accessible_by_teams(current_team).order(:name)
+    @deleted_repositories = RepositorySnapshot.where(team: current_team)
+                                              .group(:parent_id, :name)
+                                              .where.not(
+                                                original_repository: Repository.accessible_by_teams(current_team)
+                                              )
+                                              .select(:parent_id, :name)
+  end
 
   def load_vars
     @report = current_team.reports.find_by(id: params[:id])

@@ -88,6 +88,14 @@ module Reports::Docx::DrawMyModule
       end
     end
 
+    @settings['deleted_repositories']&.each do |repo|
+      draw_my_module_repository(nil,
+                                my_module,
+                                my_module.repository_snapshots
+                                         .where(parent_id: repo)
+                                         .find_by(selected: true))
+    end
+
     @docx.p
     subject.children.active.each do |child|
       public_send("draw_#{child.type_of}", child)

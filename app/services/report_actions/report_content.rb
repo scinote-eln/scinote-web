@@ -14,7 +14,7 @@ module ReportActions
       @report = report
       @template_values = template_values
       @repositories = Repository.accessible_by_teams(report.project.team)
-                                .where(id: @content['repositories']).active
+                                .where(id: @content['repositories'])
     end
 
     def save_with_content

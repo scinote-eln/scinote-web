@@ -975,7 +975,7 @@ function reportHandsonTableConverter() {
     reportData.report = {
       name: $('.report-name').val(),
       description: $('#projectDescription').val(),
-      settings: { task: { protocol: {} } }
+      settings: { task: { protocol: {} }, deleted_repositories: [] }
     };
     // Project
     reportData.project_id = dropdownSelector.getValues('#projectSelector');
@@ -1032,7 +1032,7 @@ function reportHandsonTableConverter() {
         reportData.project_content.tasks[experimentId].push(parseInt(myModule.value, 10));
       });
     });
-    $.each($('.task-contents-container .repositories-contents .sci-checkbox:checked'), function(i, e) {
+    $.each($('.task-contents-container .repositories-contents .repositories-setting:checked'), function(i, e) {
       reportData.project_content.repositories.push(parseInt(e.value, 10));
     });
 
@@ -1045,6 +1045,9 @@ function reportHandsonTableConverter() {
     });
     $.each($('.task-contents-container .content-element .task-setting'), function(i, e) {
       reportData.report.settings.task[e.value] = e.checked;
+    });
+    $.each($('.task-contents-container .repositories-contents .deleted-repositories-setting:checked'), function(i, e) {
+      reportData.report.settings.deleted_repositories.push(parseInt(e.value, 10));
     });
 
     reportData.report.settings.task.result_order = dropdownSelector.getValues('#taskResultsOrder');

@@ -586,6 +586,8 @@ en:
           results_comments: "Include all result comments"
           additional_content: "Additional content"
           task_activity: "Include task activity"
+          archived: "[archived]"
+          deleted: "[deleted]"
 
       new:
         report_name_placeholder: "Name your report"

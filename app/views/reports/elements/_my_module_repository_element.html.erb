@@ -1,6 +1,7 @@
 <% my_module ||= @my_module %>
-<% element_id ||= repository&.id %>
+<% repository ||= nil %>
 <% repository_snapshot ||= nil %>
+<% element_id ||= repository&.id %>
 <% repository ||= assigned_repository_or_snapshot(my_module, element_id, repository, repository_snapshot) %>
 <% timestamp = Time.current + 1.year - 1.days %>
 <% rows_json = my_module.repository_json_hot(repository, :desc) %>
