@@ -99,7 +99,7 @@
       <% end %>
     <% end %>
 
-    <% @settings.dig('deleted_repositories')&.each do |repo| %>
+    <% @settings['deleted_repositories']&.each do |repo| %>
       <%= render partial: 'reports/elements/my_module_repository_element.html.erb', locals: { repository_snapshot: my_module.repository_snapshots.where(parent_id: repo).find_by(selected: true), export_all: export_all, my_module: my_module } %>
     <% end %>
   </div>
