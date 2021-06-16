@@ -89,11 +89,8 @@ module Reports::Docx::DrawMyModule
     end
 
     @settings['deleted_repositories']&.each do |repo|
-      draw_my_module_repository(nil,
-                                my_module,
-                                my_module.repository_snapshots
-                                         .where(parent_id: repo)
-                                         .find_by(selected: true))
+      snapshot = my_module.repository_snapshots.where(parent_id: repo).find_by(selected: true)
+      draw_my_module_repository(nil, my_module, snapshot) if snapshot
     end
 
     @docx.p
