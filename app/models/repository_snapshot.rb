@@ -28,8 +28,8 @@ class RepositorySnapshot < RepositoryBase
 
   scope :assigned_to_project, lambda { |project|
     where(team: project.team)
-      .joins(repository_rows: { my_module_repository_rows: { my_module: { experiment: :project } } })
-      .where(repository_rows: { my_module_repository_rows: { my_module: { experiments: { project: project } } } })
+      .joins(my_module: { experiment: :project })
+      .where(my_module: { experiments: { project: project } })
   }
 
   def self.create_preliminary(repository, my_module, created_by = nil)

@@ -26,7 +26,7 @@
         <div class="pull-left table-name">
             <% file_link = @obj_filenames.dig(:repositories, repository.id, :file) %>
             <a href="<%= file_link %>">
-              <em><%= t('projects.reports.elements.module_repository.table_name', name: file_link&.split('/').last) %></em>
+              <em><%= t('projects.reports.elements.module_repository.table_name', name: file_link&.split('/')&.last) %></em>
             </a>
         </div>
       <% end %>

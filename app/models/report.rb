@@ -104,7 +104,7 @@ class Report < ApplicationRecord
     content = {
       'experiments' => [],
       'tasks' => {},
-      'repositories' => Repository.accessible_by_teams(project.team).pluck(:id)
+      'repositories' => project.assigned_repositories_and_snapshots.pluck(:id)
     }
     project.experiments.includes(:my_modules).each do |experiment|
       content['experiments'].push(experiment.id)

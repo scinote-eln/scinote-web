@@ -13,8 +13,9 @@ module ReportActions
       @element_position = 0
       @report = report
       @template_values = template_values
-      @repositories = Repository.accessible_by_teams(report.project.team)
-                                .where(id: @content['repositories'])
+      @repositories = report.project
+                            .assigned_repositories_and_snapshots
+                            .select { |repository| @content['repositories'].include?(repository.id) }
     end
 
     def save_with_content
@@ -80,6 +81,8 @@ module ReportActions
         my_module_element = save_element!({ 'my_module_id' => my_module.id }, :my_module, experiment_element)
 
         @repositories.each do |repository|
+          next unless my_module.live_and_snapshot_repositories_list.pluck(:id).include?(repository.id)
+
           save_element!(
             { 'my_module_id' => my_module.id, 'repository_id' => repository.id },
             :my_module_repository,
