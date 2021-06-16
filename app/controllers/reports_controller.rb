@@ -206,6 +206,8 @@ class ReportsController < ApplicationController
       format.json do
         @report.docx_processing!
         log_activity(:generate_docx_report)
+
+        ensure_report_template!
         Reports::DocxJob.perform_later(@report.id, current_user, root_url)
         render json: {
           message: I18n.t('projects.reports.index.generation.accepted_message')
@@ -573,6 +575,15 @@ class ReportsController < ApplicationController
 
     @report.pdf_processing!
     log_activity(:generate_pdf_report)
+
+    ensure_report_template!
     Reports::PdfJob.perform_later(@report.id, current_user)
+  end
+
+  def ensure_report_template!
+    return if @report.settings['template'].present?
+
+    @report.settings['template'] = 'scinote_template'
+    @report.save
   end
 end
