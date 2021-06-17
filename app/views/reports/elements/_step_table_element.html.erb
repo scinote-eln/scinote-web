@@ -10,7 +10,7 @@
         <% if defined? export_all and export_all %>
           <% file_link = @obj_filenames.dig(:tables, table.id, :file) %>
           <a href="<%= file_link %>">
-            <em><%=t 'projects.reports.elements.step_table.table_name', name: file_link&.split('/').last %></em>
+            <em><%=t 'projects.reports.elements.step_table.table_name', name: file_link&.split('/')&.last %></em>
           </a>
         <% else %>
           <% if table.try(:name) %>

@@ -121,10 +121,7 @@ module ReportsHelper
       repository = Repository.accessible_by_teams(my_module.experiment.project.team).find_by(id: element_id)
       # Check for default set snapshots when repository still exists
       if repository
-        selected_snapshot = repository.repository_snapshots
-                                      .joins(repository_rows: { my_module_repository_rows: :my_module })
-                                      .where(repository_rows: { my_module_repository_rows: { my_module: my_module } })
-                                      .find_by(selected: true)
+        selected_snapshot = repository.repository_snapshots.where(my_module: my_module).find_by(selected: true)
         repository = selected_snapshot if selected_snapshot
       end
       repository ||= RepositorySnapshot.joins(my_module: { experiment: :project })
