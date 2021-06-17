@@ -25,12 +25,11 @@ class ReportsController < ApplicationController
   before_action :load_vars, only: %i(edit update document_preview generate_pdf generate_docx status
                                      save_pdf_to_inventory_modal save_pdf_to_inventory_item)
   before_action :load_vars_nested, only: BEFORE_ACTION_METHODS
-  before_action :load_visible_projects, only: %i(new edit)
+  before_action :load_wizard_vars, only: %i(new edit)
   before_action :load_available_repositories, only: %i(index save_pdf_to_inventory_modal available_repositories)
 
   before_action :check_manage_permissions, only: BEFORE_ACTION_METHODS
   before_action :switch_team_with_param, only: :index
-  before_action :load_repositories, only: %i(new edit)
 
   after_action :generate_pdf_report, only: %i(create update generate_pdf)
 
@@ -112,7 +111,6 @@ class ReportsController < ApplicationController
 
   def edit
     @edit = true
-    @templates = Extends::REPORT_TEMPLATES
     @active_template = @report.settings[:template]
     @report.settings = Report::DEFAULT_SETTINGS if @report.settings.blank?
 
@@ -496,16 +494,6 @@ class ReportsController < ApplicationController
   include StringUtility
   AvailableRepository = Struct.new(:id, :name)
 
-  def load_repositories
-    @repositories = Repository.accessible_by_teams(current_team).order(:name)
-    @deleted_repositories = RepositorySnapshot.where(team: current_team)
-                                              .group(:parent_id, :name)
-                                              .where.not(
-                                                original_repository: Repository.accessible_by_teams(current_team)
-                                              )
-                                              .select(:parent_id, :name)
-  end
-
   def load_vars
     @report = current_team.reports.find_by(id: params[:id])
     render_404 unless @report
@@ -518,18 +506,24 @@ class ReportsController < ApplicationController
     render_403 unless can_read_project?(@project)
   end
 
-  def check_manage_permissions
-    render_403 unless can_manage_reports?(@project.team)
-  end
-
-  def load_visible_projects
-    render_404 unless current_team
+  def load_wizard_vars
+    @templates = Extends::REPORT_TEMPLATES
+    live_repositories = Repository.accessible_by_teams(current_team)
+    snapshots_of_deleted = RepositorySnapshot.left_outer_joins(:original_repository)
+                                             .where(team: current_team)
+                                             .where.not(original_repository: live_repositories)
+                                             .select('DISTINCT ON ("repositories"."parent_id") "repositories".*')
+    @repositories = (live_repositories + snapshots_of_deleted).sort_by { |r| r.name.downcase }
     @visible_projects = Project.active
                                .viewable_by_user(current_user, current_team)
                                .joins(experiments: :my_modules)
                                .merge(Experiment.active)
                                .merge(MyModule.active)
                                .select(:id, :name)
+  end
+
+  def check_manage_permissions
+    render_403 unless can_manage_reports?(@project.team)
   end
 
   def load_available_repositories

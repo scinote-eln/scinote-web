@@ -3,6 +3,7 @@
 module ReportActions
   class ReportContent
     include Canaid::Helpers::PermissionsHelper
+    include ReportsHelper
 
     MY_MODULE_ADDONS_ELEMENTS = []
 
@@ -81,7 +82,8 @@ module ReportActions
         my_module_element = save_element!({ 'my_module_id' => my_module.id }, :my_module, experiment_element)
 
         @repositories.each do |repository|
-          next unless my_module.live_and_snapshot_repositories_list.pluck(:id).include?(repository.id)
+          repository = assigned_repository_or_snapshot(my_module, repository)
+          next unless repository
 
           save_element!(
             { 'my_module_id' => my_module.id, 'repository_id' => repository.id },

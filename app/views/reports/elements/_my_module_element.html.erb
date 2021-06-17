@@ -98,11 +98,6 @@
         <%= render partial: 'reports/elements/my_module_result_text_element.html.erb', locals: { result: result, export_all: export_all } %>
       <% end %>
     <% end %>
-
-    <% @settings['deleted_repositories']&.each do |repo| %>
-      <% snapshot = my_module.repository_snapshots.where(parent_id: repo).find_by(selected: true) %>
-      <%= render partial: 'reports/elements/my_module_repository_element.html.erb', locals: { repository_snapshot: snapshot, export_all: export_all, my_module: my_module } if snapshot %>
-    <% end %>
   </div>
 
   <% if defined?(children) %>

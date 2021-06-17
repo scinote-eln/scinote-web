@@ -975,7 +975,7 @@ function reportHandsonTableConverter() {
     reportData.report = {
       name: $('.report-name').val(),
       description: $('#projectDescription').val(),
-      settings: { task: { protocol: {} }, deleted_repositories: [] }
+      settings: { task: { protocol: {} } }
     };
     // Project
     reportData.project_id = dropdownSelector.getValues('#projectSelector');
@@ -1045,9 +1045,6 @@ function reportHandsonTableConverter() {
     });
     $.each($('.task-contents-container .content-element .task-setting'), function(i, e) {
       reportData.report.settings.task[e.value] = e.checked;
-    });
-    $.each($('.task-contents-container .repositories-contents .deleted-repositories-setting:checked'), function(i, e) {
-      reportData.report.settings.deleted_repositories.push(parseInt(e.value, 10));
     });
 
     reportData.report.settings.task.result_order = dropdownSelector.getValues('#taskResultsOrder');
