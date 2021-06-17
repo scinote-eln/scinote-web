@@ -63,7 +63,7 @@
             <li class="webhook <%= 'active' if webhook.active? %>">
               <div class="view-mode">
                 <span class="webhook-text">
-                  <%= t('webhooks.index.webhook_text_html', method: webhook.method.upcase, url: webhook.url) %>
+                  <%= t('webhooks.index.webhook_text_html', method: webhook.http_method.upcase, url: webhook.url) %>
                 </span>
                 <% if webhook.active? %>
                   <span class="active-webhook">

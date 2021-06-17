@@ -155,6 +155,6 @@ class Activity < ApplicationRecord
   end
 
   def dispatch_webhooks
-    Activities::DispatchWebhooksJobs.perform_later(self)
+    Activities::DispatchWebhooksJob.perform_later(self)
   end
 end

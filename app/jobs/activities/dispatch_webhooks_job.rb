@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Activities
-  class DispatchWebhooksJobs < ApplicationJob
+  class DispatchWebhooksJob < ApplicationJob
     queue_as :high_priority
 
     def perform(activity)
