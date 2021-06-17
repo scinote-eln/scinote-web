@@ -101,7 +101,7 @@
                   ${I18n.t('projects.reports.index.previous_pdf')})
                 </a>`;
       }
-      return `<span class="processing-error">
+      return `<span class="processing-error pdf">
                 <i class="fas fa-exclamation-triangle"></i>
                 ${I18n.t('projects.reports.index.error')}${oldLink}
               </span>`;
