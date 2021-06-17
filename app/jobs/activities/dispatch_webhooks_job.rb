@@ -6,7 +6,7 @@ module Activities
 
     def perform(activity)
       webhooks =
-        Webhook.where(
+        Webhook.active.where(
           activity_filter_id:
             Activities::ActivityFilterMatchingService.new(activity).activity_filters.select(:id)
         )
