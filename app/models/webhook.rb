@@ -8,6 +8,8 @@ class Webhook < ApplicationRecord
   validates :url, presence: true
   validate :valid_url
 
+  scope :active, -> { where(active: true) }
+
   private
 
   def valid_url

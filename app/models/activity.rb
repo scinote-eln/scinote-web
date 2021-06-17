@@ -63,6 +63,8 @@ class Activity < ApplicationRecord
     breadcrumbs: {}
   )
 
+  after_create :dispatch_webhooks
+
   def self.activity_types_list
     activity_list = type_ofs.map do |key, value|
       [
@@ -150,5 +152,9 @@ class Activity < ApplicationRecord
 
   def activity_version
     errors.add(:activity, 'wrong combination of associations') if (experiment_id || my_module_id) && subject
+  end
+
+  def dispatch_webhooks
+    Activities::DispatchWebhooksJobs.perform_later(self)
   end
 end

@@ -2801,7 +2801,9 @@ CREATE TABLE public.webhooks (
     url character varying NOT NULL,
     method integer NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    error_count integer DEFAULT 0 NOT NULL,
+    last_error text
 );
 
 
@@ -7348,6 +7350,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210410100006'),
 ('20210506125657'),
 ('20210531114633'),
-('20210603152345');
+('20210603152345'),
+('20210616071836');
 
 
