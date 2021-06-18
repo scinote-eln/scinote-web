@@ -677,7 +677,7 @@ en:
           protocol:
             user_time: "Protocol created on %{timestamp}."
         experiment:
-          user_time: "Experiment created on %{timestamp}."
+          user_time: "Experiment %{code} created on %{timestamp}."
           no_description: "No description"
           no_tags: "No tags"
         module_activity:
