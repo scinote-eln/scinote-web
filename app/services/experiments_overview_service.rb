@@ -49,7 +49,10 @@ class ExperimentsOverviewService
     records = records.archived if @view_mode == 'archived' && @project.active?
     records = records.active if @view_mode == 'active'
     if @params[:search].present?
-      records = records.where_attributes_like(%w(experiments.name experiments.description), @params[:search])
+      records = records.where_attributes_like(
+        ["experiments.name", "experiments.description", "('EX' || experiments.id)"],
+        @params[:search]
+      )
     end
     if @params[:created_on_from].present?
       records = records.where('experiments.created_at > ?', @params[:created_on_from])
