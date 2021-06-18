@@ -118,12 +118,14 @@ module ReportsHelper
   end
 
   def assigned_repository_or_snapshot(my_module, repository)
-    return repository if repository.is_a?(RepositorySnapshot)
+    if repository.is_a?(RepositorySnapshot)
+      return my_module.repository_snapshots.find_by(parent_id: repository.parent_id, selected: true)
+    end
 
-    selected_snapshot = repository.repository_snapshots.where(my_module: my_module).find_by(selected: true)
-    repository = selected_snapshot if selected_snapshot
+    return nil unless my_module.assigned_repositories.exists?(id: repository.id)
 
-    repository
+    selected_snapshot = repository.repository_snapshots.find_by(my_module: my_module, selected: true)
+    selected_snapshot || repository
   end
 
   def assigned_repositories_in_project_list(project)
