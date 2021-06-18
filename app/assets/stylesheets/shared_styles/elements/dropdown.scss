@@ -40,15 +40,27 @@
 }
 
 .dropdown-menu {
+  .form-dropdown-break hr {
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
+
   .form-dropdown-item {
     padding: 0 !important;
 
-    button {
+    button, .form-dropdown-item-info {
       border-radius: 0;
-      color: $color-black !important;
       padding-left: .9em;
       text-align: left;
       width: 100%;
+    }
+
+    button {
+      color: $color-black !important;
+    }
+
+    .form-dropdown-item-info {
+      color: $color-silver-chalice !important;
     }
 
     .project-archive-restore-form {

@@ -99,6 +99,10 @@ class Experiment < ApplicationRecord
     where(project: Project.viewable_by_user(user, teams))
   end
 
+  def code
+    "EX#{id}"
+  end
+
   def archived_branch?
     archived? || project.archived?
   end
