@@ -4,8 +4,9 @@
     <meta charset='utf-8' />
     <%= wicked_pdf_stylesheet_link_tag "application" %>
     <%= wicked_pdf_stylesheet_link_tag "reports_pdf" %>
-    <%= bootstrap_cdn_link_tag %>
-    <%= font_awesome_cdn_link_tag %>
+    <%= wicked_pdf_stylesheet_pack_tag "fonts" %>
+    <%= wicked_pdf_stylesheet_pack_tag "fontawesome" %>
+    <%= wicked_pdf_stylesheet_link_tag "bootstrap" %>
     <%= wicked_pdf_javascript_include_tag "jquery" %>
     <%= wicked_pdf_javascript_include_tag "handsontable.full" %>
     <!-- Libraries for formulas -->
@@ -25,7 +26,6 @@
     <div class="print-report">
       <% report.root_elements.each do |el| %>
         <%= render_report_element(el, local_assigns) %>
-        <%= render_new_element(false) %>
       <% end %>
     </div>
 

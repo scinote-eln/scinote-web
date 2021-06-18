@@ -1,17 +1,8 @@
-<% my_module ||= @my_module %>
+<% my_module ||= report_element.my_module %>
 <% repository ||= report_element.repository %>
-<% element_id ||= repository&.id %>
 <% repository ||= assigned_repository_or_snapshot(my_module, repository) %>
-<% timestamp = Time.current + 1.year - 1.days %>
 <% rows_json = my_module.repository_json_hot(repository, :desc) %>
-<div class="report-element report-module-repository-element"
-     data-sort-hot="1"
-     data-ts="<%= timestamp.to_i %>"
-     data-type="my_module_repository"
-     data-id='{ "my_module_id": <%= my_module.id %>, "repository_id": <%= repository.id %> }'
-     data-scroll-id="<%= "#{my_module.id}_#{repository.id}" %>"
-     data-name="<%= repository.name %>"
-     data-icon-class="fas fa-list-alt">
+<div class="report-element report-module-repository-element">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left repository-icon">
@@ -29,9 +20,6 @@
             </a>
         </div>
       <% end %>
-      <div class="pull-right controls">
-        <%= render partial: "reports/elements/element_controls.html.erb", locals: { show_sort: true } %>
-      </div>
     </div>
   </div>
   <div class="report-element-body">

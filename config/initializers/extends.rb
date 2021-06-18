@@ -42,6 +42,8 @@ class Extends
                            my_module_repository: 17,
                            my_module_protocol: 18 }
 
+  ACTIVE_REPORT_ELEMENTS = %i(project_header my_module experiment my_module_repository)
+
   # Data type name should match corresponding model's name
   REPOSITORY_DATA_TYPES = { RepositoryTextValue: 0,
                             RepositoryDateValue: 1,

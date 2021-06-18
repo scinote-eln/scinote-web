@@ -2,6 +2,7 @@ class ReportsController < ApplicationController
   include TeamsHelper
   include ReportActions
   include ReportsHelper
+  include StringUtility
 
   BEFORE_ACTION_METHODS = %i(
     create
@@ -9,17 +10,8 @@ class ReportsController < ApplicationController
     update
     generate_pdf
     generate_docx
-    save_modal
     new_template_values
     project_contents
-    experiment_contents_modal
-    module_contents_modal
-    step_contents_modal
-    result_contents_modal
-    experiment_contents
-    module_contents
-    step_contents
-    result_contents
   ).freeze
 
   before_action :load_vars, only: %i(edit update document_preview generate_pdf generate_docx status
@@ -246,58 +238,6 @@ class ReportsController < ApplicationController
     render json: { message: e.message }, status: :internal_server_error
   end
 
-  # Modal for saving the existsing/new report
-  def save_modal
-    # Assume user is updating existing report
-    @report = @project.reports.find_by_id(params[:id])
-    @method = :put
-
-    # Case when saving a new report
-    if @report.blank?
-      @report = Report.new
-      @method = :post
-      @url = project_reports_path(@project, format: :json)
-    else
-      @url = project_report_path(@project, @report, format: :json)
-    end
-
-    render_403 and return unless params.include? :contents
-
-    @report_contents = params[:contents]
-
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'reports/new/modal/save.html.erb'
-          )
-        }
-      end
-    end
-  end
-
-  # Experiment for adding contents into experiment element
-  def experiment_contents_modal
-    experiment = @project.experiments.find_by_id(params[:experiment_id])
-
-    respond_to do |format|
-      if experiment.blank?
-        format.json do
-          render json: {}, status: :not_found
-        end
-      else
-        format.json do
-          render json: {
-            html: render_to_string(
-              partial: 'reports/new/modal/experiment_contents.html.erb',
-              locals: { project: @project, experiment: experiment }
-            )
-          }
-        end
-      end
-    end
-  end
-
   # Modal for adding contents into module element
   def module_contents_modal
     my_module = MyModule.find_by_id(params[:my_module_id])
@@ -376,105 +316,6 @@ class ReportsController < ApplicationController
     }
   end
 
-  def experiment_contents
-    experiment = @project.experiments.find_by(id: params[:id])
-    module_ids = (params[:modules].select { |_, p| p == '1' }).keys.collect(&:to_i)
-    selected_modules = experiment.my_modules.where(id: module_ids)
-
-    respond_to do |format|
-      if experiment.blank?
-        format.json { render json: {}, status: :not_found }
-      elsif selected_modules.blank?
-        format.json { render json: {}, status: :no_content }
-      else
-        elements = generate_experiment_contents_json(selected_modules)
-      end
-
-      if elements_empty? elements
-        format.json { render json: {}, status: :no_content }
-      else
-        format.json do
-          render json: {
-            status: :ok,
-            elements: elements
-          }
-        end
-      end
-    end
-  end
-
-  def module_contents
-    my_module = MyModule.find_by_id(params[:id])
-    return render_403 unless my_module.experiment.project == @project
-
-    respond_to do |format|
-      if my_module.blank?
-        format.json { render json: {}, status: :not_found }
-      else
-        elements = generate_module_contents_json(my_module)
-
-        if elements_empty? elements
-          format.json { render json: {}, status: :no_content }
-        else
-          format.json do
-            render json: {
-              status: :ok,
-              elements: elements
-            }
-          end
-        end
-      end
-    end
-  end
-
-  def step_contents
-    step = Step.find_by_id(params[:id])
-    return render_403 unless step.my_module.experiment.project == @project
-
-    respond_to do |format|
-      if step.blank?
-        format.json { render json: {}, status: :not_found }
-      else
-        elements = generate_step_contents_json(step)
-
-        if elements_empty? elements
-          format.json { render json: {}, status: :no_content }
-        else
-          format.json {
-            render json: {
-              status: :ok,
-              elements: elements
-            }
-          }
-        end
-      end
-    end
-  end
-
-  def result_contents
-    result = Result.find_by_id(params[:id])
-    return render_403 unless result.my_module.experiment.project == @project
-
-    respond_to do |format|
-      if result.blank?
-        format.json { render json: {}, status: :not_found }
-      else
-        elements = generate_result_contents_json(result)
-
-        if elements_empty? elements
-          format.json { render json: {}, status: :no_content }
-        else
-          format.json {
-            render json: {
-              status: :ok,
-              elements: elements
-            }
-          }
-        end
-      end
-    end
-  end
-
   def available_repositories
     render json: { results: @available_repositories }, status: :ok
   end
@@ -491,7 +332,6 @@ class ReportsController < ApplicationController
 
   private
 
-  include StringUtility
   AvailableRepository = Struct.new(:id, :name)
 
   def load_vars

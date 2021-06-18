@@ -1,25 +1,21 @@
-<% if step.blank? and @step.present? then step = @step end %>
+<% step ||= report_element.step %>
 <% comments = step.step_comments.order(created_at: :desc) %>
-<% timestamp = Time.current + 1.year %>
 <% export_all = defined?(export_all) && export_all %>
-<div class="report-element report-comments-element report-step-comments-element" data-ts="<%= timestamp.to_i %>" data-order="asc" data-type="step_comments" data-id='{ "step_id": <%= step.id %> }' data-scroll-id="<%= step.id %>" data-name="<%=t "projects.reports.elements.step_comments.sidebar_name" %>" data-icon-class="fas fa-comment">
+<div class="report-element report-comments-element report-step-comments-element">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left comments-icon">
           <span class="fas fa-comment"></span>
       </div>
       <div class="pull-left comments-name">
-        <%=t "projects.reports.elements.step_comments.name", step: step.name %>
-      </div>
-      <div class="pull-right controls">
-        <%= render partial: "reports/elements/element_controls.html.erb", locals: { show_sort: true } %>
+        <%= t('projects.reports.elements.step_comments.name', step: step.name) %>
       </div>
     </div>
   </div>
   <div class="report-element-body">
     <div class="row">
       <div class="col-xs-12 comments-container simple">
-        <% if comments.any? %>
+        <% if comments.present? %>
           <ul class="no-style content-comments">
             <% comments.each do |comment| %>
               <%= render partial: 'shared/comments/item.html.erb',
@@ -27,7 +23,7 @@
             <% end %>
           </ul>
         <% else %>
-          <em><%=t "projects.reports.elements.step_comments.no_comments" %></em>
+          <em><%= t('projects.reports.elements.step_comments.no_comments') %></em>
         <% end %>
       </div>
     </div>
