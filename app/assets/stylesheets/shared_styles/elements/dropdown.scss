@@ -41,14 +41,15 @@
 
 .dropdown-menu {
   .form-dropdown-break hr {
-    margin-top: 0;
     margin-bottom: 8px;
+    margin-top: 0;
   }
 
   .form-dropdown-item {
     padding: 0 !important;
 
-    button, .form-dropdown-item-info {
+    button,
+    .form-dropdown-item-info {
       border-radius: 0;
       padding-left: .9em;
       text-align: left;
