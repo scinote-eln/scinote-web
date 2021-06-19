@@ -8,7 +8,8 @@ Canaid::Permissions.register_for(Project) do
      archive_project
      create_experiments
      create_comments_in_project
-     manage_tags)
+     manage_tags
+     manage_project_access)
     .each do |perm|
     can perm do |_, project|
       project.active?
@@ -49,6 +50,11 @@ Canaid::Permissions.register_for(Project) do
           true
         end
       end
+  end
+
+  # project: manage access policies
+  can :manage_project_access do |user, project|
+    project.permission_granted?(user, ProjectPermissions::MANAGE_ACCESS)
   end
 
   # project: archive

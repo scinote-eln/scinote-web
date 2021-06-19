@@ -94,7 +94,7 @@ module AccessPermissions
     end
 
     def check_manage_permissions
-      render_403 unless can_manage_project?(@project)
+      render_403 unless can_manage_project_access?(@project)
     end
 
     def check_read_permissions

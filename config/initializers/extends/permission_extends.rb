@@ -12,6 +12,7 @@ module PermissionExtends
       CREATE_COMMENTS
       MANAGE_COMMENTS
       MANAGE_TAGS
+      MANAGE_ACCESS
     ).each { |permission| const_set(permission, "project_#{permission.underscore}") }
   end
 
@@ -24,6 +25,7 @@ module PermissionExtends
       CLONE
       MOVE
       CREATE_TASKS
+      MANAGE_ACCESS
     ).each { |permission| const_set(permission, "experiment_#{permission.underscore}") }
   end
 
@@ -41,6 +43,7 @@ module PermissionExtends
       MANAGE_COMMENTS
       CREATE_REPOSITORY_SNAPSHOT
       MANAGE_REPOSITORY_SNAPSHOT
+      MANAGE_ACCESS
     ).each { |permission| const_set(permission, "task_#{permission.underscore}") }
   end
 

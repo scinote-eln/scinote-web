@@ -5,7 +5,7 @@ json.modal controller.render_to_string(
   formats: [:html],
   locals: {
     resource: @project,
-    can_manage_resource: can_manage_project?(@project)
+    can_manage_resource: can_manage_project_access?(@project)
   },
   layout: false
 )

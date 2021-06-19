@@ -16,7 +16,7 @@
       </div>
       <div class="modal-footer">
         <% if can_manage_resource %>
-          <%= link_to new_resource_path, class: 'btn btn-default pull-left', data: { action: 'swap-remote-container', target: '#user_assignments_modal' } do %>
+          <%= link_to new_access_permissions_project_path, class: 'btn btn-default pull-left', data: { action: 'swap-remote-container', target: '#user_assignments_modal' } do %>
             <i class="fas fa-plus"></i>
             <%= t '.new_resource_assignments', resource: resource.model_name.human.downcase %>
           <% end %>

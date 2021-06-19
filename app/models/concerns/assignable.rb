@@ -9,6 +9,12 @@ module Assignable
     default_scope { includes(user_assignments: :user_role) }
 
     after_create_commit do
+      UserAssignment.create(
+        user: created_by,
+        assignable: self,
+        user_role: UserRole.find_by(name: 'Owner')
+      )
+
       UserAssignments::GenerateUserAssignmentsJob.perform_later(self, created_by)
     end
   end

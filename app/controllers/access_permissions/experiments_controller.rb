@@ -50,7 +50,7 @@ module AccessPermissions
     end
 
     def check_manage_permissions
-      render_403 unless can_manage_experiment?(@experiment)
+      render_403 unless can_manage_experiment_access?(@experiment)
     end
 
     def check_read_permissions
