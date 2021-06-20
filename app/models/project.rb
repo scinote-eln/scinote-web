@@ -153,11 +153,12 @@ class Project < ApplicationRecord
     # If project is visible everyone from the team can view it
     Project.where(team: teams)
            .left_outer_joins(team: :user_teams)
-           .left_outer_joins(:user_assignments)
+           .left_outer_joins(user_assignments: :user_role)
            .where('projects.visibility = 1 OR '\
                   'user_assignments.user_id = :user_id OR '\
                   '(user_teams.user_id = :user_id AND user_teams.role = 2)',
                   user_id: user.id)
+           .where('user_roles.permissions @> ARRAY[?]::varchar[]', %w[project_read])
            .distinct
   end
 

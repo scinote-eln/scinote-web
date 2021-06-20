@@ -101,7 +101,9 @@ class Experiment < ApplicationRecord
   end
 
   def self.viewable_by_user(user, teams)
-    where(project: Project.viewable_by_user(user, teams))
+    left_outer_joins(user_assignments: :user_role)
+      .where(project: Project.viewable_by_user(user, teams))
+      .where('user_roles.permissions @> ARRAY[?]::varchar[]', %w[experiment_read])
   end
 
   def archived_branch?
