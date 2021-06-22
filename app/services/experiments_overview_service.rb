@@ -50,7 +50,7 @@ class ExperimentsOverviewService
     records = records.active if @view_mode == 'active'
     if @params[:search].present?
       records = records.where_attributes_like(
-        ["experiments.name", "experiments.description", "('EX' || experiments.id)"],
+        ['experiments.name', 'experiments.description', "('EX' || experiments.id)"],
         @params[:search]
       )
     end
