@@ -245,7 +245,6 @@ class MyModulesController < ApplicationController
                                 .project
                                 .team)
 
-
     @results_order = params[:order] || 'new'
 
     @results = @my_module.archived_branch? ? @my_module.results : @my_module.results.active
