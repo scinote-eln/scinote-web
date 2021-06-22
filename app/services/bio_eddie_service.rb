@@ -55,7 +55,7 @@ class BioEddieService
     end
 
     def generate_image(params)
-      StringIO.new(Base64.decode64(params[:image].split(',')[1]))
+      StringIO.new(params[:image])
     end
 
     def attach_file(asset, file, params)

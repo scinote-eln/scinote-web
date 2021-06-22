@@ -2396,6 +2396,7 @@ en:
     file_preview:
       edit_in_scinote: "Edit in SciNote"
       edit_in_marvinjs: "Edit in Marvin JS"
+      edit_in_bio_eddie: "Edit in BioEddie"
     context_menu:
       set_view_size: "SET VIEW SIZE"
       delete: "Delete file"
@@ -2637,6 +2638,7 @@ en:
 
   bio_eddie:
     new_molecule: "New Molecule"
+    new_button: ""
     molecule_name_placeholder: "Click here to enter Molecule name"
 
   marvinjs:

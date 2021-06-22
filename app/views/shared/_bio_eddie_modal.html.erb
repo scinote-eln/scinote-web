@@ -4,6 +4,7 @@
        role="dialog"
        aria-labelledby="bioEddieModal"
        aria-hidden="true"
+       data-create-url="<%= bio_eddie_assets_path %>"
        data-backdrop="static"
        data-keyboard="false">
     <div class="modal-dialog">
@@ -11,7 +12,7 @@
         <div class="modal-header">
           <span class="file-name">
             <div class="sci-input-container ">
-              <%= text_field_tag :module_name, '', placeholder: t('bio_eddie.molecule_name_placeholder'), class: 'sci-input-field' %>
+              <%= text_field_tag :molecule_name, '', placeholder: t('bio_eddie.molecule_name_placeholder'), class: 'sci-input-field' %>
             </div>
           </span>
           <button class="file-save-link btn btn-light">
@@ -23,11 +24,10 @@
           </button>
         </div>
         <div class="modal-body">
-          <div id="bio-eddie-editor">
-          </div>
+          <iframe id="bioEddieIframe" data-src="<%= BioEddieService.url %>/index.html" frameBorder="0" ></iframe>
         </div>
       </div>
     </div>
   </div>
-  <%= javascript_include_tag "assets/bio_eddie" %>
 <% end %>
+
