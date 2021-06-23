@@ -2396,6 +2396,7 @@ en:
     file_preview:
       edit_in_scinote: "Edit in SciNote"
       edit_in_marvinjs: "Edit in Marvin JS"
+      edit_in_bio_eddie: "Edit in BioEddie"
     context_menu:
       set_view_size: "SET VIEW SIZE"
       delete: "Delete file"
@@ -2635,6 +2636,12 @@ en:
     invite_users:
       permission_error: "You don't have permission to invite additional users to this team. Contact its administrator/s."
 
+  bio_eddie:
+    new_molecule: "New Molecule"
+    new_button: "Create Biomolecule"
+    molecule_name_placeholder: "Click here to enter Molecule name"
+    no_molecules_found: "No Molecules Found"
+
   marvinjs:
     new_sketch: "New Chemical Drawing"
     new_button: "Create Chemical Drawing"
@@ -2642,6 +2649,7 @@ en:
     structure_placeholder: "Click here to enter Chemical Drawing name"
     modal_name_title: "Chemical Drawing name:"
     checmical_drawing: "Chemical drawings"
+    no_sketches_found: "No Sketches Found"
 
   pdf_preview:
     fit_to_screen: 'Fit to screen'

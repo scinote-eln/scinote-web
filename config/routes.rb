@@ -773,6 +773,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :bio_eddie_assets, only: %i(create update) do
+    member do
+      post :start_editing
+    end
+  end
+
   post 'global_activities', to: 'global_activities#index'
 
   constraints WopiSubdomain do
