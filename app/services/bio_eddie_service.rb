@@ -7,11 +7,11 @@ class BioEddieService
     end
 
     def enabled?
-      ApplicationSettings.instance.values['bio_eddie_url'].present?
+      url.present?
     end
 
     def create_molecule(params, current_user, current_team)
-      file = generate_image(params)
+      file = image_io(params)
 
       asset = Asset.new(created_by: current_user,
                           last_modified_by: current_user,
@@ -28,7 +28,7 @@ class BioEddieService
 
       return unless attachment
 
-      file = generate_image(params)
+      file = image_io(params)
       attach_file(attachment, file, params)
       asset
     end
@@ -45,21 +45,21 @@ class BioEddieService
         my_module = MyModule.find_by(id: params[:object_id])
         return unless my_module
 
-        object = Result.create(user: current_user,
-                          my_module: my_module,
-                          name: prepare_name(params[:name]),
-                          asset: asset,
-                          last_modified_by: current_user)
+        Result.create(user: current_user,
+                      my_module: my_module,
+                      name: prepare_name(params[:name]),
+                      asset: asset,
+                      last_modified_by: current_user)
       end
-      { asset: asset, object: object }
+      asset
     end
 
-    def generate_image(params)
+    def image_io(params)
       StringIO.new(params[:image])
     end
 
-    def attach_file(asset, file, params)
-      asset.attach(
+    def attach_file(attachment, file, params)
+      attachment.attach(
         io: file,
         filename: "#{prepare_name(params[:name])}.svg",
         content_type: 'image/svg+xml',
@@ -72,11 +72,7 @@ class BioEddieService
     end
 
     def prepare_name(sketch_name)
-      if sketch_name.empty?
-        I18n.t('bio_eddie.new_molecule')
-      else
-        sketch_name
-      end
+      sketch_name.presence || I18n.t('bio_eddie.new_molecule')
     end
   end
 end

@@ -10,25 +10,19 @@ class BioEddieAssetsController < ApplicationController
   before_action :check_edit_permission, only: %i(update create start_editing)
 
   def create
-    result = BioEddieService.create_molecule(bio_eddie_params, current_user, current_team)
+    asset = BioEddieService.create_molecule(bio_eddie_params, current_user, current_team)
 
-    if result[:asset] && bio_eddie_params[:object_type] == 'Step'
+    if asset && bio_eddie_params[:object_type] == 'Step'
       render json: {
         html: render_to_string(partial: 'assets/asset.html.erb', locals: {
-                                 asset: result[:asset],
+                                 asset: asset,
                                  gallery_view_id: bio_eddie_params[:object_id]
                                })
       }
-    elsif result[:asset] && bio_eddie_params[:object_type] == 'Result'
-      @my_module = result[:object].my_module
-      render json: {
-        html: render_to_string(
-          partial: 'my_modules/result.html.erb',
-            locals: { result: result[:object] }
-        )
-      }, status: :ok
+    elsif asset && bio_eddie_params[:object_type] == 'Result'
+      render json: { status: 'created' }, status: :ok
     else
-      render json: result[:asset].errors, status: :unprocessable_entity
+      render json: asset.errors, status: :unprocessable_entity
     end
   end
 
@@ -40,7 +34,7 @@ class BioEddieAssetsController < ApplicationController
                      id: asset.id,
                      file_name: asset.blob.metadata['name'] }
     else
-      render json: { error: t('marvinjs.no_sketches_found') }, status: :unprocessable_entity
+      render json: { error: t('bio_eddie.no_molecules_found') }, status: :unprocessable_entity
     end
   end
 
@@ -54,32 +48,33 @@ class BioEddieAssetsController < ApplicationController
     @asset = current_team.assets.find_by(id: params[:id])
     return render_404 unless @asset
 
-    @assoc ||= @asset.step
-    @assoc ||= @asset.result
+    @assoc = @asset.step || @asset.result
 
-    if @assoc.instance_of?(Step)
+    case @assoc
+    when Step
       @protocol = @assoc.protocol
-    elsif @assoc.instance_of?(Result)
+    when Result
       @my_module = @assoc.my_module
     end
   end
 
   def load_create_vars
-    @assoc = Step.find_by(id: bio_eddie_params[:object_id]) if bio_eddie_params[:object_type] == 'Step'
-    @assoc = MyModule.find_by(id: bio_eddie_params[:object_id]) if bio_eddie_params[:object_type] == 'Result'
-
-    if @assoc.instance_of?(Step)
+    case bio_eddie_params[:object_type]
+    when 'Step'
+      @assoc = Step.find_by(id: bio_eddie_params[:object_id])
       @protocol = @assoc.protocol
-    elsif @assoc.instance_of?(MyModule)
+    when 'Result'
+      @assoc = MyModule.find_by(id: bio_eddie_params[:object_id])
       @my_module = @assoc
     end
   end
 
   def check_read_permission
-    if @assoc.instance_of?(Step)
+    case @assoc
+    when Step
       return render_403 unless can_read_protocol_in_module?(@protocol) ||
                                can_read_protocol_in_repository?(@protocol)
-    elsif @assoc.instance_of?(Result) || @assoc.instance_of?(MyModule)
+    when Result, MyModule
       return render_403 unless can_read_experiment?(@my_module.experiment)
     else
       render_403
@@ -87,10 +82,11 @@ class BioEddieAssetsController < ApplicationController
   end
 
   def check_edit_permission
-    if @assoc.instance_of?(Step)
+    case @assoc
+    when Step
       return render_403 unless can_manage_protocol_in_module?(@protocol) ||
                                can_manage_protocol_in_repository?(@protocol)
-    elsif @assoc.instance_of?(Result) || @assoc.instance_of?(MyModule)
+    when Result, MyModule
       return render_403 unless can_manage_module?(@my_module)
     else
       render_403

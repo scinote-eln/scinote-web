@@ -53,7 +53,7 @@ var bioEddieEditor = (function() {
         }, 200);
         bioEddieModal.modal('hide');
       } else if (bioEddieModal.data('object_type') === 'Result') {
-        location.reload();
+        window.location.reload();
       }
     });
   }
