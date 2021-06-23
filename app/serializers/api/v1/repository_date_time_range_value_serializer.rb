@@ -3,7 +3,14 @@
 module Api
   module V1
     class RepositoryDateTimeRangeValueSerializer < ActiveModel::Serializer
-      attribute :formatted, key: :date_time_range
+      attribute :date_time_range
+
+      def date_time_range
+        {
+          from: object.start_time,
+          to: object.end_time
+        }
+      end
     end
   end
 end

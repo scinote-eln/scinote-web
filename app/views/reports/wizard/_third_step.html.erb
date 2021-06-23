@@ -69,10 +69,24 @@
             <% @repositories.each do |repository| %>
               <li>
                 <span class="sci-checkbox-container">
-                  <input type="checkbox" class="sci-checkbox repositories-setting" value="<%= repository.id %>" <%= 'checked' if report.new_record? || @project_contents[:repositories].include?(repository.id) %> />
+                  <input type="checkbox"
+                         class="sci-checkbox repositories-setting"
+                         value="<%= repository.id %>"
+                         <%= 'checked' if report.new_record? ||
+                                          @project_contents[:repositories].include?(repository.id) ||
+                                          (repository.is_a?(Repository) && repository.repository_snapshots.exists?(id: @project_contents[:repositories])) %> />
                   <span class="sci-checkbox-label"></span>
                 </span>
                 <%= repository.name %>
+                <% if repository.archived? %>
+                  <span class="archived">
+                    <%= t("projects.reports.wizard.third_step.archived") %>
+                  </span>
+                <% elsif repository.is_a?(RepositorySnapshot) %>
+                  <span class="deleted">
+                    <%= t("projects.reports.wizard.third_step.deleted") %>
+                  </span>
+                <% end %>
                 <div class="divider"></div>
               </li>
             <% end %>

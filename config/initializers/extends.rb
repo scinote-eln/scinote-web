@@ -42,83 +42,7 @@ class Extends
                            my_module_repository: 17,
                            my_module_protocol: 18 }
 
-  EXPORT_ALL_PROJECT_ELEMENTS = [
-    {
-      type_of: 'project_header',
-      id_key: 'project_id'
-    },
-    {
-      type_of: 'experiment',
-      id_key: 'experiment_id',
-      relation: %w(experiments),
-      children: [
-        {
-          type_of: 'my_module',
-          id_key: 'my_module_id',
-          relation: %w(my_modules),
-          children: [
-            {
-              type_of: 'my_module_protocol',
-              id_key: 'my_module_id'
-            },
-            {
-              type_of: 'step',
-              relation: %w(protocol steps),
-              id_key: 'step_id',
-              children: [
-                {
-                  type_of: 'step_asset',
-                  relation: %w(assets),
-                  id_key: 'asset_id'
-                },
-                {
-                  type_of: 'step_table',
-                  relation: %w(tables),
-                  id_key: 'table_id'
-                },
-                {
-                  type_of: 'step_checklist',
-                  relation: %w(checklists),
-                  id_key: 'checklist_id'
-                },
-                {
-                  type_of: 'step_comments',
-                  id_key: 'step_id',
-                  sort_order: 'asc'
-                }
-              ]
-            },
-            {
-              type_of_lambda: lambda { |result|
-                (result.result_asset ||
-                 result.result_table ||
-                 result.result_text).class.to_s.underscore
-              },
-              relation: %w(results),
-              id_key: 'result_id',
-              children: [{
-                type_of: 'result_comments',
-                id_key: 'result_id',
-                sort_order: 'asc'
-              }]
-            },
-            {
-              type_of: 'my_module_activity',
-              id_key: 'my_module_id',
-              sort_order: 'asc'
-            },
-            {
-              type_of: 'my_module_repository',
-              relation: %w(experiment project assigned_repositories_and_snapshots),
-              id_key: 'repository_id',
-              parent_id_key: 'my_module_id',
-              sort_order: 'asc'
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  ACTIVE_REPORT_ELEMENTS = %i(project_header my_module experiment my_module_repository)
 
   # Data type name should match corresponding model's name
   REPOSITORY_DATA_TYPES = { RepositoryTextValue: 0,
@@ -143,16 +67,25 @@ class Extends
   REPOSITORY_IMPORT_COLUMN_PRELOADS = %i(repository_list_items repository_status_items repository_checklist_items)
 
   # Extra attributes used for search in repositories, 'filed_name' => include_hash
-  REPOSITORY_EXTRA_SEARCH_ATTR = {'repository_text_values.data' => :repository_text_value,
-                                  'repository_number_values.data' => :repository_number_value,
-                                  'repository_list_items.data' => { repository_list_value: :repository_list_item },
-                                  'repository_checklist_items.data' =>
-                                    { repository_checklist_value:
-                                      { repository_checklist_items_values: :repository_checklist_item } },
-                                  'repository_status_items.status' =>
-                                    { repository_status_value: :repository_status_item },
-                                  'active_storage_blobs.filename' =>
-                                    { repository_asset_value: { asset: { file_attachment: :blob } } } }
+  REPOSITORY_EXTRA_SEARCH_ATTR = {
+    RepositoryTextValue: {
+      field: 'repository_text_values.data', includes: :repository_text_value
+    }, RepositoryNumberValue: {
+      field: 'repository_number_values.data', includes: :repository_number_value
+    }, RepositoryListValue: {
+      field: 'repository_list_items.data',
+      includes: { repository_list_value: :repository_list_item }
+    }, RepositoryChecklistValue: {
+      field: 'repository_checklist_items.data',
+      includes: { repository_checklist_value: { repository_checklist_items_values: :repository_checklist_item } }
+    }, RepositoryStatusValue: {
+      field: 'repository_status_items.status',
+      includes: { repository_status_value: :repository_status_item }
+    }, RepositoryAssetValue: {
+      field: 'active_storage_blobs.filename',
+      includes: { repository_asset_value: { asset: { file_attachment: :blob } } }
+    }
+  }
 
   # Array of includes used in search query for repository rows
   REPOSITORY_SEARCH_INCLUDES = [:repository_text_value,

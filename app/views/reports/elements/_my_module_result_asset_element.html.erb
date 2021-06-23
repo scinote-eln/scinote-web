@@ -1,16 +1,7 @@
-<% result ||= @result %>
+<% result ||= report_element.result %>
 <% asset = result.asset %>
-<% comments = result.result_comments %>
 <% timestamp = asset.created_at %>
-<% icon_class = 'fas ' + file_fa_icon_class(asset) if asset.file_name %>
-<div class="report-element report-result-element report-result-asset-element"
-     data-ts="<%= timestamp.to_i %>"
-     data-type="result_asset"
-     data-id='{ "result_id": <%= result.id %> }'
-     data-scroll-id="<%= result.id %>"
-     data-modal-title="<%= t("projects.reports.elements.modals.result_contents.head_title", result: result.name) %>"
-     data-name="<%= result.name %>"
-     data-icon-class="<%= icon_class %>">
+<div class="report-element report-result-element report-result-asset-element">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left result-icon">
@@ -24,8 +15,9 @@
       </div>
       <div class="pull-left file-name">
         <% if defined? export_all and export_all %>
-          <a href="<%= path[:file] %>">
-            <em><%= t("projects.reports.elements.result_asset.file_name", file: filename) %></em>
+          <% file_link = @obj_filenames.dig(:assets, asset.id, :file) %>
+          <a href="<%= file_link %>">
+            <em><%= t("projects.reports.elements.result_asset.file_name", file: file_link&.split('/')&.last) %></em>
           </a>
         <% else %>
           <em>
@@ -41,9 +33,6 @@
           <%= t('projects.reports.elements.result_asset.full_preview_attached') %>
         <% end %>
       </div>
-      <div class="pull-right controls">
-        <%= render partial: "reports/elements/element_controls.html.erb" %>
-      </div>
     </div>
   </div>
   <div class="row"></div>
@@ -52,7 +41,7 @@
         <div class="row">
           <div class="col-xs-12 file-image">
             <% if defined?(export_all) && export_all %>
-              <img class="report-export-img" src="<%= path[:preview] %>">
+              <img class="report-export-img" src="<%= @obj_filenames.dig(:assets, asset.id, :preview) %>">
             <% else %>
               <%= report_image_asset_url(asset) %>
             <% end %>

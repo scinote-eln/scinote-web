@@ -37,7 +37,7 @@ module Reports
       report = Report.find(report_id)
       file = Tempfile.new(['report', '.docx'])
       begin
-        I18n.backend.date_format = user.settings[:date_format] || Constants::DEFAULT_DATE_FORMAT
+        I18n.backend.date_format = user.settings[:date_format]
         docx = Caracal::Document.new(file.path)
         Reports::Docx.new(report, docx, user: user, scinote_url: root_url).draw
         docx.save
@@ -52,9 +52,11 @@ module Reports
                           report_link: "<a href='#{report_path}'>#{sanitize_input(report.name)}</a>",
                           team_name: sanitize_input(report.team.name))
         )
+
+        Reports::DocxPreviewJob.perform_now(report.id)
         notification.create_user_notification(user)
       ensure
-        I18n.backend.date_format = Constants::DEFAULT_DATE_FORMAT
+        I18n.backend.date_format = nil
         file.close
         file.unlink
       end

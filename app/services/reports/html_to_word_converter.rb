@@ -50,6 +50,8 @@ module Reports
       elements = []
       temp_p = []
       raw_elements.each do |elem|
+        next unless elem
+
         if %w(image newline table ol ul).include? elem[:type]
           unless temp_p.empty?
             elements.push(type: 'p', children: temp_p)

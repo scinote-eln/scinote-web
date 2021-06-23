@@ -152,7 +152,7 @@
               padding-top: .25em;
 
               &::after {
-                background: linear-gradient(to right, transparent, $color-white 50%);
+                background: linear-gradient(to right, $color-transparent, $color-white 50%);
                 bottom: .75em;
                 content: "";
                 height: 1.75em;
@@ -270,7 +270,7 @@
 
           &:hover {
             .description-text::after {
-              background: linear-gradient(to right, transparent, $color-concrete 50%);
+              background: linear-gradient(to right, $color-transparent, $color-concrete 50%);
             }
           }
         }
@@ -323,7 +323,7 @@
             }
 
             .description-text::after {
-              background: linear-gradient(to right, transparent, $color-concrete 50%);
+              background: linear-gradient(to right, $color-transparent, $color-concrete 50%);
             }
           }
         }
@@ -341,7 +341,7 @@
 
             &:hover {
               .description-text::after {
-                background: linear-gradient(to right, transparent, $color-alto 50%);
+                background: linear-gradient(to right, $color-transparent, $color-alto 50%);
               }
             }
           }
