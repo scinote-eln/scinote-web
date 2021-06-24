@@ -145,6 +145,11 @@ class Activity < ApplicationRecord
     when ProjectFolder
       breadcrumbs[:project_folder] = subject.name
       generate_breadcrumb(subject.team)
+    when ActivityFilter
+      breadcrumbs[:activity_filter] = subject.name
+    when Webhook
+      breadcrumbs[:webhook] = subject.name
+      generate_breadcrumb(subject.activity_filter)
     end
   end
 

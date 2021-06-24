@@ -8,6 +8,10 @@ class Webhook < ApplicationRecord
   validates :url, presence: true
   validate :valid_url
 
+  def name
+    "#{method.upcase} #{url}"
+  end
+
   private
 
   def valid_url

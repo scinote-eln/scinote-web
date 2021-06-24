@@ -29,6 +29,7 @@ module Users
           render json: { errors: @webhook.errors.messages }, status: :unprocessable_entity
         else
           flash[:success] = t('webhooks.index.webhook_created')
+          log_activity(:create_webhook, @webhook)
           redirect_to users_settings_webhooks_path(sort: @current_sort)
         end
       end
@@ -39,6 +40,7 @@ module Users
           render json: { errors: @webhook.errors.messages }, status: :unprocessable_entity
         else
           flash[:success] = t('webhooks.index.webhook_updated')
+          log_activity(:edit_webhook, @webhook)
           redirect_to users_settings_webhooks_path(sort: @current_sort)
         end
       end
@@ -95,6 +97,19 @@ module Users
         end
 
         result
+      end
+
+      def log_activity(type_of, webhook)
+        Activities::CreateActivityService
+          .call(
+            activity_type: type_of,
+            owner: current_user,
+            team: current_team,
+            subject: webhook,
+            message_items: {
+              activity_filter_name: webhook.activity_filter.name
+            }
+          )
       end
     end
   end

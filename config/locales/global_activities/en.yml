@@ -192,6 +192,9 @@ en:
       generate_pdf_report_html: "%{user} generated PDF report %{report}."
       generate_docx_report_html: "%{user} generated DOCX report %{report}."
 
+      create_webhook_html: "%{user} created webhook for filter %{activity_filter_name}."
+      edit_webhook_html: "%{user} edited webhook for filter %{activity_filter_name}."
+
     activity_name:
       create_project: "Project created"
       rename_project: "Project renamed"
@@ -339,6 +342,8 @@ en:
       move_project_folder: "Project folder moved"
       generate_pdf_report: "PDF Report generated"
       generate_docx_report: "DOCX Report generated"
+      create_webhook: "Webhook created"
+      edit_webhook: "Webhook edited"
 
     activity_group:
       projects: "Projects"
@@ -361,3 +366,4 @@ en:
       protocol: "Protocol"
       step: "Step"
       report: "Report"
+      webhook: "Webhook"

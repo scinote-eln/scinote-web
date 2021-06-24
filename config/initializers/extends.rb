@@ -210,6 +210,7 @@ class Extends
 
   ACTIVITY_SUBJECT_TYPES = %w(
     Team RepositoryBase Project Experiment MyModule Result Protocol Report RepositoryRow ProjectFolder
+    Webhook
   ).freeze
 
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
@@ -384,7 +385,9 @@ class Extends
     rename_project_folder: 161,
     delete_project_folder: 162,
     generate_pdf_report: 163,
-    generate_docx_report: 164
+    generate_docx_report: 164,
+    create_webhook: 165,
+    edit_webhook: 166
   }
 
   ACTIVITY_GROUPS = {
@@ -399,7 +402,8 @@ class Extends
     inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77, 78, 96, 107, 113, 114, *133..136],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131],
-    team: [92, 94, 93, 97, 104]
+    team: [92, 94, 93, 97, 104],
+    webhook: [165, 166]
   }
 
   SHARED_INVENTORIES_PERMISSION_LEVELS = {
