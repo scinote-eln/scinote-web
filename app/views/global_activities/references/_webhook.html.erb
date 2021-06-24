@@ -1,0 +1,7 @@
+<div class="ga-breadcrumb">
+  <span class="fas fa-users"></span>
+  <%= route_to_other_team projects_path(team: team.id),
+                          team,
+                          team.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
+                          title: team.name %>
+</div>
