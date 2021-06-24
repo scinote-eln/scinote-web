@@ -387,7 +387,8 @@ class Extends
     generate_pdf_report: 163,
     generate_docx_report: 164,
     create_webhook: 165,
-    edit_webhook: 166
+    edit_webhook: 166,
+    delete_webhook: 167
   }
 
   ACTIVITY_GROUPS = {
@@ -403,7 +404,7 @@ class Extends
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131],
     team: [92, 94, 93, 97, 104],
-    webhook: [165, 166]
+    webhook: [165, 166, 167]
   }
 
   SHARED_INVENTORIES_PERMISSION_LEVELS = {

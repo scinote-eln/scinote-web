@@ -194,6 +194,7 @@ en:
 
       create_webhook_html: "%{user} created webhook for filter %{activity_filter_name}."
       edit_webhook_html: "%{user} edited webhook for filter %{activity_filter_name}."
+      delete_webhook_html: "%{user} deleted webhook for filter %{activity_filter_name}."
 
     activity_name:
       create_project: "Project created"
@@ -344,6 +345,7 @@ en:
       generate_docx_report: "DOCX Report generated"
       create_webhook: "Webhook created"
       edit_webhook: "Webhook edited"
+      delete_webhook: "Webhook deleted"
 
     activity_group:
       projects: "Projects"

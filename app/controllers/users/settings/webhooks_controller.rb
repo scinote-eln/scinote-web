@@ -48,6 +48,7 @@ module Users
       def destroy
         @webhook.destroy
         flash[:success] = t('webhooks.index.webhook_deleted')
+        log_activity(:delete_webhook, @webhook)
         redirect_to users_settings_webhooks_path(sort: @current_sort)
       end
 
