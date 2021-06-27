@@ -6,7 +6,7 @@ json.form controller.render_to_string(
   locals: {
     user: @form.user,
     project: @project,
-    update_path: access_permissions_project_path(@project, format: :json)
+    update_path: access_permissions_project_path(@project)
   },
   layout: false
 )

@@ -25,7 +25,7 @@
           </div>
           <div class="col-xs-5">
             <% unless project_member.last_project_owner? %>
-              <%= link_to access_permissions_project_path(project, user_id: user, format: :json), remote: true, method: :delete, class: 'btn btn-link', data: { action: 'remote-destroy', target: "##{item_id}" } do %>
+              <%= link_to access_permissions_project_path(project, user_id: user), remote: true, method: :delete, class: 'btn btn-link', data: { action: 'remote-destroy', target: "##{item_id}" } do %>
                 <span class="fas fa-times"></span>
                 <%= t 'general.remove' %>
               <% end %>

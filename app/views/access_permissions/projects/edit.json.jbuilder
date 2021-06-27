@@ -5,8 +5,8 @@ json.modal controller.render_to_string(
   formats: [:html],
   locals: {
     project: @project,
-    update_path: access_permissions_project_path(@project, format: :json),
-    new_resource_path: new_access_permissions_project_path(id: @project, format: :json)
+    update_path: access_permissions_project_path(@project),
+    new_resource_path: new_access_permissions_project_path(id: @project)
   },
   layout: false
 )
@@ -16,8 +16,8 @@ modal_container = controller.render_to_string(
   formats: [:html],
   locals: {
     project: @project,
-    update_path: access_permissions_project_path(@project, format: :json),
-    new_resource_path: new_access_permissions_project_path(id: @project, format: :json)
+    update_path: access_permissions_project_path(@project),
+    new_resource_path: new_access_permissions_project_path(id: @project)
   },
   layout: false
 )

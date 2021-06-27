@@ -51,7 +51,7 @@
       <!-- Project members access -->
       <% if can_read_project?(project) %>
         <li class="form-dropdown-item">
-          <%= link_to can_manage_project_access?(project) ? edit_access_permissions_project_path(project, format: :json) : access_permissions_project_path(project, format: :json),
+          <%= link_to can_manage_project_access?(project) ? edit_access_permissions_project_path(project) : access_permissions_project_path(project),
                       class: 'btn btn-light',
                       data: { action: 'remote-modal'} do %>
             <i class="fas fa-door-open"></i>

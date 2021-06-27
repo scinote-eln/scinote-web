@@ -382,8 +382,8 @@ class Extends
     move_project_folder: 160,
     rename_project_folder: 161,
     delete_project_folder: 162,
-    change_user_role_on_experiment: 163,
-    change_user_role_on_my_module: 164
+    change_user_role_on_experiment: 165,
+    change_user_role_on_my_module: 166
   }
 
   ACTIVITY_GROUPS = {

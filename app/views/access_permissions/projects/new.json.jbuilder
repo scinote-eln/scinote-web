@@ -6,8 +6,8 @@ json.html controller.render_to_string(
   locals: {
     resource: @project,
     form_object: @form,
-    create_path: access_permissions_projects_path(id: @project.id, format: :json),
-    resource_path: edit_access_permissions_project_path(@project, format: :json)
+    create_path: access_permissions_projects_path(id: @project.id),
+    resource_path: edit_access_permissions_project_path(@project)
   },
   layout: false
 )
