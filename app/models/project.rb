@@ -15,6 +15,8 @@ class Project < ApplicationRecord
   validates :visibility, presence: true
   validates :team, presence: true
   validate :project_folder_team, if: -> { project_folder.present? }
+  validate :selected_user_role_validation, if: :bulk_assignment?
+
   before_validation :remove_project_folder, on: :update, if: :archived_changed?
 
   belongs_to :created_by,
@@ -32,6 +34,10 @@ class Project < ApplicationRecord
   belongs_to :restored_by,
              foreign_key: 'restored_by_id',
              class_name: 'User',
+             optional: true
+  belongs_to :group_user_role,
+             foreign_key: 'group_user_role_id',
+             class_name: 'UserRole',
              optional: true
   belongs_to :team, inverse_of: :projects, touch: true
   belongs_to :project_folder, inverse_of: :projects, optional: true, touch: true
@@ -64,6 +70,8 @@ class Project < ApplicationRecord
   scope :templates, -> { where(template: true) }
 
   after_create :assign_project_ownership
+  after_create :auto_assign_project_members, if: :visible?
+  before_update :sync_project_assignments, if: :visibility_changed?
 
   def self.visible_from_user_by_name(user, team, name)
     projects = where(team: team).distinct
@@ -374,7 +382,32 @@ class Project < ApplicationRecord
     UserAssignment.create(
       user: created_by,
       assignable: self,
+      assigned: :manually, # we set this to manually since was the user action to create the project
       user_role: UserRole.find_by(name: 'Owner')
     )
+  end
+
+  def auto_assign_project_members
+    UserAssignments::GroupAssignmentJob.perform_now(
+      team,
+      self,
+      created_by
+    )
+  end
+
+  def bulk_assignment?
+    visible? && group_user_role.present?
+  end
+
+  def selected_user_role_validation
+    errors.add(:group_user_role_id, :inclusion) unless group_user_role.in?(UserRole.all)
+  end
+
+  def sync_project_assignments
+    if visible?
+      auto_assign_project_members
+    else
+      UserAssignments::GroupUnAssignmentJob.perform_now(self)
+    end
   end
 end

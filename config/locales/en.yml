@@ -410,7 +410,7 @@ en:
         name: "Project name"
         name_placeholder: "My project"
         team: "Team"
-        visibility: "Visible to:"
+        visibility_html: "Make this project visible to all team members <br /> <small class='text-muted'>This will assign all team members to the project with the default role you choose</small>"
         visibility_hidden: "Project members only"
         visibility_visible: "All team members"
       modal_edit_project:
@@ -2344,6 +2344,7 @@ en:
   user_assignment:
     current_assignee: "(you)"
     change_project_role: "Change project role"
+    select_default_user_role: "Select default user role"
     change_experiment_role: "Change experiment role"
     change_my_module_role: "Change task role"
     select_role: "Select role"

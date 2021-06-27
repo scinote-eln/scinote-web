@@ -90,6 +90,8 @@ var ProjectsIndex = (function() {
         $(projectsWrapper).append($.parseHTML(data.html));
         $(newProjectModal).modal('show');
         $(newProjectModal).find("input[type='text']").focus();
+        // init select picker
+        $(newProjectModal).find('.selectpicker').selectpicker();
         // Remove modal when it gets closed
         $(newProjectModal).on('hidden.bs.modal', function() {
           $(newProjectModal).remove();
@@ -383,6 +385,7 @@ var ProjectsIndex = (function() {
       $.get(url, function(result) {
         $(editProjectModal).find('.modal-content').html(result.html);
         $(editProjectModal).modal('show');
+        $(editProjectModal).find('.selectpicker').selectpicker();
         $(editProjectModal).find('form')
           .on('ajax:success', function(ev, data) {
             $(editProjectModal).modal('hide');
