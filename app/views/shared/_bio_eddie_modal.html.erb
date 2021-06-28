@@ -1,4 +1,4 @@
-<% if BioEddieService.enabled? %>
+<% if BioEddieService.enabled?(current_user) %>
   <div id="bioEddieModal"
        class="modal modal-bio-eddie"
        role="dialog"

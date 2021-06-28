@@ -6,8 +6,8 @@ class BioEddieService
       ApplicationSettings.instance.values['bio_eddie_url']
     end
 
-    def enabled?
-      url.present?
+    def enabled?(current_user)
+      url.present? && current_user.settings.fetch('bio_eddie_enabled', false)
     end
 
     def create_molecule(params, current_user, current_team)
