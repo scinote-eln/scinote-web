@@ -1,6 +1,6 @@
 <% step ||= report_element.step %>
 <% step_type_str = step.completed ? 'completed' : 'uncompleted' %>
-<% user = step.completed? ? step.last_modified_by : step.user %>
+<% user = step.completed? && step.last_modified_by || step.user %>
 <% timestamp = step.completed ? step.completed_on : step.created_at %>
 <% tables = step.tables %>
 <% assets = step.assets %>
