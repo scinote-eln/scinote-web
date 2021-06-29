@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class BioEddieAssetsController < ApplicationController
+  include BioEddieActions
   include ActiveStorage::SetCurrent
 
   before_action :load_vars, except: :create
@@ -11,6 +12,8 @@ class BioEddieAssetsController < ApplicationController
 
   def create
     asset = BioEddieService.create_molecule(bio_eddie_params, current_user, current_team)
+
+    create_create_bio_eddie_activity(asset, current_user)
 
     if asset && bio_eddie_params[:object_type] == 'Step'
       render json: {
@@ -29,6 +32,8 @@ class BioEddieAssetsController < ApplicationController
   def update
     asset = BioEddieService.update_molecule(bio_eddie_params, current_user, current_team)
 
+    create_edit_bio_eddie_activity(asset, current_user, :finish_editing)
+
     if asset
       render json: { url: rails_representation_url(asset.medium_preview),
                      id: asset.id,
@@ -39,7 +44,7 @@ class BioEddieAssetsController < ApplicationController
   end
 
   def start_editing
-    # Activity here
+    create_edit_bio_eddie_activity(@asset, current_user, :start_editing)
   end
 
   private
