@@ -21,7 +21,8 @@ module Activities
 
     def filter_date!
       @activity_filters = @activity_filters.where(
-        "((filter ->> 'from_date') = '' AND (filter ->> 'to_date') = '') OR ((?)::date BETWEEN (filter ->> 'from_date')::date AND (filter ->> 'to_date')::date)",
+        "((filter ->> 'from_date') = '' AND (filter ->> 'to_date') = '') OR " \
+        "((?)::date BETWEEN (filter ->> 'from_date')::date AND (filter ->> 'to_date')::date)",
         @activity.created_at.to_date
       )
     end
@@ -46,7 +47,8 @@ module Activities
 
     def filter_subjects!
       @activity_filters = @activity_filters.where(
-        "NOT(filter ? 'subjects') OR filter -> 'subjects' -> '#{@activity.subject_type}' @> '\"#{@activity.subject_id}\"'"
+        "NOT(filter ? 'subjects') OR "\
+        "filter -> 'subjects' -> '#{@activity.subject_type}' @> '\"#{@activity.subject_id}\"'"
       )
     end
   end

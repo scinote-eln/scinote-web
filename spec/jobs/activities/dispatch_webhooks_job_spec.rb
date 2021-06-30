@@ -6,8 +6,9 @@ describe Activities::DispatchWebhooksJob do
   let!(:activity_filter_1) { create :activity_filter }
   let!(:activity_filter_2) { create :activity_filter }
   let!(:non_matching_activity_filter) do
-    create(:activity_filter,
-      filter: {"types" => ["163"], "from_date" => "", "to_date" => ""}
+    create(
+      :activity_filter,
+      filter: { 'types' => ['163'], 'from_date' => '', 'to_date' => '' }
     )
   end
   let!(:webhook_1) { create :webhook, activity_filter: activity_filter_1 }
@@ -18,8 +19,7 @@ describe Activities::DispatchWebhooksJob do
   it 'enqueues webhook jobs' do
     ActiveJob::Base.queue_adapter = :test
 
-    expect {
-      Activities::DispatchWebhooksJob.new(activity).perform_now
-    }.to have_enqueued_job(Activities::SendWebhookJob).exactly(2).times
+    expect { Activities::DispatchWebhooksJob.new(activity).perform_now }
+      .to have_enqueued_job(Activities::SendWebhookJob).exactly(2).times
   end
 end

@@ -67,9 +67,8 @@ describe Activity, type: :model do
   describe '.create' do
     it 'enqueues webhook dispatch job' do
       ActiveJob::Base.queue_adapter = :test
-      expect {
-        Activity.create(owner: user, team: team, type_of: "generate_pdf_report")
-      }.to have_enqueued_job(Activities::DispatchWebhooksJob)
+      expect { Activity.create(owner: user, team: team, type_of: "generate_pdf_report") }
+        .to have_enqueued_job(Activities::DispatchWebhooksJob)
     end
   end
 
