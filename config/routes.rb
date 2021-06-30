@@ -779,6 +779,10 @@ Rails.application.routes.draw do
     end
   end
 
+  match 'biomolecule_toolkit/*path', to: 'bio_eddie_assets#bmt_request',
+                                     via: %i(get post put delete),
+                                     defaults: { format: 'json' }
+
   post 'global_activities', to: 'global_activities#index'
 
   constraints WopiSubdomain do
