@@ -13,9 +13,8 @@ class WebhookService
   def send_webhook
     unless @webhook.active?
       raise(
-        Activities::WebhooksService::InactiveWebhookSendException.new(
-          'Refused to send inactive webhook.'
-        )
+        Activities::WebhooksService::InactiveWebhookSendException,
+        'Refused to send inactive webhook.'
       )
     end
 
