@@ -1,8 +1,10 @@
 # frozen_string_literal: true
+
 require File.expand_path('app/helpers/database_helper')
-include DatabaseHelper
 
 class FixExperimentIndices < ActiveRecord::Migration[6.1]
+  include DatabaseHelper
+
   def up
     remove_index :experiments, name: 'index_experiments_on_name', column: 'name'
 
