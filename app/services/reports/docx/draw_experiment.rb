@@ -11,7 +11,7 @@ module Reports::Docx::DrawExperiment
     @docx.h2 experiment.name, size: Constants::REPORT_DOCX_EXPERIMENT_TITLE_SIZE
     @docx.p do
       text I18n.t('projects.reports.elements.experiment.user_time',
-                  timestamp: I18n.l(experiment.created_at, format: :full)), color: color[:gray]
+                  code: experiment.code, timestamp: I18n.l(experiment.created_at, format: :full)), color: color[:gray]
       if experiment.archived?
         text ' | '
         text I18n.t('search.index.archived'), color: color[:gray]
