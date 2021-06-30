@@ -17,9 +17,9 @@ class FixExperimentIndices < ActiveRecord::Migration[6.1]
   end
 
   def down
-    remove_index :experiments, name: 'index_experiments_on_code'
-    remove_index :experiments, name: 'index_experiments_on_description', column: 'description'
-    remove_index :experiments, name: 'index_experiments_on_name', column: 'name'
+    remove_index :experiments, name: 'index_experiments_on_experiment_code'
+    remove_index :experiments, name: 'index_experiments_on_description'
+    remove_index :experiments, name: 'index_experiments_on_name'
 
     add_index :experiments, :name
   end
