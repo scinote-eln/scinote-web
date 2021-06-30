@@ -8,6 +8,8 @@ Devise.setup do |config|
   # by default. You can change it below and use your own secret key.
   # config.secret_key = '8d3a7b1acfb05057553abeb1ee4709f9f2d7e2fa1e5e60e7f45ab2e9244c301adcf0d146ae7cf74ba03c39c5bf895f08606a9f98051478ac4c6a695cafb4007a'
 
+  Devise::Models::Authenticatable::BLACKLIST_FOR_SERIALIZATION.concat(%i(otp otp_recovery_codes otp_secret))
+
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
