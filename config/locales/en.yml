@@ -43,7 +43,7 @@ en:
         bypass_code_link: "I have a bypass code"
       2fa_recovery:
         title: "2FA Bypass"
-        description: "Enter one of the bypass codes provided when you creted 2FA authentication. The code will no longer be valid after use."
+        description: "Enter one of the bypass codes provided when you created 2FA authentication. The code will no longer be valid after use."
         bypass_code: "Bypass code"
         enter: "Enter"
         not_correct_code: "Not correct recovery code"
@@ -1714,7 +1714,7 @@ en:
         new_password_label: "New password"
         new_password_2_label: "New password confirmation"
         2fa_title: "Two-factor authentication"
-        2fa_description: "Two-factor authentication (2FA) is a way of verifying a user’s identity by using a combination of two different verification methods. It adds an extra layer of security to your account and protects from potential remote attacs or other threats."
+        2fa_description: "Two-factor authentication (2FA) is a way of verifying a user’s identity by using a combination of two different verification methods. It adds an extra layer of security to your account and protects from potential remote attacks or other threats."
         2fa_enabled: "Enabled"
         2fa_button: "Enable authentication"
         2fa_button_disable: "Disable authentication"
