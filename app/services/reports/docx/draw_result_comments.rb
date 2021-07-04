@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 module Reports::Docx::DrawResultComments
-  def draw_result_comments(subject, result)
-    return unless result
-
-    comments = result.result_comments.order(created_at: subject['sort_order'])
-    return if comments.count.zero?
+  def draw_result_comments(result)
+    comments = result.result_comments.order(created_at: :desc)
+    return if comments.blank?
 
     @docx.p
     @docx.p I18n.t('projects.reports.elements.result_comments.name', result: result.name),

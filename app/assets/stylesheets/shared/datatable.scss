@@ -2,7 +2,7 @@
 // scss-lint:disable NestingDepth QualifyingElement
 
 .dataTables_wrapper {
-
+  --datatable-pagination-row: 68px;
   .main-actions {
     align-items: center;
     display: flex;
@@ -24,7 +24,7 @@
     align-items: center;
     display: flex;
     flex-wrap: wrap;
-    min-height: 68px;
+    min-height: var(--datatable-pagination-row);
     width: 100%;
 
     .pagination-info,

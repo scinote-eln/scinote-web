@@ -4,6 +4,10 @@ class Experiment < ApplicationRecord
   include SearchableByNameModel
   include PermissionCheckableModel
 
+  EXPERIMENT_CODE_SQL = "('EX' || id)".freeze
+
+  before_save -> { report_elements.destroy_all }, if: -> { !new_record? && project_id_changed? }
+
   belongs_to :project, inverse_of: :experiments, touch: true
   belongs_to :created_by,
              foreign_key: :created_by_id,
@@ -74,19 +78,25 @@ class Experiment < ApplicationRecord
       new_query =
         Experiment
         .where('experiments.project_id IN (?)', projects_ids)
-        .where_attributes_like([:name, :description], query, options)
+        .where_attributes_like(
+          [:name, :description, EXPERIMENT_CODE_SQL], query, options
+        )
       return include_archived ? new_query : new_query.active
     elsif include_archived
       new_query =
         Experiment
         .where(project: project_ids)
-        .where_attributes_like([:name, :description], query, options)
+        .where_attributes_like(
+          [:name, :description, EXPERIMENT_CODE_SQL], query, options
+        )
     else
       new_query =
         Experiment
         .active
         .where(project: project_ids)
-        .where_attributes_like([:name, :description], query, options)
+        .where_attributes_like(
+          [:name, :description, EXPERIMENT_CODE_SQL], query, options
+        )
     end
 
     # Show all results if needed
@@ -101,6 +111,10 @@ class Experiment < ApplicationRecord
 
   def self.viewable_by_user(user, teams)
     where(project: Project.viewable_by_user(user, teams))
+  end
+
+  def code
+    "EX#{id}"
   end
 
   def archived_branch?

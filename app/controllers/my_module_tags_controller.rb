@@ -134,6 +134,18 @@ class MyModuleTagsController < ApplicationController
   def destroy_by_tag_id
     tag = @my_module.my_module_tags.find_by_tag_id(params[:id])
 
+    Activities::CreateActivityService
+      .call(activity_type: :remove_task_tag,
+            owner: current_user,
+            subject: tag.my_module,
+            project:
+              tag.my_module.experiment.project,
+            team: current_team,
+            message_items: {
+              my_module: tag.my_module.id,
+              tag: tag.tag.id
+            })
+
     return render_404 unless tag
 
     tag.destroy

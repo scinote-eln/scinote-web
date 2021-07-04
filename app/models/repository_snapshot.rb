@@ -26,6 +26,12 @@ class RepositorySnapshot < RepositoryBase
       .order(:parent_id, updated_at: :desc)
   }
 
+  scope :assigned_to_project, lambda { |project|
+    where(team: project.team)
+      .joins(my_module: { experiment: :project })
+      .where(my_module: { experiments: { project: project } })
+  }
+
   def self.create_preliminary(repository, my_module, created_by = nil)
     created_by ||= repository.created_by
     repository_snapshot = repository.dup.becomes(RepositorySnapshot)

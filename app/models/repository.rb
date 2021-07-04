@@ -86,9 +86,9 @@ class Repository < RepositoryBase
     repository_rows = readable_rows.where(id: repository_row_matches)
     repository_rows = repository_rows.or(readable_rows.where(id: matched_by_user))
 
-    Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each do |field, include_hash|
-      custom_cell_matches = readable_rows.joins(repository_cells: include_hash)
-                                         .where_attributes_like(field, query, options)
+    Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each do |_data_type, config|
+      custom_cell_matches = repository_rows.joins(repository_cells: config[:includes])
+                                           .where_attributes_like(config[:field], query, options)
       repository_rows = repository_rows.or(readable_rows.where(id: custom_cell_matches))
     end
 

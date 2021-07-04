@@ -30,9 +30,11 @@ class User < ApplicationRecord
 
   validate :time_zone_check
 
-  store_accessor :settings, :time_zone, :notifications_settings
+  validates :external_id, length: { maximum: Constants::EMAIL_MAX_LENGTH }
 
-  default_settings(
+  store_accessor :settings, :time_zone, :notifications_settings, :external_id
+
+  DEFAULT_SETTINGS = {
     time_zone: 'UTC',
     date_format: Constants::DEFAULT_DATE_FORMAT,
     notifications_settings: {
@@ -42,7 +44,7 @@ class User < ApplicationRecord
       recent_email: false,
       system_message_email: false
     }
-  )
+  }.freeze
 
   store_accessor :variables, :export_vars
 
@@ -556,7 +558,7 @@ class User < ApplicationRecord
   end
 
   def enabled_notifications_for?(notification_type, channel)
-    return true if notification_type == :deliver
+    return true if %i(deliver deliver_error).include?(notification_type)
 
     case channel
     when :web

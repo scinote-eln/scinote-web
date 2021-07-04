@@ -214,6 +214,7 @@ module ApplicationHelper
     end
   rescue StandardError => e
     Rails.logger.error e.message
+    'icon_small/missing.png'
   end
 
   def wopi_enabled?

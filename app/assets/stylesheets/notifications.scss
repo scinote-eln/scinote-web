@@ -80,6 +80,17 @@
     padding-top: 5px;
     width: 30px;
   }
+
+  .deliver-error {
+    background-color: $brand-danger;
+    border-radius: 50%;
+    color: $color-concrete;
+    display: inline-block;
+    font-size: $font-size-small;
+    height: 30px;
+    padding-top: 5px;
+    width: 30px;
+  }
 }
 
 .btn-more-notifications {

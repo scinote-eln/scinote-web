@@ -1,0 +1,8 @@
+<% if @editing %>
+  <div class="sci-input-container">
+    <%= label_tag @name, @label %>
+    <%= text_area_tag @name, @value, placeholder: @placeholder, class: 'sci-input-field', data: { type: 'LargeTextInputComponent' } %>
+  </div>
+<% else %>
+  <%= @value %>
+<% end %>

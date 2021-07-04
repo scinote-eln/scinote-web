@@ -1,7 +1,6 @@
-<% asset ||= @asset %>
+<% asset ||= report_element.asset %>
 <% timestamp = asset.created_at %>
-<% icon_class = file_fa_icon_class(asset) if asset.file_name %>
-<div class="report-element report-step-attachment-element report-step-asset-element" data-ts="<%= timestamp.to_i %>" data-type="step_asset" data-id='{ "asset_id": <%= asset.id %> }' data-scroll-id="<%= asset.id %>" data-name="<%=t "projects.reports.elements.step_asset.sidebar_name", file: asset.file_name %>" data-icon-class="<%= icon_class %>">
+<div class="report-element report-step-attachment-element report-step-asset-element">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left attachment-icon <%= defined?(export_all) && export_all ? 'export-all-icons' : '' %>">
@@ -9,8 +8,9 @@
       </div>
       <div class="pull-left file-name">
         <% if defined? export_all and export_all %>
-          <a href="<%= path[:file] %>">
-            <em><%= t('projects.reports.elements.step_asset.file_name', file: filename) %></em>
+          <% file_link = @obj_filenames.dig(:assets, asset.id, :file) %>
+          <a href="<%= file_link %>">
+            <em><%= t('projects.reports.elements.step_asset.file_name', file: file_link&.split('/')&.last) %></em>
           </a>
         <% else %>
           <em>
@@ -18,14 +18,10 @@
                   file: truncate(asset.file_name, length: Constants::FILENAME_TRUNCATION_LENGTH)) %>
             <%= link_to t('projects.reports.elements.download'), asset_download_url(asset, disposition: 'attachment'), class: 'download-link', target: :_blank %>
           </em>
-
         <% end %>
       </div>
       <div class="pull-left user-time">
-        <%=t 'projects.reports.elements.step_asset.user_time', timestamp: l(timestamp, format: :full) %>
-      </div>
-      <div class="pull-right controls">
-        <%= render partial: 'reports/elements/element_controls.html.erb' %>
+        <%= t('projects.reports.elements.step_asset.user_time', timestamp: l(timestamp, format: :full)) %>
       </div>
     </div>
   </div>
@@ -34,7 +30,7 @@
       <div class="row">
         <div class="col-xs-12 file-image">
           <% if defined?(export_all) && export_all %>
-            <img class="report-export-img" src="<%= path[:preview] %>">
+            <img class="report-export-img" src="<%= @obj_filenames.dig(:assets, asset.id, :preview) %>">
           <% else %>
             <%= report_image_asset_url(asset) %>
           <% end %>
@@ -42,7 +38,9 @@
       </div>
     <% end %>
   </div>
-  <div class="report-element-children">
-    <%= children if (defined? children and children.present?) %>
-  </div>
+  <% if defined?(children) %>
+    <div class="report-element-children">
+      <%= children %>
+    </div>
+  <% end %>
 </div>

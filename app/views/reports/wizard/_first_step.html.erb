@@ -1,0 +1,5 @@
+<div class="project-selector-container">
+  <%= render partial: 'reports/wizard/project_template_selector', locals: {report: report} %>
+</div>
+<div class="report-template-values-container <%= 'hidden' if report.settings["template"].blank? %>">
+</div>

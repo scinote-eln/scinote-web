@@ -1,0 +1,25 @@
+<% if @editing %>
+  <div>
+    <%= label_tag "#{@name}[]", @label %>
+    <ul>
+    <% @items.each do |key, value| %>
+      <li>
+        <div class="sci-checkbox-container">
+          <%= check_box_tag "#{@name}[]", key, (@value && @value[key.to_s]), class: 'sci-checkbox', data: { type: 'MultiCheckboxInputComponent' } %>
+          <span class="sci-checkbox-label"></span>
+        </div>
+        <%= value %>
+      </li>
+    <% end %>
+    </ul>
+  </div>
+<% else %>
+  <ul>
+    <% @items.each do |key, value| %>
+      <li>
+        <div class="template-checkbox <%= 'selected' if @value && @value[key.to_s] %>"></div>
+        <%= value %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>

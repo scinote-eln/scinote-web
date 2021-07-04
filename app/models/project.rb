@@ -59,18 +59,6 @@ class Project < ApplicationRecord
 
   scope :templates, -> { where(template: true) }
 
-  def self.visible_from_user_by_name(user, team, name)
-    projects = where(team: team).distinct
-    if user.is_admin_of_team?(team)
-      projects.where('projects.archived IS FALSE AND projects.name ILIKE ?', "%#{name}%")
-    else
-      projects.joins(:user_projects)
-              .where('user_projects.user_id = ? OR projects.visibility = 1', user.id)
-              .where('projects.archived IS FALSE AND projects.name ILIKE ?',
-                     "%#{name}%")
-    end
-  end
-
   def self.search(
     user,
     include_archived,
@@ -236,7 +224,7 @@ class Project < ApplicationRecord
 
   def assigned_repositories_and_snapshots
     live_repositories = Repository.assigned_to_project(self)
-    snapshots = RepositorySnapshot.of_unassigned_from_project(self)
+    snapshots = RepositorySnapshot.assigned_to_project(self)
     (live_repositories + snapshots).sort_by { |r| r.name.downcase }
   end
 
@@ -287,15 +275,15 @@ class Project < ApplicationRecord
     ActionController::Renderer::RACK_KEY_TRANSLATION['warden'] ||= 'warden'
     proxy = Warden::Proxy.new({}, Warden::Manager.new({}))
     proxy.set_user(user, scope: :user, store: false)
+    ApplicationController.renderer.defaults[:http_host] = Rails.application.routes.default_url_options[:host]
     renderer = ApplicationController.renderer.new(warden: proxy)
 
     report = Report.generate_whole_project_report(self, user, team)
 
     page_html_string =
-      renderer.render 'reports/new.html.erb',
-                      locals: { export_all: true,
-                                obj_filenames: obj_filenames },
-                      assigns: { project: self, report: report }
+      renderer.render 'reports/export.html.erb',
+                      locals: { report: report, export_all: true },
+                      assigns: { settings: report.settings, obj_filenames: obj_filenames }
     parsed_page_html = Nokogiri::HTML(page_html_string)
     parsed_html = parsed_page_html.at_css('#report-content')
 
