@@ -26,6 +26,8 @@
     var teamSelectorDropdown = modal.find('[data-role=team-selector-dropdown]');
     var teamSelectorDropdown2 = $();
     var emailsInput = modal.find('.emails-input');
+    var teamsInput = modal.find('.teams-input');
+    var roleInput = modal.find('.role-input');
     var recaptchaErrorMsgDiv = modal.find('#recaptcha-error-msg');
     var recaptchaErrorText = modal.find('#recaptcha-error-msg>span');
 
@@ -46,7 +48,7 @@
       labelHTML: true,
       tagClass: 'users-dropdown-list',
       inputTagMode: true,
-      customDropdownIcon: () => { return '<i class="fas fa-search pull-right"></i>'; },
+      customDropdownIcon: () => { return '<i class="fas fa-search right-icon"></i>'; },
       onChange: () => {
         let values = dropdownSelector.getValues(emailsInput);
         if (values.length > 0) {
@@ -114,6 +116,8 @@
       modal.find('[data-action=invite]').off('click').on('click', function() {
         var data = {
           emails: dropdownSelector.getValues(emailsInput),
+          team_ids: dropdownSelector.getValues(teamsInput),
+          role: roleInput.val(),
           'g-recaptcha-response': $('#recaptcha-invite-modal').val()
         };
 
@@ -121,24 +125,24 @@
 
         switch (type) {
           case 'invite_to_team':
-            data.teamId = modal.attr('data-team-id');
+            data.team_ids = [modal.attr('data-team-id')];
             data.role = $(this).attr('data-team-role');
             break;
           case 'invite_to_team_with_role':
-            data.teamId = modal.attr('data-team-id');
+            data.team_ids = [modal.attr('data-team-id')];
             data.role = modal.attr('data-team-role');
             break;
           case 'invite':
             break;
           case 'invite_with_team_selector':
             if (teamSelectorCheckbox.is(':checked')) {
-              data.teamId = teamSelectorDropdown.val();
+              data.team_ids = [teamSelectorDropdown.val()];
               data.role = $(this).attr('data-team-role');
             }
             break;
           case 'invite_with_team_selector_and_role':
             if (teamSelectorCheckbox.is(':checked')) {
-              data.teamId = teamSelectorDropdown.val();
+              data.team_ids = [teamSelectorDropdown.val()];
               data.role = modal.attr('data-team-role');
             }
             break;
@@ -181,6 +185,11 @@
       script.src = 'https://www.google.com/recaptcha/api.js?hl=en';
       $(script).insertAfter('#recaptcha-service');
       // Remove 'data-invited="true"' status
+
+      dropdownSelector.init(teamsInput, {
+        optionClass: 'checkbox-icon'
+      });
+
       modal.removeAttr('data-invited');
     }).on('hide.bs.modal', function() {
       // 'Reset' modal state

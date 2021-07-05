@@ -100,7 +100,7 @@ var dropdownSelector = (function() {
 
   // Save data to the field
   function updateCurrentData(container, data) {
-    container.find('.data-field').val(JSON.stringify(data));
+    container.find('.data-field').val(JSON.stringify(data)).change();
   }
 
   // Search filter for non-ajax data
@@ -293,6 +293,7 @@ var dropdownSelector = (function() {
     var optionContainer;
     var perfectScroll;
     var dropdownContainer;
+    var toggleElement;
 
     if (selectElement.length === 0) return;
 
@@ -315,6 +316,30 @@ var dropdownSelector = (function() {
       <input type="hidden" class="data-field" value="[]">
 
     `).appendTo(dropdownContainer);
+
+    // Blank option
+    if (selectElement.data('blank')) {
+      $(`<div class="dropdown-blank btn">${selectElement.data('blank')}</div>`)
+        .appendTo(dropdownContainer.find('.dropdown-container'))
+        .click(() => {
+          dropdownContainer.find('.dropdown-group, .dropdown-option').removeClass('select');
+          saveData(selectElement, dropdownContainer);
+          dropdownContainer.removeClass('open');
+        });
+    }
+
+    if (selectElement.data('toggle-target')) {
+      dropdownContainer.find('.data-field').on('change', function() {
+        toggleElement = $(selectElement.data('toggle-target'));
+        if (getCurrentData(dropdownContainer).length > 0) {
+          toggleElement.removeClass('hidden');
+          toggleElement.find('input, select').removeAttr('disabled');
+        } else {
+          toggleElement.addClass('hidden');
+          toggleElement.find('input, select').attr('disabled', true);
+        }
+      });
+    }
 
     // If we setup Select All we draw it and add correspond logic
     if (selectElement.data('select-all-button')) {

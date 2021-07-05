@@ -2209,12 +2209,18 @@ en:
     no_team:
       title: "Invite users to SciNote"
       heading: "Invite more people to start using SciNote."
-    input_subtitle: "Input one or multiple emails, confirm each email with ENTER key."
+    input_subtitle: "You can enter one or more emails. To confirm each one press the ENTER key."
     invite_to_team_heading: "Invite users to my team:"
     invite_btn: "Invite members"
     invite_guest: "As Guests"
     invite_user: "As Normal Users"
     invite_admin: "As Administrators"
+    new_member_email: "New member email"
+    select_team: "Select a team"
+    select_team_blank: "Do not add this user to any team"
+    select_team_role: "Select a team role"
+    default: "default"
+
     errors:
       recaptcha: "reCAPTCHA verification failed, please try again"
     results:

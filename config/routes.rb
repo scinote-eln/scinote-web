@@ -109,6 +109,9 @@ Rails.application.routes.draw do
       post '/invite',
            to: 'users/invitations#invite_users',
            as: 'invite_users'
+      get '/invitable_teams',
+          to: 'users/invitations#invitable_teams',
+          as: 'invitable_teams'
     end
 
     # Notifications
