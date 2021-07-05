@@ -1319,6 +1319,7 @@ body > .loading-overlay {
 .modal-invite-users {
   .bootstrap-tagsinput {
     min-width: 450px;
+    width: 100%;
   }
 
   .results-container .alert {
@@ -1340,6 +1341,10 @@ body > .loading-overlay {
       vertical-align: middle;
       margin: 0;
     }
+  }
+
+  .dropdown-selector-container {
+    margin-bottom: 20px;
   }
 
   .g-recaptcha {
@@ -1485,4 +1490,16 @@ a.disabled-with-click-events {
     padding-left: 3px;
   }
 
+}
+
+.form-select {
+  border: 1px solid $color-silver-chalice;
+  border-radius: 4px;
+  color: $color-emperor;
+  display: block;
+  font-size: 14px;
+  min-height: 36px;
+  outline: 0;
+  padding: 8px 42px 3px 3px;
+  width: 100%;
 }
