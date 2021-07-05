@@ -6,7 +6,7 @@
           <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
           <h2 class="modal-title"><%= t("users.registrations.edit.2fa_modal.disable.title") %></h2>
         </div>
-        <%= form_with(url: users_2fa_disable_path, method: "post", class: "2fa-disable-form") do %>
+        <%= form_with(url: main_app.users_2fa_disable_path, method: "post", class: "2fa-disable-form") do %>
           <div class="modal-body">
             <p><%= t("users.registrations.edit.2fa_modal.disable.description") %></p>
             <div class="sci-input-container password-field">
@@ -26,10 +26,10 @@
             <li role="presentation"><a href="#2fa-step-4" data-toggle="tab" data-no-turbolink="true"></a></li>
           </ul>
           <div class="tab-content">
-            <%= render partial: '2fa_modal_apps_tab' %>
-            <%= render partial: '2fa_modal_qr_code_tab' %>
-            <%= render partial: '2fa_modal_verify_code_tab' %>
-            <%= render partial: '2fa_modal_recovery_codes_tab' %>
+            <%= render partial: 'users/registrations/2fa_modal_apps_tab.html.erb' %>
+            <%= render partial: 'users/registrations/2fa_modal_qr_code_tab.html.erb' %>
+            <%= render partial: 'users/registrations/2fa_modal_verify_code_tab.html.erb' %>
+            <%= render partial: 'users/registrations/2fa_modal_recovery_codes_tab.html.erb' %>
           </div>
       <% end %>
     </div>
