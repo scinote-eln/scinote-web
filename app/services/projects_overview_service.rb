@@ -86,6 +86,7 @@ class ProjectsOverviewService
 
   def fetch_project_records
     @team.projects
+         .includes(user_assignments: :user_role)
          .visible_to(@user, @team)
          .left_outer_joins(:project_comments)
          .preload(:user_projects, team: :user_teams)

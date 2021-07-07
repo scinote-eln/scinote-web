@@ -6,9 +6,6 @@ describe UserProject, type: :model do
   let(:user_project_without_role) { build :user_project }
   let(:user_project) { build :user_project, :owner }
 
-  it 'is invalid without role' do
-    expect(user_project_without_role).not_to be_valid
-  end
 
   it 'is valid with role' do
     expect(user_project).to be_valid
@@ -19,7 +16,6 @@ describe UserProject, type: :model do
   end
 
   describe 'Database table' do
-    it { should have_db_column :role }
     it { should have_db_column :user_id }
     it { should have_db_column :project_id }
     it { should have_db_column :created_at }
@@ -34,7 +30,6 @@ describe UserProject, type: :model do
   end
 
   describe 'Should be a valid object' do
-    it { should validate_presence_of :role }
     it { should validate_presence_of :user }
     it { should validate_presence_of :project }
   end

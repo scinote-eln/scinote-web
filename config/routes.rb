@@ -227,12 +227,15 @@ Rails.application.routes.draw do
       resource :recent_works, module: 'dashboard', only: [:show]
     end
 
-    resources :projects, except: [:destroy] do
-      resources :user_projects, path: '/users', only: %i(create index update destroy), as: :users do
-        collection do
-          get 'edit', to: 'user_projects#index_edit'
+    namespace :access_permissions do
+      resources :projects, defaults: { format: 'json' } do
+        resources :experiments, only: %i(show update edit) do
+          resources :my_modules, only: %i(show update edit)
         end
       end
+    end
+
+    resources :projects, except: [:destroy] do
       resources :project_comments,
                 path: '/comments',
                 only: [:create, :index, :edit, :update, :destroy]
@@ -689,14 +692,24 @@ Rails.application.routes.draw do
               end
             end
             resources :projects, only: %i(index show create update) do
-              resources :user_projects, only: %i(index show create update destroy), path: 'users', as: :users
+              resources :user_assignments,
+                        only: %i(index show create update destroy),
+                        controller: :project_user_assignments,
+                        path: 'users',
+                        as: :users
               resources :project_comments, only: %i(index show), path: 'comments', as: :comments
               get 'activities', to: 'projects#activities'
               resources :reports, only: %i(index show), path: 'reports', as: :reports
               resources :experiments, only: %i(index show create update) do
+                resources :user_assignments,
+                          only: %i(index show update),
+                          controller: :experiment_user_assignments
                 resources :task_groups, only: %i(index show)
                 resources :connections, only: %i(index show)
                 resources :tasks, only: %i(index show create update) do
+                  resources :user_assignments,
+                            only: %i(index show update),
+                            controller: :task_user_assignments
                   resources :task_inventory_items, only: %i(index show),
                             path: 'items',
                             as: :items
@@ -732,6 +745,7 @@ Rails.application.routes.draw do
                       as: :identities
           end
 
+          resources :user_roles, only: :index
           resources :workflows, only: %i(index show) do
             resources :workflow_statuses, path: :statuses, only: %i(index)
           end

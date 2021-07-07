@@ -38,7 +38,14 @@ module Experiments
           @c_exp.my_module_groups << g.deep_clone_to_experiment(@user, @c_exp)
         end
 
-        raise ActiveRecord::Rollback unless @c_exp.save
+        # Copy user assignments to the experiment
+        @exp.user_assignments.map do |user_assignment|
+          new_user_assigment = user_assignment.dup
+          new_user_assigment.assignable = @c_exp
+          new_user_assigment.save!
+        end
+
+        @c_exp.save!
       end
       @errors.merge!(@c_exp.errors.to_hash) unless @c_exp.valid?
 

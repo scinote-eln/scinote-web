@@ -9,7 +9,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
     @user = create(:user)
     @teams = create_list(:team, 2, created_by: @user)
     create(:user_team, user: @user, team: @teams.first, role: 2)
-
+    @owner_role = create(:owner_role)
     @valid_project = create(:project, name: Faker::Name.unique.name,
                             created_by: @user, team: @teams.first)
 
@@ -144,7 +144,12 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
 
   describe 'POST tasks, #create' do
     before :all do
-      create :user_project, :normal_user, user: @user, project: @valid_project
+      create :user_project, user: @user, project: @valid_project
+      create :user_assignment,
+             assignable: @valid_project,
+             user: @user,
+             user_role: @owner_role,
+             assigned_by: @user
       @valid_headers['Content-Type'] = 'application/json'
     end
 
@@ -223,8 +228,9 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
       end
 
       it 'renders 403 for use with view permissions' do
-        up = UserProject.where(user: @user, project: @valid_project).first
-        up.update_attribute(:role, :viewer)
+        user_assignment = UserAssignment.where(user: @user, assignable: @valid_project)
+                                        .first
+        user_assignment.update!(user_role: create(:viewer_role))
 
         post(api_v1_team_project_experiment_tasks_path(
                team_id: @teams.first.id,

@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 class MyModule < ApplicationRecord
+  SEARCHABLE_ATTRIBUTES = %i(name description).freeze
+
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
   include TinyMceImages
   include PermissionCheckableModel
+  include Assignable
 
   enum state: Extends::TASKS_STATES
 
@@ -53,15 +56,10 @@ class MyModule < ApplicationRecord
   has_many :repository_snapshots, dependent: :destroy, inverse_of: :my_module
   has_many :user_my_modules, inverse_of: :my_module, dependent: :destroy
   has_many :users, through: :user_my_modules
-  has_many :user_assignments, as: :assignable, dependent: :destroy
   has_many :report_elements, inverse_of: :my_module, dependent: :destroy
   has_many :protocols, inverse_of: :my_module, dependent: :destroy
   # Associations for old activity type
   has_many :activities, inverse_of: :my_module
-
-  alias_attribute :experiment, :permission_parent
-
-  default_scope { includes(user_assignments: :user_role) }
 
   scope :overdue, -> { where('my_modules.due_date < ?', Time.current.utc) }
   scope :without_group, -> { active.where(my_module_group: nil) }
@@ -72,6 +70,13 @@ class MyModule < ApplicationRecord
   end)
   scope :workflow_ordered, -> { order(workflow_order: :asc) }
   scope :uncomplete, -> { where(state: 'uncompleted') }
+
+  scope :my_module_search_scope, lambda { |experiment_ids, user|
+    joins(:user_assignments).where(
+      experiment: experiment_ids,
+      user_assignments: { user: user }
+    ).distinct
+  }
 
   # A module takes this much space in canvas (x, y) in database
   WIDTH = 30
@@ -85,23 +90,24 @@ class MyModule < ApplicationRecord
     current_team = nil,
     options = {}
   )
-    exp_ids =
+    my_module_scope = my_module_search_scope(
       Experiment
-      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .pluck(:id)
+        .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
+        .pluck(:id),
+      user
+    )
 
     if current_team
-      experiments_ids = Experiment
-                        .search(user,
-                                include_archived,
-                                nil,
-                                1,
-                                current_team)
-                        .select('id')
-      new_query = MyModule
-                  .distinct
-                  .where('my_modules.experiment_id IN (?)', experiments_ids)
-                  .where_attributes_like([:name, :description], query, options)
+      new_query = my_module_search_scope(
+        Experiment
+          .search(user,
+                  include_archived,
+                  nil,
+                  1,
+                  current_team)
+          .select('id'),
+        user
+      ).where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
 
       if include_archived
         return new_query
@@ -109,16 +115,10 @@ class MyModule < ApplicationRecord
         return new_query.where('my_modules.archived = ?', false)
       end
     elsif include_archived
-      new_query = MyModule
-                  .distinct
-                  .where('my_modules.experiment_id IN (?)', exp_ids)
-                  .where_attributes_like([:name, :description], query, options)
+      new_query = my_module_scope.where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
     else
-      new_query = MyModule
-                  .distinct
-                  .where('my_modules.experiment_id IN (?)', exp_ids)
-                  .where('my_modules.archived = ?', false)
-                  .where_attributes_like([:name, :description], query, options)
+      new_query = my_module_scope.where('my_modules.archived = ?', false)
+                                 .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
     end
 
     # Show all results if needed
@@ -132,7 +132,9 @@ class MyModule < ApplicationRecord
   end
 
   def self.viewable_by_user(user, teams)
-    where(experiment: Experiment.viewable_by_user(user, teams))
+    left_outer_joins(user_assignments: :user_role)
+      .where(experiment: Experiment.viewable_by_user(user, teams))
+      .where('user_roles.permissions @> ARRAY[?]::varchar[]', %w[task_read])
   end
 
   def navigable?
@@ -429,6 +431,10 @@ class MyModule < ApplicationRecord
 
   def comments
     task_comments
+  end
+
+  def permission_parent
+    experiment
   end
 
   private

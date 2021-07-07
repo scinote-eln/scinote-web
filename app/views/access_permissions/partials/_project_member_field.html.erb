@@ -1,0 +1,37 @@
+<% # frozen_string_literal: true %>
+
+<%
+  project_member = ProjectMember.new(user, project)
+  item_id = dom_id(user, :project_member)
+%>
+
+<%= form_with(model: project_member, url: update_path, method: :put, remote: true, html: { class: 'row member-item', id: item_id, data: { action: 'replace-form autosave-form' } }) do |f| %>
+  <%= f.hidden_field :user_id, value: f.object.user.id %>
+    <div class="col-xs-2">
+      <span class="global-avatar-container">
+        <%= image_tag avatar_path(user, :icon_small), title: current_assignee_name(user), class: 'img-circle pull-left' %>
+      </span>
+    </div>
+    <div class="col-xs-3">
+      <span><%= current_assignee_name(user) %></span>
+      <br>
+      <small class="text-muted"><%= user_assignment_resource_role_name(project_member, user, project) %></small>
+    </div>
+    <% unless user == current_user %>
+      <div class="col-xs-7">
+        <div class="row">
+          <div class="col-xs-7">
+            <%= f.select :user_role_id, options_for_select(user_roles_collection, selected: f.object.user_role.id), {}, class: 'form-control selectpicker', title: t('user_assignment.change_project_role'), data: { 'selected-text-format' => 'static' } %>
+          </div>
+          <div class="col-xs-5">
+            <% unless project_member.last_project_owner? %>
+              <%= link_to access_permissions_project_path(project, user_id: user), remote: true, method: :delete, class: 'btn btn-link', data: { action: 'remote-destroy', target: "##{item_id}" } do %>
+                <span class="fas fa-times"></span>
+                <%= t 'general.remove' %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+<% end %>

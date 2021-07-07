@@ -1,8 +1,13 @@
+# frozen_string_literal: true
+
 class Experiment < ApplicationRecord
+  SEARCHABLE_ATTRIBUTES = %i(name description).freeze
+
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
   include PermissionCheckableModel
+  include Assignable
 
   belongs_to :project, inverse_of: :experiments, touch: true
   belongs_to :created_by,
@@ -23,11 +28,9 @@ class Experiment < ApplicationRecord
   has_many :report_elements, inverse_of: :experiment, dependent: :destroy
   # Associations for old activity type
   has_many :activities, inverse_of: :experiment
-  has_many :user_assignments, as: :assignable, dependent: :destroy
   has_many :users, through: :user_assignments
-  has_one_attached :workflowimg
 
-  alias_attribute :project, :permission_parent
+  has_one_attached :workflowimg
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name, length: { minimum: Constants::NAME_MIN_LENGTH, maximum: Constants::NAME_MAX_LENGTH }
@@ -38,14 +41,19 @@ class Experiment < ApplicationRecord
   validates :uuid, uniqueness: { scope: :project },
                    unless: proc { |e| e.uuid.blank? }
 
-  default_scope { includes(user_assignments: :user_role) }
-
   scope :is_archived, lambda { |is_archived|
     if is_archived
       joins(:project).where('experiments.archived = TRUE OR projects.archived = TRUE')
     else
       joins(:project).where('experiments.archived = FALSE AND projects.archived = FALSE')
     end
+  }
+
+  scope :experiment_search_scope, lambda { |project_ids, user|
+    joins(:user_assignments).where(
+      project: project_ids,
+      user_assignments: { user: user }
+    )
   }
 
   def self.search(
@@ -56,37 +64,30 @@ class Experiment < ApplicationRecord
     current_team = nil,
     options = {}
   )
-    project_ids =
+    experiment_scope = experiment_search_scope(
       Project
-      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .pluck(:id)
+        .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
+        .pluck(:id),
+      user
+    )
 
     if current_team
-      projects_ids =
+      new_query = experiment_search_scope(
         Project
-        .search(user,
-                include_archived,
-                nil,
-                1,
-                current_team)
-        .select('id')
-
-      new_query =
-        Experiment
-        .where('experiments.project_id IN (?)', projects_ids)
-        .where_attributes_like([:name, :description], query, options)
+          .search(user,
+                  include_archived,
+                  nil,
+                  1,
+                  current_team)
+          .select('id'),
+        user
+      ).where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
       return include_archived ? new_query : new_query.active
     elsif include_archived
-      new_query =
-        Experiment
-        .where(project: project_ids)
-        .where_attributes_like([:name, :description], query, options)
+      new_query = experiment_scope.where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
     else
-      new_query =
-        Experiment
-        .active
-        .where(project: project_ids)
-        .where_attributes_like([:name, :description], query, options)
+      new_query = experiment_scope.active
+                                  .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
     end
 
     # Show all results if needed
@@ -100,7 +101,9 @@ class Experiment < ApplicationRecord
   end
 
   def self.viewable_by_user(user, teams)
-    where(project: Project.viewable_by_user(user, teams))
+    left_outer_joins(user_assignments: :user_role)
+      .where(project: Project.viewable_by_user(user, teams))
+      .where('user_roles.permissions @> ARRAY[?]::varchar[]', %w[experiment_read])
   end
 
   def archived_branch?
@@ -239,6 +242,10 @@ class Experiment < ApplicationRecord
     projects - [project]
   end
 
+  def permission_parent
+    project
+  end
+
   private
 
   # Archive all modules. Receives an array of module integer IDs
@@ -325,6 +332,9 @@ class Experiment < ApplicationRecord
       end
 
       next unless my_module.save
+      # regenerate user assignments
+      my_module.user_assignments.destroy_all
+      UserAssignments::GenerateUserAssignmentsJob.perform_later(my_module, current_user)
 
       Activities::CreateActivityService.call(activity_type: :move_task,
                                              owner: current_user,

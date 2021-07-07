@@ -9,7 +9,15 @@ describe ExperimentsController, type: :controller do
   let!(:team) { create :team, created_by: user, users: [user] }
   let!(:project) { create :project, team: team }
   let!(:user_project) do
-    create :user_project, :owner, user: user, project: project
+    create :user_project, user: user, project: project
+  end
+  let(:owner_role) { create :owner_role }
+  let!(:user_assignment) do
+    create :user_assignment,
+           assignable: project,
+           user: user,
+           user_role: owner_role,
+           assigned_by: user
   end
   let(:experiment) { create :experiment, project: project }
 

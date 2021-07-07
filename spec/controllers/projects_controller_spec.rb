@@ -54,11 +54,20 @@ describe ProjectsController, type: :controller do
     end
   end
 
+  let(:owner_user_role) { create :owner_role }
   # rubocop:disable Security/Eval
   # rubocop:disable Style/EvalWithLocation
   (1..PROJECTS_CNT).each do |i|
     let!("user_projects_#{i}") do
-      create :user_project, :owner, project: eval("project_#{i}"), user: user
+      create :user_project, project: eval("project_#{i}"), user: user
+    end
+
+    let!("user_assignments_#{i}") do
+      create :user_assignment,
+             assignable: eval("project_#{i}"),
+             user: user,
+             user_role: owner_user_role,
+             assigned_by: user
     end
   end
   # rubocop:enable Security/Eval

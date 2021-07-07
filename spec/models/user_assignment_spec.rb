@@ -19,6 +19,6 @@ RSpec.describe UserAssignment, type: :model do
     it { should belong_to :assignable }
     it { should belong_to :user }
     it { should belong_to :user_role }
-    it { should belong_to(:assigned_by).class_name('User') }
+    it { should belong_to(:assigned_by).class_name('User').optional }
   end
 end

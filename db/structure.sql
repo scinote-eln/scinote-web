@@ -1079,7 +1079,8 @@ CREATE TABLE public.projects (
     experiments_order character varying,
     template boolean,
     demo boolean DEFAULT false NOT NULL,
-    project_folder_id bigint
+    project_folder_id bigint,
+    group_user_role_id bigint
 );
 
 
@@ -2443,7 +2444,8 @@ CREATE TABLE public.user_assignments (
     user_role_id bigint NOT NULL,
     assigned_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    assigned integer DEFAULT 0 NOT NULL
 );
 
 
@@ -4699,6 +4701,13 @@ CREATE INDEX index_projects_on_created_by_id ON public.projects USING btree (cre
 
 
 --
+-- Name: index_projects_on_group_user_role_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_projects_on_group_user_role_id ON public.projects USING btree (group_user_role_id);
+
+
+--
 -- Name: index_projects_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6315,6 +6324,14 @@ ALTER TABLE ONLY public.repository_rows
 
 
 --
+-- Name: projects fk_rails_73110d691c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.projects
+    ADD CONSTRAINT fk_rails_73110d691c FOREIGN KEY (group_user_role_id) REFERENCES public.user_roles(id);
+
+
+--
 -- Name: oauth_access_tokens fk_rails_732cb83ab7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7341,6 +7358,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210202214508'),
 ('20210217114042'),
 ('20210222123823'),
-('20210410100006');
+('20210410100006'),
+('20210612070220'),
+('20210627095718');
 
 

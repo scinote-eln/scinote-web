@@ -90,6 +90,8 @@ var ProjectsIndex = (function() {
         $(projectsWrapper).append($.parseHTML(data.html));
         $(newProjectModal).modal('show');
         $(newProjectModal).find("input[type='text']").focus();
+        // init select picker
+        $(newProjectModal).find('.selectpicker').selectpicker();
         // Remove modal when it gets closed
         $(newProjectModal).on('hidden.bs.modal', function() {
           $(newProjectModal).remove();
@@ -265,27 +267,6 @@ var ProjectsIndex = (function() {
     manageProjectUsersModal.find('.modal-footer').html(data.html_footer);
   }
 
-  // Initialize manage project users modal remote loading.
-  function initManageProjectUsersLink() {
-    $(projectsWrapper).on('ajax:success', '.manage-project-users-link', function(e, data) {
-      initManageProjectUsersModalBody(data);
-      manageProjectUsersModal.modal('show');
-    });
-  }
-
-  // Initialize view project users modal remote loading.
-  function initViewProjectUsersLink() {
-    $(projectsWrapper).on('ajax:success', '.view-project-users-link', function(e, data) {
-      let viewProjectUsersModal = $(data.html);
-      $(projectsWrapper).append(viewProjectUsersModal);
-      viewProjectUsersModal.modal('show');
-      // Remove modal when it gets closed
-      viewProjectUsersModal.on('hidden.bs.modal', function() {
-        viewProjectUsersModal.remove();
-      });
-    });
-  }
-
   // Initialize reloading manage user modal content after posting new
   // user.
   function initAddUserForm() {
@@ -404,6 +385,7 @@ var ProjectsIndex = (function() {
       $.get(url, function(result) {
         $(editProjectModal).find('.modal-content').html(result.html);
         $(editProjectModal).modal('show');
+        $(editProjectModal).find('.selectpicker').selectpicker();
         $(editProjectModal).find('form')
           .on('ajax:success', function(ev, data) {
             $(editProjectModal).modal('hide');
@@ -694,8 +676,6 @@ var ProjectsIndex = (function() {
     initExportProjects();
     initDeleteFoldersToolbarButton();
     initArchiveRestoreToolbarButtons();
-    initViewProjectUsersLink();
-    initManageProjectUsersLink();
     initAddUserForm();
     initRemoveUserLinks();
     initUserRoleForms();

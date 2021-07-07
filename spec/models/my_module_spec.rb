@@ -106,4 +106,14 @@ describe MyModule, type: :model do
       it { is_expected.to validate_presence_of :experiment }
     end
   end
+
+  describe 'after_create_commit' do
+    it 'triggers the UserAssignments::GenerateUserAssignmentsJob job' do
+      my_module.created_by = create(:user)
+      expect(UserAssignments::GenerateUserAssignmentsJob).to receive(:perform_later).with(
+        my_module, my_module.created_by
+      )
+      my_module.save!
+    end
+  end
 end

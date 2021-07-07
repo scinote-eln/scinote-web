@@ -21,6 +21,7 @@ module Experiments
         @exp.project = @project
 
         @exp.my_modules.each do |my_module|
+          sync_user_assignments(my_module)
           new_tags = []
           my_module.tags.each do |tag|
             new_tag = @project.tags.where.not(id: new_tags).find_by(name: tag.name, color: tag.color)
@@ -33,6 +34,7 @@ module Experiments
         end
 
         @exp.save!
+        sync_user_assignments(@exp)
       rescue
         @errors.merge!(@exp.errors.to_hash) unless @exp.valid?
         raise ActiveRecord::Rollback
@@ -67,6 +69,13 @@ module Experiments
       else
         true
       end
+    end
+
+    def sync_user_assignments(object)
+      # remove user assignments where the user are not present on the project
+      object.user_assignments.destroy_all
+
+      UserAssignments::GenerateUserAssignmentsJob.perform_later(object, @user)
     end
 
     def track_activity

@@ -10,7 +10,8 @@ Canaid::Permissions.register_for(MyModule) do
      create_comments_in_module
      create_my_module_repository_snapshot
      manage_my_module_repository_snapshots
-     change_my_module_flow_status)
+     change_my_module_flow_status
+     manage_module_access)
     .each do |perm|
     can perm do |_, my_module|
       my_module.active? &&
@@ -31,6 +32,11 @@ Canaid::Permissions.register_for(MyModule) do
     my_module.permission_granted?(user, MyModulePermissions::ARCHIVE)
   end
 
+  # module: manage access policies
+  can :manage_module_access do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::MANAGE_ACCESS)
+  end
+
   # NOTE: Must not be dependent on canaid parmision for which we check if it's
   # active
   # module: restore
@@ -41,6 +47,11 @@ Canaid::Permissions.register_for(MyModule) do
   # module: move
   can :move_module do |user, my_module|
     my_module.permission_granted?(user, MyModulePermissions::MOVE)
+  end
+
+  # module: read
+  can :read_module do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::READ)
   end
 
   # module: assign/reassign/unassign users

@@ -13,7 +13,12 @@ RSpec.describe 'Api::V1::ChecklistsController', type: :request do
     @step = create(:step, protocol: @protocol)
     @checklist = create(:checklist, step: @step)
     create(:user_team, user: @user, team: @team)
-    create(:user_project, :normal_user, user: @user, project: @project)
+    create(:user_project, user: @user, project: @project)
+    create :user_assignment,
+           assignable: @project,
+           user: @user,
+           user_role: create(:owner_role),
+           assigned_by: @user
 
     @valid_headers = {
       'Authorization': 'Bearer ' + generate_token(@user.id),

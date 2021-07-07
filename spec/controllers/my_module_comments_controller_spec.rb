@@ -10,7 +10,15 @@ describe MyModuleCommentsController, type: :controller do
   let!(:user_team) { create :user_team, :admin, user: user, team: team }
   let(:project) { create :project, team: team, created_by: user }
   let!(:user_project) do
-    create :user_project, :normal_user, user: user, project: project
+    create :user_project, user: user, project: project
+  end
+  let(:normal_user_role) { create :normal_user_role }
+  let!(:user_assignment) do
+    create :user_assignment,
+           assignable: project,
+           user: user,
+           user_role: normal_user_role,
+           assigned_by: user
   end
   let(:experiment) { create :experiment, project: project }
   let(:my_module) { create :my_module, experiment: experiment }

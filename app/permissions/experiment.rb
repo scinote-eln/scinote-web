@@ -3,7 +3,8 @@ Canaid::Permissions.register_for(Experiment) do
   %i(manage_experiment
      archive_experiment
      clone_experiment
-     move_experiment)
+     move_experiment
+     manage_experiment_access)
     .each do |perm|
     can perm do |_, experiment|
       experiment.active? &&
@@ -35,6 +36,11 @@ Canaid::Permissions.register_for(Experiment) do
           true
         end
       end
+  end
+
+  # experiment: manage access policies
+  can :manage_experiment_access do |user, experiment|
+    experiment.permission_granted?(user, ExperimentPermissions::MANAGE_ACCESS)
   end
 
   # experiment: archive

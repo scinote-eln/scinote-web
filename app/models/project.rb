@@ -15,6 +15,8 @@ class Project < ApplicationRecord
   validates :visibility, presence: true
   validates :team, presence: true
   validate :project_folder_team, if: -> { project_folder.present? }
+  validate :selected_user_role_validation, if: :bulk_assignment?
+
   before_validation :remove_project_folder, on: :update, if: :archived_changed?
 
   belongs_to :created_by,
@@ -33,6 +35,10 @@ class Project < ApplicationRecord
              foreign_key: 'restored_by_id',
              class_name: 'User',
              optional: true
+  belongs_to :group_user_role,
+             foreign_key: 'group_user_role_id',
+             class_name: 'UserRole',
+             optional: true
   belongs_to :team, inverse_of: :projects, touch: true
   belongs_to :project_folder, inverse_of: :projects, optional: true, touch: true
   has_many :user_projects, inverse_of: :project
@@ -49,23 +55,31 @@ class Project < ApplicationRecord
 
   default_scope { includes(user_assignments: :user_role) }
 
+  accepts_nested_attributes_for :user_assignments,
+                                allow_destroy: true,
+                                reject_if: :all_blank
+
   scope :visible_to, (lambda do |user, team|
                         unless user.is_admin_of_team?(team)
-                          left_outer_joins(:user_projects)
-                          .where('visibility = 1 OR user_projects.user_id = :id', id: user.id)
+                          left_outer_joins(:user_assignments)
+                          .where('visibility = 1 OR user_assignments.user_id = :id', id: user.id)
                           .group(:id)
                         end
                       end)
 
   scope :templates, -> { where(template: true) }
 
+  after_create :assign_project_ownership
+  after_create :auto_assign_project_members, if: :visible?
+  before_update :sync_project_assignments, if: :visibility_changed?
+
   def self.visible_from_user_by_name(user, team, name)
     projects = where(team: team).distinct
     if user.is_admin_of_team?(team)
       projects.where('projects.archived IS FALSE AND projects.name ILIKE ?', "%#{name}%")
     else
-      projects.joins(:user_projects)
-              .where('user_projects.user_id = ? OR projects.visibility = 1', user.id)
+      projects.joins(:user_assignments)
+              .where('user_assignments.user_id = ? OR projects.visibility = 1', user.id)
               .where('projects.archived IS FALSE AND projects.name ILIKE ?',
                      "%#{name}%")
     end
@@ -84,12 +98,12 @@ class Project < ApplicationRecord
       new_query =
         Project
         .distinct
-        .joins(:user_projects)
+        .joins(:user_assignments)
         .where('projects.team_id = ?', current_team.id)
       unless user.user_teams.find_by(team: current_team).try(:admin?)
         # Admins see all projects in the team
         new_query = new_query.where(
-          'projects.visibility = 1 OR user_projects.user_id = ?',
+          'projects.visibility = 1 OR user_assignments.user_id = ?',
           user.id
         )
       end
@@ -109,10 +123,10 @@ class Project < ApplicationRecord
       if include_archived
         new_query =
           new_query
-          .joins(:user_projects)
+          .joins(:user_assignments)
           .where(
             'user_teams.role = 2 OR projects.visibility = 1 OR ' \
-            'user_projects.user_id = ?',
+            'user_assignments.user_id = ?',
             user.id
           )
           .where_attributes_like('projects.name', query, options)
@@ -120,10 +134,10 @@ class Project < ApplicationRecord
       else
         new_query =
           new_query
-          .joins(:user_projects)
+          .joins(:user_assignments)
           .where(
             'user_teams.role = 2 OR projects.visibility = 1 OR ' \
-            'user_projects.user_id = ?',
+            'user_assignments.user_id = ?',
             user.id
           )
           .where_attributes_like('projects.name', query, options)
@@ -147,11 +161,12 @@ class Project < ApplicationRecord
     # If project is visible everyone from the team can view it
     Project.where(team: teams)
            .left_outer_joins(team: :user_teams)
-           .left_outer_joins(:user_projects)
+           .left_outer_joins(user_assignments: :user_role)
            .where('projects.visibility = 1 OR '\
-                  'user_projects.user_id = :user_id OR '\
+                  'user_assignments.user_id = :user_id OR '\
                   '(user_teams.user_id = :user_id AND user_teams.role = 2)',
                   user_id: user.id)
+           .where('user_roles.permissions @> ARRAY[?]::varchar[]', %w[project_read])
            .distinct
   end
 
@@ -203,7 +218,7 @@ class Project < ApplicationRecord
   end
 
   def user_role(user)
-    user_projects.find_by_user_id(user)&.role
+    user_assignments.find_by_user_id(user)&.user_role.name
   end
 
   def sorted_experiments(sort_by = :new, archived = false)
@@ -361,5 +376,38 @@ class Project < ApplicationRecord
 
   def remove_project_folder
     self.project_folder = nil
+  end
+
+  def assign_project_ownership
+    UserAssignment.create(
+      user: created_by,
+      assignable: self,
+      assigned: :manually, # we set this to manually since was the user action to create the project
+      user_role: UserRole.find_by(name: 'Owner')
+    )
+  end
+
+  def auto_assign_project_members
+    UserAssignments::GroupAssignmentJob.perform_now(
+      team,
+      self,
+      created_by
+    )
+  end
+
+  def bulk_assignment?
+    visible? && group_user_role.present?
+  end
+
+  def selected_user_role_validation
+    errors.add(:group_user_role_id, :inclusion) unless group_user_role.in?(UserRole.all)
+  end
+
+  def sync_project_assignments
+    if visible?
+      auto_assign_project_members
+    else
+      UserAssignments::GroupUnAssignmentJob.perform_now(self)
+    end
   end
 end
