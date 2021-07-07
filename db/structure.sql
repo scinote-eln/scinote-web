@@ -1261,6 +1261,40 @@ ALTER SEQUENCE public.report_elements_id_seq OWNED BY public.report_elements.id;
 
 
 --
+-- Name: report_template_values; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.report_template_values (
+    id bigint NOT NULL,
+    report_id bigint NOT NULL,
+    view_component character varying NOT NULL,
+    name character varying NOT NULL,
+    value jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: report_template_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.report_template_values_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: report_template_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.report_template_values_id_seq OWNED BY public.report_template_values.id;
+
+
+--
 -- Name: reports; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1273,7 +1307,10 @@ CREATE TABLE public.reports (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     last_modified_by_id bigint,
-    team_id bigint
+    team_id bigint,
+    pdf_file_status integer DEFAULT 0,
+    docx_file_status integer DEFAULT 0,
+    settings jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -3143,6 +3180,13 @@ ALTER TABLE ONLY public.report_elements ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
+-- Name: report_template_values id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.report_template_values ALTER COLUMN id SET DEFAULT nextval('public.report_template_values_id_seq'::regclass);
+
+
+--
 -- Name: reports id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3732,6 +3776,14 @@ ALTER TABLE ONLY public.protocols
 
 ALTER TABLE ONLY public.report_elements
     ADD CONSTRAINT report_elements_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: report_template_values report_template_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.report_template_values
+    ADD CONSTRAINT report_template_values_pkey PRIMARY KEY (id);
 
 
 --
@@ -4400,6 +4452,20 @@ CREATE INDEX index_experiments_on_created_by_id ON public.experiments USING btre
 
 
 --
+-- Name: index_experiments_on_description; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_experiments_on_description ON public.experiments USING gin (public.trim_html_tags(description) public.gin_trgm_ops);
+
+
+--
+-- Name: index_experiments_on_experiment_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_experiments_on_experiment_code ON public.experiments USING gin ((('EX'::text || id)) public.gin_trgm_ops);
+
+
+--
 -- Name: index_experiments_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4410,7 +4476,7 @@ CREATE INDEX index_experiments_on_last_modified_by_id ON public.experiments USIN
 -- Name: index_experiments_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_experiments_on_name ON public.experiments USING btree (name);
+CREATE INDEX index_experiments_on_name ON public.experiments USING gin (public.trim_html_tags((name)::text) public.gin_trgm_ops);
 
 
 --
@@ -4915,6 +4981,20 @@ CREATE INDEX index_report_elements_on_step_id ON public.report_elements USING bt
 --
 
 CREATE INDEX index_report_elements_on_table_id ON public.report_elements USING btree (table_id);
+
+
+--
+-- Name: index_report_template_values_on_report_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_report_template_values_on_report_id ON public.report_template_values USING btree (report_id);
+
+
+--
+-- Name: index_report_template_values_on_view_component_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_report_template_values_on_view_component_name ON public.report_template_values USING btree (view_component, name);
 
 
 --
@@ -6148,6 +6228,14 @@ ALTER TABLE ONLY public.repository_number_values
 
 
 --
+-- Name: report_template_values fk_rails_423a0bad87; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.report_template_values
+    ADD CONSTRAINT fk_rails_423a0bad87 FOREIGN KEY (report_id) REFERENCES public.reports(id);
+
+
+--
 -- Name: my_modules fk_rails_4768515e2e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7358,8 +7446,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210202214508'),
 ('20210217114042'),
 ('20210222123823'),
+('20210312185911'),
+('20210325152257'),
+('20210407143303'),
 ('20210410100006'),
+('20210506125657'),
 ('20210612070220'),
+('20210622101238'),
 ('20210627095718');
-
-

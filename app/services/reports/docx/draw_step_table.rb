@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
 module Reports::Docx::DrawStepTable
-  def draw_step_table(subject, step)
-    table = step.tables.find_by(id: subject['id']['table_id'])
-    return unless table
-
+  def draw_step_table(table)
     color = @color
     timestamp = table.created_at
     @docx.p

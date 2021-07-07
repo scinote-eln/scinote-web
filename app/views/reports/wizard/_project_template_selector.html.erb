@@ -1,0 +1,33 @@
+<h1><%= t('projects.reports.wizard.first_step.select_project_title') %></h1>
+<p class="description">
+  <%= t('projects.reports.wizard.first_step.select_project_description') %>
+</p>
+<div class="row">
+  <div class="col-md-6">
+    <div class='project-selector'>
+      <%= label_tag :projectSelector, t('projects.reports.wizard.first_step.select_project') %>
+      <%= select_tag :projectSelector,
+                     options_from_collection_for_select(@visible_projects, :id, :name, report.project_id),
+                     prompt: t('projects.reports.wizard.first_step.select_project') %>
+    </div>
+
+    <div class='template-selector'>
+      <%= label_tag :templateSelector, t('projects.reports.wizard.first_step.select_template') %>
+      <%= select_tag :templateSelector,
+                     options_for_select(@templates.invert, @active_template),
+                     prompt: t('projects.reports.wizard.first_step.select_template'),
+                     data: {
+                       disable_on_load: report.settings[:template].blank? && report.new_record?,
+                       placeholder: t('projects.reports.wizard.first_step.select_template'),
+                       selected_template: report.settings[:template],
+                       values_editor_path: reports_new_template_values_path(report_id: report.id)
+                     } %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="sci-input-container">
+      <%= label_tag :projectDescription, t('projects.reports.wizard.first_step.report_description') %>
+      <%= text_area_tag :projectDescription, report.description, placeholder: t('projects.reports.wizard.first_step.report_description_placeholder'), class: 'sci-input-field' %>
+    </div>
+  </div>
+</div>

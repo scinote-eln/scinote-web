@@ -16,7 +16,8 @@ class Extends
   NOTIFICATIONS_TYPES = { assignment: 0,
                           recent_changes: 1,
                           system_message: 2, # DEPRECATED
-                          deliver: 5 }
+                          deliver: 5,
+                          deliver_error: 7 }
 
   TASKS_STATES = { uncompleted: 0,
                    completed: 1 }
@@ -41,83 +42,7 @@ class Extends
                            my_module_repository: 17,
                            my_module_protocol: 18 }
 
-  EXPORT_ALL_PROJECT_ELEMENTS = [
-    {
-      type_of: 'project_header',
-      id_key: 'project_id'
-    },
-    {
-      type_of: 'experiment',
-      id_key: 'experiment_id',
-      relation: %w(experiments),
-      children: [
-        {
-          type_of: 'my_module',
-          id_key: 'my_module_id',
-          relation: %w(my_modules),
-          children: [
-            {
-              type_of: 'my_module_protocol',
-              id_key: 'my_module_id'
-            },
-            {
-              type_of: 'step',
-              relation: %w(protocol steps),
-              id_key: 'step_id',
-              children: [
-                {
-                  type_of: 'step_asset',
-                  relation: %w(assets),
-                  id_key: 'asset_id'
-                },
-                {
-                  type_of: 'step_table',
-                  relation: %w(tables),
-                  id_key: 'table_id'
-                },
-                {
-                  type_of: 'step_checklist',
-                  relation: %w(checklists),
-                  id_key: 'checklist_id'
-                },
-                {
-                  type_of: 'step_comments',
-                  id_key: 'step_id',
-                  sort_order: 'asc'
-                }
-              ]
-            },
-            {
-              type_of_lambda: lambda { |result|
-                (result.result_asset ||
-                 result.result_table ||
-                 result.result_text).class.to_s.underscore
-              },
-              relation: %w(results),
-              id_key: 'result_id',
-              children: [{
-                type_of: 'result_comments',
-                id_key: 'result_id',
-                sort_order: 'asc'
-              }]
-            },
-            {
-              type_of: 'my_module_activity',
-              id_key: 'my_module_id',
-              sort_order: 'asc'
-            },
-            {
-              type_of: 'my_module_repository',
-              relation: %w(experiment project assigned_repositories_and_snapshots),
-              id_key: 'repository_id',
-              parent_id_key: 'my_module_id',
-              sort_order: 'asc'
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  ACTIVE_REPORT_ELEMENTS = %i(project_header my_module experiment my_module_repository)
 
   # Data type name should match corresponding model's name
   REPOSITORY_DATA_TYPES = { RepositoryTextValue: 0,
@@ -142,16 +67,25 @@ class Extends
   REPOSITORY_IMPORT_COLUMN_PRELOADS = %i(repository_list_items repository_status_items repository_checklist_items)
 
   # Extra attributes used for search in repositories, 'filed_name' => include_hash
-  REPOSITORY_EXTRA_SEARCH_ATTR = {'repository_text_values.data' => :repository_text_value,
-                                  'repository_number_values.data' => :repository_number_value,
-                                  'repository_list_items.data' => { repository_list_value: :repository_list_item },
-                                  'repository_checklist_items.data' =>
-                                    { repository_checklist_value:
-                                      { repository_checklist_items_values: :repository_checklist_item } },
-                                  'repository_status_items.status' =>
-                                    { repository_status_value: :repository_status_item },
-                                  'active_storage_blobs.filename' =>
-                                    { repository_asset_value: { asset: { file_attachment: :blob } } } }
+  REPOSITORY_EXTRA_SEARCH_ATTR = {
+    RepositoryTextValue: {
+      field: 'repository_text_values.data', includes: :repository_text_value
+    }, RepositoryNumberValue: {
+      field: 'repository_number_values.data', includes: :repository_number_value
+    }, RepositoryListValue: {
+      field: 'repository_list_items.data',
+      includes: { repository_list_value: :repository_list_item }
+    }, RepositoryChecklistValue: {
+      field: 'repository_checklist_items.data',
+      includes: { repository_checklist_value: { repository_checklist_items_values: :repository_checklist_item } }
+    }, RepositoryStatusValue: {
+      field: 'repository_status_items.status',
+      includes: { repository_status_value: :repository_status_item }
+    }, RepositoryAssetValue: {
+      field: 'active_storage_blobs.filename',
+      includes: { repository_asset_value: { asset: { file_attachment: :blob } } }
+    }
+  }
 
   # Array of includes used in search query for repository rows
   REPOSITORY_SEARCH_INCLUDES = [:repository_text_value,
@@ -382,6 +316,8 @@ class Extends
     move_project_folder: 160,
     rename_project_folder: 161,
     delete_project_folder: 162,
+    generate_pdf_report: 163,
+    generate_docx_report: 164,
     change_user_role_on_experiment: 165,
     change_user_role_on_my_module: 166
   }
@@ -394,7 +330,7 @@ class Extends
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137],
     task_inventory: [55, 56, 146, 147],
     experiment: [*27..31, 57],
-    reports: [48, 50, 49],
+    reports: [48, 50, 49, 163, 164],
     inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77, 78, 96, 107, 113, 114, *133..136],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131],
@@ -421,6 +357,8 @@ class Extends
     { name: 'In progress', color: '#0065ff', consequences: ['MyModuleStatusConsequences::Uncompletion'] },
     { name: 'Completed', color: '#00b900', consequences: ['MyModuleStatusConsequences::Completion'] }
   ]
+
+  REPORT_TEMPLATES = {}
 
   NOTIFIABLE_ACTIVITIES = %w(
     assign_user_to_project

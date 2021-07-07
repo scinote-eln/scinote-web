@@ -11,28 +11,32 @@ module ActiveStorage
     private
 
     def check_read_permissions
-      attachment = @blob.attachments.take
-      return render_404 if attachment.blank?
+      return render_404 if @blob.attachments.blank?
 
+      @blob.attachments.any? { |attachment| check_attachment_read_permissions(attachment) }
+    end
+
+    def check_attachment_read_permissions(attachment)
       case attachment.record_type
       when 'Asset'
-        check_asset_read_permissions
+        check_asset_read_permissions(attachment.record)
       when 'TinyMceAsset'
-        check_tinymce_asset_read_permissions
+        check_tinymce_asset_read_permissions(attachment.record)
       when 'Experiment'
-        check_experiment_read_permissions
+        check_experiment_read_permissions(attachment.record)
+      when 'Report'
+        check_report_read_permissions(attachment.record)
       when 'User'
         # No read restrictions for avatars
         true
       when 'ZipExport', 'TeamZipExport'
-        check_zip_export_read_permissions
+        check_zip_export_read_permissions(attachment.record)
       else
         render_403
       end
     end
 
-    def check_asset_read_permissions
-      asset = @blob.attachments.first.record
+    def check_asset_read_permissions(asset)
       return render_403 unless asset
 
       if asset.step
@@ -49,8 +53,7 @@ module ActiveStorage
       end
     end
 
-    def check_tinymce_asset_read_permissions
-      asset = @blob.attachments.first.record
+    def check_tinymce_asset_read_permissions(asset)
       return render_403 unless asset
       return true if asset.object.nil? && asset.team == current_team
 
@@ -70,12 +73,16 @@ module ActiveStorage
       end
     end
 
-    def check_experiment_read_permissions
-      render_403 && return unless can_read_experiment?(@blob.attachments.first.record)
+    def check_experiment_read_permissions(experiment)
+      render_403 && return unless can_read_experiment?(experiment)
     end
 
-    def check_zip_export_read_permissions
-      render_403 unless @blob.attachments.first.record.user == current_user
+    def check_report_read_permissions(report)
+      render_403 && return unless can_read_project?(report.project)
+    end
+
+    def check_zip_export_read_permissions(zip_export)
+      render_403 unless zip_export.user == current_user
     end
   end
 end

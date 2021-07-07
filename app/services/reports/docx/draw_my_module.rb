@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 module Reports::Docx::DrawMyModule
-  def draw_my_module(subject, experiment)
+  def draw_my_module(subject)
     color = @color
     link_style = @link_style
     scinote_url = @scinote_url
-    my_module = experiment.my_modules.find_by(id: subject['id']['my_module_id'])
+    my_module = subject.my_module
     tags = my_module.tags
-    return unless my_module
+    return unless can_read_experiment?(@user, my_module.experiment)
 
     @docx.h3 my_module.name, italic: false, size: Constants::REPORT_DOCX_MY_MODULE_TITLE_SIZE
     @docx.p do
@@ -72,9 +72,27 @@ module Reports::Docx::DrawMyModule
       @docx.p I18n.t('projects.reports.elements.module.no_description')
     end
 
-    @docx.p
-    subject['children'].each do |child|
-      public_send("draw_#{child['type_of']}", child, my_module)
+    draw_my_module_protocol(my_module) if @settings.dig('task', 'protocol', 'description')
+
+    filter_steps_for_report(my_module.protocol.steps, @settings).order(:position).each do |step|
+      draw_step(step)
     end
+
+    order_results_for_report(my_module.results, @settings.dig('task', 'result_order')).each do |result|
+      if result.is_asset && @settings.dig('task', 'file_results')
+        draw_result_asset(result)
+      elsif result.is_table && @settings.dig('task', 'table_results')
+        draw_result_table(result)
+      elsif result.is_text && @settings.dig('task', 'text_results')
+        draw_result_text(result)
+      end
+    end
+
+    @docx.p
+    subject.children.active.each do |child|
+      public_send("draw_#{child.type_of}", child)
+    end
+
+    draw_my_module_activity(my_module) if @settings.dig('task', 'activities')
   end
 end

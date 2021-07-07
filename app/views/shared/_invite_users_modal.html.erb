@@ -71,30 +71,41 @@ invite_to_team = type.in?(%w(invite_to_team invite_to_team_with_role))
             <% end %>
           </p>
 
-          <select class="emails-input" multiple data-role="tags-input" name="emails[]">
-          </select>
-          <br />
-          <em><%= t('invite_users.input_subtitle') %></em>
+          <div class="user-selector">
+            <select class="emails-input" multiple data-role="tags-input" name="emails[]">
+            </select>
+            <h4><%= t('invite_users.input_subtitle') %></h4>
+          </div>
 
           <% if current_user && type.in?(['invite_with_team_selector', 'invite_with_team_selector_and_role']) %>
             <% # Only allow inviting to teams where user is admin %>
-            <% teams = current_user.teams
-                                   .joins(:user_teams)
-                                   .where('user_teams.role': UserTeam.roles[:admin])
-                                   .select { |team|  can_invite_team_users?(team) } %>
-            <% if teams.any? %>
-              <div class="team-selector">
-                <div class="heading">
-                  <input type="checkbox" data-role="team-selector-checkbox" />
-                  <span><%= t('invite_users.invite_to_team_heading') %></span>
+            <div class="team-selector">
+              <h4 class="heading">
+                <span><%= t('invite_users.select_team') %></span>
+              </h4>
+              <div class="team-selector filter-block small-left">
+                <div class="select-container select-container--with-search select-container--with-blank">
+                  <select class="teams-input" name="teams[]"
+                    data-placeholder = "<%= t('invite_users.select_team_blank') %>"
+                    data-blank = "<%= t('invite_users.select_team_blank') %>"
+                    data-select-all = "false"
+                    data-toggle-target = "#role-select-container"
+                    data-ajax-url = "<%= invitable_teams_path %>"
+                  ></select>
                 </div>
-                <%= select_tag('team-select',
-                               options_for_select(teams.pluck(:name, :id)),
-                               { class: 'form-control selectpicker',
-                                 'data-role' => 'team-selector-dropdown',
-                                 disabled: 'disabled' }) %>
+
+                <div id="role-select-container" class="hidden">
+                  <h4 class="heading">
+                    <span><%= t('invite_users.select_team_role') %></span>
+                  </h4>
+                  <%= select_tag "role",
+                    options_for_select(UserTeam.roles.keys
+                      .map { |k| [k.humanize + (k == 'normal_user' ? " (#{t('invite_users.default')})" : ''), k] }, 'normal_user'),
+                    disabled: true, class: "role-input from-control form-select"
+                  %>
+                </div>
               </div>
-            <% end %>
+            </div>
           <% end %>
           <% if ENV['ENABLE_RECAPTCHA'] == 'true' %>
             <div id="recaptcha-service" class="g-recaptcha"

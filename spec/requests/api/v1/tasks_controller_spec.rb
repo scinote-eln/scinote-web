@@ -20,10 +20,9 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
       last_modified_by: @user, project: @valid_project)
     @unaccessible_experiment = create(:experiment, created_by: @user,
       last_modified_by: @user, project: @unaccessible_project)
-
-    create_list(:my_module, 3, created_by: @user,
+    create_list(:my_module, 3, :with_due_date, created_by: @user,
                 last_modified_by: @user, experiment: @valid_experiment)
-    create_list(:my_module, 3, created_by: @user,
+    create_list(:my_module, 3, :with_due_date, created_by: @user,
                 last_modified_by: @user, experiment: @unaccessible_experiment)
 
     @valid_headers =
@@ -40,10 +39,11 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(@valid_experiment.my_modules,
-               each_serializer: Api::V1::TaskSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@valid_experiment.my_modules, each_serializer: Api::V1::TaskSerializer)
+            .to_json
+        )['data']
       )
     end
 
@@ -95,10 +95,11 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(@valid_experiment.my_modules.first,
-               serializer: Api::V1::TaskSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@valid_experiment.my_modules.first, serializer: Api::V1::TaskSerializer)
+            .to_json
+        )['data']
       )
     end
 

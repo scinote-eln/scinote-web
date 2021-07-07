@@ -8,6 +8,7 @@
     data-select-by-group // Add groups to dropdown
     data-disable-placeholder // Placeholder for disabled fields
     data-placeholder // Search placeholder
+    data-select-hint // A hint on top of a dropdown
     data-disable-on-load // Disable input after initialization
     data-select-all-button // Text for select all button
     data-combine-tags // Combine multiple tags to one (in simple mode gives you multiple select)
@@ -99,7 +100,7 @@ var dropdownSelector = (function() {
 
   // Save data to the field
   function updateCurrentData(container, data) {
-    container.find('.data-field').val(JSON.stringify(data));
+    container.find('.data-field').val(JSON.stringify(data)).change();
   }
 
   // Search filter for non-ajax data
@@ -145,7 +146,9 @@ var dropdownSelector = (function() {
   function disableEnableDropdown(selector, container, mode) {
     var searchFieldValue = container.find('.search-field');
     if (mode) {
-      updateCurrentData(container, []);
+      if ($(selector).data('ajax-url')) {
+        updateCurrentData(container, []);
+      }
       updateTags(selector, container, { skipChange: true });
       searchFieldValue.attr('placeholder', selector.data('disable-placeholder') || '');
       container.addClass('disabled').removeClass('open')
@@ -169,6 +172,10 @@ var dropdownSelector = (function() {
       group: option.dataset.group || '',
       params: JSON.parse(option.dataset.params || '{}')
     };
+  }
+
+  function noOptionsForSelect(selector) {
+    return !$(selector).data('ajax-url') && $(selector).find('.dropdown-option').length == 0;
   }
 
   // Ajax intial values, we will use default options //
@@ -198,12 +205,12 @@ var dropdownSelector = (function() {
   }
 
   // Prepare custom dropdown icon
-  function prepareCustomDropdownIcon(config) {
+  function prepareCustomDropdownIcon(selector, config) {
+    if (config.inputTagMode && noOptionsForSelect(selector)) {
+      return '';
+    }
     if (config.customDropdownIcon) {
       return config.customDropdownIcon();
-    }
-    if (config.inputTagMode) {
-      return '';
     }
     return '<i class="fas fa-caret-down right-icon"></i><i class="fas fa-search right-icon"></i>';
   }
@@ -286,6 +293,7 @@ var dropdownSelector = (function() {
     var optionContainer;
     var perfectScroll;
     var dropdownContainer;
+    var toggleElement;
 
     if (selectElement.length === 0) return;
 
@@ -303,11 +311,35 @@ var dropdownSelector = (function() {
       <div class="dropdown-container"></div>
       <div class="input-field">
         <input type="text" class="search-field" data-options-selected=0 placeholder="${selectElement.data('placeholder') || ''}"></input>
-        ${prepareCustomDropdownIcon(config)}
+        ${prepareCustomDropdownIcon(selector, config)}
       </div>
       <input type="hidden" class="data-field" value="[]">
 
     `).appendTo(dropdownContainer);
+
+    // Blank option
+    if (selectElement.data('blank')) {
+      $(`<div class="dropdown-blank btn">${selectElement.data('blank')}</div>`)
+        .appendTo(dropdownContainer.find('.dropdown-container'))
+        .click(() => {
+          dropdownContainer.find('.dropdown-group, .dropdown-option').removeClass('select');
+          saveData(selectElement, dropdownContainer);
+          dropdownContainer.removeClass('open');
+        });
+    }
+
+    if (selectElement.data('toggle-target')) {
+      dropdownContainer.find('.data-field').on('change', function() {
+        toggleElement = $(selectElement.data('toggle-target'));
+        if (getCurrentData(dropdownContainer).length > 0) {
+          toggleElement.removeClass('hidden');
+          toggleElement.find('input, select').removeAttr('disabled');
+        } else {
+          toggleElement.addClass('hidden');
+          toggleElement.find('input, select').attr('disabled', true);
+        }
+      });
+    }
 
     // If we setup Select All we draw it and add correspond logic
     if (selectElement.data('select-all-button')) {
@@ -376,8 +408,8 @@ var dropdownSelector = (function() {
       dropdownContainer.addClass('active');
       $('.dropdown-selector-container:not(.active)').removeClass('open');
 
-      // If dropdown disabled or we use it in tag mode we not open it
-      if (dropdownContainer.hasClass('disabled') || config.inputTagMode) return;
+      // If dropdown disabled or we use it in only tag mode we not open it
+      if (dropdownContainer.hasClass('disabled') || (config.inputTagMode && noOptionsForSelect(selector))) return;
 
       // Each time we open option contianer we must scroll it
       optionContainer.scrollTo(0);
@@ -519,10 +551,15 @@ var dropdownSelector = (function() {
     }
 
     // Remove placeholder from option container
-    container.find('.dropdown-group, .dropdown-option, .empty-dropdown, .delimiter').remove();
+    container.find('.dropdown-group, .dropdown-option, .empty-dropdown, .dropdown-hint, .delimiter').remove();
     if (!data) return;
 
     if (data.length > 0 && !(data.length === 1 && data[0].value === '')) {
+      if (selector.data('select-hint')) {
+        $(`<div class="dropdown-hint">${selector.data('select-hint')}</div>`)
+          .appendTo(container.find('.dropdown-container'));
+      }
+
       // If we use select-by-group option we need first draw groups
       if (selector.data('select-by-group')) {
         $.each(data, function(gi, group) {

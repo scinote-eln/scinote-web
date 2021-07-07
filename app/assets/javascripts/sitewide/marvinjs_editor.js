@@ -61,7 +61,8 @@ var MarvinJsEditorApi = (function() {
       implicitHydrogen: 'TERMINAL_AND_HETERO',
       displayMode: 'WIREFRAME',
       width: 900,
-      height: 900
+      height: 900,
+      'background-color': '#ffffff'
     };
     if (typeof (marvinJsRemoteEditor) === 'undefined') {
       setTimeout(() => { remoteImage(childFuction, source, options); }, 100);

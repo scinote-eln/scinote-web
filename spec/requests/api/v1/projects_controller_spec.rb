@@ -38,10 +38,11 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
           headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(@teams.first.projects,
-               each_serializer: Api::V1::ProjectSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@teams.first.projects, each_serializer: Api::V1::ProjectSerializer)
+            .to_json
+        )['data']
       )
     end
 
@@ -71,10 +72,11 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
           headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(@teams.first.projects.first,
-               serializer: Api::V1::ProjectSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@teams.first.projects.first, serializer: Api::V1::ProjectSerializer)
+            .to_json
+        )['data']
       )
     end
 

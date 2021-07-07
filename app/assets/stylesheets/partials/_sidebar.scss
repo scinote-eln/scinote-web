@@ -112,6 +112,15 @@
     display: flex;
     flex-wrap: wrap;
 
+    .fa-map-marker-alt {
+      color: $color-alto;
+    }
+
+    &:hover .fa-map-marker-alt,
+    .fa-map-marker-alt.module-hover {
+      color: $color-concrete;
+    }
+
     .toggle-branch {
       cursor: pointer;
       display: inline-block;
@@ -124,6 +133,7 @@
 
       &:hover ~ .sidebar-link:not(.selected) {
         background: $color-alto;
+
       }
 
       &.collapsed ~ .sidebar-branch {
@@ -152,6 +162,7 @@
       &.selected {
         background: $color-white;
         color: $brand-primary;
+        font-weight: bold;
         pointer-events: none;
       }
 

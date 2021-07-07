@@ -3,7 +3,11 @@
 module Api
   module V1
     class RepositoryDateValueSerializer < ActiveModel::Serializer
-      attribute :formatted, key: :date
+      attribute :date
+
+      def date
+        object.data.to_date
+      end
     end
   end
 end

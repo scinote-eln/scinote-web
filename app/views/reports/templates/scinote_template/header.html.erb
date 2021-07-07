@@ -1,0 +1,29 @@
+<style>
+ .print-header {
+    line-height: 50px;
+  }
+
+  .logo-img {
+    display: inline-block;
+    margin: 0 0 0 30px;
+  }
+
+  img {
+    width: 100px;
+  }
+
+  .page-numbers {
+    display: inline-block;
+    float: right;
+    margin: 0 30px 0 0;
+    white-space: nowrap;
+  }
+</style>
+<div class="print-header">
+  <div class="logo-img">
+    <%= wicked_pdf_image_tag logo %>
+  </div>
+  <div class="page-numbers pagination" data-page-offset="0">
+    Page <span class="page"></span> of <span class="topage"></span>
+  </div>
+</div>

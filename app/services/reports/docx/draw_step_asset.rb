@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
 module Reports::Docx::DrawStepAsset
-  def draw_step_asset(subject, step)
-    asset = step.assets.find_by(id: subject['id']['asset_id'])
-    return unless asset
-
+  def draw_step_asset(asset)
     timestamp = asset.created_at
     asset_url = Rails.application.routes.url_helpers.asset_download_url(asset)
     color = @color

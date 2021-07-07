@@ -165,4 +165,44 @@
       }
     }
   }
+
+  .modal-invite-users {
+    .user-selector {
+      .fa-search {
+        visibility: hidden;
+      }
+
+      .open {
+        .input-field {
+          border: 1px solid $brand-focus;
+          border-radius: $border-radius-small;
+
+          .fa-search {
+            color: $brand-focus;
+            visibility: visible;
+          }
+        }
+      }
+
+      .input-field {
+        padding: 3px 6px 3px 3px;
+      }
+    }
+
+    .users-dropdown-list {
+      border-top: 1px solid $color-gainsboro;
+
+      .item-avatar {
+        border-radius: 50%;
+        height: 20px;
+        margin: 0 .5em 0 0;
+        width: 20px;
+      }
+
+      .item-email {
+        color: $color-silver-chalice;
+        margin-left: auto;
+      }
+    }
+  }
 }

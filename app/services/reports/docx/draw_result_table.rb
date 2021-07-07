@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
 module Reports::Docx::DrawResultTable
-  def draw_result_table(subject, my_module)
-    result = my_module.results.find_by(id: subject['id']['result_id'])
-    return unless result
-
+  def draw_result_table(result)
     table = result.table
     timestamp = table.created_at
     color = @color
@@ -19,8 +16,7 @@ module Reports::Docx::DrawResultTable
                   timestamp: I18n.l(timestamp, format: :full), user: result.user.full_name), color: color[:gray]
     end
     @docx.table JSON.parse(table.contents_utf_8)['data'], border_size: Constants::REPORT_DOCX_TABLE_BORDER_SIZE
-    subject['children'].each do |child|
-      public_send("draw_#{child['type_of']}", child, result)
-    end
+
+    draw_result_comments(result) if @settings.dig('task', 'result_comments')
   end
 end

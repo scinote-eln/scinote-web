@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 class Experiment < ApplicationRecord
-  SEARCHABLE_ATTRIBUTES = %i(name description).freeze
+  SEARCHABLE_ATTRIBUTES = [:name, :description, "('EX' || id)"].freeze
 
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
   include PermissionCheckableModel
   include Assignable
+
+  before_save -> { report_elements.destroy_all }, if: -> { !new_record? && project_id_changed? }
 
   belongs_to :project, inverse_of: :experiments, touch: true
   belongs_to :created_by,
@@ -104,6 +106,10 @@ class Experiment < ApplicationRecord
     left_outer_joins(user_assignments: :user_role)
       .where(project: Project.viewable_by_user(user, teams))
       .where('user_roles.permissions @> ARRAY[?]::varchar[]', %w[experiment_read])
+  end
+
+  def code
+    "EX#{id}"
   end
 
   def archived_branch?

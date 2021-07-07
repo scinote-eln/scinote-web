@@ -9,7 +9,7 @@ module Api
       belongs_to :project_folder, serializer: ProjectFolderSerializer
 
       def start_date
-        I18n.l(object.created_at, format: :full)
+        object.created_at
       end
     end
   end
