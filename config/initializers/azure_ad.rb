@@ -35,38 +35,40 @@ Rails.application.configure do
     end
   end
 
-  # Checking additional configurations in ApplicationSettings JSON. Key and values should be strings there.
-  begin
-    if ApplicationSettings.instance.values['azure_ad_apps']&.is_a?(Array)
-      config.x.azure_ad_apps ||= HashWithIndifferentAccess.new
-      settings = ApplicationSettings.instance
+  Rails.application.reloader.to_prepare do
+    # Checking additional configurations in ApplicationSettings JSON. Key and values should be strings there.
+    begin
+      if ApplicationSettings.instance.values['azure_ad_apps']&.is_a?(Array)
+        config.x.azure_ad_apps ||= HashWithIndifferentAccess.new
+        settings = ApplicationSettings.instance
 
-      settings.values['azure_ad_apps'].each do |azure_ad_app|
-        app_config = {}
-        app_id = azure_ad_app['app_id']
-        Rails.logger.error('No app_id present for the entry in Azure app settings') && next unless app_id
+        settings.values['azure_ad_apps'].each do |azure_ad_app|
+          app_config = {}
+          app_id = azure_ad_app['app_id']
+          Rails.logger.error('No app_id present for the entry in Azure app settings') && next unless app_id
 
-        app_config[:iss] = azure_ad_app['iss']
-        Rails.logger.error("No iss for #{app_id} Azure app") && next unless app_config[:iss]
+          app_config[:iss] = azure_ad_app['iss']
+          Rails.logger.error("No iss for #{app_id} Azure app") && next unless app_config[:iss]
 
-        app_config[:conf_url] = azure_ad_app['conf_url']
-        Rails.logger.error("No conf_url for #{app_id} Azure app") && next unless app_config[:conf_url]
+          app_config[:conf_url] = azure_ad_app['conf_url']
+          Rails.logger.error("No conf_url for #{app_id} Azure app") && next unless app_config[:conf_url]
 
-        app_config[:provider] = azure_ad_app['provider_name']
-        Rails.logger.error("No provider_name for #{app_id} Azure app") && next unless app_config[:provider]
+          app_config[:provider] = azure_ad_app['provider_name']
+          Rails.logger.error("No provider_name for #{app_id} Azure app") && next unless app_config[:provider]
 
-        app_config[:enable_sign_in] = azure_ad_app['enable_sign_in'] == 'true'
+          app_config[:enable_sign_in] = azure_ad_app['enable_sign_in'] == 'true'
 
-        if app_config[:enable_sign_in]
-          app_config[:sign_in_label] = azure_ad_app['sign_in_label'] || 'Sign in with Azure AD'
-          app_config[:auto_link_on_sign_in] = azure_ad_app['auto_link_on_sign_in'] == 'true'
-          app_config[:sign_in_policy] = azure_ad_app['sign_in_policy'] if azure_ad_app['sign_in_policy']
+          if app_config[:enable_sign_in]
+            app_config[:sign_in_label] = azure_ad_app['sign_in_label'] || 'Sign in with Azure AD'
+            app_config[:auto_link_on_sign_in] = azure_ad_app['auto_link_on_sign_in'] == 'true'
+            app_config[:sign_in_policy] = azure_ad_app['sign_in_policy'] if azure_ad_app['sign_in_policy']
+          end
+
+          config.x.azure_ad_apps[app_id] = app_config
         end
-
-        config.x.azure_ad_apps[app_id] = app_config
       end
+    rescue ActiveRecord::ActiveRecordError, PG::ConnectionBad
+      Rails.logger.info('Not connected to database, skipping additional Azure AD configuration')
     end
-  rescue ActiveRecord::ActiveRecordError, PG::ConnectionBad
-    Rails.logger.info('Not connected to database, skipping additional Azure AD configuration')
   end
 end
