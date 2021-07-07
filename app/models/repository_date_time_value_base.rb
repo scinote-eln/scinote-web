@@ -13,7 +13,6 @@ class RepositoryDateTimeValueBase < ApplicationRecord
   validates :repository_cell, :data, :type, presence: true
 
   SORTABLE_COLUMN_NAME = 'repository_date_time_values.data'
-  SORTABLE_VALUE_INCLUDE = :repository_date_time_value_base
 
   def formatted(format)
     I18n.l(data, format: format)

@@ -11,8 +11,6 @@ class RepositoryNumberValue < ApplicationRecord
   validates :repository_cell, :data, presence: true
 
   SORTABLE_COLUMN_NAME = 'repository_number_values.data'
-  SORTABLE_VALUE_INCLUDE = :repository_number_value
-  PRELOAD_INCLUDE = :repository_number_value
 
   def formatted
     data.to_s
