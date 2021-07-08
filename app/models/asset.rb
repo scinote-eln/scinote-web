@@ -57,6 +57,8 @@ class Asset < ApplicationRecord
 
   attr_accessor :file_content, :file_info, :in_template
 
+  before_save :reset_file_processing, if: -> { file.new_record? }
+
   def self.search(
     user,
     include_archived,
@@ -494,5 +496,9 @@ class Asset < ApplicationRecord
         errors.add(:file, I18n.t('activerecord.errors.models.asset.attributes.file.too_big'))
       end
     end
+  end
+
+  def reset_file_processing
+    self.file_processing = false
   end
 end
