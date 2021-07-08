@@ -165,7 +165,10 @@ module Users
                           .joins(:user_teams)
                           .where('user_teams.role': UserTeam.roles[:admin])
                           .distinct
-                          .select { |team| can_invite_team_users?(team) }
+
+      teams = teams.where('name ILIKE ?', "%#{params[:query]}%") if params[:query].present?
+
+      teams.select { |team| can_invite_team_users?(team) }
 
       render json: teams.map { |t| { value: t.id, label: t.name } }.to_json
     end
