@@ -166,7 +166,7 @@ module Users
                           .where('user_teams.role': UserTeam.roles[:admin])
                           .distinct
 
-      teams = teams.where('name ILIKE ?', "%#{params[:query]}%") if params[:query].present?
+      teams = teams.where_attributes_like(:name, params[:query]) if params[:query].present?
 
       teams.select { |team| can_invite_team_users?(team) }
 
