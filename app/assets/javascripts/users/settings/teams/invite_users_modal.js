@@ -84,6 +84,10 @@
           inviteBtn.hide();
           inviteWithRoleDiv.show();
           break;
+        case 'invite_new_members':
+          inviteBtn.show();
+          inviteWithRoleDiv.hide();
+          break;
         default:
           break;
       }

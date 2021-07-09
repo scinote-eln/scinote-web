@@ -2209,6 +2209,11 @@ en:
     no_team:
       title: "Invite users to SciNote"
       heading: "Invite more people to start using SciNote."
+    new_members:
+        description: "Invite people to your organization to start using SciNote"
+        input_placeholder: "jsmith@someemail.com"
+        input_label: "New member emails"
+        input_subtitle: "You can enter one or more emails. To confirm each one press the ENTER key."
     input_subtitle: "You can enter one or more emails. To confirm each one press the ENTER key."
     invite_to_team_heading: "Invite users to my team:"
     invite_btn: "Invite members"
