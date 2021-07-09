@@ -36,7 +36,7 @@
       maxTags: modal.data('max-tags')
     });
 
-    emailTagsInput.on('change', function(e) {
+    emailTagsInput.on('change', function() {
       if (emailTagsInput.val()) {
         inviteBtn.removeAttr('disabled');
       } else {
