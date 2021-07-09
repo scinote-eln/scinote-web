@@ -1322,29 +1322,6 @@ body > .loading-overlay {
   .bootstrap-tagsinput {
     min-width: 450px;
     width: 100%;
-    border-color: $color-silver-chalice;
-
-    .tag {
-      color: $color-black;
-      font-size: 12px;
-      font-weight: normal;
-      line-height: 13px;
-      padding: 5px 8px;
-    }
-
-    [data-role="remove"] {
-      margin-left: 4px;
-    }
-
-    [data-role="remove"]::after {
-      content: "\f00d";
-      display: inline-block;
-      font-family: "Font Awesome 5 Free";
-      font-size: 12px;
-      font-weight: 900;
-      opacity: .7;
-      padding: 0 2px;
-    }
   }
 
   .results-container .alert {
@@ -1375,10 +1352,6 @@ body > .loading-overlay {
   h4 {
     font-size: 14px;
     margin-bottom: 5px;
-  }
-
-  .tag.label.label-info {
-    background-color: $color-concrete;
   }
 
   .select-container--with-blank {

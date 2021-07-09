@@ -26,23 +26,10 @@
     var teamSelectorDropdown = modal.find('[data-role=team-selector-dropdown]');
     var teamSelectorDropdown2 = $();
     var emailsInput = modal.find('.emails-input');
-    var emailTagsInput = modal.find('.email-tags-input');
     var teamsInput = modal.find('.teams-input');
     var roleInput = modal.find('.role-input');
     var recaptchaErrorMsgDiv = modal.find('#recaptcha-error-msg');
     var recaptchaErrorText = modal.find('#recaptcha-error-msg>span');
-
-    emailTagsInput.tagsinput({
-      maxTags: modal.data('max-tags')
-    });
-
-    emailTagsInput.on('change', function() {
-      if (emailTagsInput.val()) {
-        inviteBtn.removeAttr('disabled');
-      } else {
-        inviteBtn.attr('disabled', 'disabled');
-      }
-    });
 
     dropdownSelector.init(emailsInput, {
       delimiter: true,
@@ -132,7 +119,7 @@
       // Click action
       modal.find('[data-action=invite]').off('click').on('click', function() {
         var data = {
-          emails: dropdownSelector.getValues(emailsInput) || emailTagsInput.val(),
+          emails: dropdownSelector.getValues(emailsInput),
           team_ids: dropdownSelector.getValues(teamsInput),
           role: roleInput.val(),
           'g-recaptcha-response': $('#recaptcha-invite-modal').val()

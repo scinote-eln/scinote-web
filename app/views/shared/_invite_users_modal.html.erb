@@ -78,8 +78,9 @@ invite_with_team_selector = type.in?(%w(invite_new_members invite_with_team_sele
               <span><%= t('invite_users.new_members.input_label') %></span>
             </h4>
             <div class="emails-selector" >
-              <select class="email-tags-input" multiple data-role="tags-input" name="emails[]">
-              </select>
+              <div class="select-container">
+                <select name="emails[]" class="emails-input"></select>
+              </div>
               <p><small><%= t('invite_users.new_members.input_subtitle') %></small></p>
             </div>
           <% else %>
