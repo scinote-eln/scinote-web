@@ -360,60 +360,135 @@
     }).getContainer(myModuleTagsSelector).addClass('my-module-tags-container');
   }
 
+
   function initAssignedUsersSelector() {
-    var manageUsersModal = $('#manage-module-users-modal');
-    var manageUsersModalBody = manageUsersModal.find('.modal-body');
+    var myModuleUserSelector = '#module-assigned-users-selector';
 
-    // Initialize users editing modal remote loading
-    function initUsersEditLink() {
-      $('.task-details').on('ajax:success', '.manage-users-link', function(e, data) {
-        manageUsersModal.modal('show');
-        manageUsersModal.find('#manage-module-users-modal-module').text(data.my_module.name);
-        initUsersModalBody(data);
-      });
-    }
+    dropdownSelector.init(myModuleUserSelector, {
+      closeOnSelect: true,
+      tagClass: 'my-module-white-tags',
+      customDropdownIcon: () => {
+        return '';
+      },
+      optionLabel: (data) => {
+        return `<span class="global-avatar-container"><img src="${data.params.avatar_url}" alt="${data.label}"/></span>
+                ${data.label}`;
 
-    // Initialize ajax listeners and elements style on modal body.
-    // This function must be called when modal body is changed.
-    function initUsersModalBody(data) {
-      manageUsersModalBody.html(data.html);
-      manageUsersModalBody.find('.selectpicker').selectpicker();
-    }
+      },
+      onOpen: function() {
+        $('.select-container .edit-button-container').removeClass('hidden');
+      },
+      onClose: function() {
+        $('.select-container .edit-button-container').addClass('hidden');
+      },
+      onSelect: function() {
+        var selectElement = $(myModuleUserSelector);
+        var lastUser = selectElement.next().find('.ds-tags').last();
+        var lastUserId = lastUser.find('.tag-label').data('ds-tag-id');
+        var newUser;
 
-    // Initialize reloading manage user modal content after posting new user
-    manageUsersModalBody.on('ajax:success', '.add-user-form', function(e, data) {
-      initUsersModalBody(data);
-    });
-
-    // Initialize remove user from my_module links
-    manageUsersModalBody.on('ajax:success', '.remove-user-link', function(e, data) {
-      initUsersModalBody(data);
-    });
-
-    // Reload users HTML element when modal is closed
-    manageUsersModal.on('hide.bs.modal', function() {
-      var usersEl = $('.task-assigned-users');
-      // Load HTML to refresh users
-      $.ajax({
-        url: usersEl.attr('data-module-users-url'),
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-          $('.task-assigned-users').replaceWith(data.html);
-        },
-        error: function() {
-          // TODO
+        if (lastTagId > 0) {
+          newUser = { my_module_user: { user_id: lastUserId } };
+          $.post(selectElement.data('update-module-users-url'), newUser)
+            .fail(function(response) {
+              dropdownSelector.removeValue(myModuleUserSelector, lastUserId, '', true);
+              if (response.status === 403) {
+                HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+              }
+            });
+        } else {
+          newUser = {
+            tag: {
+              name: lastUser.find('.tag-label').html(),
+              project_id: selectElement.data('project-id'),
+              color: null
+            },
+            my_module_id: selectElement.data('module-id'),
+            simple_creation: true
+          };
+          $.post(selectElement.data('users-create-url'), newUser, function(result) {
+            debugger
+            dropdownSelector.removeValue(myModuleUserSelector, 0, '', true);
+            dropdownSelector.addValue(myModuleUserSelector, {
+              value: result.user.id,
+              label: result.user.name,
+              params: {
+                avatar_url: result.user.avatar_url
+              }
+            }, true);
+          }).fail(function() {
+            dropdownSelector.removeValue(myModuleUserSelector, lastUserId, '', true);
+          });
         }
-      });
-    });
-
-    // Remove users modal content when modal window is closed.
-    manageUsersModal.on('hidden.bs.modal', function() {
-      manageUsersModalBody.html('');
-    });
-
-    initUsersEditLink();
+      },
+      onUnSelect: (id) => {
+        $.destroy(`${$(myModuleUserSelector).data('data-update-module-users-url')}/${id}`)
+          .success(function() {
+            dropdownSelector.closeDropdown(myModuleUserSelector);
+          })
+          .fail(function(r) {
+            if (r.status === 403) {
+              HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+            }
+          });
+      }
+    }).getContainer(myModuleUserSelector).addClass('my-module-users-container');
   }
+
+  // function initAssignedUsersSelector() {
+  //   var manageUsersModal = $('#manage-module-users-modal');
+  //   var manageUsersModalBody = manageUsersModal.find('.modal-body');
+  //
+  //   // Initialize users editing modal remote loading
+  //   function initUsersEditLink() {
+  //     $('.task-details').on('ajax:success', '.manage-users-link', function(e, data) {
+  //       manageUsersModal.modal('show');
+  //       manageUsersModal.find('#manage-module-users-modal-module').text(data.my_module.name);
+  //       initUsersModalBody(data);
+  //     });
+  //   }
+  //
+  //   // Initialize ajax listeners and elements style on modal body.
+  //   // This function must be called when modal body is changed.
+  //   function initUsersModalBody(data) {
+  //     manageUsersModalBody.html(data.html);
+  //     manageUsersModalBody.find('.selectpicker').selectpicker();
+  //   }
+  //
+  //   // Initialize reloading manage user modal content after posting new user
+  //   manageUsersModalBody.on('ajax:success', '.add-user-form', function(e, data) {
+  //     initUsersModalBody(data);
+  //   });
+  //
+  //   // Initialize remove user from my_module links
+  //   manageUsersModalBody.on('ajax:success', '.remove-user-link', function(e, data) {
+  //     initUsersModalBody(data);
+  //   });
+  //
+  //   // Reload users HTML element when modal is closed
+  //   manageUsersModal.on('hide.bs.modal', function() {
+  //     var usersEl = $('.task-assigned-users');
+  //     // Load HTML to refresh users
+  //     $.ajax({
+  //       url: usersEl.attr('data-module-users-url'),
+  //       type: 'GET',
+  //       dataType: 'json',
+  //       success: function(data) {
+  //         $('.task-assigned-users').replaceWith(data.html);
+  //       },
+  //       error: function() {
+  //         // TODO
+  //       }
+  //     });
+  //   });
+  //
+  //   // Remove users modal content when modal window is closed.
+  //   manageUsersModal.on('hidden.bs.modal', function() {
+  //     manageUsersModalBody.html('');
+  //   });
+  //
+  //   initUsersEditLink();
+  // }
 
   initTaskCollapseState();
   applyTaskStatusChangeCallBack();

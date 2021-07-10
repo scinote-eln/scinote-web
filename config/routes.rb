@@ -366,6 +366,9 @@ Rails.application.routes.draw do
         collection do
           get :index_old
         end
+        member do
+          get :search
+        end
       end
 
       resource :status_flow, controller: :my_module_status_flow, only: :show

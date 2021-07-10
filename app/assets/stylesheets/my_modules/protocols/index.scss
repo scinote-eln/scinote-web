@@ -335,21 +335,21 @@
     }
   }
 
-  .task-assigned-users {
-    align-items: center;
-    border-radius: 17px;
-    display: flex;
-
-    &.empty {
-      border-radius: 4px;
-      padding: 0 4px;
-    }
-
-    &:hover {
-      background-color: $color-concrete;
-      text-decoration: none;
-    }
-  }
+  //.task-assigned-users {
+  //  align-items: center;
+  //  border-radius: 17px;
+  //  display: flex;
+  //
+  //  &.empty {
+  //    border-radius: 4px;
+  //    padding: 0 4px;
+  //  }
+  //
+  //  &:hover {
+  //    background-color: $color-concrete;
+  //    text-decoration: none;
+  //  }
+  //}
 
   .assign-new-user {
     background-color: $color-alto;

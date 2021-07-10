@@ -94,7 +94,31 @@ class UserMyModulesController < ApplicationController
     end
   end
 
+  def search
+    assigned_users = @my_module.user_my_modules.pluck(:user_id)
+    all_users = @my_module.experiment.project.users
+    users = all_users.where.not(id: assigned_users)
+                     .search(true, params[:query])
+                     .limit(6)
+
+    users = users.map do |user|
+      {
+        value: user.id,
+        label: sanitize_input(user.name),
+        params: { avatar_url: avatar_path(user, :icon_small) }
+      }
+    end
+
+    if params[:query].present? && tags.select { |users| users[:label] == params[:query] }.blank?
+      users << { value: 0, label: sanitize_input(params[:query]), params: { avatar_url: nil } }
+    end
+
+    render json: users
+  end
+
   private
+
+  include InputSanitizeHelper
 
   def load_vars
     @my_module = MyModule.find_by_id(params[:my_module_id])

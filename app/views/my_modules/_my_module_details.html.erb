@@ -25,7 +25,7 @@
     <span class="fas block-icon fa-users"></span>
     <span class="hidden-xs hidden-sm"><%= t('my_modules.details.assigned_users') %></span>
   </div>
-  <%= render partial: "user_my_modules/index" %>
+  <%= render partial: "user_my_modules/index", locals: { my_module: @my_module } %>
 </div>
 
 <div class="module-tags">
