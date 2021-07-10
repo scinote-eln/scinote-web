@@ -277,7 +277,8 @@
       margin-right: 4px;
     }
 
-    .select-container, .select-user-container {
+    .select-container,
+    .select-user-container {
       display: flex;
       flex-basis: 100px;
       flex-grow: 1;
@@ -340,8 +341,8 @@
     }
 
     img {
-      margin: 5px;
       display: inline;
+      margin: 5px;
       max-height: 20px;
       max-width: 20px;
     }

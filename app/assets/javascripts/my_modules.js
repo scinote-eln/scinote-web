@@ -377,11 +377,12 @@
       },
       optionLabel: (data) => {
         if (data.params.avatar_url) {
-          return `<span class="global-avatar-container" style="margin-top: 10px"><img src="${data.params.avatar_url}" alt="${data.label}"/></span>
-                <span style="margin-left: 10px">${data.label}</span>`;
-        } else {
-          return data.label
+          return `<span class="global-avatar-container" style="margin-top: 10px">
+                  <img src="${data.params.avatar_url}" alt="${data.label}"/></span>
+                  <span style="margin-left: 10px">${data.label}</span>`;
         }
+
+        return data.label;
       },
       onSelect: function() {
         var selectElement = $(myModuleUserSelector);
@@ -393,13 +394,13 @@
           newUser = {
             user_my_module: {
               user_id: lastUserId
-            },
+            }
           };
         } else {
           newUser = {
             user_my_module: {
               user_id: selectElement.val()
-            },
+            }
           };
         }
 
@@ -418,7 +419,7 @@
         });
       },
       onUnSelect: (id) => {
-        var umID = $(myModuleUserSelector).find(`option[value="${id}"]`).data('params').user_module_id
+        var umID = $(myModuleUserSelector).find(`option[value="${id}"]`).data('params').user_module_id;
 
         $.ajax({
           url: `${$(myModuleUserSelector).data('update-module-users-url')}/${umID}`,
@@ -431,7 +432,7 @@
               HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
             }
           }
-        })
+        });
       }
     }).getContainer(myModuleUserSelector).addClass('my-module-users-container');
   }
