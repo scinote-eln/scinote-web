@@ -20,16 +20,16 @@
   </div>
 </div>
 
-<div class="flex-block">
-  <div class="flex-block-label">
+<div class="module-tags">
+  <div class="tags-wrapper">
     <span class="fas block-icon fa-users"></span>
     <span class="hidden-xs hidden-sm"><%= t('my_modules.details.assigned_users') %></span>
+    <%= render partial: "user_my_modules/index", locals: { my_module: @my_module } %>
   </div>
-  <%= render partial: "user_my_modules/index", locals: { my_module: @my_module } %>
 </div>
 
 <div class="module-tags">
-  <div id="module-tags" data-module-tags-url="<%= my_module_my_module_tags_url(@my_module, format: :json) %>">
+  <div class="tags-wrapper" id="module-tags" data-module-tags-url="<%= my_module_my_module_tags_url(@my_module, format: :json) %>">
     <span class="fas block-icon fa-tags"></span>
     <span class="hidden-xs hidden-sm tags-title"><%=t "my_modules.details.tags" %></span>
     <%= render partial: "my_modules/tags", locals: { my_module: @my_module, editable: my_module_editable } %>

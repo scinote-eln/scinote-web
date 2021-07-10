@@ -51,14 +51,20 @@ class UserMyModulesController < ApplicationController
   def create
     @um = UserMyModule.new(um_params.merge(my_module: @my_module))
     @um.assigned_by = current_user
+
     if @um.save
       log_activity(:assign_user_to_module)
 
       respond_to do |format|
         format.json do
-          redirect_to my_module_users_edit_path(format: :json),
-                      turbolinks: false,
-                      status: 303
+          render json: {
+            user: {
+              id: @um.user.id,
+              full_name: @um.user.full_name,
+              avatar_url: avatar_path(@um.user, :icon_small),
+              user_module_id: @um.id
+            }, status: :ok
+          }
         end
       end
     else
@@ -66,7 +72,7 @@ class UserMyModulesController < ApplicationController
         format.json do
           render json: {
             errors: @um.errors
-          }
+          }, status: :unprocessable_entity
         end
       end
     end
@@ -78,9 +84,7 @@ class UserMyModulesController < ApplicationController
 
       respond_to do |format|
         format.json do
-          redirect_to my_module_users_edit_path(format: :json),
-                      turbolinks: false,
-                      status: 303
+          render json: {}, status: :ok
         end
       end
     else
@@ -88,7 +92,7 @@ class UserMyModulesController < ApplicationController
         format.json do
           render json: {
             errors: @um.errors
-          }
+          }, status: :unprocessable_entity
         end
       end
     end
@@ -98,19 +102,15 @@ class UserMyModulesController < ApplicationController
     assigned_users = @my_module.user_my_modules.pluck(:user_id)
     all_users = @my_module.experiment.project.users
     users = all_users.where.not(id: assigned_users)
-                     .search(true, params[:query])
+                     .search(false, params[:query])
                      .limit(6)
 
     users = users.map do |user|
       {
         value: user.id,
-        label: sanitize_input(user.name),
+        label: sanitize_input(user.full_name),
         params: { avatar_url: avatar_path(user, :icon_small) }
       }
-    end
-
-    if params[:query].present? && tags.select { |users| users[:label] == params[:query] }.blank?
-      users << { value: 0, label: sanitize_input(params[:query]), params: { avatar_url: nil } }
     end
 
     render json: users

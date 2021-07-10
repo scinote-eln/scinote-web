@@ -1,13 +1,13 @@
 <% # frozen_string_literal: true %>
 
-<div class="select-container">
+<div class="select-user-container">
   <%= select_tag 'user_my_modules',
                  options_for_select(my_module.user_my_modules.map{ |um|
                    user = um.user
                    [
-                     user.name,
-                     um.id,
-                     {'data-params' => {avatar_url: avatar_path(user.user, :icon_small) }.to_json}
+                     user.full_name,
+                     user.id,
+                     {'data-params' => {avatar_url: avatar_path(user, :icon_small), user_module_id: um.id }.to_json}
                    ]
                  }),
                  {
@@ -18,6 +18,6 @@
                    'data-users-create-url': my_module_user_my_modules_path(my_module_id: my_module.id),
                    'data-ajax-url': search_my_module_user_my_module_path(my_module),
                    'data-update-module-users-url': my_module_user_my_modules_url(my_module),
-                   'data-view-mode': !(can_manage_users_in_module?(my_module) && my_module.unassigned_users.any?)
+                   'data-view-mode': !can_manage_users_in_module?(my_module)
                  } %>
 </div>

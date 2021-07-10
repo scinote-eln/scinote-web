@@ -222,7 +222,7 @@
   }
 
   .module-tags {
-    #module-tags {
+    .tags-wrapper {
       align-items: center;
       display: flex;
       width: 100%;
@@ -277,14 +277,13 @@
       margin-right: 4px;
     }
 
-    .select-container {
+    .select-container, .select-user-container {
       display: flex;
       flex-basis: 100px;
       flex-grow: 1;
       flex-shrink: 1;
       max-width: 100%;
       position: relative;
-      z-index: 110;
 
       select {
         display: none;
@@ -335,21 +334,18 @@
     }
   }
 
-  //.task-assigned-users {
-  //  align-items: center;
-  //  border-radius: 17px;
-  //  display: flex;
-  //
-  //  &.empty {
-  //    border-radius: 4px;
-  //    padding: 0 4px;
-  //  }
-  //
-  //  &:hover {
-  //    background-color: $color-concrete;
-  //    text-decoration: none;
-  //  }
-  //}
+  .my-module-user-tags {
+    .tag-label {
+      padding: 5px;
+    }
+
+    img {
+      margin: 5px;
+      display: inline;
+      max-height: 20px;
+      max-width: 20px;
+    }
+  }
 
   .assign-new-user {
     background-color: $color-alto;
