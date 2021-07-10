@@ -49,13 +49,20 @@ class MigrateToNewUserRoles < ActiveRecord::Migration[6.1]
 
   def create_user_assignments(user_projects, user_role)
     user_projects.includes(:user, :project).find_in_batches(batch_size: 100) do |user_project_batch|
-      user_assignments = []
       user_project_batch.each do |user_project|
-        user_assignments << UserAssignment.new(user: user_project.user,
-                                               assignable: user_project.project,
-                                               user_role: user_role)
+        UserAssignment.create(
+          user: user_project.user,
+          assignable: user_project.project,
+          user_role: user_role
+        )
+        # Propagate user assignment
+        UserAssignments::PropagateAssignmentJob.perform_now(
+          user_project.project,
+          user_project.user,
+          user_role,
+          user_project.assigned_by
+        )
       end
-      UserAssignment.import(user_assignments)
     end
   end
 
