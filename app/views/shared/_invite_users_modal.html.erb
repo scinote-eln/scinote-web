@@ -72,7 +72,7 @@ invite_with_team_selector = type.in?(%w(invite_new_members invite_with_team_sele
             <% end %>
           </p>
 
-          <% if type == 'invite_new_members' %>
+          <% if type.in? ['invite_new_members', 'invite'] %>
             <p><%= t('invite_users.new_members.description') %></p>
             <h4 class="heading">
               <span><%= t('invite_users.new_members.input_label') %></span>
