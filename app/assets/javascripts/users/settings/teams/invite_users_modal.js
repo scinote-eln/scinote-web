@@ -137,6 +137,7 @@
             data.role = modal.attr('data-team-role');
             break;
           case 'invite':
+            data.team_ids = [];
             break;
           case 'invite_with_team_selector':
             if (teamSelectorCheckbox.is(':checked')) {

@@ -204,7 +204,7 @@ module Users
       @emails = params[:emails]&.map(&:downcase)
 
       @teams = Team.where(id: params[:team_ids]).select { |team| can_manage_team_users?(team) }
-      return render_403 if @teams.none?
+      return render_403 if params[:team_ids].present? && @teams.none?
 
       @role = params['role']
 
