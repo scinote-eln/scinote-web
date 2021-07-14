@@ -47,11 +47,14 @@
 
     .cards-wrapper {
       --card-min-width: 350px;
-      --list-columns-number: 7;
+      --list-columns-number: 8;
 
       .card {
-        grid-row: span 6;
+        grid-row: span 7;
 
+        .experiment-code-cell {
+          display: none;
+        }
 
         &.experiment-card {
           border-radius: 4px;
@@ -174,7 +177,7 @@
 
       &.list {
         grid-auto-rows: 1px 5em;
-        grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 2), minmax(100px, auto)) max-content;
+        grid-template-columns: max-content minmax(100px, auto) minmax(80px, max-content) repeat(calc(var(--list-columns-number) - 4), minmax(100px, auto)) max-content;
         grid-template-rows: 3em;
 
         .card {
@@ -230,20 +233,25 @@
               }
             }
 
-            .start-date-cell {
+            .experiment-code-cell {
+              display: block;
               grid-column: 3;
             }
 
-            .modified-date-cell {
+            .start-date-cell {
               grid-column: 4;
             }
 
-            .completed-task-cell {
+            .modified-date-cell {
               grid-column: 5;
             }
 
-            .description-cell {
+            .completed-task-cell {
               grid-column: 6;
+            }
+
+            .description-cell {
+              grid-column: 7;
               position: relative;
 
               .description-text {
@@ -262,7 +270,7 @@
             }
 
             .actions-cell {
-              grid-column: 7;
+              grid-column: 8;
               padding-top: 3px;
               position: initial;
             }
@@ -331,7 +339,7 @@
         &.list {
           .card.experiment-card {
             .archived-date-cell {
-              grid-column: 5;
+              grid-column: 6;
             }
             .description-cell {
               .description-text::before {

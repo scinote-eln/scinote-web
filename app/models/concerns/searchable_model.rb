@@ -43,6 +43,8 @@ module SearchableModel
             (attrs.map.with_index do |a, i|
               if %w(repository_rows.id repository_number_values.data).include?(a)
                 "((#{a})::text) #{like} :t#{i} OR "
+              elsif a == Experiment::EXPERIMENT_CODE_SQL
+                "#{Experiment::EXPERIMENT_CODE_SQL} #{like} :t#{i} OR "
               else
                 col = options[:at_search].to_s == 'true' ? "lower(#{a})": a
                 "(trim_html_tags(#{col})) #{like} :t#{i} OR "
@@ -67,6 +69,8 @@ module SearchableModel
             (attrs.map.with_index do |a, i|
               if %w(repository_rows.id repository_number_values.data).include?(a)
                 "((#{a})::text) #{like} ANY (array[:t#{i}]) OR "
+              elsif a == Experiment::EXPERIMENT_CODE_SQL
+                "#{Experiment::EXPERIMENT_CODE_SQL} #{like} ANY (array[:t#{i}]) OR "
               else
                 "(trim_html_tags(#{a})) #{like} ANY (array[:t#{i}]) OR "
               end
@@ -86,6 +90,8 @@ module SearchableModel
             (attrs.map.with_index do |a, i|
               if %w(repository_rows.id repository_number_values.data).include?(a)
                 "((#{a})::text) #{like} :t#{i} OR "
+              elsif a == Experiment::EXPERIMENT_CODE_SQL
+                "#{Experiment::EXPERIMENT_CODE_SQL} #{like} :t#{i} OR "
               else
                 "(trim_html_tags(#{a})) #{like} :t#{i} OR "
               end

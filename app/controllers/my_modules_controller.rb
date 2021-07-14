@@ -12,6 +12,7 @@ class MyModulesController < ApplicationController
   before_action :check_view_permissions, except: %i(update update_description update_protocol_description restore_group)
   before_action :check_update_state_permissions, only: :update_state
   before_action :set_inline_name_editing, only: %i(protocols results activities archive)
+  before_action :load_experiment_my_modules, only: %i(protocols results activities archive)
 
   layout 'fluid'.freeze
 
@@ -243,6 +244,7 @@ class MyModulesController < ApplicationController
                                 .experiment
                                 .project
                                 .team)
+
     @results_order = params[:order] || 'new'
 
     @results = @my_module.archived_branch? ? @my_module.results : @my_module.results.active
@@ -311,6 +313,10 @@ class MyModulesController < ApplicationController
     else
       render_404
     end
+  end
+
+  def load_experiment_my_modules
+    @experiment_my_modules = @my_module.experiment.my_modules.active.order(:name)
   end
 
   def check_manage_permissions

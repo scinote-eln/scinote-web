@@ -43,7 +43,7 @@ en:
         bypass_code_link: "I have a bypass code"
       2fa_recovery:
         title: "2FA Bypass"
-        description: "Enter one of the bypass codes provided when you creted 2FA authentication. The code will no longer be valid after use."
+        description: "Enter one of the bypass codes provided when you created 2FA authentication. The code will no longer be valid after use."
         bypass_code: "Bypass code"
         enter: "Enter"
         not_correct_code: "Not correct recovery code"
@@ -677,7 +677,7 @@ en:
           protocol:
             user_time: "Protocol created on %{timestamp}."
         experiment:
-          user_time: "Experiment created on %{timestamp}."
+          user_time: "Experiment %{code} created on %{timestamp}."
           no_description: "No description"
           no_tags: "No tags"
         module_activity:
@@ -1001,6 +1001,8 @@ en:
       body_html: This inventory has been unshared with your team by the inventory’s owner. To view the item/s that are assigned to your task/s contact the <b>%{team_name}</b> team administrator <b>%{admin_name}</b> (<b>%{admin_email}</b>).
     open_mobile_app: "Open mobile app"
   experiments:
+    id: "ID"
+    experiment_id: "Experiment ID"
     header:
       cards: "Cards"
       table: "Table"
@@ -1712,7 +1714,7 @@ en:
         new_password_label: "New password"
         new_password_2_label: "New password confirmation"
         2fa_title: "Two-factor authentication"
-        2fa_description: "Two-factor authentication (2FA) is a way of verifying a user’s identity by using a combination of two different verification methods. It adds an extra layer of security to your account and protects from potential remote attacs or other threats."
+        2fa_description: "Two-factor authentication (2FA) is a way of verifying a user’s identity by using a combination of two different verification methods. It adds an extra layer of security to your account and protects from potential remote attacks or other threats."
         2fa_enabled: "Enabled"
         2fa_button: "Enable authentication"
         2fa_button_disable: "Disable authentication"
@@ -2207,12 +2209,23 @@ en:
     no_team:
       title: "Invite users to SciNote"
       heading: "Invite more people to start using SciNote."
-    input_subtitle: "Input one or multiple emails, confirm each email with ENTER key."
+    new_members:
+        description: "Invite people to your organization to start using SciNote"
+        input_placeholder: "jsmith@someemail.com"
+        input_label: "New member emails"
+        input_subtitle: "You can enter one or more emails. To confirm each one press the ENTER key."
+    input_subtitle: "You can enter one or more emails. To confirm each one press the ENTER key."
     invite_to_team_heading: "Invite users to my team:"
-    invite_btn: "Invite Users"
+    invite_btn: "Invite members"
     invite_guest: "As Guests"
     invite_user: "As Normal Users"
     invite_admin: "As Administrators"
+    new_member_email: "New member email"
+    select_team: "Select a team"
+    select_team_blank: "Do not add this user to any team"
+    select_team_role: "Select a team role"
+    default: "default"
+
     errors:
       recaptcha: "reCAPTCHA verification failed, please try again"
     results:
