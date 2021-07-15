@@ -140,7 +140,7 @@ class Extends
   ]
 
   ACTIVITY_SUBJECT_TYPES = %w(
-    Team RepositoryBase Project Experiment MyModule Result Protocol Report RepositoryRow ProjectFolder
+    Team RepositoryBase Project Experiment MyModule Result Protocol Report RepositoryRow ProjectFolder Asset Step
   ).freeze
 
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
@@ -315,7 +315,8 @@ class Extends
     rename_project_folder: 161,
     delete_project_folder: 162,
     generate_pdf_report: 163,
-    generate_docx_report: 164
+    generate_docx_report: 164,
+    register_molecule: 165
   }
 
   ACTIVITY_GROUPS = {

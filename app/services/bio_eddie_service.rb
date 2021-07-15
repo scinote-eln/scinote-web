@@ -14,22 +14,22 @@ class BioEddieService
       file = image_io(params)
 
       asset = Asset.new(created_by: current_user,
-                          last_modified_by: current_user,
-                          team_id: current_team.id)
-      attach_file(asset.file, file, params)
+                        last_modified_by: current_user,
+                        team_id: current_team.id)
+      attach_file(asset.file, file, params, current_user)
       asset.save!
       asset.post_process_file(current_team)
       connect_asset(asset, params, current_user)
     end
 
-    def update_molecule(params, _current_user, current_team)
+    def update_molecule(params, current_user, current_team)
       asset = current_team.assets.find(params[:id])
       attachment = asset&.file
 
       return unless attachment
 
       file = image_io(params)
-      attach_file(attachment, file, params)
+      attach_file(attachment, file, params, current_user)
       asset
     end
 
@@ -58,7 +58,7 @@ class BioEddieService
       StringIO.new(params[:image])
     end
 
-    def attach_file(attachment, file, params)
+    def attach_file(attachment, file, params, current_user)
       attachment.attach(
         io: file,
         filename: "#{prepare_name(params[:name])}.svg",
@@ -66,13 +66,31 @@ class BioEddieService
         metadata: {
           name: prepare_name(params[:name]),
           description: params[:description],
+          schedule_for_registration: params[:schedule_for_registration] == 'true',
           asset_type: 'bio_eddie'
         }
       )
+
+      log_activity(attachment.record, current_user) if params[:schedule_for_registration] == 'true'
     end
 
     def prepare_name(sketch_name)
       sketch_name.presence || I18n.t('bio_eddie.new_molecule')
+    end
+
+    def log_activity(asset, current_user)
+      Activities::CreateActivityService
+        .call(
+          activity_type: :register_molecule,
+          owner: current_user,
+          team: asset.team,
+          project: asset.my_module.experiment.project,
+          subject: asset,
+          message_items: {
+            description: asset.blob.metadata['description'],
+            name: asset.blob.metadata['name']
+          }
+        )
     end
   end
 end

@@ -185,6 +185,8 @@ en:
       generate_pdf_report_html: "%{user} generated PDF report %{report}."
       generate_docx_report_html: "%{user} generated DOCX report %{report}."
 
+      register_molecule_html: "%{user} scheduled the %{name} molecule for registration."
+
     activity_name:
       create_project: "Project created"
       rename_project: "Project renamed"

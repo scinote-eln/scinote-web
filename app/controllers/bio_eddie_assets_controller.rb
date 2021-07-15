@@ -94,6 +94,6 @@ class BioEddieAssetsController < ApplicationController
   end
 
   def bio_eddie_params
-    params.permit(:id, :description, :object_id, :object_type, :name, :image)
+    params.permit(:id, :description, :object_id, :object_type, :name, :image, :schedule_for_registration)
   end
 end
