@@ -18,7 +18,7 @@
         <p>
           <span>
             <%= t('repository_row.modal_info.ID') %>
-            <%= @repository_row.parent_id || @repository_row.id %>
+            <%= @repository_row.parent&.code || @repository_row.code %>
           </span>
           <br>
           <span>

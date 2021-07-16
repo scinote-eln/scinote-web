@@ -1,9 +1,12 @@
+# frozen_string_literal: true
+
 class Experiment < ApplicationRecord
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
 
-  EXPERIMENT_CODE_SQL = "('EX' || id)".freeze
+  ID_PREFIX = 'EX'
+  include PrefixedIdModel
 
   before_save -> { report_elements.destroy_all }, if: -> { !new_record? && project_id_changed? }
 
@@ -73,7 +76,7 @@ class Experiment < ApplicationRecord
         Experiment
         .where('experiments.project_id IN (?)', projects_ids)
         .where_attributes_like(
-          [:name, :description, EXPERIMENT_CODE_SQL], query, options
+          [:name, :description, PREFIXED_ID_SQL], query, options
         )
       return include_archived ? new_query : new_query.active
     elsif include_archived
@@ -81,7 +84,7 @@ class Experiment < ApplicationRecord
         Experiment
         .where(project: project_ids)
         .where_attributes_like(
-          [:name, :description, EXPERIMENT_CODE_SQL], query, options
+          [:name, :description, PREFIXED_ID_SQL], query, options
         )
     else
       new_query =
@@ -89,7 +92,7 @@ class Experiment < ApplicationRecord
         .active
         .where(project: project_ids)
         .where_attributes_like(
-          [:name, :description, EXPERIMENT_CODE_SQL], query, options
+          [:name, :description, PREFIXED_ID_SQL], query, options
         )
     end
 
@@ -105,10 +108,6 @@ class Experiment < ApplicationRecord
 
   def self.viewable_by_user(user, teams)
     where(project: Project.viewable_by_user(user, teams))
-  end
-
-  def code
-    "EX#{id}"
   end
 
   def archived_branch?

@@ -80,8 +80,14 @@ class Repository < RepositoryBase
 
     matched_by_user = readable_rows.joins(:created_by).where_attributes_like('users.full_name', query, options)
 
+    prefixed_repository_row_ids = RepositoryRow.where(repository_id: repositories)
+                                               .where_attributes_like([RepositoryRow::PREFIXED_ID_SQL], query, options)
+                                               .pluck(:id)
+
     repository_row_matches =
-      readable_rows.where_attributes_like(['repository_rows.name', 'repository_rows.id'], query, options)
+      readable_rows.where_attributes_like(['repository_rows.name'], query, options).or(
+        readable_rows.where('repository_rows.id' => prefixed_repository_row_ids)
+      )
 
     repository_rows = readable_rows.where(id: repository_row_matches)
     repository_rows = repository_rows.or(readable_rows.where(id: matched_by_user))
