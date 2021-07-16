@@ -21,13 +21,14 @@
           <span class="fas fa-pencil-alt"></span>
           <%= t('assets.file_preview.edit_in_marvinjs') %>
         </button>
-      <% elsif asset.file.metadata[:asset_type] == 'bio_eddie' && BioEddieService.enabled?(current_user) %>
+
+      <% elsif asset.bio_eddie? && BioEddieService.enabled?(current_user) %>
         <button class="btn btn-light bio-eddie-edit-button"
           data-molecule-id="<%= asset.id %>"
           data-update-url="<%= bio_eddie_asset_path(asset) %>"
           data-edit-url="<%= start_editing_bio_eddie_asset_path(asset) %>"
-          data-molecule-name="<%= asset.file.metadata[:name] %>"
-          data-molecule-description="<%= asset.file.metadata[:description] %>"
+          data-molecule-name="<%= asset.file.metadata[:name] || asset.file_name %>"
+          data-molecule-description="<%= asset.file.metadata[:description] || asset.file.download %>"
         >
           <span class="fas fa-pencil-alt"></span>
           <%= t('assets.file_preview.edit_in_bio_eddie') %>
