@@ -1,4 +1,4 @@
-/* global dropdownSelector */
+/* global dropdownSelector bwipjs */
 
 (function() {
   'use strict';
@@ -20,11 +20,11 @@
       });
 
       let barCodeCanvas = bwipjs.toCanvas('bar-code-canvas', {
-        bcid:        'qrcode',
-        text:        $('#modal-info-repository-row #bar-code-canvas').data('id').toString(),
-        scale:       3
+        bcid: 'qrcode',
+        text: $('#modal-info-repository-row #bar-code-canvas').data('id').toString(),
+        scale: 3
       });
-      $('#modal-info-repository-row #bar-code-image').attr('src', barCodeCanvas.toDataURL('image/png'))
+      $('#modal-info-repository-row #bar-code-image').attr('src', barCodeCanvas.toDataURL('image/png'));
 
 
       $('#repository_row-info-table').DataTable({
