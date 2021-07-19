@@ -128,6 +128,7 @@ var bioEddieEditor = (function() {
       bioEddieModal.data('update-url', updateUrl);
       bioEddieModal.find('.file-name input').val(name);
       bioEddieModal.modal('show');
+
     }
   };
 }());
@@ -148,5 +149,6 @@ var bioEddieEditor = (function() {
       this.dataset.moleculeDescription,
       this.dataset.updateUrl
     );
+    $.post(this.dataset.editUrl);
   });
 }());
