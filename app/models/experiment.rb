@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Experiment < ApplicationRecord
-  SEARCHABLE_ATTRIBUTES = [:name, :description, "('EX' || id)"].freeze
+  EXPERIMENT_CODE_SQL = "('EX' || id)".freeze
+  SEARCHABLE_ATTRIBUTES = [:name, :description, EXPERIMENT_CODE_SQL].freeze
 
   include ArchivableModel
   include SearchableModel

@@ -72,10 +72,12 @@
           <% end %>
         </li>
       <% else %>
-        <%= link_to access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'} do %>
-          <i class="fas fa-door-open"></i>
-          <span><%= t('experiments.index.experiment_access') %></span>
-        <% end %>
+        <li class="form-dropdown-item">
+          <%= link_to access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'} do %>
+            <i class="fas fa-door-open"></i>
+            <span><%= t('experiments.index.experiment_access') %></span>
+          <% end %>
+        </li>
       <% end %>
       <li class="form-dropdown-break">
         <hr>
