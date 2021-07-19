@@ -52,7 +52,7 @@ module RepositoryDatatableHelper
       row = {
         'DT_RowId': record.id,
         'DT_RowAttr': { 'data-state': row_style(record) },
-        '1': record.parent&.code || record.code,
+        '1': record.code,
         '2': escape_input(record.name),
         '3': I18n.l(record.created_at, format: :full),
         '4': escape_input(record.created_by.full_name),

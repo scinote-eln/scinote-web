@@ -37,6 +37,10 @@ class RepositoryRow < ApplicationRecord
   scope :active, -> { where(archived: false) }
   scope :archived, -> { where(archived: true) }
 
+  def code
+    "#{ID_PREFIX}#{parent_id || id}"
+  end
+
   def self.viewable_by_user(user, teams)
     where(repository: Repository.viewable_by_user(user, teams))
   end
