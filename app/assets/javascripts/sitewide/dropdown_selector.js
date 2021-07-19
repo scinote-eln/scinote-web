@@ -77,13 +77,13 @@ var dropdownSelector = (function() {
 
     if ((modalContainerBottom + bottomSpace) < bottomTreshold) {
       container.addClass('inverse');
-      container.find('.dropdown-container').css('max-height', `${(containerPosition - 122 + maxHeight)}px`)
+      container.find('.dropdown-container')
         .css('margin-bottom', `${(containerPosition * -1)}px`)
         .css('left', `${containerPositionLeft}px`)
         .css('width', `${containerWidth}px`);
     } else {
       container.removeClass('inverse');
-      container.find('.dropdown-container').css('max-height', `${(bottomSpace - 32 + maxHeight)}px`)
+      container.find('.dropdown-container')
         .css('width', `${containerWidth}px`)
         .css('left', `${containerPositionLeft}px`)
         .css('margin-top', `${(bottomSpace * -1)}px`);
@@ -254,8 +254,8 @@ var dropdownSelector = (function() {
     updateTags(selector, container, { select: true });
   }
 
-  // intialization keyboard control
-  function initKeyboardControl(container) {
+  // initialize keyboard control
+  function initKeyboardControl(selector, container) {
     container.find('.search-field').keydown(function(e) {
       var dropdownContainer = container.find('.dropdown-container');
       var pressedKey = e.keyCode;
@@ -265,20 +265,22 @@ var dropdownSelector = (function() {
         dropdownContainer.find('.dropdown-option').first().addClass('highlight');
       }
 
-      if (pressedKey === 38) {
+      if (pressedKey === 38) { // arrow up
         if (selectedOption.prev('.dropdown-option').length) {
           selectedOption.removeClass('highlight').prev().addClass('highlight');
         }
         if (selectedOption.prev('.delimiter').length) {
           selectedOption.removeClass('highlight').prev().prev().addClass('highlight');
         }
-      } else if (pressedKey === 40) {
+      } else if (pressedKey === 40) { // arrow down
         if (selectedOption.next('.dropdown-option').length) {
           selectedOption.removeClass('highlight').next().addClass('highlight');
         }
         if (selectedOption.next('.delimiter').length) {
           selectedOption.removeClass('highlight').next().next().addClass('highlight');
         }
+      } else if (pressedKey === 8 && e.target.value === '') { // backspace
+        deleteTag(selector, container, container.find('.ds-tags .fa-times').last());
       }
     });
   }
@@ -485,10 +487,10 @@ var dropdownSelector = (function() {
       dropdownContainer.addClass('disable-search');
     }
 
-    // initialization keyboard controll
-    initKeyboardControl(dropdownContainer);
+    // initialization keyboard control
+    initKeyboardControl(selector, dropdownContainer);
 
-    // In some case dropdown position not correclty calculated
+    // In some case dropdown position not correctly calculated
     updateDropdownDirection(selectElement, dropdownContainer);
   }
 
@@ -663,6 +665,25 @@ var dropdownSelector = (function() {
     updateTags(selector, container, { select: true });
   }
 
+  function deleteTag(selector, container, target) {
+    var tagLabel = target.prev();
+
+    // Start delete animation
+    target.parent().addClass('closing');
+
+    // Add timeout for deleting animation
+    setTimeout(() => {
+      if (selector.data('combine-tags')) {
+        // if we use combine-tags options we simply clear all values
+        container.find('.data-field').val('[]');
+        updateTags(selector, container);
+      } else {
+        // Or delete specific one
+        deleteValue(selector, container, tagLabel.data('ds-tag-id'), tagLabel.data('ds-tag-group'));
+      }
+    }, 350);
+  }
+
   // Refresh tags in input field
   function updateTags(selector, container, config = {}) {
     var selectedOptions = getCurrentData(container);
@@ -696,22 +717,8 @@ var dropdownSelector = (function() {
 
       // Now we need add delete action to tag
       tag.find('.fa-times').click(function(e) {
-        var tagLabel = $(this).prev();
-        var toDelete;
         e.stopPropagation();
-        // Start delete animation
-        $(this).parent().addClass('closing');
-        // Add timeout for deleting animation
-        setTimeout(() => {
-          if (selector.data('combine-tags')) {
-            // if we use combine-tags optons we simply clear all values
-            container.find('.data-field').val('[]');
-            updateTags(selector, container);
-          } else {
-            // Or delete specific one
-            deleteValue(selector, container, tagLabel.data('ds-tag-id'), tagLabel.data('ds-tag-group'));
-          }
-        }, 350);
+        deleteTag(selector, container, $(this));
       });
     }
 

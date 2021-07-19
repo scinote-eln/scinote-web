@@ -103,7 +103,6 @@
       .tag-label {
         display: inline-block;
         margin-right: 5px;
-        margin-top: 1px;
         max-width: 240px;
         overflow: hidden;
         text-align: left;
@@ -113,6 +112,12 @@
 
         &[data-ds-tag-id=""] {
           opacity: .7;
+        }
+
+        .item-avatar {
+          height: 16px;
+          margin-right: 8px;
+          width: 16px;
         }
       }
 
@@ -134,6 +139,7 @@
     bottom: calc(100% - 30px);
     box-shadow: $flyout-shadow;
     display: none;
+    max-height: 320px;
     overflow: hidden;
     position: fixed;
     transition: .2s;
