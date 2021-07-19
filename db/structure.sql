@@ -556,6 +556,41 @@ ALTER SEQUENCE public.experiments_id_seq OWNED BY public.experiments.id;
 
 
 --
+-- Name: label_templates; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.label_templates (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    content text NOT NULL,
+    language_type integer,
+    "default" boolean DEFAULT false NOT NULL,
+    size character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: label_templates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.label_templates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: label_templates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.label_templates_id_seq OWNED BY public.label_templates.id;
+
+
+--
 -- Name: my_module_groups; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2975,6 +3010,13 @@ ALTER TABLE ONLY public.experiments ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: label_templates id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.label_templates ALTER COLUMN id SET DEFAULT nextval('public.label_templates_id_seq'::regclass);
+
+
+--
 -- Name: my_module_groups id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3538,6 +3580,14 @@ ALTER TABLE ONLY public.delayed_jobs
 
 ALTER TABLE ONLY public.experiments
     ADD CONSTRAINT experiments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: label_templates label_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.label_templates
+    ADD CONSTRAINT label_templates_pkey PRIMARY KEY (id);
 
 
 --
@@ -4389,6 +4439,13 @@ CREATE INDEX index_experiments_on_project_id ON public.experiments USING btree (
 --
 
 CREATE INDEX index_experiments_on_restored_by_id ON public.experiments USING btree (restored_by_id);
+
+
+--
+-- Name: index_label_templates_on_language_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_label_templates_on_language_type ON public.label_templates USING btree (language_type);
 
 
 --
@@ -7250,6 +7307,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210407143303'),
 ('20210410100006'),
 ('20210506125657'),
-('20210622101238');
+('20210622101238'),
+('20210715125349'),
+('20210716124649');
 
 
