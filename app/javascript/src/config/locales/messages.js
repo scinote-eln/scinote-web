@@ -44,7 +44,7 @@ export default {
       info_label: "Info"
     },
     invite_users: {
-      modal_title: "Invite users to team {team}",
+      modal_title: "Invite members to {team}",
       input_text: "Invite more people to team {team} and start using SciNote.",
       input_help:
         "Input one or multiple emails, confirm each email with ENTER key.",
