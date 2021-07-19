@@ -78,8 +78,11 @@ class RepositoryDatatableService
     if search_value.present?
       matched_by_user = repository_rows.joins(:created_by).where_attributes_like('users.full_name', search_value)
 
-      repository_row_matches = repository_rows
-                               .where_attributes_like(['repository_rows.name', 'repository_rows.id'], search_value)
+      repository_row_matches =  repository_rows
+                                .where_attributes_like(
+                                  ['repository_rows.name', RepositoryRow::PREFIXED_ID_SQL],
+                                  search_value
+                                )
       results = repository_rows.where(id: repository_row_matches)
       results = results.or(repository_rows.where(id: matched_by_user))
 

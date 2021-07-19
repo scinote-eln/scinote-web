@@ -5,7 +5,11 @@ class RepositoryRow < ApplicationRecord
   include SearchableByNameModel
   include ArchivableModel
 
+  ID_PREFIX = 'IT'
+  include PrefixedIdModel
+
   belongs_to :repository, class_name: 'RepositoryBase'
+  belongs_to :parent, class_name: 'RepositoryRow', optional: true
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
   belongs_to :last_modified_by, foreign_key: :last_modified_by_id, class_name: 'User'
   belongs_to :archived_by,
@@ -32,6 +36,10 @@ class RepositoryRow < ApplicationRecord
 
   scope :active, -> { where(archived: false) }
   scope :archived, -> { where(archived: true) }
+
+  def code
+    "#{ID_PREFIX}#{parent_id || id}"
+  end
 
   def self.viewable_by_user(user, teams)
     where(repository: Repository.viewable_by_user(user, teams))

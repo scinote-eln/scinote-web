@@ -9,7 +9,7 @@ module RepositoryDatatableHelper
         'DT_RowId': record.id,
         'DT_RowAttr': { 'data-state': row_style(record) },
         '1': assigned_row(record),
-        '2': record.id,
+        '2': record.code,
         '3': escape_input(record.name),
         '4': I18n.l(record.created_at, format: :full),
         '5': escape_input(record.created_by.full_name),
@@ -52,7 +52,7 @@ module RepositoryDatatableHelper
       row = {
         'DT_RowId': record.id,
         'DT_RowAttr': { 'data-state': row_style(record) },
-        '1': record.parent_id,
+        '1': record.code,
         '2': escape_input(record.name),
         '3': I18n.l(record.created_at, format: :full),
         '4': escape_input(record.created_by.full_name),
