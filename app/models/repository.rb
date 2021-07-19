@@ -82,7 +82,7 @@ class Repository < RepositoryBase
 
     prefixed_repository_row_ids = RepositoryRow.where(repository_id: repositories)
                                                .where_attributes_like([RepositoryRow::PREFIXED_ID_SQL], query, options)
-                                               .pluck(:id)
+                                               .select(:id)
 
     repository_row_matches =
       readable_rows.where_attributes_like(['repository_rows.name'], query, options).or(
