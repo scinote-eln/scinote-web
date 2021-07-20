@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-class LabelTemplate < ApplicationRecord
-  enum language_type: { zpl: 0 }
-end
-
 class CreateLabelTemplates < ActiveRecord::Migration[6.1]
+  class LabelTemplate < ApplicationRecord
+    enum language_type: { zpl: 0 }
+  end
+
   def change
     create_table :label_templates do |t|
       t.string :name, null: false
