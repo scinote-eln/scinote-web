@@ -38,6 +38,11 @@ module GenerateNotificationModel
       users = subject.project.users
     when MyModule
       users = subject.users
+      # Also send to the user that was unassigned,
+      # and is therefore no longer present on the module.
+      if type_of == 'unassign_user_from_module'
+        users += User.where(id: values.dig('message_items', 'user_target', 'id'))
+      end
     when Protocol
       users = subject.in_repository? ? [] : subject.my_module.users
     when Result
