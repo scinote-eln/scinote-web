@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <span class="file-name"><%= asset.file&.metadata[:name] || asset.file_name %></span>
+  <span class="file-name"><%= asset.file.metadata[:name] || asset.file_name %></span>
   <div class="sci-btn-group">
     <% if can_edit && !preview %>
       <% if wopi_enabled? && wopi_file?(asset) %>
