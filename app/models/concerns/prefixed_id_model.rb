@@ -15,7 +15,8 @@ module PrefixedIdModel
       # rubocop:disable Rails/Output
       puts("\nWARNING missing index\n#{indexdef}\nfor prefixed id model #{name}!\n\n") unless index_exists
       # rubocop:enable Rails/Output
-    rescue ActiveRecord::NoDatabaseError # only applicable when setting up project
+    rescue ActiveRecord::NoDatabaseError, ActiveRecord::ConnectionNotEstablished
+      # only applicable during build and when setting up project
     end
 
     self::PREFIXED_ID_SQL = "('#{self::ID_PREFIX}' || #{table_name}.id)"
