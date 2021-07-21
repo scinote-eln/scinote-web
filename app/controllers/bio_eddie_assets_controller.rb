@@ -4,10 +4,10 @@ class BioEddieAssetsController < ApplicationController
   include BioEddieActions
   include ActiveStorage::SetCurrent
 
-  before_action :load_vars, except: :create
+  before_action :load_vars, except: %i(create bmt_request)
   before_action :load_create_vars, only: :create
 
-  before_action :check_read_permission
+  before_action :check_read_permission, except: %i(update create start_editing bmt_request)
   before_action :check_edit_permission, only: %i(update create start_editing)
 
   def create
@@ -40,6 +40,23 @@ class BioEddieAssetsController < ApplicationController
                      file_name: asset.blob.metadata['name'] }
     else
       render json: { error: t('bio_eddie.no_molecules_found') }, status: :unprocessable_entity
+    end
+  end
+
+  def bmt_request
+    return_404 unless ENV['BIOMOLECULE_TOOLKIT_BASE_URL']
+
+    uri = URI.parse(ENV['BIOMOLECULE_TOOLKIT_BASE_URL'])
+    uri.path = request.original_fullpath.remove('/biomolecule_toolkit')
+
+    Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
+      api_request = "Net::HTTP::#{request.request_method.capitalize}".constantize.new(uri)
+      api_request['x-api-key'] = ENV['BIOMOLECULE_TOOLKIT_API_KEY'] if ENV['BIOMOLECULE_TOOLKIT_API_KEY']
+      api_request['Content-Type'] = 'application/json'
+      request_body = request.body.read
+      api_request.body = request_body if request_body.present?
+      api_response = http.request(api_request)
+      render body: api_response.body, content_type: api_response.content_type, status: api_response.code
     end
   end
 
