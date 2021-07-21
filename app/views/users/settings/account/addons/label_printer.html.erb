@@ -1,0 +1,63 @@
+<% provide(:head_title, t('users.settings.account.addons.head_title')) %>
+<% provide(:container_class, "no-second-nav-container") %>
+
+<%= render partial: 'users/settings/sidebar.html.erb' %>
+
+<div class="content-pane flexible label-printer-show">
+  <div class="content-header">
+    <div id="breadcrumbsWrapper">
+      <div class="breadcrumbs-container">
+        <%= render partial: 'shared/breadcrumbs', locals: {
+          links: [{label: 'Add-ons', url: addons_path}]
+        } %>
+      </div>
+    </div>
+    <div class="title-row">
+      <h1 class="printer-title">
+        <%= t("users.settings.account.label_printer.#{@printer[:printer_type]}_printer") %>
+      </h1>
+      <div class="status" data-ready="<%= @printer[:ready] %>">
+        <% if @printer[:ready] %>
+          <%= t('users.settings.account.addons.printers.ready') %>
+        <% else %>
+          <%= t('users.settings.account.addons.printers.not_ready') %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <ul>
+    <li>
+      <div class="collapse-row">
+        <i class="fas fa-caret-down" data-toggle="collapse" href="#InstructionsSection" aria-expanded="false"></i>
+        <div class="row-title"><%= t("users.settings.account.label_printer.instructions") %></div>
+      </div>
+      <ul class="collapse in" id="InstructionsSection">
+        Instruction here
+      </ul>
+    </li>
+    <li>
+      <div class="collapse-row">
+        <i class="fas fa-caret-down" data-toggle="collapse" href="#SettingsSection" aria-expanded="false"></i>
+        <div class="row-title"><%= t("users.settings.account.label_printer.settings") %></div>
+      </div>
+      <ul class="collapse in" id="SettingsSection">
+        <% if @printer[:printer_type] == :fluics %>
+          <%= form_with url: "" do |form| %>
+              <div class="sci-input-container">
+                <%= form.label :api_key, t("users.settings.account.label_printer.api_key_label") %>
+                <div class="api-key-container">
+                  <%= form.text_field :api_key, class: "sci-input-field api-key-input" %>
+                  <%= form.submit t('general.save'), class: "btn btn-secondary" %>
+                </div>
+              </div>
+            <%= link_to t("users.settings.account.label_printer.api_key_information"), '' %>
+          <% end %>
+        <% end %>
+      </ul>
+    </li>
+  </ul>
+
+
+</div>
+
