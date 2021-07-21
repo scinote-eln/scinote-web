@@ -5,7 +5,7 @@ class RepositoryRowsController < ApplicationController
   include MyModulesHelper
 
   before_action :load_repository, except: :show
-  before_action :load_repository_row, only: %i(update assigned_task_list)
+  before_action :load_repository_row, only: %i(update assigned_task_list print_modal)
   before_action :check_read_permissions, except: %i(show create update delete_records copy_records)
   before_action :check_snapshotting_status, only: %i(create update delete_records copy_records)
   before_action :check_create_permissions, only: :create
@@ -65,6 +65,19 @@ class RepositoryRowsController < ApplicationController
         render json: {
           html: render_to_string(
             partial: 'repositories/repository_row_info_modal.html.erb'
+          )
+        }
+      end
+    end
+  end
+
+  def print_modal
+    @printers = ['test1', 'test2', 'test3']
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'repositories/print_label_modal.html.erb'
           )
         }
       end

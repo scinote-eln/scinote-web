@@ -1,0 +1,29 @@
+<div class="modal fade" id="modal-print-repository-row-label" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">
+          <%= t('repository_row.modal_print_label.head_title', repository_row: @repository_row.name) %>
+          <span class="id-label">
+            <%= t('repository_row.modal_print_label.id_label', repository_row_id: @repository_row.id) %>
+          </span>
+        </h4>
+
+      </div>
+      <div class="modal-body">
+        <div class=printers-container>
+          <label><%= t('repository_row.modal_print_label.printer') %></label>
+          <%= select_tag "printers", options_for_select(@printers) %>
+        </div>
+        <p class="sci-input-container">
+          <label><%= t('repository_row.modal_print_label.number_of_copies') %></label>
+          <%= number_field_tag :copies, 1, min: 1, class: 'sci-input-field print-copies-input' %>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal"><%= t('repository_row.modal_print_label.print_label') %></button>
+      </div>
+    </div>
+  </div>
+</div>
