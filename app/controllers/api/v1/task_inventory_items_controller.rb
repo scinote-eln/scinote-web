@@ -12,7 +12,7 @@ module Api
         items =
           @task.repository_rows
                .includes(repository_cells: :repository_column)
-               .includes(repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES)
+               .preload(repository_cells: :value)
                .page(params.dig(:page, :number))
                .per(params.dig(:page, :size))
         render jsonapi: items,

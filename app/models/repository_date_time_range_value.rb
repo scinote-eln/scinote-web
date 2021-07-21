@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class RepositoryDateTimeRangeValue < RepositoryDateTimeRangeValueBase
-  PRELOAD_INCLUDE = :repository_date_time_range_value
-
   def data_changed?(new_data)
     data = new_data.is_a?(String) ? JSON.parse(new_data).symbolize_keys : new_data
     st = Time.zone.parse(data[:start_time])
