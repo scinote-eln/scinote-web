@@ -48,19 +48,20 @@ class BiomoleculeToolkitClient
   private
 
   def process_request(request)
-    responce = @http.request(request)
+    response = @http.request(request)
 
-    if responce.is_a? Net::HTTPOK
-      JSON.parse(responce.body)
-    elsif responce.is_a? Net::HTTPNoContent
+    case response.class
+    when Net::HTTPOK
+      JSON.parse(response.body)
+    when Net::HTTPNoContent
       true
     else
-      error_message = JSON.parse(responce.body).dig('error', 'message')
+      error_message = JSON.parse(response.body).dig('error', 'message')
       error_message ||= I18n.t('biomolecule_toolkit_client.generic_error')
       raise BiomoleculeToolkitClientException, error_message
     end
   rescue JSON::ParserError
-    raise BiomoleculeToolkitClientException, I18n.t('biomolecule_toolkit_client.responce_parsing_error')
+    raise BiomoleculeToolkitClientException, I18n.t('biomolecule_toolkit_client.response_parsing_error')
   rescue StandardError
     raise BiomoleculeToolkitClientException, I18n.t('biomolecule_toolkit_client.generic_error')
   end
