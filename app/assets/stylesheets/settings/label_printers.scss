@@ -1,7 +1,10 @@
+// scss-lint:disable SelectorDepth SelectorFormat QualifyingElement
+// scss-lint:disable NestingDepth ImportantRule
+
 .label-printer-show {
   .printer-title {
-    margin-right: .5em !important;
     flex-grow: 0 !important;
+    margin-right: .5em !important;
   }
 
   .status {
