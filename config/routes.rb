@@ -774,6 +774,9 @@ Rails.application.routes.draw do
   end
 
   resources :bio_eddie_assets, only: %i(create update) do
+    collection do
+      get :license
+    end
     member do
       post :start_editing
     end
