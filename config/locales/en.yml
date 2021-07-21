@@ -1796,6 +1796,22 @@ en:
           head_title: "Settings | Add-ons"
           title: "Add-ons"
           no_addons: "You have no SciNote Add-ons."
+          label_printers: Label Printers
+          printers:
+            ready: "Ready"
+            not_ready: "Not ready"
+            printer_details: "Printer details"
+            enabled: "Enabled"
+          fluics_printer:
+            title: "FLUICS Printer"
+            description: "Sustainable sample inventory management for innovative research labs."
+        label_printer:
+          fluics_printer: "Label printer: FLUICS Printer"
+          instructions: "Instructions"
+          settings: "Settings"
+          api_key_label: "API key"
+          api_key_information: "Don’t have API key? Click here for more info."
+
         connected_accounts:
           head_title: "Settings | Connected Accounts"
           title: "Connected Accounts"

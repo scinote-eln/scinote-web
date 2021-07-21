@@ -1,0 +1,60 @@
+.label-printer-show {
+  .printer-title {
+    margin-right: .5em !important;
+    flex-grow: 0 !important;
+  }
+
+  .status {
+    border: $border-default;
+    color: $color-silver-chalice;
+    margin-left: .5em;
+    margin-right: auto;
+    padding: .25em;
+
+    &[data-ready="true"] {
+      background: $brand-success;
+      border-color: $brand-success;
+      color: $color-white;
+    }
+  }
+
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+
+    li {
+      padding: .5em 0;
+    }
+  }
+
+  .fa-caret-down {
+    cursor: pointer;
+    margin-right: .25em;
+
+    &.collapsed {
+      @include rotate(-90deg);
+    }
+  }
+
+  .collapse-row {
+    align-items: center;
+    display: flex;
+  }
+
+  .collapse {
+    padding-left: 1.5em;
+  }
+
+  .row-title {
+    @include font-h2;
+    margin-left: .5em;
+  }
+
+  .api-key-container {
+    display: flex;
+
+    .api-key-input {
+      margin-right: .5em;
+    }
+  }
+}
