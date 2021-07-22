@@ -48,10 +48,12 @@
 
 
 */
+
 var dropdownSelector = (function() {
   // /////////////////////
   // Support functions //
   // ////////////////////
+  const MAX_DROPDOWN_HEIGHT = 320;
 
   // Change direction of dropdown depends of container position
   function updateDropdownDirection(selector, container) {
@@ -77,13 +79,15 @@ var dropdownSelector = (function() {
 
     if ((modalContainerBottom + bottomSpace) < bottomTreshold) {
       container.addClass('inverse');
-      container.find('.dropdown-container')
+      maxHeight = Math.min(containerPosition - 122 + maxHeight, MAX_DROPDOWN_HEIGHT);
+      container.find('.dropdown-container').css('max-height', `${maxHeight}px`)
         .css('margin-bottom', `${(containerPosition * -1)}px`)
         .css('left', `${containerPositionLeft}px`)
         .css('width', `${containerWidth}px`);
     } else {
       container.removeClass('inverse');
-      container.find('.dropdown-container')
+      maxHeight = Math.min(bottomSpace - 32 + maxHeight, MAX_DROPDOWN_HEIGHT);
+      container.find('.dropdown-container').css('max-height', `${maxHeight}px`)
         .css('width', `${containerWidth}px`)
         .css('left', `${containerPositionLeft}px`)
         .css('margin-top', `${(bottomSpace * -1)}px`);
