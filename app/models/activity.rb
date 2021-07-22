@@ -63,6 +63,8 @@ class Activity < ApplicationRecord
     breadcrumbs: {}
   )
 
+  after_create ->(activity) { Activities::DispatchWebhooksJob.perform_later(activity) }
+
   def self.activity_types_list
     activity_list = type_ofs.map do |key, value|
       [
