@@ -17,8 +17,10 @@ describe Activities::CreateActivityService do
     it 'logs error' do
       stub_request(:post, webhook.url).to_return(status: 500, body: "", headers: {})
 
-      expect(WebhookService.new(webhook, { payload: "payload" }).send_webhook.response.code).to eq("500")
-      expect(webhook.error_count).to eq(1)
+      expect { WebhookService.new(webhook, { payload: "payload" }).send_webhook }.to(
+        raise_error(WebhookService::RequestFailureException)
+      )
+
       expect(webhook.last_error).to eq("500: ")
     end
   end
@@ -28,7 +30,6 @@ describe Activities::CreateActivityService do
       stub_request(:post, webhook.url).to_timeout
 
       expect { WebhookService.new(webhook, { payload: "payload" }).send_webhook }.to raise_error(Net::OpenTimeout)
-      expect(webhook.error_count).to eq(1)
       expect(webhook.last_error).to eq("execution expired")
     end
   end
@@ -38,20 +39,7 @@ describe Activities::CreateActivityService do
       stub_request(:post, webhook.url).to_raise(SocketError)
 
       expect { WebhookService.new(webhook, { payload: "payload" }).send_webhook }.to raise_error(SocketError)
-      expect(webhook.error_count).to eq(1)
       expect(webhook.last_error).to eq("Exception from WebMock")
-    end
-  end
-
-  context 'when webhook failed too many times' do
-    it 'disables webhook' do
-      stub_request(:post, webhook.url).to_raise(SocketError)
-
-      webhook.update_columns(error_count: WebhookService::DISABLE_WEBHOOK_ERROR_THRESHOLD - 1, active: true)
-
-      expect { WebhookService.new(webhook, { payload: "payload" }).send_webhook }.to raise_error(SocketError)
-      expect(webhook.error_count).to eq(WebhookService::DISABLE_WEBHOOK_ERROR_THRESHOLD)
-      expect(webhook.active).to be false
     end
   end
 end

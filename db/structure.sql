@@ -2802,7 +2802,6 @@ CREATE TABLE public.webhooks (
     http_method integer NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    error_count integer DEFAULT 0 NOT NULL,
     last_error text,
     text text
 );

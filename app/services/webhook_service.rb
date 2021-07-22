@@ -3,7 +3,7 @@
 class WebhookService
   class InactiveWebhookSendException < StandardError; end
 
-  DISABLE_WEBHOOK_ERROR_THRESHOLD = 10
+  class RequestFailureException < StandardError; end
 
   def initialize(webhook, payload)
     @webhook = webhook
@@ -13,7 +13,7 @@ class WebhookService
   def send_webhook
     unless @webhook.active?
       raise(
-        Activities::WebhooksService::InactiveWebhookSendException,
+        InactiveWebhookSendException,
         'Refused to send inactive webhook.'
       )
     end
@@ -27,30 +27,27 @@ class WebhookService
       }
     )
 
-    log_error!("#{response.code}: #{response.message}") unless response.success?
+    unless response.success?
+      error_description = "#{response.code}: #{response.message}"
+      log_error!(error_description)
+
+      raise(
+        RequestFailureException,
+        error_description
+      )
+    end
 
     response
   rescue Net::ReadTimeout, Net::OpenTimeout, SocketError => e
     log_error!(e)
     raise e
-  ensure
-    disable_webhook_if_broken!
   end
 
   private
 
   def log_error!(message)
-    error_count = @webhook.error_count + 1
-
     @webhook.update!(
-      error_count: error_count,
       last_error: message
     )
-  end
-
-  def disable_webhook_if_broken!
-    return if @webhook.error_count < DISABLE_WEBHOOK_ERROR_THRESHOLD
-
-    @webhook.update!(active: false)
   end
 end
