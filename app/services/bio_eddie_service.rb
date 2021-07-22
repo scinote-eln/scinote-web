@@ -58,7 +58,7 @@ class BioEddieService
       StringIO.new(params[:image])
     end
 
-    def attach_file(attachment, file, params, current_user)
+    def attach_file(attachment, file, params)
       attachment.attach(
         io: file,
         filename: "#{prepare_name(params[:name])}.svg",
@@ -70,27 +70,10 @@ class BioEddieService
           asset_type: 'bio_eddie'
         }
       )
-
-      log_activity(attachment.record, current_user) if params[:schedule_for_registration] == 'true'
     end
 
     def prepare_name(sketch_name)
       sketch_name.presence || I18n.t('bio_eddie.new_molecule')
-    end
-
-    def log_activity(asset, current_user)
-      Activities::CreateActivityService
-        .call(
-          activity_type: :register_molecule,
-          owner: current_user,
-          team: asset.team,
-          project: asset.my_module.experiment.project,
-          subject: asset,
-          message_items: {
-            description: asset.blob.metadata['description'],
-            name: asset.blob.metadata['name']
-          }
-        )
     end
   end
 end
