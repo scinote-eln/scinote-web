@@ -42,7 +42,7 @@ class WebhookService
   def log_error!(message)
     error_count = @webhook.error_count + 1
 
-    @webhook.update(
+    @webhook.update!(
       error_count: error_count,
       last_error: message
     )
@@ -51,6 +51,6 @@ class WebhookService
   def disable_webhook_if_broken!
     return if @webhook.error_count < DISABLE_WEBHOOK_ERROR_THRESHOLD
 
-    @webhook.update(active: false)
+    @webhook.update!(active: false)
   end
 end
