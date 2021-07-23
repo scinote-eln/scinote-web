@@ -65,6 +65,7 @@ var RepositoryDatatable = (function(global) {
         $('#restoreRepositoryRecords').prop('disabled', true);
         $('#deleteRepositoryRecords').prop('disabled', true);
         $('#editDeleteCopy').hide();
+        $('#toolbarPrintLabel').hide();
       } else {
         if (rowsSelected.length === 1) {
           $('#editRepositoryRecord').prop('disabled', false);
@@ -82,6 +83,7 @@ var RepositoryDatatable = (function(global) {
           $('#archiveRepositoryRecordsButton').prop('disabled', true);
         }
         $('#editDeleteCopy').show();
+        $('#toolbarPrintLabel').show();
       }
     } else if (currentMode === 'editMode') {
       $(TABLE_WRAPPER_ID).addClass('editing');
@@ -100,6 +102,8 @@ var RepositoryDatatable = (function(global) {
       $('.repository-row-selector').prop('disabled', true);
       $('.dataTables_filter input').prop('disabled', true);
     }
+
+    $('#toolbarPrintLabel').data('rows', JSON.stringify(rowsSelected));
   }
 
   function clearRowSelection() {

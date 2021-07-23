@@ -1609,6 +1609,7 @@ en:
       no_tasks: "This item in not assigned to any task."
     modal_print_label:
       head_title: "Print label - %{repository_row}"
+      head_title_multiple: "Print label - %{repository_rows} rows"
       id_label: "ID: %{repository_row_id}"
       printer: "Printer"
       number_of_copies: "Number of copies"

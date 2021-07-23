@@ -56,6 +56,7 @@
     $.ajax({
       method: 'GET',
       url: $(this).data('url'),
+      data: { rows: JSON.parse($(this).data('rows')) },
       dataType: 'json'
     }).done(function(xhr, settings, data) {
       $('body').append($.parseHTML(data.responseJSON.html));
