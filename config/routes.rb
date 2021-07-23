@@ -42,7 +42,9 @@ Rails.application.routes.draw do
         to: 'users/settings/account/addons#index',
         as: 'addons'
 
-    resources :label_printers, except: :show, path: 'users/settings/account/addons/label_printers'
+    resources :label_printers, except: :show, path: 'users/settings/account/addons/label_printers' do
+      post :create_fluics, on: :collection
+    end
 
     get 'users/settings/account/connected_accounts',
         to: 'users/settings/account/connected_accounts#index',

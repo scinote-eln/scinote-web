@@ -44,7 +44,24 @@ class LabelPrintersController < ApplicationController
       flash[:error] = t('label_printers.destroy.error', { printer_name: @label_printer.name })
     end
 
-    redirect_to label_printers_path
+    redirect_to addons_path
+  end
+
+  def create_fluics
+    # Placeholder for FLUICS printer management
+
+    LabelPrinters::Fluics::ApiClient.new(params[:fluics_api_key]).list.each do |fluics_printer|
+      label_printer = LabelPrinter.find_or_initialize_by(
+        fluics_api_key: params[:fluics_api_key],
+        fluics_lid: fluics_printer['LID'],
+        type_of: :fluics,
+        language_type: :zpl
+      )
+
+      label_printer.update(name: fluics_printer['serviceName'])
+    end
+
+    redirect_to addons_path
   end
 
   private

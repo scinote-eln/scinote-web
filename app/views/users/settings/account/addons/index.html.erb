@@ -18,6 +18,13 @@
     <div class="row">
       <div class="col-xs-12 col-sm-12">
         <h1 class="addons-title"><%= t('users.settings.account.addons.label_printers') %></h1>
+        <% if @label_printers.none? %>
+          <%= form_with url: create_fluics_label_printers_path, method: :post do |f| %>
+            <h2>FLUICS Printer Management Placeholder</h2>
+            <%= f.text_field :fluics_api_key %>
+            <%= f.submit "Fetch FLUICS Printers" %>
+          <% end %>
+        <% end %>
         <% @label_printers.each do |label_printer| %>
           <div class="printers-container">
             <div class="printer">
