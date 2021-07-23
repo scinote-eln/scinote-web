@@ -224,7 +224,7 @@ class Project < ApplicationRecord
     ids = active_experiments.map do |exp|
       exp.my_modules.pluck(:id) if exp.my_modules
     end
-    ids.delete_if { |i| i.flatten.empty? }
+    ids.delete_if { |i| i.flatten.blank? }
     ids.join(', ')
   end
 

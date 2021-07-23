@@ -140,7 +140,7 @@
               <hr>
               <% step.checklists.asc.each do |checklist| %>
                 <strong><%= custom_auto_link(checklist.name, team: current_team) %></strong>
-                <% if checklist.checklist_items.empty? %>
+                <% if checklist.checklist_items.blank? %>
                   </br>
                   <%= t("protocols.steps.empty_checklist") %>
                   </br>

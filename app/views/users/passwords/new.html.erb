@@ -7,10 +7,10 @@
 
       <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
 
-        <% if not resource.errors.empty? %>
-        <div class="alert alert-danger" id="alert-flash">
-        <%= devise_error_messages! %>
-        </div>
+        <% if resource.errors.present? %>
+          <div class="alert alert-danger" id="alert-flash">
+            <%= devise_error_messages! %>
+          </div>
         <% end %>
 
         <div class="form-group sci-input-container">

@@ -52,7 +52,7 @@
 <% end %>
 </div>
 
-<% if resource and not resource.errors.empty? %>
+<% if resource && resource.errors.present? %>
 <script>
 (function () {
   var formErrors = {};
@@ -69,7 +69,7 @@
 </script>
 <% end %>
 
-<% if @team and not @team.errors.empty? %>
+<% if @team && @team.errors.present? %>
 <script>
 (function () {
   var formErrors = {};

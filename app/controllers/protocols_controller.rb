@@ -570,7 +570,7 @@ class ProtocolsController < ApplicationController
       end
 
       p_name =
-        if @protocol_json['name'].present? && !@protocol_json['name'].empty?
+        if @protocol_json['name'].present?
           escape_input(@protocol_json['name'])
         else
           t('protocols.index.no_protocol_name')
@@ -772,7 +772,7 @@ class ProtocolsController < ApplicationController
           unless protocol_name.nil?
             escaped_name = protocol_name.gsub(/[^0-9a-zA-Z\-.,_]/i, '_')
                                         .downcase[0..Constants::NAME_MAX_LENGTH]
-            file_name = escaped_name + '.eln' unless escaped_name.empty?
+            file_name = escaped_name + '.eln' unless escaped_name.blank?
           end
         elsif @protocols.length > 1
           file_name = 'protocols.eln'

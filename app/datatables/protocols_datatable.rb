@@ -183,7 +183,7 @@ class ProtocolsDatatable < CustomDatatable
   end
 
   def keywords_html(record)
-    if !record.protocol_keywords_str || record.protocol_keywords_str.empty?
+    if !record.protocol_keywords_str || record.protocol_keywords_str.blank?
       "<i>#{I18n.t("protocols.no_keywords")}</i>"
     else
       kws = record.protocol_keywords_str.split(", ")

@@ -13,7 +13,7 @@ module Api
                key: :keywords,
                serializer: ProtocolKeywordSerializer,
                class_name: 'ProtocolKeyword',
-               unless: -> { object.protocol_keywords.empty? }
+               unless: -> { object.protocol_keywords.blank? }
       has_many :steps, serializer: StepSerializer, if: -> { object.steps.any? }
       belongs_to :parent, serializer: ProtocolSerializer, if: -> { object.parent.present? }
 

@@ -14,7 +14,7 @@ class ResultCommentsController < ApplicationController
 
   def index
     comments = @result.last_comments(@last_comment_id, @per_page)
-    more_url = result_result_comments_path(@result, format: :json, from: comments.first.id) unless comments.empty?
+    more_url = result_result_comments_path(@result, format: :json, from: comments.first.id) unless comments.blank?
     comment_index_helper(comments, more_url)
   end
 

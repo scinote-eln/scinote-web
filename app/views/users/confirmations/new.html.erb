@@ -20,7 +20,7 @@
 </div>
 
 
-<% if not resource.errors.empty? %>
+<% if resource.errors.present? %>
 <script>
 (function () {
   var formErrors = {};

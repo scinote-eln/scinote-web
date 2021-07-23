@@ -216,7 +216,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def sign_up_params
     tmp = params.require(:user).permit(:full_name, :initials, :email, :password, :password_confirmation)
     initials = tmp[:full_name].titleize.scan(/[A-Z]+/).join()
-    initials = if initials.strip.empty?
+    initials = if initials.strip.blank?
                  'PLCH'
                else
                  initials[0..Constants::USER_INITIALS_MAX_LENGTH]

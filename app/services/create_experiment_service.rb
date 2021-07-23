@@ -13,7 +13,7 @@ class CreateExperimentService
       unless @params[:project].class == Project
         @params[:project] = CreateProjectService.new(@user, @team, @params[:project]).call
       end
-      unless @params[:project]&.errors&.empty?
+      unless @params[:project]&.errors&.blank?
         new_experiment = @params[:project]
         raise ActiveRecord::Rollback
       end

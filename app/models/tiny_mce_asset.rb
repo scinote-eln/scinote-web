@@ -131,7 +131,7 @@ class TinyMceAsset < ApplicationRecord
       order(:id).each do |tiny_mce_asset|
         asset_guid = get_guid(tiny_mce_asset.id)
         extension = tiny_mce_asset.image.blob.filename.extension
-        asset_file_name = if extension.empty?
+        asset_file_name = if extension.blank?
                             "rte-#{asset_guid}"
                           else
                             "rte-#{asset_guid}.#{tiny_mce_asset.image.blob.filename.extension}"

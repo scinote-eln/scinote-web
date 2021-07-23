@@ -22,7 +22,7 @@ module Users
       @team.name = params[:team][:name]
 
       super do |user|
-        if user.errors.empty?
+        if user.errors.blank?
           @team.created_by = user
           @team.save
 

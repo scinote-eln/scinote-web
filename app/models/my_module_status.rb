@@ -33,11 +33,11 @@ class MyModuleStatus < ApplicationRecord
   def self.sort_by_position(order = :asc)
     ordered_statuses, statuses = all.to_a.partition { |i| i.previous_status_id.nil? }
 
-    return [] if ordered_statuses.empty?
+    return [] if ordered_statuses.blank?
 
-    until statuses.empty?
+    until statuses.blank?
       next_element, statuses = statuses.partition { |i| ordered_statuses.last.id == i.previous_status_id }
-      if next_element.empty?
+      if next_element.blank?
         break
       else
         ordered_statuses.concat(next_element)

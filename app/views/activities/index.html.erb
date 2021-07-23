@@ -4,7 +4,7 @@
   <div class="container" id="global-activity-page">
     <div>
       <ul id="list-activities" class="no-style content-activities">
-        <% if @vars[:activities].empty? %>
+        <% if @vars[:activities].blank? %>
           <li><em><%= t'activities.index.no_activities' %></em></li>
         <% else %>
           <% @vars[:activities].each do |activity| %>

@@ -87,7 +87,7 @@ class RepositoryColumnsController < ApplicationController
   end
 
   def available_asset_type_columns
-    if @asset_columns.empty?
+    if @asset_columns.blank?
       render json: {
         no_items: t(
           'projects.reports.new.save_PDF_to_inventory_modal.no_columns'

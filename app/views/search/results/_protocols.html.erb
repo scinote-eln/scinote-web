@@ -1,6 +1,6 @@
 <% results.each do |protocol| %>
-  <% has_description = protocol.description.present? && !protocol.description.empty? %>
-  <% has_authors = protocol.authors.present? && !protocol.authors.empty? %>
+  <% has_description = protocol.description.present? %>
+  <% has_authors = protocol.authors.present? %>
   <% has_keywords = protocol.in_repository? && protocol.protocol_keywords.count > 0 %>
 
   <h5>
@@ -122,5 +122,3 @@
   <hr>
 
 <% end %>
-
-
