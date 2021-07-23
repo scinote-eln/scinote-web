@@ -762,6 +762,18 @@ en:
       add_user_generic_error: "An error occurred. "
       can_add_user_to_project: "Can not add user to the project."
 
+  label_printers:
+    create:
+      success: "Successfully added %{printer_name}"
+      error: "Could not add %{printer_name}"
+    update:
+      success: "Successfully updated %{printer_name}"
+      error: "Could not update %{printer_name}"
+    delete:
+      success: "Successfully deleted %{printer_name}."
+      error: "Could not delete %{printer_name}."
+
+
   my_modules:
     details:
       title: "Details"

@@ -18,34 +18,32 @@
     <div class="row">
       <div class="col-xs-12 col-sm-12">
         <h1 class="addons-title"><%= t('users.settings.account.addons.label_printers') %></h1>
-        <div class="printers-container">
-          <% if @fluics_printer  %>
+        <% @label_printers.each do |label_printer| %>
+          <div class="printers-container">
             <div class="printer">
               <div class="header">
                 <div class="title">
                   <%= t('users.settings.account.addons.fluics_printer.title') %>
                 </div>
-                <div class="status" data-ready="<%= @fluics_printer[:ready] %>">
-                  <% if @fluics_printer[:ready] %>
+                <div class="status" data-ready="<%= label_printer.ready? %>">
+                  <% if label_printer.ready? %>
                     <%= t('users.settings.account.addons.printers.ready') %>
                   <% else %>
                     <%= t('users.settings.account.addons.printers.not_ready') %>
                   <% end %>
                 </div>
                 <div class="control">
-                  <% if @fluics_printer[:enabled] %>
-                    <%= t('users.settings.account.addons.printers.enabled') %>
-                    <i class="fas fa-check"></i>
-                  <% end %>
+                  <%= t('users.settings.account.addons.printers.enabled') %>
+                  <i class="fas fa-check"></i>
                 </div>
               </div>
               <div class="description">
                 <%= t('users.settings.account.addons.fluics_printer.description') %>
               </div>
-              <%= link_to t('users.settings.account.addons.printers.printer_details'), label_printer_path, class: 'printer-details' %>
+              <%= link_to t('users.settings.account.addons.printers.printer_details'), edit_label_printer_path(label_printer), class: 'printer-details' %>
             </div>
-          <% end %>
-        </div>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>

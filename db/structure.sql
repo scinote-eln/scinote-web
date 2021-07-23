@@ -556,6 +556,43 @@ ALTER SEQUENCE public.experiments_id_seq OWNED BY public.experiments.id;
 
 
 --
+-- Name: label_printers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.label_printers (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    type_of integer NOT NULL,
+    language_type integer NOT NULL,
+    host character varying,
+    port integer,
+    fluics_api_key character varying,
+    fluics_lid character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: label_printers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.label_printers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: label_printers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.label_printers_id_seq OWNED BY public.label_printers.id;
+
+
+--
 -- Name: label_templates; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3010,6 +3047,13 @@ ALTER TABLE ONLY public.experiments ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: label_printers id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.label_printers ALTER COLUMN id SET DEFAULT nextval('public.label_printers_id_seq'::regclass);
+
+
+--
 -- Name: label_templates id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3580,6 +3624,14 @@ ALTER TABLE ONLY public.delayed_jobs
 
 ALTER TABLE ONLY public.experiments
     ADD CONSTRAINT experiments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: label_printers label_printers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.label_printers
+    ADD CONSTRAINT label_printers_pkey PRIMARY KEY (id);
 
 
 --
@@ -7308,6 +7360,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210410100006'),
 ('20210506125657'),
 ('20210622101238'),
-('20210716124649');
+('20210716124649'),
+('20210720112050');
 
 
