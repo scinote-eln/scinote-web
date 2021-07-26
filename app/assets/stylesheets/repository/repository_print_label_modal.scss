@@ -18,4 +18,14 @@
   .modal-footer {
     text-align: center;
   }
+
+  .no-printers-container {
+    padding: 2em;
+    text-align: center;
+
+    .no-printer-title {
+      @include font-h3;
+      margin-top: 1em;
+    }
+  }
 }

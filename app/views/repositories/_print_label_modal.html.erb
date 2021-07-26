@@ -1,33 +1,48 @@
 <div class="modal fade" id="modal-print-repository-row-label" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">
-          <% if @repository_rows.size == 1 %>
-            <%= t('repository_row.modal_print_label.head_title', repository_row: @repository_rows.first.name) %>
-            <span class="id-label">
-              <%= t('repository_row.modal_print_label.id_label', repository_row_id: @repository_rows.first.id) %>
-            </span>
-          <% else %>
-            <%= t('repository_row.modal_print_label.head_title_multiple', repository_rows: @repository_rows.size) %>
-          <% end %>
-        </h4>
 
-      </div>
-      <div class="modal-body">
-        <div class=printers-container>
-          <label><%= t('repository_row.modal_print_label.printer') %></label>
-          <%= select_tag "printers", options_for_select(@printers) %>
+      <% if @printers.size > 0 %>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">
+            <% if @repository_rows.size == 1 %>
+              <%= t('repository_row.modal_print_label.head_title', repository_row: @repository_rows.first.name) %>
+              <span class="id-label">
+                <%= t('repository_row.modal_print_label.id_label', repository_row_id: @repository_rows.first.id) %>
+              </span>
+            <% else %>
+              <%= t('repository_row.modal_print_label.head_title_multiple', repository_rows: @repository_rows.size) %>
+            <% end %>
+          </h4>
         </div>
-        <p class="sci-input-container">
-          <label><%= t('repository_row.modal_print_label.number_of_copies') %></label>
-          <%= number_field_tag :copies, 1, min: 1, class: 'sci-input-field print-copies-input' %>
-        </p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal"><%= t('repository_row.modal_print_label.print_label') %></button>
-      </div>
+        <div class="modal-body">
+          <div class=printers-container>
+            <label><%= t('repository_row.modal_print_label.printer') %></label>
+            <%= select_tag "printers", options_for_select(@printers) %>
+          </div>
+          <p class="sci-input-container">
+            <label><%= t('repository_row.modal_print_label.number_of_copies') %></label>
+            <%= number_field_tag :copies, 1, min: 1, class: 'sci-input-field print-copies-input' %>
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal"><%= t('repository_row.modal_print_label.print_label') %></button>
+        </div>
+      <% else %>
+        <div class="modal-body no-printers-container">
+          <%= image_tag 'printers/no_available_printers' %>
+          <p class="no-printer-title">
+            <%= t('repository_row.modal_print_label.no_printers.title') %>
+          </p>
+          <p class="no-printer-body">
+            <%= t('repository_row.modal_print_label.no_printers.description') %>
+          </p>
+        </div>
+        <div class="modal-footer">
+          <%= link_to t('repository_row.modal_print_label.no_printers.visit_blog'), '', class: "btn btn-primary" %>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>

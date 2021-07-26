@@ -1626,6 +1626,10 @@ en:
       printer: "Printer"
       number_of_copies: "Number of copies"
       print_label: "Print label"
+      no_printers:
+        title: "There seems to be no printer available"
+        description: "To learn more about printing labels and label printers please visit our blog."
+        visit_blog: "Visit blog"
   activities:
     index:
       global_activities_title: "Global activities"

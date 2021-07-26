@@ -73,7 +73,7 @@ class RepositoryRowsController < ApplicationController
 
   def print_modal
     @repository_rows = @repository.repository_rows.where(id: params[:rows])
-    @printers = ['test1', 'test2', 'test3']
+    @printers = []
     respond_to do |format|
       format.json do
         render json: {
