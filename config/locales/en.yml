@@ -1630,6 +1630,17 @@ en:
         title: "There seems to be no printer available"
         description: "To learn more about printing labels and label printers please visit our blog."
         visit_blog: "Visit blog"
+    modal_printing_status:
+      printer_status:
+        ready: "Ready"
+        not_ready: "Not Ready"
+        out_of_labels: "Out of labels"
+      id_label: "ID: %{repository_row_id}"
+      multiple_items: "%{repository_rows_count} labels"
+      printing_status:
+        done: "Done"
+        printing: "Printing"
+        waiting_labels: "Waiting for labels. Please, insert labels."
   activities:
     index:
       global_activities_title: "Global activities"
