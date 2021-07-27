@@ -1,15 +1,5 @@
 # frozen_string_literal: true
 
-# ATTENTION: This should be removed ASAP, contact FLUICS
-module Net
-  module HTTPHeader
-    def capitalize(name)
-      name
-    end
-    private :capitalize
-  end
-end
-
 module LabelPrinters
   module Fluics
     class ApiClient
