@@ -563,6 +563,8 @@ var RepositoryDatatable = (function(global) {
         DataTableHelpers.initLengthApearance($(TABLE_ID).closest('.dataTables_wrapper'));
         DataTableHelpers.initSearchField($(TABLE_ID).closest('.dataTables_wrapper'), I18n.t('repositories.show.filter_inventory_items'));
 
+        $('<img class="barcode-scanner" src="/images/icon_small/barcode.png"></img>').appendTo($('.search-container'));
+
         if ($('.repository-show').length) {
           $('.dataTables_scrollBody, .dataTables_scrollHead').css('overflow', '');
         }
