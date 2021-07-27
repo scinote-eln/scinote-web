@@ -21,6 +21,8 @@ Rails.application.routes.draw do
 
     resources :activities, only: [:index]
 
+    get '/jobs/:id/status', to: 'active_jobs#status'
+
     get 'forbidden', to: 'application#forbidden', as: 'forbidden'
     get 'not_found', to: 'application#not_found', as: 'not_found'
 
@@ -44,6 +46,7 @@ Rails.application.routes.draw do
 
     resources :label_printers, except: :show, path: 'users/settings/account/addons/label_printers' do
       post :create_fluics, on: :collection
+      post :print, on: :member
     end
 
     get 'users/settings/account/connected_accounts',
