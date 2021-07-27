@@ -560,8 +560,10 @@ Rails.application.routes.draw do
 
       resources :repository_columns, only: %i(index new edit destroy)
       resources :repository_rows, only: %i(create show update) do
-        member do
+        collection do
           get :print_modal
+        end
+        member do
           get :assigned_task_list
         end
       end

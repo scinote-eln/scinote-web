@@ -5,7 +5,7 @@ class RepositoryRowsController < ApplicationController
   include MyModulesHelper
 
   before_action :load_repository, except: :show
-  before_action :load_repository_row, only: %i(update assigned_task_list print_modal)
+  before_action :load_repository_row, only: %i(update assigned_task_list)
   before_action :check_read_permissions, except: %i(show create update delete_records copy_records)
   before_action :check_snapshotting_status, only: %i(create update delete_records copy_records)
   before_action :check_create_permissions, only: :create
@@ -72,6 +72,7 @@ class RepositoryRowsController < ApplicationController
   end
 
   def print_modal
+    @repository_rows = @repository.repository_rows.where(id: params[:rows])
     @printers = ['test1', 'test2', 'test3']
     respond_to do |format|
       format.json do
