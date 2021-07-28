@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class Experiment < ApplicationRecord
-  EXPERIMENT_CODE_SQL = "('EX' || id)".freeze
-  SEARCHABLE_ATTRIBUTES = [:name, :description, EXPERIMENT_CODE_SQL].freeze
+  ID_PREFIX = 'EX'
+
+  include PrefixedIdModel
+  SEARCHABLE_ATTRIBUTES = [:name, :description, PREFIXED_ID_SQL].freeze
 
   include ArchivableModel
   include SearchableModel
@@ -76,13 +78,13 @@ class Experiment < ApplicationRecord
 
     if current_team
       new_query = experiment_search_scope(
-        Project
-          .search(user,
-                  include_archived,
-                  nil,
-                  1,
-                  current_team)
-          .select('id'),
+        Project.search(
+          user,
+          include_archived,
+          nil,
+          1,
+          current_team
+        ).select('id'),
         user
       ).where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
       return include_archived ? new_query : new_query.active
@@ -107,10 +109,6 @@ class Experiment < ApplicationRecord
     left_outer_joins(user_assignments: :user_role)
       .where(project: Project.viewable_by_user(user, teams))
       .where('user_roles.permissions @> ARRAY[?]::varchar[]', %w[experiment_read])
-  end
-
-  def code
-    "EX#{id}"
   end
 
   def archived_branch?

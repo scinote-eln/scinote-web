@@ -20,6 +20,7 @@ class ProjectsController < ApplicationController
   before_action :set_inline_name_editing, only: %i(show)
   before_action :load_exp_sort_var, only: :show
   before_action :reset_invalid_view_state, only: %i(index cards show)
+  before_action :set_folder_inline_name_editing, only: %i(index cards)
 
   layout 'fluid'
 
@@ -48,7 +49,15 @@ class ProjectsController < ApplicationController
         breadcrumbs_html = render_to_string(partial: 'projects/index/breadcrumbs.html.erb',
                                             locals: { target_folder: current_folder, folder_page: true })
         projects_cards_url = project_folder_cards_url(current_folder)
-        title = current_folder.name
+        title = if @inline_editable_title_config.present?
+                  render_to_string(partial: 'shared/inline_editing',
+                    locals: {
+                      initial_value: current_folder&.name,
+                      config: @inline_editable_title_config
+                    })
+                else
+                  current_folder.name
+                end
       else
         breadcrumbs_html = ''
         projects_cards_url = cards_projects_url
@@ -369,6 +378,18 @@ class ProjectsController < ApplicationController
       item_id: @project.id,
       field_to_udpate: 'name',
       path_to_update: project_path(@project)
+    }
+  end
+
+  def set_folder_inline_name_editing
+    return if !can_update_team?(current_team) || @current_folder.nil?
+
+    @inline_editable_title_config = {
+      name: 'title',
+      params_group: 'project_folder',
+      item_id: @current_folder.id,
+      field_to_udpate: 'name',
+      path_to_update: project_folder_path(@current_folder)
     }
   end
 

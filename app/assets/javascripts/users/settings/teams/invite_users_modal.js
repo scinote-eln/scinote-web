@@ -84,6 +84,10 @@
           inviteBtn.hide();
           inviteWithRoleDiv.show();
           break;
+        case 'invite_new_members':
+          inviteBtn.show();
+          inviteWithRoleDiv.hide();
+          break;
         default:
           break;
       }
@@ -133,6 +137,7 @@
             data.role = modal.attr('data-team-role');
             break;
           case 'invite':
+            data.team_ids = [];
             break;
           case 'invite_with_team_selector':
             if (teamSelectorCheckbox.is(':checked')) {

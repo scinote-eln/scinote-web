@@ -14,8 +14,8 @@ class RepositoryChecklistValue < ApplicationRecord
   validates :repository_checklist_items, presence: true
 
   SORTABLE_COLUMN_NAME = 'repository_checklist_items.data'
-  SORTABLE_VALUE_INCLUDE = { repository_checklist_value: :repository_checklist_items }.freeze
-  PRELOAD_INCLUDE = { repository_checklist_value: :repository_checklist_items }.freeze
+  EXTRA_SORTABLE_VALUE_INCLUDE = :repository_checklist_items
+  EXTRA_PRELOAD_INCLUDE = :repository_checklist_items
 
   def formatted(separator: ' | ')
     repository_checklist_items.pluck(:data).join(separator)

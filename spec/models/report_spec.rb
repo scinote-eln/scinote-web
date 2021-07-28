@@ -44,9 +44,5 @@ describe Report, type: :model do
         .is_at_least(Constants::NAME_MIN_LENGTH)
         .is_at_most(Constants::NAME_MAX_LENGTH)
     end
-
-    it do
-      expect(report).to validate_uniqueness_of(:name).scoped_to(:user_id, :project_id).case_insensitive
-    end
   end
 end

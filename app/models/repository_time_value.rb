@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class RepositoryTimeValue < RepositoryDateTimeValueBase
-  PRELOAD_INCLUDE = :repository_time_value
-
   def data_changed?(new_data)
     new_time = Time.zone.parse(new_data)
     new_time.min != data.min || new_time.hour != data.hour

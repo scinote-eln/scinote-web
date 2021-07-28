@@ -1317,6 +1317,8 @@ body > .loading-overlay {
 }
 
 .modal-invite-users {
+  overflow: hidden;
+
   .bootstrap-tagsinput {
     min-width: 450px;
     width: 100%;
@@ -1343,12 +1345,26 @@ body > .loading-overlay {
     }
   }
 
-  .dropdown-selector-container {
-    margin-bottom: 20px;
-  }
-
   .g-recaptcha {
     margin-top: 20px;
+  }
+
+  h4 {
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+
+  .select-container--with-blank {
+    overflow: hidden;
+
+    .search-field::placeholder {
+      color: $color-black;
+      opacity: 1;
+    }
+
+    .search-field:focus::placeholder {
+      opacity: 0;
+    }
   }
 }
 
@@ -1493,13 +1509,34 @@ a.disabled-with-click-events {
 }
 
 .form-select {
-  border: 1px solid $color-silver-chalice;
-  border-radius: 4px;
-  color: $color-emperor;
-  display: block;
-  font-size: 14px;
-  min-height: 36px;
-  outline: 0;
-  padding: 8px 42px 3px 3px;
-  width: 100%;
+  position: relative;
+
+  select {
+    appearance: none;
+    border: 1px solid $color-silver-chalice;
+    border-radius: 4px;
+    color: $color-emperor;
+    display: block;
+    font-size: 14px;
+    min-height: 36px;
+    outline: 0;
+    padding: 8px 42px 3px 3px;
+    width: 100%;
+  }
+
+  &::after {
+    color: $color-silver-chalice;
+    content: "\f0d7";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    height: 100%;
+    padding: 12px 8px;
+    pointer-events: none;
+    position: absolute;
+    right: -6px;
+    text-align: center;
+    top: -6px;
+    width: 10%;
+    z-index: 1;
+  }
 }

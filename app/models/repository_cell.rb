@@ -5,106 +5,32 @@ class RepositoryCell < ApplicationRecord
 
   belongs_to :repository_row
   belongs_to :repository_column
-  belongs_to :value, polymorphic: true,
-                     inverse_of: :repository_cell,
-                     dependent: :destroy
-  belongs_to :repository_text_value,
-             (lambda do
-               includes(:repository_cell)
-               .where(repository_cells: { value_type: 'RepositoryTextValue' })
-             end),
-             optional: true, foreign_key: :value_id, inverse_of: :repository_cell
-  belongs_to :repository_number_value,
-             (lambda do
-               includes(:repository_cell)
-               .where(repository_cells: { value_type: 'RepositoryNumberValue' })
-             end),
-             optional: true, foreign_key: :value_id, inverse_of: :repository_cell
-  belongs_to :repository_date_value,
-             (lambda do
-               includes(:repository_cell)
-               .where(repository_cells: { value_type: 'RepositoryDateTimeValueBase' })
-             end),
-             optional: true, foreign_key: :value_id, inverse_of: :repository_cell
-  belongs_to :repository_list_value,
-             (lambda do
-               includes(:repository_cell)
-               .where(repository_cells: { value_type: 'RepositoryListValue' })
-             end),
-             optional: true, foreign_key: :value_id, inverse_of: :repository_cell
-  belongs_to :repository_asset_value,
-             (lambda do
-               includes(:repository_cell)
-               .where(repository_cells: { value_type: 'RepositoryAssetValue' })
-             end),
-             optional: true, foreign_key: :value_id, inverse_of: :repository_cell
+  belongs_to :value, polymorphic: true, inverse_of: :repository_cell, dependent: :destroy
 
-  belongs_to :repository_status_value,
-             (lambda do
-               includes(:repository_cell)
-                 .where(repository_cells: { value_type: 'RepositoryStatusValue' })
-             end),
-             optional: true, foreign_key: :value_id, inverse_of: :repository_cell
-
-  belongs_to :repository_checklist_value,
-             (lambda do
-               includes(:repository_cell)
-                 .where(repository_cells: { value_type: 'RepositoryChecklistValue' })
-             end),
-             optional: true, foreign_key: :value_id, inverse_of: :repository_cell
-
-  belongs_to :repository_date_time_value_base,
-             (lambda do
-               includes(:repository_cell)
-                 .where(repository_cells: { value_type: 'RepositoryDateTimeValueBase' })
-             end),
-             optional: true, foreign_key: :value_id, inverse_of: :repository_cell
-
-  belongs_to :repository_date_time_value,
-             (lambda do
-               includes(:repository_cell)
-                 .where(repository_cells: { value_type: 'RepositoryDateTimeValueBase' })
-             end),
-             optional: true, foreign_key: :value_id, inverse_of: :repository_cell
-
-  belongs_to :repository_time_value,
-             (lambda do
-               includes(:repository_cell)
-                 .where(repository_cells: { value_type: 'RepositoryDateTimeValueBase' })
-             end),
-             optional: true, foreign_key: :value_id, inverse_of: :repository_cell
-
-  belongs_to :repository_date_time_range_value_base,
-             (lambda do
-               includes(:repository_cell)
-                 .where(repository_cells: { value_type: 'RepositoryDateTimeRangeValueBase' })
-             end),
-             optional: true, foreign_key: :value_id, inverse_of: :repository_cell
-
-  belongs_to :repository_date_time_range_value,
-             (lambda do
-               includes(:repository_cell)
-                 .where(repository_cells: { value_type: 'RepositoryDateTimeRangeValueBase' })
-             end),
-             optional: true, foreign_key: :value_id, inverse_of: :repository_cell
-
-  belongs_to :repository_date_range_value,
-             (lambda do
-               includes(:repository_cell)
-                 .where(repository_cells: { value_type: 'RepositoryDateTimeRangeValueBase' })
-             end),
-             optional: true, foreign_key: :value_id, inverse_of: :repository_cell
-
-  belongs_to :repository_time_range_value,
-             (lambda do
-               includes(:repository_cell)
-                 .where(repository_cells: { value_type: 'RepositoryDateTimeRangeValueBase' })
-             end),
-             optional: true, foreign_key: :value_id, inverse_of: :repository_cell
+  {
+    repository_text: 'RepositoryTextValue',
+    repository_number: 'RepositoryNumberValue',
+    repository_list: 'RepositoryListValue',
+    repository_asset: 'RepositoryAssetValue',
+    repository_status: 'RepositoryStatusValue',
+    repository_checklist: 'RepositoryChecklistValue',
+    repository_date_time: 'RepositoryDateTimeValueBase',
+    repository_time: 'RepositoryDateTimeValueBase',
+    repository_date: 'RepositoryDateTimeValueBase',
+    repository_date_time_range: 'RepositoryDateTimeRangeValueBase',
+    repository_time_range: 'RepositoryDateTimeRangeValueBase',
+    repository_date_range: 'RepositoryDateTimeRangeValueBase'
+  }.each do |relation, class_name|
+    belongs_to "#{relation}_value".to_sym,
+               (lambda do |repository_cell|
+                 repository_cell.value_type == class_name ? self : none
+               end),
+               optional: true, foreign_key: :value_id, inverse_of: :repository_cell
+  end
 
   validates :repository_column,
-            inclusion: { in: (lambda do |cell|
-              cell.repository_row&.repository&.repository_columns || []
+            inclusion: { in: (lambda do |repository_cell|
+              repository_cell.repository_row&.repository&.repository_columns || []
             end) },
             unless: :importing
   validates :repository_column, presence: true

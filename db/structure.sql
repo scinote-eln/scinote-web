@@ -5306,6 +5306,13 @@ CREATE INDEX index_repository_rows_on_repository_id ON public.repository_rows US
 
 
 --
+-- Name: index_repository_rows_on_repository_row_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_rows_on_repository_row_code ON public.repository_rows USING gin ((('IT'::text || id)) public.gin_trgm_ops);
+
+
+--
 -- Name: index_repository_rows_on_restored_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7453,4 +7460,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210506125657'),
 ('20210612070220'),
 ('20210622101238'),
-('20210627095718');
+('20210627095718'),
+('20210715125349');
+
+

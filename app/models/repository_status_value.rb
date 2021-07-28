@@ -12,8 +12,8 @@ class RepositoryStatusValue < ApplicationRecord
   validates :repository_cell, :repository_status_item, presence: true
 
   SORTABLE_COLUMN_NAME = 'repository_status_items.status'
-  SORTABLE_VALUE_INCLUDE = { repository_status_value: :repository_status_item }.freeze
-  PRELOAD_INCLUDE = { repository_status_value: :repository_status_item }.freeze
+  EXTRA_SORTABLE_VALUE_INCLUDE = :repository_status_item
+  EXTRA_PRELOAD_INCLUDE = :repository_status_item
 
   def formatted
     data
