@@ -1,0 +1,38 @@
+<div class="label-printing-progress-modal">
+  <div class="modal-header">
+    <div class="title">
+      <%= @printing[:printer_name] %>
+    </div>
+    <div class="printer-status" data-status="<%= @printing[:printer_status] %>">
+      <% if @printing[:printer_status] == :ready  %>
+        <%= t('repository_row.modal_printing_status.printer_status.ready') %>
+      <% elsif @printing[:printer_status] == :out_of_labels %>
+        <%= t('repository_row.modal_printing_status.printer_status.not_ready') %>
+      <% else %>
+        <%= t('repository_row.modal_printing_status.printer_status.out_of_label') %>
+      <% end %>
+    </div>
+    <button type="button" class="close"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="modal-body">
+    <div class="printing-items">
+      <% if @printing[:items].size == 1 %>
+        <%= @printing[:items].first.name %>
+        <span class="id-label">
+          <%= t('repository_row.modal_printing_status.id_label', repository_row_id: @printing[:items].first.id) %>
+        </span>
+      <% else %>
+        <%= t('repository_row.modal_printing_status.multiple_items', repository_rows_count: @printing[:items].length) %>
+      <% end %>
+    </div>
+    <div class="printing-status"  data-status="<%= @printing[:printing_status] %>">
+      <% if @printing[:printing_status] == :done  %>
+        <%= t('repository_row.modal_printing_status.printing_status.done') %>
+      <% elsif @printing[:printing_status] == :waiting_labels %>
+        <%= t('repository_row.modal_printing_status.printing_status.waiting_labels') %>
+      <% else %>
+        <%= t('repository_row.modal_printing_status.printing_status.printing') %>
+      <% end %>
+    </div>
+  </div>
+</div>
