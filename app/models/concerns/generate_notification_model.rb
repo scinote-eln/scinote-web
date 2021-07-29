@@ -15,7 +15,7 @@ module GenerateNotificationModel
     description = generate_notification_description_elements(subject).reverse.join(' | ')
 
     notification = Notification.create(
-      type_of: :recent_changes,
+      type_of: notification_type,
       title: sanitize_input(message, %w(strong a)),
       message: sanitize_input(description, %w(strong a)),
       generator_user_id: owner.id
@@ -113,5 +113,15 @@ module GenerateNotificationModel
 
   def generate_notification
     CreateNotificationFromActivityJob.perform_later(self) if notifiable?
+  end
+
+  def notification_type
+    return :recent_changes unless instance_of?(Activity)
+
+    if type_of.in? Activity::ASSIGNMENT_TYPES
+      :assignment
+    else
+      :recent_changes
+    end
   end
 end

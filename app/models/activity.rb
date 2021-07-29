@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 
 class Activity < ApplicationRecord
+  ASSIGNMENT_TYPES = %w(
+    assign_user_to_project
+    change_user_role_on_project
+    unassign_user_from_project
+    assign_user_to_module
+    unassign_user_from_module
+    invite_user_to_team
+    remove_user_from_team
+    change_users_role_on_team
+  ).freeze
+
   include ActivityValuesModel
   include GenerateNotificationModel
 
