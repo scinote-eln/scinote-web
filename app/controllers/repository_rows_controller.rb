@@ -23,7 +23,7 @@ class RepositoryRowsController < ApplicationController
     @repository_rows = datatable_service.repository_rows
                                         .preload(:repository_columns,
                                                  :created_by,
-                                                 repository_cells: @repository.cell_preload_includes)
+                                                 repository_cells: { value: @repository.cell_preload_includes })
                                         .page(page)
                                         .per(per_page)
 

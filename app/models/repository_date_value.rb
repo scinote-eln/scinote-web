@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class RepositoryDateValue < RepositoryDateTimeValueBase
-  PRELOAD_INCLUDE = :repository_date_value
-
   def data_changed?(new_data)
     new_time = Time.zone.parse(new_data)
     new_time.to_date != data.to_date

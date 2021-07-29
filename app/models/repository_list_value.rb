@@ -20,8 +20,8 @@ class RepositoryListValue < ApplicationRecord
                          end)
 
   SORTABLE_COLUMN_NAME = 'repository_list_items.data'
-  SORTABLE_VALUE_INCLUDE = { repository_list_value: :repository_list_item }.freeze
-  PRELOAD_INCLUDE = { repository_list_value: :repository_list_item }.freeze
+  EXTRA_SORTABLE_VALUE_INCLUDE = :repository_list_item
+  EXTRA_PRELOAD_INCLUDE = :repository_list_item
 
   def formatted
     data.to_s

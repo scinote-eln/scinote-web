@@ -24,7 +24,10 @@ class RepositoryBase < ApplicationRecord
   def cell_preload_includes
     cell_includes = []
     repository_columns.pluck(:data_type).each do |data_type|
-      cell_includes << data_type.constantize::PRELOAD_INCLUDE
+      value_class = data_type.constantize
+      next unless value_class.const_defined?('EXTRA_PRELOAD_INCLUDE')
+
+      cell_includes << value_class::EXTRA_PRELOAD_INCLUDE
     end
     cell_includes
   end
