@@ -24,9 +24,7 @@ module DelayedWorkerConfig
   # or left in the database with "failed_at" set dempends on the
   # DESTROY_FAILED_JOBS value
   def max_attempts
-    value = ENV['DELAYED_WORKER_MAX_ATTEMPTS'].to_i
-    return 6 if value.zero?
-    value
+    1
   end
 
   # The default DELAYED_WORKER_MAX_RUN_TIME is 30.minutes.

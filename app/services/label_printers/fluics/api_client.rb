@@ -4,7 +4,9 @@ module LabelPrinters
   module Fluics
     class ApiClient
       class NotFoundError < StandardError; end
+
       class ServerError < StandardError; end
+
       class BadRequestError < StandardError; end
 
       include HTTParty
