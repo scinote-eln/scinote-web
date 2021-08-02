@@ -67,7 +67,7 @@
         $(this).remove();
       });
 
-      dropdownSelector.init('#modal-print-repository-row-label #printers', {
+      dropdownSelector.init('#modal-print-repository-row-label #label_printer_id', {
         noEmptyOption: true,
         singleSelect: true,
         closeOnSelect: true,

@@ -34,6 +34,12 @@
         border-color: $brand-warning;
         color: $color-white;
       }
+
+      &[data-status="error"] {
+        background: $brand-danger;
+        border-color: $brand-danger;
+        color: $color-white;
+      }
     }
   }
 
@@ -52,7 +58,7 @@
         color: $brand-success;
       }
 
-      &[data-status="waiting_labels"] {
+      &[data-status="waiting_labels"], &[data-status="error"] {
         color: $brand-danger;
       }
     }

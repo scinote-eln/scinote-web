@@ -49,12 +49,8 @@ class RepositoriesController < ApplicationController
     @display_delete_button = can_delete_repository_rows?(@repository)
     @display_duplicate_button = can_create_repository_rows?(@repository)
     @snapshot_provisioning = @repository.repository_snapshots.provisioning.any?
-    @printing = {
-      printer_name: 'Fluics label printer',
-      printer_status: :out_of_labels,
-      items: RepositoryRow.all,
-      printing_status: :waiting_labels
-    }
+
+    @busy_printer = LabelPrinter.where.not(current_print_job_ids: []).first
   end
 
   def table_toolbar

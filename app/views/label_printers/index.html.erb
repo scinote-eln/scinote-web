@@ -88,7 +88,7 @@
         <% if @label_printers.any? %>
           <% @label_printers.each do |printer| %>
             <li>
-              <b><%= printer.name %></b>
+              <b><%= printer.name %></b> • <%= printer.description %>
             </li>
           <% end %>
         <% else %>
