@@ -18,39 +18,30 @@
     <div class="row">
       <div class="col-xs-12 col-sm-12">
         <h1 class="addons-title"><%= t('users.settings.account.addons.label_printers') %></h1>
-        <% if @label_printers.none? %>
-          <%= form_with url: create_fluics_label_printers_path, method: :post do |f| %>
-            <h2>FLUICS Printer Management Placeholder</h2>
-            <%= f.text_field :fluics_api_key %>
-            <%= f.submit "Fetch FLUICS Printers" %>
-          <% end %>
-        <% end %>
-        <% @label_printers.each do |label_printer| %>
-          <div class="printers-container">
-            <div class="printer">
-              <div class="header">
-                <div class="title">
-                  <%= t('users.settings.account.addons.fluics_printer.title') %>
-                </div>
-                <div class="status" data-ready="<%= label_printer.ready? %>">
-                  <% if label_printer.ready? %>
-                    <%= t('users.settings.account.addons.printers.ready') %>
-                  <% else %>
-                    <%= t('users.settings.account.addons.printers.not_ready') %>
-                  <% end %>
-                </div>
-                <div class="control">
-                  <%= t('users.settings.account.addons.printers.enabled') %>
-                  <i class="fas fa-check"></i>
-                </div>
+        <div class="printers-container">
+          <div class="printer">
+            <div class="header">
+              <div class="title">
+                <%= t('users.settings.account.addons.fluics_printer.title') %>
               </div>
-              <div class="description">
-                <%= t('users.settings.account.addons.fluics_printer.description') %>
+              <div class="control">
+                <%= t('users.settings.account.addons.printers.enabled') %>
+                <i class="fas fa-check"></i>
               </div>
-              <%= link_to t('users.settings.account.addons.printers.printer_details'), edit_label_printer_path(label_printer), class: 'printer-details' %>
             </div>
+            <div class="description">
+              <%= t('users.settings.account.addons.fluics_printer.description') %>
+            </div>
+            <% if !@label_printer_any && can_manage_label_printers? %>
+              <%= link_to label_printers_path(), class: 'printer-details btn btn-primary' do %>
+                <i class="fas fa-key"></i>
+                <%= t('users.settings.account.addons.printers.enter_api_key') %>
+              <% end %>
+            <% else %>
+              <%= link_to t('users.settings.account.addons.printers.printer_details'), label_printers_path(), class: 'printer-details' %>
+            <% end %>
           </div>
-        <% end %>
+        </div>
       </div>
     </div>
   </div>

@@ -8,5 +8,9 @@ module Organization
     can :create_teams do |_|
       true
     end
+
+    can :manage_label_printers do |_|
+      true
+    end
   end
 end

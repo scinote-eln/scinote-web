@@ -3,10 +3,12 @@
 class LabelPrintersController < ApplicationController
   include InputSanitizeHelper
 
+  before_action :check_manage_permissions, except: :index
   before_action :find_label_printer, only: %i(edit update destroy)
 
   def index
     @label_printers = LabelPrinter.all
+    @fluics_api_key = @label_printers.any? ? @label_printers.first.fluics_api_key : nil
   end
 
   def new
@@ -59,22 +61,33 @@ class LabelPrintersController < ApplicationController
 
   def create_fluics
     # Placeholder for FLUICS printer management
+    begin
+      printers = LabelPrinters::Fluics::ApiClient.new(label_printer_params[:fluics_api_key]).list
 
-    LabelPrinters::Fluics::ApiClient.new(params[:fluics_api_key]).list.each do |fluics_printer|
-      label_printer = LabelPrinter.find_or_initialize_by(
-        fluics_api_key: params[:fluics_api_key],
-        fluics_lid: fluics_printer['LID'],
-        type_of: :fluics,
-        language_type: :zpl
-      )
+      LabelPrinter.destroy_all
 
-      label_printer.update(name: fluics_printer['serviceName'])
+      printers.each do |fluics_printer|
+        label_printer = LabelPrinter.find_or_initialize_by(
+          fluics_api_key: label_printer_params[:fluics_api_key],
+          fluics_lid: fluics_printer['LID'],
+          type_of: :fluics,
+          language_type: :zpl
+        )
+
+        label_printer.update(name: fluics_printer['serviceName'])
+      end
+    rescue LabelPrinters::Fluics::ApiClient::BadRequestError
+      flash[:error] = t('users.settings.account.label_printer.api_key_error')
     end
 
-    redirect_to addons_path
+    redirect_to label_printers_path
   end
 
   private
+
+  def check_manage_permissions
+    render_403 unless can_manage_label_printers?
+  end
 
   def label_printer_params
     params.require(:label_printer).permit(
