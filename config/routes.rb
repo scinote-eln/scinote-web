@@ -46,7 +46,11 @@ Rails.application.routes.draw do
 
     resources :label_printers, except: :show, path: 'users/settings/account/addons/label_printers' do
       post :create_fluics, on: :collection
+    end
+
+    resources :label_printers, only: [] do
       post :print, on: :member
+      get :update_progress_modal, on: :member
     end
 
     get 'users/settings/account/connected_accounts',
@@ -567,6 +571,7 @@ Rails.application.routes.draw do
       resources :repository_rows, only: %i(create show update) do
         collection do
           get :print_modal
+          post :print
         end
         member do
           get :assigned_task_list

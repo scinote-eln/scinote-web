@@ -562,12 +562,15 @@ ALTER SEQUENCE public.experiments_id_seq OWNED BY public.experiments.id;
 CREATE TABLE public.label_printers (
     id bigint NOT NULL,
     name character varying NOT NULL,
+    description character varying,
     type_of integer NOT NULL,
     language_type integer NOT NULL,
     host character varying,
     port integer,
     fluics_api_key character varying,
     fluics_lid character varying,
+    current_print_job_ids character varying[] DEFAULT '{}'::character varying[],
+    status integer DEFAULT 0,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );

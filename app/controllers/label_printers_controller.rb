@@ -3,7 +3,7 @@
 class LabelPrintersController < ApplicationController
   include InputSanitizeHelper
 
-  before_action :check_manage_permissions, except: :index
+  before_action :check_manage_permissions, except: %i(index update_progress_modal)
   before_action :find_label_printer, only: %i(edit update destroy)
 
   def index
@@ -59,8 +59,22 @@ class LabelPrintersController < ApplicationController
     render json: { job_id: print_job.job_id }
   end
 
+  def update_progress_modal
+    render(
+      json: {
+        html:
+          render_to_string(
+            partial: 'label_printers/print_progress_modal',
+            locals: {
+              starting_item_count: params[:starting_item_count].to_i,
+              label_printer: LabelPrinter.find(params[:id])
+            }
+          )
+      }
+    )
+  end
+
   def create_fluics
-    # Placeholder for FLUICS printer management
     begin
       printers = LabelPrinters::Fluics::ApiClient.new(label_printer_params[:fluics_api_key]).list
 
