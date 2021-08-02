@@ -2204,7 +2204,7 @@ en:
 
   invite_users:
     to_team:
-      title: "Invite users to team %{team}"
+      title: "Invite members to %{team}"
       heading: "Invite more people to team %{team} and start using SciNote."
     no_team:
       title: "Invite users to SciNote"
