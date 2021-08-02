@@ -1835,6 +1835,7 @@ en:
             ready: "Ready"
             not_ready: "Not ready"
             printer_details: "Printer details"
+            enter_api_key: "Enter API key"
             enabled: "Enabled"
           fluics_printer:
             title: "FLUICS Printer"
@@ -1842,9 +1843,21 @@ en:
         label_printer:
           fluics_printer: "Label printer: FLUICS Printer"
           instructions: "Instructions"
+          fluics_instruction:
+            p1: "To make it work, please follow these steps:"
+            p2: "1. Open the FLUICS Connect web app or install an iOS / Android mobile app."
+            p3: "2. Sign up for a free account. Follow the instructions to set up your workspace."
+            p4: "3. Upgrade to a Pro Workspace to get your API key. Read more on how to get an API key."
+            p5: "4. Enter the API key into the field below and start printing your own labels."
           settings: "Settings"
           api_key_label: "API key"
+          api_key_warning: "API key change will lead to printer list refresh"
+          api_key_error: "Invalid API key"
           api_key_information: "Don’t have API key? Click here for more info."
+          saved: "Saved"
+          update_printers: "Update printers"
+          no_printers_available: "No printers available"
+
 
         connected_accounts:
           head_title: "Settings | Connected Accounts"

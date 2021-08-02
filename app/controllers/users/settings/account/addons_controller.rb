@@ -5,7 +5,7 @@ module Users
         layout 'fluid'
 
         def index
-          @label_printers = LabelPrinter.all
+          @label_printer_any = LabelPrinter.any?
         end
       end
     end
