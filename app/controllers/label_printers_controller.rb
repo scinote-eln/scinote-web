@@ -88,7 +88,10 @@ class LabelPrintersController < ApplicationController
           language_type: :zpl
         )
 
-        label_printer.update(name: fluics_printer['serviceName'])
+        label_printer.update(
+          name: fluics_printer['serviceName'],
+          description: fluics_printer['comment']
+        )
       end
     rescue LabelPrinters::Fluics::ApiClient::BadRequestError
       flash[:error] = t('users.settings.account.label_printer.api_key_error')
