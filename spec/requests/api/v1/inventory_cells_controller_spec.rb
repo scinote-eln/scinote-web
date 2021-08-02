@@ -369,10 +369,11 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(@valid_item.repository_cells,
-               each_serializer: Api::V1::InventoryCellSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@valid_item.repository_cells, each_serializer: Api::V1::InventoryCellSerializer)
+            .to_json
+        )['data']
       )
     end
 
@@ -548,10 +549,11 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       expect(response).to have_http_status 201
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(RepositoryCell.last,
-               serializer: Api::V1::InventoryCellSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(RepositoryCell.last, serializer: Api::V1::InventoryCellSerializer)
+            .to_json
+        )['data']
       )
     end
 
@@ -602,10 +604,11 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       expect(response).to have_http_status 201
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(RepositoryCell.last,
-               serializer: Api::V1::InventoryCellSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(RepositoryCell.last, serializer: Api::V1::InventoryCellSerializer)
+            .to_json
+        )['data']
       )
     end
 
@@ -836,10 +839,12 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       expect(response).to have_http_status 200
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(@valid_item.repository_cells.where(repository_column: @date_column).first,
-               serializer: Api::V1::InventoryCellSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@valid_item.repository_cells.where(repository_column: @date_column).first,
+                 serializer: Api::V1::InventoryCellSerializer)
+            .to_json
+        )['data']
       )
     end
 
@@ -872,10 +877,12 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       expect(response).to have_http_status 200
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(@valid_item.repository_cells.where(repository_column: @date_time_column).first,
-               serializer: Api::V1::InventoryCellSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@valid_item.repository_cells.where(repository_column: @date_time_column).first,
+                 serializer: Api::V1::InventoryCellSerializer)
+            .to_json
+        )['data']
       )
     end
 
@@ -890,10 +897,12 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       expect(response).to have_http_status 200
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(@valid_item.repository_cells.where(repository_column: @date_range_column).first,
-               serializer: Api::V1::InventoryCellSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@valid_item.repository_cells.where(repository_column: @date_range_column).first,
+                 serializer: Api::V1::InventoryCellSerializer)
+            .to_json
+        )['data']
       )
     end
 

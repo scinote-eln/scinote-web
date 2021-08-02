@@ -80,15 +80,21 @@ class Repository < RepositoryBase
 
     matched_by_user = readable_rows.joins(:created_by).where_attributes_like('users.full_name', query, options)
 
+    prefixed_repository_row_ids = RepositoryRow.where(repository_id: repositories)
+                                               .where_attributes_like([RepositoryRow::PREFIXED_ID_SQL], query, options)
+                                               .select(:id)
+
     repository_row_matches =
-      readable_rows.where_attributes_like(['repository_rows.name', 'repository_rows.id'], query, options)
+      readable_rows.where_attributes_like(['repository_rows.name'], query, options).or(
+        readable_rows.where('repository_rows.id' => prefixed_repository_row_ids)
+      )
 
     repository_rows = readable_rows.where(id: repository_row_matches)
     repository_rows = repository_rows.or(readable_rows.where(id: matched_by_user))
 
-    Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each do |field, include_hash|
-      custom_cell_matches = readable_rows.joins(repository_cells: include_hash)
-                                         .where_attributes_like(field, query, options)
+    Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each do |_data_type, config|
+      custom_cell_matches = repository_rows.joins(config[:includes])
+                                           .where_attributes_like(config[:field], query, options)
       repository_rows = repository_rows.or(readable_rows.where(id: custom_cell_matches))
     end
 
@@ -193,14 +199,6 @@ class Repository < RepositoryBase
             message_items: { repository_new: new_repo.id, repository_original: id })
 
     new_repo
-  end
-
-  def cell_preload_includes
-    cell_includes = []
-    repository_columns.pluck(:data_type).each do |data_type|
-      cell_includes << data_type.constantize::PRELOAD_INCLUDE
-    end
-    cell_includes
   end
 
   def import_records(sheet, mappings, user)

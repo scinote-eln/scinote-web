@@ -188,7 +188,7 @@ en:
       create_project_folder_html: "%{user} created project folder %{project_folder}."
       rename_project_folder_html: "%{user} renamed project folder %{project_folder}."
       delete_project_folder_html: "%{user} deleted project folder %{project_folder}."
-      move_project_folder_html: "%{user} moved folder %{project_folder} from folder %{project_folder_from}</strong> to folder %{project_folder_to}."
+      move_project_folder_html: "%{user} moved project folder %{project_folder} from folder %{project_folder_from}</strong> to folder %{project_folder_to}."
       generate_pdf_report_html: "%{user} generated PDF report %{report}."
       generate_docx_report_html: "%{user} generated DOCX report %{report}."
 

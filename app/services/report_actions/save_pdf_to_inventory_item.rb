@@ -11,7 +11,10 @@ module ReportActions
     end
 
     def save
-      ActiveRecord::Base.transaction do
+      # we lock the row, to prevent two repository cells being created at the same location
+      # as the RepositoryCell validation would pass in both concurrent transactions
+
+      @repository_row.with_lock do
         asset = create_new_asset
         delete_old_repository_cell
         @new_cell_value = create_new_cell_value(asset)

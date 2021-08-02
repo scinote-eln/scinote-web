@@ -71,7 +71,7 @@
                   ${I18n.t('projects.reports.index.previous_docx')})
                 </a>`;
       }
-      return `<span class="processing-error">
+      return `<span class="processing-error docx">
                 <i class="fas fa-exclamation-triangle"></i>
                 ${I18n.t('projects.reports.index.error')}${oldLink}
               </span>`;
@@ -101,7 +101,7 @@
                   ${I18n.t('projects.reports.index.previous_pdf')})
                 </a>`;
       }
-      return `<span class="processing-error">
+      return `<span class="processing-error pdf">
                 <i class="fas fa-exclamation-triangle"></i>
                 ${I18n.t('projects.reports.index.error')}${oldLink}
               </span>`;
@@ -132,6 +132,9 @@
       .attr('data-retry-count', 0)
       .attr('data-save-to-inventory-path', data.save_to_inventory)
       .attr('data-id', data['0']);
+    if (data.archived) {
+      $(row).addClass('archived');
+    }
     if (data['3'].processing || data['4'].processing) {
       $(row).addClass('processing');
     }
@@ -161,6 +164,7 @@
       $('.single-object-action, .multiple-object-action').removeClass('disabled hidden');
 
       let $row = $(`.report-row[data-id=${CHECKED_REPORTS[0]}]`);
+      let archived = $row.hasClass('archived');
       let pdfProcessing = $row.has('.processing.pdf').length > 0;
       let docxProcessing = $row.has('.processing.docx').length > 0;
       let docxGenerate = $row.has('.generate-docx').length > 0;
@@ -185,12 +189,11 @@
         }
       }
 
-      if (pdfProcessing || docxProcessing) {
+      if (archived || pdfProcessing || docxProcessing) {
         $('#edit-report-btn').addClass('disabled');
       } else {
         $('#edit-report-btn').removeClass('disabled');
       }
-
     } else {
       $('.single-object-action').removeClass('hidden').addClass('disabled');
       $('.multiple-object-action').removeClass('disabled hidden');

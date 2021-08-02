@@ -2,7 +2,13 @@
 <% provide(:sidebar_title, t("sidebar.my_module.sidebar_title")) %>
 
 <%= content_for :sidebar do %>
-  <%= render partial: 'shared/sidebar/my_module.html.erb' %>
+  <%= render partial: 'shared/sidebar/my_module.html.erb',
+    locals: {
+      my_modules: @experiment_my_modules,
+      experiment: @experiment,
+      current_my_module: @my_module
+    }
+  %>
 <% end %>
 <%= render partial: "shared/secondary_navigation" %>
 
@@ -21,3 +27,6 @@
     <% end %>
   </div>
 </div>
+
+<%= javascript_pack_tag 'pdfjs/pdf_js' %>
+<%= stylesheet_pack_tag 'pdfjs/pdf_js_styles' %>

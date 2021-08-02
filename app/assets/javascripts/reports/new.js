@@ -1020,19 +1020,21 @@ function reportHandsonTableConverter() {
     });
 
     // Project content
-    reportData.project_content = { experiments: [], tasks: {}, repositories: [] };
+    reportData.project_content = { experiments: [], repositories: [] };
     $.each($('.project-contents-container .experiment-element'), function(i, experiment) {
       let expCheckbox = $(experiment).find('.report-experiment-checkbox');
       if (!expCheckbox.prop('checked') && !expCheckbox.prop('indeterminate')) return;
 
-      let experimentId = $(experiment).find('.report-experiment-checkbox').val();
-      reportData.project_content.tasks[experimentId] = [];
-      reportData.project_content.experiments.push(experimentId);
+      let experimentData = {};
+      experimentData.id = parseInt($(experiment).find('.report-experiment-checkbox').val(), 10);
+      experimentData.my_module_ids = [];
       $.each($(experiment).find('.report-my-module-checkbox:checked'), function(j, myModule) {
-        reportData.project_content.tasks[experimentId].push(parseInt(myModule.value, 10));
+        experimentData.my_module_ids.push(parseInt(myModule.value, 10));
       });
+      reportData.project_content.experiments.push(experimentData);
     });
-    $.each($('.task-contents-container .repositories-contents .sci-checkbox:checked'), function(i, e) {
+
+    $.each($('.task-contents-container .repositories-contents .repositories-setting:checked'), function(i, e) {
       reportData.project_content.repositories.push(parseInt(e.value, 10));
     });
 

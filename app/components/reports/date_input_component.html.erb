@@ -1,8 +1,20 @@
 <% if @editing %>
   <div class="sci-input-container">
     <%= label_tag @name, @label %>
-    <%= date_field_tag @name, @value, placeholder: @placeholder, class: 'sci-input-field', data: { type: 'DateInputComponent' } %>
+    <div class="datetime-picker-container">
+      <span class="fas fa-calendar-alt"></span>
+      <input type="datetime"
+             name="<%= @name %>"
+             data-toggle='date-time-picker'
+             class="sci-input-field"
+             placeholder="<%= @placeholder %>"
+             data-date-format="<%= datetime_picker_format_date_only %>"
+             data-date-locale="<%= I18n.locale %>"
+             data-date-use-current="false"
+             data-type="DateInputComponent"
+             value="<%= @value.present? ? l(Date.parse(@value), format: :full) : '' %>"/>
+    </div>
   </div>
 <% else %>
-  <%= @value %>
+  <%= @value.present? ? l(Date.parse(@value), format: :full) : '' %>
 <% end %>

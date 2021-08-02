@@ -6,6 +6,8 @@ module Reports
     include InputSanitizeHelper
     include ReportsHelper
 
+    PDFUNITE_ENCRYPTED_PDF_ERROR_STRING = 'Unimplemented Feature: Could not merge encrypted files'
+
     queue_as :reports
 
     discard_on StandardError do |job, error|
@@ -49,7 +51,7 @@ module Reports
 
         raise StandardError, 'Report template not found!' if template.blank?
 
-        I18n.backend.date_format = user.settings[:date_format] || Constants::DEFAULT_DATE_FORMAT
+        I18n.backend.date_format = user.settings[:date_format]
         ActionController::Renderer::RACK_KEY_TRANSLATION['warden'] ||= 'warden'
         proxy = Warden::Proxy.new({}, Warden::Manager.new({}))
         proxy.set_user(user, scope: :user, store: false)
@@ -58,10 +60,10 @@ module Reports
 
         file << renderer.render(
           pdf: 'report', header: { html: { template: "reports/templates/#{template}/header",
-                                           locals: { report: report, user: user },
+                                           locals: { report: report, user: user, logo: report_logo },
                                            layout: 'reports/footer_header.html.erb' } },
                          footer: { html: { template: "reports/templates/#{template}/footer",
-                                           locals: { report: report, user: user },
+                                           locals: { report: report, user: user, logo: report_logo },
                                            layout: 'reports/footer_header.html.erb' } },
                          assigns: { settings: report.settings },
                          locals: { report: report },
@@ -89,7 +91,7 @@ module Reports
         )
         notification.create_user_notification(user)
       ensure
-        I18n.backend.date_format = Constants::DEFAULT_DATE_FORMAT
+        I18n.backend.date_format = nil
         file.close(true)
       end
     end
@@ -119,12 +121,22 @@ module Reports
 
     def merge_pdf_files(file, report_file)
       merged_file = Tempfile.new(['report', '.pdf'], binmode: true)
-      success = system(
+
+      _output, error, status = Open3.capture3(
         'pdfunite', report_file.path, file.path, merged_file.path
       )
 
-      unless success && File.file?(merged_file)
-        raise StandardError, 'There was an error merging report and PDF file preview'
+      # don't raise error if the issue was an encrypted pdf, which pdfunite doesn't support
+      if error.include?(PDFUNITE_ENCRYPTED_PDF_ERROR_STRING)
+        Rails.logger.warn("Cannot merge encrypted PDF #{file.path}, skipping!")
+
+        file.close(true)
+        merged_file.close(true)
+
+        # return the report file unchanged, as no merge was done
+        return report_file
+      elsif !status.success? || !File.file?(merged_file)
+        raise StandardError, "There was an error merging report and PDF file preview (#{error})"
       end
 
       file.close(true)
@@ -152,7 +164,7 @@ module Reports
       title_page << renderer.render(
         pdf: 'report', inline: renderer.render_to_string("reports/templates/#{template}/cover.html.erb",
                                                          layout: false,
-                                                         locals: { report: report, total_pages: total_pages.to_i }),
+                                                         locals: { report: report, total_pages: total_pages.to_i, logo: report_logo }),
                        disable_javascript: false,
                        template: 'reports/report.pdf.erb'
       )
@@ -170,5 +182,10 @@ module Reports
 
       merged_file
     end
+
+    def report_logo
+      'logo.png'
+    end
+
   end
 end

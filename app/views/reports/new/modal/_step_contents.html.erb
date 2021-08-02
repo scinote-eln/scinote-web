@@ -1,4 +1,0 @@
-<%= bootstrap_form_tag remote: true, url: step_contents_project_reports_path(project, format: :json), method: :post, html: { id: "add-contents-form" } do |f| %>
-  <%= hidden_field_tag :id, step.id %>
-  <%= render partial: "reports/new/modal/step_contents_inner.html.erb", locals: { form: f, step: step } %>
-<% end %>

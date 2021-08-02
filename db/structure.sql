@@ -4448,6 +4448,20 @@ CREATE INDEX index_experiments_on_created_by_id ON public.experiments USING btre
 
 
 --
+-- Name: index_experiments_on_description; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_experiments_on_description ON public.experiments USING gin (public.trim_html_tags(description) public.gin_trgm_ops);
+
+
+--
+-- Name: index_experiments_on_experiment_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_experiments_on_experiment_code ON public.experiments USING gin ((('EX'::text || id)) public.gin_trgm_ops);
+
+
+--
 -- Name: index_experiments_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4458,7 +4472,7 @@ CREATE INDEX index_experiments_on_last_modified_by_id ON public.experiments USIN
 -- Name: index_experiments_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_experiments_on_name ON public.experiments USING btree (name);
+CREATE INDEX index_experiments_on_name ON public.experiments USING gin (public.trim_html_tags((name)::text) public.gin_trgm_ops);
 
 
 --
@@ -5278,6 +5292,13 @@ CREATE INDEX index_repository_rows_on_name ON public.repository_rows USING gin (
 --
 
 CREATE INDEX index_repository_rows_on_repository_id ON public.repository_rows USING btree (repository_id);
+
+
+--
+-- Name: index_repository_rows_on_repository_row_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_rows_on_repository_row_code ON public.repository_rows USING gin ((('IT'::text || id)) public.gin_trgm_ops);
 
 
 --
@@ -7351,6 +7372,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210506125657'),
 ('20210531114633'),
 ('20210603152345'),
-('20210616071836');
+('20210616071836'),
+('20210622101238'),
+('20210715125349');
 
 

@@ -2,6 +2,7 @@ class ReportsController < ApplicationController
   include TeamsHelper
   include ReportActions
   include ReportsHelper
+  include StringUtility
 
   BEFORE_ACTION_METHODS = %i(
     create
@@ -9,23 +10,14 @@ class ReportsController < ApplicationController
     update
     generate_pdf
     generate_docx
-    save_modal
     new_template_values
     project_contents
-    experiment_contents_modal
-    module_contents_modal
-    step_contents_modal
-    result_contents_modal
-    experiment_contents
-    module_contents
-    step_contents
-    result_contents
   ).freeze
 
   before_action :load_vars, only: %i(edit update document_preview generate_pdf generate_docx status
                                      save_pdf_to_inventory_modal save_pdf_to_inventory_item)
   before_action :load_vars_nested, only: BEFORE_ACTION_METHODS
-  before_action :load_visible_projects, only: %i(new edit)
+  before_action :load_wizard_vars, only: %i(new edit)
   before_action :load_available_repositories, only: %i(index save_pdf_to_inventory_modal available_repositories)
 
   before_action :check_manage_permissions, only: BEFORE_ACTION_METHODS
@@ -51,7 +43,6 @@ class ReportsController < ApplicationController
   # Report grouped by modules
   def new
     @templates = Extends::REPORT_TEMPLATES
-    @repositories = Repository.accessible_by_teams(current_team).active.select(:id, :name).order(:name)
     @report = current_team.reports.new
   end
 
@@ -112,9 +103,7 @@ class ReportsController < ApplicationController
 
   def edit
     @edit = true
-    @templates = Extends::REPORT_TEMPLATES
     @active_template = @report.settings[:template]
-    @repositories = Repository.accessible_by_teams(current_team).active.select(:id, :name).order(:name)
     @report.settings = Report::DEFAULT_SETTINGS if @report.settings.blank?
 
     @project_contents = {
@@ -128,7 +117,9 @@ class ReportsController < ApplicationController
   # Updating existing report from the _save modal of the new page
   def update
     @report.last_modified_by = current_user
-    @report.assign_attributes(report_params)
+    @report.assign_attributes(
+      report_params.merge(project_id: @project.id)
+    )
 
     ReportActions::ReportContent.new(
       @report,
@@ -205,6 +196,8 @@ class ReportsController < ApplicationController
       format.json do
         @report.docx_processing!
         log_activity(:generate_docx_report)
+
+        ensure_report_template!
         Reports::DocxJob.perform_later(@report.id, current_user, root_url)
         render json: {
           message: I18n.t('projects.reports.index.generation.accepted_message')
@@ -243,58 +236,6 @@ class ReportsController < ApplicationController
     render json: { message: e.message }, status: :forbidden
   rescue StandardError => e
     render json: { message: e.message }, status: :internal_server_error
-  end
-
-  # Modal for saving the existsing/new report
-  def save_modal
-    # Assume user is updating existing report
-    @report = @project.reports.find_by_id(params[:id])
-    @method = :put
-
-    # Case when saving a new report
-    if @report.blank?
-      @report = Report.new
-      @method = :post
-      @url = project_reports_path(@project, format: :json)
-    else
-      @url = project_report_path(@project, @report, format: :json)
-    end
-
-    render_403 and return unless params.include? :contents
-
-    @report_contents = params[:contents]
-
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'reports/new/modal/save.html.erb'
-          )
-        }
-      end
-    end
-  end
-
-  # Experiment for adding contents into experiment element
-  def experiment_contents_modal
-    experiment = @project.experiments.find_by_id(params[:experiment_id])
-
-    respond_to do |format|
-      if experiment.blank?
-        format.json do
-          render json: {}, status: :not_found
-        end
-      else
-        format.json do
-          render json: {
-            html: render_to_string(
-              partial: 'reports/new/modal/experiment_contents.html.erb',
-              locals: { project: @project, experiment: experiment }
-            )
-          }
-        end
-      end
-    end
   end
 
   # Modal for adding contents into module element
@@ -375,105 +316,6 @@ class ReportsController < ApplicationController
     }
   end
 
-  def experiment_contents
-    experiment = @project.experiments.find_by(id: params[:id])
-    module_ids = (params[:modules].select { |_, p| p == '1' }).keys.collect(&:to_i)
-    selected_modules = experiment.my_modules.where(id: module_ids)
-
-    respond_to do |format|
-      if experiment.blank?
-        format.json { render json: {}, status: :not_found }
-      elsif selected_modules.blank?
-        format.json { render json: {}, status: :no_content }
-      else
-        elements = generate_experiment_contents_json(selected_modules)
-      end
-
-      if elements_empty? elements
-        format.json { render json: {}, status: :no_content }
-      else
-        format.json do
-          render json: {
-            status: :ok,
-            elements: elements
-          }
-        end
-      end
-    end
-  end
-
-  def module_contents
-    my_module = MyModule.find_by_id(params[:id])
-    return render_403 unless my_module.experiment.project == @project
-
-    respond_to do |format|
-      if my_module.blank?
-        format.json { render json: {}, status: :not_found }
-      else
-        elements = generate_module_contents_json(my_module)
-
-        if elements_empty? elements
-          format.json { render json: {}, status: :no_content }
-        else
-          format.json do
-            render json: {
-              status: :ok,
-              elements: elements
-            }
-          end
-        end
-      end
-    end
-  end
-
-  def step_contents
-    step = Step.find_by_id(params[:id])
-    return render_403 unless step.my_module.experiment.project == @project
-
-    respond_to do |format|
-      if step.blank?
-        format.json { render json: {}, status: :not_found }
-      else
-        elements = generate_step_contents_json(step)
-
-        if elements_empty? elements
-          format.json { render json: {}, status: :no_content }
-        else
-          format.json {
-            render json: {
-              status: :ok,
-              elements: elements
-            }
-          }
-        end
-      end
-    end
-  end
-
-  def result_contents
-    result = Result.find_by_id(params[:id])
-    return render_403 unless result.my_module.experiment.project == @project
-
-    respond_to do |format|
-      if result.blank?
-        format.json { render json: {}, status: :not_found }
-      else
-        elements = generate_result_contents_json(result)
-
-        if elements_empty? elements
-          format.json { render json: {}, status: :no_content }
-        else
-          format.json {
-            render json: {
-              status: :ok,
-              elements: elements
-            }
-          }
-        end
-      end
-    end
-  end
-
   def available_repositories
     render json: { results: @available_repositories }, status: :ok
   end
@@ -490,7 +332,6 @@ class ReportsController < ApplicationController
 
   private
 
-  include StringUtility
   AvailableRepository = Struct.new(:id, :name)
 
   def load_vars
@@ -505,18 +346,24 @@ class ReportsController < ApplicationController
     render_403 unless can_read_project?(@project)
   end
 
-  def check_manage_permissions
-    render_403 unless can_manage_reports?(@project.team)
-  end
-
-  def load_visible_projects
-    render_404 unless current_team
+  def load_wizard_vars
+    @templates = Extends::REPORT_TEMPLATES
+    live_repositories = Repository.accessible_by_teams(current_team)
+    snapshots_of_deleted = RepositorySnapshot.left_outer_joins(:original_repository)
+                                             .where(team: current_team)
+                                             .where.not(original_repository: live_repositories)
+                                             .select('DISTINCT ON ("repositories"."parent_id") "repositories".*')
+    @repositories = (live_repositories + snapshots_of_deleted).sort_by { |r| r.name.downcase }
     @visible_projects = Project.active
                                .viewable_by_user(current_user, current_team)
                                .joins(experiments: :my_modules)
                                .merge(Experiment.active)
                                .merge(MyModule.active)
                                .select(:id, :name)
+  end
+
+  def check_manage_permissions
+    render_403 unless can_manage_reports?(@project.team)
   end
 
   def load_available_repositories
@@ -562,6 +409,15 @@ class ReportsController < ApplicationController
 
     @report.pdf_processing!
     log_activity(:generate_pdf_report)
+
+    ensure_report_template!
     Reports::PdfJob.perform_later(@report.id, current_user)
+  end
+
+  def ensure_report_template!
+    return if @report.settings['template'].present?
+
+    @report.settings['template'] = 'scinote_template'
+    @report.save
   end
 end

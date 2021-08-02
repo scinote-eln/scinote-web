@@ -78,14 +78,21 @@ class RepositoryDatatableService
     if search_value.present?
       matched_by_user = repository_rows.joins(:created_by).where_attributes_like('users.full_name', search_value)
 
-      repository_row_matches = repository_rows
-                               .where_attributes_like(['repository_rows.name', 'repository_rows.id'], search_value)
+      repository_row_matches =  repository_rows
+                                .where_attributes_like(
+                                  ['repository_rows.name', RepositoryRow::PREFIXED_ID_SQL],
+                                  search_value
+                                )
       results = repository_rows.where(id: repository_row_matches)
       results = results.or(repository_rows.where(id: matched_by_user))
 
-      Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each do |field, include_hash|
-        custom_cell_matches = repository_rows.joins(repository_cells: include_hash)
-                                             .where_attributes_like(field, search_value)
+      data_types = @repository.repository_columns.pluck(:data_type).uniq
+
+      Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each do |data_type, config|
+        next unless data_types.include?(data_type.to_s)
+
+        custom_cell_matches = repository_rows.joins(config[:includes])
+                                             .where_attributes_like(config[:field], search_value)
         results = results.or(repository_rows.where(id: custom_cell_matches))
       end
 
@@ -132,37 +139,38 @@ class RepositoryDatatableService
     col_order = service.load_state.state['ColReorder']
     column_id = col_order[column_index].to_i
 
-    if @sortable_columns[column_id - 1] == 'assigned'
+    case @sortable_columns[column_id - 1]
+    when 'assigned'
       return records if @my_module && @params[:assigned] == 'assigned'
 
       records.order("assigned_my_modules_count #{dir}")
-    elsif @sortable_columns[column_id - 1] == 'repository_cell.value'
+    when 'repository_cell.value'
       id = @mappings.key(column_id.to_s)
-      sorting_column = RepositoryColumn.find_by(id: id)
+      sorting_column = @repository.repository_columns.find_by(id: id)
       return records unless sorting_column
 
       sorting_data_type = sorting_column.data_type.constantize
+      cells = sorting_data_type.joins(:repository_cell)
+                               .where('repository_cells.repository_column_id': sorting_column.id)
+      if sorting_data_type.const_defined?('EXTRA_SORTABLE_VALUE_INCLUDE')
+        cells = cells.joins(sorting_data_type::EXTRA_SORTABLE_VALUE_INCLUDE)
+      end
 
       cells = if sorting_column.repository_checklist_value?
-                RepositoryCell.joins(sorting_data_type::SORTABLE_VALUE_INCLUDE)
-                              .where('repository_cells.repository_column_id': sorting_column.id)
-                              .select("repository_cells.repository_row_id,
-                                              STRING_AGG(
-                                                #{sorting_data_type::SORTABLE_COLUMN_NAME}, ' '
-                                                ORDER BY #{sorting_data_type::SORTABLE_COLUMN_NAME}) AS value")
-                              .group('repository_cells.repository_row_id')
-
+                cells
+                  .select("repository_cells.repository_row_id, \
+                           STRING_AGG(#{sorting_data_type::SORTABLE_COLUMN_NAME}, ' ' \
+                           ORDER BY #{sorting_data_type::SORTABLE_COLUMN_NAME}) AS value")
+                  .group('repository_cells.repository_row_id')
               else
-                RepositoryCell.joins(sorting_data_type::SORTABLE_VALUE_INCLUDE)
-                              .where('repository_cells.repository_column_id': sorting_column.id)
-                              .select("repository_cells.repository_row_id,
-                                      #{sorting_data_type::SORTABLE_COLUMN_NAME} AS value")
+                cells
+                  .select("repository_cells.repository_row_id, #{sorting_data_type::SORTABLE_COLUMN_NAME} AS value")
               end
 
       records.joins("LEFT OUTER JOIN (#{cells.to_sql}) AS values ON values.repository_row_id = repository_rows.id")
              .group('values.value')
              .order("values.value #{dir}")
-    elsif @sortable_columns[column_id - 1] == 'users.full_name'
+    when 'users.full_name'
       records.group('users.full_name').order("users.full_name #{dir}")
     else
       records.group(@sortable_columns[column_id - 1]).order("#{@sortable_columns[column_id - 1]} #{dir}")

@@ -25,11 +25,12 @@
       <%= link_to experiment.name, canvas_experiment_path(experiment), title: experiment.name, class: 'name-link' %>
     <% end %>
   </div>
-    <div class="actions actions-cell table-cell">
-      <% if can_manage_experiments?(experiment.project) %>
-        <%= render partial: 'projects/show/experiment_actions_dropdown.html.erb', locals: { experiment: experiment } %>
-      <% end %>
-    </div>
+  <div class="experiment-code-cell table-cell">
+    <span><%= experiment.code %></span>
+  </div>
+  <div class="actions actions-cell table-cell">
+    <%= render partial: 'projects/show/experiment_actions_dropdown.html.erb', locals: { experiment: experiment } %>
+  </div>
   <div class="dates-and-img-container">
     <div class="dates-container">
       <div class="data-row start-date-cell table-cell">

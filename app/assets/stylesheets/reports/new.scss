@@ -333,6 +333,11 @@
         }
       }
 
+      .datetime-picker-container {
+        display: block;
+        max-width: 40%;
+      }
+
       .sci-checkbox-container {
         float: left;
         margin-right: .5em;
