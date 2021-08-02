@@ -1636,11 +1636,13 @@ en:
         ready: "Ready"
         not_ready: "Not Ready"
         out_of_labels: "Out of labels"
+        error: "Printer error"
       multiple_items: "%{item_count}/%{starting_item_count} labels"
       printing_status:
         done: "Done"
         printing: "Printing"
         out_of_labels: "Waiting for labels. Please, insert labels."
+        error: "There is an issue with the printer."
   activities:
     index:
       global_activities_title: "Global activities"

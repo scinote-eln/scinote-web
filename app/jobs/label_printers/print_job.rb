@@ -2,7 +2,14 @@
 
 module LabelPrinters
   class PrintJob < ApplicationJob
+    MAX_STATUS_UPDATES = 10
+
     queue_as :high_priority
+
+    discard_on(StandardError) do |job, _error|
+      label_printer = job.arguments.first
+      label_printer.update!(status: :error)
+    end
 
     def perform(label_printer, payload)
       case label_printer.type_of
@@ -14,11 +21,11 @@ module LabelPrinters
         api_client.print(label_printer.fluics_lid, payload)
 
         # wait for FLUICS printer to stop being busy
-        loop do
+        MAX_STATUS_UPDATES.times do
           status =
-            LabelPrinters::FLUICS_STATUS_MAP(
+            LabelPrinter::FLUICS_STATUS_MAP[
               api_client.status(label_printer.fluics_lid).dig('printerState', 'printerStatus')
-            )
+            ]
           label_printer.update!(status: status)
 
           break if status == :ready
@@ -27,13 +34,13 @@ module LabelPrinters
         end
       end
 
+      # mark as unreachable if no final state is reached
+      label_printer.update!(status: :unreachable) unless label_printer.status.in? %w(ready out_of_labels)
+
       label_printer.with_lock do
         label_printer.current_print_job_ids.delete(job_id)
         label_printer.save!
       end
     end
-  rescue StandardError => e
-    label_printer.update(status: :error)
-    raise e
   end
 end

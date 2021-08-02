@@ -87,7 +87,9 @@ class RepositoryRowsController < ApplicationController
 
   def print
     label_printer = LabelPrinter.find(params[:label_printer_id])
-    label_printer.update!(status: :ready) # reset potential error state
+
+    # reset potential error state
+    label_printer.update!(status: :ready, current_print_job_ids: [])
 
     job_ids = RepositoryRow.where(id: params[:repository_row_ids]).flat_map do |repository_row|
       Array.new(params[:copies].to_i).map do

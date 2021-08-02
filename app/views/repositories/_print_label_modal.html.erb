@@ -9,7 +9,7 @@
               <% if @repository_rows.size == 1 %>
                 <%= t('repository_row.modal_print_label.head_title', repository_row: @repository_rows.first.name) %>
                 <span class="id-label">
-                  <%= t('repository_row.modal_print_label.id_label', repository_row_id: @repository_rows.first.id) %>
+                  <%= t('repository_row.modal_print_label.id_label', repository_row_id: @repository_rows.first.code) %>
                 </span>
               <% else %>
                 <%= t('repository_row.modal_print_label.head_title_multiple', repository_rows: @repository_rows.size) %>

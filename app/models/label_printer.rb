@@ -22,4 +22,20 @@ class LabelPrinter < ApplicationRecord
   def display_name
     "#{name} • #{description}"
   end
+
+  def done?
+    current_print_job_ids.blank? && ready?
+  end
+
+  def printing?
+    current_print_job_ids.any? && ready?
+  end
+
+  def printing_status
+    return 'printing' if printing?
+
+    return 'done' if done?
+
+    status
+  end
 end
