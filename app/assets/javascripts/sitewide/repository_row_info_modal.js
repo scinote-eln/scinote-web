@@ -1,3 +1,5 @@
+/* global dropdownSelector bwipjs */
+
 (function() {
   'use strict';
 
@@ -16,6 +18,15 @@
         $(this).find('.modal-body #repository_row-info-table').DataTable().destroy();
         $(this).remove();
       });
+
+      let barCodeCanvas = bwipjs.toCanvas('bar-code-canvas', {
+        bcid: 'qrcode',
+        text: $('#modal-info-repository-row #bar-code-canvas').data('id').toString(),
+        scale: 3
+      });
+      $('#modal-info-repository-row #bar-code-image').attr('src', barCodeCanvas.toDataURL('image/png'));
+
+
       $('#repository_row-info-table').DataTable({
         dom: 'RBltpi',
         stateSave: false,
@@ -39,5 +50,29 @@
     });
     e.preventDefault();
     return false;
+  });
+
+  $(document).on('click', '.print-label-button', function() {
+    $.ajax({
+      method: 'GET',
+      url: $(this).data('url'),
+      data: { rows: JSON.parse($(this).data('rows')) },
+      dataType: 'json'
+    }).done(function(xhr, settings, data) {
+      $('body').append($.parseHTML(data.responseJSON.html));
+      $('#modal-print-repository-row-label').modal('show', {
+        backdrop: true,
+        keyboard: false
+      }).on('hidden.bs.modal', function() {
+        $(this).remove();
+      });
+
+      dropdownSelector.init('#modal-print-repository-row-label #label_printer_id', {
+        noEmptyOption: true,
+        singleSelect: true,
+        closeOnSelect: true,
+        selectAppearance: 'simple'
+      });
+    });
   });
 })();

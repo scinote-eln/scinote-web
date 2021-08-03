@@ -21,6 +21,8 @@ Rails.application.routes.draw do
 
     resources :activities, only: [:index]
 
+    get '/jobs/:id/status', to: 'active_jobs#status'
+
     get 'forbidden', to: 'application#forbidden', as: 'forbidden'
     get 'not_found', to: 'application#not_found', as: 'not_found'
 
@@ -41,6 +43,16 @@ Rails.application.routes.draw do
     get 'users/settings/account/addons',
         to: 'users/settings/account/addons#index',
         as: 'addons'
+
+    resources :label_printers, except: :show, path: 'users/settings/account/addons/label_printers' do
+      post :create_fluics, on: :collection
+    end
+
+    resources :label_printers, only: [] do
+      post :print, on: :member
+      get :update_progress_modal, on: :member
+    end
+
     get 'users/settings/account/connected_accounts',
         to: 'users/settings/account/connected_accounts#index',
         as: 'connected_accounts'
@@ -569,6 +581,10 @@ Rails.application.routes.draw do
 
       resources :repository_columns, only: %i(index new edit destroy)
       resources :repository_rows, only: %i(create show update) do
+        collection do
+          get :print_modal
+          post :print
+        end
         member do
           get :assigned_task_list
         end

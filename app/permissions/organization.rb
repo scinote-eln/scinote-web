@@ -9,6 +9,10 @@ module Organization
       true
     end
 
+    can :manage_label_printers do |_|
+      true
+    end
+
     can :create_acitivity_filters do
       true
     end

@@ -1823,6 +1823,11 @@ builtin-status-codes@^3.0.0:
   resolved "https://registry.yarnpkg.com/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
   integrity sha1-hZgoeOIbmOHGZCXgPQF0eI9Wnug=
 
+bwip-js@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/bwip-js/-/bwip-js-3.0.1.tgz#13cbfbea186f038308635624e9db17796eda047e"
+  integrity sha512-3kC5orAnLaRnXhW6tmH+pZL9nmKBPPzPHFsBi8rDMr68JapkwN0I2CqJKFUT9c1THN/dfLq95R2t3nE4jgNQPw==
+
 bytes@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/bytes/-/bytes-3.0.0.tgz#d32815404d689699f85a4ea4fa8755dd13a96048"

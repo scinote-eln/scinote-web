@@ -71,6 +71,43 @@ class RepositoryRowsController < ApplicationController
     end
   end
 
+  def print_modal
+    @repository_rows = @repository.repository_rows.where(id: params[:rows])
+    @printers = LabelPrinter.all
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'repositories/print_label_modal.html.erb'
+          )
+        }
+      end
+    end
+  end
+
+  def print
+    label_printer = LabelPrinter.find(params[:label_printer_id])
+
+    # reset potential error state
+    label_printer.update!(status: :ready, current_print_job_ids: [])
+
+    job_ids = RepositoryRow.where(id: params[:repository_row_ids]).flat_map do |repository_row|
+      Array.new(params[:copies].to_i).map do
+        LabelPrinters::PrintJob.perform_later(
+          label_printer,
+          LabelTemplate.first.render( # Currently we will only use the default template
+            item_id: repository_row.code,
+            item_name: repository_row.name
+          )
+        ).job_id
+      end
+    end
+
+    label_printer.update!(current_print_job_ids: job_ids)
+
+    redirect_to repository_path(@repository)
+  end
+
   def update
     row_update = RepositoryRows::UpdateRepositoryRowService
                  .call(repository_row: @repository_row, user: current_user, params: update_params)

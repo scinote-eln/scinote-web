@@ -159,6 +159,12 @@
 <%= render partial: 'repositories/import_repository_records_modal',
                     locals: { repository: @repository } %>
 
+<% if @busy_printer %>
+  <%= render(
+    partial: 'label_printers/print_progress_modal',
+    locals: { starting_item_count: @busy_printer.current_print_job_ids.length, label_printer: @busy_printer }) %>
+<% end %>
+
 <%= render partial: "repositories/delete_record_modal" %>
 <%= render partial: 'repositories/export_repository_modal',
            locals: { repository: @repository } %>
@@ -172,6 +178,7 @@
 <%= javascript_pack_tag 'emoji_button' %>
 <%= javascript_pack_tag 'pdfjs/pdf_js' %>
 <%= stylesheet_pack_tag 'pdfjs/pdf_js_styles' %>
+<%= javascript_pack_tag 'custom/bwipjs' %>
 
 <script type="text/javascript" charset="utf-8">
   var formatJS = "<%= datetime_picker_format_date_only %>"

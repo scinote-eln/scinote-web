@@ -1,0 +1,89 @@
+// scss-lint:disable SelectorDepth SelectorFormat QualifyingElement
+// scss-lint:disable NestingDepth ImportantRule
+
+.label-printer-show {
+  .printer-title {
+    flex-grow: 0 !important;
+    margin-right: .5em !important;
+  }
+
+  .status {
+    border: $border-default;
+    color: $color-silver-chalice;
+    margin-left: .5em;
+    margin-right: auto;
+    padding: .25em;
+
+    &[data-ready="true"] {
+      background: $brand-success;
+      border-color: $brand-success;
+      color: $color-white;
+    }
+  }
+
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+
+    li {
+      padding: .5em 0;
+    }
+  }
+
+  .collapse {
+    margin-bottom: 1em;
+  }
+
+  .fa-caret-down {
+    cursor: pointer;
+    margin-right: .25em;
+
+    &.collapsed {
+      @include rotate(-90deg);
+    }
+  }
+
+  .collapse-row {
+    align-items: center;
+    display: flex;
+  }
+
+  .collapse {
+    padding-left: 1.5em;
+  }
+
+  .row-title {
+    @include font-h2;
+    margin-left: .5em;
+  }
+
+  .api-key-container {
+    display: flex;
+    position: relative;
+
+    &.warning {
+      &::after {
+        color: $brand-primary-light;
+        content: attr(data-warning);
+        left: 0;
+        position: absolute;
+        bottom: -1.5em;
+      }
+    }
+
+    .api-key-input {
+      margin-right: .5em;
+
+
+    }
+
+    .btn {
+      margin-left: .5em;
+      margin-top: 23px;
+    }
+  }
+
+  .update-printers {
+    margin-left: auto;
+  }
+}
