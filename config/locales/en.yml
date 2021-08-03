@@ -146,6 +146,10 @@ en:
           attributes:
             base:
               per_column_limit: "Too many items in the column"
+        webhook:
+          attributes:
+            url:
+              not_valid: 'Not valid URL'
 
   helpers:
     label:
@@ -1655,6 +1659,7 @@ en:
       activities_counter_label: " activities"
       expand_all: "Expand all"
       collapse_all: "Collapse all"
+
     modal:
       modal_title: "Activities"
     result_type:
@@ -1811,6 +1816,7 @@ en:
       sidebar:
         account: "Account"
         teams: "Teams"
+        webhooks: "Webhooks"
         account_nav:
           profile: "Profile"
           preferences: "Preferences"
@@ -2269,7 +2275,7 @@ en:
 
   invite_users:
     to_team:
-      title: "Invite users to team %{team}"
+      title: "Invite members to %{team}"
       heading: "Invite more people to team %{team} and start using SciNote."
     no_team:
       title: "Invite users to SciNote"
@@ -2409,6 +2415,7 @@ en:
     file_preview:
       edit_in_scinote: "Edit in SciNote"
       edit_in_marvinjs: "Edit in Marvin JS"
+      edit_in_bio_eddie: "Edit in BioEddie"
     context_menu:
       set_view_size: "SET VIEW SIZE"
       delete: "Delete file"
@@ -2465,6 +2472,27 @@ en:
     export_request_success: "Export request received!"
     export_error: "Error when creating zip export."
 
+  webhooks:
+    index:
+      title: 'Webhooks'
+      description: 'Saved activity filters are listed below as collapsible sections. You can add more saved filters on the Activities page. Each saved filter can hold several webhooks.'
+      new_webhook: "New webhook"
+      applied_filters: "Applied activity filters"
+      delete_filter_modal:
+        title: "Delete filter"
+        description_html: "Are you sure you want to delete <b></b>?"
+      webhook_text_html: "Trigger <b class=\"method\">%{method}</b> target <b>%{url}</b>"
+      enable: "Enable"
+      disable: "Disable"
+      active: "Active"
+      disabled: "Disabled"
+      webhook_trigger: "Webhook trigger"
+      target: "target"
+      url_placeholder: "Enter url or other html target"
+      webhook_created: "Webhook successfully created"
+      webhook_updated: "Webhook successfully updated"
+      webhook_deleted: "Webhook successfully deleted"
+      delete_webhook_confimration: "Are you sure you want to delete the webhook?"
   # This section contains general words that can be used in any parts of
   # application.
   tiny_mce:
@@ -2648,6 +2676,13 @@ en:
     invite_users:
       permission_error: "You don't have permission to invite additional users to this team. Contact its administrator/s."
 
+  bio_eddie:
+    new_molecule: "New Molecule"
+    new_button: "Create Biomolecule"
+    molecule_name_placeholder: "Click here to enter Molecule name"
+    no_molecules_found: "No Molecules Found"
+    save_and_register: "Save & Register to Biomolecule Toolkit"
+
   marvinjs:
     new_sketch: "New Chemical Drawing"
     new_button: "Create Chemical Drawing"
@@ -2655,6 +2690,7 @@ en:
     structure_placeholder: "Click here to enter Chemical Drawing name"
     modal_name_title: "Chemical Drawing name:"
     checmical_drawing: "Chemical drawings"
+    no_sketches_found: "No Sketches Found"
 
   pdf_preview:
     fit_to_screen: 'Fit to screen'

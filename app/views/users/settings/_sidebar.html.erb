@@ -32,5 +32,12 @@
                 class: "sidebar-link #{'selected' if on_settings_team_page?}"
     %>
   </li>
+
+  <li class="sidebar-leaf" >
+    <%= link_to t("users.settings.sidebar.webhooks"),
+                users_settings_webhooks_path,
+                class: "sidebar-link #{'selected' if on_settings_webhook_page?}"
+    %>
+  </li>
 </ul>
 <% end %>

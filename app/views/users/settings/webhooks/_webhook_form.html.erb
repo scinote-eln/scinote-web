@@ -1,0 +1,16 @@
+<span class="form-text"><%= t("webhooks.index.webhook_trigger") %></span>
+<div class="webhook-method-container">
+  <%= f.select :http_method, options_for_select(Webhook.http_methods.map{ |k,_v| [k.upcase, k] }, f.object.http_method) %>
+</div>
+<span class="form-text"><%= t("webhooks.index.target") %></span>
+<div class="sci-input-container url-input-container form-group">
+  <%= f.text_field :url, class: "sci-input-field url-input", placeholder: t("webhooks.index.url_placeholder") %>
+</div>
+<button class="btn btn-light cancel-action">
+  <i class="fas fa-times"></i>
+  <%= t('general.cancel') %>
+</button>
+<%= f.button class: "btn btn-primary save-webhook" do %>
+  <i class="fas fa-save"></i>
+  <%= t('general.save') %>
+<% end %>

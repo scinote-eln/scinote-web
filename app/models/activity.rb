@@ -74,6 +74,8 @@ class Activity < ApplicationRecord
     breadcrumbs: {}
   )
 
+  after_create ->(activity) { Activities::DispatchWebhooksJob.perform_later(activity) }
+
   def self.activity_types_list
     activity_list = type_ofs.map do |key, value|
       [
@@ -156,6 +158,12 @@ class Activity < ApplicationRecord
     when ProjectFolder
       breadcrumbs[:project_folder] = subject.name
       generate_breadcrumb(subject.team)
+    when Step
+      breadcrumbs[:step] = subject.name
+      generate_breadcrumbs(subject.protocol)
+    when Asset
+      breadcrumbs[:asset] = subject.blob.filename.to_s
+      generate_breadcrumb(subject.result || subject.step || subject.repository_cell.repository_row.repository)
     end
   end
 

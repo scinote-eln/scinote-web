@@ -116,6 +116,18 @@ Rails.application.routes.draw do
            to: 'users/settings/user_teams#destroy',
            as: 'destroy_user_team'
 
+    namespace :users do
+      namespace :settings do
+        resources :webhooks, only: %i(index create update destroy) do
+          collection do
+            post :destroy_filter
+            get :filter_info
+          end
+        end
+      end
+    end
+
+
     # Invite users
     devise_scope :user do
       post '/invite',
@@ -745,6 +757,7 @@ Rails.application.routes.draw do
       get :protocol_filter
       get :team_filter
       get :user_filter
+      post :save_activity_filter
     end
   end
 
@@ -756,6 +769,19 @@ Rails.application.routes.draw do
       post :start_editing
     end
   end
+
+  resources :bio_eddie_assets, only: %i(create update) do
+    collection do
+      get :license
+    end
+    member do
+      post :start_editing
+    end
+  end
+
+  match 'biomolecule_toolkit/*path', to: 'bio_eddie_assets#bmt_request',
+                                     via: %i(get post put delete),
+                                     defaults: { format: 'json' }
 
   post 'global_activities', to: 'global_activities#index'
 
