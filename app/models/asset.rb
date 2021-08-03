@@ -446,7 +446,7 @@ class Asset < ApplicationRecord
   end
 
   def my_module
-    (result || step).my_module
+    (result || step)&.my_module
   end
 
   private
