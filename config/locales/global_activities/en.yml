@@ -195,6 +195,8 @@ en:
       delete_molecule_on_step_in_repository_html: "%{user} deleted molecule %{asset_name} on protocol %{protocol}'s step %{step_position} %{step}."
 
 
+      register_molecule_html: "%{user} scheduled the %{name} molecule for registration."
+
     activity_name:
       create_project: "Project created"
       rename_project: "Project renamed"

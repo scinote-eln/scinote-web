@@ -23,6 +23,7 @@ class BioEddieAssetsController < ApplicationController
                                })
       }
     elsif asset && bio_eddie_params[:object_type] == 'Result'
+      log_registration_activity(asset) if bio_eddie_params[:schedule_for_registration] == 'true'
       render json: { status: 'created' }, status: :ok
     else
       render json: asset.errors, status: :unprocessable_entity
@@ -35,6 +36,7 @@ class BioEddieAssetsController < ApplicationController
     create_edit_bio_eddie_activity(asset, current_user, :finish_editing)
 
     if asset
+      log_registration_activity(asset) if bio_eddie_params[:schedule_for_registration] == 'true'
       render json: { url: rails_representation_url(asset.medium_preview),
                      id: asset.id,
                      file_name: asset.blob.metadata['name'] }
@@ -125,6 +127,21 @@ class BioEddieAssetsController < ApplicationController
   end
 
   def bio_eddie_params
-    params.permit(:id, :description, :object_id, :object_type, :name, :image)
+    params.permit(:id, :description, :object_id, :object_type, :name, :image, :schedule_for_registration)
+  end
+
+  def log_registration_activity(asset)
+    Activities::CreateActivityService
+      .call(
+        activity_type: :register_molecule,
+        owner: current_user,
+        team: asset.team,
+        project: asset.my_module.experiment.project,
+        subject: asset,
+        message_items: {
+          description: asset.blob.metadata['description'],
+          name: asset.blob.metadata['name']
+        }
+      )
   end
 end

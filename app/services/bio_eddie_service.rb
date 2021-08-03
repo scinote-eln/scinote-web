@@ -14,22 +14,22 @@ class BioEddieService
       file = image_io(params)
 
       asset = Asset.new(created_by: current_user,
-                          last_modified_by: current_user,
-                          team_id: current_team.id)
-      attach_file(asset.file, file, params)
+                        last_modified_by: current_user,
+                        team_id: current_team.id)
+      attach_file(asset.file, file, params, current_user)
       asset.save!
       asset.post_process_file(current_team)
       connect_asset(asset, params, current_user)
     end
 
-    def update_molecule(params, _current_user, current_team)
+    def update_molecule(params, current_user, current_team)
       asset = current_team.assets.find(params[:id])
       attachment = asset&.file
 
       return unless attachment
 
       file = image_io(params)
-      attach_file(attachment, file, params)
+      attach_file(attachment, file, params, current_user)
       asset
     end
 
@@ -66,6 +66,7 @@ class BioEddieService
         metadata: {
           name: prepare_name(params[:name]),
           description: params[:description],
+          schedule_for_registration: params[:schedule_for_registration] == 'true',
           asset_type: 'bio_eddie'
         }
       )

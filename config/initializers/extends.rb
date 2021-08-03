@@ -140,7 +140,7 @@ class Extends
   ]
 
   ACTIVITY_SUBJECT_TYPES = %w(
-    Team RepositoryBase Project Experiment MyModule Result Protocol Report RepositoryRow ProjectFolder
+    Team RepositoryBase Project Experiment MyModule Result Protocol Report RepositoryRow ProjectFolder Asset Step
   ).freeze
 
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
@@ -325,6 +325,7 @@ class Extends
     delete_molecule_on_step: 174,
     delete_molecule_on_result: 175,
     delete_molecule_on_step_in_repository: 176,
+    register_molecule: 165
   }
 
   ACTIVITY_GROUPS = {

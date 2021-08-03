@@ -39,6 +39,11 @@
     .file-save-link {
       flex-shrink: 0;
       margin: 0 20px 0 0;
+
+      img {
+        height: 16px;
+        vertical-align: sub;
+      }
     }
 
     .file-name {

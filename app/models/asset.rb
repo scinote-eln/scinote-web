@@ -449,6 +449,10 @@ class Asset < ApplicationRecord
     return convert_variant_to_base64(medium_preview) if style == :medium
   end
 
+  def my_module
+    (result || step)&.my_module
+  end
+
   private
 
   def tempdir

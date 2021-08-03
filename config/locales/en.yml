@@ -2641,6 +2641,7 @@ en:
     new_button: "Create Biomolecule"
     molecule_name_placeholder: "Click here to enter Molecule name"
     no_molecules_found: "No Molecules Found"
+    save_and_register: "Save & Register to Biomolecule Toolkit"
 
   marvinjs:
     new_sketch: "New Chemical Drawing"

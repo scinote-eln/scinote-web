@@ -35,10 +35,11 @@ var bioEddieEditor = (function() {
     }
   }
 
-  function saveMolecule(svg, structure) {
+  function saveMolecule(svg, structure, scheduleForRegistration) {
     var moleculeName = bioEddieModal.find('.file-name input').val();
     $.post(bioEddieModal.data('create-url'), {
       description: structure,
+      schedule_for_registration: scheduleForRegistration,
       object_id: bioEddieModal.data('object_id'),
       object_type: bioEddieModal.data('object_type'),
       name: moleculeName,
@@ -58,12 +59,13 @@ var bioEddieEditor = (function() {
     });
   }
 
-  function updateMolecule(svg, structure) {
+  function updateMolecule(svg, structure, scheduleForRegistration) {
     var moleculeName = bioEddieModal.find('.file-name input').val();
     $.ajax({
       url: bioEddieModal.data('update-url'),
       data: {
         description: structure,
+        schedule_for_registration: scheduleForRegistration,
         name: moleculeName,
         image: svg
       },
@@ -82,15 +84,16 @@ var bioEddieEditor = (function() {
     });
   }
 
-  function generateImage(structure) {
+  function generateImage(structure, scheduleForRegistration) {
     var imageGenerator = new CHEMAXON.ImageGenerator();
     var emptySVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+
     imageGenerator.generateSVGFromHelm(emptySVG, structure)
       .then(svg => {
         if (bioEddieModal.data('edit-mode')) {
-          updateMolecule(svg, structure);
+          updateMolecule(svg, structure, scheduleForRegistration);
         } else {
-          saveMolecule(svg, structure);
+          saveMolecule(svg, structure, scheduleForRegistration);
         }
       });
   }
@@ -107,9 +110,10 @@ var bioEddieEditor = (function() {
       var model = BIO_EDDIE.getModel();
       var monomerModel = BIO_EDDIE.getMonomerModel();
       var monomerExporter = new CHEMAXON.Helm2ExportModule();
+      var scheduleForRegistration = $(this).data('schedule-for-registration');
 
       monomerExporter.export(model, monomerModel)
-        .then(structure => generateImage(structure));
+        .then(structure => generateImage(structure, scheduleForRegistration));
     });
   });
 
