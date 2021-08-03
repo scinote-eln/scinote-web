@@ -1,0 +1,131 @@
+<% provide(:head_title, t('webhooks.index.title')) %>
+<% provide(:container_class, "no-second-nav-container") %>
+
+<%= render partial: "users/settings/sidebar.html.erb" %>
+
+<div class="content-pane flexible webhooks-index">
+  <div class="content-header sticky-header">
+    <div class="title-row">
+      <h1>
+        <%= t('webhooks.index.title') %>
+      </h1>
+      <div class="header-actions">
+        <div class="dropdown sort-menu">
+          <button class="btn btn-light dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <span><i class="fas fa-sort-amount-down"></i></span>
+          </button>
+          <ul id="sortMenuDropdown" class="dropdown-menu dropdown-menu-right" aria-labelledby="sortMenu">
+            <% %w(atoz ztoa).each do |sort| %>
+              <li>
+                <%= link_to t("general.sort.#{sort}_html"), users_settings_webhooks_path(sort: sort), class: (@current_sort == sort ? 'selected' : '') %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="webhooks-description">
+    <%= t('webhooks.index.description') %>
+  </div>
+  <ul class="activity-filters-list">
+    <% @activity_filters.each do |filter| %>
+      <li class="filter-element">
+        <div class="filter-block">
+          <i class="fas fa-caret-down collapsed" data-toggle="collapse" href="#activityFilter<%= filter.id %>" aria-expanded="false"></i>
+          <span class="filter-name" title="<%= filter.name %>">
+            <%= filter.name %>
+          </span>
+          <div class="info-container dropdown" data-url="<%= filter_info_users_settings_webhooks_path(filter_id: filter.id) %>" >
+            <div id="filter-info-<%= filter.id %>-button" class="btn btn-light show-filter icon-btn" data-toggle="dropdown">
+              <i class="fas fa-info-circle"></i>
+            </div>
+            <div class="dropdown-menu" aria-labelledby="filter-info-<%= filter.id %>-button" role="menu">
+              <p class="filter-info-title"><%= t('webhooks.index.applied_filters') %></p>
+              <div class="tags-list"></div>
+            </div>
+          </div>
+          <div class="btn btn-light create-webhook">
+            <i class="fas fa-plus"></i>
+            <%= t('webhooks.index.new_webhook') %>
+          </div>
+          <div class="btn btn-light delete-filter icon-btn" data-id="<%= filter.id %>" data-name="<%= filter.name %>">
+            <i class="fas fa-trash"></i>
+          </div>
+        </div>
+        <ul class="webhooks-list collapse" id="activityFilter<%= filter.id %>">
+          <li class="create-webhook-container hidden">
+            <%= form_with model: Webhook.new, url: users_settings_webhooks_path(filter_id: filter.id, sort: @current_sort), class: 'webhook-form' do |f| %>
+              <%= render partial: 'webhook_form', locals: {f: f} %>
+            <% end %>
+          </li>
+          <% filter.webhooks.order(created_at: :desc).each do |webhook| %>
+            <li class="webhook <%= 'active' if webhook.active? %>">
+              <div class="view-mode">
+                <span class="webhook-text">
+                  <%= t('webhooks.index.webhook_text_html', method: webhook.http_method.upcase, url: webhook.url) %>
+                </span>
+                <% if webhook.active? %>
+                  <span class="active-webhook">
+                    <i class="fas fa-check-circle"></i>
+                    <%= t("webhooks.index.active") %>
+                  </span>
+                <% else %>
+                  <span class="disabled-webhook">
+                    <i class="fas fa-unlink"></i>
+                    <%= t("webhooks.index.disabled") %>
+                  </span>
+                <% end %>
+                <div class="dropdown webhook-menu">
+                  <button class="btn btn-light icon-btn dropdown-toggle" type="button" id="webhookMenuButton<%= webhook.id %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span><i class="fas fa-ellipsis-h"></i></span>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="webhookMenuButton<%= webhook.id %>">
+                    <li>
+                      <a href="#" class="edit-webhook">
+                        <i class="fas fa-pen"></i>
+                        <%= t('general.edit') %>
+                      </a>
+                    </li>
+                    <li>
+                      <% if webhook.active? %>
+                        <%= link_to users_settings_webhook_path(webhook, filter_id: filter.id, 'webhook[active]' => false, sort: @current_sort), method: :patch do %>
+                          <i class="fas fa-unlink"></i>
+                          <%= t("webhooks.index.disable") %>
+                        <% end %>
+                      <% else %>
+                        <%= link_to users_settings_webhook_path(webhook, filter_id: filter.id, 'webhook[active]' => true, sort: @current_sort), method: :patch do %>
+                          <i class="fas fa-check-circle"></i>
+                          <%= t("webhooks.index.enable") %>
+                        <% end %>
+                      <% end %>
+                    </li>
+                    <li>
+                      <%= link_to users_settings_webhook_path(webhook, filter_id: filter.id, sort: @current_sort), method: :delete, data: { confirm: t('webhooks.index.delete_webhook_confimration') } do %>
+                        <i class="fas fa-trash"></i>
+                        <%= t('general.delete') %>
+                      <% end %>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="edit-webhook-container hidden">
+                <%= form_with model: webhook, url: users_settings_webhook_path(webhook, filter_id: filter.id, sort: @current_sort), class: 'webhook-form', method: :patch do |f| %>
+                  <%= render partial: 'webhook_form', locals: {f: f} %>
+                <% end %>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      </li>
+    <% end %>
+  </ul>
+
+  <%= render partial: 'delete_filter_modal' %>
+
+</div>
+
+
+
+<%= javascript_include_tag "users/settings/webhooks/index" %>
+

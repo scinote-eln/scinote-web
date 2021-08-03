@@ -146,6 +146,10 @@ en:
           attributes:
             base:
               per_column_limit: "Too many items in the column"
+        webhook:
+          attributes:
+            url:
+              not_valid: 'Not valid URL'
 
   helpers:
     label:
@@ -1619,6 +1623,7 @@ en:
       activities_counter_label: " activities"
       expand_all: "Expand all"
       collapse_all: "Collapse all"
+
     modal:
       modal_title: "Activities"
     result_type:
@@ -1775,6 +1780,7 @@ en:
       sidebar:
         account: "Account"
         teams: "Teams"
+        webhooks: "Webhooks"
         account_nav:
           profile: "Profile"
           preferences: "Preferences"
@@ -2400,6 +2406,27 @@ en:
     export_request_success: "Export request received!"
     export_error: "Error when creating zip export."
 
+  webhooks:
+    index:
+      title: 'Webhooks'
+      description: 'Saved activity filters are listed below as collapsible sections. You can add more saved filters on the Activities page. Each saved filter can hold several webhooks.'
+      new_webhook: "New webhook"
+      applied_filters: "Applied activity filters"
+      delete_filter_modal:
+        title: "Delete filter"
+        description_html: "Are you sure you want to delete <b></b>?"
+      webhook_text_html: "Trigger <b class=\"method\">%{method}</b> target <b>%{url}</b>"
+      enable: "Enable"
+      disable: "Disable"
+      active: "Active"
+      disabled: "Disabled"
+      webhook_trigger: "Webhook trigger"
+      target: "target"
+      url_placeholder: "Enter url or other html target"
+      webhook_created: "Webhook successfully created"
+      webhook_updated: "Webhook successfully updated"
+      webhook_deleted: "Webhook successfully deleted"
+      delete_webhook_confimration: "Are you sure you want to delete the webhook?"
   # This section contains general words that can be used in any parts of
   # application.
   tiny_mce:

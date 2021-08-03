@@ -1,0 +1,146 @@
+// scss-lint:disable SelectorDepth NestingDepth
+
+.webhooks-index {
+  .webhooks-description {
+    @include font-main;
+    margin: 1em 0;
+  }
+
+  .activity-filters-list {
+    padding: 0;
+  }
+
+  .filter-element {
+    border-left: 3px solid $color-concrete;
+    list-style: none;
+    margin: 1em 0;
+  }
+
+  .filter-block {
+    align-items: center;
+    display: flex;
+    padding-left: 1em;
+
+    .fa-caret-down {
+      cursor: pointer;
+      margin-right: 1em;
+
+      &.collapsed {
+        @include rotate(-90deg);
+      }
+    }
+
+    .create-webhook {
+      margin-left: auto;
+    }
+
+    .filter-name {
+      @include font-h3;
+      margin-right: .5em;
+    }
+
+    .info-container {
+      .dropdown-menu {
+        padding: .5em;
+        width: 400px;
+      }
+    }
+
+    .filter-info-title {
+      @include font-small;
+      padding-left: .25em;
+    }
+
+    .tags-list {
+      display: flex;
+      flex-wrap: wrap;
+
+      .filter-info-tag {
+        @include font-small;
+        background: $color-concrete;
+        flex-shrink: 0;
+        margin: .25em;
+        padding: .25em;
+      }
+    }
+  }
+
+  .webhooks-list {
+    list-style: none;
+  }
+
+  .webhook-form {
+    align-items: center;
+    display: flex;
+
+    .form-group {
+      margin: 0;
+    }
+
+    .form-text {
+      flex-shrink: 0;
+    }
+
+    .webhook-method-container {
+      margin: .5em;
+    }
+
+    .url-input-container {
+      margin: .5em;
+    }
+  }
+
+  .webhook {
+    .view-mode {
+      align-items: center;
+      display: flex;
+
+      .method {
+        margin: 0 .5em;
+      }
+
+      .webhook-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .active-webhook,
+      .disabled-webhook {
+        flex-basis: 110px;
+        flex-shrink: 0;
+        margin-left: auto;
+        padding: 0 1em;
+        text-align: right;
+
+        .fas {
+          margin-right: .25em;
+        }
+      }
+
+      .active-webhook {
+        color: $brand_success;
+      }
+
+      .dropdown-menu {
+        @include font-button;
+
+        .fas {
+          margin-right: .25em;
+        }
+      }
+    }
+
+    &:not(.active) {
+      .view-mode {
+        color: $color-silver-chalice;
+      }
+    }
+  }
+
+  #deleteFilterModal {
+    .delete-filter-form {
+      display: inline-block;
+    }
+  }
+}

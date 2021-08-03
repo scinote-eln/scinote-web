@@ -36,6 +36,13 @@ en:
       select_reports: Select Reports
       no_name: "(unnamed)"
       content_generation_error: "Failed to render activity content with id: %{activity_id}"
+      activity_filter_saved: "Filter successfully saved to the Webhooks page!"
+      save_filter: "Save filter"
+      save_filter_modal:
+        title: "Save filter"
+        description: "Saved filter will be located in the Webhooks section of the Settings. It can be used to trigger webhooks."
+        filter_name_label: "Filter name"
+        filter_name_placeholder: "Name your filter"
     content:
       create_project_html: "%{user} created project %{project}."
       rename_project_html: "%{user} renamed project %{project}."

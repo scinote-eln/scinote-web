@@ -8,5 +8,9 @@ module Organization
     can :create_teams do |_|
       true
     end
+
+    can :create_acitivity_filters do
+      true
+    end
   end
 end

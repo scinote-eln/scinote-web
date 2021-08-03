@@ -1,4 +1,4 @@
-/* global animateSpinner globalActivities */
+/* global animateSpinner globalActivities HelperModule */
 
 'use strict';
 
@@ -58,6 +58,37 @@
       });
     });
   }
+
+  function validateActivityFilterName() {
+    let filterName = $('#saveFilterModal .activity-filter-name-input').val();
+    $('#saveFilterModal .btn-confirm').prop('disabled', filterName.length === 0);
+  }
+
+  $('#saveFilterModal')
+    .on('keyup', '.activity-filter-name-input', function() {
+      validateActivityFilterName();
+    })
+    .on('click', '.btn-confirm', function() {
+      $.ajax({
+        url: this.dataset.saveFilterUrl,
+        type: 'POST',
+        global: false,
+        dataType: 'json',
+        data: {
+          name: $('#saveFilterModal .activity-filter-name-input').val(),
+          filter: globalActivities.getFilters()
+        },
+        success: function(data) {
+          HelperModule.flashAlertMsg(data.message, 'success');
+          $('#saveFilterModal .activity-filter-name-input').val('');
+          validateActivityFilterName();
+          $('#saveFilterModal').modal('hide');
+        },
+        error: function(response) {
+          HelperModule.flashAlertMsg(response.responseJSON.errors.join(','), 'danger');
+        }
+      });
+    });
 
   initExpandCollapseAllButtons();
   initShowMoreButton();
