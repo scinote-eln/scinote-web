@@ -191,6 +191,18 @@ en:
       move_project_folder_html: "%{user} moved project folder %{project_folder} from folder %{project_folder_from}</strong> to folder %{project_folder_to}."
       generate_pdf_report_html: "%{user} generated PDF report %{report}."
       generate_docx_report_html: "%{user} generated DOCX report %{report}."
+      edit_molecule_on_step_html: "%{user} edited molecule %{asset_name} on protocol's step %{step_position} %{step} on task %{my_module}: %{action}."
+      edit_molecule_on_result_html: "%{user} edited molecule %{asset_name} on result %{result}: %{action}."
+      edit_molecule_on_step_in_repository_html: "%{user} edited molecule %{asset_name} on protocol %{protocol}'s step %{step_position} %{step}: %{action}."
+      create_molecule_on_step_html: "%{user} created molecule %{asset_name} on protocol's step %{step_position} %{step} on task %{my_module}."
+      create_molecule_on_result_html: "%{user} created molecule %{asset_name} on result %{result}."
+      create_molecule_on_step_in_repository_html: "%{user} created molecule %{asset_name} on protocol %{protocol}'s step %{step_position} %{step}."
+      delete_molecule_on_step_html: "%{user} deleted molecule %{asset_name} on protocol's step %{step_position} %{step} on task %{my_module}."
+      delete_molecule_on_result_html: "%{user} deleted molecule %{asset_name} on result %{result}."
+      delete_molecule_on_step_in_repository_html: "%{user} deleted molecule %{asset_name} on protocol %{protocol}'s step %{step_position} %{step}."
+
+
+      register_molecule_html: "%{user} scheduled the %{name} molecule for registration."
 
     activity_name:
       create_project: "Project created"
@@ -339,6 +351,16 @@ en:
       move_project_folder: "Project folder moved"
       generate_pdf_report: "PDF Report generated"
       generate_docx_report: "DOCX Report generated"
+      edit_molecule_on_step: "Molecule on task step edited"
+      edit_molecule_on_result: "Molecule on result edited"
+      edit_molecule_on_step_in_repository: "Molecule on step edited"
+      create_molecule_on_step: "Molecule on task step created"
+      create_molecule_on_result: "Molecule on result created"
+      create_molecule_on_step_in_repository: "Molecule on step created"
+      delete_molecule_on_step: "Molecule on task step deleted"
+      delete_molecule_on_result: "Molecule on result deleted"
+      delete_molecule_on_step_in_repository: "Molecule on step deleted"
+
 
     activity_group:
       projects: "Projects"
