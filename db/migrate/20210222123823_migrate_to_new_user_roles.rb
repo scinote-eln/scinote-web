@@ -54,6 +54,16 @@ class MigrateToNewUserRoles < ActiveRecord::Migration[6.1]
         user_assignments << UserAssignment.new(user: user_project.user,
                                                assignable: user_project.project,
                                                user_role: user_role)
+        user_project.project.experiments.each do |experiment|
+          user_assignments << UserAssignment.new(user: user_project.user,
+                                               assignable: experiment,
+                                               user_role: user_role)
+          experiment.my_modules.each do |my_module|
+            user_assignments << UserAssignment.new(user: user_project.user,
+                                               assignable: my_module,
+                                               user_role: user_role)
+          end
+        end
       end
       UserAssignment.import(user_assignments)
     end
