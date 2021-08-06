@@ -23,7 +23,7 @@ class WebhookService
       @webhook.url,
       {
         headers: { 'Content-Type' => 'application/json' },
-        body: @payload
+        body: @payload.to_json
       }
     )
 

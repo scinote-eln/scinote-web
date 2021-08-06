@@ -14,7 +14,11 @@ module Activities
     def activity_payload
       @activity.values.merge(
         type: @activity.type_of,
-        created_at: @activity.created_at
+        created_at: @activity.created_at,
+        subject: {
+          type: @activity.subject_type,
+          id: @activity.subject_id
+        }
       )
     end
   end
