@@ -49,7 +49,9 @@
 
   $('.activity-filters-list').on('click', '.edit-webhook-container .cancel-action', function(e) {
     let webhookContainer = $(this).closest('.webhook');
+    let input = webhookContainer.find('.url-input');
     e.preventDefault();
+    input.val(input.data('original-value'));
     webhookContainer.find('.view-mode').removeClass('hidden');
     webhookContainer.find('.edit-webhook-container').addClass('hidden');
   });
