@@ -95,7 +95,7 @@ module BioEddieActions
 
     message_items[:action] = action if action
     Activities::CreateActivityService
-      .call(activity_type: "#{activity}_molecule_on_step_on_result".to_sym,
+      .call(activity_type: "#{activity}_molecule_on_result".to_sym,
             owner: current_user,
             subject: result,
             team: my_module.experiment.project.team,

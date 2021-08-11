@@ -16,20 +16,20 @@ class BioEddieService
       asset = Asset.new(created_by: current_user,
                         last_modified_by: current_user,
                         team_id: current_team.id)
-      attach_file(asset.file, file, params, current_user)
+      attach_file(asset.file, file, params)
       asset.save!
       asset.post_process_file(current_team)
       connect_asset(asset, params, current_user)
     end
 
-    def update_molecule(params, current_user, current_team)
+    def update_molecule(params, current_team)
       asset = current_team.assets.find(params[:id])
       attachment = asset&.file
 
       return unless attachment
 
       file = image_io(params)
-      attach_file(attachment, file, params, current_user)
+      attach_file(attachment, file, params)
       asset
     end
 
@@ -51,7 +51,7 @@ class BioEddieService
                       asset: asset,
                       last_modified_by: current_user)
       end
-      asset
+      asset.reload
     end
 
     def image_io(params)

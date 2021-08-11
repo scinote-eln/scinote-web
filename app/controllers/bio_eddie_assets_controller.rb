@@ -16,6 +16,7 @@ class BioEddieAssetsController < ApplicationController
     create_create_bio_eddie_activity(asset, current_user)
 
     if asset && bio_eddie_params[:object_type] == 'Step'
+      log_registration_activity(asset) if bio_eddie_params[:schedule_for_registration] == 'true'
       render json: {
         html: render_to_string(partial: 'assets/asset.html.erb', locals: {
                                  asset: asset,
@@ -31,7 +32,7 @@ class BioEddieAssetsController < ApplicationController
   end
 
   def update
-    asset = BioEddieService.update_molecule(bio_eddie_params, current_user, current_team)
+    asset = BioEddieService.update_molecule(bio_eddie_params, current_team)
 
     create_edit_bio_eddie_activity(asset, current_user, :finish_editing)
 
