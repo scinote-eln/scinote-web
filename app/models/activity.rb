@@ -160,7 +160,7 @@ class Activity < ApplicationRecord
       generate_breadcrumb(subject.team)
     when Step
       breadcrumbs[:step] = subject.name
-      generate_breadcrumbs(subject.protocol)
+      generate_breadcrumb(subject.protocol)
     when Asset
       breadcrumbs[:asset] = subject.blob.filename.to_s
       generate_breadcrumb(subject.result || subject.step || subject.repository_cell.repository_row.repository)
