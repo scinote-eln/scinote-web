@@ -322,6 +322,14 @@ describe User, type: :model do
     it { is_expected.to have_many(:system_notifications) }
   end
 
+  describe 'Email downcase' do
+    it 'downcases email before validating and saving user' do
+      user = User.new(email: 'Test@Email.com')
+      user.save
+      expect(user.email).to eq('test@email.com')
+    end
+  end
+
   describe 'valid_otp?' do
     let(:user) { create :user }
     before do

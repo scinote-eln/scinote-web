@@ -291,6 +291,7 @@ class User < ApplicationRecord
                            foreign_key: :resource_owner_id,
                            dependent: :delete_all
 
+  before_validation :downcase_email!
   before_destroy :destroy_notifications
 
   def name
@@ -673,6 +674,12 @@ class User < ApplicationRecord
   end
 
   private
+
+  def downcase_email!
+    return unless email
+
+    self.email = email.downcase
+  end
 
   def destroy_notifications
     # Find all notifications where user is the only reference
