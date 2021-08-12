@@ -8,7 +8,7 @@ var bioEddieEditor = (function() {
   function importMolecule() {
     var monomerModel = BIO_EDDIE.getMonomerModel();
     var monomerImporter = new CHEMAXON.HelmImportModule();
-    var molecule = bioEddieModal.data('molecule') || '';
+    var molecule = bioEddieModal.data('molecule');
     monomerImporter.import(molecule, monomerModel)
       .then(builder => BIO_EDDIE.setModel(builder.graphStoreData));
   }
@@ -27,12 +27,8 @@ var bioEddieEditor = (function() {
   }
 
   function initIframe() {
-    if (typeof BIO_EDDIE === 'undefined' || typeof CHEMAXON === 'undefined') {
-      bioEddieIframe.src = bioEddieIframe.dataset.src;
-      loadBioEddie();
-    } else {
-      importMolecule();
-    }
+    bioEddieIframe.src = bioEddieIframe.dataset.src;
+    loadBioEddie();
   }
 
   function saveMolecule(svg, structure, scheduleForRegistration) {
@@ -87,7 +83,6 @@ var bioEddieEditor = (function() {
   function generateImage(structure, scheduleForRegistration) {
     var imageGenerator = new CHEMAXON.ImageGenerator();
     var emptySVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-
     imageGenerator.generateSVGFromHelm(emptySVG, structure)
       .then(svg => {
         if (bioEddieModal.data('edit-mode')) {
