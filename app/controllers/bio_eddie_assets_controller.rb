@@ -137,7 +137,7 @@ class BioEddieAssetsController < ApplicationController
         activity_type: :register_molecule,
         owner: current_user,
         team: asset.team,
-        project: asset.my_module.experiment.project,
+        project: asset&.my_module&.experiment&.project,
         subject: asset,
         message_items: {
           description: asset.blob.metadata['description'],
