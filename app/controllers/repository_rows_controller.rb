@@ -86,24 +86,26 @@ class RepositoryRowsController < ApplicationController
   end
 
   def print
+    # reset all potential error states for printers and discard all jobs
+
+    # rubocop:disable Rails/SkipsModelValidations
+    LabelPrinter.update_all(status: :ready, current_print_job_ids: [])
+    # rubocop:enable Rails/SkipsModelValidations
+
     label_printer = LabelPrinter.find(params[:label_printer_id])
 
-    # reset potential error state
-    label_printer.update!(status: :ready, current_print_job_ids: [])
-
     job_ids = RepositoryRow.where(id: params[:repository_row_ids]).flat_map do |repository_row|
-      Array.new(params[:copies].to_i).map do
-        LabelPrinters::PrintJob.perform_later(
-          label_printer,
-          LabelTemplate.first.render( # Currently we will only use the default template
-            item_id: repository_row.code,
-            item_name: repository_row.name
-          )
-        ).job_id
-      end
+      LabelPrinters::PrintJob.perform_later(
+        label_printer,
+        LabelTemplate.first.render( # Currently we will only use the default template
+          item_id: repository_row.code,
+          item_name: repository_row.name
+        ),
+        params[:copies].to_i
+      ).job_id
     end
 
-    label_printer.update!(current_print_job_ids: job_ids)
+    label_printer.update!(current_print_job_ids: job_ids * params[:copies].to_i)
 
     redirect_to repository_path(@repository)
   end

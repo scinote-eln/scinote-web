@@ -1641,12 +1641,14 @@ en:
         not_ready: "Not Ready"
         out_of_labels: "Out of labels"
         error: "Printer error"
+        unreachable: "Printer offline"
       multiple_items: "%{item_count}/%{starting_item_count} labels"
       printing_status:
         done: "Done"
         printing: "Printing"
         out_of_labels: "Waiting for labels. Please, insert labels."
         error: "There is an issue with the printer."
+        unreachable: "Printer is offline"
   activities:
     index:
       global_activities_title: "Global activities"
