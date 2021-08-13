@@ -200,9 +200,9 @@ en:
       delete_molecule_on_step_html: "%{user} deleted molecule %{asset_name} on protocol's step %{step_position} %{step} on task %{my_module}."
       delete_molecule_on_result_html: "%{user} deleted molecule %{asset_name} on result %{result}."
       delete_molecule_on_step_in_repository_html: "%{user} deleted molecule %{asset_name} on protocol %{protocol}'s step %{step_position} %{step}."
-
-
-      register_molecule_html: "%{user} scheduled the %{name} molecule for registration."
+      register_molecule_on_step_html: "%{user} registered molecule %{asset_name} on protocol's step %{step_position} %{step} on task %{my_module}."
+      register_molecule_on_result_html: "%{user} registered molecule %{asset_name} on result %{result}."
+      register_molecule_on_step_in_repository_html: "%{user} registered molecule %{asset_name} on protocol %{protocol}'s step %{step_position} %{step}."
 
     activity_name:
       create_project: "Project created"
@@ -360,6 +360,9 @@ en:
       delete_molecule_on_step: "Molecule on task step deleted"
       delete_molecule_on_result: "Molecule on result deleted"
       delete_molecule_on_step_in_repository: "Molecule on step deleted"
+      register_molecule_on_step: "Molecule on task step registered"
+      register_molecule_on_result: "Molecule on result registered"
+      register_molecule_on_step_in_repository: "Molecule on step registered"
 
 
     activity_group:

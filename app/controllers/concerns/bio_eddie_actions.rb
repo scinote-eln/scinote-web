@@ -29,6 +29,12 @@ module BioEddieActions
     bio_eddie_find_target_object(asset, current_user, 'delete')
   end
 
+  def create_register_bio_eddie_activity(asset, current_user)
+    return unless bio_eddie_asset_validation(asset)
+
+    bio_eddie_find_target_object(asset, current_user, 'register')
+  end
+
   def bio_eddie_asset_validation(asset)
     asset && asset.file.metadata[:asset_type] == 'bio_eddie'
   end
@@ -55,10 +61,13 @@ module BioEddieActions
 
     return unless step && protocol
 
-    default_step_items =
-      { step: step.id,
-        step_position: { id: step.id, value_for: 'position_plus_one' },
-        asset_type => { id: asset.id, value_for: 'file_name' } }
+    default_step_items = {
+      step: step.id,
+      step_position: { id: step.id, value_for: 'position_plus_one' },
+      asset_type => { id: asset.id, value_for: 'file_name' },
+      description: asset.blob.metadata['description'],
+      name: asset.blob.metadata['name']
+    }
 
     default_step_items[:action] = action if action
     if protocol.in_module?
@@ -72,6 +81,7 @@ module BioEddieActions
       message_items = { protocol: protocol.id }
     end
     message_items = default_step_items.merge(message_items)
+
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
@@ -90,7 +100,9 @@ module BioEddieActions
 
     message_items = {
       result: result.id,
-      asset_type => { id: asset.id, value_for: 'file_name' }
+      asset_type => { id: asset.id, value_for: 'file_name' },
+      description: asset.blob.metadata['description'],
+      name: asset.blob.metadata['name']
     }
 
     message_items[:action] = action if action

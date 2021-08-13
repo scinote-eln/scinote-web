@@ -770,7 +770,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :bio_eddie_assets, only: %i(create update) do
+  resources :bio_eddie_assets, only: %i(create update destroy) do
     collection do
       get :license
     end
