@@ -1366,6 +1366,7 @@ en:
 
     table:
       id: 'ID'
+      external_id: 'External ID'
       assigned: "Assigned"
       assigned_search: 'Search...'
       assigned_tooltip: "%{tasks} tasks in &#10;%{experiments} experiments,&#10;%{projects} projects"

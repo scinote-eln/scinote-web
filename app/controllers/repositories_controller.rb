@@ -27,7 +27,7 @@ class RepositoriesController < ApplicationController
   def index
     respond_to do |format|
       format.html do
-        render 'empty_index' if Repository.accessible_by_teams(current_team).blank?
+        render 'empty_index' if @repositories.blank?
       end
       format.json do
         render json: prepare_repositories_datatable(@repositories, current_team, params)

@@ -108,8 +108,8 @@ class Repository < RepositoryBase
     end
   end
 
-  def default_columns_count
-    Constants::REPOSITORY_TABLE_DEFAULT_STATE['columns'].length
+  def default_table_state
+    Constants::REPOSITORY_TABLE_DEFAULT_STATE
   end
 
   def i_shared?(team)

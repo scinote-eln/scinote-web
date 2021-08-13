@@ -386,4 +386,6 @@ class Extends
     delete_individual_signature_request
     delete_group_signature_request
   )
+
+  STI_PRELOAD_CLASSES = %w(LinkedRepository)
 end

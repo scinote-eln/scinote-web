@@ -78,11 +78,10 @@ class RepositoryDatatableService
     if search_value.present?
       matched_by_user = repository_rows.joins(:created_by).where_attributes_like('users.full_name', search_value)
 
-      repository_row_matches =  repository_rows
-                                .where_attributes_like(
-                                  ['repository_rows.name', RepositoryRow::PREFIXED_ID_SQL],
-                                  search_value
-                                )
+      repository_row_search_fileds = ['repository_rows.name', RepositoryRow::PREFIXED_ID_SQL]
+      repository_row_search_fileds << 'repository_rows.external_id' if @repository.is_a?(LinkedRepository)
+
+      repository_row_matches = repository_rows.where_attributes_like(repository_row_search_fileds, search_value)
       results = repository_rows.where(id: repository_row_matches)
       results = results.or(repository_rows.where(id: matched_by_user))
 
@@ -121,8 +120,9 @@ class RepositoryDatatableService
       'repository_rows.created_at',
       'users.full_name',
       'repository_rows.archived_on',
-      'archived_bies_repository_rows.full_name',
+      'archived_bies_repository_rows.full_name'
     ]
+    array.insert(1, 'repository_rows.external_id') if @repository.is_a?(LinkedRepository)
     @repository.repository_columns.count.times do
       array << 'repository_cell.value'
     end
