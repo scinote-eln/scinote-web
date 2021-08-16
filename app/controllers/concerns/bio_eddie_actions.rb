@@ -23,12 +23,6 @@ module BioEddieActions
     bio_eddie_find_target_object(asset, current_user, 'create')
   end
 
-  def create_delete_bio_eddie_activity(asset, current_user)
-    return unless bio_eddie_asset_validation(asset)
-
-    bio_eddie_find_target_object(asset, current_user, 'delete')
-  end
-
   def create_register_bio_eddie_activity(asset, current_user)
     return unless bio_eddie_asset_validation(asset)
 

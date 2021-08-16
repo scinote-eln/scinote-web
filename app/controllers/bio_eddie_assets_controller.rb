@@ -46,21 +46,6 @@ class BioEddieAssetsController < ApplicationController
     end
   end
 
-  def destroy
-    asset = current_team.assets.find(bio_eddie_params[:id])
-
-    if asset
-      create_delete_bio_eddie_activity(asset, current_user)
-      if asset.destroy
-        render json: { flash: I18n.t('assets.file_deleted', file_name: asset.file_name) }
-      else
-        render json: {}, status: :unprocessable_entity
-      end
-    else
-      render json: { error: t('bio_eddie.no_molecules_found') }, status: :unprocessable_entity
-    end
-  end
-
   def license
     license_file_path = Rails.root.join('data/bioeddie/license.cxl')
     if File.file?(license_file_path)
