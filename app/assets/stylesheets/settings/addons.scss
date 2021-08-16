@@ -9,7 +9,12 @@
 
   .addons-title {
     border-bottom: $border-tertiary;
+    margin-bottom: 0;
     padding-bottom: 15px;
+  }
+
+  .addons-subtitle {
+    margin-top: 2em;
   }
 
   .printers-container {
