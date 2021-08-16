@@ -12,10 +12,14 @@ module ActiveStorage
       end
 
 <<<<<<< HEAD
+<<<<<<< HEAD
       def preview(**_options)
 =======
       def preview
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+      def preview(**_options)
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
         download_blob_to_tempfile do |input|
           work_dir = File.dirname(input.path)
           basename = File.basename(input.path, '.*')
@@ -26,10 +30,14 @@ module ActiveStorage
           begin
             success = system(
 <<<<<<< HEAD
+<<<<<<< HEAD
               libreoffice_path, '--headless', '--invisible', '--convert-to', 'png', '--outdir', work_dir, input.path
 =======
               "#{libreoffice_path} --headless --invisible --convert-to png --outdir #{work_dir} #{input.path}"
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+              libreoffice_path, '--headless', '--invisible', '--convert-to', 'png', '--outdir', work_dir, input.path
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
             )
 
             unless success && File.file?(preview_file)

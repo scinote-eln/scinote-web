@@ -1,6 +1,10 @@
 @import "constants";
 @import "mixins";
 
+:root {
+  --menu-bar-width: 83px;
+}
+
 .menu-bar {
   background-color: $color-white;
   box-shadow: $flyout-shadow;
@@ -8,16 +12,13 @@
   left: 0;
   padding-bottom: 50px;
   position: fixed;
-  width: 83px;
+  width: var(--menu-bar-width);
   z-index: 1001;
-  // @@@20180627JS shift the bar down
-  // margin-top: 50px;
-  padding-bottom: 50px;
 
   .scroll-wrapper {
     height: 100%;
     padding-top: 16px;
-    width: 83px;
+    width: var(--menu-bar-width);
     overflow-x: hidden;
   }
 
@@ -26,7 +27,7 @@
     & > a,
     & > span {
       @include font-small;
-      color: $color-silver-chalice;
+      color: $color-volcano;
       display: grid;
       margin-left: auto;
       margin-right: auto;
@@ -75,7 +76,7 @@
       margin-bottom: 0;
 
       & > li > a {
-        padding: 8px 20px;
+        padding: 8px 38px;
       }
     }
 
@@ -92,7 +93,17 @@
     }
   }
 
-  #support-link {
+  #knowledge-center-link {
+    .fas {
+      margin-left: -26px;
+      padding: 3px;
+      position: absolute
+    }
+  }
+
+
+  #support-link,
+  #knowledge-center-link {
     color: $brand-primary;
   }
 }

@@ -63,9 +63,13 @@
     height: 36px;
     margin-right: 4px;
 <<<<<<< HEAD
+<<<<<<< HEAD
     position: relative;
 =======
 >>>>>>> Pulled latest release
+=======
+    position: relative;
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     width: 36px;
 
     .current-tasks-filters {
@@ -116,6 +120,7 @@
 
     &.filters-applied::after {
 <<<<<<< HEAD
+<<<<<<< HEAD
       @include red-dot;
       right: .45em;
       top: .4em;
@@ -130,6 +135,11 @@
       top: .5em;
       width: .5em;
 >>>>>>> Pulled latest release
+=======
+      @include red-dot;
+      right: .45em;
+      top: .4em;
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     }
   }
 

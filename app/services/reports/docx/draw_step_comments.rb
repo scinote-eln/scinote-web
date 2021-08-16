@@ -4,6 +4,7 @@
 <<<<<<< HEAD
 module Reports::Docx::DrawStepComments
 <<<<<<< HEAD
+<<<<<<< HEAD
   def draw_step_comments(step)
     comments = step.step_comments.order(created_at: :desc)
     return if comments.blank?
@@ -22,6 +23,11 @@ module Reports::Docx::DrawStepComments
     comments = step.step_comments
     return if comments.count.zero?
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+  def draw_step_comments(step)
+    comments = step.step_comments.order(created_at: :desc)
+    return if comments.blank?
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
     @docx.p
     @docx.p I18n.t('projects.reports.elements.step_comments.name', step: step.name),

@@ -24,7 +24,7 @@ describe ResultAssetsController, type: :controller do
       { my_module_id: task.id,
         results_names: { '0': 'result name created' },
         results_files:
-          { '0': fixture_file_upload('files/export.csv', 'text/csv') } }
+          { '0': file_fixture('files/export.csv', 'text/csv') } }
     end
 
     #it 'calls create activity service' do

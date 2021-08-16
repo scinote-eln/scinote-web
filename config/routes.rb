@@ -18,34 +18,6 @@ Rails.application.routes.draw do
                                       passwords: 'users/passwords' }
 
     root 'dashboards#show'
-    # root 'projects#index'
-
-    # EPA Help routes: about, contact, and training pages
-    get 'help/about', to: 'help#about', as: 'about'
-    get 'help/contact', to: 'help#contact', as: 'contact'
-    get 'help/training', to: 'help#training', as: 'training'
-    # Routes to methods for downloading the Fact Sheet and Manual
-    # get 'help/download_manual', to: 'help#download_manual', as 'manual'
-    # get 'help/download_manual' => 'help#download_manual', as 'manual'
-    get 'help/download_manual'
-    # get 'users/download_factsheet' => 'users/sessions#download_factsheet', as: 'factsheet'
-
-    # EPA RAP Information JSON results
-    get '/rap_program_level/',
-        to: 'rap_program_level#show',
-        as: 'rap_program_level'
-
-    get 'rap_topic_level/:rap_program_level_id',
-        to: 'rap_topic_level#show',
-        as: 'rap_topic_level'
-
-    get 'rap_project_level/:rap_topic_level_id',
-        to: 'rap_project_level#show',
-        as: 'rap_project_level'
-
-    get 'rap_task_level/:rap_project_level_id',
-        to: 'rap_task_level#show',
-        as: 'rap_task_level'
 
     resources :activities, only: [:index]
 
@@ -69,12 +41,12 @@ Rails.application.routes.draw do
     get 'users/settings/account/addons',
         to: 'users/settings/account/addons#index',
         as: 'addons'
-        get 'users/settings/account/connected_accounts',
-            to: 'users/settings/account/connected_accounts#index',
-            as: 'connected_accounts'
-        delete 'users/settings/account/connected_accounts',
-               to: 'users/settings/account/connected_accounts#destroy',
-               as: 'unlink_connected_account'
+    get 'users/settings/account/connected_accounts',
+        to: 'users/settings/account/connected_accounts#index',
+        as: 'connected_accounts'
+    delete 'users/settings/account/connected_accounts',
+           to: 'users/settings/account/connected_accounts#destroy',
+           as: 'unlink_connected_account'
     put 'users/settings/account/preferences',
         to: 'users/settings/account/preferences#update',
         as: 'update_preferences'
@@ -199,6 +171,7 @@ Rails.application.routes.draw do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'export_repository', to: 'repositories#export_repository'
         post 'export_projects'
+        get 'sidebar'
         get 'export_projects_modal'
         # Used for atwho (smart annotations)
         get 'atwho_users', to: 'at_who#users'
@@ -221,20 +194,20 @@ Rails.application.routes.draw do
             via: [:get, :post, :put, :patch]
     end
 
-    post 'projects/index_dt', to: 'projects#index_dt', as: 'projects_index_dt'
-    get 'projects/sidebar', to: 'projects#sidebar', as: 'projects_sidebar'
-    get 'projects/dt_state_load', to: 'projects#dt_state_load',
-                                  as: 'projects_dt_state_load'
-
-    resources :reports, only: :index
+    resources :reports, only: [:index, :new, :create, :update] do
+      member do
+        get :document_preview
+        get :save_pdf_to_inventory_modal, defaults: { format: 'json' }
+        post :save_pdf_to_inventory_item, defaults: { format: 'json' }
+      end
+      collection do
+        get :project_contents
+      end
+    end
     get 'reports/datatable', to: 'reports#datatable'
-    post 'reports/visible_projects', to: 'reports#visible_projects',
-                                     defaults: { format: 'json' }
+    get 'reports/new_template_values', to: 'reports#new_template_values', defaults: { format: 'json' }
     post 'reports/available_repositories', to: 'reports#available_repositories',
                                            defaults: { format: 'json' }
-    post 'reports/save_pdf_to_inventory_item',
-         to: 'reports#save_pdf_to_inventory_item',
-         defaults: { format: 'json' }
     post 'available_asset_type_columns',
           to: 'repository_columns#available_asset_type_columns',
           defaults: { format: 'json' }
@@ -259,9 +232,12 @@ Rails.application.routes.draw do
       resource :recent_works, module: 'dashboard', only: [:show]
     end
 
-    resources :projects, except: [:new, :destroy] do
-      resources :user_projects, path: '/users',
-                only: [:create, :index, :update, :destroy]
+    resources :projects, except: [:destroy] do
+      resources :user_projects, path: '/users', only: %i(create index update destroy), as: :users do
+        collection do
+          get 'edit', to: 'user_projects#index_edit'
+        end
+      end
       resources :project_comments,
                 path: '/comments',
                 only: [:create, :index, :edit, :update, :destroy]
@@ -272,61 +248,57 @@ Rails.application.routes.draw do
       resources :reports,
                 path: '/reports',
                 only: %i(edit update create) do
+        member do
+          post 'generate_pdf', to: 'reports#generate_pdf'
+          post 'generate_docx', to: 'reports#generate_docx'
+          get 'status', to: 'reports#status', format: %w(json)
+        end
+
         collection do
-          # The posts following here should in theory be gets,
-          # but are posts because of parameters payload
-          post 'generate', to: 'reports#generate', format: %w(docx pdf)
-          get 'new/', to: 'reports#new'
-          get 'new/project_contents_modal',
-              to: 'reports#project_contents_modal',
-              as: :project_contents_modal
-          post 'new/project_contents',
-               to: 'reports#project_contents',
-               as: :project_contents
-          get 'new/experiment_contents_modal',
-              to: 'reports#experiment_contents_modal',
-              as: :experiment_contents_modal
-          post 'new/experiment_contents',
-               to: 'reports#experiment_contents',
-               as: :experiment_contents
-          get 'new/module_contents_modal',
-              to: 'reports#module_contents_modal',
-              as: :module_contents_modal
-          post 'new/module_contents',
-               to: 'reports#module_contents',
-               as: :module_contents
-          get 'new/step_contents_modal',
-              to: 'reports#step_contents_modal',
-              as: :step_contents_modal
-          post 'new/step_contents',
-               to: 'reports#step_contents',
-               as: :step_contents
-          get 'new/result_contents_modal',
-              to: 'reports#result_contents_modal',
-              as: :result_contents_modal
-          post 'new/result_contents',
-               to: 'reports#result_contents',
-               as: :result_contents
-          post '_save',
-               to: 'reports#save_modal',
-               as: :save_modal
+          get 'new', to: 'reports#new'
         end
       end
-      resources :experiments,
-                only: [:new, :create, :edit, :update],
-                defaults: { format: 'json' }
+      resources :experiments, only: %i(new create), defaults: { format: 'json' } do
+        collection do
+          post 'archive_group' # archive group of experements
+          post 'restore_group' # restore group of experementss
+        end
+      end
       member do
         # Notifications popup for individual project in projects index
         get 'notifications'
-        get 'experiment_archive' # Experiment archive for single project
+        get 'experiments_cards'
+        get 'sidebar'
+        put 'view_type'
       end
 
-      # This route is defined outside of member block
-      # to preserve original :project_id parameter in URL.
-      get 'users/edit', to: 'user_projects#index_edit'
+      collection do
+        get 'cards', to: 'projects#cards'
+        get 'users_filter'
+        post 'archive_group'
+        post 'restore_group'
+        put 'view_type', to: 'teams#view_type'
+      end
     end
 
-    resources :experiments do
+    resources :project_folders, only: %i(create new update edit) do
+      get 'cards', to: 'projects#cards'
+
+      collection do
+        post 'move_to', to: 'project_folders#move_to', defaults: { format: 'json' }
+        get 'move_to_modal', to: 'project_folders#move_to_modal', defaults: { format: 'json' }
+        post 'destroy', to: 'project_folders#destroy', as: 'destroy', defaults: { format: 'json' }
+        post 'destroy_modal', to: 'project_folders#destroy_modal', defaults: { format: 'json' }
+      end
+    end
+    get 'project_folders/:project_folder_id', to: 'projects#index', as: :project_folder_projects
+
+    resources :experiments, only: %i(show edit update) do
+      collection do
+        get 'edit', action: :edit
+        get 'clone_modal', action: :clone_modal
+        get 'move_modal', action: :move_modal
+      end
       member do
         get 'canvas' # Overview/structure for single experiment
         # AJAX-loaded canvas edit mode (from canvas)
@@ -338,13 +310,16 @@ Rails.application.routes.draw do
         post 'canvas', to: 'canvas#update' # Save updated canvas action
         get 'module_archive' # Module archive for single experiment
         get 'my_module_tags', to: 'my_module_tags#canvas_index'
-        get 'archive' # archive experiment
+        post 'archive' # archive experiment
         get 'clone_modal' # return modal with clone options
         post 'clone' # clone experiment
         get 'move_modal' # return modal with move options
         post 'move' # move experiment
         get 'fetch_workflow_img' # Get udated workflow img
+        post 'restore_my_modules', to: 'my_modules#restore_group'
       end
+
+      get 'sidebar', to: 'experiments#sidebar', as: 'sidebar'
     end
 
     # Show action is a popup (JSON) for individual module in full-zoom canvas,
@@ -419,7 +394,7 @@ Rails.application.routes.draw do
         patch 'protocol_description',
               to: 'my_modules#update_protocol_description',
               as: 'update_protocol_description'
-              patch 'state', to: 'my_modules#update_state', as: 'update_state'
+        patch 'state', to: 'my_modules#update_state', as: 'update_state'
         get 'protocols' # Protocols view for single module
         get 'results' # Results view for single module
         get 'archive' # Archive view for single module
@@ -533,14 +508,16 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :comments, only: %i(index create update destroy)
+
     resources :repositories do
       post 'repository_index',
            to: 'repository_rows#index',
            as: 'table_index',
            defaults: { format: 'json' }
-           member do
-             get :load_table
-           end
+      member do
+        get :load_table
+      end
       # Save repository table state
       post 'state_save',
            to: 'user_repositories#save_table_state',
@@ -559,12 +536,12 @@ Rails.application.routes.draw do
       post 'copy_records',
            to: 'repository_rows#copy_records',
            defaults: { format: 'json' }
-           post 'archive_records',
-                to: 'repository_rows#archive_records',
-                defaults: { format: 'json' }
-           post 'restore_records',
-                to: 'repository_rows#restore_records',
-                defaults: { format: 'json' }
+      post 'archive_records',
+           to: 'repository_rows#archive_records',
+           defaults: { format: 'json' }
+      post 'restore_records',
+           to: 'repository_rows#restore_records',
+           defaults: { format: 'json' }
       get 'repository_columns/:id/destroy_html',
           to: 'repository_columns#destroy_html',
           as: 'columns_destroy_html'
@@ -572,20 +549,20 @@ Rails.application.routes.draw do
           to: 'repository_columns#available_columns',
           as: 'available_columns',
           defaults: { format: 'json' }
-          get :table_toolbar
-          get :status
+      get :table_toolbar
+      get :status
 
-          resources :repository_columns, only: %i(index new edit destroy)
-          resources :repository_rows, only: %i(create show update) do
-            member do
-              get :assigned_task_list
-            end
-          end
+      resources :repository_columns, only: %i(index new edit destroy)
+      resources :repository_rows, only: %i(create show update) do
+        member do
+          get :assigned_task_list
+        end
+      end
 
-          collection do
-            get :sidebar
-            post 'available_rows', to: 'repository_rows#available_rows', defaults: { format: 'json' }
-          end
+      collection do
+        get :sidebar
+        post 'available_rows', to: 'repository_rows#available_rows', defaults: { format: 'json' }
+      end
 
       member do
         post 'parse_sheet', defaults: { format: 'json' }
@@ -600,20 +577,20 @@ Rails.application.routes.draw do
         resources :list_columns, only: %i(create update) do
           member do
             get 'items'
+          end
+        end
+        resources :checklist_columns, only: %i(create update) do
+          member do
+            get 'items'
+          end
+        end
+        resources :status_columns, only: %i(create update) do
+          member do
+            get 'items'
+          end
+        end
+      end
     end
-  end
-  resources :checklist_columns, only: %i(create update) do
-    member do
-      get 'items'
-    end
-  end
-  resources :status_columns, only: %i(create update) do
-    member do
-      get 'items'
-    end
-  end
-end
-end
 
     get 'search' => 'search#index'
     get 'search/new' => 'search#new', as: :new_search
@@ -623,12 +600,13 @@ end
     get 'files/:id/preview',
         to: 'assets#file_preview',
         as: 'asset_file_preview'
-    get 'files/:id/preview', to: 'assets#preview', as: 'preview_asset'
+    get 'files/:id/pdf_preview', to: 'assets#pdf_preview', as: 'asset_pdf_preview'
     get 'files/:id/view', to: 'assets#view', as: 'view_asset'
     get 'files/:id/file_url', to: 'assets#file_url', as: 'asset_file_url'
     get 'files/:id/download', to: 'assets#download', as: 'asset_download'
     get 'files/:id/edit', to: 'assets#edit', as: 'edit_asset'
     patch 'files/:id/toggle_view_mode', to: 'assets#toggle_view_mode', as: 'toggle_view_mode'
+    get 'files/:id/load_asset', to: 'assets#load_asset', as: 'load_asset'
     post 'files/:id/update_image', to: 'assets#update_image',
                                    as: 'update_asset_image'
     delete 'files/:id/', to: 'assets#destroy', as: 'asset_destroy'
@@ -639,12 +617,9 @@ end
 
     devise_scope :user do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'
-      get 'users/auth_token_sign_in' => 'users/sessions#auth_token_create'
-      # @@@20190520JS - Sessions controller doesn't require pre-authentication,
-      #                 so we will do the factsheet download here:
-      get 'users/download_factsheet' => 'users/sessions#download_factsheet', as: 'factsheet'
       get 'users/sign_up_provider' => 'users/registrations#new_with_provider'
       get 'users/two_factor_recovery' => 'users/sessions#two_factor_recovery'
+      get 'users/two_factor_auth' => 'users/sessions#two_factor_auth'
       post 'users/authenticate_with_two_factor' => 'users/sessions#authenticate_with_two_factor'
       post 'users/authenticate_with_recovery_code' => 'users/sessions#authenticate_with_recovery_code'
       post 'users/complete_sign_up_provider' => 'users/registrations#create_with_provider'
@@ -669,14 +644,14 @@ end
                           only: %i(index create show update destroy),
                           path: 'list_items',
                           as: :list_items
-                          resources :inventory_checklist_items,
-                                    only: %i(index create show update destroy),
-                                    path: 'checklist_items',
-                                    as: :checklist_items
-                          resources :inventory_status_items,
-                                    only: %i(index create show update destroy),
-                                    path: 'status_items',
-                                    as: :status_items
+                resources :inventory_checklist_items,
+                          only: %i(index create show update destroy),
+                          path: 'checklist_items',
+                          as: :checklist_items
+                resources :inventory_status_items,
+                          only: %i(index create show update destroy),
+                          path: 'status_items',
+                          as: :status_items
               end
               resources :inventory_items,
                         only: %i(index create show update destroy),
@@ -723,6 +698,7 @@ end
                 end
               end
             end
+            resources :project_folders, only: %i(index show create update)
           end
           resources :users, only: %i(show) do
             resources :user_identities,

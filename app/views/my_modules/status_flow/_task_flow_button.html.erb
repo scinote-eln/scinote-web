@@ -6,10 +6,14 @@
      data-status-changing="<%= my_module.status_changing %>"
      data-status-check-url="<%= status_state_my_module_path(my_module) %>">
 <<<<<<< HEAD
+<<<<<<< HEAD
   <button class="btn btn-secondary dropdown-toggle <%= 'disabled' if my_module.status_changing || my_module.archived_branch? %>"
 =======
   <button class="btn btn-secondary dropdown-toggle <%= 'disabled' if my_module.status_changing %>"
 >>>>>>> Pulled latest release
+=======
+  <button class="btn btn-secondary dropdown-toggle <%= 'disabled' if my_module.status_changing || my_module.archived_branch? %>"
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
           type="button"
           data-toggle="dropdown"
           aria-haspopup="true"

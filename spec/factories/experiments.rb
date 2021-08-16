@@ -15,5 +15,11 @@ FactoryBot.define do
         create_list :my_module, 3, :with_tag, experiment: e
       end
     end
+
+    trait :archived do
+      archived { true }
+      archived_on { Time.zone.now }
+      archived_by { created_by }
+    end
   end
 end

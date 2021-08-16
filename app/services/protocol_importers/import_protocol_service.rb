@@ -25,11 +25,16 @@ module ProtocolImporters
                        .symbolize_keys
                        .slice(:name, :position, :description, :tables_attributes)
 <<<<<<< HEAD
+<<<<<<< HEAD
                        .merge(user: @user, completed: false)
                        .merge(last_modified_by_id: @user.id))
 =======
                        .merge(user: @user, completed: false))
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+                       .merge(user: @user, completed: false)
+                       .merge(last_modified_by_id: @user.id))
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
         # 'Manually' create assets here. "Accept nasted attributes" won't work for assets
         s.assets << AttachmentsBuilder.generate(step_params.deep_symbolize_keys, user: @user, team: @team)

@@ -194,7 +194,7 @@ class TinyMceAsset < ApplicationRecord
     raise ArgumentError, 'Destination TinyMce asset should be persisted first!' unless to_asset.persisted?
 
     image.blob.open do |tmp_file|
-      to_blob = ActiveStorage::Blob.create_after_upload!(io: tmp_file, filename: blob.filename, metadata: blob.metadata)
+      to_blob = ActiveStorage::Blob.create_and_upload!(io: tmp_file, filename: blob.filename, metadata: blob.metadata)
       to_asset.image.attach(to_blob)
     end
     TinyMceAsset.update_estimated_size(to_asset.id)

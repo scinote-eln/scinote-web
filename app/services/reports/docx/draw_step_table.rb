@@ -4,6 +4,7 @@
 <<<<<<< HEAD
 module Reports::Docx::DrawStepTable
 <<<<<<< HEAD
+<<<<<<< HEAD
   def draw_step_table(table)
 =======
 module DrawStepTable
@@ -19,6 +20,9 @@ module Reports::Docx::DrawStepTable
     return unless table
 
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+  def draw_step_table(table)
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     color = @color
     timestamp = table.created_at
     @docx.p

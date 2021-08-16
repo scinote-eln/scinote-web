@@ -47,6 +47,8 @@
 
   function loadUnseenNotificationsNumber(element = 'notifications', icon = '.fa-bell') {
     var notificationCount = $('#count-' + element);
+    if (!notificationCount.length) return;
+
     $.ajax({
       url: notificationCount.attr('data-href'),
       type: 'GET',

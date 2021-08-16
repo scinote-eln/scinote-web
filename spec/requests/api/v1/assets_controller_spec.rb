@@ -145,10 +145,14 @@ RSpec.describe 'Api::V1::AssetsController', type: :request do
     context 'when has valid params' do
       context 'when multipart form' do
 <<<<<<< HEAD
+<<<<<<< HEAD
         let(:file) { Rack::Test::UploadedFile.new(file_fixture('test.jpg').open) }
 =======
         let(:file) { fixture_file_upload('files/test.jpg', 'image/jpg') }
 >>>>>>> Pulled latest release
+=======
+        let(:file) { Rack::Test::UploadedFile.new(file_fixture('test.jpg').open) }
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
         let(:attributes) { { file: file } }
 
         it 'creates new asset' do

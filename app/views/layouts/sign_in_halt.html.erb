@@ -20,20 +20,19 @@
     <%= csrf_meta_tags %>
   </head>
   <body class="<%= yield :body_class %>">
-    <% # @@@20180627JS Add main-nav to use css from EPA template %>
-    <nav class="navbar navbar-default navbar-fixed-top navbar-sign-in-halt main-nav" id="main-nav">
+    <nav class="navbar navbar-default navbar-fixed-top navbar-sign-in-halt" id="main-nav">
       <div class="container-fluid">
         <div class="navbar-header">
           <span class="navbar-brand" title="<% t('nav.label.scinote') %>">
-            <img id="logo" src="/images/logo.png" alt="Logo">
+            <%= image_tag('/images/scinote_icon.svg', id: 'logo') %>
           </span>
         </div>
         <% if user_signed_in? %>
-        <div class="pull-right sign-in-halt-logout-button">
-          <%= link_to main_app.destroy_user_session_path, class: 'btn btn-default', method: :delete do %>
-            <%= t('nav.user.logout') %>
-          <% end %>
-        </div>
+          <div class="pull-right sign-in-halt-logout-button">
+            <%= link_to main_app.destroy_user_session_path, class: 'btn btn-default', method: :delete do %>
+              <%= t('nav.user.logout') %>
+            <% end %>
+          </div>
         <% end %>
       </div>
     </nav>

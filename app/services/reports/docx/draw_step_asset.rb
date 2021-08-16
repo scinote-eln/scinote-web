@@ -4,6 +4,7 @@
 <<<<<<< HEAD
 module Reports::Docx::DrawStepAsset
 <<<<<<< HEAD
+<<<<<<< HEAD
   def draw_step_asset(asset)
     timestamp = asset.created_at
     asset_url = Rails.application.routes.url_helpers.asset_download_url(asset)
@@ -28,6 +29,9 @@ module Reports::Docx::DrawStepAsset
 >>>>>>> Pulled latest release
     return unless asset
 
+=======
+  def draw_step_asset(asset)
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     timestamp = asset.created_at
     asset_url = Rails.application.routes.url_helpers.asset_download_url(asset)
     color = @color

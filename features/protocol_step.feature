@@ -32,6 +32,7 @@ Given the following users are registered
    | Karli Novak | nonadmin@myorg.com | mypassword1234 | mypassword1234 |
 And "nonadmin@myorg.com" is in "BioSistemika Process" team as a "admin"
 <<<<<<< HEAD
+<<<<<<< HEAD
 Given Templates project exists for the "BioSistemika Process" team
 And "nonadmin@myorg.com" is signed in with "mypassword1234"
 
@@ -87,6 +88,9 @@ Scenario: Successful add new step to a task4
   Then I should see "BOS"
 =======
 Given Demo project exists for the "BioSistemika Process" team
+=======
+Given Templates project exists for the "BioSistemika Process" team
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 And "nonadmin@myorg.com" is signed in with "mypassword1234"
 
 @javascript @wip

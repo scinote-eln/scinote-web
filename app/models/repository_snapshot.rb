@@ -27,14 +27,20 @@ class RepositorySnapshot < RepositoryBase
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   scope :assigned_to_project, lambda { |project|
     where(team: project.team)
       .joins(my_module: { experiment: :project })
       .where(my_module: { experiments: { project: project } })
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> Pulled latest release
+=======
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   def self.create_preliminary(repository, my_module, created_by = nil)
     created_by ||= repository.created_by
     repository_snapshot = repository.dup.becomes(RepositorySnapshot)

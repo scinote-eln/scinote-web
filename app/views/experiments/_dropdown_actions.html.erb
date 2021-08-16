@@ -4,7 +4,7 @@
 
   <% if can_manage_experiment?(experiment) %>
   <li><%= link_to t('experiments.edit.label_title'),
-                edit_project_experiment_url(project, experiment),
+                edit_experiment_url(experiment),
                 remote: true,
                 type: 'button',
                 data: { id: experiment.id },
@@ -26,9 +26,18 @@
     </li>
   <% end %>
   <% if can_archive_experiment?(experiment) %>
-  <li><%= link_to t('experiments.archive.label_title'),
-                archive_experiment_url(experiment),
-                type: 'button',
-                data: { confirm: t('experiments.canvas.archive_confirm') } %></li>
+    <li><%= link_to t('experiments.archive.label_title'),
+                  archive_experiment_url(experiment),
+                  type: 'button',
+                  method: :post,
+                  data: { confirm: t('experiments.canvas.archive_confirm') } %></li>
+  <% end %>
+  <% if can_restore_experiment?(experiment) %>
+    <% experiment_form = nil %>
+    <%= form_for experiment, method: :patch, format: :html do |f| %>
+      <% experiment_form = f %>
+      <%= f.hidden_field :archived, value: false %>
+    <% end %>
+    <li><a href="#" class="form-submit-link" data-turbolinks="false" data-submit-form="<%= experiment_form.options[:html][:id] %>"><%= t "projects.experiment_archive.restore_option" %></a></li>
   <% end %>
 </ul>

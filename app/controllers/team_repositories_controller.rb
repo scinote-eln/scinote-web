@@ -78,10 +78,15 @@ class TeamRepositoriesController < ApplicationController
 
   def teams_to_update
 <<<<<<< HEAD
+<<<<<<< HEAD
     return [] if update_params[:permission_changes].blank?
 
 =======
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+    return [] if update_params[:permission_changes].blank?
+
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     teams_to_update = JSON.parse(update_params[:permission_changes]).keys.map(&:to_i).to_a &
                       update_params[:share_team_ids]&.map(&:to_i).to_a
     wp = update_params[:write_permissions]&.map(&:to_i)

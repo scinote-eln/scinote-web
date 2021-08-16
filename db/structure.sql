@@ -97,7 +97,8 @@ CREATE TABLE public.active_storage_blobs (
     metadata text,
     byte_size bigint NOT NULL,
     checksum character varying NOT NULL,
-    created_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone NOT NULL,
+    service_name character varying NOT NULL
 );
 
 
@@ -118,6 +119,36 @@ CREATE SEQUENCE public.active_storage_blobs_id_seq
 --
 
 ALTER SEQUENCE public.active_storage_blobs_id_seq OWNED BY public.active_storage_blobs.id;
+
+
+--
+-- Name: active_storage_variant_records; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.active_storage_variant_records (
+    id bigint NOT NULL,
+    blob_id bigint NOT NULL,
+    variation_digest character varying NOT NULL
+);
+
+
+--
+-- Name: active_storage_variant_records_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.active_storage_variant_records_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: active_storage_variant_records_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.active_storage_variant_records_id_seq OWNED BY public.active_storage_variant_records.id;
 
 
 --
@@ -225,7 +256,8 @@ CREATE TABLE public.assets (
     file_processing boolean,
     team_id integer,
     file_image_quality integer,
-    view_mode integer DEFAULT 0 NOT NULL
+    view_mode integer DEFAULT 0 NOT NULL,
+    pdf_preview_processing boolean DEFAULT false
 );
 
 
@@ -333,7 +365,8 @@ CREATE TABLE public.comments (
     updated_at timestamp without time zone NOT NULL,
     last_modified_by_id bigint,
     type character varying,
-    associated_id integer
+    associated_id integer,
+    unseen_by bigint[] DEFAULT '{}'::bigint[]
 );
 
 
@@ -890,7 +923,7 @@ CREATE TABLE public.oauth_access_grants (
     redirect_uri text NOT NULL,
     created_at timestamp without time zone NOT NULL,
     revoked_at timestamp without time zone,
-    scopes character varying
+    scopes character varying DEFAULT ''::character varying NOT NULL
 );
 
 
@@ -987,6 +1020,44 @@ ALTER SEQUENCE public.oauth_applications_id_seq OWNED BY public.oauth_applicatio
 
 
 --
+-- Name: project_folders; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.project_folders (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    team_id bigint NOT NULL,
+    parent_folder_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    archived boolean DEFAULT false,
+    archived_by_id bigint,
+    archived_on timestamp without time zone,
+    restored_by_id bigint,
+    restored_on timestamp without time zone
+);
+
+
+--
+-- Name: project_folders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.project_folders_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: project_folders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.project_folders_id_seq OWNED BY public.project_folders.id;
+
+
+--
 -- Name: projects; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1006,9 +1077,9 @@ CREATE TABLE public.projects (
     restored_by_id bigint,
     restored_on timestamp without time zone,
     experiments_order character varying,
-    rap_task_level_id integer NOT NULL,
     template boolean,
-    demo boolean DEFAULT false NOT NULL
+    demo boolean DEFAULT false NOT NULL,
+    project_folder_id bigint
 );
 
 
@@ -1144,133 +1215,6 @@ ALTER SEQUENCE public.protocols_id_seq OWNED BY public.protocols.id;
 
 
 --
--- Name: rap_program_levels; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.rap_program_levels (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: rap_program_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.rap_program_levels_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: rap_program_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.rap_program_levels_id_seq OWNED BY public.rap_program_levels.id;
-
-
---
--- Name: rap_project_levels; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.rap_project_levels (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    rap_topic_level_id bigint,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: rap_project_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.rap_project_levels_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: rap_project_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.rap_project_levels_id_seq OWNED BY public.rap_project_levels.id;
-
-
---
--- Name: rap_task_levels; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.rap_task_levels (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    rap_project_level_id bigint,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: rap_task_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.rap_task_levels_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: rap_task_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.rap_task_levels_id_seq OWNED BY public.rap_task_levels.id;
-
-
---
--- Name: rap_topic_levels; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.rap_topic_levels (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    rap_program_level_id bigint,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: rap_topic_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.rap_topic_levels_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: rap_topic_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.rap_topic_levels_id_seq OWNED BY public.rap_topic_levels.id;
-
-
---
 -- Name: report_elements; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1316,6 +1260,40 @@ ALTER SEQUENCE public.report_elements_id_seq OWNED BY public.report_elements.id;
 
 
 --
+-- Name: report_template_values; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.report_template_values (
+    id bigint NOT NULL,
+    report_id bigint NOT NULL,
+    view_component character varying NOT NULL,
+    name character varying NOT NULL,
+    value jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: report_template_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.report_template_values_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: report_template_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.report_template_values_id_seq OWNED BY public.report_template_values.id;
+
+
+--
 -- Name: reports; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1328,7 +1306,10 @@ CREATE TABLE public.reports (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     last_modified_by_id bigint,
-    team_id bigint
+    team_id bigint,
+    pdf_file_status integer DEFAULT 0,
+    docx_file_status integer DEFAULT 0,
+    settings jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -2924,6 +2905,13 @@ ALTER TABLE ONLY public.active_storage_blobs ALTER COLUMN id SET DEFAULT nextval
 
 
 --
+-- Name: active_storage_variant_records id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.active_storage_variant_records ALTER COLUMN id SET DEFAULT nextval('public.active_storage_variant_records_id_seq'::regclass);
+
+
+--
 -- Name: activities id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3078,6 +3066,13 @@ ALTER TABLE ONLY public.oauth_applications ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+-- Name: project_folders id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_folders ALTER COLUMN id SET DEFAULT nextval('public.project_folders_id_seq'::regclass);
+
+
+--
 -- Name: projects id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3106,38 +3101,17 @@ ALTER TABLE ONLY public.protocols ALTER COLUMN id SET DEFAULT nextval('public.pr
 
 
 --
--- Name: rap_program_levels id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_program_levels ALTER COLUMN id SET DEFAULT nextval('public.rap_program_levels_id_seq'::regclass);
-
-
---
--- Name: rap_project_levels id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_project_levels ALTER COLUMN id SET DEFAULT nextval('public.rap_project_levels_id_seq'::regclass);
-
-
---
--- Name: rap_task_levels id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_task_levels ALTER COLUMN id SET DEFAULT nextval('public.rap_task_levels_id_seq'::regclass);
-
-
---
--- Name: rap_topic_levels id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_topic_levels ALTER COLUMN id SET DEFAULT nextval('public.rap_topic_levels_id_seq'::regclass);
-
-
---
 -- Name: report_elements id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.report_elements ALTER COLUMN id SET DEFAULT nextval('public.report_elements_id_seq'::regclass);
+
+
+--
+-- Name: report_template_values id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.report_template_values ALTER COLUMN id SET DEFAULT nextval('public.report_template_values_id_seq'::regclass);
 
 
 --
@@ -3479,6 +3453,14 @@ ALTER TABLE ONLY public.active_storage_blobs
 
 
 --
+-- Name: active_storage_variant_records active_storage_variant_records_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.active_storage_variant_records
+    ADD CONSTRAINT active_storage_variant_records_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: activities activities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3663,6 +3645,14 @@ ALTER TABLE ONLY public.oauth_applications
 
 
 --
+-- Name: project_folders project_folders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_folders
+    ADD CONSTRAINT project_folders_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: projects projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3695,43 +3685,19 @@ ALTER TABLE ONLY public.protocols
 
 
 --
--- Name: rap_program_levels rap_program_levels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_program_levels
-    ADD CONSTRAINT rap_program_levels_pkey PRIMARY KEY (id);
-
-
---
--- Name: rap_project_levels rap_project_levels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_project_levels
-    ADD CONSTRAINT rap_project_levels_pkey PRIMARY KEY (id);
-
-
---
--- Name: rap_task_levels rap_task_levels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_task_levels
-    ADD CONSTRAINT rap_task_levels_pkey PRIMARY KEY (id);
-
-
---
--- Name: rap_topic_levels rap_topic_levels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_topic_levels
-    ADD CONSTRAINT rap_topic_levels_pkey PRIMARY KEY (id);
-
-
---
 -- Name: report_elements report_elements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.report_elements
     ADD CONSTRAINT report_elements_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: report_template_values report_template_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.report_template_values
+    ADD CONSTRAINT report_template_values_pkey PRIMARY KEY (id);
 
 
 --
@@ -4143,6 +4109,13 @@ CREATE UNIQUE INDEX index_active_storage_attachments_uniqueness ON public.active
 --
 
 CREATE UNIQUE INDEX index_active_storage_blobs_on_key ON public.active_storage_blobs USING btree (key);
+
+
+--
+-- Name: index_active_storage_variant_records_uniqueness; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_active_storage_variant_records_uniqueness ON public.active_storage_variant_records USING btree (blob_id, variation_digest);
 
 
 --
@@ -4643,6 +4616,27 @@ CREATE INDEX index_on_repository_checklist_value_id ON public.repository_checkli
 
 
 --
+-- Name: index_project_folders_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_folders_on_name ON public.project_folders USING gin (public.trim_html_tags((name)::text) public.gin_trgm_ops);
+
+
+--
+-- Name: index_project_folders_on_parent_folder_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_folders_on_parent_folder_id ON public.project_folders USING btree (parent_folder_id);
+
+
+--
+-- Name: index_project_folders_on_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_folders_on_team_id ON public.project_folders USING btree (team_id);
+
+
+--
 -- Name: index_projects_on_archived_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4671,10 +4665,10 @@ CREATE INDEX index_projects_on_name ON public.projects USING gin (public.trim_ht
 
 
 --
--- Name: index_projects_on_rap_task_level_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_projects_on_project_folder_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_projects_on_rap_task_level_id ON public.projects USING btree (rap_task_level_id);
+CREATE INDEX index_projects_on_project_folder_id ON public.projects USING btree (project_folder_id);
 
 
 --
@@ -4790,55 +4784,6 @@ CREATE INDEX index_protocols_on_team_id ON public.protocols USING btree (team_id
 
 
 --
--- Name: index_rap_program_levels_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_rap_program_levels_on_name ON public.rap_program_levels USING btree (name);
-
-
---
--- Name: index_rap_project_levels_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_rap_project_levels_on_name ON public.rap_project_levels USING btree (name);
-
-
---
--- Name: index_rap_project_levels_on_rap_topic_level_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_rap_project_levels_on_rap_topic_level_id ON public.rap_project_levels USING btree (rap_topic_level_id);
-
-
---
--- Name: index_rap_task_levels_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_rap_task_levels_on_name ON public.rap_task_levels USING btree (name);
-
-
---
--- Name: index_rap_task_levels_on_rap_project_level_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_rap_task_levels_on_rap_project_level_id ON public.rap_task_levels USING btree (rap_project_level_id);
-
-
---
--- Name: index_rap_topic_levels_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_rap_topic_levels_on_name ON public.rap_topic_levels USING btree (name);
-
-
---
--- Name: index_rap_topic_levels_on_rap_program_level_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_rap_topic_levels_on_rap_program_level_id ON public.rap_topic_levels USING btree (rap_program_level_id);
-
-
---
 -- Name: index_report_elements_on_asset_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4913,6 +4858,20 @@ CREATE INDEX index_report_elements_on_step_id ON public.report_elements USING bt
 --
 
 CREATE INDEX index_report_elements_on_table_id ON public.report_elements USING btree (table_id);
+
+
+--
+-- Name: index_report_template_values_on_report_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_report_template_values_on_report_id ON public.report_template_values USING btree (report_id);
+
+
+--
+-- Name: index_report_template_values_on_view_component_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_report_template_values_on_view_component_name ON public.report_template_values USING btree (view_component, name);
 
 
 --
@@ -5035,10 +4994,10 @@ CREATE INDEX index_repository_cells_on_repository_row_id ON public.repository_ce
 
 
 --
--- Name: index_repository_cells_on_value_type_and_value_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_repository_cells_on_value; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_repository_cells_on_value_type_and_value_id ON public.repository_cells USING btree (value_type, value_id);
+CREATE INDEX index_repository_cells_on_value ON public.repository_cells USING btree (value_type, value_id);
 
 
 --
@@ -5819,10 +5778,10 @@ CREATE INDEX index_view_states_on_user_id ON public.view_states USING btree (use
 
 
 --
--- Name: index_view_states_on_viewable_type_and_viewable_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_view_states_on_viewable; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_view_states_on_viewable_type_and_viewable_id ON public.view_states USING btree (viewable_type, viewable_id);
+CREATE INDEX index_view_states_on_viewable ON public.view_states USING btree (viewable_type, viewable_id);
 
 
 --
@@ -5864,11 +5823,11 @@ ALTER TABLE ONLY public.report_elements
 
 
 --
--- Name: projects fk_rails_0710cff186; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: project_folders fk_rails_05fe6e31fe; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.projects
-    ADD CONSTRAINT fk_rails_0710cff186 FOREIGN KEY (rap_task_level_id) REFERENCES public.rap_task_levels(id);
+ALTER TABLE ONLY public.project_folders
+    ADD CONSTRAINT fk_rails_05fe6e31fe FOREIGN KEY (parent_folder_id) REFERENCES public.project_folders(id);
 
 
 --
@@ -6088,11 +6047,11 @@ ALTER TABLE ONLY public.repository_number_values
 
 
 --
--- Name: rap_topic_levels fk_rails_474c9b818d; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: report_template_values fk_rails_423a0bad87; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.rap_topic_levels
-    ADD CONSTRAINT fk_rails_474c9b818d FOREIGN KEY (rap_program_level_id) REFERENCES public.rap_program_levels(id);
+ALTER TABLE ONLY public.report_template_values
+    ADD CONSTRAINT fk_rails_423a0bad87 FOREIGN KEY (report_id) REFERENCES public.reports(id);
 
 
 --
@@ -6192,14 +6151,6 @@ ALTER TABLE ONLY public.repository_checklist_items
 
 
 --
--- Name: rap_task_levels fk_rails_68120f8d8c; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_task_levels
-    ADD CONSTRAINT fk_rails_68120f8d8c FOREIGN KEY (rap_project_level_id) REFERENCES public.rap_project_levels(id);
-
-
---
 -- Name: projects fk_rails_6981ffffd4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6296,6 +6247,22 @@ ALTER TABLE ONLY public.repository_status_items
 
 
 --
+-- Name: project_folders fk_rails_7931975dd0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_folders
+    ADD CONSTRAINT fk_rails_7931975dd0 FOREIGN KEY (restored_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: project_folders fk_rails_795296de66; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_folders
+    ADD CONSTRAINT fk_rails_795296de66 FOREIGN KEY (team_id) REFERENCES public.teams(id);
+
+
+--
 -- Name: results fk_rails_79fcaa8e37; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6365,14 +6332,6 @@ ALTER TABLE ONLY public.checklists
 
 ALTER TABLE ONLY public.report_elements
     ADD CONSTRAINT fk_rails_831f89b951 FOREIGN KEY (checklist_id) REFERENCES public.checklists(id);
-
-
---
--- Name: rap_project_levels fk_rails_83bc72d987; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_project_levels
-    ADD CONSTRAINT fk_rails_83bc72d987 FOREIGN KEY (rap_topic_level_id) REFERENCES public.rap_topic_levels(id);
 
 
 --
@@ -6525,6 +6484,14 @@ ALTER TABLE ONLY public.repository_checklist_values
 
 ALTER TABLE ONLY public.activities
     ADD CONSTRAINT fk_rails_992865be13 FOREIGN KEY (experiment_id) REFERENCES public.experiments(id);
+
+
+--
+-- Name: active_storage_variant_records fk_rails_993965df05; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.active_storage_variant_records
+    ADD CONSTRAINT fk_rails_993965df05 FOREIGN KEY (blob_id) REFERENCES public.active_storage_blobs(id);
 
 
 --
@@ -6992,6 +6959,14 @@ ALTER TABLE ONLY public.protocol_protocol_keywords
 
 
 --
+-- Name: project_folders fk_rails_f27fa590f4; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_folders
+    ADD CONSTRAINT fk_rails_f27fa590f4 FOREIGN KEY (archived_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: report_elements fk_rails_f36eac136b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7029,6 +7004,14 @@ ALTER TABLE ONLY public.tags
 
 ALTER TABLE ONLY public.team_repositories
     ADD CONSTRAINT fk_rails_f99472b670 FOREIGN KEY (team_id) REFERENCES public.teams(id);
+
+
+--
+-- Name: projects fk_rails_fbf93d1a3d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.projects
+    ADD CONSTRAINT fk_rails_fbf93d1a3d FOREIGN KEY (project_folder_id) REFERENCES public.project_folders(id);
 
 
 --
@@ -7184,11 +7167,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180207095200'),
 ('20180308094354'),
 ('20180416114040'),
-('20180416171923'),
-('20180418123509'),
-('20180418123815'),
-('20180418124021'),
-('20180507160013'),
 ('20180524091143'),
 ('20180806115201'),
 ('20180813120338'),
@@ -7245,6 +7223,18 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200826143431'),
 ('20200902093234'),
 ('20200909121441'),
-('20201027133634');
+('20201027133634'),
+('20201028103608'),
+('20201126203713'),
+('20201209165626'),
+('20201215161050'),
+('20210128105457'),
+('20210128105458'),
+('20210217114042'),
+('20210312185911'),
+('20210325152257'),
+('20210407143303'),
+('20210410100006'),
+('20210506125657');
 
 

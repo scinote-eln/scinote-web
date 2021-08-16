@@ -41,6 +41,7 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
     @time_range_column = create(:repository_column, repository: @valid_inventory, data_type: :RepositoryTimeRangeValue)
     @date_time_range_column = create(:repository_column,
                                      repository: @valid_inventory, data_type: :RepositoryDateTimeRangeValue)
+    @number_column = create(:repository_column, repository: @valid_inventory, data_type: :RepositoryNumberValue)
 
     @valid_item = create(:repository_row, repository: @valid_inventory)
 
@@ -76,6 +77,9 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
            start_time: DateTime.now,
            end_time: DateTime.now + 1.day,
            repository_cell_attributes: { repository_row: @valid_item, repository_column: @date_time_range_column })
+    create(:repository_number_value,
+           data: 1234.5678,
+           repository_cell_attributes: { repository_row: @valid_item, repository_column: @number_column })
 
     @valid_headers =
       { 'Authorization': 'Bearer ' + generate_token(@user.id),
@@ -189,6 +193,24 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
             start_time: DateTime.now,
             end_time: DateTime.now + 1.day
           }
+        }
+      }
+    }
+    @valid_number_body = {
+      data: {
+        type: 'inventory_cells',
+        attributes: {
+          column_id: @number_column.id,
+          value: 1234.5678
+        }
+      }
+    }
+    @valid_number_as_text_body = {
+      data: {
+        type: 'inventory_cells',
+        attributes: {
+          column_id: @number_column.id,
+          value: '1234.5678'
         }
       }
     }
@@ -314,6 +336,26 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
         }
       }
     }
+    @update_number_body = {
+      data: {
+        id: @valid_item.repository_cells.where(repository_column: @number_column).first.id,
+        type: 'inventory_cells',
+        attributes: {
+          column_id: @number_column.id,
+          value: 8765.4321
+        }
+      }
+    }
+    @update_number_as_text_body = {
+      data: {
+        id: @valid_item.repository_cells.where(repository_column: @number_column).first.id,
+        type: 'inventory_cells',
+        attributes: {
+          column_id: @number_column.id,
+          value: '8765.4321'
+        }
+      }
+    }
   end
 
   describe 'GET inventory_cells, #index' do
@@ -327,10 +369,11 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(@valid_item.repository_cells,
-               each_serializer: Api::V1::InventoryCellSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@valid_item.repository_cells, each_serializer: Api::V1::InventoryCellSerializer)
+            .to_json
+        )['data']
       )
     end
 
@@ -506,10 +549,11 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       expect(response).to have_http_status 201
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(RepositoryCell.last,
-               serializer: Api::V1::InventoryCellSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(RepositoryCell.last, serializer: Api::V1::InventoryCellSerializer)
+            .to_json
+        )['data']
       )
     end
 
@@ -560,10 +604,11 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       expect(response).to have_http_status 201
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(RepositoryCell.last,
-               serializer: Api::V1::InventoryCellSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(RepositoryCell.last, serializer: Api::V1::InventoryCellSerializer)
+            .to_json
+        )['data']
       )
     end
 
@@ -593,6 +638,42 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
         inventory_id: @valid_inventory.id,
         item_id: empty_item.id
       ), params: @valid_date_time_range_body.to_json, headers: @valid_headers
+      expect(response).to have_http_status 201
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data]).to match(
+        ActiveModelSerializers::SerializableResource
+          .new(RepositoryCell.last,
+               serializer: Api::V1::InventoryCellSerializer)
+          .as_json[:data]
+      )
+    end
+
+    it 'Response with correct inventory cell, number cell' do
+      hash_body = nil
+      empty_item = create(:repository_row, repository: @valid_inventory)
+      post api_v1_team_inventory_item_cells_path(
+        team_id: @team.id,
+        inventory_id: @valid_inventory.id,
+        item_id: empty_item.id
+      ), params: @valid_number_body.to_json, headers: @valid_headers
+      expect(response).to have_http_status 201
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data]).to match(
+        ActiveModelSerializers::SerializableResource
+          .new(RepositoryCell.last,
+               serializer: Api::V1::InventoryCellSerializer)
+          .as_json[:data]
+      )
+    end
+
+    it 'Response with correct inventory cell, text number cell' do
+      hash_body = nil
+      empty_item = create(:repository_row, repository: @valid_inventory)
+      post api_v1_team_inventory_item_cells_path(
+        team_id: @team.id,
+        inventory_id: @valid_inventory.id,
+        item_id: empty_item.id
+      ), params: @valid_number_as_text_body.to_json, headers: @valid_headers
       expect(response).to have_http_status 201
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
@@ -758,10 +839,12 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       expect(response).to have_http_status 200
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(@valid_item.repository_cells.where(repository_column: @date_column).first,
-               serializer: Api::V1::InventoryCellSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@valid_item.repository_cells.where(repository_column: @date_column).first,
+                 serializer: Api::V1::InventoryCellSerializer)
+            .to_json
+        )['data']
       )
     end
 
@@ -794,10 +877,12 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       expect(response).to have_http_status 200
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(@valid_item.repository_cells.where(repository_column: @date_time_column).first,
-               serializer: Api::V1::InventoryCellSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@valid_item.repository_cells.where(repository_column: @date_time_column).first,
+                 serializer: Api::V1::InventoryCellSerializer)
+            .to_json
+        )['data']
       )
     end
 
@@ -812,10 +897,12 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       expect(response).to have_http_status 200
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(@valid_item.repository_cells.where(repository_column: @date_range_column).first,
-               serializer: Api::V1::InventoryCellSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@valid_item.repository_cells.where(repository_column: @date_range_column).first,
+                 serializer: Api::V1::InventoryCellSerializer)
+            .to_json
+        )['data']
       )
     end
 
@@ -850,6 +937,42 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       expect(hash_body[:data]).to match(
         ActiveModelSerializers::SerializableResource
           .new(@valid_item.repository_cells.where(repository_column: @date_time_range_column).first,
+               serializer: Api::V1::InventoryCellSerializer)
+          .as_json[:data]
+      )
+    end
+
+    it 'Response with correct inventory cell, number cell' do
+      hash_body = nil
+      patch api_v1_team_inventory_item_cell_path(
+        team_id: @team.id,
+        inventory_id: @valid_inventory.id,
+        item_id: @valid_item.id,
+        id: @valid_item.repository_cells.where(repository_column: @number_column).first.id
+      ), params: @update_number_body.to_json, headers: @valid_headers
+      expect(response).to have_http_status 200
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data]).to match(
+        ActiveModelSerializers::SerializableResource
+          .new(@valid_item.repository_cells.where(repository_column: @number_column).first,
+               serializer: Api::V1::InventoryCellSerializer)
+          .as_json[:data]
+      )
+    end
+
+    it 'Response with correct inventory cell, text number cell' do
+      hash_body = nil
+      patch api_v1_team_inventory_item_cell_path(
+        team_id: @team.id,
+        inventory_id: @valid_inventory.id,
+        item_id: @valid_item.id,
+        id: @valid_item.repository_cells.where(repository_column: @number_column).first.id
+      ), params: @update_number_as_text_body.to_json, headers: @valid_headers
+      expect(response).to have_http_status 200
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data]).to match(
+        ActiveModelSerializers::SerializableResource
+          .new(@valid_item.repository_cells.where(repository_column: @number_column).first,
                serializer: Api::V1::InventoryCellSerializer)
           .as_json[:data]
       )

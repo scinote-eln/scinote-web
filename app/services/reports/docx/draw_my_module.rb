@@ -4,6 +4,7 @@
 <<<<<<< HEAD
 module Reports::Docx::DrawMyModule
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 module DrawMyModule
 >>>>>>> Finished merging. Test on dev machine (iMac).
@@ -30,6 +31,15 @@ module Reports::Docx::DrawMyModule
     tags = my_module.tags
     return unless my_module
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+  def draw_my_module(subject)
+    color = @color
+    link_style = @link_style
+    scinote_url = @scinote_url
+    my_module = subject.my_module
+    tags = my_module.tags
+    return unless can_read_experiment?(@user, my_module.experiment)
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
     @docx.h3 my_module.name, italic: false, size: Constants::REPORT_DOCX_MY_MODULE_TITLE_SIZE
     @docx.p do
@@ -167,6 +177,7 @@ module Reports::Docx::DrawMyModule
         draw_result_table(result)
       elsif result.is_text && @settings.dig('task', 'text_results')
         draw_result_text(result)
+<<<<<<< HEAD
 =======
         text I18n.t 'projects.reports.elements.module.no_tags'
 >>>>>>> Finished merging. Test on dev machine (iMac).
@@ -196,5 +207,16 @@ module Reports::Docx::DrawMyModule
       public_send("draw_#{child['type_of']}", child, my_module)
     end
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+      end
+    end
+
+    @docx.p
+    subject.children.active.each do |child|
+      public_send("draw_#{child.type_of}", child)
+    end
+
+    draw_my_module_activity(my_module) if @settings.dig('task', 'activities')
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   end
 end

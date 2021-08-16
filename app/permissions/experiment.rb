@@ -1,7 +1,6 @@
 Canaid::Permissions.register_for(Experiment) do
   # Experiment and its project must be active for all the specified permissions
-  %i(read_experiment
-     manage_experiment
+  %i(manage_experiment
      archive_experiment
      clone_experiment
      move_experiment)
@@ -47,8 +46,10 @@ Canaid::Permissions.register_for(Experiment) do
   # active
   # experiment: restore
   can :restore_experiment do |user, experiment|
-    user.is_user_or_higher_of_project?(experiment.project) &&
-      experiment.archived?
+    project = experiment.project
+    user.is_user_or_higher_of_project?(project) &&
+      experiment.archived? &&
+      project.active?
   end
 
   # experiment: copy
@@ -77,8 +78,7 @@ Canaid::Permissions.register_for(Protocol) do
 
   # Module, its experiment and its project must be active for all the specified
   # permissions
-  %i(read_protocol_in_module
-     manage_protocol_in_module
+  %i(manage_protocol_in_module
      complete_or_checkbox_step)
     .each do |perm|
     can perm do |_, protocol|
@@ -105,25 +105,6 @@ Canaid::Permissions.register_for(Protocol) do
   # step: complete/uncomplete
   can :complete_or_checkbox_step do |user, protocol|
     can_change_my_module_flow_status?(user, protocol.my_module)
-  end
-end
-
-Canaid::Permissions.register_for(Result) do
-  # Module, its experiment and its project must be active for all the specified
-  # permissions
-  %i(manage_result).each do |perm|
-    can perm do |_, result|
-      my_module = result.my_module
-      my_module.active? &&
-        my_module.experiment.active? &&
-        my_module.experiment.project.active?
-    end
-  end
-
-  # result: delete, archive
-  can :manage_result do |user, result|
-    result.unlocked?(result) &&
-      user.is_owner_of_project?(result.my_module.experiment.project)
   end
 end
 

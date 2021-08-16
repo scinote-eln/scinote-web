@@ -1,20 +1,18 @@
-<ul class="sidebar-root">
-  <% @projects_tree.each do |project| %>
-    <% cache [action_name, current_user, project] do %>
-      <li data-parent="candidate"
-          class="branch" >
-        <span class="tree-link no-indent" title="<%= project.name %>">
-          <% if project.active_experiments.any? %>
-            <i class="fas fa-caret-right tree-toggle"></i>
-          <% end %>
-            <%= link_to project.name,
-                        project_action_to_link_to(project),
-                        title: project.name,
-                        class: 'line-wrap',
-                        data: { type: 'project', id: project.id } %>
-        </span>
-        <%= render partial: 'shared/sidebar/experiments', locals: { project: project } %>
-      </li>
-    <% end %>
+ <ul class="sidebar-branch">
+  <% if projects_view_mode_archived? %>
+    <li class="sidebar-leaf">
+      <%= link_to projects_path, class: "sidebar-link back-button" do %>
+        <%= t("projects.index.back_to_active_projects") %>
+      <% end %>
+    </li>
+  <% end %>
+  <%= render partial: 'shared/sidebar/projects_tree_branch.html.erb', locals: { records: sidebar_folders_tree(team, current_user, sort) } %>
+  <% if !projects_view_mode_archived? %>
+    <li class="sidebar-leaf">
+      <%= link_to projects_path(view_mode: :archived), class: "sidebar-link" do %>
+        <span class="fas fa-archive"></span>
+        <%= t('projects.index.navigation_archived_projects') %>
+      <% end %>
+    </li>
   <% end %>
 </ul>

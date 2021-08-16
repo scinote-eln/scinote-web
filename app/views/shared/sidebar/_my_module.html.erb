@@ -1,5 +1,6 @@
 <ul class="sidebar-branch">
   <li class="sidebar-leaf">
+<<<<<<< HEAD
     <%= link_to t('sidebar.my_module.back_button'), canvas_experiment_url(experiment), class: 'sidebar-link back-button' %>
   </li>
   <% my_modules.each do |my_module| %>
@@ -17,4 +18,35 @@
       <%= t('sidebar.my_modules.archived_button') %>
     <% end%>
   </li>
+=======
+    <% if @my_module.archived_branch? %>
+      <%= link_to t('sidebar.my_module.back_button_archived'), module_archive_experiment_url(@my_module.experiment), class: 'sidebar-link back-button' %>
+    <% else %>
+      <%= link_to t('sidebar.my_module.back_button'), canvas_experiment_path(@my_module.experiment), class: 'sidebar-link back-button' %>
+    <% end %>
+  </li>
+  <li class="sidebar-leaf">
+    <%= link_to t('sidebar.my_module.steps'),
+        protocols_my_module_url(@my_module),
+        class: "sidebar-link #{'selected' if is_module_protocols?}" %>
+  </li>
+  <li class="sidebar-leaf">
+    <%= link_to t('sidebar.my_module.results'),
+        results_my_module_url(@my_module),
+        class: "sidebar-link #{'selected' if is_module_results?}" %>
+  </li>
+  <li class="sidebar-leaf">
+    <%= link_to t('sidebar.my_module.activities'),
+        activities_my_module_url(@my_module),
+        class: "sidebar-link #{'selected' if is_module_activities?}" %>
+  </li>
+  <li data-hook="sidebar-my-module"></li>
+  <% unless @my_module.archived_branch? %>
+    <li class="sidebar-leaf">
+      <%= link_to t('sidebar.my_module.archive'),
+          archive_my_module_url(@my_module),
+          class: "sidebar-link #{'selected' if is_module_archive?}" %>
+    </li>
+  <% end %>
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 </ul>

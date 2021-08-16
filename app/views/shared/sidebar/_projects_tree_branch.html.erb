@@ -9,7 +9,11 @@
     </li>
   <% else %>
     <li class="sidebar-leaf">
+<<<<<<< HEAD
       <% unless record[:children].blank? %>
+=======
+      <% unless record[:children].empty? %>
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
         <i class="fas fa-caret-right toggle-branch collapsed"></i>
       <% end %>
       <%= link_to project_folder_path(record[:folder]),

@@ -4,6 +4,7 @@
 <<<<<<< HEAD
 module Reports::Docx::DrawStepChecklist
 <<<<<<< HEAD
+<<<<<<< HEAD
   def draw_step_checklist(checklist)
     team = @report_team
     user = @user
@@ -21,6 +22,11 @@ module Reports::Docx::DrawStepChecklist
     checklist = step.checklists.find_by(id: subject['id']['checklist_id'])
     return unless checklist
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+  def draw_step_checklist(checklist)
+    team = @report_team
+    user = @user
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
     items = checklist.checklist_items
     timestamp = checklist.created_at

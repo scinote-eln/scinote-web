@@ -5,7 +5,6 @@
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
-      <li class="dropdown-header"><%=t "projects.index.options_header" %></li>
       <li>
         <% option_text = t("my_modules.module_archive.option_download") %>
         <% if result.is_asset %>
@@ -19,7 +18,7 @@
           <%= link_to option_text, result_table_download_path(result.result_table_id), data: { turbolinks: false } %>
         <% end %>
       </li>
-      <% if can_manage_result?(result) %>
+      <% if can_delete_result?(result) %>
       <li>
         <%= link_to t('my_modules.module_archive.option_delete'),
                     result_path(action: :delete, id: result.id),

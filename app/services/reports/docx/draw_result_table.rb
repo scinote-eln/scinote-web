@@ -4,6 +4,7 @@
 <<<<<<< HEAD
 module Reports::Docx::DrawResultTable
 <<<<<<< HEAD
+<<<<<<< HEAD
   def draw_result_table(result)
 =======
 module DrawResultTable
@@ -19,6 +20,9 @@ module Reports::Docx::DrawResultTable
     return unless result
 
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+  def draw_result_table(result)
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     table = result.table
     timestamp = table.created_at
     color = @color
@@ -34,6 +38,7 @@ module Reports::Docx::DrawResultTable
     end
     @docx.table JSON.parse(table.contents_utf_8)['data'], border_size: Constants::REPORT_DOCX_TABLE_BORDER_SIZE
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     draw_result_comments(result) if @settings.dig('task', 'result_comments')
 =======
@@ -41,5 +46,9 @@ module Reports::Docx::DrawResultTable
       public_send("draw_#{child['type_of']}", child, result)
     end
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+
+    draw_result_comments(result) if @settings.dig('task', 'result_comments')
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   end
 end

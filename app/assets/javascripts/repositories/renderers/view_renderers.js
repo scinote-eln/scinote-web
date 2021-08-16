@@ -27,11 +27,16 @@ $.fn.dataTable.render.defaultRepositoryAssetValue = function() {
 
 $.fn.dataTable.render.RepositoryTextValue = function(data) {
 <<<<<<< HEAD
+<<<<<<< HEAD
   var text = $(`<span class="text-value">${data.value.view}</span>`);
   text.attr('data-edit-value', data.value.edit);
 =======
   var text = $(`<span class="text-value" data-edit-value="${data.value.edit}">${data.value.view}</span>`);
 >>>>>>> Pulled latest release
+=======
+  var text = $(`<span class="text-value">${data.value.view}</span>`);
+  text.attr('data-edit-value', data.value.edit);
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   return text.prop('outerHTML');
 };
 

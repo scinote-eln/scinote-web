@@ -8,9 +8,11 @@ class MyModule < ApplicationRecord
 
   enum state: Extends::TASKS_STATES
 
+  before_validation :archiving_and_restoring_extras, on: :update, if: :archived_changed?
+  before_save -> { report_elements.destroy_all }, if: -> { !new_record? && experiment_id_changed? }
+  around_save :exec_status_consequences, if: :my_module_status_id_changed?
   before_create :create_blank_protocol
   before_create :assign_default_status_flow
-  around_save :exec_status_consequences, if: :my_module_status_id_changed?
   after_save -> { experiment.workflowimg.purge },
              if: -> { (saved_changes.keys & %w(x y experiment_id my_module_group_id input_id output_id archived)).any? }
 
@@ -56,8 +58,6 @@ class MyModule < ApplicationRecord
   # Associations for old activity type
   has_many :activities, inverse_of: :my_module
 
-  scope :is_archived, ->(is_archived) { where('archived = ?', is_archived) }
-  scope :active, -> { where(archived: false) }
   scope :overdue, -> { where('my_modules.due_date < ?', Time.current.utc) }
   scope :without_group, -> { active.where(my_module_group: nil) }
   scope :one_day_prior, (lambda do
@@ -134,42 +134,8 @@ class MyModule < ApplicationRecord
     !experiment.archived? && experiment.navigable?
   end
 
-  # Removes connections with other modules
-  def archive(current_user)
-    self.x = 0
-    self.y = 0
-    # Remove association with module group.
-    self.my_module_group = nil
-
-    was_archived = false
-
-    MyModule.transaction do
-      was_archived = super
-      # Remove all connection between modules.
-      was_archived = Connection.where(input_id: id).destroy_all if was_archived
-      was_archived = Connection.where(output_id: id).destroy_all if was_archived
-      raise ActiveRecord::Rollback unless was_archived
-    end
-    was_archived
-  end
-
-  # Similar as super restore, but also calculate new module position
-  def restore(current_user)
-    restored = false
-
-    # Calculate new module position
-    new_pos = get_new_position
-    self.x = new_pos[:x]
-    self.y = new_pos[:y]
-
-    MyModule.transaction do
-      restored = super
-
-      unless restored
-        raise ActiveRecord::Rollback
-      end
-    end
-    restored
+  def archived_branch?
+    archived? || experiment.archived_branch?
   end
 
   def repository_rows_count(repository)
@@ -249,7 +215,7 @@ class MyModule < ApplicationRecord
                           .where('comments.id <  ?', last_id)
                           .order(created_at: :desc)
                           .limit(per_page)
-    comments.reverse
+    TaskComment.from(comments, :comments).order(created_at: :asc)
   end
 
   def last_activities(last_id = 1,
@@ -426,7 +392,7 @@ class MyModule < ApplicationRecord
 
     # Get all modules position that overlap with first column, [0, WIDTH) and
     # sort them by y coordinate.
-    positions = experiment.active_modules.collect { |m| [m.x, m.y] }
+    positions = experiment.my_modules.active.collect { |m| [m.x, m.y] }
                           .select { |x, _| x >= 0 && x < WIDTH }
                           .sort_by { |_, y| y }
     return { x: 0, y: 0 } if positions.empty? || positions.first[1] >= HEIGHT
@@ -454,6 +420,10 @@ class MyModule < ApplicationRecord
             subject: self,
             message_items: { my_module: id,
                              user_target: user.id })
+  end
+
+  def comments
+    task_comments
   end
 
   private
@@ -521,6 +491,24 @@ class MyModule < ApplicationRecord
         consequence.public_send(status_changing_direction, self)
       end
       update!(status_changing: false)
+    end
+  end
+
+  def archiving_and_restoring_extras
+    if archived?
+      # Removes connections with other modules
+      self.x = 0
+      self.y = 0
+      # Remove association with module group.
+      self.my_module_group = nil
+      # Remove all connection between modules.
+      Connection.where(input_id: id).destroy_all
+      Connection.where(output_id: id).destroy_all
+    else
+      # Calculate new module position
+      new_pos = get_new_position
+      self.x = new_pos[:x]
+      self.y = new_pos[:y]
     end
   end
 end

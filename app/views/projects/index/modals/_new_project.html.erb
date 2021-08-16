@@ -13,6 +13,7 @@
               <%= f.text_field :name, label: t('projects.index.modal_new_project.name'), placeholder: t('projects.index.modal_new_project.name_placeholder') %>
             </div>
           </div>
+<<<<<<< HEAD
           <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
               <div class="checkbox">
@@ -30,6 +31,9 @@
                            class: 'form-control selectpicker'%>
             </div>
           </div>
+=======
+          <%= f.enum_btn_group :visibility, label: t('projects.index.modal_new_project.visibility'), btn_names: { hidden: t('projects.index.modal_new_project.visibility_hidden'), visible: t('projects.index.modal_new_project.visibility_visible') } %>
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.cancel') %></button>

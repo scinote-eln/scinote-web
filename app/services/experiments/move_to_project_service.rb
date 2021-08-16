@@ -20,18 +20,23 @@ module Experiments
       ActiveRecord::Base.transaction do
         @exp.project = @project
 
-        @exp.my_modules.each do |m|
-          new_tags = m.tags.map do |t|
-            t.clone_to_project_or_return_existing(@project)
+        @exp.my_modules.each do |my_module|
+          new_tags = []
+          my_module.tags.each do |tag|
+            new_tag = @project.tags.where.not(id: new_tags).find_by(name: tag.name, color: tag.color)
+            new_tag ||=
+              @project.tags.create!(name: tag.name, color: tag.color, created_by: @user, last_modified_by: @user)
+            new_tags << new_tag
           end
-          m.my_module_tags.delete_all
-          m.tags = new_tags
+          my_module.tags.destroy_all
+          my_module.tags = new_tags
         end
 
-        raise ActiveRecord::Rollback unless @exp.save
+        @exp.save!
+      rescue
+        @errors.merge!(@exp.errors.to_hash) unless @exp.valid?
+        raise ActiveRecord::Rollback
       end
-
-      @errors.merge!(@exp.errors.to_hash) unless @exp.valid?
 
       track_activity if succeed?
       self
@@ -55,13 +60,7 @@ module Experiments
         return false
       end
 
-      e = Experiment.find_by(name: @exp.name, project: @project)
-
-      if e
-        @errors[:project_with_exp] =
-          ['Project already contains experiment with this name']
-        false
-      elsif !@exp.moveable_projects(@user).include?(@project)
+      if !@exp.moveable_projects(@user).include?(@project)
         @errors[:target_project_not_valid] =
           ['Experiment cannot be moved to this project']
         false

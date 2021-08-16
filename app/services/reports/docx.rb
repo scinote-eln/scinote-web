@@ -9,6 +9,7 @@ class Reports::Docx
   include InputSanitizeHelper
   include TeamsHelper
 <<<<<<< HEAD
+<<<<<<< HEAD
   include ReportsHelper
   include GlobalActivitiesHelper
   include Canaid::Helpers::PermissionsHelper
@@ -25,6 +26,9 @@ class Reports::Docx
     @user = options[:user]
     @report_team = report.project.team
 =======
+=======
+  include ReportsHelper
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   include GlobalActivitiesHelper
   include Canaid::Helpers::PermissionsHelper
 
@@ -33,12 +37,17 @@ class Reports::Docx
     include "Reports::Docx::#{include_module}".constantize
   end
 
-  def initialize(json, docx, options)
-    @json = JSON.parse(json)
+  def initialize(report, docx, options)
+    @report = report
+    @settings = report.settings
     @docx = docx
     @user = options[:user]
+<<<<<<< HEAD
     @report_team = options[:team]
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+    @report_team = report.project.team
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     @link_style = {}
     @color = {}
     @scinote_url = options[:scinote_url][0..-2]
@@ -47,6 +56,7 @@ class Reports::Docx
   def draw
     initial_document_load
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     @report.root_elements.each do |subject|
       public_send("draw_#{subject.type_of}", subject)
@@ -57,6 +67,10 @@ end
 =======
     @json.each do |subject|
       public_send("draw_#{subject['type_of']}", subject)
+=======
+    @report.root_elements.each do |subject|
+      public_send("draw_#{subject.type_of}", subject)
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     end
     @docx
   end

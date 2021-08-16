@@ -104,12 +104,7 @@ class Step < ApplicationRecord
                           .where('comments.id <  ?', last_id)
                           .order(created_at: :desc)
                           .limit(per_page)
-    comments.reverse
-  end
-
-  def save(current_user=nil)
-    @current_user = current_user
-    super()
+    StepComment.from(comments, :comments).order(created_at: :asc)
   end
 
   def space_taken
@@ -136,6 +131,10 @@ class Step < ApplicationRecord
     return if position == protocol.steps.count - 1
 
     move_in_protocol(:down)
+  end
+
+  def comments
+    step_comments
   end
 
   private
@@ -198,23 +197,6 @@ class Step < ApplicationRecord
   end
 
   def set_last_modified_by
-    if @current_user&.is_a?(User)
-      self.tables.each do |t|
-        t.created_by ||= @current_user
-        t.last_modified_by = @current_user if t.changed?
-      end
-      self.assets.each do |a|
-        a.created_by ||= @current_user
-        a.last_modified_by = @current_user if a.changed?
-      end
-      self.checklists.each do |checklist|
-        checklist.created_by ||= @current_user
-        checklist.last_modified_by = @current_user if checklist.changed?
-        checklist.checklist_items.each do |checklist_item|
-          checklist_item.created_by ||= @current_user
-          checklist_item.last_modified_by = @current_user if checklist_item.changed?
-        end
-      end
-    end
+    self.last_modified_by_id ||= user_id
   end
 end

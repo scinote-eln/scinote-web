@@ -15,6 +15,7 @@ module Reports::Docx::DrawExperiment
     scinote_url = @scinote_url
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     experiment = subject.experiment
     return unless can_read_experiment?(@user, experiment)
 =======
@@ -25,6 +26,10 @@ module Reports::Docx::DrawExperiment
     experiment = Experiment.find_by(id: subject['id']['experiment_id'])
     return unless experiment && can_read_experiment?(@user, experiment)
 >>>>>>> Pulled latest release
+=======
+    experiment = subject.experiment
+    return unless can_read_experiment?(@user, experiment)
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
     @docx.h2 experiment.name, size: Constants::REPORT_DOCX_EXPERIMENT_TITLE_SIZE
     @docx.p do
@@ -61,9 +66,14 @@ module Reports::Docx::DrawExperiment
     Reports::HtmlToWordConverter.new(@docx, { scinote_url: scinote_url,
                                               link_style: link_style }).html_to_word_converter(html)
     @docx.p
+<<<<<<< HEAD
     subject['children'].each do |child|
       public_send("draw_#{child['type_of']}", child, experiment)
 >>>>>>> Pulled latest release
+=======
+    subject.children.active.each do |child|
+      public_send("draw_#{child.type_of}", child)
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     end
   end
 end

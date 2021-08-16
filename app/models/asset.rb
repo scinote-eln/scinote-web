@@ -16,6 +16,7 @@ class Asset < ApplicationRecord
 
   # ActiveStorage configuration
   has_one_attached :file
+  has_one_attached :file_pdf_preview
 
   # Asset validation
   # This could cause some problems if you create empty asset and want to
@@ -215,7 +216,7 @@ class Asset < ApplicationRecord
     raise ArgumentError, 'Destination asset should be persisted first!' unless to_asset.persisted?
 
     file.blob.open do |tmp_file|
-      to_blob = ActiveStorage::Blob.create_after_upload!(io: tmp_file, filename: blob.filename, metadata: blob.metadata)
+      to_blob = ActiveStorage::Blob.create_and_upload!(io: tmp_file, filename: blob.filename, metadata: blob.metadata)
       to_asset.file.attach(to_blob)
     end
     to_asset.post_process_file(to_asset.team)
@@ -235,6 +236,24 @@ class Asset < ApplicationRecord
     file.metadata[:asset_type] == 'marvinjs'
   end
 
+  def pdf_preview_ready?
+    return false if pdf_preview_processing
+
+    return true if file_pdf_preview.attached?
+
+    PdfPreviewJob.perform_later(id)
+    ActiveRecord::Base.no_touching { update(pdf_preview_processing: true) }
+    false
+  end
+
+  def pdf?
+    content_type == 'application/pdf'
+  end
+
+  def pdf_previewable?
+    pdf? || (previewable_document?(blob) && Rails.application.config.x.enable_pdf_previews)
+  end
+
   def post_process_file(team = nil)
     # Extract asset text if it's of correct type
     if text?
@@ -247,6 +266,11 @@ class Asset < ApplicationRecord
     else
       # Update asset's estimated size immediately
       update_estimated_size(team)
+    end
+
+    if Rails.application.config.x.enable_pdf_previews && previewable_document?(blob)
+      PdfPreviewJob.perform_later(id)
+      ActiveRecord::Base.no_touching { update(pdf_preview_processing: true) }
     end
   end
 

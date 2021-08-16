@@ -10,8 +10,11 @@ module Api
       belongs_to :parent_folder, serializer: ProjectFolderSerializer
       has_many :projects, serializer: ProjectSerializer
       has_many :project_folders, serializer: ProjectFolderSerializer
+<<<<<<< HEAD
 
       include TimestampableModel
+=======
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     end
   end
 end

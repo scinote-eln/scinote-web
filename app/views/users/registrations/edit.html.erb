@@ -5,7 +5,9 @@
 
 <div class="content-pane active flexible user-settings">
   <div class="content-header">
-    <h1><%=t "users.registrations.edit.title" %></h1>
+    <div class="title-row">
+      <h1><%=t "users.registrations.edit.title" %></h1>
+    </div>
   </div>
   <div class="row settings-row">
     <div class="col-md-12">
@@ -23,6 +25,7 @@
             <div class="col-md-6">
               <%= render partial: 'users/registrations/edit_partials/full_name' %>
               <%= render partial: 'users/registrations/edit_partials/initials' %>
+              <%= render partial: 'users/registrations/edit_partials/external_id' %>
             </div>
             <div class="col-md-6">
               <%= render partial: 'users/registrations/edit_partials/email' %>
@@ -71,5 +74,4 @@
 
 <%= javascript_pack_tag 'custom/croppie' %>
 <%= stylesheet_pack_tag 'custom/croppie_styles' %>
-<%= javascript_include_tag("canvas-to-blob.min") %>
 <%= javascript_include_tag "users/registrations/edit" %>

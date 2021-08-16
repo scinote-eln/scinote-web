@@ -84,6 +84,7 @@ RSpec.describe 'Api::V1::StepsController', type: :request do
       end
     end
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
     context 'when experiment is archived and permission checks fails' do
@@ -103,6 +104,8 @@ RSpec.describe 'Api::V1::StepsController', type: :request do
       end
     end
 >>>>>>> Pulled latest release
+=======
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   end
 
   describe 'POST step, #create' do
@@ -158,14 +161,20 @@ RSpec.describe 'Api::V1::StepsController', type: :request do
         )
       end
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
       it 'sets the last_changed_by' do
         action
 
         expect(Step.find(json['data']['id']).last_modified_by_id).to be @user.id
       end
+<<<<<<< HEAD
 =======
 >>>>>>> Pulled latest release
+=======
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     end
 
     context 'when has missing param' do
@@ -239,13 +248,19 @@ RSpec.describe 'Api::V1::StepsController', type: :request do
         )
       end
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
       it 'sets the last_changed_by' do
         action
         expect(Step.find(json['data']['id']).last_modified_by_id).to be @user.id
       end
+<<<<<<< HEAD
 =======
 >>>>>>> Pulled latest release
+=======
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     end
 
     context 'when has missing param' do

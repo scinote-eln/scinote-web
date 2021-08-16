@@ -14,18 +14,26 @@ $.fn.dataTable.render.editRowName = function(formId, cell) {
              type="text"
              name="repository_row[name]"
 <<<<<<< HEAD
+<<<<<<< HEAD
              value=""
 =======
              value="${text}"
 >>>>>>> Pulled latest release
+=======
+             value=""
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
              placeholder="${I18n.t('repositories.table.enter_row_name')}"
              data-type="RowName">
     </div>
   `);
 <<<<<<< HEAD
+<<<<<<< HEAD
   $cell.find('input').val(text);
 =======
 >>>>>>> Pulled latest release
+=======
+  $cell.find('input').val(text);
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 };
 
 $.fn.dataTable.render.editRepositoryAssetValue = function(formId, columnId, cell) {
@@ -43,6 +51,7 @@ $.fn.dataTable.render.editRepositoryTextValue = function(formId, columnId, cell)
              type="text"
              name="repository_cells[${columnId}]"
 <<<<<<< HEAD
+<<<<<<< HEAD
              value=""
              placeholder="${I18n.t('repositories.table.text.enter_text')}"
              data-type="RepositoryTextValue">
@@ -55,6 +64,13 @@ $.fn.dataTable.render.editRepositoryTextValue = function(formId, columnId, cell)
     </div>`);
 
 >>>>>>> Pulled latest release
+=======
+             value=""
+             placeholder="${I18n.t('repositories.table.text.enter_text')}"
+             data-type="RepositoryTextValue">
+    </div>`);
+  $cell.find('input').val(text);
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   SmartAnnotation.init($cell.find('input'));
 };
 

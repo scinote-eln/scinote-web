@@ -72,25 +72,21 @@ describe Experiments::MoveToProjectService do
     end
 
     it 'returns an error on validate' do
-      FactoryBot.create :experiment, project: new_project, name: 'MyExp'
+      allow_any_instance_of(Experiment).to(receive(:moveable_projects).and_return([]))
+
       expect(service_call.succeed?).to be_falsey
     end
 
     it 'returns an error on saving' do
-      expect_any_instance_of(Experiments::MoveToProjectService)
-        .to receive(:valid?)
-        .and_return(true)
-      FactoryBot.create :experiment, project: new_project, name: 'MyExp'
+      experiment.name = Faker::Lorem.characters(number: 300)
+      experiment.save(validate: false)
 
       expect(service_call.succeed?).to be_falsey
     end
 
     it 'rollbacks cloned tags after unsucessful save' do
-      expect_any_instance_of(Experiments::MoveToProjectService)
-        .to receive(:valid?)
-        .and_return(true)
-      FactoryBot.create :experiment, project: new_project, name: 'MyExp'
-      experiment
+      experiment.name = Faker::Lorem.characters(number: 300)
+      experiment.save(validate: false)
 
       expect { service_call }.not_to(change { Tag.count })
     end

@@ -67,7 +67,7 @@
  * Scrollbar thumb styles
  */
 .ps__thumb-x {
-  background-color: $color-silver-chalice;
+  background-color: $color-black;
   border-radius: 4px;
   transition: background-color .2s linear, height .2s ease-in-out;
   -webkit-transition: background-color .2s linear, height .2s ease-in-out;
@@ -75,11 +75,12 @@
   /* there must be 'bottom' for ps__thumb-x */
   bottom: 2px;
   /* please don't change 'position' */
+  opacity: .5;
   position: absolute;
 }
 
 .ps__thumb-y {
-  background-color: $color-silver-chalice;
+  background-color: $color-black;
   border-radius: 3px;
   transition: background-color .2s linear, width .2s ease-in-out;
   -webkit-transition: background-color .2s linear, width .2s ease-in-out;
@@ -87,6 +88,7 @@
   /* there must be 'right' for ps__thumb-y */
   right: 2px;
   /* please don't change 'position' */
+  opacity: .5;
   position: absolute;
 }
 

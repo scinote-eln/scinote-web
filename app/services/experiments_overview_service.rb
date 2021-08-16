@@ -35,27 +35,41 @@ class ExperimentsOverviewService
   def fetch_records
     @project.experiments
             .joins(:project)
+<<<<<<< HEAD
             .includes(my_modules: { my_module_status: :my_module_status_implications })
             .includes(workflowimg_attachment: :blob, user_assignments: %i(user_role user))
+=======
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
             .joins('LEFT OUTER JOIN my_modules AS active_tasks ON active_tasks.experiment_id = experiments.id ' \
                    'AND active_tasks.archived = FALSE')
             .joins('LEFT OUTER JOIN my_modules AS active_completed_tasks ON active_completed_tasks.experiment_id '\
                    '= experiments.id AND active_completed_tasks.archived = FALSE AND active_completed_tasks.state = 1')
+<<<<<<< HEAD
             .readable_by_user(@user)
             .select('experiments.*')
             .select('COUNT(DISTINCT active_tasks.id) AS task_count')
             .select('COUNT(DISTINCT active_completed_tasks.id) AS completed_task_count')
             .group('experiments.id, user_assignments.id, user_roles.id')
+=======
+            .select('experiments.*')
+            .select('COUNT(DISTINCT active_tasks.id) AS task_count')
+            .select('COUNT(DISTINCT active_completed_tasks.id) AS completed_task_count')
+            .group('experiments.id')
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   end
 
   def filter_records(records)
     records = records.archived if @view_mode == 'archived' && @project.active?
     records = records.active if @view_mode == 'active'
     if @params[:search].present?
+<<<<<<< HEAD
       records = records.where_attributes_like(
         ['experiments.name', 'experiments.description', "('EX' || experiments.id)"],
         @params[:search]
       )
+=======
+      records = records.where_attributes_like(%w(experiments.name experiments.description), @params[:search])
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     end
     if @params[:created_on_from].present?
       records = records.where('experiments.created_at > ?', @params[:created_on_from])

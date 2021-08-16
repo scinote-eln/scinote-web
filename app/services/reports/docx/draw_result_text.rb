@@ -4,6 +4,7 @@
 <<<<<<< HEAD
 module Reports::Docx::DrawResultText
 <<<<<<< HEAD
+<<<<<<< HEAD
   def draw_result_text(result)
 =======
 module DrawResultText
@@ -19,6 +20,9 @@ module Reports::Docx::DrawResultText
     return unless result
 
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+  def draw_result_text(result)
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     result_text = result.result_text
     timestamp = result.created_at
     color = @color
@@ -44,9 +48,13 @@ module Reports::Docx::DrawResultText
                                               link_style: @link_style }).html_to_word_converter(html)
 >>>>>>> Pulled latest release
 
+<<<<<<< HEAD
     subject['children'].each do |child|
       public_send("draw_#{child['type_of']}", child, result)
     end
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+    draw_result_comments(result) if @settings.dig('task', 'result_comments')
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   end
 end

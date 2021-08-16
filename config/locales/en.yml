@@ -49,8 +49,6 @@ en:
         not_correct_code: "Not correct recovery code"
       create:
         team_name: "%{user}'s projects"
-      auth_token_create:
-        wrong_credentials: "Failed to automatically sign in (wrong credentials)."
     unlocks:
       new:
         head_title: "Resend unlock instructions"
@@ -67,7 +65,7 @@ en:
     linkedin:
       provider_name: "LinkedIn"
       complete_sign_up: "You have to complete the sign up process"
-      email_already_taken: "SciNote account with email %{email} alreday exists"
+      email_already_taken: "SciNote account with email %{email} already exists"
       failed_to_save: "Failed to create new user"
     azure:
       provider_name: "Azure Active Directory"
@@ -78,6 +76,13 @@ en:
         failed_to_save: "Failed to create new user"
 
   doorkeeper:
+    errors:
+      messages:
+        invalid_request:
+          unknown: 'The request is missing a required parameter, includes an unsupported parameter value, or is otherwise malformed.'
+          missing_param: 'Missing required parameter: %{value}.'
+          not_support_pkce: 'Invalid code_verifier parameter. Server does not support pkce.'
+          request_not_authorized: 'Request need to be authorized. Required parameter for authorizing request is missing or invalid.'
     authorizations:
       buttons:
         authorize: "Authorize"
@@ -96,6 +101,13 @@ en:
           attributes:
             name:
               taken: "This project name has to be unique inside a team (this includes the archive)."
+            project_folder:
+              team: "Project folder and project should belongs to the same team"
+        project_folder:
+          attributes:
+            parent_folder_team: "Parent folder and folder should belongs to the same team"
+            parent_folder: "Folder cannot be parent to itself"
+            parent_folder_child: "Folder cannot be moved to it's child"
         view_state:
           attributes:
             viewable_id:
@@ -161,15 +173,6 @@ en:
     user:
       settings: "Settings"
       logout: "Log out"
-      about: "About SciNote"
-    help:
-      tutorials: "Tutorials"
-      release_notes: "Release notes"
-      support: "Customer support"
-      premium: "Premium"
-      contact: "Contact us"
-      about: "About SciNote"
-      training: "Training"
     activities:
       none: "No activities!"
     label:
@@ -199,10 +202,10 @@ en:
     reports: "Reports"
     settings: "Settings"
     activities: "Activities"
-    academy: "Academy"
+    academy: "Courses"
     support: "Support"
     support_links:
-      support: "Support Center"
+      support: "Knowledge center"
       tutorials: "Video tutorials"
       core_version: "SciNote Core ver. %{version} |"
       about: "about"
@@ -212,6 +215,32 @@ en:
     branch_expand: "Expand this branch"
     branch_collapse: "Collapse this branch"
     no_module_group: "No workflow"
+    settings:
+      sidebar_title: "SETTINGS"
+    experiments:
+      sidebar_title: "EXPERIMENTS"
+      sidebar_title_archived: "ARCHIVED EXPERIMENTS"
+      back_button: "Back to projects"
+      back_active_experiments: "Back to active experiments"
+      back_archived_projects: "Back to archived projects"
+      archived_experiments: "Archived experiments"
+    my_modules:
+      sidebar_title: "TASKS"
+      sidebar_title_archived: "ARCHIVED TASKS"
+      back_button: "Back to experiments"
+      back_to_archived_button: "Back to archived experiments"
+      archived_button: "Archived tasks"
+      back_to_active_button: "Back to active tasks"
+    my_module:
+      sidebar_title: "TASK"
+      back_button: "Back to all tasks"
+      back_button_archived: "Back to all archived tasks"
+      steps: "Protocol"
+      results: "Results"
+      activities: "Activity"
+      archive: "Archived results"
+    repositories:
+      sidebar_title: "INVENTORIES"
 
   nav2:
     all_projects:
@@ -223,14 +252,10 @@ en:
       activities: "Activity"
       reports: "Reports"
       archive: "Archived experiments"
-    experiments:
-      canvas: "Tasks"
-      archive: "Archived tasks"
     modules:
-      steps: "Protocols"
+      steps: "Protocol"
       results: "Results"
       activities: "Activity"
-      repositories: "Inventories"
       archive: "Archived results"
 
   search:
@@ -253,6 +278,7 @@ en:
       description: "Description: "
       no_description: "No description"
       team: "Team: "
+      folder: "Folders: "
       repository: "Inventory: "
       repository_row: "Inventory item: "
       project: "Project: "
@@ -263,6 +289,7 @@ en:
       module: "Task: "
       step: "Step: "
       result: "Result: "
+      report: "Report: "
       no_name: "(no name)"
       error:
         no_results: "No results for %{q}."
@@ -279,24 +306,31 @@ en:
         result: "Result comment"
 
   comments:
+    save_changes: "Save changes"
+    empty_state:
+      title: "No comments here"
+      description: "Nobody has commented yet. Be the first by using the box below."
     options_dropdown:
       header: "Comment options"
       edit: "Edit"
       delete: "Delete"
     delete_confirm: "Are you sure you wish to delete this comment?"
-    delete_error: "Error occured while deleting comment."
-
-  help:
-    contact:
-      head_title: "Contact"
-    about:
-      head_title: "About"
-    training:
-      head_title: "Training"
+    delete_error: "Error occurred while deleting comment."
 
   projects:
     index:
+      header:
+        cards: "Cards"
+        table: "Table"
+        active_projects: "Go to Active projects"
+        archived_projects: "Go to Archived projects"
       head_title: "Projects"
+      head_title_archived: "Archived projects"
+      navigation_title: "PROJECTS"
+      navigation_archived_projects: "Archived projects"
+      back_to_active_projects: "Back to active projects"
+      breadcrumbs_root: "Projects"
+      breadcrumbs_collapsed: "Click to show hidden levels"
       archive: "Archive"
       archived: "Archived"
       active: "Active"
@@ -308,6 +342,7 @@ en:
         create_new_button: "New Project"
         no_permission_title: "You don't have permission to create new project. Please contact your team administrator."
       new: "New Project"
+      new_folder: "Create folder"
       visibility_private: "Project is visible to project members only."
       visibility_public: "Project is visible to all team members."
       user_project: "%{user} joined on %{timestamp}."
@@ -316,6 +351,8 @@ en:
       no_users: "No users!"
       manage_users: "Manage users"
       no_notifications: "There are no overdue tasks at the moment"
+      no_results_found: "No results found..."
+      no_results_description: "Try resetting your filter or choose a different search query"
       module_overdue_html: "Task <em>%{module}</em> is overdue (%{days})."
       module_overdue_days:
         one: "1 day"
@@ -335,13 +372,34 @@ en:
       comment_tab: "Comments"
       new_comment: "New comment"
       content_loading: "Loading..."
+      edit_button: "Edit"
+      move_button: "Move"
+      archive_button: "Archive"
+      restore_button: "Restore"
+      delete_button: "Delete"
       edit_option: "Edit"
       archive_option: "Archive"
       archive_confirm: "Are you sure you want to archive this project?"
       restore_option: "Restore"
-      options_header: "Options"
+      comments_option: "Show comments (%{comments_count})"
+      activities_option: "Open activities"
       comment_placeholder: "Your Message"
       more_comments: "More Comments"
+      card:
+        start_date: "Start date"
+        visibility: "Visible to"
+        users: "Members"
+        name: "Project name"
+        archived_date: "Archived"
+      folder:
+        description: "%{projects_count} projects | %{folders_count} folders"
+      modal_new_project_folder:
+        description: "Give your folder a distinct name to recognize it faster."
+        modal_title: "Create folder"
+        name: "New folder name"
+        name_placeholder: "Name your folder"
+        create: "Create folder"
+        success_flash: "Project folder <strong>%{name}</strong> successfully created."
       modal_new_project:
         modal_title: "Create new project"
         create: "Create"
@@ -354,16 +412,42 @@ en:
       modal_edit_project:
         modal_title: "Edit project %{project}"
         submit: "Save"
+      modal_edit_folder:
+        title: "Edit folder %{folder}"
+        description: "Rename your folder"
+        folder_name_field: "Folder name"
+        submit: "Save"
+      modal_move_folder:
+        title: "Move %{items}"
+        description: "Select where you want to move your %{items}"
+        submit: "Move"
+        items:
+          projects: 'projects'
+          folders: 'folders'
+          projects_and_folders: 'projects & folders'
+      modal_delete_folders:
+        title: "Delete project folder(s)"
+        description_1_html: "You are about to delete <strong>%{number}</strong> selected project folder(s)"
+        description_2: "Are you sure you want to continue?"
+        confirm_button: "Delete folder(s)"
       modal_manage_users:
-        modal_title_html: "Manage users for <span id='manage-users-modal-project'>%{name}</span>"
+        modal_title: "Manage users for %{name}"
         no_users: "No users!"
         create: "Add"
         select_user_role: "Select Role"
         invite_users_link: "Invite users"
         invite_users_details: "to team %{team}."
         contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
+      filters_modal:
+        members:
+          label: "Members"
+          placeholder: "Select members of a project"
+        folders:
+          label: "Look inside folders"
+          popover_html: "When <strong>“Look inside folders”</strong> is active, the filters will also take all folders and their content into account."
+
     export_projects:
-      export_button: "Export projects"
+      export_button: "Export"
       error_title: "Export denied"
       error_text_p1_html: "It looks like you have exceeded your daily export limit. The number of exports is <strong>limited to %{limit} requests per day </strong>- you currently have 0 export requests left."
       error_text_p2_html: "Please repeat the desired action <strong>tomorrow</strong>, when your daily limit will reset back to %{limit} export requests."
@@ -373,14 +457,7 @@ en:
       modal_text_p3_html: "Please note that the number of exports is limited to %{limit} requests per day. After you confirm this export you will have %{num} left."
       modal_submit: "Export"
       success_flash: "Export request received. Your export request is being processed."
-    table:
-      status: "Status"
-      name: "Project name"
-      start: "Start date"
-      visibility: "Visible to"
-      users: "Users"
-      experiments: "Experiments"
-      tasks: "Tasks"
+      zero_projects_flash: "The folder is empty. No projects can be exported."
     activity:
       visibility_hidden: "Project members only"
       visibility_visible: "All team members"
@@ -389,19 +466,37 @@ en:
     update:
       success_flash: "Project <strong>%{name}</strong> successfully updated."
       error_flash: "Project <strong>%{name}</strong> not updated."
+    move:
+      success_flash: "You have successfully moved the selected project(s)/folder(s) to another folder."
+      error_flash: "An error occurred. The selected project(s)/folder(s) have not been moved."
     archive:
       success_flash: "Project <strong>%{name}</strong> successfully archived."
       error_flash: "Project <strong>%{name}</strong> not archived."
+    archive_group:
+      success_flash: "<strong>%{number}</strong> project(s) successfully archived."
+      error_flash: "Failed to archive project(s)."
+    restore_group:
+      success_flash: "<strong>%{number}</strong> project(s) successfully restored."
+      error_flash: "Failed to restore project(s)."
     restore:
       success_flash: "Project <strong>%{name}</strong> successfully restored."
       error_flash: "Project <strong>%{name}</strong> not restored."
+    delete_folders:
+      success_flash: "<strong>%{number}</strong> project folder(s) successfully deleted."
+      error_flash: "Failed to delete project folder(s)."
     show:
       head_title: "%{project}"
     reports:
       print_title: "%{project} | Report"
       index:
-        head_title: " Reports"
+        head_title: "Reports"
         new: "New report"
+        report_button: "Report"
+        update_pdf: "Update PDF"
+        save_pdf_to_inventory: "Save PDF to Inventory"
+        search_reports: "Filter reports"
+        request_docx: "Generate DOCX"
+        update_docx: "Update DOCX"
         edit: "Edit"
         delete: "Delete"
         deleted: "(Deleted)"
@@ -409,20 +504,98 @@ en:
         thead_name: "Report name"
         thead_created_by: "Created by"
         thead_last_modified_by: "Last modified by"
-        thead_created_at: "Created at"
-        thead_updated_at: "Last updated at"
+        thead_created_at: "Creation date"
+        thead_updated_at: "Last update date"
         no_reports: "No reports!"
-        modal_new:
-          projects: "Projects"
-          head_title: "Create new report"
-          no_projects: "No projects available."
-          message: "You are about to create a new report. Please select a project from which you would like to create a report."
-          create: "Create"
+        pdf: "PDF"
+        docx: "DOCX"
+        error: "Error"
+        previous_pdf: "Previous PDF"
+        previous_docx: "Previous DOCX"
+        generating: "Generating"
+        generate: "Generate"
+        generation:
+          regeneration_modal_title: "Report content"
+          regeneration_modal_body: "The content of Project, Experiments and Tasks included in this report might have been updated in SciNote since the report was last generated. Therefore the content of the report you are about to generate might be different from the saved version."
+          regeneration_modal_confirmation: "Do you want to continue?"
+          accepted_message: "Your report is successfully added to the generator queue. We will notify you when it is done!"
+          completed_docx_notification_title: "Your report .DOCX was generated successfully."
+          completed_pdf_notification_title: "Your report .PDF was generated successfully."
+          completed_notification_message: "Report: %{report_link} | Team: %{team_name}"
+          error_docx_notification_title: "Your report .DOCX generation failed. Please try again."
+          error_pdf_notification_title: "Your report .PDF generation failed. Please try again."
+          error_notification_message: "Report: %{report_link} | Team: %{team_name}"
+          content_generation_error: "Failed to generate report content"
         modal_delete:
           head_title: "Delete report/s"
           message: "Are you sure to delete selected report/s?"
           delete: "Delete"
+      wizard:
+        statuses:
+          step_1: "Select project"
+          step_2: "Select tasks"
+          step_3: "Select task contents"
+        first_step:
+          select_project_title: "Select project and report template"
+          select_project_description: "You are about to create a new report. Please select a project for which you would like to create a report, and choose the report design template. Only projects with at least 1 task are displayed."
+          select_project: "Select a project"
+          select_template: "Select your template"
+          report_description: "Report description (optional)"
+          report_description_placeholder: "In this report you can see..."
+          values_editor:
+            title: "Enter template data"
+            description: "This template requires you to fill out additional information about this project. This is the only place you will be able to do so."
+            header: "Header"
+            cover: "Title page"
+            footer: "Footer"
+            no_values_title: "No additional data required"
+            no_values_description: "SciNote template doesn’t need any additional input for it to be successfully generated."
+        second_step:
+          select_project_content: "Select and reorder experiments and tasks"
+          collapse_all: "Collapse all"
+          expand_all: "Expand all"
+          hide_unchecked: "Hide unchecked"
+          select_all_tasks: "Select all tasks"
+        third_step:
+          title: "Select task contents"
+          select_all: "Select all content"
+          task_protocol: "Task protocol"
+          protocol_description: "Protocol description"
+          protocol_step: "Protocol steps"
+          completed_steps: "Completed steps"
+          uncompleted_steps: "Uncompleted steps"
+          step_checklists: "Step checklists"
+          step_files: "Step files"
+          step_tables: "Step tables"
+          step_comments: "Step comments"
+          assigned_items: "Assigned items"
+          assigned_items_description: "Inventories selected below will only contain the items that you assigned to the tasks directly."
+          include_all_assigned_iitems: "Include all assigned items from the following inventories"
+          results: "Results"
+          all_results: "Include all results"
+          order_results: "Order results"
+          atoz: "Alphabetically A to Z"
+          ztoa: "Alphabetically Z to A"
+          new_results: "Newest first"
+          old_results: "Oldest first"
+          file_results: "File results"
+          insert_pages_from_pdf: "Insert pages from PDF and docx files into the report"
+          pdf_warning: "This may increase report generation time."
+          table_results: "Table results"
+          text_results: "Text results"
+          results_comments: "Include all result comments"
+          additional_content: "Additional content"
+          task_activity: "Include task activity"
+          archived: "[archived]"
+          deleted: "[deleted]"
+
       new:
+        report_name_placeholder: "Name your report"
+        continue_button: "Continue"
+        generate_button: "Start generating"
+        generate_as_button: "Generate as"
+        save_as_new_report: "A new report"
+        update_report: "Overwrite current report"
         head_title: "%{project} | New report"
         nav_title: "Report for: "
         nav_print: "Print"
@@ -441,7 +614,12 @@ en:
         unsaved_work: "Are you sure you want to leave this page? All unsaved data will be lost."
         no_content_for_PDF_html: "<h1>No content</h1>"
         no_permissions: "You don't have permission to manage this column"
+        edit_warning_modal:
+          title: "Report content"
+          description: "The content of Project, Experiments and Tasks included in this report might have been updated in SciNote since the report was last generated. Therefore the content of the report you are about to edit might be different from the saved version."
+          button: "Okay"
         save_PDF_to_inventory_modal:
+          pdf_not_ready: "The PDF of this report isn't ready yet, please try again in a minute"
           description_one: "Here you can save PDF report to an inventory item."
           description_two: "First select an inventory, then a column and finally the item within the inventory to which you would like to save the PDF report to. Note that the column has to be of type \"file\"."
           inventory: "Select inventory:"
@@ -454,6 +632,20 @@ en:
           here: "here"
           no_columns: "You do not have File columns in selected Inventory. Add a File column to selected Inventory or select another Inventory containing File columns."
           nothing_selected: "Nothing selected"
+        exit_modal:
+          title_new: "Report will be lost"
+          title_edit: "Changes will be lost"
+          description_new: "You’re about to cancel the process of generating a report. This will cause all selections and possible entered data to be lost."
+          description_edit: "You’re about to cancel the process of generating an edited report. This will cause all changes to be lost."
+          description_2: "Do you want to continue?"
+        template_warning_modal:
+          title: "Template data will be lost"
+          description: "You’re about to switch to a different template. All the data related to the template you entered will be lost."
+          confirmation: "Do you want to continue?"
+        project_warning_modal:
+          title: "Task selection will refresh"
+          description: "You’re about to switch to a different project. The task selections you made will be completely refreshed."
+          confirmation: "Do you want to continue?"
         generate_PDF:
           generated_on: "Report generated by SciNote on: %{timestamp}"
       renderers:
@@ -462,71 +654,6 @@ en:
           appended_table: "Appended table"
       elements:
         download: "[Download]"
-        modals:
-          project_contents:
-            head_title: "Add contents to report"
-            tasks_tab: "Choose tasks"
-            content_tab: "Choose content"
-          project_contents_inner:
-            instructions: "To create a project report select one or multiple experiment. You can include an entire experiment or individual experimental tasks."
-            no_modules: "The project contains no tasks"
-            no_module_group: "No workflow"
-          module_contents:
-            head_title: "Add contents to task %{module}"
-            module_tab: "Task content"
-            steps_tab: "Protocols content"
-            results_tab: "Results content"
-          module_contents_inner:
-            instructions: "Select the information from your task that you would like to include to your report."
-            check_all: "All tasks content"
-            protocol: "Protocol"
-            steps: "Steps"
-            completed_steps: "Completed"
-            uncompleted_steps: "Uncompleted"
-            no_steps: "Task has no steps"
-            results: "Results"
-            result_assets: "Files"
-            result_tables: "Tables"
-            result_texts: "Texts"
-            no_results: "Task contains no results"
-            activity: "Activity"
-          experiment_contents:
-            head_title: "Add contents to experiment %{experiment}"
-            experiment_tab: "Experiment content"
-            module_tab: "Task content"
-            steps_tab: "Protocols content"
-            results_tab: "Results content"
-          experiment_contents_inner:
-            instructions: "Select tasks to include in the report"
-            no_modules: "The experiment contains no tasks"
-          step_contents:
-            head_title: "Add contents to step %{step}"
-            step_tab: "Step content"
-            results_tab: "Results content"
-          step_contents_inner:
-            instructions: "Select the information from task protocol step/s to include in the report"
-            check_all: "All protocols steps content"
-            tables: "Tables"
-            no_tables: "Step contains no tables"
-            assets: "Files"
-            no_assets: "Step contains no uploaded files"
-            checklists: "Checklists"
-            no_checklists: "Step contains no checklists"
-            comments: "Comments"
-          result_contents:
-            head_title: "Add contents to result %{result}"
-          result_contents_inner:
-            instructions: "Include result/s comments in the report?"
-            check_all: "All results content"
-            comments: "Comments"
-          add: "Add"
-          save_report:
-            head_title: "Save report"
-            name: "Report name"
-            name_placeholder: "My report"
-            description: "Report description"
-            description_placeholder: "My report description..."
-            save: "Save"
         all:
           sort_asc: "Sort report element contents by oldest on top"
           sort_desc: "Sort report element contents by newest on top"
@@ -534,8 +661,6 @@ en:
           move_down: "Move report element down"
           remove: "Remove report element from the report"
           scinote_link: "SciNote link"
-        new_element:
-          title: "Add new report element/s here"
         project_header:
           user_time: "Project created on %{timestamp}."
           title: "Report for project %{project}"
@@ -566,6 +691,7 @@ en:
         result_asset:
           file_name: "[ %{file} ]"
           user_time: "Uploaded by %{user} on %{timestamp}."
+          full_preview_attached: "[full document attached to report]"
         result_table:
           table_name: "[ %{name} ]"
           user_time: "Created by %{user} on %{timestamp}."
@@ -625,11 +751,15 @@ en:
         normal_user: "User"
         technician: "Technician"
         viewer: "Viewer"
+    view_users:
+      modal_title: "Members of %{name}"
+      no_users: "No users!"
+      current_user_label: "(you)"
     edit:
       update_role: "Change Role"
     create:
       select_user_role: "Please select a user role."
-      add_user_generic_error: "An error occured. "
+      add_user_generic_error: "An error occurred. "
       can_add_user_to_project: "Can not add user to the project."
 
   my_modules:
@@ -687,13 +817,17 @@ en:
       head_title: "%{project} | %{module} | Archive"
       option_delete: "Delete"
       confirm_delete: "Are you sure you want to permanently delete result?"
-      delete_flash: "Sucessfully removed result <strong>%{result}</strong> from task <strong>%{module}</strong>."
+      delete_flash: "Successfully removed result <strong>%{result}</strong> from task <strong>%{module}</strong>."
       archived_on: "Archived on"
       archived_on_title: "Result archived on %{date} at %{time}."
       option_download: "Download"
       no_archived_results: "No archived results!"
       archive_timelabel: "archived on %{date}"
       restored_flash: "Task %{module} restored successfully!"
+    restore_group:
+      success_flash_html: "<strong>%{number}</strong> task(s) successfully restored."
+      partial_success_flash_html: "Only restored <strong>%{number}</strong> task(s)."
+      error_flash: "Failed to restore task(s)."
     protocols:
       head_title: "%{project} | %{module} | Protocols"
       protocol_status_bar:
@@ -707,7 +841,7 @@ en:
         template_updated: "Template updated on:"
         protocol_updated: "Protocol updated on:"
         messages:
-          template_updated_html: "There is a new version of this protocol avaliable in the protocol repository.<br>Would you like to update it?"
+          template_updated_html: "There is a new version of this protocol available in the protocol repository.<br>Would you like to update it?"
           protocol_updated: "The version of this protocol in the task is modified, do you wish to save it as a new protocol template?"
           unlinked: "This protocol is not linked to the repository."
         btns:
@@ -809,7 +943,6 @@ en:
       no_activities: "There are no activities for this task."
       more_activities: "More activities"
     repository:
-      head_title: "%{project} | %{module} | Inventory %{repository}"
       export: 'Export'
       full_view:
         modal_live_header: ': Live version'
@@ -826,7 +959,7 @@ en:
           live_description: 'Regularly updated from the inventory'
           no_live_version: 'Inventory was deleted'
           no_assigned_items: 'No items assigned'
-          no_snapshots_label: 'You have not created any snapshots yet. To do so click the button bellow.'
+          no_snapshots_label: 'You have not created any snapshots yet. To do so click the button below.'
           versions_sidebar_button: 'View versions'
           export_button: "Export items"
           create_button: 'Create snapshot'
@@ -865,9 +998,40 @@ en:
         description: 'Try another search request'
     unshared_inventory:
       title_html: The inventory <b>%{inventory_name}</b> is no longer shared with your team.
-      body_html: This inventory has been ushared with your team by the inventory’s owner. To view the item/s that are assigned to your task/s contact the <b>%{team_name}</b> team administrator <b>%{admin_name}</b> (<b>%{admin_email}</b>).
+      body_html: This inventory has been unshared with your team by the inventory’s owner. To view the item/s that are assigned to your task/s contact the <b>%{team_name}</b> team administrator <b>%{admin_name}</b> (<b>%{admin_email}</b>).
     open_mobile_app: "Open mobile app"
   experiments:
+    header:
+      cards: "Cards"
+      table: "Table"
+      active_experiments: "Go to Active experiments"
+      archived_experiments: "Go to Archived experiments"
+    toolbar:
+      new_button: "New experiment"
+      edit_button: "Edit details"
+      duplicate_button: "Duplicate"
+      move_button: "Move"
+      archive_button: "Archive"
+      restore_button: "Restore"
+    card:
+      name: "Experiment"
+      start_date: "Start date"
+      modified_date: "Modified date"
+      archived_date: "Archived date"
+      completed_task: "Completed"
+      completed_value: "%{completed}/%{all} tasks"
+      description: "Description"
+      more: "more"
+    index:
+      edit_option: "Edit details"
+      clone_option: "Duplicate (as template)"
+      move_option: "Move"
+      archive_option: "Archive"
+      archive_confirm: "Are you sure you want to archive this project?"
+      restore_option: "Restore"
+      more_link: "More"
+      details_modal:
+        description: "%{name} description"
     new:
       create: 'New Experiment'
       modal_title: 'Create new experiment'
@@ -894,6 +1058,12 @@ en:
       success_flash: "Successfully archived experiment %{experiment}"
       error_flash: 'Could not archive the experiment.'
       label_title: 'Archive'
+    archive_group:
+      success_flash: "<strong>%{number}</strong> experiment(s) successfully archived."
+      error_flash: 'Could not archive experiments.'
+    restore_group:
+      success_flash: "<strong>%{number}</strong> experiment(s) successfully restored."
+      error_flash: "Failed to restore experiment(s)."
     clone:
       modal_title: 'Copy experiment %{experiment} as template'
       label_title: 'Copy as template'
@@ -999,7 +1169,7 @@ en:
           invite_users_details: "to team %{team}."
           contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
       update:
-        success_flash: "Project successfully updated."
+        success_flash: "Experiment successfully updated."
     module_archive:
       head_title: "%{experiment} | Archived tasks"
       no_archived_modules: "No archived tasks!"
@@ -1065,7 +1235,7 @@ en:
     wopi_edit_file: "Edit in %{app}"
     wopi_word: "Word for the web"
     wopi_excel: "Excel for the web"
-    wopi_powerpoint: "Powerpoint for the web"
+    wopi_powerpoint: "PowerPoint for the web"
     error_flash: 'Something went wrong! Please try again later.'
 
   result_tables:
@@ -1095,6 +1265,13 @@ en:
     index:
       head_title: "Inventories"
       title: "Inventories"
+      empty_title: "Your team has no inventories yet"
+      empty_description_no_create: "It would be a shame to waste all this space. Sadly you don’t have permission to add inventories. You can ask your team admin to grant you that permission."
+      empty_description_with_create: "It would be a shame to waste all this space. Create your first inventory now"
+      sidebar_instructions: "This is where a list of inventories will appear once they are created. This list will allow you to quickly jump from one inventory to another"
+      sidebar_repo1: "Reagents"
+      sidebar_repo2: "Samples"
+      sidebar_repo3: "Devices"
       add_new_repository_tab: "Add inventory"
       delete_flash: "\"%{name}\" inventory was successfully deleted!"
       rename_flash: "\"%{old_name}\" inventory was successfully renamed to \"%{new_name}\"!"
@@ -1102,7 +1279,7 @@ en:
       columns: "Columns"
       edit_inventory: "Edit Inventory"
       share_inventory: "Share"
-      view_only_permission_label: "You have veiw-only permission"
+      view_only_permission_label: "You have view-only permission"
       show_per_page: "Show %{number} per page"
       filter_inventory: "Filter inventories"
       no_inventories:  "No inventories here"
@@ -1251,8 +1428,6 @@ en:
     columns_delete: "Delete"
     columns_changed: "Someone removed/added a new column to the inventory in use. To prevent data inconsistency we will reload this page for you."
     columns_visibility: "Visible columns"
-    view_all_records: "View All Items"
-    view_assigned_records: "View Assigned Items"
     modal_delete_record:
       title: "Delete items"
       notice: "Are you sure you want to delete the selected item(s)?"
@@ -1277,7 +1452,7 @@ en:
     js:
       permission_error: "You don't have permission to edit this item."
       not_found_error: "This inventory item does not exist."
-      column_added: "New column was sucessfully created."
+      column_added: "New column was successfully created."
       empty_column_name: "Please enter column name."
     create:
       success_flash: "Successfully added item <strong>%{record}</strong> to inventory <strong>%{repository}</strong>"
@@ -1392,7 +1567,7 @@ en:
       destroy:
         success_flash: "Column %{name} was successfully deleted."
         error_flash: "Something went wrong! Please try again later."
-      index:
+    index:
       head_title: "Inventories"
       head_title_archived: "Archived Inventories"
       table:
@@ -1527,6 +1702,8 @@ en:
         email_label: "Email"
         email_title: "Change email"
         new_email_label: "New email"
+        external_id_label: 'External Id'
+        external_id_title: 'External Id'
         current_password_label: "Current password"
         password_explanation: "(we need your current password to confirm your changes)"
         waiting_for_confirm: "Currently waiting confirmation for: %{email}"
@@ -1542,7 +1719,7 @@ en:
         2fa_modal:
           step_1:
             title: "1. Install an Authenticator App on your mobile device"
-            description: "Use your phone to download an authenticator app. It is needed to enable the 2FA in SciNote. Bellow you can see the most commonly used ones."
+            description: "Use your phone to download an authenticator app. It is needed to enable the 2FA in SciNote. Below you can see the most commonly used ones."
             google_auth: "Google authenticator"
             microsoft_auth: "Microsoft authenticator"
             2fa_auth: "2FA authenticator"
@@ -1555,17 +1732,17 @@ en:
             next: "Next"
           step_3:
             title: "3. Enter the code given by your authenticator app"
-            description: "Enter the generated code into the fields bellow to finalize the setup of the two-factor authorisation."
+            description: "Enter the generated code into the fields below to finalize the setup of the two-factor authorization."
             enter_code: "Enter authenticator code"
             verify: "Verify"
           step_4:
             title: "4. Save your bypass codes"
             verified: "2FA Verified"
-            description: "Your 2FA is now verified. Save these one-time codes bellow to access your account in case you lose your device. This way you will be able to reset the authorization."
+            description: "Your 2FA is now verified. Save these one-time codes below to access your account in case you lose your device. This way you will be able to reset the authorization."
             download_codes: "Download codes"
           disable:
             title: "Disable two-factor authentication"
-            description: "Enter your password bellow to confirm disableing 2FA. This will remove authentication, from your account and make you more vulnerable to potential attacks."
+            description: "Enter your password below to confirm disabling 2FA. This will remove authentication, from your account and make you more vulnerable to potential attacks."
             password_label: "Enter password"
             disable_2fa: "Disable 2FA"
         2fa_errors:
@@ -1621,7 +1798,7 @@ en:
           head_title: "Settings | Connected Accounts"
           title: "Connected Accounts"
           not_connected: "You have no Connected accounts"
-          unlink_success: "Sucessfully unlinked"
+          unlink_success: "Successfully unlinked"
           azure_ad:
             title: "Your Azure AD Account"
             connect_hint: "Allows you to sign in with your Azure AD account."
@@ -1709,7 +1886,7 @@ en:
         destroy_uo_alert_line_3: "all repository protocols in the team belonging to user will be reassigned onto you;"
         destroy_uo_alert_line_4: "all inventory items in the team added by user will be reassigned onto you."
         destroy_uo_confirm: "Remove"
-        leave_flash: "Successfuly left team %{team}."
+        leave_flash: "Successfully left team %{team}."
 
   protocols:
     protocols_io_import:
@@ -1864,13 +2041,13 @@ en:
         description: "Archived protocols can only be seen by you. Restoring protocols will return them to their previous location (team/my protocols)."
       restore: "Restore"
       make_private_unauthorized: "You do not have permission to move selected protocols to My protocols."
-      make_private_error: "Error occured while moving selected protocols to My protocols."
+      make_private_error: "Error occurred while moving selected protocols to My protocols."
       publish_unauthorized: "You do not have permission to move selected protocols to Team protocols."
-      publish_error: "Error occured while moving selected protocols to Team protocols."
+      publish_error: "Error occurred while moving selected protocols to Team protocols."
       archive_unauthorized: "You do not have permission to archive selected protocols."
-      archive_error: "Error occured while archiving selected protocols."
+      archive_error: "Error occurred while archiving selected protocols."
       restore_unauthorized: "You do not have permission to restore selected protocols."
-      restore_error: "Error occured while restoring selected protocols."
+      restore_error: "Error occurred while restoring selected protocols."
       row_renamed_html: "%{old_name}<i> to </i>%{new_name}"
       no_protocol_name: "(no name)"
       create:
@@ -2044,11 +2221,14 @@ en:
       user_exists_unconfirmed_invited_to_team: "User is already a member of SciNote but is not confirmed yet - successfully invited to team %{team} as %{role}."
       user_exists_and_in_team: "User is already a member of SciNote and team %{team} as %{role}."
       user_exists_invited_to_team: "User was already a member of SciNote - successfully invited to team %{team} as %{role}."
-      user_created: "User succesfully invited to SciNote."
+      user_created: "User successfully invited to SciNote."
       user_created_invited_to_team: "User successfully invited to SciNote and team %{team} as %{role}."
       user_invalid: "Invalid email."
       too_many_emails: "Only invited first %{nr} emails. To invite more users, "
 
+  date:
+    formats:
+      full: "%{date_format}"
   time:
     formats:
       full_js: "D.M.YYYY HH:mm"
@@ -2090,8 +2270,12 @@ en:
     experiment_annotation_message_html: "Project: %{project} | Experiment: %{experiment}"
     project_comment_annotation_title: "%{user} mentioned you in a comment on project %{project}."
     project_annotation_message_html: "Project: %{project}"
+    my_module_description_annotation_title: "%{user} mentioned you in a description on task %{my_module}."
+    my_module_description_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
     my_module_comment_annotation_title: "%{user} mentioned you in a comment on task %{my_module}."
-    my_module_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
+    my_module_comment_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
+    my_module_protocol_annotation_title: "%{user} mentioned you in a protocol description on task %{my_module}."
+    my_module_protocol_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
     step_comment_annotation_title: "%{user} mentioned you in a comment on step %{step}."
     step_description_title: "%{user} mentioned you in a description on step %{step}."
     checklist_title: "%{user} mentioned you in a checklist on step %{step}."
@@ -2101,6 +2285,8 @@ en:
     result_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
     repository_annotation_title: "%{user} mentioned you in Column: %{column} of Item %{record} in Inventory %{repository}"
     repository_annotation_message_html: "Item: %{record} | Column: %{column}"
+    protocol_description_annotation_title: "%{user} mentioned you in a description on protocol %{protocol}."
+    protocol_description_annotation_message_html: "Protocol: %{protocol}"
     protocol_step_annotation_message_html: "Protocol: %{protocol}"
     email_title: "You've received a SciNote notification!"
     assign_user_to_team: "<i>%{assigned_user}</i> was added as %{role} to team <strong>%{team}</strong> by <i>%{assigned_by_user}</i>."
@@ -2128,7 +2314,7 @@ en:
       size_label: "Size: %{size}"
     wopi_supported_text_formats_title: 'Only .docx, .docm, .odt file formats are supported for editing in Word Online.'
     wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel Online.'
-    wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in Powerpoint Online.'
+    wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in PowerPoint Online.'
     create_wopi_file:
       button_text: 'New Office file'
       li_text: "Office file"
@@ -2156,6 +2342,9 @@ en:
       description_1_html: "You are about to delete <b>%{file_name}</b></p>"
       description_2: "Are you sure you want to continue?"
       confirm_button: "Delete attachment"
+    empty_office_file:
+      description: "The file is empty. Please add some data before saving the file."
+      reload: "Reload file"
 
   atwho:
     no_results:
@@ -2217,10 +2406,15 @@ en:
     save: "Save"
     update: "Update"
     edit: "Edit"
+    delete: "Delete"
     cancel: "Cancel"
+    back: "Back"
     close: "Close"
     create: 'Create'
     change: "Change"
+    # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
+    'yes': "Yes"
+    'no': "No"
     leaving_unsaved_warning: "You have made some changes, are you sure you want to leave this page?"
     no_comments: "No comments!"
     more_comments: "More comments"
@@ -2228,10 +2422,12 @@ en:
     comment_placeholder_new: "Add new comment…"
     archived: "Archived"
     sort:
-      new_html: "Newest first &#8595;"
-      old_html: "Oldest first &#8593;"
-      atoz_html: "Name &#8595;"
-      ztoa_html: "Name &#8593;"
+      new_html: "Started last"
+      old_html: "Started first"
+      atoz_html: "Name A to Z"
+      ztoa_html: "Name Z to A"
+      archived_new_html: "Archived last"
+      archived_old_html: "Archived first"
     sort_new:
       new: "Newest"
       old: "Oldest"
@@ -2243,6 +2439,7 @@ en:
     public: "public"
     private: "private"
     view: "View"
+    set_view_type: "SET VIEW TYPE"
     search: "Search"
     file:
       choose: "Choose File"
@@ -2333,6 +2530,7 @@ en:
   Modules: "Tasks"
   Project: "Project"
   Projects: "Projects"
+  ProjectFolders: "Folders"
   Experiments: "Experiments"
   Result: "Result"
   Results: "Results"
@@ -2361,8 +2559,8 @@ en:
     generic_error_message: "Something went wrong! Please try again later."
     user_teams:
       permission_error: "You don't have permission to manage users."
-      leave_team_error: "An error occured."
-      leave_flash: "Successfuly left team %{team}."
+      leave_team_error: "An error occurred."
+      leave_flash: "Successfully left team %{team}."
     teams:
       create_permission_error: "You don't have permission to create team."
       update_permission_error: "You don't have permission to edit this team."
@@ -2380,6 +2578,15 @@ en:
     modal_name_title: "Chemical Drawing name:"
     checmical_drawing: "Chemical drawings"
 
+  pdf_preview:
+    fit_to_screen: 'Fit to screen'
+    pages:
+      of: 'of'
+    blocked:
+      title: 'The file you’re trying to view is very large.'
+      description: 'To ensure the optimal performance of SciNote, we did not load it automatically.'
+      submit_button: 'Load anyway'
+
   views:
     pagination:
       first: "First"
@@ -2387,3 +2594,21 @@ en:
       previous: "Previous"
       next: "Next"
       truncate: "&hellip;"
+
+  filters_modal:
+    title: "Filters"
+    text:
+      label: "Contains text"
+      placeholder: "Enter search terms..."
+    from_placeholder: "From"
+    to_placeholder: "To"
+    created_on:
+      label: "Start date"
+    updated_on:
+      label: "Modified date"
+    archived_on:
+      label: "Archived date"
+    recent_searches_label: "Recent searches"
+    show_btn:
+     one: "Show results"
+    clear_btn: "Clear"

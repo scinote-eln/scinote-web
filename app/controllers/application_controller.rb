@@ -1,12 +1,11 @@
 class ApplicationController < ActionController::Base
-  acts_as_token_authentication_handler_for User, unless: -> { current_user.present? }
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception, prepend: true
   before_action :authenticate_user!
   helper_method :current_team
   before_action :update_current_team, if: :user_signed_in?
-  before_action :set_date_format, if: :user_signed_in?
+  around_action :set_date_format, if: :user_signed_in?
   around_action :set_time_zone, if: :current_user
   layout 'main'
 
@@ -103,7 +102,9 @@ class ApplicationController < ActionController::Base
   end
 
   def set_date_format
-    I18n.backend.date_format =
-      current_user.settings[:date_format] || Constants::DEFAULT_DATE_FORMAT
+    I18n.backend.date_format = current_user.settings[:date_format]
+    yield
+  ensure
+    I18n.backend.date_format = nil
   end
 end

@@ -5,6 +5,7 @@
 module Reports::Docx::DrawProjectHeader
   def draw_project_header(subject)
 <<<<<<< HEAD
+<<<<<<< HEAD
     project = subject.project
     return unless project && can_read_project?(@user, project)
 =======
@@ -18,6 +19,9 @@ module Reports::Docx::DrawProjectHeader
 >>>>>>> Finished merging. Test on dev machine (iMac).
 =======
     project = Project.find_by(id: subject['id']['project_id'])
+=======
+    project = subject.project
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     return unless project && can_read_project?(@user, project)
 >>>>>>> Pulled latest release
 

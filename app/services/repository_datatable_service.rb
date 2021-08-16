@@ -10,7 +10,7 @@ class RepositoryDatatableService
     @params = params
     @sortable_columns = build_sortable_columns
     create_columns_mappings
-    process_query
+    @repository_rows = process_query
   end
 
   private
@@ -57,7 +57,7 @@ class RepositoryDatatableService
                       .select('COUNT(DISTINCT experiments.project_id) AS "assigned_projects_count"')
     repository_rows = repository_rows.preload(Extends::REPOSITORY_ROWS_PRELOAD_RELATIONS)
 
-    @repository_rows = sort_rows(order_obj, repository_rows)
+    sort_rows(order_obj, repository_rows)
   end
 
   def fetch_rows(search_value)
@@ -83,9 +83,13 @@ class RepositoryDatatableService
       results = repository_rows.where(id: repository_row_matches)
       results = results.or(repository_rows.where(id: matched_by_user))
 
-      Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each do |field, include_hash|
-        custom_cell_matches = repository_rows.joins(repository_cells: include_hash)
-                                             .where_attributes_like(field, search_value)
+      data_types = @repository.repository_columns.pluck(:data_type).uniq
+
+      Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each do |data_type, config|
+        next unless data_types.include?(data_type.to_s)
+
+        custom_cell_matches = repository_rows.joins(repository_cells: config[:includes])
+                                             .where_attributes_like(config[:field], search_value)
         results = results.or(repository_rows.where(id: custom_cell_matches))
       end
 

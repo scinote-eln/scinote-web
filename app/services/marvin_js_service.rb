@@ -50,9 +50,13 @@ class MarvinJsService
       if params[:object_type] == 'Step'
         object = params[:object_type].constantize.find(params[:object_id])
 <<<<<<< HEAD
+<<<<<<< HEAD
         asset.update!(view_mode: object.assets_view_mode)
 =======
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+        asset.update!(view_mode: object.assets_view_mode)
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
         object.assets << asset
       elsif params[:object_type] == 'Result'
         my_module = MyModule.find_by(id: params[:object_id])

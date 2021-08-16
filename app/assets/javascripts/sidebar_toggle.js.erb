@@ -1,71 +1,59 @@
-(function(global) {
-  'use strict';
-  global.SideBarToggle = (function() {
-    var STORAGE_TOGGLE_KEY = "scinote-sidebar-toggled";
+var SideBarToggle = (function() {
+  var STORAGE_TOGGLE_KEY = "scinote-sidebar-toggled";
+  var WRAPPER = '#wrapper'
+  var SIDEBAR_CONTAINER = ".sidebar-container"
 
-    function show() {
-      $('#wrapper').removeClass('hidden2');
-      $('#wrapper').css('paddingLeft', '280px');
-      $('.navbar-secondary').css(
-        <%# @@@20180627JS Get rid of this padding, from 294px to 280px %>
-        { 'margin-left': '-280px', 'padding-left': '280px' }
-      );
-      $('#sidebar-arrow').attr('data-shown', '');
-      sessionStorage.setItem(STORAGE_TOGGLE_KEY, "un-toggled");
-      $('#wrapper').trigger('sideBar::show');
-      $('#wrapper').one("transitionend", function() {
-        $('#wrapper').trigger('sideBar::shown');
-      })
+  function show() {
+    $(SIDEBAR_CONTAINER).removeClass('collapsed');
+    $(WRAPPER).css('paddingLeft', 'var(--wrapper-width)');
+    $('.navbar-secondary').removeClass("navbar-without-sidebar");
+    sessionStorage.setItem(STORAGE_TOGGLE_KEY, "un-toggled");
+    $(WRAPPER).trigger('sideBar::show');
+    $(WRAPPER).one("transitionend", function() {
+      $(WRAPPER).trigger('sideBar::shown');
+    })
+  }
+
+  function hide() {
+    $(SIDEBAR_CONTAINER).addClass('collapsed');
+    $(WRAPPER).css('paddingLeft', '0');
+    $('.navbar-secondary').addClass("navbar-without-sidebar");
+    sessionStorage.setItem(STORAGE_TOGGLE_KEY, "toggled");
+    $(WRAPPER).trigger('sideBar::hide');
+    $(WRAPPER).one("transitionend", function() {
+      $(WRAPPER).trigger('sideBar::hidden');
+    })
+  }
+
+  function isToggledStorage() {
+    var val = sessionStorage.getItem(STORAGE_TOGGLE_KEY);
+    if (val === null) {
+      return null;
     }
+    return val === "toggled";
+  }
 
-    function hide() {
-      $('#wrapper').addClass('hidden2');
-      $('#wrapper').css('paddingLeft', '0');
-      $('.navbar-secondary').css({
-        'margin-left': '0',
-        <%# @@@20180627JS Get rid of this padding, from 14px to 0px %>
-        'padding-left': '0'
-      });
-      $('#sidebar-arrow').removeAttr('data-shown');
-      sessionStorage.setItem(STORAGE_TOGGLE_KEY, "toggled");
-      $('#wrapper').trigger('sideBar::hide');
-      $('#wrapper').one("transitionend", function() {
-        $('#wrapper').trigger('sideBar::hidden');
-      })
-    }
-
-    function toggle() {
-      var btn = $('#sidebar-arrow');
-      if (btn.is('[data-shown]')) {
+  function init() {
+    $(document).on('click', `${SIDEBAR_CONTAINER} .close-sidebar`, function() {
+      hide();
+    }).on('click', `${SIDEBAR_CONTAINER} .show-sidebar`, function() {
+      show();
+    }).on('turbolinks:load', function() {
+      if (isToggledStorage()) {
         hide();
       } else {
         show();
       }
-    }
-
-    function isShown() {
-      var btn = $('#sidebar-arrow');
-      return btn.is('[data-shown]');
-    }
-
-    function isToggledStorage() {
-      var val = sessionStorage.getItem(STORAGE_TOGGLE_KEY);
-      if (val === null) {
-        return null;
-      }
-      return val === "toggled";
-    }
-
-    return Object.freeze({
-      show: show,
-      hide: hide,
-      toggle: toggle,
-      isShown: isShown,
-      isToggledStorage: isToggledStorage
+      $(WRAPPER).show();
     })
-  })();
-
-  if (SideBarToggle.isToggledStorage()) {
-    SideBarToggle.hide();
   }
-})(window);
+
+  return Object.freeze({
+    init: init,
+    show: show,
+    hide: hide,
+    isToggledStorage: isToggledStorage
+  })
+}());
+
+SideBarToggle.init();

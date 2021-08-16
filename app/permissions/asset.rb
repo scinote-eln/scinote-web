@@ -10,10 +10,14 @@ Canaid::Permissions.register_for(Asset) do
       can_read_protocol_in_module?(user, protocol) || can_read_protocol_in_repository?(user, protocol)
     when Result
 <<<<<<< HEAD
+<<<<<<< HEAD
       can_read_result?(object)
 =======
       can_read_experiment?(user, object.my_module.experiment)
 >>>>>>> Pulled latest release
+=======
+      can_read_result?(object)
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     when RepositoryCell
       can_read_repository?(user, object.repository_column.repository)
     end
@@ -38,12 +42,20 @@ Canaid::Permissions.register_for(Asset) do
       protocol = object.protocol
       can_manage_protocol_in_module?(user, protocol) || can_manage_protocol_in_repository?(user, protocol)
     when Result
-      can_manage_module?(user, object.my_module)
+      can_manage_result?(object)
     when RepositoryCell
+<<<<<<< HEAD
       return false if object.repository_column.repository.is_a?(RepositorySnapshot)
 
       can_manage_repository?(user, object.repository_column.repository)
 >>>>>>> Pulled latest release
+=======
+      if object.repository_column.repository.is_a?(RepositorySnapshot)
+        false
+      else
+        can_manage_repository?(user, object.repository_column.repository)
+      end
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     end
   end
 end

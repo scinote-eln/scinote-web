@@ -22,26 +22,6 @@ describe MyModulesController, type: :controller do
   describe 'PUT update' do
     let(:action) { put :update, params: params, format: :json }
 
-    context 'when restoring task from archive' do
-      let(:params) { { id: my_module.id, my_module: { archived: false } } }
-      let(:my_module) do
-        create :my_module, archived: true, experiment: experiment
-      end
-
-      it 'calls create activity for restoring task from archive' do
-        expect(Activities::CreateActivityService)
-          .to(receive(:call)
-                .with(hash_including(activity_type: :restore_module)))
-
-        put :update, params: params
-      end
-
-      it 'adds activity in DB' do
-        expect { put :update, params: params }
-          .to(change { Activity.count })
-      end
-    end
-
     context 'when changing task description' do
       let(:params) do
         { id: my_module.id, my_module: { description: 'description changed' } }
@@ -190,6 +170,100 @@ describe MyModulesController, type: :controller do
         action
 
         expect(response).to have_http_status 404
+      end
+    end
+  end
+
+  describe 'POST restore_tasks' do
+    let(:action) { post :restore_group, params: params }
+    let(:params) do
+      {
+        id: experiment.id,
+        my_modules_ids: [task1.id, task2.id, task3.id]
+      }
+    end
+    let(:experiment) { create :experiment }
+    let(:task1) { create :my_module, :archived, experiment: experiment }
+    let(:task2) { create :my_module, :archived, experiment: experiment }
+    let(:task3) { create :my_module, :archived, experiment: experiment }
+    let(:user) { controller.current_user }
+    let!(:user_project) { create :user_project, user: user, project: experiment.project, role: 0 }
+
+    context 'when tasks are restored' do
+      it 'tasks are active' do
+        action
+
+        expect(task1.reload.active?).to be_truthy
+        expect(task2.reload.active?).to be_truthy
+        expect(task3.reload.active?).to be_truthy
+      end
+
+      it 'calls create activity service 3 times' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call).with(hash_including(activity_type: :restore_module))).exactly(3).times
+
+        action
+      end
+
+      it 'adds activity in DB' do
+        expect { action }.to(change { Activity.count }.by(3))
+      end
+
+      it 'renders 302' do
+        action
+
+        expect(response).to have_http_status(302)
+      end
+    end
+
+    context 'when tasks are not restored' do
+      context 'when one task is invalid' do
+        before do
+          task3.name = Faker::Lorem.characters(number: 300)
+          task3.save(validate: false)
+        end
+
+        it 'returns 302' do
+          action
+
+          expect(response).to have_http_status(302)
+        end
+
+        it 'only 2 activities added in DB' do
+          expect { action }.to(change { Activity.count }.by(2))
+        end
+
+        it 'one task is still archived' do
+          action
+
+          expect(task1.reload.active?).to be_truthy
+          expect(task2.reload.active?).to be_truthy
+          expect(task3.reload.active?).to be_falsey
+        end
+      end
+
+      context 'when user does not have permissions for one task' do
+        before do
+          task3.restore!(user)
+        end
+
+        it 'returns 302' do
+          action
+
+          expect(response).to have_http_status(302)
+        end
+
+        it 'only 2 activities added in DB' do
+          expect { action }.to(change { Activity.count }.by(2))
+        end
+
+        it 'tasks are restored' do
+          action
+
+          expect(task1.reload.active?).to be_truthy
+          expect(task2.reload.active?).to be_truthy
+          expect(task3.reload.active?).to be_truthy
+        end
       end
     end
   end

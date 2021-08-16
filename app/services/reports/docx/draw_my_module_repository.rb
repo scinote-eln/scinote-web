@@ -4,6 +4,9 @@
 <<<<<<< HEAD
 module Reports::Docx::DrawMyModuleRepository
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   def draw_my_module_repository(subject)
     my_module = subject.my_module
     repository = subject.repository
@@ -11,6 +14,7 @@ module Reports::Docx::DrawMyModuleRepository
 
     return unless repository && can_read_experiment?(@user, my_module.experiment) &&
                   (repository.is_a?(RepositorySnapshot) || can_read_repository?(@user, repository))
+<<<<<<< HEAD
 
     repository_data = my_module.repository_docx_json(repository)
 
@@ -28,9 +32,9 @@ module Reports::Docx::DrawMyModuleRepository
   def draw_my_module_repository(subject, my_module)
 >>>>>>> Pulled latest release
     return unless my_module
+=======
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
-    repository_id = subject['id']['repository_id']
-    repository = ::RepositoryBase.find(repository_id)
     repository_data = my_module.repository_docx_json(repository)
 
     return false unless repository_data[:rows].any? && can_read_repository?(@user, repository)

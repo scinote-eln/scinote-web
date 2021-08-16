@@ -58,18 +58,6 @@ describe Experiment, type: :model do
         .is_at_most(Constants::TEXT_MAX_LENGTH)
     end
 
-    it 'should have uniq name scoped on project' do
-      create :experiment, name: 'experiment',
-                          project: project,
-                          created_by: project.created_by,
-                          last_modified_by: project.created_by
-      new_exp = build_stubbed :experiment, name: 'experiment',
-                                           project: project,
-                                           created_by: project.created_by,
-                                           last_modified_by: project.created_by
-      expect(new_exp).to_not be_valid
-    end
-
     it 'should have uniq uuid scoped on project' do
       uuid = SecureRandom.uuid
       puts uuid

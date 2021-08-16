@@ -2,6 +2,7 @@ class Project < ApplicationRecord
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
+  include ViewableModel
 
   enum visibility: { hidden: 0, visible: 1 }
 
@@ -12,6 +13,8 @@ class Project < ApplicationRecord
             uniqueness: { scope: :team_id, case_sensitive: false }
   validates :visibility, presence: true
   validates :team, presence: true
+  validate :project_folder_team, if: -> { project_folder.present? }
+  before_validation :remove_project_folder, on: :update, if: :archived_changed?
 
   belongs_to :created_by,
              foreign_key: 'created_by_id',
@@ -29,11 +32,8 @@ class Project < ApplicationRecord
              foreign_key: 'restored_by_id',
              class_name: 'User',
              optional: true
-  belongs_to :rap_task_level,
-            foreign_key: 'rap_task_level_id',
-            class_name: 'RapTaskLevel',
-            optional: false
   belongs_to :team, inverse_of: :projects, touch: true
+  belongs_to :project_folder, inverse_of: :projects, optional: true, touch: true
   has_many :user_projects, inverse_of: :project
   has_many :users, through: :user_projects
   has_many :experiments, inverse_of: :project
@@ -48,26 +48,12 @@ class Project < ApplicationRecord
   scope :visible_to, (lambda do |user, team|
                         unless user.is_admin_of_team?(team)
                           left_outer_joins(:user_projects)
-                          .where(
-                            'visibility = 1 OR user_projects.user_id = :id',
-                            id: user.id
-                          ).distinct
+                          .where('visibility = 1 OR user_projects.user_id = :id', id: user.id)
+                          .group(:id)
                         end
                       end)
 
   scope :templates, -> { where(template: true) }
-
-  def self.visible_from_user_by_name(user, team, name)
-    projects = where(team: team).distinct
-    if user.is_admin_of_team?(team)
-      projects.where('projects.archived IS FALSE AND projects.name ILIKE ?', "%#{name}%")
-    else
-      projects.joins(:user_projects)
-              .where('user_projects.user_id = ? OR projects.visibility = 1', user.id)
-              .where('projects.archived IS FALSE AND projects.name ILIKE ?',
-                     "%#{name}%")
-    end
-  end
 
   def self.search(
     user,
@@ -153,6 +139,24 @@ class Project < ApplicationRecord
            .distinct
   end
 
+  def default_view_state
+    {
+      experiments: {
+        active: { sort: 'new' },
+        archived: { sort: 'new' },
+        view_type: 'cards'
+      }
+    }
+  end
+
+  def validate_view_state(view_state)
+    if %w(cards table).exclude?(view_state.state.dig('experiments', 'view_type')) ||
+       %w(new old atoz ztoa).exclude?(view_state.state.dig('experiments', 'active', 'sort')) ||
+       %w(new old atoz ztoa archived_new archived_old).exclude?(view_state.state.dig('experiments', 'archived', 'sort'))
+      view_state.errors.add(:state, :wrong_state)
+    end
+  end
+
   def last_activities(count = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
     activities.order(created_at: :desc).first(count)
   end
@@ -166,7 +170,7 @@ class Project < ApplicationRecord
                              .where('comments.id <  ?', last_id)
                              .order(created_at: :desc)
                              .limit(per_page)
-    comments.reverse
+    ProjectComment.from(comments, :comments).order(created_at: :asc)
   end
 
   def unassigned_users
@@ -182,14 +186,16 @@ class Project < ApplicationRecord
     user_projects.find_by_user_id(user)&.role
   end
 
-  def sorted_active_experiments(sort_by = :new)
+  def sorted_experiments(sort_by = :new, archived = false)
     sort = case sort_by
            when 'old' then { created_at: :asc }
            when 'atoz' then { name: :asc }
            when 'ztoa' then { name: :desc }
+           when 'archived_new' then { archived_on: :desc }
+           when 'archived_old' then { archived_on: :asc }
            else { created_at: :desc }
            end
-    experiments.is_archived(false).order(sort)
+    experiments.is_archived(archived).order(sort)
   end
 
   def archived_experiments
@@ -210,7 +216,7 @@ class Project < ApplicationRecord
 
   def assigned_repositories_and_snapshots
     live_repositories = Repository.assigned_to_project(self)
-    snapshots = RepositorySnapshot.of_unassigned_from_project(self)
+    snapshots = RepositorySnapshot.assigned_to_project(self)
     (live_repositories + snapshots).sort_by { |r| r.name.downcase }
   end
 
@@ -251,21 +257,25 @@ class Project < ApplicationRecord
     res
   end
 
+  def comments
+    project_comments
+  end
+
   def generate_teams_export_report_html(
     user, team, html_title, obj_filenames = nil
   )
     ActionController::Renderer::RACK_KEY_TRANSLATION['warden'] ||= 'warden'
     proxy = Warden::Proxy.new({}, Warden::Manager.new({}))
     proxy.set_user(user, scope: :user, store: false)
+    ApplicationController.renderer.defaults[:http_host] = Rails.application.routes.default_url_options[:host]
     renderer = ApplicationController.renderer.new(warden: proxy)
 
     report = Report.generate_whole_project_report(self, user, team)
 
     page_html_string =
-      renderer.render 'reports/new.html.erb',
-                      locals: { export_all: true,
-                                obj_filenames: obj_filenames },
-                      assigns: { project: self, report: report }
+      renderer.render 'reports/export.html.erb',
+                      locals: { report: report, export_all: true },
+                      assigns: { settings: report.settings, obj_filenames: obj_filenames }
     parsed_page_html = Nokogiri::HTML(page_html_string)
     parsed_html = parsed_page_html.at_css('#report-content')
 
@@ -319,5 +329,17 @@ class Project < ApplicationRecord
     )
   ensure
     report.destroy if report.present?
+  end
+
+  private
+
+  def project_folder_team
+    return if project_folder.team_id == team_id
+
+    errors.add(:project_folder, I18n.t('activerecord.errors.models.project.attributes.project_folder.team'))
+  end
+
+  def remove_project_folder
+    self.project_folder = nil
   end
 end

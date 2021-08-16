@@ -10,7 +10,6 @@ class User < ApplicationRecord
   include InputSanitizeHelper
   include ActiveStorageConcerns
 
-  acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
          :async, :recoverable, :rememberable, :trackable, :validatable,
          :timeoutable, :omniauthable, :lockable,
@@ -32,9 +31,11 @@ class User < ApplicationRecord
 
   validate :time_zone_check
 
-  store_accessor :settings, :time_zone, :notifications_settings
+  validates :external_id, length: { maximum: Constants::EMAIL_MAX_LENGTH }
 
-  default_settings(
+  store_accessor :settings, :time_zone, :notifications_settings, :external_id
+
+  DEFAULT_SETTINGS = {
     time_zone: 'UTC',
     date_format: Constants::DEFAULT_DATE_FORMAT,
     notifications_settings: {
@@ -44,7 +45,7 @@ class User < ApplicationRecord
       recent_email: false,
       system_message_email: false
     }
-  )
+  }.freeze
 
   store_accessor :variables, :export_vars
 
@@ -125,6 +126,14 @@ class User < ApplicationRecord
   has_many :restored_projects,
            class_name: 'Project',
            foreign_key: 'restored_by_id'
+  has_many :archived_project_folders,
+           class_name: 'ProjectFolder',
+           foreign_key: 'archived_by_id',
+           inverse_of: :arhived_by
+  has_many :restored_project_folders,
+           class_name: 'ProjectFolder',
+           foreign_key: 'restored_by_id',
+           inverse_of: :restored_by
   has_many :modified_reports,
            class_name: 'Report',
            foreign_key: 'last_modified_by_id'
@@ -430,28 +439,6 @@ class User < ApplicationRecord
     result || []
   end
 
-  def projects_tree(team, sort_by = nil)
-    result = team.projects.includes(active_experiments: :active_my_modules)
-    unless is_admin_of_team?(team)
-      # Only admins see all projects of the team
-      result = result.joins(:user_projects).where(
-        'visibility=1 OR user_projects.user_id=:user_id', user_id: id
-      )
-    end
-
-    sort = case sort_by
-           when 'old'
-             { created_at: :asc }
-           when 'atoz'
-             { name: :asc }
-           when 'ztoa'
-             { name: :desc }
-           else
-             { created_at: :desc }
-           end
-    result.where(archived: false).distinct.order(sort)
-  end
-
   # Finds all activities of user that is assigned to project. If user
   # is not an owner of the project, user must be also assigned to
   # module.
@@ -567,6 +554,19 @@ class User < ApplicationRecord
     define_method("#{name}=") do |value|
       attr_name = name.gsub('_notification', '').to_sym
       notifications_settings[attr_name] = value
+    end
+  end
+
+  def enabled_notifications_for?(notification_type, channel)
+    return true if %i(deliver deliver_error).include?(notification_type)
+
+    case channel
+    when :web
+      notification_type == :recent_changes && recent_notification ||
+        notification_type == :assignment && assignments_notification
+    when :email
+      notification_type == :recent_changes && recent_email_notification ||
+        notification_type == :assignment && assignments_email_notification
     end
   end
 

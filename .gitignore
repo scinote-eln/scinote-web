@@ -82,6 +82,3 @@ spec/addons
 
 public/marvinjs
 public/marvin4js-license.cxl
-
-/.vs
-.vscode/settings.json

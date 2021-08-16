@@ -68,7 +68,11 @@ module ReportActions
 
     def generate_experiment_content(experiment_id, my_module_ids)
       experiment = Experiment.find_by(id: experiment_id)
+<<<<<<< HEAD
       return unless experiment && can_read_experiment?(@user, experiment)
+=======
+      return if !experiment && !can_read_experiment?(experiment, @user)
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
       experiment_element = save_element!({ 'experiment_id' => experiment.id }, :experiment, nil)
       generate_my_modules_content(experiment, experiment_element, my_module_ids)
@@ -79,8 +83,11 @@ module ReportActions
                              .active
                              .where(id: my_module_ids)
       my_modules.sort_by { |m| my_module_ids.index m.id }.each do |my_module|
+<<<<<<< HEAD
         next unless can_read_my_module?(@user, my_module)
 
+=======
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
         my_module_element = save_element!({ 'my_module_id' => my_module.id }, :my_module, experiment_element)
 
         @repositories.each do |repository|

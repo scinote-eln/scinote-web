@@ -50,6 +50,7 @@ RSpec.describe Users::SessionsController, type: :controller do
 
       context 'when user has 2FA enabled' do
 <<<<<<< HEAD
+<<<<<<< HEAD
         it 'redirects to 2fa code form, sets the session and does not sign in the user' do
           user.two_factor_auth_enabled = true
           user.save!
@@ -63,6 +64,14 @@ RSpec.describe Users::SessionsController, type: :controller do
 
           expect(action).to render_template('users/sessions/two_factor_auth')
 >>>>>>> Pulled latest release
+=======
+        it 'redirects to 2fa code form, sets the session and does not sign in the user' do
+          user.two_factor_auth_enabled = true
+          user.save!
+          expect(action).to redirect_to(users_two_factor_auth_path)
+          expect(action.request.session[:otp_user_id]).to eq user.id
+          expect { action }.not_to(change { subject.current_user })
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
         end
       end
     end

@@ -6,7 +6,11 @@ describe ExperimentsOverviewService do
   EXPERIMENTS_CNT = 26
   time = Time.new(2019, 8, 1, 14, 35, 0)
   let!(:user) { create :user }
+<<<<<<< HEAD
   let!(:project) { create :project, created_by: user }
+=======
+  let!(:project) { create :project }
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   before do
     @experiments_overview = ExperimentsOverviewService.new(project, user, params)
   end

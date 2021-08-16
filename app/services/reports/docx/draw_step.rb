@@ -4,6 +4,7 @@
 <<<<<<< HEAD
 module Reports::Docx::DrawStep
 <<<<<<< HEAD
+<<<<<<< HEAD
   def draw_step(step)
     color = @color
     step_type_str = step.completed ? 'completed' : 'uncompleted'
@@ -18,14 +19,19 @@ module Reports::Docx::DrawStep
 =======
   def draw_step(subject, my_module)
 >>>>>>> Pulled latest release
+=======
+  def draw_step(step)
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     color = @color
-    step = my_module.protocols.first.steps.find_by(id: subject['id']['step_id'])
-    return unless step
-
     step_type_str = step.completed ? 'completed' : 'uncompleted'
+<<<<<<< HEAD
     user = step.completed || !step.changed? ? step.user : step.last_modified_by
     timestamp = step.completed ? step.completed_on : step.updated_at
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+    user = step.completed? ? step.last_modified_by : step.user
+    timestamp = step.completed ? step.completed_on : step.created_at
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     @docx.p
     @docx.h5 (I18n.t('projects.reports.elements.step.step_pos', pos: step.position_plus_one) +
              ' ' + step.name), size: Constants::REPORT_DOCX_STEP_TITLE_SIZE
@@ -60,6 +66,9 @@ module Reports::Docx::DrawStep
     end
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     if @settings.dig('task', 'protocol', 'step_tables')
       step.tables.each do |table|
         draw_step_table(table)
@@ -69,6 +78,7 @@ module Reports::Docx::DrawStep
       step.assets.each do |asset|
         draw_step_asset(asset)
       end
+<<<<<<< HEAD
     end
     if @settings.dig('task', 'protocol', 'step_checklists')
       step.checklists.each do |checklist|
@@ -82,6 +92,16 @@ module Reports::Docx::DrawStep
       public_send("draw_#{child['type_of']}", child, step)
     end
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+    end
+    if @settings.dig('task', 'protocol', 'step_checklists')
+      step.checklists.each do |checklist|
+        draw_step_checklist(checklist)
+      end
+    end
+    draw_step_comments(step) if @settings.dig('task', 'protocol', 'step_comments')
+
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     @docx.p
     @docx.p
   end

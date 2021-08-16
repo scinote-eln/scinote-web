@@ -3,12 +3,12 @@
 class AssetsController < ApplicationController
   include WopiUtil
   include AssetsActions
-  # include ActionView::Helpers
   include ActiveStorage::SetCurrent
   include ActionView::Helpers::AssetTagHelper
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::UrlHelper
   include ActionView::Context
+  include ActiveStorageFileUtil
   include ApplicationHelper
   include InputSanitizeHelper
   include FileIconsHelper
@@ -52,6 +52,19 @@ class AssetsController < ApplicationController
     end
   end
 
+  def load_asset
+    gallery_view_id = if @assoc.is_a?(Step)
+                        @assoc.id
+                      elsif @assoc.is_a?(Result)
+                        @assoc.my_module.id
+                      end
+    render json: { html: render_to_string(partial: 'assets/asset.html.erb',
+                                          locals: {
+                                            asset: @asset,
+                                            gallery_view_id: gallery_view_id
+                                          }) }
+  end
+
   def file_url
     return render_404 unless @asset.file.attached?
 
@@ -84,6 +97,13 @@ class AssetsController < ApplicationController
     @ttl = (tkn.ttl * 1000).to_s
 
     render layout: false
+  end
+
+  def pdf_preview
+    return render plain: '', status: :not_acceptable unless previewable_document?(@asset.blob)
+    return render plain: '', status: :accepted unless @asset.pdf_preview_ready?
+
+    redirect_to @asset.file_pdf_preview.service_url
   end
 
   def create_start_edit_image_activity
@@ -161,6 +181,7 @@ class AssetsController < ApplicationController
       render_403 && return unless can_manage_protocol_in_module?(step.protocol) ||
                                   can_manage_protocol_in_repository?(step.protocol)
       step_asset = StepAsset.create!(step: step, asset: asset)
+      asset.update!(view_mode: step.assets_view_mode)
       step.protocol&.update(updated_at: Time.zone.now)
 
       edit_url = edit_asset_url(step_asset.asset_id)

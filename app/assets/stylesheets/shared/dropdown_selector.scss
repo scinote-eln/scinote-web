@@ -31,10 +31,14 @@
     align-items: center;
     background: $color-white;
 <<<<<<< HEAD
+<<<<<<< HEAD
     border: 1px solid $color-silver-chalice;
 =======
     border: 1px solid $color-alto;
 >>>>>>> Pulled latest release
+=======
+    border: 1px solid $color-silver-chalice;
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     border-radius: 4px;
     display: flex;
     flex-wrap: wrap;
@@ -102,9 +106,13 @@
       line-height: 13px;
       margin: 2px 3px;
 <<<<<<< HEAD
+<<<<<<< HEAD
       max-height: 24px;
 =======
 >>>>>>> Pulled latest release
+=======
+      max-height: 24px;
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
       max-width: calc(100% - 11px);
       overflow: hidden;
       padding: 5px 8px;
@@ -128,7 +136,11 @@
         margin-top: 1px;
         max-width: 240px;
         overflow: hidden;
+<<<<<<< HEAD
 >>>>>>> Pulled latest release
+=======
+        text-align: left;
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
         text-overflow: ellipsis;
         white-space: nowrap;
         width: auto;
@@ -307,10 +319,14 @@
 
         &:hover {
 <<<<<<< HEAD
+<<<<<<< HEAD
           background: $brand-focus-light;
 =======
           background: $brand-primary-light;
 >>>>>>> Pulled latest release
+=======
+          background: $brand-focus-light;
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
         }
       }
 
@@ -328,10 +344,14 @@
 
           &:hover {
 <<<<<<< HEAD
+<<<<<<< HEAD
             background: $brand-focus-light;
 =======
             background: $brand-primary-light;
 >>>>>>> Pulled latest release
+=======
+            background: $brand-focus-light;
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
           }
 
           &::before {
@@ -368,9 +388,13 @@
         .tag-label {
           overflow: hidden;
 <<<<<<< HEAD
+<<<<<<< HEAD
           text-align: left;
 =======
 >>>>>>> Pulled latest release
+=======
+          text-align: left;
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
           text-overflow: ellipsis;
           white-space: nowrap;
 

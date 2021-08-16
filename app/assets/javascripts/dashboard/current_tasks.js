@@ -11,10 +11,14 @@ var DasboardCurrentTasksWidget = (function() {
     $.each(json.data, (i, task) => {
       var currentTaskItem = task;
 <<<<<<< HEAD
+<<<<<<< HEAD
       $(container).find('.current-tasks-list').append(currentTaskItem);
 =======
       $(container).append(currentTaskItem);
 >>>>>>> Pulled latest release
+=======
+      $(container).find('.current-tasks-list').append(currentTaskItem);
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     });
   }
 
@@ -53,10 +57,14 @@ var DasboardCurrentTasksWidget = (function() {
 
   function initInfiniteScroll() {
 <<<<<<< HEAD
+<<<<<<< HEAD
     InfiniteScroll.init('.current-tasks-list-wrapper', {
 =======
     InfiniteScroll.init('.current-tasks-list', {
 >>>>>>> Pulled latest release
+=======
+    InfiniteScroll.init('.current-tasks-list-wrapper', {
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
       url: $('.current-tasks-list').data('tasksListUrl'),
       customResponse: (json, container) => {
         appendTasksList(json, container);
@@ -143,6 +151,7 @@ var DasboardCurrentTasksWidget = (function() {
         }
       }
 <<<<<<< HEAD
+<<<<<<< HEAD
       appendTasksList(result, '.current-tasks-list-wrapper');
       PerfectSb().update_all();
       if (newList) InfiniteScroll.resetScroll('.current-tasks-list-wrapper');
@@ -151,6 +160,11 @@ var DasboardCurrentTasksWidget = (function() {
       PerfectSb().update_all();
       if (newList) InfiniteScroll.resetScroll('.current-tasks-list');
 >>>>>>> Pulled latest release
+=======
+      appendTasksList(result, '.current-tasks-list-wrapper');
+      PerfectSb().update_all();
+      if (newList) InfiniteScroll.resetScroll('.current-tasks-list-wrapper');
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
       animateSpinner($currentTasksList, false);
     }).error(function(error) {
       // If error is 403, it is possible that the user was removed from project/experiment,

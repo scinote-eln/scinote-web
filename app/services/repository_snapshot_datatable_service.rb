@@ -58,10 +58,20 @@ class RepositorySnapshotDatatableService < RepositoryDatatableService
       results = repository_rows.where(id: repository_row_matches)
       results = results.or(repository_rows.where(id: matched_by_user))
 
+<<<<<<< HEAD
       Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each do |field, include_hash|
         custom_cell_matches = repository_rows.joins(repository_cells: include_hash)
                                              .where_attributes_like(field, search_value)
 >>>>>>> Pulled latest release
+=======
+      data_types = @repository.repository_columns.pluck(:data_type).uniq
+
+      Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each do |data_type, config|
+        next unless data_types.include?(data_type.to_s)
+
+        custom_cell_matches = repository_rows.joins(repository_cells: config[:includes])
+                                             .where_attributes_like(config[:field], search_value)
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
         results = results.or(repository_rows.where(id: custom_cell_matches))
       end
 

@@ -2,7 +2,7 @@
 
 source 'http://rubygems.org'
 
-ruby '2.6.4'
+ruby '2.7.2'
 
 gem 'bootsnap', require: false
 gem 'bootstrap-sass', '~> 3.4.1'
@@ -12,11 +12,11 @@ gem 'devise_invitable'
 gem 'figaro'
 gem 'pg', '~> 1.1'
 gem 'pg_search' # PostgreSQL full text search
-gem 'rails', '~> 6.0.0'
+gem 'rails', '~> 6.1.1'
+gem 'view_component', require: 'view_component/engine'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 5.2'
 gem 'sassc-rails'
-gem 'simple_token_authentication', '~> 1.16.0' # Token authentication for Devise
 gem 'webpacker', '~> 4.0.0'
 gem 'yomu', git: 'https://github.com/biosistemika/yomu', branch: 'master'
 
@@ -61,20 +61,19 @@ gem 'ajax-datatables-rails', '~> 0.3.1'
 gem 'aspector' # Aspect-oriented programming for Rails
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces AR
 gem 'bcrypt', '~> 3.1.10'
-gem 'caracal-rails' # Build docx report
+gem 'caracal' # Build docx report
 gem 'deface', '~> 1.0'
 gem 'down', '~> 5.0'
 gem 'faker' # Generate fake data
 gem 'fastimage' # Light gem to get image resolution
-gem 'httparty', '~> 0.13.1'
+gem 'httparty', '~> 0.17.3'
 gem 'i18n-js', '~> 3.6' # Localization in javascript files
 gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'logging', '~> 2.0.0'
 gem 'nested_form_fields'
-gem 'nokogiri', '~> 1.10.8' # HTML/XML parser
+gem 'nokogiri', '~> 1.11.4' # HTML/XML parser
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'rgl' # Graph framework for project diagram calculations
-gem 'spreadsheet', '~> 1.1.4' # @@@20190719JS Spreadsheet required before roo?
 gem 'roo', '~> 2.8.2' # Spreadsheet parser
 gem 'rotp'
 gem 'rqrcode' # QR code generator
@@ -85,7 +84,7 @@ gem 'silencer' # Silence certain Rails logs
 gem 'sneaky-save', git: 'https://github.com/einzige/sneaky-save'
 gem 'turbolinks', '~> 5.1.1'
 gem 'underscore-rails'
-gem 'wicked_pdf', '~> 1.4.0'
+gem 'wicked_pdf'
 gem 'wkhtmltopdf-heroku', '2.12.5'
 
 gem 'aws-sdk-rails'
@@ -99,7 +98,7 @@ gem 'rufus-scheduler', '~> 3.5'
 
 gem 'discard', '~> 1.0'
 
-gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails
+gem 'graphviz'
 gem 'tinymce-rails', '~> 4.9.10' # Rich text editor - SEE BELOW
 # Any time you update tinymce-rails Gem, also update the cache_suffix parameter
 # in sitewide/tiny_mce.js - to prevent browsers from loading old, cached .js

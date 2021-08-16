@@ -1,18 +1,9 @@
-<div class="row">
-  <% projects.each_with_index  do |project, i| %>
-    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-      <% cache [current_user, project] do %>
-        <%= render partial: "projects/index/project.html.erb", locals: { project: project } %>
-      <% end %>
-    </div>
-    <% if (i + 1) % 4 == 0 %>
-      <div class="clearfix visible-lg-block"></div>
-    <% end %>
-    <% if (i + 1) % 3 == 0 %>
-      <div class="clearfix visible-md-block"></div>
-    <% end %>
-    <% if (i + 1) % 2 == 0 %>
-      <div class="clearfix visible-sm-block"></div>
+<% cards.each  do |card| %>
+  <% cache [current_user, card] do %>
+    <% if card.is_a? Project %>
+      <%= render partial: 'projects/index/project_card', locals: { project: card } %>
+    <% else %>
+      <%= render partial: 'projects/index/folder_card', locals: { folder: card } %>
     <% end %>
   <% end %>
-</div>
+<% end %>

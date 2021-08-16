@@ -123,6 +123,7 @@
             margin-top: 1px;
             max-width: 500px;
             overflow: hidden;
+            text-align: left;
             text-overflow: ellipsis;
             white-space: nowrap;
             width: auto;
@@ -209,7 +210,7 @@
       padding: 5px 0 5px 40px;
 
       &:hover {
-        background-color: $brand-primary-light;
+        background-color: $brand-focus-light;
         border-radius: 5px;
       }
 

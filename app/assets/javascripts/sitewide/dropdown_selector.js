@@ -172,12 +172,18 @@ var dropdownSelector = (function() {
     var searchFieldValue = container.find('.search-field');
     if (mode) {
 <<<<<<< HEAD
+<<<<<<< HEAD
       if ($(selector).data('ajax-url')) {
         updateCurrentData(container, []);
       }
 =======
       updateCurrentData(container, []);
 >>>>>>> Pulled latest release
+=======
+      if ($(selector).data('ajax-url')) {
+        updateCurrentData(container, []);
+      }
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
       updateTags(selector, container, { skipChange: true });
       searchFieldValue.attr('placeholder', selector.data('disable-placeholder') || '');
       container.addClass('disabled').removeClass('open')
@@ -1041,9 +1047,13 @@ var dropdownSelector = (function() {
       valuesArray.forEach(function(value) {
         option = $selector.find(`option[value="${value}"]`)[0];
 <<<<<<< HEAD
+<<<<<<< HEAD
         option.selected = 'selected';
 =======
 >>>>>>> Pulled latest release
+=======
+        option.selected = 'selected';
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
         options.push(convertOptionToJson(option));
       });
       setData($selector, options);

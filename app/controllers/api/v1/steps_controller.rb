@@ -41,16 +41,22 @@ module Api
         step = @protocol.steps.create!(step_params.merge!(completed: false,
                                                           user: current_user,
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                           position: @protocol.number_of_steps,
                                                           last_modified_by_id: current_user.id))
 =======
                                                           position: @protocol.number_of_steps))
 >>>>>>> Pulled latest release
+=======
+                                                          position: @protocol.number_of_steps,
+                                                          last_modified_by_id: current_user.id))
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
         render jsonapi: step, serializer: StepSerializer, status: :created
       end
 
       def update
+<<<<<<< HEAD
 <<<<<<< HEAD
         @step.assign_attributes(
           step_params.merge!(last_modified_by_id: current_user.id)
@@ -58,6 +64,11 @@ module Api
 =======
         @step.assign_attributes(step_params)
 >>>>>>> Pulled latest release
+=======
+        @step.assign_attributes(
+          step_params.merge!(last_modified_by_id: current_user.id)
+        )
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
         if @step.changed? && @step.save!
           if @step.saved_change_to_attribute?(:completed)

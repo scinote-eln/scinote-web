@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 require 'active_storage/service/s3_service'
 
 module ActiveStorage
@@ -34,16 +35,17 @@ module ActiveStorage
 
 require 'aws-sdk-s3'
 require 'active_support/core_ext/numeric/bytes'
+=======
+require 'active_storage/service/s3_service'
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
 module ActiveStorage
-  # Wraps the Amazon Simple Storage Service (S3) as an Active Storage service.
-  # See ActiveStorage::Service for the generic API documentation that applies to all services.
-  class Service::CustomS3Service < Service
-    attr_reader :client, :bucket, :upload_options
+  class Service::CustomS3Service < Service::S3Service
     attr_reader :subfolder
 
-    def initialize(bucket:, upload: {}, **options)
+    def initialize(bucket:, upload: {}, public: false, **options)
       @subfolder = options.delete(:subfolder)
+<<<<<<< HEAD
 
       @client = Aws::S3::Resource.new(**options)
       @bucket = @client.bucket(bucket)
@@ -89,6 +91,9 @@ module ActiveStorage
         object_for(key).delete
       end
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+      super
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     end
 
     def delete_prefixed(prefix)
@@ -98,6 +103,7 @@ module ActiveStorage
       end
     end
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
     def exist?(key)
@@ -137,6 +143,8 @@ module ActiveStorage
     end
 
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     def path_for(key)
       subfolder.present? ? File.join(subfolder, key) : key
     end
@@ -147,6 +155,7 @@ module ActiveStorage
       key = subfolder.present? ? File.join(subfolder, key) : key
       bucket.object(key)
     end
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 
@@ -165,5 +174,7 @@ module ActiveStorage
       end
     end
 >>>>>>> Initial commit of 1.17.2 merge
+=======
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   end
 end

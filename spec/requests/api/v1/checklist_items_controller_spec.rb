@@ -80,6 +80,7 @@ RSpec.describe 'Api::V1::ChecklistsController', type: :request do
       end
     end
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
     context 'when experiment is archived and permission checks fails' do
@@ -101,6 +102,8 @@ RSpec.describe 'Api::V1::ChecklistsController', type: :request do
       end
     end
 >>>>>>> Pulled latest release
+=======
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   end
 
   describe 'POST checklist_item, #create' do

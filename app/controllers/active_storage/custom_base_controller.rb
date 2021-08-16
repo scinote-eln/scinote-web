@@ -15,6 +15,7 @@ module ActiveStorage
 
     def stream(_blob)
       raise NotImplementedError
+<<<<<<< HEAD
 =======
     include ActiveStorage::SetCurrent
 
@@ -29,5 +30,8 @@ module ActiveStorage
     prepend_before_action :authenticate_request!, if: -> { request.headers['Authorization'].present? }
     skip_before_action :authenticate_user!, if: -> { current_user.present? }
 >>>>>>> Pulled latest release
+=======
+    end
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   end
 end

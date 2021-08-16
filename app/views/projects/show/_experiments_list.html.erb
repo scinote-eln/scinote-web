@@ -5,11 +5,17 @@
     <div class="no-results-description"><%= t('projects.index.no_results_description') %></div>
   </div>
 <% else %>
+<<<<<<< HEAD
   <% project_is_managable = can_manage_project?(@project) %>
   <% cards.each  do |card| %>
     <% cache [current_user, @project, card] do %>
       <%= render partial: 'projects/show/experiment_card',
                  locals: { experiment: card, project: @project, project_is_managable: project_is_managable } %>
+=======
+  <% cards.each  do |card| %>
+    <% cache [current_user, card] do %>
+      <%= render partial: 'projects/show/experiment_card', locals: { experiment: card } %>
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     <% end %>
   <% end %>
 <% end %>

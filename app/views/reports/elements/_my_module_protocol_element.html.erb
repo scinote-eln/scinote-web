@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <% protocol ||= report_element.my_module.protocol %>
 <% export_all = defined?(export_all) && export_all %>
 <div class="report-element report-module-protocol-element">
@@ -18,12 +19,22 @@
       <div class="pull-right controls">
         <%= render partial: "reports/elements/element_controls.html.erb", locals: { show_sort: true } %>
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+<% protocol ||= report_element.my_module.protocol %>
+<% export_all = defined?(export_all) && export_all %>
+<div class="report-element report-module-protocol-element">
+  <div class="report-element-header">
+    <div class="row">
+      <div class="pull-left user-time">
+        <%= t('projects.reports.elements.module.protocol.user_time', timestamp: l(protocol.created_at, format: :full)) %>
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
       </div>
     </div>
   </div>
   <div class="report-element-body">
     <div class="row module-protocol-description">
       <% if protocol.description.present? %>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
         <%= custom_auto_link(protocol.prepare_for_report(:description, export_all),
@@ -39,6 +50,12 @@
                              simple_format: false,
                              base64_encoded_imgs: for_export_all) %>
 >>>>>>> Pulled latest release
+=======
+        <%= custom_auto_link(protocol.prepare_for_report(:description, export_all),
+                             team: current_team,
+                             simple_format: false,
+                             base64_encoded_imgs: export_all) %>
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
       <% else %>
         <em><%= t('my_modules.protocols.protocol_status_bar.no_description') %></em>
       <% end %>

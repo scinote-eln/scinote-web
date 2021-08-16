@@ -7,21 +7,17 @@ class ExperimentsController < ApplicationController
   include ApplicationHelper
   include Rails.application.routes.url_helpers
 
-  before_action :set_experiment,
-                except: %i(new create)
-  before_action :set_project,
-                only: %i(new create module_archive
-                         clone_modal move_modal)
-  before_action :load_projects_tree, only: %i(canvas module_archive)
-  before_action :check_view_permissions,
-                only: %i(canvas module_archive)
-  before_action :check_manage_permissions, only: :edit
+  before_action :load_project, only: %i(new create archive_group restore_group)
+  before_action :load_experiment, except: %i(new create archive_group restore_group)
+  before_action :check_view_permissions, except: %i(edit archive clone move new create archive_group restore_group)
+  before_action :check_create_permissions, only: %i(new create)
+  before_action :check_manage_permissions, only: %i(edit)
   before_action :check_archive_permissions, only: :archive
   before_action :check_clone_permissions, only: %i(clone_modal clone)
   before_action :check_move_permissions, only: %i(move_modal move)
   before_action :set_inline_name_editing, only: %i(canvas module_archive)
 
-  layout 'fluid'.freeze
+  layout 'fluid'
 
   def new
     @experiment = Experiment.new
@@ -43,7 +39,7 @@ class ExperimentsController < ApplicationController
     @experiment.project = @project
     if @experiment.save
       experiment_annotation_notification
-      log_activity(:create_experiment)
+      log_activity(:create_experiment, @experiment)
       flash[:success] = t('experiments.create.success_flash',
                           experiment: @experiment.name)
       respond_to do |format|
@@ -60,10 +56,16 @@ class ExperimentsController < ApplicationController
     end
   end
 
+  def show
+    render json: {
+      html: render_to_string(partial: 'experiments/details_modal.html.erb')
+    }
+  end
+
   def canvas
+    redirect_to module_archive_experiment_path(@experiment) if @experiment.archived_branch?
     @project = @experiment.project
-    @active_modules = @experiment.active_modules
-                                 .includes(:tags, :inputs, :outputs)
+    @active_modules = @experiment.my_modules.active.order(:name).includes(:tags, :inputs, :outputs)
     current_team_switch(@project.team)
   end
 
@@ -102,15 +104,14 @@ class ExperimentsController < ApplicationController
                       else
                         :edit_experiment
                       end
-      log_activity(activity_type)
+      log_activity(activity_type, @experiment)
 
       respond_to do |format|
         format.json do
           render json: {}, status: :ok
         end
         format.html do
-          flash[:success] = t('experiments.update.success_flash',
-                          experiment: @experiment.name)
+          flash[:success] = t('experiments.update.success_flash', experiment: @experiment.name)
           redirect_to project_path(@experiment.project)
         end
       end
@@ -128,11 +129,9 @@ class ExperimentsController < ApplicationController
   end
 
   def archive
-    @experiment.archived = true
-    @experiment.archived_by = current_user
-    @experiment.archived_on = DateTime.now
+    @experiment.archive(current_user)
     if @experiment.save
-      log_activity(:archive_experiment)
+      log_activity(:archive_experiment, @experiment)
       flash[:success] = t('experiments.archive.success_flash',
                           experiment: @experiment.name)
 
@@ -140,6 +139,51 @@ class ExperimentsController < ApplicationController
     else
       flash[:alert] = t('experiments.archive.error_flash')
       redirect_back(fallback_location: root_path)
+    end
+  end
+
+  def archive_group
+    experiments = @project.experiments.active.where(id: params[:experiments_ids])
+    counter = 0
+    experiments.each do |experiment|
+      next unless can_archive_experiment?(experiment)
+
+      experiment.transaction do
+        experiment.archived_on = DateTime.now
+        experiment.archive!(current_user)
+        log_activity(:archive_experiment, experiment)
+        counter += 1
+      rescue StandardError => e
+        Rails.logger.error e.message
+        raise ActiveRecord::Rollback
+      end
+    end
+    if counter.positive?
+      render json: { message: t('experiments.archive_group.success_flash', number: counter) }
+    else
+      render json: { message: t('experiments.archive_group.error_flash') }, status: :unprocessable_entity
+    end
+  end
+
+  def restore_group
+    experiments = @project.experiments.archived.where(id: params[:experiments_ids])
+    counter = 0
+    experiments.each do |experiment|
+      next unless can_restore_experiment?(experiment)
+
+      experiment.transaction do
+        experiment.restore!(current_user)
+        log_activity(:restore_experiment, experiment)
+        counter += 1
+      rescue StandardError => e
+        Rails.logger.error e.message
+        raise ActiveRecord::Rollback
+      end
+    end
+    if counter.positive?
+      render json: { message: t('experiments.restore_group.success_flash', number: counter) }
+    else
+      render json: { message: t('experiments.restore_group.error_flash') }, status: :unprocessable_entity
     end
   end
 
@@ -211,6 +255,7 @@ class ExperimentsController < ApplicationController
   end
 
   def module_archive
+    @my_modules = @experiment.archived_branch? ? @experiment.my_modules : @experiment.my_modules.archived
   end
 
   def fetch_workflow_img
@@ -232,15 +277,27 @@ class ExperimentsController < ApplicationController
     end
   end
 
+  def sidebar
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'shared/sidebar/my_modules.html.erb', locals: { experiment: @experiment }
+          )
+        }
+      end
+    end
+  end
+
   private
 
-  def set_experiment
-    @experiment = Experiment.find_by_id(params[:id])
+  def load_experiment
+    @experiment = Experiment.find_by(id: params[:id])
     render_404 unless @experiment
   end
 
-  def set_project
-    @project = Project.find_by_id(params[:project_id]) || @experiment.project
+  def load_project
+    @project = Project.find_by(id: params[:project_id])
     render_404 unless @project
   end
 
@@ -252,14 +309,12 @@ class ExperimentsController < ApplicationController
     params.require(:experiment).require(:project_id)
   end
 
-  def load_projects_tree
-    # Switch to correct team
-    current_team_switch(@experiment.project.team) unless @experiment.project.nil?
-    @projects_tree = current_user.projects_tree(current_team, 'atoz')
-  end
-
   def check_view_permissions
     render_403 unless can_read_experiment?(@experiment)
+  end
+
+  def check_create_permissions
+    render_403 unless can_create_experiments?(@project)
   end
 
   def check_manage_permissions
@@ -280,6 +335,7 @@ class ExperimentsController < ApplicationController
 
   def set_inline_name_editing
     return unless can_manage_experiment?(@experiment)
+
     @inline_editable_title_config = {
       name: 'title',
       params_group: 'experiment',
@@ -304,13 +360,13 @@ class ExperimentsController < ApplicationController
     )
   end
 
-  def log_activity(type_of)
+  def log_activity(type_of, experiment)
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
-            team: @experiment.project.team,
-            project: @experiment.project,
-            subject: @experiment,
-            message_items: { experiment: @experiment.id })
+            team: experiment.project.team,
+            project: experiment.project,
+            subject: experiment,
+            message_items: { experiment: experiment.id })
   end
 end

@@ -4,6 +4,7 @@
 <<<<<<< HEAD
 module Reports::Docx::DrawMyModuleActivity
 <<<<<<< HEAD
+<<<<<<< HEAD
   def draw_my_module_activity(my_module)
     activities = ActivitiesService.my_module_activities(my_module).order(created_at: :desc)
     return false if activities.blank?
@@ -23,6 +24,11 @@ module Reports::Docx::DrawMyModuleActivity
 
     return false unless activities.any?
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+  def draw_my_module_activity(my_module)
+    activities = ActivitiesService.my_module_activities(my_module).order(created_at: :desc)
+    return false if activities.blank?
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
     color = @color
     @docx.p
@@ -34,12 +40,16 @@ module Reports::Docx::DrawMyModuleActivity
                         sanitize_input(activity.message)
                       else
 <<<<<<< HEAD
+<<<<<<< HEAD
                         sanitize_input(generate_activity_content(activity, no_links: true))
                       end
       @docx.p I18n.l(activity_ts, format: :full), color: color[:gray]
       Reports::HtmlToWordConverter.new(@docx).html_to_word_converter(activity_text)
 =======
                         sanitize_input(generate_activity_content(activity, true))
+=======
+                        sanitize_input(generate_activity_content(activity, no_links: true))
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
                       end
       @docx.p I18n.l(activity_ts, format: :full), color: color[:gray]
 <<<<<<< HEAD

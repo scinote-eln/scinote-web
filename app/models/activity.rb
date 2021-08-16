@@ -2,6 +2,7 @@
 
 class Activity < ApplicationRecord
   include ActivityValuesModel
+  include GenerateNotificationModel
 
   enum type_of: Extends::ACTIVITY_TYPES
 
@@ -141,6 +142,9 @@ class Activity < ApplicationRecord
     when Report
       breadcrumbs[:report] = subject.name
       generate_breadcrumb(subject.team) if subject.team
+    when ProjectFolder
+      breadcrumbs[:project_folder] = subject.name
+      generate_breadcrumb(subject.team)
     end
   end
 

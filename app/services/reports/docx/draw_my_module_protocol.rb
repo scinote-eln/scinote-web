@@ -4,6 +4,7 @@
 <<<<<<< HEAD
 module Reports::Docx::DrawMyModuleProtocol
 <<<<<<< HEAD
+<<<<<<< HEAD
   def draw_my_module_protocol(my_module)
     protocol = my_module.protocol
     return false if protocol.description.blank?
@@ -23,6 +24,9 @@ module Reports::Docx::DrawMyModuleProtocol
   def draw_my_module_protocol(_subject, my_module)
     return unless my_module
 
+=======
+  def draw_my_module_protocol(my_module)
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     protocol = my_module.protocol
     return false if protocol.description.blank?
 >>>>>>> Pulled latest release

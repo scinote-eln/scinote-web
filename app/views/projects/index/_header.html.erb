@@ -3,6 +3,7 @@
     <%= render partial: 'projects/index/breadcrumbs', locals: { target_folder: current_folder, folder_page: true } if current_folder %>
   </div>
   <div class="title-row">
+<<<<<<< HEAD
       <% if current_folder&.name && @inline_editable_title_config.present? %>
         <h1 data-view-mode="active" class="projects-title">
           <%= render partial: "shared/inline_editing",
@@ -16,6 +17,9 @@
           <%= current_folder&.name || t('projects.index.head_title') %>
         </h1>
       <% end %>
+=======
+    <h1 data-view-mode="active" class="projects-title name-readonly-placeholder"><%= current_folder&.name || t('projects.index.head_title') %></h1>
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     <h1 data-view-mode="archived">
       <i class="fas fa-archive"></i>&nbsp;
       <span class="projects-title name-readonly-placeholder"><%= current_folder&.name || t('projects.index.head_title_archived') %></span>

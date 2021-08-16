@@ -59,12 +59,16 @@ class RepositoryNumberValue < ApplicationRecord
     self.data = BigDecimal(new_data.to_s)
 =======
   def data_changed?(new_data)
-    BigDecimal(new_data) != data
+    BigDecimal(new_data.to_s) != data
   end
 
   def update_data!(new_data, user)
+<<<<<<< HEAD
     self.data = BigDecimal(new_data)
 >>>>>>> Pulled latest release
+=======
+    self.data = BigDecimal(new_data.to_s)
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     self.last_modified_by = user
     save!
   end
@@ -82,19 +86,27 @@ class RepositoryNumberValue < ApplicationRecord
   def self.new_with_payload(payload, attributes)
     value = new(attributes)
 <<<<<<< HEAD
+<<<<<<< HEAD
     value.data = BigDecimal(payload.to_s)
 =======
     value.data = BigDecimal(payload)
 >>>>>>> Pulled latest release
+=======
+    value.data = BigDecimal(payload.to_s)
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     value
   end
 
   def self.import_from_text(text, attributes, _options = {})
 <<<<<<< HEAD
+<<<<<<< HEAD
     new(attributes.merge(data: BigDecimal(text.to_s)))
 =======
     new(attributes.merge(data: BigDecimal(text)))
 >>>>>>> Pulled latest release
+=======
+    new(attributes.merge(data: BigDecimal(text.to_s)))
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   rescue ArgumentError
     nil
   end

@@ -35,10 +35,14 @@ module Dashboard
       end
 
 <<<<<<< HEAD
+<<<<<<< HEAD
       tasks = tasks.where(my_module_status_id: task_filters[:statuses]) if task_filters[:statuses].present?
 =======
       tasks = tasks.where(my_module_status_id: task_filters[:statuses])
 >>>>>>> Pulled latest release
+=======
+      tasks = tasks.where(my_module_status_id: task_filters[:statuses]) if task_filters[:statuses].present?
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
       case task_filters[:sort]
       when 'start_date'

@@ -4,6 +4,7 @@
 <<<<<<< HEAD
 module Reports::Docx::DrawResultAsset
 <<<<<<< HEAD
+<<<<<<< HEAD
   def draw_result_asset(result)
     asset = result.asset
     timestamp = asset.created_at
@@ -21,6 +22,9 @@ module Reports::Docx::DrawResultAsset
 >>>>>>> Pulled latest release
     return unless result
 
+=======
+  def draw_result_asset(result)
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     asset = result.asset
     timestamp = asset.created_at
 <<<<<<< HEAD
@@ -68,9 +72,13 @@ module Reports::Docx::DrawResultAsset
 
     Reports::DocxRenderer.render_asset_image(@docx, asset) if asset.previewable? && !asset.list?
 
+<<<<<<< HEAD
     subject['children'].each do |child|
       public_send("draw_#{child['type_of']}", child, result)
     end
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+    draw_result_comments(result) if @settings.dig('task', 'result_comments')
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   end
 end

@@ -51,11 +51,16 @@ module Reports
       temp_p = []
       raw_elements.each do |elem|
 <<<<<<< HEAD
+<<<<<<< HEAD
         next unless elem
 
         if %w(image newline table ol ul).include? elem[:type]
           unless temp_p.blank?
 =======
+=======
+        next unless elem
+
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
         if %w(image newline table ol ul).include? elem[:type]
           unless temp_p.empty?
 >>>>>>> Pulled latest release
@@ -168,10 +173,14 @@ module Reports
 
     def list_element(list_element)
 <<<<<<< HEAD
+<<<<<<< HEAD
       allowed_elements = %w(li ul ol a img strong em h1 h2 h2 h3 h4 h5 span p)
 =======
       allowed_elements = %w(li ul ol a img strong em h1 h2 h2 h3 h4 h5 span)
 >>>>>>> Pulled latest release
+=======
+      allowed_elements = %w(li ul ol a img strong em h1 h2 h2 h3 h4 h5 span p)
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
       data_array = list_element.children.select { |n| allowed_elements.include?(n.name) }.map do |li_child|
         li_child.children.map do |item|
           if item.is_a? Nokogiri::XML::Text
@@ -185,10 +194,14 @@ module Reports
           elsif %w(table).include?(item.name)
             tiny_mce_table_element(item).merge(bookmark_id: SecureRandom.hex)
 <<<<<<< HEAD
+<<<<<<< HEAD
           elsif %w(strong em h1 h2 h2 h3 h4 h5 span p).include?(item.name)
 =======
           elsif %w(strong em h1 h2 h2 h3 h4 h5 span).include?(item.name)
 >>>>>>> Pulled latest release
+=======
+          elsif %w(strong em h1 h2 h2 h3 h4 h5 span p).include?(item.name)
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
             # Pass styles and extend renderer for li with style, some limitations on li items
             # { type: 'text', value: item[:value], style: paragraph_styling(item) }
             item.children.text

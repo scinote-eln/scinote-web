@@ -30,6 +30,7 @@ Background:
      | Karli Novak | nonadmin@myorg.com | mypassword1234 | mypassword1234 |
   And "nonadmin@myorg.com" is in "BioSistemika Process" team as a "admin"
 <<<<<<< HEAD
+<<<<<<< HEAD
   Given Templates project exists for the "BioSistemika Process" team
   And "nonadmin@myorg.com" is signed in with "mypassword1234"
 
@@ -535,6 +536,9 @@ Scenario: Delete archived File result
  Then I should see "Sucessfully removed result MED from task Experiment design." flash message
 =======
   Given Demo project exists for the "BioSistemika Process" team
+=======
+  Given Templates project exists for the "BioSistemika Process" team
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   And "nonadmin@myorg.com" is signed in with "mypassword1234"
 
 @javascript

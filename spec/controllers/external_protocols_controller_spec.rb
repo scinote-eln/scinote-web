@@ -80,10 +80,14 @@ describe ExternalProtocolsController, type: :controller do
     let(:action) { get :show, params: params }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     let(:html_preview) { double('html_preview', body: '<html></html>') }
 =======
     let(:html_preview) { double('html_preview') }
 >>>>>>> Finished merging. Test on dev machine (iMac).
+=======
+    let(:html_preview) { double('html_preview', body: '<html></html>') }
+>>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
     before do
       allow(html_preview).to(receive(:as_json).and_return('<html></html>'))
