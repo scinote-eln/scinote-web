@@ -67,6 +67,7 @@
 
   .webhooks-list {
     list-style: none;
+    padding-top: .5em;
   }
 
   .webhook-form {
@@ -91,6 +92,9 @@
   }
 
   .webhook {
+    border-top: $border-tertiary;
+    padding: .5em 0;
+
     .view-mode {
       align-items: center;
       display: flex;
@@ -127,6 +131,22 @@
 
         .fas {
           margin-right: .25em;
+        }
+
+        .divider-label {
+          @include font-small;
+          color: $color-silver-chalice;
+          padding-left: 1em;
+        }
+
+        a {
+          border-radius: unset;
+          cursor: pointer;
+          padding: .5em 1em;
+
+          &:hover {
+            background: $color-concrete;
+          }
         }
       }
     }

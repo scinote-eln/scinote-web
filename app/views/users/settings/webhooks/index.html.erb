@@ -62,7 +62,7 @@
           <% filter.webhooks.order(created_at: :desc).each do |webhook| %>
             <li class="webhook <%= 'active' if webhook.active? %>">
               <div class="view-mode">
-                <span class="webhook-text">
+                <span class="webhook-text" title="<%= webhook.url %>" >
                   <%= t('webhooks.index.webhook_text_html', method: webhook.http_method.upcase, url: webhook.url) %>
                 </span>
                 <% if webhook.active? %>
@@ -81,6 +81,7 @@
                     <span><i class="fas fa-ellipsis-h"></i></span>
                   </button>
                   <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="webhookMenuButton<%= webhook.id %>">
+                    <li class="divider-label"><%= t("webhooks.index.webhook_options") %></li>
                     <li>
                       <a href="#" class="edit-webhook">
                         <i class="fas fa-pen"></i>

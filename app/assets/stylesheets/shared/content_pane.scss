@@ -115,7 +115,7 @@
 
         .dropdown-menu {
           @include font-button;
-          min-width: 150px;
+          min-width: 200px;
           padding: .5em 0;
 
           a {
@@ -135,6 +135,10 @@
               position: absolute;
               right: 1em;
             }
+          }
+
+          .fa-stack {
+            width: 2em;
           }
         }
       }

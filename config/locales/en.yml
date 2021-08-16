@@ -1838,7 +1838,8 @@ en:
           head_title: "Settings | Add-ons"
           title: "Add-ons"
           no_addons: "You have no SciNote Add-ons."
-          label_printers: Label Printers
+          scinote_addons: "Scinote add-ons"
+          label_printers: "Label Printers"
           printers:
             ready: "Ready"
             not_ready: "Not ready"
@@ -1846,17 +1847,17 @@ en:
             enter_api_key: "Enter API key"
             enabled: "Enabled"
           fluics_printer:
-            title: "FLUICS Printer"
-            description: "Sustainable sample inventory management for innovative research labs."
+            title: "FLUICS Print"
+            description: "Truly a plug & play label printing solution."
         label_printer:
-          fluics_printer: "Label printer: FLUICS Printer"
+          fluics_printer: "FLUICS Print: Label printers"
           instructions: "Instructions"
           fluics_instruction:
             p1: "To make it work, please follow these steps:"
-            p2: "1. Open the FLUICS Connect web app or install an iOS / Android mobile app."
-            p3: "2. Sign up for a free account. Follow the instructions to set up your workspace."
-            p4: "3. Upgrade to a Pro Workspace to get your API key. Read more on how to get an API key."
-            p5: "4. Enter the API key into the field below and start printing your own labels."
+            p2_html: "1. <a href='%{link}' target='_blank'>Order</a> your FLUICS Print package. It includes an online printer, labels and the API key."
+            p3: "2. Plug the online printer to a power outlet and connect it to the internet with a LAN cable."
+            p4: "3. Enter the API key into the field below."
+            p5: "4. SciNote will find your printer and connect to it automatically. You can start printing labels."
           settings: "Settings"
           api_key_label: "API key"
           api_key_warning: "API key change will lead to printer list refresh"
@@ -2478,6 +2479,7 @@ en:
       description: 'Saved activity filters are listed below as collapsible sections. You can add more saved filters on the Activities page. Each saved filter can hold several webhooks.'
       new_webhook: "New webhook"
       applied_filters: "Applied activity filters"
+      webhook_options: "WEBHOOK OPTIONS"
       delete_filter_modal:
         title: "Delete filter"
         description_html: "Are you sure you want to delete <b></b>?"
@@ -2528,12 +2530,12 @@ en:
     comment_placeholder_new: "Add new comment…"
     archived: "Archived"
     sort:
-      new_html: "Started last"
-      old_html: "Started first"
-      atoz_html: "Name A to Z"
-      ztoa_html: "Name Z to A"
-      archived_new_html: "Archived last"
-      archived_old_html: "Archived first"
+      new_html: "<i class=\"fas fa-sort-numeric-up\"></i>&nbsp;&nbsp;Started last"
+      old_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Started first"
+      atoz_html: "<i class=\"fas fa-sort-alpha-down\"></i>&nbsp;&nbsp;Name A to Z"
+      ztoa_html: "<i class=\"fas fa-sort-alpha-up\"></i>&nbsp;&nbsp;Name Z to A"
+      archived_new_html: "<span class=\"fa-stack\"><i class=\"fas fa-long-arrow-alt-up\"></i><i class=\"fas fa-archive\"></i></span>Archived last"
+      archived_old_html: "<span class=\"fa-stack\"><i class=\"fas fa-long-arrow-alt-down\"></i><i class=\"fas fa-archive\"></i></span>Archived first"
     sort_new:
       new: "Newest"
       old: "Oldest"
