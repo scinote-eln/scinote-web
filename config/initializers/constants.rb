@@ -229,7 +229,7 @@ class Constants
     },
   }
 
-  SCINOTE_FLUICS_URL = 'https://www.scinote.net/fluics/'
+  SCINOTE_FLUICS_URL = 'https://www.scinote.net/fluics/'.freeze
   TWO_FACTOR_RECOVERY_CODE_COUNT = 6
   TWO_FACTOR_RECOVERY_CODE_LENGTH = 12
 

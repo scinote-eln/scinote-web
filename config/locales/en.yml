@@ -2479,7 +2479,7 @@ en:
       description: 'Saved activity filters are listed below as collapsible sections. You can add more saved filters on the Activities page. Each saved filter can hold several webhooks.'
       new_webhook: "New webhook"
       applied_filters: "Applied activity filters"
-      webhook_options: "WEBHOOK OPTIONS"
+      webhook_options: "Webhook options"
       delete_filter_modal:
         title: "Delete filter"
         description_html: "Are you sure you want to delete <b></b>?"
