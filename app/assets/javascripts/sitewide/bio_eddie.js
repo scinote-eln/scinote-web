@@ -9,8 +9,10 @@ var bioEddieEditor = (function() {
     var monomerModel = BIO_EDDIE.getMonomerModel();
     var monomerImporter = new CHEMAXON.HelmImportModule();
     var molecule = bioEddieModal.data('molecule');
-    monomerImporter.import(molecule, monomerModel)
-      .then(builder => BIO_EDDIE.setModel(builder.graphStoreData));
+    if (molecule) {
+      monomerImporter.import(molecule, monomerModel)
+        .then(builder => BIO_EDDIE.setModel(builder.graphStoreData));
+    }
   }
 
   function loadBioEddie() {
