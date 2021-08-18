@@ -32,10 +32,12 @@ RSpec.describe "Api::V1::ExperimentsController", type: :request do
         project_id: @valid_project), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(@valid_project.experiments,
-               each_serializer: Api::V1::ExperimentSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@valid_project.experiments,
+                 each_serializer: Api::V1::ExperimentSerializer)
+            .to_json
+        )['data']
       )
     end
 
@@ -75,10 +77,12 @@ RSpec.describe "Api::V1::ExperimentsController", type: :request do
           headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
+        JSON.parse(
         ActiveModelSerializers::SerializableResource
           .new(@valid_project.experiments.first,
                serializer: Api::V1::ExperimentSerializer)
-          .as_json[:data]
+          .to_json
+        )['data']
       )
     end
 

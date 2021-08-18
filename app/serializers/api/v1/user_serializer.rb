@@ -9,6 +9,8 @@ module Api
       attribute :avatar_file_size, if: -> { object.avatar.attached? }
       attribute :avatar_url, if: -> { object.avatar.attached? }
 
+      include TimestampableModel
+
       def avatar_file_name
         object.avatar.blob.filename
       end

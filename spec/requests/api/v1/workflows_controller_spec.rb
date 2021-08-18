@@ -18,10 +18,11 @@ RSpec.describe 'Api::V1::WrokflowsController', type: :request do
       get api_v1_workflows_path, headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(MyModuleStatusFlow.all,
-               each_serializer: Api::V1::WorkflowSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(MyModuleStatusFlow.all, each_serializer: Api::V1::WorkflowSerializer)
+            .to_json
+        )['data']
       )
     end
   end
@@ -32,10 +33,11 @@ RSpec.describe 'Api::V1::WrokflowsController', type: :request do
       get api_v1_workflow_path(id: MyModuleStatusFlow.all.first), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(MyModuleStatusFlow.all.first,
-               serializer: Api::V1::WorkflowSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(MyModuleStatusFlow.all.first, serializer: Api::V1::WorkflowSerializer)
+            .to_json
+        )['data']
       )
     end
 

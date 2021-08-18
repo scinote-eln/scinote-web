@@ -11,6 +11,8 @@ module Api
       belongs_to :to, key: :output_task,
                       serializer: TaskSerializer,
                       class_name: 'MyModule'
+
+      include TimestampableModel
     end
   end
 end

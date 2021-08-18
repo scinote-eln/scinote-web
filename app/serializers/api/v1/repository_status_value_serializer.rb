@@ -10,6 +10,8 @@ module Api
       attribute :inventory_status_item_name do
         object.repository_status_item.status
       end
+
+      include TimestampableModel
     end
   end
 end

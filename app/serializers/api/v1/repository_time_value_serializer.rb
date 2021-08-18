@@ -5,6 +5,8 @@ module Api
     class RepositoryTimeValueSerializer < ActiveModel::Serializer
       attribute :time
 
+      include TimestampableModel
+
       def time
         object.data.strftime('%H:%M:%S.%3NZ')
       end

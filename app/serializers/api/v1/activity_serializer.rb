@@ -19,6 +19,8 @@ module Api
       belongs_to :subject, polymorphic: true
       belongs_to :owner, key: :user, serializer: UserSerializer
 
+      include TimestampableModel
+
       def message
         if object.old_activity?
           object.message

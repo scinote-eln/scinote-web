@@ -5,6 +5,8 @@ module Api
     class InventoryStatusItemSerializer < ActiveModel::Serializer
       type :inventory_status_items
       attributes :status, :icon
+
+      include TimestampableModel
     end
   end
 end

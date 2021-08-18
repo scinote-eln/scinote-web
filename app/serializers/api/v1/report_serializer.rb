@@ -15,6 +15,8 @@ module Api
       belongs_to :project, serializer: ProjectSerializer,
                            unless: -> { instance_options[:hide_project] }
 
+      include TimestampableModel
+
       def pdf_file_size
         object.pdf_file.blob.byte_size
       end

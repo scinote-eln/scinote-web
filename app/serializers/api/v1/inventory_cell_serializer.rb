@@ -7,6 +7,8 @@ module Api
       attributes :id, :value_type, :value
       attribute :repository_column_id, key: :column_id
 
+      include TimestampableModel
+
       def value
         ActiveModelSerializers::SerializableResource.new(
           object.value,

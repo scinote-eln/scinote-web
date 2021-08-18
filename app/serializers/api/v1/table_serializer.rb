@@ -6,6 +6,8 @@ module Api
       type :tables
       attributes :id, :name, :contents
 
+      include TimestampableModel
+
       def contents
         object.contents&.force_encoding(Encoding::UTF_8)
       end

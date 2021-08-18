@@ -5,6 +5,8 @@ module Api
     class ProtocolKeywordSerializer < ActiveModel::Serializer
       type :protocol_keywords
       attributes :id, :name
+
+      include TimestampableModel
     end
   end
 end

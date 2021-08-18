@@ -10,6 +10,8 @@ module Api
       belongs_to :parent_folder, serializer: ProjectFolderSerializer
       has_many :projects, serializer: ProjectSerializer
       has_many :project_folders, serializer: ProjectFolderSerializer
+
+      include TimestampableModel
     end
   end
 end

@@ -5,6 +5,8 @@ module Api
     class InventoryChecklistItemSerializer < ActiveModel::Serializer
       type :inventory_checklist_items
       attributes :id, :data
+
+      include TimestampableModel
     end
   end
 end

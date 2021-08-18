@@ -5,6 +5,8 @@ module Api
     class RepositoryDateTimeRangeValueSerializer < ActiveModel::Serializer
       attribute :date_time_range
 
+      include TimestampableModel
+
       def date_time_range
         {
           from: object.start_time,

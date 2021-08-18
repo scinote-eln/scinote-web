@@ -5,6 +5,8 @@ module Api
     class ChecklistItemSerializer < ActiveModel::Serializer
       type :checklist_items
       attributes :id, :text, :checked, :position
+
+      include TimestampableModel
     end
   end
 end
