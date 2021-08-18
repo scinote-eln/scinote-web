@@ -4,7 +4,7 @@
       <div class="title">
         {{ i18n.t('repositories.show.bmt_search.title') }}
       </div>
-      <button class="btn btn-light" @click="clear_all_filters">
+      <button class="btn btn-light" @click="clearAllFilters">
         <i class="fas fa-times-circle"></i>
         {{ i18n.t('repositories.show.bmt_search.clear_all') }}
       </button>
@@ -13,11 +13,11 @@
       <FilterElement v-for="(filter, index) in filters" :key="filter.id" :filter.sync="filters[index]" @delete:filter="filters.splice(index, 1)"></FilterElement>
     </div>
     <div class="footer">
-      <button class="btn btn-light add-filter" @click="add_filter">
+      <button class="btn btn-light add-filter" @click="addFilter">
         <i class="fas fa-plus"></i>
         {{ i18n.t('repositories.show.bmt_search.add_filter') }}
       </button>
-      <button class="btn btn-primary" @click="add_filter">
+      <button class="btn btn-primary">
         {{ i18n.t('repositories.show.bmt_search.apply') }}
       </button>
     </div>
@@ -29,7 +29,7 @@
 
   export default {
     name: 'FilterContainer',
-    data: () => {
+    data() {
       return {
         filters: [],
         i18n: I18n
@@ -40,7 +40,7 @@
     },
     components: { FilterElement },
     methods: {
-      add_filter: function() {
+      addFilter: function() {
         var id;
 
         if (this.filters.length > 0) {
@@ -53,7 +53,7 @@
           id: id
         });
       },
-      clear_all_filters: function() {
+      clearAllFilters: function() {
         this.filters = []
       }
     }

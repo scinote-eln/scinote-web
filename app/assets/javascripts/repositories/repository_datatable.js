@@ -1,7 +1,7 @@
 /*
   globals I18n _ SmartAnnotation FilePreviewModal animateSpinner DataTableHelpers
   HelperModule RepositoryDatatableRowEditor prepareRepositoryHeaderForExport
-  initAssignedTasksDropdown
+  initAssignedTasksDropdown initBMTFilter
 */
 
 //= require jquery-ui/widgets/sortable
@@ -578,7 +578,6 @@ var RepositoryDatatable = (function(global) {
         });
 
         initAssignedTasksDropdown(TABLE_ID);
-        console.log($('#bmtFilterContainer'))
 
       }
     });
