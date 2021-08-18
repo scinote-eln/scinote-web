@@ -1,7 +1,7 @@
 /*
   globals I18n _ SmartAnnotation FilePreviewModal animateSpinner DataTableHelpers
   HelperModule RepositoryDatatableRowEditor prepareRepositoryHeaderForExport
-  initAssignedTasksDropdown
+  initAssignedTasksDropdown initBMTFilter
 */
 
 //= require jquery-ui/widgets/sortable
@@ -268,6 +268,7 @@ var RepositoryDatatable = (function(global) {
     $.getJSON($(TABLE_ID).data('toolbar-url'), (data) => {
       $('#toolbarButtonsDatatable').remove();
       $(data.html).appendTo('div.toolbar');
+      initBMTFilter();
     });
 
     TABLE.ajax.reload(null, false);
@@ -551,6 +552,7 @@ var RepositoryDatatable = (function(global) {
         // Append buttons to inner toolbar in the table
         $.getJSON($(TABLE_ID).data('toolbar-url'), (data) => {
           $(data.html).appendTo('div.toolbar');
+          initBMTFilter();
         });
 
         $('div.toolbar-filter-buttons').prependTo('div.filter-container');
@@ -577,6 +579,7 @@ var RepositoryDatatable = (function(global) {
         });
 
         initAssignedTasksDropdown(TABLE_ID);
+
       }
     });
 
