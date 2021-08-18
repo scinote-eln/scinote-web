@@ -1364,6 +1364,11 @@ en:
       no_archived_items: "No archived items here"
       no_archived_items_matched: "No archived items matched your search request"
 
+      bmt_search:
+        title: "Filters"
+        clear_all: "Clear all"
+        add_filter: "Add filter"
+        apply: "Apply"
     table:
       id: 'ID'
       assigned: "Assigned"

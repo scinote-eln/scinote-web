@@ -1,0 +1,37 @@
+#bmtFilterContainer {
+  min-width: 300px;
+  z-index: 100;
+
+  .header {
+    align-items: center;
+    border-bottom: $border-tertiary;
+    display: flex;
+    padding: .5em 1em;
+
+    .title {
+      @include font-h2;
+      margin-right: auto;
+    }
+  }
+
+  .filter-element {
+    align-items: center;
+    display: flex;
+  }
+
+  .filters-list {
+    border-top: $border-tertiary;
+    padding: .5em 1em;
+  }
+
+  .footer {
+    align-items: center;
+    border-top: $border-tertiary;
+    display: flex;
+    padding: .5em 1em;
+
+    .add-filter {
+      margin-right: auto;
+    }
+  }
+}
