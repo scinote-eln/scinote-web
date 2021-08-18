@@ -372,7 +372,6 @@ class ReportsController < ApplicationController
                              .accessible_by_teams(current_team)
                              .name_like(search_params[:q])
                              .limit(Constants::SEARCH_LIMIT)
-                             .select(:id, :name, :team_id, :permission_level)
     repositories.each do |repository|
       next unless can_manage_repository_rows?(current_user, repository)
 
