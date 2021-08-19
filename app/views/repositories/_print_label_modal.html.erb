@@ -35,7 +35,7 @@
         <% end %>
       <% else %>
         <div class="modal-body no-printers-container">
-          <%= image_tag 'printers/no_available_printers' %>
+          <%= image_tag 'printers/no_available_printers.png' %>
           <p class="no-printer-title">
             <%= t('repository_row.modal_print_label.no_printers.title') %>
           </p>
@@ -44,7 +44,7 @@
           </p>
         </div>
         <div class="modal-footer">
-          <%= link_to t('repository_row.modal_print_label.no_printers.visit_blog'), '', class: "btn btn-primary" %>
+          <%= link_to t('repository_row.modal_print_label.no_printers.visit_blog'), Constants::SCINOTE_FLUICS_URL, class: "btn btn-primary", target: "_blank" %>
         </div>
       <% end %>
     </div>

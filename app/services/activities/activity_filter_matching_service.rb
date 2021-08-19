@@ -65,7 +65,7 @@ module Activities
     end
 
     def activity_subject_parents
-      subject_parents(@activity.subject, [])
+      subject_parents(@activity.subject, []).compact
     end
 
     def subject_parents(subject, parents)

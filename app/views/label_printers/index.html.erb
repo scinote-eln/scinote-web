@@ -30,7 +30,7 @@
           <%= t("users.settings.account.label_printer.fluics_instruction.p1") %>
         </li>
         <li>
-          <%= t("users.settings.account.label_printer.fluics_instruction.p2") %>
+          <%= t("users.settings.account.label_printer.fluics_instruction.p2_html", link: Constants::SCINOTE_FLUICS_URL) %>
         </li>
         <li>
           <%= t("users.settings.account.label_printer.fluics_instruction.p3") %>
@@ -76,7 +76,7 @@
           <div class="update-printers">
             <%= form_with scope: :label_printer, url: create_fluics_label_printers_path do |form| %>
               <%= form.hidden_field :fluics_api_key, value: @fluics_api_key %>
-              <%= button_tag type: 'submit', class: "btn btn-light", disabled: @fluics_api_key.present?.to_s do %>
+              <%= button_tag type: 'submit', class: "btn btn-light", disabled: @fluics_api_key.blank? do %>
                 <i class="fas fa-sync"></i>
                 <%= t("users.settings.account.label_printer.update_printers") %>
               <% end %>
