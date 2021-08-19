@@ -16,6 +16,12 @@
         },
         "status": {
           "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
         }
       },
       "additionalProperties": false,
@@ -28,7 +34,3 @@
   "additionalProperties": false,
   "required": ["id", "type", "attributes"]
 }
-
-
-
-

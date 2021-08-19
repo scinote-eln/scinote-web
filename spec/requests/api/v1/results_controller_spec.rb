@@ -69,9 +69,11 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(@valid_task.results, each_serializer: Api::V1::ResultSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@valid_task.results, each_serializer: Api::V1::ResultSerializer)
+            .to_json
+        )['data']
       )
     end
 
@@ -153,16 +155,18 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
       expect(response).to have_http_status 201
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(Result.last,
-               serializer: Api::V1::ResultSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(Result.last, serializer: Api::V1::ResultSerializer)
+            .to_json
+        )['data']
       )
       expect(hash_body[:included]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(Result.last, serializer: Api::V1::ResultSerializer,
-               include: :text)
-          .as_json[:included]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(Result.last, serializer: Api::V1::ResultSerializer, include: :text)
+            .to_json
+        )['included']
       )
     end
 
@@ -177,15 +181,18 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
       expect(response).to have_http_status 201
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(Result.last, serializer: Api::V1::ResultSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(Result.last, serializer: Api::V1::ResultSerializer)
+            .to_json
+        )['data']
       )
       expect(hash_body[:included]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(Result.last, serializer: Api::V1::ResultSerializer,
-               include: :text)
-          .as_json[:included]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(Result.last, serializer: Api::V1::ResultSerializer, include: :text)
+            .to_json
+        )['included']
       )
       expect(ResultText.last.text).to include "data-mce-token=\"#{Base62.encode(TinyMceAsset.last.id)}\""
     end
@@ -343,9 +350,11 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(@valid_task.results.first, serializer: Api::V1::ResultSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@valid_task.results.first, serializer: Api::V1::ResultSerializer)
+            .to_json
+        )['data']
       )
     end
 

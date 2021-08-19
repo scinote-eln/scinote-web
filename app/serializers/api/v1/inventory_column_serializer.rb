@@ -30,6 +30,8 @@ module Api
                    !instance_options[:hide_list_items]
                end)
 
+      include TimestampableModel
+
       def data_type
         Extends::API_REPOSITORY_DATA_TYPE_MAPPINGS[object.data_type]
       end
