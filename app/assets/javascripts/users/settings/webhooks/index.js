@@ -38,6 +38,7 @@
     e.preventDefault();
     webhookContainer.addClass('hidden');
     webhookContainer.find('.url-input').val('');
+    $('.webhook-form').renderFormErrors('webhook', [], true);
   });
 
   $('.activity-filters-list').on('click', '.edit-webhook', function(e) {
@@ -54,6 +55,7 @@
     input.val(input.data('original-value'));
     webhookContainer.find('.view-mode').removeClass('hidden');
     webhookContainer.find('.edit-webhook-container').addClass('hidden');
+    $('.webhook-form').renderFormErrors('webhook', [], true);
   });
 
 
