@@ -35,6 +35,7 @@
         <% end %>
       <% else %>
         <div class="modal-body no-printers-container">
+          <button type="button" class="close modal-absolute-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <%= image_tag 'printers/no_available_printers.png' %>
           <p class="no-printer-title">
             <%= t('repository_row.modal_print_label.no_printers.title') %>
