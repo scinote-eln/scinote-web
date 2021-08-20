@@ -3,7 +3,7 @@ import Vue from 'vue/dist/vue.esm';
 import FilterContainer from '../../vue/bmt_filter/container.vue';
 
 Vue.use(TurbolinksAdapter);
-
+Vue.prototype.i18n = window.I18n;
 
 window.initBMTFilter = () => {
   const app = new Vue({
@@ -13,8 +13,5 @@ window.initBMTFilter = () => {
     }
   });
 
-  $('#bmtFilterContainer').on('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-  });
+  $('#bmtFilterContainer').on('click', (e) => e.stopPropagation());
 };

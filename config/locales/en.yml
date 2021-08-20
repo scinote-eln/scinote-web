@@ -1369,6 +1369,37 @@ en:
         clear_all: "Clear all"
         add_filter: "Add filter"
         apply: "Apply"
+        filter: "Filter"
+        no_filters: "Filter through Chemaxon's database. No active filters are applied at the moment."
+        filters:
+          types:
+            additionalDataFilter:
+              name: "Additional data"
+            entityTypeFilter:
+              name: "Entity type"
+              placeholder: "Enter entity type"
+            monomerTypeFilter:
+              name: "Monomer type"
+              placeholder: "Enter monomer type"
+            subsequenceFilter:
+              name: "Subsequence"
+              placeholder: "Enter subsequence"
+              derivatives_included: "Derivatives included"
+            variantSequenceFilter:
+              name: "Variant sequence"
+              placeholder: "Enter variant sequence"
+              derivatives_included: "Derivatives included"
+              distance: "Distance"
+              distance_type: "Distance type"
+              exact: "Exact"
+              maximum: "Maximum"
+            fullSequenceFilter:
+              name: "Full sequence"
+              placeholder: "Enter full sequence"
+              derivatives_included: "Derivatives included"
+            monomerSubstructureSearchFilter:
+              name: "Monomer substructure"
+              placeholder: "Enter substructure"
     table:
       id: 'ID'
       external_id: 'External ID'
