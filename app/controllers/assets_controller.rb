@@ -212,6 +212,22 @@ class AssetsController < ApplicationController
 
   def destroy
     if @asset.destroy
+      case @assoc
+      when Step
+        if @assoc.protocol.in_module?
+          log_step_activity(:edit_step, @assoc, @assoc.my_module.experiment.project, my_module: @assoc.my_module.id)
+        else
+          log_step_activity(
+            :edit_step_in_protocol_repository,
+            @assoc,
+            nil,
+            protocol: @assoc.protocol.id
+          )
+        end
+      when Result
+        log_result_activity(:edit_result, @assoc)
+      end
+
       render json: { flash: I18n.t('assets.file_deleted', file_name: @asset.file_name) }
     else
       render json: {}, status: :unprocessable_entity
@@ -264,5 +280,32 @@ class AssetsController < ApplicationController
     return 'image' if asset.image?
 
     'file'
+  end
+
+  def log_step_activity(type_of, step, project = nil, message_items = {})
+    default_items = { step: step.id,
+                      step_position: { id: step.id, value_for: 'position_plus_one' } }
+    message_items = default_items.merge(message_items)
+
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: step.protocol,
+            team: current_team,
+            project: project,
+            message_items: message_items)
+  end
+
+  def log_result_activity(type_of, result)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: result,
+            team: result.my_module.experiment.project.team,
+            project: result.my_module.experiment.project,
+            message_items: {
+              result: result.id,
+              type_of_result: t('activities.result_type.text')
+            })
   end
 end
