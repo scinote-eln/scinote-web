@@ -10,7 +10,16 @@
       </button>
     </div>
     <div class="filters-list">
-      <FilterElement v-for="(filter, index) in filters" :key="filter.id" :filter.sync="filters[index]" @delete:filter="filters.splice(index, 1)"></FilterElement>
+      <div v-if="filters.length == 0" class="filter-list-notice">
+        <p class="text-muted"><em>{{ i18n.t('repositories.show.bmt_search.no_filters') }}</em></p>
+      </div>
+      <FilterElement
+          v-for="(filter, index) in filters"
+          :key="filter.id"
+          :filter.sync="filters[index]"
+          @filter:delete="filters.splice(index, 1)"
+          @filter:update="updateFilter"
+        />
     </div>
     <div class="footer">
       <button class="btn btn-light add-filter" @click="addFilter">
@@ -31,30 +40,44 @@
     name: 'FilterContainer',
     data() {
       return {
-        filters: [],
-        i18n: I18n
+        filters: []
       }
     },
     props: {
       container: Object
     },
     components: { FilterElement },
+    computed: {
+      searchJSON() {
+        return this.filters.map((f) => f.data);
+      }
+    },
     methods: {
-      addFilter: function() {
-        var id;
-
+      addFilter() {
+        let id;
         if (this.filters.length > 0) {
           id = this.filters[this.filters.length - 1].id + 1
         } else {
           id = 1
         };
-
-        this.filters.push({
-          id: id
-        });
+        this.filters.push({ id: id, data: { type: "fullSequenceFilter" } });
       },
-      clearAllFilters: function() {
-        this.filters = []
+      updateFilter(filter) {
+        this.filters.find((f) => f.id === filter.id).data = filter.data;
+      },
+      clearAllFilters() {
+        this.filters = [];
+      },
+      loadFilters(filters) {
+        this.clearAllFilters();
+        filters.forEach((filter, index) => {
+          this.filters.push(
+            {
+              id: index,
+              data: filter
+            }
+          );
+        });
       }
     }
   }
