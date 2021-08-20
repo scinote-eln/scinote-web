@@ -10,9 +10,9 @@ if User.count.zero?
     admin_email = ENV['ADMIN_EMAIL']
     admin_password = ENV['ADMIN_PASSWORD']
   else
-    admin_name = 'Admin'
-    admin_email = 'admin@scinote.net'
-    admin_password = 'inHisHouseAtRlyehDeadCthulhuWaitsDreaming'
+    admin_name = 'Daniel Young'
+    admin_email = 'young.daniel@epa.gov'
+    admin_password = '***REMOVED***'
   end
 
   # Create admin user

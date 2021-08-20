@@ -1,0 +1,1623 @@
+/** Font-faces *************************************************/
+ /* Baseline Grid: 1.5em (25.5px)*/
+
+@font-face {
+  font-family: "Source Sans Pro";
+  font-style: normal;
+  font-weight: 300;
+  src:
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/sourcesanspro-light-webfont.eot?#iefix") format("embedded-opentype"),
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/sourcesanspro-light-webfont.woff2") format("woff2"),
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/sourcesanspro-light-webfont.woff") format("woff"),
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/sourcesanspro-light-webfont.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Source Sans Pro";
+  font-style: normal;
+  font-weight: 400;
+  src:
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/sourcesanspro-regular-webfont.eot?#iefix") format("embedded-opentype"),
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/sourcesanspro-regular-webfont.woff2") format("woff2"),
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/sourcesanspro-regular-webfont.woff") format("woff"),
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/sourcesanspro-regular-webfont.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Source Sans Pro";
+  font-style: italic;
+  font-weight: 400;
+  src:
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/sourcesanspro-italic-webfont.eot?#iefix") format("embedded-opentype"),
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/sourcesanspro-italic-webfont.woff2") format("woff2"),
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/sourcesanspro-italic-webfont.woff") format("woff"),
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/sourcesanspro-italic-webfont.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Source Sans Pro";
+  font-style: normal;
+  font-weight: 700;
+  src:
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/sourcesanspro-bold-webfont.eot?#iefix") format("embedded-opentype"),
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/sourcesanspro-bold-webfont.woff2") format("woff2"),
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/sourcesanspro-bold-webfont.woff") format("woff"),
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/sourcesanspro-bold-webfont.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Merriweather";
+  font-style: normal;
+  font-weight: 300;
+  src:
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/merriweather-light-webfont.eot?#iefix") format("embedded-opentype"),
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/merriweather-light-webfont.woff2") format("woff2"),
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/merriweather-light-webfont.woff") format("woff"),
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/merriweather-light-webfont.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Merriweather";
+  font-style: normal;
+  font-weight: 400;
+  src:
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/merriweather-regular-webfont.eot?#iefix") format("embedded-opentype"),
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/merriweather-regular-webfont.woff2") format("woff2"),
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/merriweather-regular-webfont.woff") format("woff"),
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/merriweather-regular-webfont.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Merriweather";
+  font-style: italic;
+  font-weight: 400;
+  src:
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/merriweather-italic-webfont.eot?#iefix") format("embedded-opentype"),
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/merriweather-italic-webfont.woff2") format("woff2"),
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/merriweather-italic-webfont.woff") format("woff"),
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/merriweather-italic-webfont.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Merriweather";
+  font-style: normal;
+  font-weight: 700;
+  src:
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/merriweather-bold-webfont.eot?#iefix") format("embedded-opentype"),
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/merriweather-bold-webfont.woff2") format("woff2"),
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/merriweather-bold-webfont.woff") format("woff"),
+    url("https://www.epa.gov/sites/all/themes/epa/css/fonts/merriweather-bold-webfont.ttf") format("truetype");
+}
+
+/** Generic Screen Typography *************************************************/
+@media screen {
+  html {
+    font-size: 106.25%;
+  }
+
+  body,button,input,select,textarea {
+    font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
+  }
+  body {
+    font-size: 100%;
+    line-height: 1.5;
+  }
+  aside .pane-content {
+    font-size: 88.2353%;
+  }
+
+  code,kbd,pre,samp {
+    font-family: "Source Code Pro", "Consolas", monospace, sans-serif;
+    font-size: 1em;
+  }
+
+  h1,h2,h3,h4,h5,h6,legend,caption {
+    font-family: "Merriweather", "Georgia", "Cambria", "Times New Roman", "Times", serif;
+    font-weight: bold;
+    line-height: 1.3;
+    margin: 0;
+    text-rendering: optimizeLegibility;
+  }
+  h1,h2,h3,h4,h5,h6 {
+    padding: 0 0 0.5em;
+  }
+  h1 a,h2 a,h3 a,h4 a,h5 a,h6 a {
+    text-decoration: none;
+  }
+  h1 {
+    font-size: 235.2941%;
+  }
+  .page-title {
+    padding-top: 0.25em;
+  }
+  .page-title--news-release-secondary {
+    font-weight: normal;
+    font-style: italic;
+  }
+  h2,aside.size-1of4 h1 {
+    font-size: 176.4706%;
+  }
+  h3,aside.size-1of4 h2 {
+    font-size: 117.6471%;
+  }
+  h4,aside.size-1of4 h3 {
+    font-size: 100%;
+  }
+  h5,aside.size-1of4 h4 {
+    font-size: 88.2353%;
+  }
+  h6,aside.size-1of4 h5 {
+    font-size: 76.4706%;
+  }
+
+  abbr[title] {
+    text-decoration: dotted underline;
+  }
+
+  .box .pane-content {
+    font-size: 88.2353%;
+  }
+
+  h2.preface {
+    padding-top: 0.625em;
+  }
+
+  .teaser-title {
+    font-size: 100% !important;
+    padding-bottom: 0.25em !important;
+  }
+
+  dd,ol,p,ul,
+  .fieldset-description,
+  .form-actions,
+  .form-item,
+  .pane-content > .node,
+  .node-teaser,
+  .view-mode-teaser:not(.file),
+  .view-mode-teaser2,
+  .view-mode-title2,
+  ul.accordion ul {
+    margin: 0;
+    padding-bottom: 1.5em;
+    word-wrap: break-word;
+  }
+
+  div.links,
+  .box,
+  .panel-pane,
+  .progress,
+  .region-sidebar > .block,
+  .view-mode-title {
+    margin-bottom: 1.5em;
+  }
+
+  ul {
+    padding-left: 1.2em; /* LTR */
+  }
+  dd,ol {
+    padding-left: 1.5em; /* LTR */
+  }
+  ol ol {
+    list-style-type: lower-alpha;
+  }
+  ol ol ol {
+    list-style-type: lower-roman;
+  }
+  div.indented,
+  p.indented {
+    margin-left: 1.5em;
+  }
+  ol li:last-child p:last-child,
+  ol ol,
+  ol ul,
+  p:empty,
+  ul li:last-child p:last-child,
+  ul ol,
+  ul ul,
+  .form-checkboxes .form-item,
+  .form-radios .form-item,
+  .pane-content > .view-mode-title > h3,
+  .pane-content > .node > :last-child,
+  .pane-content > :last-child,
+  ul.accordion ul ul {
+    padding-bottom: 0;
+  }
+
+  sub,sup {
+    font-size: 76.4706%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+  }
+  sup {
+    top: -.5em;
+  }
+  sub {
+    bottom: -.25em;
+  }
+
+  fieldset {
+    margin: 0 2px 1.5em;
+    padding: .35em 1em .75em;
+  }
+  .fieldset-wrapper div:last-child {
+    padding-bottom: 0;
+  }
+  .fieldset-description {
+    font-style: italic;
+  }
+
+  figcaption,
+  small,
+  .archive,
+  .block-user .item-list,
+  .comment-links,
+  .figcaption,
+  .filter-help,
+  .form-item .description,
+  .more-link,
+  .node-links,
+  .progress .message,
+  .progress .percentage,
+  .search-results .search-info,
+  .submitted,
+  .vertical-tab-button .summary,
+  #block-epa-og-footer {
+    font-size: 76.4706%;
+  }
+
+  .node-links,
+  .comment-links {
+    margin-bottom: 1.5em;
+  }
+}
+
+/** Print Typography **********************************************************/
+@media print {
+  * {
+    background: transparent !important;
+    color: #000 !important;
+    -ms-filter: none !important;
+    filter: none !important;
+    text-shadow: none !important;
+  }
+
+  a,
+  a:visited {
+    color: #444 !important;
+  }
+
+  /*
+  .main-content a[href]:after {
+    content: ' (' attr(href) ') ';
+    display: inline-block;
+    font-size: 10pt;
+    font-weight: normal;
+    margin-left: 3pt;
+  }
+
+  .main-content a[href^='/']:after {
+    content: ' (http://www.epa.gov' attr(href) ') ';
+  }
+
+  a[href^='javascript:']:after,
+  a[href^='#']:after,
+  .user-picture > a[href]:after,
+  a.username[href]:after,
+  .comment-title a[href]:after,
+  .field-type-taxonomy-term-reference a[href]:after {
+    content: '' !important;
+  }
+  */
+
+  abbr[title]:after {
+    content: ' (' attr(title) ')';
+  }
+
+  blockquote,
+  pre {
+    border: 1px solid #999;
+    page-break-inside: avoid;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  img,
+  tr {
+    page-break-inside: avoid;
+  }
+
+  h1 a:after,
+  h2 a:after,
+  h3 a:after,
+  h4 a:after,
+  h5 a:after,
+  h6 a:after {
+    display: inline-block;
+  }
+
+  h2,
+  h3,
+  h4,
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  h2,
+  h3,
+  h4 {
+    page-break-after: avoid;
+  }
+
+  #comments {
+    page-break-before: always;
+  }
+}
+
+/** Print Layout **************************************************************/
+@media print {
+  nav,
+  .epa-search,
+  .breadcrumb,
+  .breadcrumb-title,
+  .block-epa-core-gsa-epa-search,
+  .block-menu,
+  .block-menu-block,
+  .block-search,
+  .block-user,
+  .col__title,
+  .comment-form,
+  .govdelivery-form,
+  .links,
+  .menu,
+  .microsite-aside,
+  .microsite-name,
+  .mobile-nav,
+  .no-print,
+  .node-links,
+  .region-preface,
+  .site-name-and-slogan,
+  .social-menu,
+  .submitted .permalink,
+  .pagetop,
+  .tasks,
+  #block-epa-accessibility-quail-results,
+  #block-epa-workflow-revision-info-block,
+  #block-comment-recent,
+  #block-forum-active,
+  #block-forum-new,
+  #block-node-recent,
+  #block-node-syndicate,
+  footer .pipeline,
+  #show-admin-info-wrapper,
+  .social-menu-wrapper,
+  .social-menu-title,
+  .social-menu-more,
+  .web-area-footer,
+  #block-pane-epa-web-area-footer {
+    display: none !important;
+  }
+
+  .masthead,
+  .main-content,
+  .main-nav,
+  .secondary-nav,
+  .main-footer {
+    width: 100%;
+  }
+
+  .site-logo {
+    display: block;
+    margin-bottom: 1em;
+  }
+
+  .microsite-name,
+  .page-title {
+    margin-top: -10px;
+    padding: 0;
+  }
+
+  .main-footer .region-footer {
+    background: transparent;
+    min-height: auto;
+    padding-top: 0;
+  }
+
+  .block-pane-epa-global-footer .row > .col {
+    width: 100%;
+  }
+}
+
+	html {
+		-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+		-ms-text-size-adjust: 100%;
+		-webkit-text-size-adjust: 100%
+	}
+	@media screen {
+		body, header, nav, section, footer {
+			font-size: 100%;
+			margin: 0;
+		}
+	}
+	header *, nav *, section *, footer * {
+		box-sizing: border-box;
+		*behavior: url('https://www.epa.gov/sites/all/themes/epa/inc/boxsizing.htc');
+	}
+	.menu-link, .epa-search-button, .menu-button, .mobile-links a {
+		transition: background-color .25s linear, border-color .25s linear, box-shadow .25s linear, color .25s linear, opacity .25s linear, text-shadow .25s linear, transform .25s linear
+	}
+
+/** EPA Global Header *************************************************/
+  .skip-links {
+    font-size: 16px;
+    left: 50%;
+    margin-left: -7em;
+    position: absolute;
+    width: 14em;
+    z-index: 9999;
+  }
+  .skip-link, .skip-link:focus, .skip-link:visited {
+    background-color: #212121;
+    border: 2px solid #f1f1f1;
+    border-top: 0;
+    box-shadow: 0 0 6px rgba(0,0,0,.5);
+    color: #f1f1f1;
+    display: inline-block;
+    font-weight: 700;
+    line-height: 1.5;
+    margin: 0;
+    outline: 0;
+    text-align: center;
+    text-decoration: none;
+    width: 14em;
+    z-index: 9999;
+  }
+  header {
+		display: block
+	}
+	header {
+		background: #fff
+	}
+	header button, header select {
+		text-transform: none
+	}
+	header button, header input, header optgroup, header select, header textarea {
+		font-family: inherit;
+		font-size: 100%;
+		margin: 0;
+		max-width: 100%;
+		vertical-align: baseline
+	}
+	header button, header input {
+		line-height: normal
+	}
+	header img, header input, header textarea, header video {
+		height: auto;
+		max-width: 100%
+	}
+	header, header dl, header figure, header form {
+		margin: 0
+	}
+	header button {
+		width: auto;
+		overflow: visible
+	}
+	@media screen {
+		header, header button, header input, header select, header textarea {
+			font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
+		}
+	}
+	@media screen {
+		header h1 {
+			font-size: 235.29%;
+		}
+	}
+	header a {
+		color: #0071bc
+	}
+	header::selection {
+		background: #5b616b;
+		color: #fff;
+		text-shadow: none
+	}
+	header .main-content, header .main-footer>.main-footer__inner, header .main-nav>.nav__inner, .masthead, header .region-alert>.block-alert, header .secondary-nav {
+		margin: 0 auto;
+		max-width: 35em;
+		padding: 0 1em
+	}
+	@media screen and (min-width:35em), print and (min-width:35em) {
+		header .main-nav>.nav__inner, header.masthead, header .region-alert>.block-alert, header .secondary-nav, header .main-content, header .main-footer>.main-footer__inner {
+			max-width: 60em;
+		}
+	}
+	header.masthead {
+		color: #fff;
+		padding-bottom: 1em;
+		padding-top: 1.4em;
+		position: relative
+	}
+	header.clearfix::after, header .menu::after, header .pane-content::after, header .pipeline::after, header .tabs::after, header .slat::after, header .row::after, header .col::after {
+		clear: both;
+		content: "";
+		display: table
+	}
+	@media screen and (min-width:35em), print and (min-width:35em) {
+		.wide-template header .region-alert>.block-alert, .wide-template header.masthead, .wide-template header .nav, .wide-template header .main-content, .wide-template header .main-footer>.main-footer__inner {
+			max-width: 100%;
+		}
+	}
+	header img {
+		border: 0;
+		-ms-interpolation-mode: bicubic
+	}
+	header .site-logo {
+		display: none
+	}
+	@media screen and (min-width:50em) {
+		header .site-name-and-slogan {
+			float: left;
+		}
+	}
+	header #block-epa-core-gsa-epa-search {
+		position: initial
+	}
+	header .epa-search {
+		clear: both;
+		padding-top: 1em;
+		position: relative
+	}
+	@media screen and (min-width:50em) {
+		header .epa-search {
+			clear: right;
+			padding-top: 0px;
+			float: right;
+			width: 16.5em;
+		}
+	}
+	@media screen and (min-width:65em) {
+		header .epa-search {
+			bottom: 0.5em;
+			padding-right: 1em;
+			position: absolute;
+			right: 0px;
+		}
+		.js header .epa-search {
+			bottom: -2.29em;
+		}
+	}
+	header label {
+		display: block
+	}
+	header .element-hidden {
+		display: none
+	}
+  .element-invisible {
+  clip: rect(1px,1px,1px,1px);
+  position: absolute!important;
+  }
+  .element-invisible.element-focusable:active, .element-invisible.element-focusable:focus {
+    clip: auto;
+    position: static!important;
+  }
+	header .form-select, header .form-text, header .form-textarea {
+		-moz-appearance: none;
+		-webkit-appearance: none;
+		appearance: none;
+		background-color: #fff;
+		border: 1px solid #5b616b;
+		border-radius: 0;
+		color: #212121;
+		line-height: 1.2352;
+		min-width: 10em;
+		padding: 0.4117647059em 0.6470588235em
+	}
+	header .epa-search>.form-text {
+		border-color: #0071bc;
+		border-radius: 0 3px 3px 0;
+		color: #212121;
+		height: 1.64em;
+		line-height: 1;
+		padding: 0.2647058824em 2.8235294118em 0.2647058824em 0.6470588235em;
+		width: 100%
+	}
+	@media screen and (min-width:65em) {
+		.js header .epa-search > .form-text {
+			border-color: #fff;
+		}
+	}
+	header .ui-helper-hidden-accessible {
+		border: 0;
+		clip: rect(0px, 0px, 0px, 0px);
+		height: 1px;
+		margin: -1px;
+		overflow: hidden;
+		padding: 0;
+		position: absolute;
+		width: 1px
+	}
+	header button, header input[type='button'], header input[type='reset'], header input[type='submit'] {
+		cursor: pointer;
+		-webkit-appearance: button
+	}
+	header button, header fieldset.collapsed legend, header input[type='button'], header input[type='reset'], header input[type='submit'], header .archive, header .button, header ins.new::before, header .password-suggestions, header .progress .bar, header #edit-cancel, header .addtocal {
+		border-radius: 3px
+	}
+	header button, input[type='button'], header input[type='reset'], header input[type='submit'], header .button, header #edit-cancel, header .addtocal {
+		background-color: #0071bc;
+		border: 0;
+		color: #fff;
+		cursor: pointer;
+		display: inline-block;
+		font-weight: bold;
+		line-height: 1;
+		margin: 0 0 1.5em;
+		padding: 0.5882em 1.1765em;
+		text-align: center;
+		text-decoration: none;
+		vertical-align: baseline;
+		white-space: normal
+	}
+	header .epa-search-button {
+		background-color: #02bfe7;
+		background-image: url("https://www.epa.gov/sites/all/themes/epa/img/svg/search.svg");
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
+		background-size: 12px 12px;
+		border-color: #02bfe7;
+		border-radius: 0 3px 3px 0;
+		box-sizing: border-box;
+		color: #4aa564;
+		font: 0/0 a;
+		height: 28px;
+		right: 0px;
+		position: absolute;
+		text-decoration: none;
+		text-indent: -999em;
+		text-shadow: none;
+		top: 17px;
+		width: 44px
+	}
+	@media screen and (min-width:50em) {
+		header .epa-search-button {
+			top: 0px;
+		}
+	}
+	@media screen and (min-width:65em) {
+		header .epa-search-button {
+			right: 16px;
+		}
+	}
+	@media screen {
+		header h1, header h2, header h3, header h4, header h5, header h6, header legend, header caption {
+			font-family: "Merriweather", "Georgia", "Cambria", "Times New Roman", "Times", serif;
+			font-weight: bold;
+			line-height: 1.3;
+			margin: 0;
+			text-rendering: optimizeLegibility;
+		}
+	}
+	@media screen {
+		header h1, header h2, header h3, header h4, header h5, header h6 {
+			padding: 0 0 0.5em;
+		}
+	}
+	header .site-name {
+		height: 31px;
+		margin: 0 0 0.125em;
+		padding: 0;
+		width: 101px
+	}
+	@media screen and (min-width:23em) {
+		header .site-name {
+			float: left;
+			margin-right: 0.2em;
+		}
+	}
+	header .site-slogan {
+		color: #0071bc;
+		font-family: Arial, sans-serif;
+		font-size: 0.64em;
+		font-weight: 500;
+		line-height: 1;
+		position: relative
+	}
+	@media screen and (min-width:23em) {
+		header .site-slogan {
+			top: -1px;
+			width: 21.8em;
+		}
+	}
+	header a {
+		outline-offset: 2px
+	}
+	@media screen {
+		header h1 a, header h2 a, header h3 a, header h4 a, header h5 a, header h6 a {
+			text-decoration: none;
+		}
+	}
+	header a:link {
+		-webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+	}
+	header a:visited {
+		color: #4c2c92
+	}
+	header .site-name>a {
+		display: block;
+		margin: 0;
+		padding: 0;
+		position: relative;
+		z-index: 1
+	}
+	header .site-name span {
+		background: url(https://www.epa.gov/sites/all/themes/epa/img/svg/epa-logo.svg) no-repeat;
+		color: transparent;
+		display: block;
+		font: 0/0 a;
+		height: 31px;
+		text-shadow: none
+	}
+
+/** EPA Global Navigation *************************************************/
+	nav {
+		display: block
+	}
+	nav {
+		background: #fff
+	}
+	@media screen {
+		nav h2 {
+			font-size: 176.47%;
+		}
+	}
+	@media screen {
+		nav dd, nav ol, nav p, nav ul, nav .fieldset-description, nav .form-actions, nav .form-item, nav .pane-content>.node, nav .node-teaser, nav :not(.file).view-mode-teaser, nav .view-mode-teaser2, nav .view-mode-title2, nav ul.accordion ul {
+			margin: 0;
+			padding-bottom: 1.5em;
+			word-wrap: break-word;
+		}
+	}
+	@media screen {
+		nav ul {
+			padding-left: 1.2em;
+		}
+	}
+	nav a {
+		outline-offset: 2px
+	}
+	nav a {
+		color: #0071bc
+	}
+	nav::selection {
+		background: #5b616b;
+		color: #fff;
+		text-shadow: none
+	}
+	nav.main-nav {
+		background-color: #0071bc;
+		line-height: 1
+	}
+	.js nav .simple-nav, nav.main-nav, nav .secondary-nav {
+		display: none
+	}
+	@media screen and (min-width:50em) {
+		.js nav .simple-nav, nav.main-nav, nav .secondary-nav {
+			display: block;
+		}
+	}
+	@media screen {
+		nav ol li:last-child p:last-child, nav ol ol, nav ol ul, nav p:empty, nav ul li:last-child p:last-child, nav ul ol, nav ul ul, nav .form-checkboxes .form-item, nav .form-radios .form-item, nav .pane-content>.view-mode-title>h3, nav .pane-content>.node> :last-child, nav .pane-content> :last-child, nav ul.accordion ul ul {
+			padding-bottom: 0px;
+		}
+	}
+	nav .links, nav .menu, nav .pipeline, nav .tabs {
+		list-style: none !important;
+		margin: 0;
+		padding: 0
+	}
+	nav.clearfix::after, nav .menu::after, nav .pane-content::after, nav .pipeline::after, nav .tabs::after, nav .slat::after, nav .row::after, nav .col::after {
+		clear: both;
+		content: "";
+		display: table
+	}
+	@media screen and (min-width:35em), print and (min-width:35em) {
+		.wide-template nav .region-alert>.block-alert, .wide-template nav .masthead, .wide-template nav.nav, .wide-template nav .main-content, .wide-template nav .main-footer>.main-footer__inner {
+			max-width: 100%;
+		}
+	}
+	nav, nav dl, nav figure, nav form {
+		margin: 0
+	}
+	@media screen {
+		nav, nav button, nav input, nav select, nav textarea {
+			font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
+		}
+	}
+	nav .main-content, nav .main-footer>.main-footer__inner, nav.main-nav>.nav__inner, nav .masthead, .region-alert>.block-alert, nav .secondary-nav {
+		margin: 0 auto;
+		max-width: 35em;
+		padding: 0 1em
+	}
+	@media screen and (min-width:35em), print and (min-width:35em) {
+		nav.main-nav>.nav__inner, nav .masthead, nav .region-alert>.block-alert, nav .secondary-nav, nav .main-content, nav .main-footer>.main-footer__inner {
+			max-width: 60em;
+		}
+	}
+	@media screen {
+		nav h1, nav h2, nav h3, nav h4, nav h5, nav h6, nav legend, nav caption {
+			font-family: "Merriweather", "Georgia", "Cambria", "Times New Roman", "Times", serif;
+			font-weight: bold;
+			line-height: 1.3;
+			margin: 0;
+			text-rendering: optimizeLegibility;
+		}
+	}
+	@media screen {
+		nav h1, nav h2, nav h3, nav h4, nav h5, nav h6 {
+			padding: 0 0 0.5em;
+		}
+	}
+	nav .element-invisible {
+		clip: rect(1px, 1px, 1px, 1px);
+		position: absolute !important
+	}
+	nav.main-nav>.nav__inner>.menu {
+		float: left
+	}
+	nav.main-nav>.nav__inner>.menu>.menu-item {
+		float: left
+	}
+	nav .menu-link, .pipeline>li>a, nav .tabs>li>a {
+		display: block;
+		margin: 0;
+		padding: 0
+	}
+	nav a:link {
+		-webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+	}
+	nav a:visited {
+		color: #4c2c92
+	}
+	nav.main-nav>.nav__inner>.menu>.menu-item>.menu-link {
+		color: #fff;
+		font-family: "Merriweather", "Georgia", "Cambria", "Times New Roman", "Times", serif;
+		font-size: 76.47%;
+		font-weight: bold;
+		line-height: 1;
+		padding: 1.2em 1.6em;
+		text-decoration: none
+	}
+.main-nav > .nav__inner > .menu > .menu-item > .active {
+  background-color: #205493;
+}
+.main-nav > .nav__inner > .menu > .menu-item > .menu-link:focus,
+.main-nav > .nav__inner > .menu > .menu-item > .menu-link:hover,
+.main-nav > .nav__inner > .menu > .menu-item:hover > .menu-link,
+.main-nav > .nav__inner > .menu > .show-menu > .menu-link {
+  background-color: #205493;
+  box-shadow: none;
+}
+	@media screen and (min-width:46em) {
+		nav.main-nav>.nav__inner>.menu>.menu-item>.menu-link {
+			font-size: 88.23%;
+		}
+	}
+	nav.main-nav>.nav__inner>.menu .menu {
+		position: absolute;
+		z-index: 4
+	}
+	nav.main-nav>.nav__inner>.menu .menu {
+		background: #d6d7d9;
+		padding: 0.5882em 0
+	}
+	nav.main-nav>.nav__inner>.menu .menu .menu-link {
+		clip: rect(1px, 1px, 1px, 1px);
+		opacity: 0;
+		position: absolute !important
+	}
+	nav.main-nav>.nav__inner>.menu .menu .menu-link {
+		background: #d6d7d9;
+		border: solid #d6d7d9;
+		border-width: 0 5px;
+		color: #205493;
+		font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
+		font-size: 82.35%;
+		font-weight: 400;
+		line-height: 1.1;
+		padding: 0.7143em 1.5714em;
+		text-decoration: none;
+		width: 12em
+	}
+	nav.main-nav>.nav__inner>.menu .menu a.active, nav.main-nav>.nav__inner>.menu .menu a.menu-link:focus, nav.main-nav>.nav__inner>.menu .menu a.menu-link:hover, nav.main-nav>.nav__inner>.menu .menu a.menu-link:active {
+		background: #aeb0b5;
+		border-color: #205493;
+		outline: 0
+	}
+	nav.main-nav>.nav__inner>.menu .menu a.active {
+		font-weight: 700
+	}
+
+/** EPA Global Section *************************************************/
+	section {
+		display: block
+	}
+	section {
+		background: #fff
+	}
+	@media screen {
+		section dd, section ol, section p, section ul, section .fieldset-description, section .form-actions, section .form-item, section .pane-content>.node, section .node-teaser, section :not(.file).view-mode-teaser, section .view-mode-teaser2, section .view-mode-title2, section ul.accordion ul {
+			margin: 0;
+			padding-bottom: 1.5em;
+			word-wrap: break-word;
+		}
+	}
+	@media screen {
+		section ul {
+			padding-left: 1.2em;
+		}
+	}
+	section a {
+		outline-offset: 2px
+	}
+	section a {
+		color: #0071bc
+	}
+	@media screen {
+		section, section button, section input, section select, section textarea {
+			font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
+		}
+	}
+	section b, section strong {
+		font-weight: bold
+	}
+	section::selection {
+		background: #5b616b;
+		color: #fff;
+		text-shadow: none
+	}
+	section.main-content, section .main-footer>.main-footer__inner, section .main-nav>.nav__inner, section .masthead, section .region-alert>.block-alert, section .secondary-nav {
+		margin: 0 auto;
+		max-width: 35em;
+		padding: 0 1em
+	}
+	@media screen and (min-width:35em), print and (min-width:35em) {
+		section .main-nav>.nav__inner, section .masthead, section .region-alert>.block-alert, section .secondary-nav, section.main-content, section .main-footer>.main-footer__inner {
+			max-width: 60em;
+		}
+	}
+	section.main-content {
+		background-color: #fff;
+		color: #212121
+	}
+	@media screen and (min-width:30em) {
+		section .region-preface {
+			text-align: right;
+		}
+	}
+	section .links, section .menu, section .pipeline, section .tabs {
+		list-style: none !important;
+		margin: 0;
+		padding: 0
+	}
+	@media screen and (min-width:45em) {
+		section .pipeline {
+			padding: 0 0 1em;
+		}
+	}
+	section.clearfix::after, section .menu::after, section .pane-content::after, section .pipeline::after, section .tabs::after, section .slat::after, section .row::after, section .col::after {
+		clear: both;
+		content: "";
+		display: table
+	}
+	@media screen and (min-width:35em), print and (min-width:35em) {
+		.wide-template section .region-alert>.block-alert, .wide-template section .masthead, .wide-template section .nav, .wide-template section.main-content, .wide-template section .main-footer>.main-footer__inner {
+			max-width: 100%;
+		}
+	}
+	section#main-content {
+		display: block
+	}
+	section#main-content:focus {
+		outline: 0
+	}
+	section, section dl, section figure, section form {
+		margin: 0
+	}
+	section button {
+		width: auto;
+		overflow: visible
+	}
+	section .region-preface {
+		margin: 0 -1em;
+		padding: 0.5em 1em
+	}
+	section .resource-directory .region-preface {
+		border-bottom: 1px solid #d6d7d9
+	}
+	@media screen and (min-width:30em) {
+		section .region-preface>div {
+			text-align: left;
+		}
+	}
+	@media screen and (min-width:30em) {
+		section #block-views-hublinks-block, section #block-views-revision-hublinks-block {
+			float: left;
+		}
+	}
+	@media screen {
+		section figcaption, section small, section .archive, section .block-user .item-list, section .comment-links, section .figcaption, .filter-help, section .form-item .description, section .more-link, section .node-links, section .progress .message, section .progress .percentage, section .search-results .search-info, section .submitted, section .vertical-tab-button .summary, section #block-pane-epa-web-area-connect, section #block-epa-og-footer {
+			font-size: 76.47%;
+		}
+	}
+	section #block-pane-epa-web-area-connect {
+		display: inline-block;
+		padding-bottom: 0.66em
+	}
+	section #block-pane-epa-web-area-connect {
+		margin-left: 2em
+	}
+	@media screen and (min-width:30em) {
+		section #block-pane-epa-web-area-connect {
+			padding-top: 0.66em;
+		}
+	}
+	section #block-pane-epa-web-area-connect>.menu>.menu-item {
+		float: left;
+		margin-left: 1.5em
+	}
+	section #block-pane-epa-web-area-connect>.menu> :first-child.menu-item, section #block-pane-social-sharing>.menu> :first-child.menu-item {
+		margin-left: 0px
+	}
+	section .view-hublinks a, section .view-revision-hublinks a {
+		display: inline-block;
+		font-weight: bold;
+		text-decoration: none
+	}
+	section .menu-link, section .pipeline>li>a, section .tabs>li>a {
+		display: block;
+		margin: 0;
+		padding: 0
+	}
+	section a:link {
+		-webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+	}
+	section #block-pane-epa-web-area-connect>.menu>.menu-item>.menu-link, section #block-pane-social-sharing>.menu>.menu-item>.menu-link {
+		display: block;
+		margin: 0 -.3333em;
+		padding: 0 .3333em;
+		text-decoration: none
+	}
+	section button, section input, section optgroup, section select, section textarea {
+		font-family: inherit;
+		font-size: 100%;
+		margin: 0;
+		max-width: 100%;
+		vertical-align: baseline
+	}
+	section button, section select {
+		text-transform: none
+	}
+	section button, section input {
+		line-height: normal
+	}
+	section button, section input[type='button'], section input[type='reset'], section input[type='submit'] {
+		cursor: pointer;
+		-webkit-appearance: button
+	}
+	section button, section fieldset.collapsed legend, section input[type='button'], section input[type='reset'], section input[type='submit'], section .archive, section .button, section ins.new::before, section .password-suggestions, section .progress .bar, section #edit-cancel, section .addtocal {
+		border-radius: 3px
+	}
+	section button, section input[type='button'], section input[type='reset'], section input[type='submit'], section .button, section #edit-cancel, section .addtocal {
+		background-color: #0071bc;
+		border: 0;
+		color: #fff;
+		cursor: pointer;
+		display: inline-block;
+		font-weight: bold;
+		line-height: 1;
+		margin: 0 0 1.5em;
+		padding: 0.5882em 1.1765em;
+		text-align: center;
+		text-decoration: none;
+		vertical-align: baseline;
+		white-space: normal
+	}
+	@media screen {
+		section ol li:last-child p:last-child, section ol ol, section ol ul, section p:empty, section ul li:last-child p:last-child, section ul ol, section ul ul, section .form-checkboxes .form-item, section .form-radios .form-item, section .pane-content>.view-mode-title>h3, section .pane-content>.node> :last-child, section .pane-content> :last-child, section ul.accordion ul ul {
+			padding-bottom: 0px;
+		}
+	}
+	section .view-hublinks>.menu, section .view-revision-hublinks>.menu, section .view-hublinks>.related-info, section .view-revision-hublinks>.related-info {
+		display: inline-block;
+		padding: 0.5em 0 0;
+		vertical-align: top
+	}
+	section .pipeline>li {
+		border-color: #5b616b;
+		line-height: 1
+	}
+	section .view-hublinks .menu-item, section .view-revision-hublinks .menu-item, section .view-hublinks>.related-info, section .view-revision-hublinks>.related-info {
+		line-height: 1.25
+	}
+	section .view-hublinks>.related-info, section .view-revision-hublinks>.related-info {
+		margin-right: 0.5em
+	}
+	section .pipeline {
+		padding: 0 0 .25em
+	}
+	@media screen and (min-width:30em) {
+		section .pipeline>li {
+			border-right: 1px solid #777;
+			float: left;
+			margin-bottom: 0.5em;
+			margin-right: 1em;
+			padding-right: 1em;
+		}
+	}
+	@media screen and (min-width:30em) {
+		section .pipeline>li:last-child {
+			border-right: 0;
+			margin-right: 0px;
+			padding-right: 0px;
+		}
+	}
+	section a:visited {
+		color: #4c2c92
+	}
+	section .pipeline>li>a {
+		padding: .75em 0
+	}
+	@media screen and (min-width:45em) {
+		section .pipeline>li>a {
+			padding: 0;
+		}
+	}
+	section .view-hublinks .pipeline>li>a, section .view-revision-hublinks .pipeline>li>a {
+		padding: 0 0 1em
+	}
+	@media screen and (min-width:30em) {
+		section .view-hublinks .pipeline>li>a, section .view-revision-hublinks .pipeline>li>a {
+			padding-bottom: 0px;
+		}
+	}
+
+/** EPA Global Footer *************************************************/
+	footer {
+		display: block
+	}
+	footer {
+		background: #fff
+	}
+	@media screen {
+		footer dd, footer ol, footer p, footer ul, footer .fieldset-description, footer .form-actions, footer .form-item, footer .pane-content>.node, footer .node-teaser, footer :not(.file).view-mode-teaser, footer .view-mode-teaser2, footer .view-mode-title2, footer ul.accordion ul {
+			margin: 0;
+			padding-bottom: 1.5em;
+			word-wrap: break-word;
+		}
+	}
+	@media screen {
+		footer ul {
+			padding-left: 1.2em;
+		}
+	}
+	footer a {
+		outline-offset: 2px
+	}
+	footer a {
+		color: #0071bc
+	}
+	footer::selection {
+		background: #5b616b;
+		color: #fff;
+		text-shadow: none
+	}
+	footer.main-footer {
+		background-color: #323a45;
+		color: #fff;
+		padding-bottom: 3.9em;
+		padding-top: 2.5em
+	}
+	footer .row {
+		margin: 0 -1em
+	}
+	footer .col {
+		padding: 0 1em
+	}
+	footer .links, footer .menu, footer .pipeline, footer .tabs {
+		list-style: none !important;
+		margin: 0;
+		padding: 0
+	}
+	footer.clearfix::after, footer .menu::after, footer .pane-content::after, footer .pipeline::after, footer .tabs::after, footer .slat::after, footer .row::after, footer .col::after {
+		clear: both;
+		content: "";
+		display: table
+	}
+	body, footer dl, footer figure, footer form {
+		margin: 0
+	}
+	@media screen {
+		footer, footer button, footer input, footer select, footer textarea {
+			font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
+		}
+	}
+	footer .main-content, footer.main-footer>.main-footer__inner, footer .main-nav>.nav__inner, footer .masthead, footer .region-alert>.block-alert, footer .secondary-nav {
+		margin: 0 auto;
+		max-width: 35em;
+		padding: 0 1em
+	}
+	@media screen and (min-width:35em), print and (min-width:35em) {
+		footer .main-nav>.nav__inner, footer .masthead, footer .region-alert>.block-alert, footer .secondary-nav, footer .main-content, footer.main-footer>.main-footer__inner {
+			max-width: 60em;
+		}
+	}
+	@media screen and (min-width:35em), print and (min-width:35em) {
+		.wide-template footer .region-alert>.block-alert, .wide-template footer .masthead, .wide-template footer .nav, .wide-template footer .main-content, .wide-template footer.main-footer>.main-footer__inner {
+			max-width: 100%;
+		}
+	}
+	footer .region-footer {
+		background: url("https://www.epa.gov/sites/all/themes/epa/img/svg/box-seal.svg") 50% 100% no-repeat;
+		background-position: 0 0;
+		background-size: 5.8824em 5.8824em;
+		font-family: "Merriweather", "Georgia", "Cambria", "Times New Roman", "Times", serif;
+		font-weight: bold;
+		min-height: 5.88em;
+		padding-top: 8em
+	}
+	@media screen and (min-width:55em) {
+		footer .region-footer {
+			padding-left: 11em;
+			padding-top: 0px;
+		}
+	}
+	footer .region-footer .row {
+		margin: 0 -1.6em
+	}
+	footer .region-footer .col {
+		padding: 0 1.6em
+	}
+	@media screen and (min-width:40em), print and (min-width:40em) {
+		footer .cols-3>.col {
+			float: left;
+			width: 50%;
+		}
+	}
+	@media screen and (min-width:45em), print and (min-width:45em) {
+		footer .row>.col {
+			float: left;
+		}
+	}
+	@media screen and (min-width:40em), print and (min-width:40em) {
+		footer .cols-3> :first-child.col {
+			width: 100%;
+		}
+	}
+	@media screen and (min-width:45em), print and (min-width:45em) {
+		footer .cols-3.row>.col {
+			width: 33.33%;
+		}
+	}
+	@media screen and (min-width:45em), print and (min-width:45em) {
+		footer .row>.size-1of3.col {
+			width: 33.33%;
+		}
+	}
+	footer .region-footer .col__title {
+		font-size: 117.64%;
+		margin: 0 0 1.25em
+	}
+	footer .region-footer .menu {
+		margin-bottom: 2em
+	}
+	footer .region-footer .social-menu {
+		margin: 0;
+		padding: 0
+	}
+	footer .region-footer .last-updated {
+		font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
+		font-size: 70.58%;
+		font-weight: 500;
+		padding: 0.8333em 0 0;
+		text-transform: uppercase
+	}
+	footer .region-footer .social-menu>li {
+		display: inline-block;
+		margin: 0 .25em 1em;
+		vertical-align: top
+	}
+	@media screen and (min-width:58em), print and (min-width:58em) {
+		footer .region-footer .social-menu>li {
+			margin: 0 .5em 1em;
+		}
+	}
+	footer .region-footer .social-menu>li:first-child {
+		margin-left: 0px
+	}
+	footer .region-footer .social-menu>li:last-child {
+		margin-right: 0px
+	}
+	footer .menu-link, .pipeline>li>a, footer .tabs>li>a {
+		display: block;
+		margin: 0;
+		padding: 0
+	}
+	footer .social-instagram {
+		background: url(https://www.epa.gov/sites/all/themes/epa/img/svg/epa_icons_Instagram.svg) no-repeat
+	}
+	footer .social-flickr {
+		background: url(https://www.epa.gov/sites/all/themes/epa/img/svg/epa_icons_Flickr.svg) no-repeat
+	}
+	footer .social-youtube {
+		background: url(https://www.epa.gov/sites/all/themes/epa/img/svg/epa_icons_YouTube.svg) no-repeat
+	}
+	footer .social-twitter {
+		background: url(https://www.epa.gov/sites/all/themes/epa/img/svg/epa_icons_Twitter.svg) no-repeat
+	}
+	footer .social-facebook {
+		background: url(https://www.epa.gov/sites/all/themes/epa/img/svg/epa_icons_Facebook.svg) no-repeat
+	}
+	footer a:link {
+		-webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+	}
+	footer.main-footer a {
+		color: #fff
+	}
+	.region-footer a {
+		text-decoration: none
+	}
+	footer .region-footer .social-menu>li>a {
+		background-size: 26px 26px;
+		color: transparent;
+		font: 0/0 a;
+		height: 26px;
+		text-decoration: none;
+		text-shadow: none;
+		width: 26px
+	}
+	footer .region-footer .menu>li {
+		margin: 0 0 .75em
+	}
+	footer .region-footer .menu a {
+		display: inline-block;
+		font-size: 88.23%;
+		line-height: 1.2;
+		margin: 0;
+		padding: 0
+	}
+
+/** EPA Disclaimers ****************************************************************/
+  .disclaimer {
+    background: #f1f1f1;
+    display: block;
+    margin: 0 0 1.5em;
+    padding: .75em 1.5em;
+    word-wrap: break-word;
+  }
+
+  .epa-archive-link,
+  .exit-disclaimer,
+  .free-viewers {
+    background-color: #aeb0b5;
+    border-radius: 3px;
+    color: #323a45 !important;
+    display: inline-block;
+    font-size: 88.2352941176%;
+    margin: 0 0.3333333333em;
+    padding: 0.0666666667em 0.4666666667em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+/** EPA Mobile Menu *************************************************/
+	.mobile-nav {
+		z-index: 100;
+		font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif
+	}
+	.mobile-bar {
+		position: absolute;
+		right: 1em;
+		top: 1em
+	}
+	.mobile-nav ul {
+		list-style: none !important;
+		margin: 0;
+		padding: 0;
+		display: block
+	}
+	.mobile-nav input[type=checkbox] {
+		display: none
+	}
+	.mobile-nav #mobile-nav-toggle:checked~div {
+		display: none
+	}
+	.menu-button {
+		background-color: #fff;
+		border: 0;
+		border-radius: 3px;
+		color: #0071bc;
+		cursor: pointer;
+		display: inline-block;
+		font-weight: bold;
+		line-height: 1;
+		margin: 0 0 1.5em;
+		padding: 0.5882em 1.1765em;
+		text-align: center;
+		text-decoration: none;
+		vertical-align: baseline;
+		white-space: normal
+	}
+	.menu-button:focus, .menu-button:hover, .menu-button:active {
+		background-color: #0071bc;
+		box-shadow: none;
+		color: #fff;
+		outline: 0
+	}
+	.mobile-links {
+		background: #fff;
+		border: 0;
+		margin-top: -3em;
+		padding: 0.5em 0;
+		position: absolute;
+		width: 100%;
+		z-index: 100
+	}
+	.mobile-links a {
+		color: #0071bc;
+		outline-offset: 2px;
+		display: block;
+		font-weight: bold;
+		line-height: 2.75;
+		margin: 0 0.5em 0.5em;
+		padding: 0 1em;
+		text-decoration: none
+	}
+	.mobile-links a:visited {
+		color: #0071bc
+	}
+	.mobile-links a:focus, .mobile-links a:hover, .mobile-links a:active {
+		background: #e1f3f8
+	}
+	.mobile-links a:focus {
+		outline: 0
+	}
+	.mobile-links a:after {
+		content: '>';
+		float: right
+	}
+	.mobile-nav .sub-menu {
+		padding-left: 1em
+	}
+	.js .simple-nav, .main-nav, .secondary-nav {
+		display: none
+	}
+	@media screen and (min-width:50em) {
+		#mobile-nav {
+			display: none;
+		}
+		.js .simple-nav, .main-nav, .secondary-nav {
+			display: block;
+		}
+	}
+
+/** Public Alerts *************************************************************/
+.block-alert .alert-title,
+.sitewide-alert__title {
+  display: none;
+}
+
+.sitewide-alert {
+  background: #fff1d0;
+  color: #000;
+}
+
+.sitewide-alert a {
+  color: #0071bc;
+  text-decoration: none;
+}
+
+.sitewide-alert a:focus,
+.sitewide-alert a:hover {
+  text-decoration: underline;
+}
+
+.sitewide-alert__content {
+  font-size: 70.5882%;
+  margin: 0 auto;
+  max-width: 35rem;
+  padding: 0.5em 6.5em 0.5em 3.66667em;
+  position: relative;
+}
+
+@media screen and (min-width: 35em), print and (min-width: 35em) {
+  .sitewide-alert__content {
+    max-width: 60rem;
+  }
+}
+
+.wide-template .sitewide-alert__content {
+  max-width: 100%;
+}
+
+.sitewide-alert__content > :last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.sitewide-alert__content::before {
+  background-position: 0 50%;
+  background-repeat: no-repeat;
+  background-size: contain;
+  content: '';
+  display: block;
+  height: 1.25em;
+  margin: 0.125em 0 0 -2.25em;
+  position: absolute;
+  width: 2.25em;
+}
+
+.sitewide-alert__close {
+  align-items: center;
+  background: none;
+  color: inherit;
+  display: flex;
+  font-weight: normal;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  right: 1rem;
+}
+
+.sitewide-alert__close:focus,
+.sitewide-alert__close:hover {
+  background: none;
+}
+
+.sitewide-alert__close::after {
+  background-image: url(https://www.epa.gov/sites/all/themes/epa/img/svg/close.svg);
+  background-position: 50% 100%;
+  background-repeat: no-repeat;
+  background-size: contain;
+  content: '';
+  font-size: 83.33333%;
+  height: 1.2em;
+  margin: 0 0 0 0.6em;
+  width: 1em;
+}
+
+.sitewide-alert--emergency {
+  background: #ffecec;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.sitewide-alert--emergency .sitewide-alert__content::before {
+  background-image: url(https://www.epa.gov/sites/all/themes/epa/img/error.png);
+}
+
+.sitewide-alert--information {
+  background: #e1f3ff;
+}
+
+.sitewide-alert--information .sitewide-alert__content::before {
+  background-image: url(https://www.epa.gov/sites/all/themes/epa/img/info.png);
+}
+
+.sitewide-alert--warning {
+  background: #fff1d2;
+}
+
+.sitewide-alert--warning .sitewide-alert__content::before {
+  background-image: url(https://www.epa.gov/sites/all/themes/epa/img/warning.png);
+}
+
+.sitewide-alert--official {
+  background: #f1f1f1;
+}
+
+.sitewide-alert--official .sitewide-alert__content::before {
+  background-image: url(https://www.epa.gov/sites/all/themes/epa/img/us-flag.png);
+}

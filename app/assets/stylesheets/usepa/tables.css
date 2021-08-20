@@ -1,0 +1,39 @@
+/** Tables ********************************************************************/
+table {
+  background-color: #fff;
+  color: #212121;
+  margin-bottom: 1.5em;
+}
+td, th {
+  border: 1px solid #5b616b;
+  padding: 0.88235em;
+}
+th {
+  background-color: #f1f1f1;
+  font-weight: 700;
+}
+thead th {
+  text-align: left;
+}
+caption {
+  margin-bottom: 0.5em;
+}
+table.noborder td,table.noborder th {
+  border-left: 0;
+  border-right: 0;
+}
+table.noborder th {
+  background-color: transparent;
+}
+table.noborder thead th {
+  border-top: 0;
+}
+table.striped tr:nth-of-type(even) {
+  background-color: #f0f4f9;
+}
+table.nostyle th,table.nostyle thead tr,table.nostyle tr:nth-of-type(even) {
+  background-color: #fff;
+}
+table.nostyle td,table.nostyle th {
+  border: 0;
+}

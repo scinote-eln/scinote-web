@@ -1,0 +1,190 @@
+/** Forms *********************************************************************/
+.form-select,
+.form-text,
+.form-textarea {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #fff;
+  border: 1px solid #5b616b;
+  border-radius: 0;
+  color: #212121;
+  line-height: 1.2352941176;
+  min-width: 10em;
+  padding: 0.4117647059em 0.6470588235em;
+}
+.form-select::-ms-expand {
+  display: none;
+}
+.form-select:focus,
+.form-text:focus,
+.form-textarea:focus {
+  box-shadow: 0 0 3px #3e94cf, 0 0 7px #3e94cf;
+  outline: 0;
+}
+.form-textarea {
+  padding: 0.5294117647em 0.6470588235em;
+}
+.form-select {
+  background-image: url(https://www.epa.gov/sites/all/themes/epa/img/arrow-alt-down.png);
+  background-image: url(https://www.epa.gov/sites/all/themes/epa/img/svg/arrow-alt-down.svg);
+  background-position: right 0.7647058824em center;
+  background-repeat: no-repeat;
+  background-size: 0.7647058824em;
+  line-height: 1;
+  padding: 0.3235294118em 2em 0.3235294118em 0.6470588235em;
+}
+
+.box .form-select,
+.box .form-text,
+.box .form-textarea {
+  min-width: 5em;
+}
+
+label {
+  display: block;
+}
+label.option {
+  cursor: pointer;
+  display: inline;
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+  padding: 0;
+  position: absolute;
+  left: -999em;
+}
+input[type='checkbox'] + label:before,
+input[type='radio'] + label:before {
+  background: #fff;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px #757575;
+  content: '\a0';
+  display: inline-block;
+  height: 1.05882em;
+  line-height: 0.8;
+  margin-right: 0.6em;
+  text-indent: 0.15em;
+  vertical-align: 0.2em;
+  width: 1.05882em;
+}
+input[type='radio'] + label:before {
+  border-radius: 100%;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 3px #757575;
+  height: 0.9411em;
+  width: 0.9411em;
+}
+input[type='checkbox']:checked + label:before,
+input[type='radio']:checked + label:before {
+  background-color: #0071bc;
+  box-shadow: 0 0 0 1px #0071bc;
+}
+input[type='checkbox']:checked + label:before {
+  background-image: url(https://www.epa.gov/sites/all/themes/epa/img/correct.png);
+  background-image: url(https://www.epa.gov/sites/all/themes/epa/img/svg/correct.svg);
+  background-position: 50%;
+  background-repeat: no-repeat;
+}
+input[type='radio']:checked + label:before {
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #0071bc;
+}
+input[type='checkbox']:disabled + label,
+input[type='radio']:disabled + label {
+  color: #5b616b;
+  cursor: not-allowed;
+}
+input[type='checkbox']:disabled + label:before,
+input[type='radio']:disabled + label:before {
+  background: #d6d7d9;
+  box-shadow: 0 0 0 1px #aeb0b5;
+}
+
+.password-indicator div {
+  background-color: #4aa564;
+}
+
+.govdelivery-form {
+  background: #fff;
+  display: inline-block;
+  margin-bottom: 1.5em;
+  max-width: 100%;
+  padding: 0.75em 0.75em 0;
+}
+@media screen and (min-width: 43em) {
+  .govdelivery-form {
+    display: block;
+  }
+}
+.govdelivery-fieldset {
+  background: transparent;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  position: static;
+  top: 0;
+}
+.govdelivery-legend {
+  background: transparent;
+  border: 0;
+  color: #000;
+  height: auto;
+  line-height: 1;
+  padding-left: 2.2352941176em;
+  position: relative;
+  text-indent: 0;
+  text-shadow: none;
+  top: 0;
+}
+.govdelivery-legend:before {
+  background: url(https://www.epa.gov/sites/all/themes/epa/img/govdelivery.png) no-repeat 50% 50%;
+  content: '';
+  display: block;
+  height: 1.4117647059em;
+  left: 0;
+  margin-top: -0.2941176471em;
+  position: absolute;
+  width: 1.9411764706em;
+}
+@media screen and (min-width: 43em) {
+  .microsite-aside .govdelivery-legend {
+    padding-left: 0;
+  }
+  .microsite-aside .govdelivery-legend:before {
+    display: none;
+  }
+}
+@media screen and (min-width: 61.75em) {
+  .microsite-aside .govdelivery-legend {
+    padding-left: 2.2352941176em;
+  }
+  .microsite-aside .govdelivery-legend:before {
+    display: block;
+  }
+}
+.govdelivery-text {
+  margin: 0.5882352941em 0 0;
+  max-width: 10.5882352941em;
+  min-width: 5.8823529412em;
+  width: 100%;
+}
+.govdelivery-submit {
+  margin: 0.5882352941em 0 0.75em;
+}
+
+.webform-client-form {
+  clear: both;
+}
+
+.webform-grid-option .form-item {
+  padding: 0;
+}
+
+.webform-grid-option label {
+  text-align: center;
+}
+
+.webform-grid-option input[type='checkbox'] + label:before,
+.webform-grid-option input[type='radio'] + label:before {
+  margin-right: 0;
+}

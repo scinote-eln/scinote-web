@@ -1,0 +1,44 @@
+/** Accordion *****************************************************************/
+.accordion {
+  list-style: none;
+  padding-left: 0;
+}
+
+.accordion > li {
+  margin-bottom: 6px;
+}
+
+.accordion-title {
+  background-color: #f1f1f1;
+  background-position: right 1.7647em center;
+  background-repeat: no-repeat;
+  background-size: 0.7647em;
+  color: #212121;
+  cursor: pointer;
+  display: block;
+  font-weight: bold;
+  line-height: 1.1;
+  margin: 0;
+  padding: 0.8824em 3.2353em 0.8824em 1.7647em;
+  text-decoration: none;
+}
+.accordion-title:focus,
+.accordion-title:hover {
+  background-color: #d6d7d9;
+  box-shadow: none;
+  color: #212121;
+}
+.js .accordion-title {
+  background-image: url(https://www.epa.gov/sites/all/themes/epa/img/svg/plus.svg);
+}
+.js .accordion-title.is-active {
+  background-image: url(https://www.epa.gov/sites/all/themes/epa/img/svg/minus.svg);
+}
+
+.accordion-pane {
+  background-color: #fff;
+  padding: 1.7647em;
+}
+.accordion-pane.is-closed {
+  display: none;
+}
