@@ -12,7 +12,7 @@
 
     .form-control,
     .form-select {
-      margin-bottom: 21px;
+      margin-bottom: 1.2em;
       width: 100%;
     }
   }
@@ -23,7 +23,8 @@
 
   .filter-list-notice {
     color: $color-silver-chalice;
-    padding: 16px;
+    font-style: italic;
+    padding: 1em;
   }
 
   .header {
@@ -42,25 +43,16 @@
     align-items: center;
     border-bottom: $border-tertiary;
     display: flex;
-    padding: 15px 52px 15px 15px;
+    padding: 1em 3.5em 1em 1em;
     position: relative;
   }
 
   .filter-remove {
+    cursor: pointer;
     padding: 0;
     position: absolute;
-    right: 16px;
-    top: 16px;
-
-    .btn {
-      height: 16px;
-      padding: 0;
-      width: 16px;
-    }
-
-    .btn:hover {
-      background: $color-white;
-    }
+    right: 0;
+    top: 0;
   }
 
   .filters-list {
