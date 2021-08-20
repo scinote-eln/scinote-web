@@ -5,11 +5,7 @@ module RepositoryDatatableHelper
 
   def prepare_row_columns(repository_rows, repository, columns_mappings, team, options = {})
     repository_rows.map do |record|
-      row = if repository.is_a?(LinkedRepository)
-              linked_repository_default_columns(record)
-            else
-              repository_default_columns(record)
-            end
+      row = public_send("#{repository.class.name.underscore}_default_columns", record)
 
       row['DT_RowId'] = record.id
       row['DT_RowAttr'] = { 'data-state': row_style(record) }
@@ -103,6 +99,16 @@ module RepositoryDatatableHelper
       '6': escape_input(record.created_by.full_name),
       '7': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
       '8': escape_input(record.archived_by&.full_name)
+    }
+  end
+
+  def bmt_repository_default_columns(record)
+    {
+      '1': assigned_row(record),
+      '2': escape_input(record.external_id),
+      '3': record.code,
+      '4': escape_input(record.name),
+      '5': I18n.l(record.created_at, format: :full)
     }
   end
 

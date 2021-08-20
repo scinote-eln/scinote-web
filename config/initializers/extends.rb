@@ -387,5 +387,5 @@ class Extends
     delete_group_signature_request
   )
 
-  STI_PRELOAD_CLASSES = %w(LinkedRepository)
+  STI_PRELOAD_CLASSES = %w(LinkedRepository BmtRepository)
 end
