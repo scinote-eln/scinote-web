@@ -1358,7 +1358,7 @@ en:
         active: "These are individually archived items from the %{repository_name} inventory. The inventory itself is active."
         archived_on: "Inventory archived on"
         archived_by: "by"
-      filter_inventory_items: "Filter inventory items"
+      filter_inventory_items: "Filter items"
       no_items: "No items here"
       no_items_matched: "No items matched your search request"
       no_archived_items: "No archived items here"
