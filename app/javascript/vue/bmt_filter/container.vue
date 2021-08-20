@@ -11,7 +11,7 @@
     </div>
     <div class="filters-list">
       <div v-if="filters.length == 0" class="filter-list-notice">
-        <p class="text-muted"><em>{{ i18n.t('repositories.show.bmt_search.no_filters') }}</em></p>
+        {{ i18n.t('repositories.show.bmt_search.no_filters') }}
       </div>
       <FilterElement
           v-for="(filter, index) in filters"
