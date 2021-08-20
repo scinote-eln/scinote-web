@@ -23,7 +23,7 @@ module LeftMenuBarHelper
   end
 
   def settings_are_selected?
-    controller_name.in? %(registrations preferences addons teams connected_accounts)
+    controller_name.in? %(registrations preferences addons teams connected_accounts webhooks)
   end
 
   def activities_are_selected?
