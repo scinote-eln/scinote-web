@@ -1,12 +1,37 @@
 #bmtFilterContainer {
-  min-width: 300px;
+  min-width: 422px;
   z-index: 100;
+
+  label {
+    font-weight: normal;
+  }
+
+  .form-group {
+    display: block;
+    width: 100%;
+
+    .form-control,
+    .form-select {
+      margin-bottom: 1.2em;
+      width: 100%;
+    }
+  }
+
+  .checkbox-label {
+    vertical-align: text-bottom;
+  }
+
+  .filter-list-notice {
+    color: $color-silver-chalice;
+    font-style: italic;
+    padding: 1em;
+  }
 
   .header {
     align-items: center;
     border-bottom: $border-tertiary;
     display: flex;
-    padding: .5em 1em;
+    padding: 0 1em;
 
     .title {
       @include font-h2;
@@ -16,19 +41,28 @@
 
   .filter-element {
     align-items: center;
+    border-bottom: $border-tertiary;
     display: flex;
+    padding: 1em 3.5em 1em 1em;
+    position: relative;
+  }
+
+  .filter-remove {
+    cursor: pointer;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
   }
 
   .filters-list {
     border-top: $border-tertiary;
-    padding: .5em 1em;
   }
 
   .footer {
     align-items: center;
     border-top: $border-tertiary;
     display: flex;
-    padding: .5em 1em;
 
     .add-filter {
       margin-right: auto;
