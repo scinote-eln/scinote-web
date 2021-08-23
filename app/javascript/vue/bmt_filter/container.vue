@@ -72,12 +72,7 @@
     },
     methods: {
       addFilter() {
-        let id;
-        if (this.filters.length > 0) {
-          id = this.filters[this.filters.length - 1].id + 1
-        } else {
-          id = 1
-        };
+        let id = this.filters.length ? this.filters[this.filters.length - 1].id + 1 : 1
         this.filters.push({ id: id, data: { type: "fullSequenceFilter" } });
       },
       updateFilter(filter) {

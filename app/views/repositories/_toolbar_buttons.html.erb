@@ -85,25 +85,27 @@
       </table>
     <% end %>
   </div>
-  <div class="dropdown">
-      <button id="bmtFiltersDropdown"
-              class="btn btn-secondary"
-              type="button"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-      >
-      <span class="fas fa-microscope"></span>
-      <%= t('repositories.show.bmt_search.bmt_filter') %>
-    </button>
-    <div class="dropdown-menu bmt-filters-container" id="bmtFilterContainer">
-      <filter-container :saved_filters="saved_filters"></filter-container>
+  <% if @repository.is_a?(BmtRepository) %>
+    <div class="dropdown">
+        <button id="bmtFiltersDropdown"
+                class="btn btn-secondary"
+                type="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+        >
+        <span class="fas fa-microscope"></span>
+        <%= t('repositories.show.bmt_search.bmt_filter') %>
+      </button>
+      <div class="dropdown-menu bmt-filters-container" id="bmtFilterContainer">
+        <filter-container :saved_filters="saved_filters"></filter-container>
+      </div>
     </div>
-  </div>
-  <button
-    class="btn btn-light open-save-bmt-modal hidden"
-    type="button"
-    aria-haspopup="true"
-  >
-    <span class="fas fa-save"></span>
-    <%= t('repositories.show.bmt_search.save_filters') %>
-  </button>
+    <button
+      class="btn btn-light open-save-bmt-modal hidden"
+      type="button"
+      aria-haspopup="true"
+    >
+      <span class="fas fa-save"></span>
+      <%= t('repositories.show.bmt_search.save_filters') %>
+    </button>
+  <% end %>

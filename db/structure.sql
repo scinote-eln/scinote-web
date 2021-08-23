@@ -1876,7 +1876,8 @@ CREATE TABLE public.repository_rows (
     archived_on timestamp without time zone,
     restored_on timestamp without time zone,
     archived_by_id bigint,
-    restored_by_id bigint
+    restored_by_id bigint,
+    external_id character varying
 );
 
 
@@ -5386,6 +5387,13 @@ CREATE INDEX index_repository_rows_on_archived_by_id ON public.repository_rows U
 
 
 --
+-- Name: index_repository_rows_on_external_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_rows_on_external_id ON public.repository_rows USING gin (public.trim_html_tags((external_id)::text) public.gin_trgm_ops);
+
+
+--
 -- Name: index_repository_rows_on_id_text; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6034,6 +6042,13 @@ CREATE INDEX index_wopi_actions_on_extension_and_action ON public.wopi_actions U
 --
 
 CREATE INDEX index_zip_exports_on_user_id ON public.zip_exports USING btree (user_id);
+
+
+--
+-- Name: unique_index_repository_rows_on_external_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX unique_index_repository_rows_on_external_id ON public.repository_rows USING btree (external_id);
 
 
 --
@@ -7488,6 +7503,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210622101238'),
 ('20210715125349'),
 ('20210716124649'),
-('20210720112050');
+('20210720112050'),
+('20210811103123'),
+('20210812095254');
 
 
