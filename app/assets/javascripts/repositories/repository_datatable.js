@@ -101,6 +101,7 @@ var RepositoryDatatable = (function(global) {
       $('th').addClass('disable-click');
       $('.repository-row-selector').prop('disabled', true);
       $('.dataTables_filter input').prop('disabled', true);
+      $('#toolbarPrintLabel').hide();
     }
 
     $('#toolbarPrintLabel').data('rows', JSON.stringify(rowsSelected));
