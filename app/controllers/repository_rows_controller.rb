@@ -4,6 +4,8 @@ class RepositoryRowsController < ApplicationController
   include ApplicationHelper
   include MyModulesHelper
 
+  MAX_PRINTABLE_ITEM_NAME_LENGTH = 64
+
   before_action :load_repository, except: :show
   before_action :load_repository_row, only: %i(update assigned_task_list)
   before_action :check_read_permissions, except: %i(show create update delete_records copy_records)
@@ -99,7 +101,7 @@ class RepositoryRowsController < ApplicationController
         label_printer,
         LabelTemplate.first.render( # Currently we will only use the default template
           item_id: repository_row.code,
-          item_name: repository_row.name.truncate(64)
+          item_name: repository_row.name.truncate(MAX_PRINTABLE_ITEM_NAME_LENGTH)
         ),
         params[:copies].to_i
       ).job_id
