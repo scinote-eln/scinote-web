@@ -1,8 +1,19 @@
 <template>
   <div class="filter-container">
     <div class="header">
-      <div class="title">
-        {{ i18n.t('repositories.show.bmt_search.title') }}
+      <div class="dropdown savedFilterContainer">
+        <div class="title" @click="openSavedFilters()">
+          {{ i18n.t('repositories.show.bmt_search.title') }}
+          <i class="fas fa-caret-down"></i>
+        </div>
+        <div class="dropdown-menu saved-filters-container">
+          <SavedFilterElement
+            v-for="(saved_filter, index) in saved_filters"
+            :key="saved_filter.id"
+            :saved_filter.sync="saved_filters[index]"
+            @saved_filter:delete="saved_filters.splice(index, 1)"
+          />
+        </div>
       </div>
       <button class="btn btn-light" @click="clearAllFilters">
         <i class="fas fa-times-circle"></i>
@@ -35,6 +46,7 @@
 
  <script>
   import FilterElement from 'vue/bmt_filter/filter.vue'
+  import SavedFilterElement from 'vue/bmt_filter/saved_filter.vue'
 
   export default {
     name: 'FilterContainer',
@@ -44,12 +56,18 @@
       }
     },
     props: {
-      container: Object
+      container: Object,
+      saved_filters: Array
     },
-    components: { FilterElement },
+    components: { FilterElement, SavedFilterElement },
     computed: {
       searchJSON() {
         return this.filters.map((f) => f.data);
+      }
+    },
+    watch: {
+      filters() {
+        $('.open-save-bmt-modal').toggleClass('hidden', !this.filters.length)
       }
     },
     methods: {
@@ -67,6 +85,9 @@
       },
       clearAllFilters() {
         this.filters = [];
+      },
+      openSavedFilters() {
+        $('.savedFilterContainer').toggleClass('open')
       },
       loadFilters(filters) {
         this.clearAllFilters();
