@@ -99,7 +99,7 @@ class RepositoryRowsController < ApplicationController
         label_printer,
         LabelTemplate.first.render( # Currently we will only use the default template
           item_id: repository_row.code,
-          item_name: repository_row.name
+          item_name: repository_row.name.truncate(64)
         ),
         params[:copies].to_i
       ).job_id
