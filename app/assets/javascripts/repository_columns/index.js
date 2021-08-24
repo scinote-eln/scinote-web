@@ -258,6 +258,9 @@ var RepositoryColumns = (function() {
       case 'row-id':
         colType = 'RepositoryNumberValue';
         break;
+      case 'row-external-id':
+        colType = 'RepositoryTextValue';
+        break;
       case 'row-name':
         colType = 'RepositoryTextValue';
         break;

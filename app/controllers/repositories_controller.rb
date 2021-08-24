@@ -51,8 +51,6 @@ class RepositoriesController < ApplicationController
     @snapshot_provisioning = @repository.repository_snapshots.provisioning.any?
 
     @busy_printer = LabelPrinter.where.not(current_print_job_ids: []).first
-
-    render(@repository.type == 'BmtRepository' ? :show_bmt : :show)
   end
 
   def table_toolbar

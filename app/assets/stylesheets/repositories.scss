@@ -158,7 +158,7 @@
     top: calc(4em + var(--navbar-height));
     transition: .4s $timing-function-sharp;
     width: calc(100% - var(--repository-sidebar-margin));
-    z-index: 100;
+    z-index: 99;
 
     .filter-container {
       flex-shrink: 0;

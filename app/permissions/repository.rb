@@ -32,6 +32,8 @@ Canaid::Permissions.register_for(Repository) do
 
   # repository: archive, restore
   can :archive_repository do |user, repository|
+    next false if repository.is_a?(BmtRepository)
+
     !repository.shared_with?(user.current_team) && user.is_admin_of_team?(repository.team)
   end
 
