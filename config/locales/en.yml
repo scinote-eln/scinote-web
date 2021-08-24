@@ -1366,6 +1366,8 @@ en:
       no_archived_items_matched: "No archived items matched your search request"
 
       bmt_search:
+        bmt_filter: "Biomolecule filter"
+        save_filters: "Save filters"
         title: "Filters"
         clear_all: "Clear all"
         add_filter: "Add filter"
