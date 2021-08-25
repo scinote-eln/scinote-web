@@ -10,7 +10,11 @@
           </option>
         </select>
       </div>
-      <component :is="type" @filter:updateData="updateFilter" :currentData="filter.data" />
+      <component
+        :is="type"
+        @filter:updateData="updateFilter"
+        :additionalDataAttributes="additionalDataAttributes"
+        :currentData="filter.data" />
     </div>
     <div class="filter-remove">
       <button class="btn btn-light icon-btn" @click="$emit('filter:delete')">
@@ -32,7 +36,8 @@
 
   export default {
     props: {
-      filter: Object
+      filter: Object,
+      additionalDataAttributes: Array
     },
     data() {
       return {
@@ -45,7 +50,8 @@
           'variantSequenceFilter',
           'fullSequenceFilter',
           'monomerSubstructureSearchFilter'
-        ]
+        ],
+        additionaDataAttributes: []
       }
     },
     components: {

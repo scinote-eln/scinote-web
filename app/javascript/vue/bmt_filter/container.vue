@@ -26,12 +26,13 @@
         {{ i18n.t('repositories.show.bmt_search.no_filters') }}
       </div>
       <FilterElement
-          v-for="(filter, index) in filters"
-          :key="filter.id"
-          :filter.sync="filters[index]"
-          @filter:delete="filters.splice(index, 1)"
-          @filter:update="updateFilter"
-        />
+        v-for="(filter, index) in filters"
+        :key="filter.id"
+        :filter.sync="filters[index]"
+        :additionalDataAttributes="additionalDataAttributes"
+        @filter:delete="filters.splice(index, 1)"
+        @filter:update="updateFilter"
+      />
     </div>
     <div class="footer">
       <button class="btn btn-light add-filter" @click="addFilter">
@@ -51,22 +52,37 @@
 
   export default {
     name: 'FilterContainer',
+    data() {
+      return {
+        filters: [],
+        additionalDataAttributes: []
+      }
+    },
     props: {
       container: Object,
       savedFilters: Array,
       bmtApiBaseUrl: String
     },
-    data() {
-      return {
-        filters: []
-      }
+    created() {
+      this.fetchAdditionalDataAttributes();
     },
     components: { FilterElement, SavedFilterElement },
     computed: {
       searchJSON() {
-        const filterData = this.filters.map(f => f.data)
+        let mergedFilters = this.filters.map(f => f.data).filter(f => f.type !== 'additionalDataFilter');
+        let additionalDataFilters = this.filters.map(f => f.data).filter(f => f.type === 'additionalDataFilter');
+
+        mergedFilters.push(
+          {
+            'type': 'additionalDataFilter',
+            'dataList': additionalDataFilters.map(f => {
+              return { 'attribute': f.attribute, 'value': f.value }
+            })
+          }
+        );
+
         return {
-          'filters': filterData,
+          'filters': mergedFilters,
           'resultAttributeNames': ['Cid']
         }
       }
@@ -105,16 +121,40 @@
       toggleSavedFilters() {
         $('.saved-filters-container').toggleClass('open');
       },
+      fetchAdditionalDataAttributes() {
+        $.get(this.bmtApiBaseUrl + '/admin/macromolecules/attributes', (data) => {
+          this.additionalDataAttributes = data
+        });
+      },
       loadFilters(filters) {
         this.toggleSavedFilters();
         this.clearFilters();
-        filters.forEach((filter, index) => {
-          this.filters.push(
-            {
-              id: index,
-              data: filter
-            }
-          );
+
+        let id = 1;
+
+        filters.forEach(filter => {
+          // extract additional filters
+          if(filter.type === 'additionalDataFilter') {
+            filter.dataList.forEach(additionalDataFilter => {
+              this.filters.push(
+                {
+                  'id': id++,
+                  'data': {
+                    'type': 'additionalDataFilter',
+                    'attribute': additionalDataFilter.attribute,
+                    'value': additionalDataFilter.value
+                  }
+                }
+              )
+            });
+          } else {
+            this.filters.push(
+              {
+                'id': id++,
+                'data': filter
+              }
+            );
+          }
         });
         this.fetchCIDs();
       }
