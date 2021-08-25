@@ -47,6 +47,8 @@ class User < ApplicationRecord
     }
   }.freeze
 
+  DEFAULT_OTP_DRIFT_TIME_SECONDS = 10
+
   store_accessor :variables, :export_vars
 
   default_variables(
@@ -621,7 +623,10 @@ class User < ApplicationRecord
     raise StandardError, 'Missing otp_secret' unless otp_secret
 
     totp = ROTP::TOTP.new(otp_secret, issuer: 'sciNote')
-    totp.verify(otp, drift_behind: 10)
+    totp.verify(
+      otp,
+      drift_behind: ENV.fetch('OTP_DRIFT_TIME_SECONDS', DEFAULT_OTP_DRIFT_TIME_SECONDS).to_i
+    )
   end
 
   def assign_2fa_token!
