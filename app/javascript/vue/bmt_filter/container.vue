@@ -8,10 +8,10 @@
         </div>
         <div class="dropdown-menu saved-filters-container">
           <SavedFilterElement
-            v-for="(saved_filter, index) in saved_filters"
-            :key="saved_filter.id"
-            :saved_filter.sync="saved_filters[index]"
-            @saved_filter:delete="saved_filters.splice(index, 1)"
+            v-for="(savedFilter, index) in savedFilters"
+            :key="savedFilter.id"
+            :savedFilter.sync="savedFilters[index]"
+            @savedFilter:delete="savedFilters.splice(index, 1)"
           />
         </div>
       </div>
@@ -50,14 +50,14 @@
 
   export default {
     name: 'FilterContainer',
+    props: {
+      container: Object,
+      savedFilters: Array
+    },
     data() {
       return {
         filters: []
       }
-    },
-    props: {
-      container: Object,
-      saved_filters: Array
     },
     components: { FilterElement, SavedFilterElement },
     computed: {
@@ -77,6 +77,7 @@
       },
       updateFilter(filter) {
         this.filters.find((f) => f.id === filter.id).data = filter.data;
+        this.$emit('filters:update', this.searchJSON);
       },
       clearAllFilters() {
         this.filters = [];
