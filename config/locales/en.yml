@@ -148,6 +148,8 @@ en:
               per_column_limit: "Too many items in the column"
         webhook:
           attributes:
+            configuration:
+              disabled: 'Webhooks are disabled'
             url:
               not_valid: 'Not valid URL'
 

@@ -14,7 +14,7 @@ module Organization
     end
 
     can :create_acitivity_filters do
-      true
+      Rails.application.config.x.webhooks_enabled
     end
   end
 end
