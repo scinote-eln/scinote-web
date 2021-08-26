@@ -10,7 +10,7 @@ window.initBMTFilter = () => {
     el: '#bmtFilterContainer',
     data: () => {
       return {
-        saved_filters: [],
+        savedFilters: [],
         filters: []
       };
     },
@@ -18,8 +18,11 @@ window.initBMTFilter = () => {
       'filter-container': FilterContainer
     },
     methods: {
+      updateFilters(filters) {
+        this.filters = filters;
+      },
       getFilters() {
-        return this.filters.map(f => f.data)
+        return this.filters;
       }
     }
   });
@@ -28,19 +31,18 @@ window.initBMTFilter = () => {
   $("#saveBmtFilterForm" )
     .off()
     .on('ajax:before', function() {
-     $('#bmt_filter_filters').val(bmtFilterContainer.getFilters());
+     $('#bmt_filter_filters').val(JSON.stringify(bmtFilterContainer.getFilters()));
     })
     .on('ajax:success', function(e, result) {
-      bmtFilterContainer.saved_filters.push(result.data);
+      bmtFilterContainer.savedFilters.push(result.data);
       $('#modalSaveBmtFilter').modal('hide');
     });
 
   $.get($('#bmtFilterContainer').data('url-saved-filters'), function(result) {
-    bmtFilterContainer.saved_filters = result.data;
+    bmtFilterContainer.savedFilters = result.data;
   })
 };
 
 $('.repository-show').on('click', '.open-save-bmt-modal', () => {
   $('#modalSaveBmtFilter').modal('show');
 })
-

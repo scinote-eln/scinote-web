@@ -97,7 +97,10 @@
         <%= t('repositories.show.bmt_search.bmt_filter') %>
       </button>
       <div class="dropdown-menu bmt-filters-container" id="bmtFilterContainer" data-url-saved-filters="<%= bmt_filters_path %>">
-        <filter-container :saved_filters.sync="saved_filters" :filters.sync="filters"></filter-container>
+        <filter-container
+          @filters:update="updateFilters"
+          :saved-filters.sync="savedFilters"
+          :filters.sync="filters" />
       </div>
     </div>
     <button

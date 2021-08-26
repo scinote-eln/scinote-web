@@ -1,6 +1,6 @@
 <template>
   <div class="saved-filter-element">
-    {{ saved_filter.attributes.name }}
+    {{ savedFilter.attributes.name }}
     <button class="btn btn-light icon-btn" @click="deleteFilter">
       <i class="fas fa-trash"></i>
     </button>
@@ -11,17 +11,17 @@
   export default {
     name: 'SavedFilterElement',
     props: {
-      saved_filter: Object
+      savedFilter: Object
     },
     methods: {
       deleteFilter() {
         let filter = this
         $.ajax({
-          url: this.saved_filter.attributes.delete_url,
+          url: this.savedFilter.attributes.delete_url,
           type: 'DELETE',
           dataType: 'json',
           success: function() {
-            filter.$emit('saved_filter:delete')
+            filter.$emit('savedFilter:delete')
           }
         });
       }
