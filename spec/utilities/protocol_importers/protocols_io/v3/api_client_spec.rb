@@ -4,7 +4,6 @@ require 'rails_helper'
 
 describe ProtocolImporters::ProtocolsIo::V3::ApiClient do
   CONSTANTS = Constants::PROTOCOLS_IO_V3_API
-  TOKEN = 'test_token'
 
   describe '#protocol_list' do
     context 'when search key is not given' do
@@ -114,17 +113,6 @@ describe ProtocolImporters::ProtocolsIo::V3::ApiClient do
         subject.protocol_list(query)
         expect(WebMock).to have_requested(:get, URL).with(query: query)
       end
-
-      it 'should send authorization token if provided on initialization' do
-        headers = { 'Authorization': "Bearer #{TOKEN}" }
-        stub_protocols.with(headers: headers, query: default_query_params_with_key)
-                      .to_return(status: 200,
-                                body: JSON.generate(status_code: 0),
-                                headers: { 'Content-Type': 'application/json' })
-
-        ProtocolImporters::ProtocolsIo::V3::ApiClient.new(TOKEN).protocol_list(key_query)
-        expect(WebMock).to have_requested(:get, URL).with(headers: headers, query: default_query_params_with_key)
-      end
     end
   end
 
@@ -151,14 +139,6 @@ describe ProtocolImporters::ProtocolsIo::V3::ApiClient do
       stub_request(:get, SINGLE_PROTOCOL_URL).to_timeout
 
       expect { subject.single_protocol(PROTOCOL_ID) }.to raise_error(ProtocolImporters::ProtocolsIo::V3::NetworkError)
-    end
-
-    it 'should send authorization token if provided on initialization' do
-      headers = { 'Authorization': "Bearer #{TOKEN}" }
-      stub_single_protocol.with(headers: headers)
-
-      ProtocolImporters::ProtocolsIo::V3::ApiClient.new(TOKEN).single_protocol(PROTOCOL_ID)
-      expect(WebMock).to have_requested(:get, SINGLE_PROTOCOL_URL).with(headers: headers)
     end
   end
 

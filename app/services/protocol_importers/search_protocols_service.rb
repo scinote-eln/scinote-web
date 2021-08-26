@@ -40,7 +40,7 @@ module ProtocolImporters
       @errors[:invalid_params][:page_id] = 'Page needs to be positive' if @query_params[:page_id]&.to_i&.negative?
 
       # try if endpints exists
-      @errors[:invalid_params][:source_endpoint] = 'Wrong source endpoint' unless endpoint_name&.is_a?(String)
+      @errors[:invalid_params][:source_endpoint] = 'Wrong source endpoint' unless endpoint_name.is_a?(String)
 
       succeed?
     end
