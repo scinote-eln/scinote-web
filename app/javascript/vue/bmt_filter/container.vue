@@ -50,14 +50,10 @@
 
   export default {
     name: 'FilterContainer',
-    data() {
-      return {
-        filters: []
-      }
-    },
     props: {
       container: Object,
-      saved_filters: Array
+      saved_filters: Array,
+      filters: Array
     },
     components: { FilterElement, SavedFilterElement },
     computed: {

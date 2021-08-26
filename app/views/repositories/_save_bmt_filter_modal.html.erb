@@ -7,11 +7,12 @@
           <%= t('repositories.show.bmt_search.save_filters') %>
         </h4>
       </div>
-      <%= form_with url: '', method: :post, :html => { :id => "saveBmtFilterForm" } do |f| %>
+      <%= form_with model: BmtFilter.new, method: :post, :html => { :id => "saveBmtFilterForm" } do |f| %>
         <div class="modal-body">
+          <%= f.hidden_field :filters, class: "sci-input-field" %>
           <div class="sci-input-container">
-            <%= f.label :filter_name %>
-            <%= f.text_field :filter_name, class: "sci-input-field" %>
+            <%= f.label :name %>
+            <%= f.text_field :name, class: "sci-input-field" %>
           </div>
         </div>
 

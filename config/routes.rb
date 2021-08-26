@@ -779,6 +779,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :bmt_filters, only: %i(index create destroy)
+
   match '/marvin4js-license.cxl', to: 'bio_eddie_assets#license', via: :get
 
   match 'biomolecule_toolkit/*path', to: 'bio_eddie_assets#bmt_request',

@@ -314,6 +314,39 @@ ALTER SEQUENCE public.assets_id_seq OWNED BY public.assets.id;
 
 
 --
+-- Name: bmt_filters; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.bmt_filters (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    filters character varying NOT NULL,
+    created_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: bmt_filters_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.bmt_filters_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: bmt_filters_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.bmt_filters_id_seq OWNED BY public.bmt_filters.id;
+
+
+--
 -- Name: checklist_items; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3084,6 +3117,13 @@ ALTER TABLE ONLY public.assets ALTER COLUMN id SET DEFAULT nextval('public.asset
 
 
 --
+-- Name: bmt_filters id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bmt_filters ALTER COLUMN id SET DEFAULT nextval('public.bmt_filters_id_seq'::regclass);
+
+
+--
 -- Name: checklist_items id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3670,6 +3710,14 @@ ALTER TABLE ONLY public.asset_text_data
 
 ALTER TABLE ONLY public.assets
     ADD CONSTRAINT assets_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: bmt_filters bmt_filters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bmt_filters
+    ADD CONSTRAINT bmt_filters_pkey PRIMARY KEY (id);
 
 
 --
@@ -4425,6 +4473,13 @@ CREATE INDEX index_assets_on_last_modified_by_id ON public.assets USING btree (l
 --
 
 CREATE INDEX index_assets_on_team_id ON public.assets USING btree (team_id);
+
+
+--
+-- Name: index_bmt_filters_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_bmt_filters_on_created_by_id ON public.bmt_filters USING btree (created_by_id);
 
 
 --
@@ -7148,6 +7203,14 @@ ALTER TABLE ONLY public.protocols
 
 
 --
+-- Name: bmt_filters fk_rails_de5b654b84; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bmt_filters
+    ADD CONSTRAINT fk_rails_de5b654b84 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: my_modules fk_rails_e21638fa54; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7504,6 +7567,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210715125349'),
 ('20210716124649'),
 ('20210720112050'),
-('20210812095254');
+('20210812095254'),
+('20210825112050');
 
 

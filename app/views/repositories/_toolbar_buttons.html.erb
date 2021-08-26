@@ -96,8 +96,8 @@
         <span class="fas fa-microscope"></span>
         <%= t('repositories.show.bmt_search.bmt_filter') %>
       </button>
-      <div class="dropdown-menu bmt-filters-container" id="bmtFilterContainer">
-        <filter-container :saved_filters="saved_filters"></filter-container>
+      <div class="dropdown-menu bmt-filters-container" id="bmtFilterContainer" data-url-saved-filters="<%= bmt_filters_path %>">
+        <filter-container :saved_filters.sync="saved_filters" :filters.sync="filters"></filter-container>
       </div>
     </div>
     <button

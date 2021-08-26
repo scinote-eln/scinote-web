@@ -36,6 +36,10 @@ Canaid::Permissions.register_for(Team) do
     user.is_normal_user_or_admin_of_team?(team)
   end
 
+  can :manage_bmt_filters do |user, team|
+    user.is_normal_user_or_admin_of_team?(team)
+  end
+
   # repository: create, copy
   can :create_repositories do |user, team|
     within_limits = Repository.within_global_limits?
