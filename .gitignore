@@ -35,6 +35,9 @@ ehthumbs.db
 # Ignore temporary files
 public/system/*
 
+# Ignore BioEddie installion in public folder
+public/bio_eddie/
+
 # Ignore ActiveStorage Disc service storage directory
 storage/
 

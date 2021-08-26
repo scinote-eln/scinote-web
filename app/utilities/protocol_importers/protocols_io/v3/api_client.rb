@@ -12,12 +12,9 @@ module ProtocolImporters
         default_timeout CONSTANTS[:default_timeout]
         logger Rails.logger, CONSTANTS[:debug_level]
 
-        def initialize(token = nil)
-          # Currently we support public tokens only (no token needed for public data)
-          @auth = { token: token }
-
+        def initialize
           # Set default headers
-          self.class.headers('Authorization': "Bearer #{@auth[:token]}") if @auth[:token].present?
+          self.class.headers('Authorization' => "Bearer #{ENV.fetch('PROTOCOLS_IO_ACCESS_TOKEN')}")
         end
 
         # Query params available are:
