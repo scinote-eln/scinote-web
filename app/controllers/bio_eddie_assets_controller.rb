@@ -66,8 +66,10 @@ class BioEddieAssetsController < ApplicationController
       api_request['x-api-key'] = ENV['BIOMOLECULE_TOOLKIT_API_KEY'] if ENV['BIOMOLECULE_TOOLKIT_API_KEY']
       api_request['Content-Type'] = 'application/json'
       request_body = request.body.read
+
       api_request.body = request_body if request_body.present?
       api_response = http.request(api_request)
+
       render body: api_response.body, content_type: api_response.content_type, status: api_response.code
     end
   end

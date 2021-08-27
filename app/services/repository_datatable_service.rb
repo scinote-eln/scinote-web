@@ -75,6 +75,8 @@ class RepositoryDatatableService
         repository_rows.count
       end
 
+    repository_rows = repository_rows.where(external_id: @params[:external_ids]) if @params[:external_ids]
+
     if search_value.present?
       if @repository.default_search_fileds.include?('users.full_name')
         repository_rows = repository_rows.joins(:created_by)

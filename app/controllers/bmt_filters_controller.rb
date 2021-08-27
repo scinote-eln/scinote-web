@@ -8,7 +8,10 @@ class BmtFiltersController < ApplicationController
   end
 
   def create
-    filter = BmtFilter.new(filters_params)
+    filter = BmtFilter.new(
+      name: filters_params[:name],
+      filters: JSON.parse(filters_params[:filters])
+    )
     filter.created_by = current_user
     if filter.save
       render json: filter, serializer: BmtFilterSerializer

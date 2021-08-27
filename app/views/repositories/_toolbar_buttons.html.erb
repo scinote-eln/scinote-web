@@ -88,7 +88,7 @@
   <% if @repository.is_a?(BmtRepository) %>
     <div class="dropdown">
         <button id="bmtFiltersDropdown"
-                class="btn btn-secondary"
+                class="btn btn-secondary bmt-filters-button"
                 type="button"
                 data-toggle="dropdown"
                 aria-haspopup="true"
@@ -96,9 +96,18 @@
         <span class="fas fa-microscope"></span>
         <%= t('repositories.show.bmt_search.bmt_filter') %>
       </button>
-      <div class="dropdown-menu bmt-filters-container" id="bmtFilterContainer" data-url-saved-filters="<%= bmt_filters_path %>">
+      <div
+        class="dropdown-menu bmt-filters-container"
+        id="bmtFilterContainer"
+        data-datatable-id="#repository-table-<%= @repository.id %>"
+        data-saved-filters-url="<%= bmt_filters_url %>"
+        data-bmt-api-base-url="<%= bmt_request_url(path: 'api') %>"
+      >
         <filter-container
           @filters:update="updateFilters"
+          @filters:clear="clearFilters"
+          @cids:update="updateExternalIds"
+          :bmt-api-base-url="bmtApiBaseUrl"
           :saved-filters.sync="savedFilters"
           :filters.sync="filters" />
       </div>

@@ -1,3 +1,19 @@
+.bmt-filters-button.active-filters {
+  position: relative;
+
+  &::after {
+    background: $brand-accent;
+    border-radius: 50%;
+    content: "";
+    display: block;
+    height: 8px;
+    position: absolute;
+    right: .3em;
+    top: .3em;
+    width: 8px;
+  }
+}
+
 #bmtFilterContainer {
   min-width: 422px;
   z-index: 100;
@@ -63,15 +79,37 @@
     align-items: center;
     border-top: $border-tertiary;
     display: flex;
+    padding: 0 1em;
 
     .add-filter {
       margin-right: auto;
     }
   }
 
-  .savedFilterContainer {
-    .saved-filter-element {
-      display: flex;
+  .saved-filters-container {
+    .title {
+      cursor: pointer;
     }
+  }
+
+  .saved-filters-list {
+    padding: 0 1em;
+  }
+
+  .saved-filters-element {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    min-width: 200px;
+
+    i {
+      color: $color-silver-chalice;
+    }
+
+  }
+
+  .saved-filters-element:hover i {
+    color: $color-black;
   }
 }

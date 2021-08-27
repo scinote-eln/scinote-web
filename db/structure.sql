@@ -320,7 +320,7 @@ ALTER SEQUENCE public.assets_id_seq OWNED BY public.assets.id;
 CREATE TABLE public.bmt_filters (
     id bigint NOT NULL,
     name character varying NOT NULL,
-    filters character varying NOT NULL,
+    filters json NOT NULL,
     created_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
