@@ -785,7 +785,8 @@ Rails.application.routes.draw do
 
   match 'biomolecule_toolkit/*path', to: 'bio_eddie_assets#bmt_request',
                                      via: %i(get post put delete),
-                                     defaults: { format: 'json' }
+                                     defaults: { format: 'json' },
+                                     as: 'bmt_request'
 
   post 'global_activities', to: 'global_activities#index'
 

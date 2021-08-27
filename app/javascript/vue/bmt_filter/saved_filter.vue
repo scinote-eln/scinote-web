@@ -1,6 +1,6 @@
 <template>
-  <div class="saved-filter-element">
-    {{ savedFilter.attributes.name }}
+  <div class="saved-filters-element">
+    <span @click="loadFilters">{{ savedFilter.attributes.name }}</span>
     <button class="btn btn-light icon-btn" @click="deleteFilter">
       <i class="fas fa-trash"></i>
     </button>
@@ -14,6 +14,9 @@
       savedFilter: Object
     },
     methods: {
+      loadFilters() {
+        this.$emit('savedFilter:load', this.savedFilter.attributes.filters)
+      },
       deleteFilter() {
         let filter = this
         $.ajax({
@@ -27,5 +30,4 @@
       }
     }
   }
-</script>
 </script>
