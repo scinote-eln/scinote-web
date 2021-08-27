@@ -30,7 +30,7 @@
 <script>
   import FilterMixin from 'vue/bmt_filter/mixins/filter.js'
   export default {
-    name: 'fullSequenceFilter',
+    name: 'fullsequenceFilter',
     mixins: [FilterMixin],
     data() {
       return {

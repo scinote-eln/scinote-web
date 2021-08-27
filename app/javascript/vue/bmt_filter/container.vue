@@ -1,21 +1,22 @@
 <template>
   <div class="filter-container">
     <div class="header">
-      <div class="dropdown savedFilterContainer">
-        <div class="title" @click="openSavedFilters()">
+      <div class="dropdown saved-filters-container">
+        <div class="title" @click="toggleSavedFilters">
           {{ i18n.t('repositories.show.bmt_search.title') }}
-          <i class="fas fa-caret-down"></i>
+          <i v-if="savedFilters.length" class="fas fa-caret-down"></i>
         </div>
-        <div class="dropdown-menu saved-filters-container">
+        <div v-if="savedFilters.length" class="dropdown-menu saved-filters-list">
           <SavedFilterElement
             v-for="(savedFilter, index) in savedFilters"
             :key="savedFilter.id"
             :savedFilter.sync="savedFilters[index]"
+            @savedFilter:load="loadFilters"
             @savedFilter:delete="savedFilters.splice(index, 1)"
           />
         </div>
       </div>
-      <button class="btn btn-light" @click="clearAllFilters">
+      <button class="btn btn-light" @click="clearFilters">
         <i class="fas fa-times-circle"></i>
         {{ i18n.t('repositories.show.bmt_search.clear_all') }}
       </button>
@@ -37,7 +38,7 @@
         <i class="fas fa-plus"></i>
         {{ i18n.t('repositories.show.bmt_search.add_filter') }}
       </button>
-      <button class="btn btn-primary">
+      <button @click="fetchCIDs" class="btn btn-primary">
         {{ i18n.t('repositories.show.bmt_search.apply') }}
       </button>
     </div>
@@ -52,7 +53,8 @@
     name: 'FilterContainer',
     props: {
       container: Object,
-      savedFilters: Array
+      savedFilters: Array,
+      bmtApiBaseUrl: String
     },
     data() {
       return {
@@ -62,31 +64,50 @@
     components: { FilterElement, SavedFilterElement },
     computed: {
       searchJSON() {
-        return this.filters.map((f) => f.data);
+        const filterData = this.filters.map(f => f.data)
+        return {
+          'filters': filterData,
+          'resultAttributeNames': ['Cid']
+        }
       }
     },
     watch: {
       filters() {
         $('.open-save-bmt-modal').toggleClass('hidden', !this.filters.length)
+        $('.bmt-filters-button').toggleClass('active-filters', !!this.filters.length)
       }
     },
     methods: {
       addFilter() {
-        let id = this.filters.length ? this.filters[this.filters.length - 1].id + 1 : 1
+        const id = this.filters.length ? this.filters[this.filters.length - 1].id + 1 : 1
         this.filters.push({ id: id, data: { type: "fullSequenceFilter" } });
       },
       updateFilter(filter) {
         this.filters.find((f) => f.id === filter.id).data = filter.data;
-        this.$emit('filters:update', this.searchJSON);
+        this.$emit('filters:update', this.searchJSON.filters);
       },
-      clearAllFilters() {
+      clearFilters() {
         this.filters = [];
+        this.$emit('filters:clear');
       },
-      openSavedFilters() {
-        $('.savedFilterContainer').toggleClass('open')
+      fetchCIDs() {
+        $.ajax({
+          type: 'POST',
+          url: this.bmtApiBaseUrl + '/macromolecule/search',
+          data: JSON.stringify(this.searchJSON),
+          contentType: 'application/json; charset=utf-8',
+          dataType: 'json',
+          success: (data) => {
+            this.$emit('cids:update', data.map(i => i.Cid))
+          }
+        });
+      },
+      toggleSavedFilters() {
+        $('.saved-filters-container').toggleClass('open');
       },
       loadFilters(filters) {
-        this.clearAllFilters();
+        this.toggleSavedFilters();
+        this.clearFilters();
         filters.forEach((filter, index) => {
           this.filters.push(
             {
@@ -95,6 +116,7 @@
             }
           );
         });
+        this.fetchCIDs();
       }
     }
   }

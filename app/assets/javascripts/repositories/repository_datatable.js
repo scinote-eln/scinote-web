@@ -406,6 +406,10 @@ var RepositoryDatatable = (function(global) {
         url: $(TABLE_ID).data('source'),
         data: function(d) {
           d.archived = $('.repository-show').hasClass('archived');
+
+          if ($('[data-external-ids]').length) {
+            d.external_ids = $('[data-external-ids]').attr('data-external-ids').split(',');
+          }
         },
         global: false,
         type: 'POST'
