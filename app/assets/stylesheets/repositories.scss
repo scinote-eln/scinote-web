@@ -127,24 +127,6 @@
     }
   }
 
-  .barcode-scanner {
-    cursor: pointer;
-    position: absolute;
-    right: 12px;
-    top: 12px;
-  }
-
-  .search-container {
-    .search-field {
-      padding-right: 32px;
-
-      &.barcode-mode {
-        background-color: $brand-primary;
-        opacity: .3;
-      }
-    }
-  }
-
   .main-actions {
     align-items: center;
     background-color: $color-white;
@@ -595,5 +577,23 @@
     margin: auto;
     margin-top: 60px;
     max-height: 290px;
+  }
+}
+
+.barcode-scanner {
+  cursor: pointer;
+  position: absolute;
+  right: 12px;
+  top: 12px;
+}
+
+.search-container {
+  .search-field {
+    padding-right: 32px;
+
+    &.barcode-mode {
+      background-color: $brand-primary;
+      opacity: .3;
+    }
   }
 }
