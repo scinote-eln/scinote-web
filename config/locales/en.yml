@@ -530,6 +530,7 @@ en:
           error_pdf_notification_title: "Your report .PDF generation failed. Please try again."
           error_notification_message: "Report: %{report_link} | Team: %{team_name}"
           content_generation_error: "Failed to generate report content"
+          file_preview_generation_error: "We were unable to generate preview for this file."
         modal_delete:
           head_title: "Delete report/s"
           message: "Are you sure to delete selected report/s?"
