@@ -42,6 +42,9 @@ window.initBMTFilter = () => {
       },
       reloadDataTable() {
         this.dataTableElement.DataTable().ajax.reload();
+      },
+      handleSearchError(error) {
+        setTimeout(() => $('.dataTables_empty').html(error), 100);
       }
     }
   });
