@@ -41,8 +41,7 @@
 
 .dropdown-menu {
   .form-dropdown-break hr {
-    margin-bottom: 8px;
-    margin-top: 0;
+    margin: 0;
   }
 
   .form-dropdown-item {
@@ -62,6 +61,7 @@
 
     .form-dropdown-item-info {
       color: $color-silver-chalice !important;
+      padding-top: .3em;
     }
 
     .project-archive-restore-form {

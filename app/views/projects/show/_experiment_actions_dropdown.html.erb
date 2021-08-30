@@ -63,9 +63,15 @@
           <% end %>
         </li>
       <% end %>
-      <li class="form-dropdown-break">
-        <hr>
-      </li>
+      <% if experiment.active? && can_manage_experiment?(experiment) ||
+            can_move_experiment?(experiment) ||
+            can_clone_experiment?(experiment) ||
+            experiment.active? && can_archive_experiment?(experiment) ||
+            experiment.archived? && can_restore_experiment?(experiment) %>
+        <li class="form-dropdown-break">
+          <hr>
+        </li>
+      <% end %>
       <li class="form-dropdown-item">
         <div class="form-dropdown-item-info">
           <small><%= t('experiments.experiment_id') %>: <strong><%= experiment.code %></strong></small>
