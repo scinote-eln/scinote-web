@@ -26,8 +26,8 @@ class CreateLabelTemplates < ActiveRecord::Migration[6.1]
           ^XA
           ^LH20,20
           ^CF0,23
-          ^FO0,0^FDIT68329^FS
-          ^FO0,20^BQN,2,4^FDMA\{{item_id}}^FS
+          ^FO0,0^FD{{item_id}}^FS
+          ^FO0,7^BQN,2,4^FDMA\{{item_id}}^FS
           ^FO95,30^FB180,4,0,L^FD{{item_name}}^FS^FS
           ^XZ
         HEREDOC
