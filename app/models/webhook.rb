@@ -6,11 +6,18 @@ class Webhook < ApplicationRecord
   belongs_to :activity_filter
   validates :http_method, presence: true
   validates :url, presence: true
+  validate :enabled?
   validate :valid_url
 
   scope :active, -> { where(active: true) }
 
   private
+
+  def enabled?
+    unless Rails.application.config.x.webhooks_enabled
+      errors.add(:configuration, I18n.t('activerecord.errors.models.webhook.attributes.configuration.disabled'))
+    end
+  end
 
   def valid_url
     unless /\A#{URI::DEFAULT_PARSER.make_regexp(%w(http https))}\z/.match?(url)
