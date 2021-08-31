@@ -1,6 +1,7 @@
 $(document).on('click', '.barcode-scanner', function() {
   var search = $('.search-container .search-field');
-  var input = $('<input>').attr('type', 'text').css('opacity', 0).appendTo('body');
+  var input = $('<input>').attr('type', 'text').css({ position: 'absolute', right: 0, opacity: 0 })
+    .appendTo($('.search-container').parent());
   search.val('');
   search.attr('disabled', true).addClass('barcode-mode');
 
