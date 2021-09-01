@@ -5,6 +5,8 @@ module Api
     class ExperimentSerializer < ActiveModel::Serializer
       type :experiments
       attributes :id, :name, :description, :archived
+
+      include TimestampableModel
     end
   end
 end

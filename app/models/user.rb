@@ -47,6 +47,8 @@ class User < ApplicationRecord
     }
   }.freeze
 
+  DEFAULT_OTP_DRIFT_TIME_SECONDS = 10
+
   store_accessor :variables, :export_vars
 
   default_variables(
@@ -291,6 +293,7 @@ class User < ApplicationRecord
                            foreign_key: :resource_owner_id,
                            dependent: :delete_all
 
+  before_validation :downcase_email!
   before_destroy :destroy_notifications
 
   def name
@@ -621,7 +624,10 @@ class User < ApplicationRecord
     raise StandardError, 'Missing otp_secret' unless otp_secret
 
     totp = ROTP::TOTP.new(otp_secret, issuer: 'sciNote')
-    totp.verify(otp, drift_behind: 10)
+    totp.verify(
+      otp,
+      drift_behind: ENV.fetch('OTP_DRIFT_TIME_SECONDS', DEFAULT_OTP_DRIFT_TIME_SECONDS).to_i
+    )
   end
 
   def assign_2fa_token!
@@ -673,6 +679,12 @@ class User < ApplicationRecord
   end
 
   private
+
+  def downcase_email!
+    return unless email
+
+    self.email = email.downcase
+  end
 
   def destroy_notifications
     # Find all notifications where user is the only reference

@@ -38,7 +38,7 @@ module Users
         return redirect_to after_omniauth_failure_path_for(resource_name)
       end
 
-      user = User.find_by(email: email)
+      user = User.find_by(email: email.downcase)
 
       if user.blank?
         # Create new user and identity

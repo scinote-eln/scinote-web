@@ -5,6 +5,8 @@ module Api
     class RepositoryDateTimeValueSerializer < ActiveModel::Serializer
       attribute :date_time
 
+      include TimestampableModel
+
       def date_time
         object.data
       end

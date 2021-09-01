@@ -9,6 +9,8 @@ module Api
       attribute :inventory_checklist_item_names do
         object.repository_checklist_items.pluck(:data)
       end
+
+      include TimestampableModel
     end
   end
 end

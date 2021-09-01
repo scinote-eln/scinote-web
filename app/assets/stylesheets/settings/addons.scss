@@ -1,3 +1,6 @@
+// scss-lint:disable SelectorDepth SelectorFormat QualifyingElement
+// scss-lint:disable NestingDepth ImportantRule
+
 .user-account-addons {
   .content-pane {
     margin: 0;
@@ -6,6 +9,54 @@
 
   .addons-title {
     border-bottom: $border-tertiary;
+    margin-bottom: 0;
     padding-bottom: 15px;
+  }
+
+  .addons-subtitle {
+    margin-top: 2em;
+  }
+
+  .printers-container {
+    .printer {
+      border: $border-default;
+      padding: 1em;
+
+      .header {
+        align-items: center;
+        display: flex;
+        margin-bottom: .5em;
+
+        .title {
+          font-weight: bold;
+        }
+
+        .control {
+          margin-left: auto;
+        }
+
+        .status {
+          border: $border-default;
+          color: $color-silver-chalice;
+          margin-left: .5em;
+          margin-right: auto;
+          padding: .25em;
+
+          &[data-ready="true"] {
+            background: $brand-success;
+            border-color: $brand-success;
+            color: $color-white;
+          }
+        }
+
+        .fas-check {
+          margin-left: .25em;
+        }
+      }
+
+      .description {
+        margin-bottom: .5em;
+      }
+    }
   }
 }

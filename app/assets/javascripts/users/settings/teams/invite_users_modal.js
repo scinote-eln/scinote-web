@@ -61,6 +61,14 @@
       }
     });
 
+    dropdownSelector.init('#role', {
+      noEmptyOption: true,
+      singleSelect: true,
+      closeOnSelect: true,
+      selectAppearance: 'simple',
+      disableSearch: true
+    });
+
     modal.off('show.bs.modal').on('show.bs.modal', function() {
       // This cannot be scoped outside this function
       // because it is generated via JS
@@ -121,7 +129,7 @@
         var data = {
           emails: dropdownSelector.getValues(emailsInput),
           team_ids: dropdownSelector.getValues(teamsInput),
-          role: roleInput.val(),
+          role: dropdownSelector.getValues(roleInput),
           'g-recaptcha-response': $('#recaptcha-invite-modal').val()
         };
 

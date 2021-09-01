@@ -20,11 +20,17 @@ module Api
                            .page(params.dig(:page, :number))
                            .per(params.dig(:page, :size))
 
-        render jsonapi: tasks, each_serializer: TaskSerializer, rte_rendering: render_rte?, team: @team
+        render jsonapi: tasks, each_serializer: TaskSerializer,
+                               include: include_params,
+                               rte_rendering: render_rte?,
+                               team: @team
       end
 
       def show
-        render jsonapi: @task, serializer: TaskSerializer, rte_rendering: render_rte?, team: @team
+        render jsonapi: @task, serializer: TaskSerializer,
+                               include: include_params,
+                               rte_rendering: render_rte?,
+                               team: @team
       end
 
       def create
@@ -67,6 +73,10 @@ module Api
         raise TypeError unless params.require(:data).require(:type) == 'tasks'
 
         params.require(:data).require(:attributes).permit(%i(name x y description my_module_status_id))
+      end
+
+      def permitted_includes
+        %w(comments)
       end
 
       def load_task_for_managing

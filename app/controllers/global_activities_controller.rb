@@ -3,6 +3,8 @@
 class GlobalActivitiesController < ApplicationController
   include InputSanitizeHelper
 
+  before_action :check_create_activity_filter_permissions, only: :save_activity_filter
+
   def index
     # Preload filter format
     #   {
@@ -106,7 +108,20 @@ class GlobalActivitiesController < ApplicationController
     render json: get_objects(Report)
   end
 
+  def save_activity_filter
+    activity_filter = ActivityFilter.new(activity_filter_params)
+    if activity_filter.save
+      render json: { message: t('global_activities.index.activity_filter_saved') }
+    else
+      render json: { errors: activity_filter.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
   private
+
+  def check_create_activity_filter_permissions
+    render_403 && return unless can_create_acitivity_filters?
+  end
 
   def get_objects(subject)
     query = subject_search_params[:query]
@@ -136,6 +151,10 @@ class GlobalActivitiesController < ApplicationController
 
     matched = matched.limit(Constants::SEARCH_LIMIT).pluck(:id, :name)
     matched.map { |pr| { value: pr[0], label: escape_input(pr[1]) } }
+  end
+
+  def activity_filter_params
+    params.permit(:name, filter: {})
   end
 
   def activity_filters

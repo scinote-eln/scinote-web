@@ -18,8 +18,8 @@ class RepositoryAssetValue < ApplicationRecord
   validates :asset, :repository_cell, presence: true
 
   SORTABLE_COLUMN_NAME = 'active_storage_blobs.filename'
-  SORTABLE_VALUE_INCLUDE = { repository_asset_value: { asset: { file_attachment: :blob } } }.freeze
-  PRELOAD_INCLUDE = { repository_asset_value: { asset: { file_attachment: :blob } } }.freeze
+  EXTRA_SORTABLE_VALUE_INCLUDE = { asset: { file_attachment: :blob } }.freeze
+  EXTRA_PRELOAD_INCLUDE = { asset: { file_attachment: :blob } }.freeze
 
   def formatted
     asset.file_name

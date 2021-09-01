@@ -1,0 +1,66 @@
+.label-printing-progress-modal {
+  background: $color-white;
+  bottom: 1em;
+  box-shadow: $modal-shadow;
+  min-width: 300px;
+  position: fixed;
+  right: 1em;
+  z-index: 9999;
+
+  .modal-header {
+    align-items: center;
+    display: flex;
+    padding: .5em;
+
+    .title {
+      @include font-h3;
+    }
+
+    .printer-status {
+      border: $border-default;
+      color: $color-silver-chalice;
+      margin-left: .5em;
+      margin-right: auto;
+      padding: .25em;
+
+      &[data-status="ready"] {
+        background: $brand-success;
+        border-color: $brand-success;
+        color: $color-white;
+      }
+
+      &[data-status="out_of_labels"] {
+        background: $brand-warning;
+        border-color: $brand-warning;
+        color: $color-white;
+      }
+
+      &[data-status="error"] {
+        background: $brand-danger;
+        border-color: $brand-danger;
+        color: $color-white;
+      }
+    }
+  }
+
+  .modal-body {
+    .printing-items {
+      .id-label {
+        margin-left: .5em;
+        opacity: .5;
+      }
+    }
+
+    .printing-status {
+      color: $brand-primary;
+
+      &[data-status="done"] {
+        color: $brand-success;
+      }
+
+      &[data-status="waiting_labels"], &[data-status="error"] {
+        color: $brand-danger;
+      }
+    }
+  }
+}

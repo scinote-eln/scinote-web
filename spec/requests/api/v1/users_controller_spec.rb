@@ -24,9 +24,11 @@ RSpec.describe 'Api::V1::UsersController', type: :request do
       get api_v1_user_path(id: @user2.id), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(@user2, serializer: Api::V1::UserSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@user2, serializer: Api::V1::UserSerializer)
+            .to_json
+        )['data']
       )
     end
 

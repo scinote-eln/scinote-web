@@ -31,10 +31,11 @@ RSpec.describe 'Api::V1::InventoriesController', type: :request do
           headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(@teams.first.repositories,
-               each_serializer: Api::V1::InventorySerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@teams.first.repositories, each_serializer: Api::V1::InventorySerializer)
+            .to_json
+        )['data']
       )
     end
 
@@ -72,10 +73,11 @@ RSpec.describe 'Api::V1::InventoriesController', type: :request do
       expect { hash_body = json }.not_to raise_exception
 
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(@teams.first.repositories.first,
-               serializer: Api::V1::InventorySerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@teams.first.repositories.first, serializer: Api::V1::InventorySerializer)
+            .to_json
+        )['data']
       )
     end
 
@@ -127,10 +129,10 @@ RSpec.describe 'Api::V1::InventoriesController', type: :request do
       expect(response).to have_http_status 201
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(Repository.last,
-               serializer: Api::V1::InventorySerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource.new(Repository.last, serializer: Api::V1::InventorySerializer)
+          .to_json
+        )['data']
       )
     end
 
@@ -222,7 +224,7 @@ RSpec.describe 'Api::V1::InventoriesController', type: :request do
       headers: @valid_headers
       expect(response).to have_http_status 200
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body.to_json).to match(updated_inventory.to_json)
+      expect(hash_body['data']['attributes']['name']).to match(updated_inventory[:data][:attributes][:name])
     end
 
     it 'When invalid request, inventory does not belong to team' do

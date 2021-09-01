@@ -40,11 +40,13 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(@valid_inventory.repository_columns.limit(10),
-               each_serializer: Api::V1::InventoryColumnSerializer,
-               hide_list_items: true)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@valid_inventory.repository_columns.limit(10),
+                 each_serializer: Api::V1::InventoryColumnSerializer,
+                 hide_list_items: true)
+            .to_json
+        )['data']
       )
     end
 
@@ -93,10 +95,11 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(text_column,
-               serializer: Api::V1::InventoryColumnSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(text_column, serializer: Api::V1::InventoryColumnSerializer)
+            .to_json
+        )['data']
       )
       expect(hash_body[:data]).not_to include('relationships')
     end
@@ -111,18 +114,21 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(list_column,
-               serializer: Api::V1::InventoryColumnSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(list_column, serializer: Api::V1::InventoryColumnSerializer)
+            .to_json
+        )['data']
       )
       expect(hash_body[:data]).to include('relationships')
       expect(hash_body[:included]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(@valid_inventory.repository_columns.limit(10),
-               each_serializer: Api::V1::InventoryColumnSerializer,
-               include: :inventory_list_items)
-          .as_json[:included]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@valid_inventory.repository_columns.limit(10),
+                 each_serializer: Api::V1::InventoryColumnSerializer,
+                 include: :inventory_list_items)
+            .to_json
+        )['included']
       )
     end
 
@@ -136,18 +142,21 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(status_column,
-               serializer: Api::V1::InventoryColumnSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(status_column, serializer: Api::V1::InventoryColumnSerializer)
+            .to_json
+        )['data']
       )
       expect(hash_body[:data]).to include('relationships')
       expect(hash_body[:included]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(@valid_inventory.repository_columns.limit(10),
-               each_serializer: Api::V1::InventoryColumnSerializer,
-               include: :inventory_status_items)
-          .as_json[:included]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@valid_inventory.repository_columns.limit(10),
+                 each_serializer: Api::V1::InventoryColumnSerializer,
+                 include: :inventory_status_items)
+            .to_json
+        )['included']
       )
     end
 
@@ -161,10 +170,11 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(file_column,
-               serializer: Api::V1::InventoryColumnSerializer)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(file_column, serializer: Api::V1::InventoryColumnSerializer)
+            .to_json
+        )['data']
       )
       expect(hash_body[:data]).not_to include('relationships')
     end
@@ -221,11 +231,11 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
       expect(response).to have_http_status 201
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-        ActiveModelSerializers::SerializableResource
-          .new(RepositoryColumn.last,
-               serializer: Api::V1::InventoryColumnSerializer,
-               include: :inventory_cells)
-          .as_json[:data]
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(RepositoryColumn.last, serializer: Api::V1::InventoryColumnSerializer, include: :inventory_cells)
+            .to_json
+        )['data']
       )
     end
 
@@ -397,7 +407,7 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
       headers: @valid_headers
       expect(response).to have_http_status 200
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body.to_json).to match(returned_inventory_column.to_json)
+      expect(hash_body['data']['attributes']['name']).to match(returned_inventory_column[:data][:attributes][:name])
     end
 
     it 'Invalid request, wrong team' do

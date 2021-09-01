@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 
 class Activity < ApplicationRecord
+  ASSIGNMENT_TYPES = %w(
+    assign_user_to_project
+    change_user_role_on_project
+    unassign_user_from_project
+    assign_user_to_module
+    unassign_user_from_module
+    invite_user_to_team
+    remove_user_from_team
+    change_users_role_on_team
+  ).freeze
+
   include ActivityValuesModel
   include GenerateNotificationModel
 
@@ -62,6 +73,9 @@ class Activity < ApplicationRecord
     message_items: {},
     breadcrumbs: {}
   )
+
+  after_create ->(activity) { Activities::DispatchWebhooksJob.perform_later(activity) },
+               if: -> { Rails.application.config.x.webhooks_enabled }
 
   def self.activity_types_list
     activity_list = type_ofs.map do |key, value|
@@ -145,6 +159,12 @@ class Activity < ApplicationRecord
     when ProjectFolder
       breadcrumbs[:project_folder] = subject.name
       generate_breadcrumb(subject.team)
+    when Step
+      breadcrumbs[:step] = subject.name
+      generate_breadcrumb(subject.protocol)
+    when Asset
+      breadcrumbs[:asset] = subject.blob.filename.to_s
+      generate_breadcrumb(subject.result || subject.step || subject.repository_cell.repository_row.repository)
     end
   end
 

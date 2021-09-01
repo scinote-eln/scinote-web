@@ -9,6 +9,8 @@ module Api
       attributes :id, :file_name, :file_size, :file_type, :file_url
       belongs_to :step, serializer: StepSerializer
 
+      include TimestampableModel
+
       def file_type
         object.content_type
       end

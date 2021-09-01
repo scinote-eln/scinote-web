@@ -29,9 +29,7 @@
     <span><%= experiment.code %></span>
   </div>
   <div class="actions actions-cell table-cell">
-    <% if can_manage_experiments?(experiment.project) %>
-      <%= render partial: 'projects/show/experiment_actions_dropdown.html.erb', locals: { experiment: experiment } %>
-    <% end %>
+    <%= render partial: 'projects/show/experiment_actions_dropdown.html.erb', locals: { experiment: experiment } %>
   </div>
   <div class="dates-and-img-container">
     <div class="dates-container">

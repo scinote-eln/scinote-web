@@ -9,6 +9,8 @@ module Api
                             serializer: TaskSerializer,
                             class_name: 'MyModule',
                             unless: -> { object.my_modules.empty? }
+
+      include TimestampableModel
     end
   end
 end

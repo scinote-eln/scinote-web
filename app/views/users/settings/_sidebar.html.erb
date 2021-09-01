@@ -26,11 +26,20 @@
     %>
   </li>
   <li class="delimiter"></li>
-  <li class="sidebar-leaf" >
+  <li class="sidebar-leaf teams-link" >
     <%= link_to t("users.settings.sidebar.teams"),
                 teams_path,
                 class: "sidebar-link #{'selected' if on_settings_team_page?}"
     %>
   </li>
+
+  <% if can_create_acitivity_filters? %>
+    <li class="sidebar-leaf" >
+      <%= link_to t("users.settings.sidebar.webhooks"),
+                  users_settings_webhooks_path,
+                  class: "sidebar-link #{'selected' if on_settings_webhook_page?}"
+      %>
+    </li>
+  <% end %>
 </ul>
 <% end %>

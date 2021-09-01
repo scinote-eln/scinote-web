@@ -16,6 +16,9 @@ module Api
       has_many :input_tasks, key: :inputs,
                              serializer: TaskSerializer,
                              class_name: 'MyModule'
+      has_many :task_comments, key: :comments, serializer: CommentSerializer
+
+      include TimestampableModel
 
       def status_id
         object.my_module_status_id
