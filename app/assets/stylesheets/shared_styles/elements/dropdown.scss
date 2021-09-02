@@ -61,7 +61,13 @@
 
     .form-dropdown-item-info {
       color: $color-silver-chalice !important;
+      border-top: 1px solid $color-concrete;
       padding-top: .3em;
+    }
+
+    &:only-child .form-dropdown-item-info {
+      border-top: 0;
+      padding-top: 0;
     }
 
     .project-archive-restore-form {
