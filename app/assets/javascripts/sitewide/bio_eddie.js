@@ -92,6 +92,11 @@ var bioEddieEditor = (function() {
         } else {
           saveMolecule(svg, structure, scheduleForRegistration);
         }
+      })
+      .catch(() => {
+        if (structure === '$$$$V2.0') {
+          HelperModule.flashAlertMsg(I18n.t('bio_eddie.empty_molecule_error'), 'danger');
+        }
       });
   }
 
@@ -129,7 +134,6 @@ var bioEddieEditor = (function() {
       bioEddieModal.data('update-url', updateUrl);
       bioEddieModal.find('.file-name input').val(name);
       bioEddieModal.modal('show');
-
     }
   };
 }());

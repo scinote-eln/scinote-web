@@ -2688,6 +2688,7 @@ en:
     molecule_name_placeholder: "Click here to enter Molecule name"
     no_molecules_found: "No Molecules Found"
     save_and_register: "Save & Register to Biomolecule Toolkit"
+    empty_molecule_error: "An error occurred. The molecule can't be empty."
 
   marvinjs:
     new_sketch: "New Chemical Drawing"
