@@ -74,7 +74,8 @@ class Activity < ApplicationRecord
     breadcrumbs: {}
   )
 
-  after_create ->(activity) { Activities::DispatchWebhooksJob.perform_later(activity) }
+  after_create ->(activity) { Activities::DispatchWebhooksJob.perform_later(activity) },
+               if: -> { Rails.application.config.x.webhooks_enabled }
 
   def self.activity_types_list
     activity_list = type_ofs.map do |key, value|
