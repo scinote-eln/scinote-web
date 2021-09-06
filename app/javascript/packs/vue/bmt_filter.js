@@ -34,6 +34,7 @@ window.initBMTFilter = () => {
         this.reloadDataTable();
       },
       clearFilters() {
+        this.clearSearchError();
         this.dataTableElement.removeAttr('data-external-ids');
         this.reloadDataTable();
       },
@@ -41,10 +42,14 @@ window.initBMTFilter = () => {
         $(this.$el).closest('.dropdown').removeClass('open');
       },
       reloadDataTable() {
+        this.clearSearchError();
         this.dataTableElement.DataTable().ajax.reload();
       },
       handleSearchError(error) {
-        setTimeout(() => $('.dataTables_empty').html(error), 100);
+        $('.repository-table-error').addClass('active').html(error);
+      },
+      clearSearchError() {
+        $('.repository-table-error').removeClass('active').html('');
       }
     }
   });
