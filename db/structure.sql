@@ -5211,6 +5211,13 @@ CREATE INDEX index_repository_cells_on_repository_column_id ON public.repository
 
 
 --
+-- Name: index_repository_cells_on_repository_row_and_repository_column; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_repository_cells_on_repository_row_and_repository_column ON public.repository_cells USING btree (repository_row_id, repository_column_id);
+
+
+--
 -- Name: index_repository_cells_on_repository_row_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7489,6 +7496,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210715125349'),
 ('20210716124649'),
 ('20210720112050'),
-('20210811103123');
+('20210811103123'),
+('20210906132120');
 
 
