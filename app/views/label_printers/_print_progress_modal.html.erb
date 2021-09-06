@@ -25,3 +25,7 @@
     </div>
   </div>
 </div>
+
+<% if label_printer.out_of_labels? || label_printer.error?
+     label_printer.update(current_print_job_ids: [])
+   end %>
