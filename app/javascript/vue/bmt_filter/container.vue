@@ -115,6 +115,10 @@
           dataType: 'json',
           success: (data) => {
             this.$emit('cids:update', data.map(i => i.Cid))
+          },
+          error: ()=> {
+            this.$emit('cids:update', [])
+            this.$emit('cids:error', this.i18n.t('repositories.show.error_searching'));
           }
         });
       },

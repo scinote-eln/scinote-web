@@ -4,8 +4,26 @@
 @import "constants";
 
 .repository-table {
+  position: relative;
+
   .dataTables_filter {
     float: right;
+  }
+
+  .repository-table-error {
+    background: $color-white;
+    display: none;
+    height: 200px;
+    padding: 1em;
+    position: absolute;
+    text-align: center;
+    top: 176px;
+    width: 100%;
+    z-index: 1;
+
+    &.active {
+      display: block;
+    }
   }
 
   // hack only for firefox

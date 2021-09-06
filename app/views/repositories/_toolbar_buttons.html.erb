@@ -107,6 +107,7 @@
           @filters:update="updateFilters"
           @filters:clear="clearFilters"
           @cids:update="updateExternalIds"
+          @cids:error="handleSearchError"
           :bmt-api-base-url="bmtApiBaseUrl"
           :saved-filters.sync="savedFilters"
           :filters.sync="filters" />
