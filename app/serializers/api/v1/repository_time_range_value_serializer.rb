@@ -5,6 +5,8 @@ module Api
     class RepositoryTimeRangeValueSerializer < ActiveModel::Serializer
       attribute :time_range
 
+      include TimestampableModel
+
       def time_range
         {
           from: object.start_time.strftime('%H:%M:%S.%3NZ'),

@@ -65,6 +65,7 @@ var RepositoryDatatable = (function(global) {
         $('#restoreRepositoryRecords').prop('disabled', true);
         $('#deleteRepositoryRecords').prop('disabled', true);
         $('#editDeleteCopy').hide();
+        $('#toolbarPrintLabel').hide();
       } else {
         if (rowsSelected.length === 1) {
           $('#editRepositoryRecord').prop('disabled', false);
@@ -82,6 +83,7 @@ var RepositoryDatatable = (function(global) {
           $('#archiveRepositoryRecordsButton').prop('disabled', true);
         }
         $('#editDeleteCopy').show();
+        $('#toolbarPrintLabel').show();
       }
     } else if (currentMode === 'editMode') {
       $(TABLE_WRAPPER_ID).addClass('editing');
@@ -99,7 +101,10 @@ var RepositoryDatatable = (function(global) {
       $('th').addClass('disable-click');
       $('.repository-row-selector').prop('disabled', true);
       $('.dataTables_filter input').prop('disabled', true);
+      $('#toolbarPrintLabel').hide();
     }
+
+    $('#toolbarPrintLabel').data('rows', JSON.stringify(rowsSelected));
   }
 
   function clearRowSelection() {
@@ -558,6 +563,8 @@ var RepositoryDatatable = (function(global) {
 
         DataTableHelpers.initLengthApearance($(TABLE_ID).closest('.dataTables_wrapper'));
         DataTableHelpers.initSearchField($(TABLE_ID).closest('.dataTables_wrapper'), I18n.t('repositories.show.filter_inventory_items'));
+
+        $('<img class="barcode-scanner" src="/images/icon_small/barcode.png"></img>').appendTo($('.search-container'));
 
         if ($('.repository-show').length) {
           $('.dataTables_scrollBody, .dataTables_scrollHead').css('overflow', '');

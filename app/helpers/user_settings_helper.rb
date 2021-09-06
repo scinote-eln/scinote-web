@@ -23,6 +23,11 @@ module UserSettingsHelper
       action_name.in?(%w(index new create show audits_index))
   end
 
+  def on_settings_webhook_page?
+    controller_name.in?(%w(webhooks)) &&
+      action_name.in?(%w(index))
+  end
+
   def on_settings_account_connected_accounts_page?
     controller_name == 'connected_accounts'
   end

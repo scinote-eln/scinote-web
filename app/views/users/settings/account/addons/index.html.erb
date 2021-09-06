@@ -6,12 +6,43 @@
   <div class="tab-pane content-pane active" role="tabpanel">
 
     <div class="row">
+      <h1 class="addons-title"><%= t('users.settings.account.addons.title') %></h1>
+
       <div class="col-xs-12 col-sm-12">
-        <h1 class="addons-title"><%= t('users.settings.account.addons.title') %></h1>
+        <h2 class="addons-subtitle" ><%= t('users.settings.account.addons.scinote_addons') %></h2>
         <div data-hook="settings-addons-container">
           <em data-hook="settings-addons-no-addons">
             <%= t('users.settings.account.addons.no_addons') %>
           </em>
+        </div>
+      </div>
+    </div>
+    <div class="row printer-settings">
+      <div class="col-xs-12 col-sm-12">
+        <h2 class="addons-subtitle"><%= t('users.settings.account.addons.label_printers') %></h2>
+        <div class="printers-container">
+          <div class="printer">
+            <div class="header">
+              <div class="title">
+                <%= t('users.settings.account.addons.fluics_printer.title') %>
+              </div>
+              <div class="control">
+                <%= t('users.settings.account.addons.printers.enabled') %>
+                <i class="fas fa-check"></i>
+              </div>
+            </div>
+            <div class="description">
+              <%= t('users.settings.account.addons.fluics_printer.description') %>
+            </div>
+            <% if !@label_printer_any && can_manage_label_printers? %>
+              <%= link_to label_printers_path(), class: 'printer-details btn btn-primary' do %>
+                <i class="fas fa-key"></i>
+                <%= t('users.settings.account.addons.printers.enter_api_key') %>
+              <% end %>
+            <% else %>
+              <%= link_to t('users.settings.account.addons.printers.printer_details'), label_printers_path(), class: 'printer-details' %>
+            <% end %>
+          </div>
         </div>
       </div>
     </div>

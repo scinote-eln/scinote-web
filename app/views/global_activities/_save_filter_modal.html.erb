@@ -1,0 +1,25 @@
+<div class="modal" id="saveFilterModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="regenerate-report-modal-label">
+          <%= t('global_activities.index.save_filter_modal.title') %>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <p>
+          <%= t('global_activities.index.save_filter_modal.description') %>
+        </p>
+        <div class="sci-input-container">
+          <label><%= t('global_activities.index.save_filter_modal.filter_name_label') %></label>
+          <input type="text" class="sci-input-field activity-filter-name-input" placeholder="<%= t('global_activities.index.save_filter_modal.filter_name_placeholder') %>"></input>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.cancel') %></button>
+        <button type="button" class="btn btn-primary btn-confirm" data-save-filter-url="<%= save_activity_filter_global_activities_path %>" disabled><%= t('general.save') %></button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -238,6 +238,10 @@ class Asset < ApplicationRecord
     file.metadata[:asset_type] == 'marvinjs'
   end
 
+  def bio_eddie?
+    file.metadata[:asset_type] == 'bio_eddie' || File.extname(file_name) == '.helm'
+  end
+
   def pdf_preview_ready?
     return false if pdf_preview_processing
 
@@ -445,6 +449,10 @@ class Asset < ApplicationRecord
 
   def generate_base64(style)
     return convert_variant_to_base64(medium_preview) if style == :medium
+  end
+
+  def my_module
+    (result || step)&.my_module
   end
 
   private

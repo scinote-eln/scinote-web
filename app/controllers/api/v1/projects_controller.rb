@@ -16,11 +16,11 @@ module Api
                         .page(params.dig(:page, :number))
                         .per(params.dig(:page, :size))
 
-        render jsonapi: projects, each_serializer: ProjectSerializer
+        render jsonapi: projects, each_serializer: ProjectSerializer, include: include_params
       end
 
       def show
-        render jsonapi: @project, serializer: ProjectSerializer
+        render jsonapi: @project, serializer: ProjectSerializer, include: include_params
       end
 
       def create
@@ -62,6 +62,10 @@ module Api
         raise TypeError unless params.require(:data).require(:type) == 'projects'
 
         params.require(:data).require(:attributes).permit(:name, :visibility, :archived, :project_folder_id)
+      end
+
+      def permitted_includes
+        %w(comments)
       end
 
       def load_project_for_managing

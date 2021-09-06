@@ -8,7 +8,7 @@ module Api
       include InputSanitizeHelper
 
       type :steps
-      attributes :id, :name, :description, :created_at, :position, :completed
+      attributes :id, :name, :description, :position, :completed
       attribute :completed_on, if: -> { object.completed? }
       belongs_to :user, serializer: UserSerializer
       belongs_to :protocol, serializer: ProtocolSerializer
@@ -16,6 +16,8 @@ module Api
       has_many :checklists, serializer: ChecklistSerializer
       has_many :tables, serializer: TableSerializer
       has_many :step_comments, key: :comments, serializer: CommentSerializer
+
+      include TimestampableModel
 
       def description
         if instance_options[:rte_rendering]

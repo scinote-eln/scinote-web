@@ -5,6 +5,8 @@ module Api
     class InventoryListItemSerializer < ActiveModel::Serializer
       type :inventory_list_items
       attribute :data
+
+      include TimestampableModel
     end
   end
 end

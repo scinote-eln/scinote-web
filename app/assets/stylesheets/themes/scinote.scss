@@ -133,6 +133,10 @@ body {
   }
 }
 
+.modal-header h4 {
+  font-size: 18px;
+}
+
 .jumbotron {
   background-color: inherit;
 }
@@ -1349,14 +1353,7 @@ body > .loading-overlay {
     margin-top: 20px;
   }
 
-  h4 {
-    font-size: 14px;
-    margin-bottom: 5px;
-  }
-
   .select-container--with-blank {
-    overflow: hidden;
-
     .search-field::placeholder {
       color: $color-black;
       opacity: 1;
