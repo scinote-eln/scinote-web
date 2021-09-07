@@ -4,15 +4,21 @@ module PermissionExtends
   module ProjectPermissions
     %w(
       READ
-      EXPORT
+      READ_ARCHIVED
       MANAGE
-      ARCHIVE
-      RESTORE
-      CREATE_EXPERIMENTS
-      CREATE_COMMENTS
-      MANAGE_COMMENTS
-      MANAGE_TAGS
-      MANAGE_ACCESS
+      FOLDERS_READ
+      ACTIVITIES_READ
+      USERS_READ
+      USERS_MANAGE
+      COMMENTS_READ
+      COMMENTS_CREATE
+      COMMENTS_MANAGE
+      EXPERIMENTS_READ
+      EXPERIMENTS_READ_ARCHIVED
+      EXPERIMENTS_CREATE
+      EXPERIMENTS_READ_CANVAS
+      EXPERIMENTS_ACTIVITIES_READ
+      EXPERIMENTS_USERS_READ
     ).each { |permission| const_set(permission, "project_#{permission.underscore}") }
   end
 

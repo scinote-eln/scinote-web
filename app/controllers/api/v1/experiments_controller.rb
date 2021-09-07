@@ -22,7 +22,7 @@ module Api
       end
 
       def create
-        raise PermissionError.new(Experiment, :create) unless can_create_experiments?(@project)
+        raise PermissionError.new(Experiment, :create) unless can_create_project_experiments?(@project)
 
         experiment = @project.experiments.create!(experiment_params.merge!(created_by: current_user,
                                                                            last_modified_by: current_user))

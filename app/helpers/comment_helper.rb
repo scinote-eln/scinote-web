@@ -63,7 +63,7 @@ module CommentHelper
     when 'Step', 'Result'
       can_create_comments_in_module?(object.my_module)
     when 'Project'
-      can_create_comments_in_project?(object)
+      can_create_project_comments?(object)
     else
       false
     end

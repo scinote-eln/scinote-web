@@ -161,7 +161,7 @@ class TagsController < ApplicationController
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_tags?(@project)
+    render_403 unless can_manage_project?(@project)
   end
 
   def tag_params

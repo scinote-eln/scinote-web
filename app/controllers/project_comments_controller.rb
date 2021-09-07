@@ -51,7 +51,7 @@ class ProjectCommentsController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 unless can_create_comments_in_project?(@project)
+    render_403 unless can_create_project_comments?(@project)
   end
 
   def check_manage_permissions

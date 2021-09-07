@@ -1,6 +1,6 @@
 <div id="projectShowToolbar" class="project-show-toolbar">
   <!-- new experiment button -->
-  <% if can_create_experiments?(@project) %>
+  <% if can_create_project_experiments?(@project) %>
     <%= button_to new_project_experiment_url(@project),
                   remote: true,
                   form_class: 'new-experiment-form',
