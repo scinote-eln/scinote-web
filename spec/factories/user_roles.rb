@@ -13,8 +13,8 @@ FactoryBot.define do
       permissions {
         [
           ProjectPermissions::READ,
-          ProjectPermissions::CREATE_EXPERIMENTS,
-          ProjectPermissions::CREATE_COMMENTS,
+          ProjectPermissions::EXPERIMENTS_CREATE,
+          ProjectPermissions::COMMENTS_CREATE,
           ExperimentPermissions::READ,
           ExperimentPermissions::MANAGE,
           ExperimentPermissions::ARCHIVE,
@@ -37,7 +37,7 @@ FactoryBot.define do
       permissions {
         [
           ProjectPermissions::READ,
-          ProjectPermissions::CREATE_COMMENTS,
+          ProjectPermissions::COMMENTS_CREATE,
           ExperimentPermissions::READ,
           MyModulePermissions::READ,
           MyModulePermissions::CREATE_COMMENTS,

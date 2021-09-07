@@ -70,7 +70,7 @@ module Dashboard
       end
 
       unless @experiment
-        render_403 unless can_create_experiments?(current_user, @project)
+        render_403 unless can_create_project_experiments?(current_user, @project)
         return
       end
 

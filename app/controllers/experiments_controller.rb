@@ -314,7 +314,7 @@ class ExperimentsController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 unless can_create_experiments?(@project)
+    render_403 unless can_create_project_experiments?(@project)
   end
 
   def check_manage_permissions
