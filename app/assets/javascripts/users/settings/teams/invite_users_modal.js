@@ -126,10 +126,12 @@
 
       // Click action
       modal.find('[data-action=invite]').off('click').on('click', function() {
+        var role = dropdownSelector.getValues(roleInput);
+
         var data = {
           emails: dropdownSelector.getValues(emailsInput),
           team_ids: dropdownSelector.getValues(teamsInput),
-          role: dropdownSelector.getValues(roleInput),
+          role: role && role !== 'false' ? role : null,
           'g-recaptcha-response': $('#recaptcha-invite-modal').val()
         };
 

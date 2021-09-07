@@ -206,7 +206,7 @@ module Users
       @teams = Team.where(id: params[:team_ids]).select { |team| can_manage_team_users?(team) }
       return render_403 if params[:team_ids].present? && @teams.none?
 
-      @role = params['role']
+      @role = params['role'].presence
 
       return render_403 if @emails.blank? # We must have at least one email
       return render_403 if @role && !UserTeam.roles.key?(@role) # if we select role, we must check that this role exist
