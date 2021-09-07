@@ -1,4 +1,58 @@
-.navbar-brand-custom {
-    @extend .navbar-brand;
-    padding: 0 2px 0 2px;
-  }
+// .navbar-brand-custom {
+//     @extend .navbar-brand;
+//     padding: .2em;
+//     padding-top: 1em;
+// }
+
+// #main-menu {
+//   margin-top: 1em;
+// }
+
+.custom-pl-2 {
+  padding-left: 2em !important;
+}
+
+.custom-pb-0 {
+  padding-bottom: 0em !important;
+}
+
+.custom-mt-2 {
+  margin-top: 2em !important;
+}
+
+// This is used to force the "fixed-top" header of scinote down below
+// the EPA header, so set it to the height of that div...
+.custom-mt-header {
+  // margin-top: 76px !important;
+  margin-top: 56px !important;
+}
+
+.custom-pt-header {
+  padding-top: 34px !important;
+}
+
+.custom-epa-theme {
+  color: #FFF;
+  background-color: #0071bc;
+}
+
+.masthead-custom {
+  width: 100%;
+  padding-top: 1.2em;
+  padding-left: 12em;
+  padding-right: 12em;
+  background-color: #FFF;
+}
+
+.masthead-custom-center {
+  margin: 0 auto !important;
+}
+
+#content-wrapper {
+  margin-top: 100px;
+  margin-left: 83px;
+}
+
+.white-text {
+  color: #FFF !important;
+}
