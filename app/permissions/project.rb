@@ -20,7 +20,7 @@ Canaid::Permissions.register_for(Project) do
      export_project)
     .each do |perm|
     can perm do |user, project|
-      project.permission_granted?(user, ProjectPermissions::READ)
+      user.is_admin_of_team?(project.team) || project.permission_granted?(user, ProjectPermissions::READ)
     end
   end
   # project: read, read activities, read comments, read users, read archive,
