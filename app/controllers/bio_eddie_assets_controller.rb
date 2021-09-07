@@ -59,7 +59,7 @@ class BioEddieAssetsController < ApplicationController
     return render_404 unless Rails.application.config.x.biomolecule_toolkit_base_url
 
     uri = URI.parse(Rails.application.config.x.biomolecule_toolkit_base_url)
-    uri.path = request.original_fullpath.remove('/biomolecule_toolkit')
+    uri.path = File.join(uri.path, request.original_fullpath.remove('/biomolecule_toolkit'))
 
     Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
       api_request = "Net::HTTP::#{request.request_method.capitalize}".constantize.new(uri)
