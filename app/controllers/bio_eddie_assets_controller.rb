@@ -64,7 +64,7 @@ class BioEddieAssetsController < ApplicationController
     Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
       api_request = "Net::HTTP::#{request.request_method.capitalize}".constantize.new(uri)
       if Rails.application.config.x.biomolecule_toolkit_api_key
-        api_request['x-api-key'] = if Rails.application.config.x.biomolecule_toolkit_api_key
+        api_request['x-api-key'] = Rails.application.config.x.biomolecule_toolkit_api_key
       end
       api_request['Content-Type'] = 'application/json'
       request_body = request.body.read
