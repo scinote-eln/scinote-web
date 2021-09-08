@@ -124,10 +124,7 @@ invite_with_team_selector = type.in?(%w(invite_new_members invite_with_team_sele
             </div>
           <% end %>
           <% if ENV['ENABLE_RECAPTCHA'] == 'true' %>
-            <div id="recaptcha-service" class="g-recaptcha"
-                 data-callback="recaptchaCallback"
-                 data-sitekey=<%= ENV['RECAPTCHA_SITE_KEY'] %>></div>
-            <input type="hidden" id="recaptcha-invite-modal" value="">
+            <%= recaptcha_input_tag include_description: false %>
             <div class="form-group has-error hidden" id="recaptcha-error-msg" >
               <span class="has-error help-block"></span>
             </div>
