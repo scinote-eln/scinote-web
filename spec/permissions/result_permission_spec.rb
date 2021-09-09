@@ -12,12 +12,7 @@ describe 'ResultPermissions' do
   let(:experiment) { create :experiment, user: user }
 
   before do
-    create :user_project, user: user, project: experiment.project
-    create :user_assignment,
-           assignable: experiment.project,
-           user: user,
-           user_role: create(:owner_role),
-           assigned_by: user
+    create_user_assignment(my_module, (create :owner_role), user)
   end
 
   describe 'can_read_result?' do

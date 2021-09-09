@@ -9,21 +9,18 @@ describe MyModulesController, type: :controller do
   let(:team) { create :team, created_by: user }
   let!(:user_team) { create :user_team, :admin, user: user, team: team }
   let(:project) { create :project, team: team, created_by: user }
-  let!(:user_project) { create :user_project, user: user, project: project }
   let(:owner_role) { create :owner_role }
-  let!(:user_assignment) do
-    create :user_assignment,
-           assignable: project,
-           user: user,
-           user_role: owner_role,
-           assigned_by: user
-  end
+
   let!(:repository) { create :repository, created_by: user, team: team }
   let!(:repository_row) do
     create :repository_row, created_by: user, repository: repository
   end
   let(:experiment) { create :experiment, project: project }
   let(:my_module) { create :my_module, experiment: experiment }
+
+  before do
+    create_user_assignment(my_module, owner_role, user)
+  end
 
   describe 'PUT update' do
     let(:action) { put :update, params: params, format: :json }
@@ -161,9 +158,7 @@ describe MyModulesController, type: :controller do
 
     context 'when user does not have permissions' do
       it 'renders 403' do
-        # Remove user from project
-        UserProject.where(user: user, project: project).destroy_all
-        UserAssignment.where(user: user, assignable: project).destroy_all
+        UserAssignment.where(user: user, assignable: my_module).destroy_all
         action
 
         expect(response).to have_http_status 403
@@ -194,13 +189,11 @@ describe MyModulesController, type: :controller do
     let(:task2) { create :my_module, :archived, experiment: experiment }
     let(:task3) { create :my_module, :archived, experiment: experiment }
     let(:user) { controller.current_user }
-    let!(:user_project) { create :user_project, user: user, project: experiment.project }
-    let!(:user_assignment) do
-      create :user_assignment,
-             assignable: experiment.project,
-             user: user,
-             user_role: owner_role,
-             assigned_by: user
+
+    before do
+      3.times do |i|
+        create_user_assignment(public_send("task#{i+1}"), owner_role, user)
+      end
     end
 
     context 'when tasks are restored' do

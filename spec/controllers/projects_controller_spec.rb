@@ -11,6 +11,7 @@ describe ProjectsController, type: :controller do
   let!(:user) { User.first }
   let!(:team) { create :team, created_by: user }
   let!(:user_team) { create :user_team, team: team, user: user }
+  let!(:owner_role) { create :owner_role }
   before do
     @projects_overview = ProjectsOverviewService.new(team, user, nil, params)
   end
@@ -54,24 +55,14 @@ describe ProjectsController, type: :controller do
     end
   end
 
-  let(:owner_user_role) { create :owner_role }
-  # rubocop:disable Security/Eval
-  # rubocop:disable Style/EvalWithLocation
-  (1..PROJECTS_CNT).each do |i|
-    let!("user_projects_#{i}") do
-      create :user_project, project: eval("project_#{i}"), user: user
-    end
 
-    let!("user_assignments_#{i}") do
-      create :user_assignment,
-             assignable: eval("project_#{i}"),
-             user: user,
-             user_role: owner_user_role,
-             assigned_by: user
+
+
+  before do
+    PROJECTS_CNT.times do |i|
+      create_user_assignment(public_send("project_#{i+1}"), owner_role, user)
     end
   end
-  # rubocop:enable Security/Eval
-  # rubocop:enable Style/EvalWithLocation
 
   describe '#index' do
     let(:params) { { team: team.id, sort: 'atoz' } }

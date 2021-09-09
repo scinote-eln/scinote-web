@@ -13,13 +13,7 @@ describe MyModuleRepositoriesController, type: :controller do
     create :user_project, user: user, project: project
   end
   let(:normal_user_role) { create :normal_user_role }
-  let!(:user_assignment) do
-    create :user_assignment,
-           assignable: project,
-           user: user,
-           user_role: normal_user_role,
-           assigned_by: user
-  end
+
   let!(:repository) { create :repository, created_by: user, team: team }
   let!(:repository_row) do
     create :repository_row, created_by: user, repository: repository
@@ -29,6 +23,10 @@ describe MyModuleRepositoriesController, type: :controller do
   end
   let(:experiment) { create :experiment, project: project }
   let(:my_module) { create :my_module, experiment: experiment }
+
+  before do
+    create_user_assignment(my_module, normal_user_role, user)
+  end
 
   describe 'PUT update (assign repository records)' do
     let(:params) do

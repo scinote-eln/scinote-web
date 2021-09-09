@@ -15,13 +15,7 @@ describe CanvasController do
     create :project, team: team
   end
   let(:owner_role) { create :owner_role }
-  let!(:user_assignment) do
-    create :user_assignment,
-           assignable: project,
-           user: user,
-           user_role: owner_role,
-           assigned_by: user
-  end
+
   let(:experiment) { create :experiment, project: project }
   let(:experiment2) { create :experiment, project: project }
 
@@ -42,6 +36,9 @@ describe CanvasController do
 
     # Setup environment for "big change" request
     # Tasks in DB
+
+
+
     let!(:task1) { create :my_module, x: 0, y: 1, experiment: experiment }
     let!(:task2) { create :my_module, x: 0, y: 2, experiment: experiment }
     let!(:task3) { create :my_module, x: 0, y: 3, experiment: experiment }
@@ -93,6 +90,13 @@ describe CanvasController do
         remove: task_archives,
         cloned: task_clones
       }
+    end
+
+    before do
+      8.times do |i|
+        create_user_assignment(public_send("task#{i+1}"), owner_role, user)
+      end
+      create_user_assignment(experiment2, owner_role, user)
     end
 
     context 'when have a lot changes on canvas' do

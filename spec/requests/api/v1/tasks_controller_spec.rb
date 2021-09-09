@@ -229,7 +229,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
       end
 
       it 'renders 403 for use with view permissions' do
-        user_assignment = UserAssignment.where(user: @user, assignable: @valid_project)
+        user_assignment = UserAssignment.where(user: @user, assignable: @valid_experiment)
                                         .first
         user_assignment.update!(user_role: create(:viewer_role))
 

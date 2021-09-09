@@ -57,7 +57,7 @@ class ProjectCommentsController < ApplicationController
   def check_manage_permissions
     @comment = ProjectComment.find_by_id(params[:id])
     render_403 unless @comment.present? &&
-                      can_manage_comment_in_project?(@comment)
+                      can_manage_project_comments?(@project)
   end
 
   def comment_params

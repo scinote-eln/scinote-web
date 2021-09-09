@@ -13,13 +13,6 @@ describe AssetsController, type: :controller do
     create :project, team: team, user_projects: [user_project]
   end
   let(:owner_role) { create :owner_role }
-  let!(:user_assignment) do
-    create :user_assignment,
-           assignable: project,
-           user: user,
-           user_role: owner_role,
-           assigned_by: user
-  end
   let(:experiment) { create :experiment, project: project }
   let(:my_module) { create :my_module, name: 'test task', experiment: experiment }
   let(:protocol) do
@@ -39,8 +32,11 @@ describe AssetsController, type: :controller do
   let!(:asset) { create :asset }
   let(:step_asset_in_repository) { create :step_asset, step: step_in_repository, asset: asset }
 
+
+
   describe 'POST start_edit' do
     before do
+      create_user_assignment(my_module, owner_role, user)
       allow(controller).to receive(:check_edit_permission).and_return(true)
     end
     let(:action) { post :create_start_edit_image_activity, params: params, format: :json }
@@ -52,6 +48,7 @@ describe AssetsController, type: :controller do
       expect(Activities::CreateActivityService).to receive(:call)
         .with(hash_including(activity_type: :edit_image_on_step))
       action
+      p response.code
     end
 
     it 'calls create activity service (start edit image on result)' do
