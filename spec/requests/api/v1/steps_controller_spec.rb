@@ -10,12 +10,7 @@ RSpec.describe 'Api::V1::StepsController', type: :request do
     @experiment = create(:experiment, :with_tasks, project: @project)
     @task = @experiment.my_modules.first
     create(:user_team, user: @user, team: @team)
-    create(:user_project, user: @user, project: @project)
-    create :user_assignment,
-           assignable: @project,
-           user: @user,
-           user_role: create(:owner_role),
-           assigned_by: @user
+    create_user_assignment(@task, (create :owner_role), @user)
 
     @valid_headers =
       { 'Authorization': 'Bearer ' + generate_token(@user.id) }

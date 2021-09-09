@@ -8,21 +8,18 @@ describe ProjectCommentsController, type: :controller do
   let(:user) { subject.current_user }
   let(:team) { create :team, created_by: user }
   let(:user_team) { create :user_team, team: team, user: user }
-  let(:user_project) { create :user_project, user: user }
   let(:project) do
-    create :project, team: team, user_projects: [user_project]
+    create :project, team: team
   end
-  let(:owner_user_role) { create :owner_role }
-  let!(:user_assignment) do
-    create :user_assignment,
-           assignable: project,
-           user: user,
-           user_role: owner_user_role,
-           assigned_by: user
-  end
+  let(:owner_role) { create :owner_role }
   let(:project_comment) do
     create :project_comment, project: project, user: user
   end
+
+  before do
+    create_user_assignment(project, owner_role, user)
+  end
+
 
   describe 'POST create' do
     context 'in JSON format' do

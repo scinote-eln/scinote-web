@@ -13,17 +13,13 @@ describe AccessPermissions::ExperimentsController, type: :controller do
   let!(:owner_role) { create :owner_role }
   let!(:viewer_user_role) { create :viewer_role }
   let!(:technician_role) { create :technician_role }
-  let!(:user_project) { create :user_project, user: user, project: project }
-  let!(:user_assignment) do
-    create :user_assignment,
-           assignable: project,
-           user: user,
-           user_role: owner_role,
-           assigned_by: user
-  end
   let!(:viewer_user) { create :user, confirmed_at: Time.zone.now }
   let!(:normal_user_team) { create :user_team, :normal_user, user: viewer_user, team: team }
-  let!(:viewer_user_project) { create :user_project, user: viewer_user, project: project }
+
+  before do
+    create_user_assignment(experiment, owner_role, user)
+    create_user_assignment(experiment, viewer_user_role, viewer_user)
+  end
 
   describe 'GET #show' do
     it 'returns a http success response' do
@@ -63,20 +59,6 @@ describe AccessPermissions::ExperimentsController, type: :controller do
   end
 
   describe 'PUT #update' do
-    let!(:viewer_project_assignment) do
-      create :user_assignment,
-             assignable: project,
-             user: viewer_user,
-             user_role: viewer_user_role,
-             assigned_by: user
-    end
-    let!(:viewer_user_assignment) do
-      create :user_assignment,
-             assignable: experiment,
-             user: viewer_user,
-             user_role: viewer_user_role,
-             assigned_by: user
-    end
 
     let(:valid_params) do
       {
@@ -92,7 +74,7 @@ describe AccessPermissions::ExperimentsController, type: :controller do
     it 'updates the user role' do
       put :update, params: valid_params, format: :json
       expect(response).to have_http_status :success
-      expect(viewer_user_assignment.reload.user_role).to eq technician_role
+      expect(UserAssignment.find_by(assignable: experiment, user: viewer_user).user_role).to eq technician_role
     end
 
     it 'does not update the user role when the user has no permissions' do
@@ -101,7 +83,7 @@ describe AccessPermissions::ExperimentsController, type: :controller do
       put :update, params: valid_params, format: :json
 
       expect(response).to have_http_status :forbidden
-      expect(viewer_user_assignment.reload.user_role).to eq viewer_user_role
+      expect(UserAssignment.find_by(assignable: experiment, user: viewer_user).user_role).to eq viewer_user_role
     end
   end
 

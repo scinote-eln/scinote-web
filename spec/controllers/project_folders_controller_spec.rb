@@ -10,6 +10,7 @@ describe ProjectFoldersController, type: :controller do
   let(:team) { create :team, created_by: user }
   let!(:user_team) { create :user_team, team: team, user: user, role: :admin }
   let(:project_folder) { create :project_folder, team: team }
+  let(:owner_role) { create :owner_role }
 
   describe 'POST #move_to' do
     let!(:project_folder_1) do
@@ -29,6 +30,12 @@ describe ProjectFoldersController, type: :controller do
     end
     let!(:project_3) do
       create :project, name: 'test project C', team: team, project_folder: project_folder_3, created_by: user
+    end
+
+    before do
+      3.times do |i|
+        create_user_assignment(public_send("project_#{i+1}"), owner_role, user)
+      end
     end
 
     context 'in JSON format' do

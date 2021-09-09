@@ -9,18 +9,10 @@ describe WopiController, type: :controller do
   let(:user) { subject.current_user }
   let!(:team) { create :team, created_by: user }
   let(:user_team) { create :user_team, :admin, user: user, team: team }
-  let!(:user_project) { create :user_project, user: user }
   let(:project) do
-    create :project, team: team, user_projects: [user_project]
+    create :project, team: team
   end
   let(:owner_role) { create :owner_role }
-  let!(:user_assignment) do
-    create :user_assignment,
-           assignable: project,
-           user: user,
-           user_role: owner_role,
-           assigned_by: user
-  end
   let(:experiment) { create :experiment, project: project }
   let(:my_module) { create :my_module, name: 'test task', experiment: experiment }
   let(:result) do
@@ -39,6 +31,10 @@ describe WopiController, type: :controller do
   let(:step_asset_in_repository) { create :step_asset, step: step_in_repository, asset: asset }
   let(:result_asset) { create :result_asset, result: result, asset: asset }
   let(:token) { Token.create(token: 'token', ttl: 0, user_id: user.id) }
+
+  before do
+    create_user_assignment(my_module, owner_role, user)
+  end
 
   describe 'POST unlock' do
     before do

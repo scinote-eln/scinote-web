@@ -7,18 +7,10 @@ describe ResultTextsController, type: :controller do
 
   let(:user) { subject.current_user }
   let!(:team) { create :team, :with_members }
-  let!(:user_project) { create :user_project, user: user }
   let(:project) do
-    create :project, team: team, user_projects: [user_project]
+    create :project, team: team
   end
-  let(:owner_user_role) { create :owner_role }
-  let!(:user_assignment) do
-    create :user_assignment,
-           assignable: project,
-           user: user,
-           user_role: owner_user_role,
-           assigned_by: user
-  end
+  let(:owner_role) { create :owner_role }
   let(:experiment) { create :experiment, project: project }
   let(:task) { create :my_module, name: 'test task', experiment: experiment }
   let(:result) do
@@ -26,6 +18,10 @@ describe ResultTextsController, type: :controller do
   end
   let(:result_text) do
     create :result_text, text: 'test text result', result: result
+  end
+
+  before do
+    create_user_assignment(task, owner_role, user)
   end
 
   describe 'POST create' do

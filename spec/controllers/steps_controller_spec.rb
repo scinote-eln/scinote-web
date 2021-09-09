@@ -9,16 +9,7 @@ describe StepsController, type: :controller do
   let(:team) { create :team, created_by: user }
   let!(:user_team) { create :user_team, :admin, user: user, team: team }
   let(:project) { create :project, team: team, created_by: user }
-  let!(:user_project) do
-    create :user_project, user: user, project: project
-  end
-  let!(:user_assignment) do
-    create :user_assignment,
-           assignable: project,
-           user: user,
-           user_role: create(:owner_role),
-           assigned_by: user
-  end
+  let(:owner_role) { create :owner_role }
   let(:experiment) { create :experiment, project: project }
   let(:my_module) { create :my_module, experiment: experiment }
   let(:protocol) do
@@ -29,6 +20,10 @@ describe StepsController, type: :controller do
     create :protocol, :in_public_repository, team: team, added_by: user
   end
   let(:step_repo) { create :step, protocol: protocol_repo }
+
+  before do
+    create_user_assignment(my_module, owner_role, user)
+  end
 
   describe 'POST create' do
     let(:action) { post :create, params: params, format: :json }

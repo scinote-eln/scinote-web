@@ -114,6 +114,7 @@ RSpec.configure do |config|
   config.include ApiHelper, type: :controller
   config.include ApiHelper, type: :request
   config.extend ControllerMacros, type: :controller
+  config.include PermissionHelpers
 
   config.filter_run_excluding broken: true
 end
