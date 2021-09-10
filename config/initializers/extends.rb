@@ -147,10 +147,10 @@ class Extends
     report: nil,
     project: nil,
     experiment: [:my_modules],
-    my_module: [:results, :protocols],
-    result: nil,
+    my_module: %i(results protocols),
+    result: [:asset],
     protocol: [:steps],
-    step: nil
+    step: [:assets]
   }
 
   ACTIVITY_MESSAGE_ITEMS_TYPES =
