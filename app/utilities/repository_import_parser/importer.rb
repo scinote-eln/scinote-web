@@ -63,7 +63,7 @@ module RepositoryImportParser
 
         @rows.each do |row|
           # Skip empty rows
-          next if row.empty?
+          next if row.compact.all? { |r| r.instance_of?(Roo::Excelx::Cell::Empty) }
 
           unless @header_skipped
             @header_skipped = true
@@ -87,6 +87,7 @@ module RepositoryImportParser
               new_full_row[:repository_row] = new_row
               next
             end
+
             next unless @columns[index]
 
             new_full_row[index] = value
