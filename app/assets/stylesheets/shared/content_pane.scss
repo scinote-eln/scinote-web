@@ -32,6 +32,8 @@
       width: calc(100% + 4em);
 
       h1 {
+        align-items: center;
+        display: flex;
         flex-grow: 1;
         margin: 0;
       }
