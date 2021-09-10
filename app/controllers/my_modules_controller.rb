@@ -316,7 +316,7 @@ class MyModulesController < ApplicationController
   end
 
   def load_experiment_my_modules
-    @experiment_my_modules = @my_module.experiment.my_modules.active.order(:name)
+    @experiment_my_modules = @my_module.experiment.my_modules.where(archived: @my_module.archived?).order(:name)
   end
 
   def check_manage_permissions
