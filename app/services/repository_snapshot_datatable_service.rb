@@ -69,7 +69,7 @@ class RepositorySnapshotDatatableService < RepositoryDatatableService
       Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each do |data_type, config|
         next unless data_types.include?(data_type.to_s)
 
-        custom_cell_matches = repository_rows.joins(repository_cells: config[:includes])
+        custom_cell_matches = repository_rows.joins(config[:includes])
                                              .where_attributes_like(config[:field], search_value)
 >>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
         results = results.or(repository_rows.where(id: custom_cell_matches))

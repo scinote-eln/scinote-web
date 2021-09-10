@@ -70,7 +70,7 @@ module Users
           break
         end
 
-        result = { email: email }
+        result = { email: email, user_teams: [] }
         unless Constants::BASIC_EMAIL_REGEX.match?(email)
           result[:status] = :user_invalid
           @invite_results << result
@@ -100,46 +100,49 @@ module Users
           user.delay.deliver_invitation
         end
 
-        if @team && user
-          user_team = UserTeam.find_by_user_id_and_team_id(user.id, @team.id)
-          if user_team
-            result[:status] = :user_exists_and_in_team
-          else
-            # Also generate user team relation
-            user_team = UserTeam.new(
-              user: user,
-              team: @team,
-              role: @role
-            )
-            user_team.save
+        if @teams.any? && user
+          @teams.each do |team|
+            user_team = UserTeam.find_by(user_id: user.id, team_id: team.id)
+            if user_team
+              result[:status] = :user_exists_and_in_team
+            else
+              # Also generate user team relation
+              user_team = UserTeam.new(
+                user: user,
+                team: team,
+                role: @role || 'normal_user'
+              )
+              user_team.save
 
-            generate_notification(
-              @user,
-              user,
-              user_team.team,
-              user_team.role_str
-            )
-            Activities::CreateActivityService
-              .call(activity_type: :invite_user_to_team,
-                    owner: current_user,
-                    subject: @team,
-                    team: @team,
-                    message_items: {
-                      team: @team.id,
-                      user_invited: user.id,
-                      role: user_team.role_str
-                    })
+              generate_notification(
+                @user,
+                user,
+                user_team.team,
+                user_team.role_str
+              )
 
-            result[:status] = if result[:status] == :user_exists && !user.confirmed?
-                                :user_exists_unconfirmed_invited_to_team
-                              elsif result[:status] == :user_exists
-                                :user_exists_invited_to_team
-                              else
-                                :user_created_invited_to_team
-                              end
+              Activities::CreateActivityService
+                .call(activity_type: :invite_user_to_team,
+                      owner: current_user,
+                      subject: team,
+                      team: team,
+                      message_items: {
+                        team: team.id,
+                        user_invited: user.id,
+                        role: user_team.role_str
+                      })
+
+              result[:status] = if result[:status] == :user_exists && !user.confirmed?
+                                  :user_exists_unconfirmed_invited_to_team
+                                elsif result[:status] == :user_exists
+                                  :user_exists_invited_to_team
+                                else
+                                  :user_created_invited_to_team
+                                end
+            end
+
+            result[:user_teams] << user_team
           end
-
-          result[:user_team] = user_team
         end
 
         @invite_results << result
@@ -154,6 +157,20 @@ module Users
           }
         end
       end
+    end
+
+    def invitable_teams
+      teams = current_user.teams
+                          .select(:id, :name)
+                          .joins(:user_teams)
+                          .where('user_teams.role': UserTeam.roles[:admin])
+                          .distinct
+
+      teams = teams.where_attributes_like(:name, params[:query]) if params[:query].present?
+
+      teams.select { |team| can_invite_team_users?(team) }
+
+      render json: teams.map { |t| { value: t.id, label: t.name } }.to_json
     end
 
     private
@@ -185,12 +202,13 @@ module Users
     def check_invite_users_permission
       @user = current_user
       @emails = params[:emails]&.map(&:downcase)
-      @team = Team.find_by_id(params['teamId'])
+
+      @teams = Team.where(id: params[:team_ids]).select { |team| can_manage_team_users?(team) }
+      return render_403 if params[:team_ids].present? && @teams.none?
+
       @role = params['role']
 
-      return render_403 if @team && @role.nil? # if we select team, we must select role
       return render_403 if @emails.blank? # We must have at least one email
-      return render_403 if @team && !can_manage_team_users?(@team) # if we select team, we must check permission
       return render_403 if @role && !UserTeam.roles.key?(@role) # if we select role, we must check that this role exist
     end
   end

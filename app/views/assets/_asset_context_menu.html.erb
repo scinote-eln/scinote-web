@@ -28,16 +28,11 @@
               data-sketch-name="<%= asset.file.metadata[:name] %>"
               data-sketch-description="<%= asset.file.metadata[:description] %>"
             >
-<<<<<<< HEAD
               <%= image_tag 'icon_small/marvinjs.svg' %>
-=======
-              <span class="fas fa-pencil-alt"></span>
->>>>>>> Pulled latest release
               <%= t('assets.file_preview.edit_in_marvinjs') %>
             </a>
           </li>
           <li role="separator" class="divider"></li>
-<<<<<<< HEAD
         <% elsif asset.bio_eddie? && BioEddieService.enabled?(current_user) %>
           <li>
             <a class="btn btn-light bio-eddie-edit-button"
@@ -52,8 +47,6 @@
             </a>
           </li>
           <li role="separator" class="divider"></li>
-=======
->>>>>>> Pulled latest release
         <% elsif asset.editable_image? %>
           <li>
             <a class="btn btn-light image-edit-button"

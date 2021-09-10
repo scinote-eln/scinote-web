@@ -7,8 +7,8 @@ module Api
       class IDMismatchError < StandardError; end
       class IncludeNotSupportedError < StandardError; end
       class PermissionError < StandardError
-        attr_reader :klass
-        attr_reader :mode
+        attr_reader :klass, :mode
+
         def initialize(klass, mode)
           @klass = klass
           @mode = mode

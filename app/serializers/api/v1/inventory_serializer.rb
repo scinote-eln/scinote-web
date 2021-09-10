@@ -6,6 +6,8 @@ module Api
       type :inventories
       attributes :id, :name
       belongs_to :created_by, serializer: UserSerializer
+
+      include TimestampableModel
     end
   end
 end

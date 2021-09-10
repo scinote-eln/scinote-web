@@ -1,9 +1,5 @@
 <div class="modal-header">
-<<<<<<< HEAD
   <span class="file-name"><%= asset.file.metadata[:name] || asset.file_name %></span>
-=======
-  <span class="file-name"><%= asset.file_name %></span>
->>>>>>> Pulled latest release
   <div class="sci-btn-group">
     <% if can_edit && !preview %>
       <% if wopi_enabled? && wopi_file?(asset) %>
@@ -25,7 +21,6 @@
           <span class="fas fa-pencil-alt"></span>
           <%= t('assets.file_preview.edit_in_marvinjs') %>
         </button>
-<<<<<<< HEAD
 
       <% elsif asset.bio_eddie? && BioEddieService.enabled?(current_user) %>
         <button class="btn btn-light bio-eddie-edit-button"
@@ -38,8 +33,6 @@
           <span class="fas fa-pencil-alt"></span>
           <%= t('assets.file_preview.edit_in_bio_eddie') %>
         </button>
-=======
->>>>>>> Pulled latest release
       <% elsif asset.editable_image? %>
         <button class="btn btn-light image-edit-button"
           data-image-id="<%= asset.id %>"
@@ -54,9 +47,8 @@
         </button>
       <% end %>
     <% end %>
-<<<<<<< HEAD
     <% if asset.file.metadata[:asset_type] == 'bio_eddie' %>
-      <a class="btn btn-light file-download-link" href="data:text/plain;charset=utf-8,<%= asset.file.metadata[:description] %>" download="<%= asset.file.metadata[:name] %>.helm" data-turbolinks="false">
+       <a class="btn btn-light file-download-link" href="data:text/plain;charset=utf-8,<%= asset.file.metadata[:description] %>" download="<%= asset.file.metadata[:name] %>.helm" data-turbolinks="false">
         <span class="fas fa-download"></span> <%= t('Download')%>
       </a>
     <% else %>
@@ -64,11 +56,6 @@
         <span class="fas fa-download"></span> <%= t('Download')%>
       </a>
     <% end %>
-=======
-     <a class="btn btn-light file-download-link" href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>" data-turbolinks="false">
-      <span class="fas fa-download"></span> <%= t('Download')%>
-    </a>
->>>>>>> Pulled latest release
     <% if (asset.step || asset.result) && !preview %>
       <%= render partial: 'assets/asset_context_menu.html.erb', locals: { asset: asset, deletable: false, editable: false } %>
     <% end %>
@@ -80,16 +67,8 @@
     <% if asset.previewable? %>
       <% if wopi_enabled? && wopi_file?(asset) %>
         <iframe class="wopi-file-preview" src="<%= asset.get_action_url(current_user, 'embedview') %>"></iframe>
-<<<<<<< HEAD
-<<<<<<< HEAD
       <% elsif asset.pdf_previewable? %>
         <%= render partial: 'shared/pdf_viewer.html.erb', locals: { asset: asset, report_document: false } %>
-=======
->>>>>>> Pulled latest release
-=======
-      <% elsif asset.pdf_previewable? %>
-        <%= render partial: 'shared/pdf_viewer.html.erb', locals: { asset: asset, report_document: false } %>
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
       <% else %>
         <%= image_tag asset.large_preview,
             onerror: 'ActiveStoragePreviews.reCheckPreview(event)',

@@ -13,10 +13,6 @@ class RepositoryDateTimeRangeValueBase < ApplicationRecord
   validates :repository_cell, :start_time, :end_time, :type, presence: true
 
   SORTABLE_COLUMN_NAME = 'repository_date_time_range_values.start_time'
-<<<<<<< HEAD
-=======
-  SORTABLE_VALUE_INCLUDE = :repository_date_time_range_value_base
->>>>>>> Pulled latest release
 
   def data
     [start_time, end_time].compact.join(' - ')

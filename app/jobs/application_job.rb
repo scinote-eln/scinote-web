@@ -6,7 +6,6 @@ class ApplicationJob < ActiveJob::Base
 
   # Most jobs are safe to ignore if the underlying records are no longer available
   discard_on ActiveJob::DeserializationError
-<<<<<<< HEAD
 
   def self.status(job_id)
     delayed_job = Delayed::Job.where('handler LIKE ?', "%job_id: #{job_id}%").last
@@ -17,6 +16,4 @@ class ApplicationJob < ActiveJob::Base
 
     :pending
   end
-=======
->>>>>>> Pulled latest release
 end

@@ -57,6 +57,8 @@ class Asset < ApplicationRecord
 
   attr_accessor :file_content, :file_info, :in_template
 
+  before_save :reset_file_processing, if: -> { file.new_record? }
+
   def self.search(
     user,
     include_archived,
@@ -234,6 +236,10 @@ class Asset < ApplicationRecord
 
   def marvinjs?
     file.metadata[:asset_type] == 'marvinjs'
+  end
+
+  def bio_eddie?
+    file.metadata[:asset_type] == 'bio_eddie' || File.extname(file_name) == '.helm'
   end
 
   def pdf_preview_ready?
@@ -445,6 +451,10 @@ class Asset < ApplicationRecord
     return convert_variant_to_base64(medium_preview) if style == :medium
   end
 
+  def my_module
+    (result || step)&.my_module
+  end
+
   private
 
   def tempdir
@@ -494,5 +504,9 @@ class Asset < ApplicationRecord
         errors.add(:file, I18n.t('activerecord.errors.models.asset.attributes.file.too_big'))
       end
     end
+  end
+
+  def reset_file_processing
+    self.file_processing = false
   end
 end

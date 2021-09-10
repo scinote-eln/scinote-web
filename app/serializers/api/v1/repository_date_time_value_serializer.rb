@@ -18,6 +18,8 @@ module Api
 =======
       attribute :date_time
 
+      include TimestampableModel
+
       def date_time
         object.data
       end

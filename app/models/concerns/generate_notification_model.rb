@@ -15,11 +15,7 @@ module GenerateNotificationModel
     description = generate_notification_description_elements(subject).reverse.join(' | ')
 
     notification = Notification.create(
-<<<<<<< HEAD
       type_of: notification_type,
-=======
-      type_of: :recent_changes,
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
       title: sanitize_input(message, %w(strong a)),
       message: sanitize_input(description, %w(strong a)),
       generator_user_id: owner.id
@@ -39,28 +35,18 @@ module GenerateNotificationModel
     when Project
       users = subject.users
     when Experiment
-<<<<<<< HEAD
-      users = subject.users
-    when MyModule
-      users = subject.designated_users
-      # Also send to the user that was unassigned,
-      # and is therefore no longer present on the module.
-      if type_of == 'undesignate_user_from_my_module'
-        users += User.where(id: values.dig('message_items', 'user_target', 'id'))
-      end
-    when Protocol
-      users = subject.in_repository? ? [] : subject.my_module.designated_users
-    when Result
-      users = subject.my_module.designated_users
-=======
       users = subject.project.users
     when MyModule
       users = subject.users
+      # Also send to the user that was unassigned,
+      # and is therefore no longer present on the module.
+      if type_of == 'unassign_user_from_module'
+        users += User.where(id: values.dig('message_items', 'user_target', 'id'))
+      end
     when Protocol
       users = subject.in_repository? ? [] : subject.my_module.users
     when Result
       users = subject.my_module.users
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     when Repository
       users = subject.team.users
     when Team
@@ -128,7 +114,6 @@ module GenerateNotificationModel
   def generate_notification
     CreateNotificationFromActivityJob.perform_later(self) if notifiable?
   end
-<<<<<<< HEAD
 
   def notification_type
     return :recent_changes unless instance_of?(Activity)
@@ -139,6 +124,4 @@ module GenerateNotificationModel
       :recent_changes
     end
   end
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 end

@@ -1,7 +1,12 @@
+# frozen_string_literal: true
+
 class Experiment < ApplicationRecord
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
+
+  ID_PREFIX = 'EX'
+  include PrefixedIdModel
 
   before_save -> { report_elements.destroy_all }, if: -> { !new_record? && project_id_changed? }
 
@@ -70,19 +75,25 @@ class Experiment < ApplicationRecord
       new_query =
         Experiment
         .where('experiments.project_id IN (?)', projects_ids)
-        .where_attributes_like([:name, :description], query, options)
+        .where_attributes_like(
+          [:name, :description, PREFIXED_ID_SQL], query, options
+        )
       return include_archived ? new_query : new_query.active
     elsif include_archived
       new_query =
         Experiment
         .where(project: project_ids)
-        .where_attributes_like([:name, :description], query, options)
+        .where_attributes_like(
+          [:name, :description, PREFIXED_ID_SQL], query, options
+        )
     else
       new_query =
         Experiment
         .active
         .where(project: project_ids)
-        .where_attributes_like([:name, :description], query, options)
+        .where_attributes_like(
+          [:name, :description, PREFIXED_ID_SQL], query, options
+        )
     end
 
     # Show all results if needed

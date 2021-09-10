@@ -18,14 +18,11 @@ class WebhookService
       )
     end
 
-    headers = { 'Content-Type' => 'application/json' }
-    headers['Webhook-Secret-Key'] = @webhook.secret_key if @webhook.secret_key.present?
-
     response = HTTParty.public_send(
       @webhook.http_method,
       @webhook.url,
       {
-        headers: headers,
+        headers: { 'Content-Type' => 'application/json' },
         body: @payload.to_json
       }
     )

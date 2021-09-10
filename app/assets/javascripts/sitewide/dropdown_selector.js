@@ -8,10 +8,7 @@
     data-select-by-group // Add groups to dropdown
     data-disable-placeholder // Placeholder for disabled fields
     data-placeholder // Search placeholder
-<<<<<<< HEAD
     data-select-hint // A hint on top of a dropdown
-=======
->>>>>>> Pulled latest release
     data-disable-on-load // Disable input after initialization
     data-select-all-button // Text for select all button
     data-combine-tags // Combine multiple tags to one (in simple mode gives you multiple select)
@@ -51,18 +48,12 @@
 
 
 */
-<<<<<<< HEAD
 
-=======
->>>>>>> Pulled latest release
 var dropdownSelector = (function() {
   // /////////////////////
   // Support functions //
   // ////////////////////
-<<<<<<< HEAD
   const MAX_DROPDOWN_HEIGHT = 320;
-=======
->>>>>>> Pulled latest release
 
   // Change direction of dropdown depends of container position
   function updateDropdownDirection(selector, container) {
@@ -88,23 +79,15 @@ var dropdownSelector = (function() {
 
     if ((modalContainerBottom + bottomSpace) < bottomTreshold) {
       container.addClass('inverse');
-<<<<<<< HEAD
       maxHeight = Math.min(containerPosition - 122 + maxHeight, MAX_DROPDOWN_HEIGHT);
       container.find('.dropdown-container').css('max-height', `${maxHeight}px`)
-=======
-      container.find('.dropdown-container').css('max-height', `${(containerPosition - 122 + maxHeight)}px`)
->>>>>>> Pulled latest release
         .css('margin-bottom', `${(containerPosition * -1)}px`)
         .css('left', `${containerPositionLeft}px`)
         .css('width', `${containerWidth}px`);
     } else {
       container.removeClass('inverse');
-<<<<<<< HEAD
       maxHeight = Math.min(bottomSpace - 32 + maxHeight, MAX_DROPDOWN_HEIGHT);
       container.find('.dropdown-container').css('max-height', `${maxHeight}px`)
-=======
-      container.find('.dropdown-container').css('max-height', `${(bottomSpace - 32 + maxHeight)}px`)
->>>>>>> Pulled latest release
         .css('width', `${containerWidth}px`)
         .css('left', `${containerPositionLeft}px`)
         .css('margin-top', `${(bottomSpace * -1)}px`);
@@ -121,11 +104,7 @@ var dropdownSelector = (function() {
 
   // Save data to the field
   function updateCurrentData(container, data) {
-<<<<<<< HEAD
     container.find('.data-field').val(JSON.stringify(data)).change();
-=======
-    container.find('.data-field').val(JSON.stringify(data));
->>>>>>> Pulled latest release
   }
 
   // Search filter for non-ajax data
@@ -171,19 +150,9 @@ var dropdownSelector = (function() {
   function disableEnableDropdown(selector, container, mode) {
     var searchFieldValue = container.find('.search-field');
     if (mode) {
-<<<<<<< HEAD
-<<<<<<< HEAD
       if ($(selector).data('ajax-url')) {
         updateCurrentData(container, []);
       }
-=======
-      updateCurrentData(container, []);
->>>>>>> Pulled latest release
-=======
-      if ($(selector).data('ajax-url')) {
-        updateCurrentData(container, []);
-      }
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
       updateTags(selector, container, { skipChange: true });
       searchFieldValue.attr('placeholder', selector.data('disable-placeholder') || '');
       container.addClass('disabled').removeClass('open')
@@ -209,13 +178,10 @@ var dropdownSelector = (function() {
     };
   }
 
-<<<<<<< HEAD
   function noOptionsForSelect(selector) {
     return !$(selector).data('ajax-url') && $(selector).find('.dropdown-option').length == 0;
   }
 
-=======
->>>>>>> Pulled latest release
   // Ajax intial values, we will use default options //
   function ajaxInitialValues(selector, container) {
     var intialData = [];
@@ -243,7 +209,6 @@ var dropdownSelector = (function() {
   }
 
   // Prepare custom dropdown icon
-<<<<<<< HEAD
   function prepareCustomDropdownIcon(selector, config) {
     if (config.inputTagMode && noOptionsForSelect(selector)) {
       return '';
@@ -251,17 +216,7 @@ var dropdownSelector = (function() {
     if (config.customDropdownIcon) {
       return config.customDropdownIcon();
     }
-    return '<i class="fas fa-caret-down right-icon"></i><i class="fas fa-search right-icon simple-dropdown"></i>';
-=======
-  function prepareCustomDropdownIcon(config) {
-    if (config.customDropdownIcon) {
-      return config.customDropdownIcon();
-    }
-    if (config.inputTagMode) {
-      return '';
-    }
     return '<i class="fas fa-caret-down right-icon"></i><i class="fas fa-search right-icon"></i>';
->>>>>>> Pulled latest release
   }
 
   // Set new data
@@ -303,13 +258,8 @@ var dropdownSelector = (function() {
     updateTags(selector, container, { select: true });
   }
 
-<<<<<<< HEAD
   // initialize keyboard control
   function initKeyboardControl(selector, container) {
-=======
-  // intialization keyboard control
-  function initKeyboardControl(container) {
->>>>>>> Pulled latest release
     container.find('.search-field').keydown(function(e) {
       var dropdownContainer = container.find('.dropdown-container');
       var pressedKey = e.keyCode;
@@ -319,33 +269,22 @@ var dropdownSelector = (function() {
         dropdownContainer.find('.dropdown-option').first().addClass('highlight');
       }
 
-<<<<<<< HEAD
       if (pressedKey === 38) { // arrow up
-=======
-      if (pressedKey === 38) {
->>>>>>> Pulled latest release
         if (selectedOption.prev('.dropdown-option').length) {
           selectedOption.removeClass('highlight').prev().addClass('highlight');
         }
         if (selectedOption.prev('.delimiter').length) {
           selectedOption.removeClass('highlight').prev().prev().addClass('highlight');
         }
-<<<<<<< HEAD
       } else if (pressedKey === 40) { // arrow down
-=======
-      } else if (pressedKey === 40) {
->>>>>>> Pulled latest release
         if (selectedOption.next('.dropdown-option').length) {
           selectedOption.removeClass('highlight').next().addClass('highlight');
         }
         if (selectedOption.next('.delimiter').length) {
           selectedOption.removeClass('highlight').next().next().addClass('highlight');
         }
-<<<<<<< HEAD
       } else if (pressedKey === 8 && e.target.value === '') { // backspace
         deleteTag(selector, container, container.find('.ds-tags .fa-times').last());
-=======
->>>>>>> Pulled latest release
       }
     });
   }
@@ -360,10 +299,7 @@ var dropdownSelector = (function() {
     var optionContainer;
     var perfectScroll;
     var dropdownContainer;
-<<<<<<< HEAD
     var toggleElement;
-=======
->>>>>>> Pulled latest release
 
     if (selectElement.length === 0) return;
 
@@ -381,17 +317,12 @@ var dropdownSelector = (function() {
       <div class="dropdown-container"></div>
       <div class="input-field">
         <input type="text" class="search-field" data-options-selected=0 placeholder="${selectElement.data('placeholder') || ''}"></input>
-<<<<<<< HEAD
         ${prepareCustomDropdownIcon(selector, config)}
-=======
-        ${prepareCustomDropdownIcon(config)}
->>>>>>> Pulled latest release
       </div>
       <input type="hidden" class="data-field" value="[]">
 
     `).appendTo(dropdownContainer);
 
-<<<<<<< HEAD
     // Blank option
     if (selectElement.data('blank')) {
       $(`<div class="dropdown-blank btn">${selectElement.data('blank')}</div>`)
@@ -416,8 +347,6 @@ var dropdownSelector = (function() {
       });
     }
 
-=======
->>>>>>> Pulled latest release
     // If we setup Select All we draw it and add correspond logic
     if (selectElement.data('select-all-button')) {
       $(`<div class="dropdown-select-all btn">${selectElement.data('select-all-button')}</div>`)
@@ -485,13 +414,8 @@ var dropdownSelector = (function() {
       dropdownContainer.addClass('active');
       $('.dropdown-selector-container:not(.active)').removeClass('open');
 
-<<<<<<< HEAD
       // If dropdown disabled or we use it in only tag mode we not open it
       if (dropdownContainer.hasClass('disabled') || (config.inputTagMode && noOptionsForSelect(selector))) return;
-=======
-      // If dropdown disabled or we use it in tag mode we not open it
-      if (dropdownContainer.hasClass('disabled') || config.inputTagMode) return;
->>>>>>> Pulled latest release
 
       // Each time we open option contianer we must scroll it
       optionContainer.scrollTo(0);
@@ -567,17 +491,10 @@ var dropdownSelector = (function() {
       dropdownContainer.addClass('disable-search');
     }
 
-<<<<<<< HEAD
     // initialization keyboard control
     initKeyboardControl(selector, dropdownContainer);
 
     // In some case dropdown position not correctly calculated
-=======
-    // initialization keyboard controll
-    initKeyboardControl(dropdownContainer);
-
-    // In some case dropdown position not correclty calculated
->>>>>>> Pulled latest release
     updateDropdownDirection(selectElement, dropdownContainer);
   }
 
@@ -603,10 +520,6 @@ var dropdownSelector = (function() {
       var customStyle = selector2.data('config').optionStyle;
       return $(`
         <div class="dropdown-option ${customClass}" style="${customStyle ? customStyle(option) : ''}"
-<<<<<<< HEAD
-          title="${(option.params && option.params.tooltip) || ''}"
-=======
->>>>>>> Pulled latest release
           data-params='${JSON.stringify(option.params || {})}'
           data-label="${option.label}"
           data-group="${group ? group.value : ''}"
@@ -644,7 +557,6 @@ var dropdownSelector = (function() {
     }
 
     // Remove placeholder from option container
-<<<<<<< HEAD
     container.find('.dropdown-group, .dropdown-option, .empty-dropdown, .dropdown-hint, .delimiter').remove();
     if (!data) return;
 
@@ -654,12 +566,6 @@ var dropdownSelector = (function() {
           .appendTo(container.find('.dropdown-container'));
       }
 
-=======
-    container.find('.dropdown-group, .dropdown-option, .empty-dropdown, .delimiter').remove();
-    if (!data) return;
-
-    if (data.length > 0 && !(data.length === 1 && data[0].value === '')) {
->>>>>>> Pulled latest release
       // If we use select-by-group option we need first draw groups
       if (selector.data('select-by-group')) {
         $.each(data, function(gi, group) {
@@ -694,11 +600,7 @@ var dropdownSelector = (function() {
         // For simple options we only draw them
         $.each(data, function(oi, option) {
           var optionElement;
-<<<<<<< HEAD
-          if (option.delimiter || (option.params && option.params.delimiter)) {
-=======
           if (option.delimiter) {
->>>>>>> Pulled latest release
             drawDelimiter().appendTo(container.find('.dropdown-container'));
             return;
           }
@@ -767,7 +669,6 @@ var dropdownSelector = (function() {
     updateTags(selector, container, { select: true });
   }
 
-<<<<<<< HEAD
   function deleteTag(selector, container, target) {
     var tagLabel = target.prev();
 
@@ -787,8 +688,6 @@ var dropdownSelector = (function() {
     }, 350);
   }
 
-=======
->>>>>>> Pulled latest release
   // Refresh tags in input field
   function updateTags(selector, container, config = {}) {
     var selectedOptions = getCurrentData(container);
@@ -807,11 +706,7 @@ var dropdownSelector = (function() {
       // Add new tag before search field
       var tag = $(`<div class="${tagAppearance} ${customClass}" style="${customStyle ? customStyle(data) : ''}" >
                   <div class="tag-label"
-<<<<<<< HEAD
-                    title="${(data.params && data.params.tooltip) || $('<span>' + label + '</span>').text().trim()}"
-=======
                     title="${$('<span>' + label + '</span>').text()}"
->>>>>>> Pulled latest release
                     data-ds-tag-group="${data.group}"
                     data-ds-tag-id="${data.value}">
                   </div>
@@ -826,27 +721,8 @@ var dropdownSelector = (function() {
 
       // Now we need add delete action to tag
       tag.find('.fa-times').click(function(e) {
-<<<<<<< HEAD
         e.stopPropagation();
         deleteTag(selector, container, $(this));
-=======
-        var tagLabel = $(this).prev();
-        var toDelete;
-        e.stopPropagation();
-        // Start delete animation
-        $(this).parent().addClass('closing');
-        // Add timeout for deleting animation
-        setTimeout(() => {
-          if (selector.data('combine-tags')) {
-            // if we use combine-tags optons we simply clear all values
-            container.find('.data-field').val('[]');
-            updateTags(selector, container);
-          } else {
-            // Or delete specific one
-            deleteValue(selector, container, tagLabel.data('ds-tag-id'), tagLabel.data('ds-tag-group'));
-          }
-        }, 350);
->>>>>>> Pulled latest release
       });
     }
 
@@ -1046,14 +922,7 @@ var dropdownSelector = (function() {
 
       valuesArray.forEach(function(value) {
         option = $selector.find(`option[value="${value}"]`)[0];
-<<<<<<< HEAD
-<<<<<<< HEAD
         option.selected = 'selected';
-=======
->>>>>>> Pulled latest release
-=======
-        option.selected = 'selected';
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
         options.push(convertOptionToJson(option));
       });
       setData($selector, options);

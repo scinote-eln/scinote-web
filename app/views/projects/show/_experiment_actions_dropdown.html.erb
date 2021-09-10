@@ -37,25 +37,6 @@
           <% end %>
         </li>
       <% end %>
-<<<<<<< HEAD
-      <!-- Set or view user experiment assignments -->
-      <% if can_manage_experiment_users?(experiment) %>
-        <li class="form-dropdown-item">
-          <%= link_to edit_access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'} do %>
-            <i class="fas fa-door-open"></i>
-            <span><%= t('experiments.index.experiment_access') %></span>
-          <% end %>
-        </li>
-      <% else %>
-        <li class="form-dropdown-item">
-          <%= link_to access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'} do %>
-            <i class="fas fa-door-open"></i>
-            <span><%= t('experiments.index.experiment_access') %></span>
-          <% end %>
-        </li>
-      <% end %>
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
       <!-- Archive/restore experiment -->
       <% if experiment.active? && can_archive_experiment?(experiment) %>
         <li class="form-dropdown-item">
@@ -82,14 +63,14 @@
           <% end %>
         </li>
       <% end %>
-<<<<<<< HEAD
+      <li class="form-dropdown-break">
+        <hr>
+      </li>
       <li class="form-dropdown-item">
         <div class="form-dropdown-item-info">
           <small><%= t('experiments.experiment_id') %>: <strong><%= experiment.code %></strong></small>
         </div>
       </li>
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     </ul>
   </div>
 <% end %>

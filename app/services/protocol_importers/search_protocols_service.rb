@@ -3,13 +3,6 @@
 module ProtocolImporters
   class SearchProtocolsService
     extend Service
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    require 'protocol_importers/protocols_io/v3/errors'
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
->>>>>>> Initial commit of 1.17.2 merge
 
     attr_reader :errors, :protocols_list
 
@@ -47,11 +40,7 @@ module ProtocolImporters
       @errors[:invalid_params][:page_id] = 'Page needs to be positive' if @query_params[:page_id]&.to_i&.negative?
 
       # try if endpints exists
-<<<<<<< HEAD
       @errors[:invalid_params][:source_endpoint] = 'Wrong source endpoint' unless endpoint_name.is_a?(String)
-=======
-      @errors[:invalid_params][:source_endpoint] = 'Wrong source endpoint' unless endpoint_name&.is_a?(String)
->>>>>>> Finished merging. Test on dev machine (iMac).
 
       succeed?
     end

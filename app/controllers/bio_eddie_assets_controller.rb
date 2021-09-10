@@ -56,22 +56,18 @@ class BioEddieAssetsController < ApplicationController
   end
 
   def bmt_request
-    return render_404 unless Rails.application.config.x.biomolecule_toolkit_base_url
+    return render_404 unless ENV['BIOMOLECULE_TOOLKIT_BASE_URL']
 
-    uri = URI.parse(Rails.application.config.x.biomolecule_toolkit_base_url)
-    uri.path = File.join(uri.path, request.original_fullpath.remove('/biomolecule_toolkit'))
+    uri = URI.parse(ENV['BIOMOLECULE_TOOLKIT_BASE_URL'])
+    uri.path = request.original_fullpath.remove('/biomolecule_toolkit')
 
     Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
       api_request = "Net::HTTP::#{request.request_method.capitalize}".constantize.new(uri)
-      if Rails.application.config.x.biomolecule_toolkit_api_key
-        api_request['x-api-key'] = Rails.application.config.x.biomolecule_toolkit_api_key
-      end
+      api_request['x-api-key'] = ENV['BIOMOLECULE_TOOLKIT_API_KEY'] if ENV['BIOMOLECULE_TOOLKIT_API_KEY']
       api_request['Content-Type'] = 'application/json'
       request_body = request.body.read
-
       api_request.body = request_body if request_body.present?
       api_response = http.request(api_request)
-
       render body: api_response.body, content_type: api_response.content_type, status: api_response.code
     end
   end
@@ -122,9 +118,10 @@ class BioEddieAssetsController < ApplicationController
   def check_edit_permission
     case @assoc
     when Step
-      return render_403 unless can_manage_step?(@assoc)
+      return render_403 unless can_manage_protocol_in_module?(@protocol) ||
+                               can_manage_protocol_in_repository?(@protocol)
     when Result, MyModule
-      return render_403 unless can_manage_my_module?(@my_module)
+      return render_403 unless can_manage_module?(@my_module)
     else
       render_403
     end

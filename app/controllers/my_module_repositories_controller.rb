@@ -5,11 +5,7 @@ class MyModuleRepositoriesController < ApplicationController
 
   before_action :load_my_module
   before_action :load_repository, except: %i(repositories_dropdown_list repositories_list_html)
-<<<<<<< HEAD
-  before_action :check_my_module_view_permissions, except: :update
-=======
   before_action :check_my_module_view_permissions
->>>>>>> Pulled latest release
   before_action :check_repository_view_permissions, except: %i(repositories_dropdown_list repositories_list_html)
   before_action :check_assign_repository_records_permissions, only: :update
 
@@ -29,16 +25,10 @@ class MyModuleRepositoriesController < ApplicationController
       repository_rows = datatable_service.repository_rows
       rows_view = 'repository_rows/simple_view_index.json'
     else
-<<<<<<< HEAD
       repository_rows = datatable_service.repository_rows
                                          .preload(:repository_columns,
                                                   :created_by,
                                                   repository_cells: { value: @repository.cell_preload_includes })
-=======
-      repository_rows = datatable_service.repository_rows.preload(:repository_columns,
-                                                                  :created_by,
-                                                                  repository_cells: @repository.cell_preload_includes)
->>>>>>> Pulled latest release
       rows_view = 'repository_rows/index.json'
     end
     @repository_rows = repository_rows.page(page).per(per_page)
@@ -77,12 +67,7 @@ class MyModuleRepositoriesController < ApplicationController
       partial: 'my_modules/modals/update_repository_records_modal_content.html.erb',
       locals: { my_module: @my_module,
                 repository: @repository,
-<<<<<<< HEAD
-                selected_rows: params[:selected_rows],
-                downstream: params[:downstream] }
-=======
                 selected_rows: params[:selected_rows] }
->>>>>>> Pulled latest release
     )
     render json: {
       html: modal,
@@ -95,12 +80,7 @@ class MyModuleRepositoriesController < ApplicationController
       partial: 'my_modules/modals/assign_repository_records_modal_content.html.erb',
       locals: { my_module: @my_module,
                 repository: @repository,
-<<<<<<< HEAD
-                selected_rows: params[:selected_rows],
-                downstream: params[:downstream] }
-=======
                 selected_rows: params[:selected_rows] }
->>>>>>> Pulled latest release
     )
     render json: {
       html: modal,
@@ -171,11 +151,7 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def check_my_module_view_permissions
-<<<<<<< HEAD
-    render_403 unless can_read_my_module?(@my_module)
-=======
     render_403 unless can_read_experiment?(@my_module.experiment)
->>>>>>> Pulled latest release
   end
 
   def check_repository_view_permissions
@@ -183,11 +159,7 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def check_assign_repository_records_permissions
-<<<<<<< HEAD
-    render_403 unless can_assign_my_module_repository_rows?(@my_module)
-=======
     render_403 unless can_assign_repository_rows_to_module?(@my_module)
->>>>>>> Pulled latest release
   end
 
   def update_flash_message(service)

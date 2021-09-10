@@ -23,6 +23,7 @@
 text_title ||= nil
 text_invite_heading ||= nil
 invite_to_team = type.in?(%w(invite_to_team invite_to_team_with_role))
+invite_with_team_selector = type.in?(%w(invite_new_members invite_with_team_selector invite_with_team_selector_and_role))
 %>
 <div
   class="modal modal-invite-users"
@@ -71,30 +72,56 @@ invite_to_team = type.in?(%w(invite_to_team invite_to_team_with_role))
             <% end %>
           </p>
 
-          <select class="emails-input" multiple data-role="tags-input" name="emails[]">
-          </select>
-          <br />
-          <em><%= t('invite_users.input_subtitle') %></em>
-
-          <% if current_user && type.in?(['invite_with_team_selector', 'invite_with_team_selector_and_role']) %>
-            <% # Only allow inviting to teams where user is admin %>
-            <% teams = current_user.teams
-                                   .joins(:user_teams)
-                                   .where('user_teams.role': UserTeam.roles[:admin])
-                                   .select { |team|  can_invite_team_users?(team) } %>
-            <% if teams.any? %>
-              <div class="team-selector">
-                <div class="heading">
-                  <input type="checkbox" data-role="team-selector-checkbox" />
-                  <span><%= t('invite_users.invite_to_team_heading') %></span>
-                </div>
-                <%= select_tag('team-select',
-                               options_for_select(teams.pluck(:name, :id)),
-                               { class: 'form-control selectpicker',
-                                 'data-role' => 'team-selector-dropdown',
-                                 disabled: 'disabled' }) %>
+          <% if type.in? ['invite_new_members', 'invite'] %>
+            <p><%= t('invite_users.new_members.description') %></p>
+            <h4 class="heading">
+              <span><%= t('invite_users.new_members.input_label') %></span>
+            </h4>
+            <div class="emails-selector" >
+              <div class="select-container">
+                <select name="emails[]" class="emails-input"></select>
               </div>
-            <% end %>
+              <p><small><%= t('invite_users.new_members.input_subtitle') %></small></p>
+            </div>
+          <% else %>
+            <div class="user-selector">
+              <select class="emails-input" multiple data-role="tags-input" name="emails[]">
+              </select>
+              <h4><%= t('invite_users.input_subtitle') %></h4>
+            </div>
+          <% end %>
+
+          <% if current_user && invite_with_team_selector %>
+            <% # Only allow inviting to teams where user is admin %>
+            <div class="team-selector">
+              <h4 class="heading">
+                <span><%= t('invite_users.select_team') %></span>
+              </h4>
+              <div class="team-selector filter-block small-left">
+                <div class="select-container select-container--with-search select-container--with-blank">
+                  <select class="teams-input" name="teams[]"
+                    data-placeholder = "<%= t('invite_users.select_team_blank') %>"
+                    data-blank = "<%= t('invite_users.select_team_blank') %>"
+                    data-select-all = "false"
+                    data-toggle-target = "#role-select-container"
+                    data-ajax-url = "<%= invitable_teams_path %>"
+                  ></select>
+                </div>
+
+                <div id="role-select-container" class="hidden">
+                  <h4 class="heading">
+                    <span><%= t('invite_users.select_team_role') %></span>
+                  </h4>
+                  <div class="form-select">
+                    <%= select_tag "role",
+                      options_for_select(UserTeam.roles.keys
+                        .map { |k| [k.humanize + (k == 'normal_user' ? " (#{t('invite_users.default')})" : ''), k] }, 'normal_user'),
+                      disabled: true, class: "role-input from-control"
+                    %>
+                  </div>
+                </div>
+              </div>
+            </div>
           <% end %>
           <% if ENV['ENABLE_RECAPTCHA'] == 'true' %>
             <div id="recaptcha-service" class="g-recaptcha"

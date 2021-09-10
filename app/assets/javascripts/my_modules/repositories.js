@@ -112,19 +112,11 @@ var MyModuleRepositories = (function() {
       destroy: true,
       ajax: {
         url: $(tableContainer).data('source'),
-<<<<<<< HEAD
-        contentType: 'application/json',
-=======
->>>>>>> Pulled latest release
         data: function(d) {
           d.order[0].column = tableContainer.data('name-column-id');
           d.assigned = 'assigned';
           d.view_mode = true;
           d.simple_view = true;
-<<<<<<< HEAD
-          return JSON.stringify(d);
-=======
->>>>>>> Pulled latest release
         },
         global: false,
         type: 'POST'
@@ -166,17 +158,9 @@ var MyModuleRepositories = (function() {
       destroy: true,
       ajax: {
         url: $(tableContainer).data('source'),
-<<<<<<< HEAD
-        contentType: 'application/json',
         data: function(d) {
           if (options.assigned) d.assigned = 'assigned';
           d.view_mode = true;
-          return JSON.stringify(d);
-=======
-        data: function(d) {
-          if (options.assigned) d.assigned = 'assigned';
-          d.view_mode = true;
->>>>>>> Pulled latest release
         },
         global: false,
         type: 'POST'
@@ -186,14 +170,9 @@ var MyModuleRepositories = (function() {
 
       fnInitComplete: function() {
         var dataTableWrapper = $(tableContainer).closest('.dataTables_wrapper');
-<<<<<<< HEAD
-        DataTableHelpers.initLengthAppearance(dataTableWrapper);
-        DataTableHelpers.initSearchField(dataTableWrapper, I18n.t('repositories.show.filter_inventory_items'));
-        $('<img class="barcode-scanner" src="/images/icon_small/barcode.png"></img>').appendTo($('.search-container'));
-=======
         DataTableHelpers.initLengthApearance(dataTableWrapper);
         DataTableHelpers.initSearchField(dataTableWrapper, I18n.t('repositories.show.filter_inventory_items'));
->>>>>>> Pulled latest release
+        $('<img class="barcode-scanner" src="/images/icon_small/barcode.png"></img>').appendTo($('.search-container'));
         dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
         if (options.assign_mode) {
           renderFullViewAssignButtons();
@@ -233,15 +212,8 @@ var MyModuleRepositories = (function() {
           if (!options.assign_mode) {
             json.state.columns[0].visible = false;
           }
-<<<<<<< HEAD
-          if ($(tableContainer).data('type') !== 'snapshot') {
-            json.state.columns[6].visible = false;
-            json.state.columns[7].visible = false;
-          }
-=======
           json.state.columns[6].visible = false;
           json.state.columns[7].visible = false;
->>>>>>> Pulled latest release
           if (json.state.search) delete json.state.search;
           callback(json.state);
         });
@@ -352,11 +324,7 @@ var MyModuleRepositories = (function() {
     });
   }
 
-<<<<<<< HEAD
-  function refreshCreationSnapshotInfoText() {
-=======
   function refreshCreationSpanshotInfoText() {
->>>>>>> Pulled latest release
     var snapshotsCount = FULL_VIEW_MODAL.find('.repository-snapshot-item').length;
     var createSnapshotInfo = FULL_VIEW_MODAL.find('.create-snapshot-item .info');
     if (snapshotsCount) {
@@ -401,11 +369,7 @@ var MyModuleRepositories = (function() {
             checkSnapshotStatus(snapshotItem);
           }, STATUS_POLLING_INTERVAL);
           animateSpinner(null, false);
-<<<<<<< HEAD
-          refreshCreationSnapshotInfoText();
-=======
           refreshCreationSpanshotInfoText();
->>>>>>> Pulled latest release
         }
       });
       e.stopPropagation();
@@ -424,11 +388,7 @@ var MyModuleRepositories = (function() {
           }
           snapshotItem.remove();
           animateSpinner(null, false);
-<<<<<<< HEAD
-          refreshCreationSnapshotInfoText();
-=======
           refreshCreationSpanshotInfoText();
->>>>>>> Pulled latest release
         }
       });
       e.stopPropagation();
@@ -540,15 +500,9 @@ var MyModuleRepositories = (function() {
     $(row).toggleClass('selected');
 
     if (Object.keys(SELECTED_ROWS).length) {
-<<<<<<< HEAD
-      $('.assign-button').attr('disabled', false);
-    } else {
-      $('.assign-button').attr('disabled', true);
-=======
       $('#assignRepositoryRecords, #updateRepositoryRecords').attr('disabled', false);
     } else {
       $('#assignRepositoryRecords, #updateRepositoryRecords').attr('disabled', true);
->>>>>>> Pulled latest release
     }
 
     refreshSelectAllCheckbox();
@@ -559,15 +513,8 @@ var MyModuleRepositories = (function() {
     toolbar.empty();
     if (parseInt(FULL_VIEW_MODAL.data('rows-count'), 10) === 0) {
       toolbar.append($('#my-module-repository-full-view-assign-button').html());
-<<<<<<< HEAD
-      toolbar.append($('#my-module-repository-full-view-assign-downstream-button').html());
     } else {
       toolbar.append($('#my-module-repository-full-view-update-button').html());
-      toolbar.append($('#my-module-repository-full-view-update-downstream-button').html());
-=======
-    } else {
-      toolbar.append($('#my-module-repository-full-view-update-button').html());
->>>>>>> Pulled latest release
     }
   }
 
@@ -589,11 +536,7 @@ var MyModuleRepositories = (function() {
     } else if (snapshotDate) {
       title = repositoryName;
       version = I18n.t('my_modules.repository.full_view.modal_snapshot_header', {
-<<<<<<< HEAD
-        snapshot_date: snapshotDate
-=======
         snaphot_date: snapshotDate
->>>>>>> Pulled latest release
       });
     } else {
       title = repositoryName;
@@ -604,11 +547,7 @@ var MyModuleRepositories = (function() {
     FULL_VIEW_MODAL.find('.repository-version').html(version);
   }
 
-<<<<<<< HEAD
-  function initRepositoryAssignView() {
-=======
   function initRepoistoryAssignView() {
->>>>>>> Pulled latest release
     $('.repositories-dropdown-menu').on('click', '.repository', function(e) {
       var assignUrlModal = $(this).data('assign-url-modal');
       var updateUrlModal = $(this).data('update-url-modal');
@@ -631,21 +570,9 @@ var MyModuleRepositories = (function() {
       e.stopPropagation();
     }).on('click', '#assignRepositoryRecords', function() {
       openAssignRecordsModal();
-<<<<<<< HEAD
-    }).on('click', '#assignRepositoryRecordsDownstream', function() {
-      openAssignRecordsModal(true);
-    })
-      .on('click', '#updateRepositoryRecords', function() {
-        openUpdateRecordsModal();
-      })
-      .on('click', '#updateRepositoryRecordsDownstream', function() {
-        openUpdateRecordsModal(true);
-      });
-=======
     }).on('click', '#updateRepositoryRecords', function() {
       openUpdateRecordsModal();
     });
->>>>>>> Pulled latest release
 
     UPDATE_REPOSITORY_MODAL.on('click', '.downstream-action', function() {
       submitUpdateRepositoryRecord({ downstream: true });
@@ -653,24 +580,12 @@ var MyModuleRepositories = (function() {
       submitUpdateRepositoryRecord({ downstream: false });
     }).on('hidden.bs.modal', function() {
       FULL_VIEW_MODAL.focus();
-<<<<<<< HEAD
-    }).on('click', '.next-step', function() {
-      UPDATE_REPOSITORY_MODAL.find('.next-step, .description-1, .rows-list-container').addClass('hidden');
-      UPDATE_REPOSITORY_MODAL.find('.description-2, .my-modules-to-assign, .hidden-my-modules, .downstream-action').removeClass('hidden');
-    });
-  }
-
-  function openUpdateRecordsModal(downstream) {
-    var updateUrl = FULL_VIEW_MODAL.data('update-url-modal');
-    $.get(updateUrl, { selected_rows: SELECTED_ROWS, downstream: downstream }, function(data) {
-=======
     });
   }
 
   function openUpdateRecordsModal() {
     var updateUrl = FULL_VIEW_MODAL.data('update-url-modal');
     $.get(updateUrl, { selected_rows: SELECTED_ROWS }, function(data) {
->>>>>>> Pulled latest release
       var assignList;
       var assignListScrollbar;
       var unassignList;
@@ -687,15 +602,9 @@ var MyModuleRepositories = (function() {
     });
   }
 
-<<<<<<< HEAD
-  function openAssignRecordsModal(downstream) {
-    var assignUrl = FULL_VIEW_MODAL.data('assign-url-modal');
-    $.get(assignUrl, { selected_rows: SELECTED_ROWS, downstream: downstream }, function(data) {
-=======
   function openAssignRecordsModal() {
     var assignUrl = FULL_VIEW_MODAL.data('assign-url-modal');
     $.get(assignUrl, { selected_rows: SELECTED_ROWS }, function(data) {
->>>>>>> Pulled latest release
       UPDATE_REPOSITORY_MODAL.find('.modal-content').html(data.html);
       UPDATE_REPOSITORY_MODAL.data('update-url', data.update_url);
       UPDATE_REPOSITORY_MODAL.modal('show');
@@ -767,11 +676,7 @@ var MyModuleRepositories = (function() {
       initRepositoryFullView();
       initRepositoriesDropdown();
       initVersionsSidebarActions();
-<<<<<<< HEAD
-      initRepositoryAssignView();
-=======
       initRepoistoryAssignView();
->>>>>>> Pulled latest release
       initSelectAllCheckbox();
       initExportAssignedRows();
     }

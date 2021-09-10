@@ -4,6 +4,9 @@ require 'rails_helper'
 
 describe Activity, type: :model do
   let(:activity) { build :activity }
+  let(:user) { create :user }
+  let(:team) { create :team }
+
   let(:old_activity) { build :activity, :old }
 
   it 'should be of class Activity' do
@@ -58,6 +61,14 @@ describe Activity, type: :model do
     end
     it 'returns false for activity' do
       expect(activity.old_activity?).to be_falsey
+    end
+  end
+
+  describe '.create' do
+    it 'enqueues webhook dispatch job' do
+      ActiveJob::Base.queue_adapter = :test
+      expect { Activity.create(owner: user, team: team, type_of: "generate_pdf_report") }
+        .to have_enqueued_job(Activities::DispatchWebhooksJob)
     end
   end
 

@@ -47,7 +47,6 @@
 
     .cards-wrapper {
       --card-min-width: 350px;
-<<<<<<< HEAD
       --list-columns-number: 8;
 
       .card {
@@ -56,13 +55,6 @@
         .experiment-code-cell {
           display: none;
         }
-=======
-      --list-columns-number: 7;
-
-      .card {
-        grid-row: span 6;
-
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
         &.experiment-card {
           border-radius: 4px;
@@ -185,11 +177,7 @@
 
       &.list {
         grid-auto-rows: 1px 5em;
-<<<<<<< HEAD
         grid-template-columns: max-content minmax(100px, auto) minmax(80px, max-content) repeat(calc(var(--list-columns-number) - 4), minmax(100px, auto)) max-content;
-=======
-        grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 2), minmax(100px, auto)) max-content;
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
         grid-template-rows: 3em;
 
         .card {
@@ -245,7 +233,6 @@
               }
             }
 
-<<<<<<< HEAD
             .experiment-code-cell {
               display: block;
               grid-column: 3;
@@ -265,22 +252,6 @@
 
             .description-cell {
               grid-column: 7;
-=======
-            .start-date-cell {
-              grid-column: 3;
-            }
-
-            .modified-date-cell {
-              grid-column: 4;
-            }
-
-            .completed-task-cell {
-              grid-column: 5;
-            }
-
-            .description-cell {
-              grid-column: 6;
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
               position: relative;
 
               .description-text {
@@ -299,11 +270,7 @@
             }
 
             .actions-cell {
-<<<<<<< HEAD
               grid-column: 8;
-=======
-              grid-column: 7;
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
               padding-top: 3px;
               position: initial;
             }
@@ -372,11 +339,7 @@
         &.list {
           .card.experiment-card {
             .archived-date-cell {
-<<<<<<< HEAD
               grid-column: 6;
-=======
-              grid-column: 5;
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
             }
             .description-cell {
               .description-text::before {
@@ -396,21 +359,6 @@
   }
 }
 
-<<<<<<< HEAD
-.move-experiment-modal {
-  .warning-message {
-    background: $brand-warning-light;
-    margin-top: 1em;
-    padding: .5em;
-
-    .fas {
-      color: $brand-warning;
-    }
-  }
-}
-
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 @media (max-height: 700px) {
   .projects-show {
     .experiments-filters {

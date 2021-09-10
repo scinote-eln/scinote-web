@@ -2,7 +2,13 @@
 <% provide(:sidebar_title, t("sidebar.my_module.sidebar_title")) %>
 
 <%= content_for :sidebar do %>
-  <%= render partial: 'shared/sidebar/my_module.html.erb' %>
+  <%= render partial: 'shared/sidebar/my_module.html.erb',
+    locals: {
+      my_modules: @experiment_my_modules,
+      experiment: @my_module.experiment,
+      current_my_module: @my_module
+    }
+  %>
 <% end %>
 <%= render partial: "shared/secondary_navigation" %>
 <%= render partial: 'shared/drag_n_drop_overlay' %>
@@ -29,6 +35,8 @@
           </li>
           <%= render partial: '/assets/marvinjs/create_marvin_sketch_li',
                        locals: {  element_id: @my_module.id, element_type: 'Result',  sketch_container: "#results[data-module-id=#{@my_module.id}]" } %>
+          <%= render partial: '/assets/bio_eddie/create_bio_eddie_li.html.erb',
+                     locals: {  element_id: @my_module.id, element_type: 'Result',  assets_container:"#results[data-module-id=#{@my_module.id}]" } %>
           <%= render partial: "assets/wopi/create_wopi_file_li",
                      locals: {  element_id: @my_module.id, element_type: 'Result' } %>
         </ul>
@@ -68,6 +76,9 @@
     <%= paginate @results, outer_window: 1, window: 1 %>
   </div>
 </div>
+
+<%= render partial: "shared/bio_eddie_modal.html.erb" %>
+
 
 <%= javascript_include_tag "handsontable.full" %>
 

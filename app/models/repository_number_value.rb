@@ -11,64 +11,17 @@ class RepositoryNumberValue < ApplicationRecord
   validates :repository_cell, :data, presence: true
 
   SORTABLE_COLUMN_NAME = 'repository_number_values.data'
-<<<<<<< HEAD
-=======
-  SORTABLE_VALUE_INCLUDE = :repository_number_value
-  PRELOAD_INCLUDE = :repository_number_value
->>>>>>> Pulled latest release
 
   def formatted
     data.to_s
   end
 
-<<<<<<< HEAD
-  def self.add_filter_condition(repository_rows, join_alias, filter_element)
-    parameters = filter_element.parameters
-    if filter_element.operator == 'between'
-      return repository_rows if parameters['from'].blank? || parameters['to'].blank?
-    elsif parameters['number'].blank?
-      return repository_rows
-    end
-
-    case filter_element.operator
-    when 'equal_to'
-      repository_rows.where("#{join_alias}.data = ?", parameters['number'].to_d)
-    when 'unequal_to'
-      repository_rows.where.not("#{join_alias}.data = ?", parameters['number'].to_d)
-    when 'greater_than'
-      repository_rows.where("#{join_alias}.data > ?", parameters['number'].to_d)
-    when 'greater_than_or_equal_to'
-      repository_rows.where("#{join_alias}.data >= ?", parameters['number'].to_d)
-    when 'less_than'
-      repository_rows.where("#{join_alias}.data < ?", parameters['number'].to_d)
-    when 'less_than_or_equal_to'
-      repository_rows.where("#{join_alias}.data <= ?", parameters['number'].to_d)
-    when 'between'
-      repository_rows
-        .where("#{join_alias}.data > ? AND #{join_alias}.data < ?", parameters['from'].to_d, parameters['to'].to_d)
-    else
-      raise ArgumentError, 'Wrong operator for RepositoryNumberValue!'
-    end
-  end
-
-  def data_different?(new_data)
-    BigDecimal(new_data.to_s) != data
-  end
-
-  def update_data!(new_data, user)
-    self.data = BigDecimal(new_data.to_s)
-=======
   def data_changed?(new_data)
     BigDecimal(new_data.to_s) != data
   end
 
   def update_data!(new_data, user)
-<<<<<<< HEAD
-    self.data = BigDecimal(new_data)
->>>>>>> Pulled latest release
-=======
     self.data = BigDecimal(new_data.to_s)
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     self.last_modified_by = user
     save!
   end
@@ -85,28 +38,12 @@ class RepositoryNumberValue < ApplicationRecord
 
   def self.new_with_payload(payload, attributes)
     value = new(attributes)
-<<<<<<< HEAD
-<<<<<<< HEAD
     value.data = BigDecimal(payload.to_s)
-=======
-    value.data = BigDecimal(payload)
->>>>>>> Pulled latest release
-=======
-    value.data = BigDecimal(payload.to_s)
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     value
   end
 
   def self.import_from_text(text, attributes, _options = {})
-<<<<<<< HEAD
-<<<<<<< HEAD
     new(attributes.merge(data: BigDecimal(text.to_s)))
-=======
-    new(attributes.merge(data: BigDecimal(text)))
->>>>>>> Pulled latest release
-=======
-    new(attributes.merge(data: BigDecimal(text.to_s)))
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   rescue ArgumentError
     nil
   end

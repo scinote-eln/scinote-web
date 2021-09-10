@@ -14,13 +14,8 @@ class RepositoryChecklistValue < ApplicationRecord
   validates :repository_checklist_items, presence: true
 
   SORTABLE_COLUMN_NAME = 'repository_checklist_items.data'
-<<<<<<< HEAD
   EXTRA_SORTABLE_VALUE_INCLUDE = :repository_checklist_items
   EXTRA_PRELOAD_INCLUDE = :repository_checklist_items
-=======
-  SORTABLE_VALUE_INCLUDE = { repository_checklist_value: :repository_checklist_items }.freeze
-  PRELOAD_INCLUDE = { repository_checklist_value: :repository_checklist_items }.freeze
->>>>>>> Pulled latest release
 
   def formatted(separator: ' | ')
     repository_checklist_items.pluck(:data).join(separator)
@@ -30,49 +25,11 @@ class RepositoryChecklistValue < ApplicationRecord
     formatted(separator: repository_cell.repository_column.delimiter_char)
   end
 
-<<<<<<< HEAD
-  def self.add_filter_condition(repository_rows, join_alias, filter_element)
-    items_join_alias = "#{join_alias}_checklist_items"
-    repository_rows =
-      repository_rows
-      .joins(
-        "LEFT OUTER JOIN \"repository_checklist_items_values\" AS \"#{join_alias}_checklist_items_values\" " \
-        "ON  \"#{join_alias}_checklist_items_values\".\"repository_checklist_value_id\" = \"#{join_alias}\".\"id\""
-      )
-      .joins(
-        "LEFT OUTER JOIN \"repository_checklist_items\" AS \"#{items_join_alias}\" " \
-        "ON  \"#{join_alias}_checklist_items_values\".\"repository_checklist_item_id\" = \"#{items_join_alias}\".\"id\""
-      )
-
-    case filter_element.operator
-    when 'any_of'
-      repository_rows
-        .where("#{items_join_alias}.id = ANY(ARRAY[?]::bigint[])", filter_element.parameters['item_ids'])
-    when 'all_of'
-      repository_rows
-        .having("ARRAY_AGG(#{items_join_alias}.id ORDER BY #{items_join_alias}.id) @> ARRAY[?]::bigint[]",
-                filter_element.parameters['item_ids'].sort)
-        .group(:id)
-    when 'none_of'
-      repository_rows
-        .having("NOT ARRAY_AGG(#{items_join_alias}.id) && ARRAY[?]::bigint[]", filter_element.parameters['item_ids'])
-        .group(:id)
-    else
-      raise ArgumentError, 'Wrong operator for RepositoryChecklistValue!'
-    end
-  end
-
-=======
->>>>>>> Pulled latest release
   def data
     repository_checklist_items.map { |i| { value: i.id, label: i.data } }
   end
 
-<<<<<<< HEAD
-  def data_different?(new_data)
-=======
   def data_changed?(new_data)
->>>>>>> Pulled latest release
     if new_data.is_a?(String)
       JSON.parse(new_data) != repository_checklist_items.pluck(:id)
     else

@@ -13,15 +13,12 @@
       "properties": {
         "name": {
           "type": "string"
-<<<<<<< HEAD
         },
         "created_at": {
           "type": "string"
         },
         "updated_at": {
           "type": "string"
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
         }
       },
       "additionalProperties": false,
@@ -52,10 +49,3 @@
   "additionalProperties": false,
   "required": ["id", "type", "attributes"]
 }
-<<<<<<< HEAD
-=======
-
-
-
-
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.

@@ -313,7 +313,7 @@ class MyModule < ApplicationRecord
     rows = repository.assigned_rows(self).includes(:created_by).order(created_at: order)
     rows.find_each do |row|
       row_json = []
-      row_json << (row.repository.is_a?(RepositorySnapshot) ? row.parent_id : row.id)
+      row_json << row.code
       row_json << (row.archived ? "#{row.name} [#{I18n.t('general.archived')}]" : row.name)
       row_json << I18n.l(row.created_at, format: :full)
       row_json << row.created_by.full_name

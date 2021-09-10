@@ -25,7 +25,7 @@ module NotificationsHelper
     )
 
     if target_user.assignments_notification
-      UserNotification.create(notification: notification, user: target_user)
+      notification.create_user_notification(target_user)
     end
   end
 end

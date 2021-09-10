@@ -1,13 +1,5 @@
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
   "id": "file:/status_items/item.json#",
-=======
-  "id": "file:/item.json#",
->>>>>>> Pulled latest release
-=======
-  "id": "file:/status_items/item.json#",
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   "type": "object",
   "properties": {
     "id": {
@@ -24,15 +16,12 @@
         },
         "status": {
           "type": "string"
-<<<<<<< HEAD
         },
         "created_at": {
           "type": "string"
         },
         "updated_at": {
           "type": "string"
-=======
->>>>>>> Pulled latest release
         }
       },
       "additionalProperties": false,
@@ -45,10 +34,3 @@
   "additionalProperties": false,
   "required": ["id", "type", "attributes"]
 }
-<<<<<<< HEAD
-=======
-
-
-
-
->>>>>>> Pulled latest release

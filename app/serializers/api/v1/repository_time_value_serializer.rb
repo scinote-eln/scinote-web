@@ -18,6 +18,8 @@ module Api
 =======
       attribute :time
 
+      include TimestampableModel
+
       def time
         object.data.strftime('%H:%M:%S.%3NZ')
       end

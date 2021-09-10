@@ -17,6 +17,11 @@
 </div>
 <div class="ga-tags-container">
   <div class="ga-tags perfect-scrollbar"></div>
+  <% if can_create_acitivity_filters? %>
+     <div class="btn btn-light save-filter" data-toggle="modal" data-target="#saveFilterModal">
+      <i class="fas fa-save"></i><%= t('global_activities.index.save_filter') %>
+    </div>
+  <% end %>
   <div class="btn btn-light clear-container">
     <i class="fas fa-times-circle"></i><%= t('global_activities.index.clear_filters') %>
   </div>

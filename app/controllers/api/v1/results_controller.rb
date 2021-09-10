@@ -12,7 +12,7 @@ module Api
                        .page(params.dig(:page, :number))
                        .per(params.dig(:page, :size))
         render jsonapi: results, each_serializer: ResultSerializer,
-                                 include: %i(text table file)
+                                 include: (%i(text table file) << include_params).flatten.compact
       end
 
       def create
@@ -43,7 +43,7 @@ module Api
 
       def show
         render jsonapi: @result, serializer: ResultSerializer,
-                                 include: %i(text table file)
+                                 include: (%i(text table file) << include_params).flatten.compact
       end
 
       private
@@ -183,6 +183,10 @@ module Api
           end
         end
         prms
+      end
+
+      def permitted_includes
+        %w(comments)
       end
 
       def convert_old_tiny_mce_format(text)

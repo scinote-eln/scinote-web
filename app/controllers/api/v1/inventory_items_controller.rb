@@ -14,7 +14,7 @@ module Api
         items = @inventory.repository_rows
                           .active
                           .preload(repository_cells: :repository_column)
-                          .preload(repository_cells: @inventory.cell_preload_includes)
+                          .preload(repository_cells: { value: @inventory.cell_preload_includes })
                           .page(params.dig(:page, :number))
                           .per(params.dig(:page, :size))
                           .order(:id)

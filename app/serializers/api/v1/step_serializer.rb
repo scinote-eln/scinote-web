@@ -8,11 +8,7 @@ module Api
       include InputSanitizeHelper
 
       type :steps
-<<<<<<< HEAD
       attributes :id, :name, :description, :position, :completed
-=======
-      attributes :id, :name, :description, :created_at, :position, :completed
->>>>>>> Pulled latest release
       attribute :completed_on, if: -> { object.completed? }
       belongs_to :user, serializer: UserSerializer
       belongs_to :protocol, serializer: ProtocolSerializer
@@ -21,11 +17,8 @@ module Api
       has_many :tables, serializer: TableSerializer
       has_many :step_comments, key: :comments, serializer: CommentSerializer
 
-<<<<<<< HEAD
       include TimestampableModel
 
-=======
->>>>>>> Pulled latest release
       def description
         if instance_options[:rte_rendering]
           custom_auto_link(object.tinymce_render(:description),

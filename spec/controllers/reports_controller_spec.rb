@@ -26,13 +26,15 @@ describe ReportsController, type: :controller do
           report: { name: 'test report created',
                     description: 'test description created',
                     settings: Report::DEFAULT_SETTINGS },
-          project_content: { experiments: { experiment.id => [my_module1.id] } },
+          project_content: { experiments: [{ id: experiment.id, my_module_ids: [my_module1.id] }] },
           template_values: [] }
       end
 
       it 'calls create activity service' do
         expect(Activities::CreateActivityService).to receive(:call)
-          .with(hash_including(activity_type: :create_report))
+          .once.with(hash_including(activity_type: :create_report)).ordered
+        expect(Activities::CreateActivityService).to receive(:call)
+          .once.with(hash_including(activity_type: :generate_pdf_report)).ordered
         action
       end
 
@@ -51,12 +53,14 @@ describe ReportsController, type: :controller do
           id: report.id,
           report: { name: 'test report update',
                     description: 'test description update' },
-          project_content: { experiments: { experiment.id => [my_module2.id] } },
+          project_content: { experiments: [{ id: experiment.id, my_module_ids: [my_module2.id] }] },
           template_values: [] }
       end
       it 'calls create activity service' do
         expect(Activities::CreateActivityService).to receive(:call)
-          .with(hash_including(activity_type: :edit_report))
+          .once.with(hash_including(activity_type: :edit_report)).ordered
+        expect(Activities::CreateActivityService).to receive(:call)
+          .once.with(hash_including(activity_type: :generate_pdf_report)).ordered
         action
       end
 
