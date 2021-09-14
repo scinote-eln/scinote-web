@@ -3,7 +3,9 @@
 require 'rails_helper'
 
 describe AssetsController, type: :controller do
-  include_context 'project_generator', {
+  login_user
+
+  include_context 'reference_project_structure', {
     role: :owner_role,
     result_asset: true,
     step: true,
@@ -29,11 +31,9 @@ describe AssetsController, type: :controller do
     end
     it 'calls create activity service (start edit image on step)' do
       params[:id] = step_asset.asset.id
-      p result_asset_comment
       expect(Activities::CreateActivityService).to receive(:call)
         .with(hash_including(activity_type: :edit_image_on_step))
       action
-      p response.code
     end
 
     it 'calls create activity service (start edit image on result)' do

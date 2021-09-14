@@ -3,7 +3,8 @@
 require 'rails_helper'
 
 describe MyModulesController, type: :controller do
-  include_context 'project_generator'
+  login_user
+  include_context 'reference_project_structure'
 
   let!(:repository) { create :repository, created_by: user, team: team }
   let!(:repository_row) do
@@ -180,7 +181,7 @@ describe MyModulesController, type: :controller do
 
     before do
       3.times do |i|
-        create_user_assignment(public_send("task#{i+1}"), owner_role, user)
+        create_user_assignment(public_send("task#{i+1}"), role, user)
       end
     end
 

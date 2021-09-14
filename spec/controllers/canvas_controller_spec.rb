@@ -3,7 +3,8 @@
 require 'rails_helper'
 
 describe CanvasController do
-  include_context 'project_generator'
+  login_user
+  include_context 'reference_project_structure'
 
   let(:experiment2) { create :experiment, project: project }
 
@@ -82,9 +83,9 @@ describe CanvasController do
 
     before do
       8.times do |i|
-        create_user_assignment(public_send("task#{i+1}"), owner_role, user)
+        create_user_assignment(public_send("task#{i+1}"), role, user)
       end
-      create_user_assignment(experiment2, owner_role, user)
+      create_user_assignment(experiment2, role, user)
     end
 
     context 'when have a lot changes on canvas' do

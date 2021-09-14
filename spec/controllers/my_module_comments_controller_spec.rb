@@ -3,7 +3,8 @@
 require 'rails_helper'
 
 describe MyModuleCommentsController, type: :controller do
-  include_context 'project_generator' , {
+  login_user
+  include_context 'reference_project_structure' , {
     role: :normal_user_role,
     my_module_comment: true
   }

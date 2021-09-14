@@ -3,7 +3,8 @@
 require 'rails_helper'
 
 describe ProjectCommentsController, type: :controller do
-  include_context 'project_generator', {
+  login_user
+  include_context 'reference_project_structure', {
     project_comment: true
   }
   describe 'POST create' do
