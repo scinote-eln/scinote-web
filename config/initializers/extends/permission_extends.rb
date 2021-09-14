@@ -19,6 +19,7 @@ module PermissionExtends
       EXPERIMENTS_READ_CANVAS
       EXPERIMENTS_ACTIVITIES_READ
       EXPERIMENTS_USERS_READ
+      MY_MODULES_MANAGE
     ).each { |permission| const_set(permission, "project_#{permission.underscore}") }
   end
 
@@ -30,7 +31,7 @@ module PermissionExtends
       RESTORE
       CLONE
       MOVE
-      CREATE_TASKS
+      MY_MODULES_CREATE
       MANAGE_ACCESS
     ).each { |permission| const_set(permission, "experiment_#{permission.underscore}") }
   end
@@ -39,17 +40,31 @@ module PermissionExtends
     %w(
       READ
       MANAGE
-      ARCHIVE
-      RESTORE
-      MOVE
-      MANAGE_USERS
-      ASSIGN_REPOSITORY_ROWS
-      CHANGE_FLOW_STATUS
-      CREATE_COMMENTS
-      MANAGE_COMMENTS
-      CREATE_REPOSITORY_SNAPSHOT
-      MANAGE_REPOSITORY_SNAPSHOT
-      MANAGE_ACCESS
+      UPDATE_START_DATE
+      UPDATE_DUE_DATE
+      UPDATE_NOTES
+      TAGS_MANAGE
+      STEPS_MANAGE
+      COMMENTS_MANAGE
+      COMMENTS_CREATE
+      REPOSITORY_ROWS_ASSIGN
+      REPOSITORY_ROWS_MANAGE
+      RESULTS_MANAGE
+      RESULTS_DELETE_ARCHIVED
+      PROTOCOL_MANAGE
+      COMPLETE
+      UPDATE_STATUS
+      STEPS_COMPLETE
+      STEPS_UNCOMPLETE
+      STEPS_CHECK
+      STEPS_UNCHECK
+      STEPS_COMMENTS_CREATE
+      STEPS_COMMENTS_DELETE
+      STEPS_COMMENTS_DELETE_OWN
+      STEPS_COMMENTS_UPDATE
+      STEPS_COMMENT_UPDATE_OWN
+      REPOSITORY_ROWS_MANAGE
+      REPOSITORY_ROWS_ASSIGN
     ).each { |permission| const_set(permission, "task_#{permission.underscore}") }
   end
 

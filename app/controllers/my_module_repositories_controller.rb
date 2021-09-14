@@ -159,7 +159,7 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def check_assign_repository_records_permissions
-    render_403 unless can_assign_repository_rows_to_module?(@my_module)
+    render_403 unless can_assign_my_module_repository_rows?(@my_module)
   end
 
   def update_flash_message(service)

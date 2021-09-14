@@ -6,10 +6,10 @@ Canaid::Permissions.register_for(Result) do
   end
 
   can :manage_result do |user, result|
-    can_manage_module?(user, result.my_module) && result.active? && result.unlocked?(result)
+    can_manage_my_module?(user, result.my_module) && result.active? && result.unlocked?(result)
   end
 
   can :delete_result do |user, result|
-    can_manage_module?(user, result.my_module) && result.archived? && result.unlocked?(result)
+    can_manage_my_module?(user, result.my_module) && result.archived? && result.unlocked?(result)
   end
 end

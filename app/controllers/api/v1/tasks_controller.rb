@@ -81,7 +81,7 @@ module Api
 
       def load_task_for_managing
         @task = @experiment.my_modules.find(params.require(:id))
-        raise PermissionError.new(MyModule, :manage) unless can_manage_module?(@task)
+        raise PermissionError.new(MyModule, :manage) unless can_manage_my_module?(@task)
       end
     end
   end

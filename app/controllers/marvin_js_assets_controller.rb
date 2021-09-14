@@ -98,7 +98,7 @@ class MarvinJsAssetsController < ApplicationController
       return render_403 unless can_manage_protocol_in_module?(@protocol) ||
                                can_manage_protocol_in_repository?(@protocol)
     elsif @assoc.class == Result || @assoc.class == MyModule
-      return render_403 unless can_manage_module?(@my_module)
+      return render_403 unless can_manage_my_module?(@my_module)
     else
       render_403
     end

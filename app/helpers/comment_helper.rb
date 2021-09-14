@@ -59,9 +59,9 @@ module CommentHelper
   def comment_addable?(object)
     case object.class.name
     when 'MyModule'
-      can_create_comments_in_module?(object)
+      can_create_my_module_comments?(object)
     when 'Step', 'Result'
-      can_create_comments_in_module?(object.my_module)
+      can_create_my_module_comments?(object.my_module)
     when 'Project'
       can_create_project_comments?(object)
     else
