@@ -109,7 +109,13 @@ class RepositoryRowsController < ApplicationController
 
     label_printer.update!(current_print_job_ids: job_ids * params[:copies].to_i)
 
-    redirect_to repository_path(@repository)
+    render json: {
+      html: render_to_string(
+        partial: 'label_printers/print_progress_modal.html.erb',
+        locals: { starting_item_count: label_printer.current_print_job_ids.length,
+                  label_printer: label_printer }
+      )
+    }
   end
 
   def update
