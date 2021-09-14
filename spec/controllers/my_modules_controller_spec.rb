@@ -3,23 +3,11 @@
 require 'rails_helper'
 
 describe MyModulesController, type: :controller do
-  login_user
-
-  let(:user) { subject.current_user }
-  let(:team) { create :team, created_by: user }
-  let!(:user_team) { create :user_team, :admin, user: user, team: team }
-  let(:project) { create :project, team: team, created_by: user }
-  let(:owner_role) { create :owner_role }
+  include_context 'project_generator'
 
   let!(:repository) { create :repository, created_by: user, team: team }
   let!(:repository_row) do
     create :repository_row, created_by: user, repository: repository
-  end
-  let(:experiment) { create :experiment, project: project }
-  let(:my_module) { create :my_module, experiment: experiment }
-
-  before do
-    create_user_assignment(my_module, owner_role, user)
   end
 
   describe 'PUT update' do

@@ -3,13 +3,7 @@
 require 'rails_helper'
 
 describe ExperimentsController, type: :controller do
-  login_user
-
-  let!(:user) { controller.current_user }
-  let!(:team) { create :team, created_by: user, users: [user] }
-  let!(:project) { create :project, team: team }
-  let(:owner_role) { create :owner_role }
-  let(:experiment) { create :experiment, project: project }
+  include_context 'project_generator'
 
   before do
     create_user_assignment(experiment, owner_role, user)

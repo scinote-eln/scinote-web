@@ -3,20 +3,8 @@
 require 'rails_helper'
 
 describe CanvasController do
-  login_user
+  include_context 'project_generator'
 
-  let(:user) { subject.current_user }
-  let(:team) { create :team, created_by: user }
-  let!(:user_team) { create :user_team, :admin, user: user, team: team }
-  let!(:user_project) do
-    create :user_project, user: user, project: project
-  end
-  let(:project) do
-    create :project, team: team
-  end
-  let(:owner_role) { create :owner_role }
-
-  let(:experiment) { create :experiment, project: project }
   let(:experiment2) { create :experiment, project: project }
 
   # Idea of this "end to end" test is to put a lot "work" on method `@experiment.udpate_canvas` and controller actipn
