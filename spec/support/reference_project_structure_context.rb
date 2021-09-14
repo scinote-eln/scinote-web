@@ -16,14 +16,12 @@ RSpec.shared_context 'reference_project_structure' do |config|
 
   config ||= {}
   let(:user) { subject.current_user }
-  unless config[:skip_role]
-    let(:role) { create (config[:role] || :owner_role) }
-  end
+  let(:role) { create (config[:role] || :owner_role) } unless config[:skip_role]
   let!(:team) { config[:team] || (create :team, created_by: user) }
   let!(:user_team) { create :user_team, :admin, user: user, team: team }
   let(:project) { create :project, team: team }
   let(:experiment) { create :experiment, project: project }
-  let(:my_module) { create :my_module, experiment: experiment }
+  let(:my_module) { create :my_module, experiment: experiment } unless config[:skip_my_module]
 
   let(:tag) { create :tag, project: project} if config[:tag]
   let(:tags) { create_list :tag, config[:tags], project: project} if config[:tags]
@@ -66,6 +64,12 @@ RSpec.shared_context 'reference_project_structure' do |config|
   end
 
   before do
-    create_user_assignment(my_module, role, user) unless config[:skip_assignments]
+    unless config[:skip_assignments]
+      if config[:skip_my_module]
+        create_user_assignment(experiment, role, user)
+      else
+        create_user_assignment(my_module, role, user)
+      end
+    end
   end
 end

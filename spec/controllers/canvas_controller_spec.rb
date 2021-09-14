@@ -4,7 +4,9 @@ require 'rails_helper'
 
 describe CanvasController do
   login_user
-  include_context 'reference_project_structure'
+  include_context 'reference_project_structure', {
+    skip_my_module: true
+  }
 
   let(:experiment2) { create :experiment, project: project }
 
