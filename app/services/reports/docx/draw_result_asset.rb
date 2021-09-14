@@ -19,7 +19,14 @@ module Reports::Docx::DrawResultAsset
                         user: result.user.full_name, timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
     end
 
-    Reports::DocxRenderer.render_asset_image(@docx, asset) if asset.previewable? && !asset.list?
+    begin
+      Reports::DocxRenderer.render_asset_image(@docx, asset) if asset.previewable? && !asset.list?
+    rescue StandardError => e
+      Rails.logger.error e.message
+      @docx.p do
+        text I18n.t('projects.reports.index.generation.file_preview_generation_error'), italic: true
+      end
+    end
 
     draw_result_comments(result) if @settings.dig('task', 'result_comments')
   end
