@@ -4,23 +4,9 @@ require 'rails_helper'
 
 describe ProjectCommentsController, type: :controller do
   login_user
-
-  let(:user) { subject.current_user }
-  let(:team) { create :team, created_by: user }
-  let(:user_team) { create :user_team, team: team, user: user }
-  let(:project) do
-    create :project, team: team
-  end
-  let(:owner_role) { create :owner_role }
-  let(:project_comment) do
-    create :project_comment, project: project, user: user
-  end
-
-  before do
-    create_user_assignment(project, owner_role, user)
-  end
-
-
+  include_context 'reference_project_structure', {
+    project_comment: true
+  }
   describe 'POST create' do
     context 'in JSON format' do
       let(:action) { post :create, params: params, format: :json }

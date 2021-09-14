@@ -4,21 +4,11 @@ require 'rails_helper'
 
 describe MyModuleTagsController, type: :controller do
   login_user
-
-  let(:user) { subject.current_user }
-  let(:team) { create :team, created_by: user }
-  let!(:user_team) { create :user_team, :admin, user: user, team: team }
-  let(:project) { create :project, created_by: user }
-
-  let(:experiment) { create :experiment, project: project }
-  let(:my_module) { create :my_module, experiment: experiment }
-
-  before do
-    create_user_assignment(my_module, create(:owner_role), user)
-  end
+  include_context 'reference_project_structure', {
+    tag: true
+  }
 
   describe 'POST create' do
-    let(:tag) { create :tag, project: project }
     let(:action) { post :create, params: params, format: :json }
     let(:params) do
       { my_module_id: my_module.id, my_module_tag: { tag_id: tag.id } }

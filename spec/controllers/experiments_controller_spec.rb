@@ -4,16 +4,8 @@ require 'rails_helper'
 
 describe ExperimentsController, type: :controller do
   login_user
+  include_context 'reference_project_structure'
 
-  let!(:user) { controller.current_user }
-  let!(:team) { create :team, created_by: user, users: [user] }
-  let!(:project) { create :project, team: team }
-  let(:owner_role) { create :owner_role }
-  let(:experiment) { create :experiment, project: project }
-
-  before do
-    create_user_assignment(experiment, owner_role, user)
-  end
 
   describe 'POST create' do
     let(:action) { post :create, params: params, format: :json }
@@ -78,7 +70,7 @@ describe ExperimentsController, type: :controller do
       end
 
       before do
-        create_user_assignment(archived_experiment, owner_role, user)
+        create_user_assignment(archived_experiment, role, user)
       end
 
       it 'calls create activity for unarchiving experiment' do

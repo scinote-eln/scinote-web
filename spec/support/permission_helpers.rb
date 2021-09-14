@@ -1,10 +1,13 @@
 module PermissionHelpers
   def create_user_assignment(object, role, user, assigned_by = nil)
-    create :user_assignment,
-           assignable: object,
-           user: user,
-           user_role: role,
-           assigned_by: assigned_by || user
+
+    unless UserAssignment.where(assignable: object, user: user, user_role: role).any?
+      create :user_assignment,
+             assignable: object,
+             user: user,
+             user_role: role,
+             assigned_by: assigned_by || user
+    end
 
     case object
     when MyModule

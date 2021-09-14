@@ -4,19 +4,10 @@ require 'rails_helper'
 
 describe CanvasController do
   login_user
+  include_context 'reference_project_structure', {
+    skip_my_module: true
+  }
 
-  let(:user) { subject.current_user }
-  let(:team) { create :team, created_by: user }
-  let!(:user_team) { create :user_team, :admin, user: user, team: team }
-  let!(:user_project) do
-    create :user_project, user: user, project: project
-  end
-  let(:project) do
-    create :project, team: team
-  end
-  let(:owner_role) { create :owner_role }
-
-  let(:experiment) { create :experiment, project: project }
   let(:experiment2) { create :experiment, project: project }
 
   # Idea of this "end to end" test is to put a lot "work" on method `@experiment.udpate_canvas` and controller actipn
@@ -94,9 +85,9 @@ describe CanvasController do
 
     before do
       8.times do |i|
-        create_user_assignment(public_send("task#{i+1}"), owner_role, user)
+        create_user_assignment(public_send("task#{i+1}"), role, user)
       end
-      create_user_assignment(experiment2, owner_role, user)
+      create_user_assignment(experiment2, role, user)
     end
 
     context 'when have a lot changes on canvas' do
