@@ -6,11 +6,10 @@ describe ProjectFoldersController, type: :controller do
   login_user
   # render_views
 
-  let(:user) { subject.current_user }
-  let(:team) { create :team, created_by: user }
-  let!(:user_team) { create :user_team, team: team, user: user, role: :admin }
+  include_context 'reference_project_structure'
+
   let(:project_folder) { create :project_folder, team: team }
-  let(:owner_role) { create :owner_role }
+
 
   describe 'POST #move_to' do
     let!(:project_folder_1) do
@@ -34,7 +33,7 @@ describe ProjectFoldersController, type: :controller do
 
     before do
       3.times do |i|
-        create_user_assignment(public_send("project_#{i+1}"), owner_role, user)
+        create_user_assignment(public_send("project_#{i+1}"), role, user)
       end
     end
 
