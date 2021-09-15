@@ -12,14 +12,6 @@ describe Notifications::HandleSystemNotificationInCommunicationChannelService do
     Notifications::HandleSystemNotificationInCommunicationChannelService.call(system_notification)
   end
 
-  before do
-    Delayed::Worker.delay_jobs = false
-  end
-
-  after do
-    Delayed::Worker.delay_jobs = true
-  end
-
   context 'when user has enabled notifications' do
     it 'calls AppMailer' do
       allow_any_instance_of(User).to receive(:system_message_email_notification).and_return(true)

@@ -9,8 +9,8 @@ class UserTeam < ApplicationRecord
   belongs_to :assigned_by, foreign_key: 'assigned_by_id', class_name: 'User', optional: true
   belongs_to :team, inverse_of: :user_teams
 
-  before_destroy :destroy_associations
   after_create :assign_user_to_visible_projects
+  before_destroy :destroy_associations
 
   def role_str
     I18n.t("user_teams.enums.role.#{role}")

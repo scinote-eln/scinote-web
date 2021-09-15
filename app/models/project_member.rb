@@ -130,6 +130,6 @@ class ProjectMember
   def project_owners
     @project_owners ||= @project.user_assignments
                                 .includes(:user_role)
-                                .where(user_roles: { name: 'Owner' })
+                                .where(user_roles: { name: I18n.t('user_roles.predefined.owner') })
   end
 end
