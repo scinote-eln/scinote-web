@@ -210,7 +210,7 @@
       padding: 5px 0 5px 40px;
 
       &:hover {
-        background-color: $brand-focus-light;
+        background-color: $color-concrete;
         border-radius: 5px;
       }
 
@@ -363,7 +363,7 @@
         width: calc(50% - 25px);
 
         &.selected {
-          background: $brand-light-blue;
+          background: $color-alto;
           opacity: 1;
         }
 
