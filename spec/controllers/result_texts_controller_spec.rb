@@ -5,29 +5,14 @@ require 'rails_helper'
 describe ResultTextsController, type: :controller do
   login_user
 
-  let(:user) { subject.current_user }
-  let!(:team) { create :team, :with_members }
-  let(:project) do
-    create :project, team: team
-  end
-  let(:owner_role) { create :owner_role }
-  let(:experiment) { create :experiment, project: project }
-  let(:task) { create :my_module, name: 'test task', experiment: experiment }
-  let(:result) do
-    create :result, name: 'test result', my_module: task, user: user
-  end
-  let(:result_text) do
-    create :result_text, text: 'test text result', result: result
-  end
-
-  before do
-    create_user_assignment(task, owner_role, user)
-  end
+  include_context 'reference_project_structure', {
+    result_text: true
+  }
 
   describe 'POST create' do
     let(:action) { post :create, params: params, format: :json }
     let(:params) do
-      { my_module_id: task.id,
+      { my_module_id: my_module.id,
         result: { name: 'result name created',
                   result_text_attributes: { text: 'result text created' } } }
     end
@@ -48,7 +33,7 @@ describe ResultTextsController, type: :controller do
     let(:action) { put :update, params: params, format: :json }
     let(:params) do
       { id: result_text.id,
-        result: { name: result.name } }
+        result: { name: result_text.result.name } }
     end
     it 'calls create activity service (edit_result)' do
       params[:result][:name] = 'test result changed'

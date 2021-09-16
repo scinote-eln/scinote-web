@@ -5,25 +5,14 @@ require 'rails_helper'
 describe StepsController, type: :controller do
   login_user
 
-  let(:user) { subject.current_user }
-  let(:team) { create :team, created_by: user }
-  let!(:user_team) { create :user_team, :admin, user: user, team: team }
-  let(:project) { create :project, team: team, created_by: user }
-  let(:owner_role) { create :owner_role }
-  let(:experiment) { create :experiment, project: project }
-  let(:my_module) { create :my_module, experiment: experiment }
-  let(:protocol) do
-    create :protocol, my_module: my_module, team: team, added_by: user
-  end
-  let(:step) { create :step, protocol: protocol, user: user }
+  include_context 'reference_project_structure', {
+    step: true
+  }
+
   let(:protocol_repo) do
     create :protocol, :in_public_repository, team: team, added_by: user
   end
   let(:step_repo) { create :step, protocol: protocol_repo }
-
-  before do
-    create_user_assignment(my_module, owner_role, user)
-  end
 
   describe 'POST create' do
     let(:action) { post :create, params: params, format: :json }
@@ -50,7 +39,7 @@ describe StepsController, type: :controller do
 
     context 'when in protocol on task' do
       let(:params) do
-        { protocol_id: protocol.id,
+        { protocol_id: my_module.protocol.id,
           step: { name: 'test', description: 'description' } }
       end
 
@@ -208,7 +197,7 @@ describe StepsController, type: :controller do
 
     context 'when completing step' do
       let(:step) do
-        create :step, protocol: protocol, user: user, completed: false
+        create :step, protocol: my_module.protocol, user: user, completed: false
       end
       let(:params) { { id: step.id, completed: true } }
 

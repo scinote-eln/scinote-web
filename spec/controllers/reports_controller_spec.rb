@@ -5,21 +5,8 @@ require 'rails_helper'
 describe ReportsController, type: :controller do
   login_user
 
-  let(:user) { subject.current_user }
-  let!(:team) { create :team, created_by: user }
-  let!(:user_team) { create :user_team, team: team, user: user }
-  let(:user_project) { create :user_project, :owner, user: user }
-  let(:project) { create :project, team: team, user_projects: [user_project] }
-  let(:owner_user_role) { create :owner_role }
-  let!(:user_assignment) do
-    create :user_assignment,
-           assignable: project,
-           user: user,
-           user_role: owner_user_role,
-           assigned_by: user
-  end
-  let(:experiment) { create :experiment, project: project }
-  let(:my_module1) { create :my_module, experiment: experiment }
+  include_context 'reference_project_structure'
+
   let(:my_module2) { create :my_module, experiment: experiment }
   let(:report) do
     create :report, user: user, project: project, team: team,
@@ -34,7 +21,7 @@ describe ReportsController, type: :controller do
           report: { name: 'test report created',
                     description: 'test description created',
                     settings: Report::DEFAULT_SETTINGS },
-          project_content: { experiments: [{ id: experiment.id, my_module_ids: [my_module1.id] }] },
+          project_content: { experiments: [{ id: experiment.id, my_module_ids: [my_module.id] }] },
           template_values: [] }
       end
 
