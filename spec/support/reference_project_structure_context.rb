@@ -13,15 +13,20 @@
 #  }
 
 RSpec.shared_context 'reference_project_structure' do |config|
-
   config ||= {}
-  let(:user) { subject.current_user }
-  let(:role) { create (config[:role] || :owner_role) } unless config[:skip_role]
+  let!(:user) { subject.current_user }
+  let!(:role) { create (config[:role] || :owner_role) }
   let!(:team) { config[:team] || (create :team, created_by: user) }
-  let!(:user_team) { create :user_team, :admin, user: user, team: team }
-  let(:project) { create :project, team: team }
-  let(:experiment) { create :experiment, project: project }
-  let(:my_module) { create :my_module, experiment: experiment } unless config[:skip_my_module]
+  let!(:user_team) { create :user_team, config[:team_role] || :admin, user: user, team: team }
+
+  let!(:project) { create :project, team: team, created_by: user }
+  let!(:projects) { create_list :project, config[:projects], team: team, created_by: user } if config[:projects]
+
+  let!(:experiment) { create :experiment, project: project } unless config[:skip_experiment]
+  let!(:experiments) { create_list :experiment, config[:experiments], project: project } if config[:experiments]
+
+  let!(:my_module) { create :my_module, experiment: experiment } unless config[:skip_my_module]
+  let!(:my_modules) { create_list :my_module, config[:my_modules], experiment: experiment } if config[:my_modules]
 
   let(:tag) { create :tag, project: project} if config[:tag]
   let(:tags) { create_list :tag, config[:tags], project: project} if config[:tags]

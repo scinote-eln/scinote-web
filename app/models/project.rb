@@ -367,11 +367,11 @@ class Project < ApplicationRecord
   end
 
   def assign_project_ownership
-    UserAssignment.create(
+    UserAssignment.create!(
       user: created_by,
       assignable: self,
       assigned: :manually, # we set this to manually since was the user action to create the project
-      user_role: UserRole.find_by(name: 'Owner')
+      user_role: UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))
     )
   end
 

@@ -84,7 +84,7 @@ class UserRole < ApplicationRecord
   end
 
   def owner?
-    name == 'Owner'
+    name == I18n.t('user_roles.predefined.owner')
   end
 
   private

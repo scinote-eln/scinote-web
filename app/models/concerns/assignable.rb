@@ -12,7 +12,7 @@ module Assignable
       UserAssignment.create(
         user: created_by,
         assignable: self,
-        user_role: UserRole.find_by(name: 'Owner')
+        user_role: UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))
       )
 
       UserAssignments::GenerateUserAssignmentsJob.perform_later(self, created_by)
