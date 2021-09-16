@@ -179,7 +179,8 @@ var RepositoryColumns = (function() {
             closeOnSelect: true,
             optionClass: 'custom-option',
             selectAppearance: 'simple',
-            disableSearch: true
+            disableSearch: true,
+            labelHTML: true
           });
 
           dropdownSelector.init('.list-column-type .delimiter', delimiterDropdownConfig);
