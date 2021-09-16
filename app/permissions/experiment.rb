@@ -112,25 +112,3 @@ Canaid::Permissions.register_for(Protocol) do
     can_update_my_module_status?(user, protocol.my_module)
   end
 end
-
-Canaid::Permissions.register_for(Comment) do
-  # Module, its experiment and its project must be active for all the specified
-  # permissions
-  %i(manage_comment_in_module)
-    .each do |perm|
-    can perm do |_, comment|
-      my_module = ::PermissionsUtil.get_comment_module(comment)
-      my_module.active? &&
-        my_module.experiment.active? &&
-        my_module.experiment.project.active?
-    end
-  end
-
-  # module: update/delete comment
-  # result: update/delete comment
-  # step: update/delete comment
-  can :manage_comment_in_module do |user, comment|
-    my_module = ::PermissionsUtil.get_comment_module(comment)
-    comment.user == user || my_module.permission_granted?(user, MyModulePermissions::MANAGE_COMMENTS)
-  end
-end
