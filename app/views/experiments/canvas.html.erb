@@ -1,6 +1,6 @@
 <% provide(:head_title, t("experiments.canvas.head_title", project: h(@project.name)).html_safe) %>
 <% provide(:sidebar_title, t("sidebar.my_modules.sidebar_title")) %>
-<% provide(:sidebar_url, experiment_sidebar_path(@experiment)) %>
+<% provide(:sidebar_url, sidebar_experiment_path(@experiment)) %>
 
 <%= content_for :sidebar do %>
   <%= render partial: 'shared/sidebar/my_modules.html.erb', locals: { experiment: @experiment, my_modules: @active_modules } %>

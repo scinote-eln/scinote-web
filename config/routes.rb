@@ -347,9 +347,8 @@ Rails.application.routes.draw do
         post 'move' # move experiment
         get 'fetch_workflow_img' # Get udated workflow img
         post 'restore_my_modules', to: 'my_modules#restore_group'
+        get 'sidebar'
       end
-
-      get 'sidebar', to: 'experiments#sidebar', as: 'sidebar'
     end
 
     # Show action is a popup (JSON) for individual module in full-zoom canvas,
