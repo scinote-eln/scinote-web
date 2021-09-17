@@ -212,4 +212,10 @@ div.print-report {
       }
     }
   }
+
+  .export-all-link {
+    em {
+      color: $brand-primary !important;
+    }
+  }
 }
