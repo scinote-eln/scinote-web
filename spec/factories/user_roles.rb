@@ -20,7 +20,7 @@ FactoryBot.define do
           ExperimentPermissions::ARCHIVE,
           ExperimentPermissions::RESTORE,
           ExperimentPermissions::CLONE,
-          ExperimentPermissions::MY_MODULES_CREATE,
+          ExperimentPermissions::TASKS_CREATE,
           MyModulePermissions::READ,
           MyModulePermissions::COMMENTS_CREATE,
           MyModulePermissions::UPDATE_STATUS,

@@ -91,6 +91,6 @@ Canaid::Permissions.register_for(Project) do
   end
 
   can :manage_project_my_modules do |user, project|
-    project.permission_granted?(user, ProjectPermissions::MY_MODULES_MANAGE)
+    project.permission_granted?(user, ProjectPermissions::TASKS_MANAGE)
   end
 end

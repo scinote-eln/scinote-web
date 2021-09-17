@@ -19,7 +19,7 @@ module PermissionExtends
       EXPERIMENTS_READ_CANVAS
       EXPERIMENTS_ACTIVITIES_READ
       EXPERIMENTS_USERS_READ
-      MY_MODULES_MANAGE
+      TASKS_MANAGE
     ).each { |permission| const_set(permission, "project_#{permission.underscore}") }
   end
 
@@ -31,7 +31,7 @@ module PermissionExtends
       RESTORE
       CLONE
       MOVE
-      MY_MODULES_CREATE
+      TASKS_CREATE
       MANAGE_ACCESS
     ).each { |permission| const_set(permission, "experiment_#{permission.underscore}") }
   end
