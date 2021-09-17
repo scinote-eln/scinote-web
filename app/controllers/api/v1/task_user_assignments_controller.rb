@@ -55,7 +55,7 @@ module Api
       end
 
       def load_user_assignment_for_managing
-        raise PermissionError.new(MyModule, :manage) unless can_manage_module?(@task)
+        raise PermissionError.new(MyModule, :manage) unless can_manage_my_module?(@task)
       end
 
       def user_assignment_params

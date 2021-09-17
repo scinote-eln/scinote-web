@@ -20,13 +20,11 @@ FactoryBot.define do
           ExperimentPermissions::ARCHIVE,
           ExperimentPermissions::RESTORE,
           ExperimentPermissions::CLONE,
-          ExperimentPermissions::CREATE_TASKS,
+          ExperimentPermissions::TASKS_CREATE,
           MyModulePermissions::READ,
-          MyModulePermissions::CREATE_COMMENTS,
-          MyModulePermissions::ASSIGN_REPOSITORY_ROWS,
-          MyModulePermissions::CHANGE_FLOW_STATUS,
-          MyModulePermissions::CREATE_REPOSITORY_SNAPSHOT,
-          MyModulePermissions::MANAGE_REPOSITORY_SNAPSHOT
+          MyModulePermissions::COMMENTS_CREATE,
+          MyModulePermissions::UPDATE_STATUS,
+          MyModulePermissions::REPOSITORY_ROWS_ASSIGN
         ]
       }
       predefined { true }
@@ -40,11 +38,9 @@ FactoryBot.define do
           ProjectPermissions::COMMENTS_CREATE,
           ExperimentPermissions::READ,
           MyModulePermissions::READ,
-          MyModulePermissions::CREATE_COMMENTS,
-          MyModulePermissions::ASSIGN_REPOSITORY_ROWS,
-          MyModulePermissions::CHANGE_FLOW_STATUS,
-          MyModulePermissions::CREATE_REPOSITORY_SNAPSHOT,
-          MyModulePermissions::MANAGE_REPOSITORY_SNAPSHOT
+          MyModulePermissions::COMMENTS_CREATE,
+          MyModulePermissions::UPDATE_STATUS,
+          MyModulePermissions::REPOSITORY_ROWS_ASSIGN
         ]
       }
       predefined { true }

@@ -301,7 +301,7 @@ class WopiController < ActionController::Base
       @breadcrumb_folder_url = @close_url
     elsif @assoc.class == Result
       @can_read = can_read_experiment?(@my_module.experiment)
-      @can_write = can_manage_module?(@my_module)
+      @can_write = can_manage_my_module?(@my_module)
 
       @close_url = results_my_module_url(@my_module, only_path: false, host: ENV['WOPI_USER_HOST'])
 

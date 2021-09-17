@@ -12,7 +12,7 @@
         <%= f.hidden_field :archived, value: false %>
       <% end %>
       <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
-        <% if can_restore_module?(my_module) %>
+        <% if can_restore_my_module?(my_module) %>
           <li><a href="#" class="form-submit-link" data-turbolinks="false" data-submit-form="<%= my_module_form.options[:html][:id] %>"><%= t "experiments.module_archive.restore_option" %></a></li>
         <% end %>
       </ul>

@@ -57,11 +57,11 @@ module AccessPermissions
     end
 
     def check_manage_permissions
-      render_403 unless can_manage_module_access?(@my_module)
+      render_403 unless can_manage_my_module_users?(@my_module)
     end
 
     def check_read_permissions
-      render_403 unless can_read_module?(@my_module)
+      render_403 unless can_read_my_module?(@my_module)
     end
   end
 end

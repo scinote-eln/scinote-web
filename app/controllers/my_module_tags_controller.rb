@@ -29,7 +29,7 @@ class MyModuleTagsController < ApplicationController
         render json: {
           html_module_header: render_to_string(
             partial: 'my_modules/tags.html.erb',
-            locals: { my_module: @my_module, editable: can_manage_module?(@my_module) }
+            locals: { my_module: @my_module, editable: can_manage_my_module?(@my_module) }
           )
         }
       end
@@ -167,7 +167,7 @@ class MyModuleTagsController < ApplicationController
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_module?(@my_module)
+    render_403 unless can_manage_my_module?(@my_module)
   end
 
   def mt_params

@@ -150,7 +150,7 @@ class ResultTextsController < ApplicationController
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_module?(@my_module)
+    render_403 unless can_manage_my_module?(@my_module)
   end
 
   def check_archive_permissions
