@@ -2,14 +2,18 @@
 
 Canaid::Permissions.register_for(Result) do
   can :read_result do |user, result|
-    can_read_experiment?(user, result.my_module.experiment)
+    can_read_my_module?(user, result.my_module.experiment)
   end
 
   can :manage_result do |user, result|
-    can_manage_my_module?(user, result.my_module) && result.active? && result.unlocked?(result)
+    !result.archived? &&
+    result.unlocked?(result) &&
+    result.my_module.permission_granted?(user, MyModulePermissions::RESULTS_MANAGE)
   end
 
   can :delete_result do |user, result|
-    can_manage_my_module?(user, result.my_module) && result.archived? && result.unlocked?(result)
+    result.archived? &&
+    result.unlocked?(result) &&
+    result.my_module.permission_granted?(user, MyModulePermissions::RESULTS_DELETE_ARCHIVED)
   end
 end

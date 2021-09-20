@@ -67,12 +67,8 @@ Canaid::Permissions.register_for(MyModule) do
     my_module.permission_granted?(user, MyModulePermissions::REPOSITORY_ROWS_MANAGE)
   end
 
-  can :manage_my_module_results do |user, my_module|
+  can :create_my_module_results do |user, my_module|
     my_module.permission_granted?(user, MyModulePermissions::RESULTS_MANAGE)
-  end
-
-  can :delete_my_module_archived_results do |user, my_module|
-    my_module.permission_granted?(user, MyModulePermissions::RESULTS_DELETE_ARCHIVED)
   end
 
   can :manage_my_module_protocol do |user, my_module|
