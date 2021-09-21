@@ -71,6 +71,10 @@ Canaid::Permissions.register_for(MyModule) do
     my_module.permission_granted?(user, MyModulePermissions::RESULTS_MANAGE)
   end
 
+  can :create_my_module_result_comments do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::RESULTS_COMMENTS_CREATE)
+  end
+
   can :manage_my_module_protocol do |user, my_module|
     my_module.permission_granted?(user, MyModulePermissions::PROTOCOL_MANAGE)
   end
