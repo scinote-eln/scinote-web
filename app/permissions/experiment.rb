@@ -20,6 +20,10 @@ Canaid::Permissions.register_for(Experiment) do
     experiment.permission_granted?(user, ExperimentPermissions::READ)
   end
 
+  can :read_users_of_experiment do |user, project|
+    project.permission_granted?(user, ExperimentPermissions::USERS_READ)
+  end
+
   # experiment: create/update/delete
   # canvas: update
   # module: create, copy, reposition, create/update/delete connection,
@@ -40,12 +44,12 @@ Canaid::Permissions.register_for(Experiment) do
 
   # experiment: manage access policies
   can :manage_experiment_access do |user, experiment|
-    experiment.permission_granted?(user, ExperimentPermissions::MANAGE_ACCESS)
+    experiment.permission_granted?(user, ExperimentPermissions::USERS_MANAGE)
   end
 
   # experiment: archive
   can :archive_experiment do |user, experiment|
-    experiment.permission_granted?(user, ExperimentPermissions::ARCHIVE)
+    experiment.permission_granted?(user, ExperimentPermissions::MANAGE)
   end
 
   # NOTE: Must not be dependent on canaid parmision for which we check if it's
@@ -53,19 +57,19 @@ Canaid::Permissions.register_for(Experiment) do
   # experiment: restore
   can :restore_experiment do |user, experiment|
     project = experiment.project
-    experiment.permission_granted?(user, ExperimentPermissions::RESTORE) &&
+    experiment.permission_granted?(user, ExperimentPermissions::MANAGE) &&
       experiment.archived? &&
       project.active?
   end
 
   # experiment: copy
   can :clone_experiment do |user, experiment|
-    experiment.permission_granted?(user, ExperimentPermissions::CLONE)
+    experiment.permission_granted?(user, ExperimentPermissions::MANAGE)
   end
 
   # experiment: move
   can :move_experiment do |user, experiment|
-    experiment.permission_granted?(user, ExperimentPermissions::MOVE)
+    experiment.permission_granted?(user, ExperimentPermissions::MANAGE)
   end
 end
 

@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class UserRole < ApplicationRecord
-  before_update :prevent_update, if: :predefined?
-
+  validate :prevent_update, on: :update, if: :predefined?
   validates :name,
             presence: true,
             length: { minimum: Constants::NAME_MIN_LENGTH,
@@ -32,18 +31,35 @@ class UserRole < ApplicationRecord
       permissions:
       [
         ProjectPermissions::READ,
-        ProjectPermissions::EXPERIMENTS_CREATE,
+        ProjectPermissions::READ_ARCHIVED,
+        ProjectPermissions::ACTIVITIES_READ,
+        ProjectPermissions::USERS_READ,
+        ProjectPermissions::COMMENTS_READ,
         ProjectPermissions::COMMENTS_CREATE,
+        ProjectPermissions::EXPERIMENTS_CREATE,
         ExperimentPermissions::READ,
         ExperimentPermissions::MANAGE,
-        ExperimentPermissions::ARCHIVE,
-        ExperimentPermissions::RESTORE,
-        ExperimentPermissions::CLONE,
-        ExperimentPermissions::TASKS_CREATE,
+        ExperimentPermissions::TASKS_MANAGE,
         MyModulePermissions::READ,
+        MyModulePermissions::MANAGE,
+        MyModulePermissions::RESULTS_MANAGE,
+        MyModulePermissions::PROTOCOL_MANAGE,
+        MyModulePermissions::STEPS_MANAGE,
+        MyModulePermissions::TAGS_MANAGE,
         MyModulePermissions::COMMENTS_CREATE,
+        MyModulePermissions::COMMENTS_MANAGE,
+        MyModulePermissions::COMMENTS_MANAGE_OWN,
+        MyModulePermissions::COMPLETE,
         MyModulePermissions::UPDATE_STATUS,
-        MyModulePermissions::REPOSITORY_ROWS_ASSIGN
+        MyModulePermissions::STEPS_COMPLETE,
+        MyModulePermissions::STEPS_UNCOMPLETE,
+        MyModulePermissions::STEPS_CHECKLIST_CHECK,
+        MyModulePermissions::STEPS_CHECKLIST_UNCHECK,
+        MyModulePermissions::STEPS_COMMENTS_CREATE,
+        MyModulePermissions::STEPS_COMMENTS_DELETE_OWN,
+        MyModulePermissions::STEPS_COMMENT_UPDATE_OWN,
+        MyModulePermissions::REPOSITORY_ROWS_ASSIGN,
+        MyModulePermissions::REPOSITORY_ROWS_MANAGE
       ],
       predefined: true
     )
@@ -55,12 +71,29 @@ class UserRole < ApplicationRecord
       permissions:
       [
         ProjectPermissions::READ,
+        ProjectPermissions::READ_ARCHIVED,
+        ProjectPermissions::ACTIVITIES_READ,
+        ProjectPermissions::USERS_READ,
+        ProjectPermissions::COMMENTS_READ,
         ProjectPermissions::COMMENTS_CREATE,
         ExperimentPermissions::READ,
+        ExperimentPermissions::READ_ARCHIVED,
+        ExperimentPermissions::ACTIVITIES_READ,
+        ExperimentPermissions::USERS_READ,
         MyModulePermissions::READ,
         MyModulePermissions::COMMENTS_CREATE,
+        MyModulePermissions::COMMENTS_MANAGE_OWN,
+        MyModulePermissions::COMPLETE,
         MyModulePermissions::UPDATE_STATUS,
-        MyModulePermissions::REPOSITORY_ROWS_ASSIGN
+        MyModulePermissions::STEPS_COMPLETE,
+        MyModulePermissions::STEPS_UNCOMPLETE,
+        MyModulePermissions::STEPS_CHECKLIST_CHECK,
+        MyModulePermissions::STEPS_CHECKLIST_UNCHECK,
+        MyModulePermissions::STEPS_COMMENTS_CREATE,
+        MyModulePermissions::STEPS_COMMENTS_DELETE_OWN,
+        MyModulePermissions::STEPS_COMMENT_UPDATE_OWN,
+        MyModulePermissions::REPOSITORY_ROWS_ASSIGN,
+        MyModulePermissions::REPOSITORY_ROWS_MANAGE
       ],
       predefined: true
     )
@@ -72,7 +105,14 @@ class UserRole < ApplicationRecord
       permissions:
       [
         ProjectPermissions::READ,
+        ProjectPermissions::READ_ARCHIVED,
+        ProjectPermissions::ACTIVITIES_READ,
+        ProjectPermissions::USERS_READ,
+        ProjectPermissions::COMMENTS_READ,
         ExperimentPermissions::READ,
+        ExperimentPermissions::READ_ARCHIVED,
+        ExperimentPermissions::ACTIVITIES_READ,
+        ExperimentPermissions::USERS_READ,
         MyModulePermissions::READ
       ],
       predefined: true
@@ -86,6 +126,6 @@ class UserRole < ApplicationRecord
   private
 
   def prevent_update
-    raise ActiveRecord::RecordInvalid, I18n.t('user_roles.predefined.unchangable_error_message')
+    errors.add(:base, I18n.t('user_roles.predefined.unchangable_error_message'))
   end
 end
