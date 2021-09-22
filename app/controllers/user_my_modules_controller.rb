@@ -1,6 +1,6 @@
 class UserMyModulesController < ApplicationController
   before_action :load_vars
-  before_action :check_view_permissions, only: %i(index index_old index_edit)
+  before_action :check_view_permissions, except: %i(create destroy)
   before_action :check_manage_permissions, only: %i(create destroy)
 
   def index_old
@@ -114,7 +114,7 @@ class UserMyModulesController < ApplicationController
   end
 
   def check_view_permissions
-    render_403 unless can_read_experiment?(@my_module.experiment)
+    render_403 unless can_read_my_module?(@my_module)
   end
 
   def check_manage_permissions

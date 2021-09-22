@@ -40,21 +40,16 @@ module PermissionExtends
     %w(
       READ
       MANAGE
-      UPDATE_START_DATE
-      UPDATE_DUE_DATE
-      UPDATE_NOTES
-      TAGS_MANAGE
       STEPS_MANAGE
+      UPDATE_STATUS
+      COMMENTS_CREATE
       COMMENTS_MANAGE
       COMMENTS_MANAGE_OWN
-      COMMENTS_CREATE
-      REPOSITORY_ROWS_ASSIGN
-      REPOSITORY_ROWS_MANAGE
       RESULTS_MANAGE
       RESULTS_DELETE_ARCHIVED
+      TAGS_MANAGE
       PROTOCOL_MANAGE
       COMPLETE
-      UPDATE_STATUS
       STEPS_COMPLETE
       STEPS_UNCOMPLETE
       STEPS_CHECK
@@ -64,8 +59,9 @@ module PermissionExtends
       STEPS_COMMENTS_DELETE_OWN
       STEPS_COMMENTS_UPDATE
       STEPS_COMMENT_UPDATE_OWN
-      REPOSITORY_ROWS_MANAGE
       REPOSITORY_ROWS_ASSIGN
+      REPOSITORY_ROWS_MANAGE
+      USERS_MANAGE
     ).each { |permission| const_set(permission, "task_#{permission.underscore}") }
   end
 

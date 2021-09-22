@@ -39,11 +39,11 @@ Canaid::Permissions.register_for(MyModule) do
     my_module.permission_granted?(user, MyModulePermissions::UPDATE_START_DATE)
   end
 
-  can :update_my_module_start_date do |user, my_module|
+  can :update_my_module_due_date do |user, my_module|
     my_module.permission_granted?(user, MyModulePermissions::UPDATE_DUE_DATE)
   end
 
-  can :update_my_module_start_date do |user, my_module|
+  can :update_my_module_notes do |user, my_module|
     my_module.permission_granted?(user, MyModulePermissions::UPDATE_NOTES)
   end
 
@@ -140,23 +140,22 @@ Canaid::Permissions.register_for(MyModule) do
   end
 end
 
-Canaid::Permissions.register_for(Comment) do
+Canaid::Permissions.register_for(TaskComment) do
   # Module, its experiment and its project must be active for all the specified
   # permissions
-  %i(manage_my_module_comments)
+  %i(manage_my_module_comment)
     .each do |perm|
     can perm do |_, comment|
       my_module = ::PermissionsUtil.get_comment_module(comment)
-      !my_module.archived_branch?
+      my_module.active? &&
+        my_module.experiment.active? &&
+        my_module.experiment.project.active?
     end
   end
 
-  # module: update/delete comment
-  # result: update/delete comment
-  # step: update/delete comment
-  can :manage_my_module_comments do |user, comment|
+  can :manage_my_module_comment do |user, comment|
     my_module = ::PermissionsUtil.get_comment_module(comment)
-    (comment.user == user && my_module.permission_granted?(user, MyModulePermissions::COMMENTS_MANAGE_OWN)) ||
-      my_module.permission_granted?(user, MyModulePermissions::COMMENTS_MANAGE)
+    my_module.permission_granted?(user, MyModulePermissions::COMMENTS_MANAGE) ||
+      ((comment.user == user) && my_module.permission_granted?(user, MyModulePermissions::COMMENTS_MANAGE_OWN))
   end
 end

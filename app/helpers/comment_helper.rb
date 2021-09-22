@@ -71,7 +71,9 @@ module CommentHelper
 
   def comment_editable?(comment)
     case comment.type
-    when 'TaskComment', 'StepComment', 'ResultComment'
+    when 'TaskComment'
+      can_manage_my_module_comment?(comment)
+    when 'StepComment', 'ResultComment'
       can_manage_comment_in_module?(comment.becomes(Comment))
     when 'ProjectComment'
       can_manage_comment_in_project?(comment)

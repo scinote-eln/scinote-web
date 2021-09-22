@@ -97,7 +97,7 @@ Canaid::Permissions.register_for(Protocol) do
   # protocol in module: read
   # step in module: read, read comments, read/download assets
   can :read_protocol_in_module do |user, protocol|
-    can_read_experiment?(user, protocol.my_module.experiment)
+    protocol.my_module.permission_granted?(user, MyModulePermissions::READ)
   end
 
   # protocol in module: create/update/delete, unlink, revert, update from
