@@ -12,23 +12,13 @@
 
 
 <%= content_for :sidebar do %>
-  <% if @my_module.archived? %>
-    <%= render partial: 'shared/sidebar/archived_my_module.html.erb',
-      locals: {
-        my_modules: @experiment_my_modules,
-        experiment: @my_module.experiment,
-        current_my_module: @my_module
-      }
-    %>
-  <% else %>
-    <%= render partial: 'shared/sidebar/my_module.html.erb',
-      locals: {
-        my_modules: @experiment_my_modules,
-        experiment: @my_module.experiment,
-        current_my_module: @my_module
-      }
-    %>
-  <% end %>
+  <%= render partial: "shared/sidebar/#{@my_module.archived? ? 'archived_my_module' : 'my_module'}.html.erb",
+    locals: {
+      my_modules: @experiment_my_modules,
+      experiment: @my_module.experiment,
+      current_my_module: @my_module
+    }
+  %>
 <% end %>
 <%= render partial: 'shared/drag_n_drop_overlay' %>
 <%= render partial: 'shared/secondary_navigation', locals: { render_breadcrumbs: true, project: @experiment.project, experiment: @experiment } %>
