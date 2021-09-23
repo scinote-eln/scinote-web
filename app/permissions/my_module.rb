@@ -55,10 +55,6 @@ Canaid::Permissions.register_for(MyModule) do
     my_module.permission_granted?(user, MyModulePermissions::STEPS_MANAGE)
   end
 
-  can :manage_my_module_comments do |user, my_module|
-    my_module.permission_granted?(user, MyModulePermissions::COMMENTS_MANAGE)
-  end
-
   can :create_my_module_comments do |user, my_module|
     my_module.permission_granted?(user, MyModulePermissions::COMMENTS_CREATE)
   end
@@ -141,5 +137,26 @@ Canaid::Permissions.register_for(MyModule) do
 
   can :manage_my_module_repository_snapshots do |user, my_module|
     my_module.permission_granted?(user, MyModulePermissions::REPOSITORY_ROWS_MANAGE)
+  end
+end
+
+Canaid::Permissions.register_for(Comment) do
+  # Module, its experiment and its project must be active for all the specified
+  # permissions
+  %i(manage_my_module_comments)
+    .each do |perm|
+    can perm do |_, comment|
+      my_module = ::PermissionsUtil.get_comment_module(comment)
+      !my_module.archived_branch?
+    end
+  end
+
+  # module: update/delete comment
+  # result: update/delete comment
+  # step: update/delete comment
+  can :manage_my_module_comments do |user, comment|
+    my_module = ::PermissionsUtil.get_comment_module(comment)
+    (comment.user == user && my_module.permission_granted?(user, MyModulePermissions::COMMENTS_MANAGE_OWN)) ||
+      my_module.permission_granted?(user, MyModulePermissions::COMMENTS_MANAGE)
   end
 end
