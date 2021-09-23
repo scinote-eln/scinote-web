@@ -78,7 +78,7 @@ module CommentHelper
     when 'StepComment'
       can_manage_comment_in_module?(comment.becomes(Comment))
     when 'ResultComment'
-      can_manage_result_comments?(comment.becomes(Comment))
+      can_manage_result_comment?(comment.becomes(Comment))
     when 'ProjectComment'
       can_manage_comment_in_project?(comment)
     else

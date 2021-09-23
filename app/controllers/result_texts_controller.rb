@@ -11,7 +11,7 @@ class ResultTextsController < ApplicationController
   before_action :check_manage_permissions, only: %i(edit update)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_archive_permissions, only: [:update]
-  before_action :check_view_permissions, only: [:download]
+  before_action :check_view_permissions, except: %i(new create edit update)
 
   def new
     @result = Result.new(

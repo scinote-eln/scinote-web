@@ -21,7 +21,7 @@ end
 Canaid::Permissions.register_for(Comment) do
   # Module, its experiment and its project must be active for all the specified
   # permissions
-  %i(manage_result_comments)
+  %i(manage_result_comment)
     .each do |perm|
     can perm do |_, comment|
       my_module = ::PermissionsUtil.get_comment_module(comment)
@@ -32,7 +32,7 @@ Canaid::Permissions.register_for(Comment) do
   # module: update/delete comment
   # result: update/delete comment
   # step: update/delete comment
-  can :manage_result_comments do |user, comment|
+  can :manage_result_comment do |user, comment|
     my_module = ::PermissionsUtil.get_comment_module(comment)
     (comment.user == user && my_module.permission_granted?(user, MyModulePermissions::RESULTS_COMMENTS_MANAGE_OWN)) ||
       my_module.permission_granted?(user, MyModulePermissions::RESULTS_COMMENTS_MANAGE)

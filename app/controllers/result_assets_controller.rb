@@ -1,8 +1,8 @@
 class ResultAssetsController < ApplicationController
   include ResultsHelper
 
-  before_action :load_vars, only: [:edit, :update]
-  before_action :load_vars_nested, only: [:new, :create]
+  before_action :load_vars, only: %i(edit update)
+  before_action :load_vars_nested, only: %i(new create)
 
   before_action :check_manage_permissions, only: %i(edit update)
   before_action :check_create_permissions, only: %i(new create)
