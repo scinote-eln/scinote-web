@@ -9,7 +9,7 @@ class ProjectCommentsController < ApplicationController
   before_action :load_vars
   before_action :check_view_permissions, only: :index
   before_action :check_create_permissions, only: :create
-  before_action :check_manage_permissions, only: %i(edit update destroy)
+  before_action :check_manage_permissions, only: %i(update destroy)
 
   def index
     comments = @project.last_comments(@last_comment_id, @per_page)

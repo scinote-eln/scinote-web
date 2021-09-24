@@ -270,7 +270,7 @@ Rails.application.routes.draw do
     resources :projects, except: [:destroy] do
       resources :project_comments,
                 path: '/comments',
-                only: [:create, :index, :edit, :update, :destroy]
+                only: %i(create index update destroy)
       # Activities popup (JSON) for individual project in projects index,
       # as well as all activities page for single project (HTML)
       resources :project_activities, path: '/activities', only: [:index]
@@ -372,7 +372,7 @@ Rails.application.routes.draw do
 
       resources :my_module_comments,
                 path: '/comments',
-                only: [:index, :create, :edit, :update, :destroy]
+                only: %i(create index update destroy)
 
       get :repositories_dropdown_list, controller: :my_module_repositories
       get :repositories_list_html, controller: :my_module_repositories
@@ -438,7 +438,7 @@ Rails.application.routes.draw do
     resources :steps, only: [:edit, :update, :destroy, :show] do
       resources :step_comments,
                 path: '/comments',
-                only: [:create, :index, :edit, :update, :destroy]
+                only: %i(create index update destroy)
       member do
         post 'checklistitem_state'
         post 'toggle_step_state'
@@ -475,7 +475,7 @@ Rails.application.routes.draw do
     resources :results, only: [:update, :destroy] do
       resources :result_comments,
                 path: '/comments',
-                only: [:create, :index, :edit, :update, :destroy]
+                only: %i(create index update destroy)
     end
 
     resources :result_texts, only: [:edit, :update, :destroy]

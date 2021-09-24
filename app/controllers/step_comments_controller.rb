@@ -10,7 +10,7 @@ class StepCommentsController < ApplicationController
 
   before_action :check_view_permissions, only: [:index]
   before_action :check_add_permissions, only: [:create]
-  before_action :check_manage_permissions, only: %i(edit update destroy)
+  before_action :check_manage_permissions, only: %i(update destroy)
 
   def index
     comments = @step.last_comments(@last_comment_id, @per_page)
