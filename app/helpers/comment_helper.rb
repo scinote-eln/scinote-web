@@ -60,7 +60,9 @@ module CommentHelper
     case object.class.name
     when 'MyModule'
       can_create_my_module_comments?(object)
-    when 'Step', 'Result'
+    when 'Step'
+      can_create_my_module_comments?(object.my_module)
+    when 'Result'
       can_create_my_module_comments?(object.my_module)
     when 'Project'
       can_create_project_comments?(object)
@@ -73,8 +75,10 @@ module CommentHelper
     case comment.type
     when 'TaskComment'
       can_manage_my_module_comment?(comment)
-    when 'StepComment', 'ResultComment'
+    when 'StepComment'
       can_manage_comment_in_module?(comment.becomes(Comment))
+    when 'ResultComment'
+      can_manage_result_comment?(comment.becomes(Comment))
     when 'ProjectComment'
       can_manage_comment_in_project?(comment)
     else
