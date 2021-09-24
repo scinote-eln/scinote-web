@@ -36,15 +36,15 @@ Canaid::Permissions.register_for(MyModule) do
   end
 
   can :update_my_module_start_date do |user, my_module|
-    my_module.permission_granted?(user, MyModulePermissions::UPDATE_START_DATE)
+    my_module.permission_granted?(user, MyModulePermissions::MANAGE)
   end
 
   can :update_my_module_due_date do |user, my_module|
-    my_module.permission_granted?(user, MyModulePermissions::UPDATE_DUE_DATE)
+    my_module.permission_granted?(user, MyModulePermissions::MANAGE)
   end
 
   can :update_my_module_notes do |user, my_module|
-    my_module.permission_granted?(user, MyModulePermissions::UPDATE_NOTES)
+    my_module.permission_granted?(user, MyModulePermissions::MANAGE)
   end
 
   can :manage_my_module_tags do |user, my_module|
@@ -96,11 +96,11 @@ Canaid::Permissions.register_for(MyModule) do
   end
 
   can :check_my_module_steps do |user, my_module|
-    my_module.permission_granted?(user, MyModulePermissions::STEPS_CHECK)
+    my_module.permission_granted?(user, MyModulePermissions::STEPS_CHECKLIST_CHECK)
   end
 
   can :uncheck_my_module_steps do |user, my_module|
-    my_module.permission_granted?(user, MyModulePermissions::STEPS_UNCHECK)
+    my_module.permission_granted?(user, MyModulePermissions::STEPS_CHECKLIST_UNCHECK)
   end
 
   can :create_comments_in_my_module_steps do |user, my_module|

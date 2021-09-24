@@ -38,10 +38,6 @@ Canaid::Permissions.register_for(Project) do
       end
   end
 
-  can :read_project_folders do |user, project|
-    project.permission_granted?(user, ProjectPermissions::FOLDERS_READ)
-  end
-
   can :manage_project_users do |user, project|
     project.permission_granted?(user, ProjectPermissions::USERS_MANAGE)
   end
@@ -56,26 +52,6 @@ Canaid::Permissions.register_for(Project) do
 
   can :create_project_experiments do |user, project|
     project.permission_granted?(user, ProjectPermissions::EXPERIMENTS_CREATE)
-  end
-
-  can :read_project_experiments do |user, project|
-    project.permission_granted?(user, ProjectPermissions::EXPERIMENTS_READ)
-  end
-
-  can :read_archived_project_experiments do |user, project|
-    project.permission_granted?(user, ProjectPermissions::EXPERIMENTS_READ_ARCHIVED)
-  end
-
-  can :read_canvas_of_project_experiments do |user, project|
-    project.permission_granted?(user, ProjectPermissions::EXPERIMENTS_READ_CANVAS)
-  end
-
-  can :read_activities_of_project_experiments do |user, project|
-    project.permission_granted?(user, ProjectPermissions::EXPERIMENTS_ACTIVITIES_READ)
-  end
-
-  can :read_users_of_project_experiments do |user, project|
-    project.permission_granted?(user, ProjectPermissions::EXPERIMENTS_USERS_READ)
   end
 
   can :create_project_comments do |user, project|

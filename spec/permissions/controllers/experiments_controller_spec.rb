@@ -61,51 +61,51 @@ describe ExperimentsController, type: :controller do
 
     it_behaves_like "a controller action with permissions checking", :put, :update do
       let(:testable) { experiment }
-      let(:permissions) { [ExperimentPermissions::MANAGE, ExperimentPermissions::RESTORE] }
+      let(:permissions) { [ExperimentPermissions::MANAGE, ExperimentPermissions::MANAGE] }
       let(:action_params) { { id: experiment.id, experiment: { name: 'Test1' } } }
     end
 
     it_behaves_like "a controller action with permissions checking", :post, :archive do
       let(:testable) { experiment }
-      let(:permissions) { [ExperimentPermissions::ARCHIVE] }
+      let(:permissions) { [ExperimentPermissions::MANAGE] }
       let(:action_params) { { id: experiment.id } }
     end
 
     it_behaves_like "a controller action with permissions checking", :post, :archive_group do
       let(:testable) { experiment }
-      let(:permissions) { [ExperimentPermissions::ARCHIVE] }
+      let(:permissions) { [ExperimentPermissions::MANAGE] }
       let(:action_params) { { project_id: project.id, experiments_ids: [experiment.id] } }
       let(:custom_response_status) { :unprocessable_entity }
     end
 
     it_behaves_like "a controller action with permissions checking", :post, :restore_group do
       let(:testable) { experiment }
-      let(:permissions) { [ExperimentPermissions::RESTORE] }
+      let(:permissions) { [ExperimentPermissions::MANAGE] }
       let(:action_params) { { project_id: project.id, experiments_ids: [experiment.id] } }
       let(:custom_response_status) { :unprocessable_entity }
     end
 
     it_behaves_like "a controller action with permissions checking", :get, :clone_modal do
       let(:testable) { experiment }
-      let(:permissions) { [ExperimentPermissions::CLONE] }
+      let(:permissions) { [ExperimentPermissions::MANAGE] }
       let(:action_params) { { id: experiment.id } }
     end
 
     it_behaves_like "a controller action with permissions checking", :post, :clone do
       let(:testable) { experiment }
-      let(:permissions) { [ExperimentPermissions::CLONE] }
+      let(:permissions) { [ExperimentPermissions::MANAGE] }
       let(:action_params) { { id: experiment.id } }
     end
 
     it_behaves_like "a controller action with permissions checking", :get, :move_modal do
       let(:testable) { experiment }
-      let(:permissions) { [ExperimentPermissions::MOVE] }
+      let(:permissions) { [ExperimentPermissions::MANAGE] }
       let(:action_params) { { id: experiment.id } }
     end
 
     it_behaves_like "a controller action with permissions checking", :post, :move do
       let(:testable) { experiment }
-      let(:permissions) { [ExperimentPermissions::MOVE] }
+      let(:permissions) { [ExperimentPermissions::MANAGE] }
       let(:action_params) { { id: experiment.id } }
     end
 

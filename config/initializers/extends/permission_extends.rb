@@ -6,33 +6,26 @@ module PermissionExtends
       READ
       READ_ARCHIVED
       MANAGE
-      FOLDERS_READ
       ACTIVITIES_READ
       USERS_READ
       USERS_MANAGE
       COMMENTS_READ
       COMMENTS_CREATE
       COMMENTS_MANAGE
-      EXPERIMENTS_READ
-      EXPERIMENTS_READ_ARCHIVED
+      TAGS_MANAGE
       EXPERIMENTS_CREATE
-      EXPERIMENTS_READ_CANVAS
-      EXPERIMENTS_ACTIVITIES_READ
-      EXPERIMENTS_USERS_READ
-      TASKS_MANAGE
     ).each { |permission| const_set(permission, "project_#{permission.underscore}") }
   end
 
   module ExperimentPermissions
     %w(
       READ
+      READ_ARCHIVED
+      ACTIVITIES_READ
       MANAGE
-      ARCHIVE
-      RESTORE
-      CLONE
-      MOVE
-      TASKS_CREATE
-      MANAGE_ACCESS
+      TASKS_MANAGE
+      USERS_READ
+      USERS_MANAGE
     ).each { |permission| const_set(permission, "experiment_#{permission.underscore}") }
   end
 
@@ -52,8 +45,8 @@ module PermissionExtends
       COMPLETE
       STEPS_COMPLETE
       STEPS_UNCOMPLETE
-      STEPS_CHECK
-      STEPS_UNCHECK
+      STEPS_CHECKLIST_CHECK
+      STEPS_CHECKLIST_UNCHECK
       STEPS_COMMENTS_CREATE
       STEPS_COMMENTS_DELETE
       STEPS_COMMENTS_DELETE_OWN
