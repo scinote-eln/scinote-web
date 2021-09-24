@@ -148,7 +148,7 @@ class ResultTablesController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 unless can_create_my_module_results?(@my_module)
+    render_403 unless can_create_results?(@my_module)
   end
 
   def check_manage_permissions

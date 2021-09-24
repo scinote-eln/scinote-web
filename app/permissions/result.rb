@@ -18,7 +18,7 @@ Canaid::Permissions.register_for(Result) do
   end
 end
 
-Canaid::Permissions.register_for(Comment) do
+Canaid::Permissions.register_for(ResultComment) do
   # Module, its experiment and its project must be active for all the specified
   # permissions
   %i(manage_result_comment)
