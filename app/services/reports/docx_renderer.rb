@@ -152,14 +152,8 @@ module Reports
         y = y * 300 / x
         x = 300
       end
-      blob_data = if asset_preview.class == ActiveStorage::Preview
-                    asset_preview.image.download
-                  else
-                    asset_preview.blob.download
-                  end
 
       docx.img asset_preview.service_url.split('&')[0] do
-        data blob_data
         width x
         height y
       end

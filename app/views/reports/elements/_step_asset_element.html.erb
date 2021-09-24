@@ -13,7 +13,7 @@
           <% else %>
             <% file_link = @obj_filenames.dig(:assets, asset.id, :file) %>
           <% end %>
-          <a href="<%= file_link %>">
+          <a href="<%= file_link %>" class="export-all-link">
             <em><%= t('projects.reports.elements.step_asset.file_name', file: file_link&.split('/')&.last) %></em>
           </a>
         <% else %>

@@ -17,7 +17,7 @@ module RepositoryRows
     def call
       return self unless valid?
 
-      ActiveRecord::Base.transaction do
+      @repository_row.with_lock do
         # Update invetory row's cells
         params[:repository_cells]&.each do |column_id, value|
           column = @repository_row.repository.repository_columns.find_by(id: column_id)
