@@ -10,51 +10,19 @@ FactoryBot.define do
 
     factory :normal_user_role do
       name { I18n.t('user_roles.predefined.normal_user') }
-      permissions {
-        [
-          ProjectPermissions::READ,
-          ProjectPermissions::EXPERIMENTS_CREATE,
-          ProjectPermissions::COMMENTS_CREATE,
-          ExperimentPermissions::READ,
-          ExperimentPermissions::MANAGE,
-          ExperimentPermissions::ARCHIVE,
-          ExperimentPermissions::RESTORE,
-          ExperimentPermissions::CLONE,
-          ExperimentPermissions::TASKS_CREATE,
-          MyModulePermissions::READ,
-          MyModulePermissions::COMMENTS_CREATE,
-          MyModulePermissions::UPDATE_STATUS,
-          MyModulePermissions::REPOSITORY_ROWS_ASSIGN
-        ]
-      }
+      permissions { PredefinedRoles::NORMAL_USER_PERMISSIONS }
       predefined { true }
     end
 
     factory :technician_role do
       name { I18n.t('user_roles.predefined.technician') }
-      permissions {
-        [
-          ProjectPermissions::READ,
-          ProjectPermissions::COMMENTS_CREATE,
-          ExperimentPermissions::READ,
-          MyModulePermissions::READ,
-          MyModulePermissions::COMMENTS_CREATE,
-          MyModulePermissions::UPDATE_STATUS,
-          MyModulePermissions::REPOSITORY_ROWS_ASSIGN
-        ]
-      }
+      permissions { PredefinedRoles::TECHNICIAN_PERMISSIONS }
       predefined { true }
     end
 
     factory :viewer_role do
       name { I18n.t('user_roles.predefined.viewer') }
-      permissions {
-        [
-          ProjectPermissions::READ,
-          ExperimentPermissions::READ,
-          MyModulePermissions::READ
-        ]
-      }
+      permissions { PredefinedRoles::VIEWER_PERMISSIONS }
       predefined { true }
     end
   end

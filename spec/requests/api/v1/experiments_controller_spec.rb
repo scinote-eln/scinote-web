@@ -16,7 +16,7 @@ RSpec.describe "Api::V1::ExperimentsController", type: :request do
     create :user_assignment,
            assignable: @valid_project,
            user: @user,
-           user_role: create(:owner_role),
+           user_role: UserRole.find_by(name: I18n.t('user_roles.predefined.owner')),
            assigned_by: @user
 
     @unaccessible_project = create(:project, name: Faker::Name.unique.name,

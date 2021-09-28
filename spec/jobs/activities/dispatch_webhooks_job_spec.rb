@@ -14,7 +14,7 @@ describe Activities::DispatchWebhooksJob do
   let!(:webhook_1) { create :webhook, activity_filter: activity_filter_1 }
   let!(:webhook_2) { create :webhook, activity_filter: activity_filter_2 }
   let!(:webhook_3) { create :webhook, activity_filter: non_matching_activity_filter }
-  let!(:activity) { create :activity }
+  let(:activity) { create :activity }
 
   it 'enqueues webhook jobs' do
     ActiveJob::Base.queue_adapter = :test

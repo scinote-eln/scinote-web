@@ -8,7 +8,7 @@ RSpec.describe "Api::V1::ExperimentUserAssignmentsController", type: :request do
     @another_user = create(:user)
     @team = create(:team, created_by: @user)
     @normal_user_role = create :normal_user_role
-    @owner_role = create :owner_role
+    @owner_role = UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))
     create(:user_team, user: @user, team: @team, role: :normal_user)
     create(:user_team, user: @another_user, team: @team, role: :normal_user)
     @own_project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @team)

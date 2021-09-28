@@ -1,6 +1,7 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
 require 'shoulda-matchers'
+require 'database_cleaner'
 require 'devise'
 require_relative 'support/controller_macros'
 ENV['RAILS_ENV'] = 'test'
@@ -39,7 +40,45 @@ RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
-  config.use_transactional_fixtures = true
+  config.use_transactional_fixtures = false
+  config.before(:suite) do
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
+  config.before(:each) do
+    DatabaseCleaner.strategy = :transaction
+  end
+
+  config.before(:each, js: true) do
+    DatabaseCleaner.strategy = :truncation
+  end
+
+  config.before(:each) do
+    DatabaseCleaner.start
+
+    # project creation now requires an owner role to be present, as it assigns it to creator
+    # so we must ensure it always exists
+    UserRole.exists?(name: I18n.t('user_roles.predefined.owner')) || UserRole.owner_role.save!
+  end
+
+  config.after(:each) do
+    DatabaseCleaner.clean
+  end
+
+  config.before(:all) do
+    DatabaseCleaner.strategy = :transaction
+  end
+
+  config.before(:all) do
+    DatabaseCleaner.start
+    # project creation now requires an owner role to be present, as it assigns it to creator
+    # so we must ensure it always exists
+    UserRole.exists?(name: I18n.t('user_roles.predefined.owner')) || UserRole.owner_role.save!
+  end
+
+  config.after(:all) do
+    DatabaseCleaner.clean
+  end
 
   Delayed::Worker.delay_jobs = false
 

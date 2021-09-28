@@ -9,7 +9,7 @@ describe AccessPermissions::ProjectsController, type: :controller do
   let!(:team) { create :team, created_by: user }
   let!(:user_team) { create :user_team, :admin, user: user, team: team }
   let!(:project) { create :project, team: team, created_by: user }
-  let!(:owner_role) { create :owner_role }
+  let!(:owner_role) { UserRole.find_by(name: I18n.t('user_roles.predefined.owner')) }
   let!(:normal_user_role) { create :normal_user_role }
   let!(:technician_role) { create :technician_role }
   let!(:user_project) { create :user_project, user: user, project: project }

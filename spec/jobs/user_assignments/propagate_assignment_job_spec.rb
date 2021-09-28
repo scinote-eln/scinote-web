@@ -3,18 +3,18 @@ require 'rails_helper'
 
 module UserAssignments
   RSpec.describe PropagateAssignmentJob, type: :job do
-    let!(:owner_role) { create :owner_role }
-    let!(:technician_role) { create :technician_role }
 
+    let!(:technician_role) { create :technician_role }
     let!(:user_one) { create :user }
     let!(:user_two) { create :user }
     let!(:team) { create :team, created_by: user_one }
+    let!(:owner_role) { UserRole.find_by(name: I18n.t('user_roles.predefined.owner')) }
     let!(:project) { create :project, team: team, created_by: user_one }
     let!(:user_project) { create :user_project, user: user_one, project: project }
     let!(:experiment_one) { create :experiment, project: project }
     let!(:experiment_two) { create :experiment, project: project }
-    let!(:my_module_one) { create :my_module, experiment: experiment_one }
-    let!(:my_module_two) { create :my_module, experiment: experiment_two }
+    let!(:my_module_one) { create :my_module, experiment: experiment_one, created_by: experiment_one.created_by }
+    let!(:my_module_two) { create :my_module, experiment: experiment_two, created_by: experiment_two.created_by }
     let!(:user_assignment) do
       create :user_assignment,
              assignable: project,

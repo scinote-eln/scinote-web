@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 describe ProjectMember, type: :model do
-  let(:owner_role) { create :owner_role }
-  let!(:project) { create :project }
+  let!(:owner_role) { UserRole.find_by(name: I18n.t('user_roles.predefined.owner')) }
   let!(:user) { create :user }
+  let!(:project) { create :project, created_by: user }
   let(:normal_user_role) { create :normal_user_role }
 
   let(:subject) { described_class.new(user, project, user) }
@@ -84,13 +84,7 @@ describe ProjectMember, type: :model do
              assigned_by: user
     end
     let!(:user_project) { create :user_project, user: user, project: project }
-    let!(:user_assignment) do
-      create :user_assignment,
-             assignable: project,
-             user: user,
-             user_role: owner_role,
-             assigned_by: user
-    end
+    let!(:user_assignment) { project.user_assignments.first }
 
     it 'removes the user_assignment and user_project' do
       expect {
@@ -157,6 +151,7 @@ describe ProjectMember, type: :model do
       end
 
       it 'does not add an error when role exists' do
+        project.user_assignments.destroy_all
         subject.assign = true
         subject.user_role_id = owner_role.id
         subject.valid?

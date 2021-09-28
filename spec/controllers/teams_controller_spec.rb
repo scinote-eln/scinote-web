@@ -7,7 +7,6 @@ describe TeamsController, type: :controller do
 
   let(:user) { subject.current_user }
   let(:team) { create :team, created_by: user }
-  let!(:owner_role) { create :owner_role }
   let!(:user_team) { create :user_team, :admin, user: user, team: team }
 
   describe 'POST export_projects' do

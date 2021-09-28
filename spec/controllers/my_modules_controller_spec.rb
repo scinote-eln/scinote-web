@@ -55,7 +55,7 @@ describe MyModulesController, type: :controller do
     context 'when deleting due_date' do
       let(:params) { { id: my_module.id, my_module: { due_date: '' } } }
       let(:my_module) do
-        create :my_module, :with_due_date, experiment: experiment
+        create :my_module, :with_due_date, experiment: experiment, created_by: experiment.created_by
       end
 
       it 'calls create activity for removing due date' do
@@ -77,7 +77,7 @@ describe MyModulesController, type: :controller do
         { id: my_module.id, my_module: { due_date: '02/21/2019 23:59' } }
       end
       let(:my_module) do
-        create :my_module, :with_due_date, experiment: experiment
+        create :my_module, :with_due_date, experiment: experiment, created_by: experiment.created_by
       end
 
       it 'calls create activity for changing due date' do
@@ -174,9 +174,9 @@ describe MyModulesController, type: :controller do
       }
     end
     let(:experiment) { create :experiment }
-    let(:task1) { create :my_module, :archived, experiment: experiment }
-    let(:task2) { create :my_module, :archived, experiment: experiment }
-    let(:task3) { create :my_module, :archived, experiment: experiment }
+    let(:task1) { create :my_module, :archived, experiment: experiment, created_by: experiment.created_by }
+    let(:task2) { create :my_module, :archived, experiment: experiment, created_by: experiment.created_by }
+    let(:task3) { create :my_module, :archived, experiment: experiment, created_by: experiment.created_by }
     let(:user) { controller.current_user }
 
     before do
