@@ -68,7 +68,7 @@ module ReportActions
 
     def generate_experiment_content(experiment_id, my_module_ids)
       experiment = Experiment.find_by(id: experiment_id)
-      return if !experiment && !can_read_experiment?(experiment, @user)
+      return if !experiment && !can_read_experiment?(@user, experiment)
 
       experiment_element = save_element!({ 'experiment_id' => experiment.id }, :experiment, nil)
       generate_my_modules_content(experiment, experiment_element, my_module_ids)

@@ -1,6 +1,8 @@
 Canaid::Permissions.register_for(Experiment) do
   # Experiment and its project must be active for all the specified permissions
   %i(manage_experiment
+     manage_experiment_tasks
+     manage_experiment_users
      archive_experiment
      clone_experiment
      move_experiment
@@ -10,18 +12,6 @@ Canaid::Permissions.register_for(Experiment) do
       experiment.active? &&
         experiment.project.active?
     end
-  end
-
-  # experiment: read (read archive)
-  # canvas: read
-  # module: read (read users, read comments, read archive)
-  # result: read (read comments)
-  can :read_experiment do |user, experiment|
-    experiment.permission_granted?(user, ExperimentPermissions::READ)
-  end
-
-  can :read_users_of_experiment do |user, project|
-    project.permission_granted?(user, ExperimentPermissions::USERS_READ)
   end
 
   # experiment: create/update/delete
@@ -42,19 +32,38 @@ Canaid::Permissions.register_for(Experiment) do
       end
   end
 
-  # experiment: manage access policies
-  can :manage_experiment_access do |user, experiment|
+  can :read_experiment do |user, experiment|
+    experiment.permission_granted?(user, ExperimentPermissions::READ)
+  end
+
+  can :read_archived_experiment do |user, experiment|
+    experiment.permission_granted?(user, ExperimentPermissions::READ_ARCHIVED)
+  end
+
+  can :read_experiment_canvas do |user, experiment|
+    experiment.permission_granted?(user, ExperimentPermissions::READ_CANVAS)
+  end
+
+  can :read_experiment_activities do |user, experiment|
+    experiment.permission_granted?(user, ExperimentPermissions::ACTIVITIES_READ)
+  end
+
+  can :read_experiment_users do |user, experiment|
+    experiment.permission_granted?(user, ExperimentPermissions::USERS_READ)
+  end
+
+  can :manage_experiment_users do |user, experiment|
     experiment.permission_granted?(user, ExperimentPermissions::USERS_MANAGE)
   end
 
-  # experiment: archive
+  can :manage_experiment_tasks do |user, experiment|
+    experiment.permission_granted?(user, ExperimentPermissions::TASKS_MANAGE)
+  end
+
   can :archive_experiment do |user, experiment|
     experiment.permission_granted?(user, ExperimentPermissions::MANAGE)
   end
 
-  # NOTE: Must not be dependent on canaid parmision for which we check if it's
-  # active
-  # experiment: restore
   can :restore_experiment do |user, experiment|
     project = experiment.project
     experiment.permission_granted?(user, ExperimentPermissions::MANAGE) &&
@@ -62,12 +71,10 @@ Canaid::Permissions.register_for(Experiment) do
       project.active?
   end
 
-  # experiment: copy
   can :clone_experiment do |user, experiment|
     experiment.permission_granted?(user, ExperimentPermissions::MANAGE)
   end
 
-  # experiment: move
   can :move_experiment do |user, experiment|
     experiment.permission_granted?(user, ExperimentPermissions::MANAGE)
   end

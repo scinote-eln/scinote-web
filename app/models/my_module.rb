@@ -364,7 +364,15 @@ class MyModule < ApplicationRecord
 
   def deep_clone_to_experiment(current_user, experiment_dest)
     # Copy the module
-    clone = MyModule.new(name: name, experiment: experiment_dest, description: description, x: x, y: y)
+    clone = MyModule.new(
+      name: name,
+      experiment: experiment_dest,
+      description: description,
+      x: x,
+      y: y,
+      created_by: created_by
+    )
+
     # set new position if cloning in the same experiment
     clone.attributes = get_new_position if clone.experiment == experiment
 

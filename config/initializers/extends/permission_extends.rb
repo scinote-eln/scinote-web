@@ -26,6 +26,9 @@ module PermissionExtends
       TASKS_MANAGE
       USERS_READ
       USERS_MANAGE
+      READ_ARCHIVED
+      READ_CANVAS
+      ACTIVITIES_READ
     ).each { |permission| const_set(permission, "experiment_#{permission.underscore}") }
   end
 
@@ -77,5 +80,87 @@ module PermissionExtends
       UPDATE_COLUMN
       DELETE_COLUMN
     ).each { |permission| const_set(permission, "inventory_#{permission.underscore}") }
+  end
+
+  module PredefinedRoles
+    OWNER_PERMISSIONS = (
+      ProjectPermissions.constants.map { |const| ProjectPermissions.const_get(const) } +
+      ExperimentPermissions.constants.map { |const| ExperimentPermissions.const_get(const) } +
+      MyModulePermissions.constants.map { |const| MyModulePermissions.const_get(const) }
+    )
+
+    NORMAL_USER_PERMISSIONS = [
+      ProjectPermissions::READ,
+      ProjectPermissions::READ_ARCHIVED,
+      ProjectPermissions::ACTIVITIES_READ,
+      ProjectPermissions::USERS_READ,
+      ProjectPermissions::COMMENTS_READ,
+      ProjectPermissions::COMMENTS_CREATE,
+      ProjectPermissions::EXPERIMENTS_CREATE,
+      ExperimentPermissions::READ,
+      ExperimentPermissions::MANAGE,
+      ExperimentPermissions::TASKS_MANAGE,
+      ExperimentPermissions::USERS_MANAGE,
+      MyModulePermissions::READ,
+      MyModulePermissions::MANAGE,
+      MyModulePermissions::RESULTS_MANAGE,
+      MyModulePermissions::PROTOCOL_MANAGE,
+      MyModulePermissions::STEPS_MANAGE,
+      MyModulePermissions::TAGS_MANAGE,
+      MyModulePermissions::COMMENTS_CREATE,
+      MyModulePermissions::COMMENTS_MANAGE,
+      MyModulePermissions::COMMENTS_MANAGE_OWN,
+      MyModulePermissions::COMPLETE,
+      MyModulePermissions::UPDATE_STATUS,
+      MyModulePermissions::STEPS_COMPLETE,
+      MyModulePermissions::STEPS_UNCOMPLETE,
+      MyModulePermissions::STEPS_CHECKLIST_CHECK,
+      MyModulePermissions::STEPS_CHECKLIST_UNCHECK,
+      MyModulePermissions::STEPS_COMMENTS_CREATE,
+      MyModulePermissions::STEPS_COMMENTS_DELETE_OWN,
+      MyModulePermissions::STEPS_COMMENT_UPDATE_OWN,
+      MyModulePermissions::REPOSITORY_ROWS_ASSIGN,
+      MyModulePermissions::REPOSITORY_ROWS_MANAGE
+    ]
+
+    TECHNICIAN_PERMISSIONS = [
+      ProjectPermissions::READ,
+      ProjectPermissions::READ_ARCHIVED,
+      ProjectPermissions::ACTIVITIES_READ,
+      ProjectPermissions::USERS_READ,
+      ProjectPermissions::COMMENTS_READ,
+      ProjectPermissions::COMMENTS_CREATE,
+      ExperimentPermissions::READ,
+      ExperimentPermissions::READ_ARCHIVED,
+      ExperimentPermissions::ACTIVITIES_READ,
+      ExperimentPermissions::USERS_READ,
+      MyModulePermissions::READ,
+      MyModulePermissions::COMMENTS_CREATE,
+      MyModulePermissions::COMMENTS_MANAGE_OWN,
+      MyModulePermissions::COMPLETE,
+      MyModulePermissions::UPDATE_STATUS,
+      MyModulePermissions::STEPS_COMPLETE,
+      MyModulePermissions::STEPS_UNCOMPLETE,
+      MyModulePermissions::STEPS_CHECKLIST_CHECK,
+      MyModulePermissions::STEPS_CHECKLIST_UNCHECK,
+      MyModulePermissions::STEPS_COMMENTS_CREATE,
+      MyModulePermissions::STEPS_COMMENTS_DELETE_OWN,
+      MyModulePermissions::STEPS_COMMENT_UPDATE_OWN,
+      MyModulePermissions::REPOSITORY_ROWS_ASSIGN,
+      MyModulePermissions::REPOSITORY_ROWS_MANAGE
+    ]
+
+    VIEWER_PERMISSIONS = [
+      ProjectPermissions::READ,
+      ProjectPermissions::READ_ARCHIVED,
+      ProjectPermissions::ACTIVITIES_READ,
+      ProjectPermissions::USERS_READ,
+      ProjectPermissions::COMMENTS_READ,
+      ExperimentPermissions::READ,
+      ExperimentPermissions::READ_ARCHIVED,
+      ExperimentPermissions::ACTIVITIES_READ,
+      ExperimentPermissions::USERS_READ,
+      MyModulePermissions::READ
+    ]
   end
 end

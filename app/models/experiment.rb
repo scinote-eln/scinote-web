@@ -12,6 +12,8 @@ class Experiment < ApplicationRecord
   include PermissionCheckableModel
   include Assignable
 
+  include Canaid::Helpers::PermissionsHelper
+
   before_save -> { report_elements.destroy_all }, if: -> { !new_record? && project_id_changed? }
 
   belongs_to :project, inverse_of: :experiments, touch: true
@@ -237,14 +239,11 @@ class Experiment < ApplicationRecord
   # Projects to which this experiment can be moved (inside the same
   # team and not archived), all users assigned on experiment.project has
   # to be assigned on such project
-  def moveable_projects(current_user)
-    projects = projects_with_role_above_user(current_user)
-
-    projects = projects.each_with_object([]) do |p, arr|
-      arr << p if (project.users - p.users).empty?
-      arr
+  def movable_projects(current_user)
+    current_user.projects.where.not(id: project_id).where(archived: false, team: project.team).select do |p|
+      can_create_project_experiments?(current_user, p) &&
+        project.users == p.users
     end
-    projects - [project]
   end
 
   def permission_parent
@@ -274,7 +273,7 @@ class Experiment < ApplicationRecord
     cloned_pairs = {}
     ids_map = {}
     to_add.each do |m|
-      original = MyModule.find_by_id(to_clone.fetch(m[:id], nil)) if to_clone.present?
+      original = MyModule.find_by(id: to_clone.fetch(m[:id], nil)) if to_clone.present?
       if original.present?
         my_module = original.deep_clone(current_user)
         cloned_pairs[my_module] = original

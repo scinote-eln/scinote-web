@@ -9,7 +9,7 @@ class MyModulesController < ApplicationController
   before_action :load_vars, except: %i(restore_group)
   before_action :check_archive_permissions, only: %i(update)
   before_action :check_manage_permissions, only: %i(description due_date update_description update_protocol_description)
-  before_action :check_view_permissions, except: %i(update update_description update_protocol_description restore_group)
+  before_action :check_read_permissions, except: %i(update update_description update_protocol_description restore_group)
   before_action :check_update_state_permissions, only: :update_state
   before_action :set_inline_name_editing, only: %i(protocols results activities archive)
   before_action :load_experiment_my_modules, only: %i(protocols results activities archive)
@@ -327,8 +327,8 @@ class MyModulesController < ApplicationController
     return render_403 if my_module_params[:archived] == 'true' && !can_archive_my_module?(@my_module)
   end
 
-  def check_view_permissions
-    render_403 unless can_read_protocol_in_module?(@my_module.protocol)
+  def check_read_permissions
+    render_403 unless can_read_my_module?(@my_module)
   end
 
   def check_update_state_permissions

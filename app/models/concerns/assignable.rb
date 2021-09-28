@@ -9,7 +9,7 @@ module Assignable
     default_scope { includes(user_assignments: :user_role) }
 
     after_create_commit do
-      UserAssignment.create(
+      UserAssignment.create!(
         user: created_by,
         assignable: self,
         user_role: UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))

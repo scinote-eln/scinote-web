@@ -62,12 +62,11 @@ module Experiments
         return false
       end
 
-      if !@exp.moveable_projects(@user).include?(@project)
+      if @exp.movable_projects(@user).include?(@project)
+        true
+      else
         @errors[:target_project_not_valid] =
           ['Experiment cannot be moved to this project']
-        false
-      else
-        true
       end
     end
 

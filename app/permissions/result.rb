@@ -7,6 +7,7 @@ Canaid::Permissions.register_for(Result) do
 
   can :manage_result do |user, result|
     !result.archived? &&
+      !result.my_module.experiment.archived? &&
       result.unlocked?(result) &&
       result.my_module.permission_granted?(user, MyModulePermissions::RESULTS_MANAGE)
   end

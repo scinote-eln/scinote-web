@@ -7,9 +7,10 @@ module UserAssignments
     def perform(object, assigned_by)
       @assigned_by = assigned_by
       ActiveRecord::Base.transaction do
-        if object.is_a? Experiment
+        case object
+        when Experiment
           assign_users_to_experiment(object)
-        elsif object.is_a? MyModule
+        when MyModule
           assign_users_to_my_module(object)
         end
       end

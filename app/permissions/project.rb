@@ -38,6 +38,14 @@ Canaid::Permissions.register_for(Project) do
       end
   end
 
+  can :read_project_users do |user, project|
+    project.permission_granted?(user, ProjectPermissions::USERS_READ)
+  end
+
+  can :read_project_activities do |user, project|
+    project.permission_granted?(user, ProjectPermissions::ACTIVITIES_READ)
+  end
+
   can :manage_project_users do |user, project|
     project.permission_granted?(user, ProjectPermissions::USERS_MANAGE)
   end
