@@ -6,7 +6,7 @@ describe ExperimentsOverviewService do
   EXPERIMENTS_CNT = 26
   time = Time.new(2019, 8, 1, 14, 35, 0)
   let!(:user) { create :user }
-  let!(:project) { create :project }
+  let!(:project) { create :project, created_by: user }
   before do
     @experiments_overview = ExperimentsOverviewService.new(project, user, params)
   end

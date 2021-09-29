@@ -12,8 +12,6 @@ class Experiment < ApplicationRecord
   include PermissionCheckableModel
   include Assignable
 
-  include Canaid::Helpers::PermissionsHelper
-
   before_save -> { report_elements.destroy_all }, if: -> { !new_record? && project_id_changed? }
 
   belongs_to :project, inverse_of: :experiments, touch: true
