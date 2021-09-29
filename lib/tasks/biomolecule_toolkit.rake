@@ -10,7 +10,7 @@ namespace :biomolecule_toolkit do
 
     team = Team.find(args[:team_id])
     BmtRepository.transaction do
-      repository = BmtRepository.create!(name: 'Molecules', team: team, created_by: team.created_by)
+      repository = BmtRepository.create!(name: 'Biomolecule registry', team: team, created_by: team.created_by)
       attributes.each do |attribute|
         repository.repository_columns.create!(name: attribute['name'],
                                               data_type: 'RepositoryTextValue',
