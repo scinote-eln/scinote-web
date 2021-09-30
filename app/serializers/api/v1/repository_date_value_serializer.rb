@@ -8,7 +8,9 @@ module Api
       include TimestampableModel
 
       def date
-        object.data.to_date
+        Time.use_zone('UTC') do # all Date values are stored as UTC DateTime
+          object.data.to_date
+        end
       end
     end
   end

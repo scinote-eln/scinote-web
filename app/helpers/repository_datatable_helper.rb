@@ -102,6 +102,7 @@ module RepositoryDatatableHelper
 
   def display_cell_value(cell, team)
     serializer_class = "RepositoryDatatable::#{cell.repository_column.data_type}Serializer".constantize
+
     serializer_class.new(
       cell.value,
       scope: { team: team, user: current_user, column: cell.repository_column }
