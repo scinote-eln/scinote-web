@@ -57,6 +57,7 @@ module Users
       elsif provider_conf[:auto_link_on_sign_in]
         # Link to existing local account
         user.user_identities.create!(provider: auth.provider, uid: auth.uid)
+        user.update!(confirmed_at: user.created_at) if user.confirmed_at.blank?
         sign_in_and_redirect(user)
       else
         # Cannot do anything with it, so just return an error
