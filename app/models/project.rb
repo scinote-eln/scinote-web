@@ -209,7 +209,7 @@ class Project < ApplicationRecord
     user_assignments.find_by_user_id(user)&.user_role.name
   end
 
-  def sorted_experiments(sort_by = :new, archived = false)
+  def sorted_experiments(user, sort_by = :new, archived = false)
     sort = case sort_by
            when 'old' then { created_at: :asc }
            when 'atoz' then { name: :asc }
@@ -218,7 +218,7 @@ class Project < ApplicationRecord
            when 'archived_old' then { archived_on: :asc }
            else { created_at: :desc }
            end
-    experiments.is_archived(archived).order(sort)
+    experiments.readable_by_user(user).is_archived(archived).order(sort)
   end
 
   def archived_experiments

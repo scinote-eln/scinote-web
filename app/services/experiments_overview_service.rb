@@ -39,10 +39,11 @@ class ExperimentsOverviewService
                    'AND active_tasks.archived = FALSE')
             .joins('LEFT OUTER JOIN my_modules AS active_completed_tasks ON active_completed_tasks.experiment_id '\
                    '= experiments.id AND active_completed_tasks.archived = FALSE AND active_completed_tasks.state = 1')
+            .readable_by_user(@user)
             .select('experiments.*')
             .select('COUNT(DISTINCT active_tasks.id) AS task_count')
             .select('COUNT(DISTINCT active_completed_tasks.id) AS completed_task_count')
-            .group('experiments.id')
+            .group('experiments.id, user_assignments.id, user_roles.id')
   end
 
   def filter_records(records)

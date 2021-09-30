@@ -30,14 +30,14 @@ describe CanvasController do
 
 
 
-    let!(:task1) { create :my_module, x: 0, y: 1, experiment: experiment }
-    let!(:task2) { create :my_module, x: 0, y: 2, experiment: experiment }
-    let!(:task3) { create :my_module, x: 0, y: 3, experiment: experiment }
-    let!(:task4) { create :my_module, x: 0, y: 4, experiment: experiment }
-    let!(:task5) { create :my_module, x: 0, y: 5, experiment: experiment }
-    let!(:task6) { create :my_module, x: 0, y: 6, experiment: experiment }
-    let!(:task7) { create :my_module, x: 0, y: 7, experiment: experiment }
-    let!(:task8) { create :my_module, x: 0, y: 8, experiment: experiment }
+    let!(:task1) { create :my_module, x: 0, y: 1, experiment: experiment, created_by: experiment.created_by }
+    let!(:task2) { create :my_module, x: 0, y: 2, experiment: experiment, created_by: experiment.created_by }
+    let!(:task3) { create :my_module, x: 0, y: 3, experiment: experiment, created_by: experiment.created_by }
+    let!(:task4) { create :my_module, x: 0, y: 4, experiment: experiment, created_by: experiment.created_by }
+    let!(:task5) { create :my_module, x: 0, y: 5, experiment: experiment, created_by: experiment.created_by }
+    let!(:task6) { create :my_module, x: 0, y: 6, experiment: experiment, created_by: experiment.created_by }
+    let!(:task7) { create :my_module, x: 0, y: 7, experiment: experiment, created_by: experiment.created_by }
+    let!(:task8) { create :my_module, x: 0, y: 8, experiment: experiment, created_by: experiment.created_by }
 
     let!(:step_on_task5) { create :step, name: 'task5_step', protocol: task5.protocol }
     let!(:step_on_task6) { create :step, name: 'task6_step', protocol: task6.protocol }

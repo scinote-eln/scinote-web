@@ -107,22 +107,6 @@ Canaid::Permissions.register_for(MyModule) do
     my_module.permission_granted?(user, MyModulePermissions::STEPS_COMMENTS_CREATE)
   end
 
-  can :delete_comments_in_my_module_steps do |user, my_module|
-    my_module.permission_granted?(user, MyModulePermissions::STEPS_COMMENTS_DELETE)
-  end
-
-  can :delete_own_comments_in_my_module_steps do |user, my_module|
-    my_module.permission_granted?(user, MyModulePermissions::STEPS_COMMENTS_DELETE_OWN)
-  end
-
-  can :update_comments_in_my_module_steps do |user, my_module|
-    my_module.permission_granted?(user, MyModulePermissions::STEPS_COMMENTS_UPDATE)
-  end
-
-  can :update_own_comments_in_my_module_steps do |user, my_module|
-    my_module.permission_granted?(user, MyModulePermissions::STEPS_COMMENT_UPDATE_OWN)
-  end
-
   can :manage_my_module_users do |user, my_module|
     my_module.permission_granted?(user, MyModulePermissions::MANAGE)
   end
@@ -146,7 +130,7 @@ Canaid::Permissions.register_for(TaskComment) do
   %i(manage_my_module_comment)
     .each do |perm|
     can perm do |_, comment|
-      my_module = ::PermissionsUtil.get_comment_module(comment)
+      my_module = comment.my_module
       my_module.active? &&
         my_module.experiment.active? &&
         my_module.experiment.project.active?
@@ -154,8 +138,36 @@ Canaid::Permissions.register_for(TaskComment) do
   end
 
   can :manage_my_module_comment do |user, comment|
-    my_module = ::PermissionsUtil.get_comment_module(comment)
+    my_module = comment.my_module
     my_module.permission_granted?(user, MyModulePermissions::COMMENTS_MANAGE) ||
       ((comment.user == user) && my_module.permission_granted?(user, MyModulePermissions::COMMENTS_MANAGE_OWN))
+  end
+end
+
+Canaid::Permissions.register_for(StepComment) do
+  # Module, its experiment and its project must be active for all the specified
+  # permissions
+  %i(delete_comment_in_my_module_steps
+     update_comment_in_my_module_steps)
+    .each do |perm|
+    can perm do |_, comment|
+      my_module = comment.step.my_module
+      my_module.active? &&
+        !my_module.archived_branch? &&
+        my_module.experiment.active? &&
+        my_module.experiment.project.active?
+    end
+  end
+
+  can :delete_comment_in_my_module_steps do |user, comment|
+    my_module = comment.step.my_module
+    my_module.permission_granted?(user, MyModulePermissions::STEPS_COMMENTS_DELETE) ||
+      ((comment.user == user) && my_module.permission_granted?(user, MyModulePermissions::STEPS_COMMENTS_DELETE_OWN))
+  end
+
+  can :update_comment_in_my_module_steps do |user, comment|
+    my_module = comment.step.my_module
+    my_module.permission_granted?(user, MyModulePermissions::STEPS_COMMENTS_UPDATE) ||
+      ((comment.user == user) && my_module.permission_granted?(user, MyModulePermissions::STEPS_COMMENTS_UPDATE_OWN))
   end
 end

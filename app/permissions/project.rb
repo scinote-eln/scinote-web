@@ -38,6 +38,14 @@ Canaid::Permissions.register_for(Project) do
       end
   end
 
+  can :read_project_users do |user, project|
+    project.permission_granted?(user, ProjectPermissions::USERS_READ)
+  end
+
+  can :read_project_activities do |user, project|
+    project.permission_granted?(user, ProjectPermissions::ACTIVITIES_READ)
+  end
+
   can :manage_project_users do |user, project|
     project.permission_granted?(user, ProjectPermissions::USERS_MANAGE)
   end
@@ -58,15 +66,17 @@ Canaid::Permissions.register_for(Project) do
     project.permission_granted?(user, ProjectPermissions::COMMENTS_CREATE)
   end
 
-  can :manage_project_comments do |user, project|
-    project.permission_granted?(user, ProjectPermissions::COMMENTS_MANAGE)
-  end
-
   can :manage_project_tags do |user, project|
     project.permission_granted?(user, ProjectPermissions::MANAGE)
   end
 
   can :manage_project_my_modules do |user, project|
     project.permission_granted?(user, ProjectPermissions::TASKS_MANAGE)
+  end
+end
+
+Canaid::Permissions.register_for(ProjectComment) do
+  can :manage_project_comment do |user, comment|
+    comment.project.permission_granted?(user, ProjectPermissions::COMMENTS_MANAGE)
   end
 end

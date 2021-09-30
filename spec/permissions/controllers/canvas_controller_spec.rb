@@ -53,7 +53,7 @@ describe CanvasController, type: :controller do
 
     it_behaves_like "a controller action with permissions checking", :post, :update do
       let(:testable) { my_modules.first }
-      let(:permissions) { [MyModulePermissions::ARCHIVE] }
+      let(:permissions) { [MyModulePermissions::MANAGE] }
       let(:action_params) { { id: experiment.id, remove: "#{my_modules.first.id},#{my_modules.second.id}" } }
     end
 

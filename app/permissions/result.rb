@@ -7,6 +7,7 @@ Canaid::Permissions.register_for(Result) do
 
   can :manage_result do |user, result|
     !result.archived? &&
+      !result.my_module.archived_branch? &&
       result.unlocked?(result) &&
       result.my_module.permission_granted?(user, MyModulePermissions::RESULTS_MANAGE)
   end
@@ -24,8 +25,7 @@ Canaid::Permissions.register_for(ResultComment) do
   %i(manage_result_comment)
     .each do |perm|
     can perm do |_, comment|
-      my_module = ::PermissionsUtil.get_comment_module(comment)
-      !my_module.archived_branch?
+      !comment.result.my_module.archived_branch?
     end
   end
 
@@ -33,7 +33,7 @@ Canaid::Permissions.register_for(ResultComment) do
   # result: update/delete comment
   # step: update/delete comment
   can :manage_result_comment do |user, comment|
-    my_module = ::PermissionsUtil.get_comment_module(comment)
+    my_module = comment.result.my_module
     (comment.user == user && my_module.permission_granted?(user, MyModulePermissions::RESULTS_COMMENTS_MANAGE_OWN)) ||
       my_module.permission_granted?(user, MyModulePermissions::RESULTS_COMMENTS_MANAGE)
   end

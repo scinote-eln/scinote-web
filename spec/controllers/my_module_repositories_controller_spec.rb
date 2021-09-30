@@ -5,7 +5,7 @@ require 'rails_helper'
 describe MyModuleRepositoriesController, type: :controller do
   login_user
   include_context 'reference_project_structure' , {
-    role: :normal_user_role
+    role: :normal_user
   }
   let!(:repository) { create :repository, created_by: user, team: team }
   let!(:repository_row) do
@@ -48,7 +48,7 @@ describe MyModuleRepositoriesController, type: :controller do
                             rows_to_assign: [repository_row.id],
                             downstream: true }
       3.times do |_i|
-        child_module = create :my_module, experiment: experiment
+        child_module = create :my_module, experiment: experiment, created_by: experiment.created_by
         Connection.create(output_id: parent_my_module.id, input_id: child_module.id)
       end
       expect { put :update, params: params_downstream, format: :json }
@@ -97,7 +97,7 @@ describe MyModuleRepositoriesController, type: :controller do
                             rows_to_unassign: [repository_row.id],
                             downstream: true }
       3.times do |_i|
-        child_module = create :my_module, experiment: experiment
+        child_module = create :my_module, experiment: experiment, created_by: experiment.created_by
         Connection.create(output_id: parent_my_module.id, input_id: child_module.id)
         create :mm_repository_row, repository_row: repository_row,
                                    my_module: child_module,
@@ -155,7 +155,7 @@ describe MyModuleRepositoriesController, type: :controller do
                             rows_to_unassign: [repository_row_2.id],
                             downstream: true }
       3.times do |_i|
-        child_module = create :my_module, experiment: experiment
+        child_module = create :my_module, experiment: experiment, created_by: experiment.created_by
         Connection.create(output_id: parent_my_module.id, input_id: child_module.id)
         create :mm_repository_row, repository_row: repository_row_2,
                                    my_module: child_module,

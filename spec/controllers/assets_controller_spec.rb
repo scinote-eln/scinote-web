@@ -6,7 +6,7 @@ describe AssetsController, type: :controller do
   login_user
 
   include_context 'reference_project_structure', {
-    role: :owner_role,
+    role: :owner,
     result_asset: true,
     step: true,
     step_asset: true,

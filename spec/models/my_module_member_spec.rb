@@ -3,8 +3,9 @@
 require 'rails_helper'
 
 describe MyModuleMember, type: :model do
-  let(:owner_role) { create :owner_role }
+  # let(:owner_role) { create :owner_role }
   let!(:user) { create :user }
+  let!(:owner_role) { UserRole.find_by(name: I18n.t('user_roles.predefined.owner')) }
   let!(:project) { create :project }
   let!(:user_project) { create :user_project, user: user, project: project }
   let!(:user_assignment) do
@@ -15,7 +16,7 @@ describe MyModuleMember, type: :model do
            assigned_by: user
   end
   let!(:experiment) { create :experiment, project: project }
-  let!(:my_module) { create :my_module, experiment: experiment }
+  let!(:my_module) { create :my_module, experiment: experiment, created_by: user }
   let(:normal_user_role) { create :normal_user_role }
 
   describe '#update' do

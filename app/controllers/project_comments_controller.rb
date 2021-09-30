@@ -41,7 +41,7 @@ class ProjectCommentsController < ApplicationController
   def load_vars
     @last_comment_id = params[:from].to_i
     @per_page = Constants::COMMENTS_SEARCH_LIMIT
-    @project = Project.find_by_id(params[:project_id])
+    @project = current_team.projects.find_by(id: params[:project_id])
 
     render_404 unless @project
   end
@@ -55,9 +55,9 @@ class ProjectCommentsController < ApplicationController
   end
 
   def check_manage_permissions
-    @comment = ProjectComment.find_by_id(params[:id])
+    @comment = @project.project_comments.find_by(id: params[:id])
     render_403 unless @comment.present? &&
-                      can_manage_project_comments?(@project)
+                      can_manage_project_comment?(@comment)
   end
 
   def comment_params

@@ -3,8 +3,9 @@
 require 'rails_helper'
 
 describe ExperimentMember, type: :model do
-  let(:owner_role) { create :owner_role }
+  # let(:owner_role) { create :owner_role }
   let!(:user) { create :user }
+  let!(:owner_role) { UserRole.find_by(name: I18n.t('user_roles.predefined.owner')) }
   let!(:project) { create :project }
   let!(:user_project) { create :user_project, user: user, project: project }
   let!(:user_assignment) do

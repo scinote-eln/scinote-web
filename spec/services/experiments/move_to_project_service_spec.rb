@@ -4,17 +4,16 @@ require 'rails_helper'
 
 describe Experiments::MoveToProjectService do
   let(:team) { create :team, :with_members }
+  let(:user) { create :user }
   let(:project) do
-    create :project, team: team, user_projects: []
+    create :project, team: team, created_by: user
   end
   let(:new_project) do
-    create :project, team: team, user_projects: [user_project2]
+    create :project, team: team, created_by: user
   end
   let(:experiment) do
     create :experiment, :with_tasks, name: 'MyExp', project: project
   end
-  let(:user) { create :user }
-  let(:user_project2) { create :user_project, :normal_user, user: user }
   let(:service_call) do
     Experiments::MoveToProjectService.call(experiment_id: experiment.id,
                                     project_id: new_project.id,
@@ -72,7 +71,7 @@ describe Experiments::MoveToProjectService do
     end
 
     it 'returns an error on validate' do
-      allow_any_instance_of(Experiment).to(receive(:moveable_projects).and_return([]))
+      allow_any_instance_of(Experiment).to(receive(:movable_projects).and_return([]))
 
       expect(service_call.succeed?).to be_falsey
     end

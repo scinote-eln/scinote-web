@@ -7,7 +7,7 @@ describe ReportsController, type: :controller do
 
   include_context 'reference_project_structure'
 
-  let(:my_module2) { create :my_module, experiment: experiment }
+  let(:my_module2) { create :my_module, experiment: experiment, created_by: experiment.created_by }
   let(:report) do
     create :report, user: user, project: project, team: team,
                     name: 'test repot A1', description: 'test description A1'
