@@ -58,13 +58,13 @@ class StepCommentsController < ApplicationController
   end
 
   def check_destroy_permissions
-    @comment = StepComment.find_by(id: params[:id])
+    @comment = @step.step_comments.find_by(id: params[:id])
     render_403 unless @comment.present? &&
                       can_delete_comment_in_my_module_steps?(@comment)
   end
 
   def check_update_permissions
-    @comment = StepComment.find_by(id: params[:id])
+    @comment = @step.step_comments.find_by(id: params[:id])
     render_403 unless @comment.present? &&
                       can_update_comment_in_my_module_steps?(@comment)
   end

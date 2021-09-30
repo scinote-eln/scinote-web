@@ -80,7 +80,7 @@ module CommentHelper
     when 'ResultComment'
       can_manage_result_comment?(comment.becomes(Comment))
     when 'ProjectComment'
-      can_manage_project_comments?(comment.project)
+      can_manage_project_comment?(comment)
     else
       false
     end

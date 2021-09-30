@@ -57,7 +57,7 @@ class ResultCommentsController < ApplicationController
   end
 
   def check_manage_permissions
-    @comment = ResultComment.find_by_id(params[:id])
+    @comment = @result.result_comments.find_by(id: params[:id])
     render_403 unless @comment.present? &&
                       can_manage_result_comment?(@comment)
   end
