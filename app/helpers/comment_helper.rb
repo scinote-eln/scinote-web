@@ -76,7 +76,7 @@ module CommentHelper
     when 'TaskComment'
       can_manage_my_module_comment?(comment)
     when 'StepComment'
-      can_manage_my_module_step_comment?(comment)
+      can_update_comment_in_my_module_step?(comment)
     when 'ResultComment'
       can_manage_result_comment?(comment.becomes(Comment))
     when 'ProjectComment'
