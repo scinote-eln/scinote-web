@@ -79,6 +79,8 @@ module ReportActions
                              .active
                              .where(id: my_module_ids)
       my_modules.sort_by { |m| my_module_ids.index m.id }.each do |my_module|
+        next unless can_read_my_module(@user, my_module)
+
         my_module_element = save_element!({ 'my_module_id' => my_module.id }, :my_module, experiment_element)
 
         @repositories.each do |repository|
