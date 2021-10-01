@@ -17,8 +17,6 @@ class MigrateToNewUserRoles < ActiveRecord::Migration[6.1]
         create_user_assignments(UserProject.normal_user, normal_user_role)
         create_user_assignments(UserProject.technician, technician_role)
         create_user_assignments(UserProject.viewer, viewer_role)
-
-        UserProject.delete_all
       end
       dir.down do
         project_assignments = UserAssignment.joins(:user_role).where(assignable_type: 'Project')
