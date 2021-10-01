@@ -311,7 +311,7 @@ class ExperimentsController < ApplicationController
   end
 
   def check_canvas_read_permissions
-    render 403 unless can_read_experiment_canvas?(@experiment)
+    render_403 unless can_read_experiment_canvas?(@experiment)
   end
 
   def check_create_permissions
