@@ -16,6 +16,12 @@ module Assignable
         .where('? = ANY(user_roles.permissions)', "::#{self.class.to_s.split('::').first}Permissions".constantize::READ)
     }
 
+    scope :managable_by_user, lambda { |user|
+      joins(user_assignments: :user_role)
+        .where(user_assignments: { user: user })
+        .where('? = ANY(user_roles.permissions)', "::#{self.class.to_s.split('::').first}Permissions".constantize::MANAGE)
+    }
+
     after_create_commit do
       UserAssignment.create!(
         user: created_by,

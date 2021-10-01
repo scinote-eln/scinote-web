@@ -20,9 +20,9 @@ module Dashboard
     end
 
     def project_filter
-      projects = current_team.projects.search(current_user, false, params[:query], 1, current_team)
-                             .where(user_projects: { user_id: current_user.id, role: %i(owner normal_user) })
-                             .select(:id, :name)
+      projects = Project.managable_by_user(current_user)
+                        .search(current_user, false, params[:query], 1, current_team)
+                        .select(:id, :name)
       projects = projects.map { |i| { value: i.id, label: escape_input(i.name) } }
       if (projects.map { |i| i[:label] }.exclude? params[:query]) && params[:query].present?
         projects = [{ value: 0, label: params[:query] }] + projects

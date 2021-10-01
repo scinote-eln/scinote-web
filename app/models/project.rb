@@ -4,6 +4,7 @@ class Project < ApplicationRecord
   include SearchableByNameModel
   include ViewableModel
   include PermissionCheckableModel
+  include Assignable
 
   enum visibility: { hidden: 0, visible: 1 }
 
@@ -42,7 +43,6 @@ class Project < ApplicationRecord
   belongs_to :team, inverse_of: :projects, touch: true
   belongs_to :project_folder, inverse_of: :projects, optional: true, touch: true
   has_many :user_projects, inverse_of: :project
-  has_many :user_assignments, as: :assignable, dependent: :destroy
   has_many :users, through: :user_assignments
   has_many :experiments, inverse_of: :project
   has_many :active_experiments, -> { where(archived: false) },
@@ -95,7 +95,7 @@ class Project < ApplicationRecord
           user.id
         )
       end
-      new_query = new_query.where_attributes_like(:name, query, options)
+      new_query = new_query.where_attributes_like('projects.name', query, options)
 
       if include_archived
         return new_query
