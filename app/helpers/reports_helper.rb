@@ -2,8 +2,16 @@
 
 module ReportsHelper
   include StringUtility
+  include Canaid::Helpers::PermissionsHelper
 
   def render_report_element(element, provided_locals = nil)
+    case element.type_of
+    when 'experiment'
+      return unless can_read_experiment?(element.report.user, element.experiment)
+    when 'my_module'
+      return unless can_read_my_module?(element.report.user, element.my_module)
+    end
+
     # Determine partial
     view = "reports/elements/#{element.type_of}_element.html.erb"
 
