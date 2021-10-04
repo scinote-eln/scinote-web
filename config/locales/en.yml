@@ -2498,9 +2498,9 @@ en:
         new_resource_assignments: "Grant new access to %{resource}"
       new_assignments_form:
         title: "Select members"
-        submit: "Grand access"
-        submit_singular: "Grand access to 1 user"
-        submit_plural: "Grand access to {num} users"
+        submit: "Grant access"
+        submit_singular: "Grant access to 1 user"
+        submit_plural: "Grant access to {num} users"
         find_people_html: "&#128269; Find people"
     projects:
       modals:
