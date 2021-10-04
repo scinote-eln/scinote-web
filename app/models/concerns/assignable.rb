@@ -26,10 +26,14 @@ module Assignable
       UserAssignment.create!(
         user: created_by,
         assignable: self,
+        assigned: :manually, # we set this to manually since was the user action to create the item
         user_role: UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))
       )
 
-      UserAssignments::GenerateUserAssignmentsJob.perform_later(self, created_by)
+      # project is top level, so we do not need to create any more assignments for it
+      unless self.class.instance_of?(Project)
+        UserAssignments::GenerateUserAssignmentsJob.perform_later(self, created_by)
+      end
     end
   end
 end

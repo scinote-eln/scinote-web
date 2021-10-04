@@ -69,7 +69,6 @@ class Project < ApplicationRecord
 
   scope :templates, -> { where(template: true) }
 
-  after_create :assign_project_ownership
   after_create :auto_assign_project_members, if: :visible?
   before_update :sync_project_assignments, if: :visibility_changed?
 
@@ -364,15 +363,6 @@ class Project < ApplicationRecord
 
   def remove_project_folder
     self.project_folder = nil
-  end
-
-  def assign_project_ownership
-    UserAssignment.create!(
-      user: created_by,
-      assignable: self,
-      assigned: :manually, # we set this to manually since was the user action to create the project
-      user_role: UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))
-    )
   end
 
   def auto_assign_project_members
