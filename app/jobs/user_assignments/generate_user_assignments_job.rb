@@ -12,11 +12,29 @@ module UserAssignments
           assign_users_to_experiment(object)
         when MyModule
           assign_users_to_my_module(object)
+        when Project
+          assign_team_admins_to_project(object)
         end
       end
     end
 
     private
+
+    def assign_team_admins_to_project(project)
+      # TEMPORARY UNTIL WE ADD TEAM USER ASSIGNMENTS
+      # Assigns all team admins as owners of project
+
+      User.joins(:user_teams).where(
+        user_teams: { role: UserTeam.roles[:admin], team: project.team }
+      ).find_each do |user|
+        UserAssignment.find_or_create_by!(
+          user: user,
+          assignable: project,
+          assigned: :manually, # we set this to manually since was the user action to create the item
+          user_role: UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))
+        )
+      end
+    end
 
     def assign_users_to_experiment(experiment)
       project = experiment.project
