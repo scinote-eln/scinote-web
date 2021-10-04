@@ -135,6 +135,7 @@ class MyModule < ApplicationRecord
   def self.viewable_by_user(user, teams)
     left_outer_joins(user_assignments: :user_role)
       .where(experiment: Experiment.viewable_by_user(user, teams))
+      .where(user_assignments: { user: user })
       .where('user_roles.permissions @> ARRAY[?]::varchar[]', %w[task_read])
   end
 
