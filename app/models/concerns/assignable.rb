@@ -30,10 +30,7 @@ module Assignable
         user_role: UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))
       )
 
-      # project is top level, so we do not need to create any more assignments for it
-      unless self.class.instance_of?(Project)
-        UserAssignments::GenerateUserAssignmentsJob.perform_later(self, created_by)
-      end
+      UserAssignments::GenerateUserAssignmentsJob.perform_later(self, created_by)
     end
   end
 end
