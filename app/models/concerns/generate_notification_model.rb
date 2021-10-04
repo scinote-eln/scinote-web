@@ -35,7 +35,7 @@ module GenerateNotificationModel
     when Project
       users = subject.users
     when Experiment
-      users = subject.project.users
+      users = subject.users
     when MyModule
       users = subject.users
       # Also send to the user that was unassigned,
