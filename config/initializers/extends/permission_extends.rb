@@ -12,6 +12,7 @@ module PermissionExtends
       COMMENTS_READ
       COMMENTS_CREATE
       COMMENTS_MANAGE
+      COMMENTS_MANAGE_OWN
       TAGS_MANAGE
       EXPERIMENTS_CREATE
     ).each { |permission| const_set(permission, "project_#{permission.underscore}") }
@@ -96,6 +97,7 @@ module PermissionExtends
       ProjectPermissions::USERS_READ,
       ProjectPermissions::COMMENTS_READ,
       ProjectPermissions::COMMENTS_CREATE,
+      ProjectPermissions::COMMENTS_MANAGE_OWN,
       ProjectPermissions::EXPERIMENTS_CREATE,
       ExperimentPermissions::READ,
       ExperimentPermissions::READ_CANVAS,
@@ -131,6 +133,7 @@ module PermissionExtends
       ProjectPermissions::USERS_READ,
       ProjectPermissions::COMMENTS_READ,
       ProjectPermissions::COMMENTS_CREATE,
+      ProjectPermissions::COMMENTS_MANAGE_OWN,
       ExperimentPermissions::READ,
       ExperimentPermissions::READ_CANVAS,
       ExperimentPermissions::READ_ARCHIVED,

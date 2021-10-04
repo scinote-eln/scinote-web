@@ -76,7 +76,17 @@ Canaid::Permissions.register_for(Project) do
 end
 
 Canaid::Permissions.register_for(ProjectComment) do
+  %i(manage_project_comment)
+    .each do |perm|
+    can perm do |_, comment|
+      project = comment.project
+      project.active?
+    end
+  end
+
   can :manage_project_comment do |user, comment|
-    comment.project.permission_granted?(user, ProjectPermissions::COMMENTS_MANAGE)
+    project = comment.project
+    project.permission_granted?(user, ProjectPermissions::COMMENTS_MANAGE) ||
+      ((comment.user == user) && project.permission_granted?(user, ProjectPermissions::COMMENTS_MANAGE_OWN))
   end
 end

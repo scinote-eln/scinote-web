@@ -35,13 +35,13 @@ describe ProjectCommentsController, type: :controller do
 
     it_behaves_like "a controller action with permissions checking", :put, :update do
       let(:testable) { project }
-      let(:permissions) { [ProjectPermissions::COMMENTS_MANAGE] }
+      let(:permissions) { [ProjectPermissions::COMMENTS_MANAGE, ProjectPermissions::COMMENTS_MANAGE_OWN] }
       let(:action_params) { { project_id: project.id, id: project_comment.id, comment: { message: 'Test1' } } }
     end
 
     it_behaves_like "a controller action with permissions checking", :post, :destroy do
       let(:testable) { project }
-      let(:permissions) { [ProjectPermissions::COMMENTS_MANAGE] }
+      let(:permissions) { [ProjectPermissions::COMMENTS_MANAGE, ProjectPermissions::COMMENTS_MANAGE_OWN] }
       let(:action_params) { { project_id: project.id, id: project_comment.id } }
     end
   end
