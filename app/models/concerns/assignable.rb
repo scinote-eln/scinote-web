@@ -8,7 +8,7 @@ module Assignable
 
     has_many :user_assignments, as: :assignable, dependent: :destroy
 
-    default_scope { includes(user_assignments: :user_role) }
+    default_scope { includes(user_assignments: :user_role).distinct }
 
     scope :readable_by_user, lambda { |user|
       joins(user_assignments: :user_role)
