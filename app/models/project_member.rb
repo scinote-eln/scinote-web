@@ -11,8 +11,7 @@ class ProjectMember
   validates :user, :project, presence: true, if: -> { assign }
   validates :user_role_id, presence: true, if: -> { assign }
   validate :validate_role_presence, if: -> { assign }
-  validate :validate_user_project_relation_presence, if: -> { assign }
-  validate :validate_user_project_assignment_presence, if: -> { assign }
+  validate :validate_user_assignment_presence, if: -> { assign }
 
   def initialize(user, project, current_user = nil)
     @user = user
@@ -25,7 +24,6 @@ class ProjectMember
     return unless assign
 
     ActiveRecord::Base.transaction do
-      @user_project = UserProject.create!(project: @project, user: @user)
       user_role = set_user_role
 
       @user_assignment = UserAssignment.create!(
@@ -67,12 +65,12 @@ class ProjectMember
 
   def destroy
     user_assignment = UserAssignment.find_by!(assignable: @project, user: @user)
-    user_project = UserProject.find_by!(project: @project, user: @user)
+    user_project = UserProject.find_by(project: @project, user: @user)
     return false if last_project_owner?
 
     ActiveRecord::Base.transaction do
       user_assignment.destroy!
-      user_project.destroy!
+      user_project&.destroy!
       log_activity(:unassign_user_from_project)
 
       UserAssignments::PropagateAssignmentJob.perform_later(
@@ -115,14 +113,8 @@ class ProjectMember
     errors.add(:user_role_id, :not_found) if UserRole.find_by(id: user_role_id).nil?
   end
 
-  def validate_user_project_relation_presence
-    return if UserProject.find_by(project: @project, user: @user).nil?
-
-    errors.add(:user)
-  end
-
-  def validate_user_project_assignment_presence
-    return if  UserAssignment.find_by(assignable: @project, user: @user).nil?
+  def validate_user_assignment_presence
+    return if UserAssignment.find_by(assignable: @project, user: @user).nil?
 
     errors.add(:user_role_id, :already_present)
   end
