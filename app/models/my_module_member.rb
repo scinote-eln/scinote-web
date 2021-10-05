@@ -22,7 +22,7 @@ class MyModuleMember
   end
 
   def update(params)
-    prepare_data(params)
+    user_assignment(params)
 
     ActiveRecord::Base.transaction do
       user_assignment.update!(user_role: user_role, assigned: :manually)
@@ -32,7 +32,7 @@ class MyModuleMember
 
   private
 
-  def prepare_data(params)
+  def user_assignment(params)
     self.user_role_id = params[:user_role_id]
     self.user_id = params[:user_id]
 
