@@ -4,7 +4,7 @@ class UserAssignment < ApplicationRecord
   belongs_to :assignable, polymorphic: true
   belongs_to :user_role
   belongs_to :user
-  belongs_to :assigned_by, foreign_key: 'assigned_by_id', class_name: 'User', optional: true
+  belongs_to :assigned_by, class_name: 'User', optional: true
 
   enum assigned: { automatically: 0, manually: 1 }, _suffix: true
 end

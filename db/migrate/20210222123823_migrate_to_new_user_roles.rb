@@ -17,6 +17,7 @@ class MigrateToNewUserRoles < ActiveRecord::Migration[6.1]
         create_user_assignments(UserProject.normal_user, normal_user_role)
         create_user_assignments(UserProject.technician, technician_role)
         create_user_assignments(UserProject.viewer, viewer_role)
+        create_public_project_assignments
       end
       dir.down do
         project_assignments = UserAssignment.joins(:user_role).where(assignable_type: 'Project')
@@ -45,33 +46,63 @@ class MigrateToNewUserRoles < ActiveRecord::Migration[6.1]
 
   private
 
-  def new_user_assignment(user, assignable, user_role)
+  def new_user_assignment(user, assignable, user_role, assigned = :manually, existing_assignments = [])
+    if existing_assignments.find { |ea| ea.user == user && ea.assignable == assignable && ea.user_role == user_role }
+      return
+    end
+
     UserAssignment.new(
       user: user,
       assignable: assignable,
-      assigned: :automatically,
+      assigned: assigned,
       user_role: user_role
     )
   end
 
-  def create_team_admin_assignments
+  def create_public_project_assignments
     user_assignments = []
-    owner_role = UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))
-    admin_user_teams =
-      UserTeam.includes(:user, :team).where({ role: UserTeam.roles[:admin] })
+    viewer_role = UserRole.find_by(name: I18n.t('user_roles.predefined.viewer'))
+    public_projects = Project.where(visibility: 'visible')
+    public_experiments = Experiment.where(project_id: public_projects.select(:id))
+    public_my_modules = MyModule.where(experiment_id: public_experiments.select(:id))
 
-    admin_user_teams.find_each do |user_team|
-      user_team.team.projects.find_each do |project|
-        user_assignments << new_user_assignment(user_team.user, project, owner_role)
+    existing_viewer_user_assignments = UserAssignment.where(
+      assignable_id: public_projects.select(:id),
+      assignable_type: 'Project',
+      user_role: viewer_role
+    ).or(
+      UserAssignment.where(
+        assignable_id: public_experiments.select(:id),
+        assignable_type: 'Experiment',
+        user_role: viewer_role
+      )
+    ).or(
+      UserAssignment.where(
+        assignable_id: public_my_modules.select(:id),
+        assignable_type: 'MyModule',
+        user_role: viewer_role
+      )
+    ).to_a
+
+    public_projects.find_each do |project|
+      project.team.users.find_each do |user|
+        user_assignments << new_user_assignment(
+          user, project, viewer_role, :automatically, existing_viewer_user_assignments
+        )
         project.experiments.find_each do |experiment|
-          user_assignments << new_user_assignment(user_team.user, experiment, owner_role)
+          user_assignments << new_user_assignment(
+            user, experiment, viewer_role, :automatically, existing_viewer_user_assignments
+          )
           experiment.my_modules.find_each do |my_module|
-            user_assignments << new_user_assignment(user_team.user, my_module, owner_role)
+            user_assignments << new_user_assignment(
+              user, my_module, viewer_role, :automatically, existing_viewer_user_assignments
+            )
           end
         end
       end
     end
-    UserAssignment.import(user_assignments)
+
+    UserAssignment.import(user_assignments.compact)
   end
 
   def create_user_assignments(user_projects, user_role)
@@ -86,7 +117,7 @@ class MigrateToNewUserRoles < ActiveRecord::Migration[6.1]
           end
         end
       end
-      UserAssignment.import(user_assignments)
+      UserAssignment.import(user_assignments.compact)
     end
   end
 
