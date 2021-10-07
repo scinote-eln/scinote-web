@@ -20,24 +20,6 @@ class MigrateToNewUserRoles < ActiveRecord::Migration[6.1]
         create_public_project_assignments
       end
       dir.down do
-        project_assignments = UserAssignment.joins(:user_role).where(assignable_type: 'Project')
-        create_user_project(
-          project_assignments.where(user_role: { name: I18n.t('user_roles.predefined.owner'), predefined: true }),
-          'owner'
-        )
-        create_user_project(
-          project_assignments.where(user_role: { name: I18n.t('user_roles.predefined.normal_user'), predefined: true }),
-          'normal_user'
-        )
-        create_user_project(
-          project_assignments.where(user_role: { name: I18n.t('user_roles.predefined.technician'), predefined: true }),
-          'technician'
-        )
-        create_user_project(
-          project_assignments.where(user_role: { name: I18n.t('user_roles.predefined.viewer'), predefined: true }),
-          'viewer'
-        )
-
         UserAssignment.joins(:user_role).where(user_role: { predefined: true }).delete_all
         UserRole.where(predefined: true).delete_all
       end
@@ -46,10 +28,8 @@ class MigrateToNewUserRoles < ActiveRecord::Migration[6.1]
 
   private
 
-  def new_user_assignment(user, assignable, user_role, assigned = :manually, existing_assignments = [])
-    if existing_assignments.find { |ea| ea.user == user && ea.assignable == assignable && ea.user_role == user_role }
-      return
-    end
+  def new_user_assignment(user, assignable, user_role, assigned = :manually, existing_assignments = {})
+    return if existing_assignments[[user.id, assignable.id, assignable.class.name]]
 
     UserAssignment.new(
       user: user,
@@ -66,36 +46,33 @@ class MigrateToNewUserRoles < ActiveRecord::Migration[6.1]
     public_experiments = Experiment.where(project_id: public_projects.select(:id))
     public_my_modules = MyModule.where(experiment_id: public_experiments.select(:id))
 
-    existing_viewer_user_assignments = UserAssignment.where(
+    existing_user_assignments = UserAssignment.where(
       assignable_id: public_projects.select(:id),
-      assignable_type: 'Project',
-      user_role: viewer_role
+      assignable_type: 'Project'
     ).or(
       UserAssignment.where(
         assignable_id: public_experiments.select(:id),
-        assignable_type: 'Experiment',
-        user_role: viewer_role
+        assignable_type: 'Experiment'
       )
     ).or(
       UserAssignment.where(
         assignable_id: public_my_modules.select(:id),
-        assignable_type: 'MyModule',
-        user_role: viewer_role
+        assignable_type: 'MyModule'
       )
-    ).to_a
+    ).map { |ua| [[ua.user_id, ua.assignable_id, ua.assignable_type], true] }.to_h
 
     public_projects.find_each do |project|
       project.team.users.find_each do |user|
         user_assignments << new_user_assignment(
-          user, project, viewer_role, :automatically, existing_viewer_user_assignments
+          user, project, viewer_role, :automatically, existing_user_assignments
         )
         project.experiments.find_each do |experiment|
           user_assignments << new_user_assignment(
-            user, experiment, viewer_role, :automatically, existing_viewer_user_assignments
+            user, experiment, viewer_role, :automatically, existing_user_assignments
           )
           experiment.my_modules.find_each do |my_module|
             user_assignments << new_user_assignment(
-              user, my_module, viewer_role, :automatically, existing_viewer_user_assignments
+              user, my_module, viewer_role, :automatically, existing_user_assignments
             )
           end
         end
@@ -118,16 +95,6 @@ class MigrateToNewUserRoles < ActiveRecord::Migration[6.1]
         end
       end
       UserAssignment.import(user_assignments.compact)
-    end
-  end
-
-  def create_user_project(user_roles, role)
-    user_roles.includes(:user, :assignable).find_in_batches(batch_size: 100) do |user_role_batch|
-      user_projects = []
-      user_role_batch.each do |user_role|
-        user_projects << UserProject.new(user: user_role.user, project: user_role.assignable, role: role)
-      end
-      UserProject.import(user_projects)
     end
   end
 end
