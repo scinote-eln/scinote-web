@@ -282,7 +282,7 @@ class WopiController < ActionController::Base
     if @assoc.class == Step
       if @protocol.in_module?
         @can_read = can_read_protocol_in_module?(@protocol)
-        @can_write = can_manage_protocol_in_module?(@protocol)
+        @can_write = can_manage_step?(@assoc)
         @close_url = protocols_my_module_url(@protocol.my_module, only_path: false, host: ENV['WOPI_USER_HOST'])
 
         project = @protocol.my_module.experiment.project
@@ -291,7 +291,7 @@ class WopiController < ActionController::Base
         @breadcrumb_folder_name = @protocol.my_module.name
       else
         @can_read = can_read_protocol_in_repository?(@protocol)
-        @can_write = can_manage_protocol_in_repository?(@protocol)
+        @can_write = can_manage_step?(@assoc)
         @close_url = protocols_url(only_path: false, host: ENV['WOPI_USER_HOST'])
 
         @breadcrump_brand_name = 'Projects'
