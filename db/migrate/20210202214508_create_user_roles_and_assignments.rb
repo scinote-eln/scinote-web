@@ -17,6 +17,7 @@ class CreateUserRolesAndAssignments < ActiveRecord::Migration[6.1]
       t.references :user, foreign_key: true, null: false
       t.references :user_role, foreign_key: true, null: false
       t.references :assigned_by, foreign_key: { to_table: :users }, null: true
+      t.integer :assigned, null: false, default: 0
 
       t.timestamps
     end
