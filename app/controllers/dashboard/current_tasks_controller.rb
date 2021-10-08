@@ -15,8 +15,10 @@ module Dashboard
               elsif @project
                 MyModule.active.where(projects: { id: @project.id })
               else
-                MyModule.active.viewable_by_user(current_user, current_team)
+                MyModule.active
               end
+
+      tasks = tasks.viewable_by_user(current_user, current_team)
 
       tasks = tasks.joins(experiment: :project)
                    .where(experiments: { archived: false })

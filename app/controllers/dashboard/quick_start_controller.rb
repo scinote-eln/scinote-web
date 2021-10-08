@@ -35,6 +35,7 @@ module Dashboard
         experiments = [{ value: 0, label: params[:query] }]
       elsif @project
         experiments = @project.experiments
+                              .managable_by_user(current_user)
                               .search(current_user, false, params[:query], 1, current_team)
                               .select(:id, :name)
         experiments = experiments.map { |i| { value: i.id, label: escape_input(i.name) } }
