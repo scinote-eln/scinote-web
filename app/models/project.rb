@@ -196,16 +196,20 @@ class Project < ApplicationRecord
   end
 
   def unassigned_users
-    User
-      .joins('INNER JOIN user_teams ON users.id = user_teams.user_id')
-      .where('user_teams.team_id = ?', team)
-      .where.not(confirmed_at: nil)
-      .where('users.id NOT IN (?)',
-             UserProject.where(project: self).select(:user_id).distinct)
+    User.joins(:user_teams)
+        .joins(
+          "LEFT OUTER JOIN user_assignments ON user_assignments.user_id = users.id "\
+          "AND user_assignments.assignable_id = #{id} "\
+          "AND user_assignments.assignable_type = 'Project'"
+        )
+        .where(user_teams: { team_id: team_id })
+        .where(user_assignments: { id: nil })
+        .where.not(confirmed_at: nil)
+        .distinct
   end
 
   def user_role(user)
-    user_assignments.find_by_user_id(user)&.user_role.name
+    user_assignments.includes(:user_role).references(:user_role).find_by(user: user)&.user_role&.name
   end
 
   def sorted_experiments(user, sort_by = :new, archived = false)

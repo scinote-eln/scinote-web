@@ -33,7 +33,7 @@ class UserMyModulesController < ApplicationController
 
   def index_edit
     @user_my_modules = @my_module.user_my_modules
-    @unassigned_users = @my_module.unassigned_users
+    @undesignated_users = @my_module.undesignated_users.order(full_name: :asc)
     @new_um = UserMyModule.new(my_module: @my_module)
 
     respond_to do |format|

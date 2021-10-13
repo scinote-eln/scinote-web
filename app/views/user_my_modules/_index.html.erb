@@ -11,7 +11,7 @@
         <%= image_tag avatar_path(user, :icon_small) %>
       </span>
     <% end %>
-    <% if can_manage_my_module_users?(@my_module) && @my_module.unassigned_users.any? %>
+    <% if can_manage_my_module_users?(@my_module) && @my_module.undesignated_users.any? %>
       <span class="global-avatar-container assign-new-user">
         <i class="fas fa-plus"></i>
       </span>
