@@ -2,7 +2,6 @@
 
 class UserMyModulesController < ApplicationController
   include InputSanitizeHelper
-  MAX_SEARCH_RESULTS = 6
 
   before_action :load_vars
   before_action :check_view_permissions, except: %i(create destroy)
@@ -104,11 +103,10 @@ class UserMyModulesController < ApplicationController
   end
 
   def search
-    assigned_users = @my_module.user_my_modules.pluck(:user_id)
-    all_users = @my_module.experiment.project.users
-    users = all_users.where.not(id: assigned_users)
-                     .search(false, params[:query])
-                     .limit(MAX_SEARCH_RESULTS)
+    users = @my_module.experiment.project.users
+                      .where.not(id: @my_module.designated_users.select(:id))
+                      .search(false, params[:query])
+                      .limit(Constants::SEARCH_LIMIT)
 
     users = users.map do |user|
       {
@@ -127,6 +125,8 @@ class UserMyModulesController < ApplicationController
     @my_module = MyModule.find(params[:my_module_id])
     @project = @my_module.experiment.project
     @um = UserMyModule.find(id: params[:id]) if action_name == 'destroy'
+  rescue ActiveRecord::RecordNotFound
+    render_404
   end
 
   def check_view_permissions
