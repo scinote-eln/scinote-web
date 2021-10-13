@@ -75,7 +75,8 @@ module Experiments
         return false
       end
 
-      if @exp.projects_with_role_above_user(@user).include?(@project)
+      if @exp.project.team.projects
+             .with_user_permission(@user, ProjectPermissions::EXPERIMENTS_CREATE).include?(@project)
         true
       else
         @errors[:user_without_permissions] =

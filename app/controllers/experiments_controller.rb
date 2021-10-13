@@ -185,7 +185,8 @@ class ExperimentsController < ApplicationController
 
   # GET: clone_modal_experiment_path(id)
   def clone_modal
-    @projects = @experiment.projects_with_role_above_user(current_user)
+    @projects = @experiment.project.team.projects
+                           .with_user_permission(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
     respond_to do |format|
       format.json do
         render json: {
