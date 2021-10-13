@@ -1179,6 +1179,7 @@ en:
         due_date: "Due date"
         no_due_date: "not set"
         status_transitioning_label: "Transitioning to:"
+        no_access: "You don’t have permission to view this task"
         modal_manage_users:
           modal_title: "Manage users for"
           no_users: "No users"
@@ -1188,6 +1189,8 @@ en:
           invite_users_link: "Invite users"
           invite_users_details: "to team %{team}."
           contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
+      medium_zoom:
+        no_access: "Can't view task"
       update:
         success_flash: "Experiment successfully updated."
     module_archive:
