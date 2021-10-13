@@ -191,15 +191,15 @@ class MyModule < ApplicationRecord
     report_elements.where(repository_id: ids).update(repository: repository)
   end
 
-  def unassigned_users
-    User.find_by_sql(
-      "SELECT DISTINCT users.id, users.full_name FROM users " +
-      "INNER JOIN user_projects ON users.id = user_projects.user_id " +
-      "INNER JOIN experiments ON experiments.project_id = user_projects.project_id " +
-      "WHERE experiments.id = #{experiment_id.to_s}" +
-      " AND users.id NOT IN " +
-      "(SELECT DISTINCT user_id FROM user_my_modules WHERE user_my_modules.my_module_id = #{id.to_s})"
-    )
+  def undesignated_users
+    User.joins(:user_assignments)
+        .joins(
+          "LEFT OUTER JOIN user_my_modules ON user_my_modules.user_id = users.id "\
+          "AND user_my_modules.my_module_id = #{id}"
+        )
+        .where(user_assignments: { assignable: self })
+        .where(user_my_modules: { id: nil })
+        .distinct
   end
 
   def unassigned_tags
