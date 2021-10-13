@@ -1,4 +1,9 @@
+# frozen_string_literal: true
+
 class UserMyModulesController < ApplicationController
+  include InputSanitizeHelper
+  MAX_SEARCH_RESULTS = 6
+
   before_action :load_vars
   before_action :check_view_permissions, except: %i(create destroy)
   before_action :check_manage_permissions, only: %i(create destroy)
@@ -103,7 +108,7 @@ class UserMyModulesController < ApplicationController
     all_users = @my_module.experiment.project.users
     users = all_users.where.not(id: assigned_users)
                      .search(false, params[:query])
-                     .limit(6)
+                     .limit(MAX_SEARCH_RESULTS)
 
     users = users.map do |user|
       {
@@ -118,23 +123,10 @@ class UserMyModulesController < ApplicationController
 
   private
 
-  include InputSanitizeHelper
-
   def load_vars
-    @my_module = MyModule.find_by_id(params[:my_module_id])
-
-    if @my_module
-      @project = @my_module.experiment.project
-    else
-      render_404
-    end
-
-    if action_name == "destroy"
-      @um = UserMyModule.find_by_id(params[:id])
-      unless @um
-        render_404
-      end
-    end
+    @my_module = MyModule.find(params[:my_module_id])
+    @project = @my_module.experiment.project
+    @um = UserMyModule.find(id: params[:id]) if action_name == 'destroy'
   end
 
   def check_view_permissions
