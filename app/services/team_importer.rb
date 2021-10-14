@@ -47,6 +47,7 @@ class TeamImporter
     Protocol.skip_callback(:save, :after, :update_linked_children)
     Activity.skip_callback(:create, :before, :add_user)
     Activity.skip_callback(:initialize, :after, :init_default_values)
+    @user_roles = UserRole.all
     @import_dir = import_dir
     team_json = JSON.parse(File.read("#{@import_dir}/team_export.json"))
     team = Team.new(team_json['team'].slice(*Team.column_names))
@@ -579,6 +580,8 @@ class TeamImporter
       project.save!
       @project_mappings[orig_project_id] = project.id
       @project_counter += 1
+      puts 'Creating project user_assignments...'
+      create_user_assignments(project_json['user_assignments'], project)
       puts 'Creating user_projects...'
       project_json['user_projects'].each do |user_project_json|
         user_project = UserProject.new(user_project_json)
@@ -634,6 +637,9 @@ class TeamImporter
     experiment.restored_by_id = find_user(experiment.restored_by_id)
     experiment.save!
     @experiment_mappings[orig_experiment_id] = experiment.id
+
+    create_user_assignments(experiment_json['user_assignments'], experiment)
+
     experiment_json['my_module_groups'].each do |my_module_group_json|
       my_module_group = MyModuleGroup.new(my_module_group_json)
       orig_module_group_id = my_module_group.id
@@ -676,6 +682,8 @@ class TeamImporter
       my_module.save!
       @my_module_mappings[orig_my_module_id] = my_module.id
       @my_module_counter += 1
+
+      create_user_assignments(my_module_json['user_assignments'], my_module)
 
       unless @is_template
         my_module_json['my_module_tags'].each do |my_module_tag_json|
@@ -996,6 +1004,19 @@ class TeamImporter
 
   def find_status_item_id(status_item_id)
     @repository_status_item_mappings[status_item_id]
+  end
+
+  def create_user_assignments(user_assignments_json, assignable)
+    return if user_assignments_json.blank?
+
+    user_assignments_json.each do |user_assignment_json|
+      user_assignment = UserAssignment.new
+      user_assignment.assignable = assignable
+      user_assignment.user_role = @user_roles.find { |role| role.name == user_assignment_json['role_name'] }
+      user_assignment.user_id = find_user(user_assignment_json['user_id'])
+      user_assignment.assigned_by_id = find_user(user_assignment_json['assigned_by_id'])
+      user_assignment.save!
+    end
   end
 
   def create_cell_value(repository_cell, value_json, team)
