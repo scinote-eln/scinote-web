@@ -103,7 +103,7 @@ class UserMyModulesController < ApplicationController
   end
 
   def search
-    users = @my_module.experiment.project.users
+    users = @my_module.users
                       .where.not(id: @my_module.designated_users.select(:id))
                       .search(false, params[:query])
                       .limit(Constants::SEARCH_LIMIT)
@@ -124,7 +124,7 @@ class UserMyModulesController < ApplicationController
   def load_vars
     @my_module = MyModule.find(params[:my_module_id])
     @project = @my_module.experiment.project
-    @um = UserMyModule.find(id: params[:id]) if action_name == 'destroy'
+    @um = UserMyModule.find(params[:id]) if action_name == 'destroy'
   rescue ActiveRecord::RecordNotFound
     render_404
   end
