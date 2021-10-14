@@ -4,7 +4,7 @@ class Experiment < ApplicationRecord
   ID_PREFIX = 'EX'
 
   include PrefixedIdModel
-  SEARCHABLE_ATTRIBUTES = [:name, :description, PREFIXED_ID_SQL].freeze
+  SEARCHABLE_ATTRIBUTES = ['experiments.name', 'experiments.description', PREFIXED_ID_SQL].freeze
 
   include ArchivableModel
   include SearchableModel

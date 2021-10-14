@@ -22,7 +22,7 @@ module Assignable
         .where('? = ANY(user_roles.permissions)', "::#{self.class.to_s.split('::').first}Permissions".constantize::MANAGE)
     }
 
-    after_create_commit do
+    after_create do
       UserAssignment.create!(
         user: created_by,
         assignable: self,
