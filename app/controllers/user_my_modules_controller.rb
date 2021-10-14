@@ -1,4 +1,8 @@
+# frozen_string_literal: true
+
 class UserMyModulesController < ApplicationController
+  include InputSanitizeHelper
+
   before_action :load_vars
   before_action :check_view_permissions, except: %i(create destroy)
   before_action :check_manage_permissions, only: %i(create destroy)
@@ -51,14 +55,20 @@ class UserMyModulesController < ApplicationController
   def create
     @um = UserMyModule.new(um_params.merge(my_module: @my_module))
     @um.assigned_by = current_user
+
     if @um.save
       log_activity(:assign_user_to_module)
 
       respond_to do |format|
         format.json do
-          redirect_to my_module_users_edit_path(format: :json),
-                      turbolinks: false,
-                      status: 303
+          render json: {
+            user: {
+              id: @um.user.id,
+              full_name: @um.user.full_name,
+              avatar_url: avatar_path(@um.user, :icon_small),
+              user_module_id: @um.id
+            }, status: :ok
+          }
         end
       end
     else
@@ -66,7 +76,7 @@ class UserMyModulesController < ApplicationController
         format.json do
           render json: {
             errors: @um.errors
-          }
+          }, status: :unprocessable_entity
         end
       end
     end
@@ -78,9 +88,7 @@ class UserMyModulesController < ApplicationController
 
       respond_to do |format|
         format.json do
-          redirect_to my_module_users_edit_path(format: :json),
-                      turbolinks: false,
-                      status: 303
+          render json: {}, status: :ok
         end
       end
     else
@@ -88,29 +96,37 @@ class UserMyModulesController < ApplicationController
         format.json do
           render json: {
             errors: @um.errors
-          }
+          }, status: :unprocessable_entity
         end
       end
     end
   end
 
+  def search
+    users = @my_module.users
+                      .where.not(id: @my_module.designated_users.select(:id))
+                      .search(false, params[:query])
+                      .limit(Constants::SEARCH_LIMIT)
+
+    users = users.map do |user|
+      {
+        value: user.id,
+        label: sanitize_input(user.full_name),
+        params: { avatar_url: avatar_path(user, :icon_small) }
+      }
+    end
+
+    render json: users
+  end
+
   private
 
   def load_vars
-    @my_module = MyModule.find_by_id(params[:my_module_id])
-
-    if @my_module
-      @project = @my_module.experiment.project
-    else
-      render_404
-    end
-
-    if action_name == "destroy"
-      @um = UserMyModule.find_by_id(params[:id])
-      unless @um
-        render_404
-      end
-    end
+    @my_module = MyModule.find(params[:my_module_id])
+    @project = @my_module.experiment.project
+    @um = UserMyModule.find(params[:id]) if action_name == 'destroy'
+  rescue ActiveRecord::RecordNotFound
+    render_404
   end
 
   def check_view_permissions
