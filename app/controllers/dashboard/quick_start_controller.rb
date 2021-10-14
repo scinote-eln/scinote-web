@@ -57,11 +57,14 @@ module Dashboard
     end
 
     def load_project
-      @project = current_team.projects.find_by(id: params.dig(:project, :id))
+      @project = current_team.projects.managable_by_user(current_user).find_by(id: params.dig(:project, :id))
     end
 
     def load_experiment
-      @experiment = @project.experiments.find_by(id: params.dig(:experiment, :id)) if @project
+      return unless @project
+
+      @experiment =
+        @project.experiments.managable_by_user(current_user).find_by(id: params.dig(:experiment, :id))
     end
 
     def check_task_create_permissions
