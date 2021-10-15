@@ -239,12 +239,10 @@ class Experiment < ApplicationRecord
   # team and not archived), all users assigned on experiment.project has
   # to be assigned on such project
   def movable_projects(current_user)
-    viewer_role = UserRole.find_by(name: I18n.t('user_roles.predefined.viewer'))
-    current_user.projects.where.not(id: project_id).where(archived: false, team: project.team).select do |p|
-      can_create_project_experiments?(current_user, p) &&
-        project.user_assignments.where.not(user_role: viewer_role).pluck(:user_id) ==
-          p.user_assignments.where.not(user_role: viewer_role).pluck(:user_id)
-    end
+    current_user.projects
+                .where.not(id: project_id)
+                .where(archived: false, team: project.team)
+                .with_user_permission(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
   end
 
   def permission_parent
