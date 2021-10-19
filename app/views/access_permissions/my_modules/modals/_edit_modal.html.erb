@@ -15,7 +15,7 @@
         <% users.each do |user| %>
           <% user_assignment = my_module.user_assignments.find_by(user: user) %>
 
-          <% cache [user_assignment, my_module, user] do %>
+          <% cache [user_assignment, my_module, user, current_user] do %>
             <%= render partial: 'access_permissions/partials/my_module_member_field',
                        locals: {
                          user: user,
