@@ -6,7 +6,7 @@ json.modal controller.render_to_string(
   locals: {
     experiment: @experiment,
     project: @project,
-    users: @project.users,
+    users: @experiment.users,
     project_path: project_path(@project)
   },
   layout: false
