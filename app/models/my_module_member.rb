@@ -22,7 +22,7 @@ class MyModuleMember
   end
 
   def update(params)
-    user_assignment(params)
+    initialize_user_assignment!(params)
 
     ActiveRecord::Base.transaction do
       user_assignment.update!(user_role: user_role, assigned: :manually)
@@ -32,13 +32,13 @@ class MyModuleMember
 
   private
 
-  def user_assignment(params)
+  def initialize_user_assignment!(params)
     self.user_role_id = params[:user_role_id]
     self.user_id = params[:user_id]
 
     @user = @project.users.find(user_id)
     @user_role = UserRole.find_by(id: user_role_id)
-    @user_assignment ||= UserAssignment.find_by(assignable: my_module, user: user)
+    @user_assignment = UserAssignment.find_by(assignable: my_module, user: user)
   end
 
   def log_change_activity
