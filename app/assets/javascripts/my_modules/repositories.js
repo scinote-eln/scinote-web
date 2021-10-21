@@ -500,9 +500,9 @@ var MyModuleRepositories = (function() {
     $(row).toggleClass('selected');
 
     if (Object.keys(SELECTED_ROWS).length) {
-      $('#assignRepositoryRecords, #updateRepositoryRecords').attr('disabled', false);
+      $('.assign-button').attr('disabled', false);
     } else {
-      $('#assignRepositoryRecords, #updateRepositoryRecords').attr('disabled', true);
+      $('.assign-button').attr('disabled', true);
     }
 
     refreshSelectAllCheckbox();
@@ -513,8 +513,10 @@ var MyModuleRepositories = (function() {
     toolbar.empty();
     if (parseInt(FULL_VIEW_MODAL.data('rows-count'), 10) === 0) {
       toolbar.append($('#my-module-repository-full-view-assign-button').html());
+      toolbar.append($('#my-module-repository-full-view-assign-downstream-button').html());
     } else {
       toolbar.append($('#my-module-repository-full-view-update-button').html());
+      toolbar.append($('#my-module-repository-full-view-update-downstream-button').html());
     }
   }
 
@@ -570,9 +572,15 @@ var MyModuleRepositories = (function() {
       e.stopPropagation();
     }).on('click', '#assignRepositoryRecords', function() {
       openAssignRecordsModal();
-    }).on('click', '#updateRepositoryRecords', function() {
-      openUpdateRecordsModal();
-    });
+    }).on('click', '#assignRepositoryRecordsDownstream', function() {
+      openAssignRecordsModal(true);
+    })
+      .on('click', '#updateRepositoryRecords', function() {
+        openUpdateRecordsModal();
+      })
+      .on('click', '#updateRepositoryRecordsDownstream', function() {
+        openUpdateRecordsModal(true);
+      });
 
     UPDATE_REPOSITORY_MODAL.on('click', '.downstream-action', function() {
       submitUpdateRepositoryRecord({ downstream: true });
@@ -580,12 +588,15 @@ var MyModuleRepositories = (function() {
       submitUpdateRepositoryRecord({ downstream: false });
     }).on('hidden.bs.modal', function() {
       FULL_VIEW_MODAL.focus();
+    }).on('click', '.next-step', function() {
+      UPDATE_REPOSITORY_MODAL.find('.next-step, .description-1, .rows-list-container').addClass('hidden');
+      UPDATE_REPOSITORY_MODAL.find('.description-2, .my-modules-to-assign, .hidden-my-modules, .downstream-action').removeClass('hidden');
     });
   }
 
-  function openUpdateRecordsModal() {
+  function openUpdateRecordsModal(downstream) {
     var updateUrl = FULL_VIEW_MODAL.data('update-url-modal');
-    $.get(updateUrl, { selected_rows: SELECTED_ROWS }, function(data) {
+    $.get(updateUrl, { selected_rows: SELECTED_ROWS, downstream: downstream }, function(data) {
       var assignList;
       var assignListScrollbar;
       var unassignList;
@@ -602,9 +613,9 @@ var MyModuleRepositories = (function() {
     });
   }
 
-  function openAssignRecordsModal() {
+  function openAssignRecordsModal(downstream) {
     var assignUrl = FULL_VIEW_MODAL.data('assign-url-modal');
-    $.get(assignUrl, { selected_rows: SELECTED_ROWS }, function(data) {
+    $.get(assignUrl, { selected_rows: SELECTED_ROWS, downstream: downstream }, function(data) {
       UPDATE_REPOSITORY_MODAL.find('.modal-content').html(data.html);
       UPDATE_REPOSITORY_MODAL.data('update-url', data.update_url);
       UPDATE_REPOSITORY_MODAL.modal('show');
