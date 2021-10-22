@@ -103,7 +103,7 @@ module PermissionExtends
       ExperimentPermissions::READ_CANVAS,
       ExperimentPermissions::MANAGE,
       ExperimentPermissions::TASKS_MANAGE,
-      ExperimentPermissions::USERS_MANAGE,
+      ExperimentPermissions::USERS_READ,
       MyModulePermissions::READ,
       MyModulePermissions::MANAGE,
       MyModulePermissions::RESULTS_MANAGE,
