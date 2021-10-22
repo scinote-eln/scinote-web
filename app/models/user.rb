@@ -369,24 +369,14 @@ class User < ApplicationRecord
     team_to_ignore = nil
   )
     result = User.all
-
-    if active_only
-      result = result.where.not(confirmed_at: nil)
-    end
+    result = result.where.not(confirmed_at: nil) if active_only
 
     if team_to_ignore.present?
-      ignored_ids =
-        UserTeam
-        .select(:user_id)
-        .where(team_id: team_to_ignore.id)
-      result =
-        result
-        .where("users.id NOT IN (?)", ignored_ids)
+      ignored_ids = UserTeam.select(:user_id).where(team_id: team_to_ignore.id)
+      result = result.where.not('users.id IN (?)', ignored_ids)
     end
 
-    result
-      .where_attributes_like([:full_name, :email], query)
-      .distinct
+    result.where_attributes_like(%i(full_name email), query).distinct
   end
 
   # Whether user is active (= confirmed) or not
