@@ -10,10 +10,7 @@
       <div class="modal-body">
         <% users.each do |user| %>
           <% user_assignment = experiment.user_assignments.find_by(user: user) %>
-
-          <% cache [user_assignment, experiment, current_user, user] do %>
-            <%= render partial: 'access_permissions/partials/user_assignment', locals: { user_assignment: user_assignment, user: user, resource: experiment } %>
-          <% end %>
+          <%= render partial: 'access_permissions/partials/user_assignment', locals: { user_assignment: user_assignment, user: user, resource: experiment } %>
         <% end %>
       </div>
       <div class="modal-footer">
