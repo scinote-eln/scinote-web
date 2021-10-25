@@ -6,6 +6,7 @@ module Api
       before_action :load_team
       before_action :load_project
       before_action :load_experiment
+      before_action :check_read_permissions
       before_action :load_user_assignment, only: %i(update show)
       before_action :load_user_assignment_for_managing, only: %i(update show)
 
@@ -47,12 +48,16 @@ module Api
 
       private
 
+      def check_read_permissions
+        raise PermissionError.new(Experiment, :read_users) unless can_read_experiment_users?(@experiment)
+      end
+
       def load_user_assignment
         @user_assignment = @experiment.user_assignments.find(params.require(:id))
       end
 
       def load_user_assignment_for_managing
-        raise PermissionError.new(Experiment, :manage) unless can_manage_experiment?(@experiment)
+        raise PermissionError.new(Experiment, :manage_users) unless can_manage_experiment_users?(@experiment)
       end
 
       def user_assignment_params

@@ -5,6 +5,7 @@ module Api
     class ProjectUserAssignmentsController < BaseController
       before_action :load_team
       before_action :load_project
+      before_action :check_read_permissions
       before_action :load_user_assignment, only: %i(show update destroy)
       before_action :load_user_project_for_managing, only: %i(show update destroy)
 
@@ -26,7 +27,7 @@ module Api
       end
 
       def create
-        raise PermissionError.new(Project, :manage) unless can_manage_project?(@project)
+        raise PermissionError.new(Project, :manage) unless can_manage_project_users?(@project)
 
         # internally we reuse the same logic as for user project assignment
         user = @team.users.find(user_project_params[:user_id])
@@ -62,12 +63,16 @@ module Api
 
       private
 
+      def check_read_permissions
+        raise PermissionError.new(Project, :read_users) unless can_read_project_users?(@project)
+      end
+
       def load_user_assignment
         @user_assignment = @project.user_assignments.find(params.require(:id))
       end
 
       def load_user_project_for_managing
-        raise PermissionError.new(Project, :manage) unless can_manage_project?(@project)
+        raise PermissionError.new(Project, :manage_users) unless can_manage_project_users?(@project)
       end
 
       def user_project_params

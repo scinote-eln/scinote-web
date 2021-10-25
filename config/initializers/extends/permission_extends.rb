@@ -61,6 +61,7 @@ module PermissionExtends
       STEPS_COMMENT_UPDATE_OWN
       REPOSITORY_ROWS_ASSIGN
       REPOSITORY_ROWS_MANAGE
+      USERS_READ
       USERS_MANAGE
     ).each { |permission| const_set(permission, "task_#{permission.underscore}") }
   end
@@ -103,7 +104,7 @@ module PermissionExtends
       ExperimentPermissions::READ_CANVAS,
       ExperimentPermissions::MANAGE,
       ExperimentPermissions::TASKS_MANAGE,
-      ExperimentPermissions::USERS_MANAGE,
+      ExperimentPermissions::USERS_READ,
       MyModulePermissions::READ,
       MyModulePermissions::MANAGE,
       MyModulePermissions::RESULTS_MANAGE,
@@ -123,7 +124,8 @@ module PermissionExtends
       MyModulePermissions::STEPS_COMMENTS_DELETE_OWN,
       MyModulePermissions::STEPS_COMMENT_UPDATE_OWN,
       MyModulePermissions::REPOSITORY_ROWS_ASSIGN,
-      MyModulePermissions::REPOSITORY_ROWS_MANAGE
+      MyModulePermissions::REPOSITORY_ROWS_MANAGE,
+      MyModulePermissions::USERS_READ
     ]
 
     TECHNICIAN_PERMISSIONS = [
@@ -152,7 +154,8 @@ module PermissionExtends
       MyModulePermissions::STEPS_COMMENTS_DELETE_OWN,
       MyModulePermissions::STEPS_COMMENT_UPDATE_OWN,
       MyModulePermissions::REPOSITORY_ROWS_ASSIGN,
-      MyModulePermissions::REPOSITORY_ROWS_MANAGE
+      MyModulePermissions::REPOSITORY_ROWS_MANAGE,
+      MyModulePermissions::USERS_READ
     ]
 
     VIEWER_PERMISSIONS = [
@@ -166,7 +169,8 @@ module PermissionExtends
       ExperimentPermissions::READ_ARCHIVED,
       ExperimentPermissions::ACTIVITIES_READ,
       ExperimentPermissions::USERS_READ,
-      MyModulePermissions::READ
+      MyModulePermissions::READ,
+      MyModulePermissions::USERS_READ
     ]
   end
 end

@@ -106,8 +106,8 @@ RSpec.describe "Api::V1::ProjectUserAssignmentsController", type: :request do
         }
       end
 
-      it 'creates new user project and user assignment' do
-        expect { action }.to change { UserAssignment.count }.by(1).and(change { UserProject.count }.by(1))
+      it 'creates new user assignment' do
+        expect { action }.to change { UserAssignment.count }.by(1)
       end
 
       it 'returns status 201' do

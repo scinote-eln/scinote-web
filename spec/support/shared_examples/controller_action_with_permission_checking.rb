@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.shared_examples 'a controller action with permissions checking' do |verb, action|
-
   describe 'controller action' do
     context 'user without permissions' do
       it "returns forbidden response for action :#{action}" do

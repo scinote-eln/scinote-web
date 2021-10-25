@@ -5,6 +5,7 @@ module Api
     class ProjectCommentsController < BaseController
       before_action :load_team
       before_action :load_project
+      before_action :check_read_permissions
       before_action :load_project_comment, only: :show
 
       def index
@@ -25,6 +26,10 @@ module Api
       end
 
       private
+
+      def check_read_permissions
+        raise PermissionError.new(Project, :read_comments) unless can_read_project_comments?(@project)
+      end
 
       def load_project_comment
         @project_comment = @project.project_comments.find(params.require(:id))

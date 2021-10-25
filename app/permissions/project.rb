@@ -62,6 +62,10 @@ Canaid::Permissions.register_for(Project) do
     project.permission_granted?(user, ProjectPermissions::EXPERIMENTS_CREATE)
   end
 
+  can :read_project_comments do |user, project|
+    project.permission_granted?(user, ProjectPermissions::COMMENTS_READ)
+  end
+
   can :create_project_comments do |user, project|
     project.permission_granted?(user, ProjectPermissions::COMMENTS_CREATE)
   end

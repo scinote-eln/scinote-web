@@ -107,8 +107,12 @@ Canaid::Permissions.register_for(MyModule) do
     my_module.permission_granted?(user, MyModulePermissions::STEPS_COMMENTS_CREATE)
   end
 
+  can :read_my_module_users do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::USERS_READ)
+  end
+
   can :manage_my_module_users do |user, my_module|
-    my_module.permission_granted?(user, MyModulePermissions::MANAGE)
+    my_module.permission_granted?(user, MyModulePermissions::USERS_MANAGE)
   end
 
   can :restore_my_module do |user, my_module|
