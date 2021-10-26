@@ -459,6 +459,36 @@
     }
 
   }
+
+  .my-modules-to-assign {
+    @include font-button;
+    background: $color-concrete;
+    border-radius: $border-radius-default;
+    padding: 1em;
+
+    .my-module-to-assign {
+      margin-bottom: .5em;
+    }
+
+    .current-task {
+      @include font-small;
+      background: $brand-primary-light;
+      border-radius: $border-radius-tag;
+      color: $color-white;
+      padding: .25em;
+    }
+  }
+
+  .hidden-my-modules {
+    background: $brand-warning-light;
+    border-radius: $border-radius-default;
+    margin-top: .5em;
+    padding: .5em;
+
+    .fas {
+      color: $brand-warning;
+    }
+  }
 }
 
 
