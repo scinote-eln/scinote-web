@@ -29,20 +29,13 @@ module Experiments
         )
 
         # Copy all signle taskas
-        @c_exp.my_modules << @exp.my_modules.without_group.map do |m|
+        @c_exp.my_modules << @exp.my_modules.readable_by_user(@user).without_group.map do |m|
           m.deep_clone_to_experiment(@user, @c_exp)
         end
 
         # Copy all grouped tasks
         @exp.my_module_groups.each do |g|
           @c_exp.my_module_groups << g.deep_clone_to_experiment(@user, @c_exp)
-        end
-
-        # Copy user assignments to the experiment
-        @exp.user_assignments.map do |user_assignment|
-          new_user_assigment = user_assignment.dup
-          new_user_assigment.assignable = @c_exp
-          new_user_assigment.save!
         end
 
         @c_exp.save!
