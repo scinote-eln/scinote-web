@@ -4,6 +4,7 @@ class Project < ApplicationRecord
   include SearchableByNameModel
   include ViewableModel
   include PermissionCheckableModel
+  include PermissionExtends
   include Assignable
 
   enum visibility: { hidden: 0, visible: 1 }
@@ -153,7 +154,7 @@ class Project < ApplicationRecord
                   'user_assignments.user_id = :user_id OR '\
                   '(user_teams.user_id = :user_id AND user_teams.role = 2)',
                   user_id: user.id)
-           .where('user_roles.permissions @> ARRAY[?]::varchar[]', %w[project_read])
+           .where('user_roles.permissions @> ARRAY[?]::varchar[]', [ProjectPermissions::READ])
            .distinct
   end
 

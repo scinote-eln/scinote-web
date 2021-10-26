@@ -36,6 +36,7 @@ module PermissionExtends
   module MyModulePermissions
     %w(
       READ
+      ACTIVITIES_READ
       MANAGE
       STEPS_MANAGE
       UPDATE_STATUS
@@ -105,6 +106,7 @@ module PermissionExtends
       ExperimentPermissions::TASKS_MANAGE,
       ExperimentPermissions::USERS_READ,
       MyModulePermissions::READ,
+      MyModulePermissions::ACTIVITIES_READ,
       MyModulePermissions::MANAGE,
       MyModulePermissions::RESULTS_MANAGE,
       MyModulePermissions::PROTOCOL_MANAGE,
@@ -140,6 +142,7 @@ module PermissionExtends
       ExperimentPermissions::ACTIVITIES_READ,
       ExperimentPermissions::USERS_READ,
       MyModulePermissions::READ,
+      MyModulePermissions::ACTIVITIES_READ,
       MyModulePermissions::COMMENTS_CREATE,
       MyModulePermissions::COMMENTS_MANAGE_OWN,
       MyModulePermissions::COMPLETE,
@@ -166,7 +169,8 @@ module PermissionExtends
       ExperimentPermissions::READ_ARCHIVED,
       ExperimentPermissions::ACTIVITIES_READ,
       ExperimentPermissions::USERS_READ,
-      MyModulePermissions::READ
+      MyModulePermissions::READ,
+      MyModulePermissions::ACTIVITIES_READ
     ]
   end
 end
