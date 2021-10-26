@@ -60,6 +60,10 @@ Canaid::Permissions.register_for(Experiment) do
     experiment.permission_granted?(user, ExperimentPermissions::TASKS_MANAGE)
   end
 
+  can :manage_all_experiment_my_modules do |user, experiment|
+    experiment.my_modules == experiment.my_modules.managable_by_user(user)
+  end
+
   can :archive_experiment do |user, experiment|
     experiment.permission_granted?(user, ExperimentPermissions::MANAGE)
   end

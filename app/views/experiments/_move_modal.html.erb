@@ -16,7 +16,7 @@
         </div>
         <div class="modal-body">
           <%= t("experiments.move.notice") %>
-          <% if @projects.any? && @have_access_my_modules %>
+          <% if @projects.any? && can_manage_all_experiment_my_modules?(@experiment) %>
             <%= f.select :project_id, options_for_select(@projects.collect { |p| [ p.name, p.id ] }),
                         {}, { class: "form-control selectpicker", "data-role" => "clear" } %>
           <% else %>
@@ -24,7 +24,7 @@
               <i class="fas fa-exclamation-triangle"></i>
               <% if @projects.blank? %>
                 <%= t("experiments.move.no_projects") %>
-              <% elsif !@have_access_my_modules %>
+              <% elsif !can_manage_all_experiment_my_modules?(@experiment) %>
                 <%= t("experiments.move.task_permission") %>
               <% end %>
             </div>
@@ -32,7 +32,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
-          <% if @projects.any? && @have_access_my_modules %>
+          <% if @projects.any? && can_manage_all_experiment_my_modules?(@experiment) %>
             <%= f.submit t("experiments.move.modal_submit"), class: "btn btn-primary" %>
           <% end %>
         </div>

@@ -218,7 +218,6 @@ class ExperimentsController < ApplicationController
   # GET: move_modal_experiment_path(id)
   def move_modal
     @projects = @experiment.movable_projects(current_user)
-    @have_access_my_modules = @experiment.my_modules == @experiment.my_modules.managable_by_user(current_user)
     respond_to do |format|
       format.json do
         render json: {
