@@ -100,6 +100,7 @@ module PermissionExtends
       ProjectPermissions::COMMENTS_CREATE,
       ProjectPermissions::COMMENTS_MANAGE_OWN,
       ProjectPermissions::EXPERIMENTS_CREATE,
+      ProjectPermissions::TAGS_MANAGE,
       ExperimentPermissions::READ,
       ExperimentPermissions::READ_CANVAS,
       ExperimentPermissions::MANAGE,
