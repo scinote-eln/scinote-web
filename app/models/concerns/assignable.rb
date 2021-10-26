@@ -32,5 +32,9 @@ module Assignable
 
       UserAssignments::GenerateUserAssignmentsJob.perform_later(self, created_by)
     end
+
+    def role_for_user(user)
+      user_assignments.find_by(user: user)&.user_role
+    end
   end
 end

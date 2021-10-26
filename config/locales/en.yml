@@ -1170,7 +1170,7 @@ en:
         info_tab: "Task info"
         no_description: "This task has no description."
         full_info: "Edit description"
-        users_tab: "Assigned users"
+        users_tab: "Task assigned to"
         no_users: "This task has no assigned users."
         manage_users: "Manage users"
         module_user_join: "Joined on %{date}."

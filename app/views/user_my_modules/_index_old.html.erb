@@ -1,4 +1,4 @@
-<h5 class="text-center"><%=t "experiments.canvas.popups.users_tab" %></h5>
+<h5 class="designated-users-task-title"><%=t "experiments.canvas.popups.users_tab" %></h5>
 <hr>
 <ul class="no-style content-users">
   <% if @user_my_modules.size == 0 then %>
@@ -12,23 +12,15 @@
           <div class="col-xs-2">
             <span class='global-avatar-container'>
               <%= image_tag avatar_path(user, :icon_small), class: "img-circle pull-left" %>
+            </span>
           </div>
           <div class="col-xs-10" style="line-height: 15px">
             <span><%= user.full_name %></span><br>
-            <span class="text-muted" title="<%=t "experiments.canvas.popups.module_user_join_full", user: user.full_name, date: l(user_my_module.created_at, format: :full_date), time: l(user_my_module.created_at, format: :time) %>">
-              <em>
-              <%=t "experiments.canvas.popups.module_user_join", date: l(user_my_module.created_at, format: :full_date) %>
-              </em>
-            </span>
+            <span class="user-role"><%= @my_module.role_for_user(user).name %></span>
           </div>
         </div>
       </li>
     <% end %>
   <% end %>
 </ul>
-<% if can_manage_my_module_users?(@my_module) %>
-    <p>
-      <hr>
-      <%= link_to t('experiments.canvas.popups.manage_users'), my_module_users_edit_path(@my_module, format: :json), remote: true, class: "manage-users-link" %>
-    </p>
 <% end %>
