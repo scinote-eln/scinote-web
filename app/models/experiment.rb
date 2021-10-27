@@ -223,18 +223,6 @@ class Experiment < ApplicationRecord
     workflowimg.attached? && workflowimg.service.exist?(workflowimg.blob.key)
   end
 
-  # Get projects where user is either owner or user in the same team
-  # as this experiment
-  def projects_with_role_above_user(current_user)
-    team = project.team
-    projects = team.projects.where(archived: false)
-
-    current_user.user_projects
-                .where(project: projects)
-                .where('role < 2')
-                .map(&:project)
-  end
-
   # Projects to which this experiment can be moved (inside the same
   # team and not archived), all users assigned on experiment.project has
   # to be assigned on such project
