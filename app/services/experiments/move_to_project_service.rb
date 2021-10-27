@@ -21,6 +21,8 @@ module Experiments
         @exp.project = @project
 
         @exp.my_modules.each do |my_module|
+          raise unless can_manage_my_module?(@user, my_module)
+
           sync_user_assignments(my_module)
           new_tags = []
           my_module.tags.each do |tag|
@@ -35,8 +37,12 @@ module Experiments
 
         @exp.save!
         sync_user_assignments(@exp)
-      rescue
-        @errors.merge!(@exp.errors.to_hash) unless @exp.valid?
+      rescue StandardError
+        if @exp.valid?
+          @errors[:main] = "Don't have permission for tasks manage"
+        else
+          @errors.merge!(@exp.errors.to_hash)
+        end
         raise ActiveRecord::Rollback
       end
 
@@ -87,7 +93,6 @@ module Experiments
               message_items: { experiment: @exp.id,
                                project_new: @project.id,
                                project_original: @original_project.id })
-
     end
   end
 end
