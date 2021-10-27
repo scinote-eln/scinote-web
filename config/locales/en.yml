@@ -790,6 +790,7 @@ en:
         modified_label: "Modified"
         modified_value: "%{date} by %{full_name}"
         modified_value_without_user: "%{date}"
+        view_task_access: "View task access"
       start_date: "Start date:"
       no_start_date_placeholder: "+ Add starting date"
       due_date: "Due date:"
