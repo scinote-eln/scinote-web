@@ -5,7 +5,7 @@ module AccessPermissions
     before_action :set_project
     before_action :set_experiment
     before_action :check_read_permissions, only: %i(show)
-    before_action :check_manage_permissions, only: %i(edit update)
+    before_action :check_manage_permissions, only: %i(edit update destroy)
 
     def show
       respond_to do |format|
@@ -26,6 +26,33 @@ module AccessPermissions
       respond_to do |format|
         format.json do
           render :experiment_member
+        end
+      end
+    end
+
+    def destroy
+      user = @experiment.users.find(params[:user_id])
+      experiment_member = ExperimentMember.new(current_user, @experiment, @project, user)
+
+      respond_to do |format|
+        if experiment_member.destroy
+          format.json do
+            render(
+              json: {
+                flash:
+                  t(
+                    'access_permissions.destroy.success',
+                    member_name: user.full_name, resource: Experiment.model_name.human.downcase
+                  )
+              },
+              status: :ok
+            )
+          end
+        else
+          format.json do
+            render json: { flash: t('access_permissions.destroy.failure') },
+                   status: :unprocessable_entity
+          end
         end
       end
     end
