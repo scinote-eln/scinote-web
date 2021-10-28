@@ -59,7 +59,7 @@ module PermissionExtends
       STEPS_COMMENTS_DELETE
       STEPS_COMMENTS_DELETE_OWN
       STEPS_COMMENTS_UPDATE
-      STEPS_COMMENT_UPDATE_OWN
+      STEPS_COMMENTS_UPDATE_OWN
       REPOSITORY_ROWS_ASSIGN
       REPOSITORY_ROWS_MANAGE
       USERS_MANAGE
@@ -124,7 +124,7 @@ module PermissionExtends
       MyModulePermissions::STEPS_CHECKLIST_UNCHECK,
       MyModulePermissions::STEPS_COMMENTS_CREATE,
       MyModulePermissions::STEPS_COMMENTS_DELETE_OWN,
-      MyModulePermissions::STEPS_COMMENT_UPDATE_OWN,
+      MyModulePermissions::STEPS_COMMENTS_UPDATE_OWN,
       MyModulePermissions::REPOSITORY_ROWS_ASSIGN,
       MyModulePermissions::REPOSITORY_ROWS_MANAGE
     ]
@@ -154,7 +154,7 @@ module PermissionExtends
       MyModulePermissions::STEPS_CHECKLIST_UNCHECK,
       MyModulePermissions::STEPS_COMMENTS_CREATE,
       MyModulePermissions::STEPS_COMMENTS_DELETE_OWN,
-      MyModulePermissions::STEPS_COMMENT_UPDATE_OWN,
+      MyModulePermissions::STEPS_COMMENTS_UPDATE_OWN,
       MyModulePermissions::REPOSITORY_ROWS_ASSIGN,
       MyModulePermissions::REPOSITORY_ROWS_MANAGE
     ]
