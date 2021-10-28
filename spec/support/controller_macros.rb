@@ -7,4 +7,18 @@ module ControllerMacros
       sign_in user
     end
   end
+
+  def login_api_user
+    before(:each) do
+      user = create :user
+      user.confirm
+
+      @request.headers.merge!({
+        'Authorization': 'Bearer ' + Api::CoreJwt.encode(sub: user.id),
+        'Content-Type': 'application/json'
+      })
+
+      subject.send(:authenticate_request!)
+    end
+  end
 end
