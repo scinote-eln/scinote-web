@@ -22,7 +22,7 @@ module SearchableByNameModel
     end
 
     def self.filter_by_teams(teams = [])
-      return self if teams.empty?
+      return self if teams.blank?
 
       if column_names.include? 'team_id'
         where(team_id: teams)

@@ -84,7 +84,7 @@ class StepsController < ApplicationController
     end
 
     respond_to do |format|
-      if @step.errors.empty?
+      if @step.errors.blank?
         format.json do
           render json: {
             html: render_to_string(
@@ -392,7 +392,7 @@ class StepsController < ApplicationController
     update_params = {}
     delete_step_tables(params)
     extract_destroy_params(params, update_params)
-    @step.update(update_params) unless update_params.empty?
+    @step.update(update_params) unless update_params.blank?
   end
 
   # Delete the step table

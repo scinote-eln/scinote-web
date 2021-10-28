@@ -49,7 +49,7 @@ module UsersGenerator
     end
 
     # Assign user team as user current team
-    nu.current_team_id = nu.teams.first.id unless nu.teams.empty?
+    nu.current_team_id = nu.teams.first.id unless nu.teams.blank?
     nu.save!
 
     nu.reload

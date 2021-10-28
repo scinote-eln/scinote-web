@@ -279,7 +279,7 @@ class RepositoriesController < ApplicationController
       else
         @import_data = parsed_file.data
 
-        if @import_data.header.empty? || @import_data.columns.empty?
+        if @import_data.header.blank? || @import_data.columns.blank?
           return repository_response(t('repositories.parse_sheet.errors.empty_file'))
         end
 

@@ -19,7 +19,7 @@ module Users
       auth = request.env['omniauth.auth']
       provider_id = auth.dig(:extra, :raw_info, :id_token_claims, :aud)
       provider_conf = Rails.configuration.x.azure_ad_apps[provider_id]
-      raise StandardError, 'No matching Azure AD provider config found' if provider_conf.empty?
+      raise StandardError, 'No matching Azure AD provider config found' if provider_conf.blank?
 
       auth.provider = provider_conf[:provider]
 
@@ -161,7 +161,7 @@ module Users
 
     def generate_initials(full_name)
       initials = full_name.titleize.scan(/[A-Z]+/).join
-      initials = initials.strip.empty? ? 'PLCH' : initials[0..3]
+      initials = initials.strip.blank? ? 'PLCH' : initials[0..3]
       initials
     end
   end

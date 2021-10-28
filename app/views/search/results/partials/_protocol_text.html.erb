@@ -1,5 +1,5 @@
 <% query ||= nil %>
-<% text = query.present? ? highlight(protocol.name, query.strip.split(/\s+/)) : (protocol.name.empty? ? t("search.index.no_name") : protocol.name) %>
+<% text = query.present? ? highlight(protocol.name, query.strip.split(/\s+/)) : (protocol.name.blank? ? t("search.index.no_name") : protocol.name) %>
 
 <% if protocol.in_repository_public? %>
   <span class="label label-info">

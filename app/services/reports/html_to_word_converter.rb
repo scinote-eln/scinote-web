@@ -53,7 +53,7 @@ module Reports
         next unless elem
 
         if %w(image newline table ol ul).include? elem[:type]
-          unless temp_p.empty?
+          unless temp_p.blank?
             elements.push(type: 'p', children: temp_p)
             temp_p = []
           end

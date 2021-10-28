@@ -192,7 +192,7 @@ class RepositoryRowsController < ApplicationController
   end
 
   def available_rows
-    if @repository.repository_rows.active.empty?
+    if @repository.repository_rows.active.blank?
       no_items_string =
         "#{t('projects.reports.new.save_PDF_to_inventory_modal.no_items')} " \
         "#{link_to(t('projects.reports.new.save_PDF_to_inventory_modal.here'),

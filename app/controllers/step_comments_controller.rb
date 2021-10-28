@@ -14,7 +14,7 @@ class StepCommentsController < ApplicationController
 
   def index
     comments = @step.last_comments(@last_comment_id, @per_page)
-    more_url = step_step_comments_path(@step, format: :json, from: comments.first.id) unless comments.empty?
+    more_url = step_step_comments_path(@step, format: :json, from: comments.first.id) unless comments.blank?
     comment_index_helper(comments, more_url)
   end
 

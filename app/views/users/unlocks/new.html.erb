@@ -5,7 +5,7 @@
 
   <%= form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post }) do |f| %>
 
-    <% if not resource.errors.empty? %>
+    <% if not resource.errors.blank? %>
     <div class="alert alert-danger">
     <%= devise_error_messages! %>
     </div>

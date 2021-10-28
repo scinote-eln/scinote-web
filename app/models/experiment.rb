@@ -240,7 +240,7 @@ class Experiment < ApplicationRecord
     projects = projects_with_role_above_user(current_user)
 
     projects = projects.each_with_object([]) do |p, arr|
-      arr << p if (project.users - p.users).empty?
+      arr << p if (project.users - p.users).blank?
       arr
     end
     projects - [project]

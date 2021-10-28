@@ -286,7 +286,7 @@ class MyModule < ApplicationRecord
   def downstream_modules
     final = []
     modules = [self]
-    until modules.empty?
+    until modules.blank?
       my_module = modules.shift
       final << my_module unless final.include?(my_module)
       modules.push(*my_module.my_modules)
@@ -298,7 +298,7 @@ class MyModule < ApplicationRecord
   def upstream_modules
     final = []
     modules = [self]
-    until modules.empty?
+    until modules.blank?
       my_module = modules.shift
       final << my_module unless final.include?(my_module)
       modules.push(*my_module.my_module_antecessors)
@@ -395,7 +395,7 @@ class MyModule < ApplicationRecord
     positions = experiment.my_modules.active.collect { |m| [m.x, m.y] }
                           .select { |x, _| x >= 0 && x < WIDTH }
                           .sort_by { |_, y| y }
-    return { x: 0, y: 0 } if positions.empty? || positions.first[1] >= HEIGHT
+    return { x: 0, y: 0 } if positions.blank? || positions.first[1] >= HEIGHT
 
     # It looks we'll have to find a gap between the modules if it exists (at
     # least 2*HEIGHT wide

@@ -22,7 +22,7 @@
   <%= render 'users/shared/links' %>
 </div>
 
-<% if @team and not @team.errors.empty? %>
+<% if @team && @team.errors.present? %>
   <script>
   (function () {
     var formErrors = {};

@@ -5,7 +5,7 @@ namespace :db do
 
   desc "Load users into database from the provided YAML file"
   task :load_users, [ :file_path, :create_teams ] => :environment do |task, args|
-    if args.blank? or args.empty? or args[:file_path].blank?
+    if args.blank? || args[:file_path].blank?
       puts "No file provided"
       return
     end
@@ -81,7 +81,7 @@ namespace :db do
     puts 'Type in user\'s password (e.g. \'password\'), or ' \
          'leave blank to let Rails generate password'
     password = $stdin.gets.to_s.strip
-    if password.empty?
+    if password.blank?
       password = generate_user_password
     end
     puts 'Do you want Rails to create default user\'s team? (T/F)'
@@ -89,7 +89,7 @@ namespace :db do
     puts 'Type names of any additional teams you want the user ' \
          'to be admin of (delimited with \',\'), or leave blank'
     team_names = $stdin.gets.to_s.strip
-    if team_names.empty?
+    if team_names.blank?
       team_names = []
     else
       team_names = team_names.split(',').collect(&:strip)

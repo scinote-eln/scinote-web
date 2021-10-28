@@ -15,7 +15,7 @@ class CreateMyModuleService
         @params[:experiment][:project] = @params[:project]
         @params[:experiment] = CreateExperimentService.new(@user, @team, @params[:experiment]).call
       end
-      unless @params[:experiment]&.errors&.empty?
+      unless @params[:experiment]&.errors&.blank?
         new_my_module = @params[:experiment]
         raise ActiveRecord::Rollback
       end
