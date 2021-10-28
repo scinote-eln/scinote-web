@@ -46,9 +46,7 @@ class Table < ApplicationRecord
                        .pluck('result_tables.id')
 
     table_query = Table.distinct
-                       .joins('LEFT OUTER JOIN step_tables ON step_tables.table_id = tables.id')
-                       .joins('LEFT OUTER JOIN result_tables ON result_tables.table_id = tables.id')
-                       .joins('LEFT OUTER JOIN results ON result_tables.result_id = results.id')
+                       .left_outer_joins(:step_table, :result_table, :result)
                        .where('step_tables.id IN (?) OR result_tables.id IN (?)', step_ids, result_ids)
 
     if options[:whole_word].to_s == 'true' ||

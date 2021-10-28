@@ -373,7 +373,7 @@ class User < ApplicationRecord
 
     if team_to_ignore.present?
       ignored_ids = UserTeam.select(:user_id).where(team_id: team_to_ignore.id)
-      result = result.where.not('users.id IN (?)', ignored_ids)
+      result = result.where.not(users: { id: ignored_ids })
     end
 
     result.where_attributes_like(%i(full_name email), query).distinct

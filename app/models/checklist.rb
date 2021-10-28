@@ -41,7 +41,7 @@ class Checklist < ApplicationRecord
 
     new_query = Checklist.distinct
                          .where(checklists: { step_id: step_ids })
-                         .joins('LEFT JOIN checklist_items ON checklists.id = checklist_items.checklist_id')
+                         .left_outer_joins(:checklist_items)
                          .where_attributes_like(['checklists.name', 'checklist_items.text'], query, options)
 
     # Show all results if needed
