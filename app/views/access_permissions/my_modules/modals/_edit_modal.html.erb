@@ -13,22 +13,15 @@
         </p>
         <hr />
         <% users.each do |user| %>
-          <% user_assignment = my_module.user_assignments.find_by(user: user) %>
-
-          <% cache [user_assignment, my_module, user] do %>
-            <%= render partial: 'access_permissions/partials/my_module_member_field',
-                       locals: {
-                         user: user,
-                         project: project,
-                         experiment: experiment,
-                         my_module: my_module,
-                         update_path: access_permissions_project_experiment_my_module_path(project, experiment, my_module)
-                       } %>
-          <% end %>
+          <%= render partial: 'access_permissions/partials/my_module_member_field',
+                      locals: {
+                        user: user,
+                        project: project,
+                        experiment: experiment,
+                        my_module: my_module,
+                        update_path: access_permissions_project_experiment_my_module_path(project, experiment, my_module)
+                      } %>
         <% end %>
-      </div>
-      <div class="modal-footer">
-        <button type='button' class='btn btn-default' data-dismiss='modal'><%= t('general.cancel')%></button>
       </div>
     </div>
   </div>

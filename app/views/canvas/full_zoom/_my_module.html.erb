@@ -41,7 +41,7 @@
 
   <div class="panel-heading">
     <h3 class="panel-title">
-      <%= link_to_if can_read_experiment?(my_module.experiment), my_module.name, protocols_my_module_path(my_module) %>
+      <%= link_to_if can_read_experiment?(my_module.experiment), my_module.name, protocols_my_module_path(my_module), class: 'my-module-title' %>
     </h3>
   </div>
 

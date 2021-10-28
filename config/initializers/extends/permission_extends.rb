@@ -34,6 +34,7 @@ module PermissionExtends
   module MyModulePermissions
     %w(
       READ
+      ACTIVITIES_READ
       MANAGE
       STEPS_MANAGE
       UPDATE_STATUS
@@ -56,7 +57,7 @@ module PermissionExtends
       STEPS_COMMENTS_DELETE
       STEPS_COMMENTS_DELETE_OWN
       STEPS_COMMENTS_UPDATE
-      STEPS_COMMENT_UPDATE_OWN
+      STEPS_COMMENTS_UPDATE_OWN
       REPOSITORY_ROWS_ASSIGN
       REPOSITORY_ROWS_MANAGE
       USERS_MANAGE
@@ -97,12 +98,14 @@ module PermissionExtends
       ProjectPermissions::COMMENTS_CREATE,
       ProjectPermissions::COMMENTS_MANAGE_OWN,
       ProjectPermissions::EXPERIMENTS_CREATE,
+      ProjectPermissions::TAGS_MANAGE,
       ExperimentPermissions::READ,
       ExperimentPermissions::READ_CANVAS,
       ExperimentPermissions::MANAGE,
       ExperimentPermissions::TASKS_MANAGE,
-      ExperimentPermissions::USERS_MANAGE,
+      ExperimentPermissions::USERS_READ,
       MyModulePermissions::READ,
+      MyModulePermissions::ACTIVITIES_READ,
       MyModulePermissions::MANAGE,
       MyModulePermissions::RESULTS_MANAGE,
       MyModulePermissions::PROTOCOL_MANAGE,
@@ -119,7 +122,7 @@ module PermissionExtends
       MyModulePermissions::STEPS_CHECKLIST_UNCHECK,
       MyModulePermissions::STEPS_COMMENTS_CREATE,
       MyModulePermissions::STEPS_COMMENTS_DELETE_OWN,
-      MyModulePermissions::STEPS_COMMENT_UPDATE_OWN,
+      MyModulePermissions::STEPS_COMMENTS_UPDATE_OWN,
       MyModulePermissions::REPOSITORY_ROWS_ASSIGN,
       MyModulePermissions::REPOSITORY_ROWS_MANAGE
     ]
@@ -138,6 +141,7 @@ module PermissionExtends
       ExperimentPermissions::ACTIVITIES_READ,
       ExperimentPermissions::USERS_READ,
       MyModulePermissions::READ,
+      MyModulePermissions::ACTIVITIES_READ,
       MyModulePermissions::COMMENTS_CREATE,
       MyModulePermissions::COMMENTS_MANAGE_OWN,
       MyModulePermissions::COMPLETE,
@@ -148,7 +152,7 @@ module PermissionExtends
       MyModulePermissions::STEPS_CHECKLIST_UNCHECK,
       MyModulePermissions::STEPS_COMMENTS_CREATE,
       MyModulePermissions::STEPS_COMMENTS_DELETE_OWN,
-      MyModulePermissions::STEPS_COMMENT_UPDATE_OWN,
+      MyModulePermissions::STEPS_COMMENTS_UPDATE_OWN,
       MyModulePermissions::REPOSITORY_ROWS_ASSIGN,
       MyModulePermissions::REPOSITORY_ROWS_MANAGE
     ]
@@ -164,7 +168,8 @@ module PermissionExtends
       ExperimentPermissions::READ_ARCHIVED,
       ExperimentPermissions::ACTIVITIES_READ,
       ExperimentPermissions::USERS_READ,
-      MyModulePermissions::READ
+      MyModulePermissions::READ,
+      MyModulePermissions::ACTIVITIES_READ
     ]
   end
 end

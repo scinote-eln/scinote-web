@@ -790,6 +790,7 @@ en:
         modified_label: "Modified"
         modified_value: "%{date} by %{full_name}"
         modified_value_without_user: "%{date}"
+        view_task_access: "View task access"
       start_date: "Start date:"
       no_start_date_placeholder: "+ Add starting date"
       due_date: "Due date:"
@@ -997,14 +998,22 @@ en:
         done: "Done"
       update_repository_record:
         title: "Update %{repository_name} items to %{my_module_name} task"
-        message: "Do you want to update %{size} items only from this task, or update them from this task & downstream tasks in the workflow also?"
+        title_downstream: "Update %{repository_name} items to task and downstream"
+        message: "Do you want to update %{size} items for this task?"
+        message_downstream_1: "These %{size} items will be updated on this taks and downstream tasks."
+        message_downstream_2: "The items will be updated in the following tasks. Ready to update them?"
+        next: "Next"
         task: 'Update task'
         task_and_downstream: 'Update task & downstream'
         newly_assigned_items: "Items newly assigned"
         items_will_be_removed: "Items that will be removed"
       assign_repository_record:
         title: 'Assign %{repository_name} items to task %{my_module_name}'
-        message: Do you want to assign %{size} items only to this task, or assign them to this task & downstream tasks in the workflow as well?
+        title_downstream: 'Assign %{repository_name} items to task and downstream'
+        message: You will assign %{size} items to this task only are you ready to assign them?
+        message_downstream: You will assign %{size} items to the following tasks. Are you ready to assign them?
+        current_task: "Current task"
+        hidden_tasks: "No permission: There are %{size} tasks you can’t assign to."
         task: 'Assign to task'
         task_and_downstream: 'Assign to task & downstream'
     modules_list_partial:
@@ -1162,7 +1171,7 @@ en:
         info_tab: "Task info"
         no_description: "This task has no description."
         full_info: "Edit description"
-        users_tab: "Assigned users"
+        users_tab: "Task assigned to"
         no_users: "This task has no assigned users."
         manage_users: "Manage users"
         module_user_join: "Joined on %{date}."

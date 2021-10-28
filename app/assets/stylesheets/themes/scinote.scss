@@ -702,12 +702,10 @@ ul.double-line > li {
     }
 
     .badge-indicator {
-      background: transparent;
-      color: $color-silver-chalice;
-      font-size: 12px;
-      margin-left: 0;
-      padding: 0;
-      top: 0;
+      background: $brand-primary;
+      color: $color-white;
+      font-size: 10px;
+      margin-left: -8px;
     }
   }
 }
@@ -722,7 +720,7 @@ ul.double-line > li {
 }
 
 .panel-footer-scinote {
-  background: linear-gradient(to bottom, $color-concrete, $color-white 10px);
+  background: $color-white;
   padding: 0;
 
   hr {

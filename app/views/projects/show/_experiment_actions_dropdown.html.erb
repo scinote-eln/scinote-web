@@ -37,6 +37,22 @@
           <% end %>
         </li>
       <% end %>
+      <!-- Set or view user experiment assignments -->
+      <% if can_manage_experiment_users?(experiment) %>
+        <li class="form-dropdown-item">
+          <%= link_to edit_access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'} do %>
+            <i class="fas fa-door-open"></i>
+            <span><%= t('experiments.index.experiment_access') %></span>
+          <% end %>
+        </li>
+      <% else %>
+        <li class="form-dropdown-item">
+          <%= link_to access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'} do %>
+            <i class="fas fa-door-open"></i>
+            <span><%= t('experiments.index.experiment_access') %></span>
+          <% end %>
+        </li>
+      <% end %>
       <!-- Archive/restore experiment -->
       <% if experiment.active? && can_archive_experiment?(experiment) %>
         <li class="form-dropdown-item">
@@ -60,22 +76,6 @@
                         params: { experiment: { archived: false } }) do %>
             <i class="fas fa-undo"></i>
             <span><%= t('experiments.index.restore_option') %></span>
-          <% end %>
-        </li>
-      <% end %>
-      <!-- Set or view user experiment assignments -->
-      <% if can_manage_experiment_users?(experiment) %>
-        <li class="form-dropdown-item">
-          <%= link_to edit_access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'} do %>
-            <i class="fas fa-door-open"></i>
-            <span><%= t('experiments.index.experiment_access') %></span>
-          <% end %>
-        </li>
-      <% else %>
-        <li class="form-dropdown-item">
-          <%= link_to access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'} do %>
-            <i class="fas fa-door-open"></i>
-            <span><%= t('experiments.index.experiment_access') %></span>
           <% end %>
         </li>
       <% end %>

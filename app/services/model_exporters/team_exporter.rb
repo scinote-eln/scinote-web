@@ -98,12 +98,24 @@ module ModelExporters
 
       {
         project: project,
+        user_assignments: project.user_assignments.map do |ua|
+          user_assignment(ua)
+        end,
         user_projects: project.user_projects,
         activities: project.activities,
         project_comments: project.project_comments,
         reports: project.reports.map { |r| report(r) },
         experiments: experiments,
         tags: project.tags
+      }
+    end
+
+    def user_assignment(user_assignment)
+      {
+        user_id: user_assignment.user_id,
+        assigned_by_id: user_assignment.assigned_by_id,
+        role_name: user_assignment.user_role.name,
+        assigned: user_assignment.assigned
       }
     end
 

@@ -346,7 +346,7 @@ class MyModule < ApplicationRecord
       description: description,
       x: x,
       y: y,
-      created_by: created_by
+      created_by: current_user
     )
 
     # set new position if cloning in the same experiment
