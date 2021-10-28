@@ -20,17 +20,8 @@ module Experiments
       ActiveRecord::Base.transaction do
         @exp.project = @project
 
-        @exp.my_modules.each do |my_module|
-          new_tags = []
-          my_module.tags.each do |tag|
-            new_tag = @project.tags.where.not(id: new_tags).find_by(name: tag.name, color: tag.color)
-            new_tag ||=
-              @project.tags.create!(name: tag.name, color: tag.color, created_by: @user, last_modified_by: @user)
-            new_tags << new_tag
-          end
-          my_module.tags.destroy_all
-          my_module.tags = new_tags
-        end
+        move_tags!
+        move_activities!(@exp)
 
         @exp.save!
       rescue
@@ -66,6 +57,34 @@ module Experiments
         false
       else
         true
+      end
+    end
+
+    def move_tags!
+      @exp.my_modules.each do |my_module|
+        new_tags = []
+        my_module.tags.each do |tag|
+          new_tag = @project.tags.where.not(id: new_tags).find_by(name: tag.name, color: tag.color)
+          new_tag ||=
+            @project.tags.create!(name: tag.name, color: tag.color, created_by: @user, last_modified_by: @user)
+          new_tags << new_tag
+        end
+        my_module.tags.destroy_all
+        my_module.tags = new_tags
+      end
+    end
+
+    # recursively move all activities in child associations to new project
+    def move_activities!(subject)
+      Activity.where(subject: subject).update!(project: @project)
+
+      child_associations = Extends::ACTIVITY_SUBJECT_CHILDREN[subject.class.name.underscore.to_sym]
+      return unless child_associations
+
+      child_associations.each do |child_association|
+        [subject.public_send(child_association)].flatten.each do |child_subject|
+          move_activities!(child_subject)
+        end
       end
     end
 
