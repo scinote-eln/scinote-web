@@ -69,47 +69,25 @@ class Experiment < ApplicationRecord
     current_team = nil,
     options = {}
   )
-    experiment_scope = experiment_search_scope(
-      Project
-        .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-        .pluck(:id),
-      user
-    )
+    viewable_projects = Project.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT, current_team)
+                               .pluck(:id)
+    new_query = Experiment.with_granted_permissions(user, ExperimentPermissions::READ)
+                          .where(project: viewable_projects)
+                          .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
 
-    if current_team
-      new_query = experiment_search_scope(
-        Project.search(
-          user,
-          include_archived,
-          nil,
-          1,
-          current_team
-        ).select('id'),
-        user
-      ).where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
-      return include_archived ? new_query : new_query.active
-    elsif include_archived
-      new_query = experiment_scope.where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
-    else
-      new_query = experiment_scope.active
-                                  .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
-    end
+    new_query = new_query.active unless include_archived
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT
       new_query
     else
-      new_query
-        .limit(Constants::SEARCH_LIMIT)
-        .offset((page - 1) * Constants::SEARCH_LIMIT)
+      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 
   def self.viewable_by_user(user, teams)
-    left_outer_joins(user_assignments: :user_role)
+    with_granted_permissions(user, ExperimentPermissions::READ)
       .where(project: Project.viewable_by_user(user, teams))
-      .where(user_assignments: { user: user })
-      .where('user_roles.permissions @> ARRAY[?]::varchar[]', %w[experiment_read])
   end
 
   def archived_branch?
@@ -223,28 +201,14 @@ class Experiment < ApplicationRecord
     workflowimg.attached? && workflowimg.service.exist?(workflowimg.blob.key)
   end
 
-  # Get projects where user is either owner or user in the same team
-  # as this experiment
-  def projects_with_role_above_user(current_user)
-    team = project.team
-    projects = team.projects.where(archived: false)
-
-    current_user.user_projects
-                .where(project: projects)
-                .where('role < 2')
-                .map(&:project)
-  end
-
   # Projects to which this experiment can be moved (inside the same
   # team and not archived), all users assigned on experiment.project has
   # to be assigned on such project
   def movable_projects(current_user)
-    viewer_role = UserRole.find_by(name: I18n.t('user_roles.predefined.viewer'))
-    current_user.projects.where.not(id: project_id).where(archived: false, team: project.team).select do |p|
-      can_create_project_experiments?(current_user, p) &&
-        project.user_assignments.where.not(user_role: viewer_role).pluck(:user_id) ==
-          p.user_assignments.where.not(user_role: viewer_role).pluck(:user_id)
-    end
+    current_user.projects
+                .where.not(id: project_id)
+                .where(archived: false, team: project.team)
+                .with_user_permission(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
   end
 
   def permission_parent

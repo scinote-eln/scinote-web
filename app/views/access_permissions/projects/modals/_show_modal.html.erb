@@ -1,6 +1,6 @@
 <% # frozen_string_literal: true %>
 
-<div class="modal fade" tabindex="-1" role="dialog" data-action="modal-close" data-target="<%= projects_path %>">
+<div class="modal fade" tabindex="-1" role="dialog" data-action="modal-close">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content" id="user_assignments_modal">
       <div class="modal-header">
@@ -9,9 +9,7 @@
       </div>
       <div class="modal-body">
         <% resource.user_assignments.each do |user_assignment| %>
-          <% cache [user_assignment, resource, current_user, user_assignment.user] do %>
-            <%= render partial: 'access_permissions/partials/user_assignment', locals: { user_assignment: user_assignment, user: user_assignment.user, resource: resource } %>
-          <% end %>
+          <%= render partial: 'access_permissions/partials/user_assignment', locals: { user_assignment: user_assignment, user: user_assignment.user, resource: resource } %>
         <% end %>
       </div>
       <div class="modal-footer">

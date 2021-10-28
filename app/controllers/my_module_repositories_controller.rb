@@ -67,7 +67,8 @@ class MyModuleRepositoriesController < ApplicationController
       partial: 'my_modules/modals/update_repository_records_modal_content.html.erb',
       locals: { my_module: @my_module,
                 repository: @repository,
-                selected_rows: params[:selected_rows] }
+                selected_rows: params[:selected_rows],
+                downstream: params[:downstream] }
     )
     render json: {
       html: modal,
@@ -80,7 +81,8 @@ class MyModuleRepositoriesController < ApplicationController
       partial: 'my_modules/modals/assign_repository_records_modal_content.html.erb',
       locals: { my_module: @my_module,
                 repository: @repository,
-                selected_rows: params[:selected_rows] }
+                selected_rows: params[:selected_rows],
+                downstream: params[:downstream] }
     )
     render json: {
       html: modal,

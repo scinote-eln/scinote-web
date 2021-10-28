@@ -10,14 +10,8 @@
       <div class="modal-body">
         <% users.each do |user| %>
           <% user_assignment = my_module.user_assignments.find_by(user: user) %>
-
-          <% cache [user_assignment, my_module, current_user, user] do %>
-            <%= render partial: 'access_permissions/partials/user_assignment', locals: { user_assignment: user_assignment, user: user, resource: my_module } %>
-          <% end %>
+          <%= render partial: 'access_permissions/partials/user_assignment', locals: { user_assignment: user_assignment, user: user, resource: my_module } %>
         <% end %>
-      </div>
-      <div class="modal-footer">
-        <button type='button' class='btn btn-default' data-dismiss='modal'><%= t('general.cancel')%></button>
       </div>
     </div>
   </div>

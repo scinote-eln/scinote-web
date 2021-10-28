@@ -22,6 +22,12 @@ module Assignable
         .where('? = ANY(user_roles.permissions)', "::#{self.class.to_s.split('::').first}Permissions".constantize::MANAGE)
     }
 
+    scope :with_user_permission, lambda { |user, permission|
+      joins(user_assignments: :user_role)
+        .where(user_assignments: { user: user })
+        .where('? = ANY(user_roles.permissions)', permission)
+    }
+
     after_create do
       UserAssignment.create!(
         user: created_by,
@@ -31,6 +37,10 @@ module Assignable
       )
 
       UserAssignments::GenerateUserAssignmentsJob.perform_later(self, created_by)
+    end
+
+    def role_for_user(user)
+      user_assignments.find_by(user: user)&.user_role
     end
   end
 end

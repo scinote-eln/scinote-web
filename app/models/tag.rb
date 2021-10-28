@@ -24,23 +24,19 @@ class Tag < ApplicationRecord
                   page = 1,
                   _current_team = nil,
                   options = {})
-    project_ids =
-      Project
-      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .pluck(:id)
+    project_ids = Project.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
+                         .pluck(:id)
 
     new_query = Tag
                 .distinct
-                .where('tags.project_id IN (?)', project_ids)
+                .where(tags: { project_id: project_ids })
                 .where_attributes_like(:name, query, options)
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT
       new_query
     else
-      new_query
-        .limit(Constants::SEARCH_LIMIT)
-        .offset((page - 1) * Constants::SEARCH_LIMIT)
+      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 end

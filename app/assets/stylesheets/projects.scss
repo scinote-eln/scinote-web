@@ -218,14 +218,26 @@ path, ._jsPlumb_endpoint {
   .panel-body .due-date-link {
     color: $color-emperor;
     display: block;
+
+    &:hover {
+      text-decoration: none;
+    }
   }
 
   .panel-body .due-date-label {
-    margin-left: 30px;
+    margin-left: .5em;
+
+    &.empty-label {
+      color: $color-alto;
+    }
   }
 
   &.expanded {
     z-index: 30;
+  }
+
+  .my-module-title {
+    color: $color-black;
   }
 
   &.group-hover {
@@ -261,6 +273,18 @@ path, ._jsPlumb_endpoint {
     }
   }
 
+  .nav-tabs {
+    border-bottom: 0;
+  }
+
+  .designated-users-task-title {
+    padding-left: 15px;
+  }
+
+  .user-role {
+    @include font-small;
+  }
+
   &.private {
     @include font-main;
     color: $color-silver-chalice;
@@ -281,6 +305,12 @@ path, ._jsPlumb_endpoint {
     .description {
       margin-top: .5em;
       text-align: center;
+    }
+  }
+
+  .panel-footer {
+    .btn-link {
+      display: flex;
     }
   }
 }
