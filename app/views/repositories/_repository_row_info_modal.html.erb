@@ -15,33 +15,41 @@
           <%= t('repositories.repository', name: @repository_row.repository.name) %>
           <%= @repository_row.repository.archived? ? I18n.t('atwho.res.archived') : '' %>
         </ol>
-        <p>
-          <span>
-            <%= t('repository_row.modal_info.ID') %>
-            <%= @repository_row.code %>
-          </span>
-          <br>
-          <span>
-            <%= t('repository_row.modal_info.added_on') %>:
-            <%= l(@repository_row.created_at, format: :full) %>
-          </span>
-          <br>
-          <span>
-            <%= t('repository_row.modal_info.added_by') %>:
-            <%= @repository_row.created_by.full_name %>
-          </span>
-          <% @repository_row.repository_cells.each do |repository_cell| %>
-            <br>
-            <span>
-              <%= t 'repository_row.modal_info.column_name', cf: repository_cell.repository_column.name %>
-              <% if repository_cell.value_type == 'RepositoryAssetValue' %>
-                <%= render partial: 'assets/asset_link', locals: { asset: repository_cell.value.asset, display_image_tag: false }, formats: :html %>
-              <% else %>
-                <%= custom_auto_link(repository_cell.value.formatted, simple_format: false, team: current_team) %>
+        <div class="row">
+          <div class="col-md-8">
+            <p>
+              <span>
+                <%= t('repository_row.modal_info.ID') %>
+                <%= @repository_row.code %>
+              </span>
+              <br>
+              <span>
+                <%= t('repository_row.modal_info.added_on') %>:
+                <%= l(@repository_row.created_at, format: :full) %>
+              </span>
+              <br>
+              <span>
+                <%= t('repository_row.modal_info.added_by') %>:
+                <%= @repository_row.created_by.full_name %>
+              </span>
+              <% @repository_row.repository_cells.each do |repository_cell| %>
+                <br>
+                <span>
+                  <%= t 'repository_row.modal_info.column_name', cf: repository_cell.repository_column.name %>
+                  <% if repository_cell.value_type == 'RepositoryAssetValue' %>
+                    <%= render partial: 'assets/asset_link', locals: { asset: repository_cell.value.asset, display_image_tag: false }, formats: :html %>
+                  <% else %>
+                    <%= custom_auto_link(repository_cell.value.formatted, simple_format: false, team: current_team) %>
+                  <% end %>
+                </span>
               <% end %>
-            </span>
-          <% end %>
-        </p>
+            </p>
+          </div>
+          <div class="col-md-4 bar-code-container">
+            <canvas id="bar-code-canvas" class="hidden" data-id="<%= @repository_row.code %>"></canvas>
+            <img id="bar-code-image"></img>
+          </div>
+        </div>
 
         <% if @repository_row.repository.is_a?(Repository) %>
           <% if @assigned_modules.size.positive? %>
@@ -98,7 +106,9 @@
         <% end %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('general.close')%></button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.close')%></button>
+        <button type="button" class="btn btn-primary print-label-button" data-dismiss="modal" data-url="<%= print_modal_repository_repository_rows_path(@repository_row.repository) %>"  data-rows="[<%= @repository_row.id %>]"><%= t('repository_row.modal_print_label.print_label') %></button>
+
       </div>
     </div>
   </div>

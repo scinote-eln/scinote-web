@@ -1,3 +1,11 @@
 .modal-sm {
   width: 370px;
 }
+
+.modal {
+  .modal-absolute-close-button {
+    position: absolute;
+    right: 1em;
+    top: .5em;
+  }
+}

@@ -63,11 +63,12 @@ module Api
             p.require(%i(id attributes))
             p.require(:attributes).require(:value)
           end
-          @inventory_item.transaction do
+          @inventory_item.with_lock do
             inventory_cells_params.each do |cell_params|
               cell = @inventory_item.repository_cells.find(cell_params[:id])
               cell_value = cell_params.dig(:attributes, :value)
               next unless cell.value.data_changed?(cell_value)
+
               cell.value.update_data!(cell_value, current_user)
               item_changed = true
             end

@@ -17,6 +17,8 @@ module Api
       has_many :steps, serializer: StepSerializer, if: -> { object.steps.any? }
       belongs_to :parent, serializer: ProtocolSerializer, if: -> { object.parent.present? }
 
+      include TimestampableModel
+
       def description
         if instance_options[:rte_rendering]
           custom_auto_link(object.tinymce_render(:description),

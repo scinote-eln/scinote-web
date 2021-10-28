@@ -1,0 +1,18 @@
+<% case (subject&.result || subject&.step) %>
+<% when Result %>
+  <%= render partial: "global_activities/references/result.html.erb",
+          locals: { team: team, subject: subject.result, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
+<% when Step %>
+  <%= render partial: "global_activities/references/protocol.html.erb",
+          locals: { team: team, subject: subject.step.protocol, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
+<% else %>
+  <%= render partial: "global_activities/references/my_module.html.erb",
+          locals: { team: team, subject: nil, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
+  <div class="ga-breadcrumb">
+    <span class="fa fa-paperclip">&nbsp;</span>
+    <% name = breadcrumbs['result'] || breadcrumbs['step'] %>
+    <span title="<%= name %>">
+      <%= name.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
+    </span>
+  </div>
+<% end %>

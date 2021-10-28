@@ -5,6 +5,7 @@
     <div class="center-block center-block-narrow">
       <h1 class="log-in-title"><%= t "devise.sessions.2fa.title" %></h1>
       <%= form_with url: users_authenticate_with_two_factor_url, local: true  do %>
+        <%= hidden_field_tag :initial_page, @initial_page %>
         <p><%= t "devise.sessions.2fa.description" %></p>
         <p class="input-group sci-input-container">
           <%= label :otp, t("devise.sessions.2fa.field") %>

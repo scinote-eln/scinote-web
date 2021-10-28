@@ -6,10 +6,10 @@ define PRODUCTION_CONFIG_BODY
 SECRET_KEY_BASE=$(shell openssl rand -hex 64)
 PAPERCLIP_HASH_SECRET=$(shell openssl rand -base64 128 | tr -d '\n')
 DATABASE_URL=postgresql://postgres:mysecretpassword@db/scinote_production
-PAPERCLIP_STORAGE=filesystem
+ACTIVESTORAGE_SERVICE=local
 ENABLE_RECAPTCHA=false
 ENABLE_USER_CONFIRMATION=false
-ENABLE_USER_REGISTRATION=true
+ENABLE_USER_REGISTRATION=false
 DEFACE_ENABLED=false
 endef
 export PRODUCTION_CONFIG_BODY

@@ -18,6 +18,9 @@ module Api
                              serializer: ResultAssetSerializer,
                              class_name: 'ResultAsset',
                              if: -> { object.is_asset }
+      has_many :result_comments, key: :comments, serializer: CommentSerializer
+
+      include TimestampableModel
     end
   end
 end

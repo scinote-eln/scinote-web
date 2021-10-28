@@ -1,0 +1,30 @@
+<div class="label-printing-progress-modal"
+     data-label-printer-status="<%= label_printer.printing_status %>" data-label-printer-id="<%= label_printer.id %>"
+     data-starting-item-count="<%= starting_item_count %>"
+     data-progress-url="<%= update_progress_modal_label_printer_path(label_printer, starting_item_count: starting_item_count) %>">
+  <div class="modal-header">
+    <div class="title">
+      <%= label_printer.name %>
+    </div>
+    <div class="printer-status" data-status="<%= label_printer.status %>">
+      <% if label_printer.ready?  %>
+        <%= t('label_printers.modal_printing_status.printer_status.ready') %>
+      <% elsif label_printer.out_of_labels? %>
+        <%= t('label_printers.modal_printing_status.printer_status.out_of_labels') %>
+      <% elsif label_printer.error? %>
+        <%= t('label_printers.modal_printing_status.printer_status.error') %>
+      <% else %>
+        <%= t('label_printers.modal_printing_status.printer_status.not_ready') %>
+      <% end %>
+    </div>
+    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="modal-body">
+    <div class="printing-items">
+      <%= t('label_printers.modal_printing_status.multiple_items', starting_item_count: starting_item_count,  item_count: starting_item_count - label_printer.current_print_job_ids.length) %>
+    </div>
+    <div class="printing-status" data-status="<%= label_printer.printing_status %>">
+      <%= t("label_printers.modal_printing_status.printing_status.#{label_printer.printing_status}") %>
+    </div>
+  </div>
+</div>

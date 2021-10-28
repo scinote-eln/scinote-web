@@ -76,4 +76,8 @@ class ActivitiesService
       *subjects_with_children.to_h.flatten
     )
   end
+
+  def self.activity_matches_filter?(user, teams, activity, activity_filter)
+    load_activities(user, teams, activity_filter.filter).where(id: activity.id).any?
+  end
 end

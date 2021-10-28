@@ -23,9 +23,10 @@ class Users::SessionsController < Devise::SessionsController
   def create
     super do |user|
       if redirect_to_two_factor_auth?(user)
+        initial_page = stored_location_for(:user)
         sign_out
         session[:otp_user_id] = user.id
-        store_location_for(:user, request.original_fullpath) if request.get?
+        store_location_for(:user, initial_page)
         redirect_to users_two_factor_auth_path
         return
       end
@@ -40,6 +41,7 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def two_factor_auth
+    @initial_page = stored_location_for(:user)
   end
 
   def after_sign_in
@@ -60,7 +62,7 @@ class Users::SessionsController < Devise::SessionsController
       sign_in(user)
       generate_templates_project
       flash[:notice] = t('devise.sessions.signed_in')
-      redirect_to stored_location_for(:user) || root_path
+      redirect_to params[:initial_page] || root_path
     else
       flash.now[:alert] = t('devise.sessions.2fa.error_message')
       render :two_factor_auth

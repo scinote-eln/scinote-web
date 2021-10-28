@@ -70,7 +70,7 @@ module Users
           break
         end
 
-        result = { email: email }
+        result = { email: email, user_teams: [] }
         unless Constants::BASIC_EMAIL_REGEX.match?(email)
           result[:status] = :user_invalid
           @invite_results << result

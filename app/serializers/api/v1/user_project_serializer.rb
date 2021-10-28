@@ -5,8 +5,9 @@ module Api
     class UserProjectSerializer < ActiveModel::Serializer
       type :user_projects
       attributes :id, :role
-
       belongs_to :user, serializer: UserSerializer
+
+      include TimestampableModel
     end
   end
 end

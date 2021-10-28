@@ -1,0 +1,31 @@
+#modal-print-repository-row-label {
+
+  .id-label {
+    margin-left: .5em;
+    opacity: .5;
+  }
+
+  .printers-container {
+    margin-bottom: 1em;
+    min-height: 4em;
+  }
+
+  .print-copies-input {
+    margin-left: .5em;
+    width: 50px;
+  }
+
+  .modal-footer {
+    text-align: center;
+  }
+
+  .no-printers-container {
+    padding: 2em;
+    text-align: center;
+
+    .no-printer-title {
+      @include font-h3;
+      margin-top: 1em;
+    }
+  }
+}

@@ -13,6 +13,8 @@ module Api
                               serializer: InventorySerializer,
                               class_name: 'Repository',
                               if: -> { instance_options[:show_repository] }
+
+      include TimestampableModel
     end
   end
 end

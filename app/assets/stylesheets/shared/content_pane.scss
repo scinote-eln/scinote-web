@@ -32,6 +32,8 @@
       width: calc(100% + 4em);
 
       h1 {
+        align-items: center;
+        display: flex;
         flex-grow: 1;
         margin: 0;
       }
@@ -115,7 +117,7 @@
 
         .dropdown-menu {
           @include font-button;
-          min-width: 150px;
+          min-width: 200px;
           padding: .5em 0;
 
           a {
@@ -135,6 +137,10 @@
               position: absolute;
               right: 1em;
             }
+          }
+
+          .fa-stack {
+            width: 2em;
           }
         }
       }

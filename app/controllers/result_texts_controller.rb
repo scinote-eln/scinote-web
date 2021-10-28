@@ -10,6 +10,7 @@ class ResultTextsController < ApplicationController
 
   before_action :check_manage_permissions, only: %i(new create edit update)
   before_action :check_archive_permissions, only: [:update]
+  before_action :check_view_permissions, only: [:download]
 
   def new
     @result = Result.new(
@@ -157,6 +158,10 @@ class ResultTextsController < ApplicationController
     if result_params[:archived].to_s != '' && !can_manage_result?(@result)
       render_403
     end
+  end
+
+  def check_view_permissions
+    render_403 unless can_read_result?(@result)
   end
 
   def result_params

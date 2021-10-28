@@ -194,6 +194,38 @@ ALTER SEQUENCE public.activities_id_seq OWNED BY public.activities.id;
 
 
 --
+-- Name: activity_filters; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.activity_filters (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    filter jsonb NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: activity_filters_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.activity_filters_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: activity_filters_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.activity_filters_id_seq OWNED BY public.activity_filters.id;
+
+
+--
 -- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -553,6 +585,81 @@ CREATE SEQUENCE public.experiments_id_seq
 --
 
 ALTER SEQUENCE public.experiments_id_seq OWNED BY public.experiments.id;
+
+
+--
+-- Name: label_printers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.label_printers (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    description character varying,
+    type_of integer NOT NULL,
+    language_type integer NOT NULL,
+    host character varying,
+    port integer,
+    fluics_api_key character varying,
+    fluics_lid character varying,
+    current_print_job_ids character varying[] DEFAULT '{}'::character varying[],
+    status integer DEFAULT 0,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: label_printers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.label_printers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: label_printers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.label_printers_id_seq OWNED BY public.label_printers.id;
+
+
+--
+-- Name: label_templates; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.label_templates (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    content text NOT NULL,
+    language_type integer,
+    "default" boolean DEFAULT false NOT NULL,
+    size character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: label_templates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.label_templates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: label_templates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.label_templates_id_seq OWNED BY public.label_templates.id;
 
 
 --
@@ -2759,6 +2866,42 @@ ALTER SEQUENCE public.view_states_id_seq OWNED BY public.view_states.id;
 
 
 --
+-- Name: webhooks; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.webhooks (
+    id bigint NOT NULL,
+    activity_filter_id bigint NOT NULL,
+    active boolean DEFAULT true NOT NULL,
+    url character varying NOT NULL,
+    http_method integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    last_error text,
+    text text
+);
+
+
+--
+-- Name: webhooks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.webhooks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: webhooks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.webhooks_id_seq OWNED BY public.webhooks.id;
+
+
+--
 -- Name: wopi_actions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2919,6 +3062,13 @@ ALTER TABLE ONLY public.activities ALTER COLUMN id SET DEFAULT nextval('public.a
 
 
 --
+-- Name: activity_filters id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.activity_filters ALTER COLUMN id SET DEFAULT nextval('public.activity_filters_id_seq'::regclass);
+
+
+--
 -- Name: asset_text_data id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2972,6 +3122,20 @@ ALTER TABLE ONLY public.delayed_jobs ALTER COLUMN id SET DEFAULT nextval('public
 --
 
 ALTER TABLE ONLY public.experiments ALTER COLUMN id SET DEFAULT nextval('public.experiments_id_seq'::regclass);
+
+
+--
+-- Name: label_printers id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.label_printers ALTER COLUMN id SET DEFAULT nextval('public.label_printers_id_seq'::regclass);
+
+
+--
+-- Name: label_templates id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.label_templates ALTER COLUMN id SET DEFAULT nextval('public.label_templates_id_seq'::regclass);
 
 
 --
@@ -3409,6 +3573,13 @@ ALTER TABLE ONLY public.view_states ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: webhooks id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.webhooks ALTER COLUMN id SET DEFAULT nextval('public.webhooks_id_seq'::regclass);
+
+
+--
 -- Name: wopi_actions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3466,6 +3637,14 @@ ALTER TABLE ONLY public.active_storage_variant_records
 
 ALTER TABLE ONLY public.activities
     ADD CONSTRAINT activities_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: activity_filters activity_filters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.activity_filters
+    ADD CONSTRAINT activity_filters_pkey PRIMARY KEY (id);
 
 
 --
@@ -3538,6 +3717,22 @@ ALTER TABLE ONLY public.delayed_jobs
 
 ALTER TABLE ONLY public.experiments
     ADD CONSTRAINT experiments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: label_printers label_printers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.label_printers
+    ADD CONSTRAINT label_printers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: label_templates label_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.label_templates
+    ADD CONSTRAINT label_templates_pkey PRIMARY KEY (id);
 
 
 --
@@ -4045,6 +4240,14 @@ ALTER TABLE ONLY public.view_states
 
 
 --
+-- Name: webhooks webhooks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.webhooks
+    ADD CONSTRAINT webhooks_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: wopi_actions wopi_actions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4389,6 +4592,13 @@ CREATE INDEX index_experiments_on_project_id ON public.experiments USING btree (
 --
 
 CREATE INDEX index_experiments_on_restored_by_id ON public.experiments USING btree (restored_by_id);
+
+
+--
+-- Name: index_label_templates_on_language_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_label_templates_on_language_type ON public.label_templates USING btree (language_type);
 
 
 --
@@ -4998,6 +5208,13 @@ CREATE INDEX index_repository_asset_values_on_last_modified_by_id ON public.repo
 --
 
 CREATE INDEX index_repository_cells_on_repository_column_id ON public.repository_cells USING btree (repository_column_id);
+
+
+--
+-- Name: index_repository_cells_on_repository_row_and_repository_column; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_repository_cells_on_repository_row_and_repository_column ON public.repository_cells USING btree (repository_row_id, repository_column_id);
 
 
 --
@@ -5806,6 +6023,13 @@ CREATE INDEX index_view_states_on_viewable ON public.view_states USING btree (vi
 
 
 --
+-- Name: index_webhooks_on_activity_filter_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_webhooks_on_activity_filter_id ON public.webhooks USING btree (activity_filter_id);
+
+
+--
 -- Name: index_wopi_actions_on_extension_and_action; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6145,6 +6369,14 @@ ALTER TABLE ONLY public.repository_date_time_values
 
 ALTER TABLE ONLY public.tags
     ADD CONSTRAINT fk_rails_5f245fd6a7 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: webhooks fk_rails_61458d031d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.webhooks
+    ADD CONSTRAINT fk_rails_61458d031d FOREIGN KEY (activity_filter_id) REFERENCES public.activity_filters(id);
 
 
 --
@@ -7257,7 +7489,14 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210407143303'),
 ('20210410100006'),
 ('20210506125657'),
+('20210531114633'),
+('20210603152345'),
+('20210616071836'),
 ('20210622101238'),
-('20210715125349');
+('20210715125349'),
+('20210716124649'),
+('20210720112050'),
+('20210811103123'),
+('20210906132120');
 
 

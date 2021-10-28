@@ -481,6 +481,10 @@ li.module-hover {
     }
   }
 
+  .projects-title {
+    flex-grow: 1;
+  }
+
   .delete-folders-form,
   .delete-folders-btn {
     display: inline-block;
@@ -514,12 +518,14 @@ li.module-hover {
       }
     }
 
-    .users-dropdown-list {
+    .dropdown-option.users-dropdown-list {
+      padding: 8px 10px;
+
       .item-avatar {
         border-radius: 50%;
-        height: 20px;
-        margin: 0 .5em 0 0;
-        width: 20px;
+        height: 32px;
+        margin: 0 16px 0 0;
+        width: 32px;
       }
     }
   }

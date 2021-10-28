@@ -7,7 +7,6 @@ module User::ProjectRoles
     # Check if user is member of project
     around %i(
       is_member_of_project?
-      is_owner_of_project?
       is_user_of_project?
       is_user_or_higher_of_project?
       is_technician_of_project?
@@ -15,7 +14,7 @@ module User::ProjectRoles
       is_viewer_of_project?
     ) do |proxy, *args, &block|
       if args[0]
-        @user_project = user_projects.where(project: args[0]).take
+        @user_project = user_projects.find_by(project: args[0])
         @user_project ? proxy.call(*args, &block) : false
       else
         false
@@ -33,7 +32,13 @@ module User::ProjectRoles
   end
 
   def is_owner_of_project?(project)
-    @user_project.owner?
+    # if project has no assigned users, creator can manage it
+    if project.user_projects.none? && project.created_by_id == id
+      true
+    else
+      user_project = user_projects.find_by(project: project)
+      user_project.present? ? user_project.owner? : false
+    end
   end
 
   def is_user_of_project?(project)

@@ -146,6 +146,12 @@ en:
           attributes:
             base:
               per_column_limit: "Too many items in the column"
+        webhook:
+          attributes:
+            configuration:
+              disabled: 'Webhooks are disabled'
+            url:
+              not_valid: 'Not valid URL'
 
   helpers:
     label:
@@ -526,6 +532,7 @@ en:
           error_pdf_notification_title: "Your report .PDF generation failed. Please try again."
           error_notification_message: "Report: %{report_link} | Team: %{team_name}"
           content_generation_error: "Failed to generate report content"
+          file_preview_generation_error: "We were unable to generate preview for this file."
         modal_delete:
           head_title: "Delete report/s"
           message: "Are you sure to delete selected report/s?"
@@ -761,6 +768,18 @@ en:
       select_user_role: "Please select a user role."
       add_user_generic_error: "An error occurred. "
       can_add_user_to_project: "Can not add user to the project."
+
+  label_printers:
+    create:
+      success: "Successfully added %{printer_name}"
+      error: "Could not add %{printer_name}"
+    update:
+      success: "Successfully updated %{printer_name}"
+      error: "Could not update %{printer_name}"
+    delete:
+      success: "Successfully deleted %{printer_name}."
+      error: "Could not delete %{printer_name}."
+
 
   my_modules:
     details:
@@ -1342,7 +1361,7 @@ en:
         active: "These are individually archived items from the %{repository_name} inventory. The inventory itself is active."
         archived_on: "Inventory archived on"
         archived_by: "by"
-      filter_inventory_items: "Filter inventory items"
+      filter_inventory_items: "Filter items"
       no_items: "No items here"
       no_items_matched: "No items matched your search request"
       no_archived_items: "No archived items here"
@@ -1607,6 +1626,32 @@ en:
       title: "This item is assigned to %{nr} tasks."
       private_tasks: "%{nr} task(s) are private and will not be displayed."
       no_tasks: "This item in not assigned to any task."
+    modal_print_label:
+      head_title: "Print label - %{repository_row}"
+      head_title_multiple: "Print label - %{repository_rows} rows"
+      id_label: "ID: %{repository_row_id}"
+      printer: "Printer"
+      number_of_copies: "Number of copies"
+      print_label: "Print label"
+      no_printers:
+        title: "There seems to be no printer available"
+        description: "To learn more about printing labels and label printers please visit our blog."
+        visit_blog: "Visit blog"
+  label_printers:
+    modal_printing_status:
+      printer_status:
+        ready: "Ready"
+        not_ready: "Not Ready"
+        out_of_labels: "Out of labels"
+        error: "Printer error"
+        unreachable: "Printer offline"
+      multiple_items: "%{item_count}/%{starting_item_count} labels"
+      printing_status:
+        done: "Done"
+        printing: "Printing"
+        out_of_labels: "Waiting for labels. Please, insert labels."
+        error: "There is an issue with the printer."
+        unreachable: "Printer is offline"
   activities:
     index:
       global_activities_title: "Global activities"
@@ -1619,6 +1664,7 @@ en:
       activities_counter_label: " activities"
       expand_all: "Expand all"
       collapse_all: "Collapse all"
+
     modal:
       modal_title: "Activities"
     result_type:
@@ -1775,6 +1821,7 @@ en:
       sidebar:
         account: "Account"
         teams: "Teams"
+        webhooks: "Webhooks"
         account_nav:
           profile: "Profile"
           preferences: "Preferences"
@@ -1796,6 +1843,36 @@ en:
           head_title: "Settings | Add-ons"
           title: "Add-ons"
           no_addons: "You have no SciNote Add-ons."
+          scinote_addons: "Scinote add-ons"
+          label_printers: "Label Printers"
+          printers:
+            ready: "Ready"
+            not_ready: "Not ready"
+            printer_details: "Printer details"
+            enter_api_key: "Enter API key"
+            enabled: "Enabled"
+          fluics_printer:
+            title: "FLUICS Print"
+            description: "Truly a plug & play label printing solution."
+        label_printer:
+          fluics_printer: "FLUICS Print: Label printers"
+          instructions: "Instructions"
+          fluics_instruction:
+            p1: "To make it work, please follow these steps:"
+            p2_html: "1. <a href='%{link}' target='_blank'>Order</a> your FLUICS Print package. It includes an online printer, labels and the API key."
+            p3: "2. Plug the online printer to a power outlet and connect it to the internet with a LAN cable."
+            p4: "3. Enter the API key into the field below."
+            p5: "4. SciNote will find your printer and connect to it automatically. You can start printing labels."
+          settings: "Settings"
+          api_key_label: "API key"
+          api_key_warning: "API key change will lead to printer list refresh"
+          api_key_error: "Invalid API key"
+          api_key_information: "Don’t have API key? Click here for more info."
+          saved: "Saved"
+          update_printers: "Update printers"
+          no_printers_available: "No printers available"
+
+
         connected_accounts:
           head_title: "Settings | Connected Accounts"
           title: "Connected Accounts"
@@ -2204,7 +2281,7 @@ en:
 
   invite_users:
     to_team:
-      title: "Invite users to team %{team}"
+      title: "Invite members to %{team}"
       heading: "Invite more people to team %{team} and start using SciNote."
     no_team:
       title: "Invite users to SciNote"
@@ -2344,6 +2421,7 @@ en:
     file_preview:
       edit_in_scinote: "Edit in SciNote"
       edit_in_marvinjs: "Edit in Marvin JS"
+      edit_in_bio_eddie: "Edit in BioEddie"
     context_menu:
       set_view_size: "SET VIEW SIZE"
       delete: "Delete file"
@@ -2400,6 +2478,28 @@ en:
     export_request_success: "Export request received!"
     export_error: "Error when creating zip export."
 
+  webhooks:
+    index:
+      title: 'Webhooks'
+      description: 'Saved activity filters are listed below as collapsible sections. You can add more saved filters on the Activities page. Each saved filter can hold several webhooks.'
+      new_webhook: "New webhook"
+      applied_filters: "Applied activity filters"
+      webhook_options: "Webhook options"
+      delete_filter_modal:
+        title: "Delete filter"
+        description_html: "Are you sure you want to delete <b></b>?"
+      webhook_text_html: "Trigger <b class=\"method\">%{method}</b> target <b>%{url}</b>"
+      enable: "Enable"
+      disable: "Disable"
+      active: "Active"
+      disabled: "Disabled"
+      webhook_trigger: "Webhook trigger"
+      target: "target"
+      url_placeholder: "Enter url or other html target"
+      webhook_created: "Webhook successfully created"
+      webhook_updated: "Webhook successfully updated"
+      webhook_deleted: "Webhook successfully deleted"
+      delete_webhook_confimration: "Are you sure you want to delete the webhook?"
   # This section contains general words that can be used in any parts of
   # application.
   tiny_mce:
@@ -2435,12 +2535,12 @@ en:
     comment_placeholder_new: "Add new comment…"
     archived: "Archived"
     sort:
-      new_html: "Started last"
-      old_html: "Started first"
-      atoz_html: "Name A to Z"
-      ztoa_html: "Name Z to A"
-      archived_new_html: "Archived last"
-      archived_old_html: "Archived first"
+      new_html: "<i class=\"fas fa-sort-numeric-up\"></i>&nbsp;&nbsp;Started last"
+      old_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Started first"
+      atoz_html: "<i class=\"fas fa-sort-alpha-down\"></i>&nbsp;&nbsp;Name A to Z"
+      ztoa_html: "<i class=\"fas fa-sort-alpha-up\"></i>&nbsp;&nbsp;Name Z to A"
+      archived_new_html: "<span class=\"fa-stack\"><i class=\"fas fa-long-arrow-alt-up\"></i><i class=\"fas fa-archive\"></i></span>Archived last"
+      archived_old_html: "<span class=\"fa-stack\"><i class=\"fas fa-long-arrow-alt-down\"></i><i class=\"fas fa-archive\"></i></span>Archived first"
     sort_new:
       new: "Newest"
       old: "Oldest"
@@ -2583,6 +2683,14 @@ en:
     invite_users:
       permission_error: "You don't have permission to invite additional users to this team. Contact its administrator/s."
 
+  bio_eddie:
+    new_molecule: "New Molecule"
+    new_button: "Create Biomolecule"
+    molecule_name_placeholder: "Click here to enter Molecule name"
+    no_molecules_found: "No Molecules Found"
+    save_and_register: "Save & Register to Biomolecule Toolkit"
+    empty_molecule_error: "An error occurred. The molecule can't be empty."
+
   marvinjs:
     new_sketch: "New Chemical Drawing"
     new_button: "Create Chemical Drawing"
@@ -2590,6 +2698,7 @@ en:
     structure_placeholder: "Click here to enter Chemical Drawing name"
     modal_name_title: "Chemical Drawing name:"
     checmical_drawing: "Chemical drawings"
+    no_sketches_found: "No Sketches Found"
 
   pdf_preview:
     fit_to_screen: 'Fit to screen'

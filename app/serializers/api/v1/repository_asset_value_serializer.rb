@@ -5,6 +5,8 @@ module Api
     class RepositoryAssetValueSerializer < ActiveModel::Serializer
       attributes :file_id, :file_name, :file_size, :url
 
+      include TimestampableModel
+
       def file_id
         object.asset&.id
       end

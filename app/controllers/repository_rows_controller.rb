@@ -4,6 +4,8 @@ class RepositoryRowsController < ApplicationController
   include ApplicationHelper
   include MyModulesHelper
 
+  MAX_PRINTABLE_ITEM_NAME_LENGTH = 64
+
   before_action :load_repository, except: :show
   before_action :load_repository_row, only: %i(update assigned_task_list)
   before_action :check_read_permissions, except: %i(show create update delete_records copy_records)
@@ -69,6 +71,51 @@ class RepositoryRowsController < ApplicationController
         }
       end
     end
+  end
+
+  def print_modal
+    @repository_rows = @repository.repository_rows.where(id: params[:rows])
+    @printers = LabelPrinter.all
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'repositories/print_label_modal.html.erb'
+          )
+        }
+      end
+    end
+  end
+
+  def print
+    # reset all potential error states for printers and discard all jobs
+
+    # rubocop:disable Rails/SkipsModelValidations
+    LabelPrinter.update_all(status: :ready, current_print_job_ids: [])
+    # rubocop:enable Rails/SkipsModelValidations
+
+    label_printer = LabelPrinter.find(params[:label_printer_id])
+
+    job_ids = RepositoryRow.where(id: params[:repository_row_ids]).flat_map do |repository_row|
+      LabelPrinters::PrintJob.perform_later(
+        label_printer,
+        LabelTemplate.first.render( # Currently we will only use the default template
+          item_id: repository_row.code,
+          item_name: repository_row.name.truncate(MAX_PRINTABLE_ITEM_NAME_LENGTH)
+        ),
+        params[:copies].to_i
+      ).job_id
+    end
+
+    label_printer.update!(current_print_job_ids: job_ids * params[:copies].to_i)
+
+    render json: {
+      html: render_to_string(
+        partial: 'label_printers/print_progress_modal.html.erb',
+        locals: { starting_item_count: label_printer.current_print_job_ids.length,
+                  label_printer: label_printer }
+      )
+    }
   end
 
   def update

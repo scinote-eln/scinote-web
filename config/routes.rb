@@ -21,6 +21,8 @@ Rails.application.routes.draw do
 
     resources :activities, only: [:index]
 
+    get '/jobs/:id/status', to: 'active_jobs#status'
+
     get 'forbidden', to: 'application#forbidden', as: 'forbidden'
     get 'not_found', to: 'application#not_found', as: 'not_found'
 
@@ -41,6 +43,16 @@ Rails.application.routes.draw do
     get 'users/settings/account/addons',
         to: 'users/settings/account/addons#index',
         as: 'addons'
+
+    resources :label_printers, except: :show, path: 'users/settings/account/addons/label_printers' do
+      post :create_fluics, on: :collection
+    end
+
+    resources :label_printers, only: [] do
+      post :print, on: :member
+      get :update_progress_modal, on: :member
+    end
+
     get 'users/settings/account/connected_accounts',
         to: 'users/settings/account/connected_accounts#index',
         as: 'connected_accounts'
@@ -103,6 +115,18 @@ Rails.application.routes.draw do
     delete 'users/settings/user_teams/:id',
            to: 'users/settings/user_teams#destroy',
            as: 'destroy_user_team'
+
+    namespace :users do
+      namespace :settings do
+        resources :webhooks, only: %i(index create update destroy) do
+          collection do
+            post :destroy_filter
+            get :filter_info
+          end
+        end
+      end
+    end
+
 
     # Invite users
     devise_scope :user do
@@ -557,6 +581,10 @@ Rails.application.routes.draw do
 
       resources :repository_columns, only: %i(index new edit destroy)
       resources :repository_rows, only: %i(create show update) do
+        collection do
+          get :print_modal
+          post :print
+        end
         member do
           get :assigned_task_list
         end
@@ -729,6 +757,7 @@ Rails.application.routes.draw do
       get :protocol_filter
       get :team_filter
       get :user_filter
+      post :save_activity_filter
     end
   end
 
@@ -740,6 +769,21 @@ Rails.application.routes.draw do
       post :start_editing
     end
   end
+
+  resources :bio_eddie_assets, only: %i(create update) do
+    collection do
+      get :license
+    end
+    member do
+      post :start_editing
+    end
+  end
+
+  match '/marvin4js-license.cxl', to: 'bio_eddie_assets#license', via: :get
+
+  match 'biomolecule_toolkit/*path', to: 'bio_eddie_assets#bmt_request',
+                                     via: %i(get post put delete),
+                                     defaults: { format: 'json' }
 
   post 'global_activities', to: 'global_activities#index'
 

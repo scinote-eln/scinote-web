@@ -134,7 +134,7 @@ class Extends
   ]
 
   ACTIVITY_SUBJECT_TYPES = %w(
-    Team RepositoryBase Project Experiment MyModule Result Protocol Report RepositoryRow ProjectFolder
+    Team RepositoryBase Project Experiment MyModule Result Protocol Report RepositoryRow ProjectFolder Asset Step
   ).freeze
 
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
@@ -309,21 +309,31 @@ class Extends
     rename_project_folder: 161,
     delete_project_folder: 162,
     generate_pdf_report: 163,
-    generate_docx_report: 164
+    generate_docx_report: 164,
+    edit_molecule_on_step: 168,
+    edit_molecule_on_result: 169,
+    edit_molecule_on_step_in_repository: 170,
+    create_molecule_on_step: 171,
+    create_molecule_on_result: 172,
+    create_molecule_on_step_in_repository: 173,
+    register_molecule_on_step: 177,
+    register_molecule_on_result: 178,
+    register_molecule_on_step_in_repository: 179
   }
 
   ACTIVITY_GROUPS = {
     projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162],
-    task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128],
+    task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, 169, 172, 178],
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
            *146..148],
-    task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137],
+    task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
+                    168, 171, 177],
     task_inventory: [55, 56, 146, 147],
-    experiment: [*27..31, 57],
+    experiment: [*27..31, 57, 141],
     reports: [48, 50, 49, 163, 164],
     inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77, 78, 96, 107, 113, 114, *133..136],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
-                          83, 101, 112, 123, 125, 117, 119, 129, 131],
+                          83, 101, 112, 123, 125, 117, 119, 129, 131, 170, 173, 179],
     team: [92, 94, 93, 97, 104]
   }
 

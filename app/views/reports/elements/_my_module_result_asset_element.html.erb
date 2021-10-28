@@ -15,8 +15,12 @@
       </div>
       <div class="pull-left file-name">
         <% if defined? export_all and export_all %>
-          <% file_link = @obj_filenames.dig(:assets, asset.id, :file) %>
-          <a href="<%= file_link %>">
+          <% if  @obj_filenames.dig(:assets, asset.id, :bio_eddie) %>
+            <% file_link = @obj_filenames.dig(:assets, asset.id, :bio_eddie) %>
+          <% else %>
+            <% file_link = @obj_filenames.dig(:assets, asset.id, :file) %>
+          <% end %>
+          <a href="<%= file_link %>" class="export-all-link" >
             <em><%= t("projects.reports.elements.result_asset.file_name", file: file_link&.split('/')&.last) %></em>
           </a>
         <% else %>

@@ -64,6 +64,11 @@
     <p class="view-only-label"><%= t('repositories.index.view_only_permission_label') %></p>
   <% end %>
 <% end %>
+  <button type="button" id="toolbarPrintLabel" class="btn btn-light print-label-button" data-dismiss="modal" data-url="<%= print_modal_repository_repository_rows_path(@repository)  %>" data-rows="[]" style="display: none">
+    <span class="fas fa-print"></span>
+    <%= t('repository_row.modal_print_label.print_label') %>
+
+  </button>
   <div class="archived-label" data-view-mode="archived">
     <% if @repository.active? %>
       <%= t('repositories.show.archived_view_label.active', repository_name: @repository.name) %>
@@ -80,4 +85,5 @@
       </table>
     <% end %>
   </div>
+
 </div>

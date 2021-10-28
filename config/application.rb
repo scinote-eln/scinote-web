@@ -40,6 +40,8 @@ module Scinote
     # Max uploaded file size in MB
     config.x.file_max_size_mb = (ENV['FILE_MAX_SIZE_MB'] || 50).to_i
 
+    config.x.webhooks_enabled = ENV['ENABLE_WEBHOOKS'] == 'true'
+
     # Logging
     config.log_formatter = proc do |severity, datetime, progname, msg|
       "[#{datetime}] #{severity}: #{msg}\n"

@@ -533,6 +533,10 @@ class StepsController < ApplicationController
       marvin_js_assets_attributes: %i(
         id
         _destroy
+      ),
+       bio_eddie_assets_attributes: %i(
+        id
+        _destroy
       )
     )
   end
