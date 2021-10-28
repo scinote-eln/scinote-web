@@ -22,12 +22,10 @@ module PermissionExtends
     %w(
       READ
       READ_ARCHIVED
-      ACTIVITIES_READ
       MANAGE
       TASKS_MANAGE
       USERS_READ
       USERS_MANAGE
-      READ_ARCHIVED
       READ_CANVAS
       ACTIVITIES_READ
     ).each { |permission| const_set(permission, "experiment_#{permission.underscore}") }

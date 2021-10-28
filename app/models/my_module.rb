@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class MyModule < ApplicationRecord
-  SEARCHABLE_ATTRIBUTES = %i(name description).freeze
+  SEARCHABLE_ATTRIBUTES = ['my_modules.name', 'my_modules.description']
 
   include ArchivableModel
   include SearchableModel
@@ -92,52 +92,26 @@ class MyModule < ApplicationRecord
     current_team = nil,
     options = {}
   )
-    my_module_scope = my_module_search_scope(
-      Experiment
-        .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-        .pluck(:id),
-      user
-    )
+    viewable_experiments = Experiment.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT, current_team)
+                                     .pluck(:id)
 
-    if current_team
-      new_query = my_module_search_scope(
-        Experiment
-          .search(user,
-                  include_archived,
-                  nil,
-                  1,
-                  current_team)
-          .select('id'),
-        user
-      ).where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
+    new_query = MyModule.with_granted_permissions(user, MyModulePermissions::READ)
+                        .where(experiment: viewable_experiments)
+                        .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
 
-      if include_archived
-        return new_query
-      else
-        return new_query.where('my_modules.archived = ?', false)
-      end
-    elsif include_archived
-      new_query = my_module_scope.where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
-    else
-      new_query = my_module_scope.where('my_modules.archived = ?', false)
-                                 .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
-    end
+    new_query = new_query.active unless include_archived
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT
       new_query
     else
-      new_query
-        .limit(Constants::SEARCH_LIMIT)
-        .offset((page - 1) * Constants::SEARCH_LIMIT)
+      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 
   def self.viewable_by_user(user, teams)
-    left_outer_joins(user_assignments: :user_role)
+    with_granted_permissions(user, MyModulePermissions::READ)
       .where(experiment: Experiment.viewable_by_user(user, teams))
-      .where(user_assignments: { user: user })
-      .where('user_roles.permissions @> ARRAY[?]::varchar[]', %w[task_read])
   end
 
   def navigable?

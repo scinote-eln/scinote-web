@@ -69,47 +69,25 @@ class Experiment < ApplicationRecord
     current_team = nil,
     options = {}
   )
-    experiment_scope = experiment_search_scope(
-      Project
-        .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-        .pluck(:id),
-      user
-    )
+    viewable_projects = Project.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT, current_team)
+                               .pluck(:id)
+    new_query = Experiment.with_granted_permissions(user, ExperimentPermissions::READ)
+                          .where(project: viewable_projects)
+                          .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
 
-    if current_team
-      new_query = experiment_search_scope(
-        Project.search(
-          user,
-          include_archived,
-          nil,
-          1,
-          current_team
-        ).select('id'),
-        user
-      ).where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
-      return include_archived ? new_query : new_query.active
-    elsif include_archived
-      new_query = experiment_scope.where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
-    else
-      new_query = experiment_scope.active
-                                  .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
-    end
+    new_query = new_query.active unless include_archived
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT
       new_query
     else
-      new_query
-        .limit(Constants::SEARCH_LIMIT)
-        .offset((page - 1) * Constants::SEARCH_LIMIT)
+      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 
   def self.viewable_by_user(user, teams)
-    left_outer_joins(user_assignments: :user_role)
+    with_granted_permissions(user, ExperimentPermissions::READ)
       .where(project: Project.viewable_by_user(user, teams))
-      .where(user_assignments: { user: user })
-      .where('user_roles.permissions @> ARRAY[?]::varchar[]', %w[experiment_read])
   end
 
   def archived_branch?

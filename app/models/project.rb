@@ -82,64 +82,15 @@ class Project < ApplicationRecord
     options = {}
   )
 
-    if current_team
-      new_query =
-        Project
-        .distinct
-        .joins(:user_assignments)
-        .where('projects.team_id = ?', current_team.id)
-      unless user.user_teams.find_by(team: current_team).try(:admin?)
-        # Admins see all projects in the team
-        new_query = new_query.where(
-          'projects.visibility = 1 OR user_assignments.user_id = ?',
-          user.id
-        )
-      end
-      new_query = new_query.where_attributes_like('projects.name', query, options)
-
-      if include_archived
-        return new_query
-      else
-        return new_query.where('projects.archived = ?', false)
-      end
-    else
-      new_query = Project
-                  .distinct
-                  .joins(team: :user_teams)
-                  .where('user_teams.user_id = ?', user.id)
-
-      if include_archived
-        new_query =
-          new_query
-          .joins(:user_assignments)
-          .where(
-            'user_teams.role = 2 OR projects.visibility = 1 OR ' \
-            'user_assignments.user_id = ?',
-            user.id
-          )
-          .where_attributes_like('projects.name', query, options)
-
-      else
-        new_query =
-          new_query
-          .joins(:user_assignments)
-          .where(
-            'user_teams.role = 2 OR projects.visibility = 1 OR ' \
-            'user_assignments.user_id = ?',
-            user.id
-          )
-          .where_attributes_like('projects.name', query, options)
-          .where('projects.archived = ?', false)
-      end
-    end
+    new_query = Project.viewable_by_user(user, current_team || user.teams)
+                       .where_attributes_like('projects.name', query, options)
+    new_query = new_query.active unless include_archived
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT
       new_query
     else
-      new_query
-        .limit(Constants::SEARCH_LIMIT)
-        .offset((page - 1) * Constants::SEARCH_LIMIT)
+      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 
@@ -147,15 +98,12 @@ class Project < ApplicationRecord
     # Admins see all projects in the team
     # Member of the projects can view
     # If project is visible everyone from the team can view it
-    Project.where(team: teams)
-           .left_outer_joins(team: :user_teams)
-           .left_outer_joins(user_assignments: :user_role)
-           .where('projects.visibility = 1 OR '\
-                  'user_assignments.user_id = :user_id OR '\
-                  '(user_teams.user_id = :user_id AND user_teams.role = 2)',
-                  user_id: user.id)
-           .where('user_roles.permissions @> ARRAY[?]::varchar[]', [ProjectPermissions::READ])
-           .distinct
+    projects = Project.where(team: teams)
+                      .left_outer_joins(team: :user_teams)
+                      .left_outer_joins(user_assignments: :user_role)
+    projects.where('projects.visibility = 1 OR (user_teams.user_id = ? AND user_teams.role = 2)', user)
+            .or(projects.with_granted_permissions(user, ProjectPermissions::READ))
+            .distinct
   end
 
   def permission_parent
