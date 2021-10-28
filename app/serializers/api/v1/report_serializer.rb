@@ -22,7 +22,7 @@ module Api
       end
 
       def pdf_file_url
-        rails_blob_path(object.pdf_file, disposition: 'attachment')
+        object.pdf_file.url if object.pdf_file.attached?
       end
 
       def docx_file_size
@@ -30,7 +30,7 @@ module Api
       end
 
       def docx_file_url
-        rails_blob_path(object.docx_file, disposition: 'attachment')
+        object.docx_file.url if object.docx_file.attached?
       end
     end
   end
