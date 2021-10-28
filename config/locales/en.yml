@@ -2498,11 +2498,11 @@ en:
   access_permissions:
     create:
       success:
-        one: "You have successfully granted access to %{count} member to the project."
-        other: "You have successfully granted access to %{count} members to the project."
+        one: "You have successfully granted access to %{count} member to the %{resource}."
+        other: "You have successfully granted access to %{count} members to the %{resource}."
       failure: "Something went wrong"
     destroy:
-      success: "You have successfully removed %{member_name} from the project."
+      success: "You have successfully removed %{member_name} from the %{resource}."
       failure: "Something went wrong"
     partials:
       edit_assignments_content:

@@ -405,7 +405,7 @@ class MyModule < ApplicationRecord
       user: user
     )
     Activities::CreateActivityService
-      .call(activity_type: :assign_user_to_module,
+      .call(activity_type: :designate_user_to_my_module,
             owner: assigned_by || user,
             team: experiment.project.team,
             project: experiment.project,

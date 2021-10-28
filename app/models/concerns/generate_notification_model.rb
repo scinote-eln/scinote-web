@@ -40,7 +40,7 @@ module GenerateNotificationModel
       users = subject.designated_users
       # Also send to the user that was unassigned,
       # and is therefore no longer present on the module.
-      if type_of == 'unassign_user_from_module'
+      if type_of == 'undesignate_user_from_my_module'
         users += User.where(id: values.dig('message_items', 'user_target', 'id'))
       end
     when Protocol

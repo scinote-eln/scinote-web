@@ -89,7 +89,7 @@ describe Experiment, type: :model do
                 .with(hash_including(activity_type: :create_module)))
         expect(Activities::CreateActivityService)
           .to(receive(:call)
-                .with(hash_including(activity_type: :assign_user_to_module)))
+                .with(hash_including(activity_type: :designate_user_to_my_module)))
         function_call
       end
 
@@ -177,7 +177,7 @@ describe Experiment, type: :model do
         expect(Activities::CreateActivityService)
           .to(receive(:call)
                 .with(hash_including(activity_type:
-                                       :assign_user_to_module))).exactly(6).times
+                                       :designate_user_to_my_module))).exactly(6).times
         function_call
       end
 

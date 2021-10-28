@@ -57,7 +57,7 @@ class UserMyModulesController < ApplicationController
     @um.assigned_by = current_user
 
     if @um.save
-      log_activity(:assign_user_to_module)
+      log_activity(:designate_user_to_my_module)
 
       respond_to do |format|
         format.json do
@@ -84,7 +84,7 @@ class UserMyModulesController < ApplicationController
 
   def destroy
     if @um.destroy
-      log_activity(:unassign_user_from_module)
+      log_activity(:undesignate_user_from_my_module)
 
       respond_to do |format|
         format.json do
