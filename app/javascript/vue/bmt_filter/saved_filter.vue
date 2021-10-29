@@ -1,7 +1,7 @@
 <template>
   <div class="saved-filters-element">
     <span @click="loadFilters">{{ savedFilter.attributes.name }}</span>
-    <button class="btn btn-light icon-btn" @click="deleteFilter">
+    <button v-if="canManageFilters" class="btn btn-light icon-btn" @click="deleteFilter">
       <i class="fas fa-trash"></i>
     </button>
   </div>
@@ -11,7 +11,8 @@
   export default {
     name: 'SavedFilterElement',
     props: {
-      savedFilter: Object
+      savedFilter: Object,
+      canManageFilters: Boolean
     },
     methods: {
       loadFilters() {

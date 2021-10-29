@@ -10,7 +10,8 @@ window.initBMTFilter = () => {
     el: '#bmtFilterContainer',
     data: () => {
       return {
-        bmtApiBaseUrl: $($('#bmtFilterContainer')).data('bmt-api-base-url'),
+        bmtApiBaseUrl: $('#bmtFilterContainer').data('bmt-api-base-url'),
+        canManageFilters: $('#bmtFilterContainer').data('can-manage-filters'),
         savedFilters: [],
         filters: []
       };

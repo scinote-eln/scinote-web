@@ -11,6 +11,7 @@
             v-for="(savedFilter, index) in savedFilters"
             :key="savedFilter.id"
             :savedFilter.sync="savedFilters[index]"
+            :canManageFilters="canManageFilters"
             @savedFilter:load="loadFilters"
             @savedFilter:delete="savedFilters.splice(index, 1)"
           />
@@ -61,7 +62,8 @@
     props: {
       container: Object,
       savedFilters: Array,
-      bmtApiBaseUrl: String
+      bmtApiBaseUrl: String,
+      canManageFilters: Boolean
     },
     created() {
       this.fetchAdditionalDataAttributes();
