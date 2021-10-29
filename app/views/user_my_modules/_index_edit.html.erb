@@ -21,7 +21,7 @@
         </span>
       </div>
 
-      <% if can_manage_my_module_users?(@my_module) %>
+      <% if can_manage_my_module?(@my_module) %>
         <div class="col-xs-2">
           <%= link_to my_module_user_my_module_path(@my_module, umm, format: :json), method: :delete, remote: true, class: 'btn btn-link remove-user-link' do %>
           <span class="fas fa-times"></span>
@@ -34,7 +34,7 @@
   <% end %>
 <% end %>
 
-<% if can_manage_my_module_users?(@my_module) && @undesignated_users.any? %>
+<% if can_manage_my_module?(@my_module) && @undesignated_users.any? %>
   <li>
     <hr>
     <div class="row">
