@@ -10,7 +10,8 @@ class StepsController < ApplicationController
   before_action :convert_table_contents_to_utf8, only: %i(create update)
 
   before_action :check_view_permissions, only: :show
-  before_action :check_manage_permissions, only: %i(new create edit update destroy move_up move_down
+  before_action :check_create_permissions, only: %i(new create)
+  before_action :check_manage_permissions, only: %i(edit update destroy move_up move_down
                                                     update_view_state update_asset_view_mode)
   before_action :check_complete_and_checkbox_permissions, only: %i(toggle_step_state checklistitem_state)
 
@@ -497,7 +498,15 @@ class StepsController < ApplicationController
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_protocol_in_module?(@protocol) || can_manage_protocol_in_repository?(@protocol)
+    render_403 unless can_manage_step?(@step)
+  end
+
+  def check_create_permissions
+    if @my_module
+      render_403 unless can_manage_my_module_steps?(@my_module)
+    else
+      render_403 unless can_manage_protocol_in_repository?(@protocol)
+    end
   end
 
   def check_complete_and_checkbox_permissions

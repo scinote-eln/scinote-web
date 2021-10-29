@@ -12,7 +12,7 @@ describe SmartAnnotations::HtmlPreview do
                         created_by: user,
                         last_modified_by: user
   end
-  let(:task) { create :my_module, name: 'task', experiment: experiment }
+  let(:task) { create :my_module, name: 'task', experiment: experiment, created_by: experiment.created_by }
 
   describe 'Project annotations with type prj' do
     it 'returns a html snippet' do

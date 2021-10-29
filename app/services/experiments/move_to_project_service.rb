@@ -20,12 +20,22 @@ module Experiments
       ActiveRecord::Base.transaction do
         @exp.project = @project
 
-        move_tags!
-        move_activities!(@exp)
+        @exp.my_modules.each do |my_module|
+          raise unless can_manage_my_module?(@user, my_module)
 
+          sync_user_assignments(my_module)
+          move_tags!(my_module)
+        end
+
+        move_activities!(@exp)
         @exp.save!
-      rescue
-        @errors.merge!(@exp.errors.to_hash) unless @exp.valid?
+        sync_user_assignments(@exp)
+      rescue StandardError
+        if @exp.valid?
+          @errors[:main] = "Don't have permission for tasks manage"
+        else
+          @errors.merge!(@exp.errors.to_hash)
+        end
         raise ActiveRecord::Rollback
       end
 
@@ -51,27 +61,24 @@ module Experiments
         return false
       end
 
-      if !@exp.moveable_projects(@user).include?(@project)
+      if @exp.movable_projects(@user).include?(@project)
+        true
+      else
         @errors[:target_project_not_valid] =
           ['Experiment cannot be moved to this project']
-        false
-      else
-        true
       end
     end
 
-    def move_tags!
-      @exp.my_modules.each do |my_module|
-        new_tags = []
-        my_module.tags.each do |tag|
-          new_tag = @project.tags.where.not(id: new_tags).find_by(name: tag.name, color: tag.color)
-          new_tag ||=
-            @project.tags.create!(name: tag.name, color: tag.color, created_by: @user, last_modified_by: @user)
-          new_tags << new_tag
-        end
-        my_module.tags.destroy_all
-        my_module.tags = new_tags
+    def move_tags!(my_module)
+      new_tags = []
+      my_module.tags.each do |tag|
+        new_tag = @project.tags.where.not(id: new_tags).find_by(name: tag.name, color: tag.color)
+        new_tag ||=
+          @project.tags.create!(name: tag.name, color: tag.color, created_by: @user, last_modified_by: @user)
+        new_tags << new_tag
       end
+      my_module.tags.destroy_all
+      my_module.tags = new_tags
     end
 
     # recursively move all activities in child associations to new project
@@ -88,6 +95,13 @@ module Experiments
       end
     end
 
+    def sync_user_assignments(object)
+      # remove user assignments where the user are not present on the project
+      object.user_assignments.destroy_all
+
+      UserAssignments::GenerateUserAssignmentsJob.perform_later(object, @user)
+    end
+
     def track_activity
       Activities::CreateActivityService
         .call(activity_type: :move_experiment,
@@ -98,7 +112,6 @@ module Experiments
               message_items: { experiment: @exp.id,
                                project_new: @project.id,
                                project_original: @original_project.id })
-
     end
   end
 end

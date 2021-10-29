@@ -2,6 +2,7 @@
 
 module Dashboard
   class RecentWorkService
+    include PermissionExtends
     include InputSanitizeHelper
     include Rails.application.routes.url_helpers
 
@@ -12,18 +13,39 @@ module Dashboard
     end
 
     def call
-      visible_projects = Project.viewable_by_user(@user, @team)
+      all_activities = @team.activities.where(owner_id: @user.id)
+      all_activities = join_project_user_roles(all_activities)
+      all_activities = join_experiment_user_roles(all_activities)
+      all_activities = join_my_module_user_roles(all_activities)
+      all_activities = join_result_user_roles(all_activities)
+      all_activities = join_protocol_user_roles(all_activities)
+      all_activities = join_step_user_roles(all_activities)
 
-      activities = Activity.where(owner_id: @user.id)
-                           .where('((project_id IS NULL AND team_id = ?) OR project_id IN (?))',
-                                  @team.id,
-                                  visible_projects.pluck(:id))
-                           .where.not(type_of: Extends::DASHBOARD_BLACKLIST_ACTIVITY_TYPES)
-                           .select('MAX(created_at) AS last_change',
-                                   :subject_id,
-                                   :subject_type)
-                           .group(:subject_id, :subject_type)
-                           .order(last_change: :desc)
+      team_activities = all_activities.where(subject_type: %w(Team RepositoryBase ProjectFolder))
+      project_activities = all_activities.where('project_user_roles.permissions @> ARRAY[?]::varchar[]',
+                                                [ProjectPermissions::ACTIVITIES_READ])
+      experiment_activities = all_activities.where('experiment_user_roles.permissions @> ARRAY[?]::varchar[]',
+                                                   [ExperimentPermissions::ACTIVITIES_READ])
+      my_module_activities = all_activities.where('my_module_user_roles.permissions @> ARRAY[?]::varchar[]',
+                                                  [MyModulePermissions::ACTIVITIES_READ])
+      result_activities = all_activities.where('result_my_module_user_roles.permissions @> ARRAY[?]::varchar[]',
+                                               [MyModulePermissions::ACTIVITIES_READ])
+      protocol_activities = all_activities.where('protocol_my_module_user_roles.permissions @> ARRAY[?]::varchar[]',
+                                                 [MyModulePermissions::ACTIVITIES_READ])
+      step_activities = all_activities.where('protocol_my_module_user_roles.permissions @> ARRAY[?]::varchar[]',
+                                             [MyModulePermissions::ACTIVITIES_READ])
+
+      activities = team_activities.or(project_activities)
+                                  .or(experiment_activities)
+                                  .or(my_module_activities)
+                                  .or(result_activities)
+                                  .or(protocol_activities)
+                                  .or(step_activities)
+
+      activities = activities.where.not(type_of: Extends::DASHBOARD_BLACKLIST_ACTIVITY_TYPES)
+                             .select('MAX(activities.created_at) AS last_change', :subject_id, :subject_type)
+                             .group(:subject_id, :subject_type)
+                             .order(last_change: :desc)
 
       query = Activity.from("(#{activities.to_sql}) AS activities")
                       .results_joins
@@ -102,6 +124,74 @@ module Dashboard
     end
 
     private
+
+    def join_project_user_roles(activities)
+      activities.joins("LEFT OUTER JOIN projects project_subjects
+                        ON project_subjects.id = activities.subject_id AND activities.subject_type='Project'")
+                .joins("LEFT OUTER JOIN user_assignments project_user_assignments
+                        ON project_user_assignments.assignable_type = 'Project'
+                        AND project_user_assignments.assignable_id = project_subjects.id
+                        LEFT OUTER JOIN user_roles project_user_roles
+                        ON project_user_roles.id = project_user_assignments.user_role_id")
+    end
+
+    def join_experiment_user_roles(activities)
+      activities.joins("LEFT OUTER JOIN experiments experiment_subjects
+                        ON experiment_subjects.id = activities.subject_id AND activities.subject_type='Experiment'")
+                .joins("LEFT OUTER JOIN user_assignments experiment_user_assignments
+                        ON experiment_user_assignments.assignable_type = 'Experiment'
+                        AND experiment_user_assignments.assignable_id = experiment_subjects.id
+                        LEFT OUTER JOIN user_roles experiment_user_roles
+                        ON experiment_user_roles.id = experiment_user_assignments.user_role_id")
+    end
+
+    def join_my_module_user_roles(activities)
+      activities.joins("LEFT OUTER JOIN my_modules my_module_subjects
+                        ON my_module_subjects.id = activities.subject_id AND activities.subject_type='MyModule'")
+                .joins("LEFT OUTER JOIN user_assignments my_module_user_assignments
+                        ON my_module_user_assignments.assignable_type = 'MyModule'
+                        AND my_module_user_assignments.assignable_id = my_module_subjects.id
+                        LEFT OUTER JOIN user_roles my_module_user_roles
+                        ON my_module_user_roles.id = my_module_user_assignments.user_role_id")
+    end
+
+    def join_result_user_roles(activities)
+      activities.joins("LEFT OUTER JOIN results result_subjects
+                        ON result_subjects.id = activities.subject_id AND activities.subject_type='Result'
+                        LEFT OUTER JOIN my_modules result_my_modules
+                        ON result_subjects.my_module_id = result_my_modules.id")
+                .joins("LEFT OUTER JOIN user_assignments result_my_module_user_assignments
+                        ON result_my_module_user_assignments.assignable_type = 'MyModule'
+                        AND result_my_module_user_assignments.assignable_id = result_my_modules.id
+                        LEFT OUTER JOIN user_roles result_my_module_user_roles
+                        ON result_my_module_user_roles.id = result_my_module_user_assignments.user_role_id")
+    end
+
+    def join_protocol_user_roles(activities)
+      activities.joins("LEFT OUTER JOIN protocols protocol_subjects
+                        ON protocol_subjects.id = activities.subject_id AND activities.subject_type='Protocol'
+                        LEFT OUTER JOIN my_modules protocol_my_modules
+                        ON protocol_subjects.my_module_id = protocol_my_modules.id")
+                .joins("LEFT OUTER JOIN user_assignments protocol_my_module_user_assignments
+                        ON protocol_my_module_user_assignments.assignable_type = 'MyModule'
+                        AND protocol_my_module_user_assignments.assignable_id = protocol_my_modules.id
+                        LEFT OUTER JOIN user_roles protocol_my_module_user_roles
+                        ON protocol_my_module_user_roles.id = protocol_my_module_user_assignments.user_role_id")
+    end
+
+    def join_step_user_roles(activities)
+      activities.joins("LEFT OUTER JOIN steps step_subjects
+                        ON step_subjects.id = activities.subject_id AND activities.subject_type='Step'
+                        LEFT OUTER JOIN protocols step_protocols
+                        ON step_subjects.protocol_id = step_protocols.id
+                        LEFT OUTER JOIN my_modules step_my_modules
+                        ON step_protocols.my_module_id = step_my_modules.id")
+                .joins("LEFT OUTER JOIN user_assignments step_my_module_user_assignments
+                        ON step_my_module_user_assignments.assignable_type = 'MyModule'
+                        AND step_my_module_user_assignments.assignable_id = step_my_modules.id
+                        LEFT OUTER JOIN user_roles step_my_module_user_roles
+                        ON step_my_module_user_roles.id = step_my_module_user_assignments.user_role_id")
+    end
 
     def generate_url(recent_object)
       object_id = recent_object[:group_id].gsub(/[^0-9]/, '')

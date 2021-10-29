@@ -1,10 +1,11 @@
 class ResultAssetsController < ApplicationController
   include ResultsHelper
 
-  before_action :load_vars, only: [:edit, :update]
-  before_action :load_vars_nested, only: [:new, :create]
+  before_action :load_vars, only: %i(edit update)
+  before_action :load_vars_nested, only: %i(new create)
 
-  before_action :check_manage_permissions, only: %i(new create edit update)
+  before_action :check_manage_permissions, only: %i(edit update)
+  before_action :check_create_permissions, only: %i(new create)
   before_action :check_archive_permissions, only: [:update]
 
   def new
@@ -142,8 +143,12 @@ class ResultAssetsController < ApplicationController
     render_404 unless @my_module
   end
 
+  def check_create_permissions
+    render_403 unless can_create_results?(@my_module)
+  end
+
   def check_manage_permissions
-    render_403 unless can_manage_module?(@my_module)
+    render_403 unless can_manage_result?(@result)
   end
 
   def check_archive_permissions

@@ -7,7 +7,7 @@ module Reports::Docx::DrawMyModule
     scinote_url = @scinote_url
     my_module = subject.my_module
     tags = my_module.tags
-    return unless can_read_experiment?(@user, my_module.experiment)
+    return unless can_read_my_module?(@user, my_module)
 
     @docx.h3 my_module.name, italic: false, size: Constants::REPORT_DOCX_MY_MODULE_TITLE_SIZE
     @docx.p do

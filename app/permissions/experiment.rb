@@ -1,9 +1,12 @@
 Canaid::Permissions.register_for(Experiment) do
   # Experiment and its project must be active for all the specified permissions
   %i(manage_experiment
+     manage_experiment_tasks
+     manage_experiment_users
      archive_experiment
      clone_experiment
-     move_experiment)
+     move_experiment
+     manage_experiment_access)
     .each do |perm|
     can perm do |_, experiment|
       experiment.active? &&
@@ -11,20 +14,12 @@ Canaid::Permissions.register_for(Experiment) do
     end
   end
 
-  # experiment: read (read archive)
-  # canvas: read
-  # module: read (read users, read comments, read archive)
-  # result: read (read comments)
-  can :read_experiment do |user, experiment|
-    can_read_project?(user, experiment.project)
-  end
-
   # experiment: create/update/delete
   # canvas: update
   # module: create, copy, reposition, create/update/delete connection,
   #         assign/reassign/unassign tags
   can :manage_experiment do |user, experiment|
-    user.is_user_or_higher_of_project?(experiment.project) &&
+    experiment.permission_granted?(user, ExperimentPermissions::MANAGE) &&
       MyModule.joins(:experiment)
               .where(experiment: experiment)
               .preload(my_module_status: :my_module_status_implications)
@@ -37,30 +32,55 @@ Canaid::Permissions.register_for(Experiment) do
       end
   end
 
-  # experiment: archive
-  can :archive_experiment do |user, experiment|
-    can_manage_experiment?(user, experiment)
+  can :read_experiment do |user, experiment|
+    experiment.permission_granted?(user, ExperimentPermissions::READ)
   end
 
-  # NOTE: Must not be dependent on canaid parmision for which we check if it's
-  # active
-  # experiment: restore
+  can :read_archived_experiment do |user, experiment|
+    experiment.permission_granted?(user, ExperimentPermissions::READ_ARCHIVED)
+  end
+
+  can :read_experiment_canvas do |user, experiment|
+    experiment.permission_granted?(user, ExperimentPermissions::READ_CANVAS)
+  end
+
+  can :read_experiment_activities do |user, experiment|
+    experiment.permission_granted?(user, ExperimentPermissions::ACTIVITIES_READ)
+  end
+
+  can :read_experiment_users do |user, experiment|
+    experiment.permission_granted?(user, ExperimentPermissions::USERS_READ)
+  end
+
+  can :manage_experiment_users do |user, experiment|
+    experiment.permission_granted?(user, ExperimentPermissions::USERS_MANAGE)
+  end
+
+  can :manage_experiment_tasks do |user, experiment|
+    experiment.permission_granted?(user, ExperimentPermissions::TASKS_MANAGE)
+  end
+
+  can :manage_all_experiment_my_modules do |user, experiment|
+    experiment.my_modules == experiment.my_modules.managable_by_user(user)
+  end
+
+  can :archive_experiment do |user, experiment|
+    experiment.permission_granted?(user, ExperimentPermissions::MANAGE)
+  end
+
   can :restore_experiment do |user, experiment|
     project = experiment.project
-    user.is_user_or_higher_of_project?(project) &&
+    experiment.permission_granted?(user, ExperimentPermissions::MANAGE) &&
       experiment.archived? &&
       project.active?
   end
 
-  # experiment: copy
   can :clone_experiment do |user, experiment|
-    user.is_user_or_higher_of_project?(experiment.project) &&
-      user.is_normal_user_or_admin_of_team?(experiment.project.team)
+    experiment.permission_granted?(user, ExperimentPermissions::MANAGE)
   end
 
-  # experiment: move
   can :move_experiment do |user, experiment|
-    can_clone_experiment?(user, experiment)
+    experiment.permission_granted?(user, ExperimentPermissions::MANAGE)
   end
 end
 
@@ -92,43 +112,18 @@ Canaid::Permissions.register_for(Protocol) do
   # protocol in module: read
   # step in module: read, read comments, read/download assets
   can :read_protocol_in_module do |user, protocol|
-    can_read_experiment?(user, protocol.my_module.experiment)
+    protocol.my_module.permission_granted?(user, MyModulePermissions::READ)
   end
 
   # protocol in module: create/update/delete, unlink, revert, update from
   # protocol in repository, update from file
   # step in module: create/update/delete, reorder
   can :manage_protocol_in_module do |user, protocol|
-    can_manage_module?(user, protocol.my_module)
+    can_manage_my_module?(user, protocol.my_module)
   end
 
   # step: complete/uncomplete
   can :complete_or_checkbox_step do |user, protocol|
-    can_change_my_module_flow_status?(user, protocol.my_module)
-  end
-end
-
-Canaid::Permissions.register_for(Comment) do
-  # Module, its experiment and its project must be active for all the specified
-  # permissions
-  %i(manage_comment_in_module)
-    .each do |perm|
-    can perm do |_, comment|
-      my_module = ::PermissionsUtil.get_comment_module(comment)
-      my_module.active? &&
-        my_module.experiment.active? &&
-        my_module.experiment.project.active?
-    end
-  end
-
-  # module: update/delete comment
-  # result: update/delete comment
-  # step: update/delete comment
-  can :manage_comment_in_module do |user, comment|
-    my_module = ::PermissionsUtil.get_comment_module(comment)
-    project = my_module.experiment.project
-    # Same check as in `can_manage_comment_in_project?`
-    project.present? &&
-      (user.is_owner_of_project?(project) || comment.user == user)
+    can_update_my_module_status?(user, protocol.my_module)
   end
 end

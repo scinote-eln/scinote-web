@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class UserProject < ApplicationRecord
+  # TODO: Remove this from DB (Ask Alex)
   enum role: { owner: 0, normal_user: 1, technician: 2, viewer: 3 }
 
-  validates :role, presence: true
   validates :user, presence: true, uniqueness: { scope: :project }
   validates :project, presence: true
 
@@ -14,10 +14,6 @@ class UserProject < ApplicationRecord
   before_destroy :destroy_associations
   validates_uniqueness_of :user_id, scope: :project_id
 
-  def role_str
-    I18n.t("user_projects.enums.role.#{role.to_s}")
-  end
-
   def destroy_associations
     # Destroy the user from all project's modules
     project.project_my_modules.each do |my_module|
@@ -27,5 +23,4 @@ class UserProject < ApplicationRecord
       end
     end
   end
-
 end

@@ -178,8 +178,8 @@ class AssetsController < ApplicationController
     # Create file depending on the type
     if params[:element_type] == 'Step'
       step = Step.find(params[:element_id].to_i)
-      render_403 && return unless can_manage_protocol_in_module?(step.protocol) ||
-                                  can_manage_protocol_in_repository?(step.protocol)
+      render_403 && return unless can_manage_step?(step)
+
       step_asset = StepAsset.create!(step: step, asset: asset)
       asset.update!(view_mode: step.assets_view_mode)
       step.protocol&.update(updated_at: Time.zone.now)
@@ -187,7 +187,7 @@ class AssetsController < ApplicationController
       edit_url = edit_asset_url(step_asset.asset_id)
     elsif params[:element_type] == 'Result'
       my_module = MyModule.find(params[:element_id].to_i)
-      render_403 and return unless can_manage_module?(my_module)
+      render_403 and return unless can_manage_my_module?(my_module)
 
       # First create result and then the asset
       result = Result.create(name: asset.file_name,

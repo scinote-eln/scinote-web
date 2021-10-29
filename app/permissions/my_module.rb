@@ -3,14 +3,13 @@
 Canaid::Permissions.register_for(MyModule) do
   # Module, its experiment and its project must be active for all the specified
   # permissions
-  %i(manage_module
-     archive_module
-     manage_users_in_module
-     assign_repository_rows_to_module
-     create_comments_in_module
-     create_my_module_repository_snapshot
+  %i(manage_my_module
+     manage_my_module_users
+     assign_my_module_repository_rows
+     create_my_module_comments
+     create_my_module_repository_snapshots
      manage_my_module_repository_snapshots
-     change_my_module_flow_status)
+     update_my_module_status)
     .each do |perm|
     can perm do |_, my_module|
       my_module.active? &&
@@ -20,60 +19,159 @@ Canaid::Permissions.register_for(MyModule) do
     end
   end
 
-  # module: update
-  # result: create, update
-  can :manage_module do |user, my_module|
-    can_manage_experiment?(user, my_module.experiment)
+  can :read_my_module do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::READ)
   end
 
-  # module: archive
-  can :archive_module do |user, my_module|
-    can_manage_experiment?(user, my_module.experiment)
+  can :manage_my_module do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::MANAGE)
   end
 
-  # NOTE: Must not be dependent on canaid parmision for which we check if it's
-  # active
-  # module: restore
-  can :restore_module do |user, my_module|
-    user.is_user_or_higher_of_project?(my_module.experiment.project) &&
-      my_module.archived?
+  can :restore_my_module do |user, my_module|
+    my_module.archived? && my_module.permission_granted?(user, MyModulePermissions::MANAGE)
   end
 
-  # module: move
-  can :move_module do |user, my_module|
-    can_manage_experiment?(user, my_module.experiment)
+  can :archive_my_module do |user, my_module|
+    !my_module.archived? && my_module.permission_granted?(user, MyModulePermissions::MANAGE)
   end
 
-  # module: assign/reassign/unassign users
-  can :manage_users_in_module do |user, my_module|
-    user.is_owner_of_project?(my_module.experiment.project)
+  can :update_my_module_start_date do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::MANAGE)
   end
 
-  # module: assign/unassign repository record
-  # NOTE: Use 'module_page? &&' before calling this permission!
-  can :assign_repository_rows_to_module do |user, my_module|
-    user.is_technician_or_higher_of_project?(my_module.experiment.project)
+  can :update_my_module_due_date do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::MANAGE)
   end
 
-  # module: change_flow_status
-  can :change_my_module_flow_status do |user, my_module|
-    user.is_technician_or_higher_of_project?(my_module.experiment.project)
+  can :update_my_module_notes do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::MANAGE)
   end
 
-  # module: create comment
-  # result: create comment
-  # step: create comment
-  can :create_comments_in_module do |user, my_module|
-    can_create_comments_in_project?(user, my_module.experiment.project)
+  can :manage_my_module_tags do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::TAGS_MANAGE)
   end
 
-  # module: create a snapshot of repository item
-  can :create_my_module_repository_snapshot do |user, my_module|
-    user.is_technician_or_higher_of_project?(my_module.experiment.project)
+  can :manage_my_module_steps do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::STEPS_MANAGE)
   end
 
-  # module: make a repository snapshot selected
+  can :create_my_module_comments do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::COMMENTS_CREATE)
+  end
+
+  can :assign_my_module_repository_rows do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::REPOSITORY_ROWS_ASSIGN)
+  end
+
+  can :manage_my_module_repository_rows do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::REPOSITORY_ROWS_MANAGE)
+  end
+
+  can :create_results do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::RESULTS_MANAGE)
+  end
+
+  can :create_my_module_result_comments do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::RESULTS_COMMENTS_CREATE)
+  end
+
+  can :manage_my_module_protocol do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::PROTOCOL_MANAGE)
+  end
+
+  can :complete_my_module do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::COMPLETE)
+  end
+
+  can :update_my_module_status do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::UPDATE_STATUS)
+  end
+
+  can :complete_my_module_steps do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::STEPS_COMPLETE)
+  end
+
+  can :uncomplete_my_module_steps do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::STEPS_UNCOMPLETE)
+  end
+
+  can :check_my_module_steps do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::STEPS_CHECKLIST_CHECK)
+  end
+
+  can :uncheck_my_module_steps do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::STEPS_CHECKLIST_UNCHECK)
+  end
+
+  can :create_comments_in_my_module_steps do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::STEPS_COMMENTS_CREATE)
+  end
+
+  can :read_my_module_users do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::USERS_READ)
+  end
+
+  can :manage_my_module_users do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::USERS_MANAGE)
+  end
+
+  can :restore_my_module do |user, my_module|
+    my_module.archived? && my_module.permission_granted?(user, MyModulePermissions::MANAGE)
+  end
+
+  can :create_my_module_repository_snapshots do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::REPOSITORY_ROWS_MANAGE)
+  end
+
   can :manage_my_module_repository_snapshots do |user, my_module|
-    user.is_technician_or_higher_of_project?(my_module.experiment.project)
+    my_module.permission_granted?(user, MyModulePermissions::REPOSITORY_ROWS_MANAGE)
+  end
+end
+
+Canaid::Permissions.register_for(TaskComment) do
+  # Module, its experiment and its project must be active for all the specified
+  # permissions
+  %i(manage_my_module_comment)
+    .each do |perm|
+    can perm do |_, comment|
+      my_module = comment.my_module
+      my_module.active? &&
+        my_module.experiment.active? &&
+        my_module.experiment.project.active?
+    end
+  end
+
+  can :manage_my_module_comment do |user, comment|
+    my_module = comment.my_module
+    my_module.permission_granted?(user, MyModulePermissions::COMMENTS_MANAGE) ||
+      ((comment.user == user) && my_module.permission_granted?(user, MyModulePermissions::COMMENTS_MANAGE_OWN))
+  end
+end
+
+Canaid::Permissions.register_for(StepComment) do
+  # Module, its experiment and its project must be active for all the specified
+  # permissions
+  %i(delete_comment_in_my_module_steps
+     update_comment_in_my_module_steps)
+    .each do |perm|
+    can perm do |_, comment|
+      my_module = comment.step.my_module
+      my_module.active? &&
+        !my_module.archived_branch? &&
+        my_module.experiment.active? &&
+        my_module.experiment.project.active?
+    end
+  end
+
+  can :delete_comment_in_my_module_steps do |user, comment|
+    my_module = comment.step.my_module
+    my_module.permission_granted?(user, MyModulePermissions::STEPS_COMMENTS_DELETE) ||
+      ((comment.user == user) && my_module.permission_granted?(user, MyModulePermissions::STEPS_COMMENTS_DELETE_OWN))
+  end
+
+  can :update_comment_in_my_module_steps do |user, comment|
+    my_module = comment.step.my_module
+    my_module.permission_granted?(user, MyModulePermissions::STEPS_COMMENTS_UPDATE) ||
+      ((comment.user == user) && my_module.permission_granted?(user, MyModulePermissions::STEPS_COMMENTS_UPDATE_OWN))
   end
 end

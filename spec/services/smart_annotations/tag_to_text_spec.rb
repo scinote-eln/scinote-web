@@ -8,8 +8,16 @@ describe SmartAnnotations::TagToText do
   let!(:user_team) { create :user_team, user: user, team: team, role: 2 }
   let!(:project) { create :project, name: 'my project', team: team }
   let!(:user_project) do
-    create :user_project, project: project, user: user, role: 0
+    create :user_project, project: project, user: user
   end
+  let!(:user_assignment) do
+    create :user_assignment,
+           assignable: project,
+           user: user,
+           user_role: UserRole.find_by(name: I18n.t('user_roles.predefined.owner')),
+           assigned_by: user
+  end
+
   let(:text) do
     "My annotation of [#my project~prj~#{project.id.base62_encode}]"
   end

@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
 class MyModule < ApplicationRecord
+  SEARCHABLE_ATTRIBUTES = ['my_modules.name', 'my_modules.description']
+
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
   include TinyMceImages
+  include PermissionCheckableModel
+  include Assignable
 
   enum state: Extends::TASKS_STATES
 
@@ -52,7 +56,8 @@ class MyModule < ApplicationRecord
   has_many :repository_rows, through: :my_module_repository_rows
   has_many :repository_snapshots, dependent: :destroy, inverse_of: :my_module
   has_many :user_my_modules, inverse_of: :my_module, dependent: :destroy
-  has_many :users, through: :user_my_modules
+  has_many :users, through: :user_assignments
+  has_many :designated_users, through: :user_my_modules, source: :user
   has_many :report_elements, inverse_of: :my_module, dependent: :destroy
   has_many :protocols, inverse_of: :my_module, dependent: :destroy
   # Associations for old activity type
@@ -68,6 +73,13 @@ class MyModule < ApplicationRecord
   scope :workflow_ordered, -> { order(workflow_order: :asc) }
   scope :uncomplete, -> { where(state: 'uncompleted') }
 
+  scope :my_module_search_scope, lambda { |experiment_ids, user|
+    joins(:user_assignments).where(
+      experiment: experiment_ids,
+      user_assignments: { user: user }
+    ).distinct
+  }
+
   # A module takes this much space in canvas (x, y) in database
   WIDTH = 30
   HEIGHT = 14
@@ -80,54 +92,26 @@ class MyModule < ApplicationRecord
     current_team = nil,
     options = {}
   )
-    exp_ids =
-      Experiment
-      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .pluck(:id)
+    viewable_experiments = Experiment.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT, current_team)
+                                     .pluck(:id)
 
-    if current_team
-      experiments_ids = Experiment
-                        .search(user,
-                                include_archived,
-                                nil,
-                                1,
-                                current_team)
-                        .select('id')
-      new_query = MyModule
-                  .distinct
-                  .where('my_modules.experiment_id IN (?)', experiments_ids)
-                  .where_attributes_like([:name, :description], query, options)
+    new_query = MyModule.with_granted_permissions(user, MyModulePermissions::READ)
+                        .where(experiment: viewable_experiments)
+                        .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
 
-      if include_archived
-        return new_query
-      else
-        return new_query.where('my_modules.archived = ?', false)
-      end
-    elsif include_archived
-      new_query = MyModule
-                  .distinct
-                  .where('my_modules.experiment_id IN (?)', exp_ids)
-                  .where_attributes_like([:name, :description], query, options)
-    else
-      new_query = MyModule
-                  .distinct
-                  .where('my_modules.experiment_id IN (?)', exp_ids)
-                  .where('my_modules.archived = ?', false)
-                  .where_attributes_like([:name, :description], query, options)
-    end
+    new_query = new_query.active unless include_archived
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT
       new_query
     else
-      new_query
-        .limit(Constants::SEARCH_LIMIT)
-        .offset((page - 1) * Constants::SEARCH_LIMIT)
+      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 
   def self.viewable_by_user(user, teams)
-    where(experiment: Experiment.viewable_by_user(user, teams))
+    with_granted_permissions(user, MyModulePermissions::READ)
+      .where(experiment: Experiment.viewable_by_user(user, teams))
   end
 
   def navigable?
@@ -182,15 +166,15 @@ class MyModule < ApplicationRecord
     report_elements.where(repository_id: ids).update(repository: repository)
   end
 
-  def unassigned_users
-    User.find_by_sql(
-      "SELECT DISTINCT users.id, users.full_name FROM users " +
-      "INNER JOIN user_projects ON users.id = user_projects.user_id " +
-      "INNER JOIN experiments ON experiments.project_id = user_projects.project_id " +
-      "WHERE experiments.id = #{experiment_id.to_s}" +
-      " AND users.id NOT IN " +
-      "(SELECT DISTINCT user_id FROM user_my_modules WHERE user_my_modules.my_module_id = #{id.to_s})"
-    )
+  def undesignated_users
+    User.joins(:user_assignments)
+        .joins(
+          "LEFT OUTER JOIN user_my_modules ON user_my_modules.user_id = users.id "\
+          "AND user_my_modules.my_module_id = #{id}"
+        )
+        .where(user_assignments: { assignable: self })
+        .where(user_my_modules: { id: nil })
+        .distinct
   end
 
   def unassigned_tags
@@ -356,7 +340,15 @@ class MyModule < ApplicationRecord
 
   def deep_clone_to_experiment(current_user, experiment_dest)
     # Copy the module
-    clone = MyModule.new(name: name, experiment: experiment_dest, description: description, x: x, y: y)
+    clone = MyModule.new(
+      name: name,
+      experiment: experiment_dest,
+      description: description,
+      x: x,
+      y: y,
+      created_by: current_user
+    )
+
     # set new position if cloning in the same experiment
     clone.attributes = get_new_position if clone.experiment == experiment
 
@@ -413,7 +405,7 @@ class MyModule < ApplicationRecord
       user: user
     )
     Activities::CreateActivityService
-      .call(activity_type: :assign_user_to_module,
+      .call(activity_type: :designate_user_to_my_module,
             owner: assigned_by || user,
             team: experiment.project.team,
             project: experiment.project,
@@ -424,6 +416,10 @@ class MyModule < ApplicationRecord
 
   def comments
     task_comments
+  end
+
+  def permission_parent
+    experiment
   end
 
   private

@@ -21,7 +21,7 @@
         </span>
       </div>
 
-      <% if can_manage_users_in_module?(@my_module) %>
+      <% if can_manage_my_module?(@my_module) %>
         <div class="col-xs-2">
           <%= link_to my_module_user_my_module_path(@my_module, umm, format: :json), method: :delete, remote: true, class: 'btn btn-link remove-user-link' do %>
           <span class="fas fa-times"></span>
@@ -34,13 +34,13 @@
   <% end %>
 <% end %>
 
-<% if can_manage_users_in_module?(@my_module) && @unassigned_users.count > 0 %>
+<% if can_manage_my_module?(@my_module) && @undesignated_users.any? %>
   <li>
     <hr>
     <div class="row">
     <%= bootstrap_form_for [@my_module, @new_um], remote: true, format: :json, html: { class: 'add-user-form' } do |f| %>
       <div class="col-xs-4">
-      <%= collection_select(:user_my_module, :user_id, @unassigned_users, :id, :full_name, {}, { class: 'selectpicker' }) %>
+      <%= collection_select(:user_my_module, :user_id, @undesignated_users, :id, :full_name, {}, { class: 'selectpicker' }) %>
       </div>
       <div class="col-xs-2">
         <%= f.button class: 'btn btn-primary' do %>

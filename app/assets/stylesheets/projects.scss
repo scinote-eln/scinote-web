@@ -218,14 +218,26 @@ path, ._jsPlumb_endpoint {
   .panel-body .due-date-link {
     color: $color-emperor;
     display: block;
+
+    &:hover {
+      text-decoration: none;
+    }
   }
 
   .panel-body .due-date-label {
-    margin-left: 30px;
+    margin-left: .5em;
+
+    &.empty-label {
+      color: $color-alto;
+    }
   }
 
   &.expanded {
     z-index: 30;
+  }
+
+  .my-module-title {
+    color: $color-black;
   }
 
   &.group-hover {
@@ -260,6 +272,47 @@ path, ._jsPlumb_endpoint {
       color: $brand-danger;
     }
   }
+
+  .nav-tabs {
+    border-bottom: 0;
+  }
+
+  .designated-users-task-title {
+    padding-left: 15px;
+  }
+
+  .user-role {
+    @include font-small;
+  }
+
+  &.private {
+    @include font-main;
+    color: $color-silver-chalice;
+    height: 136px;
+    padding: 1.5em 2em;
+
+    .panel-body {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .fas {
+      flex-grow: 1;
+      font-size: 24px;
+    }
+
+    .description {
+      margin-top: .5em;
+      text-align: center;
+    }
+  }
+
+  .panel-footer {
+    .btn-link {
+      display: flex;
+    }
+  }
 }
 
 /* MEDIUM-ZOOM MODULE */
@@ -292,6 +345,15 @@ path, ._jsPlumb_endpoint {
     border-color: $brand-danger;
     border-width: 4px;
     border-radius: 8px;
+  }
+
+  &.private {
+    @include font-main;
+    color: $color-silver-chalice;
+
+    .fas {
+      margin-right: .25em;
+    }
   }
 }
 
@@ -364,7 +426,17 @@ path, ._jsPlumb_endpoint {
     border-color: $brand-warning;
   }
   &.alert-red {
-  border-color: $brand-danger;
+    border-color: $brand-danger;
+  }
+
+  &.private {
+    @include font-main;
+    align-items: center;
+    background: $color-white;
+    box-shadow: none;
+    color: $color-silver-chalice;
+    display: flex;
+    justify-content: center;
   }
 }
 

@@ -5,7 +5,8 @@ class MyModuleRepositorySnapshotsController < ApplicationController
   before_action :load_repository, only: :create
   before_action :load_repository_snapshot, except: %i(create full_view_sidebar select)
   before_action :check_view_permissions, except: %i(create destroy select)
-  before_action :check_manage_permissions, only: %i(create destroy select)
+  before_action :check_create_permissions, only: %i(create)
+  before_action :check_manage_permissions, only: %i(destroy select)
 
   def index_dt
     @draw = params[:draw].to_i
@@ -144,7 +145,11 @@ class MyModuleRepositorySnapshotsController < ApplicationController
   end
 
   def check_view_permissions
-    render_403 unless can_read_experiment?(@my_module.experiment)
+    render_403 unless can_read_my_module?(@my_module)
+  end
+
+  def check_create_permissions
+    render_403 unless can_create_my_module_repository_snapshots?(@my_module)
   end
 
   def check_manage_permissions

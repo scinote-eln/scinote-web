@@ -360,59 +360,81 @@
     }).getContainer(myModuleTagsSelector).addClass('my-module-tags-container');
   }
 
+
   function initAssignedUsersSelector() {
-    var manageUsersModal = $('#manage-module-users-modal');
-    var manageUsersModalBody = manageUsersModal.find('.modal-body');
+    var myModuleUserSelector = '#module-assigned-users-selector';
 
-    // Initialize users editing modal remote loading
-    function initUsersEditLink() {
-      $('.task-details').on('ajax:success', '.manage-users-link', function(e, data) {
-        manageUsersModal.modal('show');
-        manageUsersModal.find('#manage-module-users-modal-module').text(data.my_module.name);
-        initUsersModalBody(data);
-      });
-    }
-
-    // Initialize ajax listeners and elements style on modal body.
-    // This function must be called when modal body is changed.
-    function initUsersModalBody(data) {
-      manageUsersModalBody.html(data.html);
-      manageUsersModalBody.find('.selectpicker').selectpicker();
-    }
-
-    // Initialize reloading manage user modal content after posting new user
-    manageUsersModalBody.on('ajax:success', '.add-user-form', function(e, data) {
-      initUsersModalBody(data);
-    });
-
-    // Initialize remove user from my_module links
-    manageUsersModalBody.on('ajax:success', '.remove-user-link', function(e, data) {
-      initUsersModalBody(data);
-    });
-
-    // Reload users HTML element when modal is closed
-    manageUsersModal.on('hide.bs.modal', function() {
-      var usersEl = $('.task-assigned-users');
-      // Load HTML to refresh users
-      $.ajax({
-        url: usersEl.attr('data-module-users-url'),
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-          $('.task-assigned-users').replaceWith(data.html);
-        },
-        error: function() {
-          // TODO
+    dropdownSelector.init(myModuleUserSelector, {
+      closeOnSelect: true,
+      labelHTML: true,
+      tagClass: 'my-module-user-tags',
+      tagLabel: (data) => {
+        return `<img class="img-responsive block-inline" src="${data.params.avatar_url}" alt="${data.label}"/>
+                <span style="user-full-name block-inline">${data.label}</span>`;
+      },
+      customDropdownIcon: () => {
+        return '';
+      },
+      optionLabel: (data) => {
+        if (data.params.avatar_url) {
+          return `<span class="global-avatar-container" style="margin-top: 10px">
+                  <img src="${data.params.avatar_url}" alt="${data.label}"/></span>
+                  <span style="margin-left: 10px">${data.label}</span>`;
         }
-      });
-    });
 
-    // Remove users modal content when modal window is closed.
-    manageUsersModal.on('hidden.bs.modal', function() {
-      manageUsersModalBody.html('');
-    });
+        return data.label;
+      },
+      onSelect: function() {
+        var selectElement = $(myModuleUserSelector);
+        var lastUser = selectElement.next().find('.ds-tags').last();
+        var lastUserId = lastUser.find('.tag-label').data('ds-tag-id');
+        var newUser;
 
-    initUsersEditLink();
+        if (lastUserId > 0) {
+          newUser = {
+            user_my_module: {
+              user_id: lastUserId
+            }
+          };
+        } else {
+          newUser = {
+            user_my_module: {
+              user_id: selectElement.val()
+            }
+          };
+        }
+
+        $.post(selectElement.data('users-create-url'), newUser, function(result) {
+          dropdownSelector.removeValue(myModuleUserSelector, 0, '', true);
+          dropdownSelector.addValue(myModuleUserSelector, {
+            value: result.user.id,
+            label: result.user.full_name,
+            params: {
+              avatar_url: result.user.avatar_url,
+              user_module_id: result.user.user_module_id
+            }
+          }, true);
+        }).fail(function() {
+          dropdownSelector.removeValue(myModuleUserSelector, lastUserId, '', true);
+        });
+      },
+      onUnSelect: (id) => {
+        var umID = $(myModuleUserSelector).find(`option[value="${id}"]`).data('params').user_module_id;
+
+        $.ajax({
+          url: `${$(myModuleUserSelector).data('update-module-users-url')}/${umID}`,
+          type: 'DELETE',
+          success: () => {
+            dropdownSelector.closeDropdown(myModuleUserSelector);
+          },
+          error: (r) => {
+            if (r.status === 403) {
+              HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+            }
+          }
+        });
+      }
+    }).getContainer(myModuleUserSelector).addClass('my-module-users-container');
   }
 
   initTaskCollapseState();

@@ -1,0 +1,43 @@
+<% # frozen_string_literal: true %>
+
+<%
+  my_module_member = MyModuleMember.new(current_user, my_module, experiment, project, user)
+  item_id = dom_id(user, :my_module_member)
+%>
+
+<%= form_with(model: my_module_member, url: update_path, method: :put, remote: true, html: { class: 'row member-item', id: item_id, data: { action: 'replace-form autosave-form' } }) do |f| %>
+  <%= f.hidden_field :user_id, value: f.object.user.id %>
+  <div class="col-xs-2">
+      <span class="global-avatar-container">
+        <%= image_tag avatar_path(user, :icon_small), title: current_assignee_name(user), class: 'img-circle pull-left' %>
+      </span>
+  </div>
+  <div class="col-xs-3">
+    <span><%= current_assignee_name(user) %></span>
+    <br>
+    <small class="text-muted"><%= user_assignment_resource_role_name(my_module_member, user, my_module) %></small>
+  </div>
+  <% unless user == current_user %>
+    <div class="col-xs-7">
+      <div class="row">
+        <div class="col-xs-7">
+          <%= f.select :user_role_id,
+                      options_for_select(user_roles_collection, selected: f.object.user_role&.id),
+                      {},
+                      class: 'form-control selectpicker',
+                      title: t('user_assignment.change_my_module_role'),
+                      data: { 'selected-text-format' => 'static' }  %>
+        </div>
+        <div class="col-xs-5">
+          <%= link_to(
+            access_permissions_project_experiment_my_module_path(experiment.project, experiment, my_module, user_id: user),
+            remote: true, method: :delete, class: 'btn btn-link', data: { action: 'remote-destroy', target: "##{item_id}" }
+          ) do %>
+            <span class="fas fa-times"></span>
+            <%= t 'general.remove' %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>

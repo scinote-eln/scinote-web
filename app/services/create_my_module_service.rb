@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class CreateMyModuleService
+  include Canaid::Helpers::PermissionsHelper
+
   def initialize(user, team, params)
     @params = params
     @my_module_params = params[:my_module] || {}
@@ -9,16 +11,14 @@ class CreateMyModuleService
   end
 
   def call
-    new_my_module = nil
     ActiveRecord::Base.transaction do
-      unless @params[:experiment].class == Experiment
+      unless @params[:experiment].instance_of?(Experiment)
         @params[:experiment][:project] = @params[:project]
         @params[:experiment] = CreateExperimentService.new(@user, @team, @params[:experiment]).call
       end
-      unless @params[:experiment]&.errors&.blank?
-        new_my_module = @params[:experiment]
-        raise ActiveRecord::Rollback
-      end
+
+      raise ActiveRecord::Rollback unless @params[:experiment]&.valid? &&
+                                          can_manage_experiment_tasks?(@user, @params[:experiment])
 
       @my_module_params[:x] ||= 0
       @my_module_params[:y] ||= 0
@@ -36,10 +36,9 @@ class CreateMyModuleService
       create_my_module_activity
 
       @my_module.assign_user(@user)
-
-      new_my_module = @my_module
     end
-    new_my_module
+
+    @my_module
   end
 
   private

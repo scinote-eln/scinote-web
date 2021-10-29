@@ -1,0 +1,27 @@
+<% # frozen_string_literal: true %>
+
+<div class="modal fade" tabindex="-1" role="dialog" data-action="modal-close">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content" id="user_assignments_modal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><%= t '.title', resource_name: experiment.name %></h4>
+      </div>
+      <div class="modal-body">
+        <p>
+          <%= t '.description' %>
+        </p>
+        <hr />
+        <% users.each do |user| %>
+          <%= render partial: 'access_permissions/partials/experiment_member_field',
+                      locals: {
+                        user: user,
+                        project: project,
+                        experiment: experiment,
+                        update_path: access_permissions_project_experiment_path(project, experiment)
+                      } %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

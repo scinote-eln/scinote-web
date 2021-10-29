@@ -9,7 +9,7 @@ class ProjectCommentsController < ApplicationController
   before_action :load_vars
   before_action :check_view_permissions, only: :index
   before_action :check_create_permissions, only: :create
-  before_action :check_manage_permissions, only: %i(edit update destroy)
+  before_action :check_manage_permissions, only: %i(update destroy)
 
   def index
     comments = @project.last_comments(@last_comment_id, @per_page)
@@ -41,7 +41,7 @@ class ProjectCommentsController < ApplicationController
   def load_vars
     @last_comment_id = params[:from].to_i
     @per_page = Constants::COMMENTS_SEARCH_LIMIT
-    @project = Project.find_by_id(params[:project_id])
+    @project = current_team.projects.find_by(id: params[:project_id])
 
     render_404 unless @project
   end
@@ -51,13 +51,13 @@ class ProjectCommentsController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 unless can_create_comments_in_project?(@project)
+    render_403 unless can_create_project_comments?(@project)
   end
 
   def check_manage_permissions
-    @comment = ProjectComment.find_by_id(params[:id])
+    @comment = @project.project_comments.find_by(id: params[:id])
     render_403 unless @comment.present? &&
-                      can_manage_comment_in_project?(@comment)
+                      can_manage_project_comment?(@comment)
   end
 
   def comment_params

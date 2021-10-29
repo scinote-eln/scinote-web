@@ -81,7 +81,10 @@ spec/addons
 # RVM/rbenv ruby version for local development
 .ruby-version
 
-#ignore marvinJs
+# Ignore marvinJs
 
 public/marvinjs
 public/marvin4js-license.cxl
+
+# Ignore JetBrains
+.idea/

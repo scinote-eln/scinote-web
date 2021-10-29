@@ -173,8 +173,8 @@ class Extends
     archive_module: 10,
     restore_module: 11,
     change_module_description: 12,
-    assign_user_to_module: 13,
-    unassign_user_from_module: 14,
+    designate_user_to_my_module: 13,
+    undesignate_user_from_my_module: 14,
     create_step: 15,
     destroy_step: 16,
     add_comment_to_step: 17,
@@ -310,6 +310,8 @@ class Extends
     delete_project_folder: 162,
     generate_pdf_report: 163,
     generate_docx_report: 164,
+    change_user_role_on_experiment: 165,
+    change_user_role_on_my_module: 166,
     edit_molecule_on_step: 168,
     edit_molecule_on_result: 169,
     edit_molecule_on_step_in_repository: 170,
@@ -318,7 +320,11 @@ class Extends
     create_molecule_on_step_in_repository: 173,
     register_molecule_on_step: 177,
     register_molecule_on_result: 178,
-    register_molecule_on_step_in_repository: 179
+    register_molecule_on_step_in_repository: 179,
+    assign_user_to_experiment: 180,
+    unassign_user_from_experiment: 181,
+    assign_user_to_my_module: 182,
+    unassign_user_from_my_module: 183
   }
 
   ACTIVITY_GROUPS = {
@@ -366,8 +372,8 @@ class Extends
     edit_module_comment
     delete_module_comment
     add_comment_to_module
-    assign_user_to_module
-    unassign_user_from_module
+    designate_user_to_my_module
+    undesignate_user_from_my_module
     set_task_due_date
     change_task_due_date
     remove_task_due_date
@@ -385,5 +391,7 @@ class Extends
     create_individual_signature_request
     delete_individual_signature_request
     delete_group_signature_request
+    change_user_role_on_experiment
+    change_user_role_on_my_module
   )
 end

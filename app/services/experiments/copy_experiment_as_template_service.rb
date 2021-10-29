@@ -29,7 +29,7 @@ module Experiments
         )
 
         # Copy all signle taskas
-        @c_exp.my_modules << @exp.my_modules.without_group.map do |m|
+        @c_exp.my_modules << @exp.my_modules.readable_by_user(@user).without_group.map do |m|
           m.deep_clone_to_experiment(@user, @c_exp)
         end
 
@@ -38,7 +38,7 @@ module Experiments
           @c_exp.my_module_groups << g.deep_clone_to_experiment(@user, @c_exp)
         end
 
-        raise ActiveRecord::Rollback unless @c_exp.save
+        @c_exp.save!
       end
       @errors.merge!(@c_exp.errors.to_hash) unless @c_exp.valid?
 
@@ -75,7 +75,8 @@ module Experiments
         return false
       end
 
-      if @exp.projects_with_role_above_user(@user).include?(@project)
+      if @exp.project.team.projects
+             .with_user_permission(@user, ProjectPermissions::EXPERIMENTS_CREATE).include?(@project)
         true
       else
         @errors[:user_without_permissions] =

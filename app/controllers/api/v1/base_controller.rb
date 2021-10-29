@@ -175,7 +175,7 @@ module Api
 
       def load_task(key = :task_id)
         @task = @experiment.my_modules.find(params.require(key))
-        raise PermissionError.new(MyModule, :read) unless can_read_protocol_in_module?(@task.protocol)
+        raise PermissionError.new(MyModule, :read) unless can_read_my_module?(@task)
       end
 
       def load_protocol(key = :protocol_id)

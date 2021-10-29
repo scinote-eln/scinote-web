@@ -1,0 +1,12 @@
+<div class="panel panel-default module-small private"
+  id="<%= my_module.id %>"
+  data-module-id="<%= my_module.id %>"
+  <% if my_module.my_module_group.present? %>
+  data-module-group="<%= my_module.my_module_group.id %>"
+  <% end %>
+  data-module-x="<%= my_module.x %>"
+  data-module-y="<%= my_module.y %>"
+  data-module-conns="<%= construct_module_connections(my_module) %>"
+ >
+  <i class="fas fa-eye-slash"></i>
+</div>

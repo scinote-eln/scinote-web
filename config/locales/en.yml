@@ -95,6 +95,10 @@ en:
         terms: "%{client_name} terms may apply."
 
   activerecord:
+    models:
+      project: "Project"
+      my_module: "Task"
+      experiment: "Experiment"
     errors:
       models:
         project:
@@ -161,7 +165,6 @@ en:
         full_name: "Full name"
         initials: "Initials"
         avatar: "Avatar"
-
 
   head:
     title: "SciNote | %{title}"
@@ -387,6 +390,7 @@ en:
       archive_option: "Archive"
       archive_confirm: "Are you sure you want to archive this project?"
       restore_option: "Restore"
+      project_members_access: "Project members access"
       comments_option: "Show comments (%{comments_count})"
       activities_option: "Open activities"
       comment_placeholder: "Your Message"
@@ -412,7 +416,7 @@ en:
         name: "Project name"
         name_placeholder: "My project"
         team: "Team"
-        visibility: "Visible to:"
+        visibility_html: "Make this project visible to all team members <br /> <small class='text-muted'>This will assign all team members to the project with the default role you choose</small>"
         visibility_hidden: "Project members only"
         visibility_visible: "All team members"
       modal_edit_project:
@@ -752,12 +756,6 @@ en:
         admin: "Administrator"
 
   user_projects:
-    enums:
-      role:
-        owner: "Owner"
-        normal_user: "User"
-        technician: "Technician"
-        viewer: "Viewer"
     view_users:
       modal_title: "Members of %{name}"
       no_users: "No users!"
@@ -793,12 +791,13 @@ en:
         modified_label: "Modified"
         modified_value: "%{date} by %{full_name}"
         modified_value_without_user: "%{date}"
+        view_task_access: "View task access"
       start_date: "Start date:"
       no_start_date_placeholder: "+ Add starting date"
       due_date: "Due date:"
       no_due_date_placeholder: "+ Add due date"
-      assigned_users: "Assigned users:"
-      no_assigned_users: "+ Assign user to task"
+      assigned_users: "Assigned to:"
+      no_assigned_users: "+ Assign task to a project member"
       tags: "Tags:"
       no_tags: "+ Add tags"
       manage_tags: "Manage tags"
@@ -1000,14 +999,22 @@ en:
         done: "Done"
       update_repository_record:
         title: "Update %{repository_name} items to %{my_module_name} task"
-        message: "Do you want to update %{size} items only from this task, or update them from this task & downstream tasks in the workflow also?"
+        title_downstream: "Update %{repository_name} items to task and downstream"
+        message: "Do you want to update %{size} items for this task?"
+        message_downstream_1: "These %{size} items will be updated on this taks and downstream tasks."
+        message_downstream_2: "The items will be updated in the following tasks. Ready to update them?"
+        next: "Next"
         task: 'Update task'
         task_and_downstream: 'Update task & downstream'
         newly_assigned_items: "Items newly assigned"
         items_will_be_removed: "Items that will be removed"
       assign_repository_record:
         title: 'Assign %{repository_name} items to task %{my_module_name}'
-        message: Do you want to assign %{size} items only to this task, or assign them to this task & downstream tasks in the workflow as well?
+        title_downstream: 'Assign %{repository_name} items to task and downstream'
+        message: You will assign %{size} items to this task only are you ready to assign them?
+        message_downstream: You will assign %{size} items to the following tasks. Are you ready to assign them?
+        current_task: "Current task"
+        hidden_tasks: "No permission: There are %{size} tasks you can’t assign to."
         task: 'Assign to task'
         task_and_downstream: 'Assign to task & downstream'
     modules_list_partial:
@@ -1051,6 +1058,7 @@ en:
       archive_confirm: "Are you sure you want to archive this project?"
       restore_option: "Restore"
       more_link: "More"
+      experiment_access: "Experiment access"
       details_modal:
         description: "%{name} description"
     new:
@@ -1128,6 +1136,7 @@ en:
         drag_connections: "Drag connection/s from here"
         options_header: "Options"
         edit_module: "Rename task"
+        task_access: "Task access"
         clone_module: "Copy task as template (only Protocols steps copied)"
         clone_module_group: "Copy workflow as template (only Protocols steps copied)"
         move_module: "Move task to another experiment"
@@ -1163,7 +1172,7 @@ en:
         info_tab: "Task info"
         no_description: "This task has no description."
         full_info: "Edit description"
-        users_tab: "Assigned users"
+        users_tab: "Task assigned to"
         no_users: "This task has no assigned users."
         manage_users: "Manage users"
         module_user_join: "Joined on %{date}."
@@ -1180,6 +1189,7 @@ en:
         due_date: "Due date"
         no_due_date: "not set"
         status_transitioning_label: "Transitioning to:"
+        no_access: "You don’t have permission to view this task"
         modal_manage_users:
           modal_title: "Manage users for"
           no_users: "No users"
@@ -1189,6 +1199,8 @@ en:
           invite_users_link: "Invite users"
           invite_users_details: "to team %{team}."
           contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
+      medium_zoom:
+        no_access: "Can't view task"
       update:
         success_flash: "Experiment successfully updated."
     module_archive:
@@ -1967,6 +1979,14 @@ en:
         destroy_uo_confirm: "Remove"
         leave_flash: "Successfully left team %{team}."
 
+  user_roles:
+    predefined:
+      owner: "Owner"
+      normal_user: "User"
+      technician: "Technician"
+      viewer: "Viewer"
+      unchangable_error_message: "Predefined roles can not be changed!"
+
   protocols:
     protocols_io_import:
       title_too_long: "... Text is too long so we had to cut it off."
@@ -2466,6 +2486,54 @@ en:
   create_task_service:
     default_task_name: "New Task"
 
+  user_assignment:
+    current_assignee: "(you)"
+    change_project_role: "Change project role"
+    select_default_user_role: "Select default user role"
+    change_experiment_role: "Change experiment role"
+    change_my_module_role: "Change task role"
+    select_role: "Select role"
+    from_project: "%{user_role} [from project]"
+    from_experiment: "%{user_role} [from experiment]"
+    experiment_select_role: "Change experiment role"
+  access_permissions:
+    create:
+      success:
+        one: "You have successfully granted access to %{count} member to the %{resource}."
+        other: "You have successfully granted access to %{count} members to the %{resource}."
+      failure: "Something went wrong"
+    destroy:
+      success: "You have successfully removed %{member_name} from the %{resource}."
+      failure: "Something went wrong"
+    partials:
+      edit_assignments_content:
+        title: "Manage access for to %{resource_name}"
+        new_resource_assignments: "Grant new access to %{resource}"
+      new_assignments_form:
+        title: "Select members"
+        submit: "Grant access"
+        submit_singular: "Grant access to 1 user"
+        submit_plural: "Grant access to {num} users"
+        find_people_html: "&#128269; Find people"
+    projects:
+      modals:
+        show_modal:
+          title: "Access to %{resource_name}"
+          new_resource_assignments: "Grant new access to %{resource}"
+    experiments:
+      modals:
+        show_modal:
+          title: "Access to %{resource_name}"
+        edit_modal:
+          title: "Manage access for %{resource_name}"
+          description: "Changing roles will not take away any permissions from previous levels. Permissions can only be added with a new role. New permissions apply only to this concrete experiment."
+    my_modules:
+      modals:
+        show_modal:
+          title: "Access to %{resource_name}"
+        edit_modal:
+          title: "Manage access for %{resource_name}"
+          description: "Changing roles will not take away any permissions from previous levels. Permissions can only be added with a new role. New permissions apply only to this concrete task."
   zip_export:
     modal_label: 'Export inventory'
     notification_title: 'Your requested export package is ready!'
@@ -2525,6 +2593,7 @@ en:
     close: "Close"
     create: 'Create'
     change: "Change"
+    remove: "Remove"
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"

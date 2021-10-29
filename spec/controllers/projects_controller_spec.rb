@@ -4,65 +4,11 @@ require 'rails_helper'
 
 describe ProjectsController, type: :controller do
   login_user
-  render_views
 
-  PROJECTS_CNT = 26
-  time = Time.new(2015, 8, 1, 14, 35, 0)
-  let!(:user) { User.first }
-  let!(:team) { create :team, created_by: user }
-  let!(:user_team) { create :user_team, team: team, user: user }
-  before do
-    @projects_overview = ProjectsOverviewService.new(team, user, nil, params)
-  end
-
-  let!(:project_1) do
-    create :project, name: 'test project D', visibility: 1, team: team,
-                     archived: false, created_at: time.advance(hours: 2),
-                     created_by: user
-  end
-  let!(:project_2) do
-    create :project, name: 'test project B', visibility: 1, team: team,
-                     archived: true, created_at: time, created_by: user
-  end
-  let!(:project_3) do
-    create :project, name: 'test project C', visibility: 1, team: team,
-                     archived: false, created_at: time.advance(hours: 3),
-                     created_by: user
-  end
-  let!(:project_4) do
-    create :project, name: 'test project A', visibility: 1, team: team,
-                     archived: true, created_at: time.advance(hours: 1),
-                     created_by: user
-  end
-  let!(:project_5) do
-    create :project, name: 'test project E', visibility: 1, team: team,
-                     archived: true, created_at: time.advance(hours: 5),
-                     created_by: user
-  end
-  let!(:project_6) do
-    create :project, name: 'test project F', visibility: 0, team: team,
-                     archived: false, created_at: time.advance(hours: 4),
-                     created_by: user
-  end
-  (7..PROJECTS_CNT).each do |i|
-    let!("project_#{i}") do
-      create :project, name: "test project #{(64 + i).chr}",
-                       visibility: 1,
-                       team: team, archived: i % 2,
-                       created_at: time.advance(hours: 6, minutes: i),
-                       created_by: user
-    end
-  end
-
-  # rubocop:disable Security/Eval
-  # rubocop:disable Style/EvalWithLocation
-  (1..PROJECTS_CNT).each do |i|
-    let!("user_projects_#{i}") do
-      create :user_project, :owner, project: eval("project_#{i}"), user: user
-    end
-  end
-  # rubocop:enable Security/Eval
-  # rubocop:enable Style/EvalWithLocation
+  include_context 'reference_project_structure', {
+    projects: 3,
+    skip_my_module: true
+  }
 
   describe '#index' do
     let(:params) { { team: team.id, sort: 'atoz' } }
@@ -107,7 +53,7 @@ describe ProjectsController, type: :controller do
 
   describe '#edit' do
     context 'in JSON format' do
-      let(:params) { { id: project_1.id } }
+      let(:params) { { id: projects.first.id } }
 
       it 'returns success response' do
         get :edit, params: params, format: :json
@@ -121,9 +67,9 @@ describe ProjectsController, type: :controller do
     context 'in HTML format' do
       let(:action) { put :update, params: params }
       let(:params) do
-        { id: project_1.id,
-          project: { name: project_1.name, team_id: project_1.team.id,
-                     visibility: project_1.visibility } }
+        { id: projects.first.id,
+          project: { name: projects.first.name, team_id: projects.first.team.id,
+                     visibility: projects.first.visibility } }
       end
 
       it 'returns redirect response' do
@@ -133,7 +79,7 @@ describe ProjectsController, type: :controller do
       end
 
       it 'calls create activity service (change_project_visibility)' do
-        params[:project][:visibility] = 'hidden'
+        params[:project][:visibility] = 'visible'
         expect(Activities::CreateActivityService).to receive(:call)
           .with(hash_including(activity_type: :change_project_visibility))
         action
@@ -147,7 +93,7 @@ describe ProjectsController, type: :controller do
       end
 
       it 'calls create activity service (restore_project)' do
-        project_1.update(archived: true)
+        projects.first.update(archived: true)
         params[:project][:archived] = false
         expect(Activities::CreateActivityService).to receive(:call)
           .with(hash_including(activity_type: :restore_project))
@@ -172,7 +118,7 @@ describe ProjectsController, type: :controller do
   describe '#show' do
     context 'in HTML format' do
       let(:params) do
-        { id: project_1.id, sort: 'old',
+        { id: projects.first.id, sort: 'old',
           project: { name: 'test project A1', team_id: team.id,
                      visibility: 'visible' } }
       end
@@ -188,7 +134,7 @@ describe ProjectsController, type: :controller do
   describe '#notifications' do
     context 'in JSON format' do
       let(:params) do
-        { id: project_1.id,
+        { id: projects.first.id,
           project: { name: 'test project A1', team_id: team.id,
                      visibility: 'visible' } }
       end
@@ -204,7 +150,7 @@ describe ProjectsController, type: :controller do
   describe '#experiment_archive' do
     context 'in HTML format' do
       let(:params) do
-        { id: project_1.id,
+        { id: projects.first.id,
           view_mode: :archived,
           project: { name: 'test project A1', team_id: team.id,
                      visibility: 'visible' } }

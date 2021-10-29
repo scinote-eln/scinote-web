@@ -7,9 +7,10 @@ class MyModuleCommentsController < ApplicationController
   include CommentHelper
 
   before_action :load_vars
+  before_action :load_comment, only: %i(update destroy)
   before_action :check_view_permissions, only: :index
-  before_action :check_add_permissions, only: [:create]
-  before_action :check_manage_permissions, only: %i(edit update destroy)
+  before_action :check_create_permissions, only: :create
+  before_action :check_manage_permissions, only: %i(update destroy)
 
   def index
     comments = @my_module.last_comments(@last_comment_id, @per_page)
@@ -43,23 +44,25 @@ class MyModuleCommentsController < ApplicationController
   def load_vars
     @last_comment_id = params[:from].to_i
     @per_page = Constants::COMMENTS_SEARCH_LIMIT
-    @my_module = MyModule.find_by_id(params[:my_module_id])
+    @my_module = MyModule.find_by(id: params[:my_module_id])
 
     render_404 unless @my_module
   end
 
-  def check_view_permissions
-    render_403 unless can_read_experiment?(@my_module.experiment)
+  def load_comment
+    @comment = @my_module.task_comments.find(params[:id])
   end
 
-  def check_add_permissions
-    render_403 unless can_create_comments_in_module?(@my_module)
+  def check_view_permissions
+    render_403 unless can_read_my_module?(@my_module)
+  end
+
+  def check_create_permissions
+    render_403 unless can_create_my_module_comments?(@my_module)
   end
 
   def check_manage_permissions
-    @comment = TaskComment.find_by_id(params[:id])
-    render_403 unless @comment.present? &&
-                      can_manage_comment_in_module?(@comment.becomes(Comment))
+    render_403 unless can_manage_my_module_comment?(@comment)
   end
 
   def comment_params

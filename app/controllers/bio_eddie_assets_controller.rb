@@ -118,10 +118,9 @@ class BioEddieAssetsController < ApplicationController
   def check_edit_permission
     case @assoc
     when Step
-      return render_403 unless can_manage_protocol_in_module?(@protocol) ||
-                               can_manage_protocol_in_repository?(@protocol)
+      return render_403 unless can_manage_step?(@assoc)
     when Result, MyModule
-      return render_403 unless can_manage_module?(@my_module)
+      return render_403 unless can_manage_my_module?(@my_module)
     else
       render_403
     end

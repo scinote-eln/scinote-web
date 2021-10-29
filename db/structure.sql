@@ -1186,7 +1186,8 @@ CREATE TABLE public.projects (
     experiments_order character varying,
     template boolean,
     demo boolean DEFAULT false NOT NULL,
-    project_folder_id bigint
+    project_folder_id bigint,
+    group_user_role_id bigint
 );
 
 
@@ -2576,6 +2577,42 @@ ALTER SEQUENCE public.tokens_id_seq OWNED BY public.tokens.id;
 
 
 --
+-- Name: user_assignments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_assignments (
+    id bigint NOT NULL,
+    assignable_type character varying NOT NULL,
+    assignable_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    user_role_id bigint NOT NULL,
+    assigned_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    assigned integer DEFAULT 0 NOT NULL
+);
+
+
+--
+-- Name: user_assignments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.user_assignments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_assignments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.user_assignments_id_seq OWNED BY public.user_assignments.id;
+
+
+--
 -- Name: user_identities; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2710,6 +2747,41 @@ CREATE SEQUENCE public.user_projects_id_seq
 --
 
 ALTER SEQUENCE public.user_projects_id_seq OWNED BY public.user_projects.id;
+
+
+--
+-- Name: user_roles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_roles (
+    id bigint NOT NULL,
+    name character varying,
+    predefined boolean DEFAULT false,
+    permissions character varying[] DEFAULT '{}'::character varying[],
+    created_by_id bigint,
+    last_modified_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: user_roles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.user_roles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.user_roles_id_seq OWNED BY public.user_roles.id;
 
 
 --
@@ -3517,6 +3589,13 @@ ALTER TABLE ONLY public.tokens ALTER COLUMN id SET DEFAULT nextval('public.token
 
 
 --
+-- Name: user_assignments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_assignments ALTER COLUMN id SET DEFAULT nextval('public.user_assignments_id_seq'::regclass);
+
+
+--
 -- Name: user_identities id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3542,6 +3621,13 @@ ALTER TABLE ONLY public.user_notifications ALTER COLUMN id SET DEFAULT nextval('
 --
 
 ALTER TABLE ONLY public.user_projects ALTER COLUMN id SET DEFAULT nextval('public.user_projects_id_seq'::regclass);
+
+
+--
+-- Name: user_roles id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_roles ALTER COLUMN id SET DEFAULT nextval('public.user_roles_id_seq'::regclass);
 
 
 --
@@ -4176,6 +4262,14 @@ ALTER TABLE ONLY public.tokens
 
 
 --
+-- Name: user_assignments user_assignments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_assignments
+    ADD CONSTRAINT user_assignments_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: user_identities user_identities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4205,6 +4299,14 @@ ALTER TABLE ONLY public.user_notifications
 
 ALTER TABLE ONLY public.user_projects
     ADD CONSTRAINT user_projects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_roles user_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_roles
+    ADD CONSTRAINT user_roles_pkey PRIMARY KEY (id);
 
 
 --
@@ -4872,6 +4974,13 @@ CREATE INDEX index_projects_on_archived_by_id ON public.projects USING btree (ar
 --
 
 CREATE INDEX index_projects_on_created_by_id ON public.projects USING btree (created_by_id);
+
+
+--
+-- Name: index_projects_on_group_user_role_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_projects_on_group_user_role_id ON public.projects USING btree (group_user_role_id);
 
 
 --
@@ -5792,6 +5901,34 @@ CREATE INDEX index_tiny_mce_assets_on_team_id ON public.tiny_mce_assets USING bt
 
 
 --
+-- Name: index_user_assignments_on_assignable; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_assignments_on_assignable ON public.user_assignments USING btree (assignable_type, assignable_id);
+
+
+--
+-- Name: index_user_assignments_on_assigned_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_assignments_on_assigned_by_id ON public.user_assignments USING btree (assigned_by_id);
+
+
+--
+-- Name: index_user_assignments_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_assignments_on_user_id ON public.user_assignments USING btree (user_id);
+
+
+--
+-- Name: index_user_assignments_on_user_role_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_assignments_on_user_role_id ON public.user_assignments USING btree (user_role_id);
+
+
+--
 -- Name: index_user_identities_on_provider_and_uid; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5880,6 +6017,20 @@ CREATE INDEX index_user_projects_on_user_id ON public.user_projects USING btree 
 --
 
 CREATE UNIQUE INDEX index_user_projects_on_user_id_and_project_id ON public.user_projects USING btree (user_id, project_id);
+
+
+--
+-- Name: index_user_roles_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_roles_on_created_by_id ON public.user_roles USING btree (created_by_id);
+
+
+--
+-- Name: index_user_roles_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_roles_on_last_modified_by_id ON public.user_roles USING btree (last_modified_by_id);
 
 
 --
@@ -6084,6 +6235,14 @@ ALTER TABLE ONLY public.assets
 
 
 --
+-- Name: user_assignments fk_rails_0b13c65ab0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_assignments
+    ADD CONSTRAINT fk_rails_0b13c65ab0 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: my_modules fk_rails_0d264d93f8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6129,6 +6288,14 @@ ALTER TABLE ONLY public.team_repositories
 
 ALTER TABLE ONLY public.zip_exports
     ADD CONSTRAINT fk_rails_1952fc2261 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: user_assignments fk_rails_19dca62dfc; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_assignments
+    ADD CONSTRAINT fk_rails_19dca62dfc FOREIGN KEY (user_role_id) REFERENCES public.user_roles(id);
 
 
 --
@@ -6388,6 +6555,14 @@ ALTER TABLE ONLY public.user_my_modules
 
 
 --
+-- Name: user_assignments fk_rails_6467e12fc3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_assignments
+    ADD CONSTRAINT fk_rails_6467e12fc3 FOREIGN KEY (assigned_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: user_teams fk_rails_64c25f3fe6; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6473,6 +6648,14 @@ ALTER TABLE ONLY public.report_elements
 
 ALTER TABLE ONLY public.repository_rows
     ADD CONSTRAINT fk_rails_7186e2b731 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: projects fk_rails_73110d691c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.projects
+    ADD CONSTRAINT fk_rails_73110d691c FOREIGN KEY (group_user_role_id) REFERENCES public.user_roles(id);
 
 
 --
@@ -6721,6 +6904,14 @@ ALTER TABLE ONLY public.step_tables
 
 ALTER TABLE ONLY public.user_teams
     ADD CONSTRAINT fk_rails_978858c8ea FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: user_roles fk_rails_983264fab9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_roles
+    ADD CONSTRAINT fk_rails_983264fab9 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
 --
@@ -7009,6 +7200,14 @@ ALTER TABLE ONLY public.report_elements
 
 ALTER TABLE ONLY public.checklists
     ADD CONSTRAINT fk_rails_c89d59efd3 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: user_roles fk_rails_c958cec38d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_roles
+    ADD CONSTRAINT fk_rails_c958cec38d FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
 
 
 --
@@ -7483,7 +7682,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201215161050'),
 ('20210128105457'),
 ('20210128105458'),
+('20210202214508'),
 ('20210217114042'),
+('20210222123823'),
 ('20210312185911'),
 ('20210325152257'),
 ('20210407143303'),
@@ -7491,8 +7692,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210506125657'),
 ('20210531114633'),
 ('20210603152345'),
+('20210612070220'),
 ('20210616071836'),
 ('20210622101238'),
+('20210627095718'),
 ('20210715125349'),
 ('20210716124649'),
 ('20210720112050'),

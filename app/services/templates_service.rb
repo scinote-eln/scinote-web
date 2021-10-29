@@ -20,7 +20,8 @@ class TemplatesService
         tmpl_project = team.projects.create!(
           name: Constants::TEMPLATES_PROJECT_NAME,
           visibility: :visible,
-          template: true
+          template: true,
+          created_by: team.created_by
         )
         tmpl_project.user_projects.create!(user: team.created_by, role: 'owner')
       end

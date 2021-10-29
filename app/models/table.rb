@@ -35,29 +35,19 @@ class Table < ApplicationRecord
                   page = 1,
                   _current_team = nil,
                   options = {})
-    step_ids =
-      Step
-      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .joins(:step_tables)
-      .distinct
-      .pluck('step_tables.id')
+    step_ids = Step.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
+                   .joins(:step_tables)
+                   .distinct
+                   .pluck('step_tables.id')
 
-    result_ids =
-      Result
-      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .joins(:result_table)
-      .distinct
-      .pluck('result_tables.id')
+    result_ids = Result.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
+                       .joins(:result_table)
+                       .distinct
+                       .pluck('result_tables.id')
 
-    table_query =
-      Table
-      .distinct
-      .joins('LEFT OUTER JOIN step_tables ON step_tables.table_id = tables.id')
-      .joins('LEFT OUTER JOIN result_tables ON ' \
-             'result_tables.table_id = tables.id')
-      .joins('LEFT OUTER JOIN results ON result_tables.result_id = results.id')
-      .where('step_tables.id IN (?) OR result_tables.id IN (?)',
-             step_ids, result_ids)
+    table_query = Table.distinct
+                       .left_outer_joins(:step_table, :result_table, :result)
+                       .where('step_tables.id IN (?) OR result_tables.id IN (?)', step_ids, result_ids)
 
     if options[:whole_word].to_s == 'true' ||
        options[:whole_phrase].to_s == 'true'
@@ -111,9 +101,7 @@ class Table < ApplicationRecord
     if page == Constants::SEARCH_NO_LIMIT
       new_query
     else
-      new_query
-        .limit(Constants::SEARCH_LIMIT)
-        .offset((page - 1) * Constants::SEARCH_LIMIT)
+      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 

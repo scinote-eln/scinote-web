@@ -9,9 +9,11 @@ class ExperimentsController < ApplicationController
 
   before_action :load_project, only: %i(new create archive_group restore_group)
   before_action :load_experiment, except: %i(new create archive_group restore_group)
-  before_action :check_view_permissions, except: %i(edit archive clone move new create archive_group restore_group)
+  before_action :check_read_permissions, except: %i(edit archive clone move new create archive_group restore_group)
+  before_action :check_canvas_read_permissions, only: %i(canvas)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: %i(edit)
+  before_action :check_update_permissions, only: %i(update)
   before_action :check_archive_permissions, only: :archive
   before_action :check_clone_permissions, only: %i(clone_modal clone)
   before_action :check_move_permissions, only: %i(move_modal move)
@@ -82,12 +84,6 @@ class ExperimentsController < ApplicationController
   end
 
   def update
-    render_403 && return unless if experiment_params[:archived] == 'false'
-                                  can_restore_experiment?(@experiment)
-                                else
-                                  can_manage_experiment?(@experiment)
-                                end
-
     old_text = @experiment.description
     @experiment.assign_attributes(experiment_params)
     @experiment.last_modified_by = current_user
@@ -189,7 +185,8 @@ class ExperimentsController < ApplicationController
 
   # GET: clone_modal_experiment_path(id)
   def clone_modal
-    @projects = @experiment.projects_with_role_above_user(current_user)
+    @projects = @experiment.project.team.projects
+                           .with_user_permission(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
     respond_to do |format|
       format.json do
         render json: {
@@ -221,7 +218,7 @@ class ExperimentsController < ApplicationController
 
   # GET: move_modal_experiment_path(id)
   def move_modal
-    @projects = @experiment.moveable_projects(current_user)
+    @projects = @experiment.movable_projects(current_user)
     respond_to do |format|
       format.json do
         render json: {
@@ -309,16 +306,29 @@ class ExperimentsController < ApplicationController
     params.require(:experiment).require(:project_id)
   end
 
-  def check_view_permissions
-    render_403 unless can_read_experiment?(@experiment)
+  def check_read_permissions
+    render_403 unless can_read_experiment?(@experiment) ||
+                      @experiment.archived? && can_read_archived_experiment?(@experiment)
+  end
+
+  def check_canvas_read_permissions
+    render_403 unless can_read_experiment_canvas?(@experiment)
   end
 
   def check_create_permissions
-    render_403 unless can_create_experiments?(@project)
+    render_403 unless can_create_project_experiments?(@project)
   end
 
   def check_manage_permissions
     render_403 unless can_manage_experiment?(@experiment)
+  end
+
+  def check_update_permissions
+    if experiment_params[:archived] == 'false'
+      render_403 unless can_restore_experiment?(@experiment)
+    else
+      render_403 unless can_manage_experiment?(@experiment)
+    end
   end
 
   def check_archive_permissions

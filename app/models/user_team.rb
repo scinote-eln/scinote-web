@@ -9,6 +9,7 @@ class UserTeam < ApplicationRecord
   belongs_to :assigned_by, foreign_key: 'assigned_by_id', class_name: 'User', optional: true
   belongs_to :team, inverse_of: :user_teams
 
+  after_create :assign_user_to_visible_projects
   before_destroy :destroy_associations
 
   def role_str
@@ -24,6 +25,8 @@ class UserTeam < ApplicationRecord
         up2.destroy
       end
     end
+    # destroy all assignments
+    UserAssignments::RemoveUserAssignmentJob.perform_now(team, user)
   end
 
   # returns user_teams where the user is in team
@@ -77,4 +80,15 @@ class UserTeam < ApplicationRecord
     super()
   end
 
+  private
+
+  def assign_user_to_visible_projects
+    team.projects.visible.each do |project|
+      UserAssignments::GroupAssignmentJob.perform_later(
+        team,
+        project,
+        assigned_by
+      )
+    end
+  end
 end

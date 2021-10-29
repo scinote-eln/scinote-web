@@ -259,15 +259,18 @@ Rails.application.routes.draw do
       resource :recent_works, module: 'dashboard', only: [:show]
     end
 
-    resources :projects, except: [:destroy] do
-      resources :user_projects, path: '/users', only: %i(create index update destroy), as: :users do
-        collection do
-          get 'edit', to: 'user_projects#index_edit'
+    namespace :access_permissions do
+      resources :projects, defaults: { format: 'json' } do
+        resources :experiments, only: %i(show update edit destroy) do
+          resources :my_modules, only: %i(show update edit destroy)
         end
       end
+    end
+
+    resources :projects, except: [:destroy] do
       resources :project_comments,
                 path: '/comments',
-                only: [:create, :index, :edit, :update, :destroy]
+                only: %i(create index update destroy)
       # Activities popup (JSON) for individual project in projects index,
       # as well as all activities page for single project (HTML)
       resources :project_activities, path: '/activities', only: [:index]
@@ -344,9 +347,8 @@ Rails.application.routes.draw do
         post 'move' # move experiment
         get 'fetch_workflow_img' # Get udated workflow img
         post 'restore_my_modules', to: 'my_modules#restore_group'
+        get 'sidebar'
       end
-
-      get 'sidebar', to: 'experiments#sidebar', as: 'sidebar'
     end
 
     # Show action is a popup (JSON) for individual module in full-zoom canvas,
@@ -364,13 +366,16 @@ Rails.application.routes.draw do
         collection do
           get :index_old
         end
+        member do
+          get :search
+        end
       end
 
       resource :status_flow, controller: :my_module_status_flow, only: :show
 
       resources :my_module_comments,
                 path: '/comments',
-                only: [:index, :create, :edit, :update, :destroy]
+                only: %i(create index update destroy)
 
       get :repositories_dropdown_list, controller: :my_module_repositories
       get :repositories_list_html, controller: :my_module_repositories
@@ -436,7 +441,7 @@ Rails.application.routes.draw do
     resources :steps, only: [:edit, :update, :destroy, :show] do
       resources :step_comments,
                 path: '/comments',
-                only: [:create, :index, :edit, :update, :destroy]
+                only: %i(create index update destroy)
       member do
         post 'checklistitem_state'
         post 'toggle_step_state'
@@ -473,7 +478,7 @@ Rails.application.routes.draw do
     resources :results, only: [:update, :destroy] do
       resources :result_comments,
                 path: '/comments',
-                only: [:create, :index, :edit, :update, :destroy]
+                only: %i(create index update destroy)
     end
 
     resources :result_texts, only: [:edit, :update, :destroy]
@@ -695,14 +700,24 @@ Rails.application.routes.draw do
               end
             end
             resources :projects, only: %i(index show create update) do
-              resources :user_projects, only: %i(index show create update destroy), path: 'users', as: :users
+              resources :user_assignments,
+                        only: %i(index show create update destroy),
+                        controller: :project_user_assignments,
+                        path: 'users',
+                        as: :users
               resources :project_comments, only: %i(index show), path: 'comments', as: :comments
               get 'activities', to: 'projects#activities'
               resources :reports, only: %i(index show), path: 'reports', as: :reports
               resources :experiments, only: %i(index show create update) do
+                resources :user_assignments,
+                          only: %i(index show update),
+                          controller: :experiment_user_assignments
                 resources :task_groups, only: %i(index show)
                 resources :connections, only: %i(index show)
                 resources :tasks, only: %i(index show create update) do
+                  resources :user_assignments,
+                            only: %i(index show update),
+                            controller: :task_user_assignments
                   resources :task_inventory_items, only: %i(index show),
                             path: 'items',
                             as: :items
@@ -738,6 +753,7 @@ Rails.application.routes.draw do
                       as: :identities
           end
 
+          resources :user_roles, only: :index
           resources :workflows, only: %i(index show) do
             resources :workflow_statuses, path: :statuses, only: %i(index)
           end
