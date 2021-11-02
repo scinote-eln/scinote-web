@@ -25,6 +25,14 @@
     <div data-hook="omniauth-sign-in-links"></div>
   <% end -%>
 
+  <%- if devise_mapping.omniauthable? && Devise.omniauth_configs[:okta].present? %>
+    <div class="okta-sign-in-actions">
+      <%= form_tag omniauth_authorize_path(resource_name, :okta), method: :post do %>
+        <%= submit_tag t('devise.okta.sign_in_label'), class: 'btn btn-okta' %>
+      <% end %>
+    </div>
+  <% end %>
+
   <%- unless defined?(linkedin_skip) %>
     <%- if Rails.configuration.x.enable_user_registration && Rails.configuration.x.linkedin_signin_enabled && @oauth_authorize != true %>
       <%= render partial: "users/shared/linkedin_sign_in_links", locals: { resource_name: resource_name } %>

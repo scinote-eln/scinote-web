@@ -25,6 +25,7 @@ gem 'doorkeeper', '>= 4.6'
 gem 'omniauth'
 gem 'omniauth-azure-activedirectory'
 gem 'omniauth-linkedin-oauth2'
+gem 'omniauth-okta'
 
 # TODO: remove this when omniauth gem resolves CVE issues
 # Prevents CVE-2015-9284 (https://github.com/omniauth/omniauth/wiki/FAQ#cve-2015-9284-warnings)
