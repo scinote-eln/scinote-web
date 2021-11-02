@@ -57,6 +57,11 @@ window.initBMTFilter = () => {
   // prevent closing of dropdown
   $('#bmtFilterContainer').on('click', (e) => e.stopPropagation());
 
+  // close saved filters dropdown
+  $('#bmtFiltersDropdownButton').on('hidden.bs.dropdown', (e) => {
+    $('.saved-filters-container').removeClass('open');
+  });
+
   $("#saveBmtFilterForm" )
     .off()
     .on('ajax:before', function() {
