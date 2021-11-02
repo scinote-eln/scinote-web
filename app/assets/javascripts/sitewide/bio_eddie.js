@@ -89,11 +89,13 @@ var bioEddieEditor = (function() {
   $(document).on('turbolinks:load', function() {
     bioEddieIframe = document.getElementById('bioEddieIframe');
     bioEddieModal = $('#bioEddieModal');
-    bioEddieIframe.onload = function() {
-      BIO_EDDIE = bioEddieIframe.contentWindow.bioEddieEditor;
-      CHEMAXON = bioEddieIframe.contentWindow.chemaxon;
-      importMolecule();
-    };
+    if (bioEddieIframe) {
+      bioEddieIframe.onload = function() {
+        BIO_EDDIE = bioEddieIframe.contentWindow.bioEddieEditor;
+        CHEMAXON = bioEddieIframe.contentWindow.chemaxon;
+        importMolecule();
+      };
+    }
 
     bioEddieModal.on('shown.bs.modal', function() {
       initIframe();
