@@ -73,6 +73,8 @@
 
   .filters-list {
     border-top: $border-tertiary;
+    max-height: calc(100vh - 300px);
+    overflow-y: auto;
   }
 
   .footer {
@@ -93,6 +95,8 @@
   }
 
   .saved-filters-list {
+    max-height: calc(100vh - 300px);
+    overflow-y: auto;
     padding: 0 1em;
   }
 
