@@ -2950,7 +2950,8 @@ CREATE TABLE public.webhooks (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     last_error text,
-    text text
+    text text,
+    secret_key character varying
 );
 
 
@@ -7700,6 +7701,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210716124649'),
 ('20210720112050'),
 ('20210811103123'),
-('20210906132120');
+('20210906132120'),
+('20211103115450');
 
 
