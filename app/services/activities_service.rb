@@ -61,7 +61,7 @@ class ActivitiesService
 
         subjects[child_model] = parent_model.where(id: subjects[subject_name])
                                             .joins(child)
-                                            .pluck("#{child}.id")
+                                            .pluck("#{child.to_s.pluralize}.id")
       end
     end
 
