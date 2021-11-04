@@ -71,7 +71,7 @@ Canaid::Permissions.register_for(Project) do
   end
 
   can :manage_project_tags do |user, project|
-    project.permission_granted?(user, ProjectPermissions::MANAGE)
+    project.permission_granted?(user, ProjectPermissions::TAGS_MANAGE)
   end
 
   can :manage_project_my_modules do |user, project|
