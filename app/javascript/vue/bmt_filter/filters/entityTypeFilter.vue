@@ -1,8 +1,8 @@
 <template>
-  <div class="filter-form">
+  <div class="sci-input-container">
     <input
       @input="updateFilterData"
-      class="form-control"
+      class="sci-input-field"
       type="text"
       name="entityType"
       v-model="entityType"

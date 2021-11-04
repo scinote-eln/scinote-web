@@ -667,6 +667,10 @@ var dropdownSelector = (function() {
     updateCurrentData(container, selectArray);
     // Redraw tags
     updateTags(selector, container, { select: true });
+
+    if (selector.data('config').singleSelect) {
+      selector.val(selectArray[0].value).trigger('change')
+    }
   }
 
   function deleteTag(selector, container, target) {

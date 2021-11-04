@@ -1,8 +1,8 @@
 <template>
   <div class="filter-element">
     <div class="form-group filter-action">
-      <div class="form-select">
-        <select @change="updateFilter({ type: $event.target.value })" v-model="type">
+      <div class="sci-input-container">
+        <select @change="updateFilter({ type: $event.target.value })" v-model="type" :id="'bmtFilter' + this.filter.id">
           <option
             v-for="type in types"
             :key="type.name" :value="type">
@@ -63,8 +63,18 @@
       fullSequenceFilter,
       monomerSubstructureSearchFilter
     },
+    mounted: function() {
+      let filterTypeSelect = `#bmtFilter${this.filter.id}`;
+      dropdownSelector.init(filterTypeSelect, {
+        noEmptyOption: true,
+        singleSelect: true,
+        closeOnSelect: true,
+        selectAppearance: 'simple',
+      });
+    },
     methods: {
       updateFilter(data) {
+        console.log(1)
         this.$emit(
           'filter:update',
           {

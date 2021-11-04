@@ -1,43 +1,37 @@
 <template>
-  <div class="filter-form">
+  <div class="sci-input-container">
     <input
       @input="updateFilterData"
-      class="form-control"
+      class="sci-input-field"
       type="text"
       name="sequence"
       v-model="sequence"
       :placeholder="i18n.t('repositories.show.bmt_search.filters.types.variantSequenceFilter.placeholder')"
     />
     <div>
-      <label>
-        <div class="row">
-          <div class="col-md-4">
+      <label class="field-suboption">
+        <div class="sci-input-container">
             <label for="distance">{{ i18n.t('repositories.show.bmt_search.filters.types.variantSequenceFilter.distance') }}</label>
-            <input class="form-control" @input="updateFilterData" type="text" v-model="distance" />
-          </div>
-          <div class="col-md-4">
-            <label>
-              <input
-                @change="updateFilterData"
-                type="radio"
-                v-model="distanceType"
-                value="EXACT"
-              />
-              <span>{{ i18n.t('repositories.show.bmt_search.filters.types.variantSequenceFilter.exact') }}</span>
-            </label>
-          </div>
-          <div class="col-md-4">
-            <label>
-              <input
-                @change="updateFilterData"
-                type="radio"
-                v-model="distanceType"
-                value="MAX"
-              />
-              <span>{{ i18n.t('repositories.show.bmt_search.filters.types.variantSequenceFilter.maximum') }}</span>
-            </label>
-          </div>
+            <input class="sci-input-field" @input="updateFilterData" type="text" v-model="distance" />
         </div>
+        <label class="distance-attribute">
+          <input
+            @change="updateFilterData"
+            type="radio"
+            v-model="distanceType"
+            value="EXACT"
+          />
+          <span>{{ i18n.t('repositories.show.bmt_search.filters.types.variantSequenceFilter.exact') }}</span>
+        </label>
+        <label class="distance-attribute">
+          <input
+            @change="updateFilterData"
+            type="radio"
+            v-model="distanceType"
+            value="MAX"
+          />
+          <span>{{ i18n.t('repositories.show.bmt_search.filters.types.variantSequenceFilter.maximum') }}</span>
+        </label>
       </label>
     </div>
   </div>
