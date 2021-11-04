@@ -112,7 +112,7 @@ class ProjectsOverviewService
     records = records.active if @view_mode == 'active'
     records = records.where_attributes_like('projects.name', @params[:search]) if @params[:search].present?
     if @params[:members].present?
-      records = records.joins(:user_assignments).where(user_assignments: { user_id: params[:members] })
+      records = records.joins(:user_assignments).where(user_assignments: { user_id: @params[:members] })
     end
     records = records.where('projects.created_at > ?', @params[:created_on_from]) if @params[:created_on_from].present?
     records = records.where('projects.created_at < ?', @params[:created_on_to]) if @params[:created_on_to].present?
