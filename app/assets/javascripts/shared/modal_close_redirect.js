@@ -10,6 +10,13 @@
         Turbolinks.visit(targetPath);
       }
     });
+
+    $(document).on('ajax:success', 'form[data-action*="modal-close"]', function(_, { form, flash }) {
+      $(this).closest('.modal').modal('hide');
+      if (flash) {
+        HelperModule.flashAlertMsg(flash, 'success');
+      }
+    });
   }
 
   $(document).one('turbolinks:load', initModalCloseListeners);
