@@ -9,9 +9,14 @@
 
       animateSpinner();
       $.get(ev.currentTarget.getAttribute('href')).then(function({ modal }) {
-        $(modal).on('shown.bs.modal', function() {
-          $(this).find('.selectpicker').selectpicker();
-        }).modal('show');
+        $(modal)
+          .on('shown.bs.modal', function() {
+            $(this).find('.selectpicker').selectpicker();
+          })
+          .on('hidden.bs.modal', function() {
+            $(this).remove();
+          })
+          .modal('show');
         animateSpinner(null, false);
       });
     });
