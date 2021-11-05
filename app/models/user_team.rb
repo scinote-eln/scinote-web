@@ -36,27 +36,6 @@ class UserTeam < ApplicationRecord
 
   def destroy(new_owner)
     return super() unless new_owner
-    # If any project of the team has the sole owner and that
-    # owner is the user to be removed from the team, then we must
-    # create a new owner of the project (the provided user).
-    team.projects.find_each do |project|
-      owners = project.user_projects.where(role: 0)
-      if owners.count == 1 && owners.first.user == user
-        if project.users.exists?(new_owner.id)
-          # If the new owner is already assigned onto project,
-          # update its role
-          project.user_projects.find_by(user: new_owner).update(role: 0)
-        else
-          # Else, create a new association
-          UserProject.create(
-            user: new_owner,
-            project: project,
-            role: 0,
-            assigned_by: user
-          )
-        end
-      end
-    end
 
     # Also, make new owner author of all protocols that belong
     # to the departing user and belong to this team.
