@@ -16,7 +16,7 @@ describe UserMyModulesController, type: :controller do
     it 'calls create activity for assigning user to task' do
       expect(Activities::CreateActivityService)
         .to(receive(:call)
-              .with(hash_including(activity_type: :assign_user_to_module)))
+              .with(hash_including(activity_type: :designate_user_to_my_module)))
       action
     end
 
@@ -36,7 +36,7 @@ describe UserMyModulesController, type: :controller do
     it 'calls create activity for unassigning user to task' do
       expect(Activities::CreateActivityService)
         .to(receive(:call)
-              .with(hash_including(activity_type: :unassign_user_from_module)))
+              .with(hash_including(activity_type: :undesignate_user_from_my_module)))
       action
     end
 

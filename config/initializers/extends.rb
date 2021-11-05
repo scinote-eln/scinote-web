@@ -173,8 +173,8 @@ class Extends
     archive_module: 10,
     restore_module: 11,
     change_module_description: 12,
-    assign_user_to_module: 13,
-    unassign_user_from_module: 14,
+    designate_user_to_my_module: 13,
+    undesignate_user_from_my_module: 14,
     create_step: 15,
     destroy_step: 16,
     add_comment_to_step: 17,
@@ -368,8 +368,8 @@ class Extends
     edit_module_comment
     delete_module_comment
     add_comment_to_module
-    assign_user_to_module
-    unassign_user_from_module
+    designate_user_to_my_module
+    undesignate_user_from_my_module
     set_task_due_date
     change_task_due_date
     remove_task_due_date
