@@ -26,25 +26,7 @@ class MyModuleMember
 
     ActiveRecord::Base.transaction do
       user_assignment.update!(user_role: user_role, assigned: :manually)
-      log_activity(:change_user_role_on_my_module)
-    end
-  end
-
-  def destroy
-    @user_assignment = UserAssignment.find_by!(assignable: my_module, user: user)
-
-    ActiveRecord::Base.transaction do
-      @user_assignment.destroy!
-
-      log_activity(:unassign_user_from_my_module)
-
-      UserAssignments::PropagateAssignmentJob.perform_later(
-        @my_module,
-        @user,
-        user_role,
-        current_user,
-        destroy: true
-      )
+      log_change_activity
     end
   end
 
@@ -54,14 +36,14 @@ class MyModuleMember
     self.user_role_id = params[:user_role_id]
     self.user_id = params[:user_id]
 
-    @user = @my_module.users.find(user_id)
+    @user = @project.users.find(user_id)
     @user_role = UserRole.find_by(id: user_role_id)
     @user_assignment = UserAssignment.find_by(assignable: my_module, user: user)
   end
 
-  def log_activity(type)
+  def log_change_activity
     Activities::CreateActivityService.call(
-      activity_type: type,
+      activity_type: :change_user_role_on_my_module,
       owner: current_user,
       subject: my_module,
       team: project.team,

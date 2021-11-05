@@ -31,34 +31,6 @@ module AccessPermissions
       end
     end
 
-    def destroy
-      user = @my_module.users.find(params[:user_id])
-      my_module_member = MyModuleMember.new(current_user, @my_module, @experiment, @project, user)
-
-      respond_to do |format|
-        if my_module_member.destroy
-          format.json do
-            render(
-              json: {
-                flash:
-                  t(
-                    'access_permissions.destroy.success',
-                    member_name: user.full_name,
-                    resource: MyModule.model_name.human.downcase
-                  )
-              },
-              status: :ok
-            )
-          end
-        else
-          format.json do
-            render json: { flash: t('access_permissions.destroy.failure') },
-                   status: :unprocessable_entity
-          end
-        end
-      end
-    end
-
     private
 
     def permitted_update_params
