@@ -320,11 +320,7 @@ class Extends
     create_molecule_on_step_in_repository: 173,
     register_molecule_on_step: 177,
     register_molecule_on_result: 178,
-    register_molecule_on_step_in_repository: 179,
-    assign_user_to_experiment: 180,
-    unassign_user_from_experiment: 181,
-    assign_user_to_my_module: 182,
-    unassign_user_from_my_module: 183
+    register_molecule_on_step_in_repository: 179
   }
 
   ACTIVITY_GROUPS = {

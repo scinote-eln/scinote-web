@@ -47,10 +47,7 @@ module AccessPermissions
       @form.resource_members = permitted_create_params
       respond_to do |format|
         if @form.save
-          @message = t(
-            'access_permissions.create.success',
-            count: @form.new_members_count, resource: Project.model_name.human.downcase
-          )
+          @message = t('access_permissions.create.success', count: @form.new_members_count)
           format.json { render :edit }
         else
           @message = t('access_permissions.create.failure')
@@ -66,16 +63,8 @@ module AccessPermissions
       respond_to do |format|
         if project_member.destroy
           format.json do
-            render(
-              json: {
-                flash:
-                  t(
-                    'access_permissions.destroy.success',
-                    member_name: user.full_name, resource: Project.model_name.human.downcase
-                  )
-              },
-              status: :ok
-            )
+            render json: { flash: t('access_permissions.destroy.success', member_name: user.full_name) },
+                   status: :ok
           end
         else
           format.json do
