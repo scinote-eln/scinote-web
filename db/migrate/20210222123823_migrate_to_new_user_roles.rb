@@ -40,46 +40,27 @@ class MigrateToNewUserRoles < ActiveRecord::Migration[6.1]
   end
 
   def create_public_project_assignments
-    user_assignments = []
-    viewer_role = UserRole.find_by(name: I18n.t('user_roles.predefined.viewer'))
-    public_projects = Project.where(visibility: 'visible')
-    public_experiments = Experiment.where(project_id: public_projects.select(:id))
-    public_my_modules = MyModule.where(experiment_id: public_experiments.select(:id))
+    viewer_role = UserRole.find_by(name: UserRole.viewer_role.name)
 
-    existing_user_assignments = UserAssignment.where(
-      assignable_id: public_projects.select(:id),
-      assignable_type: 'Project'
-    ).or(
-      UserAssignment.where(
-        assignable_id: public_experiments.select(:id),
-        assignable_type: 'Experiment'
-      )
-    ).or(
-      UserAssignment.where(
-        assignable_id: public_my_modules.select(:id),
-        assignable_type: 'MyModule'
-      )
-    ).map { |ua| [[ua.user_id, ua.assignable_id, ua.assignable_type], true] }.to_h
+    Team.preload(:users).find_each do |team|
+      public_projects = team.projects.where(visibility: 'visible')
+      public_projects.preload(:team, experiments: :my_modules).find_each(batch_size: 10) do |project|
+        user_assignments = []
+        already_assigned_user_ids = project.user_assignments.pluck(:user_id)
+        unassigned_users = team.users.reject { |u| already_assigned_user_ids.include?(u.id) }
 
-    public_projects.find_each do |project|
-      project.team.users.find_each do |user|
-        user_assignments << new_user_assignment(
-          user, project, viewer_role, :automatically, existing_user_assignments
-        )
-        project.experiments.find_each do |experiment|
-          user_assignments << new_user_assignment(
-            user, experiment, viewer_role, :automatically, existing_user_assignments
-          )
-          experiment.my_modules.find_each do |my_module|
-            user_assignments << new_user_assignment(
-              user, my_module, viewer_role, :automatically, existing_user_assignments
-            )
+        unassigned_users.each do |user|
+          user_assignments << new_user_assignment(user, project, viewer_role, :automatically)
+          project.experiments.each do |experiment|
+            user_assignments << new_user_assignment(user, experiment, viewer_role, :automatically)
+            experiment.my_modules.each do |my_module|
+              user_assignments << new_user_assignment(user, my_module, viewer_role, :automatically)
+            end
           end
         end
+        UserAssignment.import(user_assignments)
       end
     end
-
-    UserAssignment.import(user_assignments.compact)
   end
 
   def create_user_assignments(user_projects, user_role)
@@ -87,14 +68,14 @@ class MigrateToNewUserRoles < ActiveRecord::Migration[6.1]
       user_assignments = []
       user_project_batch.each do |user_project|
         user_assignments << new_user_assignment(user_project.user, user_project.project, user_role)
-        user_project.project.experiments.each do |experiment|
+        user_project.project.experiments.preload(:my_modules).each do |experiment|
           user_assignments << new_user_assignment(user_project.user, experiment, user_role)
           experiment.my_modules.each do |my_module|
             user_assignments << new_user_assignment(user_project.user, my_module, user_role)
           end
         end
       end
-      UserAssignment.import(user_assignments.compact)
+      UserAssignment.import(user_assignments)
     end
   end
 end
