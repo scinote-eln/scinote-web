@@ -1,0 +1,12 @@
+#user_assignments_modal {
+  .modal-body {
+    max-height: 400px;
+    overflow: auto;
+  }
+
+  .sci-input-container {
+    .fa-search {
+      color: $color-alto;
+    }
+  }
+}

@@ -25,6 +25,20 @@
                     class: 'move-experiment'%>
     </li>
   <% end %>
+  <!-- Set or view user experiment assignments -->
+  <% if can_manage_experiment_users?(experiment) %>
+    <li>
+      <%= link_to edit_access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'} do %>
+        <span><%= t('experiments.index.experiment_access') %></span>
+      <% end %>
+    </li>
+  <% else %>
+    <li>
+      <%= link_to access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'} do %>
+        <span><%= t('experiments.index.experiment_access') %></span>
+      <% end %>
+    </li>
+  <% end %>
   <% if can_archive_experiment?(experiment) %>
     <li><%= link_to t('experiments.archive.label_title'),
                   archive_experiment_url(experiment),

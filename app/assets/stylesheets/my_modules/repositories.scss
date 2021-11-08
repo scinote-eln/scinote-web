@@ -420,8 +420,13 @@
 
 .update-repository-record-modal {
   .rows-list-container {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr;
     margin: 0 -10px;
+
+    &.multiple {
+      grid-template-columns: 1fr 1fr;
+    }
 
     .header {
       font-weight: bold;

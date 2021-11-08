@@ -216,7 +216,7 @@ var dropdownSelector = (function() {
     if (config.customDropdownIcon) {
       return config.customDropdownIcon();
     }
-    return '<i class="fas fa-caret-down right-icon"></i><i class="fas fa-search right-icon"></i>';
+    return '<i class="fas fa-caret-down right-icon"></i><i class="fas fa-search right-icon simple-dropdown"></i>';
   }
 
   // Set new data

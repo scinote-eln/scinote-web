@@ -24,7 +24,7 @@
   <% else %>
     <p class="description"><%= t('my_modules.modals.update_repository_record.message', size: selected_rows.values.count) %></p>
   <% end %>
-  <div class="rows-list-container">
+  <div class="rows-list-container <%= 'multiple' if rows_to_assign.values.any? && rows_to_unassign.values.any? %>">
     <% if rows_to_assign.values.any? %>
       <div class="rows-to-assign">
         <p class="header">
