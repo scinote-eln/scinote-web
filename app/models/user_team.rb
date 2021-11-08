@@ -26,7 +26,7 @@ class UserTeam < ApplicationRecord
       end
     end
     # destroy all assignments
-    UserAssignments::RemoveUserAssignmentJob.perform_now(team, user)
+    UserAssignments::RemoveUserAssignmentJob.perform_now(user, team)
   end
 
   # returns user_teams where the user is in team
