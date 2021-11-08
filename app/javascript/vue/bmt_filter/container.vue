@@ -1,8 +1,8 @@
 <template>
   <div class="filter-container">
     <div class="header">
-      <div class="dropdown saved-filters-container">
-        <div class="title" @click="toggleSavedFilters">
+      <div id="savedFiltersContainer" class="dropdown saved-filters-container" @click="toggleSavedFilters">
+        <div class="title" id="savedFilterDropdown">
           {{ i18n.t('repositories.show.bmt_search.title') }}
           <i v-if="savedFilters.length" class="fas fa-caret-down"></i>
         </div>
@@ -16,12 +16,12 @@
           />
         </div>
       </div>
-      <button class="btn btn-light" @click="clearFilters">
+      <button class="btn btn-light" @click="closeSavedFilters() && clearFilters()">
         <i class="fas fa-times-circle"></i>
         {{ i18n.t('repositories.show.bmt_search.clear_all') }}
       </button>
     </div>
-    <div class="filters-list">
+    <div class="filters-list" @click="closeSavedFilters">
       <div v-if="filters.length == 0" class="filter-list-notice">
         {{ i18n.t('repositories.show.bmt_search.no_filters') }}
       </div>
@@ -34,7 +34,7 @@
         @filter:update="updateFilter"
       />
     </div>
-    <div class="footer">
+    <div class="footer" @click="closeSavedFilters">
       <button class="btn btn-light add-filter" @click="addFilter">
         <i class="fas fa-plus"></i>
         {{ i18n.t('repositories.show.bmt_search.add_filter') }}
@@ -121,6 +121,9 @@
             this.$emit('cids:error', this.i18n.t('repositories.show.error_searching'));
           }
         });
+      },
+      closeSavedFilters() {
+        $('.saved-filters-container').removeClass('open');
       },
       toggleSavedFilters() {
         $('.saved-filters-container').toggleClass('open');
