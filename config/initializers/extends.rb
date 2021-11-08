@@ -1,6 +1,8 @@
 # Extends class holds the arrays for the models enum fields
 # so that can be extended in sub modules.
 
+# rubocop:disable Style/MutableConstant
+
 class Extends
   # To extend the enum fields in the engine you have to put in
   # lib/engine_name/engine.rb file as in the example:
@@ -109,7 +111,7 @@ class Extends
                                         'RepositoryAssetValue' => 'file',
                                         'RepositoryStatusValue' => 'status' }
 
-  OMNIAUTH_PROVIDERS = [:linkedin, :customazureactivedirectory]
+  OMNIAUTH_PROVIDERS = %i(linkedin customazureactivedirectory okta)
 
   INITIAL_USER_OPTIONS = {}
 
@@ -391,3 +393,5 @@ class Extends
     change_user_role_on_my_module
   )
 end
+
+# rubocop:enable Style/MutableConstant

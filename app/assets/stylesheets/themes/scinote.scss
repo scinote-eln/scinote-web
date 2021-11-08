@@ -401,6 +401,16 @@ a[data-toggle="tooltip"] {
   }
 }
 
+.okta-sign-in-actions {
+  margin-bottom: 10px;
+  margin-top: 10px;
+
+  .btn-okta {
+    background-color: #00297a;
+    color: $color-white;
+  }
+}
+
 .navbar-secondary {
   transition: .4s $timing-function-sharp;
 }
