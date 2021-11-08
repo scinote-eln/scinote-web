@@ -153,10 +153,12 @@ module Reports
         x = 300
       end
 
-      docx.img asset_preview.service_url.split('&')[0] do
+      docx.img asset_preview.service_url do
         width x
         height y
       end
+    rescue SocketError, Caracal::Errors::InvalidModelError # invalid URL or broken image
+      nil
     end
   end
 end
