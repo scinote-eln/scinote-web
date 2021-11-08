@@ -71,23 +71,35 @@
   }
 
   .webhook-form {
-    align-items: center;
-    display: flex;
+    .webhook-form-row {
+      align-items: center;
+      display: flex;
 
-    .form-group {
-      margin: 0;
-    }
+      .form-group {
+        margin: 0;
+      }
 
-    .form-text {
-      flex-shrink: 0;
-    }
+      .form-text {
+        flex-shrink: 0;
+      }
 
-    .webhook-method-container {
-      margin: .5em;
-    }
+      .webhook-form-trigger-text,
+      .webhook-form-secret-key-text {
+        flex-basis: 120px;
+      }
 
-    .url-input-container {
-      margin: .5em;
+      .webhook-method-container,
+      .webhook-secret-key-container {
+        margin: .5em;
+      }
+
+      .webhook-secret-key-container {
+        flex-basis: 400px;
+      }
+
+      .url-input-container {
+        margin: .5em;
+      }
     }
   }
 
