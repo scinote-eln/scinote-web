@@ -1,7 +1,47 @@
 #user_assignments_modal {
   .modal-body {
     max-height: 400px;
+    min-height: 250px;
     overflow: auto;
+  }
+
+  .checkbox,
+  .global-avatar-container,
+  .user-assignment-info,
+  .sci-checkbox-container {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .sci-checkbox-container {
+    margin-right: 1em;
+  }
+
+  .user-assignment-info {
+    margin-left: 1em;
+  }
+
+  .user-assignment-role .dropdown-toggle,
+  .user-assignment-remove {
+    border: 0;
+  }
+
+
+  .dropdown-toggle,
+  .user-assignment-remove {
+    margin-top: .45em;
+  }
+
+  .member-item {
+    margin: 0;
+
+    &:first-child {
+      margin-top: -1em;
+    }
+  }
+
+  a {
+    color: $color-black;
   }
 
   .sci-input-container {

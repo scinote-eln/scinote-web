@@ -2515,7 +2515,7 @@ en:
       failure: "Something went wrong"
     partials:
       edit_assignments_content:
-        title: "Manage access for to %{resource_name}"
+        title: "Manage access for %{resource_name}"
         new_resource_assignments: "Grant new access to %{resource}"
       new_assignments_form:
         title: "Select members"
