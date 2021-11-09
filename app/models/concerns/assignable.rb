@@ -29,11 +29,17 @@ module Assignable
     }
 
     after_create do
+      role = if self.class == Project
+               UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))
+             else
+               permission_parent.user_assignments.find_by(user: created_by).user_role
+             end
+
       UserAssignment.create!(
         user: created_by,
         assignable: self,
         assigned: :manually, # we set this to manually since was the user action to create the item
-        user_role: UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))
+        user_role: role
       )
 
       UserAssignments::GenerateUserAssignmentsJob.perform_later(self, created_by)
