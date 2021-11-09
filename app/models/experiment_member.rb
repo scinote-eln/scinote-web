@@ -27,6 +27,13 @@ class ExperimentMember
       user_assignment.update!(user_role: user_role, assigned: :manually)
       log_change_activity
     end
+
+    UserAssignments::PropagateAssignmentJob.perform_later(
+      @experiment,
+      @user,
+      user_role,
+      current_user
+    )
   end
 
   private
