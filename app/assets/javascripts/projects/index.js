@@ -169,14 +169,6 @@ var ProjectsIndex = (function() {
         HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
       });
   }
-
-  function initManageUsersModal() {
-    // Reload users tab HTML element when modal is closed
-    $(document).on('ajax:success', '#user_assignments_modal form[data-object-type=project]', function() {
-      refreshCurrentView();
-    });
-  }
-
   /**
    * Initialize the JS for export projects modal to work.
    */
@@ -619,7 +611,6 @@ var ProjectsIndex = (function() {
     updateSelectedCards();
     initNewProjectFolderModal();
     initNewProjectModal();
-    initManageUsersModal();
     initExportProjectsModal();
     initExportProjects();
     initDeleteFoldersToolbarButton();
