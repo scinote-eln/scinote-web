@@ -74,6 +74,8 @@ module ModelExporters
       user_json = user.as_json
       # Looks like Devise doesn't export some fields to JSON, so add it manually
       user_json['encrypted_password'] = user.encrypted_password
+      user_json['otp_secret'] = user.otp_secret
+      user_json['otp_recovery_codes'] = user.otp_recovery_codes
       user_json['confirmed_at'] = user.confirmed_at
       user_json['sign_in_count'] = user.sign_in_count
       user_json['last_sign_in_at'] = user.last_sign_in_at
