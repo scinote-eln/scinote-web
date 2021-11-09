@@ -13,7 +13,7 @@ module UserAssignments
           UserAssignment.create!(
             user: user,
             assignable: project,
-            user_role: project.group_user_role,
+            user_role: project.default_public_user_role,
             assigned_by: @assigned_by,
             assigned: :automatically
           )
@@ -21,7 +21,7 @@ module UserAssignments
           UserAssignments::PropagateAssignmentJob.perform_later(
             project,
             user,
-            project.group_user_role,
+            project.default_public_user_role,
             @assigned_by
           )
         end

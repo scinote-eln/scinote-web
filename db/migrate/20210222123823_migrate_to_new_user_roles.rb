@@ -44,6 +44,11 @@ class MigrateToNewUserRoles < ActiveRecord::Migration[6.1]
 
     Team.preload(:users).find_each do |team|
       public_projects = team.projects.where(visibility: 'visible')
+
+      public_projects.find_each do |project|
+        project.update!(default_public_user_role: viewer_role)
+      end
+
       public_projects.preload(:team, experiments: :my_modules).find_each(batch_size: 10) do |project|
         user_assignments = []
         already_assigned_user_ids = project.user_assignments.pluck(:user_id)

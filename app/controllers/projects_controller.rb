@@ -335,7 +335,7 @@ class ProjectsController < ApplicationController
           .permit(
             :name, :team_id, :visibility,
             :archived, :project_folder_id,
-            :group_user_role_id
+            :default_public_user_role_id
           )
   end
 
