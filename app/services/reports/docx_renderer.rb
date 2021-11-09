@@ -157,7 +157,8 @@ module Reports
         width x
         height y
       end
-    rescue SocketError, Caracal::Errors::InvalidModelError # invalid URL or broken image
+    rescue SocketError, Caracal::Errors::InvalidModelError => e # invalid URL or broken image
+      Rails.logger.warn("Unable to render docx image due to #{e.class}: #{e}")
       nil
     end
   end
