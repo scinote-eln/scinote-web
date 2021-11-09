@@ -33,6 +33,7 @@ module UserAssignments
       experiment.my_modules.find_each do |my_module|
         if @destroy
           destroy_user_assignment(my_module)
+          my_module.user_my_modules.where(user: @user).destroy_all
         else
           create_or_update_user_assignment(my_module)
         end
