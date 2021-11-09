@@ -101,6 +101,7 @@
         id="bmtFilterContainer"
         data-datatable-id="#repository-table-<%= @repository.id %>"
         data-saved-filters-url="<%= bmt_filters_url %>"
+        data-can-manage-filters="<%= can_manage_bmt_filters?(current_team) %>"
         data-bmt-api-base-url="<%= bmt_request_url(path: 'api') %>"
       >
         <filter-container
@@ -108,17 +109,20 @@
           @filters:clear="clearFilters"
           @cids:update="updateExternalIds"
           @cids:error="handleSearchError"
+          :can-manage-filters="canManageFilters"
           :bmt-api-base-url="bmtApiBaseUrl"
           :saved-filters.sync="savedFilters"
           :filters.sync="filters" />
       </div>
     </div>
-    <button
-      class="btn btn-light open-save-bmt-modal hidden"
-      type="button"
-      aria-haspopup="true"
-    >
-      <span class="fas fa-save"></span>
-      <%= t('repositories.show.bmt_search.save_filters') %>
-    </button>
+    <% if can_manage_bmt_filters?(current_team) %>
+      <button
+        class="btn btn-light open-save-bmt-modal hidden"
+        type="button"
+        aria-haspopup="true"
+      >
+        <span class="fas fa-save"></span>
+        <%= t('repositories.show.bmt_search.save_filters') %>
+      </button>
+    <% end %>
   <% end %>
