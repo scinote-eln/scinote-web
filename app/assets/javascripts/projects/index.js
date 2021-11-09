@@ -172,7 +172,7 @@ var ProjectsIndex = (function() {
 
   function initManageUsersModal() {
     // Reload users tab HTML element when modal is closed
-    $(document).on('ajax:success', '#user_assignments_modal form', function() {
+    $(document).on('ajax:success', '#user_assignments_modal form[data-object-type=project]', function() {
       refreshCurrentView();
     });
   }
