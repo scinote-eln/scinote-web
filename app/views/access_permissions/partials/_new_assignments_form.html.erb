@@ -12,8 +12,9 @@
   </div>
   <%= form_with(model: form_object, url: create_path, method: :post, remote: true, html: { id: 'new-user-assignment-to-project-form', data: { action: 'replace-form', target: '#user_assignments_modal' } }) do |f| %>
     <div class="modal-body">
-      <div class="form-group">
-        <%= text_field_tag :search_users, '', placeholder: t('.find_people_html'), class: 'form-control', data: { action: 'filter-list', target: 'new-user-assignment-to-project-form' } %>
+      <div class="sci-input-container left-icon">
+        <%= text_field_tag :search_users, '', placeholder: t('.find_people_html'), class: 'sci-input-field', data: { action: 'filter-list', target: 'new-user-assignment-to-project-form' } %>
+        <i class="fas fa-search"></i>
       </div>
       <% f.object.resource_members.each do |member| %>
         <%= f.fields_for :resource_members, member do |member_form| %>

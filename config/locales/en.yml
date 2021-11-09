@@ -1018,7 +1018,7 @@ en:
       assign_repository_record:
         title: 'Assign %{repository_name} items to task %{my_module_name}'
         title_downstream: 'Assign %{repository_name} items to task and downstream'
-        message: You will assign %{size} items to this task only are you ready to assign them?
+        message: You will assign %{size} items to this task only. Are you ready to assign them?
         message_downstream: You will assign %{size} items to the following tasks. Are you ready to assign them?
         current_task: "Current task"
         hidden_tasks: "No permission: There are %{size} tasks you can’t assign to."
@@ -1460,7 +1460,8 @@ en:
     restore_record: "Restore"
     save_record: "Save"
     cancel_save: "Cancel"
-    assign_records_to_module: "Assign"
+    assign_records_to_module: "Assign to task"
+    update_records_to_module: "Update task"
     unassign_records_from_module: "Unassign"
     columns: "Columns"
     column_new_text: "New column"
@@ -2521,7 +2522,7 @@ en:
         submit: "Grant access"
         submit_singular: "Grant access to 1 user"
         submit_plural: "Grant access to {num} users"
-        find_people_html: "&#128269; Find people"
+        find_people_html: "Find people"
     projects:
       modals:
         show_modal:

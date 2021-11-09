@@ -336,13 +336,11 @@
   }
 
   .my-module-user-tags {
-    .tag-label {
-      padding: 5px;
-    }
 
     img {
+      border-radius: 50%;
       display: inline;
-      margin: 5px;
+      margin-right: .5em;
       max-height: 20px;
       max-width: 20px;
     }
