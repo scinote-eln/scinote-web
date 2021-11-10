@@ -24,13 +24,15 @@
     width: 200px;
   }
 
-  .member-item, .user-assignment-info, .user-assignment-controls {
+  .member-item,
+  .user-assignment-info,
+  .user-assignment-controls {
     align-items: center;
     display: flex;
   }
 
   .user-assignment-controls {
-    margin-left: auto
+    margin-left: auto;
   }
 
   .global-avatar-container {
