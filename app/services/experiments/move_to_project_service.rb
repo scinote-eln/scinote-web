@@ -3,6 +3,7 @@
 module Experiments
   class MoveToProjectService
     extend Service
+    include Canaid::Helpers::PermissionsHelper
 
     attr_reader :errors
 
@@ -19,7 +20,6 @@ module Experiments
 
       ActiveRecord::Base.transaction do
         @exp.project = @project
-
         @exp.my_modules.each do |my_module|
           raise unless can_manage_my_module?(@user, my_module)
 
@@ -83,7 +83,9 @@ module Experiments
 
     # recursively move all activities in child associations to new project
     def move_activities!(subject)
-      Activity.where(subject: subject).update!(project: @project)
+      Activity.where(subject: subject).find_each do |activity|
+        activity.update!(project: @project)
+      end
 
       child_associations = Extends::ACTIVITY_SUBJECT_CHILDREN[subject.class.name.underscore.to_sym]
       return unless child_associations
