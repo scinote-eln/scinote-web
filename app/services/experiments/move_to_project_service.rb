@@ -83,7 +83,9 @@ module Experiments
 
     # recursively move all activities in child associations to new project
     def move_activities!(subject)
-      Activity.where(subject: subject).update(project: @project)
+      Activity.where(subject: subject).find_each do |activity|
+        activity.update!(project: @project)
+      end
 
       child_associations = Extends::ACTIVITY_SUBJECT_CHILDREN[subject.class.name.underscore.to_sym]
       return unless child_associations
