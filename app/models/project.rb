@@ -37,8 +37,8 @@ class Project < ApplicationRecord
              foreign_key: 'restored_by_id',
              class_name: 'User',
              optional: true
-  belongs_to :group_user_role,
-             foreign_key: 'group_user_role_id',
+  belongs_to :default_public_user_role,
+             foreign_key: 'default_public_user_role_id',
              class_name: 'UserRole',
              optional: true
   belongs_to :team, inverse_of: :projects, touch: true
@@ -327,11 +327,11 @@ class Project < ApplicationRecord
   end
 
   def bulk_assignment?
-    visible? && group_user_role.present?
+    visible? && default_public_user_role.present?
   end
 
   def selected_user_role_validation
-    errors.add(:group_user_role_id, :inclusion) unless group_user_role.in?(UserRole.all)
+    errors.add(:default_public_user_role_id, :inclusion) unless default_public_user_role.in?(UserRole.all)
   end
 
   def sync_project_assignments
