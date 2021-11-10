@@ -1,5 +1,5 @@
 <template>
-  <div class="filter-container">
+  <div class="filters-container">
     <div class="header">
       <div id="savedFiltersContainer" class="dropdown saved-filters-container" @click="toggleSavedFilters">
         <div class="title" id="savedFilterDropdown">

@@ -1,3 +1,6 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
 .bmt-filters-button.active-filters {
   position: relative;
 
@@ -69,7 +72,6 @@
 
   .filter-list-notice {
     color: $color-silver-chalice;
-    font-style: italic;
     padding: 1em;
   }
 
@@ -88,11 +90,19 @@
     }
   }
 
+  .filter-container {
+    border-bottom: $border-tertiary;
+    padding: 1em 3.5em 1em 1em;
+
+
+    .filter-title {
+      @include font-small;
+    }
+  }
+
   .filter-element {
     align-items: center;
-    border-bottom: $border-tertiary;
     display: flex;
-    padding: 1em 3.5em 1em 1em;
     position: relative;
   }
 
@@ -100,8 +110,8 @@
     cursor: pointer;
     padding: 0;
     position: absolute;
-    right: .5em;
-    top: 14px;
+    right: -2.5em;
+    top: -2px;
   }
 
   .filters-list {
