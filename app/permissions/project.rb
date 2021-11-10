@@ -47,7 +47,7 @@ Canaid::Permissions.register_for(Project) do
   end
 
   can :manage_project_users do |user, project|
-    project.permission_granted?(user, ProjectPermissions::USERS_MANAGE)
+    user.is_admin_of_team?(project.team) || project.permission_granted?(user, ProjectPermissions::USERS_MANAGE)
   end
 
   can :archive_project do |user, project|
