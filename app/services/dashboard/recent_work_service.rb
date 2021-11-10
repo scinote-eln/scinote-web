@@ -22,17 +22,23 @@ module Dashboard
       all_activities = join_step_user_roles(all_activities)
 
       team_activities = all_activities.where(subject_type: %w(Team RepositoryBase ProjectFolder))
-      project_activities = all_activities.where('project_user_roles.permissions @> ARRAY[?]::varchar[]',
+      project_activities = all_activities.where(project_user_assignments: { user_id: @user.id })
+                                         .where('project_user_roles.permissions @> ARRAY[?]::varchar[]',
                                                 [ProjectPermissions::ACTIVITIES_READ])
-      experiment_activities = all_activities.where('experiment_user_roles.permissions @> ARRAY[?]::varchar[]',
+      experiment_activities = all_activities.where(experiment_user_assignments: { user_id: @user.id })
+                                            .where('experiment_user_roles.permissions @> ARRAY[?]::varchar[]',
                                                    [ExperimentPermissions::ACTIVITIES_READ])
-      my_module_activities = all_activities.where('my_module_user_roles.permissions @> ARRAY[?]::varchar[]',
+      my_module_activities = all_activities.where(my_module_user_assignments: { user_id: @user.id })
+                                           .where('my_module_user_roles.permissions @> ARRAY[?]::varchar[]',
                                                   [MyModulePermissions::ACTIVITIES_READ])
-      result_activities = all_activities.where('result_my_module_user_roles.permissions @> ARRAY[?]::varchar[]',
+      result_activities = all_activities.where(result_my_module_user_assignments: { user_id: @user.id })
+                                        .where('result_my_module_user_roles.permissions @> ARRAY[?]::varchar[]',
                                                [MyModulePermissions::ACTIVITIES_READ])
-      protocol_activities = all_activities.where('protocol_my_module_user_roles.permissions @> ARRAY[?]::varchar[]',
+      protocol_activities = all_activities.where(protocol_my_module_user_assignments: { user_id: @user.id })
+                                          .where('protocol_my_module_user_roles.permissions @> ARRAY[?]::varchar[]',
                                                  [MyModulePermissions::ACTIVITIES_READ])
-      step_activities = all_activities.where('protocol_my_module_user_roles.permissions @> ARRAY[?]::varchar[]',
+      step_activities = all_activities.where(step_my_module_user_assignments: { user_id: @user.id })
+                                      .where('step_my_module_user_roles.permissions @> ARRAY[?]::varchar[]',
                                              [MyModulePermissions::ACTIVITIES_READ])
 
       activities = team_activities.or(project_activities)
