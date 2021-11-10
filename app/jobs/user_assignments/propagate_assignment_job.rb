@@ -50,6 +50,9 @@ module UserAssignments
     end
 
     def destroy_user_assignment(object)
+      # also destroy user designations if it's a MyModule
+      object.user_my_modules.where(user: @user).destroy_all if object.is_a?(MyModule)
+
       UserAssignment.where(user: @user, assignable: object).destroy_all
     end
   end
