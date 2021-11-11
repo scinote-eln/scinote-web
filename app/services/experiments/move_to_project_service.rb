@@ -18,6 +18,11 @@ module Experiments
     def call
       return self unless valid?
 
+      unless @project.permission_granted?(@user, ProjectPermissions::EXPERIMENTS_CREATE)
+        @errors[:main] = 'No permission to create experiments at project'
+        return self
+      end
+
       ActiveRecord::Base.transaction do
         @exp.project = @project
         @exp.my_modules.each do |my_module|
