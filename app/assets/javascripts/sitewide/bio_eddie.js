@@ -91,8 +91,17 @@ var bioEddieEditor = (function() {
     bioEddieModal = $('#bioEddieModal');
     if (bioEddieIframe) {
       bioEddieIframe.onload = function() {
+        let body = $(bioEddieIframe).contents().find('body');
         BIO_EDDIE = bioEddieIframe.contentWindow.bioEddieEditor;
         CHEMAXON = bioEddieIframe.contentWindow.chemaxon;
+        let cssRemoveFileImport = `
+          <style>
+            .breg-modal .breg-import-dialog-tabs li:last-child{
+              display: none
+            }
+          </style>
+        `;
+        $(body).append(cssRemoveFileImport);
         importMolecule();
       };
     }
