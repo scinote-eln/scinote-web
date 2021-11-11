@@ -5,8 +5,7 @@ Canaid::Permissions.register_for(Experiment) do
      manage_experiment_users
      archive_experiment
      clone_experiment
-     move_experiment
-     manage_experiment_access)
+     move_experiment)
     .each do |perm|
     can perm do |_, experiment|
       experiment.active? &&

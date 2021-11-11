@@ -10,6 +10,8 @@ class Activity < ApplicationRecord
     invite_user_to_team
     remove_user_from_team
     change_users_role_on_team
+    change_user_role_on_experiment
+    change_user_role_on_my_module
   ).freeze
 
   include ActivityValuesModel
