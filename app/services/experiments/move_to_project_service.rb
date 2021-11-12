@@ -18,7 +18,7 @@ module Experiments
     def call
       return self unless valid?
 
-      unless @project.permission_granted?(@user, ProjectPermissions::EXPERIMENTS_CREATE)
+      unless can_create_project_experiments?(@user, @project)
         @errors[:main] = 'No permission to create experiments at project'
         return self
       end
