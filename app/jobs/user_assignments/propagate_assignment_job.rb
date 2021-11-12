@@ -9,6 +9,7 @@ module UserAssignments
       @user_role = user_role
       @assigned_by = assigned_by
       @destroy = destroy
+      @resource = resource
 
       ActiveRecord::Base.transaction do
         sync_resource_user_associations(resource)
@@ -18,6 +19,11 @@ module UserAssignments
     private
 
     def sync_resource_user_associations(resource)
+      # stop role update propagation for child resources when encountering a manual assignment
+      return if resource != @resource && # child resource
+                !@destroy &&
+                resource.user_assignments.find_by(user: @user).manually_assigned?
+
       child_associations =
         case resource
         when Project
