@@ -205,8 +205,9 @@ class Experiment < ApplicationRecord
   # team and not archived), all users assigned on experiment.project has
   # to be assigned on such project
   def movable_projects(current_user)
-    Project.where.not(id: project_id)
-           .where(archived: false, team: project.team)
+    project.team.projects.active
+           .where.not(id: project_id)
+           .where(archived: false)
            .with_granted_permissions(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
   end
 
