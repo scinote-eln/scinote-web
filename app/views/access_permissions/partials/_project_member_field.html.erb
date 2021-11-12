@@ -17,19 +17,17 @@
         <small class="text-muted"><%= user_assignment_resource_role_name(project_member, user, project) %></small>
       </div>
     </div>
-    <% unless user == current_user %>
-      <div class="user-assignment-controls">
-        <div class="user-assignment-role">
-          <%= f.select :user_role_id, options_for_select(user_roles_collection, selected: f.object.user_role.id), {}, class: 'form-control selectpicker', title: t('user_assignment.change_project_role'), data: { 'selected-text-format' => 'static' } %>
-        </div>
-        <div class="user-assignment-remove">
-          <% unless project_member.last_project_owner? %>
-            <%= link_to access_permissions_project_path(project, user_id: user), remote: true, method: :delete, class: 'btn btn-secondary', data: { action: 'remote-destroy', target: "##{item_id}" } do %>
-              <span class="fas fa-times"></span>
-              <%= t 'general.remove' %>
-            <% end %>
-          <% end %>
-        </div>
+    <div class="user-assignment-controls">
+      <div class="user-assignment-role">
+        <%= f.select :user_role_id, options_for_select(user_roles_collection, selected: f.object.user_role.id), {}, class: 'form-control selectpicker', title: t('user_assignment.change_project_role'), data: { 'selected-text-format' => 'static' } %>
       </div>
-    <% end %>
+      <div class="user-assignment-remove">
+        <% unless project_member.last_project_owner? %>
+          <%= link_to access_permissions_project_path(project, user_id: user), remote: true, method: :delete, class: 'btn btn-secondary', data: { action: 'remote-destroy', target: "##{item_id}" } do %>
+            <span class="fas fa-times"></span>
+            <%= t 'general.remove' %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
 <% end %>
