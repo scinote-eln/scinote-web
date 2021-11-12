@@ -18,6 +18,11 @@ module Experiments
     def call
       return self unless valid?
 
+      unless can_create_project_experiments?(@user, @project)
+        @errors[:main] = I18n.t('move_to_project_service.project_permission_error')
+        return self
+      end
+
       ActiveRecord::Base.transaction do
         @exp.project = @project
         @exp.my_modules.each do |my_module|
@@ -32,7 +37,7 @@ module Experiments
         sync_user_assignments(@exp)
       rescue StandardError
         if @exp.valid?
-          @errors[:main] = "Don't have permission for tasks manage"
+          @errors[:main] = I18n.t('move_to_project_service.my_modules_permission_error')
         else
           @errors.merge!(@exp.errors.to_hash)
         end

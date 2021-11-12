@@ -1109,12 +1109,13 @@ en:
       current_project: '(current project)'
     move:
       modal_title: 'Move experiment %{experiment}'
-      notice: 'Moving is possible only to projects that contain same (or additional) users.'
+      notice: 'Moving is possible to projects, where you have permissions to create experiments and tasks.'
       label_title: 'Move'
       modal_submit: 'Move'
       success_flash: "Successfully moved experiment %{experiment}"
       error_flash: ' Could not move the experiment. Experiment name is already in use. '
-      no_projects: 'No projects to move this experiment to.'
+      task_permission: 'No permission: You don’t have edit access to all experiment tasks.'
+      no_projects: 'No projects: You don’t have edit access to any other projects.'
     canvas:
       archive_confirm: "Are you sure to archive this experiment?"
       actions: 'Actions'
@@ -2504,6 +2505,11 @@ en:
     from_project: "%{user_role} [from project]"
     from_experiment: "%{user_role} [from experiment]"
     experiment_select_role: "Change experiment role"
+
+  move_to_project_service:
+    project_permission_error: "No permission to create experiments at project"
+    my_modules_permission_error: "No manage permissions on tasks"
+
   access_permissions:
     create:
       success:
