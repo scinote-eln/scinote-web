@@ -126,6 +126,7 @@
       },
       closeSavedFilters() {
         $('.saved-filters-container').removeClass('open');
+        return true;
       },
       toggleSavedFilters() {
         $('.saved-filters-container').toggleClass('open');
@@ -136,7 +137,6 @@
         });
       },
       loadFilters(filters) {
-        this.toggleSavedFilters();
         this.clearFilters();
 
         let id = 1;
@@ -165,7 +165,6 @@
             );
           }
         });
-        this.fetchCIDs();
       }
     }
   }
