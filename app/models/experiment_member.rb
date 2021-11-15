@@ -51,7 +51,6 @@ class ExperimentMember
     end
   end
 
-
   private
 
   def prepare_data(params)
