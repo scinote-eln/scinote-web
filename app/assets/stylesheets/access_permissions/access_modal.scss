@@ -24,6 +24,13 @@
     width: 200px;
   }
 
+  .permission-object-tag {
+    @include font-small;
+    background: $color-concrete;
+    border-radius: $border-radius-tag;
+    padding: .25em;
+  }
+
   .member-item,
   .user-assignment-info,
   .user-assignment-controls {

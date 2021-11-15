@@ -2536,6 +2536,14 @@ en:
       my_module_member_field:
         reset: "Inherit role"
         reset_description: "The inherited role from project or experiment will be applied"
+      project: "Project"
+      project_tooltip: "This role was set on this project."
+      project_tooltip_inherit: "This role was inhertied from the project."
+      experiment: "Experiment"
+      experiment_tooltip: "This role was set on this experiment."
+      experiment_tooltip_inherit: "This role was inhertied from the experiment."
+      mymodule: "Task"
+      mymodule_tooltip: "This role was set on this task"
 
     projects:
       modals:
@@ -2548,7 +2556,7 @@ en:
           title: "Access to %{resource_name}"
         edit_modal:
           title: "Manage access for %{resource_name}"
-          description: "Changing roles will not take away any permissions from previous levels. Permissions can only be added with a new role. New permissions apply only to this concrete experiment."
+          description: "Changing a role will take away any permissions inherited from the project. New permissions will apply only to this specific experiment and its tasks."
     my_modules:
       modals:
         show_modal:
