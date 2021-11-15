@@ -1110,6 +1110,7 @@ en:
     move:
       modal_title: 'Move experiment %{experiment}'
       notice: 'Moving is possible to projects, where you have permissions to create experiments and tasks.'
+      target_project: 'Target project'
       label_title: 'Move'
       modal_submit: 'Move'
       success_flash: "Successfully moved experiment %{experiment}"
