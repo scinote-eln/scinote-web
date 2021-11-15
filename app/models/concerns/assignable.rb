@@ -38,7 +38,7 @@ module Assignable
       UserAssignment.create!(
         user: created_by,
         assignable: self,
-        assigned: :manually, # we set this to manually since was the user action to create the item
+        assigned: :automatically,
         user_role: role
       )
 

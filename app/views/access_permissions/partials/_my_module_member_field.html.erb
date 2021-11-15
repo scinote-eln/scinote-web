@@ -14,7 +14,7 @@
     <div>
       <%= current_assignee_name(user) %>
       <br>
-      <small class="text-muted"><%= user_assignment_resource_role_name(my_module_member, user, my_module) %></small>
+      <small class="text-muted"><%= user_assignment_resource_role_name(user, my_module) %></small>
     </div>
   </div>
   <% unless user == current_user %>
