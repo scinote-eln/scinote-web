@@ -36,6 +36,21 @@ class ExperimentMember
     )
   end
 
+  def reset(params)
+    ActiveRecord::Base.transaction do
+      prepare_data(params)
+
+      @user_role =
+        @experiment.project
+                   .user_assignments
+                   .find_by(user: user_assignment.user)
+                   .user_role
+
+      user_assignment.update!(user_role: @user_role, assigned: :automatically)
+      log_change_activity
+    end
+  end
+
   private
 
   def prepare_data(params)

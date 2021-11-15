@@ -2529,6 +2529,13 @@ en:
         submit_singular: "Grant access to 1 user"
         submit_plural: "Grant access to {num} users"
         find_people_html: "Find people"
+      experiment_member_field:
+        reset: "Inherit role"
+        reset_description: "The inherited role from project will be applied"
+      my_module_member_field:
+        reset: "Inherit role"
+        reset_description: "The inherited role from project or experiment will be applied"
+
     projects:
       modals:
         show_modal:

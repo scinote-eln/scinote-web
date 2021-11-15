@@ -43,7 +43,8 @@
     margin-left: 1em;
   }
 
-  a {
+  a,
+  .bootstrap-select > .dropdown-toggle.bs-placeholder {
     color: $color-volcano;
   }
 
