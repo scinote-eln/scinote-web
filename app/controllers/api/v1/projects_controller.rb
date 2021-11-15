@@ -26,7 +26,13 @@ module Api
       def create
         raise PermissionError.new(Project, :create) unless can_create_projects?(@team)
 
-        project = @team.projects.create!(project_params.merge!(created_by: current_user))
+        project = @team.projects.build(project_params.merge!(created_by: current_user))
+
+        if project.visible? # set default viewer role for public projects
+          project.default_public_user_role = UserRole.find_by(name: I18n.t('user_roles.predefined.viewer'))
+        end
+
+        project.save!
 
         render jsonapi: project, serializer: ProjectSerializer, status: :created
       end
