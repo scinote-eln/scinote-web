@@ -327,53 +327,59 @@ class Experiment < ApplicationRecord
   # it's obviously not updated. Position for entire module group is updated
   # to bottom left corner.
   def move_module_groups(to_move, current_user)
-    to_move.each do |ids, experiment_id|
-      modules = my_modules.find(ids)
-      groups = Set.new(modules.map(&:my_module_group))
-      experiment = project.experiments.find_by_id(experiment_id)
+    ActiveRecord::Base.transaction do
+      to_move.each do |ids, experiment_id|
+        modules = my_modules.find(ids)
+        groups = Set.new(modules.map(&:my_module_group))
+        experiment = project.experiments.find_by_id(experiment_id)
 
-      groups.each do |group|
-        next unless group && experiment.present?
+        groups.each do |group|
+          next unless group && experiment.present?
 
-        # Find the lowest point for current modules(max_y) and the leftmost
-        # module(min_x)
-        active_modules = experiment.my_modules.active
-        if active_modules.blank?
-          max_y = 0
-          min_x = 0
-        else
-          max_y = active_modules.maximum(:y) + MyModule::HEIGHT
-          min_x = active_modules.minimum(:x)
+          # Find the lowest point for current modules(max_y) and the leftmost
+          # module(min_x)
+          active_modules = experiment.my_modules.active
+          if active_modules.blank?
+            max_y = 0
+            min_x = 0
+          else
+            max_y = active_modules.maximum(:y) + MyModule::HEIGHT
+            min_x = active_modules.minimum(:x)
+          end
+
+          # Set new positions
+          curr_min_x = modules.min_by(&:x).x
+          curr_min_y = modules.min_by(&:y).y
+          modules.each { |m| m.x += -curr_min_x + min_x }
+          modules.each { |m| m.y += -curr_min_y + max_y }
+
+          modules.each do |m|
+            experiment_org = m.experiment
+            m.experiment = experiment
+            m.save!
+
+            # regenerate user assignments
+            m.user_assignments.destroy_all
+            UserAssignments::GenerateUserAssignmentsJob.new(m, current_user).perform_now
+
+            # Add activity
+            Activities::CreateActivityService.call(
+              activity_type: :move_task,
+              owner: current_user,
+              subject: m,
+              project: experiment.project,
+              team: experiment.project.team,
+              message_items: {
+                my_module: m.id,
+                experiment_original: experiment_org.id,
+                experiment_new: experiment.id
+              }
+            )
+          end
+
+          group.experiment = experiment
+          group.save!
         end
-
-        # Set new positions
-        curr_min_x = modules.min_by(&:x).x
-        curr_min_y = modules.min_by(&:y).y
-        modules.each { |m| m.x += -curr_min_x + min_x }
-        modules.each { |m| m.y += -curr_min_y + max_y }
-
-        modules.each do |m|
-          experiment_org = m.experiment
-          m.experiment = experiment
-          m.save!
-
-          # Add activity
-          Activities::CreateActivityService.call(
-            activity_type: :move_task,
-            owner: current_user,
-            subject: m,
-            project: experiment.project,
-            team: experiment.project.team,
-            message_items: {
-              my_module: m.id,
-              experiment_original: experiment_org.id,
-              experiment_new: experiment.id
-            }
-          )
-        end
-
-        group.experiment = experiment
-        group.save!
       end
     end
   end
