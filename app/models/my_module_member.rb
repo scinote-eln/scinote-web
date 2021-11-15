@@ -30,6 +30,21 @@ class MyModuleMember
     end
   end
 
+  def reset(params)
+    initialize_user_assignment!(params)
+
+    ActiveRecord::Base.transaction do
+      @user_role =
+        @my_module.experiment
+                  .user_assignments
+                  .find_by(user: user_assignment.user)
+                  .user_role
+
+      user_assignment.update!(user_role: @user_role, assigned: :automatically)
+      log_change_activity
+    end
+  end
+
   private
 
   def initialize_user_assignment!(params)

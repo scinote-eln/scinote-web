@@ -20,7 +20,12 @@
   <% unless user == current_user %>
     <div class="user-assignment-controls">
       <div class="user-assignment-role">
-        <%= f.select :user_role_id, options_for_select(user_roles_collection, selected: f.object.user_role.id), {}, class: 'form-control selectpicker', title: t('user_assignment.change_experiment_role'), data: { 'selected-text-format' => 'static' } %>
+        <%= f.select :user_role_id, nil, {}, id: "experiment_member_#{experiment_member.user.id}_user_role_id", class: 'form-control selectpicker', title: t('user_assignment.change_experiment_role'), data: { 'selected-text-format' => 'static' } do %>
+          <option data-content="<span title='<%= t('.reset_description') %>'><%= t('.reset') %></span>" value="reset"><%= t('.reset') %></option>
+          <% user_roles_collection.each do |user_role| %>
+            <option value="<%= user_role[1] %>"><%= user_role[0] %></option>
+          <% end %>
+        <% end %>
       </div>
     </div>
   <% end %>

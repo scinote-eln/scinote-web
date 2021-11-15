@@ -22,7 +22,12 @@ module AccessPermissions
 
     def update
       @my_module_member = MyModuleMember.new(current_user, @my_module, @experiment, @project)
-      @my_module_member.update(permitted_update_params)
+
+      if permitted_update_params[:user_role_id] == 'reset'
+        @my_module_member.reset(permitted_update_params)
+      else
+        @my_module_member.update(permitted_update_params)
+      end
 
       respond_to do |format|
         format.json do
