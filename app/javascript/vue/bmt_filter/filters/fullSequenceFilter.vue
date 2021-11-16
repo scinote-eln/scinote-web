@@ -1,15 +1,15 @@
 <template>
-  <div class="filter-form">
+  <div class="sci-input-container">
     <input
       @input="updateFilterData"
-      class="form-control"
+      class="sci-input-field"
       type="text"
       name="sequence"
       v-model="sequence"
       :placeholder="i18n.t('repositories.show.bmt_search.filters.types.fullSequenceFilter.placeholder')"
     />
     <div>
-      <label>
+      <label class="field-suboption">
         <div class="sci-checkbox-container">
           <input
             @change="updateFilterData"

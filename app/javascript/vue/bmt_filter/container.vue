@@ -1,5 +1,5 @@
 <template>
-  <div class="filter-container">
+  <div class="filters-container">
     <div class="header">
       <div id="savedFiltersContainer" class="dropdown saved-filters-container" @click="toggleSavedFilters">
         <div class="title" id="savedFilterDropdown">
@@ -17,7 +17,7 @@
           />
         </div>
       </div>
-      <button class="btn btn-light" @click="closeSavedFilters() && clearFilters()">
+      <button class="btn btn-light clear-filters-btn" @click="closeSavedFilters() && clearFilters()">
         <i class="fas fa-times-circle"></i>
         {{ i18n.t('repositories.show.bmt_search.clear_all') }}
       </button>
@@ -36,7 +36,7 @@
       />
     </div>
     <div class="footer" @click="closeSavedFilters">
-      <button class="btn btn-light add-filter" @click="addFilter">
+      <button class="btn btn-secondary add-filter" @click="addFilter">
         <i class="fas fa-plus"></i>
         {{ i18n.t('repositories.show.bmt_search.add_filter') }}
       </button>

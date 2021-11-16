@@ -1,28 +1,30 @@
 <template>
-  <div class="filter-element">
-    <div class="form-group filter-action">
-      <div class="form-select">
-        <select @change="updateFilter({ type: $event.target.value })" v-model="type">
-          <option
-            v-for="type in types"
-            :key="type.name" :value="type">
-              {{ i18n.t('repositories.show.bmt_search.filters.types.' + type + '.name') }}
-          </option>
-        </select>
+  <div class="filter-container">
+    <b class='filter-title'>Filter</b>  
+    <div class="filter-element">
+      <div class="form-group filter-action">
+      
+        <div class="sci-input-container">
+          <DropdownSelector
+            :options="prepareTypesOptions()"
+            :selectorId="`bmtFilter${this.filter.id}`"
+            @dropdown:changed="updateFilter"
+          />
+        </div>
+        <component
+          :is="type"
+          @filter:updateData="updateFilter"
+          :additionalDataAttributes="additionalDataAttributes"
+          :currentData="filter.data" />
       </div>
-      <component
-        :is="type"
-        @filter:updateData="updateFilter"
-        :additionalDataAttributes="additionalDataAttributes"
-        :currentData="filter.data" />
+      <div class="filter-remove">
+        <button class="btn btn-light icon-btn" @click="$emit('filter:delete')">
+          <i class="fas fa-times-circle"></i>
+        </button>
+      </div>
+      <hr>
     </div>
-    <div class="filter-remove">
-      <button class="btn btn-light icon-btn" @click="$emit('filter:delete')">
-        <i class="fas fa-times-circle"></i>
-      </button>
-    </div>
-    <hr>
-  </div>
+</div>
 </template>
 
 <script>
@@ -33,6 +35,7 @@
   import variantSequenceFilter from 'vue/bmt_filter/filters/variantSequenceFilter.vue'
   import fullSequenceFilter from 'vue/bmt_filter/filters/fullSequenceFilter.vue'
   import monomerSubstructureSearchFilter from 'vue/bmt_filter/filters/monomerSubstructureSearchFilter.vue'
+  import DropdownSelector from 'vue/shared/dropdown_selector.vue'
 
   export default {
     props: {
@@ -61,15 +64,24 @@
       subsequenceFilter,
       variantSequenceFilter,
       fullSequenceFilter,
-      monomerSubstructureSearchFilter
+      monomerSubstructureSearchFilter,
+      DropdownSelector
     },
     methods: {
-      updateFilter(data) {
+      prepareTypesOptions() {
+        return this.types.map(option => {
+          return {label: this.i18n.t(`repositories.show.bmt_search.filters.types.${option}.name`), value: option}
+        })
+      },
+      updateFilter(value) {
+        this.type = value;
         this.$emit(
           'filter:update',
           {
             id: this.filter.id,
-            data: data
+            data: {
+              type: value
+            }
           }
         );
       }

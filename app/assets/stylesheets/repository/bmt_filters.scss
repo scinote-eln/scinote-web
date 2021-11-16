@@ -1,3 +1,6 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
 .bmt-filters-button.active-filters {
   position: relative;
 
@@ -17,6 +20,36 @@
 #bmtFilterContainer {
   min-width: 422px;
   z-index: 100;
+
+  .sci-input-container {
+    margin-bottom: .5em;
+  }
+
+  .dropdown-selector-container {
+    width: 100%;
+  }
+
+  .field-suboption {
+    align-items: center;
+    display: flex;
+    margin-top: .5em;
+
+    .sci-checkbox-container {
+      margin-right: .25em;
+    }
+
+    .distance-attribute {
+      align-items: center;
+      display: flex;
+      flex-shrink: 0;
+      margin-bottom: .5em;
+      margin-top: 1.5em;
+
+      input[type=radio] {
+        margin: 0 .25em 0 .5em;
+      }
+    }
+  }
 
   label {
     font-weight: normal;
@@ -39,7 +72,6 @@
 
   .filter-list-notice {
     color: $color-silver-chalice;
-    font-style: italic;
     padding: 1em;
   }
 
@@ -51,15 +83,26 @@
 
     .title {
       @include font-h2;
-      margin-right: auto;
+    }
+
+    .clear-filters-btn {
+      margin-left: auto;
+    }
+  }
+
+  .filter-container {
+    border-bottom: $border-tertiary;
+    padding: 1em 3.5em 1em 1em;
+
+
+    .filter-title {
+      @include font-small;
     }
   }
 
   .filter-element {
     align-items: center;
-    border-bottom: $border-tertiary;
     display: flex;
-    padding: 1em 3.5em 1em 1em;
     position: relative;
   }
 
@@ -67,8 +110,8 @@
     cursor: pointer;
     padding: 0;
     position: absolute;
-    right: 0;
-    top: 0;
+    right: -2.5em;
+    top: -2px;
   }
 
   .filters-list {
@@ -81,7 +124,7 @@
     align-items: center;
     border-top: $border-tertiary;
     display: flex;
-    padding: 0 1em;
+    padding: 5px 1em 0;
 
     .add-filter {
       margin-right: auto;
@@ -91,6 +134,12 @@
   .saved-filters-container {
     .title {
       cursor: pointer;
+    }
+
+    &.open {
+      .fa-caret-down {
+        @include rotate(-180deg);
+      }
     }
   }
 

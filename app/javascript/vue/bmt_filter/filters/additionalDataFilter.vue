@@ -1,7 +1,7 @@
 <template>
   <div class="filter-form">
-    <div class="form-select">
-      <select @change="updateFilterData" v-model="attribute">
+    <div class="sci-input-container">
+      <select @change="updateFilterData" v-model="attribute" class="sci-input-field">
         <option
           v-for="attribute in additionalDataAttributes"
           :key="attribute.name" :value="attribute.name">
@@ -9,13 +9,15 @@
         </option>
       </select>
     </div>
-    <input
-      @input="updateFilterData"
-      class="form-control"
-      type="text"
-      name="value"
-      v-model="value"
-    />
+    <div class="sci-input-container">
+      <input
+        @input="updateFilterData"
+        class="sci-input-field"
+        type="text"
+        name="value"
+        v-model="value"
+      />
+    </div>
   </div>
 </template>
 
