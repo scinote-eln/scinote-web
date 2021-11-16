@@ -2563,7 +2563,7 @@ en:
           title: "Access to %{resource_name}"
         edit_modal:
           title: "Manage access for %{resource_name}"
-          description: "Changing roles will not take away any permissions from previous levels. Permissions can only be added with a new role. New permissions apply only to this concrete task."
+          description: "Changing a role will take away any permissions inherited from the project or the experiment. New permissions will apply only to this specific task."
   zip_export:
     modal_label: 'Export inventory'
     notification_title: 'Your requested export package is ready!'
