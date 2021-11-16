@@ -37,7 +37,6 @@ window.initBMTFilter = () => {
       clearFilters() {
         this.clearSearchError();
         this.dataTableElement.removeAttr('data-external-ids');
-        this.reloadDataTable();
       },
       closeFilters() {
         $(this.$el).closest('.dropdown').removeClass('open');
