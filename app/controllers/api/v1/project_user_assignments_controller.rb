@@ -9,6 +9,15 @@ module Api
       before_action :load_user_assignment, only: %i(show update destroy)
       before_action :load_user_project_for_managing, only: %i(show update destroy)
 
+      rescue_from TypeError do
+        # TEMP (17.10.2021) additional error details when using the deprecated user_projects
+        detail_key = params.dig('data', 'type') == 'user_projects' ? 'user_projects_detail' : 'detail'
+
+        render_error(I18n.t('api.core.errors.type.title'),
+                     I18n.t("api.core.errors.type.#{detail_key}"),
+                     :bad_request)
+      end
+
       def index
         user_assignments = @project.user_assignments
                                    .includes(:user_role)
