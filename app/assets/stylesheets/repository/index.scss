@@ -1,13 +1,13 @@
 .repositories-index {
   &.active {
     [data-view-mode="archived"] {
-      display: none;
+      display: none !important;
     }
   }
 
   &.archived {
     [data-view-mode="active"] {
-      display: none;
+      display: none !important;
     }
   }
 
