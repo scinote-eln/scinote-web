@@ -8,6 +8,7 @@ module Api
       before_action :load_experiment
       before_action :load_connections
       before_action :load_connection, only: :show
+      before_action :check_manage_permissions, except: %i(index show)
 
       def index
         @connections = @connections.page(params.dig(:page, :number))
@@ -20,7 +21,20 @@ module Api
       def show
         render jsonapi: @connection,
                serializer: ConnectionSerializer,
-               include: %i(input_task output_task)
+               include: %i(to from)
+      end
+
+      def create
+        connection = Connection.create!(connection_params)
+
+        render jsonapi: connection,
+               serializer: ConnectionSerializer,
+               include: %i(to from)
+      end
+
+      def destroy
+        @connection.destroy!
+        render body: nil
       end
 
       private
@@ -40,8 +54,22 @@ module Api
         @connection = @connections.find(params.require(:id))
       end
 
+      def connection_params
+        raise TypeError unless params.require(:data).require(:type) == 'connections'
+
+        params.require(:data).require(:attributes).permit(:input_id, :output_id)
+      end
+
+      def check_manage_permissions
+        input_output_ids = [connection_params[:input_id], connection_params[:output_id]]
+
+        unless can_manage_experiment?(@experiment) && (input_output_ids - @experiment.my_modules.pluck(:id)).empty?
+          raise PermissionError.new(Connection, :create)
+        end
+      end
+
       def permitted_includes
-        %w(tasks)
+        %w(to from)
       end
     end
   end
