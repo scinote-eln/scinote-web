@@ -62,9 +62,9 @@ class Project < ApplicationRecord
 
   scope :visible_to, (lambda do |user, team|
                         unless user.is_admin_of_team?(team)
-                          left_outer_joins(:user_assignments)
-                          .where('visibility = 1 OR user_assignments.user_id = :id', id: user.id)
-                          .group(:id)
+                          left_outer_joins(user_assignments: :user_role)
+                            .where(user_assignments: { user: user })
+                            .where('? = ANY(user_roles.permissions)', ProjectPermissions::READ)
                         end
                       end)
 
