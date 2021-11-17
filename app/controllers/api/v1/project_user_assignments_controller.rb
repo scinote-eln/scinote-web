@@ -9,6 +9,15 @@ module Api
       before_action :load_user_assignment, only: %i(show update destroy)
       before_action :load_user_project_for_managing, only: %i(show update destroy)
 
+      rescue_from TypeError do
+        # TEMP (17.10.2021) additional error details when using the deprecated user_projects
+        detail_key = params.dig('data', 'type') == 'user_projects' ? 'user_projects_detail' : 'detail'
+
+        render_error(I18n.t('api.core.errors.type.title'),
+                     I18n.t("api.core.errors.type.#{detail_key}"),
+                     :bad_request)
+      end
+
       def index
         user_assignments = @project.user_assignments
                                    .includes(:user_role)
@@ -16,14 +25,14 @@ module Api
                                    .per(params.dig(:page, :size))
 
         render jsonapi: user_assignments,
-               each_serializer: ProjectUserAssignmentSerializer,
-               include: %i(user user_role)
+               each_serializer: UserAssignmentSerializer,
+               include: include_params
       end
 
       def show
         render jsonapi: @user_assignment,
-               serializer: ProjectUserAssignmentSerializer,
-               include: %i(user user_role)
+               serializer: UserAssignmentSerializer,
+               include: include_params
       end
 
       def create
@@ -38,7 +47,7 @@ module Api
         project_member.create
 
         render jsonapi: project_member.user_assignment.reload,
-               serializer: ProjectUserAssignmentSerializer,
+               serializer: UserAssignmentSerializer,
                status: :created
       end
 
@@ -52,7 +61,7 @@ module Api
 
         project_member.user_role_id = user_role.id
         project_member.update
-        render jsonapi: @user_assignment.reload, serializer: ProjectUserAssignmentSerializer, status: :ok
+        render jsonapi: @user_assignment.reload, serializer: UserAssignmentSerializer, status: :ok
       end
 
       def destroy
@@ -76,9 +85,13 @@ module Api
       end
 
       def user_project_params
-        raise TypeError unless params.require(:data).require(:type) == 'project_user_assignments'
+        raise TypeError unless params.require(:data).require(:type) == 'user_assignments'
 
         params.require(:data).require(:attributes).permit(:user_id, :user_role_id)
+      end
+
+      def permitted_includes
+        %w(user user_role assignable)
       end
     end
   end

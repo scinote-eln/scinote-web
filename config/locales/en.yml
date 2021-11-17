@@ -2726,6 +2726,7 @@ en:
         type:
           title: "Wrong type"
           detail: "Wrong object type within parameters"
+          user_projects_detail: "Wrong object type within parameters. This endpoint has been changed and you should use 'user_assignments' instead of 'user_projects'"
         inventory_column_type:
           detail: "Update of data_type attribute is not allowed"
         result_missing_tinymce:
