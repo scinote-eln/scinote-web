@@ -18,14 +18,14 @@ module Api
                                 .per(params.dig(:page, :size))
 
         render jsonapi: user_assignments,
-               each_serializer: TaskUserAssignmentSerializer,
-               include: %i(user user_role)
+               each_serializer: UserAssignmentSerializer,
+               include: include_params
       end
 
       def show
         render jsonapi: @user_assignment,
-               serializer: TaskUserAssignmentSerializer,
-               include: %i(user user_role)
+               serializer: UserAssignmentSerializer,
+               include: include_params
       end
 
       def update
@@ -45,7 +45,7 @@ module Api
         my_module_member.update(user_role_id: user_role.id, user_id: user.id)
 
         render jsonapi: my_module_member.user_assignment.reload,
-               serializer: TaskUserAssignmentSerializer,
+               serializer: UserAssignmentSerializer,
                status: :ok
       end
 
@@ -64,9 +64,13 @@ module Api
       end
 
       def user_assignment_params
-        raise TypeError unless params.require(:data).require(:type) == 'task_user_assignments'
+        raise TypeError unless params.require(:data).require(:type) == 'user_assignments'
 
         params.require(:data).require(:attributes).permit(:user_id, :user_role_id)
+      end
+
+      def permitted_includes
+        %w(user user_role assignable)
       end
     end
   end

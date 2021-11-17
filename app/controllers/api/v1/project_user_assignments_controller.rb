@@ -25,14 +25,14 @@ module Api
                                    .per(params.dig(:page, :size))
 
         render jsonapi: user_assignments,
-               each_serializer: ProjectUserAssignmentSerializer,
-               include: %i(user user_role)
+               each_serializer: UserAssignmentSerializer,
+               include: include_params
       end
 
       def show
         render jsonapi: @user_assignment,
-               serializer: ProjectUserAssignmentSerializer,
-               include: %i(user user_role)
+               serializer: UserAssignmentSerializer,
+               include: include_params
       end
 
       def create
@@ -47,7 +47,7 @@ module Api
         project_member.create
 
         render jsonapi: project_member.user_assignment.reload,
-               serializer: ProjectUserAssignmentSerializer,
+               serializer: UserAssignmentSerializer,
                status: :created
       end
 
@@ -61,7 +61,7 @@ module Api
 
         project_member.user_role_id = user_role.id
         project_member.update
-        render jsonapi: @user_assignment.reload, serializer: ProjectUserAssignmentSerializer, status: :ok
+        render jsonapi: @user_assignment.reload, serializer: UserAssignmentSerializer, status: :ok
       end
 
       def destroy
@@ -85,9 +85,13 @@ module Api
       end
 
       def user_project_params
-        raise TypeError unless params.require(:data).require(:type) == 'project_user_assignments'
+        raise TypeError unless params.require(:data).require(:type) == 'user_assignments'
 
         params.require(:data).require(:attributes).permit(:user_id, :user_role_id)
+      end
+
+      def permitted_includes
+        %w(user user_role assignable)
       end
     end
   end
