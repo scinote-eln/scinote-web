@@ -29,7 +29,7 @@ module Api
         project = @team.projects.build(project_params.merge!(created_by: current_user))
 
         if project.visible? # set default viewer role for public projects
-          project.default_public_user_role = UserRole.find_by(name: I18n.t('user_roles.predefined.viewer'))
+          project.default_public_user_role = UserRole.predefined.find_by(name: I18n.t('user_roles.predefined.viewer'))
         end
 
         project.save!

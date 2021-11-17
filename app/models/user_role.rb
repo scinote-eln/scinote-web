@@ -15,6 +15,8 @@ class UserRole < ApplicationRecord
   belongs_to :last_modified_by, class_name: 'User', optional: true
   has_many :user_assignments, dependent: :destroy
 
+  scope :predefined, -> { where(predefined: true) }
+
   def self.owner_role
     new(
       name: I18n.t('user_roles.predefined.owner'),
