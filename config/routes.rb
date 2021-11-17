@@ -713,7 +713,7 @@ Rails.application.routes.draw do
                           only: %i(index show update),
                           controller: :experiment_user_assignments
                 resources :task_groups, only: %i(index show)
-                resources :connections, only: %i(index show)
+                resources :connections, only: %i(index show create destroy)
                 resources :tasks, only: %i(index show create update) do
                   resources :user_assignments,
                             only: %i(index show update),
