@@ -1014,6 +1014,7 @@ class TeamImporter
       user_assignment.assignable = assignable
       user_assignment.user_role = @user_roles.find { |role| role.name == user_assignment_json['role_name'] }
       user_assignment.user_id = find_user(user_assignment_json['user_id'])
+      user_assignment.assigned = user_assignment_json['assigned']
       user_assignment.assigned_by_id = find_user(user_assignment_json['assigned_by_id'])
       user_assignment.save!
     end
