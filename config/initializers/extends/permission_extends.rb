@@ -148,7 +148,6 @@ module PermissionExtends
       MyModulePermissions::COMMENTS_CREATE,
       MyModulePermissions::COMMENTS_MANAGE_OWN,
       MyModulePermissions::COMPLETE,
-      MyModulePermissions::RESULTS_MANAGE,
       MyModulePermissions::RESULTS_COMMENTS_MANAGE_OWN,
       MyModulePermissions::RESULTS_COMMENTS_CREATE,
       MyModulePermissions::UPDATE_STATUS,
