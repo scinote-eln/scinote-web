@@ -576,6 +576,7 @@ class TeamImporter
       project.last_modified_by_id = find_user(project.last_modified_by_id)
       project.archived_by_id = find_user(project.archived_by_id)
       project.restored_by_id = find_user(project.restored_by_id)
+      project.skip_user_assignments = true
       project.project_folder_id = @project_folder_mappings[project.project_folder_id]
       project.save!
       @project_mappings[orig_project_id] = project.id
@@ -635,6 +636,7 @@ class TeamImporter
       user_id || find_user(experiment.last_modified_by_id)
     experiment.archived_by_id = find_user(experiment.archived_by_id)
     experiment.restored_by_id = find_user(experiment.restored_by_id)
+    experiment.skip_user_assignments = true
     experiment.save!
     @experiment_mappings[orig_experiment_id] = experiment.id
 
@@ -669,6 +671,7 @@ class TeamImporter
       my_module.archived_by_id = find_user(my_module.archived_by_id)
       my_module.restored_by_id = find_user(my_module.restored_by_id)
       my_module.experiment = experiment
+      my_module.skip_user_assignments = true
 
       # Find matching status from default flow
       default_flow = MyModuleStatusFlow.global.first
