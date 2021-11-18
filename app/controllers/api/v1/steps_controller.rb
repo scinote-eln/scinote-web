@@ -77,7 +77,11 @@ module Api
 
       def load_step_for_managing
         @step = @protocol.steps.find(params.require(:id))
-        raise PermissionError.new(Protocol, :manage) unless can_manage_protocol_in_module?(@step.protocol)
+        if step_params.key?(:completed) && step_params.except(:completed).blank?
+          raise PermissionError.new(Step, :toggle_completion) unless can_complete_or_checkbox_step?(@step.protocol)
+        else
+          raise PermissionError.new(Protocol, :manage) unless can_manage_protocol_in_module?(@step.protocol)
+        end
       end
 
       def log_activity(type_of, message_items = {})

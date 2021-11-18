@@ -2708,6 +2708,9 @@ en:
         manage_permission:
           title: "Permission denied"
           detail: "You don't have permission to manage %{model}"
+        toggle_completion_permission:
+          title: "Permission denied"
+          detail: "You don't have permission to toggle %{model} completion"
         read_users_permission:
           title: "Permission denied"
           detail: "You don't have permission to read users on %{model}"
