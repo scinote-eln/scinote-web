@@ -7,11 +7,11 @@ module Experiments
     attr_reader :errors, :c_exp
     alias cloned_experiment c_exp
 
-    def initialize(experiment_id:, project_id:, user_id:)
-      @exp = Experiment.find experiment_id
-      @project = Project.find project_id
-      @user = User.find user_id
-      @original_project = @exp&.project
+    def initialize(experiment:, project:, user:)
+      @exp = experiment
+      @project = project
+      @user = user
+      @original_project = @exp.project
       @c_exp = nil
       @errors = {}
     end
@@ -66,23 +66,16 @@ module Experiments
     def valid?
       unless @exp && @project && @user
         @errors[:invalid_arguments] =
-          { 'experiment': @exp,
-            'project': @project,
-            'user': @user }
+          { experiment: @exp,
+            project: @project,
+            user: @user }
           .map do |key, value|
             "Can't find #{key.capitalize}" if value.nil?
           end.compact
-        return false
-      end
-
-      if @exp.project.team.projects
-             .with_user_permission(@user, ProjectPermissions::EXPERIMENTS_CREATE).include?(@project)
-        true
-      else
-        @errors[:user_without_permissions] =
-          ['You are not allowed to copy this experiment to this project']
         false
       end
+
+      true
     end
 
     def track_activity

@@ -200,10 +200,12 @@ class ExperimentsController < ApplicationController
 
   # POST: clone_experiment(id)
   def clone
-    service = Experiments::CopyExperimentAsTemplateService
-              .call(experiment_id: @experiment.id,
-                    project_id: move_experiment_param,
-                    user_id: current_user.id)
+    project = current_team.projects.find(move_experiment_param)
+    return render_403 unless can_create_project_experiments?(project)
+
+    service = Experiments::CopyExperimentAsTemplateService.call(experiment: @experiment,
+                                                                project: project,
+                                                                user: current_user)
 
     if service.succeed?
       flash[:success] = t('experiments.clone.success_flash',

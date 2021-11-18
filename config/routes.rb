@@ -668,6 +668,11 @@ Rails.application.routes.draw do
     namespace :api, defaults: { format: 'json' } do
       get 'health', to: 'api#health'
       get 'status', to: 'api#status'
+      namespace :service do
+        resources :teams, except: %i(index new create show edit update destroy) do
+          post 'clone_experiment' => 'experiments#clone'
+        end
+      end
       if Rails.configuration.x.core_api_v1_enabled
         namespace :v1 do
           resources :teams, only: %i(index show) do

@@ -4,8 +4,11 @@ module Api
   module V1
     class BaseController < ApiController
       class TypeError < StandardError; end
+
       class IDMismatchError < StandardError; end
+
       class IncludeNotSupportedError < StandardError; end
+
       class PermissionError < StandardError
         attr_reader :klass, :mode
 
