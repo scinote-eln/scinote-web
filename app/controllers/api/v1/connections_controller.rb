@@ -8,7 +8,7 @@ module Api
       before_action :load_experiment
       before_action :load_connections
       before_action :load_connection, only: %i(show destroy)
-      before_action :check_manage_permissions, except: %i(index show)
+      before_action :check_manage_permissions, except: %i(index show destroy)
 
       def index
         @connections = @connections.page(params.dig(:page, :number))
