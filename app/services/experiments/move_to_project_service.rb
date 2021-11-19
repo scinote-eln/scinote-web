@@ -97,6 +97,7 @@ module Experiments
 
       child_associations.each do |child_association|
         [subject.public_send(child_association)].flatten.each do |child_subject|
+          next unless child_subject
           move_activities!(child_subject)
         end
       end
