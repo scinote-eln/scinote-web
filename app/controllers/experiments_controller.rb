@@ -255,6 +255,7 @@ class ExperimentsController < ApplicationController
 
   def module_archive
     @my_modules = @experiment.archived_branch? ? @experiment.my_modules : @experiment.my_modules.archived
+    @my_modules = @my_modules.with_granted_permissions(current_user, MyModulePermissions::READ_ARCHIVED)
   end
 
   def fetch_workflow_img

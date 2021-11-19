@@ -34,8 +34,12 @@ module PermissionExtends
   module MyModulePermissions
     %w(
       READ
+      READ_ARCHIVED
       ACTIVITIES_READ
       MANAGE
+      UPDATE_START_DATE
+      UPDATE_DUE_DATE
+      UPDATE_DESCRIPTION
       STEPS_MANAGE
       UPDATE_STATUS
       COMMENTS_CREATE
@@ -62,6 +66,7 @@ module PermissionExtends
       REPOSITORY_ROWS_MANAGE
       USERS_READ
       USERS_MANAGE
+      DESIGNATED_USERS_MANAGE
     ).each { |permission| const_set(permission, "task_#{permission.underscore}") }
   end
 
@@ -106,8 +111,12 @@ module PermissionExtends
       ExperimentPermissions::TASKS_MANAGE,
       ExperimentPermissions::USERS_READ,
       MyModulePermissions::READ,
+      MyModulePermissions::READ_ARCHIVED,
       MyModulePermissions::ACTIVITIES_READ,
       MyModulePermissions::MANAGE,
+      MyModulePermissions::UPDATE_START_DATE,
+      MyModulePermissions::UPDATE_DUE_DATE,
+      MyModulePermissions::UPDATE_DESCRIPTION,
       MyModulePermissions::RESULTS_MANAGE,
       MyModulePermissions::RESULTS_COMMENTS_MANAGE_OWN,
       MyModulePermissions::RESULTS_COMMENTS_CREATE,
@@ -144,6 +153,7 @@ module PermissionExtends
       ExperimentPermissions::ACTIVITIES_READ,
       ExperimentPermissions::USERS_READ,
       MyModulePermissions::READ,
+      MyModulePermissions::READ_ARCHIVED,
       MyModulePermissions::ACTIVITIES_READ,
       MyModulePermissions::COMMENTS_CREATE,
       MyModulePermissions::COMMENTS_MANAGE_OWN,

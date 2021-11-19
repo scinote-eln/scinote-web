@@ -134,7 +134,7 @@ class UserMyModulesController < ApplicationController
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_my_module?(@my_module)
+    render_403 unless can_manage_my_module_designated_users?(@my_module)
   end
 
   def um_params

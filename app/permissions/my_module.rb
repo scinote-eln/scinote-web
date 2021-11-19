@@ -36,15 +36,15 @@ Canaid::Permissions.register_for(MyModule) do
   end
 
   can :update_my_module_start_date do |user, my_module|
-    my_module.permission_granted?(user, MyModulePermissions::MANAGE)
+    my_module.permission_granted?(user, MyModulePermissions::UPDATE_START_DATE)
   end
 
   can :update_my_module_due_date do |user, my_module|
-    my_module.permission_granted?(user, MyModulePermissions::MANAGE)
+    my_module.permission_granted?(user, MyModulePermissions::UPDATE_DUE_DATE)
   end
 
-  can :update_my_module_notes do |user, my_module|
-    my_module.permission_granted?(user, MyModulePermissions::MANAGE)
+  can :update_my_module_description do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::UPDATE_DESCRIPTION)
   end
 
   can :manage_my_module_tags do |user, my_module|
@@ -113,6 +113,14 @@ Canaid::Permissions.register_for(MyModule) do
 
   can :manage_my_module_users do |user, my_module|
     my_module.permission_granted?(user, MyModulePermissions::USERS_MANAGE)
+  end
+
+  can :manage_my_module_designated_users do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::DESIGNATED_USERS_MANAGE)
+  end
+
+  can :read_my_module_activities do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::ACTIVITIES_READ)
   end
 
   can :restore_my_module do |user, my_module|

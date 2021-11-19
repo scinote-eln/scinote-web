@@ -118,7 +118,7 @@ Canaid::Permissions.register_for(Protocol) do
   # protocol in repository, update from file
   # step in module: create/update/delete, reorder
   can :manage_protocol_in_module do |user, protocol|
-    can_manage_my_module?(user, protocol.my_module)
+    can_manage_my_module_protocol?(user, protocol.my_module)
   end
 
   # step: complete/uncomplete
