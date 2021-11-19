@@ -73,7 +73,10 @@ module Api
       private
 
       def check_read_permissions
-        raise PermissionError.new(Project, :read_users) unless can_read_project_users?(@project)
+        # team admins can always manage users, so they should also be able to read them
+        unless can_read_project_users?(@project) || can_manage_project_users?(@project)
+          raise PermissionError.new(Project, :read_users)
+        end
       end
 
       def load_user_assignment
