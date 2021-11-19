@@ -1,6 +1,6 @@
 <div class="task-notes">
   <div class="task-notes-content">
-    <% if can_manage_my_module?(@my_module) %>
+    <% if can_update_my_module_description?(@my_module) %>
       <%= render partial: "description_form" %>
     <% elsif @my_module.description.present? %>
       <%= custom_auto_link(@my_module.tinymce_render(:description),

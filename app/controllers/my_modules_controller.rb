@@ -124,6 +124,22 @@ class MyModulesController < ApplicationController
     start_date_changes = @my_module.changes[:started_on]
     due_date_changes = @my_module.changes[:due_date]
 
+    if @my_module.completed_changed? && !can_complete_my_module?(@my_module)
+      render_403 && return
+    end
+
+    if description_changed && !can_update_my_module_description?(@my_module)
+      render_403 && return
+    end
+
+    if start_date_changes.present? && !can_update_my_module_start_date?(@my_module)
+      render_403 && return
+    end
+
+    if due_date_changes.present? && !can_update_my_module_start_date?(@my_module)
+      render_403 && return
+    end
+
     if @my_module.archived_changed?(from: false, to: true)
       saved = @my_module.archive(current_user)
     else
@@ -185,6 +201,7 @@ class MyModulesController < ApplicationController
   end
 
   def update_description
+    render_403 && return unless can_update_my_module_description?(@my_module)
     old_description = @my_module.description
     respond_to do |format|
       format.json do
