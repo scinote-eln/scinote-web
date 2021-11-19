@@ -24,12 +24,10 @@ class ProjectMember
     return unless assign
 
     ActiveRecord::Base.transaction do
-      user_role = set_user_role
-
       @user_assignment = UserAssignment.create!(
         assignable: @project,
         user: @user,
-        user_role: user_role,
+        user_role_id: user_role_id,
         assigned_by: current_user,
         assigned: :manually
       )
@@ -49,9 +47,8 @@ class ProjectMember
     return false unless valid?
 
     ActiveRecord::Base.transaction do
-      user_role = set_user_role
-      user_assignment = UserAssignment.find_by!(assignable: @project, user: @user)
-      user_assignment.update!(user_role: user_role, assigned: :manually)
+      @user_assignment = UserAssignment.find_by!(assignable: @project, user: @user)
+      @user_assignment.update!(user_role_id: user_role_id, assigned: :manually)
       log_activity(:change_user_role_on_project)
 
       UserAssignments::PropagateAssignmentJob.perform_later(
@@ -103,10 +100,6 @@ class ProjectMember
             message_items: { project: project.id,
                              user_target: user.id,
                              role: user_role.name })
-  end
-
-  def set_user_role
-    UserRole.find(user_role_id)
   end
 
   def validate_role_presence
