@@ -100,6 +100,11 @@ class RepositoryColumn < ApplicationRecord
     Constants::REPOSITORY_LIST_ITEMS_DELIMITERS_MAP[metadata['delimiter']&.to_sym] || "\n"
   end
 
+  def items
+    items_method_name = "#{data_type.chomp('Value').underscore}_items"
+    __send__(items_method_name) if respond_to?(items_method_name, true)
+  end
+
   private
 
   def repository_list_value_deep_dup(new_column)

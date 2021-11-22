@@ -584,7 +584,11 @@ Rails.application.routes.draw do
       get :table_toolbar
       get :status
 
-      resources :repository_columns, only: %i(index new edit destroy)
+      resources :repository_columns, only: %i(index new edit destroy) do
+        collection do
+          get :describe_all
+        end
+      end
       resources :repository_rows, only: %i(create show update) do
         collection do
           get :print_modal

@@ -34,6 +34,18 @@ class RepositoryColumnsController < ApplicationController
     raise NotImplementedError
   end
 
+  def describe_all
+    response_json = @repository.repository_columns.map do |column|
+      {
+        id: column.id,
+        name: escape_input(column.name),
+        data_type: column.data_type,
+        items: column.items&.map { |item| { id: item.id, label: escape_input(item.data) } }
+      }
+    end
+    render json: { response: response_json }
+  end
+
   def edit
     render json: {
       html: render_to_string(
@@ -118,7 +130,8 @@ class RepositoryColumnsController < ApplicationController
   end
 
   def load_asset_type_columns
-    render_403 unless can_read_repository?(@repository)
+    render_403 && return unless can_read_repository?(@repository)
+
     @asset_columns = load_asset_columns(search_params[:q])
   end
 
