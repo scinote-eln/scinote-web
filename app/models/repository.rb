@@ -97,8 +97,24 @@ class Repository < RepositoryBase
     end
   end
 
-  def default_columns_count
-    Constants::REPOSITORY_TABLE_DEFAULT_STATE['columns'].length
+  def default_table_state
+    Constants::REPOSITORY_TABLE_DEFAULT_STATE
+  end
+
+  def default_sortable_columns
+    [
+      'assigned',
+      'repository_rows.id',
+      'repository_rows.name',
+      'repository_rows.created_at',
+      'users.full_name',
+      'repository_rows.archived_on',
+      'archived_bies_repository_rows.full_name'
+    ]
+  end
+
+  def default_search_fileds
+    ['repository_rows.name', RepositoryRow::PREFIXED_ID_SQL, 'users.full_name']
   end
 
   def i_shared?(team)

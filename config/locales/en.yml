@@ -1304,6 +1304,7 @@ en:
       i_shared: "Shared inventory (owned by your Team)"
       shared_edit: "Shared inventory (owned by %{team_name}). You can edit."
       shared_read: "Shared inventory (owned by %{team_name}). You can view."
+    bmt_singleton_error: "Only one BMT inventory can be present."
     index:
       head_title: "Inventories"
       title: "Inventories"
@@ -1387,9 +1388,49 @@ en:
       no_items_matched: "No items matched your search request"
       no_archived_items: "No archived items here"
       no_archived_items_matched: "No archived items matched your search request"
+      error_searching: "Error searching, please try again"
 
+      bmt_search:
+        bmt_filter: "Biomolecule filter"
+        save_filters: "Save filters"
+        title: "Filters"
+        clear_all: "Clear all"
+        add_filter: "Add filter"
+        apply: "Apply"
+        filter: "Filter"
+        no_filters: "No active filters."
+        filters:
+          types:
+            additionalDataFilter:
+              name: "Additional data"
+            entityTypeFilter:
+              name: "Entity type"
+              placeholder: "Enter entity type"
+            monomerTypeFilter:
+              name: "Monomer type"
+              placeholder: "Enter monomer type"
+            subsequenceFilter:
+              name: "Subsequence"
+              placeholder: "Enter subsequence"
+              derivatives_included: "Derivatives included"
+            variantSequenceFilter:
+              name: "Variant sequence"
+              placeholder: "Enter variant sequence"
+              derivatives_included: "Derivatives included"
+              distance: "Distance"
+              distance_type: "Distance type"
+              exact: "Exact"
+              maximum: "Maximum"
+            fullSequenceFilter:
+              name: "Full sequence"
+              placeholder: "Enter full sequence"
+              derivatives_included: "Derivatives included"
+            monomerSubstructureSearchFilter:
+              name: "Monomer substructure"
+              placeholder: "Enter substructure"
     table:
       id: 'ID'
+      external_id: 'External ID'
       assigned: "Assigned"
       assigned_search: 'Search...'
       assigned_tooltip: "%{tasks} tasks in &#10;%{experiments} experiments,&#10;%{projects} projects"
@@ -2791,7 +2832,7 @@ en:
 
   bio_eddie:
     new_molecule: "New Molecule"
-    new_button: "Create Biomolecule"
+    new_button: "Biomolecule"
     molecule_name_placeholder: "Click here to enter Molecule name"
     no_molecules_found: "No Molecules Found"
     save_and_register: "Save & Register to Biomolecule Toolkit"

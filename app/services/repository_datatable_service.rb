@@ -75,16 +75,14 @@ class RepositoryDatatableService
         repository_rows.count
       end
 
-    if search_value.present?
-      matched_by_user = repository_rows.joins(:created_by).where_attributes_like('users.full_name', search_value)
+    repository_rows = repository_rows.where(external_id: @params[:external_ids]) if @params[:external_ids]
 
-      repository_row_matches =  repository_rows
-                                .where_attributes_like(
-                                  ['repository_rows.name', RepositoryRow::PREFIXED_ID_SQL],
-                                  search_value
-                                )
+    if search_value.present?
+      if @repository.default_search_fileds.include?('users.full_name')
+        repository_rows = repository_rows.joins(:created_by)
+      end
+      repository_row_matches = repository_rows.where_attributes_like(@repository.default_search_fileds, search_value)
       results = repository_rows.where(id: repository_row_matches)
-      results = results.or(repository_rows.where(id: matched_by_user))
 
       data_types = @repository.repository_columns.pluck(:data_type).uniq
 
@@ -114,15 +112,7 @@ class RepositoryDatatableService
   end
 
   def build_sortable_columns
-    array = [
-      'assigned',
-      'repository_rows.id',
-      'repository_rows.name',
-      'repository_rows.created_at',
-      'users.full_name',
-      'repository_rows.archived_on',
-      'archived_bies_repository_rows.full_name',
-    ]
+    array = @repository.default_sortable_columns
     @repository.repository_columns.count.times do
       array << 'repository_cell.value'
     end

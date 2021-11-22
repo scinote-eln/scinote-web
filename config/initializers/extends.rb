@@ -392,6 +392,8 @@ class Extends
     change_user_role_on_experiment
     change_user_role_on_my_module
   )
+
+  STI_PRELOAD_CLASSES = %w(LinkedRepository BmtRepository)
 end
 
 # rubocop:enable Style/MutableConstant

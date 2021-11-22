@@ -5,18 +5,11 @@ module RepositoryDatatableHelper
 
   def prepare_row_columns(repository_rows, repository, columns_mappings, team, options = {})
     repository_rows.map do |record|
-      row = {
-        'DT_RowId': record.id,
-        'DT_RowAttr': { 'data-state': row_style(record) },
-        '1': assigned_row(record),
-        '2': record.code,
-        '3': escape_input(record.name),
-        '4': I18n.l(record.created_at, format: :full),
-        '5': escape_input(record.created_by.full_name),
-        '6': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
-        '7': escape_input(record.archived_by&.full_name),
-        'recordInfoUrl': Rails.application.routes.url_helpers.repository_repository_row_path(repository, record)
-      }
+      row = public_send("#{repository.class.name.underscore}_default_columns", record)
+
+      row['DT_RowId'] = record.id
+      row['DT_RowAttr'] = { 'data-state': row_style(record) }
+      row['recordInfoUrl'] = Rails.application.routes.url_helpers.repository_repository_row_path(repository, record)
 
       unless options[:view_mode]
         row['recordUpdateUrl'] =
@@ -84,20 +77,39 @@ module RepositoryDatatableHelper
       can_manage_repository_rows?(repository)
   end
 
-  def default_table_order_as_js_array
-    Constants::REPOSITORY_TABLE_DEFAULT_STATE['order'].to_json
+  def repository_default_columns(record)
+    {
+      '1': assigned_row(record),
+      '2': record.code,
+      '3': escape_input(record.name),
+      '4': I18n.l(record.created_at, format: :full),
+      '5': escape_input(record.created_by.full_name),
+      '6': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
+      '7': escape_input(record.archived_by&.full_name)
+    }
   end
 
-  def default_table_columns
-    Constants::REPOSITORY_TABLE_DEFAULT_STATE['columns'].to_json
+  def linked_repository_default_columns(record)
+    {
+      '1': assigned_row(record),
+      '2': escape_input(record.external_id),
+      '3': record.code,
+      '4': escape_input(record.name),
+      '5': I18n.l(record.created_at, format: :full),
+      '6': escape_input(record.created_by.full_name),
+      '7': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
+      '8': escape_input(record.archived_by&.full_name)
+    }
   end
 
-  def default_snapshot_table_order_as_js_array
-    Constants::REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['order'].to_json
-  end
-
-  def default_snapshot_table_columns
-    Constants::REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['columns'].to_json
+  def bmt_repository_default_columns(record)
+    {
+      '1': assigned_row(record),
+      '2': escape_input(record.external_id),
+      '3': record.code,
+      '4': escape_input(record.name),
+      '5': I18n.l(record.created_at, format: :full)
+    }
   end
 
   def display_cell_value(cell, team)

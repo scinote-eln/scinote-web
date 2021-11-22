@@ -45,8 +45,8 @@ class RepositorySnapshot < RepositoryBase
     repository_snapshot.reload
   end
 
-  def default_columns_count
-    Constants::REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['columns'].length
+  def default_table_state
+    Constants::REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE
   end
 
   def assigned_rows(my_module)
