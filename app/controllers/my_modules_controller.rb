@@ -124,7 +124,7 @@ class MyModulesController < ApplicationController
     start_date_changes = @my_module.changes[:started_on]
     due_date_changes = @my_module.changes[:due_date]
 
-    if @my_module.completed_changed? && !can_complete_my_module?(@my_module)
+    if @my_module.completed_on_changed? && !can_complete_my_module?(@my_module)
       render_403 && return
     end
 
