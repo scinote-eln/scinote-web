@@ -107,6 +107,13 @@ module Experiments
       # remove user assignments where the user are not present on the project
       object.user_assignments.destroy_all
 
+      UserAssignment.create!(
+        user: @user,
+        assignable: object,
+        assigned: :automatically,
+        user_role: @project.user_assignments.find_by(user: @user).user_role
+      )
+
       UserAssignments::GenerateUserAssignmentsJob.perform_later(object, @user)
     end
 
