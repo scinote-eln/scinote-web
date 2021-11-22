@@ -319,6 +319,8 @@ class Project < ApplicationRecord
   end
 
   def auto_assign_project_members
+    return if skip_user_assignments
+
     UserAssignments::GroupAssignmentJob.perform_now(
       team,
       self,
