@@ -21,6 +21,8 @@ class MigrateToNewUserRoles < ActiveRecord::Migration[6.1]
       end
       dir.down do
         UserAssignment.joins(:user_role).where(user_role: { predefined: true }).delete_all
+        Project.where(default_public_user_role: UserRole.where(predefined: true))
+               .update_all(default_public_user_role_id: nil)
         UserRole.where(predefined: true).delete_all
       end
     end
@@ -28,13 +30,11 @@ class MigrateToNewUserRoles < ActiveRecord::Migration[6.1]
 
   private
 
-  def new_user_assignment(user, assignable, user_role, assigned = :manually, existing_assignments = {})
-    return if existing_assignments[[user.id, assignable.id, assignable.class.name]]
-
+  def new_user_assignment(user, assignable, user_role)
     UserAssignment.new(
       user: user,
       assignable: assignable,
-      assigned: assigned,
+      assigned: :automatically,
       user_role: user_role
     )
   end
@@ -52,11 +52,11 @@ class MigrateToNewUserRoles < ActiveRecord::Migration[6.1]
         unassigned_users = team.users.reject { |u| already_assigned_user_ids.include?(u.id) }
 
         unassigned_users.each do |user|
-          user_assignments << new_user_assignment(user, project, viewer_role, :automatically)
+          user_assignments << new_user_assignment(user, project, viewer_role)
           project.experiments.each do |experiment|
-            user_assignments << new_user_assignment(user, experiment, viewer_role, :automatically)
+            user_assignments << new_user_assignment(user, experiment, viewer_role)
             experiment.my_modules.each do |my_module|
-              user_assignments << new_user_assignment(user, my_module, viewer_role, :automatically)
+              user_assignments << new_user_assignment(user, my_module, viewer_role)
             end
           end
         end
