@@ -26,7 +26,7 @@ module Experiments
       ActiveRecord::Base.transaction do
         @exp.project = @project
         @exp.my_modules.each do |my_module|
-          raise unless can_manage_my_module?(@user, my_module)
+          raise unless can_move_my_module?(@user, my_module)
 
           sync_user_assignments(my_module)
           move_tags!(my_module)
