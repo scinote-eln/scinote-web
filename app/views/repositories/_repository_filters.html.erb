@@ -1,0 +1,19 @@
+<template id="repositoryFilterTemplate">
+  <div class="dropdown" id="filtersDropdownButton">
+      <button id="filtersDropdown"
+              class="btn btn-light filters-button icon-btn"
+              type="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+    >
+      <span class="fas fa-filter"></span>
+    </button>
+    <div
+      class="dropdown-menu filters-container dropdown-menu-right"
+      id="filterContainer"
+      data-datatable-id="#repository-table-<%= @repository.id %>"
+    >
+      <filter-container/>
+    </div>
+  </div>
+</template>

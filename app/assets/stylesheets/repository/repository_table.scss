@@ -7,7 +7,12 @@
   position: relative;
 
   .dataTables_filter {
+    display: flex;
     float: right;
+
+    #filtersDropdownButton {
+      margin-left: .5em;
+    }
   }
 
   .repository-table-error {
