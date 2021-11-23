@@ -41,7 +41,7 @@ module Assignable
     def create_users_assignments
       return if skip_user_assignments
 
-      role = if self.class == Project
+      role = if is_a?(Project)
                UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))
              else
                permission_parent.user_assignments.find_by(user: created_by).user_role
@@ -50,7 +50,7 @@ module Assignable
       UserAssignment.create!(
         user: created_by,
         assignable: self,
-        assigned: :automatically,
+        assigned: is_a?(Project) ? :manually : :automatically,
         user_role: role
       )
 
