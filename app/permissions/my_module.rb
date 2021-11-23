@@ -35,6 +35,10 @@ Canaid::Permissions.register_for(MyModule) do
     !my_module.archived? && my_module.permission_granted?(user, MyModulePermissions::MANAGE)
   end
 
+  can :move_my_module do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::MANAGE)
+  end
+
   can :update_my_module_start_date do |user, my_module|
     my_module.permission_granted?(user, MyModulePermissions::UPDATE_START_DATE)
   end
