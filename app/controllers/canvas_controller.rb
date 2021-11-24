@@ -114,7 +114,7 @@ class CanvasController < ApplicationController
         # Okay, JSON parsed!
         unless to_move.is_a?(Hash) &&
                to_move.keys.all? do |id|
-                 !is_int?(id) || can_manage_my_module?(MyModule.find_by(id: id))
+                 !is_int?(id) || can_move_my_module?(MyModule.find_by(id: id))
                end &&
                to_move.values.all? do |exp_id|
                  can_manage_experiment?(Experiment.find_by(id: exp_id))
