@@ -32,7 +32,7 @@
       <% end %>
     </div>
   <% end %>
-  <% if @repository.present? && live_items_present && can_create_my_module_repository_snapshot?(@my_module) %>
+  <% if @repository.present? && live_items_present && can_create_my_module_repository_snapshots?(@my_module) %>
     <div class="create-snapshot-item">
       <p class="info <%= 'hidden' unless @repository_snapshots.blank? %>">
         <%= t('my_modules.repository.snapshots.full_view.no_snapshots_label') %>
