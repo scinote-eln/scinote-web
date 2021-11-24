@@ -492,6 +492,7 @@ Rails.application.routes.draw do
     resources :protocols, only: [:index, :edit, :create] do
       resources :steps, only: [:new, :create]
       member do
+        get 'print', to: 'protocols#print'
         get 'linked_children', to: 'protocols#linked_children'
         post 'linked_children_datatable',
              to: 'protocols#linked_children_datatable'

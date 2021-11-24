@@ -1,0 +1,115 @@
+<p class="print-protocol-header">
+  <span><%= t('.header.printed_from') %></span>
+  <span class="print-protocol-header__logo">
+    <%= image_tag 'logo.png' %>
+  </span>
+  <span><%= t('.header.print_info', datetime: l(DateTime.current, format: :full), full_name: current_user.full_name) %></span>
+</p>
+
+<h1><%= @protocol.name || @protocol.my_module.name %></h1>
+<div><%= @protocol.description.html_safe %></div>
+<% @protocol.steps.order(position: :asc).each do |step| %>
+  <div class="print-step">
+    <h2>
+      <div class="step-check-circle <%= 'checked' if step.completed_on %>">
+        <% if step.completed_on %>✓<% end %>
+      </div>
+      <%= step.position + 1 %>. <%= step.name %>
+    </h2>
+    <div><%= step.description.html_safe %></div>
+
+    <% step.checklists.each do |checklist| %>
+      <div class="print-checklist">
+      <h3><%= checklist.name %></h3>
+        <% checklist.checklist_items.order(position: :asc).each do |checklist_item| %>
+          <div class="print-checklist-item">
+            <span class="checklist-checkbox <%= 'checked' if checklist_item.checked %>">
+              <% if checklist_item.checked %>
+                ✓
+              <% end %>
+            </span>
+            <span><%= checklist_item.text %></span>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% step.tables.each do |table| %>
+      <% table_data = JSON.parse(table.contents)["data"] %>
+      <h3><%= table.name %></h3>
+      <table class="print-table">
+        <thead>
+          <tr>
+            <th></th>
+            <% col = "A" %>
+            <% table_data[0].length.times do %>
+              <th><%= col %></th>
+              <% col.succ! %>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% table_data.each_with_index do |tr, row| %>
+            <tr>
+              <td><%= row + 1 %></td>
+              <% tr.each do |td| %>
+                <td><%= td %></td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+    <% step.assets.where(view_mode: "inline").each do |asset| %>
+        <div class="print-asset inline">
+          <div class="print-asset-image">
+            <%= image_tag asset.blob.url %>
+            <p><%= asset.blob.filename %></p>
+          </div>
+        </div>
+    <% end %>
+    <% step.assets.where(view_mode: "list").each do |asset| %>
+        <div class="print-asset list">
+          <span class="print-asset-icon"><%= file_extension_icon_html(asset) %></span>
+          <span><%= asset.blob.filename %></span>
+        </div>
+    <% end %>
+    <div class="print-thumbnails">
+      <% step.assets.where(view_mode: "thumbnail").each do |asset| %>
+        <div class="print-asset thumbnail">
+          <div class="print-asset-image">
+            <%= image_tag asset.blob.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT).processed %>
+            <p><%= asset.blob.filename %></p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <% if params[:include_comments] && step.comments.present? %>
+    <div class="print-comments">
+      <h3><%= t('Comments') %>:</h3>
+      <% step.step_comments.each do |comment| %>
+        <div class="print-comment-container">
+          <div class="print-comment-header">
+            <%= image_tag avatar_path(comment.user, :icon_small), class: 'user-avatar' %>
+            <div class="user-name">
+              <%= comment.user.full_name %>
+            </div>
+          </div>
+          <div class="print-comment-body">
+            <div class="comment-message">
+              <%= comment.message %>
+            </div>
+            <div class="print-comment-footer">
+              <div class="print-comment-create-date">
+                <%= I18n.l(comment.created_at, format: :full) %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+  <hr>
+<% end %>

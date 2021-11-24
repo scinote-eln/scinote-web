@@ -121,6 +121,7 @@
               <span><%=t "protocols.steps.new_step" %></span>
           </a>
         <% end %>
+        <%= render partial: "my_modules/protocols/print_protocol_button", locals: { protocol: @protocol } %>
         <%= render partial: "my_modules/protocols/protocol_options_dropdown" %>
       </div>
     </div>
