@@ -10,7 +10,8 @@ window.initRepositoryFilter = () => {
     el: '#filterContainer',
     data: () => {
       return {
-        filters: []
+        filters: [],
+        columns: []
       };
     },
     created() {
@@ -22,5 +23,14 @@ window.initRepositoryFilter = () => {
     methods: {
     }
   });
+
+  // Replace with remote endpoint
+  repositoryFilterContainer.columns = [
+    {id: 'row_name', name: 'Column 1', colType: 'TextColumn'},
+    {id: 1, name: 'Column 2', colType: 'TextColumn'},
+    {id: 2, name: 'Column 3', colType: 'NumberColumn'},
+    {id: 3, name: 'Column 4', colType: 'TextColumn'}
+  ]
+  $('#filterContainer').on('click', (e) => e.stopPropagation());
 
 };

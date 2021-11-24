@@ -15,12 +15,29 @@
       <div v-if="filters.length == 0" class="filter-list-notice">
         No filters
       </div>
+      <FilterElement
+        v-for="(filter, index) in filters"
+        :key="filter.id"
+        :filter.sync="filters[index]"
+        @filter:delete="filters.splice(index, 1)"
+      />
     </div>
     <div class="footer">
-      <button class="btn btn-secondary add-filter">
-        <i class="fas fa-plus"></i>
-        Add filter
-      </button>
+      <div id="filtersColumnsDropdown" class="dropdown filters-columns-dropdown" @click="toggleColumnsFilters">
+        <button class="btn btn-secondary add-filter" >
+          <i class="fas fa-plus"></i>
+          Add filter
+        </button>
+        <div class="dropdown-menu filters-columns-list">
+
+          <ColumnElement
+            v-for="(column, index) in columns"
+            :key="column.id"
+            :column.sync="columns[index]"
+            @columns:addFilter="addFilter"
+          />
+        </div>
+      </div>
       <button class="btn btn-primary">
         Apply
       </button>
@@ -29,7 +46,8 @@
 </template>
 
  <script>
-  //import FilterElement from 'vue/repository_filter/filter.vue'
+  import ColumnElement from 'vue/repository_filter/column.vue'
+  import FilterElement from 'vue/repository_filter/filter.vue'
 
   export default {
     name: 'FilterContainer',
@@ -40,10 +58,20 @@
     },
     props: {
       container: Object,
-      savedFilters: Array
+      savedFilters: Array,
+      columns: Array
     },
     created() {
+    },
+    components: { ColumnElement, FilterElement },
+    methods: {
+      addFilter(column) {
+        const id = this.filters.length ? this.filters[this.filters.length - 1].id + 1 : 1
+        this.filters.push({ id: id, column: column, data: {} });
+      },
+      toggleColumnsFilters() {
+        $('#filtersColumnsDropdown').toggleClass('open');
+      }
     }
-    //components: { FilterElement, SavedFilterElement },
   }
  </script>

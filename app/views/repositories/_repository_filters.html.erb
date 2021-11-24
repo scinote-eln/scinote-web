@@ -13,7 +13,9 @@
       id="filterContainer"
       data-datatable-id="#repository-table-<%= @repository.id %>"
     >
-      <filter-container/>
+      <filter-container 
+        :columns.sync="columns"
+      />
     </div>
   </div>
 </template>
