@@ -168,9 +168,12 @@
 
 <%= render partial: 'repository_columns/manage_column_modal', locals: { my_module_page: false } %>
 <%= render partial: 'save_bmt_filter_modal' %>
+<%= render partial: 'repository_filters' %>
 
 <% if @repository.is_a?(BmtRepository) %>
   <%= javascript_pack_tag 'vue/bmt_filter' %>
+<% else %>
+  <%= javascript_pack_tag 'vue/repository_filter' %>
 <% end %>
 <%= javascript_include_tag 'repositories/edit' %>
 <%= javascript_include_tag 'repositories/repository_datatable' %>

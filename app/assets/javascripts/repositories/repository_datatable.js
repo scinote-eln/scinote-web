@@ -268,7 +268,7 @@ var RepositoryDatatable = (function(global) {
     $.getJSON($(TABLE_ID).data('toolbar-url'), (data) => {
       $('#toolbarButtonsDatatable').remove();
       $(data.html).appendTo('div.toolbar');
-      initBMTFilter();
+      if (typeof initBMTFilter === 'function') initBMTFilter();
     });
 
     TABLE.ajax.reload(null, false);
@@ -556,7 +556,7 @@ var RepositoryDatatable = (function(global) {
         // Append buttons to inner toolbar in the table
         $.getJSON($(TABLE_ID).data('toolbar-url'), (data) => {
           $(data.html).appendTo('div.toolbar');
-          initBMTFilter();
+          if (typeof initBMTFilter === 'function') initBMTFilter();
         });
 
         $('div.toolbar-filter-buttons').prependTo('div.filter-container');
@@ -583,7 +583,7 @@ var RepositoryDatatable = (function(global) {
         });
 
         initAssignedTasksDropdown(TABLE_ID);
-
+        renderFiltersDropdown();
       }
     });
 
@@ -808,6 +808,12 @@ var RepositoryDatatable = (function(global) {
         TABLE.column(column.idx).visible(archived);
       }
     });
+  }
+
+  function renderFiltersDropdown() {
+    let dropdown = $('#repositoryFilterTemplate').html();
+    $('.dataTables_filter').append(dropdown);
+    if (typeof initRepositoryFilter === 'function') initRepositoryFilter();
   }
 
   return Object.freeze({

@@ -1389,6 +1389,11 @@ en:
       no_archived_items: "No archived items here"
       no_archived_items_matched: "No archived items matched your search request"
       error_searching: "Error searching, please try again"
+      filters:
+        title: "Filters"
+        clear: "Clear"
+        add_filter: "Add filter"
+        apply: "Apply"
 
       bmt_search:
         bmt_filter: "Biomolecule filter"

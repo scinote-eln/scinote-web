@@ -1,0 +1,73 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
+.repository-show {
+  .filters-container {
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 300px);
+    min-height: 300px;
+    padding: 0;
+    width: 460px;
+
+    .header {
+      align-items: center;
+      border-bottom: $border-default;
+      display: flex;
+      flex-shrink: 0;
+      padding: .25em .5em;
+
+      .title {
+        @include font-h2;
+      }
+
+      .clear-filters-btn {
+        margin-left: auto;
+      }
+    }
+
+    .footer {
+      border-top: $border-default;
+      display: flex;
+      flex-shrink: 0;
+      padding: .5em;
+
+      .apply-button {
+        flex-grow: 1;
+        margin-left: .5em !important;
+      }
+
+      .column-filters-element {
+        cursor: pointer;
+        padding: .25em .5em;
+
+        &:hover {
+          background: $color-concrete;
+        }
+      }
+    }
+
+    .filters-list {
+      flex-grow: 1;
+      padding: .5em;
+    }
+
+    .filter-container {
+      margin-bottom: .5em;
+
+      .filter-title {
+        @include font-small;
+        font-weight: bold;
+      }
+
+      .filter-element {
+        display: flex;
+      }
+
+      .filter-remove {
+        margin-left: 0;
+      }
+    }
+  }
+
+}
