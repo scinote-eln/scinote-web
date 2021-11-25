@@ -1,7 +1,9 @@
 <template>
   <div class="filter-container">
-    <b class='filter-title'>{{ filter.column.name }}</b>
+    <div class='filter-title'>{{ filter.column.name }}</div>
     <div class="filter-element">
+      <div class="filter-body">
+      </div>
       <div class="filter-remove">
         <button class="btn btn-light icon-btn" @click="$emit('filter:delete')">
           <i class="fas fa-times-circle"></i>

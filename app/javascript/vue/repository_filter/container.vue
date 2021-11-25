@@ -3,18 +3,15 @@
     <div class="header">
       <div id="savedFiltersContainer" class="dropdown saved-filters-container">
         <div class="title" id="savedFilterDropdown">
-          Filters
+          {{ i18n.t('repositories.show.filters.title') }}
         </div>
       </div>
-      <button class="btn btn-light clear-filters-btn">
+      <button class="btn btn-light clear-filters-btn" @click="clearFilters()">
         <i class="fas fa-times-circle"></i>
-        Clear
+        {{ i18n.t('repositories.show.filters.clear') }}
       </button>
     </div>
     <div class="filters-list">
-      <div v-if="filters.length == 0" class="filter-list-notice">
-        No filters
-      </div>
       <FilterElement
         v-for="(filter, index) in filters"
         :key="filter.id"
@@ -26,7 +23,7 @@
       <div id="filtersColumnsDropdown" class="dropdown filters-columns-dropdown" @click="toggleColumnsFilters">
         <button class="btn btn-secondary add-filter" >
           <i class="fas fa-plus"></i>
-          Add filter
+          {{ i18n.t('repositories.show.filters.add_filter') }}
         </button>
         <div class="dropdown-menu filters-columns-list">
 
@@ -38,8 +35,8 @@
           />
         </div>
       </div>
-      <button class="btn btn-primary">
-        Apply
+      <button class="btn btn-primary apply-button">
+        {{ i18n.t('repositories.show.filters.apply') }}
       </button>
     </div>
   </div>
@@ -68,6 +65,10 @@
       addFilter(column) {
         const id = this.filters.length ? this.filters[this.filters.length - 1].id + 1 : 1
         this.filters.push({ id: id, column: column, data: {} });
+      },
+      clearFilters() {
+        this.filters = [];
+        this.$emit('filters:clear');
       },
       toggleColumnsFilters() {
         $('#filtersColumnsDropdown').toggleClass('open');
