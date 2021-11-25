@@ -26,12 +26,11 @@ window.initRepositoryFilter = () => {
 
   // Replace with remote endpoint
   repositoryFilterContainer.columns = [
-    {id: 'assigned', name: 'Assigned to task', data_type: 'RepositoryMyModuleValue'},
-    {id: 'row_id', name: 'ID', data_type: 'RepositoryTextValue'},
-    {id: 'row_name', name: 'Name', data_type: 'RepositoryTextValue'},
-    {id: 'added_on', name: 'Added on', data_type: 'RepositoryDateTimeValue'},
-    {id: 'added_by', name: 'Added by', data_type: 'RepositoryUserValue'}
-  ]
+    { id: 'assigned', name: 'Assigned to task', data_type: 'RepositoryMyModuleValue' },
+    { id: 'row_id', name: 'ID', data_type: 'RepositoryTextValue' },
+    { id: 'row_name', name: 'Name', data_type: 'RepositoryTextValue' },
+    { id: 'added_on', name: 'Added on', data_type: 'RepositoryDateTimeValue' },
+    { id: 'added_by', name: 'Added by', data_type: 'RepositoryUserValue' }
+  ];
   $('#filterContainer').on('click', (e) => e.stopPropagation());
-
 };
