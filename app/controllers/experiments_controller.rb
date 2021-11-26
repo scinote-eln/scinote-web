@@ -238,15 +238,13 @@ class ExperimentsController < ApplicationController
               .call(experiment_id: @experiment.id,
                     project_id: move_experiment_param,
                     user_id: current_user.id)
-
     if service.succeed?
       flash[:success] = t('experiments.move.success_flash',
                           experiment: @experiment.name)
       path = canvas_experiment_url(@experiment)
       status = :ok
     else
-      message = t('experiments.move.error_flash',
-                  experiment: escape_input(@experiment.name))
+      message = service.errors.values.join(', ')
       status = :unprocessable_entity
     end
 
