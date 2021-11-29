@@ -8,6 +8,7 @@
       <%= yield %>
       <script>
         window.print();
+        window.onfocus=function(){ window.close(); }
       </script>
     </body>
 </html>
