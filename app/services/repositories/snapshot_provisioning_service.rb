@@ -14,7 +14,7 @@ module Repositories
     def call
       return self unless valid?
 
-      ActiveRecord::Base.transaction do
+      ActiveRecord::Base.transaction(requires_new: true) do
         repository = @repository_snapshot.original_repository
 
         repository.repository_columns.each do |column|
@@ -30,8 +30,12 @@ module Repositories
         end
 
         @repository_snapshot.ready!
-      rescue ActiveRecord::RecordInvalid => e
-        @errors[e.record.class.name.underscore] = e.record.errors.full_messages
+      rescue StandardError => e
+        if e.is_a?(ActiveRecord::RecordInvalid)
+          @errors[e.record.class.name.underscore] = e.record.errors.full_messages
+        else
+          @errors[:general] = e.message
+        end
         Rails.logger.error e.message
         raise ActiveRecord::Rollback
       end
