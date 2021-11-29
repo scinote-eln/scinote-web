@@ -156,7 +156,8 @@
                         <% else %>
                           <input type="checkbox"
                                  value=""
-                                 disabled="disabled" />
+                                 disabled="disabled"
+                                 <%= "checked" if checklist_item.checked? %> />
                         <% end %>
                         <%= custom_auto_link(checklist_item.text, team: current_team) %>
                       </label>
