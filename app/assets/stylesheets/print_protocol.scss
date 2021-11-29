@@ -39,9 +39,9 @@ h3 {
 }
 
 hr {
+  background-color: $color-alto;
   border-width: 0;
   height: 1px;
-  background-color: $color-alto;
 }
 
 .print-step {
@@ -50,7 +50,7 @@ hr {
 
 .step-check-circle {
   border-radius: 50%;
-  border: 0.15em solid $color-alto;
+  border: .15em solid $color-alto;
   color: $color-white;
   display: inline-block;
   height: 1.1em;
@@ -82,9 +82,9 @@ hr {
   width: 1em;
 
   &.checked {
-    color: $color-white;
     background-color: $brand-primary;
     border-color: $brand-primary;
+    color: $color-white;
     font-size: 1em;
   }
 }
@@ -97,12 +97,15 @@ hr {
   &,
   td,
   th {
-    border: 1px solid #ccc;
+    border: 1px solid $color-silver-chalice;
   }
 
-  th { font-weight: normal }
+  th {
+    font-weight: normal;
+  }
 
-  th, td:first-child {
+  th,
+  td:first-child {
     background: $color-concrete;
   }
 
@@ -123,12 +126,13 @@ hr {
     padding: 1em;
   }
 
-  &.thumbnail, &.list {
-    border: 1px solid #ccc;
+  &.thumbnail,
+  &.list {
+    border: 1px solid $color-silver-chalice;
   }
 
   &.list {
-    padding: 0.5em 1em;
+    padding: .5em 1em;
   }
 
   &.inline {
@@ -169,11 +173,12 @@ hr {
   margin-bottom: 1em;
 }
 
-.print-comment-header{
+.print-comment-header {
   .user-avatar {
     float: left;
     margin-right: 1em;
   }
+
   .user-name {
     color: $color-silver-chalice;
   }
@@ -181,6 +186,6 @@ hr {
 
 .print-comment-footer {
   color: $color-silver-chalice;
-  font-size: 0.8em;
+  font-size: .8em;
   text-align: right;
 }
