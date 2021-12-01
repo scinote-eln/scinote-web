@@ -61,7 +61,7 @@ module UserAssignments
 
       user_assignment = UserAssignment.find_by!(user: @user, assignable: object)
 
-      if object.project.visibility == 'visible'
+      if object.project.visible?
         # if project is public, the assignment
         # will reset to the default public role
 

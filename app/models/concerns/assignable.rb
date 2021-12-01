@@ -36,6 +36,10 @@ module Assignable
       user_assignments.find_by(user: user)&.user_role
     end
 
+    def manually_assigned_users
+      User.joins(:user_assignments).where(user_assignments: { assigned: :manually, assignable: self })
+    end
+
     private
 
     def create_users_assignments

@@ -15,7 +15,7 @@ module UserAssignments
             assignable: project
           )
 
-          next if user_assignment.assigned == 'manually'
+          next if user_assignment.manually_assigned?
 
           user_assignment.update!(
             user_role: project.default_public_user_role,

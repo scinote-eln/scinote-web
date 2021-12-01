@@ -71,7 +71,7 @@ class ProjectMember
     ActiveRecord::Base.transaction do
       # if project is public, the assignment
       # will reset to the default public role
-      if @project.visibility == 'visible'
+      if @project.visible?
         user_assignment.update!(
           user_role: @project.default_public_user_role,
           assigned: :automatically

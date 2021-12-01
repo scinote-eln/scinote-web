@@ -4,12 +4,12 @@ module AccessPermissions
   class ProjectsController < ApplicationController
     before_action :set_project
     before_action :check_read_permissions, only: %i(show)
-    before_action :check_manage_permissions, only: %i(new create edit update destroy)
+    before_action :check_manage_permissions, only: %i(new create edit update destroy update_default_public_user_role)
 
     def new
       # automatically assigned or not assigned to project
       available_users = current_team.users.where(
-        id: @project.user_assignments.where(assigned: :automatically).select(:user_id)
+        id: @project.user_assignments.automatically_assigned.select(:user_id)
       ).or(
         current_team.users.where.not(id: @project.users.select(:id))
       )
