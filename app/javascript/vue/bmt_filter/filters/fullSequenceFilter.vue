@@ -35,7 +35,7 @@
     data() {
       return {
         sequence: "",
-        derivativesIncluded: false
+        derivativesIncluded: true
       }
     }
   }

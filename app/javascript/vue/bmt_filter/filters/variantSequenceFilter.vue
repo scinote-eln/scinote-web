@@ -15,21 +15,28 @@
             <input class="sci-input-field" @input="updateFilterData" type="text" v-model="distance" />
         </div>
         <label class="distance-attribute">
-          <input
-            @change="updateFilterData"
-            type="radio"
-            v-model="distanceType"
-            value="EXACT"
-          />
+          <span class="sci-radio-container">
+            <input
+              @change="updateFilterData"
+              type="radio"
+              class="sci-radio"
+              v-model="distanceType"
+              value="EXACT"
+            />
+            <label class="sci-radio-label"></label>
+          </span>
           <span>{{ i18n.t('repositories.show.bmt_search.filters.types.variantSequenceFilter.exact') }}</span>
         </label>
         <label class="distance-attribute">
-          <input
-            @change="updateFilterData"
-            type="radio"
-            v-model="distanceType"
-            value="MAX"
-          />
+          <span class="sci-radio-container">
+            <input
+              @change="updateFilterData"
+              type="radio"
+              v-model="distanceType"
+              value="MAX"
+            />
+            <label class="sci-radio-label"></label>
+          </span>
           <span>{{ i18n.t('repositories.show.bmt_search.filters.types.variantSequenceFilter.maximum') }}</span>
         </label>
       </label>
@@ -45,7 +52,7 @@
     data() {
       return {
         sequence: "",
-        distance: null,
+        distance: 3,
         distanceType: "EXACT"
       }
     }
