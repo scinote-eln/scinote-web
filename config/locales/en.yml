@@ -2527,6 +2527,7 @@ en:
     general_error: "Something went wrong"
 
   access_permissions:
+    everyone_else: "Everyone else at %{team_name}"
     create:
       success:
         one: "You have successfully granted access to %{count} member to the project."

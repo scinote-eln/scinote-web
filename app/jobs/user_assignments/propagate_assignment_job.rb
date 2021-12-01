@@ -59,7 +59,20 @@ module UserAssignments
       # also destroy user designations if it's a MyModule
       object.user_my_modules.where(user: @user).destroy_all if object.is_a?(MyModule)
 
-      UserAssignment.where(user: @user, assignable: object).destroy_all
+      user_assignment = UserAssignment.find_by!(user: @user, assignable: object)
+
+      if object.project.visible?
+        # if project is public, the assignment
+        # will reset to the default public role
+
+        user_assignment.update!(
+          user_role_id: object.project.default_public_user_role_id,
+          assigned: :automatically,
+          assigned_by: @assigned_by
+        )
+      else
+        user_assignment.destroy!
+      end
     end
   end
 end

@@ -20,7 +20,7 @@ module AccessPermissions
       if @error
         false
       else
-        @resource_members.map(&:create)
+        @resource_members.map(&:save)
         true
       end
     end

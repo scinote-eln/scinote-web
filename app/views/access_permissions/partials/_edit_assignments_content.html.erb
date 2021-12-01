@@ -6,10 +6,12 @@
     <h4 class="modal-title"><%= t '.title', resource_name: project.name %></h4>
   </div>
   <div class="modal-body">
-    <% project.users.each do |user| %>
-      <%= render('access_permissions/partials/project_member_field.html.erb', user: user, project: project, update_path: update_path) %>
+    <% project.manually_assigned_users.each do |user| %>
+      <%= render('access_permissions/partials/project_member_field', user: user, project: project, update_path: update_path) %>
     <% end %>
+    <%= render('access_permissions/partials/default_public_user_role_form', project: project) if project.visible? %>
   </div>
+
   <div class="modal-footer">
     <%= link_to new_resource_path, class: 'btn btn-default pull-left', data: { action: 'swap-remote-container', target: '#user_assignments_modal' } do %>
       <i class="fas fa-plus"></i>
