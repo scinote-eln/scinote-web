@@ -1394,7 +1394,15 @@ en:
         clear: "Clear"
         add_filter: "Add filter"
         apply: "Apply"
-
+      repository_filter:
+        enter_value: "Enter text"
+        filters:
+            types:
+              RepositoryAssetValue:
+                operators:
+                  file_contains: "File contains"
+                  file_attached: "File is attached"
+                  file_not_attached: "File is not attached"
       bmt_search:
         bmt_filter: "Biomolecule filter"
         save_filters: "Save filters"

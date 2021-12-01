@@ -3,6 +3,10 @@
     <div class='filter-title'>{{ filter.column.name }}</div>
     <div class="filter-element">
       <div class="filter-body">
+        <component
+          :is="filter.column.data_type"
+          :filter="filter"
+          @filter:update="updateFilter" />
       </div>
       <div class="filter-remove">
         <button class="btn btn-light icon-btn" @click="$emit('filter:delete')">
@@ -15,6 +19,9 @@
 </template>
 
 <script>
+  // filter types
+  import RepositoryAssetValue from 'vue/repository_filter/filters/repositoryAssetValue.vue'
+
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
 
   export default {
@@ -26,12 +33,13 @@
       return {}
     },
     components: {
-      DropdownSelector
+      DropdownSelector,
+      RepositoryAssetValue
     },
     methods: {
       updateFilter(value) {
+        this.$emit('filter:update', value)
       }
     }
   }
 </script>
-  

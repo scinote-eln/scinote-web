@@ -16,6 +16,7 @@
         v-for="(filter, index) in filters"
         :key="filter.id"
         :filter.sync="filters[index]"
+        @filter:update="updateFilter"
         @filter:delete="filters.splice(index, 1)"
       />
     </div>
@@ -64,7 +65,12 @@
     methods: {
       addFilter(column) {
         const id = this.filters.length ? this.filters[this.filters.length - 1].id + 1 : 1
-        this.filters.push({ id: id, column: column, data: {} });
+        this.filters.push({ id: id, column: column, isBlank: true, data: {} });
+      },
+      updateFilter(filter) {
+        const index = this.filters.findIndex((f) => f.id === filter.id);
+        this.filters[index].data = filter.data;
+        this.filters[index].isBlank = filter.isBlank;
       },
       clearFilters() {
         this.filters = [];

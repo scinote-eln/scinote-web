@@ -32,6 +32,10 @@
         type: String,
         default: 'simple'
       },
+      disableSearch: {
+        type: Boolean,
+        default: false
+      },
       onChange: Function
 
     },
@@ -41,6 +45,7 @@
         singleSelect: this.singleSelect,
         closeOnSelect: this.closeOnSelect,
         selectAppearance: this.selectAppearance,
+        disableSearch: this.disableSearch,
         onChange: () => {
           if (this.onChange) this.onChange();
           this.selectChanged(dropdownSelector.getValues(`#${this.selectorId}`))
