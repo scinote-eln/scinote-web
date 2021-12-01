@@ -1,56 +1,47 @@
 <template>
   <div class="filter-attributes">
     <DropdownSelector
+      :disableSearch="true"
       :options="this.operators"
       :selectorId="`OperatorSelector${this.filter.id}`"
       @dropdown:changed="updateOperator"
     />
     <div class="sci-input-container">
       <input
-        @input="updateInput"
+        @input="updateFilter"
         class="sci-input-field"
         type="text"
         name="value"
         v-model="value"
-        :placeholder= "'Enter ' + this.filter.column.name"
+        :placeholder= "this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryTextValue.input_placeholder',{name: this.filter.column.name})"
       />
     </div>
   </div>
 </template>
 
 <script>
-  //import FilterMixin from 'vue/bmt_filter/mixins/filter.js'
+  import FilterMixin from 'vue/repository_filter/mixins/filter.js'
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
   export default {
     name: 'RepositoryTextValue',
-    //mixins: [FilterMixin],
-    props: {
-      filter: Object
-    },
+    mixins: [FilterMixin],
     data() {
       return {
         operators: [
-          { value: 'contain', label: 'Contains' },
-          { value: 'not_contain', label: 'Doesn\'t contain' },
-          { value: 'empty', label: 'Is empty' }
+          { value: 'contain', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryTextValue.operators.contain') },
+          { value: 'not_contain', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryTextValue.operators.not_contain') },
+          { value: 'empty', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryTextValue.operators.empty') }
         ],
-        operator: this.filter.data.operator,
-        value: this.filter.data.value
+        operator: 'contain',
+        value: ''
       }
     },
     components: {
       DropdownSelector
     },
-    methods: {
-      updateOperator(operator)  {
-        this.operator = operator;
-        this.updateFilter();
-      },
-      updateFilter() {
-        this.$emit('filter:updateData', {
-          operator: this.operator,
-          value: this.value
-        })
+    computed: {
+      isBlank(){
+        return this.operator == 'contain' && !this.value;
       }
     }
   }

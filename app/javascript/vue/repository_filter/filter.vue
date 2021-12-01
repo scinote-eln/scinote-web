@@ -32,7 +32,7 @@
     },
     components: {
       DropdownSelector,
-      RepositoryAssetValue
+      RepositoryAssetValue,
       RepositoryTextValue
     },
     methods: {

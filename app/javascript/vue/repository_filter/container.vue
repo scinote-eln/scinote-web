@@ -72,11 +72,6 @@
         this.filters[index].data = filter.data;
         this.filters[index].isBlank = filter.isBlank;
       },
-      updateFilter(filter) {
-        this.filters.find((f) => f.id === filter.id).data = filter.data;
-        this.$emit('filters:update', this.searchJSON.filters);
-      },
-
       clearFilters() {
         this.filters = [];
         this.$emit('filters:clear');
