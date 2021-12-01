@@ -163,6 +163,10 @@ en:
               disabled: 'Webhooks are disabled'
             url:
               not_valid: 'Not valid URL'
+        connection:
+          attributes:
+            output_id:
+              creates_cycle: "mustn't create cycle"
 
   helpers:
     label:
