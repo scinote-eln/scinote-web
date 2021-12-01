@@ -2524,6 +2524,7 @@ en:
   move_to_project_service:
     project_permission_error: "No permission to create experiments at project"
     my_modules_permission_error: "No manage permissions on tasks"
+    general_error: "Something went wrong"
 
   access_permissions:
     create:
