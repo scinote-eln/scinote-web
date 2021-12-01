@@ -1410,6 +1410,15 @@ en:
                   contain: "Contains"
                   not_contain: "Doesn't contain"
                   empty: "Is empty"
+              RepositoryNumberValue:
+                 input_placeholder: "Enter %{name}"
+                 operators:
+                   equal: "Equal to"
+                   not_equal: "Not equal to"
+                   greater: "Greater than"
+                   less: "Less than"
+                   less_equal: "Less than or equal to"
+                   between: "Between"
       bmt_search:
         bmt_filter: "Biomolecule filter"
         save_filters: "Save filters"

@@ -7,13 +7,13 @@
       @dropdown:changed="updateOperator"
     />
     <div class="sci-input-container">
-      <input
+      <input 
         @input="updateFilter"
         class="sci-input-field"
         type="text"
         name="value"
         v-model="value"
-        :placeholder= "this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryTextValue.input_placeholder',{name: this.filter.column.name})"
+        :placeholder= "this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.input_placeholder',{name: this.filter.column.name})"
       />
     </div>
   </div>

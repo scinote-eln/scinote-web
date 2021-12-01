@@ -22,6 +22,7 @@
   // filter types
   import RepositoryAssetValue from 'vue/repository_filter/filters/repositoryAssetValue.vue'
   import RepositoryTextValue from 'vue/repository_filter/filters/repositoryTextValue.vue'
+  import RepositoryNumberValue from 'vue/repository_filter/filters/repositoryNumberValue.vue'
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
 
 
@@ -33,10 +34,12 @@
     components: {
       DropdownSelector,
       RepositoryAssetValue,
-      RepositoryTextValue
+      RepositoryTextValue,
+      RepositoryNumberValue
     },
     methods: {
       updateFilter(value) {
+        console.log(value);
         this.$emit('filter:update', value)
       }
     }
