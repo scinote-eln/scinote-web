@@ -4,7 +4,7 @@ module AccessPermissions
   class ProjectsController < ApplicationController
     before_action :set_project
     before_action :check_read_permissions, only: %i(show)
-    before_action :check_manage_permissions, only: %i(new create edit update destroy update_default_public_user_role)
+    before_action :check_manage_permissions, except: %i(show)
 
     def new
       # automatically assigned or not assigned to project
