@@ -261,6 +261,7 @@ Rails.application.routes.draw do
 
     namespace :access_permissions do
       resources :projects, defaults: { format: 'json' } do
+        put :update_default_public_user_role, on: :member
         resources :experiments, only: %i(show update edit) do
           resources :my_modules, only: %i(show update edit)
         end
