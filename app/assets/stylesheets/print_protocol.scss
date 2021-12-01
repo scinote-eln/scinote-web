@@ -1,0 +1,191 @@
+@import "shared_styles/constants/*";
+@import "constants";
+
+@page {
+  size: A4;
+  margin: 8mm;
+}
+
+body {
+  font-family: Lato, "Open Sans", Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.print-protocol-header {
+  font-size: .8em;
+
+  img {
+    height: .8em;
+  }
+}
+
+h1 {
+  font-size: 1.5em;
+}
+
+h2 {
+  font-size: 1.3em;
+
+  .fa-check-circle {
+    color: $brand-success;
+    font-size: 1.3em;
+  }
+}
+
+h3 {
+  font-size: 1em;
+}
+
+hr {
+  background-color: $color-alto;
+  border-width: 0;
+  height: 1px;
+}
+
+.print-step {
+  margin: 5em 0;
+}
+
+.step-check-circle {
+  border-radius: 50%;
+  border: .15em solid $color-alto;
+  color: $color-white;
+  display: inline-block;
+  height: 1.1em;
+  text-align: center;
+  vertical-align: text-bottom;
+  width: 1.1em;
+
+  &.checked {
+    background-color: $brand-success;
+    border-color: $brand-success;
+  }
+}
+
+.print-checklist-item {
+  margin-bottom: 1em;
+
+  span {
+    display: inline-block;
+    vertical-align: top;
+  }
+}
+
+.checklist-checkbox {
+  border: .15em solid $color-alto;
+  border-radius: .2em;
+  display: inline-block;
+  height: 1em;
+  text-align: center;
+  width: 1em;
+
+  &.checked {
+    background-color: $brand-primary;
+    border-color: $brand-primary;
+    color: $color-white;
+    font-size: 1em;
+  }
+}
+
+.print-table {
+  border-collapse: collapse;
+  text-align: center;
+  width: 100%;
+
+  &,
+  td,
+  th {
+    border: 1px solid $color-silver-chalice;
+  }
+
+  th {
+    font-weight: normal;
+  }
+
+  th,
+  td:first-child {
+    background: $color-concrete;
+  }
+
+  td {
+    padding: .15em .3em;
+  }
+}
+
+.print-asset {
+  margin: 1em;
+
+  p {
+    font-style: italic;
+  }
+
+  &.thumbnail {
+    float: left;
+    padding: 1em;
+  }
+
+  &.thumbnail,
+  &.list {
+    border: 1px solid $color-silver-chalice;
+  }
+
+  &.list {
+    padding: .5em 1em;
+  }
+
+  &.inline {
+    margin: 5em 0;
+    text-align: center;
+
+    img {
+      max-width: 100%;
+    }
+  }
+}
+
+.print-thumbnails {
+  clear: both;
+  overflow: hidden;
+}
+
+.print-asset-icon {
+  display: inline-block;
+  font-size: $font-size-h2;
+  text-align: center;
+  width: 24px;
+
+  .fa-file-pdf {
+    color: $pdf-color;
+  }
+
+  .fa-image {
+    color: $brand-primary;
+  }
+}
+
+.print-comments {
+  margin-bottom: 5em;
+}
+
+.print-comment-container {
+  margin-bottom: 1em;
+}
+
+.print-comment-header {
+  .user-avatar {
+    float: left;
+    margin-right: 1em;
+  }
+
+  .user-name {
+    color: $color-silver-chalice;
+  }
+}
+
+.print-comment-footer {
+  color: $color-silver-chalice;
+  font-size: .8em;
+  text-align: right;
+}

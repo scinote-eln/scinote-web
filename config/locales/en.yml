@@ -2002,6 +2002,16 @@ en:
       unchangable_error_message: "Predefined roles can not be changed!"
 
   protocols:
+    print:
+      title: "Print protocol"
+      button: "Print"
+      modal:
+        title: "Print protocol"
+        content: "Select what to include in the printed version of this protocol."
+        include_comments: "Include comments when printing"
+      header:
+        printed_from: "Printed from"
+        print_info: "on %{datetime} by %{full_name}"
     protocols_io_import:
       title_too_long: "... Text is too long so we had to cut it off."
       too_long: "... <span class='label label-warning'>Text is too long so we had to cut it off.</span>"

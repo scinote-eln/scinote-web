@@ -11,6 +11,8 @@ class ProtocolsController < ApplicationController
   include TeamsHelper
   include CommentHelper
 
+  layout 'protocols/print', only: :print
+
   before_action :check_create_permissions, only: %i(
     create_new_modal
     create
@@ -106,6 +108,11 @@ class ProtocolsController < ApplicationController
         }
       end
     end
+  end
+
+  def print
+    @protocol = Protocol.find(params[:id])
+    render_403 && return unless @protocol.my_module.blank? || can_read_protocol_in_module?(@protocol)
   end
 
   def linked_children
