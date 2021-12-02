@@ -7,7 +7,16 @@
 </p>
 
 <h1><%= @protocol.name || @protocol.my_module.name %></h1>
-<div><%= smart_annotation_parser(@protocol.description.html_safe, current_team).html_safe %></div>
+<div>
+  <% if @protocol.description.present? %>
+    <%= custom_auto_link(@protocol.tinymce_render(:description),
+                          simple_format: false,
+                          tags: %w(img),
+                          team: current_team) %>
+  <% else %>
+    <em><%= t('my_modules.protocols.protocol_status_bar.no_description') %></em>
+  <% end %>
+</div>
 <% @protocol.steps.order(position: :asc).each do |step| %>
   <div class="print-step">
     <h2>
@@ -16,7 +25,18 @@
       </div>
       <%= step.position + 1 %>. <%= step.name %>
     </h2>
-    <div><%= smart_annotation_parser(step.description.html_safe, current_team).html_safe %></div>
+    <div>
+      <% if step.description.blank? %>
+        <em><%= t('protocols.steps.no_description') %></em>
+      <% else %>
+        <div class="ql-editor">
+          <%= custom_auto_link(step.tinymce_render(:description),
+                                simple_format: false,
+                                tags: %w(img),
+                                team: current_team) %>
+        </div>
+      <% end %>
+    </div>
 
     <% step.checklists.each do |checklist| %>
       <div class="print-checklist">
@@ -63,23 +83,28 @@
     <% step.assets.where(view_mode: "inline").each do |asset| %>
         <div class="print-asset inline">
           <div class="print-asset-image">
-            <%= image_tag asset.blob.url %>
-            <p><%= asset.blob.filename %></p>
+            <% if asset.previewable? %>
+              <%= image_tag asset.large_preview %>
+            <% end %>
+            <p><%= asset.render_file_name %></p>
           </div>
         </div>
+        <div class="page-break"></div>
     <% end %>
     <% step.assets.where(view_mode: "list").each do |asset| %>
         <div class="print-asset list">
           <span class="print-asset-icon"><%= file_extension_icon_html(asset) %></span>
-          <span><%= asset.blob.filename %></span>
+          <span><%= asset.render_file_name %></span>
         </div>
     <% end %>
     <div class="print-thumbnails">
       <% step.assets.where(view_mode: "thumbnail").each do |asset| %>
         <div class="print-asset thumbnail">
           <div class="print-asset-image">
-            <%= image_tag asset.blob.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT).processed %>
-            <p><%= asset.blob.filename %></p>
+            <% if asset.previewable? %>
+              <%= image_tag asset.blob.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT).processed %>
+            <% end %>
+            <p><%= asset.render_file_name %></p>
           </div>
         </div>
       <% end %>
@@ -112,4 +137,5 @@
     </div>
   <% end %>
   <hr>
+  <div class="page-break"></div>
 <% end %>
