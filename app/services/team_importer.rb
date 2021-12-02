@@ -192,9 +192,9 @@ class TeamImporter
         
         # handle the permissions for newly created experiment
         user = User.find(user_id)
-        UserAssignments::GenerateUserAssignmentsJob.perform_later(experiment, user)
+        UserAssignments::GenerateUserAssignmentsJob.perform_now(experiment, user)
         experiment.my_modules.each do |my_module|
-          UserAssignments::GenerateUserAssignmentsJob.perform_later(my_module, user)
+          UserAssignments::GenerateUserAssignmentsJob.perform_now(my_module, user)
         end
         puts "Imported experiment: #{experiment.id}"
         return experiment
