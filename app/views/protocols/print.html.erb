@@ -7,7 +7,7 @@
 </p>
 
 <h1><%= @protocol.name || @protocol.my_module.name %></h1>
-<div><%= @protocol.description.html_safe %></div>
+<div><%= smart_annotation_parser(@protocol.description.html_safe, current_team).html_safe %></div>
 <% @protocol.steps.order(position: :asc).each do |step| %>
   <div class="print-step">
     <h2>
@@ -16,11 +16,11 @@
       </div>
       <%= step.position + 1 %>. <%= step.name %>
     </h2>
-    <div><%= step.description.html_safe %></div>
+    <div><%= smart_annotation_parser(step.description.html_safe, current_team).html_safe %></div>
 
     <% step.checklists.each do |checklist| %>
       <div class="print-checklist">
-      <h3><%= checklist.name %></h3>
+      <h3><%= smart_annotation_parser(checklist.name, current_team).html_safe %></h3>
         <% checklist.checklist_items.order(position: :asc).each do |checklist_item| %>
           <div class="print-checklist-item">
             <span class="checklist-checkbox <%= 'checked' if checklist_item.checked %>">
@@ -28,7 +28,7 @@
                 ✓
               <% end %>
             </span>
-            <span><%= checklist_item.text %></span>
+            <span><%= smart_annotation_parser(checklist_item.text, current_team).html_safe %></span>
           </div>
         <% end %>
       </div>
@@ -36,7 +36,7 @@
 
     <% step.tables.each do |table| %>
       <% table_data = JSON.parse(table.contents)["data"] %>
-      <h3><%= table.name %></h3>
+      <h3><%= smart_annotation_parser(table.name, current_team).html_safe %></h3>
       <table class="print-table">
         <thead>
           <tr>
@@ -99,7 +99,7 @@
           </div>
           <div class="print-comment-body">
             <div class="comment-message">
-              <%= comment.message %>
+              <%= smart_annotation_parser(comment.message, current_team).html_safe %>
             </div>
             <div class="print-comment-footer">
               <div class="print-comment-create-date">
