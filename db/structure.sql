@@ -2004,6 +2004,74 @@ ALTER SEQUENCE public.repository_status_values_id_seq OWNED BY public.repository
 
 
 --
+-- Name: repository_table_filter_elements; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_table_filter_elements (
+    id bigint NOT NULL,
+    repository_table_filter_id bigint,
+    repository_column_id bigint,
+    operator integer,
+    parameters jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_table_filter_elements_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_table_filter_elements_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_table_filter_elements_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_table_filter_elements_id_seq OWNED BY public.repository_table_filter_elements.id;
+
+
+--
+-- Name: repository_table_filters; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_table_filters (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    default_columns jsonb DEFAULT '{}'::jsonb NOT NULL,
+    repository_id bigint,
+    created_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_table_filters_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_table_filters_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_table_filters_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_table_filters_id_seq OWNED BY public.repository_table_filters.id;
+
+
+--
 -- Name: repository_table_states; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3505,6 +3573,20 @@ ALTER TABLE ONLY public.repository_status_values ALTER COLUMN id SET DEFAULT nex
 
 
 --
+-- Name: repository_table_filter_elements id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_table_filter_elements ALTER COLUMN id SET DEFAULT nextval('public.repository_table_filter_elements_id_seq'::regclass);
+
+
+--
+-- Name: repository_table_filters id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_table_filters ALTER COLUMN id SET DEFAULT nextval('public.repository_table_filters_id_seq'::regclass);
+
+
+--
 -- Name: repository_table_states id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4157,6 +4239,22 @@ ALTER TABLE ONLY public.repository_status_items
 
 ALTER TABLE ONLY public.repository_status_values
     ADD CONSTRAINT repository_status_values_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repository_table_filter_elements repository_table_filter_elements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_table_filter_elements
+    ADD CONSTRAINT repository_table_filter_elements_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repository_table_filters repository_table_filters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_table_filters
+    ADD CONSTRAINT repository_table_filters_pkey PRIMARY KEY (id);
 
 
 --
@@ -4999,6 +5097,13 @@ CREATE INDEX index_on_repository_checklist_value_id ON public.repository_checkli
 
 
 --
+-- Name: index_on_repository_table_filter_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_on_repository_table_filter_id ON public.repository_table_filter_elements USING btree (repository_table_filter_id);
+
+
+--
 -- Name: index_project_folders_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5640,6 +5745,27 @@ CREATE INDEX index_repository_status_values_on_created_by_id ON public.repositor
 --
 
 CREATE INDEX index_repository_status_values_on_last_modified_by_id ON public.repository_status_values USING btree (last_modified_by_id);
+
+
+--
+-- Name: index_repository_table_filter_elements_on_repository_column_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_table_filter_elements_on_repository_column_id ON public.repository_table_filter_elements USING btree (repository_column_id);
+
+
+--
+-- Name: index_repository_table_filters_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_table_filters_on_created_by_id ON public.repository_table_filters USING btree (created_by_id);
+
+
+--
+-- Name: index_repository_table_filters_on_repository_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_table_filters_on_repository_id ON public.repository_table_filters USING btree (repository_id);
 
 
 --
@@ -7226,6 +7352,14 @@ ALTER TABLE ONLY public.protocols
 
 
 --
+-- Name: repository_table_filters fk_rails_c2b1aff901; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_table_filters
+    ADD CONSTRAINT fk_rails_c2b1aff901 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: active_storage_attachments fk_rails_c3b3935057; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7781,7 +7915,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210812095254'),
 ('20210825112050'),
 ('20210906132120'),
-('20211103115450');
->>>>>>> features/bmt-search
+('20211103115450'),
+('20211123103711');
 
 

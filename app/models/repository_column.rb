@@ -14,6 +14,7 @@ class RepositoryColumn < ApplicationRecord
   has_many :repository_checklist_items, -> { order('data ASC') }, dependent: :destroy,
                                                                   index_errors: true,
                                                                   inverse_of: :repository_column
+  has_many :repository_table_filter_elements, dependent: :destroy
 
   accepts_nested_attributes_for :repository_status_items, allow_destroy: true
   accepts_nested_attributes_for :repository_list_items, allow_destroy: true
