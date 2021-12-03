@@ -6,6 +6,11 @@
   margin: 8mm;
 }
 
+.page-break {
+  clear: both;
+  page-break-after: always;
+}
+
 body {
   font-family: Lato, "Open Sans", Arial, Helvetica, sans-serif;
   font-size: 16px;
@@ -89,7 +94,7 @@ hr {
   }
 }
 
-.print-table {
+table {
   border-collapse: collapse;
   text-align: center;
   width: 100%;
@@ -122,8 +127,20 @@ hr {
   }
 
   &.thumbnail {
-    float: left;
-    padding: 1em;
+    align-items: flex-end;
+    display: flex;
+    justify-content: center;
+    padding: 1em 1em 0;
+    text-align: center;
+    width: 15%;
+
+    img {
+      max-width: 100%;
+    }
+
+    .print-asset-image {
+      flex-basis: .25;
+    }
   }
 
   &.thumbnail,
@@ -146,8 +163,10 @@ hr {
 }
 
 .print-thumbnails {
-  clear: both;
-  overflow: hidden;
+  align-items: stretch;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
 }
 
 .print-asset-icon {
@@ -188,4 +207,19 @@ hr {
   color: $color-silver-chalice;
   font-size: .8em;
   text-align: right;
+}
+
+.global-avatar-container.smart-annotation {
+  img {
+    margin-right: .2em;
+    vertical-align: middle;
+    width: 1.2em;
+  }
+}
+
+.ht_clone_top,
+.ht_clone_bottom,
+.ht_clone_left,
+.ht_clone_top_left_corner {
+  display: none;
 }

@@ -6,8 +6,17 @@
   <span><%= t('.header.print_info', datetime: l(DateTime.current, format: :full), full_name: current_user.full_name) %></span>
 </p>
 
-<h1><%= @protocol.name || @protocol.my_module.name %></h1>
-<div><%= @protocol.description.html_safe %></div>
+<h1><%= @protocol.linked? ? protocol_name(@protocol.parent) : @protocol.name || @protocol.my_module.name %></h1>
+<div>
+  <% if @protocol.description.present? %>
+    <%= custom_auto_link(@protocol.tinymce_render(:description),
+                          simple_format: false,
+                          tags: %w(img),
+                          team: current_team) %>
+  <% else %>
+    <em><%= t('my_modules.protocols.protocol_status_bar.no_description') %></em>
+  <% end %>
+</div>
 <% @protocol.steps.order(position: :asc).each do |step| %>
   <div class="print-step">
     <h2>
@@ -16,11 +25,22 @@
       </div>
       <%= step.position + 1 %>. <%= step.name %>
     </h2>
-    <div><%= step.description.html_safe %></div>
+    <div>
+      <% if step.description.blank? %>
+        <em><%= t('protocols.steps.no_description') %></em>
+      <% else %>
+        <div class="ql-editor">
+          <%= custom_auto_link(step.tinymce_render(:description),
+                                simple_format: false,
+                                tags: %w(img),
+                                team: current_team) %>
+        </div>
+      <% end %>
+    </div>
 
     <% step.checklists.each do |checklist| %>
       <div class="print-checklist">
-      <h3><%= checklist.name %></h3>
+      <h3><%= smart_annotation_parser(checklist.name, current_team).html_safe %></h3>
         <% checklist.checklist_items.order(position: :asc).each do |checklist_item| %>
           <div class="print-checklist-item">
             <span class="checklist-checkbox <%= 'checked' if checklist_item.checked %>">
@@ -28,58 +48,51 @@
                 ✓
               <% end %>
             </span>
-            <span><%= checklist_item.text %></span>
+            <span><%= smart_annotation_parser(checklist_item.text, current_team).html_safe %></span>
           </div>
         <% end %>
       </div>
     <% end %>
 
     <% step.tables.each do |table| %>
-      <% table_data = JSON.parse(table.contents)["data"] %>
-      <h3><%= table.name %></h3>
-      <table class="print-table">
-        <thead>
-          <tr>
-            <th></th>
-            <% col = "A" %>
-            <% table_data[0].length.times do %>
-              <th><%= col %></th>
-              <% col.succ! %>
-            <% end %>
-          </tr>
-        </thead>
-        <tbody>
-          <% table_data.each_with_index do |tr, row| %>
-            <tr>
-              <td><%= row + 1 %></td>
-              <% tr.each do |td| %>
-                <td><%= td %></td>
-              <% end %>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
+      <strong>
+        <%= auto_link(simple_format(table.name),
+                            link: :urls,
+                            html: { target: '_blank' }) %>
+      </strong>
+      <div class="print-table">
+        <div class="page-break"></div>
+        <div data-role="hot-table" class="hot-table">
+          <%= hidden_field(table, :contents, value: table.contents_utf_8, class: "hot-contents") %>
+          <div data-role="step-hot-table" class="step-result-hot-table"></div>
+        </div>
+      </div>
     <% end %>
     <% step.assets.where(view_mode: "inline").each do |asset| %>
         <div class="print-asset inline">
           <div class="print-asset-image">
-            <%= image_tag asset.blob.url %>
-            <p><%= asset.blob.filename %></p>
+            <% if asset.previewable? %>
+              <%= image_tag asset.large_preview %>
+            <% end %>
+            <p><%= asset.render_file_name %></p>
           </div>
         </div>
+        <div class="page-break"></div>
     <% end %>
     <% step.assets.where(view_mode: "list").each do |asset| %>
         <div class="print-asset list">
           <span class="print-asset-icon"><%= file_extension_icon_html(asset) %></span>
-          <span><%= asset.blob.filename %></span>
+          <span><%= asset.render_file_name %></span>
         </div>
     <% end %>
     <div class="print-thumbnails">
       <% step.assets.where(view_mode: "thumbnail").each do |asset| %>
         <div class="print-asset thumbnail">
           <div class="print-asset-image">
-            <%= image_tag asset.blob.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT).processed %>
-            <p><%= asset.blob.filename %></p>
+            <% if asset.previewable? %>
+              <%= image_tag asset.blob.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT).processed %>
+            <% end %>
+            <p><%= asset.render_file_name %></p>
           </div>
         </div>
       <% end %>
@@ -99,7 +112,7 @@
           </div>
           <div class="print-comment-body">
             <div class="comment-message">
-              <%= comment.message %>
+              <%= smart_annotation_parser(comment.message, current_team).html_safe %>
             </div>
             <div class="print-comment-footer">
               <div class="print-comment-create-date">
@@ -112,4 +125,5 @@
     </div>
   <% end %>
   <hr>
+  <div class="page-break"></div>
 <% end %>
