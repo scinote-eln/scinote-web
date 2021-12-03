@@ -21,6 +21,9 @@ window.initRepositoryFilter = () => {
       'filter-container': FilterContainer
     },
     methods: {
+      updateFilters(filters) {
+        this.filters = filters;
+      }
     }
   });
 

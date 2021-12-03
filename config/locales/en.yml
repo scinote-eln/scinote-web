@@ -1385,6 +1385,7 @@ en:
         archived_by: "by"
       filter_inventory_items: "Filter items"
       no_items: "No items here"
+
       no_items_matched: "No items matched your search request"
       no_archived_items: "No archived items here"
       no_archived_items_matched: "No archived items matched your search request"
@@ -1403,6 +1404,21 @@ en:
                   file_contains: "File contains"
                   file_attached: "File is attached"
                   file_not_attached: "File is not attached"
+              RepositoryTextValue:
+                input_placeholder: "Enter %{name}"
+                operators:
+                  contain: "Contains"
+                  not_contain: "Doesn't contain"
+                  empty: "Is empty"
+              RepositoryNumberValue:
+                 input_placeholder: "Enter %{name}"
+                 operators:
+                   equal: "Equal to"
+                   not_equal: "Not equal to"
+                   greater: "Greater than"
+                   less: "Less than"
+                   less_equal: "Less than or equal to"
+                   between: "Between"
       bmt_search:
         bmt_filter: "Biomolecule filter"
         save_filters: "Save filters"

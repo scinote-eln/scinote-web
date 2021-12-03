@@ -1,0 +1,91 @@
+<template>
+  <div class="filter-attributes">
+    <DropdownSelector
+      :disableSearch="true"
+      :options="this.operators"
+      :selectorId="`OperatorSelector${this.filter.id}`"
+      @dropdown:changed="updateOperator"
+    />
+    <div v-if="operator !== 'between'" class="sci-input-container">
+      <input
+        @input="updateFilter"
+        class="sci-input-field"
+        type="number"
+        name="value"
+        v-model="value"
+        :placeholder= "this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.input_placeholder',{name: this.filter.column.name})"
+      />
+    </div>
+    <div v-else class="range-selector">
+      <div class="sci-input-container">
+        <input
+          @input="updateRange"
+          class="sci-input-field"
+          type="number"
+          name="from"
+          v-model="from"
+
+        />
+      </div>
+      -
+      <div class="sci-input-container">
+        <input
+          @input="updateRange"
+          class="sci-input-field"
+          type="number"
+          name="to"
+          v-model="to"
+        />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import FilterMixin from 'vue/repository_filter/mixins/filter.js'
+  import DropdownSelector from 'vue/shared/dropdown_selector.vue'
+  export default {
+    name: 'RepositoryNumberValue',
+    mixins: [FilterMixin],
+    data() {
+      return {
+        operators: [
+          { value: 'equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.operators.equal')},
+          { value: 'unequal_to', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.operators.not_equal') },
+          { value: 'greater_than', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.operators.greater') },
+          { value: 'less_than', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.operators.less') },
+          { value: 'less_than_or_equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.operators.less_equal') },
+          { value: 'between', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.operators.between') }
+        ],
+        operator: 'equal_to',
+        value: '',
+        from: '',
+        to: ''
+      }
+    },
+    components: {
+      DropdownSelector
+    },
+    methods: {
+      updateRange(value) {
+        this.value = {
+          from: this.from,
+          to: this.to
+        }
+        this.updateFilter();
+      }
+    },
+    watch: {
+      operator() {
+        if(this.operator !== 'between' && !(typeof this.value === 'string')) this.value = '';
+        if(this.operator === 'between') this.value = {to: '', from: ''};
+
+      }
+    },
+    computed: {
+      isBlank(){
+        return this.operator == 'equal' && !this.value;
+      }
+    }
+  }
+</script>
