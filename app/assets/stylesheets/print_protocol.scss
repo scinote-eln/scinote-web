@@ -130,11 +130,9 @@ hr {
     align-items: flex-end;
     display: flex;
     justify-content: center;
-    padding: 1em 1em 0 1em;
-    width: 10em;
+    padding: 1em 1em 0;
     text-align: center;
     width: 15%;
-    text-align: center;
 
     img {
       max-width: 100%;
@@ -214,7 +212,7 @@ hr {
 .global-avatar-container.smart-annotation {
   img {
     margin-right: .2em;
-    width: 1.2em;
     vertical-align: middle;
+    width: 1.2em;
   }
 }
