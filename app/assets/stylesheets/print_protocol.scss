@@ -94,28 +94,30 @@ hr {
   }
 }
 
-table {
-  border-collapse: collapse;
-  text-align: center;
-  width: 100%;
+.print-table {
+  table {
+    border-collapse: collapse;
+    text-align: center;
+    width: 100%;
 
-  &,
-  td,
-  th {
-    border: 1px solid $color-silver-chalice;
-  }
+    &,
+    td,
+    th {
+      border: 1px solid $color-silver-chalice;
+    }
 
-  th {
-    font-weight: normal;
-  }
+    th {
+      font-weight: normal;
+    }
 
-  th,
-  td:first-child {
-    background: $color-concrete;
-  }
+    th,
+    td:first-child {
+      background: $color-concrete;
+    }
 
-  td {
-    padding: .15em .3em;
+    td {
+      padding: .15em .3em;
+    }
   }
 }
 
