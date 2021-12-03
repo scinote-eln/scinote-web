@@ -94,7 +94,7 @@ hr {
   }
 }
 
-.print-table {
+table {
   border-collapse: collapse;
   text-align: center;
   width: 100%;
@@ -215,4 +215,11 @@ hr {
     vertical-align: middle;
     width: 1.2em;
   }
+}
+
+.ht_clone_top,
+.ht_clone_bottom,
+.ht_clone_left,
+.ht_clone_top_left_corner {
+  display: none;
 }

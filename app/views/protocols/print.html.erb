@@ -55,30 +55,18 @@
     <% end %>
 
     <% step.tables.each do |table| %>
-      <% table_data = JSON.parse(table.contents)["data"] %>
-      <h3><%= smart_annotation_parser(table.name, current_team).html_safe %></h3>
-      <table class="print-table">
-        <thead>
-          <tr>
-            <th></th>
-            <% col = "A" %>
-            <% table_data[0].length.times do %>
-              <th><%= col %></th>
-              <% col.succ! %>
-            <% end %>
-          </tr>
-        </thead>
-        <tbody>
-          <% table_data.each_with_index do |tr, row| %>
-            <tr>
-              <td><%= row + 1 %></td>
-              <% tr.each do |td| %>
-                <td><%= td %></td>
-              <% end %>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
+      <strong>
+        <%= auto_link(simple_format(table.name),
+                            link: :urls,
+                            html: { target: '_blank' }) %>
+      </strong>
+      <div class="print-table">
+        <div class="page-break"></div>
+        <div data-role="hot-table" class="hot-table">
+          <%= hidden_field(table, :contents, value: table.contents_utf_8, class: "hot-contents") %>
+          <div data-role="step-hot-table" class="step-result-hot-table"></div>
+        </div>
+      </div>
     <% end %>
     <% step.assets.where(view_mode: "inline").each do |asset| %>
         <div class="print-asset inline">

@@ -3,10 +3,47 @@
   <head>
     <title><%= t("protocols.print.title") %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <%= javascript_include_tag 'application' %>
+    <%= javascript_include_tag "handsontable.full" %>
+    <%= javascript_include_tag "lodash" %>
+    <%= javascript_include_tag "numeral" %>
+    <%= javascript_include_tag "numeric" %>
+    <%= javascript_include_tag "md5" %>
+    <%= javascript_include_tag "jstat" %>
+    <%= javascript_include_tag "formula" %>
+    <%= javascript_include_tag "parser" %>
+    <%= javascript_include_tag "ruleJS" %>
+    <%= javascript_include_tag "big.min" %>
+    <%= javascript_include_tag "handsontable.formula" %>
+    <%= stylesheet_link_tag "handsontable.formula", media: 'print, screen' %>
     <%= stylesheet_link_tag 'print_protocol', media: 'print, screen' %>
     <body>
       <%= yield %>
       <script>
+        $("[data-role='hot-table']").each(function()  {
+          var $container = $(this).find("[data-role='step-hot-table']");
+          var contents = $(this).find('.hot-contents');
+
+          $container.handsontable({
+            startRows: <%= Constants::HANDSONTABLE_INIT_ROWS_CNT %>,
+            startCols: <%= Constants::HANDSONTABLE_INIT_COLS_CNT %>,
+            rowHeaders: true,
+            colHeaders: true,
+            fillHandle: false,
+            formulas: true,
+            readOnly: true
+          });
+          var hot = $container.handsontable('getInstance');
+
+          if (contents.attr("value")) {
+            var data = JSON.parse(contents.attr("value"));
+            if (Array.isArray(data.data)) hot.loadData(data.data);
+            setTimeout(() => {
+              hot.render()
+            }, 0)
+          }
+        });
+
         window.print();
         window.onfocus=function(){ window.close(); }
       </script>
