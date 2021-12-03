@@ -50,14 +50,14 @@
     data() {
       return {
         operators: [
-          { value: 'equal', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.operators.equal')},
-          { value: 'not_equal', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.operators.not_equal') },
-          { value: 'greater', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.operators.greater') },
-          { value: 'less', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.operators.less') },
-          { value: 'less_equal', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.operators.less_equal') },
+          { value: 'equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.operators.equal')},
+          { value: 'unequal_to', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.operators.not_equal') },
+          { value: 'greater_than', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.operators.greater') },
+          { value: 'less_than', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.operators.less') },
+          { value: 'less_than_or_equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.operators.less_equal') },
           { value: 'between', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.operators.between') }
         ],
-        operator: 'equal',
+        operator: 'equal_to',
         value: '',
         from: '',
         to: ''

@@ -7,7 +7,7 @@
       @dropdown:changed="updateOperator"
     />
     <div class="sci-input-container">
-      <input 
+      <input
         @input="updateFilter"
         class="sci-input-field"
         type="text"
@@ -28,11 +28,11 @@
     data() {
       return {
         operators: [
-          { value: 'contain', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryTextValue.operators.contain') },
-          { value: 'not_contain', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryTextValue.operators.not_contain') },
+          { value: 'contains', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryTextValue.operators.contain') },
+          { value: 'doesnt_contain', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryTextValue.operators.not_contain') },
           { value: 'empty', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryTextValue.operators.empty') }
         ],
-        operator: 'contain',
+        operator: 'contains',
         value: ''
       }
     },
@@ -41,7 +41,7 @@
     },
     computed: {
       isBlank(){
-        return this.operator == 'contain' && !this.value;
+        return this.operator == 'contains' && !this.value;
       }
     }
   }
