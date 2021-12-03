@@ -5,17 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <%= javascript_include_tag 'application' %>
     <%= javascript_include_tag "handsontable.full" %>
-    <%= javascript_include_tag "lodash" %>
-    <%= javascript_include_tag "numeral" %>
-    <%= javascript_include_tag "numeric" %>
-    <%= javascript_include_tag "md5" %>
-    <%= javascript_include_tag "jstat" %>
-    <%= javascript_include_tag "formula" %>
-    <%= javascript_include_tag "parser" %>
-    <%= javascript_include_tag "ruleJS" %>
-    <%= javascript_include_tag "big.min" %>
-    <%= javascript_include_tag "handsontable.formula" %>
-    <%= stylesheet_link_tag "handsontable.formula", media: 'print, screen' %>
+    <%= render 'shared/formulas_libraries' %>
     <%= stylesheet_link_tag 'print_protocol', media: 'print, screen' %>
     <body>
       <%= yield %>
