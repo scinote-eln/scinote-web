@@ -4,11 +4,12 @@ module UserAssignments
   class PropagateAssignmentJob < ApplicationJob
     queue_as :high_priority
 
-    def perform(resource, user, user_role, assigned_by, destroy: false)
+    def perform(resource, user, user_role, assigned_by, options = {})
       @user = user
       @user_role = user_role
       @assigned_by = assigned_by
-      @destroy = destroy
+      @destroy = options.fetch(:destroy, false)
+      @remove_from_team = options.fetch(:remove_from_team, false)
       @resource = resource
 
       ActiveRecord::Base.transaction do
@@ -36,7 +37,7 @@ module UserAssignments
 
       child_associations.find_each do |child_association|
         if @destroy
-          destroy_user_assignment(child_association)
+          destroy_or_update_user_assignment(child_association)
         else
           create_or_update_user_assignment(child_association)
         end
@@ -55,13 +56,14 @@ module UserAssignments
       user_assignment.save!
     end
 
-    def destroy_user_assignment(object)
+    def destroy_or_update_user_assignment(object)
       # also destroy user designations if it's a MyModule
       object.user_my_modules.where(user: @user).destroy_all if object.is_a?(MyModule)
 
-      user_assignment = UserAssignment.find_by!(user: @user, assignable: object)
+      user_assignment = object.user_assignments.find { |ua| ua.user_id == @user.id }
+      return if user_assignment.blank?
 
-      if object.project.visible?
+      if object.project.visible? && !@remove_from_team
         # if project is public, the assignment
         # will reset to the default public role
 
