@@ -31,6 +31,7 @@ module Experiments
             raise
           end
           sync_user_assignments(my_module)
+          clean_up_user_my_modules(my_module)
           move_tags!(my_module)
         end
 
@@ -117,6 +118,10 @@ module Experiments
       )
 
       UserAssignments::GenerateUserAssignmentsJob.perform_later(object, @user)
+    end
+
+    def clean_up_user_my_modules(my_module)
+      my_module.user_my_modules.where.not(user_id: @project.users.select(:id)).destroy_all
     end
 
     def track_activity
