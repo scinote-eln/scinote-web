@@ -18,7 +18,7 @@ class UserTeam < ApplicationRecord
 
   def destroy_associations
     # Destroy the user from all team's projects
-    team.projects.joins(:user_projects).where(user_projects: { user: user }).destroy_all
+    user.user_projects.joins(:project).where(project: team.projects).destroy_all
     # destroy all assignments
     UserAssignments::RemoveUserAssignmentJob.perform_now(user, team)
   end
