@@ -1,5 +1,5 @@
-@import "shared_styles/constants/*";
-@import "constants";
+@import "../shared_styles/constants/*";
+@import "../constants";
 
 @page {
   size: A4;
@@ -54,8 +54,8 @@ hr {
 }
 
 .step-check-circle {
-  border-radius: 50%;
   border: .15em solid $color-alto;
+  border-radius: 50%;
   color: $color-white;
   display: inline-block;
   height: 1.1em;
