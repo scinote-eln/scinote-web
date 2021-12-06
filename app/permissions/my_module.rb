@@ -4,12 +4,28 @@ Canaid::Permissions.register_for(MyModule) do
   # Module, its experiment and its project must be active for all the specified
   # permissions
   %i(manage_my_module
+     manage_my_module_protocol
      manage_my_module_users
+     manage_my_module_designated_users
      assign_my_module_repository_rows
+     manage_my_module_repository_rows
+     create_results
      create_my_module_comments
+     create_comments_in_my_module_steps
+     create_my_module_result_comments
      create_my_module_repository_snapshots
      manage_my_module_repository_snapshots
-     update_my_module_status)
+     update_my_module_start_date
+     update_my_module_due_date
+     complete_my_module
+     update_my_module_description
+     manage_my_module_tags
+     update_my_module_status
+     manage_my_module_steps
+     complete_my_module_steps
+     uncomplete_my_module_steps
+     check_my_module_steps
+     uncheck_my_module_steps)
     .each do |perm|
     can perm do |_, my_module|
       my_module.active? &&
