@@ -1398,6 +1398,22 @@ en:
       repository_filter:
         enter_value: "Enter text"
         filters:
+            operators:
+              contains: "Contains"
+              does_not_contain: "Does not contain"
+              equal_to: "Equal to"
+              unequal_to: "Not equal to"
+              greater_than: "Greater than"
+              greater_than_or_equal_to: "Greater than or equal to"
+              less_than: "Less than"
+              less_than_or_equal_to: "Less than or equal to"
+              between: "Between"
+              today: "Today"
+              yesterday: "Yesterday"
+              last_week: "Last week"
+              this_month: "This month"
+              this_year: "This year"
+              last_year: "Last year"
             types:
               RepositoryAssetValue:
                 operators:
