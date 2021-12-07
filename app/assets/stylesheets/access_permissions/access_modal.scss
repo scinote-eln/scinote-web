@@ -24,14 +24,6 @@
     width: 200px;
   }
 
-  .permission-object-tag {
-    @include font-small;
-    background: $color-concrete;
-    border-radius: $border-radius-tag;
-    cursor: pointer;
-    padding: .25em;
-  }
-
   .member-item,
   .user-assignment-info,
   .user-assignment-controls {
@@ -76,4 +68,12 @@
   hr {
     margin: 1em 0;
   }
+}
+
+.permission-object-tag {
+  @include font-small;
+  background: $color-concrete;
+  border-radius: $border-radius-tag;
+  cursor: pointer;
+  padding: .25em;
 }
