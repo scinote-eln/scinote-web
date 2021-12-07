@@ -11,7 +11,8 @@ window.initRepositoryFilter = () => {
     data: () => {
       return {
         filters: [],
-        columns: []
+        columns: [],
+        my_modules: []
       };
     },
     created() {
@@ -25,6 +26,10 @@ window.initRepositoryFilter = () => {
         this.filters = filters;
       }
     }
+  });
+
+  $.get($('#filterContainer').data('my-modules-url'), function(data) {
+    repositoryFilterContainer.my_modules = data;
   });
 
   // Replace with remote endpoint

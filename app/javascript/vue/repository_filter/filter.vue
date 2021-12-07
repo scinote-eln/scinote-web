@@ -6,6 +6,7 @@
         <component
           :is="filter.column.data_type"
           :filter="filter"
+          :my_modules='my_modules'
           @filter:update="updateFilter" />
       </div>
       <div class="filter-remove">
@@ -23,6 +24,7 @@
   import RepositoryAssetValue from 'vue/repository_filter/filters/repositoryAssetValue.vue'
   import RepositoryTextValue from 'vue/repository_filter/filters/repositoryTextValue.vue'
   import RepositoryNumberValue from 'vue/repository_filter/filters/repositoryNumberValue.vue'
+  import RepositoryMyModuleValue from 'vue/repository_filter/filters/repositoryMyModuleValue.vue'
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
 
 
@@ -30,16 +32,17 @@
     name: "FilterElement",
     props: {
       filter: Object,
+      my_modules: Array
     },
     components: {
       DropdownSelector,
       RepositoryAssetValue,
       RepositoryTextValue,
-      RepositoryNumberValue
+      RepositoryNumberValue,
+      RepositoryMyModuleValue
     },
     methods: {
       updateFilter(value) {
-        console.log(value);
         this.$emit('filter:update', value)
       }
     }

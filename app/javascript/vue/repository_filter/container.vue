@@ -16,6 +16,7 @@
         v-for="(filter, index) in filters"
         :key="filter.id"
         :filter.sync="filters[index]"
+        :my_modules.sync= "my_modules"
         @filter:update="updateFilter"
         @filter:delete="filters.splice(index, 1)"
       />
@@ -55,6 +56,7 @@
       }
     },
     props: {
+      my_modules: Array,
       container: Object,
       savedFilters: Array,
       columns: Array

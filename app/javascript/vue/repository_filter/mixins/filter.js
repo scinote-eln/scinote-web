@@ -1,6 +1,7 @@
 export default {
   props: {
-    filter: Object
+    filter: Object,
+    my_modules: Array
   },
   created() {
     this.operator = this.operator || this.filter.data.operator;
