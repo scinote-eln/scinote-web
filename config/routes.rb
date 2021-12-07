@@ -548,6 +548,7 @@ Rails.application.routes.draw do
            as: 'table_index',
            defaults: { format: 'json' }
       member do
+        get :assigned_my_modules
         get :load_table
       end
       # Save repository table state

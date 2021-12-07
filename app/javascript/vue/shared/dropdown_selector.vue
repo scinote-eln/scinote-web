@@ -1,7 +1,18 @@
 <template>
   <div class="dropdown-selector">
-    <select :id="this.selectorId">
-      <option
+    <select :id="this.selectorId"
+            :data-select-by-group="groupSelector"
+            :data-combine-tags="dataCombineTags"
+            :data-select-multiple-all-selected="dataSelectMultipleAllSelected"
+            :data-select-multiple-name="dataSelectMultipleName"
+            :data-placeholder="placeholder"
+    >
+      <optgroup v-if="groupSelector" v-for="group in this.options" :label="group.label">
+        <option v-for="option in group.options" :key="option.label" :value="option.value">
+          {{ option.label }}
+        </option>
+      </optgroup>
+      <option v-if="!groupSelector"
         v-for="option in this.options"
         :key="option.label" :value="option.value">
           {{ option.label }}
@@ -16,9 +27,17 @@
     props: {
       options: Array,
       selectorId: String,
+      groupSelector: {
+        type: Boolean,
+        default: false
+      },
       noEmptyOption: {
         type: Boolean,
         default: true
+      },
+      placeholder: {
+        type: String,
+        default: ''
       },
       singleSelect: {
         type: Boolean,
@@ -36,11 +55,28 @@
         type: Boolean,
         default: false
       },
+      optionClass: {
+        type: String,
+        default: ''
+      },
+      dataCombineTags: {
+        type: Boolean,
+        default: false
+      },
+      dataSelectMultipleAllSelected: {
+        type: String,
+        default: ''
+      },
+      dataSelectMultipleName: {
+        type: String,
+        default: ''
+      },
       onChange: Function
 
     },
     mounted: function() {
       dropdownSelector.init(`#${this.selectorId}`, {
+        optionClass: this.optionClass,
         noEmptyOption: this.noEmptyOption,
         singleSelect: this.singleSelect,
         closeOnSelect: this.closeOnSelect,

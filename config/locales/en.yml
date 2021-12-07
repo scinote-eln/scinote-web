@@ -1394,7 +1394,7 @@ en:
         title: "Filters"
         clear: "Clear"
         add_filter: "Add filter"
-        apply: "Apply"
+        apply: "Show results"
       repository_filter:
         enter_value: "Enter text"
         filters:
@@ -1411,14 +1411,23 @@ en:
                   not_contain: "Doesn't contain"
                   empty: "Is empty"
               RepositoryNumberValue:
-                 input_placeholder: "Enter %{name}"
-                 operators:
-                   equal: "Equal to"
-                   not_equal: "Not equal to"
-                   greater: "Greater than"
-                   less: "Less than"
-                   less_equal: "Less than or equal to"
-                   between: "Between"
+                input_placeholder: "Enter %{name}"
+                operators:
+                  equal: "Equal to"
+                  not_equal: "Not equal to"
+                  greater: "Greater than"
+                  less: "Less than"
+                  less_equal: "Less than or equal to"
+                  between: "Between"
+              RepositoryMyModuleValue:
+                select_placeholder: "Select task"
+                multiple_selected: "tasks selected"
+                all_selected: "All tasks selected"
+                operators:
+                  any_of: "Any of"
+                  all_of: "All of"
+                  none_of: "None of"
+
       bmt_search:
         bmt_filter: "Biomolecule filter"
         save_filters: "Save filters"
