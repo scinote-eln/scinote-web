@@ -44,6 +44,8 @@ module UserAssignments
 
         sync_resource_user_associations(child_association)
       end
+
+      destroy_or_update_user_assignment(resource) if resource.is_a?(Project) && @destroy
     end
 
     def create_or_update_user_assignment(object)
@@ -63,7 +65,7 @@ module UserAssignments
       user_assignment = object.user_assignments.find { |ua| ua.user_id == @user.id }
       return if user_assignment.blank?
 
-      if object.project.visible? && !@remove_from_team
+      if !object.is_a?(Project) && object.project.visible? && !@remove_from_team
         # if project is public, the assignment
         # will reset to the default public role
 
