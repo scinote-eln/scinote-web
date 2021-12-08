@@ -14,10 +14,10 @@
       :singleSelect="false"
       :closeOnSelect="false"
       :options="this.filter.column.items"
-      :dataSelectMultipleName="this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryListValue.multiple_selected')"
-      :dataSelectMultipleAllSelected="this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryListValue.all_selected')"
-      :selectorId="`DropdownSelector${this.filter.id}`"
-      :placeholder="this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryListValue.select_placeholder', {name: this.filter.column.name})"
+      :dataSelectMultipleName="this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryChecklistValue.multiple_selected')"
+      :dataSelectMultipleAllSelected="this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryChecklistValue.all_selected')"
+      :selectorId="`ChecklistSelector${this.filter.id}`"
+      :placeholder="this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryChecklistValue.select_placeholder', {name: this.filter.column.name})"
       @dropdown:changed="updateValue"
     />
   </div>
@@ -27,13 +27,14 @@
   import FilterMixin from 'vue/repository_filter/mixins/filter.js'
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
   export default {
-    name: 'RepositoryListValue',
+    name: 'RepositoryChecklistValue',
     mixins: [FilterMixin],
     data() {
       return {
         operators: [
-          { value: 'any_of', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryListValue.operators.any_of') },
-          { value: 'none_of', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryListValue.operators.none_of') }
+          { value: 'any_of', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryChecklistValue.operators.any_of') },
+          { value: 'all_of', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryChecklistValue.operators.all_of') },
+          { value: 'none_of', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryChecklistValue.operators.none_of') }
         ],
         operator: 'any_of',
         value: []

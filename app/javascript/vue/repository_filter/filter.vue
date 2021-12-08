@@ -29,6 +29,8 @@
   import RepositoryDateTimeValue from 'vue/repository_filter/filters/repositoryDateTimeValue.vue'
   import RepositoryTimeValue from 'vue/repository_filter/filters/repositoryTimeValue.vue'
   import RepositoryListValue from 'vue/repository_filter/filters/repositoryListValue.vue'
+  import RepositoryStatusValue from 'vue/repository_filter/filters/repositoryStatusValue.vue'
+  import RepositoryChecklistValue from 'vue/repository_filter/filters/repositoryChecklistValue.vue'
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
 
 
@@ -47,7 +49,9 @@
       RepositoryDateValue,
       RepositoryTimeValue,
       RepositoryDateTimeValue,
-      RepositoryListValue
+      RepositoryListValue,
+      RepositoryStatusValue,
+      RepositoryChecklistValue
     },
     methods: {
       updateFilter(value) {

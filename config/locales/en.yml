@@ -1443,6 +1443,21 @@ en:
                 operators:
                   any_of: "Any of"
                   none_of: "None of"
+              RepositoryStatusValue:
+                select_placeholder: "Select %{name}"
+                multiple_selected: "items selected"
+                all_selected: "All items selected"
+                operators:
+                  any_of: "Any of"
+                  none_of: "None of"
+              RepositoryChecklistValue:
+                select_placeholder: "Select %{name}"
+                multiple_selected: "items selected"
+                all_selected: "All items selected"
+                operators:
+                  any_of: "Any of"
+                  all_of: "All of"
+                  none_of: "None of"
 
       bmt_search:
         bmt_filter: "Biomolecule filter"
