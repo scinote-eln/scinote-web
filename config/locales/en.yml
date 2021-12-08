@@ -163,6 +163,10 @@ en:
               disabled: 'Webhooks are disabled'
             url:
               not_valid: 'Not valid URL'
+        connection:
+          attributes:
+            output_id:
+              creates_cycle: "mustn't create cycle"
 
   helpers:
     label:
@@ -1998,6 +2002,16 @@ en:
       unchangable_error_message: "Predefined roles can not be changed!"
 
   protocols:
+    print:
+      title: "Print protocol"
+      button: "Print"
+      modal:
+        title: "Print protocol"
+        content: "Select what to include in the printed version of this protocol."
+        include_comments: "Include comments when printing"
+      header:
+        printed_from: "Printed from"
+        print_info: "on %{datetime} by %{full_name}"
     protocols_io_import:
       title_too_long: "... Text is too long so we had to cut it off."
       too_long: "... <span class='label label-warning'>Text is too long so we had to cut it off.</span>"
@@ -2510,8 +2524,10 @@ en:
   move_to_project_service:
     project_permission_error: "No permission to create experiments at project"
     my_modules_permission_error: "No manage permissions on tasks"
+    general_error: "Something went wrong"
 
   access_permissions:
+    everyone_else: "Everyone else at %{team_name}"
     create:
       success:
         one: "You have successfully granted access to %{count} member to the project."

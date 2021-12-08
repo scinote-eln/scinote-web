@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= t("protocols.print.title") %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <%= javascript_include_tag 'application' %>
+    <%= javascript_include_tag "handsontable.full" %>
+    <%= render 'shared/formulas_libraries' %>
+    <%= stylesheet_link_tag 'layouts/print_protocol', media: 'print, screen' %>
+    <body>
+      <%= yield %>
+      <script>
+        $("[data-role='hot-table']").each(function()  {
+          var $container = $(this).find("[data-role='step-hot-table']");
+          var contents = $(this).find('.hot-contents');
+
+          $container.handsontable({
+            startRows: <%= Constants::HANDSONTABLE_INIT_ROWS_CNT %>,
+            startCols: <%= Constants::HANDSONTABLE_INIT_COLS_CNT %>,
+            rowHeaders: true,
+            colHeaders: true,
+            fillHandle: false,
+            formulas: true,
+            readOnly: true
+          });
+          var hot = $container.handsontable('getInstance');
+
+          if (contents.attr("value")) {
+            var data = JSON.parse(contents.attr("value"));
+            if (Array.isArray(data.data)) hot.loadData(data.data);
+            setTimeout(() => {
+              hot.render()
+            }, 0)
+          }
+        });
+
+        window.print();
+      </script>
+    </body>
+</html>

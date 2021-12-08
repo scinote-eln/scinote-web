@@ -15,8 +15,11 @@
             </span>
           </div>
           <div class="col-xs-10" style="line-height: 15px">
-            <span><%= user.full_name %></span><br>
-            <span class="user-role"><%= @my_module.role_for_user(user).name %></span>
+            <span><%= user.full_name %></span>
+            <br>
+            <span class="user-role">
+              <small class="text-muted"><%= user_assignment_resource_role_name(user, user_my_module.my_module) %></small>
+            </span>
           </div>
         </div>
       </li>

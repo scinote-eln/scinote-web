@@ -9,14 +9,19 @@ module UserAssignments
       @assigned_by = assigned_by
 
       ActiveRecord::Base.transaction do
-        team.users.where.not(id: project.users.pluck(:id)).where.not(id: assigned_by.id).find_each do |user|
-          UserAssignment.create!(
+        team.users.where.not(id: assigned_by.id).find_each do |user|
+          user_assignment = UserAssignment.find_or_initialize_by(
             user: user,
-            assignable: project,
-            user_role: project.default_public_user_role,
-            assigned_by: @assigned_by,
-            assigned: :automatically
+            assignable: project
           )
+
+          next if user_assignment.manually_assigned?
+
+          user_assignment.update!(
+            user_role: project.default_public_user_role,
+            assigned_by: @assigned_by
+          )
+
           # make sure all related experiments and my modules are assigned
           UserAssignments::PropagateAssignmentJob.perform_later(
             project,

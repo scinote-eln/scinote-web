@@ -16,15 +16,9 @@ class UserTeam < ApplicationRecord
     I18n.t("user_teams.enums.role.#{role}")
   end
 
-
   def destroy_associations
     # Destroy the user from all team's projects
-    team.projects.each do |project|
-      up2 = (project.user_projects.select { |up| up.user == self.user }).first
-      if up2.present?
-        up2.destroy
-      end
-    end
+    user.user_projects.joins(:project).where(project: team.projects).destroy_all
     # destroy all assignments
     UserAssignments::RemoveUserAssignmentJob.perform_now(user, team)
   end

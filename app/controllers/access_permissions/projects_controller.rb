@@ -4,10 +4,16 @@ module AccessPermissions
   class ProjectsController < ApplicationController
     before_action :set_project
     before_action :check_read_permissions, only: %i(show)
-    before_action :check_manage_permissions, only: %i(new create edit update destroy)
+    before_action :check_manage_permissions, except: %i(show)
 
     def new
-      available_users = current_team.users.where.not(id: @project.users.pluck(:id))
+      # automatically assigned or not assigned to project
+      available_users = current_team.users.where(
+        id: @project.user_assignments.automatically_assigned.select(:user_id)
+      ).or(
+        current_team.users.where.not(id: @project.users.select(:id))
+      )
+
       @form = AccessPermissions::NewUserProjectForm.new(
         current_user,
         @project,
@@ -75,7 +81,16 @@ module AccessPermissions
       end
     end
 
+    def update_default_public_user_role
+      @project.update!(permitted_default_public_user_role_params)
+      UserAssignments::GroupAssignmentJob.perform_later(current_team, @project, current_user)
+    end
+
     private
+
+    def permitted_default_public_user_role_params
+      params.require(:project).permit(:default_public_user_role_id)
+    end
 
     def permitted_update_params
       params.require(:project_member)

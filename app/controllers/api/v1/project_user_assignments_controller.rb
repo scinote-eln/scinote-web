@@ -44,7 +44,7 @@ module Api
         project_member = ProjectMember.new(user, @project, current_user)
         project_member.assign = true
         project_member.user_role_id = user_project_params[:user_role_id]
-        project_member.create
+        project_member.save
 
         render jsonapi: project_member.user_assignment.reload,
                serializer: UserAssignmentSerializer,

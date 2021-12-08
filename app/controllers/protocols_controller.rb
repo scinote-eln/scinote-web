@@ -108,6 +108,12 @@ class ProtocolsController < ApplicationController
     end
   end
 
+  def print
+    @protocol = Protocol.find(params[:id])
+    render_403 && return unless @protocol.my_module.blank? || can_read_protocol_in_module?(@protocol)
+    render layout: 'protocols/print'
+  end
+
   def linked_children
     respond_to do |format|
       format.json do
