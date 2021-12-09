@@ -5,9 +5,9 @@ class ActivitiesService
     # Create condition for view permissions checking first
     visible_teams = user.teams.where(id: teams)
     visible_projects = Project.viewable_by_user(user, visible_teams)
-    visible_by_teams = Activity.where(project: nil, team_id: visible_teams.pluck(:id))
+    visible_by_teams = Activity.where(project: nil, team_id: visible_teams.select(:id))
                                .order(created_at: :desc)
-    visible_by_projects = Activity.where(project_id: visible_projects.pluck(:id))
+    visible_by_projects = Activity.where(project_id: visible_projects.select(:id))
                                   .order(created_at: :desc)
 
     query = Activity.from("((#{visible_by_teams.to_sql}) UNION ALL (#{visible_by_projects.to_sql})) AS activities")
