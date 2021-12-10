@@ -14,7 +14,10 @@
       </optgroup>
       <option v-if="!groupSelector"
         v-for="option in this.options"
-        :key="option.label" :value="option.value">
+        :key="option.label"
+        :value="option.value"
+        :selected="option.value == selectedValue"
+        :data-selected="option.value == selectedValue">
           {{ option.label }}
       </option>
     </select>
@@ -38,6 +41,10 @@
       placeholder: {
         type: String,
         default: ''
+      },
+      selectedValue: {
+        type: [String, Number, Boolean],
+        default: null
       },
       singleSelect: {
         type: Boolean,

@@ -25,6 +25,7 @@
   import RepositoryTextValue from 'vue/repository_filter/filters/repositoryTextValue.vue'
   import RepositoryNumberValue from 'vue/repository_filter/filters/repositoryNumberValue.vue'
   import RepositoryMyModuleValue from 'vue/repository_filter/filters/repositoryMyModuleValue.vue'
+  import RepositoryDateValue from 'vue/repository_filter/filters/repositoryDateValue.vue'
   import RepositoryListValue from 'vue/repository_filter/filters/repositoryListValue.vue'
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
 
@@ -41,6 +42,7 @@
       RepositoryTextValue,
       RepositoryNumberValue,
       RepositoryMyModuleValue,
+      RepositoryDateValue
       RepositoryListValue
     },
     methods: {

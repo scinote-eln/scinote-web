@@ -14,6 +14,7 @@
       data-columns-url="<%= describe_all_repository_repository_columns_path(@repository) %>"
       data-my-modules-url="<%= assigned_my_modules_repository_path(@repository) %>"
       data-datatable-id="#repository-table-<%= @repository.id %>"
+      data-date-format="<%= current_user.date_format.gsub(/\%/, '').upcase %>"
     >
       <filter-container
         :columns.sync="columns"

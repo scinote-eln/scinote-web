@@ -6,7 +6,7 @@ Vue.use(TurbolinksAdapter);
 Vue.prototype.i18n = window.I18n;
 
 window.initRepositoryFilter = () => {
-
+  Vue.prototype.dateFormat = $('#filterContainer').data('date-format')
   const defaultColumns = [
     { id: 'assigned', name: 'Assigned to task', data_type: 'RepositoryMyModuleValue' },
     { id: 'row_id', name: 'ID', data_type: 'RepositoryTextValue' },
