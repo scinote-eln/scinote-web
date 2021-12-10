@@ -40,7 +40,7 @@ class RepositoryColumnsController < ApplicationController
         id: column.id,
         name: escape_input(column.name),
         data_type: column.data_type,
-        items: column.items&.map { |item| { id: item.id, label: escape_input(item.data) } }
+        items: column.items&.map { |item| { value: item.id, label: escape_input(item.data) } }
       }
     end
     render json: { response: response_json }
