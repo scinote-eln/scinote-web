@@ -590,6 +590,7 @@ Rails.application.routes.draw do
           get :describe_all
         end
       end
+      resources :repository_table_filters, only: %i(index show create update destroy)
       resources :repository_rows, only: %i(create show update) do
         collection do
           get :print_modal
