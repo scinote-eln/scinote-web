@@ -274,6 +274,6 @@ module CommentHelper
   end
 
   def has_unseen_comments?(commentable)
-    commentable.comments.where('? = ANY (unseen_by)', current_user.id).any?
+    commentable.comments.any? { |comment| comment.unseen_by.include?(current_user.id) }
   end
 end

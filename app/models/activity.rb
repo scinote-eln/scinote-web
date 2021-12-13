@@ -112,14 +112,14 @@ class Activity < ApplicationRecord
   def self.url_search_query(filters)
     result = []
     filters.each do |filter, values|
-      result.push(values.to_query(filter))
+      result.push(values.map { |k, v| { k => v.collect(&:id) } }.to_query(filter))
     end
     if filters[:subjects]
       subject_labels = []
       filters[:subjects].each do |object, values|
         values.each do |value|
-          label = object.to_s.constantize.find_by_id(value).name
-          subject_labels.push({ value: value, label: label, object: object.downcase, group: '' }.as_json)
+          label = value.name
+          subject_labels.push({ value: value.id, label: label, object: object.downcase, group: '' }.as_json)
         end
       end
       result.push(subject_labels.to_query('subject_labels'))

@@ -20,7 +20,7 @@ module ViewableModel
   end
 
   def current_view_state(user)
-    state = view_states.where(user: user).take
+    state = view_states.find_by(user: user)
     state || view_states.create!(user: user, state: default_view_state)
   end
 end
