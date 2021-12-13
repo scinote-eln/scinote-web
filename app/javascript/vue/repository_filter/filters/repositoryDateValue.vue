@@ -10,10 +10,10 @@
     </div>
     <template v-if="!isPreset">
       <div class="filter-datepicker-input">
-        <DateTimePicker @change="updateDate" :selectorId="`DateTimePicker${filter.id}`" />
+        <DatePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`" />
       </div>
       <div class="filter-datepicker-to-input">
-        <DateTimePicker @change="updateDateTo" v-if="operator == 'between'" :selectorId="`DateTimePickerTo${filter.id}`" />
+        <DatePicker @change="updateDateTo" v-if="operator == 'between'" :selectorId="`DatePickerTo${filter.id}`" />
       </div>
     </template>
   </div>
@@ -22,10 +22,10 @@
 <script>
   import FilterMixin from 'vue/repository_filter/mixins/filter.js'
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
-  import DateTimePicker from 'vue/shared/date_time_picker.vue'
+  import DatePicker from 'vue/shared/date_picker.vue'
 
   export default {
-    name: 'RepositoryAssetValue',
+    name: 'RepositoryDateValue',
     mixins: [FilterMixin],
     props: {
       filter: Object
@@ -55,7 +55,7 @@
     },
     components: {
       DropdownSelector,
-      DateTimePicker
+      DatePicker
     },
     watch: {
       operator() {

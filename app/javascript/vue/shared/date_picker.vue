@@ -6,11 +6,10 @@
 
 <script>
   export default {
-    name: 'DateTimePicker',
+    name: 'DatePicker',
     props: {
       selectorId: { type: String, required: true },
-      useCurrent: { type: Boolean, default: true },
-      includeTime: { type: Boolean, default: false }
+      useCurrent: { type: Boolean, default: true }
     },
     mounted() {
       $("#" + this.selectorId).datetimepicker(
@@ -18,7 +17,7 @@
           useCurrent: this.useCurrent,
           ignoreReadonly: this.ignoreReadOnly,
           locale: this.i18n.locale,
-          format: this.includeTime ? this.dateFormat + ' mm:ss' : this.dateFormat
+          format: this.dateFormat
         }
       );
 

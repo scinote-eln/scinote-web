@@ -1,52 +1,41 @@
 <template>
   <div class="filter-attributes">
-    <DropdownSelector
+    <div class="filter-operator-select">
+      <DropdownSelector
       :disableSearch="true"
-      :options="this.operators"
-      :selectorId="`OperatorSelector${this.filter.id}`"
-      @dropdown:changed="updateOperator"
-    />
-    <div v-if="operator !== 'between'" class="sci-input-container">
-      <input
-        @input="updateFilter"
-        class="sci-input-field"
-        type="number"
-        name="value"
-        v-model="value"
-        :placeholder= "this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.input_placeholder',{name: this.filter.column.name})"
-      />
+      :options="operators"
+      :selectorId="`OperatorSelector${filter.id}`"
+      :selectedValue="operator"
+      @dropdown:changed="updateOperator" />
     </div>
-    <div v-else class="range-selector">
-      <div class="sci-input-container">
-        <input
-          @input="updateRange"
-          class="sci-input-field"
-          type="number"
-          name="from"
-          v-model="from"
-
-        />
+    <template v-if="operator !== 'between'" >
+      <div class="filter-timepicker-input">
+        <TimePicker :selectorId="`TimePicker${filter.id}`" @change="updateTime" />
+      </div>
+    </template>
+    <template v-if="operator == 'between'">
+      <div class="filter-timepicker-input">
+        <TimePicker :selectorId="`TimeFromPicker${filter.id}`" @change="updateTimeRange" />
       </div>
       -
-      <div class="sci-input-container">
-        <input
-          @input="updateRange"
-          class="sci-input-field"
-          type="number"
-          name="to"
-          v-model="to"
-        />
+      <div class="filter-timepicker-input">
+        <TimePicker :selectorId="`TimeToPicker${filter.id}`" @change="updateTimeRange" />
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
 <script>
   import FilterMixin from 'vue/repository_filter/mixins/filter.js'
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
+  import TimePicker from 'vue/shared/time_picker.vue'
+
   export default {
-    name: 'RepositoryNumberValue',
+    name: 'RepositoryTimeValue',
     mixins: [FilterMixin],
+    props: {
+      filter: Object
+    },
     data() {
       return {
         operators: [
@@ -59,22 +48,12 @@
           { value: 'between', label: this.i18n.t('repositories.show.repository_filter.filters.operators.between') }
         ],
         operator: 'equal_to',
-        value: '',
-        from: '',
-        to: ''
+        value: ''
       }
     },
     components: {
-      DropdownSelector
-    },
-    methods: {
-      updateRange(value) {
-        this.value = {
-          from: this.from,
-          to: this.to
-        }
-        this.updateFilter();
-      }
+      DropdownSelector,
+      TimePicker
     },
     watch: {
       operator() {
@@ -85,7 +64,21 @@
     },
     computed: {
       isBlank(){
-        return this.operator == 'equal' && !this.value;
+        return this.operator == 'equal_to' && !this.value;
+      }
+    },
+    methods: {
+      updateTime(value) {
+        console.log(value)
+        this.value = value
+        this.updateFilter()
+      },
+      updateTimeRange() {
+        this.value = {
+          from: $(`#TimeFromPicker${this.filter.id}`).val(),
+          to: $(`#TimeToPicker${this.filter.id}`).val()
+        }
+        this.updateFilter()
       }
     }
   }

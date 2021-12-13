@@ -22,7 +22,7 @@
       />
     </div>
     <div class="footer">
-      <div id="filtersColumnsDropdown" class="dropdown filters-columns-dropdown" @click="toggleColumnsFilters">
+      <div id="filtersColumnsDropdown" class="dropup filters-columns-dropdown" @click="toggleColumnsFilters">
         <button class="btn btn-secondary add-filter" >
           <i class="fas fa-plus"></i>
           {{ i18n.t('repositories.show.filters.add_filter') }}
