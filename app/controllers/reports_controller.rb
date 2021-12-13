@@ -360,6 +360,7 @@ class ReportsController < ApplicationController
                                     .with_granted_permissions(current_user, ProjectPermissions::READ)
                                     .merge(Experiment.active)
                                     .merge(MyModule.active)
+                                    .group(:id)
                                     .select(:id, :name)
   end
 
