@@ -86,10 +86,10 @@ class ProjectsOverviewService
 
   def fetch_project_records
     @team.projects
-         .includes(user_assignments: :user_role)
+         .includes(user_assignments: %i(user user_role), team: :user_teams)
+         .includes(:project_comments, experiments: { my_modules: { my_module_status: :my_module_status_implications } })
          .visible_to(@user, @team)
          .left_outer_joins(:project_comments)
-         .preload(team: :user_teams)
          .select('projects.*')
          .select('COUNT(DISTINCT comments.id) AS comment_count')
          .group('projects.id')
@@ -97,7 +97,7 @@ class ProjectsOverviewService
 
   def fetch_project_folder_records
     project_folders = @team.project_folders
-                           .preload(team: :user_teams)
+                           .includes(team: :user_teams)
                            .joins('LEFT OUTER JOIN project_folders child_folders
                                    ON child_folders.parent_folder_id = project_folders.id')
                            .left_outer_joins(:projects)

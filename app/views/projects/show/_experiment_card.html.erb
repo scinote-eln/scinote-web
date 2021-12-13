@@ -7,7 +7,7 @@
      data-restorable="<%= experiment.archived? && can_restore_experiment?(experiment) %>"
      data-duplicable="<%= can_clone_experiment?(experiment) %>">
   <div class="checkbox-cell table-cell">
-    <% if can_manage_project?(experiment.project) %>
+    <% if project_is_managable %>
       <div class="sci-checkbox-container">
         <input value="1" type="checkbox" class="sci-checkbox experiment-card-selector">
         <span class="sci-checkbox-label"></span>

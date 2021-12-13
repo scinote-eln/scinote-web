@@ -35,6 +35,8 @@ class ExperimentsOverviewService
   def fetch_records
     @project.experiments
             .joins(:project)
+            .includes(my_modules: { my_module_status: :my_module_status_implications })
+            .includes(workflowimg_attachment: :blob, user_assignments: %i(user_role user))
             .joins('LEFT OUTER JOIN my_modules AS active_tasks ON active_tasks.experiment_id = experiments.id ' \
                    'AND active_tasks.archived = FALSE')
             .joins('LEFT OUTER JOIN my_modules AS active_completed_tasks ON active_completed_tasks.experiment_id '\

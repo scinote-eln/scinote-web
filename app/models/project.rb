@@ -54,8 +54,6 @@ class Project < ApplicationRecord
   has_many :reports, inverse_of: :project, dependent: :destroy
   has_many :report_elements, inverse_of: :project, dependent: :destroy
 
-  default_scope { includes(user_assignments: :user_role) }
-
   accepts_nested_attributes_for :user_assignments,
                                 allow_destroy: true,
                                 reject_if: :all_blank

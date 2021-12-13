@@ -2,7 +2,7 @@
   <div class="archived-icon-plceholder">
     <i class="fas fa-archive"></i>
   </div>
-<% elsif experiment.my_modules.active.any? %>
+<% elsif experiment.my_modules.any?(&:active?) %>
   <% if experiment.workflowimg.attached? %>
     <div class="workflowimg-container" data-workflowimg-present="true">
       <%= render partial: 'projects/show/workflow_img.html.erb', locals: { experiment: experiment } %>

@@ -26,14 +26,13 @@ Canaid::Permissions.register_for(Project) do
 
   can :manage_project do |user, project|
     project.permission_granted?(user, ProjectPermissions::MANAGE) &&
-      MyModule.joins(experiment: :project)
-              .where(experiments: { project: project })
-              .preload(my_module_status: :my_module_status_implications)
-              .all? do |my_module|
-        if my_module.my_module_status
-          my_module.my_module_status.my_module_status_implications.all? { |implication| implication.call(my_module) }
-        else
-          true
+      project.experiments.each do |experiment|
+        experiment.my_modules.all? do |my_module|
+          if my_module.my_module_status
+            my_module.my_module_status.my_module_status_implications.all? { |implication| implication.call(my_module) }
+          else
+            true
+          end
         end
       end
   end
