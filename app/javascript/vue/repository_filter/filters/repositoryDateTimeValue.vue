@@ -10,10 +10,10 @@
     </div>
     <template v-if="!isPreset">
       <div class="filter-datepicker-input">
-        <DateTimePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`" :onlyDate="true" />
+        <DateTimePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`" />
       </div>
       <div class="filter-datepicker-to-input">
-        <DateTimePicker @change="updateDateTo" v-if="operator == 'between'" :selectorId="`DatePickerTo${filter.id}`" :onlyDate="true" />
+        <DateTimePicker @change="updateDateTo" v-if="operator == 'between'" :selectorId="`DatePickerTo${filter.id}`" />
       </div>
     </template>
   </div>
@@ -22,7 +22,7 @@
 <script>
   import FilterMixin from 'vue/repository_filter/mixins/filter.js'
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
-  import DateTimePicker from 'vue/shared/date_picker.vue'
+  import DateTimePicker from 'vue/shared/date_time_picker.vue'
 
   export default {
     name: 'RepositoryDateValue',
@@ -71,9 +71,11 @@
         switch(this.operator) {
           case "today":
             date = today;
+            dateTo = today
             break;
           case "yesterday":
             date = new Date(new Date().setDate(today.getDate() - 1));
+            dateTo = date;
             break;
           case "last_week":
             let monday = new Date(new Date().setDate(
@@ -98,8 +100,8 @@
             break;
         }
 
-        date && this.updateDate(date);
-        dateTo && this.updateDateTo(dateTo);
+        date && this.updateDate(new Date(date.setHours(0, 0, 0)));
+        dateTo && this.updateDateTo(new Date(dateTo.setHours(23, 59, 59)));
       }
     },
     computed: {
@@ -119,7 +121,7 @@
     },
     methods: {
       formattedDate(date) {
-        return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+        return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`
       },
       updateDate(date) {
         date = date && this.formattedDate(date);

@@ -10,16 +10,16 @@
     </div>
     <template v-if="operator !== 'between'" >
       <div class="filter-timepicker-input">
-        <TimePicker :selectorId="`TimePicker${filter.id}`" @change="updateTime" />
+        <DateTimePicker :selectorId="`TimePicker${filter.id}`" @change="updateTime" :timeOnly="true" />
       </div>
     </template>
     <template v-if="operator == 'between'">
       <div class="filter-timepicker-input">
-        <TimePicker :selectorId="`TimeFromPicker${filter.id}`" @change="updateTimeRange" />
+        <DateTimePicker :selectorId="`TimeFromPicker${filter.id}`" @change="updateTimeFrom" :timeOnly="true" />
       </div>
       -
       <div class="filter-timepicker-input">
-        <TimePicker :selectorId="`TimeToPicker${filter.id}`" @change="updateTimeRange" />
+        <DateTimePicker :selectorId="`TimeToPicker${filter.id}`" @change="updateTimeTo" :timeOnly="true" />
       </div>
     </template>
   </div>
@@ -28,7 +28,7 @@
 <script>
   import FilterMixin from 'vue/repository_filter/mixins/filter.js'
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
-  import TimePicker from 'vue/shared/time_picker.vue'
+  import DateTimePicker from 'vue/shared/date_time_picker.vue'
 
   export default {
     name: 'RepositoryTimeValue',
@@ -48,12 +48,14 @@
           { value: 'between', label: this.i18n.t('repositories.show.repository_filter.filters.operators.between') }
         ],
         operator: 'equal_to',
-        value: ''
+        value: '',
+        from: '',
+        to: '',
       }
     },
     components: {
       DropdownSelector,
-      TimePicker
+      DateTimePicker
     },
     watch: {
       operator() {
@@ -69,14 +71,22 @@
     },
     methods: {
       updateTime(value) {
-        console.log(value)
         this.value = value
+
         this.updateFilter()
+      },
+      updateTimeFrom(value) {
+        this.from = value;
+        this.updateTimeRange();
+      },
+      updateTimeTo(value) {
+        this.to = value;
+        this.updateTimeRange();
       },
       updateTimeRange() {
         this.value = {
-          from: $(`#TimeFromPicker${this.filter.id}`).val(),
-          to: $(`#TimeToPicker${this.filter.id}`).val()
+          from: this.from,
+          to: this.to
         }
         this.updateFilter()
       }

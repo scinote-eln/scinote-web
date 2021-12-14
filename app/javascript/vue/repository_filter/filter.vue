@@ -26,6 +26,7 @@
   import RepositoryNumberValue from 'vue/repository_filter/filters/repositoryNumberValue.vue'
   import RepositoryMyModuleValue from 'vue/repository_filter/filters/repositoryMyModuleValue.vue'
   import RepositoryDateValue from 'vue/repository_filter/filters/repositoryDateValue.vue'
+  import RepositoryDateTimeValue from 'vue/repository_filter/filters/repositoryDateTimeValue.vue'
   import RepositoryTimeValue from 'vue/repository_filter/filters/repositoryTimeValue.vue'
   import RepositoryListValue from 'vue/repository_filter/filters/repositoryListValue.vue'
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
@@ -45,6 +46,7 @@
       RepositoryMyModuleValue,
       RepositoryDateValue,
       RepositoryTimeValue,
+      RepositoryDateTimeValue,
       RepositoryListValue
     },
     methods: {
