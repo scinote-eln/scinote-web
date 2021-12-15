@@ -373,6 +373,23 @@ class RepositoriesController < ApplicationController
                  }
   end
 
+  def repository_users
+    users = User.where(id:
+      Repository.first.repository_rows
+                      .joins(params[:archived_by] ? :archived_by : :created_by)
+                      .select('users.id').distinct)
+
+    render json: { users: users.map do |u|
+                            {
+                              label: u.full_name,
+                              value: u.id,
+                              params: {
+                                email: u.email, avatar_url: u.avatar_url('icon_small')
+                              }
+                            }
+                          end }
+  end
+
   private
 
   def repostiory_import_actions

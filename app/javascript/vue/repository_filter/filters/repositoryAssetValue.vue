@@ -32,9 +32,9 @@
     data() {
       return {
         operators: [
-          { value: 'file_contains', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryAssetValue.operators.file_contains') },
-          { value: 'file_attached', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryAssetValue.operators.file_attached') },
-          { value: 'file_not_attached', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryAssetValue.operators.file_not_attached') }
+          { value: 'file_contains', label: this.i18n.t('repositories.show.repository_filter.filters.operators.file_contains') },
+          { value: 'file_attached', label: this.i18n.t('repositories.show.repository_filter.filters.operators.file_attached') },
+          { value: 'file_not_attached', label: this.i18n.t('repositories.show.repository_filter.filters.operators.file_not_attached') }
         ],
         operator: 'file_contains',
         value: ''

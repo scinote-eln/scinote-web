@@ -8,7 +8,7 @@
             :data-placeholder="placeholder"
     >
       <optgroup v-if="groupSelector" v-for="group in this.options" :label="group.label">
-        <option v-for="option in group.options" :key="option.label" :value="option.value">
+        <option v-for="option in group.options" :key="option.label" :value="option.value" :data-params="JSON.stringify(option.params)">
           {{ option.label }}
         </option>
       </optgroup>
@@ -17,7 +17,8 @@
         :key="option.label"
         :value="option.value"
         :selected="option.value == selectedValue"
-        :data-selected="option.value == selectedValue">
+        :data-selected="option.value == selectedValue"
+        :data-params="JSON.stringify(option.params)">
           {{ option.label }}
       </option>
     </select>
@@ -78,12 +79,16 @@
         type: String,
         default: ''
       },
+      optionLabel: {
+        type: Function
+      },
       onChange: Function
 
     },
     mounted: function() {
       dropdownSelector.init(`#${this.selectorId}`, {
         optionClass: this.optionClass,
+        optionLabel: this.optionLabel,
         noEmptyOption: this.noEmptyOption,
         singleSelect: this.singleSelect,
         closeOnSelect: this.closeOnSelect,
