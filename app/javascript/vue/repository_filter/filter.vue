@@ -51,7 +51,6 @@
     },
     methods: {
       updateFilter(value) {
-        console.log(value)
         this.$emit('filter:update', value)
       }
     }

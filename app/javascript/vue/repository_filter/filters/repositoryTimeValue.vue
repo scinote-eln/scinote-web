@@ -8,18 +8,12 @@
       :selectedValue="operator"
       @dropdown:changed="updateOperator" />
     </div>
-    <template v-if="operator !== 'between'" >
-      <div class="filter-timepicker-input">
-        <DateTimePicker :selectorId="`TimePicker${filter.id}`" @change="updateTime" :timeOnly="true" />
+    <template v-if="!isPreset">
+      <div class="filter-datepicker-input">
+        <DateTimePicker @change="updateDate" :selectorId="`TimePicker${filter.id}`" :timeOnly="true" />
       </div>
-    </template>
-    <template v-if="operator == 'between'">
-      <div class="filter-timepicker-input">
-        <DateTimePicker :selectorId="`TimeFromPicker${filter.id}`" @change="updateTimeFrom" :timeOnly="true" />
-      </div>
-      -
-      <div class="filter-timepicker-input">
-        <DateTimePicker :selectorId="`TimeToPicker${filter.id}`" @change="updateTimeTo" :timeOnly="true" />
+      <div class="filter-datepicker-to-input">
+        <DateTimePicker @change="updateDateTo" v-if="operator == 'between'" :selectorId="`TimePickerTo${filter.id}`" :timeOnly="true" />
       </div>
     </template>
   </div>
@@ -27,15 +21,13 @@
 
 <script>
   import FilterMixin from 'vue/repository_filter/mixins/filter.js'
+  import DateTimeFilterMixin from 'vue/repository_filter/mixins/filters/date_time_filter.js'
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
   import DateTimePicker from 'vue/shared/date_time_picker.vue'
 
   export default {
     name: 'RepositoryTimeValue',
-    mixins: [FilterMixin],
-    props: {
-      filter: Object
-    },
+    mixins: [FilterMixin, DateTimeFilterMixin],
     data() {
       return {
         operators: [
@@ -48,47 +40,18 @@
           { value: 'between', label: this.i18n.t('repositories.show.repository_filter.filters.operators.between') }
         ],
         operator: 'equal_to',
-        value: '',
-        from: '',
-        to: '',
+        date: null,
+        dateTo: null,
+        value: null
       }
     },
     components: {
       DropdownSelector,
       DateTimePicker
     },
-    watch: {
-      operator() {
-        if(this.operator !== 'between' && !(typeof this.value === 'string')) this.value = '';
-        if(this.operator === 'between') this.value = {to: '', from: ''};
-
-      }
-    },
-    computed: {
-      isBlank(){
-        return this.operator == 'equal_to' && !this.value;
-      }
-    },
     methods: {
-      updateTime(value) {
-        this.value = value
-
-        this.updateFilter()
-      },
-      updateTimeFrom(value) {
-        this.from = value;
-        this.updateTimeRange();
-      },
-      updateTimeTo(value) {
-        this.to = value;
-        this.updateTimeRange();
-      },
-      updateTimeRange() {
-        this.value = {
-          from: this.from,
-          to: this.to
-        }
-        this.updateFilter()
+      formattedDate(date) {
+        return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`
       }
     }
   }
