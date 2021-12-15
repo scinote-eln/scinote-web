@@ -549,6 +549,7 @@ Rails.application.routes.draw do
            defaults: { format: 'json' }
       member do
         get :assigned_my_modules
+        get :repository_users
         get :load_table
       end
       # Save repository table state

@@ -28,9 +28,9 @@
     data() {
       return {
         operators: [
-          { value: 'contains', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryTextValue.operators.contain') },
-          { value: 'doesnt_contain', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryTextValue.operators.not_contain') },
-          { value: 'empty', label: this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryTextValue.operators.empty') }
+          { value: 'contains', label: this.i18n.t('repositories.show.repository_filter.filters.operators.contain') },
+          { value: 'doesnt_contain', label: this.i18n.t('repositories.show.repository_filter.filters.operators.not_contain') },
+          { value: 'empty', label: this.i18n.t('repositories.show.repository_filter.filters.operators.empty') }
         ],
         operator: 'contains',
         value: ''

@@ -1414,6 +1414,10 @@ en:
               this_month: "This month"
               this_year: "This year"
               last_year: "Last year"
+              empty: "Is empty"
+              any_of: "Any of"
+              all_of: "All of"
+              none_of: "None of"
             types:
               RepositoryAssetValue:
                 operators:
@@ -1422,42 +1426,28 @@ en:
                   file_not_attached: "File is not attached"
               RepositoryTextValue:
                 input_placeholder: "Enter %{name}"
-                operators:
-                  contain: "Contains"
-                  not_contain: "Doesn't contain"
-                  empty: "Is empty"
               RepositoryNumberValue:
                 input_placeholder: "Enter %{name}"
               RepositoryMyModuleValue:
                 select_placeholder: "Select task"
                 multiple_selected: "tasks selected"
                 all_selected: "All tasks selected"
-                operators:
-                  any_of: "Any of"
-                  all_of: "All of"
-                  none_of: "None of"
               RepositoryListValue:
                 select_placeholder: "Select %{name}"
                 multiple_selected: "items selected"
                 all_selected: "All items selected"
-                operators:
-                  any_of: "Any of"
-                  none_of: "None of"
               RepositoryStatusValue:
                 select_placeholder: "Select %{name}"
                 multiple_selected: "items selected"
                 all_selected: "All items selected"
-                operators:
-                  any_of: "Any of"
-                  none_of: "None of"
               RepositoryChecklistValue:
                 select_placeholder: "Select %{name}"
                 multiple_selected: "items selected"
                 all_selected: "All items selected"
-                operators:
-                  any_of: "Any of"
-                  all_of: "All of"
-                  none_of: "None of"
+              RepositoryUserValue:
+                select_placeholder: "Select user"
+                multiple_selected: "users selected"
+                all_selected: "All users selected"
 
       bmt_search:
         bmt_filter: "Biomolecule filter"

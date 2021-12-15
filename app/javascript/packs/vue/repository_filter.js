@@ -12,7 +12,8 @@ window.initRepositoryFilter = () => {
     { id: 'row_id', name: 'ID', data_type: 'RepositoryTextValue' },
     { id: 'row_name', name: 'Name', data_type: 'RepositoryTextValue' },
     { id: 'added_on', name: 'Added on', data_type: 'RepositoryDateTimeValue' },
-    { id: 'added_by', name: 'Added by', data_type: 'RepositoryUserValue' }
+    { id: 'added_by', name: 'Added by', data_type: 'RepositoryUserValue' },
+    { id: 'archived_by', name: 'Archived by', data_type: 'RepositoryUserValue' }
   ];
   const repositoryFilterContainer = new Vue({
     el: '#filterContainer',
@@ -67,7 +68,8 @@ window.initRepositoryFilter = () => {
   });
 
   $.get($('#filterContainer').data('columns-url'), function(data) {
-    repositoryFilterContainer.columns = data.response.concat(defaultColumns).sort((a, b) => a.name > b.name ? 1 : -1);
+    let combinedColumns = data.response.concat(defaultColumns)
+    repositoryFilterContainer.columns = combinedColumns.sort((a, b) => a.name > b.name ? 1 : -1);
   });
 
   $('#filterContainer').on('click', (e) => {
