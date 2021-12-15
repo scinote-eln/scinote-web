@@ -438,7 +438,7 @@ class MyModule < ApplicationRecord
   def assign_default_status_flow
     return if my_module_status.present? || MyModuleStatusFlow.global.blank?
 
-    self.my_module_status = MyModuleStatusFlow.global.first.initial_status
+    self.my_module_status = MyModuleStatusFlow.global.last.initial_status
   end
 
   def check_status_conditions
