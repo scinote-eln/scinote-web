@@ -1428,13 +1428,6 @@ en:
                   empty: "Is empty"
               RepositoryNumberValue:
                 input_placeholder: "Enter %{name}"
-                operators:
-                  equal: "Equal to"
-                  not_equal: "Not equal to"
-                  greater: "Greater than"
-                  less: "Less than"
-                  less_equal: "Less than or equal to"
-                  between: "Between"
               RepositoryMyModuleValue:
                 select_placeholder: "Select task"
                 multiple_selected: "tasks selected"

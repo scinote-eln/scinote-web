@@ -10,10 +10,10 @@
     </div>
     <template v-if="!isPreset">
       <div class="filter-datepicker-input">
-        <DateTimePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`" :onlyDate="true" />
+        <DateTimePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`" />
       </div>
       <div class="filter-datepicker-to-input">
-        <DateTimePicker @change="updateDateTo" v-if="operator == 'between'" :selectorId="`DatePickerTo${filter.id}`" :onlyDate="true" />
+        <DateTimePicker @change="updateDateTo" v-if="operator == 'between'" :selectorId="`DatePickerTo${filter.id}`" />
       </div>
     </template>
   </div>
@@ -23,7 +23,7 @@
   import FilterMixin from 'vue/repository_filter/mixins/filter.js'
   import DateTimeFilterMixin from 'vue/repository_filter/mixins/filters/date_time_filter.js'
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
-  import DateTimePicker from 'vue/shared/date_picker.vue'
+  import DateTimePicker from 'vue/shared/date_time_picker.vue'
 
   export default {
     name: 'RepositoryDateValue',
@@ -57,7 +57,7 @@
     },
     methods: {
       formattedDate(date) {
-        return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+        return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`
       }
     }
   }

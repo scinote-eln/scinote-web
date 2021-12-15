@@ -1,32 +1,63 @@
 <template>
-  <div class="datepicker">
-      <input @change="update" type="datetime" class="form-control calendar-input" :id="this.selectorId" placeholder="" />
+  <div class="date-time-picker">
+    <DatePicker v-if="!timeOnly" @change="updateDate" :selectorId="`${this.selectorId}_Date`" />
+    <TimePicker v-if="!dateOnly" @change="updateTime" :selectorId="`${this.selectorId}_Time`" />
   </div>
 </template>
 
 <script>
+  import TimePicker from 'vue/shared/time_picker.vue'
+  import DatePicker from 'vue/shared/date_picker.vue'
+
   export default {
     name: 'DateTimePicker',
     props: {
-      selectorId: { type: String, required: true },
-      useCurrent: { type: Boolean, default: true },
-      includeTime: { type: Boolean, default: false }
+      dateOnly: { type: Boolean, default: false },
+      timeOnly: { type: Boolean, default: false },
+      selectorId: { type: String, required: true }
     },
-    mounted() {
-      $("#" + this.selectorId).datetimepicker(
-        {
-          useCurrent: this.useCurrent,
-          ignoreReadonly: this.ignoreReadOnly,
-          locale: this.i18n.locale,
-          format: this.includeTime ? this.dateFormat + ' mm:ss' : this.dateFormat
-        }
-      );
-
-      $("#" + this.selectorId).on('dp.change', (e) => this.update(e.date))
+    data() {
+      return {
+        date: '',
+        time: '',
+        datetime: ''
+      }
+    },
+    components: {
+      TimePicker,
+      DatePicker
     },
     methods: {
-      update(value) {
-        this.$emit('change', value.toDate());
+      updateDate(value) {
+        this.date = value;
+        this.updateDateTime();
+      },
+      updateTime(value) {
+        this.time = value;
+        this.updateDateTime();
+      },
+      updateDateTime() {
+        this.recalcTimestamp();
+        this.$emit('change', this.datetime);
+      },
+
+      isValidTime() {
+        return /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(this.time);
+      },
+      isValidDate() {
+        return (this.date instanceof Date) && !isNaN(this.date.getTime());
+      },
+      recalcTimestamp() {
+        let date = this.timeOnly ? new Date() : this.date;
+        if (!this.isValidTime()) {
+          date.setHours(0);
+          date.setMinutes(0);
+        } else {
+          date.setHours(this.time.split(':')[0]);
+          date.setMinutes(this.time.split(':')[1]);
+        }
+
+        this.datetime = date
       }
     }
   }

@@ -36,6 +36,11 @@
         margin-left: auto !important;
       }
 
+      .filters-columns-list {
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
       .column-filters-element {
         cursor: pointer;
         padding: .25em .5em;
