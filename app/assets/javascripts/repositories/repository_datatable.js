@@ -411,6 +411,10 @@ var RepositoryDatatable = (function(global) {
           if ($('[data-external-ids]').length) {
             d.external_ids = $('[data-external-ids]').attr('data-external-ids').split(',');
           }
+
+          if ($('[data-repository-filter-json]')) {
+            d.repository_filter_json = $('[data-repository-filter-json]').attr('data-repository-filter-json');
+          }
         },
         global: false,
         type: 'POST'

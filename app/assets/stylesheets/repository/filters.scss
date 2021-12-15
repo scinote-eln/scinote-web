@@ -2,6 +2,22 @@
 // scss-lint:disable NestingDepth
 
 .repository-show {
+  .active-filters {
+    position: relative;
+
+    &::after {
+      background: $brand-accent;
+      border-radius: 50%;
+      content: "";
+      display: block;
+      height: 8px;
+      position: absolute;
+      right: .3em;
+      top: .3em;
+      width: 8px;
+    }
+  }
+
   .filters-container {
     display: flex;
     flex-direction: column;

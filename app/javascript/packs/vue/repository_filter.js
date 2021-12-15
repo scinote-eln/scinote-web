@@ -29,9 +29,35 @@ window.initRepositoryFilter = () => {
     components: {
       'filter-container': FilterContainer
     },
+    computed: {
+      filtersJSON() {
+        return this.filters.map((f) => {
+          return {
+            repository_column_id: f.column.id,
+            operator: f.operator,
+            parameters: { ...f.data, isBlank: f.isBlank }
+          }
+        });
+      }
+    },
     methods: {
       updateFilters(filters) {
         this.filters = filters;
+      },
+      applyFilters() {
+        this.dataTableElement.attr('data-repository-filter-json', JSON.stringify(this.filtersJSON));
+        $('#filterContainer .dropdown-selector-container').removeClass('open');
+        $('#filtersDropdownButton').removeClass('open');
+        $('#filtersDropdownButton').addClass('active-filters');
+        this.reloadDataTable();
+      },
+      clearFilters() {
+        this.filters = [];
+        $('#filtersDropdownButton').removeClass('active-filters');
+        this.reloadDataTable();
+      },
+      reloadDataTable() {
+        this.dataTableElement.DataTable().ajax.reload();
       }
     }
   });
