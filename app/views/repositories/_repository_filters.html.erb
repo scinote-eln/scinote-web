@@ -19,6 +19,9 @@
       <filter-container
         :columns.sync="columns"
         :my_modules.sync="my_modules"
+        @filters:apply="applyFilters"
+        @filters:clear="clearFilters"
+        @filters:update="updateFilters"
       />
     </div>
   </div>

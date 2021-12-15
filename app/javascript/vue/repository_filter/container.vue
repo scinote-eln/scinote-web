@@ -37,7 +37,7 @@
           />
         </div>
       </div>
-      <button class="btn btn-primary apply-button">
+      <button @click="$emit('filters:apply')" class="btn btn-primary apply-button">
         {{ i18n.t('repositories.show.filters.apply') }}
       </button>
     </div>
@@ -73,6 +73,8 @@
         const index = this.filters.findIndex((f) => f.id === filter.id);
         this.filters[index].data = filter.data;
         this.filters[index].isBlank = filter.isBlank;
+
+        this.$emit("filters:update", this.filters);
       },
       clearFilters() {
         this.filters = [];
