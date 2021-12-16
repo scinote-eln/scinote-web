@@ -74,7 +74,7 @@
       </li>
       <!-- Open activities -->
       <li>
-        <a href="/global_activities?<%= Activity.url_search_query({ subjects: { Project: [project.id] } }) %>">
+        <a href="/global_activities?<%= Activity.url_search_query({ subjects: { Project: [project] } }) %>">
           <i class="fas fa-list"></i>
           <span><%= t('projects.index.activities_option') %></span>
         </a>

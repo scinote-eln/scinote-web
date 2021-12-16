@@ -13,7 +13,7 @@ module User::TeamRoles
       is_guest_of_team?
     ) do |proxy, *args, &block|
       if args[0]
-        @user_team = user_teams.where(team: args[0]).take
+        @user_team = args[0]&.user_teams&.find { |ut| ut.user == self }
         @user_team ? proxy.call(*args, &block) : false
       else
         false

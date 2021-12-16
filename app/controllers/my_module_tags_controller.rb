@@ -114,10 +114,10 @@ class MyModuleTagsController < ApplicationController
   end
 
   def search_tags
-    assigned_tags = @my_module.my_module_tags.pluck(:tag_id)
+    assigned_tags = @my_module.my_module_tags.select(:tag_id)
     all_tags = @my_module.experiment.project.tags
     tags = all_tags.where.not(id: assigned_tags)
-                   .search(current_user, false, params[:query])
+                   .where_attributes_like(:name, params[:query])
                    .select(:id, :name, :color)
                    .limit(6)
 
