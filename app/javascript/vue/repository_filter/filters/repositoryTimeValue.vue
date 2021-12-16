@@ -30,6 +30,7 @@
     mixins: [FilterMixin, DateTimeFilterMixin],
     data() {
       return {
+        timeType: 'time',
         operators: [
           { value: 'equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.equal_to')},
           { value: 'unequal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.unequal_to') },
@@ -49,9 +50,15 @@
       DropdownSelector,
       DateTimePicker
     },
+    watch: {
+      value() {
+        this.parameters = this.value;
+        this.updateFilter();
+      }
+    },
     methods: {
       formattedDate(date) {
-        return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`
+        return `${date.getHours()}:${date.getMinutes()}`
       }
     }
   }

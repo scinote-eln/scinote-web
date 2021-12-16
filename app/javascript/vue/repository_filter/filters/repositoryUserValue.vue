@@ -38,7 +38,7 @@
           { value: 'none_of', label: this.i18n.t('repositories.show.repository_filter.filters.operators.none_of') }
         ],
         operator: 'any_of',
-        value: '',
+        value: [],
         users: []
       }
     },
@@ -52,10 +52,15 @@
         this.users = data.users;
       });
     },
+    watch: {
+      value() {
+        this.parameters = { user_ids: this.value };
+        this.updateFilter();
+      }
+    },
     methods: {
       updateValue(value) {
         this.value = value
-        this.updateFilter();
       },
       renderOption(data) {
         return `<span class="user-filter-option" title="${data.label.trim()} | ${data.params.email}">

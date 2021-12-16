@@ -8,7 +8,6 @@
     />
     <div v-if="operator !== 'between'" class="sci-input-container">
       <input
-        @input="updateFilter"
         class="sci-input-field"
         type="number"
         name="value"
@@ -68,12 +67,11 @@
       DropdownSelector
     },
     methods: {
-      updateRange(value) {
+      updateRange() {
         this.value = {
           from: this.from,
           to: this.to
-        }
-        this.updateFilter();
+        };
       }
     },
     watch: {
@@ -81,6 +79,14 @@
         if(this.operator !== 'between' && !(typeof this.value === 'string')) this.value = '';
         if(this.operator === 'between') this.value = {to: '', from: ''};
 
+      },
+      value() {
+        if (this.operator === 'between') {
+          this.parameters = this.value;
+        } else {
+          this.parameters = { number: this.value }
+        }
+        this.updateFilter();
       }
     },
     computed: {

@@ -32,11 +32,11 @@ window.initRepositoryFilter = () => {
     },
     computed: {
       filtersJSON() {
-        return this.filters.map((f) => {
+        return this.filters.filter((f) => !f.isBlank).map((f) => {
           return {
             repository_column_id: f.column.id,
-            operator: f.operator,
-            parameters: { ...f.data, isBlank: f.isBlank }
+            operator: f.data.operator,
+            parameters: f.data.parameters
           }
         });
       }
