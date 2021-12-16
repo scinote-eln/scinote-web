@@ -1418,12 +1418,12 @@ en:
               any_of: "Any of"
               all_of: "All of"
               none_of: "None of"
+              file_contains: "File contains"
+              file_attached: "File is attached"
+              file_not_attached: "File is not attached"
             types:
               RepositoryAssetValue:
-                operators:
-                  file_contains: "File contains"
-                  file_attached: "File is attached"
-                  file_not_attached: "File is not attached"
+                input_placeholder: "Enter text"
               RepositoryTextValue:
                 input_placeholder: "Enter %{name}"
               RepositoryNumberValue:

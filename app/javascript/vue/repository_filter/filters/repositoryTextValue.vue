@@ -8,12 +8,11 @@
     />
     <div class="sci-input-container">
       <input
-        @input="updateFilter"
         class="sci-input-field"
         type="text"
         name="value"
         v-model="value"
-        :placeholder= "this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.input_placeholder',{name: this.filter.column.name})"
+        :placeholder= "this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryTextValue.input_placeholder',{name: this.filter.column.name})"
       />
     </div>
   </div>
@@ -28,8 +27,8 @@
     data() {
       return {
         operators: [
-          { value: 'contains', label: this.i18n.t('repositories.show.repository_filter.filters.operators.contain') },
-          { value: 'doesnt_contain', label: this.i18n.t('repositories.show.repository_filter.filters.operators.not_contain') },
+          { value: 'contains', label: this.i18n.t('repositories.show.repository_filter.filters.operators.contains') },
+          { value: 'doesnt_contain', label: this.i18n.t('repositories.show.repository_filter.filters.operators.does_not_contain') },
           { value: 'empty', label: this.i18n.t('repositories.show.repository_filter.filters.operators.empty') }
         ],
         operator: 'contains',
@@ -38,6 +37,12 @@
     },
     components: {
       DropdownSelector
+    },
+    watch: {
+      value() {
+        this.parameters = { text: this.value };
+        this.updateFilter();
+      }
     },
     computed: {
       isBlank(){

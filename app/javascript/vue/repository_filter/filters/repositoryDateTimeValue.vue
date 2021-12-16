@@ -30,6 +30,7 @@
     mixins: [FilterMixin, DateTimeFilterMixin],
     data() {
       return {
+        timeType: 'datetime',
         operators: [
           { value: 'today', label: this.i18n.t('repositories.show.repository_filter.filters.operators.today') },
           { value: 'yesterday', label: this.i18n.t('repositories.show.repository_filter.filters.operators.yesterday') },
@@ -54,6 +55,12 @@
     components: {
       DropdownSelector,
       DateTimePicker
+    },
+    watch: {
+      value() {
+        this.parameters = this.value;
+        this.updateFilter();
+      }
     },
     methods: {
       formattedDate(date) {

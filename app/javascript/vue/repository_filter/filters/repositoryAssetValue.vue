@@ -12,8 +12,7 @@
         type="text"
         name="value"
         v-model="value"
-        :placeholder="i18n.t('repositories.show.repository_filter.enter_text')"
-        @input="updateFilter"
+        :placeholder="i18n.t('repositories.show.repository_filter.filters.types.RepositoryAssetValue.input_placeholder')"
       />
     </div>
   </div>
@@ -43,6 +42,10 @@
     watch: {
       operator() {
         if(this.operator !== 'file_contains') this.value = '';
+      },
+      value() {
+        this.parameters = this.operator === 'file_contains' ? { text: this.value } : {}
+        this.updateFilter();
       }
     },
     components: {

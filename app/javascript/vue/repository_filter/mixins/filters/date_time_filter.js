@@ -66,29 +66,30 @@ export default {
     }
   },
   methods: {
+    rangeObject(start, end) {
+      let range = {};
+
+      range['start_' + this.timeType] = start;
+      range['end_' + this.timeType] = end;
+
+      return range;
+    },
     updateDate(date) {
       date = date && this.formattedDate(date);
       this.date = date;
       if (this.dateTo) {
-        this.value = {
-          from_date: date,
-          to_date: this.dateTo
-        };
+        this.value = this.rangeObject(date, this.dateTo);
       } else {
-        this.value = date;
-      }
+        let valueObject = {};
+        valueObject[this.timeType] = date;
 
-      this.updateFilter();
+        this.value = valueObject;
+      }
     },
     updateDateTo(date) {
       date = date && this.formattedDate(date);
       this.dateTo = date;
-      this.value = {
-        from_date: this.date,
-        to_date: date
-      };
-
-      this.updateFilter();
+      this.value = this.rangeObject(this.date, date);
     }
   }
 }

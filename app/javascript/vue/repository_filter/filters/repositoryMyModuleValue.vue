@@ -42,10 +42,15 @@
     components: {
       DropdownSelector
     },
+    watch: {
+      value() {
+        this.parameters = { my_module_ids: this.value };
+        this.updateFilter();
+      }
+    },
     methods: {
       updateValue(value) {
-        this.value = value
-        this.updateFilter();
+        this.value = value;
       }
     },
     computed: {

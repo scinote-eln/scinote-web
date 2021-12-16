@@ -3,9 +3,18 @@ export default {
     filter: Object,
     my_modules: Array
   },
+  data() {
+    return {
+      parameters: {}
+    };
+  },
   created() {
     this.operator = this.operator || this.filter.data.operator;
-    this.value = this.value || this.filter.data.value;
+    this.parameters = this.parameters || this.filter.data.parameters;
+
+    // load value from parameters
+    const keys = Object.keys(this.parameters);
+    this.value = keys.length <= 1 ? this.parameters[keys[0]] : { ...this.parameters };
   },
   methods: {
     updateOperator(operator) {
@@ -20,7 +29,7 @@ export default {
           isBlank: this.isBlank,
           data: {
             operator: this.operator,
-            value: this.value
+            parameters: this.parameters
           }
         }
       );
