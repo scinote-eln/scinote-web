@@ -6,6 +6,8 @@ class BmtRepository < LinkedRepository
   def default_table_state
     state = Constants::REPOSITORY_TABLE_DEFAULT_STATE.deep_dup
     state['order'] = [[3, 'asc']]
+    state['ColReorder'] << state['ColReorder'].length
+    state['columns'].pop(2)
     state
   end
 
