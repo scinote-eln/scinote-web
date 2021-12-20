@@ -68,7 +68,7 @@
     <%= render "shared/left_menu_bar" if user_signed_in? %>
 
     <div id="content-wrapper">
-      <% if user_signed_in? && current_user.teams.empty? && !(activities_are_selected? || settings_are_selected?) %>
+      <% if user_signed_in? && current_user.teams.blank? && !(activities_are_selected? || settings_are_selected?) %>
         <!-- If member of no teams -->
         <div id="no-teams-jumbotron" class="jumbotron">
           <h2><%=t 'general.no_teams.title' %></h2>

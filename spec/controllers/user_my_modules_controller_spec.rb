@@ -5,15 +5,7 @@ require 'rails_helper'
 describe UserMyModulesController, type: :controller do
   login_user
 
-  let(:user) { subject.current_user }
-  let(:team) { create :team, created_by: user }
-  let!(:user_team) { create :user_team, :admin, user: user, team: team }
-  let(:project) { create :project, team: team, created_by: user }
-  let!(:user_project) do
-    create :user_project, :owner, user: user, project: project
-  end
-  let(:experiment) { create :experiment, project: project }
-  let(:my_module) { create :my_module, experiment: experiment }
+  include_context 'reference_project_structure'
 
   describe 'POST create' do
     let(:action) { post :create, params: params, format: :json }
@@ -24,7 +16,7 @@ describe UserMyModulesController, type: :controller do
     it 'calls create activity for assigning user to task' do
       expect(Activities::CreateActivityService)
         .to(receive(:call)
-              .with(hash_including(activity_type: :assign_user_to_module)))
+              .with(hash_including(activity_type: :designate_user_to_my_module)))
       action
     end
 
@@ -44,7 +36,7 @@ describe UserMyModulesController, type: :controller do
     it 'calls create activity for unassigning user to task' do
       expect(Activities::CreateActivityService)
         .to(receive(:call)
-              .with(hash_including(activity_type: :unassign_user_from_module)))
+              .with(hash_including(activity_type: :undesignate_user_from_my_module)))
       action
     end
 

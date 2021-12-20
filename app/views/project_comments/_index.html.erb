@@ -2,8 +2,8 @@
 <hr>
   <%= render partial: 'shared/comments/comments.html.erb', locals: {
     object: @project,
-    comments: comments, 
-    can_create_comments: can_create_comments_in_project?(@project), 
+    comments: comments,
+    can_create_comments: can_create_project_comments?(@project),
     create_url: project_project_comments_path(@project, format: :json),
     more_url: project_project_comments_path(@project, format: :json, from: comments.first&.id)
   } %>

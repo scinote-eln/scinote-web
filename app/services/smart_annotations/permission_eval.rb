@@ -12,21 +12,15 @@ module SmartAnnotations
       private
 
       def validate_prj_permissions(user, team, object)
-        object.archived = false
-        permission_check = object.team.id == team.id && can_read_project?(user, object)
-        object.archived = true if object.archived_changed?
-        permission_check
+        object.team.id == team.id && can_read_project?(user, object)
       end
 
       def validate_exp_permissions(user, team, object)
-        object.archived = false
-        permission_check = validate_prj_permissions(user, team, object.project)
-        object.archived = true if object.archived_changed?
-        permission_check
+        can_read_experiment?(user, object) && validate_prj_permissions(user, team, object.project)
       end
 
       def validate_tsk_permissions(user, team, object)
-        validate_exp_permissions(user, team, object.experiment)
+        can_read_my_module?(user, object) && validate_exp_permissions(user, team, object.experiment)
       end
 
       def validate_rep_item_permissions(user, team, object)

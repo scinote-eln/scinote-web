@@ -89,13 +89,13 @@ class CommentsController < ApplicationController
   def check_create_permissions
     case @commentable
     when Project
-      render_403 and return unless can_create_comments_in_project?(@commentable)
+      render_403 and return unless can_create_project_comments?(@commentable)
     when MyModule
-      render_403 and return unless can_create_comments_in_module?(@commentable)
+      render_403 and return unless can_create_my_module_comments?(@commentable)
     when Step
-      render_403 and return unless can_create_comments_in_module?(@commentable.protocol.my_module)
+      render_403 and return unless can_create_my_module_comments?(@commentable.protocol.my_module)
     when Result
-      render_403 and return unless can_create_comments_in_module?(@commentable.my_module)
+      render_403 and return unless can_create_my_module_comments?(@commentable.my_module)
     else
       render_403 and return
     end

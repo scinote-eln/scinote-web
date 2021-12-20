@@ -5,9 +5,11 @@
     <div class="no-results-description"><%= t('projects.index.no_results_description') %></div>
   </div>
 <% else %>
+  <% project_is_managable = can_manage_project?(@project) %>
   <% cards.each  do |card| %>
     <% cache [current_user, card] do %>
-      <%= render partial: 'projects/show/experiment_card', locals: { experiment: card } %>
+      <%= render partial: 'projects/show/experiment_card',
+                 locals: { experiment: card, project: @project, project_is_managable: project_is_managable } %>
     <% end %>
   <% end %>
 <% end %>

@@ -15,22 +15,8 @@ var bioEddieEditor = (function() {
     }
   }
 
-  function loadBioEddie() {
-    BIO_EDDIE = bioEddieIframe.contentWindow.bioEddieEditor;
-    CHEMAXON = bioEddieIframe.contentWindow.chemaxon;
-
-    if (typeof BIO_EDDIE === 'undefined' || typeof CHEMAXON === 'undefined') {
-      setTimeout(function() {
-        loadBioEddie();
-      }, 2000);
-    } else {
-      importMolecule();
-    }
-  }
-
   function initIframe() {
     bioEddieIframe.src = bioEddieIframe.dataset.src;
-    loadBioEddie();
   }
 
   function saveMolecule(svg, structure, scheduleForRegistration) {
@@ -103,6 +89,22 @@ var bioEddieEditor = (function() {
   $(document).on('turbolinks:load', function() {
     bioEddieIframe = document.getElementById('bioEddieIframe');
     bioEddieModal = $('#bioEddieModal');
+    if (bioEddieIframe) {
+      bioEddieIframe.onload = function() {
+        let body = $(bioEddieIframe).contents().find('body');
+        BIO_EDDIE = bioEddieIframe.contentWindow.bioEddieEditor;
+        CHEMAXON = bioEddieIframe.contentWindow.chemaxon;
+        let cssRemoveFileImport = `
+          <style>
+            .breg-modal .breg-import-dialog-tabs li:last-child{
+              display: none
+            }
+          </style>
+        `;
+        $(body).append(cssRemoveFileImport);
+        importMolecule();
+      };
+    }
 
     bioEddieModal.on('shown.bs.modal', function() {
       initIframe();

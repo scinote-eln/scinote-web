@@ -121,13 +121,18 @@ class TinyMceAssetsController < ApplicationController
   end
 
   def check_edit_permission
-    if @assoc.class == Step || @assoc.class == Protocol
+    if @assoc.nil?
+      return render_403 unless current_team == @asset.team
+    end
+
+    case @assoc
+    when Step
+      return render_403 unless can_manage_step?(@assoc)
+    when Protocol
       return render_403 unless can_manage_protocol_in_module?(@protocol) ||
                                can_manage_protocol_in_repository?(@protocol)
-    elsif @assoc.class == ResultText || @assoc.class == MyModule
-      return render_403 unless can_manage_module?(@my_module)
-    elsif @assoc.nil?
-      return render_403 unless current_team == @asset.team
+    when ResultText, MyModule
+      return render_403 unless can_manage_my_module?(@my_module)
     else
       render_403
     end

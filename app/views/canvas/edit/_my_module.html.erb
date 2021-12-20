@@ -17,7 +17,7 @@
         <span class="fas fa-caret-down" aria-hidden="true"></span>
       </a>
       <ul class="dropdown-menu custom-dropdown-menu no-scale" aria-labelledby="<%= my_module.id %>_options">
-        <% if can_manage_module?(my_module) %>
+        <% if can_manage_my_module?(my_module) %>
           <li>
             <a class="edit-module" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.edit_module') %></a>
           </li>
@@ -26,26 +26,34 @@
           <li>
             <a class ="clone-module" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.clone_module') %></a>
           </li>
-          <li <%= 'style=display:none;' if my_module.my_module_group.blank? %>>
-            <a class ="clone-module-group" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.clone_module_group') %></a>
-          </li>
         <% end %>
-        <% if can_move_module?(my_module) %>
+        <% if can_move_my_module?(my_module) %>
           <li>
             <a class="move-module" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.move_module') %></a>
           </li>
         <% end %>
-        <% if module_group&.my_modules&.all? { |my_module| can_move_module?(my_module) } %>
-          <li>
-            <a class="move-module-group" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.move_module_group') %></a>
-          </li>
-        <% end %>
-        <% if can_archive_module?(my_module) %>
+        <li>
+          <%= link_to t('experiments.canvas.edit.task_access'),
+                      can_manage_my_module_users?(my_module) ? edit_access_permissions_project_experiment_my_module_path(my_module.experiment.project, my_module.experiment, my_module) : access_permissions_project_experiment_my_module_path(my_module.experiment.project, my_module.experiment, my_module),
+                      data: { action: 'remote-modal'} %>
+        </li>
+        <% if can_archive_my_module?(my_module) %>
           <li>
             <a class="delete-module" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.delete_module') %></a>
           </li>
         <% end %>
-        <% if module_group&.my_modules&.all? { |my_module| can_archive_module?(my_module) } %>
+        <% if can_manage_experiment?(my_module.experiment) %>
+          <li <%= 'style=display:none;' if my_module.my_module_group.blank? %>>
+            <a class ="clone-module-group" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.clone_module_group') %></a>
+          </li>
+        <% end %>
+        <% if module_group&.my_modules&.all? { |my_module| can_move_my_module?(my_module) } %>
+          <li>
+            <a class="move-module-group" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.move_module_group') %></a>
+          </li>
+        <% end %>
+
+        <% if module_group&.my_modules&.all? { |my_module| can_archive_my_module?(my_module) } %>
           <li data-hook="archive-module-group">
             <a class ="delete-module-group" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.delete_module_group') %></a>
           </li>

@@ -1,7 +1,7 @@
 <div id="diagram-container">
   <div id="diagram" class="diagram">
     <% my_modules.each do |my_module| %>
-      <%= render partial: "canvas/small_zoom/my_module", locals: {experiment: experiment, my_module: my_module} %>
+      <%= render partial: "canvas/small_zoom/my_module#{('_hidden' unless can_read_my_module?(my_module))}", locals: {experiment: experiment, my_module: my_module} %>
     <% end %>
   </div>
 </div>

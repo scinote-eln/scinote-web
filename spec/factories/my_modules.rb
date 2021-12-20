@@ -2,6 +2,10 @@
 
 FactoryBot.define do
   factory :my_module do
+    transient do
+      user { create :user }
+    end
+    created_by { user }
     sequence(:name) { |n| "Task-#{n}" }
     sequence(:y) { |n| n }
     sequence(:x) { |n| n }

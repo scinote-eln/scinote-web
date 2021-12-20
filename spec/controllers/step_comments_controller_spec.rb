@@ -5,20 +5,10 @@ require 'rails_helper'
 describe StepCommentsController, type: :controller do
   login_user
 
-  let(:user) { subject.current_user }
-  let(:team) { create :team, created_by: user }
-  let!(:user_team) { create :user_team, :admin, user: user, team: team }
-  let(:project) { create :project, team: team, created_by: user }
-  let!(:user_project) do
-    create :user_project, :normal_user, user: user, project: project
-  end
-  let(:experiment) { create :experiment, project: project }
-  let(:my_module) { create :my_module, experiment: experiment }
-  let(:protocol) do
-    create :protocol, my_module: my_module, team: team, added_by: user
-  end
-  let(:step) { create :step, protocol: protocol, user: user }
-  let(:step_comment) { create :step_comment, user: user, step: step }
+  include_context 'reference_project_structure', {
+    step: true,
+    step_comment: true
+  }
 
   describe 'POST create' do
     let(:action) { post :create, params: params, format: :json }

@@ -1,0 +1,79 @@
+#user_assignments_modal {
+  .modal-body {
+    max-height: 400px;
+    min-height: 250px;
+    overflow: auto;
+    padding-top: 0;
+  }
+
+  .member-item {
+    border-bottom: 1px solid $modal-header-border-color;
+
+    margin: 0 .5em;
+    padding: .5em;
+  }
+
+  .user-assignment-role .dropdown-toggle,
+  .user-assignment-remove .btn {
+    border-width: 0;
+  }
+
+  .new-member-item .user-assignment-role .dropdown-toggle {
+    border-width: 1px;
+    border-color: $color-volcano;
+    width: 200px;
+  }
+
+  .member-item,
+  .user-assignment-info,
+  .user-assignment-controls {
+    align-items: center;
+    display: flex;
+  }
+
+  .user-assignment-controls {
+    margin-left: auto;
+  }
+
+  .global-avatar-container {
+    margin-right: 1em;
+  }
+
+  .user-assignment-remove {
+    margin-left: 1em;
+    min-width: 7em;
+  }
+
+  a,
+  .bootstrap-select > .dropdown-toggle.bs-placeholder {
+    color: $color-volcano;
+  }
+
+  .sci-checkbox-container {
+    margin-right: 1em;
+  }
+
+  .sci-input-container {
+    margin-top: 1em;
+
+    .fa-search {
+      color: $color-alto;
+    }
+  }
+
+  .user-assignments-description {
+    margin: 1em .5em;
+  }
+
+  hr {
+    margin: 1em 0;
+  }
+}
+
+.permission-object-tag {
+  @include font-small;
+  background: $color-concrete;
+  border-radius: $border-radius-tag;
+  cursor: pointer;
+  padding: .25em;
+}

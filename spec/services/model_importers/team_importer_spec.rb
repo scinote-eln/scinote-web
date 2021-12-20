@@ -385,7 +385,7 @@ describe TeamImporter do
             end
             #
             # User assigns to the the module
-            expect(db_module.user_my_modules.first.user_id).to eq USER_ID unless my_module['user_my_modules'].empty?
+            expect(db_module.user_my_modules.first.user_id).to eq USER_ID unless my_module['user_my_modules'].blank?
           end
         end
       end

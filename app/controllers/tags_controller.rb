@@ -157,11 +157,11 @@ class TagsController < ApplicationController
   def check_manage_my_module_permissions
     my_module = MyModule.find_by id: params[:my_module_id]
 
-    render_403 if my_module && !can_manage_module?(my_module)
+    render_403 if my_module && !can_manage_my_module_tags?(my_module)
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_tags?(@project)
+    render_403 unless can_manage_project_tags?(@project)
   end
 
   def tag_params

@@ -1,24 +1,21 @@
-<% user_my_modules = @my_module.user_my_modules %>
-<a class="task-assigned-users manage-users-link <%= 'empty' unless user_my_modules.present? %>"
-   data-remote="true"
-   href="<%= my_module_users_edit_path(@my_module) %>"
-   data-module-id="<%= @my_module.id %>"
-   data-module-users-url="<%= my_module_user_my_modules_url(@my_module) %>">
-  <% if user_my_modules.present? %>
-    <% user_my_modules.each do |user_my_module| %>
-      <%  user = user_my_module.user %>
-      <span class="global-avatar-container">
-        <%= image_tag avatar_path(user, :icon_small) %>
-      </span>
-    <% end %>
-    <% if can_manage_users_in_module?(@my_module) && @my_module.unassigned_users.any? %>
-      <span class="global-avatar-container assign-new-user">
-        <i class="fas fa-plus"></i>
-      </span>
-    <% end %>
-  <% else %>
-    <span class="empty-label">
-      <%= t('my_modules.details.no_assigned_users') %>
-    </span>
-  <% end %>
-</a>
+<div class="select-user-container">
+  <%= select_tag 'user_my_modules',
+                 options_for_select(my_module.user_my_modules.map{ |um|
+                   user = um.user
+                   [
+                     user.full_name,
+                     user.id,
+                     {'data-params' => {avatar_url: avatar_path(user, :icon_small), user_module_id: um.id }.to_json}
+                   ]
+                 }),
+                 {
+                   id: 'module-assigned-users-selector',
+                   'data-module-id': my_module.id,
+                   'data-project-id': my_module.experiment.project_id,
+                   'data-placeholder': t('my_modules.details.no_assigned_users'),
+                   'data-users-create-url': my_module_user_my_modules_path(my_module_id: my_module.id),
+                   'data-ajax-url': search_my_module_user_my_module_path(my_module),
+                   'data-update-module-users-url': my_module_user_my_modules_url(my_module),
+                   'data-view-mode': !can_manage_my_module?(my_module)
+                 } %>
+</div>

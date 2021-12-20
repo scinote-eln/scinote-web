@@ -63,7 +63,7 @@ module RepositoryImportParser
 
         @rows.each do |row|
           # Skip empty rows
-          next if row.empty?
+          next if row.blank?
 
           unless @header_skipped
             @header_skipped = true

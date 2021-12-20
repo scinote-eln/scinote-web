@@ -78,4 +78,18 @@ describe Project, type: :model do
       end
     end
   end
+
+  describe 'after create hooks' do
+
+
+    it 'grands owner permissions to project creator' do
+      user = create(:user)
+      project.created_by = user
+      expect {
+        project.save
+      }.to change(UserAssignment, :count).by(1)
+      user_role = project.reload.user_assignments.first.user_role
+      expect(user_role.name).to eq 'Owner'
+    end
+  end
 end

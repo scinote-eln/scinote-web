@@ -359,6 +359,18 @@
   }
 }
 
+.move-experiment-modal {
+  .warning-message {
+    background: $brand-warning-light;
+    margin-top: 1em;
+    padding: .5em;
+
+    .fas {
+      color: $brand-warning;
+    }
+  }
+}
+
 @media (max-height: 700px) {
   .projects-show {
     .experiments-filters {

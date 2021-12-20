@@ -4,7 +4,7 @@
     <%= render partial: "search/results/partials/my_module_text.html.erb", locals: { my_module: mod, query: search_query } %>
   </h5>
 
-  <% if mod.description.present? && !mod.description.empty? %>
+  <% if mod.description.present? %>
     <p>
       <span>
         <%=t "search.index.description" %>

@@ -1,6 +1,8 @@
 # Extends class holds the arrays for the models enum fields
 # so that can be extended in sub modules.
 
+# rubocop:disable Style/MutableConstant
+
 class Extends
   # To extend the enum fields in the engine you have to put in
   # lib/engine_name/engine.rb file as in the example:
@@ -109,7 +111,7 @@ class Extends
                                         'RepositoryAssetValue' => 'file',
                                         'RepositoryStatusValue' => 'status' }
 
-  OMNIAUTH_PROVIDERS = [:linkedin, :customazureactivedirectory]
+  OMNIAUTH_PROVIDERS = %i(linkedin customazureactivedirectory okta)
 
   INITIAL_USER_OPTIONS = {}
 
@@ -147,10 +149,10 @@ class Extends
     report: nil,
     project: nil,
     experiment: [:my_modules],
-    my_module: [:results, :protocols],
-    result: nil,
+    my_module: %i(results protocols),
+    result: [:asset],
     protocol: [:steps],
-    step: nil
+    step: [:assets]
   }
 
   ACTIVITY_MESSAGE_ITEMS_TYPES =
@@ -173,8 +175,8 @@ class Extends
     archive_module: 10,
     restore_module: 11,
     change_module_description: 12,
-    assign_user_to_module: 13,
-    unassign_user_from_module: 14,
+    designate_user_to_my_module: 13,
+    undesignate_user_from_my_module: 14,
     create_step: 15,
     destroy_step: 16,
     add_comment_to_step: 17,
@@ -310,6 +312,8 @@ class Extends
     delete_project_folder: 162,
     generate_pdf_report: 163,
     generate_docx_report: 164,
+    change_user_role_on_experiment: 165,
+    change_user_role_on_my_module: 166,
     edit_molecule_on_step: 168,
     edit_molecule_on_result: 169,
     edit_molecule_on_step_in_repository: 170,
@@ -325,11 +329,11 @@ class Extends
     projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162],
     task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, 169, 172, 178],
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
-           *146..148],
+           *146..148, 166],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
                     168, 171, 177],
     task_inventory: [55, 56, 146, 147],
-    experiment: [*27..31, 57, 141],
+    experiment: [*27..31, 57, 141, 165],
     reports: [48, 50, 49, 163, 164],
     inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77, 78, 96, 107, 113, 114, *133..136],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
@@ -362,12 +366,13 @@ class Extends
 
   NOTIFIABLE_ACTIVITIES = %w(
     assign_user_to_project
+    unassign_user_from_project
     change_user_role_on_project
     edit_module_comment
     delete_module_comment
     add_comment_to_module
-    assign_user_to_module
-    unassign_user_from_module
+    designate_user_to_my_module
+    undesignate_user_from_my_module
     set_task_due_date
     change_task_due_date
     remove_task_due_date
@@ -385,7 +390,11 @@ class Extends
     create_individual_signature_request
     delete_individual_signature_request
     delete_group_signature_request
+    change_user_role_on_experiment
+    change_user_role_on_my_module
   )
 
   STI_PRELOAD_CLASSES = %w(LinkedRepository BmtRepository)
 end
+
+# rubocop:enable Style/MutableConstant

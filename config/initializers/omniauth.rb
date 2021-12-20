@@ -2,9 +2,9 @@
 
 require 'omniauth/strategies/custom_azure_active_directory'
 
-SETUP_PROC = lambda do |env|
+AZURE_SETUP_PROC = lambda do |env|
   providers = Rails.configuration.x.azure_ad_apps.select { |_, v| v[:enable_sign_in] == true }
-  raise StandardError, 'No Azure AD config available for sign in' if providers.empty?
+  raise StandardError, 'No Azure AD config available for sign in' if providers.blank?
 
   req = Rack::Request.new(env)
 
@@ -31,7 +31,7 @@ SETUP_PROC = lambda do |env|
 end
 
 Rails.application.config.middleware.use OmniAuth::Builder do
-  provider OmniAuth::Strategies::CustomAzureActiveDirectory, setup: SETUP_PROC
+  provider OmniAuth::Strategies::CustomAzureActiveDirectory, setup: AZURE_SETUP_PROC
 end
 
 OmniAuth.config.logger = Rails.logger

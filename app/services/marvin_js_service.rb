@@ -82,7 +82,7 @@ class MarvinJsService
     end
 
     def prepare_name(sketch_name)
-      if !sketch_name.empty?
+      if !sketch_name.blank?
         sketch_name
       else
         I18n.t('marvinjs.new_sketch')

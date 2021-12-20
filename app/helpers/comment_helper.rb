@@ -59,11 +59,13 @@ module CommentHelper
   def comment_addable?(object)
     case object.class.name
     when 'MyModule'
-      can_create_comments_in_module?(object)
-    when 'Step', 'Result'
-      can_create_comments_in_module?(object.my_module)
+      can_create_my_module_comments?(object)
+    when 'Step'
+      can_create_my_module_comments?(object.my_module)
+    when 'Result'
+      can_create_my_module_comments?(object.my_module)
     when 'Project'
-      can_create_comments_in_project?(object)
+      can_create_project_comments?(object)
     else
       false
     end
@@ -71,10 +73,14 @@ module CommentHelper
 
   def comment_editable?(comment)
     case comment.type
-    when 'TaskComment', 'StepComment', 'ResultComment'
-      can_manage_comment_in_module?(comment.becomes(Comment))
+    when 'TaskComment'
+      can_manage_my_module_comment?(comment)
+    when 'StepComment'
+      can_update_comment_in_my_module_steps?(comment)
+    when 'ResultComment'
+      can_manage_result_comment?(comment)
     when 'ProjectComment'
-      can_manage_comment_in_project?(comment)
+      can_manage_project_comment?(comment)
     else
       false
     end
@@ -268,6 +274,6 @@ module CommentHelper
   end
 
   def has_unseen_comments?(commentable)
-    commentable.comments.where('? = ANY (unseen_by)', current_user.id).any?
+    commentable.comments.any? { |comment| comment.unseen_by.include?(current_user.id) }
   end
 end

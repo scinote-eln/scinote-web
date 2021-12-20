@@ -10,8 +10,9 @@
 
 <% provide(:sidebar_title, t("sidebar.my_module.sidebar_title")) %>
 
+
 <%= content_for :sidebar do %>
-  <%= render partial: 'shared/sidebar/my_module.html.erb',
+  <%= render partial: "shared/sidebar/#{@my_module.archived? ? 'archived_my_module' : 'my_module'}.html.erb",
     locals: {
       my_modules: @experiment_my_modules,
       experiment: @my_module.experiment,
@@ -80,7 +81,7 @@
         </span>
       </a>
       <div class="actions-block">
-        <% if can_assign_repository_rows_to_module?(@my_module) %>
+        <% if can_assign_my_module_repository_rows?(@my_module) %>
           <div class="dropdown repositories-assign-container sci-dropdown" data-repositories-url="<%= my_module_repositories_dropdown_list_path(@my_module) %>">
             <a href="#" id="repositories-assign-button" class="btn btn-secondary btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               <span class="fas fa-file-signature"></span>
@@ -120,6 +121,7 @@
               <span><%=t "protocols.steps.new_step" %></span>
           </a>
         <% end %>
+        <%= render partial: "my_modules/protocols/print_protocol_button", locals: { protocol: @protocol } %>
         <%= render partial: "my_modules/protocols/protocol_options_dropdown" %>
       </div>
     </div>

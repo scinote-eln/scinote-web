@@ -6,22 +6,16 @@ describe WopiController, type: :controller do
   ENV['WOPI_USER_HOST'] = 'localhost'
 
   login_user
-  let(:user) { subject.current_user }
-  let!(:team) { create :team, created_by: user }
-  let(:user_team) { create :user_team, :admin, user: user, team: team }
-  let!(:user_project) { create :user_project, :owner, user: user }
-  let(:project) do
-    create :project, team: team, user_projects: [user_project]
-  end
-  let(:experiment) { create :experiment, project: project }
-  let(:my_module) { create :my_module, name: 'test task', experiment: experiment }
+
+  include_context 'reference_project_structure', {
+    step: true
+  }
+
+
   let(:result) do
     create :result, name: 'test result', my_module: my_module, user: user
   end
-  let(:protocol) do
-    create :protocol, my_module: my_module, team: team, added_by: user
-  end
-  let(:step) { create :step, protocol: protocol, user: user }
+
 
   let(:protocol_in_repository) { create :protocol, :in_public_repository, team: team }
   let(:step_in_repository) { create :step, protocol: protocol_in_repository, user: user }

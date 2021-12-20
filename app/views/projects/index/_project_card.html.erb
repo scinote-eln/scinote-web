@@ -50,15 +50,15 @@
   <div class="data-row user-cell table-cell">
     <span class="card-label"><%= t('projects.index.card.users') %></span>
     <div class="value">
-      <% if can_manage_project?(project) %>
-        <%= link_to edit_project_users_path(project), class: 'project-users-link manage-project-users-link', remote: true do %>
+      <% if can_manage_project_users?(project) %>
+        <%= link_to edit_access_permissions_project_path(project), class: 'project-users-link', data: { action: 'remote-modal' } do %>
           <%= render partial: 'projects/index/users_list.html.erb', locals: { project: project } %>
           <span class="new-user global-avatar-container">
             <i class="fas fa-plus"></i>
           </span>
         <% end %>
       <% else %>
-        <%= link_to project_users_path(project), class: 'project-users-link view-project-users-link', remote: true do %>
+        <%= link_to access_permissions_project_path(project), class: 'project-users-link', data: { action: 'remote-modal' } do %>
           <%= render partial: 'projects/index/users_list.html.erb', locals: { project: project } %>
         <% end %>
       <% end %>

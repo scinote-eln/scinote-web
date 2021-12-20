@@ -9,7 +9,7 @@
     </li>
   <% else %>
     <li class="sidebar-leaf">
-      <% unless record[:children].empty? %>
+      <% unless record[:children].blank? %>
         <i class="fas fa-caret-right toggle-branch collapsed"></i>
       <% end %>
       <%= link_to project_folder_path(record[:folder]),

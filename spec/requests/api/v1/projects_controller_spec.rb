@@ -7,14 +7,19 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
     @user = create(:user)
     @teams = create_list(:team, 2, created_by: @user)
     create(:user_team, user: @user, team: @teams.first, role: 2)
-
+    owner_role = UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))
     # valid_projects
-    create(:user_project, :owner,
-           user: @user,
-           project: create(:project, name: Faker::Name.unique.name, created_by: @user, team: @teams.first))
-    create(:user_project, :owner,
-           user: @user,
-           project: create(:project, name: Faker::Name.unique.name, created_by: @user, team: @teams.first))
+    2.times do
+      project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @teams.first)
+      create :user_project, :owner,
+             user: @user,
+             project: project
+      create :user_assignment,
+             assignable: project,
+             user: @user,
+             user_role: owner_role,
+             assigned_by: @user
+    end
 
     # unaccessable_projects
     create(:project, name: Faker::Name.unique.name,

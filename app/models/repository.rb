@@ -74,27 +74,17 @@ class Repository < RepositoryBase
     repository = nil,
     options = {}
   )
+    serchable_row_fields = [RepositoryRow::PREFIXED_ID_SQL, 'repository_rows.name', 'users.full_name']
+
     repositories = repository&.id || Repository.accessible_by_teams(user.teams).pluck(:id)
 
-    readable_rows = RepositoryRow.joins(:repository).where(repository_id: repositories)
+    readable_rows = RepositoryRow.joins(:repository, :created_by).where(repository_id: repositories)
 
-    matched_by_user = readable_rows.joins(:created_by).where_attributes_like('users.full_name', query, options)
-
-    prefixed_repository_row_ids = RepositoryRow.where(repository_id: repositories)
-                                               .where_attributes_like([RepositoryRow::PREFIXED_ID_SQL], query, options)
-                                               .select(:id)
-
-    repository_row_matches =
-      readable_rows.where_attributes_like(['repository_rows.name'], query, options).or(
-        readable_rows.where('repository_rows.id' => prefixed_repository_row_ids)
-      )
-
-    repository_rows = readable_rows.where(id: repository_row_matches)
-    repository_rows = repository_rows.or(readable_rows.where(id: matched_by_user))
+    repository_rows = readable_rows.where_attributes_like(serchable_row_fields, query, options)
 
     Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each do |_data_type, config|
-      custom_cell_matches = repository_rows.joins(config[:includes])
-                                           .where_attributes_like(config[:field], query, options)
+      custom_cell_matches = readable_rows.joins(config[:includes])
+                                         .where_attributes_like(config[:field], query, options)
       repository_rows = repository_rows.or(readable_rows.where(id: custom_cell_matches))
     end
 
@@ -103,8 +93,7 @@ class Repository < RepositoryBase
       repository_rows.select('repositories.id AS id, COUNT(DISTINCT repository_rows.id) AS counter')
                      .group('repositories.id')
     else
-      repository_rows.limit(Constants::SEARCH_LIMIT)
-                     .offset((page - 1) * Constants::SEARCH_LIMIT)
+      repository_rows.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 

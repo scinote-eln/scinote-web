@@ -58,6 +58,15 @@ Canaid::Permissions.register_for(Team) do
   end
 end
 
+Canaid::Permissions.register_for(ProjectFolder) do
+  # ProjectFolder: delete
+  can :delete_project_folder do |user, project_folder|
+    user.is_admin_of_team?(project_folder.team) &&
+      project_folder.projects.none? &&
+      project_folder.project_folders.none?
+  end
+end
+
 Canaid::Permissions.register_for(Protocol) do
   # protocol in repository: read, export, read step, read/download step asset
   can :read_protocol_in_repository do |user, protocol|

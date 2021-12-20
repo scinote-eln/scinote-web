@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class CreateExperimentService
+  include Canaid::Helpers::PermissionsHelper
+
   def initialize(user, team, params)
     @params = params
     @user = user
@@ -8,26 +10,21 @@ class CreateExperimentService
   end
 
   def call
-    new_experiment = nil
     ActiveRecord::Base.transaction do
-      unless @params[:project].class == Project
+      unless @params[:project].instance_of?(Project)
         @params[:project] = CreateProjectService.new(@user, @team, @params[:project]).call
       end
-      unless @params[:project]&.errors&.empty?
-        new_experiment = @params[:project]
-        raise ActiveRecord::Rollback
-      end
+
+      raise ActiveRecord::Rollback unless @params[:project]&.valid? &&
+                                          can_create_project_experiments?(@user, @params[:project])
 
       @params[:created_by] = @user
       @params[:last_modified_by] = @user
 
-      @experiment = @params[:project].experiments.new(@params)
-
-      create_experiment_activity if @experiment.save
-
-      new_experiment = @experiment
+      @experiment = @params[:project].experiments.create!(@params)
+      create_experiment_activity
     end
-    new_experiment
+    @experiment
   end
 
   private

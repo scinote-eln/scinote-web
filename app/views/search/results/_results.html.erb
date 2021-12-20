@@ -14,7 +14,7 @@
     <%= render partial: "search/results/partials/result_text.html.erb", locals: { result: result, query: search_query, target: nil } %>
   </h5>
 
-  <% if result.is_text && result.result_text.text.present? && !result.result_text.text.empty? %>
+  <% if result.is_text && result.result_text.text.present? %>
     <blockquote class="search-asset-text-data">
       <p>
         <%= highlight custom_auto_link(result.result_text.tinymce_render(:text),

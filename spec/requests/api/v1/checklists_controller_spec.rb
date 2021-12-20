@@ -12,8 +12,7 @@ RSpec.describe 'Api::V1::ChecklistsController', type: :request do
     @protocol = create(:protocol, my_module: @task)
     @step = create(:step, protocol: @protocol)
     create(:user_team, user: @user, team: @team)
-    create(:user_project, :normal_user, user: @user, project: @project)
-
+    create_user_assignment(@task, UserRole.find_by(name: I18n.t('user_roles.predefined.owner')), @user)
     @valid_headers = {
       'Authorization': 'Bearer ' + generate_token(@user.id),
       'Content-Type': 'application/json'

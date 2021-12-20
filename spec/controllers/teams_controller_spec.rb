@@ -10,8 +10,8 @@ describe TeamsController, type: :controller do
   let!(:user_team) { create :user_team, :admin, user: user, team: team }
 
   describe 'POST export_projects' do
-    let!(:first_project) { create :project, team: team }
-    let!(:second_project) { create :project, team: team }
+    let!(:first_project) { create :project, team: team, created_by: user }
+    let!(:second_project) { create :project, team: team, created_by: user }
     let(:params) do
       {
         id: team.id,

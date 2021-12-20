@@ -40,13 +40,25 @@
 </div>
 
 <template id="my-module-repository-full-view-assign-button">
-  <button type="button" class="btn btn-primary" id="assignRepositoryRecords" disabled>
+  <button type="button" class="btn btn-primary assign-button" id="assignRepositoryRecords" disabled>
       <%= t('repositories.assign_records_to_module') %>
   </button>
 </template>
 
+<template id="my-module-repository-full-view-assign-downstream-button">
+  <button type="button" class="btn btn-secondary assign-button" id="assignRepositoryRecordsDownstream" disabled>
+      <%= t('my_modules.modals.assign_repository_record.task_and_downstream') %>
+  </button>
+</template>
+
 <template id="my-module-repository-full-view-update-button">
-   <button type="button" class="btn btn-primary" id="updateRepositoryRecords" disabled>
-      <%= t('general.update') %>
+   <button type="button" class="btn btn-primary assign-button" id="updateRepositoryRecords" disabled>
+      <%= t('repositories.update_records_to_module') %>
+   </button>
+</template>
+
+<template id="my-module-repository-full-view-update-downstream-button">
+   <button type="button" class="btn btn-secondary assign-button" id="updateRepositoryRecordsDownstream" disabled>
+      Update task & downstream
    </button>
 </template>

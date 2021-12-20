@@ -4,17 +4,10 @@ require 'rails_helper'
 
 describe MyModuleCommentsController, type: :controller do
   login_user
-
-  let(:user) { subject.current_user }
-  let(:team) { create :team, created_by: user }
-  let!(:user_team) { create :user_team, :admin, user: user, team: team }
-  let(:project) { create :project, team: team, created_by: user }
-  let!(:user_project) do
-    create :user_project, :normal_user, user: user, project: project
-  end
-  let(:experiment) { create :experiment, project: project }
-  let(:my_module) { create :my_module, experiment: experiment }
-  let(:task_comment) { create :task_comment, user: user, my_module: my_module }
+  include_context 'reference_project_structure' , {
+    role: :normal_user,
+    my_module_comment: true
+  }
 
   describe 'POST create' do
     let(:action) { post :create, params: params, format: :json }
@@ -39,7 +32,7 @@ describe MyModuleCommentsController, type: :controller do
     let(:action) { put :update, params: params, format: :json }
     let(:params) do
       { my_module_id: my_module.id,
-        id: task_comment.id,
+        id: my_module_comment.id,
         comment: { message: 'comment updated' } }
     end
 
@@ -59,7 +52,7 @@ describe MyModuleCommentsController, type: :controller do
   describe 'DELETE destroy' do
     let(:action) { delete :destroy, params: params, format: :json }
     let(:params) do
-      { my_module_id: my_module.id, id: task_comment.id }
+      { my_module_id: my_module.id, id: my_module_comment.id }
     end
 
     it 'calls create activity for deleting comment on task' do

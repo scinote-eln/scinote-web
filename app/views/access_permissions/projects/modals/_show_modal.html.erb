@@ -1,0 +1,25 @@
+<% # frozen_string_literal: true %>
+
+<div class="modal fade project-assignments-modal" tabindex="-1" role="dialog" data-action="modal-close">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content" id="user_assignments_modal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><%= t '.title', resource_name: resource.name %></h4>
+      </div>
+      <div class="modal-body">
+        <% resource.user_assignments.each do |user_assignment| %>
+          <%= render partial: 'access_permissions/partials/user_assignment', locals: { user_assignment: user_assignment, user: user_assignment.user, resource: resource } %>
+        <% end %>
+      </div>
+      <div class="modal-footer">
+        <% if can_manage_resource %>
+          <%= link_to new_access_permissions_project_path, class: 'btn btn-default pull-left', data: { action: 'swap-remote-container', target: '#user_assignments_modal' } do %>
+            <i class="fas fa-plus"></i>
+            <%= t '.new_resource_assignments', resource: resource.model_name.human.downcase %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

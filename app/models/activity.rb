@@ -5,11 +5,13 @@ class Activity < ApplicationRecord
     assign_user_to_project
     change_user_role_on_project
     unassign_user_from_project
-    assign_user_to_module
-    unassign_user_from_module
+    designate_user_to_my_module
+    undesignate_user_from_my_module
     invite_user_to_team
     remove_user_from_team
     change_users_role_on_team
+    change_user_role_on_experiment
+    change_user_role_on_my_module
   ).freeze
 
   include ActivityValuesModel
@@ -110,14 +112,14 @@ class Activity < ApplicationRecord
   def self.url_search_query(filters)
     result = []
     filters.each do |filter, values|
-      result.push(values.to_query(filter))
+      result.push(values.map { |k, v| { k => v.collect(&:id) } }.to_query(filter))
     end
     if filters[:subjects]
       subject_labels = []
       filters[:subjects].each do |object, values|
         values.each do |value|
-          label = object.to_s.constantize.find_by_id(value).name
-          subject_labels.push({ value: value, label: label, object: object.downcase, group: '' }.as_json)
+          label = value.name
+          subject_labels.push({ value: value.id, label: label, object: object.downcase, group: '' }.as_json)
         end
       end
       result.push(subject_labels.to_query('subject_labels'))

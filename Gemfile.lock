@@ -236,7 +236,12 @@ GEM
       railties (>= 4.2, < 7)
     cucumber-tag_expressions (1.1.1)
     cucumber-wire (0.0.1)
-    database_cleaner (1.8.5)
+    database_cleaner (2.0.1)
+      database_cleaner-active_record (~> 2.0.0)
+    database_cleaner-active_record (2.0.1)
+      activerecord (>= 5.a)
+      database_cleaner-core (~> 2.0.0)
+    database_cleaner-core (2.0.1)
     debug_inspector (1.0.0)
     deface (1.6.1)
       nokogiri (>= 1.6)
@@ -365,7 +370,7 @@ GEM
       rake
     mini_magick (4.11.0)
     mini_mime (1.0.2)
-    mini_portile2 (2.5.1)
+    mini_portile2 (2.6.1)
     minitest (5.14.4)
     momentjs-rails (2.17.1)
       railties (>= 3.1)
@@ -379,9 +384,9 @@ GEM
       jquery-rails
       rails (>= 3.2.0)
     newrelic_rpm (6.15.0)
-    nio4r (2.5.7)
-    nokogiri (1.11.4)
-      mini_portile2 (~> 2.5.0)
+    nio4r (2.5.8)
+    nokogiri (1.12.5)
+      mini_portile2 (~> 2.6.1)
       racc (~> 1.4)
     nokogumbo (2.0.4)
       nokogiri (~> 1.8, >= 1.8.4)
@@ -402,6 +407,9 @@ GEM
     omniauth-oauth2 (1.7.1)
       oauth2 (~> 1.4)
       omniauth (>= 1.9, < 3)
+    omniauth-okta (0.1.3)
+      omniauth (~> 1.5)
+      omniauth-oauth2 (>= 1.6.0, < 2.0)
     omniauth-rails_csrf_protection (0.1.2)
       actionpack (>= 4.2)
       omniauth (>= 1.3.1)
@@ -432,7 +440,7 @@ GEM
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     public_suffix (4.0.6)
-    puma (5.3.1)
+    puma (5.5.1)
       nio4r (~> 2.0)
     raabro (1.4.0)
     racc (1.5.2)
@@ -683,10 +691,11 @@ DEPENDENCIES
   momentjs-rails (~> 2.17.1)
   nested_form_fields
   newrelic_rpm
-  nokogiri (~> 1.11.4)
+  nokogiri (~> 1.12.5)
   omniauth
   omniauth-azure-activedirectory
   omniauth-linkedin-oauth2
+  omniauth-okta
   omniauth-rails_csrf_protection (~> 0.1)
   overcommit
   pg (~> 1.1)

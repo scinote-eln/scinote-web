@@ -7,14 +7,24 @@
     <span aria-hidden="true">×</span>
   </button>
   <h4 class="modal-title">
-    <%= t('my_modules.modals.update_repository_record.title',
-         repository_name: repository.name,
-         my_module_name: my_module.name) %>
+    <% if downstream %>
+        <%= t('my_modules.modals.update_repository_record.title_downstream',
+             repository_name: repository.name) %>
+    <% else %>
+      <%= t('my_modules.modals.update_repository_record.title',
+           repository_name: repository.name,
+           my_module_name: my_module.name) %>
+    <% end %>
   </h4>
 </div>
 <div class="modal-body">
-  <p><%= t('my_modules.modals.update_repository_record.message', size: selected_rows.values.count) %></p>
-  <div class="rows-list-container">
+  <% if downstream %>
+    <p class="description-1"><%= t('my_modules.modals.update_repository_record.message_downstream_1', size: selected_rows.values.count) %></p>
+    <p class="description-2 hidden"><%= t('my_modules.modals.update_repository_record.message_downstream_2') %></p>
+  <% else %>
+    <p class="description"><%= t('my_modules.modals.update_repository_record.message', size: selected_rows.values.count) %></p>
+  <% end %>
+  <div class="rows-list-container <%= 'multiple' if rows_to_assign.values.any? && rows_to_unassign.values.any? %>">
     <% if rows_to_assign.values.any? %>
       <div class="rows-to-assign">
         <p class="header">
@@ -42,16 +52,45 @@
       </div>
     <% end %>
   </div>
+  <% if downstream %>
+    <div class='my-modules-to-assign hidden'>
+      <% visible_modules = 0
+         downstream_modules = my_module.downstream_modules
+         downstream_modules.each do |m| %>
+        <% if can_assign_my_module_repository_rows?(m) %>
+          <div class='my-module-to-assign'>
+            <% if m == my_module %>
+              <span class="current-task"><%= t('my_modules.modals.assign_repository_record.current_task') %></span>
+            <% end %>
+            <%= m.name %>
+          </div>
+          <% visible_modules += 1 %>
+        <% end %>
+      <% end %>
+    </div>
+    <% if visible_modules != downstream_modules.size %>
+      <div class="hidden-my-modules hidden">
+        <i class="fas fa-exclamation-triangle"></i>
+        <%= t('my_modules.modals.assign_repository_record.hidden_tasks', size: (downstream_modules.size - visible_modules)) %>
+      </div>
+    <% end %>
+  <% end %>
 </div>
 <div class="modal-footer">
   <a class="btn btn-light" data-dismiss="modal">
     <i class="fas fa-times"></i>
     <%= t('general.cancel') %>
   </a>
-  <a class="btn btn-secondary downstream-action" >
-    <%= t('my_modules.modals.update_repository_record.task_and_downstream') %>
-  </a>
-  <a class="btn btn-primary task-action">
-    <%= t('my_modules.modals.update_repository_record.task') %>
-  </a>
+  <% if downstream %>
+    <a class="btn btn-primary next-step" >
+      <%= t('my_modules.modals.update_repository_record.next') %>
+    </a>
+    <a class="btn btn-primary downstream-action hidden" >
+      <%= t('my_modules.modals.update_repository_record.task_and_downstream') %>
+    </a>
+  <% else %>
+    <a class="btn btn-primary task-action">
+      <%= t('my_modules.modals.update_repository_record.task') %>
+    </a>
+  <% end %>
 </div>

@@ -74,7 +74,11 @@
   <% if can_manage_experiment?(@experiment) %>
     <div id="diagram" class="diagram">
       <% my_modules.each do |my_module| %>
-        <%= render partial: "canvas/edit/my_module", locals: { experiment: @experiment, my_module: my_module } %>
+        <% if can_read_my_module?(my_module) %>
+          <%= render partial: "canvas/edit/my_module", locals: { experiment: @experiment, my_module: my_module } %>
+        <% else %>
+          <%= render partial: "canvas/full_zoom/my_module_hidden", locals: { experiment: @experiment, my_module: my_module } %>
+        <% end %>
       <% end %>
     </div>
   <% end %>

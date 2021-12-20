@@ -20,8 +20,7 @@ Canaid::Permissions.register_for(Asset) do
 
     case object
     when Step
-      protocol = object.protocol
-      can_manage_protocol_in_module?(user, protocol) || can_manage_protocol_in_repository?(user, protocol)
+      can_manage_step?(user, object)
     when Result
       can_manage_result?(object)
     when RepositoryCell

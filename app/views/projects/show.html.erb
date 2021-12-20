@@ -11,13 +11,13 @@
   <%= render partial: 'projects/show/header' %>
 
   <div class="project-show-container">
-    <div class="cards-wrapper <%= 'readonly' unless can_manage_experiments?(@project) %> <%= cards_view_type_class(@current_view_type) %>"
+    <div class="cards-wrapper <%= 'readonly' unless can_manage_project?(@project) %> <%= cards_view_type_class(@current_view_type) %>"
          id="cardsWrapper"
          data-experiments-cards-url="<%= experiments_cards_project_path(@project) %>">
       <!-- list -->
       <div class="table-header">
         <div class="table-header-cell select-all-checkboxes">
-          <% if can_manage_experiments?(@project) %>
+          <% if can_manage_project?(@project) %>
             <div class="sci-checkbox-container">
               <input value="1" type="checkbox" class="sci-checkbox select-all">
               <span class="sci-checkbox-label"></span>

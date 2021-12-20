@@ -5,10 +5,10 @@
 
   <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
 
-    <% if not resource.errors.empty? %>
-    <div class="alert alert-danger" id="alert-flash">
-    <%= devise_error_messages! %>
-    </div>
+    <% if resource.errors.present? %>
+      <div class="alert alert-danger" id="alert-flash">
+        <%= devise_error_messages! %>
+      </div>
     <% end %>
 
     <%= f.hidden_field :reset_password_token %>

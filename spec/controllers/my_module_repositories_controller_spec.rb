@@ -4,14 +4,9 @@ require 'rails_helper'
 
 describe MyModuleRepositoriesController, type: :controller do
   login_user
-
-  let(:user) { subject.current_user }
-  let(:team) { create :team, created_by: user }
-  let!(:user_team) { create :user_team, :admin, user: user, team: team }
-  let(:project) { create :project, team: team, created_by: user }
-  let!(:user_project) do
-    create :user_project, :normal_user, user: user, project: project
-  end
+  include_context 'reference_project_structure' , {
+    role: :normal_user
+  }
   let!(:repository) { create :repository, created_by: user, team: team }
   let!(:repository_row) do
     create :repository_row, created_by: user, repository: repository
@@ -19,8 +14,6 @@ describe MyModuleRepositoriesController, type: :controller do
   let!(:repository_row_2) do
     create :repository_row, created_by: user, repository: repository
   end
-  let(:experiment) { create :experiment, project: project }
-  let(:my_module) { create :my_module, experiment: experiment }
 
   describe 'PUT update (assign repository records)' do
     let(:params) do
@@ -55,7 +48,7 @@ describe MyModuleRepositoriesController, type: :controller do
                             rows_to_assign: [repository_row.id],
                             downstream: true }
       3.times do |_i|
-        child_module = create :my_module, experiment: experiment
+        child_module = create :my_module, experiment: experiment, created_by: experiment.created_by
         Connection.create(output_id: parent_my_module.id, input_id: child_module.id)
       end
       expect { put :update, params: params_downstream, format: :json }
@@ -104,7 +97,7 @@ describe MyModuleRepositoriesController, type: :controller do
                             rows_to_unassign: [repository_row.id],
                             downstream: true }
       3.times do |_i|
-        child_module = create :my_module, experiment: experiment
+        child_module = create :my_module, experiment: experiment, created_by: experiment.created_by
         Connection.create(output_id: parent_my_module.id, input_id: child_module.id)
         create :mm_repository_row, repository_row: repository_row,
                                    my_module: child_module,
@@ -162,7 +155,7 @@ describe MyModuleRepositoriesController, type: :controller do
                             rows_to_unassign: [repository_row_2.id],
                             downstream: true }
       3.times do |_i|
-        child_module = create :my_module, experiment: experiment
+        child_module = create :my_module, experiment: experiment, created_by: experiment.created_by
         Connection.create(output_id: parent_my_module.id, input_id: child_module.id)
         create :mm_repository_row, repository_row: repository_row_2,
                                    my_module: child_module,

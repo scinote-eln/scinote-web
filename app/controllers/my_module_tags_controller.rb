@@ -2,7 +2,7 @@ class MyModuleTagsController < ApplicationController
   include InputSanitizeHelper
 
   before_action :load_vars, except: :canvas_index
-  before_action :check_view_permissions, only: %i(index index_edit)
+  before_action :check_view_permissions, except: %i(canvas_index create destroy destroy_by_tag_id)
   before_action :check_manage_permissions, only: %i(create destroy destroy_by_tag_id)
 
   def index_edit
@@ -29,7 +29,7 @@ class MyModuleTagsController < ApplicationController
         render json: {
           html_module_header: render_to_string(
             partial: 'my_modules/tags.html.erb',
-            locals: { my_module: @my_module, editable: can_manage_module?(@my_module) }
+            locals: { my_module: @my_module, editable: can_manage_my_module?(@my_module) }
           )
         }
       end
@@ -38,7 +38,8 @@ class MyModuleTagsController < ApplicationController
 
   def canvas_index
     experiment = Experiment.find(params[:id])
-    render_403 unless can_read_experiment?(experiment)
+    return render_403 unless can_read_experiment?(experiment)
+
     res = []
     experiment.my_modules.active.each do |my_module|
       res << {
@@ -113,10 +114,10 @@ class MyModuleTagsController < ApplicationController
   end
 
   def search_tags
-    assigned_tags = @my_module.my_module_tags.pluck(:tag_id)
+    assigned_tags = @my_module.my_module_tags.select(:tag_id)
     all_tags = @my_module.experiment.project.tags
     tags = all_tags.where.not(id: assigned_tags)
-                   .search(current_user, false, params[:query])
+                   .where_attributes_like(:name, params[:query])
                    .select(:id, :name, :color)
                    .limit(6)
 
@@ -157,17 +158,15 @@ class MyModuleTagsController < ApplicationController
   def load_vars
     @my_module = MyModule.find_by_id(params[:my_module_id])
 
-    unless @my_module
-      render_404
-    end
+    render_404 if @my_module.blank?
   end
 
   def check_view_permissions
-    render_403 unless can_read_experiment?(@my_module.experiment)
+    render_403 unless can_read_my_module?(@my_module)
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_module?(@my_module)
+    render_403 unless can_manage_my_module_tags?(@my_module)
   end
 
   def mt_params

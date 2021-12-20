@@ -86,9 +86,10 @@ class ProjectsOverviewService
 
   def fetch_project_records
     @team.projects
+         .includes(user_assignments: %i(user user_role), team: :user_teams)
+         .includes(:project_comments, experiments: { my_modules: { my_module_status: :my_module_status_implications } })
          .visible_to(@user, @team)
          .left_outer_joins(:project_comments)
-         .preload(:user_projects, team: :user_teams)
          .select('projects.*')
          .select('COUNT(DISTINCT comments.id) AS comment_count')
          .group('projects.id')
@@ -96,7 +97,7 @@ class ProjectsOverviewService
 
   def fetch_project_folder_records
     project_folders = @team.project_folders
-                           .preload(team: :user_teams)
+                           .includes(team: :user_teams)
                            .joins('LEFT OUTER JOIN project_folders child_folders
                                    ON child_folders.parent_folder_id = project_folders.id')
                            .left_outer_joins(:projects)
@@ -111,7 +112,7 @@ class ProjectsOverviewService
     records = records.active if @view_mode == 'active'
     records = records.where_attributes_like('projects.name', @params[:search]) if @params[:search].present?
     if @params[:members].present?
-      records = records.joins(:user_projects).where('user_projects.user_id IN (?)', @params[:members])
+      records = records.joins(:user_assignments).where(user_assignments: { user_id: @params[:members] })
     end
     records = records.where('projects.created_at > ?', @params[:created_on_from]) if @params[:created_on_from].present?
     records = records.where('projects.created_at < ?', @params[:created_on_to]) if @params[:created_on_to].present?

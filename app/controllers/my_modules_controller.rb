@@ -9,7 +9,7 @@ class MyModulesController < ApplicationController
   before_action :load_vars, except: %i(restore_group)
   before_action :check_archive_permissions, only: %i(update)
   before_action :check_manage_permissions, only: %i(description due_date update_description update_protocol_description)
-  before_action :check_view_permissions, except: %i(update update_description update_protocol_description restore_group)
+  before_action :check_read_permissions, except: %i(update update_description update_protocol_description restore_group)
   before_action :check_update_state_permissions, only: :update_state
   before_action :set_inline_name_editing, only: %i(protocols results activities archive)
   before_action :load_experiment_my_modules, only: %i(protocols results activities archive)
@@ -124,10 +124,26 @@ class MyModulesController < ApplicationController
     start_date_changes = @my_module.changes[:started_on]
     due_date_changes = @my_module.changes[:due_date]
 
+    if @my_module.completed_on_changed? && !can_complete_my_module?(@my_module)
+      render_403 && return
+    end
+
+    if description_changed && !can_update_my_module_description?(@my_module)
+      render_403 && return
+    end
+
+    if start_date_changes.present? && !can_update_my_module_start_date?(@my_module)
+      render_403 && return
+    end
+
+    if due_date_changes.present? && !can_update_my_module_start_date?(@my_module)
+      render_403 && return
+    end
+
     if @my_module.archived_changed?(from: false, to: true)
       saved = @my_module.archive(current_user)
     else
-      render_403 && return unless can_manage_module?(@my_module)
+      render_403 && return unless can_manage_my_module?(@my_module)
 
       saved = @my_module.save
       if saved
@@ -154,11 +170,11 @@ class MyModulesController < ApplicationController
             status: :ok,
             start_date_label: render_to_string(
               partial: 'my_modules/start_date_label.html.erb',
-              locals: { my_module: @my_module, my_module_editable: true }
+              locals: { my_module: @my_module, start_date_editable: true }
             ),
             due_date_label: render_to_string(
               partial: 'my_modules/due_date_label.html.erb',
-              locals: { my_module: @my_module, my_module_editable: true }
+              locals: { my_module: @my_module, due_date_editable: true }
             ),
             card_due_date_label: render_to_string(
               partial: 'my_modules/card_due_date_label.html.erb',
@@ -185,6 +201,7 @@ class MyModulesController < ApplicationController
   end
 
   def update_description
+    render_403 && return unless can_update_my_module_description?(@my_module)
     old_description = @my_module.description
     respond_to do |format|
       format.json do
@@ -270,7 +287,7 @@ class MyModulesController < ApplicationController
     my_modules = experiment.my_modules.archived.where(id: params[:my_modules_ids])
     counter = 0
     my_modules.each do |my_module|
-      next unless can_restore_module?(my_module)
+      next unless can_restore_my_module?(my_module)
 
       my_module.transaction do
         my_module.restore!(current_user)
@@ -316,29 +333,30 @@ class MyModulesController < ApplicationController
   end
 
   def load_experiment_my_modules
-    @experiment_my_modules = @my_module.experiment.my_modules.active.order(:name)
+    @experiment_my_modules = @my_module.experiment.my_modules.where(archived: @my_module.archived?).order(:name)
   end
 
   def check_manage_permissions
-    render_403 && return unless can_manage_module?(@my_module)
+    render_403 && return unless can_manage_my_module?(@my_module)
   end
 
   def check_archive_permissions
-    return render_403 if my_module_params[:archived] == 'true' && !can_archive_module?(@my_module)
+    return render_403 if my_module_params[:archived] == 'true' && !can_archive_my_module?(@my_module)
   end
 
-  def check_view_permissions
-    render_403 unless can_read_protocol_in_module?(@my_module.protocol)
+  def check_read_permissions
+    render_403 unless can_read_my_module?(@my_module)
   end
 
   def check_update_state_permissions
-    return render_403 unless can_change_my_module_flow_status?(@my_module)
+    return render_403 unless can_update_my_module_status?(@my_module)
 
     render_404 unless @my_module.my_module_status
   end
 
   def set_inline_name_editing
-    return unless can_manage_module?(@my_module)
+    return unless can_manage_my_module?(@my_module)
+
     @inline_editable_title_config = {
       name: 'title',
       params_group: 'my_module',

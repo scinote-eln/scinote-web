@@ -11,7 +11,12 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
     @valid_project = create(:project, name: Faker::Name.unique.name,
                             created_by: @user, team: @teams.first)
 
-    create(:user_project, user: @user, project: @valid_project, role: 0)
+    create(:user_project, user: @user, project: @valid_project)
+    create :user_assignment,
+           assignable: @valid_project,
+           user: @user,
+           user_role: UserRole.find_by(name: I18n.t('user_roles.predefined.owner')),
+           assigned_by: @user
 
     @unaccessible_project = create(:project, name: Faker::Name.unique.name,
                                    created_by: @user, team: @teams.second)
