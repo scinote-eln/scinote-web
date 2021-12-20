@@ -22,6 +22,14 @@ export default {
       this.updateFilter();
     },
     updateFilter() {
+      console.log({
+        id: this.filter.id,
+        isBlank: this.isBlank,
+        data: {
+          operator: this.operator,
+          parameters: this.parameters
+        }
+      });
       this.$emit(
         'filter:update',
         {

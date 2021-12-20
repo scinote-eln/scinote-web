@@ -1,0 +1,26 @@
+<div class="modal fade" id="modalSaveRepositoryTableFilter" tabindex="-1" role="dialog" aria-labelledby="modal-import-records-label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">
+          <%= t('repositories.show.filters.save_filters') %>
+        </h4>
+      </div>
+      <%= form_with model: [@repository.becomes(Repository), RepositoryTableFilter.new], method: :post, :html => { :id => "saveRepositoryTableFilterForm" }, remote: true do |f| %>
+        <div class="modal-body">
+          <%= f.hidden_field :repository_table_filter_elements_json, class: "sci-input-field" %>
+          <div class="sci-input-container">
+            <%= f.label :name %>
+            <%= f.text_field :name, class: "sci-input-field" %>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('general.cancel')%></button>
+          <%= f.submit t('general.save'), class: "btn btn-success" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

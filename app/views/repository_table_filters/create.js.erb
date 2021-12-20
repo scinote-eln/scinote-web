@@ -1,0 +1,8 @@
+<% if flash[:error] %>
+  HelperModule.flashAlertMsg('<%= flash[:error] %>', 'danger');
+<% else %>
+  $('#modalSaveRepositoryTableFilter').modal('hide');
+  $('#overwriteFilterLink').removeClass('hidden');
+  $('#overwriteFilterLink').attr('data-repository-table-filter-id', <%= @repository_table_filter.id %>);
+  $('#currentFilterName').html('<%= @repository_table_filter.name %>');
+<% end %>

@@ -197,8 +197,29 @@
     });
   }
 
+  function initFilterSaving() {
+    $(document).on('click', '#overwriteFilterLink', function() {
+      // change to 'update' form
+      $('#saveRepositoryTableFilterForm').attr(
+        'action',
+        $('#saveRepositoryTableFilterForm').attr('action') + '/' + $(this).data().repositoryTableFilterId
+      );
+      $('#saveRepositoryTableFilterForm').attr('method', 'put');
+
+      // revert to 'create' form
+      $('#modalSaveRepositoryTableFilter').on('hidden.bs.modal', function() {
+        $('#saveRepositoryTableFilterForm').attr(
+          'action',
+          $('#saveRepositoryTableFilterForm').attr('action').replace(/\/\d+$/, '')
+        );
+        $('#saveRepositoryTableFilterForm').attr('method', 'post');
+      });
+    });
+  }
+
   initImportRecordsModal();
   initTable();
   initRepositoryViewSwitcher();
   initArchivingActionsInDropdown();
+  initFilterSaving();
 }(window));
