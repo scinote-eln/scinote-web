@@ -32,15 +32,17 @@
             <input name="select_all" value="1" type="checkbox" class="sci-checkbox">
             <span class="sci-checkbox-label"></span>
         </th>
-        <th id="assigned" data-unmanageable="true"><%= t("repositories.table.assigned") %></th>
+        <% unless @repository.is_a?(BmtRepository) %>
+          <th id="assigned" data-unmanageable="true"><%= t("repositories.table.assigned") %></th>
+        <% end %>
         <% if @repository.is_a?(LinkedRepository) %>
           <th id="row-external-id"><%= t('repositories.table.external_id') %></th>
         <% end %>
         <th id="row-id"><%= t("repositories.table.id") %></th>
         <th id="row-name"><%= t("repositories.table.row_name") %></th>
         <th id="added-on" ><%= t("repositories.table.added_on") %></th>
+        <th id="added-by" ><%= t("repositories.table.added_by") %></th>
         <% unless @repository.is_a?(BmtRepository) %>
-          <th id="added-by" ><%= t("repositories.table.added_by") %></th>
           <th id="archived-on"><%= t("repositories.table.archived_on") %></th>
           <th id="archived-by"><%= t("repositories.table.archived_by") %></th>
         <% end %>

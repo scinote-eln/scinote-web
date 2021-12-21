@@ -13,16 +13,12 @@ class BmtRepository < LinkedRepository
 
   def default_sortable_columns
     [
-      'assigned',
+      'users.full_name',
       'repository_rows.external_id',
       'repository_rows.id',
       'repository_rows.name',
       'repository_rows.created_at'
     ]
-  end
-
-  def default_search_fileds
-    super - ['users.full_name']
   end
 
   private
