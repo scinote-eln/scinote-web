@@ -14,9 +14,15 @@ class RepositoryTableFilterElement < ApplicationRecord
                    greater_than_or_equal_to: 10,
                    less_than_or_equal_to: 11,
                    between: 12,
-                   file_is_attached: 13,
-                   file_is_not_attached: 14,
-                   file_contains: 15 }
+                   file_attached: 13,
+                   file_not_attached: 14,
+                   file_contains: 15,
+                   today: 16,
+                   yesterday: 17,
+                   last_week: 18,
+                   this_month: 19,
+                   last_year: 20,
+                   this_year: 21 }
 
   belongs_to :repository_table_filter, inverse_of: :repository_table_filter_elements
   belongs_to :repository_column, inverse_of: :repository_table_filter_elements

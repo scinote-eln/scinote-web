@@ -39,7 +39,7 @@
           { value: 'this_year', label: this.i18n.t('repositories.show.repository_filter.filters.operators.this_year') },
           { value: 'last_year', label: this.i18n.t('repositories.show.repository_filter.filters.operators.last_year') },
           { value: 'equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.equal_to') },
-          { value: 'not_equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.unequal_to') },
+          { value: 'unequal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.unequal_to') },
           { value: 'greater_than', label: this.i18n.t('repositories.show.repository_filter.filters.operators.greater_than') },
           { value: 'greater_than_or_equal', label: this.i18n.t('repositories.show.repository_filter.filters.operators.greater_than_or_equal_to') },
           { value: 'less_than', label: this.i18n.t('repositories.show.repository_filter.filters.operators.less_than') },

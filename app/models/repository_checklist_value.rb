@@ -25,6 +25,15 @@ class RepositoryChecklistValue < ApplicationRecord
     formatted(separator: repository_cell.repository_column.delimiter_char)
   end
 
+  def self.add_filter_condition(repository_rows, filter_element)
+    repository_rows
+      .where(repository_checklist_values: {
+               repository_checklist_items_values: {
+                 repository_checklist_item: { id: filter_element.parameters['item_ids'] }
+               }
+             })
+  end
+
   def data
     repository_checklist_items.map { |i| { value: i.id, label: i.data } }
   end

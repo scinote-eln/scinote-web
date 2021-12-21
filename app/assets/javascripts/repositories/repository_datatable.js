@@ -405,6 +405,7 @@ var RepositoryDatatable = (function(global) {
       destroy: true,
       ajax: {
         url: $(TABLE_ID).data('source'),
+        contentType: 'application/json',
         data: function(d) {
           d.archived = $('.repository-show').hasClass('archived');
 
@@ -412,9 +413,10 @@ var RepositoryDatatable = (function(global) {
             d.external_ids = $('[data-external-ids]').attr('data-external-ids').split(',');
           }
 
-          if ($('[data-repository-filter-json]')) {
-            d.repository_filter_json = $('[data-repository-filter-json]').attr('data-repository-filter-json');
+          if ($('[data-repository-filter-json]').attr('data-repository-filter-json')) {
+            d.advanced_search = JSON.parse($('[data-repository-filter-json]').attr('data-repository-filter-json'));
           }
+          return JSON.stringify(d);
         },
         global: false,
         type: 'POST'

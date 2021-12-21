@@ -10,6 +10,29 @@ class RepositoryTimeValue < RepositoryDateTimeValueBase
     super(:time)
   end
 
+  def self.add_filter_condition(repository_rows, filter_element)
+    parameters = filter_element.parameters
+    case filter_element.operator
+    when 'equal_to'
+      repository_rows.where(repository_date_time_values: { data: parameters['time'] })
+    when 'unequal_to'
+      repository_rows.where.not(repository_date_time_values: { data: parameters['time'] })
+    when 'greater_than'
+      repository_rows.where('repository_date_time_values.data > ?', parameters['time'])
+    when 'greater_than_or_equal_to'
+      repository_rows.where('repository_date_time_values.data >= ?', parameters['time'])
+    when 'less_than'
+      repository_rows.where('repository_date_time_values.data < ?', parameters['time'])
+    when 'less_than_or_equal_to'
+      repository_rows.where('repository_date_time_values.data =< ?', parameters['time'])
+    when 'between'
+      repository_rows.where('repository_date_time_values.data > ? AND repository_date_time_values.data < ?',
+                            parameters['start_time'], parameters['end_time'])
+    else
+      raise ArgumentError, 'Wrong operator for RepositoryTimeValue!'
+    end
+  end
+
   def self.new_with_payload(payload, attributes)
     value = new(attributes)
     value.data = Time.zone.parse(payload)
