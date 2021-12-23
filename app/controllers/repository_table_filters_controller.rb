@@ -18,20 +18,23 @@ class RepositoryTableFiltersController < ApplicationController
   end
 
   def create
-    @repository_table_filter = @repository.repository_table_filters.new(
+    repository_table_filter = @repository.repository_table_filters.new(
       name: repository_table_filter_params[:name],
       default_columns: repository_table_filter_elements_params[:default_columns],
       created_by: current_user
     )
-    @repository_table_filter.transaction do
-      @repository_table_filter.save!
+    repository_table_filter.transaction do
+      repository_table_filter.save!
       repository_table_filter_elements_params[:custom_columns].each do |custom_column_params|
-        @repository_table_filter.repository_table_filter_elements.create!(custom_column_params)
+        repository_table_filter.repository_table_filter_elements.create!(custom_column_params)
       end
     end
-  rescue ActiveRecord::RecordInvalid => e
-    error_key = e.message.include?('Repository column must exist') ? 'repository_column.must_exist' : 'general'
-    flash[:error] = I18n.t("activerecord.errors.models.repository_table_filter_element.attributes.#{error_key}")
+
+    render json: repository_table_filter
+  rescue ActiveRecord::RecordInvalid
+    error_key = repository_table_filter.errors[:repository_table_filter_elements] ? 'repository_column.must_exist' : 'general'
+    message = I18n.t("activerecord.errors.models.repository_table_filter_element.attributes.#{error_key}")
+    render json: { message: message }, status: :unprocessable_entity
   end
 
   def update
@@ -53,9 +56,12 @@ class RepositoryTableFiltersController < ApplicationController
                                 .update!(custom_column_params)
       end
     end
-  rescue ActiveRecord::RecordInvalid => e
-    error_key = e.message.include?('Repository column must exist') ? 'repository_column.must_exist' : 'general'
-    flash[:error] = I18n.t("activerecord.errors.models.repository_table_filter_element.attributes.#{error_key}")
+
+    render json: @repository_table_filter
+  rescue ActiveRecord::RecordInvalid
+    error_key = @repository_table_filter.errors[:repository_table_filter_elements] ? 'repository_column.must_exist' : 'general'
+    message = I18n.t("activerecord.errors.models.repository_table_filter_element.attributes.#{error_key}")
+    render json: { message: message }, status: :unprocessable_entity
   end
 
   def destroy

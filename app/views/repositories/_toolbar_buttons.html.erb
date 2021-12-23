@@ -13,8 +13,7 @@
       <span class="hidden-xs"><%= t("repositories.add_new_record") %></span>
     </button>
   <% end %>
-
-  <% if can_manage_repository_rows?(@repository) %>
+  <% if can_manage_repository?(@repository) %>
     <div class="repository-cog dropdown hidden" id="saveRepositoryFilters">
       <button type="button"
               class="btn btn-default"

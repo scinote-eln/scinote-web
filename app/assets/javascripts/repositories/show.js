@@ -199,20 +199,49 @@
 
   function initFilterSaving() {
     $(document).on('click', '#overwriteFilterLink', function() {
-      // change to 'update' form
-      $('#saveRepositoryTableFilterForm').attr(
-        'action',
-        $('#saveRepositoryTableFilterForm').attr('action') + '/' + $(this).data().repositoryTableFilterId
-      );
-      $('#saveRepositoryTableFilterForm').attr('method', 'put');
+      var $modal = $('#modalSaveRepositoryTableFilter');
+
+      // set overwrite flag
+      $modal.data('overwrite', true);
 
       // revert to 'create' form
-      $('#modalSaveRepositoryTableFilter').on('hidden.bs.modal', function() {
-        $('#saveRepositoryTableFilterForm').attr(
-          'action',
-          $('#saveRepositoryTableFilterForm').attr('action').replace(/\/\d+$/, '')
-        );
-        $('#saveRepositoryTableFilterForm').attr('method', 'post');
+      $modal.on('hidden.bs.modal', function() {
+        $modal.removeData('overwrite');
+      });
+    });
+
+    $(document).on('click', '#saveRepositoryTableFilterButton', function() {
+      var $modal = $('#modalSaveRepositoryTableFilter');
+      var url = $modal.data().saveUrl;
+      var method;
+
+      if ($modal.data().overwrite) {
+        method = 'PUT';
+        url = url + '/' + $modal.data().repositoryTableFilterId;
+      } else {
+        method = 'POST';
+      }
+
+      $.ajax({
+        type: method,
+        url: url,
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify({
+          repository_table_filter: {
+            name: $('#repository_table_filter_name').val(),
+            repository_table_filter_elements_json: $('#repository_table_filter_elements_json').val()
+          }
+        }),
+        success: function(response) {
+          var $overwriteLink = $('#overwriteFilterLink');
+          $modal.modal('hide');
+          $overwriteLink.removeClass('hidden');
+          $modal.data('repositoryTableFilterId', response.data.id);
+          $('#currentFilterName').html(response.data.name);
+        },
+        error: function(response) {
+          HelperModule.flashAlertMsg(response.responseJSON.message, 'danger');
+        }
       });
     });
   }
