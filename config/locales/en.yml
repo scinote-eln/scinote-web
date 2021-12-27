@@ -1425,7 +1425,7 @@ en:
               distance_type: "Distance type"
               exact: "Exact"
               maximum: "Maximum"
-            fullSequenceFilter:
+            fullsequenceFilter:
               name: "Full sequence"
               placeholder: "Enter full sequence"
               derivatives_included: "Derivatives included"
