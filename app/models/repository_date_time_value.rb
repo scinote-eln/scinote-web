@@ -10,6 +10,44 @@ class RepositoryDateTimeValue < RepositoryDateTimeValueBase
     super(:full_with_comma)
   end
 
+  def self.add_filter_condition(repository_rows, filter_element)
+    parameters = filter_element.parameters
+    case filter_element.operator
+    when 'today'
+      repository_rows.where('repository_date_time_values.data >= ?', Time.zone.now.beginning_of_day)
+    when 'yesterday'
+      repository_rows.where('repository_date_time_values.data >= ? AND repository_date_time_values.data < ?',
+                            Time.zone.now.beginning_of_day - 1.day, Time.zone.now.beginning_of_day)
+    when 'last_week'
+      repository_rows.where('repository_date_time_values.data >= ? AND repository_date_time_values.data < ?',
+                            Time.zone.now.beginning_of_week - 1.week, Time.zone.now.beginning_of_week)
+    when 'this_month'
+      repository_rows.where('repository_date_time_values.data >= ?', Time.zone.now.beginning_of_month)
+    when 'last_year'
+      repository_rows.where('repository_date_time_values.data >= ? AND repository_date_time_values.data < ?',
+                            Time.zone.now.beginning_of_year - 1.year, Time.zone.now.beginning_of_year)
+    when 'this_year'
+      repository_rows.where('repository_date_time_values.data >= ?', Time.zone.now.beginning_of_year)
+    when 'equal_to'
+      repository_rows.where(repository_date_time_values: { data: parameters['datetime'] })
+    when 'unequal_to'
+      repository_rows.where.not(repository_date_time_values: { data: parameters['datetime'] })
+    when 'greater_than'
+      repository_rows.where('repository_date_time_values.data > ?', parameters['datetime'])
+    when 'greater_than_or_equal_to'
+      repository_rows.where('repository_date_time_values.data >= ?', parameters['datetime'])
+    when 'less_than'
+      repository_rows.where('repository_date_time_values.data < ?', parameters['datetime'])
+    when 'less_than_or_equal_to'
+      repository_rows.where('repository_date_time_values.data <= ?', parameters['datetime'])
+    when 'between'
+      repository_rows.where('repository_date_time_values.data > ? AND repository_date_time_values.data < ?',
+                            parameters['start_datetime'], parameters['end_datetime'])
+    else
+      raise ArgumentError, 'Wrong operator for RepositoryDateTimeValue!'
+    end
+  end
+
   def export_formatted
     I18n.l(data, format: :full)
   end

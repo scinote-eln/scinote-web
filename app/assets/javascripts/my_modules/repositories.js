@@ -112,11 +112,13 @@ var MyModuleRepositories = (function() {
       destroy: true,
       ajax: {
         url: $(tableContainer).data('source'),
+        contentType: 'application/json',
         data: function(d) {
           d.order[0].column = tableContainer.data('name-column-id');
           d.assigned = 'assigned';
           d.view_mode = true;
           d.simple_view = true;
+          return JSON.stringify(d);
         },
         global: false,
         type: 'POST'
@@ -158,9 +160,11 @@ var MyModuleRepositories = (function() {
       destroy: true,
       ajax: {
         url: $(tableContainer).data('source'),
+        contentType: 'application/json',
         data: function(d) {
           if (options.assigned) d.assigned = 'assigned';
           d.view_mode = true;
+          return JSON.stringify(d);
         },
         global: false,
         type: 'POST'

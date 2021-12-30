@@ -25,6 +25,19 @@ class RepositoryAssetValue < ApplicationRecord
     asset.file_name
   end
 
+  def self.add_filter_condition(repository_rows, filter_element)
+    case filter_element.operator
+    when 'file_contains'
+      repository_rows.joins(repository_asset_values: { asset: :asset_text_datum })
+                     .where('asset_text_data.data_vector @@ to_tsquery(?)',
+                            "%#{sanitize_sql_like(filter_element.parameters['text'])}%")
+    when 'file_attached'
+      repository_rows.where.not(repository_asset_values: nil)
+    else
+      raise ArgumentError, 'Wrong operator for RepositoryAssetValue!'
+    end
+  end
+
   def data
     asset.file_name
   end

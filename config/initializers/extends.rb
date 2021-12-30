@@ -86,6 +86,12 @@ class Extends
     }, RepositoryAssetValue: {
       field: 'active_storage_blobs.filename',
       includes: { repository_asset_values: { asset: { file_attachment: :blob } } }
+    }, RepositoryDateTimeValue: {
+      field: 'repository_date_time_values.data', includes: :repository_date_time_values
+    }, RepositoryDateValue: {
+      field: 'repository_date_time_values.data', includes: :repository_date_values
+    }, RepositoryTimeValue: {
+      field: 'repository_date_time_values.data', includes: :repository_time_values
     }
   }
 
