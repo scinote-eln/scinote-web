@@ -1581,6 +1581,7 @@ en:
       alert_heading: "Deleting a column has following consequences:"
       alert_line_1: "you will lose information in this column for %{nr} item(s);"
       alert_line_2: "the column will be deleted for all team members."
+      alert_line_3: "any saved inventory filters relying on this column will be updated (individual filters based on this column will be removed from saved filters)."
       delete: "Delete"
     modal_parse:
       title: 'Import items'
@@ -1642,7 +1643,7 @@ en:
       name: "Name"
       colum_type: "Column type"
       dropdown_item_descirption: "Dropdown items should be separated by comma."
-      change_multi_select_items_warning: "Be careful: changing existing list items will result in deselecting previously selected items."
+      change_multi_select_items_warning: "Be careful: changing existing list items will result in deselecting previously selected items. Removing a list item will remove it also from any saved inventory filters."
       too_many_items_label: " of %{limit} items"
       select:
         repository_text_value: "Text"
