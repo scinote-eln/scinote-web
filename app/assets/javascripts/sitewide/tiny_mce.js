@@ -104,6 +104,22 @@ var TinyMCE = (function() {
     }
   }
 
+  // Update scroll position after exit
+  function updateScrollPosition(editorForm) {
+    if (editorForm.offset().top < $(window).scrollTop()) {
+      $(window).scrollTop(editorForm.offset().top - 150);
+    }
+  }
+
+  function saveAction(editor) {
+    var editorForm = $(editor.getContainer()).closest('form');
+    editorForm.clearFormErrors();
+    editor.setProgressState(1);
+    editor.save();
+    editorForm.submit();
+    updateScrollPosition(editorForm);
+  }
+
   // returns a public API for TinyMCE editor
   return Object.freeze({
     init: function(selector, onSaveCallback) {
@@ -242,13 +258,6 @@ var TinyMCE = (function() {
             // Init image toolbar
             initImageToolBar(editor);
 
-            // Update scroll position after exit
-            function updateScrollPosition() {
-              if (editorForm.offset().top < $(window).scrollTop()) {
-                $(window).scrollTop(editorForm.offset().top - 150);
-              }
-            }
-
             // Init Save button
             editorForm
               .find('.tinymce-save-button')
@@ -256,11 +265,7 @@ var TinyMCE = (function() {
               .appendTo(menuBar)
               .on('click', function(event) {
                 event.preventDefault();
-                editorForm.clearFormErrors();
-                editor.setProgressState(1);
-                editor.save();
-                editorForm.submit();
-                updateScrollPosition();
+                saveAction(editor);
               });
 
             // After save action
@@ -296,7 +301,7 @@ var TinyMCE = (function() {
                 editorForm.find('.tinymce-status-badge').addClass('hidden');
                 editorForm.find('.tinymce-view').removeClass('hidden');
                 editor.remove();
-                updateScrollPosition();
+                updateScrollPosition(editorForm);
               })
               .removeClass('hidden');
 
@@ -363,7 +368,8 @@ var TinyMCE = (function() {
               restoreDraftNotification(selector, editor);
             });
           },
-          codesample_content_css: $(selector).data('highlightjs-path')
+          codesample_content_css: $(selector).data('highlightjs-path'),
+          save_onsavecallback: function(editor) { saveAction(editor); }
         });
       }
     },
