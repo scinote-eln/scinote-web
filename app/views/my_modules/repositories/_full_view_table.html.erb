@@ -19,6 +19,9 @@
         </div>
       </th>
       <th id="assigned"><%= t("repositories.table.assigned") %></th>
+      <% if @repository.is_a?(LinkedRepository) %>
+        <th id="row-external-id"><%= t('repositories.table.external_id') %></th>
+      <% end %>
       <th id="row-id"><%= t("repositories.table.id") %></th>
       <th id="row-name"><%= t("repositories.table.row_name") %></th>
       <th id="added-on"><%= t("repositories.table.added_on") %></th>
