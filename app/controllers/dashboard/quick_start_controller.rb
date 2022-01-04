@@ -20,7 +20,7 @@ module Dashboard
     end
 
     def project_filter
-      projects = Project.managable_by_user(current_user)
+      projects = Project.readable_by_user(current_user)
                         .search(current_user, false, params[:query], 1, current_team)
                         .select(:id, :name)
       projects = projects.map { |i| { value: i.id, label: escape_input(i.name) } }
@@ -39,7 +39,9 @@ module Dashboard
                               .search(current_user, false, params[:query], 1, current_team)
                               .select(:id, :name)
         experiments = experiments.map { |i| { value: i.id, label: escape_input(i.name) } }
-        if (experiments.map { |i| i[:label] }.exclude? params[:query]) && params[:query].present?
+        if (experiments.map { |i| i[:label] }.exclude? params[:query]) &&
+           params[:query].present? &&
+           can_create_project_experiments?(@project)
           experiments = [{ value: 0, label: params[:query] }] + experiments
         end
       end
@@ -57,7 +59,7 @@ module Dashboard
     end
 
     def load_project
-      @project = current_team.projects.managable_by_user(current_user).find_by(id: params.dig(:project, :id))
+      @project = current_team.projects.readable_by_user(current_user).find_by(id: params.dig(:project, :id))
     end
 
     def load_experiment
