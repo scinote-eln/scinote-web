@@ -1,43 +1,44 @@
 <div class="my-modules-list-partial">
-  <% grouped_by_prj_exp(my_modules).each do |task_group| %>
-  <div class="task-group">
-    <div class="header">
-      <% if task_group[:project_archived]%>
-        <span class="archived"><%= t('general.archived') %></span>
-      <% end %>
-      <span class="project" title="<%= task_group[:project_name] %>"><%= task_group[:project_name] %></span>
-      <span class="slash">/</span>
-      <% if task_group[:experiment_archived] %>
-        <span class="archived"><%= t('general.archived') %></span>
-      <% end %>
-      <span class="experiment" title="<%= task_group[:experiment_name] %>"><%= task_group[:experiment_name] %></span>
-    </div>
-    <div class="tasks">
-      <% task_group[:tasks].each do |task| %>
-      <div class="task">
-        <%= draw_custom_icon('task-icon') %>
-        <% if task.archived %>
+  <% grouped_my_modules = grouped_by_prj_exp(my_modules) %>
+  <% grouped_my_modules.each do |task_group| %>
+    <div class="task-group">
+      <div class="header">
+        <% if task_group[:project_archived] %>
           <span class="archived"><%= t('general.archived') %></span>
         <% end %>
-        <%= link_to(task.name, protocols_my_module_path(task.id), {class: "task-link", title: task.name, target: "_blank"}) %>
+        <span class="project" title="<%= task_group[:project_name] %>"><%= task_group[:project_name] %></span>
+        <span class="slash">/</span>
+        <% if task_group[:experiment_archived] %>
+          <span class="archived"><%= t('general.archived') %></span>
+        <% end %>
+        <span class="experiment" title="<%= task_group[:experiment_name] %>"><%= task_group[:experiment_name] %></span>
       </div>
-      <% end %>
+      <div class="tasks">
+        <% task_group[:tasks].each do |task| %>
+          <div class="task">
+            <%= draw_custom_icon('task-icon') %>
+            <% if task.archived? %>
+              <span class="archived"><%= t('general.archived') %></span>
+            <% end %>
+            <%= link_to(task.name, protocols_my_module_path(task.id), { class: 'task-link', title: task.name, target: '_blank' }) %>
+          </div>
+        <% end %>
+      </div>
     </div>
-  </div>
   <% end %>
-  <% if defined?(private_modules) && private_modules.size.positive? %>
-  <div class="private-tasks-counter">
-    <%= t('my_modules.modules_list_partial.private_tasks_html', nr: private_modules.size ) %>
-  </div>
+  <% if defined?(private_modules_number) && private_modules_number.positive? %>
+    <div class="private-tasks-counter">
+      <%= t('my_modules.modules_list_partial.private_tasks_html', nr: private_modules_number) %>
+    </div>
   <% end %>
-  <% unless my_modules.any? || (defined?(private_modules) && private_modules.any?) %>
-  <div class="no-results-placeholder">
-    <span class="fa-stack">
-      <i class="fas fa-search fa-stack-1x"></i>
-      <i class="fas fa-slash fa-stack-1x fa-flip-vertical"></i>
-    </span>
-    <h2 class="title"><%= t('my_modules.modules_list_partial.no_results.title') %></h2>
-    <p><%= t('my_modules.modules_list_partial.no_results.description') %></p>
-  </div>
+  <% unless grouped_my_modules.present? || (defined?(private_modules_number) && private_modules_number.positive?) %>
+    <div class="no-results-placeholder">
+      <span class="fa-stack">
+        <i class="fas fa-search fa-stack-1x"></i>
+        <i class="fas fa-slash fa-stack-1x fa-flip-vertical"></i>
+      </span>
+      <h2 class="title"><%= t('my_modules.modules_list_partial.no_results.title') %></h2>
+      <p><%= t('my_modules.modules_list_partial.no_results.description') %></p>
+    </div>
   <% end %>
 </div>
