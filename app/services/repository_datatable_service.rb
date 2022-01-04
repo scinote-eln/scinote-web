@@ -111,7 +111,6 @@ class RepositoryDatatableService
   def advanced_search(repository_rows)
     adv_search_params = @params[:advanced_search]
     filter = @repository.repository_table_filters.new
-
     adv_search_params[:filter_elements].each do |filter_element_params|
       repository_rows =
         if PREDEFINED_COLUMNS.include?(filter_element_params[:repository_column_id])
@@ -125,7 +124,7 @@ class RepositoryDatatableService
   end
 
   def add_predefined_column_filter_condition(repository_rows, filter_element_params)
-    case filter_element_params['repository_column_id']
+    case filter_element_params[:repository_column_id]
     when 'row_id'
       build_row_id_filter_condition(repository_rows, filter_element_params)
     when 'name'
@@ -179,35 +178,35 @@ class RepositoryDatatableService
   def build_added_on_filter_condition(repository_rows, filter_element_params)
     case filter_element_params[:operator]
     when 'today'
-      repository_rows.where('repository_date_time_values.data >= ?', Time.zone.now.beginning_of_day)
+      repository_rows.where('created_at >= ?', Time.zone.now.beginning_of_day)
     when 'yesterday'
-      repository_rows.where('repository_date_time_values.data >= ? AND repository_date_time_values.data < ?',
+      repository_rows.where('created_at >= ? AND created_at < ?',
                             Time.zone.now.beginning_of_day - 1.day, Time.zone.now.beginning_of_day)
     when 'last_week'
-      repository_rows.where('repository_date_time_values.data >= ? AND repository_date_time_values.data < ?',
+      repository_rows.where('created_at >= ? AND created_at < ?',
                             Time.zone.now.beginning_of_week - 1.week, Time.zone.now.beginning_of_week)
     when 'this_month'
-      repository_rows.where('repository_date_time_values.data >= ?', Time.zone.now.beginning_of_month)
+      repository_rows.where('created_at >= ?', Time.zone.now.beginning_of_month)
     when 'last_year'
-      repository_rows.where('repository_date_time_values.data >= ? AND repository_date_time_values.data < ?',
+      repository_rows.where('created_at >= ? AND created_at < ?',
                             Time.zone.now.beginning_of_year - 1.year, Time.zone.now.beginning_of_year)
     when 'this_year'
-      repository_rows.where('repository_date_time_values.data >= ?', Time.zone.now.beginning_of_year)
+      repository_rows.where('created_at >= ?', Time.zone.now.beginning_of_year)
     when 'equal_to'
-      repository_rows.where(repository_date_time_values: { data: filter_element_params.dig(:parameters, :datetime) })
+      repository_rows.where(created_at: filter_element_params.dig(:parameters, :datetime))
     when 'unequal_to'
       repository_rows
-        .where.not(repository_date_time_values: { data: filter_element_params.dig(:parameters, :datetime) })
+        .where.not(created_at: filter_element_params.dig(:parameters, :datetime))
     when 'greater_than'
-      repository_rows.where('repository_date_time_values.data > ?', filter_element_params.dig(:parameters, :datetime))
+      repository_rows.where('created_at > ?', filter_element_params.dig(:parameters, :datetime))
     when 'greater_than_or_equal_to'
-      repository_rows.where('repository_date_time_values.data >= ?', filter_element_params.dig(:parameters, :datetime))
+      repository_rows.where('created_at >= ?', filter_element_params.dig(:parameters, :datetime))
     when 'less_than'
-      repository_rows.where('repository_date_time_values.data < ?', filter_element_params.dig(:parameters, :datetime))
+      repository_rows.where('created_at < ?', filter_element_params.dig(:parameters, :datetime))
     when 'less_than_or_equal_to'
-      repository_rows.where('repository_date_time_values.data =< ?', filter_element_params.dig(:parameters, :datetime))
+      repository_rows.where('created_at =< ?', filter_element_params.dig(:parameters, :datetime))
     when 'between'
-      repository_rows.where('repository_date_time_values.data > ? AND repository_date_time_values.data < ?',
+      repository_rows.where('created_at > ? AND created_at < ?',
                             filter_element_params.dig(:parameters, :start_datetime),
                             filter_element_params.dig(:parameters, :end_datetime))
     else
