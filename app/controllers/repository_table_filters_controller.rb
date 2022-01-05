@@ -32,7 +32,8 @@ class RepositoryTableFiltersController < ApplicationController
 
     render json: repository_table_filter
   rescue ActiveRecord::RecordInvalid
-    error_key = repository_table_filter.errors[:repository_table_filter_elements] ? 'repository_column.must_exist' : 'general'
+    error_key =
+      repository_table_filter.errors[:repository_table_filter_elements] ? 'repository_column.must_exist' : 'general'
     message = I18n.t("activerecord.errors.models.repository_table_filter_element.attributes.#{error_key}")
     render json: { message: message }, status: :unprocessable_entity
   end
@@ -59,7 +60,8 @@ class RepositoryTableFiltersController < ApplicationController
 
     render json: @repository_table_filter
   rescue ActiveRecord::RecordInvalid
-    error_key = @repository_table_filter.errors[:repository_table_filter_elements] ? 'repository_column.must_exist' : 'general'
+    error_key =
+      @repository_table_filter.errors[:repository_table_filter_elements] ? 'repository_column.must_exist' : 'general'
     message = I18n.t("activerecord.errors.models.repository_table_filter_element.attributes.#{error_key}")
     render json: { message: message }, status: :unprocessable_entity
   end
