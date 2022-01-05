@@ -38,6 +38,10 @@
       margin-right: .25em;
     }
 
+    .distance-input-container {
+      width: 50px;
+    }
+
     .distance-attribute {
       align-items: center;
       display: flex;
@@ -71,7 +75,7 @@
   }
 
   .filter-list-notice {
-    color: $color-silver-chalice;
+    color: $color-alto;
     padding: 1em;
   }
 
@@ -107,11 +111,16 @@
   }
 
   .filter-remove {
+
     cursor: pointer;
     padding: 0;
     position: absolute;
     right: -2.5em;
     top: -2px;
+
+    .btn {
+      color: $color-alto
+    }
   }
 
   .filters-list {

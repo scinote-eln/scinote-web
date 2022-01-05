@@ -1,13 +1,11 @@
 <template>
   <div class="filter-form">
     <div class="sci-input-container">
-      <select @change="updateFilterData" v-model="attribute" class="sci-input-field">
-        <option
-          v-for="attribute in additionalDataAttributes"
-          :key="attribute.name" :value="attribute.name">
-            {{ attribute.name }}
-        </option>
-      </select>
+      <DropdownSelector
+        :options="attributeOptions"
+        :selectorId="`AttributeFilter${filterId}`"
+        @dropdown:changed="updateFilterType"
+      />
     </div>
     <div class="sci-input-container">
       <input
@@ -22,17 +20,35 @@
 </template>
 
 <script>
+  import DropdownSelector from 'vue/shared/dropdown_selector.vue'
   import FilterMixin from 'vue/bmt_filter/mixins/filter.js'
   export default {
     name: 'additionalDataFilter',
     mixins: [FilterMixin],
+    components: {
+      DropdownSelector
+    },
     props: {
-      additionalDataAttributes: Array
+      additionalDataAttributes: Array,
+      filterId: Number
+    },
+    computed: {
+      attributeOptions() {
+        return this.additionalDataAttributes.map(option => {
+          return {label: option, value: option}
+        })
+      }
     },
     data() {
       return {
         attribute: null,
         value: null
+      }
+    },
+    methods: {
+      updateAttributes(value) {
+        this.attribute = value;
+        this.updateFilterData();
       }
     }
   }
