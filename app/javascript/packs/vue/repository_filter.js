@@ -48,6 +48,9 @@ window.initRepositoryFilter = () => {
       applyFilters() {
         this.dataTableElement
             .attr('data-repository-filter-json', JSON.stringify({ filter_elements: this.filtersJSON }));
+
+        $('#repository_table_filter_elements_json').val(JSON.stringify(this.filtersJSON));
+        $('#saveRepositoryFilters').removeClass('hidden');
         $('#filterContainer .dropdown-selector-container').removeClass('open');
         $('#filtersDropdownButton').removeClass('open');
         $('#filtersDropdownButton').addClass('active-filters');

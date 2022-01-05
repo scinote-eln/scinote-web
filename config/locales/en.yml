@@ -157,6 +157,13 @@ en:
           attributes:
             base:
               per_column_limit: "Too many items in the column"
+        repository_table_filter_element:
+          general: "There was a problem saving the filter."
+          attributes:
+            repository_column:
+              must_exist: Filter cannot be saved because one or more columns no longer exist. Please update your filter before saving.
+            parameters:
+              must_be_valid: Filter cannot be saved because some filter values no longer exist. Please update your filter before saving.
         webhook:
           attributes:
             configuration:
@@ -1372,6 +1379,7 @@ en:
         all_teams_tooltip: "This will disable individual team settings"
         success_message: "Selected sharing options for the Inventory %{inventory_name} have been saved."
     show:
+      name: "Name"
       archived_inventory_items: "%{repository_name} archived items"
       archived_inventory: "Archived %{repository_name}"
       inventory_archived_items: "%{repository_name} archived items"
@@ -1391,6 +1399,9 @@ en:
       no_archived_items_matched: "No archived items matched your search request"
       error_searching: "Error searching, please try again"
       filters:
+        save_filters: "Save filters"
+        new_filter: "New filter"
+        overwrite_filter: "Overwrite"
         title: "Filters"
         clear: "Clear"
         add_filter: "Add filter"
