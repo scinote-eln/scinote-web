@@ -50,8 +50,6 @@ CREATE FUNCTION public.trim_html_tags(input text, OUT output text) RETURNS text
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
-
 --
 -- Name: active_storage_attachments; Type: TABLE; Schema: public; Owner: -
 --
