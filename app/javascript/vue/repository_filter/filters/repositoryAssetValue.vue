@@ -3,6 +3,7 @@
     <DropdownSelector
       :disableSearch="true"
       :options="operators"
+      :selectedValue="this.operator"
       :selectorId="`OperatorSelector${filter.id}`"
       @dropdown:changed="updateOperator"
     />

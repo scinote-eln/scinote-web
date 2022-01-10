@@ -3,6 +3,7 @@
     <DropdownSelector
       :disableSearch="true"
       :options="this.operators"
+      :selectedValue="this.operator"
       :selectorId="`OperatorSelector${this.filter.id}`"
       @dropdown:changed="updateOperator"
     />
@@ -13,6 +14,7 @@
       :noEmptyOption="false"
       :singleSelect="false"
       :closeOnSelect="false"
+      :selectedValue="this.value"
       :options="this.filter.column.items"
       :dataSelectMultipleName="this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryChecklistValue.multiple_selected')"
       :dataSelectMultipleAllSelected="this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryChecklistValue.all_selected')"

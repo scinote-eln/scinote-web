@@ -3,6 +3,7 @@
     <DropdownSelector
       :disableSearch="true"
       :options="this.operators"
+      :selectedValue="this.operator"
       :selectorId="`OperatorSelector${this.filter.id}`"
       @dropdown:changed="updateOperator"
     />
@@ -12,6 +13,7 @@
       :noEmptyOption="false"
       :singleSelect="false"
       :groupSelector="true"
+      :selectedValue="this.value"
       :options="this.my_modules"
       :dataSelectMultipleName="this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryMyModuleValue.multiple_selected')"
       :dataSelectMultipleAllSelected="this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryMyModuleValue.all_selected')"

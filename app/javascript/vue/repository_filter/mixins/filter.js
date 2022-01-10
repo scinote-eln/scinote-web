@@ -9,12 +9,14 @@ export default {
     };
   },
   created() {
-    this.operator = this.operator || this.filter.data.operator;
-    this.parameters = this.parameters || this.filter.data.parameters;
+    this.operator = this.filter.data.operator || this.operator;
+    this.parameters = this.filter.data.parameters || this.parameters;
 
     // load value from parameters
     const keys = Object.keys(this.parameters);
-    this.value = keys.length <= 1 ? this.parameters[keys[0]] : { ...this.parameters };
+    if (keys.length) {
+      this.value = keys.length == 1 ? this.parameters[keys[0]] : { ...this.parameters };
+    }
   },
   methods: {
     updateOperator(operator) {
