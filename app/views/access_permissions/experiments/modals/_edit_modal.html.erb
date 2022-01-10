@@ -21,6 +21,7 @@
                         update_path: access_permissions_project_experiment_path(project, experiment)
                       } %>
         <% end %>
+        <%= render('access_permissions/partials/default_public_user_role_form', project: project, editable: false) if project.visible? %>
       </div>
     </div>
   </div>
