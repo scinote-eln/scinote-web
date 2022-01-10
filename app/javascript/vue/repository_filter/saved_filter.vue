@@ -19,13 +19,11 @@
         this.$emit('savedFilter:load', this.savedFilter.attributes.show_url)
       },
       deleteFilter() {
-        let filter = this
         $.ajax({
           url: this.savedFilter.attributes.delete_url,
           type: 'DELETE',
-          dataType: 'json',
-          success: function() {
-            filter.$emit('savedFilter:delete')
+          success: ()=> {
+            this.$emit('savedFilter:delete')
           }
         });
       }
