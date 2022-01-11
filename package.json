@@ -110,7 +110,7 @@
     "styled-components": "^2.4.1",
     "tui-code-snippet": "^1.5.0",
     "tui-color-picker": "^2.2.0",
-    "tui-image-editor": "git://github.com/biosistemika/tui.image-editor#3_15_2_updated",
+    "tui-image-editor": "github:biosistemika/tui.image-editor#3_15_2_updated",
     "twemoji": "^12.1.4",
     "typeface-lato": "^0.0.75",
     "vue-loader": "^15.9.1",
