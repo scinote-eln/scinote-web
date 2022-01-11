@@ -5,6 +5,7 @@
     </div>
     <div>
       <%= t('access_permissions.everyone_else', team_name: f.object.team.name) %>
+      <%= render 'access_permissions/partials/public_members_dropdown', team: f.object.team, project: project %>
       <br>
       <small class="text-muted">
         <%= f.object.default_public_user_role.name %>
