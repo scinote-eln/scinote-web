@@ -703,7 +703,8 @@ CREATE TABLE public.my_module_repository_rows (
     my_module_id integer,
     assigned_by_id bigint NOT NULL,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    stock_consumption numeric
 );
 
 
@@ -1759,6 +1760,42 @@ ALTER SEQUENCE public.repository_date_time_values_id_seq OWNED BY public.reposit
 
 
 --
+-- Name: repository_ledger_records; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_ledger_records (
+    id bigint NOT NULL,
+    repository_row_id bigint NOT NULL,
+    reference_type character varying NOT NULL,
+    reference_id bigint NOT NULL,
+    amount numeric,
+    balance numeric,
+    user_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_ledger_records_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_ledger_records_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_ledger_records_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_ledger_records_id_seq OWNED BY public.repository_ledger_records.id;
+
+
+--
 -- Name: repository_list_items; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1965,6 +2002,40 @@ CREATE SEQUENCE public.repository_status_values_id_seq
 --
 
 ALTER SEQUENCE public.repository_status_values_id_seq OWNED BY public.repository_status_values.id;
+
+
+--
+-- Name: repository_stock_values; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_stock_values (
+    id bigint NOT NULL,
+    amount numeric,
+    units character varying,
+    last_modified_by_id bigint,
+    created_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_stock_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_stock_values_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_stock_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_stock_values_id_seq OWNED BY public.repository_stock_values.id;
 
 
 --
@@ -3420,6 +3491,13 @@ ALTER TABLE ONLY public.repository_date_time_values ALTER COLUMN id SET DEFAULT 
 
 
 --
+-- Name: repository_ledger_records id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_ledger_records ALTER COLUMN id SET DEFAULT nextval('public.repository_ledger_records_id_seq'::regclass);
+
+
+--
 -- Name: repository_list_items id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3459,6 +3537,13 @@ ALTER TABLE ONLY public.repository_status_items ALTER COLUMN id SET DEFAULT next
 --
 
 ALTER TABLE ONLY public.repository_status_values ALTER COLUMN id SET DEFAULT nextval('public.repository_status_values_id_seq'::regclass);
+
+
+--
+-- Name: repository_stock_values id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_values ALTER COLUMN id SET DEFAULT nextval('public.repository_stock_values_id_seq'::regclass);
 
 
 --
@@ -4061,6 +4146,14 @@ ALTER TABLE ONLY public.repository_date_time_values
 
 
 --
+-- Name: repository_ledger_records repository_ledger_records_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_ledger_records
+    ADD CONSTRAINT repository_ledger_records_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: repository_list_items repository_list_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4106,6 +4199,14 @@ ALTER TABLE ONLY public.repository_status_items
 
 ALTER TABLE ONLY public.repository_status_values
     ADD CONSTRAINT repository_status_values_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repository_stock_values repository_stock_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_values
+    ADD CONSTRAINT repository_stock_values_pkey PRIMARY KEY (id);
 
 
 --
@@ -5417,6 +5518,27 @@ CREATE INDEX index_repository_date_time_range_values_on_start_time ON public.rep
 
 
 --
+-- Name: index_repository_ledger_records_on_reference; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_ledger_records_on_reference ON public.repository_ledger_records USING btree (reference_type, reference_id);
+
+
+--
+-- Name: index_repository_ledger_records_on_repository_row_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_ledger_records_on_repository_row_id ON public.repository_ledger_records USING btree (repository_row_id);
+
+
+--
+-- Name: index_repository_ledger_records_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_ledger_records_on_user_id ON public.repository_ledger_records USING btree (user_id);
+
+
+--
 -- Name: index_repository_list_items_on_created_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5575,6 +5697,27 @@ CREATE INDEX index_repository_status_values_on_created_by_id ON public.repositor
 --
 
 CREATE INDEX index_repository_status_values_on_last_modified_by_id ON public.repository_status_values USING btree (last_modified_by_id);
+
+
+--
+-- Name: index_repository_stock_values_on_amount; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_stock_values_on_amount ON public.repository_stock_values USING btree (amount);
+
+
+--
+-- Name: index_repository_stock_values_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_stock_values_on_created_by_id ON public.repository_stock_values USING btree (created_by_id);
+
+
+--
+-- Name: index_repository_stock_values_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_stock_values_on_last_modified_by_id ON public.repository_stock_values USING btree (last_modified_by_id);
 
 
 --
@@ -6279,6 +6422,14 @@ ALTER TABLE ONLY public.tables
 
 ALTER TABLE ONLY public.team_repositories
     ADD CONSTRAINT fk_rails_15daa6a6bf FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
+
+
+--
+-- Name: repository_ledger_records fk_rails_16d35cbff3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_ledger_records
+    ADD CONSTRAINT fk_rails_16d35cbff3 FOREIGN KEY (repository_row_id) REFERENCES public.repository_rows(id);
 
 
 --
@@ -7138,6 +7289,14 @@ ALTER TABLE ONLY public.repository_asset_values
 
 
 --
+-- Name: repository_stock_values fk_rails_c111ff8695; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_values
+    ADD CONSTRAINT fk_rails_c111ff8695 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: my_module_status_flows fk_rails_c19dc6b9e9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7442,6 +7601,14 @@ ALTER TABLE ONLY public.report_elements
 
 
 --
+-- Name: repository_stock_values fk_rails_f83c438412; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_values
+    ADD CONSTRAINT fk_rails_f83c438412 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: tags fk_rails_f95c7c81ac; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7699,6 +7866,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210720112050'),
 ('20210811103123'),
 ('20210906132120'),
-('20211103115450');
+('20211103115450'),
+('20220110151006');
 
 
