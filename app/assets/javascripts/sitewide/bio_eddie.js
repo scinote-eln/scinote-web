@@ -125,6 +125,7 @@ var bioEddieEditor = (function() {
     open_new: (objectId, objectType, container) => {
       bioEddieModal.data('object_id', objectId);
       bioEddieModal.data('object_type', objectType);
+      bioEddieModal.data('molecule', null);
       bioEddieModal.data('assets_container', container);
       bioEddieModal.find('.file-name input').val('');
       bioEddieModal.modal('show');

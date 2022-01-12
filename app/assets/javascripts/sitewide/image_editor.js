@@ -2,6 +2,7 @@
 /* eslint-disable no-underscore-dangle */
 
 var ImageEditorModal = (function() {
+
   function updateFabricControls() {
     fabric.Object.prototype.drawBorders = function(ctx, styleOverride = {}) {
       var wh = this._calculateCurrentDimensions();
@@ -174,29 +175,9 @@ var ImageEditorModal = (function() {
       'downloadButton.fontFamily': '\'Noto Sans\', sans-serif',
       'downloadButton.fontSize': '12px',
 
-      // main icons
-      'menu.normalIcon.path': '/images/icon-d.svg',
-      'menu.normalIcon.name': 'icon-d',
-      'menu.activeIcon.path': '/images/icon-b.svg',
-      'menu.activeIcon.name': 'icon-b',
-      'menu.disabledIcon.path': '/images/icon-a.svg',
-      'menu.disabledIcon.name': 'icon-a',
-      'menu.hoverIcon.path': '/images/icon-c.svg',
-      'menu.hoverIcon.name': 'icon-c',
-      'menu.iconSize.width': '24px',
-      'menu.iconSize.height': '24px',
-
       // submenu primary color
       'submenu.backgroundColor': '#1e1e1e',
       'submenu.partition.color': '#3c3c3c',
-
-      // submenu icons
-      'submenu.normalIcon.path': '/images/icon-d.svg',
-      'submenu.normalIcon.name': 'icon-d',
-      'submenu.activeIcon.path': '/images/icon-c.svg',
-      'submenu.activeIcon.name': 'icon-c',
-      'submenu.iconSize.width': '32px',
-      'submenu.iconSize.height': '32px',
 
       // submenu labels
       'submenu.normalLabel.color': '#8a8a8a',
@@ -261,6 +242,7 @@ var ImageEditorModal = (function() {
     });
 
     ps = new PerfectScrollbar($('.tui-image-editor-wrap')[0], { wheelSpeed: 0.5 });
+    /*
     $('#tui-image-editor .tui-image-editor').on('mousewheel', (e) => {
       var imageOriginalSize = {
         width: imageEditor._graphics.canvasImage.width,
@@ -329,6 +311,7 @@ var ImageEditorModal = (function() {
     });
     $('.tui-image-editor-wrap')[0].onwheel = function() { return false; };
     $('.tui-image-editor-wrap').css('height', 'calc(100% - 150px)');
+    */
 
     $('#fileEditModal').find('.file-name').text('Editing: ' + data.filename);
     $('#fileEditModal').modal('show');
@@ -397,7 +380,7 @@ var ImageEditorModal = (function() {
   function preInitImageEditor() {
     $(document).on('click', '.image-edit-button', function() {
       var editButton = $(this);
-      updateFabricControls();
+      //updateFabricControls();
       $.get(editButton.data('image-url'), function(responseData) {
         var fileUrl = responseData;
         var data = {
