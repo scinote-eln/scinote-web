@@ -236,8 +236,10 @@
           var $overwriteLink = $('#overwriteFilterLink');
           $modal.modal('hide');
           $overwriteLink.removeClass('hidden');
-          $modal.data('repositoryTableFilterId', response.data.id);
-          $('#currentFilterName').html(response.data.name);
+          $modal.data('repositoryTableFilterId', response.data.attributes.id);
+          $('#currentFilterName').html(response.data.attributes.name);
+
+          repositoryFitlerObject.savedFilters.push(response.data)
         },
         error: function(response) {
           HelperModule.flashAlertMsg(response.responseJSON.message, 'danger');

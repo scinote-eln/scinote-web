@@ -1,9 +1,20 @@
 <template>
   <div class="filters-container">
     <div class="header">
-      <div id="savedFiltersContainer" class="dropdown saved-filters-container">
+      <div id="savedFiltersContainer" class="dropdown saved-filters-container" @click="toggleSavedFilters">
         <div class="title" id="savedFilterDropdown">
           {{ i18n.t('repositories.show.filters.title') }}
+          <i v-if="savedFilters.length" class="fas fa-caret-down"></i>
+        </div>
+        <div v-if="savedFilters.length" class="dropdown-menu saved-filters-list">
+          <SavedFilterElement
+            v-for="(savedFilter, index) in savedFilters"
+            :key="savedFilter.id"
+            :savedFilter.sync="savedFilters[index]"
+            :canManageFilters="canManageFilters"
+            @savedFilter:load="loadFilters"
+            @savedFilter:delete="savedFilters.splice(index, 1)"
+          />
         </div>
       </div>
       <button class="btn btn-light clear-filters-btn" @click="clearFilters()">
@@ -47,6 +58,7 @@
  <script>
   import ColumnElement from 'vue/repository_filter/column.vue'
   import FilterElement from 'vue/repository_filter/filter.vue'
+  import SavedFilterElement from 'vue/repository_filter/saved_filter.vue'
 
   export default {
     name: 'FilterContainer',
@@ -58,12 +70,11 @@
     props: {
       my_modules: Array,
       container: Object,
+      columns: Array,
       savedFilters: Array,
-      columns: Array
+      canManageFilters: Boolean
     },
-    created() {
-    },
-    components: { ColumnElement, FilterElement },
+    components: { ColumnElement, FilterElement, SavedFilterElement },
     methods: {
       addFilter(column) {
         const id = this.filters.length ? this.filters[this.filters.length - 1].id + 1 : 1
@@ -82,7 +93,34 @@
       },
       toggleColumnsFilters() {
         $('#filtersColumnsDropdown').toggleClass('open');
-      }
+      },
+      loadFilters(filterUrl) {
+        $.get(filterUrl, (data) => {
+          let filters = [];
+          let rawFilters = data.data.attributes.default_columns.concat((data.included || []).map(f => f.attributes))
+          let id = 0;
+          $.each(rawFilters, (i, f) => {
+            filters.push({
+              id: id,
+              column: this.columns.find(c => c.id == f.repository_column_id),
+              isBlank: false,
+              data: {
+                operator: f.operator,
+                parameters: f.parameters
+              }
+            });
+            id++;
+          })
+          this.filters = filters
+        });
+      },
+      closeSavedFilters() {
+        $('#savedFiltersContainer').removeClass('open');
+        return true;
+      },
+      toggleSavedFilters() {
+        $('#savedFiltersContainer').toggleClass('open');
+      },
     }
   }
  </script>

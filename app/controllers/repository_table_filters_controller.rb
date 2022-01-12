@@ -10,7 +10,9 @@ class RepositoryTableFiltersController < ApplicationController
   before_action :check_manage_permissions, only: %i(update destroy)
 
   def index
-    render json: @repository.repository_table_filters
+
+
+    render json: @repository.repository_table_filters, each_serializer: RepositoryFilterSerializer
   end
 
   def show
@@ -30,7 +32,7 @@ class RepositoryTableFiltersController < ApplicationController
       end
     end
 
-    render json: repository_table_filter
+    render json: repository_table_filter, serializer: RepositoryFilterSerializer
   rescue ActiveRecord::RecordInvalid
     error_key =
       repository_table_filter.errors[:repository_table_filter_elements] ? 'repository_column.must_exist' : 'general'
@@ -58,7 +60,7 @@ class RepositoryTableFiltersController < ApplicationController
       end
     end
 
-    render json: @repository_table_filter
+    render json: @repository_table_filter, serializer: RepositoryFilterSerializer
   rescue ActiveRecord::RecordInvalid
     error_key =
       @repository_table_filter.errors[:repository_table_filter_elements] ? 'repository_column.must_exist' : 'general'
