@@ -12,8 +12,7 @@ module Reports
     queue_as :reports
 
     discard_on StandardError do |job, error|
-      report = Report.find_by(id: job.arguments.first)
-      return if report.blank?
+      report = Report.find(job.arguments.first)
 
       ActiveRecord::Base.no_touching do
         report.pdf_error!
