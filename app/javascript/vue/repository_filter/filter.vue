@@ -11,10 +11,9 @@
       </div>
       <div class="filter-remove">
         <button class="btn btn-light icon-btn" @click="$emit('filter:delete')">
-          <i class="fas fa-times-circle"></i>
+          <i class="fas fa-trash"></i>
         </button>
       </div>
-      <hr>
     </div>
 </div>
 </template>

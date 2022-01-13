@@ -1,12 +1,14 @@
 <template>
   <div class="filter-attributes">
-    <DropdownSelector
-      :disableSearch="true"
-      :options="this.operators"
-      :selectedValue="this.operator"
-      :selectorId="`OperatorSelector${this.filter.id}`"
-      @dropdown:changed="updateOperator"
-    />
+    <div class="operator-selector">
+      <DropdownSelector
+        :disableSearch="true"
+        :options="this.operators"
+        :selectedValue="this.operator"
+        :selectorId="`OperatorSelector${this.filter.id}`"
+        @dropdown:changed="updateOperator"
+      />
+    </div>
     <div v-if="operator !== 'between'" class="sci-input-container">
       <input
         class="sci-input-field"

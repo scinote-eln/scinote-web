@@ -1,12 +1,13 @@
 <template>
   <div class="filter-attributes">
-    <DropdownSelector
-      :disableSearch="true"
-      :options="operators"
-      :selectedValue="this.operator"
-      :selectorId="`OperatorSelector${filter.id}`"
-      @dropdown:changed="updateOperator"
-    />
+    <div class="operator-selector">
+      <DropdownSelector
+        :disableSearch="true"
+        :options="operators"
+        :selectedValue="this.operator"
+        :selectorId="`OperatorSelector${filter.id}`"
+        @dropdown:changed="updateOperator"
+    </div>
     <div class="sci-input-container">
       <input v-if="operator === 'file_contains'"
         class="sci-input-field"

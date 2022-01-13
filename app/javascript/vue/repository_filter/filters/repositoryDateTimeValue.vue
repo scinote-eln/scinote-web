@@ -1,6 +1,6 @@
 <template>
   <div class="filter-attributes">
-    <div class="filter-operator-select">
+    <div class="operator-selector">
       <DropdownSelector
       :disableSearch="true"
       :options="operators"
@@ -9,11 +9,13 @@
       @dropdown:changed="updateOperator" />
     </div>
     <template v-if="!isPreset">
-      <div class="filter-datepicker-input">
-        <DateTimePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`" />
-      </div>
-      <div class="filter-datepicker-to-input">
-        <DateTimePicker @change="updateDateTo" v-if="operator == 'between'" :selectorId="`DatePickerTo${filter.id}`" />
+      <div class="datetime-filter-attributes">
+        <div class="filter-datepicker-input">
+          <DateTimePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`" />
+        </div>
+        <div class="filter-datepicker-to-input">
+          <DateTimePicker @change="updateDateTo" v-if="operator == 'between'" :selectorId="`DatePickerTo${filter.id}`" />
+        </div>
       </div>
     </template>
   </div>

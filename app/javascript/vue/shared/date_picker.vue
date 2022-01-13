@@ -1,6 +1,7 @@
 <template>
-  <div class="datepicker">
-      <input @change="update" type="datetime" class="form-control calendar-input" :id="this.selectorId" placeholder="" />
+  <div class="datepicker sci-input-container right-icon">
+      <input @change="update" type="datetime" class="form-control calendar-input sci-input-field" :id="this.selectorId" placeholder="" />
+      <i class="fas fa-calendar-alt"></i>
   </div>
 </template>
 
