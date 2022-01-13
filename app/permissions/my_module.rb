@@ -154,6 +154,10 @@ Canaid::Permissions.register_for(MyModule) do
   can :manage_my_module_repository_snapshots do |user, my_module|
     my_module.permission_granted?(user, MyModulePermissions::REPOSITORY_ROWS_MANAGE)
   end
+
+  can :update_my_module_stock_consumption do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::STOCK_CONSUMPTION_UPDATE)
+  end
 end
 
 Canaid::Permissions.register_for(TaskComment) do
