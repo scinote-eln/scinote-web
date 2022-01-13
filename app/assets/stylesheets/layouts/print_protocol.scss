@@ -63,10 +63,10 @@ hr {
   width: 1.1em;
 }
 
-.step-check-circle-checked{
+.step-check-circle-checked {
   img {
-    vertical-align:text-bottom;
     height: 1.4em;
+    vertical-align: text-bottom;
     width: 1.4em;
   }
 }
@@ -80,16 +80,16 @@ hr {
 }
 
 .checklist-checkbox {
-  &.checked{
+  &.checked {
     img {
       height: 1.3em;
-      vertical-align: middle;
       text-align: center;
+      vertical-align: middle;
       width: 1.3em;
     }
   }
 
-  &.not-checked{
+  &.not-checked {
     border: .15em solid $color-alto;
     border-radius: .2em;
     display: inline-block;
