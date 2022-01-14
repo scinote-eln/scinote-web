@@ -21,7 +21,7 @@
   <div class="print-step">
     <h2 class="step-check-circle-checked">
       <% if step.completed_on %>
-          <img src="/images/check-circle-solid.svg"></img>
+        <%= image_tag "/images/check-circle-solid.svg" %>
       <% else %>
         <div class="step-check-circle"></div>
       <% end %>
@@ -47,7 +47,7 @@
           <div class="print-checklist-item">
             <span class="checklist-checkbox checked">
               <% if checklist_item.checked %>
-                <img src="/images/check-square-solid.svg"></img>
+                <%= image_tag "/images/check-square-solid.svg" %>
               <% else %>
                 <span class="checklist-checkbox not-checked"></span>
               <% end %>
