@@ -19,10 +19,12 @@
 </div>
 <% @protocol.steps.order(position: :asc).each do |step| %>
   <div class="print-step">
-    <h2>
-      <div class="step-check-circle <%= 'checked' if step.completed_on %>">
-        <% if step.completed_on %>✓<% end %>
-      </div>
+    <h2 class="step-check-circle-checked">
+      <% if step.completed_on %>
+        <%= image_tag "check-circle-solid.svg" %>
+      <% else %>
+        <div class="step-check-circle"></div>
+      <% end %>
       <%= step.position + 1 %>. <%= step.name %>
     </h2>
     <div>
@@ -43,12 +45,14 @@
       <h3><%= smart_annotation_parser(checklist.name, current_team).html_safe %></h3>
         <% checklist.checklist_items.order(position: :asc).each do |checklist_item| %>
           <div class="print-checklist-item">
-            <span class="checklist-checkbox <%= 'checked' if checklist_item.checked %>">
+            <span class="checklist-checkbox checked">
               <% if checklist_item.checked %>
-                ✓
+                <%= image_tag "check-square-solid.svg" %>
+              <% else %>
+                <span class="checklist-checkbox not-checked"></span>
               <% end %>
+              <%= smart_annotation_parser(checklist_item.text, current_team).html_safe %>
             </span>
-            <span><%= smart_annotation_parser(checklist_item.text, current_team).html_safe %></span>
           </div>
         <% end %>
       </div>
