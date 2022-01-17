@@ -1559,6 +1559,7 @@ en:
         repository_date_time_range_value: "Date & Time"
         repository_checklist_value: "Checklist"
         repository_status_value: "Status"
+        repository_stock_value: "Stock"
         repository_list_value: "Dropdown"
         repository_asset_value: "File"
       new:
