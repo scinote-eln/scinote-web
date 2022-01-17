@@ -267,7 +267,7 @@ class RepositoryDatatableService
       operator: filter_element_params[:operator],
       parameters: filter_element_params[:parameters]
     )
-    config = Extends::REPOSITORY_EXTRA_SEARCH_ATTR[filter_element.repository_column.data_type.to_sym]
+    config = Extends::REPOSITORY_ADVANCED_SEARCH_ATTR[filter_element.repository_column.data_type.to_sym]
 
     if %w(empty file_not_attached).include?(filter_element_params[:operator])
       repository_rows.left_outer_joins(config[:includes]).where(config[:field] => nil)
