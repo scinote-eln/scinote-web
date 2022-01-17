@@ -76,8 +76,8 @@
             <%= t('libraries.manange_modal_column.select.repository_status_value') %>
           </option>
 
-          <option data-create-url=""
-                  data-edit-url=""
+          <option data-create-url="<%= repository_repository_columns_stock_columns_path(@repository) %>"
+                  data-edit-url="<%= repository_repository_columns_stock_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
                   value="RepositoryStockValue"
                   <%= 'selected' if @repository_column.repository_stock_value? %> >
             <%= t('libraries.manange_modal_column.select.repository_stock_value') %>

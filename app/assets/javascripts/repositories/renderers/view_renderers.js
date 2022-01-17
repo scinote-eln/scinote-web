@@ -180,3 +180,8 @@ $.fn.dataTable.render.AssignedTasksValue = function(data) {
   }
   return "<div class='assign-counter-container'><span class='assign-counter'>0</span></div>";
 };
+
+
+$.fn.dataTable.render.defaultRepositoryStockValue = function() {
+  return '';
+};

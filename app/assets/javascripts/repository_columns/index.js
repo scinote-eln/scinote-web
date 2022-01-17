@@ -16,6 +16,7 @@ var RepositoryColumns = (function() {
     RepositoryDateTimeValue: 'RepositoryDateTimeColumnType',
     RepositoryTimeValue: 'RepositoryTimeColumnType',
     RepositoryChecklistValue: 'RepositoryChecklistColumnType',
+    RepositoryStockValue: 'RepositoryStockColumnType',
     RepositoryNumberValue: 'RepositoryNumberColumnType'
   };
 
@@ -190,6 +191,8 @@ var RepositoryColumns = (function() {
           dropdownSelector.init('.checklist-column-type .delimiter', delimiterDropdownConfig);
           RepositoryChecklistColumnType.initChecklistDropdown();
           RepositoryChecklistColumnType.initChecklistPlaceholder();
+
+          RepositoryStockColumnType.initStockUnitDropdown();
 
           $manageModal
             .trigger('columnModal::partialLoadedFor' + columnType);
@@ -402,6 +405,7 @@ var RepositoryColumns = (function() {
         initManageColumnAction();
         RepositoryListColumnType.init();
         RepositoryStatusColumnType.init();
+        RepositoryStockColumnType.init();
         RepositoryChecklistColumnType.init();
       }
     }

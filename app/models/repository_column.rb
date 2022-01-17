@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 class RepositoryColumn < ApplicationRecord
   belongs_to :repository, class_name: 'RepositoryBase'
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
@@ -14,10 +13,14 @@ class RepositoryColumn < ApplicationRecord
   has_many :repository_checklist_items, -> { order('data ASC') }, dependent: :destroy,
                                                                   index_errors: true,
                                                                   inverse_of: :repository_column
+  has_many :repository_stock_unit_items, -> { order('data ASC') }, dependent: :destroy,
+                                                                  index_errors: true,
+                                                                  inverse_of: :repository_column
 
   accepts_nested_attributes_for :repository_status_items, allow_destroy: true
   accepts_nested_attributes_for :repository_list_items, allow_destroy: true
   accepts_nested_attributes_for :repository_checklist_items, allow_destroy: true
+  accepts_nested_attributes_for :repository_stock_unit_items, allow_destroy: true
 
   enum data_type: Extends::REPOSITORY_DATA_TYPES
 
@@ -34,6 +37,7 @@ class RepositoryColumn < ApplicationRecord
   scope :asset_type, -> { where(data_type: 'RepositoryAssetValue') }
   scope :status_type, -> { where(data_type: 'RepositoryStatusValue') }
   scope :checkbox_type, -> { where(data_type: 'RepositoryChecklistValue') }
+  scope :stock_unit_type, -> { where(data_type: 'RepositoryStockUnitValue') }
 
   def self.name_like(query)
     where('repository_columns.name ILIKE ?', "%#{query}%")
@@ -117,6 +121,12 @@ class RepositoryColumn < ApplicationRecord
   def repository_status_value_deep_dup(new_column)
     repository_status_items.each do |item|
       new_column.repository_status_items << item.deep_dup
+    end
+  end
+
+  def repository_stock_unit_value_deep_dup(new_column)
+    repository_stock_unit_items.each do |item|
+      new_column.repository_stock_unit_items << item.deep_dup
     end
   end
 end

@@ -1593,6 +1593,10 @@ en:
           icon_and_name_error: "Status icon and status name should be filled"
       datetime_type:
         range_label: 'Range'
+      stock_type:
+        multiple_options: 'selected'
+        all_options: 'All options'
+        stock_units: 'Stock units'
       checklist_type:
         multiple_options: 'selected'
         all_options: 'All options'

@@ -622,6 +622,11 @@ Rails.application.routes.draw do
             get 'items'
           end
         end
+        resources :stock_columns, only: %i(create update) do
+          member do
+            get 'items'
+          end
+        end
         resources :status_columns, only: %i(create update) do
           member do
             get 'items'
