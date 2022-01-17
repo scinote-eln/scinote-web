@@ -45,9 +45,6 @@ var RepositoryStockColumnType = (function() {
         );
         initStockUnitDropdown();
       })
-      .on('keyup change', columnNameInput, function() {
-        $manageModal.find(previewContainer).find('.preview-label').html($manageModal.find(columnNameInput).val());
-      });
   }
 
   return {

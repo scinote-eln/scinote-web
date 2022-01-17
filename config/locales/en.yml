@@ -1597,6 +1597,7 @@ en:
         multiple_options: 'selected'
         all_options: 'All options'
         stock_units: 'Stock units'
+        units_description: 'These units will appear when managing your stock. You can always add, remove or rename them in the list.'
       checklist_type:
         multiple_options: 'selected'
         all_options: 'All options'
