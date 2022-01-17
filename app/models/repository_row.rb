@@ -42,6 +42,11 @@ class RepositoryRow < ApplicationRecord
              source: :value, source_type: class_name
   end
 
+  has_one :repository_stock_cell, -> { where(value_type: 'RepositoryStockValue') }, class_name: 'RepositoryCell',
+           inverse_of: :repository_row
+  has_one :repository_stock_value, class_name: 'RepositoryStockValue', through: :repository_stock_cell,
+           source: :value, source_type: 'RepositoryStockValue'
+
   has_many :repository_columns, through: :repository_cells
   has_many :my_module_repository_rows,
            inverse_of: :repository_row, dependent: :destroy
