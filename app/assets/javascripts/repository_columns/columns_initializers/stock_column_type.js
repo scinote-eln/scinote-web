@@ -1,4 +1,4 @@
-/* global GLOBAL_CONSTANTS dropdownSelector RepositoryListColumnType I18n */
+/* global GLOBAL_CONSTANTS dropdownSelector RepositoryListColumnType */
 
 var RepositoryStockColumnType = (function() {
   var manageModal = '#manage-repository-column';
@@ -17,8 +17,6 @@ var RepositoryStockColumnType = (function() {
 
   function initDropdownItemsTextArea() {
     var $manageModal = $(manageModal);
-    var columnNameInput = '#repository-column-name';
-
 
     $manageModal
       .on('show.bs.modal', function() {
@@ -44,7 +42,7 @@ var RepositoryStockColumnType = (function() {
           GLOBAL_CONSTANTS.REPOSITORY_STOCK_UNIT_ITEMS_PER_COLUMN
         );
         initStockUnitDropdown();
-      })
+      });
   }
 
   return {

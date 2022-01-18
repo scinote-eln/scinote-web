@@ -515,12 +515,13 @@ var dropdownSelector = (function() {
     // Draw option object
     function drawOption(selector2, option, group = null) {
       // Check additional params from config
+      var params = option.params || {};
       var customLabel = selector2.data('config').optionLabel;
-      var customClass = selector2.data('config').optionClass || '';
+      var customClass = params.optionClass || selector2.data('config').optionClass || '';
       var customStyle = selector2.data('config').optionStyle;
       return $(`
         <div class="dropdown-option ${customClass}" style="${customStyle ? customStyle(option) : ''}"
-          data-params='${JSON.stringify(option.params || {})}'
+          data-params='${JSON.stringify(params)}'
           data-label="${option.label}"
           data-group="${group ? group.value : ''}"
           data-value="${option.value}">

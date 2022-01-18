@@ -24,11 +24,14 @@ class RepositoryColumn < ApplicationRecord
 
   enum data_type: Extends::REPOSITORY_DATA_TYPES
 
-  auto_strip_attributes :name, nullify: false
+  validates :data_type, uniqueness: { if: :RepositoryStockValue?, scope: :repository_id }
+
   validates :name,
             length: { maximum: Constants::NAME_MAX_LENGTH },
             uniqueness: { scope: :repository_id, case_sensitive: true }
   validates :name, :data_type, :repository, :created_by, presence: true
+
+  validate
 
   after_create :update_repository_table_states_with_new_column
   around_destroy :update_repository_table_states_with_removed_column
@@ -102,6 +105,10 @@ class RepositoryColumn < ApplicationRecord
 
   def delimiter_char
     Constants::REPOSITORY_LIST_ITEMS_DELIMITERS_MAP[metadata['delimiter']&.to_sym] || "\n"
+  end
+
+  def deletable?
+    data_type != 'RepositoryStockValue'
   end
 
   private

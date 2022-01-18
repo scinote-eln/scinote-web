@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class RepositoryStockUnitItem < ApplicationRecord
-
   DEFAULT_UNITS = %i(L mL uL g mg ug M mM)
   belongs_to :repository_column, inverse_of: :repository_checklist_items
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User',

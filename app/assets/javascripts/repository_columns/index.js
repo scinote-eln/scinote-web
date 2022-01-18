@@ -1,4 +1,4 @@
-/* global I18n HelperModule truncateLongString animateSpinner RepositoryListColumnType */
+/* global I18n HelperModule truncateLongString animateSpinner RepositoryListColumnType RepositoryStockColumnType */
 /* global RepositoryDatatable RepositoryStatusColumnType RepositoryChecklistColumnType dropdownSelector */
 /* eslint-disable no-restricted-globals */
 
@@ -181,7 +181,13 @@ var RepositoryColumns = (function() {
             optionClass: 'custom-option',
             selectAppearance: 'simple',
             disableSearch: true,
-            labelHTML: true
+            labelHTML: true,
+            optionLabel: function(option) {
+              return `<div class="column-type-option" data-disabled="${option.params.disabled}">
+                        <span>${option.label}</span>
+                        <span class="text-description">${option.params.text_description || ''}</span>
+                      </div>`
+            }
           });
 
           dropdownSelector.init('.list-column-type .delimiter', delimiterDropdownConfig);
@@ -311,6 +317,17 @@ var RepositoryColumns = (function() {
           visClass = '';
           visText = '';
         }
+
+        let destroyButton = '';
+
+        if (destroyUrl) {
+          destroyButton = `<button class="btn icon-btn btn-light delete-repo-column manage-repo-column"
+                              data-action="destroy"
+                              data-modal-url="${destroyUrl}">
+                              <span class="fas fa-trash" title="Delete"></span>
+                          </button>`;
+        }
+
         let listItem = `<li class="col-list-el ${visLi} ${customColumn} ${editableRow}" data-position="${colIndex}" data-id="${colId}">
           <i class="grippy"></i>
           <span class="vis-controls">
@@ -324,11 +341,7 @@ var RepositoryColumns = (function() {
                     data-modal-url="${editUrl}">
               <span class="fas fa-pencil-alt" title="Edit"></span>
             </button>
-            <button class="btn icon-btn btn-light delete-repo-column manage-repo-column"
-                    data-action="destroy"
-                    data-modal-url="${destroyUrl}">
-              <span class="fas fa-trash" title="Delete"></span>
-            </button>
+            ${destroyButton}
           </span>
           <br>
         </li>`;

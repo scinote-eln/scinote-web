@@ -31,10 +31,9 @@ module RepositoryColumns
 
     def items
       column_stock_unit_items = @repository_column.repository_stock_unit_items
-                                                 .where('data ILIKE ?',
-                                                        "%#{search_params[:query]}%")
-                                                 .select(:id, :data)
-                                                 .order(data: :asc)
+                                                  .where('data ILIKE ?', "%#{search_params[:query]}%")
+                                                  .select(:id, :data)
+                                                  .order(data: :asc)
 
       render json: column_stock_unit_items.map { |i| { value: i.id, label: escape_input(i.data) } }, status: :ok
     end
