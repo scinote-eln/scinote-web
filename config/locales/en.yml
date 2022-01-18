@@ -1559,6 +1559,7 @@ en:
         repository_date_time_range_value: "Date & Time"
         repository_checklist_value: "Checklist"
         repository_status_value: "Status"
+        repository_stock_value: "Stock"
         repository_list_value: "Dropdown"
         repository_asset_value: "File"
       new:
@@ -1592,6 +1593,11 @@ en:
           icon_and_name_error: "Status icon and status name should be filled"
       datetime_type:
         range_label: 'Range'
+      stock_type:
+        multiple_options: 'selected'
+        all_options: 'All options'
+        stock_units: 'Stock units'
+        units_description: 'These units will appear when managing your stock. You can always add, remove or rename them in the list.'
       checklist_type:
         multiple_options: 'selected'
         all_options: 'All options'

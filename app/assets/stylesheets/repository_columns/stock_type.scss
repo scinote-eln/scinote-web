@@ -1,0 +1,8 @@
+#manage-repository-column {
+  .stock-column-type {
+    .units-info-description {
+      @include font-small;
+      color: $color-silver-chalice;
+    }
+  }
+}

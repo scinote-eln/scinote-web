@@ -50,6 +50,8 @@ CREATE FUNCTION public.trim_html_tags(input text, OUT output text) RETURNS text
 
 SET default_tablespace = '';
 
+SET default_table_access_method = heap;
+
 --
 -- Name: active_storage_attachments; Type: TABLE; Schema: public; Owner: -
 --
@@ -2005,6 +2007,40 @@ ALTER SEQUENCE public.repository_status_values_id_seq OWNED BY public.repository
 
 
 --
+-- Name: repository_stock_unit_items; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_stock_unit_items (
+    id bigint NOT NULL,
+    data character varying NOT NULL,
+    repository_column_id bigint NOT NULL,
+    created_by_id bigint,
+    last_modified_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_stock_unit_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_stock_unit_items_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_stock_unit_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_stock_unit_items_id_seq OWNED BY public.repository_stock_unit_items.id;
+
+
+--
 -- Name: repository_stock_values; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3540,6 +3576,13 @@ ALTER TABLE ONLY public.repository_status_values ALTER COLUMN id SET DEFAULT nex
 
 
 --
+-- Name: repository_stock_unit_items id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_unit_items ALTER COLUMN id SET DEFAULT nextval('public.repository_stock_unit_items_id_seq'::regclass);
+
+
+--
 -- Name: repository_stock_values id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4199,6 +4242,14 @@ ALTER TABLE ONLY public.repository_status_items
 
 ALTER TABLE ONLY public.repository_status_values
     ADD CONSTRAINT repository_status_values_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repository_stock_unit_items repository_stock_unit_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_unit_items
+    ADD CONSTRAINT repository_stock_unit_items_pkey PRIMARY KEY (id);
 
 
 --
@@ -5700,6 +5751,34 @@ CREATE INDEX index_repository_status_values_on_last_modified_by_id ON public.rep
 
 
 --
+-- Name: index_repository_stock_unit_items_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_stock_unit_items_on_created_by_id ON public.repository_stock_unit_items USING btree (created_by_id);
+
+
+--
+-- Name: index_repository_stock_unit_items_on_data; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_stock_unit_items_on_data ON public.repository_stock_unit_items USING gin (public.trim_html_tags((data)::text) public.gin_trgm_ops);
+
+
+--
+-- Name: index_repository_stock_unit_items_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_stock_unit_items_on_last_modified_by_id ON public.repository_stock_unit_items USING btree (last_modified_by_id);
+
+
+--
+-- Name: index_repository_stock_unit_items_on_repository_column_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_stock_unit_items_on_repository_column_id ON public.repository_stock_unit_items USING btree (repository_column_id);
+
+
+--
 -- Name: index_repository_stock_values_on_amount; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6649,6 +6728,14 @@ ALTER TABLE ONLY public.experiments
 
 
 --
+-- Name: repository_stock_unit_items fk_rails_4c20ff4c1f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_unit_items
+    ADD CONSTRAINT fk_rails_4c20ff4c1f FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: repository_status_values fk_rails_4cf67f9f1e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7305,6 +7392,14 @@ ALTER TABLE ONLY public.my_module_status_flows
 
 
 --
+-- Name: repository_stock_unit_items fk_rails_c200d845a5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_unit_items
+    ADD CONSTRAINT fk_rails_c200d845a5 FOREIGN KEY (repository_column_id) REFERENCES public.repository_columns(id);
+
+
+--
 -- Name: protocols fk_rails_c2952dc4b7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7454,6 +7549,14 @@ ALTER TABLE ONLY public.activities
 
 ALTER TABLE ONLY public.notifications
     ADD CONSTRAINT fk_rails_d44c385bb8 FOREIGN KEY (generator_user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: repository_stock_unit_items fk_rails_d5b7257ea2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_unit_items
+    ADD CONSTRAINT fk_rails_d5b7257ea2 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
 --
@@ -7867,6 +7970,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210811103123'),
 ('20210906132120'),
 ('20211103115450'),
-('20220110151006');
+('20220110151006'),
+('20220117103522');
 
 
