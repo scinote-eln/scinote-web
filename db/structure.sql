@@ -1767,12 +1767,13 @@ ALTER SEQUENCE public.repository_date_time_values_id_seq OWNED BY public.reposit
 
 CREATE TABLE public.repository_ledger_records (
     id bigint NOT NULL,
-    repository_row_id bigint NOT NULL,
+    repository_stock_value_id bigint NOT NULL,
     reference_type character varying NOT NULL,
     reference_id bigint NOT NULL,
     amount numeric,
     balance numeric,
     user_id bigint,
+    comment text,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -5576,10 +5577,10 @@ CREATE INDEX index_repository_ledger_records_on_reference ON public.repository_l
 
 
 --
--- Name: index_repository_ledger_records_on_repository_row_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_repository_ledger_records_on_repository_stock_value_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_repository_ledger_records_on_repository_row_id ON public.repository_ledger_records USING btree (repository_row_id);
+CREATE INDEX index_repository_ledger_records_on_repository_stock_value_id ON public.repository_ledger_records USING btree (repository_stock_value_id);
 
 
 --
@@ -6448,6 +6449,14 @@ ALTER TABLE ONLY public.project_folders
 
 
 --
+-- Name: repository_ledger_records fk_rails_062bed0c26; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_ledger_records
+    ADD CONSTRAINT fk_rails_062bed0c26 FOREIGN KEY (repository_stock_value_id) REFERENCES public.repository_stock_values(id);
+
+
+--
 -- Name: assets fk_rails_0916329f9e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6501,14 +6510,6 @@ ALTER TABLE ONLY public.tables
 
 ALTER TABLE ONLY public.team_repositories
     ADD CONSTRAINT fk_rails_15daa6a6bf FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
-
-
---
--- Name: repository_ledger_records fk_rails_16d35cbff3; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.repository_ledger_records
-    ADD CONSTRAINT fk_rails_16d35cbff3 FOREIGN KEY (repository_row_id) REFERENCES public.repository_rows(id);
 
 
 --

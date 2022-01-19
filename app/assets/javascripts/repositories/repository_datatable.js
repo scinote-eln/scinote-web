@@ -471,6 +471,7 @@ var RepositoryDatatable = (function(global) {
       },
       rowCallback: function(row, data) {
         $(row).attr('data-editable', data.recordEditable);
+        $(row).attr('data-manage-stock-url', data.manageStockUrl);
         // Get row ID
         let rowId = data.DT_RowId;
         // If row ID is in the list of selected row IDs

@@ -139,4 +139,3 @@ $.fn.dataTable.render.editRepositoryNumberValue = function(formId, columnId, cel
 $.fn.dataTable.render.editRepositoryStockValue = function(formId, columnId, cell) {
   return cell.node();
 };
-

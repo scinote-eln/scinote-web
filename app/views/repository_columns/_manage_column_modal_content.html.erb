@@ -107,6 +107,15 @@
                   <%= 'selected' if @repository_column.repository_time_value? || @repository_column.repository_time_range_value? %> >
             <%= t('libraries.manange_modal_column.select.repository_time_value') %>
           </option>
+
+          <option data-delimiter=true></option>
+
+          <option data-create-url="<%= repository_repository_columns_stock_columns_path(@repository) %>"
+                  data-edit-url="<%= repository_repository_columns_stock_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
+                  value="RepositoryStockValue"
+                  <%= 'selected' if @repository_column.repository_stock_value? %> >
+            <%= t('libraries.manange_modal_column.select.repository_stock_value') %>
+          </option>
         </select>
       </div>
     </div>

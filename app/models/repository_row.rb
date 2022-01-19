@@ -103,6 +103,10 @@ class RepositoryRow < ApplicationRecord
     row_archived? ? super : repository.archived_on
   end
 
+  def has_stock?
+    RepositoryStockValue.joins(repository_cell: :repository_row).exists?(repository_rows: { id: id })
+  end
+
   def snapshot!(repository_snapshot)
     row_snapshot = dup
     row_snapshot.assign_attributes(
