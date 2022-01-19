@@ -159,6 +159,37 @@
     }
   }
 
+  // Stock
+  .stock-value-view-render {
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: none;
+    };
+
+    &.stock-alert {
+      color: $brand-danger;
+
+      &::before {
+        @include font-awesome;
+        content: $font-fas-exclamation-triangle;
+      }
+    }
+  }
+
+  .not-assigned-stock {
+    color: $color-black;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: none;
+    };
+  }
+
+  .empty-stock-render {
+    color: $color-silver-chalice;
+  }
+
   // DateTime
   .datetime-container {
     display: flex;

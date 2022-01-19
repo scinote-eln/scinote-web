@@ -181,7 +181,30 @@ $.fn.dataTable.render.AssignedTasksValue = function(data) {
   return "<div class='assign-counter-container'><span class='assign-counter'>0</span></div>";
 };
 
+$.fn.dataTable.render.RepositoryStockValue = function(data) {
+  let canManage = $('.repository-table > table').data('editable');
+  if (data) {
+    if (canManage) {
+      return `<a class="manage-repository-stock-value-link stock-value-view-render
+                        ${data.value.stock_amount <= 0 ? 'stock-alert' : ''}" data-manage-url="">
+                ${data.value.stock_formatted}
+                </a>`;
+    }
+    return `<span class="stock-value-view-render
+                         ${data.value.stock_amount <= 0 ? 'stock-alert' : ''}" data-manage-url="">
+              ${data.value.stock_formatted}
+              </span>`;
+  } else if (canManage) {
+    return `<a class="manage-repository-stock-value-link not-assigned-stock" data-manage-url="">
+              <i class="fas fa-box-open"></i>
+              ${I18n.t('libraries.manange_modal_column.stock_type.add_stock')}
+            </a>`;
+  }
+  return `<span class="empty-stock-render" data-manage-url="">
+            ${I18n.t('libraries.manange_modal_column.stock_type.no_item_stock')}
+          </span>`;
+};
 
 $.fn.dataTable.render.defaultRepositoryStockValue = function() {
-  return '';
+  return $.fn.dataTable.render.RepositoryStockValue();
 };
