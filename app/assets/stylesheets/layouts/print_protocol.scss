@@ -8,7 +8,6 @@
 
 .page-break {
   clear: both;
-  page-break-after: always;
 }
 
 body {
@@ -62,10 +61,13 @@ hr {
   text-align: center;
   vertical-align: text-bottom;
   width: 1.1em;
+}
 
-  &.checked {
-    background-color: $brand-success;
-    border-color: $brand-success;
+.step-check-circle-checked {
+  img {
+    height: 1.4em;
+    vertical-align: text-bottom;
+    width: 1.4em;
   }
 }
 
@@ -73,24 +75,27 @@ hr {
   margin-bottom: 1em;
 
   span {
-    display: inline-block;
     vertical-align: top;
   }
 }
 
 .checklist-checkbox {
-  border: .15em solid $color-alto;
-  border-radius: .2em;
-  display: inline-block;
-  height: 1em;
-  text-align: center;
-  width: 1em;
-
   &.checked {
-    background-color: $brand-primary;
-    border-color: $brand-primary;
-    color: $color-white;
-    font-size: 1em;
+    img {
+      height: 1.3em;
+      text-align: center;
+      vertical-align: middle;
+      width: 1.3em;
+    }
+  }
+
+  &.not-checked {
+    border: .15em solid $color-alto;
+    border-radius: .2em;
+    display: inline-block;
+    height: 1em;
+    text-align: center;
+    width: 1em;
   }
 }
 
@@ -224,4 +229,17 @@ hr {
 .ht_clone_left,
 .ht_clone_top_left_corner {
   display: none;
+}
+
+.sa-type {
+  font-size: 10px;
+  font-weight: 600;
+  padding-left: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  vertical-align: super;
+
+  &:hover {
+    text-decoration: none;
+  }
 }

@@ -13,7 +13,7 @@ module Reports
 
     discard_on StandardError do |job, error|
       report = Report.find_by(id: job.arguments.first)
-      return if report.blank?
+      next unless report
 
       ActiveRecord::Base.no_touching do
         report.pdf_error!
