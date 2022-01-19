@@ -9,6 +9,7 @@ class RepositoryStockValuesController < ApplicationController
         partial: 'repository_stock_values/manage_modal_content',
         locals: {
           repository_row: @repository_row,
+          repository_stock_column: @repository_column,
           units: @repository_column.repository_stock_unit_items,
           repository_stock_value: RepositoryStockValue.new
         }
@@ -22,6 +23,7 @@ class RepositoryStockValuesController < ApplicationController
         partial: 'repository_stock_values/manage_modal_content',
         locals: {
           repository_row: @repository_row,
+          repository_stock_column: @repository_column,
           units: @repository_column.repository_stock_unit_items,
           repository_stock_value: @repository_stock_value
         }

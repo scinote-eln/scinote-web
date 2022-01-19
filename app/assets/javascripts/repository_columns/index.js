@@ -436,6 +436,13 @@ var RepositoryStockValues = (function() {
           var $manageModal = $('#manage-repository-stock-value-modal');
           $manageModal.find('.modal-content').html(result.html);
 
+          dropdownSelector.init('#repository-stock-value-units', {
+            noEmptyOption: true,
+            singleSelect: true,
+            closeOnSelect: true,
+            selectAppearance: 'simple'
+          });
+
           $manageModal.find('form').on('ajax:success', function() {
             var dataTable = $('.dataTable').DataTable();
             $manageModal.modal('hide');

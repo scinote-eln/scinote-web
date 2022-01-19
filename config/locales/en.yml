@@ -1548,8 +1548,10 @@ en:
       set: "Set to"
       amount: "Amount"
       amount_placeholder: "Enter amount"
+      amount_error: "Enter an amount"
       unit: "Unit"
       unit_prompt: "Select unit"
+      unit_error: "Select a unit"
       comment: "Comment (optional)"
       comment_placeholder: "Enter comment"
   libraries:

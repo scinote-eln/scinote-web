@@ -1546,3 +1546,31 @@ a.disabled-with-click-events {
     z-index: 1;
   }
 }
+
+.input-error-message {
+  visibility: hidden;
+  color: $brand-danger;
+  font-size: 0.8em;
+}
+
+form:not([novalidate]) {
+  input:invalid,
+  select:invalid,
+  textarea:invalid {
+    border-color: $brand-danger;
+    & + .input-error-message {
+      visibility: visible;
+    }
+  }
+
+  select:invalid + .dropdown-selector-container {
+    .input-field {
+      border-color: $brand-danger;
+    }
+
+    & + .input-error-message {
+      margin-top: -0.5em;
+      visibility: visible;
+    }
+  }
+}
