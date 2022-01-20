@@ -435,8 +435,9 @@ GEM
       pry (~> 0.13.0)
     pry-rails (0.3.9)
       pry (>= 0.10.4)
+    psych (3.3.2)
     public_suffix (4.0.6)
-    puma (5.5.1)
+    puma (5.5.2)
       nio4r (~> 2.0)
     raabro (1.4.0)
     racc (1.6.0)
@@ -699,6 +700,7 @@ DEPENDENCIES
   pry
   pry-byebug
   pry-rails
+  psych (< 4.0)
   puma
   rack-attack
   rack-cors
@@ -742,7 +744,7 @@ DEPENDENCIES
   yomu!
 
 RUBY VERSION
-   ruby 2.7.2p137
+   ruby 2.7.5p203
 
 BUNDLED WITH
    2.1.4

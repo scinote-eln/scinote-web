@@ -148,7 +148,7 @@
                   <% ordered_checklist_items(checklist).each do |checklist_item| %>
                     <div class="checkbox" <%= @protocol.in_module? ? "data-action=check-item" : "" %>>
                       <label>
-                        <% if @protocol.in_module? %>
+                        <% if @protocol.in_module? && can_complete_or_checkbox_step?(@protocol) %>
                           <input type="checkbox"
                                  value=""
                                  data-link-url="<%=checklistitem_state_step_path(step) %>"
@@ -156,7 +156,8 @@
                         <% else %>
                           <input type="checkbox"
                                  value=""
-                                 disabled="disabled" />
+                                 disabled="disabled"
+                                 <%= "checked" if checklist_item.checked? %> />
                         <% end %>
                         <%= custom_auto_link(checklist_item.text, team: current_team) %>
                       </label>

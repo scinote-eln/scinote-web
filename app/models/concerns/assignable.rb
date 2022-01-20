@@ -10,8 +10,6 @@ module Assignable
 
     has_many :user_assignments, as: :assignable, dependent: :destroy
 
-    default_scope { includes(user_assignments: :user_role).distinct }
-
     scope :readable_by_user, lambda { |user|
       joins(user_assignments: :user_role)
         .where(user_assignments: { user: user })
@@ -36,12 +34,16 @@ module Assignable
       user_assignments.find_by(user: user)&.user_role
     end
 
+    def manually_assigned_users
+      User.joins(:user_assignments).where(user_assignments: { assigned: :manually, assignable: self })
+    end
+
     private
 
     def create_users_assignments
       return if skip_user_assignments
 
-      role = if self.class == Project
+      role = if is_a?(Project)
                UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))
              else
                permission_parent.user_assignments.find_by(user: created_by).user_role
@@ -50,7 +52,7 @@ module Assignable
       UserAssignment.create!(
         user: created_by,
         assignable: self,
-        assigned: :automatically,
+        assigned: is_a?(Project) ? :manually : :automatically,
         user_role: role
       )
 

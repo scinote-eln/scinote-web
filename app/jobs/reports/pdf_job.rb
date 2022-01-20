@@ -5,6 +5,7 @@ module Reports
     extend InputSanitizeHelper
     include InputSanitizeHelper
     include ReportsHelper
+    include Canaid::Helpers::PermissionsHelper
 
     PDFUNITE_ENCRYPTED_PDF_ERROR_STRING = 'Unimplemented Feature: Could not merge encrypted files'
 
@@ -12,7 +13,7 @@ module Reports
 
     discard_on StandardError do |job, error|
       report = Report.find_by(id: job.arguments.first)
-      return if report.blank?
+      next unless report
 
       ActiveRecord::Base.no_touching do
         report.pdf_error!
@@ -75,7 +76,7 @@ module Reports
 
         file = prepend_title_page(file, template, report, renderer)
 
-        file = append_result_asset_previews(report, file) if report.settings.dig(:task, :file_results_previews)
+        file = append_result_asset_previews(report, file, user) if report.settings.dig(:task, :file_results_previews)
 
         report.pdf_file.attach(io: file, filename: 'report.pdf')
         report.pdf_ready!
@@ -98,9 +99,11 @@ module Reports
 
     private
 
-    def append_result_asset_previews(report, report_file)
+    def append_result_asset_previews(report, report_file, user)
       Dir.mktmpdir do |tmp_dir|
         report.report_elements.my_module.each do |my_module_element|
+          next unless can_read_my_module?(user, my_module_element.my_module)
+
           results = my_module_element.my_module.results
           order_results_for_report(results, report.settings.dig(:task, :result_order)).each do |result|
             next unless result.is_asset && PREVIEW_EXTENSIONS.include?(result.asset.file.blob.filename.extension)

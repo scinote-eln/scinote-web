@@ -8,7 +8,7 @@ class RepositoryListItem < ApplicationRecord
   validate :validate_per_column_limit
   validates :data,
             presence: true,
-            uniqueness: { scope: :repository_column_id, case_sensitive: false },
+            uniqueness: { scope: :repository_column_id },
             length: { maximum: Constants::TEXT_MAX_LENGTH }
 
   private

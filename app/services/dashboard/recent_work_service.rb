@@ -15,6 +15,7 @@ module Dashboard
     def call
       all_activities = @team.activities.where(owner_id: @user.id)
       all_activities = join_project_user_roles(all_activities)
+      all_activities = join_report_project_user_roles(all_activities)
       all_activities = join_experiment_user_roles(all_activities)
       all_activities = join_my_module_user_roles(all_activities)
       all_activities = join_result_user_roles(all_activities)
@@ -24,6 +25,9 @@ module Dashboard
       team_activities = all_activities.where(subject_type: %w(Team RepositoryBase ProjectFolder))
       project_activities = all_activities.where(project_user_assignments: { user_id: @user.id })
                                          .where('project_user_roles.permissions @> ARRAY[?]::varchar[]',
+                                                [ProjectPermissions::ACTIVITIES_READ])
+      report_activities = all_activities.where(report_project_user_assignments: { user_id: @user.id })
+                                         .where('report_project_user_roles.permissions @> ARRAY[?]::varchar[]',
                                                 [ProjectPermissions::ACTIVITIES_READ])
       experiment_activities = all_activities.where(experiment_user_assignments: { user_id: @user.id })
                                             .where('experiment_user_roles.permissions @> ARRAY[?]::varchar[]',
@@ -37,16 +41,20 @@ module Dashboard
       protocol_activities = all_activities.where(protocol_my_module_user_assignments: { user_id: @user.id })
                                           .where('protocol_my_module_user_roles.permissions @> ARRAY[?]::varchar[]',
                                                  [MyModulePermissions::ACTIVITIES_READ])
+      protocol_repository_activities = all_activities.where(project_id: nil, subject_type: 'Protocol')
+
       step_activities = all_activities.where(step_my_module_user_assignments: { user_id: @user.id })
                                       .where('step_my_module_user_roles.permissions @> ARRAY[?]::varchar[]',
                                              [MyModulePermissions::ACTIVITIES_READ])
 
       activities = team_activities.or(project_activities)
+                                  .or(report_activities)
                                   .or(experiment_activities)
                                   .or(my_module_activities)
                                   .or(result_activities)
                                   .or(protocol_activities)
                                   .or(step_activities)
+                                  .or(protocol_repository_activities)
 
       activities = activities.where.not(type_of: Extends::DASHBOARD_BLACKLIST_ACTIVITY_TYPES)
                              .select('MAX(activities.created_at) AS last_change', :subject_id, :subject_type)
@@ -139,6 +147,16 @@ module Dashboard
                         AND project_user_assignments.assignable_id = project_subjects.id
                         LEFT OUTER JOIN user_roles project_user_roles
                         ON project_user_roles.id = project_user_assignments.user_role_id")
+    end
+
+    def join_report_project_user_roles(activities)
+      activities.joins("LEFT OUTER JOIN projects report_project_subjects
+                        ON report_project_subjects.id = activities.project_id AND activities.subject_type='Report'")
+                .joins("LEFT OUTER JOIN user_assignments report_project_user_assignments
+                        ON report_project_user_assignments.assignable_type = 'Project'
+                        AND report_project_user_assignments.assignable_id = report_project_subjects.id
+                        LEFT OUTER JOIN user_roles report_project_user_roles
+                        ON report_project_user_roles.id = report_project_user_assignments.user_role_id")
     end
 
     def join_experiment_user_roles(activities)

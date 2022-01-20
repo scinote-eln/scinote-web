@@ -11,7 +11,6 @@ class ProjectMember
   validates :user, :project, presence: true, if: -> { assign }
   validates :user_role_id, presence: true, if: -> { assign }
   validate :validate_role_presence, if: -> { assign }
-  validate :validate_user_assignment_presence, if: -> { assign }
 
   def initialize(user, project, current_user = nil)
     @user = user
@@ -20,17 +19,21 @@ class ProjectMember
     @user_assignment = UserAssignment.find_by(assignable: @project, user: @user)
   end
 
-  def create
+  def save
     return unless assign
 
     ActiveRecord::Base.transaction do
-      @user_assignment = UserAssignment.create!(
+      @user_assignment = UserAssignment.find_or_initialize_by(
         assignable: @project,
-        user: @user,
+        user: @user
+      )
+
+      @user_assignment.update!(
         user_role_id: user_role_id,
         assigned_by: current_user,
         assigned: :manually
       )
+
       log_activity(:assign_user_to_project)
 
       UserAssignments::PropagateAssignmentJob.perform_later(
@@ -66,9 +69,17 @@ class ProjectMember
     return false if last_project_owner?
 
     ActiveRecord::Base.transaction do
-      user_assignment.destroy!
-      user_project&.destroy!
-      log_activity(:unassign_user_from_project)
+      # if project is public, the assignment
+      # will reset to the default public role
+      if @project.visible?
+        user_assignment.update!(
+          user_role: @project.default_public_user_role,
+          assigned: :automatically
+        )
+      else
+        user_assignment.destroy!
+        user_project&.destroy!
+      end
 
       UserAssignments::PropagateAssignmentJob.perform_later(
         @project,
@@ -77,6 +88,8 @@ class ProjectMember
         current_user,
         destroy: true
       )
+
+      log_activity(:unassign_user_from_project)
     end
   end
 
@@ -104,12 +117,6 @@ class ProjectMember
 
   def validate_role_presence
     errors.add(:user_role_id, :not_found) if UserRole.find_by(id: user_role_id).nil?
-  end
-
-  def validate_user_assignment_presence
-    return if UserAssignment.find_by(assignable: @project, user: @user).nil?
-
-    errors.add(:user_role_id, :already_present)
   end
 
   def project_owners

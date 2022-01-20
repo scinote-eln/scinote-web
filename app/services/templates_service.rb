@@ -26,8 +26,9 @@ class TemplatesService
         )
       end
     end
-    owner = tmpl_project.user_projects
-                        .where(role: 'owner')
+    owner_role_id = UserRole.find_by(name: I18n.t('user_roles.predefined.owner')).id
+    owner = tmpl_project.user_assignments
+                        .where(user_role_id: owner_role_id)
                         .order(:created_at)
                         .first&.user
     return unless owner.present?

@@ -9,10 +9,6 @@
     }
   }
 
-  window.recaptchaCallback = function recaptchaCallback(response) {
-    $('#recaptcha-invite-modal').val(response);
-  };
-
   function initializeModal(modal) {
     var modalDialog = modal.find('.modal-dialog');
     var type = modal.attr('data-type');
@@ -130,7 +126,7 @@
           emails: dropdownSelector.getValues(emailsInput),
           team_ids: dropdownSelector.getValues(teamsInput),
           role: dropdownSelector.getValues(roleInput),
-          'g-recaptcha-response': $('#recaptcha-invite-modal').val()
+          'g-recaptcha-response': $('.g-recaptcha-response').val()
         };
 
         animateSpinner(modalDialog);
@@ -191,18 +187,11 @@
         });
       });
     }).on('shown.bs.modal', function() {
-      var script = document.createElement('script');
       emailsInput.focus();
-      recaptchaErrorMsgDiv.addClass('hidden');
-      script.type = 'text/javascript';
-      script.src = 'https://www.google.com/recaptcha/api.js?hl=en';
-      $(script).insertAfter('#recaptcha-service');
-      // Remove 'data-invited="true"' status
-
       dropdownSelector.init(teamsInput, {
         optionClass: 'checkbox-icon'
       });
-
+      // Remove 'data-invited="true"' status
       modal.removeAttr('data-invited');
     }).on('hide.bs.modal', function() {
       // 'Reset' modal state

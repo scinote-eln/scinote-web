@@ -11,7 +11,7 @@
 
         <% if @linked_accounts.any? %>
           <% @linked_accounts.each do |provider| %>
-            <% if Rails.configuration.x.azure_ad_apps.find { |_,value| value[:provider] == provider } %>
+            <% if Rails.configuration.x.azure_ad_apps.find { |_,value| value[:provider] == provider || provider == 'giot_connect'} %>
               <% if lookup_context.exists?(provider, 'users/settings/account/connected_accounts', true) %>
                 <%= render partial: provider %>
               <% else %>

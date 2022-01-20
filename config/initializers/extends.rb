@@ -372,6 +372,7 @@ class Extends
 
   NOTIFIABLE_ACTIVITIES = %w(
     assign_user_to_project
+    unassign_user_from_project
     change_user_role_on_project
     edit_module_comment
     delete_module_comment

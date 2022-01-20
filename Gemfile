@@ -2,7 +2,7 @@
 
 source 'http://rubygems.org'
 
-ruby '2.7.2'
+ruby '2.7.5'
 
 gem 'bootsnap', require: false
 gem 'bootstrap-sass', '~> 3.4.1'
@@ -13,6 +13,7 @@ gem 'figaro'
 gem 'pg', '~> 1.1'
 gem 'pg_search' # PostgreSQL full text search
 gem 'rails', '~> 6.1.4'
+gem 'psych', '< 4.0'
 gem 'view_component', require: 'view_component/engine'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 5.2'

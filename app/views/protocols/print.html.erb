@@ -1,0 +1,133 @@
+<p class="print-protocol-header">
+  <span><%= t('.header.printed_from') %></span>
+  <span class="print-protocol-header__logo">
+    <%= image_tag 'logo.png' %>
+  </span>
+  <span><%= t('.header.print_info', datetime: l(DateTime.current, format: :full), full_name: current_user.full_name) %></span>
+</p>
+
+<h1><%= @protocol.linked? ? protocol_name(@protocol.parent) : @protocol.name || @protocol.my_module.name %></h1>
+<div>
+  <% if @protocol.description.present? %>
+    <%= custom_auto_link(@protocol.tinymce_render(:description),
+                          simple_format: false,
+                          tags: %w(img),
+                          team: current_team) %>
+  <% else %>
+    <em><%= t('my_modules.protocols.protocol_status_bar.no_description') %></em>
+  <% end %>
+</div>
+<% @protocol.steps.order(position: :asc).each do |step| %>
+  <div class="print-step">
+    <h2 class="step-check-circle-checked">
+      <% if step.completed_on %>
+        <%= image_tag "check-circle-solid.svg" %>
+      <% else %>
+        <div class="step-check-circle"></div>
+      <% end %>
+      <%= step.position + 1 %>. <%= step.name %>
+    </h2>
+    <div>
+      <% if step.description.blank? %>
+        <em><%= t('protocols.steps.no_description') %></em>
+      <% else %>
+        <div class="ql-editor">
+          <%= custom_auto_link(step.tinymce_render(:description),
+                                simple_format: false,
+                                tags: %w(img),
+                                team: current_team) %>
+        </div>
+      <% end %>
+    </div>
+
+    <% step.checklists.each do |checklist| %>
+      <div class="print-checklist">
+      <h3><%= smart_annotation_parser(checklist.name, current_team).html_safe %></h3>
+        <% checklist.checklist_items.order(position: :asc).each do |checklist_item| %>
+          <div class="print-checklist-item">
+            <span class="checklist-checkbox checked">
+              <% if checklist_item.checked %>
+                <%= image_tag "check-square-solid.svg" %>
+              <% else %>
+                <span class="checklist-checkbox not-checked"></span>
+              <% end %>
+              <%= smart_annotation_parser(checklist_item.text, current_team).html_safe %>
+            </span>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% step.tables.each do |table| %>
+      <strong>
+        <%= auto_link(simple_format(table.name),
+                            link: :urls,
+                            html: { target: '_blank' }) %>
+      </strong>
+      <div class="print-table">
+        <div class="page-break"></div>
+        <div data-role="hot-table" class="hot-table">
+          <%= hidden_field(table, :contents, value: table.contents_utf_8, class: "hot-contents") %>
+          <div data-role="step-hot-table" class="step-result-hot-table"></div>
+        </div>
+      </div>
+    <% end %>
+    <% step.assets.where(view_mode: "inline").each do |asset| %>
+        <div class="print-asset inline">
+          <div class="print-asset-image">
+            <% if asset.previewable? %>
+              <%= image_tag asset.large_preview %>
+            <% end %>
+            <p><%= asset.render_file_name %></p>
+          </div>
+        </div>
+        <div class="page-break"></div>
+    <% end %>
+    <% step.assets.where(view_mode: "list").each do |asset| %>
+        <div class="print-asset list">
+          <span class="print-asset-icon"><%= file_extension_icon_html(asset) %></span>
+          <span><%= asset.render_file_name %></span>
+        </div>
+    <% end %>
+    <div class="print-thumbnails">
+      <% step.assets.where(view_mode: "thumbnail").each do |asset| %>
+        <div class="print-asset thumbnail">
+          <div class="print-asset-image">
+            <% if asset.previewable? %>
+              <%= image_tag asset.blob.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT).processed %>
+            <% end %>
+            <p><%= asset.render_file_name %></p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <% if params[:include_comments] && step.comments.present? %>
+    <div class="print-comments">
+      <h3><%= t('Comments') %>:</h3>
+      <% step.step_comments.each do |comment| %>
+        <div class="print-comment-container">
+          <div class="print-comment-header">
+            <%= image_tag avatar_path(comment.user, :icon_small), class: 'user-avatar' %>
+            <div class="user-name">
+              <%= comment.user.full_name %>
+            </div>
+          </div>
+          <div class="print-comment-body">
+            <div class="comment-message">
+              <%= smart_annotation_parser(comment.message, current_team).html_safe %>
+            </div>
+            <div class="print-comment-footer">
+              <div class="print-comment-create-date">
+                <%= I18n.l(comment.created_at, format: :full) %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+  <hr>
+  <div class="page-break"></div>
+<% end %>

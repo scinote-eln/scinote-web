@@ -261,6 +261,7 @@ Rails.application.routes.draw do
 
     namespace :access_permissions do
       resources :projects, defaults: { format: 'json' } do
+        put :update_default_public_user_role, on: :member
         resources :experiments, only: %i(show update edit) do
           resources :my_modules, only: %i(show update edit)
         end
@@ -492,6 +493,7 @@ Rails.application.routes.draw do
     resources :protocols, only: [:index, :edit, :create] do
       resources :steps, only: [:new, :create]
       member do
+        get 'print', to: 'protocols#print'
         get 'linked_children', to: 'protocols#linked_children'
         post 'linked_children_datatable',
              to: 'protocols#linked_children_datatable'

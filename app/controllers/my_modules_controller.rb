@@ -333,7 +333,11 @@ class MyModulesController < ApplicationController
   end
 
   def load_experiment_my_modules
-    @experiment_my_modules = @my_module.experiment.my_modules.where(archived: @my_module.archived?).order(:name)
+    @experiment_my_modules = if @my_module.experiment.archived_branch?
+                               @my_module.experiment.my_modules.order(:name)
+                             else
+                               @my_module.experiment.my_modules.where(archived: @my_module.archived?).order(:name)
+                             end
   end
 
   def check_manage_permissions
