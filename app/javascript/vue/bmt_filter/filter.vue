@@ -1,18 +1,19 @@
 <template>
   <div class="filter-container">
-    <b class='filter-title'>Filter</b>  
+    <b class='filter-title'>Filter</b>
     <div class="filter-element">
       <div class="form-group filter-action">
-      
+
         <div class="sci-input-container">
           <DropdownSelector
-            :options="prepareTypesOptions()"
+            :options="typeOptions"
             :selectorId="`bmtFilter${this.filter.id}`"
-            @dropdown:changed="updateFilter"
+            @dropdown:changed="updateFilterType"
           />
         </div>
         <component
-          :is="type"
+          v-if="filter.data"
+          :is="filter.data.type"
           @filter:updateData="updateFilter"
           :additionalDataAttributes="additionalDataAttributes"
           :currentData="filter.data" />
@@ -24,7 +25,7 @@
       </div>
       <hr>
     </div>
-</div>
+  </div>
 </template>
 
 <script>
@@ -33,7 +34,7 @@
   import monomerTypeFilter from 'vue/bmt_filter/filters/monomerTypeFilter.vue'
   import subsequenceFilter from 'vue/bmt_filter/filters/subsequenceFilter.vue'
   import variantSequenceFilter from 'vue/bmt_filter/filters/variantSequenceFilter.vue'
-  import fullSequenceFilter from 'vue/bmt_filter/filters/fullSequenceFilter.vue'
+  import fullsequenceFilter from 'vue/bmt_filter/filters/fullsequenceFilter.vue'
   import monomerSubstructureSearchFilter from 'vue/bmt_filter/filters/monomerSubstructureSearchFilter.vue'
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
 
@@ -44,17 +45,15 @@
     },
     data() {
       return {
-        type: this.filter.data.type,
         types: [
           'additionalDataFilter',
           'entityTypeFilter',
           'monomerTypeFilter',
           'subsequenceFilter',
           'variantSequenceFilter',
-          'fullSequenceFilter',
+          'fullsequenceFilter',
           'monomerSubstructureSearchFilter'
-        ],
-        additionaDataAttributes: []
+        ]
       }
     },
     components: {
@@ -63,25 +62,33 @@
       monomerTypeFilter,
       subsequenceFilter,
       variantSequenceFilter,
-      fullSequenceFilter,
+      fullsequenceFilter,
       monomerSubstructureSearchFilter,
       DropdownSelector
     },
-    methods: {
-      prepareTypesOptions() {
+    computed: {
+      typeOptions() {
         return this.types.map(option => {
           return {label: this.i18n.t(`repositories.show.bmt_search.filters.types.${option}.name`), value: option}
         })
-      },
-      updateFilter(value) {
-        this.type = value;
+      }
+    },
+    methods: {
+      updateFilterType(type) {
         this.$emit(
           'filter:update',
           {
             id: this.filter.id,
-            data: {
-              type: value
-            }
+            data: { type: type }
+          }
+        );
+      },
+      updateFilter(value) {
+        this.$emit(
+          'filter:update',
+          {
+            id: this.filter.id,
+            data: value
           }
         );
       }

@@ -108,7 +108,8 @@ module RepositoryDatatableHelper
       '2': escape_input(record.external_id),
       '3': record.code,
       '4': escape_input(record.name),
-      '5': I18n.l(record.created_at, format: :full)
+      '5': escape_input(record.created_by.full_name),
+      '6': I18n.l(record.created_at, format: :full)
     }
   end
 

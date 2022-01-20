@@ -6,7 +6,7 @@
       type="text"
       name="sequence"
       v-model="sequence"
-      :placeholder="i18n.t('repositories.show.bmt_search.filters.types.fullSequenceFilter.placeholder')"
+      :placeholder="i18n.t('repositories.show.bmt_search.filters.types.fullsequenceFilter.placeholder')"
     />
     <div>
       <label class="field-suboption">
@@ -20,7 +20,7 @@
           <label class="sci-checkbox-label"></label>
         </div>
         <span class="checkbox-label">
-          {{ i18n.t('repositories.show.bmt_search.filters.types.fullSequenceFilter.derivatives_included') }}
+          {{ i18n.t('repositories.show.bmt_search.filters.types.fullsequenceFilter.derivatives_included') }}
         </span>
       </label>
     </div>
@@ -35,7 +35,7 @@
     data() {
       return {
         sequence: "",
-        derivativesIncluded: false
+        derivativesIncluded: true
       }
     }
   }

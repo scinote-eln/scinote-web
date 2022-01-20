@@ -98,7 +98,7 @@
     methods: {
       addFilter() {
         const id = this.filters.length ? this.filters[this.filters.length - 1].id + 1 : 1
-        this.filters.push({ id: id, data: { type: "fullSequenceFilter" } });
+        this.filters.push({ id: id, data: { type: "fullsequenceFilter" } });
       },
       updateFilter(filter) {
         this.filters.find((f) => f.id === filter.id).data = filter.data;

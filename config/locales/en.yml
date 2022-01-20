@@ -1481,8 +1481,8 @@ en:
               name: "Entity type"
               placeholder: "Enter entity type"
             monomerTypeFilter:
-              name: "Monomer type"
-              placeholder: "Enter monomer type"
+              name: "Monomere type"
+              placeholder: "Enter monomere type"
             subsequenceFilter:
               name: "Subsequence"
               placeholder: "Enter subsequence"
@@ -1495,12 +1495,12 @@ en:
               distance_type: "Distance type"
               exact: "Exact"
               maximum: "Maximum"
-            fullSequenceFilter:
+            fullsequenceFilter:
               name: "Full sequence"
               placeholder: "Enter full sequence"
               derivatives_included: "Derivatives included"
             monomerSubstructureSearchFilter:
-              name: "Monomer substructure"
+              name: "Monomere substructure"
               placeholder: "Enter substructure"
     table:
       id: 'ID'
