@@ -2,6 +2,7 @@
 
 class RepositoryStockValuesController < ApplicationController
   before_action :load_vars
+  before_action :check_manage_permissions
 
   def new
     render json: {
@@ -40,7 +41,7 @@ class RepositoryStockValuesController < ApplicationController
           repository_stock_value_params[:comment].presence
         )
         @repository_stock_value.units = repository_stock_value_params[:units]
-        @repository_stock_value.update_amount!(repository_stock_value_params[:amount], current_user)
+        @repository_stock_value.update_data!(repository_stock_value_params[:amount], current_user)
       end
     else
       ActiveRecord::Base.transaction do # create

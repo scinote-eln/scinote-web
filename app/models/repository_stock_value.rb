@@ -15,12 +15,12 @@ class RepositoryStockValue < ApplicationRecord
     "#{amount} #{units}"
   end
 
-  def amount_changed?(new_amount)
-    BigDecimal(new_amount.to_s) != data
+  def data_changed?(new_data)
+    BigDecimal(new_data.to_s) != data
   end
 
-  def update_amount!(new_amount, user)
-    self.amount = BigDecimal(new_amount.to_s)
+  def update_data!(new_data, user)
+    self.amount = BigDecimal(new_data.to_s)
     self.last_modified_by = user
     save!
   end
