@@ -1,0 +1,87 @@
+<%= form_tag update_repository_stock_repository_repository_row_path(@repository, @repository_row), method: :post, remote: true, novalidate: true do %>
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title" id="modal-delete-module-label">
+      <%= t('repository_stock_values.manage_modal.title', item: repository_row.name) %>
+    </h4>
+  </div>
+  <div class="modal-body">
+    <%= hidden_field_tag 'repository_stock_value[amount]', repository_stock_value.amount %>
+    <p><%= t('repository_stock_values.manage_modal.enter_amount') %></p>
+    <div class="row">
+      <div class="col-sm-5">
+        <label><%= t('repository_stock_values.manage_modal.operation') %></label>
+        <% if repository_stock_value.id %>
+          <div class="btn-group" role="group" aria-label="Operator group">
+            <button type="button" data-operator="set" class="btn btn-primary stock-operator-option"><%= t('repository_stock_values.manage_modal.set') %></button>
+            <button type="button" data-operator="remove" class="btn btn-secondary stock-operator-option"><%= t('repository_stock_values.manage_modal.remove') %></button>
+            <button type="button" data-operator="add" class="btn btn-secondary stock-operator-option"><%= t('repository_stock_values.manage_modal.add') %></button>
+          </div>
+        <% else %>
+          <div class="btn-group" role="group" aria-label="Operator group">
+            <button type="button" data-operator="set" class="btn btn-primary"><%= t('repository_stock_values.manage_modal.set') %></button>
+            <button type="button" data-operator="remove" class="btn btn-secondary disabled"><%= t('repository_stock_values.manage_modal.remove') %></button>
+            <button type="button" data-operator="add" class="btn btn-secondary disabled"><%= t('repository_stock_values.manage_modal.add') %></button>
+          </div>
+        <% end %>
+      </div>
+      <div class="col-sm-7">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label><%= t('repository_stock_values.manage_modal.amount') %></label>
+              <input id="stock-input-amount"
+                     class="form-control"
+                     type="number"
+                     name="input-amount"
+                     data-operator="set"
+                     data-current-amount="<%= repository_stock_value.amount %>"
+                     value="<%= repository_stock_value.amount %>"
+                     placeholder="<%= t('repository_stock_values.manage_modal.amount_placeholder') %>"
+                     step="<%= repository_stock_column.metadata['decimals'] ? 1.0/(10 ** repository_stock_column.metadata['decimals']) : 1 %>"
+                     required />
+              <div class="input-error-message">
+                <%= t('repository_stock_values.manage_modal.amount_error') %>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <label><%= t('repository_stock_values.manage_modal.unit') %></label>
+            <select class="form-control" name="repository_stock_value[units]" id="repository-stock-value-units" required>
+              <option value="" <%= 'selected="selected"' unless repository_stock_value.units %> disabled><%= t('repository_stock_values.manage_modal.unit_prompt') %></option>
+              <% units.each do |unit| %>
+                <option <%= 'selected="selected"' if repository_stock_value.units == unit %>>
+                  <%= unit.data %>
+                </option>
+              <% end %>
+            </select>
+            <div class="input-error-message">
+                <%= t('repository_stock_values.manage_modal.unit_error') %>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label><%= t('repository_stock_values.manage_modal.comment') %></label>
+          <input class="form-control"
+          type="text"
+          name="repository_stock_value[comment]"
+          id="repository-stock-value-comment"
+          placeholder="<%= t('repository_stock_values.manage_modal.comment_placeholder') %>">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            id="cancel"
+            class="btn btn-default"
+            data-dismiss="modal"><%=t 'general.cancel' %></button>
+    <%= submit_tag t('repository_stock_values.manage_modal.save_stock'), class: "btn btn-primary" %>
+  </div>
+<% end %>

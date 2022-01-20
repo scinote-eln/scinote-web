@@ -165,6 +165,7 @@
            locals: { repository: @repository } %>
 
 <%= render partial: 'repository_columns/manage_column_modal', locals: { my_module_page: false } %>
+<%= render partial: "repository_stock_values/manage_modal" %>
 
 <%= javascript_include_tag 'repositories/edit' %>
 <%= javascript_include_tag 'repositories/repository_datatable' %>

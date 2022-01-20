@@ -595,6 +595,12 @@ Rails.application.routes.draw do
         member do
           get :assigned_task_list
         end
+        member do
+          get 'repository_stock_value/new', to: 'repository_stock_values#new', as: 'new_repository_stock'
+          get 'repository_stock_value/edit', to: 'repository_stock_values#edit', as: 'edit_repository_stock'
+          post 'repository_stock_value', to: 'repository_stock_values#create_or_update', as: 'update_repository_stock'
+        end
+        resources :repository_stock_values, only: %i(new create edit update)
       end
 
       collection do

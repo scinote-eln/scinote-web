@@ -24,6 +24,7 @@ class Repository < RepositoryBase
            class_name: 'RepositorySnapshot',
            foreign_key: :parent_id,
            inverse_of: :original_repository
+  has_many :repository_ledger_records, as: :references, dependent: :nullify
 
   before_save :sync_name_with_snapshots, if: :name_changed?
   after_save :unassign_unshared_items, if: :saved_change_to_permission_level

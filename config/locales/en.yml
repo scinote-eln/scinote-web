@@ -1537,6 +1537,23 @@ en:
       invalid_arguments: "Can't find %{key}"
     my_module_assigned_snapshot_service:
       invalid_arguments: "Can't find %{key}"
+  repository_stock_values:
+    manage_modal:
+      title: "Stock %{item}"
+      save_stock: "Save stock"
+      enter_amount: "Enter the amount and unit of the item you wish to stock."
+      operation: "Operation"
+      add: "Add"
+      remove: "Remove"
+      set: "Set to"
+      amount: "Amount"
+      amount_placeholder: "Enter amount"
+      amount_error: "Enter an amount"
+      unit: "Unit"
+      unit_prompt: "Select unit"
+      unit_error: "Select a unit"
+      comment: "Comment (optional)"
+      comment_placeholder: "Enter comment"
   libraries:
     manange_modal_column_index:
       title: "Manage columns"
@@ -1562,6 +1579,7 @@ en:
         repository_stock_value: "Stock"
         repository_list_value: "Dropdown"
         repository_asset_value: "File"
+        repository_stock_value: "Stock"
       new:
         title: "Add New Column"
         button: "Save column"

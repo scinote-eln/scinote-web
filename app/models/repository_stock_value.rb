@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class RepositoryStockValue < ApplicationRecord
-  belongs_to :created_by, class_name: 'User', optional: true, inverse_of: :created_repository_stock_value
-  belongs_to :last_modified_by, class_name: 'User', optional: true, inverse_of: :modified_repository_stock_value
+  belongs_to :created_by, class_name: 'User', optional: true, inverse_of: :created_repository_stock_values
+  belongs_to :last_modified_by, class_name: 'User', optional: true, inverse_of: :modified_repository_stock_values
   has_one :repository_cell, as: :value, dependent: :destroy, inverse_of: :value
   has_many :repository_ledger_records, dependent: :destroy
   accepts_nested_attributes_for :repository_cell
@@ -20,7 +20,7 @@ class RepositoryStockValue < ApplicationRecord
   end
 
   def update_data!(new_data, user)
-    self.data = BigDecimal(new_data.to_s)
+    self.amount = BigDecimal(new_data.to_s)
     self.last_modified_by = user
     save!
   end
@@ -45,9 +45,15 @@ class RepositoryStockValue < ApplicationRecord
     value
   end
 
-  def update_stock_with_ledger!(amount)
+  def update_stock_with_ledger!(amount, reference, comment)
     delta = amount.to_d - self.amount.to_d
-    repository_ledger_records.create!(user: last_modified_by, amount: delta, balance: amount)
+    repository_ledger_records.create!(
+      user: last_modified_by,
+      amount: delta,
+      balance: amount,
+      reference: reference,
+      comment: comment
+    )
   end
 
   alias export_formatted formatted

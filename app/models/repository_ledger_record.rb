@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class RepositoryLedgerRecord < ApplicationRecord
-  belongs_to :repository_row
-  belongs_to :reference, polymorphic: true, inverse_of: :repository_ledger_record
+  belongs_to :repository_stock_value, optional: true
+  belongs_to :reference, polymorphic: true
+  belongs_to :user
 end
