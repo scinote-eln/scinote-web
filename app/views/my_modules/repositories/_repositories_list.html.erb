@@ -27,17 +27,20 @@
          data-footer-label="<%= assigned_repository_simple_view_footer_label(repository) %>"
          data-name-column-id="<%=  assigned_repository_simple_view_name_column_id(repository) %>"
     >
+      <table class="table hidden repository-table"
+             data-stock-management="<%= repository.has_stock_management? %>"
+             data-stock-consumption-editable="<%= can_manage_my_module_repository_rows?(@my_module) %>">
+        <thead>
+          <tr>
+            <th class="row-name"><%= t("repositories.table.row_name") %></th>
+            <% if repository.has_stock_management? %>
+              <th class="row-stock" data-columns-visible="false"><%= repository.repository_stock_column.name %></th>
+              <th class="row-consumption" data-columns-visible="false"><%= t("repositories.table.row_consumption") %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
   </div>
 <% end %>
-
-<template id="myModuleRepositorySimpleTemplate">
-  <table class="table hidden">
-    <thead>
-      <tr>
-        <th class="row-name"><%= t("repositories.table.row_name") %></th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-</template>

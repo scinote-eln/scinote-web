@@ -1391,6 +1391,7 @@ en:
       no_items_matched: "No items matched your search request"
       no_archived_items: "No archived items here"
       no_archived_items_matched: "No archived items matched your search request"
+      no_stock: "No item stock"
 
     table:
       id: 'ID'
@@ -1402,6 +1403,7 @@ en:
       added_by: "Added by"
       archived_on: "Archived on"
       archived_by: "Archived by"
+      row_consumption: "Consumed"
       enter_row_name: "Enter name"
       locked_item: "This is read-only item."
       assets:
@@ -1617,6 +1619,7 @@ en:
         stock_units: 'Stock units'
         units_description: 'These units will appear when managing your stock. You can always add, remove or rename them in the list.'
         add_stock: 'Add stock'
+        add_stock_consumption: 'Consume'
         no_item_stock: 'No item stock'
       checklist_type:
         multiple_options: 'selected'
