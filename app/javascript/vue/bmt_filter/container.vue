@@ -134,7 +134,8 @@
       },
       fetchAdditionalDataAttributes() {
         $.get(this.bmtApiBaseUrl + '/admin/macromolecules/attributes', (data) => {
-          this.additionalDataAttributes = data
+          // Cid filter works as a special filter, not as additional data
+          this.additionalDataAttributes = data.filter((a) => a.name != 'Cid')
         });
       },
       loadFilters(filters) {

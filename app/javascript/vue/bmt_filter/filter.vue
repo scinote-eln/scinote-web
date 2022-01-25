@@ -3,7 +3,6 @@
     <b class='filter-title'>Filter</b>
     <div class="filter-element">
       <div class="form-group filter-action">
-
         <div class="sci-input-container">
           <DropdownSelector
             :options="typeOptions"
@@ -29,6 +28,7 @@
 </template>
 
 <script>
+  // Filter types
   import additionalDataFilter from 'vue/bmt_filter/filters/additionalDataFilter.vue'
   import entityTypeFilter from 'vue/bmt_filter/filters/entityTypeFilter.vue'
   import monomerTypeFilter from 'vue/bmt_filter/filters/monomerTypeFilter.vue'
@@ -36,6 +36,9 @@
   import variantSequenceFilter from 'vue/bmt_filter/filters/variantSequenceFilter.vue'
   import fullsequenceFilter from 'vue/bmt_filter/filters/fullsequenceFilter.vue'
   import monomerSubstructureSearchFilter from 'vue/bmt_filter/filters/monomerSubstructureSearchFilter.vue'
+  import cidFilter from 'vue/bmt_filter/filters/cidFilter.vue'
+
+  // Other components
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
 
   export default {
@@ -52,7 +55,8 @@
           'subsequenceFilter',
           'variantSequenceFilter',
           'fullsequenceFilter',
-          'monomerSubstructureSearchFilter'
+          'monomerSubstructureSearchFilter',
+          'cidFilter'
         ]
       }
     },
@@ -64,6 +68,7 @@
       variantSequenceFilter,
       fullsequenceFilter,
       monomerSubstructureSearchFilter,
+      cidFilter,
       DropdownSelector
     },
     computed: {
@@ -83,12 +88,12 @@
           }
         );
       },
-      updateFilter(value) {
+      updateFilter(data) {
         this.$emit(
           'filter:update',
           {
             id: this.filter.id,
-            data: value
+            data: data
           }
         );
       }

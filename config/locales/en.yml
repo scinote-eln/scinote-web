@@ -1502,6 +1502,9 @@ en:
             monomerSubstructureSearchFilter:
               name: "Monomere substructure"
               placeholder: "Enter substructure"
+            cidFilter:
+              name: "Cid"
+              placeholder: "Enter Cid"
     table:
       id: 'ID'
       external_id: 'External ID'
