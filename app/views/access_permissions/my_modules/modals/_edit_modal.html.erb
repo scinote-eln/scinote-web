@@ -12,7 +12,7 @@
           <%= t '.description' %>
         </p>
         <hr />
-        <% users.each do |user| %>
+        <% users.order(full_name: :asc).each do |user| %>
           <%= render partial: 'access_permissions/partials/my_module_member_field',
                       locals: {
                         user: user,
