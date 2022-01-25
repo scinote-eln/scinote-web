@@ -37,6 +37,10 @@ class RepositoryDatatableService
       if @params[:assigned] == 'assigned'
         repository_rows = repository_rows.joins(:my_module_repository_rows)
                                          .where(my_module_repository_rows: { my_module_id: @my_module })
+        if @repository.has_stock_management?
+          repository_rows = repository_rows
+                            .select('SUM(my_module_repository_rows.stock_consumption) AS "consumed_stock"')
+        end
       else
         repository_rows = repository_rows
                           .joins(:repository)

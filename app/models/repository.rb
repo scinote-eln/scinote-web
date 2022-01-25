@@ -211,6 +211,14 @@ class Repository < RepositoryBase
                          .destroy_all
   end
 
+  def self.stock_management_enabled?
+    true
+  end
+
+  def has_stock_management?
+    self.class.stock_management_enabled? && repository_columns.stock_type.exists?
+  end
+
   private
 
   def sync_name_with_snapshots

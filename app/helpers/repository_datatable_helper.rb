@@ -52,12 +52,27 @@ module RepositoryDatatableHelper
 
   def prepare_simple_view_row_columns(repository_rows)
     repository_rows.map do |record|
-      {
-        'DT_RowId': record.id,
-        'DT_RowAttr': { 'data-state': row_style(record) },
+      row = {
+        DT_RowId: record.id,
+        DT_RowAttr: { 'data-state': row_style(record) },
         '0': escape_input(record.name),
-        'recordInfoUrl': Rails.application.routes.url_helpers.repository_repository_row_path(record.repository, record)
+        recordInfoUrl: Rails.application.routes.url_helpers.repository_repository_row_path(record.repository, record)
       }
+
+      if record.repository.has_stock_management?
+        row['1'] =
+          if record.repository_stock_cell.present?
+            display_cell_value(record.repository_stock_cell, record.repository.team)
+          end
+        row['2'] = {
+          stock_present: record.repository_stock_cell.present?,
+          value: {
+            consumed_stock_formatted: record.consumed_stock
+          }
+        }
+      end
+
+      row
     end
   end
 

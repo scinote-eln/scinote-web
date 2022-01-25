@@ -97,6 +97,62 @@ var MyModuleRepositories = (function() {
     return columnDefs;
   }
 
+  function simpleTableColumns(tableContainer) {
+    let columns = [
+      {
+        visible: true,
+        searchable: false,
+        data: 0
+      }
+    ];
+
+    if ($(tableContainer).data('stock-management')) {
+      columns.push({
+        visible: true,
+        searchable: false,
+        data: 1
+      });
+      columns.push({
+        visible: true,
+        searchable: false,
+        data: 2
+      });
+    }
+
+    return columns;
+  }
+
+  function simpleViewColumnDefs(tableContainer) {
+    let columnDefs = [{
+      targets: 0,
+      className: 'item-name',
+      render: function(data, type, row) {
+        return "<a href='" + row.recordInfoUrl + "'"
+               + "class='record-info-link'>" + data + '</a>';
+      }
+    }];
+
+    if ($(tableContainer).data('stock-management')) {
+      columnDefs.push({
+        targets: 1,
+        className: 'item-stock',
+        sWidth: '1%',
+        render: function(data) {
+          return $.fn.dataTable.render.RepositoryStockValue(data);
+        }
+      }, {
+        targets: 2,
+        className: 'item-consumed-stock',
+        sWidth: '1%',
+        render: function(data) {
+          return $.fn.dataTable.render.RepositoryConsumedStockValue(data);
+        }
+      });
+    }
+
+    return columnDefs;
+  }
+
   function renderSimpleTable(tableContainer) {
     if (SIMPLE_TABLE) SIMPLE_TABLE.destroy();
     SIMPLE_TABLE = $(tableContainer).DataTable({
@@ -121,14 +177,8 @@ var MyModuleRepositories = (function() {
         global: false,
         type: 'POST'
       },
-      columnDefs: [{
-        targets: 0,
-        className: 'item-name',
-        render: function(data, type, row) {
-          return "<a href='" + row.recordInfoUrl + "'"
-                 + "class='record-info-link'>" + data + '</a>';
-        }
-      }],
+      columns: simpleTableColumns(tableContainer),
+      columnDefs: simpleViewColumnDefs(tableContainer),
       drawCallback: function() {
         var repositoryContainer = $(this).closest('.assigned-repository-container');
         repositoryContainer.find('.table.dataTable').removeClass('hidden');
@@ -299,12 +349,13 @@ var MyModuleRepositories = (function() {
   function initSimpleTable() {
     $('#assigned-items-container').on('shown.bs.collapse', '.assigned-repository-container', function() {
       var repositoryContainer = $(this);
-      var repositoryTemplate = $($('#myModuleRepositorySimpleTemplate').html());
-      repositoryTemplate.attr('data-source', $(this).data('repository-url'));
-      repositoryTemplate.attr('data-version-label', $(this).data('footer-label'));
-      repositoryTemplate.attr('data-name-column-id', $(this).data('name-column-id'));
-      repositoryContainer.html(repositoryTemplate);
-      renderSimpleTable(repositoryTemplate);
+      var repositoryTable = repositoryContainer.find('.table');
+      repositoryTable.attr('data-source', $(this).data('repository-url'));
+      repositoryTable.attr('data-version-label', $(this).data('footer-label'));
+      repositoryTable.attr('data-name-column-id', $(this).data('name-column-id'));
+      repositoryTable.attr('data-stock-management', $(this).data('data-stock-management'));
+      repositoryContainer.html(repositoryTable);
+      renderSimpleTable(repositoryTable);
     });
 
     $('#wrapper').on('sideBar::shown sideBar::hidden', function() {

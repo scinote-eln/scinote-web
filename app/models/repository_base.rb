@@ -10,6 +10,12 @@ class RepositoryBase < ApplicationRecord
   belongs_to :team
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
   has_many :repository_columns, foreign_key: :repository_id, inverse_of: :repository, dependent: :destroy
+  has_one :repository_stock_column,
+          -> { where(data_type: 'RepositoryStockValue') },
+          class_name: 'RepositoryColumn',
+          foreign_key: :repository_id,
+          inverse_of: :repository,
+          dependent: :destroy
   has_many :repository_rows, foreign_key: :repository_id, inverse_of: :repository, dependent: :destroy
   has_many :repository_table_states, foreign_key: :repository_id, inverse_of: :repository, dependent: :destroy
   has_many :report_elements, inverse_of: :repository, dependent: :destroy, foreign_key: :repository_id

@@ -40,7 +40,7 @@ class RepositoryColumn < ApplicationRecord
   scope :asset_type, -> { where(data_type: 'RepositoryAssetValue') }
   scope :status_type, -> { where(data_type: 'RepositoryStatusValue') }
   scope :checkbox_type, -> { where(data_type: 'RepositoryChecklistValue') }
-  scope :stock_unit_type, -> { where(data_type: 'RepositoryStockUnitValue') }
+  scope :stock_type, -> { where(data_type: 'RepositoryStockValue') }
 
   def self.name_like(query)
     where('repository_columns.name ILIKE ?', "%#{query}%")
