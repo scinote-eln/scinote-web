@@ -2560,6 +2560,8 @@ en:
       experiment_tooltip_inherit: "This role was inherited from the experiment."
       mymodule: "Task"
       mymodule_tooltip: "This role was set on this task"
+      public_members_dropdown:
+        title: "Members of team %{team}"
 
     projects:
       modals:

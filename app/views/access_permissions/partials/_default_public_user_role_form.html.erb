@@ -5,6 +5,7 @@
     </div>
     <div>
       <%= t('access_permissions.everyone_else', team_name: f.object.team.name) %>
+      <%= render 'access_permissions/partials/public_members_dropdown', team: f.object.team, project: project %>
       <br>
       <small class="text-muted">
         <%= f.object.default_public_user_role.name %>
@@ -16,7 +17,9 @@
   </div>
   <div class="user-assignment-controls">
     <div class="user-assignment-role">
-      <%= f.select :default_public_user_role_id, options_for_select(user_roles_collection, selected: f.object.default_public_user_role_id), {}, class: 'form-control selectpicker', title: t('user_assignment.change_project_role'), data: { 'selected-text-format' => 'static' } %>
+      <% if editable %>
+        <%= f.select :default_public_user_role_id, options_for_select(user_roles_collection, selected: f.object.default_public_user_role_id), {}, class: 'form-control selectpicker', title: t('user_assignment.change_project_role'), data: { 'selected-text-format' => 'static' } %>
+      <% end %>
     </div>
     <div class="user-assignment-remove">
     </div>
