@@ -11,7 +11,7 @@ class RepositoryChecklistItem < ApplicationRecord
 
   validate :validate_per_column_limit
   validates :data, presence: true,
-                   uniqueness: { scope: :repository_column_id, case_sensitive: false },
+                   uniqueness: { scope: :repository_column_id },
                    length: { maximum: Constants::NAME_MAX_LENGTH }
 
   private

@@ -1,0 +1,151 @@
+// scss-lint:disable SelectorDepth unknownProperties
+// scss-lint:disable NestingDepth
+
+.repository-show {
+  .active-filters {
+    position: relative;
+
+    &::after {
+      background: $brand-accent;
+      border-radius: 50%;
+      content: "";
+      display: block;
+      height: 8px;
+      position: absolute;
+      right: .3em;
+      top: .3em;
+      width: 8px;
+    }
+  }
+
+  #filterContainer {
+    padding: 0;
+  }
+
+  .filters-container {
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 300px);
+    min-height: 300px;
+    padding: 0;
+    width: 460px;
+
+    .header {
+      align-items: center;
+      border-bottom: $border-default;
+      display: flex;
+      flex-shrink: 0;
+      padding: .25em 1em;
+
+      .title {
+        @include font-h2;
+      }
+
+      .clear-filters-btn {
+        margin-left: auto;
+      }
+    }
+
+    .saved-filters-container {
+      .saved-filters-list {
+        padding: 0;
+      }
+
+      .saved-filters-element {
+        align-items: center;
+        display: flex;
+        padding: .5em 1em;
+
+        .btn-light {
+          color: $color-silver-chalice;
+          margin-left: auto;
+        }
+      }
+    }
+
+    .footer {
+      border-top: $border-default;
+      display: flex;
+      flex-shrink: 0;
+      padding: 1em;
+
+      .apply-button {
+        margin-left: auto !important;
+      }
+
+      .filters-columns-list {
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      .column-filters-element {
+        cursor: pointer;
+        padding: .5em 1em;
+
+        &:hover {
+          background: $color-concrete;
+        }
+      }
+    }
+
+    .filters-list {
+      flex-grow: 1;
+      padding: .5em;
+    }
+
+    .filter-container {
+      margin-bottom: .5em;
+
+      .filter-title {
+        @include font-small;
+        font-weight: bold;
+      }
+
+      .filter-element {
+        display: flex;
+      }
+
+      .filter-attributes {
+        display: grid;
+        gap: .5em;
+        grid-auto-flow: column;
+        grid-template-columns: min-content auto;
+
+        .dropdown-selector-container {
+          width: 100%;
+        }
+
+        .operator-selector {
+          .dropdown-selector-container {
+            width: 120px;
+          }
+        }
+
+        input {
+          margin: 0;
+          width: 100%;
+        }
+
+        .date-time-picker {
+          display: grid;
+          gap: .5em;
+          grid-auto-flow: column;
+        }
+
+        .datetime-filter-attributes {
+          display: grid;
+          gap: .5em;
+        }
+      }
+
+      .filter-body {
+        flex-grow: 1;
+      }
+
+      .filter-remove {
+        margin-left: auto;
+      }
+    }
+  }
+
+}

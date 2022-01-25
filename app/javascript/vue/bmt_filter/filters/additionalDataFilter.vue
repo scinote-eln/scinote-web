@@ -2,9 +2,9 @@
   <div class="filter-form">
     <div class="sci-input-container">
       <DropdownSelector
-        :options="attributeOptions"
-        :selectorId="`AttributeFilter${filterId}`"
-        @dropdown:changed="updateFilterType"
+        :options="additionalDataAttributes"
+        :selectorId="`bmtFilterType${this._uid}`"
+        @dropdown:changed="updateAttribute"
       />
     </div>
     <div class="sci-input-container">
@@ -22,6 +22,8 @@
 <script>
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
   import FilterMixin from 'vue/bmt_filter/mixins/filter.js'
+  import DropdownSelector from 'vue/shared/dropdown_selector.vue'
+
   export default {
     name: 'additionalDataFilter',
     mixins: [FilterMixin],
@@ -39,6 +41,9 @@
         })
       }
     },
+    components: {
+      DropdownSelector
+    },
     data() {
       return {
         attribute: null,
@@ -46,8 +51,8 @@
       }
     },
     methods: {
-      updateAttributes(value) {
-        this.attribute = value;
+      updateAttribute(attribute) {
+        this.attribute = attribute;
         this.updateFilterData();
       }
     }

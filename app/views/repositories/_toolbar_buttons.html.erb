@@ -13,8 +13,34 @@
       <span class="hidden-xs"><%= t("repositories.add_new_record") %></span>
     </button>
   <% end %>
+  <% if can_manage_repository?(@repository) %>
+    <div class="repository-cog dropdown hidden" id="saveRepositoryFilters">
+      <button type="button"
+              class="btn btn-default"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="true">
+        <span class="fas fa-save"></span>
+        <span class="hidden-xs"><%= t("repositories.show.filters.save_filters") %></span>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu pull-right">
+        <li id="newFilterLink" data-view-mode="active">
+          <a href="#" data-toggle="modal" data-target="#modalSaveRepositoryTableFilter">
+            <span class="fas fa-plus"></span>
+            <%= t('repositories.show.filters.new_filter') %>
+          </a>
+        </li>
+        <li id="overwriteFilterLink" class="hidden" data-view-mode="active">
+          <a href="#" data-toggle="modal" data-target="#modalSaveRepositoryTableFilter">
+            <span class="fas fa-save"></span>
+            <%= t('repositories.show.filters.overwrite_filter') %>
+            <span id="currentFilterName"></span>
+          </a>
+        </li>
+      </ul>
+    </div>
 
-  <% if can_manage_repository_rows?(@repository) %>
     <span id="editDeleteCopy" data-toggle="buttons" style="display:none">
       <%if can_update_repository_rows?(@repository) %>
         <button type="button" class="btn btn-light editAdd" id="editRepositoryRecord" disabled data-view-mode="active">

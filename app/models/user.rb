@@ -71,6 +71,7 @@ class User < ApplicationRecord
   has_many :results, inverse_of: :user
   has_many :repositories, inverse_of: :user
   has_many :repository_table_states, inverse_of: :user, dependent: :destroy
+  has_many :repository_table_filters, inverse_of: :user, dependent: :nullify
   has_many :steps, inverse_of: :user
   has_many :reports, inverse_of: :user
   has_many :created_assets, class_name: 'Asset', foreign_key: 'created_by_id'
