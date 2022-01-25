@@ -8,7 +8,7 @@
         <h4 class="modal-title"><%= t '.title', resource_name: resource.name %></h4>
       </div>
       <div class="modal-body">
-        <% resource.user_assignments.joins(:user).order('users.full_name ASC').each do |user_assignment| %>
+        <% resource.user_assignments.joins(:user).order('users.full_name': :asc).each do |user_assignment| %>
           <%= render partial: 'access_permissions/partials/user_assignment', locals: { user_assignment: user_assignment, user: user_assignment.user, resource: resource } %>
         <% end %>
       </div>
