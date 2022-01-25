@@ -59,7 +59,8 @@ class Extends
                             RepositoryDateRangeValue: 9,
                             RepositoryChecklistValue: 10,
                             RepositoryNumberValue: 11,
-                            RepositoryStockValue: 12 }
+                            RepositoryStockValue: 12,
+                            RepositoryStockConsumptionValue: 13 }
 
   # Data types which can be imported to repository,
   # name should match record in REPOSITORY_DATA_TYPES

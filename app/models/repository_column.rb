@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class RepositoryColumn < ApplicationRecord
   belongs_to :repository, class_name: 'RepositoryBase'
+  belongs_to :repository_snapshot, foreign_key: :repository_id, optional: true
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
   has_many :repository_cells, dependent: :destroy
   has_many :repository_rows, through: :repository_cells
@@ -24,7 +25,8 @@ class RepositoryColumn < ApplicationRecord
 
   enum data_type: Extends::REPOSITORY_DATA_TYPES
 
-  validates :data_type, uniqueness: { if: :RepositoryStockValue?, scope: :repository_id }
+  validates :data_type, uniqueness: { if: :repository_stock_value?, scope: :repository_id }
+  validates :data_type, uniqueness: { if: :repository_stock_consumption_value?, scope: :repository_id }
 
   validates :name,
             length: { maximum: Constants::NAME_MAX_LENGTH },
@@ -41,6 +43,7 @@ class RepositoryColumn < ApplicationRecord
   scope :status_type, -> { where(data_type: 'RepositoryStatusValue') }
   scope :checkbox_type, -> { where(data_type: 'RepositoryChecklistValue') }
   scope :stock_type, -> { where(data_type: 'RepositoryStockValue') }
+  scope :stock_consumption_type, -> { where(data_type: 'RepositoryStockConsumptionValue') }
 
   def self.name_like(query)
     where('repository_columns.name ILIKE ?', "%#{query}%")
@@ -101,6 +104,8 @@ class RepositoryColumn < ApplicationRecord
       updated_at: updated_at
     )
     column_snapshot.save!
+    snapshot_stock_consumption!(repository_snapshot) if repository_stock_value?
+    column_snapshot
   end
 
   def delimiter_char
@@ -131,9 +136,20 @@ class RepositoryColumn < ApplicationRecord
     end
   end
 
-  def repository_stock_unit_value_deep_dup(new_column)
+  def repository_stock_value_deep_dup(new_column)
     repository_stock_unit_items.each do |item|
       new_column.repository_stock_unit_items << item.deep_dup
     end
+  end
+
+  def snapshot_stock_consumption!(repository_snapshot)
+    column_snapshot = deep_dup
+    column_snapshot.assign_attributes(
+      name: I18n.t('repositories.table.row_consumption'),
+      repository_snapshot: repository_snapshot,
+      data_type: 'RepositoryStockConsumptionValue',
+      parent_id: nil
+    )
+    column_snapshot.save!
   end
 end

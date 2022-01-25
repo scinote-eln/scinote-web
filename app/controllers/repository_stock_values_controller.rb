@@ -11,7 +11,7 @@ class RepositoryStockValuesController < ApplicationController
         locals: {
           repository_row: @repository_row,
           repository_stock_column: @repository_column,
-          units: @repository_column.repository_stock_unit_items,
+          unit_items: @repository_column.repository_stock_unit_items,
           repository_stock_value: RepositoryStockValue.new
         }
       )
@@ -25,7 +25,7 @@ class RepositoryStockValuesController < ApplicationController
         locals: {
           repository_row: @repository_row,
           repository_stock_column: @repository_column,
-          units: @repository_column.repository_stock_unit_items,
+          unit_items: @repository_column.repository_stock_unit_items,
           repository_stock_value: @repository_stock_value
         }
       )
@@ -40,7 +40,8 @@ class RepositoryStockValuesController < ApplicationController
           @repository,
           repository_stock_value_params[:comment].presence
         )
-        @repository_stock_value.units = repository_stock_value_params[:units]
+        @repository_stock_value.repository_stock_unit_item =
+          @repository_column.repository_stock_unit_items.find(repository_stock_value_params[:unit_item_id])
         @repository_stock_value.update_data!(repository_stock_value_params[:amount], current_user)
       end
     else
@@ -51,7 +52,8 @@ class RepositoryStockValuesController < ApplicationController
           repository_cell: repository_cell,
           created_by: current_user,
           last_modified_by: current_user,
-          units: repository_stock_value_params[:units]
+          repository_stock_unit_item: @repository_column.repository_stock_unit_items
+                                                        .find(repository_stock_value_params[:unit_item_id])
         )
         @repository_stock_value.save!
         @repository_stock_value.update_stock_with_ledger!(
@@ -77,6 +79,6 @@ class RepositoryStockValuesController < ApplicationController
   end
 
   def repository_stock_value_params
-    params.require(:repository_stock_value).permit(:units, :amount, :comment)
+    params.require(:repository_stock_value).permit(:unit_item_id, :amount, :comment)
   end
 end

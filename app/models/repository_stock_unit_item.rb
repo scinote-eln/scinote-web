@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 class RepositoryStockUnitItem < ApplicationRecord
-  DEFAULT_UNITS = %i(L mL uL g mg ug M mM)
+  DEFAULT_UNITS = %i(L mL uL g mg ug M mM).freeze
   belongs_to :repository_column, inverse_of: :repository_checklist_items
-  belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User',
+  belongs_to :created_by, class_name: 'User',
              inverse_of: :created_repository_checklist_types
-  belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User',
+  belongs_to :last_modified_by, class_name: 'User',
              inverse_of: :modified_repository_checklist_types
+  has_many :repository_stock_values, inverse_of: :repository_stock_unit_item, dependent: :nullify
+  has_many :my_module_repository_rows, inverse_of: :repository_stock_unit_item, dependent: :nullify
 
   validate :validate_per_column_limit
   validates :data, presence: true,

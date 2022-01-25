@@ -19,7 +19,9 @@ class RepositoryCell < ApplicationRecord
     repository_date: 'RepositoryDateTimeValueBase',
     repository_date_time_range: 'RepositoryDateTimeRangeValueBase',
     repository_time_range: 'RepositoryDateTimeRangeValueBase',
-    repository_date_range: 'RepositoryDateTimeRangeValueBase'
+    repository_date_range: 'RepositoryDateTimeRangeValueBase',
+    repository_stock: 'RepositoryStockValue',
+    repository_stock_consumption_snapshot: 'RepositoryStockConsumptionValue'
   }.each do |relation, class_name|
     belongs_to "#{relation}_value".to_sym,
                (lambda do |repository_cell|
@@ -64,6 +66,7 @@ class RepositoryCell < ApplicationRecord
       updated_at: updated_at
     )
     value.snapshot!(cell_snapshot)
+    cell_snapshot
   end
 
   private

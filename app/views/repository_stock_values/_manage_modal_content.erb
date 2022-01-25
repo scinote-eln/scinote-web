@@ -50,10 +50,10 @@
           </div>
           <div class="col-sm-6">
             <label><%= t('repository_stock_values.manage_modal.unit') %></label>
-            <select class="form-control" name="repository_stock_value[units]" id="repository-stock-value-units" required data-placeholder="<%= t('repository_stock_values.manage_modal.unit_prompt') %>">
-              <% units.each do |unit| %>
-                <option value="<%= unit.data %>" <%= 'data-selected=true' if repository_stock_value.units == unit.data %>>
-                  <%= unit.data %>
+            <select class="form-control" name="repository_stock_value[unit_item_id]" id="repository-stock-value-units" required data-placeholder="<%= t('repository_stock_values.manage_modal.unit_prompt') %>">
+              <% unit_items.each do |unit_item| %>
+                <option value="<%= unit_item.id %>" <%= 'data-selected=true' if repository_stock_value.repository_stock_unit_item == unit_item %>>
+                  <%= unit_item.data %>
                 </option>
               <% end %>
             </select>

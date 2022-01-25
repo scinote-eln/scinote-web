@@ -35,7 +35,8 @@ class RepositoryRow < ApplicationRecord
     repository_date_time_range: 'RepositoryDateTimeRangeValue',
     repository_time_range: 'RepositoryTimeRangeValue',
     repository_date_range: 'RepositoryDateRangeValue',
-    repository_stock: 'RepositoryStockValue'
+    repository_stock: 'RepositoryStockValue',
+    repository_stock_consumption: 'RepositoryStockConsumptionValue'
   }.each do |relation, class_name|
     has_many "#{relation}_cells".to_sym, -> { where(value_type: class_name) }, class_name: 'RepositoryCell',
              inverse_of: :repository_row
@@ -119,5 +120,6 @@ class RepositoryRow < ApplicationRecord
     row_snapshot.save!
 
     repository_cells.each { |cell| cell.snapshot!(row_snapshot) }
+    row_snapshot
   end
 end
