@@ -20,14 +20,26 @@
 </template>
 
 <script>
+  import DropdownSelector from 'vue/shared/dropdown_selector.vue'
   import FilterMixin from 'vue/bmt_filter/mixins/filter.js'
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
 
   export default {
     name: 'additionalDataFilter',
     mixins: [FilterMixin],
+    components: {
+      DropdownSelector
+    },
     props: {
-      additionalDataAttributes: Array
+      additionalDataAttributes: Array,
+      filterId: Number
+    },
+    computed: {
+      attributeOptions() {
+        return this.additionalDataAttributes.map(option => {
+          return {label: option, value: option}
+        })
+      }
     },
     components: {
       DropdownSelector

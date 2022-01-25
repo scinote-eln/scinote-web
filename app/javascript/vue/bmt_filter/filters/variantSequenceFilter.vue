@@ -10,7 +10,7 @@
     />
     <div>
       <label class="field-suboption">
-        <div class="sci-input-container">
+        <div class="sci-input-container distance-input-container">
             <label for="distance">{{ i18n.t('repositories.show.bmt_search.filters.types.variantSequenceFilter.distance') }}</label>
             <input class="sci-input-field" @input="updateFilterData" type="text" v-model="distance" />
         </div>
@@ -32,6 +32,7 @@
             <input
               @change="updateFilterData"
               type="radio"
+              class="sci-radio"
               v-model="distanceType"
               value="MAX"
             />

@@ -31,12 +31,13 @@
         :key="filter.id"
         :filter.sync="filters[index]"
         :additionalDataAttributes="additionalDataAttributes"
+        :filterId="filter.id"
         @filter:delete="filters.splice(index, 1)"
         @filter:update="updateFilter"
       />
     </div>
     <div class="footer" @click="closeSavedFilters">
-      <button class="btn btn-secondary add-filter" @click="addFilter">
+      <button class="btn btn-light add-filter" @click="addFilter">
         <i class="fas fa-plus"></i>
         {{ i18n.t('repositories.show.bmt_search.add_filter') }}
       </button>
