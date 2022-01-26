@@ -1,0 +1,31 @@
+<%= form_with url: update_consume_my_module_repository_path(@my_module, @repository, module_row_id: @module_repository_row), method: :post, remote: true, novalidate: true do |f| %>
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">
+      Consume <%= @repository_row.name %>
+    </h4>
+  </div>
+  <div class="modal-body">
+    <p>Enter the total amount consumed in this task.</p>
+    <div class="consumption-container">
+      <div class="sci-input-container">
+        <%= f.label :stock_consumption, 'Amount'%>
+        <%= f.text_field :stock_consumption, value: @module_repository_row.stock_consumption, placeholder: 'Consumed', class: 'sci-input-field' %>
+      </div>
+      <span class="units"></span>
+    </div>
+    <div class="sci-input-container">
+      <%= f.label :comment, 'Comment (optional)'%>
+      <%= f.text_field :comment, placeholder: 'Enter a comment', class: 'sci-input-field' %>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            id="cancel"
+            class="btn btn-default"
+            data-dismiss="modal"><%=t('general.cancel') %></button>
+    <%= submit_tag t('general.save'), class: "btn btn-primary" %>
+  </div>
+<% end %>

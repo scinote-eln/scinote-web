@@ -144,8 +144,8 @@ var MyModuleRepositories = (function() {
         targets: 2,
         className: 'item-consumed-stock',
         sWidth: '1%',
-        render: function(data) {
-          return $.fn.dataTable.render.RepositoryConsumedStockValue(data);
+        render: function(data, type, row) {
+          return $.fn.dataTable.render.RepositoryConsumedStockValue(data, row.consumeUpdateUrl);
         }
       });
     }

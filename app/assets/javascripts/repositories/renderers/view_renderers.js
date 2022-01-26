@@ -206,11 +206,11 @@ $.fn.dataTable.render.RepositoryStockValue = function(data) {
           </span>`;
 };
 
-$.fn.dataTable.render.RepositoryConsumedStockValue = function(data) {
+$.fn.dataTable.render.RepositoryConsumedStockValue = function(data, url) {
   let canManage = $('.repository-table').data('stock-consumption-editable');
   if (data && data.value.consumed_stock_formatted) {
     if (canManage) {
-      return `<a class="manage-repository-stock-value-link stock-value-view-render">
+      return `<a href="${url}" class="manage-repository-consumed-stock-value-link stock-value-view-render">
                 ${data.value.consumed_stock_formatted}
                 </a>`;
     }
@@ -219,7 +219,7 @@ $.fn.dataTable.render.RepositoryConsumedStockValue = function(data) {
               </span>`;
   }
   if (canManage && data && data.stock_present) {
-    return `<a class="manage-repository-consumed-stock-value-link">
+    return `<a href="${url}" class="manage-repository-consumed-stock-value-link">
               <i class="fas fa-vial"></i>
               ${I18n.t('libraries.manange_modal_column.stock_type.add_stock_consumption')}
             </a>`;

@@ -1,4 +1,7 @@
 class MyModuleRepositoryRow < ApplicationRecord
+
+  attr_accessor :last_modified_by
+
   belongs_to :assigned_by,
              foreign_key: 'assigned_by_id',
              class_name: 'User',
@@ -17,13 +20,17 @@ class MyModuleRepositoryRow < ApplicationRecord
 
   def deduct_stock_balance
     stock_value = repository_row.repository_stock_value
-    delta = stock_consumption_was.to_d - stock_consumption.to_d
-    lock!
+    delta = stock_consumption.to_d - stock_consumption_was.to_d
     stock_value.lock!
     stock_value.amount = stock_value.amount - delta
     yield
     stock_value.save!
-    stock_value.repository_ledger_records.create!(user: last_modified_by, amount: delta, balance: stock_value.amount)
+    stock_value.repository_ledger_records.create!(
+      reference: self,
+      user: last_modified_by,
+      amount: delta,
+      balance: stock_value.amount
+    )
     save!
   end
 end
