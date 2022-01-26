@@ -10,9 +10,7 @@ class RepositoryTableFiltersController < ApplicationController
   before_action :check_manage_permissions, only: %i(update destroy)
 
   def index
-
-
-    render json: @repository.repository_table_filters, each_serializer: RepositoryFilterSerializer
+    render json: @repository.repository_table_filters.order(:name), each_serializer: RepositoryFilterSerializer
   end
 
   def show
