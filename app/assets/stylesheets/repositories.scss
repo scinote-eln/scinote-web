@@ -135,13 +135,12 @@
     flex-wrap: nowrap;
     height: 6em;
     left: var(--repository-sidebar-margin);
-    overflow: hidden;
     padding: 1em 2em 0;
     position: fixed;
     top: calc(4em + var(--navbar-height));
     transition: .4s $timing-function-sharp;
     width: calc(100% - var(--repository-sidebar-margin));
-    z-index: 90;
+    z-index: 99;
 
     .filter-container {
       flex-shrink: 0;

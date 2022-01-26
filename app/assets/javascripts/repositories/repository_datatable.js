@@ -1,7 +1,7 @@
 /*
   globals I18n _ SmartAnnotation FilePreviewModal animateSpinner DataTableHelpers
   HelperModule RepositoryDatatableRowEditor prepareRepositoryHeaderForExport
-  initAssignedTasksDropdown
+  initAssignedTasksDropdown initBMTFilter
 */
 
 //= require jquery-ui/widgets/sortable
@@ -268,6 +268,7 @@ var RepositoryDatatable = (function(global) {
     $.getJSON($(TABLE_ID).data('toolbar-url'), (data) => {
       $('#toolbarButtonsDatatable').remove();
       $(data.html).appendTo('div.toolbar');
+      if (typeof initBMTFilter === 'function') initBMTFilter();
     });
 
     TABLE.ajax.reload(null, false);
@@ -404,8 +405,18 @@ var RepositoryDatatable = (function(global) {
       destroy: true,
       ajax: {
         url: $(TABLE_ID).data('source'),
+        contentType: 'application/json',
         data: function(d) {
           d.archived = $('.repository-show').hasClass('archived');
+
+          if ($('[data-external-ids]').length) {
+            d.external_ids = $('[data-external-ids]').attr('data-external-ids').split(',');
+          }
+
+          if ($('[data-repository-filter-json]').attr('data-repository-filter-json')) {
+            d.advanced_search = JSON.parse($('[data-repository-filter-json]').attr('data-repository-filter-json'));
+          }
+          return JSON.stringify(d);
         },
         global: false,
         type: 'POST'
@@ -551,6 +562,7 @@ var RepositoryDatatable = (function(global) {
         // Append buttons to inner toolbar in the table
         $.getJSON($(TABLE_ID).data('toolbar-url'), (data) => {
           $(data.html).appendTo('div.toolbar');
+          if (typeof initBMTFilter === 'function') initBMTFilter();
         });
 
         $('div.toolbar-filter-buttons').prependTo('div.filter-container');
@@ -577,6 +589,7 @@ var RepositoryDatatable = (function(global) {
         });
 
         initAssignedTasksDropdown(TABLE_ID);
+        renderFiltersDropdown();
       }
     });
 
@@ -801,6 +814,12 @@ var RepositoryDatatable = (function(global) {
         TABLE.column(column.idx).visible(archived);
       }
     });
+  }
+
+  function renderFiltersDropdown() {
+    let dropdown = $('#repositoryFilterTemplate').html();
+    $('.dataTables_filter').append(dropdown);
+    if (typeof initRepositoryFilter === 'function') initRepositoryFilter();
   }
 
   return Object.freeze({

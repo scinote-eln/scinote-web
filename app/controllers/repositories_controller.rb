@@ -7,6 +7,7 @@ class RepositoriesController < ApplicationController
   include IconsHelper
   include TeamsHelper
   include RepositoriesDatatableHelper
+  include MyModulesHelper
 
   before_action :switch_team_with_param, only: :show
   before_action :load_repository, except: %i(index create create_modal sidebar archive restore)
@@ -27,7 +28,7 @@ class RepositoriesController < ApplicationController
   def index
     respond_to do |format|
       format.html do
-        render 'empty_index' if Repository.accessible_by_teams(current_team).blank?
+        render 'empty_index' if @repositories.blank?
       end
       format.json do
         render json: prepare_repositories_datatable(@repositories, current_team, params)
@@ -358,6 +359,35 @@ class RepositoriesController < ApplicationController
         end
       end
     end
+  end
+
+  def assigned_my_modules
+    my_modules = MyModule.joins(:repository_rows).where(repository_rows: { repository: @repository })
+                         .readable_by_user(current_user).distinct
+    render json: grouped_by_prj_exp(my_modules).map { |g|
+                   {
+                     label: "#{g[:project_name]} / #{g[:experiment_name]}", options: g[:tasks].map do |t|
+                       { label: t.name, value: t.id }
+                     end
+                   }
+                 }
+  end
+
+  def repository_users
+    users = User.where(id:
+      Repository.first.repository_rows
+                      .joins(params[:archived_by] ? :archived_by : :created_by)
+                      .select('users.id').distinct)
+
+    render json: { users: users.map do |u|
+                            {
+                              label: u.full_name,
+                              value: u.id,
+                              params: {
+                                email: u.email, avatar_url: u.avatar_url('icon_small')
+                              }
+                            }
+                          end }
   end
 
   private

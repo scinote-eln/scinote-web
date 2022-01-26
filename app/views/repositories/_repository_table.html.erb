@@ -1,4 +1,5 @@
 <div class="repository-table">
+  <div class="repository-table-error"></div>
   <table id="repository-table-<%= repository.id %>" class="table"
     data-current-uri="<%= request.original_url %>"
     data-repository-id="<%= repository.id %>"
@@ -20,8 +21,8 @@
     data-columns-delete-text="<%= I18n.t('repositories.columns_delete') %>"
     data-available-columns="<%= repository_available_columns_path(repository) %>"
     data-columns-changed="<%= I18n.t('repositories.columns_changed') %>"
-    data-default-order="<%= default_table_order_as_js_array %>"
-    data-default-table-columns="<%= default_table_columns %>"
+    data-default-order="<%= @repository.default_table_order_as_js_array %>"
+    data-default-table-columns="<%= @repository.default_table_columns %>"
     data-editable="<%= can_manage_repository_rows?(repository) %>"
     data-snapshot-provisioning="<%= @snapshot_provisioning %>"
     data-status-url="<%= repository_status_path(@repository) %>">
@@ -32,6 +33,9 @@
             <span class="sci-checkbox-label"></span>
         </th>
         <th id="assigned" data-unmanageable="true"><%= t("repositories.table.assigned") %></th>
+        <% if @repository.is_a?(LinkedRepository) %>
+          <th id="row-external-id"><%= t('repositories.table.external_id') %></th>
+        <% end %>
         <th id="row-id"><%= t("repositories.table.id") %></th>
         <th id="row-name"><%= t("repositories.table.row_name") %></th>
         <th id="added-on" ><%= t("repositories.table.added_on") %></th>

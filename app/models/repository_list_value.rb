@@ -27,6 +27,11 @@ class RepositoryListValue < ApplicationRecord
     data.to_s
   end
 
+  def self.add_filter_condition(repository_rows, filter_element)
+    repository_rows
+      .where(repository_list_values: { repository_list_item: { id: filter_element.parameters['item_ids'] } })
+  end
+
   def data
     return nil unless repository_list_item
     repository_list_item.data

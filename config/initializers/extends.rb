@@ -89,6 +89,33 @@ class Extends
     }
   }
 
+  # Extra attributes used for advanced search in repositories, 'filed_name' => include_hash
+  REPOSITORY_ADVANCED_SEARCH_ATTR = {
+    RepositoryTextValue: {
+      field: 'repository_text_values.data', includes: :repository_text_values
+    }, RepositoryNumberValue: {
+      field: 'repository_number_values.data', includes: :repository_number_values
+    }, RepositoryListValue: {
+      field: 'repository_list_items.data',
+      includes: { repository_list_values: :repository_list_item }
+    }, RepositoryChecklistValue: {
+      field: 'repository_checklist_items.data',
+      includes: { repository_checklist_values: { repository_checklist_items_values: :repository_checklist_item } }
+    }, RepositoryStatusValue: {
+      field: 'repository_status_items.status',
+      includes: { repository_status_values: :repository_status_item }
+    }, RepositoryAssetValue: {
+      field: 'active_storage_blobs.filename',
+      includes: { repository_asset_values: { asset: { file_attachment: :blob } } }
+    }, RepositoryDateTimeValue: {
+      field: 'repository_date_time_values.data', includes: :repository_date_time_values
+    }, RepositoryDateValue: {
+      field: 'repository_date_time_values.data', includes: :repository_date_values
+    }, RepositoryTimeValue: {
+      field: 'repository_date_time_values.data', includes: :repository_time_values
+    }
+  }
+
   # Array of preload relations used in search query for repository rows
   REPOSITORY_ROWS_PRELOAD_RELATIONS = []
 
@@ -393,6 +420,8 @@ class Extends
     change_user_role_on_experiment
     change_user_role_on_my_module
   )
+
+  STI_PRELOAD_CLASSES = %w(LinkedRepository BmtRepository)
 end
 
 # rubocop:enable Style/MutableConstant

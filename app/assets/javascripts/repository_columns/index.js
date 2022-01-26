@@ -253,31 +253,12 @@ var RepositoryColumns = (function() {
     });
   }
 
-  function getColumnTypeText(el, colId) {
-    var colType = '';
-    switch (colId) {
-      case 'row-id':
-        colType = 'RepositoryNumberValue';
-        break;
-      case 'row-name':
-        colType = 'RepositoryTextValue';
-        break;
-      case 'added-on':
-        colType = 'RepositoryDateTimeValue';
-        break;
-      case 'added-by':
-        colType = 'RepositoryListValue';
-        break;
-      case 'archived-on':
-        colType = 'RepositoryDateTimeValue';
-        break;
-      case 'archived-by':
-        colType = 'RepositoryListValue';
-        break;
-      default:
-        colType = $(el).attr('data-type');
-    }
-    return I18n.t('libraries.manange_modal_column.select.' + colType.split(/(?=[A-Z])/).join('_').toLowerCase());
+  function getColumnTypeText(el) {
+    let colType = $(el).attr('data-type');
+    if (!colType) return '';
+
+    return I18n.t('libraries.manange_modal_column.select.' + colType.split(/(?=[A-Z])/).join('_')
+      .toLowerCase());
   }
 
   // loads the columns names in the manage columns modal index

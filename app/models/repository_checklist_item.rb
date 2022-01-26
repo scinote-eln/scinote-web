@@ -14,12 +14,21 @@ class RepositoryChecklistItem < ApplicationRecord
                    uniqueness: { scope: :repository_column_id },
                    length: { maximum: Constants::NAME_MAX_LENGTH }
 
+  before_destroy :update_table_fiter_elements
+
   private
 
   def validate_per_column_limit
     if repository_column &&
        repository_column.repository_checklist_items.size > Constants::REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN
       errors.add(:base, :per_column_limit)
+    end
+  end
+
+  def update_table_fiter_elements
+    repository_column.repository_table_filter_elements.find_each do |filter_element|
+      filter_element.parameters['item_ids']&.delete(id)
+      filter_element.parameters['item_ids'].blank? ? filter_element.destroy! : filter_element.save!
     end
   end
 end

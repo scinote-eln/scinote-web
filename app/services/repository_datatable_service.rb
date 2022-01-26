@@ -3,6 +3,8 @@
 class RepositoryDatatableService
   attr_reader :repository_rows, :all_count, :mappings
 
+  PREDEFINED_COLUMNS = %w(row_id name added_on added_by archived_by assigned).freeze
+
   def initialize(repository, params, user, my_module = nil)
     @repository = repository
     @user = user
@@ -27,8 +29,9 @@ class RepositoryDatatableService
   end
 
   def process_query
-    search_value = build_conditions(@params)[:search_value]
-    order_obj = build_conditions(@params)[:order_by_column]
+    search_value = @params[:search][:value]
+    order_params = @params[:order].first
+    order_by_column = { column: order_params[:column].to_i, dir: order_params[:dir] }
 
     repository_rows = fetch_rows(search_value)
 
@@ -57,7 +60,7 @@ class RepositoryDatatableService
                       .select('COUNT(DISTINCT experiments.project_id) AS "assigned_projects_count"')
     repository_rows = repository_rows.preload(Extends::REPOSITORY_ROWS_PRELOAD_RELATIONS)
 
-    sort_rows(order_obj, repository_rows)
+    sort_rows(order_by_column, repository_rows)
   end
 
   def fetch_rows(search_value)
@@ -75,16 +78,14 @@ class RepositoryDatatableService
         repository_rows.count
       end
 
-    if search_value.present?
-      matched_by_user = repository_rows.joins(:created_by).where_attributes_like('users.full_name', search_value)
+    repository_rows = repository_rows.where(external_id: @params[:external_ids]) if @params[:external_ids]
 
-      repository_row_matches =  repository_rows
-                                .where_attributes_like(
-                                  ['repository_rows.name', RepositoryRow::PREFIXED_ID_SQL],
-                                  search_value
-                                )
+    if search_value.present?
+      if @repository.default_search_fileds.include?('users.full_name')
+        repository_rows = repository_rows.joins(:created_by)
+      end
+      repository_row_matches = repository_rows.where_attributes_like(@repository.default_search_fileds, search_value)
       results = repository_rows.where(id: repository_row_matches)
-      results = results.or(repository_rows.where(id: matched_by_user))
 
       data_types = @repository.repository_columns.pluck(:data_type).uniq
 
@@ -99,30 +100,186 @@ class RepositoryDatatableService
       repository_rows = results
     end
 
+    repository_rows = repository_rows.where(id: advanced_search(repository_rows)) if @params[:advanced_search].present?
+
     repository_rows.left_outer_joins(:created_by, :archived_by)
                    .select('repository_rows.*')
                    .select('COUNT("repository_rows"."id") OVER() AS filtered_count')
                    .group('repository_rows.id')
   end
 
-  def build_conditions(params)
-    search_value = params[:search][:value]
-    order = params[:order].values.first
-    order_by_column = { column: order[:column].to_i,
-                        dir: order[:dir] }
-    { search_value: search_value, order_by_column: order_by_column }
+  def advanced_search(repository_rows)
+    adv_search_params = @params[:advanced_search]
+    filter = @repository.repository_table_filters.new
+    adv_search_params[:filter_elements].each do |filter_element_params|
+      repository_rows =
+        if PREDEFINED_COLUMNS.include?(filter_element_params[:repository_column_id])
+          add_predefined_column_filter_condition(repository_rows, filter_element_params)
+        else
+          add_custom_column_filter_condition(repository_rows, filter, filter_element_params)
+        end
+    end
+
+    repository_rows
+  end
+
+  def add_predefined_column_filter_condition(repository_rows, filter_element_params)
+    case filter_element_params[:repository_column_id]
+    when 'row_id'
+      build_row_id_filter_condition(repository_rows, filter_element_params)
+    when 'name'
+      build_name_filter_condition(repository_rows, filter_element_params)
+    when 'added_on'
+      build_added_on_filter_condition(repository_rows, filter_element_params)
+    when 'added_by'
+      build_added_by_filter_condition(repository_rows, filter_element_params)
+    when 'archived_by'
+      build_archived_by_filter_condition(repository_rows, filter_element_params)
+    when 'assigned'
+      build_assigned_filter_condition(repository_rows, filter_element_params)
+    else
+      repository_rows
+    end
+  end
+
+  def build_row_id_filter_condition(repository_rows, filter_element_params)
+    case filter_element_params[:operator]
+    when 'contains'
+      repository_rows
+        .where("(#{RepositoryRow::PREFIXED_ID_SQL})::text ILIKE ?",
+               "%#{ActiveRecord::Base.sanitize_sql_like(filter_element_params.dig(:parameters, :text))}%")
+    when 'doesnt_contain'
+      repository_rows
+        .where.not("(#{RepositoryRow::PREFIXED_ID_SQL})::text ILIKE ?",
+                   "%#{ActiveRecord::Base.sanitize_sql_like(filter_element_params.dig(:parameters, :text))}%")
+    when 'empty'
+      repository_rows.where(id: nil)
+    else
+      raise ArgumentError, 'Wrong operator for RepositoryRow ID!'
+    end
+  end
+
+  def build_name_filter_condition(repository_rows, filter_element_params)
+    case filter_element_params[:operator]
+    when 'contains'
+      repository_rows.where('repository_rows.name ILIKE ?',
+                            "%#{ActiveRecord::Base.sanitize_sql_like(filter_element_params.dig(:parameters, :text))}%")
+    when 'doesnt_contain'
+      repository_rows
+        .where.not('repository_rows.name ILIKE ?',
+                   "%#{ActiveRecord::Base.sanitize_sql_like(filter_element_params.dig(:parameters, :text))}%")
+    when 'empty'
+      repository_rows.where(name: nil)
+    else
+      raise ArgumentError, 'Wrong operator for RepositoryRow Name!'
+    end
+  end
+
+  def build_added_on_filter_condition(repository_rows, filter_element_params)
+    case filter_element_params[:operator]
+    when 'today'
+      repository_rows.where('created_at >= ?', Time.zone.now.beginning_of_day)
+    when 'yesterday'
+      repository_rows.where('created_at >= ? AND created_at < ?',
+                            Time.zone.now.beginning_of_day - 1.day, Time.zone.now.beginning_of_day)
+    when 'last_week'
+      repository_rows.where('created_at >= ? AND created_at < ?',
+                            Time.zone.now.beginning_of_week - 1.week, Time.zone.now.beginning_of_week)
+    when 'this_month'
+      repository_rows.where('created_at >= ?', Time.zone.now.beginning_of_month)
+    when 'last_year'
+      repository_rows.where('created_at >= ? AND created_at < ?',
+                            Time.zone.now.beginning_of_year - 1.year, Time.zone.now.beginning_of_year)
+    when 'this_year'
+      repository_rows.where('created_at >= ?', Time.zone.now.beginning_of_year)
+    when 'equal_to'
+      repository_rows.where(created_at: filter_element_params.dig(:parameters, :datetime))
+    when 'unequal_to'
+      repository_rows
+        .where.not(created_at: filter_element_params.dig(:parameters, :datetime))
+    when 'greater_than'
+      repository_rows.where('created_at > ?', filter_element_params.dig(:parameters, :datetime))
+    when 'greater_than_or_equal_to'
+      repository_rows.where('created_at >= ?', filter_element_params.dig(:parameters, :datetime))
+    when 'less_than'
+      repository_rows.where('created_at < ?', filter_element_params.dig(:parameters, :datetime))
+    when 'less_than_or_equal_to'
+      repository_rows.where('created_at =< ?', filter_element_params.dig(:parameters, :datetime))
+    when 'between'
+      repository_rows.where('created_at > ? AND created_at < ?',
+                            filter_element_params.dig(:parameters, :start_datetime),
+                            filter_element_params.dig(:parameters, :end_datetime))
+    else
+      raise ArgumentError, 'Wrong operator for RepositoryRow Added On!'
+    end
+  end
+
+  def build_added_by_filter_condition(repository_rows, filter_element_params)
+    case filter_element_params[:operator]
+    when 'any_of'
+      repository_rows.joins(:created_by)
+                     .where(created_by: { id: filter_element_params.dig(:parameters, :user_ids) })
+    when 'none_of'
+      repository_rows.joins(:created_by)
+                     .where.not(created_by: { id: filter_element_params.dig(:parameters, :user_ids) })
+    else
+      raise ArgumentError, 'Wrong operator for RepositoryRow Added By!'
+    end
+  end
+
+  def build_archived_by_filter_condition(repository_rows, filter_element_params)
+    case filter_element_params[:operator]
+    when 'any_of'
+      repository_rows.joins(:archived_by)
+                     .where(archived_by: { id: filter_element_params.dig(:parameters, :user_ids) })
+    when 'none_of'
+      repository_rows.joins(:archived_by)
+                     .where.not(archived_by: { id: filter_element_params.dig(:parameters, :user_ids) })
+    else
+      raise ArgumentError, 'Wrong operator for RepositoryRow Archived By!'
+    end
+  end
+
+  def build_assigned_filter_condition(repository_rows, filter_element_params)
+    case filter_element_params[:operator]
+    when 'any_of'
+      repository_rows.joins(:my_modules)
+                     .where(my_modules: { id: filter_element_params.dig(:parameters, :my_module_ids) })
+    when 'none_of'
+      repository_rows = repository_rows.left_outer_joins(:my_modules)
+      repository_rows.where.not(my_modules: { id: filter_element_params.dig(:parameters, :my_module_ids) })
+                     .or(repository_rows.where(my_modules: { id: nil }))
+    when 'all_of'
+      repository_rows
+        .joins(:my_modules)
+        .where(my_modules: { id: filter_element_params.dig(:parameters, :my_module_ids) })
+        .having('COUNT(my_modules.id) = ?', filter_element_params.dig(:parameters, :my_module_ids).count)
+        .group(:id)
+    else
+      raise ArgumentError, 'Wrong operator for RepositoryRow Assigned To!'
+    end
+  end
+
+  def add_custom_column_filter_condition(repository_rows, filter, filter_element_params)
+    filter_element = filter.repository_table_filter_elements.new(
+      repository_column: @repository.repository_columns.find(filter_element_params['repository_column_id']),
+      operator: filter_element_params[:operator],
+      parameters: filter_element_params[:parameters]
+    )
+    config = Extends::REPOSITORY_ADVANCED_SEARCH_ATTR[filter_element.repository_column.data_type.to_sym]
+
+    if %w(empty file_not_attached).include?(filter_element_params[:operator])
+      repository_rows.left_outer_joins(config[:includes]).where(config[:field] => nil)
+    else
+      repository_rows = repository_rows.joins(config[:includes])
+                                       .where(repository_cells: { repository_column: filter_element.repository_column })
+      value_klass = filter_element.repository_column.data_type.constantize
+      value_klass.add_filter_condition(repository_rows, filter_element)
+    end
   end
 
   def build_sortable_columns
-    array = [
-      'assigned',
-      'repository_rows.id',
-      'repository_rows.name',
-      'repository_rows.created_at',
-      'users.full_name',
-      'repository_rows.archived_on',
-      'archived_bies_repository_rows.full_name',
-    ]
+    array = @repository.default_sortable_columns
     @repository.repository_columns.count.times do
       array << 'repository_cell.value'
     end

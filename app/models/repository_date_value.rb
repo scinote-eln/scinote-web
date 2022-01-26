@@ -10,6 +10,44 @@ class RepositoryDateValue < RepositoryDateTimeValueBase
     super(:full_date)
   end
 
+  def self.add_filter_condition(repository_rows, filter_element)
+    parameters = filter_element.parameters
+    case filter_element.operator
+    when 'today'
+      repository_rows.where('repository_date_time_values.data >= ?', Time.zone.now.beginning_of_day)
+    when 'yesterday'
+      repository_rows.where('repository_date_time_values.data >= ? AND repository_date_time_values.data < ?',
+                            Time.zone.now.beginning_of_day - 1.day, Time.zone.now.beginning_of_day)
+    when 'last_week'
+      repository_rows.where('repository_date_time_values.data >= ? AND repository_date_time_values.data < ?',
+                            Time.zone.now.beginning_of_week - 1.week, Time.zone.now.beginning_of_week)
+    when 'this_month'
+      repository_rows.where('repository_date_time_values.data >= ?', Time.zone.now.beginning_of_month)
+    when 'last_year'
+      repository_rows.where('repository_date_time_values.data >= ? AND repository_date_time_values.data < ?',
+                            Time.zone.now.beginning_of_year - 1.year, Time.zone.now.beginning_of_year)
+    when 'this_year'
+      repository_rows.where('repository_date_time_values.data >= ?', Time.zone.now.beginning_of_year)
+    when 'equal_to'
+      repository_rows.where(repository_date_time_values: { data: parameters['date'] })
+    when 'unequal_to'
+      repository_rows.where.not(repository_date_time_values: { data: parameters['date'] })
+    when 'greater_than'
+      repository_rows.where('repository_date_time_values.data > ?', parameters['date'])
+    when 'greater_than_or_equal_to'
+      repository_rows.where('repository_date_time_values.data >= ?', parameters['date'])
+    when 'less_than'
+      repository_rows.where('repository_date_time_values.data < ?', parameters['date'])
+    when 'less_than_or_equal_to'
+      repository_rows.where('repository_date_time_values.data <= ?', parameters['date'])
+    when 'between'
+      repository_rows.where('repository_date_time_values.data > ? AND repository_date_time_values.data < ?',
+                            parameters['start_date'], parameters['end_date'])
+    else
+      raise ArgumentError, 'Wrong operator for RepositoryDateValue!'
+    end
+  end
+
   def self.new_with_payload(payload, attributes)
     value = new(attributes)
     value.data = Time.zone.parse(payload)

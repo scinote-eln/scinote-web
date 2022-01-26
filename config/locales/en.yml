@@ -157,6 +157,13 @@ en:
           attributes:
             base:
               per_column_limit: "Too many items in the column"
+        repository_table_filter_element:
+          general: "There was a problem saving the filter."
+          attributes:
+            repository_column:
+              must_exist: Filter cannot be saved because one or more columns no longer exist. Please update your filter before saving.
+            parameters:
+              must_be_valid: Filter cannot be saved because some filter values no longer exist. Please update your filter before saving.
         webhook:
           attributes:
             configuration:
@@ -1308,6 +1315,7 @@ en:
       i_shared: "Shared inventory (owned by your Team)"
       shared_edit: "Shared inventory (owned by %{team_name}). You can edit."
       shared_read: "Shared inventory (owned by %{team_name}). You can view."
+    bmt_singleton_error: "Only one BMT inventory can be present."
     index:
       head_title: "Inventories"
       title: "Inventories"
@@ -1375,6 +1383,7 @@ en:
         all_teams_tooltip: "This will disable individual team settings"
         success_message: "Selected sharing options for the Inventory %{inventory_name} have been saved."
     show:
+      name: "Name"
       archived_inventory_items: "%{repository_name} archived items"
       archived_inventory: "Archived %{repository_name}"
       inventory_archived_items: "%{repository_name} archived items"
@@ -1388,12 +1397,117 @@ en:
         archived_by: "by"
       filter_inventory_items: "Filter items"
       no_items: "No items here"
+
       no_items_matched: "No items matched your search request"
       no_archived_items: "No archived items here"
       no_archived_items_matched: "No archived items matched your search request"
+      error_searching: "Error searching, please try again"
+      filters:
+        save_filters: "Save filters"
+        new_filter: "New filter"
+        overwrite_filter: "Overwrite"
+        title: "Filters"
+        clear: "Clear"
+        add_filter: "Add filter"
+        apply: "Show results"
+      repository_filter:
+        enter_value: "Enter text"
+        filters:
+            operators:
+              contains: "Contains"
+              does_not_contain: "Does not contain"
+              equal_to: "Equal to"
+              unequal_to: "Not equal to"
+              greater_than: "Greater than"
+              greater_than_or_equal_to: "Greater than or equal to"
+              less_than: "Less than"
+              less_than_or_equal_to: "Less than or equal to"
+              between: "Between"
+              today: "Today"
+              yesterday: "Yesterday"
+              last_week: "Last week"
+              this_month: "This month"
+              this_year: "This year"
+              last_year: "Last year"
+              empty: "Is empty"
+              any_of: "Any of"
+              all_of: "All of"
+              none_of: "None of"
+              file_contains: "File contains"
+              file_attached: "File is attached"
+              file_not_attached: "File is not attached"
+            types:
+              RepositoryAssetValue:
+                input_placeholder: "Enter text"
+              RepositoryTextValue:
+                input_placeholder: "Enter %{name}"
+              RepositoryNumberValue:
+                input_placeholder: "Enter %{name}"
+              RepositoryMyModuleValue:
+                select_placeholder: "Select task"
+                multiple_selected: "tasks selected"
+                all_selected: "All tasks selected"
+              RepositoryListValue:
+                select_placeholder: "Select %{name}"
+                multiple_selected: "items selected"
+                all_selected: "All items selected"
+              RepositoryStatusValue:
+                select_placeholder: "Select %{name}"
+                multiple_selected: "items selected"
+                all_selected: "All items selected"
+              RepositoryChecklistValue:
+                select_placeholder: "Select %{name}"
+                multiple_selected: "items selected"
+                all_selected: "All items selected"
+              RepositoryUserValue:
+                select_placeholder: "Select user"
+                multiple_selected: "users selected"
+                all_selected: "All users selected"
 
+      bmt_search:
+        bmt_filter: "Biomolecule filter"
+        save_filters: "Save filters"
+        title: "Filters"
+        clear_all: "Clear all"
+        add_filter: "Add filter"
+        apply: "Apply"
+        filter: "Filter"
+        no_filters: "No active filters."
+        filters:
+          types:
+            additionalDataFilter:
+              name: "Additional data"
+            entityTypeFilter:
+              name: "Entity type"
+              placeholder: "Enter entity type"
+            monomerTypeFilter:
+              name: "Monomere type"
+              placeholder: "Enter monomere type"
+            subsequenceFilter:
+              name: "Subsequence"
+              placeholder: "Enter subsequence"
+              derivatives_included: "Derivatives included"
+            variantSequenceFilter:
+              name: "Variant sequence"
+              placeholder: "Enter variant sequence"
+              derivatives_included: "Derivatives included"
+              distance: "Distance"
+              distance_type: "Distance type"
+              exact: "Exact"
+              maximum: "Maximum"
+            fullsequenceFilter:
+              name: "Full sequence"
+              placeholder: "Enter full sequence"
+              derivatives_included: "Derivatives included"
+            monomerSubstructureSearchFilter:
+              name: "Monomere substructure"
+              placeholder: "Enter substructure"
+            cidFilter:
+              name: "Cid"
+              placeholder: "Enter Cid"
     table:
       id: 'ID'
+      external_id: 'External ID'
       assigned: "Assigned"
       assigned_search: 'Search...'
       assigned_tooltip: "%{tasks} tasks in &#10;%{experiments} experiments,&#10;%{projects} projects"
@@ -1485,6 +1599,7 @@ en:
       alert_heading: "Deleting a column has following consequences:"
       alert_line_1: "you will lose information in this column for %{nr} item(s);"
       alert_line_2: "the column will be deleted for all team members."
+      alert_line_3: "any saved inventory filters relying on this column will be updated (individual filters based on this column will be removed from saved filters)."
       delete: "Delete"
     modal_parse:
       title: 'Import items'
@@ -1546,7 +1661,7 @@ en:
       name: "Name"
       colum_type: "Column type"
       dropdown_item_descirption: "Dropdown items should be separated by comma."
-      change_multi_select_items_warning: "Be careful: changing existing list items will result in deselecting previously selected items."
+      change_multi_select_items_warning: "Be careful: changing existing list items will result in deselecting previously selected items. Removing a list item will remove it also from any saved inventory filters."
       too_many_items_label: " of %{limit} items"
       select:
         repository_text_value: "Text"
@@ -2811,7 +2926,7 @@ en:
 
   bio_eddie:
     new_molecule: "New Molecule"
-    new_button: "Create Biomolecule"
+    new_button: "Biomolecule"
     molecule_name_placeholder: "Click here to enter Molecule name"
     no_molecules_found: "No Molecules Found"
     save_and_register: "Save & Register to Biomolecule Toolkit"
