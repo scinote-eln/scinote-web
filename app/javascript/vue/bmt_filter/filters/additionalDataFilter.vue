@@ -22,7 +22,6 @@
 <script>
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
   import FilterMixin from 'vue/bmt_filter/mixins/filter.js'
-  import DropdownSelector from 'vue/shared/dropdown_selector.vue'
 
   export default {
     name: 'additionalDataFilter',
@@ -40,9 +39,6 @@
           return {label: option, value: option}
         })
       }
-    },
-    components: {
-      DropdownSelector
     },
     data() {
       return {
