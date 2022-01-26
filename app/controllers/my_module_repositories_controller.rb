@@ -143,7 +143,9 @@ class MyModuleRepositoriesController < ApplicationController
   def consume_modal
     @repository_row = @repository.repository_rows.find_by(id: params[:row_id])
     render_404 and return  unless @repository_row
+
     @module_repository_row = @my_module.my_module_repository_rows.find_by(repository_row: @repository_row)
+    @stock_value = @module_repository_row.repository_row.stock_value
     render json: {
       html: render_to_string(
         partial: 'my_modules/repositories/consume_stock_modal_content.html.erb'
@@ -154,7 +156,11 @@ class MyModuleRepositoriesController < ApplicationController
   def update_consume
     module_repository_row = @my_module.my_module_repository_rows.find_by(id: params[:module_row_id])
     module_repository_row.lock!
-    module_repository_row.update!(stock_consumption: params[:stock_consumption], last_modified_by: current_user)
+    module_repository_row.update!(
+      stock_consumption: params[:stock_consumption],
+      last_modified_by: current_user,
+      comment: params[:comment]
+    )
 
     redirect_to protocols_my_module_path(@my_module)
   end

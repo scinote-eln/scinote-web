@@ -208,14 +208,14 @@ $.fn.dataTable.render.RepositoryStockValue = function(data) {
 
 $.fn.dataTable.render.RepositoryConsumedStockValue = function(data, url) {
   let canManage = $('.repository-table').data('stock-consumption-editable');
-  if (data && data.value.consumed_stock_formatted) {
+  if (data && data.value.consumed_stock_formatted > 0) {
     if (canManage) {
       return `<a href="${url}" class="manage-repository-consumed-stock-value-link stock-value-view-render">
-                ${data.value.consumed_stock_formatted}
+                ${data.value.consumed_stock_formatted} ${data.value.units}
                 </a>`;
     }
     return `<span class="stock-value-view-render">
-              ${data.value.consumed_stock_formatted}
+              ${data.value.consumed_stock_formatted} ${data.value.units}
               </span>`;
   }
   if (canManage && data && data.stock_present) {

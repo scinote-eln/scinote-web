@@ -4,21 +4,40 @@
       <span aria-hidden="true">&times;</span>
     </button>
     <h4 class="modal-title">
-      Consume <%= @repository_row.name %>
+      <%= t('my_modules.repository.stock_modal.title', name: @repository_row.name)%>
     </h4>
   </div>
   <div class="modal-body">
-    <p>Enter the total amount consumed in this task.</p>
+    <p><%= t('my_modules.repository.stock_modal.description') %></p>
     <div class="consumption-container">
       <div class="sci-input-container">
-        <%= f.label :stock_consumption, 'Amount'%>
-        <%= f.text_field :stock_consumption, value: @module_repository_row.stock_consumption, placeholder: 'Consumed', class: 'sci-input-field' %>
+        <%= f.label :stock_consumption, t('my_modules.repository.stock_modal.amount') %>
+        <%= f.text_field :stock_consumption, value: @module_repository_row.stock_consumption , placeholder: t('my_modules.repository.stock_modal.consumed') , class: 'sci-input-field', data: {initial_value: (@module_repository_row.stock_consumption || 0), initial_stock: @stock_value.amount } %>
       </div>
-      <span class="units"></span>
+      <span class="units"> <%= @stock_value.units %></span>
     </div>
-    <div class="sci-input-container">
-      <%= f.label :comment, 'Comment (optional)'%>
-      <%= f.text_field :comment, placeholder: 'Enter a comment', class: 'sci-input-field' %>
+    <div class="sci-input-container comments-container">
+      <%= f.label :comment, t('my_modules.repository.stock_modal.comment') %>
+      <%= f.text_field :comment, placeholder: t('my_modules.repository.stock_modal.enter_comment') , class: 'sci-input-field' %>
+    </div>
+    <div class="row mt-3">
+      <div class="col-sm-12">
+        <div class="stock-update-view">
+          <div class="stock-initial-container">
+            <span class="subtitle"><%= t('repository_stock_values.manage_modal.current_stock') %></span>
+            <span class="value"><%= @stock_value.amount %></span>
+            <span class="units"><%= @stock_value.units %></span>
+          </div>
+          <div class="stock-arrow">
+            <i class="fas fa-arrow-right"></i>
+          </div>
+          <div class="stock-final-container">
+            <span class="subtitle"><%= t('repository_stock_values.manage_modal.new_stock') %></span>
+            <span class="value">-</span>
+            <span class="units"><%= @stock_value.units %></span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="modal-footer">
@@ -26,6 +45,6 @@
             id="cancel"
             class="btn btn-default"
             data-dismiss="modal"><%=t('general.cancel') %></button>
-    <%= submit_tag t('general.save'), class: "btn btn-primary" %>
+    <%= submit_tag t('general.save'), class: "btn btn-primary update-consumption-button", disabled: @module_repository_row.stock_consumption.nil? %>
   </div>
 <% end %>

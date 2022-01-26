@@ -1,6 +1,6 @@
 class MyModuleRepositoryRow < ApplicationRecord
-
   attr_accessor :last_modified_by
+  attr_accessor :comment
 
   belongs_to :assigned_by,
              foreign_key: 'assigned_by_id',
@@ -29,7 +29,8 @@ class MyModuleRepositoryRow < ApplicationRecord
       reference: self,
       user: last_modified_by,
       amount: delta,
-      balance: stock_value.amount
+      balance: stock_value.amount,
+      comment: comment
     )
     save!
   end
