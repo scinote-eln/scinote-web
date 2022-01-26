@@ -1,0 +1,38 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
+.repository-stock-modal {
+  .stock-update-view {
+    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+
+    .stock-initial-container,
+    .stock-final-container {
+      align-items: center;
+      background: $color-concrete;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      padding: .5em 0;
+
+      .value {
+        @include font-h1;
+      }
+
+      .subtitle {
+        @include font-small;
+        color: $color-silver-chalice;
+      }
+
+      .units {
+        @include font-small;
+      }
+    }
+
+    .stock-arrow {
+      @include font-h1;
+      padding: 1em;
+    }
+  }
+}

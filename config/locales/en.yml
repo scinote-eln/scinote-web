@@ -1556,6 +1556,9 @@ en:
       unit_error: "Select a unit"
       comment: "Comment (optional)"
       comment_placeholder: "Enter comment"
+      current_stock: "Current stock"
+      new_stock: "New stock"
+
   libraries:
     manange_modal_column_index:
       title: "Manage columns"
