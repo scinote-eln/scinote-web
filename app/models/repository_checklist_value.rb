@@ -29,7 +29,7 @@ class RepositoryChecklistValue < ApplicationRecord
     repository_rows
       .where(repository_checklist_values: {
                repository_checklist_items_values: {
-                 repository_checklist_item: { id: filter_element.parameters['item_ids'] }
+                 repository_checklist_items: { id: filter_element.parameters['item_ids'] }
                }
              })
   end

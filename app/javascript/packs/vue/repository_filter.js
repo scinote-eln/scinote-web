@@ -71,7 +71,7 @@ window.initRepositoryFilter = () => {
   });
 
   $.get($('#filterContainer').data('my-modules-url'), function(data) {
-    repositoryFilterContainer.my_modules = data;
+    repositoryFilterContainer.my_modules = data.data;
   });
 
   $.get($('#filterContainer').data('columns-url'), function(data) {

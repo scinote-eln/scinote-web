@@ -21,7 +21,7 @@ class RepositoryStatusValue < ApplicationRecord
 
   def self.add_filter_condition(repository_rows, filter_element)
     repository_rows
-      .where(repository_status_values: { repository_status_item: { id: filter_element.parameters['status_ids'] } })
+      .where(repository_status_values: { repository_status_items: { id: filter_element.parameters['status_ids'] } })
   end
 
   def data_changed?(new_data)

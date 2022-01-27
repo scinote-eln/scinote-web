@@ -364,13 +364,13 @@ class RepositoriesController < ApplicationController
   def assigned_my_modules
     my_modules = MyModule.joins(:repository_rows).where(repository_rows: { repository: @repository })
                          .readable_by_user(current_user).distinct
-    render json: grouped_by_prj_exp(my_modules).map { |g|
-                   {
-                     label: "#{g[:project_name]} / #{g[:experiment_name]}", options: g[:tasks].map do |t|
-                       { label: t.name, value: t.id }
-                     end
-                   }
-                 }
+    render json: {data: grouped_by_prj_exp(my_modules).map { |g|
+                          {
+                            label: "#{g[:project_name]} / #{g[:experiment_name]}", options: g[:tasks].map do |t|
+                              { label: t.name, value: t.id }
+                            end
+                          }
+                        } }
   end
 
   def repository_users
