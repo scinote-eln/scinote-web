@@ -95,6 +95,7 @@
         $('#filtersColumnsDropdown').toggleClass('open');
       },
       loadFilters(filterUrl) {
+        this.filters = [];
         $.get(filterUrl, (data) => {
           let filters = [];
           let rawFilters = data.data.attributes.default_columns.concat((data.included || []).map(f => f.attributes))
