@@ -5,7 +5,7 @@ class MyModuleRepositoriesController < ApplicationController
 
   before_action :load_my_module
   before_action :load_repository, except: %i(repositories_dropdown_list repositories_list_html)
-  before_action :check_my_module_view_permissions, except: :update
+  before_action :check_my_module_view_permissions, except: %i(update consume_modal update_consumption)
   before_action :check_repository_view_permissions, except: %i(repositories_dropdown_list repositories_list_html)
   before_action :check_repository_row_consumption_permissions, only: %i(consume_modal update_consumption)
   before_action :check_assign_repository_records_permissions, only: :update
