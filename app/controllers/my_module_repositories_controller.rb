@@ -142,9 +142,7 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def consume_modal
-    @repository_row = @repository.repository_rows.find_by(id: params[:row_id])
-    render_404 and return  unless @repository_row
-
+    @repository_row = @repository.repository_rows.find(params[:row_id])
     @module_repository_row = @my_module.my_module_repository_rows.find_by(repository_row: @repository_row)
     @stock_value = @module_repository_row.repository_row.repository_stock_value
     render json: {
@@ -156,18 +154,16 @@ class MyModuleRepositoriesController < ApplicationController
 
   def update_consumption
     module_repository_row = @my_module.my_module_repository_rows.find_by(id: params[:module_row_id])
-    module_repository_row.lock!
-    module_repository_row.assign_attributes(
-      stock_consumption: params[:stock_consumption],
-      last_modified_by: current_user,
-      comment: params[:comment]
-    )
-
-    if module_repository_row.save
-      render json: {}, status: :ok
-    else
-      render json: { message: module_repository_row.errors.full_messages }, status: :unprocessable_entity
+    module_repository_row.with_lock do
+      module_repository_row.assign_attributes(
+        stock_consumption: params[:stock_consumption],
+        last_modified_by: current_user,
+        comment: params[:comment]
+      )
+      module_repository_row.save!
     end
+
+    render json: {}, status: :ok
   end
 
   private
