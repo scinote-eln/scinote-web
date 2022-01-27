@@ -1,4 +1,4 @@
-/* global SmartAnnotation I18n */
+/* global SmartAnnotation I18n MyModuleRepositories */
 var MyModuleStockConsumption = (function() {
   const CONSUMPTION_MODAL = '#consumeRepositoryStockValueModal';
   const WARNING_MODAL = '#consumeRepositoryStockValueModalWarning';
@@ -25,14 +25,13 @@ var MyModuleStockConsumption = (function() {
             $('.update-consumption-button').attr('disabled', $(this).val() === '');
           });
 
-          $(CONSUMPTION_MODAL + ' form').on('ajax:success', function(e, data) {
+          $(CONSUMPTION_MODAL + ' form').on('ajax:success', function() {
             MyModuleRepositories.reloadSimpletable();
             $manageModal.modal('hide');
             $(WARNING_MODAL).modal('hide');
           });
 
           $('.update-consumption-button').on('click', function(event, skipValidation) {
-
             if (parseFloat($('.stock-final-container .value').text()) < 0 && !skipValidation) {
               event.preventDefault();
               $manageModal.modal('hide');
@@ -54,8 +53,7 @@ var MyModuleStockConsumption = (function() {
       $(WARNING_MODAL).modal('hide');
       $(CONSUMPTION_MODAL).modal('show');
     }).on('click', '.confirm-consumption-button', function() {
-      $('.update-consumption-button').trigger('click', [ true ])
-
+      $('.update-consumption-button').trigger('click', [true]);
     });
   }
 

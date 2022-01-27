@@ -19,7 +19,7 @@ class RepositoryRowsController < ApplicationController
     @draw = params[:draw].to_i
     per_page = params[:length] == '-1' ? 100 : params[:length].to_i
     page = (params[:start].to_i / per_page) + 1
-    datatable_service = ".new(@repository, params, current_user)
+    datatable_service = RepositoryDatatableService.new(@repository, params, current_user)
 
     @all_rows_count = datatable_service.all_count
     @columns_mappings = datatable_service.mappings

@@ -166,7 +166,7 @@ class MyModuleRepositoriesController < ApplicationController
     if module_repository_row.save
       render json: {}, status: :ok
     else
-      render json: {message: module_repository_row.errors.full_messages}, status: :unprocessable_entity
+      render json: { message: module_repository_row.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
