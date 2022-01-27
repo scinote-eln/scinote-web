@@ -214,7 +214,7 @@ class RepositoryRowsController < ApplicationController
                                         params[:query],
                                         whole_phrase: true
                                       )
-    viewable_modules = assigned_modules.viewable_by_user(current_user, current_team)
+    viewable_modules = assigned_modules.viewable_by_user(current_user, current_user.teams)
     private_modules_number = assigned_modules.where.not(id: viewable_modules).count
     render json: {
       html: render_to_string(partial: 'shared/my_modules_list_partial.html.erb', locals: {
