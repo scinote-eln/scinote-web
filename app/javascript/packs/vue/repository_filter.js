@@ -5,7 +5,7 @@ import FilterContainer from '../../vue/repository_filter/container.vue';
 Vue.use(TurbolinksAdapter);
 Vue.prototype.i18n = window.I18n;
 
-window.repositoryFitlerObject = null
+window.repositoryFilterObject = null
 window.initRepositoryFilter = () => {
   Vue.prototype.dateFormat = $('#filterContainer').data('date-format')
   const defaultColumns = [
@@ -24,7 +24,8 @@ window.initRepositoryFilter = () => {
         columns: [],
         my_modules: [],
         canManageFilters: $('#filterContainer').data('can-manage-filters'),
-        savedFilters: []
+        savedFilters: [],
+        filterName: null
       };
     },
     created() {
@@ -66,6 +67,9 @@ window.initRepositoryFilter = () => {
       },
       reloadDataTable() {
         this.dataTableElement.DataTable().ajax.reload();
+      },
+      updateCurrentFilterName(name) {
+        this.filterName = name;
       }
     }
   });
@@ -88,5 +92,5 @@ window.initRepositoryFilter = () => {
     e.stopPropagation();
   });
 
-  repositoryFitlerObject = repositoryFilterContainer
+  repositoryFilterObject = repositoryFilterContainer
 };

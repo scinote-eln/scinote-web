@@ -25,6 +25,8 @@
           :my_modules.sync="my_modules"
           :can-manage-filters="canManageFilters"
           :saved-filters.sync="savedFilters"
+          :filter-name="filterName"
+          @filters:update-current-name="updateCurrentFilterName"
           @filters:apply="applyFilters"
           @filters:clear="clearFilters"
           @filters:update="updateFilters"
