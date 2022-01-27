@@ -3,7 +3,7 @@
 class RepositoryDatatableService
   attr_reader :repository_rows, :all_count, :mappings
 
-  PREDEFINED_COLUMNS = %w(row_id name added_on added_by archived_by assigned).freeze
+  PREDEFINED_COLUMNS = %w(row_id row_name added_on added_by archived_by assigned).freeze
 
   def initialize(repository, params, user, my_module = nil)
     @repository = repository
@@ -127,7 +127,7 @@ class RepositoryDatatableService
     case filter_element_params[:repository_column_id]
     when 'row_id'
       build_row_id_filter_condition(repository_rows, filter_element_params)
-    when 'name'
+    when 'row_name'
       build_name_filter_condition(repository_rows, filter_element_params)
     when 'added_on'
       build_added_on_filter_condition(repository_rows, filter_element_params)
