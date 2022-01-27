@@ -1,4 +1,4 @@
-<%= form_with url: update_consume_my_module_repository_path(@my_module, @repository, module_row_id: @module_repository_row), method: :post, remote: true, novalidate: true do |f| %>
+<%= form_with url: update_consumption_my_module_repository_path(@my_module, @repository, module_row_id: @module_repository_row), method: :post, remote: true do |f| %>
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>">
       <span aria-hidden="true">&times;</span>
@@ -14,7 +14,7 @@
         <%= f.label :stock_consumption, t('my_modules.repository.stock_modal.amount') %>
         <%= f.text_field :stock_consumption, value: @module_repository_row.stock_consumption , placeholder: t('my_modules.repository.stock_modal.consumed') , class: 'sci-input-field', data: {initial_value: (@module_repository_row.stock_consumption || 0), initial_stock: @stock_value.amount } %>
       </div>
-      <span class="units"> <%= @stock_value.units %></span>
+      <span class="units"> <%= @stock_value.repository_stock_unit_item&.data %></span>
     </div>
     <div class="sci-input-container comments-container">
       <%= f.label :comment, t('my_modules.repository.stock_modal.comment') %>
@@ -26,7 +26,7 @@
           <div class="stock-initial-container">
             <span class="subtitle"><%= t('repository_stock_values.manage_modal.current_stock') %></span>
             <span class="value"><%= @stock_value.amount %></span>
-            <span class="units"><%= @stock_value.units %></span>
+            <span class="units"><%= @stock_value.repository_stock_unit_item&.data %></span>
           </div>
           <div class="stock-arrow">
             <i class="fas fa-arrow-right"></i>
@@ -34,7 +34,7 @@
           <div class="stock-final-container">
             <span class="subtitle"><%= t('repository_stock_values.manage_modal.new_stock') %></span>
             <span class="value">-</span>
-            <span class="units"><%= @stock_value.units %></span>
+            <span class="units"><%= @stock_value.repository_stock_unit_item&.data %></span>
           </div>
         </div>
       </div>

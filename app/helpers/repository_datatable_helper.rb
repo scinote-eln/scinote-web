@@ -57,11 +57,7 @@ module RepositoryDatatableHelper
         DT_RowAttr: { 'data-state': row_style(record) },
         '0': escape_input(record.name),
         recordInfoUrl: Rails.application.routes.url_helpers.repository_repository_row_path(record.repository, record),
-        consumeUpdateUrl: Rails.application.routes.url_helpers.consume_modal_my_module_repository_path(
-          my_module,
-          record.repository,
-          row_id: record.id
-        )
+
       }
 
       if record.repository.has_stock_management?
@@ -71,9 +67,14 @@ module RepositoryDatatableHelper
           end
         row['2'] = {
           stock_present: record.repository_stock_cell.present?,
+          updateStockConsumptionUrl: Rails.application.routes.url_helpers.consume_modal_my_module_repository_path(
+            my_module,
+            record.repository,
+            row_id: record.id
+          ),
           value: {
             consumed_stock_formatted: record.consumed_stock,
-            units: record.stock_value.units
+            units: record.repository_stock_value.repository_stock_unit_item&.data
           }
         }
       end

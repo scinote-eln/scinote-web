@@ -144,8 +144,8 @@ var MyModuleRepositories = (function() {
         targets: 2,
         className: 'item-consumed-stock',
         sWidth: '1%',
-        render: function(data, type, row) {
-          return $.fn.dataTable.render.RepositoryConsumedStockValue(data, row.consumeUpdateUrl);
+        render: function(data) {
+          return $.fn.dataTable.render.RepositoryConsumedStockValue(data);
         }
       });
     }
@@ -189,6 +189,10 @@ var MyModuleRepositories = (function() {
         $(row).find('.item-name').attr('data-state', data.DT_RowAttr['data-state']);
       }
     });
+  }
+
+  function reloadSimpleTable() {
+    SIMPLE_TABLE.ajax.reload(null, false);
   }
 
   function renderFullViewTable(tableContainer, options = {}) {
@@ -741,6 +745,9 @@ var MyModuleRepositories = (function() {
       initRepoistoryAssignView();
       initSelectAllCheckbox();
       initExportAssignedRows();
+    },
+    reloadSimpletable: () => {
+      reloadSimpleTable();
     }
   };
 }());

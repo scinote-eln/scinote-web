@@ -108,10 +108,6 @@ class RepositoryRow < ApplicationRecord
     RepositoryStockValue.joins(repository_cell: :repository_row).exists?(repository_rows: { id: id })
   end
 
-  def stock_value
-    repository_stock_values.first
-  end
-
   def snapshot!(repository_snapshot)
     row_snapshot = dup
     row_snapshot.assign_attributes(

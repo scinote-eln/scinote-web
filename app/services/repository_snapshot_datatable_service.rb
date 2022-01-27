@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RepositorySnapshotDatatableService < RepositoryDatatableService
+class RepositorySnapshotDatatableService < "
   private
 
   def create_columns_mappings

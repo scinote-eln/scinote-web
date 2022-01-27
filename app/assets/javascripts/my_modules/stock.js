@@ -25,10 +25,16 @@ var MyModuleStockConsumption = (function() {
             $('.update-consumption-button').attr('disabled', $(this).val() === '');
           });
 
-          $('.update-consumption-button').on('click', function(event) {
-            event.preventDefault();
+          $(CONSUMPTION_MODAL + ' form').on('ajax:success', function(e, data) {
+            MyModuleRepositories.reloadSimpletable();
+            $manageModal.modal('hide');
+            $(WARNING_MODAL).modal('hide');
+          });
 
-            if (parseFloat($('.stock-final-container .value').text()) < 0) {
+          $('.update-consumption-button').on('click', function(event, skipValidation) {
+
+            if (parseFloat($('.stock-final-container .value').text()) < 0 && !skipValidation) {
+              event.preventDefault();
               $manageModal.modal('hide');
               $(WARNING_MODAL).modal('show');
               let units = $(CONSUMPTION_MODAL).find('.consumption-container .units').text();
@@ -36,8 +42,6 @@ var MyModuleStockConsumption = (function() {
               $(WARNING_MODAL).find('.modal-body p').text(
                 I18n.t('my_modules.repository.stock_warning_modal.description', { value: `${value} ${units}` })
               );
-            } else {
-              $(CONSUMPTION_MODAL + ' form')[0].submit();
             }
           });
         }
@@ -50,7 +54,8 @@ var MyModuleStockConsumption = (function() {
       $(WARNING_MODAL).modal('hide');
       $(CONSUMPTION_MODAL).modal('show');
     }).on('click', '.confirm-consumption-button', function() {
-      $(CONSUMPTION_MODAL + ' form')[0].submit();
+      $('.update-consumption-button').trigger('click', [ true ])
+
     });
   }
 
