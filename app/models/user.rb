@@ -195,6 +195,11 @@ class User < ApplicationRecord
            foreign_key: 'restored_by_id',
            inverse_of: :restored_by,
            dependent: :nullify
+  has_many :created_repository_rows,
+           class_name: 'RepositoryRow',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
   has_many :archived_repository_rows,
            class_name: 'RepositoryRow',
            foreign_key: 'archived_by_id',

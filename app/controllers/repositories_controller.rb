@@ -374,10 +374,10 @@ class RepositoriesController < ApplicationController
   end
 
   def repository_users
-    users = User.where(id:
-      Repository.first.repository_rows
-                      .joins(params[:archived_by] ? :archived_by : :created_by)
-                      .select('users.id').distinct)
+    rows_type = params[:archived_by].present? ? :archived_repository_rows : :created_repository_rows
+    users = User.joins(rows_type)
+                .where(rows_type => { repository: @repository })
+                .group(:id)
 
     render json: { users: users.map do |u|
                             {
