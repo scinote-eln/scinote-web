@@ -16,6 +16,7 @@ module Repositories
 
       ActiveRecord::Base.transaction(requires_new: true) do
         repository = @repository_snapshot.original_repository
+        has_stock_management = repository.has_stock_management?
 
         repository.repository_columns.each do |column|
           column.snapshot!(@repository_snapshot)
@@ -26,7 +27,8 @@ module Repositories
                                     .where(my_module_repository_rows: { my_module: @repository_snapshot.my_module })
 
         repository_rows.find_each do |original_row|
-          original_row.snapshot!(@repository_snapshot)
+          row_snapshot = original_row.snapshot!(@repository_snapshot)
+          create_stock_consumption_cell_snapshot!(original_row, row_snapshot) if has_stock_management
         end
 
         @repository_snapshot.ready!
@@ -61,6 +63,25 @@ module Repositories
         return false
       end
       true
+    end
+
+    def create_stock_consumption_cell_snapshot!(repository_row, row_snapshot)
+      my_module_repository_row =
+        repository_row.my_module_repository_rows.find { |mrr| mrr.my_module_id == @repository_snapshot.my_module_id }
+      return if my_module_repository_row.stock_consumption.blank?
+
+      stock_unit_item =
+        @repository_snapshot.repository_stock_consumption_column
+                            .repository_stock_unit_items
+                            .find { |item| item.data == my_module_repository_row.repository_stock_unit_item&.data }
+      RepositoryStockConsumptionValue.create!(
+        repository_cell_attributes: {
+          repository_column: @repository_snapshot.repository_stock_consumption_column,
+          repository_row: row_snapshot
+        },
+        amount: my_module_repository_row.stock_consumption,
+        repository_stock_unit_item: stock_unit_item
+      )
     end
   end
 end

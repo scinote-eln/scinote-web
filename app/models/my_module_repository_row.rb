@@ -11,6 +11,7 @@ class MyModuleRepositoryRow < ApplicationRecord
   belongs_to :my_module,
              touch: true,
              inverse_of: :my_module_repository_rows
+  belongs_to :repository_stock_unit_item, optional: true
 
   validates :repository_row, uniqueness: { scope: :my_module }
 
