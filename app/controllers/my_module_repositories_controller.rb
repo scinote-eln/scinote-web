@@ -18,10 +18,12 @@ class MyModuleRepositoriesController < ApplicationController
 
     @datatable_params = {
       view_mode: params[:view_mode],
-      my_module: @my_module
+      my_module: @my_module,
+      include_stock_consumption: @repository.has_stock_management?
     }
     @all_rows_count = datatable_service.all_count
     @columns_mappings = datatable_service.mappings
+
     if params[:simple_view]
       repository_rows = datatable_service.repository_rows
       rows_view = 'repository_rows/simple_view_index.json'
@@ -101,7 +103,10 @@ class MyModuleRepositoriesController < ApplicationController
 
   def full_view_table
     render json: {
-      html: render_to_string(partial: 'my_modules/repositories/full_view_table')
+      html: render_to_string(
+        partial: 'my_modules/repositories/full_view_table',
+        locals: { include_stock_consumption: params[:include_stock_consumption] }
+      )
     }
   end
 

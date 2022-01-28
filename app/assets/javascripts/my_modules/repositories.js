@@ -11,6 +11,41 @@ var MyModuleRepositories = (function() {
   var FULL_VIEW_TABLE_SCROLLBAR;
   var SELECTED_ROWS = {};
 
+  function stockManagementColumns(otherColumnCount) {
+    return [
+      {
+        visible: true,
+        searchable: false,
+        data: otherColumnCount
+      },
+      {
+        visible: true,
+        searchable: false,
+        data: otherColumnCount + 1
+      }
+    ];
+  }
+
+  function stockManagementColumnDefs() {
+    return [
+      {
+        targets: 'row-stock',
+        className: 'item-stock',
+        sWidth: '1%',
+        render: function(data) {
+          return $.fn.dataTable.render.RepositoryStockValue(data);
+        }
+      }, {
+        targets: 'row-consumption',
+        className: 'item-consumed-stock',
+        sWidth: '1%',
+        render: function(data) {
+          return $.fn.dataTable.render.RepositoryConsumedStockValue(data);
+        }
+      }
+    ];
+  }
+
   function reloadRepositoriesList(repositoryId) {
     var repositoriesContainer = $('#assigned-items-container');
     $.get(repositoriesContainer.data('repositories-list-url'), function(result) {
@@ -38,10 +73,17 @@ var MyModuleRepositories = (function() {
         defaultContent: $.fn.dataTable.render['default' + column.dataset.type](column.id)
       });
     });
+
+    if ($(tableContainer).data('stock-management')) {
+      let column = stockManagementColumns(columns.length)[1];
+      column.data -= 1;
+      columns.push(column);
+    }
+
     return columns;
   }
 
-  function fullViewColumnDefs() {
+  function fullViewColumnDefs(tableContainer) {
     let columnDefs = [{
       targets: 0,
       visible: true,
@@ -89,10 +131,18 @@ var MyModuleRepositories = (function() {
           if (typeof data === 'object' && $.fn.dataTable.render[data.value_type]) {
             return $.fn.dataTable.render[data.value_type](data);
           }
+          if (data !== undefined && data.stock_present !== undefined) {
+            return $.fn.dataTable.render.RepositoryConsumedStockValue(data);
+          }
           return data;
         }
       }
     );
+
+    if ($(tableContainer).data('stock-management')) {
+      let stockColumnDef = stockManagementColumnDefs()[1];
+      columnDefs.push(stockColumnDef);
+    }
 
     return columnDefs;
   }
@@ -107,16 +157,7 @@ var MyModuleRepositories = (function() {
     ];
 
     if ($(tableContainer).data('stock-management')) {
-      columns.push({
-        visible: true,
-        searchable: false,
-        data: 1
-      });
-      columns.push({
-        visible: true,
-        searchable: false,
-        data: 2
-      });
+      columns = columns.concat(stockManagementColumns(columns.length));
     }
 
     return columns;
@@ -133,21 +174,7 @@ var MyModuleRepositories = (function() {
     }];
 
     if ($(tableContainer).data('stock-management')) {
-      columnDefs.push({
-        targets: 1,
-        className: 'item-stock',
-        sWidth: '1%',
-        render: function(data) {
-          return $.fn.dataTable.render.RepositoryStockValue(data);
-        }
-      }, {
-        targets: 2,
-        className: 'item-consumed-stock',
-        sWidth: '1%',
-        render: function(data) {
-          return $.fn.dataTable.render.RepositoryConsumedStockValue(data);
-        }
-      });
+      columnDefs = columnDefs.concat(stockManagementColumnDefs());
     }
 
     return columnDefs;
@@ -192,6 +219,7 @@ var MyModuleRepositories = (function() {
   }
 
   function reloadSimpleTable() {
+    if (!SIMPLE_TABLE) return;
     SIMPLE_TABLE.ajax.reload(null, false);
   }
 
@@ -220,7 +248,7 @@ var MyModuleRepositories = (function() {
         type: 'POST'
       },
       columns: tableColumns(tableContainer, options.skipCheckbox),
-      columnDefs: fullViewColumnDefs(),
+      columnDefs: fullViewColumnDefs(tableContainer),
 
       fnInitComplete: function() {
         var dataTableWrapper = $(tableContainer).closest('.dataTables_wrapper');
@@ -748,6 +776,10 @@ var MyModuleRepositories = (function() {
     },
     reloadSimpletable: () => {
       reloadSimpleTable();
+    },
+    reloadFullViewTable: () => {
+      if (!FULL_VIEW_TABLE) return;
+      FULL_VIEW_TABLE.ajax.reload(null, false);
     }
   };
 }());

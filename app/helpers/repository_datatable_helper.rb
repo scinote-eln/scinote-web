@@ -5,32 +5,37 @@ module RepositoryDatatableHelper
 
   def prepare_row_columns(repository_rows, repository, columns_mappings, team, options = {})
     repository_rows.map do |record|
-      row = {
-        'DT_RowId': record.id,
-        'DT_RowAttr': { 'data-state': row_style(record) },
+      default_cells = {
         '1': assigned_row(record),
         '2': record.code,
         '3': escape_input(record.name),
         '4': I18n.l(record.created_at, format: :full),
         '5': escape_input(record.created_by.full_name),
         '6': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
-        '7': escape_input(record.archived_by&.full_name),
-        'recordInfoUrl': Rails.application.routes.url_helpers.repository_repository_row_path(repository, record)
+        '7': escape_input(record.archived_by&.full_name)
       }
 
-      row['manageStockUrl'] = if record.has_stock?
-                                Rails.application.routes.url_helpers
-                                     .edit_repository_stock_repository_repository_row_url(
-                                       repository,
-                                       record
-                                     )
-                              else
-                                Rails.application.routes.url_helpers
-                                     .new_repository_stock_repository_repository_row_url(
-                                       repository,
-                                       record
-                                     )
-                              end
+      row = {
+        'DT_RowId': record.id,
+        'DT_RowAttr': { 'data-state': row_style(record) },
+        'recordInfoUrl': Rails.application.routes.url_helpers.repository_repository_row_path(repository, record)
+      }.merge(default_cells)
+
+      if options[:include_stock_consumption]
+        row['manageStockUrl'] = if record.has_stock?
+                                  Rails.application.routes.url_helpers
+                                       .edit_repository_stock_repository_repository_row_url(
+                                         repository,
+                                         record
+                                       )
+                                else
+                                  Rails.application.routes.url_helpers
+                                       .new_repository_stock_repository_repository_row_url(
+                                         repository,
+                                         record
+                                       )
+                                end
+      end
 
       unless options[:view_mode]
         row['recordUpdateUrl'] =
@@ -41,16 +46,37 @@ module RepositoryDatatableHelper
       row['0'] = record[:row_assigned] if options[:my_module]
 
       # Add custom columns
-      record.repository_cells.each do |cell|
+      custom_cells = record.repository_cells
+
+      custom_cells.each do |cell|
         row[columns_mappings[cell.repository_column.id]] =
           display_cell_value(cell, team)
+      end
+
+      if options[:include_stock_consumption] && record.repository.has_stock_management? && options[:my_module]
+        row[(default_cells.length + custom_cells.length + 1).to_s] =
+          if record.repository_stock_cell.present?
+            display_cell_value(record.repository_stock_cell, record.repository.team)
+          end
+        row[(default_cells.length + custom_cells.length + 2).to_s] = {
+          stock_present: record.repository_stock_cell.present?,
+          updateStockConsumptionUrl: Rails.application.routes.url_helpers.consume_modal_my_module_repository_path(
+            options[:my_module],
+            record.repository,
+            row_id: record.id
+          ),
+          value: {
+            consumed_stock_formatted: record.consumed_stock,
+            unit: record.repository_stock_value.repository_stock_unit_item&.data
+          }
+        }
       end
 
       row
     end
   end
 
-  def prepare_simple_view_row_columns(repository_rows, my_module)
+  def prepare_simple_view_row_columns(repository_rows, my_module, options = {})
     repository_rows.map do |record|
       row = {
         DT_RowId: record.id,
@@ -59,7 +85,7 @@ module RepositoryDatatableHelper
         recordInfoUrl: Rails.application.routes.url_helpers.repository_repository_row_path(record.repository, record)
       }
 
-      if record.repository.has_stock_management?
+      if options[:include_stock_consumption] && record.repository.has_stock_management?
         row['1'] =
           if record.repository_stock_cell.present?
             display_cell_value(record.repository_stock_cell, record.repository.team)
