@@ -50,7 +50,7 @@ module RepositoryDatatableHelper
     end
   end
 
-  def prepare_simple_view_row_columns(repository_rows)
+  def prepare_simple_view_row_columns(repository_rows, my_module)
     repository_rows.map do |record|
       row = {
         DT_RowId: record.id,
@@ -66,8 +66,14 @@ module RepositoryDatatableHelper
           end
         row['2'] = {
           stock_present: record.repository_stock_cell.present?,
+          updateStockConsumptionUrl: Rails.application.routes.url_helpers.consume_modal_my_module_repository_path(
+            my_module,
+            record.repository,
+            row_id: record.id
+          ),
           value: {
-            consumed_stock_formatted: record.consumed_stock
+            consumed_stock_formatted: record.consumed_stock,
+            unit: record.repository_stock_value.repository_stock_unit_item&.data
           }
         }
       end

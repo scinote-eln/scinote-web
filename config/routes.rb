@@ -388,6 +388,8 @@ Rails.application.routes.draw do
           post :export_repository
           get :assign_repository_records_modal, as: :assign_modal
           get :update_repository_records_modal, as: :update_modal
+          get :consume_modal
+          post :update_consumption
         end
       end
 

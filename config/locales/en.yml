@@ -995,6 +995,17 @@ en:
           set_default_button: 'Set as default view'
           created_by: 'by %{full_name}'
           provisioning: 'Provisioning'
+      stock_modal:
+        title: 'Consume %{name}'
+        description: 'Enter the total amount consumed in this task.'
+        amount: 'Amount'
+        consumed: 'Consumed'
+        comment: 'Comment (optional)'
+        enter_comment: 'Enter a comment'
+      stock_warning_modal:
+        title: 'Out of stock!'
+        description: 'By consuming %{value} you will use more than you currently have in stock. This will result in negative stock.'
+        consume_anyway: 'Consume anyway'
       flash:
         assign_to_task_html: "Successfully assigned <strong>%{assigned_items}</strong> item(s) to the task."
         assign_to_task_and_downstream_html: "Successfully assigned <strong>%{assigned_items}</strong> item(s) to the task and downstream tasks."

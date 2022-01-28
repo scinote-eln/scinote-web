@@ -34,7 +34,8 @@ class RepositoryRow < ApplicationRecord
     repository_date: 'RepositoryDateValue',
     repository_date_time_range: 'RepositoryDateTimeRangeValue',
     repository_time_range: 'RepositoryTimeRangeValue',
-    repository_date_range: 'RepositoryDateRangeValue'
+    repository_date_range: 'RepositoryDateRangeValue',
+    repository_stock: 'RepositoryStockValue'
   }.each do |relation, class_name|
     has_many "#{relation}_cells".to_sym, -> { where(value_type: class_name) }, class_name: 'RepositoryCell',
              inverse_of: :repository_row

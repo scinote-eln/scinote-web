@@ -191,6 +191,10 @@ var MyModuleRepositories = (function() {
     });
   }
 
+  function reloadSimpleTable() {
+    SIMPLE_TABLE.ajax.reload(null, false);
+  }
+
   function renderFullViewTable(tableContainer, options = {}) {
     if (FULL_VIEW_TABLE) FULL_VIEW_TABLE.destroy();
     SELECTED_ROWS = {};
@@ -741,6 +745,9 @@ var MyModuleRepositories = (function() {
       initRepoistoryAssignView();
       initSelectAllCheckbox();
       initExportAssignedRows();
+    },
+    reloadSimpletable: () => {
+      reloadSimpleTable();
     }
   };
 }());

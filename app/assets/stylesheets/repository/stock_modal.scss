@@ -1,7 +1,8 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
 
-.repository-stock-modal {
+.repository-stock-modal,
+#consumeRepositoryStockValueModal {
   .stock-update-view {
     align-items: center;
     display: grid;
@@ -27,6 +28,12 @@
 
       .units {
         @include font-small;
+      }
+
+      &.error {
+        .value {
+          color: $brand-danger;
+        }
       }
     }
 
