@@ -25,8 +25,11 @@
   import RepositoryNumberValue from 'vue/repository_filter/filters/repositoryNumberValue.vue'
   import RepositoryMyModuleValue from 'vue/repository_filter/filters/repositoryMyModuleValue.vue'
   import RepositoryDateValue from 'vue/repository_filter/filters/repositoryDateValue.vue'
+  import RepositoryDateRangeValue from 'vue/repository_filter/filters/repositoryDateRangeValue.vue'
   import RepositoryDateTimeValue from 'vue/repository_filter/filters/repositoryDateTimeValue.vue'
+  import RepositoryDateTimeRangeValue from 'vue/repository_filter/filters/repositoryDateTimeRangeValue.vue'
   import RepositoryTimeValue from 'vue/repository_filter/filters/repositoryTimeValue.vue'
+  import RepositoryTimeRangeValue from 'vue/repository_filter/filters/repositoryTimeRangeValue.vue'
   import RepositoryListValue from 'vue/repository_filter/filters/repositoryListValue.vue'
   import RepositoryStatusValue from 'vue/repository_filter/filters/repositoryStatusValue.vue'
   import RepositoryChecklistValue from 'vue/repository_filter/filters/repositoryChecklistValue.vue'
@@ -47,8 +50,11 @@
       RepositoryNumberValue,
       RepositoryMyModuleValue,
       RepositoryDateValue,
+      RepositoryDateRangeValue,
       RepositoryTimeValue,
+      RepositoryTimeRangeValue,
       RepositoryDateTimeValue,
+      RepositoryDateTimeRangeValue,
       RepositoryListValue,
       RepositoryStatusValue,
       RepositoryChecklistValue,

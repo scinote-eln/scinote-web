@@ -13,6 +13,31 @@ class RepositoryTimeRangeValue < RepositoryDateTimeRangeValueBase
     super(:time)
   end
 
+  def self.add_filter_condition(repository_rows, filter_element)
+    parameters = filter_element.parameters
+    case filter_element.operator
+    when 'equal_to'
+      repository_rows.where('repository_date_time_range_values.start_time::time = ? AND repository_date_time_range_values.end_time::time = ?',
+                            parameters['start_time'], parameters['end_time'])
+    when 'unequal_to'
+      repository_rows.where.not('repository_date_time_range_values.start_time::time = ? AND repository_date_time_range_values.end_time::time = ?',
+                            parameters['start_time'], parameters['end_time'])
+    when 'greater_than'
+      repository_rows.where('repository_date_time_range_values.start_time::time > ?', parameters['end_datetime'])
+    when 'greater_than_or_equal_to'
+      repository_rows.where('repository_date_time_range_values.start_time::time >= ?', parameters['end_datetime'])
+    when 'less_than'
+      repository_rows.where('repository_date_time_range_values.end_time::time < ?', parameters['start_datetime'])
+    when 'less_than_or_equal_to'
+      repository_rows.where('repository_date_time_range_values.end_time::time <= ?', parameters['start_datetime'])
+    when 'between'
+      repository_rows.where('repository_date_time_range_values.start_time::time > ? AND repository_date_time_range_values.end_time::time < ?',
+                            parameters['start_datetime'], parameters['end_datetime'])
+    else
+      raise ArgumentError, 'Wrong operator for RepositoryTimeRangeValue!'
+    end
+  end
+
   def self.new_with_payload(payload, attributes)
     data = payload.is_a?(String) ? JSON.parse(payload).symbolize_keys : payload
 
