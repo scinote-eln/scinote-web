@@ -16,7 +16,13 @@ class MyModuleRepositoryRow < ApplicationRecord
 
   around_save :deduct_stock_balance, if: :stock_consumption_changed?
 
+  before_save :nulify_stock_consumption, if: :stock_consumption_changed?
+
   private
+
+  def nulify_stock_consumption
+    self.stock_consumption = nil if stock_consumption.zero?
+  end
 
   def deduct_stock_balance
     stock_value = repository_row.repository_stock_value

@@ -12,7 +12,7 @@
     <div class="consumption-container">
       <div class="sci-input-container">
         <%= f.label :stock_consumption, t('my_modules.repository.stock_modal.amount') %>
-        <%= f.text_field :stock_consumption, value: @module_repository_row.stock_consumption , placeholder: t('my_modules.repository.stock_modal.consumed') , class: 'sci-input-field', data: {initial_value: (@module_repository_row.stock_consumption || 0), initial_stock: @stock_value.amount } %>
+        <%= f.number_field :stock_consumption, value: @module_repository_row.stock_consumption , placeholder: t('my_modules.repository.stock_modal.consumed') , class: 'sci-input-field', data: {initial_value: (@module_repository_row.stock_consumption || 0), initial_stock: @stock_value.amount } %>
       </div>
       <span class="units"> <%= @stock_value.repository_stock_unit_item&.data %></span>
     </div>

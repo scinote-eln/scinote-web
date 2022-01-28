@@ -208,7 +208,7 @@ $.fn.dataTable.render.RepositoryStockValue = function(data) {
 
 $.fn.dataTable.render.RepositoryConsumedStockValue = function(data) {
   let canManage = $('.repository-table').data('stock-consumption-editable');
-  if (data && parseFloat(data.value.consumed_stock_formatted) > 0) {
+  if (data && data.value.consumed_stock_formatted) {
     if (canManage) {
       return `<a href="${data.updateStockConsumptionUrl}" class="manage-repository-consumed-stock-value-link stock-value-view-render">
                 ${data.value.consumed_stock_formatted} ${data.value.unit}
