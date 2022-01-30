@@ -89,36 +89,32 @@ class Extends
     }
   }
 
-  # Extra attributes used for advanced search in repositories, 'filed_name' => include_hash
+  # Extra attributes used for advanced search in repositories
   REPOSITORY_ADVANCED_SEARCH_ATTR = {
     RepositoryTextValue: {
-      field: 'repository_text_values.data', includes: :repository_text_values
+      field: 'repository_text_values.data', table_name: :repository_text_values
     }, RepositoryNumberValue: {
-      field: 'repository_number_values.data', includes: :repository_number_values
+      field: 'repository_number_values.data', table_name: :repository_number_values
     }, RepositoryListValue: {
-      field: 'repository_list_items.data',
-      includes: { repository_list_values: :repository_list_item }
+      field: 'repository_list_items.data', table_name: :repository_list_values
     }, RepositoryChecklistValue: {
-      field: 'repository_checklist_items.data',
-      includes: { repository_checklist_values: { repository_checklist_items_values: :repository_checklist_item } }
+      field: 'repository_checklist_items.data', table_name: :repository_checklist_values
     }, RepositoryStatusValue: {
-      field: 'repository_status_items.status',
-      includes: { repository_status_values: :repository_status_item }
+      field: 'repository_status_items.status', table_name: :repository_status_values
     }, RepositoryAssetValue: {
-      field: 'active_storage_blobs.filename',
-      includes: { repository_asset_values: { asset: { file_attachment: :blob } } }
+      field: 'active_storage_blobs.filename', table_name: :repository_asset_values
     }, RepositoryDateTimeValue: {
-      field: 'repository_date_time_values.data', includes: :repository_date_time_values
+      field: 'repository_date_time_values.data', table_name: :repository_date_time_values
     }, RepositoryDateTimeRangeValue: {
-      field: 'repository_date_time_range_values.data', includes: :repository_date_time_range_values
+      field: 'repository_date_time_range_values.data', table_name: :repository_date_time_range_values
     }, RepositoryDateValue: {
-      field: 'repository_date_time_values.data', includes: :repository_date_values
+      field: 'repository_date_time_values.data', table_name: :repository_date_values
     }, RepositoryDateRangeValue: {
-      field: 'repository_date_time_range_values.data', includes: :repository_date_range_values
+      field: 'repository_date_time_range_values.data', table_name: :repository_date_range_values
     }, RepositoryTimeValue: {
-      field: 'repository_date_time_values.data', includes: :repository_time_values
+      field: 'repository_date_time_values.data', table_name: :repository_time_values
     }, RepositoryTimeRangeValue: {
-      field: 'repository_date_time_range_values.data', includes: :repository_time_range_values
+      field: 'repository_date_time_range_values.data', table_name: :repository_time_range_values
     }
   }
 

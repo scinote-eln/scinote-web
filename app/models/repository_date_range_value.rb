@@ -16,19 +16,21 @@ class RepositoryDateRangeValue < RepositoryDateTimeRangeValueBase
     parameters = filter_element.parameters
     case filter_element.operator
     when 'equal_to'
-      repository_rows.where(repository_date_time_range_values: { start_time: parameters['start_date'], end_time: parameters['end_date'] })
+      repository_rows.where("#{join_alias}.start_time = ? AND #{join_alias}.end_time = ?",
+                            parameters['start_date'], parameters['end_date'])
     when 'unequal_to'
-      repository_rows.where.not(repository_date_time_range_values: { start_time: parameters['start_date'], end_time: parameters['end_date'] })
+      repository_rows.where.not("#{join_alias}.start_time = ? AND #{join_alias}.end_time = ?",
+                                parameters['start_date'], parameters['end_date'])
     when 'greater_than'
-      repository_rows.where('repository_date_time_range_values.start_time > ?', parameters['end_date'])
+      repository_rows.where("#{join_alias}.start_time > ?", parameters['end_date'])
     when 'greater_than_or_equal_to'
-      repository_rows.where('repository_date_time_range_values.start_time >= ?', parameters['end_date'])
+      repository_rows.where("#{join_alias}.start_time >= ?", parameters['end_date'])
     when 'less_than'
-      repository_rows.where('repository_date_time_range_values.end_time < ?', parameters['start_date'])
+      repository_rows.where("#{join_alias}.end_time < ?", parameters['start_date'])
     when 'less_than_or_equal_to'
-      repository_rows.where('repository_date_time_range_values.end_time <= ?', parameters['start_date'])
+      repository_rows.where("#{join_alias}.end_time <= ?", parameters['start_date'])
     when 'between'
-      repository_rows.where('repository_date_time_range_values.start_time > ? AND repository_date_time_range_values.end_time < ?',
+      repository_rows.where("#{join_alias}.start_time > ? AND #{join_alias}.end_time < ?",
                             parameters['start_date'], parameters['end_date'])
     else
       raise ArgumentError, 'Wrong operator for RepositoryDateRangeValue!'

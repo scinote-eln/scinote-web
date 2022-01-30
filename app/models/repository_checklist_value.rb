@@ -25,13 +25,17 @@ class RepositoryChecklistValue < ApplicationRecord
     formatted(separator: repository_cell.repository_column.delimiter_char)
   end
 
-  def self.add_filter_condition(repository_rows, filter_element)
+  def self.add_filter_condition(repository_rows, join_alias, filter_element)
     repository_rows
-      .where(repository_checklist_values: {
-               repository_checklist_items_values: {
-                 repository_checklist_items: { id: filter_element.parameters['item_ids'] }
-               }
-             })
+      .joins(
+        "INNER JOIN \"repository_checklist_items_values\"" \
+        " ON  \"repository_checklist_items_values\".\"repository_checklist_value_id\" = \"#{join_alias}\".\"id\""
+      )
+      .joins(
+        'INNER JOIN "repository_checklist_items"' \
+        ' ON  "repository_checklist_items_values"."repository_checklist_item_id" = "repository_checklist_items"."id"'
+      )
+      .where(repository_checklist_items: { id: filter_element.parameters['item_ids'] })
   end
 
   def data

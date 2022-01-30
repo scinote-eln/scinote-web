@@ -269,12 +269,22 @@ class RepositoryDatatableService
     config = Extends::REPOSITORY_ADVANCED_SEARCH_ATTR[filter_element.repository_column.data_type.to_sym]
 
     if %w(empty file_not_attached).include?(filter_element_params[:operator])
-      repository_rows.left_outer_joins(config[:includes]).where(config[:field] => nil)
+      repository_rows.left_outer_joins(config[:table_name]).where(config[:field] => nil)
     else
-      repository_rows = repository_rows.joins(config[:includes])
-                                       .where(repository_cells: { repository_column: filter_element.repository_column })
+      join_cells_alias = "repository_column_cells_#{filter_element.repository_column.id}"
+      join_values_alias = "repository_column_values_#{filter_element.repository_column.id}"
+      repository_rows =
+        repository_rows
+        .joins(
+          "INNER JOIN \"repository_cells\" AS \"#{join_cells_alias}\"" \
+          " ON  \"repository_rows\".\"id\" = \"#{join_cells_alias}\".\"repository_row_id\"" \
+          " AND \"#{join_cells_alias}\".\"repository_column_id\" = '#{filter_element.repository_column.id}'")
+        .joins(
+          "INNER JOIN \"#{config[:table_name]}\" AS \"#{join_values_alias}\"" \
+          " ON  \"#{join_values_alias}\".\"id\" = \"#{join_cells_alias}\".\"value_id\""
+        )
       value_klass = filter_element.repository_column.data_type.constantize
-      value_klass.add_filter_condition(repository_rows, filter_element)
+      value_klass.add_filter_condition(repository_rows, join_values_alias, filter_element)
     end
   end
 

@@ -19,14 +19,14 @@ class RepositoryTextValue < ApplicationRecord
     data
   end
 
-  def self.add_filter_condition(repository_rows, filter_element)
+  def self.add_filter_condition(repository_rows, join_alias, filter_element)
     case filter_element.operator
     when 'contains'
       repository_rows
-        .where('repository_text_values.data ILIKE ?', "%#{sanitize_sql_like(filter_element.parameters['text'])}%")
+        .where("#{join_alias}.data ILIKE ?", "%#{sanitize_sql_like(filter_element.parameters['text'])}%")
     when 'doesnt_contain'
       repository_rows
-        .where.not('repository_text_values.data ILIKE ?', "%#{sanitize_sql_like(filter_element.parameters['text'])}%")
+        .where.not("#{join_alias}.data ILIKE ?", "%#{sanitize_sql_like(filter_element.parameters['text'])}%")
     else
       raise ArgumentError, 'Wrong operator for RepositoryTextValue!'
     end
