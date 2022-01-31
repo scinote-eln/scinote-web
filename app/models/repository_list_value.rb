@@ -27,9 +27,13 @@ class RepositoryListValue < ApplicationRecord
     data.to_s
   end
 
-  def self.add_filter_condition(repository_rows, filter_element)
+  def self.add_filter_condition(repository_rows, join_alias, filter_element)
     repository_rows
-      .where(repository_list_values: { repository_list_items: { id: filter_element.parameters['item_ids'] } })
+      .joins(
+        "INNER JOIN \"repository_list_items\"" \
+        " ON  \"repository_list_items\".\"id\" = \"#{join_alias}\".\"repository_list_item_id\""
+      )
+      .where(repository_list_items: { id: filter_element.parameters['item_ids'] })
   end
 
   def data
