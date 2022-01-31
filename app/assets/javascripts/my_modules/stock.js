@@ -27,6 +27,7 @@ var MyModuleStockConsumption = (function() {
 
           $(CONSUMPTION_MODAL + ' form').on('ajax:success', function() {
             MyModuleRepositories.reloadSimpletable();
+            MyModuleRepositories.reloadFullViewTable();
             $manageModal.modal('hide');
             $(WARNING_MODAL).modal('hide');
           });
