@@ -14,19 +14,19 @@ class RepositoryTimeValue < RepositoryDateTimeValueBase
     parameters = filter_element.parameters
     case filter_element.operator
     when 'equal_to'
-      repository_rows.where(repository_date_time_values: { data: parameters['time'] })
+      repository_rows.where('repository_date_time_values.data::time = ?', parameters['time'])
     when 'unequal_to'
-      repository_rows.where.not(repository_date_time_values: { data: parameters['time'] })
+      repository_rows.where.not('repository_date_time_values.data::time = ?', parameters['time'])
     when 'greater_than'
-      repository_rows.where('repository_date_time_values.data > ?', parameters['time'])
+      repository_rows.where('repository_date_time_values.data::time > ?', parameters['time'])
     when 'greater_than_or_equal_to'
-      repository_rows.where('repository_date_time_values.data >= ?', parameters['time'])
+      repository_rows.where('repository_date_time_values.data::time >= ?', parameters['time'])
     when 'less_than'
-      repository_rows.where('repository_date_time_values.data < ?', parameters['time'])
+      repository_rows.where('repository_date_time_values.data::time < ?', parameters['time'])
     when 'less_than_or_equal_to'
-      repository_rows.where('repository_date_time_values.data =< ?', parameters['time'])
+      repository_rows.where('repository_date_time_values.data::time <= ?', parameters['time'])
     when 'between'
-      repository_rows.where('repository_date_time_values.data > ? AND repository_date_time_values.data < ?',
+      repository_rows.where('repository_date_time_values.data::time > ? AND repository_date_time_values.data::time < ?',
                             parameters['start_time'], parameters['end_time'])
     else
       raise ArgumentError, 'Wrong operator for RepositoryTimeValue!'

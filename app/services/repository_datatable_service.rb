@@ -204,7 +204,7 @@ class RepositoryDatatableService
     when 'less_than'
       repository_rows.where('created_at < ?', filter_element_params.dig(:parameters, :datetime))
     when 'less_than_or_equal_to'
-      repository_rows.where('created_at =< ?', filter_element_params.dig(:parameters, :datetime))
+      repository_rows.where('created_at <= ?', filter_element_params.dig(:parameters, :datetime))
     when 'between'
       repository_rows.where('created_at > ? AND created_at < ?',
                             filter_element_params.dig(:parameters, :start_datetime),
