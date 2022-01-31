@@ -118,6 +118,21 @@ class Extends
     }
   }
 
+  REPOSITORY_ADVANCED_SEARCHABLE_COLUMNS = %i(
+    RepositoryTextValue
+    RepositoryNumberValue
+    RepositoryListValue
+    RepositoryChecklistValue
+    RepositoryStatusValue
+    RepositoryAssetValue
+    RepositoryDateTimeValue
+    RepositoryDateTimeRangeValue
+    RepositoryDateValue
+    RepositoryDateRangeValue
+    RepositoryTimeValue
+    RepositoryTimeRangeValue
+  )
+
   # Array of preload relations used in search query for repository rows
   REPOSITORY_ROWS_PRELOAD_RELATIONS = []
 
