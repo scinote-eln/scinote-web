@@ -9,7 +9,7 @@
         @dropdown:changed="updateOperator"
       />
     </div>
-    <div class="sci-input-container">
+    <div class="sci-input-container" v-if="operator != 'empty'">
       <input
         class="sci-input-field"
         type="text"
