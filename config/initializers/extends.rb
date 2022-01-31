@@ -109,10 +109,16 @@ class Extends
       includes: { repository_asset_values: { asset: { file_attachment: :blob } } }
     }, RepositoryDateTimeValue: {
       field: 'repository_date_time_values.data', includes: :repository_date_time_values
+    }, RepositoryDateTimeRangeValue: {
+      field: 'repository_date_time_range_values.data', includes: :repository_date_time_range_values
     }, RepositoryDateValue: {
       field: 'repository_date_time_values.data', includes: :repository_date_values
+    }, RepositoryDateRangeValue: {
+      field: 'repository_date_time_range_values.data', includes: :repository_date_range_values
     }, RepositoryTimeValue: {
       field: 'repository_date_time_values.data', includes: :repository_time_values
+    }, RepositoryTimeRangeValue: {
+      field: 'repository_date_time_range_values.data', includes: :repository_time_range_values
     }
   }
 
