@@ -56,7 +56,7 @@ window.initRepositoryFilter = () => {
         $('#saveRepositoryFilters').removeClass('hidden');
         $('#filterContainer .dropdown-selector-container').removeClass('open');
         $('#filtersDropdownButton').removeClass('open');
-        $('#filtersDropdownButton').addClass('active-filters');
+        $('#filtersDropdownButton').toggleClass('active-filters', this.filters.length > 0);
         this.reloadDataTable();
       },
       clearFilters() {
