@@ -83,6 +83,9 @@
 
   .notification-text {
     flex-grow: 1;
+    max-width: 75%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .restore-draft-btn {
