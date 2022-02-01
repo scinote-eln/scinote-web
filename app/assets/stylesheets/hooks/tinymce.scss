@@ -98,3 +98,8 @@
 .mce-menu-item.mce-active.mce-menu-item-normal {
   background-color: $brand-primary !important;
 }
+
+// Fix for Safari artefacts
+.mce-menu.mce-animate {
+  transform: none !important;
+}
