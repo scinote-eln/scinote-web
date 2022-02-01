@@ -9,7 +9,7 @@
         @dropdown:changed="updateOperator"
       />
     </div>
-    <div class="users-filter-dropdown">
+    <div v-if="users" class="users-filter-dropdown">
       <DropdownSelector
         :optionClass="'checkbox-icon'"
         :dataCombineTags="true"
@@ -43,7 +43,7 @@
         ],
         operator: 'any_of',
         value: [],
-        users: []
+        users: null
       }
     },
     components: {
