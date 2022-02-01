@@ -243,12 +243,12 @@
           $modal.data('repositoryTableFilterId', response.data.id);
           $('#currentFilterName').html(response.data.attributes.name);
 
-          if (existingFilterIndex) {
+          if (existingFilterIndex > -1) {
             repositoryFilterObject.savedFilters = repositoryFilterObject.savedFilters.map((f) => {
               return f.id === response.data.id ? response.data : f;
             });
           } else {
-            repositoryFilterObject.savedFilters.push(response.data);
+            repositoryFilterObject.savedFilters = repositoryFilterObject.savedFilters.concat([response.data]);
           }
 
           repositoryFilterObject.filterName = response.data.attributes.name;

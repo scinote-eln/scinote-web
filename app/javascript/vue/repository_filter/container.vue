@@ -122,7 +122,7 @@
           let $saveFiltersModal = $('#modalSaveRepositoryTableFilter');
           let $overwriteLink = $('#overwriteFilterLink');
           $overwriteLink.removeClass('hidden');
-          $saveFiltersModal.data('repositoryTableFilterId', filterUrl.split("/")[filterUrl.split("/").length - 1]);
+          $saveFiltersModal.data('repositoryTableFilterId', data.data.id);
           $('#currentFilterName').html(data.data.attributes.name);
         });
       },

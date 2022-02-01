@@ -28,12 +28,12 @@
     }
 
     &.open .fas.fa-caret-down::before {
-      content: "\f0d8";
+      content: $font-fas-caret-up;
     }
 
     .saved-filters-list {
       max-height: 300px;
-      overflow-y: scroll;
+      overflow-y: auto;
     }
   }
 
@@ -110,7 +110,7 @@
 
     .filters-list {
       flex-grow: 1;
-      overflow-y: scroll;
+      overflow-y: auto;
       padding: .5em;
     }
 
