@@ -35,7 +35,9 @@ class RepositoryColumnsController < ApplicationController
   end
 
   def describe_all
-    response_json = @repository.repository_columns.map do |column|
+    response_json = @repository.repository_columns
+                               .where(data_type: Extends::REPOSITORY_ADVANCED_SEARCHABLE_COLUMNS)
+                               .map do |column|
       {
         id: column.id,
         name: escape_input(column.name),
