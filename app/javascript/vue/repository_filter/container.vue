@@ -3,7 +3,9 @@
     <div class="header">
       <div id="savedFiltersContainer" class="dropdown saved-filters-container" @click="toggleSavedFilters">
         <div class="title" id="savedFilterDropdown">
-          {{ i18n.t('repositories.show.filters.title') }}
+          <span class="filter-name">
+            {{ filterName || i18n.t('repositories.show.filters.title') }}
+          </span>
           <i v-if="savedFilters.length" class="fas fa-caret-down"></i>
         </div>
         <div v-if="savedFilters.length" class="dropdown-menu saved-filters-list">
@@ -72,7 +74,8 @@
       container: Object,
       columns: Array,
       savedFilters: Array,
-      canManageFilters: Boolean
+      canManageFilters: Boolean,
+      filterName: String, default: () => null
     },
     components: { ColumnElement, FilterElement, SavedFilterElement },
     methods: {
@@ -112,7 +115,15 @@
             });
             id++;
           })
-          this.filters = filters
+          this.$emit('filters:update-current-name', data.data.attributes.name);
+          this.filters = filters;
+
+          // set up save modal
+          let $saveFiltersModal = $('#modalSaveRepositoryTableFilter');
+          let $overwriteLink = $('#overwriteFilterLink');
+          $overwriteLink.removeClass('hidden');
+          $saveFiltersModal.data('repositoryTableFilterId', data.data.id);
+          $('#currentFilterName').html(data.data.attributes.name);
         });
       },
       closeSavedFilters() {

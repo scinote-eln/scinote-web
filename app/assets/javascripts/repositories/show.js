@@ -2,7 +2,7 @@
 
 /*
   global pageReload animateSpinner repositoryRecordsImporter I18n
-  RepositoryDatatable PerfectScrollbar HelperModule
+  RepositoryDatatable PerfectScrollbar HelperModule repositoryFilterObject
 */
 
 (function(global) {
@@ -233,13 +233,25 @@
           }
         }),
         success: function(response) {
+          var existingFilterIndex = repositoryFilterObject.savedFilters.findIndex((f) => {
+            return f.id === response.data.id;
+          });
+
           var $overwriteLink = $('#overwriteFilterLink');
           $modal.modal('hide');
           $overwriteLink.removeClass('hidden');
-          $modal.data('repositoryTableFilterId', response.data.attributes.id);
+          $modal.data('repositoryTableFilterId', response.data.id);
           $('#currentFilterName').html(response.data.attributes.name);
 
-          repositoryFitlerObject.savedFilters.push(response.data)
+          if (existingFilterIndex > -1) {
+            repositoryFilterObject.savedFilters = repositoryFilterObject.savedFilters.map((f) => {
+              return f.id === response.data.id ? response.data : f;
+            });
+          } else {
+            repositoryFilterObject.savedFilters = repositoryFilterObject.savedFilters.concat([response.data]);
+          }
+
+          repositoryFilterObject.filterName = response.data.attributes.name;
         },
         error: function(response) {
           HelperModule.flashAlertMsg(response.responseJSON.message, 'danger');
