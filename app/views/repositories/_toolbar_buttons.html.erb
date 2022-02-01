@@ -13,7 +13,7 @@
       <span class="hidden-xs"><%= t("repositories.add_new_record") %></span>
     </button>
   <% end %>
-  <% if can_manage_repository?(@repository) %>
+  <% if can_manage_repository_filters?(@repository) %>
     <div class="repository-cog dropdown hidden" id="saveRepositoryFilters">
       <button type="button"
               class="btn btn-default"
@@ -40,7 +40,9 @@
         </li>
       </ul>
     </div>
+  <% end %>
 
+  <% if can_manage_repository_rows?(@repository) %>
     <span id="editDeleteCopy" data-toggle="buttons" style="display:none">
       <%if can_update_repository_rows?(@repository) %>
         <button type="button" class="btn btn-light editAdd" id="editRepositoryRecord" disabled data-view-mode="active">
@@ -86,7 +88,7 @@
         <%= t("repositories.cancel_save") %>
       </button>
     </span>
-  <% elsif @repository.shared_with?(current_team) %>
+  <% elsif @repository.shared_with_read?(current_team) %>
     <p class="view-only-label"><%= t('repositories.index.view_only_permission_label') %></p>
   <% end %>
 <% end %>

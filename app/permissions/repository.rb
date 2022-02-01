@@ -80,4 +80,10 @@ Canaid::Permissions.register_for(Repository) do
   can :create_repository_columns do |user, repository|
     can_create_repository_rows?(user, repository) unless repository.shared_with?(user.current_team)
   end
+
+  # repository: create/update/delete filters
+  can :manage_repository_filters do |user, repository|
+    user.is_admin_of_team?(repository.team) ||
+      (repository.shared_with_write?(user.current_team) && user.is_admin_of_team?(user.current_team))
+  end
 end

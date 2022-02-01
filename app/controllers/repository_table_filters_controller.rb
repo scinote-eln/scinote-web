@@ -87,11 +87,11 @@ class RepositoryTableFiltersController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 unless can_manage_repository?(@repository)
+    render_403 unless can_manage_repository_filters?(@repository)
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_repository?(@repository)
+    render_403 unless can_manage_repository_filters?(@repository)
   end
 
   def repository_table_filter_elements_params
