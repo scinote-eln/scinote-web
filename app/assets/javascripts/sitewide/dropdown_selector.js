@@ -896,6 +896,17 @@ var dropdownSelector = (function() {
 
       return values;
     },
+    // Get selected labels
+    getLabels: function(selector) {
+      var labels;
+      if ($(selector).length === 0) return false;
+      labels = $.map(getCurrentData($(selector).next()), (v) => {
+        return v.label;
+      });
+      if ($(selector).data('config').singleSelect) return labels[0];
+
+      return labels;
+    },
     // Get all data
     getData: function(selector) {
       if ($(selector).length === 0) return false;

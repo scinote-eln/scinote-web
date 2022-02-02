@@ -18,7 +18,7 @@ var RepositoryStockValues = (function() {
             closeOnSelect: true,
             selectAppearance: 'simple',
             onChange: function() {
-              $('.stock-final-container .units').text(dropdownSelector.getValues(UNIT_SELECTOR));
+              $('.stock-final-container .units').text(dropdownSelector.getLabels(UNIT_SELECTOR));
             }
           });
 
@@ -35,6 +35,8 @@ var RepositoryStockValues = (function() {
             $stockInput.data('operator', $(this).data('operator'));
 
             dropdownSelector.selectValues(UNIT_SELECTOR, $('#initial_units').val());
+            $('#operator').val($(this).data('operator'));
+
             switch ($(this).data('operator')) {
               case 'set':
                 $stockInput.val($stockInput.data('currentAmount'));
@@ -74,6 +76,8 @@ var RepositoryStockValues = (function() {
                 newAmount = currentAmount;
                 break;
             }
+            $('#change_amount').val(inputAmount);
+
             $('#repository_stock_value_amount').val(newAmount);
             $('.stock-final-container .value').text(newAmount);
           });

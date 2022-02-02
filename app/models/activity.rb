@@ -150,6 +150,8 @@ class Activity < ApplicationRecord
     when Repository
       breadcrumbs[:repository] = subject.name
       generate_breadcrumb(subject.team)
+    when RepositoryRow
+      generate_breadcrumb(subject.repository)
     when Result
       breadcrumbs[:result] = subject.name
       generate_breadcrumb(subject.my_module)

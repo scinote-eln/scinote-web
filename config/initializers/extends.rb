@@ -138,7 +138,8 @@ class Extends
   ]
 
   ACTIVITY_SUBJECT_TYPES = %w(
-    Team RepositoryBase Project Experiment MyModule Result Protocol Report RepositoryRow ProjectFolder Asset Step
+    Team RepositoryBase Project Experiment MyModule Result Protocol Report RepositoryRow
+    ProjectFolder Asset Step
   ).freeze
 
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
@@ -324,7 +325,10 @@ class Extends
     create_molecule_on_step_in_repository: 173,
     register_molecule_on_step: 177,
     register_molecule_on_result: 178,
-    register_molecule_on_step_in_repository: 179
+    register_molecule_on_step_in_repository: 179,
+    inventory_item_stock_set: 180,
+    inventory_item_stock_add: 181,
+    inventory_item_stock_remove: 182
   }
 
   ACTIVITY_GROUPS = {
@@ -337,7 +341,8 @@ class Extends
     task_inventory: [55, 56, 146, 147],
     experiment: [*27..31, 57, 141, 165],
     reports: [48, 50, 49, 163, 164],
-    inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77, 78, 96, 107, 113, 114, *133..136],
+    inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77,
+                  78, 96, 107, 113, 114, *133..136, 180, 181, 182],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 170, 173, 179],
     team: [92, 94, 93, 97, 104]

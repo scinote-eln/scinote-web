@@ -9,7 +9,9 @@
   </div>
   <div class="modal-body">
     <%= hidden_field_tag 'repository_stock_value[amount]', repository_stock_value.amount %>
-    <%= hidden_field_tag 'initial_units', repository_stock_value.units %>
+    <%= hidden_field_tag 'initial_units', repository_stock_value.repository_stock_unit_item_id %>
+    <%= hidden_field_tag 'change_amount' %>
+    <%= hidden_field_tag 'operator', 'set' %>
     <p><%= t('repository_stock_values.manage_modal.enter_amount') %></p>
     <div class="row">
       <div class="col-sm-5">
@@ -83,7 +85,7 @@
             <div class="stock-initial-container">
               <span class="subtitle"><%= t('repository_stock_values.manage_modal.current_stock') %></span>
               <span class="value"><%= repository_stock_value.amount %></span>
-              <span class="units"><%= repository_stock_value.units %></span>
+              <span class="units"><%= repository_stock_value.repository_stock_unit_item&.data %></span>
             </div>
             <div class="stock-arrow">
               <i class="fas fa-arrow-right"></i>
@@ -91,7 +93,7 @@
             <div class="stock-final-container">
               <span class="subtitle"><%= t('repository_stock_values.manage_modal.new_stock') %></span>
               <span class="value"><%= repository_stock_value.amount %></span>
-              <span class="units"><%= repository_stock_value.units %></span>
+              <span class="units"><%= repository_stock_value.repository_stock_unit_item&.data %></span>
             </div>
           </div>
         </div>
