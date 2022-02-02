@@ -53,6 +53,32 @@ class RepositoryStockValue < ApplicationRecord
     value
   end
 
+  def self.import_from_text(text, attributes, _options = {})
+    digit, unit = text.match(/(^\d*\.?\d*)(\D*)/).captures
+    digit.strip!
+    unit.strip!
+    return nil if digit.blank?
+
+    value = new(attributes.merge(amount: BigDecimal(digit)))
+    return value if unit.blank?
+
+    column = attributes.dig(:repository_cell_attributes, :repository_column)
+    stock_unit_item = column.repository_stock_unit_items.find { |item| item.data == unit }
+
+    if stock_unit_item.blank?
+      stock_unit_item = column.repository_stock_unit_items.new(data: unit,
+                                                               created_by: value.created_by,
+                                                               last_modified_by: value.last_modified_by)
+
+      return value unless stock_unit_item.save
+    end
+
+    value.repository_stock_unit_item = stock_unit_item
+    value
+  rescue ArgumentError
+    nil
+  end
+
   def update_stock_with_ledger!(amount, reference, comment)
     delta = amount.to_d - self.amount.to_d
     repository_ledger_records.create!(
