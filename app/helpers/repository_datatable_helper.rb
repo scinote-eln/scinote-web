@@ -21,19 +21,21 @@ module RepositoryDatatableHelper
         'recordInfoUrl': Rails.application.routes.url_helpers.repository_repository_row_path(repository, record)
       }.merge(default_cells)
 
-      row['manageStockUrl'] = if record.has_stock?
-                                Rails.application.routes.url_helpers
-                                     .edit_repository_stock_repository_repository_row_url(
-                                       repository,
-                                       record
-                                     )
-                              else
-                                Rails.application.routes.url_helpers
-                                     .new_repository_stock_repository_repository_row_url(
-                                       repository,
-                                       record
-                                     )
-                              end
+      if record.repository.has_stock_management?
+        row['manageStockUrl'] = if record.has_stock?
+                                  Rails.application.routes.url_helpers
+                                       .edit_repository_stock_repository_repository_row_url(
+                                         repository,
+                                         record
+                                       )
+                                else
+                                  Rails.application.routes.url_helpers
+                                       .new_repository_stock_repository_repository_row_url(
+                                         repository,
+                                         record
+                                       )
+                                end
+      end
 
       unless options[:view_mode]
         row['recordUpdateUrl'] =

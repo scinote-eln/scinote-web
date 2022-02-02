@@ -139,7 +139,7 @@ class Extends
 
   ACTIVITY_SUBJECT_TYPES = %w(
     Team RepositoryBase Project Experiment MyModule Result Protocol Report RepositoryRow
-    ProjectFolder Asset Step RepositoryStockValue
+    ProjectFolder Asset Step
   ).freeze
 
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(

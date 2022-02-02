@@ -150,6 +150,8 @@ class Activity < ApplicationRecord
     when Repository
       breadcrumbs[:repository] = subject.name
       generate_breadcrumb(subject.team)
+    when RepositoryRow
+      generate_breadcrumb(subject.repository)
     when Result
       breadcrumbs[:result] = subject.name
       generate_breadcrumb(subject.my_module)
@@ -167,9 +169,6 @@ class Activity < ApplicationRecord
     when Asset
       breadcrumbs[:asset] = subject.blob.filename.to_s
       generate_breadcrumb(subject.result || subject.step || subject.repository_cell.repository_row.repository)
-    when RepositoryStockValue
-      breadcrumbs[:repository_stock_value] = subject.repository_cell.repository_column.name
-      generate_breadcrumb(subject.repository_cell.repository_row.repository)
     end
   end
 

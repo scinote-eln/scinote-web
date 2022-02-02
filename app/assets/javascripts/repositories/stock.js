@@ -18,7 +18,7 @@ var RepositoryStockValues = (function() {
             closeOnSelect: true,
             selectAppearance: 'simple',
             onChange: function() {
-              $('.stock-final-container .units').text(dropdownSelector.getData(UNIT_SELECTOR)[0].label.trim());
+              $('.stock-final-container .units').text(dropdownSelector.getLabels(UNIT_SELECTOR));
             }
           });
 
