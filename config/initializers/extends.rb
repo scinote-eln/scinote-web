@@ -108,13 +108,13 @@ class Extends
     }, RepositoryDateTimeRangeValue: {
       field: 'repository_date_time_range_values.data', table_name: :repository_date_time_range_values
     }, RepositoryDateValue: {
-      field: 'repository_date_time_values.data', table_name: :repository_date_values
+      field: 'repository_date_time_values.data', table_name: :repository_date_time_values
     }, RepositoryDateRangeValue: {
-      field: 'repository_date_time_range_values.data', table_name: :repository_date_range_values
+      field: 'repository_date_time_range_values.data', table_name: :repository_date_time_range_values
     }, RepositoryTimeValue: {
-      field: 'repository_date_time_values.data', table_name: :repository_time_values
+      field: 'repository_date_time_values.data', table_name: :repository_date_time_values
     }, RepositoryTimeRangeValue: {
-      field: 'repository_date_time_range_values.data', table_name: :repository_time_range_values
+      field: 'repository_date_time_range_values.data', table_name: :repository_date_time_range_values
     }
   }
 
