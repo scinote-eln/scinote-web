@@ -48,7 +48,7 @@
       <% end %>
     <% end %>
     <% if asset.file.metadata[:asset_type] == 'bio_eddie' %>
-       <a class="btn btn-light file-download-link" href="data:text/plain;charset=utf-8,<%= asset.file.metadata[:description] %>" download="<%= asset.file.metadata[:name] %>.helm" data-turbolinks="false">
+      <a class="btn btn-light file-download-link" href="data:text/plain;charset=utf-8,<%= asset.file.metadata[:description] %>" download="<%= asset.file.metadata[:name] %>.helm" data-turbolinks="false">
         <span class="fas fa-download"></span> <%= t('Download')%>
       </a>
     <% else %>
