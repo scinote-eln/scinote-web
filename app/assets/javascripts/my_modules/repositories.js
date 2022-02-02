@@ -174,7 +174,7 @@ var MyModuleRepositories = (function() {
 
       fnInitComplete: function() {
         var dataTableWrapper = $(tableContainer).closest('.dataTables_wrapper');
-        DataTableHelpers.initLengthApearance(dataTableWrapper);
+        DataTableHelpers.initLengthAppearance(dataTableWrapper);
         DataTableHelpers.initSearchField(dataTableWrapper, I18n.t('repositories.show.filter_inventory_items'));
         $('<img class="barcode-scanner" src="/images/icon_small/barcode.png"></img>').appendTo($('.search-container'));
         dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');

@@ -573,7 +573,7 @@ var RepositoryDatatable = (function(global) {
         initSaveButton();
         initCancelButton();
 
-        DataTableHelpers.initLengthApearance($(TABLE_ID).closest('.dataTables_wrapper'));
+        DataTableHelpers.initLengthAppearance($(TABLE_ID).closest('.dataTables_wrapper'));
         DataTableHelpers.initSearchField($(TABLE_ID).closest('.dataTables_wrapper'), I18n.t('repositories.show.filter_inventory_items'));
 
         $('<img class="barcode-scanner" src="/images/icon_small/barcode.png"></img>').appendTo($('.search-container'));
