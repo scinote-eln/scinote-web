@@ -14,7 +14,8 @@ window.initRepositoryFilter = () => {
     { id: 'row_name', name: 'Name', data_type: 'RepositoryTextValue' },
     { id: 'added_on', name: 'Added on', data_type: 'RepositoryDateTimeValue' },
     { id: 'added_by', name: 'Added by', data_type: 'RepositoryUserValue' },
-    { id: 'archived_by', name: 'Archived by', data_type: 'RepositoryUserValue' }
+    { id: 'archived_by', name: 'Archived by', data_type: 'RepositoryUserValue' },
+    { id: 'archived_on', name: 'Archived on', data_type: 'RepositoryDateTimeValue' }
   ];
   const repositoryFilterContainer = new Vue({
     el: '#filterContainer',
