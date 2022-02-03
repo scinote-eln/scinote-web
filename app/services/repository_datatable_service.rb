@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
+module RepositoryFilters
+  class ColumnNotFoundException < StandardError; end
+
+  class ValueNotFoundException < StandardError; end
+end
+
 class RepositoryDatatableService
   attr_reader :repository_rows, :all_count, :mappings
 
@@ -302,8 +308,12 @@ class RepositoryDatatableService
   end
 
   def add_custom_column_filter_condition(repository_rows, filter, filter_element_params)
+    repository_column = @repository.repository_columns.find_by(id: filter_element_params['repository_column_id'])
+
+    raise RepositoryFilters::ColumnNotFoundException unless repository_column
+
     filter_element = filter.repository_table_filter_elements.new(
-      repository_column: @repository.repository_columns.find(filter_element_params['repository_column_id']),
+      repository_column: repository_column,
       operator: filter_element_params[:operator],
       parameters: filter_element_params[:parameters]
     )
@@ -314,6 +324,9 @@ class RepositoryDatatableService
     else
       join_cells_alias = "repository_column_cells_#{filter_element.repository_column.id}"
       join_values_alias = "repository_column_values_#{filter_element.repository_column.id}"
+
+      enforce_referenced_value_existence!(filter_element)
+
       repository_rows =
         repository_rows
         .joins(
@@ -324,8 +337,23 @@ class RepositoryDatatableService
           "INNER JOIN \"#{config[:table_name]}\" AS \"#{join_values_alias}\"" \
           " ON  \"#{join_values_alias}\".\"id\" = \"#{join_cells_alias}\".\"value_id\""
         )
+
       value_klass = filter_element.repository_column.data_type.constantize
       value_klass.add_filter_condition(repository_rows, join_values_alias, filter_element)
+    end
+  end
+
+  def enforce_referenced_value_existence!(filter_element)
+    referenced_value_klass =
+      Extends::REPOSITORY_ADVANCED_SEARCH_REFERENCED_VALUE_TYPES[
+        filter_element.repository_column.data_type.to_sym
+      ]&.constantize
+
+    return unless referenced_value_klass
+
+    value_item_ids = filter_element.parameters['item_ids']
+    if referenced_value_klass.where(id: value_item_ids).count != value_item_ids.length
+      raise RepositoryFilters::ValueNotFoundException
     end
   end
 

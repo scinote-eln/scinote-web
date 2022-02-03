@@ -110,6 +110,7 @@ window.initRepositoryFilter = () => {
         $('#filterContainer .dropdown-selector-container').removeClass('open');
         $('#filtersDropdownButton').removeClass('open');
         $('#filtersDropdownButton').toggleClass('active-filters', this.filters.length > 0);
+        $('.repository-table-error').removeClass('active').html('');
         this.reloadDataTable();
       },
       clearFilters() {

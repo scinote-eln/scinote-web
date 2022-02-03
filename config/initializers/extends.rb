@@ -118,6 +118,12 @@ class Extends
     }
   }
 
+  REPOSITORY_ADVANCED_SEARCH_REFERENCED_VALUE_TYPES = {
+    RepositoryListValue: 'RepositoryListItem',
+    RepositoryChecklistValue: 'RepositoryChecklistItem',
+    RepositoryStatusValue: 'RepositoryStatusItem'
+  }
+
   REPOSITORY_ADVANCED_SEARCHABLE_COLUMNS = %i(
     RepositoryTextValue
     RepositoryNumberValue
