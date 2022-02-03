@@ -7,6 +7,7 @@
         :selectedValue="this.operator"
         :selectorId="`OperatorSelector${filter.id}`"
         @dropdown:changed="updateOperator"
+      />
     </div>
     <div class="sci-input-container">
       <input v-if="operator === 'file_contains'"
