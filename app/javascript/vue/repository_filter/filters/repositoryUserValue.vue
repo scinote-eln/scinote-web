@@ -75,7 +75,8 @@
     },
     computed: {
       isBlank(){
-        return this.operator == 'any_of' && !this.value;
+        return (this.operator == 'any_of' && !this.value) ||
+               (this.filter.column.id === 'archived_by' && $('.repository-show').hasClass('active') ) ;
       }
     }
   }

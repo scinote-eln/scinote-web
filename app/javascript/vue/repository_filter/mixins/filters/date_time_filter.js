@@ -16,7 +16,8 @@ export default {
   },
   computed: {
     isBlank() {
-      return this.operator === 'equal_to' && !this.value;
+      return (this.operator === 'equal_to' && !this.value) ||
+             (this.filter.column.id === 'archived_on' && $('.repository-show').hasClass('active'));
     },
     isPreset() {
       return [

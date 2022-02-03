@@ -135,6 +135,8 @@ class RepositoryDatatableService
       build_added_by_filter_condition(repository_rows, filter_element_params)
     when 'archived_by'
       build_archived_by_filter_condition(repository_rows, filter_element_params)
+    when 'archived_on'
+      build_archived_on_filter_condition(repository_rows, filter_element_params)
     when 'assigned'
       build_assigned_filter_condition(repository_rows, filter_element_params)
     else
@@ -211,6 +213,45 @@ class RepositoryDatatableService
                             filter_element_params.dig(:parameters, :end_datetime))
     else
       raise ArgumentError, 'Wrong operator for RepositoryRow Added On!'
+    end
+  end
+
+  def build_archived_on_filter_condition(repository_rows, filter_element_params)
+    case filter_element_params[:operator]
+    when 'today'
+      repository_rows.where('archived_on >= ?', Time.zone.now.beginning_of_day)
+    when 'yesterday'
+      repository_rows.where('archived_on >= ? AND archived_on < ?',
+                            Time.zone.now.beginning_of_day - 1.day, Time.zone.now.beginning_of_day)
+    when 'last_week'
+      repository_rows.where('archived_on >= ? AND archived_on < ?',
+                            Time.zone.now.beginning_of_week - 1.week, Time.zone.now.beginning_of_week)
+    when 'this_month'
+      repository_rows.where('archived_on >= ?', Time.zone.now.beginning_of_month)
+    when 'last_year'
+      repository_rows.where('archived_on >= ? AND archived_on < ?',
+                            Time.zone.now.beginning_of_year - 1.year, Time.zone.now.beginning_of_year)
+    when 'this_year'
+      repository_rows.where('archived_on >= ?', Time.zone.now.beginning_of_year)
+    when 'equal_to'
+      repository_rows.where(archived_on: filter_element_params.dig(:parameters, :datetime))
+    when 'unequal_to'
+      repository_rows
+        .where.not(archived_on: filter_element_params.dig(:parameters, :datetime))
+    when 'greater_than'
+      repository_rows.where('archived_on > ?', filter_element_params.dig(:parameters, :datetime))
+    when 'greater_than_or_equal_to'
+      repository_rows.where('archived_on >= ?', filter_element_params.dig(:parameters, :datetime))
+    when 'less_than'
+      repository_rows.where('archived_on < ?', filter_element_params.dig(:parameters, :datetime))
+    when 'less_than_or_equal_to'
+      repository_rows.where('archived_on <= ?', filter_element_params.dig(:parameters, :datetime))
+    when 'between'
+      repository_rows.where('archived_on > ? AND archived_on < ?',
+                            filter_element_params.dig(:parameters, :start_datetime),
+                            filter_element_params.dig(:parameters, :end_datetime))
+    else
+      raise ArgumentError, 'Wrong operator for RepositoryRow Archived On!'
     end
   end
 
