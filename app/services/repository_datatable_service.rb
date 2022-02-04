@@ -195,22 +195,22 @@ class RepositoryDatatableService
     when 'this_year'
       repository_rows.where('created_at >= ?', Time.zone.now.beginning_of_year)
     when 'equal_to'
-      repository_rows.where(created_at: filter_element_params.dig(:parameters, :datetime))
+      repository_rows.where(created_at: Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
     when 'unequal_to'
       repository_rows
-        .where.not(created_at: filter_element_params.dig(:parameters, :datetime))
+        .where.not(created_at: Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
     when 'greater_than'
-      repository_rows.where('created_at > ?', filter_element_params.dig(:parameters, :datetime))
+      repository_rows.where('created_at > ?', Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
     when 'greater_than_or_equal_to'
-      repository_rows.where('created_at >= ?', filter_element_params.dig(:parameters, :datetime))
+      repository_rows.where('created_at >= ?', Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
     when 'less_than'
-      repository_rows.where('created_at < ?', filter_element_params.dig(:parameters, :datetime))
+      repository_rows.where('created_at < ?', Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
     when 'less_than_or_equal_to'
-      repository_rows.where('created_at <= ?', filter_element_params.dig(:parameters, :datetime))
+      repository_rows.where('created_at <= ?', Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
     when 'between'
       repository_rows.where('created_at > ? AND created_at < ?',
-                            filter_element_params.dig(:parameters, :start_datetime),
-                            filter_element_params.dig(:parameters, :end_datetime))
+                            Time.zone.parse(filter_element_params.dig(:parameters, :start_datetime)),
+                            Time.zone.parse(filter_element_params.dig(:parameters, :end_datetime)))
     else
       raise ArgumentError, 'Wrong operator for RepositoryRow Added On!'
     end

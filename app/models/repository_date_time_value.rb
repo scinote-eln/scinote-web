@@ -29,20 +29,20 @@ class RepositoryDateTimeValue < RepositoryDateTimeValueBase
     when 'this_year'
       repository_rows.where("#{join_alias}.data >= ?", Time.zone.now.beginning_of_year)
     when 'equal_to'
-      repository_rows.where("#{join_alias}.data = ?", parameters['datetime'])
+      repository_rows.where("#{join_alias}.data = ?", Time.zone.parse(parameters['datetime']))
     when 'unequal_to'
-      repository_rows.where.not("#{join_alias}.data = ?", parameters['datetime'])
+      repository_rows.where.not("#{join_alias}.data = ?", Time.zone.parse(parameters['datetime']))
     when 'greater_than'
-      repository_rows.where("#{join_alias}.data > ?", parameters['datetime'])
+      repository_rows.where("#{join_alias}.data > ?", Time.zone.parse(parameters['datetime']))
     when 'greater_than_or_equal_to'
-      repository_rows.where("#{join_alias}.data >= ?", parameters['datetime'])
+      repository_rows.where("#{join_alias}.data >= ?", Time.zone.parse(parameters['datetime']))
     when 'less_than'
-      repository_rows.where("#{join_alias}.data < ?", parameters['datetime'])
+      repository_rows.where("#{join_alias}.data < ?", Time.zone.parse(parameters['datetime']))
     when 'less_than_or_equal_to'
-      repository_rows.where("#{join_alias}.data <= ?", parameters['datetime'])
+      repository_rows.where("#{join_alias}.data <= ?", Time.zone.parse(parameters['datetime']))
     when 'between'
       repository_rows.where("#{join_alias}.data > ? AND #{join_alias}.data < ?",
-                            parameters['start_datetime'], parameters['end_datetime'])
+                            Time.zone.parse(parameters['start_datetime']), Time.zone.parse(parameters['end_datetime']))
     else
       raise ArgumentError, 'Wrong operator for RepositoryDateTimeValue!'
     end

@@ -14,35 +14,35 @@ class RepositoryDateValue < RepositoryDateTimeValueBase
     parameters = filter_element.parameters
     case filter_element.operator
     when 'today'
-      repository_rows.where("#{join_alias}.data >= ?", Time.zone.now.beginning_of_day)
+      repository_rows.where("#{join_alias}.data::date >= ?", Time.zone.now.beginning_of_day)
     when 'yesterday'
-      repository_rows.where("#{join_alias}.data >= ? AND #{join_alias}.data < ?",
+      repository_rows.where("#{join_alias}.data::date >= ? AND #{join_alias}.data::date < ?",
                             Time.zone.now.beginning_of_day - 1.day, Time.zone.now.beginning_of_day)
     when 'last_week'
-      repository_rows.where("#{join_alias}.data >= ? AND #{join_alias}.data < ?",
+      repository_rows.where("#{join_alias}.data::date >= ? AND #{join_alias}.data::date < ?",
                             Time.zone.now.beginning_of_week - 1.week, Time.zone.now.beginning_of_week)
     when 'this_month'
-      repository_rows.where("#{join_alias}.data >= ?", Time.zone.now.beginning_of_month)
+      repository_rows.where("#{join_alias}.data::date >= ?", Time.zone.now.beginning_of_month)
     when 'last_year'
-      repository_rows.where("#{join_alias}.data >= ? AND #{join_alias}.data < ?",
+      repository_rows.where("#{join_alias}.data::date >= ? AND #{join_alias}.data::date < ?",
                             Time.zone.now.beginning_of_year - 1.year, Time.zone.now.beginning_of_year)
     when 'this_year'
-      repository_rows.where("#{join_alias}.data >= ?", Time.zone.now.beginning_of_year)
+      repository_rows.where("#{join_alias}.data::date >= ?", Time.zone.now.beginning_of_year)
     when 'equal_to'
-      repository_rows.where("#{join_alias}.data = ?", parameters['date'])
+      repository_rows.where("#{join_alias}.data::date = ?", Time.zone.parse(parameters['date']))
     when 'unequal_to'
-      repository_rows.where.not("#{join_alias}.data = ?", parameters['date'])
+      repository_rows.where.not("#{join_alias}.data::date = ?", Time.zone.parse(parameters['date']))
     when 'greater_than'
-      repository_rows.where("#{join_alias}.data > ?", parameters['date'])
+      repository_rows.where("#{join_alias}.data::date > ?", Time.zone.parse(parameters['date']))
     when 'greater_than_or_equal_to'
-      repository_rows.where("#{join_alias}.data >= ?", parameters['date'])
+      repository_rows.where("#{join_alias}.data::date >= ?", Time.zone.parse(parameters['date']))
     when 'less_than'
-      repository_rows.where("#{join_alias}.data < ?", parameters['date'])
+      repository_rows.where("#{join_alias}.data::date < ?", Time.zone.parse(parameters['date']))
     when 'less_than_or_equal_to'
-      repository_rows.where("#{join_alias}.data <= ?", parameters['date'])
+      repository_rows.where("#{join_alias}.data::date <= ?", Time.zone.parse(parameters['date']))
     when 'between'
-      repository_rows.where("#{join_alias}.data > ? AND #{join_alias}.data < ?",
-                            parameters['start_date'], parameters['end_date'])
+      repository_rows.where("#{join_alias}.data::date > ? AND #{join_alias}.data::date < ?",
+                            Time.zone.parse(parameters['start_date']), Time.zone.parse(parameters['end_date']))
     else
       raise ArgumentError, 'Wrong operator for RepositoryDateValue!'
     end
