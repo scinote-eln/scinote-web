@@ -16,6 +16,8 @@ describe MyModuleRepositoryRow, type: :model do
   describe 'Database table' do
     it { should have_db_column :id }
     it { should have_db_column :repository_row_id }
+    it { should have_db_column :repository_stock_unit_item_id }
+    it { should have_db_column :stock_consumption }
     it { should have_db_column :my_module_id }
     it { should have_db_column :assigned_by_id }
     it { should have_db_column :created_at }
@@ -24,6 +26,7 @@ describe MyModuleRepositoryRow, type: :model do
 
   describe 'Relations' do
     it { should belong_to(:my_module) }
+    it { should belong_to(:repository_stock_unit_item).optional }
     it { should belong_to(:assigned_by).class_name('User').optional }
     it { should belong_to(:repository_row) }
   end
