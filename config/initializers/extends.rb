@@ -66,7 +66,7 @@ class Extends
   # name should match record in REPOSITORY_DATA_TYPES
   REPOSITORY_IMPORTABLE_TYPES = %i(RepositoryTextValue RepositoryListValue RepositoryNumberValue
                                    RepositoryDateValue RepositoryDateTimeValue RepositoryTimeValue
-                                   RepositoryStatusValue RepositoryChecklistValue)
+                                   RepositoryStatusValue RepositoryChecklistValue RepositoryStockValue)
 
   REPOSITORY_IMPORT_COLUMN_PRELOADS = %i(repository_list_items repository_status_items repository_checklist_items)
 
