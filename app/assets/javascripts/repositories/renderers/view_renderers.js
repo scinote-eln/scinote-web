@@ -182,9 +182,8 @@ $.fn.dataTable.render.AssignedTasksValue = function(data) {
 };
 
 $.fn.dataTable.render.RepositoryStockValue = function(data) {
-  let canManage = $('.repository-table table').data('editable');
-  if (data) {
-    if (canManage) {
+  if (data.value) {
+    if (data.stock_managable) {
       return `<a class="manage-repository-stock-value-link stock-value-view-render
                         ${data.value.stock_amount <= 0 ? 'stock-alert' : ''}">
                 ${data.value.stock_formatted}
@@ -195,7 +194,7 @@ $.fn.dataTable.render.RepositoryStockValue = function(data) {
               ${data.value.stock_formatted}
               </span>`;
   }
-  if (canManage) {
+  if (data.stock_managable) {
     return `<a class="manage-repository-stock-value-link not-assigned-stock">
               <i class="fas fa-box-open"></i>
               ${I18n.t('libraries.manange_modal_column.stock_type.add_stock')}
@@ -207,9 +206,8 @@ $.fn.dataTable.render.RepositoryStockValue = function(data) {
 };
 
 $.fn.dataTable.render.RepositoryConsumedStockValue = function(data) {
-  let canManage = $('.repository-table').data('stock-consumption-editable');
-  if (data && data.value.consumed_stock_formatted) {
-    if (canManage) {
+  if (data.value) {
+    if (data.consumption_managable) {
       return `<a href="${data.updateStockConsumptionUrl}" class="manage-repository-consumed-stock-value-link stock-value-view-render">
                 ${data.value.consumed_stock_formatted} ${data.value.unit}
                 </a>`;
@@ -218,7 +216,7 @@ $.fn.dataTable.render.RepositoryConsumedStockValue = function(data) {
               ${data.value.consumed_stock_formatted} ${data.value.unit}
               </span>`;
   }
-  if (canManage && data && data.stock_present) {
+  if (data.stock_present && data.consumption_managable) {
     return `<a href="${data.updateStockConsumptionUrl}" class="manage-repository-consumed-stock-value-link">
               <i class="fas fa-vial"></i>
               ${I18n.t('libraries.manange_modal_column.stock_type.add_stock_consumption')}

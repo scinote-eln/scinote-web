@@ -86,22 +86,28 @@ module RepositoryDatatableHelper
       }
 
       if options[:include_stock_consumption] && record.repository.has_stock_management?
-        row['1'] =
-          if record.repository_stock_cell.present?
-            display_cell_value(record.repository_stock_cell, record.repository.team)
-          end
+        stock_present = record.repository_stock_cell.present?
+        # Always disabled in a simple view
+        stock_managable = false
+        consumption_managable = stock_present && can_update_my_module_stock_consumption?(my_module)
+
+        row['1'] = stock_present ? display_cell_value(record.repository_stock_cell, record.repository.team) : {}
+        row['1'][:stock_managable] = stock_managable
         row['2'] = {
-          stock_present: record.repository_stock_cell.present?,
+          stock_present: stock_present,
+          consumption_managable: consumption_managable,
           updateStockConsumptionUrl: Rails.application.routes.url_helpers.consume_modal_my_module_repository_path(
             my_module,
             record.repository,
             row_id: record.id
-          ),
-          value: {
+          )
+        }
+        if record.consumed_stock.present?
+          row['2'][:value] = {
             consumed_stock_formatted: record.consumed_stock,
             unit: record.repository_stock_value.repository_stock_unit_item&.data
           }
-        }
+        end
       end
 
       row
