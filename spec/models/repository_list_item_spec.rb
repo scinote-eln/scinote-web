@@ -33,7 +33,7 @@ RSpec.describe RepositoryListItem, type: :model do
       it { is_expected.to validate_length_of(:data).is_at_most(Constants::TEXT_MAX_LENGTH) }
       it {
         expect(repository_list_item).to validate_uniqueness_of(:data)
-          .scoped_to(:repository_column_id).case_insensitive
+          .scoped_to(:repository_column_id)
       }
     end
   end

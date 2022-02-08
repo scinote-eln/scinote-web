@@ -14,20 +14,16 @@ module UserAssignments
 
     before(:each) do
       available_roles = [owner_role, viewer_role, technician_role]
-      [user_one, user_two, user_three].each_with_index do |user, i|
-        create :user_team, :admin, user: user, team: team
-        create :user_project, user: user, project: project
-        create :user_assignment,
-               assignable: project,
-               user: user,
-               user_role: available_roles[i],
-               assigned_by: user
-      end
+      create :user_team, :admin, user: user_two, team: team
+      create :user_assignment, user: user_two, assignable: project, user_role: viewer_role, assigned_by: user_one
+
+      create :user_team, :admin, user: user_three, team: team
+      create :user_assignment, user: user_three, assignable: project, user_role: technician_role, assigned_by: user_one
     end
 
     describe 'perform' do
       context 'experiment' do
-        let!(:experiment) { create :experiment, project: project }
+        let!(:experiment) { create :experiment, project: project, created_by: project.created_by }
 
         it 'user assignments should be created automatically upon experiment creation' do
           # check that all users are assigned
@@ -45,8 +41,8 @@ module UserAssignments
       end
 
       context 'my_module' do
-        let!(:experiment) { create :experiment, project: project }
-        let!(:my_module) { create :my_module, experiment: experiment, created_by: experiment.created_by, created_by: user_one }
+        let!(:experiment) { create :experiment, project: project, created_by: project.created_by }
+        let!(:my_module) { create :my_module, experiment: experiment, created_by: experiment.created_by }
 
         it 'user assignments should be created automatically upon my_module creation' do
           # check that all users are assigned

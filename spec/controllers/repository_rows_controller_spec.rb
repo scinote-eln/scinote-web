@@ -13,7 +13,7 @@ describe RepositoryRowsController, type: :controller do
     RepositoryTableState.create(
       repository: repository,
       user: user,
-      state: repository.default_teble_state
+      state: repository.default_table_state
     )
   end
   let!(:repository_row) do

@@ -27,10 +27,6 @@ RSpec.describe "Api::V1::TaskUserAssignmentsController", type: :request do
                                  project: @invalid_project,
                                  created_by: @another_user
     @invalid_task = create :my_module, name: Faker::Name.unique.name, experiment: @invalid_experiment
-    create :user_project, user: @user, project: @own_project
-    create :user_assignment, assignable: @own_project, user: @user, user_role: @owner_role, assigned_by: @user
-    create :user_assignment, assignable: @own_experiment, user: @user, user_role: @owner_role, assigned_by: @user
-    create :user_assignment, assignable: @own_task, user: @user, user_role: @owner_role, assigned_by: @user
     @technician_user_role = create :technician_role
 
     @valid_headers = { 'Authorization': 'Bearer ' + generate_token(@user.id) }

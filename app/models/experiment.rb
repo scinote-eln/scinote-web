@@ -98,6 +98,17 @@ class Experiment < ApplicationRecord
     !project.archived?
   end
 
+  def connections
+    Connection.joins(
+      'LEFT JOIN my_modules AS inputs ON input_id = inputs.id'
+    ).joins(
+      'LEFT JOIN my_modules AS outputs ON output_id = outputs.id'
+    ).where(
+      'inputs.experiment_id = ? OR outputs.experiment_id = ?',
+      id, id
+    )
+  end
+
   def update_canvas(
     to_archive,
     to_add,

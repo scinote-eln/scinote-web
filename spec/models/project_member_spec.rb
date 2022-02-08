@@ -10,50 +10,13 @@ describe ProjectMember, type: :model do
 
   let(:subject) { described_class.new(user, project, user) }
 
-  describe '#create' do
-    it 'create a user_assignment and user_project records' do
-      subject.assign = true
-      subject.user_role_id = owner_role.id
-      expect {
-        subject.create
-      }.to change(UserProject, :count).by(1).and \
-           change(UserAssignment, :count).by(1)
-    end
-
-    it 'logs a assign_user_to_project activity' do
-      subject.assign = true
-      subject.user_role_id = owner_role.id
-      expect {
-        subject.create
-      }.to change(Activity, :count).by(1)
-      expect(Activity.last.type_of).to eq 'assign_user_to_project'
-    end
-
-    it 'triggers the UserAssignments::PropagateAssignmentJob job' do
-      subject.assign = true
-      subject.user_role_id = owner_role.id
-
-      expect(UserAssignments::PropagateAssignmentJob).to receive(:perform_later).with(
-        project, user, owner_role, user
-      )
-      subject.create
-    end
-  end
-
   describe '#update' do
     let!(:user_project) { create :user_project, user: user, project: project }
-    let!(:user_assignment) do
-      create :user_assignment,
-             assignable: project,
-             user: user,
-             user_role: owner_role,
-             assigned_by: user
-    end
 
     it 'updates only the user assignment role' do
       subject.user_role_id = normal_user_role.id
       subject.update
-      expect(user_assignment.reload.user_role).to eq normal_user_role
+      expect(subject.user_assignment.user_role).to eq normal_user_role
     end
 
     it 'logs a change_user_role_on_project activity' do
@@ -127,17 +90,9 @@ describe ProjectMember, type: :model do
       expect(subject.errors).to have_key(:user_role_id)
     end
 
-    it 'validates user project relation existence' do
-      create :user_project, project: project, user: user
-      subject.assign = true
-      subject.valid?
-      expect(subject.errors).to have_key(:user)
-    end
-
     it 'validates user project assignment existence' do
-      create :user_assignment, assignable: project, user: user, user_role: owner_role, assigned_by: user
       subject.assign = true
-      subject.user_role_id = owner_role.id
+      subject.user_assignment.user_role_id = owner_role.id
       subject.valid?
       expect(subject.errors).to have_key(:user_role_id)
     end

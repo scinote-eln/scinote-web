@@ -42,7 +42,6 @@ module Assignable
 
     def create_users_assignments
       return if skip_user_assignments
-
       role = if is_a?(Project)
                UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))
              else
