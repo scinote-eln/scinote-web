@@ -161,4 +161,21 @@ namespace :data do
   task cleanup_blobs: :environment do
     ActiveStorage::Blob.unattached.find_each(&:purge_later)
   end
+
+  desc 'Reset to defaults all predefined user roles'
+  task reset_predefined_user_roles: :environment do
+    ActiveRecord::Base.transaction do
+      %i(owner_role normal_user_role technician_role viewer_role).each do |predefined_role|
+        reference_role = UserRole.public_send(predefined_role)
+        existing_role = UserRole.find_by(name: reference_role.name)
+        if existing_role.present?
+          # rubocop:disable Rails/SkipsModelValidations
+          existing_role.update_attribute(:permissions, reference_role.permissions)
+          # rubocop:enable Rails/SkipsModelValidations
+        else
+          reference_role.save!
+        end
+      end
+    end
+  end
 end

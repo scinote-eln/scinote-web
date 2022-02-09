@@ -34,9 +34,9 @@ module Api
       end
 
       def create
-        raise PermissionError.new(MyModule, :create) unless can_manage_experiment?(@experiment)
+        raise PermissionError.new(MyModule, :create) unless can_manage_experiment_tasks?(@experiment)
 
-        my_module = @experiment.my_modules.create!(task_params_create)
+        my_module = @experiment.my_modules.create!(task_params_create.merge(created_by: current_user))
 
         render jsonapi: my_module, serializer: TaskSerializer,
                                    rte_rendering: render_rte?,
@@ -81,7 +81,7 @@ module Api
 
       def load_task_for_managing
         @task = @experiment.my_modules.find(params.require(:id))
-        raise PermissionError.new(MyModule, :manage) unless can_manage_module?(@task)
+        raise PermissionError.new(MyModule, :manage) unless can_manage_my_module?(@task)
       end
     end
   end

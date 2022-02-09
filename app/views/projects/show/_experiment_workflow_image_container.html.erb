@@ -2,11 +2,7 @@
   <div class="archived-icon-plceholder">
     <i class="fas fa-archive"></i>
   </div>
-<<<<<<< HEAD
 <% elsif experiment.my_modules.any?(&:active?) %>
-=======
-<% elsif experiment.my_modules.active.any? %>
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   <% if experiment.workflowimg.attached? %>
     <div class="workflowimg-container" data-workflowimg-present="true">
       <%= render partial: 'projects/show/workflow_img.html.erb', locals: { experiment: experiment } %>

@@ -6,18 +6,10 @@ module Api
       include Api::V1::ExtraParams
 
       before_action :load_team, :load_project, :load_experiment, :load_task, :load_protocol
-<<<<<<< HEAD
-      before_action only: %i(show update destroy) do
-        load_step(:id)
-      end
-      before_action :check_manage_permissions, only: :update
-      before_action :check_delete_permissions, only: :destroy
-=======
       before_action only: :show do
         load_step(:id)
       end
       before_action :load_step_for_managing, only: %i(update destroy)
->>>>>>> Pulled latest release
 
       def index
         steps = @protocol.steps.page(params.dig(:page, :number)).per(params.dig(:page, :size))
@@ -40,35 +32,16 @@ module Api
 
         step = @protocol.steps.create!(step_params.merge!(completed: false,
                                                           user: current_user,
-<<<<<<< HEAD
-<<<<<<< HEAD
                                                           position: @protocol.number_of_steps,
                                                           last_modified_by_id: current_user.id))
-=======
-                                                          position: @protocol.number_of_steps))
->>>>>>> Pulled latest release
-=======
-                                                          position: @protocol.number_of_steps,
-                                                          last_modified_by_id: current_user.id))
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
         render jsonapi: step, serializer: StepSerializer, status: :created
       end
 
       def update
-<<<<<<< HEAD
-<<<<<<< HEAD
         @step.assign_attributes(
           step_params.merge!(last_modified_by_id: current_user.id)
         )
-=======
-        @step.assign_attributes(step_params)
->>>>>>> Pulled latest release
-=======
-        @step.assign_attributes(
-          step_params.merge!(last_modified_by_id: current_user.id)
-        )
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
         if @step.changed? && @step.save!
           if @step.saved_change_to_attribute?(:completed)
@@ -102,22 +75,13 @@ module Api
         %w(tables assets checklists checklists.checklist_items comments user)
       end
 
-<<<<<<< HEAD
-      def check_manage_permissions
+      def load_step_for_managing
+        @step = @protocol.steps.find(params.require(:id))
         if step_params.key?(:completed) && step_params.except(:completed).blank?
           raise PermissionError.new(Step, :toggle_completion) unless can_complete_or_checkbox_step?(@step.protocol)
         else
-          raise PermissionError.new(Step, :manage) unless can_manage_step?(@step)
+          raise PermissionError.new(Protocol, :manage) unless can_manage_protocol_in_module?(@step.protocol)
         end
-      end
-
-      def check_delete_permissions
-        raise PermissionError.new(Step, :delete) unless can_manage_step?(@step)
-=======
-      def load_step_for_managing
-        @step = @protocol.steps.find(params.require(:id))
-        raise PermissionError.new(Protocol, :manage) unless can_manage_protocol_in_module?(@step.protocol)
->>>>>>> Pulled latest release
       end
 
       def log_activity(type_of, message_items = {})

@@ -2,7 +2,7 @@
 
 source 'http://rubygems.org'
 
-ruby '2.7.2'
+ruby '2.7.5'
 
 gem 'bootsnap', require: false
 gem 'bootstrap-sass', '~> 3.4.1'
@@ -12,7 +12,8 @@ gem 'devise_invitable'
 gem 'figaro'
 gem 'pg', '~> 1.1'
 gem 'pg_search' # PostgreSQL full text search
-gem 'rails', '~> 6.1.1'
+gem 'rails', '~> 6.1.4'
+gem 'psych', '< 4.0'
 gem 'view_component', require: 'view_component/engine'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 5.2'
@@ -25,6 +26,7 @@ gem 'doorkeeper', '>= 4.6'
 gem 'omniauth'
 gem 'omniauth-azure-activedirectory'
 gem 'omniauth-linkedin-oauth2'
+gem 'omniauth-okta'
 
 # TODO: remove this when omniauth gem resolves CVE issues
 # Prevents CVE-2015-9284 (https://github.com/omniauth/omniauth/wiki/FAQ#cve-2015-9284-warnings)
@@ -71,7 +73,7 @@ gem 'i18n-js', '~> 3.6' # Localization in javascript files
 gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'logging', '~> 2.0.0'
 gem 'nested_form_fields'
-gem 'nokogiri', '~> 1.11.4' # HTML/XML parser
+gem 'nokogiri', '~> 1.12.5' # HTML/XML parser
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'rgl' # Graph framework for project diagram calculations
 gem 'roo', '~> 2.8.2' # Spreadsheet parser

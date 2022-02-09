@@ -17,7 +17,6 @@ var ProjectsIndex = (function() {
   var editProjectModal = '#edit-modal';
   var moveToModal = '#move-to-modal';
 
-  var manageProjectUsersModal = null;
   var exportProjectsModal = null;
   var exportProjectsModalHeader = null;
   var exportProjectsModalBody = null;
@@ -90,6 +89,8 @@ var ProjectsIndex = (function() {
         $(projectsWrapper).append($.parseHTML(data.html));
         $(newProjectModal).modal('show');
         $(newProjectModal).find("input[type='text']").focus();
+        // init select picker
+        $(newProjectModal).find('.selectpicker').selectpicker();
         // Remove modal when it gets closed
         $(newProjectModal).on('hidden.bs.modal', function() {
           $(newProjectModal).remove();
@@ -168,14 +169,6 @@ var ProjectsIndex = (function() {
         HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
       });
   }
-
-  function initManageUsersModal() {
-    // Reload users tab HTML element when modal is closed
-    manageProjectUsersModal.on('hide.bs.modal', function() {
-      refreshCurrentView();
-    });
-  }
-
   /**
    * Initialize the JS for export projects modal to work.
    */
@@ -257,77 +250,6 @@ var ProjectsIndex = (function() {
     });
   }
 
-  // Initialize ajax listeners and elements style on modal body. This
-  // function must be called when modal body is changed.
-  function initManageProjectUsersModalBody(data) {
-    manageProjectUsersModal.find('.modal-title').html(data.html_title);
-    manageProjectUsersModal.find('.modal-body').html(data.html_body).find('.selectpicker').selectpicker();
-    manageProjectUsersModal.find('.modal-footer').html(data.html_footer);
-  }
-
-  // Initialize manage project users modal remote loading.
-  function initManageProjectUsersLink() {
-    $(projectsWrapper).on('ajax:success', '.manage-project-users-link', function(e, data) {
-      initManageProjectUsersModalBody(data);
-      manageProjectUsersModal.modal('show');
-    });
-  }
-
-  // Initialize view project users modal remote loading.
-  function initViewProjectUsersLink() {
-    $(projectsWrapper).on('ajax:success', '.view-project-users-link', function(e, data) {
-      let viewProjectUsersModal = $(data.html);
-      $(projectsWrapper).append(viewProjectUsersModal);
-      viewProjectUsersModal.modal('show');
-      // Remove modal when it gets closed
-      viewProjectUsersModal.on('hidden.bs.modal', function() {
-        viewProjectUsersModal.remove();
-      });
-    });
-  }
-
-  // Initialize reloading manage user modal content after posting new
-  // user.
-  function initAddUserForm() {
-    manageProjectUsersModal
-      .on('ajax:success', '.add-user-form', function(e, data) {
-        var errorBlock;
-        initManageProjectUsersModalBody(data);
-        if (data.status === 'error') {
-          $(this).addClass('has-error');
-          errorBlock = $(this).find('span.help-block');
-          if (errorBlock.length && errorBlock.length > 0) {
-            errorBlock.html(data.error);
-          } else {
-            $(this).append("<span class='help-block col-xs-8'>" + data.error + '</span>');
-          }
-        }
-      });
-  }
-
-  // Initialize remove user from project links.
-  function initRemoveUserLinks() {
-    manageProjectUsersModal.on('ajax:success', '.remove-user-link', function(e, data) {
-      initManageProjectUsersModalBody(data);
-    });
-  }
-
-  //
-  function initUserRoleForms() {
-    manageProjectUsersModal
-      .on('change', '.update-user-form select', function() {
-        $(this).parents('form').submit();
-      });
-
-    manageProjectUsersModal
-      .on('ajax:success', '.update-user-form', function(e, data) {
-        initManageProjectUsersModalBody(data);
-      })
-      .on('ajax:error', function() {
-        // TODO
-      });
-  }
-
   function updateSelectedCards() {
     $('.project-card').removeClass('selected');
     $.each(selectedProjects, function(index, value) {
@@ -404,6 +326,7 @@ var ProjectsIndex = (function() {
       $.get(url, function(result) {
         $(editProjectModal).find('.modal-content').html(result.html);
         $(editProjectModal).modal('show');
+        $(editProjectModal).find('.selectpicker').selectpicker();
         $(editProjectModal).find('form')
           .on('ajax:success', function(ev, data) {
             $(editProjectModal).modal('hide');
@@ -681,7 +604,6 @@ var ProjectsIndex = (function() {
    * Initializes cards view
    */
   function init() {
-    manageProjectUsersModal = $('#manageProjectUsersModal');
     exportProjectsModal = $('#export-projects-modal');
     exportProjectsModalHeader = exportProjectsModal.find('.modal-title');
     exportProjectsModalBody = exportProjectsModal.find('.modal-body');
@@ -689,16 +611,10 @@ var ProjectsIndex = (function() {
     updateSelectedCards();
     initNewProjectFolderModal();
     initNewProjectModal();
-    initManageUsersModal();
     initExportProjectsModal();
     initExportProjects();
     initDeleteFoldersToolbarButton();
     initArchiveRestoreToolbarButtons();
-    initViewProjectUsersLink();
-    initManageProjectUsersLink();
-    initAddUserForm();
-    initRemoveUserLinks();
-    initUserRoleForms();
     initEditButton();
     initMoveButton();
     initProjectsViewModeSwitch();

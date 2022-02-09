@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="expand-all-steps" style="display: <%= 'none' if @protocol.steps.empty? %>">
+  <div class="expand-all-steps" style="display: <%= 'none' if @protocol.steps.blank? %>">
     <a class="btn btn-light" data-action="collapse-steps">
       <span class="fas fa-caret-up"></span>
       <span><%= t("protocols.steps.collapse_label") %></a></span>

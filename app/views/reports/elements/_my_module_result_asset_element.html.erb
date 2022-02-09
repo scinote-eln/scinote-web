@@ -20,14 +20,20 @@
           <% else %>
             <% file_link = @obj_filenames.dig(:assets, asset.id, :file) %>
           <% end %>
-          <a href="<%= file_link %>">
+          <a href="<%= file_link %>" class="export-all-link" >
             <em><%= t("projects.reports.elements.result_asset.file_name", file: file_link&.split('/')&.last) %></em>
           </a>
         <% else %>
           <em>
-            <%= t("projects.reports.elements.result_asset.file_name",
-                    file: truncate(asset.file_name, length: Constants::FILENAME_TRUNCATION_LENGTH)) %>
-            <%= link_to t('projects.reports.elements.download'), asset_download_url(asset, disposition: 'attachment'), class: 'download-link', target: :_blank %>
+            <% if asset.file.metadata[:asset_type] == 'bio_eddie' %>
+              <%= t("projects.reports.elements.result_asset.file_name", file: truncate("#{asset.file.metadata[:name]}.helm", length: Constants::FILENAME_TRUNCATION_LENGTH)) %>
+              <a class="btn btn-light file-download-link" href="data:text/plain;charset=utf-8,<%= asset.file.metadata[:description] %>" download="<%= asset.file.metadata[:name] %>.helm" data-turbolinks="false">
+                <span class="fas fa-download"></span> <%= t('Download')%>
+              </a>
+            <% else %>
+              <%= t("projects.reports.elements.result_asset.file_name", file: truncate(asset.file_name, length: Constants::FILENAME_TRUNCATION_LENGTH)) %>
+              <%= link_to t('projects.reports.elements.download'), asset_download_url(asset, disposition: 'attachment'), class: 'download-link', target: :_blank %>
+            <% end %>
           </em>
         <% end %>
       </div>

@@ -8,7 +8,7 @@ module Api
       has_many :repository_cells, key: :inventory_cells,
                                   serializer: InventoryCellSerializer,
                                   class_name: 'RepositoryCell',
-                                  unless: -> { object.repository_cells.empty? }
+                                  unless: -> { object.repository_cells.blank? }
       belongs_to :repository, key: :inventory,
                               serializer: InventorySerializer,
                               class_name: 'Repository',

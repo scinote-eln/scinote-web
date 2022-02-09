@@ -76,7 +76,7 @@ class SearchController < ApplicationController
           @search_query += "#{splited_query[i]} "
         end
       end
-      if @search_query.empty?
+      if @search_query.blank?
         flash[:error] = t('general.query.wrong_query',
                           min_length: Constants::NAME_MIN_LENGTH,
                           max_length: Constants::TEXT_MAX_LENGTH)

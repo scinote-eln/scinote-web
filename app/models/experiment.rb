@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
 class Experiment < ApplicationRecord
+  ID_PREFIX = 'EX'
+
+  include PrefixedIdModel
+  SEARCHABLE_ATTRIBUTES = ['experiments.name', 'experiments.description', PREFIXED_ID_SQL].freeze
+
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
-
-  ID_PREFIX = 'EX'
-  include PrefixedIdModel
+  include PermissionCheckableModel
+  include Assignable
 
   before_save -> { report_elements.destroy_all }, if: -> { !new_record? && project_id_changed? }
 
@@ -29,6 +33,7 @@ class Experiment < ApplicationRecord
   has_many :report_elements, inverse_of: :experiment, dependent: :destroy
   # Associations for old activity type
   has_many :activities, inverse_of: :experiment
+  has_many :users, through: :user_assignments
 
   has_one_attached :workflowimg
 
@@ -49,6 +54,13 @@ class Experiment < ApplicationRecord
     end
   }
 
+  scope :experiment_search_scope, lambda { |project_ids, user|
+    joins(:user_assignments).where(
+      project: project_ids,
+      user_assignments: { user: user }
+    )
+  }
+
   def self.search(
     user,
     include_archived,
@@ -57,57 +69,25 @@ class Experiment < ApplicationRecord
     current_team = nil,
     options = {}
   )
-    project_ids =
-      Project
-      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .pluck(:id)
+    viewable_projects = Project.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT, current_team)
+                               .pluck(:id)
+    new_query = Experiment.with_granted_permissions(user, ExperimentPermissions::READ)
+                          .where(project: viewable_projects)
+                          .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
 
-    if current_team
-      projects_ids =
-        Project
-        .search(user,
-                include_archived,
-                nil,
-                1,
-                current_team)
-        .select('id')
-
-      new_query =
-        Experiment
-        .where('experiments.project_id IN (?)', projects_ids)
-        .where_attributes_like(
-          [:name, :description, PREFIXED_ID_SQL], query, options
-        )
-      return include_archived ? new_query : new_query.active
-    elsif include_archived
-      new_query =
-        Experiment
-        .where(project: project_ids)
-        .where_attributes_like(
-          [:name, :description, PREFIXED_ID_SQL], query, options
-        )
-    else
-      new_query =
-        Experiment
-        .active
-        .where(project: project_ids)
-        .where_attributes_like(
-          [:name, :description, PREFIXED_ID_SQL], query, options
-        )
-    end
+    new_query = new_query.active unless include_archived
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT
       new_query
     else
-      new_query
-        .limit(Constants::SEARCH_LIMIT)
-        .offset((page - 1) * Constants::SEARCH_LIMIT)
+      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 
   def self.viewable_by_user(user, teams)
-    where(project: Project.viewable_by_user(user, teams))
+    with_granted_permissions(user, ExperimentPermissions::READ)
+      .where(project: Project.viewable_by_user(user, teams))
   end
 
   def archived_branch?
@@ -221,29 +201,18 @@ class Experiment < ApplicationRecord
     workflowimg.attached? && workflowimg.service.exist?(workflowimg.blob.key)
   end
 
-  # Get projects where user is either owner or user in the same team
-  # as this experiment
-  def projects_with_role_above_user(current_user)
-    team = project.team
-    projects = team.projects.where(archived: false)
-
-    current_user.user_projects
-                .where(project: projects)
-                .where('role < 2')
-                .map(&:project)
-  end
-
   # Projects to which this experiment can be moved (inside the same
   # team and not archived), all users assigned on experiment.project has
   # to be assigned on such project
-  def moveable_projects(current_user)
-    projects = projects_with_role_above_user(current_user)
+  def movable_projects(current_user)
+    project.team.projects.active
+           .where.not(id: project_id)
+           .where(archived: false)
+           .with_granted_permissions(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
+  end
 
-    projects = projects.each_with_object([]) do |p, arr|
-      arr << p if (project.users - p.users).empty?
-      arr
-    end
-    projects - [project]
+  def permission_parent
+    project
   end
 
   private
@@ -269,7 +238,7 @@ class Experiment < ApplicationRecord
     cloned_pairs = {}
     ids_map = {}
     to_add.each do |m|
-      original = MyModule.find_by_id(to_clone.fetch(m[:id], nil)) if to_clone.present?
+      original = MyModule.find_by(id: to_clone.fetch(m[:id], nil)) if to_clone.present?
       if original.present?
         my_module = original.deep_clone(current_user)
         cloned_pairs[my_module] = original
@@ -332,6 +301,9 @@ class Experiment < ApplicationRecord
       end
 
       next unless my_module.save
+      # regenerate user assignments
+      my_module.user_assignments.destroy_all
+      UserAssignments::GenerateUserAssignmentsJob.perform_later(my_module, current_user)
 
       Activities::CreateActivityService.call(activity_type: :move_task,
                                              owner: current_user,
@@ -355,53 +327,59 @@ class Experiment < ApplicationRecord
   # it's obviously not updated. Position for entire module group is updated
   # to bottom left corner.
   def move_module_groups(to_move, current_user)
-    to_move.each do |ids, experiment_id|
-      modules = my_modules.find(ids)
-      groups = Set.new(modules.map(&:my_module_group))
-      experiment = project.experiments.find_by_id(experiment_id)
+    ActiveRecord::Base.transaction do
+      to_move.each do |ids, experiment_id|
+        modules = my_modules.find(ids)
+        groups = Set.new(modules.map(&:my_module_group))
+        experiment = project.experiments.find_by_id(experiment_id)
 
-      groups.each do |group|
-        next unless group && experiment.present?
+        groups.each do |group|
+          next unless group && experiment.present?
 
-        # Find the lowest point for current modules(max_y) and the leftmost
-        # module(min_x)
-        active_modules = experiment.my_modules.active
-        if active_modules.blank?
-          max_y = 0
-          min_x = 0
-        else
-          max_y = active_modules.maximum(:y) + MyModule::HEIGHT
-          min_x = active_modules.minimum(:x)
+          # Find the lowest point for current modules(max_y) and the leftmost
+          # module(min_x)
+          active_modules = experiment.my_modules.active
+          if active_modules.blank?
+            max_y = 0
+            min_x = 0
+          else
+            max_y = active_modules.maximum(:y) + MyModule::HEIGHT
+            min_x = active_modules.minimum(:x)
+          end
+
+          # Set new positions
+          curr_min_x = modules.min_by(&:x).x
+          curr_min_y = modules.min_by(&:y).y
+          modules.each { |m| m.x += -curr_min_x + min_x }
+          modules.each { |m| m.y += -curr_min_y + max_y }
+
+          modules.each do |m|
+            experiment_org = m.experiment
+            m.experiment = experiment
+            m.save!
+
+            # regenerate user assignments
+            m.user_assignments.destroy_all
+            UserAssignments::GenerateUserAssignmentsJob.new(m, current_user).perform_now
+
+            # Add activity
+            Activities::CreateActivityService.call(
+              activity_type: :move_task,
+              owner: current_user,
+              subject: m,
+              project: experiment.project,
+              team: experiment.project.team,
+              message_items: {
+                my_module: m.id,
+                experiment_original: experiment_org.id,
+                experiment_new: experiment.id
+              }
+            )
+          end
+
+          group.experiment = experiment
+          group.save!
         end
-
-        # Set new positions
-        curr_min_x = modules.min_by(&:x).x
-        curr_min_y = modules.min_by(&:y).y
-        modules.each { |m| m.x += -curr_min_x + min_x }
-        modules.each { |m| m.y += -curr_min_y + max_y }
-
-        modules.each do |m|
-          experiment_org = m.experiment
-          m.experiment = experiment
-          m.save!
-
-          # Add activity
-          Activities::CreateActivityService.call(
-            activity_type: :move_task,
-            owner: current_user,
-            subject: m,
-            project: experiment.project,
-            team: experiment.project.team,
-            message_items: {
-              my_module: m.id,
-              experiment_original: experiment_org.id,
-              experiment_new: experiment.id
-            }
-          )
-        end
-
-        group.experiment = experiment
-        group.save!
       end
     end
   end

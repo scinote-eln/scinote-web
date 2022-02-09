@@ -5,8 +5,10 @@ class ResultTablesController < ApplicationController
   before_action :load_vars_nested, only: [:new, :create]
   before_action :convert_contents_to_utf8, only: [:create, :update]
 
-  before_action :check_manage_permissions, only: %i(new create edit update)
+  before_action :check_manage_permissions, only: %i(edit update)
+  before_action :check_create_permissions, only: %i(new create)
   before_action :check_archive_permissions, only: [:update]
+  before_action :check_view_permissions, except: %i(new create edit update)
 
   def new
     @table = Table.new
@@ -145,14 +147,22 @@ class ResultTablesController < ApplicationController
     end
   end
 
+  def check_create_permissions
+    render_403 unless can_create_results?(@my_module)
+  end
+
   def check_manage_permissions
-    render_403 unless can_manage_module?(@my_module)
+    render_403 unless can_manage_result?(@result)
   end
 
   def check_archive_permissions
     if result_params[:archived].to_s != '' && !can_manage_result?(@result)
       render_403
     end
+  end
+
+  def check_view_permissions
+    render_403 unless can_read_result?(@result)
   end
 
   def result_params

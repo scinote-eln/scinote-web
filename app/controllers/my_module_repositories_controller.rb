@@ -5,7 +5,7 @@ class MyModuleRepositoriesController < ApplicationController
 
   before_action :load_my_module
   before_action :load_repository, except: %i(repositories_dropdown_list repositories_list_html)
-  before_action :check_my_module_view_permissions
+  before_action :check_my_module_view_permissions, except: :update
   before_action :check_repository_view_permissions, except: %i(repositories_dropdown_list repositories_list_html)
   before_action :check_assign_repository_records_permissions, only: :update
 
@@ -67,7 +67,8 @@ class MyModuleRepositoriesController < ApplicationController
       partial: 'my_modules/modals/update_repository_records_modal_content.html.erb',
       locals: { my_module: @my_module,
                 repository: @repository,
-                selected_rows: params[:selected_rows] }
+                selected_rows: params[:selected_rows],
+                downstream: params[:downstream] }
     )
     render json: {
       html: modal,
@@ -80,7 +81,8 @@ class MyModuleRepositoriesController < ApplicationController
       partial: 'my_modules/modals/assign_repository_records_modal_content.html.erb',
       locals: { my_module: @my_module,
                 repository: @repository,
-                selected_rows: params[:selected_rows] }
+                selected_rows: params[:selected_rows],
+                downstream: params[:downstream] }
     )
     render json: {
       html: modal,
@@ -151,7 +153,7 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def check_my_module_view_permissions
-    render_403 unless can_read_experiment?(@my_module.experiment)
+    render_403 unless can_read_my_module?(@my_module)
   end
 
   def check_repository_view_permissions
@@ -159,7 +161,7 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def check_assign_repository_records_permissions
-    render_403 unless can_assign_repository_rows_to_module?(@my_module)
+    render_403 unless can_assign_my_module_repository_rows?(@my_module)
   end
 
   def update_flash_message(service)

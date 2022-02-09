@@ -148,9 +148,9 @@ class GlobalActivitiesController < ApplicationController
     matched = matched.where(project_id: selected_subject['Project']) if subject == Experiment
     matched = matched.where(experiment_id: selected_subject['Experiment']) if subject == MyModule
     matched = matched.where(repository_id: selected_subject['RepositoryBase']) if subject == RepositoryRow
+    matched = matched.limit(Constants::SEARCH_LIMIT)
 
-    matched = matched.limit(Constants::SEARCH_LIMIT).pluck(:id, :name)
-    matched.map { |pr| { value: pr[0], label: escape_input(pr[1]) } }
+    matched.map { |pr| { value: pr.id, label: escape_input(pr.name) } }
   end
 
   def activity_filter_params

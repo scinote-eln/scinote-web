@@ -15,22 +15,8 @@ var bioEddieEditor = (function() {
     }
   }
 
-  function loadBioEddie() {
-    BIO_EDDIE = bioEddieIframe.contentWindow.bioEddieEditor;
-    CHEMAXON = bioEddieIframe.contentWindow.chemaxon;
-
-    if (typeof BIO_EDDIE === 'undefined' || typeof CHEMAXON === 'undefined') {
-      setTimeout(function() {
-        loadBioEddie();
-      }, 2000);
-    } else {
-      importMolecule();
-    }
-  }
-
   function initIframe() {
     bioEddieIframe.src = bioEddieIframe.dataset.src;
-    loadBioEddie();
   }
 
   function saveMolecule(svg, structure, scheduleForRegistration) {
@@ -92,12 +78,33 @@ var bioEddieEditor = (function() {
         } else {
           saveMolecule(svg, structure, scheduleForRegistration);
         }
+      })
+      .catch(() => {
+        if (structure === '$$$$V2.0') {
+          HelperModule.flashAlertMsg(I18n.t('bio_eddie.empty_molecule_error'), 'danger');
+        }
       });
   }
 
   $(document).on('turbolinks:load', function() {
     bioEddieIframe = document.getElementById('bioEddieIframe');
     bioEddieModal = $('#bioEddieModal');
+    if (bioEddieIframe) {
+      bioEddieIframe.onload = function() {
+        let body = $(bioEddieIframe).contents().find('body');
+        BIO_EDDIE = bioEddieIframe.contentWindow.bioEddieEditor;
+        CHEMAXON = bioEddieIframe.contentWindow.chemaxon;
+        let cssRemoveFileImport = `
+          <style>
+            .breg-modal .breg-import-dialog-tabs li:last-child{
+              display: none
+            }
+          </style>
+        `;
+        $(body).append(cssRemoveFileImport);
+        importMolecule();
+      };
+    }
 
     bioEddieModal.on('shown.bs.modal', function() {
       initIframe();
@@ -118,6 +125,7 @@ var bioEddieEditor = (function() {
     open_new: (objectId, objectType, container) => {
       bioEddieModal.data('object_id', objectId);
       bioEddieModal.data('object_type', objectType);
+      bioEddieModal.data('molecule', null);
       bioEddieModal.data('assets_container', container);
       bioEddieModal.find('.file-name input').val('');
       bioEddieModal.modal('show');
@@ -129,7 +137,6 @@ var bioEddieEditor = (function() {
       bioEddieModal.data('update-url', updateUrl);
       bioEddieModal.find('.file-name input').val(name);
       bioEddieModal.modal('show');
-
     }
   };
 }());

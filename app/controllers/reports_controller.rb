@@ -354,12 +354,14 @@ class ReportsController < ApplicationController
                                              .where.not(original_repository: live_repositories)
                                              .select('DISTINCT ON ("repositories"."parent_id") "repositories".*')
     @repositories = (live_repositories + snapshots_of_deleted).sort_by { |r| r.name.downcase }
-    @visible_projects = Project.active
-                               .viewable_by_user(current_user, current_team)
-                               .joins(experiments: :my_modules)
-                               .merge(Experiment.active)
-                               .merge(MyModule.active)
-                               .select(:id, :name)
+    @visible_projects = current_team.projects
+                                    .active
+                                    .joins(experiments: :my_modules)
+                                    .with_granted_permissions(current_user, ProjectPermissions::READ)
+                                    .merge(Experiment.active)
+                                    .merge(MyModule.active)
+                                    .group(:id)
+                                    .select(:id, :name)
   end
 
   def check_manage_permissions

@@ -139,7 +139,8 @@ module Users
 
               @user_t.destroy(new_owner)
             end
-          rescue Exception
+          rescue StandardError => e
+            Rails.logger.error e.message
             invalid = true
           end
         end

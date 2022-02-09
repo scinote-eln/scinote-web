@@ -6,7 +6,8 @@ class RepositoryRowsController < ApplicationController
 
   MAX_PRINTABLE_ITEM_NAME_LENGTH = 64
 
-  before_action :load_repository, except: :show
+  before_action :load_repository, except: %i(show print_modal print)
+  before_action :load_repository_or_snapshot, only: %i(print_modal print)
   before_action :load_repository_row, only: %i(update assigned_task_list)
   before_action :check_read_permissions, except: %i(show create update delete_records copy_records)
   before_action :check_snapshotting_status, only: %i(create update delete_records copy_records)
@@ -109,7 +110,13 @@ class RepositoryRowsController < ApplicationController
 
     label_printer.update!(current_print_job_ids: job_ids * params[:copies].to_i)
 
-    redirect_to repository_path(@repository)
+    render json: {
+      html: render_to_string(
+        partial: 'label_printers/print_progress_modal.html.erb',
+        locals: { starting_item_count: label_printer.current_print_job_ids.length,
+                  label_printer: label_printer }
+      )
+    }
   end
 
   def update
@@ -186,7 +193,7 @@ class RepositoryRowsController < ApplicationController
   end
 
   def available_rows
-    if @repository.repository_rows.active.empty?
+    if @repository.repository_rows.active.blank?
       no_items_string =
         "#{t('projects.reports.new.save_PDF_to_inventory_modal.no_items')} " \
         "#{link_to(t('projects.reports.new.save_PDF_to_inventory_modal.here'),
@@ -208,11 +215,11 @@ class RepositoryRowsController < ApplicationController
                                         whole_phrase: true
                                       )
     viewable_modules = assigned_modules.viewable_by_user(current_user, current_user.teams)
-    private_modules = assigned_modules - viewable_modules
+    private_modules_number = assigned_modules.where.not(id: viewable_modules).count
     render json: {
       html: render_to_string(partial: 'shared/my_modules_list_partial.html.erb', locals: {
                                my_modules: viewable_modules,
-                               private_modules: private_modules
+                               private_modules_number: private_modules_number
                              })
     }
   end
@@ -252,6 +259,13 @@ class RepositoryRowsController < ApplicationController
     @repository = Repository.accessible_by_teams(current_team)
                             .eager_load(:repository_columns)
                             .find_by(id: params[:repository_id])
+    render_404 unless @repository
+  end
+
+  def load_repository_or_snapshot
+    @repository = Repository.accessible_by_teams(current_team).find_by(id: params[:repository_id])
+    @repository ||= RepositorySnapshot.find_by(id: params[:repository_id])
+
     render_404 unless @repository
   end
 

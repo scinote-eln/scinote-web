@@ -20,11 +20,7 @@
   <% if limit_reached %>
     <div class="more-results"><%= t('atwho.more_results') %></div>
   <% end %>
-<<<<<<< HEAD
   <% if my_modules.blank? %>
-=======
-  <% if my_modules.empty? %>
->>>>>>> Pulled latest release
     <%= render partial: 'shared/smart_annotation/no_results.html.erb', locals: { object_type: 'my_modules' } %>
   <% end %>
 </div>

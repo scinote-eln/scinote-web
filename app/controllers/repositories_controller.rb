@@ -7,6 +7,7 @@ class RepositoriesController < ApplicationController
   include IconsHelper
   include TeamsHelper
   include RepositoriesDatatableHelper
+  include MyModulesHelper
 
   before_action :switch_team_with_param, only: :show
   before_action :load_repository, except: %i(index create create_modal sidebar archive restore)
@@ -27,7 +28,7 @@ class RepositoriesController < ApplicationController
   def index
     respond_to do |format|
       format.html do
-        render 'empty_index' if Repository.accessible_by_teams(current_team).blank?
+        render 'empty_index' if @repositories.blank?
       end
       format.json do
         render json: prepare_repositories_datatable(@repositories, current_team, params)
@@ -279,7 +280,7 @@ class RepositoriesController < ApplicationController
       else
         @import_data = parsed_file.data
 
-        if @import_data.header.empty? || @import_data.columns.empty?
+        if @import_data.header.blank? || @import_data.columns.blank?
           return repository_response(t('repositories.parse_sheet.errors.empty_file'))
         end
 
@@ -358,6 +359,35 @@ class RepositoriesController < ApplicationController
         end
       end
     end
+  end
+
+  def assigned_my_modules
+    my_modules = MyModule.joins(:repository_rows).where(repository_rows: { repository: @repository })
+                         .readable_by_user(current_user).distinct
+    render json: {data: grouped_by_prj_exp(my_modules).map { |g|
+                          {
+                            label: "#{g[:project_name]} / #{g[:experiment_name]}", options: g[:tasks].map do |t|
+                              { label: t.name, value: t.id }
+                            end
+                          }
+                        } }
+  end
+
+  def repository_users
+    rows_type = params[:archived_by].present? ? :archived_repository_rows : :created_repository_rows
+    users = User.joins(rows_type)
+                .where(rows_type => { repository: @repository })
+                .group(:id)
+
+    render json: { users: users.map do |u|
+                            {
+                              label: u.full_name,
+                              value: u.id,
+                              params: {
+                                email: u.email, avatar_url: u.avatar_url('icon_small')
+                              }
+                            }
+                          end }
   end
 
   private

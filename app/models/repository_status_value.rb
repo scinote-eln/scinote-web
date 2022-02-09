@@ -19,6 +19,15 @@ class RepositoryStatusValue < ApplicationRecord
     data
   end
 
+  def self.add_filter_condition(repository_rows, join_alias, filter_element)
+    repository_rows
+      .joins(
+        "INNER JOIN \"repository_status_items\"" \
+        " ON  \"repository_status_items\".\"id\" = \"#{join_alias}\".\"repository_status_item_id\""
+      )
+      .where(repository_status_items: { id: filter_element.parameters['status_ids'] })
+  end
+
   def data_changed?(new_data)
     new_data.to_i != repository_status_item_id
   end

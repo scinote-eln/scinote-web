@@ -20,13 +20,15 @@ class TemplatesService
         tmpl_project = team.projects.create!(
           name: Constants::TEMPLATES_PROJECT_NAME,
           visibility: :visible,
-          template: true
+          template: true,
+          default_public_user_role: UserRole.predefined.find_by(name: I18n.t('user_roles.predefined.viewer')),
+          created_by: team.created_by
         )
-        tmpl_project.user_projects.create!(user: team.created_by, role: 'owner')
       end
     end
-    owner = tmpl_project.user_projects
-                        .where(role: 'owner')
+    owner_role_id = UserRole.find_by(name: I18n.t('user_roles.predefined.owner')).id
+    owner = tmpl_project.user_assignments
+                        .where(user_role_id: owner_role_id)
                         .order(:created_at)
                         .first&.user
     return unless owner.present?

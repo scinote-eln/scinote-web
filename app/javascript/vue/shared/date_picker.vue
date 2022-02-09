@@ -10,8 +10,7 @@
     name: 'DatePicker',
     props: {
       selectorId: { type: String, required: true },
-      useCurrent: { type: Boolean, default: true },
-      defaultValue: { type: Date, default: true }
+      useCurrent: { type: Boolean, default: true }
     },
     mounted() {
       $("#" + this.selectorId).datetimepicker(
@@ -19,16 +18,15 @@
           useCurrent: this.useCurrent,
           ignoreReadonly: this.ignoreReadOnly,
           locale: this.i18n.locale,
-          format: this.dateFormat,
-          date: this.defaultValue
+          format: this.dateFormat
         }
       );
-      this.update($("#" + this.selectorId).data("DateTimePicker").date());
+
       $("#" + this.selectorId).on('dp.change', (e) => this.update(e.date))
     },
     methods: {
       update(value) {
-        this.$emit('change', (value._isAMomentObject) ? value.toDate() : '');
+        this.$emit('change', value.toDate());
       }
     }
   }

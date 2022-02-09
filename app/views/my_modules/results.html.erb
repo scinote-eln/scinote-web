@@ -2,7 +2,7 @@
 <% provide(:sidebar_title, t("sidebar.my_module.sidebar_title")) %>
 
 <%= content_for :sidebar do %>
-  <%= render partial: 'shared/sidebar/my_module.html.erb',
+  <%= render partial: "shared/sidebar/#{@my_module.archived_branch? ? 'archived_my_module' : 'my_module'}.html.erb",
     locals: {
       my_modules: @experiment_my_modules,
       experiment: @my_module.experiment,
@@ -16,7 +16,7 @@
 
 <div class="content-pane">
   <div id="results-toolbar">
-    <% if can_manage_module?(@my_module) %>
+    <% if can_manage_my_module?(@my_module) %>
       <div class="add-result-dropdown dropdown sci-dropdown">
         <a href="#" id="add-result-button" class="btn btn-secondary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           <span class="fas fa-plus"></span>

@@ -2,10 +2,7 @@
 
 module RepositoryRows
   class MyModuleAssignUnassignService
-<<<<<<< HEAD
     include Canaid::Helpers::PermissionsHelper
-=======
->>>>>>> Pulled latest release
     extend Service
 
     attr_reader :repository,
@@ -32,10 +29,7 @@ module RepositoryRows
       ActiveRecord::Base.transaction do
         if params[:downstream] == 'true'
           @my_module.downstream_modules.each do |downstream_module|
-<<<<<<< HEAD
             next unless can_assign_my_module_repository_rows?(@user, downstream_module)
-=======
->>>>>>> Pulled latest release
             unassign_repository_rows_from_my_module(downstream_module)
             assign_repository_rows_to_my_module(downstream_module)
           end

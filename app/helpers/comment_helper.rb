@@ -14,21 +14,9 @@ module CommentHelper
     end
   end
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   def comment_index_helper(comments, more_url, partial = nil)
     partial ||= 'shared/comments/list.html.erb'
     render json: {
-=======
-  def comment_index_helper(comments, more_url, partial = false)
-    partial ||= 'shared/comments/list.html.erb'
-    render  json: {
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-  def comment_index_helper(comments, more_url, partial = nil)
-    partial ||= 'shared/comments/list.html.erb'
-    render json: {
->>>>>>> Pulled latest release
       perPage: @per_page,
       resultsNumber: comments.size,
       moreUrl: more_url,
@@ -38,8 +26,6 @@ module CommentHelper
     }
   end
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   def comment_create_helper(comment, partial = 'item')
     if comment.save
       case comment.type
@@ -55,54 +41,17 @@ module CommentHelper
       when 'TaskComment'
         my_module_comment_annotation_notification(comment)
         log_my_module_activity(:add_comment_to_module, comment)
-=======
-  def comment_create_helper(comment)
-=======
-  def comment_create_helper(comment, partial = 'item')
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
-    if comment.save
-      case comment.type
-      when 'StepComment'
-        step_comment_annotation_notification(comment)
-        log_step_activity(:add_comment_to_step, comment)
-      when 'ResultComment'
-        result_comment_annotation_notification(comment)
-        log_result_activity(:add_comment_to_result, comment)
-      when 'ProjectComment'
-        project_comment_annotation_notification(comment)
-        log_project_activity(:add_comment_to_project, comment)
-      when 'TaskComment'
-<<<<<<< HEAD
-        my_module_comment_annotation_notification
-        log_activity(:add_comment_to_module)
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-        my_module_comment_annotation_notification(comment)
-        log_my_module_activity(:add_comment_to_module, comment)
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
       end
 
       render json: {
         html: render_to_string(
-<<<<<<< HEAD
-<<<<<<< HEAD
           partial: "/shared/comments/#{partial}.html.erb",
-=======
-          partial: '/shared/comments/item.html.erb',
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-          partial: "/shared/comments/#{partial}.html.erb",
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
           locals: {
             comment: comment
           }
         )
       }
     else
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
       render json: { errors: comment.errors.to_hash(true) }, status: :unprocessable_entity
     end
   end
@@ -110,7 +59,6 @@ module CommentHelper
   def comment_addable?(object)
     case object.class.name
     when 'MyModule'
-<<<<<<< HEAD
       can_create_my_module_comments?(object)
     when 'Step'
       can_create_my_module_comments?(object.my_module)
@@ -168,67 +116,6 @@ module CommentHelper
         message = custom_auto_link(comment.message, team: current_team, simple_format: true)
         render json: { comment: message }, status: :ok
       end
-=======
-      render json: { errors: comment.errors.to_hash(true) }, status: :error
-=======
-      can_create_comments_in_module?(object)
-    when 'Step', 'Result'
-      can_create_comments_in_module?(object.my_module)
-    when 'Project'
-      can_create_comments_in_project?(object)
-    else
-      false
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
-    end
-  end
-
-  def comment_editable?(comment)
-    case comment.type
-    when 'TaskComment', 'StepComment', 'ResultComment'
-      can_manage_comment_in_module?(comment.becomes(Comment))
-    when 'ProjectComment'
-      can_manage_comment_in_project?(comment)
-    else
-      false
-    end
-  end
-
-  def comment_update_helper(comment, old_text, partial = nil)
-    if comment.save
-      case comment.type
-      when 'StepComment'
-        step_comment_annotation_notification(comment, old_text)
-        log_step_activity(:edit_step_comment, comment)
-      when 'ResultComment'
-        result_comment_annotation_notification(comment, old_text)
-        log_result_activity(:edit_result_comment, comment)
-      when 'ProjectComment'
-        project_comment_annotation_notification(comment, old_text)
-        log_project_activity(:edit_project_comment, comment)
-      when 'TaskComment'
-        my_module_comment_annotation_notification(comment, old_text)
-        log_my_module_activity(:edit_module_comment, comment)
-      end
-
-<<<<<<< HEAD
-      message = custom_auto_link(comment.message, team: current_team, simple_format: true)
-      render json: { comment: message }, status: :ok
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-      if partial
-        render json: {
-          html: render_to_string(
-            partial: "/shared/comments/#{partial}.html.erb",
-            locals: {
-              comment: comment
-            }
-          )
-        }
-      else
-        message = custom_auto_link(comment.message, team: current_team, simple_format: true)
-        render json: { comment: message }, status: :ok
-      end
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     else
       render json: { errors: comment.errors.to_hash(true) },
                  status: :unprocessable_entity
@@ -239,8 +126,6 @@ module CommentHelper
     if comment.destroy
       case comment.type
       when 'StepComment'
-<<<<<<< HEAD
-<<<<<<< HEAD
         log_step_activity(:delete_step_comment, comment)
       when 'ResultComment'
         log_result_activity(:delete_result_comment, comment)
@@ -248,22 +133,6 @@ module CommentHelper
         log_project_activity(:delete_project_comment, comment)
       when 'TaskComment'
         log_my_module_activity(:delete_module_comment, comment)
-=======
-        log_activity(:delete_step_comment)
-=======
-        log_step_activity(:delete_step_comment, comment)
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
-      when 'ResultComment'
-        log_result_activity(:delete_result_comment, comment)
-      when 'ProjectComment'
-        log_project_activity(:delete_project_comment, comment)
-      when 'TaskComment'
-<<<<<<< HEAD
-        log_activity(:delete_module_comment)
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-        log_my_module_activity(:delete_module_comment, comment)
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
       end
       render json: {}, status: :ok
     else
@@ -271,10 +140,6 @@ module CommentHelper
                  status: :unprocessable_entity
     end
   end
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
   def result_comment_annotation_notification(comment, old_text = nil)
     result = comment.result
@@ -409,13 +274,6 @@ module CommentHelper
   end
 
   def has_unseen_comments?(commentable)
-<<<<<<< HEAD
     commentable.comments.any? { |comment| comment.unseen_by.include?(current_user.id) }
   end
-=======
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-    commentable.comments.where('? = ANY (unseen_by)', current_user.id).any?
-  end
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 end

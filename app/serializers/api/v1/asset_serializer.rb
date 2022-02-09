@@ -16,7 +16,7 @@ module Api
       end
 
       def file_url
-        rails_blob_url(object.file, disposition: 'attachment') if object.file.attached?
+        object.file.url if object.file.attached?
       end
     end
   end

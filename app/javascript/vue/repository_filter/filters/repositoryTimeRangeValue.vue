@@ -9,24 +9,23 @@
       @dropdown:changed="updateOperator" />
     </div>
     <div class="filter-datepicker-input">
-      <DateTimePicker @change="updateDate" :selectorId="`TimePicker${filter.id}`" :timeOnly="true"  :defaultValue="date || fallbackDate()" />
+      <DateTimePicker @change="updateDate" :selectorId="`TimePicker${filter.id}`" :timeOnly="true" />
     </div>
-    <span class="between-delimiter">—</span>
     <div class="filter-datepicker-to-input">
-      <DateTimePicker @change="updateDateTo" :selectorId="`TimePickerTo${filter.id}`" :timeOnly="true" :defaultValue="dateTo || fallbackDate(7 * 24 * 60 * 60)" />
+      <DateTimePicker @change="updateDateTo" :selectorId="`TimePickerTo${filter.id}`" :timeOnly="true" />
     </div>
   </div>
 </template>
 
 <script>
   import FilterMixin from 'vue/repository_filter/mixins/filter.js'
-  import RangeDateTimeFilterMixin from 'vue/repository_filter/mixins/filters/range_date_time_filter.js'
+  import DateTimeFilterMixin from 'vue/repository_filter/mixins/filters/date_time_filter.js'
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
   import DateTimePicker from 'vue/shared/date_time_picker.vue'
 
   export default {
     name: 'RepositoryTimeRangeValue',
-    mixins: [FilterMixin, RangeDateTimeFilterMixin],
+    mixins: [FilterMixin, DateTimeFilterMixin],
     data() {
       return {
         timeType: 'time',
@@ -57,8 +56,7 @@
     },
     methods: {
       formattedDate(date) {
-        if (!date) return null
-        return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
+        return `${date.getHours()}:${date.getMinutes()}`
       }
     }
   }

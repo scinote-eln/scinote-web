@@ -6,7 +6,7 @@
     "node": true
   },
   "plugins": ["flowtype", "react", "prettier"],
-  "extends": ["airbnb", "prettier", "prettier/react"],
+  "extends": ["airbnb", "prettier", "prettier/react", "plugin:vue/base"],
   "parser": "babel-eslint",
   "parserOptions": {
     "sourceType": "module",
@@ -16,6 +16,7 @@
       "jsx": true
     }
   },
+  "ignorePatterns": ["*.vue", "**/mixins/*.js"],
   "rules": {
     "import/extensions": "off",
     "import/no-unresolved": "off",

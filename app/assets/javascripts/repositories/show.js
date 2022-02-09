@@ -2,7 +2,7 @@
 
 /*
   global pageReload animateSpinner repositoryRecordsImporter I18n
-  RepositoryDatatable PerfectScrollbar HelperModule
+  RepositoryDatatable PerfectScrollbar HelperModule repositoryFilterObject
 */
 
 (function(global) {
@@ -197,8 +197,72 @@
     });
   }
 
+  function initFilterSaving() {
+    $(document).on('click', '#overwriteFilterLink', function() {
+      var $modal = $('#modalSaveRepositoryTableFilter');
+
+      // set overwrite flag
+      $modal.data('overwrite', true);
+
+      // revert to 'create' form
+      $modal.on('hidden.bs.modal', function() {
+        $modal.removeData('overwrite');
+      });
+    });
+
+    $(document).on('click', '#saveRepositoryTableFilterButton', function() {
+      var $modal = $('#modalSaveRepositoryTableFilter');
+      var url = $modal.data().saveUrl;
+      var method;
+
+      if ($modal.data().overwrite) {
+        method = 'PUT';
+        url = url + '/' + $modal.data().repositoryTableFilterId;
+      } else {
+        method = 'POST';
+      }
+
+      $.ajax({
+        type: method,
+        url: url,
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify({
+          repository_table_filter: {
+            name: $('#repository_table_filter_name').val(),
+            repository_table_filter_elements_json: $('#repository_table_filter_elements_json').val()
+          }
+        }),
+        success: function(response) {
+          var existingFilterIndex = repositoryFilterObject.savedFilters.findIndex((f) => {
+            return f.id === response.data.id;
+          });
+
+          var $overwriteLink = $('#overwriteFilterLink');
+          $modal.modal('hide');
+          $overwriteLink.removeClass('hidden');
+          $modal.data('repositoryTableFilterId', response.data.id);
+          $('#currentFilterName').html(response.data.attributes.name);
+
+          if (existingFilterIndex > -1) {
+            repositoryFilterObject.savedFilters = repositoryFilterObject.savedFilters.map((f) => {
+              return f.id === response.data.id ? response.data : f;
+            });
+          } else {
+            repositoryFilterObject.savedFilters = repositoryFilterObject.savedFilters.concat([response.data]);
+          }
+
+          repositoryFilterObject.filterName = response.data.attributes.name;
+        },
+        error: function(response) {
+          HelperModule.flashAlertMsg(response.responseJSON.message, 'danger');
+        }
+      });
+    });
+  }
+
   initImportRecordsModal();
   initTable();
   initRepositoryViewSwitcher();
   initArchivingActionsInDropdown();
+  initFilterSaving();
 }(window));

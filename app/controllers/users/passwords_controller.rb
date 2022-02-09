@@ -19,7 +19,7 @@ class Users::PasswordsController < Devise::PasswordsController
     self.resource = resource_class.reset_password_by_token(resource_params)
     yield resource if block_given?
 
-    if resource.errors.empty?
+    if resource.errors.blank?
       resource.unlock_access! if unlockable?(resource)
       if !resource.two_factor_auth_enabled?
         flash_message = resource.active_for_authentication? ? :updated : :updated_not_active

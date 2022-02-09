@@ -1,5 +1,5 @@
 <template>
-  <div class="filters-container" @click="closeDropdowns">
+  <div class="filters-container">
     <div class="header">
       <div id="savedFiltersContainer" class="dropdown saved-filters-container" @click="toggleSavedFilters">
         <div class="title" id="savedFilterDropdown">
@@ -64,20 +64,18 @@
 
   export default {
     name: 'FilterContainer',
+    data() {
+      return {
+        filters: []
+      }
+    },
     props: {
-      defaultFilters: Array,
       my_modules: Array,
       container: Object,
       columns: Array,
       savedFilters: Array,
       canManageFilters: Boolean,
       filterName: String, default: () => null
-    },
-    data() {
-      return {
-        filters: this.defaultFilters,
-        savedFilterScrollbar: null
-      }
     },
     components: { ColumnElement, FilterElement, SavedFilterElement },
     methods: {
@@ -89,23 +87,14 @@
         const index = this.filters.findIndex((f) => f.id === filter.id);
         this.filters[index].data = filter.data;
         this.filters[index].isBlank = filter.isBlank;
+
         this.$emit("filters:update", this.filters);
       },
       clearFilters() {
         this.filters = [];
         this.$emit('filters:clear');
       },
-      closeDropdowns() {
-        this.closeColumnsFilters();
-        this.closeSavedFilters();
-      },
-      closeColumnsFilters() {
-        $('#filtersColumnsDropdown').removeClass('open');
-      },
-      toggleColumnsFilters(e) {
-        e.stopPropagation();
-        $('.filters-columns-list').scrollTo(0);
-        this.closeSavedFilters();
+      toggleColumnsFilters() {
         $('#filtersColumnsDropdown').toggleClass('open');
       },
       loadFilters(filterUrl) {
@@ -135,22 +124,13 @@
           $overwriteLink.removeClass('hidden');
           $saveFiltersModal.data('repositoryTableFilterId', data.data.id);
           $('#currentFilterName').html(data.data.attributes.name);
-          $saveFiltersModal.data('repositoryTableFilterName', data.data.attributes.name);
         });
       },
       closeSavedFilters() {
         $('#savedFiltersContainer').removeClass('open');
         return true;
       },
-      toggleSavedFilters(e) {
-        e.stopPropagation();
-        $('.saved-filters-list').scrollTo(0);
-        if (this.savedFilterScrollbar) {
-          this.savedFilterScrollbar.update();
-        } else {
-          this.savedFilterScrollbar = new PerfectScrollbar($('.saved-filters-list')[0]);
-        }
-        this.closeColumnsFilters();
+      toggleSavedFilters() {
         $('#savedFiltersContainer').toggleClass('open');
       },
     }

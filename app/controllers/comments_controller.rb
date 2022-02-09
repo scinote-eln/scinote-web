@@ -89,7 +89,6 @@ class CommentsController < ApplicationController
   def check_create_permissions
     case @commentable
     when Project
-<<<<<<< HEAD
       render_403 and return unless can_create_project_comments?(@commentable)
     when MyModule
       render_403 and return unless can_create_my_module_comments?(@commentable)
@@ -97,15 +96,6 @@ class CommentsController < ApplicationController
       render_403 and return unless can_create_my_module_comments?(@commentable.protocol.my_module)
     when Result
       render_403 and return unless can_create_my_module_comments?(@commentable.my_module)
-=======
-      render_403 and return unless can_create_comments_in_project?(@commentable)
-    when MyModule
-      render_403 and return unless can_create_comments_in_module?(@commentable)
-    when Step
-      render_403 and return unless can_create_comments_in_module?(@commentable.protocol.my_module)
-    when Result
-      render_403 and return unless can_create_comments_in_module?(@commentable.my_module)
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     else
       render_403 and return
     end

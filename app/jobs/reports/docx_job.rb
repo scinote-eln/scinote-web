@@ -9,11 +9,7 @@ module Reports
 
     discard_on StandardError do |job, error|
       report = Report.find_by(id: job.arguments.first)
-<<<<<<< HEAD
       next unless report
-=======
-      return if report.blank?
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
       ActiveRecord::Base.no_touching do
         report.docx_error!

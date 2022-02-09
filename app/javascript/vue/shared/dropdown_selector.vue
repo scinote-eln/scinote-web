@@ -7,22 +7,8 @@
             :data-select-multiple-name="dataSelectMultipleName"
             :data-placeholder="placeholder"
     >
-      <template v-if="groupSelector">
-        <optgroup v-for="group in this.options" :label="group.label" :key="group.label">
-          <option v-for="option in group.options"
-            :key="option.label"
-            :value="option.value"
-            :selected="option.value == selectedValue || (Array.isArray(selectedValue) && selectedValue.some(e => e == option.value))"
-            :data-selected="option.value == selectedValue || (Array.isArray(selectedValue) && selectedValue.some(e => e == option.value))"
-            :data-params="JSON.stringify(option.params)"
-            :data-group="group.label">
-            {{ option.label }}
-          </option>
-        </optgroup>
-      </template>
-      <template v-else>
-        <option
-          v-for="option in this.options"
+      <optgroup v-if="groupSelector" v-for="group in this.options" :label="group.label">
+        <option v-for="option in group.options"
           :key="option.label"
           :value="option.value"
           :selected="option.value == selectedValue || (Array.isArray(selectedValue) && selectedValue.some(e => e == option.value))"
@@ -30,7 +16,16 @@
           :data-params="JSON.stringify(option.params)">
           {{ option.label }}
         </option>
-      </template>
+      </optgroup>
+      <option v-if="!groupSelector"
+        v-for="option in this.options"
+        :key="option.label"
+        :value="option.value"
+        :selected="option.value == selectedValue || (Array.isArray(selectedValue) && selectedValue.some(e => e == option.value))"
+        :data-selected="option.value == selectedValue || (Array.isArray(selectedValue) && selectedValue.some(e => e == option.value))"
+        :data-params="JSON.stringify(option.params)">
+          {{ option.label }}
+      </option>
     </select>
   </div>
 </template>

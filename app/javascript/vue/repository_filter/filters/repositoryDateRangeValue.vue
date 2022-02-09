@@ -9,33 +9,34 @@
       @dropdown:changed="updateOperator" />
     </div>
     <div class="filter-datepicker-input">
-      <DateTimePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`" :onlyDate="true"  :defaultValue="date || fallbackDate()" />
+      <DateTimePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`" :onlyDate="true" />
     </div>
-    <span class="between-delimiter">—</span>
     <div class="filter-datepicker-to-input">
-      <DateTimePicker @change="updateDateTo" :selectorId="`DatePickerTo${filter.id}`" :onlyDate="true" :defaultValue="dateTo || fallbackDate(7 * 24 * 60 * 60)" />
+      <DateTimePicker @change="updateDateTo" :selectorId="`DatePickerTo${filter.id}`" :onlyDate="true" />
     </div>
   </div>
 </template>
 
 <script>
   import FilterMixin from 'vue/repository_filter/mixins/filter.js'
-  import RangeDateTimeFilterMixin from 'vue/repository_filter/mixins/filters/range_date_time_filter.js'
+  import DateTimeFilterMixin from 'vue/repository_filter/mixins/filters/date_time_filter.js'
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
   import DateTimePicker from 'vue/shared/date_picker.vue'
 
   export default {
     name: 'RepositoryDateRangeValue',
-    mixins: [FilterMixin, RangeDateTimeFilterMixin],
+    mixins: [FilterMixin, DateTimeFilterMixin],
     data() {
       return {
         timeType: 'date',
         operators: [
-          { value: 'equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.date.on') },
-          { value: 'greater_than_or_equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.date.after') },
-          { value: 'less_than', label: this.i18n.t('repositories.show.repository_filter.filters.operators.date.before') },
-          { value: 'between', label: this.i18n.t('repositories.show.repository_filter.filters.operators.between') },
-          { value: 'unequal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.date.not_on') }
+          { value: 'equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.equal_to') },
+          { value: 'unequal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.unequal_to') },
+          { value: 'greater_than', label: this.i18n.t('repositories.show.repository_filter.filters.operators.greater_than') },
+          { value: 'greater_than_or_equal', label: this.i18n.t('repositories.show.repository_filter.filters.operators.greater_than_or_equal_to') },
+          { value: 'less_than', label: this.i18n.t('repositories.show.repository_filter.filters.operators.less_than') },
+          { value: 'less_than_or_equal', label: this.i18n.t('repositories.show.repository_filter.filters.operators.less_than_or_equal_to') },
+          { value: 'between', label: this.i18n.t('repositories.show.repository_filter.filters.operators.between') }
         ],
         operator: 'equal_to',
         date: null,
@@ -55,7 +56,6 @@
     },
     methods: {
       formattedDate(date) {
-        if (!date) return null
         return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
       }
     }

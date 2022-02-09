@@ -1,15 +1,7 @@
 <span class="start-date-label">
   <% if my_module.started_on.present? %>
     <strong><%= l(my_module.started_on, format: :full) %></strong>
-<<<<<<< HEAD
-<<<<<<< HEAD
   <% elsif start_date_editable %>
-=======
-  <% else %>
->>>>>>> Pulled latest release
-=======
-  <% elsif my_module_editable %>
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     <span class="empty-label">
       <%= t('my_modules.details.no_start_date_placeholder') %>
     </span>

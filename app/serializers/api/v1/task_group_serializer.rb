@@ -8,7 +8,7 @@ module Api
       has_many :my_modules, key: :tasks,
                             serializer: TaskSerializer,
                             class_name: 'MyModule',
-                            unless: -> { object.my_modules.empty? }
+                            unless: -> { object.my_modules.blank? }
 
       include TimestampableModel
     end

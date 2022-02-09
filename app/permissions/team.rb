@@ -36,6 +36,10 @@ Canaid::Permissions.register_for(Team) do
     user.is_normal_user_or_admin_of_team?(team)
   end
 
+  can :manage_bmt_filters do |user, team|
+    user.is_normal_user_or_admin_of_team?(team)
+  end
+
   # repository: create, copy
   can :create_repositories do |user, team|
     within_limits = Repository.within_global_limits?
@@ -51,6 +55,15 @@ Canaid::Permissions.register_for(Team) do
   #   - check visible_by method in Project model
   can :manage_reports do |user, team|
     user.is_normal_user_or_admin_of_team?(team)
+  end
+end
+
+Canaid::Permissions.register_for(ProjectFolder) do
+  # ProjectFolder: delete
+  can :delete_project_folder do |user, project_folder|
+    user.is_admin_of_team?(project_folder.team) &&
+      project_folder.projects.none? &&
+      project_folder.project_folders.none?
   end
 end
 

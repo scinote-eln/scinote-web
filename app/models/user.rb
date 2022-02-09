@@ -5,7 +5,6 @@ class User < ApplicationRecord
   include SettingsModel
   include VariablesModel
   include User::TeamRoles
-  include User::ProjectRoles
   include TeamBySubjectModel
   include InputSanitizeHelper
   include ActiveStorageConcerns
@@ -62,15 +61,17 @@ class User < ApplicationRecord
   has_many :user_identities, inverse_of: :user
   has_many :user_teams, inverse_of: :user
   has_many :teams, through: :user_teams
+  has_many :user_assignments, dependent: :destroy
   has_many :user_projects, inverse_of: :user
-  has_many :projects, through: :user_projects
+  has_many :projects, through: :user_assignments, source: :assignable, source_type: 'Project'
   has_many :user_my_modules, inverse_of: :user
-  has_many :my_modules, through: :user_my_modules
+  has_many :my_modules, through: :user_assignments, source: :assignable, source_type: 'MyModule'
   has_many :comments, inverse_of: :user
   has_many :activities, inverse_of: :owner, foreign_key: 'owner_id'
   has_many :results, inverse_of: :user
   has_many :repositories, inverse_of: :user
   has_many :repository_table_states, inverse_of: :user, dependent: :destroy
+  has_many :repository_table_filters, foreign_key: 'created_by_id', inverse_of: :created_by, dependent: :nullify
   has_many :steps, inverse_of: :user
   has_many :reports, inverse_of: :user
   has_many :created_assets, class_name: 'Asset', foreign_key: 'created_by_id'
@@ -193,6 +194,11 @@ class User < ApplicationRecord
            class_name: 'Repository',
            foreign_key: 'restored_by_id',
            inverse_of: :restored_by,
+           dependent: :nullify
+  has_many :created_repository_rows,
+           class_name: 'RepositoryRow',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
            dependent: :nullify
   has_many :archived_repository_rows,
            class_name: 'RepositoryRow',
@@ -369,24 +375,14 @@ class User < ApplicationRecord
     team_to_ignore = nil
   )
     result = User.all
-
-    if active_only
-      result = result.where.not(confirmed_at: nil)
-    end
+    result = result.where.not(confirmed_at: nil) if active_only
 
     if team_to_ignore.present?
-      ignored_ids =
-        UserTeam
-        .select(:user_id)
-        .where(team_id: team_to_ignore.id)
-      result =
-        result
-        .where("users.id NOT IN (?)", ignored_ids)
+      ignored_ids = UserTeam.select(:user_id).where(team_id: team_to_ignore.id)
+      result = result.where.not(users: { id: ignored_ids })
     end
 
-    result
-      .where_attributes_like([:full_name, :email], query)
-      .distinct
+    result.where_attributes_like(%i(full_name email), query).distinct
   end
 
   # Whether user is active (= confirmed) or not

@@ -16,11 +16,7 @@
   <% if limit_reached %>
     <div class="more-results"><%= t('atwho.more_results') %></div>
   <% end %>
-<<<<<<< HEAD
   <% if users.blank? %>
-=======
-  <% if users.empty? %>
->>>>>>> Pulled latest release
     <%= render partial: 'shared/smart_annotation/no_results.html.erb', locals: { object_type: 'users' } %>
   <% end %>
 </div>

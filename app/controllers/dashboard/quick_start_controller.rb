@@ -12,11 +12,7 @@ module Dashboard
       my_module = CreateMyModuleService.new(current_user, current_team,
                                             project: @project || create_project_params,
                                             experiment: @experiment || create_experiment_params).call
-<<<<<<< HEAD
       if my_module.errors.blank?
-=======
-      if my_module.errors.empty?
->>>>>>> Pulled latest release
         render json: { my_module_path: protocols_my_module_path(my_module) }
       else
         render json: { errors: my_module.errors, error_object: my_module.class.name }, status: :unprocessable_entity
@@ -24,15 +20,9 @@ module Dashboard
     end
 
     def project_filter
-<<<<<<< HEAD
       projects = Project.readable_by_user(current_user)
                         .search(current_user, false, params[:query], 1, current_team)
                         .select(:id, :name)
-=======
-      projects = current_team.projects.search(current_user, false, params[:query], 1, current_team)
-                             .where(user_projects: { user_id: current_user.id, role: %i(owner normal_user) })
-                             .select(:id, :name)
->>>>>>> Pulled latest release
       projects = projects.map { |i| { value: i.id, label: escape_input(i.name) } }
       if (projects.map { |i| i[:label] }.exclude? params[:query]) && params[:query].present?
         projects = [{ value: 0, label: params[:query] }] + projects
@@ -45,7 +35,6 @@ module Dashboard
         experiments = [{ value: 0, label: params[:query] }]
       elsif @project
         experiments = @project.experiments
-<<<<<<< HEAD
                               .managable_by_user(current_user)
                               .search(current_user, false, params[:query], 1, current_team)
                               .select(:id, :name)
@@ -53,12 +42,6 @@ module Dashboard
         if (experiments.map { |i| i[:label] }.exclude? params[:query]) &&
            params[:query].present? &&
            can_create_project_experiments?(@project)
-=======
-                              .search(current_user, false, params[:query], 1, current_team)
-                              .select(:id, :name)
-        experiments = experiments.map { |i| { value: i.id, label: escape_input(i.name) } }
-        if (experiments.map { |i| i[:label] }.exclude? params[:query]) && params[:query].present?
->>>>>>> Pulled latest release
           experiments = [{ value: 0, label: params[:query] }] + experiments
         end
       end
@@ -76,7 +59,6 @@ module Dashboard
     end
 
     def load_project
-<<<<<<< HEAD
       @project = current_team.projects.readable_by_user(current_user).find_by(id: params.dig(:project, :id))
     end
 
@@ -85,13 +67,6 @@ module Dashboard
 
       @experiment =
         @project.experiments.managable_by_user(current_user).find_by(id: params.dig(:experiment, :id))
-=======
-      @project = current_team.projects.find_by(id: params.dig(:project, :id))
-    end
-
-    def load_experiment
-      @experiment = @project.experiments.find_by(id: params.dig(:experiment, :id)) if @project
->>>>>>> Pulled latest release
     end
 
     def check_task_create_permissions
@@ -101,11 +76,7 @@ module Dashboard
       end
 
       unless @experiment
-<<<<<<< HEAD
         render_403 unless can_create_project_experiments?(current_user, @project)
-=======
-        render_403 unless can_create_experiments?(current_user, @project)
->>>>>>> Pulled latest release
         return
       end
 

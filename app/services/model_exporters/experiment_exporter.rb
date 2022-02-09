@@ -44,14 +44,29 @@ module ModelExporters
       end
       return {
         experiment: @experiment,
+        user_assignments: @experiment.user_assignments.map do |ua|
+          user_assignment(ua)
+        end,
         my_modules: my_modules.map { |m| my_module(m) },
         my_module_groups: my_module_groups
       }, @assets_to_copy
     end
 
+    def user_assignment(user_assignment)
+      {
+        user_id: user_assignment.user_id,
+        assigned_by_id: user_assignment.assigned_by_id,
+        role_name: user_assignment.user_role.name,
+        assigned: user_assignment.assigned
+      }
+    end
+
     def my_module(my_module)
       {
         my_module: my_module,
+        user_assignments: my_module.user_assignments.map do |ua|
+          user_assignment(ua)
+        end,
         my_module_status_name: my_module.my_module_status&.name,
         outputs: my_module.outputs,
         my_module_tags: my_module.my_module_tags,

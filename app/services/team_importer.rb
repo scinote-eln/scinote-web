@@ -47,6 +47,7 @@ class TeamImporter
     Protocol.skip_callback(:save, :after, :update_linked_children)
     Activity.skip_callback(:create, :before, :add_user)
     Activity.skip_callback(:initialize, :after, :init_default_values)
+    @user_roles = UserRole.all
     @import_dir = import_dir
     team_json = JSON.parse(File.read("#{@import_dir}/team_export.json"))
     team = Team.new(team_json['team'].slice(*Team.column_names))
@@ -189,6 +190,12 @@ class TeamImporter
 
         update_smart_annotations_in_project(project)
 
+        # handle the permissions for newly created experiment
+        user = User.find(user_id)
+        UserAssignments::GenerateUserAssignmentsJob.perform_now(experiment, user)
+        experiment.my_modules.find_each do |my_module|
+          UserAssignments::GenerateUserAssignmentsJob.perform_now(my_module, user)
+        end
         puts "Imported experiment: #{experiment.id}"
         return experiment
       end
@@ -575,10 +582,13 @@ class TeamImporter
       project.last_modified_by_id = find_user(project.last_modified_by_id)
       project.archived_by_id = find_user(project.archived_by_id)
       project.restored_by_id = find_user(project.restored_by_id)
+      project.skip_user_assignments = true
       project.project_folder_id = @project_folder_mappings[project.project_folder_id]
       project.save!
       @project_mappings[orig_project_id] = project.id
       @project_counter += 1
+      puts 'Creating project user_assignments...'
+      create_user_assignments(project_json['user_assignments'], project)
       puts 'Creating user_projects...'
       project_json['user_projects'].each do |user_project_json|
         user_project = UserProject.new(user_project_json)
@@ -632,8 +642,12 @@ class TeamImporter
       user_id || find_user(experiment.last_modified_by_id)
     experiment.archived_by_id = find_user(experiment.archived_by_id)
     experiment.restored_by_id = find_user(experiment.restored_by_id)
+    experiment.skip_user_assignments = true
     experiment.save!
     @experiment_mappings[orig_experiment_id] = experiment.id
+
+    create_user_assignments(experiment_json['user_assignments'], experiment)
+
     experiment_json['my_module_groups'].each do |my_module_group_json|
       my_module_group = MyModuleGroup.new(my_module_group_json)
       orig_module_group_id = my_module_group.id
@@ -663,6 +677,7 @@ class TeamImporter
       my_module.archived_by_id = find_user(my_module.archived_by_id)
       my_module.restored_by_id = find_user(my_module.restored_by_id)
       my_module.experiment = experiment
+      my_module.skip_user_assignments = true
 
       # Find matching status from default flow
       default_flow = MyModuleStatusFlow.global.first
@@ -676,6 +691,8 @@ class TeamImporter
       my_module.save!
       @my_module_mappings[orig_my_module_id] = my_module.id
       @my_module_counter += 1
+
+      create_user_assignments(my_module_json['user_assignments'], my_module)
 
       unless @is_template
         my_module_json['my_module_tags'].each do |my_module_tag_json|
@@ -996,6 +1013,20 @@ class TeamImporter
 
   def find_status_item_id(status_item_id)
     @repository_status_item_mappings[status_item_id]
+  end
+
+  def create_user_assignments(user_assignments_json, assignable)
+    return if user_assignments_json.blank?
+
+    user_assignments_json.each do |user_assignment_json|
+      user_assignment = UserAssignment.new
+      user_assignment.assignable = assignable
+      user_assignment.user_role = @user_roles.find { |role| role.name == user_assignment_json['role_name'] }
+      user_assignment.user_id = find_user(user_assignment_json['user_id'])
+      user_assignment.assigned = user_assignment_json['assigned']
+      user_assignment.assigned_by_id = find_user(user_assignment_json['assigned_by_id'])
+      user_assignment.save!
+    end
   end
 
   def create_cell_value(repository_cell, value_json, team)

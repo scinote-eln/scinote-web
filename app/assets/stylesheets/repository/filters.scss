@@ -6,22 +6,15 @@
     position: relative;
 
     &::after {
-      background: $brand-danger;
+      background: $brand-accent;
       border-radius: 50%;
-      border: 2px solid $color-white;
       content: "";
       display: block;
-      height: 10px;
+      height: 8px;
       position: absolute;
       right: .3em;
       top: .3em;
-      width: 10px;
-    }
-
-    &:hover {
-      &::after {
-        border-color: $color-concrete;
-      }
+      width: 8px;
     }
   }
 
@@ -41,7 +34,6 @@
     .saved-filters-list {
       max-height: 300px;
       overflow-y: auto;
-      width: 250px;
     }
   }
 
@@ -52,11 +44,6 @@
     min-height: 300px;
     padding: 0;
     width: 460px;
-
-    .dropdown-selector,
-    .users-filter-dropdown {
-      overflow: hidden;
-    }
 
     .header {
       align-items: center;
@@ -86,29 +73,12 @@
       .saved-filters-element {
         align-items: center;
         display: flex;
-        padding: 0 1em;
+        padding: .5em 1em;
         cursor: pointer;
-
-        .saved-filter-name {
-          padding: 8px 0;
-        }
-
-        &:hover {
-          background: $color-concrete;
-        }
-
-        span {
-          flex-grow: 1;
-        }
 
         .btn-light {
           color: $color-silver-chalice;
-          flex-shrink: 0;
           margin-left: auto;
-
-          &:hover {
-            color: $color-black;
-          }
         }
       }
     }
@@ -141,7 +111,7 @@
     .filters-list {
       flex-grow: 1;
       overflow-y: auto;
-      padding: .5em 1.6rem;
+      padding: .5em;
     }
 
     .filter-container {
@@ -162,31 +132,11 @@
         grid-auto-flow: column;
         grid-template-columns: min-content auto;
 
-        .between-delimiter {
-          align-self: center;
-
-          &.vertical {
-            background-color: $color-silver-chalice;
-            height: 12px;
-            margin: auto;
-            width: 2px;
-          }
-        }
-
-        .number-range-selector {
-          align-items: center;
-          display: grid;
-          gap: .5em;
-          grid-auto-flow: column;
-        }
-
         .dropdown-selector-container {
           width: 100%;
         }
 
         .operator-selector {
-          height: 2em;
-
           .dropdown-selector-container {
             width: 120px;
           }
@@ -214,45 +164,7 @@
       }
 
       .filter-remove {
-        margin-left: .5em;
-
-        .icon-btn {
-          color: $color-silver-chalice;
-
-          &:hover {
-            color: $color-black;
-          }
-        }
-      }
-    }
-  }
-
-  .task-option {
-    background-image: image-url("icon_small/task-black.svg");
-    background-position: left center;
-    background-repeat: no-repeat;
-    background-size: 1em;
-    padding-left: 1.5em;
-  }
-}
-
-#saveRepositoryFilters {
-  padding-left: 0;
-
-  .dropdown-menu {
-    width: 320px;
-
-    .overwrite-link {
-      display: flex;
-
-      .fa-save {
-        flex-shrink: 0;
-        line-height: 20px;
-        margin-right: .25em;
-      }
-
-      .overwrite-title {
-        white-space: normal;
+        margin-left: auto;
       }
     }
   }

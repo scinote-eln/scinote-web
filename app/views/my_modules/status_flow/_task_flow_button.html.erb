@@ -5,15 +5,7 @@
 <div class="dropdown sci-dropdown status-flow-dropdown"
      data-status-changing="<%= my_module.status_changing %>"
      data-status-check-url="<%= status_state_my_module_path(my_module) %>">
-<<<<<<< HEAD
-<<<<<<< HEAD
   <button class="btn btn-secondary dropdown-toggle <%= 'disabled' if my_module.status_changing || my_module.archived_branch? %>"
-=======
-  <button class="btn btn-secondary dropdown-toggle <%= 'disabled' if my_module.status_changing %>"
->>>>>>> Pulled latest release
-=======
-  <button class="btn btn-secondary dropdown-toggle <%= 'disabled' if my_module.status_changing || my_module.archived_branch? %>"
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
           type="button"
           data-toggle="dropdown"
           aria-haspopup="true"
@@ -29,11 +21,7 @@
     <span class="caret pull-right"></span>
   </button>
   <ul class="dropdown-menu" aria-labelledby="dropdownTaskFlow" id="dropdownTaskFlowList" data-link-url="<%= update_state_my_module_url(my_module) %>">
-<<<<<<< HEAD
     <% if can_update_my_module_status?(@my_module) %>
-=======
-    <% if can_change_my_module_flow_status?(@my_module) %>
->>>>>>> Pulled latest release
       <% unless status.initial_status? %>
         <% previous_s = status.previous_status %>
         <% previous_s_errors = previous_s.conditions_errors(my_module) %>

@@ -8,7 +8,7 @@
       <%= link_to t('sidebar.experiments.back_button'), projects_path, class: 'sidebar-link back-button' %>
     <% end %>
   </li>
-  <% project.sorted_experiments(@current_sort, view_mode == 'archived').each do |experiment| %>
+  <% project.sorted_experiments(current_user, @current_sort, view_mode == 'archived').each do |experiment| %>
     <li class="sidebar-leaf">
       <% if view_mode == 'archived'  %>
         <%= link_to experiment.name, module_archive_experiment_path(experiment), title: experiment.name, class: 'sidebar-link' %>

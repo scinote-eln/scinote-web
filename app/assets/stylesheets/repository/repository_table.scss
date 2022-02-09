@@ -4,7 +4,6 @@
 @import "constants";
 
 .repository-table {
-<<<<<<< HEAD
   position: relative;
 
   .dataTables_filter {
@@ -30,10 +29,6 @@
     &.active {
       display: block;
     }
-=======
-  .dataTables_filter {
-    float: right;
->>>>>>> Pulled latest release
   }
 
   // hack only for firefox

@@ -25,6 +25,21 @@ class RepositoryAssetValue < ApplicationRecord
     asset.file_name
   end
 
+  def self.add_filter_condition(repository_rows, join_alias, filter_element)
+    case filter_element.operator
+    when 'file_contains'
+      repository_rows
+        .joins("INNER JOIN \"assets\" ON  \"assets\".\"id\" = \"#{join_alias}\".\"asset_id\"")
+        .joins('INNER JOIN "asset_text_data" ON  "asset_text_data"."asset_id" = "assets"."id"')
+        .where('asset_text_data.data_vector @@ to_tsquery(?)',
+               "%#{sanitize_sql_like(filter_element.parameters['text'])}%")
+    when 'file_attached'
+      repository_rows.where.not("#{join_alias} IS NULL")
+    else
+      raise ArgumentError, 'Wrong operator for RepositoryAssetValue!'
+    end
+  end
+
   def data
     asset.file_name
   end

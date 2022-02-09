@@ -13,16 +13,12 @@ module ProjectsHelper
     projects_view_mode == 'archived'
   end
 
-  def user_project_role_to_s(user_project)
-    t('user_projects.enums.role.' + user_project.role)
+  def user_names_with_roles(user_assignments)
+    user_assignments.map { |up| user_name_with_role(up) }.join('&#013;').html_safe
   end
 
-  def user_names_with_roles(user_projects)
-    user_projects.map { |up| user_name_with_role(up) }.join('&#013;').html_safe
-  end
-
-  def user_name_with_role(user_project)
-    "#{sanitize_input(user_project.user.name)} - #{I18n.t("user_projects.enums.role.#{user_project.role}")}"
+  def user_name_with_role(user_assignment)
+    "#{sanitize_input(user_assignment.user.name)} - #{user_assignment.user_role.name}"
   end
 
   def construct_module_connections(my_module)

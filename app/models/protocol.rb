@@ -123,14 +123,11 @@ class Protocol < ApplicationRecord
                   _current_team = nil,
                   options = {})
     team_ids = Team.joins(:user_teams)
-                   .where('user_teams.user_id = ?', user.id)
+                   .where(user_teams: { user_id: user.id })
                    .distinct
                    .pluck(:id)
 
-    module_ids = MyModule.search(user,
-                                 include_archived,
-                                 nil,
-                                 Constants::SEARCH_NO_LIMIT)
+    module_ids = MyModule.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
                          .pluck(:id)
 
     where_str =
@@ -193,9 +190,7 @@ class Protocol < ApplicationRecord
     if page == Constants::SEARCH_NO_LIMIT
       new_query
     else
-      new_query
-        .limit(Constants::SEARCH_LIMIT)
-        .offset((page - 1) * Constants::SEARCH_LIMIT)
+      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 

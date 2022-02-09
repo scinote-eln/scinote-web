@@ -1,21 +1,13 @@
 .repositories-index {
   &.active {
     [data-view-mode="archived"] {
-<<<<<<< HEAD
       display: none !important;
-=======
-      display: none;
->>>>>>> Pulled latest release
     }
   }
 
   &.archived {
     [data-view-mode="active"] {
-<<<<<<< HEAD
       display: none !important;
-=======
-      display: none;
->>>>>>> Pulled latest release
     }
   }
 
@@ -49,12 +41,9 @@
     text-align: center;
   }
 }
-<<<<<<< HEAD
 
 .main-actions {
   .dropdown-menu {
     font-size: 14px;
   }
 }
-=======
->>>>>>> Pulled latest release

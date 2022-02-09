@@ -33,19 +33,11 @@ class MyModuleStatus < ApplicationRecord
   def self.sort_by_position(order = :asc)
     ordered_statuses, statuses = all.to_a.partition { |i| i.previous_status_id.nil? }
 
-<<<<<<< HEAD
     return [] if ordered_statuses.blank?
 
     until statuses.blank?
       next_element, statuses = statuses.partition { |i| ordered_statuses.last.id == i.previous_status_id }
       if next_element.blank?
-=======
-    return [] if ordered_statuses.empty?
-
-    until statuses.empty?
-      next_element, statuses = statuses.partition { |i| ordered_statuses.last.id == i.previous_status_id }
-      if next_element.empty?
->>>>>>> Pulled latest release
         break
       else
         ordered_statuses.concat(next_element)

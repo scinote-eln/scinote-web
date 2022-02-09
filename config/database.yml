@@ -17,8 +17,8 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  database: postgres
   pool: <%= ENV['DB_POOL'] || ENV['RAILS_MAX_THREADS'] || 5 %>
+  url: <%= ENV['DATABASE_URL'] %>
 
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
@@ -80,7 +80,7 @@ test: &test
 #     url: <%= ENV['DATABASE_URL'] %>
 #
 production:
-  url: <%= ENV['DATABASE_URL'] %>
+  <<: *default
 
 cucumber:
   <<: *test

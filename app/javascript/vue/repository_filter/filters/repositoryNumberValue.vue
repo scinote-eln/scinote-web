@@ -12,30 +12,31 @@
     <div v-if="operator !== 'between'" class="sci-input-container">
       <input
         class="sci-input-field"
-        type="text"
+        type="number"
         name="value"
         v-model="value"
         :placeholder= "this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.input_placeholder',{name: this.filter.column.name})"
       />
     </div>
-    <div v-else class="number-range-selector">
+    <div v-else class="range-selector">
       <div class="sci-input-container">
         <input
+          @input="updateRange"
           class="sci-input-field"
-          type="text"
+          type="number"
           name="from"
           v-model="from"
-          :placeholder= "this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.from_placeholder')"
+
         />
       </div>
-      <span class="between-delimiter">—</span>
+      -
       <div class="sci-input-container">
         <input
+          @input="updateRange"
           class="sci-input-field"
-          type="text"
+          type="number"
           name="to"
           v-model="to"
-          :placeholder= "this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.to_placeholder')"
         />
       </div>
     </div>
@@ -69,31 +70,31 @@
       DropdownSelector
     },
     methods: {
-      validateNumber(number) {
-        return number.replace(/[^0-9.]/g, '').match(/^\d*(\.\d{0,10})?/)[0]
+      updateRange() {
+        this.value = {
+          from: this.from,
+          to: this.to
+        };
       }
     },
     watch: {
+      operator() {
+        if(this.operator !== 'between' && !(typeof this.value === 'string')) this.value = '';
+        if(this.operator === 'between') this.value = {to: '', from: ''};
+
+      },
       value() {
-        this.value = this.validateNumber(this.value)
-        this.parameters = { number: this.value }
-        this.updateFilter();
-      },
-      to() {
-        this.to = this.validateNumber(this.to)
-        this.parameters = {from: this.from, to: this.to}
-        this.updateFilter();
-      },
-      from() {
-        this.from = this.validateNumber(this.from)
-        this.parameters = {from: this.from, to: this.to}
+        if (this.operator === 'between') {
+          this.parameters = this.value;
+        } else {
+          this.parameters = { number: this.value }
+        }
         this.updateFilter();
       }
     },
     computed: {
       isBlank(){
-        return (!this.value && this.operator != 'between') ||
-               ((!this.to || !this.from) && this.operator == 'between');
+        return this.operator == 'equal' && !this.value;
       }
     }
   }

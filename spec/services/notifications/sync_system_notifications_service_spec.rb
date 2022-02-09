@@ -84,11 +84,9 @@ describe Notifications::SyncSystemNotificationsService do
     end
 
     it 'calls service to notify users about notification' do
-      Delayed::Worker.delay_jobs = false
       expect(Notifications::PushToCommunicationChannelService).to receive(:call).exactly(10)
 
       service_call
-      Delayed::Worker.delay_jobs = true
     end
   end
 
@@ -113,11 +111,9 @@ describe Notifications::SyncSystemNotificationsService do
     end
 
     it 'does not call service to notify users about notification' do
-      Delayed::Worker.delay_jobs = false
       expect(Notifications::PushToCommunicationChannelService).to_not receive(:call)
 
       service_call
-      Delayed::Worker.delay_jobs = true
     end
   end
 end

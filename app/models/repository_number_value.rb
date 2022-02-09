@@ -16,6 +16,28 @@ class RepositoryNumberValue < ApplicationRecord
     data.to_s
   end
 
+  def self.add_filter_condition(repository_rows, join_alias, filter_element)
+    parameters = filter_element.parameters
+    case filter_element.operator
+    when 'equal_to'
+      repository_rows.where("#{join_alias}.data = ?", parameters['number'])
+    when 'unequal_to'
+      repository_rows.where.not("#{join_alias}.data = ?", parameters['number'])
+    when 'greater_than'
+      repository_rows.where("#{join_alias}.data > ?", parameters['number'])
+    when 'greater_than_or_equal_to'
+      repository_rows.where("#{join_alias}.data >= ?", parameters['number'])
+    when 'less_than'
+      repository_rows.where("#{join_alias}.data < ?", parameters['number'])
+    when 'less_than_or_equal_to'
+      repository_rows.where("#{join_alias}.data <= ?", parameters['number'])
+    when 'between'
+      repository_rows.where("#{join_alias}.data > ? AND #{join_alias}.data < ?", parameters['from'], parameters['to'])
+    else
+      raise ArgumentError, 'Wrong operator for RepositoryNumberValue!'
+    end
+  end
+
   def data_changed?(new_data)
     BigDecimal(new_data.to_s) != data
   end

@@ -1,14 +1,11 @@
 // scss-lint:disable ImportantRule
 @import "constants";
 
-<<<<<<< HEAD
 @font-face {
   font-family: "tinymce";
   src: asset-url("tinymce/skins/lightgray/fonts/tinymce.woff");
 }
 
-=======
->>>>>>> Finished merging. Test on dev machine (iMac).
 .tinymce-view {
   border: solid 1px;
   border-color: $color-white;
@@ -74,8 +71,6 @@
 .mce-toolbar {
   background: $color-white !important;
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 
 
@@ -97,7 +92,6 @@
     border: 1px solid $color-silver-chalice;
     cursor: pointer;
     font-size: 12px;
-    margin-left: auto;
     padding: 3px 10px 3px 10px;
   }
 
@@ -108,39 +102,6 @@
     font-weight: 501;
     margin-left: 10px;
   }
-=======
-
-
-
-.restore-draft-notification {
-  align-items: center;
-  background: $state-info-bg !important;
-  display: flex;
-  height: 30px !important;
-  padding: 0 10px !important;
-
-  .notification-text {
-    flex-grow: 1;
-  }
-
-  .restore-draft-btn {
-    border: 1px solid $color-silver-chalice;
-    cursor: pointer;
-    font-size: 12px;
-    padding: 3px 10px 3px 10px;
-  }
-<<<<<<< HEAD
->>>>>>> Initial commit of 1.17.2 merge
-=======
-
-  .fas {
-    color: $color-silver-chalice;
-    cursor: pointer;
-    font-family: 'Font Awesome 5 Free';
-    font-weight: 501;
-    margin-left: 10px;
-  }
->>>>>>> Pulled latest release
 }
 
 .mce-stack-layout {
@@ -196,19 +157,8 @@
 
   .mce-container-body.mce-abs-layout {
     background: $brand-primary;
-<<<<<<< HEAD
-<<<<<<< HEAD
     position: relative;
     top: -10px;
-=======
-    border-radius: 5px 5px 0 0;
-    position: relative;
-    top: -45px;
->>>>>>> Initial commit of 1.17.2 merge
-=======
-    position: relative;
-    top: -10px;
->>>>>>> Pulled latest release
 
     .mce-container,
     .mce-widget {
@@ -225,10 +175,6 @@
   }
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Pulled latest release
 .mce-window {
 
   .mce-abs-layout {
@@ -249,11 +195,4 @@
   }
 }
 
-<<<<<<< HEAD
-=======
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
->>>>>>> Initial commit of 1.17.2 merge
-=======
->>>>>>> Pulled latest release
 // scss-lint:enable ImportantRule

@@ -10,14 +10,21 @@ describe SmartAnnotations::PermissionEval do
   let(:another_team) { create :team }
   let!(:user_team) { create :user_team, user: user, team: team, role: :admin }
   let(:project) { create :project, name: 'my project', team: team }
-  let!(:user_project) { create :user_project, :owner, project: project, user: user }
+  let!(:user_project) { create :user_project, project: project, user: user }
+  let!(:user_assignment) do
+    create :user_assignment,
+           assignable: project,
+           user: user,
+           user_role: UserRole.find_by(name: I18n.t('user_roles.predefined.owner')),
+           assigned_by: user
+  end
   let(:experiment) do
     create :experiment, name: 'my experiment',
                         project: project,
                         created_by: user,
                         last_modified_by: user
   end
-  let(:task) { create :my_module, name: 'task', experiment: experiment }
+  let(:task) { create :my_module, name: 'task', experiment: experiment, created_by: experiment.created_by }
   let(:repository) { create :repository, team: team, created_by: user }
   let(:repository_item) { create :repository_row, repository: repository }
 

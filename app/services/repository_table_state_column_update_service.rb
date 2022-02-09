@@ -9,7 +9,7 @@ class RepositoryTableStateColumnUpdateService
   def update_states_with_new_column(repository)
     raise ArgumentError, 'repository is empty' if repository.blank?
 
-    columns_num = Constants::REPOSITORY_TABLE_DEFAULT_STATE['columns'].length + repository.repository_columns.count
+    columns_num = repository.default_columns_count + repository.repository_columns.count
     RepositoryTableState.where(
       repository: repository
     ).find_each do |table_state|
@@ -49,7 +49,7 @@ class RepositoryTableStateColumnUpdateService
         if state.dig('order', 0, 0).to_i == old_column_index
           # Fallback to default order if user had table ordered by
           # the deleted column
-          state['order'] = Constants::REPOSITORY_TABLE_DEFAULT_STATE['order']
+          state['order'] = repository.default_table_state['order']
         elsif state.dig('order', 0, 0).to_i > old_column_index
           state['order'][0][0] -= 1
         end

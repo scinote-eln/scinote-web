@@ -21,14 +21,16 @@ class MyModuleGroup < ApplicationRecord
     )
 
     # Get clones of modules from this group, save them as hash
-    cloned_modules = my_modules.workflow_ordered.each_with_object({}) do |m, h|
+    cloned_modules = my_modules.readable_by_user(current_user).workflow_ordered.each_with_object({}) do |m, h|
       h[m.id] = m.deep_clone_to_experiment(current_user, experiment)
       h
     end
 
-    my_modules.workflow_ordered.each do |m|
+    my_modules.readable_by_user(current_user).workflow_ordered.each do |m|
       # Copy connections
       m.inputs.each do |inp|
+        next if cloned_modules[inp[:input_id]].nil? || cloned_modules[inp[:output_id]].nil?
+
         Connection.create(
           input_id: cloned_modules[inp[:input_id]].id,
           output_id: cloned_modules[inp[:output_id]].id

@@ -38,13 +38,7 @@ class TeamRepositoriesController < ApplicationController
   private
 
   def load_vars
-<<<<<<< HEAD
     @repository = current_team.repositories.find(params[:repository_id])
-=======
-    @repository = current_team.repositories.find_by_id(params[:repository_id])
-
-    render_404 unless @repository
->>>>>>> Finished merging. Test on dev machine (iMac).
   end
 
   def create_params
@@ -77,16 +71,8 @@ class TeamRepositoriesController < ApplicationController
   end
 
   def teams_to_update
-<<<<<<< HEAD
-<<<<<<< HEAD
     return [] if update_params[:permission_changes].blank?
 
-=======
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-    return [] if update_params[:permission_changes].blank?
-
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     teams_to_update = JSON.parse(update_params[:permission_changes]).keys.map(&:to_i).to_a &
                       update_params[:share_team_ids]&.map(&:to_i).to_a
     wp = update_params[:write_permissions]&.map(&:to_i)

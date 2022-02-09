@@ -50,20 +50,10 @@ module Reports
       elements = []
       temp_p = []
       raw_elements.each do |elem|
-<<<<<<< HEAD
-<<<<<<< HEAD
         next unless elem
 
         if %w(image newline table ol ul).include? elem[:type]
           unless temp_p.blank?
-=======
-=======
-        next unless elem
-
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
-        if %w(image newline table ol ul).include? elem[:type]
-          unless temp_p.empty?
->>>>>>> Pulled latest release
             elements.push(type: 'p', children: temp_p)
             temp_p = []
           end
@@ -78,21 +68,13 @@ module Reports
 
     # Convert HTML structure to plain text structure
     # rubocop:disable Metrics/BlockLength
-<<<<<<< HEAD
-    def recursive_children(children, elements, skip_newline = false)
-=======
     def recursive_children(children, elements)
->>>>>>> Pulled latest release
       children.each do |elem|
         if elem.class == Nokogiri::XML::Text
           next if elem.text.strip == ' ' # Invisible symbol
 
           style = paragraph_styling(elem.parent)
-<<<<<<< HEAD
-          type = !skip_newline && ((style[:align] && style[:align] != :justify) || style[:style]) ? 'newline' : 'text'
-=======
           type = (style[:align] && style[:align] != :justify) || style[:style] ? 'newline' : 'text'
->>>>>>> Pulled latest release
 
           text = smart_annotation_check(elem)
 
@@ -128,11 +110,7 @@ module Reports
           elements.push(list_element(elem))
           next
         end
-<<<<<<< HEAD
-        elements = recursive_children(elem.children, elements, skip_newline) if elem.children
-=======
         elements = recursive_children(elem.children, elements) if elem.children
->>>>>>> Pulled latest release
       end
       elements
     end
@@ -172,15 +150,7 @@ module Reports
     end
 
     def list_element(list_element)
-<<<<<<< HEAD
-<<<<<<< HEAD
       allowed_elements = %w(li ul ol a img strong em h1 h2 h2 h3 h4 h5 span p)
-=======
-      allowed_elements = %w(li ul ol a img strong em h1 h2 h2 h3 h4 h5 span)
->>>>>>> Pulled latest release
-=======
-      allowed_elements = %w(li ul ol a img strong em h1 h2 h2 h3 h4 h5 span p)
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
       data_array = list_element.children.select { |n| allowed_elements.include?(n.name) }.map do |li_child|
         li_child.children.map do |item|
           if item.is_a? Nokogiri::XML::Text
@@ -193,15 +163,7 @@ module Reports
             img_element(item)&.merge(bookmark_id: SecureRandom.hex)
           elsif %w(table).include?(item.name)
             tiny_mce_table_element(item).merge(bookmark_id: SecureRandom.hex)
-<<<<<<< HEAD
-<<<<<<< HEAD
           elsif %w(strong em h1 h2 h2 h3 h4 h5 span p).include?(item.name)
-=======
-          elsif %w(strong em h1 h2 h2 h3 h4 h5 span).include?(item.name)
->>>>>>> Pulled latest release
-=======
-          elsif %w(strong em h1 h2 h2 h3 h4 h5 span p).include?(item.name)
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
             # Pass styles and extend renderer for li with style, some limitations on li items
             # { type: 'text', value: item[:value], style: paragraph_styling(item) }
             item.children.text
@@ -285,11 +247,7 @@ module Reports
           next unless cell.name == 'td'
 
           # Parse cell content
-<<<<<<< HEAD
-          formated_cell = recursive_children(cell.children, [], true)
-=======
           formated_cell = recursive_children(cell.children, [])
->>>>>>> Pulled latest release
 
           # Combine text elements to single paragraph
           formated_cell = combine_docx_elements(formated_cell)

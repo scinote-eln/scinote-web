@@ -33,13 +33,10 @@ var RepositoryColumns = (function() {
       $(response.html).appendTo($('.repository-show'));
       RepositoryDatatable.init('#' + $('.repository-table table').attr('id'));
       RepositoryDatatable.redrawTableOnSidebarToggle();
-<<<<<<< HEAD
-=======
       // show manage columns index modal
       setTimeout(function() {
         $(manageModal).find('.back-to-column-modal').trigger('click');
       }, 500);
->>>>>>> Pulled latest release
     });
   }
 
@@ -182,12 +179,8 @@ var RepositoryColumns = (function() {
             closeOnSelect: true,
             optionClass: 'custom-option',
             selectAppearance: 'simple',
-<<<<<<< HEAD
             disableSearch: true,
             labelHTML: true
-=======
-            disableSearch: true
->>>>>>> Pulled latest release
           });
 
           dropdownSelector.init('.list-column-type .delimiter', delimiterDropdownConfig);
@@ -260,40 +253,12 @@ var RepositoryColumns = (function() {
     });
   }
 
-<<<<<<< HEAD
   function getColumnTypeText(el) {
     let colType = $(el).attr('data-type');
     if (!colType) return '';
 
     return I18n.t('libraries.manange_modal_column.select.' + colType.split(/(?=[A-Z])/).join('_')
       .toLowerCase());
-=======
-  function getColumnTypeText(el, colId) {
-    var colType = '';
-    switch (colId) {
-      case 'row-id':
-        colType = 'RepositoryNumberValue';
-        break;
-      case 'row-name':
-        colType = 'RepositoryTextValue';
-        break;
-      case 'added-on':
-        colType = 'RepositoryDateTimeValue';
-        break;
-      case 'added-by':
-        colType = 'RepositoryListValue';
-        break;
-      case 'archived-on':
-        colType = 'RepositoryDateTimeValue';
-        break;
-      case 'archived-by':
-        colType = 'RepositoryListValue';
-        break;
-      default:
-        colType = $(el).attr('data-type');
-    }
-    return I18n.t('libraries.manange_modal_column.select.' + colType.split(/(?=[A-Z])/).join('_').toLowerCase());
->>>>>>> Pulled latest release
   }
 
   // loads the columns names in the manage columns modal index

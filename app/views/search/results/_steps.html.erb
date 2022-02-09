@@ -4,7 +4,7 @@
     <%= render partial: "search/results/partials/step_text.html.erb", locals: { step: step, query: search_query, target: nil } %>
   </h5>
 
-  <% if step.description.present? && !step.description.empty? %>
+  <% if step.description.present? %>
     <p>
       <span>
         <%=t "search.index.description" %>

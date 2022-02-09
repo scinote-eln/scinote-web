@@ -331,7 +331,12 @@ class ProjectsController < ApplicationController
   private
 
   def project_params
-    params.require(:project).permit(:name, :team_id, :visibility, :archived, :project_folder_id)
+    params.require(:project)
+          .permit(
+            :name, :team_id, :visibility,
+            :archived, :project_folder_id,
+            :default_public_user_role_id
+          )
   end
 
   def view_type_params

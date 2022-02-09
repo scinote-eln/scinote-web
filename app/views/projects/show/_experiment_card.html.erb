@@ -5,16 +5,16 @@
      data-moveable="<%= can_move_experiment?(experiment) %>"
      data-archivable="<%= experiment.active? && can_archive_experiment?(experiment) %>"
      data-restorable="<%= experiment.archived? && can_restore_experiment?(experiment) %>"
-     data-duplicable="<%= can_clone_experiment?(experiment) %>"
->
-    <div class="checkbox-cell table-cell">
-      <% if can_manage_experiments?(experiment.project) %>
-        <div class="sci-checkbox-container">
-          <input value="1" type="checkbox" class="sci-checkbox experiment-card-selector">
-          <span class="sci-checkbox-label"></span>
-        </div>
-      <% end %>
-    </div>
+     data-duplicable="<%= can_clone_experiment?(experiment) %>">
+  <div class="checkbox-cell table-cell">
+    <% if project_is_managable %>
+      <div class="sci-checkbox-container">
+        <input value="1" type="checkbox" class="sci-checkbox experiment-card-selector">
+        <span class="sci-checkbox-label"></span>
+      </div>
+    <% end %>
+  </div>
+
   <div class="experiment-name-cell table-cell">
     <div class="workflow-img-wrapper" list-render="true">
       <%= render partial: 'projects/show/experiment_workflow_image_container', locals: { experiment: experiment } %>
@@ -29,7 +29,7 @@
     <span><%= experiment.code %></span>
   </div>
   <div class="actions actions-cell table-cell">
-    <%= render partial: 'projects/show/experiment_actions_dropdown.html.erb', locals: { experiment: experiment } %>
+    <%= render partial: 'projects/show/experiment_actions_dropdown.html.erb', locals: { experiment: experiment, project: project } %>
   </div>
   <div class="dates-and-img-container">
     <div class="dates-container">
@@ -44,7 +44,7 @@
       <% if experiment.archived_branch? %>
         <div class="data-row archived-date-cell table-cell">
           <span class="card-label" cards-render="true"><%= t('experiments.card.archived_date') %></span>
-          <span class="card-value"><%= l(experiment.archived_on || @project.archived_on, format: :full_date) %></span>
+          <span class="card-value"><%= l(experiment.archived_on || project.archived_on, format: :full_date) %></span>
         </div>
       <% end %>
       <div class="data-row" cards-render="true" data-view-mode="active">

@@ -9,11 +9,7 @@ describe 'my_modules:fix_positions' do
     experiment = create :experiment
 
     100.times do
-<<<<<<< HEAD
       create :my_module, experiment: experiment, created_by: experiment.created_by
-=======
-      create :my_module, experiment: experiment
->>>>>>> Pulled latest release
     end
 
     # set 10 tasks same position

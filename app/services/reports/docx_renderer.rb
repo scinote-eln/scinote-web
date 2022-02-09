@@ -152,17 +152,21 @@ module Reports
         y = y * 300 / x
         x = 300
       end
-      blob_data = if asset_preview.class == ActiveStorage::Preview
+
+      blob_data = if asset_preview.instance_of? ActiveStorage::Preview
                     asset_preview.image.download
                   else
                     asset_preview.blob.download
                   end
 
-      docx.img asset_preview.service_url.split('&')[0] do
+      docx.img asset_preview.processed.service_url do
         data blob_data
         width x
         height y
       end
+    rescue SocketError, Caracal::Errors::InvalidModelError => e # invalid URL or broken image
+      Rails.logger.warn("Unable to render docx image due to #{e.class}: #{e}")
+      nil
     end
   end
 end

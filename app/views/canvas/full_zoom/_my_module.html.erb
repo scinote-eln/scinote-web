@@ -13,7 +13,7 @@
   data-module-tags-url="<%= my_module_tags_experiment_path(my_module.experiment, format: :json) %>">
 
   <div data-view-mode="active">
-    <% if can_manage_module?(my_module) %>
+    <% if can_manage_my_module?(my_module) %>
       <a class="edit-tags-link pull-right" data-remote="true" href="<%= my_module_tags_edit_url(my_module, format: :json) %>">
         <%= render partial: "canvas/tags.html.erb", locals: { my_module: my_module } %>
       </a>
@@ -30,7 +30,7 @@
     </a>
   </div>
 
-  <% unless my_module.experiment.archived_branch? %>
+  <% unless my_module.experiment.archived_branch? || !can_restore_my_module?(my_module) %>
     <div class="task-selector-container pull-left " data-view-mode="archived" data-task-id="<%= my_module.id %>">
       <div class="sci-checkbox-container">
         <input value="1" type="checkbox" class="sci-checkbox task-selector">
@@ -41,13 +41,13 @@
 
   <div class="panel-heading">
     <h3 class="panel-title">
-      <%= link_to_if can_read_experiment?(my_module.experiment), my_module.name, protocols_my_module_path(my_module) %>
+      <%= link_to_if can_read_experiment?(my_module.experiment), my_module.name, protocols_my_module_path(my_module), class: 'my-module-title' %>
     </h3>
   </div>
 
   <div class="panel-body">
     <div class="overdue-date" data-view-mode="active">
-      <% if !my_module.completed? && can_manage_module?(my_module) %>
+      <% if !my_module.completed? && can_manage_my_module?(my_module) %>
         <%= link_to due_date_my_module_path(my_module, format: :json), remote: true,
                     class: "due-date-link due-date-refresh" do %>
           <%= render partial: "my_modules/card_due_date_label.html.erb", locals: { my_module: my_module, format: :full_date } %>
@@ -86,9 +86,9 @@
         <li role="presentation">
           <a class="btn btn-link task-card-view-users" href="<%= index_old_my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_users" role="tab" data-remote="true">
             <span class="fas fa-users" aria-hidden="true"></span>
-            <span class="badge badge-indicator users-badge-indicator <%= 'hidden' unless my_module.users.count.positive? %>"
+            <span class="badge badge-indicator users-badge-indicator <%= 'hidden' unless my_module.designated_users.count.positive? %>"
                   data-linked-id="<%= my_module.id %>">
-              <%= my_module.users.count %>
+              <%= my_module.designated_users.count %>
             </span>
           </a>
         </li>

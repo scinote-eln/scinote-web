@@ -1,7 +1,7 @@
 <template>
   <div class="date-time-picker">
-    <DatePicker v-if="!timeOnly" @change="updateDate" :selectorId="`${this.selectorId}_Date`" :defaultValue="defaultValue" />
-    <TimePicker v-if="!dateOnly" @change="updateTime" :selectorId="`${this.selectorId}_Time`" :defaultValue="getTime(defaultValue)" />
+    <DatePicker v-if="!timeOnly" @change="updateDate" :selectorId="`${this.selectorId}_Date`" />
+    <TimePicker v-if="!dateOnly" @change="updateTime" :selectorId="`${this.selectorId}_Time`" />
   </div>
 </template>
 
@@ -14,8 +14,7 @@
     props: {
       dateOnly: { type: Boolean, default: false },
       timeOnly: { type: Boolean, default: false },
-      selectorId: { type: String, required: true },
-      defaultValue: {type: Date, required: false }
+      selectorId: { type: String, required: true }
     },
     data() {
       return {
@@ -33,9 +32,6 @@
         this.date = value;
         this.updateDateTime();
       },
-      getTime(dateTime) {
-        return `${dateTime.getHours().toString().padStart(2, '0')}:${dateTime.getMinutes().toString().padStart(2, '0')}`
-      },
       updateTime(value) {
         this.time = value;
         this.updateDateTime();
@@ -48,23 +44,20 @@
       isValidTime() {
         return /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(this.time);
       },
-      isValidDate(date) {
-        return (date instanceof Date) && !isNaN(date.getTime());
+      isValidDate() {
+        return (this.date instanceof Date) && !isNaN(this.date.getTime());
       },
       recalcTimestamp() {
         let date = this.timeOnly ? new Date() : this.date;
-        if (this.isValidDate(date) && (this.dateOnly || this.isValidTime())) {
-          if (this.dateOnly) {
-            date.setHours(0);
-            date.setMinutes(0);
-          } else {
-            date.setHours(this.time.split(':')[0]);
-            date.setMinutes(this.time.split(':')[1]);
-          }
-          this.datetime = date
+        if (!this.isValidTime()) {
+          date.setHours(0);
+          date.setMinutes(0);
         } else {
-          this.datetime = null;
+          date.setHours(this.time.split(':')[0]);
+          date.setMinutes(this.time.split(':')[1]);
         }
+
+        this.datetime = date
       }
     }
   }

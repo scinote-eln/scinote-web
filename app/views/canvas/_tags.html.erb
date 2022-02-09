@@ -15,7 +15,7 @@
       <%= my_module.tags.count %>
     </span>
   <% else %>
-    <span class="badge badge-indicator <%= "invisible" unless can_manage_module?(my_module) %>">
+    <span class="badge badge-indicator <%= "invisible" unless can_manage_my_module?(my_module) %>">
       +
     </span>
   <% end %>

@@ -17,8 +17,6 @@
       :groupSelector="true"
       :selectedValue="this.value"
       :options="this.my_modules"
-      :optionLabel="renderOption"
-      :closeOnSelect="false"
       :dataSelectMultipleName="this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryMyModuleValue.multiple_selected')"
       :dataSelectMultipleAllSelected="this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryMyModuleValue.all_selected')"
       :selectorId="`MyModulesSelector${this.filter.id}`"
@@ -57,11 +55,6 @@
     methods: {
       updateValue(value) {
         this.value = value;
-      },
-      renderOption(data) {
-        return `<span class="task-option">
-                  ${data.label}
-                </span>`;
       }
     },
     computed: {

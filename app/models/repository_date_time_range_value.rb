@@ -12,6 +12,32 @@ class RepositoryDateTimeRangeValue < RepositoryDateTimeRangeValueBase
     super(:full_with_comma)
   end
 
+  def self.add_filter_condition(repository_rows, filter_element)
+    parameters = filter_element.parameters
+    case filter_element.operator
+    when 'equal_to'
+      repository_rows.where("#{join_alias}.start_time = ? AND #{join_alias}.end_time = ?",
+                            Time.zone.parse(parameters['start_datetime']), Time.zone.parse(parameters['end_datetime']))
+    when 'unequal_to'
+      repository_rows.where.not("#{join_alias}.start_time = ? AND #{join_alias}.end_time = ?",
+                                Time.zone.parse(parameters['start_datetime']),
+                                Time.zone.parse(parameters['end_datetime']))
+    when 'greater_than'
+      repository_rows.where("#{join_alias}.start_time > ?", Time.zone.parse(parameters['end_datetime']))
+    when 'greater_than_or_equal_to'
+      repository_rows.where("#{join_alias}.start_time >= ?", Time.zone.parse(parameters['end_datetime']))
+    when 'less_than'
+      repository_rows.where("#{join_alias}.end_time < ?", Time.zone.parse(parameters['start_datetime']))
+    when 'less_than_or_equal_to'
+      repository_rows.where("#{join_alias}.end_time <= ?", Time.zone.parse(parameters['start_datetime']))
+    when 'between'
+      repository_rows.where("#{join_alias}.start_time > ? AND #{join_alias}.end_time < ?",
+                            Time.zone.parse(parameters['start_datetime']), Time.zone.parse(parameters['end_datetime']))
+    else
+      raise ArgumentError, 'Wrong operator for RepositoryDateTimeRangeValue!'
+    end
+  end
+
   def self.new_with_payload(payload, attributes)
     data = payload.is_a?(String) ? JSON.parse(payload).symbolize_keys : payload
 

@@ -2,7 +2,6 @@
 
 Canaid::Permissions.register_for(Result) do
   can :read_result do |user, result|
-<<<<<<< HEAD
     can_read_my_module?(user, result.my_module)
   end
 
@@ -37,16 +36,5 @@ Canaid::Permissions.register_for(ResultComment) do
     my_module = comment.result.my_module
     (comment.user == user && my_module.permission_granted?(user, MyModulePermissions::RESULTS_COMMENTS_MANAGE_OWN)) ||
       my_module.permission_granted?(user, MyModulePermissions::RESULTS_COMMENTS_MANAGE)
-=======
-    can_read_experiment?(user, result.my_module.experiment)
-  end
-
-  can :manage_result do |user, result|
-    can_manage_module?(user, result.my_module) && result.active? && result.unlocked?(result)
-  end
-
-  can :delete_result do |user, result|
-    can_manage_module?(user, result.my_module) && result.archived? && result.unlocked?(result)
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   end
 end

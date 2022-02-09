@@ -48,6 +48,17 @@
           <% end %>
         </li>
       <% end %>
+      <!-- Project members access -->
+      <% if can_read_project?(project) %>
+        <li class="form-dropdown-item">
+          <%= link_to can_manage_project_users?(project) ? edit_access_permissions_project_path(project) : access_permissions_project_path(project),
+                      class: 'btn btn-light',
+                      data: { action: 'remote-modal'} do %>
+            <i class="fas fa-door-open"></i>
+            <%= I18n.t('projects.index.project_members_access') %>
+          <% end  %>
+        </li>
+      <% end %>
       <!-- Show comments -->
       <li>
         <a href="#"
@@ -63,7 +74,7 @@
       </li>
       <!-- Open activities -->
       <li>
-        <a href="/global_activities?<%= Activity.url_search_query({ subjects: { Project: [project.id] } }) %>">
+        <a href="/global_activities?<%= Activity.url_search_query({ subjects: { Project: [project] } }) %>">
           <i class="fas fa-list"></i>
           <span><%= t('projects.index.activities_option') %></span>
         </a>

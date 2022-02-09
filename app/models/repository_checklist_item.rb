@@ -11,17 +11,11 @@ class RepositoryChecklistItem < ApplicationRecord
 
   validate :validate_per_column_limit
   validates :data, presence: true,
-<<<<<<< HEAD
                    uniqueness: { scope: :repository_column_id },
                    length: { maximum: Constants::NAME_MAX_LENGTH }
 
   before_destroy :update_table_fiter_elements
 
-=======
-                   uniqueness: { scope: :repository_column_id, case_sensitive: false },
-                   length: { maximum: Constants::NAME_MAX_LENGTH }
-
->>>>>>> Pulled latest release
   private
 
   def validate_per_column_limit
@@ -30,14 +24,11 @@ class RepositoryChecklistItem < ApplicationRecord
       errors.add(:base, :per_column_limit)
     end
   end
-<<<<<<< HEAD
 
   def update_table_fiter_elements
     repository_column.repository_table_filter_elements.find_each do |filter_element|
-      filter_element.parameters['item_ids']&.delete(id.to_s)
+      filter_element.parameters['item_ids']&.delete(id)
       filter_element.parameters['item_ids'].blank? ? filter_element.destroy! : filter_element.save!
     end
   end
-=======
->>>>>>> Pulled latest release
 end

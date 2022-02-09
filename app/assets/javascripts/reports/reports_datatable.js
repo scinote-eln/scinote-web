@@ -261,11 +261,7 @@
       fnDrawCallback: tableDrowCallback,
       createdRow: addAttributesToRow,
       fnInitComplete: function() {
-<<<<<<< HEAD
         DataTableHelpers.initLengthAppearance($table.closest('.dataTables_wrapper'));
-=======
-        DataTableHelpers.initLengthApearance($table.closest('.dataTables_wrapper'));
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
         $('.pagination-row').removeClass('hidden');
         $('.report-row.processing').each(function() {
           setTimeout(() => { checkProcessingStatus($(this).data('id')); }, START_POLLING_INTERVAL);

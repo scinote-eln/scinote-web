@@ -11,11 +11,10 @@
     <template v-if="!isPreset">
       <div class="datetime-filter-attributes">
         <div class="filter-datepicker-input">
-          <DateTimePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`" :defaultValue="date || fallbackDate()" />
+          <DateTimePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`" />
         </div>
-        <div class="between-delimiter vertical" v-if="operator == 'between'"></div>
         <div class="filter-datepicker-to-input">
-          <DateTimePicker @change="updateDateTo" v-if="operator == 'between'" :selectorId="`DatePickerTo${filter.id}`" :defaultValue="dateTo || fallbackDate(7 * 24 * 60 * 60)" />
+          <DateTimePicker @change="updateDateTo" v-if="operator == 'between'" :selectorId="`DatePickerTo${filter.id}`" />
         </div>
       </div>
     </template>
@@ -35,30 +34,19 @@
       return {
         timeType: 'datetime',
         operators: [
-          { value: 'today', label: this.i18n.t('repositories.show.repository_filter.filters.operators.today'), params: {
-            tooltip: this.i18n.t('repositories.show.repository_filter.filters.operators.tooltips.today')
-          } },
-          { value: 'yesterday', label: this.i18n.t('repositories.show.repository_filter.filters.operators.yesterday'), params: {
-            tooltip: this.i18n.t('repositories.show.repository_filter.filters.operators.tooltips.yesterday')
-          } },
-          { value: 'last_week', label: this.i18n.t('repositories.show.repository_filter.filters.operators.last_week'), params: {
-            tooltip: this.i18n.t('repositories.show.repository_filter.filters.operators.tooltips.last_week')
-          } },
-          { value: 'this_month', label: this.i18n.t('repositories.show.repository_filter.filters.operators.this_month'), params: {
-            tooltip: this.i18n.t('repositories.show.repository_filter.filters.operators.tooltips.this_month')
-          } },
-          { value: 'this_year', label: this.i18n.t('repositories.show.repository_filter.filters.operators.this_year'), params: {
-            tooltip: this.i18n.t('repositories.show.repository_filter.filters.operators.tooltips.this_year')
-          } },
-          { value: 'last_year', label: this.i18n.t('repositories.show.repository_filter.filters.operators.last_year'), params: {
-            tooltip: this.i18n.t('repositories.show.repository_filter.filters.operators.tooltips.last_year')
-          } },
-          { value: '', label: '', params: { delimiter: true } },
-          { value: 'equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.date.on') },
-          { value: 'greater_than_or_equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.date.after') },
-          { value: 'less_than', label: this.i18n.t('repositories.show.repository_filter.filters.operators.date.before') },
-          { value: 'between', label: this.i18n.t('repositories.show.repository_filter.filters.operators.between') },
-          { value: 'unequal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.date.not_on') }
+          { value: 'today', label: this.i18n.t('repositories.show.repository_filter.filters.operators.today') },
+          { value: 'yesterday', label: this.i18n.t('repositories.show.repository_filter.filters.operators.yesterday') },
+          { value: 'last_week', label: this.i18n.t('repositories.show.repository_filter.filters.operators.last_week') },
+          { value: 'this_month', label: this.i18n.t('repositories.show.repository_filter.filters.operators.this_month') },
+          { value: 'this_year', label: this.i18n.t('repositories.show.repository_filter.filters.operators.this_year') },
+          { value: 'last_year', label: this.i18n.t('repositories.show.repository_filter.filters.operators.last_year') },
+          { value: 'equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.equal_to') },
+          { value: 'unequal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.unequal_to') },
+          { value: 'greater_than', label: this.i18n.t('repositories.show.repository_filter.filters.operators.greater_than') },
+          { value: 'greater_than_or_equal', label: this.i18n.t('repositories.show.repository_filter.filters.operators.greater_than_or_equal_to') },
+          { value: 'less_than', label: this.i18n.t('repositories.show.repository_filter.filters.operators.less_than') },
+          { value: 'less_than_or_equal', label: this.i18n.t('repositories.show.repository_filter.filters.operators.less_than_or_equal_to') },
+          { value: 'between', label: this.i18n.t('repositories.show.repository_filter.filters.operators.between') }
         ],
         operator: 'equal_to',
         date: null,
@@ -78,8 +66,7 @@
     },
     methods: {
       formattedDate(date) {
-        if (!date) return null
-        return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
+        return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`
       }
     }
   }

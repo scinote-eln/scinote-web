@@ -32,28 +32,22 @@ class Result < ApplicationRecord
                   page = 1,
                   _current_team = nil,
                   options = {})
-    module_ids =
-      MyModule
-      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .pluck(:id)
+    module_ids = MyModule.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT).pluck(:id)
 
     new_query =
       Result
       .distinct
       .joins('LEFT JOIN result_texts ON results.id = result_texts.result_id')
-      .where('results.my_module_id IN (?)', module_ids)
-      .where_attributes_like(['results.name', 'result_texts.text'],
-                             query, options)
+      .where(results: { my_module_id: module_ids })
+      .where_attributes_like(['results.name', 'result_texts.text'], query, options)
 
-    new_query = new_query.where('results.archived = ?', false) unless include_archived
+    new_query = new_query.active unless include_archived
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT
       new_query
     else
-      new_query
-        .limit(Constants::SEARCH_LIMIT)
-        .offset((page - 1) * Constants::SEARCH_LIMIT)
+      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 
