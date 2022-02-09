@@ -89,24 +89,35 @@ module RepositoryDatatableHelper
         stock_present = record.repository_stock_cell.present?
         # Always disabled in a simple view
         stock_managable = false
-        consumption_managable = stock_present && can_update_my_module_stock_consumption?(my_module)
+        consumption_managable =
+          stock_present && record.repository.is_a?(Repository) && can_update_my_module_stock_consumption?(my_module)
 
         row['1'] = stock_present ? display_cell_value(record.repository_stock_cell, record.repository.team) : {}
         row['1'][:stock_managable] = stock_managable
         row['2'] = {
           stock_present: stock_present,
-          consumption_managable: consumption_managable,
-          updateStockConsumptionUrl: Rails.application.routes.url_helpers.consume_modal_my_module_repository_path(
-            my_module,
-            record.repository,
-            row_id: record.id
-          )
+          consumption_managable: consumption_managable
         }
-        if record.consumed_stock.present?
-          row['2'][:value] = {
-            consumed_stock_formatted: record.consumed_stock,
-            unit: record.repository_stock_value.repository_stock_unit_item&.data
-          }
+        if record.repository.is_a?(RepositorySnapshot)
+          if record.repository_stock_consumption_value.present?
+            row['2'][:value] = {
+              consumed_stock: record.repository_stock_consumption_value.amount,
+              unit: record.repository_stock_consumption_value.repository_stock_unit_item&.data
+            }
+          end
+        else
+          if consumption_managable
+            row['2'][:updateStockConsumptionUrl] =
+              Rails.application.routes.url_helpers.consume_modal_my_module_repository_path(
+                my_module, record.repository, row_id: record.id
+              )
+          end
+          if record.consumed_stock.present?
+            row['2'][:value] = {
+              consumed_stock: record.consumed_stock,
+              unit: record.repository_stock_value&.repository_stock_unit_item&.data
+            }
+          end
         end
       end
 

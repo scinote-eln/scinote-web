@@ -18,6 +18,7 @@ class MyModuleRepositorySnapshotsController < ApplicationController
     @columns_mappings = datatable_service.mappings
     if params[:simple_view]
       repository_rows = datatable_service.repository_rows
+      @repository = @repository_snapshot
       rows_view = 'repository_rows/simple_view_index.json'
     else
       repository_rows =

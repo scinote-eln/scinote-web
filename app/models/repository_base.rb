@@ -27,6 +27,14 @@ class RepositoryBase < ApplicationRecord
   # Not discarded
   default_scope -> { kept }
 
+  def self.stock_management_enabled?
+    true
+  end
+
+  def has_stock_management?
+    self.class.stock_management_enabled? && repository_columns.stock_type.exists?
+  end
+
   def cell_preload_includes
     cell_includes = []
     repository_columns.pluck(:data_type).each do |data_type|

@@ -66,9 +66,10 @@ module Repositories
     end
 
     def create_stock_consumption_cell_snapshot!(repository_row, row_snapshot)
+      return if repository_row.repository_stock_value.blank?
+
       my_module_repository_row =
         repository_row.my_module_repository_rows.find { |mrr| mrr.my_module_id == @repository_snapshot.my_module_id }
-      return if my_module_repository_row.stock_consumption.blank?
 
       stock_unit_item =
         @repository_snapshot.repository_stock_consumption_column
@@ -79,7 +80,7 @@ module Repositories
           repository_column: @repository_snapshot.repository_stock_consumption_column,
           repository_row: row_snapshot
         },
-        amount: my_module_repository_row.stock_consumption,
+        amount: my_module_repository_row.stock_consumption.to_d,
         repository_stock_unit_item: stock_unit_item
       )
     end
