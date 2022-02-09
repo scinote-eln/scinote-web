@@ -26,11 +26,6 @@ describe RepositoryStockValuesController, type: :controller do
   #                                                               repository_stock_unit_item: repository_stock_unit_item
   #                                                              }                                                                       
 
-  include_context 'reference_project_structure' , {
-    created_by: controller.current_user,
-    role: :owner
-  }
-
   describe 'create' do
     let(:params) {}
     let(:repository_stock_value) {post :create_or_update, params:{ amount:10, 
@@ -39,11 +34,11 @@ describe RepositoryStockValuesController, type: :controller do
                                                                    repository_column_id: repository_column.id,
                                                                    unit_item_id: repository_stock_unit_item.id} }
     it 'adds activity in DB' do
-      post :create_or_update, params:{ amount:10, 
-                                                                   repository_id: repository.id,
-                                                                   id: repository_row.id,
-                                                                   repository_column_id: repository_column.id,
-                                                                   unit_item_id: repository_stock_unit_item.id} 
+      post :create_or_update, params:{amount:10, 
+                                      repository_id: repository.id,
+                                      id: repository_row.id,
+                                      repository_column_id: repository_column.id,
+                                      unit_item_id: repository_stock_unit_item.id} 
       expect(response).to have_http_status(403)
     end
   end
