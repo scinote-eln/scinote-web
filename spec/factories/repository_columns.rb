@@ -47,6 +47,10 @@ FactoryBot.define do
       data_type { :RepositoryTimeRangeValue }
     end
 
+    trait :checklist_type do
+      data_type { :RepositoryChecklistValue }
+    end
+
     trait :stock_type do
       data_type { :RepositoryStockValue }
     end
