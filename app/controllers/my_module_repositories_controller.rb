@@ -168,8 +168,8 @@ class MyModuleRepositoriesController < ApplicationController
       )
       module_repository_row.save!
 
-      log_activity(current_stock, 
-                   params[:stock_consumption], 
+      log_activity(current_stock,
+                   params[:stock_consumption],
                    params[:initial_units],
                    params[:comment])
     end
