@@ -68,14 +68,16 @@
     </div>
     <div class="row">
       <div class="col-sm-12">
-        <div class="form-group">
-          <label><%= t('repository_stock_values.manage_modal.comment') %></label>
-          <input class="form-control"
-          type="text"
-          name="repository_stock_value[comment]"
-          id="repository-stock-value-comment"
-          placeholder="<%= t('repository_stock_values.manage_modal.comment_placeholder') %>">
-        </div>
+        <p>
+          <div class="sci-input-container" data-error-text="<%= t('repository_stock_values.manage_modal.comment_limit') %>">
+            <label><%= t('repository_stock_values.manage_modal.comment') %></label>
+            <input class="sci-input-field"
+            type="text"
+            name="repository_stock_value[comment]"
+            id="repository-stock-value-comment"
+            placeholder="<%= t('repository_stock_values.manage_modal.comment_placeholder') %>">
+          </div>
+        </p>
       </div>
     </div>
     <% unless repository_stock_value.new_record? %>
@@ -105,6 +107,6 @@
             id="cancel"
             class="btn btn-default"
             data-dismiss="modal"><%=t 'general.cancel' %></button>
-    <%= submit_tag t('repository_stock_values.manage_modal.save_stock'), class: "btn btn-primary" %>
+    <%= submit_tag t('repository_stock_values.manage_modal.save_stock'), class: "btn btn-primary update-repository-stock" %>
   </div>
 <% end %>

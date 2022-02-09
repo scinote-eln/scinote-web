@@ -16,7 +16,7 @@
       </div>
       <span class="units"> <%= @stock_value.repository_stock_unit_item&.data %></span>
     </div>
-    <div class="sci-input-container comments-container">
+    <div class="sci-input-container comments-container"  data-error-text="<%= t('repository_stock_values.manage_modal.comment_limit') %>">
       <%= f.label :comment, t('my_modules.repository.stock_modal.comment') %>
       <%= f.text_field :comment, placeholder: t('my_modules.repository.stock_modal.enter_comment') , class: 'sci-input-field' %>
     </div>

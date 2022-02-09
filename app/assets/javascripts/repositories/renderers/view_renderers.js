@@ -181,9 +181,9 @@ $.fn.dataTable.render.AssignedTasksValue = function(data) {
   return "<div class='assign-counter-container'><span class='assign-counter'>0</span></div>";
 };
 
-$.fn.dataTable.render.RepositoryStockValue = function(data) {
-  if (data.value) {
-    if (data.stock_managable) {
+$.fn.dataTable.render.RepositoryStockValue = function(data, row) {
+  if (data && data.value) {
+    if (row && row.manageStockUrl) {
       return `<a class="manage-repository-stock-value-link stock-value-view-render
                         ${data.value.stock_amount <= 0 ? 'stock-alert' : ''}">
                 ${data.value.stock_formatted}
@@ -194,7 +194,7 @@ $.fn.dataTable.render.RepositoryStockValue = function(data) {
               ${data.value.stock_formatted}
               </span>`;
   }
-  if (data.stock_managable) {
+  if (data && row && row.manageStockUrl) {
     return `<a class="manage-repository-stock-value-link not-assigned-stock">
               <i class="fas fa-box-open"></i>
               ${I18n.t('libraries.manange_modal_column.stock_type.add_stock')}
