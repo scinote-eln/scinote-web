@@ -194,7 +194,7 @@ $.fn.dataTable.render.RepositoryStockValue = function(data, row) {
               ${data.value.stock_formatted}
               </span>`;
   }
-  if (data && row && row.manageStockUrl) {
+  if ((data && row && row.manageStockUrl) || (!data && $('.repository-table table').data('editable'))) {
     return `<a class="manage-repository-stock-value-link not-assigned-stock">
               <i class="fas fa-box-open"></i>
               ${I18n.t('libraries.manange_modal_column.stock_type.add_stock')}

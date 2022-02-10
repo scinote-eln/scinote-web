@@ -245,9 +245,9 @@ class MyModuleRepositoriesController < ApplicationController
             message_items: {
               repository: @repository.id,
               repository_row: @repository_row.id,
-              current_stock: initial_stock,
+              current_stock: initial_stock || 0,
               unit: unit,
-              new_stock: new_stock,
+              new_stock: new_stock || 0,
               my_module: @my_module.id,
               comment: comment
             })
