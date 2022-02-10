@@ -64,12 +64,8 @@
 
   export default {
     name: 'FilterContainer',
-    data() {
-      return {
-        filters: []
-      }
-    },
     props: {
+      filters: Array,
       my_modules: Array,
       container: Object,
       columns: Array,
@@ -87,7 +83,6 @@
         const index = this.filters.findIndex((f) => f.id === filter.id);
         this.filters[index].data = filter.data;
         this.filters[index].isBlank = filter.isBlank;
-
         this.$emit("filters:update", this.filters);
       },
       clearFilters() {

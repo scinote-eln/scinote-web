@@ -1,3 +1,5 @@
+/* global I18n */
+
 import TurbolinksAdapter from 'vue-turbolinks';
 import Vue from 'vue/dist/vue.esm';
 import FilterContainer from '../../vue/repository_filter/container.vue';
@@ -5,30 +7,81 @@ import FilterContainer from '../../vue/repository_filter/container.vue';
 Vue.use(TurbolinksAdapter);
 Vue.prototype.i18n = window.I18n;
 
+const DEFAULT_FILTERS = [
+  {
+    id: 1,
+    column: {
+      data_type: 'RepositoryMyModuleValue',
+      id: 'assigned',
+      name: I18n.t('repositories.table.assigned_tasks')
+    },
+    data: { operator: 'any_of' },
+    isBlank: true
+  },
+  {
+    id: 2,
+    column: {
+      data_type: 'RepositoryTextValue',
+      id: 'row_id',
+      name: I18n.t('repositories.table.id')
+    },
+    data: { operator: 'contains' },
+    isBlank: true
+  },
+  {
+    id: 3,
+    column: {
+      data_type: 'RepositoryTextValue',
+      id: 'row_name',
+      name: I18n.t('repositories.table.row_name')
+    },
+    data: { operator: 'contains' },
+    isBlank: true
+  },
+  {
+    id: 4,
+    column: {
+      data_type: 'RepositoryDateTimeValue',
+      id: 'added_on',
+      name: I18n.t('repositories.table.added_on')
+    },
+    data: { operator: 'equal_to' },
+    isBlank: true
+  },
+  {
+    id: 5,
+    column: {
+      data_type: 'RepositoryUserValue',
+      id: 'added_by',
+      name: I18n.t('repositories.table.added_by')
+    },
+    data: { operator: 'any_of' },
+    isBlank: true
+  }
+];
+
 window.repositoryFilterObject = null;
 window.initRepositoryFilter = () => {
   Vue.prototype.dateFormat = $('#filterContainer').data('date-format')
   const defaultColumns = [
-    { id: 'assigned', name: 'Assigned to task', data_type: 'RepositoryMyModuleValue' },
-    { id: 'row_id', name: 'ID', data_type: 'RepositoryTextValue' },
-    { id: 'row_name', name: 'Name', data_type: 'RepositoryTextValue' },
-    { id: 'added_on', name: 'Added on', data_type: 'RepositoryDateTimeValue' },
-    { id: 'added_by', name: 'Added by', data_type: 'RepositoryUserValue' },
-    { id: 'archived_by', name: 'Archived by', data_type: 'RepositoryUserValue' },
-    { id: 'archived_on', name: 'Archived on', data_type: 'RepositoryDateTimeValue' }
+    { id: 'assigned', name: I18n.t('repositories.table.assigned_tasks'), data_type: 'RepositoryMyModuleValue' },
+    { id: 'row_id', name: I18n.t('repositories.table.id'), data_type: 'RepositoryTextValue' },
+    { id: 'row_name', name: I18n.t('repositories.table.row_name'), data_type: 'RepositoryTextValue' },
+    { id: 'added_on', name: I18n.t('repositories.table.added_on'), data_type: 'RepositoryDateTimeValue' },
+    { id: 'added_by', name: I18n.t('repositories.table.added_by'), data_type: 'RepositoryUserValue' },
+    { id: 'archived_by', name: I18n.t('repositories.table.archived_by'), data_type: 'RepositoryUserValue' },
+    { id: 'archived_on', name: I18n.t('repositories.table.archived_on'), data_type: 'RepositoryDateTimeValue' }
   ];
   const repositoryFilterContainer = new Vue({
     el: '#filterContainer',
-    data: () => {
-      return {
-        filters: [],
-        columns: [],
-        my_modules: [],
-        canManageFilters: $('#filterContainer').data('can-manage-filters'),
-        savedFilters: [],
-        filterName: null
-      };
-    },
+    data: () => ({
+      filters: DEFAULT_FILTERS,
+      columns: [],
+      my_modules: [],
+      canManageFilters: $('#filterContainer').data('can-manage-filters'),
+      savedFilters: [],
+      filterName: null
+    }),
     created() {
       this.dataTableElement = $($('#filterContainer').data('datatable-id'));
     },
@@ -37,13 +90,11 @@ window.initRepositoryFilter = () => {
     },
     computed: {
       filtersJSON() {
-        return this.filters.filter((f) => !f.isBlank).map((f) => {
-          return {
-            repository_column_id: f.column.id,
-            operator: f.data.operator,
-            parameters: f.data.parameters
-          }
-        });
+        return this.filters.filter((f) => !f.isBlank).map((f) => ({
+          repository_column_id: f.column.id,
+          operator: f.data.operator,
+          parameters: f.data.parameters
+        }));
       }
     },
     methods: {
@@ -80,12 +131,12 @@ window.initRepositoryFilter = () => {
     }
   });
 
-  $.get($('#filterContainer').data('my-modules-url'), function(data) {
+  $.get($('#filterContainer').data('my-modules-url'), (data) => {
     repositoryFilterContainer.my_modules = data.data;
   });
 
-  $.get($('#filterContainer').data('columns-url'), function(data) {
-    let combinedColumns = data.response.concat(defaultColumns)
+  $.get($('#filterContainer').data('columns-url'), (data) => {
+    const combinedColumns = data.response.concat(defaultColumns);
     repositoryFilterContainer.columns = combinedColumns.sort((a, b) => a.name > b.name ? 1 : -1);
   });
 

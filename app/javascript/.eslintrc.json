@@ -16,7 +16,6 @@
       "jsx": true
     }
   },
-  "ignorePatterns": ["*.vue", "**/mixins/*.js"],
   "rules": {
     "import/extensions": "off",
     "import/no-unresolved": "off",
