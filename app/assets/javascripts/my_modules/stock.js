@@ -1,4 +1,4 @@
-/* global SmartAnnotation I18n MyModuleRepositories */
+/* global SmartAnnotation I18n MyModuleRepositories GLOBAL_CONSTANTS */
 var MyModuleStockConsumption = (function() {
   const CONSUMPTION_MODAL = '#consumeRepositoryStockValueModal';
   const WARNING_MODAL = '#consumeRepositoryStockValueModalWarning';
@@ -31,6 +31,18 @@ var MyModuleStockConsumption = (function() {
             $manageModal.modal('hide');
             $(WARNING_MODAL).modal('hide');
           });
+
+          $(CONSUMPTION_MODAL + ' #comment').on('keyup change', function() {
+            $(this).closest('.sci-input-container').toggleClass(
+              'error',
+              this.value.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH
+            );
+            $('.update-consumption-button').attr(
+              'disabled',
+              this.value.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH
+            );
+          });
+
 
           $('.update-consumption-button').on('click', function(event, skipValidation) {
             if (parseFloat($('.stock-final-container .value').text()) < 0 && !skipValidation) {

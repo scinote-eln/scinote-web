@@ -1569,6 +1569,7 @@ en:
       comment_placeholder: "Enter comment"
       current_stock: "Current stock"
       new_stock: "New stock"
+      comment_limit: "Maximum number of characters reached (255)"
 
   libraries:
     manange_modal_column_index:

@@ -1,4 +1,4 @@
-/* global dropdownSelector */
+/* global dropdownSelector GLOBAL_CONSTANTS */
 
 var RepositoryStockValues = (function() {
   const UNIT_SELECTOR = '#repository-stock-value-units';
@@ -53,6 +53,17 @@ var RepositoryStockValues = (function() {
               default:
                 break;
             }
+          });
+
+          $('#repository-stock-value-comment').on('keyup change', function() {
+            $(this).closest('.sci-input-container').toggleClass(
+              'error',
+              this.value.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH
+            );
+            $('.update-repository-stock').toggleClass(
+              'disabled',
+              this.value.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH
+            );
           });
 
           $('#stock-input-amount').on('input', function() {
