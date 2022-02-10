@@ -12,7 +12,7 @@
     <div v-if="operator !== 'between'" class="sci-input-container">
       <input
         class="sci-input-field"
-        type="number"
+        type="text"
         name="value"
         v-model="value"
         :placeholder= "this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.input_placeholder',{name: this.filter.column.name})"
@@ -60,6 +60,7 @@
           { value: 'less_than_or_equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.less_than_or_equal_to') },
           { value: 'between', label: this.i18n.t('repositories.show.repository_filter.filters.operators.between') }
         ],
+        numberRegexp: /[^0-9.]/g,
         operator: 'equal_to',
         value: '',
         from: '',
@@ -75,18 +76,22 @@
           from: this.from,
           to: this.to
         };
-      }
+      },
     },
     watch: {
       operator() {
         if(this.operator !== 'between' && !(typeof this.value === 'string')) this.value = '';
         if(this.operator === 'between') this.value = {to: '', from: ''};
-
       },
       value() {
         if (this.operator === 'between') {
+          this.value = {
+            from: this.from.replace(this.numberRegexp, '').match(/^\d*(\.\d{0,10})?/)[0],
+            to: this.to.replace(this.numberRegexp, '').match(/^\d*(\.\d{0,10})?/)[0]
+          };
           this.parameters = this.value;
         } else {
+          this.value = this.value.replace(this.numberRegexp, '').match(/^\d*(\.\d{0,10})?/)[0]
           this.parameters = { number: this.value }
         }
         this.updateFilter();
