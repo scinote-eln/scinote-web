@@ -133,6 +133,7 @@
           $overwriteLink.removeClass('hidden');
           $saveFiltersModal.data('repositoryTableFilterId', data.data.id);
           $('#currentFilterName').html(data.data.attributes.name);
+          $saveFiltersModal.data('repositoryTableFilterName', data.data.attributes.name);
         });
       },
       closeSavedFilters() {
