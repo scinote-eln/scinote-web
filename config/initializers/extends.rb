@@ -92,29 +92,29 @@ class Extends
   # Extra attributes used for advanced search in repositories
   REPOSITORY_ADVANCED_SEARCH_ATTR = {
     RepositoryTextValue: {
-      field: 'repository_text_values.data', table_name: :repository_text_values
+      table_name: :repository_text_values
     }, RepositoryNumberValue: {
-      field: 'repository_number_values.data', table_name: :repository_number_values
+      table_name: :repository_number_values
     }, RepositoryListValue: {
-      field: 'repository_list_items.data', table_name: :repository_list_values
+      table_name: :repository_list_values
     }, RepositoryChecklistValue: {
-      field: 'repository_checklist_items.data', table_name: :repository_checklist_values
+      table_name: :repository_checklist_values
     }, RepositoryStatusValue: {
-      field: 'repository_status_items.status', table_name: :repository_status_values
+      table_name: :repository_status_values
     }, RepositoryAssetValue: {
-      field: 'active_storage_blobs.filename', table_name: :repository_asset_values
+      table_name: :repository_asset_values
     }, RepositoryDateTimeValue: {
-      field: 'repository_date_time_values.data', table_name: :repository_date_time_values
+      table_name: :repository_date_time_values
     }, RepositoryDateTimeRangeValue: {
-      field: 'repository_date_time_range_values.data', table_name: :repository_date_time_range_values
+      table_name: :repository_date_time_range_values
     }, RepositoryDateValue: {
-      field: 'repository_date_time_values.data', table_name: :repository_date_time_values
+      table_name: :repository_date_time_values
     }, RepositoryDateRangeValue: {
-      field: 'repository_date_time_range_values.data', table_name: :repository_date_time_range_values
+      table_name: :repository_date_time_range_values
     }, RepositoryTimeValue: {
-      field: 'repository_date_time_values.data', table_name: :repository_date_time_values
+      table_name: :repository_date_time_values
     }, RepositoryTimeRangeValue: {
-      field: 'repository_date_time_range_values.data', table_name: :repository_date_time_range_values
+      table_name: :repository_date_time_range_values
     }
   }
 

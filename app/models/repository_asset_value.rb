@@ -28,11 +28,14 @@ class RepositoryAssetValue < ApplicationRecord
   def self.add_filter_condition(repository_rows, join_alias, filter_element)
     case filter_element.operator
     when 'file_contains'
+      s_query = filter_element.parameters['text']&.gsub(/[!()&|:]/, ' ')&.strip&.split(/\s+/)
+      return repository_rows if s_query.blank?
+
+      s_query = s_query.map { |t| "#{t}:*" }.join('|').tr('\'', '"')
       repository_rows
         .joins("INNER JOIN \"assets\" ON  \"assets\".\"id\" = \"#{join_alias}\".\"asset_id\"")
         .joins('INNER JOIN "asset_text_data" ON  "asset_text_data"."asset_id" = "assets"."id"')
-        .where('asset_text_data.data_vector @@ to_tsquery(?)',
-               "%#{sanitize_sql_like(filter_element.parameters['text'])}%")
+        .where('asset_text_data.data_vector @@ to_tsquery(?)', s_query)
     when 'file_attached'
       repository_rows.where.not("#{join_alias} IS NULL")
     else
