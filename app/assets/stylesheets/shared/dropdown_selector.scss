@@ -226,6 +226,7 @@
         border-radius: 1px;
         color: $color-white;
         content: "";
+        flex-shrink: 0;
         font-size: calc(var(--sci-checkbox-size) - var(--sci-checkbox-size) * .375);
         height: var(--sci-checkbox-size);
         line-height: calc(var(--sci-checkbox-size) - 2px);
