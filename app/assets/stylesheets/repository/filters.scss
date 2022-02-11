@@ -34,6 +34,7 @@
     .saved-filters-list {
       max-height: 300px;
       overflow-y: auto;
+      width: 250px;
     }
   }
 
@@ -77,12 +78,25 @@
       .saved-filters-element {
         align-items: center;
         display: flex;
-        padding: .5em 1em;
+        padding: 0 1em;
         cursor: pointer;
+
+        &:hover {
+          background: $color-concrete;
+        }
+
+        span {
+          flex-grow: 1;
+        }
 
         .btn-light {
           color: $color-silver-chalice;
+          flex-shrink: 0;
           margin-left: auto;
+
+          &:hover {
+            color: $color-black;
+          }
         }
       }
     }

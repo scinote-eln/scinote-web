@@ -1410,6 +1410,7 @@ en:
         clear: "Clear"
         add_filter: "Add filter"
         apply: "Show results"
+        delete_saved_filter: "Delete the saved filter"
       repository_filter:
         errors:
           column_not_found: "Filtering failed because one or more columns no longer exist. Please update your filter."

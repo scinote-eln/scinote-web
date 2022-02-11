@@ -75,7 +75,8 @@
     },
     data() {
       return {
-        filters: this.defaultFilters
+        filters: this.defaultFilters,
+        savedFilterScrollbar: null
       }
     },
     components: { ColumnElement, FilterElement, SavedFilterElement },
@@ -141,6 +142,11 @@
       },
       toggleSavedFilters(e) {
         e.stopPropagation();
+        if (this.savedFilterScrollbar) {
+          this.savedFilterScrollbar.update();
+        } else {
+          this.savedFilterScrollbar = new PerfectScrollbar($('.saved-filters-list')[0]);
+        }
         this.closeColumnsFilters();
         $('#savedFiltersContainer').toggleClass('open');
       },
