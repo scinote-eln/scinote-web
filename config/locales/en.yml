@@ -1411,6 +1411,9 @@ en:
         add_filter: "Add filter"
         apply: "Show results"
       repository_filter:
+        errors:
+          column_not_found: "Filtering failed because one or more columns no longer exist. Please update your filter."
+          value_not_found: "Filtering failed because some filter values no longer exist. Please update your filter."
         enter_value: "Enter text"
         filters:
             operators:

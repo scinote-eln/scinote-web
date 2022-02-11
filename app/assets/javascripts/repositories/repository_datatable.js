@@ -419,7 +419,13 @@ var RepositoryDatatable = (function(global) {
           return JSON.stringify(d);
         },
         global: false,
-        type: 'POST'
+        type: 'POST',
+        error: function(e) {
+          $('#filtersDropdownButton').removeClass('active-filters');
+          $('#saveRepositoryFilters').addClass('hidden');
+          $('.repository-table-error').addClass('active').html(e.responseJSON.error);
+          animateSpinner(null, false);
+        }
       },
       columnDefs: [{
         // Checkbox column needs special handling
