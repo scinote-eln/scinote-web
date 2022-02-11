@@ -1,5 +1,5 @@
 <template>
-  <div class="filters-container">
+  <div class="filters-container" @click="closeDropdowns">
     <div class="header">
       <div id="savedFiltersContainer" class="dropdown saved-filters-container" @click="toggleSavedFilters">
         <div class="title" id="savedFilterDropdown">
@@ -65,13 +65,18 @@
   export default {
     name: 'FilterContainer',
     props: {
-      filters: Array,
+      defaultFilters: Array,
       my_modules: Array,
       container: Object,
       columns: Array,
       savedFilters: Array,
       canManageFilters: Boolean,
       filterName: String, default: () => null
+    },
+    data() {
+      return {
+        filters: this.defaultFilters
+      }
     },
     components: { ColumnElement, FilterElement, SavedFilterElement },
     methods: {
@@ -89,7 +94,16 @@
         this.filters = [];
         this.$emit('filters:clear');
       },
-      toggleColumnsFilters() {
+      closeDropdowns() {
+        this.closeColumnsFilters();
+        this.closeSavedFilters();
+      },
+      closeColumnsFilters() {
+        $('#filtersColumnsDropdown').removeClass('open');
+      },
+      toggleColumnsFilters(e) {
+        e.stopPropagation();
+        this.closeSavedFilters();
         $('#filtersColumnsDropdown').toggleClass('open');
       },
       loadFilters(filterUrl) {
@@ -125,7 +139,9 @@
         $('#savedFiltersContainer').removeClass('open');
         return true;
       },
-      toggleSavedFilters() {
+      toggleSavedFilters(e) {
+        e.stopPropagation();
+        this.closeColumnsFilters();
         $('#savedFiltersContainer').toggleClass('open');
       },
     }
