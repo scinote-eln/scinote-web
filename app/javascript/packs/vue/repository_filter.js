@@ -86,6 +86,7 @@ window.initRepositoryFilter = () => {
     created() {
       this.dataTableElement = $($('#filterContainer').data('datatable-id'));
     },
+
     components: {
       'filter-container': FilterContainer
     },
