@@ -339,11 +339,11 @@ class RepositoryDatatableService
       repository_rows =
         repository_rows
         .joins(
-          "INNER JOIN \"repository_cells\" AS \"#{join_cells_alias}\"" \
+          "LEFT OUTER JOIN \"repository_cells\" AS \"#{join_cells_alias}\"" \
           " ON  \"repository_rows\".\"id\" = \"#{join_cells_alias}\".\"repository_row_id\"" \
           " AND \"#{join_cells_alias}\".\"repository_column_id\" = '#{filter_element.repository_column.id}'")
         .joins(
-          "INNER JOIN \"#{config[:table_name]}\" AS \"#{join_values_alias}\"" \
+          "LEFT OUTER JOIN \"#{config[:table_name]}\" AS \"#{join_values_alias}\"" \
           " ON  \"#{join_values_alias}\".\"id\" = \"#{join_cells_alias}\".\"value_id\""
         )
 
