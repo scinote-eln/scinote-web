@@ -47,7 +47,7 @@
     },
     watch: {
       value() {
-        this.parameters = { status_ids: this.value };
+        this.parameters = { item_ids: this.value };
         this.updateFilter();
       }
     },

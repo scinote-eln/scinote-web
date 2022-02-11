@@ -21,8 +21,8 @@ class RepositoryStatusItem < ApplicationRecord
 
   def update_table_fiter_elements
     repository_column.repository_table_filter_elements.find_each do |filter_element|
-      filter_element.parameters['status_ids']&.delete(id.to_s)
-      filter_element.parameters['status_ids'].blank? ? filter_element.destroy! : filter_element.save!
+      filter_element.parameters['item_ids']&.delete(id.to_s)
+      filter_element.parameters['item_ids'].blank? ? filter_element.destroy! : filter_element.save!
     end
   end
 end
