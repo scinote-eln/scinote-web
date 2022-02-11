@@ -45,6 +45,10 @@
     padding: 0;
     width: 460px;
 
+    .dropdown-selector {
+      overflow: hidden;
+    }
+
     .header {
       align-items: center;
       border-bottom: $border-default;
@@ -167,5 +171,13 @@
         margin-left: auto;
       }
     }
+  }
+
+  .task-option {
+    background-image: image-url("icon_small/task-black.svg");
+    background-position: left center;
+    background-repeat: no-repeat;
+    background-size: 1em;
+    padding-left: 1.5em;
   }
 }
