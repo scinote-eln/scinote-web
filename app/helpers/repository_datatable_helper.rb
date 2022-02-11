@@ -54,20 +54,21 @@ module RepositoryDatatableHelper
       end
 
       if options[:include_stock_consumption] && record.repository.has_stock_management? && options[:my_module]
-        row[(default_cells.length + custom_cells.length + 1).to_s] =
-          if record.repository_stock_cell.present?
-            display_cell_value(record.repository_stock_cell, record.repository.team)
-          end
-        row[(default_cells.length + custom_cells.length + 2).to_s] = {
-          stock_present: record.repository_stock_cell.present?,
+        stock_present = record.repository_stock_cell.present?
+        consumption_managable =
+          stock_present && record.repository.is_a?(Repository) && can_update_my_module_stock_consumption?(options[:my_module])
+
+        row['consumedStock'] = {
+          stock_present: stock_present,
+          consumption_managable: consumption_managable,
           updateStockConsumptionUrl: Rails.application.routes.url_helpers.consume_modal_my_module_repository_path(
             options[:my_module],
             record.repository,
             row_id: record.id
           ),
           value: {
-            consumed_stock_formatted: record.consumed_stock,
-            unit: record.repository_stock_value.repository_stock_unit_item&.data
+            consumed_stock: record.consumed_stock,
+            unit: record.repository_stock_value&.repository_stock_unit_item&.data
           }
         }
       end
@@ -94,26 +95,26 @@ module RepositoryDatatableHelper
 
         row['1'] = stock_present ? display_cell_value(record.repository_stock_cell, record.repository.team) : {}
         row['1'][:stock_managable] = stock_managable
-        row['2'] = {
+        row['consumedStock'] = {
           stock_present: stock_present,
           consumption_managable: consumption_managable
         }
         if record.repository.is_a?(RepositorySnapshot)
           if record.repository_stock_consumption_value.present?
-            row['2'][:value] = {
+            row['consumedStock'][:value] = {
               consumed_stock: record.repository_stock_consumption_value.amount,
               unit: record.repository_stock_consumption_value.repository_stock_unit_item&.data
             }
           end
         else
           if consumption_managable
-            row['2'][:updateStockConsumptionUrl] =
+            row['consumedStock'][:updateStockConsumptionUrl] =
               Rails.application.routes.url_helpers.consume_modal_my_module_repository_path(
                 my_module, record.repository, row_id: record.id
               )
           end
           if record.consumed_stock.present?
-            row['2'][:value] = {
+            row['consumedStock'][:value] = {
               consumed_stock: record.consumed_stock,
               unit: record.repository_stock_value&.repository_stock_unit_item&.data
             }
