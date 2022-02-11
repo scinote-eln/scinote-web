@@ -31,4 +31,29 @@ class RepositoryTableFilterElement < ApplicationRecord
                                 inclusion: { in: proc { |record|
                                                    record.repository_table_filter.repository.repository_columns
                                                  } }
+
+  validate :items_exist
+
+  private
+
+  def items_exist
+    invalid = case repository_column&.data_type
+              when 'RepositoryChecklistValue'
+                items = repository_column.repository_checklist_items.where(id: parameters['item_ids'])
+                items.count != parameters['item_ids'].length
+              when 'RepositoryListValue'
+                items = repository_column.repository_list_items.where(id: parameters['item_ids'])
+                items.count != parameters['item_ids'].length
+              when 'RepositoryStatusValue'
+                items = repository_column.repository_status_items.where(id: parameters['item_ids'])
+                items.count != parameters['item_ids'].length
+              end
+
+    if invalid
+      errors.add(
+        :column_items,
+        I18n.t('activerecord.errors.models.repository_table_filter_element.attributes.parameters.must_be_valid')
+      )
+    end
+  end
 end

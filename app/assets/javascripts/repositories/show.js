@@ -198,6 +198,10 @@
   }
 
   function initFilterSaving() {
+    $(document).on('click', '#newFilterLink', function() {
+      $('#modalSaveRepositoryTableFilter #repository_table_filter_name').val('');
+    });
+
     $(document).on('click', '#overwriteFilterLink', function() {
       var $modal = $('#modalSaveRepositoryTableFilter');
 
@@ -208,6 +212,9 @@
       $modal.on('hidden.bs.modal', function() {
         $modal.removeData('overwrite');
       });
+
+      $('#modalSaveRepositoryTableFilter #repository_table_filter_name')
+        .val($modal.data('repositoryTableFilterName'));
     });
 
     $(document).on('click', '#saveRepositoryTableFilterButton', function() {
@@ -244,7 +251,9 @@
           $modal.modal('hide');
           $overwriteLink.removeClass('hidden');
           $modal.data('repositoryTableFilterId', response.data.id);
+          $modal.data('repositoryTableFilterName', response.data.attributes.name);
           $('#currentFilterName').html(response.data.attributes.name);
+
 
           if (existingFilterIndex > -1) {
             repositoryFilterObject.savedFilters = repositoryFilterObject.savedFilters.map((f) => {
@@ -260,6 +269,7 @@
         error: function(response) {
           HelperModule.flashAlertMsg(response.responseJSON.message, 'danger');
           $button.removeClass('disabled');
+          $modal.modal('hide');
         }
       });
     });

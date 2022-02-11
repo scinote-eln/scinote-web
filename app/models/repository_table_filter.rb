@@ -6,4 +6,5 @@ class RepositoryTableFilter < ApplicationRecord
   has_many :repository_table_filter_elements, dependent: :destroy
 
   validates :name, :repository, :created_by, presence: true
+  validates_associated :repository_table_filter_elements
 end
