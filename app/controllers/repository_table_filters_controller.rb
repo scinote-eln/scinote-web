@@ -24,10 +24,10 @@ class RepositoryTableFiltersController < ApplicationController
       created_by: current_user
     )
     @repository_table_filter.transaction do
-      @repository_table_filter.save!
       repository_table_filter_elements_params[:custom_columns].each do |custom_column_params|
-        @repository_table_filter.repository_table_filter_elements.create!(custom_column_params)
+        @repository_table_filter.repository_table_filter_elements.build(custom_column_params)
       end
+      @repository_table_filter.save!
     end
 
     render json: @repository_table_filter, serializer: RepositoryFilterSerializer
@@ -39,7 +39,6 @@ class RepositoryTableFiltersController < ApplicationController
     @repository_table_filter.transaction do
       @repository_table_filter.name = repository_table_filter_params[:name]
       @repository_table_filter.default_columns = repository_table_filter_elements_params[:default_columns]
-      @repository_table_filter.save!
 
       repository_column_ids =
         repository_table_filter_elements_params[:custom_columns].map { |r| r['repository_column_id'] }
@@ -51,8 +50,10 @@ class RepositoryTableFiltersController < ApplicationController
       repository_table_filter_elements_params[:custom_columns].each do |custom_column_params|
         @repository_table_filter.repository_table_filter_elements
                                 .find_or_initialize_by(repository_column_id: custom_column_params['repository_column_id'])
-                                .update!(custom_column_params)
+                                .assign_attributes(custom_column_params)
       end
+
+      @repository_table_filter.save!
     end
 
     render json: @repository_table_filter, serializer: RepositoryFilterSerializer
@@ -89,12 +90,12 @@ class RepositoryTableFiltersController < ApplicationController
   end
 
   def render_errors
-    message = if @repository_table_filter.errors[:column_items].present?
-                @repository_table_filter.errors[:column_items]
+    message = if @repository_table_filter.errors[:repository_table_filter_elements]
+                I18n.t('activerecord.errors.models.repository_table_filter_element.attributes.parameters.must_be_valid')
               elsif @repository_table_filter.errors[:repository_column].present?
                 I18n.t('activerecord.errors.models.repository_table_filter_element.attributes.repository_column.must_exist')
               else
-                I18n.t('activerecord.errors.models.repository_table_filter_element.attributes.general')
+                I18n.t('activerecord.errors.models.repository_table_filter_element.general')
               end
     render json: { message: message }, status: :unprocessable_entity
   end
