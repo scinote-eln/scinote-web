@@ -17,7 +17,7 @@
         data-users-url="<%= repository_users_repository_path(@repository) %>"
         data-saved-filters-url="<%= repository_repository_table_filters_path(@repository) %>"
         data-datatable-id="#repository-table-<%= @repository.id %>"
-        data-can-manage-filters="<%= can_manage_repository?(@repository) %>"
+        data-can-manage-filters="<%= can_manage_repository_filters?(@repository) %>"
         data-date-format="<%= current_user.date_format.gsub(/\%/, '').upcase %>"
       >
         <filter-container
