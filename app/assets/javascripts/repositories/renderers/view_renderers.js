@@ -209,11 +209,11 @@ $.fn.dataTable.render.RepositoryConsumedStockValue = function(data) {
   if (data.value) {
     if (data.consumption_managable) {
       return `<a href="${data.updateStockConsumptionUrl}" class="manage-repository-consumed-stock-value-link stock-value-view-render">
-                ${data.value.consumed_stock_formatted} ${data.value.unit}
+                ${data.value.consumed_stock} ${data.value.unit || ''}
                 </a>`;
     }
     return `<span class="stock-value-view-render">
-              ${data.value.consumed_stock_formatted} ${data.value.unit}
+              ${data.value.consumed_stock} ${data.value.unit || ''}
               </span>`;
   }
   if (data.stock_present && data.consumption_managable) {
