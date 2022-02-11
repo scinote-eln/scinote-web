@@ -75,7 +75,8 @@ window.initRepositoryFilter = () => {
   const repositoryFilterContainer = new Vue({
     el: '#filterContainer',
     data: () => ({
-      filters: DEFAULT_FILTERS,
+      filters: [],
+      defaultFilters: DEFAULT_FILTERS,
       columns: [],
       my_modules: [],
       canManageFilters: $('#filterContainer').data('can-manage-filters'),
@@ -121,7 +122,6 @@ window.initRepositoryFilter = () => {
         $('#modalSaveRepositoryTableFilter').data('repositoryTableFilterId', null);
         $('#saveRepositoryFilters').addClass('hidden');
         $('#overwriteFilterLink').addClass('hidden');
-        this.reloadDataTable();
       },
       reloadDataTable() {
         this.dataTableElement.DataTable().ajax.reload();
@@ -148,6 +148,10 @@ window.initRepositoryFilter = () => {
   $('#filterContainer').on('click', (e) => {
     $('#filterContainer .dropdown-selector-container').removeClass('open')
     e.stopPropagation();
+  });
+
+  $('#filtersDropdownButton').on('show.bs.dropdown', () => {
+    $('#filtersColumnsDropdown, #savedFiltersContainer').removeClass('open');
   });
 
   window.repositoryFilterObject = repositoryFilterContainer;
