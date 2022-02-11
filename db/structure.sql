@@ -5557,10 +5557,24 @@ CREATE INDEX index_repository_date_time_range_values_on_created_by_id ON public.
 
 
 --
--- Name: index_repository_date_time_range_values_on_end_time; Type: INDEX; Schema: public; Owner: -
+-- Name: index_repository_date_time_range_values_on_end_time_as_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_repository_date_time_range_values_on_end_time ON public.repository_date_time_range_values USING btree (end_time);
+CREATE INDEX index_repository_date_time_range_values_on_end_time_as_date ON public.repository_date_time_range_values USING btree (((end_time)::date)) WHERE ((type)::text = 'RepositoryDateRangeValue'::text);
+
+
+--
+-- Name: index_repository_date_time_range_values_on_end_time_as_date_tim; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_range_values_on_end_time_as_date_tim ON public.repository_date_time_range_values USING btree (end_time) WHERE ((type)::text = 'RepositoryDateTimeRangeValue'::text);
+
+
+--
+-- Name: index_repository_date_time_range_values_on_end_time_as_time; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_range_values_on_end_time_as_time ON public.repository_date_time_range_values USING btree (((end_time)::time without time zone)) WHERE ((type)::text = 'RepositoryTimeRangeValue'::text);
 
 
 --
@@ -5571,10 +5585,45 @@ CREATE INDEX index_repository_date_time_range_values_on_last_modified_by_id ON p
 
 
 --
--- Name: index_repository_date_time_range_values_on_start_time; Type: INDEX; Schema: public; Owner: -
+-- Name: index_repository_date_time_range_values_on_start_time_as_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_repository_date_time_range_values_on_start_time ON public.repository_date_time_range_values USING btree (start_time);
+CREATE INDEX index_repository_date_time_range_values_on_start_time_as_date ON public.repository_date_time_range_values USING btree (((start_time)::date)) WHERE ((type)::text = 'RepositoryDateRangeValue'::text);
+
+
+--
+-- Name: index_repository_date_time_range_values_on_start_time_as_date_t; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_range_values_on_start_time_as_date_t ON public.repository_date_time_range_values USING btree (start_time) WHERE ((type)::text = 'RepositoryDateTimeRangeValue'::text);
+
+
+--
+-- Name: index_repository_date_time_range_values_on_start_time_as_time; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_range_values_on_start_time_as_time ON public.repository_date_time_range_values USING btree (((start_time)::time without time zone)) WHERE ((type)::text = 'RepositoryTimeRangeValue'::text);
+
+
+--
+-- Name: index_repository_date_time_values_on_data_as_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_values_on_data_as_date ON public.repository_date_time_values USING btree (((data)::date)) WHERE ((type)::text = 'RepositoryDateValue'::text);
+
+
+--
+-- Name: index_repository_date_time_values_on_data_as_date_time; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_values_on_data_as_date_time ON public.repository_date_time_values USING btree (data) WHERE ((type)::text = 'RepositoryDateTimeValue'::text);
+
+
+--
+-- Name: index_repository_date_time_values_on_data_as_time; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_values_on_data_as_time ON public.repository_date_time_values USING btree (((data)::time without time zone)) WHERE ((type)::text = 'RepositoryTimeValue'::text);
 
 
 --
@@ -5659,6 +5708,20 @@ CREATE INDEX index_repository_number_values_on_last_modified_by_id ON public.rep
 --
 
 CREATE INDEX index_repository_rows_on_archived_by_id ON public.repository_rows USING btree (archived_by_id);
+
+
+--
+-- Name: index_repository_rows_on_archived_on_as_date_time_minutes; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_rows_on_archived_on_as_date_time_minutes ON public.repository_rows USING btree (date_trunc('minute'::text, archived_on));
+
+
+--
+-- Name: index_repository_rows_on_created_at_as_date_time_minutes; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_rows_on_created_at_as_date_time_minutes ON public.repository_rows USING btree (date_trunc('minute'::text, created_at));
 
 
 --
@@ -7914,6 +7977,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210825112050'),
 ('20210906132120'),
 ('20211103115450'),
-('20211123103711');
+('20211123103711'),
+('20220203122802');
 
 
