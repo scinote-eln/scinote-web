@@ -212,6 +212,7 @@
 
     $(document).on('click', '#saveRepositoryTableFilterButton', function() {
       var $modal = $('#modalSaveRepositoryTableFilter');
+      var $button = $(this);
       var url = $modal.data().saveUrl;
       var method;
 
@@ -221,6 +222,8 @@
       } else {
         method = 'POST';
       }
+
+      $button.addClass('disabled');
 
       $.ajax({
         type: method,
@@ -252,9 +255,11 @@
           }
 
           repositoryFilterObject.filterName = response.data.attributes.name;
+          $button.removeClass('disabled');
         },
         error: function(response) {
           HelperModule.flashAlertMsg(response.responseJSON.message, 'danger');
+          $button.removeClass('disabled');
         }
       });
     });
