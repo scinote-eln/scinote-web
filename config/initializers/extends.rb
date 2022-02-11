@@ -118,10 +118,10 @@ class Extends
     }
   }
 
-  REPOSITORY_ADVANCED_SEARCH_REFERENCED_VALUE_TYPES = {
-    RepositoryListValue: 'RepositoryListItem',
-    RepositoryChecklistValue: 'RepositoryChecklistItem',
-    RepositoryStatusValue: 'RepositoryStatusItem'
+  REPOSITORY_ADVANCED_SEARCH_REFERENCED_VALUE_RELATIONS = {
+    RepositoryListValue: 'repository_list_items',
+    RepositoryChecklistValue: 'repository_checklist_items',
+    RepositoryStatusValue: 'repository_status_items'
   }
 
   REPOSITORY_ADVANCED_SEARCHABLE_COLUMNS = %i(

@@ -309,7 +309,6 @@ class RepositoryDatatableService
 
   def add_custom_column_filter_condition(repository_rows, filter, filter_element_params)
     repository_column = @repository.repository_columns.find_by(id: filter_element_params['repository_column_id'])
-
     raise RepositoryFilters::ColumnNotFoundException unless repository_column
 
     filter_element = filter.repository_table_filter_elements.new(
@@ -344,17 +343,16 @@ class RepositoryDatatableService
   end
 
   def enforce_referenced_value_existence!(filter_element)
-    referenced_value_klass =
-      Extends::REPOSITORY_ADVANCED_SEARCH_REFERENCED_VALUE_TYPES[
+    relation_method =
+      Extends::REPOSITORY_ADVANCED_SEARCH_REFERENCED_VALUE_RELATIONS[
         filter_element.repository_column.data_type.to_sym
-      ]&.constantize
+      ]
 
-    return unless referenced_value_klass
+    return unless relation_method
 
+    relation = filter_element.repository_column.public_send(relation_method)
     value_item_ids = filter_element.parameters['item_ids']
-    if referenced_value_klass.where(id: value_item_ids).count != value_item_ids.length
-      raise RepositoryFilters::ValueNotFoundException
-    end
+    raise RepositoryFilters::ValueNotFoundException if relation.where(id: value_item_ids).count != value_item_ids.length
   end
 
   def build_sortable_columns
