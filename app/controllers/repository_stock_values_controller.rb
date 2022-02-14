@@ -97,7 +97,7 @@ class RepositoryStockValuesController < ApplicationController
     Activities::CreateActivityService
       .call(activity_type: "inventory_item_stock_#{operator}",
             owner: current_user,
-            subject: @repository_row,
+            subject: @repository,
             team: @repository.team,
             message_items: {
               repository: @repository.id,
