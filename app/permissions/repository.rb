@@ -83,7 +83,7 @@ Canaid::Permissions.register_for(Repository) do
 
   # repository: create/update/delete filters
   can :manage_repository_filters do |user, repository|
-    user.is_normal_user_or_admin_of_team?(repository.team) ||
+    ((repository.team == user.current_team) && user.is_normal_user_or_admin_of_team?(repository.team)) ||
       (repository.shared_with_write?(user.current_team) && user.is_normal_user_or_admin_of_team?(user.current_team))
   end
 end
