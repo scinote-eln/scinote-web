@@ -35,7 +35,7 @@ module ProtocolImporters
         else
           @steps_assets[step.position] = AttachmentsBuilder.generate_json(s)
         end
-        step.tables << TablesBuilder.extract_tables_from_html_string(s[:description][:body], true)
+        step.tables << TablesBuilder.extract_tables_from_html_string(s[:description][:body], false)
         step.description = StepDescriptionBuilder.generate(s)
         step
       end
