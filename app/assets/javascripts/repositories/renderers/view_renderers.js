@@ -205,8 +205,8 @@ $.fn.dataTable.render.RepositoryStockValue = function(data, row) {
           </span>`;
 };
 
-$.fn.dataTable.render.RepositoryConsumedStockValue = function(data) {
-  if (data.value) {
+$.fn.dataTable.render.RepositoryConsumedStockValue = function(data = {}) {
+  if (data.value && data.value.consumed_stock !== null) {
     if (data.consumption_managable) {
       return `<a href="${data.updateStockConsumptionUrl}" class="manage-repository-consumed-stock-value-link stock-value-view-render">
                 ${data.value.consumed_stock} ${data.value.unit || ''}

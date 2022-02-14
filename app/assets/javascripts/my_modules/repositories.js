@@ -21,7 +21,7 @@ var MyModuleRepositories = (function() {
       {
         visible: true,
         searchable: false,
-        data: otherColumnCount + 1
+        data: 'consumedStock'
       }
     ];
   }
@@ -75,9 +75,7 @@ var MyModuleRepositories = (function() {
     });
 
     if ($(tableContainer).data('stock-management')) {
-      let column = stockManagementColumns(columns.length)[1];
-      column.data -= 1;
-      columns.push(column);
+      columns.push(stockManagementColumns(columns.length)[1]);
     }
 
     return columns;
