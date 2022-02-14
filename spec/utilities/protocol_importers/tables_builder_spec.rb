@@ -43,8 +43,8 @@ RSpec.describe ProtocolImporters::TablesBuilder do
     end
 
     context 'when no opening tr' do
-      it 'returns table with 2 rows and 3 columns' do
-        table = described_class.extract_tables_from_html_string(description_string_with_headers, false).first
+      it 'returns table with 3 rows and 4 columns' do
+        table = described_class.extract_tables_from_html_string(description_string_with_no_opening_tr, false).first
 
         expect(JSON.parse(table.contents)['data'].count).to be == 3
         expect(JSON.parse(table.contents)['data'].first.count).to be == 4
