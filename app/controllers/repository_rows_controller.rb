@@ -32,9 +32,9 @@ class RepositoryRowsController < ApplicationController
 
     @repository_rows = @repository_rows.where(archived: params[:archived]) unless @repository.archived?
   rescue RepositoryFilters::ColumnNotFoundException
-    render json: { error: I18n.t('repositories.show.repository_filter.errors.column_not_found') }, status: :not_found
+    render json: { custom_error: I18n.t('repositories.show.repository_filter.errors.column_not_found') }
   rescue RepositoryFilters::ValueNotFoundException
-    render json: { error: I18n.t('repositories.show.repository_filter.errors.value_not_found') }, status: :not_found
+    render json: { custom_error: I18n.t('repositories.show.repository_filter.errors.value_not_found') }
   end
 
   def create

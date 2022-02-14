@@ -24,8 +24,6 @@ var RepositoryDatatable = (function(global) {
   // Tells whether we're currently viewing or editing table
   var currentMode = 'viewMode';
 
-  // var selectedRecord;
-
   // Extend datatables API with searchable options
   // (http://stackoverflow.com/questions/39912395/datatables-dynamically-set-columns-searchable)
   $.fn.dataTable.Api.register('isColumnSearchable()', function(colSelector) {
@@ -419,13 +417,7 @@ var RepositoryDatatable = (function(global) {
           return JSON.stringify(d);
         },
         global: false,
-        type: 'POST',
-        error: function(e) {
-          $('#filtersDropdownButton').removeClass('active-filters');
-          $('#saveRepositoryFilters').addClass('hidden');
-          $('.repository-table-error').addClass('active').html(e.responseJSON.error);
-          animateSpinner(null, false);
-        }
+        type: 'POST'
       },
       columnDefs: [{
         // Checkbox column needs special handling
@@ -612,6 +604,20 @@ var RepositoryDatatable = (function(global) {
 
       $(this).parent().find('.repository-row-selector').trigger('click');
     });
+
+    // Handling of special errors
+    $(TABLE_ID).on('xhr.dt', function(e, settings, json) {
+      if (json.custom_error) {
+        json.data = [];
+        json.recordsFiltered = 0;
+        json.recordsTotal = 0;
+        TABLE.one('draw', function() {
+          $('#filtersDropdownButton').removeClass('active-filters');
+          $('#saveRepositoryFilters').addClass('hidden');
+          $('.repository-table-error').addClass('active').text(json.custom_error);
+        });
+      }
+    })
 
     initRowSelection();
     bindExportActions();
