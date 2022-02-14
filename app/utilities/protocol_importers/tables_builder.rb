@@ -5,8 +5,8 @@ module ProtocolImporters
     def self.extract_tables_from_html_string(description_string, remove_first_column_row = false)
       tables = []
 
-      description_string = description_string.gsub(/\<\/tr\> *\<td/, "</tr><tr><td")
-      description_string = description_string.gsub(/\<table(.*?)\> *\<td/, "<table><tr><td")
+      description_string = description_string.gsub(/\<\/tr\> *\<td/, '</tr><tr><td')
+      description_string = description_string.gsub(%r{<table(.*?)> *<td}, '<table><tr><td')
 
       doc = Nokogiri::HTML(description_string)
       tables_nodeset = doc.css('table')
