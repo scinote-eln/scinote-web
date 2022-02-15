@@ -202,6 +202,10 @@
       $('#modalSaveRepositoryTableFilter #repository_table_filter_name').val('');
     });
 
+    $('#modalSaveRepositoryTableFilter').on('shown.bs.modal', function() {
+      $('#repository_table_filter_name').focus();
+    });
+
     $(document).on('click', '#overwriteFilterLink', function() {
       var $modal = $('#modalSaveRepositoryTableFilter');
 
@@ -212,6 +216,7 @@
       $modal.on('hidden.bs.modal', function() {
         $modal.removeData('overwrite');
       });
+
 
       $('#modalSaveRepositoryTableFilter #repository_table_filter_name')
         .val($modal.data('repositoryTableFilterName'));

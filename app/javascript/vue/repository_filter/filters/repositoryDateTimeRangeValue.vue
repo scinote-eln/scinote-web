@@ -12,6 +12,7 @@
       <div class="filter-datepicker-input">
         <DateTimePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`" />
       </div>
+      <div class="between-delimiter vertical"></div>
       <div class="filter-datepicker-to-input">
         <DateTimePicker @change="updateDateTo" :selectorId="`DatePickerTo${filter.id}`" />
       </div>

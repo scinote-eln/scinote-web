@@ -143,6 +143,7 @@
       },
       toggleSavedFilters(e) {
         e.stopPropagation();
+        $('.saved-filters-list').scrollTo(0);
         if (this.savedFilterScrollbar) {
           this.savedFilterScrollbar.update();
         } else {

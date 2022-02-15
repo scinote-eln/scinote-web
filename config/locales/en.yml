@@ -1440,6 +1440,13 @@ en:
               file_contains: "File contains"
               file_attached: "File is attached"
               file_not_attached: "File is not attached"
+              tooltips:
+                today: "Today from midnight to midnight"
+                yesterday: "The previous 24 hour day"
+                last_week: "The previous calendar week beginning of Monday to end of Sunday"
+                this_month: "The current calendar month from beginning of first day to the end of the last day"
+                this_year: "The current calendar year from beginning of 1st January to  the end of 31st December"
+                last_year: "The last calendar year from beginning of 1st January to the end of 31st December"
             types:
               RepositoryAssetValue:
                 input_placeholder: "Enter text"
