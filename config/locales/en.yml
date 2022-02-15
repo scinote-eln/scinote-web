@@ -1398,7 +1398,7 @@ en:
       filter_inventory_items: "Filter items"
       no_items: "No items here"
 
-      no_items_matched: "No items matched your search request"
+      no_items_matched: "No items here"
       no_archived_items: "No archived items here"
       no_archived_items_matched: "No archived items matched your search request"
       error_searching: "Error searching, please try again"
