@@ -12,6 +12,7 @@
       <div class="filter-datepicker-input">
         <DateTimePicker @change="updateDate" :selectorId="`TimePicker${filter.id}`" :timeOnly="true" />
       </div>
+      <span class="between-delimiter" v-if="operator == 'between'">—</span>
       <div class="filter-datepicker-to-input" v-if="operator == 'between'">
         <DateTimePicker @change="updateDateTo" :selectorId="`TimePickerTo${filter.id}`" :timeOnly="true" />
       </div>

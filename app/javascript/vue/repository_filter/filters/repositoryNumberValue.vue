@@ -18,23 +18,21 @@
         :placeholder= "this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.input_placeholder',{name: this.filter.column.name})"
       />
     </div>
-    <div v-else class="range-selector">
+    <div v-else class="number-range-selector">
       <div class="sci-input-container">
         <input
-          @input="updateRange"
           class="sci-input-field"
-          type="number"
+          type="text"
           name="from"
           v-model="from"
 
         />
       </div>
-      -
+      <span class="between-delimiter">—</span>
       <div class="sci-input-container">
         <input
-          @input="updateRange"
           class="sci-input-field"
-          type="number"
+          type="text"
           name="to"
           v-model="to"
         />
@@ -60,7 +58,6 @@
           { value: 'less_than_or_equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.less_than_or_equal_to') },
           { value: 'between', label: this.i18n.t('repositories.show.repository_filter.filters.operators.between') }
         ],
-        numberRegexp: /[^0-9.]/g,
         operator: 'equal_to',
         value: '',
         from: '',
@@ -71,29 +68,24 @@
       DropdownSelector
     },
     methods: {
-      updateRange() {
-        this.value = {
-          from: this.from,
-          to: this.to
-        };
+      validateNumber(number) {
+        return number.replace(/[^0-9.]/g, '').match(/^\d*(\.\d{0,10})?/)[0]
       },
     },
     watch: {
-      operator() {
-        if(this.operator !== 'between' && !(typeof this.value === 'string')) this.value = '';
-        if(this.operator === 'between') this.value = {to: '', from: ''};
-      },
       value() {
-        if (this.operator === 'between') {
-          this.value = {
-            from: this.from.replace(this.numberRegexp, '').match(/^\d*(\.\d{0,10})?/)[0],
-            to: this.to.replace(this.numberRegexp, '').match(/^\d*(\.\d{0,10})?/)[0]
-          };
-          this.parameters = this.value;
-        } else {
-          this.value = this.value.replace(this.numberRegexp, '').match(/^\d*(\.\d{0,10})?/)[0]
-          this.parameters = { number: this.value }
-        }
+        this.value = this.validateNumber(this.value)
+        this.parameters = { number: this.value }
+        this.updateFilter();
+      },
+      to() {
+        this.to = this.validateNumber(this.to)
+        this.parameters = {from: this.from, to: this.to}
+        this.updateFilter();
+      },
+      from() {
+        this.from = this.validateNumber(this.from)
+        this.parameters = {from: this.from, to: this.to}
         this.updateFilter();
       }
     },

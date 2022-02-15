@@ -11,6 +11,7 @@
     <div class="filter-datepicker-input">
       <DateTimePicker @change="updateDate" :selectorId="`TimePicker${filter.id}`" :timeOnly="true" />
     </div>
+    <span class="between-delimiter">—</span>
     <div class="filter-datepicker-to-input">
       <DateTimePicker @change="updateDateTo" :selectorId="`TimePickerTo${filter.id}`" :timeOnly="true" />
     </div>

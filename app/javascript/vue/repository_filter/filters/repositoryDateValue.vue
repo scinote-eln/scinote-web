@@ -12,6 +12,7 @@
       <div class="filter-datepicker-input">
         <DateTimePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`" :onlyDate="true" />
       </div>
+      <span class="between-delimiter" v-if="operator == 'between'">—</span>
       <div class="filter-datepicker-to-input" v-if="operator == 'between'">
         <DateTimePicker @change="updateDateTo" :selectorId="`DatePickerTo${filter.id}`" :onlyDate="true" />
       </div>
@@ -32,12 +33,25 @@
       return {
         timeType: 'date',
         operators: [
-          { value: 'today', label: this.i18n.t('repositories.show.repository_filter.filters.operators.today') },
-          { value: 'yesterday', label: this.i18n.t('repositories.show.repository_filter.filters.operators.yesterday') },
-          { value: 'last_week', label: this.i18n.t('repositories.show.repository_filter.filters.operators.last_week') },
-          { value: 'this_month', label: this.i18n.t('repositories.show.repository_filter.filters.operators.this_month') },
-          { value: 'this_year', label: this.i18n.t('repositories.show.repository_filter.filters.operators.this_year') },
-          { value: 'last_year', label: this.i18n.t('repositories.show.repository_filter.filters.operators.last_year') },
+          { value: 'today', label: this.i18n.t('repositories.show.repository_filter.filters.operators.today'), params: {
+            tooltip: this.i18n.t('repositories.show.repository_filter.filters.operators.tooltips.today')
+          } },
+          { value: 'yesterday', label: this.i18n.t('repositories.show.repository_filter.filters.operators.yesterday'), params: {
+            tooltip: this.i18n.t('repositories.show.repository_filter.filters.operators.tooltips.yesterday')
+          } },
+          { value: 'last_week', label: this.i18n.t('repositories.show.repository_filter.filters.operators.last_week'), params: {
+            tooltip: this.i18n.t('repositories.show.repository_filter.filters.operators.tooltips.last_week')
+          } },
+          { value: 'this_month', label: this.i18n.t('repositories.show.repository_filter.filters.operators.this_month'), params: {
+            tooltip: this.i18n.t('repositories.show.repository_filter.filters.operators.tooltips.this_month')
+          } },
+          { value: 'this_year', label: this.i18n.t('repositories.show.repository_filter.filters.operators.this_year'), params: {
+            tooltip: this.i18n.t('repositories.show.repository_filter.filters.operators.tooltips.this_year')
+          } },
+          { value: 'last_year', label: this.i18n.t('repositories.show.repository_filter.filters.operators.last_year'), params: {
+            tooltip: this.i18n.t('repositories.show.repository_filter.filters.operators.tooltips.last_year')
+          } },
+          { value: '', label: '', params: { delimiter: true } },
           { value: 'equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.equal_to') },
           { value: 'unequal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.unequal_to') },
           { value: 'greater_than', label: this.i18n.t('repositories.show.repository_filter.filters.operators.greater_than') },
