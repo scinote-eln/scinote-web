@@ -117,12 +117,12 @@ class RepositoryDatatableService
   def advanced_search(repository_rows)
     adv_search_params = @params[:advanced_search]
     filter = @repository.repository_table_filters.new
-    adv_search_params[:filter_elements].each do |filter_element_params|
+    adv_search_params[:filter_elements].each_with_index do |filter_element_params, index|
       repository_rows =
         if PREDEFINED_COLUMNS.include?(filter_element_params[:repository_column_id])
           add_predefined_column_filter_condition(repository_rows, filter_element_params)
         else
-          add_custom_column_filter_condition(repository_rows, filter, filter_element_params)
+          add_custom_column_filter_condition(repository_rows, filter, index, filter_element_params)
         end
     end
 
@@ -338,7 +338,7 @@ class RepositoryDatatableService
     end
   end
 
-  def add_custom_column_filter_condition(repository_rows, filter, filter_element_params)
+  def add_custom_column_filter_condition(repository_rows, filter, index, filter_element_params)
     repository_column = @repository.repository_columns.find_by(id: filter_element_params['repository_column_id'])
     raise RepositoryFilters::ColumnNotFoundException unless repository_column
 
@@ -348,26 +348,25 @@ class RepositoryDatatableService
       parameters: filter_element_params[:parameters]
     )
     config = Extends::REPOSITORY_ADVANCED_SEARCH_ATTR[filter_element.repository_column.data_type.to_sym]
+    join_cells_alias = "repository_cells_#{index}"
+    join_values_alias = "repository_values_#{index}"
+
+    enforce_referenced_value_existence!(filter_element)
+
+    repository_rows =
+      repository_rows
+      .joins(
+        "LEFT OUTER JOIN \"repository_cells\" AS \"#{join_cells_alias}\"" \
+        " ON  \"repository_rows\".\"id\" = \"#{join_cells_alias}\".\"repository_row_id\"" \
+        " AND \"#{join_cells_alias}\".\"repository_column_id\" = '#{filter_element.repository_column.id}'"
+      ).joins(
+        "LEFT OUTER JOIN \"#{config[:table_name]}\" AS \"#{join_values_alias}\"" \
+        " ON  \"#{join_values_alias}\".\"id\" = \"#{join_cells_alias}\".\"value_id\""
+      )
 
     if %w(empty file_not_attached).include?(filter_element_params[:operator])
-      repository_rows.left_outer_joins(config[:table_name]).where(config[:table_name] => nil)
+      repository_rows.where(join_values_alias => { id: nil })
     else
-      join_cells_alias = "repository_column_cells_#{filter_element.repository_column.id}"
-      join_values_alias = "repository_column_values_#{filter_element.repository_column.id}"
-
-      enforce_referenced_value_existence!(filter_element)
-
-      repository_rows =
-        repository_rows
-        .joins(
-          "LEFT OUTER JOIN \"repository_cells\" AS \"#{join_cells_alias}\"" \
-          " ON  \"repository_rows\".\"id\" = \"#{join_cells_alias}\".\"repository_row_id\"" \
-          " AND \"#{join_cells_alias}\".\"repository_column_id\" = '#{filter_element.repository_column.id}'")
-        .joins(
-          "LEFT OUTER JOIN \"#{config[:table_name]}\" AS \"#{join_values_alias}\"" \
-          " ON  \"#{join_values_alias}\".\"id\" = \"#{join_cells_alias}\".\"value_id\""
-        )
-
       value_klass = filter_element.repository_column.data_type.constantize
       value_klass.add_filter_condition(repository_rows, join_values_alias, filter_element)
     end
