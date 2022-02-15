@@ -140,6 +140,6 @@ $.fn.dataTable.render.editRepositoryStockValue = function(formId, columnId, cell
   return cell.node();
 };
 
-$.fn.dataTable.render.editRepositoryConsumedStockValue = function(formId, columnId, cell) {
+$.fn.dataTable.render.editRepositoryStockConsumptionValue = function(formId, columnId, cell) {
   return cell.node();
 };

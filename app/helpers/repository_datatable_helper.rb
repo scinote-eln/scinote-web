@@ -93,20 +93,17 @@ module RepositoryDatatableHelper
         consumption_managable =
           stock_present && record.repository.is_a?(Repository) && can_update_my_module_stock_consumption?(my_module)
 
-        row['1'] = stock_present ? display_cell_value(record.repository_stock_cell, record.repository.team) : {}
-        row['1'][:stock_managable] = stock_managable
-        row['consumedStock'] = {
-          stock_present: stock_present,
-          consumption_managable: consumption_managable
-        }
+        row['stock'] = stock_present ? display_cell_value(record.repository_stock_cell, record.repository.team) : {}
+        row['stock'][:stock_managable] = stock_managable
         if record.repository.is_a?(RepositorySnapshot)
-          if record.repository_stock_consumption_value.present?
-            row['consumedStock'][:value] = {
-              consumed_stock: record.repository_stock_consumption_value.amount,
-              unit: record.repository_stock_consumption_value.repository_stock_unit_item&.data
-            }
-          end
+          row['consumedStock'] =
+            if record.repository_stock_consumption_value.present?
+              display_cell_value(record.repository_stock_consumption_cell, record.repository.team)
+            else
+              {}
+            end
         else
+          row['consumedStock'] = {}
           if consumption_managable
             row['consumedStock'][:updateStockConsumptionUrl] =
               Rails.application.routes.url_helpers.consume_modal_my_module_repository_path(
@@ -116,17 +113,20 @@ module RepositoryDatatableHelper
           if record.consumed_stock.present?
             row['consumedStock'][:value] = {
               consumed_stock: record.consumed_stock,
-              unit: record.repository_stock_value&.repository_stock_unit_item&.data
+              consumed_stock_formatted:
+                "#{record.consumed_stock} #{record.repository_stock_value&.repository_stock_unit_item&.data}"
             }
           end
         end
+        row['consumedStock']['stock_present'] = stock_present
+        row['consumedStock']['consumption_managable'] = consumption_managable
       end
 
       row
     end
   end
 
-  def prepare_snapshot_row_columns(repository_rows, columns_mappings, team)
+  def prepare_snapshot_row_columns(repository_rows, columns_mappings, team, options = {})
     repository_rows.map do |record|
       row = {
         'DT_RowId': record.id,
@@ -141,6 +141,17 @@ module RepositoryDatatableHelper
       # Add custom columns
       record.repository_cells.each do |cell|
         row[columns_mappings[cell.repository_column.id]] = display_cell_value(cell, team)
+      end
+
+      if options[:include_stock_consumption] && record.repository.has_stock_management?
+        stock_present = record.repository_stock_cell.present?
+        row['stock'] = stock_present ? display_cell_value(record.repository_stock_cell, record.repository.team) : {}
+        row['consumedStock'] =
+          if stock_present
+            display_cell_value(record.repository_stock_consumption_cell, record.repository.team)
+          else
+            {}
+          end
       end
 
       row
