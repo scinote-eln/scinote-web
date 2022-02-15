@@ -9,7 +9,7 @@ end
 class RepositoryDatatableService
   attr_reader :repository_rows, :all_count, :mappings
 
-  PREDEFINED_COLUMNS = %w(row_id row_name added_on added_by archived_by assigned).freeze
+  PREDEFINED_COLUMNS = %w(row_id row_name added_on added_by archived_on archived_by assigned).freeze
 
   def initialize(repository, params, user, my_module = nil)
     @repository = repository
