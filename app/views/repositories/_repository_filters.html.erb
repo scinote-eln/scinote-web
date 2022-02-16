@@ -18,7 +18,7 @@
         data-saved-filters-url="<%= repository_repository_table_filters_path(@repository) %>"
         data-datatable-id="#repository-table-<%= @repository.id %>"
         data-can-manage-filters="<%= can_manage_repository_filters?(@repository) %>"
-        data-date-format="<%= current_user.date_format.gsub(/\%/, '').upcase %>"
+        data-date-format="<%= datetime_picker_format_date_only %>"
       >
         <filter-container
           :columns.sync="columns"
