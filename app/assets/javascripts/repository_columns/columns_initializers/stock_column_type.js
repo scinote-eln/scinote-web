@@ -5,7 +5,7 @@ var RepositoryStockColumnType = (function() {
   var delimiterDropdown = '.stock-column-type #delimiter';
   var itemsTextarea = '.stock-column-type .items-textarea';
   var previewContainer = '.stock-column-type .dropdown-preview';
-  var dropdownOptions = '.stock-column-type .dropdown-options';
+  var dropdownOptions = '.stock-column-type #dropdown-options';
 
   function initStockUnitDropdown() {
     dropdownSelector.init(previewContainer + ' .preview-select', {

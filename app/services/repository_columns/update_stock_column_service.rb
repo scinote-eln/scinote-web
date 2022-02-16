@@ -13,7 +13,7 @@ module RepositoryColumns
 
       @column.lock!
 
-      updating_units_names = @params[:repository_stock_unit_items_attributes].to_a.map { |e| e[:data] }
+      updating_units_names = @params[:repository_stock_unit_items_attributes].to_a.pluck(:data)
       existing_units_names = @column.repository_stock_unit_items.pluck(:data)
       to_be_deleted = existing_units_names - updating_units_names
       to_be_created = updating_units_names - existing_units_names
