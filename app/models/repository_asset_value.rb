@@ -31,11 +31,18 @@ class RepositoryAssetValue < ApplicationRecord
       s_query = filter_element.parameters['text']&.gsub(/[!()&|:]/, ' ')&.strip&.split(/\s+/)
       return repository_rows if s_query.blank?
 
+      asset_join_alias = "#{join_alias}_assets"
+      asset_text_join_alias = "#{join_alias}_asset_text_data"
+
       s_query = s_query.map { |t| "#{t}:*" }.join('|').tr('\'', '"')
       repository_rows
-        .joins("INNER JOIN \"assets\" ON  \"assets\".\"id\" = \"#{join_alias}\".\"asset_id\"")
-        .joins('INNER JOIN "asset_text_data" ON  "asset_text_data"."asset_id" = "assets"."id"')
-        .where('asset_text_data.data_vector @@ to_tsquery(?)', s_query)
+        .joins(
+          "INNER JOIN \"assets\" AS \"#{asset_join_alias}\" ON "\
+          "\"#{asset_join_alias}\".\"id\" = \"#{join_alias}\".\"asset_id\""
+        ).joins(
+          "INNER JOIN \"asset_text_data\" AS \"#{asset_text_join_alias}\" ON "\
+          "\"#{asset_text_join_alias}\".\"asset_id\" = \"#{asset_join_alias}\".\"id\""
+        ).where("\"#{asset_text_join_alias}\".data_vector @@ to_tsquery(?)", s_query)
     when 'file_attached'
       repository_rows.where.not("#{join_alias} IS NULL")
     else
