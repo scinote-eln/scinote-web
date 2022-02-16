@@ -104,6 +104,7 @@
       },
       toggleColumnsFilters(e) {
         e.stopPropagation();
+        $('.filters-columns-list').scrollTo(0);
         this.closeSavedFilters();
         $('#filtersColumnsDropdown').toggleClass('open');
       },

@@ -1454,6 +1454,8 @@ en:
                 input_placeholder: "Enter %{name}"
               RepositoryNumberValue:
                 input_placeholder: "Enter %{name}"
+                to_placeholder: "To"
+                from_placeholder: "From"
               RepositoryMyModuleValue:
                 select_placeholder: "Select task"
                 multiple_selected: "tasks selected"
