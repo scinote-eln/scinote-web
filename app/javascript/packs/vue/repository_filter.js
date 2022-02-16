@@ -108,10 +108,14 @@ window.initRepositoryFilter = () => {
             .attr('data-repository-filter-json', JSON.stringify({ filter_elements: this.filtersJSON }));
 
         $('#repository_table_filter_elements_json').val(JSON.stringify(this.filtersJSON));
-        $('#saveRepositoryFilters').removeClass('hidden');
+
+        if (this.filtersJSON.length > 0) {
+          $('#saveRepositoryFilters').removeClass('hidden');
+        }
+
         $('#filterContainer .dropdown-selector-container').removeClass('open');
         $('#filtersDropdownButton').removeClass('open');
-        $('#filtersDropdownButton').toggleClass('active-filters', this.filters.length > 0);
+        $('#filtersDropdownButton').toggleClass('active-filters', this.filtersJSON.length > 0);
         $('.repository-table-error').removeClass('active').html('');
         this.reloadDataTable();
       },
