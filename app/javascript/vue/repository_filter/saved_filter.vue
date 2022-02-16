@@ -1,6 +1,6 @@
 <template>
   <div class="saved-filters-element">
-    <span @click="loadFilters">{{ savedFilter.attributes.name }}</span>
+    <span class="saved-filter-name" @click="loadFilters">{{ savedFilter.attributes.name }}</span>
     <button v-if="canManageFilters" class="btn btn-light icon-btn" @click="deleteFilter">
       <i :title="i18n.t('repositories.show.filters.delete_saved_filter')" class="fas fa-trash"></i>
     </button>

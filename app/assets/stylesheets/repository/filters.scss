@@ -53,7 +53,8 @@
     padding: 0;
     width: 460px;
 
-    .dropdown-selector {
+    .dropdown-selector,
+    .users-filter-dropdown {
       overflow: hidden;
     }
 
@@ -87,6 +88,10 @@
         display: flex;
         padding: 0 1em;
         cursor: pointer;
+
+        .saved-filter-name {
+          padding: 8px 0;
+        }
 
         &:hover {
           background: $color-concrete;
@@ -136,7 +141,7 @@
     .filters-list {
       flex-grow: 1;
       overflow-y: auto;
-      padding: .5em 1em;
+      padding: .5em 1.6rem;
     }
 
     .filter-container {
@@ -209,7 +214,7 @@
       }
 
       .filter-remove {
-        margin-left: auto;
+        margin-left: .5em;
 
         .icon-btn {
           color: $color-silver-chalice;
@@ -237,11 +242,11 @@
     width: 320px;
 
     .overwrite-link {
-      align-items: center;
       display: flex;
 
       .fa-save {
         flex-shrink: 0;
+        line-height: 20px;
         margin-right: .25em;
       }
 

@@ -25,7 +25,7 @@
           type="text"
           name="from"
           v-model="from"
-
+          :placeholder= "this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.from_placeholder')"
         />
       </div>
       <span class="between-delimiter">—</span>
@@ -35,6 +35,7 @@
           type="text"
           name="to"
           v-model="to"
+          :placeholder= "this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryNumberValue.to_placeholder')"
         />
       </div>
     </div>
