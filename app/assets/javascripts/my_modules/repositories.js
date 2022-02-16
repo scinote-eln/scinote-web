@@ -16,7 +16,7 @@ var MyModuleRepositories = (function() {
       {
         visible: true,
         searchable: false,
-        data: otherColumnCount
+        data: 'stock'
       },
       {
         visible: true,
@@ -40,7 +40,7 @@ var MyModuleRepositories = (function() {
         className: 'item-consumed-stock',
         sWidth: '1%',
         render: function(data) {
-          return $.fn.dataTable.render.RepositoryConsumedStockValue(data);
+          return $.fn.dataTable.render.RepositoryStockConsumptionValue(data);
         }
       }
     ];
@@ -130,7 +130,7 @@ var MyModuleRepositories = (function() {
             return $.fn.dataTable.render[data.value_type](data);
           }
           if (data !== undefined && data.stock_present !== undefined) {
-            return $.fn.dataTable.render.RepositoryConsumedStockValue(data);
+            return $.fn.dataTable.render.RepositoryStockConsumptionValue(data);
           }
           return data;
         }

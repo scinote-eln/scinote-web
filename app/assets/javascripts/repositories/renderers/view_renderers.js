@@ -205,16 +205,19 @@ $.fn.dataTable.render.RepositoryStockValue = function(data, row) {
           </span>`;
 };
 
-$.fn.dataTable.render.RepositoryConsumedStockValue = function(data = {}) {
+$.fn.dataTable.render.defaultRepositoryStockValue = function() {
+  return $.fn.dataTable.render.RepositoryStockValue();
+};
+
+$.fn.dataTable.render.RepositoryStockConsumptionValue = function(data = {}) {
   if (data.value && data.value.consumed_stock !== null) {
     if (data.consumption_managable) {
-      return `<a href="${data.updateStockConsumptionUrl}" class="manage-repository-consumed-stock-value-link stock-value-view-render">
-                ${data.value.consumed_stock} ${data.value.unit || ''}
-                </a>`;
+      return `<a href="${data.updateStockConsumptionUrl}"
+                 class="manage-repository-consumed-stock-value-link stock-value-view-render">
+                ${data.value.consumed_stock_formatted}
+              </a>`;
     }
-    return `<span class="stock-value-view-render">
-              ${data.value.consumed_stock} ${data.value.unit || ''}
-              </span>`;
+    return `<span class="stock-value-view-render">${data.value.consumed_stock_formatted}</span>`;
   }
   if (data.stock_present && data.consumption_managable) {
     return `<a href="${data.updateStockConsumptionUrl}" class="manage-repository-consumed-stock-value-link">
@@ -225,6 +228,6 @@ $.fn.dataTable.render.RepositoryConsumedStockValue = function(data = {}) {
   return '<span class="empty-consumed-stock-render"> - </span>';
 };
 
-$.fn.dataTable.render.defaultRepositoryStockValue = function() {
-  return $.fn.dataTable.render.RepositoryStockValue();
+$.fn.dataTable.render.defaultRepositoryStockConsumptionValue = function() {
+  return $.fn.dataTable.render.RepositoryStockConsumptionValue();
 };
