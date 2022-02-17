@@ -122,7 +122,6 @@ window.initRepositoryFilter = () => {
       clearFilters() {
         this.filters = [];
         this.filterName = null;
-        $('#filtersDropdownButton').removeClass('active-filters');
         this.dataTableElement.removeAttr('data-repository-filter-json');
         $('#modalSaveRepositoryTableFilter').data('repositoryTableFilterId', null);
         $('#saveRepositoryFilters').addClass('hidden');
