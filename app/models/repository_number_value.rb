@@ -18,21 +18,28 @@ class RepositoryNumberValue < ApplicationRecord
 
   def self.add_filter_condition(repository_rows, join_alias, filter_element)
     parameters = filter_element.parameters
+    if filter_element.operator == 'between'
+      return repository_rows if parameters['from'].blank? || parameters['to'].blank?
+    elsif parameters['number'].blank?
+      return repository_rows
+    end
+
     case filter_element.operator
     when 'equal_to'
-      repository_rows.where("#{join_alias}.data = ?", parameters['number'])
+      repository_rows.where("#{join_alias}.data = ?", parameters['number'].to_i)
     when 'unequal_to'
-      repository_rows.where.not("#{join_alias}.data = ?", parameters['number'])
+      repository_rows.where.not("#{join_alias}.data = ?", parameters['number'].to_i)
     when 'greater_than'
-      repository_rows.where("#{join_alias}.data > ?", parameters['number'])
+      repository_rows.where("#{join_alias}.data > ?", parameters['number'].to_i)
     when 'greater_than_or_equal_to'
-      repository_rows.where("#{join_alias}.data >= ?", parameters['number'])
+      repository_rows.where("#{join_alias}.data >= ?", parameters['number'].to_i)
     when 'less_than'
-      repository_rows.where("#{join_alias}.data < ?", parameters['number'])
+      repository_rows.where("#{join_alias}.data < ?", parameters['number'].to_i)
     when 'less_than_or_equal_to'
-      repository_rows.where("#{join_alias}.data <= ?", parameters['number'])
+      repository_rows.where("#{join_alias}.data <= ?", parameters['number'].to_i)
     when 'between'
-      repository_rows.where("#{join_alias}.data > ? AND #{join_alias}.data < ?", parameters['from'], parameters['to'])
+      repository_rows
+        .where("#{join_alias}.data > ? AND #{join_alias}.data < ?", parameters['from'].to_i, parameters['to'].to_i)
     else
       raise ArgumentError, 'Wrong operator for RepositoryNumberValue!'
     end
