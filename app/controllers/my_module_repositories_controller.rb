@@ -164,14 +164,15 @@ class MyModuleRepositoriesController < ApplicationController
       module_repository_row.assign_attributes(
         stock_consumption: params[:stock_consumption],
         last_modified_by: current_user,
-        comment: params[:comment]
+        comment: params[:comment],
       )
       module_repository_row.save!
 
       log_activity(current_stock,
-                   params[:stock_consumption],
-                   params[:initial_units],
-                   params[:comment])
+                   module_repository_row.stock_consumption,
+                   module_repository_row.repository_row.repository_stock_value.repository_stock_unit_item.data,
+                   params[:comment],
+                   module_repository_row.repository_row_id)
     end
 
     render json: {}, status: :ok
@@ -234,8 +235,7 @@ class MyModuleRepositoriesController < ApplicationController
     end
   end
 
-  def log_activity(initial_stock, new_stock, unit, comment)
-    @repository_row = @repository.repository_rows.find(params[:repository_row_id])
+  def log_activity(initial_stock, new_stock, unit, comment, repository_row)
     Activities::CreateActivityService
       .call(activity_type: :task_inventory_item_stock_consumed,
             owner: current_user,
@@ -244,7 +244,7 @@ class MyModuleRepositoriesController < ApplicationController
             project: @my_module.experiment.project,
             message_items: {
               repository: @repository.id,
-              repository_row: @repository_row.id,
+              repository_row: repository_row,
               current_stock: initial_stock || 0,
               unit: unit,
               new_stock: new_stock || 0,

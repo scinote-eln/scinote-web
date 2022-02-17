@@ -17,7 +17,7 @@ module GlobalActivitiesHelper
           no_links ? generate_name(value) : generate_link(value, activity)
         end
 
-      if key == 'comment' && !parameters[key].strip.empty?
+      if key == 'comment' && parameters[key].strip.present?
         parameters[key] = '<i class="fas fa-comment"></i>' + parameters[key]
       end
     end
