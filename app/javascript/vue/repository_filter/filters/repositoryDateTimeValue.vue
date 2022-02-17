@@ -11,11 +11,11 @@
     <template v-if="!isPreset">
       <div class="datetime-filter-attributes">
         <div class="filter-datepicker-input">
-          <DateTimePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`" />
+          <DateTimePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`" :defaultValue="currentDate()" />
         </div>
         <div class="between-delimiter vertical" v-if="operator == 'between'"></div>
         <div class="filter-datepicker-to-input">
-          <DateTimePicker @change="updateDateTo" v-if="operator == 'between'" :selectorId="`DatePickerTo${filter.id}`" />
+          <DateTimePicker @change="updateDateTo" v-if="operator == 'between'" :selectorId="`DatePickerTo${filter.id}`" :defaultValue="currentDate(7 * 24 * 60 * 60)" />
         </div>
       </div>
     </template>

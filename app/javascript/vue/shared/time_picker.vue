@@ -15,7 +15,8 @@
   export default {
     name: 'TimePicker',
     props: {
-      selectorId: { type: String, required: true }
+      selectorId: { type: String, required: true },
+      defaultValue: { type: String, required: false }
     },
     data() {
       return {
@@ -41,6 +42,9 @@
         this.value = value;
         this.update();
       });
+
+      this.value = this.defaultValue
+      this.update();
     },
     methods: {
       update() {

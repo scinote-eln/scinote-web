@@ -1,7 +1,7 @@
 <template>
   <div class="date-time-picker">
-    <DatePicker v-if="!timeOnly" @change="updateDate" :selectorId="`${this.selectorId}_Date`" />
-    <TimePicker v-if="!dateOnly" @change="updateTime" :selectorId="`${this.selectorId}_Time`" />
+    <DatePicker v-if="!timeOnly" @change="updateDate" :selectorId="`${this.selectorId}_Date`" :defaultValue="defaultValue" />
+    <TimePicker v-if="!dateOnly" @change="updateTime" :selectorId="`${this.selectorId}_Time`" :defaultValue="getTime(defaultValue)" />
   </div>
 </template>
 
@@ -14,7 +14,8 @@
     props: {
       dateOnly: { type: Boolean, default: false },
       timeOnly: { type: Boolean, default: false },
-      selectorId: { type: String, required: true }
+      selectorId: { type: String, required: true },
+      defaultValue: {type: Date, required: false }
     },
     data() {
       return {
@@ -31,6 +32,9 @@
       updateDate(value) {
         this.date = value;
         this.updateDateTime();
+      },
+      getTime(dateTime) {
+        return `${dateTime.getHours()}:${dateTime.getMinutes()}`
       },
       updateTime(value) {
         this.time = value;
