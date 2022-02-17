@@ -164,7 +164,7 @@ class MyModuleRepositoriesController < ApplicationController
       module_repository_row.assign_attributes(
         stock_consumption: params[:stock_consumption],
         last_modified_by: current_user,
-        comment: params[:comment],
+        comment: params[:comment]
       )
       module_repository_row.save!
 
