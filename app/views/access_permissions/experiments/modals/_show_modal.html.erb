@@ -12,7 +12,7 @@
           <% user_assignment = experiment.user_assignments.find_by(user: user) %>
           <%= render partial: 'access_permissions/partials/user_assignment', locals: { user_assignment: user_assignment, user: user, resource: experiment } %>
         <% end %>
-        <%= render('access_permissions/partials/default_public_user_role_form', project: project, editable: false) if project.visible? %>
+        <%= render('access_permissions/partials/default_public_user_role_form', project: experiment.project, editable: false) if experiment.project.visible? %>
       </div>
     </div>
   </div>
