@@ -176,7 +176,6 @@ CREATE TABLE public.activities (
 --
 
 CREATE SEQUENCE public.activities_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -230,8 +229,8 @@ ALTER SEQUENCE public.activity_filters_id_seq OWNED BY public.activity_filters.i
 CREATE TABLE public.ar_internal_metadata (
     key character varying NOT NULL,
     value character varying,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -254,7 +253,6 @@ CREATE TABLE public.asset_text_data (
 --
 
 CREATE SEQUENCE public.asset_text_data_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -296,7 +294,6 @@ CREATE TABLE public.assets (
 --
 
 CREATE SEQUENCE public.assets_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -366,7 +363,6 @@ CREATE TABLE public.checklist_items (
 --
 
 CREATE SEQUENCE public.checklist_items_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -401,7 +397,6 @@ CREATE TABLE public.checklists (
 --
 
 CREATE SEQUENCE public.checklists_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -438,7 +433,6 @@ CREATE TABLE public.comments (
 --
 
 CREATE SEQUENCE public.comments_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -469,7 +463,6 @@ CREATE TABLE public.connections (
 --
 
 CREATE SEQUENCE public.connections_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -561,7 +554,6 @@ CREATE TABLE public.delayed_jobs (
 --
 
 CREATE SEQUENCE public.delayed_jobs_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -603,7 +595,6 @@ CREATE TABLE public.experiments (
 --
 
 CREATE SEQUENCE public.experiments_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -711,7 +702,6 @@ CREATE TABLE public.my_module_groups (
 --
 
 CREATE SEQUENCE public.my_module_groups_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -745,7 +735,6 @@ CREATE TABLE public.my_module_repository_rows (
 --
 
 CREATE SEQUENCE public.my_module_repository_rows_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -946,7 +935,6 @@ CREATE TABLE public.my_module_tags (
 --
 
 CREATE SEQUENCE public.my_module_tags_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -998,7 +986,6 @@ CREATE TABLE public.my_modules (
 --
 
 CREATE SEQUENCE public.my_modules_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1033,7 +1020,6 @@ CREATE TABLE public.notifications (
 --
 
 CREATE SEQUENCE public.notifications_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1227,7 +1213,6 @@ CREATE TABLE public.projects (
 --
 
 CREATE SEQUENCE public.projects_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1261,7 +1246,6 @@ CREATE TABLE public.protocol_keywords (
 --
 
 CREATE SEQUENCE public.protocol_keywords_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1292,7 +1276,6 @@ CREATE TABLE public.protocol_protocol_keywords (
 --
 
 CREATE SEQUENCE public.protocol_protocol_keywords_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1338,7 +1321,6 @@ CREATE TABLE public.protocols (
 --
 
 CREATE SEQUENCE public.protocols_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1351,6 +1333,133 @@ CREATE SEQUENCE public.protocols_id_seq
 --
 
 ALTER SEQUENCE public.protocols_id_seq OWNED BY public.protocols.id;
+
+
+--
+-- Name: rap_program_levels; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rap_program_levels (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: rap_program_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rap_program_levels_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rap_program_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rap_program_levels_id_seq OWNED BY public.rap_program_levels.id;
+
+
+--
+-- Name: rap_project_levels; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rap_project_levels (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    rap_topic_level_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: rap_project_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rap_project_levels_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rap_project_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rap_project_levels_id_seq OWNED BY public.rap_project_levels.id;
+
+
+--
+-- Name: rap_task_levels; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rap_task_levels (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    rap_project_level_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: rap_task_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rap_task_levels_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rap_task_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rap_task_levels_id_seq OWNED BY public.rap_task_levels.id;
+
+
+--
+-- Name: rap_topic_levels; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rap_topic_levels (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    rap_program_level_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: rap_topic_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rap_topic_levels_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rap_topic_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rap_topic_levels_id_seq OWNED BY public.rap_topic_levels.id;
 
 
 --
@@ -1383,7 +1492,6 @@ CREATE TABLE public.report_elements (
 --
 
 CREATE SEQUENCE public.report_elements_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1457,7 +1565,6 @@ CREATE TABLE public.reports (
 --
 
 CREATE SEQUENCE public.reports_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1503,7 +1610,6 @@ CREATE TABLE public.repositories (
 --
 
 CREATE SEQUENCE public.repositories_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1571,7 +1677,6 @@ CREATE TABLE public.repository_cells (
 --
 
 CREATE SEQUENCE public.repository_cells_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1706,7 +1811,6 @@ CREATE TABLE public.repository_columns (
 --
 
 CREATE SEQUENCE public.repository_columns_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1776,7 +1880,6 @@ CREATE TABLE public.repository_date_time_values (
 --
 
 CREATE SEQUENCE public.repository_date_time_values_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1918,7 +2021,6 @@ CREATE TABLE public.repository_rows (
 --
 
 CREATE SEQUENCE public.repository_rows_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2088,7 +2190,6 @@ CREATE TABLE public.repository_table_states (
 --
 
 CREATE SEQUENCE public.repository_table_states_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2122,7 +2223,6 @@ CREATE TABLE public.repository_text_values (
 --
 
 CREATE SEQUENCE public.repository_text_values_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2153,7 +2253,6 @@ CREATE TABLE public.result_assets (
 --
 
 CREATE SEQUENCE public.result_assets_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2184,7 +2283,6 @@ CREATE TABLE public.result_tables (
 --
 
 CREATE SEQUENCE public.result_tables_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2215,7 +2313,6 @@ CREATE TABLE public.result_texts (
 --
 
 CREATE SEQUENCE public.result_texts_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2255,7 +2352,6 @@ CREATE TABLE public.results (
 --
 
 CREATE SEQUENCE public.results_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2295,7 +2391,6 @@ CREATE TABLE public.settings (
 --
 
 CREATE SEQUENCE public.settings_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2326,7 +2421,6 @@ CREATE TABLE public.step_assets (
 --
 
 CREATE SEQUENCE public.step_assets_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2357,7 +2451,6 @@ CREATE TABLE public.step_tables (
 --
 
 CREATE SEQUENCE public.step_tables_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2397,7 +2490,6 @@ CREATE TABLE public.steps (
 --
 
 CREATE SEQUENCE public.steps_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2472,7 +2564,6 @@ CREATE TABLE public.tables (
 --
 
 CREATE SEQUENCE public.tables_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2508,7 +2599,6 @@ CREATE TABLE public.tags (
 --
 
 CREATE SEQUENCE public.tags_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2561,7 +2651,6 @@ ALTER SEQUENCE public.team_repositories_id_seq OWNED BY public.team_repositories
 --
 
 CREATE SEQUENCE public.teams_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2593,7 +2682,6 @@ CREATE TABLE public.temp_files (
 --
 
 CREATE SEQUENCE public.temp_files_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2629,7 +2717,6 @@ CREATE TABLE public.tiny_mce_assets (
 --
 
 CREATE SEQUENCE public.tiny_mce_assets_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2661,7 +2748,6 @@ CREATE TABLE public.tokens (
 --
 
 CREATE SEQUENCE public.tokens_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2731,7 +2817,6 @@ CREATE TABLE public.user_identities (
 --
 
 CREATE SEQUENCE public.user_identities_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2765,7 +2850,6 @@ CREATE TABLE public.user_my_modules (
 --
 
 CREATE SEQUENCE public.user_my_modules_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2799,7 +2883,6 @@ CREATE TABLE public.user_notifications (
 --
 
 CREATE SEQUENCE public.user_notifications_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2834,7 +2917,6 @@ CREATE TABLE public.user_projects (
 --
 
 CREATE SEQUENCE public.user_projects_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2923,7 +3005,6 @@ ALTER SEQUENCE public.user_system_notifications_id_seq OWNED BY public.user_syst
 --
 
 CREATE SEQUENCE public.user_teams_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2988,7 +3069,6 @@ CREATE TABLE public.users (
 --
 
 CREATE SEQUENCE public.users_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3092,7 +3172,6 @@ CREATE TABLE public.wopi_actions (
 --
 
 CREATE SEQUENCE public.wopi_actions_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3124,7 +3203,6 @@ CREATE TABLE public.wopi_apps (
 --
 
 CREATE SEQUENCE public.wopi_apps_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3158,7 +3236,6 @@ CREATE TABLE public.wopi_discoveries (
 --
 
 CREATE SEQUENCE public.wopi_discoveries_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3191,7 +3268,6 @@ CREATE TABLE public.zip_exports (
 --
 
 CREATE SEQUENCE public.zip_exports_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3442,6 +3518,34 @@ ALTER TABLE ONLY public.protocol_protocol_keywords ALTER COLUMN id SET DEFAULT n
 --
 
 ALTER TABLE ONLY public.protocols ALTER COLUMN id SET DEFAULT nextval('public.protocols_id_seq'::regclass);
+
+
+--
+-- Name: rap_program_levels id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_program_levels ALTER COLUMN id SET DEFAULT nextval('public.rap_program_levels_id_seq'::regclass);
+
+
+--
+-- Name: rap_project_levels id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_project_levels ALTER COLUMN id SET DEFAULT nextval('public.rap_project_levels_id_seq'::regclass);
+
+
+--
+-- Name: rap_task_levels id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_task_levels ALTER COLUMN id SET DEFAULT nextval('public.rap_task_levels_id_seq'::regclass);
+
+
+--
+-- Name: rap_topic_levels id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_topic_levels ALTER COLUMN id SET DEFAULT nextval('public.rap_topic_levels_id_seq'::regclass);
 
 
 --
@@ -4093,6 +4197,38 @@ ALTER TABLE ONLY public.protocol_protocol_keywords
 
 ALTER TABLE ONLY public.protocols
     ADD CONSTRAINT protocols_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rap_program_levels rap_program_levels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_program_levels
+    ADD CONSTRAINT rap_program_levels_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rap_project_levels rap_project_levels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_project_levels
+    ADD CONSTRAINT rap_project_levels_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rap_task_levels rap_task_levels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_task_levels
+    ADD CONSTRAINT rap_task_levels_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rap_topic_levels rap_topic_levels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_topic_levels
+    ADD CONSTRAINT rap_topic_levels_pkey PRIMARY KEY (id);
 
 
 --
@@ -5277,6 +5413,55 @@ CREATE INDEX index_protocols_on_team_id ON public.protocols USING btree (team_id
 
 
 --
+-- Name: index_rap_program_levels_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_rap_program_levels_on_name ON public.rap_program_levels USING btree (name);
+
+
+--
+-- Name: index_rap_project_levels_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_rap_project_levels_on_name ON public.rap_project_levels USING btree (name);
+
+
+--
+-- Name: index_rap_project_levels_on_rap_topic_level_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rap_project_levels_on_rap_topic_level_id ON public.rap_project_levels USING btree (rap_topic_level_id);
+
+
+--
+-- Name: index_rap_task_levels_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_rap_task_levels_on_name ON public.rap_task_levels USING btree (name);
+
+
+--
+-- Name: index_rap_task_levels_on_rap_project_level_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rap_task_levels_on_rap_project_level_id ON public.rap_task_levels USING btree (rap_project_level_id);
+
+
+--
+-- Name: index_rap_topic_levels_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_rap_topic_levels_on_name ON public.rap_topic_levels USING btree (name);
+
+
+--
+-- Name: index_rap_topic_levels_on_rap_program_level_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rap_topic_levels_on_rap_program_level_id ON public.rap_topic_levels USING btree (rap_program_level_id);
+
+
+--
 -- Name: index_report_elements_on_asset_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5494,10 +5679,10 @@ CREATE INDEX index_repository_cells_on_repository_row_id ON public.repository_ce
 
 
 --
--- Name: index_repository_cells_on_value; Type: INDEX; Schema: public; Owner: -
+-- Name: index_repository_cells_on_value_type_and_value_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_repository_cells_on_value ON public.repository_cells USING btree (value_type, value_id);
+CREATE INDEX index_repository_cells_on_value_type_and_value_id ON public.repository_cells USING btree (value_type, value_id);
 
 
 --
@@ -6355,10 +6540,10 @@ CREATE INDEX index_view_states_on_user_id ON public.view_states USING btree (use
 
 
 --
--- Name: index_view_states_on_viewable; Type: INDEX; Schema: public; Owner: -
+-- Name: index_view_states_on_viewable_type_and_viewable_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_view_states_on_viewable ON public.view_states USING btree (viewable_type, viewable_id);
+CREATE INDEX index_view_states_on_viewable_type_and_viewable_id ON public.view_states USING btree (viewable_type, viewable_id);
 
 
 --
@@ -6662,6 +6847,14 @@ ALTER TABLE ONLY public.report_template_values
 
 
 --
+-- Name: rap_topic_levels fk_rails_474c9b818d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_topic_levels
+    ADD CONSTRAINT fk_rails_474c9b818d FOREIGN KEY (rap_program_level_id) REFERENCES public.rap_program_levels(id);
+
+
+--
 -- Name: my_modules fk_rails_4768515e2e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6771,6 +6964,14 @@ ALTER TABLE ONLY public.user_teams
 
 ALTER TABLE ONLY public.repository_checklist_items
     ADD CONSTRAINT fk_rails_664f0498be FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: rap_task_levels fk_rails_68120f8d8c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_task_levels
+    ADD CONSTRAINT fk_rails_68120f8d8c FOREIGN KEY (rap_project_level_id) REFERENCES public.rap_project_levels(id);
 
 
 --
@@ -6955,6 +7156,14 @@ ALTER TABLE ONLY public.checklists
 
 ALTER TABLE ONLY public.report_elements
     ADD CONSTRAINT fk_rails_831f89b951 FOREIGN KEY (checklist_id) REFERENCES public.checklists(id);
+
+
+--
+-- Name: rap_project_levels fk_rails_83bc72d987; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rap_project_levels
+    ADD CONSTRAINT fk_rails_83bc72d987 FOREIGN KEY (rap_topic_level_id) REFERENCES public.rap_topic_levels(id);
 
 
 --
@@ -7709,6 +7918,7 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20150713060702'),
+('20150713061603'),
 ('20150713063224'),
 ('20150713070738'),
 ('20150713071921'),
@@ -7792,6 +8002,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20160704110900'),
 ('20160722082700'),
 ('20160803082801'),
+('20160808083040'),
 ('20160809074757'),
 ('20160928114119'),
 ('20160928114915'),
@@ -7830,6 +8041,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180207095200'),
 ('20180308094354'),
 ('20180416114040'),
+('20180416171923'),
+('20180417062042'),
+('20180418123509'),
+('20180418123815'),
+('20180418124021'),
+('20180507160013'),
 ('20180524091143'),
 ('20180806115201'),
 ('20180813120338'),
@@ -7864,6 +8081,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191001133557'),
 ('20191003091614'),
 ('20191007144622'),
+('20191009146101'),
 ('20191023162335'),
 ('20191105143702'),
 ('20191115143747'),
@@ -7914,6 +8132,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210825112050'),
 ('20210906132120'),
 ('20211103115450'),
-('20211123103711');
+('20211123103711'),
+('20220216205001');
 
 
