@@ -1439,6 +1439,11 @@ en:
               file_contains: "File contains"
               file_attached: "File is attached"
               file_not_attached: "File is not attached"
+              date:
+                "on": "On"
+                after: "After"
+                before: "Before"
+                not_on: "Not on"
               tooltips:
                 today: "Today from midnight to midnight"
                 yesterday: "The previous 24 hour day"
