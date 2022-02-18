@@ -26,8 +26,8 @@ module UserAssignments
     end
 
     def assign_users_to_my_module(my_module)
-      project = my_module.experiment.project
-      project.user_assignments.find_each do |user_assignment|
+      experiment = my_module.experiment
+      experiment.user_assignments.find_each do |user_assignment|
         create_or_update_user_assignment(user_assignment, my_module)
       end
     end
