@@ -263,9 +263,13 @@ var RepositoryDatatable = (function(global) {
   }
 
   function resetTableView() {
+    var filterSaveButtonVisible = !$('#saveRepositoryFilters').hasClass('hidden');
     $.getJSON($(TABLE_ID).data('toolbar-url'), (data) => {
       $('#toolbarButtonsDatatable').remove();
       $(data.html).appendTo('div.toolbar');
+      if (filterSaveButtonVisible) {
+        $('#saveRepositoryFilters').removeClass('hidden');
+      }
       if (typeof initBMTFilter === 'function') initBMTFilter();
     });
 
