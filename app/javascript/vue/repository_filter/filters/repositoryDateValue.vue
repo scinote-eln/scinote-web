@@ -52,13 +52,11 @@
             tooltip: this.i18n.t('repositories.show.repository_filter.filters.operators.tooltips.last_year')
           } },
           { value: '', label: '', params: { delimiter: true } },
-          { value: 'equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.equal_to') },
-          { value: 'unequal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.unequal_to') },
-          { value: 'greater_than', label: this.i18n.t('repositories.show.repository_filter.filters.operators.greater_than') },
-          { value: 'greater_than_or_equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.greater_than_or_equal_to') },
-          { value: 'less_than', label: this.i18n.t('repositories.show.repository_filter.filters.operators.less_than') },
-          { value: 'less_than_or_equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.less_than_or_equal_to') },
-          { value: 'between', label: this.i18n.t('repositories.show.repository_filter.filters.operators.between') }
+          { value: 'greater_than_or_equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.date.after') },
+          { value: 'less_than', label: this.i18n.t('repositories.show.repository_filter.filters.operators.date.before') },
+          { value: 'equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.date.on') },
+          { value: 'between', label: this.i18n.t('repositories.show.repository_filter.filters.operators.between') },
+          { value: 'unequal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.date.not_on') }
         ],
         operator: 'equal_to',
         date: null,
