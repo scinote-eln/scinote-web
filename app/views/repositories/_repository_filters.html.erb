@@ -19,6 +19,7 @@
         data-datatable-id="#repository-table-<%= @repository.id %>"
         data-can-manage-filters="<%= can_manage_repository_filters?(@repository) %>"
         data-date-format="<%= datetime_picker_format_date_only %>"
+        data-user-utc-offset="<%= ActiveSupport::TimeZone.find_tzinfo(current_user.time_zone).utc_offset %>"
       >
         <filter-container
           :columns.sync="columns"

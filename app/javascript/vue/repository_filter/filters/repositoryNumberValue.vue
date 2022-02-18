@@ -71,7 +71,7 @@
     methods: {
       validateNumber(number) {
         return number.replace(/[^0-9.]/g, '').match(/^\d*(\.\d{0,10})?/)[0]
-      },
+      }
     },
     watch: {
       value() {
@@ -92,7 +92,8 @@
     },
     computed: {
       isBlank(){
-        return this.operator == 'equal' && !this.value;
+        return (!this.value && this.operator != 'between') ||
+               ((!this.to || !this.from) && this.operator == 'between');
       }
     }
   }

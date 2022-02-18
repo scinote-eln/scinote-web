@@ -39,6 +39,13 @@ export default {
 
       return range;
     },
+    currentDate(customOffset = 0) {
+      const d = new Date();
+      const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+      const offset = $('#filterContainer').data('user-utc-offset');
+      const tz = new Date(utc + (1000 * offset) + (1000 * customOffset));
+      return tz;
+    },
     updateDate(date) {
       date = date && this.formattedDate(date);
       this.date = date;
