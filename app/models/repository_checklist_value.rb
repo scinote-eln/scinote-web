@@ -60,7 +60,7 @@ class RepositoryChecklistValue < ApplicationRecord
     repository_checklist_items.map { |i| { value: i.id, label: i.data } }
   end
 
-  def data_changed?(new_data)
+  def data_different?(new_data)
     if new_data.is_a?(String)
       JSON.parse(new_data) != repository_checklist_items.pluck(:id)
     else

@@ -37,7 +37,7 @@ module RepositoryRows
             next
           end
 
-          if cell.value.data_changed?(value)
+          if cell.value.data_different?(value)
             cell.value.update_data!(value, @user)
             @record_updated = true
           end

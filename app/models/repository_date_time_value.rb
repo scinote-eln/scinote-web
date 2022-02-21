@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RepositoryDateTimeValue < RepositoryDateTimeValueBase
-  def data_changed?(new_data)
+  def data_different?(new_data)
     new_time = Time.zone.parse(new_data)
     new_time.to_i != data.to_i
   end
@@ -32,14 +32,10 @@ class RepositoryDateTimeValue < RepositoryDateTimeValueBase
       repository_rows.where("#{join_alias}.data = ?", Time.zone.parse(parameters['datetime']))
     when 'unequal_to'
       repository_rows.where.not("#{join_alias}.data = ?", Time.zone.parse(parameters['datetime']))
-    when 'greater_than'
-      repository_rows.where("#{join_alias}.data > ?", Time.zone.parse(parameters['datetime']))
     when 'greater_than_or_equal_to'
       repository_rows.where("#{join_alias}.data >= ?", Time.zone.parse(parameters['datetime']))
     when 'less_than'
       repository_rows.where("#{join_alias}.data < ?", Time.zone.parse(parameters['datetime']))
-    when 'less_than_or_equal_to'
-      repository_rows.where("#{join_alias}.data <= ?", Time.zone.parse(parameters['datetime']))
     when 'between'
       repository_rows.where("#{join_alias}.data > ? AND #{join_alias}.data < ?",
                             Time.zone.parse(parameters['start_datetime']), Time.zone.parse(parameters['end_datetime']))

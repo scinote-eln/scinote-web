@@ -32,7 +32,7 @@ class RepositoryTextValue < ApplicationRecord
     end
   end
 
-  def data_changed?(new_data)
+  def data_different?(new_data)
     new_data != data
   end
 

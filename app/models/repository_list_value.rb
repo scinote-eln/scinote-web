@@ -53,7 +53,7 @@ class RepositoryListValue < ApplicationRecord
     repository_list_item.data
   end
 
-  def data_changed?(new_data)
+  def data_different?(new_data)
     new_data.to_i != repository_list_item_id
   end
 

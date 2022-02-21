@@ -38,7 +38,7 @@ class RepositoryNumberValue < ApplicationRecord
     end
   end
 
-  def data_changed?(new_data)
+  def data_different?(new_data)
     BigDecimal(new_data.to_s) != data
   end
 
