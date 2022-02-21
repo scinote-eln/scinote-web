@@ -16,7 +16,8 @@ export default {
   },
   computed: {
     isBlank() {
-      return (this.operator === 'equal_to' && !this.value) ||
+      return ((this.operator !== 'between' || !this.isPreset) && (!this.value || !this.value[this.timeType])) ||
+             (this.operator === 'between' && (!this.value || (!this.value[`start_${this.timeType}`] || !this.value[`end_${this.timeType}`]))) ||
              (this.filter.column.id === 'archived_on' && $('.repository-show').hasClass('active'));
     },
     isPreset() {
