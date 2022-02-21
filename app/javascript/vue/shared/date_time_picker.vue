@@ -53,15 +53,18 @@
       },
       recalcTimestamp() {
         let date = this.timeOnly ? new Date() : this.date;
-        if (!this.isValidTime()) {
-          date.setHours(0);
-          date.setMinutes(0);
+        if (this.isValidDate(date)) {
+          if (!this.isValidTime()) {
+            date.setHours(0);
+            date.setMinutes(0);
+          } else {
+            date.setHours(this.time.split(':')[0]);
+            date.setMinutes(this.time.split(':')[1]);
+          }
+          this.datetime = date
         } else {
-          date.setHours(this.time.split(':')[0]);
-          date.setMinutes(this.time.split(':')[1]);
+          this.datetime = null;
         }
-
-        this.datetime = date
       }
     }
   }
