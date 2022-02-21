@@ -159,7 +159,7 @@ module Reports
                     asset_preview.blob.download
                   end
 
-      docx.img asset_preview.processed.service_url do
+      docx.img asset_preview.processed.service_url.split('&')[0] do
         data blob_data
         width x
         height y
