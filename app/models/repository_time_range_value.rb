@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RepositoryTimeRangeValue < RepositoryDateTimeRangeValueBase
-  def data_changed?(new_data)
+  def data_different?(new_data)
     data = new_data.is_a?(String) ? JSON.parse(new_data).symbolize_keys : new_data
 
     st = Time.zone.parse(data[:start_time])

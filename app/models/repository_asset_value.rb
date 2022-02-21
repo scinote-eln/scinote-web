@@ -54,7 +54,7 @@ class RepositoryAssetValue < ApplicationRecord
     asset.file_name
   end
 
-  def data_changed?(_new_data)
+  def data_different?(_new_data)
     true
   end
 

@@ -40,7 +40,7 @@ class RepositoryStatusValue < ApplicationRecord
     end
   end
 
-  def data_changed?(new_data)
+  def data_different?(new_data)
     new_data.to_i != repository_status_item_id
   end
 

@@ -245,13 +245,13 @@ var DateTimeHelper = (function() {
          >
       <div class="start-time ${mode}"
            data-current-datetime="${startDatetime}">
-        ${dateInputField(startDate, startDateDataValue)}
+        ${dateInputField(startDate, startDatetime)}
         ${timeInputField(startTime)}
       </div>
       <div class="separator">—</div>
       <div class="end-time ${mode}"
            data-current-datetime="${endDatetime}">
-        ${dateInputField(endDate, endDateDataValue)}
+        ${dateInputField(endDate, endDatetime)}
         ${timeInputField(endTime)}
       </div>
     </div>

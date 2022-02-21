@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 class RepositoryDateValue < RepositoryDateTimeValueBase
-  def data_changed?(new_data)
-    new_time = Time.zone.parse(new_data)
-    new_time.to_date != data.to_date
+  self.skip_time_zone_conversion_for_attributes = [:data]
+
+  before_save -> { self.data = data.to_date }, if: :data_changed?
+
+  def data_different?(new_data)
+    Date.parse(new_data).to_date != data.to_date
   end
 
   def formatted
@@ -14,35 +17,30 @@ class RepositoryDateValue < RepositoryDateTimeValueBase
     parameters = filter_element.parameters
     case filter_element.operator
     when 'today'
-      repository_rows.where("#{join_alias}.data::date >= ?", Time.zone.now.beginning_of_day)
+      repository_rows.where("#{join_alias}.data::date = ?", Time.zone.now.to_date)
     when 'yesterday'
-      repository_rows.where("#{join_alias}.data::date >= ? AND #{join_alias}.data::date < ?",
-                            Time.zone.now.beginning_of_day - 1.day, Time.zone.now.beginning_of_day)
+      repository_rows.where("#{join_alias}.data::date = ?", Time.zone.now.to_date - 1.day)
     when 'last_week'
       repository_rows.where("#{join_alias}.data::date >= ? AND #{join_alias}.data::date < ?",
-                            Time.zone.now.beginning_of_week - 1.week, Time.zone.now.beginning_of_week)
+                            Time.zone.now.beginning_of_week.to_date - 1.week, Time.zone.now.beginning_of_week.to_date)
     when 'this_month'
-      repository_rows.where("#{join_alias}.data::date >= ?", Time.zone.now.beginning_of_month)
+      repository_rows.where("#{join_alias}.data::date >= ?", Time.zone.now.beginning_of_month.to_date)
     when 'last_year'
       repository_rows.where("#{join_alias}.data::date >= ? AND #{join_alias}.data::date < ?",
-                            Time.zone.now.beginning_of_year - 1.year, Time.zone.now.beginning_of_year)
+                            Time.zone.now.beginning_of_year.to_date - 1.year, Time.zone.now.beginning_of_year.to_date)
     when 'this_year'
-      repository_rows.where("#{join_alias}.data::date >= ?", Time.zone.now.beginning_of_year)
+      repository_rows.where("#{join_alias}.data::date >= ?", Time.zone.now.beginning_of_year.to_date)
     when 'equal_to'
-      repository_rows.where("#{join_alias}.data::date = ?", Time.zone.parse(parameters['date']))
+      repository_rows.where("#{join_alias}.data::date = ?", Date.parse(parameters['date']))
     when 'unequal_to'
-      repository_rows.where.not("#{join_alias}.data::date = ?", Time.zone.parse(parameters['date']))
-    when 'greater_than'
-      repository_rows.where("#{join_alias}.data::date > ?", Time.zone.parse(parameters['date']))
+      repository_rows.where.not("#{join_alias}.data::date = ?", Date.parse(parameters['date']))
     when 'greater_than_or_equal_to'
-      repository_rows.where("#{join_alias}.data::date >= ?", Time.zone.parse(parameters['date']))
+      repository_rows.where("#{join_alias}.data::date >= ?", Date.parse(parameters['date']))
     when 'less_than'
-      repository_rows.where("#{join_alias}.data::date < ?", Time.zone.parse(parameters['date']))
-    when 'less_than_or_equal_to'
-      repository_rows.where("#{join_alias}.data::date <= ?", Time.zone.parse(parameters['date']))
+      repository_rows.where("#{join_alias}.data::date < ?", Date.parse(parameters['date']))
     when 'between'
       repository_rows.where("#{join_alias}.data::date > ? AND #{join_alias}.data::date < ?",
-                            Time.zone.parse(parameters['start_date']), Time.zone.parse(parameters['end_date']))
+                            Date.parse(parameters['start_date']), Date.parse(parameters['end_date']))
     else
       raise ArgumentError, 'Wrong operator for RepositoryDateValue!'
     end
@@ -50,8 +48,14 @@ class RepositoryDateValue < RepositoryDateTimeValueBase
 
   def self.new_with_payload(payload, attributes)
     value = new(attributes)
-    value.data = Time.zone.parse(payload)
+    value.data = Date.parse(payload)
     value
+  end
+
+  def update_data!(new_data, user)
+    self.data = Date.parse(new_data)
+    self.last_modified_by = user
+    save!
   end
 
   def self.import_from_text(text, attributes, options = {})
