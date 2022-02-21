@@ -458,11 +458,19 @@ var RepositoryDatatable = (function(global) {
         visible: true
       }, {
         targets: '_all',
-        render: function(data, type, row) {
+        render: function(data) {
           if (typeof data === 'object' && $.fn.dataTable.render[data.value_type]) {
-            return $.fn.dataTable.render[data.value_type](data, row);
+            return $.fn.dataTable.render[data.value_type](data);
           }
           return data;
+        }
+      },
+      {
+        targets: 'row-stock',
+        className: 'item-stock',
+        sWidth: '1%',
+        render: function(data) {
+          return $.fn.dataTable.render.RepositoryStockValue(data);
         }
       }],
       language: {
@@ -488,13 +496,15 @@ var RepositoryDatatable = (function(global) {
           columns[i].defaultContent = '';
         }
         customColumns.each((i, column) => {
+          var columnData = $(column).data('type') === 'RepositoryStockValue' ? 'stock' : String(columns.length);
           columns.push({
             visible: true,
             searchable: true,
-            data: String(columns.length),
+            data: columnData,
             defaultContent: $.fn.dataTable.render['default' + column.dataset.type](column.id)
           });
         });
+
         return columns;
       }()),
       drawCallback: function() {
