@@ -13,36 +13,6 @@
       <span class="hidden-xs"><%= t("repositories.add_new_record") %></span>
     </button>
   <% end %>
-  <% if can_manage_repository_filters?(@repository) %>
-    <div class="repository-cog dropdown hidden" id="saveRepositoryFilters">
-      <button type="button"
-              class="btn btn-default"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="true">
-        <span class="fas fa-save"></span>
-        <span class="hidden-xs"><%= t("repositories.show.filters.save_filters") %></span>
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu">
-        <li id="newFilterLink" data-view-mode="active">
-          <a href="#" data-toggle="modal" data-target="#modalSaveRepositoryTableFilter">
-            <span class="fas fa-plus"></span>
-            <%= t('repositories.show.filters.new_filter') %>
-          </a>
-        </li>
-        <li id="overwriteFilterLink" class="hidden" data-view-mode="active">
-          <a href="#" data-toggle="modal" class="overwrite-link" data-target="#modalSaveRepositoryTableFilter">
-            <span class="fas fa-save"></span>
-            <span class="overwrite-title">
-              <%= t('repositories.show.filters.overwrite_filter') %>
-              <span id="currentFilterName"></span>
-            </span>
-          </a>
-        </li>
-      </ul>
-    </div>
-  <% end %>
 
   <% if can_manage_repository_rows?(@repository) %>
     <span id="editDeleteCopy" data-toggle="buttons" style="display:none">
@@ -115,6 +85,38 @@
       </table>
     <% end %>
   </div>
+
+  <% if can_manage_repository_filters?(@repository) %>
+    <div class="repository-cog dropdown hidden" id="saveRepositoryFilters">
+      <button type="button"
+              class="btn btn-default"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="true">
+        <span class="fas fa-save"></span>
+        <span class="hidden-xs"><%= t("repositories.show.filters.save_filters") %></span>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li id="newFilterLink" data-view-mode="active">
+          <a href="#" data-toggle="modal" data-target="#modalSaveRepositoryTableFilter">
+            <span class="fas fa-plus"></span>
+            <%= t('repositories.show.filters.new_filter') %>
+          </a>
+        </li>
+        <li id="overwriteFilterLink" class="hidden" data-view-mode="active">
+          <a href="#" data-toggle="modal" class="overwrite-link" data-target="#modalSaveRepositoryTableFilter">
+            <span class="fas fa-save"></span>
+            <span class="overwrite-title">
+              <%= t('repositories.show.filters.overwrite_filter') %>
+              <span id="currentFilterName"></span>
+            </span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  <% end %>
+
   <% if @repository.is_a?(BmtRepository) %>
     <div class="dropdown" id="bmtFiltersDropdownButton">
         <button id="bmtFiltersDropdown"
