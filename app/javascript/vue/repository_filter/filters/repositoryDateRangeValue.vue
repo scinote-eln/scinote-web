@@ -47,6 +47,11 @@
       DropdownSelector,
       DateTimePicker
     },
+    computed: {
+      isBlank() {
+        return !this.value || !this.value.start_date || !this.value.end_date
+      }
+    },
     watch: {
       value() {
         this.parameters = this.value;
