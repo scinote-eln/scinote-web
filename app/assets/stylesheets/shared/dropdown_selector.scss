@@ -159,9 +159,9 @@
     }
 
     .delimiter {
-      background: $color-alto;
+      background: $color-concrete;
       height: 1px;
-      margin: 5px 16px;
+      margin: 5px 0;
     }
 
     .dropdown-select-all {
@@ -227,7 +227,9 @@
         color: $color-white;
         content: "";
         flex-shrink: 0;
-        font-size: calc(var(--sci-checkbox-size) - var(--sci-checkbox-size) * .375);
+        font-size: calc(
+          var(--sci-checkbox-size) - var(--sci-checkbox-size) * .375
+        );
         height: var(--sci-checkbox-size);
         line-height: calc(var(--sci-checkbox-size) - 2px);
         margin-right: 8px;
@@ -273,7 +275,6 @@
       }
 
       &.select {
-
         .group-name.checkbox-icon {
           background: $color-concrete;
 
@@ -331,7 +332,6 @@
   }
 
   &.open {
-
     .input-field {
       border-radius: 4px 4px 0 0;
       z-index: 12;
@@ -354,7 +354,6 @@
     }
 
     &.inverse {
-
       .input-field {
         border-bottom: 1px solid $color-alto;
         border-radius: 0 0 4px 4px;
@@ -404,7 +403,6 @@
   }
 
   &.disabled {
-
     .input-field {
       background: $color-concrete;
 
