@@ -13,7 +13,7 @@ class RepositoryTimeRangeValue < RepositoryDateTimeRangeValueBase
     super(:time)
   end
 
-  def self.add_filter_condition(repository_rows, filter_element)
+  def self.add_filter_condition(repository_rows, join_alias, filter_element)
     parameters = filter_element.parameters
     case filter_element.operator
     when 'equal_to'
