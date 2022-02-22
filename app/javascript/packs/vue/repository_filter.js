@@ -21,7 +21,7 @@ const DEFAULT_FILTERS = [
   {
     id: 2,
     column: {
-      data_type: 'RepositoryTextValue',
+      data_type: 'RepositoryNonEmptyTextValue',
       id: 'row_id',
       name: I18n.t('repositories.table.id')
     },
@@ -31,7 +31,7 @@ const DEFAULT_FILTERS = [
   {
     id: 3,
     column: {
-      data_type: 'RepositoryTextValue',
+      data_type: 'RepositoryNonEmptyTextValue',
       id: 'row_name',
       name: I18n.t('repositories.table.row_name')
     },

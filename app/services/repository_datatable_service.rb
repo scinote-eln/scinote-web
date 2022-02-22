@@ -160,8 +160,6 @@ class RepositoryDatatableService
       repository_rows
         .where.not("(#{RepositoryRow::PREFIXED_ID_SQL})::text ILIKE ?",
                    "%#{ActiveRecord::Base.sanitize_sql_like(filter_element_params.dig(:parameters, :text))}%")
-    when 'empty'
-      repository_rows.where(id: nil)
     else
       raise ArgumentError, 'Wrong operator for RepositoryRow ID!'
     end
@@ -176,8 +174,6 @@ class RepositoryDatatableService
       repository_rows
         .where.not('repository_rows.name ILIKE ?',
                    "%#{ActiveRecord::Base.sanitize_sql_like(filter_element_params.dig(:parameters, :text))}%")
-    when 'empty'
-      repository_rows.where(name: nil)
     else
       raise ArgumentError, 'Wrong operator for RepositoryRow Name!'
     end

@@ -20,6 +20,7 @@
 
 <script>
   // filter types
+  import RepositoryNonEmptyTextValue from 'vue/repository_filter/filters/repositoryNonEmptyTextValue.vue'
   import RepositoryAssetValue from 'vue/repository_filter/filters/repositoryAssetValue.vue'
   import RepositoryTextValue from 'vue/repository_filter/filters/repositoryTextValue.vue'
   import RepositoryNumberValue from 'vue/repository_filter/filters/repositoryNumberValue.vue'
@@ -45,6 +46,7 @@
     },
     components: {
       DropdownSelector,
+      RepositoryNonEmptyTextValue,
       RepositoryAssetValue,
       RepositoryTextValue,
       RepositoryNumberValue,

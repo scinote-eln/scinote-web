@@ -1418,7 +1418,7 @@ en:
         filters:
             operators:
               contains: "Contains"
-              does_not_contain: "Does not contain"
+              does_not_contain: "Doesn’t contain"
               equal_to: "Equal to"
               unequal_to: "Not equal to"
               greater_than: "Greater than"
@@ -1452,6 +1452,8 @@ en:
                 this_year: "The current calendar year from beginning of 1st January to  the end of 31st December"
                 last_year: "The last calendar year from beginning of 1st January to the end of 31st December"
             types:
+              RepositoryNonEmptyTextValue:
+                input_placeholder: "Enter %{name}"
               RepositoryAssetValue:
                 input_placeholder: "Enter text"
               RepositoryTextValue:
@@ -1523,7 +1525,7 @@ en:
               name: "Cid"
               placeholder: "Enter Cid"
     table:
-      id: 'ID'
+      id: 'Item ID'
       external_id: 'External ID'
       assigned: "Assigned"
       assigned_tasks: "Assigned to task"
