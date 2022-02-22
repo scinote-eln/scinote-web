@@ -28,7 +28,7 @@
     },
     methods: {
       update(value) {
-        this.$emit('change', (value instanceof Date) ? value.toDate() : '');
+        this.$emit('change', (value._isAMomentObject) ? value.toDate() : '');
       }
     }
   }
