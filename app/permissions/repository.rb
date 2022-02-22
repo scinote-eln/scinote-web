@@ -37,6 +37,11 @@ Canaid::Permissions.register_for(Repository) do
     !repository.shared_with?(user.current_team) && user.is_admin_of_team?(repository.team)
   end
 
+  # repository: destroy
+  can :delete_repository do |user, repository|
+    repository.archived? && can_manage_repository?(user, repository)
+  end
+
   # repository: share
   can :share_repository do |user, repository|
     user.is_admin_of_team?(repository.team) unless repository.shared_with?(user.current_team)
