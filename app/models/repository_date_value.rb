@@ -24,12 +24,14 @@ class RepositoryDateValue < RepositoryDateTimeValueBase
       repository_rows.where("#{join_alias}.data::date >= ? AND #{join_alias}.data::date < ?",
                             Time.zone.now.beginning_of_week.to_date - 1.week, Time.zone.now.beginning_of_week.to_date)
     when 'this_month'
-      repository_rows.where("#{join_alias}.data::date >= ?", Time.zone.now.beginning_of_month.to_date)
+      repository_rows.where("#{join_alias}.data::date >= ? AND #{join_alias}.data::date <= ?",
+                            Time.zone.now.beginning_of_month.to_date, Time.zone.now.end_of_month.to_date)
     when 'last_year'
       repository_rows.where("#{join_alias}.data::date >= ? AND #{join_alias}.data::date < ?",
                             Time.zone.now.beginning_of_year.to_date - 1.year, Time.zone.now.beginning_of_year.to_date)
     when 'this_year'
-      repository_rows.where("#{join_alias}.data::date >= ?", Time.zone.now.beginning_of_year.to_date)
+      repository_rows.where("#{join_alias}.data::date >= ? AND #{join_alias}.data::date <= ?",
+                            Time.zone.now.beginning_of_year.to_date, Time.zone.now.end_of_year.to_date)
     when 'equal_to'
       repository_rows.where("#{join_alias}.data::date = ?", Date.parse(parameters['date']))
     when 'unequal_to'

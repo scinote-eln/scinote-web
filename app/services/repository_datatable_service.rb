@@ -187,8 +187,10 @@ class RepositoryDatatableService
     case filter_element_params[:operator]
     when 'today'
       repository_rows.where(
-        "date_trunc('minute', \"repository_rows\".\"created_at\") >= ?",
-        Time.zone.now.beginning_of_day
+        "date_trunc('minute', \"repository_rows\".\"created_at\") >= ? AND " \
+        "date_trunc('minute', \"repository_rows\".\"created_at\" < ?)",
+        Time.zone.now.beginning_of_day,
+        Time.zone.now.end_of_day
       )
     when 'yesterday'
       repository_rows.where(
@@ -204,8 +206,9 @@ class RepositoryDatatableService
       )
     when 'this_month'
       repository_rows.where(
-        "date_trunc('minute', \"repository_rows\".\"created_at\") >= ?",
-        Time.zone.now.beginning_of_month
+        "date_trunc('minute', \"archived_on\") >= ? AND date_trunc('minute', \"archived_on\") <= ?",
+        Time.zone.now.beginning_of_month,
+        Time.zone.now.end_of_month
       )
     when 'last_year'
       repository_rows.where(
@@ -215,8 +218,10 @@ class RepositoryDatatableService
       )
     when 'this_year'
       repository_rows.where(
-        "date_trunc('minute', \"repository_rows\".\"created_at\") >= ?",
-        Time.zone.now.beginning_of_year
+        "date_trunc('minute', \"repository_rows\".\"created_at\") >= ? AND "\
+        "date_trunc('minute', \"repository_rows\".\"created_at\") <= ?",
+        Time.zone.now.beginning_of_year,
+        Time.zone.now.end_of_year
       )
     when 'equal_to'
       repository_rows.where("date_trunc('minute', \"repository_rows\".\"created_at\") = ?",
@@ -251,7 +256,8 @@ class RepositoryDatatableService
   def build_archived_on_filter_condition(repository_rows, filter_element_params)
     case filter_element_params[:operator]
     when 'today'
-      repository_rows.where("date_trunc('minute', \"archived_on\") >= ?", Time.zone.now.beginning_of_day)
+      repository_rows.where("date_trunc('minute', \"archived_on\") >= ? AND date_trunc('minute', \"archived_on\") <= ?",
+                            Time.zone.now.beginning_of_day, Time.zone.now.end_of_day)
     when 'yesterday'
       repository_rows.where("date_trunc('minute', \"archived_on\") >= ? AND date_trunc('minute', \"archived_on\") < ?",
                             Time.zone.now.beginning_of_day - 1.day, Time.zone.now.beginning_of_day)
@@ -259,12 +265,21 @@ class RepositoryDatatableService
       repository_rows.where("date_trunc('minute', \"archived_on\") >= ? AND date_trunc('minute', \"archived_on\") < ?",
                             Time.zone.now.beginning_of_week - 1.week, Time.zone.now.beginning_of_week)
     when 'this_month'
-      repository_rows.where("date_trunc('minute', \"archived_on\") >= ?", Time.zone.now.beginning_of_month)
+      repository_rows.where(
+        "date_trunc('minute', \"archived_on\") >= ? AND date_trunc('minute', \"archived_on\") <= ?",
+        Time.zone.now.beginning_of_month,
+        Time.zone.now.end_of_month
+      )
     when 'last_year'
       repository_rows.where("date_trunc('minute', \"archived_on\") >= ? AND date_trunc('minute', \"archived_on\") < ?",
                             Time.zone.now.beginning_of_year - 1.year, Time.zone.now.beginning_of_year)
     when 'this_year'
-      repository_rows.where("date_trunc('minute', \"archived_on\") >= ?", Time.zone.now.beginning_of_year)
+      repository_rows.where(
+        "date_trunc('minute', \"repository_rows\".\"created_at\") >= ? AND "\
+        "date_trunc('minute', \"repository_rows\".\"created_at\") <= ?",
+        Time.zone.now.beginning_of_year,
+        Time.zone.now.end_of_year
+      )
     when 'equal_to'
       repository_rows.where("date_trunc('minute', \"archived_on\") = ?",
                             Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))

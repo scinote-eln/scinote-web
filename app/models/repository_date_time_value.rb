@@ -14,7 +14,8 @@ class RepositoryDateTimeValue < RepositoryDateTimeValueBase
     parameters = filter_element.parameters
     case filter_element.operator
     when 'today'
-      repository_rows.where("#{join_alias}.data >= ?", Time.zone.now.beginning_of_day)
+      repository_rows.where("#{join_alias}.data >= ? AND #{join_alias}.data <= ?",
+                            Time.zone.now.beginning_of_day, Time.zone.now.end_of_day)
     when 'yesterday'
       repository_rows.where("#{join_alias}.data >= ? AND #{join_alias}.data < ?",
                             Time.zone.now.beginning_of_day - 1.day, Time.zone.now.beginning_of_day)
@@ -22,12 +23,14 @@ class RepositoryDateTimeValue < RepositoryDateTimeValueBase
       repository_rows.where("#{join_alias}.data >= ? AND #{join_alias}.data < ?",
                             Time.zone.now.beginning_of_week - 1.week, Time.zone.now.beginning_of_week)
     when 'this_month'
-      repository_rows.where("#{join_alias}.data >= ?", Time.zone.now.beginning_of_month)
+      repository_rows.where("#{join_alias}.data >= ? AND #{join_alias}.data <= ?",
+                            Time.zone.now.beginning_of_month, Time.zone.now.end_of_month)
     when 'last_year'
       repository_rows.where("#{join_alias}.data >= ? AND #{join_alias}.data < ?",
                             Time.zone.now.beginning_of_year - 1.year, Time.zone.now.beginning_of_year)
     when 'this_year'
-      repository_rows.where("#{join_alias}.data >= ?", Time.zone.now.beginning_of_year)
+      repository_rows.where("#{join_alias}.data >= ? AND #{join_alias}.data <= ?",
+                            Time.zone.now.beginning_of_year, Time.zone.now.end_of_year)
     when 'equal_to'
       repository_rows.where("#{join_alias}.data = ?", Time.zone.parse(parameters['datetime']))
     when 'unequal_to'
