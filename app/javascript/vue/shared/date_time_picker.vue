@@ -48,8 +48,8 @@
       isValidTime() {
         return /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(this.time);
       },
-      isValidDate() {
-        return (this.date instanceof Date) && !isNaN(this.date.getTime());
+      isValidDate(date) {
+        return (date instanceof Date) && !isNaN(date.getTime());
       },
       recalcTimestamp() {
         let date = this.timeOnly ? new Date() : this.date;
