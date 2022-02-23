@@ -222,7 +222,7 @@
         .val($modal.data('repositoryTableFilterName'));
     });
 
-    $(document).on('click', '#saveRepositoryTableFilterButton', function() {
+    $('#saveRepositoryTableFilterButton').on('click', function() {
       var $modal = $('#modalSaveRepositoryTableFilter');
       var $button = $(this);
       var url = $modal.data().saveUrl;
