@@ -55,6 +55,10 @@ class RepositorySnapshot < RepositoryBase
     repository_rows
   end
 
+  def default_search_fileds
+    ['repository_rows.name', "('#{RepositoryRow::ID_PREFIX}' || repository_rows.parent_id)", 'users.full_name']
+  end
+
   private
 
   def only_one_selected_for_my_module
