@@ -22,13 +22,13 @@
 
 <script>
   import FilterMixin from 'vue/repository_filter/mixins/filter.js'
-  import DateTimeFilterMixin from 'vue/repository_filter/mixins/filters/date_time_filter.js'
+  import RangeDateTimeFilterMixin from 'vue/repository_filter/mixins/filters/range_date_time_filter.js'
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
   import DateTimePicker from 'vue/shared/date_time_picker.vue'
 
   export default {
     name: 'RepositoryDateRangeValue',
-    mixins: [FilterMixin, DateTimeFilterMixin],
+    mixins: [FilterMixin, RangeDateTimeFilterMixin],
     data() {
       return {
         timeType: 'datetime',
@@ -48,11 +48,6 @@
     components: {
       DropdownSelector,
       DateTimePicker
-    },
-    computed: {
-      isBlank() {
-        return !this.value || !this.value.start_datetime || !this.value.end_datetime
-      }
     },
     watch: {
       value() {
