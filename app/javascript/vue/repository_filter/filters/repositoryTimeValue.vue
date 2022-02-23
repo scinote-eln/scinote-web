@@ -59,6 +59,7 @@
     },
     methods: {
       formattedDate(date) {
+        if (!date) return null
         return `${date.getHours()}:${date.getMinutes()}`
       }
     }
