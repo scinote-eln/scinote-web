@@ -53,8 +53,8 @@
       },
       recalcTimestamp() {
         let date = this.timeOnly ? new Date() : this.date;
-        if (this.isValidDate(date)) {
-          if (!this.isValidTime()) {
+        if (this.isValidDate(date) && (this.dateOnly || this.isValidTime())) {
+          if (this.dateOnly) {
             date.setHours(0);
             date.setMinutes(0);
           } else {
