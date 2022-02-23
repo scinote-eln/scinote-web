@@ -208,7 +208,7 @@ en:
       inventory_item_stock_set_html: "%{user} set total stock for %{repository_row} to %{new_amount} %{unit} in %{repository}"
       inventory_item_stock_add_html: "%{user} added %{change_amount} %{unit} of stock to a total of %{new_amount} %{unit} for %{repository_row} in %{repository}"
       inventory_item_stock_remove_html: "%{user} removed %{change_amount} %{unit} of stock to a total of %{new_amount} %{unit} for %{repository_row} in %{repository}"
-      task_inventory_item_stock_consumed_html: "%{user} changed consumption of %{repository_row} from %{current_stock} %{unit} to %{new_stock} %{unit} in %{my_module} \n%{comment}"
+      task_inventory_item_stock_consumed_html: "%{user} changed consumption of %{repository_row} from %{stock_consumption_was} %{unit} to %{stock_consumption} %{unit} in %{my_module} \n%{comment}"
 
     activity_name:
       create_project: "Project created"
