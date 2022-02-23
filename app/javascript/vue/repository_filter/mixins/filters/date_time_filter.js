@@ -11,6 +11,9 @@ export default {
       if(this.isPreset) {
         this.date = null;
         this.dateTo = null;
+        this.value = {}
+      } else {
+        this.updateValue();
       }
     }
   },
@@ -33,10 +36,10 @@ export default {
   },
   methods: {
     rangeObject(start, end) {
-      let range = {};
+      const range = {};
 
-      range['start_' + this.timeType] = start;
-      range['end_' + this.timeType] = end;
+      range[`start_${this.timeType}`] = this.formattedDate(start);
+      range[`end_${this.timeType}`] = this.formattedDate(end);
 
       return range;
     },
@@ -48,21 +51,22 @@ export default {
       return tz;
     },
     updateDate(date) {
-      date = date && this.formattedDate(date);
       this.date = date;
-      if (this.dateTo) {
-        this.value = this.rangeObject(date, this.dateTo);
-      } else {
-        let valueObject = {};
-        valueObject[this.timeType] = date;
-
-        this.value = valueObject;
-      }
+      this.updateValue();
     },
     updateDateTo(date) {
-      date = date && this.formattedDate(date);
       this.dateTo = date;
-      this.value = this.rangeObject(this.date, date);
+      this.updateValue();
+    },
+
+    updateValue() {
+      if (this.dateTo) {
+        this.value = this.rangeObject(this.date, this.dateTo);
+      } else {
+        const valueObject = {};
+        valueObject[this.timeType] = this.formattedDate(this.date);
+        this.value = valueObject;
+      }
     }
   }
 }
