@@ -335,9 +335,9 @@ class RepositoryDatatableService
       repository_rows.joins(:my_modules)
                      .where(my_modules: { id: filter_element_params.dig(:parameters, :my_module_ids) })
     when 'none_of'
-      repository_rows = repository_rows.left_outer_joins(:my_modules)
-      repository_rows.where.not(my_modules: { id: filter_element_params.dig(:parameters, :my_module_ids) })
-                     .or(repository_rows.where(my_modules: { id: nil }))
+      repository_rows.where('NOT EXISTS (SELECT NULL FROM my_module_repository_rows
+                                 WHERE my_module_repository_rows.repository_row_id = repository_rows.id AND
+                                       my_module_repository_rows.my_module_id IN (?))', filter_element_params.dig(:parameters, :my_module_ids))
     when 'all_of'
       repository_rows
         .joins(:my_modules)
