@@ -38,9 +38,7 @@ export default {
     },
 
     updateValue() {
-      if (this.date && this.dateTo) {
-        this.value = this.rangeObject(this.date, this.dateTo);
-      }
+      this.value = this.rangeObject(this.date, this.dateTo);
     }
   }
 }
