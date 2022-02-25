@@ -184,7 +184,7 @@ class RepositoryDatatableService
     when 'today'
       repository_rows.where(
         "date_trunc('minute', \"repository_rows\".\"created_at\") >= ? AND " \
-        "date_trunc('minute', \"repository_rows\".\"created_at\" < ?)",
+        "date_trunc('minute', \"repository_rows\".\"created_at\") < ?",
         Time.zone.now.beginning_of_day,
         Time.zone.now.end_of_day
       )
@@ -202,7 +202,7 @@ class RepositoryDatatableService
       )
     when 'this_month'
       repository_rows.where(
-        "date_trunc('minute', \"archived_on\") >= ? AND date_trunc('minute', \"archived_on\") <= ?",
+        "date_trunc('minute', \"created_at\") >= ? AND date_trunc('minute', \"created_at\") <= ?",
         Time.zone.now.beginning_of_month,
         Time.zone.now.end_of_month
       )
