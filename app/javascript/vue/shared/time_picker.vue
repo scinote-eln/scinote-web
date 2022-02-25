@@ -43,7 +43,7 @@
         this.update();
       });
 
-      this.value = this.defaultValue
+      this.value = this.defaultValue;
       this.update();
     },
     methods: {
