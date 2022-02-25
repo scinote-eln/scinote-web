@@ -12,7 +12,7 @@ export default {
       return !this.value || !this.value[`start_${this.timeType}`] || !this.value[`end_${this.timeType}`];
     }
   },
-  created(){
+  created() {
     if (this.timeType === 'time') {
       this.initTimeFromParameters();
     } else {
@@ -50,9 +50,9 @@ export default {
       }
     },
     initTimeFromParameters() {
-      if (this.parameters && this.parameters['start_time']) {
-        this.date = this.dateTimeFromTimeString(this.parameters['start_time']);
-        this.dateTo = this.dateTimeFromTimeString(this.parameters['end_time']);
+      if (this.parameters && this.parameters.start_time) {
+        this.date = this.dateTimeFromTimeString(this.parameters.start_time);
+        this.dateTo = this.dateTimeFromTimeString(this.parameters.end_time);
       }
     },
     updateDate(date) {

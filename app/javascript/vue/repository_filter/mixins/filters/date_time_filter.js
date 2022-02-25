@@ -34,7 +34,7 @@ export default {
       ].indexOf(this.operator) !== -1;
     }
   },
-  created(){
+  created() {
     if (this.timeType === 'time') {
       this.initTimeFromParameters();
     } else {
@@ -74,11 +74,11 @@ export default {
       }
     },
     initTimeFromParameters() {
-      if (this.parameters && this.parameters['time']) {
-        this.date = this.dateTimeFromTimeString(this.parameters['time']);
-      } else if (this.parameters && this.parameters['start_time']) {
-        this.date = this.dateTimeFromTimeString(this.parameters['start_time']);
-        this.dateTo = this.dateTimeFromTimeString(this.parameters['end_time']);
+      if (this.parameters && this.parameters.time) {
+        this.date = this.dateTimeFromTimeString(this.parameters.time);
+      } else if (this.parameters && this.parameters.start_time) {
+        this.date = this.dateTimeFromTimeString(this.parameters.start_time);
+        this.dateTo = this.dateTimeFromTimeString(this.parameters.end_time);
       }
     },
     updateDate(date) {
