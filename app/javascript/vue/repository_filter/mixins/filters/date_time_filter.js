@@ -34,6 +34,13 @@ export default {
       ].indexOf(this.operator) !== -1;
     }
   },
+  created() {
+    if (this.timeType === 'time') {
+      this.initTimeFromParameters();
+    } else {
+      this.initDateTimeFromParameters();
+    }
+  },
   methods: {
     rangeObject(start, end) {
       const range = {};
@@ -43,12 +50,36 @@ export default {
 
       return range;
     },
-    currentDate(customOffset = 0) {
+    fallbackDate(customOffset = 0) {
       const d = new Date();
       const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
       const offset = $('#filterContainer').data('user-utc-offset');
       const tz = new Date(utc + (1000 * offset) + (1000 * customOffset));
       return tz;
+    },
+    dateTimeFromTimeString(timeString) {
+      let dateTime = new Date();
+
+      dateTime.setHours(timeString.split(':')[0]);
+      dateTime.setMinutes(timeString.split(':')[1]);
+
+      return dateTime;
+    },
+    initDateTimeFromParameters() {
+      if (this.parameters && this.parameters[`${this.timeType}`]) {
+        this.date = new Date(this.parameters[`${this.timeType}`]);
+      } else if (this.parameters && this.parameters[`start_${this.timeType}`]) {
+        this.date = new Date(this.parameters[`start_${this.timeType}`]);
+        this.dateTo = new Date(this.parameters[`end_${this.timeType}`]);
+      }
+    },
+    initTimeFromParameters() {
+      if (this.parameters && this.parameters.time) {
+        this.date = this.dateTimeFromTimeString(this.parameters.time);
+      } else if (this.parameters && this.parameters.start_time) {
+        this.date = this.dateTimeFromTimeString(this.parameters.start_time);
+        this.dateTo = this.dateTimeFromTimeString(this.parameters.end_time);
+      }
     },
     updateDate(date) {
       this.date = date;
@@ -58,7 +89,6 @@ export default {
       this.dateTo = date;
       this.updateValue();
     },
-
     updateValue() {
       if (this.dateTo) {
         this.value = this.rangeObject(this.date, this.dateTo);

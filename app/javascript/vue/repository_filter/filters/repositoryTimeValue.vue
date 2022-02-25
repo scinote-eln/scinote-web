@@ -10,11 +10,11 @@
     </div>
     <template v-if="!isPreset">
       <div class="filter-datepicker-input">
-        <DateTimePicker @change="updateDate" :selectorId="`TimePicker${filter.id}`" :timeOnly="true"  :defaultValue="currentDate()" />
+        <DateTimePicker @change="updateDate" :selectorId="`TimePicker${filter.id}`" :timeOnly="true"  :defaultValue="date || fallbackDate()" />
       </div>
       <span class="between-delimiter" v-if="operator == 'between'">—</span>
       <div class="filter-datepicker-to-input" v-if="operator == 'between'">
-        <DateTimePicker @change="updateDateTo" :selectorId="`TimePickerTo${filter.id}`" :timeOnly="true" :defaultValue="currentDate(7 * 24 * 60 * 60)" />
+        <DateTimePicker @change="updateDateTo" :selectorId="`TimePickerTo${filter.id}`" :timeOnly="true" :defaultValue="dateTo || fallbackDate(7 * 24 * 60 * 60)" />
       </div>
     </template>
   </div>
@@ -59,8 +59,7 @@
     },
     methods: {
       formattedDate(date) {
-        if (!date) return null
-        return `${date.getHours()}:${date.getMinutes()}`
+        return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
       }
     }
   }

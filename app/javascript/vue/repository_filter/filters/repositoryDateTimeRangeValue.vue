@@ -10,11 +10,11 @@
     </div>
     <div class="datetime-filter-attributes">
       <div class="filter-datepicker-input">
-        <DateTimePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`"  :defaultValue="currentDate()" />
+        <DateTimePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`"  :defaultValue="date || fallbackDate()" />
       </div>
       <div class="between-delimiter vertical"></div>
       <div class="filter-datepicker-to-input">
-        <DateTimePicker @change="updateDateTo" :selectorId="`DatePickerTo${filter.id}`" :defaultValue="currentDate(7 * 24 * 60 * 60)" />
+        <DateTimePicker @change="updateDateTo" :selectorId="`DatePickerTo${filter.id}`" :defaultValue="dateTo || fallbackDate(7 * 24 * 60 * 60)" />
       </div>
     </div>
   </div>
@@ -58,7 +58,7 @@
     methods: {
       formattedDate(date) {
         if (!date) return null
-        return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`
+        return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
       }
     }
   }

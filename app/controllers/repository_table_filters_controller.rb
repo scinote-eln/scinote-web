@@ -49,8 +49,9 @@ class RepositoryTableFiltersController < ApplicationController
 
       repository_table_filter_elements_params[:custom_columns].each do |custom_column_params|
         @repository_table_filter.repository_table_filter_elements
-                                .find_or_initialize_by(repository_column_id: custom_column_params['repository_column_id'])
-                                .assign_attributes(custom_column_params)
+                                .find_or_initialize_by(
+                                  repository_column_id: custom_column_params['repository_column_id']
+                                ).update!(custom_column_params)
       end
 
       @repository_table_filter.save!
