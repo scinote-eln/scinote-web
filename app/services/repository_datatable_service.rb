@@ -250,6 +250,8 @@ class RepositoryDatatableService
   end
 
   def build_archived_on_filter_condition(repository_rows, filter_element_params)
+    return repository_rows unless @params[:archived]
+
     case filter_element_params[:operator]
     when 'today'
       repository_rows.where("date_trunc('minute', \"archived_on\") >= ? AND date_trunc('minute', \"archived_on\") <= ?",
@@ -271,8 +273,8 @@ class RepositoryDatatableService
                             Time.zone.now.beginning_of_year - 1.year, Time.zone.now.beginning_of_year)
     when 'this_year'
       repository_rows.where(
-        "date_trunc('minute', \"repository_rows\".\"created_at\") >= ? AND "\
-        "date_trunc('minute', \"repository_rows\".\"created_at\") <= ?",
+        "date_trunc('minute', \"repository_rows\".\"archived_on\") >= ? AND "\
+        "date_trunc('minute', \"repository_rows\".\"archived_on\") <= ?",
         Time.zone.now.beginning_of_year,
         Time.zone.now.end_of_year
       )
@@ -317,6 +319,8 @@ class RepositoryDatatableService
   end
 
   def build_archived_by_filter_condition(repository_rows, filter_element_params)
+    return repository_rows unless @params[:archived]
+
     case filter_element_params[:operator]
     when 'any_of'
       repository_rows.joins(:archived_by)
