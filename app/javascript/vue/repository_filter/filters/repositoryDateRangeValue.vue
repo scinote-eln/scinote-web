@@ -9,11 +9,11 @@
       @dropdown:changed="updateOperator" />
     </div>
     <div class="filter-datepicker-input">
-      <DateTimePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`" :onlyDate="true"  :defaultValue="currentDate()" />
+      <DateTimePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`" :onlyDate="true"  :defaultValue="date || fallbackDate()" />
     </div>
     <span class="between-delimiter">—</span>
     <div class="filter-datepicker-to-input">
-      <DateTimePicker @change="updateDateTo" :selectorId="`DatePickerTo${filter.id}`" :onlyDate="true" :defaultValue="currentDate(7 * 24 * 60 * 60)" />
+      <DateTimePicker @change="updateDateTo" :selectorId="`DatePickerTo${filter.id}`" :onlyDate="true" :defaultValue="dateTo || fallbackDate(7 * 24 * 60 * 60)" />
     </div>
   </div>
 </template>

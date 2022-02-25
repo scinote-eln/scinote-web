@@ -12,6 +12,12 @@ export default {
       return !this.value || !this.value[`start_${this.timeType}`] || !this.value[`end_${this.timeType}`];
     }
   },
+  created(){
+    if (this.parameters && this.parameters[`start_${this.timeType}`]) {
+      this.date = new Date(this.parameters[`start_${this.timeType}`]);
+      this.dateTo = new Date(this.parameters[`end_${this.timeType}`]);
+    }
+  },
   methods: {
     rangeObject(start, end) {
       const range = {};
@@ -21,7 +27,7 @@ export default {
 
       return range;
     },
-    currentDate(customOffset = 0) {
+    fallbackDate(customOffset = 0) {
       const d = new Date();
       const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
       const offset = $('#filterContainer').data('user-utc-offset');
@@ -36,8 +42,8 @@ export default {
       this.dateTo = date;
       this.updateValue();
     },
-
     updateValue() {
+      console.log(`${this.date} - ${this.dateTo}`)
       this.value = this.rangeObject(this.date, this.dateTo);
     }
   }
