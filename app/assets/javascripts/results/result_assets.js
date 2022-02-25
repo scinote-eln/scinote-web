@@ -35,7 +35,7 @@
     }
 
     function applyEditResultAssetCallback() {
-      $('.edit-result-asset').off().on('ajax:success', function(e, data) {
+      $('.edit-result-asset').off('ajax:success ajax:error').on('ajax:success', function(e, data) {
         var $result = $(this).closest('.result');
         var $form = $(data.html);
         var $prevResult = $result;
