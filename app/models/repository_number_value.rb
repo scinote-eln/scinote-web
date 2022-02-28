@@ -26,20 +26,20 @@ class RepositoryNumberValue < ApplicationRecord
 
     case filter_element.operator
     when 'equal_to'
-      repository_rows.where("#{join_alias}.data = ?", parameters['number'].to_i)
+      repository_rows.where("#{join_alias}.data = ?", parameters['number'].to_d)
     when 'unequal_to'
-      repository_rows.where.not("#{join_alias}.data = ?", parameters['number'].to_i)
+      repository_rows.where.not("#{join_alias}.data = ?", parameters['number'].to_d)
     when 'greater_than'
-      repository_rows.where("#{join_alias}.data > ?", parameters['number'].to_i)
+      repository_rows.where("#{join_alias}.data > ?", parameters['number'].to_d)
     when 'greater_than_or_equal_to'
-      repository_rows.where("#{join_alias}.data >= ?", parameters['number'].to_i)
+      repository_rows.where("#{join_alias}.data >= ?", parameters['number'].to_d)
     when 'less_than'
-      repository_rows.where("#{join_alias}.data < ?", parameters['number'].to_i)
+      repository_rows.where("#{join_alias}.data < ?", parameters['number'].to_d)
     when 'less_than_or_equal_to'
-      repository_rows.where("#{join_alias}.data <= ?", parameters['number'].to_i)
+      repository_rows.where("#{join_alias}.data <= ?", parameters['number'].to_d)
     when 'between'
       repository_rows
-        .where("#{join_alias}.data > ? AND #{join_alias}.data < ?", parameters['from'].to_i, parameters['to'].to_i)
+        .where("#{join_alias}.data > ? AND #{join_alias}.data < ?", parameters['from'].to_d, parameters['to'].to_d)
     else
       raise ArgumentError, 'Wrong operator for RepositoryNumberValue!'
     end
