@@ -592,6 +592,9 @@ var RepositoryDatatable = (function(global) {
 
         initAssignedTasksDropdown(TABLE_ID);
         renderFiltersDropdown();
+        setTimeout(function() {
+          adjustTableHeader();
+        }, 500);
       }
     });
 
