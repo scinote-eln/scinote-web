@@ -79,13 +79,7 @@ module Api
         item_changed = true if @inventory_item.changed?
         if item_changed
           if @inventory_item.archived_changed?
-            if @inventory_item.archived?
-              check_archive_permissions
-              @inventory_item.archived_by = current_user
-            else
-              check_restore_permissions
-              @inventory_item.restored_by = current_user
-            end
+            @inventory_item.archived? ? @inventory_item.archive(current_user) : @inventory_item.restore(current_user)
           end
           @inventory_item.last_modified_by = current_user
           @inventory_item.save!
@@ -105,21 +99,13 @@ module Api
       private
 
       def check_manage_permissions
-        raise PermissionError.new(RepositoryItem, :manage) unless can_manage_repository_rows?(@inventory)
+        raise PermissionError.new(RepositoryRow, :manage) unless can_manage_repository_rows?(@inventory)
       end
 
       def check_delete_permissions
         unless can_delete_repository_rows?(@inventory) && @inventory_item.archived?
-          raise PermissionError.new(RepositoryItem, :delete)
+          raise PermissionError.new(RepositoryRow, :delete)
         end
-      end
-
-      def check_archive_permissions
-        raise PermissionError.new(RepositoryItem, :archive) unless can_delete_repository_rows?(@inventory)
-      end
-
-      def check_restore_permissions
-        raise PermissionError.new(RepositoryItem, :restore) unless can_delete_repository_rows?(@inventory)
       end
 
       def inventory_item_params

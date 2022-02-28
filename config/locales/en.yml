@@ -2863,6 +2863,12 @@ en:
         manage_permission:
           title: "Permission denied"
           detail: "You don't have permission to manage %{model}"
+        archive_permission:
+          title: "Permission denied"
+          detail: "You don't have permission to archive/restore %{model}"
+        delete_permission:
+          title: "Permission denied"
+          detail: "You don't have permission to delete %{model}"
         toggle_completion_permission:
           title: "Permission denied"
           detail: "You don't have permission to toggle %{model} completion"
