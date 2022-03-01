@@ -95,7 +95,7 @@ gem 'delayed_job_active_record'
 gem 'devise-async',
     git: 'https://github.com/mhfs/devise-async.git',
     branch: 'devise-4.x'
-gem 'image_processing', '~> 1.2'
+gem 'image_processing', '~> 1.12'
 gem 'rufus-scheduler', '~> 3.5'
 
 gem 'discard', '~> 1.0'
