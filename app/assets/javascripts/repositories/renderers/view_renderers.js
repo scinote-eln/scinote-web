@@ -182,15 +182,22 @@ $.fn.dataTable.render.AssignedTasksValue = function(data) {
 };
 
 $.fn.dataTable.render.RepositoryStockValue = function(data, row) {
+  var alertTag;
   if (data && data.value) {
+    if (row && row.displayStockAlert) {
+      if (data.value.stock_amount <= 0) {
+        alertTag = 'stock-alert';
+      } else {
+        alertTag = data.value.stock_amount < data.value.low_stock_threshold ? 'stock-low-stock-alert' : '';
+      }
+    } else alertTag = '';
+
     if (row && row.manageStockUrl) {
-      return `<a class="manage-repository-stock-value-link stock-value-view-render
-                        ${data.value.stock_amount <= 0 ? 'stock-alert' : ''}">
+      return `<a class="manage-repository-stock-value-link stock-value-view-render ${alertTag}">
                 ${data.value.stock_formatted}
                 </a>`;
     }
-    return `<span class="stock-value-view-render
-                         ${data.value.stock_amount <= 0 ? 'stock-alert' : ''}">
+    return `<span class="stock-value-view-render ${alertTag}">
               ${data.value.stock_formatted}
               </span>`;
   }

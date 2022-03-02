@@ -35,6 +35,7 @@ module RepositoryDatatableHelper
                                          record
                                        )
                                 end
+        row['displayStockAlert'] = true
       end
 
       unless options[:view_mode]
@@ -120,6 +121,7 @@ module RepositoryDatatableHelper
         end
         row['consumedStock']['stock_present'] = stock_present
         row['consumedStock']['consumption_managable'] = consumption_managable
+        row['displayStockAlert'] = true
       end
 
       row
@@ -152,6 +154,7 @@ module RepositoryDatatableHelper
           else
             {}
           end
+        row['displayStockAlert'] = false
       end
 
       row
