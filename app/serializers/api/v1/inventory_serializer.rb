@@ -4,7 +4,7 @@ module Api
   module V1
     class InventorySerializer < ActiveModel::Serializer
       type :inventories
-      attributes :id, :name
+      attributes :id, :name, :archived
       belongs_to :created_by, serializer: UserSerializer
 
       include TimestampableModel

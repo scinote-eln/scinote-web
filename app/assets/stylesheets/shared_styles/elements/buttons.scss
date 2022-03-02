@@ -195,6 +195,7 @@
     color: $color-silver-chalice;
     cursor: auto;
     opacity: .5;
+    pointer-events: none;
 
     &.btn-primary,
     &.btn-danger {

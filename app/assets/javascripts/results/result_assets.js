@@ -35,18 +35,18 @@
     }
 
     function applyEditResultAssetCallback() {
-      $('.edit-result-asset').on('ajax:success', function(e, data) {
+      $('.edit-result-asset').off('ajax:success ajax:error').on('ajax:success', function(e, data) {
         var $result = $(this).closest('.result');
         var $form = $(data.html);
         var $prevResult = $result;
         $result.after($form);
-        $result.remove();
+        $prevResult.hide();
 
-        _formAjaxResultAsset($form);
+        _formAjaxResultAsset($form, $prevResult);
 
         // Cancel button
         $form.find('.cancel-edit').click(function () {
-          $form.after($prevResult);
+          $prevResult.show();
           $form.remove();
           applyEditResultAssetCallback();
           Results.toggleResultEditButtons(true);
@@ -60,8 +60,9 @@
       });
     }
 
-    function _formAjaxResultAsset($form) {
+    function _formAjaxResultAsset($form, $prevResult) {
       $form.on('ajax:success', function(e, data) {
+        if ($prevResult) $prevResult.remove();
         $form.after(data.html);
         var $newResult = $form.next();
         initFormSubmitLinks($newResult);

@@ -1,7 +1,7 @@
 /*
   globals I18n _ SmartAnnotation FilePreviewModal animateSpinner DataTableHelpers
   HelperModule RepositoryDatatableRowEditor prepareRepositoryHeaderForExport
-  initAssignedTasksDropdown
+  initAssignedTasksDropdown initBMTFilter
 */
 
 //= require jquery-ui/widgets/sortable
@@ -23,8 +23,6 @@ var RepositoryDatatable = (function(global) {
 
   // Tells whether we're currently viewing or editing table
   var currentMode = 'viewMode';
-
-  // var selectedRecord;
 
   // Extend datatables API with searchable options
   // (http://stackoverflow.com/questions/39912395/datatables-dynamically-set-columns-searchable)
@@ -265,9 +263,14 @@ var RepositoryDatatable = (function(global) {
   }
 
   function resetTableView() {
+    var filterSaveButtonVisible = !$('#saveRepositoryFilters').hasClass('hidden');
     $.getJSON($(TABLE_ID).data('toolbar-url'), (data) => {
       $('#toolbarButtonsDatatable').remove();
       $(data.html).appendTo('div.toolbar');
+      if (filterSaveButtonVisible) {
+        $('#saveRepositoryFilters').removeClass('hidden');
+      }
+      if (typeof initBMTFilter === 'function') initBMTFilter();
     });
 
     TABLE.ajax.reload(null, false);
@@ -404,8 +407,18 @@ var RepositoryDatatable = (function(global) {
       destroy: true,
       ajax: {
         url: $(TABLE_ID).data('source'),
+        contentType: 'application/json',
         data: function(d) {
           d.archived = $('.repository-show').hasClass('archived');
+
+          if ($('[data-external-ids]').length) {
+            d.external_ids = $('[data-external-ids]').attr('data-external-ids').split(',');
+          }
+
+          if ($('[data-repository-filter-json]').attr('data-repository-filter-json')) {
+            d.advanced_search = JSON.parse($('[data-repository-filter-json]').attr('data-repository-filter-json'));
+          }
+          return JSON.stringify(d);
         },
         global: false,
         type: 'POST'
@@ -551,6 +564,7 @@ var RepositoryDatatable = (function(global) {
         // Append buttons to inner toolbar in the table
         $.getJSON($(TABLE_ID).data('toolbar-url'), (data) => {
           $(data.html).appendTo('div.toolbar');
+          if (typeof initBMTFilter === 'function') initBMTFilter();
         });
 
         $('div.toolbar-filter-buttons').prependTo('div.filter-container');
@@ -561,7 +575,7 @@ var RepositoryDatatable = (function(global) {
         initSaveButton();
         initCancelButton();
 
-        DataTableHelpers.initLengthApearance($(TABLE_ID).closest('.dataTables_wrapper'));
+        DataTableHelpers.initLengthAppearance($(TABLE_ID).closest('.dataTables_wrapper'));
         DataTableHelpers.initSearchField($(TABLE_ID).closest('.dataTables_wrapper'), I18n.t('repositories.show.filter_inventory_items'));
 
         $('<img class="barcode-scanner" src="/images/icon_small/barcode.png"></img>').appendTo($('.search-container'));
@@ -577,6 +591,10 @@ var RepositoryDatatable = (function(global) {
         });
 
         initAssignedTasksDropdown(TABLE_ID);
+        renderFiltersDropdown();
+        setTimeout(function() {
+          adjustTableHeader();
+        }, 500);
       }
     });
 
@@ -593,6 +611,20 @@ var RepositoryDatatable = (function(global) {
 
       $(this).parent().find('.repository-row-selector').trigger('click');
     });
+
+    // Handling of special errors
+    $(TABLE_ID).on('xhr.dt', function(e, settings, json) {
+      if (json.custom_error) {
+        json.data = [];
+        json.recordsFiltered = 0;
+        json.recordsTotal = 0;
+        TABLE.one('draw', function() {
+          $('#filtersDropdownButton').removeClass('active-filters');
+          $('#saveRepositoryFilters').addClass('hidden');
+          $('.repository-table-error').addClass('active').text(json.custom_error);
+        });
+      }
+    })
 
     initRowSelection();
     bindExportActions();
@@ -801,6 +833,12 @@ var RepositoryDatatable = (function(global) {
         TABLE.column(column.idx).visible(archived);
       }
     });
+  }
+
+  function renderFiltersDropdown() {
+    let dropdown = $('#repositoryFilterTemplate').html();
+    $('.dataTables_filter').append(dropdown);
+    if (typeof initRepositoryFilter === 'function') initRepositoryFilter();
   }
 
   return Object.freeze({

@@ -7,6 +7,7 @@ class RepositoriesController < ApplicationController
   include IconsHelper
   include TeamsHelper
   include RepositoriesDatatableHelper
+  include MyModulesHelper
 
   before_action :switch_team_with_param, only: :show
   before_action :load_repository, except: %i(index create create_modal sidebar archive restore)
@@ -15,7 +16,8 @@ class RepositoriesController < ApplicationController
   before_action :load_repositories_for_restoring, only: :restore
   before_action :check_view_all_permissions, only: %i(index sidebar)
   before_action :check_view_permissions, except: %i(index create_modal create update destroy parse_sheet import_records sidebar archive restore)
-  before_action :check_manage_permissions, only: %i(destroy destroy_modal rename_modal update)
+  before_action :check_manage_permissions, only: %i(rename_modal update)
+  before_action :check_delete_permissions, only: %i(destroy destroy_modal)
   before_action :check_archive_permissions, only: %i(archive restore)
   before_action :check_share_permissions, only: :share_modal
   before_action :check_create_permissions, only: %i(create_modal create)
@@ -27,7 +29,7 @@ class RepositoriesController < ApplicationController
   def index
     respond_to do |format|
       format.html do
-        render 'empty_index' if Repository.accessible_by_teams(current_team).blank?
+        render 'empty_index' if @repositories.blank?
       end
       format.json do
         render json: prepare_repositories_datatable(@repositories, current_team, params)
@@ -360,6 +362,35 @@ class RepositoriesController < ApplicationController
     end
   end
 
+  def assigned_my_modules
+    my_modules = MyModule.joins(:repository_rows).where(repository_rows: { repository: @repository })
+                         .readable_by_user(current_user).distinct
+    render json: {data: grouped_by_prj_exp(my_modules).map { |g|
+                          {
+                            label: "#{g[:project_name]} / #{g[:experiment_name]}", options: g[:tasks].map do |t|
+                              { label: t.name, value: t.id }
+                            end
+                          }
+                        } }
+  end
+
+  def repository_users
+    rows_type = params[:archived_by].present? ? :archived_repository_rows : :created_repository_rows
+    users = User.joins(rows_type)
+                .where(rows_type => { repository: @repository })
+                .group(:id)
+
+    render json: { users: users.map do |u|
+                            {
+                              label: u.full_name,
+                              value: u.id,
+                              params: {
+                                email: u.email, avatar_url: u.avatar_url('icon_small')
+                              }
+                            }
+                          end }
+  end
+
   private
 
   def repostiory_import_actions
@@ -432,6 +463,10 @@ class RepositoriesController < ApplicationController
     @repositories.each do |repository|
       return render_403 unless can_archive_repository?(repository)
     end
+  end
+
+  def check_delete_permissions
+    render_403 unless can_delete_repository?(@repository)
   end
 
   def check_share_permissions

@@ -41,9 +41,10 @@
       }
 
       // Apply ajax callback to form
-      function _formAjaxResultTable($form) {
+      function _formAjaxResultTable($form, $prevResult) {
         $form.on('ajax:success', function(e, data) {
           var $result;
+          if ($prevResult) $prevResult.remove();
           $form.after(data.html);
           $result = $(this).next();
           initFormSubmitLinks($result);
@@ -64,20 +65,20 @@
 
       // Edit result table button behaviour
       function applyEditResultTableCallback() {
-        $('.edit-result-table').on('ajax:success', function(e, data) {
+        $('.edit-result-table').off('ajax:success ajax:error').on('ajax:success', function(e, data) {
           var $result = $(this).closest('.result');
           var $form = $(data.html);
           var $prevResult = $result;
           $result.after($form);
-          $result.remove();
+          $prevResult.hide();
 
-          _formAjaxResultTable($form);
+          _formAjaxResultTable($form, $prevResult);
           _initEditableHandsOnTable($form);
           _onSubmitExtractTable($form);
 
           // Cancel button
           $form.find('.cancel-edit').click(function () {
-            $form.after($prevResult);
+            $prevResult.show();
             $form.remove();
             applyEditResultTableCallback();
             Results.toggleResultEditButtons(true);

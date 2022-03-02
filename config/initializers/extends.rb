@@ -89,6 +89,56 @@ class Extends
     }
   }
 
+  # Extra attributes used for advanced search in repositories
+  REPOSITORY_ADVANCED_SEARCH_ATTR = {
+    RepositoryTextValue: {
+      table_name: :repository_text_values
+    }, RepositoryNumberValue: {
+      table_name: :repository_number_values
+    }, RepositoryListValue: {
+      table_name: :repository_list_values
+    }, RepositoryChecklistValue: {
+      table_name: :repository_checklist_values
+    }, RepositoryStatusValue: {
+      table_name: :repository_status_values
+    }, RepositoryAssetValue: {
+      table_name: :repository_asset_values
+    }, RepositoryDateTimeValue: {
+      table_name: :repository_date_time_values
+    }, RepositoryDateTimeRangeValue: {
+      table_name: :repository_date_time_range_values
+    }, RepositoryDateValue: {
+      table_name: :repository_date_time_values
+    }, RepositoryDateRangeValue: {
+      table_name: :repository_date_time_range_values
+    }, RepositoryTimeValue: {
+      table_name: :repository_date_time_values
+    }, RepositoryTimeRangeValue: {
+      table_name: :repository_date_time_range_values
+    }
+  }
+
+  REPOSITORY_ADVANCED_SEARCH_REFERENCED_VALUE_RELATIONS = {
+    RepositoryListValue: 'repository_list_items',
+    RepositoryChecklistValue: 'repository_checklist_items',
+    RepositoryStatusValue: 'repository_status_items'
+  }
+
+  REPOSITORY_ADVANCED_SEARCHABLE_COLUMNS = %i(
+    RepositoryTextValue
+    RepositoryNumberValue
+    RepositoryListValue
+    RepositoryChecklistValue
+    RepositoryStatusValue
+    RepositoryAssetValue
+    RepositoryDateTimeValue
+    RepositoryDateTimeRangeValue
+    RepositoryDateValue
+    RepositoryDateRangeValue
+    RepositoryTimeValue
+    RepositoryTimeRangeValue
+  )
+
   # Array of preload relations used in search query for repository rows
   REPOSITORY_ROWS_PRELOAD_RELATIONS = []
 
@@ -393,6 +443,8 @@ class Extends
     change_user_role_on_experiment
     change_user_role_on_my_module
   )
+
+  STI_PRELOAD_CLASSES = %w(LinkedRepository BmtRepository)
 end
 
 # rubocop:enable Style/MutableConstant

@@ -21,10 +21,10 @@ describe RepositoryStatusValue do
     it { is_expected.to belong_to(:last_modified_by).optional }
   end
 
-  describe '.data_changed?' do
+  describe '.data_different?' do
     context 'when has new data' do
       it do
-        expect(repository_status_value.data_changed?('-1')).to be_truthy
+        expect(repository_status_value.data_different?('-1')).to be_truthy
       end
     end
 
@@ -33,7 +33,7 @@ describe RepositoryStatusValue do
         repository_status_value.save
         id = repository_status_value.repository_status_item.id
 
-        expect(repository_status_value.data_changed?(id)).to be_falsey
+        expect(repository_status_value.data_different?(id)).to be_falsey
       end
     end
   end

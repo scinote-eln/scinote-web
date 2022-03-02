@@ -61,7 +61,8 @@ $.fn.dataTable.render.defaultRepositoryDateValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryDateValue = function(data) {
-  return `<span data-datetime="${data.value.datetime}" data-date="${data.value.formatted}">${data.value.formatted}</span>`;
+  return `<span data-datetime="${data.value.datetime}"
+                data-date="${data.value.formatted}">${data.value.formatted}</span>`;
 };
 
 $.fn.dataTable.render.defaultRepositoryDateTimeValue = function() {

@@ -40,7 +40,7 @@
 
     // Edit result text button behaviour
     function applyEditResultTextCallback() {
-      $('.edit-result-text').off().on('ajax:success', function(e, data) {
+      $('.edit-result-text').off('ajax:success ajax:error').on('ajax:success', function(e, data) {
         var $result = $(this).closest('.result');
         var $form = $(data.html);
         var $prevResult = $result;

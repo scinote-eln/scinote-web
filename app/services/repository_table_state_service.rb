@@ -26,7 +26,7 @@ class RepositoryTableStateService
 
   def update_state(state)
     saved_state = load_state
-    state['order'] = Constants::REPOSITORY_TABLE_DEFAULT_STATE['order'] if state.dig('order', 0, 0).to_i < 1
+    state['order'] = @repository.default_table_state['order'] if state.dig('order', 0, 0).to_i < 1
 
     return if saved_state.state.except('time') == state.except('time')
 
@@ -47,10 +47,10 @@ class RepositoryTableStateService
   private
 
   def generate_default_state
-    default_columns_num = Constants::REPOSITORY_TABLE_DEFAULT_STATE['columns'].length
+    default_columns_num = @repository.default_columns_count
 
     # This state should be strings-only
-    state = Constants::REPOSITORY_TABLE_DEFAULT_STATE.deep_dup
+    state = @repository.default_table_state.deep_dup
     @repository.repository_columns.each_with_index do |_, index|
       real_index = default_columns_num + index
       state['columns'][real_index] = Constants::REPOSITORY_TABLE_STATE_CUSTOM_COLUMN_TEMPLATE

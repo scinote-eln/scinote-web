@@ -31,6 +31,10 @@ class RepositoryRowsController < ApplicationController
                                         .per(per_page)
 
     @repository_rows = @repository_rows.where(archived: params[:archived]) unless @repository.archived?
+  rescue RepositoryFilters::ColumnNotFoundException
+    render json: { custom_error: I18n.t('repositories.show.repository_filter.errors.column_not_found') }
+  rescue RepositoryFilters::ValueNotFoundException
+    render json: { custom_error: I18n.t('repositories.show.repository_filter.errors.value_not_found') }
   end
 
   def create
@@ -214,7 +218,7 @@ class RepositoryRowsController < ApplicationController
                                         params[:query],
                                         whole_phrase: true
                                       )
-    viewable_modules = assigned_modules.viewable_by_user(current_user, current_team)
+    viewable_modules = assigned_modules.viewable_by_user(current_user, current_user.teams)
     private_modules_number = assigned_modules.where.not(id: viewable_modules).count
     render json: {
       html: render_to_string(partial: 'shared/my_modules_list_partial.html.erb', locals: {
@@ -316,7 +320,7 @@ class RepositoryRowsController < ApplicationController
     @repository.repository_rows.where(id: process_ids).pluck(:id)
   end
 
-  def load_available_rows(query)
+  def load_available_rows
     @repository.repository_rows
                .active
                .includes(:repository_cells)

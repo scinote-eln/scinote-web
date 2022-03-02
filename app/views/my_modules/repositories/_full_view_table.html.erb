@@ -2,8 +2,8 @@
        data-id="<%= @repository.id %>"
        data-type="live"
        data-source="<%= index_dt_my_module_repository_path(@my_module, @repository) %>"
-       data-default-order="<%= default_table_order_as_js_array %>"
-       data-default-table-columns="<%= default_table_columns %>"
+       data-default-order="<%= @repository.default_table_order_as_js_array %>"
+       data-default-table-columns="<%= @repository.default_table_columns %>"
        data-repository-name="<%= @repository.name %>"
        data-assigned-items-count="<%= @my_module.repository_rows_count(@repository) %>"
        data-load-state-url="<%= repository_load_table_state_path(@repository) %>"
@@ -19,6 +19,9 @@
         </div>
       </th>
       <th id="assigned"><%= t("repositories.table.assigned") %></th>
+      <% if @repository.is_a?(LinkedRepository) %>
+        <th id="row-external-id"><%= t('repositories.table.external_id') %></th>
+      <% end %>
       <th id="row-id"><%= t("repositories.table.id") %></th>
       <th id="row-name"><%= t("repositories.table.row_name") %></th>
       <th id="added-on"><%= t("repositories.table.added_on") %></th>
