@@ -188,10 +188,10 @@ $.fn.dataTable.render.RepositoryStockValue = function(data, row) {
       if (data.value.stock_amount <= 0) {
         alertTag = 'stock-alert';
       } else {
-        alertTag = data.value.stock_amount < data.value.low_stock_threshold ? 'stock-low-stock-alert' : '';
+        alertTag = parseFloat(data.value.stock_amount) < parseFloat(data.value.low_stock_threshold)
+          ? 'stock-low-stock-alert' : '';
       }
     } else alertTag = '';
-
     if (row && row.manageStockUrl) {
       return `<a class="manage-repository-stock-value-link stock-value-view-render ${alertTag}">
                 ${data.value.stock_formatted}
