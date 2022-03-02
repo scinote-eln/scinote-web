@@ -64,7 +64,7 @@ describe RepositoryRowsController, type: :controller do
 
     describe 'json object' do
       it 'returns a valid object' do
-        params = { order: { 0 => { column: '4', dir: 'asc' } },
+        params = { order: [{ column: '4', dir: 'asc' }],
                    drow: '0',
                    search: { value: '' },
                    length: '10',
@@ -79,7 +79,7 @@ describe RepositoryRowsController, type: :controller do
 
     describe 'pagination' do
       it 'returns first 10 records' do
-        params = { order: { 0 => { column: '4', dir: 'asc' } },
+        params = { order: [{ column: '4', dir: 'asc' }],
                    drow: '0',
                    search: { value: '' },
                    length: '10',
@@ -93,7 +93,7 @@ describe RepositoryRowsController, type: :controller do
       end
 
       it 'returns next 10 records' do
-        params = { order: { 0 => { column: '4', dir: 'asc' } },
+        params = { order: [{ column: '4', dir: 'asc' }],
                    drow: '0',
                    search: { value: '' },
                    length: '10',
@@ -107,7 +107,7 @@ describe RepositoryRowsController, type: :controller do
       end
 
       it 'returns first 25 records' do
-        params = { order: { 0 => { column: '4', dir: 'desc' } },
+        params = { order: [{ column: '4', dir: 'desc' }],
                    drow: '0',
                    search: { value: '' },
                    length: '25',

@@ -6,8 +6,8 @@ RSpec.describe 'Api::V1::StepsController', type: :request do
   before :all do
     @user = create(:user)
     @team = create(:team, created_by: @user)
-    @project = create(:project, team: @team)
-    @experiment = create(:experiment, :with_tasks, project: @project)
+    @project = create(:project, team: @team, created_by: @user)
+    @experiment = create(:experiment, :with_tasks, project: @project, created_by: @user)
     @task = @experiment.my_modules.first
     create(:user_team, user: @user, team: @team)
 
@@ -249,7 +249,8 @@ RSpec.describe 'Api::V1::StepsController', type: :request do
           experiment_id: @experiment.id,
           task_id: @task.id,
           protocol_id: protocol.id,
-          id: step.id
+          id: step.id,
+          data: {attributes: {name: 'Test'}, type: "steps"}
         ),
         headers: @valid_headers
       )

@@ -36,7 +36,7 @@ class RepositoryDatatableService
 
   def process_query
     search_value = @params[:search][:value]
-    order_params = @params[:order][@params[:order].keys.first]
+    order_params = @params[:order].first
     order_by_column = { column: order_params[:column].to_i, dir: order_params[:dir] }
 
     repository_rows = fetch_rows(search_value)

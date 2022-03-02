@@ -43,9 +43,9 @@ RSpec.describe "Api::V1::TaskUserAssignmentsController", type: :request do
           ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-                                    ActiveModelSerializers::SerializableResource
-                                      .new(@own_task.user_assignments, each_serializer: Api::V1::TaskUserAssignmentSerializer)
-                                      .as_json[:data]
+                                    JSON.parse(ActiveModelSerializers::SerializableResource
+                                      .new(@own_task.user_assignments, each_serializer: Api::V1::UserAssignmentSerializer)
+                                      .to_json)['data']
                                   )
     end
 
@@ -88,9 +88,9 @@ RSpec.describe "Api::V1::TaskUserAssignmentsController", type: :request do
           ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
-                                    ActiveModelSerializers::SerializableResource
-                                      .new(@own_task.user_assignments.first, serializer: Api::V1::TaskUserAssignmentSerializer)
-                                      .as_json[:data]
+                                    JSON.parse(ActiveModelSerializers::SerializableResource
+                                      .new(@own_task.user_assignments.first, serializer: Api::V1::UserAssignmentSerializer)
+                                      .to_json)['data']
                                   )
     end
 
@@ -126,7 +126,6 @@ RSpec.describe "Api::V1::TaskUserAssignmentsController", type: :request do
   describe 'PATCH user_assignment, #update' do
     before :all do
       @valid_headers['Content-Type'] = 'application/json'
-      create :user_project, user: @another_user, project: @own_project
       create :user_assignment,
              assignable: @own_project,
              user: @another_user,
@@ -157,7 +156,7 @@ RSpec.describe "Api::V1::TaskUserAssignmentsController", type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'task_user_assignments',
+            type: 'user_assignments',
             attributes: {
               user_role_id: @technician_user_role.id
             }
@@ -177,7 +176,7 @@ RSpec.describe "Api::V1::TaskUserAssignmentsController", type: :request do
         expect(json).to match(
                           hash_including(
                             data: hash_including(
-                              type: 'task_user_assignments',
+                              type: 'user_assignments',
                               relationships: hash_including(
                                 user_role: hash_including(data: hash_including(id: @technician_user_role.id.to_s))
                               )
@@ -191,7 +190,7 @@ RSpec.describe "Api::V1::TaskUserAssignmentsController", type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'task_user_assignments',
+            type: 'user_assignments',
             attributes: {
             }
           }
@@ -209,7 +208,7 @@ RSpec.describe "Api::V1::TaskUserAssignmentsController", type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'task_user_assignments',
+            type: 'user_assignments',
             attributes: {
               user_role_id: @technician_user_role.id
             }
@@ -218,19 +217,13 @@ RSpec.describe "Api::V1::TaskUserAssignmentsController", type: :request do
       end
 
       it 'renders 403' do
-        invalid_user_assignment = create :user_assignment,
-                                         assignable: @invalid_task,
-                                         user: @another_user,
-                                         user_role: @normal_user_role,
-                                         assigned_by: @another_user
-
         patch(
           api_v1_team_project_experiment_task_user_assignment_path(
             team_id: @invalid_project.team.id,
             project_id: @invalid_project.id,
             experiment_id: @invalid_experiment.id,
             task_id: @invalid_task.id,
-            id: invalid_user_assignment.id
+            id: UserAssignment.last.id
           ),
           params: request_body.to_json,
           headers: @valid_headers
