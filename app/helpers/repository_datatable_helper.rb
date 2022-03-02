@@ -69,7 +69,8 @@ module RepositoryDatatableHelper
           ),
           value: {
             consumed_stock: record.consumed_stock,
-            consumed_stock_formatted: "#{record.consumed_stock} #{record.repository_stock_value&.repository_stock_unit_item&.data}",
+            consumed_stock_formatted:
+              "#{record.consumed_stock} #{record.repository_stock_value&.repository_stock_unit_item&.data}",
             unit: record.repository_stock_value&.repository_stock_unit_item&.data
           }
         }
