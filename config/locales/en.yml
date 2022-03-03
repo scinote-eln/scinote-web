@@ -982,7 +982,7 @@ en:
       export: 'Export'
       full_view:
         modal_live_header: ': Live version'
-        modal_snapshot_header: ': Snapshot of %{snaphot_date}'
+        modal_snapshot_header: ': Snapshot of %{snapshot_date}'
         assign_modal_header: 'Assign from %{repository_name} inventory'
       snapshots:
         simple_view:
