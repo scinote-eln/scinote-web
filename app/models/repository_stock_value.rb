@@ -16,6 +16,12 @@ class RepositoryStockValue < ApplicationRecord
     "#{amount} #{repository_stock_unit_item&.data}"
   end
 
+  def low_stock?
+    return false unless low_stock_threshold
+
+    amount <= low_stock_threshold
+  end
+
   def data_changed?(new_data)
     BigDecimal(new_data.to_s) != data
   end

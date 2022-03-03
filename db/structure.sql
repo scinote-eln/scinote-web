@@ -50,8 +50,6 @@ CREATE FUNCTION public.trim_html_tags(input text, OUT output text) RETURNS text
 
 SET default_tablespace = '';
 
-SET default_table_access_method = heap;
-
 --
 -- Name: active_storage_attachments; Type: TABLE; Schema: public; Owner: -
 --
@@ -706,7 +704,8 @@ CREATE TABLE public.my_module_repository_rows (
     assigned_by_id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    stock_consumption numeric
+    stock_consumption numeric,
+    repository_stock_unit_item_id bigint
 );
 
 
@@ -2048,11 +2047,13 @@ ALTER SEQUENCE public.repository_stock_unit_items_id_seq OWNED BY public.reposit
 CREATE TABLE public.repository_stock_values (
     id bigint NOT NULL,
     amount numeric,
-    units character varying,
+    repository_stock_unit_item_id bigint,
+    type character varying,
     last_modified_by_id bigint,
     created_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    low_stock_threshold numeric
 );
 
 
@@ -5094,6 +5095,13 @@ CREATE INDEX index_on_repository_checklist_value_id ON public.repository_checkli
 
 
 --
+-- Name: index_on_repository_stock_unit_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_on_repository_stock_unit_item_id ON public.my_module_repository_rows USING btree (repository_stock_unit_item_id);
+
+
+--
 -- Name: index_project_folders_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5801,6 +5809,13 @@ CREATE INDEX index_repository_stock_values_on_last_modified_by_id ON public.repo
 
 
 --
+-- Name: index_repository_stock_values_on_repository_stock_unit_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_stock_values_on_repository_stock_unit_item_id ON public.repository_stock_values USING btree (repository_stock_unit_item_id);
+
+
+--
 -- Name: index_repository_table_states_on_repository_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6457,6 +6472,14 @@ ALTER TABLE ONLY public.repository_ledger_records
 
 
 --
+-- Name: repository_stock_values fk_rails_08ce900341; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_values
+    ADD CONSTRAINT fk_rails_08ce900341 FOREIGN KEY (repository_stock_unit_item_id) REFERENCES public.repository_stock_unit_items(id);
+
+
+--
 -- Name: assets fk_rails_0916329f9e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6934,6 +6957,14 @@ ALTER TABLE ONLY public.project_folders
 
 ALTER TABLE ONLY public.results
     ADD CONSTRAINT fk_rails_79fcaa8e37 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: my_module_repository_rows fk_rails_7b302dfece; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_repository_rows
+    ADD CONSTRAINT fk_rails_7b302dfece FOREIGN KEY (repository_stock_unit_item_id) REFERENCES public.repository_stock_unit_items(id);
 
 
 --
@@ -7971,7 +8002,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210811103123'),
 ('20210906132120'),
 ('20211103115450'),
+('20220110151005'),
 ('20220110151006'),
-('20220117103522');
+('20220224153705');
 
 
