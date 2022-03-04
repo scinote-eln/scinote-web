@@ -42,4 +42,29 @@
       padding: 1em;
     }
   }
+
+  .stock-comment-field {
+    margin-bottom: 1.25em;
+  }
+
+  .repository-stock-reminder-selector {
+    align-items: center;
+    display: flex;
+    margin-bottom: 1.25em;
+
+    .sci-checkbox-container {
+      margin-right: .5em;
+    }
+  }
+
+  .repository-stock-reminder-value {
+    align-items: center;
+    display: flex;
+    margin-bottom: 1.25em;
+
+    .sci-input-container {
+      flex-basis: 160px;
+      margin: 0 .5em;
+    }
+  }
 }

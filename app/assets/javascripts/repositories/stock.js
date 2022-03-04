@@ -1,4 +1,4 @@
-/* global dropdownSelector GLOBAL_CONSTANTS */
+/* global dropdownSelector GLOBAL_CONSTANTS I18n */
 
 var RepositoryStockValues = (function() {
   const UNIT_SELECTOR = '#repository-stock-value-units';
@@ -19,6 +19,11 @@ var RepositoryStockValues = (function() {
             selectAppearance: 'simple',
             onChange: function() {
               $('.stock-final-container .units').text(dropdownSelector.getLabels(UNIT_SELECTOR));
+              $('.repository-stock-reminder-value .units').text(
+                I18n.t('repository_stock_values.manage_modal.units_remaining', {
+                  unit: dropdownSelector.getLabels(UNIT_SELECTOR)
+                })
+              );
             }
           });
 
@@ -64,6 +69,19 @@ var RepositoryStockValues = (function() {
               'disabled',
               this.value.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH
             );
+          });
+
+          $('#reminder-selector-checkbox').on('change', function() {
+            $('.repository-stock-reminder-value').toggleClass('hidden', !this.checked);
+            $('.repository-stock-reminder-value').find('input').attr('required', this.checked);
+            if (!this.checked) {
+              $('.repository-stock-reminder-value').find('input').val(null);
+            }
+          });
+
+          $('.update-repository-stock').on('click', function() {
+            let reminderError = $('#reminder-selector-checkbox')[0].checked && $('.repository-stock-reminder-value').find('input').val() === '';
+            $('.repository-stock-reminder-value').find('.sci-input-container').toggleClass('error', reminderError);
           });
 
           $('#stock-input-amount').on('input', function() {
