@@ -33,10 +33,6 @@ var RepositoryColumns = (function() {
       $(response.html).appendTo($('.repository-show'));
       RepositoryDatatable.init('#' + $('.repository-table table').attr('id'));
       RepositoryDatatable.redrawTableOnSidebarToggle();
-      // show manage columns index modal
-      setTimeout(function() {
-        $(manageModal).find('.back-to-column-modal').trigger('click');
-      }, 500);
     });
   }
 
