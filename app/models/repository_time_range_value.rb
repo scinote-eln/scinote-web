@@ -17,22 +17,23 @@ class RepositoryTimeRangeValue < RepositoryDateTimeRangeValueBase
     parameters = filter_element.parameters
     case filter_element.operator
     when 'equal_to'
-      repository_rows.where("#{join_alias}.start_time::time = ? AND #{join_alias}.end_time::time = ?",
-                            Time.zone.parse(parameters['start_time']), Time.zone.parse(parameters['end_time']))
+      repository_rows.where("#{join_alias}.start_time::time = (?)::time AND #{join_alias}.end_time::time = (?)::time",
+                            parameters['start_time'], parameters['end_time'])
     when 'unequal_to'
-      repository_rows.where.not("#{join_alias}.start_time::time = ? AND #{join_alias}.end_time::time = ?",
-                                Time.zone.parse(parameters['start_time']), Time.zone.parse(parameters['end_time']))
+      repository_rows
+        .where.not("#{join_alias}.start_time::time = (?)::time AND #{join_alias}.end_time::time = (?)::time",
+                   parameters['start_time'], parameters['end_time'])
     when 'greater_than'
-      repository_rows.where("#{join_alias}.start_time::time > ?", Time.zone.parse(parameters['end_time']))
+      repository_rows.where("#{join_alias}.start_time::time > (?)::time", parameters['end_time'])
     when 'greater_than_or_equal_to'
-      repository_rows.where("#{join_alias}.start_time::time >= ?", Time.zone.parse(parameters['end_time']))
+      repository_rows.where("#{join_alias}.start_time::time >= (?)::time", parameters['end_time'])
     when 'less_than'
-      repository_rows.where("#{join_alias}.end_time::time < ?", Time.zone.parse(parameters['start_time']))
+      repository_rows.where("#{join_alias}.end_time::time < (?)::time", parameters['start_time'])
     when 'less_than_or_equal_to'
-      repository_rows.where("#{join_alias}.end_time::time <= ?", Time.zone.parse(parameters['start_time']))
+      repository_rows.where("#{join_alias}.end_time::time <= (?)::time", parameters['start_time'])
     when 'between'
-      repository_rows.where("#{join_alias}.start_time::time > ? AND #{join_alias}.end_time::time < ?",
-                            Time.zone.parse(parameters['start_time']), Time.zone.parse(parameters['end_time']))
+      repository_rows.where("#{join_alias}.start_time::time > (?)::time AND #{join_alias}.end_time::time < (?)::time",
+                            parameters['start_time'], parameters['end_time'])
     else
       raise ArgumentError, 'Wrong operator for RepositoryTimeRangeValue!'
     end
