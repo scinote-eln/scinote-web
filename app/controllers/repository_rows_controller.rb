@@ -206,7 +206,7 @@ class RepositoryRowsController < ApplicationController
       render json: { no_items: no_items_string },
                    status: :ok
     else
-      render json: { results: load_available_rows(search_params[:q]) },
+      render json: { results: load_available_rows },
                    status: :ok
     end
   end
