@@ -431,7 +431,7 @@ var RepositoryDatatable = (function(global) {
         className: 'assigned-column',
         sWidth: '1%',
         render: function(data, type, row) {
-          let content = $.fn.dataTable.render.AssignedTasksValue(data);
+          let content = $.fn.dataTable.render.AssignedTasksValue(data, row);
           let icon;
           if (!row.recordEditable) {
             icon = `<i class="repository-row-lock-icon fas fa-lock" title="${I18n.t('repositories.table.locked_item')}"></i>`;

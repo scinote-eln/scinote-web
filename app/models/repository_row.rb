@@ -86,7 +86,9 @@ class RepositoryRow < ApplicationRecord
   scope :archived, -> { where(archived: true) }
 
   scope :with_active_reminders, lambda {
-    joins(:repository_cells).where(repository_cells: { id: RepositoryCell.with_active_reminder.select(:id) })
+    joins(:repository_cells).where(
+      repository_cells: { id: RepositoryCell.with_active_reminder.select(:id) }
+    ).distinct
   }
 
   def code

@@ -104,8 +104,8 @@ var MyModuleRepositories = (function() {
         searchable: false,
         className: 'assigned-column',
         sWidth: '1%',
-        render: function(data) {
-          return $.fn.dataTable.render.AssignedTasksValue(data);
+        render: function(data, type, row) {
+          return $.fn.dataTable.render.AssignedTasksValue(data, row);
         }
       }, {
         targets: 3,

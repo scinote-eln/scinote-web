@@ -157,14 +157,16 @@ $.fn.dataTable.render.RepositoryNumberValue = function(data) {
           </span>`;
 };
 
-$.fn.dataTable.render.AssignedTasksValue = function(data) {
+$.fn.dataTable.render.AssignedTasksValue = function(data, row) {
+  let tasksLinkHTML;
+
   if (data.tasks > 0) {
     let tooltip = I18n.t('repositories.table.assigned_tooltip', {
       tasks: data.tasks,
       experiments: data.experiments,
       projects: data.projects
     });
-    return `<div class="assign-counter-container dropdown" title="${tooltip}"
+    tasksLinkHTML = `<div class="assign-counter-container dropdown" title="${tooltip}"
             data-task-list-url="${data.task_list_url}">
               <a href="#" class="assign-counter has-assigned"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">${data.tasks}</a>
@@ -177,8 +179,16 @@ $.fn.dataTable.render.AssignedTasksValue = function(data) {
                 <div class="tasks"></div>
               </div>
             </div>`;
+  } else {
+    tasksLinkHTML = "<div class='assign-counter-container'><span class='assign-counter'>0</span></div>";
   }
-  return "<div class='assign-counter-container'><span class='assign-counter'>0</span></div>";
+
+  if (row.hasActiveReminders) {
+    return `<i class="fas fa-bell row-reminders-icon" data-row-reminders-url="${row.rowRemindersUrl}"></i>`
+      + tasksLinkHTML;
+  }
+
+  return tasksLinkHTML;
 };
 
 $.fn.dataTable.render.RepositoryStockValue = function(data, row) {
