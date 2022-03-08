@@ -590,6 +590,9 @@ var RepositoryDatatable = (function(global) {
           rowsLocked.push(parseInt($(e).attr('id'), 10));
         });
 
+        // go back to manage columns index in modal, on column save, after table loads
+        $('#manage-repository-column .back-to-column-modal').trigger('click');
+
         initAssignedTasksDropdown(TABLE_ID);
         renderFiltersDropdown();
         setTimeout(function() {
