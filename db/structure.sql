@@ -1336,133 +1336,6 @@ ALTER SEQUENCE public.protocols_id_seq OWNED BY public.protocols.id;
 
 
 --
--- Name: rap_program_levels; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.rap_program_levels (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: rap_program_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.rap_program_levels_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: rap_program_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.rap_program_levels_id_seq OWNED BY public.rap_program_levels.id;
-
-
---
--- Name: rap_project_levels; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.rap_project_levels (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    rap_topic_level_id bigint,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: rap_project_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.rap_project_levels_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: rap_project_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.rap_project_levels_id_seq OWNED BY public.rap_project_levels.id;
-
-
---
--- Name: rap_task_levels; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.rap_task_levels (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    rap_project_level_id bigint,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: rap_task_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.rap_task_levels_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: rap_task_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.rap_task_levels_id_seq OWNED BY public.rap_task_levels.id;
-
-
---
--- Name: rap_topic_levels; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.rap_topic_levels (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    rap_program_level_id bigint,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: rap_topic_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.rap_topic_levels_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: rap_topic_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.rap_topic_levels_id_seq OWNED BY public.rap_topic_levels.id;
-
-
---
 -- Name: report_elements; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1837,7 +1710,9 @@ CREATE TABLE public.repository_date_time_range_values (
     created_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    type character varying
+    type character varying,
+    start_time_dup timestamp without time zone,
+    end_time_dup timestamp without time zone
 );
 
 
@@ -1871,7 +1746,8 @@ CREATE TABLE public.repository_date_time_values (
     updated_at timestamp without time zone,
     created_by_id bigint NOT NULL,
     last_modified_by_id bigint NOT NULL,
-    type character varying
+    type character varying,
+    data_dup timestamp without time zone
 );
 
 
@@ -3521,34 +3397,6 @@ ALTER TABLE ONLY public.protocols ALTER COLUMN id SET DEFAULT nextval('public.pr
 
 
 --
--- Name: rap_program_levels id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_program_levels ALTER COLUMN id SET DEFAULT nextval('public.rap_program_levels_id_seq'::regclass);
-
-
---
--- Name: rap_project_levels id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_project_levels ALTER COLUMN id SET DEFAULT nextval('public.rap_project_levels_id_seq'::regclass);
-
-
---
--- Name: rap_task_levels id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_task_levels ALTER COLUMN id SET DEFAULT nextval('public.rap_task_levels_id_seq'::regclass);
-
-
---
--- Name: rap_topic_levels id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_topic_levels ALTER COLUMN id SET DEFAULT nextval('public.rap_topic_levels_id_seq'::regclass);
-
-
---
 -- Name: report_elements id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4197,38 +4045,6 @@ ALTER TABLE ONLY public.protocol_protocol_keywords
 
 ALTER TABLE ONLY public.protocols
     ADD CONSTRAINT protocols_pkey PRIMARY KEY (id);
-
-
---
--- Name: rap_program_levels rap_program_levels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_program_levels
-    ADD CONSTRAINT rap_program_levels_pkey PRIMARY KEY (id);
-
-
---
--- Name: rap_project_levels rap_project_levels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_project_levels
-    ADD CONSTRAINT rap_project_levels_pkey PRIMARY KEY (id);
-
-
---
--- Name: rap_task_levels rap_task_levels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_task_levels
-    ADD CONSTRAINT rap_task_levels_pkey PRIMARY KEY (id);
-
-
---
--- Name: rap_topic_levels rap_topic_levels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_topic_levels
-    ADD CONSTRAINT rap_topic_levels_pkey PRIMARY KEY (id);
 
 
 --
@@ -5413,55 +5229,6 @@ CREATE INDEX index_protocols_on_team_id ON public.protocols USING btree (team_id
 
 
 --
--- Name: index_rap_program_levels_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_rap_program_levels_on_name ON public.rap_program_levels USING btree (name);
-
-
---
--- Name: index_rap_project_levels_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_rap_project_levels_on_name ON public.rap_project_levels USING btree (name);
-
-
---
--- Name: index_rap_project_levels_on_rap_topic_level_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_rap_project_levels_on_rap_topic_level_id ON public.rap_project_levels USING btree (rap_topic_level_id);
-
-
---
--- Name: index_rap_task_levels_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_rap_task_levels_on_name ON public.rap_task_levels USING btree (name);
-
-
---
--- Name: index_rap_task_levels_on_rap_project_level_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_rap_task_levels_on_rap_project_level_id ON public.rap_task_levels USING btree (rap_project_level_id);
-
-
---
--- Name: index_rap_topic_levels_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_rap_topic_levels_on_name ON public.rap_topic_levels USING btree (name);
-
-
---
--- Name: index_rap_topic_levels_on_rap_program_level_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_rap_topic_levels_on_rap_program_level_id ON public.rap_topic_levels USING btree (rap_program_level_id);
-
-
---
 -- Name: index_report_elements_on_asset_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5742,10 +5509,24 @@ CREATE INDEX index_repository_date_time_range_values_on_created_by_id ON public.
 
 
 --
--- Name: index_repository_date_time_range_values_on_end_time; Type: INDEX; Schema: public; Owner: -
+-- Name: index_repository_date_time_range_values_on_end_time_as_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_repository_date_time_range_values_on_end_time ON public.repository_date_time_range_values USING btree (end_time);
+CREATE INDEX index_repository_date_time_range_values_on_end_time_as_date ON public.repository_date_time_range_values USING btree (((end_time)::date)) WHERE ((type)::text = 'RepositoryDateRangeValue'::text);
+
+
+--
+-- Name: index_repository_date_time_range_values_on_end_time_as_date_tim; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_range_values_on_end_time_as_date_tim ON public.repository_date_time_range_values USING btree (end_time) WHERE ((type)::text = 'RepositoryDateTimeRangeValue'::text);
+
+
+--
+-- Name: index_repository_date_time_range_values_on_end_time_as_time; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_range_values_on_end_time_as_time ON public.repository_date_time_range_values USING btree (((end_time)::time without time zone)) WHERE ((type)::text = 'RepositoryTimeRangeValue'::text);
 
 
 --
@@ -5756,10 +5537,45 @@ CREATE INDEX index_repository_date_time_range_values_on_last_modified_by_id ON p
 
 
 --
--- Name: index_repository_date_time_range_values_on_start_time; Type: INDEX; Schema: public; Owner: -
+-- Name: index_repository_date_time_range_values_on_start_time_as_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_repository_date_time_range_values_on_start_time ON public.repository_date_time_range_values USING btree (start_time);
+CREATE INDEX index_repository_date_time_range_values_on_start_time_as_date ON public.repository_date_time_range_values USING btree (((start_time)::date)) WHERE ((type)::text = 'RepositoryDateRangeValue'::text);
+
+
+--
+-- Name: index_repository_date_time_range_values_on_start_time_as_date_t; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_range_values_on_start_time_as_date_t ON public.repository_date_time_range_values USING btree (start_time) WHERE ((type)::text = 'RepositoryDateTimeRangeValue'::text);
+
+
+--
+-- Name: index_repository_date_time_range_values_on_start_time_as_time; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_range_values_on_start_time_as_time ON public.repository_date_time_range_values USING btree (((start_time)::time without time zone)) WHERE ((type)::text = 'RepositoryTimeRangeValue'::text);
+
+
+--
+-- Name: index_repository_date_time_values_on_data_as_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_values_on_data_as_date ON public.repository_date_time_values USING btree (((data)::date)) WHERE ((type)::text = 'RepositoryDateValue'::text);
+
+
+--
+-- Name: index_repository_date_time_values_on_data_as_date_time; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_values_on_data_as_date_time ON public.repository_date_time_values USING btree (data) WHERE ((type)::text = 'RepositoryDateTimeValue'::text);
+
+
+--
+-- Name: index_repository_date_time_values_on_data_as_time; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_values_on_data_as_time ON public.repository_date_time_values USING btree (((data)::time without time zone)) WHERE ((type)::text = 'RepositoryTimeValue'::text);
 
 
 --
@@ -5844,6 +5660,20 @@ CREATE INDEX index_repository_number_values_on_last_modified_by_id ON public.rep
 --
 
 CREATE INDEX index_repository_rows_on_archived_by_id ON public.repository_rows USING btree (archived_by_id);
+
+
+--
+-- Name: index_repository_rows_on_archived_on_as_date_time_minutes; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_rows_on_archived_on_as_date_time_minutes ON public.repository_rows USING btree (date_trunc('minute'::text, archived_on));
+
+
+--
+-- Name: index_repository_rows_on_created_at_as_date_time_minutes; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_rows_on_created_at_as_date_time_minutes ON public.repository_rows USING btree (date_trunc('minute'::text, created_at));
 
 
 --
@@ -6847,14 +6677,6 @@ ALTER TABLE ONLY public.report_template_values
 
 
 --
--- Name: rap_topic_levels fk_rails_474c9b818d; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_topic_levels
-    ADD CONSTRAINT fk_rails_474c9b818d FOREIGN KEY (rap_program_level_id) REFERENCES public.rap_program_levels(id);
-
-
---
 -- Name: my_modules fk_rails_4768515e2e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6964,14 +6786,6 @@ ALTER TABLE ONLY public.user_teams
 
 ALTER TABLE ONLY public.repository_checklist_items
     ADD CONSTRAINT fk_rails_664f0498be FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
-
-
---
--- Name: rap_task_levels fk_rails_68120f8d8c; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_task_levels
-    ADD CONSTRAINT fk_rails_68120f8d8c FOREIGN KEY (rap_project_level_id) REFERENCES public.rap_project_levels(id);
 
 
 --
@@ -7156,14 +6970,6 @@ ALTER TABLE ONLY public.checklists
 
 ALTER TABLE ONLY public.report_elements
     ADD CONSTRAINT fk_rails_831f89b951 FOREIGN KEY (checklist_id) REFERENCES public.checklists(id);
-
-
---
--- Name: rap_project_levels fk_rails_83bc72d987; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.rap_project_levels
-    ADD CONSTRAINT fk_rails_83bc72d987 FOREIGN KEY (rap_topic_level_id) REFERENCES public.rap_topic_levels(id);
 
 
 --
@@ -8133,6 +7939,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210906132120'),
 ('20211103115450'),
 ('20211123103711'),
-('20220216205001');
+('20220203122802'),
+('20220216205001'),
+('20220217104635');
 
 

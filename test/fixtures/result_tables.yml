@@ -1,7 +1,0 @@
-one:
-  result: three
-  table: one
-
-test:
-  result: test
-  table: test

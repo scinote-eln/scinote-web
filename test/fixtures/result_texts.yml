@@ -1,7 +1,0 @@
-one:
-  text: This is an example result text.
-  result: one
-
-test:
-  text: This is a test result text.
-  result: test
