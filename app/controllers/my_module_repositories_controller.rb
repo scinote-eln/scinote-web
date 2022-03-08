@@ -162,6 +162,8 @@ class MyModuleRepositoriesController < ApplicationController
     module_repository_row.with_lock do
       module_repository_row.assign_attributes(
         stock_consumption: params[:stock_consumption],
+        repository_stock_unit_item_id:
+          module_repository_row.repository_row.repository_stock_value.repository_stock_unit_item_id,
         last_modified_by: current_user,
         comment: params[:comment]
       )

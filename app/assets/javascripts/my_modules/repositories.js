@@ -11,7 +11,7 @@ var MyModuleRepositories = (function() {
   var FULL_VIEW_TABLE_SCROLLBAR;
   var SELECTED_ROWS = {};
 
-  function stockManagementColumns(otherColumnCount) {
+  function stockManagementColumns() {
     return [
       {
         visible: true,
@@ -65,17 +65,20 @@ var MyModuleRepositories = (function() {
       columns[i].defaultContent = '';
       if (skipCheckbox && i === 0) columns[i].visible = false;
     }
+
     customColumns.each((i, column) => {
-      columns.push({
-        visible: true,
-        searchable: true,
-        data: String(columns.length),
-        defaultContent: $.fn.dataTable.render['default' + column.dataset.type](column.id)
-      });
+      if (!$(column).hasClass('item-stock')) {
+        columns.push({
+          visible: true,
+          searchable: true,
+          data: String(columns.length),
+          defaultContent: $.fn.dataTable.render['default' + column.dataset.type](column.id)
+        });
+      }
     });
 
     if ($(tableContainer).data('stock-management')) {
-      columns.push(stockManagementColumns(columns.length)[1]);
+      columns = columns.concat(stockManagementColumns());
     }
 
     return columns;
@@ -121,6 +124,9 @@ var MyModuleRepositories = (function() {
       });
     }
 
+    if ($(tableContainer).data('stock-management')) {
+      columnDefs = columnDefs.concat(stockManagementColumnDefs());
+    }
 
     columnDefs.push(
       {
@@ -137,11 +143,6 @@ var MyModuleRepositories = (function() {
       }
     );
 
-    if ($(tableContainer).data('stock-management')) {
-      let stockColumnDef = stockManagementColumnDefs()[1];
-      columnDefs.push(stockColumnDef);
-    }
-
     return columnDefs;
   }
 
@@ -155,7 +156,7 @@ var MyModuleRepositories = (function() {
     ];
 
     if ($(tableContainer).data('stock-management')) {
-      columns = columns.concat(stockManagementColumns(columns.length));
+      columns = columns.concat(stockManagementColumns());
     }
 
     return columns;
