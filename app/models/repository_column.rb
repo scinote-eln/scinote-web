@@ -25,6 +25,8 @@ class RepositoryColumn < ApplicationRecord
 
   enum data_type: Extends::REPOSITORY_DATA_TYPES
 
+  store_accessor :metadata, %i(reminder_delta)
+
   validates :data_type, uniqueness: { if: :repository_stock_value?, scope: :repository_id }
   validates :data_type, uniqueness: { if: :repository_stock_consumption_value?, scope: :repository_id }
 
