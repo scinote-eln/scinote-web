@@ -59,12 +59,12 @@
     <% end %>
 
     <% step.tables.each do |table| %>
-      <strong>
-        <%= auto_link(simple_format(table.name),
-                            link: :urls,
-                            html: { target: '_blank' }) %>
-      </strong>
       <div class="print-table">
+        <strong>
+          <%= auto_link(simple_format(table.name),
+                              link: :urls,
+                              html: { target: '_blank' }) %>
+        </strong>
         <div class="page-break"></div>
         <div data-role="hot-table" class="hot-table">
           <%= hidden_field(table, :contents, value: table.contents_utf_8, class: "hot-contents") %>
