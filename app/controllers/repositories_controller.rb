@@ -16,7 +16,8 @@ class RepositoriesController < ApplicationController
   before_action :load_repositories_for_restoring, only: :restore
   before_action :check_view_all_permissions, only: %i(index sidebar)
   before_action :check_view_permissions, except: %i(index create_modal create update destroy parse_sheet import_records sidebar archive restore)
-  before_action :check_manage_permissions, only: %i(destroy destroy_modal rename_modal update)
+  before_action :check_manage_permissions, only: %i(rename_modal update)
+  before_action :check_delete_permissions, only: %i(destroy destroy_modal)
   before_action :check_archive_permissions, only: %i(archive restore)
   before_action :check_share_permissions, only: :share_modal
   before_action :check_create_permissions, only: %i(create_modal create)
@@ -462,6 +463,10 @@ class RepositoriesController < ApplicationController
     @repositories.each do |repository|
       return render_403 unless can_archive_repository?(repository)
     end
+  end
+
+  def check_delete_permissions
+    render_403 unless can_delete_repository?(@repository)
   end
 
   def check_share_permissions

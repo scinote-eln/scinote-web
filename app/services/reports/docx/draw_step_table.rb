@@ -1,28 +1,7 @@
 # frozen_string_literal: true
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 module Reports::Docx::DrawStepTable
-<<<<<<< HEAD
-<<<<<<< HEAD
   def draw_step_table(table)
-=======
-module DrawStepTable
-=======
-module Reports::Docx::DrawStepTable
->>>>>>> Initial commit of 1.17.2 merge
-  def draw_step_table(subject)
-    table = Table.find_by_id(subject['id']['table_id'])
-=======
-  def draw_step_table(subject, step)
-    table = step.tables.find_by(id: subject['id']['table_id'])
->>>>>>> Pulled latest release
-    return unless table
-
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-  def draw_step_table(table)
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     color = @color
     timestamp = table.created_at
     @docx.p

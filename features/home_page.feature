@@ -132,15 +132,7 @@ Feature: Home page
     And I click element with css "html body.modal-open div#content-wrapper div#wrapper.container-fluid div#fluid-content.container-fluid div#new-project-modal.modal.in form#new_project.new_project div.modal-dialog div.modal-content div.modal-footer input.btn.btn-primary"
     And I click element with css ".fa-users"
     And I click element with css ".manage-users-link"
-<<<<<<< HEAD
-<<<<<<< HEAD
     And I click element with css "#manageProjectUsersModal > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > span:nth-child(1) > a:nth-child(1)"
-=======
-    And I click element with css "#project-actions-modal > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > span:nth-child(1) > a:nth-child(1)"
->>>>>>> Pulled latest release
-=======
-    And I click element with css "#manageProjectUsersModal > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > span:nth-child(1) > a:nth-child(1)"
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     And I click element with css ".dropdown-teams-user"
     And I click element with css ".open > ul:nth-child(2) > li:nth-child(7) > a:nth-child(1)"
     And I click "Remove" button

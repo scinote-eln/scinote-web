@@ -11,15 +11,7 @@ module Repositories
 
           log_activity(:restore_inventory, repository)
         end
-<<<<<<< HEAD
-<<<<<<< HEAD
       rescue ActiveRecord::RecordInvalid
-=======
-      rescue ActiveRecord::RecordNotSaved
->>>>>>> Pulled latest release
-=======
-      rescue ActiveRecord::RecordInvalid
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
         @errors[:restoring_error] = I18n.t('repositories.restore_inventories.unsuccess_flash')
         raise ActiveRecord::Rollback
       end

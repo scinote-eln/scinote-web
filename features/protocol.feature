@@ -13,15 +13,7 @@ Given default screen size2
      | name        | email              | password       | password_confirmation |
      | Karli Novak | nonadmin@myorg.com | mypassword1234 | mypassword1234 |
   And "nonadmin@myorg.com" is in "BioSistemika Process" team as a "admin"
-<<<<<<< HEAD
-<<<<<<< HEAD
   Given Templates project exists for the "BioSistemika Process" team
-=======
-  Given Demo project exists for the "BioSistemika Process" team
->>>>>>> Pulled latest release
-=======
-  Given Templates project exists for the "BioSistemika Process" team
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   And "nonadmin@myorg.com" is signed in with "mypassword1234"
 
  @javascript

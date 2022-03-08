@@ -1,16 +1,7 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 // scss-lint:disable SelectorDepth, NestingDepth, ImportantRule
 
 @import "constants";
 
-<<<<<<< HEAD
-=======
->>>>>>> Pulled latest release
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 .sci-dropdown {
   [data-toggle="dropdown"] {
     &:focus {
@@ -46,8 +37,6 @@
       }
     }
   }
-<<<<<<< HEAD
-<<<<<<< HEAD
 }
 
 .dropdown-menu {
@@ -108,69 +97,4 @@
       }
     }
   }
-=======
-
->>>>>>> Pulled latest release
-=======
-}
-
-.dropdown-menu {
-  .form-dropdown-break hr {
-    margin: 0;
-  }
-
-  .form-dropdown-item {
-    padding: 0 !important;
-
-    button,
-    .form-dropdown-item-info {
-      border-radius: 0;
-      padding-left: .9em;
-      text-align: left;
-      width: 100%;
-    }
-
-    button {
-      color: $color-black !important;
-    }
-
-    .form-dropdown-item-info {
-      color: $color-silver-chalice !important;
-      border-top: 1px solid $color-concrete;
-      padding-top: .3em;
-    }
-
-    &:only-child .form-dropdown-item-info {
-      border-top: 0;
-      padding-top: 0;
-    }
-
-    .project-archive-restore-form {
-      .button-to {
-        &:hover {
-          background-color: $color-dd-hover !important;
-        }
-      }
-    }
-
-    .change-projects-view-type-form,
-    .change-experiments-view-type-form {
-      .button-to {
-        float: unset !important;
-        height: 48px;
-        margin: 0;
-
-        &:active {
-          background-color: inherit;
-        }
-
-        &.selected::after {
-          @include font-awesome;
-          content: $font-fas-check;
-          float: right;
-        }
-      }
-    }
-  }
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 }

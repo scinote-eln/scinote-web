@@ -186,3 +186,21 @@
 [2018-03-04 18:16:18 +0000 f06b30ec7389 (12)] ERROR : Invalid license key, please contact support@newrelic.com
 [2018-03-04 18:16:18 +0000 f06b30ec7389 (12)] ERROR : Visit NewRelic.com to obtain a valid license key, or to upgrade your account.
 [2018-03-04 18:20:33 +0000 f06b30ec7389 (12)] INFO : Starting Agent shutdown
+[2022-03-08 17:49:32 +0000 6c56ea62dbde (1)] INFO : Starting the New Relic agent version 6.15.0 in "development" environment.
+[2022-03-08 17:49:32 +0000 6c56ea62dbde (1)] INFO : To prevent agent startup add a NEW_RELIC_AGENT_ENABLED=false environment variable or modify the "development" section of your newrelic.yml.
+[2022-03-08 17:49:32 +0000 6c56ea62dbde (1)] INFO : Reading configuration from config/newrelic.yml (/usr/src/app)
+[2022-03-08 17:49:32 +0000 6c56ea62dbde (1)] INFO : Environment: development
+[2022-03-08 17:49:32 +0000 6c56ea62dbde (1)] INFO : No known dispatcher detected.
+[2022-03-08 17:49:32 +0000 6c56ea62dbde (1)] INFO : Application: SciNote (Development)
+[2022-03-08 17:49:32 +0000 6c56ea62dbde (1)] WARN : No license key found. This often means your newrelic.yml file was not found, or it lacks a section for the running environment, 'development'. You may also want to try linting your newrelic.yml to ensure it is valid YML.
+[2022-03-08 17:49:32 +0000 6c56ea62dbde (1)] INFO : Installing notifications based Active Record instrumentation
+[2022-03-08 17:49:32 +0000 6c56ea62dbde (1)] INFO : Installing Net instrumentation
+[2022-03-08 17:49:32 +0000 6c56ea62dbde (1)] INFO : Installing Rails 3+ middleware instrumentation
+[2022-03-08 17:49:32 +0000 6c56ea62dbde (1)] INFO : Installing DelayedJob instrumentation [part 1/2]
+[2022-03-08 17:49:32 +0000 6c56ea62dbde (1)] INFO : Installing ActiveJob instrumentation
+[2022-03-08 17:49:32 +0000 6c56ea62dbde (1)] INFO : Installing deferred Rack::Builder instrumentation
+[2022-03-08 17:49:32 +0000 6c56ea62dbde (1)] INFO : Installing Rack::Builder middleware instrumentation
+[2022-03-08 17:49:32 +0000 6c56ea62dbde (1)] INFO : Installing ActiveStorage 5 instrumentation
+[2022-03-08 17:49:32 +0000 6c56ea62dbde (1)] INFO : Installing notifications based Action Controller instrumentation
+[2022-03-08 17:49:32 +0000 6c56ea62dbde (1)] INFO : Installing notification based Action View instrumentation
+[2022-03-08 17:49:32 +0000 6c56ea62dbde (1)] INFO : Finished instrumentation

@@ -2,13 +2,6 @@
 
 module ProtocolImporters
   class BuildProtocolFromClientService
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    require 'protocol_importers/protocols_io/v3/errors'
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
->>>>>>> Initial commit of 1.17.2 merge
     extend Service
 
     attr_reader :errors, :built_protocol, :steps_assets
@@ -54,13 +47,6 @@ module ProtocolImporters
       # Serialize steps with nested attributes for Tables and NOT nasted attributes for Assets
       # We want to avoid creating (downloading) Assets instances on building first time and again on importing/creating,
       # when both actions are not in a row.
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-      # Also serialization does not work properly with paperclip attrs
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
->>>>>>> Initial commit of 1.17.2 merge
       return nil unless built_protocol
 
       built_protocol.steps.map do |step|

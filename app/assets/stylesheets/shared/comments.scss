@@ -39,14 +39,7 @@
       }
 
       .comment-message {
-<<<<<<< HEAD
-<<<<<<< HEAD
         @include font-main;
-=======
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-        @include font-main;
->>>>>>> Pulled latest release
         float: left;
         width: 100%;
 
@@ -201,15 +194,7 @@
       }
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     &.error {
-=======
-    &[data-error="true"] {
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-    &.error {
->>>>>>> Pulled latest release
 
       .error-block {
         display: block;
@@ -234,21 +219,10 @@
 
     textarea {
       border: 1px solid transparent;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Pulled latest release
       border-radius: $border-radius-default;
       box-shadow: none;
       outline: none;
       overflow: hidden;
-<<<<<<< HEAD
-=======
-      box-shadow: none;
-      outline: none;
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
->>>>>>> Pulled latest release
       width: 100%;
 
       &:focus {
@@ -274,15 +248,7 @@
       padding: 4px;
       position: absolute;
       right: -36px;
-<<<<<<< HEAD
-<<<<<<< HEAD
       text-align: center;
-=======
-      text-align: center; 
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-      text-align: center;
->>>>>>> Pulled latest release
       top: 0;
       transition: $md-transaction;
       width: 26px;

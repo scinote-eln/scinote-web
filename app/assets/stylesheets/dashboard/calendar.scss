@@ -5,13 +5,6 @@
 
 .dashboard-container .calendar-widget {
   --calendar-day-size: 32px;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  min-height: 320px;
->>>>>>> Pulled latest release
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
   .dashboard-calendar {
     height: 100%;
@@ -46,21 +39,9 @@
       flex-basis: calc(100% - 42px);
       flex-grow: 1;
       grid-column-gap: 6px;
-<<<<<<< HEAD
-<<<<<<< HEAD
       grid-row-gap: 2px;
       grid-template-columns: repeat(7, 1fr);
       grid-template-rows: repeat(auto-fit, minmax(1em, 1fr));
-=======
-      grid-row-gap: 6px;
-      grid-template-columns: repeat(7, 1fr);
-      grid-template-rows: repeat(7, 1fr);
->>>>>>> Pulled latest release
-=======
-      grid-row-gap: 2px;
-      grid-template-columns: repeat(7, 1fr);
-      grid-template-rows: repeat(auto-fit, minmax(1em, 1fr));
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
       justify-items: center;
       padding: 6px;
 
@@ -104,30 +85,10 @@
             }
           }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
           &::after {
             @include red-dot;
             right: calc((var(--calendar-day-size) / 2) - 4px);
             top: calc((var(--calendar-day-size) / 2) + 6px);
-=======
-
-          &::after {
-            background: $brand-danger;
-            border-radius: 50%;
-            content: "";
-            height: 4px;
-            left: calc((var(--calendar-day-size) / 2) - 2px);
-            position: absolute;
-            top: calc((var(--calendar-day-size) / 2) + 8px);
-            width: 4px;
->>>>>>> Pulled latest release
-=======
-          &::after {
-            @include red-dot;
-            right: calc((var(--calendar-day-size) / 2) - 4px);
-            top: calc((var(--calendar-day-size) / 2) + 6px);
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
           }
         }
 
@@ -136,18 +97,8 @@
 
           &.event {
             &::after {
-<<<<<<< HEAD
-<<<<<<< HEAD
               left: 12px;
               top: 21px;
-=======
-              left: 13px;
-              top: 23px;
->>>>>>> Pulled latest release
-=======
-              left: 12px;
-              top: 21px;
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
             }
           }
         }

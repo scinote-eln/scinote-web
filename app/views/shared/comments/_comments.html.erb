@@ -1,12 +1,4 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 <div class="comments-container" data-object-id = <%= object.id %>>
-=======
-<div class="comments-container" data-object-id = <%= object.id %>> 
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-<div class="comments-container" data-object-id = <%= object.id %>>
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   <% per_page = Constants::COMMENTS_SEARCH_LIMIT %>
   <div class="content-comments inline_scroll_block">
     <% if comments.size == per_page %>
@@ -20,43 +12,16 @@
     <% end %>
     <div class="comments-list">
       <%= render partial: 'shared/comments/list.html.erb', locals: { comments: comments} %>
-<<<<<<< HEAD
-<<<<<<< HEAD
       <% comments.mark_as_seen_by(current_user) %>
-=======
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-      <% comments.mark_as_seen_by(current_user) %>
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     </div>
   </div>
   <% if can_create_comments %>
   <div class="new-message-container" data-create-url="<%= create_url %>">
-<<<<<<< HEAD
-<<<<<<< HEAD
     <%= text_area_tag 'message', '',  placeholder: t('general.comment_placeholder_new'),
                                       class: 'form-control  smart-text-area textarea-sm',
                                       data: { 'atwho-edit' => '' } %>
-=======
-    <%= text_area_tag 'message', '',  placeholder: t('general.comment_placeholder_new'), 
-                                        class: 'form-control  smart-text-area textarea-sm', 
-                                        data: { 'atwho-edit' => '' } %>
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-    <%= text_area_tag 'message', '',  placeholder: t('general.comment_placeholder_new'),
-                                      class: 'form-control  smart-text-area textarea-sm',
-                                      data: { 'atwho-edit' => '' } %>
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     <i class="fas fa-paper-plane new-comment-button"></i>
     <span class="new-message-error"></span>
   </div>
   <% end %>
-<<<<<<< HEAD
-<<<<<<< HEAD
 </div>
-=======
-</div>
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-</div>
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.

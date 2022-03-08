@@ -231,16 +231,7 @@ RSpec.describe 'Api::V1::InventoryStatusItemsController', type: :request do
 
     context 'when user does not has manage permissions' do
       it 'renders 403' do
-<<<<<<< HEAD
-<<<<<<< HEAD
         @user_team.reload.update!(role: :guest)
-=======
-        @user_team.role = :guest
-        @user_team.save
->>>>>>> Pulled latest release
-=======
-        @user_team.reload.update!(role: :guest)
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
         action
 
@@ -248,16 +239,7 @@ RSpec.describe 'Api::V1::InventoryStatusItemsController', type: :request do
       end
 
       it 'does not creats an item' do
-<<<<<<< HEAD
-<<<<<<< HEAD
         @user_team.reload.update!(role: :guest)
-=======
-        @user_team.role = :guest
-        @user_team.save
->>>>>>> Pulled latest release
-=======
-        @user_team.reload.update!(role: :guest)
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
         expect { action }.not_to(change { RepositoryStatusItem.count })
       end
@@ -385,16 +367,7 @@ RSpec.describe 'Api::V1::InventoryStatusItemsController', type: :request do
 
     context 'when user does not has manage permissions' do
       it 'renders 403' do
-<<<<<<< HEAD
-<<<<<<< HEAD
         @user_team.reload.update!(role: :guest)
-=======
-        @user_team.role = :guest
-        @user_team.save
->>>>>>> Pulled latest release
-=======
-        @user_team.reload.update!(role: :guest)
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
         action
 
@@ -471,16 +444,7 @@ RSpec.describe 'Api::V1::InventoryStatusItemsController', type: :request do
 
     context 'when user does not has manage permissions' do
       it 'renders 403' do
-<<<<<<< HEAD
-<<<<<<< HEAD
         @user_team.reload.update!(role: :guest)
-=======
-        @user_team.role = :guest
-        @user_team.save
->>>>>>> Pulled latest release
-=======
-        @user_team.reload.update!(role: :guest)
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
         action
 
@@ -488,16 +452,7 @@ RSpec.describe 'Api::V1::InventoryStatusItemsController', type: :request do
       end
 
       it 'does not delets any item' do
-<<<<<<< HEAD
-<<<<<<< HEAD
         @user_team.reload.update!(role: :guest)
-=======
-        @user_team.role = :guest
-        @user_team.save
->>>>>>> Pulled latest release
-=======
-        @user_team.reload.update!(role: :guest)
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
         expect { action }.not_to(change { RepositoryStatusItem.count })
       end

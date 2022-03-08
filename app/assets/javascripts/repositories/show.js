@@ -198,6 +198,14 @@
   }
 
   function initFilterSaving() {
+    $(document).on('click', '#newFilterLink', function() {
+      $('#modalSaveRepositoryTableFilter #repository_table_filter_name').val('');
+    });
+
+    $('#modalSaveRepositoryTableFilter').on('shown.bs.modal', function() {
+      $('#repository_table_filter_name').focus();
+    });
+
     $(document).on('click', '#overwriteFilterLink', function() {
       var $modal = $('#modalSaveRepositoryTableFilter');
 
@@ -208,10 +216,15 @@
       $modal.on('hidden.bs.modal', function() {
         $modal.removeData('overwrite');
       });
+
+
+      $('#modalSaveRepositoryTableFilter #repository_table_filter_name')
+        .val($modal.data('repositoryTableFilterName'));
     });
 
-    $(document).on('click', '#saveRepositoryTableFilterButton', function() {
+    $('#saveRepositoryTableFilterButton').on('click', function() {
       var $modal = $('#modalSaveRepositoryTableFilter');
+      var $button = $(this);
       var url = $modal.data().saveUrl;
       var method;
 
@@ -221,6 +234,8 @@
       } else {
         method = 'POST';
       }
+
+      $button.addClass('disabled');
 
       $.ajax({
         type: method,
@@ -241,7 +256,9 @@
           $modal.modal('hide');
           $overwriteLink.removeClass('hidden');
           $modal.data('repositoryTableFilterId', response.data.id);
+          $modal.data('repositoryTableFilterName', response.data.attributes.name);
           $('#currentFilterName').html(response.data.attributes.name);
+
 
           if (existingFilterIndex > -1) {
             repositoryFilterObject.savedFilters = repositoryFilterObject.savedFilters.map((f) => {
@@ -252,9 +269,12 @@
           }
 
           repositoryFilterObject.filterName = response.data.attributes.name;
+          $button.removeClass('disabled');
         },
         error: function(response) {
           HelperModule.flashAlertMsg(response.responseJSON.message, 'danger');
+          $button.removeClass('disabled');
+          $modal.modal('hide');
         }
       });
     });

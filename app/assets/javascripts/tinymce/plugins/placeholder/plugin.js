@@ -27,10 +27,6 @@ tinymce.PluginManager.add('placeholder', function(editor) {
   editor.on('init', function() {
     var label = new Label();
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Initial commit of 1.17.2 merge
     // Correct top css property due to notification bar
     function calculatePlaceholderPosition() {
       var editorForm = $(editor.getContainer()).closest('form');
@@ -44,31 +40,13 @@ tinymce.PluginManager.add('placeholder', function(editor) {
 
     function checkPlaceholder() {
       // Show/hide depending on the content
-<<<<<<< HEAD
-=======
-    function checkPlaceholder() {
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
->>>>>>> Initial commit of 1.17.2 merge
       if (editor.getContent() === '') {
         label.show();
       } else {
         label.hide();
       }
-<<<<<<< HEAD
-<<<<<<< HEAD
 
       calculatePlaceholderPosition();
-=======
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-
-<<<<<<< HEAD
-      // calculatePlaceholderPosition();
->>>>>>> Initial commit of 1.17.2 merge
-=======
-      calculatePlaceholderPosition();
->>>>>>> Pulled latest release
     }
 
     function onKeydown() {

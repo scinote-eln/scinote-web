@@ -1,27 +1,11 @@
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
   "id": "file:/status_items/collection.json#",
-=======
-  "id": "file:/collection.json#",
->>>>>>> Pulled latest release
-=======
-  "id": "file:/status_items/collection.json#",
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   "type": "object",
   "properties": {
     "data": {
       "type": "array",
       "items": {
-<<<<<<< HEAD
-<<<<<<< HEAD
         "$ref": "file:/status_items/item.json#"
-=======
-        "$ref": "file:/item.json#"
->>>>>>> Pulled latest release
-=======
-        "$ref": "file:/status_items/item.json#"
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
       }
     }
   },

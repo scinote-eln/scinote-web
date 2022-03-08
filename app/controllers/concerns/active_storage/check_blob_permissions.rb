@@ -11,10 +11,6 @@ module ActiveStorage
     private
 
     def check_read_permissions
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
       return render_404 if @blob.attachments.blank?
 
       @blob.attachments.any? { |attachment| check_attachment_read_permissions(attachment) }
@@ -22,7 +18,6 @@ module ActiveStorage
 
     def check_attachment_read_permissions(attachment)
       case attachment.record_type
-<<<<<<< HEAD
       when 'Asset'
         check_asset_read_permissions(attachment.record)
       when 'TinyMceAsset'
@@ -31,51 +26,17 @@ module ActiveStorage
         check_experiment_read_permissions(attachment.record)
       when 'Report'
         check_report_read_permissions(attachment.record)
-=======
-      case @blob.attachments.first.record_type
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
-      when 'Asset'
-        check_asset_read_permissions(attachment.record)
-      when 'TinyMceAsset'
-        check_tinymce_asset_read_permissions(attachment.record)
-      when 'Experiment'
-<<<<<<< HEAD
-        check_experiment_read_permissions
->>>>>>> Initial commit of 1.17.2 merge
-=======
-        check_experiment_read_permissions(attachment.record)
-      when 'Report'
-        check_report_read_permissions(attachment.record)
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
       when 'User'
         # No read restrictions for avatars
         true
       when 'ZipExport', 'TeamZipExport'
-<<<<<<< HEAD
-<<<<<<< HEAD
         check_zip_export_read_permissions(attachment.record)
-=======
-        check_zip_export_read_permissions
->>>>>>> Initial commit of 1.17.2 merge
-=======
-        check_zip_export_read_permissions(attachment.record)
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
       else
         render_403
       end
     end
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     def check_asset_read_permissions(asset)
-=======
-    def check_asset_read_permissions
-      asset = @blob.attachments.first.record
->>>>>>> Initial commit of 1.17.2 merge
-=======
-    def check_asset_read_permissions(asset)
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
       return render_403 unless asset
 
       if asset.step
@@ -86,30 +47,13 @@ module ActiveStorage
         render_403 unless can_read_experiment?(experiment)
       elsif asset.repository_cell
         repository = asset.repository_cell.repository_column.repository
-<<<<<<< HEAD
-<<<<<<< HEAD
         render_403 unless can_read_repository?(repository)
-=======
-        render_403 unless can_read_team?(repository.team)
->>>>>>> Initial commit of 1.17.2 merge
-=======
-        render_403 unless can_read_repository?(repository)
->>>>>>> Pulled latest release
       else
         render_403
       end
     end
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     def check_tinymce_asset_read_permissions(asset)
-=======
-    def check_tinymce_asset_read_permissions
-      asset = @blob.attachments.first.record
->>>>>>> Initial commit of 1.17.2 merge
-=======
-    def check_tinymce_asset_read_permissions(asset)
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
       return render_403 unless asset
       return true if asset.object.nil? && asset.team == current_team
 
@@ -129,35 +73,16 @@ module ActiveStorage
       end
     end
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     def check_experiment_read_permissions(experiment)
       render_403 && return unless can_read_experiment?(experiment)
     end
 
     def check_report_read_permissions(report)
       render_403 && return unless can_read_project?(report.project)
-<<<<<<< HEAD
     end
 
     def check_zip_export_read_permissions(zip_export)
       render_403 unless zip_export.user == current_user
-=======
-    def check_experiment_read_permissions
-      render_403 && return unless can_read_experiment?(@blob.attachments.first.record)
-    end
-
-    def check_zip_export_read_permissions
-      render_403 unless @blob.attachments.first.record.user == current_user
->>>>>>> Initial commit of 1.17.2 merge
-=======
-    end
-
-    def check_zip_export_read_permissions(zip_export)
-      render_403 unless zip_export.user == current_user
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     end
   end
 end

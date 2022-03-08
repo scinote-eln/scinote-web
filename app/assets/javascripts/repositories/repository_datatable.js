@@ -24,8 +24,6 @@ var RepositoryDatatable = (function(global) {
   // Tells whether we're currently viewing or editing table
   var currentMode = 'viewMode';
 
-  // var selectedRecord;
-
   // Extend datatables API with searchable options
   // (http://stackoverflow.com/questions/39912395/datatables-dynamically-set-columns-searchable)
   $.fn.dataTable.Api.register('isColumnSearchable()', function(colSelector) {
@@ -265,9 +263,13 @@ var RepositoryDatatable = (function(global) {
   }
 
   function resetTableView() {
+    var filterSaveButtonVisible = !$('#saveRepositoryFilters').hasClass('hidden');
     $.getJSON($(TABLE_ID).data('toolbar-url'), (data) => {
       $('#toolbarButtonsDatatable').remove();
       $(data.html).appendTo('div.toolbar');
+      if (filterSaveButtonVisible) {
+        $('#saveRepositoryFilters').removeClass('hidden');
+      }
       if (typeof initBMTFilter === 'function') initBMTFilter();
     });
 
@@ -588,8 +590,14 @@ var RepositoryDatatable = (function(global) {
           rowsLocked.push(parseInt($(e).attr('id'), 10));
         });
 
+        // go back to manage columns index in modal, on column save, after table loads
+        $('#manage-repository-column .back-to-column-modal').trigger('click');
+
         initAssignedTasksDropdown(TABLE_ID);
         renderFiltersDropdown();
+        setTimeout(function() {
+          adjustTableHeader();
+        }, 500);
       }
     });
 
@@ -606,6 +614,20 @@ var RepositoryDatatable = (function(global) {
 
       $(this).parent().find('.repository-row-selector').trigger('click');
     });
+
+    // Handling of special errors
+    $(TABLE_ID).on('xhr.dt', function(e, settings, json) {
+      if (json.custom_error) {
+        json.data = [];
+        json.recordsFiltered = 0;
+        json.recordsTotal = 0;
+        TABLE.one('draw', function() {
+          $('#filtersDropdownButton').removeClass('active-filters');
+          $('#saveRepositoryFilters').addClass('hidden');
+          $('.repository-table-error').addClass('active').text(json.custom_error);
+        });
+      }
+    })
 
     initRowSelection();
     bindExportActions();

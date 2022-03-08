@@ -1,12 +1,4 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 /* global windowScrollEvents HelperModule I18n PdfPreview */
-=======
-/* global windowScrollEvents HelperModule I18n */
->>>>>>> Pulled latest release
-=======
-/* global windowScrollEvents HelperModule I18n PdfPreview */
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 $(document).on('click', '.asset-context-menu .change-preview-type', function(e) {
   var viewModeBtn = $(this);
   var viewMode = viewModeBtn.data('preview-type');
@@ -23,14 +15,7 @@ $(document).on('click', '.asset-context-menu .change-preview-type', function(e) 
       viewModeBtn.closest('.dropdown-menu').find('.change-preview-type').removeClass('selected');
       viewModeBtn.addClass('selected');
       $(`.asset[data-asset-id=${assetId}]`).replaceWith(data.html);
-<<<<<<< HEAD
-<<<<<<< HEAD
       PdfPreview.initCanvas();
-=======
->>>>>>> Pulled latest release
-=======
-      PdfPreview.initCanvas();
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     }
   });
 });
@@ -112,37 +97,19 @@ var InlineAttachments = (function() {
     }
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   function initReloadButtons() {
     $(document).on('ajax:success', '.asset .reload-asset', function(e, data) {
       $(this).closest('.asset').replaceWith(data.html);
     });
   }
 
-<<<<<<< HEAD
-=======
->>>>>>> Pulled latest release
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   return {
     init: () => {
       windowScrollEvents.InlineAttachments = InlineAttachments.scrollEvent;
     },
-<<<<<<< HEAD
-<<<<<<< HEAD
     initReloadButtons: () => {
       initReloadButtons();
     },
-=======
->>>>>>> Pulled latest release
-=======
-    initReloadButtons: () => {
-      initReloadButtons();
-    },
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     scrollEvent: () => {
       checkForAttachmentsState();
     }
@@ -153,11 +120,4 @@ $(document).on('turbolinks:load', function() {
   InlineAttachments.init();
   InlineAttachments.scrollEvent();
 });
-<<<<<<< HEAD
-<<<<<<< HEAD
 InlineAttachments.initReloadButtons();
-=======
->>>>>>> Pulled latest release
-=======
-InlineAttachments.initReloadButtons();
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.

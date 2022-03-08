@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 const GLOBAL_CONSTANTS = {
   NAME_TRUNCATION_LENGTH: <%= Constants::NAME_TRUNCATION_LENGTH %>,
   NAME_MAX_LENGTH: <%= Constants::NAME_MAX_LENGTH %>,
@@ -12,23 +10,3 @@ const GLOBAL_CONSTANTS = {
   REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN: <%= Constants::REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN %>,
   HAS_UNSAVED_DATA_CLASS_NAME: 'has-unsaved-data'
 };
-=======
-const globalConstants = {
-  name_truncation_length: <%= Constants::NAME_TRUNCATION_LENGTH %>,
-  is_safari: /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
-}
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-const GLOBAL_CONSTANTS = {
-  NAME_TRUNCATION_LENGTH: <%= Constants::NAME_TRUNCATION_LENGTH %>,
-  NAME_MAX_LENGTH: <%= Constants::NAME_MAX_LENGTH %>,
-  NAME_MIN_LENGTH: <%= Constants::NAME_MIN_LENGTH %>,
-  TEXT_MAX_LENGTH: <%= Constants::TEXT_MAX_LENGTH %>,
-  FILENAME_TRUNCATION_LENGTH: <%= Constants::FILENAME_TRUNCATION_LENGTH %>,
-  FILE_MAX_SIZE_MB: parseInt($('meta[name="max-file-size"]').attr('content'), 10),
-  IS_SAFARI: /^((?!chrome|android).)*safari/i.test(navigator.userAgent),
-  REPOSITORY_LIST_ITEMS_PER_COLUMN: <%= Constants::REPOSITORY_LIST_ITEMS_PER_COLUMN %>,
-  REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN: <%= Constants::REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN %>,
-  HAS_UNSAVED_DATA_CLASS_NAME: 'has-unsaved-data'
-};
->>>>>>> Initial commit of 1.17.2 merge

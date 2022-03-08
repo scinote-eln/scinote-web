@@ -46,15 +46,7 @@ describe ExternalProtocolsController, type: :controller do
     it 'returns JSON, 200 response when protocol parsing was valid' do
       action
       expect(response).to have_http_status(:success)
-<<<<<<< HEAD
-<<<<<<< HEAD
       expect(response.media_type).to eq 'application/json'
-=======
-      expect(response.content_type).to eq 'application/json'
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-      expect(response.media_type).to eq 'application/json'
->>>>>>> Initial commit of 1.17.2 merge
     end
 
     it 'contains html key in the response' do
@@ -79,15 +71,7 @@ describe ExternalProtocolsController, type: :controller do
 
     let(:action) { get :show, params: params }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     let(:html_preview) { double('html_preview', body: '<html></html>') }
-=======
-    let(:html_preview) { double('html_preview') }
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-    let(:html_preview) { double('html_preview', body: '<html></html>') }
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
     before do
       allow(html_preview).to(receive(:as_json).and_return('<html></html>'))
@@ -95,41 +79,17 @@ describe ExternalProtocolsController, type: :controller do
     end
 
     it 'returns JSON, 200 response when preview was successfully returned' do
-<<<<<<< HEAD
-<<<<<<< HEAD
       allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ApiClient)
-=======
-      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-      allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ApiClient)
->>>>>>> Initial commit of 1.17.2 merge
         .to(receive(:protocol_html_preview)).and_return(html_preview)
 
       # Call action
       action
       expect(response).to have_http_status(:success)
-<<<<<<< HEAD
-<<<<<<< HEAD
       expect(response.media_type).to eq 'application/json'
     end
 
     it 'should return html preview in the JSON' do
       allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ApiClient)
-=======
-      expect(response.content_type).to eq 'application/json'
-    end
-
-    it 'should return html preview in the JSON' do
-      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-      expect(response.media_type).to eq 'application/json'
-    end
-
-    it 'should return html preview in the JSON' do
-      allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ApiClient)
->>>>>>> Initial commit of 1.17.2 merge
         .to(receive(:protocol_html_preview)).and_return(html_preview)
 
       # Call action
@@ -138,15 +98,7 @@ describe ExternalProtocolsController, type: :controller do
     end
 
     it 'returns error JSON and 400 response when something went wrong' do
-<<<<<<< HEAD
-<<<<<<< HEAD
       allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ApiClient)
-=======
-      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-      allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ApiClient)
->>>>>>> Initial commit of 1.17.2 merge
         .to(receive(:protocol_html_preview)).and_raise(StandardError)
 
       # Call action
@@ -187,15 +139,7 @@ describe ExternalProtocolsController, type: :controller do
       it 'returns JSON, 200 response when protocol parsing was valid' do
         action
         expect(response).to have_http_status(:success)
-<<<<<<< HEAD
-<<<<<<< HEAD
         expect(response.media_type).to eq 'application/json'
-=======
-        expect(response.content_type).to eq 'application/json'
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-        expect(response.media_type).to eq 'application/json'
->>>>>>> Initial commit of 1.17.2 merge
       end
 
       it 'should return html form in the JSON' do
@@ -216,15 +160,7 @@ describe ExternalProtocolsController, type: :controller do
       # Call action
       action
       expect(response).to have_http_status(:bad_request)
-<<<<<<< HEAD
-<<<<<<< HEAD
       expect(response.media_type).to eq 'application/json'
-=======
-      expect(response.content_type).to eq 'application/json'
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-      expect(response.media_type).to eq 'application/json'
->>>>>>> Initial commit of 1.17.2 merge
     end
   end
 
@@ -253,15 +189,7 @@ describe ExternalProtocolsController, type: :controller do
         # Call action
         action
         expect(response).to have_http_status(:success)
-<<<<<<< HEAD
-<<<<<<< HEAD
         expect(response.media_type).to eq 'application/json'
-=======
-        expect(response.content_type).to eq 'application/json'
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-        expect(response.media_type).to eq 'application/json'
->>>>>>> Initial commit of 1.17.2 merge
       end
 
       it 'returns JSON, 400 response when protocol parsing was invalid' do
@@ -275,15 +203,7 @@ describe ExternalProtocolsController, type: :controller do
         # Call action
         action
         expect(response).to have_http_status(:bad_request)
-<<<<<<< HEAD
-<<<<<<< HEAD
         expect(response.media_type).to eq 'application/json'
-=======
-        expect(response.content_type).to eq 'application/json'
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-        expect(response.media_type).to eq 'application/json'
->>>>>>> Initial commit of 1.17.2 merge
       end
     end
 

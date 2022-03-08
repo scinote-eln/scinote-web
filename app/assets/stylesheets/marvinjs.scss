@@ -10,30 +10,9 @@
 // MarvinJs modal
 .modal-marvin-js {
   background: transparent;
-<<<<<<< HEAD
-<<<<<<< HEAD
   font-size: $font-size-base;
   padding: 0 !important;
 
-<<<<<<< HEAD
-=======
-  font-size: $font-size-large;
-=======
-  font-size: $font-size-base;
->>>>>>> Pulled latest release
-  padding: 0 !important;
-
-  .preview-close {
-    background: transparent;
-    border: 0;
-    color: $color-white;
-    display: inline-block;
-    float: right;
-  }
-
->>>>>>> Initial commit of 1.17.2 merge
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   .modal-dialog {
     height: 100%;
     margin: 0;
@@ -45,66 +24,29 @@
     background: transparent;
     border: 0;
     box-shadow: none;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    color: $color-white;
->>>>>>> Initial commit of 1.17.2 merge
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     height: 100%;
     width: auto;
   }
 
   .modal-header {
-<<<<<<< HEAD
-<<<<<<< HEAD
     background: $color-white;
     display: flex;
-=======
-    background: $color-black;
-    border: 0;
-<<<<<<< HEAD
->>>>>>> Initial commit of 1.17.2 merge
-=======
-=======
-    background: $color-white;
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
-    display: flex;
->>>>>>> Pulled latest release
     height: 60px;
     line-height: 40px;
     padding: 10px 15px;
     text-align: center;
 
     .file-save-link {
-<<<<<<< HEAD
-<<<<<<< HEAD
       flex-shrink: 0;
-=======
->>>>>>> Initial commit of 1.17.2 merge
-=======
-      flex-shrink: 0;
->>>>>>> Pulled latest release
       margin: 0 20px 0 0;
     }
 
     .file-name {
       align-items: center;
       display: flex;
-<<<<<<< HEAD
-<<<<<<< HEAD
       flex-shrink: 0;
       float: left;
       margin-right: auto;
-=======
-      float: left;
->>>>>>> Initial commit of 1.17.2 merge
-=======
-      flex-shrink: 0;
-      float: left;
-      margin-right: auto;
->>>>>>> Pulled latest release
 
       input {
         border-radius: 5px;
@@ -171,20 +113,6 @@
       }
     }
   }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
-  .file-save-link {
-    color: $color-white;
-    cursor: pointer;
-    display: inline-block;
-    float: right;
-    margin-right: 20px;
-  }
->>>>>>> Initial commit of 1.17.2 merge
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 }
 
 #new-step-sketch {
@@ -198,25 +126,10 @@
 }
 
 .new-marvinjs-upload-button {
-<<<<<<< HEAD
-<<<<<<< HEAD
   .new-marvinjs-upload-icon {
     display: inline-block;
     height: 1.5em;
     width: 1.5em;
-=======
-
-  .new-marvinjs-upload-icon {
-    display: inline-block;
-    height: 32px;
-    width: 32px;
->>>>>>> Initial commit of 1.17.2 merge
-=======
-  .new-marvinjs-upload-icon {
-    display: inline-block;
-    height: 1.5em;
-    width: 1.5em;
->>>>>>> Pulled latest release
 
     img {
       height: 100%;

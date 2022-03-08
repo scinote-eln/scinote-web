@@ -31,6 +31,10 @@ class RepositoryRowsController < ApplicationController
                                         .per(per_page)
 
     @repository_rows = @repository_rows.where(archived: params[:archived]) unless @repository.archived?
+  rescue RepositoryFilters::ColumnNotFoundException
+    render json: { custom_error: I18n.t('repositories.show.repository_filter.errors.column_not_found') }
+  rescue RepositoryFilters::ValueNotFoundException
+    render json: { custom_error: I18n.t('repositories.show.repository_filter.errors.value_not_found') }
   end
 
   def create
@@ -202,7 +206,7 @@ class RepositoryRowsController < ApplicationController
       render json: { no_items: no_items_string },
                    status: :ok
     else
-      render json: { results: load_available_rows(search_params[:q]) },
+      render json: { results: load_available_rows },
                    status: :ok
     end
   end
@@ -316,7 +320,7 @@ class RepositoryRowsController < ApplicationController
     @repository.repository_rows.where(id: process_ids).pluck(:id)
   end
 
-  def load_available_rows(query)
+  def load_available_rows
     @repository.repository_rows
                .active
                .includes(:repository_cells)

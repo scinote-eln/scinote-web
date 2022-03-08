@@ -4,18 +4,9 @@ require 'active_storage/previewer/libreoffice_previewer'
 require 'active_storage/analyzer/custom_image_analyzer'
 require 'active_storage/downloader'
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 # Enable PDF previews for files
 Rails.application.config.x.enable_pdf_previews = ENV['ACTIVESTORAGE_ENABLE_PDF_PREVIEWS'] == 'true'
 
-=======
->>>>>>> Initial commit of 1.17.2 merge
-=======
-# Enable PDF previews for files
-Rails.application.config.x.enable_pdf_previews = ENV['ACTIVESTORAGE_ENABLE_PDF_PREVIEWS'] == 'true'
-
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 Rails.application.config.active_storage.previewers = [ActiveStorage::Previewer::PopplerPDFPreviewer,
                                                       ActiveStorage::Previewer::LibreofficePreviewer]
 

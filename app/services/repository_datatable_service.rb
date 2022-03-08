@@ -1,9 +1,15 @@
 # frozen_string_literal: true
 
+module RepositoryFilters
+  class ColumnNotFoundException < StandardError; end
+
+  class ValueNotFoundException < StandardError; end
+end
+
 class RepositoryDatatableService
   attr_reader :repository_rows, :all_count, :mappings
 
-  PREDEFINED_COLUMNS = %w(row_id row_name added_on added_by archived_by assigned).freeze
+  PREDEFINED_COLUMNS = %w(row_id row_name added_on added_by archived_on archived_by assigned).freeze
 
   def initialize(repository, params, user, my_module = nil)
     @repository = repository
@@ -111,12 +117,12 @@ class RepositoryDatatableService
   def advanced_search(repository_rows)
     adv_search_params = @params[:advanced_search]
     filter = @repository.repository_table_filters.new
-    adv_search_params[:filter_elements].each do |filter_element_params|
+    adv_search_params[:filter_elements].each_with_index do |filter_element_params, index|
       repository_rows =
         if PREDEFINED_COLUMNS.include?(filter_element_params[:repository_column_id])
           add_predefined_column_filter_condition(repository_rows, filter_element_params)
         else
-          add_custom_column_filter_condition(repository_rows, filter, filter_element_params)
+          add_custom_column_filter_condition(repository_rows, filter, index, filter_element_params)
         end
     end
 
@@ -154,8 +160,6 @@ class RepositoryDatatableService
       repository_rows
         .where.not("(#{RepositoryRow::PREFIXED_ID_SQL})::text ILIKE ?",
                    "%#{ActiveRecord::Base.sanitize_sql_like(filter_element_params.dig(:parameters, :text))}%")
-    when 'empty'
-      repository_rows.where(id: nil)
     else
       raise ArgumentError, 'Wrong operator for RepositoryRow ID!'
     end
@@ -170,8 +174,6 @@ class RepositoryDatatableService
       repository_rows
         .where.not('repository_rows.name ILIKE ?',
                    "%#{ActiveRecord::Base.sanitize_sql_like(filter_element_params.dig(:parameters, :text))}%")
-    when 'empty'
-      repository_rows.where(name: nil)
     else
       raise ArgumentError, 'Wrong operator for RepositoryRow Name!'
     end
@@ -180,76 +182,124 @@ class RepositoryDatatableService
   def build_added_on_filter_condition(repository_rows, filter_element_params)
     case filter_element_params[:operator]
     when 'today'
-      repository_rows.where('created_at >= ?', Time.zone.now.beginning_of_day)
+      repository_rows.where(
+        "date_trunc('minute', \"repository_rows\".\"created_at\") >= ? AND " \
+        "date_trunc('minute', \"repository_rows\".\"created_at\") < ?",
+        Time.zone.now.beginning_of_day,
+        Time.zone.now.end_of_day
+      )
     when 'yesterday'
-      repository_rows.where('created_at >= ? AND created_at < ?',
-                            Time.zone.now.beginning_of_day - 1.day, Time.zone.now.beginning_of_day)
+      repository_rows.where(
+        "date_trunc('minute', \"repository_rows\".\"created_at\") >= ? AND "\
+        "date_trunc('minute', \"repository_rows\".\"created_at\") < ?",
+        Time.zone.now.beginning_of_day - 1.day, Time.zone.now.beginning_of_day
+      )
     when 'last_week'
-      repository_rows.where('created_at >= ? AND created_at < ?',
-                            Time.zone.now.beginning_of_week - 1.week, Time.zone.now.beginning_of_week)
+      repository_rows.where(
+        "date_trunc('minute', \"repository_rows\".\"created_at\") >= ? AND "\
+        "date_trunc('minute', \"repository_rows\".\"created_at\") < ?",
+        Time.zone.now.beginning_of_week - 1.week, Time.zone.now.beginning_of_week
+      )
     when 'this_month'
-      repository_rows.where('created_at >= ?', Time.zone.now.beginning_of_month)
+      repository_rows.where(
+        "date_trunc('minute', \"repository_rows\".\"created_at\") >= ? AND date_trunc('minute', \"repository_rows\".\"created_at\") <= ?",
+        Time.zone.now.beginning_of_month,
+        Time.zone.now.end_of_month
+      )
     when 'last_year'
-      repository_rows.where('created_at >= ? AND created_at < ?',
-                            Time.zone.now.beginning_of_year - 1.year, Time.zone.now.beginning_of_year)
+      repository_rows.where(
+        "date_trunc('minute', \"repository_rows\".\"created_at\") >= ? AND "\
+        "date_trunc('minute', \"repository_rows\".\"created_at\") < ?",
+        Time.zone.now.beginning_of_year - 1.year, Time.zone.now.beginning_of_year
+      )
     when 'this_year'
-      repository_rows.where('created_at >= ?', Time.zone.now.beginning_of_year)
+      repository_rows.where(
+        "date_trunc('minute', \"repository_rows\".\"created_at\") >= ? AND "\
+        "date_trunc('minute', \"repository_rows\".\"created_at\") <= ?",
+        Time.zone.now.beginning_of_year,
+        Time.zone.now.end_of_year
+      )
     when 'equal_to'
-      repository_rows.where(created_at: Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
+      repository_rows.where("date_trunc('minute', \"repository_rows\".\"created_at\") = ?",
+                            Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
     when 'unequal_to'
-      repository_rows
-        .where.not(created_at: Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
+      repository_rows.where.not("date_trunc('minute', \"repository_rows\".\"created_at\") = ?",
+                                Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
     when 'greater_than'
-      repository_rows.where('created_at > ?', Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
+      repository_rows.where("date_trunc('minute', \"repository_rows\".\"created_at\") > ?",
+                            Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
     when 'greater_than_or_equal_to'
-      repository_rows.where('created_at >= ?', Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
+      repository_rows.where("date_trunc('minute', \"repository_rows\".\"created_at\") >= ?",
+                            Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
     when 'less_than'
-      repository_rows.where('created_at < ?', Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
+      repository_rows.where("date_trunc('minute', \"repository_rows\".\"created_at\") < ?",
+                            Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
     when 'less_than_or_equal_to'
-      repository_rows.where('created_at <= ?', Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
+      repository_rows.where("date_trunc('minute', \"repository_rows\".\"created_at\") <= ?",
+                            Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
     when 'between'
-      repository_rows.where('created_at > ? AND created_at < ?',
-                            Time.zone.parse(filter_element_params.dig(:parameters, :start_datetime)),
-                            Time.zone.parse(filter_element_params.dig(:parameters, :end_datetime)))
+      repository_rows.where(
+        "date_trunc('minute', \"repository_rows\".\"created_at\") > ? AND "\
+        "date_trunc('minute', \"repository_rows\".\"created_at\") < ?",
+        Time.zone.parse(filter_element_params.dig(:parameters, :start_datetime)),
+        Time.zone.parse(filter_element_params.dig(:parameters, :end_datetime))
+      )
     else
       raise ArgumentError, 'Wrong operator for RepositoryRow Added On!'
     end
   end
 
   def build_archived_on_filter_condition(repository_rows, filter_element_params)
+    return repository_rows unless @params[:archived]
+
     case filter_element_params[:operator]
     when 'today'
-      repository_rows.where('archived_on >= ?', Time.zone.now.beginning_of_day)
+      repository_rows.where("date_trunc('minute', \"repository_rows\".\"archived_on\") >= ? AND date_trunc('minute', \"repository_rows\".\"archived_on\") <= ?",
+                            Time.zone.now.beginning_of_day, Time.zone.now.end_of_day)
     when 'yesterday'
-      repository_rows.where('archived_on >= ? AND archived_on < ?',
+      repository_rows.where("date_trunc('minute', \"repository_rows\".\"archived_on\") >= ? AND date_trunc('minute', \"repository_rows\".\"archived_on\") < ?",
                             Time.zone.now.beginning_of_day - 1.day, Time.zone.now.beginning_of_day)
     when 'last_week'
-      repository_rows.where('archived_on >= ? AND archived_on < ?',
+      repository_rows.where("date_trunc('minute', \"repository_rows\".\"archived_on\") >= ? AND date_trunc('minute', \"repository_rows\".\"archived_on\") < ?",
                             Time.zone.now.beginning_of_week - 1.week, Time.zone.now.beginning_of_week)
     when 'this_month'
-      repository_rows.where('archived_on >= ?', Time.zone.now.beginning_of_month)
+      repository_rows.where(
+        "date_trunc('minute', \"repository_rows\".\"archived_on\") >= ? AND date_trunc('minute', \"repository_rows\".\"archived_on\") <= ?",
+        Time.zone.now.beginning_of_month,
+        Time.zone.now.end_of_month
+      )
     when 'last_year'
-      repository_rows.where('archived_on >= ? AND archived_on < ?',
+      repository_rows.where("date_trunc('minute', \"repository_rows\".\"archived_on\") >= ? AND date_trunc('minute', \"repository_rows\".\"archived_on\") < ?",
                             Time.zone.now.beginning_of_year - 1.year, Time.zone.now.beginning_of_year)
     when 'this_year'
-      repository_rows.where('archived_on >= ?', Time.zone.now.beginning_of_year)
+      repository_rows.where(
+        "date_trunc('minute', \"repository_rows\".\"archived_on\") >= ? AND "\
+        "date_trunc('minute', \"repository_rows\".\"archived_on\") <= ?",
+        Time.zone.now.beginning_of_year,
+        Time.zone.now.end_of_year
+      )
     when 'equal_to'
-      repository_rows.where(archived_on: filter_element_params.dig(:parameters, :datetime))
+      repository_rows.where("date_trunc('minute', \"repository_rows\".\"archived_on\") = ?",
+                            Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
     when 'unequal_to'
-      repository_rows
-        .where.not(archived_on: filter_element_params.dig(:parameters, :datetime))
+      repository_rows.where.not("date_trunc('minute', \"repository_rows\".\"archived_on\") = ?",
+                                Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
     when 'greater_than'
-      repository_rows.where('archived_on > ?', filter_element_params.dig(:parameters, :datetime))
+      repository_rows.where("date_trunc('minute', \"repository_rows\".\"archived_on\") > ?",
+                            Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
     when 'greater_than_or_equal_to'
-      repository_rows.where('archived_on >= ?', filter_element_params.dig(:parameters, :datetime))
+      repository_rows.where("date_trunc('minute', \"repository_rows\".\"archived_on\") >= ?",
+                            Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
     when 'less_than'
-      repository_rows.where('archived_on < ?', filter_element_params.dig(:parameters, :datetime))
+      repository_rows.where("date_trunc('minute', \"repository_rows\".\"archived_on\") < ?",
+                            Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
     when 'less_than_or_equal_to'
-      repository_rows.where('archived_on <= ?', filter_element_params.dig(:parameters, :datetime))
+      repository_rows.where("date_trunc('minute', \"repository_rows\".\"archived_on\") <= ?",
+                            Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
     when 'between'
-      repository_rows.where('archived_on > ? AND archived_on < ?',
-                            filter_element_params.dig(:parameters, :start_datetime),
-                            filter_element_params.dig(:parameters, :end_datetime))
+      repository_rows.where("date_trunc('minute', \"repository_rows\".\"archived_on\") > ? AND date_trunc('minute', \"repository_rows\".\"archived_on\") < ?",
+                            Time.zone.parse(filter_element_params.dig(:parameters, :start_datetime)),
+                            Time.zone.parse(filter_element_params.dig(:parameters, :end_datetime)))
     else
       raise ArgumentError, 'Wrong operator for RepositoryRow Archived On!'
     end
@@ -269,6 +319,8 @@ class RepositoryDatatableService
   end
 
   def build_archived_by_filter_condition(repository_rows, filter_element_params)
+    return repository_rows unless @params[:archived]
+
     case filter_element_params[:operator]
     when 'any_of'
       repository_rows.joins(:archived_by)
@@ -287,9 +339,9 @@ class RepositoryDatatableService
       repository_rows.joins(:my_modules)
                      .where(my_modules: { id: filter_element_params.dig(:parameters, :my_module_ids) })
     when 'none_of'
-      repository_rows = repository_rows.left_outer_joins(:my_modules)
-      repository_rows.where.not(my_modules: { id: filter_element_params.dig(:parameters, :my_module_ids) })
-                     .or(repository_rows.where(my_modules: { id: nil }))
+      repository_rows.where('NOT EXISTS (SELECT NULL FROM my_module_repository_rows
+                                 WHERE my_module_repository_rows.repository_row_id = repository_rows.id AND
+                                       my_module_repository_rows.my_module_id IN (?))', filter_element_params.dig(:parameters, :my_module_ids))
     when 'all_of'
       repository_rows
         .joins(:my_modules)
@@ -301,32 +353,51 @@ class RepositoryDatatableService
     end
   end
 
-  def add_custom_column_filter_condition(repository_rows, filter, filter_element_params)
+  def add_custom_column_filter_condition(repository_rows, filter, index, filter_element_params)
+    repository_column = @repository.repository_columns.find_by(id: filter_element_params['repository_column_id'])
+    raise RepositoryFilters::ColumnNotFoundException unless repository_column
+
     filter_element = filter.repository_table_filter_elements.new(
-      repository_column: @repository.repository_columns.find(filter_element_params['repository_column_id']),
+      repository_column: repository_column,
       operator: filter_element_params[:operator],
       parameters: filter_element_params[:parameters]
     )
     config = Extends::REPOSITORY_ADVANCED_SEARCH_ATTR[filter_element.repository_column.data_type.to_sym]
+    join_cells_alias = "repository_cells_#{index}"
+    join_values_alias = "repository_values_#{index}"
+
+    enforce_referenced_value_existence!(filter_element)
+
+    repository_rows =
+      repository_rows
+      .joins(
+        "LEFT OUTER JOIN \"repository_cells\" AS \"#{join_cells_alias}\"" \
+        " ON  \"repository_rows\".\"id\" = \"#{join_cells_alias}\".\"repository_row_id\"" \
+        " AND \"#{join_cells_alias}\".\"repository_column_id\" = '#{filter_element.repository_column.id}'"
+      ).joins(
+        "LEFT OUTER JOIN \"#{config[:table_name]}\" AS \"#{join_values_alias}\"" \
+        " ON  \"#{join_values_alias}\".\"id\" = \"#{join_cells_alias}\".\"value_id\""
+      )
 
     if %w(empty file_not_attached).include?(filter_element_params[:operator])
-      repository_rows.left_outer_joins(config[:table_name]).where(config[:field] => nil)
+      repository_rows.where(join_values_alias => { id: nil })
     else
-      join_cells_alias = "repository_column_cells_#{filter_element.repository_column.id}"
-      join_values_alias = "repository_column_values_#{filter_element.repository_column.id}"
-      repository_rows =
-        repository_rows
-        .joins(
-          "INNER JOIN \"repository_cells\" AS \"#{join_cells_alias}\"" \
-          " ON  \"repository_rows\".\"id\" = \"#{join_cells_alias}\".\"repository_row_id\"" \
-          " AND \"#{join_cells_alias}\".\"repository_column_id\" = '#{filter_element.repository_column.id}'")
-        .joins(
-          "INNER JOIN \"#{config[:table_name]}\" AS \"#{join_values_alias}\"" \
-          " ON  \"#{join_values_alias}\".\"id\" = \"#{join_cells_alias}\".\"value_id\""
-        )
       value_klass = filter_element.repository_column.data_type.constantize
       value_klass.add_filter_condition(repository_rows, join_values_alias, filter_element)
     end
+  end
+
+  def enforce_referenced_value_existence!(filter_element)
+    relation_method =
+      Extends::REPOSITORY_ADVANCED_SEARCH_REFERENCED_VALUE_RELATIONS[
+        filter_element.repository_column.data_type.to_sym
+      ]
+
+    return unless relation_method
+
+    relation = filter_element.repository_column.public_send(relation_method)
+    value_item_ids = filter_element.parameters['item_ids']
+    raise RepositoryFilters::ValueNotFoundException if relation.where(id: value_item_ids).count != value_item_ids.length
   end
 
   def build_sortable_columns

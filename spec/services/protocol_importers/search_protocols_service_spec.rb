@@ -34,21 +34,9 @@ describe ProtocolImporters::SearchProtocolsService do
 
   context 'when raise api client error' do
     it 'return api errors' do
-<<<<<<< HEAD
-<<<<<<< HEAD
       allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ApiClient)
         .to(receive(:protocol_list)
         .and_raise(ProtocolImporters::ProtocolsIo::V3::ArgumentError
-=======
-      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
-        .to(receive(:protocol_list)
-        .and_raise(ProtocolImporters::ProtocolsIO::V3::ArgumentError
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-      allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ApiClient)
-        .to(receive(:protocol_list)
-        .and_raise(ProtocolImporters::ProtocolsIo::V3::ArgumentError
->>>>>>> Initial commit of 1.17.2 merge
           .new(:missing_or_empty_parameters), 'Missing Or Empty Parameters Error'))
 
       expect(service_call.errors).to have_key(:missing_or_empty_parameters)
@@ -59,8 +47,6 @@ describe ProtocolImporters::SearchProtocolsService do
     it 'return normalizer errors' do
       client_data = double('api_response')
 
-<<<<<<< HEAD
-<<<<<<< HEAD
       allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ApiClient)
         .to(receive(:protocol_list)
         .and_return(client_data))
@@ -68,22 +54,6 @@ describe ProtocolImporters::SearchProtocolsService do
       allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ProtocolNormalizer)
         .to(receive(:normalize_list).with(client_data)
         .and_raise(ProtocolImporters::ProtocolsIo::V3::NormalizerError.new(:nil_protocol), 'Nil Protocol'))
-=======
-      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
-=======
-      allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ApiClient)
->>>>>>> Initial commit of 1.17.2 merge
-        .to(receive(:protocol_list)
-        .and_return(client_data))
-
-      allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ProtocolNormalizer)
-        .to(receive(:normalize_list).with(client_data)
-<<<<<<< HEAD
-        .and_raise(ProtocolImporters::ProtocolsIO::V3::NormalizerError.new(:nil_protocol), 'Nil Protocol'))
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-        .and_raise(ProtocolImporters::ProtocolsIo::V3::NormalizerError.new(:nil_protocol), 'Nil Protocol'))
->>>>>>> Initial commit of 1.17.2 merge
 
       expect(service_call.errors).to have_key(:nil_protocol)
     end
@@ -93,27 +63,11 @@ describe ProtocolImporters::SearchProtocolsService do
     before do
       client_data = double('api_response')
 
-<<<<<<< HEAD
-<<<<<<< HEAD
       allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ApiClient)
         .to(receive(:protocol_list)
               .and_return(client_data))
 
       allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ProtocolNormalizer)
-=======
-      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ApiClient)
-        .to(receive(:protocol_list)
-              .and_return(client_data))
-
-      allow_any_instance_of(ProtocolImporters::ProtocolsIO::V3::ProtocolNormalizer)
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-      allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ApiClient)
-        .to(receive(:protocol_list)
-              .and_return(client_data))
-
-      allow_any_instance_of(ProtocolImporters::ProtocolsIo::V3::ProtocolNormalizer)
->>>>>>> Initial commit of 1.17.2 merge
         .to(receive(:normalize_list).with(client_data)
               .and_return(normalized_list))
     end

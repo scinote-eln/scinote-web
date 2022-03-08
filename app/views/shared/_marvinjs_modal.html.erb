@@ -9,8 +9,6 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-<<<<<<< HEAD
-<<<<<<< HEAD
           <span class="file-name">
             <div class="sci-input-container ">
               <%= text_field_tag :sketch_name, '', placeholder: t('marvinjs.structure_placeholder'), class: 'sci-input-field' %>
@@ -23,31 +21,6 @@
           <button class="preview-close btn btn-light icon-btn" data-dismiss="modal">
             <i class="fas fa-times"></i>
           </button>
-=======
-          <button type="button" class="preview-close" data-dismiss="modal"><span class="fas fa-times"></span></button>
-=======
->>>>>>> Pulled latest release
-          <span class="file-name">
-            <div class="sci-input-container ">
-              <%= text_field_tag :sketch_name, '', placeholder: t('marvinjs.structure_placeholder'), class: 'sci-input-field' %>
-            </div>
-          </span>
-<<<<<<< HEAD
-          <p class="file-save-link"><span class="fas fa-save"></span> <%= t('SaveClose')%></p>
-<<<<<<< HEAD
->>>>>>> Initial commit of 1.17.2 merge
-=======
-          <button type="button" class="preview-close" data-dismiss="modal"><span class="fas fa-times"></span></button>
->>>>>>> Pulled latest release
-=======
-          <button class="file-save-link btn btn-light">
-            <i class="fas fa-save"></i>
-            <%= t('SaveClose')%>
-          </button>
-          <button class="preview-close btn btn-light icon-btn" data-dismiss="modal">
-            <i class="fas fa-times"></i>
-          </button>
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
         </div>
         <div class="modal-body">
           <div id="marvinjs-editor" data-marvinjs-mode="<%= ENV['MARVINJS_API_KEY'] ? 'remote' : 'local' %>">

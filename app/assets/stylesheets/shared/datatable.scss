@@ -2,15 +2,7 @@
 // scss-lint:disable NestingDepth QualifyingElement
 
 .dataTables_wrapper {
-<<<<<<< HEAD
-<<<<<<< HEAD
   --datatable-pagination-row: 68px;
-=======
-
->>>>>>> Pulled latest release
-=======
-  --datatable-pagination-row: 68px;
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   .main-actions {
     align-items: center;
     display: flex;
@@ -32,15 +24,7 @@
     align-items: center;
     display: flex;
     flex-wrap: wrap;
-<<<<<<< HEAD
-<<<<<<< HEAD
     min-height: var(--datatable-pagination-row);
-=======
-    min-height: 68px;
->>>>>>> Pulled latest release
-=======
-    min-height: var(--datatable-pagination-row);
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     width: 100%;
 
     .pagination-info,

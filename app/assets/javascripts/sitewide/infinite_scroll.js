@@ -47,14 +47,6 @@ var InfiniteScroll = (function() {
 
     if (config.loadFirstPage) {
       loadData($container, 1);
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    } else if (scrollNotVisible($container)) {
-      loadData($container, $container.data('next-page'));
->>>>>>> Pulled latest release
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     }
 
     $container.on('scroll', () => {

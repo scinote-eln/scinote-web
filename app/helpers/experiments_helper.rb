@@ -1,21 +1,12 @@
 # frozen_string_literal: true
 
 module ExperimentsHelper
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   def experiments_view_mode(project)
     return 'archived' if project.archived?
 
     params[:view_mode] == 'archived' ? 'archived' : 'active'
   end
 
-<<<<<<< HEAD
-=======
->>>>>>> Pulled latest release
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   def grouped_by_prj(experiments)
     ungrouped_experiments = experiments.joins(:project)
                                        .select('projects.name as project_name,
@@ -29,10 +20,6 @@ module ExperimentsHelper
       }
     end
   end
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 
   def experiment_archived_on(experiment)
     if experiment.archived?
@@ -41,9 +28,4 @@ module ExperimentsHelper
       experiment.project.archived_on
     end
   end
-<<<<<<< HEAD
-=======
->>>>>>> Pulled latest release
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
 end

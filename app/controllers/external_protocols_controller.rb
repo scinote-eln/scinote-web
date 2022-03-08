@@ -30,33 +30,15 @@ class ExternalProtocolsController < ApplicationController
                                                   .split('/').map(&:to_sym))
     api_client = "ProtocolImporters::#{endpoint_name}::ApiClient".constantize.new
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     html_preview_request = api_client.protocol_html_preview(show_params[:protocol_id])
     base_uri = URI.parse(html_preview_request.request.last_uri.to_s)
-=======
-    html_preview = api_client.protocol_html_preview(show_params[:protocol_id])
-    base_uri = URI.parse(html_preview.request.last_uri.to_s)
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-    html_preview_request = api_client.protocol_html_preview(show_params[:protocol_id])
-    base_uri = URI.parse(html_preview_request.request.last_uri.to_s)
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     base_uri = "#{base_uri.scheme}://#{base_uri.host}"
 
     render json: {
       protocol_source: show_params[:protocol_source],
       protocol_id: show_params[:protocol_id],
       base_uri: base_uri,
-<<<<<<< HEAD
-<<<<<<< HEAD
       html: html_preview_request.body
-=======
-      html: html_preview
->>>>>>> Finished merging. Test on dev machine (iMac).
-=======
-      html: html_preview_request.body
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     }
   rescue StandardError => e
     render json: {

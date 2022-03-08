@@ -25,10 +25,6 @@
     <%= render partial: 'assets/asset_context_menu.html.erb', locals: { asset: asset, deletable: deletable, editable: editable } %>
   </div>
   <% if wopi_enabled? && wopi_file?(asset) %>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
     <% if asset.file_size.positive? %>
       <div class="iframe-placeholder" data-iframe-url="<%= asset.get_action_url(current_user, 'embedview') %>"></div>
     <% else %>
@@ -44,12 +40,6 @@
     <% end %>
   <% elsif asset.pdf_previewable? %>
     <%= render partial: 'shared/pdf_viewer.html.erb', locals: { asset: asset, report_document: false } %>
-<<<<<<< HEAD
-=======
-    <div class="iframe-placeholder" data-iframe-url="<%= asset.get_action_url(current_user, 'embedview') %>"></div>
->>>>>>> Pulled latest release
-=======
->>>>>>> Latest 1.22.0 release from biosistemika. All previous EPA changes revoked. Need to add in template.
   <% elsif asset.previewable? %>
     <div class="image-container">
       <%= image_tag asset.large_preview,
