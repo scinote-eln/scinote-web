@@ -600,7 +600,7 @@ var RepositoryDatatable = (function(global) {
     // Handle click on table cells with checkboxes
     $(TABLE_ID).on('click', 'tbody td', function(ev) {
       // Skip if clicking on selector checkbox, edit icon or link
-      if ($(ev.target).is('.repository-row-selector, .repository-row-edit-icon, a')) return;
+      if ($(ev.target).is('.row-reminders-icon, .repository-row-selector, .repository-row-edit-icon, a')) return;
 
       $(this).parent().find('.repository-row-selector').trigger('click');
     });
@@ -638,6 +638,17 @@ var RepositoryDatatable = (function(global) {
       }
     });
   };
+
+  function updateReminderDropdownPosition(reminderContainer) {
+    let row = $(reminderContainer).closest('tr');
+    let screenHeight = screen.height;
+    let rowPosition = row[0].getBoundingClientRect().y;
+    if ((screenHeight / 2) < rowPosition) {
+      $(reminderContainer).find('.dropdown-menu').css({ top: 'unset', bottom: '100%' });
+    } else {
+      $(reminderContainer).find('.dropdown-menu').css({ bottom: 'unset', top: '100%' });
+    }
+  }
 
   $('.repository-show')
     .on('click', '#addRepositoryRecord', function() {
@@ -736,6 +747,9 @@ var RepositoryDatatable = (function(global) {
     })
     .on('click', '#deleteRepositoryRecords', function() {
       $('#deleteRepositoryRecord').modal('show');
+    })
+    .on('show.bs.dropdown', '.row-reminders-dropdown', function() {
+      updateReminderDropdownPosition(this);
     });
 
   // Handle enter key
