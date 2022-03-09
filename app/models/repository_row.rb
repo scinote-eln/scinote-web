@@ -4,6 +4,7 @@ class RepositoryRow < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
   include ArchivableModel
+  include ReminderRepositoryCellJoinable
 
   ID_PREFIX = 'IT'
   include PrefixedIdModel
@@ -86,9 +87,7 @@ class RepositoryRow < ApplicationRecord
   scope :archived, -> { where(archived: true) }
 
   scope :with_active_reminders, lambda {
-    joins(:repository_cells).where(
-      repository_cells: { id: RepositoryCell.with_active_reminder.select(:id) }
-    ).distinct
+    reminder_repository_cells_scope(joins(repository_cells: :repository_column)).distinct
   }
 
   def code

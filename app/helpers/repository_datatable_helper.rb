@@ -4,7 +4,7 @@ module RepositoryDatatableHelper
   include InputSanitizeHelper
 
   def prepare_row_columns(repository_rows, repository, columns_mappings, team, options = {})
-    repository_rows_with_active_reminders = repository.repository_rows.with_active_reminders
+    repository_row_with_active_reminder_ids = repository_rows.with_active_reminders.pluck(:id)
 
     repository_rows.map do |record|
       default_cells = {
@@ -21,7 +21,7 @@ module RepositoryDatatableHelper
         'DT_RowId': record.id,
         'DT_RowAttr': { 'data-state': row_style(record) },
         'recordInfoUrl': Rails.application.routes.url_helpers.repository_repository_row_path(repository, record),
-        'hasActiveReminders': repository_rows_with_active_reminders.include?(record),
+        'hasActiveReminders': repository_row_with_active_reminder_ids.include?(record.id),
         'rowRemindersUrl':
           Rails.application.routes.url_helpers
                .active_reminder_repository_cells_repository_repository_row_url(
