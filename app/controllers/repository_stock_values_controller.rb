@@ -57,13 +57,13 @@ class RepositoryStockValuesController < ApplicationController
     )
     @repository_stock_value.repository_stock_unit_item =
       @repository_column.repository_stock_unit_items.find(repository_stock_value_params[:unit_item_id])
-    @repository_stock_value.update_data!(repository_stock_value_params[:amount], current_user)
+    @repository_stock_value.update_data!(repository_stock_value_params, current_user)
   end
 
   def create!
     repository_cell = @repository_row.repository_cells.create(repository_column: @repository_column)
     @repository_stock_value = RepositoryStockValue.new_with_payload(
-      repository_stock_value_params[:amount],
+      repository_stock_value_params,
       repository_cell: repository_cell,
       created_by: current_user,
       last_modified_by: current_user,
@@ -90,7 +90,7 @@ class RepositoryStockValuesController < ApplicationController
   end
 
   def repository_stock_value_params
-    params.require(:repository_stock_value).permit(:unit_item_id, :amount, :comment)
+    params.require(:repository_stock_value).permit(:unit_item_id, :amount, :comment, :low_stock_threshold)
   end
 
   def log_activity(operator, change_amount, unit, new_amount)
