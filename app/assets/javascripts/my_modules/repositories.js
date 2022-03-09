@@ -170,8 +170,13 @@ var MyModuleRepositories = (function() {
         var recordName = "<a href='" + row.recordInfoUrl + "'"
                          + "class='record-info-link'>" + data + '</a>';
         if (row.hasActiveReminders) {
-          recordName = `<i class="fas fa-bell row-reminders-icon" 
-                         data-row-reminders-url="${row.rowRemindersUrl}"></i>` + recordName;
+          recordName = `<div class="dropdown row-reminders-dropdown" data-row-reminders-url="${row.rowRemindersUrl}">
+                          <i class="fas fa-bell dropdown-toggle row-reminders-icon" 
+                             data-toggle="dropdown" id="rowReminders${row.DT_RowId}}"></i>
+                          <ul class="dropdown-menu" role="menu" aria-labelledby="rowReminders${row.DT_RowId}">
+                            List of reminders
+                          </ul>
+                        </div>` + recordName;
         }
         return recordName;
       }
