@@ -160,6 +160,7 @@ class MyModuleRepositoriesController < ApplicationController
   def update_consumption
     module_repository_row = @my_module.my_module_repository_rows.find_by(id: params[:module_row_id])
     module_repository_row.with_lock do
+      current_stock = module_repository_row.stock_consumption
       module_repository_row.assign_attributes(
         stock_consumption: params[:stock_consumption],
         repository_stock_unit_item_id:
@@ -168,6 +169,10 @@ class MyModuleRepositoriesController < ApplicationController
         comment: params[:comment]
       )
       module_repository_row.save!
+
+      log_activity(module_repository_row,
+                   current_stock,
+                   params[:comment])
     end
 
     render json: {}, status: :ok
@@ -228,5 +233,23 @@ class MyModuleRepositoriesController < ApplicationController
       t('my_modules.repository.flash.unassign_from_task_html',
         unassigned_items: unassigned_count)
     end
+  end
+
+  def log_activity(module_repository_row, stock_consumption_was, comment)
+    Activities::CreateActivityService
+      .call(activity_type: :task_inventory_item_stock_consumed,
+            owner: current_user,
+            subject: @my_module,
+            team: @repository.team,
+            project: @my_module.experiment.project,
+            message_items: {
+              repository: @repository.id,
+              repository_row: module_repository_row.repository_row_id,
+              stock_consumption_was: stock_consumption_was || 0,
+              unit: module_repository_row.repository_row.repository_stock_value.repository_stock_unit_item&.data || '',
+              stock_consumption: module_repository_row.stock_consumption || 0,
+              my_module: @my_module.id,
+              comment: comment
+            })
   end
 end

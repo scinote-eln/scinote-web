@@ -328,7 +328,8 @@ class Extends
     register_molecule_on_step_in_repository: 179,
     inventory_item_stock_set: 180,
     inventory_item_stock_add: 181,
-    inventory_item_stock_remove: 182
+    inventory_item_stock_remove: 182,
+    task_inventory_item_stock_consumed: 183
   }
 
   ACTIVITY_GROUPS = {
@@ -338,7 +339,7 @@ class Extends
            *146..148, 166],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
                     168, 171, 177],
-    task_inventory: [55, 56, 146, 147],
+    task_inventory: [55, 56, 146, 147, 183],
     experiment: [*27..31, 57, 141, 165],
     reports: [48, 50, 49, 163, 164],
     inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77,
