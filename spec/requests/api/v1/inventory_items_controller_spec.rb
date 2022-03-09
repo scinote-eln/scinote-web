@@ -181,7 +181,9 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
 
   describe 'DELETE inventory_items, #destroy' do
     it 'Destroys inventory item' do
-      deleted_id = @teams.first.repositories.first.repository_rows.last.id
+      row = @teams.first.repositories.first.repository_rows.last
+      row.archive!(@user)
+      deleted_id = row.id
       delete api_v1_team_inventory_item_path(
         id: deleted_id,
         team_id: @teams.first.id,

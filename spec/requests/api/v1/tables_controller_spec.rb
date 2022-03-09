@@ -6,13 +6,12 @@ RSpec.describe 'Api::V1::TablesController', type: :request do
   before :all do
     @user = create(:user)
     @team = create(:team, created_by: @user)
-    @project = create(:project, team: @team)
-    @experiment = create(:experiment, :with_tasks, project: @project)
+    @project = create(:project, team: @team, created_by: @user)
+    @experiment = create(:experiment, :with_tasks, project: @project, created_by: @user)
     @task = @experiment.my_modules.first
     @protocol = create(:protocol, my_module: @task)
     @step = create(:step, protocol: @protocol)
     create(:user_team, user: @user, team: @team)
-    create_user_assignment(@task, UserRole.find_by(name: I18n.t('user_roles.predefined.owner')), @user)
 
     @valid_headers = {
       'Authorization': 'Bearer ' + generate_token(@user.id),
