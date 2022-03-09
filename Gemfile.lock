@@ -369,7 +369,7 @@ GEM
     mime-types-data (3.2022.0105)
     mini_magick (4.11.0)
     mini_mime (1.1.2)
-    mini_portile2 (2.6.1)
+    mini_portile2 (2.8.0)
     minitest (5.15.0)
     momentjs-rails (2.17.1)
       railties (>= 3.1)
@@ -383,8 +383,8 @@ GEM
       rails (>= 3.2.0)
     newrelic_rpm (8.5.0)
     nio4r (2.5.8)
-    nokogiri (1.12.5)
-      mini_portile2 (~> 2.6.1)
+    nokogiri (1.13.3)
+      mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     nokogumbo (2.0.5)
       nokogiri (~> 1.8, >= 1.8.4)
@@ -693,7 +693,7 @@ DEPENDENCIES
   momentjs-rails (~> 2.17.1)
   nested_form_fields
   newrelic_rpm
-  nokogiri (~> 1.12.5)
+  nokogiri (~> 1.13.2)
   omniauth
   omniauth-azure-activedirectory
   omniauth-linkedin-oauth2
@@ -706,7 +706,7 @@ DEPENDENCIES
   pry-byebug
   pry-rails
   psych (< 4.0)
-  puma
+  puma (>= 5.6.2)
   rack-attack
   rack-cors
   rails (~> 6.1.4)
