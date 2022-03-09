@@ -4,6 +4,7 @@ class RepositoryRow < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
   include ArchivableModel
+  include ReminderRepositoryCellJoinable
 
   ID_PREFIX = 'IT'
   include PrefixedIdModel
@@ -34,7 +35,8 @@ class RepositoryRow < ApplicationRecord
     repository_date: 'RepositoryDateValue',
     repository_date_time_range: 'RepositoryDateTimeRangeValue',
     repository_time_range: 'RepositoryTimeRangeValue',
-    repository_date_range: 'RepositoryDateRangeValue'
+    repository_date_range: 'RepositoryDateRangeValue',
+    repository_stock: 'RepositoryStockValue'
   }.each do |relation, class_name|
     has_many "#{relation}_cells".to_sym, -> { where(value_type: class_name) }, class_name: 'RepositoryCell',
              inverse_of: :repository_row
@@ -83,6 +85,10 @@ class RepositoryRow < ApplicationRecord
 
   scope :active, -> { where(archived: false) }
   scope :archived, -> { where(archived: true) }
+
+  scope :with_active_reminders, lambda {
+    reminder_repository_cells_scope(joins(repository_cells: :repository_column)).distinct
+  }
 
   def code
     "#{ID_PREFIX}#{parent_id || id}"

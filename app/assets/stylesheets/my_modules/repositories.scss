@@ -205,14 +205,20 @@
     .assigned-column {
       position: relative;
 
+      .row-reminders-icon {
+        cursor: pointer;
+        display: inline-block;
+        line-height: 35px;
+      }
+
       .assign-counter-container {
         border-radius: $border-radius-tag;
         cursor: pointer;
+        display: inline-block;
         line-height: 35px;
+        padding: 0 5px;
         position: absolute;
-        text-align: center;
-        top: 1px;
-        width: calc(100% - 16px);
+        right: 5px;
 
         .assign-counter {
           display: inline-block;

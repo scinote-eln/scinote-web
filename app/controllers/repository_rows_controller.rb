@@ -9,7 +9,7 @@ class RepositoryRowsController < ApplicationController
   before_action :load_repository, except: %i(show print_modal print)
   before_action :load_repository_or_snapshot, only: %i(print_modal print)
   before_action :load_repository_row, only: %i(update assigned_task_list)
-  before_action :check_read_permissions, except: %i(show create update delete_records copy_records)
+  before_action :check_read_permissions, except: %i(show create update delete_records copy_records reminder_repository_cells)
   before_action :check_snapshotting_status, only: %i(create update delete_records copy_records)
   before_action :check_create_permissions, only: :create
   before_action :check_delete_permissions, only: %i(delete_records archive_records restore_records)
@@ -222,6 +222,10 @@ class RepositoryRowsController < ApplicationController
                                private_modules_number: private_modules_number
                              })
     }
+  end
+
+  def reminder_repository_cells
+    render json: @repository_row.repository_cells.with_active_reminder
   end
 
   def archive_records

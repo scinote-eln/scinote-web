@@ -34,7 +34,13 @@
 
     .repository-row-edit-icon {
       cursor: pointer;
-      display: none;
+      display: inline-block;
+      opacity: 0;
+    }
+
+    .row-reminders-icon {
+      cursor: pointer;
+      display: inline-block;
     }
 
     .assign-counter-container {
@@ -42,8 +48,7 @@
       display: inline-block;
       line-height: 35px;
       position: absolute;
-      right: 0;
-      width: calc(100% - 40px);
+      right: 5px;
 
       .assign-counter {
         display: inline-block;
@@ -251,7 +256,7 @@
 
         .assigned-column {
           .repository-row-edit-icon {
-            display: inline-block;
+            opacity: 1;
           }
         }
       }
@@ -273,7 +278,7 @@
         tr:hover {
           .assigned-column {
             .repository-row-edit-icon {
-              display: none;
+              opacity: 0;
             }
 
             .assign-counter-container {

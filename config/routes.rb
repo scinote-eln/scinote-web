@@ -596,6 +596,7 @@ Rails.application.routes.draw do
         end
         member do
           get :assigned_task_list
+          get :active_reminder_repository_cells
         end
         member do
           get 'repository_stock_value/new', to: 'repository_stock_values#new', as: 'new_repository_stock'
