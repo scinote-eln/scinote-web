@@ -294,3 +294,28 @@
     }
   }
 }
+
+.repository-table,
+#myModuleRepositoryFullViewModal {
+  .date-time-cell-value,
+  .date-cell-value {
+    display: inline-block;
+
+    &.reminder {
+      position: relative;
+
+      &::after {
+        background-color: $brand-danger;
+        border: 2px solid $color-white;
+        border-radius: 50%;
+        content: "";
+        display: inline-block;
+        height: 10px;
+        position: absolute;
+        right: -.7em;
+        top: 0;
+        width: 10px;
+      }
+    }
+  }
+}

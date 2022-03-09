@@ -61,7 +61,10 @@ $.fn.dataTable.render.defaultRepositoryDateValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryDateValue = function(data) {
-  return `<span data-datetime="${data.value.datetime}" data-date="${data.value.formatted}">${data.value.formatted}</span>`;
+  let reminderClass = data.value.reminder ? 'reminder' : '';
+  return `<span class="${reminderClass}
+                date-cell-value" data-datetime="${data.value.datetime}"
+                data-date="${data.value.formatted}">${data.value.formatted}</span>`;
 };
 
 $.fn.dataTable.render.defaultRepositoryDateTimeValue = function() {
@@ -69,7 +72,9 @@ $.fn.dataTable.render.defaultRepositoryDateTimeValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryDateTimeValue = function(data) {
-  return `<span data-time="${data.value.time_formatted}"
+  let reminderClass = data.value.reminder ? 'reminder' : '';
+  return `<span class="${reminderClass} date-time-cell-value"
+                data-time="${data.value.time_formatted}"
                 data-datetime="${data.value.datetime}"
                 data-date="${data.value.date_formatted}">${data.value.formatted}</span>`;
 };
