@@ -244,7 +244,7 @@ class MyModuleRepositoriesController < ApplicationController
               repository: @repository.id,
               repository_row: module_repository_row.repository_row_id,
               stock_consumption_was: stock_consumption_was || 0,
-              unit: module_repository_row.repository_row.repository_stock_value.repository_stock_unit_item.data,
+              unit: module_repository_row.repository_row.repository_stock_value.repository_stock_unit_item&.data || '',
               stock_consumption: module_repository_row.stock_consumption || 0,
               my_module: @my_module.id,
               comment: comment
