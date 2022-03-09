@@ -167,8 +167,13 @@ var MyModuleRepositories = (function() {
       targets: 0,
       className: 'item-name',
       render: function(data, type, row) {
-        return "<a href='" + row.recordInfoUrl + "'"
-               + "class='record-info-link'>" + data + '</a>';
+        var recordName = "<a href='" + row.recordInfoUrl + "'"
+                         + "class='record-info-link'>" + data + '</a>';
+        if (row.hasActiveReminders) {
+          recordName = `<i class="fas fa-bell row-reminders-icon" 
+                         data-row-reminders-url="${row.rowRemindersUrl}"></i>` + recordName;
+        }
+        return recordName;
       }
     }];
 
