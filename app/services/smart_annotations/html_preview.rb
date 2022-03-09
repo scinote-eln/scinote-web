@@ -5,7 +5,7 @@ module SmartAnnotations
     class << self
       def html(name, type, object, preview_repository = false)
         if preview_repository
-          send("generate_rep_snippet", name, object)
+          send('generate_rep_snippet', name, object)
         else
           send("generate_#{type}_snippet", name, object)
         end
