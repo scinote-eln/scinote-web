@@ -749,6 +749,17 @@ var RepositoryDatatable = (function(global) {
       $('#deleteRepositoryRecord').modal('show');
     })
     .on('show.bs.dropdown', '.row-reminders-dropdown', function() {
+      $.ajax({
+        url: $(this).attr('data-row-reminders-url'),
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+          $('.row-reminders-dropdown .dropdown-menu').html(data.html);
+        },
+        error: function() {
+          console.log('Error');
+        }
+      });
       updateReminderDropdownPosition(this);
     });
 
