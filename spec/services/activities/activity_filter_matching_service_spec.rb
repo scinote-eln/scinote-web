@@ -18,7 +18,7 @@ describe Activities::ActivityFilterMatchingService do
   it 'matches activity filters by activity date' do
     matching_filter = ActivityFilter.create(
       name: "date filter",
-      filter: {"to_date"=>"2021-1-2", "from_date"=>"2021-1-1"}
+      filter: {"to_date"=>"2021-1-6", "from_date"=>"2021-1-1"}
     )
 
     non_matching_filter = ActivityFilter.create(
@@ -26,8 +26,8 @@ describe Activities::ActivityFilterMatchingService do
       filter: {"to_date"=>"2021-12-2", "from_date"=>"2021-12-1"}
     )
 
-    activity.update_column(:created_at, Date.parse("2021-1-1").to_time)
-
+    activity.update_column(:created_at, Date.parse("2021-1-4").to_time)
+    p activity
     matched_activity_filters = Activities::ActivityFilterMatchingService.new(activity).activity_filters
 
     expect(matched_activity_filters).to include(matching_filter)
@@ -115,7 +115,7 @@ describe Activities::ActivityFilterMatchingService do
       name: "mixed filter 1",
       filter: {
         "subjects" => { "Project" => [project.id.to_s] },
-        "to_date"=>"2021-1-2",
+        "to_date"=>"2021-1-6",
         "from_date"=>"2021-1-1",
         "teams"=>[team.id.to_s],
         "users"=>[user.id.to_s],
@@ -124,7 +124,7 @@ describe Activities::ActivityFilterMatchingService do
     )
 
     activity.update_columns(
-      created_at: Date.parse("2021-1-1").to_time,
+      created_at: Date.parse("2021-1-4").to_time,
       owner_id: user.id,
       type_of: 163,
       subject_type: "Project",

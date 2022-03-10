@@ -14,19 +14,19 @@ class RepositoryTimeValue < RepositoryDateTimeValueBase
     parameters = filter_element.parameters
     case filter_element.operator
     when 'equal_to'
-      repository_rows.where("#{join_alias}.data::time = ?", Time.zone.parse(parameters['time']))
+      repository_rows.where("#{join_alias}.data::time = (?)::time", Time.zone.parse(parameters['time']))
     when 'unequal_to'
-      repository_rows.where.not("#{join_alias}.data::time = ?", Time.zone.parse(parameters['time']))
+      repository_rows.where.not("#{join_alias}.data::time = (?)::time", Time.zone.parse(parameters['time']))
     when 'greater_than'
-      repository_rows.where("#{join_alias}.data::time > ?", Time.zone.parse(parameters['time']))
+      repository_rows.where("#{join_alias}.data::time > (?)::time", Time.zone.parse(parameters['time']))
     when 'greater_than_or_equal_to'
-      repository_rows.where("#{join_alias}.data::time >= ?", Time.zone.parse(parameters['time']))
+      repository_rows.where("#{join_alias}.data::time >= (?)::time", Time.zone.parse(parameters['time']))
     when 'less_than'
-      repository_rows.where("#{join_alias}.data::time < ?", Time.zone.parse(parameters['time']))
+      repository_rows.where("#{join_alias}.data::time < (?)::time", Time.zone.parse(parameters['time']))
     when 'less_than_or_equal_to'
-      repository_rows.where("#{join_alias}.data::time <= ?", Time.zone.parse(parameters['time']))
+      repository_rows.where("#{join_alias}.data::time <= (?)::time", Time.zone.parse(parameters['time']))
     when 'between'
-      repository_rows.where("#{join_alias}.data::time > ? AND #{join_alias}.data::time < ?",
+      repository_rows.where("#{join_alias}.data::time > (?)::time AND #{join_alias}.data::time < (?)::time",
                             Time.zone.parse(parameters['start_time']), Time.zone.parse(parameters['end_time']))
     else
       raise ArgumentError, 'Wrong operator for RepositoryTimeValue!'

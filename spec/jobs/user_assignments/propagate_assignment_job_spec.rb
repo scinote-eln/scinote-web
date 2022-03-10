@@ -11,17 +11,11 @@ module UserAssignments
     let!(:owner_role) { UserRole.find_by(name: I18n.t('user_roles.predefined.owner')) }
     let!(:project) { create :project, team: team, created_by: user_one }
     let!(:user_project) { create :user_project, user: user_one, project: project }
-    let!(:experiment_one) { create :experiment, project: project }
-    let!(:experiment_two) { create :experiment, project: project }
+    let!(:experiment_one) { create :experiment, project: project, created_by: project.created_by }
+    let!(:experiment_two) { create :experiment, project: project, created_by: project.created_by }
     let!(:my_module_one) { create :my_module, experiment: experiment_one, created_by: experiment_one.created_by }
     let!(:my_module_two) { create :my_module, experiment: experiment_two, created_by: experiment_two.created_by }
-    let!(:user_assignment) do
-      create :user_assignment,
-             assignable: project,
-             user: user_one,
-             user_role: owner_role,
-             assigned_by: user_one
-    end
+
 
     before do
       [user_one, user_two].each do |user|

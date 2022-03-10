@@ -109,17 +109,15 @@ module Api
       end
 
       def inventory_item_params
-        unless params.require(:data).require(:type) == 'inventory_items'
-          raise TypeError
-        end
+        raise TypeError unless params.require(:data).require(:type) == 'inventory_items'
+
         params.require(:data).require(:attributes)
         params.permit(data: { attributes: %i(name archived) })[:data]
       end
 
       def update_inventory_item_params
-        unless params.require(:data).require(:id).to_i == params[:id].to_i
-          raise IDMismatchError
-        end
+        raise IDMismatchError unless params.require(:data).require(:id).to_i == params[:id].to_i
+
         inventory_item_params[:attributes]
       end
 
