@@ -260,7 +260,7 @@ class RepositoryRowsController < ApplicationController
       html: render_to_string(partial: 'shared/repository_row_reminder.html.erb', locals: {
                                reminders: reminder_cells
                              })
-      }
+    }
   end
 
   private
