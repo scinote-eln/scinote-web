@@ -8,7 +8,7 @@ describe AccessPermissions::MyModulesController, type: :controller do
   let!(:user) { subject.current_user }
   let!(:team) { create :team, created_by: user }
   let!(:user_team) { create :user_team, :admin, user: user, team: team }
-  let!(:experiment) { create :experiment, project: project }
+  let!(:experiment) { create :experiment, project: project, created_by: user }
   let!(:owner_role) { UserRole.find_by(name: I18n.t('user_roles.predefined.owner')) }
   let!(:viewer_user_role) { create :viewer_role }
   let!(:technician_role) { create :technician_role }
@@ -48,8 +48,6 @@ describe AccessPermissions::MyModulesController, type: :controller do
     end
 
     it 'renders 403 if user does not have manage permissions on project' do
-      create :user_assignment, assignable: my_module, user: viewer_user, user_role: viewer_user_role, assigned_by: user
-
       sign_in_viewer_user
 
       get :edit, params: { project_id: project.id, experiment_id: experiment.id, id: my_module.id }, format: :json

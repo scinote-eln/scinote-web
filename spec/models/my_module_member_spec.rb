@@ -6,28 +6,12 @@ describe MyModuleMember, type: :model do
   # let(:owner_role) { create :owner_role }
   let!(:user) { create :user }
   let!(:owner_role) { UserRole.find_by(name: I18n.t('user_roles.predefined.owner')) }
-  let!(:project) { create :project }
-  let!(:user_project) { create :user_project, user: user, project: project }
-  let!(:user_assignment) do
-    create :user_assignment,
-           assignable: project,
-           user: user,
-           user_role: owner_role,
-           assigned_by: user
-  end
-  let!(:experiment) { create :experiment, project: project }
-  let!(:my_module) { create :my_module, experiment: experiment, created_by: user }
+  let!(:project) { create :project, created_by: user }
+  let!(:experiment) { create :experiment, project: project, created_by: project.created_by }
+  let!(:my_module) { create :my_module, experiment: experiment, created_by: experiment.created_by }
   let(:normal_user_role) { create :normal_user_role }
 
   describe '#update' do
-    let!(:my_module_user_assignment) do
-      create :user_assignment,
-             assignable: my_module,
-             user: user,
-             user_role: owner_role,
-             assigned_by: user
-    end
-
     let!(:valid_params) do
       {
         user_id: user.id,
@@ -35,11 +19,11 @@ describe MyModuleMember, type: :model do
       }
     end
 
-    let!(:subject) { described_class.new(user, my_module, experiment, project, user, my_module_user_assignment) }
+    let!(:subject) { described_class.new(user, my_module, experiment, project, user) }
 
     it 'updates the assigment user role' do
       subject.update(valid_params)
-      expect(my_module_user_assignment.reload.user_role).to eq normal_user_role
+      expect(subject.user_assignment.user_role).to eq normal_user_role
     end
 
     it 'logs a change_user_role_on_my_module activity' do

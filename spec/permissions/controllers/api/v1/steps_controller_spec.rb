@@ -81,7 +81,7 @@ describe Api::V1::StepsController, type: :controller do
 
     it_behaves_like "a controller action with permissions checking", :post, :create do
       let(:testable) { my_module }
-      let(:permissions) { [MyModulePermissions::MANAGE] }
+      let(:permissions) { [MyModulePermissions::PROTOCOL_MANAGE] }
       let(:action_params) {
         {
           team_id: team.id,
@@ -96,7 +96,7 @@ describe Api::V1::StepsController, type: :controller do
 
     it_behaves_like "a controller action with permissions checking", :put, :update do
       let(:testable) { my_module }
-      let(:permissions) { [MyModulePermissions::MANAGE] }
+      let(:permissions) { [MyModulePermissions::PROTOCOL_MANAGE] }
       let(:action_params) {
         {
           team_id: team.id,
@@ -104,6 +104,7 @@ describe Api::V1::StepsController, type: :controller do
           experiment_id: experiment.id,
           task_id: my_module.id,
           protocol_id: step.protocol_id,
+          data: { attributes: { name: 'Test' }, type: 'steps' },
           id: step.id
         }
       }

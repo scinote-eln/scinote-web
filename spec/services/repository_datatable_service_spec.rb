@@ -156,7 +156,7 @@ describe RepositoryDatatableService do
       end
 
       it 'returns the rows matching "this_month"' do
-        repository_row.update_column(:created_at, Time.now.beginning_of_month)
+        repository_row.update_column(:created_at, Time.now)
         previous_month_repository_row = RepositoryRow.create(
           name: "Last week",
           repository: repository,

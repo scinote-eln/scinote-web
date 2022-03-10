@@ -13,23 +13,23 @@ describe ProjectsOverviewService do
 
   let!(:project_1) do
     create :project, name: 'test project D', visibility: 1, team: team,
-                     archived: false, created_at: time.advance(hours: 2)
+                     archived: false, created_at: time.advance(hours: 2), created_by: user
   end
   let!(:project_2) do
     create :project, name: 'test project B', visibility: 1, team: team,
-                     archived: true, created_at: time
+                     archived: true, created_at: time, created_by: user
   end
   let!(:project_3) do
     create :project, name: 'test project C', visibility: 1, team: team,
-                     archived: false, created_at: time.advance(hours: 3)
+                     archived: false, created_at: time.advance(hours: 3), created_by: user
   end
   let!(:project_4) do
     create :project, name: 'test project A', visibility: 1, team: team,
-                     archived: true, created_at: time.advance(hours: 1)
+                     archived: true, created_at: time.advance(hours: 1), created_by: user
   end
   let!(:project_5) do
     create :project, name: 'test project E', visibility: 1, team: team,
-                     archived: true, created_at: time.advance(hours: 5)
+                     archived: true, created_at: time.advance(hours: 5), created_by: user
   end
   let!(:project_6) do
     create :project, name: 'test project F', visibility: 0, team: team,
@@ -40,7 +40,8 @@ describe ProjectsOverviewService do
       create :project, name: "test project #{(64 + i).chr}",
                        visibility: 1,
                        team: team, archived: i % 2,
-                       created_at: time.advance(hours: 6, minutes: i)
+                       created_at: time.advance(hours: 6, minutes: i),
+                       created_by: user
     end
   end
 

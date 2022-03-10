@@ -5,12 +5,12 @@ FactoryBot.define do
     transient do
       user { create :user }
     end
-    created_by { user }
     sequence(:name) { |n| "Task-#{n}" }
     sequence(:y) { |n| n }
     sequence(:x) { |n| n }
     workflow_order { MyModule.where(experiment_id: experiment.id).count + 1 }
     experiment
+    created_by { experiment.created_by }
     my_module_group { create :my_module_group, experiment: experiment }
     trait :with_tag do
       tags { create_list :tag, 3, project: experiment.project }

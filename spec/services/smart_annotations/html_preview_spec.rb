@@ -5,7 +5,7 @@ require 'rails_helper'
 describe SmartAnnotations::HtmlPreview do
   let(:subject) { described_class }
   let(:user) { create :user }
-  let(:project) { create :project, name: 'my project' }
+  let(:project) { create :project, name: 'my project', created_by: user }
   let(:experiment) do
     create :experiment, name: 'my experiment',
                         project: project,
