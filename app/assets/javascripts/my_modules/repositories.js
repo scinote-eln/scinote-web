@@ -32,8 +32,8 @@ var MyModuleRepositories = (function() {
         targets: 'row-stock',
         className: 'item-stock',
         sWidth: '1%',
-        render: function(data, type, row) {
-          return $.fn.dataTable.render.RepositoryStockValue(data, row);
+        render: function(data) {
+          return $.fn.dataTable.render.RepositoryStockValue(data);
         }
       }, {
         targets: 'row-consumption',
@@ -131,9 +131,9 @@ var MyModuleRepositories = (function() {
     columnDefs.push(
       {
         targets: '_all',
-        render: function(data, type, row) {
+        render: function(data) {
           if (typeof data === 'object' && $.fn.dataTable.render[data.value_type]) {
-            return $.fn.dataTable.render[data.value_type](data, row);
+            return $.fn.dataTable.render[data.value_type](data);
           }
           if (data !== undefined && data.stock_present !== undefined) {
             return $.fn.dataTable.render.RepositoryStockConsumptionValue(data);
