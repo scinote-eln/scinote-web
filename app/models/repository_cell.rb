@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class RepositoryCell < ApplicationRecord
+  include ReminderRepositoryCellJoinable
+
   attr_accessor :importing
 
   belongs_to :repository_row
@@ -40,6 +42,10 @@ class RepositoryCell < ApplicationRecord
   validates :repository_row,
             uniqueness: { scope: :repository_column },
             unless: :importing
+
+  scope :with_active_reminder, lambda {
+    reminder_repository_cells_scope(joins(:repository_column))
+  }
 
   def self.create_with_value!(row, column, data, user)
     cell = new(repository_row: row, repository_column: column)

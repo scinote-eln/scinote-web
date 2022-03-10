@@ -1570,6 +1570,10 @@ en:
       current_stock: "Current stock"
       new_stock: "New stock"
       comment_limit: "Maximum number of characters reached (255)"
+      create_reminder: "Create a low stock reminder"
+      reminder_at: "Reminder at"
+      units_remaining: "%{unit} remaining."
+      enter_ammount: "Enter an amount"
 
   libraries:
     manange_modal_column_index:

@@ -34,7 +34,13 @@
 
     .repository-row-edit-icon {
       cursor: pointer;
-      display: none;
+      display: inline-block;
+      opacity: 0;
+    }
+
+    .row-reminders-dropdown {
+      cursor: pointer;
+      display: inline-block;
     }
 
     .assign-counter-container {
@@ -42,8 +48,7 @@
       display: inline-block;
       line-height: 35px;
       position: absolute;
-      right: 0;
-      width: calc(100% - 40px);
+      right: 5px;
 
       .assign-counter {
         display: inline-block;
@@ -260,7 +265,7 @@
 
         .assigned-column {
           .repository-row-edit-icon {
-            display: inline-block;
+            opacity: 1;
           }
         }
       }
@@ -282,7 +287,7 @@
         tr:hover {
           .assigned-column {
             .repository-row-edit-icon {
-              display: none;
+              opacity: 0;
             }
 
             .assign-counter-container {
@@ -294,6 +299,31 @@
             }
           }
         }
+      }
+    }
+  }
+}
+
+.repository-table,
+#myModuleRepositoryFullViewModal {
+  .date-time-cell-value,
+  .date-cell-value {
+    display: inline-block;
+
+    &.reminder {
+      position: relative;
+
+      &::after {
+        background-color: $brand-danger;
+        border: 2px solid $color-white;
+        border-radius: 50%;
+        content: "";
+        display: inline-block;
+        height: 10px;
+        position: absolute;
+        right: -.7em;
+        top: 0;
+        width: 10px;
       }
     }
   }

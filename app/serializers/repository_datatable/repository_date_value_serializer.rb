@@ -5,7 +5,8 @@ module RepositoryDatatable
     def value
       {
         formatted: I18n.l(object.data, format: :full_date),
-        datetime: object.data.strftime('%Y/%m/%d %H:%M')
+        datetime: object.data.strftime('%Y/%m/%d %H:%M'),
+        reminder: object.reminder?
       }
     end
   end

@@ -86,6 +86,15 @@
         }, {
           targets: 8,
           visible: archived
+        },
+        {
+          visible: true,
+          searchable: false,
+          data: 'stock',
+          render: {
+            _: 'display',
+            sort: 'sort'
+          }
         }],
         fnInitComplete: function(e) {
           var dataTableWrapper = $(e.nTableWrapper);

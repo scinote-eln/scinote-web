@@ -431,7 +431,7 @@ var RepositoryDatatable = (function(global) {
         className: 'assigned-column',
         sWidth: '1%',
         render: function(data, type, row) {
-          let content = $.fn.dataTable.render.AssignedTasksValue(data);
+          let content = $.fn.dataTable.render.AssignedTasksValue(data, row);
           let icon;
           if (!row.recordEditable) {
             icon = `<i class="repository-row-lock-icon fas fa-lock" title="${I18n.t('repositories.table.locked_item')}"></i>`;
@@ -458,11 +458,19 @@ var RepositoryDatatable = (function(global) {
         visible: true
       }, {
         targets: '_all',
-        render: function(data, type, row) {
+        render: function(data) {
           if (typeof data === 'object' && $.fn.dataTable.render[data.value_type]) {
-            return $.fn.dataTable.render[data.value_type](data, row);
+            return $.fn.dataTable.render[data.value_type](data);
           }
           return data;
+        }
+      },
+      {
+        targets: 'row-stock',
+        className: 'item-stock',
+        sWidth: '1%',
+        render: function(data) {
+          return $.fn.dataTable.render.RepositoryStockValue(data);
         }
       }],
       language: {
@@ -488,13 +496,15 @@ var RepositoryDatatable = (function(global) {
           columns[i].defaultContent = '';
         }
         customColumns.each((i, column) => {
+          var columnData = $(column).data('type') === 'RepositoryStockValue' ? 'stock' : String(columns.length);
           columns.push({
             visible: true,
             searchable: true,
-            data: String(columns.length),
+            data: columnData,
             defaultContent: $.fn.dataTable.render['default' + column.dataset.type](column.id)
           });
         });
+
         return columns;
       }()),
       drawCallback: function() {
@@ -590,7 +600,7 @@ var RepositoryDatatable = (function(global) {
     // Handle click on table cells with checkboxes
     $(TABLE_ID).on('click', 'tbody td', function(ev) {
       // Skip if clicking on selector checkbox, edit icon or link
-      if ($(ev.target).is('.repository-row-selector, .repository-row-edit-icon, a')) return;
+      if ($(ev.target).is('.row-reminders-icon, .repository-row-selector, .repository-row-edit-icon, a')) return;
 
       $(this).parent().find('.repository-row-selector').trigger('click');
     });
@@ -628,6 +638,17 @@ var RepositoryDatatable = (function(global) {
       }
     });
   };
+
+  function updateReminderDropdownPosition(reminderContainer) {
+    let row = $(reminderContainer).closest('tr');
+    let screenHeight = screen.height;
+    let rowPosition = row[0].getBoundingClientRect().y;
+    if ((screenHeight / 2) < rowPosition) {
+      $(reminderContainer).find('.dropdown-menu').css({ top: 'unset', bottom: '100%' });
+    } else {
+      $(reminderContainer).find('.dropdown-menu').css({ bottom: 'unset', top: '100%' });
+    }
+  }
 
   $('.repository-show')
     .on('click', '#addRepositoryRecord', function() {
@@ -726,6 +747,9 @@ var RepositoryDatatable = (function(global) {
     })
     .on('click', '#deleteRepositoryRecords', function() {
       $('#deleteRepositoryRecord').modal('show');
+    })
+    .on('show.bs.dropdown', '.row-reminders-dropdown', function() {
+      updateReminderDropdownPosition(this);
     });
 
   // Handle enter key

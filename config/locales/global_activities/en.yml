@@ -208,6 +208,7 @@ en:
       inventory_item_stock_set_html: "%{user} set total stock for %{repository_row} to %{new_amount} %{unit} in %{repository}"
       inventory_item_stock_add_html: "%{user} added %{change_amount} %{unit} of stock to a total of %{new_amount} %{unit} for %{repository_row} in %{repository}"
       inventory_item_stock_remove_html: "%{user} removed %{change_amount} %{unit} of stock to a total of %{new_amount} %{unit} for %{repository_row} in %{repository}"
+      task_inventory_item_stock_consumed_html: "%{user} changed consumption of %{repository_row} from %{stock_consumption_was} %{unit} to %{stock_consumption} %{unit} in %{my_module} \n%{comment}"
 
     activity_name:
       create_project: "Project created"
@@ -367,6 +368,11 @@ en:
       register_molecule_on_step: "Molecule on task step registered"
       register_molecule_on_result: "Molecule on result registered"
       register_molecule_on_step_in_repository: "Molecule on step registered"
+      inventory_item_stock_set: "Inventory item stock set to"
+      inventory_item_stock_add: "Inventory item stock added"
+      inventory_item_stock_remove: "Inventory item stock removed"
+      task_inventory_item_stock_consumed: "Task-assigned inventory item consumed"
+
 
 
     activity_group:
