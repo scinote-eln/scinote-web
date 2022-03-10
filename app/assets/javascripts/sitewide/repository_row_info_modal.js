@@ -75,4 +75,27 @@
       });
     });
   });
-})();
+
+  function updateReminderDropdownPosition(reminderContainer) {
+    let row = $(reminderContainer).closest('tr');
+    let screenHeight = screen.height;
+    let rowPosition = row[0].getBoundingClientRect().y;
+    if ((screenHeight / 2) < rowPosition) {
+      $(reminderContainer).find('.dropdown-menu').css({ top: 'unset', bottom: '100%' });
+    } else {
+      $(reminderContainer).find('.dropdown-menu').css({ bottom: 'unset', top: '100%' });
+    }
+  }
+
+  $(document).on('show.bs.dropdown', '.row-reminders-dropdown', function() {
+    $.ajax({
+      url: $(this).attr('data-row-reminders-url'),
+      type: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        $('.row-reminders-dropdown .dropdown-menu').html(data.html);
+      }
+    });
+    updateReminderDropdownPosition(this);
+  });
+}());
