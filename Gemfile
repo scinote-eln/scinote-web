@@ -18,7 +18,7 @@ gem 'view_component', require: 'view_component/engine'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 5.2'
 gem 'sassc-rails'
-gem 'webpacker', '~> 4.0.0'
+gem 'webpacker', '~> 4.x'
 gem 'yomu', git: 'https://github.com/biosistemika/yomu', branch: 'master'
 
 # Gems for OAuth2 subsystem

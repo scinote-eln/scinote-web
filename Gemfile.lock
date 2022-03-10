@@ -123,10 +123,10 @@ GEM
       rails (>= 3.1)
     awesome_print (1.9.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.565.0)
+    aws-partitions (1.566.0)
     aws-record (2.7.0)
       aws-sdk-dynamodb (~> 1.18)
-    aws-sdk-core (3.129.0)
+    aws-sdk-core (3.129.1)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.525.0)
       aws-sigv4 (~> 1.1)
@@ -616,7 +616,7 @@ GEM
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    webpacker (4.0.7)
+    webpacker (4.3.0)
       activesupport (>= 4.2)
       rack-proxy (>= 0.6.1)
       railties (>= 4.2)
@@ -742,7 +742,7 @@ DEPENDENCIES
   underscore-rails
   view_component
   webmock
-  webpacker (~> 4.0.0)
+  webpacker (~> 4.x)
   whacamole
   wicked_pdf
   wkhtmltopdf-heroku (= 2.12.5)
