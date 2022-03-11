@@ -79,7 +79,7 @@
     "node-sass": "^7.0.1",
     "path-complete-extname": "^0.1.0",
     "pdfjs-dist": "^2.5.207",
-    "postcss-loader": "^2.1.6",
+    "postcss-loader": "^6.2.1",
     "postcss-smart-import": "^0.7.6",
     "precss": "^4.0.0",
     "prop-types": "^15.7.2",
