@@ -1,3 +1,24 @@
+function initReminderDropdown(table) {
+  $(table).on('show.bs.dropdown', '.row-reminders-dropdown', function(e) {
+    let row = $(this).closest('tr');
+    let screenHeight = screen.height;
+    let rowPosition = row[0].getBoundingClientRect().y;
+    if ((screenHeight / 2) < rowPosition) {
+      $(this).find('.dropdown-menu').css({ top: 'unset', bottom: '100%' });
+    } else {
+      $(this).find('.dropdown-menu').css({ bottom: 'unset', top: '100%' });
+    }
+    $.ajax({
+      url: $(this).attr('data-row-reminders-url'),
+      type: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        $('.row-reminders-dropdown .dropdown-menu').html(data.html);
+      }
+    });
+  });
+}
+
 function initAssignedTasksDropdown(table) {
   function loadTasks(counterContainer) {
     var tasksContainer = counterContainer.find('.tasks');
