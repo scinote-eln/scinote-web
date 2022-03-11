@@ -586,6 +586,38 @@ ALTER SEQUENCE public.experiments_id_seq OWNED BY public.experiments.id;
 
 
 --
+-- Name: hidden_repository_cell_reminders; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.hidden_repository_cell_reminders (
+    id bigint NOT NULL,
+    repository_cell_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: hidden_repository_cell_reminders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.hidden_repository_cell_reminders_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: hidden_repository_cell_reminders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.hidden_repository_cell_reminders_id_seq OWNED BY public.hidden_repository_cell_reminders.id;
+
+
+--
 -- Name: label_printers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3305,6 +3337,13 @@ ALTER TABLE ONLY public.experiments ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: hidden_repository_cell_reminders id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.hidden_repository_cell_reminders ALTER COLUMN id SET DEFAULT nextval('public.hidden_repository_cell_reminders_id_seq'::regclass);
+
+
+--
 -- Name: label_printers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3932,6 +3971,14 @@ ALTER TABLE ONLY public.delayed_jobs
 
 ALTER TABLE ONLY public.experiments
     ADD CONSTRAINT experiments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: hidden_repository_cell_reminders hidden_repository_cell_reminders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.hidden_repository_cell_reminders
+    ADD CONSTRAINT hidden_repository_cell_reminders_pkey PRIMARY KEY (id);
 
 
 --
@@ -4847,6 +4894,20 @@ CREATE INDEX index_experiments_on_project_id ON public.experiments USING btree (
 --
 
 CREATE INDEX index_experiments_on_restored_by_id ON public.experiments USING btree (restored_by_id);
+
+
+--
+-- Name: index_hidden_repository_cell_reminders_on_repository_cell_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_hidden_repository_cell_reminders_on_repository_cell_id ON public.hidden_repository_cell_reminders USING btree (repository_cell_id);
+
+
+--
+-- Name: index_hidden_repository_cell_reminders_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_hidden_repository_cell_reminders_on_user_id ON public.hidden_repository_cell_reminders USING btree (user_id);
 
 
 --
@@ -6472,6 +6533,14 @@ ALTER TABLE ONLY public.repository_ledger_records
 
 
 --
+-- Name: hidden_repository_cell_reminders fk_rails_08be8c52e0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.hidden_repository_cell_reminders
+    ADD CONSTRAINT fk_rails_08be8c52e0 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: repository_stock_values fk_rails_08ce900341; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7181,6 +7250,14 @@ ALTER TABLE ONLY public.user_roles
 
 ALTER TABLE ONLY public.repository_checklist_values
     ADD CONSTRAINT fk_rails_98a7704432 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: hidden_repository_cell_reminders fk_rails_98e782ebf2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.hidden_repository_cell_reminders
+    ADD CONSTRAINT fk_rails_98e782ebf2 FOREIGN KEY (repository_cell_id) REFERENCES public.repository_cells(id);
 
 
 --
@@ -8004,6 +8081,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211103115450'),
 ('20220110151005'),
 ('20220110151006'),
-('20220224153705');
+('20220224153705'),
+('20220310105144');
 
 

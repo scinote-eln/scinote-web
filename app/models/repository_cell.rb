@@ -32,6 +32,8 @@ class RepositoryCell < ApplicationRecord
                optional: true, foreign_key: :value_id, inverse_of: :repository_cell
   end
 
+  has_many :hidden_repository_cell_reminders, dependent: :destroy
+
   validates :repository_column,
             inclusion: { in: (lambda do |repository_cell|
               repository_cell.repository_row&.repository&.repository_columns || []
@@ -43,8 +45,8 @@ class RepositoryCell < ApplicationRecord
             uniqueness: { scope: :repository_column },
             unless: :importing
 
-  scope :with_active_reminder, lambda {
-    reminder_repository_cells_scope(joins(:repository_column))
+  scope :with_active_reminder, lambda { |user|
+    reminder_repository_cells_scope(joins(:repository_column), user)
   }
 
   def self.create_with_value!(row, column, data, user)

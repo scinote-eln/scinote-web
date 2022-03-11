@@ -313,6 +313,8 @@ class User < ApplicationRecord
                            foreign_key: :resource_owner_id,
                            dependent: :delete_all
 
+  has_many :hidden_repository_cell_reminders, dependent: :destroy
+
   before_validation :downcase_email!
   before_destroy :destroy_notifications
 

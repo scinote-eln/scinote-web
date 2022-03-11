@@ -4,7 +4,7 @@ module RepositoryDatatableHelper
   include InputSanitizeHelper
 
   def prepare_row_columns(repository_rows, repository, columns_mappings, team, options = {})
-    repository_row_with_active_reminder_ids = repository_rows.with_active_reminders.pluck(:id)
+    repository_row_with_active_reminder_ids = repository_rows.with_active_reminders(current_user).pluck(:id).uniq
 
     repository_rows.map do |record|
       default_cells = {
