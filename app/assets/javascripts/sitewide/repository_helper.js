@@ -82,4 +82,22 @@ function initReminderDropdown(table) {
       }
     });
   });
+
+  $(table).on('click', '.row-reminders-footer', function(e) {
+    var dropdownMenuLength = $(this).closest('.dropdown-menu').children().length;
+    var bellIcon = $(this).closest('.row-reminders-dropdown');
+    $.ajax({
+      url: $(this).attr('data-row-hide-reminders-url'),
+      type: 'POST',
+      dataType: 'json',
+      success: function() {
+        $(this).closest('.row-reminders-notification').remove();
+
+        if (dropdownMenuLength === 1) {
+          bellIcon.remove();
+        }
+        e.stopPropagation();
+      }
+    });
+  });
 }

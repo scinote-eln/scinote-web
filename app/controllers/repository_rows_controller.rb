@@ -225,7 +225,7 @@ class RepositoryRowsController < ApplicationController
   end
 
   def reminder_repository_cells
-    render json: @repository_row.repository_cells.with_active_reminder
+    render json: @repository_row.repository_cells.with_active_reminder(current_user)
   end
 
   def archive_records
@@ -255,7 +255,7 @@ class RepositoryRowsController < ApplicationController
   end
 
   def active_reminder_repository_cells
-    reminder_cells = @repository_row.repository_cells.with_active_reminder.distinct
+    reminder_cells = @repository_row.repository_cells.with_active_reminder(current_user).distinct
     render json: {
       html: render_to_string(partial: 'shared/repository_row_reminder.html.erb', locals: {
                                reminders: reminder_cells

@@ -4,7 +4,7 @@ module ReminderRepositoryCellJoinable
   extend ActiveSupport::Concern
 
   included do
-    def self.reminder_repository_cells_scope(relation)
+    def self.reminder_repository_cells_scope(relation, user)
       relation.joins( # datetime reminders
         'LEFT OUTER JOIN "repository_date_time_values" ON '\
         '"repository_date_time_values"."id" = "repository_cells"."value_id" AND '\
@@ -17,7 +17,8 @@ module ReminderRepositoryCellJoinable
         '"repository_cells"."value_type" = \'RepositoryStockValue\' AND '\
         'repository_stock_values.amount <= repository_stock_values.low_stock_threshold'
       ).where(
-        'repository_date_time_values.id IS NOT NULL OR repository_stock_values.id IS NOT NULL'
+        'hidden_repository_cell_reminders.id IS NULL AND '\
+        '(repository_date_time_values.id IS NOT NULL OR repository_stock_values.id IS NOT NULL)'
       )
     end
   end
