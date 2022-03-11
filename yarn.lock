@@ -11145,9 +11145,9 @@ twemoji@^12.1.4:
     universalify "^0.1.2"
 
 twemoji@^13.0.0:
-  version "13.1.0"
-  resolved "https://registry.yarnpkg.com/twemoji/-/twemoji-13.1.0.tgz#65bb71e966dae56f0d42c30176f04cbdae109913"
-  integrity sha512-e3fZRl2S9UQQdBFLYXtTBT6o4vidJMnpWUAhJA+yLGR+kaUTZAt3PixC0cGvvxWSuq2MSz/o0rJraOXrWw/4Ew==
+  version "13.1.1"
+  resolved "https://registry.yarnpkg.com/twemoji/-/twemoji-13.1.1.tgz#6e31409908bb5383cdb1d09c9c8e7856aa6e2e3b"
+  integrity sha512-IIIoq+n1lk1M1+evBKZD3DO0ud02fDQ4ssbgAv8rp3YBWUeNmskjlisFUPPDacQ50XS3bhrd4Kq9Q2gqhxb0dg==
   dependencies:
     fs-extra "^8.0.1"
     jsonfile "^5.0.0"
