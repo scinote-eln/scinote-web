@@ -1,0 +1,27 @@
+.column-type.datetime-column-type,
+.column-type.date-column-type {
+
+  .checkbox-selector {
+    align-items: center;
+    display: flex;
+    margin: .25em 0;
+
+    .sci-checkbox-container {
+      margin-right: .5em;
+    }
+  }
+  .reminder-data-container {
+    align-items: center;
+    display: flex;
+    margin-bottom: .5em;
+
+    .reminder-value-container {
+      flex-basis: 120px;
+    }
+
+    .dropdown-selector-container {
+      flex-basis: 100px;
+      margin: 0 .5em;
+    }
+  }
+}

@@ -1,5 +1,6 @@
 /* global I18n HelperModule truncateLongString animateSpinner RepositoryListColumnType RepositoryStockColumnType */
-/* global RepositoryDatatable RepositoryStatusColumnType RepositoryChecklistColumnType dropdownSelector */
+/* global RepositoryDatatable RepositoryStatusColumnType RepositoryChecklistColumnType dropdownSelector RepositoryDateTimeColumnType */
+/* global RepositoryDateColumnType RepositoryDatatable */
 /* eslint-disable no-restricted-globals */
 
 //= require jquery-ui/widgets/sortable
@@ -193,6 +194,9 @@ var RepositoryColumns = (function() {
           dropdownSelector.init('.list-column-type .delimiter', delimiterDropdownConfig);
           RepositoryListColumnType.initListDropdown();
           RepositoryListColumnType.initListPlaceholder();
+
+          RepositoryDateTimeColumnType.initReminderUnitDropdown();
+          RepositoryDateColumnType.initReminderUnitDropdown();
 
           dropdownSelector.init('.checklist-column-type .delimiter', delimiterDropdownConfig);
           RepositoryChecklistColumnType.initChecklistDropdown();
@@ -420,6 +424,8 @@ var RepositoryColumns = (function() {
         RepositoryStatusColumnType.init();
         RepositoryStockColumnType.init();
         RepositoryChecklistColumnType.init();
+        RepositoryDateTimeColumnType.init();
+        RepositoryDateColumnType.init();
       }
     }
   };
