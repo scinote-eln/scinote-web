@@ -215,7 +215,6 @@ var MyModuleRepositories = (function() {
         $(row).find('.item-name').attr('data-state', data.DT_RowAttr['data-state']);
       },
       fnInitComplete: function() {
-        initAssignedTasksDropdown(tableContainer);
         initReminderDropdown(tableContainer);
       }
     });
