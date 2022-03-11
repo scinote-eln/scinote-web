@@ -39,6 +39,7 @@ class RepositoryColumn < ApplicationRecord
   validate
 
   after_create :update_repository_table_states_with_new_column
+  after_update :clear_hidden_repository_cell_reminders
   around_destroy :update_repository_table_states_with_removed_column
 
   scope :list_type, -> { where(data_type: 'RepositoryListValue') }
@@ -160,5 +161,13 @@ class RepositoryColumn < ApplicationRecord
       parent_id: nil
     )
     column_snapshot.save!
+  end
+
+  def clear_hidden_repository_cell_reminders
+    return unless reminder_delta_changed?
+
+    HiddenRepositoryCellReminder.joins(repository_cell: :repository_column)
+                                .where(repository_columns: { id: id })
+                                .delete_all
   end
 end
