@@ -8,7 +8,7 @@ describe CanvasController do
     skip_my_module: true
   }
 
-  let(:experiment2) { create :experiment, project: project }
+  let(:experiment2) { create :experiment, project: project, created_by: project.created_by }
 
   # Idea of this "end to end" test is to put a lot "work" on method `@experiment.udpate_canvas` and controller actipn
   # update also. We've implemented some unit tests on `.update_canvas` itself, but behaviour is tightly coupled with

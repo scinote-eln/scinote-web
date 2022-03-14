@@ -1,0 +1,15 @@
+<span class="dropdown group-members-dropdown-container">
+  <span id="groupMembersButton" class="fas block-icon fa-info-circle group-members-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></span>
+  <div class="dropdown-menu" aria-labelledby="groupMembersButton">
+    <div class="group-members-content">
+      <div class="title">
+        <%= t('.title', team: team.name) %>
+      </div>
+      <% team.users.order(full_name: :asc).where.not(id: project.manually_assigned_users.select(:id)).each do |user| %>
+        <div class="name">
+          <%= user.full_name %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</span>

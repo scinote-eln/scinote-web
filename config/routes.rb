@@ -552,6 +552,8 @@ Rails.application.routes.draw do
            as: 'table_index',
            defaults: { format: 'json' }
       member do
+        get :assigned_my_modules
+        get :repository_users
         get :load_table
       end
       # Save repository table state
@@ -588,7 +590,12 @@ Rails.application.routes.draw do
       get :table_toolbar
       get :status
 
-      resources :repository_columns, only: %i(index new edit destroy)
+      resources :repository_columns, only: %i(index new edit destroy) do
+        collection do
+          get :describe_all
+        end
+      end
+      resources :repository_table_filters, only: %i(index show create update destroy)
       resources :repository_rows, only: %i(create show update) do
         collection do
           get :print_modal
@@ -819,11 +826,14 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :bmt_filters, only: %i(index create destroy)
+
   match '/marvin4js-license.cxl', to: 'bio_eddie_assets#license', via: :get
 
   match 'biomolecule_toolkit/*path', to: 'bio_eddie_assets#bmt_request',
                                      via: %i(get post put delete),
-                                     defaults: { format: 'json' }
+                                     defaults: { format: 'json' },
+                                     as: 'bmt_request'
 
   post 'global_activities', to: 'global_activities#index'
 

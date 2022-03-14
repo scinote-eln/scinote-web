@@ -2,7 +2,7 @@
 
 var DataTableHelpers = (function() {
   return {
-    initLengthApearance: function(dataTableWraper) {
+    initLengthAppearance: function(dataTableWraper) {
       var tableLengthSelect = $(dataTableWraper).find('.dataTables_length select');
       if (tableLengthSelect.val() == null) {
         tableLengthSelect.val(10).change();

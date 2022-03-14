@@ -22,6 +22,7 @@ describe 'my_modules:fix_positions' do
     my_modules_with_same_position.third.update_column(:archived, true)
     @my_module_id = my_modules_with_same_position.fourth.id
   end
+
   context 'when record is valid except position' do
     it 'changes position for my_module' do
       expect { subject.invoke }.to(change { MyModule.find(@my_module_id).y })

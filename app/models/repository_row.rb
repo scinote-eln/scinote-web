@@ -30,13 +30,13 @@ class RepositoryRow < ApplicationRecord
     repository_asset: 'RepositoryAssetValue',
     repository_status: 'RepositoryStatusValue',
     repository_checklist: 'RepositoryChecklistValue',
-    repository_date_time: 'RepositoryDateTimeValue',
-    repository_time: 'RepositoryTimeValue',
-    repository_date: 'RepositoryDateValue',
-    repository_date_time_range: 'RepositoryDateTimeRangeValue',
-    repository_time_range: 'RepositoryTimeRangeValue',
-    repository_date_range: 'RepositoryDateRangeValue',
-    repository_stock: 'RepositoryStockValue'
+    repository_stock: 'RepositoryStockValue',
+    repository_date_time: 'RepositoryDateTimeValueBase',
+    repository_time: 'RepositoryDateTimeValueBase',
+    repository_date: 'RepositoryDateTimeValueBase',
+    repository_date_time_range: 'RepositoryDateTimeRangeValueBase',
+    repository_time_range: 'RepositoryDateTimeRangeValueBase',
+    repository_date_range: 'RepositoryDateTimeRangeValueBase'
   }.each do |relation, class_name|
     has_many "#{relation}_cells".to_sym, -> { where(value_type: class_name) }, class_name: 'RepositoryCell',
              inverse_of: :repository_row

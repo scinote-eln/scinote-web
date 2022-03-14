@@ -68,6 +68,35 @@
   hr {
     margin: 1em 0;
   }
+
+  .group-members-button {
+    cursor: pointer;
+    margin-left: .5em;
+  }
+
+  .group-members-content {
+    max-height: 180px;
+    min-width: 260px;
+    overflow: auto;
+    padding: .6em 1em;
+
+    .title {
+      @include font-small;
+      color: $color-silver-chalice;
+      padding-bottom: .5em;
+    }
+
+    .name {
+      @include font-button;
+      padding: .4em 0;
+    }
+
+    .no-members {
+      @include font-button;
+      font-style: italic;
+      padding: .4em 0;
+    }
+  }
 }
 
 .permission-object-tag {

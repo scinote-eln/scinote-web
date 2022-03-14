@@ -69,7 +69,7 @@ class ActivitiesService
   end
 
   def self.my_module_activities(my_module)
-    subjects_with_children = load_subjects_children('MyModule': [my_module.id])
+    subjects_with_children = load_subjects_children('MyModule' => [my_module.id])
     query = Activity.where(project: my_module.experiment.project)
     query.where(
       subjects_with_children.to_h.map { '(subject_type = ? AND subject_id IN(?))' }.join(' OR '),

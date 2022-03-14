@@ -105,7 +105,7 @@
               updateActionButtons();
             }
           });
-          DataTableHelpers.initLengthApearance(dataTableWrapper);
+          DataTableHelpers.initLengthAppearance(dataTableWrapper);
           DataTableHelpers.initSearchField(dataTableWrapper, I18n.t('repositories.index.filter_inventory'));
           $('.content-body .toolbar').html($('#repositoriesListButtons').html());
           dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');

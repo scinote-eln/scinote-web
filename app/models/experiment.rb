@@ -16,15 +16,11 @@ class Experiment < ApplicationRecord
 
   belongs_to :project, inverse_of: :experiments, touch: true
   belongs_to :created_by,
-             foreign_key: :created_by_id,
              class_name: 'User'
   belongs_to :last_modified_by,
-             foreign_key: :last_modified_by_id,
              class_name: 'User'
-  belongs_to :archived_by,
-             foreign_key: :archived_by_id, class_name: 'User', optional: true
+  belongs_to :archived_by, class_name: 'User', optional: true
   belongs_to :restored_by,
-             foreign_key: :restored_by_id,
              class_name: 'User',
              optional: true
 
@@ -190,8 +186,8 @@ class Experiment < ApplicationRecord
       end
     rescue ActiveRecord::ActiveRecordError,
            ArgumentError,
-           ActiveRecord::RecordNotSaved => ex
-      logger.error ex.message
+           ActiveRecord::RecordNotSaved => e
+      logger.error e.message
       return false
     end
     true
@@ -220,7 +216,7 @@ class Experiment < ApplicationRecord
   # Archive all modules. Receives an array of module integer IDs
   # and current user.
   def archive_modules(module_ids, current_user)
-    my_modules.where(id: module_ids).each do |my_module|
+    my_modules.where(id: module_ids).find_each do |my_module|
       my_module.archive!(current_user)
       log_activity(:archive_module, current_user, my_module)
     end
@@ -268,12 +264,12 @@ class Experiment < ApplicationRecord
   # it's obviously not updated.
   def rename_modules(to_rename, current_user)
     to_rename.each do |id, new_name|
-      my_module = MyModule.find_by_id(id)
-      if my_module.present?
-        my_module.name = new_name
-        my_module.save!
-        log_activity(:rename_task, current_user, my_module)
-      end
+      my_module = MyModule.find_by(id: id)
+      next if my_module.blank?
+
+      my_module.name = new_name
+      my_module.save!
+      log_activity(:rename_task, current_user, my_module)
     end
   end
 
@@ -284,8 +280,8 @@ class Experiment < ApplicationRecord
   # it's obviously not updated. Any connection on module is destroyed.
   def move_modules(to_move, current_user)
     to_move.each do |id, experiment_id|
-      my_module = my_modules.find_by_id(id)
-      experiment = project.experiments.find_by_id(experiment_id)
+      my_module = my_modules.find_by(id: id)
+      experiment = project.experiments.find_by(id: experiment_id)
       next unless my_module.present? && experiment.present?
 
       experiment_original = my_module.experiment
@@ -296,11 +292,10 @@ class Experiment < ApplicationRecord
       my_module.x = new_pos[:x]
       my_module.y = new_pos[:y]
 
-      unless my_module.outputs.destroy_all && my_module.inputs.destroy_all
-        raise ActiveRecord::ActiveRecordError
-      end
+      raise ActiveRecord::ActiveRecordError unless my_module.outputs.destroy_all && my_module.inputs.destroy_all
 
       next unless my_module.save
+
       # regenerate user assignments
       my_module.user_assignments.destroy_all
       UserAssignments::GenerateUserAssignmentsJob.perform_later(my_module, current_user)
@@ -331,7 +326,7 @@ class Experiment < ApplicationRecord
       to_move.each do |ids, experiment_id|
         modules = my_modules.find(ids)
         groups = Set.new(modules.map(&:my_module_group))
-        experiment = project.experiments.find_by_id(experiment_id)
+        experiment = project.experiments.find_by(id: experiment_id)
 
         groups.each do |group|
           next unless group && experiment.present?
@@ -395,23 +390,19 @@ class Experiment < ApplicationRecord
     dg = RGL::DirectedAdjacencyGraph.new
     connections.each do |a, b|
       # Check if both vertices exist
-      if (my_modules.find_all { |m| [a.to_i, b.to_i].include? m.id }).count == 2
-        dg.add_edge(a, b)
-      end
+      dg.add_edge(a, b) if (my_modules.find_all { |m| [a.to_i, b.to_i].include? m.id }).count == 2
     end
 
     # Check if cycles exist!
     topsort = dg.topsort_iterator.to_a
-    if topsort.length.zero? && dg.edges.size > 1
-      raise ArgumentError, 'Cycles exist.'
-    end
+    raise ArgumentError, 'Cycles exist.' if topsort.length.zero? && dg.edges.size > 1
 
     # First, delete existing connections
     # but keep a copy of previous state
     previous_sources = {}
     previous_sources.default = []
 
-    my_modules.includes(inputs: { from: [:inputs, outputs: :to] }).each do |m|
+    my_modules.includes(inputs: { from: [:inputs, outputs: :to] }).find_each do |m|
       previous_sources[m.id] = []
       m.inputs.each do |c|
         previous_sources[m.id] << c.from
@@ -429,7 +420,7 @@ class Experiment < ApplicationRecord
 
     # Save topological order of modules (for modules without workflow,
     # leave them unordered)
-    my_modules.includes(:my_module_group).each do |m|
+    my_modules.includes(:my_module_group).find_each do |m|
       m.workflow_order =
         if topsort.include? m.id.to_s
           topsort.find_index(m.id.to_s)
@@ -483,8 +474,8 @@ class Experiment < ApplicationRecord
 
     dg = RGL::DirectedAdjacencyGraph[]
     group_ids = Set.new
-    my_modules.active.includes(:my_module_group, outputs: :to).each do |m|
-      group_ids << m.my_module_group.id unless m.my_module_group.blank?
+    my_modules.active.includes(:my_module_group, outputs: :to).find_each do |m|
+      group_ids << m.my_module_group.id if m.my_module_group.present?
       dg.add_vertex m.id unless dg.has_vertex? m.id
       m.outputs.each do |o|
         dg.add_edge m.id, o.to.id
@@ -496,14 +487,13 @@ class Experiment < ApplicationRecord
     end
 
     # Remove any existing module groups from modules
-    unless MyModuleGroup.where(id: group_ids.to_a).destroy_all
-      raise ActiveRecord::ActiveRecordError
-    end
+    raise ActiveRecord::ActiveRecordError unless MyModuleGroup.where(id: group_ids.to_a).destroy_all
 
     # Second, create new groups
     workflows.each do |modules|
       # Single modules are not considered part of any workflow
       next unless modules.length > 1
+
       MyModuleGroup.create!(experiment: self,
                             my_modules: modules,
                             created_by: current_user)

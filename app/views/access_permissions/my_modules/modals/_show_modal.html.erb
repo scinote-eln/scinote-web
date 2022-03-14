@@ -8,10 +8,12 @@
         <h4 class="modal-title"><%= t '.title', resource_name: my_module.name %></h4>
       </div>
       <div class="modal-body">
-        <% users.each do |user| %>
+        <% users.order(full_name: :asc).each do |user| %>
           <% user_assignment = my_module.user_assignments.find_by(user: user) %>
           <%= render partial: 'access_permissions/partials/user_assignment', locals: { user_assignment: user_assignment, user: user, resource: my_module } %>
         <% end %>
+        <%= render('access_permissions/partials/default_public_user_role_form',
+                   project: my_module.experiment.project, editable: false) if my_module.experiment.project.visible? %>
       </div>
     </div>
   </div>

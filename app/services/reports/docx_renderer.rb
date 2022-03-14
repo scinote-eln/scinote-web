@@ -153,7 +153,14 @@ module Reports
         x = 300
       end
 
-      docx.img asset_preview.service_url do
+      blob_data = if asset_preview.instance_of? ActiveStorage::Preview
+                    asset_preview.image.download
+                  else
+                    asset_preview.blob.download
+                  end
+
+      docx.img asset_preview.processed.service_url.split('&')[0] do
+        data blob_data
         width x
         height y
       end
