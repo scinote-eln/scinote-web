@@ -13,13 +13,6 @@ describe AccessPermissions::ProjectsController, type: :controller do
   let!(:normal_user_role) { create :normal_user_role }
   let!(:technician_role) { create :technician_role }
   let!(:user_project) { create :user_project, user: user, project: project }
-  let!(:user_assignment) do
-    create :user_assignment,
-           assignable: project,
-           user: user,
-           user_role: owner_role,
-           assigned_by: user
-  end
   let!(:normal_user) { create :user, confirmed_at: Time.zone.now }
   let!(:normal_user_team) do
     create :user_team,
@@ -151,17 +144,17 @@ describe AccessPermissions::ProjectsController, type: :controller do
     it 'creates new project user and user assignment' do
       expect {
         post :create, params: valid_params, format: :json
-      }.to change(UserProject, :count).by(1).and \
-        change(UserAssignment, :count).by(1)
+      }.to change(UserAssignment, :count).by(1)
     end
 
     it 'does not create an assigment if user is already assigned' do
-      create :user_project, user: normal_user, project: project
-
+      create :user_assignment, user: normal_user,
+                               user_role: technician_role,
+                               assignable: project,
+                               assigned_by: user
       expect {
         post :create, params: valid_params, format: :json
-      }.to change(UserProject, :count).by(0).and \
-        change(UserAssignment, :count).by(0)
+      }.to change(UserAssignment, :count).by(0)
     end
 
     it 'does not create an assigment when the user is already assigned with different permission' do

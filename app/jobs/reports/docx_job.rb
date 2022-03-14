@@ -8,7 +8,8 @@ module Reports
     queue_as :reports
 
     discard_on StandardError do |job, error|
-      report = Report.find(job.arguments.first)
+      report = Report.find_by(id: job.arguments.first)
+      next unless report
 
       ActiveRecord::Base.no_touching do
         report.docx_error!

@@ -229,29 +229,29 @@ var DateTimeHelper = (function() {
     let $startSpan = $cell.find('span').first();
     let startDate = $startSpan.data('date');
     let startTime = getTimeOrDefault($startSpan, mode);
-    let startDatetime = $startSpan.data('datetime');
+    let startDatetime = getDateOrDefault($startSpan, mode);
     let startDateDataValue = getDateOrDefault($startSpan, mode);
     let $endSpan = $cell.find('span').last();
     let endDate = $endSpan.data('date');
     let endTime = getTimeOrDefault($endSpan, mode);
-    let endDatetime = $endSpan.data('datetime');
+    let endDatetime = getDateOrDefault($endSpan, mode);
     let endDateDataValue = getDateOrDefault($endSpan, mode);
 
     let inputFields = `
-    <div class="form-group datetime-container range-type"
+    <div class="form-group datetime-container range-type ${mode}"
          data-form-id="${formId}"
          data-column-id="${columnId}"
          data-type="${columnType}"
          >
       <div class="start-time ${mode}"
            data-current-datetime="${startDatetime}">
-        ${dateInputField(startDate, startDateDataValue)}
+        ${dateInputField(startDate, startDatetime)}
         ${timeInputField(startTime)}
       </div>
       <div class="separator">—</div>
       <div class="end-time ${mode}"
            data-current-datetime="${endDatetime}">
-        ${dateInputField(endDate, endDateDataValue)}
+        ${dateInputField(endDate, endDatetime)}
         ${timeInputField(endTime)}
       </div>
     </div>

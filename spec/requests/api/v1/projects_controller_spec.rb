@@ -11,14 +11,6 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
     # valid_projects
     2.times do
       project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @teams.first)
-      create :user_project, :owner,
-             user: @user,
-             project: project
-      create :user_assignment,
-             assignable: project,
-             user: @user,
-             user_role: owner_role,
-             assigned_by: @user
     end
 
     # unaccessable_projects

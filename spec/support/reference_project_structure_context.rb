@@ -29,11 +29,11 @@ RSpec.shared_context 'reference_project_structure' do |config|
   let!(:project) { role && create(:project, team: team, created_by: user) }
   let!(:projects) { role && create_list(:project, config[:projects], team: team, created_by: user) } if config[:projects]
 
-  let!(:experiment) { create :experiment, project: project } unless config[:skip_experiment]
-  let!(:experiments) { create_list :experiment, config[:experiments], project: project } if config[:experiments]
+  let!(:experiment) { create :experiment, project: project, created_by: project.created_by} unless config[:skip_experiment]
+  let!(:experiments) { create_list :experiment, config[:experiments], project: project, created_by: project.created_by } if config[:experiments]
 
-  let!(:my_module) { create :my_module, experiment: experiment, created_by: user } unless config[:skip_my_module]
-  let!(:my_modules) { create_list :my_module, config[:my_modules], experiment: experiment } if config[:my_modules]
+  let!(:my_module) { create :my_module, experiment: experiment, created_by: experiment.created_by } unless config[:skip_my_module]
+  let!(:my_modules) { create_list :my_module, config[:my_modules], experiment: experiment, created_by: experiment.created_by } if config[:my_modules]
 
   let!(:connection) { create :connection, input_id: my_modules.first.id, output_id: my_modules.last.id } if config[:connection]
 
@@ -83,16 +83,6 @@ RSpec.shared_context 'reference_project_structure' do |config|
   [:result_assets, :result_texts, :result_tables].each do |result|
     if config[result]
       let(result) { create_list result, config[result], result: (create :result, my_module: my_module, user: user )}
-    end
-  end
-
-  before do
-    unless config[:skip_assignments]
-      if config[:skip_my_module]
-        create_user_assignment(experiment, role, user)
-      else
-        create_user_assignment(my_module, role, user)
-      end
     end
   end
 end

@@ -50,6 +50,8 @@ CREATE FUNCTION public.trim_html_tags(input text, OUT output text) RETURNS text
 
 SET default_tablespace = '';
 
+SET default_table_access_method = heap;
+
 --
 -- Name: active_storage_attachments; Type: TABLE; Schema: public; Owner: -
 --
@@ -309,6 +311,39 @@ CREATE SEQUENCE public.assets_id_seq
 --
 
 ALTER SEQUENCE public.assets_id_seq OWNED BY public.assets.id;
+
+
+--
+-- Name: bmt_filters; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.bmt_filters (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    filters json NOT NULL,
+    created_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: bmt_filters_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.bmt_filters_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: bmt_filters_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.bmt_filters_id_seq OWNED BY public.bmt_filters.id;
 
 
 --
@@ -583,6 +618,38 @@ CREATE SEQUENCE public.experiments_id_seq
 --
 
 ALTER SEQUENCE public.experiments_id_seq OWNED BY public.experiments.id;
+
+
+--
+-- Name: hidden_repository_cell_reminders; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.hidden_repository_cell_reminders (
+    id bigint NOT NULL,
+    repository_cell_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: hidden_repository_cell_reminders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.hidden_repository_cell_reminders_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: hidden_repository_cell_reminders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.hidden_repository_cell_reminders_id_seq OWNED BY public.hidden_repository_cell_reminders.id;
 
 
 --
@@ -1702,7 +1769,9 @@ CREATE TABLE public.repository_date_time_range_values (
     created_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    type character varying
+    type character varying,
+    start_time_dup timestamp without time zone,
+    end_time_dup timestamp without time zone
 );
 
 
@@ -1736,7 +1805,8 @@ CREATE TABLE public.repository_date_time_values (
     updated_at timestamp without time zone,
     created_by_id bigint NOT NULL,
     last_modified_by_id bigint NOT NULL,
-    type character varying
+    type character varying,
+    data_dup timestamp without time zone
 );
 
 
@@ -1914,7 +1984,8 @@ CREATE TABLE public.repository_rows (
     archived_on timestamp without time zone,
     restored_on timestamp without time zone,
     archived_by_id bigint,
-    restored_by_id bigint
+    restored_by_id bigint,
+    external_id character varying
 );
 
 
@@ -2074,6 +2145,74 @@ CREATE SEQUENCE public.repository_stock_values_id_seq
 --
 
 ALTER SEQUENCE public.repository_stock_values_id_seq OWNED BY public.repository_stock_values.id;
+
+
+--
+-- Name: repository_table_filter_elements; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_table_filter_elements (
+    id bigint NOT NULL,
+    repository_table_filter_id bigint,
+    repository_column_id bigint,
+    operator integer,
+    parameters jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_table_filter_elements_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_table_filter_elements_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_table_filter_elements_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_table_filter_elements_id_seq OWNED BY public.repository_table_filter_elements.id;
+
+
+--
+-- Name: repository_table_filters; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_table_filters (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    default_columns jsonb DEFAULT '{}'::jsonb NOT NULL,
+    repository_id bigint,
+    created_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_table_filters_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_table_filters_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_table_filters_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_table_filters_id_seq OWNED BY public.repository_table_filters.id;
 
 
 --
@@ -3263,6 +3402,13 @@ ALTER TABLE ONLY public.assets ALTER COLUMN id SET DEFAULT nextval('public.asset
 
 
 --
+-- Name: bmt_filters id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bmt_filters ALTER COLUMN id SET DEFAULT nextval('public.bmt_filters_id_seq'::regclass);
+
+
+--
 -- Name: checklist_items id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3302,6 +3448,13 @@ ALTER TABLE ONLY public.delayed_jobs ALTER COLUMN id SET DEFAULT nextval('public
 --
 
 ALTER TABLE ONLY public.experiments ALTER COLUMN id SET DEFAULT nextval('public.experiments_id_seq'::regclass);
+
+
+--
+-- Name: hidden_repository_cell_reminders id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.hidden_repository_cell_reminders ALTER COLUMN id SET DEFAULT nextval('public.hidden_repository_cell_reminders_id_seq'::regclass);
 
 
 --
@@ -3589,6 +3742,20 @@ ALTER TABLE ONLY public.repository_stock_unit_items ALTER COLUMN id SET DEFAULT 
 --
 
 ALTER TABLE ONLY public.repository_stock_values ALTER COLUMN id SET DEFAULT nextval('public.repository_stock_values_id_seq'::regclass);
+
+
+--
+-- Name: repository_table_filter_elements id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_table_filter_elements ALTER COLUMN id SET DEFAULT nextval('public.repository_table_filter_elements_id_seq'::regclass);
+
+
+--
+-- Name: repository_table_filters id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_table_filters ALTER COLUMN id SET DEFAULT nextval('public.repository_table_filters_id_seq'::regclass);
 
 
 --
@@ -3887,6 +4054,14 @@ ALTER TABLE ONLY public.assets
 
 
 --
+-- Name: bmt_filters bmt_filters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bmt_filters
+    ADD CONSTRAINT bmt_filters_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: checklist_items checklist_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3932,6 +4107,14 @@ ALTER TABLE ONLY public.delayed_jobs
 
 ALTER TABLE ONLY public.experiments
     ADD CONSTRAINT experiments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: hidden_repository_cell_reminders hidden_repository_cell_reminders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.hidden_repository_cell_reminders
+    ADD CONSTRAINT hidden_repository_cell_reminders_pkey PRIMARY KEY (id);
 
 
 --
@@ -4260,6 +4443,22 @@ ALTER TABLE ONLY public.repository_stock_unit_items
 
 ALTER TABLE ONLY public.repository_stock_values
     ADD CONSTRAINT repository_stock_values_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repository_table_filter_elements repository_table_filter_elements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_table_filter_elements
+    ADD CONSTRAINT repository_table_filter_elements_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repository_table_filters repository_table_filters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_table_filters
+    ADD CONSTRAINT repository_table_filters_pkey PRIMARY KEY (id);
 
 
 --
@@ -4682,6 +4881,13 @@ CREATE INDEX index_assets_on_team_id ON public.assets USING btree (team_id);
 
 
 --
+-- Name: index_bmt_filters_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_bmt_filters_on_created_by_id ON public.bmt_filters USING btree (created_by_id);
+
+
+--
 -- Name: index_checklist_items_on_checklist_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4847,6 +5053,20 @@ CREATE INDEX index_experiments_on_project_id ON public.experiments USING btree (
 --
 
 CREATE INDEX index_experiments_on_restored_by_id ON public.experiments USING btree (restored_by_id);
+
+
+--
+-- Name: index_hidden_repository_cell_reminders_on_repository_cell_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_hidden_repository_cell_reminders_on_repository_cell_id ON public.hidden_repository_cell_reminders USING btree (repository_cell_id);
+
+
+--
+-- Name: index_hidden_repository_cell_reminders_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_hidden_repository_cell_reminders_on_user_id ON public.hidden_repository_cell_reminders USING btree (user_id);
 
 
 --
@@ -5099,6 +5319,13 @@ CREATE INDEX index_on_repository_checklist_value_id ON public.repository_checkli
 --
 
 CREATE INDEX index_on_repository_stock_unit_item_id ON public.my_module_repository_rows USING btree (repository_stock_unit_item_id);
+
+
+--
+-- Name: index_on_repository_table_filter_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_on_repository_table_filter_id ON public.repository_table_filter_elements USING btree (repository_table_filter_id);
 
 
 --
@@ -5557,10 +5784,24 @@ CREATE INDEX index_repository_date_time_range_values_on_created_by_id ON public.
 
 
 --
--- Name: index_repository_date_time_range_values_on_end_time; Type: INDEX; Schema: public; Owner: -
+-- Name: index_repository_date_time_range_values_on_end_time_as_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_repository_date_time_range_values_on_end_time ON public.repository_date_time_range_values USING btree (end_time);
+CREATE INDEX index_repository_date_time_range_values_on_end_time_as_date ON public.repository_date_time_range_values USING btree (((end_time)::date)) WHERE ((type)::text = 'RepositoryDateRangeValue'::text);
+
+
+--
+-- Name: index_repository_date_time_range_values_on_end_time_as_date_tim; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_range_values_on_end_time_as_date_tim ON public.repository_date_time_range_values USING btree (end_time) WHERE ((type)::text = 'RepositoryDateTimeRangeValue'::text);
+
+
+--
+-- Name: index_repository_date_time_range_values_on_end_time_as_time; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_range_values_on_end_time_as_time ON public.repository_date_time_range_values USING btree (((end_time)::time without time zone)) WHERE ((type)::text = 'RepositoryTimeRangeValue'::text);
 
 
 --
@@ -5571,10 +5812,45 @@ CREATE INDEX index_repository_date_time_range_values_on_last_modified_by_id ON p
 
 
 --
--- Name: index_repository_date_time_range_values_on_start_time; Type: INDEX; Schema: public; Owner: -
+-- Name: index_repository_date_time_range_values_on_start_time_as_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_repository_date_time_range_values_on_start_time ON public.repository_date_time_range_values USING btree (start_time);
+CREATE INDEX index_repository_date_time_range_values_on_start_time_as_date ON public.repository_date_time_range_values USING btree (((start_time)::date)) WHERE ((type)::text = 'RepositoryDateRangeValue'::text);
+
+
+--
+-- Name: index_repository_date_time_range_values_on_start_time_as_date_t; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_range_values_on_start_time_as_date_t ON public.repository_date_time_range_values USING btree (start_time) WHERE ((type)::text = 'RepositoryDateTimeRangeValue'::text);
+
+
+--
+-- Name: index_repository_date_time_range_values_on_start_time_as_time; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_range_values_on_start_time_as_time ON public.repository_date_time_range_values USING btree (((start_time)::time without time zone)) WHERE ((type)::text = 'RepositoryTimeRangeValue'::text);
+
+
+--
+-- Name: index_repository_date_time_values_on_data_as_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_values_on_data_as_date ON public.repository_date_time_values USING btree (((data)::date)) WHERE ((type)::text = 'RepositoryDateValue'::text);
+
+
+--
+-- Name: index_repository_date_time_values_on_data_as_date_time; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_values_on_data_as_date_time ON public.repository_date_time_values USING btree (data) WHERE ((type)::text = 'RepositoryDateTimeValue'::text);
+
+
+--
+-- Name: index_repository_date_time_values_on_data_as_time; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_date_time_values_on_data_as_time ON public.repository_date_time_values USING btree (((data)::time without time zone)) WHERE ((type)::text = 'RepositoryTimeValue'::text);
 
 
 --
@@ -5680,6 +5956,27 @@ CREATE INDEX index_repository_number_values_on_last_modified_by_id ON public.rep
 --
 
 CREATE INDEX index_repository_rows_on_archived_by_id ON public.repository_rows USING btree (archived_by_id);
+
+
+--
+-- Name: index_repository_rows_on_archived_on_as_date_time_minutes; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_rows_on_archived_on_as_date_time_minutes ON public.repository_rows USING btree (date_trunc('minute'::text, archived_on));
+
+
+--
+-- Name: index_repository_rows_on_created_at_as_date_time_minutes; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_rows_on_created_at_as_date_time_minutes ON public.repository_rows USING btree (date_trunc('minute'::text, created_at));
+
+
+--
+-- Name: index_repository_rows_on_external_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_rows_on_external_id ON public.repository_rows USING gin (public.trim_html_tags((external_id)::text) public.gin_trgm_ops);
 
 
 --
@@ -5813,6 +6110,27 @@ CREATE INDEX index_repository_stock_values_on_last_modified_by_id ON public.repo
 --
 
 CREATE INDEX index_repository_stock_values_on_repository_stock_unit_item_id ON public.repository_stock_values USING btree (repository_stock_unit_item_id);
+
+
+--
+-- Name: index_repository_table_filter_elements_on_repository_column_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_table_filter_elements_on_repository_column_id ON public.repository_table_filter_elements USING btree (repository_column_id);
+
+
+--
+-- Name: index_repository_table_filters_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_table_filters_on_created_by_id ON public.repository_table_filters USING btree (created_by_id);
+
+
+--
+-- Name: index_repository_table_filters_on_repository_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_table_filters_on_repository_id ON public.repository_table_filters USING btree (repository_id);
 
 
 --
@@ -6432,6 +6750,13 @@ CREATE INDEX index_zip_exports_on_user_id ON public.zip_exports USING btree (use
 
 
 --
+-- Name: unique_index_repository_rows_on_external_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX unique_index_repository_rows_on_external_id ON public.repository_rows USING btree (external_id);
+
+
+--
 -- Name: comments fk_rails_03de2dc08c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6469,6 +6794,14 @@ ALTER TABLE ONLY public.project_folders
 
 ALTER TABLE ONLY public.repository_ledger_records
     ADD CONSTRAINT fk_rails_062bed0c26 FOREIGN KEY (repository_stock_value_id) REFERENCES public.repository_stock_values(id);
+
+
+--
+-- Name: hidden_repository_cell_reminders fk_rails_08be8c52e0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.hidden_repository_cell_reminders
+    ADD CONSTRAINT fk_rails_08be8c52e0 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -7184,6 +7517,14 @@ ALTER TABLE ONLY public.repository_checklist_values
 
 
 --
+-- Name: hidden_repository_cell_reminders fk_rails_98e782ebf2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.hidden_repository_cell_reminders
+    ADD CONSTRAINT fk_rails_98e782ebf2 FOREIGN KEY (repository_cell_id) REFERENCES public.repository_cells(id);
+
+
+--
 -- Name: activities fk_rails_992865be13; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7440,6 +7781,14 @@ ALTER TABLE ONLY public.protocols
 
 
 --
+-- Name: repository_table_filters fk_rails_c2b1aff901; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_table_filters
+    ADD CONSTRAINT fk_rails_c2b1aff901 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: active_storage_attachments fk_rails_c3b3935057; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7629,6 +7978,14 @@ ALTER TABLE ONLY public.assets
 
 ALTER TABLE ONLY public.protocols
     ADD CONSTRAINT fk_rails_dcb4ab6aa9 FOREIGN KEY (parent_id) REFERENCES public.protocols(id);
+
+
+--
+-- Name: bmt_filters fk_rails_de5b654b84; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bmt_filters
+    ADD CONSTRAINT fk_rails_de5b654b84 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
 --
@@ -8000,10 +8357,16 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210716124649'),
 ('20210720112050'),
 ('20210811103123'),
+('20210812095254'),
+('20210825112050'),
 ('20210906132120'),
 ('20211103115450'),
+('20211123103711'),
 ('20220110151005'),
 ('20220110151006'),
-('20220224153705');
+('20220203122802'),
+('20220217104635'),
+('20220224153705'),
+('20220310105144');
 
 

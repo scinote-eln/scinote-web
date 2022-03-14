@@ -59,7 +59,8 @@ describe ExperimentsController, type: :controller do
                archived: true,
                archived_by: (create :user),
                archived_on: Time.zone.now,
-               project: project
+               project: project,
+               created_by: project.created_by
       end
 
       let(:params) do

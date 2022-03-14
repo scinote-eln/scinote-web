@@ -25,11 +25,42 @@ class RepositoryChecklistValue < ApplicationRecord
     formatted(separator: repository_cell.repository_column.delimiter_char)
   end
 
+  def self.add_filter_condition(repository_rows, join_alias, filter_element)
+    items_join_alias = "#{join_alias}_checklist_items"
+    repository_rows =
+      repository_rows
+      .joins(
+        "LEFT OUTER JOIN \"repository_checklist_items_values\" AS \"#{join_alias}_checklist_items_values\" " \
+        "ON  \"#{join_alias}_checklist_items_values\".\"repository_checklist_value_id\" = \"#{join_alias}\".\"id\""
+      )
+      .joins(
+        "LEFT OUTER JOIN \"repository_checklist_items\" AS \"#{items_join_alias}\" " \
+        "ON  \"#{join_alias}_checklist_items_values\".\"repository_checklist_item_id\" = \"#{items_join_alias}\".\"id\""
+      )
+
+    case filter_element.operator
+    when 'any_of'
+      repository_rows
+        .where("#{items_join_alias}.id = ANY(ARRAY[?]::bigint[])", filter_element.parameters['item_ids'])
+    when 'all_of'
+      repository_rows
+        .having("ARRAY_AGG(#{items_join_alias}.id ORDER BY #{items_join_alias}.id) @> ARRAY[?]::bigint[]",
+                filter_element.parameters['item_ids'].sort)
+        .group(:id)
+    when 'none_of'
+      repository_rows
+        .having("NOT ARRAY_AGG(#{items_join_alias}.id) && ARRAY[?]::bigint[]", filter_element.parameters['item_ids'])
+        .group(:id)
+    else
+      raise ArgumentError, 'Wrong operator for RepositoryChecklistValue!'
+    end
+  end
+
   def data
     repository_checklist_items.map { |i| { value: i.id, label: i.data } }
   end
 
-  def data_changed?(new_data)
+  def data_different?(new_data)
     if new_data.is_a?(String)
       JSON.parse(new_data) != repository_checklist_items.pluck(:id)
     else

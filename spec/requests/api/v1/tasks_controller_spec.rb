@@ -146,11 +146,6 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
   describe 'POST tasks, #create' do
     before :all do
       create :user_project, user: @user, project: @valid_project
-      create :user_assignment,
-             assignable: @valid_project,
-             user: @user,
-             user_role: @owner_role,
-             assigned_by: @user
       @valid_headers['Content-Type'] = 'application/json'
     end
 

@@ -7,7 +7,7 @@ json.modal controller.render_to_string(
     my_module: @my_module,
     experiment: @experiment,
     project: @project,
-    users: @my_module.users
+    users: @project.manually_assigned_users
   },
   layout: false
 )

@@ -201,10 +201,10 @@ module Users
 
     def check_invite_users_permission
       @user = current_user
-      @emails = params[:emails]&.map(&:downcase)
+      @emails = params[:emails]&.map(&:strip)&.map(&:downcase)
 
       @teams = Team.where(id: params[:team_ids]).select { |team| can_manage_team_users?(team) }
-      return render_403 if params[:team_ids].present? && @teams.none?
+      return render_403 if params[:team_ids].present? && @teams.blank?
 
       @role = params['role']
 

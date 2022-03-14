@@ -35,17 +35,17 @@ describe RepositoryTextValue, type: :model do
     end
   end
 
-  describe 'data_changed?' do
+  describe 'data_different?' do
     context 'when has new data' do
       it do
-        expect(repository_text_value.data_changed?('newData')).to be_truthy
+        expect(repository_text_value.data_different?('newData')).to be_truthy
       end
     end
 
     context 'when has same data' do
       it do
         data = repository_text_value.data
-        expect(repository_text_value.data_changed?(data)).to be_falsey
+        expect(repository_text_value.data_different?(data)).to be_falsey
       end
     end
   end

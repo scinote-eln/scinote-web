@@ -91,6 +91,56 @@ class Extends
     }
   }
 
+  # Extra attributes used for advanced search in repositories
+  REPOSITORY_ADVANCED_SEARCH_ATTR = {
+    RepositoryTextValue: {
+      table_name: :repository_text_values
+    }, RepositoryNumberValue: {
+      table_name: :repository_number_values
+    }, RepositoryListValue: {
+      table_name: :repository_list_values
+    }, RepositoryChecklistValue: {
+      table_name: :repository_checklist_values
+    }, RepositoryStatusValue: {
+      table_name: :repository_status_values
+    }, RepositoryAssetValue: {
+      table_name: :repository_asset_values
+    }, RepositoryDateTimeValue: {
+      table_name: :repository_date_time_values
+    }, RepositoryDateTimeRangeValue: {
+      table_name: :repository_date_time_range_values
+    }, RepositoryDateValue: {
+      table_name: :repository_date_time_values
+    }, RepositoryDateRangeValue: {
+      table_name: :repository_date_time_range_values
+    }, RepositoryTimeValue: {
+      table_name: :repository_date_time_values
+    }, RepositoryTimeRangeValue: {
+      table_name: :repository_date_time_range_values
+    }
+  }
+
+  REPOSITORY_ADVANCED_SEARCH_REFERENCED_VALUE_RELATIONS = {
+    RepositoryListValue: 'repository_list_items',
+    RepositoryChecklistValue: 'repository_checklist_items',
+    RepositoryStatusValue: 'repository_status_items'
+  }
+
+  REPOSITORY_ADVANCED_SEARCHABLE_COLUMNS = %i(
+    RepositoryTextValue
+    RepositoryNumberValue
+    RepositoryListValue
+    RepositoryChecklistValue
+    RepositoryStatusValue
+    RepositoryAssetValue
+    RepositoryDateTimeValue
+    RepositoryDateTimeRangeValue
+    RepositoryDateValue
+    RepositoryDateRangeValue
+    RepositoryTimeValue
+    RepositoryTimeRangeValue
+  )
+
   # Array of preload relations used in search query for repository rows
   REPOSITORY_ROWS_PRELOAD_RELATIONS = []
 
@@ -328,7 +378,8 @@ class Extends
     register_molecule_on_step_in_repository: 179,
     inventory_item_stock_set: 180,
     inventory_item_stock_add: 181,
-    inventory_item_stock_remove: 182
+    inventory_item_stock_remove: 182,
+    task_inventory_item_stock_consumed: 183
   }
 
   ACTIVITY_GROUPS = {
@@ -338,7 +389,7 @@ class Extends
            *146..148, 166],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
                     168, 171, 177],
-    task_inventory: [55, 56, 146, 147],
+    task_inventory: [55, 56, 146, 147, 183],
     experiment: [*27..31, 57, 141, 165],
     reports: [48, 50, 49, 163, 164],
     inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77,
@@ -400,6 +451,8 @@ class Extends
     change_user_role_on_experiment
     change_user_role_on_my_module
   )
+
+  STI_PRELOAD_CLASSES = %w(LinkedRepository BmtRepository)
 end
 
 # rubocop:enable Style/MutableConstant

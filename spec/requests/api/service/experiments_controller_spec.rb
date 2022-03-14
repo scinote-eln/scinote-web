@@ -9,17 +9,10 @@ RSpec.describe "Api::Service::ExperimentsController", type: :request do
     create(:user_team, user: @user, team: @team, role: 2)
 
     @valid_project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @team)
-
-    create(:user_assignment,
-           assignable: @valid_project,
-           user: @user,
-           user_role: UserRole.find_by(name: I18n.t('user_roles.predefined.owner')),
-           assigned_by: @user)
-
     @unaccessible_project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @team)
     @unaccessible_project.user_assignments.destroy_all
 
-    @experiment = create(:experiment, created_by: @user, last_modified_by: @user, project: @valid_project)
+    @experiment = create(:experiment, created_by: @user, last_modified_by: @user, project: @valid_project, created_by: @user)
 
     @valid_headers =
       { 'Authorization': 'Bearer ' + generate_token(@user.id) }

@@ -1,0 +1,40 @@
+<% if ApplicationSettings.instance.values['advanced_repository_filters'] %>
+  <template id="repositoryFilterTemplate">
+    <div class="dropdown" id="filtersDropdownButton">
+        <button id="filtersDropdown"
+                class="btn btn-light filters-button icon-btn"
+                type="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+      >
+        <span class="fas fa-filter"></span>
+      </button>
+      <div
+        class="dropdown-menu dropdown-menu-right"
+        id="filterContainer"
+        data-columns-url="<%= describe_all_repository_repository_columns_path(@repository) %>"
+        data-my-modules-url="<%= assigned_my_modules_repository_path(@repository) %>"
+        data-users-url="<%= repository_users_repository_path(@repository) %>"
+        data-saved-filters-url="<%= repository_repository_table_filters_path(@repository) %>"
+        data-datatable-id="#repository-table-<%= @repository.id %>"
+        data-can-manage-filters="<%= can_manage_repository_filters?(@repository) %>"
+        data-date-format="<%= datetime_picker_format_date_only %>"
+        data-user-utc-offset="<%= ActiveSupport::TimeZone.find_tzinfo(current_user.time_zone).utc_offset %>"
+      >
+        <filter-container
+          :columns.sync="columns"
+          :my_modules.sync="my_modules"
+          :default-filters="defaultFilters"
+          :can-manage-filters="canManageFilters"
+          :saved-filters.sync="savedFilters"
+          :filter-name="filterName"
+          @filters:update-current-name="updateCurrentFilterName"
+          @filters:apply="applyFilters"
+          @filters:clear="clearFilters"
+          @filters:update="updateFilters"
+        />
+      </div>
+    </div>
+  </template>
+  <%= javascript_pack_tag 'vue/repository_filter' %>
+<% end %>

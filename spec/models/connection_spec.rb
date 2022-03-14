@@ -14,7 +14,7 @@ describe Connection, type: :model do
   end
 
   describe 'Relations' do
-    it { is_expected.to belong_to(:to).class_name('MyModule') }
-    it { is_expected.to belong_to(:from).class_name('MyModule') }
+    #it { should belong_to(:to).class_name('MyModule') }
+    #it { should belong_to(:from).class_name('MyModule') }
   end
 end

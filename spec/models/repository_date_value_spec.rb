@@ -14,12 +14,12 @@ describe RepositoryDateValue, type: :model do
     end
   end
 
-  describe '.data_changed?' do
+  describe '.data_different?' do
     context 'when has different date value' do
       let(:new_values) { Time.utc(2000, 12, 11, 4, 14).to_s }
 
       it do
-        expect(date_value.data_changed?(new_values)).to be_truthy
+        expect(date_value.data_different?(new_values)).to be_truthy
       end
     end
 
@@ -27,7 +27,7 @@ describe RepositoryDateValue, type: :model do
       let(:new_values) { Time.utc(2000, 10, 11, 4, 11).to_s }
 
       it do
-        expect(date_value.data_changed?(new_values)).to be_falsey
+        expect(date_value.data_different?(new_values)).to be_falsey
       end
     end
   end
