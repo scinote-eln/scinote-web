@@ -43,9 +43,9 @@ describe RepositoryAssetValue, type: :model do
     end
   end
 
-  describe 'data_changed?' do
+  describe 'data_different?' do
     it do
-      expect(repository_asset_value.data_changed?(anything)).to be_truthy
+      expect(repository_asset_value.data_different?(anything)).to be_truthy
     end
   end
 

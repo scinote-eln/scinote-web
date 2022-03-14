@@ -45,7 +45,6 @@ module Api
         project_member.assign = true
         project_member.user_role_id = user_project_params[:user_role_id]
         project_member.save
-
         render jsonapi: project_member.user_assignment.reload,
                serializer: UserAssignmentSerializer,
                status: :created
@@ -55,9 +54,7 @@ module Api
         user_role = UserRole.find user_project_params[:user_role_id]
         project_member = ProjectMember.new(@user_assignment.user, @project, current_user)
 
-        if project_member.user_assignment&.user_role == user_role
-          return render body: nil, status: :no_content
-        end
+        return render body: nil, status: :no_content if project_member.user_assignment&.user_role == user_role
 
         project_member.user_role_id = user_role.id
         project_member.update

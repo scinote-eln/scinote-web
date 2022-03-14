@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class RepositoryBase < ApplicationRecord
+  require 'sti_preload'
+
+  include StiPreload
   include Discard::Model
 
   self.table_name = 'repositories'
@@ -44,6 +47,22 @@ class RepositoryBase < ApplicationRecord
       cell_includes << value_class::EXTRA_PRELOAD_INCLUDE
     end
     cell_includes
+  end
+
+  def default_table_state
+    raise NotImplementedError
+  end
+
+  def default_table_columns
+    default_table_state['columns'].to_json
+  end
+
+  def default_columns_count
+    default_table_state['columns'].length
+  end
+
+  def default_table_order_as_js_array
+    default_table_state['order'].to_json
   end
 
   def destroy_discarded(discarded_by_id = nil)

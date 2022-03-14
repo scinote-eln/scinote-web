@@ -17,8 +17,7 @@ module Experiments
         splines: true,
         center: true,
         pack: true,
-        bgcolor: Constants::COLOR_CONCRETE,
-        mode: 'ipsep'
+        bgcolor: Constants::COLOR_CONCRETE
       }
       @node_params = {
         color: Constants::COLOR_VOLCANO,

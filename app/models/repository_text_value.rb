@@ -19,7 +19,20 @@ class RepositoryTextValue < ApplicationRecord
     data
   end
 
-  def data_changed?(new_data)
+  def self.add_filter_condition(repository_rows, join_alias, filter_element)
+    case filter_element.operator
+    when 'contains'
+      repository_rows
+        .where("#{join_alias}.data ILIKE ?", "%#{sanitize_sql_like(filter_element.parameters['text'])}%")
+    when 'doesnt_contain'
+      repository_rows
+        .where.not("#{join_alias}.data ILIKE ?", "%#{sanitize_sql_like(filter_element.parameters['text'])}%")
+    else
+      raise ArgumentError, 'Wrong operator for RepositoryTextValue!'
+    end
+  end
+
+  def data_different?(new_data)
     new_data != data
   end
 

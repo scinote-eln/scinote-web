@@ -42,7 +42,7 @@ describe Api::V1::ProjectUserAssignmentsController, type: :controller do
 
     it_behaves_like "a controller action with permissions checking", :get, :index do
       let(:testable) { project }
-      let(:permissions) { [ProjectPermissions::USERS_READ] }
+      let(:permissions) { [ProjectPermissions::USERS_READ, ProjectPermissions::USERS_MANAGE] }
       let(:action_params) {
         {
           team_id: team.id,
@@ -54,7 +54,7 @@ describe Api::V1::ProjectUserAssignmentsController, type: :controller do
     it_behaves_like "a controller action with permissions checking", :get, :show do
       let(:user_assignment) { UserAssignment.find_by(assignable: project) }
       let(:testable) { project }
-      let(:permissions) { [ProjectPermissions::USERS_READ] }
+      let(:permissions) { [ProjectPermissions::USERS_READ, ProjectPermissions::USERS_MANAGE] }
       let(:action_params) {
         {
           team_id: team.id,

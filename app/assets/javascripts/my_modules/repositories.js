@@ -194,11 +194,13 @@ var MyModuleRepositories = (function() {
       destroy: true,
       ajax: {
         url: $(tableContainer).data('source'),
+        contentType: 'application/json',
         data: function(d) {
           d.order[0].column = tableContainer.data('name-column-id');
           d.assigned = 'assigned';
           d.view_mode = true;
           d.simple_view = true;
+          return JSON.stringify(d);
         },
         global: false,
         type: 'POST'
@@ -239,9 +241,11 @@ var MyModuleRepositories = (function() {
       destroy: true,
       ajax: {
         url: $(tableContainer).data('source'),
+        contentType: 'application/json',
         data: function(d) {
           if (options.assigned) d.assigned = 'assigned';
           d.view_mode = true;
+          return JSON.stringify(d);
         },
         global: false,
         type: 'POST'
@@ -251,7 +255,7 @@ var MyModuleRepositories = (function() {
 
       fnInitComplete: function() {
         var dataTableWrapper = $(tableContainer).closest('.dataTables_wrapper');
-        DataTableHelpers.initLengthApearance(dataTableWrapper);
+        DataTableHelpers.initLengthAppearance(dataTableWrapper);
         DataTableHelpers.initSearchField(dataTableWrapper, I18n.t('repositories.show.filter_inventory_items'));
         $('<img class="barcode-scanner" src="/images/icon_small/barcode.png"></img>').appendTo($('.search-container'));
         dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
@@ -293,8 +297,10 @@ var MyModuleRepositories = (function() {
           if (!options.assign_mode) {
             json.state.columns[0].visible = false;
           }
-          json.state.columns[6].visible = false;
-          json.state.columns[7].visible = false;
+          if ($(tableContainer).data('type') !== 'snapshot') {
+            json.state.columns[6].visible = false;
+            json.state.columns[7].visible = false;
+          }
           if (json.state.search) delete json.state.search;
           callback(json.state);
         });
@@ -406,7 +412,7 @@ var MyModuleRepositories = (function() {
     });
   }
 
-  function refreshCreationSpanshotInfoText() {
+  function refreshCreationSnapshotInfoText() {
     var snapshotsCount = FULL_VIEW_MODAL.find('.repository-snapshot-item').length;
     var createSnapshotInfo = FULL_VIEW_MODAL.find('.create-snapshot-item .info');
     if (snapshotsCount) {
@@ -451,7 +457,7 @@ var MyModuleRepositories = (function() {
             checkSnapshotStatus(snapshotItem);
           }, STATUS_POLLING_INTERVAL);
           animateSpinner(null, false);
-          refreshCreationSpanshotInfoText();
+          refreshCreationSnapshotInfoText();
         }
       });
       e.stopPropagation();
@@ -470,7 +476,7 @@ var MyModuleRepositories = (function() {
           }
           snapshotItem.remove();
           animateSpinner(null, false);
-          refreshCreationSpanshotInfoText();
+          refreshCreationSnapshotInfoText();
         }
       });
       e.stopPropagation();
@@ -620,7 +626,7 @@ var MyModuleRepositories = (function() {
     } else if (snapshotDate) {
       title = repositoryName;
       version = I18n.t('my_modules.repository.full_view.modal_snapshot_header', {
-        snaphot_date: snapshotDate
+        snapshot_date: snapshotDate
       });
     } else {
       title = repositoryName;
@@ -631,7 +637,7 @@ var MyModuleRepositories = (function() {
     FULL_VIEW_MODAL.find('.repository-version').html(version);
   }
 
-  function initRepoistoryAssignView() {
+  function initRepositoryAssignView() {
     $('.repositories-dropdown-menu').on('click', '.repository', function(e) {
       var assignUrlModal = $(this).data('assign-url-modal');
       var updateUrlModal = $(this).data('update-url-modal');
@@ -769,7 +775,7 @@ var MyModuleRepositories = (function() {
       initRepositoryFullView();
       initRepositoriesDropdown();
       initVersionsSidebarActions();
-      initRepoistoryAssignView();
+      initRepositoryAssignView();
       initSelectAllCheckbox();
       initExportAssignedRows();
     },

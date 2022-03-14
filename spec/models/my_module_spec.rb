@@ -109,11 +109,12 @@ describe MyModule, type: :model do
 
   describe 'after_create_commit' do
     it 'triggers the UserAssignments::GenerateUserAssignmentsJob job' do
-      my_module.created_by = create(:user)
+      experiment = create :experiment
+      new_my_module = build :my_module, experiment: experiment
       expect(UserAssignments::GenerateUserAssignmentsJob).to receive(:perform_later).with(
-        my_module, my_module.created_by
+        new_my_module, new_my_module.created_by
       )
-      my_module.save!
+      new_my_module.save!
     end
   end
 end

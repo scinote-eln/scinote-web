@@ -57,7 +57,7 @@ Canaid::Permissions.register_for(Experiment) do
   end
 
   can :manage_all_experiment_my_modules do |user, experiment|
-    experiment.my_modules == experiment.my_modules.managable_by_user(user)
+    experiment.my_modules.where.not(id: experiment.my_modules.managable_by_user(user)).none?
   end
 
   can :archive_experiment do |user, experiment|

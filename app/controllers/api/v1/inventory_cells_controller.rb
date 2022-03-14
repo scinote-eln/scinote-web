@@ -34,7 +34,7 @@ module Api
 
       def update
         value = update_inventory_cell_params[:value]
-        if @inventory_cell.value.data_changed?(value)
+        if @inventory_cell.value.data_different?(value)
           @inventory_cell.value.update_data!(value, current_user)
           render jsonapi: @inventory_cell, serializer: InventoryCellSerializer
         else

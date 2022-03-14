@@ -9,6 +9,7 @@ describe UserMyModulesController, type: :controller do
     index_old: { my_module_id: 1 },
     index: { my_module_id: 1 },
     index_edit: { my_module_id: 1 },
+    search: { my_module_id: 1, id: 1 },
     create: { my_module_id: 1 },
     destroy: { my_module_id: 1, id: 1 }
   }, []
@@ -38,16 +39,23 @@ describe UserMyModulesController, type: :controller do
       let(:action_params) { { my_module_id: my_module.id } }
     end
 
+    it_behaves_like "a controller action with permissions checking", :get, :search do
+      let(:testable) { my_module }
+      let(:user_my_module) { UserMyModule.create!(my_module: my_module, user: user) }
+      let(:permissions) { [MyModulePermissions::READ] }
+      let(:action_params) { { my_module_id: my_module.id, id: user_my_module.id } }
+    end
+
     it_behaves_like "a controller action with permissions checking", :post, :create do
       let(:testable) { my_module }
-      let(:permissions) { [MyModulePermissions::MANAGE] }
+      let(:permissions) { [MyModulePermissions::DESIGNATED_USERS_MANAGE] }
       let(:action_params) { { my_module_id: my_module.id } }
     end
 
     it_behaves_like "a controller action with permissions checking", :post, :destroy do
       let(:testable) { my_module }
       let(:user_my_module) { UserMyModule.create!(my_module: my_module, user: user) }
-      let(:permissions) { [MyModulePermissions::MANAGE] }
+      let(:permissions) { [MyModulePermissions::DESIGNATED_USERS_MANAGE] }
       let(:action_params) { { my_module_id: my_module.id, id: user_my_module.id } }
     end
   end

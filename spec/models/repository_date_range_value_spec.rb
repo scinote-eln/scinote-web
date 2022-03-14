@@ -14,7 +14,7 @@ describe RepositoryDateRangeValue, type: :model do
     end
   end
 
-  describe '.data_changed?' do
+  describe '.data_different?' do
     context 'when has different date value' do
       let(:new_values) do
         {
@@ -24,7 +24,7 @@ describe RepositoryDateRangeValue, type: :model do
       end
 
       it do
-        expect(date_range_value.data_changed?(new_values)).to be_truthy
+        expect(date_range_value.data_different?(new_values)).to be_truthy
       end
     end
 
@@ -37,7 +37,7 @@ describe RepositoryDateRangeValue, type: :model do
       end
 
       it do
-        expect(date_range_value.data_changed?(new_values)).to be_falsey
+        expect(date_range_value.data_different?(new_values)).to be_falsey
       end
     end
   end

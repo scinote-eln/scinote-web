@@ -11,7 +11,18 @@ class RepositoryStatusItem < ApplicationRecord
              inverse_of: :modified_repository_status_types
   has_many :repository_status_values, inverse_of: :repository_status_item, dependent: :destroy
 
+  before_destroy :update_table_fiter_elements
+
   def data
     "#{icon} #{status}"
+  end
+
+  private
+
+  def update_table_fiter_elements
+    repository_column.repository_table_filter_elements.find_each do |filter_element|
+      filter_element.parameters['item_ids']&.delete(id.to_s)
+      filter_element.parameters['item_ids'].blank? ? filter_element.destroy! : filter_element.save!
+    end
   end
 end
