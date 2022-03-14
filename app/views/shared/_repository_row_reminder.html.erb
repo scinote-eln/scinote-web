@@ -9,6 +9,29 @@
           <%= t('repository_row.reminder.stock_low', stock_formated: reminder.value.formatted ).html_safe %>
         <% end %>
       </div>
+    <% elsif reminder.value_type == 'RepositoryDateTimeValueBase' %>
+      <div class="row-reminders-title"><strong><%= t('repository_row.reminder.date_reminder') %></strong></div>
+      <div class="row-reminders-body">
+      <%if reminder.value.data < Time.now.utc %>
+        <%= t('repository_row.reminder.item_expired') %>
+      <% else %>
+        <% case reminder.repository_column.metadata["reminder_unit"].to_i / (60 * 60 * 24) %>
+        <% when 1 %>
+          <%= t('repository_row.reminder.date_expiration', date_expiration: 
+                reminder.convert_time_reminder((reminder.value.data - Time.now.utc), 'day') ).html_safe %>
+        <% when 7 %>
+          <%= t('repository_row.reminder.date_expiration', date_expiration: 
+                reminder.convert_time_reminder((reminder.value.data - Time.now.utc), 'week') ).html_safe %>
+        <% when 30 %>
+          <%= t('repository_row.reminder.date_expiration', date_expiration: 
+                reminder.convert_time_reminder((reminder.value.data - Time.now.utc), 'month') ).html_safe %>
+        <% end %>
+      <% end %>
+      <% if reminder.repository_column.metadata["reminder_message"] != ""%>
+        <span> <%= reminder.repository_column.metadata["reminder_message"] %> </span>
+      <% end %>
+         
+      </div>
     <% end %>
     <div class="row-reminders-footer" data-row-hide-reminders-url="
       <%= repository_repository_row_repository_cell_hide_reminder_url(reminder.repository_row.repository, 

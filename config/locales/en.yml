@@ -1850,6 +1850,9 @@ en:
       low_stock_title: "Item running low"
       stock_low: "Only <strong>%{stock_formated}</strong> left."
       stock_empty: "There is no stock left."
+      date_reminder: "Date reminder."
+      date_expiration: "This item is expiring in <strong>%{date_expiration}</strong>"
+      item_expired: "This item has expired."
   label_printers:
     modal_printing_status:
       printer_status:
