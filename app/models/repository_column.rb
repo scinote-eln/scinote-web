@@ -17,6 +17,7 @@ class RepositoryColumn < ApplicationRecord
   has_many :repository_stock_unit_items, -> { order('data ASC') }, dependent: :destroy,
                                                                   index_errors: true,
                                                                   inverse_of: :repository_column
+  has_many :repository_table_filter_elements, dependent: :destroy
 
   accepts_nested_attributes_for :repository_status_items, allow_destroy: true
   accepts_nested_attributes_for :repository_list_items, allow_destroy: true
@@ -24,6 +25,8 @@ class RepositoryColumn < ApplicationRecord
   accepts_nested_attributes_for :repository_stock_unit_items, allow_destroy: true
 
   enum data_type: Extends::REPOSITORY_DATA_TYPES
+
+  store_accessor :metadata, %i(reminder_delta)
 
   validates :data_type, uniqueness: { if: :repository_stock_value?, scope: :repository_id }
   validates :data_type, uniqueness: { if: :repository_stock_consumption_value?, scope: :repository_id }
@@ -65,7 +68,7 @@ class RepositoryColumn < ApplicationRecord
     # Calculate old_column_index - this can only be done before
     # record is deleted when we still have its index
     old_column_index = (
-      Constants::REPOSITORY_TABLE_DEFAULT_STATE['columns'].length +
+      repository.default_columns_count +
       repository.repository_columns
                 .order(id: :asc)
                 .pluck(:id)
@@ -112,8 +115,14 @@ class RepositoryColumn < ApplicationRecord
     Constants::REPOSITORY_LIST_ITEMS_DELIMITERS_MAP[metadata['delimiter']&.to_sym] || "\n"
   end
 
+
   def deletable?
     data_type != 'RepositoryStockValue'
+  end
+
+  def items
+    items_method_name = "#{data_type.chomp('Value').underscore}_items"
+    __send__(items_method_name) if respond_to?(items_method_name, true)
   end
 
   private

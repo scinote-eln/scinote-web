@@ -205,14 +205,20 @@
     .assigned-column {
       position: relative;
 
+      .row-reminders-dropdown {
+        cursor: pointer;
+        display: inline-block;
+        line-height: 35px;
+      }
+
       .assign-counter-container {
         border-radius: $border-radius-tag;
         cursor: pointer;
+        display: inline-block;
         line-height: 35px;
+        padding: 0 5px;
         position: absolute;
-        text-align: center;
-        top: 1px;
-        width: calc(100% - 16px);
+        right: 5px;
 
         .assign-counter {
           display: inline-block;
@@ -521,5 +527,40 @@
     .sidebar-collapse-button {
       transform: rotateZ(90deg);
     }
+  }
+}
+
+// Reminders
+.row-reminders-notification {
+  font-size: 14px;
+  line-height: 30px;
+  margin-left: 16px;
+  width: 300px;
+
+
+  .row-reminders-title {
+    line-height: 20px;
+    margin-top: 5px;
+  }
+
+  .row-reminders-body {
+    font-size: 13px;
+    line-height: 16px;
+    margin-top: 5px;
+  }
+
+  .fas {
+    font-size: 14px;
+    line-height: 35px;
+    margin-top: 5px;
+    text-align: center;
+    width: 16px;
+  }
+
+  hr {
+    background-color: $color-alto;
+    border-width: 0;
+    height: 1px;
+    margin: 0 16px 10px 0;
   }
 }

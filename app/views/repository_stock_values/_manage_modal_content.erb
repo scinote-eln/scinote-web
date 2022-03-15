@@ -68,13 +68,38 @@
     </div>
     <div class="row">
       <div class="col-sm-12">
-        <div class="form-group">
-          <label><%= t('repository_stock_values.manage_modal.comment') %></label>
-          <input class="form-control"
-          type="text"
-          name="repository_stock_value[comment]"
-          id="repository-stock-value-comment"
-          placeholder="<%= t('repository_stock_values.manage_modal.comment_placeholder') %>">
+          <div class="stock-comment-field sci-input-container" data-error-text="<%= t('repository_stock_values.manage_modal.comment_limit') %>">
+            <label><%= t('repository_stock_values.manage_modal.comment') %></label>
+            <input class="sci-input-field"
+            type="text"
+            name="repository_stock_value[comment]"
+            id="repository-stock-value-comment"
+            placeholder="<%= t('repository_stock_values.manage_modal.comment_placeholder') %>">
+          </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="repository-stock-reminder-selector">
+          <div class="sci-checkbox-container">
+            <input type="checkbox" name="reminder-enabled" class="sci-checkbox" id="reminder-selector-checkbox" <%= "checked" if repository_stock_value.low_stock_threshold.present? %>/>
+            <span class="sci-checkbox-label"></span>
+          </div>
+          <%= t('repository_stock_values.manage_modal.create_reminder') %>
+        </div>
+        <div class="repository-stock-reminder-value <%= "hidden" if repository_stock_value.low_stock_threshold.blank? %>">
+          <span><%= t('repository_stock_values.manage_modal.reminder_at') %></span>
+          <div class="sci-input-container" data-error-text="<%= t('repository_stock_values.manage_modal.enter_ammount') %>">
+            <input type="number"
+                   name="repository_stock_value[low_stock_threshold]"
+                   value="<%= repository_stock_value.low_stock_threshold %>"
+                   step="<%= repository_stock_column.metadata['decimals'] ? 1.0/(10 ** repository_stock_column.metadata['decimals']) : 1 %>"
+                   class="sci-input-field"
+                   placeholder="Enter amount"/>
+          </div>
+          <span class="units">
+            <%= t('repository_stock_values.manage_modal.units_remaining', unit: repository_stock_value.repository_stock_unit_item&.data) %>
+          </span>
         </div>
       </div>
     </div>
@@ -105,6 +130,6 @@
             id="cancel"
             class="btn btn-default"
             data-dismiss="modal"><%=t 'general.cancel' %></button>
-    <%= submit_tag t('repository_stock_values.manage_modal.save_stock'), class: "btn btn-primary" %>
+    <%= submit_tag t('repository_stock_values.manage_modal.save_stock'), class: "btn btn-primary update-repository-stock" %>
   </div>
 <% end %>

@@ -86,6 +86,15 @@
         }, {
           targets: 8,
           visible: archived
+        },
+        {
+          visible: true,
+          searchable: false,
+          data: 'stock',
+          render: {
+            _: 'display',
+            sort: 'sort'
+          }
         }],
         fnInitComplete: function(e) {
           var dataTableWrapper = $(e.nTableWrapper);
@@ -96,7 +105,7 @@
               updateActionButtons();
             }
           });
-          DataTableHelpers.initLengthApearance(dataTableWrapper);
+          DataTableHelpers.initLengthAppearance(dataTableWrapper);
           DataTableHelpers.initSearchField(dataTableWrapper, I18n.t('repositories.index.filter_inventory'));
           $('.content-body .toolbar').html($('#repositoriesListButtons').html());
           dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');

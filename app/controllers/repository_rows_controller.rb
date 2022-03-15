@@ -8,8 +8,8 @@ class RepositoryRowsController < ApplicationController
 
   before_action :load_repository, except: %i(show print_modal print)
   before_action :load_repository_or_snapshot, only: %i(print_modal print)
-  before_action :load_repository_row, only: %i(update assigned_task_list)
-  before_action :check_read_permissions, except: %i(show create update delete_records copy_records)
+  before_action :load_repository_row, only: %i(update assigned_task_list active_reminder_repository_cells)
+  before_action :check_read_permissions, except: %i(show create update delete_records copy_records reminder_repository_cells)
   before_action :check_snapshotting_status, only: %i(create update delete_records copy_records)
   before_action :check_create_permissions, only: :create
   before_action :check_delete_permissions, only: %i(delete_records archive_records restore_records)
@@ -31,6 +31,10 @@ class RepositoryRowsController < ApplicationController
                                         .per(per_page)
 
     @repository_rows = @repository_rows.where(archived: params[:archived]) unless @repository.archived?
+  rescue RepositoryFilters::ColumnNotFoundException
+    render json: { custom_error: I18n.t('repositories.show.repository_filter.errors.column_not_found') }
+  rescue RepositoryFilters::ValueNotFoundException
+    render json: { custom_error: I18n.t('repositories.show.repository_filter.errors.value_not_found') }
   end
 
   def create
@@ -202,7 +206,7 @@ class RepositoryRowsController < ApplicationController
       render json: { no_items: no_items_string },
                    status: :ok
     else
-      render json: { results: load_available_rows(search_params[:q]) },
+      render json: { results: load_available_rows },
                    status: :ok
     end
   end
@@ -214,7 +218,7 @@ class RepositoryRowsController < ApplicationController
                                         params[:query],
                                         whole_phrase: true
                                       )
-    viewable_modules = assigned_modules.viewable_by_user(current_user, current_team)
+    viewable_modules = assigned_modules.viewable_by_user(current_user, current_user.teams)
     private_modules_number = assigned_modules.where.not(id: viewable_modules).count
     render json: {
       html: render_to_string(partial: 'shared/my_modules_list_partial.html.erb', locals: {
@@ -222,6 +226,10 @@ class RepositoryRowsController < ApplicationController
                                private_modules_number: private_modules_number
                              })
     }
+  end
+
+  def reminder_repository_cells
+    render json: @repository_row.repository_cells.with_active_reminder(current_user)
   end
 
   def archive_records
@@ -248,6 +256,15 @@ class RepositoryRowsController < ApplicationController
     else
       render json: { error: service.error_message }, status: :unprocessable_entity
     end
+  end
+
+  def active_reminder_repository_cells
+    reminder_cells = @repository_row.repository_cells.with_active_reminder(current_user).distinct
+    render json: {
+      html: render_to_string(partial: 'shared/repository_row_reminder.html.erb', locals: {
+                               reminders: reminder_cells
+                             })
+    }
   end
 
   private
@@ -316,7 +333,7 @@ class RepositoryRowsController < ApplicationController
     @repository.repository_rows.where(id: process_ids).pluck(:id)
   end
 
-  def load_available_rows(query)
+  def load_available_rows
     @repository.repository_rows
                .active
                .includes(:repository_cells)

@@ -1,0 +1,84 @@
+<template>
+  <div class="filter-attributes">
+    <div class="operator-selector">
+      <DropdownSelector
+      :disableSearch="true"
+      :options="operators"
+      :selectorId="`OperatorSelector${filter.id}`"
+      :selectedValue="operator"
+      @dropdown:changed="updateOperator" />
+    </div>
+    <template v-if="!isPreset">
+      <div class="filter-datepicker-input">
+        <DateTimePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`" :onlyDate="true" :defaultValue="date || fallbackDate()" />
+      </div>
+      <span class="between-delimiter" v-if="operator == 'between'">—</span>
+      <div class="filter-datepicker-to-input" v-if="operator == 'between'">
+        <DateTimePicker @change="updateDateTo" :selectorId="`DatePickerTo${filter.id}`" :onlyDate="true" :defaultValue="dateTo || fallbackDate(7 * 24 * 60 * 60)"  />
+      </div>
+    </template>
+  </div>
+</template>
+
+<script>
+  import FilterMixin from 'vue/repository_filter/mixins/filter.js'
+  import DateTimeFilterMixin from 'vue/repository_filter/mixins/filters/date_time_filter.js'
+  import DropdownSelector from 'vue/shared/dropdown_selector.vue'
+  import DateTimePicker from 'vue/shared/date_picker.vue'
+
+  export default {
+    name: 'RepositoryDateValue',
+    mixins: [FilterMixin, DateTimeFilterMixin],
+    data() {
+      return {
+        timeType: 'date',
+        operators: [
+          { value: 'today', label: this.i18n.t('repositories.show.repository_filter.filters.operators.today'), params: {
+            tooltip: this.i18n.t('repositories.show.repository_filter.filters.operators.tooltips.today')
+          } },
+          { value: 'yesterday', label: this.i18n.t('repositories.show.repository_filter.filters.operators.yesterday'), params: {
+            tooltip: this.i18n.t('repositories.show.repository_filter.filters.operators.tooltips.yesterday')
+          } },
+          { value: 'last_week', label: this.i18n.t('repositories.show.repository_filter.filters.operators.last_week'), params: {
+            tooltip: this.i18n.t('repositories.show.repository_filter.filters.operators.tooltips.last_week')
+          } },
+          { value: 'this_month', label: this.i18n.t('repositories.show.repository_filter.filters.operators.this_month'), params: {
+            tooltip: this.i18n.t('repositories.show.repository_filter.filters.operators.tooltips.this_month')
+          } },
+          { value: 'this_year', label: this.i18n.t('repositories.show.repository_filter.filters.operators.this_year'), params: {
+            tooltip: this.i18n.t('repositories.show.repository_filter.filters.operators.tooltips.this_year')
+          } },
+          { value: 'last_year', label: this.i18n.t('repositories.show.repository_filter.filters.operators.last_year'), params: {
+            tooltip: this.i18n.t('repositories.show.repository_filter.filters.operators.tooltips.last_year')
+          } },
+          { value: '', label: '', params: { delimiter: true } },
+          { value: 'equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.date.on') },
+          { value: 'greater_than_or_equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.date.after') },
+          { value: 'less_than', label: this.i18n.t('repositories.show.repository_filter.filters.operators.date.before') },
+          { value: 'between', label: this.i18n.t('repositories.show.repository_filter.filters.operators.between') },
+          { value: 'unequal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.date.not_on') }
+        ],
+        operator: 'equal_to',
+        date: null,
+        dateTo: null,
+        value: null
+      }
+    },
+    components: {
+      DropdownSelector,
+      DateTimePicker
+    },
+    watch: {
+      value() {
+        this.parameters = this.value;
+        this.updateFilter();
+      }
+    },
+    methods: {
+      formattedDate(date) {
+        if (!date) return null
+        return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+      }
+    }
+  }
+</script>

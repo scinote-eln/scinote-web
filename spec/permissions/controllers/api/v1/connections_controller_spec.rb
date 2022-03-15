@@ -17,7 +17,7 @@ describe Api::V1::ConnectionsController, type: :controller do
       experiment_id: 1,
       id: 1
     }
-  }, [],
+  }, [:create, :destroy],
   :unauthorized
 
 

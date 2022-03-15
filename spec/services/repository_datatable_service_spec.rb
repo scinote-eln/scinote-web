@@ -49,30 +49,9 @@ describe RepositoryDatatableService do
            }
   end
 
-  context 'object' do
-    let(:params) do
-      { order: { 0 => { column: '3', dir: 'asc' } },
-        search: { value: 'row' } }
-    end
-
-    let(:subject) do
-      RepositoryDatatableService.new(repository, params, user)
-    end
-
-    describe '#build_conditions/1' do
-      it 'parsers the contitions' do
-        contitions = subject.send(:build_conditions, params)
-        expect(contitions[:search_value]).to eq 'row'
-        expect(contitions[:order_by_column]).to eq(
-          column: 3, dir: 'asc'
-        )
-      end
-    end
-  end
-
   describe 'ordering' do
     it 'is ordered by row name asc' do
-      params = { order: { 0 => { column: '3', dir: 'asc' } },
+      params = { order:[{ column: '3', dir: 'asc' }],
                  search: { value: '' } }
       subject = RepositoryDatatableService.new(repository,
                                                params,
@@ -82,7 +61,7 @@ describe RepositoryDatatableService do
     end
 
     it 'is ordered by row name desc' do
-      params = { order: { 0 => { column: '3', dir: 'desc' } },
+      params = { order: [{ column: '3', dir: 'desc' }],
                  search: { value: '' } }
       subject = RepositoryDatatableService.new(repository,
                                                params,
@@ -101,13 +80,144 @@ describe RepositoryDatatableService do
     end
 
     it 'returns only the searched entity' do
-      params = { order: { 0 => { column: '4', dir: 'desc' } },
+      params = { order: [{ column: '4', dir: 'desc' }],
                  search: { value: 'test' } }
       subject = RepositoryDatatableService.new(repository,
                                                params,
                                                user)
       expect(subject.repository_rows.first.name).to eq 'test'
       expect(subject.repository_rows.length).to eq 1
+    end
+
+    context 'when using advanced filter time presets' do
+      let(:base_params) do
+        { order: [{ column: '4', dir: 'desc' }], search: { value: '' } }
+      end
+      it 'returns the rows matching "today"' do
+        repository_row.update_column(:created_at, 2.days.ago)
+        today_repository_row = RepositoryRow.create(
+          name: "Today",
+          repository: repository,
+          created_by: user,
+          last_modified_by: user
+        )
+
+        params = base_params.merge(
+          advanced_search: {
+            filter_elements: [{repository_column_id: "added_on", operator: "today"}]
+          }
+        )
+
+        repository_rows = RepositoryDatatableService.new(repository, params, user).repository_rows
+        expect(repository_rows).to include(today_repository_row)
+        expect(repository_rows).to_not include(repository_row)
+      end
+
+      it 'returns the rows matching "yesterday"' do
+        yesterday_repository_row = RepositoryRow.create(
+          name: "Yesterday",
+          repository: repository,
+          created_by: user,
+          last_modified_by: user
+        )
+
+        yesterday_repository_row.update_column(:created_at, 1.day.ago)
+
+        params = base_params.merge(
+          advanced_search: {
+            filter_elements: [{repository_column_id: "added_on", operator: "yesterday"}]
+          }
+        )
+
+        repository_rows = RepositoryDatatableService.new(repository, params, user).repository_rows
+        expect(repository_rows).to include(yesterday_repository_row)
+        expect(repository_rows).to_not include(repository_row)
+      end
+
+      it 'returns the rows matching "last_week"' do
+        last_week_repository_row = RepositoryRow.create(
+          name: "Last week",
+          repository: repository,
+          created_by: user,
+          last_modified_by: user
+        )
+
+        last_week_repository_row.update_column(:created_at, 1.week.ago)
+
+        params = base_params.merge(
+          advanced_search: {
+            filter_elements: [{repository_column_id: "added_on", operator: "last_week"}]
+          }
+        )
+
+        repository_rows = RepositoryDatatableService.new(repository, params, user).repository_rows
+        expect(repository_rows).to include(last_week_repository_row)
+        expect(repository_rows).to_not include(repository_row)
+      end
+
+      it 'returns the rows matching "this_month"' do
+        repository_row.update_column(:created_at, Time.now)
+        previous_month_repository_row = RepositoryRow.create(
+          name: "Last week",
+          repository: repository,
+          created_by: user,
+          last_modified_by: user
+        )
+
+        previous_month_repository_row.update_column(:created_at, 1.month.ago)
+
+        params = base_params.merge(
+          advanced_search: {
+            filter_elements: [{repository_column_id: "added_on", operator: "this_month"}]
+          }
+        )
+
+        repository_rows = RepositoryDatatableService.new(repository, params, user).repository_rows
+        expect(repository_rows).to include(repository_row)
+        expect(repository_rows).to_not include(previous_month_repository_row)
+      end
+
+      it 'returns the rows matching "last_year"' do
+        last_year_repository_row = RepositoryRow.create(
+          name: "Yesterday",
+          repository: repository,
+          created_by: user,
+          last_modified_by: user
+        )
+
+        last_year_repository_row.update_column(:created_at, 1.year.ago)
+
+        params = base_params.merge(
+          advanced_search: {
+            filter_elements: [{repository_column_id: "added_on", operator: "last_year"}]
+          }
+        )
+
+        repository_rows = RepositoryDatatableService.new(repository, params, user).repository_rows
+        expect(repository_rows).to include(last_year_repository_row)
+        expect(repository_rows).to_not include(repository_row)
+      end
+
+      it 'returns the rows matching "this_year"' do
+        last_year_repository_row = RepositoryRow.create(
+          name: "Yesterday",
+          repository: repository,
+          created_by: user,
+          last_modified_by: user
+        )
+
+        last_year_repository_row.update_column(:created_at, 1.year.ago.end_of_year)
+
+        params = base_params.merge(
+          advanced_search: {
+            filter_elements: [{repository_column_id: "added_on", operator: "this_year"}]
+          }
+        )
+
+        repository_rows = RepositoryDatatableService.new(repository, params, user).repository_rows
+        expect(repository_rows).to_not include(last_year_repository_row)
+        expect(repository_rows).to include(repository_row)
+      end
     end
   end
 end

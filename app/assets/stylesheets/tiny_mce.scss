@@ -1,6 +1,11 @@
 // scss-lint:disable ImportantRule
 @import "constants";
 
+@font-face {
+  font-family: "tinymce";
+  src: asset-url("tinymce/skins/lightgray/fonts/tinymce.woff");
+}
+
 .tinymce-view {
   border: solid 1px;
   border-color: $color-white;
@@ -78,12 +83,16 @@
 
   .notification-text {
     flex-grow: 1;
+    max-width: 75%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .restore-draft-btn {
     border: 1px solid $color-silver-chalice;
     cursor: pointer;
     font-size: 12px;
+    margin-left: auto;
     padding: 3px 10px 3px 10px;
   }
 

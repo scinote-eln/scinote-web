@@ -16,12 +16,19 @@ class RepositoryStockValue < ApplicationRecord
     "#{amount} #{repository_stock_unit_item&.data}"
   end
 
+  def low_stock?
+    return false unless low_stock_threshold
+
+    amount <= low_stock_threshold
+  end
+
   def data_changed?(new_data)
     BigDecimal(new_data.to_s) != data
   end
 
   def update_data!(new_data, user)
-    self.amount = BigDecimal(new_data.to_s)
+    self.amount = BigDecimal(new_data[:amount].to_s)
+    self.low_stock_threshold = new_data[:low_stock_threshold]
     self.last_modified_by = user
     save!
   end
@@ -49,7 +56,8 @@ class RepositoryStockValue < ApplicationRecord
 
   def self.new_with_payload(payload, attributes)
     value = new(attributes)
-    value.amount = payload
+    value.amount = payload[:amount]
+    value.low_stock_threshold = payload[:low_stock_threshold]
     value
   end
 

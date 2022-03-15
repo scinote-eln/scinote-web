@@ -4,21 +4,21 @@ module RepositoryDatatableHelper
   include InputSanitizeHelper
 
   def prepare_row_columns(repository_rows, repository, columns_mappings, team, options = {})
-    repository_rows.map do |record|
-      default_cells = {
-        '1': assigned_row(record),
-        '2': record.code,
-        '3': escape_input(record.name),
-        '4': I18n.l(record.created_at, format: :full),
-        '5': escape_input(record.created_by.full_name),
-        '6': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
-        '7': escape_input(record.archived_by&.full_name)
-      }
+    repository_row_with_active_reminder_ids = repository_rows.with_active_reminders(current_user).pluck(:id).uniq
 
+    repository_rows.map do |record|
+      default_cells = public_send("#{repository.class.name.underscore}_default_columns", record)
       row = {
         'DT_RowId': record.id,
         'DT_RowAttr': { 'data-state': row_style(record) },
-        'recordInfoUrl': Rails.application.routes.url_helpers.repository_repository_row_path(repository, record)
+        'recordInfoUrl': Rails.application.routes.url_helpers.repository_repository_row_path(repository, record),
+        'hasActiveReminders': repository_row_with_active_reminder_ids.include?(record.id),
+        'rowRemindersUrl':
+          Rails.application.routes.url_helpers
+               .active_reminder_repository_cells_repository_repository_row_url(
+                 repository,
+                 record
+               )
       }.merge(default_cells)
 
       if record.repository.has_stock_management?
@@ -46,28 +46,37 @@ module RepositoryDatatableHelper
       row['0'] = record[:row_assigned] if options[:my_module]
 
       # Add custom columns
-      custom_cells = record.repository_cells
+      custom_cells = record.repository_cells.where.not(value_type: 'RepositoryStockValue')
 
       custom_cells.each do |cell|
         row[columns_mappings[cell.repository_column.id]] =
           display_cell_value(cell, team)
       end
 
+      stock_present = record.repository_stock_cell.present?
+      stock_managable = !options[:include_stock_consumption] && can_manage_repository_rows?(record.repository)
+
+      # always add stock cell, even if empty
+      row['stock'] = stock_present ? display_cell_value(record.repository_stock_cell, team) : {}
+      row['stock'][:stock_managable] = stock_managable
+      row['stock']['value_type'] = 'RepositoryStockValue'
+
       if options[:include_stock_consumption] && record.repository.has_stock_management? && options[:my_module]
-        row[(default_cells.length + custom_cells.length + 1).to_s] =
-          if record.repository_stock_cell.present?
-            display_cell_value(record.repository_stock_cell, record.repository.team)
-          end
-        row[(default_cells.length + custom_cells.length + 2).to_s] = {
-          stock_present: record.repository_stock_cell.present?,
+        consumption_managable =
+          stock_present && record.repository.is_a?(Repository) && can_update_my_module_stock_consumption?(options[:my_module])
+
+        row['consumedStock'] = {
+          stock_present: stock_present,
+          consumption_managable: consumption_managable,
           updateStockConsumptionUrl: Rails.application.routes.url_helpers.consume_modal_my_module_repository_path(
             options[:my_module],
             record.repository,
             row_id: record.id
           ),
           value: {
-            consumed_stock_formatted: record.consumed_stock,
-            unit: record.repository_stock_value.repository_stock_unit_item&.data
+            consumed_stock: record.consumed_stock,
+            consumed_stock_formatted:
+              "#{record.consumed_stock} #{record.repository_stock_value&.repository_stock_unit_item&.data}"
           }
         }
       end
@@ -89,32 +98,43 @@ module RepositoryDatatableHelper
         stock_present = record.repository_stock_cell.present?
         # Always disabled in a simple view
         stock_managable = false
-        consumption_managable = stock_present && can_update_my_module_stock_consumption?(my_module)
+        consumption_managable =
+          stock_present && record.repository.is_a?(Repository) && can_update_my_module_stock_consumption?(my_module)
 
-        row['1'] = stock_present ? display_cell_value(record.repository_stock_cell, record.repository.team) : {}
-        row['1'][:stock_managable] = stock_managable
-        row['2'] = {
-          stock_present: stock_present,
-          consumption_managable: consumption_managable,
-          updateStockConsumptionUrl: Rails.application.routes.url_helpers.consume_modal_my_module_repository_path(
-            my_module,
-            record.repository,
-            row_id: record.id
-          )
-        }
-        if record.consumed_stock.present?
-          row['2'][:value] = {
-            consumed_stock_formatted: record.consumed_stock,
-            unit: record.repository_stock_value.repository_stock_unit_item&.data
-          }
+        row['stock'] = stock_present ? display_cell_value(record.repository_stock_cell, record.repository.team) : {}
+        row['stock'][:stock_managable] = stock_managable
+        if record.repository.is_a?(RepositorySnapshot)
+          row['consumedStock'] =
+            if record.repository_stock_consumption_value.present?
+              display_cell_value(record.repository_stock_consumption_cell, record.repository.team)
+            else
+              {}
+            end
+        else
+          row['consumedStock'] = {}
+          if consumption_managable
+            row['consumedStock'][:updateStockConsumptionUrl] =
+              Rails.application.routes.url_helpers.consume_modal_my_module_repository_path(
+                my_module, record.repository, row_id: record.id
+              )
+          end
+          if record.consumed_stock.present?
+            row['consumedStock'][:value] = {
+              consumed_stock: record.consumed_stock,
+              consumed_stock_formatted:
+                "#{record.consumed_stock} #{record.repository_stock_value&.repository_stock_unit_item&.data}"
+            }
+          end
         end
+        row['consumedStock']['stock_present'] = stock_present
+        row['consumedStock']['consumption_managable'] = consumption_managable
       end
 
       row
     end
   end
 
-  def prepare_snapshot_row_columns(repository_rows, columns_mappings, team)
+  def prepare_snapshot_row_columns(repository_rows, columns_mappings, team, options = {})
     repository_rows.map do |record|
       row = {
         'DT_RowId': record.id,
@@ -129,6 +149,17 @@ module RepositoryDatatableHelper
       # Add custom columns
       record.repository_cells.each do |cell|
         row[columns_mappings[cell.repository_column.id]] = display_cell_value(cell, team)
+      end
+
+      if options[:include_stock_consumption] && record.repository.has_stock_management?
+        stock_present = record.repository_stock_cell.present?
+        row['stock'] = stock_present ? display_cell_value(record.repository_stock_cell, record.repository.team) : {}
+        row['consumedStock'] =
+          if stock_present
+            display_cell_value(record.repository_stock_consumption_cell, record.repository.team)
+          else
+            {}
+          end
       end
 
       row
@@ -151,20 +182,40 @@ module RepositoryDatatableHelper
       can_manage_repository_rows?(repository)
   end
 
-  def default_table_order_as_js_array
-    Constants::REPOSITORY_TABLE_DEFAULT_STATE['order'].to_json
+  def repository_default_columns(record)
+    {
+      '1': assigned_row(record),
+      '2': record.code,
+      '3': escape_input(record.name),
+      '4': I18n.l(record.created_at, format: :full),
+      '5': escape_input(record.created_by.full_name),
+      '6': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
+      '7': escape_input(record.archived_by&.full_name)
+    }
   end
 
-  def default_table_columns
-    Constants::REPOSITORY_TABLE_DEFAULT_STATE['columns'].to_json
+  def linked_repository_default_columns(record)
+    {
+      '1': assigned_row(record),
+      '2': escape_input(record.external_id),
+      '3': record.code,
+      '4': escape_input(record.name),
+      '5': I18n.l(record.created_at, format: :full),
+      '6': escape_input(record.created_by.full_name),
+      '7': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
+      '8': escape_input(record.archived_by&.full_name)
+    }
   end
 
-  def default_snapshot_table_order_as_js_array
-    Constants::REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['order'].to_json
-  end
-
-  def default_snapshot_table_columns
-    Constants::REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['columns'].to_json
+  def bmt_repository_default_columns(record)
+    {
+      '1': assigned_row(record),
+      '2': escape_input(record.external_id),
+      '3': record.code,
+      '4': escape_input(record.name),
+      '5': escape_input(record.created_by.full_name),
+      '6': I18n.l(record.created_at, format: :full)
+    }
   end
 
   def display_cell_value(cell, team)

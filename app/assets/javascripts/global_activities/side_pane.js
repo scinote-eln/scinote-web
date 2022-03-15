@@ -368,8 +368,8 @@ var globalActivities = (function() {
       var weekDay = today.getDay();
       var monday = new Date(new Date()
         .setDate(today.getDate() - weekDay - (weekDay === 0 ? 6 : -1)));
-      var lastWeekEnd = new Date(new Date().setDate(monday.getDate() - 1));
-      var lastWeekStart = new Date(new Date().setDate(monday.getDate() - 7));
+      var lastWeekStart = new Date(monday.getTime() - (7 * 24 * 60 * 60 * 1000));
+      var lastWeekEnd = new Date(lastWeekStart.getTime() + (6 * 24 * 60 * 60 * 1000));
       var firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
       var lastMonthEnd = new Date(new Date().setDate(firstDay.getDate() - 1));
       var lastMonthStart = new Date(lastMonthEnd.getFullYear(), lastMonthEnd.getMonth(), 1);

@@ -61,7 +61,10 @@ $.fn.dataTable.render.defaultRepositoryDateValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryDateValue = function(data) {
-  return `<span data-datetime="${data.value.datetime}" data-date="${data.value.formatted}">${data.value.formatted}</span>`;
+  let reminderClass = data.value.reminder ? 'reminder' : '';
+  return `<span class="${reminderClass}
+                date-cell-value" data-datetime="${data.value.datetime}"
+                data-date="${data.value.formatted}">${data.value.formatted}</span>`;
 };
 
 $.fn.dataTable.render.defaultRepositoryDateTimeValue = function() {
@@ -69,7 +72,9 @@ $.fn.dataTable.render.defaultRepositoryDateTimeValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryDateTimeValue = function(data) {
-  return `<span data-time="${data.value.time_formatted}"
+  let reminderClass = data.value.reminder ? 'reminder' : '';
+  return `<span class="${reminderClass} date-time-cell-value"
+                data-time="${data.value.time_formatted}"
                 data-datetime="${data.value.datetime}"
                 data-date="${data.value.date_formatted}">${data.value.formatted}</span>`;
 };
@@ -157,14 +162,16 @@ $.fn.dataTable.render.RepositoryNumberValue = function(data) {
           </span>`;
 };
 
-$.fn.dataTable.render.AssignedTasksValue = function(data) {
+$.fn.dataTable.render.AssignedTasksValue = function(data, row) {
+  let tasksLinkHTML;
+
   if (data.tasks > 0) {
     let tooltip = I18n.t('repositories.table.assigned_tooltip', {
       tasks: data.tasks,
       experiments: data.experiments,
       projects: data.projects
     });
-    return `<div class="assign-counter-container dropdown" title="${tooltip}"
+    tasksLinkHTML = `<div class="assign-counter-container dropdown" title="${tooltip}"
             data-task-list-url="${data.task_list_url}">
               <a href="#" class="assign-counter has-assigned"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">${data.tasks}</a>
@@ -177,44 +184,60 @@ $.fn.dataTable.render.AssignedTasksValue = function(data) {
                 <div class="tasks"></div>
               </div>
             </div>`;
+  } else {
+    tasksLinkHTML = "<div class='assign-counter-container'><span class='assign-counter'>0</span></div>";
   }
-  return "<div class='assign-counter-container'><span class='assign-counter'>0</span></div>";
+  if (row.hasActiveReminders) {
+    return `<div class="dropdown row-reminders-dropdown" data-row-reminders-url="${row.rowRemindersUrl}">
+              <i class="fas fa-bell dropdown-toggle row-reminders-icon" data-toggle="dropdown" id="rowReminders${row.DT_RowId}}"></i>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="rowReminders${row.DT_RowId}">
+              </ul>
+            </div>`
+      + tasksLinkHTML;
+  }
+
+  return tasksLinkHTML;
 };
 
 $.fn.dataTable.render.RepositoryStockValue = function(data) {
-  if (data.value) {
-    if (data.stock_managable) {
-      return `<a class="manage-repository-stock-value-link stock-value-view-render
-                        ${data.value.stock_amount <= 0 ? 'stock-alert' : ''}">
+  if (data) {
+    if (data.value) {
+      if (data.stock_managable) {
+        return `<a class="manage-repository-stock-value-link stock-value-view-render
+                          ${data.value.stock_amount <= 0 ? 'stock-alert' : ''}">
+                  ${data.value.stock_formatted}
+                  </a>`;
+      }
+      return `<span class="stock-value-view-render
+                           ${data.value.stock_amount <= 0 ? 'stock-alert' : ''}">
                 ${data.value.stock_formatted}
-                </a>`;
+                </span>`;
     }
-    return `<span class="stock-value-view-render
-                         ${data.value.stock_amount <= 0 ? 'stock-alert' : ''}">
-              ${data.value.stock_formatted}
-              </span>`;
-  }
-  if (data.stock_managable) {
-    return `<a class="manage-repository-stock-value-link not-assigned-stock">
-              <i class="fas fa-box-open"></i>
-              ${I18n.t('libraries.manange_modal_column.stock_type.add_stock')}
-            </a>`;
+    if (data.stock_managable) {
+      return `<a class="manage-repository-stock-value-link not-assigned-stock">
+                <i class="fas fa-box-open"></i>
+                ${I18n.t('libraries.manange_modal_column.stock_type.add_stock')}
+              </a>`;
+    }
   }
   return `<span class="empty-stock-render">
             ${I18n.t('libraries.manange_modal_column.stock_type.no_item_stock')}
           </span>`;
 };
 
-$.fn.dataTable.render.RepositoryConsumedStockValue = function(data) {
-  if (data.value) {
+$.fn.dataTable.render.defaultRepositoryStockValue = function() {
+  return $.fn.dataTable.render.RepositoryStockValue();
+};
+
+$.fn.dataTable.render.RepositoryStockConsumptionValue = function(data = {}) {
+  if (data.value && data.value.consumed_stock !== null) {
     if (data.consumption_managable) {
-      return `<a href="${data.updateStockConsumptionUrl}" class="manage-repository-consumed-stock-value-link stock-value-view-render">
-                ${data.value.consumed_stock_formatted} ${data.value.unit}
-                </a>`;
+      return `<a href="${data.updateStockConsumptionUrl}"
+                 class="manage-repository-consumed-stock-value-link stock-value-view-render">
+                ${data.value.consumed_stock_formatted}
+              </a>`;
     }
-    return `<span class="stock-value-view-render">
-              ${data.value.consumed_stock_formatted} ${data.value.unit}
-              </span>`;
+    return `<span class="stock-value-view-render">${data.value.consumed_stock_formatted}</span>`;
   }
   if (data.stock_present && data.consumption_managable) {
     return `<a href="${data.updateStockConsumptionUrl}" class="manage-repository-consumed-stock-value-link">
@@ -225,6 +248,6 @@ $.fn.dataTable.render.RepositoryConsumedStockValue = function(data) {
   return '<span class="empty-consumed-stock-render"> - </span>';
 };
 
-$.fn.dataTable.render.defaultRepositoryStockValue = function() {
-  return $.fn.dataTable.render.RepositoryStockValue();
+$.fn.dataTable.render.defaultRepositoryStockConsumptionValue = function() {
+  return $.fn.dataTable.render.RepositoryStockConsumptionValue();
 };

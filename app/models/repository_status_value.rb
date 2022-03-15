@@ -19,7 +19,28 @@ class RepositoryStatusValue < ApplicationRecord
     data
   end
 
-  def data_changed?(new_data)
+  def self.add_filter_condition(repository_rows, join_alias, filter_element)
+    items_join_alias = "#{join_alias}_status_items"
+    repository_rows =
+      repository_rows
+      .joins(
+        "LEFT OUTER JOIN \"repository_status_items\" AS \"#{items_join_alias}\" " \
+        "ON  \"#{join_alias}\".\"repository_status_item_id\" = \"#{items_join_alias}\".\"id\""
+      )
+    case filter_element.operator
+    when 'any_of'
+      repository_rows
+        .where("#{items_join_alias}.id = ANY(ARRAY[?]::bigint[])", filter_element.parameters['item_ids'])
+    when 'none_of'
+      repository_rows
+        .where("NOT #{items_join_alias}.id IN(?) OR #{items_join_alias}.id IS NULL",
+               filter_element.parameters['item_ids'])
+    else
+      raise ArgumentError, 'Wrong operator for RepositoryStatusValue!'
+    end
+  end
+
+  def data_different?(new_data)
     new_data.to_i != repository_status_item_id
   end
 

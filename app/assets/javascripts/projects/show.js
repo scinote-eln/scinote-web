@@ -236,6 +236,22 @@
     modal.on('hidden.bs.modal', function() {
       $(this).remove();
     });
+    validateMoveModal(modal)
+  }
+
+  function validateMoveModal(modal) {
+    if (modal[0].id.match(/move-experiment-modal-[0-9]*/)) {
+      let form = $(modal).find('form');
+      form.on('ajax:success', function(e, data) {
+        animateSpinner(form, true);
+        window.location.replace(data.path);
+      }).on('ajax:error', function(e, error) {
+        animateSpinner(form, false);
+        form.clearFormErrors();
+        let msg = JSON.parse(error.responseText);
+        renderFormError(e, form.find('#experiment_project_id'), msg.message.toString());
+      });
+    }
   }
 
 

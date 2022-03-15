@@ -25,6 +25,8 @@ module Experiments
 
       ActiveRecord::Base.transaction do
         @exp.project = @project
+        sync_user_assignments(@exp)
+
         @exp.my_modules.each do |my_module|
           unless can_move_my_module?(@user, my_module)
             @errors[:main] = I18n.t('move_to_project_service.my_modules_permission_error')
@@ -37,7 +39,6 @@ module Experiments
 
         move_activities!(@exp)
         @exp.save!
-        sync_user_assignments(@exp)
       rescue StandardError
         if @exp.valid? && @errors.none?
           @errors[:main] = I18n.t('move_to_project_service.general_error')

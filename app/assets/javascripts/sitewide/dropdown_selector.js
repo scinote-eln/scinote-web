@@ -521,7 +521,8 @@ var dropdownSelector = (function() {
       var customStyle = selector2.data('config').optionStyle;
       return $(`
         <div class="dropdown-option ${customClass}" style="${customStyle ? customStyle(option) : ''}"
-          data-params='${JSON.stringify(params)}'
+          title="${(option.params && option.params.tooltip) || ''}"
+          data-params='${JSON.stringify(option.params || {})}'
           data-label="${option.label}"
           data-group="${group ? group.value : ''}"
           data-value="${option.value}">
@@ -601,7 +602,7 @@ var dropdownSelector = (function() {
         // For simple options we only draw them
         $.each(data, function(oi, option) {
           var optionElement;
-          if (option.delimiter) {
+          if (option.delimiter || (option.params && option.params.delimiter)) {
             drawDelimiter().appendTo(container.find('.dropdown-container'));
             return;
           }
@@ -707,7 +708,7 @@ var dropdownSelector = (function() {
       // Add new tag before search field
       var tag = $(`<div class="${tagAppearance} ${customClass}" style="${customStyle ? customStyle(data) : ''}" >
                   <div class="tag-label"
-                    title="${$('<span>' + label + '</span>').text()}"
+                    title="${(data.params && data.params.tooltip) || $('<span>' + label + '</span>').text().trim()}"
                     data-ds-tag-group="${data.group}"
                     data-ds-tag-id="${data.value}">
                   </div>

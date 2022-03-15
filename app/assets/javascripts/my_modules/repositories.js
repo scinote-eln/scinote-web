@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign, no-use-before-define  */
 /* global DataTableHelpers PerfectScrollbar FilePreviewModal animateSpinner HelperModule
-initAssignedTasksDropdown I18n prepareRepositoryHeaderForExport */
+initAssignedTasksDropdown I18n prepareRepositoryHeaderForExport initReminderDropdown */
 
 var MyModuleRepositories = (function() {
   const FULL_VIEW_MODAL = $('#myModuleRepositoryFullViewModal');
@@ -11,17 +11,17 @@ var MyModuleRepositories = (function() {
   var FULL_VIEW_TABLE_SCROLLBAR;
   var SELECTED_ROWS = {};
 
-  function stockManagementColumns(otherColumnCount) {
+  function stockManagementColumns() {
     return [
       {
         visible: true,
         searchable: false,
-        data: otherColumnCount
+        data: 'stock'
       },
       {
         visible: true,
         searchable: false,
-        data: otherColumnCount + 1
+        data: 'consumedStock'
       }
     ];
   }
@@ -40,7 +40,7 @@ var MyModuleRepositories = (function() {
         className: 'item-consumed-stock',
         sWidth: '1%',
         render: function(data) {
-          return $.fn.dataTable.render.RepositoryConsumedStockValue(data);
+          return $.fn.dataTable.render.RepositoryStockConsumptionValue(data);
         }
       }
     ];
@@ -65,19 +65,20 @@ var MyModuleRepositories = (function() {
       columns[i].defaultContent = '';
       if (skipCheckbox && i === 0) columns[i].visible = false;
     }
+
     customColumns.each((i, column) => {
-      columns.push({
-        visible: true,
-        searchable: true,
-        data: String(columns.length),
-        defaultContent: $.fn.dataTable.render['default' + column.dataset.type](column.id)
-      });
+      if (!$(column).hasClass('item-stock')) {
+        columns.push({
+          visible: true,
+          searchable: true,
+          data: String(columns.length),
+          defaultContent: $.fn.dataTable.render['default' + column.dataset.type](column.id)
+        });
+      }
     });
 
     if ($(tableContainer).data('stock-management')) {
-      let column = stockManagementColumns(columns.length)[1];
-      column.data -= 1;
-      columns.push(column);
+      columns = columns.concat(stockManagementColumns());
     }
 
     return columns;
@@ -106,8 +107,8 @@ var MyModuleRepositories = (function() {
         searchable: false,
         className: 'assigned-column',
         sWidth: '1%',
-        render: function(data) {
-          return $.fn.dataTable.render.AssignedTasksValue(data);
+        render: function(data, type, row) {
+          return $.fn.dataTable.render.AssignedTasksValue(data, row);
         }
       }, {
         targets: 3,
@@ -123,6 +124,9 @@ var MyModuleRepositories = (function() {
       });
     }
 
+    if ($(tableContainer).data('stock-management')) {
+      columnDefs = columnDefs.concat(stockManagementColumnDefs());
+    }
 
     columnDefs.push(
       {
@@ -132,17 +136,12 @@ var MyModuleRepositories = (function() {
             return $.fn.dataTable.render[data.value_type](data);
           }
           if (data !== undefined && data.stock_present !== undefined) {
-            return $.fn.dataTable.render.RepositoryConsumedStockValue(data);
+            return $.fn.dataTable.render.RepositoryStockConsumptionValue(data);
           }
           return data;
         }
       }
     );
-
-    if ($(tableContainer).data('stock-management')) {
-      let stockColumnDef = stockManagementColumnDefs()[1];
-      columnDefs.push(stockColumnDef);
-    }
 
     return columnDefs;
   }
@@ -157,7 +156,7 @@ var MyModuleRepositories = (function() {
     ];
 
     if ($(tableContainer).data('stock-management')) {
-      columns = columns.concat(stockManagementColumns(columns.length));
+      columns = columns.concat(stockManagementColumns());
     }
 
     return columns;
@@ -195,11 +194,13 @@ var MyModuleRepositories = (function() {
       destroy: true,
       ajax: {
         url: $(tableContainer).data('source'),
+        contentType: 'application/json',
         data: function(d) {
           d.order[0].column = tableContainer.data('name-column-id');
           d.assigned = 'assigned';
           d.view_mode = true;
           d.simple_view = true;
+          return JSON.stringify(d);
         },
         global: false,
         type: 'POST'
@@ -214,6 +215,9 @@ var MyModuleRepositories = (function() {
       },
       createdRow: function(row, data) {
         $(row).find('.item-name').attr('data-state', data.DT_RowAttr['data-state']);
+      },
+      fnInitComplete: function() {
+        initReminderDropdown(tableContainer);
       }
     });
   }
@@ -240,9 +244,11 @@ var MyModuleRepositories = (function() {
       destroy: true,
       ajax: {
         url: $(tableContainer).data('source'),
+        contentType: 'application/json',
         data: function(d) {
           if (options.assigned) d.assigned = 'assigned';
           d.view_mode = true;
+          return JSON.stringify(d);
         },
         global: false,
         type: 'POST'
@@ -252,7 +258,7 @@ var MyModuleRepositories = (function() {
 
       fnInitComplete: function() {
         var dataTableWrapper = $(tableContainer).closest('.dataTables_wrapper');
-        DataTableHelpers.initLengthApearance(dataTableWrapper);
+        DataTableHelpers.initLengthAppearance(dataTableWrapper);
         DataTableHelpers.initSearchField(dataTableWrapper, I18n.t('repositories.show.filter_inventory_items'));
         $('<img class="barcode-scanner" src="/images/icon_small/barcode.png"></img>').appendTo($('.search-container'));
         dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
@@ -265,6 +271,7 @@ var MyModuleRepositories = (function() {
           }
         }
         initAssignedTasksDropdown(tableContainer);
+        initReminderDropdown(tableContainer);
       },
 
       drawCallback: function() {
@@ -294,8 +301,10 @@ var MyModuleRepositories = (function() {
           if (!options.assign_mode) {
             json.state.columns[0].visible = false;
           }
-          json.state.columns[6].visible = false;
-          json.state.columns[7].visible = false;
+          if ($(tableContainer).data('type') !== 'snapshot') {
+            json.state.columns[6].visible = false;
+            json.state.columns[7].visible = false;
+          }
           if (json.state.search) delete json.state.search;
           callback(json.state);
         });
@@ -407,7 +416,7 @@ var MyModuleRepositories = (function() {
     });
   }
 
-  function refreshCreationSpanshotInfoText() {
+  function refreshCreationSnapshotInfoText() {
     var snapshotsCount = FULL_VIEW_MODAL.find('.repository-snapshot-item').length;
     var createSnapshotInfo = FULL_VIEW_MODAL.find('.create-snapshot-item .info');
     if (snapshotsCount) {
@@ -452,7 +461,7 @@ var MyModuleRepositories = (function() {
             checkSnapshotStatus(snapshotItem);
           }, STATUS_POLLING_INTERVAL);
           animateSpinner(null, false);
-          refreshCreationSpanshotInfoText();
+          refreshCreationSnapshotInfoText();
         }
       });
       e.stopPropagation();
@@ -471,7 +480,7 @@ var MyModuleRepositories = (function() {
           }
           snapshotItem.remove();
           animateSpinner(null, false);
-          refreshCreationSpanshotInfoText();
+          refreshCreationSnapshotInfoText();
         }
       });
       e.stopPropagation();
@@ -621,7 +630,7 @@ var MyModuleRepositories = (function() {
     } else if (snapshotDate) {
       title = repositoryName;
       version = I18n.t('my_modules.repository.full_view.modal_snapshot_header', {
-        snaphot_date: snapshotDate
+        snapshot_date: snapshotDate
       });
     } else {
       title = repositoryName;
@@ -632,7 +641,7 @@ var MyModuleRepositories = (function() {
     FULL_VIEW_MODAL.find('.repository-version').html(version);
   }
 
-  function initRepoistoryAssignView() {
+  function initRepositoryAssignView() {
     $('.repositories-dropdown-menu').on('click', '.repository', function(e) {
       var assignUrlModal = $(this).data('assign-url-modal');
       var updateUrlModal = $(this).data('update-url-modal');
@@ -770,7 +779,7 @@ var MyModuleRepositories = (function() {
       initRepositoryFullView();
       initRepositoriesDropdown();
       initVersionsSidebarActions();
-      initRepoistoryAssignView();
+      initRepositoryAssignView();
       initSelectAllCheckbox();
       initExportAssignedRows();
     },

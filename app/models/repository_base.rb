@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class RepositoryBase < ApplicationRecord
+  require 'sti_preload'
+
+  include StiPreload
   include Discard::Model
 
   self.table_name = 'repositories'
@@ -27,6 +30,14 @@ class RepositoryBase < ApplicationRecord
   # Not discarded
   default_scope -> { kept }
 
+  def self.stock_management_enabled?
+    true
+  end
+
+  def has_stock_management?
+    self.class.stock_management_enabled? && repository_columns.stock_type.exists?
+  end
+
   def cell_preload_includes
     cell_includes = []
     repository_columns.pluck(:data_type).each do |data_type|
@@ -36,6 +47,22 @@ class RepositoryBase < ApplicationRecord
       cell_includes << value_class::EXTRA_PRELOAD_INCLUDE
     end
     cell_includes
+  end
+
+  def default_table_state
+    raise NotImplementedError
+  end
+
+  def default_table_columns
+    default_table_state['columns'].to_json
+  end
+
+  def default_columns_count
+    default_table_state['columns'].length
+  end
+
+  def default_table_order_as_js_array
+    default_table_state['order'].to_json
   end
 
   def destroy_discarded(discarded_by_id = nil)

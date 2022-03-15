@@ -71,6 +71,7 @@ class User < ApplicationRecord
   has_many :results, inverse_of: :user
   has_many :repositories, inverse_of: :user
   has_many :repository_table_states, inverse_of: :user, dependent: :destroy
+  has_many :repository_table_filters, foreign_key: 'created_by_id', inverse_of: :created_by, dependent: :nullify
   has_many :steps, inverse_of: :user
   has_many :reports, inverse_of: :user
   has_many :created_assets, class_name: 'Asset', foreign_key: 'created_by_id'
@@ -194,6 +195,11 @@ class User < ApplicationRecord
            foreign_key: 'restored_by_id',
            inverse_of: :restored_by,
            dependent: :nullify
+  has_many :created_repository_rows,
+           class_name: 'RepositoryRow',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
   has_many :archived_repository_rows,
            class_name: 'RepositoryRow',
            foreign_key: 'archived_by_id',
@@ -312,6 +318,8 @@ class User < ApplicationRecord
   has_many :access_tokens, class_name: 'Doorkeeper::AccessToken',
                            foreign_key: :resource_owner_id,
                            dependent: :delete_all
+
+  has_many :hidden_repository_cell_reminders, dependent: :destroy
 
   before_validation :downcase_email!
   before_destroy :destroy_notifications

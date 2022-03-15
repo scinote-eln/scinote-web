@@ -4,6 +4,7 @@ class RepositoryRow < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
   include ArchivableModel
+  include ReminderRepositoryCellJoinable
 
   ID_PREFIX = 'IT'
   include PrefixedIdModel
@@ -29,14 +30,13 @@ class RepositoryRow < ApplicationRecord
     repository_asset: 'RepositoryAssetValue',
     repository_status: 'RepositoryStatusValue',
     repository_checklist: 'RepositoryChecklistValue',
-    repository_date_time: 'RepositoryDateTimeValue',
-    repository_time: 'RepositoryTimeValue',
-    repository_date: 'RepositoryDateValue',
-    repository_date_time_range: 'RepositoryDateTimeRangeValue',
-    repository_time_range: 'RepositoryTimeRangeValue',
-    repository_date_range: 'RepositoryDateRangeValue',
     repository_stock: 'RepositoryStockValue',
-    repository_stock_consumption: 'RepositoryStockConsumptionValue'
+    repository_date_time: 'RepositoryDateTimeValueBase',
+    repository_time: 'RepositoryDateTimeValueBase',
+    repository_date: 'RepositoryDateTimeValueBase',
+    repository_date_time_range: 'RepositoryDateTimeRangeValueBase',
+    repository_time_range: 'RepositoryDateTimeRangeValueBase',
+    repository_date_range: 'RepositoryDateTimeRangeValueBase'
   }.each do |relation, class_name|
     has_many "#{relation}_cells".to_sym, -> { where(value_type: class_name) }, class_name: 'RepositoryCell',
              inverse_of: :repository_row
@@ -44,10 +44,33 @@ class RepositoryRow < ApplicationRecord
              source: :value, source_type: class_name
   end
 
-  has_one :repository_stock_cell, -> { where(value_type: 'RepositoryStockValue') }, class_name: 'RepositoryCell',
-           inverse_of: :repository_row
-  has_one :repository_stock_value, class_name: 'RepositoryStockValue', through: :repository_stock_cell,
-           source: :value, source_type: 'RepositoryStockValue'
+  has_one :repository_stock_cell,
+          lambda {
+            joins(:repository_column)
+              .where(repository_columns: { data_type: 'RepositoryStockValue' })
+              .where(value_type: 'RepositoryStockValue')
+          },
+          class_name: 'RepositoryCell',
+          inverse_of: :repository_row
+  has_one :repository_stock_value, class_name: 'RepositoryStockValue',
+          through: :repository_stock_cell,
+          source: :value,
+          source_type: 'RepositoryStockValue'
+
+  # Only in snapshots
+  has_one :repository_stock_consumption_cell,
+          lambda {
+            joins(:repository_column)
+              .where(repository_columns: { data_type: 'RepositoryStockConsumptionValue' })
+              .where(value_type: 'RepositoryStockValue')
+          },
+          class_name: 'RepositoryCell',
+          inverse_of: :repository_row
+  has_one :repository_stock_consumption_value,
+          class_name: 'RepositoryStockConsumptionValue',
+          through: :repository_stock_consumption_cell,
+          source: :value,
+          source_type: 'RepositoryStockValue'
 
   has_many :repository_columns, through: :repository_cells
   has_many :my_module_repository_rows,
@@ -62,6 +85,10 @@ class RepositoryRow < ApplicationRecord
 
   scope :active, -> { where(archived: false) }
   scope :archived, -> { where(archived: true) }
+
+  scope :with_active_reminders, lambda { |user|
+    reminder_repository_cells_scope(joins(repository_cells: :repository_column), user)
+  }
 
   def code
     "#{ID_PREFIX}#{parent_id || id}"

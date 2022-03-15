@@ -68,13 +68,13 @@ module Reports
 
     # Convert HTML structure to plain text structure
     # rubocop:disable Metrics/BlockLength
-    def recursive_children(children, elements)
+    def recursive_children(children, elements, skip_newline = false)
       children.each do |elem|
         if elem.class == Nokogiri::XML::Text
           next if elem.text.strip == ' ' # Invisible symbol
 
           style = paragraph_styling(elem.parent)
-          type = (style[:align] && style[:align] != :justify) || style[:style] ? 'newline' : 'text'
+          type = !skip_newline && ((style[:align] && style[:align] != :justify) || style[:style]) ? 'newline' : 'text'
 
           text = smart_annotation_check(elem)
 
@@ -110,7 +110,7 @@ module Reports
           elements.push(list_element(elem))
           next
         end
-        elements = recursive_children(elem.children, elements) if elem.children
+        elements = recursive_children(elem.children, elements, skip_newline) if elem.children
       end
       elements
     end
@@ -247,7 +247,7 @@ module Reports
           next unless cell.name == 'td'
 
           # Parse cell content
-          formated_cell = recursive_children(cell.children, [])
+          formated_cell = recursive_children(cell.children, [], true)
 
           # Combine text elements to single paragraph
           formated_cell = combine_docx_elements(formated_cell)

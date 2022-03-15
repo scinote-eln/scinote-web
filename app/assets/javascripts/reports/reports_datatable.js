@@ -261,7 +261,7 @@
       fnDrawCallback: tableDrowCallback,
       createdRow: addAttributesToRow,
       fnInitComplete: function() {
-        DataTableHelpers.initLengthApearance($table.closest('.dataTables_wrapper'));
+        DataTableHelpers.initLengthAppearance($table.closest('.dataTables_wrapper'));
         $('.pagination-row').removeClass('hidden');
         $('.report-row.processing').each(function() {
           setTimeout(() => { checkProcessingStatus($(this).data('id')); }, START_POLLING_INTERVAL);

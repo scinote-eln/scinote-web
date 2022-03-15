@@ -4,8 +4,31 @@
 @import "constants";
 
 .repository-table {
+  position: relative;
+
   .dataTables_filter {
+    display: flex;
     float: right;
+
+    #filtersDropdownButton {
+      margin-left: .5em;
+    }
+  }
+
+  .repository-table-error {
+    background: $color-white;
+    display: none;
+    height: 200px;
+    padding: 1em;
+    position: absolute;
+    text-align: center;
+    top: 176px;
+    width: 100%;
+    z-index: 1;
+
+    &.active {
+      display: block;
+    }
   }
 
   // hack only for firefox
@@ -34,7 +57,13 @@
 
     .repository-row-edit-icon {
       cursor: pointer;
-      display: none;
+      display: inline-block;
+      opacity: 0;
+    }
+
+    .row-reminders-dropdown {
+      cursor: pointer;
+      display: inline-block;
     }
 
     .assign-counter-container {
@@ -42,8 +71,7 @@
       display: inline-block;
       line-height: 35px;
       position: absolute;
-      right: 0;
-      width: calc(100% - 40px);
+      right: 5px;
 
       .assign-counter {
         display: inline-block;
@@ -194,6 +222,39 @@
     color: $color-silver-chalice;
   }
 
+  // Reminders
+
+  .row-reminders-notification {
+    font-size: 14px;
+    line-height: 30px;
+    margin-left: 16px;
+    width: 300px;
+
+
+    .row-reminders-title {
+      line-height: 20px;
+      margin-top: 5px;
+    }
+
+    .row-reminders-body {
+      font-size: 13px;
+      line-height: 16px;
+      margin-top: 5px;
+    }
+
+    .fas {
+      margin-top: 5px;
+      width: 16px;
+    }
+
+    hr {
+      background-color: $color-alto;
+      border-width: 0;
+      height: 1px;
+      margin: 0 16px 10px 0;
+    }
+  }
+
   // DateTime
   .datetime-container {
     display: flex;
@@ -251,7 +312,7 @@
 
         .assigned-column {
           .repository-row-edit-icon {
-            display: inline-block;
+            opacity: 1;
           }
         }
       }
@@ -273,7 +334,7 @@
         tr:hover {
           .assigned-column {
             .repository-row-edit-icon {
-              display: none;
+              opacity: 0;
             }
 
             .assign-counter-container {
@@ -285,6 +346,31 @@
             }
           }
         }
+      }
+    }
+  }
+}
+
+.repository-table,
+#myModuleRepositoryFullViewModal {
+  .date-time-cell-value,
+  .date-cell-value {
+    display: inline-block;
+
+    &.reminder {
+      position: relative;
+
+      &::after {
+        background-color: $brand-danger;
+        border: 2px solid $color-white;
+        border-radius: 50%;
+        content: "";
+        display: inline-block;
+        height: 10px;
+        position: absolute;
+        right: -.7em;
+        top: 0;
+        width: 10px;
       }
     }
   }

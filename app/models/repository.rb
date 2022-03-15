@@ -25,6 +25,7 @@ class Repository < RepositoryBase
            foreign_key: :parent_id,
            inverse_of: :original_repository
   has_many :repository_ledger_records, as: :references, dependent: :nullify
+  has_many :repository_table_filters, dependent: :destroy
 
   before_save :sync_name_with_snapshots, if: :name_changed?
   after_save :unassign_unshared_items, if: :saved_change_to_permission_level
@@ -98,8 +99,24 @@ class Repository < RepositoryBase
     end
   end
 
-  def default_columns_count
-    Constants::REPOSITORY_TABLE_DEFAULT_STATE['columns'].length
+  def default_table_state
+    Constants::REPOSITORY_TABLE_DEFAULT_STATE
+  end
+
+  def default_sortable_columns
+    [
+      'assigned',
+      'repository_rows.id',
+      'repository_rows.name',
+      'repository_rows.created_at',
+      'users.full_name',
+      'repository_rows.archived_on',
+      'archived_bies_repository_rows.full_name'
+    ]
+  end
+
+  def default_search_fileds
+    ['repository_rows.name', RepositoryRow::PREFIXED_ID_SQL, 'users.full_name']
   end
 
   def i_shared?(team)
@@ -209,14 +226,6 @@ class Repository < RepositoryBase
                          .where.not(my_module: { experiment: { projects: { team: team } } })
                          .where.not(my_module: { experiment: { projects: { team: teams_shared_with } } })
                          .destroy_all
-  end
-
-  def self.stock_management_enabled?
-    true
-  end
-
-  def has_stock_management?
-    self.class.stock_management_enabled? && repository_columns.stock_type.exists?
   end
 
   private
