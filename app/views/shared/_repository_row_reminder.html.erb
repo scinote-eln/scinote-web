@@ -15,17 +15,9 @@
       <%if reminder.value.data < Time.now.utc %>
         <%= t('repository_row.reminder.item_expired') %>
       <% else %>
-        <% case reminder.repository_column.metadata["reminder_unit"].to_i / (60 * 60 * 24) %>
-        <% when 1 %>
           <%= t('repository_row.reminder.date_expiration', date_expiration: 
-                reminder.convert_time_reminder((reminder.value.data - Time.now.utc), 'day') ).html_safe %>
-        <% when 7 %>
-          <%= t('repository_row.reminder.date_expiration', date_expiration: 
-                reminder.convert_time_reminder((reminder.value.data - Time.now.utc), 'week') ).html_safe %>
-        <% when 30 %>
-          <%= t('repository_row.reminder.date_expiration', date_expiration: 
-                reminder.convert_time_reminder((reminder.value.data - Time.now.utc), 'month') ).html_safe %>
-        <% end %>
+          ((reminder.value.data - Time.now.utc)/1.day).ceil.to_s + 
+          (((reminder.value.data - Time.now.utc)/1.day).ceil > 1 ? ' days' : ' day')).html_safe %>
       <% end %>
       <% if reminder.repository_column.metadata["reminder_message"] != ""%>
         <span> <%= reminder.repository_column.metadata["reminder_message"] %> </span>

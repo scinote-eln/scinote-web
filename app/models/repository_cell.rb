@@ -77,23 +77,6 @@ class RepositoryCell < ApplicationRecord
     cell_snapshot
   end
 
-  def convert_time_reminder(time_difference, mode='month')
-    month, week, day = 0, 0, 0
-    show_string = ''
-    if mode == 'month'
-      month, time_difference = time_difference.divmod(60 * 60 * 24 * 30)
-      show_string += month.floor.to_s + (month.floor > 1 ? ' months ': ' month ') if month.floor > 0 else ''
-    end
-
-    if mode == 'week' || mode == 'month'
-      week, time_difference = time_difference.divmod(60 * 60 * 24 * 7)
-      show_string += week.floor.to_s + (week.floor > 1 ? ' weeks ': ' week ') if week.floor > 0 else ''
-    end
-
-    show_string += (time_difference/1.day).ceil.to_s + ((time_difference/1.day).ceil > 1 ? ' days': ' day')
-    show_string
-  end
-
   private
 
   def repository_column_data_type
