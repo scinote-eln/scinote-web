@@ -62,3 +62,42 @@ function prepareRepositoryHeaderForExport(th) {
 
   return val;
 }
+
+function initReminderDropdown(table) {
+  $(table).on('show.bs.dropdown', '.row-reminders-dropdown', function() {
+    let row = $(this).closest('tr');
+    let screenHeight = screen.height;
+    let rowPosition = row[0].getBoundingClientRect().y;
+    if ((screenHeight / 2) < rowPosition) {
+      $(this).find('.dropdown-menu').css({ top: 'unset', bottom: '100%' });
+    } else {
+      $(this).find('.dropdown-menu').css({ bottom: 'unset', top: '100%' });
+    }
+    $.ajax({
+      url: $(this).attr('data-row-reminders-url'),
+      type: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        $('.row-reminders-dropdown .dropdown-menu').html(data.html);
+      }
+    });
+  });
+
+  $(table).on('click', '.row-reminders-footer', function(e) {
+    var dropdownMenuLength = $(this).closest('.dropdown-menu').children().length;
+    var bellIcon = $(this).closest('.row-reminders-dropdown');
+    $.ajax({
+      url: $(this).attr('data-row-hide-reminders-url'),
+      type: 'POST',
+      dataType: 'json',
+      success: function() {
+        $(this).closest('.row-reminders-notification').remove();
+
+        if (dropdownMenuLength === 1) {
+          bellIcon.remove();
+        }
+        e.stopPropagation();
+      }
+    });
+  });
+}

@@ -1,7 +1,7 @@
 /*
   globals I18n _ SmartAnnotation FilePreviewModal animateSpinner DataTableHelpers
   HelperModule RepositoryDatatableRowEditor prepareRepositoryHeaderForExport
-  initAssignedTasksDropdown initBMTFilter
+  initAssignedTasksDropdown initBMTFilter initReminderDropdown
 */
 
 //= require jquery-ui/widgets/sortable
@@ -605,6 +605,7 @@ var RepositoryDatatable = (function(global) {
         $('#manage-repository-column .back-to-column-modal').trigger('click');
 
         initAssignedTasksDropdown(TABLE_ID);
+        initReminderDropdown(TABLE_ID);
         renderFiltersDropdown();
         setTimeout(function() {
           adjustTableHeader();
@@ -673,17 +674,6 @@ var RepositoryDatatable = (function(global) {
       }
     });
   };
-
-  function updateReminderDropdownPosition(reminderContainer) {
-    let row = $(reminderContainer).closest('tr');
-    let screenHeight = screen.height;
-    let rowPosition = row[0].getBoundingClientRect().y;
-    if ((screenHeight / 2) < rowPosition) {
-      $(reminderContainer).find('.dropdown-menu').css({ top: 'unset', bottom: '100%' });
-    } else {
-      $(reminderContainer).find('.dropdown-menu').css({ bottom: 'unset', top: '100%' });
-    }
-  }
 
   $('.repository-show')
     .on('click', '#addRepositoryRecord', function() {
@@ -782,9 +772,6 @@ var RepositoryDatatable = (function(global) {
     })
     .on('click', '#deleteRepositoryRecords', function() {
       $('#deleteRepositoryRecord').modal('show');
-    })
-    .on('show.bs.dropdown', '.row-reminders-dropdown', function() {
-      updateReminderDropdownPosition(this);
     });
 
   // Handle enter key

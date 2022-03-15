@@ -8,7 +8,7 @@ class RepositoryRowsController < ApplicationController
 
   before_action :load_repository, except: %i(show print_modal print)
   before_action :load_repository_or_snapshot, only: %i(print_modal print)
-  before_action :load_repository_row, only: %i(update assigned_task_list)
+  before_action :load_repository_row, only: %i(update assigned_task_list active_reminder_repository_cells)
   before_action :check_read_permissions, except: %i(show create update delete_records copy_records reminder_repository_cells)
   before_action :check_snapshotting_status, only: %i(create update delete_records copy_records)
   before_action :check_create_permissions, only: :create
@@ -229,7 +229,7 @@ class RepositoryRowsController < ApplicationController
   end
 
   def reminder_repository_cells
-    render json: @repository_row.repository_cells.with_active_reminder
+    render json: @repository_row.repository_cells.with_active_reminder(current_user)
   end
 
   def archive_records
@@ -256,6 +256,15 @@ class RepositoryRowsController < ApplicationController
     else
       render json: { error: service.error_message }, status: :unprocessable_entity
     end
+  end
+
+  def active_reminder_repository_cells
+    reminder_cells = @repository_row.repository_cells.with_active_reminder(current_user).distinct
+    render json: {
+      html: render_to_string(partial: 'shared/repository_row_reminder.html.erb', locals: {
+                               reminders: reminder_cells
+                             })
+    }
   end
 
   private

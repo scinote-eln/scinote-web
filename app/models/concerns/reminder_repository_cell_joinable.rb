@@ -22,7 +22,7 @@ module ReminderRepositoryCellJoinable
         '"hidden_repository_cell_reminders"."user_id" = ' + user.id.to_s
       ).where(
         'hidden_repository_cell_reminders.id IS NULL AND '\
-        'repository_date_time_values.id IS NOT NULL OR repository_stock_values.id IS NOT NULL'
+        '(repository_date_time_values.id IS NOT NULL OR repository_stock_values.id IS NOT NULL)'
       )
     end
   end

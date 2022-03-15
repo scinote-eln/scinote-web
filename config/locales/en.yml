@@ -1845,6 +1845,11 @@ en:
         title: "There seems to be no printer available"
         description: "To learn more about printing labels and label printers please visit our blog."
         visit_blog: "Visit blog"
+    reminder:
+      clear: "Clear"
+      low_stock_title: "Item running low"
+      stock_low: "Only <strong>%{stock_formated}</strong> left."
+      stock_empty: "There is no stock left."
   label_printers:
     modal_printing_status:
       printer_status:
