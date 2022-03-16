@@ -4,6 +4,7 @@ require 'rails_helper'
 
 describe RepositoryLedgerRecord, type: :model do
   let(:repository_ledger_record) { build :repository_ledger_record }
+  let(:repository_stock_value_new) { build :repository_stock_value }
 
   it 'is valid' do
     expect(repository_ledger_record).to be_valid
@@ -32,4 +33,14 @@ describe RepositoryLedgerRecord, type: :model do
     it { should belong_to(:user) }
   end
 
+  describe 'Immutability' do
+    it do
+      repository_ledger_record.save
+      # expect { repository_ledger_record.save }.to change(RepositoryLedgerRecord, :count).by(1)
+      repository_ledger_record.updated_at = '2022-03-15 16:10:44.589301000'
+      # puts repository_ledger_record.save
+      expect { repository_ledger_record.save! }
+          .to(change { repository_ledger_record.reload.updated_at })
+    end
+  end
 end

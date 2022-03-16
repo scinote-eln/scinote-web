@@ -23,6 +23,7 @@ describe RepositoryStockValue, type: :model do
     it { should have_db_column :created_by_id }
     it { should have_db_column :created_at }
     it { should have_db_column :updated_at }
+    it { should have_db_column :low_stock_threshold }
   end
 
   describe 'Associations' do
