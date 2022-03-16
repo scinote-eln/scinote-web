@@ -200,16 +200,23 @@ $.fn.dataTable.render.AssignedTasksValue = function(data, row) {
 };
 
 $.fn.dataTable.render.RepositoryStockValue = function(data) {
+  var stockAlertTag;
   if (data) {
     if (data.value) {
+      if (data.value.stock_amount <= 0) {
+        stockAlertTag = 'stock-alert';
+      } else {
+        stockAlertTag = parseFloat(data.value.stock_amount) < parseFloat(data.value.low_stock_threshold)
+          ? 'stock-low-stock-alert' : '';
+      }
+
       if (data.stock_managable) {
-        return `<a class="manage-repository-stock-value-link stock-value-view-render
-                          ${data.value.stock_amount <= 0 ? 'stock-alert' : ''}">
+        return `<a class="manage-repository-stock-value-link stock-value-view-render ${stockAlertTag}">
                   ${data.value.stock_formatted}
                   </a>`;
       }
       return `<span class="stock-value-view-render
-                           ${data.value.stock_amount <= 0 ? 'stock-alert' : ''}">
+                           ${data.stock_managable !== undefined ? stockAlertTag : ''}">
                 ${data.value.stock_formatted}
                 </span>`;
     }
