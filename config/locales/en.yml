@@ -1853,6 +1853,7 @@ en:
       date_reminder: "Date reminder."
       date_expiration: "This item is expiring in <strong>%{date_expiration}</strong>"
       item_expired: "This item has expired."
+      day: "day"
   label_printers:
     modal_printing_status:
       printer_status:
