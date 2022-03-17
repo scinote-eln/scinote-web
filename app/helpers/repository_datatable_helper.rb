@@ -86,12 +86,20 @@ module RepositoryDatatableHelper
   end
 
   def prepare_simple_view_row_columns(repository_rows, my_module, options = {})
+    repository_row_with_active_reminder = repository_rows.with_active_reminders.pluck(:id).uniq
     repository_rows.map do |record|
       row = {
         DT_RowId: record.id,
         DT_RowAttr: { 'data-state': row_style(record) },
         '0': escape_input(record.name),
-        recordInfoUrl: Rails.application.routes.url_helpers.repository_repository_row_path(record.repository, record)
+        recordInfoUrl: Rails.application.routes.url_helpers.repository_repository_row_path(record.repository, record),
+        'hasActiveReminders': repository_row_with_active_reminder.include?(record.id),
+        'rowRemindersUrl':
+          Rails.application.routes.url_helpers
+               .active_reminder_repository_cells_repository_repository_row_url(
+                 record.repository,
+                 record
+               )
       }
 
       if options[:include_stock_consumption] && record.repository.has_stock_management?
