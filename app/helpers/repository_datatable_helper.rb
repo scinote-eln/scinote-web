@@ -4,7 +4,7 @@ module RepositoryDatatableHelper
   include InputSanitizeHelper
 
   def prepare_row_columns(repository_rows, repository, columns_mappings, team, options = {})
-    repository_row_with_active_reminder_ids = repository_rows.with_active_reminders(current_user).pluck(:id).uniq
+    reminder_row_ids = repository_reminder_row_ids(repository_rows, repository)
 
     repository_rows.map do |record|
       default_cells = public_send("#{repository.class.name.underscore}_default_columns", record)
@@ -12,7 +12,7 @@ module RepositoryDatatableHelper
         'DT_RowId': record.id,
         'DT_RowAttr': { 'data-state': row_style(record) },
         'recordInfoUrl': Rails.application.routes.url_helpers.repository_repository_row_path(repository, record),
-        'hasActiveReminders': repository_row_with_active_reminder_ids.include?(record.id),
+        'hasActiveReminders': reminder_row_ids.include?(record.id),
         'rowRemindersUrl':
           Rails.application.routes.url_helpers
                .active_reminder_repository_cells_repository_repository_row_url(
@@ -85,15 +85,16 @@ module RepositoryDatatableHelper
     end
   end
 
-  def prepare_simple_view_row_columns(repository_rows, my_module, options = {})
-    repository_row_with_active_reminder = repository_rows.with_active_reminders.pluck(:id).uniq
+  def prepare_simple_view_row_columns(repository_rows, repository, my_module, options = {})
+    reminder_row_ids = repository_reminder_row_ids(repository_rows, repository)
+
     repository_rows.map do |record|
       row = {
         DT_RowId: record.id,
         DT_RowAttr: { 'data-state': row_style(record) },
         '0': escape_input(record.name),
         recordInfoUrl: Rails.application.routes.url_helpers.repository_repository_row_path(record.repository, record),
-        'hasActiveReminders': repository_row_with_active_reminder.include?(record.id),
+        'hasActiveReminders': reminder_row_ids.include?(record.id),
         'rowRemindersUrl':
           Rails.application.routes.url_helpers
                .active_reminder_repository_cells_repository_repository_row_url(
@@ -238,5 +239,12 @@ module RepositoryDatatableHelper
     return I18n.t('general.archived') if row.archived
 
     ''
+  end
+
+  def repository_reminder_row_ids(repository_rows, repository)
+    # don't load reminders for archived repositories
+    return [] if repository_rows.blank? || repository.archived?
+
+    repository_rows.with_active_reminders(current_user).pluck(:id).uniq
   end
 end
