@@ -55,6 +55,7 @@ var RepositoryDatatable = (function(global) {
       $('th').removeClass('disable-click');
       $('.repository-row-selector').prop('disabled', false);
       $('.dataTables_filter input').prop('disabled', false);
+      $('#importRecordsButton').show();
       if (rowsSelected.length === 0) {
         $('#exportRepositoriesButton').addClass('disabled');
         $('#copyRepositoryRecords').prop('disabled', true);
@@ -75,6 +76,7 @@ var RepositoryDatatable = (function(global) {
         $('#copyRepositoryRecords').prop('disabled', false);
         $('#restoreRepositoryRecords').prop('disabled', false);
         $('#deleteRepositoryRecords').prop('disabled', false);
+        $('#importRecordsButton').hide();
 
         if (rowsSelected.some(r=> rowsLocked.indexOf(r) >= 0)) { // Some selected rows is rowsLocked
           $('#editRepositoryRecord').prop('disabled', true);
@@ -85,6 +87,7 @@ var RepositoryDatatable = (function(global) {
       }
     } else if (currentMode === 'editMode') {
       $(TABLE_WRAPPER_ID).addClass('editing');
+      $('#importRecordsButton').hide();
       $('#editDeleteCopy').hide();
       $('#saveCancel').show();
       $('.manage-repo-column-index').prop('disabled', true);
@@ -321,17 +324,13 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
-  function bindExportActions() {
-    $('#export-repositories').on('click', function() {
-      animateSpinner(null, true);
-    });
-
+  function initExportActions() {
     $('#exportRepositoriesButton').on('click', function() {
       $('#exportRepositoryModal').modal('show');
     });
 
 
-    $('form#form-export').submit(function() {
+    $('form#form-export').off().submit(function() {
       var form = this;
       if (currentMode === 'viewMode') {
         // Remove all hidden fields
@@ -392,7 +391,7 @@ var RepositoryDatatable = (function(global) {
 
   function dataTableInit() {
     TABLE = $(TABLE_ID).DataTable({
-      dom: "R<'main-actions hidden'<'toolbar'><'filter-container'f>>t<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
+      dom: "R<'repository-toolbar hidden'<'repository-search-container'f>>t<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
       stateSave: true,
       processing: true,
       serverSide: true,
@@ -572,22 +571,23 @@ var RepositoryDatatable = (function(global) {
         initHeaderTooltip();
         disableCheckboxToggleOnCheckboxPreview();
 
-        // Append buttons to inner toolbar in the table
-        $.getJSON($(TABLE_ID).data('toolbar-url'), (data) => {
-          $(data.html).appendTo('div.toolbar');
-          if (typeof initBMTFilter === 'function') initBMTFilter();
-        });
+        DataTableHelpers.initSearchField(
+          $(TABLE_ID).closest('.dataTables_wrapper'),
+          I18n.t('repositories.show.filter_inventory_items')
+        );
 
-        $('div.toolbar-filter-buttons').prependTo('div.filter-container');
-        $('div.toolbar-filter-buttons').show();
+        let toolBar = $($('#repositoryToolbar').html());
+        toolBar.find('.toolbar-search').html($('.repository-search-container'));
+        $('.repository-toolbar').html(toolBar);
+        if (typeof initBMTFilter === 'function') initBMTFilter();
 
         RepositoryDatatableRowEditor.initFormSubmitAction(TABLE);
+        initExportActions();
         initItemEditIcon();
         initSaveButton();
         initCancelButton();
 
         DataTableHelpers.initLengthAppearance($(TABLE_ID).closest('.dataTables_wrapper'));
-        DataTableHelpers.initSearchField($(TABLE_ID).closest('.dataTables_wrapper'), I18n.t('repositories.show.filter_inventory_items'));
 
         $('<img class="barcode-scanner" src="/images/icon_small/barcode.png"></img>').appendTo($('.search-container'));
 
@@ -595,7 +595,7 @@ var RepositoryDatatable = (function(global) {
           $('.dataTables_scrollBody, .dataTables_scrollHead').css('overflow', '');
         }
 
-        $('.main-actions, .pagination-row').removeClass('hidden');
+        $('.repository-toolbar, .pagination-row').removeClass('hidden');
 
         $(TABLE_ID).find('tr[data-editable=false]').each(function(_, e) {
           rowsLocked.push(parseInt($(e).attr('id'), 10));
@@ -603,6 +603,7 @@ var RepositoryDatatable = (function(global) {
 
         // go back to manage columns index in modal, on column save, after table loads
         $('#manage-repository-column .back-to-column-modal').trigger('click');
+
 
         initAssignedTasksDropdown(TABLE_ID);
         initReminderDropdown(TABLE_ID);
@@ -642,7 +643,6 @@ var RepositoryDatatable = (function(global) {
     })
 
     initRowSelection();
-    bindExportActions();
     $(window).resize(() => {
       setTimeout(() => {
         adjustTableHeader();
@@ -852,7 +852,7 @@ var RepositoryDatatable = (function(global) {
 
   function renderFiltersDropdown() {
     let dropdown = $('#repositoryFilterTemplate').html();
-    $('.dataTables_filter').append(dropdown);
+    $('.toolbar-filters').html(dropdown);
     if (typeof initRepositoryFilter === 'function') initRepositoryFilter();
   }
 
