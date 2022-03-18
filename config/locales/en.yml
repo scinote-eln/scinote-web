@@ -1775,6 +1775,16 @@ en:
         errors:
           icon_and_name_error: "Status icon and status name should be filled"
       datetime_type:
+        options: 'Options'
+        reminder: 'Reminder'
+        remind: 'Remind'
+        enter_amount: 'Enter amount'
+        days: 'days'
+        weeks: 'weeks'
+        months: 'months'
+        before_set_date: 'before set date'
+        reminder_message: 'Message (optional)'
+        enter_reminder_message: 'Enter a reminder message'
         range_label: 'Range'
       stock_type:
         multiple_options: 'selected'

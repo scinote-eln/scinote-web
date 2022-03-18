@@ -1,9 +1,50 @@
+/* global dropdownSelector */
 /* eslint-disable no-unused-vars */
 var RepositoryDateColumnType = (function() {
+  const columnContainer = '.date-column-type';
+
+  function initReminderUnitDropdown() {
+    dropdownSelector.init('.date-column-type .reminder-unit', {
+      noEmptyOption: true,
+      singleSelect: true,
+      selectAppearance: 'simple',
+      closeOnSelect: true
+    });
+  }
+
+  function initReminders() {
+    let $modal = $('#manage-repository-column');
+    $modal.on('change', `${columnContainer} .reminder-value, ${columnContainer} .reminder-unit`, function() {
+      let value = $(columnContainer).find('.reminder-value').val();
+      if (!isNaN(parseFloat(value))) {
+        $(columnContainer).find('.reminder-delta').val(
+          value * $(columnContainer).find('.reminder-unit').val()
+        );
+      }
+    });
+
+    $modal.on('change', `${columnContainer} #date-reminder, ${columnContainer} #date-range`, function() {
+      let reminderCheckbox = $(columnContainer).find('#date-reminder');
+      let rangeCheckbox = $(columnContainer).find('#date-range');
+      rangeCheckbox.attr('disabled', reminderCheckbox.is(':checked'));
+      reminderCheckbox.attr('disabled', rangeCheckbox.is(':checked'));
+      $(columnContainer).find('.reminder-group').toggleClass('hidden', !reminderCheckbox.is(':checked'));
+    });
+
+    $modal.on('columnModal::partialLoadedForRepositoryDateValue', function() {
+      initReminderUnitDropdown();
+    });
+  }
+
   return {
-    init: () => {},
+    init: () => {
+      initReminders();
+    },
     checkValidation: () => {
       return true;
+    },
+    initReminderUnitDropdown: () => {
+      initReminderUnitDropdown();
     },
     loadParams: () => {
       var isRange = $('#date-range').is(':checked');
@@ -11,7 +52,13 @@ var RepositoryDateColumnType = (function() {
       if (isRange) {
         columnType = columnType.replace('Value', 'RangeValue');
       }
-      return { column_type: columnType };
+      return {
+        column_type: columnType,
+        reminder_delta: $(columnContainer).find('.reminder-delta').val(),
+        reminder_value: $(columnContainer).find('.reminder-value').val(),
+        reminder_unit: $(columnContainer).find('.reminder-unit').val(),
+        reminder_message: $(columnContainer).find('.reminder-message').val()
+      };
     }
   };
 }());
