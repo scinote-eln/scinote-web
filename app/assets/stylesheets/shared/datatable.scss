@@ -14,6 +14,22 @@
     }
   }
 
+  .dataTables_filter {
+    .search-icon {
+      display: none;
+    }
+
+    @media (max-width: 900px) {
+      .search-icon:not(.collapsed) {
+        display: initial;
+      }
+
+      .search-container:not(.expand) {
+        display: none;
+      }
+    }
+  }
+
   .dataTables_scrollHead {
     .dataTable {
       margin-top: 0 !important;

@@ -1341,7 +1341,7 @@ en:
       delete_flash: "\"%{name}\" inventory was successfully deleted!"
       rename_flash: "\"%{old_name}\" inventory was successfully renamed to \"%{new_name}\"!"
       copy_flash: "\"%{new}\" inventory was successfully copied from \"%{old}\"!"
-      columns: "Columns"
+      columns: "Manage columns"
       edit_inventory: "Edit Inventory"
       share_inventory: "Share"
       view_only_permission_label: "You have view-only permission"
@@ -1355,7 +1355,7 @@ en:
 
       options_dropdown:
         import_items: 'Import items'
-        export_items: 'Export items'
+        export_items: 'Export'
         rename: "Rename inventory"
         copy: "Duplicate inventory"
         delete: "Delete inventory"
@@ -1413,6 +1413,16 @@ en:
       no_stock: "No item stock"
       no_archived_items_matched: "No archived items here"
       error_searching: "Error searching, please try again"
+      button_tooltip:
+        new: "New item"
+        edit: "Edit item"
+        duplicate: "Duplicate"
+        export: "Export"
+        print_label: "Print label"
+        archive: "Archive"
+        import: "Import items"
+        filters: "Filters"
+        search: "Quick search"
       filters:
         save_filters: "Save filters"
         new_filter: "New filter"

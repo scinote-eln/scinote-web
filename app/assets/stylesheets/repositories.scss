@@ -127,62 +127,6 @@
     }
   }
 
-  .main-actions {
-    align-items: center;
-    background-color: $color-white;
-    display: flex;
-    flex-grow: 1;
-    flex-wrap: nowrap;
-    height: 6em;
-    left: var(--repository-sidebar-margin);
-    padding: 1em 2em 0;
-    position: fixed;
-    top: calc(4em + var(--navbar-height));
-    transition: .4s $timing-function-sharp;
-    width: calc(100% - var(--repository-sidebar-margin));
-    z-index: 99;
-
-    .filter-container {
-      flex-shrink: 0;
-
-      .toolbar-filter-buttons {
-        float: right;
-      }
-    }
-
-    .repository-provisioning-notice {
-      color: $brand-info;
-    }
-
-    #editDeleteCopy {
-      flex-shrink: 0;
-    }
-
-    .archived-label {
-      color: $color-silver-chalice;
-      display: inline-block;
-      margin: 0 auto;
-      max-width: 400px;
-      padding: 0 1em;
-
-      table {
-        tr {
-          td {
-            padding: 0 .5em;
-
-            &:nth-child(1) {
-              text-align: right;
-            }
-
-            &:nth-child(2) {
-              color: $color-black;
-            }
-          }
-        }
-      }
-    }
-  }
-
   .dataTables_scroll {
     padding-bottom: 5em;
     padding-top: 10em;
@@ -217,7 +161,7 @@
     display: flex;
     height: 5em;
     left: var(--repository-sidebar-margin);
-    padding: 0 10em 0 2em;
+    padding: 0 2em;
     position: fixed;
     transition: .4s $timing-function-sharp;
     width: calc(100% - var(--repository-sidebar-margin));

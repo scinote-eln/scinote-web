@@ -1,0 +1,67 @@
+<% if can_manage_repository_rows?(@repository) %>
+  <span id="editDeleteCopy" data-toggle="buttons" style="display:none">
+    <%if can_update_repository_rows?(@repository) %>
+      <button type="button" title="<%= t('repositories.show.button_tooltip.edit') %>"
+              class="btn btn-light editAdd auto-shrink-button"
+              id="editRepositoryRecord" disabled data-view-mode="active">
+        <span class="fas fa-pencil-alt"></span>
+        <span class="button-text"><%= t("repositories.edit_record") %></span>
+      </button>
+    <% end %>
+
+
+    <% if can_create_repository_rows?(@repository) %>
+      <button type="button" title="<%= t('repositories.show.button_tooltip.duplicate') %>"
+              class="btn btn-light copyRow auto-shrink-button"
+              id="copyRepositoryRecords" disabled data-view-mode="active">
+        <span class="fas fa-copy"></span>
+        <span class="button-text"><%= t("repositories.copy_record") %></span>
+      </button>
+    <% end %>
+    <button class="btn btn-light auto-shrink-button"
+            title="<%= t('repositories.show.button_tooltip.export') %>"
+            id="exportRepositoriesButton">
+      <span class="fas fa-download"></span>
+      <span class="button-text"><%= t("repositories.index.options_dropdown.export_items") %></span>
+    </button>
+    <button type="button" id="toolbarPrintLabel"
+            title="<%= t('repositories.show.button_tooltip.print_label') %>"
+            class="btn btn-light print-label-button"
+            data-dismiss="modal" data-url="<%= print_modal_repository_repository_rows_path(@repository)  %>"
+            data-rows="[]" style="display: none">
+      <span class="fas fa-print"></span>
+      <span class="button-text"><%= t('repository_row.modal_print_label.print_label') %></span>
+    </button>
+    <% if can_delete_repository_rows?(@repository) %>
+      <button type="button" title="<%= t('repositories.show.button_tooltip.archive') %>"
+              class="btn btn-light auto-shrink-button"
+              id="archiveRepositoryRecordsButton"  disabled data-view-mode="active">
+        <span class="fas fa-archive"></span>
+        <span class="button-text"><%= t'repositories.archive_record' %></span>
+      </button>
+    <% end %>
+      <button type="button" class="btn btn-light auto-shrink-button" id="restoreRepositoryRecords" disabled  data-view-mode="archived">
+        <span class="fas fa-undo"></span>
+        <span class="button-text"><%= t("repositories.restore_record") %></span>
+      </button>
+    <% if can_delete_repository_rows?(@repository) %>
+      <button type="button" class="btn btn-light auto-shrink-buttons" id="deleteRepositoryRecords" disabled  data-view-mode="archived">
+        <span class="fas fa-trash"></span>
+        <span class="button-text"><%= t("repositories.delete_record") %></span>
+      </button>
+    <% end %>
+  </span>
+
+  <span id="saveCancel" data-toggle="buttons" style="display:none">
+    <button type="button" class="btn btn-success" id="saveRecord" data-view-mode="active">
+      <span class="fas fa-save"></span>
+      <%= t("repositories.save_record") %>
+    </button>
+    <button type="button" class="btn btn-light" id="cancelSave" data-view-mode="active">
+      <span class="fas fa-times-circle"></span>
+      <%= t("repositories.cancel_save") %>
+    </button>
+  </span>
+<% elsif @repository.shared_with_read?(current_team) %>
+  <p class="view-only-label"><%= t('repositories.index.view_only_permission_label') %></p>
+<% end %>
