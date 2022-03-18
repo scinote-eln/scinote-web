@@ -62,12 +62,11 @@ module RepositoryDatatableHelper
       row['stock']['value_type'] = 'RepositoryStockValue'
 
       if options[:include_stock_consumption] && record.repository.has_stock_management? && options[:my_module]
-        consumption_managable =
-          stock_present && record.repository.is_a?(Repository) && can_update_my_module_stock_consumption?(options[:my_module])
+        consumption_managable = stock_consumption_managable?(record, repository, options[:my_module])
 
         row['consumedStock'] = {
           stock_present: stock_present,
-          consumption_managable: consumption_managable,
+          consumptionManagable: consumption_managable,
           updateStockConsumptionUrl: Rails.application.routes.url_helpers.consume_modal_my_module_repository_path(
             options[:my_module],
             record.repository,
@@ -107,8 +106,8 @@ module RepositoryDatatableHelper
         stock_present = record.repository_stock_cell.present?
         # Always disabled in a simple view
         stock_managable = false
-        consumption_managable =
-          stock_present && record.repository.is_a?(Repository) && can_update_my_module_stock_consumption?(my_module)
+
+        consumption_managable = stock_consumption_managable?(record, repository, my_module)
 
         row['stock'] = stock_present ? display_cell_value(record.repository_stock_cell, record.repository.team) : {}
         row['stock'][:stock_managable] = stock_managable
@@ -122,7 +121,7 @@ module RepositoryDatatableHelper
         else
           row['consumedStock'] = {}
           if consumption_managable
-            row['consumedStock'][:updateStockConsumptionUrl] =
+            row['consumedStock']['updateStockConsumptionUrl'] =
               Rails.application.routes.url_helpers.consume_modal_my_module_repository_path(
                 my_module, record.repository, row_id: record.id
               )
@@ -136,7 +135,7 @@ module RepositoryDatatableHelper
           end
         end
         row['consumedStock']['stock_present'] = stock_present
-        row['consumedStock']['consumption_managable'] = consumption_managable
+        row['consumedStock']['consumptionManagable'] = consumption_managable
       end
 
       row
@@ -246,5 +245,11 @@ module RepositoryDatatableHelper
     return [] if repository_rows.blank? || repository.archived?
 
     repository_rows.with_active_reminders(current_user).pluck(:id).uniq
+  end
+
+  def stock_consumption_managable?(record, repository, my_module)
+    return false unless my_module
+
+    record.repository.is_a?(Repository) && !repository.archived? && can_update_my_module_stock_consumption?(my_module)
   end
 end
