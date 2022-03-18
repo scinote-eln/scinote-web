@@ -99,6 +99,26 @@ class RepositoriesController < ApplicationController
     end
   end
 
+  def hide_reminders
+    # synchronously hide currently visible reminders
+    if params[:visible_reminder_repository_row_ids].present?
+      repository_cell_ids =
+        RepositoryCell.joins(:repository_row)
+                      .where(repository_rows: { id: params[:visible_reminder_repository_row_ids] })
+                      .where.not(id: current_user.hidden_repository_cell_reminders.select(:repository_cell_id))
+                      .with_active_reminder(current_user).pluck(:id)
+
+      HiddenRepositoryCellReminder.import(
+        repository_cell_ids.map { |id| { repository_cell_id: id, user_id: current_user.id } }
+      )
+    end
+
+    # offload the rest to background job
+    HideRepositoryRemindersJob.perform_later(@repository, current_user)
+
+    render json: { status: :ok }, status: :accepted
+  end
+
   def create
     @repository = Repository.new(
       team: current_team,
