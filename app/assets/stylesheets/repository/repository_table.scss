@@ -234,7 +234,8 @@
     cursor: pointer;
   }
 
-  .empty-stock-render {
+  .empty-stock-render,
+  .consumption-locked {
     color: $color-silver-chalice;
   }
 

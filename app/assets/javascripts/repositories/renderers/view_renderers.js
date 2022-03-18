@@ -238,7 +238,7 @@ $.fn.dataTable.render.defaultRepositoryStockValue = function() {
 
 $.fn.dataTable.render.RepositoryStockConsumptionValue = function(data = {}) {
   if (data.value && data.value.consumed_stock !== null) {
-    if (data.consumption_managable) {
+    if (data.consumptionManagable) {
       return `<a href="${data.updateStockConsumptionUrl}"
                  class="manage-repository-consumed-stock-value-link stock-value-view-render">
                 ${data.value.consumed_stock_formatted}
@@ -246,11 +246,16 @@ $.fn.dataTable.render.RepositoryStockConsumptionValue = function(data = {}) {
     }
     return `<span class="stock-value-view-render">${data.value.consumed_stock_formatted}</span>`;
   }
-  if (data.stock_present && data.consumption_managable) {
+  if (data.stock_present && data.consumptionManagable) {
     return `<a href="${data.updateStockConsumptionUrl}" class="manage-repository-consumed-stock-value-link">
               <i class="fas fa-vial"></i>
               ${I18n.t('libraries.manange_modal_column.stock_type.add_stock_consumption')}
             </a>`;
+  }
+  if (data.stock_present && !data.consumptionManagable) {
+    return `<span class="consumption-locked">
+              ${I18n.t('libraries.manange_modal_column.stock_type.stock_consumption_locked')}
+            </span>`;
   }
   return '<span class="empty-consumed-stock-render"> - </span>';
 };
