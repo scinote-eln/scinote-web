@@ -4,7 +4,7 @@ module RepositoryDatatableHelper
   include InputSanitizeHelper
 
   def prepare_row_columns(repository_rows, repository, columns_mappings, team, options = {})
-    reminder_row_ids = repository_reminder_row_ids(repository_rows)
+    reminder_row_ids = repository_reminder_row_ids(repository_rows, repository)
 
     repository_rows.map do |record|
       default_cells = public_send("#{repository.class.name.underscore}_default_columns", record)
@@ -85,8 +85,8 @@ module RepositoryDatatableHelper
     end
   end
 
-  def prepare_simple_view_row_columns(repository_rows, my_module, options = {})
-    reminder_row_ids = repository_reminder_row_ids(repository_rows)
+  def prepare_simple_view_row_columns(repository_rows, repository, my_module, options = {})
+    reminder_row_ids = repository_reminder_row_ids(repository_rows, repository)
 
     repository_rows.map do |record|
       row = {
@@ -241,9 +241,9 @@ module RepositoryDatatableHelper
     ''
   end
 
-  def repository_reminder_row_ids(repository_rows)
+  def repository_reminder_row_ids(repository_rows, repository)
     # don't load reminders for archived repositories
-    return [] if repository_rows.blank? || repository_rows.first.repository.archived?
+    return [] if repository_rows.blank? || repository.archived?
 
     repository_rows.with_active_reminders(current_user).pluck(:id).uniq
   end
