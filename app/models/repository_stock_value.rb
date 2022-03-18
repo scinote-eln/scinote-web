@@ -27,6 +27,7 @@ class RepositoryStockValue < ApplicationRecord
   end
 
   def update_data!(new_data, user)
+    lock!
     self.amount = BigDecimal(new_data[:amount].to_s)
     self.low_stock_threshold = new_data[:low_stock_threshold]
     self.last_modified_by = user

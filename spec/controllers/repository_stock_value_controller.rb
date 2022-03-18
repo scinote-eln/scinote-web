@@ -20,12 +20,7 @@ describe RepositoryStockValuesController, type: :controller do
 
   let!(:repository_stock_unit_item) {create :repository_stock_unit_item, created_by: user,
                                                                          last_modified_by: user,
-                                                                         repository_column: repository_column}
-
-  #let!(:repository_stock_value) {create :repository_stock_value, created_by: user,
-  #                                                               last_modified_by: user,
-  #                                                               repository_stock_unit_item: repository_stock_unit_item
-  #                                                              }                                                                       
+                                                                         repository_column: repository_column}                                                               
 
   describe 'create' do
     let(:params) do {
@@ -36,15 +31,24 @@ describe RepositoryStockValuesController, type: :controller do
         low_stock_threshold: ''
       }, 
       operator: 'set',
-      change_amount: 10,
+      change_amount: 0,
       repository_id: repository.id,
       id: repository_row.id
     }
     end
 
     let(:action) { post :create_or_update, params: params, format: :json }
-    it 'adds activity in DB' do
-      expect { action }.to change(RepositoryStockValue, :count).by(1)
+    let(:action1) { post :create_or_update, params: params, format: :json }
+
+    it 'Create stock value' do
+      expect { action }.to change(RepositoryLedgerRecord, :count).by(1)
+    end
+
+    it 'Ledger immutability' do
+      action
+      expect { action1 }
+        .to (change(RepositoryLedgerRecord, :count).by(1)
+              .and(change(RepositoryStockValue, :count).by(0)))
     end
   end
 end

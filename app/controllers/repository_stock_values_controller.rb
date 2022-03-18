@@ -33,7 +33,6 @@ class RepositoryStockValuesController < ApplicationController
   end
 
   def create_or_update
-    Rails.logger.info("New test: " + params.to_yaml.to_s)
     ActiveRecord::Base.transaction do
       @repository_stock_value ? update! : create!
 
@@ -45,7 +44,7 @@ class RepositoryStockValuesController < ApplicationController
       )
     end
 
-    render json: @repository_stock_vlaue
+    render json: @repository_stock_value
   end
 
   private
