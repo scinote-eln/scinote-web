@@ -192,6 +192,23 @@
         grid-area: table;
         padding: 0;
       }
+
+      .stock-low-stock-alert {
+        &::before {
+          @include font-awesome;
+          color: $brand-warning;
+          content: $font-fas-exclamation-triangle;
+        }
+      }
+
+      .stock-alert {
+        color: $brand-danger;
+
+        &::before {
+          @include font-awesome;
+          content: $font-fas-exclamation-triangle;
+        }
+      }
     }
   }
 

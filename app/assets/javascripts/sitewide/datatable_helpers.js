@@ -28,10 +28,27 @@ var DataTableHelpers = (function() {
         .addClass('sci-input-field search-field')
         .css('margin', 0);
       $('.dataTables_filter').append(`
+          <button class="btn btn-light icon-btn search-icon"
+                  title="${I18n.t('repositories.show.button_tooltip.search')}">
+            <i class="fas fa-search"></i>
+          </button>
           <div class="sci-input-container left-icon search-container">
             <i class="fas fa-search"></i>
           </div>`).find('.sci-input-container').prepend(tableFilterInput);
       $('.dataTables_filter').find('label').remove();
+
+      $('.dataTables_filter').on('click', '.search-icon', function() {
+        $('.dataTables_filter').find('.search-container').addClass('expand');
+        $(this).addClass('collapsed');
+        $('.dataTables_filter .search-field').focus();
+      });
+
+      $('.dataTables_filter').on('focusout', '.search-field', function() {
+        if (this.value.length === 0) {
+          $('.dataTables_filter').find('.search-container').removeClass('expand');
+          $('.dataTables_filter .search-icon').removeClass('collapsed');
+        }
+      });
     }
   };
 }());
