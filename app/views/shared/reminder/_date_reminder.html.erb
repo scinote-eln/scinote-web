@@ -1,0 +1,12 @@
+<div class="row-reminders-title"><strong><%= t('repository_row.reminder.date_reminder') %></strong></div>
+<div class="row-reminders-body">
+  <%if reminder.value.data < Time.now.utc %>
+    <%= t('repository_row.reminder.item_expired') %>
+  <% else %>
+    <%= t('repository_row.reminder.date_expiration_html', date_expiration: 
+    pluralize(((reminder.value.data - Time.now.utc)/1.day).ceil, t('repository_row.reminder.day'))) %>
+  <% end %>
+</div>
+<% if reminder.repository_column.metadata["reminder_message"].present? %>
+  <div class="row-reminders-body" > <%= reminder.repository_column.metadata["reminder_message"] %> </div>
+<% end %>

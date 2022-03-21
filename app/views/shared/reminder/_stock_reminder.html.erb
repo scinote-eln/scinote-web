@@ -1,0 +1,8 @@
+<div class="row-reminders-title"><strong><%= t('repository_row.reminder.low_stock_title') %></strong></div>
+<div class="row-reminders-body">
+  <% if reminder.value.amount <= 0 %>
+    <%= t('repository_row.reminder.stock_empty') %>
+  <% else %>
+    <%= t('repository_row.reminder.stock_low_html', stock_formated: reminder.value.formatted ) %>
+  <% end %>
+</div>
