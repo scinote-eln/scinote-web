@@ -989,7 +989,8 @@ CREATE TABLE public.my_modules (
     started_on timestamp without time zone,
     my_module_status_id bigint,
     status_changing boolean DEFAULT false,
-    changing_from_my_module_status_id bigint
+    changing_from_my_module_status_id bigint,
+    last_transition_error jsonb
 );
 
 
@@ -1733,7 +1734,9 @@ CREATE TABLE public.repository_date_time_range_values (
     created_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    type character varying
+    type character varying,
+    start_time_dup timestamp without time zone,
+    end_time_dup timestamp without time zone
 );
 
 
@@ -1767,7 +1770,8 @@ CREATE TABLE public.repository_date_time_values (
     updated_at timestamp without time zone,
     created_by_id bigint NOT NULL,
     last_modified_by_id bigint NOT NULL,
-    type character varying
+    type character varying,
+    data_dup timestamp without time zone
 );
 
 
@@ -7978,6 +7982,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210906132120'),
 ('20211103115450'),
 ('20211123103711'),
-('20220203122802');
+('20220203122802'),
+('20220217104635'),
+('20220321122111');
 
 
