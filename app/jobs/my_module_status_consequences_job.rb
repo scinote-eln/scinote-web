@@ -4,19 +4,26 @@ class MyModuleStatusConsequencesJob < ApplicationJob
   queue_as :high_priority
 
   def perform(my_module, my_module_status_consequences, status_changing_direction)
-    error_raised = false
-    my_module.transaction do
+    error = nil
+    my_module.transaction(requires_new: true) do
       my_module_status_consequences.each do |consequence|
         consequence.public_send(status_changing_direction, my_module)
       end
       my_module.update!(status_changing: false)
+      my_module.update!(last_transition_error: nil)
     rescue StandardError => e
       Rails.logger.error(e.message)
       Rails.logger.error(e.backtrace.join("\n"))
-      error_raised = true
+      error = if e.is_a?(MyModuleStatus::MyModuleStatusTransitionError)
+                e.error
+              else
+                { type: :general, message: e.message }
+              end
+      raise ActiveRecord::Rollback
     end
-    if error_raised
+    if error.present?
       my_module.my_module_status = my_module.changing_from_my_module_status
+      my_module.last_transition_error = error
       my_module.status_changing = false
       my_module.save!
     end
