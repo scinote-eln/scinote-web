@@ -14,6 +14,7 @@ var MyModuleStockConsumption = (function() {
           var $manageModal = $(CONSUMPTION_MODAL);
           $manageModal.find('.modal-content').html(result.html);
           $manageModal.modal('show');
+          $('#stock_consumption').focus();
           SmartAnnotation.init($(CONSUMPTION_MODAL + ' #comment')[0]);
 
           $('#stock_consumption').on('change', function() {
@@ -62,9 +63,19 @@ var MyModuleStockConsumption = (function() {
   }
 
   function initWarningModal() {
-    $(WARNING_MODAL).on('click', '.cancel-consumption', function() {
+    $(WARNING_MODAL).on('keydown', function(e) {
+      if (e.key === 'Escape') {
+        $(WARNING_MODAL).modal('hide');
+        $(CONSUMPTION_MODAL).modal('show');
+        $('#stock_consumption').focus();
+      } else if (e.key === 'Enter') {
+        $('.update-consumption-button').trigger('click', [true]);
+      }
+    })
+    $(WARNING_MODAL).on('click', '.cancel-consumption', function(e) {
       $(WARNING_MODAL).modal('hide');
       $(CONSUMPTION_MODAL).modal('show');
+      $('#stock_consumption').focus();
     }).on('click', '.confirm-consumption-button', function() {
       $('.update-consumption-button').trigger('click', [true]);
     });
