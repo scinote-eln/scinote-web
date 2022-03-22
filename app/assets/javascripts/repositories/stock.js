@@ -27,6 +27,11 @@ var RepositoryStockValues = (function() {
             }
           });
 
+          $manageModal.find(`
+            .dropdown-selector-container .input-field,
+            .dropdown-selector-container .search-field
+          `).attr('tabindex', 2);
+
           $manageModal.find('form').on('ajax:success', function() {
             var dataTable = $('.dataTable').DataTable();
             $manageModal.modal('hide');
@@ -112,6 +117,7 @@ var RepositoryStockValues = (function() {
           });
 
           $manageModal.modal('show');
+          $('#stock-input-amount').focus();
         }
       });
     });

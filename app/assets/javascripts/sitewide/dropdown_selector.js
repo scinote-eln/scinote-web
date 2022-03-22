@@ -390,6 +390,9 @@ var dropdownSelector = (function() {
             dropdownContainer.find('.dropdown-option').first().click();
           }
           dropdownContainer.find('.search-field').val('');
+
+          e.stopPropagation();
+          e.preventDefault();
         }
       }).click((e) =>{
         e.stopPropagation();
@@ -406,6 +409,20 @@ var dropdownSelector = (function() {
 
     // Select options container
     optionContainer = dropdownContainer.find('.dropdown-container');
+
+    dropdownContainer.find('.input-field').on('focus', () => {
+      dropdownContainer.find('.input-field').click();
+    });
+
+    dropdownContainer.find('.search-field').on('keydown', function(e) {
+      if (e.which === 9) { // Tab key
+        dropdownContainer.find('.search-field').val('');
+        if (dropdownContainer.hasClass('open') && config.onClose) {
+          config.onClose();
+        }
+        dropdownContainer.removeClass('open active');
+      }
+    });
 
     // Add click event to input field
     dropdownContainer.find('.input-field').click(() => {
@@ -426,6 +443,7 @@ var dropdownSelector = (function() {
         // on Open we load new data
         loadData(selectElement, dropdownContainer);
         updateDropdownDirection(selectElement, dropdownContainer);
+
         dropdownContainer.find('.search-field').focus();
 
         // onOpen event

@@ -40,6 +40,7 @@
                      type="number"
                      name="input-amount"
                      data-operator="set"
+                     tabindex="1"
                      data-current-amount="<%= repository_stock_value.amount %>"
                      value="<%= repository_stock_value.amount %>"
                      placeholder="<%= t('repository_stock_values.manage_modal.amount_placeholder') %>"
@@ -72,6 +73,7 @@
             <label><%= t('repository_stock_values.manage_modal.comment') %></label>
             <input class="sci-input-field"
             type="text"
+            tabindex="3"
             name="repository_stock_value[comment]"
             id="repository-stock-value-comment"
             placeholder="<%= t('repository_stock_values.manage_modal.comment_placeholder') %>">
@@ -82,7 +84,7 @@
       <div class="col-sm-12">
         <div class="repository-stock-reminder-selector">
           <div class="sci-checkbox-container">
-            <input type="checkbox" name="reminder-enabled" class="sci-checkbox" id="reminder-selector-checkbox" <%= "checked" if repository_stock_value.low_stock_threshold.present? %>/>
+            <input type="checkbox" name="reminder-enabled" tabindex="4" class="sci-checkbox" id="reminder-selector-checkbox" <%= "checked" if repository_stock_value.low_stock_threshold.present? %>/>
             <span class="sci-checkbox-label"></span>
           </div>
           <%= t('repository_stock_values.manage_modal.create_reminder') %>
@@ -95,6 +97,7 @@
                    value="<%= repository_stock_value.low_stock_threshold %>"
                    step="<%= repository_stock_column.metadata['decimals'] ? 1.0/(10 ** repository_stock_column.metadata['decimals']) : 1 %>"
                    class="sci-input-field"
+                   tabindex="5"
                    placeholder="Enter amount"/>
           </div>
           <span class="units">
@@ -129,7 +132,8 @@
     <button type="button"
             id="cancel"
             class="btn btn-default"
+            tabindex="7"
             data-dismiss="modal"><%=t 'general.cancel' %></button>
-    <%= submit_tag t('repository_stock_values.manage_modal.save_stock'), class: "btn btn-primary update-repository-stock" %>
+    <%= submit_tag t('repository_stock_values.manage_modal.save_stock'), class: "btn btn-primary update-repository-stock", tabindex: "6" %>
   </div>
 <% end %>
