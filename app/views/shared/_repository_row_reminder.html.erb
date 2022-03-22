@@ -1,14 +1,9 @@
 <% reminders.each_with_index do |reminder, index| %>
   <li class="row-reminders-notification">
     <% if reminder.value_type == 'RepositoryStockValue' %>
-      <div class="row-reminders-title"><strong><%= t('repository_row.reminder.low_stock_title') %></strong></div>
-      <div class="row-reminders-body">
-        <% if reminder.value.amount <= 0 %>
-          <%= t('repository_row.reminder.stock_empty') %>
-        <% else %>
-          <%= t('repository_row.reminder.stock_low', stock_formated: reminder.value.formatted ).html_safe %>
-        <% end %>
-      </div>
+      <%= render partial: 'shared/reminder/stock_reminder', locals: { reminder: reminder } %>
+    <% elsif reminder.value_type == 'RepositoryDateTimeValueBase' %>
+      <%= render partial: 'shared/reminder/date_reminder', locals: { reminder: reminder } %>
     <% end %>
     <div class="row-reminders-footer" data-row-hide-reminders-url="
       <%= repository_repository_row_repository_cell_hide_reminder_url(reminder.repository_row.repository, 

@@ -1,0 +1,41 @@
+.row-reminders-notification {
+  font-size: 14px;
+  width: 300px;
+
+
+  .row-reminders-title {
+    line-height: 20px;
+    margin-left: 16px;
+    margin-top: 5px;
+  }
+
+  .row-reminders-body {
+    font-size: 13px;
+    line-height: 16px;
+    margin-left: 16px;
+    margin-top: 5px;
+  }
+
+  .row-reminders-footer {
+    display: inline;
+  }
+
+  .fas {
+    line-height: 30px;
+    margin-left: 8px;
+    margin-top: 5px;
+    width: 16px;
+  }
+
+  hr {
+    background-color: $color-alto;
+    border-width: 0;
+    height: 1px;
+    margin: 0 16px 10px 0;
+    }
+  }
+
+#assigned-items-container .row-reminders-notification .fas {
+  margin-left: 16px;
+}
+
