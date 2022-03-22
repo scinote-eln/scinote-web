@@ -1036,8 +1036,8 @@ en:
         task: 'Assign to task'
         task_and_downstream: 'Assign to task & downstream'
       snapshot_error:
-        title: "Snapshot error"
-        body_html: "<strong>%{repository}</strong> inventory snapshot failed to generate. Please contact support if this problem persists."
+        title: "Cannot change status"
+        body_html: "The task cannot be moved to the next status because the <strong>%{repository}</strong> inventory snapshot failed to generate. Please contact support if this problem persists."
     modules_list_partial:
       private_tasks_html: 'Assigned to <strong>%{nr}</strong> private task(s)'
       no_results:
