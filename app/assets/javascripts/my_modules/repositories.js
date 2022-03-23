@@ -11,23 +11,26 @@ var MyModuleRepositories = (function() {
   var FULL_VIEW_TABLE_SCROLLBAR;
   var SELECTED_ROWS = {};
 
-  function stockManagementColumns() {
-    return [
+  function stockManagementColumns(withConsumption = true) {
+    let columns = [
       {
         visible: true,
         searchable: false,
         data: 'stock'
-      },
-      {
+      }
+    ];
+    if (withConsumption) {
+      columns = columns.concat([{
         visible: true,
         searchable: false,
         data: 'consumedStock'
-      }
-    ];
+      }]);
+    }
+    return columns;
   }
 
-  function stockManagementColumnDefs() {
-    return [
+  function stockManagementColumnDefs(withConsumption = true) {
+    let columns = [
       {
         targets: 'row-stock',
         className: 'item-stock',
@@ -35,15 +38,20 @@ var MyModuleRepositories = (function() {
         render: function(data) {
           return $.fn.dataTable.render.RepositoryStockValue(data);
         }
-      }, {
+      }
+    ];
+    if (withConsumption) {
+      columns = columns.concat([{
         targets: 'row-consumption',
         className: 'item-consumed-stock',
         sWidth: '1%',
         render: function(data) {
           return $.fn.dataTable.render.RepositoryStockConsumptionValue(data);
         }
-      }
-    ];
+      }]);
+    }
+
+    return columns;
   }
 
   function reloadRepositoriesList(repositoryId) {
@@ -78,7 +86,11 @@ var MyModuleRepositories = (function() {
     });
 
     if ($(tableContainer).data('stock-management')) {
-      columns = columns.concat(stockManagementColumns());
+      columns = columns.concat(
+        stockManagementColumns(
+          $(tableContainer).data('stock-consumption-column')
+        )
+      );
     }
 
     return columns;
@@ -125,7 +137,11 @@ var MyModuleRepositories = (function() {
     }
 
     if ($(tableContainer).data('stock-management')) {
-      columnDefs = columnDefs.concat(stockManagementColumnDefs());
+      columnDefs = columnDefs.concat(
+        stockManagementColumnDefs(
+          $(tableContainer).data('stock-consumption-column')
+        )
+      );
     }
 
     columnDefs.push(
@@ -171,7 +187,7 @@ var MyModuleRepositories = (function() {
                          + "class='record-info-link'>" + data + '</a>';
         if (row.hasActiveReminders) {
           recordName = `<div class="dropdown row-reminders-dropdown" data-row-reminders-url="${row.rowRemindersUrl}">
-                          <i class="fas fa-bell dropdown-toggle row-reminders-icon" 
+                          <i class="fas fa-bell dropdown-toggle row-reminders-icon"
                              data-toggle="dropdown" id="rowReminders${row.DT_RowId}}"></i>
                           <ul class="dropdown-menu" role="menu" aria-labelledby="rowReminders${row.DT_RowId}">
                           </ul>

@@ -9,7 +9,8 @@
        data-load-state-url="<%= repository_load_table_state_path(@repository) %>"
        data-export-url="<%= export_repository_my_module_repository_path(@my_module ,@repository) %>"
        data-versions-sidebar-url="<%= full_view_sidebar_my_module_repository_snapshots_path(@my_module, @repository) %>"
-       data-stock-management="<%= include_stock_consumption && @repository.has_stock_management? %>"
+       data-stock-management="<%= @repository.has_stock_management? %>"
+       data-stock-consumption-column="<%= include_stock_consumption %>"
        data-stock-consumption-editable="<%= include_stock_consumption && can_update_my_module_stock_consumption?(@my_module) %>">
   <thead>
     <tr>
