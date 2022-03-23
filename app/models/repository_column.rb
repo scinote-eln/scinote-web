@@ -123,6 +123,7 @@ class RepositoryColumn < ApplicationRecord
 
   def items
     items_method_name = "#{data_type.chomp('Value').underscore}_items"
+    items_method_name = 'repository_stock_unit_items' if data_type == 'RepositoryStockValue'
     __send__(items_method_name) if respond_to?(items_method_name, true)
   end
 

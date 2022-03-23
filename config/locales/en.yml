@@ -1504,6 +1504,12 @@ en:
                 select_placeholder: "Select user"
                 multiple_selected: "users selected"
                 all_selected: "All users selected"
+              RepositoryStockValue:
+                input_placeholder: "Enter numeric value"
+                to_placeholder: "To"
+                from_placeholder: "From"
+                all_units: "All units"
+                no_unit: "No unit"
       bmt_search:
         bmt_filter: "Biomolecule filter"
         save_filters: "Save filters"

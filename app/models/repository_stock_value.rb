@@ -24,6 +24,44 @@ class RepositoryStockValue < ApplicationRecord
     amount <= low_stock_threshold
   end
 
+  def self.add_filter_condition(repository_rows, join_alias, filter_element)
+    parameters = filter_element.parameters
+    if filter_element.operator == 'between'
+      return repository_rows if parameters['from'].blank? || parameters['to'].blank?
+    elsif parameters['value'].blank?
+      return repository_rows
+    end
+
+    repository_rows = case parameters['stock_unit']
+                      when 'all'
+                        repository_rows.where("#{join_alias}.repository_stock_unit_item_id IS NOT NULL")
+                      when 'none'
+                        repository_rows.where("#{join_alias}.repository_stock_unit_item_id IS NULL")
+                      else
+                        repository_rows.where("#{join_alias}.repository_stock_unit_item_id = ?", parameters['stock_unit'])
+                      end
+
+    case filter_element.operator
+    when 'equal_to'
+      repository_rows.where("#{join_alias}.amount = ?", parameters['value'].to_d)
+    when 'unequal_to'
+      repository_rows.where.not("#{join_alias}.amount = ?", parameters['value'].to_d)
+    when 'greater_than'
+      repository_rows.where("#{join_alias}.amount > ?", parameters['value'].to_d)
+    when 'greater_than_or_equal_to'
+      repository_rows.where("#{join_alias}.amount >= ?", parameters['value'].to_d)
+    when 'less_than'
+      repository_rows.where("#{join_alias}.amount < ?", parameters['value'].to_d)
+    when 'less_than_or_equal_to'
+      repository_rows.where("#{join_alias}.amount <= ?", parameters['value'].to_d)
+    when 'between'
+      repository_rows
+        .where("#{join_alias}.amount > ? AND #{join_alias}.amount < ?", parameters['from'].to_d, parameters['to'].to_d)
+    else
+      raise ArgumentError, 'Wrong operator for RepositoryStockValue!'
+    end
+  end
+
   def data_changed?(new_data)
     BigDecimal(new_data.to_s) != data
   end

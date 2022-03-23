@@ -14,7 +14,6 @@ class RepositoryStockUnitItem < ApplicationRecord
   validates :data, presence: true,
                    uniqueness: { scope: :repository_column_id },
                    length: { maximum: Constants::NAME_MAX_LENGTH }
-
   private
 
   def validate_per_column_limit
