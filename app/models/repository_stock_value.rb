@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class RepositoryStockValue < ApplicationRecord
+  include RepositoryValueWithReminders
+
   belongs_to :repository_stock_unit_item, optional: true
   belongs_to :created_by, class_name: 'User', optional: true, inverse_of: :created_repository_stock_values
   belongs_to :last_modified_by, class_name: 'User', optional: true, inverse_of: :modified_repository_stock_values
