@@ -5,9 +5,6 @@ module Api
     class InventoryColumnSerializer < ActiveModel::Serializer
       type :inventory_columns
       attributes :name, :data_type, :metadata
-      attribute :repository_stock_unit_items,  if: (lambda do
-                                                      object.data_type == 'RepositoryStockValue'
-                                                    end)
       has_many :repository_list_items,
                key: :inventory_list_items,
                serializer: InventoryListItemSerializer,
@@ -32,22 +29,19 @@ module Api
                  object.data_type == 'RepositoryStatusValue' &&
                    !instance_options[:hide_list_items]
                end)
+       has_many :repository_stock_unit_items,
+               key: :repository_stock_unit_items,
+               serializer: InventoryStockUnitItemSerializer,
+               class_name: 'RepositoryStockUnitItem',
+               if: (lambda do
+                 object.data_type == 'RepositoryStockValue' &&
+                   !instance_options[:hide_list_items]
+               end)
 
       include TimestampableModel
 
       def data_type
         Extends::API_REPOSITORY_DATA_TYPE_MAPPINGS[object.data_type]
-      end
-
-      def repository_stock_unit_items
-        self.object.repository_stock_unit_items.map do |item|
-          {
-            id: item.id,
-            data: item.data,
-            created_at: item.created_at,
-            updated_at: item.updated_at
-          }
-        end
       end
     end
   end

@@ -234,8 +234,7 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
           data_type: 'stock_value',
           metadata: {
              decimals: 3
-          },
-         repository_stock_unit_items_attributes: [{"data":"L"}]
+          }
         } } }}
 
     it 'Response with correct inventory column' do
@@ -364,7 +363,7 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
       expect(hash_body[:data]).to match(
         JSON.parse(
           ActiveModelSerializers::SerializableResource
-            .new(RepositoryColumn.last, serializer: Api::V1::InventoryColumnSerializer, include: :inventory_cells)
+            .new(RepositoryColumn.last, serializer: Api::V1::InventoryColumnSerializer, hide_list_items: true)
             .to_json
         )['data']
       )

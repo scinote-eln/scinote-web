@@ -39,21 +39,7 @@ module Api
 
       def update
         @inventory_column.attributes = update_inventory_column_params
-        if @inventory_column.data_type == "RepositoryStockValue"
-          if @inventory_column.changed?
-            @inventory_column.update_column(:metadata, update_inventory_column_params[:metadata])
-          end
-          if update_inventory_column_params[:repository_stock_unit_items_attributes].present?
-            @inventory_column = RepositoryColumns::UpdateStockColumnService
-                      .call(user: @current_user,
-                            team: @team,
-                            column: @inventory_column,
-                            params: update_inventory_column_params)
-          end
-          render jsonapi: load_inventory_column(:id), # if not loaded again ouput is without new unit items
-                          serializer: InventoryColumnSerializer,
-                          hide_list_items: true
-        elsif @inventory_column.changed? && @inventory_column.save!
+        if @inventory_column.changed? && @inventory_column.save!
           render jsonapi: @inventory_column,
                           serializer: InventoryColumnSerializer,
                           hide_list_items: true
@@ -63,7 +49,7 @@ module Api
       end
 
       def destroy
-        if @inventory_column.data_type != "RepositoryStockValue"
+        if @inventory_column.data_type != 'RepositoryStockValue'
           @inventory_column.destroy!
           render body: nil
         else
@@ -86,18 +72,13 @@ module Api
 
         params.require(:data).require(:attributes)
         new_params = params
-                     .permit(data: { attributes: [:name, :data_type, metadata: {}, repository_stock_unit_items_attributes: %i(data)] })[:data]
+                     .permit(data: { attributes: [:name, :data_type, metadata: {}] })[:data]
                      .merge(created_by: @current_user)
         if new_params[:attributes][:data_type].present?
           new_params[:attributes][:data_type] =
             Extends::API_REPOSITORY_DATA_TYPE_MAPPINGS
             .key(new_params.dig(:attributes, :data_type))
         end
-
-        new_params[:attributes][:repository_stock_unit_items_attributes]&.map do |m|
-          m.merge!(created_by_id: @current_user.id, last_modified_by_id: @current_user.id)
-        end
-
         new_params
       end
 
