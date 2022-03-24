@@ -62,15 +62,26 @@ class RepositoryStockValue < ApplicationRecord
     end
   end
 
-  def data_changed?(new_data)
-    BigDecimal(new_data.to_s) != data
+  def data_different?(new_data)
+    BigDecimal(new_data[:amount].to_s) != amount  ||
+      (new_data[:unit_item_id].present? && new_data[:unit_item_id] != repository_stock_unit_item.id)
   end
 
   def update_data!(new_data, user)
     self.amount = BigDecimal(new_data[:amount].to_s)
-    self.low_stock_threshold = new_data[:low_stock_threshold]
+    if new_data[:low_stock_threshold].present?
+      self.low_stock_threshold = new_data[:low_stock_threshold]
+    end
+    self.repository_stock_unit_item = self.repository_cell
+                                          .repository_column
+                                          .repository_stock_unit_items
+                                          .find(new_data[:unit_item_id])
     self.last_modified_by = user
     save!
+
+    update_stock_with_ledger!(new_data[:amount], 
+      self.repository_cell.repository_column.repository, 
+      new_data[:comment].presence)
   end
 
   def snapshot!(cell_snapshot)
@@ -105,7 +116,7 @@ class RepositoryStockValue < ApplicationRecord
                                               .find(payload['unit_item_id'])
       value
     else
-      raise StandardError, 'Missing amount value'
+      raise ActionController::ParameterMissing, 'Missing amount value'
     end
   end
 

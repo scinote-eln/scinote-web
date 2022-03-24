@@ -43,8 +43,12 @@ module Api
       end
 
       def destroy
-        @inventory_cell.destroy!
-        render body: nil
+        if @inventory_cell.value_type != "RepositoryStockValue"
+          @inventory_cell.destroy!
+          render body: nil
+        else
+          render body: nil, status: :method_not_allowed
+        end
       end
 
       private

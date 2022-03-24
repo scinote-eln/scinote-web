@@ -44,19 +44,12 @@ class RepositoryStockValuesController < ApplicationController
       )
     end
 
-    render json: @repository_stock_vlaue
+    render json: @repository_stock_value
   end
 
   private
 
   def update!
-    @repository_stock_value.update_stock_with_ledger!(
-      repository_stock_value_params[:amount],
-      @repository,
-      repository_stock_value_params[:comment].presence
-    )
-    @repository_stock_value.repository_stock_unit_item =
-      @repository_column.repository_stock_unit_items.find(repository_stock_value_params[:unit_item_id])
     @repository_stock_value.update_data!(repository_stock_value_params, current_user)
   end
 
@@ -66,9 +59,7 @@ class RepositoryStockValuesController < ApplicationController
       repository_stock_value_params,
       repository_cell: repository_cell,
       created_by: current_user,
-      last_modified_by: current_user,
-      repository_stock_unit_item: @repository_column.repository_stock_unit_items
-                                                    .find(repository_stock_value_params[:unit_item_id])
+      last_modified_by: current_user
     )
     @repository_stock_value.save!
     @repository_stock_value.update_stock_with_ledger!(
