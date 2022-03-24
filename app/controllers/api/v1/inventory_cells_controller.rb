@@ -43,7 +43,7 @@ module Api
       end
 
       def destroy
-        if @inventory_cell.value_type != "RepositoryStockValue"
+        if @inventory_cell.value_type != 'RepositoryStockValue'
           @inventory_cell.destroy!
           render body: nil
         else

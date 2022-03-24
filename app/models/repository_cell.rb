@@ -59,9 +59,9 @@ class RepositoryCell < ApplicationRecord
       cell.value = value
       value.save!
 
-      if column.data_type == "RepositoryStockValue"
-        value.update_stock_with_ledger!(value.amount, 
-                                        value.repository_cell.repository_column, 
+      if column.data_type == 'RepositoryStockValue'
+        value.update_stock_with_ledger!(value.amount,
+                                        value.repository_cell.repository_column.repository,
                                         '')
       end
     end
