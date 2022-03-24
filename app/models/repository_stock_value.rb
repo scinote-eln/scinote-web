@@ -68,16 +68,18 @@ class RepositoryStockValue < ApplicationRecord
   end
 
   def update_data!(new_data, user)
-    update_stock_with_ledger!(new_data[:amount],
-                              repository_cell.repository_column.repository,
-                              new_data[:comment].presence)
-    self.amount = BigDecimal(new_data[:amount].to_s)
     self.low_stock_threshold = new_data[:low_stock_threshold] if new_data[:low_stock_threshold].present?
     self.repository_stock_unit_item = repository_cell
                                       .repository_column
                                       .repository_stock_unit_items
                                       .find(new_data[:unit_item_id])
     self.last_modified_by = user
+
+    update_stock_with_ledger!(new_data[:amount],
+                              repository_cell.repository_column.repository,
+                              new_data[:comment].presence)
+
+    self.amount = BigDecimal(new_data[:amount].to_s)
     save!
   end
 
