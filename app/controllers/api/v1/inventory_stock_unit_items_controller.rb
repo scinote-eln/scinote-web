@@ -19,7 +19,7 @@ module Api
 
       def create
         stock_unit_item = @inventory_column.repository_stock_unit_items
-                                     .create!(inventory_stock_unit_item_params)
+                                           .create!(inventory_stock_unit_item_params)
         render jsonapi: stock_unit_item,
                serializer: InventoryStockUnitItemSerializer,
                status: :created
@@ -48,9 +48,7 @@ module Api
       private
 
       def check_column_type
-        unless @inventory_column.data_type == 'RepositoryStockValue'
-          raise TypeError
-        end
+        raise TypeError unless @inventory_column.data_type == 'RepositoryStockValue'
       end
 
       def load_inventory_stock_unit_item
@@ -59,15 +57,13 @@ module Api
       end
 
       def check_manage_permissions
-        unless can_manage_repository_column?(@inventory_column)
-          raise PermissionError.new(RepositoryStockUnitItem, :manage)
-        end
+        raise PermissionError.new(RepositoryStockUnitItem, :manage) 
+          unless can_manage_repository_column?(@inventory_column)
       end
 
       def inventory_stock_unit_item_params
-        unless params.require(:data).require(:type) == 'inventory_stock_unit_items'
-          raise TypeError
-        end
+        raise TypeError unless params.require(:data).require(:type) == 'inventory_stock_unit_items'
+
         params.require(:data).require(:attributes)
         params.permit(data: { attributes: %i(data) })[:data].merge(
           created_by: @current_user,
@@ -76,9 +72,8 @@ module Api
       end
 
       def update_inventory_stock_unit_item_params
-        unless params.require(:data).require(:id).to_i == params[:id].to_i
-          raise IDMismatchError
-        end
+        raise IDMismatchError unless params.require(:data).require(:id).to_i == params[:id].to_i
+
         inventory_stock_unit_item_params[:attributes]
       end
     end
