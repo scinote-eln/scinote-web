@@ -64,21 +64,29 @@ function prepareRepositoryHeaderForExport(th) {
 }
 
 function initReminderDropdown(table) {
+  $(table).on('keyup', '.row-reminders-dropdown', function(e) {
+    if (e.key === 'Escape') {
+      $(this).dropdown('toggle');
+    }
+  });
   $(table).on('show.bs.dropdown', '.row-reminders-dropdown', function() {
     let row = $(this).closest('tr');
     let screenHeight = screen.height;
     let rowPosition = row[0].getBoundingClientRect().y;
+    let dropdownMenu = $(this).find('.dropdown-menu');
     if ((screenHeight / 2) < rowPosition) {
-      $(this).find('.dropdown-menu').css({ top: 'unset', bottom: '100%' });
+      dropdownMenu.css({ top: 'unset', bottom: '100%' });
     } else {
-      $(this).find('.dropdown-menu').css({ bottom: 'unset', top: '100%' });
+      dropdownMenu.css({ bottom: 'unset', top: '100%' });
     }
     $.ajax({
       url: $(this).attr('data-row-reminders-url'),
       type: 'GET',
       dataType: 'json',
       success: function(data) {
-        $('.row-reminders-dropdown .dropdown-menu').html(data.html);
+        dropdownMenu.html(data.html);
+
+        dropdownMenu.find('.row-reminders-footer')[0].focus();
       }
     });
   });
