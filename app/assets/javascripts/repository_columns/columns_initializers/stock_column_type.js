@@ -10,8 +10,9 @@ var RepositoryStockColumnType = (function() {
   function initStockUnitDropdown() {
     dropdownSelector.init(previewContainer + ' .preview-select', {
       noEmptyOption: true,
-      optionClass: 'checkbox-icon',
-      selectAppearance: 'simple'
+      singleSelect: true,
+      selectAppearance: 'simple',
+      closeOnSelect: true
     });
   }
 
@@ -28,7 +29,7 @@ var RepositoryStockColumnType = (function() {
           itemsTextarea,
           delimiterDropdown,
           dropdownOptions,
-          GLOBAL_CONSTANTS.REPOSITORY_STOCK_UNIT_ITEMS_PER_COLUMN
+          GLOBAL_CONSTANTS.REPOSITORY_LIST_ITEMS_PER_COLUMN
         );
         $('.changing-existing-list-items-warning').removeClass('hidden');
         initStockUnitDropdown();
@@ -57,8 +58,9 @@ var RepositoryStockColumnType = (function() {
     loadParams: () => {
       var repositoryColumnParams = {};
       var options = JSON.parse($(dropdownOptions).val());
+      var decimals = $('.stock-column-type #decimals').val();
       repositoryColumnParams.repository_stock_unit_items_attributes = options;
-      repositoryColumnParams.metadata = { delimiter: '\\n' };
+      repositoryColumnParams.metadata = { decimals: decimals };
       return repositoryColumnParams;
     },
     initStockUnitDropdown: () => {
