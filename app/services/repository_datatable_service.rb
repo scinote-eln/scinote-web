@@ -435,8 +435,10 @@ class RepositoryDatatableService
       sorting_data_type = sorting_column.data_type.constantize
       cells = sorting_data_type.joins(
         "INNER JOIN repository_cells AS repository_sort_cells "\
-        "ON repository_sort_cells.value_id = #{sorting_data_type.table_name}.id"
+        "ON repository_sort_cells.value_id = #{sorting_data_type.table_name}.id "\
+        "AND repository_sort_cells.value_type = '#{sorting_data_type}'"
       ).where('repository_sort_cells.repository_column_id': sorting_column.id)
+
       if sorting_data_type.const_defined?('EXTRA_SORTABLE_VALUE_INCLUDE')
         cells = cells.joins(sorting_data_type::EXTRA_SORTABLE_VALUE_INCLUDE)
       end
