@@ -19,13 +19,15 @@
     <div class="limit-counter-container">
       <span class="items-count" data-count="0">0</span>
       <span class="items-limit">
-        <%= t('libraries.manange_modal_column.too_many_items_label', limit: Constants::REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN) %>
+        <%= t('libraries.manange_modal_column.too_many_items_label', limit: Constants::REPOSITORY_LIST_ITEMS_PER_COLUMN) %>
       </span>
     </div>
   </div>
   <div class="col-sm-9">
-    <% units = column.repository_stock_unit_items.any? ? column.repository_stock_unit_items.pluck(:data) : RepositoryStockUnitItem::DEFAULT_UNITS %>
-    <%= text_area_tag 'items-textarea', units.join(Constants::REPOSITORY_LIST_ITEMS_DELIMITERS_MAP[:return]), rows: 10, class: 'form-control items-textarea', placeholder: 'Enter your preferred units in separate rows' %>
+    <% units = column.new_record? ? RepositoryStockUnitItem::DEFAULT_UNITS : column.repository_stock_unit_items.pluck(:data) %>
+    <%= text_area_tag 'items-textarea', units.join(Constants::REPOSITORY_LIST_ITEMS_DELIMITERS_MAP[:return]),
+          rows: 10, class: 'form-control items-textarea',
+          placeholder: t('libraries.manange_modal_column.stock_type.textarea_placeholder_html') %>
     <% unless column.new_record? %>
       <div class="bg-danger hidden changing-existing-list-items-warning">
         <%= t('libraries.manange_modal_column.change_multi_select_items_warning') %>

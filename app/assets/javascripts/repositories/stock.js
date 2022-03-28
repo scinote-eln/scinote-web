@@ -65,6 +65,12 @@ var RepositoryStockValues = (function() {
             }
           });
 
+          $('#stock-input-amount, #low_stock_threshold').on('input focus', function() {
+            let decimals = $(this).data('decimals');
+            let regexp = decimals === 0 ? /[^0-9]/g : /[^0-9.]/g;
+            this.value = this.value.replace(regexp, '').match(new RegExp(`^\\d*(\\.\\d{0,${decimals}})?`))[0];
+          });
+
           $('#repository-stock-value-comment').on('keyup change', function() {
             $(this).closest('.sci-input-container').toggleClass(
               'error',

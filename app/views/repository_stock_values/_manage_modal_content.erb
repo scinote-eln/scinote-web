@@ -37,14 +37,14 @@
               <label><%= t('repository_stock_values.manage_modal.amount') %></label>
               <input id="stock-input-amount"
                      class="form-control"
-                     type="number"
+                     type="text"
                      name="input-amount"
                      data-operator="set"
                      tabindex="1"
                      data-current-amount="<%= repository_stock_value.amount %>"
+                     data-decimals="<%= repository_stock_column.metadata['decimals'] %>"
                      value="<%= repository_stock_value.amount %>"
                      placeholder="<%= t('repository_stock_values.manage_modal.amount_placeholder') %>"
-                     step="<%= repository_stock_column.metadata['decimals'] ? 1.0/(10 ** repository_stock_column.metadata['decimals']) : 1 %>"
                      required />
               <div class="input-error-message">
                 <%= t('repository_stock_values.manage_modal.amount_error') %>
@@ -92,10 +92,11 @@
         <div class="repository-stock-reminder-value <%= "hidden" if repository_stock_value.low_stock_threshold.blank? %>">
           <span><%= t('repository_stock_values.manage_modal.reminder_at') %></span>
           <div class="sci-input-container" data-error-text="<%= t('repository_stock_values.manage_modal.enter_ammount') %>">
-            <input type="number"
+            <input type="text"
+                   id="low_stock_threshold"
                    name="repository_stock_value[low_stock_threshold]"
                    value="<%= repository_stock_value.low_stock_threshold %>"
-                   step="<%= repository_stock_column.metadata['decimals'] ? 1.0/(10 ** repository_stock_column.metadata['decimals']) : 1 %>"
+                   data-decimals="<%= repository_stock_column.metadata['decimals'] %>"
                    class="sci-input-field"
                    tabindex="5"
                    placeholder="Enter amount"/>

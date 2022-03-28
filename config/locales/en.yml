@@ -1797,10 +1797,11 @@ en:
         all_options: 'All options'
         stock_units: 'Stock units'
         units_description: 'These units will appear when managing your stock. You can always add, remove or rename them in the list.'
-        add_stock: 'Add stock'
+        add_stock: 'Set stock'
         add_stock_consumption: 'Consume'
         stock_consumption_locked: "Can't consume"
         no_item_stock: 'No item stock'
+        textarea_placeholder_html: 'Enter your preferred units in separate rows&#10;Just&#10;Like&#10;This'
       checklist_type:
         multiple_options: 'selected'
         all_options: 'All options'
