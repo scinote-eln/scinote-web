@@ -4,7 +4,9 @@
   </div>
   <div class="title-row">
     <h1 class="project-name">
-      <i class="fas fa-archive" data-view-mode="archived"></i>
+      <% if @project.archived? %>
+        <i class="fas fa-archive" data-view-mode="archived"></i>
+      <% end %>
       <% if @inline_editable_title_config.present? %>
               <%= render partial: "shared/inline_editing",
                          locals: {
