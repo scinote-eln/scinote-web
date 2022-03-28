@@ -750,7 +750,7 @@ Rails.application.routes.draw do
                   resources :user_assignments,
                             only: %i(index show update),
                             controller: :task_user_assignments
-                  resources :task_inventory_items, only: %i(index show),
+                  resources :task_inventory_items, only: %i(index show update),
                             path: 'items',
                             as: :items
                   resources :task_users, only: %i(index show),

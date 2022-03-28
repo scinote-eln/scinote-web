@@ -50,5 +50,9 @@ FactoryBot.define do
     trait :checklist_type do
       data_type { :RepositoryChecklistValue }
     end
+
+    trait :stock_type do
+      data_type { :RepositoryStockValue }
+    end
   end
 end
