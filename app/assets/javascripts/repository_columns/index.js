@@ -68,13 +68,18 @@ var RepositoryColumns = (function() {
   }
 
   function checkData() {
+    var status = true;
     var currentPartial = $('#repository-column-data-type').val();
-
-    if (columnTypeClassNames[currentPartial]) {
-      return eval(columnTypeClassNames[currentPartial])
-        .checkValidation();
+    if ($('#repository-column-name').val().length === 0) {
+      $('#repository-column-name').parent().addClass('error');
+      status = false;
+    } else {
+      $('#repository-column-name').parent().removeClass('error');
     }
-    return true;
+    if (columnTypeClassNames[currentPartial]) {
+      status = eval(columnTypeClassNames[currentPartial]).checkValidation() && status;
+    }
+    return status;
   }
 
   function addSpecificParams(type, params) {

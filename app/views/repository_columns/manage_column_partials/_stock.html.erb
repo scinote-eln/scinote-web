@@ -24,17 +24,19 @@
     </div>
   </div>
   <div class="col-sm-9">
-    <% units = column.new_record? ? RepositoryStockUnitItem::DEFAULT_UNITS : column.repository_stock_unit_items.pluck(:data) %>
-    <%= text_area_tag 'items-textarea', units.join(Constants::REPOSITORY_LIST_ITEMS_DELIMITERS_MAP[:return]),
-          rows: 10, class: 'form-control items-textarea',
-          placeholder: t('libraries.manange_modal_column.stock_type.textarea_placeholder_html') %>
-    <% unless column.new_record? %>
-      <div class="bg-danger hidden changing-existing-list-items-warning">
-        <%= t('libraries.manange_modal_column.change_multi_select_items_warning') %>
+    <div class="sci-input-container" data-error-text="<%= t('libraries.manange_modal_column.stock_type.empty_units_error') %>">
+      <% units = column.new_record? ? RepositoryStockUnitItem::DEFAULT_UNITS : column.repository_stock_unit_items.pluck(:data) %>
+      <%= text_area_tag 'items-textarea', units.join(Constants::REPOSITORY_LIST_ITEMS_DELIMITERS_MAP[:return]),
+            rows: 10, class: 'form-control items-textarea sci-input-field',
+            placeholder: t('libraries.manange_modal_column.stock_type.textarea_placeholder_html') %>
+      <% unless column.new_record? %>
+        <div class="hidden changing-existing-stock-units-warning">
+          <%= t('libraries.manange_modal_column.stock_type.units_changing_warning') %>
+        </div>
+      <% end %>
+      <div class="units-info-description">
+        <%= t('libraries.manange_modal_column.stock_type.units_description') %>
       </div>
-    <% end %>
-    <div class="units-info-description">
-      <%= t('libraries.manange_modal_column.stock_type.units_description') %>
     </div>
   </div>
 </div>

@@ -1731,6 +1731,7 @@ en:
       add_column: "Add column"
     manange_modal_column:
       name_placeholder: "Enter column name..."
+      empty_name_error: "Colmun must have a name."
       name: "Name"
       colum_type: "Column type"
       dropdown_item_descirption: "Dropdown items should be separated by comma."
@@ -1802,6 +1803,8 @@ en:
         stock_consumption_locked: "Can't consume"
         no_item_stock: 'No item stock'
         textarea_placeholder_html: 'Enter your preferred units in separate rows&#10;Just&#10;Like&#10;This'
+        units_changing_warning: 'Careful: Changing units will remove previously selected units'
+        empty_units_error: 'Enter at least one unit.'
       checklist_type:
         multiple_options: 'selected'
         all_options: 'All options'
