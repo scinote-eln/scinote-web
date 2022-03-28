@@ -4,5 +4,24 @@
       @include font-small;
       color: $color-silver-chalice;
     }
+
+    .changing-existing-stock-units-warning {
+      @include font-small;
+      background-color: $brand-warning-light;
+      padding: .5em;
+    }
+
+    .sci-input-container.error {
+      margin-bottom: 3em;
+
+      .changing-existing-stock-units-warning {
+        bottom: -3.5em;
+        position: absolute;
+      }
+
+      .units-info-description {
+        display: none;
+      }
+    }
   }
 }

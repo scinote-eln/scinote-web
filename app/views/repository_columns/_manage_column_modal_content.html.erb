@@ -22,11 +22,13 @@
         <%= t('libraries.manange_modal_column.name') %>
       </label>
       <div class="col-sm-9">
-        <input placeholder="<%= t('libraries.manange_modal_column.name_placeholder') %>"
-               class="form-control"
-               type="text"
-               name="repository_column[name]"
-               id="repository-column-name" value="<%= @repository_column.name unless @repository_column.new_record? %>">
+        <div class="sci-input-container" data-error-text="<%= t('libraries.manange_modal_column.empty_name_error') %>">
+          <input placeholder="<%= t('libraries.manange_modal_column.name_placeholder') %>"
+                  class="sci-input-field"
+                  type="text"
+                  name="repository_column[name]"
+                  id="repository-column-name" value="<%= @repository_column.name unless @repository_column.new_record? %>">
+          </div>
       </div>
     </div>
     <div class="form-group">
