@@ -54,7 +54,7 @@ module RepositoryDatatableHelper
       end
 
       stock_present = record.repository_stock_cell.present?
-      stock_managable = !options[:include_stock_consumption] && can_manage_repository_rows?(record.repository)
+      stock_managable = !options[:include_stock_consumption] && can_manage_repository_stock?(record.repository)
 
       # always add stock cell, even if empty
       row['stock'] = stock_present ? display_cell_value(record.repository_stock_cell, team) : {}
