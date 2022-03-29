@@ -23,12 +23,13 @@ module InputSanitizeHelper
     team = options.fetch(:team) { nil }
     wrapper_tag = options.fetch(:wrapper_tag) { {} }
     tags = options.fetch(:tags) { [] }
+    preview_repository = options.fetch(:preview_repository) { false }
     format_opt = wrapper_tag.merge(sanitize: false)
     base64_encoded_imgs = options.fetch(:base64_encoded_imgs) { false }
     text = sanitize_input(text, tags)
     text = simple_format(sanitize_input(text), {}, format_opt) if simple_f
     auto_link(
-      smart_annotation_parser(text, team, base64_encoded_imgs),
+      custom_link_open_new_tab(smart_annotation_parser(text, team, base64_encoded_imgs, preview_repository)),
       link: :urls,
       sanitize: false,
       html: { target: '_blank' }
