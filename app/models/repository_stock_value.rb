@@ -15,6 +15,10 @@ class RepositoryStockValue < ApplicationRecord
 
   SORTABLE_COLUMN_NAME = 'repository_stock_values.amount'
 
+  def self.enabled?
+    ApplicationSettings.instance.values['stock_management_enabled']
+  end
+
   def formatted
     rounded_amount = number_with_precision(
       amount,

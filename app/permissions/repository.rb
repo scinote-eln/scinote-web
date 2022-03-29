@@ -91,4 +91,8 @@ Canaid::Permissions.register_for(Repository) do
     ((repository.team == user.current_team) && user.is_normal_user_or_admin_of_team?(repository.team)) ||
       (repository.shared_with_write?(user.current_team) && user.is_normal_user_or_admin_of_team?(user.current_team))
   end
+
+  can :manage_repository_stock do |user, repository|
+    RepositoryStockValue.enabled? && can_manage_repository_rows?(user, repository)
+  end
 end

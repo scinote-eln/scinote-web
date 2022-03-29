@@ -78,19 +78,20 @@
             <%= t('libraries.manange_modal_column.select.repository_status_value') %>
           </option>
 
-          <option data-create-url="<%= repository_repository_columns_stock_columns_path(@repository) %>"
-                  data-edit-url="<%= repository_repository_columns_stock_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
-                  value="RepositoryStockValue"
-                  <% if @repository.repository_columns.where(data_type: 'RepositoryStockValue').any? %>
-                    data-params="<%= {
-                      optionClass: 'disabled-option',
-                      text_description: 'Only one per inventory allowed'
-                    }.to_json %>"
-                  <% end %>
-                  <%= 'selected' if @repository_column.repository_stock_value? %> >
-            <%= t('libraries.manange_modal_column.select.repository_stock_value') %>
-          </option>
-
+          <% if can_manage_repository_stock?(current_user, @repository) %>
+            <option data-create-url="<%= repository_repository_columns_stock_columns_path(@repository) %>"
+                    data-edit-url="<%= repository_repository_columns_stock_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
+                    value="RepositoryStockValue"
+                    <% if @repository.repository_columns.where(data_type: 'RepositoryStockValue').any? %>
+                      data-params="<%= {
+                        optionClass: 'disabled-option',
+                        text_description: 'Only one per inventory allowed'
+                      }.to_json %>"
+                    <% end %>
+                    <%= 'selected' if @repository_column.repository_stock_value? %> >
+              <%= t('libraries.manange_modal_column.select.repository_stock_value') %>
+            </option>
+          <% end %>
           <option data-delimiter=true></option>
 
           <option data-create-url="<%= repository_repository_columns_date_time_columns_path(@repository) %>"
