@@ -20,12 +20,27 @@ class RepositoryStockValue < ApplicationRecord
   end
 
   def formatted
-    rounded_amount = number_with_precision(
-      amount,
-      precision: (repository_cell.repository_column.metadata['decimals'].to_i || 0),
-      strip_insignificant_zeros: true
-    )
-    "#{rounded_amount} #{repository_stock_unit_item&.data}"
+    "#{formatted_value} #{repository_stock_unit_item&.data}"
+  end
+
+  def formatted_value
+    if repository_cell
+      number_with_precision(
+        amount,
+        precision: (repository_cell.repository_column.metadata['decimals'].to_i || 0),
+        strip_insignificant_zeros: true
+      )
+    end
+  end
+
+  def formatted_treshold
+    if repository_cell && low_stock_threshold
+      number_with_precision(
+        low_stock_threshold,
+        precision: (repository_cell.repository_column.metadata['decimals'].to_i || 0),
+        strip_insignificant_zeros: true
+      )
+    end
   end
 
   def low_stock?

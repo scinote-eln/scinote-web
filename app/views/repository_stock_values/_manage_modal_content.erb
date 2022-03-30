@@ -4,7 +4,11 @@
       <span aria-hidden="true">&times;</span>
     </button>
     <h4 class="modal-title" id="modal-delete-module-label">
-      <%= t('repository_stock_values.manage_modal.title', item: repository_row.name) %>
+      <% if repository_stock_value.new_record? %>
+        <%= t('repository_stock_values.manage_modal.title', item: repository_row.name) %>
+      <% else %>
+        <%= t('repository_stock_values.manage_modal.edit_title', item: repository_row.name) %>
+      <% end %>
     </h4>
   </div>
   <div class="modal-body">
@@ -19,43 +23,41 @@
         <% if repository_stock_value.id %>
           <div class="btn-group" role="group" aria-label="Operator group">
             <button type="button" data-operator="set" class="btn btn-primary stock-operator-option"><%= t('repository_stock_values.manage_modal.set') %></button>
-            <button type="button" data-operator="remove" class="btn btn-secondary stock-operator-option"><%= t('repository_stock_values.manage_modal.remove') %></button>
             <button type="button" data-operator="add" class="btn btn-secondary stock-operator-option"><%= t('repository_stock_values.manage_modal.add') %></button>
+            <button type="button" data-operator="remove" class="btn btn-secondary stock-operator-option"><%= t('repository_stock_values.manage_modal.remove') %></button>
           </div>
         <% else %>
           <div class="btn-group" role="group" aria-label="Operator group">
             <button type="button" data-operator="set" class="btn btn-primary"><%= t('repository_stock_values.manage_modal.set') %></button>
-            <button type="button" data-operator="remove" class="btn btn-secondary disabled"><%= t('repository_stock_values.manage_modal.remove') %></button>
             <button type="button" data-operator="add" class="btn btn-secondary disabled"><%= t('repository_stock_values.manage_modal.add') %></button>
+            <button type="button" data-operator="remove" class="btn btn-secondary disabled"><%= t('repository_stock_values.manage_modal.remove') %></button>
           </div>
         <% end %>
       </div>
       <div class="col-sm-7">
         <div class="row">
           <div class="col-sm-6">
-            <div class="form-group">
+            <div class="sci-input-container" data-error-text="<%= t('repository_stock_values.manage_modal.amount_error') %>">
               <label><%= t('repository_stock_values.manage_modal.amount') %></label>
               <input id="stock-input-amount"
-                     class="form-control"
+                     class="sci-input-field"
                      type="text"
                      name="input-amount"
                      data-operator="set"
                      tabindex="1"
                      data-current-amount="<%= repository_stock_value.amount %>"
                      data-decimals="<%= repository_stock_column.metadata['decimals'] %>"
-                     value="<%= repository_stock_value.amount %>"
+                     value="<%= repository_stock_value.formatted_value %>"
                      placeholder="<%= t('repository_stock_values.manage_modal.amount_placeholder') %>"
                      required />
-              <div class="input-error-message">
-                <%= t('repository_stock_values.manage_modal.amount_error') %>
-              </div>
             </div>
           </div>
           <div class="col-sm-6">
             <label><%= t('repository_stock_values.manage_modal.unit') %></label>
-            <select class="form-control" name="repository_stock_value[unit_item_id]" id="repository-stock-value-units" required data-placeholder="<%= t('repository_stock_values.manage_modal.unit_prompt') %>">
+            <select class="form-control" name="repository_stock_value[unit_item_id]" id="repository-stock-value-units" required>
+              <option valus=""><%= t('repository_stock_values.manage_modal.unit_prompt') %></option>
               <% unit_items.each do |unit_item| %>
-                <option value="<%= unit_item.id %>" <%= 'data-selected=true' if repository_stock_value.repository_stock_unit_item == unit_item %>>
+                <option value="<%= unit_item.id %>" <%= 'selected' if repository_stock_value.repository_stock_unit_item == unit_item || unit_items.one?%>>
                   <%= unit_item.data %>
                 </option>
               <% end %>
@@ -95,15 +97,12 @@
             <input type="text"
                    id="low_stock_threshold"
                    name="repository_stock_value[low_stock_threshold]"
-                   value="<%= repository_stock_value.low_stock_threshold %>"
+                   value="<%= repository_stock_value.formatted_treshold %>"
                    data-decimals="<%= repository_stock_column.metadata['decimals'] %>"
                    class="sci-input-field"
                    tabindex="5"
                    placeholder="Enter amount"/>
           </div>
-          <span class="units">
-            <%= t('repository_stock_values.manage_modal.units_remaining', unit: repository_stock_value.repository_stock_unit_item&.data) %>
-          </span>
         </div>
       </div>
     </div>
@@ -113,7 +112,7 @@
           <div class="stock-update-view">
             <div class="stock-initial-container">
               <span class="subtitle"><%= t('repository_stock_values.manage_modal.current_stock') %></span>
-              <span class="value"><%= repository_stock_value.amount %></span>
+              <span class="value"><%= repository_stock_value.formatted_value %></span>
               <span class="units"><%= repository_stock_value.repository_stock_unit_item&.data %></span>
             </div>
             <div class="stock-arrow">
@@ -121,7 +120,7 @@
             </div>
             <div class="stock-final-container">
               <span class="subtitle"><%= t('repository_stock_values.manage_modal.new_stock') %></span>
-              <span class="value"><%= repository_stock_value.amount %></span>
+              <span class="value"><%= repository_stock_value.formatted_value %></span>
               <span class="units"><%= repository_stock_value.repository_stock_unit_item&.data %></span>
             </div>
           </div>

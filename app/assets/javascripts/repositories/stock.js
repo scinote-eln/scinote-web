@@ -1,7 +1,12 @@
-/* global dropdownSelector GLOBAL_CONSTANTS I18n */
+/* global dropdownSelector GLOBAL_CONSTANTS I18n SmartAnnotation */
 
 var RepositoryStockValues = (function() {
   const UNIT_SELECTOR = '#repository-stock-value-units';
+
+  function formatDecimalValue(value, decimals) {
+    let regexp = decimals === 0 ? /[^0-9]/g : /[^0-9.]/g;
+    return value.replace(regexp, '').match(new RegExp(`^\\d*(\\.\\d{0,${decimals}})?`))[0];
+  }
 
   function initManageAction() {
     $('.repository-show').on('click', '.manage-repository-stock-value-link', function() {
@@ -16,12 +21,17 @@ var RepositoryStockValues = (function() {
           dropdownSelector.init(UNIT_SELECTOR, {
             singleSelect: true,
             closeOnSelect: true,
+            noEmptyOption: true,
             selectAppearance: 'simple',
             onChange: function() {
-              $('.stock-final-container .units').text(dropdownSelector.getLabels(UNIT_SELECTOR));
+              let unit = '';
+              if (dropdownSelector.getValues(UNIT_SELECTOR) > 0) {
+                unit = dropdownSelector.getLabels(UNIT_SELECTOR);
+              }
+              $('.stock-final-container .units').text(unit);
               $('.repository-stock-reminder-value .units').text(
                 I18n.t('repository_stock_values.manage_modal.units_remaining', {
-                  unit: dropdownSelector.getLabels(UNIT_SELECTOR)
+                  unit: unit
                 })
               );
             }
@@ -67,9 +77,10 @@ var RepositoryStockValues = (function() {
 
           $('#stock-input-amount, #low_stock_threshold').on('input focus', function() {
             let decimals = $(this).data('decimals');
-            let regexp = decimals === 0 ? /[^0-9]/g : /[^0-9.]/g;
-            this.value = this.value.replace(regexp, '').match(new RegExp(`^\\d*(\\.\\d{0,${decimals}})?`))[0];
+            this.value = formatDecimalValue(this.value, decimals);
           });
+
+          SmartAnnotation.init($('#repository-stock-value-comment')[0]);
 
           $('#repository-stock-value-comment').on('keyup change', function() {
             $(this).closest('.sci-input-container').toggleClass(
@@ -83,15 +94,21 @@ var RepositoryStockValues = (function() {
           });
 
           $('#reminder-selector-checkbox').on('change', function() {
-            $('.repository-stock-reminder-value').toggleClass('hidden', !this.checked);
-            $('.repository-stock-reminder-value').find('input').attr('required', this.checked);
+            let valueContainer = $('.repository-stock-reminder-value');
+            valueContainer.toggleClass('hidden', !this.checked);
+            valueContainer.find('input').attr('required', this.checked);
             if (!this.checked) {
-              $('.repository-stock-reminder-value').find('input').val(null);
+              $(this).data('reminder-value', valueContainer.find('input').val());
+              valueContainer.find('input').val(null);
+            } else {
+              valueContainer.find('input').val($(this).data('reminder-value'));
+              valueContainer.find('input').focus();
             }
           });
 
           $('.update-repository-stock').on('click', function() {
-            let reminderError = $('#reminder-selector-checkbox')[0].checked && $('.repository-stock-reminder-value').find('input').val() === '';
+            let reminderError = $('#reminder-selector-checkbox')[0].checked
+                                && $('.repository-stock-reminder-value').find('input').val() === '';
             $('.repository-stock-reminder-value').find('.sci-input-container').toggleClass('error', reminderError);
           });
 
@@ -119,7 +136,28 @@ var RepositoryStockValues = (function() {
             $('#change_amount').val(inputAmount);
 
             $('#repository_stock_value_amount').val(newAmount);
-            $('.stock-final-container .value').text(newAmount);
+            $('.stock-final-container .value').text(
+              formatDecimalValue(String(newAmount), $('#stock-input-amount').data('decimals'))
+            );
+          });
+
+          $manageModal.on('ajax:beforeSend', 'form', function() {
+            let status = true;
+            if (!(dropdownSelector.getValues(UNIT_SELECTOR) > 0)) {
+              dropdownSelector.showError(UNIT_SELECTOR, I18n.t('repository_stock_values.manage_modal.unit_error'));
+              status = false;
+            } else {
+              dropdownSelector.hideError(UNIT_SELECTOR);
+            }
+
+            if ($('#stock-input-amount').val().length) {
+              $('#stock-input-amount').parent().removeClass('error');
+            } else {
+              $('#stock-input-amount').parent().addClass('error');
+              status = false;
+            }
+
+            return status;
           });
 
           $manageModal.modal('show');

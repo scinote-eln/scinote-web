@@ -1704,6 +1704,7 @@ en:
   repository_stock_values:
     manage_modal:
       title: "Stock %{item}"
+      edit_title: "Edit %{item} stock"
       save_stock: "Save stock"
       enter_amount: "Enter the amount and unit of the item you wish to stock."
       operation: "Operation"
@@ -1717,7 +1718,7 @@ en:
       unit_prompt: "Select unit"
       unit_error: "Select a unit"
       comment: "Comment (optional)"
-      comment_placeholder: "Enter comment"
+      comment_placeholder: "Enter a comment"
       current_stock: "Current stock"
       new_stock: "New stock"
       comment_limit: "Maximum number of characters reached (255)"

@@ -411,7 +411,11 @@ var dropdownSelector = (function() {
     optionContainer = dropdownContainer.find('.dropdown-container');
 
     dropdownContainer.find('.input-field').on('focus', () => {
-      dropdownContainer.find('.input-field').click();
+      setTimeout(function() {
+        if (!dropdownContainer.hasClass('open')) {
+          dropdownContainer.find('.input-field').click();
+        }
+      }, 250);
     });
 
     dropdownContainer.find('.search-field').on('keydown', function(e) {
@@ -1043,6 +1047,20 @@ var dropdownSelector = (function() {
       setTimeout(() => {
         container.removeClass('error');
       }, 1500);
+      return this;
+    },
+
+    showError: function(selector, error) {
+      var container = $(selector).next();
+      if ($(selector).length === 0) return false;
+      container.addClass('error').attr('data-error-text', error);
+      return this;
+    },
+
+    hideError: function(selector) {
+      var container = $(selector).next();
+      if ($(selector).length === 0) return false;
+      container.removeClass('error');
       return this;
     }
   };
