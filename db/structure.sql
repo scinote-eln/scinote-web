@@ -1023,7 +1023,8 @@ CREATE TABLE public.my_modules (
     started_on timestamp without time zone,
     my_module_status_id bigint,
     status_changing boolean DEFAULT false,
-    changing_from_my_module_status_id bigint
+    changing_from_my_module_status_id bigint,
+    last_transition_error jsonb
 );
 
 
@@ -8366,6 +8367,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220217104635'),
 ('20220224153705'),
 ('20220310105144'),
+('20220321122111'),
+('20220325101011'),
 ('20220328164215');
 
 

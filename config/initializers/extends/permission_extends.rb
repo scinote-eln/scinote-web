@@ -189,6 +189,7 @@ module PermissionExtends
       ExperimentPermissions::USERS_READ,
       MyModulePermissions::READ,
       MyModulePermissions::USERS_READ,
+      MyModulePermissions::READ_ARCHIVED,
       MyModulePermissions::ACTIVITIES_READ
     ]
   end
