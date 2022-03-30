@@ -56,7 +56,8 @@ module Api
       end
 
       def check_stock_consumption_update_permissions
-        unless can_update_stock_my_module_repository_row_stock_consumption?(@my_module_repository_row)
+        unless can_update_my_module_stock_consumption?(@task) &&
+               can_manage_repository_rows?(@my_module_repository_row.repository_row.repository)
           raise PermissionError.new(RepositoryRow, :update_stock_consumption)
         end
       end

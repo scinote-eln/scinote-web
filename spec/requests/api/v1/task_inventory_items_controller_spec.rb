@@ -4,6 +4,9 @@ require 'rails_helper'
 
 RSpec.describe 'Api::V1::TasksController', type: :request do
   before :all do
+    ApplicationSettings.instance.update(
+      values: ApplicationSettings.instance.values.merge({"stock_management_enabled" => true})
+    )
     MyModuleStatusFlow.ensure_default
 
     @user = create(:user)
@@ -25,6 +28,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
     )
 
     @repository = create(:repository)
+    create(:user_team, user: @user, team: @repository.team, role: 1)
     #@repository_stock_column = create(:repository_column, :stock_type, repository: @repository)
     @repository_row = create(:repository_row, name: 'Test row', repository: @repository)
     @repository_stock_cell = create(
