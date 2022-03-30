@@ -1628,6 +1628,7 @@ en:
     restore_record: "Restore"
     save_record: "Save"
     cancel_save: "Cancel"
+    hide_reminders: "Clear all reminders"
     assign_records_to_module: "Assign to task"
     update_records_to_module: "Update task"
     unassign_records_from_module: "Unassign"

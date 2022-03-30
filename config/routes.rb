@@ -186,6 +186,7 @@ Rails.application.routes.draw do
         post 'copy', to: 'repositories#copy',
              defaults: { format: 'json' }
         get :share_modal
+        post 'hide_reminders', to: 'repositories#hide_reminders'
 
         resources :team_repositories, only: %i(destroy) do
           collection do

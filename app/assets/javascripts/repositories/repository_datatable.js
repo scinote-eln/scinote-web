@@ -772,6 +772,24 @@ var RepositoryDatatable = (function(global) {
     })
     .on('click', '#deleteRepositoryRecords', function() {
       $('#deleteRepositoryRecord').modal('show');
+    })
+    .on('click', '#hideRepositoryReminders', function() {
+      var visibleReminderRepositoryRowIds = $('.row-reminders-dropdown').map(
+        function() { return $(this).closest('[role=row]').attr('id'); }
+      ).toArray();
+
+      $.ajax({
+        type: 'POST',
+        url: $(this).data('hideRemindersUrl'),
+        dataType: 'json',
+        data: {
+          visible_reminder_repository_row_ids: visibleReminderRepositoryRowIds
+        },
+        success: function() {
+          $('#hideRepositoryReminders').remove();
+          TABLE.ajax.reload();
+        }
+      });
     });
 
   // Handle enter key
