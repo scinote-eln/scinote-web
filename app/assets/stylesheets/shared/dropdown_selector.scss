@@ -433,5 +433,17 @@
     .input-field {
       border-color: $brand-danger !important;
     }
+
+    &::after {
+      @include font-small;
+      bottom: -16px;
+      color: $brand-danger;
+      content: attr(data-error-text);
+      left: 0;
+      line-height: 15px;
+      position: absolute;
+      white-space: nowrap;
+      width: 100%;
+    }
   }
 }
