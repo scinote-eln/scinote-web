@@ -1,4 +1,4 @@
-<div id="<%= id %>" class="sci-dialog modal fade" role="dialog">
+<div id="<%= id %>" class="sci-dialog modal fade <%= 'modal-auto-open' if defined?(shown) && shown %>" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -30,9 +30,3 @@
     </div>
   </div>
 </div>
-
-<% if defined?(shown) && shown %>
-  <script>
-    $('#<%= id %>').modal('show');
-  </script>
-<% end %>
