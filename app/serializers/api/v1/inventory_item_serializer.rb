@@ -5,7 +5,6 @@ module Api
     class InventoryItemSerializer < ActiveModel::Serializer
       type :inventory_items
       attributes :name, :archived
-      attribute :stock_consumption, if: -> { object.repository_stock_cell.present? }
       has_many :repository_cells, key: :inventory_cells,
                                   serializer: InventoryCellSerializer,
                                   class_name: 'RepositoryCell',
