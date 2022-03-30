@@ -47,7 +47,7 @@ class MyModulesController < ApplicationController
   def status_state
     respond_to do |format|
       format.json do
-        if @my_module.last_transition_error['type'] == 'repository_snapshot_error'
+        if @my_module.last_transition_error && @my_module.last_transition_error['type'] == 'repository_snapshot'
           flash[:repository_snapshot_error] = @my_module.last_transition_error
         end
 
