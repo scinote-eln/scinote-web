@@ -42,7 +42,7 @@
           <%= display_tooltip(column.name) %>
         </th>
       <% end %>
-      <% if include_stock_consumption && @repository.has_stock_management? && can_update_my_module_stock_consumption?(@my_module) %>
+      <% if @repository.has_stock_management? && include_stock_consumption %>
         <th class="row-consumption" data-columns-visible="false"><%= t("repositories.table.row_consumption") %></th>
       <% end %>
     </tr>
