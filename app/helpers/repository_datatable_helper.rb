@@ -244,12 +244,14 @@ module RepositoryDatatableHelper
     # don't load reminders for archived repositories
     return [] if repository_rows.blank? || repository.archived?
 
-    repository_rows.with_active_reminders(current_user).pluck(:id).uniq
+    repository_rows.where(archived: false).with_active_reminders(current_user).pluck(:id).uniq
   end
 
   def stock_consumption_managable?(record, repository, my_module)
     return false unless my_module
+    return false unless record.repository.is_a?(Repository)
+    return false if repository.archived? || record.archived?
 
-    record.repository.is_a?(Repository) && !repository.archived? && can_update_my_module_stock_consumption?(my_module)
+    can_update_my_module_stock_consumption?(my_module)
   end
 end
