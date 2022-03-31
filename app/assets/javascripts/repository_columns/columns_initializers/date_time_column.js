@@ -47,17 +47,18 @@ var RepositoryDateTimeColumnType = (function() {
       initReminderUnitDropdown();
     },
     loadParams: () => {
-      var isRange = $('#datetime-range').is(':checked');
-      var columnType = $('#repository-column-data-type').val();
+      let isRange = $('#datetime-range').is(':checked');
+      let hasReminder = $('#datetime-reminder').is(':checked');
+      let columnType = $('#repository-column-data-type').val();
       if (isRange) {
         columnType = columnType.replace('Value', 'RangeValue');
       }
       return {
         column_type: columnType,
-        reminder_delta: $(columnContainer).find('.reminder-delta').val(),
-        reminder_value: $(columnContainer).find('.reminder-value').val(),
-        reminder_unit: $(columnContainer).find('.reminder-unit').val(),
-        reminder_message: $(columnContainer).find('.reminder-message').val()
+        reminder_delta: hasReminder ? $(columnContainer).find('.reminder-delta').val() : null,
+        reminder_value: hasReminder ? $(columnContainer).find('.reminder-value').val() : null,
+        reminder_unit: hasReminder ? $(columnContainer).find('.reminder-unit').val() : null,
+        reminder_message: hasReminder ? $(columnContainer).find('.reminder-message').val() : null
       };
     }
   };
