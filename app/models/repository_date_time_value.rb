@@ -8,10 +8,6 @@ class RepositoryDateTimeValue < RepositoryDateTimeValueBase
     new_time.to_i != data.to_i
   end
 
-  def reminder?
-    true
-  end
-
   def formatted
     super(:full_with_comma)
   end
