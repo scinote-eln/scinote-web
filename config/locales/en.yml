@@ -1847,7 +1847,7 @@ en:
         active: Show active inventories
         archived: Show archived inventories
       buttons:
-        edit: "Edit"
+        edit: "Rename"
         duplicate: "Duplicate"
         archive: "Archive"
         restore: "Restore"
