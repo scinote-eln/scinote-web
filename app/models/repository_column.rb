@@ -36,8 +36,6 @@ class RepositoryColumn < ApplicationRecord
             uniqueness: { scope: :repository_id, case_sensitive: true }
   validates :name, :data_type, :repository, :created_by, presence: true
 
-  validate
-
   after_create :update_repository_table_states_with_new_column
   after_update :clear_hidden_repository_cell_reminders
   around_destroy :update_repository_table_states_with_removed_column
