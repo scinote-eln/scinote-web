@@ -55,6 +55,11 @@ var RepositoryDatatable = (function(global) {
       $('th').removeClass('disable-click');
       $('.repository-row-selector').prop('disabled', false);
       $('.dataTables_filter input').prop('disabled', false);
+      $('#addRepositoryRecord').show();
+      if (!$('#saveRepositoryFilters').hasClass('hidden')) {
+        $('#saveRepositoryFilters').show();
+      }
+      $('#hideRepositoryReminders').show();
       $('#importRecordsButton').show();
       if (rowsSelected.length === 0) {
         $('#exportRepositoriesButton').addClass('disabled');
@@ -89,6 +94,11 @@ var RepositoryDatatable = (function(global) {
       $(TABLE_WRAPPER_ID).addClass('editing');
       $('#importRecordsButton').hide();
       $('#editDeleteCopy').hide();
+      $('#addRepositoryRecord').hide();
+      $('#hideRepositoryReminders').hide();
+      if (!$('#saveRepositoryFilters').hasClass('hidden')) {
+        $('#saveRepositoryFilters').hide();
+      }
       $('#saveCancel').show();
       $('.manage-repo-column-index').prop('disabled', true);
       $('#repository-acitons-dropdown').prop('disabled', true);

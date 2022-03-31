@@ -46,12 +46,12 @@
 
   <!-- RIGHT TOOLBAR BLOCK -->
   <div class="toolbar-right-block">
-    <div class="toolbar-search"></div>
     <div class="toolbar-filters"></div>
     <% if @repository.is_a?(BmtRepository) %>
       <div class="toolbar-bmt-filters">
         <%= render partial: 'repositories/toolbar/bmt' %>
       </div>
     <% end %>
+    <div class="toolbar-search"></div>
   </div>
 </template>
