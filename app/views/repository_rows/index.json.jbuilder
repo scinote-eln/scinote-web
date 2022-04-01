@@ -6,7 +6,7 @@ json.data do
                                   @repository,
                                   @columns_mappings,
                                   @repository.team,
-                                  defined?(@datatable_params) ? @datatable_params : {})
+                                  @datatable_params || {})
 end
 json.recordsFiltered @repository_rows.first ? @repository_rows.first.filtered_count : 0
 json.recordsTotal @all_rows_count
