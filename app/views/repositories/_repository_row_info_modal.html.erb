@@ -34,14 +34,20 @@
               </span>
               <% @repository_row.repository_cells.each do |repository_cell| %>
                 <br>
-                <span>
-                  <%= t 'repository_row.modal_info.column_name', cf: repository_cell.repository_column.name %>
-                  <% if repository_cell.value_type == 'RepositoryAssetValue' %>
-                    <%= render partial: 'assets/asset_link', locals: { asset: repository_cell.value.asset, display_image_tag: false }, formats: :html %>
-                  <% else %>
-                    <%= custom_auto_link(repository_cell.value.formatted, simple_format: false, team: current_team) %>
-                  <% end %>
-                </span>
+                <% if repository_cell.value_type == 'RepositoryStockValue' %>
+                  <span><%= t('repository_row.modal_info.amount', value: repository_cell.value.formatted_value ) %></span>
+                  <br>
+                  <span><%= t('repository_row.modal_info.unit', unit: repository_cell.value.repository_stock_unit_item&.data ) %></span>
+                <% else %>
+                  <span>
+                    <%= t 'repository_row.modal_info.column_name', cf: repository_cell.repository_column.name %>
+                    <% if repository_cell.value_type == 'RepositoryAssetValue' %>
+                      <%= render partial: 'assets/asset_link', locals: { asset: repository_cell.value.asset, display_image_tag: false }, formats: :html %>
+                    <% else %>
+                      <%= custom_auto_link(repository_cell.value.formatted, simple_format: false, team: current_team) %>
+                    <% end %>
+                  </span>
+                <% end %>
               <% end %>
             </p>
           </div>
