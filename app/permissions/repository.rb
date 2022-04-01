@@ -94,6 +94,6 @@ Canaid::Permissions.register_for(Repository) do
   end
 
   can :manage_repository_stock do |user, repository|
-    RepositoryStockValue.enabled? && can_manage_repository_rows?(user, repository)
+    RepositoryBase.stock_management_enabled? && can_manage_repository_rows?(user, repository)
   end
 end
