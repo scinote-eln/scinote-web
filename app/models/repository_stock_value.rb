@@ -15,10 +15,6 @@ class RepositoryStockValue < ApplicationRecord
 
   SORTABLE_COLUMN_NAME = 'repository_stock_values.amount'
 
-  def self.enabled?
-    ApplicationSettings.instance.values['stock_management_enabled']
-  end
-
   def formatted
     "#{formatted_value} #{repository_stock_unit_item&.data}"
   end
