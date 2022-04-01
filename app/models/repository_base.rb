@@ -31,7 +31,7 @@ class RepositoryBase < ApplicationRecord
   default_scope -> { kept }
 
   def self.stock_management_enabled?
-    true
+    ApplicationSettings.instance.values['stock_management_enabled']
   end
 
   def has_stock_management?

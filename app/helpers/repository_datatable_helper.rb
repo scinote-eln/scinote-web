@@ -242,7 +242,7 @@ module RepositoryDatatableHelper
 
   def repository_reminder_row_ids(repository_rows, repository)
     # don't load reminders if the stock management feature is disabled
-    return [] unless RepositoryStockValue.enabled?
+    return [] unless RepositoryBase.stock_management_enabled?
 
     # don't load reminders for archived repositories
     return [] if repository_rows.blank? || repository.archived?
