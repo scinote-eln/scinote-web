@@ -74,6 +74,11 @@
 
   @media (max-width: 1299px) {
     .repository-toolbar {
+
+      .btn {
+        padding: 7px;
+        width: 36px;
+      }
       .button-text {
         display: none;
       }
