@@ -136,7 +136,7 @@ class RepositoryStockValue < ApplicationRecord
                                               .find(payload['unit_item_id'])
       value
     else
-      raise ActionController::ParameterMissing, 'Missing amount value'
+      raise ActiveRecord::RecordInvalid, 'Missing amount value'
     end
   end
 

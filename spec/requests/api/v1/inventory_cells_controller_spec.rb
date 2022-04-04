@@ -752,7 +752,7 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
     it 'Response with inventory cell, stock cell, missing stock unit' do
       hash_body = nil
       empty_item = create(:repository_row, repository: @valid_inventory)
-      invalid_file_body = @valid_stock_body.dup
+      invalid_file_body = @valid_stock_body.deep_dup
       invalid_file_body[:data][:attributes][:value].delete(:unit_item_id)
       post api_v1_team_inventory_item_cells_path(
         team_id: @team.id,
@@ -767,7 +767,7 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
     it 'Response with inventory cell, stock cell, missing amount' do
       hash_body = nil
       empty_item = create(:repository_row, repository: @valid_inventory)
-      invalid_file_body = @valid_stock_body.dup
+      invalid_file_body = @valid_stock_body.deep_dup
       invalid_file_body[:data][:attributes][:value].delete(:amount)
       post api_v1_team_inventory_item_cells_path(
         team_id: @team.id,
@@ -1189,7 +1189,7 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
         inventory_id: @valid_inventory.id,
         item_id: @valid_item.id
       ), headers: @valid_headers
-      expect(response).to have_http_status(405)
+      expect(response).to have_http_status(400)
       expect(RepositoryCell.where(id: deleted_id)).to exist
     end
 
