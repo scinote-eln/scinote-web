@@ -49,6 +49,12 @@ input[type="checkbox"].sci-checkbox {
     }
   }
 
+  &:focus + .sci-checkbox-label {
+    &::before {
+      border: 1px solid $brand-primary;
+    }
+  }
+
   &.hidden + .sci-checkbox-label {
     display: none;
   }
@@ -58,6 +64,12 @@ input[type="checkbox"].sci-checkbox {
       background: $brand-primary;
       border: 1px solid $brand-primary;
       content: $font-fas-check;
+    }
+  }
+
+  &:focus:checked + .sci-checkbox-label {
+    &::before {
+      border: 1px solid $brand-complementary;
     }
   }
 

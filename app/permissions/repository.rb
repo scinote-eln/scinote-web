@@ -60,6 +60,7 @@ Canaid::Permissions.register_for(Repository) do
   # repository: create/import record
   can :create_repository_rows do |user, repository|
     next false if repository.is_a?(BmtRepository)
+    next false if repository.archived?
 
     if repository.shared_with?(user.current_team)
       repository.shared_with_write?(user.current_team) && user.is_normal_user_or_admin_of_team?(user.current_team)
@@ -90,5 +91,9 @@ Canaid::Permissions.register_for(Repository) do
   can :manage_repository_filters do |user, repository|
     ((repository.team == user.current_team) && user.is_normal_user_or_admin_of_team?(repository.team)) ||
       (repository.shared_with_write?(user.current_team) && user.is_normal_user_or_admin_of_team?(user.current_team))
+  end
+
+  can :manage_repository_stock do |user, repository|
+    RepositoryBase.stock_management_enabled? && can_manage_repository_rows?(user, repository)
   end
 end

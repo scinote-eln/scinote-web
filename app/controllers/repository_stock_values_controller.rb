@@ -86,7 +86,7 @@ class RepositoryStockValuesController < ApplicationController
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_repository?(@repository)
+    render_403 unless can_manage_repository_stock?(@repository)
   end
 
   def repository_stock_value_params

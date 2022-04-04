@@ -4,8 +4,8 @@ module SmartAnnotations
   class TagToHtml
     attr_reader :html
 
-    def initialize(user, team, text)
-      parse(user, team, text)
+    def initialize(user, team, text, preview_repository = false)
+      parse(user, team, text, preview_repository)
     end
 
     private
@@ -16,7 +16,7 @@ module SmartAnnotations
                         tsk: MyModule,
                         rep_item: RepositoryRow }.freeze
 
-    def parse(user, team, text)
+    def parse(user, team, text, preview_repository = false)
       @html = text.gsub(REGEX) do |el|
         value = extract_values(el)
         type = value[:object_type]
@@ -24,7 +24,7 @@ module SmartAnnotations
           object = fetch_object(type, value[:object_id])
           # handle repository_items edge case
           if type == 'rep_item'
-            repository_item(value[:name], user, team, type, object)
+            repository_item(value[:name], user, team, type, object, preview_repository)
           else
             next unless object && SmartAnnotations::PermissionEval.check(user,
                                                                          team,
@@ -38,13 +38,13 @@ module SmartAnnotations
       end
     end
 
-    def repository_item(name, user, team, type, object)
+    def repository_item(name, user, team, type, object, preview_repository)
       if object&.repository
         return unless SmartAnnotations::PermissionEval.check(user, team, type, object)
 
-        return SmartAnnotations::HtmlPreview.html(nil, type, object)
+        return SmartAnnotations::HtmlPreview.html(nil, type, object, preview_repository)
       end
-      SmartAnnotations::HtmlPreview.html(name, type, object)
+      SmartAnnotations::HtmlPreview.html(name, type, object, preview_repository)
     end
 
     def extract_values(element)

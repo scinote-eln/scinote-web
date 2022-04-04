@@ -117,6 +117,8 @@ class Extends
       table_name: :repository_date_time_values
     }, RepositoryTimeRangeValue: {
       table_name: :repository_date_time_range_values
+    }, RepositoryStockValue: {
+      table_name: :repository_stock_values
     }
   }
 
@@ -139,6 +141,7 @@ class Extends
     RepositoryDateRangeValue
     RepositoryTimeValue
     RepositoryTimeRangeValue
+    RepositoryStockValue
   )
 
   # Array of preload relations used in search query for repository rows

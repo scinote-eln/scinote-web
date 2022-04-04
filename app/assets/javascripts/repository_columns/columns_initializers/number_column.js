@@ -6,7 +6,7 @@ var RepositoryNumberColumnType = (function() {
       return true;
     },
     loadParams: () => {
-      var decimals = $('#decimals').val();
+      var decimals = $('.number-column-type #decimals').val();
       return { metadata: { decimals: decimals } };
     }
   };

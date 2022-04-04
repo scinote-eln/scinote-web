@@ -19,6 +19,20 @@ class MyModuleRepositoryRow < ApplicationRecord
 
   before_save :nulify_stock_consumption, if: :stock_consumption_changed?
 
+  def consume_stock(user, stock_consumption, comment = nil)
+    ActiveRecord::Base.transaction(requires_new: true) do
+      lock!
+      assign_attributes(
+        stock_consumption: stock_consumption,
+        repository_stock_unit_item_id:
+          repository_row.repository_stock_value.repository_stock_unit_item_id,
+        last_modified_by: user,
+        comment: comment
+      )
+      save!
+    end
+  end
+
   private
 
   def nulify_stock_consumption

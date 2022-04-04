@@ -2,6 +2,7 @@
 // scss-lint:disable NestingDepth ImportantRule
 
 @import "constants";
+@import "layouts/reminders";
 
 .repository-table {
   position: relative;
@@ -49,7 +50,7 @@
     padding: 1px 8px;
     position: relative;
 
-    .fas {
+    .fas.fa-pencil-alt {
       line-height: 35px;
       text-align: center;
       width: 30px;
@@ -64,6 +65,19 @@
     .row-reminders-dropdown {
       cursor: pointer;
       display: inline-block;
+      margin-right: 8px;
+      padding: 8px;
+
+      .fa-bell {
+        height: 16px;
+        text-align: center;
+        width: 16px;
+      }
+
+      &.open {
+        background: $color-concrete;
+        border-radius: 4px;
+      }
     }
 
     .assign-counter-container {
@@ -113,6 +127,31 @@
     }
   }
 
+  .item-name {
+    padding: 1px 8px;
+
+    .row-reminders-dropdown {
+      cursor: pointer;
+      display: inline-block;
+      padding: 8px;
+
+      .fa-bell {
+        height: 16px;
+        text-align: center;
+        width: 16px;
+      }
+
+      &.open {
+        background: $color-concrete;
+        border-radius: 4px;
+      }
+    }
+
+    .record-info-link {
+      display: inline-block;
+      padding: 8px;
+    }
+  }
   // Added on
   .added-on {
     white-space: nowrap;
@@ -189,7 +228,7 @@
 
   // Stock
   .stock-value-view-render {
-    cursor: pointer;
+
 
     &:hover {
       text-decoration: none;
@@ -203,6 +242,15 @@
         content: $font-fas-exclamation-triangle;
       }
     }
+
+    &.stock-low-stock-alert {
+      &::before {
+        @include font-awesome;
+        color: $brand-warning;
+        content: $font-fas-exclamation-triangle;
+      }
+    }
+
   }
 
   .not-assigned-stock {
@@ -218,42 +266,20 @@
     cursor: pointer;
   }
 
-  .empty-stock-render {
+  .manage-repository-consumed-stock-value-link {
+    color: $color-volcano;
+  }
+
+  .empty-stock-render,
+  .consumption-locked {
     color: $color-silver-chalice;
   }
 
-  // Reminders
-
-  .row-reminders-notification {
-    font-size: 14px;
-    line-height: 30px;
-    margin-left: 16px;
-    width: 300px;
-
-
-    .row-reminders-title {
-      line-height: 20px;
-      margin-top: 5px;
-    }
-
-    .row-reminders-body {
-      font-size: 13px;
-      line-height: 16px;
-      margin-top: 5px;
-    }
-
-    .fas {
-      margin-top: 5px;
-      width: 16px;
-    }
-
-    hr {
-      background-color: $color-alto;
-      border-width: 0;
-      height: 1px;
-      margin: 0 16px 10px 0;
-    }
+  .row-stock,
+  .row-consumption {
+    min-width: 140px;
   }
+
 
   // DateTime
   .datetime-container {

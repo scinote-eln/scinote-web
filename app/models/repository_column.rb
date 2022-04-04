@@ -26,7 +26,7 @@ class RepositoryColumn < ApplicationRecord
 
   enum data_type: Extends::REPOSITORY_DATA_TYPES
 
-  store_accessor :metadata, %i(reminder_delta)
+  store_accessor :metadata, %i(reminder_delta reminder_value reminder_unit reminder_message)
 
   validates :data_type, uniqueness: { if: :repository_stock_value?, scope: :repository_id }
   validates :data_type, uniqueness: { if: :repository_stock_consumption_value?, scope: :repository_id }
@@ -36,9 +36,8 @@ class RepositoryColumn < ApplicationRecord
             uniqueness: { scope: :repository_id, case_sensitive: true }
   validates :name, :data_type, :repository, :created_by, presence: true
 
-  validate
-
   after_create :update_repository_table_states_with_new_column
+  after_update :clear_hidden_repository_cell_reminders
   around_destroy :update_repository_table_states_with_removed_column
 
   scope :list_type, -> { where(data_type: 'RepositoryListValue') }
@@ -122,6 +121,7 @@ class RepositoryColumn < ApplicationRecord
 
   def items
     items_method_name = "#{data_type.chomp('Value').underscore}_items"
+    items_method_name = 'repository_stock_unit_items' if data_type == 'RepositoryStockValue'
     __send__(items_method_name) if respond_to?(items_method_name, true)
   end
 
@@ -160,5 +160,13 @@ class RepositoryColumn < ApplicationRecord
       parent_id: nil
     )
     column_snapshot.save!
+  end
+
+  def clear_hidden_repository_cell_reminders
+    return unless reminder_delta_changed?
+
+    HiddenRepositoryCellReminder.joins(repository_cell: :repository_column)
+                                .where(repository_columns: { id: id })
+                                .delete_all
   end
 end

@@ -14,6 +14,7 @@ var MyModuleStockConsumption = (function() {
           var $manageModal = $(CONSUMPTION_MODAL);
           $manageModal.find('.modal-content').html(result.html);
           $manageModal.modal('show');
+          $('#stock_consumption').focus();
           SmartAnnotation.init($(CONSUMPTION_MODAL + ' #comment')[0]);
 
           $('#stock_consumption').on('change', function() {
@@ -51,8 +52,8 @@ var MyModuleStockConsumption = (function() {
               $(WARNING_MODAL).modal('show');
               let units = $(CONSUMPTION_MODAL).find('.consumption-container .units').text();
               let value = $('#stock_consumption').val();
-              $(WARNING_MODAL).find('.modal-body p').text(
-                I18n.t('my_modules.repository.stock_warning_modal.description', { value: `${value} ${units}` })
+              $(WARNING_MODAL).find('.modal-body p').html(
+                I18n.t('my_modules.repository.stock_warning_modal.description_html', { value: `${value} ${units}` })
               );
             }
           });
@@ -62,9 +63,19 @@ var MyModuleStockConsumption = (function() {
   }
 
   function initWarningModal() {
-    $(WARNING_MODAL).on('click', '.cancel-consumption', function() {
+    $(WARNING_MODAL).on('keydown', function(e) {
+      if (e.key === 'Escape') {
+        $(WARNING_MODAL).modal('hide');
+        $(CONSUMPTION_MODAL).modal('show');
+        $('#stock_consumption').focus();
+      } else if (e.key === 'Enter') {
+        $('.update-consumption-button').trigger('click', [true]);
+      }
+    })
+    $(WARNING_MODAL).on('click', '.cancel-consumption', function(e) {
       $(WARNING_MODAL).modal('hide');
       $(CONSUMPTION_MODAL).modal('show');
+      $('#stock_consumption').focus();
     }).on('click', '.confirm-consumption-button', function() {
       $('.update-consumption-button').trigger('click', [true]);
     });

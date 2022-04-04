@@ -12,13 +12,13 @@
     <div class="consumption-container">
       <div class="sci-input-container">
         <%= f.label :stock_consumption, t('my_modules.repository.stock_modal.amount') %>
-        <%= f.number_field :stock_consumption, value: @module_repository_row.stock_consumption , placeholder: t('my_modules.repository.stock_modal.consumed') , class: 'sci-input-field', data: {initial_value: (@module_repository_row.stock_consumption || 0), initial_stock: @stock_value.amount } %>
+        <%= f.number_field :stock_consumption, value: @module_repository_row.stock_consumption, tabindex: 1, placeholder: t('my_modules.repository.stock_modal.consumed') , class: 'sci-input-field', data: {initial_value: (@module_repository_row.stock_consumption || 0), initial_stock: @stock_value.amount } %>
       </div>
       <span class="units"> <%= @stock_value.repository_stock_unit_item&.data %></span>
     </div>
     <div class="sci-input-container comments-container"  data-error-text="<%= t('repository_stock_values.manage_modal.comment_limit') %>">
       <%= f.label :comment, t('my_modules.repository.stock_modal.comment') %>
-      <%= f.text_field :comment, placeholder: t('my_modules.repository.stock_modal.enter_comment') , class: 'sci-input-field' %>
+      <%= f.text_field :comment, placeholder: t('my_modules.repository.stock_modal.enter_comment'), tabindex: 1, class: 'sci-input-field' %>
     </div>
     <div class="row mt-3">
       <div class="col-sm-12">
@@ -44,7 +44,8 @@
     <button type="button"
             id="cancel"
             class="btn btn-default"
+            tabindex="4"
             data-dismiss="modal"><%=t('general.cancel') %></button>
-    <%= submit_tag t('general.save'), class: "btn btn-primary update-consumption-button", disabled: @module_repository_row.stock_consumption.nil? %>
+    <%= submit_tag t('general.save'), class: "btn btn-primary update-consumption-button", disabled: @module_repository_row.stock_consumption.nil?, tabindex: 1 %>
   </div>
 <% end %>

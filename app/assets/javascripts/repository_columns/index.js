@@ -1,5 +1,6 @@
 /* global I18n HelperModule truncateLongString animateSpinner RepositoryListColumnType RepositoryStockColumnType */
-/* global RepositoryDatatable RepositoryStatusColumnType RepositoryChecklistColumnType dropdownSelector */
+/* global RepositoryDatatable RepositoryStatusColumnType RepositoryChecklistColumnType dropdownSelector RepositoryDateTimeColumnType */
+/* global RepositoryDateColumnType RepositoryDatatable */
 /* eslint-disable no-restricted-globals */
 
 //= require jquery-ui/widgets/sortable
@@ -67,13 +68,18 @@ var RepositoryColumns = (function() {
   }
 
   function checkData() {
+    var status = true;
     var currentPartial = $('#repository-column-data-type').val();
-
-    if (columnTypeClassNames[currentPartial]) {
-      return eval(columnTypeClassNames[currentPartial])
-        .checkValidation();
+    if ($('#repository-column-name').val().length === 0) {
+      $('#repository-column-name').parent().addClass('error');
+      status = false;
+    } else {
+      $('#repository-column-name').parent().removeClass('error');
     }
-    return true;
+    if (columnTypeClassNames[currentPartial]) {
+      status = eval(columnTypeClassNames[currentPartial]).checkValidation() && status;
+    }
+    return status;
   }
 
   function addSpecificParams(type, params) {
@@ -189,6 +195,9 @@ var RepositoryColumns = (function() {
           dropdownSelector.init('.list-column-type .delimiter', delimiterDropdownConfig);
           RepositoryListColumnType.initListDropdown();
           RepositoryListColumnType.initListPlaceholder();
+
+          RepositoryDateTimeColumnType.initReminderUnitDropdown();
+          RepositoryDateColumnType.initReminderUnitDropdown();
 
           dropdownSelector.init('.checklist-column-type .delimiter', delimiterDropdownConfig);
           RepositoryChecklistColumnType.initChecklistDropdown();
@@ -397,6 +406,8 @@ var RepositoryColumns = (function() {
         RepositoryStatusColumnType.init();
         RepositoryStockColumnType.init();
         RepositoryChecklistColumnType.init();
+        RepositoryDateTimeColumnType.init();
+        RepositoryDateColumnType.init();
       }
     }
   };

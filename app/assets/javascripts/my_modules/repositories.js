@@ -11,23 +11,26 @@ var MyModuleRepositories = (function() {
   var FULL_VIEW_TABLE_SCROLLBAR;
   var SELECTED_ROWS = {};
 
-  function stockManagementColumns() {
-    return [
+  function stockManagementColumns(withConsumption = true) {
+    let columns = [
       {
         visible: true,
         searchable: false,
         data: 'stock'
-      },
-      {
+      }
+    ];
+    if (withConsumption) {
+      columns = columns.concat([{
         visible: true,
         searchable: false,
         data: 'consumedStock'
-      }
-    ];
+      }]);
+    }
+    return columns;
   }
 
-  function stockManagementColumnDefs() {
-    return [
+  function stockManagementColumnDefs(withConsumption = true) {
+    let columns = [
       {
         targets: 'row-stock',
         className: 'item-stock',
@@ -35,15 +38,20 @@ var MyModuleRepositories = (function() {
         render: function(data) {
           return $.fn.dataTable.render.RepositoryStockValue(data);
         }
-      }, {
+      }
+    ];
+    if (withConsumption) {
+      columns = columns.concat([{
         targets: 'row-consumption',
         className: 'item-consumed-stock',
         sWidth: '1%',
         render: function(data) {
           return $.fn.dataTable.render.RepositoryStockConsumptionValue(data);
         }
-      }
-    ];
+      }]);
+    }
+
+    return columns;
   }
 
   function reloadRepositoriesList(repositoryId) {
@@ -67,18 +75,20 @@ var MyModuleRepositories = (function() {
     }
 
     customColumns.each((i, column) => {
-      if (!$(column).hasClass('item-stock')) {
-        columns.push({
-          visible: true,
-          searchable: true,
-          data: String(columns.length),
-          defaultContent: $.fn.dataTable.render['default' + column.dataset.type](column.id)
-        });
-      }
+      columns.push({
+        visible: true,
+        searchable: true,
+        data: column.dataset.type === 'RepositoryStockValue' ? 'stock' : String(columns.length),
+        defaultContent: $.fn.dataTable.render['default' + column.dataset.type](column.id)
+      });
     });
 
-    if ($(tableContainer).data('stock-management')) {
-      columns = columns.concat(stockManagementColumns());
+    if ($(tableContainer).data('stock-consumption-column')) {
+      columns.push({
+        visible: true,
+        searchable: false,
+        data: 'consumedStock'
+      });
     }
 
     return columns;
@@ -125,7 +135,11 @@ var MyModuleRepositories = (function() {
     }
 
     if ($(tableContainer).data('stock-management')) {
-      columnDefs = columnDefs.concat(stockManagementColumnDefs());
+      columnDefs = columnDefs.concat(
+        stockManagementColumnDefs(
+          $(tableContainer).data('stock-consumption-column')
+        )
+      );
     }
 
     columnDefs.push(
@@ -167,8 +181,17 @@ var MyModuleRepositories = (function() {
       targets: 0,
       className: 'item-name',
       render: function(data, type, row) {
-        return "<a href='" + row.recordInfoUrl + "'"
-               + "class='record-info-link'>" + data + '</a>';
+        var recordName = "<a href='" + row.recordInfoUrl + "'"
+                         + "class='record-info-link'>" + data + '</a>';
+        if (row.hasActiveReminders) {
+          recordName = `<div class="dropdown row-reminders-dropdown" data-row-reminders-url="${row.rowRemindersUrl}">
+                          <i class="fas fa-bell dropdown-toggle row-reminders-icon"
+                             data-toggle="dropdown" id="rowReminders${row.DT_RowId}}"></i>
+                          <ul class="dropdown-menu" role="menu" aria-labelledby="rowReminders${row.DT_RowId}">
+                          </ul>
+                        </div>` + recordName;
+        }
+        return recordName;
       }
     }];
 

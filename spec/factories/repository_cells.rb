@@ -81,7 +81,7 @@ FactoryBot.define do
       end
     end
 
-    trait :repository_stock_value do
+    trait :stock_value do
       repository_column { create :repository_column, :stock_type, repository: repository_row.repository }
       after(:build) do |repository_cell|
         repository_cell.value ||= build(:repository_stock_value, repository_cell: repository_cell)

@@ -192,6 +192,32 @@
         grid-area: table;
         padding: 0;
       }
+
+      .stock-low-stock-alert {
+        &::before {
+          @include font-awesome;
+          color: $brand-warning;
+          content: $font-fas-exclamation-triangle;
+        }
+      }
+
+      .stock-alert {
+        color: $brand-danger;
+
+        &::before {
+          @include font-awesome;
+          content: $font-fas-exclamation-triangle;
+        }
+      }
+
+      .manage-repository-consumed-stock-value-link {
+        color: $color-volcano;
+      }
+
+      .row-stock,
+      .row-consumptio {
+        min-width: 140px;
+      }
     }
   }
 
@@ -203,12 +229,25 @@
     }
 
     .assigned-column {
+      padding: 2px 8px;
       position: relative;
 
       .row-reminders-dropdown {
         cursor: pointer;
         display: inline-block;
-        line-height: 35px;
+        margin-right: 8px;
+        padding: 8px;
+
+        .fa-bell {
+          height: 16px;
+          text-align: center;
+          width: 16px;
+        }
+
+        &.open {
+          background: $color-concrete;
+          border-radius: 4px;
+        }
       }
 
       .assign-counter-container {
@@ -527,40 +566,5 @@
     .sidebar-collapse-button {
       transform: rotateZ(90deg);
     }
-  }
-}
-
-// Reminders
-.row-reminders-notification {
-  font-size: 14px;
-  line-height: 30px;
-  margin-left: 16px;
-  width: 300px;
-
-
-  .row-reminders-title {
-    line-height: 20px;
-    margin-top: 5px;
-  }
-
-  .row-reminders-body {
-    font-size: 13px;
-    line-height: 16px;
-    margin-top: 5px;
-  }
-
-  .fas {
-    font-size: 14px;
-    line-height: 35px;
-    margin-top: 5px;
-    text-align: center;
-    width: 16px;
-  }
-
-  hr {
-    background-color: $color-alto;
-    border-width: 0;
-    height: 1px;
-    margin: 0 16px 10px 0;
   }
 }

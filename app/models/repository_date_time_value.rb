@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 class RepositoryDateTimeValue < RepositoryDateTimeValueBase
+  include RepositoryValueWithReminders
+
   def data_different?(new_data)
     new_time = Time.zone.parse(new_data)
     new_time.to_i != data.to_i
-  end
-
-  def reminder?
-    true
   end
 
   def formatted
