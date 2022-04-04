@@ -43,6 +43,9 @@ class Constants
   # data type is used
   INFINITY = 2**32 / 2 - 1
 
+  # Prevents integer overflow for reminder_delta seconds
+  MAX_NUMBER_OF_REMINDER_WEEKS = 816
+
   #=============================================================================
   # Query/display limits
   #=============================================================================
