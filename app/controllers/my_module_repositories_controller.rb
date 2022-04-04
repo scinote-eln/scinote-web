@@ -19,8 +19,10 @@ class MyModuleRepositoriesController < ApplicationController
     @datatable_params = {
       view_mode: params[:view_mode],
       my_module: @my_module,
-      include_stock_consumption: @repository.has_stock_management? && params[:assigned]
+      include_stock_consumption: @repository.has_stock_management? && params[:assigned].present?,
+      disable_stock_management: true # stock management is always disabled in MyModule context
     }
+
     @all_rows_count = datatable_service.all_count
     @columns_mappings = datatable_service.mappings
 
@@ -159,20 +161,12 @@ class MyModuleRepositoriesController < ApplicationController
 
   def update_consumption
     module_repository_row = @my_module.my_module_repository_rows.find_by(id: params[:module_row_id])
-    module_repository_row.with_lock do
-      current_stock = module_repository_row.stock_consumption
-      module_repository_row.assign_attributes(
-        stock_consumption: params[:stock_consumption],
-        repository_stock_unit_item_id:
-          module_repository_row.repository_row.repository_stock_value.repository_stock_unit_item_id,
-        last_modified_by: current_user,
-        comment: params[:comment]
-      )
-      module_repository_row.save!
 
-      log_activity(module_repository_row,
-                   current_stock,
-                   params[:comment])
+    ActiveRecord::Base.transaction do
+      current_stock = module_repository_row.stock_consumption
+      module_repository_row.consume_stock(current_user, params[:stock_consumption], params[:comment])
+
+      log_activity(module_repository_row, current_stock, params[:comment])
     end
 
     render json: {}, status: :ok

@@ -9,7 +9,7 @@ module ReminderRepositoryCellJoinable
         'LEFT OUTER JOIN "repository_date_time_values" ON '\
         '"repository_date_time_values"."id" = "repository_cells"."value_id" AND '\
         '"repository_cells"."value_type" = \'RepositoryDateTimeValueBase\' '\
-        'AND repository_columns.metadata ? \'reminder_delta\' AND '\
+        'AND repository_columns.metadata ->> \'reminder_delta\' <> \'\' AND '\
         '(repository_date_time_values.data - NOW()) <= '\
         '(repository_columns.metadata ->> \'reminder_delta\')::int * interval \'1 sec\''
       ).joins( # stock reminders

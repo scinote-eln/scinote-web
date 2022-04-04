@@ -17,14 +17,8 @@
   }
 
   .row-reminders-footer {
-    display: inline;
-  }
-
-  .fas {
-    line-height: 30px;
-    margin-left: 8px;
-    margin-top: 5px;
-    width: 16px;
+    margin: 4px 14px;
+    padding: 8px 2px;
   }
 
   hr {
@@ -34,8 +28,3 @@
     margin: 0 16px 10px 0;
     }
   }
-
-#assigned-items-container .row-reminders-notification .fas {
-  margin-left: 16px;
-}
-

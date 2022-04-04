@@ -11,10 +11,6 @@ class RepositoryDateValue < RepositoryDateTimeValueBase
     Date.parse(new_data).to_date != data.to_date
   end
 
-  def reminder?
-    true
-  end
-
   def formatted
     super(:full_date)
   end

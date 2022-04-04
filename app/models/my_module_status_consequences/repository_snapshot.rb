@@ -13,7 +13,13 @@ module MyModuleStatusConsequences
 
         unless service.succeed?
           repository_snapshot.failed!
-          raise StandardError, service.errors
+          raise MyModuleStatus::MyModuleStatusTransitionError.new(
+            {
+              type: :repository_snapshot,
+              repository_id: repository_snapshot.parent_id,
+              message: service.errors.values.join("\n")
+            }
+          )
         end
 
         snapshot = service.repository_snapshot

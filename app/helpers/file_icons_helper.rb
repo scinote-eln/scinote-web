@@ -3,7 +3,7 @@
 module FileIconsHelper
   def wopi_file?(asset)
     file_ext = asset.file_name.split('.').last&.downcase
-    %w(csv ods xls xlsb xlsm xlsx odp pot potm potx pps ppsm
+    %w(ods xls xlsb xlsm xlsx odp pot potm potx pps ppsm
        ppsx ppt pptm pptx doc docm docx dot dotm dotx odt rtf).include?(file_ext)
   end
 

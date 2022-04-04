@@ -209,6 +209,15 @@
           content: $font-fas-exclamation-triangle;
         }
       }
+
+      .manage-repository-consumed-stock-value-link {
+        color: $color-volcano;
+      }
+
+      .row-stock,
+      .row-consumptio {
+        min-width: 140px;
+      }
     }
   }
 
@@ -220,12 +229,25 @@
     }
 
     .assigned-column {
+      padding: 2px 8px;
       position: relative;
 
       .row-reminders-dropdown {
         cursor: pointer;
         display: inline-block;
-        line-height: 35px;
+        margin-right: 8px;
+        padding: 8px;
+
+        .fa-bell {
+          height: 16px;
+          text-align: center;
+          width: 16px;
+        }
+
+        &.open {
+          background: $color-concrete;
+          border-radius: 4px;
+        }
       }
 
       .assign-counter-container {

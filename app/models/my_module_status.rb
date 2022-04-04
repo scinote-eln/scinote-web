@@ -1,6 +1,15 @@
 # frozen_string_literal: true
 
 class MyModuleStatus < ApplicationRecord
+  class MyModuleStatusTransitionError < StandardError
+    attr_reader :error
+
+    def initialize(error)
+      @error = error
+      super
+    end
+  end
+
   has_many :my_modules, dependent: :nullify
   has_many :my_module_status_conditions, dependent: :destroy
   has_many :my_module_status_consequences, dependent: :destroy

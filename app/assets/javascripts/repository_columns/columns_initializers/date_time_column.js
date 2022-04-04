@@ -14,9 +14,12 @@ var RepositoryDateTimeColumnType = (function() {
 
   function initReminders() {
     let $modal = $('#manage-repository-column');
-    $modal.on('change', `${columnContainer} .reminder-value, ${columnContainer} .reminder-unit`, function() {
-      let value = $(columnContainer).find('.reminder-value').val();
-      if (!isNaN(parseFloat(value))) {
+    $modal.on('input', `${columnContainer} .reminder-value, ${columnContainer} .reminder-unit`, function() {
+      let reminderValueInput = $(columnContainer).find('.reminder-value');
+      reminderValueInput.val(reminderValueInput.val().replace(/[^0-9]/, ''));
+      let value = reminderValueInput.val();
+
+      if (!isNaN(parseInt(value, 10))) {
         $(columnContainer).find('.reminder-delta').val(
           value * $(columnContainer).find('.reminder-unit').val()
         );
@@ -41,23 +44,30 @@ var RepositoryDateTimeColumnType = (function() {
       initReminders();
     },
     checkValidation: () => {
+      let reminderValueInput = $(columnContainer).find('.reminder-value');
+      if (parseInt(reminderValueInput.val(), 10) > parseInt(reminderValueInput.data('max'), 10)) {
+        reminderValueInput.parent().addClass('error');
+        return false;
+      }
+
       return true;
     },
     initReminderUnitDropdown: () => {
       initReminderUnitDropdown();
     },
     loadParams: () => {
-      var isRange = $('#datetime-range').is(':checked');
-      var columnType = $('#repository-column-data-type').val();
+      let isRange = $('#datetime-range').is(':checked');
+      let hasReminder = $('#datetime-reminder').is(':checked');
+      let columnType = $('#repository-column-data-type').val();
       if (isRange) {
         columnType = columnType.replace('Value', 'RangeValue');
       }
       return {
         column_type: columnType,
-        reminder_delta: $(columnContainer).find('.reminder-delta').val(),
-        reminder_value: $(columnContainer).find('.reminder-value').val(),
-        reminder_unit: $(columnContainer).find('.reminder-unit').val(),
-        reminder_message: $(columnContainer).find('.reminder-message').val()
+        reminder_delta: hasReminder ? $(columnContainer).find('.reminder-delta').val() : null,
+        reminder_value: hasReminder ? $(columnContainer).find('.reminder-value').val() : null,
+        reminder_unit: hasReminder ? $(columnContainer).find('.reminder-unit').val() : null,
+        reminder_message: hasReminder ? $(columnContainer).find('.reminder-message').val() : null
       };
     }
   };
