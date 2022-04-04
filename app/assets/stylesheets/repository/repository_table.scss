@@ -65,6 +65,19 @@
     .row-reminders-dropdown {
       cursor: pointer;
       display: inline-block;
+      margin-right: 8px;
+      padding: 8px;
+
+      .fa-bell {
+        height: 16px;
+        text-align: center;
+        width: 16px;
+      }
+
+      &.open {
+        background: $color-concrete;
+        border-radius: 4px;
+      }
     }
 
     .assign-counter-container {
@@ -114,12 +127,30 @@
     }
   }
 
-  .item-name .row-reminders-dropdown {
-    cursor: pointer;
-    display: inline-block;
-    line-height: 32px;
-    margin-left: 8px;
-    margin-right: 8px;
+  .item-name {
+    padding: 1px 8px;
+
+    .row-reminders-dropdown {
+      cursor: pointer;
+      display: inline-block;
+      padding: 8px;
+
+      .fa-bell {
+        height: 16px;
+        text-align: center;
+        width: 16px;
+      }
+
+      &.open {
+        background: $color-concrete;
+        border-radius: 4px;
+      }
+    }
+
+    .record-info-link {
+      display: inline-block;
+      padding: 8px;
+    }
   }
   // Added on
   .added-on {
@@ -235,10 +266,20 @@
     cursor: pointer;
   }
 
+  .manage-repository-consumed-stock-value-link {
+    color: $color-volcano;
+  }
+
   .empty-stock-render,
   .consumption-locked {
     color: $color-silver-chalice;
   }
+
+  .row-stock,
+  .row-consumption {
+    min-width: 140px;
+  }
+
 
   // DateTime
   .datetime-container {

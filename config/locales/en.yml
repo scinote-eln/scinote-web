@@ -1011,7 +1011,7 @@ en:
         enter_comment: 'Enter a comment'
       stock_warning_modal:
         title: 'Out of stock!'
-        description: 'By consuming %{value} you will use more than you currently have in stock. This will result in negative stock.'
+        description_html: 'By consuming <strong>%{value}</strong> you will use more than you currently have in stock. This will result in negative stock.'
         consume_anyway: 'Consume anyway'
       flash:
         assign_to_task_html: "Successfully assigned <strong>%{assigned_items}</strong> item(s) to the task."
