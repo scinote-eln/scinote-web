@@ -4,6 +4,10 @@ require 'rails_helper'
 
 RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
   before :all do
+    ApplicationSettings.instance.update(
+      values: ApplicationSettings.instance.values.merge({"stock_management_enabled" => true})
+    )
+
     @user = create(:user)
     @teams = create_list(:team, 2, created_by: @user)
     create(:user_team, user: @user, team: @teams.first, role: 2)
@@ -430,7 +434,7 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
         team_id: @teams.first.id,
         inventory_id: @teams.first.repositories.second.id
       ), headers: @valid_headers
-      expect(response).to have_http_status(405)
+      expect(response).to have_http_status(400)
       expect(RepositoryColumn.where(id: deleted_id)).to exist
     end
   end
