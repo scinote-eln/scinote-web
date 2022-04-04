@@ -74,7 +74,7 @@ function initReminderDropdown(table) {
     let screenHeight = screen.height;
     let rowPosition = row[0].getBoundingClientRect().y;
     let dropdownMenu = $(this).find('.dropdown-menu');
-    if ((screenHeight / 2) < rowPosition) {
+    if ((screenHeight / 2) < rowPosition && $('.repository-show').length) {
       dropdownMenu.css({ top: 'unset', bottom: '100%' });
     } else {
       dropdownMenu.css({ bottom: 'unset', top: '100%' });
