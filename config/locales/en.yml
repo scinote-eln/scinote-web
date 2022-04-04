@@ -1867,6 +1867,8 @@ en:
       title: "This item is assigned to %{nr} tasks."
       private_tasks: "%{nr} task(s) are private and will not be displayed."
       no_tasks: "This item in not assigned to any task."
+      amount: "Amount: %{value}"
+      unit: "Unit: %{unit}"
     modal_print_label:
       head_title: "Print label - %{repository_row}"
       head_title_multiple: "Print label - %{repository_rows} rows"
