@@ -19,8 +19,10 @@ class MyModuleRepositoriesController < ApplicationController
     @datatable_params = {
       view_mode: params[:view_mode],
       my_module: @my_module,
-      include_stock_consumption: @repository.has_stock_management? && params[:assigned]
+      include_stock_consumption: @repository.has_stock_management? && params[:assigned].present?,
+      disable_stock_management: true # stock management is always disabled in MyModule context
     }
+
     @all_rows_count = datatable_service.all_count
     @columns_mappings = datatable_service.mappings
 
