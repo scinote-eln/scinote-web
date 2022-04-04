@@ -49,6 +49,7 @@
   }
 
   .repository-stock-reminder-selector {
+    @include font-button;
     align-items: center;
     display: flex;
     margin-bottom: 1.25em;
@@ -59,6 +60,7 @@
   }
 
   .repository-stock-reminder-value {
+    @include font-button;
     align-items: center;
     display: flex;
     margin-bottom: 1.25em;

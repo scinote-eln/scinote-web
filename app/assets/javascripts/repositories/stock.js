@@ -59,15 +59,12 @@ var RepositoryStockValues = (function() {
 
             switch ($(this).data('operator')) {
               case 'set':
-                $stockInput.val($stockInput.data('currentAmount'));
                 dropdownSelector.enableSelector(UNIT_SELECTOR);
                 break;
               case 'add':
-                $stockInput.val('');
                 dropdownSelector.disableSelector(UNIT_SELECTOR);
                 break;
               case 'remove':
-                $stockInput.val('');
                 dropdownSelector.disableSelector(UNIT_SELECTOR);
                 break;
               default:
