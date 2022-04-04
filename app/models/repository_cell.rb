@@ -94,8 +94,6 @@ class RepositoryCell < ApplicationRecord
   end
 
   def prevent_stock_cell_destroy
-    if value.class.name == 'RepositoryStockValue'
-      raise NotImplementedError
-    end
+    raise NotImplementedError if value.class.name == 'RepositoryStockValue'
   end
 end
