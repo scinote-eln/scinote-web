@@ -42,6 +42,7 @@
               <input id="stock-input-amount"
                      class="sci-input-field"
                      type="text"
+                     autocomplete="off"
                      name="input-amount"
                      data-operator="set"
                      tabindex="1"
@@ -95,6 +96,7 @@
           <span><%= t('repository_stock_values.manage_modal.reminder_at') %></span>
           <div class="sci-input-container" data-error-text="<%= t('repository_stock_values.manage_modal.enter_ammount') %>">
             <input type="text"
+                   autocomplete="off"
                    id="low_stock_threshold"
                    name="repository_stock_value[low_stock_threshold]"
                    value="<%= repository_stock_value.formatted_treshold %>"
