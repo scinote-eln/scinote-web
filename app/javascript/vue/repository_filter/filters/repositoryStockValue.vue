@@ -96,6 +96,14 @@
       }
 
     },
+    created() {
+      if (this.parameters) {
+        this.value = this.parameters.value || ''
+        this.from = this.parameters.from || ''
+        this.to = this.parameters.to || ''
+        this.stock_unit = this.parameters.stock_unit || 'all'
+      }
+    },
     watch: {
       stock_unit() {
         this.parameters.stock_unit = this.stock_unit

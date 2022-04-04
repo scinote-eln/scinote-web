@@ -54,7 +54,7 @@ module RepositoryDatatableHelper
       end
 
       stock_present = record.repository_stock_cell.present?
-      stock_managable = !options[:include_stock_consumption] && can_manage_repository_rows?(record.repository)
+      stock_managable = !options[:disable_stock_management] && can_manage_repository_stock?(record.repository)
 
       # always add stock cell, even if empty
       row['stock'] = stock_present ? display_cell_value(record.repository_stock_cell, team) : {}
@@ -241,15 +241,20 @@ module RepositoryDatatableHelper
   end
 
   def repository_reminder_row_ids(repository_rows, repository)
+    # don't load reminders if the stock management feature is disabled
+    return [] unless RepositoryBase.stock_management_enabled?
+
     # don't load reminders for archived repositories
     return [] if repository_rows.blank? || repository.archived?
 
-    repository_rows.with_active_reminders(current_user).pluck(:id).uniq
+    repository_rows.active.with_active_reminders(current_user).to_a.pluck(:id).uniq
   end
 
   def stock_consumption_managable?(record, repository, my_module)
     return false unless my_module
+    return false unless record.repository.is_a?(Repository)
+    return false if repository.archived? || record.archived?
 
-    record.repository.is_a?(Repository) && !repository.archived? && can_update_my_module_stock_consumption?(my_module)
+    can_update_my_module_stock_consumption?(my_module)
   end
 end

@@ -107,24 +107,28 @@ module ApplicationHelper
     UserNotification.create(notification: notification, user: target_user) if target_user.assignments_notification
   end
 
-  def smart_annotation_parser(text, team = nil, base64_encoded_imgs = false)
+  def custom_link_open_new_tab(text)
+    text.gsub(/\<a /, '<a target=_blank ')
+  end
+
+  def smart_annotation_parser(text, team = nil, base64_encoded_imgs = false, preview_repository = false)
     # sometimes happens that the "team" param gets wrong data: "{nil, []}"
     # so we have to check if the "team" param is kind of Team object
     team = nil unless team.is_a? Team
-    new_text = smart_annotation_filter_resources(text, team)
+    new_text = smart_annotation_filter_resources(text, team, preview_repository)
     new_text = smart_annotation_filter_users(new_text, team, base64_encoded_imgs)
     new_text
   end
 
   # Check if text have smart annotations of resources
   # and outputs a link to resource
-  def smart_annotation_filter_resources(text, team)
+  def smart_annotation_filter_resources(text, team, preview_repository = false)
     user = if !defined?(current_user) && @user
              @user
            else
              current_user
            end
-    SmartAnnotations::TagToHtml.new(user, team, text).html
+    SmartAnnotations::TagToHtml.new(user, team, text, preview_repository).html
   end
 
   # Check if text have smart annotations of users

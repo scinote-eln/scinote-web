@@ -75,22 +75,20 @@ var MyModuleRepositories = (function() {
     }
 
     customColumns.each((i, column) => {
-      if (!$(column).hasClass('item-stock')) {
-        columns.push({
-          visible: true,
-          searchable: true,
-          data: String(columns.length),
-          defaultContent: $.fn.dataTable.render['default' + column.dataset.type](column.id)
-        });
-      }
+      columns.push({
+        visible: true,
+        searchable: true,
+        data: column.dataset.type === 'RepositoryStockValue' ? 'stock' : String(columns.length),
+        defaultContent: $.fn.dataTable.render['default' + column.dataset.type](column.id)
+      });
     });
 
-    if ($(tableContainer).data('stock-management')) {
-      columns = columns.concat(
-        stockManagementColumns(
-          $(tableContainer).data('stock-consumption-column')
-        )
-      );
+    if ($(tableContainer).data('stock-consumption-column')) {
+      columns.push({
+        visible: true,
+        searchable: false,
+        data: 'consumedStock'
+      });
     }
 
     return columns;

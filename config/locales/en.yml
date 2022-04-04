@@ -1011,7 +1011,7 @@ en:
         enter_comment: 'Enter a comment'
       stock_warning_modal:
         title: 'Out of stock!'
-        description: 'By consuming %{value} you will use more than you currently have in stock. This will result in negative stock.'
+        description_html: 'By consuming <strong>%{value}</strong> you will use more than you currently have in stock. This will result in negative stock.'
         consume_anyway: 'Consume anyway'
       flash:
         assign_to_task_html: "Successfully assigned <strong>%{assigned_items}</strong> item(s) to the task."
@@ -1046,6 +1046,9 @@ en:
         hidden_tasks: "No permission: There are %{size} tasks you can’t assign to."
         task: 'Assign to task'
         task_and_downstream: 'Assign to task & downstream'
+      snapshot_error:
+        title: "Cannot change status"
+        body_html: "The task cannot be moved to the next status because the <strong>%{repository}</strong> inventory snapshot failed to generate. Please contact support if this problem persists."
     modules_list_partial:
       private_tasks_html: 'Assigned to <strong>%{nr}</strong> private task(s)'
       no_results:
@@ -1628,6 +1631,7 @@ en:
     restore_record: "Restore"
     save_record: "Save"
     cancel_save: "Cancel"
+    hide_reminders: "Clear all reminders"
     assign_records_to_module: "Assign to task"
     update_records_to_module: "Update task"
     unassign_records_from_module: "Unassign"
@@ -1703,6 +1707,7 @@ en:
   repository_stock_values:
     manage_modal:
       title: "Stock %{item}"
+      edit_title: "Edit %{item} stock"
       save_stock: "Save stock"
       enter_amount: "Enter the amount and unit of the item you wish to stock."
       operation: "Operation"
@@ -1716,7 +1721,7 @@ en:
       unit_prompt: "Select unit"
       unit_error: "Select a unit"
       comment: "Comment (optional)"
-      comment_placeholder: "Enter comment"
+      comment_placeholder: "Enter a comment"
       current_stock: "Current stock"
       new_stock: "New stock"
       comment_limit: "Maximum number of characters reached (255)"
@@ -1731,6 +1736,8 @@ en:
       add_column: "Add column"
     manange_modal_column:
       name_placeholder: "Enter column name..."
+      empty_name_error: "Colmun must have a name."
+      value_too_high_error: "Too high (max %{max_value})"
       name: "Name"
       colum_type: "Column type"
       dropdown_item_descirption: "Dropdown items should be separated by comma."
@@ -1797,10 +1804,13 @@ en:
         all_options: 'All options'
         stock_units: 'Stock units'
         units_description: 'These units will appear when managing your stock. You can always add, remove or rename them in the list.'
-        add_stock: 'Add stock'
+        add_stock: 'Set stock'
         add_stock_consumption: 'Consume'
         stock_consumption_locked: "Can't consume"
         no_item_stock: 'No item stock'
+        textarea_placeholder_html: 'Enter your preferred units in separate rows&#10;Just&#10;Like&#10;This'
+        units_changing_warning: 'Careful: Changing units will remove previously selected units'
+        empty_units_error: 'Enter at least one unit.'
       checklist_type:
         multiple_options: 'selected'
         all_options: 'All options'
@@ -1842,7 +1852,7 @@ en:
         active: Show active inventories
         archived: Show archived inventories
       buttons:
-        edit: "Edit"
+        edit: "Rename"
         duplicate: "Duplicate"
         archive: "Archive"
         restore: "Restore"
@@ -1861,6 +1871,8 @@ en:
       title: "This item is assigned to %{nr} tasks."
       private_tasks: "%{nr} task(s) are private and will not be displayed."
       no_tasks: "This item in not assigned to any task."
+      amount: "Amount: %{value}"
+      unit: "Unit: %{unit}"
     modal_print_label:
       head_title: "Print label - %{repository_row}"
       head_title_multiple: "Print label - %{repository_rows} rows"
@@ -2857,6 +2869,7 @@ en:
     edit: "Edit"
     delete: "Delete"
     cancel: "Cancel"
+    okay: "Okay"
     back: "Back"
     close: "Close"
     create: 'Create'
@@ -2958,6 +2971,9 @@ en:
         read_users_permission:
           title: "Permission denied"
           detail: "You don't have permission to read users on %{model}"
+        update_stock_consumption_permission:
+          title: "Permission denied"
+          detail: "You don't have permisson to update stock consumption on this task item."
         record_not_found:
           title: "Not found"
           detail: "%{model} record with id %{id} not found in the specified scope"

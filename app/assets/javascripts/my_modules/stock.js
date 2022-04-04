@@ -52,8 +52,8 @@ var MyModuleStockConsumption = (function() {
               $(WARNING_MODAL).modal('show');
               let units = $(CONSUMPTION_MODAL).find('.consumption-container .units').text();
               let value = $('#stock_consumption').val();
-              $(WARNING_MODAL).find('.modal-body p').text(
-                I18n.t('my_modules.repository.stock_warning_modal.description', { value: `${value} ${units}` })
+              $(WARNING_MODAL).find('.modal-body p').html(
+                I18n.t('my_modules.repository.stock_warning_modal.description_html', { value: `${value} ${units}` })
               );
             }
           });

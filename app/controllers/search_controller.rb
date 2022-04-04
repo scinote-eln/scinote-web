@@ -103,6 +103,7 @@ class SearchController < ApplicationController
                  match_case: @search_case,
                  whole_word: @search_whole_word,
                  whole_phrase: @search_whole_phrase)
+         .order(created_at: :desc)
   end
 
   def count_by_name(model)

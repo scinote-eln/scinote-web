@@ -10,6 +10,8 @@ class MyModule < ApplicationRecord
   include PermissionCheckableModel
   include Assignable
 
+  attr_accessor :transition_error_rollback
+
   enum state: Extends::TASKS_STATES
 
   before_validation :archiving_and_restoring_extras, on: :update, if: :archived_changed?
@@ -493,16 +495,11 @@ class MyModule < ApplicationRecord
     yield
 
     if my_module_status.my_module_status_consequences.any?(&:runs_in_background?)
-      MyModuleStatusConsequencesJob.perform_later(
-        self,
-        my_module_status.my_module_status_consequences.to_a,
-        status_changing_direction
-      )
+      MyModuleStatusConsequencesJob
+        .perform_later(self, my_module_status.my_module_status_consequences.to_a, status_changing_direction)
     else
-      my_module_status.my_module_status_consequences.each do |consequence|
-        consequence.public_send(status_changing_direction, self)
-      end
-      update!(status_changing: false)
+      MyModuleStatusConsequencesJob
+        .perform_now(self, my_module_status.my_module_status_consequences.to_a, status_changing_direction)
     end
   end
 

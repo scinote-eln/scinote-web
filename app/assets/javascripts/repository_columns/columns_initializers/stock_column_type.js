@@ -10,8 +10,9 @@ var RepositoryStockColumnType = (function() {
   function initStockUnitDropdown() {
     dropdownSelector.init(previewContainer + ' .preview-select', {
       noEmptyOption: true,
-      optionClass: 'checkbox-icon',
-      selectAppearance: 'simple'
+      singleSelect: true,
+      selectAppearance: 'simple',
+      closeOnSelect: true
     });
   }
 
@@ -28,9 +29,9 @@ var RepositoryStockColumnType = (function() {
           itemsTextarea,
           delimiterDropdown,
           dropdownOptions,
-          GLOBAL_CONSTANTS.REPOSITORY_STOCK_UNIT_ITEMS_PER_COLUMN
+          GLOBAL_CONSTANTS.REPOSITORY_LIST_ITEMS_PER_COLUMN
         );
-        $('.changing-existing-list-items-warning').removeClass('hidden');
+        $('.changing-existing-stock-units-warning').removeClass('hidden');
         initStockUnitDropdown();
       })
       .on('columnModal::partialLoadedForRepositoryStockValue', function() {
@@ -52,13 +53,20 @@ var RepositoryStockColumnType = (function() {
     checkValidation: () => {
       var $manageModal = $(manageModal);
       var count = $manageModal.find('.items-count').attr('data-count');
+      if ($manageModal.find('.stock-column-type .items-textarea').val().length) {
+        $manageModal.find('.stock-column-type .items-textarea').parent().removeClass('error');
+      } else {
+        $manageModal.find('.stock-column-type .items-textarea').parent().addClass('error');
+        return false;
+      }
       return count <= GLOBAL_CONSTANTS.REPOSITORY_STOCK_UNIT_ITEMS_PER_COLUMN;
     },
     loadParams: () => {
       var repositoryColumnParams = {};
       var options = JSON.parse($(dropdownOptions).val());
+      var decimals = $('.stock-column-type #decimals').val();
       repositoryColumnParams.repository_stock_unit_items_attributes = options;
-      repositoryColumnParams.metadata = { delimiter: '\\n' };
+      repositoryColumnParams.metadata = { decimals: decimals };
       return repositoryColumnParams;
     },
     initStockUnitDropdown: () => {

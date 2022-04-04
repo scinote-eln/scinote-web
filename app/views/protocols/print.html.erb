@@ -35,7 +35,8 @@
           <%= custom_auto_link(step.tinymce_render(:description),
                                 simple_format: false,
                                 tags: %w(img),
-                                team: current_team) %>
+                                team: current_team,
+                                preview_repository: true) %>
         </div>
       <% end %>
     </div>
@@ -59,12 +60,12 @@
     <% end %>
 
     <% step.tables.each do |table| %>
-      <strong>
-        <%= auto_link(simple_format(table.name),
-                            link: :urls,
-                            html: { target: '_blank' }) %>
-      </strong>
       <div class="print-table">
+        <strong>
+          <%= auto_link(simple_format(table.name),
+                              link: :urls,
+                              html: { target: '_blank' }) %>
+        </strong>
         <div class="page-break"></div>
         <div data-role="hot-table" class="hot-table">
           <%= hidden_field(table, :contents, value: table.contents_utf_8, class: "hot-contents") %>

@@ -23,6 +23,16 @@
         </button>
       <% end %>
       <%= render partial: 'repositories/toolbar/row_actions' %>
+      <% if @repository.repository_rows.with_active_reminders(current_user).any? %>
+        <button type="button" title="<%= t("repositories.hide_reminders") %>"
+                class="btn btn-light auto-shrink-button"
+                id="hideRepositoryReminders"
+                data-view-mode="active"
+                data-hide-reminders-url="<%= team_repository_hide_reminders_url(@current_team, @repository) %>">
+          <span class="fas fa-bell-slash"></span>
+          <span class="button-text"><%= t("repositories.hide_reminders") %></span>
+        </button>
+      <% end %>
     <% end %>
     <div class="archived-label" data-view-mode="archived">
       <%= render partial: 'repositories/toolbar/archive_label' %>
@@ -36,12 +46,12 @@
 
   <!-- RIGHT TOOLBAR BLOCK -->
   <div class="toolbar-right-block">
-    <div class="toolbar-search"></div>
     <div class="toolbar-filters"></div>
     <% if @repository.is_a?(BmtRepository) %>
       <div class="toolbar-bmt-filters">
         <%= render partial: 'repositories/toolbar/bmt' %>
       </div>
     <% end %>
+    <div class="toolbar-search"></div>
   </div>
 </template>
