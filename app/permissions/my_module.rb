@@ -157,7 +157,7 @@ Canaid::Permissions.register_for(MyModule) do
 
   can :update_my_module_stock_consumption do |user, my_module|
     my_module.permission_granted?(user, MyModulePermissions::STOCK_CONSUMPTION_UPDATE) &&
-    RepositoryStockValue.enabled?
+      RepositoryBase.stock_management_enabled?
   end
 end
 

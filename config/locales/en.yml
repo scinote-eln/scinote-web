@@ -1011,7 +1011,7 @@ en:
         enter_comment: 'Enter a comment'
       stock_warning_modal:
         title: 'Out of stock!'
-        description: 'By consuming %{value} you will use more than you currently have in stock. This will result in negative stock.'
+        description_html: 'By consuming <strong>%{value}</strong> you will use more than you currently have in stock. This will result in negative stock.'
         consume_anyway: 'Consume anyway'
       flash:
         assign_to_task_html: "Successfully assigned <strong>%{assigned_items}</strong> item(s) to the task."
@@ -1046,6 +1046,9 @@ en:
         hidden_tasks: "No permission: There are %{size} tasks you can’t assign to."
         task: 'Assign to task'
         task_and_downstream: 'Assign to task & downstream'
+      snapshot_error:
+        title: "Cannot change status"
+        body_html: "The task cannot be moved to the next status because the <strong>%{repository}</strong> inventory snapshot failed to generate. Please contact support if this problem persists."
     modules_list_partial:
       private_tasks_html: 'Assigned to <strong>%{nr}</strong> private task(s)'
       no_results:
@@ -1734,6 +1737,7 @@ en:
     manange_modal_column:
       name_placeholder: "Enter column name..."
       empty_name_error: "Column must have a name."
+      value_too_high_error: "Too high (max %{max_value})"
       name: "Name"
       colum_type: "Column type"
       dropdown_item_descirption: "Dropdown items should be separated by comma."
@@ -1867,6 +1871,8 @@ en:
       title: "This item is assigned to %{nr} tasks."
       private_tasks: "%{nr} task(s) are private and will not be displayed."
       no_tasks: "This item in not assigned to any task."
+      amount: "Amount: %{value}"
+      unit: "Unit: %{unit}"
     modal_print_label:
       head_title: "Print label - %{repository_row}"
       head_title_multiple: "Print label - %{repository_rows} rows"
@@ -2863,6 +2869,7 @@ en:
     edit: "Edit"
     delete: "Delete"
     cancel: "Cancel"
+    okay: "Okay"
     back: "Back"
     close: "Close"
     create: 'Create'

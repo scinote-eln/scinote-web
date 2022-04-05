@@ -27,14 +27,19 @@
     <%= t('libraries.manange_modal_column.datetime_type.remind') %>
   </label>
   <div class="col-sm-9 reminder-data-container">
-    <div class="sci-input-container reminder-value-container">
-      <input type="number" class="sci-input-field reminder-value" placeholder="<%= t('libraries.manange_modal_column.datetime_type.enter_amount') %>" value="<%= column&.metadata['reminder_value'] %>">
+    <div class="sci-input-container reminder-value-container" data-error-text="<%= t('libraries.manange_modal_column.value_too_high_error', max_value: Constants::MAX_NUMBER_OF_REMINDER_WEEKS) %>">
+      <input
+        type="text" class="sci-input-field reminder-value"
+        placeholder="<%= t('libraries.manange_modal_column.datetime_type.enter_amount') %>"
+        data-max="<%= Constants::MAX_NUMBER_OF_REMINDER_WEEKS %>"
+        value="<%= column&.metadata['reminder_value'] %>"
+      >
     </div>
     <%= select_tag "reminder-unit", options_for_select(
       [
         [t('libraries.manange_modal_column.datetime_type.days'), 60 * 60 * 24],
         [t('libraries.manange_modal_column.datetime_type.weeks'), 60 * 60 * 24 * 7],
-        [t('libraries.manange_modal_column.datetime_type.months'), 60 * 60 * 24 * 30]
+        [t('libraries.manange_modal_column.datetime_type.months'), 60 * 60 * 24 * 28]
       ],
       column&.metadata['reminder_unit'].to_i
     ), { class: 'reminder-unit' } %>
@@ -49,6 +54,7 @@
     <div class="sci-input-container">
       <input type="text" class="sci-input-field reminder-message"
              placeholder="<%= t('libraries.manange_modal_column.datetime_type.enter_reminder_message')%>"
+             maxlength="<%= Constants::NAME_MAX_LENGTH %>"
              value="<%= column&.metadata['reminder_message'] %>">
     </div>
   </div>

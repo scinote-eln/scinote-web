@@ -10,6 +10,8 @@ class MyModule < ApplicationRecord
   include PermissionCheckableModel
   include Assignable
 
+  attr_accessor :transition_error_rollback
+
   enum state: Extends::TASKS_STATES
 
   before_validation :archiving_and_restoring_extras, on: :update, if: :archived_changed?
