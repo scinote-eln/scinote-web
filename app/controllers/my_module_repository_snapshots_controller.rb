@@ -52,6 +52,7 @@ class MyModuleRepositorySnapshotsController < ApplicationController
 
   def show
     render json: {
+      repository_id: @repository_snapshot.parent_id,
       html: render_to_string(partial: 'my_modules/repositories/full_view_version',
                              locals: { repository_snapshot: @repository_snapshot,
                                        can_delete_snapshot: can_manage_my_module_repository_snapshots?(@my_module) })
