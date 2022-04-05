@@ -446,8 +446,12 @@
           opacity: .5;
         }
 
-        .fa-exclamation-triangle {
+
+        .list-group-item-heading::before {
+          @include font-awesome;
+          content: $font-fas-exclamation-triangle;
           color: $brand-danger;
+          display: inline-block;
           vertical-align: text-top;
         }
       }
