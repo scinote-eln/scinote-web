@@ -8,14 +8,17 @@
     .changing-existing-stock-units-warning {
       @include font-small;
       background-color: $brand-warning-light;
+      border-radius: $border-radius-default;
       padding: .5em;
+      margin-top: .5em;
+      width: 100%;
     }
 
     .sci-input-container.error {
       margin-bottom: 3em;
 
       .changing-existing-stock-units-warning {
-        bottom: -3.5em;
+        bottom: -2.5em;
         position: absolute;
       }
 
