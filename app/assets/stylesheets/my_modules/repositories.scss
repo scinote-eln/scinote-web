@@ -345,6 +345,10 @@
     grid-area: sidebar;
     overflow: hidden;
 
+    .list-group-item-heading {
+      font-weight: normal;
+    }
+
     .sidebar-collapse-button {
       color: $color-volcano;
       text-decoration: none;
@@ -420,6 +424,35 @@
 
         &:hover {
           background-color: $color-concrete;
+        }
+      }
+
+      &.failed {
+        background-color: $brand-danger-light;
+
+        &:hover {
+          background-color: $brand-danger-light;
+
+          .fa-trash {
+            opacity: 1;
+          }
+        }
+
+        .delete-snapshot-button {
+          display: block;
+        }
+
+        .fa-trash {
+          opacity: .5;
+        }
+
+
+        .list-group-item-heading::before {
+          @include font-awesome;
+          content: $font-fas-exclamation-triangle;
+          color: $brand-danger;
+          display: inline-block;
+          vertical-align: text-top;
         }
       }
 

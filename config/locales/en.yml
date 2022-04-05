@@ -1325,6 +1325,7 @@ en:
 
   repositories:
     repository: "Inventory: %{name}"
+    snapshot_failed: "Snapshot failed"
     icon_title:
       i_shared: "Shared inventory (owned by your Team)"
       shared_edit: "Shared inventory (owned by %{team_name}). You can edit."
