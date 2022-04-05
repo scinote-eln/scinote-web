@@ -10,7 +10,7 @@ describe RepositoryCell, type: :model do
   let(:repository_cell_a) { build :repository_cell, :asset_value }
   let(:repository_cell_s) { build :repository_cell, :status_value }
   let(:repository_cell_d_r) { build :repository_cell, :date_time_range_value }
-  let(:repository_cell_s_v) { build :repository_cell, :repository_stock_value }
+  let(:repository_cell_s_v) { build :repository_cell, :stock_value }
 
   context 'when do not have value' do
     it 'is not valid' do

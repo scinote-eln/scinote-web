@@ -3,11 +3,17 @@
 require 'rails_helper'
 
 describe RepositoryStockValuesController, type: :controller do
+  before :all do
+    ApplicationSettings.instance.update(
+      values: ApplicationSettings.instance.values.merge({"stock_management_enabled" => true})
+    )
+  end
+
   login_user
   let!(:user) { controller.current_user }
   let!(:team) { create :team, created_by: user }
   let!(:user_team) { create :user_team, :admin, team: team, user: user }
-  let!(:repository) { create :repository, team: team, created_by: user}
+  let!(:repository) { create :repository, team: team, created_by: user }
   let(:repository_column) do
     create :repository_column, :stock_type, created_by: user, repository: repository
   end

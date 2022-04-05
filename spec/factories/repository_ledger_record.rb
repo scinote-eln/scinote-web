@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :repository_ledger_record do
     repository_stock_value
-    association :reference, factory: :repository
+    association :reference, factory: :repository_row
     user
   end
 end
