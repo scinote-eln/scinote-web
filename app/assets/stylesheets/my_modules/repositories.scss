@@ -210,7 +210,7 @@
         }
       }
 
-      .manage-repository-consumed-stock-value-link {
+      .manage-repository-consumed-stock-value-link:not(.stock-value-view-render) {
         color: $color-volcano;
       }
 
