@@ -32,7 +32,7 @@
         type="text" class="sci-input-field reminder-value"
         placeholder="<%= t('libraries.manange_modal_column.datetime_type.enter_amount') %>"
         data-max="<%= Constants::MAX_NUMBER_OF_REMINDER_WEEKS %>"
-        value="<%= column&.metadata['reminder_value'] %>"
+        value="<%= column&.metadata['reminder_value'] || Constants::REPOSITORY_DATETIME_REMINDER_PRESET %>"
       >
     </div>
     <%= select_tag "reminder-unit", options_for_select(
