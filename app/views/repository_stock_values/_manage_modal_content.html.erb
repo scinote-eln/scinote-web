@@ -49,7 +49,7 @@
                      data-current-amount="<%= repository_stock_value.amount %>"
                      data-decimals="<%= repository_stock_column.metadata['decimals'] %>"
                      value="<%= repository_stock_value.formatted_value %>"
-                     placeholder="<%= t('repository_stock_values.manage_modal.amount_placeholder') %>"
+                     placeholder="<%= t("repository_stock_values.manage_modal.amount_placeholder#{repository_stock_value.new_record? ? '_new' : ''}") %>"
                      required />
             </div>
           </div>
@@ -105,6 +105,8 @@
                    tabindex="5"
                    placeholder="Enter amount"/>
           </div>
+          <span class="units">
+          </span>
         </div>
       </div>
     </div>

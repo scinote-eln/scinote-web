@@ -228,12 +228,6 @@
 
   // Stock
   .stock-value-view-render {
-
-
-    &:hover {
-      text-decoration: none;
-    };
-
     &.stock-alert {
       color: $brand-danger;
 

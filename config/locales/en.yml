@@ -1717,6 +1717,7 @@ en:
       set: "Set to"
       amount: "Amount"
       amount_placeholder: "Enter amount"
+      amount_placeholder_new: "100, 2000, ..."
       amount_error: "Enter an amount"
       unit: "Unit"
       unit_prompt: "Select unit"
