@@ -44,10 +44,13 @@ module Dashboard
       end
 
       page = (params[:page] || 1).to_i
-      tasks = tasks.search_by_name(current_user, current_team, task_filters[:query])
-                   .joins(:my_module_status)
-                   .select('my_modules.*', 'my_module_statuses.name as status_name', 'my_module_statuses.color as status_color')
-                   .preload(experiment: :project).page(page).per(Constants::INFINITE_SCROLL_LIMIT)
+      tasks = tasks.search_by_name(current_user, current_team, task_filters[:query]) if task_filters[:query].present?
+      tasks = tasks.joins(:my_module_status)
+                   .select(
+                     'my_modules.*',
+                     'my_module_statuses.name AS status_name',
+                     'my_module_statuses.color AS status_color'
+                   ).preload(experiment: :project).page(page).per(Constants::INFINITE_SCROLL_LIMIT)
 
       tasks_list = tasks.map do |task|
         render_to_string(partial: 'dashboards/current_tasks/task', locals: { task: task })
