@@ -12,6 +12,7 @@
     .stock-final-container {
       align-items: center;
       background: $color-concrete;
+      border-radius: $border-radius-modal;
       display: flex;
       flex-direction: column;
       flex-grow: 1;
