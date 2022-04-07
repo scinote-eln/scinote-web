@@ -39,6 +39,7 @@ class ProjectsController < ApplicationController
     if filters_included?
       render json: {
         toolbar_html: render_to_string(partial: 'projects/index/toolbar.html.erb'),
+        filtered: true,
         cards_html: render_to_string(
           partial: 'projects/index/team_projects_grouped_by_folder.html.erb',
           locals: { projects_by_folder: overview_service.grouped_by_folder_project_cards }
@@ -63,14 +64,18 @@ class ProjectsController < ApplicationController
         projects_cards_url = cards_projects_url
       end
 
+      cards = Kaminari.paginate_array(overview_service.project_and_folder_cards)
+                      .page(params[:page] || 1).per(20)
+
       render json: {
         projects_cards_url: projects_cards_url,
         breadcrumbs_html: breadcrumbs_html,
         title: title,
+        next_page: cards.next_page,
         toolbar_html: render_to_string(partial: 'projects/index/toolbar.html.erb'),
         cards_html: render_to_string(
           partial: 'projects/index/team_projects.html.erb',
-          locals: { cards: overview_service.project_and_folder_cards }
+          locals: { cards: cards }
         )
       }
     end

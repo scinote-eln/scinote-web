@@ -38,4 +38,23 @@
   </div>
 </div>
 
+<template id="projectPlaceholder">
+  <div class="project-placeholder card">
+    <% 4.times do |i| %>
+      <div class="placeholder-element line-<%= i %>"></div>
+    <% end %>
+    <% 3.times do |i| %>
+      <div class="placeholder-element circle circle-<%= i %>"></div>
+    <% end %>
+  </div>
+</template>
+
+<template id="projectEndOfList">
+  <div class="project-list-end-placeholder">
+    <i class="fas fa-flag-checkered"></i>
+    <span><%= t('.end_of_list_placeholder') %></span>
+    <i class="fas fa-flag-checkered"></i>
+  </div>
+</template>
+
 <%= javascript_include_tag "projects/index" %>
