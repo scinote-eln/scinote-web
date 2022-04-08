@@ -50,14 +50,14 @@ module RepositoryDatatableHelper
 
       custom_cells.each do |cell|
         row[columns_mappings[cell.repository_column.id]] =
-          display_cell_value(cell, team)
+          display_cell_value(cell, team, repository)
       end
 
       stock_present = record.repository_stock_cell.present?
       stock_managable = !options[:disable_stock_management] && can_manage_repository_stock?(record.repository)
 
       # always add stock cell, even if empty
-      row['stock'] = stock_present ? display_cell_value(record.repository_stock_cell, team) : {}
+      row['stock'] = stock_present ? display_cell_value(record.repository_stock_cell, team, repository) : {}
       row['stock'][:stock_managable] = stock_managable
       row['stock']['value_type'] = 'RepositoryStockValue'
 
@@ -109,12 +109,12 @@ module RepositoryDatatableHelper
 
         consumption_managable = stock_consumption_managable?(record, repository, my_module)
 
-        row['stock'] = stock_present ? display_cell_value(record.repository_stock_cell, record.repository.team) : {}
+        row['stock'] = stock_present ? display_cell_value(record.repository_stock_cell, record.repository.team, repository) : {}
         row['stock'][:stock_managable] = stock_managable
         if record.repository.is_a?(RepositorySnapshot)
           row['consumedStock'] =
             if record.repository_stock_consumption_value.present?
-              display_cell_value(record.repository_stock_consumption_cell, record.repository.team)
+              display_cell_value(record.repository_stock_consumption_cell, record.repository.team, repository)
             else
               {}
             end
@@ -142,7 +142,7 @@ module RepositoryDatatableHelper
     end
   end
 
-  def prepare_snapshot_row_columns(repository_rows, columns_mappings, team, options = {})
+  def prepare_snapshot_row_columns(repository_rows, columns_mappings, team, repository_snapshot, options = {})
     repository_rows.map do |record|
       row = {
         'DT_RowId': record.id,
@@ -151,20 +151,20 @@ module RepositoryDatatableHelper
         '2': escape_input(record.name),
         '3': I18n.l(record.created_at, format: :full),
         '4': escape_input(record.created_by.full_name),
-        'recordInfoUrl': Rails.application.routes.url_helpers.repository_repository_row_path(record.repository, record)
+        'recordInfoUrl': Rails.application.routes.url_helpers.repository_repository_row_path(repository_snapshot, record)
       }
 
       # Add custom columns
       record.repository_cells.each do |cell|
-        row[columns_mappings[cell.repository_column.id]] = display_cell_value(cell, team)
+        row[columns_mappings[cell.repository_column.id]] = display_cell_value(cell, team, repository_snapshot)
       end
 
-      if options[:include_stock_consumption] && record.repository.has_stock_management?
+      if options[:include_stock_consumption] && repository_snapshot.has_stock_management?
         stock_present = record.repository_stock_cell.present?
-        row['stock'] = stock_present ? display_cell_value(record.repository_stock_cell, record.repository.team) : {}
+        row['stock'] = stock_present ? display_cell_value(record.repository_stock_cell, team, repository_snapshot) : {}
         row['consumedStock'] =
           if stock_present
-            display_cell_value(record.repository_stock_consumption_cell, record.repository.team)
+            display_cell_value(record.repository_stock_consumption_cell, team, repository_snapshot)
           else
             {}
           end
@@ -226,11 +226,16 @@ module RepositoryDatatableHelper
     }
   end
 
-  def display_cell_value(cell, team)
+  def display_cell_value(cell, team, repository)
     serializer_class = "RepositoryDatatable::#{cell.repository_column.data_type}Serializer".constantize
     serializer_class.new(
       cell.value,
-      scope: { team: team, user: current_user, column: cell.repository_column }
+      scope: {
+        team: team,
+        user: current_user,
+        column: cell.repository_column,
+        repository: repository
+      }
     ).serializable_hash
   end
 

@@ -9,7 +9,9 @@ module RepositoryDatatable
       }
 
       reminder_delta = scope[:column].metadata['reminder_delta']
-      data[:reminder] = DateTime.now.to_date + reminder_delta.to_i.seconds >= object.data if reminder_delta
+      if !scope[:repository].is_a?(RepositorySnapshot) && reminder_delta
+        data[:reminder] = DateTime.now.to_date + reminder_delta.to_i.seconds >= object.data
+      end
 
       data
     end
