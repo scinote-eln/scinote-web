@@ -45,7 +45,7 @@ var RepositoryStockValues = (function() {
           $manageModal.find('form').on('ajax:success', function() {
             var dataTable = $('.dataTable').DataTable();
             $manageModal.modal('hide');
-            dataTable.ajax.reload();
+            dataTable.ajax.reload(null, false);
           });
 
           $('.stock-operator-option').click(function() {
@@ -60,11 +60,14 @@ var RepositoryStockValues = (function() {
             switch ($(this).data('operator')) {
               case 'set':
                 dropdownSelector.enableSelector(UNIT_SELECTOR);
+                $stockInput.val($stockInput.data('currentAmount'));
                 break;
               case 'add':
+                $stockInput.val('');
                 dropdownSelector.disableSelector(UNIT_SELECTOR);
                 break;
               case 'remove':
+                $stockInput.val('');
                 dropdownSelector.disableSelector(UNIT_SELECTOR);
                 break;
               default:
@@ -114,7 +117,7 @@ var RepositoryStockValues = (function() {
             var inputAmount = parseFloat($(this).val());
             var newAmount;
 
-            if (!inputAmount) return;
+            if (!(inputAmount >= 0)) return;
 
             switch ($(this).data('operator')) {
               case 'set':
@@ -159,6 +162,8 @@ var RepositoryStockValues = (function() {
 
           $manageModal.modal('show');
           $('#stock-input-amount').focus();
+          $('#stock-input-amount')[0].selectionStart = $('#stock-input-amount')[0].value.length;
+          $('#stock-input-amount')[0].selectionEnd = $('#stock-input-amount')[0].value.length;
         }
       });
     });
