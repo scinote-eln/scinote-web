@@ -215,7 +215,7 @@
       }
 
       .row-stock,
-      .row-consumptio {
+      .row-consumption {
         min-width: 140px;
       }
     }
@@ -229,7 +229,9 @@
     }
 
     .assigned-column {
-      padding: 2px 8px;
+      padding-bottom: 2px;
+      padding-left: 8px;
+      padding-top: 2px;
       position: relative;
 
       .row-reminders-dropdown {

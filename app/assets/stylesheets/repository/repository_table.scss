@@ -128,11 +128,12 @@
   }
 
   .item-name {
-    padding: 1px 8px;
+    padding: 2px 8px;
 
     .row-reminders-dropdown {
       cursor: pointer;
       display: inline-block;
+      margin-right: 8px;
       padding: 8px;
 
       .fa-bell {
@@ -149,7 +150,7 @@
 
     .record-info-link {
       display: inline-block;
-      padding: 8px;
+      margin: 8px 0;
     }
   }
   // Added on
