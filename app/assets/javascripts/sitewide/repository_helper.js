@@ -66,7 +66,7 @@ function prepareRepositoryHeaderForExport(th) {
 function initReminderDropdown(table) {
   $(table).on('keyup', '.row-reminders-dropdown', function(e) {
     if (e.key === 'Escape') {
-      $(this).dropdown('toggle');
+      $(this).children('.dropdown-menu').dropdown('toggle');
     }
   });
   $(table).on('show.bs.dropdown', '.row-reminders-dropdown', function() {
@@ -85,8 +85,6 @@ function initReminderDropdown(table) {
       dataType: 'json',
       success: function(data) {
         dropdownMenu.html(data.html);
-
-        dropdownMenu.find('.row-reminders-footer')[0].focus();
       }
     });
   });

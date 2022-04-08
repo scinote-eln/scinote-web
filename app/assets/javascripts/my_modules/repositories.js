@@ -184,7 +184,8 @@ var MyModuleRepositories = (function() {
         var recordName = "<a href='" + row.recordInfoUrl + "'"
                          + "class='record-info-link'>" + data + '</a>';
         if (row.hasActiveReminders) {
-          recordName = `<div class="dropdown row-reminders-dropdown" data-row-reminders-url="${row.rowRemindersUrl}">
+          recordName = `<div class="dropdown row-reminders-dropdown" 
+                          data-row-reminders-url="${row.rowRemindersUrl}" tabindex='-1'>
                           <i class="fas fa-bell dropdown-toggle row-reminders-icon"
                              data-toggle="dropdown" id="rowReminders${row.DT_RowId}}"></i>
                           <ul class="dropdown-menu" role="menu" aria-labelledby="rowReminders${row.DT_RowId}">
