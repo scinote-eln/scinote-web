@@ -34,6 +34,8 @@ class RepositoryCell < ApplicationRecord
 
   has_many :hidden_repository_cell_reminders, dependent: :destroy
 
+  before_destroy :prevent_stock_cell_destroy
+
   validates :repository_column,
             inclusion: { in: (lambda do |repository_cell|
               repository_cell.repository_row&.repository&.repository_columns || []
@@ -58,6 +60,12 @@ class RepositoryCell < ApplicationRecord
                                                  last_modified_by: user)
       cell.value = value
       value.save!
+
+      if column.data_type == 'RepositoryStockValue'
+        value.update_stock_with_ledger!(value.amount,
+                                        value.repository_cell.repository_column.repository,
+                                        '')
+      end
     end
     cell
   end
@@ -83,5 +91,9 @@ class RepositoryCell < ApplicationRecord
     if !repository_column || value.class.name != repository_column.data_type
       errors.add(:value_type, 'must match column data type')
     end
+  end
+
+  def prevent_stock_cell_destroy
+    raise NotImplementedError if value.class.name == 'RepositoryStockValue'
   end
 end
