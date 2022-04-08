@@ -28,10 +28,8 @@ var MyModuleStockConsumption = (function() {
             let decimals = $(this).data('decimals');
             this.value = formatDecimalValue(String(this.value), decimals);
             let finalValue = initialValue - ($(this).val() || 0) + initialStock;
-
-            $('.stock-final-container .value').text(
-              formatDecimalValue(String(finalValue), $('#stock_consumption').data('decimals'))
-            );
+            $('.stock-final-container .value')
+              .text(formatDecimalValue(String(finalValue), $('#stock_consumption').data('decimals')));
             $('.stock-final-container').toggleClass('error', finalValue <= 0);
             $(this).closest('.sci-input-container').toggleClass('error', this.value === '');
             $('.update-consumption-button').attr('disabled', $(this).val() === '');
