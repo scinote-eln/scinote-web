@@ -38,6 +38,8 @@ class RepositoryColumn < ApplicationRecord
 
   after_create :update_repository_table_states_with_new_column
   after_update :clear_hidden_repository_cell_reminders
+
+  before_destroy :prevent_stock_column_destroy
   around_destroy :update_repository_table_states_with_removed_column
 
   scope :list_type, -> { where(data_type: 'RepositoryListValue') }
@@ -168,5 +170,9 @@ class RepositoryColumn < ApplicationRecord
     HiddenRepositoryCellReminder.joins(repository_cell: :repository_column)
                                 .where(repository_columns: { id: id })
                                 .delete_all
+  end
+
+  def prevent_stock_column_destroy
+    raise NotImplementedError unless deletable?
   end
 end

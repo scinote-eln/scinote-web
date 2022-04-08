@@ -720,6 +720,10 @@ Rails.application.routes.draw do
                           only: %i(index create show update destroy),
                           path: 'status_items',
                           as: :status_items
+                resources :inventory_stock_unit_items,
+                          only: %i(index create show update destroy),
+                          path: 'stock_unit_items',
+                          as: :stock_unit_items
               end
               resources :inventory_items,
                         only: %i(index create show update destroy),
