@@ -414,6 +414,14 @@ var MyModuleRepositories = (function() {
     $('#assigned-items-container').on('shown.bs.collapse', '.assigned-repository-container', function() {
       var repositoryContainer = $(this);
       var repositoryTable = repositoryContainer.find('.table');
+      var initializedTable = repositoryContainer.find('.dataTables_wrapper table');
+
+      // do not try to re-initialized already initialized table
+      if (initializedTable.length) {
+        initializedTable.DataTable().columns.adjust();
+        return;
+      }
+
       repositoryTable.attr('data-source', $(this).data('repository-url'));
       repositoryTable.attr('data-version-label', $(this).data('footer-label'));
       repositoryTable.attr('data-name-column-id', $(this).data('name-column-id'));
