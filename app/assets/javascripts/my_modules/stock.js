@@ -3,6 +3,11 @@ var MyModuleStockConsumption = (function() {
   const CONSUMPTION_MODAL = '#consumeRepositoryStockValueModal';
   const WARNING_MODAL = '#consumeRepositoryStockValueModalWarning';
 
+  function formatDecimalValue(value, decimals) {
+    let regexp = decimals === 0 ? /[^0-9-]/g : /[^0-9.-]/g;
+    return value.replace(regexp, '').match(new RegExp(`^-?\\d*(\\.\\d{0,${decimals}})?`))[0];
+  }
+
   function initManageAction() {
     $('.task-section').on('click', '.manage-repository-consumed-stock-value-link', function(e) {
       e.preventDefault();
@@ -17,12 +22,16 @@ var MyModuleStockConsumption = (function() {
           $('#stock_consumption').focus();
           SmartAnnotation.init($(CONSUMPTION_MODAL + ' #comment')[0]);
 
-          $('#stock_consumption').on('change', function() {
+          $('#stock_consumption').on('input', function() {
             let initialValue = parseFloat($(this).data('initial-value'));
             let initialStock = parseFloat($(this).data('initial-stock'));
+            let decimals = $(this).data('decimals');
+            this.value = formatDecimalValue(String(this.value), decimals);
             let finalValue = initialValue - ($(this).val() || 0) + initialStock;
-            $('.stock-final-container .value').text(finalValue);
+            $('.stock-final-container .value')
+              .text(formatDecimalValue(String(finalValue), $('#stock_consumption').data('decimals')));
             $('.stock-final-container').toggleClass('error', finalValue <= 0);
+            $(this).closest('.sci-input-container').toggleClass('error', this.value === '');
             $('.update-consumption-button').attr('disabled', $(this).val() === '');
           });
 
@@ -40,7 +49,7 @@ var MyModuleStockConsumption = (function() {
             );
             $('.update-consumption-button').attr(
               'disabled',
-              this.value.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH
+              this.value.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH || $('#stock_consumption').val() === ''
             );
           });
 

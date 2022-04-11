@@ -57,8 +57,8 @@ module Api
       end
 
       def check_manage_permissions
-        raise PermissionError.new(RepositoryStockUnitItem, :manage) 
-          unless can_manage_repository_column?(@inventory_column)
+        raise PermissionError.new(RepositoryStockUnitItem, :manage) unless
+          can_manage_repository_column?(@inventory_column)
       end
 
       def inventory_stock_unit_item_params
