@@ -65,7 +65,7 @@ class ProjectsController < ApplicationController
       end
 
       cards = Kaminari.paginate_array(overview_service.project_and_folder_cards)
-                      .page(params[:page] || 1).per(20)
+                      .page(params[:page] || 1).per(Constants::DEFAULT_ELEMENTS_PER_PAGE)
 
       render json: {
         projects_cards_url: projects_cards_url,
@@ -292,10 +292,12 @@ class ProjectsController < ApplicationController
 
   def experiments_cards
     overview_service = ExperimentsOverviewService.new(@project, current_user, params)
+    cards = overview_service.experiments.page(params[:page] || 1).per(Constants::DEFAULT_ELEMENTS_PER_PAGE)
     render json: {
+      next_page: cards.next_page,
       cards_html: render_to_string(
         partial: 'projects/show/experiments_list.html.erb',
-        locals: { cards: overview_service.experiments,
+        locals: { cards: cards,
                   filters_included: filters_included? }
       )
     }

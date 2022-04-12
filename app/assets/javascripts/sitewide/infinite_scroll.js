@@ -1,10 +1,7 @@
+/* eslint-disable no-use-before-define */
 /* eslint-disable no-unused-vars */
 
 var InfiniteScroll = (function() {
-  function getScrollHeight($container) {
-    return $container[0].scrollHeight;
-  }
-
   function scrollNotVisible($container) {
     let eventTarget = $($container.data('config').eventTarget || $container);
     return scrollHitBottom(eventTarget[0]);

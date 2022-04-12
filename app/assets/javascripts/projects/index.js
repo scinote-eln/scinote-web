@@ -7,7 +7,8 @@
 // - refresh project users tab after manage user modal is closed
 // - refactor view handling using library, ex. backbone.js
 
-/* global HelperModule dropdownSelector Sidebar Turbolinks filterDropdown InfiniteScroll */
+/* global HelperModule dropdownSelector Sidebar Turbolinks filterDropdown InfiniteScroll GLOBAL_CONSTANTS */
+/* eslint-disable no-use-before-define */
 
 var ProjectsIndex = (function() {
   const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable', 'deletable'];
@@ -16,7 +17,7 @@ var ProjectsIndex = (function() {
   var cardsWrapper = '#cardsWrapper';
   var editProjectModal = '#edit-modal';
   var moveToModal = '#move-to-modal';
-  var pageSize = 20;
+  var pageSize = GLOBAL_CONSTANTS.DEFAULT_ELEMENTS_PER_PAGE;
 
   var exportProjectsModal = null;
   var exportProjectsModalHeader = null;

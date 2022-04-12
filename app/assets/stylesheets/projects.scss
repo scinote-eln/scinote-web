@@ -624,8 +624,8 @@ li.module-hover {
       --list-columns-number: 6;
 
       &.last-page {
-        position: relative;
         padding-bottom: 5em;
+        position: relative;
       }
 
       .projects-group {
@@ -798,9 +798,9 @@ li.module-hover {
           display: flex;
 
           .placeholder-element {
-            animation-name: placeholder-pulsing;
             animation-duration: 2s;
             animation-iteration-count: infinite;
+            animation-name: placeholder-pulsing;
             background-color: $color-alto;
             border-radius: $border-radius-default;
             height: 18px;
@@ -832,9 +832,11 @@ li.module-hover {
               0% {
                 opacity: 1;
               }
+
               50% {
                 opacity: .5;
               }
+
               100% {
                 opacity: 1;
               }
