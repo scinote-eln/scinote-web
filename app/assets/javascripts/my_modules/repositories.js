@@ -399,9 +399,10 @@ var MyModuleRepositories = (function() {
 
   function checkSnapshotStatus(snapshotItem) {
     $.getJSON(snapshotItem.data('status-url'), (statusData) => {
-      if (statusData.status === 'ready') {
+      if (statusData.status !== 'provisioning') {
         $.getJSON(snapshotItem.data('version-item-url'), (itemData) => {
           snapshotItem.replaceWith(itemData.html);
+          $('#snapshot-error-' + itemData.repository_id).modal('show');
         });
       } else {
         setTimeout(function() {
