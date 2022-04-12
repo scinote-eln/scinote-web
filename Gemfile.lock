@@ -381,7 +381,7 @@ GEM
       rails (>= 3.2.0)
     newrelic_rpm (6.15.0)
     nio4r (2.5.8)
-    nokogiri (1.13.3)
+    nokogiri (1.13.4)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     nokogumbo (2.0.4)
@@ -688,7 +688,7 @@ DEPENDENCIES
   momentjs-rails (~> 2.17.1)
   nested_form_fields
   newrelic_rpm
-  nokogiri (~> 1.13.2)
+  nokogiri (~> 1.13.4)
   omniauth
   omniauth-azure-activedirectory
   omniauth-linkedin-oauth2
