@@ -1058,6 +1058,9 @@ en:
       title_html: The inventory <b>%{inventory_name}</b> is no longer shared with your team.
       body_html: This inventory has been unshared with your team by the inventory’s owner. To view the item/s that are assigned to your task/s contact the <b>%{team_name}</b> team administrator <b>%{admin_name}</b> (<b>%{admin_email}</b>).
     open_mobile_app: "Open mobile app"
+    status_error:
+      general: "Status transition failed"
+      repository_snapshot: "Snapshot failed in %{repository}"
   experiments:
     id: "ID"
     experiment_id: "Experiment ID"
