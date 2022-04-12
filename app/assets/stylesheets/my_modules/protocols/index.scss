@@ -517,6 +517,16 @@
       @include font-small;
       font-weight: bold;
     }
+
+    .status-transition-error {
+      @include font-small;
+      color: $brand-danger;
+      margin-top: .5em;
+
+      .fas {
+        margin-right: .5em;
+      }
+    }
   }
 }
 
