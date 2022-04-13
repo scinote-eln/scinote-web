@@ -15,9 +15,8 @@ class MyModuleRepositoryRow < ApplicationRecord
 
   validates :repository_row, uniqueness: { scope: :my_module }
 
-  around_save :deduct_stock_balance, if: :stock_consumption_changed?
-
   before_save :nulify_stock_consumption, if: :stock_consumption_changed?
+  around_save :deduct_stock_balance, if: :stock_consumption_changed?
 
   def consume_stock(user, stock_consumption, comment = nil)
     ActiveRecord::Base.transaction(requires_new: true) do
@@ -41,11 +40,10 @@ class MyModuleRepositoryRow < ApplicationRecord
 
   def deduct_stock_balance
     stock_value = repository_row.repository_stock_value
-    delta = stock_consumption.to_d - stock_consumption_was.to_d
     stock_value.lock!
+    delta = stock_consumption.to_d - stock_consumption_was.to_d
     stock_value.amount = stock_value.amount - delta
     yield
-    stock_value.save!
     stock_value.repository_ledger_records.create!(
       reference: self,
       user: last_modified_by,
@@ -53,6 +51,7 @@ class MyModuleRepositoryRow < ApplicationRecord
       balance: stock_value.amount,
       comment: comment
     )
+    stock_value.save!
     save!
   end
 end
