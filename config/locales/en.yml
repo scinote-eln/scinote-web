@@ -419,6 +419,7 @@ en:
         users: "Members"
         name: "Project name"
         archived_date: "Archived"
+      end_of_list_placeholder: 'You’ve reached the end of the list'
       folder:
         description: "%{projects_count} projects | %{folders_count} folders"
       modal_new_project_folder:
