@@ -5093,7 +5093,7 @@ CREATE INDEX index_my_module_groups_on_experiment_id ON public.my_module_groups 
 -- Name: index_my_module_ids_repository_row_ids; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_my_module_ids_repository_row_ids ON public.my_module_repository_rows USING btree (my_module_id, repository_row_id);
+CREATE UNIQUE INDEX index_my_module_ids_repository_row_ids ON public.my_module_repository_rows USING btree (my_module_id, repository_row_id);
 
 
 --
@@ -8366,9 +8366,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220203122802'),
 ('20220217104635'),
 ('20220224153705'),
+('20220307120010'),
 ('20220310105144'),
 ('20220321122111'),
 ('20220325101011'),
 ('20220328164215');
-
-
