@@ -48,9 +48,7 @@
             id="<%= column.id %>"
             data-type="<%= column.data_type %>"
             data-edit-column-url="<%= edit_repository_repository_column_path(repository, column) %>"
-            <% if column.deletable? %>
-              data-destroy-column-url="<%= repository_columns_destroy_html_path(repository, column) %>"
-            <% end %>
+            data-destroy-column-url="<%= repository_columns_destroy_html_path(repository, column) %>"
             data-editable-row="<%= can_manage_repository_column?(column) %>"
             <% column.metadata.each do |k, v| %>
               <%= "data-metadata-#{k}=#{v}" %>
