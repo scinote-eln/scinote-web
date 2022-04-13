@@ -184,7 +184,7 @@ var MyModuleRepositories = (function() {
         var recordName = "<a href='" + row.recordInfoUrl + "'"
                          + "class='record-info-link'>" + data + '</a>';
         if (row.hasActiveReminders) {
-          recordName = `<div class="dropdown row-reminders-dropdown" 
+          recordName = `<div class="dropdown row-reminders-dropdown"
                           data-row-reminders-url="${row.rowRemindersUrl}" tabindex='-1'>
                           <i class="fas fa-bell dropdown-toggle row-reminders-icon"
                              data-toggle="dropdown" id="rowReminders${row.DT_RowId}}"></i>
@@ -403,7 +403,9 @@ var MyModuleRepositories = (function() {
       if (statusData.status !== 'provisioning') {
         $.getJSON(snapshotItem.data('version-item-url'), (itemData) => {
           snapshotItem.replaceWith(itemData.html);
-          $('#snapshot-error-' + itemData.repository_id).modal('show');
+          if (statusData.status === 'failed') {
+            $('#snapshot-error-' + itemData.repository_id).modal('show');
+          }
         });
       } else {
         setTimeout(function() {
