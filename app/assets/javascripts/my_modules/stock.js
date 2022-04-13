@@ -8,6 +8,16 @@ var MyModuleStockConsumption = (function() {
     return value.replace(regexp, '').match(new RegExp(`^-?\\d*(\\.\\d{0,${decimals}})?`))[0];
   }
 
+  function focusStockConsumption() {
+    // focus and move cursor to end of text
+    var $stockConsumption = $('#stock_consumption');
+    $stockConsumption[0].setSelectionRange(
+      $stockConsumption.val().length,
+      $stockConsumption.val().length
+    );
+    $stockConsumption.focus();
+  }
+
   function initManageAction() {
     $('.task-section').on('click', '.manage-repository-consumed-stock-value-link', function(e) {
       e.preventDefault();
@@ -19,7 +29,7 @@ var MyModuleStockConsumption = (function() {
           var $manageModal = $(CONSUMPTION_MODAL);
           $manageModal.find('.modal-content').html(result.html);
           $manageModal.modal('show');
-          $('#stock_consumption').focus();
+          focusStockConsumption();
           SmartAnnotation.init($(CONSUMPTION_MODAL + ' #comment')[0]);
 
           $('#stock_consumption').on('input', function() {
@@ -76,7 +86,7 @@ var MyModuleStockConsumption = (function() {
       if (e.key === 'Escape') {
         $(WARNING_MODAL).modal('hide');
         $(CONSUMPTION_MODAL).modal('show');
-        $('#stock_consumption').focus();
+        focusStockConsumption();
       } else if (e.key === 'Enter') {
         $('.update-consumption-button').trigger('click', [true]);
       }
@@ -84,7 +94,7 @@ var MyModuleStockConsumption = (function() {
     $(WARNING_MODAL).on('click', '.cancel-consumption', function(e) {
       $(WARNING_MODAL).modal('hide');
       $(CONSUMPTION_MODAL).modal('show');
-      $('#stock_consumption').focus();
+      focusStockConsumption();
     }).on('click', '.confirm-consumption-button', function() {
       $('.update-consumption-button').trigger('click', [true]);
     });
