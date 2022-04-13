@@ -3,7 +3,8 @@
 class GenerateManuscriptDataService
   require 'net/http'
 
-  def initialize(experiment_ids, task_ids, callback)
+  def initialize(project_id, experiment_ids, task_ids, callback)
+    @project_id = project_id
     @experiment_ids = experiment_ids
     @task_ids = task_ids
     @callback = callback
@@ -15,7 +16,7 @@ class GenerateManuscriptDataService
     exps = Experiment.includes(:project)
                      .where(id: @experiment_ids)
 
-    prj = exps.first.project
+    prj = Project.find_by(id: @project_id )
     project = prj.as_json(only: %i(id name))
     experiments = []
     exps.find_each do |exp|
