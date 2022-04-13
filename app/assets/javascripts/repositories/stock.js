@@ -8,7 +8,42 @@ var RepositoryStockValues = (function() {
     return value.replace(regexp, '').match(new RegExp(`^\\d*(\\.\\d{0,${decimals}})?`))[0];
   }
 
+  function updateChangeAmount($element) {
+    var currentAmount = parseFloat($element.data('currentAmount'));
+    var inputAmount = parseFloat($element.val());
+    var newAmount;
+
+    if (!$element.val()) {
+      $('.stock-final-container .value').text('-');
+      return;
+    }
+    if (!(inputAmount >= 0)) return;
+
+    switch ($element.data('operator')) {
+      case 'set':
+        newAmount = inputAmount;
+        break;
+      case 'add':
+        newAmount = currentAmount + inputAmount;
+        break;
+      case 'remove':
+        newAmount = currentAmount - inputAmount;
+        break;
+      default:
+        newAmount = currentAmount;
+        break;
+    }
+    $('#change_amount').val(inputAmount);
+
+    $('#repository_stock_value_amount').val(newAmount);
+    $('.stock-final-container .value').text(
+      formatDecimalValue(String(newAmount), $('#stock-input-amount').data('decimals'))
+    );
+  }
+
   function initManageAction() {
+    let amountChanged = false;
+
     $('.repository-show').on('click', '.manage-repository-stock-value-link', function() {
       $.ajax({
         url: $(this).closest('tr').data('manage-stock-url'),
@@ -60,19 +95,21 @@ var RepositoryStockValues = (function() {
             switch ($(this).data('operator')) {
               case 'set':
                 dropdownSelector.enableSelector(UNIT_SELECTOR);
-                $stockInput.val($stockInput.data('currentAmount'));
+                if (!amountChanged) { $stockInput.val($stockInput.data('currentAmount')); }
                 break;
               case 'add':
-                $stockInput.val('');
+                if (!amountChanged) { $stockInput.val(''); }
                 dropdownSelector.disableSelector(UNIT_SELECTOR);
                 break;
               case 'remove':
-                $stockInput.val('');
+                if (!amountChanged) { $stockInput.val(''); }
                 dropdownSelector.disableSelector(UNIT_SELECTOR);
                 break;
               default:
                 break;
             }
+
+            updateChangeAmount($('#stock-input-amount'));
           });
 
           $('#stock-input-amount, #low_stock_threshold').on('input focus', function() {
@@ -113,32 +150,8 @@ var RepositoryStockValues = (function() {
           });
 
           $('#stock-input-amount').on('input', function() {
-            var currentAmount = parseFloat($(this).data('currentAmount'));
-            var inputAmount = parseFloat($(this).val());
-            var newAmount;
-
-            if (!(inputAmount >= 0)) return;
-
-            switch ($(this).data('operator')) {
-              case 'set':
-                newAmount = inputAmount;
-                break;
-              case 'add':
-                newAmount = currentAmount + inputAmount;
-                break;
-              case 'remove':
-                newAmount = currentAmount - inputAmount;
-                break;
-              default:
-                newAmount = currentAmount;
-                break;
-            }
-            $('#change_amount').val(inputAmount);
-
-            $('#repository_stock_value_amount').val(newAmount);
-            $('.stock-final-container .value').text(
-              formatDecimalValue(String(newAmount), $('#stock-input-amount').data('decimals'))
-            );
+            amountChanged = true;
+            updateChangeAmount($(this));
           });
 
           $manageModal.on('ajax:beforeSend', 'form', function() {
