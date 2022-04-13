@@ -233,6 +233,7 @@ var MyModuleRepositories = (function() {
       columnDefs: simpleViewColumnDefs(tableContainer),
       drawCallback: function() {
         var repositoryContainer = $(this).closest('.assigned-repository-container');
+        var simpleViewTableScrollbar = new PerfectScrollbar($(tableContainer).closest('.dataTables_scrollBody')[0]);
         repositoryContainer.find('.table.dataTable').removeClass('hidden');
         repositoryContainer.find('.version-label').html(tableContainer.data('version-label'));
         SIMPLE_TABLE.columns.adjust();
