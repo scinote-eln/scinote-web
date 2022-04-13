@@ -12,7 +12,6 @@ class GenerateManuscriptDataService
   end
 
   def generate_data
-    request_json = {}
     exps = Experiment.includes(:project)
                      .where(id: @experiment_ids)
 

@@ -58,6 +58,7 @@ module Api
           params.require(:data).require(:project_id)
         raise ActionController::ParameterMissing, I18n.t('api.service.errors.callback_missing') unless
           params.require(:data).require(:callback_url)
+
         params.require(:data).permit(:callback_url, :project_id, experiments: [:id, task_ids: []])
       end
 
