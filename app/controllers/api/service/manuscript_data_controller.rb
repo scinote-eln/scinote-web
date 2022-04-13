@@ -5,7 +5,7 @@ module Api
     class ManuscriptDataController < BaseController
       require 'uri'
 
-      def get_data
+      def manuscript_data
         @experiment_ids = []
         @task_ids = []
         manuscript_params = manuscript_data_params
@@ -54,16 +54,16 @@ module Api
       end
 
       def manuscript_data_params
-        raise ActionController::ParameterMissing, 
-              I18n.t('api.service.errors.missing_project_id') unless params.require(:data).require(:project_id)
-        raise ActionController::ParameterMissing, 
-              I18n.t('api.service.errors.callback_missing') unless params.require(:data).require(:callback_url)
-        params.require(:data).permit(:callback_url, :project_id, experiments: [:id, task_ids:[]])
+        raise ActionController::ParameterMissing, I18n.t('api.service.errors.missing_project_id') unless
+          params.require(:data).require(:project_id)
+        raise ActionController::ParameterMissing, I18n.t('api.service.errors.callback_missing') unless
+          params.require(:data).require(:callback_url)
+        params.require(:data).permit(:callback_url, :project_id, experiments: [:id, task_ids: []])
       end
 
       def valid_url?(url)
         uri = URI.parse(url)
-        raise URI::InvalidURIError unless uri.host.present?
+        raise URI::InvalidURIError if uri.host.blank?
       end
     end
   end

@@ -16,7 +16,7 @@ class GenerateManuscriptDataService
     exps = Experiment.includes(:project)
                      .where(id: @experiment_ids)
 
-    prj = Project.find_by(id: @project_id )
+    prj = Project.find_by(id: @project_id)
     project = prj.as_json(only: %i(id name))
     experiments = []
     exps.find_each do |exp|
@@ -31,16 +31,14 @@ class GenerateManuscriptDataService
           task['protocols'] = []
           tsk.protocols.find_each do |prtcl|
             task['protocols'] << protocol_json(prtcl)
-            prtcl.steps
-                 .order(:position)
-                 .find_each { |stp| steps << step_json(stp) }
+            prtcl.steps.order(:position).find_each { |stp| steps << step_json(stp) }
           end
           task['steps'] = steps if steps.any?
           results = []
           tsk.results
-            .where(archived: false)
-            .order(created_at: :desc)
-            .find_each { |res| results << result_json(res) }
+             .where(archived: false)
+             .order(created_at: :desc)
+             .find_each { |res| results << result_json(res) }
           task['results'] = results if results.any?
           tasks << task
         end
@@ -57,7 +55,7 @@ class GenerateManuscriptDataService
     req = Net::HTTP::Post.new(url.request_uri)
     req.body = @request_json.to_s
     http = Net::HTTP.new(url.host, url.port)
-    http.use_ssl = (url.scheme == "https")
+    http.use_ssl = (url.scheme == 'https')
     http.request(req)
   end
 
@@ -88,7 +86,7 @@ class GenerateManuscriptDataService
     stp.assets.find_each do |asset|
       files << {
         'id' => asset.id,
-        'bucket' => ENV["S3_BUCKET"],
+        'bucket' => ENV['S3_BUCKET'],
         'key' => ActiveStorage::Blob.service.path_for(asset.file.key),
         'url' => asset_url(asset)
       }
@@ -121,7 +119,7 @@ class GenerateManuscriptDataService
       result['tiny_mce_files'] = t_m_files if t_m_files.any?
     elsif res.asset
       result['type'] = 'file'
-      result['bucket'] = ENV["S3_BUCKET"]
+      result['bucket'] = ENV['S3_BUCKET']
       result['key'] = ActiveStorage::Blob.service.path_for(res.asset.file.key)
       result['url'] = asset_url(res.asset)
     elsif res.table
@@ -133,7 +131,7 @@ class GenerateManuscriptDataService
 
   def tiny_mce_file_json(asset)
     { 'id' => asset.id,
-      'bucket' => ENV["S3_BUCKET"],
+      'bucket' => ENV['S3_BUCKET'],
       'key' => ActiveStorage::Blob.service.path_for(asset.image.key) }
   end
 

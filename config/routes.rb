@@ -696,7 +696,7 @@ Rails.application.routes.draw do
       get 'health', to: 'api#health'
       get 'status', to: 'api#status'
       namespace :service do
-        post 'get_data', to: 'manuscript_data#get_data'
+        post 'manuscript_data', to: 'manuscript_data#manuscript_data'
         resources :teams, except: %i(index new create show edit update destroy) do
           post 'clone_experiment' => 'experiments#clone'
         end

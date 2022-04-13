@@ -53,9 +53,9 @@ module Api
         )
       end
 
-      rescue_from URI::InvalidURIError do |e|
+      rescue_from URI::InvalidURIError do
         render_error(
-          I18n.t('api.service.errors.url.not_valid'), 
+          I18n.t('api.service.errors.url.not_valid'),
           I18n.t('api.service.errors.url.not_valid'), :bad_request
         )
       end
