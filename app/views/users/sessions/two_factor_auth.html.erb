@@ -9,7 +9,7 @@
         <p><%= t "devise.sessions.2fa.description" %></p>
         <p class="input-group sci-input-container">
           <%= label :otp, t("devise.sessions.2fa.field") %>
-          <%= text_field_tag(:otp, '', { class: "form-control sci-input-field" })%>
+          <%= text_field_tag(:otp, '', { class: "form-control sci-input-field", autofocus: true})%>
         </p>
 
         <p class="actions">
