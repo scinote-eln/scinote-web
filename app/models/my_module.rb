@@ -308,14 +308,13 @@ class MyModule < ApplicationRecord
     if repository.has_stock_management?
       headers.push(I18n.t('repositories.table.row_consumption'))
       rows = rows.left_joins(my_module_repository_rows: :repository_stock_unit_item)
-                  .select(
+                 .select(
                    'repository_rows.*',
                    'my_module_repository_rows.stock_consumption',
                    'repository_stock_unit_items.data AS stock_unit'
                  )
     end
     rows.find_each do |row|
-
       row_json = []
       row_json << row.code
       row_json << (row.archived ? "#{row.name} [#{I18n.t('general.archived')}]" : row.name)
