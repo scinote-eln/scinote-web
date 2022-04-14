@@ -300,28 +300,35 @@ class MyModule < ApplicationRecord
     headers = [
       I18n.t('repositories.table.id'),
       I18n.t('repositories.table.row_name'),
-      I18n.t('repositories.table.added_by'),
-      I18n.t('repositories.table.')
+      I18n.t('repositories.table.added_on'),
+      I18n.t('repositories.table.added_by')
     ]
     data = []
     rows = repository.assigned_rows(self).includes(:created_by).order(created_at: order)
     if repository.has_stock_management?
       headers.push(I18n.t('repositories.table.row_consumption'))
-      rows = rows.joins(:my_module_repository_rows, repository_stock_value: :repository_stock_unit_item)
-                 .where(my_module_repository_rows: { my_module: self })
-                 .select(
+      rows = rows.left_joins(my_module_repository_rows: :repository_stock_unit_item)
+                  .select(
                    'repository_rows.*',
                    'my_module_repository_rows.stock_consumption',
                    'repository_stock_unit_items.data AS stock_unit'
                  )
     end
     rows.find_each do |row|
+
       row_json = []
       row_json << row.code
       row_json << (row.archived ? "#{row.name} [#{I18n.t('general.archived')}]" : row.name)
       row_json << I18n.l(row.created_at, format: :full)
       row_json << row.created_by.full_name
-      row_json << "#{row['stock_consumption'] || 0} #{row['stock_unit']}" if repository.has_stock_management?
+      if repository.has_stock_management?
+        if repository.is_a?(RepositorySnapshot)
+          consumed_stock = row.repository_stock_consumption_cell&.value&.formatted
+          row_json << (consumed_stock || 0)
+        else
+          row_json << "#{row['stock_consumption'] || 0} #{row['stock_unit']}"
+        end
+      end
       data << row_json
     end
 

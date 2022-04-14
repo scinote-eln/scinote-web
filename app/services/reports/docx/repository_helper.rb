@@ -3,7 +3,7 @@
 module Reports::Docx::RepositoryHelper
   include InputSanitizeHelper
 
-  def prepare_row_columns(repository_data, my_module)
+  def prepare_row_columns(repository_data, my_module, repository)
     result = [repository_data[:headers]]
     repository_data[:rows].each do |record|
       row = []
@@ -16,9 +16,14 @@ module Reports::Docx::RepositoryHelper
       custom_cells = record.repository_cells
       custom_cells.each do |cell|
         if cell.value.instance_of? RepositoryStockValue
-          consumption = record.my_module_repository_rows.find_by(my_module: my_module).stock_consumption || 0
-          unit = cell.value.repository_stock_unit_item&.data
-          cell_values[cell.repository_column_id] = "#{consumption} #{unit}"
+          if repository.is_a?(RepositorySnapshot)
+            consumed_stock = record.repository_stock_consumption_cell&.value&.formatted || 0
+            cell_values[cell.repository_column_id] = consumed_stock
+          else
+            consumption = record.my_module_repository_rows.find_by(my_module: my_module)&.stock_consumption || 0
+            unit = cell.value.repository_stock_unit_item&.data
+            cell_values[cell.repository_column_id] = "#{consumption} #{unit}"
+          end
         else
           cell_values[cell.repository_column_id] = cell.value.formatted
         end
