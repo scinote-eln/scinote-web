@@ -39,10 +39,12 @@ class RepositoryStockValue < ApplicationRecord
     end
   end
 
-  def low_stock?
-    return false unless low_stock_threshold
+  def status
+    return :empty if amount <= 0
 
-    amount <= low_stock_threshold
+    return :low if low_stock_threshold && amount <= low_stock_threshold
+
+    :normal
   end
 
   def self.add_filter_condition(repository_rows, join_alias, filter_element)

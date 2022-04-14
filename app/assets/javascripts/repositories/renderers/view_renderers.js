@@ -189,7 +189,7 @@ $.fn.dataTable.render.AssignedTasksValue = function(data, row) {
   }
   if (row.hasActiveReminders) {
     return `<div class="dropdown row-reminders-dropdown" data-row-reminders-url="${row.rowRemindersUrl}" tabindex='-1'>
-              <i class="fas fa-bell dropdown-toggle row-reminders-icon" data-toggle="dropdown" 
+              <i class="fas fa-bell dropdown-toggle row-reminders-icon" data-toggle="dropdown"
                 id="rowReminders${row.DT_RowId}}"></i>
               <ul class="dropdown-menu" role="menu" aria-labelledby="rowReminders${row.DT_RowId}">
               </ul>
@@ -201,23 +201,15 @@ $.fn.dataTable.render.AssignedTasksValue = function(data, row) {
 };
 
 $.fn.dataTable.render.RepositoryStockValue = function(data) {
-  var stockAlertTag;
   if (data) {
     if (data.value) {
-      if (data.value.stock_amount <= 0) {
-        stockAlertTag = 'stock-alert';
-      } else {
-        stockAlertTag = parseFloat(data.value.stock_amount) < parseFloat(data.value.low_stock_threshold)
-          ? 'stock-low-stock-alert' : '';
-      }
-
       if (data.stock_managable) {
-        return `<a class="manage-repository-stock-value-link stock-value-view-render ${stockAlertTag}">
+        return `<a class="manage-repository-stock-value-link stock-value-view-render stock-${data.stock_status}">
                   ${data.value.stock_formatted}
                   </a>`;
       }
       return `<span class="stock-value-view-render
-                           ${data.stock_managable !== undefined ? stockAlertTag : ''}">
+                           ${data.stock_managable !== undefined ? `stock-${data.stock_status}` : ''}">
                 ${data.value.stock_formatted}
                 </span>`;
     }
@@ -238,27 +230,27 @@ $.fn.dataTable.render.defaultRepositoryStockValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryStockConsumptionValue = function(data = {}) {
-  if (data.value && data.value.consumed_stock !== null) {
-    if (data.consumptionManagable) {
-      return `<a href="${data.updateStockConsumptionUrl}"
-                 class="manage-repository-consumed-stock-value-link stock-value-view-render">
-                ${data.value.consumed_stock_formatted}
-              </a>`;
-    }
-    return `<span class="stock-value-view-render">${data.value.consumed_stock_formatted}</span>`;
+  if (!data.stock_present) {
+    return '<span class="empty-consumed-stock-render"> - </span>';
   }
-  if (data.stock_present && data.consumptionManagable) {
+  if (!data.consumptionManagable) {
+    return `<span class="consumption-locked">
+    ${I18n.t('libraries.manange_modal_column.stock_type.stock_consumption_locked')}
+    </span>`;
+  }
+  if (!data.consumptionPermitted) {
+    return `<span class="empty-consumed-stock-render">${data.value.consumed_stock_formatted}</span>`;
+  }
+  if (!data.value.consumed_stock) {
     return `<a href="${data.updateStockConsumptionUrl}" class="manage-repository-consumed-stock-value-link">
               <i class="fas fa-vial"></i>
               ${I18n.t('libraries.manange_modal_column.stock_type.add_stock_consumption')}
             </a>`;
   }
-  if (data.stock_present && !data.consumptionManagable) {
-    return `<span class="consumption-locked">
-              ${I18n.t('libraries.manange_modal_column.stock_type.stock_consumption_locked')}
-            </span>`;
-  }
-  return '<span class="empty-consumed-stock-render"> - </span>';
+  return `<a href="${data.updateStockConsumptionUrl}"
+                class="manage-repository-consumed-stock-value-link stock-value-view-render">
+              ${data.value.consumed_stock_formatted}
+            </a>`;
 };
 
 $.fn.dataTable.render.defaultRepositoryStockConsumptionValue = function() {
