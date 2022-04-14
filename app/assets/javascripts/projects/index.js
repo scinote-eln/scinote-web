@@ -7,7 +7,8 @@
 // - refresh project users tab after manage user modal is closed
 // - refactor view handling using library, ex. backbone.js
 
-/* global HelperModule dropdownSelector Sidebar Turbolinks filterDropdown */
+/* global HelperModule dropdownSelector Sidebar Turbolinks filterDropdown InfiniteScroll GLOBAL_CONSTANTS */
+/* eslint-disable no-use-before-define */
 
 var ProjectsIndex = (function() {
   const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable', 'deletable'];
@@ -16,6 +17,7 @@ var ProjectsIndex = (function() {
   var cardsWrapper = '#cardsWrapper';
   var editProjectModal = '#edit-modal';
   var moveToModal = '#move-to-modal';
+  var pageSize = GLOBAL_CONSTANTS.DEFAULT_ELEMENTS_PER_PAGE;
 
   var exportProjectsModal = null;
   var exportProjectsModalHeader = null;
@@ -443,23 +445,35 @@ var ProjectsIndex = (function() {
     });
   }
 
+  function loadPlaceHolder() {
+    let palceholder = '';
+    $.each(Array(pageSize), function() {
+      palceholder += $('#projectPlaceholder').html();
+    });
+    $(palceholder).insertAfter($(cardsWrapper).find('.table-header'));
+  }
+
   function loadCardsView() {
+    var requestParams = {
+      view_mode: $('.projects-index').data('view-mode'),
+      sort: projectsCurrentSort,
+      search: projectsViewSearch,
+      members: membersFilter,
+      created_on_from: createdOnFromFilter,
+      created_on_to: createdOnToFilter,
+      folders_search: lookInsideFolders,
+      archived_on_from: archivedOnFromFilter,
+      archived_on_to: archivedOnToFilter
+    };
     var viewContainer = $(cardsWrapper);
+    var cardsUrl = viewContainer.data('projects-cards-url');
+
+    loadPlaceHolder();
     $.ajax({
-      url: viewContainer.data('projects-cards-url'),
+      url: cardsUrl,
       type: 'GET',
       dataType: 'json',
-      data: {
-        view_mode: $('.projects-index').data('view-mode'),
-        sort: projectsCurrentSort,
-        search: projectsViewSearch,
-        members: membersFilter,
-        created_on_from: createdOnFromFilter,
-        created_on_to: createdOnToFilter,
-        folders_search: lookInsideFolders,
-        archived_on_from: archivedOnFromFilter,
-        archived_on_to: archivedOnToFilter
-      },
+      data: { ...requestParams, ...{ page: 1 } },
       success: function(data) {
         $('#breadcrumbsWrapper').html(data.breadcrumbs_html);
         $(projectsWrapper).find('.projects-title').html(data.title);
@@ -474,6 +488,23 @@ var ProjectsIndex = (function() {
         selectedProjects.length = 0;
         selectedProjectFolders.length = 0;
         updateProjectsToolbar();
+        if (data.filtered) {
+          InfiniteScroll.removeScroll(cardsWrapper);
+        } else {
+          InfiniteScroll.init(cardsWrapper, {
+            url: cardsUrl,
+            eventTarget: window,
+            placeholderTemplate: '#projectPlaceholder',
+            endOfListTemplate: '#projectEndOfList',
+            pageSize: pageSize,
+            customResponse: (response) => {
+              $(response.cards_html).appendTo(cardsWrapper);
+            },
+            customParams: (params) => {
+              return { ...params, ...requestParams };
+            }
+          });
+        }
       },
       error: function() {
         viewContainer.html('Error loading project list');
@@ -490,6 +521,7 @@ var ProjectsIndex = (function() {
         $(projectsPageSelector).find('.cards-switch .button-to').removeClass('selected');
         $(ev.target).find('.button-to').addClass('selected');
         $(ev.target).parents('.dropdown.view-switch').removeClass('open');
+        InfiniteScroll.loadMore(cardsWrapper);
       })
       .on('ajax:error', '.change-projects-view-type-form', function(ev, data) {
         HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');

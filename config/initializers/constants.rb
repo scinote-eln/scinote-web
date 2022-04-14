@@ -71,6 +71,8 @@ class Constants
   RESULTS_PER_PAGE_LIMIT = 10
   #Experiments more button appears
   EXPERIMENT_LONG_DESCRIPTION = 80
+  # Infinite scroll default elements per page
+  DEFAULT_ELEMENTS_PER_PAGE = 20
 
   #=============================================================================
   # File and data memory size
