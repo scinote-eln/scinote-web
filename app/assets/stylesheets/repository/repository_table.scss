@@ -229,7 +229,7 @@
 
   // Stock
   .stock-value-view-render {
-    &.stock-alert {
+    &.stock-empty {
       color: $brand-danger;
 
       &::before {
@@ -238,7 +238,7 @@
       }
     }
 
-    &.stock-low-stock-alert {
+    &.stock-low {
       &::before {
         @include font-awesome;
         color: $brand-warning;

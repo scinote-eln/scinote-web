@@ -193,7 +193,7 @@
         padding: 0;
       }
 
-      .stock-low-stock-alert {
+      .stock-low {
         &::before {
           @include font-awesome;
           color: $brand-warning;
@@ -201,7 +201,7 @@
         }
       }
 
-      .stock-alert {
+      .stock-empty {
         color: $brand-danger;
 
         &::before {
