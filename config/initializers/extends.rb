@@ -165,7 +165,7 @@ class Extends
                                         'RepositoryChecklistValue' => 'checklist',
                                         'RepositoryAssetValue' => 'file',
                                         'RepositoryStatusValue' => 'status',
-                                        'RepositoryStockValue' => 'stock_value' }
+                                        'RepositoryStockValue' => 'stock' }
 
   OMNIAUTH_PROVIDERS = %i(linkedin customazureactivedirectory okta)
 
