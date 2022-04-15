@@ -4,8 +4,8 @@ var RepositoryStockValues = (function() {
   const UNIT_SELECTOR = '#repository-stock-value-units';
 
   function formatDecimalValue(value, decimals) {
-    let regexp = decimals === 0 ? /[^0-9]/g : /[^0-9.]/g;
-    return value.replace(regexp, '').match(new RegExp(`^\\d*(\\.\\d{0,${decimals}})?`))[0];
+    let regexp = decimals === 0 ? /[^-0-9]/g : /[^-0-9.]/g;
+    return value.replace(regexp, '').match(new RegExp(`^-?\\d*(\\.\\d{0,${decimals}})?`))[0];
   }
 
   function updateChangeAmount($element) {
@@ -36,6 +36,7 @@ var RepositoryStockValues = (function() {
     $('#change_amount').val(inputAmount);
 
     $('#repository_stock_value_amount').val(newAmount);
+    $('.stock-final-container').toggleClass('negative', newAmount < 0);
     $('.stock-final-container .value').text(
       formatDecimalValue(String(newAmount), $('#stock-input-amount').data('decimals'))
     );

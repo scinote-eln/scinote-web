@@ -32,6 +32,12 @@
         @include font-small;
       }
 
+      &.negative {
+        .value {
+          color: $brand-danger;
+        }
+      }
+
       &.error {
         .value {
           color: $brand-danger;
