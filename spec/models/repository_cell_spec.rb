@@ -10,6 +10,7 @@ describe RepositoryCell, type: :model do
   let(:repository_cell_a) { build :repository_cell, :asset_value }
   let(:repository_cell_s) { build :repository_cell, :status_value }
   let(:repository_cell_d_r) { build :repository_cell, :date_time_range_value }
+  let(:repository_cell_s_v) { build :repository_cell, :stock_value }
 
   context 'when do not have value' do
     it 'is not valid' do
@@ -40,6 +41,10 @@ describe RepositoryCell, type: :model do
 
     it 'is valid for date time range value' do
       expect(repository_cell_d_r).to be_valid
+    end
+
+    it 'is valid for stock value' do
+      expect(repository_cell_s_v).to be_valid
     end
   end
 
