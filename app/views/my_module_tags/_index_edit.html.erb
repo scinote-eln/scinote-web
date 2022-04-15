@@ -67,18 +67,16 @@
         </div>
       </div>
     <% end %>
-    <% if can_manage_project_tags?(@my_module.experiment.project) && can_manage_my_module_tags?(@my_module) %>
-      <div class="pull-right create-new-tag-btn">
-        <%= bootstrap_form_for [@my_module.experiment.project, @new_tag], remote: true, format: :json, html: { class: 'add-tag-form' } do |f| %>
-          <%= hidden_field_tag :my_module_id, @my_module.id %>
-          <%= f.hidden_field :project_id, :value => @my_module.experiment.project.id %>
-          <%= f.hidden_field :name, :value => t("tags.create.new_name") %>
-          <%= f.hidden_field :color, :value => Constants::TAG_COLORS[0] %>
-          <%= f.button class: "btn btn-primary" do %>
-            <span class="fas fa-plus"></span>
-            <span class="hidden-xs"><%=t "experiments.canvas.modal_manage_tags.create_new" %></span>
-          <% end %>
+    <div class="pull-right create-new-tag-btn">
+      <%= bootstrap_form_for [@my_module.experiment.project, @new_tag], remote: true, format: :json, html: { class: 'add-tag-form' } do |f| %>
+        <%= hidden_field_tag :my_module_id, @my_module.id %>
+        <%= f.hidden_field :project_id, :value => @my_module.experiment.project.id %>
+        <%= f.hidden_field :name, :value => t("tags.create.new_name") %>
+        <%= f.hidden_field :color, :value => Constants::TAG_COLORS[0] %>
+        <%= f.button class: "btn btn-primary" do %>
+          <span class="fas fa-plus"></span>
+          <span class="hidden-xs"><%=t "experiments.canvas.modal_manage_tags.create_new" %></span>
         <% end %>
-      </div>
-    <% end %>
+      <% end %>
+    </div>
 </div>
