@@ -1,4 +1,6 @@
 class MyModuleRepositoryRow < ApplicationRecord
+  include ActionView::Helpers::NumberHelper
+
   attr_accessor :last_modified_by
   attr_accessor :comment
 
@@ -30,6 +32,16 @@ class MyModuleRepositoryRow < ApplicationRecord
         comment: comment
       )
       save!
+    end
+  end
+
+  def formated_stock_consumption
+    if stock_consumption
+      number_with_precision(
+        stock_consumption,
+        precision: (repository_row.repository.repository_stock_column.metadata['decimals'].to_i || 0),
+        strip_insignificant_zeros: true
+      )
     end
   end
 
