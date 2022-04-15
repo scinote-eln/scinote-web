@@ -4,7 +4,11 @@
       <span aria-hidden="true">&times;</span>
     </button>
     <h4 class="modal-title">
-      <%= t('my_modules.repository.stock_modal.title', name: @repository_row.name)%>
+      <% if @module_repository_row.stock_consumption %>
+        <%= t('my_modules.repository.stock_modal.title_edit', name: @repository_row.name)%>
+      <% else %>
+        <%= t('my_modules.repository.stock_modal.title', name: @repository_row.name)%>
+      <% end %>
     </h4>
   </div>
   <div class="modal-body">
