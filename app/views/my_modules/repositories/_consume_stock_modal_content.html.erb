@@ -4,7 +4,11 @@
       <span aria-hidden="true">&times;</span>
     </button>
     <h4 class="modal-title">
-      <%= t('my_modules.repository.stock_modal.title', name: @repository_row.name)%>
+      <% if @module_repository_row.stock_consumption %>
+        <%= t('my_modules.repository.stock_modal.title_edit', name: @repository_row.name)%>
+      <% else %>
+        <%= t('my_modules.repository.stock_modal.title', name: @repository_row.name)%>
+      <% end %>
     </h4>
   </div>
   <div class="modal-body">
@@ -13,11 +17,11 @@
       <div class="sci-input-container" data-error-text="<%= t('repository_stock_values.manage_modal.amount_error') %>">
         <%= f.label :stock_consumption, t('my_modules.repository.stock_modal.amount') %>
         <%= f.text_field :stock_consumption,
-                         value: @module_repository_row.stock_consumption, 
-                         tabindex: 1, 
-                         placeholder: t('my_modules.repository.stock_modal.consumed') , 
+                         value: @module_repository_row.stock_consumption,
+                         tabindex: 1,
+                         placeholder: t('my_modules.repository.stock_modal.consumed') ,
                          class: 'sci-input-field',
-                         data: {initial_value: (@module_repository_row.stock_consumption || 0), 
+                         data: {initial_value: (@module_repository_row.stock_consumption || 0),
                                 initial_stock: @stock_value.amount,
                                 decimals: @stock_value.repository_cell.repository_column.metadata['decimals'] } %>
       </div>

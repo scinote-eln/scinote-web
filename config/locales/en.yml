@@ -1005,6 +1005,7 @@ en:
           provisioning: 'Provisioning'
       stock_modal:
         title: 'Consume %{name}'
+        title_edit: 'Edit %{name} consumption'
         description: 'Enter the total amount consumed in this task.'
         amount: 'Amount'
         consumed: 'Consumed'
