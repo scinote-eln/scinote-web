@@ -59,14 +59,10 @@ class RepositoryStockValuesController < ApplicationController
       repository_stock_value_params,
       repository_cell: repository_cell,
       created_by: current_user,
-      last_modified_by: current_user
+      last_modified_by: current_user,
+      comment: repository_stock_value_params[:comment].presence
     )
     @repository_stock_value.save!
-    @repository_stock_value.update_stock_with_ledger!(
-      repository_stock_value_params[:amount],
-      @repository,
-      repository_stock_value_params[:comment].presence
-    )
   end
 
   def load_vars

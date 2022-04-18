@@ -4,6 +4,8 @@ class RepositoryStockValue < ApplicationRecord
   include RepositoryValueWithReminders
   include ActionView::Helpers::NumberHelper
 
+  attr_accessor :comment
+
   belongs_to :repository_stock_unit_item, optional: true
   belongs_to :created_by, class_name: 'User', optional: true, inverse_of: :created_repository_stock_values
   belongs_to :last_modified_by, class_name: 'User', optional: true, inverse_of: :modified_repository_stock_values
@@ -12,6 +14,14 @@ class RepositoryStockValue < ApplicationRecord
   accepts_nested_attributes_for :repository_cell
 
   validates :repository_cell, presence: true
+
+  after_create do
+    repository_ledger_records.create!(user: created_by,
+                                      amount: amount,
+                                      balance: amount,
+                                      reference: repository_cell.repository_column.repository,
+                                      comment: comment)
+  end
 
   SORTABLE_COLUMN_NAME = 'repository_stock_values.amount'
 
@@ -97,11 +107,14 @@ class RepositoryStockValue < ApplicationRecord
                                       .repository_stock_unit_items
                                       .find(new_data[:unit_item_id])
     self.last_modified_by = user
-
-    update_stock_with_ledger!(new_data[:amount],
-                              repository_cell.repository_column.repository,
-                              new_data[:comment].presence)
-
+    delta = new_data[:amount].to_d - amount.to_d
+    repository_ledger_records.create!(
+      user: last_modified_by,
+      amount: delta,
+      balance: amount,
+      reference: repository_cell.repository_column.repository,
+      comment: new_data[:comment].presence
+    )
     self.amount = BigDecimal(new_data[:amount].to_s)
     save!
   end
@@ -166,17 +179,6 @@ class RepositoryStockValue < ApplicationRecord
     value
   rescue ArgumentError
     nil
-  end
-
-  def update_stock_with_ledger!(amount, reference, comment)
-    delta = amount.to_d - self.amount.to_d
-    repository_ledger_records.create!(
-      user: last_modified_by,
-      amount: delta,
-      balance: amount,
-      reference: reference,
-      comment: comment
-    )
   end
 
   alias export_formatted formatted
