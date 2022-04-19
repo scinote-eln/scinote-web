@@ -445,6 +445,7 @@ Rails.application.routes.draw do
     end
 
     resources :steps, only: %i(index edit update destroy show) do
+      resources :step_orderable_elements, only: %i(update)
       resources :step_comments,
                 path: '/comments',
                 only: %i(create index update destroy)

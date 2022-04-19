@@ -9,6 +9,26 @@ class StepOrderableElement < ApplicationRecord
   belongs_to :step, inverse_of: :step_orderable_elements, touch: true
   belongs_to :orderable, polymorphic: true, inverse_of: :step_orderable_elements
 
+  def move_to(new_position)
+    moved = false
+    step.with_lock do
+      old_position = position
+      update_column(position: -1)
+      if new_position > old_position
+        step.step_orderable_elements
+            .where('position > ? AND position =< ?', old_position, new_position)
+            .update_all('position = position - 1')
+      else
+        step.step_orderable_elements
+            .where('position => ? AND position < ?', new_position, old_position)
+            .update_all('position = position + 1')
+      end
+      update_column(position: new_position)
+      moved = true
+    end
+    moved
+  end
+
   private
 
   def check_step_relations
