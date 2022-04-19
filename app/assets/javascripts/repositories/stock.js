@@ -92,7 +92,6 @@ var RepositoryStockValues = (function() {
 
             dropdownSelector.selectValues(UNIT_SELECTOR, $('#initial_units').val());
             $('#operator').val($(this).data('operator'));
-
             switch ($(this).data('operator')) {
               case 'set':
                 dropdownSelector.enableSelector(UNIT_SELECTOR);
@@ -175,6 +174,7 @@ var RepositoryStockValues = (function() {
           });
 
           $manageModal.modal('show');
+          amountChanged = false;
           $('#stock-input-amount').focus();
           $('#stock-input-amount')[0].selectionStart = $('#stock-input-amount')[0].value.length;
           $('#stock-input-amount')[0].selectionEnd = $('#stock-input-amount')[0].value.length;
