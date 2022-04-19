@@ -16,7 +16,7 @@
         </span>
       <% end %>
       <div class="action-buttons">
-        <button class="btn btn-light icon-btn full-screen" data-table-url="<%= assigned_repository_full_view_table_path(@my_module, repository) %>">
+        <button class="btn btn-light icon-btn full-screen" data-table-url="<%= assigned_repository_full_view_table_path(@my_module, repository) %>?include_stock_consumption=true">
           <i class="fas fa-expand"></i>
         </button>
       </div>
@@ -27,17 +27,31 @@
          data-footer-label="<%= assigned_repository_simple_view_footer_label(repository) %>"
          data-name-column-id="<%=  assigned_repository_simple_view_name_column_id(repository) %>"
     >
+      <table class="table hidden repository-table"
+             data-stock-management="<%= repository.has_stock_management? %>"
+             data-stock-consumption-editable="<%= can_update_my_module_stock_consumption?(@my_module) %>">
+        <thead>
+          <tr>
+            <th class="row-name"><%= t("repositories.table.row_name") %></th>
+            <% if repository.has_stock_management? %>
+              <th class="row-stock" data-columns-visible="false"><%= repository.repository_stock_column.name %></th>
+              <th class="row-consumption" data-columns-visible="false"><%= t("repositories.table.row_consumption") %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
+    <%= render 'shared/dialog',
+               id: "snapshot-error-#{repository.id}",
+               type: "error",
+               shown: false,
+               title: t("my_modules.modals.snapshot_error.title"),
+               body:
+                 t(
+                   "my_modules.modals.snapshot_error.body_html",
+                   repository: repository.name
+                 )
+    %>
   </div>
 <% end %>
-
-<template id="myModuleRepositorySimpleTemplate">
-  <table class="table hidden">
-    <thead>
-      <tr>
-        <th class="row-name"><%= t("repositories.table.row_name") %></th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-</template>

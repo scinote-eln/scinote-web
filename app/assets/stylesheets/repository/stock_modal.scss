@@ -1,0 +1,90 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
+.repository-stock-modal,
+#consumeRepositoryStockValueModal {
+  .stock-update-view {
+    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+
+    .stock-initial-container,
+    .stock-final-container {
+      align-items: center;
+      background: $color-concrete;
+      border-radius: $border-radius-modal;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      height: 5.5em;
+      padding: .5em 0;
+
+      .value {
+        @include font-h1;
+      }
+
+      .subtitle {
+        @include font-small;
+        color: $color-silver-chalice;
+      }
+
+      .units {
+        @include font-small;
+      }
+
+      &.negative {
+        .value {
+          color: $brand-danger;
+        }
+      }
+
+      &.error {
+        .value {
+          color: $brand-danger;
+        }
+      }
+    }
+
+    .stock-arrow {
+      @include font-h1;
+      padding: 1em;
+    }
+  }
+
+  .stock-comment-field {
+    margin-bottom: 1.25em;
+  }
+
+  .repository-stock-reminder-selector {
+    @include font-button;
+    align-items: center;
+    display: flex;
+    margin-bottom: 1.25em;
+
+    .sci-checkbox-container {
+      margin-right: .5em;
+    }
+  }
+
+  .repository-stock-reminder-value {
+    @include font-button;
+    align-items: center;
+    display: flex;
+    margin-bottom: 1.25em;
+
+    .sci-input-container {
+      flex-basis: 160px;
+      margin: 0 .5em;
+    }
+  }
+}
+
+#consumeRepositoryStockValueModalWarning {
+  .modal-body {
+    padding: 0;
+
+    p {
+      padding: 15px 15px 0;
+    }
+  }
+}

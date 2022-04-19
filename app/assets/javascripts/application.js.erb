@@ -287,4 +287,23 @@ $(window).scroll(function() {
   })
 })
 
+// Disable default validation bubbles
+// NOTE: invalid event doesn't bubble, that's
+// why need to bind to each element separately
+$(document).ajaxComplete(function() {
+  setTimeout(function() {
+    $('input,select,textarea').each(function() {
+      $(this).on('invalid', function(e) {
+        e.preventDefault();
+        return false;
+      });
+    });
+  }, 10);
+});
+
+// enable form validations on form submit
+$(document).on('ajax:beforeSend', 'form', function() {
+  $(this).removeAttr('novalidate');
+  return this.reportValidity();
+});
 window.I18n = I18n

@@ -37,5 +37,29 @@
   </div>
 </div>
 
+<template id="experimentPlaceholder">
+  <div class="experiment-placeholder card">
+    <div class="placeholder-element header"></div>
+    <div class="placeholder-body">
+      <% 3.times do |i| %>
+        <div class="placeholder-element line-<%= i %>"></div>
+      <% end %>
+    </div>
+    <div class="placeholder image-container">
+      <div class="placeholder-element image"></div>
+      <div class="placeholder-element image-text"></div>
+    </div>
+    <div class="placeholder-element footer"></div>
+  </div>
+</template>
+
+<template id="experimentEndOfList">
+  <div class="experiment-list-end-placeholder">
+    <i class="fas fa-flag-checkered"></i>
+    <span><%= t('projects.index.end_of_list_placeholder') %></span>
+    <i class="fas fa-flag-checkered"></i>
+  </div>
+</template>
+
 <%= javascript_include_tag("projects/show") %>
 <i data-hook="project-show-js"></i>

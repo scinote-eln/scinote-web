@@ -37,6 +37,10 @@ module RepositoryColumns
         m.merge!(created_by_id: @user.id, last_modified_by_id: @user.id)
       end
 
+      @params[:repository_stock_unit_items_attributes]&.map do |m|
+        m.merge!(created_by_id: @user.id, last_modified_by_id: @user.id)
+      end
+
       @params.merge(repository_id: @repository.id, created_by_id: @user.id, data_type: @column_type)
     end
   end

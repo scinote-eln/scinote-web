@@ -1,0 +1,39 @@
+#manage-repository-column {
+
+  // TODO: This should be handled site-wide for all form error styles
+  [data-edit-type="RepositoryStockValue"] {
+    .sci-input-container.error {
+      margin-bottom: .36em;
+      padding-bottom: .75em;
+    }
+  }
+
+  .stock-column-type {
+    .units-info-description {
+      @include font-small;
+      color: $color-silver-chalice;
+    }
+
+    .changing-existing-stock-units-warning {
+      @include font-small;
+      background-color: $brand-warning-light;
+      border-radius: $border-radius-default;
+      padding: .5em;
+      margin-top: .5em;
+      width: 100%;
+    }
+
+    .sci-input-container.error {
+      margin-bottom: 3em;
+
+      .changing-existing-stock-units-warning {
+        bottom: -3.5em;
+        position: absolute;
+      }
+
+      .units-info-description {
+        display: none;
+      }
+    }
+  }
+}

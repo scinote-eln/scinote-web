@@ -1,0 +1,38 @@
+.sci-dialog {
+
+  .modal-dialog {
+    width: 500px;
+  }
+
+  .sci-dialog__icon {
+    margin-right: 1em;
+
+    .fas {
+      font-size: 2.5em;
+    }
+
+    &.error .fas {
+      color: $brand-danger;
+    }
+
+    &.warning .fas {
+      color: $brand-warning;
+    }
+
+    &.info .fas {
+      color: $brand-info;
+    }
+
+    &.success .fas {
+      color: $brand-success;
+    }
+  }
+
+  .modal-body {
+    display: flex;
+  }
+
+  .modal-footer {
+    text-align: center;
+  }
+}

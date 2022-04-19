@@ -10,15 +10,21 @@
     border-radius: 5px;
     display: flex;
     justify-content: center;
-    padding: 10px 100px 5px;
+    padding: .5em 100px;
     position: relative;
 
     .field-name {
+      @include font-small;
       color: $color-silver-chalice;
       left: 0;
-      padding: 0 5px;
+      padding: .5em;
       position: absolute;
       top: 0;
+    }
+
+    .preview-label {
+      @include font-small;
+      font-weight: bold;
     }
 
     .preview-block {

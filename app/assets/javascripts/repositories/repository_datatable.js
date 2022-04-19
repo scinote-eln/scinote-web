@@ -1,7 +1,7 @@
 /*
   globals I18n _ SmartAnnotation FilePreviewModal animateSpinner DataTableHelpers
   HelperModule RepositoryDatatableRowEditor prepareRepositoryHeaderForExport
-  initAssignedTasksDropdown initBMTFilter
+  initAssignedTasksDropdown initBMTFilter initReminderDropdown
 */
 
 //= require jquery-ui/widgets/sortable
@@ -55,6 +55,12 @@ var RepositoryDatatable = (function(global) {
       $('th').removeClass('disable-click');
       $('.repository-row-selector').prop('disabled', false);
       $('.dataTables_filter input').prop('disabled', false);
+      $('#addRepositoryRecord').show();
+      if (!$('#saveRepositoryFilters').hasClass('hidden')) {
+        $('#saveRepositoryFilters').show();
+      }
+      $('#hideRepositoryReminders').show();
+      $('#importRecordsButton').show();
       if (rowsSelected.length === 0) {
         $('#exportRepositoriesButton').addClass('disabled');
         $('#copyRepositoryRecords').prop('disabled', true);
@@ -75,6 +81,7 @@ var RepositoryDatatable = (function(global) {
         $('#copyRepositoryRecords').prop('disabled', false);
         $('#restoreRepositoryRecords').prop('disabled', false);
         $('#deleteRepositoryRecords').prop('disabled', false);
+        $('#importRecordsButton').hide();
 
         if (rowsSelected.some(r=> rowsLocked.indexOf(r) >= 0)) { // Some selected rows is rowsLocked
           $('#editRepositoryRecord').prop('disabled', true);
@@ -85,7 +92,13 @@ var RepositoryDatatable = (function(global) {
       }
     } else if (currentMode === 'editMode') {
       $(TABLE_WRAPPER_ID).addClass('editing');
+      $('#importRecordsButton').hide();
       $('#editDeleteCopy').hide();
+      $('#addRepositoryRecord').hide();
+      $('#hideRepositoryReminders').hide();
+      if (!$('#saveRepositoryFilters').hasClass('hidden')) {
+        $('#saveRepositoryFilters').hide();
+      }
       $('#saveCancel').show();
       $('.manage-repo-column-index').prop('disabled', true);
       $('#repository-acitons-dropdown').prop('disabled', true);
@@ -321,17 +334,13 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
-  function bindExportActions() {
-    $('#export-repositories').on('click', function() {
-      animateSpinner(null, true);
-    });
-
+  function initExportActions() {
     $('#exportRepositoriesButton').on('click', function() {
       $('#exportRepositoryModal').modal('show');
     });
 
 
-    $('form#form-export').submit(function() {
+    $('form#form-export').off().submit(function() {
       var form = this;
       if (currentMode === 'viewMode') {
         // Remove all hidden fields
@@ -392,7 +401,7 @@ var RepositoryDatatable = (function(global) {
 
   function dataTableInit() {
     TABLE = $(TABLE_ID).DataTable({
-      dom: "R<'main-actions hidden'<'toolbar'><'filter-container'f>>t<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
+      dom: "R<'repository-toolbar hidden'<'repository-search-container'f>>t<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
       stateSave: true,
       processing: true,
       serverSide: true,
@@ -444,7 +453,7 @@ var RepositoryDatatable = (function(global) {
         className: 'assigned-column',
         sWidth: '1%',
         render: function(data, type, row) {
-          let content = $.fn.dataTable.render.AssignedTasksValue(data);
+          let content = $.fn.dataTable.render.AssignedTasksValue(data, row);
           let icon;
           if (!row.recordEditable) {
             icon = `<i class="repository-row-lock-icon fas fa-lock" title="${I18n.t('repositories.table.locked_item')}"></i>`;
@@ -477,6 +486,14 @@ var RepositoryDatatable = (function(global) {
           }
           return data;
         }
+      },
+      {
+        targets: 'row-stock',
+        className: 'item-stock',
+        sWidth: '1%',
+        render: function(data) {
+          return $.fn.dataTable.render.RepositoryStockValue(data);
+        }
       }],
       language: {
         emptyTable: I18n.t('repositories.show.no_items'),
@@ -484,6 +501,7 @@ var RepositoryDatatable = (function(global) {
       },
       rowCallback: function(row, data) {
         $(row).attr('data-editable', data.recordEditable);
+        $(row).attr('data-manage-stock-url', data.manageStockUrl);
         // Get row ID
         let rowId = data.DT_RowId;
         // If row ID is in the list of selected row IDs
@@ -500,13 +518,15 @@ var RepositoryDatatable = (function(global) {
           columns[i].defaultContent = '';
         }
         customColumns.each((i, column) => {
+          var columnData = $(column).data('type') === 'RepositoryStockValue' ? 'stock' : String(columns.length);
           columns.push({
             visible: true,
             searchable: true,
-            data: String(columns.length),
+            data: columnData,
             defaultContent: $.fn.dataTable.render['default' + column.dataset.type](column.id)
           });
         });
+
         return columns;
       }()),
       drawCallback: function() {
@@ -561,22 +581,23 @@ var RepositoryDatatable = (function(global) {
         initHeaderTooltip();
         disableCheckboxToggleOnCheckboxPreview();
 
-        // Append buttons to inner toolbar in the table
-        $.getJSON($(TABLE_ID).data('toolbar-url'), (data) => {
-          $(data.html).appendTo('div.toolbar');
-          if (typeof initBMTFilter === 'function') initBMTFilter();
-        });
+        DataTableHelpers.initSearchField(
+          $(TABLE_ID).closest('.dataTables_wrapper'),
+          I18n.t('repositories.show.filter_inventory_items')
+        );
 
-        $('div.toolbar-filter-buttons').prependTo('div.filter-container');
-        $('div.toolbar-filter-buttons').show();
+        let toolBar = $($('#repositoryToolbar').html());
+        toolBar.find('.toolbar-search').html($('.repository-search-container'));
+        $('.repository-toolbar').html(toolBar);
+        if (typeof initBMTFilter === 'function') initBMTFilter();
 
         RepositoryDatatableRowEditor.initFormSubmitAction(TABLE);
+        initExportActions();
         initItemEditIcon();
         initSaveButton();
         initCancelButton();
 
         DataTableHelpers.initLengthAppearance($(TABLE_ID).closest('.dataTables_wrapper'));
-        DataTableHelpers.initSearchField($(TABLE_ID).closest('.dataTables_wrapper'), I18n.t('repositories.show.filter_inventory_items'));
 
         $('<img class="barcode-scanner" src="/images/icon_small/barcode.png"></img>').appendTo($('.search-container'));
 
@@ -584,7 +605,7 @@ var RepositoryDatatable = (function(global) {
           $('.dataTables_scrollBody, .dataTables_scrollHead').css('overflow', '');
         }
 
-        $('.main-actions, .pagination-row').removeClass('hidden');
+        $('.repository-toolbar, .pagination-row').removeClass('hidden');
 
         $(TABLE_ID).find('tr[data-editable=false]').each(function(_, e) {
           rowsLocked.push(parseInt($(e).attr('id'), 10));
@@ -593,7 +614,9 @@ var RepositoryDatatable = (function(global) {
         // go back to manage columns index in modal, on column save, after table loads
         $('#manage-repository-column .back-to-column-modal').trigger('click');
 
+
         initAssignedTasksDropdown(TABLE_ID);
+        initReminderDropdown(TABLE_ID);
         renderFiltersDropdown();
         setTimeout(function() {
           adjustTableHeader();
@@ -610,7 +633,7 @@ var RepositoryDatatable = (function(global) {
     // Handle click on table cells with checkboxes
     $(TABLE_ID).on('click', 'tbody td', function(ev) {
       // Skip if clicking on selector checkbox, edit icon or link
-      if ($(ev.target).is('.repository-row-selector, .repository-row-edit-icon, a')) return;
+      if ($(ev.target).is('.row-reminders-icon, .repository-row-selector, .repository-row-edit-icon, a')) return;
 
       $(this).parent().find('.repository-row-selector').trigger('click');
     });
@@ -630,7 +653,6 @@ var RepositoryDatatable = (function(global) {
     })
 
     initRowSelection();
-    bindExportActions();
     $(window).resize(() => {
       setTimeout(() => {
         adjustTableHeader();
@@ -760,6 +782,24 @@ var RepositoryDatatable = (function(global) {
     })
     .on('click', '#deleteRepositoryRecords', function() {
       $('#deleteRepositoryRecord').modal('show');
+    })
+    .on('click', '#hideRepositoryReminders', function() {
+      var visibleReminderRepositoryRowIds = $('.row-reminders-dropdown').map(
+        function() { return $(this).closest('[role=row]').attr('id'); }
+      ).toArray();
+
+      $.ajax({
+        type: 'POST',
+        url: $(this).data('hideRemindersUrl'),
+        dataType: 'json',
+        data: {
+          visible_reminder_repository_row_ids: visibleReminderRepositoryRowIds
+        },
+        success: function() {
+          $('#hideRepositoryReminders').remove();
+          TABLE.ajax.reload();
+        }
+      });
     });
 
   // Handle enter key
@@ -840,7 +880,7 @@ var RepositoryDatatable = (function(global) {
 
   function renderFiltersDropdown() {
     let dropdown = $('#repositoryFilterTemplate').html();
-    $('.dataTables_filter').append(dropdown);
+    $('.toolbar-filters').html(dropdown);
     if (typeof initRepositoryFilter === 'function') initRepositoryFilter();
   }
 

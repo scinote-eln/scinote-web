@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class RepositoryDateTimeValue < RepositoryDateTimeValueBase
-  def data_changed?(new_data)
+  include RepositoryValueWithReminders
+
+  def data_different?(new_data)
     new_time = Time.zone.parse(new_data)
     new_time.to_i != data.to_i
   end

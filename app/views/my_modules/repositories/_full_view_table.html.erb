@@ -9,7 +9,9 @@
        data-load-state-url="<%= repository_load_table_state_path(@repository) %>"
        data-export-url="<%= export_repository_my_module_repository_path(@my_module ,@repository) %>"
        data-versions-sidebar-url="<%= full_view_sidebar_my_module_repository_snapshots_path(@my_module, @repository) %>"
->
+       data-stock-management="<%= @repository.has_stock_management? %>"
+       data-stock-consumption-column="<%= include_stock_consumption && @repository.has_stock_management? %>"
+       data-stock-consumption-editable="<%= include_stock_consumption && can_update_my_module_stock_consumption?(@my_module) %>">
   <thead>
     <tr>
       <th id="checkbox">
@@ -30,7 +32,7 @@
       <th id="archived-by"><%= t("repositories.table.archived_by") %></th>
       <% @repository.repository_columns.order(:id).each do |column| %>
         <th
-          class="repository-column"
+          class="repository-column <%= 'row-stock item-stock' if column.data_type == 'RepositoryStockValue' %>"
           id="<%= column.id %>"
           data-type="<%= column.data_type %>"
           <% column.metadata.each do |k, v| %>
@@ -39,6 +41,9 @@
         >
           <%= display_tooltip(column.name) %>
         </th>
+      <% end %>
+      <% if @repository.has_stock_management? && include_stock_consumption %>
+        <th class="row-consumption" data-columns-visible="false"><%= t("repositories.table.row_consumption") %></th>
       <% end %>
     </tr>
   </thead>

@@ -46,11 +46,18 @@
       font-size: 14px;
     }
 
+    .control-label {
+      text-align: left;
+    }
+
     #items-textarea {
       height: 120px;
     }
 
     .dropdown-selector-container {
+
+
+
       .delimiter-icon-dropdown {
 
         .tag-label {
@@ -91,6 +98,22 @@
   #repository-column-data-type + .dropdown-selector-container {
     .custom-option {
       padding: 0 25px;
+    }
+
+    .disabled-option {
+      color: $color-silver-chalice;
+      padding: 0 25px;
+      pointer-events: none;
+    }
+
+    .column-type-option {
+      display: flex;
+      width: 100%;
+
+      .text-description {
+        font-style: italic;
+        margin-left: auto;
+      }
     }
   }
 

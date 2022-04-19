@@ -10,8 +10,13 @@ class RepositorySnapshot < RepositoryBase
              class_name: 'Repository',
              inverse_of: :repository_snapshots,
              optional: true
-
   belongs_to :my_module, optional: true
+  has_one :repository_stock_consumption_column,
+          -> { where(data_type: 'RepositoryStockConsumptionValue') },
+          class_name: 'RepositoryColumn',
+          foreign_key: :repository_id,
+          inverse_of: :repository_snapshot,
+          dependent: :destroy
 
   validates :name, presence: true, length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :status, presence: true

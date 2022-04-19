@@ -46,6 +46,10 @@ class RepositoryDatatableService
       if @params[:assigned] == 'assigned'
         repository_rows = repository_rows.joins(:my_module_repository_rows)
                                          .where(my_module_repository_rows: { my_module_id: @my_module })
+        if @repository.has_stock_management?
+          repository_rows = repository_rows
+                            .select('SUM(my_module_repository_rows.stock_consumption) AS "consumed_stock"')
+        end
       else
         repository_rows = repository_rows
                           .joins(:repository)
@@ -429,21 +433,25 @@ class RepositoryDatatableService
       return records unless sorting_column
 
       sorting_data_type = sorting_column.data_type.constantize
-      cells = sorting_data_type.joins(:repository_cell)
-                               .where('repository_cells.repository_column_id': sorting_column.id)
+      cells = sorting_data_type.joins(
+        "INNER JOIN repository_cells AS repository_sort_cells "\
+        "ON repository_sort_cells.value_id = #{sorting_data_type.table_name}.id "\
+        "AND repository_sort_cells.value_type = '#{sorting_data_type.base_class.name}'"
+      ).where('repository_sort_cells.repository_column_id': sorting_column.id)
+
       if sorting_data_type.const_defined?('EXTRA_SORTABLE_VALUE_INCLUDE')
         cells = cells.joins(sorting_data_type::EXTRA_SORTABLE_VALUE_INCLUDE)
       end
 
       cells = if sorting_column.repository_checklist_value?
                 cells
-                  .select("repository_cells.repository_row_id, \
+                  .select("repository_sort_cells.repository_row_id, \
                            STRING_AGG(#{sorting_data_type::SORTABLE_COLUMN_NAME}, ' ' \
                            ORDER BY #{sorting_data_type::SORTABLE_COLUMN_NAME}) AS value")
-                  .group('repository_cells.repository_row_id')
+                  .group('repository_sort_cells.repository_row_id')
               else
                 cells
-                  .select("repository_cells.repository_row_id, #{sorting_data_type::SORTABLE_COLUMN_NAME} AS value")
+                  .select("repository_sort_cells.repository_row_id, #{sorting_data_type::SORTABLE_COLUMN_NAME} AS value")
               end
 
       records.joins("LEFT OUTER JOIN (#{cells.to_sql}) AS values ON values.repository_row_id = repository_rows.id")

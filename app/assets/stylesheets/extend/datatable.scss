@@ -52,6 +52,14 @@
         background-color: $color-alto;
       }
     }
+
+    td {
+      padding-left: 10px;
+    }
+
+    .dt-body-center {
+      padding-left: 8px;
+    }
   }
 
   .sorting_desc,

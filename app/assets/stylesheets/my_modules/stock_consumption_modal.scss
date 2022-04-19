@@ -1,0 +1,17 @@
+
+#consumeRepositoryStockValueModal {
+  .consumption-container {
+    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: .8em;
+
+    .units {
+      margin: 1.25em 0 0 .5em;
+    }
+  }
+
+  .comments-container {
+    margin-bottom: 1em;
+  }
+}

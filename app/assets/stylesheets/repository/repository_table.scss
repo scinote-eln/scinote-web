@@ -2,6 +2,7 @@
 // scss-lint:disable NestingDepth ImportantRule
 
 @import "constants";
+@import "layouts/reminders";
 
 .repository-table {
   position: relative;
@@ -49,7 +50,7 @@
     padding: 1px 8px;
     position: relative;
 
-    .fas {
+    .fas.fa-pencil-alt {
       line-height: 35px;
       text-align: center;
       width: 30px;
@@ -57,7 +58,26 @@
 
     .repository-row-edit-icon {
       cursor: pointer;
-      display: none;
+      display: inline-block;
+      opacity: 0;
+    }
+
+    .row-reminders-dropdown {
+      cursor: pointer;
+      display: inline-block;
+      margin-right: 8px;
+      padding: 8px;
+
+      .fa-bell {
+        height: 16px;
+        text-align: center;
+        width: 16px;
+      }
+
+      &.open {
+        background: $color-concrete;
+        border-radius: 4px;
+      }
     }
 
     .assign-counter-container {
@@ -65,8 +85,7 @@
       display: inline-block;
       line-height: 35px;
       position: absolute;
-      right: 0;
-      width: calc(100% - 40px);
+      right: 5px;
 
       .assign-counter {
         display: inline-block;
@@ -108,6 +127,32 @@
     }
   }
 
+  .item-name {
+    padding: 2px 8px;
+
+    .row-reminders-dropdown {
+      cursor: pointer;
+      display: inline-block;
+      margin-right: 8px;
+      padding: 8px;
+
+      .fa-bell {
+        height: 16px;
+        text-align: center;
+        width: 16px;
+      }
+
+      &.open {
+        background: $color-concrete;
+        border-radius: 4px;
+      }
+    }
+
+    .record-info-link {
+      display: inline-block;
+      margin: 8px 0;
+    }
+  }
   // Added on
   .added-on {
     white-space: nowrap;
@@ -182,6 +227,55 @@
     }
   }
 
+  // Stock
+  .stock-value-view-render {
+    &.stock-empty {
+      color: $brand-danger;
+
+      &::before {
+        @include font-awesome;
+        content: $font-fas-exclamation-triangle;
+      }
+    }
+
+    &.stock-low {
+      &::before {
+        @include font-awesome;
+        color: $brand-warning;
+        content: $font-fas-exclamation-triangle;
+      }
+    }
+
+  }
+
+  .not-assigned-stock {
+    color: $color-black;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: none;
+    };
+  }
+
+  .manage-repository-stock-value-link {
+    cursor: pointer;
+  }
+
+  .manage-repository-consumed-stock-value-link:not(.stock-value-view-render) {
+    color: $color-volcano;
+  }
+
+  .empty-stock-render,
+  .consumption-locked {
+    color: $color-silver-chalice;
+  }
+
+  .row-stock,
+  .row-consumption {
+    min-width: 140px;
+  }
+
+
   // DateTime
   .datetime-container {
     display: flex;
@@ -239,7 +333,7 @@
 
         .assigned-column {
           .repository-row-edit-icon {
-            display: inline-block;
+            opacity: 1;
           }
         }
       }
@@ -261,7 +355,7 @@
         tr:hover {
           .assigned-column {
             .repository-row-edit-icon {
-              display: none;
+              opacity: 0;
             }
 
             .assign-counter-container {
@@ -273,6 +367,31 @@
             }
           }
         }
+      }
+    }
+  }
+}
+
+.repository-table,
+#myModuleRepositoryFullViewModal {
+  .date-time-cell-value,
+  .date-cell-value {
+    display: inline-block;
+
+    &.reminder {
+      position: relative;
+
+      &::after {
+        background-color: $brand-danger;
+        border: 2px solid $color-white;
+        border-radius: 50%;
+        content: "";
+        display: inline-block;
+        height: 10px;
+        position: absolute;
+        right: -.7em;
+        top: 0;
+        width: 10px;
       }
     }
   }

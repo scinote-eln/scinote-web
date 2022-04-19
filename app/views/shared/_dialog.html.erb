@@ -1,0 +1,32 @@
+<div id="<%= id %>" class="sci-dialog modal fade <%= 'modal-auto-open' if defined?(shown) && shown %>" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"><%= title %></h4>
+      </div>
+      <div class="modal-body">
+        <div class="sci-dialog__icon <%= type %>">
+          <% case type %>
+          <% when 'error', 'warning' %>
+            <i class="fas fa-exclamation-triangle"></i>
+          <% when 'info' %>
+            <i class="fas fa-info"></i>
+          <% when 'success' %>
+            <i class="fas fa-check-circle"></i>
+          <% else %>
+            <i class="fas fa-info"></i>
+          <% end %>
+        </div>
+        <div class="sci-dialog__body">
+          <%= body %>
+        </div>
+      </div>
+      <div class="modal-footer text-center">
+        <button type="button"
+                class="btn btn-primary"
+                data-dismiss="modal"><%= defined?(button_text) ? button_text : t('general.okay') %></button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -173,6 +173,78 @@
             }
           }
         }
+
+        &.experiment-placeholder {
+          align-items: center;
+          background-color: $color-white;
+          border-radius: $border-radius-default;
+          box-shadow: $flyout-shadow;
+          display: flex;
+
+          .placeholder-body {
+            display: flex;
+            flex-basis: 70%;
+            flex-wrap: wrap;
+            height: 80px;
+          }
+
+          .image-container {
+            margin-left: auto;
+
+            .image-text {
+              display: none;
+            }
+          }
+
+          .placeholder-element {
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+            animation-name: placeholder-pulsing;
+            background-color: $color-alto;
+            border-radius: $border-radius-default;
+            height: 18px;
+
+            &.header,
+            &.footer {
+              flex-basis: 100%;
+            }
+
+            &.footer {
+              height: 36px;
+            }
+
+            &.line-0 {
+              flex-basis: 100%;
+            }
+
+            &.line-1 {
+              flex-basis: 90%;
+            }
+
+            &.line-2 {
+              flex-basis: 80%;
+            }
+
+            &.image {
+              height: 80px;
+              width: 80px;
+            }
+
+            @keyframes placeholder-pulsing {
+              0% {
+                opacity: 1;
+              }
+
+              50% {
+                opacity: .5;
+              }
+
+              100% {
+                opacity: 1;
+              }
+            }
+          }
+        }
       }
 
       &.list {
@@ -281,12 +353,101 @@
               background: linear-gradient(to right, $color-transparent, $color-concrete 50%);
             }
           }
+
+          &.experiment-placeholder {
+            display: contents;
+
+            .placeholder-body {
+              display: contents;
+            }
+
+            .placeholder-element {
+              align-self: flex-start;
+              display: none;
+              margin-top: .5em;
+              padding: .5em 0;
+            }
+
+            .footer {
+              display: block;
+              grid-column: 6;
+              height: 18px;
+              width: 80%;
+
+            }
+
+            .header {
+              display: block;
+              grid-column: 7;
+              width: 80%;
+            }
+
+            .image-container {
+              display: flex;
+              grid-column: 2;
+              margin-left: 0;
+
+              .image {
+                display: block;
+                flex-basis: 56px;
+                height: 56px;
+                margin: 0;
+              }
+
+              .image-text {
+                display: block;
+                flex-basis: calc(100% - 80px);
+                margin: 0 10px 0 auto;
+              }
+            }
+
+            .line-0 {
+              display: block;
+              grid-column: 3;
+              width: 80%;
+            }
+
+            .line-1 {
+              display: block;
+              grid-column: 4;
+              width: 80%;
+            }
+
+            .line-2 {
+              display: block;
+              grid-column: 5;
+              width: 80%;
+            }
+          }
         }
       }
 
       &.readonly {
         .experiment-name-cell {
           margin-left: 0 !important;
+        }
+      }
+
+      &.last-page {
+        padding-bottom: 5em;
+        position: relative;
+      }
+
+      .experiment-list-end-placeholder {
+        align-items: center;
+        background-color: $color-concrete;
+        bottom: 1em;
+        display: flex;
+        height: 3em;
+        left: calc(50% - 150px);
+        margin: 0 auto;
+        padding: 1em;
+        position: absolute;
+        width: 300px;
+
+        > * {
+          flex-grow: 1;
+          text-align: center;
         }
       }
     }
