@@ -235,7 +235,7 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
       { type: 'inventory_columns',
         attributes: {
           name: Faker::Name.unique.name,
-          data_type: 'stock_value',
+          data_type: 'stock',
           metadata: {
              decimals: 3
           }
@@ -434,8 +434,9 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
         team_id: @teams.first.id,
         inventory_id: @teams.first.repositories.second.id
       ), headers: @valid_headers
-      expect(response).to have_http_status(400)
-      expect(RepositoryColumn.where(id: deleted_id)).to exist
+      expect(response).to have_http_status(200)
+      expect(RepositoryColumn.where(id: deleted_id)).to_not exist
+      expect(RepositoryCell.where(repository_column: deleted_id).count).to equal 0
     end
   end
 
