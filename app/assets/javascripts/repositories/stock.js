@@ -1,12 +1,7 @@
-/* global dropdownSelector GLOBAL_CONSTANTS I18n SmartAnnotation */
+/* global dropdownSelector GLOBAL_CONSTANTS I18n SmartAnnotation formatDecimalValue */
 
 var RepositoryStockValues = (function() {
   const UNIT_SELECTOR = '#repository-stock-value-units';
-
-  function formatDecimalValue(value, decimals) {
-    let regexp = decimals === 0 ? /[^-0-9]/g : /[^-0-9.]/g;
-    return value.replace(regexp, '').match(new RegExp(`^-?\\d*(\\.\\d{0,${decimals}})?`))[0];
-  }
 
   function updateChangeAmount($element) {
     var currentAmount = parseFloat($element.data('currentAmount'));
