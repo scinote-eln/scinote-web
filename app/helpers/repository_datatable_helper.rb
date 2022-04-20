@@ -60,7 +60,7 @@ module RepositoryDatatableHelper
       row['stock'] = stock_present ? display_cell_value(record.repository_stock_cell, team, repository) : {}
       row['stock'][:stock_managable] = stock_managable
 
-      if !options[:include_stock_consumption] || can_update_my_module_stock_consumption?(options[:my_module])
+      if !options[:include_stock_consumption] || stock_consumption_permitted?(repository, options[:my_module])
         row['stock'][:stock_status] = record.repository_stock_cell&.value&.status
       end
 
@@ -70,7 +70,7 @@ module RepositoryDatatableHelper
         consumption_managable = stock_consumption_managable?(record, repository, options[:my_module])
         row['consumedStock'] = {
           stock_present: stock_present,
-          consumptionPermitted: can_update_my_module_stock_consumption?(options[:my_module]),
+          consumptionPermitted: stock_consumption_permitted?(repository, options[:my_module]),
           consumptionManagable: consumption_managable,
           updateStockConsumptionUrl: Rails.application.routes.url_helpers.consume_modal_my_module_repository_path(
             options[:my_module],
@@ -116,7 +116,7 @@ module RepositoryDatatableHelper
 
         row['stock'] = stock_present ? display_cell_value(record.repository_stock_cell, record.repository.team, repository) : {}
 
-        if !options[:include_stock_consumption] || can_update_my_module_stock_consumption?(my_module)
+        if !options[:include_stock_consumption] || stock_consumption_permitted?(repository, my_module)
           row['stock'][:stock_status] = record.repository_stock_cell&.value&.status
         end
 
@@ -144,7 +144,7 @@ module RepositoryDatatableHelper
         end
 
         row['consumedStock']['stock_present'] = stock_present
-        row['consumedStock']['consumptionPermitted'] = can_update_my_module_stock_consumption?(my_module)
+        row['consumedStock']['consumptionPermitted'] = stock_consumption_permitted?(repository, my_module)
         row['consumedStock']['consumptionManagable'] = consumption_managable
       end
 
@@ -265,9 +265,14 @@ module RepositoryDatatableHelper
     repository_rows.active.with_active_reminders(current_user).to_a.pluck(:id).uniq
   end
 
+  def stock_consumption_permitted?(repository, my_module)
+    return false unless repository.is_a?(Repository)
+
+    can_update_my_module_stock_consumption?(my_module)
+  end
+
   def stock_consumption_managable?(record, repository, my_module)
     return false unless my_module
-    return false unless record.repository.is_a?(Repository)
     return false if repository.archived? || record.archived?
 
     true
