@@ -40,7 +40,8 @@ class RepositoryStockValuesController < ApplicationController
         params[:operator],
         params[:change_amount],
         @repository_stock_value.repository_stock_unit_item.data,
-        @repository_stock_value.amount
+        @repository_stock_value.amount,
+        params[:repository_stock_value][:comment]
       )
     end
 
@@ -80,7 +81,7 @@ class RepositoryStockValuesController < ApplicationController
     params.require(:repository_stock_value).permit(:unit_item_id, :amount, :comment, :low_stock_threshold)
   end
 
-  def log_activity(operator, change_amount, unit, new_amount)
+  def log_activity(operator, change_amount, unit, new_amount, comment)
     Activities::CreateActivityService
       .call(activity_type: "inventory_item_stock_#{operator}",
             owner: current_user,
@@ -91,7 +92,8 @@ class RepositoryStockValuesController < ApplicationController
               repository_row: @repository_row.id,
               change_amount: change_amount,
               unit: unit,
-              new_amount: new_amount
+              new_amount: new_amount,
+              comment: comment
             })
   end
 end
