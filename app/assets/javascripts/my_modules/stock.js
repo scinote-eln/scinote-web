@@ -1,12 +1,7 @@
-/* global SmartAnnotation I18n MyModuleRepositories GLOBAL_CONSTANTS */
+/* global SmartAnnotation I18n MyModuleRepositories GLOBAL_CONSTANTS formatDecimalValue */
 var MyModuleStockConsumption = (function() {
   const CONSUMPTION_MODAL = '#consumeRepositoryStockValueModal';
   const WARNING_MODAL = '#consumeRepositoryStockValueModalWarning';
-
-  function formatDecimalValue(value, decimals) {
-    let regexp = decimals === 0 ? /[^0-9-]/g : /[^0-9.-]/g;
-    return value.replace(regexp, '').match(new RegExp(`^-?\\d*(\\.\\d{0,${decimals}})?`))[0];
-  }
 
   function focusStockConsumption() {
     // focus and move cursor to end of text
