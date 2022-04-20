@@ -45,7 +45,7 @@ class ExperimentsOverviewService
             .select('experiments.*')
             .select('COUNT(DISTINCT active_tasks.id) AS task_count')
             .select('COUNT(DISTINCT active_completed_tasks.id) AS completed_task_count')
-            .group('experiments.id, user_assignments.id, user_roles.id')
+            .group('experiments.id')
   end
 
   def filter_records(records)

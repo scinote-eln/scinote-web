@@ -10,6 +10,8 @@ class MyModule < ApplicationRecord
   include PermissionCheckableModel
   include Assignable
 
+  attr_accessor :transition_error_rollback
+
   enum state: Extends::TASKS_STATES
 
   before_validation :archiving_and_restoring_extras, on: :update, if: :archived_changed?
@@ -294,17 +296,6 @@ class MyModule < ApplicationRecord
   # Generate the repository rows belonging to this module
   # in JSON form, suitable for display in handsontable.js
   def repository_json_hot(repository, order)
-    data = []
-    rows = repository.assigned_rows(self).includes(:created_by).order(created_at: order)
-    rows.find_each do |row|
-      row_json = []
-      row_json << row.code
-      row_json << (row.archived ? "#{row.name} [#{I18n.t('general.archived')}]" : row.name)
-      row_json << I18n.l(row.created_at, format: :full)
-      row_json << row.created_by.full_name
-      data << row_json
-    end
-
     # Prepare column headers
     headers = [
       I18n.t('repositories.table.id'),
@@ -312,6 +303,34 @@ class MyModule < ApplicationRecord
       I18n.t('repositories.table.added_on'),
       I18n.t('repositories.table.added_by')
     ]
+    data = []
+    rows = repository.assigned_rows(self).includes(:created_by).order(created_at: order)
+    if repository.has_stock_management?
+      headers.push(I18n.t('repositories.table.row_consumption'))
+      rows = rows.left_joins(my_module_repository_rows: :repository_stock_unit_item)
+                 .select(
+                   'repository_rows.*',
+                   'my_module_repository_rows.stock_consumption',
+                   'repository_stock_unit_items.data AS stock_unit'
+                 )
+    end
+    rows.find_each do |row|
+      row_json = []
+      row_json << row.code
+      row_json << (row.archived ? "#{row.name} [#{I18n.t('general.archived')}]" : row.name)
+      row_json << I18n.l(row.created_at, format: :full)
+      row_json << row.created_by.full_name
+      if repository.has_stock_management?
+        if repository.is_a?(RepositorySnapshot)
+          consumed_stock = row.repository_stock_consumption_cell&.value&.formatted
+          row_json << (consumed_stock || 0)
+        else
+          row_json << "#{row['stock_consumption'] || 0} #{row['stock_unit']}"
+        end
+      end
+      data << row_json
+    end
+
     { data: data, headers: headers }
   end
 
@@ -326,7 +345,11 @@ class MyModule < ApplicationRecord
     return false unless repository
 
     repository.repository_columns.order(:id).each do |column|
-      headers.push(column.name)
+      if column.data_type == 'RepositoryStockValue'
+        headers.push(I18n.t('repositories.table.row_consumption'))
+      else
+        headers.push(column.name)
+      end
       custom_columns.push(column.id)
     end
 
@@ -478,16 +501,11 @@ class MyModule < ApplicationRecord
     yield
 
     if my_module_status.my_module_status_consequences.any?(&:runs_in_background?)
-      MyModuleStatusConsequencesJob.perform_later(
-        self,
-        my_module_status.my_module_status_consequences.to_a,
-        status_changing_direction
-      )
+      MyModuleStatusConsequencesJob
+        .perform_later(self, my_module_status.my_module_status_consequences.to_a, status_changing_direction)
     else
-      my_module_status.my_module_status_consequences.each do |consequence|
-        consequence.public_send(status_changing_direction, self)
-      end
-      update!(status_changing: false)
+      MyModuleStatusConsequencesJob
+        .perform_now(self, my_module_status.my_module_status_consequences.to_a, status_changing_direction)
     end
   end
 

@@ -1,0 +1,30 @@
+.row-reminders-notification {
+  font-size: 14px;
+  width: 300px;
+
+
+  .row-reminders-title {
+    line-height: 20px;
+    margin-left: 16px;
+    margin-top: 5px;
+  }
+
+  .row-reminders-body {
+    font-size: 13px;
+    line-height: 16px;
+    margin-left: 16px;
+    margin-top: 5px;
+  }
+
+  .row-reminders-footer {
+    margin: 4px 14px;
+    padding: 8px 2px;
+  }
+
+  hr {
+    background-color: $color-alto;
+    border-width: 0;
+    height: 1px;
+    margin: 0 16px 10px;
+    }
+  }

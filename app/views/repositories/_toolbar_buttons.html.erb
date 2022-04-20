@@ -1,160 +1,57 @@
-<div id="toolbarButtonsDatatable" class="sci-btn-group">
-<% if @repository.active? %>
-  <% if @repository.repository_snapshots.provisioning.any? %>
-    <div class='repository-provisioning-notice'>
-      <i class="fas fa-info-circle"></i>
-      <%= t('repositories.index.snapshot_provisioning_in_progress') %>
+<template id="repositoryToolbar">
+  <!-- LEFT TOOLBAR BLOCK -->
+  <div class="toolbar-left-block">
+    <% if @repository.active? %>
+      <% if @repository.repository_snapshots.provisioning.any? %>
+        <div class='repository-provisioning-notice auto-shrink-button'>
+          <i class="fas fa-info-circle"></i>
+          <span class="button-text"><%= t('repositories.index.snapshot_provisioning_in_progress') %></span>
+        </div>
+      <% end %>
+      <% if can_create_repository_rows?(@repository) %>
+        <button type="button" title="<%= t('repositories.show.button_tooltip.new') %>"
+                class="btn btn-primary editAdd auto-shrink-button"
+                id="addRepositoryRecord" data-view-mode="active">
+          <span class="fas fa-plus"></span>
+          <span class="button-text"><%= t("repositories.add_new_record") %></span>
+        </button>
+        <button type="button" title="<%= t('repositories.show.button_tooltip.import') %>"
+                class="btn btn-light editImport auto-shrink-button"
+                id="importRecordsButton" data-view-mode="active">
+          <span class="fas fa-upload"></span>
+          <span class="button-text"><%= t('repositories.index.options_dropdown.import_items') %></span>
+        </button>
+      <% end %>
+      <%= render partial: 'repositories/toolbar/row_actions' %>
+      <% if @repository.repository_rows.with_active_reminders(current_user).any? %>
+        <button type="button" title="<%= t("repositories.hide_reminders") %>"
+                class="btn btn-light auto-shrink-button"
+                id="hideRepositoryReminders"
+                data-view-mode="active"
+                data-hide-reminders-url="<%= team_repository_hide_reminders_url(@current_team, @repository) %>">
+          <span class="fas fa-bell-slash"></span>
+          <span class="button-text"><%= t("repositories.hide_reminders") %></span>
+        </button>
+      <% end %>
+    <% end %>
+    <div class="archived-label" data-view-mode="archived">
+      <%= render partial: 'repositories/toolbar/archive_label' %>
+    </div>
+    <% if can_manage_repository_filters?(@repository) %>
+    <div class="toolbar-save-filters">
+      <%= render partial: 'repositories/toolbar/save_filters' %>
     </div>
   <% end %>
-
-  <% if can_create_repository_rows?(@repository) %>
-    <button type="button" class="btn btn-primary editAdd" id="addRepositoryRecord" data-view-mode="active">
-      <span class="fas fa-plus"></span>
-      <span class="hidden-xs"><%= t("repositories.add_new_record") %></span>
-    </button>
-  <% end %>
-
-  <% if can_manage_repository_rows?(@repository) %>
-    <span id="editDeleteCopy" data-toggle="buttons" style="display:none">
-      <%if can_update_repository_rows?(@repository) %>
-        <button type="button" class="btn btn-light editAdd" id="editRepositoryRecord" disabled data-view-mode="active">
-          <span class="fas fa-pencil-alt"></span>
-          <span class="hidden-xs-custom"><%= t("repositories.edit_record") %></span>
-        </button>
-      <% end %>
-
-
-      <% if can_create_repository_rows?(@repository) %>
-        <button type="button" class="btn btn-light copyRow" id="copyRepositoryRecords" disabled data-view-mode="active">
-          <span class="fas fa-copy"></span>
-          <span class="hidden-xs-custom"><%= t("repositories.copy_record") %></span>
-        </button>
-      <% end %>
-
-      <% if can_delete_repository_rows?(@repository) %>
-        <button type="button" class="btn btn-light"
-          id="archiveRepositoryRecordsButton"  disabled data-view-mode="active">
-          <span class="fas fa-archive"></span>
-          <span class="hidden-xs-custom"><%= t'repositories.archive_record' %></span>
-        </button>
-      <% end %>
-        <button type="button" class="btn btn-light" id="restoreRepositoryRecords" disabled  data-view-mode="archived">
-          <span class="fas fa-undo"></span>
-          <span class="hidden-xs"><%= t("repositories.restore_record") %></span>
-        </button>
-      <% if can_delete_repository_rows?(@repository) %>
-        <button type="button" class="btn btn-light" id="deleteRepositoryRecords" disabled  data-view-mode="archived">
-          <span class="fas fa-trash"></span>
-          <span class="hidden-xs"><%= t("repositories.delete_record") %></span>
-        </button>
-      <% end %>
-    </span>
-
-    <span id="saveCancel" data-toggle="buttons" style="display:none">
-      <button type="button" class="btn btn-success" id="saveRecord" data-view-mode="active">
-        <span class="fas fa-save"></span>
-        <%= t("repositories.save_record") %>
-      </button>
-      <button type="button" class="btn btn-light" id="cancelSave" data-view-mode="active">
-        <span class="fas fa-times-circle"></span>
-        <%= t("repositories.cancel_save") %>
-      </button>
-    </span>
-  <% elsif @repository.shared_with_read?(current_team) %>
-    <p class="view-only-label"><%= t('repositories.index.view_only_permission_label') %></p>
-  <% end %>
-<% end %>
-  <button type="button" id="toolbarPrintLabel" class="btn btn-light print-label-button" data-dismiss="modal" data-url="<%= print_modal_repository_repository_rows_path(@repository)  %>" data-rows="[]" style="display: none">
-    <span class="fas fa-print"></span>
-    <%= t('repository_row.modal_print_label.print_label') %>
-
-  </button>
-  <div class="archived-label" data-view-mode="archived">
-    <% if @repository.active? %>
-      <%= t('repositories.show.archived_view_label.active', repository_name: @repository.name) %>
-    <% else %>
-      <table>
-        <tr>
-          <td><%= t('repositories.show.archived_view_label.archived_on') %></td>
-          <td><%= I18n.l(@repository.archived_on, format: :full) %></td>
-        </tr>
-        <tr>
-          <td><%= t('repositories.show.archived_view_label.archived_by') %></td>
-          <td><%= @repository.archived_by.full_name %></td>
-        </tr>
-      </table>
-    <% end %>
   </div>
 
-  <% if can_manage_repository_filters?(@repository) %>
-    <div class="repository-cog dropdown hidden" id="saveRepositoryFilters">
-      <button type="button"
-              class="btn btn-default"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="true">
-        <span class="fas fa-save"></span>
-        <span class="hidden-xs"><%= t("repositories.show.filters.save_filters") %></span>
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu">
-        <li id="newFilterLink">
-          <a href="#" data-toggle="modal" data-target="#modalSaveRepositoryTableFilter">
-            <span class="fas fa-plus"></span>
-            <%= t('repositories.show.filters.new_filter') %>
-          </a>
-        </li>
-        <li id="overwriteFilterLink" class="hidden">
-          <a href="#" data-toggle="modal" class="overwrite-link" data-target="#modalSaveRepositoryTableFilter">
-            <span class="fas fa-save"></span>
-            <span class="overwrite-title">
-              <%= t('repositories.show.filters.overwrite_filter') %>
-              <span id="currentFilterName"></span>
-            </span>
-          </a>
-        </li>
-      </ul>
-    </div>
-  <% end %>
-
-  <% if @repository.is_a?(BmtRepository) %>
-    <div class="dropdown" id="bmtFiltersDropdownButton">
-        <button id="bmtFiltersDropdown"
-                class="btn btn-secondary bmt-filters-button"
-                type="button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-      >
-        <span class="fas fa-microscope"></span>
-        <%= t('repositories.show.bmt_search.bmt_filter') %>
-      </button>
-      <div
-        class="dropdown-menu bmt-filters-container"
-        id="bmtFilterContainer"
-        data-datatable-id="#repository-table-<%= @repository.id %>"
-        data-saved-filters-url="<%= bmt_filters_url %>"
-        data-can-manage-filters="<%= can_manage_bmt_filters?(current_team) %>"
-        data-bmt-api-base-url="<%= bmt_request_url(path: 'api') %>"
-      >
-        <filter-container
-          @filters:update="updateFilters"
-          @filters:clear="clearFilters"
-          @cids:update="updateExternalIds"
-          @cids:error="handleSearchError"
-          :can-manage-filters="canManageFilters"
-          :bmt-api-base-url="bmtApiBaseUrl"
-          :saved-filters.sync="savedFilters"
-          :filters.sync="filters" />
+  <!-- RIGHT TOOLBAR BLOCK -->
+  <div class="toolbar-right-block">
+    <div class="toolbar-filters"></div>
+    <% if @repository.is_a?(BmtRepository) %>
+      <div class="toolbar-bmt-filters">
+        <%= render partial: 'repositories/toolbar/bmt' %>
       </div>
-    </div>
-    <% if can_manage_bmt_filters?(current_team) %>
-      <button
-        class="btn btn-light open-save-bmt-modal hidden"
-        type="button"
-        aria-haspopup="true"
-      >
-        <span class="fas fa-save"></span>
-        <%= t('repositories.show.bmt_search.save_filters') %>
-      </button>
     <% end %>
-  <% end %>
+    <div class="toolbar-search"></div>
+  </div>
+</template>

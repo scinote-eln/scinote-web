@@ -253,6 +253,16 @@ class User < ApplicationRecord
            foreign_key: 'last_modified_by_id',
            inverse_of: :last_modified_by,
            dependent: :nullify
+  has_many :created_repository_stock_value,
+           class_name: 'RepositoryStockValue',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repository_stock_value,
+           class_name: 'RepositoryStockValue',
+           foreign_key: 'created_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
   has_many :created_repository_checklist_types,
            class_name: 'RepositoryChecklistItem',
            foreign_key: 'created_by_id',
@@ -283,6 +293,16 @@ class User < ApplicationRecord
            foreign_key: 'last_modified_by_id',
            inverse_of: :last_modified_by,
            dependent: :nullify
+  has_many :created_repository_stock_values,
+           class_name: 'RepositoryStockValue',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
+  has_many :modified_repository_stock_values,
+           class_name: 'RepositoryStockValue',
+           foreign_key: 'last_modified_by_id',
+           inverse_of: :last_modified_by,
+           dependent: :nullify
 
   has_many :user_notifications, inverse_of: :user
   has_many :notifications, through: :user_notifications
@@ -298,6 +318,8 @@ class User < ApplicationRecord
   has_many :access_tokens, class_name: 'Doorkeeper::AccessToken',
                            foreign_key: :resource_owner_id,
                            dependent: :delete_all
+
+  has_many :hidden_repository_cell_reminders, dependent: :destroy
 
   before_validation :downcase_email!
   before_destroy :destroy_notifications

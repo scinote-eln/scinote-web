@@ -1,0 +1,57 @@
+<% selected_decimals = column.metadata['decimals'] || '0' %>
+
+<%= hidden_field_tag 'dropdown-options', '[]', class: 'dropdown-options' %>
+
+<div class="form-group">
+  <label class="control-label col-sm-3" for="repository-column-data-type">
+    <%= t('libraries.manange_modal_column.number_type.decimals_label') %>
+  </label>
+  <div class="col-sm-3">
+    <%= number_field_tag('decimals', selected_decimals, between: 0...Constants::REPOSITORY_NUMBER_TYPE_MAX_DECIMALS,
+                         class: 'form-control',
+                         oninput: "this.value = numberMinMaxValidator(this.value, 0, #{Constants::REPOSITORY_NUMBER_TYPE_MAX_DECIMALS})" ) %>
+  </div>
+</div>
+<div class="form-group">
+  <%= hidden_field_tag :delimiter, 'return' %>
+  <div class="control-label col-sm-3">
+    <label for="repository-column-data-type"><%= t('libraries.manange_modal_column.stock_type.stock_units') %></label>
+    <div class="limit-counter-container">
+      <span class="items-count" data-count="0">0</span>
+      <span class="items-limit">
+        <%= t('libraries.manange_modal_column.too_many_items_label', limit: Constants::REPOSITORY_LIST_ITEMS_PER_COLUMN) %>
+      </span>
+    </div>
+  </div>
+  <div class="col-sm-9">
+    <div class="sci-input-container" data-error-text="<%= t('libraries.manange_modal_column.stock_type.empty_units_error') %>">
+      <% units = column.new_record? ? RepositoryStockUnitItem::DEFAULT_UNITS : column.repository_stock_unit_items.pluck(:data) %>
+      <%= text_area_tag 'items-textarea', units.join(Constants::REPOSITORY_LIST_ITEMS_DELIMITERS_MAP[:return]),
+            rows: 10, class: 'form-control items-textarea sci-input-field',
+            placeholder: t('libraries.manange_modal_column.stock_type.textarea_placeholder_html') %>
+      <% unless column.new_record? %>
+        <div class="hidden changing-existing-stock-units-warning">
+          <%= t('libraries.manange_modal_column.stock_type.units_changing_warning') %>
+        </div>
+      <% end %>
+      <div class="units-info-description">
+        <%= t('libraries.manange_modal_column.stock_type.units_description') %>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dropdown-preview">
+  <span class="field-name">Preview</span>
+  <div class="preview-block">
+    <div class="preview-label">Unit</div>
+    <select class="form-control preview-select"
+      data-combine-tags="true"
+      data-select-multiple-all-selected="<%= t('libraries.manange_modal_column.stock_type.all_options') %>"
+      data-select-multiple-name="<%= t('libraries.manange_modal_column.stock_type.multiple_options') %>"
+    >
+      <% units.each do |u| %>
+         <option value="<%= u %>"><%= u %></option>
+      <% end %>
+    </select>
+  </div>
+</div>

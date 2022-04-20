@@ -390,6 +390,9 @@ var dropdownSelector = (function() {
             dropdownContainer.find('.dropdown-option').first().click();
           }
           dropdownContainer.find('.search-field').val('');
+
+          e.stopPropagation();
+          e.preventDefault();
         }
       }).click((e) =>{
         e.stopPropagation();
@@ -406,6 +409,24 @@ var dropdownSelector = (function() {
 
     // Select options container
     optionContainer = dropdownContainer.find('.dropdown-container');
+
+    dropdownContainer.find('.input-field').on('focus', () => {
+      setTimeout(function() {
+        if (!dropdownContainer.hasClass('open')) {
+          dropdownContainer.find('.input-field').click();
+        }
+      }, 250);
+    });
+
+    dropdownContainer.find('.search-field').on('keydown', function(e) {
+      if (e.which === 9) { // Tab key
+        dropdownContainer.find('.search-field').val('');
+        if (dropdownContainer.hasClass('open') && config.onClose) {
+          config.onClose();
+        }
+        dropdownContainer.removeClass('open active');
+      }
+    });
 
     // Add click event to input field
     dropdownContainer.find('.input-field').click(() => {
@@ -426,6 +447,7 @@ var dropdownSelector = (function() {
         // on Open we load new data
         loadData(selectElement, dropdownContainer);
         updateDropdownDirection(selectElement, dropdownContainer);
+
         dropdownContainer.find('.search-field').focus();
 
         // onOpen event
@@ -515,8 +537,9 @@ var dropdownSelector = (function() {
     // Draw option object
     function drawOption(selector2, option, group = null) {
       // Check additional params from config
+      var params = option.params || {};
       var customLabel = selector2.data('config').optionLabel;
-      var customClass = selector2.data('config').optionClass || '';
+      var customClass = params.optionClass || selector2.data('config').optionClass || '';
       var customStyle = selector2.data('config').optionStyle;
       return $(`
         <div class="dropdown-option ${customClass}" style="${customStyle ? customStyle(option) : ''}"
@@ -896,6 +919,17 @@ var dropdownSelector = (function() {
 
       return values;
     },
+    // Get selected labels
+    getLabels: function(selector) {
+      var labels;
+      if ($(selector).length === 0) return false;
+      labels = $.map(getCurrentData($(selector).next()), (v) => {
+        return v.label;
+      });
+      if ($(selector).data('config').singleSelect) return labels[0];
+
+      return labels;
+    },
     // Get all data
     getData: function(selector) {
       if ($(selector).length === 0) return false;
@@ -922,9 +956,9 @@ var dropdownSelector = (function() {
       if ($selector.length === 0) return false;
 
       valuesArray.forEach(function(value) {
-        option = $selector.find(`option[value="${value}"]`)[0];
-        option.selected = 'selected';
-        options.push(convertOptionToJson(option));
+        option = $selector.find(`option[value="${value}"]`);
+        option.attr('selected', true);
+        options.push(convertOptionToJson(option[0]));
       });
       setData($selector, options);
       return this;
@@ -1013,6 +1047,20 @@ var dropdownSelector = (function() {
       setTimeout(() => {
         container.removeClass('error');
       }, 1500);
+      return this;
+    },
+
+    showError: function(selector, error) {
+      var container = $(selector).next();
+      if ($(selector).length === 0) return false;
+      container.addClass('error').attr('data-error-text', error);
+      return this;
+    },
+
+    hideError: function(selector) {
+      var container = $(selector).next();
+      if ($(selector).length === 0) return false;
+      container.removeClass('error');
       return this;
     }
   };

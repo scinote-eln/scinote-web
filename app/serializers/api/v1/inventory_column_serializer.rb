@@ -29,6 +29,14 @@ module Api
                  object.data_type == 'RepositoryStatusValue' &&
                    !instance_options[:hide_list_items]
                end)
+      has_many :repository_stock_unit_items,
+               key: :repository_stock_unit_items,
+               serializer: InventoryStockUnitItemSerializer,
+               class_name: 'RepositoryStockUnitItem',
+               if: (lambda do
+                 object.data_type == 'RepositoryStockValue' &&
+                   !instance_options[:hide_list_items]
+               end)
 
       include TimestampableModel
 

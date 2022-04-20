@@ -18,6 +18,7 @@ class MyModuleRepositorySnapshotsController < ApplicationController
     @columns_mappings = datatable_service.mappings
     if params[:simple_view]
       repository_rows = datatable_service.repository_rows
+      @repository = @repository_snapshot
       rows_view = 'repository_rows/simple_view_index.json'
     else
       repository_rows =
@@ -51,6 +52,7 @@ class MyModuleRepositorySnapshotsController < ApplicationController
 
   def show
     render json: {
+      repository_id: @repository_snapshot.parent_id,
       html: render_to_string(partial: 'my_modules/repositories/full_view_version',
                              locals: { repository_snapshot: @repository_snapshot,
                                        can_delete_snapshot: can_manage_my_module_repository_snapshots?(@my_module) })

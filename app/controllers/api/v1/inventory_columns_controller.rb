@@ -34,7 +34,7 @@ module Api
       def show
         render jsonapi: @inventory_column,
                serializer: InventoryColumnSerializer,
-               include: :inventory_list_items
+               include: %i(inventory_list_items repository_stock_unit_items)
       end
 
       def update

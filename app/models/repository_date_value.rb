@@ -1,9 +1,14 @@
 # frozen_string_literal: true
 
 class RepositoryDateValue < RepositoryDateTimeValueBase
-  def data_changed?(new_data)
-    new_time = Time.zone.parse(new_data)
-    new_time.to_date != data.to_date
+  include RepositoryValueWithReminders
+
+  self.skip_time_zone_conversion_for_attributes = [:data]
+
+  before_save -> { self.data = data.to_date }, if: :data_changed?
+
+  def data_different?(new_data)
+    Date.parse(new_data).to_date != data.to_date
   end
 
   def formatted

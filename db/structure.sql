@@ -125,7 +125,7 @@ ALTER SEQUENCE public.active_storage_blobs_id_seq OWNED BY public.active_storage
 
 CREATE TABLE public.active_storage_variant_records (
     id bigint NOT NULL,
-    blob_id bigint NOT NULL,
+    blob_id integer NOT NULL,
     variation_digest character varying NOT NULL
 );
 
@@ -176,6 +176,7 @@ CREATE TABLE public.activities (
 --
 
 CREATE SEQUENCE public.activities_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -229,8 +230,8 @@ ALTER SEQUENCE public.activity_filters_id_seq OWNED BY public.activity_filters.i
 CREATE TABLE public.ar_internal_metadata (
     key character varying NOT NULL,
     value character varying,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -253,6 +254,7 @@ CREATE TABLE public.asset_text_data (
 --
 
 CREATE SEQUENCE public.asset_text_data_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -294,6 +296,7 @@ CREATE TABLE public.assets (
 --
 
 CREATE SEQUENCE public.assets_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -363,6 +366,7 @@ CREATE TABLE public.checklist_items (
 --
 
 CREATE SEQUENCE public.checklist_items_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -397,6 +401,7 @@ CREATE TABLE public.checklists (
 --
 
 CREATE SEQUENCE public.checklists_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -433,6 +438,7 @@ CREATE TABLE public.comments (
 --
 
 CREATE SEQUENCE public.comments_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -463,6 +469,7 @@ CREATE TABLE public.connections (
 --
 
 CREATE SEQUENCE public.connections_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -554,6 +561,7 @@ CREATE TABLE public.delayed_jobs (
 --
 
 CREATE SEQUENCE public.delayed_jobs_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -595,6 +603,7 @@ CREATE TABLE public.experiments (
 --
 
 CREATE SEQUENCE public.experiments_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -607,6 +616,38 @@ CREATE SEQUENCE public.experiments_id_seq
 --
 
 ALTER SEQUENCE public.experiments_id_seq OWNED BY public.experiments.id;
+
+
+--
+-- Name: hidden_repository_cell_reminders; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.hidden_repository_cell_reminders (
+    id bigint NOT NULL,
+    repository_cell_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: hidden_repository_cell_reminders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.hidden_repository_cell_reminders_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: hidden_repository_cell_reminders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.hidden_repository_cell_reminders_id_seq OWNED BY public.hidden_repository_cell_reminders.id;
 
 
 --
@@ -702,6 +743,7 @@ CREATE TABLE public.my_module_groups (
 --
 
 CREATE SEQUENCE public.my_module_groups_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -726,7 +768,9 @@ CREATE TABLE public.my_module_repository_rows (
     my_module_id integer,
     assigned_by_id bigint NOT NULL,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    stock_consumption numeric,
+    repository_stock_unit_item_id bigint
 );
 
 
@@ -735,6 +779,7 @@ CREATE TABLE public.my_module_repository_rows (
 --
 
 CREATE SEQUENCE public.my_module_repository_rows_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -755,7 +800,7 @@ ALTER SEQUENCE public.my_module_repository_rows_id_seq OWNED BY public.my_module
 
 CREATE TABLE public.my_module_status_conditions (
     id bigint NOT NULL,
-    my_module_status_id bigint,
+    my_module_status_id integer,
     type character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -787,7 +832,7 @@ ALTER SEQUENCE public.my_module_status_conditions_id_seq OWNED BY public.my_modu
 
 CREATE TABLE public.my_module_status_consequences (
     id bigint NOT NULL,
-    my_module_status_id bigint,
+    my_module_status_id integer,
     type character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -822,9 +867,9 @@ CREATE TABLE public.my_module_status_flows (
     name character varying NOT NULL,
     description character varying,
     visibility integer DEFAULT 0,
-    team_id bigint,
-    created_by_id bigint,
-    last_modified_by_id bigint,
+    team_id integer,
+    created_by_id integer,
+    last_modified_by_id integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -855,7 +900,7 @@ ALTER SEQUENCE public.my_module_status_flows_id_seq OWNED BY public.my_module_st
 
 CREATE TABLE public.my_module_status_implications (
     id bigint NOT NULL,
-    my_module_status_id bigint,
+    my_module_status_id integer,
     type character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -890,10 +935,10 @@ CREATE TABLE public.my_module_statuses (
     name character varying NOT NULL,
     description character varying,
     color character varying NOT NULL,
-    my_module_status_flow_id bigint,
-    previous_status_id bigint,
-    created_by_id bigint,
-    last_modified_by_id bigint,
+    my_module_status_flow_id integer,
+    previous_status_id integer,
+    created_by_id integer,
+    last_modified_by_id integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -935,6 +980,7 @@ CREATE TABLE public.my_module_tags (
 --
 
 CREATE SEQUENCE public.my_module_tags_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -975,9 +1021,10 @@ CREATE TABLE public.my_modules (
     state smallint DEFAULT 0,
     completed_on timestamp without time zone,
     started_on timestamp without time zone,
-    my_module_status_id bigint,
+    my_module_status_id integer,
     status_changing boolean DEFAULT false,
-    changing_from_my_module_status_id bigint
+    changing_from_my_module_status_id integer,
+    last_transition_error jsonb
 );
 
 
@@ -986,6 +1033,7 @@ CREATE TABLE public.my_modules (
 --
 
 CREATE SEQUENCE public.my_modules_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1020,6 +1068,7 @@ CREATE TABLE public.notifications (
 --
 
 CREATE SEQUENCE public.notifications_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1150,14 +1199,14 @@ ALTER SEQUENCE public.oauth_applications_id_seq OWNED BY public.oauth_applicatio
 CREATE TABLE public.project_folders (
     id bigint NOT NULL,
     name character varying NOT NULL,
-    team_id bigint NOT NULL,
-    parent_folder_id bigint,
+    team_id integer NOT NULL,
+    parent_folder_id integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     archived boolean DEFAULT false,
-    archived_by_id bigint,
+    archived_by_id integer,
     archived_on timestamp without time zone,
-    restored_by_id bigint,
+    restored_by_id integer,
     restored_on timestamp without time zone
 );
 
@@ -1213,6 +1262,7 @@ CREATE TABLE public.projects (
 --
 
 CREATE SEQUENCE public.projects_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1246,6 +1296,7 @@ CREATE TABLE public.protocol_keywords (
 --
 
 CREATE SEQUENCE public.protocol_keywords_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1276,6 +1327,7 @@ CREATE TABLE public.protocol_protocol_keywords (
 --
 
 CREATE SEQUENCE public.protocol_protocol_keywords_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1321,6 +1373,7 @@ CREATE TABLE public.protocols (
 --
 
 CREATE SEQUENCE public.protocols_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1365,6 +1418,7 @@ CREATE TABLE public.report_elements (
 --
 
 CREATE SEQUENCE public.report_elements_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1438,6 +1492,7 @@ CREATE TABLE public.reports (
 --
 
 CREATE SEQUENCE public.reports_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1469,12 +1524,12 @@ CREATE TABLE public.repositories (
     parent_id bigint,
     status integer,
     selected boolean,
-    my_module_id bigint,
+    my_module_id integer,
     archived boolean DEFAULT false NOT NULL,
     archived_on timestamp without time zone,
     restored_on timestamp without time zone,
-    archived_by_id bigint,
-    restored_by_id bigint
+    archived_by_id integer,
+    restored_by_id integer
 );
 
 
@@ -1483,6 +1538,7 @@ CREATE TABLE public.repositories (
 --
 
 CREATE SEQUENCE public.repositories_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1550,6 +1606,7 @@ CREATE TABLE public.repository_cells (
 --
 
 CREATE SEQUENCE public.repository_cells_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1571,9 +1628,9 @@ ALTER SEQUENCE public.repository_cells_id_seq OWNED BY public.repository_cells.i
 CREATE TABLE public.repository_checklist_items (
     id bigint NOT NULL,
     data character varying NOT NULL,
-    repository_column_id bigint NOT NULL,
-    created_by_id bigint,
-    last_modified_by_id bigint,
+    repository_column_id integer NOT NULL,
+    created_by_id integer,
+    last_modified_by_id integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -1604,8 +1661,8 @@ ALTER SEQUENCE public.repository_checklist_items_id_seq OWNED BY public.reposito
 
 CREATE TABLE public.repository_checklist_items_values (
     id bigint NOT NULL,
-    repository_checklist_value_id bigint,
-    repository_checklist_item_id bigint,
+    repository_checklist_value_id integer,
+    repository_checklist_item_id integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -1636,8 +1693,8 @@ ALTER SEQUENCE public.repository_checklist_items_values_id_seq OWNED BY public.r
 
 CREATE TABLE public.repository_checklist_values (
     id bigint NOT NULL,
-    created_by_id bigint,
-    last_modified_by_id bigint,
+    created_by_id integer,
+    last_modified_by_id integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -1684,6 +1741,7 @@ CREATE TABLE public.repository_columns (
 --
 
 CREATE SEQUENCE public.repository_columns_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1706,8 +1764,8 @@ CREATE TABLE public.repository_date_time_range_values (
     id bigint NOT NULL,
     start_time timestamp without time zone,
     end_time timestamp without time zone,
-    last_modified_by_id bigint,
-    created_by_id bigint,
+    last_modified_by_id integer,
+    created_by_id integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     type character varying,
@@ -1756,6 +1814,7 @@ CREATE TABLE public.repository_date_time_values (
 --
 
 CREATE SEQUENCE public.repository_date_time_values_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1768,6 +1827,43 @@ CREATE SEQUENCE public.repository_date_time_values_id_seq
 --
 
 ALTER SEQUENCE public.repository_date_time_values_id_seq OWNED BY public.repository_date_time_values.id;
+
+
+--
+-- Name: repository_ledger_records; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_ledger_records (
+    id bigint NOT NULL,
+    repository_stock_value_id bigint NOT NULL,
+    reference_type character varying NOT NULL,
+    reference_id bigint NOT NULL,
+    amount numeric,
+    balance numeric,
+    user_id bigint,
+    comment text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_ledger_records_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_ledger_records_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_ledger_records_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_ledger_records_id_seq OWNED BY public.repository_ledger_records.id;
 
 
 --
@@ -1844,8 +1940,8 @@ ALTER SEQUENCE public.repository_list_values_id_seq OWNED BY public.repository_l
 CREATE TABLE public.repository_number_values (
     id bigint NOT NULL,
     data numeric,
-    last_modified_by_id bigint,
-    created_by_id bigint,
+    last_modified_by_id integer,
+    created_by_id integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -1886,8 +1982,8 @@ CREATE TABLE public.repository_rows (
     archived boolean DEFAULT false NOT NULL,
     archived_on timestamp without time zone,
     restored_on timestamp without time zone,
-    archived_by_id bigint,
-    restored_by_id bigint,
+    archived_by_id integer,
+    restored_by_id integer,
     external_id character varying
 );
 
@@ -1897,6 +1993,7 @@ CREATE TABLE public.repository_rows (
 --
 
 CREATE SEQUENCE public.repository_rows_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1919,9 +2016,9 @@ CREATE TABLE public.repository_status_items (
     id bigint NOT NULL,
     status character varying NOT NULL,
     icon character varying NOT NULL,
-    repository_column_id bigint NOT NULL,
-    created_by_id bigint,
-    last_modified_by_id bigint,
+    repository_column_id integer NOT NULL,
+    created_by_id integer,
+    last_modified_by_id integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -1952,9 +2049,9 @@ ALTER SEQUENCE public.repository_status_items_id_seq OWNED BY public.repository_
 
 CREATE TABLE public.repository_status_values (
     id bigint NOT NULL,
-    created_by_id bigint,
-    last_modified_by_id bigint,
-    repository_status_item_id bigint NOT NULL,
+    created_by_id integer,
+    last_modified_by_id integer,
+    repository_status_item_id integer NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -1977,6 +2074,76 @@ CREATE SEQUENCE public.repository_status_values_id_seq
 --
 
 ALTER SEQUENCE public.repository_status_values_id_seq OWNED BY public.repository_status_values.id;
+
+
+--
+-- Name: repository_stock_unit_items; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_stock_unit_items (
+    id bigint NOT NULL,
+    data character varying NOT NULL,
+    repository_column_id integer NOT NULL,
+    created_by_id integer,
+    last_modified_by_id integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_stock_unit_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_stock_unit_items_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_stock_unit_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_stock_unit_items_id_seq OWNED BY public.repository_stock_unit_items.id;
+
+
+--
+-- Name: repository_stock_values; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_stock_values (
+    id bigint NOT NULL,
+    amount numeric,
+    repository_stock_unit_item_id bigint,
+    type character varying,
+    last_modified_by_id bigint,
+    created_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    low_stock_threshold numeric
+);
+
+
+--
+-- Name: repository_stock_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_stock_values_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_stock_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_stock_values_id_seq OWNED BY public.repository_stock_values.id;
 
 
 --
@@ -2066,6 +2233,7 @@ CREATE TABLE public.repository_table_states (
 --
 
 CREATE SEQUENCE public.repository_table_states_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2099,6 +2267,7 @@ CREATE TABLE public.repository_text_values (
 --
 
 CREATE SEQUENCE public.repository_text_values_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2129,6 +2298,7 @@ CREATE TABLE public.result_assets (
 --
 
 CREATE SEQUENCE public.result_assets_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2159,6 +2329,7 @@ CREATE TABLE public.result_tables (
 --
 
 CREATE SEQUENCE public.result_tables_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2189,6 +2360,7 @@ CREATE TABLE public.result_texts (
 --
 
 CREATE SEQUENCE public.result_texts_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2228,6 +2400,7 @@ CREATE TABLE public.results (
 --
 
 CREATE SEQUENCE public.results_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2267,6 +2440,7 @@ CREATE TABLE public.settings (
 --
 
 CREATE SEQUENCE public.settings_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2297,6 +2471,7 @@ CREATE TABLE public.step_assets (
 --
 
 CREATE SEQUENCE public.step_assets_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2327,6 +2502,7 @@ CREATE TABLE public.step_tables (
 --
 
 CREATE SEQUENCE public.step_tables_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2366,6 +2542,7 @@ CREATE TABLE public.steps (
 --
 
 CREATE SEQUENCE public.steps_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2440,6 +2617,7 @@ CREATE TABLE public.tables (
 --
 
 CREATE SEQUENCE public.tables_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2475,6 +2653,7 @@ CREATE TABLE public.tags (
 --
 
 CREATE SEQUENCE public.tags_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2527,6 +2706,7 @@ ALTER SEQUENCE public.team_repositories_id_seq OWNED BY public.team_repositories
 --
 
 CREATE SEQUENCE public.teams_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2558,6 +2738,7 @@ CREATE TABLE public.temp_files (
 --
 
 CREATE SEQUENCE public.temp_files_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2593,6 +2774,7 @@ CREATE TABLE public.tiny_mce_assets (
 --
 
 CREATE SEQUENCE public.tiny_mce_assets_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2624,6 +2806,7 @@ CREATE TABLE public.tokens (
 --
 
 CREATE SEQUENCE public.tokens_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2693,6 +2876,7 @@ CREATE TABLE public.user_identities (
 --
 
 CREATE SEQUENCE public.user_identities_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2726,6 +2910,7 @@ CREATE TABLE public.user_my_modules (
 --
 
 CREATE SEQUENCE public.user_my_modules_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2759,6 +2944,7 @@ CREATE TABLE public.user_notifications (
 --
 
 CREATE SEQUENCE public.user_notifications_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2793,6 +2979,7 @@ CREATE TABLE public.user_projects (
 --
 
 CREATE SEQUENCE public.user_projects_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2881,6 +3068,7 @@ ALTER SEQUENCE public.user_system_notifications_id_seq OWNED BY public.user_syst
 --
 
 CREATE SEQUENCE public.user_teams_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2945,6 +3133,7 @@ CREATE TABLE public.users (
 --
 
 CREATE SEQUENCE public.users_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2999,7 +3188,7 @@ ALTER SEQUENCE public.view_states_id_seq OWNED BY public.view_states.id;
 
 CREATE TABLE public.webhooks (
     id bigint NOT NULL,
-    activity_filter_id bigint NOT NULL,
+    activity_filter_id integer NOT NULL,
     active boolean DEFAULT true NOT NULL,
     url character varying NOT NULL,
     http_method integer NOT NULL,
@@ -3048,6 +3237,7 @@ CREATE TABLE public.wopi_actions (
 --
 
 CREATE SEQUENCE public.wopi_actions_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3079,6 +3269,7 @@ CREATE TABLE public.wopi_apps (
 --
 
 CREATE SEQUENCE public.wopi_apps_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3112,6 +3303,7 @@ CREATE TABLE public.wopi_discoveries (
 --
 
 CREATE SEQUENCE public.wopi_discoveries_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3144,6 +3336,7 @@ CREATE TABLE public.zip_exports (
 --
 
 CREATE SEQUENCE public.zip_exports_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3254,6 +3447,13 @@ ALTER TABLE ONLY public.delayed_jobs ALTER COLUMN id SET DEFAULT nextval('public
 --
 
 ALTER TABLE ONLY public.experiments ALTER COLUMN id SET DEFAULT nextval('public.experiments_id_seq'::regclass);
+
+
+--
+-- Name: hidden_repository_cell_reminders id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.hidden_repository_cell_reminders ALTER COLUMN id SET DEFAULT nextval('public.hidden_repository_cell_reminders_id_seq'::regclass);
 
 
 --
@@ -3481,6 +3681,13 @@ ALTER TABLE ONLY public.repository_date_time_values ALTER COLUMN id SET DEFAULT 
 
 
 --
+-- Name: repository_ledger_records id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_ledger_records ALTER COLUMN id SET DEFAULT nextval('public.repository_ledger_records_id_seq'::regclass);
+
+
+--
 -- Name: repository_list_items id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3520,6 +3727,20 @@ ALTER TABLE ONLY public.repository_status_items ALTER COLUMN id SET DEFAULT next
 --
 
 ALTER TABLE ONLY public.repository_status_values ALTER COLUMN id SET DEFAULT nextval('public.repository_status_values_id_seq'::regclass);
+
+
+--
+-- Name: repository_stock_unit_items id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_unit_items ALTER COLUMN id SET DEFAULT nextval('public.repository_stock_unit_items_id_seq'::regclass);
+
+
+--
+-- Name: repository_stock_values id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_values ALTER COLUMN id SET DEFAULT nextval('public.repository_stock_values_id_seq'::regclass);
 
 
 --
@@ -3888,6 +4109,14 @@ ALTER TABLE ONLY public.experiments
 
 
 --
+-- Name: hidden_repository_cell_reminders hidden_repository_cell_reminders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.hidden_repository_cell_reminders
+    ADD CONSTRAINT hidden_repository_cell_reminders_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: label_printers label_printers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4144,6 +4373,14 @@ ALTER TABLE ONLY public.repository_date_time_values
 
 
 --
+-- Name: repository_ledger_records repository_ledger_records_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_ledger_records
+    ADD CONSTRAINT repository_ledger_records_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: repository_list_items repository_list_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4189,6 +4426,22 @@ ALTER TABLE ONLY public.repository_status_items
 
 ALTER TABLE ONLY public.repository_status_values
     ADD CONSTRAINT repository_status_values_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repository_stock_unit_items repository_stock_unit_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_unit_items
+    ADD CONSTRAINT repository_stock_unit_items_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repository_stock_values repository_stock_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_values
+    ADD CONSTRAINT repository_stock_values_pkey PRIMARY KEY (id);
 
 
 --
@@ -4802,6 +5055,20 @@ CREATE INDEX index_experiments_on_restored_by_id ON public.experiments USING btr
 
 
 --
+-- Name: index_hidden_repository_cell_reminders_on_repository_cell_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_hidden_repository_cell_reminders_on_repository_cell_id ON public.hidden_repository_cell_reminders USING btree (repository_cell_id);
+
+
+--
+-- Name: index_hidden_repository_cell_reminders_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_hidden_repository_cell_reminders_on_user_id ON public.hidden_repository_cell_reminders USING btree (user_id);
+
+
+--
 -- Name: index_label_templates_on_language_type; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4826,7 +5093,7 @@ CREATE INDEX index_my_module_groups_on_experiment_id ON public.my_module_groups 
 -- Name: index_my_module_ids_repository_row_ids; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_my_module_ids_repository_row_ids ON public.my_module_repository_rows USING btree (my_module_id, repository_row_id);
+CREATE UNIQUE INDEX index_my_module_ids_repository_row_ids ON public.my_module_repository_rows USING btree (my_module_id, repository_row_id);
 
 
 --
@@ -5044,6 +5311,13 @@ CREATE INDEX index_on_repository_checklist_item_id ON public.repository_checklis
 --
 
 CREATE INDEX index_on_repository_checklist_value_id ON public.repository_checklist_items_values USING btree (repository_checklist_value_id);
+
+
+--
+-- Name: index_on_repository_stock_unit_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_on_repository_stock_unit_item_id ON public.my_module_repository_rows USING btree (repository_stock_unit_item_id);
 
 
 --
@@ -5446,10 +5720,10 @@ CREATE INDEX index_repository_cells_on_repository_row_id ON public.repository_ce
 
 
 --
--- Name: index_repository_cells_on_value_type_and_value_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_repository_cells_on_value; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_repository_cells_on_value_type_and_value_id ON public.repository_cells USING btree (value_type, value_id);
+CREATE INDEX index_repository_cells_on_value ON public.repository_cells USING btree (value_type, value_id);
 
 
 --
@@ -5576,6 +5850,27 @@ CREATE INDEX index_repository_date_time_values_on_data_as_date_time ON public.re
 --
 
 CREATE INDEX index_repository_date_time_values_on_data_as_time ON public.repository_date_time_values USING btree (((data)::time without time zone)) WHERE ((type)::text = 'RepositoryTimeValue'::text);
+
+
+--
+-- Name: index_repository_ledger_records_on_reference; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_ledger_records_on_reference ON public.repository_ledger_records USING btree (reference_type, reference_id);
+
+
+--
+-- Name: index_repository_ledger_records_on_repository_stock_value_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_ledger_records_on_repository_stock_value_id ON public.repository_ledger_records USING btree (repository_stock_value_id);
+
+
+--
+-- Name: index_repository_ledger_records_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_ledger_records_on_user_id ON public.repository_ledger_records USING btree (user_id);
 
 
 --
@@ -5758,6 +6053,62 @@ CREATE INDEX index_repository_status_values_on_created_by_id ON public.repositor
 --
 
 CREATE INDEX index_repository_status_values_on_last_modified_by_id ON public.repository_status_values USING btree (last_modified_by_id);
+
+
+--
+-- Name: index_repository_stock_unit_items_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_stock_unit_items_on_created_by_id ON public.repository_stock_unit_items USING btree (created_by_id);
+
+
+--
+-- Name: index_repository_stock_unit_items_on_data; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_stock_unit_items_on_data ON public.repository_stock_unit_items USING gin (public.trim_html_tags((data)::text) public.gin_trgm_ops);
+
+
+--
+-- Name: index_repository_stock_unit_items_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_stock_unit_items_on_last_modified_by_id ON public.repository_stock_unit_items USING btree (last_modified_by_id);
+
+
+--
+-- Name: index_repository_stock_unit_items_on_repository_column_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_stock_unit_items_on_repository_column_id ON public.repository_stock_unit_items USING btree (repository_column_id);
+
+
+--
+-- Name: index_repository_stock_values_on_amount; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_stock_values_on_amount ON public.repository_stock_values USING btree (amount);
+
+
+--
+-- Name: index_repository_stock_values_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_stock_values_on_created_by_id ON public.repository_stock_values USING btree (created_by_id);
+
+
+--
+-- Name: index_repository_stock_values_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_stock_values_on_last_modified_by_id ON public.repository_stock_values USING btree (last_modified_by_id);
+
+
+--
+-- Name: index_repository_stock_values_on_repository_stock_unit_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_stock_values_on_repository_stock_unit_item_id ON public.repository_stock_values USING btree (repository_stock_unit_item_id);
 
 
 --
@@ -6370,10 +6721,10 @@ CREATE INDEX index_view_states_on_user_id ON public.view_states USING btree (use
 
 
 --
--- Name: index_view_states_on_viewable_type_and_viewable_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_view_states_on_viewable; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_view_states_on_viewable_type_and_viewable_id ON public.view_states USING btree (viewable_type, viewable_id);
+CREATE INDEX index_view_states_on_viewable ON public.view_states USING btree (viewable_type, viewable_id);
 
 
 --
@@ -6434,6 +6785,30 @@ ALTER TABLE ONLY public.report_elements
 
 ALTER TABLE ONLY public.project_folders
     ADD CONSTRAINT fk_rails_05fe6e31fe FOREIGN KEY (parent_folder_id) REFERENCES public.project_folders(id);
+
+
+--
+-- Name: repository_ledger_records fk_rails_062bed0c26; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_ledger_records
+    ADD CONSTRAINT fk_rails_062bed0c26 FOREIGN KEY (repository_stock_value_id) REFERENCES public.repository_stock_values(id);
+
+
+--
+-- Name: hidden_repository_cell_reminders fk_rails_08be8c52e0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.hidden_repository_cell_reminders
+    ADD CONSTRAINT fk_rails_08be8c52e0 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: repository_stock_values fk_rails_08ce900341; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_values
+    ADD CONSTRAINT fk_rails_08ce900341 FOREIGN KEY (repository_stock_unit_item_id) REFERENCES public.repository_stock_unit_items(id);
 
 
 --
@@ -6709,6 +7084,14 @@ ALTER TABLE ONLY public.experiments
 
 
 --
+-- Name: repository_stock_unit_items fk_rails_4c20ff4c1f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_unit_items
+    ADD CONSTRAINT fk_rails_4c20ff4c1f FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: repository_status_values fk_rails_4cf67f9f1e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6906,6 +7289,14 @@ ALTER TABLE ONLY public.project_folders
 
 ALTER TABLE ONLY public.results
     ADD CONSTRAINT fk_rails_79fcaa8e37 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: my_module_repository_rows fk_rails_7b302dfece; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_repository_rows
+    ADD CONSTRAINT fk_rails_7b302dfece FOREIGN KEY (repository_stock_unit_item_id) REFERENCES public.repository_stock_unit_items(id);
 
 
 --
@@ -7122,6 +7513,14 @@ ALTER TABLE ONLY public.user_roles
 
 ALTER TABLE ONLY public.repository_checklist_values
     ADD CONSTRAINT fk_rails_98a7704432 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: hidden_repository_cell_reminders fk_rails_98e782ebf2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.hidden_repository_cell_reminders
+    ADD CONSTRAINT fk_rails_98e782ebf2 FOREIGN KEY (repository_cell_id) REFERENCES public.repository_cells(id);
 
 
 --
@@ -7349,11 +7748,27 @@ ALTER TABLE ONLY public.repository_asset_values
 
 
 --
+-- Name: repository_stock_values fk_rails_c111ff8695; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_values
+    ADD CONSTRAINT fk_rails_c111ff8695 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: my_module_status_flows fk_rails_c19dc6b9e9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.my_module_status_flows
     ADD CONSTRAINT fk_rails_c19dc6b9e9 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: repository_stock_unit_items fk_rails_c200d845a5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_unit_items
+    ADD CONSTRAINT fk_rails_c200d845a5 FOREIGN KEY (repository_column_id) REFERENCES public.repository_columns(id);
 
 
 --
@@ -7517,6 +7932,14 @@ ALTER TABLE ONLY public.notifications
 
 
 --
+-- Name: repository_stock_unit_items fk_rails_d5b7257ea2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_unit_items
+    ADD CONSTRAINT fk_rails_d5b7257ea2 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: experiments fk_rails_d683124fa4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7669,6 +8092,14 @@ ALTER TABLE ONLY public.report_elements
 
 
 --
+-- Name: repository_stock_values fk_rails_f83c438412; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_values
+    ADD CONSTRAINT fk_rails_f83c438412 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: tags fk_rails_f95c7c81ac; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7724,7 +8155,6 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20150713060702'),
-('20150713061603'),
 ('20150713063224'),
 ('20150713070738'),
 ('20150713071921'),
@@ -7808,7 +8238,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20160704110900'),
 ('20160722082700'),
 ('20160803082801'),
-('20160808083040'),
 ('20160809074757'),
 ('20160928114119'),
 ('20160928114915'),
@@ -7847,12 +8276,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180207095200'),
 ('20180308094354'),
 ('20180416114040'),
-('20180416171923'),
-('20180417062042'),
-('20180418123509'),
-('20180418123815'),
-('20180418124021'),
-('20180507160013'),
 ('20180524091143'),
 ('20180806115201'),
 ('20180813120338'),
@@ -7887,7 +8310,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191001133557'),
 ('20191003091614'),
 ('20191007144622'),
-('20191009146101'),
 ('20191023162335'),
 ('20191105143702'),
 ('20191115143747'),
@@ -7939,8 +8361,16 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210906132120'),
 ('20211103115450'),
 ('20211123103711'),
+('20220110151005'),
+('20220110151006'),
 ('20220203122802'),
 ('20220216205001'),
-('20220217104635');
+('20220217104635'),
+('20220224153705'),
+('20220307120010'),
+('20220310105144'),
+('20220321122111'),
+('20220325101011'),
+('20220328164215');
 
 

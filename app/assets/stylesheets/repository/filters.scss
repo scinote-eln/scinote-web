@@ -132,6 +132,29 @@
         grid-auto-flow: column;
         grid-template-columns: min-content auto;
 
+        .between-delimiter {
+          align-self: center;
+
+          &.vertical {
+            background-color: $color-silver-chalice;
+            height: 12px;
+            margin: auto;
+            width: 2px;
+          }
+        }
+
+        &.stock-filter-attributes {
+          grid-template-columns: min-content auto 100px;
+        }
+
+        .number-range-selector {
+          align-items: center;
+          display: grid;
+          gap: .5em;
+          grid-auto-flow: column;
+          height: 2em;
+        }
+
         .dropdown-selector-container {
           width: 100%;
         }

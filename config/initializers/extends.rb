@@ -58,13 +58,15 @@ class Extends
                             RepositoryTimeRangeValue: 8,
                             RepositoryDateRangeValue: 9,
                             RepositoryChecklistValue: 10,
-                            RepositoryNumberValue: 11 }
+                            RepositoryNumberValue: 11,
+                            RepositoryStockValue: 12,
+                            RepositoryStockConsumptionValue: 13 }
 
   # Data types which can be imported to repository,
   # name should match record in REPOSITORY_DATA_TYPES
   REPOSITORY_IMPORTABLE_TYPES = %i(RepositoryTextValue RepositoryListValue RepositoryNumberValue
                                    RepositoryDateValue RepositoryDateTimeValue RepositoryTimeValue
-                                   RepositoryStatusValue RepositoryChecklistValue)
+                                   RepositoryStatusValue RepositoryChecklistValue RepositoryStockValue)
 
   REPOSITORY_IMPORT_COLUMN_PRELOADS = %i(repository_list_items repository_status_items repository_checklist_items)
 
@@ -115,6 +117,8 @@ class Extends
       table_name: :repository_date_time_values
     }, RepositoryTimeRangeValue: {
       table_name: :repository_date_time_range_values
+    }, RepositoryStockValue: {
+      table_name: :repository_stock_values
     }
   }
 
@@ -137,6 +141,7 @@ class Extends
     RepositoryDateRangeValue
     RepositoryTimeValue
     RepositoryTimeRangeValue
+    RepositoryStockValue
   )
 
   # Array of preload relations used in search query for repository rows
@@ -159,7 +164,8 @@ class Extends
                                         'RepositoryListValue' => 'list',
                                         'RepositoryChecklistValue' => 'checklist',
                                         'RepositoryAssetValue' => 'file',
-                                        'RepositoryStatusValue' => 'status' }
+                                        'RepositoryStatusValue' => 'status',
+                                        'RepositoryStockValue' => 'stock' }
 
   OMNIAUTH_PROVIDERS = %i(linkedin customazureactivedirectory okta)
 
@@ -186,7 +192,8 @@ class Extends
   ]
 
   ACTIVITY_SUBJECT_TYPES = %w(
-    Team RepositoryBase Project Experiment MyModule Result Protocol Report RepositoryRow ProjectFolder Asset Step
+    Team RepositoryBase Project Experiment MyModule Result Protocol Report RepositoryRow
+    ProjectFolder Asset Step
   ).freeze
 
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
@@ -372,7 +379,11 @@ class Extends
     create_molecule_on_step_in_repository: 173,
     register_molecule_on_step: 177,
     register_molecule_on_result: 178,
-    register_molecule_on_step_in_repository: 179
+    register_molecule_on_step_in_repository: 179,
+    inventory_item_stock_set: 180,
+    inventory_item_stock_add: 181,
+    inventory_item_stock_remove: 182,
+    task_inventory_item_stock_consumed: 183
   }
 
   ACTIVITY_GROUPS = {
@@ -382,10 +393,11 @@ class Extends
            *146..148, 166],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
                     168, 171, 177],
-    task_inventory: [55, 56, 146, 147],
+    task_inventory: [55, 56, 146, 147, 183],
     experiment: [*27..31, 57, 141, 165],
     reports: [48, 50, 49, 163, 164],
-    inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77, 78, 96, 107, 113, 114, *133..136],
+    inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77,
+                  78, 96, 107, 113, 114, *133..136, 180, 181, 182],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 170, 173, 179],
     team: [92, 94, 93, 97, 104]

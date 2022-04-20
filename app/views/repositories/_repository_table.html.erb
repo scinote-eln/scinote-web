@@ -44,7 +44,7 @@
         <th id="archived-by"><%= t("repositories.table.archived_by") %></th>
         <% repository.repository_columns.order(:id).each do |column| %>
           <th
-            class="repository-column"
+            class="repository-column <%= 'row-stock item-stock' if column.data_type == 'RepositoryStockValue' %>"
             id="<%= column.id %>"
             data-type="<%= column.data_type %>"
             data-edit-column-url="<%= edit_repository_repository_column_path(repository, column) %>"

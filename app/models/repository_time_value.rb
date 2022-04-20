@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class RepositoryTimeValue < RepositoryDateTimeValueBase
-  def data_changed?(new_data)
+  SORTABLE_COLUMN_NAME = 'repository_date_time_values.data::time'
+
+  def data_different?(new_data)
     new_time = Time.zone.parse(new_data)
     new_time.min != data.min || new_time.hour != data.hour
   end

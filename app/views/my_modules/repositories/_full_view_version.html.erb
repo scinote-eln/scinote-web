@@ -14,12 +14,12 @@
           <%= t('my_modules.repository.snapshots.full_view.created_by', full_name: repository_snapshot.created_by.full_name) %>
         </p>
       <% else %>
-        <a class="version-button select-snapshot-button <%= 'disabled' if repository_snapshot.status == 'provisioning' %>"
+        <a class="version-button select-snapshot-button <%= 'disabled' if repository_snapshot.provisioning? %> <%= 'failed' if repository_snapshot.failed? %>"
            href="#"
            data-status="<%= repository_snapshot.status %>"
            data-table-url="<%= full_view_table_my_module_repository_snapshot_path(@my_module, repository_snapshot) %>">
           <h4 class="list-group-item-heading">
-            <%= l(repository_snapshot.created_at, format: :full) %>
+            <%= repository_snapshot.failed? ? t("repositories.snapshot_failed") : l(repository_snapshot.created_at, format: :full) %>
           </h4>
           <p class="list-group-item-text">
             <%= t('my_modules.repository.snapshots.full_view.created_by', full_name: repository_snapshot.created_by.full_name) %>

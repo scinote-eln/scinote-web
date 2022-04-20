@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class RepositoryCell < ApplicationRecord
+  include ReminderRepositoryCellJoinable
+
   attr_accessor :importing
 
   belongs_to :repository_row
@@ -19,7 +21,9 @@ class RepositoryCell < ApplicationRecord
     repository_date: 'RepositoryDateTimeValueBase',
     repository_date_time_range: 'RepositoryDateTimeRangeValueBase',
     repository_time_range: 'RepositoryDateTimeRangeValueBase',
-    repository_date_range: 'RepositoryDateTimeRangeValueBase'
+    repository_date_range: 'RepositoryDateTimeRangeValueBase',
+    repository_stock: 'RepositoryStockValue',
+    repository_stock_consumption_snapshot: 'RepositoryStockConsumptionValue'
   }.each do |relation, class_name|
     belongs_to "#{relation}_value".to_sym,
                (lambda do |repository_cell|
@@ -27,6 +31,8 @@ class RepositoryCell < ApplicationRecord
                end),
                optional: true, foreign_key: :value_id, inverse_of: :repository_cell
   end
+
+  has_many :hidden_repository_cell_reminders, dependent: :destroy
 
   validates :repository_column,
             inclusion: { in: (lambda do |repository_cell|
@@ -38,6 +44,10 @@ class RepositoryCell < ApplicationRecord
   validates :repository_row,
             uniqueness: { scope: :repository_column },
             unless: :importing
+
+  scope :with_active_reminder, lambda { |user|
+    reminder_repository_cells_scope(joins(:repository_column), user)
+  }
 
   def self.create_with_value!(row, column, data, user)
     cell = new(repository_row: row, repository_column: column)
@@ -64,6 +74,7 @@ class RepositoryCell < ApplicationRecord
       updated_at: updated_at
     )
     value.snapshot!(cell_snapshot)
+    cell_snapshot
   end
 
   private

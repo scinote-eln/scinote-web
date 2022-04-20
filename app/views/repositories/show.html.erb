@@ -51,84 +51,18 @@
         <div class="share-repository-button" data-view-mode="active">
           <% if can_share_repository?(@repository) && current_user.teams.count > 1 %>
             <%= link_to team_repository_share_modal_path(current_team, repository_id: @repository),
-                        class: 'btn btn-secondary share-repo-option', remote: true, id: 'shareRepoBtn' do %>
+                        class: 'btn btn-light share-repo-option', remote: true, id: 'shareRepoBtn' do %>
               <span class="fas fa-user-plus"></span>
               <span class="hidden-xs"><%= t('repositories.index.share_inventory') %></span>
             <% end %>
           <% end %>
         </div>
 
-        <button class="btn btn-secondary manage-repo-column-index"
+        <button class="btn btn-light manage-repo-column-index"
                 data-modal-url="<%= repository_repository_columns_path(@repository) %>"
                 data-action="new">
-          <span class="fas fa-wrench"></span>&nbsp;<%= t('repositories.index.columns') %>
+          <span class="fas fa-cog"></span>&nbsp;<%= t('repositories.index.columns') %>
         </button>
-
-        <div class="repository-cog dropdown">
-          <button id="repository-acitons-dropdown"
-                  class="btn btn-secondary"
-                  type="button"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="true"
-                  <%= "disabled" unless can_perform_repository_actions(@repository) %>>
-            <span class="fas fa-pencil-alt"></span>
-            <span class="hidden-xs"><%= t('repositories.index.edit_inventory') %></span>
-            <span class="caret"></span>
-          </button>
-
-          <% if can_perform_repository_actions(@repository) %>
-            <ul class="dropdown-menu pull-right">
-              <% if can_create_repository_rows?(@repository) %>
-                <li data-view-mode="active">
-                  <a href="#" id="importRecordsButton" data-turbolinks="false">
-                    <%= t('repositories.index.options_dropdown.import_items') %>
-                  </a>
-                </li>
-              <% end %>
-              <% if can_read_repository?(@repository) %>
-                <li >
-                  <a href="#"  id="exportRepositoriesButton" data-turbolinks="false">
-                    <%= t("repositories.index.options_dropdown.export_items") %>
-                  </a>
-                </li>
-              <% end %>
-              <% if !@repository.is_a?(BmtRepository) && can_create_repositories?(current_team) && !@repository.shared_with?(current_team) %>
-                <li data-view-mode="active">
-                  <%= link_to t('repositories.index.options_dropdown.copy'),
-                              team_repository_copy_modal_path(current_team, repository_id: @repository),
-                              class: "copy-repo-option",
-                              remote: true %>
-                </li>
-              <% end %>
-              <% if can_archive_repository?(@repository) %>
-                <li data-view-mode="active" role="separator" class="divider"></li>
-                <li  data-view-mode="active">
-                  <%= link_to t('repositories.index.options_dropdown.archive'),
-                              archive_team_repositories_path(current_team),
-                              class: "archive-repository-option",
-                              data: { repository_id: @repository.id } %>
-                </li>
-                <% if @repository.archived? %>
-                  <li data-view-mode="archived">
-                    <%= link_to t('repositories.index.options_dropdown.restore'),
-                                restore_team_repositories_path(current_team),
-                                class: "archive-repository-option",
-                                data: { repository_id: @repository.id } %>
-                  </li>
-                <% end %>
-              <% end %>
-              <% if can_manage_repository?(@repository) && @repository.archived? %>
-                <li data-view-mode="archived" data-hook="destroy-repository-option">
-                  <%= link_to t('repositories.index.options_dropdown.delete'),
-                              team_repository_destroy_modal_path(current_team, repository_id: @repository),
-                              class: "delete-repo-option",
-                              remote: true %>
-                </li>
-              <% end %>
-            </ul>
-          <% end %>
-        </div>
           <% unless @repository.is_a?(BmtRepository) %>
             <%= render layout: "shared/view_switch", locals: {disabled: @repository.archived?} do %>
               <li class="view-switch-archived" data-view-mode="active">
@@ -167,6 +101,8 @@
            locals: { repository: @repository } %>
 
 <%= render partial: 'repository_columns/manage_column_modal', locals: { my_module_page: false } %>
+<%= render partial: "repository_stock_values/manage_modal" %>
+<%= render partial: "toolbar_buttons" %>
 
 <% if @repository.is_a?(BmtRepository) %>
   <%= render partial: 'save_bmt_filter_modal' %>
