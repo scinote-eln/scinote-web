@@ -867,10 +867,12 @@ en:
       error_flash: "Failed to restore task(s)."
     protocols:
       head_title: "%{project} | %{module} | Protocols"
+      protocol: "Protocol"
       protocol_status_bar:
         private_parent: "private"
         unlinked: "unlinked"
         no_description: "No protocol description"
+        enter_name: "Enter protocol name"
         empty_description_edit_label: "Click here to enter Protocol Description (optional)"
         keywords: "Keywords"
         no_keywords: "no keywords"
