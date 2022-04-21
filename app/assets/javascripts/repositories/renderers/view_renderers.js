@@ -230,6 +230,10 @@ $.fn.dataTable.render.defaultRepositoryStockValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryStockConsumptionValue = function(data = {}) {
+  // covers case of snapshots
+  if (!data.stock_present && data.value && data.value.consumed_stock_formatted) {
+    return `<span class="empty-consumed-stock-render">${data.value.consumed_stock_formatted}</span>`;
+  }
   if (!data.stock_present) {
     return '<span class="empty-consumed-stock-render"> - </span>';
   }
