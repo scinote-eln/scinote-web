@@ -117,32 +117,17 @@
       <%= render partial: "my_modules/modals/update_repository_records_modal" %>
     </div>
     <!-- Protocol -->
-    <div class="task-section hidden">
-      <div class="task-section-header">
-        <a class="task-section-caret" role="button" data-toggle="collapse" href="#protocol-container" aria-expanded="true" aria-controls="protocol-container">
-          <i class="fas fa-caret-right"></i>
-          <div class="task-section-title">
-            <h2><%= t('my_modules.protocol.title') %></h2>
-          </div>
-        </a>
-        <%= render partial: "my_modules/protocols/protocol_status_bar" %>
-        <div class="sci-btn-group actions-block">
-          <% if can_manage_protocol_in_module?(@protocol) %>
-            <a href="#"
-              class="btn btn-primary"
-              data-action="new-step"
-              data-href="<%= new_protocol_step_path(protocol_id: @protocol.id, format: :json) %>">
-                <span class="fas fa-plus" aria-hidden="true"></span>
-                <span><%=t "protocols.steps.new_step" %></span>
-            </a>
-          <% end %>
-          <%= render partial: "my_modules/protocols/print_protocol_button", locals: { protocol: @protocol } %>
-          <%= render partial: "my_modules/protocols/protocol_options_dropdown" %>
-        </div>
-      </div>
-      <div class="collapse in" id="protocol-container" aria-expanded="true">
-        <%= render partial: "my_module_protocol" %>
-      </div>
+    <div class="task-section">
+      <div
+          id="protocolContainer"
+          data-protocol-url="<%= protocol_my_module_path(@my_module, @protocol) %>"
+          data-date-format="<%= datetime_picker_format_date_only %>"
+          data-user-utc-offset="<%= ActiveSupport::TimeZone.find_tzinfo(current_user.time_zone).utc_offset %>"
+      >
+      <protocol-container
+        :protocol-url="protocolUrl"
+      />
+    </div>
     </div>
   </div>
 </div>
@@ -183,3 +168,5 @@
 <%= javascript_include_tag("my_modules/pwa_mobile_app") %>
 <%= javascript_pack_tag 'pdfjs/pdf_js' %>
 <%= stylesheet_pack_tag 'pdfjs/pdf_js_styles' %>
+
+<%= javascript_pack_tag 'vue/protocol' %>

@@ -432,6 +432,7 @@ Rails.application.routes.draw do
               as: 'update_protocol_description'
         patch 'state', to: 'my_modules#update_state', as: 'update_state'
         get 'protocols' # Protocols view for single module
+        get 'protocol', to: 'my_modules#protocol', as: 'protocol'
         get 'results' # Results view for single module
         get 'archive' # Archive view for single module
       end

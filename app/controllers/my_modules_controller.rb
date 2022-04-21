@@ -260,6 +260,10 @@ class MyModulesController < ApplicationController
     current_team_switch(@protocol.team)
   end
 
+  def protocol
+    render json: @my_module.protocol
+  end
+
   def results
     current_team_switch(@my_module
                                 .experiment
