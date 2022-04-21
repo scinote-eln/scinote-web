@@ -38,109 +38,111 @@
 <%= render partial: 'shared/secondary_navigation', locals: { render_breadcrumbs: true, project: @experiment.project, experiment: @experiment } %>
 
 <div class="content-pane my-modules-protocols-index" data-task-id="<%= @my_module.id %>">
-  <!-- Details -->
-  <div class="task-section task-information">
-    <div class="task-section-header">
-      <span id="taskDetailsLabel" class="task-section-title">
-        <h2>
-          <%= t('my_modules.details.title') %>
-        </h2>
-      </span>
-      <span class="dropdown task-details-dropdown-container">
-        <a href="#"
-           id="taskDetailsButton"
-           class="block-icon task-details-button dropdown-toggle"
-           data-toggle="dropdown"
-           aria-haspopup="true"
-           aria-expanded="true">
-          <i class="fas fa-info-circle"></i>
-        </a>
-        <div class="dropdown-menu" aria-labelledby="taskDetailsButton">
-          <%= render partial: "module_header_details_popover.html.erb" %>
-        </div>
-      </span>
-
-
-    </div>
-    <div class="task-details">
-      <%= render partial: 'my_module_details' %>
-    </div>
-    <div class="task-flows">
-      <%= render partial: 'my_modules/status_flow/task_flow_button', locals: { my_module: @my_module } if @my_module.my_module_status_flow %>
-    </div>
-  </div>
-  <!-- Notes -->
-  <div class="task-section hidden">
-    <div class="task-section-header">
-      <a class="task-section-caret" role="button" data-toggle="collapse" href="#notes-container" aria-expanded="true" aria-controls="notes-container">
-        <i class="fas fa-caret-right"></i>
-        <span class="task-section-title">
-          <h2><%= t('my_modules.notes.title') %></h2>
-        </span>
-      </a>
-    </div>
-    <div class="collapse in" id="notes-container" aria-expanded="true">
-      <%= render partial: "my_module_notes" %>
-    </div>
-  </div>
-  <!-- Assigned items -->
-  <div class="task-section hidden">
-    <div class="task-section-header">
-      <a class="task-section-caret" role="button" data-toggle="collapse" href="#assigned-items-container" aria-expanded="true" aria-controls="assigned-items-container">
-        <i class="fas fa-caret-right"></i>
-        <span class="task-section-title ">
-          <h2 class="assigned-items-title" data-assigned-items-count="<%= @assigned_repositories.map(&:assigned_rows_count).sum %>">
-            <%= t('my_modules.assigned_items.title') %>
+  <div class="my-module-position-container">
+    <!-- Details -->
+    <div class="task-section task-information">
+      <div class="task-section-header">
+        <span id="taskDetailsLabel" class="task-section-title">
+          <h2>
+            <%= t('my_modules.details.title') %>
           </h2>
         </span>
-      </a>
-      <div class="actions-block">
-        <% if can_assign_my_module_repository_rows?(@my_module) %>
-          <div class="dropdown repositories-assign-container sci-dropdown" data-repositories-url="<%= my_module_repositories_dropdown_list_path(@my_module) %>">
-            <a href="#" id="repositories-assign-button" class="btn btn-secondary btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              <span class="fas fa-file-signature"></span>
-              <span><%= t('my_modules.assigned_items.assign_from') %></span>
-              <span class="caret pull-right"></span>
-            </a>
-            <ul class="dropdown-menu repositories-dropdown-menu" aria-labelledby="repositories-assign-button">
-            </ul>
-          </div>
-        <% end %>
-      </div>
-    </div>
-    <div class="collapse in panel-group" id="assigned-items-container" aria-expanded="true"
-         data-repositories-list-url="<%= my_module_repositories_list_html_path(@my_module) %>">
-      <%= render partial: "my_modules/repositories/repositories_list" %>
-    </div>
-    <%= render partial: "my_modules/repositories/full_view_modal" %>
-    <%= render partial: "my_modules/modals/update_repository_records_modal" %>
-  </div>
-  <!-- Protocol -->
-  <div class="task-section hidden">
-    <div class="task-section-header">
-      <a class="task-section-caret" role="button" data-toggle="collapse" href="#protocol-container" aria-expanded="true" aria-controls="protocol-container">
-        <i class="fas fa-caret-right"></i>
-        <div class="task-section-title">
-          <h2><%= t('my_modules.protocol.title') %></h2>
-        </div>
-      </a>
-      <%= render partial: "my_modules/protocols/protocol_status_bar" %>
-      <div class="sci-btn-group actions-block">
-        <% if can_manage_protocol_in_module?(@protocol) %>
+        <span class="dropdown task-details-dropdown-container">
           <a href="#"
-             class="btn btn-primary"
-             data-action="new-step"
-             data-href="<%= new_protocol_step_path(protocol_id: @protocol.id, format: :json) %>">
-              <span class="fas fa-plus" aria-hidden="true"></span>
-              <span><%=t "protocols.steps.new_step" %></span>
+            id="taskDetailsButton"
+            class="block-icon task-details-button dropdown-toggle"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="true">
+            <i class="fas fa-info-circle"></i>
           </a>
-        <% end %>
-        <%= render partial: "my_modules/protocols/print_protocol_button", locals: { protocol: @protocol } %>
-        <%= render partial: "my_modules/protocols/protocol_options_dropdown" %>
+          <div class="dropdown-menu" aria-labelledby="taskDetailsButton">
+            <%= render partial: "module_header_details_popover.html.erb" %>
+          </div>
+        </span>
+
+
+      </div>
+      <div class="task-details">
+        <%= render partial: 'my_module_details' %>
+      </div>
+      <div class="task-flows">
+        <%= render partial: 'my_modules/status_flow/task_flow_button', locals: { my_module: @my_module } if @my_module.my_module_status_flow %>
       </div>
     </div>
-    <div class="collapse in" id="protocol-container" aria-expanded="true">
-      <%= render partial: "my_module_protocol" %>
+    <!-- Notes -->
+    <div class="task-section hidden">
+      <div class="task-section-header">
+        <a class="task-section-caret" role="button" data-toggle="collapse" href="#notes-container" aria-expanded="true" aria-controls="notes-container">
+          <i class="fas fa-caret-right"></i>
+          <span class="task-section-title">
+            <h2><%= t('my_modules.notes.title') %></h2>
+          </span>
+        </a>
+      </div>
+      <div class="collapse in" id="notes-container" aria-expanded="true">
+        <%= render partial: "my_module_notes" %>
+      </div>
+    </div>
+    <!-- Assigned items -->
+    <div class="task-section hidden">
+      <div class="task-section-header">
+        <a class="task-section-caret" role="button" data-toggle="collapse" href="#assigned-items-container" aria-expanded="true" aria-controls="assigned-items-container">
+          <i class="fas fa-caret-right"></i>
+          <span class="task-section-title ">
+            <h2 class="assigned-items-title" data-assigned-items-count="<%= @assigned_repositories.map(&:assigned_rows_count).sum %>">
+              <%= t('my_modules.assigned_items.title') %>
+            </h2>
+          </span>
+        </a>
+        <div class="actions-block">
+          <% if can_assign_my_module_repository_rows?(@my_module) %>
+            <div class="dropdown repositories-assign-container sci-dropdown" data-repositories-url="<%= my_module_repositories_dropdown_list_path(@my_module) %>">
+              <a href="#" id="repositories-assign-button" class="btn btn-secondary btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <span class="fas fa-file-signature"></span>
+                <span><%= t('my_modules.assigned_items.assign_from') %></span>
+                <span class="caret pull-right"></span>
+              </a>
+              <ul class="dropdown-menu repositories-dropdown-menu" aria-labelledby="repositories-assign-button">
+              </ul>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="collapse in panel-group" id="assigned-items-container" aria-expanded="true"
+          data-repositories-list-url="<%= my_module_repositories_list_html_path(@my_module) %>">
+        <%= render partial: "my_modules/repositories/repositories_list" %>
+      </div>
+      <%= render partial: "my_modules/repositories/full_view_modal" %>
+      <%= render partial: "my_modules/modals/update_repository_records_modal" %>
+    </div>
+    <!-- Protocol -->
+    <div class="task-section hidden">
+      <div class="task-section-header">
+        <a class="task-section-caret" role="button" data-toggle="collapse" href="#protocol-container" aria-expanded="true" aria-controls="protocol-container">
+          <i class="fas fa-caret-right"></i>
+          <div class="task-section-title">
+            <h2><%= t('my_modules.protocol.title') %></h2>
+          </div>
+        </a>
+        <%= render partial: "my_modules/protocols/protocol_status_bar" %>
+        <div class="sci-btn-group actions-block">
+          <% if can_manage_protocol_in_module?(@protocol) %>
+            <a href="#"
+              class="btn btn-primary"
+              data-action="new-step"
+              data-href="<%= new_protocol_step_path(protocol_id: @protocol.id, format: :json) %>">
+                <span class="fas fa-plus" aria-hidden="true"></span>
+                <span><%=t "protocols.steps.new_step" %></span>
+            </a>
+          <% end %>
+          <%= render partial: "my_modules/protocols/print_protocol_button", locals: { protocol: @protocol } %>
+          <%= render partial: "my_modules/protocols/protocol_options_dropdown" %>
+        </div>
+      </div>
+      <div class="collapse in" id="protocol-container" aria-expanded="true">
+        <%= render partial: "my_module_protocol" %>
+      </div>
     </div>
   </div>
 </div>

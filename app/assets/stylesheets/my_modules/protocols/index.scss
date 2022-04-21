@@ -7,7 +7,19 @@
 @import "mixins";
 
 .content-pane.my-modules-protocols-index {
-  padding: 10px;
+  background-color: $color-alto;
+  margin: 0 -16px;
+  overflow: hidden;
+  padding: 36px 10px 10px;
+  width: calc(100% + 32px) ;
+
+  .my-module-position-container {
+    background-color: $color-white;
+    box-shadow: $flyout-shadow;
+    margin: 0 auto;
+    max-width: 900px;
+    padding: 10px;
+  }
 }
 
 .content-pane.protocols-repository-edit-view {
@@ -531,6 +543,10 @@
 }
 
 @media (max-width: 700px) {
+  .content-pane.my-modules-protocols-index {
+    padding: 10px 0 0 0;
+  }
+
   .my-module-protocol-status {
     .status-info-dropdown {
       left: -75px;

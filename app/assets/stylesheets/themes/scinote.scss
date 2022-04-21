@@ -412,11 +412,13 @@ a[data-toggle="tooltip"] {
 }
 
 .navbar-secondary {
+  min-height: 77px;
   transition: .4s $timing-function-sharp;
 }
 
 .navbar-without-sidebar{
   margin-left: 0px;
+  min-height: 77px;
   padding-left: 0;
   transition: .4s $timing-function-sharp;
 }
