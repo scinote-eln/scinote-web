@@ -22,7 +22,7 @@ module Api
                   !instance_options[:hide_list_items]
                end)
       has_many :repository_status_items,
-               key: :repository_status_items,
+               key: :inventory_status_items,
                serializer: InventoryStatusItemSerializer,
                class_name: 'RepositoryStatusItem',
                if: (lambda do
@@ -30,7 +30,7 @@ module Api
                    !instance_options[:hide_list_items]
                end)
       has_many :repository_stock_unit_items,
-               key: :repository_stock_unit_items,
+               key: :inventory_stock_unit_items,
                serializer: InventoryStockUnitItemSerializer,
                class_name: 'RepositoryStockUnitItem',
                if: (lambda do
