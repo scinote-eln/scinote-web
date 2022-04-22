@@ -164,7 +164,7 @@ var RepositoryStockValues = (function() {
               dropdownSelector.hideError(UNIT_SELECTOR);
             }
 
-            if ($('#stock-input-amount').val().length) {
+            if ($('#stock-input-amount').val().length && $('#stock-input-amount').val() >= 0) {
               $('#stock-input-amount').parent().removeClass('error');
             } else {
               $('#stock-input-amount').parent().addClass('error');
