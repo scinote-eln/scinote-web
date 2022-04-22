@@ -6,14 +6,18 @@ class StepsController < ApplicationController
 
   before_action :load_vars, only: %i(edit update destroy show toggle_step_state checklistitem_state update_view_state
                                      move_up move_down update_asset_view_mode)
-  before_action :load_vars_nested, only:  %i(new create)
+  before_action :load_vars_nested, only:  %i(new create index)
   before_action :convert_table_contents_to_utf8, only: %i(create update)
 
-  before_action :check_view_permissions, only: :show
+  before_action :check_view_permissions, only: %i(show index)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: %i(edit update destroy move_up move_down
                                                     update_view_state update_asset_view_mode)
   before_action :check_complete_and_checkbox_permissions, only: %i(toggle_step_state checklistitem_state)
+
+  def index
+    render json: @protocol.steps.in_order, each_serializer: StepSerializer
+  end
 
   def new
     @step = Step.new
@@ -28,6 +32,16 @@ class StepsController < ApplicationController
   end
 
   def create
+    new_step = Step.new(
+      name: t('protocols.steps.default_name'),
+      completed: false,
+      user: current_user,
+      last_modified_by: current_user
+    )
+    render json: @protocol.insert_step(new_step, params[:position]), serializer: StepSerializer
+  end
+
+  def create_old
     @step = Step.new
     @step.transaction do
       new_step_params = step_params
@@ -264,23 +278,9 @@ class StepsController < ApplicationController
       # Release space taken by the step
       team.release_space(previous_size)
       team.save
-
-      flash[:success] = t(
-        'protocols.steps.destroy.success_flash',
-        step: (@step.position_plus_one).to_s
-      )
-    else
-      flash[:error] = t(
-        'protocols.steps.destroy.error_flash',
-        step: (@step.position_plus_one).to_s
-      )
     end
 
-    if @protocol.in_module?
-      redirect_to protocols_my_module_path(@step.my_module)
-    else
-      redirect_to edit_protocol_path(@protocol)
-    end
+    render json: @step, serializer: StepSerializer
   end
 
   # Responds to checkbox toggling in steps view

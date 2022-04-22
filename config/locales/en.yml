@@ -2491,6 +2491,7 @@ en:
           success_flash: 'Protocol <strong>%{name}</strong> successfully imported to %{type}.'
 
     steps:
+      default_name: 'Untitled step'
       completed: 'Completed'
       uncompleted: 'Uncompleted'
       expand_label: "Expand All"
