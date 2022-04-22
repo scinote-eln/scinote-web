@@ -2,29 +2,29 @@
 
 module Api
   module Service
-    class ManuscriptDataController < BaseController
+    class ProjectJsonExportController < BaseController
       require 'uri'
 
-      def manuscript_data
+      def project_json_export
         @experiment_ids = []
         @task_ids = []
-        manuscript_params = manuscript_data_params
-        valid_url?(manuscript_data_params[:callback_url])
-        process_project(manuscript_params)
-        GenerateManuscriptDataJob.perform_later(manuscript_params[:project_id],
-                                                @experiment_ids,
-                                                @task_ids,
-                                                manuscript_params[:callback_url])
+        project_json_export_params = project_json_export_data_params
+        valid_url?(project_json_export_params[:callback_url])
+        process_project(project_json_export_params)
+        ProjectJsonExportJob.perform_later(project_json_export_params[:project_id],
+                                           @experiment_ids,
+                                           @task_ids,
+                                           project_json_export_params[:callback_url])
         render json: { status: :ok }, status: :accepted
       end
 
       private
 
-      def process_project(manuscript_params)
-        check_read_project_permission(manuscript_params[:project_id])
-        if manuscript_params.include?('experiments')
-          manuscript_params[:experiments].each do |experiment|
-            check_read_experiment_permission(experiment[:id], manuscript_params[:project_id])
+      def process_project(project_json_export_params)
+        check_read_project_permission(project_json_export_params[:project_id])
+        if project_json_export_params.include?('experiments')
+          project_json_export_params[:experiments].each do |experiment|
+            check_read_experiment_permission(experiment[:id], project_json_export_params[:project_id])
             if experiment.include?('task_ids')
               check_read_my_module_permission(experiment[:task_ids], experiment[:id])
               @task_ids += experiment[:task_ids]
@@ -53,7 +53,7 @@ module Api
         end
       end
 
-      def manuscript_data_params
+      def project_json_export_data_params
         raise ActionController::ParameterMissing, I18n.t('api.service.errors.missing_project_id') unless
           params.require(:data).require(:project_id)
         raise ActionController::ParameterMissing, I18n.t('api.service.errors.callback_missing') unless

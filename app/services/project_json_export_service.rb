@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class GenerateManuscriptDataService
+class ProjectJsonExportService
   require 'net/http'
 
   def initialize(project_id, experiment_ids, task_ids, callback)
