@@ -16,6 +16,8 @@ class RepositoryStockValue < ApplicationRecord
   validates :repository_cell, presence: true
 
   after_create do
+    next if is_a?(RepositoryStockConsumptionValue)
+
     repository_ledger_records.create!(user: created_by,
                                       amount: amount,
                                       balance: amount,
