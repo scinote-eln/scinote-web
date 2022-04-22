@@ -34,7 +34,7 @@
     <div class="row mt-3">
       <div class="col-sm-12">
         <div class="stock-update-view">
-          <div class="stock-initial-container">
+          <div class="stock-initial-container <%= 'negative' if @stock_value.amount < 0 %>">
             <span class="subtitle"><%= t('repository_stock_values.manage_modal.current_stock') %></span>
             <span class="value"><%= @stock_value.formatted_value %></span>
             <span class="units"><%= @stock_value.repository_stock_unit_item&.data %></span>
@@ -42,7 +42,7 @@
           <div class="stock-arrow">
             <i class="fas fa-arrow-right"></i>
           </div>
-          <div class="stock-final-container">
+          <div class="stock-final-container ">
             <span class="subtitle"><%= t('repository_stock_values.manage_modal.new_stock') %></span>
             <span class="value">-</span>
             <span class="units"><%= @stock_value.repository_stock_unit_item&.data %></span>

@@ -16,6 +16,16 @@ var RepositoryStockColumnType = (function() {
     });
   }
 
+  function syncSelectedUnits() {
+    RepositoryListColumnType.refreshPreviewDropdownList(
+      previewContainer,
+      itemsTextarea,
+      delimiterDropdown,
+      dropdownOptions,
+      GLOBAL_CONSTANTS.REPOSITORY_STOCK_UNIT_ITEMS_PER_COLUMN
+    );
+  }
+
   function initDropdownItemsTextArea() {
     var $manageModal = $(manageModal);
 
@@ -24,24 +34,12 @@ var RepositoryStockColumnType = (function() {
         setTimeout(() => { initStockUnitDropdown(); }, 200);
       })
       .on('change keyup paste', itemsTextarea, function() {
-        RepositoryListColumnType.refreshPreviewDropdownList(
-          previewContainer,
-          itemsTextarea,
-          delimiterDropdown,
-          dropdownOptions,
-          GLOBAL_CONSTANTS.REPOSITORY_LIST_ITEMS_PER_COLUMN
-        );
+        syncSelectedUnits();
         $('.changing-existing-stock-units-warning').removeClass('hidden');
         initStockUnitDropdown();
       })
       .on('columnModal::partialLoadedForRepositoryStockValue', function() {
-        RepositoryListColumnType.refreshPreviewDropdownList(
-          previewContainer,
-          itemsTextarea,
-          delimiterDropdown,
-          dropdownOptions,
-          GLOBAL_CONSTANTS.REPOSITORY_STOCK_UNIT_ITEMS_PER_COLUMN
-        );
+        syncSelectedUnits();
         initStockUnitDropdown();
       });
   }
@@ -62,9 +60,10 @@ var RepositoryStockColumnType = (function() {
       return count <= GLOBAL_CONSTANTS.REPOSITORY_STOCK_UNIT_ITEMS_PER_COLUMN;
     },
     loadParams: () => {
-      var repositoryColumnParams = {};
-      var options = JSON.parse($(dropdownOptions).val());
-      var decimals = $('.stock-column-type #decimals').val();
+      let repositoryColumnParams = {};
+      syncSelectedUnits();
+      let options = JSON.parse($(dropdownOptions).val());
+      let decimals = $('.stock-column-type #decimals').val();
       repositoryColumnParams.repository_stock_unit_items_attributes = options;
       repositoryColumnParams.metadata = { decimals: decimals };
       return repositoryColumnParams;

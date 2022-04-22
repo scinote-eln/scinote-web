@@ -41,6 +41,9 @@ var RepositoryStockValues = (function() {
     let amountChanged = false;
 
     $('.repository-show').on('click', '.manage-repository-stock-value-link', function() {
+      let colIndex = this.parentNode.cellIndex;
+      let rowIndex = this.parentNode.parentNode.rowIndex;
+
       $.ajax({
         url: $(this).closest('tr').data('manage-stock-url'),
         type: 'GET',
@@ -73,10 +76,13 @@ var RepositoryStockValues = (function() {
             .dropdown-selector-container .search-field
           `).attr('tabindex', 2);
 
-          $manageModal.find('form').on('ajax:success', function() {
-            var dataTable = $('.dataTable').DataTable();
+          $manageModal.find('form').on('ajax:success', function(_, data) {
             $manageModal.modal('hide');
-            dataTable.ajax.reload(null, false);
+            $('.dataTable').find(
+              `tr:nth-child(${rowIndex}) td:nth-child(${colIndex + 1})`
+            ).html(
+              $.fn.dataTable.render.RepositoryStockValue(data)
+            );
           });
 
           $('.stock-operator-option').click(function() {
