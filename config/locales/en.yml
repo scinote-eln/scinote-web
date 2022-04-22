@@ -145,6 +145,10 @@ en:
           attributes:
             file:
               too_big: "is too big"
+        step_orderable_element:
+          attributes:
+            step:
+              wrong_step: "connected to the wrong step"
         repository_snapshot:
           attributes:
             selected:
