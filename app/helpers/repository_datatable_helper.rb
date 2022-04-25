@@ -68,6 +68,12 @@ module RepositoryDatatableHelper
 
       if options[:include_stock_consumption] && record.repository.has_stock_management? && options[:my_module]
         consumption_managable = stock_consumption_managable?(record, repository, options[:my_module])
+        consumed_stock_formatted =
+          number_with_precision(
+            record.consumed_stock,
+            precision: (record.repository.repository_stock_column.metadata['decimals'].to_i || 0),
+            strip_insignificant_zeros: true
+          )
         row['consumedStock'] = {
           stock_present: stock_present,
           consumptionPermitted: stock_consumption_permitted?(repository, options[:my_module]),
@@ -80,7 +86,7 @@ module RepositoryDatatableHelper
           value: {
             consumed_stock: record.consumed_stock,
             consumed_stock_formatted:
-              "#{record.consumed_stock || 0} #{record.repository_stock_value&.repository_stock_unit_item&.data}"
+              "#{consumed_stock_formatted || 0} #{record.repository_stock_value&.repository_stock_unit_item&.data}"
           }
         }
       end
@@ -136,10 +142,16 @@ module RepositoryDatatableHelper
                 my_module, record.repository, row_id: record.id
               )
           end
+          consumed_stock_formatted =
+            number_with_precision(
+              record.consumed_stock,
+              precision: (record.repository.repository_stock_column.metadata['decimals'].to_i || 0),
+              strip_insignificant_zeros: true
+            )
           row['consumedStock'][:value] = {
             consumed_stock: record.consumed_stock,
             consumed_stock_formatted:
-              "#{record.consumed_stock || 0} #{record.repository_stock_value&.repository_stock_unit_item&.data}"
+              "#{consumed_stock_formatted || 0} #{record.repository_stock_value&.repository_stock_unit_item&.data}"
           }
         end
 
