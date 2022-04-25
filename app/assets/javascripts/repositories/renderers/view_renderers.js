@@ -209,7 +209,7 @@ $.fn.dataTable.render.RepositoryStockValue = function(data) {
                   </a>`;
       }
       return `<span class="stock-value-view-render
-                           ${data.stock_managable !== undefined ? `stock-${data.stock_status}` : ''}">
+                           ${data.displayWarnings ? `stock-${data.stock_status}` : ''}">
                 ${data.value.stock_formatted}
                 </span>`;
     }
@@ -231,18 +231,18 @@ $.fn.dataTable.render.defaultRepositoryStockValue = function() {
 
 $.fn.dataTable.render.RepositoryStockConsumptionValue = function(data = {}) {
   // covers case of snapshots
-  if (!data.stock_present && data.value && data.value.consumed_stock_formatted) {
+  if (!data.stock_present && data.value && data.value.consumed_stock !== null) {
     return `<span class="empty-consumed-stock-render">${data.value.consumed_stock_formatted}</span>`;
   }
   if (!data.stock_present) {
     return '<span class="empty-consumed-stock-render"> - </span>';
   }
-  if (!data.consumptionManagable) {
+  if (!data.consumptionManagable && data.value && !data.value.consumed_stock) {
     return `<span class="consumption-locked">
     ${I18n.t('libraries.manange_modal_column.stock_type.stock_consumption_locked')}
     </span>`;
   }
-  if (!data.consumptionPermitted) {
+  if (!data.consumptionPermitted || !data.consumptionManagable) {
     return `<span class="empty-consumed-stock-render">${data.value.consumed_stock_formatted}</span>`;
   }
   if (!data.value.consumed_stock) {
