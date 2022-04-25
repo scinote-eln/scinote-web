@@ -1065,7 +1065,7 @@ en:
     open_mobile_app: "Open mobile app"
     status_error:
       general: "Status transition failed"
-      repository_snapshot: "Snapshot failed in %{repository}"
+      repository_snapshot: "Snapshot failed in %{repository} inventory"
   experiments:
     id: "ID"
     experiment_id: "Experiment ID"
