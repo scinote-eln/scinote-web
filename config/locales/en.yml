@@ -1727,6 +1727,7 @@ en:
       amount_placeholder: "Enter amount"
       amount_placeholder_new: "100, 2000, ..."
       amount_error: "Enter an amount"
+      negative_error: "Negative values are not allowed."
       unit: "Unit"
       unit_prompt: "Select unit"
       unit_error: "Select a unit"

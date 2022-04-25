@@ -14,6 +14,7 @@ class RepositoryStockValue < ApplicationRecord
   accepts_nested_attributes_for :repository_cell
 
   validates :repository_cell, presence: true
+  validates :low_stock_threshold, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 
   after_create do
     next if is_a?(RepositoryStockConsumptionValue)
