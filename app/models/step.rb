@@ -47,6 +47,9 @@ class Step < ApplicationRecord
                                 },
                                 allow_destroy: true
 
+  scope :in_order, -> { order(position: :asc) }
+  scope :desc_order, -> { order(position: :desc) }
+
   def self.search(user,
                   include_archived,
                   query = nil,

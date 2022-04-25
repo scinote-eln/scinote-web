@@ -443,7 +443,7 @@ Rails.application.routes.draw do
       get 'users/edit', to: 'user_my_modules#index_edit'
     end
 
-    resources :steps, only: [:edit, :update, :destroy, :show] do
+    resources :steps, only: %i(index edit update destroy show) do
       resources :step_comments,
                 path: '/comments',
                 only: %i(create index update destroy)

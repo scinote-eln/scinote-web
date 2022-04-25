@@ -202,6 +202,36 @@ class Protocol < ApplicationRecord
                    user_id: user.id))
   end
 
+  def insert_step(step, position)
+    ActiveRecord::Base.transaction do
+      steps.where('position >= ?', position).desc_order.each do |s|
+        s.update!(position: s.position + 1)
+      end
+      step.position = position
+      step.protocol = self
+      step.save!
+    end
+    step
+  end
+
+  def move_step(step, new_position)
+    ActiveRecord::Base.transaction do
+      old_position = step.position
+      step.update!(posistion: -1)
+      if old_position > new_position
+        steps.where('position > ? AND position <= ?', old_position, new_position).desc_order.each do |s|
+          s.update!(position: s.position + 1)
+        end
+      else
+        steps.where('position >= ? AND position < ?', old_position, new_position).at_order.each do |s|
+          s.update!(position: s.position - 1)
+        end
+      end
+      step.update!(posistion: new_position)
+    end
+    step
+  end
+
   def linked_modules
     MyModule.joins(:protocols).where('protocols.parent_id = ?', id)
   end

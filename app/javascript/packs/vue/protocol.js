@@ -9,7 +9,6 @@ Vue.prototype.i18n = window.I18n;
 
 window.initProtocolComponent = () => {
   Vue.prototype.dateFormat = $('#protocolContainer').data('date-format');
-
   new Vue({
     el: '#protocolContainer',
     components: {
@@ -17,7 +16,9 @@ window.initProtocolComponent = () => {
     },
     data() {
       return {
-        protocolUrl: $('#protocolContainer').data('protocol-url')
+        protocolUrl: $('#protocolContainer').data('protocol-url'),
+        stepsUrl: $('#protocolContainer').data('steps-url'),
+        addStepUrl: $('#protocolContainer').data('add-step-url')
       };
     }
   });
