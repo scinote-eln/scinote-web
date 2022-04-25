@@ -71,6 +71,9 @@
             <li id="results-nav-tab" class="<%= "active" if is_module_results? %>">
               <a href="<%= results_my_module_url(@my_module) %>" title="<%=t "nav2.modules.results" %>">
                 <span class="hidden-xs"><%=t "nav2.modules.results" %></span>
+                <% if @my_module.results.size.positive? %>
+                  <sup class="navigation-results-counter"><%= @my_module.results.size %></sup>
+                <% end %>
                 <span class="hidden-xs hidden-lg fas fa-columns"></span>
               </a>
             </li>
