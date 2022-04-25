@@ -134,7 +134,6 @@ var RepositoryStockValues = (function() {
           $('#reminder-selector-checkbox').on('change', function() {
             let valueContainer = $('.repository-stock-reminder-value');
             valueContainer.toggleClass('hidden', !this.checked);
-            valueContainer.find('input').attr('required', this.checked);
             if (!this.checked) {
               $(this).data('reminder-value', valueContainer.find('input').val());
               valueContainer.find('input').val(null);
@@ -163,12 +162,48 @@ var RepositoryStockValues = (function() {
             } else {
               dropdownSelector.hideError(UNIT_SELECTOR);
             }
-
-            if ($('#stock-input-amount').val().length && $('#stock-input-amount').val() >= 0) {
-              $('#stock-input-amount').parent().removeClass('error');
+            let stockInput = $('#stock-input-amount');
+            if (stockInput.val().length && stockInput.val() >= 0) {
+              stockInput.parent().removeClass('error');
             } else {
-              $('#stock-input-amount').parent().addClass('error');
+              stockInput.parent().addClass('error');
+              if (stockInput.val().length === 0) {
+                stockInput.parent()
+                  .attr(
+                    'data-error-text',
+                    I18n.t('repository_stock_values.manage_modal.amount_error')
+                  );
+              } else {
+                stockInput.parent()
+                  .attr(
+                    'data-error-text',
+                    I18n.t('repository_stock_values.manage_modal.negative_error')
+                  );
+              }
               status = false;
+            }
+
+            let reminderInput = $('.repository-stock-reminder-value input');
+            if ($('#reminder-selector-checkbox')[0].checked) {
+              if (reminderInput.val().length && reminderInput.val() >= 0) {
+                reminderInput.parent().removeClass('error');
+              } else {
+                reminderInput.parent().addClass('error');
+                if (reminderInput.val().length === 0) {
+                  reminderInput.parent()
+                    .attr(
+                      'data-error-text',
+                      I18n.t('repository_stock_values.manage_modal.amount_error')
+                    );
+                } else {
+                  reminderInput.parent()
+                    .attr(
+                      'data-error-text',
+                      I18n.t('repository_stock_values.manage_modal.negative_error')
+                    );
+                }
+                status = false;
+              }
             }
 
             return status;
