@@ -120,9 +120,10 @@
     <div class="task-section">
       <div
           id="protocolContainer"
-          data-protocol-url="<%= protocol_my_module_path(@my_module, @protocol) %>"
+          data-protocol-url="<%= protocol_my_module_path(@my_module) %>"
           data-add-step-url="<%= protocol_steps_path(protocol_id: @protocol.id) %>"
           data-steps-url="<%= steps_path(protocol_id: @protocol) %>"
+          data-editable="<%= can_manage_protocol_in_module?(@protocol) %>"
           data-date-format="<%= datetime_picker_format_date_only %>"
           data-user-utc-offset="<%= ActiveSupport::TimeZone.find_tzinfo(current_user.time_zone).utc_offset %>"
       >
@@ -130,11 +131,14 @@
         :protocol-url="protocolUrl"
         :steps-url="stepsUrl"
         :add-step-url="addStepUrl"
+        :editable="editable"
       />
     </div>
     </div>
   </div>
 </div>
+
+<%= render partial: "my_modules/protocols/print_protocol_modal", locals: { protocol: @protocol } %>
 
 <!-- URL for status bar refreshing -->
 <div class="hidden" data-role="protocol-status-bar-url" data-url="<%= protocol_status_bar_protocol_path(@protocol) %>"></div>

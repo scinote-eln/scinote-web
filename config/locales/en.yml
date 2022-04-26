@@ -3048,6 +3048,7 @@ en:
   More: "More"
   Added: 'Added'
   by: 'by'
+  name: 'name'
 
   client_api:
     permission_error: "You don't have permission for this action."
@@ -3117,3 +3118,7 @@ en:
     show_btn:
      one: "Show results"
     clear_btn: "Clear"
+  inline_edit:
+    errors:
+      over_limit: "%{attribute} is too long (maximum number is %{limit} characters)"
+      blank: "%{attribute} can't be empty"
