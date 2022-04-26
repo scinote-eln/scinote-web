@@ -37,7 +37,7 @@
       }
     },
     created( ){
-      this.newValue = this.value;
+      this.newValue = this.value || '';
     },
     mounted() {
       if (this.autofocus) {
