@@ -364,10 +364,10 @@ class StepsController < ApplicationController
         # not nil; nonetheless, check if my_module is present
         if @protocol.in_module?
           log_activity(type_of,
-                        @protocol.my_module.experiment.project,
-                        my_module: @my_module.id,
-                        num_completed: completed_steps.to_s,
-                        num_all: all_steps.to_s)
+                       @protocol.my_module.experiment.project,
+                       my_module: @my_module.id,
+                       num_completed: completed_steps.to_s,
+                       num_all: all_steps.to_s)
         end
       end
       render json: @step, serializer: StepSerializer

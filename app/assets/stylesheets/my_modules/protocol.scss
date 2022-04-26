@@ -8,7 +8,7 @@
     &::before,
     &::after {
       background-color: $color-concrete;
-      content: '';
+      content: "";
       display: inline-block;
       flex-grow: 1;
       height: 3px;
