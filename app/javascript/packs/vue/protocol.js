@@ -18,7 +18,8 @@ window.initProtocolComponent = () => {
       return {
         protocolUrl: $('#protocolContainer').data('protocol-url'),
         stepsUrl: $('#protocolContainer').data('steps-url'),
-        addStepUrl: $('#protocolContainer').data('add-step-url')
+        addStepUrl: $('#protocolContainer').data('add-step-url'),
+        editable: $('#protocolContainer').data('editable')
       };
     }
   });
