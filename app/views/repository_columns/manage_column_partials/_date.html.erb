@@ -54,10 +54,9 @@
       <%= t('libraries.manange_modal_column.datetime_type.reminder_message') %>
     </label>
     <div class="col-sm-9">
-      <div class="sci-input-container">
-        <input type="text" class="sci-input-field reminder-message"
+      <div class="sci-input-container" data-error-text="<%= t('libraries.manange_modal_column.datetime_type.reminder_message_limit') %>">
+        <input id="date-reminder-message" type="text" class="sci-input-field reminder-message"
               placeholder="<%= t('libraries.manange_modal_column.datetime_type.enter_reminder_message')%>"
-              maxlength="<%= Constants::NAME_MAX_LENGTH %>"
               value="<%= column&.metadata['reminder_message'] %>">
       </div>
     </div>
