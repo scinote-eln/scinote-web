@@ -40,34 +40,37 @@
 <div class="content-pane my-modules-protocols-index" data-task-id="<%= @my_module.id %>">
   <div class="my-module-position-container">
     <!-- Details -->
-    <div class="task-section task-information">
-      <div class="task-section-header">
-        <span id="taskDetailsLabel" class="task-section-title">
-          <h2>
-            <%= t('my_modules.details.title') %>
-          </h2>
-        </span>
-        <span class="dropdown task-details-dropdown-container">
-          <a href="#"
-            id="taskDetailsButton"
-            class="block-icon task-details-button dropdown-toggle"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="true">
-            <i class="fas fa-info-circle"></i>
+    <div class="task-section task-information hidden">
+      <div id="task-details" class="task-section-header">
+        <div class="task-flows">
+          <%= render partial: 'my_modules/status_flow/task_flow_button', locals: { my_module: @my_module } if @my_module.my_module_status_flow %>
+        </div>
+        <div class="task-details-container">
+          <a class="task-section-caret collapsed" role="button" data-toggle="collapse" href="#details-container" aria-expanded="false" aria-controls="details-container">
+            <i class="fas fa-caret-right"></i>
+            <span id="taskDetailsLabel" class="task-section-title">
+              <h2>
+                <%= t('my_modules.details.title') %>
+              </h2>
+            </span>
           </a>
-          <div class="dropdown-menu" aria-labelledby="taskDetailsButton">
-            <%= render partial: "module_header_details_popover.html.erb" %>
-          </div>
-        </span>
-
-
+          <span class="dropdown task-details-dropdown-container">
+            <a href="#"
+              id="taskDetailsButton"
+              class="block-icon task-details-button dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="true">
+              <i class="fas fa-info-circle"></i>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="taskDetailsButton">
+              <%= render partial: "module_header_details_popover.html.erb" %>
+            </div>
+          </span>
+        </div>
       </div>
-      <div class="task-details">
+      <div id="details-container" class="task-details collapse">
         <%= render partial: 'my_module_details' %>
-      </div>
-      <div class="task-flows">
-        <%= render partial: 'my_modules/status_flow/task_flow_button', locals: { my_module: @my_module } if @my_module.my_module_status_flow %>
       </div>
     </div>
     <!-- Notes -->

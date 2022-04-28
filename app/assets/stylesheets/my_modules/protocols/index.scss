@@ -507,26 +507,53 @@
 }
 
 .task-information {
-  column-gap: 1em;
-  display: grid;
-  grid-template-columns: auto minmax(max-content, 18em);
-
   .task-section-header {
-    grid-column: 1 / span 1;
+    align-items: center;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    width: 100%;
   }
 
-  .task-details {
-    grid-column: 1 / span 1;
-    grid-row: 2 / span 1;
+  .btn {
+    min-width: 230px;
   }
 
   .task-flows {
-    grid-column: 2 / span 1;
-    grid-row: 1 / span 2;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    #dropdownTaskFlowList {
+      min-width: 230px;
+    }
 
     .status-label {
       @include font-small;
+      flex-basis: 40%;
       font-weight: bold;
+      margin-right: .5em;
+      text-align: right;
+
+      .status-note {
+        font-weight: normal;
+      }
+    }
+
+    .status-flow-dropdown {
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+
+    .status-buttons {
+      align-items: flex-end;
+      display: flex;
+      flex-grow: 1;
+
+      :not(:first-child):not(.dropdown-menu) {
+        margin-left: .5em;
+      }
     }
 
     .status-transition-error {
@@ -541,7 +568,62 @@
   }
 }
 
-@media (max-width: 700px) {
+.task-information .expanded {
+  align-items: flex-start;
+  height: 50px;
+
+  .task-flows,
+  .status-label,
+  .status-buttons {
+    display: block;
+    max-width: 230px;
+  }
+
+  .status-label {
+    margin: 0;
+    text-align: left;
+  }
+
+  .status-flow-dropdown {
+    margin: 0;
+  }
+
+  .status-buttons :not(:first-child):not(.dropdown-menu) {
+    margin-left: 0;
+    margin-top: .5em;
+  }
+
+  .modal .modal-footer .btn {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 810px) {
+  .task-information .task-section-header {
+    display: block;
+
+    .task-flows,
+    .status-label,
+    .status-buttons {
+      display: block;
+      max-width: 230px;
+    }
+
+    .status-label {
+      margin: 0;
+      text-align: left;
+    }
+
+    .status-buttons :not(:first-child):not(.dropdown-menu) {
+      margin-left: 0;
+      margin-top: .5em;
+    }
+  }
+
+  .task-information .expanded {
+    height: auto;
+  }
+
   .content-pane.my-modules-protocols-index {
     padding: 10px 0 0 0;
   }
