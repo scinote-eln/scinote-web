@@ -24,10 +24,15 @@ class CreateLabelTemplates < ActiveRecord::Migration[6.1]
       content:
         <<~HEREDOC
           ^XA
+          ^MTT
+          ^MUD,300,300
+          ^PR2
+          ^MD30
           ^LH20,20
+          ^PW310
           ^CF0,23
           ^FO0,0^FD{{item_id}}^FS
-          ^FO0,7^BQN,2,4^FDMA\{{item_id}}^FS
+          ^FO0,20^BQN,2,4^FDMA,{{item_id}}^FS
           ^FO95,30^FB180,4,0,L^FD{{item_name}}^FS^FS
           ^XZ
         HEREDOC
