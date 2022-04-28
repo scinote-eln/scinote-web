@@ -5,7 +5,9 @@ class StepSerializer < ActiveModel::Serializer
 
   def urls
     {
-      delete_url: step_path(object)
+      delete_url: step_path(object),
+      state_url: toggle_step_state_step_path(object),
+      update_url: step_path(object)
     }
   end
 end

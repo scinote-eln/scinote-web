@@ -50,6 +50,8 @@ CREATE FUNCTION public.trim_html_tags(input text, OUT output text) RETURNS text
 
 SET default_tablespace = '';
 
+SET default_table_access_method = heap;
+
 --
 -- Name: active_storage_attachments; Type: TABLE; Schema: public; Owner: -
 --

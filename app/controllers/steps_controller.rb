@@ -32,13 +32,21 @@ class StepsController < ApplicationController
   end
 
   def create
-    new_step = Step.new(
+    @step = Step.new(
       name: t('protocols.steps.default_name'),
       completed: false,
       user: current_user,
       last_modified_by: current_user
     )
-    render json: @protocol.insert_step(new_step, params[:position]), serializer: StepSerializer
+
+    @step = @protocol.insert_step(@step, params[:position])
+    # Generate activity
+    if @protocol.in_module?
+      log_activity(:create_step, @my_module.experiment.project, my_module: @my_module.id)
+    else
+      log_activity(:add_step_to_protocol_repository, nil, protocol: @protocol.id)
+    end
+    render json: @step, serializer: StepSerializer
   end
 
   def create_old
@@ -143,6 +151,20 @@ class StepsController < ApplicationController
   end
 
   def update
+    if @step.update(step_params)
+      # Generate activity
+      if @protocol.in_module?
+        log_activity(:edit_step, @my_module.experiment.project, my_module: @my_module.id)
+      else
+        log_activity(:edit_step_in_protocol_repository, nil, protocol: @protocol.id)
+      end
+      render json: @step, serializer: StepSerializer
+    else
+      render json: {}, status: :unprocessable_entity
+    end
+  end
+
+  def update_old
     respond_to do |format|
       old_description = @step.description
       old_checklists = fetch_old_checklists_data(@step)
@@ -327,34 +349,30 @@ class StepsController < ApplicationController
 
   # Complete/uncomplete step
   def toggle_step_state
-    respond_to do |format|
-      completed = params[:completed] == 'true'
-      changed = @step.completed != completed
-      @step.completed = completed
-      @step.last_modified_by = current_user
+    @step.completed = params[:completed] == 'true'
+    @step.last_modified_by = current_user
 
-      if @step.save
-        # Create activity
-        if changed
-          completed_steps = @protocol.steps.where(completed: true).count
-          all_steps = @protocol.steps.count
+    if @step.save
+      # Create activity
+      if @step.saved_change_to_completed
+        completed_steps = @protocol.steps.where(completed: true).count
+        all_steps = @protocol.steps.count
 
-          type_of = completed ? :complete_step : :uncomplete_step
-          # Toggling step state can only occur in
-          # module protocols, so my_module is always
-          # not nil; nonetheless, check if my_module is present
-          if @protocol.in_module?
-            log_activity(type_of,
-                         @protocol.my_module.experiment.project,
-                         my_module: @my_module.id,
-                         num_completed: completed_steps.to_s,
-                         num_all: all_steps.to_s)
-          end
+        type_of = @step.completed ? :complete_step : :uncomplete_step
+        # Toggling step state can only occur in
+        # module protocols, so my_module is always
+        # not nil; nonetheless, check if my_module is present
+        if @protocol.in_module?
+          log_activity(type_of,
+                        @protocol.my_module.experiment.project,
+                        my_module: @my_module.id,
+                        num_completed: completed_steps.to_s,
+                        num_all: all_steps.to_s)
         end
-        format.json { render json: {}, status: :ok }
-      else
-        format.json { render json: {}, status: :unprocessable_entity }
       end
+      render json: @step, serializer: StepSerializer
+    else
+      render json: {}, status: :unprocessable_entity
     end
   end
 
@@ -514,6 +532,10 @@ class StepsController < ApplicationController
   end
 
   def step_params
+    params.require(:step).permit(:name)
+  end
+
+  def step_params_old
     params.require(:step).permit(
       :name,
       :description,
