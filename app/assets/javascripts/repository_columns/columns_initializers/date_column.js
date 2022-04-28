@@ -1,4 +1,4 @@
-/* global dropdownSelector */
+/* global GLOBAL_CONSTANTS dropdownSelector */
 /* eslint-disable no-unused-vars */
 var RepositoryDateColumnType = (function() {
   const columnContainer = '.date-column-type';
@@ -36,6 +36,16 @@ var RepositoryDateColumnType = (function() {
 
     $modal.on('columnModal::partialLoadedForRepositoryDateValue', function() {
       initReminderUnitDropdown();
+      $('#date-reminder-message').on('input', function() {
+        $(this).closest('.sci-input-container').toggleClass(
+          'error',
+          this.value.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH
+        );
+        $('#update-repo-column-submit').toggleClass(
+          'disabled',
+          this.value.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH
+        );
+      });
     });
   }
 

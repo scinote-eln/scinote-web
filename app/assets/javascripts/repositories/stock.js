@@ -120,7 +120,7 @@ var RepositoryStockValues = (function() {
 
           SmartAnnotation.init($('#repository-stock-value-comment')[0]);
 
-          $('#repository-stock-value-comment').on('keyup change', function() {
+          $('#repository-stock-value-comment').on('input', function() {
             $(this).closest('.sci-input-container').toggleClass(
               'error',
               this.value.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH
