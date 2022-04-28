@@ -3,6 +3,7 @@
 class MyModule < ApplicationRecord
   SEARCHABLE_ATTRIBUTES = ['my_modules.name', 'my_modules.description']
 
+  include ActionView::Helpers::NumberHelper
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
@@ -310,8 +311,7 @@ class MyModule < ApplicationRecord
       rows = rows.left_joins(my_module_repository_rows: :repository_stock_unit_item)
                  .select(
                    'repository_rows.*',
-                   'my_module_repository_rows.stock_consumption',
-                   'repository_stock_unit_items.data AS stock_unit'
+                   'my_module_repository_rows.stock_consumption'
                  )
     end
     rows.find_each do |row|
@@ -325,7 +325,18 @@ class MyModule < ApplicationRecord
           consumed_stock = row.repository_stock_consumption_cell&.value&.formatted
           row_json << (consumed_stock || 0)
         else
-          row_json << "#{row['stock_consumption'] || 0} #{row['stock_unit']}"
+          consumed_stock_formatted =
+            if row.repository_stock_cell.present?
+              consumed_stock = number_with_precision(
+                row.stock_consumption || 0,
+                precision: (row.repository.repository_stock_column.metadata['decimals'].to_i || 0),
+                strip_insignificant_zeros: true
+              )
+              "#{consumed_stock} #{row.repository_stock_value&.repository_stock_unit_item&.data}"
+            else
+              '-'
+            end
+          row_json << consumed_stock_formatted
         end
       end
       data << row_json
