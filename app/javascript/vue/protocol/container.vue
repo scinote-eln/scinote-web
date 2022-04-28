@@ -73,13 +73,13 @@
       <div class="protocol-steps">
         <template v-for="(step, index) in steps">
           <div class="step-block" :key="step.id">
-            <button v-if="index > 0" class="btn btn-primary" @click="addStep(index)">
+            <div v-if="index > 0" class="insert-step" @click="addStep(index)">
               <i class="fas fa-plus"></i>
-              {{ i18n.t("protocols.steps.new_step") }}
-            </button>
+            </div>
             <Step
               :step.sync="steps[index]"
               @step:delete="updateStepsPosition"
+              @step:update="updateStep"
             />
           </div>
         </template>
@@ -165,6 +165,9 @@
         }
         this.reorderSteps(unordered_steps)
 
+      },
+      updateStep(step) {
+        this.$set(this.steps, step.attributes.position, step)
       },
       reorderSteps(steps) {
         this.steps = steps.sort((a, b) => a.attributes.position - b.attributes.position);

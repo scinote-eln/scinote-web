@@ -1,0 +1,58 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
+.step-container {
+  margin: 20px 0;
+  padding: 8px 24px;
+
+  .step-header {
+    align-items: center;
+    display: flex;
+
+    .step-collapse-link {
+      display: inline-block;
+      line-height: 24px;
+      text-align: center;
+      width: 24px;
+
+      &:not(.collapsed) {
+        @include rotate(90deg);
+      }
+    }
+
+    .step-state {
+      border: 2px solid $color-alto;
+      border-radius: 50%;
+      cursor: pointer;
+      height: 24px;
+      text-align: center;
+      width: 24px;
+
+      &.completed {
+        background: $brand-success;
+        border: 2px solid $brand-success;
+
+        &::after {
+          @include font-awesome;
+          color: $color-white;
+          content: $font-fas-check;
+        }
+      }
+    }
+
+    .step-position {
+      @include font-main;
+      line-height: 24px;
+      margin: 0 4px;
+    }
+
+    .step-name-container {
+      flex-grow: 1;
+    }
+
+    .step-actions-container {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+}
