@@ -4,7 +4,6 @@ class StepText < ApplicationRecord
   include TinyMceImages
 
   auto_strip_attributes :text, nullify: false
-  validates :text, presence: true
   validates :text, length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
 
   belongs_to :step, inverse_of: :step_texts, touch: true

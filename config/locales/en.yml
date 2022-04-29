@@ -2512,6 +2512,17 @@ en:
       comments: "Comments"
       empty_checklist: "No items"
       comment_title: "%{user} at %{time}:"
+      insert:
+        button: 'Insert'
+        title: 'insert  content'
+        table: 'Add table'
+        text: 'Add text'
+        checklist: 'Add checklist'
+      table:
+        default_name: 'Table %{position}'
+      checklist:
+        default_name: 'Checklist %{position}'
+
       options:
         up_arrow_title: "Move step up"
         down_arrow_title: "Move step down"
