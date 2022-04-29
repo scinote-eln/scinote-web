@@ -178,7 +178,8 @@ en:
           attributes:
             output_id:
               creates_cycle: "mustn't create cycle"
-
+  errors:
+    general: "Something went wrong."
   helpers:
     label:
       team:
