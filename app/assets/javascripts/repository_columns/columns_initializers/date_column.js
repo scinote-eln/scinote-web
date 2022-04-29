@@ -12,18 +12,22 @@ var RepositoryDateColumnType = (function() {
     });
   }
 
+  function setReminderDelta() {
+    let reminderValueInput = $(columnContainer).find('.reminder-value');
+    reminderValueInput.val(reminderValueInput.val().replace(/[^0-9]/, ''));
+    let value = reminderValueInput.val();
+
+    if (!isNaN(parseInt(value, 10))) {
+      $(columnContainer).find('.reminder-delta').val(
+        value * $(columnContainer).find('.reminder-unit').val()
+      );
+    }
+  }
+
   function initReminders() {
     let $modal = $('#manage-repository-column');
     $modal.on('input', `${columnContainer} .reminder-value, ${columnContainer} .reminder-unit`, function() {
-      let reminderValueInput = $(columnContainer).find('.reminder-value');
-      reminderValueInput.val(reminderValueInput.val().replace(/[^0-9]/, ''));
-      let value = reminderValueInput.val();
-
-      if (!isNaN(parseInt(value, 10))) {
-        $(columnContainer).find('.reminder-delta').val(
-          value * $(columnContainer).find('.reminder-unit').val()
-        );
-      }
+      setReminderDelta();
     });
 
     $modal.on('change', `${columnContainer} #date-reminder, ${columnContainer} #date-range`, function() {
@@ -32,6 +36,7 @@ var RepositoryDateColumnType = (function() {
       rangeCheckbox.attr('disabled', reminderCheckbox.is(':checked'));
       reminderCheckbox.attr('disabled', rangeCheckbox.is(':checked'));
       $(columnContainer).find('.reminder-group').toggleClass('hidden', !reminderCheckbox.is(':checked'));
+      if (reminderCheckbox.is(':checked')) setReminderDelta();
     });
 
     $modal.on('columnModal::partialLoadedForRepositoryDateValue', function() {
