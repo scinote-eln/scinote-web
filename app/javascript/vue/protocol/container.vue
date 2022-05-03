@@ -14,7 +14,7 @@
         </span>
       </a>
       <div class="sci-btn-group actions-block">
-        <a class="btn btn-primary" @click="addStep(steps.length - 1)">
+        <a class="btn btn-primary" @click="addStep(steps.length)">
             <span class="fas fa-plus" aria-hidden="true"></span>
             <span>New step</span>
         </a>
@@ -166,8 +166,8 @@
         this.reorderSteps(unordered_steps)
 
       },
-      updateStep(step) {
-        this.$set(this.steps, step.attributes.position, step)
+      updateStep(attributes) {
+        this.steps[attributes.position].attributes = attributes
       },
       reorderSteps(steps) {
         this.steps = steps.sort((a, b) => a.attributes.position - b.attributes.position);

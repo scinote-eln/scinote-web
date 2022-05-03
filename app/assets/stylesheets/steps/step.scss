@@ -53,6 +53,35 @@
     .step-actions-container {
       display: flex;
       justify-content: flex-end;
+
+      .insert-button {
+        .caret {
+          margin-left: .5em;
+        }
+      }
+
+      .insert-element-dropdown {
+        @include font-button;
+        padding: 0;
+
+        li {
+          padding: .5em 1em;
+
+          &.action {
+            cursor: pointer;
+
+            &:hover {
+              background: $color-concrete;
+            }
+          }
+
+          &.title {
+            @include font-small;
+            color: $color-alto;
+            text-transform: uppercase;
+          }
+        }
+      }
     }
   }
 }
