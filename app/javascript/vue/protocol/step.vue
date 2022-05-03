@@ -56,6 +56,7 @@
         <component
           :is="elements[index].attributes.orderable_type"
           :key="index"
+          @component:delete="deleteComponent"
           :element.sync="elements[index]"/>
       </template>
     </div>
@@ -114,6 +115,21 @@
           this.$emit('step:update', this.step)
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         })
+      },
+      deleteComponent(element) {
+        let position = element.attributes.position;
+        this.elements.splice(position, 1)
+        let unordered_elements = this.elements.map( e => {
+          if (e.attributes.position >= position) {
+            e.attributes.position -= 1;
+          }
+          return e;
+        })
+        this.reorderComponents(unordered_elements)
+
+      },
+      reorderComponents(elements) {
+        this.elements = elements.sort((a, b) => a.attributes.position - b.attributes.position);
       },
       updateName(newName) {
         $.ajax({

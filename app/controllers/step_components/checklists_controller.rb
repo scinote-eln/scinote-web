@@ -13,5 +13,11 @@ module StepComponents
     def element_params
       params.require(:checklist).permit(:name)
     end
+
+    def load_vars
+      @element = @step.checklists.find_by(id: params[:id])
+      @orderable_element = @element.step_orderable_elements.find_by(step: @step)
+      return render_404 unless @element && @orderable_element
+    end
   end
 end
