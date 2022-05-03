@@ -107,8 +107,12 @@
         });
       },
       changeState() {
-        $.post(this.step.attributes.urls.state_url, {completed: !this.step.attributes.completed}, (result) => {
-          this.$emit('step:update', result.data.attributes)
+        this.step.attributes.completed = !this.step.attributes.completed;
+        this.$emit('step:update', this.step)
+        $.post(this.step.attributes.urls.state_url, {completed: this.step.attributes.completed}).error(() => {
+          this.step.attributes.completed = !this.step.attributes.completed;
+          this.$emit('step:update', this.step)
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         })
       },
       updateName(newName) {

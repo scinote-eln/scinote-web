@@ -263,14 +263,14 @@ class MyModulesController < ApplicationController
   end
 
   def protocol
-    render json: @my_module.protocol
+    render json: @my_module.protocol, serializer: ProtocolSerializer
   end
 
   def update_protocol
     protocol = @my_module.protocol
     protocol.update!(protocol_params)
 
-    render json: protocol
+    render json: protocol, serializer: ProtocolSerializer
   end
 
   def results

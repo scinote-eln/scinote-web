@@ -27,4 +27,14 @@
       }
     }
   }
+  .protocol-options-dropdown {
+    a {
+      cursor: pointer;
+
+      &.disabled {
+        cursor: default;
+        pointer-events: none;
+      }
+    }
+  }
 }

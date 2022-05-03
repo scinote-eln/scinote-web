@@ -9,6 +9,7 @@ Vue.prototype.i18n = window.I18n;
 
 window.initProtocolComponent = () => {
   Vue.prototype.dateFormat = $('#protocolContainer').data('date-format');
+
   new Vue({
     el: '#protocolContainer',
     components: {

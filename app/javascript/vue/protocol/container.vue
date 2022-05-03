@@ -6,8 +6,8 @@
         <div class="task-section-title">
           <h2>{{ i18n.t('Protocol') }}</h2>
         </div>
-        <span v-if="protocol.linked" class="status-label linked">
-          [{{ protocol.name }}]
+        <span v-if="protocol.attributes.linked" class="status-label linked">
+          [{{ protocol.attributes.name }}]
         </span>
         <span class="status-label" v-else>
           [{{ i18n.t('my_modules.protocols.protocol_status_bar.unlinked') }}]
@@ -16,52 +16,20 @@
       <div class="sci-btn-group actions-block">
         <a class="btn btn-primary" @click="addStep(steps.length)">
             <span class="fas fa-plus" aria-hidden="true"></span>
-            <span>New step</span>
+            <span>{{ i18n.t("protocols.steps.new_step") }}</span>
         </a>
         <a class="btn btn-default" data-toggle="modal" data-target="#print-protocol-modal">
           <span class="fas fa-print" aria-hidden="true"></span>
-          <span>Print</span>
+          <span>{{ i18n.t("protocols.print.button") }}</span>
         </a>
-        <div class="dropdown sci-dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownProtocolOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            <span class="fas fa-cog"></span>
-            <span>Protocol options</span>
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownProtocolOptions">
-            <li>
-              <a>
-                <span class="fas fa-edit"></span>
-                <span>Load from repository</span>
-              </a>
-            </li>
-            <li>
-              <a>
-                <span class="fas fa-download"></span>
-                <span>Import protocol</span>
-              </a>
-            </li>
-            <li>
-              <a>
-                <span class="fas fa-upload"></span>
-                <span>Export protocol</span>
-              </a>
-            </li>
-            <li>
-              <a>
-                <span class="fas fa-save"></span>
-                <span>Save to repository</span>
-              </a>
-            </li>
-          </ul>
-        </div>
+        <ProtocolOptions v-if="protocol.attributes && protocol.attributes.urls" :protocol="protocol" />
       </div>
     </div>
     <div v-if="protocol.id" id="protocol-content" class="protocol-content collapse in" aria-expanded="true">
       <div class="protocol-description">
         <div class="protocol-name">
           <InlineEdit
-            :value="protocol.name"
+            :value="protocol.attributes.name"
             :characterLimit="255"
             :placeholder="i18n.t('my_modules.protocols.protocol_status_bar.enter_name')"
             :allowBlank="true"
@@ -95,6 +63,7 @@
  <script>
   import InlineEdit from 'vue/shared/inline_edit.vue'
   import Step from 'vue/protocol/step'
+  import ProtocolOptions from 'vue/protocol/protocolOptions'
 
   export default {
     name: 'ProtocolContainer',
@@ -116,16 +85,18 @@
         required: true
       }
     },
-    components: { Step, InlineEdit },
+    components: { Step, InlineEdit, ProtocolOptions },
     data() {
       return {
-        protocol: {},
+        protocol: {
+          attributes: {}
+        },
         steps: {}
       }
     },
     created() {
-      $.get(this.protocolUrl, (data) => {
-        this.protocol = data;
+      $.get(this.protocolUrl, (result) => {
+        this.protocol = result.data;
       });
       $.get(this.stepsUrl, (result) => {
         this.steps = result.data
@@ -133,7 +104,7 @@
     },
     methods: {
       updateName(newName) {
-        this.protocol.name = newName;
+        this.protocol.attributes.name = newName;
         $.ajax({
           type: 'PATCH',
           url: this.protocolUrl,
