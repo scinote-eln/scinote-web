@@ -6,11 +6,11 @@ class StepOrderableElementSerializer < ActiveModel::Serializer
   def element
     case object.orderable_type
     when 'Checklist'
-      ChecklistSerializer
+      ChecklistSerializer.new(object.orderable).as_json
     when 'StepTable'
-      StepTableSerializer
+      StepTableSerializer.new(object.orderable.table).as_json
     when 'StepText'
-      StepTextSerializer
+      StepTextSerializer.new(object.orderable).as_json
     end
   end
 end
