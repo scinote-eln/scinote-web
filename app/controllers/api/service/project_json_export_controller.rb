@@ -35,19 +35,19 @@ module Api
       end
 
       def check_read_project_permission(id)
-        project = Project.find_by(id: id)
+        project = Project.find(id)
         raise PermissionError.new(Project, :read) unless can_read_project?(project)
       end
 
       def check_read_experiment_permission(experiment_id, project_id)
-        experiment = Experiment.find_by(id: experiment_id)
+        experiment = Experiment.find(experiment_id)
         raise PermissionError.new(Experiment, :read) unless
           can_read_experiment?(experiment) && experiment.project_id == project_id
       end
 
       def check_read_my_module_permission(task_ids, experiment_id)
         task_ids.each do |task_id|
-          task = MyModule.find_by(id: task_id)
+          task = MyModule.find(task_id)
           raise PermissionError.new(MyModule, :read) unless
             can_read_my_module?(task) && task.experiment_id == experiment_id
         end

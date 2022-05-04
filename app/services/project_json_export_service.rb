@@ -4,10 +4,13 @@ class ProjectJsonExportService
   require 'net/http'
 
   def initialize(project_id, experiment_ids, task_ids, callback)
-    @project_id = project_id
+    @project = Project.find_by(id: project_id)
     @experiment_ids = experiment_ids
     @task_ids = task_ids
     @callback = callback
+    @storage_location = ENV['ACTIVESTORAGE_SERVICE'] ? ENV['ACTIVESTORAGE_SERVICE'] : 'local'
+    @bucket_location = ENV['ACTIVESTORAGE_SERVICE'] && ENV['S3_BUCKET'] ? 
+                          ENV['S3_BUCKET'] : ActiveStorage::Blob.service.current_host
     @request_json = {}
   end
 
@@ -15,8 +18,7 @@ class ProjectJsonExportService
     exps = Experiment.includes(:project)
                      .where(id: @experiment_ids)
 
-    prj = Project.find_by(id: @project_id)
-    project = prj.as_json(only: %i(id name))
+    project = @project.as_json(only: %i(id name))
     experiments = []
     exps.find_each do |exp|
       experiment = exp.as_json(only: %i(id name description))
@@ -60,17 +62,17 @@ class ProjectJsonExportService
 
   private
 
-  def protocol_json(prtcl)
-    protocol = prtcl.as_json(only: %i(id description))
-    t_m_files = prtcl.tiny_mce_assets.map { |asset| tiny_mce_file_json(asset) }
-    protocol['tiny_mce_files'] = t_m_files if t_m_files.any?
-    protocol
+  def protocol_json(protocol)
+    protocol_json = protocol.as_json(only: %i(id description))
+    t_m_files = protocol.tiny_mce_assets.map { |asset| tiny_mce_file_json(asset) }
+    protocol_json['tiny_mce_files'] = t_m_files if t_m_files.any?
+    protocol_json
   end
 
-  def step_json(stp)
-    step = stp.as_json(only: %i(id position name description completed))
+  def step_json(step)
+    step_json = step.as_json(only: %i(id position name description completed))
     checklists = []
-    stp.checklists.find_each do |cl|
+    step.checklists.find_each do |cl|
       checklist = cl.as_json(only: %i(id name))
       items = []
       cl.checklist_items.find_each do |cli|
@@ -80,58 +82,80 @@ class ProjectJsonExportService
       checklist['items'] = items if items.any?
       checklists << checklist
     end
-    step['checklists'] = checklists if checklists.any?
+    step_json['checklists'] = checklists if checklists.any?
     files = []
-    stp.assets.find_each do |asset|
-      files << {
+    step.assets.find_each do |asset|
+      files << asset_file_json(asset)
+    end
+    step_json['files'] = files if files.any?
+    t_m_files = []
+    step.tiny_mce_assets.find_each do |asset|
+      t_m_files << tiny_mce_file_json(asset)
+    end
+    step_json['tiny_mce_files'] = t_m_files if t_m_files.any?
+    tables = []
+    step.tables.find_each do |tbl|
+      table = tbl.as_json(only: %i(id name))
+      table['contents'] = JSON.parse(tbl.contents)['data']
+      tables << table
+    end
+    step_json['tables'] = tables if tables.any?
+    step_json
+  end
+
+  def result_json(result)
+    result_json = result.as_json(only: %i(id name))
+    if result.result_text
+      result_json['type'] = 'text'
+      result_json['text'] = result.result_text.text
+      t_m_files = []
+      result.result_text.tiny_mce_assets.find_each do |asset|
+        t_m_files << tiny_mce_file_json(asset)
+      end
+      result_json['tiny_mce_files'] = t_m_files if t_m_files.any?
+    elsif result.asset
+      result_json['type'] = 'file'
+      result_json['bucket'] = ENV['S3_BUCKET']
+      result_json['key'] = ActiveStorage::Blob.service.path_for(result.asset.file.key)
+      result_json['url'] = asset_url(result.asset)
+    elsif result.table
+      result_json['type'] = 'table'
+      result_json['contents'] = JSON.parse(result.table.contents)['data']
+    end
+    result_json
+  end
+
+  def asset_file_json(asset)
+    if ( ENV['ACTIVESTORAGE_SERVICE'] && ENV['S3_BUCKET'] )
+      {
+        'storage' => ENV['ACTIVESTORAGE_SERVICE'],
         'id' => asset.id,
         'bucket' => ENV['S3_BUCKET'],
         'key' => ActiveStorage::Blob.service.path_for(asset.file.key),
         'url' => asset_url(asset)
       }
+    else
+      {
+        'storage' => 'local',
+        'id' => asset.id,
+        'url' => asset_url(asset)
+      }
     end
-    step['files'] = files if files.any?
-    t_m_files = []
-    stp.tiny_mce_assets.find_each do |asset|
-      t_m_files << tiny_mce_file_json(asset)
-    end
-    step['tiny_mce_files'] = t_m_files if t_m_files.any?
-    tables = []
-    stp.tables.find_each do |tbl|
-      table = tbl.as_json(only: %i(id name))
-      table['contents'] = JSON.parse(tbl.contents)['data']
-      tables << table
-    end
-    step['tables'] = tables if tables.any?
-    step
-  end
-
-  def result_json(res)
-    result = res.as_json(only: %i(id name))
-    if res.result_text
-      result['type'] = 'text'
-      result['text'] = res.result_text.text
-      t_m_files = []
-      res.result_text.tiny_mce_assets.find_each do |asset|
-        t_m_files << tiny_mce_file_json(asset)
-      end
-      result['tiny_mce_files'] = t_m_files if t_m_files.any?
-    elsif res.asset
-      result['type'] = 'file'
-      result['bucket'] = ENV['S3_BUCKET']
-      result['key'] = ActiveStorage::Blob.service.path_for(res.asset.file.key)
-      result['url'] = asset_url(res.asset)
-    elsif res.table
-      result['type'] = 'table'
-      result['contents'] = JSON.parse(res.table.contents)['data']
-    end
-    result
   end
 
   def tiny_mce_file_json(asset)
-    { 'id' => asset.id,
-      'bucket' => ENV['S3_BUCKET'],
-      'key' => ActiveStorage::Blob.service.path_for(asset.image.key) }
+    if ( ENV['ACTIVESTORAGE_SERVICE'] && ENV['S3_BUCKET'] )
+      { 'storage' => @storage_location,
+        'id' => asset.id,
+        'bucket' => ENV['S3_BUCKET'],
+        'key' => ActiveStorage::Blob.service.path_for(asset.image.key)
+      }
+    else
+      { 'storage' => @storage_location,
+        'id' => asset.id,
+        'url' => Rails.application.routes.url_helpers.url_for(asset.image)
+      }
+    end
   end
 
   def asset_url(asset)
