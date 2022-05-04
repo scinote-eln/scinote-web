@@ -26,7 +26,7 @@ var InfiniteScroll = (function() {
         $container.data('next-page', result.next_page);
       } else {
         $container.addClass('last-page');
-        if ($container.data('config').endOfListTemplate) {
+        if ($container.data('config').endOfListTemplate && page > 2) {
           $($($container.data('config').endOfListTemplate).html()).appendTo($container);
         }
       }

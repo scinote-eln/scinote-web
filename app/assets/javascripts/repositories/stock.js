@@ -41,6 +41,9 @@ var RepositoryStockValues = (function() {
     let amountChanged = false;
 
     $('.repository-show').on('click', '.manage-repository-stock-value-link', function() {
+      let colIndex = this.parentNode.cellIndex;
+      let rowIndex = this.parentNode.parentNode.rowIndex;
+
       $.ajax({
         url: $(this).closest('tr').data('manage-stock-url'),
         type: 'GET',
@@ -73,10 +76,13 @@ var RepositoryStockValues = (function() {
             .dropdown-selector-container .search-field
           `).attr('tabindex', 2);
 
-          $manageModal.find('form').on('ajax:success', function() {
-            var dataTable = $('.dataTable').DataTable();
+          $manageModal.find('form').on('ajax:success', function(_, data) {
             $manageModal.modal('hide');
-            dataTable.ajax.reload(null, false);
+            $('.dataTable').find(
+              `tr:nth-child(${rowIndex}) td:nth-child(${colIndex + 1})`
+            ).html(
+              $.fn.dataTable.render.RepositoryStockValue(data)
+            );
           });
 
           $('.stock-operator-option').click(function() {
@@ -114,7 +120,7 @@ var RepositoryStockValues = (function() {
 
           SmartAnnotation.init($('#repository-stock-value-comment')[0]);
 
-          $('#repository-stock-value-comment').on('keyup change', function() {
+          $('#repository-stock-value-comment').on('input', function() {
             $(this).closest('.sci-input-container').toggleClass(
               'error',
               this.value.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH
@@ -128,7 +134,6 @@ var RepositoryStockValues = (function() {
           $('#reminder-selector-checkbox').on('change', function() {
             let valueContainer = $('.repository-stock-reminder-value');
             valueContainer.toggleClass('hidden', !this.checked);
-            valueContainer.find('input').attr('required', this.checked);
             if (!this.checked) {
               $(this).data('reminder-value', valueContainer.find('input').val());
               valueContainer.find('input').val(null);
@@ -157,12 +162,48 @@ var RepositoryStockValues = (function() {
             } else {
               dropdownSelector.hideError(UNIT_SELECTOR);
             }
-
-            if ($('#stock-input-amount').val().length) {
-              $('#stock-input-amount').parent().removeClass('error');
+            let stockInput = $('#stock-input-amount');
+            if (stockInput.val().length && stockInput.val() >= 0) {
+              stockInput.parent().removeClass('error');
             } else {
-              $('#stock-input-amount').parent().addClass('error');
+              stockInput.parent().addClass('error');
+              if (stockInput.val().length === 0) {
+                stockInput.parent()
+                  .attr(
+                    'data-error-text',
+                    I18n.t('repository_stock_values.manage_modal.amount_error')
+                  );
+              } else {
+                stockInput.parent()
+                  .attr(
+                    'data-error-text',
+                    I18n.t('repository_stock_values.manage_modal.negative_error')
+                  );
+              }
               status = false;
+            }
+
+            let reminderInput = $('.repository-stock-reminder-value input');
+            if ($('#reminder-selector-checkbox')[0].checked) {
+              if (reminderInput.val().length && reminderInput.val() >= 0) {
+                reminderInput.parent().removeClass('error');
+              } else {
+                reminderInput.parent().addClass('error');
+                if (reminderInput.val().length === 0) {
+                  reminderInput.parent()
+                    .attr(
+                      'data-error-text',
+                      I18n.t('repository_stock_values.manage_modal.amount_error')
+                    );
+                } else {
+                  reminderInput.parent()
+                    .attr(
+                      'data-error-text',
+                      I18n.t('repository_stock_values.manage_modal.negative_error')
+                    );
+                }
+                status = false;
+              }
             }
 
             return status;

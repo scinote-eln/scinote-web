@@ -12,7 +12,7 @@ gem 'devise_invitable'
 gem 'figaro'
 gem 'pg', '~> 1.1'
 gem 'pg_search' # PostgreSQL full text search
-gem 'rails', '~> 6.1.4'
+gem 'rails', '~> 6.1.5'
 gem 'psych', '< 4.0'
 gem 'view_component', require: 'view_component/engine'
 gem 'recaptcha', require: 'recaptcha/rails'
