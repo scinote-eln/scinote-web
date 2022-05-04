@@ -44,6 +44,7 @@
       labelHTML: true,
       tagClass: 'users-dropdown-list',
       inputTagMode: true,
+      selectKeys: [13, 32, 44, 188],
       customDropdownIcon: () => { return '<i class="fas fa-search right-icon"></i>'; },
       onChange: () => {
         let values = dropdownSelector.getValues(emailsInput);
@@ -54,6 +55,14 @@
           inviteBtn.attr('disabled', 'disabled');
           inviteWithRoleBtn.attr('disabled', 'disabled');
         }
+      }
+    });
+
+    modal.find('.search-field').focusout(function() {
+      if ($(this).val()) {
+        $(this).trigger(
+          $.Event('keypress', { keyCode: 13 })
+        );
       }
     });
 
