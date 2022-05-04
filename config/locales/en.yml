@@ -2999,7 +2999,7 @@ en:
           detail: "Image reference not found in the text"
     service:
       errors:
-        missing_project_id: "Missing project_id"
+        missing_task_ids: "Missing task_ids"
         callback_missing: "Missing callback"
         url:
           not_valid: "Not valid URL"
