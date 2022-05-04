@@ -57,6 +57,7 @@
         {{ i18n.t("protocols.steps.new_step") }}
       </button>
     </div>
+    <ProtocolModals/>
   </div>
 </template>
 
@@ -64,6 +65,7 @@
   import InlineEdit from 'vue/shared/inline_edit.vue'
   import Step from 'vue/protocol/step'
   import ProtocolOptions from 'vue/protocol/protocolOptions'
+  import ProtocolModals from 'vue/protocol/modals'
 
   export default {
     name: 'ProtocolContainer',
@@ -85,7 +87,7 @@
         required: true
       }
     },
-    components: { Step, InlineEdit, ProtocolOptions },
+    components: { Step, InlineEdit, ProtocolModals, ProtocolOptions },
     data() {
       return {
         protocol: {

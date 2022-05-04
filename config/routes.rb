@@ -449,9 +449,9 @@ Rails.application.routes.draw do
                 path: '/comments',
                 only: %i(create index update destroy)
 
-      resources :tables, controller: 'step_components/tables', only: :create
-      resources :texts, controller: 'step_components/texts', only: :create
-      resources :checklists, controller: 'step_components/checklists', only: :create
+      resources :tables, controller: 'step_components/tables', only: %i(create destroy)
+      resources :texts, controller: 'step_components/texts', only: %i(create destroy)
+      resources :checklists, controller: 'step_components/checklists', only: %i(create destroy)
       member do
         get 'elements'
         post 'checklistitem_state'
