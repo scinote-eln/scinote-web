@@ -6,13 +6,10 @@
         <div class="task-section-title">
           <h2>{{ i18n.t('Protocol') }}</h2>
         </div>
-        <span v-if="protocol.attributes.linked" class="status-label linked">
-          [{{ protocol.attributes.name }}]
-        </span>
-        <span class="status-label" v-else>
-          [{{ i18n.t('my_modules.protocols.protocol_status_bar.unlinked') }}]
-        </span>
       </a>
+      <div class="my-module-protocol-status">
+        <!-- protocol status dropdown gets mounted here -->
+      </div>
       <div class="sci-btn-group actions-block">
         <a class="btn btn-primary" @click="addStep(steps.length)">
             <span class="fas fa-plus" aria-hidden="true"></span>
@@ -105,8 +102,13 @@
       })
     },
     methods: {
+      refreshProtocolStatus() {
+        // legacy method from app/assets/javascripts/my_modules/protocols.js
+        refreshProtocolStatusBar();
+      },
       updateName(newName) {
         this.protocol.attributes.name = newName;
+        this.refreshProtocolStatus();
         $.ajax({
           type: 'PATCH',
           url: this.protocolUrl,
@@ -117,6 +119,7 @@
         $.post(this.addStepUrl, {position: position}, (result) => {
           this.updateStepsPosition(result.data)
         })
+        this.refreshProtocolStatus();
       },
       updateStepsPosition(step, action = 'add') {
         let position = step.attributes.position;
@@ -137,13 +140,14 @@
           unordered_steps.push(step);
         }
         this.reorderSteps(unordered_steps)
-
       },
       updateStep(attributes) {
         this.steps[attributes.position].attributes = attributes
+        this.refreshProtocolStatus();
       },
       reorderSteps(steps) {
         this.steps = steps.sort((a, b) => a.attributes.position - b.attributes.position);
+        this.refreshProtocolStatus();
       }
     }
   }
