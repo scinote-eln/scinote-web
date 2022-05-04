@@ -1,7 +1,7 @@
 <template>
   <div class="sci-inline-edit">
     <div class="sci-inline-edit__content">
-      <textarea ref="input" v-if="editing" :class="{ 'error': error }" :placeholder="placeholder" v-model="newValue" @input="resize" @blur="update">
+      <textarea ref="input" rows="1" v-if="editing" :class="{ 'error': error }" :placeholder="placeholder" v-model="newValue" @input="resize" @blur="update">
       </textarea>
       <span v-else @click="enableEdit" :class="{ 'blank': isBlank }">{{ value || placeholder }}</span>
       <div v-if="editing && error" class="sci-inline-edit__error">
@@ -74,19 +74,23 @@
       enableEdit() {
         this.editing = true;
         this.focus();
+        this.$emit('editingEnabled');
       },
       cancelEdit() {
         this.editing = false;
         this.newValue = this.value || '';
+        this.$emit('editingDisabled');
       },
       resize() {
         this.$refs.input.style.height = "auto";
-        this.$refs.input.style.height = (this.$refs.input.scrollHeight * 0.8) + "px";
+        this.$refs.input.style.height = (this.$refs.input.scrollHeight) + "px";
       },
       update() {
+        if(this.isBlank) return;
         if(!this.editing) return;
 
         this.editing = false;
+        this.$emit('editingDisabled');
         this.$emit('update', this.newValue);
       }
     }

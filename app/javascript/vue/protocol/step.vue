@@ -56,8 +56,9 @@
         <component
           :is="elements[index].attributes.orderable_type"
           :key="index"
+          :element.sync="elements[index]"
           @component:delete="deleteComponent"
-          :element.sync="elements[index]"/>
+          @update="updateComponent" />
       </template>
     </div>
   </div>
@@ -127,6 +128,20 @@
         })
         this.reorderComponents(unordered_elements)
 
+      },
+      updateComponent(element) {
+        let index = this.elements.findIndex((e) => e.id === element.id);
+
+        $.ajax({
+          url: element.attributes.orderable.urls.update_url,
+          method: 'PUT',
+          data: element.attributes.orderable,
+          success: (result) => {
+            this.elements[index].orderable = result;
+          }
+        }).error(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+        })
       },
       reorderComponents(elements) {
         this.elements = elements.sort((a, b) => a.attributes.position - b.attributes.position);

@@ -6,12 +6,12 @@ module StepComponents
 
     def create_step_element
       @step.checklists.create!(
-        name: t('protocols.steps.checklist.default_name', position: @step.step_tables.length + 1)
+        name: t('protocols.steps.checklist.default_name', position: @step.checklists.length + 1)
       )
     end
 
-    def element_params
-      params.require(:checklist).permit(:name)
+    def orderable_params
+      params.permit(:name)
     end
 
     def load_vars
