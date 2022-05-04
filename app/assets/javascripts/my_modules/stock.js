@@ -35,9 +35,22 @@ var MyModuleStockConsumption = (function() {
             let finalValue = initialValue - ($(this).val() || 0) + initialStock;
             $('.stock-final-container .value')
               .text(formatDecimalValue(String(finalValue), $('#stock_consumption').data('decimals')));
-            $('.stock-final-container').toggleClass('error', finalValue <= 0);
-            $(this).closest('.sci-input-container').toggleClass('error', this.value === '');
-            $('.update-consumption-button').attr('disabled', $(this).val() === '');
+            $('.stock-final-container').toggleClass('negative', finalValue <= 0);
+            $(this).closest('.sci-input-container').toggleClass('error', !($(this).val().length && this.value >= 0));
+            if ($(this).val().length === 0) {
+              $(this).closest('.sci-input-container')
+                .attr(
+                  'data-error-text',
+                  I18n.t('repository_stock_values.manage_modal.amount_error')
+                );
+            } else if (this.value <= 0) {
+              $(this).closest('.sci-input-container')
+                .attr(
+                  'data-error-text',
+                  I18n.t('repository_stock_values.manage_modal.negative_error')
+                );
+            }
+            $('.update-consumption-button').attr('disabled', !($(this).val().length && this.value >= 0));
           });
 
           $(CONSUMPTION_MODAL + ' form').on('ajax:success', function() {
@@ -85,7 +98,7 @@ var MyModuleStockConsumption = (function() {
       } else if (e.key === 'Enter') {
         $('.update-consumption-button').trigger('click', [true]);
       }
-    })
+    });
     $(WARNING_MODAL).on('click', '.cancel-consumption', function(e) {
       $(WARNING_MODAL).modal('hide');
       $(CONSUMPTION_MODAL).modal('show');

@@ -214,6 +214,11 @@
         color: $color-volcano;
       }
 
+      .empty-stock-render,
+      .consumption-locked {
+        color: $color-silver-chalice;
+      }
+
       .row-stock,
       .row-consumption {
         min-width: 140px;
