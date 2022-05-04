@@ -109,10 +109,10 @@
       },
       changeState() {
         this.step.attributes.completed = !this.step.attributes.completed;
-        this.$emit('step:update', this.step)
+        this.$emit('step:update', this.step.attributes)
         $.post(this.step.attributes.urls.state_url, {completed: this.step.attributes.completed}).error(() => {
           this.step.attributes.completed = !this.step.attributes.completed;
-          this.$emit('step:update', this.step)
+          this.$emit('step:update', this.step.attributes)
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         })
       },

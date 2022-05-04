@@ -1,6 +1,5 @@
 <template>
   <div class="protocol-modals">
-    <deleteComponentModal/>
   </div>
 </template>
 <script>

@@ -6,7 +6,7 @@ class StepTextSerializer < ActiveModel::Serializer
   attributes :text, :urls
 
   def urls
-    return unless object.step
+    return if object.destroyed?
 
     {
       delete_url: step_text_path(object.step, object)

@@ -2528,6 +2528,7 @@ en:
           title: 'Delete content'
           description_1: 'You’re about to delete a content block from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'
           description_2: 'Are you sure you want to delete it?'
+          confirm: 'Delete forever'
       options:
         up_arrow_title: "Move step up"
         down_arrow_title: "Move step down"

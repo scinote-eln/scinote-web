@@ -1,5 +1,5 @@
 <template>
-  <div class="modal" id="modalDestroyProtocolContent" tabindex="-1" role="dialog">
+  <div ref="modal" class="modal" id="modalDestroyProtocolContent" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -14,8 +14,8 @@
 
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-          <button class="btn btn-danger delete-step">Delete forever</button>
+          <button class="btn btn-secondary" @click="cancel">{{ i18n.t('general.cancel') }}</button>
+          <button class="btn btn-danger" @click="confirm">{{ i18n.t('protocols.steps.modals.delete_component.confirm')}}</button>
         </div>
       </div>
     </div>
@@ -23,6 +23,19 @@
 </template>
  <script>
   export default {
-    name: 'deleteComponentModal'
+    name: 'deleteComponentModal',
+    mounted() {
+      $(this.$refs.modal).modal('show');
+    },
+    methods: {
+      confirm() {
+        $(this.$refs.modal).modal('hide');
+        this.$emit('confirm');
+      },
+      cancel() {
+        $(this.$refs.modal).modal('hide');
+        this.$emit('cancel');
+      }
+    }
   }
 </script>

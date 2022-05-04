@@ -2,7 +2,7 @@
 
 class StepOrderableElementsController < ApplicationController
   before_action :load_vars_nested
-  before_action :load_vars
+  before_action :load_vars, only: :destroy
   before_action :check_manage_permissions, only: %i(create destroy)
 
   def create

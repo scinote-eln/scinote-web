@@ -1,11 +1,15 @@
 export default {
+  data() {
+    return {
+      confirmingDelete: false
+    };
+  },
   methods: {
     showDeleteModal() {
-      $('#modalDestroyProtocolContent').modal('show');
-      $('#modalDestroyProtocolContent .delete-step').off().one('click', () => {
-        this.deleteComponent();
-        $('#modalDestroyProtocolContent').modal('hide');
-      });
+      this.confirmingDelete = true;
+    },
+    closeDeleteModal() {
+      this.confirmingDelete = false;
     },
     deleteComponent() {
       $.ajax({
