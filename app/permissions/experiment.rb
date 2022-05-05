@@ -72,7 +72,7 @@ Canaid::Permissions.register_for(Experiment) do
   end
 
   can :clone_experiment do |user, experiment|
-    experiment.permission_granted?(user, ExperimentPermissions::MANAGE)
+    experiment.permission_granted?(user, ExperimentPermissions::READ)
   end
 
   can :move_experiment do |user, experiment|
