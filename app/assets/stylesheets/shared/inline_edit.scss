@@ -1,6 +1,5 @@
 .sci-inline-edit {
   display: flex;
-  margin-bottom: 10px;
 }
 
 .sci-inline-edit__content {
@@ -19,9 +18,11 @@
     border: 1px solid;
     border-color: $brand-focus;
     border-radius: 4px;
+    height: 36px;
+    line-height: 36px;
     outline: none;
     overflow: hidden;
-    padding: 8px 16px;
+    padding: 0 16px;
     width: 100%;
 
     &:focus {

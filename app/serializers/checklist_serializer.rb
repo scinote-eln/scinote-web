@@ -6,10 +6,11 @@ class ChecklistSerializer < ActiveModel::Serializer
   attributes :name, :urls
 
   def urls
-    return if object.destroyed?
+    return {} if object.destroyed?
 
     {
-      delete_url: step_checklist_path(object.step, object)
+      delete_url: step_checklist_path(object.step, object),
+      update_url: step_checklist_path(object.step, object)
     }
   end
 end

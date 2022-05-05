@@ -85,3 +85,59 @@
     }
   }
 }
+
+.step-element-header {
+  align-items: center;
+  display: flex;
+  padding: 0 0 0 8px;
+
+  &.editing-name {
+    padding: 0;
+
+    .step-element-controls {
+      display: none;
+    }
+  }
+
+  .sci-inline-edit {
+    width: 100%;
+  }
+
+  .step-element-name {
+    font-weight: bold;
+    width: 100%;
+  }
+
+  .step-element-controls {
+    display: flex;
+    margin-left: auto;
+
+    .btn {
+      padding: 0;
+    }
+
+    .fas {
+      font-size: 14px;
+    }
+  }
+
+  .step-element-grip {
+    color: $color-silver-chalice;
+    cursor: grab;
+    margin-right: 8px;
+  }
+
+  .step-element-controls,
+  .step-element-grip {
+    opacity: 0;
+  }
+
+  &:hover:not(.editing-name) {
+    background: $color-concrete;
+
+    .step-element-grip,
+    .step-element-controls {
+      opacity: 1;
+    }
+  }
+}

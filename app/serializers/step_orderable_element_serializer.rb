@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class StepOrderableElementSerializer < ActiveModel::Serializer
-  attributes :position, :element, :orderable_type
+  attributes :position, :orderable, :orderable_type
 
-  def element
+  def orderable
     case object.orderable_type
     when 'Checklist'
       ChecklistSerializer.new(object.orderable).as_json

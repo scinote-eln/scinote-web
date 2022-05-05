@@ -2,7 +2,7 @@
 
 class StepOrderableElementsController < ApplicationController
   before_action :load_vars_nested
-  before_action :load_vars, only: :destroy
+  before_action :load_vars, only: %i(destroy update)
   before_action :check_manage_permissions, only: %i(create destroy)
 
   def create
@@ -15,6 +15,13 @@ class StepOrderableElementsController < ApplicationController
     rescue ActiveRecord::RecordInvalid
       render json: {}, status: :unprocessable_entity
     end
+  end
+
+  def update
+    @element.update!(orderable_params)
+    render json: @element, serializer: "#{@element.class}Serializer".constantize
+  rescue ActiveRecord::RecordInvalid
+    render json: {}, status: :unprocessable_entity
   end
 
   def destroy

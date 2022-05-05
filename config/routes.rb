@@ -451,7 +451,7 @@ Rails.application.routes.draw do
 
       resources :tables, controller: 'step_components/tables', only: %i(create destroy)
       resources :texts, controller: 'step_components/texts', only: %i(create destroy)
-      resources :checklists, controller: 'step_components/checklists', only: %i(create destroy)
+      resources :checklists, controller: 'step_components/checklists', only: %i(create destroy update)
       member do
         get 'elements'
         post 'checklistitem_state'
