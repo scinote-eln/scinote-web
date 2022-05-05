@@ -10,6 +10,7 @@
           :characterLimit="255"
           :placeholder="''"
           :allowBlank="false"
+          :autofocus="editingName"
           :attributeName="`${i18n.t('Checklist')} ${i18n.t('name')}`"
           @editingEnabled="enableNameEdit"
           @editingDisabled="disableNameEdit"
@@ -17,6 +18,9 @@
         />
       </div>
       <div class="step-element-controls">
+        <button class="btn icon-btn btn-light" @click="enableNameEdit">
+          <i class="fas fa-pen"></i>
+        </button>
         <button class="btn icon-btn btn-light" @click="showDeleteModal">
           <i class="fas fa-trash"></i>
         </button>
