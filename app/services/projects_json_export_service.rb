@@ -1,60 +1,53 @@
 # frozen_string_literal: true
 
 class ProjectsJsonExportService
+  include Canaid::Helpers::PermissionsHelper
   require 'net/http'
 
-  def initialize(project_id, experiment_ids, task_ids, callback)
-    @project = Project.find_by(id: project_id)
-    @experiment_ids = experiment_ids
+  def initialize(task_ids, callback, user)
+    @user = user
     @task_ids = task_ids
+    @experiment_ids = MyModule.where(id: @task_ids).pluck(:experiment_id).uniq
+    @project_ids = Experiment.where(id: @experiment_ids).pluck(:project_id).uniq
     @callback = callback
     @storage_location = ENV['ACTIVESTORAGE_SERVICE'] ? ENV['ACTIVESTORAGE_SERVICE'] : 'local'
-    @bucket_location = ENV['ACTIVESTORAGE_SERVICE'] && ENV['S3_BUCKET'] ? 
-                          ENV['S3_BUCKET'] : ActiveStorage::Blob.service.current_host
     @request_json = {}
   end
 
   def generate_data
-    exps = Experiment.includes(:project)
-                     .where(id: @experiment_ids)
-
-    project = @project.as_json(only: %i(id name))
-    experiments = []
-    exps.find_each do |exp|
-      experiment = exp.as_json(only: %i(id name description))
-      tasks = []
-      exp.my_modules.where(archived: false).find_each do |tsk|
-        if @task_ids.map(&:to_i).include?(tsk.id.to_i)
-          task = tsk.as_json(only: %i(id name description))
-          t_m_files = tsk.tiny_mce_assets.map { |asset| tiny_mce_file_json(asset) }
-          task['tiny_mce_files'] = t_m_files if t_m_files.any?
-          steps = []
-          task['protocols'] = []
-          tsk.protocols.find_each do |prtcl|
-            task['protocols'] << protocol_json(prtcl)
-            prtcl.steps.order(:position).find_each { |stp| steps << step_json(stp) }
+    project_json = []
+    projects = Project.where(id: @project_ids)
+    projects.find_each do |prj|
+      next unless can_read_project?(@user, prj)
+      project = prj.as_json(only: %i(id name))
+      experiments = []
+      prj.experiments.find_each do |exp|
+        if @experiment_ids.map(&:to_i).include?(exp.id.to_i)
+          next unless can_read_experiment?(@user, exp)
+          experiment = exp.as_json(only: %i(id name description))
+          tasks = []
+          exp.my_modules.where(archived: false).find_each do |tsk|
+            if @task_ids.map(&:to_i).include?(tsk.id.to_i)
+              next unless can_read_my_module?(@user, tsk)
+              tasks << task_json(tsk)
+            end
           end
-          task['steps'] = steps if steps.any?
-          results = []
-          tsk.results
-             .where(archived: false)
-             .order(created_at: :desc)
-             .find_each { |res| results << result_json(res) }
-          task['results'] = results if results.any?
-          tasks << task
+          experiment['tasks'] = tasks if tasks.any?
+          experiments << experiment
         end
+        project['experiments'] = experiments if experiments.any?
       end
-      experiment['tasks'] = tasks if tasks.any?
-      experiments << experiment
+      project_json << project
     end
-    project['experiments'] = experiments if experiments.any?
-    @request_json['project'] = project
+
+    @request_json['projects'] = project_json
   end
 
   def post_request
     url = URI.parse(@callback)
-    req = Net::HTTP::Post.new(url.request_uri)
-    req.body = @request_json.to_s
+    req = Net::HTTP::Post.new(url.request_uri, 'Content-Type': 'application/json;charset=utf-8')
+    Rails.logger.info(@request_json.to_json)
+    req.body = @request_json.to_json
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = (url.scheme == 'https')
     http.request(req)
@@ -101,6 +94,27 @@ class ProjectsJsonExportService
     end
     step_json['tables'] = tables if tables.any?
     step_json
+  end
+
+  def task_json(task)
+    task_json = task.as_json(only: %i(id name description))
+    t_m_files = task.tiny_mce_assets.map { |asset| tiny_mce_file_json(asset) }
+    task_json['tiny_mce_files'] = t_m_files if t_m_files.any?
+    steps = []
+    task_json['protocols'] = []
+    task.protocols.find_each do |protocol|
+      task_json['protocols'] << protocol_json(protocol)
+      protocol.steps.order(:position).find_each { |stp| steps << step_json(stp) }
+    end
+    task_json['steps'] = steps if steps.any?
+    results = []
+    Rails.logger.info(task.results.to_yaml.to_s)
+    task.results
+        .where(archived: false)
+        .order(created_at: :desc)
+        .find_each { |res| results << result_json(res) }
+    task_json['results'] = results if results.any?
+    task_json
   end
 
   def result_json(result)
