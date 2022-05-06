@@ -1,6 +1,8 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
 
+@import "components/*";
+
 .step-container {
   margin: 20px 0;
   padding: 8px 24px;
