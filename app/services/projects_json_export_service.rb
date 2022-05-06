@@ -10,7 +10,7 @@ class ProjectsJsonExportService
     @experiment_ids = MyModule.where(id: @task_ids).pluck(:experiment_id).uniq
     @project_ids = Experiment.where(id: @experiment_ids).pluck(:project_id).uniq
     @callback = callback
-    @storage_location = ENV['ACTIVESTORAGE_SERVICE'] ? ENV['ACTIVESTORAGE_SERVICE'] : 'local'
+    @storage_location = ENV['ACTIVESTORAGE_SERVICE'] || 'local'
     @request_json = {}
   end
 
@@ -19,16 +19,19 @@ class ProjectsJsonExportService
     projects = Project.where(id: @project_ids)
     projects.find_each do |prj|
       next unless can_read_project?(@user, prj)
+
       project = prj.as_json(only: %i(id name))
       experiments = []
       prj.experiments.find_each do |exp|
         if @experiment_ids.map(&:to_i).include?(exp.id.to_i)
           next unless can_read_experiment?(@user, exp)
+
           experiment = exp.as_json(only: %i(id name description))
           tasks = []
           exp.my_modules.where(archived: false).find_each do |tsk|
             if @task_ids.map(&:to_i).include?(tsk.id.to_i)
               next unless can_read_my_module?(@user, tsk)
+
               tasks << task_json(tsk)
             end
           end
@@ -140,7 +143,7 @@ class ProjectsJsonExportService
   end
 
   def asset_file_json(asset)
-    if ( ENV['ACTIVESTORAGE_SERVICE'] && ENV['S3_BUCKET'] )
+    if ENV['ACTIVESTORAGE_SERVICE'] && ENV['S3_BUCKET']
       {
         'storage' => ENV['ACTIVESTORAGE_SERVICE'],
         'id' => asset.id,
@@ -158,14 +161,16 @@ class ProjectsJsonExportService
   end
 
   def tiny_mce_file_json(asset)
-    if ( ENV['ACTIVESTORAGE_SERVICE'] && ENV['S3_BUCKET'] )
-      { 'storage' => @storage_location,
+    if ENV['ACTIVESTORAGE_SERVICE'] && ENV['S3_BUCKET']
+      {
+        'storage' => @storage_location,
         'id' => asset.id,
         'bucket' => ENV['S3_BUCKET'],
         'key' => ActiveStorage::Blob.service.path_for(asset.image.key)
       }
     else
-      { 'storage' => @storage_location,
+      {
+        'storage' => @storage_location,
         'id' => asset.id,
         'url' => Rails.application.routes.url_helpers.url_for(asset.image)
       }
