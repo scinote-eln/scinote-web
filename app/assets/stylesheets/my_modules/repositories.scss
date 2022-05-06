@@ -193,7 +193,7 @@
         padding: 0;
       }
 
-      .stock-low-stock-alert {
+      .stock-low {
         &::before {
           @include font-awesome;
           color: $brand-warning;
@@ -201,7 +201,7 @@
         }
       }
 
-      .stock-alert {
+      .stock-empty {
         color: $brand-danger;
 
         &::before {
@@ -210,12 +210,17 @@
         }
       }
 
-      .manage-repository-consumed-stock-value-link {
+      .manage-repository-consumed-stock-value-link:not(.stock-value-view-render) {
         color: $color-volcano;
       }
 
+      .empty-stock-render,
+      .consumption-locked {
+        color: $color-silver-chalice;
+      }
+
       .row-stock,
-      .row-consumptio {
+      .row-consumption {
         min-width: 140px;
       }
     }
@@ -229,7 +234,9 @@
     }
 
     .assigned-column {
-      padding: 2px 8px;
+      padding-bottom: 2px;
+      padding-left: 8px;
+      padding-top: 2px;
       position: relative;
 
       .row-reminders-dropdown {

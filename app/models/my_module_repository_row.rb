@@ -1,4 +1,6 @@
 class MyModuleRepositoryRow < ApplicationRecord
+  include ActionView::Helpers::NumberHelper
+
   attr_accessor :last_modified_by
   attr_accessor :comment
 
@@ -15,9 +17,8 @@ class MyModuleRepositoryRow < ApplicationRecord
 
   validates :repository_row, uniqueness: { scope: :my_module }
 
-  around_save :deduct_stock_balance, if: :stock_consumption_changed?
-
   before_save :nulify_stock_consumption, if: :stock_consumption_changed?
+  around_save :deduct_stock_balance, if: :stock_consumption_changed?
 
   def consume_stock(user, stock_consumption, comment = nil)
     ActiveRecord::Base.transaction(requires_new: true) do
@@ -33,6 +34,16 @@ class MyModuleRepositoryRow < ApplicationRecord
     end
   end
 
+  def formated_stock_consumption
+    if stock_consumption
+      number_with_precision(
+        stock_consumption,
+        precision: (repository_row.repository.repository_stock_column.metadata['decimals'].to_i || 0),
+        strip_insignificant_zeros: true
+      )
+    end
+  end
+
   private
 
   def nulify_stock_consumption
@@ -41,18 +52,18 @@ class MyModuleRepositoryRow < ApplicationRecord
 
   def deduct_stock_balance
     stock_value = repository_row.repository_stock_value
-    delta = stock_consumption.to_d - stock_consumption_was.to_d
     stock_value.lock!
+    delta = stock_consumption.to_d - stock_consumption_was.to_d
     stock_value.amount = stock_value.amount - delta
     yield
-    stock_value.save!
     stock_value.repository_ledger_records.create!(
       reference: self,
-      user: last_modified_by,
+      user: last_modified_by || assigned_by,
       amount: delta,
       balance: stock_value.amount,
       comment: comment
     )
+    stock_value.save!
     save!
   end
 end

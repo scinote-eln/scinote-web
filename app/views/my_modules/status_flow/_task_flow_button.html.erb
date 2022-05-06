@@ -59,3 +59,17 @@
     </li>
   </ul>
 </div>
+<% if my_module.last_transition_error %>
+  <div class="status-transition-error">
+    <i class="fas fa-exclamation-triangle"></i>
+    <% case my_module.last_transition_error["type"] %>
+    <% when "repository_snapshot" %>
+      <%= t(
+        "my_modules.status_error.repository_snapshot",
+        repository: Repository.find(my_module.last_transition_error["repository_id"]).name
+      ) %>
+    <% else %>
+       <%= t("my_modules.status_error.general") %>
+    <% end %>
+  </div>
+<% end %>

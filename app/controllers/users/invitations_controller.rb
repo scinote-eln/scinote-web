@@ -141,7 +141,8 @@ module Users
                                 end
             end
 
-            result[:user_teams] << user_team
+            result[:user_team] = user_team
+            result[:team] = team
           end
         end
 

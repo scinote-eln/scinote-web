@@ -128,11 +128,12 @@
   }
 
   .item-name {
-    padding: 1px 8px;
+    padding: 2px 8px;
 
     .row-reminders-dropdown {
       cursor: pointer;
       display: inline-block;
+      margin-right: 8px;
       padding: 8px;
 
       .fa-bell {
@@ -149,7 +150,7 @@
 
     .record-info-link {
       display: inline-block;
-      padding: 8px;
+      margin: 8px 0;
     }
   }
   // Added on
@@ -228,13 +229,7 @@
 
   // Stock
   .stock-value-view-render {
-
-
-    &:hover {
-      text-decoration: none;
-    };
-
-    &.stock-alert {
+    &.stock-empty {
       color: $brand-danger;
 
       &::before {
@@ -243,7 +238,7 @@
       }
     }
 
-    &.stock-low-stock-alert {
+    &.stock-low {
       &::before {
         @include font-awesome;
         color: $brand-warning;
@@ -266,7 +261,7 @@
     cursor: pointer;
   }
 
-  .manage-repository-consumed-stock-value-link {
+  .manage-repository-consumed-stock-value-link:not(.stock-value-view-render) {
     color: $color-volcano;
   }
 

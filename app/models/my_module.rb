@@ -3,6 +3,7 @@
 class MyModule < ApplicationRecord
   SEARCHABLE_ATTRIBUTES = ['my_modules.name', 'my_modules.description']
 
+  include ActionView::Helpers::NumberHelper
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
@@ -300,19 +301,17 @@ class MyModule < ApplicationRecord
     headers = [
       I18n.t('repositories.table.id'),
       I18n.t('repositories.table.row_name'),
-      I18n.t('repositories.table.added_by'),
-      I18n.t('repositories.table.')
+      I18n.t('repositories.table.added_on'),
+      I18n.t('repositories.table.added_by')
     ]
     data = []
     rows = repository.assigned_rows(self).includes(:created_by).order(created_at: order)
     if repository.has_stock_management?
       headers.push(I18n.t('repositories.table.row_consumption'))
-      rows = rows.joins(:my_module_repository_rows, repository_stock_value: :repository_stock_unit_item)
-                 .where(my_module_repository_rows: { my_module: self })
+      rows = rows.left_joins(my_module_repository_rows: :repository_stock_unit_item)
                  .select(
                    'repository_rows.*',
-                   'my_module_repository_rows.stock_consumption',
-                   'repository_stock_unit_items.data AS stock_unit'
+                   'my_module_repository_rows.stock_consumption'
                  )
     end
     rows.find_each do |row|
@@ -321,7 +320,25 @@ class MyModule < ApplicationRecord
       row_json << (row.archived ? "#{row.name} [#{I18n.t('general.archived')}]" : row.name)
       row_json << I18n.l(row.created_at, format: :full)
       row_json << row.created_by.full_name
-      row_json << "#{row['stock_consumption'] || 0} #{row['stock_unit']}" if repository.has_stock_management?
+      if repository.has_stock_management?
+        if repository.is_a?(RepositorySnapshot)
+          consumed_stock = row.repository_stock_consumption_cell&.value&.formatted
+          row_json << (consumed_stock || 0)
+        else
+          consumed_stock_formatted =
+            if row.repository_stock_cell.present?
+              consumed_stock = number_with_precision(
+                row.stock_consumption || 0,
+                precision: (row.repository.repository_stock_column.metadata['decimals'].to_i || 0),
+                strip_insignificant_zeros: true
+              )
+              "#{consumed_stock} #{row.repository_stock_value&.repository_stock_unit_item&.data}"
+            else
+              '-'
+            end
+          row_json << consumed_stock_formatted
+        end
+      end
       data << row_json
     end
 

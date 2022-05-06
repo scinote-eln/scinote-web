@@ -4,6 +4,8 @@ class RepositoryStockValue < ApplicationRecord
   include RepositoryValueWithReminders
   include ActionView::Helpers::NumberHelper
 
+  attr_accessor :comment
+
   belongs_to :repository_stock_unit_item, optional: true
   belongs_to :created_by, class_name: 'User', optional: true, inverse_of: :created_repository_stock_values
   belongs_to :last_modified_by, class_name: 'User', optional: true, inverse_of: :modified_repository_stock_values
@@ -12,6 +14,17 @@ class RepositoryStockValue < ApplicationRecord
   accepts_nested_attributes_for :repository_cell
 
   validates :repository_cell, presence: true
+  validates :low_stock_threshold, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
+
+  after_create do
+    next if is_a?(RepositoryStockConsumptionValue)
+
+    repository_ledger_records.create!(user: created_by,
+                                      amount: amount,
+                                      balance: amount,
+                                      reference: repository_cell.repository_column.repository,
+                                      comment: comment)
+  end
 
   SORTABLE_COLUMN_NAME = 'repository_stock_values.amount'
 
@@ -39,10 +52,12 @@ class RepositoryStockValue < ApplicationRecord
     end
   end
 
-  def low_stock?
-    return false unless low_stock_threshold
+  def status
+    return :empty if amount <= 0
 
-    amount <= low_stock_threshold
+    return :low if low_stock_threshold && amount <= low_stock_threshold
+
+    :normal
   end
 
   def self.add_filter_condition(repository_rows, join_alias, filter_element)
@@ -83,14 +98,27 @@ class RepositoryStockValue < ApplicationRecord
     end
   end
 
-  def data_changed?(new_data)
-    BigDecimal(new_data.to_s) != data
+  def data_different?(new_data)
+    BigDecimal(new_data[:amount].to_s) != amount ||
+      (new_data[:unit_item_id].present? && new_data[:unit_item_id] != repository_stock_unit_item.id)
   end
 
   def update_data!(new_data, user)
-    self.amount = BigDecimal(new_data[:amount].to_s)
-    self.low_stock_threshold = new_data[:low_stock_threshold]
+    self.low_stock_threshold = new_data[:low_stock_threshold].presence if new_data[:low_stock_threshold]
+    self.repository_stock_unit_item = repository_cell
+                                      .repository_column
+                                      .repository_stock_unit_items
+                                      .find(new_data[:unit_item_id])
     self.last_modified_by = user
+    delta = new_data[:amount].to_d - amount.to_d
+    repository_ledger_records.create!(
+      user: last_modified_by,
+      amount: delta,
+      balance: amount,
+      reference: repository_cell.repository_column.repository,
+      comment: new_data[:comment].presence
+    )
+    self.amount = BigDecimal(new_data[:amount].to_s)
     save!
   end
 
@@ -116,10 +144,18 @@ class RepositoryStockValue < ApplicationRecord
   end
 
   def self.new_with_payload(payload, attributes)
-    value = new(attributes)
-    value.amount = payload[:amount]
-    value.low_stock_threshold = payload[:low_stock_threshold]
-    value
+    if payload[:amount].present?
+      value = new(attributes)
+      value.amount = payload[:amount]
+      value.low_stock_threshold = payload[:low_stock_threshold]
+      value.repository_stock_unit_item = value.repository_cell
+                                              .repository_column
+                                              .repository_stock_unit_items
+                                              .find(payload['unit_item_id'])
+      value
+    else
+      raise ActiveRecord::RecordInvalid, 'Missing amount value'
+    end
   end
 
   def self.import_from_text(text, attributes, _options = {})
@@ -146,17 +182,6 @@ class RepositoryStockValue < ApplicationRecord
     value
   rescue ArgumentError
     nil
-  end
-
-  def update_stock_with_ledger!(amount, reference, comment)
-    delta = amount.to_d - self.amount.to_d
-    repository_ledger_records.create!(
-      user: last_modified_by,
-      amount: delta,
-      balance: amount,
-      reference: reference,
-      comment: comment
-    )
   end
 
   alias export_formatted formatted

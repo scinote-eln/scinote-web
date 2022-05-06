@@ -184,7 +184,8 @@ var MyModuleRepositories = (function() {
         var recordName = "<a href='" + row.recordInfoUrl + "'"
                          + "class='record-info-link'>" + data + '</a>';
         if (row.hasActiveReminders) {
-          recordName = `<div class="dropdown row-reminders-dropdown" data-row-reminders-url="${row.rowRemindersUrl}">
+          recordName = `<div class="dropdown row-reminders-dropdown"
+                          data-row-reminders-url="${row.rowRemindersUrl}" tabindex='-1'>
                           <i class="fas fa-bell dropdown-toggle row-reminders-icon"
                              data-toggle="dropdown" id="rowReminders${row.DT_RowId}}"></i>
                           <ul class="dropdown-menu" role="menu" aria-labelledby="rowReminders${row.DT_RowId}">
@@ -232,6 +233,7 @@ var MyModuleRepositories = (function() {
       columnDefs: simpleViewColumnDefs(tableContainer),
       drawCallback: function() {
         var repositoryContainer = $(this).closest('.assigned-repository-container');
+        var simpleViewTableScrollbar = new PerfectScrollbar($(tableContainer).closest('.dataTables_scrollBody')[0]);
         repositoryContainer.find('.table.dataTable').removeClass('hidden');
         repositoryContainer.find('.version-label').html(tableContainer.data('version-label'));
         SIMPLE_TABLE.columns.adjust();
@@ -398,9 +400,12 @@ var MyModuleRepositories = (function() {
 
   function checkSnapshotStatus(snapshotItem) {
     $.getJSON(snapshotItem.data('status-url'), (statusData) => {
-      if (statusData.status === 'ready') {
+      if (statusData.status !== 'provisioning') {
         $.getJSON(snapshotItem.data('version-item-url'), (itemData) => {
           snapshotItem.replaceWith(itemData.html);
+          if (statusData.status === 'failed') {
+            $('#snapshot-error-' + itemData.repository_id).modal('show');
+          }
         });
       } else {
         setTimeout(function() {
@@ -414,6 +419,14 @@ var MyModuleRepositories = (function() {
     $('#assigned-items-container').on('shown.bs.collapse', '.assigned-repository-container', function() {
       var repositoryContainer = $(this);
       var repositoryTable = repositoryContainer.find('.table');
+      var initializedTable = repositoryContainer.find('.dataTables_wrapper table');
+
+      // do not try to re-initialized already initialized table
+      if (initializedTable.length) {
+        initializedTable.DataTable().columns.adjust();
+        return;
+      }
+
       repositoryTable.attr('data-source', $(this).data('repository-url'));
       repositoryTable.attr('data-version-label', $(this).data('footer-label'));
       repositoryTable.attr('data-name-column-id', $(this).data('name-column-id'));

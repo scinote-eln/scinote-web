@@ -4,6 +4,10 @@ require 'rails_helper'
 
 RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
   before :all do
+    ApplicationSettings.instance.update(
+      values: ApplicationSettings.instance.values.merge({"stock_management_enabled" => true})
+    )
+
     @user = create(:user)
     @teams = create_list(:team, 2, created_by: @user)
     create(:user_team, user: @user, team: @teams.first, role: 2)
@@ -11,11 +15,16 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
     # valid_inventory
     @valid_inventory = create(:repository, name: Faker::Name.unique.name,
                               created_by: @user, team: @teams.first)
+    # valid_stock inventory
+    @valid_stock_inventory = create(:repository, name: Faker::Name.unique.name,
+      created_by: @user, team: @teams.first)
 
     # unaccessable_inventory
     create(:repository, name: Faker::Name.unique.name,
                 created_by: @user, team: @teams.second)
-
+          
+    stock_column = create(:repository_column, name: Faker::Name.unique.name, 
+                          data_type: :RepositoryStockValue, repository: @valid_stock_inventory)
     create(:repository_column, name: Faker::Name.unique.name,
       repository: @valid_inventory, data_type: :RepositoryTextValue)
     list_column = create(:repository_column, name: Faker::Name.unique.name,
@@ -222,6 +231,16 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
                            } } }
     end
 
+    let!(:request_body_stock) {{ data:
+      { type: 'inventory_columns',
+        attributes: {
+          name: Faker::Name.unique.name,
+          data_type: 'stock',
+          metadata: {
+             decimals: 3
+          }
+        } } }}
+
     it 'Response with correct inventory column' do
       hash_body = nil
       post api_v1_team_inventory_columns_path(
@@ -336,6 +355,32 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
         expect(hash_body['errors'][0]).to include('status': 400)
       end
     end
+
+    it 'Response with correct stock inventory column' do
+      hash_body = nil
+      post api_v1_team_inventory_columns_path(
+        team_id: @teams.first.id,
+        inventory_id: @teams.first.repositories.first.id
+      ), params: request_body_stock.to_json, headers: @valid_headers
+      expect(response).to have_http_status 201
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data]).to match(
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(RepositoryColumn.last, serializer: Api::V1::InventoryColumnSerializer, hide_list_items: true)
+            .to_json
+        )['data']
+      )
+    end
+
+    it 'Raised error with already exsisting stock column in column' do
+      hash_body = nil
+      post api_v1_team_inventory_columns_path(
+        team_id: @teams.first.id,
+        inventory_id: @teams.first.repositories.second.id
+      ), params: request_body_stock.to_json, headers: @valid_headers
+      expect(response).to have_http_status 400
+    end
   end
 
   describe 'DELETE inventory_columns, #destroy' do
@@ -381,6 +426,18 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
       expect(response).to have_http_status(403)
       expect(RepositoryColumn.where(id: deleted_id)).to exist
     end
+
+    it 'Destroy Stock inventory column' do
+      deleted_id = @teams.first.repositories.second.repository_columns.last.id
+      delete api_v1_team_inventory_column_path(
+        id: deleted_id,
+        team_id: @teams.first.id,
+        inventory_id: @teams.first.repositories.second.id
+      ), headers: @valid_headers
+      expect(response).to have_http_status(200)
+      expect(RepositoryColumn.where(id: deleted_id)).to_not exist
+      expect(RepositoryCell.where(repository_column: deleted_id).count).to equal 0
+    end
   end
 
   describe 'PATCH inventory_column, #update' do
@@ -391,6 +448,14 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
         serializer: Api::V1::InventoryColumnSerializer
       )
     end
+
+    let!(:request_body_stock_update) {
+      ActiveModelSerializers::SerializableResource.new(
+        @teams.first.repositories.second.repository_columns.last,
+        serializer: Api::V1::InventoryColumnSerializer
+      )
+
+    }
 
     it 'Response with correctly updated inventory column' do
       hash_body = nil
@@ -408,6 +473,23 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
       expect(response).to have_http_status 200
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body['data']['attributes']['name']).to match(returned_inventory_column[:data][:attributes][:name])
+    end
+
+    it 'Response with correctly updated inventory stock column' do
+      hash_body = nil
+      updated_inventory_column = request_body_stock_update.as_json
+      updated_inventory_column[:data][:attributes][:metadata][:decimals] = 0
+      returned_inventory_column = updated_inventory_column.deep_dup
+      updated_inventory_column[:data][:attributes].delete(:data_type)
+      patch api_v1_team_inventory_column_path(
+        id: @teams.first.repositories.second.repository_columns.last.id,
+        team_id: @teams.first.id,
+        inventory_id: @teams.first.repositories.second.id
+      ), params: updated_inventory_column.to_json,
+      headers: @valid_headers
+      expect(response).to have_http_status 200
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body['data']['attributes']['metadata']['decimals']).to match(returned_inventory_column[:data][:attributes][:metadata][:decimals])
     end
 
     it 'Invalid request, wrong team' do

@@ -1,12 +1,10 @@
+/* eslint-disable no-use-before-define */
 /* eslint-disable no-unused-vars */
 
 var InfiniteScroll = (function() {
-  function getScrollHeight($container) {
-    return $container[0].scrollHeight;
-  }
-
   function scrollNotVisible($container) {
-    return (getScrollHeight($container) - $container.height() - 150 <= 0);
+    let eventTarget = $($container.data('config').eventTarget || $container);
+    return scrollHitBottom(eventTarget[0]);
   }
 
   function loadData($container, page = 1) {
@@ -15,8 +13,9 @@ var InfiniteScroll = (function() {
 
     if ($container.hasClass('loading') || $container.hasClass('last-page')) return;
     $container.addClass('loading');
-
+    renderPlaceholder($container);
     $.get($container.data('config').url, params, function(result) {
+      $container.find('.placeholder-block').remove();
       if ($container.data('config').customResponse) {
         $container.data('config').customResponse(result, $container);
       } else {
@@ -27,6 +26,9 @@ var InfiniteScroll = (function() {
         $container.data('next-page', result.next_page);
       } else {
         $container.addClass('last-page');
+        if ($container.data('config').endOfListTemplate && page > 2) {
+          $($($container.data('config').endOfListTemplate).html()).appendTo($container);
+        }
       }
       $container.removeClass('loading');
 
@@ -44,26 +46,88 @@ var InfiniteScroll = (function() {
     var $container = $(object);
     $container.data('next-page', 2);
     $container.data('config', config);
-
     if (config.loadFirstPage) {
       loadData($container, 1);
     }
 
-    $container.on('scroll', () => {
-      if ($container.scrollTop() + $container.height() > getScrollHeight($container) - 150 && !$container.hasClass('last-page')) {
+    let eventTarget = $($container.data('config').eventTarget || $container);
+    eventTarget.on('scroll', () => {
+      if (scrollHitBottom(eventTarget[0]) && !$container.hasClass('last-page')) {
         loadData($container, $container.data('next-page'));
       }
     });
+
+    if (scrollNotVisible($container)) {
+      loadData($container, $container.data('next-page'));
+    }
+  }
+
+  // support functions
+
+  // Full scroll height
+  function scrollHeight(con) {
+    return con.scrollHeight || document.documentElement.scrollHeight;
+  }
+
+  // Top scroll position
+  function scrollTop(con) {
+    return con.scrollTop || con.scrollY || 0;
+  }
+
+  // Get container size
+  function containerSize(con) {
+    return con.innerHeight || con.offsetHeight;
+  }
+
+  // Container position
+  function containerPosition(con) {
+    return scrollTop(con) + containerSize(con);
+  }
+
+  // Check when load next page
+  function scrollHitBottom(con) {
+    return scrollHeight(con) - containerPosition(con) <= 0;
+  }
+
+  function removeScroll(con) {
+    let $container = $(con);
+
+    if (!$container.data('config')) {
+      return;
+    }
+
+    let eventTarget = $($container.data('config').eventTarget) || $container;
+    $container.data('config', null);
+    $container.data('next-page', null);
+    eventTarget.off('scroll');
+  }
+
+  function renderPlaceholder($container) {
+    let palceholder = '';
+    $.each(Array($container.data('config').pageSize || 10), function() {
+      palceholder += $($container.data('config').placeholderTemplate).html();
+    });
+    $(palceholder).addClass('placeholder-block').appendTo($container);
   }
 
   return {
     init: (object, config) => {
+      removeScroll(object);
       initScroll(object, config);
     },
     resetScroll: (object) => {
       $(object).data('next-page', $(object).data('config').loadFirstPage ? 1 : 2).removeClass('last-page');
       if (scrollNotVisible($(object))) {
         loadData($(object), $(object).data('next-page'));
+      }
+    },
+    removeScroll: (object) => {
+      removeScroll(object);
+    },
+    loadMore: (object) => {
+      let $container = $(object);
+      if (scrollNotVisible($container)) {
+        loadData($container, $container.data('next-page'));
       }
     }
   };

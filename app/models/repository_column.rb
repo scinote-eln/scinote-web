@@ -38,7 +38,9 @@ class RepositoryColumn < ApplicationRecord
 
   after_create :update_repository_table_states_with_new_column
   after_update :clear_hidden_repository_cell_reminders
+
   around_destroy :update_repository_table_states_with_removed_column
+  before_destroy :nulify_stock_consumption
 
   scope :list_type, -> { where(data_type: 'RepositoryListValue') }
   scope :asset_type, -> { where(data_type: 'RepositoryAssetValue') }
@@ -114,11 +116,6 @@ class RepositoryColumn < ApplicationRecord
     Constants::REPOSITORY_LIST_ITEMS_DELIMITERS_MAP[metadata['delimiter']&.to_sym] || "\n"
   end
 
-
-  def deletable?
-    data_type != 'RepositoryStockValue'
-  end
-
   def items
     items_method_name = "#{data_type.chomp('Value').underscore}_items"
     items_method_name = 'repository_stock_unit_items' if data_type == 'RepositoryStockValue'
@@ -168,5 +165,13 @@ class RepositoryColumn < ApplicationRecord
     HiddenRepositoryCellReminder.joins(repository_cell: :repository_column)
                                 .where(repository_columns: { id: id })
                                 .delete_all
+  end
+
+  def nulify_stock_consumption
+    if data_type == 'RepositoryStockValue'
+      MyModuleRepositoryRow.where(repository_row_id: repository.repository_rows.select(:id))
+                           .where.not(stock_consumption: nil)
+                           .update_all(stock_consumption: nil)
+    end
   end
 end

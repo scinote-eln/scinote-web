@@ -956,9 +956,9 @@ var dropdownSelector = (function() {
       if ($selector.length === 0) return false;
 
       valuesArray.forEach(function(value) {
-        option = $selector.find(`option[value="${value}"]`)[0];
-        option.selected = 'selected';
-        options.push(convertOptionToJson(option));
+        option = $selector.find(`option[value="${value}"]`);
+        option.attr('selected', true);
+        options.push(convertOptionToJson(option[0]));
       });
       setData($selector, options);
       return this;

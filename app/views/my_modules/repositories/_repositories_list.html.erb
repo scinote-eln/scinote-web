@@ -42,5 +42,16 @@
         <tbody></tbody>
       </table>
     </div>
+    <%= render 'shared/dialog',
+               id: "snapshot-error-#{repository.id}",
+               type: "error",
+               shown: false,
+               title: t("my_modules.modals.snapshot_error.title"),
+               body:
+                 t(
+                   "my_modules.modals.snapshot_error.body_html",
+                   repository: repository.name
+                 )
+    %>
   </div>
 <% end %>

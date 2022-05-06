@@ -15,7 +15,7 @@
     <strong><%= result[:email] %></strong>
     &nbsp;-&nbsp;
     <%= t('invite_users.results.user_exists_and_in_team',
-          team: @team.name,
+          team: result[:team].name,
           role: t("user_teams.enums.role.#{result[:user_team].role}")) %>
   </div>
 <%   elsif result[:status] == :user_exists_unconfirmed_invited_to_team %>
@@ -23,7 +23,7 @@
     <strong><%= result[:email] %></strong>
     &nbsp;-&nbsp;
     <%= t('invite_users.results.user_exists_unconfirmed_invited_to_team',
-          team: @team.name,
+          team: result[:team].name,
           role: t("user_teams.enums.role.#{result[:user_team].role}")) %>
   </div>
 <%   elsif result[:status] == :user_exists_invited_to_team %>
@@ -31,7 +31,7 @@
     <strong><%= result[:email] %></strong>
     &nbsp;-&nbsp;
     <%= t('invite_users.results.user_exists_invited_to_team',
-          team: @team.name,
+          team: result[:team].name,
           role: t("user_teams.enums.role.#{result[:user_team].role}")) %>
 </div>
 <%   elsif result[:status] == :user_created %>
@@ -45,7 +45,7 @@
     <strong><%= result[:email] %></strong>
     &nbsp;-&nbsp;
     <%= t('invite_users.results.user_created_invited_to_team',
-          team: @team.name,
+          team: result[:team].name,
           role: t("user_teams.enums.role.#{result[:user_team].role}")) %>
 </div>
 <%   elsif result[:status] == :user_invalid %>

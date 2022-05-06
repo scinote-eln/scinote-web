@@ -1,15 +1,49 @@
-/* global dropdownSelector GLOBAL_CONSTANTS I18n SmartAnnotation */
+/* global dropdownSelector GLOBAL_CONSTANTS I18n SmartAnnotation formatDecimalValue */
 
 var RepositoryStockValues = (function() {
   const UNIT_SELECTOR = '#repository-stock-value-units';
 
-  function formatDecimalValue(value, decimals) {
-    let regexp = decimals === 0 ? /[^0-9]/g : /[^0-9.]/g;
-    return value.replace(regexp, '').match(new RegExp(`^\\d*(\\.\\d{0,${decimals}})?`))[0];
+  function updateChangeAmount($element) {
+    var currentAmount = parseFloat($element.data('currentAmount'));
+    var inputAmount = parseFloat($element.val());
+    var newAmount;
+
+    if (!$element.val()) {
+      $('.stock-final-container .value').text('-');
+      return;
+    }
+    if (!(inputAmount >= 0)) return;
+
+    switch ($element.data('operator')) {
+      case 'set':
+        newAmount = inputAmount;
+        break;
+      case 'add':
+        newAmount = currentAmount + inputAmount;
+        break;
+      case 'remove':
+        newAmount = currentAmount - inputAmount;
+        break;
+      default:
+        newAmount = currentAmount;
+        break;
+    }
+    $('#change_amount').val(inputAmount);
+
+    $('#repository_stock_value_amount').val(newAmount);
+    $('.stock-final-container').toggleClass('negative', newAmount < 0);
+    $('.stock-final-container .value').text(
+      formatDecimalValue(String(newAmount), $('#stock-input-amount').data('decimals'))
+    );
   }
 
   function initManageAction() {
+    let amountChanged = false;
+
     $('.repository-show').on('click', '.manage-repository-stock-value-link', function() {
+      let colIndex = this.parentNode.cellIndex;
+      let rowIndex = this.parentNode.parentNode.rowIndex;
+
       $.ajax({
         url: $(this).closest('tr').data('manage-stock-url'),
         type: 'GET',
@@ -42,10 +76,13 @@ var RepositoryStockValues = (function() {
             .dropdown-selector-container .search-field
           `).attr('tabindex', 2);
 
-          $manageModal.find('form').on('ajax:success', function() {
-            var dataTable = $('.dataTable').DataTable();
+          $manageModal.find('form').on('ajax:success', function(_, data) {
             $manageModal.modal('hide');
-            dataTable.ajax.reload();
+            $('.dataTable').find(
+              `tr:nth-child(${rowIndex}) td:nth-child(${colIndex + 1})`
+            ).html(
+              $.fn.dataTable.render.RepositoryStockValue(data)
+            );
           });
 
           $('.stock-operator-option').click(function() {
@@ -56,20 +93,24 @@ var RepositoryStockValues = (function() {
 
             dropdownSelector.selectValues(UNIT_SELECTOR, $('#initial_units').val());
             $('#operator').val($(this).data('operator'));
-
             switch ($(this).data('operator')) {
               case 'set':
                 dropdownSelector.enableSelector(UNIT_SELECTOR);
+                if (!amountChanged) { $stockInput.val($stockInput.data('currentAmount')); }
                 break;
               case 'add':
+                if (!amountChanged) { $stockInput.val(''); }
                 dropdownSelector.disableSelector(UNIT_SELECTOR);
                 break;
               case 'remove':
+                if (!amountChanged) { $stockInput.val(''); }
                 dropdownSelector.disableSelector(UNIT_SELECTOR);
                 break;
               default:
                 break;
             }
+
+            updateChangeAmount($('#stock-input-amount'));
           });
 
           $('#stock-input-amount, #low_stock_threshold').on('input focus', function() {
@@ -79,7 +120,7 @@ var RepositoryStockValues = (function() {
 
           SmartAnnotation.init($('#repository-stock-value-comment')[0]);
 
-          $('#repository-stock-value-comment').on('keyup change', function() {
+          $('#repository-stock-value-comment').on('input', function() {
             $(this).closest('.sci-input-container').toggleClass(
               'error',
               this.value.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH
@@ -93,7 +134,6 @@ var RepositoryStockValues = (function() {
           $('#reminder-selector-checkbox').on('change', function() {
             let valueContainer = $('.repository-stock-reminder-value');
             valueContainer.toggleClass('hidden', !this.checked);
-            valueContainer.find('input').attr('required', this.checked);
             if (!this.checked) {
               $(this).data('reminder-value', valueContainer.find('input').val());
               valueContainer.find('input').val(null);
@@ -110,32 +150,8 @@ var RepositoryStockValues = (function() {
           });
 
           $('#stock-input-amount').on('input', function() {
-            var currentAmount = parseFloat($(this).data('currentAmount'));
-            var inputAmount = parseFloat($(this).val());
-            var newAmount;
-
-            if (!inputAmount) return;
-
-            switch ($(this).data('operator')) {
-              case 'set':
-                newAmount = inputAmount;
-                break;
-              case 'add':
-                newAmount = currentAmount + inputAmount;
-                break;
-              case 'remove':
-                newAmount = currentAmount - inputAmount;
-                break;
-              default:
-                newAmount = currentAmount;
-                break;
-            }
-            $('#change_amount').val(inputAmount);
-
-            $('#repository_stock_value_amount').val(newAmount);
-            $('.stock-final-container .value').text(
-              formatDecimalValue(String(newAmount), $('#stock-input-amount').data('decimals'))
-            );
+            amountChanged = true;
+            updateChangeAmount($(this));
           });
 
           $manageModal.on('ajax:beforeSend', 'form', function() {
@@ -146,19 +162,58 @@ var RepositoryStockValues = (function() {
             } else {
               dropdownSelector.hideError(UNIT_SELECTOR);
             }
-
-            if ($('#stock-input-amount').val().length) {
-              $('#stock-input-amount').parent().removeClass('error');
+            let stockInput = $('#stock-input-amount');
+            if (stockInput.val().length && stockInput.val() >= 0) {
+              stockInput.parent().removeClass('error');
             } else {
-              $('#stock-input-amount').parent().addClass('error');
+              stockInput.parent().addClass('error');
+              if (stockInput.val().length === 0) {
+                stockInput.parent()
+                  .attr(
+                    'data-error-text',
+                    I18n.t('repository_stock_values.manage_modal.amount_error')
+                  );
+              } else {
+                stockInput.parent()
+                  .attr(
+                    'data-error-text',
+                    I18n.t('repository_stock_values.manage_modal.negative_error')
+                  );
+              }
               status = false;
+            }
+
+            let reminderInput = $('.repository-stock-reminder-value input');
+            if ($('#reminder-selector-checkbox')[0].checked) {
+              if (reminderInput.val().length && reminderInput.val() >= 0) {
+                reminderInput.parent().removeClass('error');
+              } else {
+                reminderInput.parent().addClass('error');
+                if (reminderInput.val().length === 0) {
+                  reminderInput.parent()
+                    .attr(
+                      'data-error-text',
+                      I18n.t('repository_stock_values.manage_modal.amount_error')
+                    );
+                } else {
+                  reminderInput.parent()
+                    .attr(
+                      'data-error-text',
+                      I18n.t('repository_stock_values.manage_modal.negative_error')
+                    );
+                }
+                status = false;
+              }
             }
 
             return status;
           });
 
           $manageModal.modal('show');
+          amountChanged = false;
           $('#stock-input-amount').focus();
+          $('#stock-input-amount')[0].selectionStart = $('#stock-input-amount')[0].value.length;
+          $('#stock-input-amount')[0].selectionEnd = $('#stock-input-amount')[0].value.length;
         }
       });
     });

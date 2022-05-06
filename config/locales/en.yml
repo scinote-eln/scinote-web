@@ -419,6 +419,7 @@ en:
         users: "Members"
         name: "Project name"
         archived_date: "Archived"
+      end_of_list_placeholder: 'You’ve reached the end of the list'
       folder:
         description: "%{projects_count} projects | %{folders_count} folders"
       modal_new_project_folder:
@@ -1004,6 +1005,7 @@ en:
           provisioning: 'Provisioning'
       stock_modal:
         title: 'Consume %{name}'
+        title_edit: 'Edit %{name} consumption'
         description: 'Enter the total amount consumed in this task.'
         amount: 'Amount'
         consumed: 'Consumed'
@@ -1046,9 +1048,12 @@ en:
         hidden_tasks: "No permission: There are %{size} tasks you can’t assign to."
         task: 'Assign to task'
         task_and_downstream: 'Assign to task & downstream'
-      snapshot_error:
+      transition_snapshot_error:
         title: "Cannot change status"
         body_html: "The task cannot be moved to the next status because the <strong>%{repository}</strong> inventory snapshot failed to generate. Please contact support if this problem persists."
+      snapshot_error:
+        title: "Snapshot error"
+        body_html: "<strong>%{repository}</strong> inventory snapshot failed to generate. Please contact support if this problem persists."
     modules_list_partial:
       private_tasks_html: 'Assigned to <strong>%{nr}</strong> private task(s)'
       no_results:
@@ -1058,6 +1063,9 @@ en:
       title_html: The inventory <b>%{inventory_name}</b> is no longer shared with your team.
       body_html: This inventory has been unshared with your team by the inventory’s owner. To view the item/s that are assigned to your task/s contact the <b>%{team_name}</b> team administrator <b>%{admin_name}</b> (<b>%{admin_email}</b>).
     open_mobile_app: "Open mobile app"
+    status_error:
+      general: "Status transition failed"
+      repository_snapshot: "Snapshot failed in %{repository} inventory"
   experiments:
     id: "ID"
     experiment_id: "Experiment ID"
@@ -1717,7 +1725,9 @@ en:
       set: "Set to"
       amount: "Amount"
       amount_placeholder: "Enter amount"
+      amount_placeholder_new: "100, 2000, ..."
       amount_error: "Enter an amount"
+      negative_error: "Negative values are not allowed."
       unit: "Unit"
       unit_prompt: "Select unit"
       unit_error: "Select a unit"
@@ -1800,6 +1810,7 @@ en:
         reminder_message: 'Message (optional)'
         enter_reminder_message: 'Enter a reminder message'
         range_label: 'Range'
+        reminder_message_limit: "Maximum number of characters reached (255)"
       stock_type:
         multiple_options: 'selected'
         all_options: 'All options'
@@ -1891,7 +1902,7 @@ en:
       stock_low_html: "Only <strong>%{stock_formated}</strong> left."
       stock_empty: "There is no stock left."
       date_reminder: "Date reminder."
-      date_expiration_html: "This item is expiring in <strong>%{date_expiration}</strong>"
+      date_expiration_html: "This item is expiring in <strong>%{date_expiration}</strong>."
       item_expired: "This item has expired."
       day: "day"
   label_printers:
