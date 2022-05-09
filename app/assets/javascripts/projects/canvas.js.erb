@@ -250,6 +250,17 @@ function initializeEdit() {
       { color: 'white', shadow: true }
     );
   });
+
+  $('.module-options-dropdown')
+    .on('show.bs.dropdown', function() {
+      let dropdownContainer = $(this);
+      $.getJSON(dropdownContainer.data('dropdown-menu-path'), function(result) {
+        dropdownContainer.find('.dropdown-menu').html(result.html);
+      });
+    })
+    .on('show.bs.dropdown', function() {
+      $(this).find('.dropdown-menu').html('');
+    });
 }
 
 function destroyEdit() {
