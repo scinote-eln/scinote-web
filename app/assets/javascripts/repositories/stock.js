@@ -78,9 +78,11 @@ var RepositoryStockValues = (function() {
 
           $manageModal.find('form').on('ajax:success', function(_, data) {
             $manageModal.modal('hide');
-            $('.dataTable').find(
+            let $cell = $('.dataTable').find(
               `tr:nth-child(${rowIndex}) td:nth-child(${colIndex + 1})`
-            ).html(
+            );
+            $cell.parent().data('manage-stock-url', data.manageStockUrl);
+            $cell.html(
               $.fn.dataTable.render.RepositoryStockValue(data)
             );
           });
