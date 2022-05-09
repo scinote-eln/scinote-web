@@ -275,6 +275,9 @@ module RepositoryDatatableHelper
     # don't load reminders for archived repositories
     return [] if repository_rows.blank? || repository.archived?
 
+    # don't load reminders for snapshots
+    return [] if repository.is_a?(RepositorySnapshot)
+
     repository_rows.active.with_active_reminders(current_user).to_a.pluck(:id).uniq
   end
 
