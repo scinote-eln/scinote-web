@@ -1,28 +1,28 @@
-/* global dropdownSelector GLOBAL_CONSTANTS I18n SmartAnnotation formatDecimalValue */
+/* global dropdownSelector GLOBAL_CONSTANTS I18n SmartAnnotation formatDecimalValue Decimal */
 
 var RepositoryStockValues = (function() {
   const UNIT_SELECTOR = '#repository-stock-value-units';
 
   function updateChangeAmount($element) {
-    var currentAmount = parseFloat($element.data('currentAmount'));
-    var inputAmount = parseFloat($element.val());
-    var newAmount;
-
     if (!$element.val()) {
       $('.stock-final-container .value').text('-');
       return;
     }
-    if (!(inputAmount >= 0)) return;
+    if (!($element.val() >= 0)) return;
+
+    let currentAmount = new Decimal($element.data('currentAmount') || 0);
+    let inputAmount = new Decimal($element.val());
+    let newAmount;
 
     switch ($element.data('operator')) {
       case 'set':
         newAmount = inputAmount;
         break;
       case 'add':
-        newAmount = currentAmount + inputAmount;
+        newAmount = currentAmount.plus(inputAmount);
         break;
       case 'remove':
-        newAmount = currentAmount - inputAmount;
+        newAmount = currentAmount.minus(inputAmount);
         break;
       default:
         newAmount = currentAmount;
