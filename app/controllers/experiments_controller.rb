@@ -259,6 +259,12 @@ class ExperimentsController < ApplicationController
   def module_archive
     @my_modules = @experiment.archived_branch? ? @experiment.my_modules : @experiment.my_modules.archived
     @my_modules = @my_modules.with_granted_permissions(current_user, MyModulePermissions::READ_ARCHIVED)
+                             .left_outer_joins(:designated_users, :task_comments)
+                             .preload(:tags, outputs: :to)
+                             .preload(:my_module_status, :my_module_group, user_assignments: %i(user user_role))
+                             .select('COUNT(users.id) as designated_users_count')
+                             .select('COUNT(comments.id) as task_comments_count')
+                             .select('my_modules.*').group(:id)
   end
 
   def fetch_workflow_img
