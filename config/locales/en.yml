@@ -2522,6 +2522,7 @@ en:
         checklist: 'Add checklist'
       table:
         default_name: 'Table %{position}'
+        edit_message: 'Use right click for table options'
       checklist:
         default_name: 'Checklist %{position}'
       modals:

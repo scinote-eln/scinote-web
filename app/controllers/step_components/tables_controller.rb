@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 
 module StepComponents
   class TablesController < StepOrderableElementsController
@@ -8,13 +7,13 @@ module StepComponents
       @step.step_tables.create!(table:
         Table.create!(
           name: t('protocols.steps.table.default_name', position: @step.step_tables.length + 1),
-          contents: '{"data":[["",""],["",""],["",""],["",""],["",""]]}',
+          contents: { data: Array.new(5, Array.new(5, '')) }.to_json,
           created_by: current_user
         ))
     end
 
-    def element_params
-      params.require(:table).permit(:name, :contents)
+    def orderable_params
+      params.permit(:name, :contents)
     end
 
     def load_vars
