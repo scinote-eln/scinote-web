@@ -46,7 +46,7 @@
             </li>
           </ul>
         </div>
-        <button class="btn icon-btn btn-light" @click="deleteStep">
+        <button class="btn icon-btn btn-light" @click="showDeleteModal">
           <i class="fas fa-trash"></i>
         </button>
       </div>
@@ -61,6 +61,7 @@
           @update="updateComponent" />
       </template>
     </div>
+    <deleteStepModal v-if="confirmingDelete" @confirm="deleteStep" @cancel="closeDeleteModal"/>
   </div>
 </template>
 
@@ -69,6 +70,7 @@
   import StepTable from 'vue/protocol/step_components/table.vue'
   import StepText from 'vue/protocol/step_components/text.vue'
   import Checklist from 'vue/protocol/step_components/checklist.vue'
+  import deleteStepModal from 'vue/protocol/modals/delete_step.vue'
 
   export default {
     name: 'StepContainer',
@@ -80,14 +82,16 @@
     },
     data() {
       return {
-        elements: []
+        elements: [],
+        confirmingDelete: false
       }
     },
     components: {
       InlineEdit,
       StepTable,
       StepText,
-      Checklist
+      Checklist,
+      deleteStepModal
     },
     created() {
       $.get(this.step.attributes.urls.elements_url, (result) => {
@@ -95,6 +99,12 @@
       });
     },
     methods: {
+      showDeleteModal() {
+        this.confirmingDelete = true;
+      },
+      closeDeleteModal() {
+        this.confirmingDelete = false;
+      },
       deleteStep() {
         $.ajax({
           url: this.step.attributes.urls.delete_url,
