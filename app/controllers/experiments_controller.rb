@@ -71,8 +71,8 @@ class ExperimentsController < ApplicationController
                                  .left_outer_joins(:designated_users, :task_comments)
                                  .preload(:tags, outputs: :to)
                                  .preload(:my_module_status, :my_module_group, user_assignments: %i(user user_role))
-                                 .select('COUNT(users.id) as designated_users_count')
-                                 .select('COUNT(comments.id) as task_comments_count')
+                                 .select('COUNT(DISTINCT users.id) as designated_users_count')
+                                 .select('COUNT(DISTINCT comments.id) as task_comments_count')
                                  .select('my_modules.*').group(:id)
   end
 
