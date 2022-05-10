@@ -54,14 +54,16 @@ var MyModuleRepositories = (function() {
     return columns;
   }
 
-  function reloadRepositoriesList(repositoryId) {
+  function reloadRepositoriesList(repositoryId, expand = false) {
     var repositoriesContainer = $('#assigned-items-container');
     $.get(repositoriesContainer.data('repositories-list-url'), function(result) {
       repositoriesContainer.html(result.html);
       $('.assigned-items-title').attr('data-assigned-items-count', result.assigned_rows_count);
       // expand recently updated repository
-      $('#assigned-items-container').collapse('show');
-      $('#assigned-repository-items-container-' + repositoryId).collapse('show');
+      if (expand) {
+        $('#assigned-items-container').collapse('show');
+        $('#assigned-repository-items-container-' + repositoryId).collapse('show');
+      }
     });
   }
 
@@ -566,6 +568,7 @@ var MyModuleRepositories = (function() {
           versionsList.find('.list-group-item').attr('data-selected', false);
           versionsList.find('.list-group-item.active').attr('data-selected', true);
           $('#setDefaultVersionButton').parent().addClass('hidden');
+          reloadRepositoriesList(FULL_VIEW_MODAL.find('.table').data('id'));
           animateSpinner(null, false);
         }
       });
@@ -776,7 +779,7 @@ var MyModuleRepositories = (function() {
         $(FULL_VIEW_TABLE.table().container()).find('.dataTable')
           .attr('data-assigned-items-count', data.rows_count);
         FULL_VIEW_TABLE.ajax.reload(null, false);
-        reloadRepositoriesList(data.repository_id);
+        reloadRepositoriesList(data.repository_id, true);
         updateFullViewRowsCount(data.rows_count);
         renderFullViewAssignButtons();
       },
