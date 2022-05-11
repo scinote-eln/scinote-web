@@ -263,14 +263,14 @@ class MyModulesController < ApplicationController
   end
 
   def protocol
-    render json: @my_module.protocol, serializer: ProtocolSerializer
+    render json: @my_module.protocol, serializer: ProtocolSerializer, user: current_user
   end
 
   def update_protocol
     protocol = @my_module.protocol
     protocol.update!(protocol_params)
 
-    render json: protocol, serializer: ProtocolSerializer
+    render json: protocol, serializer: ProtocolSerializer, user: current_user
   end
 
   def results
@@ -403,7 +403,7 @@ class MyModulesController < ApplicationController
   end
 
   def protocol_params
-    params.require(:protocol).permit(:name)
+    params.require(:protocol).permit(:name, :description)
   end
 
   def update_status_params

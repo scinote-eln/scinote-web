@@ -37,4 +37,12 @@
       }
     }
   }
+  .tinymce-container {
+    display: flex;
+    width: 100%;
+
+    .tiny-mce-editor {
+      flex-basis: 100%;
+    }
+  }
 }

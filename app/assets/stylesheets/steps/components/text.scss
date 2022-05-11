@@ -6,7 +6,6 @@
   position: relative;
   width: calc(100% + 16px);
 
-
   .action-container {
     cursor: pointer;
     height: 100%;
@@ -16,7 +15,12 @@
     z-index: 100;
 
     .buttons-container {
-      background: linear-gradient(90deg, transparent 0%, $color-concrete 25%, $color-concrete 100%);
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        $color-concrete 25%,
+        $color-concrete 100%
+      );
       display: none;
       padding-left: 2em;
       position: absolute;
@@ -36,15 +40,8 @@
   }
 
   .tinymce-container {
-    display: flex;
-    width: 100%;
-
     .tinymce-status-badge {
       display: none;
-    };
-
-    .tiny-mce-editor {
-      flex-basis: 100%;
     }
 
     .tinymce-view {
