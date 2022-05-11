@@ -1,6 +1,20 @@
 <div class="form-group">
+  <label class="control-label col-sm-3">
+    <%= t('libraries.manange_modal_column.datetime_type.options') %>
+  </label>
+  <% if RepositoryBase.reminders_enabled? %>
+    <div class="col-sm-9 checkbox-selector">
+      <span class="sci-checkbox-container">
+        <%= check_box_tag 'range', '', column&.metadata['reminder_delta'], { id: 'datetime-reminder', class: 'sci-checkbox', disabled: column&.repository_date_time_range_value? } %>
+        <span class="sci-checkbox-label"></span>
+      </span>
+      <span class="reminder-label">
+        <%= t('libraries.manange_modal_column.datetime_type.reminder') %>
+      </span>
+    </div>
+  <% end %>
   <div class="col-sm-3"></div>
-  <div class="col-sm-9">
+  <div class="col-sm-9 checkbox-selector">
     <span class="sci-checkbox-container">
       <%= check_box_tag 'range', '', column&.repository_date_time_range_value?, { id: 'datetime-range', class: 'sci-checkbox', disabled: !column.new_record? } %>
       <span class="sci-checkbox-label"></span>
@@ -8,3 +22,43 @@
     <span class="range-label"><%= t('libraries.manange_modal_column.datetime_type.range_label') %></span>
   </div>
 </div>
+<% if RepositoryBase.reminders_enabled? %>
+  <hr/>
+  <div class="form-group reminder-group <%= 'hidden' if column&.metadata['reminder_delta'].blank? %> ">
+    <input type="hidden" class="reminder-delta" value="<%= column&.metadata['reminder_delta'] %>">
+    <label class="control-label col-sm-3">
+      <%= t('libraries.manange_modal_column.datetime_type.remind') %>
+    </label>
+    <div class="col-sm-9 reminder-data-container">
+      <div class="sci-input-container reminder-value-container" data-error-text="<%= t('libraries.manange_modal_column.value_too_high_error', max_value: Constants::MAX_NUMBER_OF_REMINDER_WEEKS) %>">
+        <input
+          type="text" class="sci-input-field reminder-value"
+          placeholder="<%= t('libraries.manange_modal_column.datetime_type.enter_amount') %>"
+          data-max="<%= Constants::MAX_NUMBER_OF_REMINDER_WEEKS %>"
+          value="<%= column&.metadata['reminder_value'] || Constants::REPOSITORY_DATETIME_REMINDER_PRESET %>"
+        >
+      </div>
+      <%= select_tag "reminder-unit", options_for_select(
+        [
+          [t('libraries.manange_modal_column.datetime_type.days'), 60 * 60 * 24],
+          [t('libraries.manange_modal_column.datetime_type.weeks'), 60 * 60 * 24 * 7],
+          [t('libraries.manange_modal_column.datetime_type.months'), 60 * 60 * 24 * 28]
+        ],
+        column&.metadata['reminder_unit'].to_i
+      ), { class: 'reminder-unit' } %>
+      <span>
+        <%= t('libraries.manange_modal_column.datetime_type.before_set_date') %>
+      </span>
+    </div>
+    <label class="control-label col-sm-3">
+      <%= t('libraries.manange_modal_column.datetime_type.reminder_message') %>
+    </label>
+    <div class="col-sm-9">
+      <div class="sci-input-container" data-error-text="<%= t('libraries.manange_modal_column.datetime_type.reminder_message_limit') %>">
+        <input id="datetime-reminder-message" type="text" class="sci-input-field reminder-message"
+              placeholder="<%= t('libraries.manange_modal_column.datetime_type.enter_reminder_message')%>"
+              value="<%= column&.metadata['reminder_message'] %>">
+      </div>
+    </div>
+  </div>
+<% end %>

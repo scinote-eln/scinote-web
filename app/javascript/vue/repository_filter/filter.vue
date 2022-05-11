@@ -35,6 +35,7 @@
   import RepositoryStatusValue from 'vue/repository_filter/filters/repositoryStatusValue.vue'
   import RepositoryChecklistValue from 'vue/repository_filter/filters/repositoryChecklistValue.vue'
   import RepositoryUserValue from 'vue/repository_filter/filters/repositoryUserValue.vue'
+  import RepositoryStockValue from 'vue/repository_filter/filters/repositoryStockValue.vue'
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
 
 
@@ -61,7 +62,8 @@
       RepositoryStatusValue,
       RepositoryChecklistValue,
       RepositoryListValue,
-      RepositoryUserValue
+      RepositoryUserValue,
+      RepositoryStockValue
     },
     methods: {
       updateFilter(value) {

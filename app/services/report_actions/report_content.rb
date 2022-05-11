@@ -83,10 +83,7 @@ module ReportActions
 
         my_module_element = save_element!({ 'my_module_id' => my_module.id }, :my_module, experiment_element)
 
-        @repositories.each do |repository|
-          repository = assigned_repository_or_snapshot(my_module, repository)
-          next unless repository
-
+        my_module.live_and_snapshot_repositories_list.each do |repository|
           save_element!(
             { 'my_module_id' => my_module.id, 'repository_id' => repository.id },
             :my_module_repository,

@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign, no-use-before-define  */
 /* global DataTableHelpers PerfectScrollbar FilePreviewModal animateSpinner HelperModule
-initAssignedTasksDropdown I18n prepareRepositoryHeaderForExport */
+initAssignedTasksDropdown I18n prepareRepositoryHeaderForExport initReminderDropdown */
 
 var MyModuleRepositories = (function() {
   const FULL_VIEW_MODAL = $('#myModuleRepositoryFullViewModal');
@@ -11,14 +11,59 @@ var MyModuleRepositories = (function() {
   var FULL_VIEW_TABLE_SCROLLBAR;
   var SELECTED_ROWS = {};
 
-  function reloadRepositoriesList(repositoryId) {
+  function stockManagementColumns(withConsumption = true) {
+    let columns = [
+      {
+        visible: true,
+        searchable: false,
+        data: 'stock'
+      }
+    ];
+    if (withConsumption) {
+      columns = columns.concat([{
+        visible: true,
+        searchable: false,
+        data: 'consumedStock'
+      }]);
+    }
+    return columns;
+  }
+
+  function stockManagementColumnDefs(withConsumption = true) {
+    let columns = [
+      {
+        targets: 'row-stock',
+        className: 'item-stock',
+        sWidth: '1%',
+        render: function(data) {
+          return $.fn.dataTable.render.RepositoryStockValue(data);
+        }
+      }
+    ];
+    if (withConsumption) {
+      columns = columns.concat([{
+        targets: 'row-consumption',
+        className: 'item-consumed-stock',
+        sWidth: '1%',
+        render: function(data) {
+          return $.fn.dataTable.render.RepositoryStockConsumptionValue(data);
+        }
+      }]);
+    }
+
+    return columns;
+  }
+
+  function reloadRepositoriesList(repositoryId, expand = false) {
     var repositoriesContainer = $('#assigned-items-container');
     $.get(repositoriesContainer.data('repositories-list-url'), function(result) {
       repositoriesContainer.html(result.html);
       $('.assigned-items-title').attr('data-assigned-items-count', result.assigned_rows_count);
       // expand recently updated repository
-      $('#assigned-items-container').collapse('show');
-      $('#assigned-repository-items-container-' + repositoryId).collapse('show');
+      if (expand) {
+        $('#assigned-items-container').collapse('show');
+        $('#assigned-repository-items-container-' + repositoryId).collapse('show');
+      }
     });
   }
 
@@ -30,18 +75,28 @@ var MyModuleRepositories = (function() {
       columns[i].defaultContent = '';
       if (skipCheckbox && i === 0) columns[i].visible = false;
     }
+
     customColumns.each((i, column) => {
       columns.push({
         visible: true,
         searchable: true,
-        data: String(columns.length),
+        data: column.dataset.type === 'RepositoryStockValue' ? 'stock' : String(columns.length),
         defaultContent: $.fn.dataTable.render['default' + column.dataset.type](column.id)
       });
     });
+
+    if ($(tableContainer).data('stock-consumption-column')) {
+      columns.push({
+        visible: true,
+        searchable: false,
+        data: 'consumedStock'
+      });
+    }
+
     return columns;
   }
 
-  function fullViewColumnDefs() {
+  function fullViewColumnDefs(tableContainer) {
     let columnDefs = [{
       targets: 0,
       visible: true,
@@ -64,8 +119,8 @@ var MyModuleRepositories = (function() {
         searchable: false,
         className: 'assigned-column',
         sWidth: '1%',
-        render: function(data) {
-          return $.fn.dataTable.render.AssignedTasksValue(data);
+        render: function(data, type, row) {
+          return $.fn.dataTable.render.AssignedTasksValue(data, row);
         }
       }, {
         targets: 3,
@@ -81,6 +136,13 @@ var MyModuleRepositories = (function() {
       });
     }
 
+    if ($(tableContainer).data('stock-management')) {
+      columnDefs = columnDefs.concat(
+        stockManagementColumnDefs(
+          $(tableContainer).data('stock-consumption-column')
+        )
+      );
+    }
 
     columnDefs.push(
       {
@@ -89,10 +151,56 @@ var MyModuleRepositories = (function() {
           if (typeof data === 'object' && $.fn.dataTable.render[data.value_type]) {
             return $.fn.dataTable.render[data.value_type](data);
           }
+          if (data !== undefined && data.stock_present !== undefined) {
+            return $.fn.dataTable.render.RepositoryStockConsumptionValue(data);
+          }
           return data;
         }
       }
     );
+
+    return columnDefs;
+  }
+
+  function simpleTableColumns(tableContainer) {
+    let columns = [
+      {
+        visible: true,
+        searchable: false,
+        data: 0
+      }
+    ];
+
+    if ($(tableContainer).data('stock-management')) {
+      columns = columns.concat(stockManagementColumns());
+    }
+
+    return columns;
+  }
+
+  function simpleViewColumnDefs(tableContainer) {
+    let columnDefs = [{
+      targets: 0,
+      className: 'item-name',
+      render: function(data, type, row) {
+        var recordName = "<a href='" + row.recordInfoUrl + "'"
+                         + "class='record-info-link'>" + data + '</a>';
+        if (row.hasActiveReminders) {
+          recordName = `<div class="dropdown row-reminders-dropdown"
+                          data-row-reminders-url="${row.rowRemindersUrl}" tabindex='-1'>
+                          <i class="fas fa-bell dropdown-toggle row-reminders-icon"
+                             data-toggle="dropdown" id="rowReminders${row.DT_RowId}}"></i>
+                          <ul class="dropdown-menu" role="menu" aria-labelledby="rowReminders${row.DT_RowId}">
+                          </ul>
+                        </div>` + recordName;
+        }
+        return recordName;
+      }
+    }];
+
+    if ($(tableContainer).data('stock-management')) {
+      columnDefs = columnDefs.concat(stockManagementColumnDefs());
+    }
 
     return columnDefs;
   }
@@ -123,24 +231,27 @@ var MyModuleRepositories = (function() {
         global: false,
         type: 'POST'
       },
-      columnDefs: [{
-        targets: 0,
-        className: 'item-name',
-        render: function(data, type, row) {
-          return "<a href='" + row.recordInfoUrl + "'"
-                 + "class='record-info-link'>" + data + '</a>';
-        }
-      }],
+      columns: simpleTableColumns(tableContainer),
+      columnDefs: simpleViewColumnDefs(tableContainer),
       drawCallback: function() {
         var repositoryContainer = $(this).closest('.assigned-repository-container');
+        var simpleViewTableScrollbar = new PerfectScrollbar($(tableContainer).closest('.dataTables_scrollBody')[0]);
         repositoryContainer.find('.table.dataTable').removeClass('hidden');
         repositoryContainer.find('.version-label').html(tableContainer.data('version-label'));
         SIMPLE_TABLE.columns.adjust();
       },
       createdRow: function(row, data) {
         $(row).find('.item-name').attr('data-state', data.DT_RowAttr['data-state']);
+      },
+      fnInitComplete: function() {
+        initReminderDropdown(tableContainer);
       }
     });
+  }
+
+  function reloadSimpleTable() {
+    if (!SIMPLE_TABLE) return;
+    SIMPLE_TABLE.ajax.reload(null, false);
   }
 
   function renderFullViewTable(tableContainer, options = {}) {
@@ -170,7 +281,7 @@ var MyModuleRepositories = (function() {
         type: 'POST'
       },
       columns: tableColumns(tableContainer, options.skipCheckbox),
-      columnDefs: fullViewColumnDefs(),
+      columnDefs: fullViewColumnDefs(tableContainer),
 
       fnInitComplete: function() {
         var dataTableWrapper = $(tableContainer).closest('.dataTables_wrapper');
@@ -187,6 +298,7 @@ var MyModuleRepositories = (function() {
           }
         }
         initAssignedTasksDropdown(tableContainer);
+        initReminderDropdown(tableContainer);
       },
 
       drawCallback: function() {
@@ -290,9 +402,12 @@ var MyModuleRepositories = (function() {
 
   function checkSnapshotStatus(snapshotItem) {
     $.getJSON(snapshotItem.data('status-url'), (statusData) => {
-      if (statusData.status === 'ready') {
+      if (statusData.status !== 'provisioning') {
         $.getJSON(snapshotItem.data('version-item-url'), (itemData) => {
           snapshotItem.replaceWith(itemData.html);
+          if (statusData.status === 'failed') {
+            $('#snapshot-error-' + itemData.repository_id).modal('show');
+          }
         });
       } else {
         setTimeout(function() {
@@ -305,12 +420,21 @@ var MyModuleRepositories = (function() {
   function initSimpleTable() {
     $('#assigned-items-container').on('shown.bs.collapse', '.assigned-repository-container', function() {
       var repositoryContainer = $(this);
-      var repositoryTemplate = $($('#myModuleRepositorySimpleTemplate').html());
-      repositoryTemplate.attr('data-source', $(this).data('repository-url'));
-      repositoryTemplate.attr('data-version-label', $(this).data('footer-label'));
-      repositoryTemplate.attr('data-name-column-id', $(this).data('name-column-id'));
-      repositoryContainer.html(repositoryTemplate);
-      renderSimpleTable(repositoryTemplate);
+      var repositoryTable = repositoryContainer.find('.table');
+      var initializedTable = repositoryContainer.find('.dataTables_wrapper table');
+
+      // do not try to re-initialized already initialized table
+      if (initializedTable.length) {
+        initializedTable.DataTable().columns.adjust();
+        return;
+      }
+
+      repositoryTable.attr('data-source', $(this).data('repository-url'));
+      repositoryTable.attr('data-version-label', $(this).data('footer-label'));
+      repositoryTable.attr('data-name-column-id', $(this).data('name-column-id'));
+      repositoryTable.attr('data-stock-management', $(this).data('data-stock-management'));
+      repositoryContainer.html(repositoryTable);
+      renderSimpleTable(repositoryTable);
     });
 
     $('#wrapper').on('sideBar::shown sideBar::hidden', function() {
@@ -444,6 +568,7 @@ var MyModuleRepositories = (function() {
           versionsList.find('.list-group-item').attr('data-selected', false);
           versionsList.find('.list-group-item.active').attr('data-selected', true);
           $('#setDefaultVersionButton').parent().addClass('hidden');
+          reloadRepositoriesList(FULL_VIEW_MODAL.find('.table').data('id'));
           animateSpinner(null, false);
         }
       });
@@ -654,7 +779,7 @@ var MyModuleRepositories = (function() {
         $(FULL_VIEW_TABLE.table().container()).find('.dataTable')
           .attr('data-assigned-items-count', data.rows_count);
         FULL_VIEW_TABLE.ajax.reload(null, false);
-        reloadRepositoriesList(data.repository_id);
+        reloadRepositoriesList(data.repository_id, true);
         updateFullViewRowsCount(data.rows_count);
         renderFullViewAssignButtons();
       },
@@ -696,6 +821,13 @@ var MyModuleRepositories = (function() {
       initRepositoryAssignView();
       initSelectAllCheckbox();
       initExportAssignedRows();
+    },
+    reloadSimpletable: () => {
+      reloadSimpleTable();
+    },
+    reloadFullViewTable: () => {
+      if (!FULL_VIEW_TABLE) return;
+      FULL_VIEW_TABLE.ajax.reload(null, false);
     }
   };
 }());

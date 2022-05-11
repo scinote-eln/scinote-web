@@ -88,3 +88,7 @@ $.fn.dataTable.render.newRepositoryDateRangeValue = function(formId, columnId, $
 $.fn.dataTable.render.newRepositoryTimeRangeValue = function(formId, columnId, $cell) {
   DateTimeHelper.initDateTimeRangeEditMode(formId, columnId, $cell, 'timeonly', 'RepositoryTimeRangeValue');
 };
+
+$.fn.dataTable.render.newRepositoryStockValue = function() {
+  return '';
+};

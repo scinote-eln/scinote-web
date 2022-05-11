@@ -5,8 +5,9 @@ class MyModuleRepositoriesController < ApplicationController
 
   before_action :load_my_module
   before_action :load_repository, except: %i(repositories_dropdown_list repositories_list_html)
-  before_action :check_my_module_view_permissions, except: :update
+  before_action :check_my_module_view_permissions, except: %i(update consume_modal update_consumption)
   before_action :check_repository_view_permissions, except: %i(repositories_dropdown_list repositories_list_html)
+  before_action :check_repository_row_consumption_permissions, only: %i(consume_modal update_consumption)
   before_action :check_assign_repository_records_permissions, only: :update
 
   def index_dt
@@ -17,10 +18,14 @@ class MyModuleRepositoriesController < ApplicationController
 
     @datatable_params = {
       view_mode: params[:view_mode],
-      my_module: @my_module
+      my_module: @my_module,
+      include_stock_consumption: @repository.has_stock_management? && params[:assigned].present?,
+      disable_stock_management: true # stock management is always disabled in MyModule context
     }
+
     @all_rows_count = datatable_service.all_count
     @columns_mappings = datatable_service.mappings
+
     if params[:simple_view]
       repository_rows = datatable_service.repository_rows
       rows_view = 'repository_rows/simple_view_index.json'
@@ -100,7 +105,10 @@ class MyModuleRepositoriesController < ApplicationController
 
   def full_view_table
     render json: {
-      html: render_to_string(partial: 'my_modules/repositories/full_view_table')
+      html: render_to_string(
+        partial: 'my_modules/repositories/full_view_table',
+        locals: { include_stock_consumption: params[:include_stock_consumption] }
+      )
     }
   end
 
@@ -140,6 +148,30 @@ class MyModuleRepositoriesController < ApplicationController
     end
   end
 
+  def consume_modal
+    @repository_row = @repository.repository_rows.find(params[:row_id])
+    @module_repository_row = @my_module.my_module_repository_rows.find_by(repository_row: @repository_row)
+    @stock_value = @module_repository_row.repository_row.repository_stock_value
+    render json: {
+      html: render_to_string(
+        partial: 'my_modules/repositories/consume_stock_modal_content.html.erb'
+      )
+    }
+  end
+
+  def update_consumption
+    module_repository_row = @my_module.my_module_repository_rows.find_by(id: params[:module_row_id])
+
+    ActiveRecord::Base.transaction do
+      current_stock = module_repository_row.stock_consumption
+      module_repository_row.consume_stock(current_user, params[:stock_consumption], params[:comment])
+
+      log_activity(module_repository_row, current_stock, params[:comment])
+    end
+
+    render json: {}, status: :ok
+  end
+
   private
 
   def load_my_module
@@ -162,6 +194,10 @@ class MyModuleRepositoriesController < ApplicationController
 
   def check_assign_repository_records_permissions
     render_403 unless can_assign_my_module_repository_rows?(@my_module)
+  end
+
+  def check_repository_row_consumption_permissions
+    render_403 unless can_update_my_module_stock_consumption?(@my_module)
   end
 
   def update_flash_message(service)
@@ -191,5 +227,23 @@ class MyModuleRepositoriesController < ApplicationController
       t('my_modules.repository.flash.unassign_from_task_html',
         unassigned_items: unassigned_count)
     end
+  end
+
+  def log_activity(module_repository_row, stock_consumption_was, comment)
+    Activities::CreateActivityService
+      .call(activity_type: :task_inventory_item_stock_consumed,
+            owner: current_user,
+            subject: @my_module,
+            team: @repository.team,
+            project: @my_module.experiment.project,
+            message_items: {
+              repository: @repository.id,
+              repository_row: module_repository_row.repository_row_id,
+              stock_consumption_was: stock_consumption_was || 0,
+              unit: module_repository_row.repository_row.repository_stock_value.repository_stock_unit_item&.data || '',
+              stock_consumption: module_repository_row.stock_consumption || 0,
+              my_module: @my_module.id,
+              comment: comment
+            })
   end
 end

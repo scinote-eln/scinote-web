@@ -192,6 +192,37 @@
         grid-area: table;
         padding: 0;
       }
+
+      .stock-low {
+        &::before {
+          @include font-awesome;
+          color: $brand-warning;
+          content: $font-fas-exclamation-triangle;
+        }
+      }
+
+      .stock-empty {
+        color: $brand-danger;
+
+        &::before {
+          @include font-awesome;
+          content: $font-fas-exclamation-triangle;
+        }
+      }
+
+      .manage-repository-consumed-stock-value-link:not(.stock-value-view-render) {
+        color: $color-volcano;
+      }
+
+      .empty-stock-render,
+      .consumption-locked {
+        color: $color-silver-chalice;
+      }
+
+      .row-stock,
+      .row-consumption {
+        min-width: 140px;
+      }
     }
   }
 
@@ -203,16 +234,37 @@
     }
 
     .assigned-column {
+      padding-bottom: 2px;
+      padding-left: 8px;
+      padding-top: 2px;
       position: relative;
+
+      .row-reminders-dropdown {
+        cursor: pointer;
+        display: inline-block;
+        margin-right: 8px;
+        padding: 8px;
+
+        .fa-bell {
+          height: 16px;
+          text-align: center;
+          width: 16px;
+        }
+
+        &.open {
+          background: $color-concrete;
+          border-radius: 4px;
+        }
+      }
 
       .assign-counter-container {
         border-radius: $border-radius-tag;
         cursor: pointer;
+        display: inline-block;
         line-height: 35px;
+        padding: 0 5px;
         position: absolute;
-        text-align: center;
-        top: 1px;
-        width: calc(100% - 16px);
+        right: 5px;
 
         .assign-counter {
           display: inline-block;
@@ -300,6 +352,10 @@
     grid-area: sidebar;
     overflow: hidden;
 
+    .list-group-item-heading {
+      font-weight: normal;
+    }
+
     .sidebar-collapse-button {
       color: $color-volcano;
       text-decoration: none;
@@ -375,6 +431,35 @@
 
         &:hover {
           background-color: $color-concrete;
+        }
+      }
+
+      &.failed {
+        background-color: $brand-danger-light;
+
+        &:hover {
+          background-color: $brand-danger-light;
+
+          .fa-trash {
+            opacity: 1;
+          }
+        }
+
+        .delete-snapshot-button {
+          display: block;
+        }
+
+        .fa-trash {
+          opacity: .5;
+        }
+
+
+        .list-group-item-heading::before {
+          @include font-awesome;
+          content: $font-fas-exclamation-triangle;
+          color: $brand-danger;
+          display: inline-block;
+          vertical-align: text-top;
         }
       }
 

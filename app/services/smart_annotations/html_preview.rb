@@ -3,8 +3,12 @@
 module SmartAnnotations
   class HtmlPreview
     class << self
-      def html(name, type, object)
-        send("generate_#{type}_snippet", name, object)
+      def html(name, type, object, preview_repository = false)
+        if preview_repository
+          send('generate_rep_snippet', name, object)
+        else
+          send("generate_#{type}_snippet", name, object)
+        end
       end
 
       private
@@ -39,6 +43,17 @@ module SmartAnnotations
           repository_name = fetch_repository_name(object)
           "<a href='#{ROUTES.repository_repository_row_path(object.repository, object)}' " \
           "class='record-info-link'><span class='sa-type'>#{trim_repository_name(repository_name)}</span>" \
+          "#{object.name} #{object.archived? ? I18n.t('atwho.res.archived') : ''}</a>"
+        else
+          "<span class='sa-type'>Inv</span> #{name} #{I18n.t('atwho.res.deleted')}"
+        end
+      end
+
+      def generate_rep_snippet(name, object)
+        if object&.repository
+          repository_name = fetch_repository_name(object)
+          "<a href='#{ROUTES.repository_path(object.repository)}' " \
+          "><span class='sa-type'>#{trim_repository_name(repository_name)}</span>" \
           "#{object.name} #{object.archived? ? I18n.t('atwho.res.archived') : ''}</a>"
         else
           "<span class='sa-type'>Inv</span> #{name} #{I18n.t('atwho.res.deleted')}"

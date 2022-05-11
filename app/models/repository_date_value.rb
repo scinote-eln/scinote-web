@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class RepositoryDateValue < RepositoryDateTimeValueBase
+  include RepositoryValueWithReminders
+
   self.skip_time_zone_conversion_for_attributes = [:data]
 
   before_save -> { self.data = data.to_date }, if: :data_changed?

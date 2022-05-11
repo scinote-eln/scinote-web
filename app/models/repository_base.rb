@@ -13,6 +13,12 @@ class RepositoryBase < ApplicationRecord
   belongs_to :team
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
   has_many :repository_columns, foreign_key: :repository_id, inverse_of: :repository, dependent: :destroy
+  has_one :repository_stock_column,
+          -> { where(data_type: 'RepositoryStockValue') },
+          class_name: 'RepositoryColumn',
+          foreign_key: :repository_id,
+          inverse_of: :repository,
+          dependent: :destroy
   has_many :repository_rows, foreign_key: :repository_id, inverse_of: :repository, dependent: :destroy
   has_many :repository_table_states, foreign_key: :repository_id, inverse_of: :repository, dependent: :destroy
   has_many :report_elements, inverse_of: :repository, dependent: :destroy, foreign_key: :repository_id
@@ -23,6 +29,18 @@ class RepositoryBase < ApplicationRecord
 
   # Not discarded
   default_scope -> { kept }
+
+  def self.stock_management_enabled?
+    ApplicationSettings.instance.values['stock_management_enabled']
+  end
+
+  def self.reminders_enabled?
+    RepositoryBase.stock_management_enabled?
+  end
+
+  def has_stock_management?
+    self.class.stock_management_enabled? && repository_columns.stock_type.exists?
+  end
 
   def cell_preload_includes
     cell_includes = []

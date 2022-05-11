@@ -41,7 +41,7 @@
 
   <div class="panel-heading">
     <h3 class="panel-title">
-      <%= link_to_if can_read_experiment?(my_module.experiment), my_module.name, protocols_my_module_path(my_module), class: 'my-module-title' %>
+      <%= link_to my_module.name, protocols_my_module_path(my_module), class: 'my-module-title' %>
     </h3>
   </div>
 
@@ -82,41 +82,37 @@
 
   <div class="panel-footer panel-footer-scinote buttons-container">
     <ul class="nav nav-tabs nav-tabs-less" role="tablist">
-      <% if can_read_experiment?(my_module.experiment) %>
-        <li role="presentation">
-          <a class="btn btn-link task-card-view-users" href="<%= index_old_my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_users" role="tab" data-remote="true">
-            <span class="fas fa-users" aria-hidden="true"></span>
-            <span class="badge badge-indicator users-badge-indicator <%= 'hidden' unless my_module.designated_users.count.positive? %>"
-                  data-linked-id="<%= my_module.id %>">
-              <%= my_module.designated_users.count %>
-            </span>
-          </a>
-        </li>
-        <li role="presentation">
-          <a class="btn btn-link task-card-view-activities" href="<%= activities_my_module_url(id: my_module.id) %>" aria-controls="<%= my_module.id %>_activities" role="tab">
-            <span class="fas fa-list" aria-hidden="true"></span>
-          </a>
-        </li>
-        <li role="presentation">
-          <a class="btn btn-link task-card-view-comments" href="<%= my_module_my_module_comments_url(my_module_id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_comments" role="tab" data-remote="true">
-            <span class="fas fa-comment" aria-hidden="true"></span>
-            <span id="comment-counter-<%= my_module.id %>" class="badge badge-indicator comments-badge-indicator <%= 'hidden' unless my_module.task_comments.count.positive? %>"
-                  data-linked-id="<%= my_module.id %>">
-              <%= my_module.task_comments.count %>
-            </span>
-          </a>
-        </li>
-      <% end %>
+      <li role="presentation">
+        <a class="btn btn-link task-card-view-users" href="<%= index_old_my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_users" role="tab" data-remote="true">
+          <span class="fas fa-users" aria-hidden="true"></span>
+          <span class="badge badge-indicator users-badge-indicator <%= 'hidden' unless my_module.designated_users_count.positive? %>"
+                data-linked-id="<%= my_module.id %>">
+            <%= my_module.designated_users_count %>
+          </span>
+        </a>
+      </li>
+      <li role="presentation">
+        <a class="btn btn-link task-card-view-activities" href="<%= activities_my_module_url(id: my_module.id) %>" aria-controls="<%= my_module.id %>_activities" role="tab">
+          <span class="fas fa-list" aria-hidden="true"></span>
+        </a>
+      </li>
+      <li role="presentation">
+        <a class="btn btn-link task-card-view-comments" href="<%= my_module_my_module_comments_url(my_module_id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_comments" role="tab" data-remote="true">
+          <span class="fas fa-comment" aria-hidden="true"></span>
+          <span id="comment-counter-<%= my_module.id %>" class="badge badge-indicator comments-badge-indicator <%= 'hidden' unless my_module.task_comments_count.positive? %>"
+                data-linked-id="<%= my_module.id %>">
+            <%= my_module.task_comments_count %>
+          </span>
+        </a>
+      </li>
     </ul>
 
     <!-- Tab panes -->
     <div class="tab-content">
-      <% if can_read_experiment?(my_module.experiment) %>
-        <div role="tabpanel" class="tab-pane" id="<%= my_module.id %>_info" data-contents="info"></div>
-        <div role="tabpanel" class="tab-pane" id="<%= my_module.id %>_users" data-contents="users"></div>
-        <div role="tabpanel" class="tab-pane" id="<%= my_module.id %>_activities" data-contents="activities"></div>
-        <div role="tabpanel" class="tab-pane" id="<%= my_module.id %>_comments" data-contents="comments"></div>
-      <% end %>
+      <div role="tabpanel" class="tab-pane" id="<%= my_module.id %>_info" data-contents="info"></div>
+      <div role="tabpanel" class="tab-pane" id="<%= my_module.id %>_users" data-contents="users"></div>
+      <div role="tabpanel" class="tab-pane" id="<%= my_module.id %>_activities" data-contents="activities"></div>
+      <div role="tabpanel" class="tab-pane" id="<%= my_module.id %>_comments" data-contents="comments"></div>
     </div>
   </div>
 </div>

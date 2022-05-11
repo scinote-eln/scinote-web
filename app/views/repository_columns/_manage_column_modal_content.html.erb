@@ -22,11 +22,13 @@
         <%= t('libraries.manange_modal_column.name') %>
       </label>
       <div class="col-sm-9">
-        <input placeholder="<%= t('libraries.manange_modal_column.name_placeholder') %>"
-               class="form-control"
-               type="text"
-               name="repository_column[name]"
-               id="repository-column-name" value="<%= @repository_column.name unless @repository_column.new_record? %>">
+        <div class="sci-input-container" data-error-text="<%= t('libraries.manange_modal_column.empty_name_error') %>">
+          <input placeholder="<%= t('libraries.manange_modal_column.name_placeholder') %>"
+                  class="sci-input-field"
+                  type="text"
+                  name="repository_column[name]"
+                  id="repository-column-name" value="<%= @repository_column.name unless @repository_column.new_record? %>">
+          </div>
       </div>
     </div>
     <div class="form-group">
@@ -76,6 +78,26 @@
             <%= t('libraries.manange_modal_column.select.repository_status_value') %>
           </option>
 
+          <% if can_manage_repository_stock?(current_user, @repository) %>
+            <option data-create-url="<%= repository_repository_columns_stock_columns_path(@repository) %>"
+                    data-edit-url="<%= repository_repository_columns_stock_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
+                    value="RepositoryStockValue"
+                    <% if @repository.repository_stock_column.present? %>
+                      data-params="<%= {
+                        optionClass: 'disabled-option',
+                        text_description: 'Only one per inventory allowed'
+                      }.to_json %>"
+                    <% end %>
+                    <%= 'selected' if @repository_column.repository_stock_value? %> >
+              <%= t('libraries.manange_modal_column.select.repository_stock_value') %>
+            </option>
+          <% elsif @repository_column.repository_stock_value? && @repository_column.persisted? %>
+            <option value="RepositoryTextValue" class="disabled-option"
+                    data-params="<%= { optionClass: 'disabled-option' }.to_json %>"
+                    selected>
+              <%= t('libraries.manange_modal_column.select.repository_stock_value') %>
+            </option>
+          <% end %>
           <option data-delimiter=true></option>
 
           <option data-create-url="<%= repository_repository_columns_date_time_columns_path(@repository) %>"
@@ -100,7 +122,7 @@
       </div>
     </div>
     <hr/>
-    <% columns = %w(Text Number Asset List Status Date Time DateTime Checklist) %>
+    <% columns = %w(Text Number Asset List Status Date Time DateTime Checklist Stock) %>
     <% columns.each do |column| %>
       <span style="display: none" class="column-type <%= column.downcase %>-column-type" data-column-type="Repository<%= column %>Value">
         <%= render partial: "repository_columns/manage_column_partials/#{column.downcase}.html.erb", locals: {column: @repository_column}  %>

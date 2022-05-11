@@ -20,7 +20,7 @@
 
       el.handsontable({
         disableVisualSelection: true,
-        rowHeaders: true,
+        rowHeaders: false,
         colHeaders: headers,
         columnSorting: false,
         editor: false,

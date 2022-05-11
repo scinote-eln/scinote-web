@@ -43,6 +43,9 @@ class Constants
   # data type is used
   INFINITY = 2**32 / 2 - 1
 
+  # Prevents integer overflow for reminder_delta seconds
+  MAX_NUMBER_OF_REMINDER_WEEKS = 816
+
   #=============================================================================
   # Query/display limits
   #=============================================================================
@@ -68,6 +71,8 @@ class Constants
   RESULTS_PER_PAGE_LIMIT = 10
   #Experiments more button appears
   EXPERIMENT_LONG_DESCRIPTION = 80
+  # Infinite scroll default elements per page
+  DEFAULT_ELEMENTS_PER_PAGE = 20
 
   #=============================================================================
   # File and data memory size
@@ -968,8 +973,11 @@ class Constants
   REPOSITORY_DEFAULT_PAGE_SIZE = 10
   REPOSITORY_LIST_ITEMS_PER_COLUMN = 500
   REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN = 50
+  REPOSITORY_STOCK_UNIT_ITEMS_PER_COLUMN = 50
   REPOSITORY_NUMBER_TYPE_DEFAULT_DECIMALS = 2
   REPOSITORY_NUMBER_TYPE_MAX_DECIMALS = 10
+
+  REPOSITORY_DATETIME_REMINDER_PRESET = 10
 
   # Repository default table state
   REPOSITORY_TABLE_DEFAULT_STATE = {

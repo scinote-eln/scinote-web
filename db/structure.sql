@@ -619,6 +619,38 @@ ALTER SEQUENCE public.experiments_id_seq OWNED BY public.experiments.id;
 
 
 --
+-- Name: hidden_repository_cell_reminders; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.hidden_repository_cell_reminders (
+    id bigint NOT NULL,
+    repository_cell_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: hidden_repository_cell_reminders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.hidden_repository_cell_reminders_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: hidden_repository_cell_reminders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.hidden_repository_cell_reminders_id_seq OWNED BY public.hidden_repository_cell_reminders.id;
+
+
+--
 -- Name: label_printers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -736,7 +768,9 @@ CREATE TABLE public.my_module_repository_rows (
     my_module_id integer,
     assigned_by_id bigint NOT NULL,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    stock_consumption numeric,
+    repository_stock_unit_item_id bigint
 );
 
 
@@ -989,7 +1023,8 @@ CREATE TABLE public.my_modules (
     started_on timestamp without time zone,
     my_module_status_id bigint,
     status_changing boolean DEFAULT false,
-    changing_from_my_module_status_id bigint
+    changing_from_my_module_status_id bigint,
+    last_transition_error jsonb
 );
 
 
@@ -1733,7 +1768,9 @@ CREATE TABLE public.repository_date_time_range_values (
     created_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    type character varying
+    type character varying,
+    start_time_dup timestamp without time zone,
+    end_time_dup timestamp without time zone
 );
 
 
@@ -1767,7 +1804,8 @@ CREATE TABLE public.repository_date_time_values (
     updated_at timestamp without time zone,
     created_by_id bigint NOT NULL,
     last_modified_by_id bigint NOT NULL,
-    type character varying
+    type character varying,
+    data_dup timestamp without time zone
 );
 
 
@@ -1789,6 +1827,43 @@ CREATE SEQUENCE public.repository_date_time_values_id_seq
 --
 
 ALTER SEQUENCE public.repository_date_time_values_id_seq OWNED BY public.repository_date_time_values.id;
+
+
+--
+-- Name: repository_ledger_records; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_ledger_records (
+    id bigint NOT NULL,
+    repository_stock_value_id bigint NOT NULL,
+    reference_type character varying NOT NULL,
+    reference_id bigint NOT NULL,
+    amount numeric,
+    balance numeric,
+    user_id bigint,
+    comment text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_ledger_records_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_ledger_records_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_ledger_records_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_ledger_records_id_seq OWNED BY public.repository_ledger_records.id;
 
 
 --
@@ -1999,6 +2074,76 @@ CREATE SEQUENCE public.repository_status_values_id_seq
 --
 
 ALTER SEQUENCE public.repository_status_values_id_seq OWNED BY public.repository_status_values.id;
+
+
+--
+-- Name: repository_stock_unit_items; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_stock_unit_items (
+    id bigint NOT NULL,
+    data character varying NOT NULL,
+    repository_column_id bigint NOT NULL,
+    created_by_id bigint,
+    last_modified_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: repository_stock_unit_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_stock_unit_items_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_stock_unit_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_stock_unit_items_id_seq OWNED BY public.repository_stock_unit_items.id;
+
+
+--
+-- Name: repository_stock_values; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repository_stock_values (
+    id bigint NOT NULL,
+    amount numeric,
+    repository_stock_unit_item_id bigint,
+    type character varying,
+    last_modified_by_id bigint,
+    created_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    low_stock_threshold numeric
+);
+
+
+--
+-- Name: repository_stock_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repository_stock_values_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repository_stock_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repository_stock_values_id_seq OWNED BY public.repository_stock_values.id;
 
 
 --
@@ -3305,6 +3450,13 @@ ALTER TABLE ONLY public.experiments ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: hidden_repository_cell_reminders id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.hidden_repository_cell_reminders ALTER COLUMN id SET DEFAULT nextval('public.hidden_repository_cell_reminders_id_seq'::regclass);
+
+
+--
 -- Name: label_printers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3529,6 +3681,13 @@ ALTER TABLE ONLY public.repository_date_time_values ALTER COLUMN id SET DEFAULT 
 
 
 --
+-- Name: repository_ledger_records id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_ledger_records ALTER COLUMN id SET DEFAULT nextval('public.repository_ledger_records_id_seq'::regclass);
+
+
+--
 -- Name: repository_list_items id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3568,6 +3727,20 @@ ALTER TABLE ONLY public.repository_status_items ALTER COLUMN id SET DEFAULT next
 --
 
 ALTER TABLE ONLY public.repository_status_values ALTER COLUMN id SET DEFAULT nextval('public.repository_status_values_id_seq'::regclass);
+
+
+--
+-- Name: repository_stock_unit_items id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_unit_items ALTER COLUMN id SET DEFAULT nextval('public.repository_stock_unit_items_id_seq'::regclass);
+
+
+--
+-- Name: repository_stock_values id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_values ALTER COLUMN id SET DEFAULT nextval('public.repository_stock_values_id_seq'::regclass);
 
 
 --
@@ -3936,6 +4109,14 @@ ALTER TABLE ONLY public.experiments
 
 
 --
+-- Name: hidden_repository_cell_reminders hidden_repository_cell_reminders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.hidden_repository_cell_reminders
+    ADD CONSTRAINT hidden_repository_cell_reminders_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: label_printers label_printers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4192,6 +4373,14 @@ ALTER TABLE ONLY public.repository_date_time_values
 
 
 --
+-- Name: repository_ledger_records repository_ledger_records_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_ledger_records
+    ADD CONSTRAINT repository_ledger_records_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: repository_list_items repository_list_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4237,6 +4426,22 @@ ALTER TABLE ONLY public.repository_status_items
 
 ALTER TABLE ONLY public.repository_status_values
     ADD CONSTRAINT repository_status_values_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repository_stock_unit_items repository_stock_unit_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_unit_items
+    ADD CONSTRAINT repository_stock_unit_items_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repository_stock_values repository_stock_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_values
+    ADD CONSTRAINT repository_stock_values_pkey PRIMARY KEY (id);
 
 
 --
@@ -4850,6 +5055,20 @@ CREATE INDEX index_experiments_on_restored_by_id ON public.experiments USING btr
 
 
 --
+-- Name: index_hidden_repository_cell_reminders_on_repository_cell_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_hidden_repository_cell_reminders_on_repository_cell_id ON public.hidden_repository_cell_reminders USING btree (repository_cell_id);
+
+
+--
+-- Name: index_hidden_repository_cell_reminders_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_hidden_repository_cell_reminders_on_user_id ON public.hidden_repository_cell_reminders USING btree (user_id);
+
+
+--
 -- Name: index_label_templates_on_language_type; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4874,7 +5093,7 @@ CREATE INDEX index_my_module_groups_on_experiment_id ON public.my_module_groups 
 -- Name: index_my_module_ids_repository_row_ids; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_my_module_ids_repository_row_ids ON public.my_module_repository_rows USING btree (my_module_id, repository_row_id);
+CREATE UNIQUE INDEX index_my_module_ids_repository_row_ids ON public.my_module_repository_rows USING btree (my_module_id, repository_row_id);
 
 
 --
@@ -5092,6 +5311,13 @@ CREATE INDEX index_on_repository_checklist_item_id ON public.repository_checklis
 --
 
 CREATE INDEX index_on_repository_checklist_value_id ON public.repository_checklist_items_values USING btree (repository_checklist_value_id);
+
+
+--
+-- Name: index_on_repository_stock_unit_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_on_repository_stock_unit_item_id ON public.my_module_repository_rows USING btree (repository_stock_unit_item_id);
 
 
 --
@@ -5627,6 +5853,27 @@ CREATE INDEX index_repository_date_time_values_on_data_as_time ON public.reposit
 
 
 --
+-- Name: index_repository_ledger_records_on_reference; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_ledger_records_on_reference ON public.repository_ledger_records USING btree (reference_type, reference_id);
+
+
+--
+-- Name: index_repository_ledger_records_on_repository_stock_value_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_ledger_records_on_repository_stock_value_id ON public.repository_ledger_records USING btree (repository_stock_value_id);
+
+
+--
+-- Name: index_repository_ledger_records_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_ledger_records_on_user_id ON public.repository_ledger_records USING btree (user_id);
+
+
+--
 -- Name: index_repository_list_items_on_created_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5806,6 +6053,62 @@ CREATE INDEX index_repository_status_values_on_created_by_id ON public.repositor
 --
 
 CREATE INDEX index_repository_status_values_on_last_modified_by_id ON public.repository_status_values USING btree (last_modified_by_id);
+
+
+--
+-- Name: index_repository_stock_unit_items_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_stock_unit_items_on_created_by_id ON public.repository_stock_unit_items USING btree (created_by_id);
+
+
+--
+-- Name: index_repository_stock_unit_items_on_data; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_stock_unit_items_on_data ON public.repository_stock_unit_items USING gin (public.trim_html_tags((data)::text) public.gin_trgm_ops);
+
+
+--
+-- Name: index_repository_stock_unit_items_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_stock_unit_items_on_last_modified_by_id ON public.repository_stock_unit_items USING btree (last_modified_by_id);
+
+
+--
+-- Name: index_repository_stock_unit_items_on_repository_column_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_stock_unit_items_on_repository_column_id ON public.repository_stock_unit_items USING btree (repository_column_id);
+
+
+--
+-- Name: index_repository_stock_values_on_amount; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_stock_values_on_amount ON public.repository_stock_values USING btree (amount);
+
+
+--
+-- Name: index_repository_stock_values_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_stock_values_on_created_by_id ON public.repository_stock_values USING btree (created_by_id);
+
+
+--
+-- Name: index_repository_stock_values_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_stock_values_on_last_modified_by_id ON public.repository_stock_values USING btree (last_modified_by_id);
+
+
+--
+-- Name: index_repository_stock_values_on_repository_stock_unit_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_stock_values_on_repository_stock_unit_item_id ON public.repository_stock_values USING btree (repository_stock_unit_item_id);
 
 
 --
@@ -6485,6 +6788,30 @@ ALTER TABLE ONLY public.project_folders
 
 
 --
+-- Name: repository_ledger_records fk_rails_062bed0c26; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_ledger_records
+    ADD CONSTRAINT fk_rails_062bed0c26 FOREIGN KEY (repository_stock_value_id) REFERENCES public.repository_stock_values(id);
+
+
+--
+-- Name: hidden_repository_cell_reminders fk_rails_08be8c52e0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.hidden_repository_cell_reminders
+    ADD CONSTRAINT fk_rails_08be8c52e0 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: repository_stock_values fk_rails_08ce900341; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_values
+    ADD CONSTRAINT fk_rails_08ce900341 FOREIGN KEY (repository_stock_unit_item_id) REFERENCES public.repository_stock_unit_items(id);
+
+
+--
 -- Name: assets fk_rails_0916329f9e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6757,6 +7084,14 @@ ALTER TABLE ONLY public.experiments
 
 
 --
+-- Name: repository_stock_unit_items fk_rails_4c20ff4c1f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_unit_items
+    ADD CONSTRAINT fk_rails_4c20ff4c1f FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: repository_status_values fk_rails_4cf67f9f1e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6954,6 +7289,14 @@ ALTER TABLE ONLY public.project_folders
 
 ALTER TABLE ONLY public.results
     ADD CONSTRAINT fk_rails_79fcaa8e37 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: my_module_repository_rows fk_rails_7b302dfece; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_repository_rows
+    ADD CONSTRAINT fk_rails_7b302dfece FOREIGN KEY (repository_stock_unit_item_id) REFERENCES public.repository_stock_unit_items(id);
 
 
 --
@@ -7170,6 +7513,14 @@ ALTER TABLE ONLY public.user_roles
 
 ALTER TABLE ONLY public.repository_checklist_values
     ADD CONSTRAINT fk_rails_98a7704432 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: hidden_repository_cell_reminders fk_rails_98e782ebf2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.hidden_repository_cell_reminders
+    ADD CONSTRAINT fk_rails_98e782ebf2 FOREIGN KEY (repository_cell_id) REFERENCES public.repository_cells(id);
 
 
 --
@@ -7397,11 +7748,27 @@ ALTER TABLE ONLY public.repository_asset_values
 
 
 --
+-- Name: repository_stock_values fk_rails_c111ff8695; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_values
+    ADD CONSTRAINT fk_rails_c111ff8695 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: my_module_status_flows fk_rails_c19dc6b9e9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.my_module_status_flows
     ADD CONSTRAINT fk_rails_c19dc6b9e9 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: repository_stock_unit_items fk_rails_c200d845a5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_unit_items
+    ADD CONSTRAINT fk_rails_c200d845a5 FOREIGN KEY (repository_column_id) REFERENCES public.repository_columns(id);
 
 
 --
@@ -7565,6 +7932,14 @@ ALTER TABLE ONLY public.notifications
 
 
 --
+-- Name: repository_stock_unit_items fk_rails_d5b7257ea2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_unit_items
+    ADD CONSTRAINT fk_rails_d5b7257ea2 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: experiments fk_rails_d683124fa4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7714,6 +8089,14 @@ ALTER TABLE ONLY public.user_projects
 
 ALTER TABLE ONLY public.report_elements
     ADD CONSTRAINT fk_rails_f5d944fc4d FOREIGN KEY (asset_id) REFERENCES public.assets(id);
+
+
+--
+-- Name: repository_stock_values fk_rails_f83c438412; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repository_stock_values
+    ADD CONSTRAINT fk_rails_f83c438412 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
 
 
 --
@@ -7978,6 +8361,13 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210906132120'),
 ('20211103115450'),
 ('20211123103711'),
-('20220203122802');
-
-
+('20220110151005'),
+('20220110151006'),
+('20220203122802'),
+('20220217104635'),
+('20220224153705'),
+('20220307120010'),
+('20220310105144'),
+('20220321122111'),
+('20220325101011'),
+('20220328164215');

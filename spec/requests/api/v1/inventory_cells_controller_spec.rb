@@ -42,6 +42,11 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
     @date_time_range_column = create(:repository_column,
                                      repository: @valid_inventory, data_type: :RepositoryDateTimeRangeValue)
     @number_column = create(:repository_column, repository: @valid_inventory, data_type: :RepositoryNumberValue)
+    @stock_column = create(:repository_column, name: Faker::Name.unique.name, 
+                           data_type: :RepositoryStockValue, repository: @valid_inventory)
+    @repository_stock_unit_item = create( :repository_stock_unit_item, created_by: @user,
+                                                                       last_modified_by: @user,
+                                                                       repository_column: @stock_column)  
 
     @valid_item = create(:repository_row, repository: @valid_inventory)
 
@@ -80,6 +85,10 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
     create(:repository_number_value,
            data: 1234.5678,
            repository_cell_attributes: { repository_row: @valid_item, repository_column: @number_column })
+    create(:repository_stock_value,
+           amount: 10,
+           repository_stock_unit_item: @repository_stock_unit_item,
+           repository_cell_attributes: { repository_row: @valid_item, repository_column: @stock_column })
 
     @valid_headers =
       { 'Authorization': 'Bearer ' + generate_token(@user.id),
@@ -211,6 +220,18 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
         attributes: {
           column_id: @number_column.id,
           value: '1234.5678'
+        }
+      }
+    }
+    @valid_stock_body = {
+      data: {
+        type: 'inventory_cells',
+        attributes: {
+          column_id: @stock_column.id,
+          value: {
+            amount: 19,
+            unit_item_id: @repository_stock_unit_item.id
+          }
         }
       }
     }
@@ -353,6 +374,19 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
         attributes: {
           column_id: @number_column.id,
           value: '8765.4321'
+        }
+      }
+    }
+    @update_stock_body = {
+      data: {
+        id: @valid_item.repository_cells.where(repository_column: @stock_column).first.id,
+        type: 'inventory_cells',
+        attributes: {
+          column_id: @stock_column.id,
+          value: {
+            amount: 20,
+            unit_item_id: @repository_stock_unit_item.id
+          }
         }
       }
     }
@@ -696,6 +730,55 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       )
     end
 
+    it 'Response with correct inventory cell, stock cell' do
+      hash_body = nil
+      empty_item = create(:repository_row, repository: @valid_inventory)
+      post api_v1_team_inventory_item_cells_path(
+        team_id: @team.id,
+        inventory_id: @valid_inventory.id,
+        item_id: empty_item.id
+      ), params: @valid_stock_body.to_json, headers: @valid_headers
+      expect(response).to have_http_status 201
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data]).to match(
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(RepositoryCell.last, serializer: Api::V1::InventoryCellSerializer)
+            .to_json
+        )['data']
+      )
+    end
+
+    it 'Response with inventory cell, stock cell, missing stock unit' do
+      hash_body = nil
+      empty_item = create(:repository_row, repository: @valid_inventory)
+      invalid_file_body = @valid_stock_body.deep_dup
+      invalid_file_body[:data][:attributes][:value].delete(:unit_item_id)
+      post api_v1_team_inventory_item_cells_path(
+        team_id: @team.id,
+        inventory_id: @valid_inventory.id,
+        item_id: empty_item.id
+      ), params: invalid_file_body.to_json, headers: @valid_headers
+      expect(response).to have_http_status 404
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body['errors'][0]).to include('status': 404)
+    end
+
+    it 'Response with inventory cell, stock cell, missing amount' do
+      hash_body = nil
+      empty_item = create(:repository_row, repository: @valid_inventory)
+      invalid_file_body = @valid_stock_body.deep_dup
+      invalid_file_body[:data][:attributes][:value].delete(:amount)
+      post api_v1_team_inventory_item_cells_path(
+        team_id: @team.id,
+        inventory_id: @valid_inventory.id,
+        item_id: empty_item.id
+      ), params: invalid_file_body.to_json, headers: @valid_headers
+      expect(response).to have_http_status 400
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body['errors'][0]).to include('status': 400)
+    end
+
     it 'When invalid request, payload mismatches column type' do
       hash_body = nil
       invalid_file_body = @valid_file_body.dup
@@ -1010,6 +1093,26 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       )
     end
 
+    it 'Response with correct inventory cell, stock cell' do
+      hash_body = nil
+      patch api_v1_team_inventory_item_cell_path(
+        team_id: @team.id,
+        inventory_id: @valid_inventory.id,
+        item_id: @valid_item.id,
+        id: @valid_item.repository_cells.where(repository_column: @stock_column).first.id
+      ), params: @update_stock_body.to_json, headers: @valid_headers
+      expect(response).to have_http_status 200
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data]).to match(
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@valid_item.repository_cells.where(repository_column: @stock_column).first,
+                 serializer: Api::V1::InventoryCellSerializer)
+            .to_json
+        )['data']
+      )
+    end
+
     it 'When invalid request, payload mismatches column type' do
       hash_body = nil
       invalid_file_body = @valid_file_body.dup
@@ -1067,7 +1170,7 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
 
   describe 'DELETE inventory_cells, #destroy' do
     it 'Destroys inventory cell' do
-      deleted_id = @valid_item.repository_cells.last.id
+      deleted_id = @valid_item.repository_cells.where(repository_column: @number_column).first.id 
       delete api_v1_team_inventory_item_cell_path(
         id: deleted_id,
         team_id: @team.id,
@@ -1076,6 +1179,18 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       ), headers: @valid_headers
       expect(response).to have_http_status(200)
       expect(RepositoryCell.where(id: deleted_id)).to_not exist
+    end
+
+    it 'Destroys stock inventory cell' do
+      deleted_id = @valid_item.repository_cells.where(repository_column: @stock_column).first.id 
+      delete api_v1_team_inventory_item_cell_path(
+        id: deleted_id,
+        team_id: @team.id,
+        inventory_id: @valid_inventory.id,
+        item_id: @valid_item.id
+      ), headers: @valid_headers
+      expect(response).to have_http_status(400)
+      expect(RepositoryCell.where(id: deleted_id)).to exist
     end
 
     it 'Invalid request, non existing inventory item' do

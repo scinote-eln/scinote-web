@@ -173,11 +173,16 @@
           }
         }
 
+        &.stock-filter-attributes {
+          grid-template-columns: min-content auto 100px;
+        }
+
         .number-range-selector {
           align-items: center;
           display: grid;
           gap: .5em;
           grid-auto-flow: column;
+          height: 2em;
         }
 
         .dropdown-selector-container {

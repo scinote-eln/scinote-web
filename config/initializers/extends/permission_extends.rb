@@ -67,6 +67,7 @@ module PermissionExtends
       USERS_READ
       USERS_MANAGE
       DESIGNATED_USERS_MANAGE
+      STOCK_CONSUMPTION_UPDATE
     ).each { |permission| const_set(permission, "task_#{permission.underscore}") }
   end
 
@@ -136,7 +137,8 @@ module PermissionExtends
       MyModulePermissions::STEPS_COMMENTS_UPDATE_OWN,
       MyModulePermissions::REPOSITORY_ROWS_ASSIGN,
       MyModulePermissions::REPOSITORY_ROWS_MANAGE,
-      MyModulePermissions::USERS_READ
+      MyModulePermissions::USERS_READ,
+      MyModulePermissions::STOCK_CONSUMPTION_UPDATE
     ]
 
     TECHNICIAN_PERMISSIONS = [
@@ -170,7 +172,8 @@ module PermissionExtends
       MyModulePermissions::STEPS_COMMENTS_UPDATE_OWN,
       MyModulePermissions::REPOSITORY_ROWS_ASSIGN,
       MyModulePermissions::REPOSITORY_ROWS_MANAGE,
-      MyModulePermissions::USERS_READ
+      MyModulePermissions::USERS_READ,
+      MyModulePermissions::STOCK_CONSUMPTION_UPDATE
     ]
 
     VIEWER_PERMISSIONS = [
@@ -186,6 +189,7 @@ module PermissionExtends
       ExperimentPermissions::USERS_READ,
       MyModulePermissions::READ,
       MyModulePermissions::USERS_READ,
+      MyModulePermissions::READ_ARCHIVED,
       MyModulePermissions::ACTIVITIES_READ
     ]
   end

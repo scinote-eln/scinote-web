@@ -47,9 +47,22 @@ class MyModulesController < ApplicationController
   def status_state
     respond_to do |format|
       format.json do
+        if @my_module.last_transition_error && @my_module.last_transition_error['type'] == 'repository_snapshot'
+          flash[:repository_snapshot_error] = @my_module.last_transition_error
+        end
+
         render json: { status_changing: @my_module.status_changing? }
       end
     end
+  end
+
+  def canvas_dropdown_menu
+    @experiment_managable = can_manage_experiment?(@experiment)
+    @group_my_modules = @my_module.my_module_group&.my_modules&.preload(user_assignments: %i(user user_role))
+    render json: {
+      html: render_to_string({ partial: 'canvas/edit/my_module_dropdown_menu',
+                               locals: { my_module: @my_module } })
+    }
   end
 
   def activities
@@ -323,7 +336,7 @@ class MyModulesController < ApplicationController
   private
 
   def load_vars
-    @my_module = MyModule.find_by_id(params[:id])
+    @my_module = MyModule.preload(user_assignments: %i(user user_role)).find_by(id: params[:id])
     if @my_module
       @experiment = @my_module.experiment
       @project = @my_module.experiment.project if @experiment

@@ -61,7 +61,9 @@ $.fn.dataTable.render.defaultRepositoryDateValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryDateValue = function(data) {
-  return `<span data-datetime="${data.value.datetime}"
+  let reminderClass = data.value.reminder ? 'reminder' : '';
+  return `<span class="${reminderClass}
+                date-cell-value" data-datetime="${data.value.datetime}"
                 data-date="${data.value.formatted}">${data.value.formatted}</span>`;
 };
 
@@ -70,7 +72,9 @@ $.fn.dataTable.render.defaultRepositoryDateTimeValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryDateTimeValue = function(data) {
-  return `<span data-time="${data.value.time_formatted}"
+  let reminderClass = data.value.reminder ? 'reminder' : '';
+  return `<span class="${reminderClass} date-time-cell-value"
+                data-time="${data.value.time_formatted}"
                 data-datetime="${data.value.datetime}"
                 data-date="${data.value.date_formatted}">${data.value.formatted}</span>`;
 };
@@ -158,14 +162,16 @@ $.fn.dataTable.render.RepositoryNumberValue = function(data) {
           </span>`;
 };
 
-$.fn.dataTable.render.AssignedTasksValue = function(data) {
+$.fn.dataTable.render.AssignedTasksValue = function(data, row) {
+  let tasksLinkHTML;
+
   if (data.tasks > 0) {
     let tooltip = I18n.t('repositories.table.assigned_tooltip', {
       tasks: data.tasks,
       experiments: data.experiments,
       projects: data.projects
     });
-    return `<div class="assign-counter-container dropdown" title="${tooltip}"
+    tasksLinkHTML = `<div class="assign-counter-container dropdown" title="${tooltip}"
             data-task-list-url="${data.task_list_url}">
               <a href="#" class="assign-counter has-assigned"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">${data.tasks}</a>
@@ -178,6 +184,79 @@ $.fn.dataTable.render.AssignedTasksValue = function(data) {
                 <div class="tasks"></div>
               </div>
             </div>`;
+  } else {
+    tasksLinkHTML = "<div class='assign-counter-container'><span class='assign-counter'>0</span></div>";
   }
-  return "<div class='assign-counter-container'><span class='assign-counter'>0</span></div>";
+  if (row.hasActiveReminders) {
+    return `<div class="dropdown row-reminders-dropdown" data-row-reminders-url="${row.rowRemindersUrl}" tabindex='-1'>
+              <i class="fas fa-bell dropdown-toggle row-reminders-icon" data-toggle="dropdown"
+                id="rowReminders${row.DT_RowId}}"></i>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="rowReminders${row.DT_RowId}">
+              </ul>
+            </div>`
+      + tasksLinkHTML;
+  }
+
+  return tasksLinkHTML;
+};
+
+$.fn.dataTable.render.RepositoryStockValue = function(data) {
+  if (data) {
+    if (data.value) {
+      if (data.stock_managable) {
+        return `<a class="manage-repository-stock-value-link stock-value-view-render stock-${data.stock_status}">
+                  ${data.value.stock_formatted}
+                  </a>`;
+      }
+      return `<span class="stock-value-view-render
+                           ${data.displayWarnings ? `stock-${data.stock_status}` : ''}">
+                ${data.value.stock_formatted}
+                </span>`;
+    }
+    if (data.stock_managable) {
+      return `<a class="manage-repository-stock-value-link not-assigned-stock">
+                <i class="fas fa-box-open"></i>
+                ${I18n.t('libraries.manange_modal_column.stock_type.add_stock')}
+              </a>`;
+    }
+  }
+  return `<span class="empty-stock-render">
+            ${I18n.t('libraries.manange_modal_column.stock_type.no_item_stock')}
+          </span>`;
+};
+
+$.fn.dataTable.render.defaultRepositoryStockValue = function() {
+  return $.fn.dataTable.render.RepositoryStockValue();
+};
+
+$.fn.dataTable.render.RepositoryStockConsumptionValue = function(data = {}) {
+  // covers case of snapshots
+  if (!data.stock_present && data.value && data.value.consumed_stock !== null) {
+    return `<span class="empty-consumed-stock-render">${data.value.consumed_stock_formatted}</span>`;
+  }
+  if (!data.stock_present) {
+    return '<span class="empty-consumed-stock-render"> - </span>';
+  }
+  if (!data.consumptionManagable && data.value && !data.value.consumed_stock) {
+    return `<span class="consumption-locked">
+    ${I18n.t('libraries.manange_modal_column.stock_type.stock_consumption_locked')}
+    </span>`;
+  }
+  if (!data.consumptionPermitted || !data.consumptionManagable) {
+    return `<span class="empty-consumed-stock-render">${data.value.consumed_stock_formatted}</span>`;
+  }
+  if (!data.value.consumed_stock) {
+    return `<a href="${data.updateStockConsumptionUrl}" class="manage-repository-consumed-stock-value-link">
+              <i class="fas fa-vial"></i>
+              ${I18n.t('libraries.manange_modal_column.stock_type.add_stock_consumption')}
+            </a>`;
+  }
+  return `<a href="${data.updateStockConsumptionUrl}"
+                class="manage-repository-consumed-stock-value-link stock-value-view-render">
+              ${data.value.consumed_stock_formatted}
+            </a>`;
+};
+
+$.fn.dataTable.render.defaultRepositoryStockConsumptionValue = function() {
+  return $.fn.dataTable.render.RepositoryStockConsumptionValue();
 };

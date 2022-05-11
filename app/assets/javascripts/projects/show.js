@@ -1,6 +1,8 @@
-/* global animateSpinner filterDropdown Sidebar Turbolinks HelperModule */
+/* global animateSpinner filterDropdown Sidebar Turbolinks HelperModule InfiniteScroll GLOBAL_CONSTANTS */
+/* eslint-disable no-use-before-define */
 (function() {
   const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable', 'duplicable'];
+  const pageSize = GLOBAL_CONSTANTS.DEFAULT_ELEMENTS_PER_PAGE;
   var cardsWrapper = '#cardsWrapper';
   var experimentsPage = '#projectShowWrapper';
 
@@ -67,23 +69,35 @@
     });
   }
 
+  function loadPlaceHolder() {
+    let palceholder = '';
+    $.each(Array(pageSize), function() {
+      palceholder += $('#experimentPlaceholder').html();
+    });
+    $(palceholder).insertAfter($(cardsWrapper).find('.table-header'));
+  }
+
   function loadCardsView() {
+    var requestParams = {
+      view_mode: $(experimentsPage).data('view-mode'),
+      sort: experimentsCurrentSort,
+      search: experimentsViewSearch,
+      created_on_from: startedOnFromFilter,
+      created_on_to: startedOnToFilter,
+      updated_on_from: modifiedOnFromFilter,
+      updated_on_to: modifiedOnToFilter,
+      archived_on_from: archivedOnFromFilter,
+      archived_on_to: archivedOnToFilter
+    };
     var viewContainer = $(cardsWrapper);
+    var cardsUrl = viewContainer.data('experiments-cards-url');
+
+    loadPlaceHolder();
     $.ajax({
-      url: viewContainer.data('experiments-cards-url'),
+      url: cardsUrl,
       type: 'GET',
       dataType: 'json',
-      data: {
-        view_mode: $(experimentsPage).data('view-mode'),
-        sort: experimentsCurrentSort,
-        search: experimentsViewSearch,
-        created_on_from: startedOnFromFilter,
-        created_on_to: startedOnToFilter,
-        updated_on_from: modifiedOnFromFilter,
-        updated_on_to: modifiedOnToFilter,
-        archived_on_from: archivedOnFromFilter,
-        archived_on_to: archivedOnToFilter
-      },
+      data: requestParams,
       success: function(data) {
         viewContainer.find('.card, .no-results-container').remove();
         viewContainer.removeClass('no-results');
@@ -94,6 +108,20 @@
         selectedExperiments.length = 0;
         updateExperimentsToolbar();
         loadExperimentWorkflowImages();
+
+        InfiniteScroll.init(cardsWrapper, {
+          url: cardsUrl,
+          eventTarget: window,
+          placeholderTemplate: '#experimentPlaceholder',
+          endOfListTemplate: '#experimentEndOfList',
+          pageSize: pageSize,
+          customResponse: (response) => {
+            $(response.cards_html).appendTo(cardsWrapper);
+          },
+          customParams: (params) => {
+            return { ...params, ...requestParams };
+          }
+        });
       },
       error: function() {
         viewContainer.html('Error loading project list');

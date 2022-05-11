@@ -186,6 +186,7 @@ Rails.application.routes.draw do
         post 'copy', to: 'repositories#copy',
              defaults: { format: 'json' }
         get :share_modal
+        post 'hide_reminders', to: 'repositories#hide_reminders'
 
         resources :team_repositories, only: %i(destroy) do
           collection do
@@ -388,6 +389,8 @@ Rails.application.routes.draw do
           post :export_repository
           get :assign_repository_records_modal, as: :assign_modal
           get :update_repository_records_modal, as: :update_modal
+          get :consume_modal
+          post :update_consumption
         end
       end
 
@@ -416,6 +419,7 @@ Rails.application.routes.draw do
         # AJAX popup accessed from full-zoom canvas for single module,
         # as well as full activities view (HTML) for single module
         get 'description'
+        get 'canvas_dropdown_menu'
         get 'activities'
         post 'activities'
         get 'activities_tab' # Activities in tab view for single module
@@ -601,6 +605,16 @@ Rails.application.routes.draw do
         end
         member do
           get :assigned_task_list
+          get :active_reminder_repository_cells
+        end
+        member do
+          get 'repository_stock_value/new', to: 'repository_stock_values#new', as: 'new_repository_stock'
+          get 'repository_stock_value/edit', to: 'repository_stock_values#edit', as: 'edit_repository_stock'
+          post 'repository_stock_value', to: 'repository_stock_values#create_or_update', as: 'update_repository_stock'
+        end
+        resources :repository_stock_values, only: %i(new create edit update)
+        resources :repository_cells, only: :hide_reminder do
+          post :hide_reminder, to: 'hidden_repository_cell_reminders#create'
         end
       end
 
@@ -625,6 +639,11 @@ Rails.application.routes.draw do
           end
         end
         resources :checklist_columns, only: %i(create update) do
+          member do
+            get 'items'
+          end
+        end
+        resources :stock_columns, only: %i(create update) do
           member do
             get 'items'
           end
@@ -702,6 +721,10 @@ Rails.application.routes.draw do
                           only: %i(index create show update destroy),
                           path: 'status_items',
                           as: :status_items
+                resources :inventory_stock_unit_items,
+                          only: %i(index create show update destroy),
+                          path: 'stock_unit_items',
+                          as: :stock_unit_items
               end
               resources :inventory_items,
                         only: %i(index create show update destroy),
@@ -732,7 +755,7 @@ Rails.application.routes.draw do
                   resources :user_assignments,
                             only: %i(index show update),
                             controller: :task_user_assignments
-                  resources :task_inventory_items, only: %i(index show),
+                  resources :task_inventory_items, only: %i(index show update),
                             path: 'items',
                             as: :items
                   resources :task_users, only: %i(index show),

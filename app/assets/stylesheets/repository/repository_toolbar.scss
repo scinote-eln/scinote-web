@@ -1,0 +1,94 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
+.repository-show {
+  .repository-toolbar {
+    align-items: center;
+    background-color: $color-white;
+    display: flex;
+    flex-grow: 1;
+    flex-wrap: nowrap;
+    height: 6em;
+    left: var(--repository-sidebar-margin);
+    padding: 1em 2em 0;
+    position: fixed;
+    top: calc(4em + var(--navbar-height));
+    transition: .4s $timing-function-sharp;
+    width: calc(100% - var(--repository-sidebar-margin));
+    z-index: 99;
+
+    .toolbar-left-block {
+      display: flex;
+      flex-grow: 1;
+
+      >* {
+        margin-left: .25em;
+
+        &:nth-child(1) {
+          margin-left: 0;
+        }
+      }
+    }
+
+    .toolbar-right-block {
+      display: flex;
+      flex-shrink: 0;
+
+      >* {
+        margin-right: .25em;
+
+        &:nth-last-child(1) {
+          margin-right: 0;
+        }
+      }
+    }
+
+    .repository-provisioning-notice {
+      color: $brand-info;
+    }
+
+    .archived-label {
+      color: $color-silver-chalice;
+      display: inline-block;
+      margin: 0 auto;
+      max-width: 400px;
+      padding: 0 1em;
+
+      table {
+        tr {
+          td {
+            padding: 0 .5em;
+
+            &:nth-child(1) {
+              text-align: right;
+            }
+
+            &:nth-child(2) {
+              color: $color-black;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1299px) {
+    .repository-toolbar {
+
+      .btn:not(.prevent-shrink) {
+        padding: 7px;
+        width: 36px;
+
+        .button-text {
+          display: none;
+        }
+      }
+
+      .auto-shrink-button {
+        .fas {
+          margin: 0;
+        }
+      }
+    }
+  }
+}
