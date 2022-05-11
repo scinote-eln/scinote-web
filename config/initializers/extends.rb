@@ -180,7 +180,7 @@ class Extends
   FILE_FA_ICON_MAPPINGS = {}
 
   # Mapping of rich text fileds to specific model
-  RICH_TEXT_FIELD_MAPPINGS = { 'Step' => :description,
+  RICH_TEXT_FIELD_MAPPINGS = { 'StepText' => :text,
                                'ResultText' => :text,
                                'Protocol' => :description,
                                'MyModule' => :description }

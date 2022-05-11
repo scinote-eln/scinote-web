@@ -19,6 +19,7 @@ class StepOrderableElementsController < ApplicationController
 
   def update
     @element.update!(orderable_params)
+    TinyMceAsset.update_images(@element, params[:tiny_mce_images], current_user) if @element.is_a? StepText
     render json: @element, serializer: "#{@element.class}Serializer".constantize, user: current_user
   rescue ActiveRecord::RecordInvalid
     render json: {}, status: :unprocessable_entity
