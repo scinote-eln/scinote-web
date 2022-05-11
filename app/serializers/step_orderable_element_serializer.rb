@@ -10,7 +10,7 @@ class StepOrderableElementSerializer < ActiveModel::Serializer
     when 'StepTable'
       TableSerializer.new(object.orderable.table).as_json
     when 'StepText'
-      StepTextSerializer.new(object.orderable).as_json
+      StepTextSerializer.new(object.orderable, scope: { user: @instance_options[:user] }).as_json
     end
   end
 end

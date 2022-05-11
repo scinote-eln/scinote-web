@@ -8,7 +8,7 @@ module StepComponents
       @step.step_texts.create!
     end
 
-    def element_params
+    def orderable_params
       params.require(:step_text).permit(:text)
     end
 

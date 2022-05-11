@@ -1,0 +1,72 @@
+.step-text-container {
+  display: block;
+  margin-bottom: 16px;
+  margin-left: -16px;
+  padding-left: 36px;
+  position: relative;
+  width: calc(100% + 16px);
+
+
+  .action-container {
+    cursor: pointer;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    width: 100%;
+    z-index: 100;
+
+    .buttons-container {
+      background: linear-gradient(90deg, transparent 0%, $color-concrete 25%, $color-concrete 100%);
+      display: none;
+      padding-left: 2em;
+      position: absolute;
+      right: 0;
+    }
+  }
+
+  .element-grip {
+    align-items: center;
+    color: $color-alto;
+    display: none;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    width: 36px;
+  }
+
+  .tinymce-container {
+    display: flex;
+    width: 100%;
+
+    .tinymce-status-badge {
+      display: none;
+    };
+
+    .tiny-mce-editor {
+      flex-basis: 100%;
+    }
+
+    .tinymce-view {
+      border-color: transparent;
+    }
+  }
+
+  &:hover:not(.edit) {
+    background: $color-concrete;
+
+    .buttons-container {
+      display: flex;
+    }
+
+    .element-grip {
+      display: flex;
+    }
+  }
+
+  &.edit {
+    .action-container {
+      display: none;
+    }
+  }
+}

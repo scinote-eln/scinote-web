@@ -11,7 +11,7 @@ class StepOrderableElementsController < ApplicationController
         position: @step.step_orderable_elements.length,
         orderable: create_step_element
       )
-      render json: element, serializer: StepOrderableElementSerializer
+      render json: element, serializer: StepOrderableElementSerializer, user: current_user
     rescue ActiveRecord::RecordInvalid
       render json: {}, status: :unprocessable_entity
     end
@@ -19,14 +19,14 @@ class StepOrderableElementsController < ApplicationController
 
   def update
     @element.update!(orderable_params)
-    render json: @element, serializer: "#{@element.class}Serializer".constantize
+    render json: @element, serializer: "#{@element.class}Serializer".constantize, user: current_user
   rescue ActiveRecord::RecordInvalid
     render json: {}, status: :unprocessable_entity
   end
 
   def destroy
     if @element.destroy
-      render json: @orderable_element, serializer: StepOrderableElementSerializer
+      render json: @orderable_element, serializer: StepOrderableElementSerializer, user: current_user
     else
       render json: {}, status: :unprocessable_entity
     end

@@ -278,7 +278,7 @@ var TinyMCE = (function() {
                 editorForm.find('.tinymce-view').html(data.html).removeClass('hidden');
                 editor.plugins.autosave.removeDraft();
                 removeDraft(editor, textAreaObject);
-                if (onSaveCallback) { onSaveCallback(); }
+                if (onSaveCallback) { onSaveCallback(data); }
               }).on('ajax:error', function(ev, data) {
                 var model = editor.getElement().dataset.objectType;
                 $(this).renderFormErrors(model, data.responseJSON);
@@ -302,6 +302,7 @@ var TinyMCE = (function() {
                 editorForm.find('.tinymce-view').removeClass('hidden');
                 editor.remove();
                 updateScrollPosition(editorForm);
+                if (onSaveCallback) { onSaveCallback(); }
               })
               .removeClass('hidden');
 
