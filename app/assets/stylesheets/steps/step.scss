@@ -91,11 +91,12 @@
 .step-element-header {
   align-items: center;
   display: flex;
+  min-height: 40px;
   padding: 0 0 0 8px;
+  position: relative;
+  padding: 8px;
 
   &.editing-name {
-    padding: 0;
-
     .step-element-controls {
       display: none;
     }
@@ -111,10 +112,16 @@
   }
 
   .step-element-controls {
+    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, $color-concrete 15%, $color-concrete 100%);
     display: flex;
     margin-left: auto;
+    position: absolute;
+    right: 4px;
+    top: 4px;
 
     .btn {
+      height: 32px;
+      width: 32px;
       padding: 0;
     }
 

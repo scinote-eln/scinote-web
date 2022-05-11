@@ -17,4 +17,16 @@ class ChecklistItem < ApplicationRecord
              foreign_key: 'last_modified_by_id',
              class_name: 'User',
              optional: true
+
+  after_destroy :update_positions
+
+  private
+
+  def update_positions
+    transaction do
+      checklist.checklist_items.order(position: :asc).each_with_index do |checklist_item, i|
+        checklist_item.update!(position: i + 1)
+      end
+    end
+  end
 end

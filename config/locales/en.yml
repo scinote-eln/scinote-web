@@ -2520,6 +2520,7 @@ en:
         table: 'Add table'
         text: 'Add text'
         checklist: 'Add checklist'
+        checklist_item: 'Add a new checklist item...'
       table:
         default_name: 'Table %{position}'
         edit_message: 'Use right click for table options'
@@ -3059,6 +3060,7 @@ en:
   Protocol: "Protocol"
   Protocols: "Protocols"
   Checklist: "Checklist"
+  ChecklistItem: "Checklist item"
   Checklists: "Checklists"
   Table: "Table"
   Tables: "Tables"

@@ -1,19 +1,29 @@
 <template>
-  <div class="sci-inline-edit">
+  <div class="sci-inline-edit" :class="{ 'editing': editing }">
     <div class="sci-inline-edit__content">
-      <textarea ref="input" rows="1" v-if="editing" :class="{ 'error': error }" :placeholder="placeholder" v-model="newValue" @input="handleInput" @keydown="handleKeypress" @blur="update">
-      </textarea>
+      <textarea
+        ref="input"
+        rows="1"
+        v-if="editing"
+        :class="{ 'error': error }"
+        :placeholder="placeholder"
+        v-model="newValue"
+        @input="handleInput"
+        @keydown="handleKeypress"
+        @paste="handlePaste"
+        @blur="handleBlur"
+      ></textarea>
       <span v-else @click="enableEdit" :class="{ 'blank': isBlank }">{{ value || placeholder }}</span>
       <div v-if="editing && error" class="sci-inline-edit__error">
         {{ error }}
       </div>
     </div>
     <div v-if="editing" class="sci-inline-edit__controls">
-      <div class="sci-inline-edit__control sci-inline-edit__save">
-        <i @click="update" class="fas fa-check"></i>
+      <div class="sci-inline-edit__control sci-inline-edit__save" @click="update">
+        <i class="fas fa-check"></i>
       </div>
-      <div class="sci-inline-edit__control sci-inline-edit__cancel">
-        <i @click="cancelEdit" class="fas fa-times"></i>
+      <div class="sci-inline-edit__control sci-inline-edit__cancel" @click="cancelEdit">
+        <i class="fas fa-times"></i>
       </div>
     </div>
   </div>
@@ -28,7 +38,8 @@
       attributeName: { type: String, required: true },
       characterLimit: { type: Number },
       placeholder: { type: String },
-      autofocus: { type: Boolean, default: false }
+      autofocus: { type: Boolean, default: false },
+      multilinePaste: { type: Boolean, default: false }
     },
     data() {
       return {
@@ -68,12 +79,21 @@
     },
     methods: {
       handleAutofocus() {
-        if (this.autofocus) {
-          this.editing = true;
+        if (this.autofocus || !this.placeholder && this.isBlank) {
+          this.enableEdit();
           setTimeout(this.focus, 50);
         }
       },
+      handleBlur() {
+        if (!this.isBlank) {
+          this.$nextTick(this.update);
+        } else {
+          this.$emit('delete');
+        }
+      },
       focus() {
+        if (!this.$refs.input) return;
+
         this.$nextTick(() => {
           this.$refs.input.focus();
           this.resize();
@@ -89,8 +109,18 @@
         this.newValue = this.value || '';
         this.$emit('editingDisabled');
       },
+      handlePaste(e) {
+        if (!this.multilinePaste) return;
+        e.clipboardData.items[0].getAsString((data) => {
+          let lines = data.split(/[\n\r]/);
+          if (lines.length > 1) {
+            this.newValue = lines[0];
+            this.$emit('multilinePaste', lines);
+          }
+        })
+      },
       handleInput() {
-        this.newValue = this.newValue.trim();
+        this.newValue = this.newValue.replace(/^[\n\r]+|[\n\r]+$/g, '');
         this.$nextTick(this.resize);
       },
       handleKeypress(e) {
@@ -108,12 +138,15 @@
         this.$refs.input.style.height = (this.$refs.input.scrollHeight) + "px";
       },
       update() {
-        if(this.isBlank) return;
-        if(!this.editing) return;
+        setTimeout(() => {
+          if(!this.allowBlank && this.isBlank) return;
+          if(!this.editing) return;
 
-        this.editing = false;
-        this.$emit('editingDisabled');
-        this.$emit('update', this.newValue);
+          this.newValue = this.newValue.trim();
+          this.editing = false;
+          this.$emit('editingDisabled');
+          this.$emit('update', this.newValue);
+        }, 100) // due to clicking 'x' also triggering a blur event
       }
     }
   }

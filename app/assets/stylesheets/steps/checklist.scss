@@ -1,0 +1,41 @@
+.step-checklist-container {
+  margin-left: -1.5em;
+
+  .step-element-name {
+    align-items: flex-start;
+    display: flex;
+
+    .sci-checkbox-container {
+      margin-right: 8px;
+      margin-top: 4px;
+    }
+
+    .step-checklist-text {
+      width: 100%;
+    }
+
+    &.done .step-checklist-text {
+      text-decoration: line-through;
+    }
+
+    &:hover.done .step-checklist-text {
+      text-decoration: none;
+    }
+  }
+
+  .step-checklist-add-item {
+    margin-left: 9px;
+    margin-top: 2px;
+  }
+}
+
+.step-checklist-items {
+  .sci-inline-edit {
+    font-weight: normal;
+
+    textarea {
+      padding-left: 4px;
+      margin-left: -5px;
+    }
+  }
+}
