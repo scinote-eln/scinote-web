@@ -1,5 +1,5 @@
 <template>
-  <div :class="`tinymce-container ${inEditMode ? 'edit' : ''}`">
+  <div class="tinymce-container">
     <form class="tiny-mce-editor" role="form" :action="updateUrl" accept-charset="UTF-8" data-remote="true" method="post">
       <input type="hidden" name="_method" value="patch">
       <div class="hidden tinymce-cancel-button mce-widget mce-btn mce-menubtn mce-flow-layout-item mce-btn-has-text pull-right" tabindex="-1">

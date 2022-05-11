@@ -2525,6 +2525,8 @@ en:
         edit_message: 'Use right click for table options'
       checklist:
         default_name: 'Checklist %{position}'
+      text:
+        placeholder: 'Enter step text'
       modals:
         delete_component:
           title: 'Delete content'

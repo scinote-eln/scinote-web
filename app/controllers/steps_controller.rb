@@ -20,7 +20,9 @@ class StepsController < ApplicationController
   end
 
   def elements
-    render json: @step.step_orderable_elements.order(:position), each_serializer: StepOrderableElementSerializer, user: current_user
+    render json: @step.step_orderable_elements.order(:position),
+           each_serializer: StepOrderableElementSerializer,
+           user: current_user
   end
 
   def new

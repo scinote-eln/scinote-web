@@ -1,5 +1,5 @@
 <template>
-  <div :class="`step-text-container ${inEditMode ? 'edit' : ''}`">
+  <div class="step-text-container" :class="{ 'edit': inEditMode }">
     <div class="action-container" @click="enableEditMode">
       <div class="element-grip">
         <i class="fas fa-grip-vertical"></i>
@@ -17,7 +17,7 @@
       :inEditMode="inEditMode"
       :value="element.attributes.orderable.text"
       :value_html="element.attributes.orderable.text_view"
-      :placeholder="'Enter step text'"
+      :placeholder="i18n.t('protocols.steps.text.placeholder')"
       :updateUrl="element.attributes.orderable.urls.update_url"
       :objectType="'StepText'"
       :objectId="element.attributes.orderable.id"
