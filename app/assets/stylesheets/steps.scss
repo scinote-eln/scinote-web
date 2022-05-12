@@ -10,12 +10,6 @@
 @import "constants";
 @import "mixins";
 
-:root {
-  --attachment-column-width: 16em;
-  --attachment-row-height: 3em;
-}
-
-
 #new_step,
 .panel-step-attachment {
   ul {
@@ -150,27 +144,6 @@
     }
   }
 }
-
-.attachments {
-  display: grid;
-  grid-auto-rows: var(--attachment-row-height);
-  grid-column-gap: 1em;
-  grid-row-gap: 1em;
-  grid-template-columns: repeat(auto-fill, minmax(var(--attachment-column-width), 1fr));
-  margin: 1em 0;
-
-  .nested_fields {
-    display: contents;
-  }
-
-  &[data-preview="true"] {
-    .asset-context-menu {
-      display: none;
-    }
-  }
-}
-
-
 
 .attachments-actions {
   align-items: center;

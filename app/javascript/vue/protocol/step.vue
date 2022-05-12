@@ -64,6 +64,14 @@
     <div v-if="attachments.length" class="step-attachments">
       <h4>{{ i18n.t('protocols.steps.files', {count: attachments.length}) }}</h4>
       <div class="attachments">
+        <template v-for="(attachment, index) in attachments">
+          <component
+            :is="`${attachments[index].attributes.view_mode}Attachment`"
+            :key="index"
+            :attachment.sync="attachments[index]"
+            :stepId="parseInt(step.id)"
+          />
+        </template>
       </div>
     </div>
     <deleteStepModal v-if="confirmingDelete" @confirm="deleteStep" @cancel="closeDeleteModal"/>
@@ -76,6 +84,9 @@
   import StepText from 'vue/protocol/step_components/text.vue'
   import Checklist from 'vue/protocol/step_components/checklist.vue'
   import deleteStepModal from 'vue/protocol/modals/delete_step.vue'
+  import listAttachment from 'vue/protocol/step_attachments/list.vue'
+  import inlineAttachment from 'vue/protocol/step_attachments/inline.vue'
+  import thumbnailAttachment from 'vue/protocol/step_attachments/thumbnail.vue'
 
   export default {
     name: 'StepContainer',
@@ -97,7 +108,10 @@
       StepTable,
       StepText,
       Checklist,
-      deleteStepModal
+      deleteStepModal,
+      thumbnailAttachment,
+      inlineAttachment,
+      listAttachment
     },
     created() {
       $.get(this.step.attributes.urls.elements_url, (result) => {
