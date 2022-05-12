@@ -2091,8 +2091,8 @@ en:
         teams: "Teams"
         webhooks: "Webhooks"
         account_nav:
-          profile: "Profile"
-          preferences: "Preferences"
+          profile: "My profile"
+          preferences: "My preferences"
           addons: "Add-ons"
           connected_accounts: "Connected Accounts"
       account:
