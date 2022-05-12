@@ -61,6 +61,11 @@
           @update="updateComponent" />
       </template>
     </div>
+    <div v-if="attachments.length" class="step-attachments">
+      <h4>{{ i18n.t('protocols.steps.files', {count: attachments.length}) }}</h4>
+      <div class="attachments">
+      </div>
+    </div>
     <deleteStepModal v-if="confirmingDelete" @confirm="deleteStep" @cancel="closeDeleteModal"/>
   </div>
 </template>
@@ -83,6 +88,7 @@
     data() {
       return {
         elements: [],
+        attachments: [],
         confirmingDelete: false
       }
     },
@@ -96,6 +102,10 @@
     created() {
       $.get(this.step.attributes.urls.elements_url, (result) => {
         this.elements = result.data
+      });
+
+      $.get(this.step.attributes.urls.attachments_url, (result) => {
+        this.attachments = result.data
       });
     },
     methods: {

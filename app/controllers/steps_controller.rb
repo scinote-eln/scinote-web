@@ -5,11 +5,11 @@ class StepsController < ApplicationController
   include MarvinJsActions
 
   before_action :load_vars, only: %i(edit update destroy show toggle_step_state checklistitem_state update_view_state
-                                     move_up move_down update_asset_view_mode elements)
+                                     move_up move_down update_asset_view_mode elements attachments)
   before_action :load_vars_nested, only:  %i(new create index)
   before_action :convert_table_contents_to_utf8, only: %i(create update)
 
-  before_action :check_view_permissions, only: %i(show index)
+  before_action :check_view_permissions, only: %i(show index attachments elements)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: %i(edit update destroy move_up move_down
                                                     update_view_state update_asset_view_mode)
@@ -22,6 +22,12 @@ class StepsController < ApplicationController
   def elements
     render json: @step.step_orderable_elements.order(:position),
            each_serializer: StepOrderableElementSerializer,
+           user: current_user
+  end
+
+  def attachments
+    render json: @step.assets,
+           each_serializer: AssetSerializer,
            user: current_user
   end
 

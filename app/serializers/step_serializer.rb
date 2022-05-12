@@ -9,6 +9,7 @@ class StepSerializer < ActiveModel::Serializer
       state_url: toggle_step_state_step_path(object),
       update_url: step_path(object),
       elements_url: elements_step_path(object),
+      attachments_url: attachments_step_path(object),
       create_table_url: step_tables_path(object),
       create_text_url: step_texts_path(object),
       create_checklist_url: step_checklists_path(object)
