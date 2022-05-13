@@ -19,7 +19,7 @@
           {{ attachment.attributes.updated_at }}
       </span>
       <span>
-        {{ i18n.t('assets.placeholder.size_label', {size: attachment.attributes.file_size}) }}
+        {{ i18n.t('assets.placeholder.size_label', {size: attachment.attributes.file_size_formatted}) }}
       </span>
     </div>
   </div>

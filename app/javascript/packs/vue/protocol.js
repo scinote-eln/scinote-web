@@ -6,6 +6,7 @@ import ProtocolContainer from '../../vue/protocol/container.vue';
 
 Vue.use(TurbolinksAdapter);
 Vue.prototype.i18n = window.I18n;
+Vue.prototype.ActiveStoragePreviews = window.ActiveStoragePreviews;
 
 window.initProtocolComponent = () => {
   Vue.prototype.dateFormat = $('#protocolContainer').data('date-format');

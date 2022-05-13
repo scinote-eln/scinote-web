@@ -10,11 +10,11 @@
         :data-gallery-view-id="stepId"
         :data-preview-url="attachment.attributes.urls.preview"
     >
-      <div class="attachment-preview <%= asset.file.attached? ? asset.file.metadata['asset_type'] : '' %>">
-        <img v-if="attachment.medium_preview"
-            :src="attachment.medium_preview"
-            :onerror='ActiveStoragePreviews.reCheckPreview(event)'
-            :onload='ActiveStoragePreviews.showPreview(event)'
+      <div class="attachment-preview" :class= "attachment.attributes.asset_type">
+        <img v-if="attachment.attributes.medium_preview !== null"
+            :src="attachment.attributes.medium_preview"
+            @error="ActiveStoragePreviews.reCheckPreview"
+            @load="ActiveStoragePreviews.showPreview"
             style='opacity: 0' />
         <i  v-else class="fas" :class="attachment.attributes.icon"></i>
       </div>
@@ -23,7 +23,7 @@
       </div>
       <div class="attachment-metadata">
         {{ i18n.t('assets.placeholder.modified_label') }} {{ attachment.attributes.updated_at }}<br>
-        {{ attachment.attributes.file_size }}
+        {{ attachment.attributes.file_size_formatted }}
       </div>
     </a>
   </div>
@@ -42,6 +42,6 @@
         type: Number,
         required: true
       }
-    },
+    }
   }
 </script>
