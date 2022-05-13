@@ -87,7 +87,7 @@ class RepositoryColumn < ApplicationRecord
   end
 
   def importable?
-    if data_type == 'RepositoryStockValue' 
+    if data_type == 'RepositoryStockValue'
       RepositoryBase.stock_management_enabled?
     else
       Extends::REPOSITORY_IMPORTABLE_TYPES.include?(data_type.to_sym)
