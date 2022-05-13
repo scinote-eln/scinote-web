@@ -2652,6 +2652,8 @@ en:
     my_module_comment_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
     my_module_protocol_annotation_title: "%{user} mentioned you in a protocol description on task %{my_module}."
     my_module_protocol_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
+    my_module_consumption_comment_annotation_title: "%{user} mentioned you in a comment on item consumption of item %{repository_item} from inventory %{repository}"
+    my_module_consumption_comment_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
     step_comment_annotation_title: "%{user} mentioned you in a comment on step %{step}."
     step_description_title: "%{user} mentioned you in a description on step %{step}."
     checklist_title: "%{user} mentioned you in a checklist on step %{step}."
