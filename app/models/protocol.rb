@@ -4,6 +4,8 @@ class Protocol < ApplicationRecord
   include SearchableModel
   include RenamingUtil
   include SearchableByNameModel
+  include Assignable
+  include PermissionCheckableModel
   include TinyMceImages
 
   after_save :update_linked_children

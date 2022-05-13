@@ -3,6 +3,8 @@
 class Repository < RepositoryBase
   include SearchableModel
   include SearchableByNameModel
+  include Assignable
+  include PermissionCheckableModel
   include RepositoryImportParser
   include ArchivableModel
 

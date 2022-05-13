@@ -3,6 +3,8 @@
 class Team < ApplicationRecord
   include SearchableModel
   include ViewableModel
+  include Assignable
+  include PermissionCheckableModel
   include TeamBySubjectModel
   include TinyMceImages
 
@@ -29,7 +31,7 @@ class Team < ApplicationRecord
              class_name: 'User',
              optional: true
   has_many :user_teams, inverse_of: :team, dependent: :destroy
-  has_many :users, through: :user_teams
+  has_many :users, through: :user_assignments
   has_many :projects, inverse_of: :team
   has_many :project_folders, inverse_of: :team, dependent: :destroy
   has_many :protocols, inverse_of: :team, dependent: :destroy
