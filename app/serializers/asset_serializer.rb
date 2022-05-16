@@ -6,8 +6,10 @@ class AssetSerializer < ActiveModel::Serializer
   include ActionView::Helpers::NumberHelper
   include ApplicationHelper
 
-  attributes :file_name, :view_mode, :icon, :urls, :updated_at, :file_size, :medium_preview, :asset_type, :wopi,
-             :pdf_previewable, :file_size_formatted
+  attributes :file_name, :view_mode, :icon, :urls, :updated_at_formatted,
+             :file_size, :medium_preview, :large_preview, :asset_type, :wopi,
+             :pdf_previewable, :file_size_formatted, :asset_order,
+             :updated_at
 
   def icon
     file_fa_icon_class(object)
@@ -18,6 +20,10 @@ class AssetSerializer < ActiveModel::Serializer
   end
 
   def updated_at
+    object.updated_at.to_i
+  end
+
+  def updated_at_formatted
     I18n.l(object.updated_at, format: :full_date) if object.updated_at
   end
 
@@ -43,6 +49,17 @@ class AssetSerializer < ActiveModel::Serializer
 
   def pdf_previewable
     object.pdf_previewable? if object.file.attached?
+  end
+
+  def asset_order
+    case object.view_mode
+    when 'inline'
+      0
+    when 'thumbnail'
+      1
+    when 'list'
+      2
+    end
   end
 
   def urls

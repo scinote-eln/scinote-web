@@ -17,7 +17,7 @@
         <div class="file-metadata">
           <span>
             {{ i18n.t('assets.placeholder.modified_label') }}
-            {{ attachment.attributes.updated_at }}
+            {{ attachment.attributes.updated_at_formatted }}
           </span>
           <span>
             {{ i18n.t('assets.placeholder.size_label', {size: attachment.attributes.file_size_formatted}) }}
@@ -43,7 +43,7 @@
     </template>
     <template v-else-if="attachment.attributes.large_preview !== null">
       <div class="image-container">
-        <img :src="attachment.attributes_large_preview"
+        <img :src="attachment.attributes.large_preview"
              @error="ActiveStoragePreviews.reCheckPreview"
              @load="ActiveStoragePreviews.showPreview"
              style='opacity: 0' />

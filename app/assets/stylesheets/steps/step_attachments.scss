@@ -7,6 +7,58 @@
 }
 
 .step-container {
+  .attachments-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+
+    .title {
+      flex-grow: 1;
+      flex-shrink: 0;
+    }
+
+    .dropdown-attachment-options {
+      @include font-button;
+      min-width: 200px;
+
+      .divider-label {
+        @include font-small;
+        color: $color-silver-chalice;
+        padding-left: 1em;
+      }
+
+      a {
+        border-radius: unset;
+        cursor: pointer;
+        padding: .5em 1em;
+
+        &:hover {
+          background: $color-concrete;
+        }
+      }
+
+      .action-link {
+        &.selected::after {
+          @include font-awesome;
+          content: $font-fas-check;
+          margin-left: auto;
+          position: absolute;
+          right: 1em;
+        }
+      }
+
+      .change-order {
+        padding-left: 2.75em;
+      }
+
+      .attachments-view-mode {
+        .fas {
+          width: 1.5em;
+        }
+      }
+    }
+  }
+
   .attachments {
     display: grid;
     grid-auto-rows: var(--attachment-row-height);

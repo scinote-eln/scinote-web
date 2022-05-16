@@ -16,7 +16,7 @@ class StepsController < ApplicationController
   before_action :check_complete_and_checkbox_permissions, only: %i(toggle_step_state checklistitem_state)
 
   def index
-    render json: @protocol.steps.in_order, each_serializer: StepSerializer
+    render json: @protocol.steps.in_order, each_serializer: StepSerializer, user: current_user
   end
 
   def elements
@@ -58,7 +58,7 @@ class StepsController < ApplicationController
     else
       log_activity(:add_step_to_protocol_repository, nil, protocol: @protocol.id)
     end
-    render json: @step, serializer: StepSerializer
+    render json: @step, serializer: StepSerializer, user: current_user
   end
 
   def create_old
@@ -170,7 +170,7 @@ class StepsController < ApplicationController
       else
         log_activity(:edit_step_in_protocol_repository, nil, protocol: @protocol.id)
       end
-      render json: @step, serializer: StepSerializer
+      render json: @step, serializer: StepSerializer, user: current_user
     else
       render json: {}, status: :unprocessable_entity
     end
@@ -280,13 +280,7 @@ class StepsController < ApplicationController
       @step.save!(touch: false)
       @step.assets.update_all(view_mode: @step.assets_view_mode)
     end
-    @step.assets.each do |asset|
-      html += render_to_string(partial: 'assets/asset.html.erb', locals: {
-                                 asset: asset,
-                                 gallery_view_id: @step.id
-                               })
-    end
-    render json: { html: html }, status: :ok
+    render json: { view_mode: @step.assets_view_mode }, status: :ok
   rescue ActiveRecord::RecordInvalid => e
     Rails.logger.error(e.message)
     render json: { errors: e.message }, status: :unprocessable_entity
@@ -314,7 +308,7 @@ class StepsController < ApplicationController
       team.save
     end
 
-    render json: @step, serializer: StepSerializer
+    render json: @step, serializer: StepSerializer, user: current_user
   end
 
   # Responds to checkbox toggling in steps view
@@ -382,7 +376,7 @@ class StepsController < ApplicationController
                        num_all: all_steps.to_s)
         end
       end
-      render json: @step, serializer: StepSerializer
+      render json: @step, serializer: StepSerializer, user: current_user
     else
       render json: {}, status: :unprocessable_entity
     end

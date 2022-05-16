@@ -22,7 +22,7 @@
         {{ attachment.attributes.file_name }}
       </div>
       <div class="attachment-metadata">
-        {{ i18n.t('assets.placeholder.modified_label') }} {{ attachment.attributes.updated_at }}<br>
+        {{ i18n.t('assets.placeholder.modified_label') }} {{ attachment.attributes.updated_at_formatted }}<br>
         {{ attachment.attributes.file_size_formatted }}
       </div>
     </a>

@@ -16,7 +16,7 @@
     <div class="file-metadata">
       <span>
           {{ i18n.t('assets.placeholder.modified_label') }}
-          {{ attachment.attributes.updated_at }}
+          {{ attachment.attributes.updated_at_formatted }}
       </span>
       <span>
         {{ i18n.t('assets.placeholder.size_label', {size: attachment.attributes.file_size_formatted}) }}
