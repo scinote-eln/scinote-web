@@ -1,6 +1,24 @@
 # frozen_string_literal: true
 
 module PermissionExtends
+  module TeamPermissions
+    %w(
+      READ
+      USERS_INVITE
+      USERS_MANAGE
+      INVENTORIES_CREATE
+      PROTOCOLS_CREATE
+    ).each { |permission| const_set(permission, "team_#{permission.underscore}") }
+  end
+
+  module ProtocolPermissions
+    %w(
+      READ
+      MANAGE
+      USERS_MANAGE
+    ).each { |permission| const_set(permission, "protocol_#{permission.underscore}") }
+  end
+
   module ProjectPermissions
     %w(
       READ
@@ -77,26 +95,35 @@ module PermissionExtends
       MANAGE
       ARCHIVE
       RESTORE
+      DELETE
       SHARE
       CREATE_SNAPSHOT
       DELETE_SNAPSHOT
       CREATE_ROW
       UPDATE_ROW
+      ARCHIVE_ROW
       DELETE_ROW
       CREATE_COLUMN
       UPDATE_COLUMN
       DELETE_COLUMN
+      USERS_MANAGE
     ).each { |permission| const_set(permission, "inventory_#{permission.underscore}") }
   end
 
   module PredefinedRoles
     OWNER_PERMISSIONS = (
+      TeamPermissions.constants.map { |const| TeamPermissions.const_get(const) } +
+      ProtocolPermissions.constants.map { |const| ProtocolPermissions.const_get(const) } +
       ProjectPermissions.constants.map { |const| ProjectPermissions.const_get(const) } +
       ExperimentPermissions.constants.map { |const| ExperimentPermissions.const_get(const) } +
-      MyModulePermissions.constants.map { |const| MyModulePermissions.const_get(const) }
+      MyModulePermissions.constants.map { |const| MyModulePermissions.const_get(const) } +
+      RepositoryPermissions.constants.map { |const| RepositoryPermissions.const_get(const) }
     )
 
     NORMAL_USER_PERMISSIONS = [
+      TeamPermissions::PROTOCOLS_CREATE,
+      ProtocolPermissions::READ,
+      ProtocolPermissions::MANAGE,
       ProjectPermissions::READ,
       ProjectPermissions::READ_ARCHIVED,
       ProjectPermissions::ACTIVITIES_READ,
@@ -138,7 +165,13 @@ module PermissionExtends
       MyModulePermissions::REPOSITORY_ROWS_ASSIGN,
       MyModulePermissions::REPOSITORY_ROWS_MANAGE,
       MyModulePermissions::USERS_READ,
-      MyModulePermissions::STOCK_CONSUMPTION_UPDATE
+      MyModulePermissions::STOCK_CONSUMPTION_UPDATE,
+      RepositoryPermissions::READ,
+      RepositoryPermissions::CREATE_COLUMN,
+      RepositoryPermissions::CREATE_ROW,
+      RepositoryPermissions::UPDATE_ROW,
+      RepositoryPermissions::ARCHIVE_ROW,
+      RepositoryPermissions::DELETE_ROW
     ]
 
     TECHNICIAN_PERMISSIONS = [
@@ -177,6 +210,7 @@ module PermissionExtends
     ]
 
     VIEWER_PERMISSIONS = [
+      ProtocolPermissions::READ,
       ProjectPermissions::READ,
       ProjectPermissions::READ_ARCHIVED,
       ProjectPermissions::ACTIVITIES_READ,
