@@ -209,27 +209,19 @@ function initializeEdit() {
 
   if (canEditModules) {
     initEditModules();
-    $(".edit-module").on("click touchstart", editModuleHandler);
+    $("#canvas-container").on("click touchstart", ".edit-module", editModuleHandler);
   }
 
   if (canCloneModules) {
-    bindCloneModuleAction(
-      $(".module-options a.clone-module"),
-      ".diagram .module",
-      GRID_DIST_EDIT_X,
-      GRID_DIST_EDIT_Y);
-    bindCloneModuleGroupAction(
-      $(".module-options a.clone-module-group"),
-      ".diagram .module",
-      GRID_DIST_EDIT_X,
-      GRID_DIST_EDIT_Y);
+    bindCloneModuleAction(".diagram .module", GRID_DIST_EDIT_X, GRID_DIST_EDIT_Y);
+    bindCloneModuleGroupAction(".diagram .module", GRID_DIST_EDIT_X, GRID_DIST_EDIT_Y);
   }
   if (canMoveModules) {
     initMoveModules();
-    $(".move-module").on("click touchstart", moveModuleHandler);
+    $("#canvas-container").on("click touchstart", ".move-module", moveModuleHandler);
 
     initMoveModuleGroups();
-    $(".move-module-group").on("click touchstart", moveModuleGroupHandler);
+    $("#canvas-container").on("click touchstart", ".move-module-group", moveModuleGroupHandler);
   }
   if (canDeleteModules) {
     bindDeleteModuleAction();
@@ -250,6 +242,17 @@ function initializeEdit() {
       { color: 'white', shadow: true }
     );
   });
+
+  $('.module-options-dropdown')
+    .on('show.bs.dropdown', function() {
+      let dropdownContainer = $(this);
+      $.getJSON(dropdownContainer.data('dropdown-menu-path'), function(result) {
+        dropdownContainer.find('.dropdown-menu').html(result.html);
+      });
+    })
+    .on('show.bs.dropdown', function() {
+      $(this).find('.dropdown-menu').html('');
+    });
 }
 
 function destroyEdit() {
@@ -1174,9 +1177,6 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
     .addClass("edit-module")
     .html($("#edit-link-placeholder").text().trim())
     .appendTo(editModuleItem);
-
-    // Add click handler for the edit module
-    $(editModuleLink).on("click touchstart", editModuleHandler);
   }
 
   // Add clone links if neccesary
@@ -1192,9 +1192,6 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
     .html($("#clone-link-placeholder").text().trim())
     .appendTo(cloneModuleItem);
 
-    // Add clone click handler for the new module
-    bindCloneModuleAction($(cloneModuleLink), ".diagram .module", gridDistX, gridDistY);
-
     var cloneModuleGroupItem = document.createElement("li");
     $(cloneModuleGroupItem).appendTo(dropdownMenu);
     $(cloneModuleGroupItem).hide();
@@ -1206,9 +1203,6 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
     .addClass("clone-module-group")
     .html($("#clone-group-link-placeholder").text().trim())
     .appendTo(cloneModuleGroupItem);
-
-    // Add clone click handler for the new module
-    bindCloneModuleGroupAction($(cloneModuleGroupLink), ".diagram .module", gridDistX, gridDistY);
 
     bindEditModeDropdownHandlers(module);
   }
@@ -1226,9 +1220,6 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
     .html($("#move-link-placeholder").text().trim())
     .appendTo(moveModuleItem);
 
-    // Add clone click handler for the new module
-    $(moveModuleLink).on("click touchstart", moveModuleHandler);
-
     // Add buttons for module groups
     var moveModuleGroupItem = document.createElement("li");
     $(moveModuleGroupItem).appendTo(dropdownMenu);
@@ -1241,8 +1232,6 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
     .addClass("move-module-group")
     .html($("#move-group-link-placeholder").text().trim())
     .appendTo(moveModuleGroupItem);
-
-    $(moveModuleGroupLink).on("click touchstart", moveModuleGroupHandler);
   }
 
   // Add delete links if neccesary
@@ -1258,9 +1247,6 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
     .html($("#delete-link-placeholder").text().trim())
     .appendTo(deleteModuleItem);
 
-    // Add delete click handler for the new module
-    $(deleteModuleLink).on("click touchstart", deleteModuleHandler);
-
     var deleteModuleGroupItem = document.createElement("li");
     $(deleteModuleGroupItem).appendTo(dropdownMenu);
     $(deleteModuleGroupItem).hide();
@@ -1272,9 +1258,6 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
     .addClass("delete-module-group")
     .html($("#delete-group-link-placeholder").text().trim())
     .appendTo(deleteModuleGroupItem);
-
-    // Add delete click handler for the new module
-    $(deleteModuleGroupLink).on("click touchstart", deleteModuleGroupHandler);
   }
 
   // Set it up for jsPlumb, depending on permissions
@@ -1769,7 +1752,7 @@ moveModuleGroupHandler = function(ev) {
  */
 function bindDeleteModuleAction() {
   // First, bind the delete module handler onto all "delete module" links
-  $(".module-options a.delete-module").on("click touchstart", deleteModuleHandler);
+  $("#canvas-container").on("click touchstart", ".delete-module", deleteModuleHandler);
 
   // Then, bind on modal events
   var modal = $("#modal-delete-module");
@@ -1961,7 +1944,7 @@ deleteModuleHandler  =function() {
 function bindDeleteModuleGroupAction() {
   // First, bind the delete module group handler onto all
   // "delete module group" links
-  $(".module-options a.delete-module-group").on("click touchstart", deleteModuleGroupHandler);
+  $("#canvas-container").on("click touchstart", ".delete-module-group", deleteModuleGroupHandler);
 
   // Then, bind on modal events
   var modal = $("#modal-delete-module-group");
@@ -2031,8 +2014,8 @@ deleteModuleGroupHandler = function() {
  * @param gridDistX - The grid distance in X direction.
  * @param gridDistY - The grid distance in Y direction.
  */
-function bindCloneModuleAction(element, modulesSel, gridDistX, gridDistY) {
-  element.on("click touchstart", function(event) {
+function bindCloneModuleAction(modulesSel, gridDistX, gridDistY) {
+  $("#canvas-container").on("click touchstart", ".clone-module", function(event) {
     cloneModuleHandler($(this).data("module-id"), modulesSel, gridDistX, gridDistY);
     event.preventDefault();
     event.stopPropagation();
@@ -2133,8 +2116,8 @@ function cloneModule(originalModule, gridDistX, gridDistY, left, top) {
  * @param gridDistX - The grid distance in X direction.
  * @param gridDistY - The grid distance in Y direction.
  */
-function bindCloneModuleGroupAction(element, modulesSel, gridDistX, gridDistY) {
-  element.on("click touchstart", function(event) {
+function bindCloneModuleGroupAction(modulesSel, gridDistX, gridDistY) {
+  $("#canvas-container").on("click touchstart", ".clone-module-group", function(event) {
     cloneModuleGroupHandler($(this).data("module-id"), modulesSel, gridDistX, gridDistY);
     event.preventDefault();
     event.stopPropagation();

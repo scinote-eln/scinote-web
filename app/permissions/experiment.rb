@@ -19,7 +19,7 @@ Canaid::Permissions.register_for(Experiment) do
   #         assign/reassign/unassign tags
   can :manage_experiment do |user, experiment|
     experiment.permission_granted?(user, ExperimentPermissions::MANAGE) &&
-      experiment.my_modules.all? do |my_module|
+      experiment.my_modules.preload(my_module_status: :my_module_status_implications).all? do |my_module|
         if my_module.my_module_status
           my_module.my_module_status.my_module_status_implications.all? { |implication| implication.call(my_module) }
         else

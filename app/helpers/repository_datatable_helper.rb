@@ -178,15 +178,14 @@ module RepositoryDatatableHelper
       end
 
       if options[:include_stock_consumption] && repository_snapshot.has_stock_management?
-        stock_present = record.repository_stock_cell.present?
-        row['stock'] = if stock_present
+        row['stock'] = if record.repository_stock_cell.present?
                          display_cell_value(record.repository_stock_cell, team, repository_snapshot)
                        else
                          { value_type: 'RepositoryStockValue' }
                        end
 
         row['consumedStock'] =
-          if stock_present
+          if record.repository_stock_consumption_cell.present?
             display_cell_value(record.repository_stock_consumption_cell, team, repository_snapshot)
           else
             {}
@@ -274,6 +273,9 @@ module RepositoryDatatableHelper
 
     # don't load reminders for archived repositories
     return [] if repository_rows.blank? || repository.archived?
+
+    # don't load reminders for snapshots
+    return [] if repository.is_a?(RepositorySnapshot)
 
     repository_rows.active.with_active_reminders(current_user).to_a.pluck(:id).uniq
   end

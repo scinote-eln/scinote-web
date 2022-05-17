@@ -419,6 +419,7 @@ Rails.application.routes.draw do
         # AJAX popup accessed from full-zoom canvas for single module,
         # as well as full activities view (HTML) for single module
         get 'description'
+        get 'canvas_dropdown_menu'
         get 'activities'
         post 'activities'
         get 'activities_tab' # Activities in tab view for single module
