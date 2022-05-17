@@ -108,6 +108,8 @@
             :key="index"
             :attachment.sync="attachmentsOrdered[index]"
             :stepId="parseInt(step.id)"
+            @attachment:viewMode="updateAttachmentViewMode"
+            @attachment:delete="attachments.splice(index, 1)"
           />
         </template>
       </div>
@@ -275,6 +277,9 @@
         $.post(this.step.attributes.urls.update_asset_view_mode_url, {
           assets_view_mode: viewMode
         })
+      },
+      updateAttachmentViewMode(id, viewMode) {
+        this.$set(this.attachments.find(e => e.id == id).attributes, 'view_mode', viewMode)
       }
     }
   }

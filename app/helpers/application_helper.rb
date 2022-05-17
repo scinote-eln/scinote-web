@@ -222,7 +222,7 @@ module ApplicationHelper
   end
 
   def wopi_enabled?
-    ENV['WOPI_ENABLED'] == 'true'
+    ENV['WOPI_ENABLED'] == 'true' || true
   end
 
   # Check whether the wopi file can be edited and return appropriate response

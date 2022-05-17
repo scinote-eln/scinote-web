@@ -24,6 +24,11 @@
           </span>
         </div>
       </div>
+      <ContextMenu
+        :attachment="attachment"
+        @attachment:viewMode="updateViewMode"
+        @attachment:delete="deleteAttachment"
+      />
     </div>
     <template v-if="attachment.attributes.wopi">
       <div v-if="attachment.attributes.file_size > 0"
@@ -59,8 +64,13 @@
 </template>
 
 <script>
+  import ContextMenuMixin from './mixins/context_menu.js'
+  import ContextMenu from './context_menu.vue'
+
   export default {
     name: 'inlineAttachment',
+    mixins: [ContextMenuMixin],
+    components: { ContextMenu },
     props: {
       attachment: {
         type: Object,

@@ -26,13 +26,22 @@
         {{ attachment.attributes.file_size_formatted }}
       </div>
     </a>
+    <ContextMenu
+      :attachment="attachment"
+      @attachment:viewMode="updateViewMode"
+      @attachment:delete="deleteAttachment"
+    />
   </div>
 
 </template>
 
 <script>
+  import ContextMenuMixin from './mixins/context_menu.js'
+  import ContextMenu from './context_menu.vue'
   export default {
     name: 'thumbnailAttachment',
+    mixins: [ContextMenuMixin],
+    components: { ContextMenu },
     props: {
       attachment: {
         type: Object,
