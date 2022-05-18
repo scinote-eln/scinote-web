@@ -1,5 +1,5 @@
 <template>
-  <div ref="modal" class="modal" role="dialog" aria-hidden="true" tabindex="-1">
+  <div ref="modal" @keydown.esc="cancel" class="modal" role="dialog" aria-hidden="true" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">

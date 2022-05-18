@@ -44,6 +44,10 @@
               <i class="fas fa-font"></i>
               {{ i18n.t('protocols.steps.insert.text') }}
             </li>
+            <li class="action"  @click="showFileModal = true">
+              <i class="fas fa-paperclip"></i>
+              {{ i18n.t('protocols.steps.insert.attachment') }}
+            </li>
           </ul>
         </div>
         <button class="btn icon-btn btn-light" @click="showDeleteModal">
@@ -115,6 +119,7 @@
       </div>
     </div>
     <deleteStepModal v-if="confirmingDelete" @confirm="deleteStep" @cancel="closeDeleteModal"/>
+    <fileModal v-if="showFileModal" @cancel="showFileModal = false" :step="step"/>
   </div>
 </template>
 
@@ -127,6 +132,7 @@
   import listAttachment from 'vue/protocol/step_attachments/list.vue'
   import inlineAttachment from 'vue/protocol/step_attachments/inline.vue'
   import thumbnailAttachment from 'vue/protocol/step_attachments/thumbnail.vue'
+  import fileModal from './step_attachments/file_modal.vue'
 
   export default {
     name: 'StepContainer',
@@ -142,7 +148,8 @@
         attachments: [],
         viewModeOptions: ['inline', 'thumbnail', 'list'],
         orderOptions: ['new', 'old', 'atoz', 'ztoa'],
-        confirmingDelete: false
+        confirmingDelete: false,
+        showFileModal: false
       }
     },
     components: {
@@ -153,7 +160,8 @@
       deleteStepModal,
       thumbnailAttachment,
       inlineAttachment,
-      listAttachment
+      fileModal,
+      listAttachment,
     },
     created() {
       $.get(this.step.attributes.urls.elements_url, (result) => {

@@ -2520,6 +2520,7 @@ en:
         table: 'Add table'
         text: 'Add text'
         checklist: 'Add checklist'
+        attachment: 'Add file'
         checklist_item: 'Add a new checklist item...'
       table:
         default_name: 'Table %{position}'
@@ -2556,6 +2557,13 @@ en:
         add: "ADD"
         sort_by: "SORT BY"
         attachments_view_mode: "ALL ATTACHMENTS VIEW SIZE"
+        file_modal:
+          title: "Add file"
+          drag_zone_title: "Upload a file from your PC"
+          drag_zone_description: "You can also drag & drop files to here or into steps to upload"
+          drag_zone_notification: "Drop files to add to step ${position}"
+          or: "OR"
+
         sort:
           new_html: "Newest first &#8595;"
           old_html: "Oldest first &#8593;"
@@ -2724,7 +2732,7 @@ en:
     wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel Online.'
     wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in PowerPoint Online.'
     create_wopi_file:
-      button_text: 'New Office file'
+      button_text: 'Create an MS Office file'
       li_text: "Office file"
       modal_title: 'Create new Microsoft Office Online document'
       text_field_label: 'Document name & type'

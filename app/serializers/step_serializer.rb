@@ -1,7 +1,34 @@
 class StepSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
+  include ApplicationHelper
 
-  attributes :name, :position, :completed, :urls, :assets_view_mode, :assets_order
+  attributes :name, :position, :completed, :urls, :assets_view_mode, :assets_order,
+             :marvinjs_enabled, :marvinjs_context, :wopi_enabled, :wopi_context
+
+  def marvinjs_enabled
+    MarvinJsService.enabled?
+  end
+
+  def marvinjs_context
+    if marvinjs_enabled
+      {
+        icon: image_path('icon_small/marvinjs.svg')
+      }
+    end
+  end
+
+  def wopi_enabled
+    wopi_enabled?
+  end
+
+  def wopi_context
+    if wopi_enabled
+      {
+        create_wopi: create_wopi_file_path,
+        icon: image_path('office/office.svg')
+      }
+    end
+  end
 
   def assets_order
     object.current_view_state(@instance_options[:user]).state.dig('assets', 'sort')

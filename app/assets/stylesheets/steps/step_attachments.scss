@@ -73,4 +73,76 @@
       }
     }
   }
+
+  .add-file-modal {
+    .file-drop-zone {
+      align-items: center;
+      background: $color-concrete;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2em;
+
+      .title {
+        cursor: pointer;
+
+        .fas {
+          margin: 0 .5em;
+        }
+      }
+
+      .description {
+        color: $color-silver-chalice;
+        margin-top: 1.5em;
+      }
+    }
+
+    .drop-notification {
+      display: none;
+    }
+
+    &.draging-file {
+      .file-drop-zone {
+        background-color: $brand-focus-light;
+        position: relative;
+
+        .drop-notification {
+          @include font-h3;
+          align-items: center;
+          color: $brand-primary;
+          display: flex;
+          height: 100%;
+          justify-content: center;
+          position: absolute;
+          width: 100%;
+        }
+
+        .title,
+        .description,
+        .available-storage {
+          opacity: 0;
+        }
+
+        * {
+          pointer-events: none;
+        }
+      }
+    }
+
+    .divider {
+      @include font-h3;
+      padding: 1em 0;
+      text-align: center;
+    }
+
+    .integrations-container {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+
+      .integration-block {
+        margin: 0 1em;
+      }
+    }
+  }
 }
