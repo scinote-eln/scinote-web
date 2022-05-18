@@ -252,6 +252,12 @@
             display: flex;
             flex-wrap: wrap;
           }
+
+          .between-delimiter {
+            height: 10px;
+            margin: 5px auto;
+            transform: rotate(90deg);
+          }
         }
       }
 
