@@ -162,9 +162,7 @@ module ApplicationHelper
       </div></div><div class='row'><div class='col-xs-12'>
       <p class='silver'>#{user.email}</p>)
     if user_still_in_team
-      user_t = user.user_teams
-                   .where('user_teams.team_id = ?', team)
-                   .first
+      user_t = user.teams.find_by(id: team)
       user_description += %(<p>
         #{I18n.t('atwho.users.popover_html',
                  role: user_t.role.capitalize,

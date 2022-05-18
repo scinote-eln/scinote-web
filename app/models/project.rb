@@ -4,7 +4,6 @@ class Project < ApplicationRecord
   include SearchableByNameModel
   include ViewableModel
   include PermissionCheckableModel
-  include PermissionExtends
   include Assignable
 
   enum visibility: { hidden: 0, visible: 1 }

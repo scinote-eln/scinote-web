@@ -24,16 +24,14 @@ namespace :data do
 
       User.transaction do
         begin
-          # Destroy user_team, and possibly team
+          # Destroy user team assignments, and possibly team
           if user.teams.count > 0
             oids = user.teams.pluck(:id)
             oids.each do |oid|
               team = Team.find(oid)
-              user_team = user.user_teams.where(team: team).first
+              team_assignment = user.user_assignments.where(assignable: team).take
               destroy_team = (team.users.count == 1 && team.created_by == user)
-              if !user_team.destroy(nil) then
-                raise Exception
-              end
+              team_assignment.destroy!
               team.destroy! if destroy_team
             end
           end
