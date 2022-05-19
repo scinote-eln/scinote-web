@@ -56,17 +56,21 @@ module FileIconsHelper
     end
   end
 
-  # For showing in view/edit buttons (WOPI)
-  def file_application_icon(asset)
+  # For showing in view/edit icon url (WOPI)
+  def file_application_url(asset)
     file_ext = asset.file_name.split('.').last
     if Constants::FILE_TEXT_FORMATS.include?(file_ext)
-      image_link = 'icon_small/docx_file.svg'
+      'icon_small/docx_file.svg'
     elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
-      image_link = 'icon_small/xslx_file.svg'
+      'icon_small/xslx_file.svg'
     elsif Constants::FILE_PRESENTATION_FORMATS.include?(file_ext)
-      image_link = 'icon_small/pptx_file.svg'
+      'icon_small/pptx_file.svg'
     end
+  end
 
+  # For showing in view/edit buttons (WOPI)
+  def file_application_icon(asset)
+    image_link = file_application_url(asset)
     if image_link
       image_tag image_link
     else
@@ -78,17 +82,17 @@ module FileIconsHelper
   def wopi_button_text(asset, action)
     file_ext = asset.file_name.split('.').last
     if Constants::FILE_TEXT_FORMATS.include?(file_ext)
-      app = t('result_assets.wopi_word')
+      app = I18n.t('result_assets.wopi_word')
     elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
-      app = t('result_assets.wopi_excel')
+      app = I18n.t('result_assets.wopi_excel')
     elsif Constants::FILE_PRESENTATION_FORMATS.include?(file_ext)
-      app = t('result_assets.wopi_powerpoint')
+      app = I18n.t('result_assets.wopi_powerpoint')
     end
 
     if action == 'view'
-      t('result_assets.wopi_open_file', app: app)
+      I18n.t('result_assets.wopi_open_file', app: app)
     elsif action == 'edit'
-      t('result_assets.wopi_edit_file', app: app)
+      I18n.t('result_assets.wopi_edit_file', app: app)
     end
   end
 

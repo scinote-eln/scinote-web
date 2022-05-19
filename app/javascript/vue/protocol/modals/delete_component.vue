@@ -1,5 +1,5 @@
 <template>
-  <div ref="modal" class="modal" id="modalDestroyProtocolContent" tabindex="-1" role="dialog">
+  <div ref="modal" @keydown.esc="cancel" class="modal" id="modalDestroyProtocolContent" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">

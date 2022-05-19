@@ -44,6 +44,10 @@
               <i class="fas fa-font"></i>
               {{ i18n.t('protocols.steps.insert.text') }}
             </li>
+            <li class="action"  @click="showFileModal = true">
+              <i class="fas fa-paperclip"></i>
+              {{ i18n.t('protocols.steps.insert.attachment') }}
+            </li>
           </ul>
         </div>
         <button class="btn icon-btn btn-light" @click="showDeleteModal">
@@ -60,8 +64,14 @@
           @component:delete="deleteComponent"
           @update="updateComponent" />
       </template>
+      <Attachments :step="step"
+                   :attachments="attachments"
+                   @attachments:order="changeAttachmentsOrder"
+                   @attachments:viewMode="changeAttachmentsViewMode"
+                   @attachment:viewMode="updateAttachmentViewMode"/>
     </div>
     <deleteStepModal v-if="confirmingDelete" @confirm="deleteStep" @cancel="closeDeleteModal"/>
+    <fileModal v-if="showFileModal" @cancel="showFileModal = false" :step="step" @files="uploadFiles" />
   </div>
 </template>
 
@@ -71,6 +81,9 @@
   import StepText from 'vue/protocol/step_components/text.vue'
   import Checklist from 'vue/protocol/step_components/checklist.vue'
   import deleteStepModal from 'vue/protocol/modals/delete_step.vue'
+  import Attachments from 'vue/protocol/attachments.vue'
+  import fileModal from 'vue/protocol/step_attachments/file_modal.vue'
+  import AttachmentsMixin from 'vue/protocol/mixins/attachments.js'
 
   export default {
     name: 'StepContainer',
@@ -83,19 +96,28 @@
     data() {
       return {
         elements: [],
-        confirmingDelete: false
+        attachments: [],
+        confirmingDelete: false,
+        showFileModal: false
       }
     },
+    mixins: [AttachmentsMixin],
     components: {
       InlineEdit,
       StepTable,
       StepText,
       Checklist,
-      deleteStepModal
+      deleteStepModal,
+      fileModal,
+      Attachments
     },
     created() {
       $.get(this.step.attributes.urls.elements_url, (result) => {
         this.elements = result.data
+      });
+
+      $.get(this.step.attributes.urls.attachments_url, (result) => {
+        this.attachments = result.data
       });
     },
     methods: {
@@ -176,7 +198,7 @@
         }).error(() => {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         })
-      }
+      },
     }
   }
 </script>

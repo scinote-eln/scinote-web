@@ -5,23 +5,41 @@ class StepsController < ApplicationController
   include MarvinJsActions
 
   before_action :load_vars, only: %i(edit update destroy show toggle_step_state checklistitem_state update_view_state
-                                     move_up move_down update_asset_view_mode elements)
+                                     move_up move_down update_asset_view_mode elements attachments upload_attachment)
   before_action :load_vars_nested, only:  %i(new create index)
   before_action :convert_table_contents_to_utf8, only: %i(create update)
 
-  before_action :check_view_permissions, only: %i(show index)
+  before_action :check_view_permissions, only: %i(show index attachments elements)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: %i(edit update destroy move_up move_down
-                                                    update_view_state update_asset_view_mode)
+                                                    update_view_state update_asset_view_mode upload_attachment)
   before_action :check_complete_and_checkbox_permissions, only: %i(toggle_step_state checklistitem_state)
 
   def index
-    render json: @protocol.steps.in_order, each_serializer: StepSerializer
+    render json: @protocol.steps.in_order, each_serializer: StepSerializer, user: current_user
   end
 
   def elements
     render json: @step.step_orderable_elements.order(:position),
            each_serializer: StepOrderableElementSerializer,
+           user: current_user
+  end
+
+  def attachments
+    render json: @step.assets,
+           each_serializer: AssetSerializer,
+           user: current_user
+  end
+
+  def upload_attachment
+    @step.transaction do
+      @asset = @step.assets.create!(created_by: current_user, last_modified_by: current_user, team: current_team)
+      @asset.file.attach(params[:signed_blob_id])
+      @asset.post_process_file(@protocol.team)
+    end
+
+    render json: @asset,
+           serializer: AssetSerializer,
            user: current_user
   end
 
@@ -52,7 +70,7 @@ class StepsController < ApplicationController
     else
       log_activity(:add_step_to_protocol_repository, nil, protocol: @protocol.id)
     end
-    render json: @step, serializer: StepSerializer
+    render json: @step, serializer: StepSerializer, user: current_user
   end
 
   def create_old
@@ -164,7 +182,7 @@ class StepsController < ApplicationController
       else
         log_activity(:edit_step_in_protocol_repository, nil, protocol: @protocol.id)
       end
-      render json: @step, serializer: StepSerializer
+      render json: @step, serializer: StepSerializer, user: current_user
     else
       render json: {}, status: :unprocessable_entity
     end
@@ -274,13 +292,7 @@ class StepsController < ApplicationController
       @step.save!(touch: false)
       @step.assets.update_all(view_mode: @step.assets_view_mode)
     end
-    @step.assets.each do |asset|
-      html += render_to_string(partial: 'assets/asset.html.erb', locals: {
-                                 asset: asset,
-                                 gallery_view_id: @step.id
-                               })
-    end
-    render json: { html: html }, status: :ok
+    render json: { view_mode: @step.assets_view_mode }, status: :ok
   rescue ActiveRecord::RecordInvalid => e
     Rails.logger.error(e.message)
     render json: { errors: e.message }, status: :unprocessable_entity
@@ -308,7 +320,7 @@ class StepsController < ApplicationController
       team.save
     end
 
-    render json: @step, serializer: StepSerializer
+    render json: @step, serializer: StepSerializer, user: current_user
   end
 
   # Responds to checkbox toggling in steps view
@@ -376,7 +388,7 @@ class StepsController < ApplicationController
                        num_all: all_steps.to_s)
         end
       end
-      render json: @step, serializer: StepSerializer
+      render json: @step, serializer: StepSerializer, user: current_user
     else
       render json: {}, status: :unprocessable_entity
     end
