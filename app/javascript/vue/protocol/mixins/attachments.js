@@ -1,6 +1,15 @@
 /* global ActiveStorage GLOBAL_CONSTANTS Promise */
 
 export default {
+  data() {
+    return {
+      viewModeOrder: {
+        inline: 0,
+        thumbnail: 1,
+        list: 2
+      }
+    };
+  },
   methods: {
     directUploadWillStoreFileWithXHR(request) {
       request.upload.addEventListener('progress', () => {
@@ -39,6 +48,27 @@ export default {
           });
         });
       });
+    },
+    changeAttachmentsOrder(order) {
+      this.step.attributes.assets_order = order;
+      $.post(this.step.attributes.urls.update_view_state_step_url, {
+        assets: { order }
+      });
+    },
+    changeAttachmentsViewMode(viewMode) {
+      this.step.attributes.assets_view_mode = viewMode;
+      this.attachments.forEach((attachment) => {
+        this.$set(attachment.attributes, 'view_mode', viewMode);
+        this.$set(attachment.attributes, 'asset_order', this.viewModeOrder[viewMode]);
+      });
+      $.post(this.step.attributes.urls.update_asset_view_mode_url, {
+        assets_view_mode: viewMode
+      });
+    },
+    updateAttachmentViewMode(id, viewMode) {
+      const attachment = this.attachments.find(e => e.id === id);
+      this.$set(attachment.attributes, 'view_mode', viewMode);
+      this.$set(attachment.attributes, 'asset_order', this.viewModeOrder[viewMode]);
     }
   }
 };

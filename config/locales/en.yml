@@ -2561,7 +2561,7 @@ en:
           title: "Add file"
           drag_zone_title: "Upload a file from your PC"
           drag_zone_description: "You can also drag & drop files to here or into steps to upload"
-          drag_zone_notification: "Drop files to add to step ${position}"
+          drag_zone_notification: "Drop files to add to step %{position}"
           or: "OR"
 
         sort:
