@@ -3010,6 +3010,12 @@ en:
           detail: "Text contains reference to nonexisting TinyMCE image"
         result_wrong_tinymce:
           detail: "Image reference not found in the text"
+    service:
+      errors:
+        missing_task_ids: "Missing task_ids"
+        callback_missing: "Missing callback"
+        url:
+          not_valid: "Not valid URL"
 
 
   Add: "Add"
