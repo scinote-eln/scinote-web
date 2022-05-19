@@ -457,6 +457,7 @@ Rails.application.routes.draw do
       member do
         get 'elements'
         get 'attachments'
+        post 'upload_attachment'
         post 'checklistitem_state'
         post 'toggle_step_state'
         put 'move_down'

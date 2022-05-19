@@ -98,7 +98,7 @@
       },
       uploadFiles() {
         $(this.$refs.modal).modal('hide');
-        this.$emit('files', e.dataTransfer.files);
+        this.$emit('files', this.$refs.fileSelector.files);
       }
     }
   }
