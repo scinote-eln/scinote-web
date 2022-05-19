@@ -10,7 +10,7 @@
  If you need to specific model you have to specify it in the connect method
  like the example below:
  >
- > Permissions.connect(MyComponent, ["can_update_team", "can_read_team"], "Team");
+ > Permissions.connect(MyComponent, ["can_manage_team", "can_read_team"], "Team");
  >
 
  In case your component is connected to Redux or some other HOC you can simply

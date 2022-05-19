@@ -143,7 +143,7 @@ module Users
 
       def load_team
         @team = Team.find_by_id(params[:id])
-        render_403 unless can_update_team?(@team)
+        render_403 unless can_manage_team?(@team)
       end
 
       def create_params
