@@ -283,7 +283,7 @@
   function initTagsSelector() {
     var myModuleTagsSelector = '#module-tags-selector';
 
-    dropdownSelector.init(myModuleTagsSelector, {
+    dropdownSelector.init($(myModuleTagsSelector), {
       closeOnSelect: true,
       tagClass: 'my-module-white-tags',
       tagStyle: (data) => {
