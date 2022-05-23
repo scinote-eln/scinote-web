@@ -2563,6 +2563,11 @@ en:
           drag_zone_description: "You can also drag & drop files to here or into steps to upload"
           drag_zone_notification: "Drop files to add to step %{position}"
           or: "OR"
+        new:
+          uploading: 'Uploading'
+          file_too_big: 'Failed to upload: File size is too big'
+          general_error: 'Failed to upload: Something went wrong, please try again'
+          leaving_warning: 'Your changes will be lost if you navigate away'
 
         sort:
           new_html: "Newest first &#8595;"
