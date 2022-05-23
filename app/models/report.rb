@@ -2,6 +2,8 @@
 
 class Report < ApplicationRecord
   include SettingsModel
+  include Assignable
+  include PermissionCheckableModel
   include SearchableModel
   include SearchableByNameModel
 
@@ -28,6 +30,7 @@ class Report < ApplicationRecord
              foreign_key: 'last_modified_by_id',
              class_name: 'User',
              optional: true
+  has_many :users, through: :user_assignments
   has_many :report_template_values, dependent: :destroy
 
   # Report either has many report elements (if grouped by timestamp),
