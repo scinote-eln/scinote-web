@@ -50,12 +50,7 @@
               </a>
             </div>
             <div class="integration-block wopi" v-if="step.attributes.wopi_enabled">
-              <a :href="step.attributes.wopi_context.create_wopi"
-                 class="create-wopi-file-btn btn btn-light"
-                 target="_blank"
-                 :data-id="step.id"
-                 data-element-type="Step"
-              >
+              <a @click="openWopiFileModal" class="create-wopi-file-btn btn btn-light">
                 <img :src="step.attributes.wopi_context.icon"/>
                 {{ i18n.t('assets.create_wopi_file.button_text') }}
               </a>
@@ -99,6 +94,30 @@
       uploadFiles() {
         $(this.$refs.modal).modal('hide');
         this.$emit('files', this.$refs.fileSelector.files);
+      },
+      openWopiFileModal() {
+        // hide regular file modal
+        $(this.$refs.modal).modal('hide');
+
+        // handle legacy wopi file modal
+        let $wopiModal = $('#new-office-file-modal')
+        $wopiModal.find('#element_id').val(this.step.id);
+        $wopiModal.find('#element_type').val('Step');
+        $wopiModal.modal('show');
+
+        $wopiModal.find('form').on('ajax:success',
+          (_e, data, status) => {
+            if (status === 'success') {
+              $wopiModal.modal('hide');
+              this.$emit('attachmentUploaded', data);
+
+              // cancel and remove regular file modal
+              this.$nextTick(() => this.cancel());
+            } else {
+              HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+            }
+          }
+        );
       }
     }
   }

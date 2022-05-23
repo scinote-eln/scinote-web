@@ -50,6 +50,9 @@ module TinyMceImages
     # and updates references in assosiated object's description
     def reassign_tiny_mce_image_references(images = [])
       object_field = Extends::RICH_TEXT_FIELD_MAPPINGS[self.class.name]
+
+      return unless object_field
+
       description = read_attribute(object_field)
 
       # Check tinymce for old format
