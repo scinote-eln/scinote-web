@@ -4,8 +4,9 @@ module PermissionExtends
   module TeamPermissions
     %w(
       READ
-      USERS_INVITE
+      MANAGE
       USERS_MANAGE
+      PROJECTS_CREATE
       INVENTORIES_CREATE
       PROTOCOLS_CREATE
     ).each { |permission| const_set(permission, "team_#{permission.underscore}") }
@@ -92,20 +93,17 @@ module PermissionExtends
   module RepositoryPermissions
     %w(
       READ
+      READ_ARCHIVED
       MANAGE
-      ARCHIVE
       RESTORE
       DELETE
       SHARE
-      CREATE_SNAPSHOT
-      DELETE_SNAPSHOT
-      CREATE_ROW
-      UPDATE_ROW
-      ARCHIVE_ROW
-      DELETE_ROW
-      CREATE_COLUMN
-      UPDATE_COLUMN
-      DELETE_COLUMN
+      ROWS_CREATE
+      ROWS_UPDATE
+      ROWS_DELETE
+      COLUMNS_CREATE
+      COLUMNS_UPDATE
+      COLUMNS_DELETE
       USERS_MANAGE
     ).each { |permission| const_set(permission, "inventory_#{permission.underscore}") }
   end
@@ -121,6 +119,7 @@ module PermissionExtends
     )
 
     NORMAL_USER_PERMISSIONS = [
+      TeamPermissions::PROJECTS_CREATE,
       TeamPermissions::PROTOCOLS_CREATE,
       ProtocolPermissions::READ,
       ProtocolPermissions::MANAGE,
@@ -167,11 +166,11 @@ module PermissionExtends
       MyModulePermissions::USERS_READ,
       MyModulePermissions::STOCK_CONSUMPTION_UPDATE,
       RepositoryPermissions::READ,
-      RepositoryPermissions::CREATE_COLUMN,
-      RepositoryPermissions::CREATE_ROW,
-      RepositoryPermissions::UPDATE_ROW,
-      RepositoryPermissions::ARCHIVE_ROW,
-      RepositoryPermissions::DELETE_ROW
+      RepositoryPermissions::READ_ARCHIVED,
+      RepositoryPermissions::COLUMNS_CREATE,
+      RepositoryPermissions::ROWS_CREATE,
+      RepositoryPermissions::ROWS_UPDATE,
+      RepositoryPermissions::ROWS_DELETE
     ]
 
     TECHNICIAN_PERMISSIONS = [
