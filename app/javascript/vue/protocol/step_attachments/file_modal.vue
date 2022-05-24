@@ -1,7 +1,7 @@
 <template>
   <div ref="modal" @keydown.esc="cancel"
        class="modal add-file-modal"
-       :class="dragingFile ? 'draging-file' : ''"
+       :class="{ 'draging-file' : dragingFile }"
        role="dialog" aria-hidden="true" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -41,7 +41,9 @@
               <a
                 class="new-marvinjs-upload-button btn btn-light"
                 :data-object-id="step.id"
+                :data-marvin-url="step.attributes.marvinjs_context.marvin_js_asset_url"
                 data-object-type="Step"
+                @click="openMarvinJsModal"
               >
                 <span class="new-marvinjs-upload-icon">
                   <img :src="step.attributes.marvinjs_context.icon"/>
@@ -79,6 +81,10 @@
     },
     mounted() {
       $(this.$refs.modal).modal('show');
+      MarvinJsEditor.initNewButton('.new-marvinjs-upload-button', () => {
+        this.$emit('attachmentsChanged');
+        this.$nextTick(this.cancel);
+      });
     },
     methods: {
       cancel() {
@@ -94,6 +100,10 @@
       uploadFiles() {
         $(this.$refs.modal).modal('hide');
         this.$emit('files', this.$refs.fileSelector.files);
+      },
+      openMarvinJsModal() {
+        // hide regular file modal
+        $(this.$refs.modal).modal('hide');
       },
       openWopiFileModal() {
         // hide regular file modal
