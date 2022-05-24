@@ -2580,6 +2580,7 @@ en:
     input_subtitle: "You can enter one or more emails. To confirm each one press the ENTER key."
     invite_to_team_heading: "Invite users to my team:"
     invite_btn: "Invite members"
+    invite_as: "As %{role}"
     invite_guest: "As Guests"
     invite_user: "As Normal Users"
     invite_admin: "As Administrators"
