@@ -2,6 +2,6 @@
 
 class Settings < ApplicationRecord
   def self.instance
-    @instance = first || new
+    first || new
   end
 end
