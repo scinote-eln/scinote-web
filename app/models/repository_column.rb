@@ -87,7 +87,11 @@ class RepositoryColumn < ApplicationRecord
   end
 
   def importable?
-    Extends::REPOSITORY_IMPORTABLE_TYPES.include?(data_type.to_sym)
+    if data_type == 'RepositoryStockValue'
+      RepositoryBase.stock_management_enabled?
+    else
+      Extends::REPOSITORY_IMPORTABLE_TYPES.include?(data_type.to_sym)
+    end
   end
 
   def deep_dup
