@@ -389,7 +389,7 @@ class ProjectsController < ApplicationController
   end
 
   def set_folder_inline_name_editing
-    return if !can_update_team?(current_team) || @current_folder.nil?
+    return if !can_manage_team?(current_team) || @current_folder.nil?
 
     @inline_editable_title_config = {
       name: 'title',

@@ -4,7 +4,6 @@ class User < ApplicationRecord
   include SearchableModel
   include SettingsModel
   include VariablesModel
-  include User::TeamRoles
   include TeamBySubjectModel
   include InputSanitizeHelper
   include ActiveStorageConcerns
@@ -387,6 +386,10 @@ class User < ApplicationRecord
       )
       .references(:user_identities)
       .take
+  end
+
+  def member_of_team?(team)
+    team.user_assignments.exists?(user: self)
   end
 
   # Search all active users for username & email. Can
