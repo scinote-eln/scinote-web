@@ -13,6 +13,13 @@ module RepositoryZipExport
                          .joins(:my_module_repository_rows)
                          .where(my_module_repository_rows: { my_module_id: params[:my_module_id] })
              end
+      if repository.has_stock_management?
+        rows = rows.left_joins(my_module_repository_rows: :repository_stock_unit_item)
+                   .select(
+                     'repository_rows.*',
+                     'my_module_repository_rows.stock_consumption'
+                   )
+      end
     else
       ordered_row_ids = params[:row_ids]
       id_row_map = RepositoryRow.where(id: ordered_row_ids,
@@ -24,14 +31,15 @@ module RepositoryZipExport
     zip = ZipExport.create(user: current_user)
     zip.generate_exportable_zip(
       current_user,
-      to_csv(rows, params[:header_ids], current_user, repository.team),
+      to_csv(rows, params[:header_ids], current_user, repository),
       :repositories
     )
   end
 
-  def self.to_csv(rows, column_ids, user, team, handle_file_name_func = nil)
+  def self.to_csv(rows, column_ids, user, repository, handle_file_name_func = nil)
     # Parse column names
     csv_header = []
+    add_consumption = !repository.is_a?(RepositorySnapshot) && repository.has_stock_management?
     column_ids.each do |c_id|
       csv_header << case c_id.to_i
                     when -1, -2
@@ -53,6 +61,7 @@ module RepositoryZipExport
                       column ? column.name : nil
                     end
     end
+    csv_header << I18n.t('repositories.table.row_consumption') if add_consumption
 
     CSV.generate do |csv|
       csv << csv_header
@@ -84,12 +93,14 @@ module RepositoryZipExport
                            handle_file_name_func.call(cell.value.asset)
                          else
                            SmartAnnotations::TagToText.new(
-                             user, team, cell.value.export_formatted
+                             user, repository.team, cell.value.export_formatted
                            ).text
                          end
                        end
                      end
         end
+
+        csv_row << row.row_consumption(row.stock_consumption) if add_consumption
         csv << csv_row
       end
     end
