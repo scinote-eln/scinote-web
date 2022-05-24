@@ -71,7 +71,13 @@
                    @attachment:viewMode="updateAttachmentViewMode"/>
     </div>
     <deleteStepModal v-if="confirmingDelete" @confirm="deleteStep" @cancel="closeDeleteModal"/>
-    <fileModal v-if="showFileModal" @cancel="showFileModal = false" :step="step" @files="uploadFiles" @attachmentUploaded="addAttachment" />
+    <fileModal v-if="showFileModal"
+               :step="step"
+               @cancel="showFileModal = false"
+               @files="uploadFiles"
+               @attachmentUploaded="addAttachment"
+               @attachmentsChanged="loadAttachments"
+    />
   </div>
 </template>
 
@@ -112,15 +118,20 @@
       Attachments
     },
     created() {
-      $.get(this.step.attributes.urls.elements_url, (result) => {
-        this.elements = result.data
-      });
-
-      $.get(this.step.attributes.urls.attachments_url, (result) => {
-        this.attachments = result.data
-      });
+      this.loadAttachments();
+      this.loadElements();
     },
     methods: {
+      loadAttachments() {
+        $.get(this.step.attributes.urls.attachments_url, (result) => {
+          this.attachments = result.data
+        });
+      },
+      loadElements() {
+        $.get(this.step.attributes.urls.elements_url, (result) => {
+          this.elements = result.data
+        });
+      },
       showDeleteModal() {
         this.confirmingDelete = true;
       },

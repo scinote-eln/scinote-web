@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StepSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
   include ApplicationHelper
@@ -12,6 +14,7 @@ class StepSerializer < ActiveModel::Serializer
   def marvinjs_context
     if marvinjs_enabled
       {
+        marvin_js_asset_url: marvin_js_assets_path,
         icon: image_path('icon_small/marvinjs.svg')
       }
     end
