@@ -2739,13 +2739,14 @@ en:
     create_wopi_file:
       button_text: 'Create an MS Office file'
       li_text: "Office file"
-      modal_title: 'Create new Microsoft Office Online document'
-      text_field_label: 'Document name & type'
+      modal_title: 'Create new MS Office document'
+      text_field_label: 'Document name'
+      type_select_label: 'Document type'
       text_field_placeholder: 'New Document'
       ms_word: 'Word<br/>Online'
       ms_excel: 'Excel<br/>Online'
       ms_powerpoint: 'PowerPoint<br/>Online'
-      create_document_button: 'Create Document'
+      create_document_button: 'Create document'
       errors:
         forbidden: 'You do not have permission to add files.'
         not_found: 'Element not found.'

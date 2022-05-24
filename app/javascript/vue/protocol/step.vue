@@ -71,7 +71,7 @@
                    @attachment:viewMode="updateAttachmentViewMode"/>
     </div>
     <deleteStepModal v-if="confirmingDelete" @confirm="deleteStep" @cancel="closeDeleteModal"/>
-    <fileModal v-if="showFileModal" @cancel="showFileModal = false" :step="step" @files="uploadFiles" />
+    <fileModal v-if="showFileModal" @cancel="showFileModal = false" :step="step" @files="uploadFiles" @attachmentUploaded="addAttachment" />
   </div>
 </template>
 
@@ -199,6 +199,9 @@
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         })
       },
+      addAttachment(attachment) {
+        this.attachments.push(attachment);
+      }
     }
   }
 </script>

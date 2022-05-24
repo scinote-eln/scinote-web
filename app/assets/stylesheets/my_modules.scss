@@ -108,6 +108,20 @@
       color: $color-white;
     }
 
+    .act {
+      display: none;
+    }
+
+    &.active {
+      .inactive {
+        display: none;
+      }
+
+      .act {
+        display: inline-block;
+      }
+    }
+
     span {
       display: inline-block;
       margin-left: 15px;
