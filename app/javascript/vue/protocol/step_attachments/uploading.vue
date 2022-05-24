@@ -1,0 +1,50 @@
+<template>
+  <div class="asset uploading-attachment-container"
+       :class="`${attachmentViewMode} ${attachment.error ? 'error' : ''}`"
+  >
+    <div class="icon">
+      <i v-if="!attachment.error" class="fas fa-file"></i>
+      <i v-if="attachment.error" class="fas fa-exclamation-triangle"></i>
+    </div>
+    <div class="file-name">
+      <span v-if="!attachment.error">{{ i18n.t("protocols.steps.attachments.new.uploading") }}</span>
+      <span>{{ attachment.attributes.file_name }}</span>
+    </div>
+    <div v-if="!attachment.error" class="progress-container">
+      <div class="progress-bar" :style="`width: ${attachment.attributes.progress}%`"></div>
+    </div>
+    <div v-if="attachment.error" class="error-container">
+      {{ attachment.error }}
+    </div>
+    <div v-if="attachment.error" class="remove-button" @click="$emit('attachment:delete')">
+      <i class="fas fa-times"></i>
+    </div>
+  </div>
+</template>
+<script>
+  export default {
+    name: 'uploadingAttachment',
+    props: {
+      attachment: {
+        type: Object,
+        required: true
+      },
+      stepId: {
+        type: Number,
+        required: true
+      }
+    },
+    computed: {
+      attachmentViewMode() {
+        switch(this.attachment.attributes.view_mode) {
+          case 'inline':
+            return 'inline-attachment-container'
+          case 'list':
+            return 'list-attachment-container'
+          default:
+            return 'attachment-container'
+        }
+      }
+    }
+  }
+</script>

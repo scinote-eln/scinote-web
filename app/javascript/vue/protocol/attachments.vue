@@ -42,7 +42,7 @@
     <div class="attachments">
       <template v-for="(attachment, index) in attachmentsOrdered">
         <component
-          :is="`${attachmentsOrdered[index].attributes.view_mode}Attachment`"
+          :is="attachment_view_mode(attachmentsOrdered[index])"
           :key="index"
           :attachment.sync="attachmentsOrdered[index]"
           :stepId="parseInt(step.id)"
@@ -57,6 +57,8 @@
   import listAttachment from 'vue/protocol/step_attachments/list.vue'
   import inlineAttachment from 'vue/protocol/step_attachments/inline.vue'
   import thumbnailAttachment from 'vue/protocol/step_attachments/thumbnail.vue'
+  import uploadingAttachment from 'vue/protocol/step_attachments/uploading.vue'
+
 
   export default {
     name: 'Attachments',
@@ -80,6 +82,7 @@
       thumbnailAttachment,
       inlineAttachment,
       listAttachment,
+      uploadingAttachment
     },
     computed: {
       attachmentsOrdered() {
@@ -110,6 +113,12 @@
       },
       updateAttachmentViewMode(id, viewMode) {
         this.$emit('attachment:viewMode', id, viewMode)
+      },
+      attachment_view_mode(attachment) {
+        if (attachment.attributes.uploading) {
+          return 'uploadingAttachment'
+        }
+        return `${attachment.attributes.view_mode}Attachment`
       }
     }
   }

@@ -1,4 +1,4 @@
-/* global ActiveStorage GLOBAL_CONSTANTS Promise */
+/* global ActiveStorage GLOBAL_CONSTANTS Promise i18n */
 
 export default {
   data() {
@@ -11,11 +11,6 @@ export default {
     };
   },
   methods: {
-    directUploadWillStoreFileWithXHR(request) {
-      request.upload.addEventListener('progress', () => {
-        // Progress checking
-      });
-    },
     uploadFiles(files) {
       const filesToUploadCntr = files.length;
       let filesUploadedCntr = 0;
@@ -23,22 +18,42 @@ export default {
 
       return new Promise((resolve, reject) => {
         $(files).each((_, file) => {
+          const fileObject = {
+            attributes: {
+              progress: 0,
+              view_mode: this.step.attributes.assets_view_mode,
+              file_name: file.name,
+              uploading: true,
+              asset_order: this.viewModeOrder[this.step.attributes.assets_view_mode]
+            },
+            directUploadWillStoreFileWithXHR(request) {
+              request.upload.addEventListener('progress', (e) => {
+                // Progress checking
+                this.attributes.progress = parseInt((e.loaded / e.total) * 100, 10);
+              });
+            }
+          };
           if (file.size > GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB * 1024 * 1024) {
-            // Handle large file size
+            fileObject.error = i18n.t('protocols.steps.attachments.new.file_too_big');
+            this.attachments.push(fileObject);
             return;
           }
 
-          const upload = new ActiveStorage.DirectUpload(file, this.step.attributes.urls.direct_upload_url, this);
+          const upload = new ActiveStorage.DirectUpload(file, this.step.attributes.urls.direct_upload_url, fileObject);
+
+          this.attachments.push(fileObject);
 
           upload.create((error, blob) => {
             if (error) {
+              fileObject.error = i18n.t('protocols.steps.attachments.new.general_error');
               reject(error);
             } else {
               const signedId = blob.signed_id;
               $.post(this.step.attributes.urls.upload_attachment_url, {
                 signed_blob_id: signedId
               }, (result) => {
-                this.attachments.push(result.data);
+                fileObject.id = result.data.id;
+                fileObject.attributes = result.data.attributes;
               });
               filesUploadedCntr += 1;
               if (filesUploadedCntr === filesToUploadCntr) {
