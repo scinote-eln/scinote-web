@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class RepositoryRow < ApplicationRecord
-
   include ActionView::Helpers::NumberHelper
   include SearchableModel
   include SearchableByNameModel
