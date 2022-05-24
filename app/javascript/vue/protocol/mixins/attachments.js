@@ -11,6 +11,12 @@ export default {
     };
   },
   methods: {
+    dropFile(e) {
+      if (!this.showFileModal && e.dataTransfer && e.dataTransfer.files.length) {
+        this.dragingFile = false;
+        this.uploadFiles(e.dataTransfer.files);
+      }
+    },
     uploadFiles(files) {
       const filesToUploadCntr = files.length;
       let filesUploadedCntr = 0;

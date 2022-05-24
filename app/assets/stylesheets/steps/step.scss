@@ -111,6 +111,34 @@
   &.showing-comments {
     border: 1px dotted $brand-primary;
   }
+
+  .drop-message {
+    @include font-h3;
+    align-items: center;
+    color: $brand-primary;
+    display: none;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  &.draging-file {
+    background-color: $brand-focus-light;
+    position: relative;
+
+    .drop-message {
+      display: flex;
+    }
+
+    *:not(.drop-message) {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
 }
 
 .step-element-header {
@@ -137,7 +165,12 @@
   }
 
   .step-element-controls {
-    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, $color-concrete 15%, $color-concrete 100%);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      $color-concrete 15%,
+      $color-concrete 100%
+    );
     display: flex;
     margin-left: auto;
     position: absolute;

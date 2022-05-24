@@ -2515,6 +2515,7 @@ en:
       comments: "Comments"
       empty_checklist: "No items"
       comment_title: "%{user} at %{time}:"
+      drop_message: "Drop file to add to step %{position}"
       insert:
         button: 'Insert'
         title: 'insert  content'
