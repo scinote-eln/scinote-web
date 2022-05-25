@@ -64,20 +64,17 @@
           <% if can_read_experiment?(@my_module.experiment) %>
             <li id="steps-nav-tab" class="<%= "active" if is_module_protocols? %>">
               <a href="<%= protocols_my_module_url(@my_module) %>" title="<%=t "nav2.modules.steps" %>">
-                <span class="hidden-xs"><%=t "nav2.modules.steps" %></span>
-                <span class="hidden-xs hidden-lg fas fa-arrow-circle-right"></span>
+                <%=t "nav2.modules.steps" %>
               </a>
             </li>
             <li id="results-nav-tab" class="<%= "active" if is_module_results? %>">
               <a href="<%= results_my_module_url(@my_module) %>" title="<%=t "nav2.modules.results" %>">
-                <span class="hidden-xs"><%=t "nav2.modules.results" %></span>
-                <span class="hidden-xs hidden-lg fas fa-columns"></span>
+                <%=t "nav2.modules.results" %>
               </a>
             </li>
             <li id="activities-nav-tab" class="<%= "active" if is_module_activities? %>">
               <a href="<%= activities_my_module_url(@my_module) %>" title="<%=t "nav2.modules.activities" %>">
-                <span class="hidden-xs"><%=t "nav2.modules.activities" %></span>
-                <span class="hidden-xs hidden-lg fas fa-list"></span>
+                <%=t "nav2.modules.activities" %>
               </a>
             </li>
           <% end %>
@@ -86,8 +83,7 @@
           <% if can_read_experiment?(@my_module.experiment) && !@my_module.archived_branch? %>
             <li id="archive-nav-tab" class="<%= "active" if is_module_archive? %>">
               <a href="<%= archive_my_module_url(@my_module) %>" title="<%= t'nav2.modules.archive' %>">
-                <span class="hidden-xs"><%=t "nav2.modules.archive" %></span>
-                <span class="hidden-xs hidden-lg fas fa-briefcase"></span>
+                <%=t "nav2.modules.archive" %>
               </a>
             </li>
           <% end %>
