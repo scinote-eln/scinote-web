@@ -1092,7 +1092,7 @@ en:
       more: "more"
     index:
       edit_option: "Edit details"
-      clone_option: "Duplicate (as template)"
+      clone_option: "Duplicate as template"
       move_option: "Move"
       archive_option: "Archive"
       archive_confirm: "Are you sure you want to archive this project?"
@@ -1134,11 +1134,11 @@ en:
       success_flash: "<strong>%{number}</strong> experiment(s) successfully restored."
       error_flash: "Failed to restore experiment(s)."
     clone:
-      modal_title: 'Copy experiment %{experiment} as template'
-      label_title: 'Copy as template'
-      modal_submit: 'Copy'
-      success_flash: 'Successfully copied experiment %{experiment} as template.'
-      error_flash: 'Could not copy the experiment as template.'
+      modal_title: 'Duplicate experiment %{experiment} as template'
+      label_title: 'Duplicate as template'
+      modal_submit: 'Duplicate'
+      success_flash: 'Successfully duplicated experiment %{experiment} as template.'
+      error_flash: 'Could not duplicate the experiment as template.'
       current_project: '(current project)'
     move:
       modal_title: 'Move experiment %{experiment}'

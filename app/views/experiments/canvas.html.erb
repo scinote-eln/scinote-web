@@ -21,6 +21,8 @@
                   <span class="fas fa-pencil-alt"></span>
                   <span class="hidden-xs"><%=t 'experiments.canvas.canvas_edit' %></span>
                 <% end %>
+        <% end %>
+        <% if can_manage_experiment?(@experiment) || can_clone_experiment?(@experiment)  %>
           <!-- experiment actions -->
           <span class="dropdown actions-button">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="exActionsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
