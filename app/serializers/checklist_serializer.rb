@@ -12,6 +12,7 @@ class ChecklistSerializer < ActiveModel::Serializer
     {
       delete_url: step_checklist_path(object.step, object),
       update_url: step_checklist_path(object.step, object),
+      reorder_url: reorder_step_checklist_checklist_items_path(object.step, object),
       create_item_url: step_checklist_checklist_items_path(object.step, object)
     }
   end

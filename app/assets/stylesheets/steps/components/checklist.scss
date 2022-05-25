@@ -30,6 +30,10 @@
 }
 
 .step-checklist-items {
+  .step-checklist-item-ghost {
+    border: 1px solid $brand-primary;
+  }
+
   .sci-inline-edit {
     font-weight: normal;
 

@@ -1,6 +1,6 @@
 <template>
   <div class="step-checklist-item">
-    <div class="step-element-header" :class="{ 'editing-name': editingText }">
+    <div class="step-element-header" :class="{ 'locked': locked || editingText }">
       <div class="step-element-grip">
         <i class="fas fa-grip-vertical"></i>
       </div>
@@ -23,7 +23,7 @@
             @editingDisabled="disableTextEdit"
             @update="updateText"
             @delete="checklistItem.attributes.id ? deleteComponent() : removeItem()"
-            @multilinePaste="(data) => { $emit('multilinePaste', data) && removeItem() }"
+            @multilinePaste="(data) => { $emit('multilinePaste', data) && removeItem() }"
           />
         </div>
       </div>
@@ -53,6 +53,10 @@
       checklistItem: {
         type: Object,
         required: true
+      },
+      locked: {
+        type: Boolean,
+        default: false
       }
     },
     data() {
@@ -68,9 +72,11 @@
     methods: {
       enableTextEdit() {
         this.editingText = true;
+        this.$emit('editStart');
       },
       disableTextEdit() {
         this.editingText = false;
+        this.$emit('editEnd');
       },
       toggleChecked() {
         this.checklistItem.attributes.checked = this.$refs.checkbox.checked;

@@ -452,7 +452,9 @@ Rails.application.routes.draw do
       resources :tables, controller: 'step_components/tables', only: %i(create destroy update)
       resources :texts, controller: 'step_components/texts', only: %i(create destroy update)
       resources :checklists, controller: 'step_components/checklists', only: %i(create destroy update) do
-        resources :checklist_items, controller: 'step_components/checklist_items', only: %i(create update destroy)
+        resources :checklist_items, controller: 'step_components/checklist_items', only: %i(create update destroy) do
+          post :reorder, on: :collection
+        end
       end
       member do
         get 'elements'
