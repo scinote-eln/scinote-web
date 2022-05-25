@@ -19,7 +19,7 @@ export default {
         success: (result) => {
           this.$emit(
             'component:delete',
-            result.data
+            this.element.attributes.position
           );
         }
       });
