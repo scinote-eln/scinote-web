@@ -160,8 +160,7 @@
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         })
       },
-      deleteComponent(element) {
-        let position = element.attributes.position;
+      deleteComponent(position) {
         this.elements.splice(position, 1)
         let unordered_elements = this.elements.map( e => {
           if (e.attributes.position >= position) {

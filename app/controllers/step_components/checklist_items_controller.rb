@@ -46,7 +46,7 @@ module StepComponents
       if @checklist_item.destroy
         render json: @checklist_item, serializer: ChecklistItemSerializer
       else
-        render json: @checklist, serializer: ChecklistItemSerializer, status: :unprocessable_entity
+        render json: @checklist_item, serializer: ChecklistItemSerializer, status: :unprocessable_entity
       end
     end
 
