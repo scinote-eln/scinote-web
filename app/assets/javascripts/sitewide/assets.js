@@ -56,12 +56,12 @@ $(document).on('click', '.asset .delete-asset', function(e) {
 $(document).on('turbolinks:before-visit', (e) => {
   if ($('.uploading-attachment-container:not(.error)').length) {
     if (confirm(I18n.t('protocols.steps.attachments.new.leaving_warning'))) {
-      return false;
+      return true;
     }
     e.preventDefault();
     return false;
   }
-  return false;
+  return true;
 });
 
 var InlineAttachments = (function() {

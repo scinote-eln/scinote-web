@@ -3,9 +3,10 @@
 class StepSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
   include ApplicationHelper
+  include CommentHelper
 
   attributes :name, :position, :completed, :urls, :assets_view_mode, :assets_order,
-             :marvinjs_enabled, :marvinjs_context, :wopi_enabled, :wopi_context
+             :marvinjs_enabled, :marvinjs_context, :wopi_enabled, :wopi_context, :comments_count, :unseen_comments
 
   def marvinjs_enabled
     MarvinJsService.enabled?
@@ -18,6 +19,14 @@ class StepSerializer < ActiveModel::Serializer
         icon: image_path('icon_small/marvinjs.svg')
       }
     end
+  end
+
+  def comments_count
+    object.comments.count
+  end
+
+  def unseen_comments
+    has_unseen_comments?(object)
   end
 
   def wopi_enabled
