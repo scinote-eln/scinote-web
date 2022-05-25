@@ -1,5 +1,8 @@
 <template>
-  <div class="step-container">
+  <div class="step-container"
+       :id="`stepContainer${step.id}`"
+       :class="{'showing-comments': showCommentsSidebar}"
+  >
     <div class="step-header">
       <a class="step-collapse-link"
            :href="'#stepBody' + step.id"
@@ -50,6 +53,21 @@
             </li>
           </ul>
         </div>
+        <a href="#"
+           ref="comments"
+           class="open-comments-sidebar btn icon-btn btn-light"
+           data-turbolinks="false"
+           data-object-type="Step"
+           @click="showCommentsSidebar = true"
+           :data-object-id="step.id">
+          <i class="fas fa-comment"></i>
+          <span class="comments-counter"
+                :id="`comment-count-${step.id}`"
+                :class="{'unseen': step.attributes.unseen_comments}"
+          >
+            {{ step.attributes.comments_count }}
+          </span>
+        </a>
         <button class="btn icon-btn btn-light" @click="showDeleteModal">
           <i class="fas fa-trash"></i>
         </button>
@@ -104,7 +122,8 @@
         elements: [],
         attachments: [],
         confirmingDelete: false,
-        showFileModal: false
+        showFileModal: false,
+        showCommentsSidebar: false
       }
     },
     mixins: [AttachmentsMixin],
@@ -120,6 +139,9 @@
     created() {
       this.loadAttachments();
       this.loadElements();
+    },
+    mounted() {
+      $(this.$refs.comments).data('closeCallback', this.closeCommentsSidebar)
     },
     methods: {
       loadAttachments() {
@@ -212,6 +234,9 @@
       },
       addAttachment(attachment) {
         this.attachments.push(attachment);
+      },
+      closeCommentsSidebar() {
+        this.showCommentsSidebar = false
       }
     }
   }

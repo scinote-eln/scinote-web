@@ -30,6 +30,7 @@
       display: flex;
       flex-basis: 5em;
       flex-shrink: 0;
+      flex-wrap: wrap;
       padding: 1em;
 
       .comments-subject-title {
@@ -40,6 +41,10 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+      }
+
+      .comments-subject-url {
+        flex-basis: 100%;
       }
 
       .close-btn {
@@ -130,12 +135,13 @@
   }
 
   .comment-container {
-    margin: 0 1em 2em 0;
+    margin: 0 1em .25em 0;
 
     .comment-header {
       align-items: center;
       display: flex;
       margin-bottom: .5em;
+      margin-top: 2em;
       min-height: 1.75em;
 
       .user-name {
@@ -195,7 +201,7 @@
     }
 
     &.current-user {
-      margin: 0 0 2em 1em;
+      margin: 0 0 .25em 1em;
 
       .comment-body {
         background: $color-alto;

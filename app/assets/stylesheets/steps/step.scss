@@ -4,6 +4,7 @@
 @import "components/*";
 
 .step-container {
+  border: $border-transparent;
   margin: 20px 0;
   padding: 8px 24px;
 
@@ -85,6 +86,30 @@
         }
       }
     }
+  }
+
+  .comments-counter {
+    @include font-small;
+    align-items: center;
+    background-color: $color-concrete;
+    border: 2px solid $color-white;
+    border-radius: 8px;
+    display: flex;
+    height: 16px;
+    justify-content: center;
+    margin: 2px;
+    min-width: 16px;
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    &.unseen {
+      background-color: $brand-complementary;
+    }
+  }
+
+  &.showing-comments {
+    border: 1px dotted $brand-primary;
   }
 }
 
