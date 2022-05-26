@@ -1465,8 +1465,9 @@ function initEditModules() {
       var moduleId = modal.attr("data-module-id");
       var moduleEl = $("#" + moduleId);
       // Update the module's name in GUI
-      moduleEl.attr("data-module-name", newName);
-      moduleEl.find(".panel-heading .panel-title").html(newName);
+      moduleEl.attr('data-module-name', newName);
+      moduleEl.find('.panel-heading .panel-title').attr('title', newName);
+      moduleEl.find('.panel-heading .panel-title').html(newName);
 
       // Add this information to form
       var formAddInput = $('#update-canvas form input#add');
