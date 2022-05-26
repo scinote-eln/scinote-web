@@ -34,6 +34,17 @@
             @update="updateName"
           />
         </div>
+        <Tinymce
+          :value="protocol.attributes.description"
+          :value_html="protocol.attributes.description_view"
+          :placeholder="i18n.t('my_modules.protocols.protocol_status_bar.empty_description_edit_label')"
+          :updateUrl="protocolUrl"
+          :objectType="'Protocol'"
+          :objectId="parseInt(protocol.id)"
+          :fieldName="'protocol[description]'"
+          :lastUpdated="protocol.attributes.updated_at"
+          @update="updateDescription"
+        />
       </div>
       <div class="protocol-steps">
         <template v-for="(step, index) in steps">
@@ -63,6 +74,7 @@
   import Step from 'vue/protocol/step'
   import ProtocolOptions from 'vue/protocol/protocolOptions'
   import ProtocolModals from 'vue/protocol/modals'
+  import Tinymce from 'vue/shared/tinymce.vue'
 
   export default {
     name: 'ProtocolContainer',
@@ -84,7 +96,7 @@
         required: true
       }
     },
-    components: { Step, InlineEdit, ProtocolModals, ProtocolOptions },
+    components: { Step, InlineEdit, ProtocolModals, ProtocolOptions, Tinymce },
     data() {
       return {
         protocol: {
@@ -114,6 +126,9 @@
           url: this.protocolUrl,
           data: { protocol: { name: newName } }
         });
+      },
+      updateDescription(protocol) {
+        this.protocol.attributes = protocol.data.attributes
       },
       addStep(position) {
         $.post(this.addStepUrl, {position: position}, (result) => {

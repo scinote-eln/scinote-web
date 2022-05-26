@@ -3,8 +3,26 @@
 class ProtocolSerializer < ActiveModel::Serializer
   include Canaid::Helpers::PermissionsHelper
   include Rails.application.routes.url_helpers
+  include ApplicationHelper
+  include ActionView::Helpers::TextHelper
 
-  attributes :name, :id, :urls
+  attributes :name, :id, :urls, :description, :description_view, :updated_at
+
+  def updated_at
+    object.updated_at.to_i
+  end
+
+  def description_view
+    @user = @instance_options[:user]
+    custom_auto_link(object.tinymce_render('description'),
+                     simple_format: false,
+                     tags: %w(img),
+                     team: object.team)
+  end
+
+  def description
+    sanitize_input(object.tinymce_render('description'))
+  end
 
   def urls
     {
