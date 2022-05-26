@@ -174,7 +174,8 @@ en:
           attributes:
             output_id:
               creates_cycle: "mustn't create cycle"
-
+      storage:
+        limit_reached: "Storage limit has been reached."
   helpers:
     label:
       team:
