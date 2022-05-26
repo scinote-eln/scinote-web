@@ -2516,6 +2516,8 @@ en:
       empty_checklist: "No items"
       comment_title: "%{user} at %{time}:"
       drop_message: "Drop file to add to step %{position}"
+      space_used_label: '%{used} / %{limit} space used.'
+      space_used_label_unlimited: '%{used} / unlimited space used.'
       insert:
         button: 'Insert'
         title: 'insert  content'

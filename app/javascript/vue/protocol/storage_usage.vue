@@ -4,10 +4,13 @@
       <div class="progress-bar" :style="`width:${storagePrecentage}%`"></div>
     </div>
     <span v-if="this.step.attributes.storage_limit.total > 0">
-      {{ `${this.step.attributes.storage_limit.used_human} / ${this.step.attributes.storage_limit.total_human} Space used`}}
+      {{ i18n.t('protocols.steps.space_used_label', {
+                  used: this.step.attributes.storage_limit.used_human,
+                  limit: this.step.attributes.storage_limit.total_human
+      }) }}
     </span>
     <span v-else>
-      {{ `${this.step.attributes.storage_limit.used_human} / Unlimited Space used`}}
+      {{ i18n.t('protocols.steps.space_used_label_unlimited', {used: this.step.attributes.storage_limit.used_human}) }}
     </span>
   </div>
 </template>
