@@ -199,7 +199,7 @@
     opacity: 0;
   }
 
-  &:hover:not(.editing-name) {
+  &:hover:not(.locked) {
     background: $color-concrete;
 
     .step-element-grip,

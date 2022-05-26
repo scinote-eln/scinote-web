@@ -50,6 +50,16 @@ module StepComponents
       end
     end
 
+    def reorder
+      ActiveRecord::Base.transaction do
+        params[:checklist_item_positions].each do |id, position|
+          @checklist.checklist_items.find(id).update_column(:position, position)
+        end
+      end
+
+      render json: params[:checklist_item_positions], status: :ok
+    end
+
     private
 
     def check_manage_permissions
