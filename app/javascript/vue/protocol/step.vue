@@ -1,8 +1,15 @@
 <template>
   <div class="step-container"
        :id="`stepContainer${step.id}`"
-       :class="{'showing-comments': showCommentsSidebar}"
+       @drop.prevent="dropFile"
+       @dragenter.prevent="!showFileModal ? dragingFile = true : null"
+       @dragleave.prevent="!showFileModal ? dragingFile = false : null"
+       @dragover.prevent
+       :class="{ 'draging-file': dragingFile, 'showing-comments': showCommentsSidebar }"
   >
+    <div class="drop-message">
+      {{ i18n.t('protocols.steps.drop_message', {position: step.attributes.position + 1}) }}
+    </div>
     <div class="step-header">
       <a class="step-collapse-link"
            :href="'#stepBody' + step.id"
@@ -123,7 +130,8 @@
         attachments: [],
         confirmingDelete: false,
         showFileModal: false,
-        showCommentsSidebar: false
+        showCommentsSidebar: false,
+        dragingFile: false
       }
     },
     mixins: [AttachmentsMixin],
