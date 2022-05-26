@@ -132,11 +132,33 @@
 
     .drop-message {
       display: flex;
+      flex-direction: column;
     }
 
-    *:not(.drop-message) {
+    > *:not(.drop-message) {
       opacity: 0;
       pointer-events: none;
+    }
+  }
+
+  .storage-usage {
+    @include font-small;
+    color: $color-black;
+
+    .progress-container {
+      background-color: $color-white;
+      border-radius: 2px;
+      height: 4px;
+      margin: 1em 0;
+      overflow: hidden;
+      position: relative;
+
+      .progress-bar {
+        background-color: $brand-primary;
+        height: 100%;
+        position: relative;
+        transition: 1s $timing-function-sharp;
+      }
     }
   }
 }

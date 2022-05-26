@@ -9,6 +9,7 @@
   >
     <div class="drop-message">
       {{ i18n.t('protocols.steps.drop_message', {position: step.attributes.position + 1}) }}
+      <StorageUsage v-if="step.attributes.storage_limit" :step="step"/>
     </div>
     <div class="step-header">
       <a class="step-collapse-link"
@@ -115,6 +116,7 @@
   import Attachments from 'vue/protocol/attachments.vue'
   import fileModal from 'vue/protocol/step_attachments/file_modal.vue'
   import AttachmentsMixin from 'vue/protocol/mixins/attachments.js'
+  import StorageUsage from 'vue/protocol/storage_usage.vue'
 
   export default {
     name: 'StepContainer',
@@ -142,7 +144,8 @@
       Checklist,
       deleteStepModal,
       fileModal,
-      Attachments
+      Attachments,
+      StorageUsage
     },
     created() {
       this.loadAttachments();

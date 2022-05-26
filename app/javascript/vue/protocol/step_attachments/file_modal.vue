@@ -28,6 +28,7 @@
             <div class="description">
               {{ i18n.t("protocols.steps.attachments.file_modal.drag_zone_description") }}
             </div>
+            <StorageUsage v-if="step.attributes.storage_limit" :step="step"/>
             <div class="available-storage"></div>
             <div class="drop-notification">
               {{ i18n.t("protocols.steps.attachments.file_modal.drag_zone_notification", {position: step.attributes.position + 1}) }}
@@ -69,6 +70,8 @@
   </div>
 </template>
  <script>
+  import StorageUsage from '../storage_usage.vue'
+
   export default {
     name: 'fileModal',
     props: {
@@ -79,6 +82,7 @@
         dragingFile: false
       }
     },
+    components: {StorageUsage},
     mounted() {
       $(this.$refs.modal).modal('show');
       MarvinJsEditor.initNewButton('.new-marvinjs-upload-button', () => {
