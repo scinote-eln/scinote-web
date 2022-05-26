@@ -6,7 +6,8 @@ class StepSerializer < ActiveModel::Serializer
   include CommentHelper
 
   attributes :name, :position, :completed, :urls, :assets_view_mode, :assets_order,
-             :marvinjs_enabled, :marvinjs_context, :wopi_enabled, :wopi_context, :comments_count, :unseen_comments
+             :marvinjs_enabled, :marvinjs_context, :wopi_enabled, :wopi_context, :comments_count, :unseen_comments,
+             :storage_limit
 
   def marvinjs_enabled
     MarvinJsService.enabled?
@@ -40,6 +41,10 @@ class StepSerializer < ActiveModel::Serializer
         icon: image_path('office/office.svg')
       }
     end
+  end
+
+  def storage_limit
+    nil
   end
 
   def assets_order
