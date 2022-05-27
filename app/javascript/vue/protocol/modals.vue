@@ -3,10 +3,10 @@
   </div>
 </template>
 <script>
-  import deleteComponentModal from 'vue/protocol/modals/delete_component.vue'
+  import deleteElementModal from 'vue/protocol/modals/delete_element.vue'
 
   export default {
     name: 'ProtocolModals',
-    components: { deleteComponentModal }
+    components: { deleteElementModal }
   }
 </script>

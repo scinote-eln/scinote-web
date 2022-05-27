@@ -1,7 +1,7 @@
 <template>
   <div class="step-checklist-container">
     <div class="step-element-header" :class="{ 'locked': locked }">
-      <div class="step-element-grip">
+      <div class="step-element-grip" @click="$emit('reorder')">
         <i class="fas fa-grip-vertical"></i>
       </div>
       <div class="step-element-name">
@@ -55,20 +55,20 @@
         {{ i18n.t('protocols.steps.insert.checklist_item') }}
       </div>
     </div>
-    <deleteComponentModal v-if="confirmingDelete" @confirm="deleteComponent" @cancel="closeDeleteModal"/>
+    <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @cancel="closeDeleteModal"/>
   </div>
 </template>
 
  <script>
   import DeleteMixin from 'vue/protocol/mixins/components/delete.js'
-  import deleteComponentModal from 'vue/protocol/modals/delete_component.vue'
+  import deleteElementModal from 'vue/protocol/modals/delete_element.vue'
   import InlineEdit from 'vue/shared/inline_edit.vue'
-  import ChecklistItem from 'vue/protocol/step_components/checklistItem.vue'
+  import ChecklistItem from 'vue/protocol/step_elements/checklistItem.vue'
   import Draggable from 'vuedraggable'
 
   export default {
     name: 'Checklist',
-    components: { deleteComponentModal, InlineEdit, ChecklistItem, Draggable },
+    components: { deleteElementModal, InlineEdit, ChecklistItem, Draggable },
     mixins: [DeleteMixin],
     props: {
       element: {

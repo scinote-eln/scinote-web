@@ -57,6 +57,10 @@
       display: flex;
       justify-content: flex-end;
 
+      .dropdown-menu {
+        white-space: nowrap;
+      }
+
       .insert-button {
         .caret {
           margin-left: .5em;
@@ -227,6 +231,28 @@
     .step-element-grip,
     .step-element-controls {
       opacity: 1;
+    }
+  }
+}
+
+.sci-reorderable-items {
+  .modal-body {
+    padding-top: 0;
+  }
+
+  .step-element-header {
+    border-bottom: 1px solid $color-concrete;
+
+    &:hover:not(.locked) {
+      background-color: $color-white;
+    }
+
+    .step-element-name {
+      font-weight: normal;
+    }
+
+    .fas {
+      margin-right: 0.5em;
     }
   }
 }

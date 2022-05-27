@@ -76,9 +76,26 @@
             {{ step.attributes.comments_count }}
           </span>
         </a>
-        <button class="btn icon-btn btn-light" @click="showDeleteModal">
-          <i class="fas fa-trash"></i>
-        </button>
+        <div class="step-actions-container">
+          <div class="dropdown">
+            <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'stepInserMenu_' + step.id" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="true">
+              <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <ul class="dropdown-menu insert-element-dropdown" :aria-labelledby="'stepInserMenu_' + step.id">
+              <li class="title">
+                {{ i18n.t('protocols.steps.options_dropdown.title') }}
+              </li>
+              <li class="action" @click="openReorderModal">
+                <i class="fas fa-arrows-alt-v"></i>
+                {{ i18n.t('protocols.steps.options_dropdown.rearrange') }}
+              </li>
+              <li class="action" @click="showDeleteModal">
+                <i class="fas fa-trash"></i>
+                {{ i18n.t('protocols.steps.options_dropdown.delete') }}
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
     <div class="collapse in" :id="'stepBody' + step.id">
@@ -87,8 +104,10 @@
           :is="elements[index].attributes.orderable_type"
           :key="index"
           :element.sync="elements[index]"
-          @component:delete="deleteComponent"
-          @update="updateComponent" />
+          @component:delete="deleteElement"
+          @update="updateElement"
+          @reorder="openReorderModal"
+        />
       </template>
       <Attachments :step="step"
                    :attachments="attachments"
@@ -104,17 +123,32 @@
                @attachmentUploaded="addAttachment"
                @attachmentsChanged="loadAttachments"
     />
+    <ReorderableItemsModal v-if="reordering"
+      :title="i18n.t('protocols.steps.modals.reorder_elements.title', { step_name: step.attributes.name })"
+      :items="reorderableItems"
+      @reorder="updateElementOrder"
+      @close="closeReorderModal"
+    />
   </div>
 </template>
 
  <script>
+  const ICON_MAP = {
+    'Checklist': 'fa-list-ul',
+    'StepText': 'fa-font',
+    'StepTable': 'fa-table'
+  }
+
   import InlineEdit from 'vue/shared/inline_edit.vue'
-  import StepTable from 'vue/protocol/step_components/table.vue'
-  import StepText from 'vue/protocol/step_components/text.vue'
-  import Checklist from 'vue/protocol/step_components/checklist.vue'
+  import StepTable from 'vue/protocol/step_elements/table.vue'
+  import StepText from 'vue/protocol/step_elements/text.vue'
+  import Checklist from 'vue/protocol/step_elements/checklist.vue'
   import deleteStepModal from 'vue/protocol/modals/delete_step.vue'
   import Attachments from 'vue/protocol/attachments.vue'
   import fileModal from 'vue/protocol/step_attachments/file_modal.vue'
+  import ReorderableItemsModal from 'vue/protocol/modals/reorderable_items_modal.vue'
+
+  import UtilsMixin from 'vue/protocol/mixins/utils.js'
   import AttachmentsMixin from 'vue/protocol/mixins/attachments.js'
   import StorageUsage from 'vue/protocol/storage_usage.vue'
 
@@ -133,10 +167,11 @@
         confirmingDelete: false,
         showFileModal: false,
         showCommentsSidebar: false,
-        dragingFile: false
+        dragingFile: false,
+        reordering: false
       }
     },
-    mixins: [AttachmentsMixin],
+    mixins: [UtilsMixin, AttachmentsMixin],
     components: {
       InlineEdit,
       StepTable,
@@ -145,7 +180,8 @@
       deleteStepModal,
       fileModal,
       Attachments,
-      StorageUsage
+      StorageUsage,
+      ReorderableItemsModal
     },
     created() {
       this.loadAttachments();
@@ -153,6 +189,20 @@
     },
     mounted() {
       $(this.$refs.comments).data('closeCallback', this.closeCommentsSidebar)
+    },
+    computed: {
+      reorderableItems() {
+        return this.elements.map((element) => {
+          let description = element.attributes.orderable.name || element.attributes.orderable.text;
+          description = this.stripHtml(this.truncate(description, 61));
+
+          return {
+            id: element.id,
+            description: description,
+            icon: ICON_MAP[element.attributes.orderable_type]
+          }
+        });
+      }
     },
     methods: {
       loadAttachments() {
@@ -193,18 +243,17 @@
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         })
       },
-      deleteComponent(position) {
+      deleteElement(position) {
         this.elements.splice(position, 1)
-        let unordered_elements = this.elements.map( e => {
+        let unorderedElements = this.elements.map( e => {
           if (e.attributes.position >= position) {
             e.attributes.position -= 1;
           }
           return e;
         })
-        this.reorderComponents(unordered_elements)
-
+        this.reorderElements(unorderedElements)
       },
-      updateComponent(element, skipRequest=false) {
+      updateElement(element, skipRequest=false) {
         let index = this.elements.findIndex((e) => e.id === element.id);
 
         if (skipRequest) {
@@ -222,8 +271,33 @@
           })
         }
       },
-      reorderComponents(elements) {
+      reorderElements(elements) {
         this.elements = elements.sort((a, b) => a.attributes.position - b.attributes.position);
+      },
+      updateElementOrder(orderedElements) {
+        orderedElements.forEach((element, position) => {
+          let index = this.elements.findIndex((e) => e.id === element.id);
+          this.elements[index].attributes.position = position + 1;
+        });
+
+
+        let elementPositions =
+          {
+            step_orderable_element_positions: this.elements.map(
+              (element) => [element.id, element.attributes.position]
+            )
+          };
+
+        $.ajax({
+          type: "POST",
+          url: this.step.attributes.urls.reorder_elements_url,
+          data: JSON.stringify(elementPositions),
+          contentType: "application/json",
+          dataType: "json",
+          error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger'))
+        });
+
+        this.reorderElements(this.elements);
       },
       updateName(newName) {
         $.ajax({
@@ -247,6 +321,12 @@
       },
       closeCommentsSidebar() {
         this.showCommentsSidebar = false
+      },
+      openReorderModal() {
+        this.reordering = true;
+      },
+      closeReorderModal() {
+        this.reordering = false;
       }
     }
   }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module StepComponents
+module StepElements
   class ChecklistItemsController < ApplicationController
     include ApplicationHelper
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module StepComponents
+module StepElements
   class TextsController < BaseController
     before_action :load_step_text, only: %i(update destroy)
 

@@ -2,9 +2,16 @@
 
 class StepOrderableElementsController < ApplicationController
   before_action :load_vars_nested
+  before_action :check_manage_permissions
 
   def reorder
-    # element reordering logic goes here
+    ActiveRecord::Base.transaction do
+      params[:step_orderable_element_positions].each do |id, position|
+        @step.step_orderable_elements.find(id).update_column(:position, position)
+      end
+    end
+
+    render json: params[:step_orderable_element_positions], status: :ok
   end
 
   private

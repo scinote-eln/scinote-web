@@ -22,7 +22,7 @@
             @editingEnabled="enableTextEdit"
             @editingDisabled="disableTextEdit"
             @update="updateText"
-            @delete="checklistItem.attributes.id ? deleteComponent() : removeItem()"
+            @delete="checklistItem.attributes.id ? deleteElement() : removeItem()"
             @multilinePaste="(data) => { $emit('multilinePaste', data) && removeItem() }"
           />
         </div>
@@ -36,18 +36,18 @@
         </button>
       </div>
     </div>
-    <deleteComponentModal v-if="confirmingDelete" @confirm="deleteComponent" @cancel="closeDeleteModal"/>
+    <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @cancel="closeDeleteModal"/>
   </div>
 </template>
 
  <script>
   import DeleteMixin from 'vue/protocol/mixins/components/delete.js'
-  import deleteComponentModal from 'vue/protocol/modals/delete_component.vue'
+  import deleteElementModal from 'vue/protocol/modals/delete_element.vue'
   import InlineEdit from 'vue/shared/inline_edit.vue'
 
   export default {
     name: 'Checklist',
-    components: { deleteComponentModal, InlineEdit },
+    components: { deleteElementModal, InlineEdit },
     mixins: [DeleteMixin],
     props: {
       checklistItem: {
@@ -85,7 +85,7 @@
       updateText(text) {
         if (text.length === 0) {
           this.disableTextEdit();
-          this.deleteComponent();
+          this.deleteElement();
         } else {
           this.checklistItem.attributes.text = text;
           this.update();
