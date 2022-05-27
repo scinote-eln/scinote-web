@@ -508,11 +508,10 @@ Rails.application.routes.draw do
     get 'result_tables/:id/download' => 'result_tables#download',
       as: :result_table_download
 
-    resources :protocols, only: [:index, :edit, :create] do
+    resources :protocols, only: %i(index show edit create) do
       resources :steps, only: [:new, :create] do
         post :reorder, on: :collection
       end
-
       member do
         get 'print', to: 'protocols#print'
         get 'linked_children', to: 'protocols#linked_children'

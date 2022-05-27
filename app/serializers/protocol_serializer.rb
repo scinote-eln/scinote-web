@@ -6,7 +6,7 @@ class ProtocolSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :name, :id, :urls, :description, :description_view, :updated_at
+  attributes :name, :id, :urls, :description, :description_view, :updated_at, :in_repository
 
   def updated_at
     object.updated_at.to_i
@@ -32,6 +32,10 @@ class ProtocolSerializer < ActiveModel::Serializer
       import_url: import_url,
       reorder_steps_url: reorder_protocol_steps_url(protocol_id: object.id)
     }
+  end
+
+  def in_repository
+    !object.in_module?
   end
 
   private

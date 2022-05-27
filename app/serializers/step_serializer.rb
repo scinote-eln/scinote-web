@@ -48,7 +48,7 @@ class StepSerializer < ActiveModel::Serializer
   end
 
   def assets_order
-    object.current_view_state(@instance_options[:user]).state.dig('assets', 'sort')
+    object.current_view_state(@instance_options[:user]).state.dig('assets', 'sort') unless object.destroyed?
   end
 
   def urls

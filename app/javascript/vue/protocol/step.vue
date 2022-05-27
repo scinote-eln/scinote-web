@@ -21,7 +21,7 @@
            data-remote="true">
           <span class="fas fa-caret-right"></span>
       </a>
-      <div class="step-complete-container">
+      <div v-if="!inRepository" class="step-complete-container">
         <div :class="`step-state ${step.attributes.completed ? 'completed' : ''}`" @click="changeState"></div>
       </div>
       <div class="step-position">
@@ -161,7 +161,11 @@
       step: {
         type: Object,
         required: true
-      }
+      },
+      inRepository: {
+        type: Boolean,
+        required: true
+      },
     },
     data() {
       return {
