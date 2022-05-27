@@ -765,6 +765,9 @@ Rails.application.routes.draw do
                   resources :task_tags, only: %i(index show),
                             path: 'tags',
                             as: :tags
+                  resources :task_assignments, only: %i(index create destroy),
+                            path: 'task_assignments',
+                            as: :task_assignments
                   resources :protocols, only: %i(index show) do
                     resources :steps, only: %i(index show create update destroy) do
                       resources :assets, only: %i(index show create), path: 'attachments'
