@@ -12,7 +12,7 @@ export default {
     closeDeleteModal() {
       this.confirmingDelete = false;
     },
-    deleteComponent() {
+    deleteElement() {
       $.ajax({
         url: this.element.attributes.orderable.urls.delete_url,
         type: 'DELETE',

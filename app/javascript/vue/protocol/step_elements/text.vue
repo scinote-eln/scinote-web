@@ -1,7 +1,7 @@
 <template>
   <div class="step-text-container" :class="{ 'edit': inEditMode }">
     <div class="action-container" @click="enableEditMode">
-      <div class="element-grip">
+      <div class="element-grip" @click="$emit('reorder')">
         <i class="fas fa-grip-vertical"></i>
       </div>
       <div class="buttons-container">
@@ -26,18 +26,18 @@
       @update="update"
       @editingDisabled="disableEditMode"
     />
-    <deleteComponentModal v-if="confirmingDelete" @confirm="deleteComponent(event)" @cancel="closeDeleteModal"/>
+    <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement($event)" @cancel="closeDeleteModal"/>
   </div>
 </template>
 
  <script>
   import DeleteMixin from 'vue/protocol/mixins/components/delete.js'
-  import deleteComponentModal from 'vue/protocol/modals/delete_component.vue'
+  import deleteElementModal from 'vue/protocol/modals/delete_element.vue'
   import Tinymce from 'vue/shared/tinymce.vue'
 
   export default {
     name: 'StepText',
-    components: { deleteComponentModal, Tinymce },
+    components: { deleteElementModal, Tinymce },
     mixins: [DeleteMixin],
     props: {
       element: {

@@ -1,7 +1,7 @@
 <template>
   <div class="step-table-container">
      <div class="step-element-header" :class="{ 'editing-name': editingName }">
-      <div class="step-element-grip">
+      <div class="step-element-grip" @click="$emit('reorder')">
         <i class="fas fa-grip-vertical"></i>
       </div>
       <div class="step-element-name">
@@ -44,18 +44,18 @@
         <i class="fas fa-times"></i>
       </button>
     </div>
-    <deleteComponentModal v-if="confirmingDelete" @confirm="deleteComponent" @cancel="closeDeleteModal"/>
+    <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @cancel="closeDeleteModal"/>
   </div>
 </template>
 
  <script>
   import DeleteMixin from 'vue/protocol/mixins/components/delete.js'
-  import deleteComponentModal from 'vue/protocol/modals/delete_component.vue'
+  import deleteElementModal from 'vue/protocol/modals/delete_element.vue'
   import InlineEdit from 'vue/shared/inline_edit.vue'
 
   export default {
     name: 'StepTable',
-    components: { deleteComponentModal, InlineEdit },
+    components: { deleteElementModal, InlineEdit },
     mixins: [DeleteMixin],
     props: {
       element: {

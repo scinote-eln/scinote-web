@@ -445,14 +445,17 @@ Rails.application.routes.draw do
     end
 
     resources :steps, only: %i(index edit update destroy show) do
+      resources :step_orderable_elements do
+        post :reorder, on: :collection
+      end
       resources :step_comments,
                 path: '/comments',
                 only: %i(create index update destroy)
 
-      resources :tables, controller: 'step_components/tables', only: %i(create destroy update)
-      resources :texts, controller: 'step_components/texts', only: %i(create destroy update)
-      resources :checklists, controller: 'step_components/checklists', only: %i(create destroy update) do
-        resources :checklist_items, controller: 'step_components/checklist_items', only: %i(create update destroy) do
+      resources :tables, controller: 'step_elements/tables', only: %i(create destroy update)
+      resources :texts, controller: 'step_elements/texts', only: %i(create destroy update)
+      resources :checklists, controller: 'step_elements/checklists', only: %i(create destroy update) do
+        resources :checklist_items, controller: 'step_elements/checklist_items', only: %i(create update destroy) do
           post :reorder, on: :collection
         end
       end
@@ -507,7 +510,10 @@ Rails.application.routes.draw do
       as: :result_table_download
 
     resources :protocols, only: [:index, :edit, :create] do
-      resources :steps, only: [:new, :create]
+      resources :steps, only: [:new, :create] do
+        post :reorder, on: :collection
+      end
+
       member do
         get 'print', to: 'protocols#print'
         get 'linked_children', to: 'protocols#linked_children'

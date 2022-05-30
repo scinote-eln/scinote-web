@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module StepComponents
+module StepElements
   class BaseController < ApplicationController
     before_action :load_step_and_protocol
     before_action :check_manage_permissions

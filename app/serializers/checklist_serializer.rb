@@ -3,8 +3,12 @@
 class ChecklistSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
 
-  attributes :id, :name, :urls
+  attributes :id, :name, :urls, :icon
   has_many :checklist_items, serializer: ChecklistItemSerializer
+
+  def icon
+    'fa-list-ul'
+  end
 
   def urls
     return {} if object.destroyed?

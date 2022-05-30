@@ -2251,6 +2251,10 @@ en:
       unchangable_error_message: "Predefined roles can not be changed!"
 
   protocols:
+    reorder_steps:
+        button: "Rearrange steps"
+        modal:
+          title: "Rearrange protocol steps"
     print:
       title: "Print protocol"
       button: "Print"
@@ -2518,6 +2522,10 @@ en:
       drop_message: "Drop file to add to step %{position}"
       space_used_label: '%{used} / %{limit} space used.'
       space_used_label_unlimited: '%{used} / unlimited space used.'
+      options_dropdown:
+        title: 'Step options'
+        rearrange: 'Rearrange step content'
+        delete: 'Delete'
       insert:
         button: 'Insert'
         title: 'insert  content'
@@ -2534,7 +2542,7 @@ en:
       text:
         placeholder: 'Enter step text'
       modals:
-        delete_component:
+        delete_element:
           title: 'Delete content'
           description_1: 'You’re about to delete a content block from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'
           description_2: 'Are you sure you want to delete it?'
@@ -2544,6 +2552,8 @@ en:
           description_1: 'You’re about to delete a whole step from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'
           description_2: 'Are you sure you want to delete it?'
           confirm: 'Delete forever'
+        reorder_elements:
+          title: 'Rearrange %{step_name} content'
       options:
         up_arrow_title: "Move step up"
         down_arrow_title: "Move step down"

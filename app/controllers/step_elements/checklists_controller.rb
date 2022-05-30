@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module StepComponents
+module StepElements
   class ChecklistsController < BaseController
     before_action :load_checklist, only: %i(update destroy)
 

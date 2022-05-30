@@ -5,17 +5,17 @@
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="modal-destroy-team-label">
-            {{ i18n.t('protocols.steps.modals.delete_component.title')}}
+            {{ i18n.t('protocols.steps.modals.delete_element.title')}}
           </h4>
         </div>
         <div class="modal-body">
-          <p>{{ i18n.t('protocols.steps.modals.delete_component.description_1')}}</p>
-          <p><b>{{ i18n.t('protocols.steps.modals.delete_component.description_2')}}</b></p>
+          <p>{{ i18n.t('protocols.steps.modals.delete_element.description_1')}}</p>
+          <p><b>{{ i18n.t('protocols.steps.modals.delete_element.description_2')}}</b></p>
 
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" @click="cancel">{{ i18n.t('general.cancel') }}</button>
-          <button class="btn btn-danger" @click="confirm">{{ i18n.t('protocols.steps.modals.delete_component.confirm')}}</button>
+          <button class="btn btn-danger" @click="confirm">{{ i18n.t('protocols.steps.modals.delete_element.confirm')}}</button>
         </div>
       </div>
     </div>
@@ -23,7 +23,7 @@
 </template>
  <script>
   export default {
-    name: 'deleteComponentModal',
+    name: 'deleteElementModal',
     mounted() {
       $(this.$refs.modal).modal('show');
     },

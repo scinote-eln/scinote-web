@@ -46,6 +46,12 @@
           @update="updateDescription"
         />
       </div>
+      <div class="protocol-step-actions">
+        <a class="btn btn-default" data-toggle="modal" @click="startStepReorder">
+            <span class="fas fa-arrows-alt-v" aria-hidden="true"></span>
+            <span>{{ i18n.t("protocols.reorder_steps.button") }}</span>
+        </a>
+      </div>
       <div class="protocol-steps">
         <template v-for="(step, index) in steps">
           <div class="step-block" :key="step.id">
@@ -54,6 +60,7 @@
             </div>
             <Step
               :step.sync="steps[index]"
+              @reorder="startStepReorder"
               @step:delete="updateStepsPosition"
               @step:update="updateStep"
             />
@@ -66,6 +73,13 @@
       </button>
     </div>
     <ProtocolModals/>
+    <ReorderableItemsModal v-if="reordering"
+      :title="i18n.t('protocols.reorder_steps.modal.title')"
+      :items="steps"
+      :includeNumbers="true"
+      @reorder="updateStepOrder"
+      @close="closeStepReorderModal"
+    />
   </div>
 </template>
 
@@ -75,6 +89,9 @@
   import ProtocolOptions from 'vue/protocol/protocolOptions'
   import ProtocolModals from 'vue/protocol/modals'
   import Tinymce from 'vue/shared/tinymce.vue'
+  import ReorderableItemsModal from 'vue/protocol/modals/reorderable_items_modal.vue'
+
+  import UtilsMixin from 'vue/protocol/mixins/utils.js'
 
   export default {
     name: 'ProtocolContainer',
@@ -96,13 +113,15 @@
         required: true
       }
     },
-    components: { Step, InlineEdit, ProtocolModals, ProtocolOptions, Tinymce },
+    components: { Step, InlineEdit, ProtocolModals, ProtocolOptions, Tinymce, ReorderableItemsModal },
+    mixins: [UtilsMixin],
     data() {
       return {
         protocol: {
           attributes: {}
         },
-        steps: {}
+        steps: {},
+        reordering: false
       }
     },
     created() {
@@ -163,6 +182,36 @@
       reorderSteps(steps) {
         this.steps = steps.sort((a, b) => a.attributes.position - b.attributes.position);
         this.refreshProtocolStatus();
+      },
+      updateStepOrder(orderedSteps) {
+        orderedSteps.forEach((step, position) => {
+          let index = this.steps.findIndex((e) => e.id === step.id);
+          this.steps[index].attributes.position = position + 1;
+        });
+
+        let stepPositions =
+          {
+            step_positions: this.steps.map(
+              (step) => [step.id, step.attributes.position]
+            )
+          };
+
+        $.ajax({
+          type: "POST",
+          url: this.protocol.attributes.urls.reorder_steps_url,
+          data: JSON.stringify(stepPositions),
+          contentType: "application/json",
+          dataType: "json",
+          error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger'))
+        });
+
+        this.reorderSteps(this.steps);
+      },
+      startStepReorder() {
+        this.reordering = true;
+      },
+      closeStepReorderModal() {
+        this.reordering = false;
       }
     }
   }

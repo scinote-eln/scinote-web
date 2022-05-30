@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module StepComponents
+module StepElements
   class TablesController < BaseController
     before_action :load_table, only: %i(update destroy)
 
