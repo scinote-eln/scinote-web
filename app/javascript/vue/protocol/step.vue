@@ -11,7 +11,10 @@
       {{ i18n.t('protocols.steps.drop_message', {position: step.attributes.position + 1}) }}
       <StorageUsage v-if="step.attributes.storage_limit" :step="step"/>
     </div>
-    <div class="step-header">
+    <div class="step-header step-element-header">
+      <div class="step-element-grip" @click="$emit('reorder')">
+        <i class="fas fa-grip-vertical"></i>
+      </div>
       <a class="step-collapse-link"
            :href="'#stepBody' + step.id"
            data-toggle="collapse"

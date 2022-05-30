@@ -2251,6 +2251,10 @@ en:
       unchangable_error_message: "Predefined roles can not be changed!"
 
   protocols:
+    reorder_steps:
+        button: "Rearrange steps"
+        modal:
+          title: "Rearrange protocol steps"
     print:
       title: "Print protocol"
       button: "Print"

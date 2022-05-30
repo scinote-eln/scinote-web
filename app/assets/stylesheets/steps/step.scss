@@ -5,7 +5,7 @@
 
 .step-container {
   border: $border-transparent;
-  margin: 20px 0;
+  margin: 20px 0 20px -1.5em;
   padding: 8px 24px;
 
   .step-header {
@@ -188,6 +188,11 @@
   .step-element-name {
     font-weight: bold;
     width: 100%;
+
+    .step-element-number {
+      display: inline-block;
+      margin-right: 8px;
+    }
   }
 
   .step-element-controls {

@@ -17,12 +17,13 @@
             :handle="'.step-element-grip'"
             @end="reorder"
           >
-            <div v-for="item in reorderedItems" :key="item.id" class="step-element-header">
+            <div v-for="(item, index) in reorderedItems" :key="item.id" class="step-element-header">
               <div class="step-element-grip">
                 <i class="fas fa-grip-vertical"></i>
               </div>
               <div class="step-element-name">
-                <i class="fas" :class="item.icon"></i>
+                <strong v-if="includeNumbers" class="step-element-number">{{ index + 1 }}</strong>
+                <i v-if="item.icon" class="fas" :class="item.icon"></i>
                 {{ item.description }}
               </div>
             </div>
@@ -48,6 +49,10 @@
       items: {
         type: Array,
         required: true,
+      },
+      includeNumbers: {
+        type: Boolean,
+        default: false
       }
     },
     data() {

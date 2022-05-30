@@ -510,7 +510,10 @@ Rails.application.routes.draw do
       as: :result_table_download
 
     resources :protocols, only: [:index, :edit, :create] do
-      resources :steps, only: [:new, :create]
+      resources :steps, only: [:new, :create] do
+        post :reorder, on: :collection
+      end
+
       member do
         get 'print', to: 'protocols#print'
         get 'linked_children', to: 'protocols#linked_children'

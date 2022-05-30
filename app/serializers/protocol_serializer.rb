@@ -29,7 +29,8 @@ class ProtocolSerializer < ActiveModel::Serializer
       load_from_repo_url: load_from_repo_url,
       save_to_repo_url: save_to_repo_url,
       export_url: export_url,
-      import_url: import_url
+      import_url: import_url,
+      reorder_steps_url: reorder_protocol_steps_url(protocol_id: object.id)
     }
   end
 

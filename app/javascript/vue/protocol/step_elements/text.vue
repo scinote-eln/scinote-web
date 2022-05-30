@@ -26,7 +26,7 @@
       @update="update"
       @editingDisabled="disableEditMode"
     />
-    <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement(event)" @cancel="closeDeleteModal"/>
+    <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement($event)" @cancel="closeDeleteModal"/>
   </div>
 </template>
 
