@@ -3,10 +3,14 @@
 class TableSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
 
-  attributes :name, :contents, :urls
+  attributes :name, :contents, :urls, :icon
 
   def contents
     object.contents_utf_8
+  end
+
+  def icon
+    'fa-table'
   end
 
   def urls

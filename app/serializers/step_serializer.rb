@@ -50,6 +50,7 @@ class StepSerializer < ActiveModel::Serializer
   def assets_order
     object.current_view_state(@instance_options[:user]).state.dig('assets', 'sort')
   end
+
   def urls
     {
       delete_url: step_path(object),

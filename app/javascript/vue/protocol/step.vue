@@ -8,7 +8,7 @@
        :class="{ 'draging-file': dragingFile, 'showing-comments': showCommentsSidebar }"
   >
     <div class="drop-message">
-      {{ i18n.t('protocols.steps.drop_message', {position: step.attributes.position + 1}) }}
+      {{ i18n.t('protocols.steps.drop_message', { position: step.attributes.position }) }}
       <StorageUsage v-if="step.attributes.storage_limit" :step="step"/>
     </div>
     <div class="step-header step-element-header">
@@ -25,7 +25,7 @@
         <div :class="`step-state ${step.attributes.completed ? 'completed' : ''}`" @click="changeState"></div>
       </div>
       <div class="step-position">
-        {{ step.attributes.position + 1 }}.
+        {{ step.attributes.position }}.
       </div>
       <div class="step-name-container">
         <InlineEdit
@@ -128,7 +128,7 @@
     />
     <ReorderableItemsModal v-if="reordering"
       :title="i18n.t('protocols.steps.modals.reorder_elements.title', { step_name: step.attributes.name })"
-      :items="reorderableItems"
+      :items="reorderableElements"
       @reorder="updateElementOrder"
       @close="closeReorderModal"
     />
@@ -194,17 +194,8 @@
       $(this.$refs.comments).data('closeCallback', this.closeCommentsSidebar)
     },
     computed: {
-      reorderableItems() {
-        return this.elements.map((element) => {
-          let description = element.attributes.orderable.name || element.attributes.orderable.text;
-          description = this.stripHtml(this.truncate(description, 61));
-
-          return {
-            id: element.id,
-            description: description,
-            icon: ICON_MAP[element.attributes.orderable_type]
-          }
-        });
+      reorderableElements() {
+        return this.elements.map((e) => { return { id: e.id, attributes: e.attributes.orderable } })
       }
     },
     methods: {

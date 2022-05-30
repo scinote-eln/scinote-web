@@ -75,7 +75,7 @@
     <ProtocolModals/>
     <ReorderableItemsModal v-if="reordering"
       :title="i18n.t('protocols.reorder_steps.modal.title')"
-      :items="reorderableSteps"
+      :items="steps"
       :includeNumbers="true"
       @reorder="updateStepOrder"
       @close="closeStepReorderModal"
@@ -122,16 +122,6 @@
         },
         steps: {},
         reordering: false
-      }
-    },
-    computed: {
-      reorderableSteps() {
-        return this.steps.map((step) => {
-          return {
-            id: step.id,
-            description: step.attributes.name
-          }
-        });
       }
     },
     created() {

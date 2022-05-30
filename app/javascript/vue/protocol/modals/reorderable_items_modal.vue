@@ -15,7 +15,6 @@
             :dragClass="'step-checklist-item-drag'"
             :chosenClass="'step-checklist-item-chosen'"
             :handle="'.step-element-grip'"
-            @end="reorder"
           >
             <div v-for="(item, index) in reorderedItems" :key="item.id" class="step-element-header">
               <div class="step-element-grip">
@@ -23,8 +22,8 @@
               </div>
               <div class="step-element-name">
                 <strong v-if="includeNumbers" class="step-element-number">{{ index + 1 }}</strong>
-                <i v-if="item.icon" class="fas" :class="item.icon"></i>
-                {{ item.description }}
+                <i v-if="item.attributes.icon" class="fas" :class="item.attributes.icon"></i>
+                {{ item.attributes.name }}
               </div>
             </div>
           </Draggable>
@@ -65,11 +64,12 @@
     },
     methods: {
       close() {
-        $(this.$refs.modal).modal('hide');
-        this.$emit('close');
-      },
-      reorder() {
         this.$emit('reorder', this.reorderedItems);
+
+        this.$nextTick(() => {
+          $(this.$refs.modal).modal('hide');
+          this.$emit('close');
+        });
       }
     }
   }

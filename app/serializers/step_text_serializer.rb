@@ -5,7 +5,7 @@ class StepTextSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :id, :text, :urls, :text_view, :updated_at
+  attributes :id, :text, :urls, :text_view, :updated_at, :icon, :name
 
   def updated_at
     object.updated_at.to_i
@@ -21,6 +21,14 @@ class StepTextSerializer < ActiveModel::Serializer
 
   def text
     sanitize_input(object.tinymce_render('text'))
+  end
+
+  def name
+    strip_tags(object.tinymce_render('text').truncate(62, '...'))
+  end
+
+  def icon
+    'fa-font'
   end
 
   def urls
