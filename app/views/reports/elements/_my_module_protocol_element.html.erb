@@ -9,6 +9,11 @@
     </div>
   </div>
   <div class="report-element-body">
+    <div class="pull-left protocol-name">
+        <h4>
+          <%= protocol.name %>
+        </h4>
+      </div>
     <div class="row module-protocol-description">
       <% if protocol.description.present? %>
         <%= custom_auto_link(protocol.prepare_for_report(:description, export_all),

@@ -2,9 +2,7 @@
 <% step_type_str = step.completed ? 'completed' : 'uncompleted' %>
 <% user = step.completed? && step.last_modified_by || step.user %>
 <% timestamp = step.completed ? step.completed_on : step.created_at %>
-<% tables = step.tables %>
 <% assets = step.assets %>
-<% checklists = step.checklists %>
 <% export_all = defined?(export_all) && export_all %>
 <div class="report-element report-step-element">
   <div class="report-element-header">
@@ -39,19 +37,20 @@
     </div>
   </div>
   <div class="report-element-children">
-    <% if @settings.dig('task', 'protocol', 'step_tables') %>
-      <% tables.each do |table| %>
-        <%= render partial: 'reports/elements/step_table_element.html.erb', locals: { table: table, export_all: export_all } %>
+    <% step.step_orderable_elements.order(:position).each do |e| %>
+      <% if e.orderable_type == 'StepTable' && @settings.dig('task', 'protocol', 'step_tables') %>
+        <%= render partial: 'reports/elements/step_table_element.html.erb', locals: { table: e.orderable.table, export_all: export_all } %>
+      <% end %>
+      <% if e.orderable_type == 'Checklist' && @settings.dig('task', 'protocol', 'step_checklists') %>
+        <%= render partial: 'reports/elements/step_checklist_element.html.erb', locals: { checklist: e.orderable, export_all: export_all } %>
+      <% end %>
+      <% if e.orderable_type == 'StepText' %>
+        <%= render partial: 'reports/elements/step_text_element.html.erb', locals: { step_text: e.orderable, export_all: export_all } %>
       <% end %>
     <% end %>
     <% if @settings.dig('task', 'protocol', 'step_files') %>
       <% assets.each do |asset| %>
         <%= render partial: 'reports/elements/step_asset_element.html.erb', locals: { asset: asset, export_all: export_all } %>
-      <% end %>
-    <% end %>
-    <% if @settings.dig('task', 'protocol', 'step_checklists') %>
-      <% checklists.each do |checklist| %>
-        <%= render partial: 'reports/elements/step_checklist_element.html.erb', locals: { checklist: checklist, export_all: export_all } %>
       <% end %>
     <% end %>
     <% if @settings.dig('task', 'protocol', 'step_comments') %>
