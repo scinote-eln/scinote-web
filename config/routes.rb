@@ -451,7 +451,6 @@ Rails.application.routes.draw do
       resources :step_comments,
                 path: '/comments',
                 only: %i(create index update destroy)
-
       resources :tables, controller: 'step_elements/tables', only: %i(create destroy update)
       resources :texts, controller: 'step_elements/texts', only: %i(create destroy update)
       resources :checklists, controller: 'step_elements/checklists', only: %i(create destroy update) do

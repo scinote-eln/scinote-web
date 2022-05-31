@@ -40,6 +40,11 @@
   }
 
   .tinymce-container {
+    align-items: center;
+    display: flex;
+    min-height: 36px;
+    width: 100%;
+    
     .tinymce-status-badge {
       display: none;
     }
