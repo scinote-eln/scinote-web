@@ -28,7 +28,7 @@
            :data-sketch-name="attachment.attributes.metadata.name"
            :data-sketch-description="attachment.attributes.metadata.description"
         >
-          <img :src="attachment.attributes.url.marvin_js_icon"/>
+          <img :src="attachment.attributes.urls.marvin_js_icon"/>
           {{ i18n.t('assets.file_preview.edit_in_marvinjs') }}
         </a>
       </li>

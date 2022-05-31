@@ -1,7 +1,7 @@
 <template>
   <div ref="modal" @keydown.esc="cancel"
        class="modal add-file-modal"
-       :class="dragingFile ? 'draging-file' : ''"
+       :class="{ 'draging-file' : dragingFile }"
        role="dialog" aria-hidden="true" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -28,6 +28,7 @@
             <div class="description">
               {{ i18n.t("protocols.steps.attachments.file_modal.drag_zone_description") }}
             </div>
+            <StorageUsage v-if="step.attributes.storage_limit" :step="step"/>
             <div class="available-storage"></div>
             <div class="drop-notification">
               {{ i18n.t("protocols.steps.attachments.file_modal.drag_zone_notification", {position: step.attributes.position + 1}) }}
@@ -41,7 +42,9 @@
               <a
                 class="new-marvinjs-upload-button btn btn-light"
                 :data-object-id="step.id"
+                :data-marvin-url="step.attributes.marvinjs_context.marvin_js_asset_url"
                 data-object-type="Step"
+                @click="openMarvinJsModal"
               >
                 <span class="new-marvinjs-upload-icon">
                   <img :src="step.attributes.marvinjs_context.icon"/>
@@ -50,12 +53,7 @@
               </a>
             </div>
             <div class="integration-block wopi" v-if="step.attributes.wopi_enabled">
-              <a :href="step.attributes.wopi_context.create_wopi"
-                 class="create-wopi-file-btn btn btn-light"
-                 target="_blank"
-                 :data-id="step.id"
-                 data-element-type="Step"
-              >
+              <a @click="openWopiFileModal" class="create-wopi-file-btn btn btn-light">
                 <img :src="step.attributes.wopi_context.icon"/>
                 {{ i18n.t('assets.create_wopi_file.button_text') }}
               </a>
@@ -72,6 +70,8 @@
   </div>
 </template>
  <script>
+  import StorageUsage from '../storage_usage.vue'
+
   export default {
     name: 'fileModal',
     props: {
@@ -82,8 +82,13 @@
         dragingFile: false
       }
     },
+    components: {StorageUsage},
     mounted() {
       $(this.$refs.modal).modal('show');
+      MarvinJsEditor.initNewButton('.new-marvinjs-upload-button', () => {
+        this.$emit('attachmentsChanged');
+        this.$nextTick(this.cancel);
+      });
     },
     methods: {
       cancel() {
@@ -99,6 +104,34 @@
       uploadFiles() {
         $(this.$refs.modal).modal('hide');
         this.$emit('files', this.$refs.fileSelector.files);
+      },
+      openMarvinJsModal() {
+        // hide regular file modal
+        $(this.$refs.modal).modal('hide');
+      },
+      openWopiFileModal() {
+        // hide regular file modal
+        $(this.$refs.modal).modal('hide');
+
+        // handle legacy wopi file modal
+        let $wopiModal = $('#new-office-file-modal')
+        $wopiModal.find('#element_id').val(this.step.id);
+        $wopiModal.find('#element_type').val('Step');
+        $wopiModal.modal('show');
+
+        $wopiModal.find('form').on('ajax:success',
+          (_e, data, status) => {
+            if (status === 'success') {
+              $wopiModal.modal('hide');
+              this.$emit('attachmentUploaded', data);
+
+              // cancel and remove regular file modal
+              this.$nextTick(() => this.cancel());
+            } else {
+              HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+            }
+          }
+        );
       }
     }
   }

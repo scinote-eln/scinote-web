@@ -344,6 +344,85 @@
   }
 }
 
+.uploading-attachment-container {
+  align-items: center;
+  background-color: $color-concrete;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+
+  .icon {
+    font-size: 2em;
+  }
+
+  .file-name {
+    text-align: center;
+  }
+
+  .remove-button {
+    color: $color-silver-chalice;
+    cursor: pointer;
+    margin: .75em 1em;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  .progress-container {
+    background-color: $color-white;
+    flex-basis: 4px;
+    margin-top: 1em;
+    position: relative;
+    width: 60%;
+
+    .progress-bar {
+      background-color: $brand-primary;
+      height: 100%;
+      position: relative;
+      transition: 1s $timing-function-sharp;
+    }
+  }
+
+  &.list-attachment-container {
+    flex-direction: row;
+
+    .icon {
+      font-size: 1em;
+    }
+
+    .progress-container {
+      border-radius: 50%;
+      flex-basis: 30%;
+      height: 4px;
+      margin-left: auto;
+      margin-top: 0;
+    }
+  }
+
+  &.error {
+    background: $color-white;
+    border-color: $brand-danger;
+
+    .icon {
+      color: $brand-danger;
+    }
+
+    .error-container {
+      color: $brand-danger;
+      margin-top: 1em;
+      padding: 0 2em;
+      text-align: center;
+    }
+
+    &.list-attachment-container {
+      .error-container {
+        margin-left: auto;
+        margin-top: 0;
+      }
+    }
+  }
+}
 
 .asset-icon {
   display: inline-block;

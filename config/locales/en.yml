@@ -348,6 +348,7 @@ en:
       delete: "Delete"
     delete_confirm: "Are you sure you wish to delete this comment?"
     delete_error: "Error occurred while deleting comment."
+    step_url: "Go to step"
 
   projects:
     index:
@@ -2250,6 +2251,10 @@ en:
       unchangable_error_message: "Predefined roles can not be changed!"
 
   protocols:
+    reorder_steps:
+        button: "Rearrange steps"
+        modal:
+          title: "Rearrange protocol steps"
     print:
       title: "Print protocol"
       button: "Print"
@@ -2514,6 +2519,13 @@ en:
       comments: "Comments"
       empty_checklist: "No items"
       comment_title: "%{user} at %{time}:"
+      drop_message: "Drop file to add to step %{position}"
+      space_used_label: '%{used} / %{limit} space used.'
+      space_used_label_unlimited: '%{used} / unlimited space used.'
+      options_dropdown:
+        title: 'Step options'
+        rearrange: 'Rearrange step content'
+        delete: 'Delete'
       insert:
         button: 'Insert'
         title: 'insert  content'
@@ -2530,7 +2542,7 @@ en:
       text:
         placeholder: 'Enter step text'
       modals:
-        delete_component:
+        delete_element:
           title: 'Delete content'
           description_1: 'You’re about to delete a content block from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'
           description_2: 'Are you sure you want to delete it?'
@@ -2540,6 +2552,8 @@ en:
           description_1: 'You’re about to delete a whole step from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'
           description_2: 'Are you sure you want to delete it?'
           confirm: 'Delete forever'
+        reorder_elements:
+          title: 'Rearrange %{step_name} content'
       options:
         up_arrow_title: "Move step up"
         down_arrow_title: "Move step down"
@@ -2563,6 +2577,11 @@ en:
           drag_zone_description: "You can also drag & drop files to here or into steps to upload"
           drag_zone_notification: "Drop files to add to step %{position}"
           or: "OR"
+        new:
+          uploading: 'Uploading'
+          file_too_big: 'Failed to upload: File size is too big'
+          general_error: 'Failed to upload: Something went wrong, please try again'
+          leaving_warning: 'Your changes will be lost if you navigate away'
 
         sort:
           new_html: "Newest first &#8595;"
@@ -2734,13 +2753,14 @@ en:
     create_wopi_file:
       button_text: 'Create an MS Office file'
       li_text: "Office file"
-      modal_title: 'Create new Microsoft Office Online document'
-      text_field_label: 'Document name & type'
+      modal_title: 'Create new MS Office document'
+      text_field_label: 'Document name'
+      type_select_label: 'Document type'
       text_field_placeholder: 'New Document'
       ms_word: 'Word<br/>Online'
       ms_excel: 'Excel<br/>Online'
       ms_powerpoint: 'PowerPoint<br/>Online'
-      create_document_button: 'Create Document'
+      create_document_button: 'Create document'
       errors:
         forbidden: 'You do not have permission to add files.'
         not_found: 'Element not found.'

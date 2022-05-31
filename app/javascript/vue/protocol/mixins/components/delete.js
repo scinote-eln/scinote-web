@@ -12,14 +12,14 @@ export default {
     closeDeleteModal() {
       this.confirmingDelete = false;
     },
-    deleteComponent() {
+    deleteElement() {
       $.ajax({
         url: this.element.attributes.orderable.urls.delete_url,
         type: 'DELETE',
         success: (result) => {
           this.$emit(
             'component:delete',
-            result.data
+            this.element.attributes.position
           );
         }
       });

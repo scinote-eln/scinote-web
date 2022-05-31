@@ -2,35 +2,16 @@
 
 class StepOrderableElementsController < ApplicationController
   before_action :load_vars_nested
-  before_action :load_vars, only: %i(destroy update)
-  before_action :check_manage_permissions, only: %i(create destroy)
+  before_action :check_manage_permissions
 
-  def create
+  def reorder
     ActiveRecord::Base.transaction do
-      element = @step.step_orderable_elements.create!(
-        position: @step.step_orderable_elements.length,
-        orderable: create_step_element
-      )
-      render json: element, serializer: StepOrderableElementSerializer, user: current_user
-    rescue ActiveRecord::RecordInvalid
-      render json: {}, status: :unprocessable_entity
+      params[:step_orderable_element_positions].each do |id, position|
+        @step.step_orderable_elements.find(id).update_column(:position, position)
+      end
     end
-  end
 
-  def update
-    @element.update!(orderable_params)
-    TinyMceAsset.update_images(@element, params[:tiny_mce_images], current_user) if @element.is_a? StepText
-    render json: @element, serializer: "#{@element.class}Serializer".constantize, user: current_user
-  rescue ActiveRecord::RecordInvalid
-    render json: {}, status: :unprocessable_entity
-  end
-
-  def destroy
-    if @element.destroy
-      render json: @orderable_element, serializer: StepOrderableElementSerializer, user: current_user
-    else
-      render json: {}, status: :unprocessable_entity
-    end
+    render json: params[:step_orderable_element_positions], status: :ok
   end
 
   private

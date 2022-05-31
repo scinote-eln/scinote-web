@@ -3,6 +3,7 @@
      role="dialog"
      aria-labelledby="new-office-file-modal-label">
     <%= bootstrap_form_tag url: create_wopi_file_path(),
+                          html: { novalidate: "novalidate" },
                           method: :post, remote: true do |f| %>
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -20,12 +21,12 @@
             <%= hidden_field_tag :element_id, '' %>
             <%= hidden_field_tag :element_type, '' %>
 
-            <%= f.text_field :file_name,
-                             label: t('assets.create_wopi_file.text_field_label'),
-                             autofocus: true,
-                             placeholder: t('assets.create_wopi_file.text_field_placeholder'),
-                             id: 'new-wopi-file-name'%>
-
+            <div class="form-group">
+              <label class="control-label" for="new-wopi-file-name"><%= t('assets.create_wopi_file.text_field_label') %></label>
+              <input autofocus="autofocus" required="required" placeholder="<%= t('assets.create_wopi_file.text_field_placeholder') %>" id="new-wopi-file-name" class="form-control" name="file_name" type="text">
+              <div class="input-error-message"><%= t('general.text.not_blank') %></div>
+            </div>
+          <label><%= t('assets.create_wopi_file.type_select_label') %></label>
           <div class="btn-group btn-group-toggle btn-group-justified"
                data-toggle="buttons">
             <label class="btn btn-default active" id="word-btn">

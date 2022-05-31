@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module StepComponents
+module StepElements
   class ChecklistItemsController < ApplicationController
     include ApplicationHelper
 
@@ -46,8 +46,18 @@ module StepComponents
       if @checklist_item.destroy
         render json: @checklist_item, serializer: ChecklistItemSerializer
       else
-        render json: @checklist, serializer: ChecklistItemSerializer, status: :unprocessable_entity
+        render json: @checklist_item, serializer: ChecklistItemSerializer, status: :unprocessable_entity
       end
+    end
+
+    def reorder
+      ActiveRecord::Base.transaction do
+        params[:checklist_item_positions].each do |id, position|
+          @checklist.checklist_items.find(id).update_column(:position, position)
+        end
+      end
+
+      render json: params[:checklist_item_positions], status: :ok
     end
 
     private
