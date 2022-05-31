@@ -186,7 +186,7 @@
       updateStepOrder(orderedSteps) {
         orderedSteps.forEach((step, position) => {
           let index = this.steps.findIndex((e) => e.id === step.id);
-          this.steps[index].attributes.position = position + 1;
+          this.steps[index].attributes.position = position;
         });
 
         let stepPositions =

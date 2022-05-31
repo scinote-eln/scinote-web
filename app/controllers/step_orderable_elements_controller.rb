@@ -9,6 +9,12 @@ class StepOrderableElementsController < ApplicationController
       params[:step_orderable_element_positions].each do |id, position|
         @step.step_orderable_elements.find(id).update_column(:position, position)
       end
+
+      if @protocol.in_module?
+        log_activity(:task_step_content_rearranged, @my_module.experiment.project, my_module: @my_module.id)
+      else
+        log_activity(:protocol_step_content_rearranged, nil, protocol: @protocol.id)
+      end
     end
 
     render json: params[:step_orderable_element_positions], status: :ok
@@ -21,6 +27,7 @@ class StepOrderableElementsController < ApplicationController
     return render_404 unless @step
 
     @protocol = @step.protocol
+    @my_module = @protocol.my_module
   end
 
   def check_view_permissions
@@ -29,5 +36,19 @@ class StepOrderableElementsController < ApplicationController
 
   def check_manage_permissions
     render_403 unless can_manage_step?(@step)
+  end
+
+  def log_activity(type_of, project = nil, message_items = {})
+    default_items = { step: @step.id,
+                      step_position: { id: @step.id, value_for: 'position_plus_one' } }
+    message_items = default_items.merge(message_items)
+
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: @protocol,
+            team: current_team,
+            project: project,
+            message_items: message_items)
   end
 end

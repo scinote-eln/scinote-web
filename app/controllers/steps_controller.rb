@@ -429,6 +429,12 @@ class StepsController < ApplicationController
       params[:step_positions].each do |id, position|
         @protocol.steps.find(id).update_column(:position, position)
       end
+
+      if @protocol.in_module?
+        log_activity(:task_steps_rearranged, @my_module.experiment.project, my_module: @my_module.id)
+      else
+        log_activity(:protocol_steps_rearranged, nil, protocol: @protocol.id)
+      end
     end
 
     render json: {
@@ -613,10 +619,6 @@ class StepsController < ApplicationController
   end
 
   def log_activity(type_of, project = nil, message_items = {})
-    default_items = { step: @step.id,
-                      step_position: { id: @step.id, value_for: 'position_plus_one' } }
-    message_items = default_items.merge(message_items)
-
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
