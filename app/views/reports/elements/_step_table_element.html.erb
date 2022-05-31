@@ -2,29 +2,24 @@
 <% timestamp = table.created_at %>
 <div class="report-element report-step-attachment-element report-step-table-element">
   <div class="report-element-header">
-    <div class="row">
-      <div class="pull-left attachment-icon">
-        <span class="fas fa-table"></span>
-      </div>
-      <div class="pull-left table-name">
-        <% if defined? export_all and export_all %>
-          <% file_link = @obj_filenames.dig(:tables, table.id, :file) %>
-          <a href="<%= file_link %>">
-            <em>
-              <%= t('projects.reports.elements.step_table.table_name', name: file_link&.split('/')&.last) %>
-            </em>
-          </a>
-        <% else %>
-          <% if table.try(:name) %>
-            <em>
-              <%= t('projects.reports.elements.step_table.table_name', name: truncate(table.name, length: Constants::FILENAME_TRUNCATION_LENGTH)) %>
-            </em>
-          <% end %>
+    <div class="table-name">
+      <% if defined? export_all and export_all %>
+        <% file_link = @obj_filenames.dig(:tables, table.id, :file) %>
+        <a href="<%= file_link %>">
+          <em>
+            <%= file_link&.split('/')&.last %>
+          </em>
+        </a>
+      <% else %>
+        <% if table.try(:name) %>
+          <em>
+            <%= truncate(table.name, length: Constants::FILENAME_TRUNCATION_LENGTH) %>
+          </em>
         <% end %>
-      </div>
-      <div class="pull-left user-time">
-        <%= t('projects.reports.elements.step_table.user_time', timestamp: l(timestamp, format: :full)) %>
-      </div>
+      <% end %>
+    </div>
+    <div class="user-time">
+      <%= t('projects.reports.elements.step_table.user_time', timestamp: l(timestamp, format: :full)) %>
     </div>
   </div>
   <div class="report-element-body">

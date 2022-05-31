@@ -1,20 +1,15 @@
 <% my_module ||= report_element.my_module %>
 <% activities = ActivitiesService.my_module_activities(my_module).order(created_at: :desc) %>
-<div class="report-element report-module-activity-element">
-  <div class="report-element-header">
-    <div class="row">
-      <div class="pull-left activity-icon">
-        <span class="fas fa-list"></span>
-      </div>
-      <div class="pull-left activity-name">
-        <%= t('projects.reports.elements.module_activity.name', my_module: my_module.name) %>
+<% if activities.present? %>
+  <div class="report-element report-module-activity-element">
+    <div class="report-element-header">
+      <div class="activity-name">
+        <%= t('projects.reports.elements.module_activity.name') %>
       </div>
     </div>
-  </div>
-  <div class="report-element-body">
-    <div class="row">
-      <div class="col-xs-12 activity-container">
-        <% if activities.present? %>
+    <div class="report-element-body">
+      <div class="row">
+        <div class="col-xs-12 activity-container">
           <ul class="no-style activity-list">
             <% activities.each do |activity| %>
               <li class="activity">
@@ -32,15 +27,13 @@
               </li>
             <% end %>
           </ul>
-        <% else %>
-          <em><%= t('projects.reports.elements.module_activity.no_activity') %></em>
-        <% end %>
+        </div>
       </div>
     </div>
+    <% if defined?(children) %>
+      <div class="report-element-children">
+        <%= children %>
+      </div>
+    <% end %>
   </div>
-  <% if defined?(children) %>
-    <div class="report-element-children">
-      <%= children %>
-    </div>
-  <% end %>
-</div>
+<% end %>

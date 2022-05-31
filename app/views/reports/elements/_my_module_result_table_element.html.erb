@@ -3,28 +3,23 @@
 <% timestamp = table.created_at %>
 <div class="report-element report-result-element report-result-table-element">
   <div class="report-element-header">
-    <div class="row">
-      <div class="pull-left result-name-container">
-        <div class="pull-left result-icon">
-          <span class="fas fa-table"></span>
-        </div>
-        <div class="pull-left result-name">
-          <%= result.name %>
-          <% if result.archived? %>
-            <span class="label label-warning"><%= t('search.index.archived') %></span>
-          <% end %>
-        </div>
-        <% if defined? export_all and export_all %>
-          <div class="pull-left table-name">
-            <% file_link = @obj_filenames.dig(:tables, table.id, :file) %>
-            <a href="<%= file_link %>">
-              <em><%=t "projects.reports.elements.result_table.table_name", name: file_link&.split('/')&.last %></em>
-            </a>
-          </div>
+    <div class="result-name-container">
+      <div class="result-name">
+        <%= result.name %>
+        <% if result.archived? %>
+          <span class="label label-warning"><%= t('search.index.archived') %></span>
         <% end %>
-        <div class="pull-left user-time">
-          <%= t('projects.reports.elements.result_table.user_time', user: result.user.full_name , timestamp: l(timestamp, format: :full)) %>
+      </div>
+      <% if defined? export_all and export_all %>
+        <div class="table-name">
+          <% file_link = @obj_filenames.dig(:tables, table.id, :file) %>
+          <a href="<%= file_link %>">
+            <em><%= file_link&.split('/')&.last %></em>
+          </a>
         </div>
+      <% end %>
+      <div class="user-time">
+        <%= t('projects.reports.elements.result_table.user_time', user: result.user.full_name , timestamp: l(timestamp, format: :full)) %>
       </div>
     </div>
   </div>

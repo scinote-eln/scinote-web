@@ -711,25 +711,22 @@ en:
           tags_header: "Task tags:"
           no_tags: "No tags"
           protocol:
+            name: 'Protocol'
             user_time: "Protocol created on %{timestamp}."
         experiment:
           user_time: "Experiment %{code} created on %{timestamp}."
           no_description: "No description"
           no_tags: "No tags"
         module_activity:
-          name: "Activity of task %{my_module}"
+          name: "Task activity"
           sidebar_name: "Activity"
           no_activity: "No activities"
         module_repository:
-          name: "%{repository} of task %{my_module}"
-          table_name: "[ %{name} ]"
           no_items: "No items"
         result_asset:
-          file_name: "[ %{file} ]"
           user_time: "Uploaded by %{user} on %{timestamp}."
           full_preview_attached: "[full document attached to report]"
         result_table:
-          table_name: "[ %{name} ]"
           user_time: "Created by %{user} on %{timestamp}."
         result_text:
           user_time: "Created by %{user} on %{timestamp}."
@@ -742,24 +739,21 @@ en:
           uncompleted:
             user_time: "Created by %{user} on %{timestamp}."
         step_table:
-          table_name: "[ %{name} ]"
           user_time: "Table created on %{timestamp}."
         step_asset:
           sidebar_name: "File %{file}"
-          file_name: "[ %{file} ]"
           user_time: "File uploaded on %{timestamp}."
         step_checklist:
-          checklist_name: "[ %{name} ]"
           user_time: "Checklist created on %{timestamp}."
           checked: "checked"
         result_comments:
           sidebar_name: "Comments"
-          name: "Comments for result %{result}"
+          name: "Result comments"
           no_comments: "No comments"
           comment_prefix: "%{user} on %{date} at %{time}:"
         step_comments:
           sidebar_name: "Comments"
-          name: "Comments for step %{step}"
+          name: "Step comments"
           no_comments: "No comments"
           comment_prefix: "%{user} on %{date} at %{time}:"
     experiment_archive:
