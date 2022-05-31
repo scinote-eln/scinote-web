@@ -42,6 +42,32 @@ class StepsController < ApplicationController
       )
       @asset.file.attach(params[:signed_blob_id])
       @asset.post_process_file(@protocol.team)
+
+      default_message_items = {
+        step: @step.id,
+        step_position: { id: @step.id,
+                         value_for: 'position_plus_one' }
+      }
+
+      if @protocol.in_module?
+        log_activity(
+          :task_step_file_added,
+          @my_module.experiment.project,
+          {
+            file: @asset.file_file_name,
+            my_module: @my_module.id
+          }.merge(default_message_items)
+        )
+      else
+        log_activity(
+          :protocol_step_file_added,
+          nil,
+          {
+            file: @asset.file_file_name,
+            protocol: @protocol.id
+          }.merge(default_message_items)
+        )
+      end
     end
 
     render json: @asset,

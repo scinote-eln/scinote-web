@@ -216,13 +216,20 @@ class AssetsController < ApplicationController
       case @assoc
       when Step
         if @assoc.protocol.in_module?
-          log_step_activity(:edit_step, @assoc, @assoc.my_module.experiment.project, my_module: @assoc.my_module.id)
+          log_step_activity(
+            :task_step_file_deleted,
+            @assoc,
+            @assoc.my_module.experiment.project,
+            my_module: @assoc.my_module.id,
+            file: @asset.file_file_name
+          )
         else
           log_step_activity(
-            :edit_step_in_protocol_repository,
+            :protocol_file_deleted,
             @assoc,
             nil,
-            protocol: @assoc.protocol.id
+            protocol: @assoc.protocol.id,
+            file: @asset.file_file_name
           )
         end
       when Result
