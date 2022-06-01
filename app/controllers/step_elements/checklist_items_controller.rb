@@ -41,9 +41,9 @@ module StepElements
                       :uncheck_step_checklist_item
                     end
           log_activity(type_of,
-                      checkbox: text_activity,
-                      num_completed: completed_items.to_s,
-                      num_all: all_items.to_s)
+                       checkbox: text_activity,
+                       num_completed: completed_items.to_s,
+                       num_all: all_items.to_s)
         else
           log_activity(
             "#{@step.protocol.in_module? ? :task : :protocol}_step_checklist_item_edited",
