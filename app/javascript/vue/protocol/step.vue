@@ -25,7 +25,7 @@
         <div :class="`step-state ${step.attributes.completed ? 'completed' : ''}`" @click="changeState"></div>
       </div>
       <div class="step-position">
-        {{ step.attributes.position }}.
+        {{ step.attributes.position + 1 }}.
       </div>
       <div class="step-name-container">
         <InlineEdit
@@ -271,7 +271,7 @@
       updateElementOrder(orderedElements) {
         orderedElements.forEach((element, position) => {
           let index = this.elements.findIndex((e) => e.id === element.id);
-          this.elements[index].attributes.position = position + 1;
+          this.elements[index].attributes.position = position;
         });
 
 

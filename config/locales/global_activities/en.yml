@@ -209,7 +209,14 @@ en:
       inventory_item_stock_add_html: "%{user} added %{change_amount} %{unit} of stock to a total of %{new_amount} %{unit} for %{repository_row} in %{repository} \n%{comment}"
       inventory_item_stock_remove_html: "%{user} removed %{change_amount} %{unit} of stock to a total of %{new_amount} %{unit} for %{repository_row} in %{repository} \n%{comment}"
       task_inventory_item_stock_consumed_html: "%{user} changed consumption of %{repository_row} from %{stock_consumption_was} %{unit} to %{stock_consumption} %{unit} in %{my_module} \n%{comment}"
-
+      task_steps_rearranged_html: "%{user} rearranged protocol's steps on task %{my_module}"
+      task_step_content_rearranged_html: "%{user} rearranged content of protocol's step %{step_position} <strong>%{step}</strong> on task %{my_module}"
+      task_step_file_added_html: "%{user} added file <strong>%{file}</strong> to protocol's step %{step_position} <strong>%{step}</strong> on task %{my_module}"
+      task_step_file_deleted_html: "%{user} deleted file <strong>%{file}</strong> in protocol's step %{step_position} <strong>%{step}</strong> on task %{my_module}"
+      protocol_steps_rearranged_html: "%{user} rearranged protocol's steps in protocol %{protocol} in Protocol repository"
+      protocol_step_content_rearranged_html: "%{user} rearranged content of protocol's step %{step_position} <strong>%{step}</strong> in protocol %{protocol} in Protocol repository"
+      protocol_step_file_added_html: "%{user} added file <strong>%{file}</strong> to protocol's step %{step_position} <strong>%{step}</strong> in Protocol repository"
+      protocol_step_file_deleted_html: "%{user} deleted file <strong>%{file}</strong> in protocol's step %{step_position} <strong>%{step}</strong> in Protocol repository"
     activity_name:
       create_project: "Project created"
       rename_project: "Project renamed"
