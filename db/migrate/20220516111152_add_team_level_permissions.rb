@@ -8,9 +8,13 @@ class AddTeamLevelPermissions < ActiveRecord::Migration[6.1]
     TeamPermissions::PROJECTS_CREATE,
     TeamPermissions::INVENTORIES_CREATE,
     TeamPermissions::PROTOCOLS_CREATE,
+    TeamPermissions::REPORTS_CREATE,
     ProtocolPermissions::READ,
     ProtocolPermissions::MANAGE,
     ProtocolPermissions::USERS_MANAGE,
+    ReportPermissions::READ,
+    ReportPermissions::MANAGE,
+    ReportPermissions::USERS_MANAGE,
     RepositoryPermissions::READ,
     RepositoryPermissions::READ_ARCHIVED,
     RepositoryPermissions::MANAGE,
@@ -28,8 +32,11 @@ class AddTeamLevelPermissions < ActiveRecord::Migration[6.1]
   NORMAL_USER_PERMISSIONS = [
     TeamPermissions::PROJECTS_CREATE,
     TeamPermissions::PROTOCOLS_CREATE,
+    TeamPermissions::REPORTS_CREATE,
     ProtocolPermissions::READ,
     ProtocolPermissions::MANAGE,
+    ReportPermissions::READ,
+    ReportPermissions::MANAGE,
     RepositoryPermissions::READ,
     RepositoryPermissions::COLUMNS_CREATE,
     RepositoryPermissions::ROWS_CREATE,
@@ -37,7 +44,7 @@ class AddTeamLevelPermissions < ActiveRecord::Migration[6.1]
     RepositoryPermissions::ROWS_DELETE
   ].freeze
 
-  VIEWER_PERMISSIONS = [ProtocolPermissions::READ].freeze
+  VIEWER_PERMISSIONS = [ProtocolPermissions::READ, ReportPermissions::READ].freeze
 
   def change
     reversible do |dir|
@@ -70,7 +77,7 @@ class AddTeamLevelPermissions < ActiveRecord::Migration[6.1]
         @viewer_role.permissions = @viewer_role.permissions - VIEWER_PERMISSIONS
         @viewer_role.save(validate: false)
 
-        UserAssignment.where(assignable_type: %w(Team Protocol Repository)).delete_all
+        UserAssignment.where(assignable_type: %w(Team Protocol Report Repository)).delete_all
       end
     end
   end
@@ -87,7 +94,7 @@ class AddTeamLevelPermissions < ActiveRecord::Migration[6.1]
   end
 
   def create_user_assignments(user_teams, user_role)
-    user_teams.includes(:user, team: %i(repositories repository_protocols))
+    user_teams.includes(:user, team: %i(reports repositories repository_protocols))
               .find_in_batches(batch_size: 100) do |user_team_batch|
       user_assignments = []
       user_team_batch.each do |user_team|
@@ -107,6 +114,9 @@ class AddTeamLevelPermissions < ActiveRecord::Migration[6.1]
           elsif protocol.in_repository_public?
             user_assignments << new_user_assignment(user_team.user, protocol, @viewer_role, :automatically)
           end
+        end
+        user_team.team.reports.each do |report|
+          user_assignments << new_user_assignment(user_team.user, report, user_role, :automatically)
         end
       end
       UserAssignment.import(user_assignments)

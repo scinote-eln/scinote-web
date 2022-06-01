@@ -47,13 +47,8 @@ Canaid::Permissions.register_for(Team) do
     within_limits && team.permission_granted?(user, TeamPermissions::INVENTORIES_CREATE)
   end
 
-  # this permission is scattered around the application
-  # if you want to make changes here keep in mind to check/change the
-  # SQL view that lists reports in index page:
-  #   - check the model app/models/views/datatables/datatables_report.rb
-  #   - check visible_by method in Project model
-  can :manage_reports do |user, team|
-    can_manage_team?(user, team)
+  can :create_reports do |user, team|
+    team.permission_granted?(user, TeamPermissions::REPORTS_CREATE)
   end
 end
 
@@ -88,5 +83,19 @@ Canaid::Permissions.register_for(Protocol) do
   # protocol in repository: copy
   can :clone_protocol_in_repository do |user, protocol|
     can_read_protocol_in_repository?(user, protocol) && can_create_protocols_in_repository?(user, protocol.team)
+  end
+end
+
+Canaid::Permissions.register_for(Report) do
+  can :read_report do |user, report|
+    report.permission_granted?(user, ReportPermissions::READ)
+  end
+
+  can :manage_report do |user, report|
+    report.permission_granted?(user, ReportPermissions::MANAGE)
+  end
+
+  can :manage_report_users do |user, report|
+    report.permission_granted?(user, ReportPermissions::USERS_MANAGE)
   end
 end

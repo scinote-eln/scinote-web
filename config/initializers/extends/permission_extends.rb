@@ -9,6 +9,7 @@ module PermissionExtends
       PROJECTS_CREATE
       INVENTORIES_CREATE
       PROTOCOLS_CREATE
+      REPORTS_CREATE
     ).each { |permission| const_set(permission, "team_#{permission.underscore}") }
   end
 
@@ -18,6 +19,14 @@ module PermissionExtends
       MANAGE
       USERS_MANAGE
     ).each { |permission| const_set(permission, "protocol_#{permission.underscore}") }
+  end
+
+  module ReportPermissions
+    %w(
+      READ
+      MANAGE
+      USERS_MANAGE
+    ).each { |permission| const_set(permission, "report_#{permission.underscore}") }
   end
 
   module ProjectPermissions
@@ -112,6 +121,7 @@ module PermissionExtends
     OWNER_PERMISSIONS = (
       TeamPermissions.constants.map { |const| TeamPermissions.const_get(const) } +
       ProtocolPermissions.constants.map { |const| ProtocolPermissions.const_get(const) } +
+      ReportPermissions.constants.map { |const| ReportPermissions.const_get(const) } +
       ProjectPermissions.constants.map { |const| ProjectPermissions.const_get(const) } +
       ExperimentPermissions.constants.map { |const| ExperimentPermissions.const_get(const) } +
       MyModulePermissions.constants.map { |const| MyModulePermissions.const_get(const) } +
@@ -121,8 +131,11 @@ module PermissionExtends
     NORMAL_USER_PERMISSIONS = [
       TeamPermissions::PROJECTS_CREATE,
       TeamPermissions::PROTOCOLS_CREATE,
+      TeamPermissions::REPORTS_CREATE,
       ProtocolPermissions::READ,
       ProtocolPermissions::MANAGE,
+      ReportPermissions::READ,
+      ReportPermissions::MANAGE,
       ProjectPermissions::READ,
       ProjectPermissions::READ_ARCHIVED,
       ProjectPermissions::ACTIVITIES_READ,
@@ -210,6 +223,7 @@ module PermissionExtends
 
     VIEWER_PERMISSIONS = [
       ProtocolPermissions::READ,
+      ReportPermissions::READ,
       ProjectPermissions::READ,
       ProjectPermissions::READ_ARCHIVED,
       ProjectPermissions::ACTIVITIES_READ,
