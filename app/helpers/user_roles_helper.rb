@@ -16,4 +16,8 @@ module UserRolesHelper
             .sort_by { |user_role| (user_role.permissions & team_permissions).length }
             .reverse!
   end
+
+  def managing_team_user_roles_collection
+    UserRole.where('permissions && ARRAY[?]::varchar[]', [TeamPermissions::USERS_MANAGE])
+  end
 end
