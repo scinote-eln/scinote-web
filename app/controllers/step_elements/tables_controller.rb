@@ -12,7 +12,10 @@ module StepElements
           created_by: current_user
         ))
 
-      create_in_step!(@step, step_table)
+      ActiveRecord::Base.transaction do
+        create_in_step!(@step, step_table)
+        log_step_activity(:table_added, { table_name: step_table.table.name })
+      end
 
       render_step_orderable_element(step_table)
     rescue ActiveRecord::RecordInvalid
@@ -20,7 +23,11 @@ module StepElements
     end
 
     def update
-      @table.update!(table_params)
+      ActiveRecord::Base.transaction do
+        @table.update!(table_params)
+        log_step_activity(:table_edited, { table_name: @table.name })
+      end
+
       render json: @table, serializer: TableSerializer
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
@@ -28,6 +35,7 @@ module StepElements
 
     def destroy
       if @table.destroy
+        log_step_activity(:table_deleted, { table_name: @table.name })
         head :ok
       else
         head :unprocessable_entity

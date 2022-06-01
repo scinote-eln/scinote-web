@@ -66,7 +66,12 @@
     },
     computed: {
       element() { // remap and alias to work with delete mixin
-        return { attributes: { orderable: this.checklistItem.attributes } }
+        return({
+          attributes: {
+            orderable: this.checklistItem.attributes,
+            position: this.checklistItem.attributes.position
+         }
+        });
       }
     },
     methods: {
@@ -92,7 +97,7 @@
         }
       },
       removeItem() {
-        this.$emit('removeItem', this.checklistItem);
+        this.$emit('removeItem', this.checklistItem.attributes.position);
       },
       update() {
         this.$emit('update', this.checklistItem);

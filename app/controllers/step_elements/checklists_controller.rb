@@ -8,15 +8,21 @@ module StepElements
       checklist = @step.checklists.build(
         name: t('protocols.steps.checklist.default_name', position: @step.checklists.length + 1)
       )
-
-      create_in_step!(@step, checklist)
+      ActiveRecord::Base.transaction do
+        create_in_step!(@step, checklist)
+        log_step_activity(:checklist_added, { checklist_name: checklist.name })
+      end
       render_step_orderable_element(checklist)
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end
 
     def update
-      @checklist.update!(checklist_params)
+      ActiveRecord::Base.transaction do
+        @checklist.update!(checklist_params)
+        log_step_activity(:checklist_edited, { checklist_name: @checklist.name })
+      end
+
       render json: @checklist, serializer: ChecklistSerializer
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
@@ -24,6 +30,7 @@ module StepElements
 
     def destroy
       if @checklist.destroy
+        log_step_activity(:checklist_deleted, { checklist_name: @checklist.name })
         head :ok
       else
         head :unprocessable_entity
