@@ -25,7 +25,7 @@ class ChecklistItem < ApplicationRecord
   def update_positions
     transaction do
       checklist.checklist_items.order(position: :asc).each_with_index do |checklist_item, i|
-        checklist_item.update!(position: i + 1)
+        checklist_item.update!(position: i)
       end
     end
   end

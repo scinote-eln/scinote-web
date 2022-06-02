@@ -33,5 +33,23 @@ module StepElements
       step_orderable_element = orderable.step_orderable_elements.find_by!(step: @step)
       render json: step_orderable_element, serializer: StepOrderableElementSerializer, user: current_user
     end
+
+    def log_step_activity(element_type_of, message_items)
+      Activities::CreateActivityService.call(
+        activity_type: "#{@step.protocol.in_module? ? 'protocol_step_' : 'task_step_'}#{element_type_of}",
+        owner: current_user,
+        team: @protocol.in_module? ? @protocol.my_module.experiment.project.team : @protocol.team,
+        project: @protocol.in_module? ? @protocol.my_module.experiment.project : nil,
+        subject: @protocol,
+        message_items: {
+          step: @step.id,
+          step_position: {
+            id: @step.id,
+            value_for: 'position_plus_one'
+          },
+          my_module: @protocol.my_module.id
+        }.merge(message_items)
+      )
+    end
   end
 end

@@ -23,10 +23,6 @@ class StepTextSerializer < ActiveModel::Serializer
     sanitize_input(object.tinymce_render('text'))
   end
 
-  def name
-    strip_tags(object.tinymce_render('text').truncate(62, '...'))
-  end
-
   def icon
     'fa-font'
   end

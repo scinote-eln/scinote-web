@@ -87,13 +87,13 @@
     },
     created() {
       this.checklistItems = this.element.attributes.orderable.checklist_items.map((item, index) => {
-        return { attributes: {...item, position: index + 1 } }
+        return { attributes: {...item, position: index } }
       });
     },
     computed: {
       orderedChecklistItems() {
         return this.checklistItems.map((item, index) => {
-          return { attributes: {...item.attributes, position: index + 1 } }
+          return { attributes: {...item.attributes, position: index } }
         });
       },
       pastingMultiline() {
@@ -114,7 +114,7 @@
       postItem(item, callback) {
         $.post(this.element.attributes.orderable.urls.create_item_url, item).success((result) => {
           this.checklistItems.splice(
-            result.data.attributes.position - 1,
+            result.data.attributes.position,
             1,
             { attributes: { ...result.data.attributes, id: result.data.id } }
           );
@@ -127,7 +127,7 @@
       saveItem(item) {
         if (item.attributes.id) {
           this.checklistItems.splice(
-            item.attributes.position - 1, 1, item
+            item.attributes.position, 1, item
           );
           $.ajax({
             url: item.attributes.urls.update_url,
@@ -147,13 +147,13 @@
             attributes: {
               text: '',
               checked: false,
-              position: this.checklistItems.length + 1
+              position: this.checklistItems.length
             }
           }
         );
       },
-      removeItem(item) {
-        this.checklistItems.splice(item.attributes.position - 1, 1);
+      removeItem(position) {
+        this.checklistItems.splice(position, 1);
       },
       startReorder() {
         this.reordering = true;

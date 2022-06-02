@@ -391,7 +391,31 @@ class Extends
     task_step_file_added: 188,
     task_step_file_deleted: 189,
     protocol_step_file_added: 190,
-    protocol_step_file_deleted: 191
+    protocol_step_file_deleted: 191,
+    task_step_text_added: 192,
+    task_step_text_edited: 193,
+    task_step_text_deleted: 194,
+    task_step_table_added: 195,
+    task_step_table_edited: 196,
+    task_step_table_deleted: 197,
+    task_step_checklist_added: 198,
+    task_step_checklist_edited: 199,
+    task_step_checklist_deleted: 200,
+    task_step_checklist_item_added: 201,
+    task_step_checklist_item_edited: 202,
+    task_step_checklist_item_deleted: 203,
+    protocol_step_text_added: 204,
+    protocol_step_text_edited: 205,
+    protocol_step_text_deleted: 206,
+    protocol_step_table_added: 207,
+    protocol_step_table_edited: 208,
+    protocol_step_table_deleted: 209,
+    protocol_step_checklist_added: 210,
+    protocol_step_checklist_edited: 211,
+    protocol_step_checklist_deleted: 212,
+    protocol_step_checklist_item_added: 213,
+    protocol_step_checklist_item_edited: 214,
+    protocol_step_checklist_item_deleted: 215
   }
 
   ACTIVITY_GROUPS = {
@@ -400,7 +424,7 @@ class Extends
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
            *146..148, 166],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
-                    168, 171, 177, 184, 185, 188, 189],
+                    168, 171, 177, 184, 185, 188, 189, *192..203],
     task_inventory: [55, 56, 146, 147, 183],
     experiment: [*27..31, 57, 141, 165],
     reports: [48, 50, 49, 163, 164],
@@ -408,7 +432,7 @@ class Extends
                   78, 96, 107, 113, 114, *133..136, 180, 181, 182],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 170, 173, 179, 187, 186,
-                          190, 191],
+                          190, 191, *204..215],
     team: [92, 94, 93, 97, 104]
   }
 
