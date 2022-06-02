@@ -210,25 +210,14 @@ label {
   width: 100%;
   margin-bottom: 15px;
 
-  .report-element-header {
-    border-bottom: 2px solid $color-black;
 
-    .user-time {
-      color: $color-emperor;
-      margin-left: 15px;
-      white-space: nowrap;
-    }
-    .controls {
-      margin-right: 15px;
-      font-size: $font-size-h6;
-      opacity: 0.05;
-    }
+  .user-time {
+    color: $color-silver-chalice;
+    white-space: nowrap;
   }
 
   .report-element-body {
     padding-top: 10px;
-    padding-left: 15px;
-    padding-right: 15px;
 
     .report-export-img {
       max-height: 300px;
@@ -237,7 +226,6 @@ label {
   }
 
   .report-element-children {
-    padding-left: 45px;
     padding-top: 15px;
   }
 
@@ -256,19 +244,34 @@ label {
 
 /* Project header element style */
 .report-project-header-element {
-  margin-bottom: 60px;
+  margin-bottom: 20px;
 
   .report-element-header {
     border-bottom: none;
   }
   .report-element-body {
     .project-name {
-      border-bottom: 4px solid $color-black;
+      @include font-h2;
     }
   }
 
   &:hover > .report-element-body .project-name {
     color: $brand-primary;
+  }
+}
+
+// Experiment element style
+.report-experiment-element {
+  .experiment-name {
+    @include font-main;
+  }
+}
+
+// Protocol element style
+.report-module-protocol-element {
+  .protcol-name {
+    @include font-small;
+    font-weight: bold;
   }
 }
 
@@ -279,7 +282,8 @@ label {
 
   .report-element-body {
     .module-name {
-      margin-left: 15px;
+      @include font-button;
+      font-weight: bold;
     }
 
     .module-start-date,
@@ -338,12 +342,12 @@ label {
 
     .result-icon {
       display: inline-block;
-      margin-left: 15px;
     }
 
     .result-name {
+      @include font-small;
       display: inline-block;
-      margin-left: 5px;
+      font-weight: bold;
     }
 
     .user-time {
@@ -366,7 +370,8 @@ label {
 .report-result-asset-element {
   .report-element-header {
     .file-name {
-      margin-left: 15px;
+      font-size: 10px;
+      font-weight: bold;
     }
 
     .image-icon.report {
@@ -383,7 +388,8 @@ label {
 .report-result-table-element {
   .report-element-header {
     .table-name {
-      margin-left: 15px;
+      font-size: 10px;
+      font-weight: bold;
     }
   }
 
@@ -405,6 +411,11 @@ label {
 
 /** Step element style  */
 .report-step-element {
+  .step-name {
+    font-size: 11px;
+    font-weight: bold;
+  }
+
   &:hover > .report-element-body .step-name {
     color: $brand-primary;
   }
@@ -450,13 +461,15 @@ label {
 .report-step-table-element {
   .report-element-header {
     .table-name {
-      margin-left: 5px;
+      font-size: 10px;
+      font-weight: bold;
     }
   }
 
   &:hover > .report-element-header {
     .table-name {
       color: $brand-primary;
+
     }
   }
 }
@@ -465,7 +478,8 @@ label {
 .report-step-asset-element {
   .report-element-header {
     .file-name {
-      margin-left: 5px;
+      font-size: 10px;
+      font-weight: bold;
       white-space: nowrap;
     }
 
@@ -483,7 +497,8 @@ label {
 .report-step-checklist-element {
   .report-element-header {
     .checklist-name {
-      margin-left: 5px;
+      font-size: 10px;
+      font-weight: bold;
     }
   }
 
@@ -510,8 +525,9 @@ label {
     }
 
     .comments-name {
-      margin-left: 5px;
       color: $color-emperor;
+      font-size: 10px;
+      font-weight: bold;
     }
   }
 
@@ -519,7 +535,6 @@ label {
     .comments-container {
       border-radius: 4px;
       padding: 5px;
-      background-color: $color-alabaster;
 
        .comment {
         margin: 3px 2px;
@@ -556,11 +571,8 @@ label {
     border-bottom: 0;
 
     .repository-name {
-      margin-left: 5px;
-    }
-
-    .table-name {
-      margin-left: 15px;
+      @include font-small;
+      font-weight: bold;
     }
   }
 
@@ -584,7 +596,8 @@ label {
     border-bottom: none;
 
     .activity-name {
-      margin-left: 5px;
+      @include font-small;
+      font-weight: bold;
     }
   }
 
@@ -592,7 +605,6 @@ label {
     .activity-container {
       border-radius: 4px;
       padding: 5px;
-      background-color: $color-alabaster;
 
        .activity {
         margin: 3px 2px;
