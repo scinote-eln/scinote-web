@@ -1,6 +1,6 @@
 <template>
   <div class="step-checklist-item">
-    <div class="step-element-header" :class="{ 'locked': locked || editingText }">
+    <div class="step-element-header" :class="{ 'locked': locked || editingText, 'editing-name': editingText }">
       <div class="step-element-grip">
         <i class="fas fa-grip-vertical"></i>
       </div>

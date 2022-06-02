@@ -1,6 +1,6 @@
 <template>
   <div class="step-checklist-container">
-    <div class="step-element-header" :class="{ 'locked': locked }">
+    <div class="step-element-header" :class="{ 'locked': locked, 'editing-name': editingName }">
       <div class="step-element-grip" @click="$emit('reorder')">
         <i class="fas fa-grip-vertical"></i>
       </div>
@@ -13,7 +13,7 @@
           :autofocus="editingName"
           :attributeName="`${i18n.t('Checklist')} ${i18n.t('name')}`"
           @editingEnabled="editingName = true"
-          @editingDisabled="editingname = false"
+          @editingDisabled="editingName = false"
           @update="updateName"
         />
       </div>
