@@ -54,7 +54,7 @@ class StepsController < ApplicationController
           :task_step_file_added,
           @my_module.experiment.project,
           {
-            file: @asset.file_file_name,
+            file: @asset.file_name,
             my_module: @my_module.id
           }.merge(default_message_items)
         )
@@ -63,7 +63,7 @@ class StepsController < ApplicationController
           :protocol_step_file_added,
           nil,
           {
-            file: @asset.file_file_name,
+            file: @asset.file_name,
             protocol: @protocol.id
           }.merge(default_message_items)
         )
