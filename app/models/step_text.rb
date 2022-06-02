@@ -10,6 +10,8 @@ class StepText < ApplicationRecord
   belongs_to :step, inverse_of: :step_texts, touch: true
   has_many :step_orderable_elements, as: :orderable, dependent: :destroy
 
+  scope :asc, -> { order('step_texts.created_at ASC') }
+
   def name
     return if text.blank?
 

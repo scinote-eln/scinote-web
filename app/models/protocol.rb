@@ -268,13 +268,30 @@ class Protocol < ApplicationRecord
     src.steps.each do |step|
       step2 = Step.new(
         name: step.name,
-        description: step.description,
         position: step.position,
         completed: false,
         user: current_user,
         protocol: dest
       )
       step2.save!
+
+      position = 0
+
+      # Copy texts
+      step.step_texts.each do |step_text|
+        step_text2 = StepText.new(
+          text: step_text.text,
+          step: step2
+        )
+        step_text2.save!
+
+        step2.step_orderable_elements.create!(
+          position: position,
+          orderable: step_text2
+        )
+
+        position += 1
+      end
 
       # Copy checklists
       step.checklists.asc.each do |checklist|
@@ -299,6 +316,13 @@ class Protocol < ApplicationRecord
         end
 
         step2.checklists << checklist2
+
+        step2.step_orderable_elements.create!(
+          position: position,
+          orderable: checklist2
+        )
+
+        position += 1
       end
 
       # "Shallow" Copy assets
@@ -319,6 +343,13 @@ class Protocol < ApplicationRecord
         table2.last_modified_by = current_user
         table2.team = dest.team
         step2.tables << table2
+
+        step2.step_orderable_elements.create!(
+          position: position,
+          orderable: table2.step_tables.first
+        )
+
+        position += 1
       end
 
       # Copy steps tinyMce assets
