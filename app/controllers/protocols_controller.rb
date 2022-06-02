@@ -17,6 +17,7 @@ class ProtocolsController < ApplicationController
   )
   before_action :check_clone_permissions, only: [:clone]
   before_action :check_view_permissions, only: %i(
+    show
     protocol_status_bar
     updated_at_label
     preview
@@ -159,6 +160,16 @@ class ProtocolsController < ApplicationController
   def edit
     # Switch to correct team
     current_team_switch(@protocol.team)
+  end
+
+  def show
+    # Switch to correct team
+    current_team_switch(@protocol.team)
+
+    respond_to do |format|
+      format.json { render json: @protocol, serializer: ProtocolSerializer, user: current_user }
+      format.html
+    end
   end
 
   def update_keywords

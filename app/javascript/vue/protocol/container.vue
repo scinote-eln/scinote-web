@@ -1,6 +1,6 @@
 <template>
   <div class="task-protocol">
-    <div class="task-section-header">
+    <div class="task-section-header" v-if="!inRepository">
       <a class="task-section-caret" role="button" data-toggle="collapse" href="#protocol-content" aria-expanded="true" aria-controls="protocol-content">
         <i class="fas fa-caret-right"></i>
         <div class="task-section-title">
@@ -61,6 +61,7 @@
             <Step
               :step.sync="steps[index]"
               @reorder="startStepReorder"
+              :inRepository="inRepository"
               @step:delete="updateStepsPosition"
               @step:update="updateStep"
             />
@@ -115,6 +116,11 @@
     },
     components: { Step, InlineEdit, ProtocolModals, ProtocolOptions, Tinymce, ReorderableItemsModal },
     mixins: [UtilsMixin],
+    computed: {
+      inRepository() {
+        return this.protocol.attributes.in_repository
+      }
+    },
     data() {
       return {
         protocol: {
@@ -134,6 +140,7 @@
     },
     methods: {
       refreshProtocolStatus() {
+        if (this.inRepository) return
         // legacy method from app/assets/javascripts/my_modules/protocols.js
         refreshProtocolStatusBar();
       },

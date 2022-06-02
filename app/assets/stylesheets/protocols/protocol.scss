@@ -4,6 +4,22 @@
 @import "constants";
 @import "mixins";
 
+.content-pane.protocols-show {
+  background-color: $color-alto;
+  margin: 0 -16px;
+  overflow: hidden;
+  padding: 36px 10px 10px;
+  width: calc(100% + 31px);
+
+  .protocol-position-container {
+    background-color: $color-white;
+    box-shadow: $flyout-shadow;
+    margin: 0 auto;
+    max-width: 900px;
+    padding: 10px;
+  }
+}
+
 .protocol-repository-header {
 
   .protocol-info {
