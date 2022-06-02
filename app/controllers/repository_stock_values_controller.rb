@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class RepositoryStockValuesController < ApplicationController
+  include RepositoryDatatableHelper # for use of display_cell_value method on stock update
+
   before_action :load_vars
   before_action :check_manage_permissions
 
@@ -45,7 +47,11 @@ class RepositoryStockValuesController < ApplicationController
       )
     end
 
-    render json: @repository_stock_value
+    render json: {
+      stock_managable: true,
+      stock_status: @repository_stock_value.status,
+      manageStockUrl: edit_repository_stock_repository_repository_row_url(@repository, @repository_row)
+    }.merge(display_cell_value(@repository_stock_value.repository_cell, current_team, @repository))
   end
 
   private

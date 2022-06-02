@@ -14,8 +14,12 @@ class RepositoryStockValue < ApplicationRecord
   accepts_nested_attributes_for :repository_cell
 
   validates :repository_cell, presence: true
+  validates :low_stock_threshold, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 
+  before_save :update_consumption_stock_units, if: :repository_stock_unit_item_id_changed?
   after_create do
+    next if is_a?(RepositoryStockConsumptionValue)
+
     repository_ledger_records.create!(user: created_by,
                                       amount: amount,
                                       balance: amount,
@@ -182,4 +186,12 @@ class RepositoryStockValue < ApplicationRecord
   end
 
   alias export_formatted formatted
+
+  private
+
+  def update_consumption_stock_units
+    repository_cell.repository_row
+                   .my_module_repository_rows
+                   .update_all(repository_stock_unit_item_id: repository_stock_unit_item_id)
+  end
 end

@@ -71,10 +71,16 @@ module Repositories
       my_module_repository_row =
         repository_row.my_module_repository_rows.find { |mrr| mrr.my_module_id == @repository_snapshot.my_module_id }
 
-      stock_unit_item =
-        @repository_snapshot.repository_stock_consumption_column
-                            .repository_stock_unit_items
-                            .find { |item| item.data == my_module_repository_row.repository_stock_unit_item&.data }
+      stock_unit_item_data =
+        if my_module_repository_row.repository_stock_unit_item.present?
+          my_module_repository_row.repository_stock_unit_item.data
+        else
+          repository_row.repository_stock_cell&.repository_stock_value&.repository_stock_unit_item&.data
+        end
+
+      stock_unit_item = @repository_snapshot.repository_stock_consumption_column
+                                            .repository_stock_unit_items
+                                            .find { |item| item.data == stock_unit_item_data }
       RepositoryStockConsumptionValue.create!(
         repository_cell_attributes: {
           repository_column: @repository_snapshot.repository_stock_consumption_column,

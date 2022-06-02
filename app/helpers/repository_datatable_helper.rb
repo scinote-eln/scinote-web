@@ -59,15 +59,19 @@ module RepositoryDatatableHelper
       # always add stock cell, even if empty
       row['stock'] = stock_present ? display_cell_value(record.repository_stock_cell, team, repository) : {}
       row['stock'][:stock_managable] = stock_managable
-
-      if !options[:include_stock_consumption] || stock_consumption_permitted?(repository, options[:my_module])
-        row['stock'][:stock_status] = record.repository_stock_cell&.value&.status
-      end
+      row['stock']['displayWarnings'] = display_stock_warnings?(repository)
+      row['stock'][:stock_status] = record.repository_stock_cell&.value&.status
 
       row['stock']['value_type'] = 'RepositoryStockValue'
 
       if options[:include_stock_consumption] && record.repository.has_stock_management? && options[:my_module]
         consumption_managable = stock_consumption_managable?(record, repository, options[:my_module])
+        consumed_stock_formatted =
+          number_with_precision(
+            record.consumed_stock,
+            precision: (record.repository.repository_stock_column.metadata['decimals'].to_i || 0),
+            strip_insignificant_zeros: true
+          )
         row['consumedStock'] = {
           stock_present: stock_present,
           consumptionPermitted: stock_consumption_permitted?(repository, options[:my_module]),
@@ -80,7 +84,7 @@ module RepositoryDatatableHelper
           value: {
             consumed_stock: record.consumed_stock,
             consumed_stock_formatted:
-              "#{record.consumed_stock || 0} #{record.repository_stock_value&.repository_stock_unit_item&.data}"
+              "#{consumed_stock_formatted || 0} #{record.repository_stock_value&.repository_stock_unit_item&.data}"
           }
         }
       end
@@ -115,10 +119,8 @@ module RepositoryDatatableHelper
         consumption_managable = stock_consumption_managable?(record, repository, my_module)
 
         row['stock'] = stock_present ? display_cell_value(record.repository_stock_cell, record.repository.team, repository) : {}
-
-        if !options[:include_stock_consumption] || stock_consumption_permitted?(repository, my_module)
-          row['stock'][:stock_status] = record.repository_stock_cell&.value&.status
-        end
+        row['stock']['displayWarnings'] = display_stock_warnings?(repository)
+        row['stock'][:stock_status] = record.repository_stock_cell&.value&.status
 
         row['stock'][:stock_managable] = stock_managable
         if record.repository.is_a?(RepositorySnapshot)
@@ -136,10 +138,16 @@ module RepositoryDatatableHelper
                 my_module, record.repository, row_id: record.id
               )
           end
+          consumed_stock_formatted =
+            number_with_precision(
+              record.consumed_stock,
+              precision: (record.repository.repository_stock_column.metadata['decimals'].to_i || 0),
+              strip_insignificant_zeros: true
+            )
           row['consumedStock'][:value] = {
             consumed_stock: record.consumed_stock,
             consumed_stock_formatted:
-              "#{record.consumed_stock || 0} #{record.repository_stock_value&.repository_stock_unit_item&.data}"
+              "#{consumed_stock_formatted || 0} #{record.repository_stock_value&.repository_stock_unit_item&.data}"
           }
         end
 
@@ -170,10 +178,14 @@ module RepositoryDatatableHelper
       end
 
       if options[:include_stock_consumption] && repository_snapshot.has_stock_management?
-        stock_present = record.repository_stock_cell.present?
-        row['stock'] = stock_present ? display_cell_value(record.repository_stock_cell, team, repository_snapshot) : {}
+        row['stock'] = if record.repository_stock_cell.present?
+                         display_cell_value(record.repository_stock_cell, team, repository_snapshot)
+                       else
+                         { value_type: 'RepositoryStockValue' }
+                       end
+
         row['consumedStock'] =
-          if stock_present
+          if record.repository_stock_consumption_cell.present?
             display_cell_value(record.repository_stock_consumption_cell, team, repository_snapshot)
           else
             {}
@@ -262,6 +274,9 @@ module RepositoryDatatableHelper
     # don't load reminders for archived repositories
     return [] if repository_rows.blank? || repository.archived?
 
+    # don't load reminders for snapshots
+    return [] if repository.is_a?(RepositorySnapshot)
+
     repository_rows.active.with_active_reminders(current_user).to_a.pluck(:id).uniq
   end
 
@@ -276,5 +291,9 @@ module RepositoryDatatableHelper
     return false if repository.archived? || record.archived?
 
     true
+  end
+
+  def display_stock_warnings?(repository)
+    !repository.is_a?(RepositorySnapshot)
   end
 end

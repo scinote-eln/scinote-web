@@ -75,12 +75,13 @@
   @media (max-width: 1299px) {
     .repository-toolbar {
 
-      .btn {
+      .btn:not(.prevent-shrink) {
         padding: 7px;
         width: 36px;
-      }
-      .button-text {
-        display: none;
+
+        .button-text {
+          display: none;
+        }
       }
 
       .auto-shrink-button {

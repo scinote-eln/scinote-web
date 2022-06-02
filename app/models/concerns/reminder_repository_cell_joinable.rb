@@ -15,7 +15,8 @@ module ReminderRepositoryCellJoinable
       ).joins( # stock reminders
         'LEFT OUTER JOIN "repository_stock_values" ON "repository_stock_values"."id" = "repository_cells"."value_id" AND '\
         '"repository_cells"."value_type" = \'RepositoryStockValue\' AND '\
-        'repository_stock_values.amount <= repository_stock_values.low_stock_threshold'
+        '(repository_stock_values.amount <= repository_stock_values.low_stock_threshold OR '\
+        ' repository_stock_values.amount <= 0)'
       ).joins(
         'LEFT OUTER JOIN "hidden_repository_cell_reminders" ON '\
         '"repository_cells"."id" = "hidden_repository_cell_reminders"."repository_cell_id" AND '\

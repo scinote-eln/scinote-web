@@ -167,6 +167,7 @@ class MyModuleRepositoriesController < ApplicationController
       module_repository_row.consume_stock(current_user, params[:stock_consumption], params[:comment])
 
       log_activity(module_repository_row, current_stock, params[:comment])
+      protocol_consumption_notification(params[:comment], module_repository_row)
     end
 
     render json: {}, status: :ok
@@ -227,6 +228,21 @@ class MyModuleRepositoriesController < ApplicationController
       t('my_modules.repository.flash.unassign_from_task_html',
         unassigned_items: unassigned_count)
     end
+  end
+
+  def protocol_consumption_notification(comment, module_repository_row)
+    smart_annotation_notification(
+      old_text: nil,
+      new_text: comment,
+      title: t('notifications.my_module_consumption_comment_annotation_title',
+               repository_item: module_repository_row.repository_row.name,
+               repository: @repository.name,
+               user: current_user.full_name),
+      message: t('notifications.my_module_consumption_comment_annotation_message_html',
+                 project: link_to(@my_module.experiment.project.name, project_url(@my_module.experiment.project)),
+                 experiment: link_to(@my_module.experiment.name, canvas_experiment_url(@my_module.experiment)),
+                 my_module: link_to(@my_module.name, protocols_my_module_url(@my_module)))
+    )
   end
 
   def log_activity(module_repository_row, stock_consumption_was, comment)

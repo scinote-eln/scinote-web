@@ -52,7 +52,7 @@ module SmartAnnotations
       def generate_rep_snippet(name, object)
         if object&.repository
           repository_name = fetch_repository_name(object)
-          "<a href='#{ROUTES.repository_path(object)}' " \
+          "<a href='#{ROUTES.repository_path(object.repository)}' " \
           "><span class='sa-type'>#{trim_repository_name(repository_name)}</span>" \
           "#{object.name} #{object.archived? ? I18n.t('atwho.res.archived') : ''}</a>"
         else

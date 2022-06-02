@@ -69,6 +69,10 @@ Canaid::Permissions.register_for(Repository) do
     end
   end
 
+  can :manage_repository_assets do |user, repository|
+    can_create_repository_rows?(user, repository)
+  end
+
   # repository: update/delete records
   can :manage_repository_rows do |user, repository|
     can_create_repository_rows?(user, repository)

@@ -54,14 +54,16 @@ var MyModuleRepositories = (function() {
     return columns;
   }
 
-  function reloadRepositoriesList(repositoryId) {
+  function reloadRepositoriesList(repositoryId, expand = false) {
     var repositoriesContainer = $('#assigned-items-container');
     $.get(repositoriesContainer.data('repositories-list-url'), function(result) {
       repositoriesContainer.html(result.html);
       $('.assigned-items-title').attr('data-assigned-items-count', result.assigned_rows_count);
       // expand recently updated repository
-      $('#assigned-items-container').collapse('show');
-      $('#assigned-repository-items-container-' + repositoryId).collapse('show');
+      if (expand) {
+        $('#assigned-items-container').collapse('show');
+        $('#assigned-repository-items-container-' + repositoryId).collapse('show');
+      }
     });
   }
 
@@ -566,6 +568,7 @@ var MyModuleRepositories = (function() {
           versionsList.find('.list-group-item').attr('data-selected', false);
           versionsList.find('.list-group-item.active').attr('data-selected', true);
           $('#setDefaultVersionButton').parent().addClass('hidden');
+          reloadRepositoriesList(FULL_VIEW_MODAL.find('.table').data('id'));
           animateSpinner(null, false);
         }
       });
@@ -595,6 +598,7 @@ var MyModuleRepositories = (function() {
 
       renderFullViewRepositoryName(repositoryNameObject.text());
       FULL_VIEW_MODAL.modal('show');
+      initCloseFullViewModal();
       $.getJSON($(this).data('table-url'), (data) => {
         FULL_VIEW_MODAL.find('.table-container').html(data.html);
         renderFullViewTable(FULL_VIEW_MODAL.find('.table'), { assigned: true, skipCheckbox: true });
@@ -682,6 +686,7 @@ var MyModuleRepositories = (function() {
       var assignUrlModal = $(this).data('assign-url-modal');
       var updateUrlModal = $(this).data('update-url-modal');
       FULL_VIEW_MODAL.modal('show');
+      initCloseFullViewModal();
       $.get($(this).data('table-url'), (data) => {
         FULL_VIEW_MODAL.find('.table-container').html(data.html);
         FULL_VIEW_MODAL.data('assign-url-modal', assignUrlModal);
@@ -776,7 +781,7 @@ var MyModuleRepositories = (function() {
         $(FULL_VIEW_TABLE.table().container()).find('.dataTable')
           .attr('data-assigned-items-count', data.rows_count);
         FULL_VIEW_TABLE.ajax.reload(null, false);
-        reloadRepositoriesList(data.repository_id);
+        reloadRepositoriesList(data.repository_id, true);
         updateFullViewRowsCount(data.rows_count);
         renderFullViewAssignButtons();
       },
@@ -806,6 +811,14 @@ var MyModuleRepositories = (function() {
       }).error((response) => {
         HelperModule.flashAlertMsg(response.responseJSON.message, 'danger');
       });
+    });
+  }
+
+  function initCloseFullViewModal() {
+    $(FULL_VIEW_MODAL).on('keyup', function(e) {
+      if (e.key === 'Escape') {
+        FULL_VIEW_MODAL.modal('hide');
+      }
     });
   }
 

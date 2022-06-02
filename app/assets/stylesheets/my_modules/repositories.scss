@@ -45,14 +45,13 @@
 
       .assigned-repository-title {
         @include my-module-repository-title;
-        padding-right: 2.2em;
 
         &::after {
           color: $color-alto;
           content: '[' attr(data-rows-count) ']';
           display: inline-block;
+          padding-left: 1px;
           padding-right: .7em;
-          position: absolute;
           right: 0;
         }
       }
@@ -212,6 +211,11 @@
 
       .manage-repository-consumed-stock-value-link:not(.stock-value-view-render) {
         color: $color-volcano;
+      }
+
+      .empty-stock-render,
+      .consumption-locked {
+        color: $color-silver-chalice;
       }
 
       .row-stock,
