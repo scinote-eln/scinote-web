@@ -11,6 +11,8 @@ class StepText < ApplicationRecord
   has_many :step_orderable_elements, as: :orderable, dependent: :destroy
 
   def name
+    return if text.blank?
+
     strip_tags(text.truncate(64))
   end
 end

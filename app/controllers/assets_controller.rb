@@ -221,7 +221,7 @@ class AssetsController < ApplicationController
             @assoc,
             @assoc.my_module.experiment.project,
             my_module: @assoc.my_module.id,
-            file: @asset.file_file_name
+            file: @asset.file_name
           )
         else
           log_step_activity(
@@ -229,7 +229,7 @@ class AssetsController < ApplicationController
             @assoc,
             nil,
             protocol: @assoc.protocol.id,
-            file: @asset.file_file_name
+            file: @asset.file_name
           )
         end
       when Result
