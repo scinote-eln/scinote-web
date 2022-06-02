@@ -44,7 +44,7 @@
       <% if e.orderable_type == 'Checklist' && @settings.dig('task', 'protocol', 'step_checklists') %>
         <%= render partial: 'reports/elements/step_checklist_element.html.erb', locals: { checklist: e.orderable, export_all: export_all } %>
       <% end %>
-      <% if e.orderable_type == 'StepText' %>
+      <% if e.orderable_type == 'StepText' && @settings.dig('task', 'protocol', 'step_texts') %>
         <%= render partial: 'reports/elements/step_text_element.html.erb', locals: { step_text: e.orderable, export_all: export_all } %>
       <% end %>
     <% end %>

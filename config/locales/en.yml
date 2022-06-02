@@ -600,6 +600,7 @@ en:
           protocol_step: "Protocol steps"
           completed_steps: "Completed steps"
           uncompleted_steps: "Uncompleted steps"
+          step_texts: "Step texts"
           step_checklists: "Step checklists"
           step_files: "Step files"
           step_tables: "Step tables"

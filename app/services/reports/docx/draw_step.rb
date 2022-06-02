@@ -37,8 +37,7 @@ module Reports::Docx::DrawStep
       if e.orderable_type == 'Checklist' && @settings.dig('task', 'protocol', 'step_checklists')
         draw_step_checklist(e.orderable)
       end
-
-      draw_step_text(e.orderable) if e.orderable_type == 'StepText'
+      draw_step_text(e.orderable) if e.orderable_type == 'StepText' && @settings.dig('task', 'protocol', 'step_texts')
     end
     if @settings.dig('task', 'protocol', 'step_files')
       step.assets.each do |asset|

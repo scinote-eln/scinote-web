@@ -41,6 +41,7 @@ class Report < ApplicationRecord
         description: true,
         completed_steps: true,
         uncompleted_steps: true,
+        step_texts: true,
         step_checklists: true,
         step_files: true,
         step_tables: true,
