@@ -106,10 +106,14 @@
     methods: {
       updateName(name) {
         this.element.attributes.orderable.name = name;
+        this.editingName = false;
         this.update();
       },
       update() {
-        this.$emit('update', this.element)
+        this.element.attributes.orderable.checklist_items =
+          this.checklistItems.map((i) => i.attributes);
+
+        this.$emit('update', this.element);
       },
       postItem(item, callback) {
         $.post(this.element.attributes.orderable.urls.create_item_url, item).success((result) => {
@@ -123,6 +127,8 @@
         }).error(() => {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
+
+        this.update();
       },
       saveItem(item) {
         if (item.attributes.id) {
@@ -140,6 +146,7 @@
           this.postItem(item);
           this.addItem();
         }
+        this.update();
       },
       addItem() {
         this.checklistItems.push(
@@ -154,6 +161,7 @@
       },
       removeItem(position) {
         this.checklistItems.splice(position, 1);
+        this.update();
       },
       startReorder() {
         this.reordering = true;
