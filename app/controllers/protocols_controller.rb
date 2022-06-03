@@ -2,7 +2,7 @@
 class ProtocolsController < ApplicationController
   include RenamingUtil
   include ProtocolsImporter
-  include ProtocolsExporter
+  include ProtocolsExporterV2
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
