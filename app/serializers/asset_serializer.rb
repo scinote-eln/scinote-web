@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class AssetSerializer < ActiveModel::Serializer
+  include Canaid::Helpers::PermissionsHelper
   include Rails.application.routes.url_helpers
   include FileIconsHelper
   include ActionView::Helpers::NumberHelper
@@ -97,15 +98,17 @@ class AssetSerializer < ActiveModel::Serializer
       download: rails_blob_path(object.file, disposition: 'attachment'),
       load_asset: load_asset_path(object),
       asset_file: asset_file_url_path(object),
+      marvin_js: marvin_js_asset_path(object),
+      marvin_js_icon: image_path('icon_small/marvinjs.svg'),
+    }
+    urls.merge!(
       toggle_view_mode: toggle_view_mode_path(object),
       edit_asset: edit_asset_path(object),
-      marvin_js: marvin_js_asset_path(object),
       marvin_js_start_edit: start_editing_marvin_js_asset_path(object),
-      marvin_js_icon: image_path('icon_small/marvinjs.svg'),
       start_edit_image: start_edit_image_path(object),
       delete: asset_destroy_path(object)
-    }
-    urls[:wopi_action] = object.get_action_url(@instance_options[:user], 'embedview') if wopi
+    ) if can_manage_asset?(object)
+    urls[:wopi_action] = object.get_action_url(@instance_options[:user], 'embedview') if wopi && can_manage_asset?(@asset)
     urls[:blob] = rails_blob_path(object.file, disposition: 'attachment') if object.file.attached?
 
     urls

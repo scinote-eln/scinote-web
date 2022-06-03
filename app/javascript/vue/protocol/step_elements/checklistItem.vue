@@ -1,17 +1,21 @@
 <template>
   <div class="step-checklist-item">
     <div class="step-element-header" :class="{ 'locked': locked || editingText, 'editing-name': editingText }">
-      <div class="step-element-grip">
+      <div v-if="reorderChecklistItemUrl" class="step-element-grip">
         <i class="fas fa-grip-vertical"></i>
       </div>
       <div class="step-element-name" :class="{ 'done': checklistItem.attributes.checked }">
-        <div class="sci-checkbox-container">
-          <input ref="checkbox" type="checkbox" class="sci-checkbox" :checked="checklistItem.attributes.checked" @change="toggleChecked" />
-          <span class="sci-checkbox-label">
+        <div class="sci-checkbox-container" :class="{ 'disabled': !checklistItem.attributes.urls.update_url}">
+          <input ref="checkbox"
+                 type="checkbox"
+                 class="sci-checkbox"
+                 :checked="checklistItem.attributes.checked" @change="toggleChecked($event)" />
+          <span class="sci-checkbox-label" >
           </span>
         </div>
         <div class="step-checklist-text">
           <InlineEdit
+            v-if="checklistItem.attributes.urls.update_url"
             :value="checklistItem.attributes.text"
             :characterLimit="10000"
             :placeholder="''"
@@ -25,13 +29,16 @@
             @delete="checklistItem.attributes.id ? deleteElement() : removeItem()"
             @multilinePaste="(data) => { $emit('multilinePaste', data) && removeItem() }"
           />
+          <span v-else>
+            {{ checklistItem.attributes.text }}
+          </span>
         </div>
       </div>
       <div class="step-element-controls">
-        <button class="btn icon-btn btn-light" @click="enableTextEdit">
+        <button v-if="checklistItem.attributes.urls.update_url" class="btn icon-btn btn-light" @click="enableTextEdit">
           <i class="fas fa-pen"></i>
         </button>
-        <button class="btn icon-btn btn-light" @click="showDeleteModal">
+        <button v-if="checklistItem.attributes.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal">
           <i class="fas fa-trash"></i>
         </button>
       </div>
@@ -57,6 +64,9 @@
       locked: {
         type: Boolean,
         default: false
+      },
+      reorderChecklistItemUrl: {
+        type: String
       }
     },
     data() {
@@ -83,7 +93,8 @@
         this.editingText = false;
         this.$emit('editEnd');
       },
-      toggleChecked() {
+      toggleChecked(e) {
+        if (!this.checklistItem.attributes.urls.update_url) return
         this.checklistItem.attributes.checked = this.$refs.checkbox.checked;
         this.update();
       },

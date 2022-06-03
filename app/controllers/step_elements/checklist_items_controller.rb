@@ -22,9 +22,9 @@ module StepElements
         )
       end
 
-      render json: checklist_item, serializer: ChecklistItemSerializer
+      render json: checklist_item, serializer: ChecklistItemSerializer, user: current_user
     rescue ActiveRecord::RecordInvalid
-      render json: checklist_item, serializer: ChecklistItemSerializer, status: :unprocessable_entity
+      render json: checklist_item, serializer: ChecklistItemSerializer, user: current_user, status: :unprocessable_entity
     end
 
     def update
@@ -53,9 +53,9 @@ module StepElements
         end
       end
 
-      render json: @checklist_item, serializer: ChecklistItemSerializer
+      render json: @checklist_item, serializer: ChecklistItemSerializer, user: current_user
     rescue ActiveRecord::RecordInvalid
-      render json: @checklist_item, serializer: ChecklistItemSerializer, status: :unprocessable_entity
+      render json: @checklist_item, serializer: ChecklistItemSerializer, user: current_user, status: :unprocessable_entity
     end
 
     def destroy
@@ -65,9 +65,9 @@ module StepElements
           checklist_item: @checklist_item.text,
           checklist_name: @checklist.name
         )
-        render json: @checklist_item, serializer: ChecklistItemSerializer
+        render json: @checklist_item, serializer: ChecklistItemSerializer, user: current_user
       else
-        render json: @checklist_item, serializer: ChecklistItemSerializer, status: :unprocessable_entity
+        render json: @checklist_item, serializer: ChecklistItemSerializer, user: current_user, status: :unprocessable_entity
       end
     end
 

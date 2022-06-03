@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class StepTextSerializer < ActiveModel::Serializer
+  include Canaid::Helpers::PermissionsHelper
   include Rails.application.routes.url_helpers
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
@@ -28,7 +29,7 @@ class StepTextSerializer < ActiveModel::Serializer
   end
 
   def urls
-    return if object.destroyed?
+    return {} if object.destroyed? || !can_manage_step?(scope[:user], object.step)
 
     {
       delete_url: step_text_path(object.step, object),

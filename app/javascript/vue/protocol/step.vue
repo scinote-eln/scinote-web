@@ -12,7 +12,7 @@
       <StorageUsage v-if="step.attributes.storage_limit" :step="step"/>
     </div>
     <div class="step-header step-element-header">
-      <div class="step-element-grip" @click="$emit('reorder')">
+      <div v-if="reorderStepUrl" class="step-element-grip" @click="$emit('reorder')">
         <i class="fas fa-grip-vertical"></i>
       </div>
       <a class="step-collapse-link"
@@ -29,15 +29,19 @@
       </div>
       <div class="step-name-container">
         <InlineEdit
+          v-if="urls.update_url"
           :value="step.attributes.name"
           :characterLimit="255"
           :allowBlank="false"
           :attributeName="`${i18n.t('Step')} ${i18n.t('name')}`"
           @update="updateName"
         />
+        <span v-else>
+          {{ step.attributes.name }}
+        </span>
       </div>
       <div class="step-actions-container">
-        <div class="dropdown">
+        <div  v-if="urls.update_url"  class="dropdown">
           <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'stepInserMenu_' + step.id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             {{ i18n.t('protocols.steps.insert.button') }}
             <span class="caret"></span>
@@ -79,7 +83,7 @@
             {{ step.attributes.comments_count }}
           </span>
         </a>
-        <div class="step-actions-container">
+        <div v-if="urls.update_url" class="step-actions-container">
           <div class="dropdown">
             <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'stepInserMenu_' + step.id" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="true">
               <i class="fas fa-ellipsis-v"></i>
@@ -88,11 +92,11 @@
               <li class="title">
                 {{ i18n.t('protocols.steps.options_dropdown.title') }}
               </li>
-              <li class="action" @click="openReorderModal">
+              <li v-if="urls.reorder_elements_url" class="action" @click="openReorderModal">
                 <i class="fas fa-arrows-alt-v"></i>
                 {{ i18n.t('protocols.steps.options_dropdown.rearrange') }}
               </li>
-              <li class="action" @click="showDeleteModal">
+              <li v-if="urls.delete_url" class="action" @click="showDeleteModal">
                 <i class="fas fa-trash"></i>
                 {{ i18n.t('protocols.steps.options_dropdown.delete') }}
               </li>
@@ -107,6 +111,7 @@
           :is="elements[index].attributes.orderable_type"
           :key="index"
           :element.sync="elements[index]"
+          :reorderElementUrl="urls.reorder_elements_url"
           @component:delete="deleteElement"
           @update="updateElement"
           @reorder="openReorderModal"
@@ -166,6 +171,10 @@
         type: Boolean,
         required: true
       },
+      reorderStepUrl: {
+        type: String,
+        required: true
+      }
     },
     data() {
       return {
@@ -200,16 +209,19 @@
     computed: {
       reorderableElements() {
         return this.elements.map((e) => { return { id: e.id, attributes: e.attributes.orderable } })
+      },
+      urls() {
+        return this.step.attributes.urls || {}
       }
     },
     methods: {
       loadAttachments() {
-        $.get(this.step.attributes.urls.attachments_url, (result) => {
+        $.get(this.urls.attachments_url, (result) => {
           this.attachments = result.data
         });
       },
       loadElements() {
-        $.get(this.step.attributes.urls.elements_url, (result) => {
+        $.get(this.urls.elements_url, (result) => {
           this.elements = result.data
         });
       },
@@ -221,7 +233,7 @@
       },
       deleteStep() {
         $.ajax({
-          url: this.step.attributes.urls.delete_url,
+          url: this.urls.delete_url,
           type: 'DELETE',
           success: (result) => {
             this.$emit(
@@ -233,9 +245,11 @@
         });
       },
       changeState() {
+        if (!this.urls.state_url) return;
+
         this.step.attributes.completed = !this.step.attributes.completed;
         this.$emit('step:update', this.step.attributes)
-        $.post(this.step.attributes.urls.state_url, {completed: this.step.attributes.completed}).error(() => {
+        $.post(this.urls.state_url, {completed: this.step.attributes.completed}).error(() => {
           this.step.attributes.completed = !this.step.attributes.completed;
           this.$emit('step:update', this.step.attributes)
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
@@ -288,7 +302,7 @@
 
         $.ajax({
           type: "POST",
-          url: this.step.attributes.urls.reorder_elements_url,
+          url: this.urls.reorder_elements_url,
           data: JSON.stringify(elementPositions),
           contentType: "application/json",
           dataType: "json",
@@ -299,7 +313,7 @@
       },
       updateName(newName) {
         $.ajax({
-          url: this.step.attributes.urls.update_url,
+          url: this.urls.update_url,
           type: 'PATCH',
           data: {step: {name: newName}},
           success: (result) => {
@@ -308,7 +322,7 @@
         });
       },
       createElement(elementType) {
-        $.post(this.step.attributes.urls[`create_${elementType}_url`], (result) => {
+        $.post(this.urls[`create_${elementType}_url`], (result) => {
           this.elements.push(result.data)
         }).error(() => {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');

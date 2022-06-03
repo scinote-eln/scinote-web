@@ -25,16 +25,18 @@
                 {{ i18n.t(`general.sort_new.${orderOption}`) }}
               </a>
             </li>
-            <li role="separator" class="divider"></li>
-            <li class="divider-label">{{ i18n.t("protocols.steps.attachments.attachments_view_mode") }}</li>
-            <li v-for="(viewMode, index) in viewModeOptions" :key="`viewMode_${index}`">
-              <a
-                class="attachments-view-mode action-link"
-                :class="viewMode == step.attributes.assets_view_mode ? 'selected' : ''"
-                @click="changeAttachmentsViewMode(viewMode)"
-                v-html="i18n.t(`protocols.steps.attachments.view_mode.${viewMode}_html`)"
-              ></a>
-            </li>
+            <template v-if="step.attributes.urls.update_asset_view_mode_url">
+              <li role="separator" class="divider"></li>
+              <li class="divider-label">{{ i18n.t("protocols.steps.attachments.attachments_view_mode") }}</li>
+              <li v-for="(viewMode, index) in viewModeOptions" :key="`viewMode_${index}`">
+                <a
+                  class="attachments-view-mode action-link"
+                  :class="viewMode == step.attributes.assets_view_mode ? 'selected' : ''"
+                  @click="changeAttachmentsViewMode(viewMode)"
+                  v-html="i18n.t(`protocols.steps.attachments.view_mode.${viewMode}_html`)"
+                ></a>
+              </li>
+            </template>
           </ul>
         </div>
       </div>

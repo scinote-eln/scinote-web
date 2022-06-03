@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ChecklistSerializer < ActiveModel::Serializer
+  include Canaid::Helpers::PermissionsHelper
   include Rails.application.routes.url_helpers
 
   attributes :id, :name, :urls, :icon
@@ -11,7 +12,7 @@ class ChecklistSerializer < ActiveModel::Serializer
   end
 
   def urls
-    return {} if object.destroyed?
+    return {} if object.destroyed? || !can_manage_step?(scope[:user], object.step)
 
     {
       delete_url: step_checklist_path(object.step, object),

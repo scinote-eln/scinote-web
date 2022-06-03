@@ -11,7 +11,7 @@
         <!-- protocol status dropdown gets mounted here -->
       </div>
       <div class="sci-btn-group actions-block">
-        <a class="btn btn-primary" @click="addStep(steps.length)">
+        <a v-if="urls.add_step_url" class="btn btn-primary" @click="addStep(steps.length)">
             <span class="fas fa-plus" aria-hidden="true"></span>
             <span>{{ i18n.t("protocols.steps.new_step") }}</span>
         </a>
@@ -26,6 +26,7 @@
       <div class="protocol-description">
         <div class="protocol-name">
           <InlineEdit
+            v-if="urls.update_protocol_url"
             :value="protocol.attributes.name"
             :characterLimit="255"
             :placeholder="i18n.t('my_modules.protocols.protocol_status_bar.enter_name')"
@@ -33,21 +34,27 @@
             :attributeName="`${i18n.t('Protocol')} ${i18n.t('name')}`"
             @update="updateName"
           />
+          <span v-else>
+            {{ protocol.attributes.name }}
+          </span>
         </div>
         <Tinymce
+          v-if="urls.update_protocol_url"
           :value="protocol.attributes.description"
           :value_html="protocol.attributes.description_view"
           :placeholder="i18n.t('my_modules.protocols.protocol_status_bar.empty_description_edit_label')"
-          :updateUrl="protocolUrl"
+          :updateUrl="urls.update_protocol"
           :objectType="'Protocol'"
           :objectId="parseInt(protocol.id)"
           :fieldName="'protocol[description]'"
           :lastUpdated="protocol.attributes.updated_at"
           @update="updateDescription"
         />
+        <div v-else v-html="protocol.attributes.description_view">
+        </div>
       </div>
       <div class="protocol-step-actions">
-        <a class="btn btn-default" data-toggle="modal" @click="startStepReorder">
+        <a v-if="urls.reorder_steps_url" class="btn btn-default" data-toggle="modal" @click="startStepReorder">
             <span class="fas fa-arrows-alt-v" aria-hidden="true"></span>
             <span>{{ i18n.t("protocols.reorder_steps.button") }}</span>
         </a>
@@ -55,7 +62,7 @@
       <div class="protocol-steps">
         <template v-for="(step, index) in steps">
           <div class="step-block" :key="step.id">
-            <div v-if="index > 0" class="insert-step" @click="addStep(index)">
+            <div v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)">
               <i class="fas fa-plus"></i>
             </div>
             <Step
@@ -64,11 +71,12 @@
               :inRepository="inRepository"
               @step:delete="updateStepsPosition"
               @step:update="updateStep"
+              :reorderStepUrl="urls.reorder_steps_url"
             />
           </div>
         </template>
       </div>
-      <button class="btn btn-primary" @click="addStep(steps.length)">
+      <button v-if="urls.add_step_url" class="btn btn-primary" @click="addStep(steps.length)">
         <i class="fas fa-plus"></i>
         {{ i18n.t("protocols.steps.new_step") }}
       </button>
@@ -100,18 +108,6 @@
       protocolUrl: {
         type: String,
         required: true
-      },
-      stepsUrl: {
-        type: String,
-        required: true
-      },
-      addStepUrl: {
-        type: String,
-        required: true
-      },
-      editable:{
-        Boolean,
-        required: true
       }
     },
     components: { Step, InlineEdit, ProtocolModals, ProtocolOptions, Tinymce, ReorderableItemsModal },
@@ -119,6 +115,9 @@
     computed: {
       inRepository() {
         return this.protocol.attributes.in_repository
+      },
+      urls() {
+        return this.protocol.attributes.urls || {}
       }
     },
     data() {
@@ -133,10 +132,10 @@
     created() {
       $.get(this.protocolUrl, (result) => {
         this.protocol = result.data;
+        $.get(this.urls.steps_url, (result) => {
+          this.steps = result.data
+        })
       });
-      $.get(this.stepsUrl, (result) => {
-        this.steps = result.data
-      })
     },
     methods: {
       refreshProtocolStatus() {
@@ -149,7 +148,7 @@
         this.refreshProtocolStatus();
         $.ajax({
           type: 'PATCH',
-          url: this.protocolUrl,
+          url: this.urls.update_protocol_url,
           data: { protocol: { name: newName } }
         });
       },
@@ -157,7 +156,7 @@
         this.protocol.attributes = protocol.data.attributes
       },
       addStep(position) {
-        $.post(this.addStepUrl, {position: position}, (result) => {
+        $.post(this.urls.add_step_url, {position: position}, (result) => {
           this.updateStepsPosition(result.data)
         })
         this.refreshProtocolStatus();
