@@ -80,16 +80,16 @@ class ProtocolSerializer < ActiveModel::Serializer
   end
 
   def add_step_url
-    return unless (in_repository ? can_manage_protocol_in_repository?(object) : can_manage_my_module_steps?(object.my_module))
+    return unless can_manage_protocol_in_module?(object) || can_manage_protocol_in_repository?(object)
 
     protocol_steps_path(protocol_id: object.id)
   end
 
   def update_protocol_url
-    if in_repository
-      protocol_path(@protocol) if can_manage_protocol_in_repository?(object)
-    else
-      protocol_my_module_path(object.my_module) if can_manage_protocol_in_module?(object)
+    if in_repository && can_manage_protocol_in_repository?(object)
+      protocol_path(@protocol)
+    elsif can_manage_protocol_in_module?(object)
+      protocol_my_module_path(object.my_module)
     end
   end
 end
