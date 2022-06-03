@@ -29,10 +29,10 @@
             <%= t(@type == :public ? "protocols.index.public_description" : "protocols.index.private_description") %>
           </div>
           <div class="sci-btn-group" role="group">
-            <button class="btn btn-primary" <%= can_create_protocols_in_repository?(@current_team) ? "data-action=create-new" : "disabled" %> data-url="<%= create_new_modal_protocols_path(team: @current_team, type: @type) %>">
+            <%= button_to protocols_path(type: @type), disabled: !can_create_protocols_in_repository?(@current_team), class: 'btn btn-primary' do %>
               <span class="fas fa-plus"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.create_new") %></span>
-            </button>
+            <% end %>
             <button class="btn btn-light disabled hidden" data-action="edit">
               <span class="fas fa-pencil-alt"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.edit") %></span>
@@ -118,7 +118,6 @@
 <div id="protocolsio-preview-modal-target"></div>
 <%= render partial: "protocols/import_export/import_json_protocol_modal.html.erb" %>
 
-<%= render partial: "protocols/index/create_new_modal.html.erb" %>
 <%= render partial: "protocols/index/make_private_results_modal.html.erb" %>
 <%= render partial: "protocols/index/publish_results_modal.html.erb" %>
 <%= render partial: "protocols/index/confirm_archive_modal.html.erb" %>

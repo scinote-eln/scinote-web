@@ -298,56 +298,6 @@ function initLinkedChildrenModal() {
   }
 }
 
-function initCreateNewModal() {
-  var link = $("[data-action='create-new']");
-  var modal = $("#create-new-modal");
-  var submitBtn = modal.find(".modal-footer [data-action='submit']");
-  var newProtocol = parseInt(sessionStorage.getItem('scinote-dashboard-new-protocol'), 10);
-
-  link.on("click", function() {
-    $.ajax({
-      url: link.attr("data-url"),
-      type: "GET",
-      dataType: "json",
-      success: function (data) {
-        var modalBody = modal.find(".modal-body");
-        modalBody.html(data.html);
-
-        modalBody.find("form")
-        .on("ajax:success", function(ev2, data2, status2) {
-          // Redirect to edit page
-          $(location).attr("href", data2.url);
-        })
-        .on("ajax:error", function(ev2, data2, status2) {
-          // Display errors if needed
-          $(this).renderFormErrors("protocol", data2.responseJSON);
-        });
-
-        modal.modal("show");
-        modalBody.find("input[type='text']").focus();
-      },
-      error: function (error) {
-        // TODO
-      }
-    });
-  });
-
-  if (Math.floor(Date.now() / 1000) - newProtocol < 15) {
-    link.click();
-    sessionStorage.removeItem('scinote-dashboard-new-protocol');
-  }
-
-  submitBtn.on("click", function() {
-    // Submit the form inside modal
-    $(this).closest(".modal").find(".modal-body form").submit();
-  });
-
-  modal.on("hidden.bs.modal", function(e) {
-    modal.find(".modal-body form").off("ajax:success ajax:error");
-    modal.find(".modal-body").html("");
-  });
-}
-
 function initModals() {
   function refresh(modal) {
     modal.find(".modal-body").html("");
