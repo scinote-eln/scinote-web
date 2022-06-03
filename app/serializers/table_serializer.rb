@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class TableSerializer < ActiveModel::Serializer
+  include Canaid::Helpers::PermissionsHelper
   include Rails.application.routes.url_helpers
 
   attributes :name, :contents, :urls, :icon
@@ -17,6 +18,8 @@ class TableSerializer < ActiveModel::Serializer
     return if object.destroyed?
 
     object.reload unless object.step
+
+    return {} unless can_manage_step?(scope[:user], object.step)
 
     {
       delete_url: step_table_path(object.step, object),

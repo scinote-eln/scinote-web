@@ -1,19 +1,20 @@
 <template>
   <div class="step-text-container" :class="{ 'edit': inEditMode }">
     <div class="action-container" @click="enableEditMode">
-      <div class="element-grip" @click="$emit('reorder')">
+      <div v-if="reorderElementUrl" class="element-grip" @click="$emit('reorder')">
         <i class="fas fa-grip-vertical"></i>
       </div>
       <div class="buttons-container">
-        <button class="btn icon-btn btn-light">
+        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light">
           <i class="fas fa-pen"></i>
         </button>
-        <button class="btn icon-btn btn-light" @click="showDeleteModal">
+        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal">
           <i class="fas fa-trash"></i>
         </button>
       </div>
     </div>
     <Tinymce
+      v-if="element.attributes.orderable.urls.update_url"
       :inEditMode="inEditMode"
       :value="element.attributes.orderable.text"
       :value_html="element.attributes.orderable.text_view"
@@ -26,6 +27,7 @@
       @update="update"
       @editingDisabled="disableEditMode"
     />
+    <div v-else v-html="element.attributes.orderable.text_view"></div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement($event)" @cancel="closeDeleteModal"/>
   </div>
 </template>
@@ -43,6 +45,9 @@
       element: {
         type: Object,
         required: true
+      },
+      reorderElementUrl: {
+        type: String
       }
     },
     data() {
@@ -52,6 +57,7 @@
     },
     methods: {
       enableEditMode() {
+        if (!this.element.attributes.orderable.urls.update_url) return
         this.inEditMode = true
       },
       disableEditMode() {

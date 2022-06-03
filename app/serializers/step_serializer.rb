@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class StepSerializer < ActiveModel::Serializer
+  include Canaid::Helpers::PermissionsHelper
   include Rails.application.routes.url_helpers
   include ApplicationHelper
   include CommentHelper
@@ -52,20 +53,27 @@ class StepSerializer < ActiveModel::Serializer
   end
 
   def urls
-    {
-      delete_url: step_path(object),
-      state_url: toggle_step_state_step_path(object),
-      update_url: step_path(object),
+    urls_list = {
       elements_url: elements_step_path(object),
-      attachments_url: attachments_step_path(object),
-      create_table_url: step_tables_path(object),
-      create_text_url: step_texts_path(object),
-      create_checklist_url: step_checklists_path(object),
-      update_asset_view_mode_url: update_asset_view_mode_step_path(object),
-      update_view_state_step_url: update_view_state_step_path(object),
-      direct_upload_url: rails_direct_uploads_url,
-      upload_attachment_url: upload_attachment_step_path(object),
-      reorder_elements_url: reorder_step_step_orderable_elements_path(step_id: object.id)
+      attachments_url: attachments_step_path(object)
     }
+
+    if can_manage_step?(object)
+      urls_list.merge!({
+        delete_url: step_path(object),
+        state_url: toggle_step_state_step_path(object),
+        update_url: step_path(object),
+        create_table_url: step_tables_path(object),
+        create_text_url: step_texts_path(object),
+        create_checklist_url: step_checklists_path(object),
+        update_asset_view_mode_url: update_asset_view_mode_step_path(object),
+        update_view_state_step_url: update_view_state_step_path(object),
+        direct_upload_url: rails_direct_uploads_url,
+        upload_attachment_url: upload_attachment_step_path(object),
+        reorder_elements_url: reorder_step_step_orderable_elements_path(step_id: object.id)
+      })
+    end
+
+    urls_list
   end
 end

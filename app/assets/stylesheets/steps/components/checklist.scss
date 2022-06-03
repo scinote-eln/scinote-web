@@ -32,6 +32,10 @@
     border: 1px solid $brand-primary;
   }
 
+  .sci-checkbox-container.disabled {
+    pointer-events: none;
+  }
+
   .sci-inline-edit {
     font-weight: normal;
 

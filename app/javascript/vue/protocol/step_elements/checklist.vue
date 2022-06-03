@@ -1,11 +1,12 @@
 <template>
   <div class="step-checklist-container">
     <div class="step-element-header" :class="{ 'locked': locked, 'editing-name': editingName }">
-      <div class="step-element-grip" @click="$emit('reorder')">
+      <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
         <i class="fas fa-grip-vertical"></i>
       </div>
       <div class="step-element-name">
         <InlineEdit
+          v-if="element.attributes.orderable.urls.update_url"
           :value="element.attributes.orderable.name"
           :characterLimit="255"
           :placeholder="''"
@@ -16,12 +17,15 @@
           @editingDisabled="editingName = false"
           @update="updateName"
         />
+        <span v-else>
+          {{ element.attributes.orderable.name }}
+        </span>
       </div>
       <div class="step-element-controls">
-        <button class="btn icon-btn btn-light" @click="editingName = true">
+        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="editingName = true">
           <i class="fas fa-pen"></i>
         </button>
-        <button class="btn icon-btn btn-light" @click="showDeleteModal">
+        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal">
           <i class="fas fa-trash"></i>
         </button>
       </div>
@@ -33,7 +37,7 @@
         :dragClass="'step-checklist-item-drag'"
         :chosenClass="'step-checklist-item-chosen'"
         :handle="'.step-element-grip'"
-        :disabled="editingItem"
+        :disabled="editingItem && !element.attributes.orderable.urls.reorder_url"
         @start="startReorder"
         @end="endReorder"
       >
@@ -42,6 +46,7 @@
           :key="checklistItem.attributes.id"
           :checklistItem="checklistItem"
           :locked="locked"
+          :reorderChecklistItemUrl="element.attributes.orderable.urls.reorder_url"
           @editStart="editingItem = true"
           @editEnd="editingItem = false"
           @update="saveItem"
@@ -50,7 +55,7 @@
           @multilinePaste="handleMultilinePaste"
         />
       </Draggable>
-      <div class="btn btn-light step-checklist-add-item" @click="addItem">
+      <div v-if="element.attributes.orderable.urls.create_item_url" class="btn btn-light step-checklist-add-item" @click="addItem">
         <i class="fas fa-plus"></i>
         {{ i18n.t('protocols.steps.insert.checklist_item') }}
       </div>
@@ -74,6 +79,9 @@
       element: {
         type: Object,
         required: true
+      },
+      reorderElementUrl: {
+        type: String
       }
     },
     data() {

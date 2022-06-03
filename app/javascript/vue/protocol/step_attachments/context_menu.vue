@@ -8,7 +8,7 @@
         aria-labelledby="dropdownAssetContextMenu"
         :data-asset-id="attachment.id"
     >
-      <li v-if="attachment.attributes.wopi" >
+      <li v-if="attachment.attributes.wopi && attachment.attributes.urls.edit_asset" >
         <a :href="attachment.attributes.urls.edit_asset"
            id="wopi_file_edit_button"
            class="btn btn-light"
@@ -20,7 +20,7 @@
           {{ attachment.attributes.wopi_context.button_text }}
         </a>
       </li>
-      <li v-if="attachment.attributes.asset_type == 'marvinjs'">
+      <li v-if="attachment.attributes.asset_type == 'marvinjs' && attachment.attributes.urls.marvin_js_start_edit">
         <a class="btn btn-light marvinjs-edit-button"
            :data-sketch-id="attachment.id"
            :data-update-url="attachment.attributes.urls.marvin_js"
@@ -32,7 +32,7 @@
           {{ i18n.t('assets.file_preview.edit_in_marvinjs') }}
         </a>
       </li>
-      <li v-if="attachment.attributes.image_editable">
+      <li v-if="attachment.attributes.image_editable && attachment.attributes.urls.start_edit_image">
         <a class="btn btn-light image-edit-button"
            :data-image-id="attachment.id"
            :data-image-name="attachment.attributes.file_name"
@@ -51,25 +51,29 @@
           {{ i18n.t('Download') }}
         </a>
       </li>
-      <li role="separator" class="divider"></li>
-      <li class="divider-label">
-        {{ i18n.t("assets.context_menu.set_view_size") }}
-      </li>
-      <li v-for="(viewMode, index) in viewModeOptions" :key="`viewMode_${index}`">
-        <a
-          class="change-preview-type"
-          :class="viewMode == attachment.attributes.view_mode ? 'selected' : ''"
-          @click.prevent.stop="changeViewMode(viewMode)"
-          v-html="i18n.t(`assets.context_menu.${viewMode}_html`)"
-        ></a>
-      </li>
-      <li role="separator" class="divider"></li>
-      <li>
-        <a @click.prevent.stop="deleteModal = true">
-          <i class="fas fa-trash"></i>
-          {{ i18n.t("assets.context_menu.delete") }}
-        </a>
-      </li>
+      <template v-if="attachment.attributes.urls.toggle_view_mode">
+        <li role="separator" class="divider"></li>
+        <li class="divider-label">
+          {{ i18n.t("assets.context_menu.set_view_size") }}
+        </li>
+        <li v-for="(viewMode, index) in viewModeOptions" :key="`viewMode_${index}`">
+          <a
+            class="change-preview-type"
+            :class="viewMode == attachment.attributes.view_mode ? 'selected' : ''"
+            @click.prevent.stop="changeViewMode(viewMode)"
+            v-html="i18n.t(`assets.context_menu.${viewMode}_html`)"
+          ></a>
+        </li>
+      </template>
+      <template v-if="attachment.attributes.urls.delete">
+        <li role="separator" class="divider"></li>
+        <li>
+          <a @click.prevent.stop="deleteModal = true">
+            <i class="fas fa-trash"></i>
+            {{ i18n.t("assets.context_menu.delete") }}
+          </a>
+        </li>
+      </template>
     </ul>
     <deleteAttachmentModal
         v-if="deleteModal"
