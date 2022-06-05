@@ -549,7 +549,6 @@ Rails.application.routes.draw do
         get 'edit_description_modal', to: 'protocols#edit_description_modal'
       end
       collection do
-        get 'create_new_modal', to: 'protocols#create_new_modal'
         post 'datatable', to: 'protocols#datatable'
         post 'make_private', to: 'protocols#make_private'
         post 'publish', to: 'protocols#publish'

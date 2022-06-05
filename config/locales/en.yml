@@ -2376,6 +2376,7 @@ en:
         label: "Description"
     index:
       head_title: "Protocol management"
+      default_name: 'New protocol'
       navigation:
         public: "Team protocols"
         private: "My protocols"

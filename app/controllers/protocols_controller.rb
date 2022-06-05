@@ -12,7 +12,6 @@ class ProtocolsController < ApplicationController
   include CommentHelper
 
   before_action :check_create_permissions, only: %i(
-    create_new_modal
     create
   )
   before_action :check_clone_permissions, only: [:clone]
@@ -234,9 +233,9 @@ class ProtocolsController < ApplicationController
     @protocol = Protocol.new(
       team: @current_team,
       protocol_type: Protocol.protocol_types[@type == :public ? :in_repository_public : :in_repository_private],
-      added_by: current_user
+      added_by: current_user,
+      name: t('protocols.index.default_name')
     )
-    @protocol.assign_attributes(create_params)
 
     ts = Time.now
     @protocol.record_timestamps = false
@@ -244,27 +243,16 @@ class ProtocolsController < ApplicationController
     @protocol.updated_at = ts
     @protocol.published_on = ts if @type == :public
 
-    respond_to do |format|
-      if @protocol.save
+    rename_record(@protocol, :name)
+    if @protocol.save
 
-        log_activity(:create_protocol_in_repository, nil, protocol: @protocol.id)
+      log_activity(:create_protocol_in_repository, nil, protocol: @protocol.id)
 
-        TinyMceAsset.update_images(@protocol, params[:tiny_mce_images], current_user)
-        format.json do
-          render json: {
-            url: edit_protocol_path(
-              @protocol,
-              team: @current_team,
-              type: @type
-            )
-          }
-        end
-      else
-        format.json do
-          render json: @protocol.errors,
-            status: :unprocessable_entity
-        end
-      end
+      TinyMceAsset.update_images(@protocol, params[:tiny_mce_images], current_user)
+      redirect_to protocol_path(@protocol)
+    else
+      flash[:error] = @protocol.errors.full_messages.join(', ')
+      redirect_to protocols_path
     end
   end
 
@@ -942,19 +930,6 @@ class ProtocolsController < ApplicationController
     end
   end
 
-  def create_new_modal
-    @new_protocol = Protocol.new
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string({
-            partial: "protocols/index/create_new_modal_body.html.erb"
-          })
-        }
-      end
-    end
-  end
-
   def edit_name_modal
     respond_to do |format|
       format.json do
@@ -1199,10 +1174,6 @@ class ProtocolsController < ApplicationController
 
   def copy_to_repository_params
     params.require(:protocol).permit(:name, :protocol_type)
-  end
-
-  def create_params
-    params.require(:protocol).permit(:name)
   end
 
   def check_protocolsio_import_permissions
