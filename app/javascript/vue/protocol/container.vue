@@ -26,7 +26,7 @@
       <div class="protocol-description">
         <div class="protocol-name">
           <InlineEdit
-            v-if="urls.update_protocol_url"
+            v-if="urls.update_protocol_name_url"
             :value="protocol.attributes.name"
             :characterLimit="255"
             :placeholder="i18n.t('my_modules.protocols.protocol_status_bar.enter_name')"
@@ -38,12 +38,13 @@
             {{ protocol.attributes.name }}
           </span>
         </div>
+        <ProtocolMetadata v-if="protocol.attributes" :protocol="protocol" @update="updateProtocol"/>
         <Tinymce
-          v-if="urls.update_protocol_url"
+          v-if="urls.update_protocol_description_url"
           :value="protocol.attributes.description"
           :value_html="protocol.attributes.description_view"
           :placeholder="i18n.t('my_modules.protocols.protocol_status_bar.empty_description_edit_label')"
-          :updateUrl="urls.update_protocol"
+          :updateUrl="urls.update_protocol_description_url"
           :objectType="'Protocol'"
           :objectId="parseInt(protocol.id)"
           :fieldName="'protocol[description]'"
@@ -54,6 +55,10 @@
         </div>
       </div>
       <div class="protocol-step-actions">
+        <a v-if="urls.add_step_url && protocol.attributes.in_repository" class="btn btn-primary" @click="addStep(steps.length)">
+            <span class="fas fa-plus" aria-hidden="true"></span>
+            <span>{{ i18n.t("protocols.steps.new_step") }}</span>
+        </a>
         <a v-if="urls.reorder_steps_url" class="btn btn-default" data-toggle="modal" @click="startStepReorder">
             <span class="fas fa-arrows-alt-v" aria-hidden="true"></span>
             <span>{{ i18n.t("protocols.reorder_steps.button") }}</span>
@@ -95,6 +100,7 @@
  <script>
   import InlineEdit from 'vue/shared/inline_edit.vue'
   import Step from 'vue/protocol/step'
+  import ProtocolMetadata from 'vue/protocol/protocolMetadata'
   import ProtocolOptions from 'vue/protocol/protocolOptions'
   import ProtocolModals from 'vue/protocol/modals'
   import Tinymce from 'vue/shared/tinymce.vue'
@@ -110,7 +116,7 @@
         required: true
       }
     },
-    components: { Step, InlineEdit, ProtocolModals, ProtocolOptions, Tinymce, ReorderableItemsModal },
+    components: { Step, InlineEdit, ProtocolModals, ProtocolOptions, Tinymce, ReorderableItemsModal, ProtocolMetadata },
     mixins: [UtilsMixin],
     computed: {
       inRepository() {
@@ -143,12 +149,15 @@
         // legacy method from app/assets/javascripts/my_modules/protocols.js
         refreshProtocolStatusBar();
       },
+      updateProtocol(attributes) {
+        this.protocol.attributes = attributes
+      },
       updateName(newName) {
         this.protocol.attributes.name = newName;
         this.refreshProtocolStatus();
         $.ajax({
           type: 'PATCH',
-          url: this.urls.update_protocol_url,
+          url: this.urls.update_protocol_name_url,
           data: { protocol: { name: newName } }
         });
       },

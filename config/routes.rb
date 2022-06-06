@@ -509,7 +509,7 @@ Rails.application.routes.draw do
     get 'result_tables/:id/download' => 'result_tables#download',
       as: :result_table_download
 
-    resources :protocols, only: %i(index show edit create) do
+    resources :protocols, only: %i(index show edit create update) do
       resources :steps, only: [:new, :create] do
         post :reorder, on: :collection
       end
@@ -520,8 +520,8 @@ Rails.application.routes.draw do
              to: 'protocols#linked_children_datatable'
         get 'preview', to: 'protocols#preview'
         patch 'description', to: 'protocols#update_description'
-        put 'name', to: 'protocols#update_name'
-        put 'authors', to: 'protocols#update_authors'
+        patch 'name', to: 'protocols#update_name'
+        patch 'authors', to: 'protocols#update_authors'
         patch 'keywords', to: 'protocols#update_keywords'
         post 'clone', to: 'protocols#clone'
         get 'unlink_modal', to: 'protocols#unlink_modal'

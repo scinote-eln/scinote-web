@@ -182,7 +182,7 @@ class ProtocolsController < ApplicationController
       if @protocol.update_keywords(params[:keywords])
         format.json do
           log_activity(:edit_keywords_in_protocol_repository, nil, protocol: @protocol.id)
-          render json: { status: :ok }
+          render json: @protocol, serializer: ProtocolSerializer, user: current_user
         end
       else
         format.json { render json: {}, status: :unprocessable_entity }
@@ -193,7 +193,7 @@ class ProtocolsController < ApplicationController
   def update_authors
     if @protocol.update(authors: params.require(:protocol)[:authors])
       log_activity(:edit_authors_in_protocol_repository, nil, protocol: @protocol.id)
-      render json: {}, status: :ok
+      render json: @protocol, serializer: ProtocolSerializer, user: current_user
     else
       render json: @protocol.errors, status: :unprocessable_entity
     end
