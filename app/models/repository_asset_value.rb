@@ -65,6 +65,8 @@ class RepositoryAssetValue < ApplicationRecord
       asset.file.attach(io: StringIO.new(Base64.decode64(new_data[:file_data])), filename: new_data[:file_name])
     end
 
+    asset.file_pdf_preview.purge if asset.file_pdf_preview.attached?
+
     asset.last_modified_by = user
     self.last_modified_by = user
     asset.save! && save!
