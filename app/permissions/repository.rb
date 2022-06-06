@@ -20,7 +20,7 @@ Canaid::Permissions.register_for(Repository) do
      create_repository_columns)
     .each do |perm|
     can perm do |_, repository|
-      repository.repository_snapshots.provisioning.none?
+      repository.active? && repository.repository_snapshots.provisioning.none?
     end
   end
 
@@ -38,7 +38,7 @@ Canaid::Permissions.register_for(Repository) do
 
   # repository: destroy
   can :delete_repository do |user, repository|
-    repository.archived? && can_manage_repository?(user, repository)
+    repository.archived? && repository.permission_granted?(user, RepositoryPermissions::MANAGE)
   end
 
   # repository: share

@@ -10,7 +10,7 @@ class ReportsController < ApplicationController
                                             generate_docx new_template_values project_contents)
   before_action :load_wizard_vars, only: %i(new edit)
   before_action :load_available_repositories, only: %i(index save_pdf_to_inventory_modal available_repositories)
-  before_action :check_read_permissions, except: %i(index datatable new create edit update generate_pdf
+  before_action :check_read_permissions, except: %i(index datatable new create edit update destroy generate_pdf
                                                     generate_docx new_template_values project_contents)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: %i(edit update generate_pdf

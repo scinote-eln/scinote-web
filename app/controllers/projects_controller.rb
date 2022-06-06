@@ -111,13 +111,6 @@ class ProjectsController < ApplicationController
     @project.created_by = current_user
     @project.last_modified_by = current_user
     if @project.save
-      # Create user-project association
-      user_project = UserProject.new(
-        role: :owner,
-        user: current_user,
-        project: @project
-      )
-      user_project.save
       log_activity(:create_project)
 
       message = t('projects.create.success_flash', name: escape_input(@project.name))

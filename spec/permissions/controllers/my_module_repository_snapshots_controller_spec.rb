@@ -24,7 +24,7 @@ describe MyModuleRepositorySnapshotsController, type: :controller do
       team_role: :normal_user
     }
 
-    let(:repository) { create :repository, team: team }
+    let(:repository) { create :repository, team: team, created_by: user }
     let (:repository_row) { create :repository_row, repository: repository, created_by: user, last_modified_by: user }
     let (:repository_snapshot) { create :repository_snapshot, original_repository: repository, my_module: my_module }
 
