@@ -29,7 +29,7 @@ class StepTextSerializer < ActiveModel::Serializer
   end
 
   def urls
-    return {} if object.destroyed? || !can_manage_step?(scope[:user], object.step)
+    return {} if object.destroyed? || !can_manage_step?(scope[:user] || @instance_options[:user], object.step)
 
     {
       delete_url: step_text_path(object.step, object),

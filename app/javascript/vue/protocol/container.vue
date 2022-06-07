@@ -38,7 +38,7 @@
             {{ protocol.attributes.name }}
           </span>
         </div>
-        <ProtocolMetadata v-if="protocol.attributes" :protocol="protocol" @update="updateProtocol"/>
+        <ProtocolMetadata v-if="protocol.attributes && protocol.attributes.in_repository" :protocol="protocol" @update="updateProtocol"/>
         <Tinymce
           v-if="urls.update_protocol_description_url"
           :value="protocol.attributes.description"

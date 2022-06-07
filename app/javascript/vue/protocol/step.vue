@@ -69,6 +69,7 @@
           </ul>
         </div>
         <a href="#"
+           v-if="!inRepository"
            ref="comments"
            class="open-comments-sidebar btn icon-btn btn-light"
            data-turbolinks="false"
@@ -111,6 +112,7 @@
           :is="elements[index].attributes.orderable_type"
           :key="index"
           :element.sync="elements[index]"
+          :inRepository="inRepository"
           :reorderElementUrl="urls.reorder_elements_url"
           @component:delete="deleteElement"
           @update="updateElement"

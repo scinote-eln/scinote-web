@@ -66,6 +66,10 @@
         type: Object,
         required: true
       },
+      inRepository: {
+        type: Boolean,
+        required: true
+      },
       reorderElementUrl: {
         type: String
       }

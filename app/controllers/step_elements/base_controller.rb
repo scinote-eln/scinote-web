@@ -35,8 +35,10 @@ module StepElements
     end
 
     def log_step_activity(element_type_of, message_items)
+      message_items[:my_module] = @protocol.my_module.id if @protocol.in_module?
+
       Activities::CreateActivityService.call(
-        activity_type: "#{@step.protocol.in_module? ? 'protocol_step_' : 'task_step_'}#{element_type_of}",
+        activity_type: "#{!@step.protocol.in_module? ? 'protocol_step_' : 'task_step_'}#{element_type_of}",
         owner: current_user,
         team: @protocol.in_module? ? @protocol.my_module.experiment.project.team : @protocol.team,
         project: @protocol.in_module? ? @protocol.my_module.experiment.project : nil,
@@ -47,7 +49,6 @@ module StepElements
             id: @step.id,
             value_for: 'position_plus_one'
           },
-          my_module: @protocol.my_module.id
         }.merge(message_items)
       )
     end

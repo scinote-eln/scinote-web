@@ -24,7 +24,7 @@ module StepElements
         log_step_activity(:text_edited, { text_name: @step_text.name })
       end
 
-      render json: @step_text, serializer: StepTextSerializer
+      render json: @step_text, serializer: StepTextSerializer, user: current_user
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end

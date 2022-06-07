@@ -124,7 +124,7 @@ module StepElements
         owner: current_user,
         subject: @step.protocol,
         team: @step.protocol.team,
-        project: @step.protocol.my_module.experiment.project,
+        project: @step.protocol.in_module? ? @step.protocol.my_module.experiment.project : nil,
         message_items: message_items
       )
     end

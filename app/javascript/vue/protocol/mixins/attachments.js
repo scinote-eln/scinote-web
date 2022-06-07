@@ -1,4 +1,4 @@
-/* global ActiveStorage GLOBAL_CONSTANTS Promise i18n */
+/* global ActiveStorage GLOBAL_CONSTANTS Promise I18n */
 
 export default {
   data() {
@@ -40,7 +40,7 @@ export default {
             }
           };
           if (file.size > GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB * 1024 * 1024) {
-            fileObject.error = i18n.t('protocols.steps.attachments.new.file_too_big');
+            fileObject.error = I18n.t('protocols.steps.attachments.new.file_too_big');
             this.attachments.push(fileObject);
             return;
           }
@@ -51,7 +51,7 @@ export default {
 
           upload.create((error, blob) => {
             if (error) {
-              fileObject.error = i18n.t('protocols.steps.attachments.new.general_error');
+              fileObject.error = I18n.t('protocols.steps.attachments.new.general_error');
               reject(error);
             } else {
               const signedId = blob.signed_id;

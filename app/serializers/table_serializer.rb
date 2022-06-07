@@ -19,7 +19,7 @@ class TableSerializer < ActiveModel::Serializer
 
     object.reload unless object.step
 
-    return {} unless can_manage_step?(scope[:user], object.step)
+    return {} unless can_manage_step?(scope[:user] || @instance_options[:user], object.step)
 
     {
       delete_url: step_table_path(object.step, object),
