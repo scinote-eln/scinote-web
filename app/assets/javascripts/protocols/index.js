@@ -16,7 +16,6 @@ function init() {
   initKeywordFiltering();
   initProtocolPreviewModal();
   initLinkedChildrenModal();
-  initCreateNewModal();
   initModals();
   initImport();
 }

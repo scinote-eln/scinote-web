@@ -28,7 +28,7 @@ module StepElements
         log_step_activity(:table_edited, { table_name: @table.name })
       end
 
-      render json: @table, serializer: TableSerializer
+      render json: @table, serializer: TableSerializer, user: current_user
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end

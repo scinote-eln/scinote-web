@@ -23,7 +23,7 @@ module StepElements
         log_step_activity(:checklist_edited, { checklist_name: @checklist.name })
       end
 
-      render json: @checklist, serializer: ChecklistSerializer
+      render json: @checklist, serializer: ChecklistSerializer, user: current_user
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end

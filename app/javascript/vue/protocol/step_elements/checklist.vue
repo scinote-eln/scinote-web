@@ -47,6 +47,7 @@
           :checklistItem="checklistItem"
           :locked="locked"
           :reorderChecklistItemUrl="element.attributes.orderable.urls.reorder_url"
+          :inRepository="inRepository"
           @editStart="editingItem = true"
           @editEnd="editingItem = false"
           @update="saveItem"
@@ -78,6 +79,10 @@
     props: {
       element: {
         type: Object,
+        required: true
+      },
+      inRepository: {
+        type: Boolean,
         required: true
       },
       reorderElementUrl: {

@@ -5,7 +5,7 @@
         <i class="fas fa-grip-vertical"></i>
       </div>
       <div class="step-element-name" :class="{ 'done': checklistItem.attributes.checked }">
-        <div class="sci-checkbox-container" :class="{ 'disabled': !checklistItem.attributes.urls.update_url}">
+        <div class="sci-checkbox-container" :class="{ 'disabled': !updateUrl || inRepository}">
           <input ref="checkbox"
                  type="checkbox"
                  class="sci-checkbox"
@@ -15,7 +15,7 @@
         </div>
         <div class="step-checklist-text">
           <InlineEdit
-            v-if="checklistItem.attributes.urls.update_url"
+            v-if="!checklistItem.attributes.urls || updateUrl"
             :value="checklistItem.attributes.text"
             :characterLimit="10000"
             :placeholder="''"
@@ -35,10 +35,10 @@
         </div>
       </div>
       <div class="step-element-controls">
-        <button v-if="checklistItem.attributes.urls.update_url" class="btn icon-btn btn-light" @click="enableTextEdit">
+        <button v-if="!checklistItem.attributes.urls || updateUrl" class="btn icon-btn btn-light" @click="enableTextEdit">
           <i class="fas fa-pen"></i>
         </button>
-        <button v-if="checklistItem.attributes.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal">
+        <button v-if="!checklistItem.attributes.urls || deleteUrl" class="btn icon-btn btn-light" @click="showDeleteModal">
           <i class="fas fa-trash"></i>
         </button>
       </div>
@@ -65,6 +65,10 @@
         type: Boolean,
         default: false
       },
+      inRepository: {
+        type: Boolean,
+        required: true
+      },
       reorderChecklistItemUrl: {
         type: String
       }
@@ -82,6 +86,16 @@
             position: this.checklistItem.attributes.position
          }
         });
+      },
+      updateUrl() {
+        if (!this.checklistItem.attributes.urls) return
+
+        return this.checklistItem.attributes.urls.update_url;
+      },
+      deleteUrl() {
+        if (!this.checklistItem.attributes.urls) return
+
+        return this.checklistItem.attributes.urls.delete_url;
       }
     },
     methods: {
@@ -94,7 +108,7 @@
         this.$emit('editEnd');
       },
       toggleChecked(e) {
-        if (!this.checklistItem.attributes.urls.update_url) return
+        if (!this.updateUrl) return
         this.checklistItem.attributes.checked = this.$refs.checkbox.checked;
         this.update();
       },
