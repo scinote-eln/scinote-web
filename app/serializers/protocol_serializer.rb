@@ -29,7 +29,7 @@ class ProtocolSerializer < ActiveModel::Serializer
   end
 
   def keywords
-    object.protocol_keywords.map{ |i| { label: i.name, value: i.name } }
+    object.protocol_keywords.map { |i| { label: i.name, value: i.name } }
   end
 
   def description_view
@@ -125,14 +125,10 @@ class ProtocolSerializer < ActiveModel::Serializer
   end
 
   def update_protocol_authors_url
-    if in_repository && can_manage_protocol_in_repository?(object)
-      authors_protocol_path(object)
-    end
+    authors_protocol_path(object) if in_repository && can_manage_protocol_in_repository?(object)
   end
 
   def update_protocol_keywords_url
-    if in_repository && can_manage_protocol_in_repository?(object)
-      keywords_protocol_path(object)
-    end
+    keywords_protocol_path(object) if in_repository && can_manage_protocol_in_repository?(object)
   end
 end
