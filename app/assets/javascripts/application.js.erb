@@ -306,4 +306,13 @@ $(document).on('ajax:beforeSend', 'form', function() {
   $(this).removeAttr('novalidate');
   return this.reportValidity();
 });
+
+$(document).keyup(function(e) {
+  if (e.keyCode == 27) {
+      $('.dropdown').removeClass('open');
+      $('.atwho-user-popover').popover("hide");
+      $('.modal').modal("hide");
+  }
+});
+
 window.I18n = I18n
