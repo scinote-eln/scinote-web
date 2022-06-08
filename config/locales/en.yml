@@ -986,6 +986,7 @@ en:
         modal_live_header: ': Live version'
         modal_snapshot_header: ': Snapshot of %{snapshot_date}'
         assign_modal_header: 'Assign from %{repository_name} inventory'
+        error: 'Error'
       snapshots:
         simple_view:
           live_bottom_label: 'Live version'

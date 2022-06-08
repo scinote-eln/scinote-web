@@ -2,23 +2,29 @@
 
 $.fn.dataTable.render.RepositoryAssetValue = function(data) {
   var asset = data.value;
-  return `
-    <div class="asset-value-cell">
-      ${asset.icon_html}
-      <div>
-        <a  class="file-preview-link"
-          id="modal_link${asset.id}"
-          data-no-turbolink="true"
-          data-id="true"
-          data-status="asset-present"
-          data-preview-url="${asset.preview_url}"
-          href="${asset.url}"
-          >
-          ${asset.file_name}
-        </a>
+  if (asset.id) {
+    return `
+      <div class="asset-value-cell">
+        ${asset.icon_html}
+        <div>
+          <a  class="file-preview-link"
+            id="modal_link${asset.id}"
+            data-no-turbolink="true"
+            data-id="true"
+            data-status="asset-present"
+            data-preview-url="${asset.preview_url}"
+            href="${asset.url}"
+            >
+            ${asset.file_name}
+          </a>
+        </div>
       </div>
-    </div>
-  `;
+    `;
+  }
+  return `<div class="processing-error">
+            <i class="fas fa-exclamation-triangle"></i>
+            ${I18n.t('my_modules.repository.full_view.error')}
+          </div>`;
 };
 
 $.fn.dataTable.render.defaultRepositoryAssetValue = function() {
