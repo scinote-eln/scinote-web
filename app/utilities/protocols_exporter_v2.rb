@@ -7,7 +7,7 @@ module ProtocolsExporterV2
 
   def generate_envelope_xml(protocols)
     envelope_xml = "<envelope xmlns=\"http://www.scinote.net\" " \
-                   "version=\"2.0\">\n"
+                   "version=\"1.1\">\n"
     protocols.each do |protocol|
       protocol_name = get_protocol_name(protocol)
       envelope_xml << "<protocol id=\"#{protocol.id}\" " \
@@ -22,7 +22,7 @@ module ProtocolsExporterV2
     protocol_name = get_protocol_name(protocol)
 
     protocol_xml =
-      "<eln xmlns=\"http://www.scinote.net\" version=\"2.0\">\n" \
+      "<eln xmlns=\"http://www.scinote.net\" version=\"1.1\">\n" \
       "<protocol id=\"#{protocol.id}\" guid=\"#{get_guid(protocol.id)}\">\n" \
       "<name>#{protocol_name}</name>\n" \
       "<authors>#{protocol.authors}</authors>\n" \
@@ -55,8 +55,6 @@ module ProtocolsExporterV2
     xml = "<step id=\"#{step.id}\" guid=\"#{step_guid}\" position=\"#{step.position}\">\n" \
           "<name>#{step.name}</name>\n"
 
-    xml << get_tiny_mce_assets(step.description) if tiny_mce_asset_present?(step)
-
     # Assets
     xml << "<assets>\n#{step.assets.map { |a| asset_xml(a) }.join}</assets>\n" if step.assets.any?
 
@@ -65,7 +63,8 @@ module ProtocolsExporterV2
       step.step_orderable_elements.find_each do |step_orderable_element|
         element = step_orderable_element.orderable
         element_guid = get_guid(element.id)
-        xml << "<stepElement guid=\"#{element_guid}\" position=\"#{step_orderable_element.position}\">"
+        xml << "<stepElement type=\"#{step_orderable_element.orderable_type}\" guid=\"#{element_guid}\" " \
+               "position=\"#{step_orderable_element.position}\">"
 
         case element
         when StepText
@@ -87,12 +86,14 @@ module ProtocolsExporterV2
   end
 
   def step_text_xml(step_text)
-    "<stepText id=\"#{step_text.id}\" guid=\"#{get_guid(step_text.id)}\">\n" \
-      "<name>#{step_text.name}</name>\n" \
-      "<contents>\n" \
-      "<!--[CDATA[  #{Nokogiri::HTML::DocumentFragment.parse(step_text.text)}  ]]-->"\
-      "</contents>\n" \
-      "</stepText>\n"
+    xml = "<stepText id=\"#{step_text.id}\" guid=\"#{get_guid(step_text.id)}\">\n" \
+          "<contents>\n" \
+          "<!--[CDATA[  #{Nokogiri::HTML::DocumentFragment.parse(step_text.text)}  ]]-->"\
+          "</contents>\n"
+
+    xml << get_tiny_mce_assets(step_text.text)
+
+    xml << "</stepText>\n"
   end
 
   def table_xml(table)
