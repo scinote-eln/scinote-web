@@ -13,21 +13,19 @@ class CanvasController < ApplicationController
   end
 
   def full_zoom
-    render partial: 'canvas/full_zoom',
-      locals: { experiment: @experiment, my_modules: @my_modules },
-      :content_type => 'text/html'
+    @my_modules = @my_modules.left_outer_joins(:designated_users, :task_comments)
+                             .select('COUNT(DISTINCT users.id) as designated_users_count')
+                             .select('COUNT(DISTINCT comments.id) as task_comments_count')
+                             .select('my_modules.*').group(:id)
+    render partial: 'canvas/full_zoom', locals: { experiment: @experiment, my_modules: @my_modules }
   end
 
   def medium_zoom
-    render partial: 'canvas/medium_zoom',
-      locals: { experiment: @experiment, my_modules: @my_modules },
-      :content_type => 'text/html'
+    render partial: 'canvas/medium_zoom', locals: { experiment: @experiment, my_modules: @my_modules }
   end
 
   def small_zoom
-    render partial: 'canvas/small_zoom',
-      locals: { experiment: @experiment, my_modules: @my_modules },
-      :content_type => 'text/html'
+    render partial: 'canvas/small_zoom', locals: { experiment: @experiment, my_modules: @my_modules }
   end
 
   def update
@@ -195,7 +193,7 @@ class CanvasController < ApplicationController
   end
 
   def load_vars
-    @experiment = Experiment.find_by_id(params[:id])
+    @experiment = Experiment.preload(user_assignments: %i(user user_role)).find_by(id: params[:id])
     unless @experiment
       respond_to do |format|
         format.html { render_404 and return }
@@ -203,7 +201,10 @@ class CanvasController < ApplicationController
       end
     end
 
-    @my_modules = @experiment.my_modules.active.preload(outputs: :to, user_assignments: %i(user user_role))
+    @my_modules = @experiment.my_modules
+                             .active
+                             .preload(:tags, outputs: :to, user_assignments: %i(user user_role))
+                             .preload(:my_module_status, :my_module_group)
   end
 
   def check_edit_canvas
