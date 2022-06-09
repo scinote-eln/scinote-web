@@ -16,9 +16,9 @@
         <i class="fas fa-grip-vertical"></i>
       </div>
       <a class="step-collapse-link"
-           :href="'#stepBody' + step.id"
-           data-toggle="collapse"
-           data-remote="true">
+         :href="'#stepBody' + step.id"
+         data-toggle="collapse"
+         data-remote="true">
           <span class="fas fa-caret-right"></span>
       </a>
       <div v-if="!inRepository" class="step-complete-container">
