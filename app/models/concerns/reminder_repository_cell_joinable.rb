@@ -13,17 +13,19 @@ module ReminderRepositoryCellJoinable
         '(repository_date_time_values.data - NOW()) <= '\
         '(repository_columns.metadata ->> \'reminder_delta\')::int * interval \'1 sec\''
       ).joins( # stock reminders
-        'LEFT OUTER JOIN "repository_stock_values" ON "repository_stock_values"."id" = "repository_cells"."value_id" AND '\
+        'LEFT OUTER JOIN "repository_stock_values" ON '\
         '"repository_cells"."value_type" = \'RepositoryStockValue\' AND '\
+        '"repository_stock_values"."id" = "repository_cells"."value_id" AND '\
         '(repository_stock_values.amount <= repository_stock_values.low_stock_threshold OR '\
         ' repository_stock_values.amount <= 0)'
       ).joins(
         'LEFT OUTER JOIN "hidden_repository_cell_reminders" ON '\
-        '"repository_cells"."id" = "hidden_repository_cell_reminders"."repository_cell_id" AND '\
-        '"hidden_repository_cell_reminders"."user_id" = ' + user.id.to_s
+        '"repository_cells"."id" = "hidden_repository_cell_reminders"."repository_cell_id"'
       ).where(
+        '"hidden_repository_cell_reminders"."user_id" = ? AND '\
         'hidden_repository_cell_reminders.id IS NULL AND '\
-        '(repository_date_time_values.id IS NOT NULL OR repository_stock_values.id IS NOT NULL)'
+        '(repository_date_time_values.id IS NOT NULL OR repository_stock_values.id IS NOT NULL)',
+        user.id
       )
     end
   end
