@@ -1,66 +1,67 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
 .sci-inline-edit {
-  display: flex;
+  column-gap: .25em;
+  display: grid;
+  grid-template-columns: auto repeat(2, max-content);
+  transition: .4s $timing-function-sharp;
 
-  &.editing {
-    margin-top: -0.5em;
-  }
-}
-
-.sci-inline-edit__content {
-  width: 100%;
-
-  span {
-    cursor: pointer;
-
-    &.blank {
-      color: $color-silver-chalice;
-    }
-  }
-
-  textarea {
-    border: 1px solid;
-    border-color: $brand-focus;
-    border-radius: 4px;
-    height: 36px;
+  .sci-inline-edit__content {
+    border: $border-transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 1em;
+    margin-left: -.25em;
     min-height: 36px;
-    outline: none;
-    overflow: hidden;
-    padding: 0.5em 1em;
+    padding-left: .25em;
     width: 100%;
 
-    &:focus {
+    .sci-inline-edit__view {
+      cursor: pointer;
+      width: 100%;
+
+      &.blank {
+        color: $color-silver-chalice;
+      }
+    }
+
+    textarea {
+      background: transparent;
+      border: 0;
+      line-height: 1em;
+      min-height: 1em;
       outline: none;
+      overflow: hidden;
+      padding: 0;
+      padding-top: 2px;
+      width: 100%;
+
+      &:focus {
+        outline: none;
+      }
+
+      &.error {
+        border-color: $brand-danger;
+      }
     }
 
-    &.error {
-      border-color: $brand-danger;
+    .sci-inline-edit__error {
+      color: $brand-danger;
+      font-size: .8em;
     }
   }
 
-  .sci-inline-edit__error {
-    color: $brand-danger;
-    font-size: .8em;
+  &:hover {
+    .sci-inline-edit__content {
+      border: $border-default;
+    }
   }
-}
 
-.sci-inline-edit__controls {
-  display: flex;
-  justify-content: space-between;
-  margin-left: 8px;
-  width: 76px;
-}
+  &.editing {
 
-.sci-inline-edit__control {
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  height: 36px;
-  line-height: 36px;
-  text-align: center;
-  width: 36px;
-}
-
-.sci-inline-edit__save {
-  background: $brand-primary;
-  color: $color-white;
+    .sci-inline-edit__content {
+      border-color: $brand-focus;
+    }
+  }
 }

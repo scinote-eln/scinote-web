@@ -45,6 +45,7 @@
 
     .step-position {
       @include font-main;
+      flex-shrink: 0;
       line-height: 24px;
       margin: 0 4px;
     }
@@ -173,7 +174,6 @@
   min-height: 40px;
   padding: 0 0 0 8px;
   position: relative;
-  padding: 8px;
 
   &.editing-name {
     .step-element-controls {
@@ -205,14 +205,7 @@
     display: flex;
     margin-left: auto;
     position: absolute;
-    right: 4px;
-    top: 4px;
-
-    .btn {
-      height: 32px;
-      width: 32px;
-      padding: 0;
-    }
+    right: 0;
 
     .fas {
       font-size: 14px;

@@ -1,47 +1,43 @@
-.step-checklist-container {
-  .step-element-name {
-    align-items: flex-start;
-    display: flex;
-
-    .sci-checkbox-container {
-      margin-right: 8px;
-      margin-top: 4px;
-    }
-
-    .step-checklist-text {
-      width: 100%;
-    }
-
-    &.done .step-checklist-text {
-      text-decoration: line-through;
-    }
-
-    &:hover.done .step-checklist-text {
-      text-decoration: none;
-    }
-  }
-
-  .step-checklist-add-item {
-    margin-left: 9px;
-    margin-top: 2px;
-  }
-}
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
 
 .step-checklist-items {
+  .step-element-header {
+    .step-element-name {
+      align-items: flex-start;
+      column-gap: .5em;
+      display: grid;
+      font-weight: normal;
+      grid-template-columns: max-content auto;
+
+      .step-checklist-text {
+        width: 100%;
+      }
+
+      &.done .step-checklist-text {
+        text-decoration: line-through;
+      }
+
+      &:hover.done .step-checklist-text {
+        text-decoration: none;
+      }
+
+      .step-checklist-add-item {
+        margin-left: 9px;
+        margin-top: 2px;
+      }
+    }
+  }
+
   .step-checklist-item-ghost {
     border: 1px solid $brand-primary;
   }
 
-  .sci-checkbox-container.disabled {
-    pointer-events: none;
-  }
+  .sci-checkbox-container {
+    margin: 10px 0;
 
-  .sci-inline-edit {
-    font-weight: normal;
-
-    textarea {
-      padding-left: 4px;
-      margin-left: -5px;
+    &.disabled {
+      pointer-events: none;
     }
   }
 }
