@@ -13,19 +13,19 @@
         @paste="handlePaste"
         @blur="handleBlur"
       ></textarea>
-      <span v-else @click="enableEdit" :class="{ 'blank': isBlank }">{{ value || placeholder }}</span>
+      <div v-else @click="enableEdit" class="sci-inline-edit__view" :class="{ 'blank': isBlank }">{{ value || placeholder }}</div>
       <div v-if="editing && error" class="sci-inline-edit__error">
         {{ error }}
       </div>
     </div>
-    <div v-if="editing" class="sci-inline-edit__controls">
-      <div class="sci-inline-edit__control sci-inline-edit__save" @click="update">
+    <template v-if="editing">
+      <div class="sci-inline-edit__control btn btn-primary icon-btn" @click="update">
         <i class="fas fa-check"></i>
       </div>
-      <div class="sci-inline-edit__control sci-inline-edit__cancel" @click="cancelEdit">
+      <div class="sci-inline-edit__control btn btn-light icon-btn" @click="cancelEdit">
         <i class="fas fa-times"></i>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -92,9 +92,9 @@
         }
       },
       focus() {
-        if (!this.$refs.input) return;
-
         this.$nextTick(() => {
+          if (!this.$refs.input) return;
+
           this.$refs.input.focus();
           this.resize();
         });
