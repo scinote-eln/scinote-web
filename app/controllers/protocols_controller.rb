@@ -1,8 +1,6 @@
 
 class ProtocolsController < ApplicationController
   include RenamingUtil
-  include ProtocolsImporter
-  include ProtocolsExporter
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
@@ -10,6 +8,7 @@ class ProtocolsController < ApplicationController
   include ProtocolsIoHelper
   include TeamsHelper
   include CommentHelper
+  include ProtocolsExporterV2
 
   before_action :check_create_permissions, only: %i(
     create
@@ -73,6 +72,8 @@ class ProtocolsController < ApplicationController
 
   before_action :check_protocolsio_import_permissions,
                 only: %i(protocolsio_import_create protocolsio_import_save)
+
+  before_action :set_importer, only: %i(load_from_file import)
 
   def index; end
 
@@ -524,14 +525,14 @@ class ProtocolsController < ApplicationController
       if @protocol.can_destroy?
         transaction_error = false
         Protocol.transaction do
-          begin
-            import_into_existing(
-              @protocol, @protocol_json, current_user, current_team
-            )
-          rescue Exception
-            transaction_error = true
-            raise ActiveRecord:: Rollback
-          end
+          @importer.import_into_existing(
+            @protocol, @protocol_json
+          )
+        rescue StandardError => e
+          transaction_error = true
+          Rails.logger.error(e.message)
+          Rails.logger.error(e.backtrace.join("\n"))
+          raise ActiveRecord::Rollback
         end
 
         if transaction_error
@@ -564,14 +565,12 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       transaction_error = false
       Protocol.transaction do
-        begin
-          protocol =
-            import_new_protocol(@protocol_json, @team, @type, current_user)
-        rescue StandardError => ex
-          Rails.logger.error ex.message
-          transaction_error = true
-          raise ActiveRecord:: Rollback
-        end
+        protocol =
+          @importer.import_new_protocol(@protocol_json, @type)
+      rescue StandardError => e
+        Rails.logger.error e.backtrace.join("\n")
+        transaction_error = true
+        raise ActiveRecord::Rollback
       end
 
       p_name =
@@ -659,7 +658,7 @@ class ProtocolsController < ApplicationController
       # and some modals get closed and opened
     end
   rescue StandardError => e
-    Rails.logger.error(e.message)
+    Rails.logger.error(e.backtrace.join("\n"))
     @protocolsio_general_error = true
     respond_to do |format|
       format.js {}
@@ -697,8 +696,8 @@ class ProtocolsController < ApplicationController
       @protocolsio_general_error = false
       Protocol.transaction do
         begin
-          protocol = import_new_protocol(
-            @db_json, current_team, params[:type].to_sym, current_user
+          protocol = @importer.import_new_protocol(
+            @db_json, params[:type].to_sym
           )
         rescue Exception
           transaction_error = true
@@ -763,6 +762,10 @@ class ProtocolsController < ApplicationController
                 end
               end
               ostream = step.tiny_mce_assets.save_to_eln(ostream, step_dir)
+
+              step.step_texts.each do |step_text|
+                ostream = step_text.tiny_mce_assets.save_to_eln(ostream, step_dir)
+              end
             end
           end
         end
@@ -988,6 +991,15 @@ class ProtocolsController < ApplicationController
   end
 
   private
+
+  def set_importer
+    case params.dig('protocol', 'elnVersion')
+    when '1.0'
+      @importer = ProtocolsImporter.new(current_user, current_team)
+    when '1.1'
+      @importer = ProtocolsImporterV2.new(current_user, current_team)
+    end
+  end
 
   def valid_protocol_json(json)
     JSON.parse(json)

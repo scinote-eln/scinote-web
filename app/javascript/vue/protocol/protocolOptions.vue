@@ -43,6 +43,7 @@
       <li>
         <a data-action="load-from-file"
            class="btn-open-file"
+           :data-import-url="protocol.attributes.urls.import_url"
            :class="{ disabled: !protocol.attributes.urls.import_url }">
           <span class="fas fa-download"></span>
           <span>{{ i18n.t("my_modules.protocol.options_dropdown.import") }}</span>
