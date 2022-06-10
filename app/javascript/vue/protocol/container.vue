@@ -59,7 +59,15 @@
             <span class="fas fa-plus" aria-hidden="true"></span>
             <span>{{ i18n.t("protocols.steps.new_step") }}</span>
         </a>
-        <a v-if="urls.reorder_steps_url" class="btn btn-default" data-toggle="modal" @click="startStepReorder">
+        <button class="btn btn-light" @click="collapseSteps">
+          <span class="fas fa-caret-up"></span>
+          {{ i18n.t("protocols.steps.collapse_label") }}
+        </button>
+        <button class="btn btn-light" @click="expandSteps">
+          <span class="fas fa-caret-down"></span>
+          {{ i18n.t("protocols.steps.expand_label") }}
+        </button>
+        <a v-if="urls.reorder_steps_url" class="btn btn-light" data-toggle="modal" @click="startStepReorder">
             <span class="fas fa-arrows-alt-v" aria-hidden="true"></span>
             <span>{{ i18n.t("protocols.reorder_steps.button") }}</span>
         </a>
@@ -144,6 +152,12 @@
       });
     },
     methods: {
+      collapseSteps() {
+        $('.step-container .collapse').collapse('hide')
+      },
+      expandSteps() {
+        $('.step-container .collapse').collapse('show')
+      },
       refreshProtocolStatus() {
         if (this.inRepository) return
         // legacy method from app/assets/javascripts/my_modules/protocols.js
