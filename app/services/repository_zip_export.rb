@@ -31,15 +31,15 @@ module RepositoryZipExport
     zip = ZipExport.create(user: current_user)
     zip.generate_exportable_zip(
       current_user,
-      to_csv(rows, params[:header_ids], current_user, repository),
+      to_csv(rows, params[:header_ids], current_user, repository, nil, params[:my_module_id].present?),
       :repositories
     )
   end
 
-  def self.to_csv(rows, column_ids, user, repository, handle_file_name_func = nil)
+  def self.to_csv(rows, column_ids, user, repository, handle_file_name_func = nil, in_module = false)
     # Parse column names
     csv_header = []
-    add_consumption = !repository.is_a?(RepositorySnapshot) && repository.has_stock_management?
+    add_consumption = in_module && !repository.is_a?(RepositorySnapshot) && repository.has_stock_management?
     column_ids.each do |c_id|
       csv_header << case c_id.to_i
                     when -1, -2
