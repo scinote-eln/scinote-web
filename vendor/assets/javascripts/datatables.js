@@ -6368,7 +6368,7 @@
 			}
 	
 			// Number of columns have changed - all bets are off, no restore of settings
-			if ( s.columns && columns.length !== s.columns.length ) {
+			if ( s.columns && (columns.length < s.columns.length || columns.length > s.columns.length + 1) ) {
 				callback();
 				return;
 			}
@@ -20103,11 +20103,11 @@ $.extend( ColReorder.prototype, {
 		}
 
 		/* State loading, overrides the column order given */
-		if ( this.s.dt.oLoadedState && typeof this.s.dt.oLoadedState.ColReorder != 'undefined' &&
-		  this.s.dt.oLoadedState.ColReorder.length == this.s.dt.aoColumns.length )
-		{
-			aiOrder = this.s.dt.oLoadedState.ColReorder;
-		}
+		if (this.s.dt.oLoadedState && typeof this.s.dt.oLoadedState.ColReorder !== 'undefined'
+        && (this.s.dt.oLoadedState.ColReorder.length === this.s.dt.aoColumns.length
+          || this.s.dt.oLoadedState.ColReorder.length + 1 === this.s.dt.aoColumns.length)) {
+      aiOrder = this.s.dt.oLoadedState.ColReorder;
+    }
 
 		/* If we have an order to apply - do so */
 		if ( aiOrder )
@@ -20163,12 +20163,13 @@ $.extend( ColReorder.prototype, {
 	{
 		var changed = false;
 
-		if ( a.length != this.s.dt.aoColumns.length )
-		{
-			this.s.dt.oInstance.oApi._fnLog( this.s.dt, 1, "ColReorder - array reorder does not "+
-				"match known number of columns. Skipping." );
-			return;
-		}
+		if ((a.length + 1 === this.s.dt.aoColumns.length
+          && this.s.dt.aoColumns[this.s.dt.aoColumns.length - 1].mData !== 'consumedStock')
+        || a.length + 1 < this.s.dt.aoColumns.length || a.length > this.s.dt.aoColumns.length) {
+      this.s.dt.oInstance.oApi._fnLog( this.s.dt, 1, 'ColReorder - array reorder does not '
+                                                     + 'match known number of columns. Skipping.');
+      return;
+    }
 
 		for ( var i=0, iLen=a.length ; i<iLen ; i++ )
 		{

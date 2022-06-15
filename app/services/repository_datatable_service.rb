@@ -7,6 +7,7 @@ module RepositoryFilters
 end
 
 class RepositoryDatatableService
+  include MyModulesHelper
   attr_reader :repository_rows, :all_count, :mappings
 
   PREDEFINED_COLUMNS = %w(row_id row_name added_on added_by archived_on archived_by assigned).freeze
@@ -43,7 +44,7 @@ class RepositoryDatatableService
 
     # Adding assigned counters
     if @my_module
-      if @params[:assigned] == 'assigned'
+      if @params[:assigned] == 'assigned' || @params[:assigned] == 'assigned_simple'
         repository_rows = repository_rows.joins(:my_module_repository_rows)
                                          .where(my_module_repository_rows: { my_module_id: @my_module })
         if @repository.has_stock_management?
@@ -80,7 +81,7 @@ class RepositoryDatatableService
     end
 
     @all_count =
-      if @my_module && @params[:assigned] == 'assigned'
+      if @my_module && (@params[:assigned] == 'assigned' || @params[:assigned] == 'assigned_simple')
         repository_rows.joins(:my_module_repository_rows)
                        .where(my_module_repository_rows: { my_module_id: @my_module })
                        .count
@@ -409,7 +410,22 @@ class RepositoryDatatableService
     @repository.repository_columns.count.times do
       array << 'repository_cell.value'
     end
+
+    array << 'consumed_stock' if @repository.has_stock_management?
     array
+  end
+
+  def map_simple_view_column(index)
+    return assigned_repository_simple_view_name_column_id(@repository) unless @repository.has_stock_management?
+
+    case index
+    when 0
+      assigned_repository_simple_view_name_column_id(@repository)
+    when 1
+      @mappings[@repository.repository_columns.find_by(data_type: 'RepositoryStockValue').id]
+    when 2
+      @sortable_columns.length
+    end
   end
 
   def sort_rows(column_obj, records)
@@ -420,11 +436,16 @@ class RepositoryDatatableService
     column_index = column_obj[:column]
     service = RepositoryTableStateService.new(@user, @repository)
     col_order = service.load_state.state['ColReorder']
-    column_id = col_order[column_index].to_i
+    column_id = case @params[:assigned]
+                when 'assigned_simple'
+                  map_simple_view_column(column_index).to_i
+                else
+                  col_order[column_index].to_i
+                end
 
     case @sortable_columns[column_id - 1]
     when 'assigned'
-      return records if @my_module && @params[:assigned] == 'assigned'
+      return records if @my_module && (@params[:assigned] == 'assigned' || @params[:assigned] == 'assigned_simple')
 
       records.order("assigned_my_modules_count #{dir}")
     when 'repository_cell.value'
@@ -459,6 +480,8 @@ class RepositoryDatatableService
              .order("values.value #{dir}")
     when 'users.full_name'
       records.group('users.full_name').order("users.full_name #{dir}")
+    when 'consumed_stock'
+      records.order("#{@sortable_columns[column_id - 1]} #{dir}")
     else
       records.group(@sortable_columns[column_id - 1]).order("#{@sortable_columns[column_id - 1]} #{dir}")
     end
