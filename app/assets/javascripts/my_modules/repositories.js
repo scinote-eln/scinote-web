@@ -332,6 +332,10 @@ var MyModuleRepositories = (function() {
             json.state.columns[7].visible = false;
           }
           if (json.state.search) delete json.state.search;
+          if ($(tableContainer).data('stockConsumptionColumn')) {
+            json.state.columns.push({});
+            json.state.ColReorder.push(json.state.ColReorder.length);
+          }
           callback(json.state);
         });
       },
