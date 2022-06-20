@@ -311,6 +311,7 @@ en:
       authors: "Authors: "
       description: "Description: "
       no_description: "No description"
+      text: "Text"
       team: "Team: "
       folder: "Folders: "
       repository: "Inventory: "
