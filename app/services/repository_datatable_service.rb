@@ -44,7 +44,7 @@ class RepositoryDatatableService
 
     # Adding assigned counters
     if @my_module
-      if @params[:assigned] == 'assigned' || @params[:assigned] == 'assigned_simple'
+      if %w(assigned assigned_simple).include?(@params[:assigned])
         repository_rows = repository_rows.joins(:my_module_repository_rows)
                                          .where(my_module_repository_rows: { my_module_id: @my_module })
         if @repository.has_stock_management?
@@ -81,7 +81,7 @@ class RepositoryDatatableService
     end
 
     @all_count =
-      if @my_module && (@params[:assigned] == 'assigned' || @params[:assigned] == 'assigned_simple')
+      if @my_module && %w(assigned assigned_simple).include?(@params[:assigned])
         repository_rows.joins(:my_module_repository_rows)
                        .where(my_module_repository_rows: { my_module_id: @my_module })
                        .count
@@ -411,7 +411,9 @@ class RepositoryDatatableService
       array << 'repository_cell.value'
     end
 
-    array << 'consumed_stock' if @repository.has_stock_management?
+    if @repository.has_stock_management? && %w(assigned assigned_simple).include?(@params[:assigned])
+      array << 'consumed_stock'
+    end
     array
   end
 
@@ -422,7 +424,7 @@ class RepositoryDatatableService
     when 0
       assigned_repository_simple_view_name_column_id(@repository)
     when 1
-      @mappings[@repository.repository_columns.find_by(data_type: 'RepositoryStockValue').id]
+      @mappings[@repository.repository_stock_column.id]
     when 2
       @sortable_columns.length
     end
@@ -440,12 +442,12 @@ class RepositoryDatatableService
                 when 'assigned_simple'
                   map_simple_view_column(column_index).to_i
                 else
-                  @params[:draw] == 1 ? column_index.to_i : col_order[column_index].to_i
+                  @params[:draw].to_i == 1 ? column_index.to_i : col_order[column_index].to_i
                 end
 
     case @sortable_columns[column_id - 1]
     when 'assigned'
-      return records if @my_module && (@params[:assigned] == 'assigned' || @params[:assigned] == 'assigned_simple')
+      return records if @my_module && %w(assigned assigned_simple).include?(@params[:assigned])
 
       records.order("assigned_my_modules_count #{dir}")
     when 'repository_cell.value'
