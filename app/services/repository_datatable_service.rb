@@ -412,9 +412,7 @@ class RepositoryDatatableService
       array << 'repository_cell.value'
     end
 
-    if @repository.has_stock_management? && @assigned_view
-      array << 'consumed_stock'
-    end
+    array << 'consumed_stock' if @repository.has_stock_management? && @assigned_view
     array
   end
 
