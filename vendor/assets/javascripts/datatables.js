@@ -4741,14 +4741,7 @@
 		// will do the drawing for us. Otherwise we draw the table regardless of the
 		// Ajax source - this allows the table to look initialised for Ajax sourcing
 		// data (show 'loading' message possibly)
-    if (settings.aoColumns && settings.oLoadedState) {
-      var orderPosition = settings.oLoadedState.order[0][0]
-      settings.aoColumns[orderPosition].aDataSort = [settings.oLoadedState.ColReorder.indexOf(orderPosition)];
-      _fnReDraw(settings);
-      settings.aoColumns[orderPosition].aDataSort = [orderPosition];
-    } else {
-      _fnReDraw(settings);
-    }
+    _fnReDraw(settings);
 	
 		// Server-side processing init complete is done by _fnAjaxUpdateDraw
 		var dataSrc = _fnDataSource( settings );

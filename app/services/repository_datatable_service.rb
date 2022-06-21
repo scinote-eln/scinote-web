@@ -440,7 +440,7 @@ class RepositoryDatatableService
                 when 'assigned_simple'
                   map_simple_view_column(column_index).to_i
                 else
-                  col_order[column_index].to_i
+                  @params[:draw] == 1 ? column_index.to_i : col_order[column_index].to_i
                 end
 
     case @sortable_columns[column_id - 1]
