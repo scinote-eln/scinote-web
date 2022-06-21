@@ -39,18 +39,19 @@
           </span>
         </div>
         <ProtocolMetadata v-if="protocol.attributes && protocol.attributes.in_repository" :protocol="protocol" @update="updateProtocol"/>
-        <Tinymce
-          v-if="urls.update_protocol_description_url"
-          :value="protocol.attributes.description"
-          :value_html="protocol.attributes.description_view"
-          :placeholder="i18n.t('my_modules.protocols.protocol_status_bar.empty_description_edit_label')"
-          :updateUrl="urls.update_protocol_description_url"
-          :objectType="'Protocol'"
-          :objectId="parseInt(protocol.id)"
-          :fieldName="'protocol[description]'"
-          :lastUpdated="protocol.attributes.updated_at"
-          @update="updateDescription"
-        />
+        <div v-if="urls.update_protocol_description_url" class="protocol-description">
+          <Tinymce
+            :value="protocol.attributes.description"
+            :value_html="protocol.attributes.description_view"
+            :placeholder="i18n.t('my_modules.protocols.protocol_status_bar.empty_description_edit_label')"
+            :updateUrl="urls.update_protocol_description_url"
+            :objectType="'Protocol'"
+            :objectId="parseInt(protocol.id)"
+            :fieldName="'protocol[description]'"
+            :lastUpdated="protocol.attributes.updated_at"
+            @update="updateDescription"
+          />
+        </div>
         <div v-else v-html="protocol.attributes.description_view">
         </div>
       </div>

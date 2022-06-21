@@ -21,12 +21,11 @@
       &:hover.done .step-checklist-text {
         text-decoration: none;
       }
-
-      .step-checklist-add-item {
-        margin-left: 9px;
-        margin-top: 2px;
-      }
     }
+  }
+
+  .step-checklist-add-item {
+    margin-left: 9px;
   }
 
   .step-checklist-item-ghost {

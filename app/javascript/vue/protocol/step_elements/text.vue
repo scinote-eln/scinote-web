@@ -1,6 +1,6 @@
 <template>
   <div class="step-text-container" :class="{ 'edit': inEditMode }">
-    <div class="action-container" @click="enableEditMode">
+    <div class="action-container" @click="enableEditMode($event)">
       <div v-if="reorderElementUrl" class="element-grip" @click="$emit('reorder')">
         <i class="fas fa-grip-vertical"></i>
       </div>
@@ -60,7 +60,8 @@
       }
     },
     methods: {
-      enableEditMode() {
+      enableEditMode(e) {
+        if ($(e.target).hasClass('fas')) return
         if (!this.element.attributes.orderable.urls.update_url) return
         this.inEditMode = true
       },

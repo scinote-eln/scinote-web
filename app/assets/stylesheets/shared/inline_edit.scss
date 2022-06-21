@@ -52,12 +52,6 @@
     }
   }
 
-  &:hover {
-    .sci-inline-edit__content {
-      border: $border-default;
-    }
-  }
-
   &.editing {
 
     .sci-inline-edit__content {

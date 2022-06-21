@@ -107,23 +107,26 @@
       </div>
     </div>
     <div class="collapse in" :id="'stepBody' + step.id">
-      <template v-for="(element, index) in elements">
-        <component
-          :is="elements[index].attributes.orderable_type"
-          :key="index"
-          :element.sync="elements[index]"
-          :inRepository="inRepository"
-          :reorderElementUrl="urls.reorder_elements_url"
-          @component:delete="deleteElement"
-          @update="updateElement"
-          @reorder="openReorderModal"
-        />
-      </template>
-      <Attachments :step="step"
-                   :attachments="attachments"
-                   @attachments:order="changeAttachmentsOrder"
-                   @attachments:viewMode="changeAttachmentsViewMode"
-                   @attachment:viewMode="updateAttachmentViewMode"/>
+      <div class="step-elements">
+        <template v-for="(element, index) in elements">
+          <component
+            :is="elements[index].attributes.orderable_type"
+            :key="index"
+            :element.sync="elements[index]"
+            :inRepository="inRepository"
+            :reorderElementUrl="urls.reorder_elements_url"
+            @component:delete="deleteElement"
+            @update="updateElement"
+            @reorder="openReorderModal"
+          />
+        </template>
+        <Attachments :step="step"
+                    :attachments="attachments"
+                    @attachments:openFileModal="showFileModal = true"
+                    @attachments:order="changeAttachmentsOrder"
+                    @attachments:viewMode="changeAttachmentsViewMode"
+                    @attachment:viewMode="updateAttachmentViewMode"/>
+      </div>
     </div>
     <deleteStepModal v-if="confirmingDelete" @confirm="deleteStep" @cancel="closeDeleteModal"/>
     <fileModal v-if="showFileModal"
