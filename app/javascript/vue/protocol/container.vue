@@ -55,11 +55,12 @@
         <div v-else v-html="protocol.attributes.description_view">
         </div>
       </div>
+      <a v-if="urls.add_step_url && protocol.attributes.in_repository" class="btn btn-primary" @click="addStep(steps.length)">
+        <span class="fas fa-plus" aria-hidden="true"></span>
+        <span>{{ i18n.t("protocols.steps.new_step") }}</span>
+      </a>
+
       <div class="protocol-step-actions">
-        <a v-if="urls.add_step_url && protocol.attributes.in_repository" class="btn btn-primary" @click="addStep(steps.length)">
-            <span class="fas fa-plus" aria-hidden="true"></span>
-            <span>{{ i18n.t("protocols.steps.new_step") }}</span>
-        </a>
         <button class="btn btn-light" @click="collapseSteps">
           <span class="fas fa-caret-up"></span>
           {{ i18n.t("protocols.steps.collapse_label") }}

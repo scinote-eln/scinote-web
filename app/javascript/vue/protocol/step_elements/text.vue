@@ -71,7 +71,8 @@
       update(data) {
         this.element.attributes.orderable.text_view = data.data.attributes.text_view
         this.element.attributes.orderable.text = data.data.attributes.text
-        this.element.attributes.orderable.udpated_at = data.data.attributes.udpated_at
+        this.element.attributes.orderable.name = data.data.attributes.name
+        this.element.attributes.orderable.updated_at = data.data.attributes.updated_at
         this.$emit('update', this.element, true)
       }
     }
