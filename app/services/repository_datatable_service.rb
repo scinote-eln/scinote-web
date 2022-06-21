@@ -17,6 +17,7 @@ class RepositoryDatatableService
     @user = user
     @my_module = my_module
     @params = params
+    @assigned_view =  @params[:assigned].in?(%w(assigned assigned_simple))
     @sortable_columns = build_sortable_columns
     create_columns_mappings
     @repository_rows = process_query
@@ -44,7 +45,7 @@ class RepositoryDatatableService
 
     # Adding assigned counters
     if @my_module
-      if %w(assigned assigned_simple).include?(@params[:assigned])
+      if @assigned_view
         repository_rows = repository_rows.joins(:my_module_repository_rows)
                                          .where(my_module_repository_rows: { my_module_id: @my_module })
         if @repository.has_stock_management?
@@ -81,7 +82,7 @@ class RepositoryDatatableService
     end
 
     @all_count =
-      if @my_module && %w(assigned assigned_simple).include?(@params[:assigned])
+      if @my_module && @assigned_view
         repository_rows.joins(:my_module_repository_rows)
                        .where(my_module_repository_rows: { my_module_id: @my_module })
                        .count
@@ -411,7 +412,7 @@ class RepositoryDatatableService
       array << 'repository_cell.value'
     end
 
-    if @repository.has_stock_management? && %w(assigned assigned_simple).include?(@params[:assigned])
+    if @repository.has_stock_management? && @assigned_view
       array << 'consumed_stock'
     end
     array
@@ -447,7 +448,7 @@ class RepositoryDatatableService
 
     case @sortable_columns[column_id - 1]
     when 'assigned'
-      return records if @my_module && %w(assigned assigned_simple).include?(@params[:assigned])
+      return records if @my_module && @assigned_view
 
       records.order("assigned_my_modules_count #{dir}")
     when 'repository_cell.value'
