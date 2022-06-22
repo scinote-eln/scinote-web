@@ -3,48 +3,64 @@
   data-id="<%= experiment.id %>">
 
   <% if can_manage_experiment?(experiment) %>
-  <li><%= link_to t('experiments.edit.label_title'),
-                edit_experiment_url(experiment),
-                remote: true,
-                type: 'button',
-                data: { id: experiment.id },
-                class: 'edit-experiment' %></li>
+    <li>
+      <%= link_to edit_experiment_url(experiment),
+                  remote: true,
+                  type: 'button',
+                  data: { id: experiment.id },
+                  class: 'edit-experiment' do %>
+        <i class="fas fa-pen"></i>
+        <span><%= t('experiments.edit.label_title') %></span>
+      <% end %>          
+    </li>
   <% end %>
   <li data-hook="experiment-actions-second-child"></li>
   <% if can_clone_experiment?(experiment) %>
-    <li><%= link_to t('experiments.clone.label_title'),
-                    clone_modal_experiment_url(experiment),
-                    remote: true, type: 'button',
-                    class: 'clone-experiment' %>
+    <li>
+      <%= link_to clone_modal_experiment_url(experiment),
+                  remote: true, type: 'button',
+                  class: 'clone-experiment' do %>
+        <i class="fas fa-copy"></i>
+        <span><%= t('experiments.clone.label_title') %></span>
+      <% end %>   
     </li>
   <% end %>
   <% if can_move_experiment?(experiment) %>
-    <li><%= link_to t('experiments.move.label_title'),
-                    move_modal_experiment_url(experiment),
-                    remote: true, type: 'button',
-                    class: 'move-experiment'%>
+    <li>
+      <%= link_to move_modal_experiment_url(experiment),
+                  remote: true, type: 'button',
+                  class: 'move-experiment' do %>
+        <i class="fas fa-arrow-right"></i>
+        <span><%= t('experiments.move.label_title') %></span>
+      <% end %>   
     </li>
   <% end %>
   <!-- Set or view user experiment assignments -->
   <% if can_manage_experiment_users?(experiment) %>
     <li>
       <%= link_to edit_access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'} do %>
+        <i class="fas fa-door-open"></i>
         <span><%= t('experiments.index.experiment_access') %></span>
       <% end %>
     </li>
   <% else %>
     <li>
       <%= link_to access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'} do %>
+        <i class="fas fa-door-open"></i>
         <span><%= t('experiments.index.experiment_access') %></span>
       <% end %>
     </li>
   <% end %>
   <% if can_archive_experiment?(experiment) %>
-    <li><%= link_to t('experiments.archive.label_title'),
-                  archive_experiment_url(experiment),
+    <li>
+      <%= link_to archive_experiment_url(experiment),
                   type: 'button',
                   method: :post,
-                  data: { confirm: t('experiments.canvas.archive_confirm') } %></li>
+                  data: { confirm: t('experiments.canvas.archive_confirm') } do %>
+        <i class="fas fa-archive"></i>
+        <span><%= t('experiments.archive.label_title') %></span>
+      <% end %>   
+    </li>
   <% end %>
   <% if can_restore_experiment?(experiment) %>
     <% experiment_form = nil %>
@@ -52,6 +68,12 @@
       <% experiment_form = f %>
       <%= f.hidden_field :archived, value: false %>
     <% end %>
-    <li><a href="#" class="form-submit-link" data-turbolinks="false" data-submit-form="<%= experiment_form.options[:html][:id] %>"><%= t "projects.experiment_archive.restore_option" %></a></li>
+    <li><a href="#" class="form-submit-link" data-turbolinks="false" data-submit-form="<%= experiment_form.options[:html][:id] %>">
+          <i class="fas fa-undo"></i><%= t "projects.experiment_archive.restore_option" %></a></li>
   <% end %>
+  <li class="form-dropdown-item">
+    <div class="form-dropdown-item-info">
+      <small><%= t('experiments.experiment_id') %>: <strong><%= experiment.code %></strong></small>
+    </div>
+  </li>
 </ul>

@@ -65,10 +65,20 @@ function prepareRepositoryHeaderForExport(th) {
 
 function initReminderDropdown(table) {
   $(table).on('keyup', '.row-reminders-dropdown', function(e) {
-    if (e.key === 'Escape') {
+    if (e.key === 'Escape' && $('.row-reminders-dropdown').hasClass('open')) {
       $(this).children('.dropdown-menu').dropdown('toggle');
+      // Preventing closing modal on full view mode for assigning repository items
+      e.preventDefault();
+      e.stopPropagation();
     }
   });
+
+  $(table).on('keyup', '.row-reminders-footer', function(e) {
+    if (e.key === ' ') {
+      $(this).click();
+    }
+  });
+
   $(table).on('show.bs.dropdown', '.row-reminders-dropdown', function() {
     let row = $(this).closest('tr');
     let screenHeight = screen.height;

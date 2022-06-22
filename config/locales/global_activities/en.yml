@@ -205,10 +205,10 @@ en:
       register_molecule_on_step_html: "%{user} registered molecule %{asset_name} on protocol's step %{step_position} %{step} on task %{my_module}."
       register_molecule_on_result_html: "%{user} registered molecule %{asset_name} on result %{result}."
       register_molecule_on_step_in_repository_html: "%{user} registered molecule %{asset_name} on protocol %{protocol}'s step %{step_position} %{step}."
-      inventory_item_stock_set_html: "%{user} set total stock for %{repository_row} to %{new_amount} %{unit} in %{repository} \n%{comment}"
-      inventory_item_stock_add_html: "%{user} added %{change_amount} %{unit} of stock to a total of %{new_amount} %{unit} for %{repository_row} in %{repository} \n%{comment}"
-      inventory_item_stock_remove_html: "%{user} removed %{change_amount} %{unit} of stock to a total of %{new_amount} %{unit} for %{repository_row} in %{repository} \n%{comment}"
-      task_inventory_item_stock_consumed_html: "%{user} changed consumption of %{repository_row} from %{stock_consumption_was} %{unit} to %{stock_consumption} %{unit} in %{my_module} \n%{comment}"
+      inventory_item_stock_set_html: "%{user} set total stock for inventory item %{repository_row} to %{new_amount} %{unit} in inventory %{repository} \n%{comment}"
+      inventory_item_stock_add_html: "%{user} added %{change_amount} %{unit} of stock to a total %{new_amount} %{unit} for inventory item %{repository_row} in inventory %{repository} \n%{comment}"
+      inventory_item_stock_remove_html: "%{user} removed %{change_amount} %{unit} of stock to a total %{new_amount} %{unit} for inventory item %{repository_row} in inventory %{repository} \n%{comment}"
+      task_inventory_item_stock_consumed_html: "%{user} changed consumption of inventory item %{repository_row} from %{stock_consumption_was} %{unit} to %{stock_consumption} %{unit} on task %{my_module} \n%{comment}"
 
     activity_name:
       create_project: "Project created"

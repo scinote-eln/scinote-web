@@ -174,7 +174,8 @@ en:
           attributes:
             output_id:
               creates_cycle: "mustn't create cycle"
-
+      storage:
+        limit_reached: "Storage limit has been reached."
   helpers:
     label:
       team:
@@ -985,6 +986,7 @@ en:
         modal_live_header: ': Live version'
         modal_snapshot_header: ': Snapshot of %{snapshot_date}'
         assign_modal_header: 'Assign from %{repository_name} inventory'
+        error: 'Error'
       snapshots:
         simple_view:
           live_bottom_label: 'Live version'
@@ -1092,7 +1094,7 @@ en:
       more: "more"
     index:
       edit_option: "Edit details"
-      clone_option: "Duplicate (as template)"
+      clone_option: "Duplicate as template"
       move_option: "Move"
       archive_option: "Archive"
       archive_confirm: "Are you sure you want to archive this project?"
@@ -1134,11 +1136,11 @@ en:
       success_flash: "<strong>%{number}</strong> experiment(s) successfully restored."
       error_flash: "Failed to restore experiment(s)."
     clone:
-      modal_title: 'Copy experiment %{experiment} as template'
-      label_title: 'Copy as template'
-      modal_submit: 'Copy'
-      success_flash: 'Successfully copied experiment %{experiment} as template.'
-      error_flash: 'Could not copy the experiment as template.'
+      modal_title: 'Duplicate experiment %{experiment} as template'
+      label_title: 'Duplicate as template'
+      modal_submit: 'Duplicate'
+      success_flash: 'Successfully duplicated experiment %{experiment} as template.'
+      error_flash: 'Could not duplicate the experiment as template.'
       current_project: '(current project)'
     move:
       modal_title: 'Move experiment %{experiment}'
@@ -2091,8 +2093,8 @@ en:
         teams: "Teams"
         webhooks: "Webhooks"
         account_nav:
-          profile: "Profile"
-          preferences: "Preferences"
+          profile: "My profile"
+          preferences: "My preferences"
           addons: "Add-ons"
           connected_accounts: "Connected Accounts"
       account:
@@ -2652,6 +2654,8 @@ en:
     my_module_comment_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
     my_module_protocol_annotation_title: "%{user} mentioned you in a protocol description on task %{my_module}."
     my_module_protocol_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
+    my_module_consumption_comment_annotation_title: "%{user} mentioned you in a comment on item consumption of item %{repository_item} from inventory %{repository}"
+    my_module_consumption_comment_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
     step_comment_annotation_title: "%{user} mentioned you in a comment on step %{step}."
     step_description_title: "%{user} mentioned you in a description on step %{step}."
     checklist_title: "%{user} mentioned you in a checklist on step %{step}."
@@ -3008,6 +3012,12 @@ en:
           detail: "Text contains reference to nonexisting TinyMCE image"
         result_wrong_tinymce:
           detail: "Image reference not found in the text"
+    service:
+      errors:
+        missing_task_ids: "Missing task_ids"
+        callback_missing: "Missing callback"
+        url:
+          not_valid: "Not valid URL"
 
 
   Add: "Add"

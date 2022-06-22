@@ -3,7 +3,6 @@
 class MyModule < ApplicationRecord
   SEARCHABLE_ATTRIBUTES = ['my_modules.name', 'my_modules.description']
 
-  include ActionView::Helpers::NumberHelper
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
@@ -325,18 +324,7 @@ class MyModule < ApplicationRecord
           consumed_stock = row.repository_stock_consumption_cell&.value&.formatted
           row_json << (consumed_stock || 0)
         else
-          consumed_stock_formatted =
-            if row.repository_stock_cell.present?
-              consumed_stock = number_with_precision(
-                row.stock_consumption || 0,
-                precision: (row.repository.repository_stock_column.metadata['decimals'].to_i || 0),
-                strip_insignificant_zeros: true
-              )
-              "#{consumed_stock} #{row.repository_stock_value&.repository_stock_unit_item&.data}"
-            else
-              '-'
-            end
-          row_json << consumed_stock_formatted
+          row_json << row.row_consumption(row.stock_consumption)
         end
       end
       data << row_json

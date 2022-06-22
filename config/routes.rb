@@ -697,6 +697,7 @@ Rails.application.routes.draw do
       get 'health', to: 'api#health'
       get 'status', to: 'api#status'
       namespace :service do
+        post 'projects_json_export', to: 'projects_json_export#projects_json_export'
         resources :teams, except: %i(index new create show edit update destroy) do
           post 'clone_experiment' => 'experiments#clone'
         end
@@ -764,6 +765,9 @@ Rails.application.routes.draw do
                   resources :task_tags, only: %i(index show),
                             path: 'tags',
                             as: :tags
+                  resources :task_assignments, only: %i(index create destroy),
+                            path: 'task_assignments',
+                            as: :task_assignments
                   resources :protocols, only: %i(index show) do
                     resources :steps, only: %i(index show create update destroy) do
                       resources :assets, only: %i(index show create), path: 'attachments'

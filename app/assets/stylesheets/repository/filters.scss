@@ -120,7 +120,7 @@
       padding: 1em;
 
       .apply-button {
-        margin-left: auto !important;
+        margin-left: auto;
       }
 
       .filters-columns-list {
@@ -227,6 +227,49 @@
           &:hover {
             color: $color-black;
           }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 992px) {
+    .filters-container {
+      width: 200px;
+
+      .filter-container {
+        .filter-attributes {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: flex-start;
+
+          .operator-selector {
+            .dropdown-selector-container {
+              width: 125px;
+            }
+          }
+
+          .date-time-picker {
+            display: flex;
+            flex-wrap: wrap;
+          }
+
+          .between-delimiter {
+            height: 10px;
+            margin: 5px auto;
+            transform: rotate(90deg);
+          }
+        }
+      }
+
+      .footer {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        text-align: center;
+
+        .apply-button {
+          margin-left: 0;
+          margin-top: .5em;
         }
       }
     }
