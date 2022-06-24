@@ -840,6 +840,7 @@ en:
         import: "Import protocol"
         export: "Export protocol"
         save_to_repo: "Save to repository"
+        delete_steps: "Delete all steps"
     description:
       title: "Edit task %{module} description"
       label: "Description"
@@ -2551,6 +2552,11 @@ en:
           title: 'Delete step'
           description_1: 'You’re about to delete a whole step from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'
           description_2: 'Are you sure you want to delete it?'
+          confirm: 'Delete forever'
+        delete_steps:
+          title: 'Delete all protocol steps'
+          description_1: 'You’re about to delete all protocol steps from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'
+          description_2: 'Are you sure you want to delete them?'
           confirm: 'Delete forever'
         reorder_elements:
           title: 'Rearrange %{step_name} content'

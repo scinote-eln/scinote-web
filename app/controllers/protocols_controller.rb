@@ -45,6 +45,7 @@ class ProtocolsController < ApplicationController
     revert_modal
     update_from_parent
     update_from_parent_modal
+    delete_steps
   )
   before_action :check_manage_parent_in_repository_permissions, only: %i(
     update_parent
@@ -254,6 +255,25 @@ class ProtocolsController < ApplicationController
     else
       flash[:error] = @protocol.errors.full_messages.join(', ')
       redirect_to protocols_path
+    end
+  end
+
+  def delete_steps
+    Protocol.transaction do
+      team = @protocol.team
+      previous_size = 0
+
+      @protocol.steps.each do |step|
+        previous_size += step.space_taken
+        step.destroy!
+      end
+
+      team.release_space(previous_size)
+      team.save
+      render json: { status: 'ok' }
+    rescue ActiveRecord::RecordNotDestroyed
+      render json: { status: 'error' }, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
     end
   end
 

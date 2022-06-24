@@ -56,7 +56,8 @@ class ProtocolSerializer < ActiveModel::Serializer
       update_protocol_name_url: update_protocol_name_url,
       update_protocol_description_url: update_protocol_description_url,
       update_protocol_authors_url: update_protocol_authors_url,
-      update_protocol_keywords_url: update_protocol_keywords_url
+      update_protocol_keywords_url: update_protocol_keywords_url,
+      delete_steps_url: delete_steps_url
     }
   end
 
@@ -130,5 +131,11 @@ class ProtocolSerializer < ActiveModel::Serializer
 
   def update_protocol_keywords_url
     keywords_protocol_path(object) if in_repository && can_manage_protocol_in_repository?(object)
+  end
+
+  def delete_steps_url
+    return unless can_manage_protocol_in_module?(object) || can_manage_protocol_in_repository?(object)
+
+    delete_steps_protocol_path(object)
   end
 end
