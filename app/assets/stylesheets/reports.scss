@@ -251,7 +251,7 @@ label {
   }
   .report-element-body {
     .project-name {
-      @include font-h2;
+      @include font-h1;
     }
   }
 
@@ -263,26 +263,31 @@ label {
 // Experiment element style
 .report-experiment-element {
   .experiment-name {
-    @include font-main;
+    font-size: 21px;
+    font-weight: bold;
   }
 }
 
 // Protocol element style
 .report-module-protocol-element {
-  .protcol-name {
-    @include font-small;
+  .protocol-name {
+    @include font-main;
     font-weight: bold;
   }
 }
 
 /* Module element style */
 .report-module-element {
-  margin-top: 15px;
-  margin-bottom: 15px;
+  @include font-button;
+
+  .results-title-name {
+    @include font-main;
+    font-weight: bold;
+  }
 
   .report-element-body {
     .module-name {
-      @include font-button;
+      font-size: 19px;
       font-weight: bold;
     }
 
@@ -345,7 +350,7 @@ label {
     }
 
     .result-name {
-      @include font-small;
+      @include font-main;
       display: inline-block;
       font-weight: bold;
     }
@@ -370,7 +375,7 @@ label {
 .report-result-asset-element {
   .report-element-header {
     .file-name {
-      font-size: 10px;
+      font-size: 13px;
       font-weight: bold;
     }
 
@@ -380,6 +385,8 @@ label {
   }
 
   img {
+    display: inline;
+    margin-top: 4em;
     max-width: 100%;
   }
 }
@@ -388,7 +395,7 @@ label {
 .report-result-table-element {
   .report-element-header {
     .table-name {
-      font-size: 10px;
+      font-size: 13px;
       font-weight: bold;
     }
   }
@@ -412,7 +419,7 @@ label {
 /** Step element style  */
 .report-step-element {
   .step-name {
-    font-size: 11px;
+    font-size: 15px;
     font-weight: bold;
   }
 
@@ -461,7 +468,7 @@ label {
 .report-step-table-element {
   .report-element-header {
     .table-name {
-      font-size: 10px;
+      font-size: 13px;
       font-weight: bold;
     }
   }
@@ -478,7 +485,7 @@ label {
 .report-step-asset-element {
   .report-element-header {
     .file-name {
-      font-size: 10px;
+      font-size: 13px;
       font-weight: bold;
       white-space: nowrap;
     }
@@ -497,7 +504,7 @@ label {
 .report-step-checklist-element {
   .report-element-header {
     .checklist-name {
-      font-size: 10px;
+      font-size: 13px;
       font-weight: bold;
     }
   }
@@ -517,6 +524,12 @@ label {
 
 /** Comments element style (generic) */
 .report-comments-element {
+  .comment-message {
+    .view-mode {
+      @include font-small;
+    }
+  }
+
   .report-element-header {
     border-bottom: none;
 
@@ -526,7 +539,7 @@ label {
 
     .comments-name {
       color: $color-emperor;
-      font-size: 10px;
+      font-size: 13px;
       font-weight: bold;
     }
   }
@@ -571,7 +584,7 @@ label {
     border-bottom: 0;
 
     .repository-name {
-      @include font-small;
+      @include font-main;
       font-weight: bold;
     }
   }
@@ -596,7 +609,7 @@ label {
     border-bottom: none;
 
     .activity-name {
-      @include font-small;
+      @include font-main;
       font-weight: bold;
     }
   }
