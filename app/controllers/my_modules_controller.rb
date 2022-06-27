@@ -278,6 +278,7 @@ class MyModulesController < ApplicationController
   def update_protocol
     protocol = @my_module.protocol
     protocol.update!(protocol_params)
+    TinyMceAsset.update_images(protocol, params[:tiny_mce_images], current_user)
 
     render json: protocol, serializer: ProtocolSerializer, user: current_user
   end
