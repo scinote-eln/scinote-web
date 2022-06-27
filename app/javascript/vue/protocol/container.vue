@@ -19,7 +19,12 @@
           <span class="fas fa-print" aria-hidden="true"></span>
           <span>{{ i18n.t("protocols.print.button") }}</span>
         </a>
-        <ProtocolOptions v-if="protocol.attributes && protocol.attributes.urls" :protocol="protocol" />
+        <ProtocolOptions
+          v-if="protocol.attributes && protocol.attributes.urls"
+          :protocol="protocol"
+          @protocol:delete_steps="deleteSteps"
+          :canDeleteSteps="steps.length > 0 && urls.delete_steps_url !== null"
+        />
       </div>
     </div>
     <div v-if="protocol.id" id="protocol-content" class="protocol-content collapse in" aria-expanded="true">
@@ -157,6 +162,13 @@
       },
       expandSteps() {
         $('.step-container .collapse').collapse('show')
+      },
+      deleteSteps() {
+        $.post(this.urls.delete_steps_url, () => {
+          this.steps = []
+        }).error(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')
+        })
       },
       refreshProtocolStatus() {
         if (this.inRepository) return
