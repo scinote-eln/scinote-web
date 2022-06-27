@@ -1,8 +1,7 @@
 .step-text-container {
   display: block;
   margin-bottom: 16px;
-  margin-left: -16px;
-  padding-left: 36px;
+  padding-left: 1.5em;
   position: relative;
   width: calc(100% + 16px);
 
@@ -30,13 +29,13 @@
 
   .element-grip {
     align-items: center;
-    color: $color-alto;
+    color: $color-silver-chalice;
     display: none;
     height: 100%;
     justify-content: center;
     left: 0;
+    padding: .5em;
     position: absolute;
-    width: 36px;
   }
 
   .tinymce-container {
@@ -44,7 +43,7 @@
     display: flex;
     min-height: 36px;
     width: 100%;
-    
+
     .tinymce-status-badge {
       display: none;
     }

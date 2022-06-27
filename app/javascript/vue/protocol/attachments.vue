@@ -15,6 +15,12 @@
               :data-step-id="step.id"
           >
             <li class="divider-label">{{ i18n.t("protocols.steps.attachments.add") }}</li>
+            <li>
+              <a class="action-link .attachments-view-mode {" @click="$emit('attachments:openFileModal')">
+                <i class="fas fa-paperclip"></i>
+                {{ i18n.t('protocols.steps.insert.attachment') }}
+              </a>
+            </li>
             <li role="separator" class="divider"></li>
             <li class="divider-label">{{ i18n.t("protocols.steps.attachments.sort_by") }}</li>
             <li v-for="(orderOption, index) in orderOptions" :key="`orderOption_${index}`">

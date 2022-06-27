@@ -1,51 +1,54 @@
 <template>
   <div class="protocol-metadata">
-    <div class="data-block">
+    <p class="data-block">
       <span class="fas block-icon fa-calendar-alt"></span>
       {{ i18n.t("protocols.header.created_at") }}
-      {{ protocol.attributes.created_at_formatted }}
-    </div>
-    <div class="data-block">
+      <b>{{ protocol.attributes.created_at_formatted }}</b>
+    </p>
+    <p class="data-block">
       <span class="fas block-icon fa-user"></span>
       {{ i18n.t("protocols.header.added_by") }}
       <img :src="protocol.attributes.added_by.avatar"/>
       {{ protocol.attributes.added_by.name }}
-    </div>
-    <div class="data-block">
+    </p>
+    <p class="data-block">
       <span class="fas block-icon fa-edit"></span>
       {{ i18n.t("protocols.header.updated_at") }}
-      {{ protocol.attributes.updated_at_formatted }}
-    </div>
-    <div class="data-block">
+      <b>{{ protocol.attributes.updated_at_formatted }}</b>
+    </p>
+    <p class="data-block authors-data">
       <span class="fas block-icon fa-graduation-cap"></span>
-      {{ i18n.t("protocols.header.authors") }}
-      <InlineEdit
-        v-if="protocol.attributes.urls.update_protocol_authors_url"
-        :value="protocol.attributes.authors"
-        :placeholder="i18n.t('protocols.header.no_authors')"
-        :allowBlank="true"
-        :attributeName="`${i18n.t('Protocol')} ${i18n.t('authors')}`"
-        @update="updateAuthors"
-      />
-      <span v-else>
+      <span>{{ i18n.t("protocols.header.authors") }}</span>
+      <span class="authors-list" v-if="protocol.attributes.urls.update_protocol_authors_url">
+        <InlineEdit
+          :value="protocol.attributes.authors"
+          :placeholder="i18n.t('protocols.header.no_authors')"
+          :allowBlank="true"
+          :attributeName="`${i18n.t('Protocol')} ${i18n.t('authors')}`"
+          @update="updateAuthors"
+        />
+      </span>
+      <span class="authors-list" v-else>
         {{ protocol.attributes.authors }}
       </span>
-    </div>
-    <div class="data-block">
+    </p>
+    <p class="data-block keywords-data">
       <span class="fas block-icon fa-font"></span>
-      {{ i18n.t("protocols.header.keywords") }}
-      <DropdownSelector
-        :inputTagMode="true"
-        :options="this.protocol.attributes.keywords"
-        :selectorId="'keywordsSelector'"
-        :singleSelect="false"
-        :closeOnSelect="false"
-        :noEmptyOption="false"
-        :selectAppearance="'tag'"
-        :viewMode="protocol.attributes.urls.update_protocol_keywords_url == null"
-        @dropdown:changed="updateKeywords"
-      />
-    </div>
+      <span>{{ i18n.t("protocols.header.keywords") }}</span>
+      <span class="keywords-list">
+        <DropdownSelector
+          :inputTagMode="true"
+          :options="this.protocol.attributes.keywords"
+          :selectorId="'keywordsSelector'"
+          :singleSelect="false"
+          :closeOnSelect="false"
+          :noEmptyOption="false"
+          :selectAppearance="'tag'"
+          :viewMode="protocol.attributes.urls.update_protocol_keywords_url == null"
+          @dropdown:changed="updateKeywords"
+        />
+      </span>
+    </p>
   </div>
 </template>
 <script>

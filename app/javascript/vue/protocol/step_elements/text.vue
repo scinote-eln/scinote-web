@@ -1,6 +1,6 @@
 <template>
   <div class="step-text-container" :class="{ 'edit': inEditMode }">
-    <div class="action-container" @click="enableEditMode">
+    <div class="action-container" @click="enableEditMode($event)">
       <div v-if="reorderElementUrl" class="element-grip" @click="$emit('reorder')">
         <i class="fas fa-grip-vertical"></i>
       </div>
@@ -60,7 +60,8 @@
       }
     },
     methods: {
-      enableEditMode() {
+      enableEditMode(e) {
+        if ($(e.target).hasClass('fas')) return
         if (!this.element.attributes.orderable.urls.update_url) return
         this.inEditMode = true
       },
@@ -70,7 +71,8 @@
       update(data) {
         this.element.attributes.orderable.text_view = data.data.attributes.text_view
         this.element.attributes.orderable.text = data.data.attributes.text
-        this.element.attributes.orderable.udpated_at = data.data.attributes.udpated_at
+        this.element.attributes.orderable.name = data.data.attributes.name
+        this.element.attributes.orderable.updated_at = data.data.attributes.updated_at
         this.$emit('update', this.element, true)
       }
     }

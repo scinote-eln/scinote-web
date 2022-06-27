@@ -89,11 +89,13 @@
         this.$emit('attachmentsChanged');
         this.$nextTick(this.cancel);
       });
+      $(this.$refs.modal).on('hidden.bs.modal', () => {
+        this.$emit('cancel');
+      });
     },
     methods: {
       cancel() {
         $(this.$refs.modal).modal('hide');
-        this.$emit('cancel');
       },
       dropFile(e) {
         if (e.dataTransfer && e.dataTransfer.files.length) {

@@ -6,7 +6,7 @@
 .step-container {
   border: $border-transparent;
   margin: 20px 0 20px -1.5em;
-  padding: 8px 24px;
+  padding: 8px 24px 8px 0;
 
   .step-header {
     align-items: center;
@@ -93,6 +93,10 @@
     }
   }
 
+  .step-elements {
+    padding-left: 24px;
+  }
+
   .comments-counter {
     @include font-small;
     align-items: center;
@@ -172,7 +176,6 @@
   align-items: center;
   display: flex;
   min-height: 40px;
-  padding: 0 0 0 8px;
   position: relative;
 
   &.editing-name {
@@ -215,7 +218,7 @@
   .step-element-grip {
     color: $color-silver-chalice;
     cursor: grab;
-    margin-right: 8px;
+    padding: .5em;
   }
 
   .step-element-controls,

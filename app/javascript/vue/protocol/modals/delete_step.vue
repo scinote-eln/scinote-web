@@ -26,6 +26,9 @@
     name: 'deleteStepModal',
     mounted() {
       $(this.$refs.modal).modal('show');
+      $(this.$refs.modal).on('hidden.bs.modal', () => {
+        this.$emit('cancel');
+      });
     },
     methods: {
       confirm() {
@@ -34,7 +37,6 @@
       },
       cancel() {
         $(this.$refs.modal).modal('hide');
-        this.$emit('cancel');
       }
     }
   }
