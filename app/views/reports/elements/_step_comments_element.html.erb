@@ -9,15 +9,13 @@
       </div>
     </div>
     <div class="report-element-body">
-      <div class="row">
-        <div class="col-xs-12 comments-container simple">
-          <ul class="no-style content-comments">
-            <% comments.each do |comment| %>
-              <%= render partial: 'shared/comments/item.html.erb',
-                          locals: { comment: comment, readonly: true, report: true, export_all: export_all } %>
-            <% end %>
-          </ul>
-        </div>
+      <div class="comments-container simple">
+        <ul class="no-style content-comments">
+          <% comments.each do |comment| %>
+            <%= render partial: 'shared/comments/item.html.erb',
+                        locals: { comment: comment, readonly: true, report: true, export_all: export_all } %>
+          <% end %>
+        </ul>
       </div>
     </div>
     <% if defined?(children) %>

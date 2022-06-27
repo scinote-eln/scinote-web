@@ -8,26 +8,24 @@
       </div>
     </div>
     <div class="report-element-body">
-      <div class="row">
-        <div class="col-xs-12 activity-container">
-          <ul class="no-style activity-list">
-            <% activities.each do |activity| %>
-              <li class="activity">
-                <span class="activity-prefix">
-                  <%= l(activity.created_at, format: :full) %>
-                </span>
-                <span class="activity-message">
-                  &nbsp;
-                  <% if activity.old_activity?  %>
-                    <%= activity.message %>
-                  <% else %>
-                    <%= generate_activity_content(activity, no_links: true) %>
-                  <% end %>
-                </span>
-              </li>
-            <% end %>
-          </ul>
-        </div>
+      <div class="activity-container">
+        <ul class="no-style activity-list">
+          <% activities.each do |activity| %>
+            <li class="activity">
+              <span class="activity-prefix">
+                <%= l(activity.created_at, format: :full) %>
+              </span>
+              <span class="activity-message">
+                &nbsp;
+                <% if activity.old_activity?  %>
+                  <%= activity.message %>
+                <% else %>
+                  <%= generate_activity_content(activity, no_links: true) %>
+                <% end %>
+              </span>
+            </li>
+          <% end %>
+        </ul>
       </div>
     </div>
     <% if defined?(children) %>

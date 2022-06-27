@@ -713,6 +713,7 @@ en:
           no_description: "No description"
           tags_header: "Task tags:"
           no_tags: "No tags"
+          results: "Results"
           protocol:
             name: 'Protocol'
             user_time: "Protocol created on %{timestamp}."
