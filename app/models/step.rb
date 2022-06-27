@@ -137,6 +137,10 @@ class Step < ApplicationRecord
     step_comments
   end
 
+  def description_step_text
+    step_texts.order(created_at: :asc).first
+  end
+
   private
 
   def move_in_protocol(direction)
