@@ -616,6 +616,7 @@ class Protocol < ApplicationRecord
 
     # Lastly, update the metadata
     reload
+    self.name = source.name
     self.record_timestamps = false
     self.updated_at = source.updated_at
     self.parent = source
