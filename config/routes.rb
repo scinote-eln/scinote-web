@@ -792,6 +792,7 @@ Rails.application.routes.draw do
                                   path: 'items'
                       end
                       resources :tables, only: %i(index show create update destroy), path: 'tables'
+                      resources :step_texts, only: %i(index show create update destroy), path: 'step_texts'
                     end
                   end
                   resources :results, only: %i(index create show update)
