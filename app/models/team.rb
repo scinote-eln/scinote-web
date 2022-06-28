@@ -49,7 +49,20 @@ class Team < ApplicationRecord
   has_many :activities, inverse_of: :team, dependent: :destroy
   has_many :assets, inverse_of: :team, dependent: :destroy
   has_many :team_repositories, inverse_of: :team, dependent: :destroy
-  has_many :shared_repositories, through: :team_repositories, source: :repository
+  has_many :repository_sharing_user_assignments,
+           (lambda do |team|
+             joins(
+               "INNER JOIN repositories "\
+               "ON user_assignments.assignable_type = 'RepositoryBase' "\
+               "AND user_assignments.assignable_id = repositories.id"
+             ).where(team_id: team.id)
+             .where.not('user_assignments.team_id = repositories.team_id')
+           end),
+           class_name: 'UserAssignment'
+  has_many :shared_repositories,
+           through: :repository_sharing_user_assignments,
+           source: :assignable,
+           source_type: 'RepositoryBase'
 
   attr_accessor :without_templates
 
