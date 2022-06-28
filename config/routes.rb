@@ -715,8 +715,18 @@ Rails.application.routes.draw do
       get 'status', to: 'api#status'
       namespace :service do
         post 'projects_json_export', to: 'projects_json_export#projects_json_export'
-        resources :teams, except: %i(index new create show edit update destroy) do
+        resources :teams, only: [] do
           post 'clone_experiment' => 'experiments#clone'
+
+          resources :projects, only: [] do
+            resources :experiments, only: [] do
+              resources :tasks, only: [] do
+                resources :protocols, only: [] do
+                  post 'reorder_steps' => 'protocols#reorder_steps'
+                end
+              end
+            end
+          end
         end
       end
       if Rails.configuration.x.core_api_v1_enabled
