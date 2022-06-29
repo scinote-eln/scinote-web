@@ -2531,7 +2531,7 @@ en:
         delete: 'Delete'
       insert:
         button: 'Insert'
-        title: 'insert  content'
+        title: 'Insert step content'
         table: 'Add table'
         text: 'Add text'
         checklist: 'Add checklist'
