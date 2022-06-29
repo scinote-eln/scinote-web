@@ -194,7 +194,12 @@
       },
       addStep(position) {
         $.post(this.urls.add_step_url, {position: position}, (result) => {
-          this.updateStepsPosition(result.data)
+          this.updateStepsPosition(result.data);
+
+          // scroll to bottom if step was appended at the end
+          if(position === this.steps.length - 1) {
+            this.$nextTick(() => this.scrollToBottom());
+          }
         })
         this.refreshProtocolStatus();
       },
@@ -255,6 +260,9 @@
       },
       closeStepReorderModal() {
         this.reordering = false;
+      },
+      scrollToBottom() {
+        window.scrollTo(0, document.body.scrollHeight);
       }
     }
   }
