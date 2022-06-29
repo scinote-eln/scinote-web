@@ -409,6 +409,12 @@ class Extends
     shared_write: 2
   }.freeze
 
+  SHARED_OBJECTS_PERMISSION_LEVELS = {
+    not_shared: 0,
+    shared_read: 1,
+    shared_write: 2
+  }.freeze
+
   SHARED_INVENTORIES_PL_MAPPINGS = {
     shared_read: 'view-only',
     shared_write: 'edit'
