@@ -2669,24 +2669,25 @@ ALTER SEQUENCE public.tags_id_seq OWNED BY public.tags.id;
 
 
 --
--- Name: team_repositories; Type: TABLE; Schema: public; Owner: -
+-- Name: team_shared_objects; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.team_repositories (
+CREATE TABLE public.team_shared_objects (
     id bigint NOT NULL,
     team_id bigint,
-    repository_id bigint,
+    shared_object_id bigint,
     permission_level integer DEFAULT 0 NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    shared_object_type character varying
 );
 
 
 --
--- Name: team_repositories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: team_shared_objects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.team_repositories_id_seq
+CREATE SEQUENCE public.team_shared_objects_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2695,10 +2696,10 @@ CREATE SEQUENCE public.team_repositories_id_seq
 
 
 --
--- Name: team_repositories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: team_shared_objects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.team_repositories_id_seq OWNED BY public.team_repositories.id;
+ALTER SEQUENCE public.team_shared_objects_id_seq OWNED BY public.team_shared_objects.id;
 
 
 --
@@ -3850,10 +3851,10 @@ ALTER TABLE ONLY public.tags ALTER COLUMN id SET DEFAULT nextval('public.tags_id
 
 
 --
--- Name: team_repositories id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: team_shared_objects id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.team_repositories ALTER COLUMN id SET DEFAULT nextval('public.team_repositories_id_seq'::regclass);
+ALTER TABLE ONLY public.team_shared_objects ALTER COLUMN id SET DEFAULT nextval('public.team_shared_objects_id_seq'::regclass);
 
 
 --
@@ -4574,11 +4575,11 @@ ALTER TABLE ONLY public.tags
 
 
 --
--- Name: team_repositories team_repositories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: team_shared_objects team_shared_objects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.team_repositories
-    ADD CONSTRAINT team_repositories_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.team_shared_objects
+    ADD CONSTRAINT team_shared_objects_pkey PRIMARY KEY (id);
 
 
 --
@@ -5658,13 +5659,6 @@ CREATE INDEX index_repositories_on_my_module_id ON public.repositories USING btr
 
 
 --
--- Name: index_repositories_on_permission_level; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repositories_on_permission_level ON public.repositories USING btree (permission_level);
-
-
---
 -- Name: index_repositories_on_restored_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6393,31 +6387,17 @@ CREATE INDEX index_tags_on_project_id ON public.tags USING btree (project_id);
 
 
 --
--- Name: index_team_repositories_on_permission_level; Type: INDEX; Schema: public; Owner: -
+-- Name: index_team_shared_objects_on_shared_type_and_id_and_team_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_team_repositories_on_permission_level ON public.team_repositories USING btree (permission_level);
-
-
---
--- Name: index_team_repositories_on_repository_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_team_repositories_on_repository_id ON public.team_repositories USING btree (repository_id);
+CREATE UNIQUE INDEX index_team_shared_objects_on_shared_type_and_id_and_team_id ON public.team_shared_objects USING btree (shared_object_type, shared_object_id, team_id);
 
 
 --
--- Name: index_team_repositories_on_team_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_team_shared_objects_on_team_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_team_repositories_on_team_id ON public.team_repositories USING btree (team_id);
-
-
---
--- Name: index_team_repositories_on_team_id_and_repository_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_team_repositories_on_team_id_and_repository_id ON public.team_repositories USING btree (team_id, repository_id);
+CREATE INDEX index_team_shared_objects_on_team_id ON public.team_shared_objects USING btree (team_id);
 
 
 --
@@ -6868,11 +6848,11 @@ ALTER TABLE ONLY public.tables
 
 
 --
--- Name: team_repositories fk_rails_15daa6a6bf; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: team_shared_objects fk_rails_15daa6a6bf; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.team_repositories
-    ADD CONSTRAINT fk_rails_15daa6a6bf FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
+ALTER TABLE ONLY public.team_shared_objects
+    ADD CONSTRAINT fk_rails_15daa6a6bf FOREIGN KEY (shared_object_id) REFERENCES public.repositories(id);
 
 
 --
@@ -8124,10 +8104,10 @@ ALTER TABLE ONLY public.tags
 
 
 --
--- Name: team_repositories fk_rails_f99472b670; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: team_shared_objects fk_rails_f99472b670; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.team_repositories
+ALTER TABLE ONLY public.team_shared_objects
     ADD CONSTRAINT fk_rails_f99472b670 FOREIGN KEY (team_id) REFERENCES public.teams(id);
 
 
@@ -8388,6 +8368,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220325101011'),
 ('20220328164215'),
 ('20220516111152'),
-('20220621153016');
+('20220621153016'),
+('20220624091046');
 
 

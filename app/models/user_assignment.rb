@@ -18,12 +18,15 @@ class UserAssignment < ApplicationRecord
   private
 
   def assign_shared_inventories
-    assignable.repository_sharing_user_assignments
-              .select('DISTINCT assignable_id, user_assignments.*')
-              .find_each do |repository_sharing_user_assignment|
-      new_user_assignment = repository_sharing_user_assignment.dup
-      new_user_assignment.assign_attributes(user: user)
-      new_user_assignment.save!
+    viewer_role = UserRole.find_by(name: UserRole.public_send('viewer_role').name)
+    normal_user_role = UserRole.find_by(name: UserRole.public_send('normal_user_role').name)
+
+    assignable.team_shared_repositories.find_each do |team_shared_repository|
+      assignable.repository_sharing_user_assignments.create!(
+        user: user,
+        user_role: team_shared_repository.shared_write? ? normal_user_role : viewer_role,
+        assignable: team_shared_repository.shared_object
+      )
     end
   end
 
