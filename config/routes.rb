@@ -723,6 +723,9 @@ Rails.application.routes.draw do
               resources :tasks, only: [] do
                 resources :protocols, only: [] do
                   post 'reorder_steps' => 'protocols#reorder_steps'
+                  resources :steps, only: [] do
+                    post 'reorder_elements' => 'steps#reorder_elements'
+                  end
                 end
               end
             end

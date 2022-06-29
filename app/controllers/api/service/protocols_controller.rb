@@ -11,8 +11,10 @@ module Api
 
       def reorder_steps
         ActiveRecord::Base.transaction do
-          step_reorder_params.each do |step_id, position|
-            @protocol.steps.find(step_id).update!(position: position)
+          step_reorder_params.each do |order|
+            # rubocop:disable Rails/SkipsModelValidations
+            @protocol.steps.find(order['id']).update_column(:position, order['position'])
+            # rubocop:enable Rails/SkipsModelValidations
           end
         rescue StandardError
           head :bad_request
@@ -24,7 +26,7 @@ module Api
       private
 
       def step_reorder_params
-        params.require(:step_order)
+        params.require(:step_order).map { |o| o.permit(:id, :position).to_h }
       end
 
       def validate_step_order

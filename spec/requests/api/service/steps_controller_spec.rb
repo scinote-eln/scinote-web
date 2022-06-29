@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe "Api::Service::ProtocolsController", type: :request do
+RSpec.describe "Api::Service::StepsController", type: :request do
   before :all do
     @user = create(:user)
     @team = create(:team, created_by: @user)
@@ -19,8 +19,9 @@ RSpec.describe "Api::Service::ProtocolsController", type: :request do
     )
 
     @protocol = create(:protocol, team: @team, my_module: @my_module, name: "Test protocol")
+    @step = create(:step, protocol: @protocol)
 
-    create_list(:step, 3, protocol: @protocol)
+    create_list(:step_orderable_element, 3, step: @step)
 
     @valid_headers =
       {
@@ -32,12 +33,13 @@ RSpec.describe "Api::Service::ProtocolsController", type: :request do
   describe 'POST reorder steps, #reorder_steps' do
     let(:action) do
       post(
-        api_service_team_project_experiment_task_protocol_reorder_steps_path(
+        api_service_team_project_experiment_task_protocol_step_reorder_elements_path(
           team_id: @team.id,
           project_id: @project.id,
           experiment_id: @experiment.id,
           task_id: @my_module.id,
-          protocol_id: @protocol.id
+          protocol_id: @protocol.id,
+          step_id: @step.id
         ),
         params: request_body.to_json,
         headers: @valid_headers
@@ -46,22 +48,22 @@ RSpec.describe "Api::Service::ProtocolsController", type: :request do
 
     context 'when has valid params' do
       let(:request_body) do
-        { step_order:
-            @protocol.steps.pluck(:id).each_with_index.map do |id, i|
-              { id: id, position: @protocol.steps.length - 1 - i }
+        { step_element_order:
+            @step.step_orderable_elements.pluck(:id).each_with_index.map do |id, i|
+              { id: id, position: @step.step_orderable_elements.length - 1 - i }
             end
         }
       end
 
-      it 'returns status 200 and reorderes steps' do
+      it 'returns status 200 and reorderes step elements' do
         action
+
         expect(response).to have_http_status 200
+        new_step_element_order = @step.step_orderable_elements.order(position: :asc).pluck(:id, :position)
 
-        new_step_order = @protocol.steps.order(position: :asc).pluck(:id, :position)
-
-        expect(new_step_order).to(
+        expect(new_step_element_order).to(
           eq(
-            request_body[:step_order].map(&:values).sort { |a, b| a[1] <=> b[1] }
+            request_body[:step_element_order].map(&:values).sort { |a, b| a[1] <=> b[1] }
           )
         )
       end
@@ -69,9 +71,9 @@ RSpec.describe "Api::Service::ProtocolsController", type: :request do
 
     context "when step order doesn't include all step ids" do
       let(:request_body) do
-        { step_order:
-            @protocol.steps.last(2).pluck(:id).each_with_index.map do |id, i|
-              { id: id, position: @protocol.steps.length - 1 - i }
+        { step_element_order:
+          @step.step_orderable_elements.last(2).pluck(:id).each_with_index.map do |id, i|
+              { id: id, position: @step.step_orderable_elements.length - 1 - i }
             end
         }
       end
@@ -84,8 +86,8 @@ RSpec.describe "Api::Service::ProtocolsController", type: :request do
 
     context "when step order doesn't have the correct positions" do
       let(:request_body) do
-        { step_order:
-            @protocol.steps.last(2).pluck(:id).each_with_index.map do |id, i|
+        { step_element_order:
+            @step.step_orderable_elements.last(2).pluck(:id).each_with_index.map do |id, i|
               { id: id, position: i + 1 }
             end
         }

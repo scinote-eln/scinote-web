@@ -96,6 +96,11 @@ module Api
         raise PermissionError.new(Protocol, :read) unless can_read_protocol_in_module?(@protocol)
       end
 
+      def load_step(key = :step_id)
+        @step = @protocol.steps.find(params.require(key))
+        raise PermissionError.new(Protocol, :read) unless can_read_protocol_in_module?(@step.protocol)
+      end
+
       def render_error(title, message, status)
         logger.error message
         render json: {
