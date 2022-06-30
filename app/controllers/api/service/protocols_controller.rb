@@ -20,7 +20,7 @@ module Api
           head :bad_request
         end
 
-        head :ok
+        render json: @protocol.steps, each_serializer: Api::V1::StepSerializer
       end
 
       private

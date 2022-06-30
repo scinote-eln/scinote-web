@@ -20,7 +20,7 @@ module Api
           head :bad_request
         end
 
-        head :ok
+        render json: @step.step_orderable_elements, each_serializer: Api::V1::StepOrderableElementSerializer
       end
 
       private
