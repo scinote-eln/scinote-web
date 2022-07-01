@@ -33,12 +33,8 @@ RSpec.describe "Api::Service::StepsController", type: :request do
   describe 'POST reorder steps, #reorder_steps' do
     let(:action) do
       post(
-        api_service_team_project_experiment_task_protocol_step_reorder_elements_path(
+        api_service_team_step_reorder_elements_path(
           team_id: @team.id,
-          project_id: @project.id,
-          experiment_id: @experiment.id,
-          task_id: @my_module.id,
-          protocol_id: @protocol.id,
           step_id: @step.id
         ),
         params: request_body.to_json,

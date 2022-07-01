@@ -4,13 +4,11 @@ module Api
   module Service
     class StepsController < BaseController
       include Api::Service::ReorderValidation
-
-      before_action :load_team, :load_project, :load_experiment, :load_task, :load_protocol
-      before_action :load_step, only: :reorder_elements
+      before_action :load_step
       before_action :validate_element_order, only: :reorder_elements
 
       def reorder_elements
-        ActiveRecord::Base.transaction do
+        @step.with_lock do
           step_element_reorder_params.each do |order|
             # rubocop:disable Rails/SkipsModelValidations
             @step.step_orderable_elements.find(order['id']).update_column(:position, order['position'])
@@ -24,6 +22,11 @@ module Api
       end
 
       private
+
+      def load_step
+        @step = Step.find(params.require(:step_id))
+        raise PermissionError.new(Protocol, :manage) unless can_manage_protocol_in_module?(@step.protocol)
+      end
 
       def step_element_reorder_params
         params.require(:step_element_order).map { |o| o.permit(:id, :position).to_h }

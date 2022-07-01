@@ -718,17 +718,12 @@ Rails.application.routes.draw do
         resources :teams, only: [] do
           post 'clone_experiment' => 'experiments#clone'
 
-          resources :projects, only: [] do
-            resources :experiments, only: [] do
-              resources :tasks, only: [] do
-                resources :protocols, only: [] do
-                  post 'reorder_steps' => 'protocols#reorder_steps'
-                  resources :steps, only: [] do
-                    post 'reorder_elements' => 'steps#reorder_elements'
-                  end
-                end
-              end
-            end
+          resources :protocols, only: [] do
+            post 'reorder_steps' => 'protocols#reorder_steps'
+          end
+
+          resources :steps, only: [] do
+            post 'reorder_elements' => 'steps#reorder_elements'
           end
         end
       end

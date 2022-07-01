@@ -5,12 +5,11 @@ module Api
     class ProtocolsController < BaseController
       include Api::Service::ReorderValidation
 
-      before_action :load_team, :load_project, :load_experiment, :load_task
-      before_action :load_protocol, only: :reorder_steps
+      before_action :load_protocol
       before_action :validate_step_order, only: :reorder_steps
 
       def reorder_steps
-        ActiveRecord::Base.transaction do
+        @protocol.with_lock do
           step_reorder_params.each do |order|
             # rubocop:disable Rails/SkipsModelValidations
             @protocol.steps.find(order['id']).update_column(:position, order['position'])
@@ -24,6 +23,11 @@ module Api
       end
 
       private
+
+      def load_protocol
+        @protocol = Protocol.find(params.require(:protocol_id))
+        raise PermissionError.new(Protocol, :manage) unless can_manage_protocol_in_module?(@protocol)
+      end
 
       def step_reorder_params
         params.require(:step_order).map { |o| o.permit(:id, :position).to_h }
