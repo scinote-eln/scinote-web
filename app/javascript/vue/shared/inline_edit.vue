@@ -85,7 +85,7 @@
         }
       },
       handleBlur() {
-        if (!this.isBlank) {
+        if (this.allowBlank || !this.isBlank) {
           this.$nextTick(this.update);
         } else {
           this.$emit('delete');

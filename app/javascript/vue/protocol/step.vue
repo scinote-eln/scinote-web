@@ -89,17 +89,21 @@
             <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'stepInserMenu_' + step.id" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="true">
               <i class="fas fa-ellipsis-v"></i>
             </button>
-            <ul class="dropdown-menu insert-element-dropdown" :aria-labelledby="'stepInserMenu_' + step.id">
+            <ul class="dropdown-menu dropdown-menu-right insert-element-dropdown" :aria-labelledby="'stepInserMenu_' + step.id">
               <li class="title">
                 {{ i18n.t('protocols.steps.options_dropdown.title') }}
               </li>
-              <li v-if="urls.reorder_elements_url" class="action" @click="openReorderModal">
-                <i class="fas fa-arrows-alt-v"></i>
-                {{ i18n.t('protocols.steps.options_dropdown.rearrange') }}
+              <li v-if="urls.reorder_elements_url" class="action">
+                <a @click="openReorderModal" :class="{ 'disabled': elements.length < 2 }">
+                  <i class="fas fa-arrows-alt-v"></i>
+                  {{ i18n.t('protocols.steps.options_dropdown.rearrange') }}
+                </a>
               </li>
-              <li v-if="urls.delete_url" class="action" @click="showDeleteModal">
-                <i class="fas fa-trash"></i>
-                {{ i18n.t('protocols.steps.options_dropdown.delete') }}
+              <li v-if="urls.delete_url" class="action">
+                <a @click="showDeleteModal">
+                  <i class="fas fa-trash"></i>
+                  {{ i18n.t('protocols.steps.options_dropdown.delete') }}
+                </a>
               </li>
             </ul>
           </div>
@@ -114,7 +118,7 @@
             :key="index"
             :element.sync="elements[index]"
             :inRepository="inRepository"
-            :reorderElementUrl="urls.reorder_elements_url"
+            :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
             @component:delete="deleteElement"
             @update="updateElement"
             @reorder="openReorderModal"
