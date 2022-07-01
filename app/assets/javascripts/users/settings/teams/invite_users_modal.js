@@ -74,9 +74,7 @@
 
       $.each(event.originalEvent.clipboardData.getData('text').split(/[ ,]+/), function(_, value) {
         inputField.val(value);
-        inputField.trigger(
-          $.Event('keypress', { keyCode: 13 })
-        );
+        inputField.trigger($.Event('keypress', { keyCode: 13 }));
       });
     });
 
