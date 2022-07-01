@@ -126,6 +126,7 @@ module ProtocolsExporterV2
 
   def asset_xml(asset)
     asset_guid = get_guid(asset.id)
+    asset_file_name = "#{asset_guid}#{File.extname(asset.file_name)}"
     "#{asset_guid}#{File.extname(asset.file_name)}" \
       "<asset id=\"#{asset.id}\" guid=\"#{asset_guid}\" fileRef=\"#{asset_file_name}\">\n" \
       "<fileName>#{asset.file_name}</fileName>\n" \

@@ -91,7 +91,7 @@ class ProtocolsImporterV2
 
       next unless step_json['assets']
 
-      create_assets(step_json)
+      asset_ids += create_assets(step_json, step)
     end
 
     # Post process assets
@@ -100,7 +100,8 @@ class ProtocolsImporterV2
     end
   end
 
-  def create_assets(step_json)
+  def create_assets(step_json, step)
+    asset_ids = []
     step_json['assets']&.values&.each do |asset_json|
       asset = Asset.new(
         created_by: @user,
@@ -121,6 +122,8 @@ class ProtocolsImporterV2
         asset: asset
       )
     end
+
+    asset_ids
   end
 
   def create_step_text(step, params)

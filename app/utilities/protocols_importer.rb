@@ -76,7 +76,8 @@ class ProtocolsImporter
         protocol: protocol
       )
       # need step id to link image to step
-      step_description_text = step.step_texts.build(text: populate_rte(step_json, step))
+      step_description_text = step.step_texts.create
+      step_description_text.update(text: populate_rte(step_json, step_description_text))
       create_in_step!(step, step_description_text)
 
       step.save!
@@ -184,6 +185,7 @@ class ProtocolsImporter
                                 content_type: tiny_mce_img_json['fileType'],
                                 metadata: JSON.parse(tiny_mce_img_json['fileMetadata'] || '{}'))
       tiny_mce_img.image.attach(to_blob)
+
       if description.gsub!("data-mce-token=\"#{tiny_mce_img_json['tokenId']}\"",
                            "data-mce-token=\"#{Base62.encode(tiny_mce_img.id)}\"")
       else
