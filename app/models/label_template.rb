@@ -6,6 +6,8 @@ class LabelTemplate < ApplicationRecord
   validates :size, presence: true
   validates :content, presence: true
 
+  belongs_to :repository, optional: true
+
   def render(locals)
     locals.reduce(content.dup) do |rendered_content, (key, value)|
       rendered_content.gsub!(/\{\{#{key}\}\}/, value.to_s)

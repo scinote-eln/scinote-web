@@ -798,6 +798,11 @@ en:
       success: "Successfully deleted %{printer_name}."
       error: "Could not delete %{printer_name}."
 
+  label_templates:
+    repository_row:
+      errors:
+        repository_mismatch: "Repository of template must match repository of label."
+        unsupported_key: "Key %{key} is not supported by this label template renderer."
 
   my_modules:
     details:
