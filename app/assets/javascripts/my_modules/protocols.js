@@ -465,7 +465,6 @@ function init() {
   initEditMyModuleDescription();
   initEditProtocolDescription();
   initEditDescription();
-  initCopyToRepository();
   initLinkUpdate();
   initLoadFromRepository();
   refreshProtocolStatusBar();
