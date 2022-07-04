@@ -61,7 +61,7 @@
     },
     methods: {
       enableEditMode(e) {
-        if ($(e.target).hasClass('fas')) return
+        if ($(e.target).hasClass('fas fa-grip-vertical') || $(e.target).hasClass('element-grip')) return
         if (!this.element.attributes.orderable.urls.update_url) return
         this.inEditMode = true
       },
