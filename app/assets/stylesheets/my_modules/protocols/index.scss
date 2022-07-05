@@ -79,7 +79,7 @@
 
       .repositories-assign-container {
         flex-grow: 1;
-        max-width: 200px;
+        max-width: 150px;
 
         .btn {
           text-align: left;
@@ -552,7 +552,7 @@
       display: flex;
       flex-grow: 1;
 
-      :not(:first-child):not(.dropdown-menu) {
+      > :not(:first-child):not(.dropdown-menu) {
         margin-left: .5em;
       }
     }
@@ -589,7 +589,7 @@
     margin: 0;
   }
 
-  .status-buttons :not(:first-child):not(.dropdown-menu) {
+  .status-buttons > :not(:first-child):not(.dropdown-menu) {
     margin-left: 0;
     margin-top: .5em;
   }
@@ -615,7 +615,7 @@
       text-align: left;
     }
 
-    .status-buttons :not(:first-child):not(.dropdown-menu) {
+    .status-buttons > :not(:first-child):not(.dropdown-menu) {
       margin-left: 0;
       margin-top: .5em;
     }

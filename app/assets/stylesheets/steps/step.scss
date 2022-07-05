@@ -5,7 +5,7 @@
 
 .step-container {
   border: $border-transparent;
-  margin: 20px 0 20px -1.5em;
+  margin: 6px 0 6px -1.5em;
   padding: 8px 24px 8px 0;
 
   .step-header {
@@ -46,12 +46,14 @@
     .step-position {
       @include font-main;
       flex-shrink: 0;
+      font-weight: bold;
       line-height: 24px;
       margin: 0 4px;
     }
 
     .step-name-container {
       flex-grow: 1;
+      font-weight: bold;
     }
 
     .step-actions-container {
