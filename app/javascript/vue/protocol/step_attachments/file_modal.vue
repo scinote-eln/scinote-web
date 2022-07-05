@@ -1,8 +1,8 @@
 <template>
-  <div ref="modal" @keydown.esc="cancel"
+  <div ref="modal" @keydown.esc="cancel" @paste="onImageFilePaste"
        class="modal add-file-modal"
        :class="{ 'draging-file' : dragingFile }"
-       role="dialog" aria-hidden="true" tabindex="-1">
+       role="dialog" aria-hidden="true" tabindex="-1" key="modal1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -67,10 +67,17 @@
         </div>
       </div>
     </div>
+    <ClipboardPasteModal v-if="showClipboardPasteModal"
+                         :step="step"
+                         :image="pasteImage"
+                         @files="uploadCopyPasteImage"
+                         @cancel="showClipboardPasteModal = false"
+    />
   </div>
 </template>
  <script>
   import StorageUsage from '../storage_usage.vue'
+  import ClipboardPasteModal from 'vue/protocol/step_attachments/clipboard_paste_modal.vue'
 
   export default {
     name: 'fileModal',
@@ -79,10 +86,14 @@
     },
     data() {
       return {
-        dragingFile: false
+        dragingFile: false,
+        showClipboardPasteModal: false
       }
     },
-    components: {StorageUsage},
+    components: {
+      ClipboardPasteModal,
+      StorageUsage
+    },
     mounted() {
       $(this.$refs.modal).modal('show');
       MarvinJsEditor.initNewButton('.new-marvinjs-upload-button', () => {
@@ -97,6 +108,17 @@
       cancel() {
         $(this.$refs.modal).modal('hide');
       },
+      onImageFilePaste (pasteEvent) {
+        if (pasteEvent.clipboardData !== false) {
+          let items = pasteEvent.clipboardData.items
+          for (let i = 0; i < items.length; i += 1) {
+            if (items[i].type.indexOf('image') !== -1) {
+              this.pasteImage = items[i];
+              this.showClipboardPasteModal = true;
+            }
+          }
+        }
+      },
       dropFile(e) {
         if (e.dataTransfer && e.dataTransfer.files.length) {
           $(this.$refs.modal).modal('hide');
@@ -106,6 +128,10 @@
       uploadFiles() {
         $(this.$refs.modal).modal('hide');
         this.$emit('files', this.$refs.fileSelector.files);
+      },
+      uploadCopyPasteImage(file) {
+        $(this.$refs.modal).modal('hide');
+        this.$emit('files', file);
       },
       openMarvinJsModal() {
         // hide regular file modal
