@@ -73,7 +73,7 @@
       .insert-element-dropdown {
         @include font-button;
 
-        min-width: 228px;
+        min-width: 230px;
         padding: 0;
 
         li {
@@ -87,7 +87,7 @@
             }
 
             .fas {
-              margin-right: 0.5em;
+              margin-right: .5em;
             }
           }
 

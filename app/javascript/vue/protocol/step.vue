@@ -210,7 +210,7 @@
     },
     mounted() {
       $(this.$refs.comments).data('closeCallback', this.closeCommentsSidebar)
-      $(this.$refs.actionsDropdownButton).on('shown.bs.dropdown', this.handleDropdownPosition);
+      $(this.$refs.actionsDropdownButton).on('shown.bs.dropdown hidden.bs.dropdown', this.handleDropdownPosition);
     },
     computed: {
       reorderableElements() {
@@ -347,11 +347,7 @@
         this.reordering = false;
       },
       handleDropdownPosition() {
-        if (!this.isInViewport(this.$refs.actionsDropdown)) {
-          this.$refs.actionsDropdownButton.classList.add("dropup");
-        } else {
-          this.$refs.actionsDropdownButton.classList.remove("dropup");
-        }
+        this.$refs.actionsDropdownButton.classList.toggle("dropup", !this.isInViewport(this.$refs.actionsDropdown));
       },
       isInViewport(el) {
           let rect = el.getBoundingClientRect();
@@ -359,8 +355,8 @@
           return (
               rect.top >= 0 &&
               rect.left >= 0 &&
-              rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /* or $(window).height() */
-              rect.right <= (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */
+              rect.bottom <= (window.innerHeight || $(window).height()) &&
+              rect.right <= (window.innerWidth || $(window).width())
           );
       }
     }
