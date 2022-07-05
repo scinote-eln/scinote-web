@@ -259,17 +259,29 @@ class ProtocolsController < ApplicationController
   end
 
   def delete_steps
+    @protocol.my_module.lock!
+
     Protocol.transaction do
       team = @protocol.team
       previous_size = 0
-
       @protocol.steps.each do |step|
         previous_size += step.space_taken
+
+        if @protocol.in_module?
+          log_activity(:destroy_step, @protocol.my_module.experiment.project,
+                       my_module: @protocol.my_module.id,
+                       step: step.id,
+                       step_position: { id: step.id, value_for: 'position_plus_one' })
+        else
+          log_activity(:delete_step_in_protocol_repository, nil, step: step.id,
+            step_position: { id: step.id, value_for: 'position_plus_one' })
+        end
+
         step.destroy!
       end
 
       team.release_space(previous_size)
-      team.save
+      team.save!
       render json: { status: 'ok' }
     rescue ActiveRecord::RecordNotDestroyed
       render json: { status: 'error' }, status: :unprocessable_entity
