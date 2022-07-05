@@ -1,4 +1,26 @@
 .task-protocol {
+  .protocol-name {
+    .sci-inline-edit__view.blank,
+    textarea {
+      font-weight: bold;
+    }
+  }
+
+  .protocol-step-actions {
+    margin-left: -6px;
+  }
+
+  .protocol-buttons-group {
+    column-gap: .25em;
+    display: grid;
+    grid-template-columns: auto auto auto;
+  }
+
+  .portocol-header-left-part {
+    align-items: baseline;
+    display: flex;
+  }
+
   .insert-step {
     align-items: center;
     color: $color-concrete;
@@ -27,6 +49,12 @@
       }
     }
   }
+  .protocol-description {
+    margin-bottom: 2em;
+    padding-left: 1em;
+  }
+
+
   .protocol-options-dropdown {
     a {
       cursor: pointer;

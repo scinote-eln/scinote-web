@@ -1,30 +1,34 @@
 <template>
   <div class="task-protocol">
     <div class="task-section-header" v-if="!inRepository">
-      <a class="task-section-caret" role="button" data-toggle="collapse" href="#protocol-content" aria-expanded="true" aria-controls="protocol-content">
-        <i class="fas fa-caret-right"></i>
-        <div class="task-section-title">
-          <h2>{{ i18n.t('Protocol') }}</h2>
+      <div class="portocol-header-left-part">
+        <a class="task-section-caret" role="button" data-toggle="collapse" href="#protocol-content" aria-expanded="true" aria-controls="protocol-content">
+          <i class="fas fa-caret-right"></i>
+          <div class="task-section-title">
+            <h2>{{ i18n.t('Protocol') }}</h2>
+          </div>
+        </a>
+        <div class="my-module-protocol-status">
+          <!-- protocol status dropdown gets mounted here -->
         </div>
-      </a>
-      <div class="my-module-protocol-status">
-        <!-- protocol status dropdown gets mounted here -->
       </div>
-      <div class="sci-btn-group actions-block">
-        <a v-if="urls.add_step_url" class="btn btn-primary" @click="addStep(steps.length)">
-            <span class="fas fa-plus" aria-hidden="true"></span>
-            <span>{{ i18n.t("protocols.steps.new_step") }}</span>
-        </a>
-        <a class="btn btn-default" data-toggle="modal" data-target="#print-protocol-modal">
-          <span class="fas fa-print" aria-hidden="true"></span>
-          <span>{{ i18n.t("protocols.print.button") }}</span>
-        </a>
-        <ProtocolOptions
-          v-if="protocol.attributes && protocol.attributes.urls"
-          :protocol="protocol"
-          @protocol:delete_steps="deleteSteps"
-          :canDeleteSteps="steps.length > 0 && urls.delete_steps_url !== null"
-        />
+      <div class="actions-block">
+        <div class="protocol-buttons-group">
+          <a v-if="urls.add_step_url" class="btn btn-primary" @click="addStep(steps.length)">
+              <span class="fas fa-plus" aria-hidden="true"></span>
+              <span>{{ i18n.t("protocols.steps.new_step") }}</span>
+          </a>
+          <a class="btn btn-default" data-toggle="modal" data-target="#print-protocol-modal">
+            <span class="fas fa-print" aria-hidden="true"></span>
+            <span>{{ i18n.t("protocols.print.button") }}</span>
+          </a>
+          <ProtocolOptions
+            v-if="protocol.attributes && protocol.attributes.urls"
+            :protocol="protocol"
+            @protocol:delete_steps="deleteSteps"
+            :canDeleteSteps="steps.length > 0 && urls.delete_steps_url !== null"
+          />
+        </div>
       </div>
     </div>
     <div v-if="protocol.id" id="protocol-content" class="protocol-content collapse in" aria-expanded="true">
@@ -44,7 +48,7 @@
           </span>
         </div>
         <ProtocolMetadata v-if="protocol.attributes && protocol.attributes.in_repository" :protocol="protocol" @update="updateProtocol"/>
-        <div v-if="urls.update_protocol_description_url" class="protocol-description">
+        <div v-if="urls.update_protocol_description_url">
           <Tinymce
             :value="protocol.attributes.description"
             :value_html="protocol.attributes.description_view"
@@ -64,8 +68,7 @@
         <span class="fas fa-plus" aria-hidden="true"></span>
         <span>{{ i18n.t("protocols.steps.new_step") }}</span>
       </a>
-
-      <div class="protocol-step-actions">
+      <div v-if="steps.length > 0" class="protocol-step-actions">
         <button class="btn btn-light" @click="collapseSteps">
           <span class="fas fa-caret-up"></span>
           {{ i18n.t("protocols.steps.collapse_label") }}
@@ -146,7 +149,7 @@
         protocol: {
           attributes: {}
         },
-        steps: {},
+        steps: [],
         reordering: false
       }
     },

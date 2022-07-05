@@ -93,17 +93,13 @@
               <li class="title">
                 {{ i18n.t('protocols.steps.options_dropdown.title') }}
               </li>
-              <li v-if="urls.reorder_elements_url" class="action">
-                <a @click="openReorderModal" :class="{ 'disabled': elements.length < 2 }">
-                  <i class="fas fa-arrows-alt-v"></i>
-                  {{ i18n.t('protocols.steps.options_dropdown.rearrange') }}
-                </a>
+              <li v-if="urls.reorder_elements_url" class="action"  @click="openReorderModal" :class="{ 'disabled': elements.length < 2 }">
+                <i class="fas fa-arrows-alt-v"></i>
+                {{ i18n.t('protocols.steps.options_dropdown.rearrange') }}
               </li>
-              <li v-if="urls.delete_url" class="action">
-                <a @click="showDeleteModal">
-                  <i class="fas fa-trash"></i>
-                  {{ i18n.t('protocols.steps.options_dropdown.delete') }}
-                </a>
+              <li v-if="urls.delete_url" class="action" @click="showDeleteModal">
+                <i class="fas fa-trash"></i>
+                {{ i18n.t('protocols.steps.options_dropdown.delete') }}
               </li>
             </ul>
           </div>

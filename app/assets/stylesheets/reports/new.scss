@@ -453,7 +453,7 @@
       }
 
       .experiment-name {
-        @include font-main;
+        @include font-h1;
         display: inline-block;
         overflow: hidden;
         text-overflow: ellipsis;
