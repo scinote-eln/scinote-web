@@ -6,6 +6,7 @@
             :data-select-multiple-all-selected="dataSelectMultipleAllSelected"
             :data-select-multiple-name="dataSelectMultipleName"
             :data-placeholder="placeholder"
+            :data-view-mode="viewMode"
     >
       <template v-if="groupSelector">
         <optgroup v-for="group in this.options" :label="group.label" :key="group.label">
@@ -92,11 +93,20 @@
       optionLabel: {
         type: Function
       },
+      inputTagMode: {
+        type: Boolean,
+        default: false
+      },
+      viewMode: {
+        type: Boolean,
+        default: false
+      },
       onChange: Function
 
     },
     mounted: function() {
       dropdownSelector.init(`#${this.selectorId}`, {
+        inputTagMode: this.inputTagMode,
         optionClass: this.optionClass,
         optionLabel: this.optionLabel,
         noEmptyOption: this.noEmptyOption,

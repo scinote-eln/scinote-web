@@ -64,6 +64,7 @@ module MarvinJsActions
       asset_type = 'asset_name'
     else
       asset_type = 'tiny_mce_asset_name'
+      step = asset.object.step
     end
 
     protocol = step&.protocol

@@ -1,0 +1,48 @@
+.task-protocol {
+  .insert-step {
+    align-items: center;
+    color: $color-concrete;
+    cursor: pointer;
+    display: flex;
+
+    &::before,
+    &::after {
+      background-color: $color-concrete;
+      content: "";
+      display: inline-block;
+      flex-grow: 1;
+      height: 3px;
+    }
+
+    .fa-plus {
+      margin: 0 .5em;
+    }
+
+    &:hover {
+      color: $brand-primary;
+
+      &::before,
+      &::after {
+        background-color: $brand-primary;
+      }
+    }
+  }
+  .protocol-options-dropdown {
+    a {
+      cursor: pointer;
+
+      &.disabled {
+        cursor: default;
+        pointer-events: none;
+      }
+    }
+  }
+  .tinymce-container {
+    display: flex;
+    width: 100%;
+
+    .tiny-mce-editor {
+      flex-basis: 100%;
+    }
+  }
+}

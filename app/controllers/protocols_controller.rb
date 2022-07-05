@@ -1,8 +1,6 @@
 
 class ProtocolsController < ApplicationController
   include RenamingUtil
-  include ProtocolsImporter
-  include ProtocolsExporter
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
@@ -10,13 +8,14 @@ class ProtocolsController < ApplicationController
   include ProtocolsIoHelper
   include TeamsHelper
   include CommentHelper
+  include ProtocolsExporterV2
 
   before_action :check_create_permissions, only: %i(
-    create_new_modal
     create
   )
   before_action :check_clone_permissions, only: [:clone]
   before_action :check_view_permissions, only: %i(
+    show
     protocol_status_bar
     updated_at_label
     preview
@@ -46,6 +45,7 @@ class ProtocolsController < ApplicationController
     revert_modal
     update_from_parent
     update_from_parent_modal
+    delete_steps
   )
   before_action :check_manage_parent_in_repository_permissions, only: %i(
     update_parent
@@ -73,6 +73,8 @@ class ProtocolsController < ApplicationController
 
   before_action :check_protocolsio_import_permissions,
                 only: %i(protocolsio_import_create protocolsio_import_save)
+
+  before_action :set_importer, only: %i(load_from_file import)
 
   def index; end
 
@@ -161,6 +163,16 @@ class ProtocolsController < ApplicationController
     current_team_switch(@protocol.team)
   end
 
+  def show
+    # Switch to correct team
+    current_team_switch(@protocol.team)
+
+    respond_to do |format|
+      format.json { render json: @protocol, serializer: ProtocolSerializer, user: current_user }
+      format.html
+    end
+  end
+
   def update_keywords
     respond_to do |format|
       # sanitize user input
@@ -172,7 +184,7 @@ class ProtocolsController < ApplicationController
       if @protocol.update_keywords(params[:keywords])
         format.json do
           log_activity(:edit_keywords_in_protocol_repository, nil, protocol: @protocol.id)
-          render json: { status: :ok }
+          render json: @protocol, serializer: ProtocolSerializer, user: current_user
         end
       else
         format.json { render json: {}, status: :unprocessable_entity }
@@ -183,7 +195,7 @@ class ProtocolsController < ApplicationController
   def update_authors
     if @protocol.update(authors: params.require(:protocol)[:authors])
       log_activity(:edit_authors_in_protocol_repository, nil, protocol: @protocol.id)
-      render json: {}, status: :ok
+      render json: @protocol, serializer: ProtocolSerializer, user: current_user
     else
       render json: @protocol.errors, status: :unprocessable_entity
     end
@@ -223,9 +235,9 @@ class ProtocolsController < ApplicationController
     @protocol = Protocol.new(
       team: @current_team,
       protocol_type: Protocol.protocol_types[@type == :public ? :in_repository_public : :in_repository_private],
-      added_by: current_user
+      added_by: current_user,
+      name: t('protocols.index.default_name')
     )
-    @protocol.assign_attributes(create_params)
 
     ts = Time.now
     @protocol.record_timestamps = false
@@ -233,27 +245,35 @@ class ProtocolsController < ApplicationController
     @protocol.updated_at = ts
     @protocol.published_on = ts if @type == :public
 
-    respond_to do |format|
-      if @protocol.save
+    rename_record(@protocol, :name)
+    if @protocol.save
 
-        log_activity(:create_protocol_in_repository, nil, protocol: @protocol.id)
+      log_activity(:create_protocol_in_repository, nil, protocol: @protocol.id)
 
-        TinyMceAsset.update_images(@protocol, params[:tiny_mce_images], current_user)
-        format.json do
-          render json: {
-            url: edit_protocol_path(
-              @protocol,
-              team: @current_team,
-              type: @type
-            )
-          }
-        end
-      else
-        format.json do
-          render json: @protocol.errors,
-            status: :unprocessable_entity
-        end
+      TinyMceAsset.update_images(@protocol, params[:tiny_mce_images], current_user)
+      redirect_to protocol_path(@protocol)
+    else
+      flash[:error] = @protocol.errors.full_messages.join(', ')
+      redirect_to protocols_path
+    end
+  end
+
+  def delete_steps
+    Protocol.transaction do
+      team = @protocol.team
+      previous_size = 0
+
+      @protocol.steps.each do |step|
+        previous_size += step.space_taken
+        step.destroy!
       end
+
+      team.release_space(previous_size)
+      team.save
+      render json: { status: 'ok' }
+    rescue ActiveRecord::RecordNotDestroyed
+      render json: { status: 'error' }, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
     end
   end
 
@@ -525,14 +545,14 @@ class ProtocolsController < ApplicationController
       if @protocol.can_destroy?
         transaction_error = false
         Protocol.transaction do
-          begin
-            import_into_existing(
-              @protocol, @protocol_json, current_user, current_team
-            )
-          rescue Exception
-            transaction_error = true
-            raise ActiveRecord:: Rollback
-          end
+          @importer.import_into_existing(
+            @protocol, @protocol_json
+          )
+        rescue StandardError => e
+          transaction_error = true
+          Rails.logger.error(e.message)
+          Rails.logger.error(e.backtrace.join("\n"))
+          raise ActiveRecord::Rollback
         end
 
         if transaction_error
@@ -565,14 +585,12 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       transaction_error = false
       Protocol.transaction do
-        begin
-          protocol =
-            import_new_protocol(@protocol_json, @team, @type, current_user)
-        rescue StandardError => ex
-          Rails.logger.error ex.message
-          transaction_error = true
-          raise ActiveRecord:: Rollback
-        end
+        protocol =
+          @importer.import_new_protocol(@protocol_json, @type)
+      rescue StandardError => e
+        Rails.logger.error e.backtrace.join("\n")
+        transaction_error = true
+        raise ActiveRecord::Rollback
       end
 
       p_name =
@@ -660,7 +678,7 @@ class ProtocolsController < ApplicationController
       # and some modals get closed and opened
     end
   rescue StandardError => e
-    Rails.logger.error(e.message)
+    Rails.logger.error(e.backtrace.join("\n"))
     @protocolsio_general_error = true
     respond_to do |format|
       format.js {}
@@ -698,8 +716,8 @@ class ProtocolsController < ApplicationController
       @protocolsio_general_error = false
       Protocol.transaction do
         begin
-          protocol = import_new_protocol(
-            @db_json, current_team, params[:type].to_sym, current_user
+          protocol = @importer.import_new_protocol(
+            @db_json, params[:type].to_sym
           )
         rescue Exception
           transaction_error = true
@@ -764,6 +782,10 @@ class ProtocolsController < ApplicationController
                 end
               end
               ostream = step.tiny_mce_assets.save_to_eln(ostream, step_dir)
+
+              step.step_texts.each do |step_text|
+                ostream = step_text.tiny_mce_assets.save_to_eln(ostream, step_dir)
+              end
             end
           end
         end
@@ -931,19 +953,6 @@ class ProtocolsController < ApplicationController
     end
   end
 
-  def create_new_modal
-    @new_protocol = Protocol.new
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string({
-            partial: "protocols/index/create_new_modal_body.html.erb"
-          })
-        }
-      end
-    end
-  end
-
   def edit_name_modal
     respond_to do |format|
       format.json do
@@ -1002,6 +1011,15 @@ class ProtocolsController < ApplicationController
   end
 
   private
+
+  def set_importer
+    case params.dig('protocol', 'elnVersion')
+    when '1.0'
+      @importer = ProtocolsImporter.new(current_user, current_team)
+    when '1.1'
+      @importer = ProtocolsImporterV2.new(current_user, current_team)
+    end
+  end
 
   def valid_protocol_json(json)
     JSON.parse(json)
@@ -1188,10 +1206,6 @@ class ProtocolsController < ApplicationController
 
   def copy_to_repository_params
     params.require(:protocol).permit(:name, :protocol_type)
-  end
-
-  def create_params
-    params.require(:protocol).permit(:name)
   end
 
   def check_protocolsio_import_permissions

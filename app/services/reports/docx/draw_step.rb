@@ -30,21 +30,21 @@ module Reports::Docx::DrawStep
       @docx.p I18n.t 'projects.reports.elements.step.no_description'
     end
 
-    if @settings.dig('task', 'protocol', 'step_tables')
-      step.tables.each do |table|
-        draw_step_table(table)
+    step.step_orderable_elements.order(:position).each do |e|
+      if e.orderable_type == 'StepTable' && @settings.dig('task', 'protocol', 'step_tables')
+        draw_step_table(e.orderable.table)
       end
+      if e.orderable_type == 'Checklist' && @settings.dig('task', 'protocol', 'step_checklists')
+        draw_step_checklist(e.orderable)
+      end
+      draw_step_text(e.orderable) if e.orderable_type == 'StepText' && @settings.dig('task', 'protocol', 'step_texts')
     end
     if @settings.dig('task', 'protocol', 'step_files')
       step.assets.each do |asset|
         draw_step_asset(asset)
       end
     end
-    if @settings.dig('task', 'protocol', 'step_checklists')
-      step.checklists.each do |checklist|
-        draw_step_checklist(checklist)
-      end
-    end
+
     draw_step_comments(step) if @settings.dig('task', 'protocol', 'step_comments')
 
     @docx.p

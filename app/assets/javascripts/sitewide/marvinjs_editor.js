@@ -167,6 +167,8 @@ var MarvinJsEditorApi = (function() {
       }
       $(marvinJsModal).modal('hide');
       config.button.dataset.inProgress = false;
+
+      if (MarvinJsEditor.saveCallback) MarvinJsEditor.saveCallback();
     }).error((response) => {
       if (response.status === 403) {
         HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
@@ -250,7 +252,7 @@ var MarvinJsEditorApi = (function() {
       return true;
     },
 
-    initNewButton: function(selector) {
+    initNewButton: function(selector, saveCallback) {
       $(selector).off('click').on('click', function() {
         var objectId = this.dataset.objectId;
         var objectType = this.dataset.objectType;
@@ -264,6 +266,8 @@ var MarvinJsEditorApi = (function() {
           container: container
         });
       });
+
+      MarvinJsEditor.saveCallback = saveCallback;
     },
 
     save: function(config) {

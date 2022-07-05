@@ -34,6 +34,14 @@
   margin-top: 20px;
 }
 
+.navigation-results-counter {
+  background-color: $color-concrete;
+  border-radius: $border-radius-circle;
+  color: $color-volcano;
+  font-weight: bold;
+  padding: .1em .5em;
+}
+
 .btn-colorselector{
   background-color: transparent;
 }
@@ -98,6 +106,20 @@
     &#powerpoint-btn.active {
       background-color: $office-ms-powerpoint;
       color: $color-white;
+    }
+
+    .act {
+      display: none;
+    }
+
+    &.active {
+      .inactive {
+        display: none;
+      }
+
+      .act {
+        display: inline-block;
+      }
     }
 
     span {

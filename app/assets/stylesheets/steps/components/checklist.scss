@@ -1,0 +1,42 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
+.step-checklist-items {
+  .step-element-header {
+    .step-element-name {
+      align-items: flex-start;
+      column-gap: .5em;
+      display: grid;
+      font-weight: normal;
+      grid-template-columns: max-content auto;
+
+      .step-checklist-text {
+        width: 100%;
+      }
+
+      &.done .step-checklist-text {
+        text-decoration: line-through;
+      }
+
+      &:hover.done .step-checklist-text {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .step-checklist-add-item {
+    margin-left: 9px;
+  }
+
+  .step-checklist-item-ghost {
+    border: 1px solid $brand-primary;
+  }
+
+  .sci-checkbox-container {
+    margin: 10px 0;
+
+    &.disabled {
+      pointer-events: none;
+    }
+  }
+}

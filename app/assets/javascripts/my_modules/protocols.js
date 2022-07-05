@@ -440,7 +440,13 @@ function initImport() {
   });
 }
 
-
+function initDetailsDropdown() {
+  $('#task-details .task-section-caret').on('click', function() {
+    if (!$('.task-details').hasClass('collapsing')) {
+      $(this).closest('#task-details').toggleClass('expanded');
+    }
+  });
+}
 
 function initProtocolSectionOpenEvent() {
   $('#protocol-container').on('shown.bs.collapse', function() {
@@ -465,6 +471,7 @@ function init() {
   refreshProtocolStatusBar();
   initImport();
   initProtocolSectionOpenEvent();
+  initDetailsDropdown();
 }
 
 init();

@@ -448,7 +448,7 @@ class Asset < ApplicationRecord
   end
 
   def editable_image?
-    !locked? && %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES_EDITABLE)}} =~ file.content_type
+    !locked? && (%r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES_EDITABLE)}} =~ file.content_type).present?
   end
 
   def generate_base64(style)

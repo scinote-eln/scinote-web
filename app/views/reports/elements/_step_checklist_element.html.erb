@@ -4,19 +4,13 @@
 <% export_all = defined?(export_all) && export_all %>
 <div class="report-element report-step-attachment-element report-step-checklist-element">
   <div class="report-element-header">
-    <div class="row">
-      <div class="pull-left attachment-icon">
-        <span class="fas fa-tasks"></span>
-      </div>
-      <div class="pull-left checklist-name">
-        <%= custom_auto_link(t('projects.reports.elements.step_checklist.checklist_name',
-                               name: checklist.name),
-                               team: current_team,
-                               base64_encoded_imgs: export_all) %>
-      </div>
-      <div class="pull-left user-time">
-        <%= t('projects.reports.elements.step_checklist.user_time', timestamp: l(timestamp, format: :full)) %>
-      </div>
+    <div class="checklist-name">
+      <%= custom_auto_link(checklist.name,
+                           team: current_team,
+                           base64_encoded_imgs: export_all) %>
+    </div>
+    <div class="user-time">
+      <%= t('projects.reports.elements.step_checklist.user_time', timestamp: l(timestamp, format: :full)) %>
     </div>
   </div>
   <div class="report-element-body">

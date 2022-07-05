@@ -433,6 +433,8 @@ Rails.application.routes.draw do
               as: 'update_protocol_description'
         patch 'state', to: 'my_modules#update_state', as: 'update_state'
         get 'protocols' # Protocols view for single module
+        get 'protocol', to: 'my_modules#protocol', as: 'protocol'
+        patch 'protocol', to: 'my_modules#update_protocol', as: 'update_protocol'
         get 'results' # Results view for single module
         get 'archive' # Archive view for single module
       end
@@ -443,11 +445,24 @@ Rails.application.routes.draw do
       get 'users/edit', to: 'user_my_modules#index_edit'
     end
 
-    resources :steps, only: [:edit, :update, :destroy, :show] do
+    resources :steps, only: %i(index edit update destroy show) do
+      resources :step_orderable_elements do
+        post :reorder, on: :collection
+      end
       resources :step_comments,
                 path: '/comments',
                 only: %i(create index update destroy)
+      resources :tables, controller: 'step_elements/tables', only: %i(create destroy update)
+      resources :texts, controller: 'step_elements/texts', only: %i(create destroy update)
+      resources :checklists, controller: 'step_elements/checklists', only: %i(create destroy update) do
+        resources :checklist_items, controller: 'step_elements/checklist_items', only: %i(create update destroy) do
+          post :reorder, on: :collection
+        end
+      end
       member do
+        get 'elements'
+        get 'attachments'
+        post 'upload_attachment'
         post 'checklistitem_state'
         post 'toggle_step_state'
         put 'move_down'
@@ -494,8 +509,10 @@ Rails.application.routes.draw do
     get 'result_tables/:id/download' => 'result_tables#download',
       as: :result_table_download
 
-    resources :protocols, only: [:index, :edit, :create] do
-      resources :steps, only: [:new, :create]
+    resources :protocols, only: %i(index show edit create update) do
+      resources :steps, only: [:new, :create] do
+        post :reorder, on: :collection
+      end
       member do
         get 'print', to: 'protocols#print'
         get 'linked_children', to: 'protocols#linked_children'
@@ -503,8 +520,8 @@ Rails.application.routes.draw do
              to: 'protocols#linked_children_datatable'
         get 'preview', to: 'protocols#preview'
         patch 'description', to: 'protocols#update_description'
-        put 'name', to: 'protocols#update_name'
-        put 'authors', to: 'protocols#update_authors'
+        patch 'name', to: 'protocols#update_name'
+        patch 'authors', to: 'protocols#update_authors'
         patch 'keywords', to: 'protocols#update_keywords'
         post 'clone', to: 'protocols#clone'
         get 'unlink_modal', to: 'protocols#unlink_modal'
@@ -530,9 +547,9 @@ Rails.application.routes.draw do
         get 'edit_keywords_modal', to: 'protocols#edit_keywords_modal'
         get 'edit_authors_modal', to: 'protocols#edit_authors_modal'
         get 'edit_description_modal', to: 'protocols#edit_description_modal'
+        post 'delete_steps'
       end
       collection do
-        get 'create_new_modal', to: 'protocols#create_new_modal'
         post 'datatable', to: 'protocols#datatable'
         post 'make_private', to: 'protocols#make_private'
         post 'publish', to: 'protocols#publish'
@@ -778,6 +795,7 @@ Rails.application.routes.draw do
                                   path: 'items'
                       end
                       resources :tables, only: %i(index show create update destroy), path: 'tables'
+                      resources :step_texts, only: %i(index show create update destroy), path: 'step_texts'
                     end
                   end
                   resources :results, only: %i(index create show update)
