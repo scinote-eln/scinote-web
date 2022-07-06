@@ -10,7 +10,7 @@ module LabelPrinters
       class BadRequestError < StandardError; end
 
       include HTTParty
-      base_uri 'https://print-api.fluics.com/latest'
+      base_uri 'https://print-api.fluics.com/v3'
 
       def initialize(api_key)
         self.class.headers(
