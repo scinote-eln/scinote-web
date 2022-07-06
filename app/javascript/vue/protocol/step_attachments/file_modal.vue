@@ -90,12 +90,26 @@
         this.$nextTick(this.cancel);
       });
       $(this.$refs.modal).on('hidden.bs.modal', () => {
+        global.removeEventListener('paste', this.onImageFilePaste, false);
         this.$emit('cancel');
       });
+      global.addEventListener('paste', this.onImageFilePaste, false);
     },
     methods: {
       cancel() {
         $(this.$refs.modal).modal('hide');
+      },
+      onImageFilePaste (pasteEvent) {
+        if (pasteEvent.clipboardData !== false) {
+          let items = pasteEvent.clipboardData.items
+          for (let i = 0; i < items.length; i += 1) {
+            if (items[i].type.indexOf('image') !== -1) {
+              this.$emit('copyPasteImageModal', items[i]);
+              $(this.$refs.modal).modal('hide');
+              return
+            }
+          }
+        }
       },
       dropFile(e) {
         if (e.dataTransfer && e.dataTransfer.files.length) {
