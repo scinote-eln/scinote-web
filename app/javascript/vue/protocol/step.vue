@@ -135,6 +135,13 @@
                @files="uploadFiles"
                @attachmentUploaded="addAttachment"
                @attachmentsChanged="loadAttachments"
+               @copyPasteImageModal="copyPasteImageModal"
+    />
+    <clipboardPasteModal v-if="showClipboardPasteModal"
+                         :step="step"
+                         :image="pasteImages"
+                         @files="uploadFiles"
+                         @cancel="showClipboardPasteModal = false"
     />
     <ReorderableItemsModal v-if="reordering"
       :title="i18n.t('protocols.steps.modals.reorder_elements.title', { step_name: step.attributes.name })"
@@ -159,6 +166,7 @@
   import deleteStepModal from 'vue/protocol/modals/delete_step.vue'
   import Attachments from 'vue/protocol/attachments.vue'
   import fileModal from 'vue/protocol/step_attachments/file_modal.vue'
+  import clipboardPasteModal from 'vue/protocol/step_attachments/clipboard_paste_modal.vue'
   import ReorderableItemsModal from 'vue/protocol/modals/reorderable_items_modal.vue'
 
   import UtilsMixin from 'vue/protocol/mixins/utils.js'
@@ -187,6 +195,7 @@
         attachments: [],
         confirmingDelete: false,
         showFileModal: false,
+        showClipboardPasteModal: false,
         showCommentsSidebar: false,
         dragingFile: false,
         reordering: false
@@ -200,6 +209,7 @@
       Checklist,
       deleteStepModal,
       fileModal,
+      clipboardPasteModal,
       Attachments,
       StorageUsage,
       ReorderableItemsModal
@@ -344,6 +354,10 @@
       },
       closeReorderModal() {
         this.reordering = false;
+      },
+      copyPasteImageModal(pasteImages) {
+        this.pasteImages = pasteImages;
+        this.showClipboardPasteModal = true;
       }
     }
   }

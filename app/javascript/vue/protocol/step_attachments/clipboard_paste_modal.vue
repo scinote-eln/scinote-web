@@ -2,7 +2,7 @@
   <div ref="modal" @keydown.esc="cancel"
       @keyup.enter="uploadImage"
        class="modal clipboardPreviewModal fade"
-       role="dialog" aria-hidden="true" tabindex="-1" key="modal2">
+       role="dialog" aria-hidden="true" tabindex="-1">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -31,7 +31,7 @@
 </template>
 <script>
   export default {
-    name: 'ClipboardPasteModal',
+    name: 'clipboardPasteModal',
     props: {
       step: Object,
       image: DataTransferItem
@@ -39,6 +39,9 @@
     mounted() {
       $(this.$refs.modal).modal('show');
       this.appendImage(this.image);
+      $(this.$refs.modal).on('hidden.bs.modal', () => {
+        this.$emit('cancel');
+      });
     },
     methods: {
       cancel() {
