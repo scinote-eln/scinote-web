@@ -26,7 +26,7 @@
             @editingEnabled="enableTextEdit"
             @editingDisabled="disableTextEdit"
             @update="updateText"
-            @delete="checklistItem.attributes.id ? deleteElement() : removeItem()"
+            @delete="removeItem()"
             @multilinePaste="(data) => { $emit('multilinePaste', data) && removeItem() }"
           />
           <span v-else>
@@ -53,7 +53,7 @@
   import InlineEdit from 'vue/shared/inline_edit.vue'
 
   export default {
-    name: 'Checklist',
+    name: 'ChecklistItem',
     components: { deleteElementModal, InlineEdit },
     mixins: [DeleteMixin],
     props: {
@@ -115,14 +115,18 @@
       updateText(text) {
         if (text.length === 0) {
           this.disableTextEdit();
-          this.deleteElement();
+          this.removeItem();
         } else {
           this.checklistItem.attributes.text = text;
           this.update();
         }
       },
       removeItem() {
-        this.$emit('removeItem', this.checklistItem.attributes.position);
+        if (this.deleteUrl) {
+          this.deleteElement();
+        } else {
+          this.$emit('removeItem', this.checklistItem.attributes.position);
+        }
       },
       update() {
         this.$emit('update', this.checklistItem);
