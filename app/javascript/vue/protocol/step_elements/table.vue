@@ -72,6 +72,9 @@
       },
       reorderElementUrl: {
         type: String
+      },
+      isNew: {
+        type: Boolean, default: false
       }
     },
     data() {
@@ -89,10 +92,13 @@
     },
     mounted() {
       this.loadTableData();
+
+      if (this.isNew) this.enableTableEdit();
     },
     methods: {
       enableTableEdit() {
         this.editingTable = true;
+        this.$nextTick(() => this.tableObject.selectCell(0,0));
       },
       disableTableEdit() {
         this.editingTable = false;
@@ -128,7 +134,8 @@
           colHeaders: true,
           contextMenu: this.editingTable,
           formulas: true,
-          readOnly: !this.editingTable
+          readOnly: !this.editingTable,
+          afterUnlisten: this.updateTable
         });
       }
     }

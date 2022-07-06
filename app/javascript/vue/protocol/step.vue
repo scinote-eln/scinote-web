@@ -115,6 +115,7 @@
             :element.sync="elements[index]"
             :inRepository="inRepository"
             :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
+            :isNew="element.isNew"
             @component:delete="deleteElement"
             @update="updateElement"
             @reorder="openReorderModal"
@@ -339,6 +340,7 @@
       },
       createElement(elementType) {
         $.post(this.urls[`create_${elementType}_url`], (result) => {
+          result.data.isNew = true;
           this.elements.push(result.data)
         }).error(() => {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
