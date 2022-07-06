@@ -354,7 +354,7 @@ GEM
     logging (2.0.0)
       little-plugger (~> 1.1)
       multi_json (~> 1.10)
-    loofah (2.16.0)
+    loofah (2.18.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.1)
@@ -472,7 +472,7 @@ GEM
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
-    rails-html-sanitizer (1.4.2)
+    rails-html-sanitizer (1.4.3)
       loofah (~> 2.3)
     rails_12factor (0.0.3)
       rails_serve_static_assets
