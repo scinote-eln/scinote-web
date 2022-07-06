@@ -7,8 +7,7 @@ module Reports::Docx::DrawMyModuleActivity
 
     color = @color
     @docx.p
-    @docx.p I18n.t('projects.reports.elements.module_activity.name', my_module: my_module.name),
-            bold: true, size: Constants::REPORT_DOCX_STEP_ELEMENTS_TITLE_SIZE
+    @docx.h4 I18n.t('projects.reports.elements.module_activity.name', my_module: my_module.name)
     activities.each do |activity|
       activity_ts = activity.created_at
       activity_text = if activity.old_activity?

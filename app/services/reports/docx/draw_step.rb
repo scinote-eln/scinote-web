@@ -4,11 +4,12 @@ module Reports::Docx::DrawStep
   def draw_step(step)
     color = @color
     step_type_str = step.completed ? 'completed' : 'uncompleted'
-    user = step.completed? && step.last_modified_by || step.user
+    user = (step.completed? && step.last_modified_by) || step.user
     timestamp = step.completed ? step.completed_on : step.created_at
     @docx.p
-    @docx.h5 (I18n.t('projects.reports.elements.step.step_pos', pos: step.position_plus_one) +
-             ' ' + step.name), size: Constants::REPORT_DOCX_STEP_TITLE_SIZE
+    @docx.h5(
+      "#{I18n.t('projects.reports.elements.step.step_pos', pos: step.position_plus_one)} #{step.name}"
+    )
     @docx.p do
       if step.completed
         text I18n.t('protocols.steps.completed'), color: color[:green], bold: true
