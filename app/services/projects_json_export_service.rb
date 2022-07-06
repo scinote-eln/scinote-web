@@ -59,43 +59,22 @@ class ProjectsJsonExportService
   private
 
   def protocol_json(protocol)
-    protocol_json = protocol.as_json(only: %i(id description))
+    protocol_json = protocol.as_json(only: %i(id name))
     t_m_files = protocol.tiny_mce_assets.map { |asset| tiny_mce_file_json(asset) }
     protocol_json['tiny_mce_files'] = t_m_files if t_m_files.any?
     protocol_json
   end
 
   def step_json(step)
-    step_json = step.as_json(only: %i(id position name description completed))
-    checklists = []
-    step.checklists.find_each do |cl|
-      checklist = cl.as_json(only: %i(id name))
-      items = []
-      cl.checklist_items.find_each do |cli|
-        item = cli.as_json(only: %i(id position text checked))
-        items << item
+    step_json = step.as_json(only: %i(id position name completed))
+    if step.step_orderable_elements.any?
+      step_elements = step.step_orderable_elements.order(position: :asc).map do |step_orderable_element|
+        step_element_json(step_orderable_element)
       end
-      checklist['items'] = items if items.any?
-      checklists << checklist
+      step_json['elements'] = step_elements if step_elements.any?
     end
-    step_json['checklists'] = checklists if checklists.any?
-    files = []
-    step.assets.find_each do |asset|
-      files << asset_file_json(asset)
-    end
+    files = asset_file_json(step)
     step_json['files'] = files if files.any?
-    t_m_files = []
-    step.tiny_mce_assets.find_each do |asset|
-      t_m_files << tiny_mce_file_json(asset)
-    end
-    step_json['tiny_mce_files'] = t_m_files if t_m_files.any?
-    tables = []
-    step.tables.find_each do |tbl|
-      table = tbl.as_json(only: %i(id name))
-      table['contents'] = JSON.parse(tbl.contents)['data']
-      tables << table
-    end
-    step_json['tables'] = tables if tables.any?
     step_json
   end
 
@@ -111,7 +90,6 @@ class ProjectsJsonExportService
     end
     task_json['steps'] = steps if steps.any?
     results = []
-    Rails.logger.info(task.results.to_yaml.to_s)
     task.results
         .where(archived: false)
         .order(created_at: :desc)
@@ -142,22 +120,48 @@ class ProjectsJsonExportService
     result_json
   end
 
-  def asset_file_json(asset)
-    if ENV['ACTIVESTORAGE_SERVICE'] && ENV['S3_BUCKET']
-      {
-        'storage' => ENV['ACTIVESTORAGE_SERVICE'],
-        'id' => asset.id,
-        'bucket' => ENV['S3_BUCKET'],
-        'key' => ActiveStorage::Blob.service.path_for(asset.file.key),
-        'url' => asset_url(asset)
-      }
-    else
-      {
-        'storage' => 'local',
-        'id' => asset.id,
-        'url' => asset_url(asset)
-      }
+  def step_element_json(step_orderable_element)
+    element = step_orderable_element.orderable
+    element_json = step_orderable_element.as_json(only: %i(id position orderable_type))
+    case element
+    when StepText
+      text = { text: element.text }
+      t_m_files = element.tiny_mce_assets.map { |asset| tiny_mce_file_json(asset) }
+      text['tiny_mce_files'] = t_m_files if t_m_files.any?
+      element_json['data'] = text
+    when StepTable
+      table = element.table.as_json(only: %i(id name))
+      table['contents'] = JSON.parse(element.table.contents)['data']
+      element_json['data'] = table
+    when Checklist
+      checklist = element.as_json(only: %i(id name))
+      items = element.checklist_items.map { |ci| ci.as_json(only: %i(id position text checked)) }
+      checklist['items'] = items if items.any?
+      element_json['data'] = checklist
     end
+    element_json
+  end
+
+  def asset_file_json(step)
+    files = []
+    step.assets.find_each do |asset|
+      files << if ENV.fetch('ACTIVESTORAGE_SERVICE') && ENV.fetch('S3_BUCKET')
+                 {
+                   'storage' => ENV.fetch('ACTIVESTORAGE_SERVICE'),
+                   'id' => asset.id,
+                   'bucket' => ENV.fetch('S3_BUCKET'),
+                   'key' => ActiveStorage::Blob.service.path_for(asset.file.key),
+                   'url' => asset_url(asset)
+                 }
+               else
+                 {
+                   'storage' => 'local',
+                   'id' => asset.id,
+                   'url' => asset_url(asset)
+                 }
+               end
+    end
+    files
   end
 
   def tiny_mce_file_json(asset)
