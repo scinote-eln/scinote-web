@@ -1,6 +1,6 @@
 <template>
   <div class="step-text-container" :class="{ 'edit': inEditMode }">
-    <div class="action-container" @click="enableEditMode($event)">
+    <div ref="actionContainer" class="action-container" @click="enableEditMode">
       <div v-if="reorderElementUrl" class="element-grip" @click="$emit('reorder')">
         <i class="fas fa-grip-vertical"></i>
       </div>
@@ -52,6 +52,10 @@
       },
       reorderElementUrl: {
         type: String
+      },
+      isNew: {
+        type: Boolean,
+        default: false
       }
     },
     data() {
@@ -59,9 +63,17 @@
         inEditMode: false,
       }
     },
+    mounted() {
+      if (this.isNew) {
+        this.enableEditMode()
+      }
+    },
     methods: {
-      enableEditMode(e) {
-        if ($(e.target).hasClass('fas fa-grip-vertical') || $(e.target).hasClass('element-grip')) return
+      enableEditMode() {
+        if (
+          $(this.$refs.actionContainer).hasClass('fas fa-grip-vertical') ||
+          $(this.$refs.actionContainer).hasClass('element-grip')
+        ) return
         if (!this.element.attributes.orderable.urls.update_url) return
         this.inEditMode = true
       },
