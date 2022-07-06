@@ -1,14 +1,14 @@
 <template>
-  <div class="step-text-container" :class="{ 'edit': inEditMode }">
+  <div class="step-text-container" :class="{ 'edit': inEditMode }" @keyup.enter="enableEditMode($event)" tabindex="0">
     <div class="action-container" @click="enableEditMode($event)">
       <div v-if="reorderElementUrl" class="element-grip" @click="$emit('reorder')">
         <i class="fas fa-grip-vertical"></i>
       </div>
       <div class="buttons-container">
-        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light">
+        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" tabindex="-1">
           <i class="fas fa-pen"></i>
         </button>
-        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal">
+        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
           <i class="fas fa-trash"></i>
         </button>
       </div>
@@ -63,6 +63,7 @@
       enableEditMode(e) {
         if ($(e.target).hasClass('fas fa-grip-vertical') || $(e.target).hasClass('element-grip')) return
         if (!this.element.attributes.orderable.urls.update_url) return
+        if (this.inEditMode == true) return
         this.inEditMode = true
       },
       disableEditMode() {

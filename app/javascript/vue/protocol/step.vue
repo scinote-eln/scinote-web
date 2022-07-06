@@ -22,7 +22,11 @@
           <span class="fas fa-caret-right"></span>
       </a>
       <div v-if="!inRepository" class="step-complete-container">
-        <div :class="`step-state ${step.attributes.completed ? 'completed' : ''}`" @click="changeState"></div>
+        <div :class="`step-state ${step.attributes.completed ? 'completed' : ''}`"
+             @click="changeState"
+             @keyup.enter="changeState"
+             tabindex="0"
+        ></div>
       </div>
       <div class="step-position">
         {{ step.attributes.position + 1 }}.

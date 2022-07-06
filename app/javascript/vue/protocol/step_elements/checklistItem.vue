@@ -35,10 +35,10 @@
         </div>
       </div>
       <div class="step-element-controls">
-        <button v-if="!checklistItem.attributes.urls || updateUrl" class="btn icon-btn btn-light" @click="enableTextEdit">
+        <button v-if="!checklistItem.attributes.urls || updateUrl" class="btn icon-btn btn-light" @click="enableTextEdit" tabindex="-1">
           <i class="fas fa-pen"></i>
         </button>
-        <button v-if="!checklistItem.attributes.urls || deleteUrl" class="btn icon-btn btn-light" @click="showDeleteModal">
+        <button v-if="!checklistItem.attributes.urls || deleteUrl" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
           <i class="fas fa-trash"></i>
         </button>
       </div>
