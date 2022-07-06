@@ -331,9 +331,11 @@ class ProtocolsController < ApplicationController
           link_protocols,
           current_user
         )
-      rescue StandardError
+      rescue StandardError => e
         transaction_error = true
-        raise ActiveRecord:: Rollback
+        Rails.logger.error(e.message)
+        Rails.logger.error(e.backtrace.join("\n"))
+        raise ActiveRecord::Rollback
       end
 
       if transaction_error

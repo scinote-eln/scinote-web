@@ -295,27 +295,23 @@ class Protocol < ApplicationRecord
 
       # Copy checklists
       step.checklists.asc.each do |checklist|
-        checklist2 = Checklist.new(
+        checklist2 = Checklist.create!(
           name: checklist.name,
-          step: step2
+          step: step2,
+          created_by: current_user,
+          last_modified_by: current_user
         )
-        checklist2.created_by = current_user
-        checklist2.last_modified_by = current_user
-        checklist2.save!
 
         checklist.checklist_items.each do |item|
-          item2 = ChecklistItem.new(
+          ChecklistItem.create!(
             text: item.text,
             checked: false,
             checklist: checklist2,
-            position: item.position
+            position: item.position,
+            created_by: current_user,
+            last_modified_by: current_user
           )
-          item2.created_by = current_user
-          item2.last_modified_by = current_user
-          item2.save!
         end
-
-        step2.checklists << checklist2
 
         step2.step_orderable_elements.create!(
           position: position,
@@ -335,18 +331,18 @@ class Protocol < ApplicationRecord
 
       # Copy tables
       step.tables.each do |table|
-        table2 = Table.new(
+        table2 = Table.create!(
           name: table.name,
-          contents: table.contents.encode('UTF-8', 'UTF-8')
+          step: step2,
+          contents: table.contents.encode('UTF-8', 'UTF-8'),
+          team: dest.team,
+          created_by: current_user,
+          last_modified_by: current_user
         )
-        table2.created_by = current_user
-        table2.last_modified_by = current_user
-        table2.team = dest.team
-        step2.tables << table2
 
         step2.step_orderable_elements.create!(
           position: position,
-          orderable: table2.step_tables.first
+          orderable: table2
         )
 
         position += 1
