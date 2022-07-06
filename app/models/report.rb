@@ -85,6 +85,10 @@ class Report < ApplicationRecord
     where(project: Project.viewable_by_user(user, teams))
   end
 
+  def self.filter_by_teams(teams = [])
+    teams.blank? ? self : where(team: teams)
+  end
+
   def root_elements
     report_elements.active.where(parent: nil).order(:position)
   end

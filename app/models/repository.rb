@@ -99,6 +99,10 @@ class Repository < RepositoryBase
     end
   end
 
+  def self.filter_by_teams(teams = [])
+    teams.blank? ? self : where(team: teams)
+  end
+
   def default_table_state
     Constants::REPOSITORY_TABLE_DEFAULT_STATE
   end

@@ -69,6 +69,10 @@ class ProjectFolder < ApplicationRecord
     end
   end
 
+  def self.filter_by_teams(teams = [])
+    teams.blank? ? self : where(team: teams)
+  end
+
   def parent_folders
     outer_folders_sql =
       'WITH RECURSIVE outer_project_folders(id, parent_folder_id, selected_folders_ids) AS (

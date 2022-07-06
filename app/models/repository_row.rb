@@ -99,6 +99,12 @@ class RepositoryRow < ApplicationRecord
     where(repository: Repository.viewable_by_user(user, teams))
   end
 
+  def self.filter_by_teams(teams = [])
+    return self if teams.blank?
+
+    joins(:repository).where(repository: { team: teams })
+  end
+
   def self.name_like(query)
     where('repository_rows.name ILIKE ?', "%#{query}%")
   end
