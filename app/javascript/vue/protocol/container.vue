@@ -200,6 +200,7 @@
       },
       addStep(position) {
         $.post(this.urls.add_step_url, {position: position}, (result) => {
+          result.data.newStep = true
           this.updateStepsPosition(result.data);
 
           // scroll to bottom if step was appended at the end
@@ -230,7 +231,10 @@
         this.reorderSteps(unordered_steps)
       },
       updateStep(attributes) {
-        this.steps[attributes.position].attributes = attributes
+        this.steps[attributes.position].attributes = {
+          ...this.steps[attributes.position].attributes,
+          ...attributes
+        };
         this.refreshProtocolStatus();
       },
       reorderSteps(steps) {

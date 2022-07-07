@@ -39,7 +39,8 @@
       characterLimit: { type: Number },
       placeholder: { type: String },
       autofocus: { type: Boolean, default: false },
-      multilinePaste: { type: Boolean, default: false }
+      multilinePaste: { type: Boolean, default: false },
+      editOnload: { type: Boolean, default: false }
     },
     data() {
       return {
@@ -52,6 +53,9 @@
     },
     mounted() {
       this.handleAutofocus();
+      if (this.editOnload) {
+        this.enableEdit();
+      }
     },
     watch: {
       autofocus() {
