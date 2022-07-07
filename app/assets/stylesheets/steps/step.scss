@@ -43,6 +43,14 @@
       }
     }
 
+    .strikethrough {
+      text-decoration: line-through;
+
+      &:hover {
+        text-decoration: initial;
+      }
+    }
+
     .step-position {
       @include font-main;
       flex-shrink: 0;
@@ -54,6 +62,10 @@
     .step-name-container {
       flex-grow: 1;
       font-weight: bold;
+
+      textarea {
+        text-decoration: initial;
+      }
     }
 
     .step-actions-container {
