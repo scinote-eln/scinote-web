@@ -2,7 +2,7 @@
   <div class="task-protocol">
     <div class="task-section-header" v-if="!inRepository">
       <div class="portocol-header-left-part">
-        <a class="task-section-caret" role="button" data-toggle="collapse" href="#protocol-content" aria-expanded="true" aria-controls="protocol-content">
+        <a class="task-section-caret" tabindex="0" role="button" data-toggle="collapse" href="#protocol-content" aria-expanded="true" aria-controls="protocol-content">
           <i class="fas fa-caret-right"></i>
           <div class="task-section-title">
             <h2>{{ i18n.t('Protocol') }}</h2>
@@ -14,11 +14,11 @@
       </div>
       <div class="actions-block">
         <div class="protocol-buttons-group">
-          <a v-if="urls.add_step_url" class="btn btn-primary" @click="addStep(steps.length)">
+          <a v-if="urls.add_step_url" class="btn btn-primary" @click="addStep(steps.length)" tabindex="0">
               <span class="fas fa-plus" aria-hidden="true"></span>
               <span>{{ i18n.t("protocols.steps.new_step") }}</span>
           </a>
-          <a class="btn btn-default" data-toggle="modal" data-target="#print-protocol-modal">
+          <a class="btn btn-secondary" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
             <span class="fas fa-print" aria-hidden="true"></span>
             <span>{{ i18n.t("protocols.print.button") }}</span>
           </a>
@@ -69,15 +69,18 @@
         <span>{{ i18n.t("protocols.steps.new_step") }}</span>
       </a>
       <div v-if="steps.length > 0" class="protocol-step-actions">
-        <button class="btn btn-light" @click="collapseSteps">
+        <button class="btn btn-light" @click="collapseSteps" tabindex="0">
           <span class="fas fa-caret-up"></span>
           {{ i18n.t("protocols.steps.collapse_label") }}
         </button>
-        <button class="btn btn-light" @click="expandSteps">
+        <button class="btn btn-light" @click="expandSteps" tabindex="0">
           <span class="fas fa-caret-down"></span>
           {{ i18n.t("protocols.steps.expand_label") }}
         </button>
-        <a v-if="urls.reorder_steps_url" class="btn btn-light" data-toggle="modal" @click="startStepReorder">
+        <a v-if="urls.reorder_steps_url" class="btn btn-light" data-toggle="modal"
+           @click="startStepReorder"
+           @keyup.enter="startStepReorder"
+           tabindex="0" >
             <span class="fas fa-arrows-alt-v" aria-hidden="true"></span>
             <span>{{ i18n.t("protocols.reorder_steps.button") }}</span>
         </a>
