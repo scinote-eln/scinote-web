@@ -20,11 +20,16 @@ class TeamSharedObject < ApplicationRecord
   validates :permission_level, presence: true
   validates :shared_object_type, uniqueness: { scope: %i(shared_object_id team_id) }
   validate :team_cannot_be_the_same
+  validate :not_globally_shared, if: -> { shared_object.is_a?(Repository) }
 
   private
 
   def team_cannot_be_the_same
     errors.add(:team_id, :same_team) if shared_object.team.id == team_id
+  end
+
+  def not_globally_shared
+    errors.add(:shared_object_id, :is_globally_shared) if shared_object.globally_shared?
   end
 
   def assign_shared_inventories

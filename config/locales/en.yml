@@ -125,10 +125,12 @@ en:
               not_unique: "State already exists for this user and parent object"
             state:
               wrong_state: "Wrong parameters"
-        team_repository:
+        team_shared_object:
           attributes:
             team_id:
               same_team: "Inventory can't be shared to the same team as it belongs to"
+            shared_object_id:
+              is_globally_shared: "Inventory is already globally shared"
         my_module:
           attributes:
             my_module_status_id:
