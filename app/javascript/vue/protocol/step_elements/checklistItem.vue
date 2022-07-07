@@ -18,11 +18,12 @@
             v-if="!checklistItem.attributes.urls || updateUrl"
             :value="checklistItem.attributes.text"
             :characterLimit="10000"
-            :placeholder="''"
+            :placeholder="'Add a checklist item...'"
             :allowBlank="true"
             :autofocus="editingText"
             :attributeName="`${i18n.t('ChecklistItem')} ${i18n.t('name')}`"
             :multilinePaste="true"
+            :editOnload="newItem()"
             @editingEnabled="enableTextEdit"
             @editingDisabled="disableTextEdit"
             @update="updateText"
@@ -127,6 +128,9 @@
         } else {
           this.$emit('removeItem', this.checklistItem.attributes.position);
         }
+      },
+      newItem(){
+        return this.checklistItem.attributes.text === ''
       },
       update() {
         this.$emit('update', this.checklistItem);

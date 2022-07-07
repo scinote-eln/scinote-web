@@ -13,7 +13,7 @@
         @paste="handlePaste"
         @blur="handleBlur"
       ></textarea>
-      <div v-else @click="enableEdit" class="sci-inline-edit__view" :class="{ 'blank': isBlank }">{{ value || placeholder }}</div>
+      <div v-else @click="enableEdit" class="sci-inline-edit__view" :class="{ 'blank': isBlank }">{{ value || editOnload ? value : placeholder }}</div>
       <div v-if="editing && error" class="sci-inline-edit__error">
         {{ error }}
       </div>
@@ -83,7 +83,7 @@
     },
     methods: {
       handleAutofocus() {
-        if (this.autofocus || !this.placeholder && this.isBlank) {
+        if (this.autofocus || !this.placeholder && this.isBlank || this.editOnload && this.isBlank) {
           this.enableEdit();
           setTimeout(this.focus, 50);
         }
