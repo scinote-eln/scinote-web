@@ -72,6 +72,13 @@ class Step < ApplicationRecord
     end
   end
 
+  def self.filter_by_teams(teams = [])
+    return self if teams.blank?
+
+    joins(protocol: { my_module: { experiment: :project } })
+      .where(protocol: { my_modules: { experiments: { projects: { team: teams } } } })
+  end
+
   def default_view_state
     { 'assets' => { 'sort' => 'new' } }
   end

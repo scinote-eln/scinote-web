@@ -1,0 +1,15 @@
+<%= render partial: "global_activities/references/team.html.erb",
+           locals: { team: team, subject: team, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
+<div class="ga-breadcrumb">
+  <span class="fas fa-list-alt"></span>
+  <% if subject %>
+    <%= route_to_other_team(repository_path(subject.repository.id, team: subject.repository.team.id),
+                            team,
+                            subject.repository.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
+                            title: subject.repository.name) %>
+  <% else %>
+    <span title="<%= breadcrumbs['repository'] %>">
+      <%= breadcrumbs['repository']&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
+    </span>
+  <% end %>
+</div>

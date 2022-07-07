@@ -22,10 +22,10 @@
         </span>
       </div>
       <div class="step-element-controls">
-        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="editingName = true">
+        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="editingName = true" tabindex="-1">
           <i class="fas fa-pen"></i>
         </button>
-        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal">
+        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
           <i class="fas fa-trash"></i>
         </button>
       </div>
@@ -56,7 +56,11 @@
           @multilinePaste="handleMultilinePaste"
         />
       </Draggable>
-      <div v-if="element.attributes.orderable.urls.create_item_url" class="btn btn-light step-checklist-add-item" @click="addItem">
+      <div v-if="element.attributes.orderable.urls.create_item_url"
+           class="btn btn-light step-checklist-add-item"
+           tabindex="0"
+           @keyup.enter="addItem"
+           @click="addItem">
         <i class="fas fa-plus"></i>
         {{ i18n.t('protocols.steps.insert.checklist_item') }}
       </div>

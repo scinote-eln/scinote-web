@@ -201,7 +201,7 @@ class Extends
   ).freeze
 
   ACTIVITY_SUBJECT_CHILDREN = {
-    repository: [:repository_rows],
+    repository_base: [:repository_rows],
     repository_row: nil,
     report: nil,
     project: nil,

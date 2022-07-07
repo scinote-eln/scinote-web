@@ -33,6 +33,7 @@
   .task-section-caret {
     color: $color-volcano;
     display: inline-block;
+    padding: .5em;
     text-decoration: none;
 
     .fas {
@@ -399,6 +400,7 @@
   .status-info {
     @include font-h2;
     color: inherit;
+    padding: .5em;
     text-decoration: none;
 
     &:hover,

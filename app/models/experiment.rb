@@ -86,6 +86,12 @@ class Experiment < ApplicationRecord
       .where(project: Project.viewable_by_user(user, teams))
   end
 
+  def self.filter_by_teams(teams = [])
+    return self if teams.blank?
+
+    joins(:project).where(project: { team: teams })
+  end
+
   def archived_branch?
     archived? || project.archived?
   end

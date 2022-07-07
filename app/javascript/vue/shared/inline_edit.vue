@@ -1,5 +1,5 @@
 <template>
-  <div class="sci-inline-edit" :class="{ 'editing': editing }">
+  <div class="sci-inline-edit" :class="{ 'editing': editing }" tabindex="0" @keyup.enter="enableEdit">
     <div class="sci-inline-edit__content">
       <textarea
         ref="input"

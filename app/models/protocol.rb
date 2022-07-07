@@ -202,6 +202,10 @@ class Protocol < ApplicationRecord
                    user_id: user.id))
   end
 
+  def self.filter_by_teams(teams = [])
+    teams.blank? ? self : where(team: teams)
+  end
+
   def insert_step(step, position)
     ActiveRecord::Base.transaction do
       steps.where('position >= ?', position).desc_order.each do |s|
