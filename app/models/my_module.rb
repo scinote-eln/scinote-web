@@ -117,6 +117,12 @@ class MyModule < ApplicationRecord
       .where(experiment: Experiment.viewable_by_user(user, teams))
   end
 
+  def self.filter_by_teams(teams = [])
+    return self if teams.blank?
+
+    joins(experiment: :project).where(experiment: { projects: { team: teams } })
+  end
+
   def navigable?
     !experiment.archived? && experiment.navigable?
   end
