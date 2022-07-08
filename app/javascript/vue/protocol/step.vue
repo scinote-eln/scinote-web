@@ -5,46 +5,48 @@
        @dragenter.prevent="!showFileModal ? dragingFile = true : null"
        @dragleave.prevent="!showFileModal ? dragingFile = false : null"
        @dragover.prevent
-       :class="{ 'draging-file': dragingFile, 'showing-comments': showCommentsSidebar }"
+       :class="{ 'draging-file': dragingFile, 'showing-comments': showCommentsSidebar, 'editing-name': editingName }"
   >
     <div class="drop-message">
       {{ i18n.t('protocols.steps.drop_message', { position: step.attributes.position }) }}
       <StorageUsage v-if="step.attributes.storage_limit" :step="step"/>
     </div>
-    <div class="step-header step-element-header">
-      <div v-if="reorderStepUrl" class="step-element-grip" @click="$emit('reorder')">
-        <i class="fas fa-grip-vertical"></i>
-      </div>
-      <a class="step-collapse-link"
-         :href="'#stepBody' + step.id"
-         data-toggle="collapse"
-         data-remote="true">
-          <span class="fas fa-caret-right"></span>
-      </a>
-      <div v-if="!inRepository" class="step-complete-container">
-        <div :class="`step-state ${step.attributes.completed ? 'completed' : ''}`"
-             @click="changeState"
-             @keyup.enter="changeState"
-             tabindex="0"
-             :title="step.attributes.completed ? i18n.t('protocols.steps.status.uncomplete') : i18n.t('protocols.steps.status.complete')"
-        ></div>
-      </div>
-      <div class="step-position">
-        {{ step.attributes.position + 1 }}.
-      </div>
-      <div class="step-name-container" :class="{'strikethrough': step.attributes.completed}">
-        <InlineEdit
-          v-if="urls.update_url"
-          :value="step.attributes.name"
-          :characterLimit="255"
-          :allowBlank="false"
-          :attributeName="`${i18n.t('Step')} ${i18n.t('name')}`"
-          :editOnload="step.newStep == true"
-          @update="updateName"
-        />
-        <span v-else>
-          {{ step.attributes.name }}
-        </span>
+    <div class="step-header">
+      <div class="step-element-header">
+        <div class="step-controls">
+          <div v-if="reorderStepUrl" class="step-element-grip" @click="$emit('reorder')">
+            <i class="fas fa-grip-vertical"></i>
+          </div>
+          <a class="step-collapse-link"
+            :href="'#stepBody' + step.id"
+            data-toggle="collapse"
+            data-remote="true">
+              <span class="fas fa-caret-right"></span>
+          </a>
+          <div v-if="!inRepository" class="step-complete-container">
+            <div :class="`step-state ${step.attributes.completed ? 'completed' : ''}`" @click="changeState"></div>
+          </div>
+          <div class="step-position">
+            {{ step.attributes.position + 1 }}.
+          </div>
+        </div>
+        <div class="step-name-container">
+          <InlineEdit
+            v-if="urls.update_url"
+            :value="step.attributes.name"
+            :characterLimit="255"
+            :allowBlank="false"
+            :attributeName="`${i18n.t('Step')} ${i18n.t('name')}`"
+            :autofocus="editingName"
+            @editingEnabled="editingName = true"
+            @editingDisabled="editingName = false"
+            @update="updateName"
+          />
+          <span v-else>
+            {{ step.attributes.name }}
+          </span>
+        </div>
+        <i v-if="!editingName" class="step-name-edit-icon fas fa-pen" @click="editingName = true"></i>
       </div>
       <div class="step-actions-container">
         <div ref="actionsDropdownButton" v-if="urls.update_url"  class="dropdown">
@@ -205,7 +207,8 @@
         showClipboardPasteModal: false,
         showCommentsSidebar: false,
         dragingFile: false,
-        reordering: false
+        reordering: false,
+        editingName: false
       }
     },
     mixins: [UtilsMixin, AttachmentsMixin],
@@ -226,7 +229,7 @@
       this.loadElements();
     },
     mounted() {
-      $(this.$refs.comments).data('closeCallback', this.closeCommentsSidebar)
+      $(this.$refs.comments).data('closeCallback', this.closeCommentsSidebar);
       $(this.$refs.actionsDropdownButton).on('shown.bs.dropdown hidden.bs.dropdown', this.handleDropdownPosition);
     },
     computed: {
