@@ -1,5 +1,5 @@
 <template>
-  <div class="sci-inline-edit" :class="{ 'editing': editing }" tabindex="0" @keyup.enter="enableEdit">
+  <div class="sci-inline-edit" :class="{ 'editing': editing }" tabindex="0" @keyup.enter="enableEdit($event)">
     <div class="sci-inline-edit__content">
       <textarea
         ref="input"
@@ -13,7 +13,7 @@
         @paste="handlePaste"
         @blur="handleBlur"
       ></textarea>
-      <div v-else @click="enableEdit" class="sci-inline-edit__view" v-html="sa_value || value || placeholder" :class="{ 'blank': isBlank }"></div>
+      <div v-else @click="enableEdit($event)" class="sci-inline-edit__view" v-html="sa_value || value || placeholder" :class="{ 'blank': isBlank }"></div>
       <div v-if="editing && error" class="sci-inline-edit__error">
         {{ error }}
       </div>
@@ -58,9 +58,6 @@
       if (this.editOnload) {
         this.enableEdit();
       }
-      if (this.smartAnnotation) {
-        SmartAnnotation.preventPropagation('.atwho-user-popover');
-      }
     },
     watch: {
       autofocus() {
@@ -94,7 +91,7 @@
         }
       },
       handleBlur() {
-        if ($('.atwho-view').length) return;
+        if ($('.atwho-view:visible').length) return;
 
         if (this.allowBlank || !this.isBlank) {
           this.$nextTick(this.update);
@@ -110,7 +107,8 @@
           this.resize();
         });
       },
-      enableEdit() {
+      enableEdit(e) {
+        if (e && $(e.target).hasClass('atwho-user-popover')) return
         this.editing = true;
         this.focus();
         this.$nextTick(() => {
