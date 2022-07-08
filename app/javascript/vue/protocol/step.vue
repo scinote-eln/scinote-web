@@ -305,7 +305,10 @@
             method: 'PUT',
             data: element.attributes.orderable,
             success: (result) => {
-              this.elements[index].orderable = result;
+              //this.elements[index].orderable = result;
+              let newElements = [...this.elements]
+              newElements[index].orderable = result
+              this.elements = newElements
             }
           }).error(() => {
             HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');

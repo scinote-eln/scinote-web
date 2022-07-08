@@ -8,10 +8,12 @@
         <InlineEdit
           v-if="element.attributes.orderable.urls.update_url"
           :value="element.attributes.orderable.name"
+          :sa_value="element.attributes.orderable.sa_name"
           :characterLimit="255"
           :placeholder="''"
           :allowBlank="false"
           :autofocus="editingName"
+          :smartAnnotation="true"
           :attributeName="`${i18n.t('Checklist')} ${i18n.t('name')}`"
           @editingEnabled="editingName = true"
           @editingDisabled="editingName = false"

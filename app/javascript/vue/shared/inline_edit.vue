@@ -13,7 +13,7 @@
         @paste="handlePaste"
         @blur="handleBlur"
       ></textarea>
-      <div v-else @click="enableEdit" class="sci-inline-edit__view" :class="{ 'blank': isBlank }">{{ value || placeholder }}</div>
+      <div v-else @click="enableEdit" class="sci-inline-edit__view" v-html="sa_value || value || placeholder" :class="{ 'blank': isBlank }"></div>
       <div v-if="editing && error" class="sci-inline-edit__error">
         {{ error }}
       </div>
@@ -34,12 +34,14 @@
     name: 'InlineEdit',
     props: {
       value: { type: String, default: '' },
+      sa_value: { type: String},
       allowBlank: { type: Boolean, default: true },
       attributeName: { type: String, required: true },
       characterLimit: { type: Number },
       placeholder: { type: String },
       autofocus: { type: Boolean, default: false },
       multilinePaste: { type: Boolean, default: false },
+      smartAnnotation: { type: Boolean, default: false },
       editOnload: { type: Boolean, default: false }
     },
     data() {
@@ -55,6 +57,9 @@
       this.handleAutofocus();
       if (this.editOnload) {
         this.enableEdit();
+      }
+      if (this.smartAnnotation) {
+        SmartAnnotation.preventPropagation('.atwho-user-popover');
       }
     },
     watch: {
@@ -89,6 +94,8 @@
         }
       },
       handleBlur() {
+        if ($('.atwho-view').length) return;
+
         if (this.allowBlank || !this.isBlank) {
           this.$nextTick(this.update);
         } else {
@@ -106,6 +113,11 @@
       enableEdit() {
         this.editing = true;
         this.focus();
+        this.$nextTick(() => {
+          if (this.smartAnnotation) {
+            SmartAnnotation.init($(this.$refs.input));
+          }
+        })
         this.$emit('editingEnabled');
       },
       cancelEdit() {
@@ -145,7 +157,7 @@
         setTimeout(() => {
           if(!this.allowBlank && this.isBlank) return;
           if(!this.editing) return;
-
+          this.newValue = this.$refs.input.value // Fix for smart annotation
           this.newValue = this.newValue.trim();
           this.editing = false;
           this.$emit('editingDisabled');
