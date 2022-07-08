@@ -6,7 +6,7 @@
     </a>
   </div>
   <%= select_tag "activity",
-  options_for_select(my_module.tags.map{|i|
+  options_for_select(my_module.tags.order(:id).map { |i|
     [
       i[:name],
       i[:id],
