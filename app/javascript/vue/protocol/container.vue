@@ -58,6 +58,7 @@
             :objectId="parseInt(protocol.id)"
             :fieldName="'protocol[description]'"
             :lastUpdated="protocol.attributes.updated_at"
+            :characterLimit="100000"
             @update="updateDescription"
           />
         </div>

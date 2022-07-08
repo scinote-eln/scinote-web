@@ -1,11 +1,10 @@
 <template>
   <div class="sci-inline-edit" :class="{ 'editing': editing }" tabindex="0" @keyup.enter="enableEdit">
-    <div class="sci-inline-edit__content">
+    <div class="sci-inline-edit__content" :class="{ 'error': error }">
       <textarea
         ref="input"
         rows="1"
         v-if="editing"
-        :class="{ 'error': error }"
         :placeholder="placeholder"
         v-model="newValue"
         @input="handleInput"
@@ -19,7 +18,7 @@
       </div>
     </div>
     <template v-if="editing">
-      <div class="sci-inline-edit__control btn btn-primary icon-btn" @click="update">
+      <div :class="{ 'btn-primary': !error, 'btn-disabled': error }" class="sci-inline-edit__control btn icon-btn" @click="update">
         <i class="fas fa-check"></i>
       </div>
       <div class="sci-inline-edit__control btn btn-light icon-btn" @click="cancelEdit">
@@ -139,7 +138,7 @@
       },
       update() {
         setTimeout(() => {
-          if(!this.allowBlank && this.isBlank) return;
+          if(this.error) return;
           if(!this.editing) return;
 
           this.newValue = this.newValue.trim();

@@ -8,7 +8,7 @@
         <InlineEdit
           v-if="element.attributes.orderable.urls.update_url"
           :value="element.attributes.orderable.name"
-          :characterLimit="255"
+          :characterLimit="10000"
           :placeholder="''"
           :allowBlank="false"
           :autofocus="editingName"
