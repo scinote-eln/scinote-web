@@ -346,7 +346,7 @@ class Protocol < ApplicationRecord
 
         step2.step_orderable_elements.create!(
           position: position,
-          orderable: table2
+          orderable: table2.step_table
         )
 
         position += 1

@@ -67,7 +67,7 @@
         <li v-if="canDeleteSteps">
           <a
             data-turbolinks="false"
-            @click.prevent="openStepsDeletingModal()()"
+            @click.prevent="openStepsDeletingModal()"
           >
             <span class="fas fa-trash"></span>
             <span>{{

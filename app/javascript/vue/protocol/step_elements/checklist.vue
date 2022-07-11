@@ -2,16 +2,18 @@
   <div class="step-checklist-container">
     <div class="step-element-header" :class="{ 'locked': locked, 'editing-name': editingName }">
       <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
-        <i class="fas fa-grip-vertical"></i>
+        <i class="fas fas-rotated-90 fa-exchange-alt"></i>
       </div>
       <div class="step-element-name">
         <InlineEdit
           v-if="element.attributes.orderable.urls.update_url"
           :value="element.attributes.orderable.name"
-          :characterLimit="255"
+          :sa_value="element.attributes.orderable.sa_name"
+          :characterLimit="10000"
           :placeholder="''"
           :allowBlank="false"
           :autofocus="editingName"
+          :smartAnnotation="true"
           :attributeName="`${i18n.t('Checklist')} ${i18n.t('name')}`"
           @editingEnabled="editingName = true"
           @editingDisabled="editingName = false"
@@ -149,13 +151,16 @@
       },
       saveItem(item) {
         if (item.attributes.id) {
-          this.checklistItems.splice(
-            item.attributes.position, 1, item
-          );
           $.ajax({
             url: item.attributes.urls.update_url,
             type: 'PATCH',
             data: item,
+            success: (result) => {
+              let updatedItem = this.checklistItems[item.attributes.position]
+              updatedItem.attributes = result.data.attributes
+              updatedItem.attributes.id = item.attributes.id
+              this.$set(this.checklistItems, item.attributes.position, updatedItem)
+            },
             error: () => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')
           });
         } else {

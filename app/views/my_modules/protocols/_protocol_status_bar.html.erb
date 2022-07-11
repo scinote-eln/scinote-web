@@ -1,7 +1,7 @@
 <div class="dropdown my-module-protocol-status">
   <% if @protocol.linked? %>
     <span class="status-label linked">
-      [<%= protocol_name(@protocol.parent) %>]
+      [<%= t("my_modules.protocols.protocol_status_bar.linked") %>]
     </span>
   <% else %>
     <span class="status-label">
