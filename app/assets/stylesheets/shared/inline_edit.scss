@@ -6,13 +6,16 @@
   grid-template-columns: auto repeat(2, max-content);
   transition: .4s $timing-function-sharp;
 
+  &.editing .sci-inline-edit__content {
+    background-color: $color-white;
+  }
+
   .sci-inline-edit__content {
     border: $border-transparent;
     border-radius: 4px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    line-height: 1em;
     margin-left: -.25em;
     min-height: 36px;
     padding-left: .25em;
@@ -31,12 +34,10 @@
     textarea {
       background: transparent;
       border: 0;
-      line-height: 1em;
       min-height: 1em;
       outline: none;
       overflow: hidden;
       padding: 0;
-      padding-top: 2px;
       width: 100%;
 
       &:focus {

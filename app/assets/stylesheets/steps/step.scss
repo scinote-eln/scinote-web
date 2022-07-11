@@ -9,37 +9,33 @@
   padding: 8px 24px 8px 0;
 
   .step-header {
-    align-items: center;
+    align-items: flex-start;
     display: flex;
     margin-bottom: 1.2em;
 
-    .step-collapse-link {
-      display: inline-block;
-      line-height: 24px;
-      text-align: center;
-      width: 24px;
+    .step-element-header {
+      border-radius: 4px;
+      flex-basis: 80%;
 
-      &:not(.collapsed) {
-        @include rotate(90deg);
+      .step-name-edit-icon {
+        display: none;
       }
-    }
 
-    .step-state {
-      border: 2px solid $color-alto;
-      border-radius: 50%;
-      cursor: pointer;
-      height: 24px;
-      text-align: center;
-      width: 24px;
+      &:hover .step-name-edit-icon {
+        cursor: pointer;
+        display: inline-block;
+        margin-right: 16px;
+      }
 
-      &.completed {
-        background: $brand-success;
-        border: 2px solid $brand-success;
+      .step-collapse-link {
+        display: inline-block;
+        flex-shrink: 0;
+        line-height: 24px;
+        text-align: center;
+        width: 24px;
 
-        &::after {
-          @include font-awesome;
-          color: $color-white;
-          content: $font-fas-check;
+        &:not(.collapsed) {
+          @include rotate(90deg);
         }
       }
     }
@@ -67,11 +63,46 @@
       textarea {
         text-decoration: initial;
       }
+
+      .step-state {
+        border: 2px solid $color-alto;
+        border-radius: 50%;
+        cursor: pointer;
+        height: 24px;
+        text-align: center;
+        width: 24px;
+
+        &.completed {
+          background: $brand-success;
+          border: 2px solid $brand-success;
+
+          &::after {
+            @include font-awesome;
+            color: $color-white;
+            content: $font-fas-check;
+          }
+        }
+      }
+
+      .step-position {
+        @include font-main;
+        flex-shrink: 0;
+        font-weight: bold;
+        line-height: 24px;
+        margin: 0 4px;
+      }
+
+      .step-name-container {
+        flex-grow: 1;
+        font-size: 16px;
+        font-weight: bold;
+      }
     }
 
     .step-actions-container {
       display: flex;
       justify-content: flex-end;
+      flex-basis: 20%;
 
       .dropdown-menu {
         white-space: nowrap;
@@ -203,6 +234,11 @@
     .step-element-controls {
       display: none;
     }
+  }
+
+  .step-controls {
+    display: flex;
+    align-items: center;
   }
 
   .sci-inline-edit {
