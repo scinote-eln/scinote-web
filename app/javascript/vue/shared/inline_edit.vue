@@ -1,6 +1,6 @@
 <template>
   <div class="sci-inline-edit" :class="{ 'editing': editing }" tabindex="0" @keyup.enter="enableEdit($event)">
-    <div class="sci-inline-edit__content">
+    <div class="sci-inline-edit__content" :class="{ 'error': error }">
       <textarea
         ref="input"
         rows="1"
