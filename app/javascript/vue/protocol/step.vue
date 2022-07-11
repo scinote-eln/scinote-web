@@ -298,14 +298,14 @@
         let index = this.elements.findIndex((e) => e.id === element.id);
 
         if (skipRequest) {
-          this.elements[index].orderable = element;
+          this.elements[index].attributes.orderable = element.attributes.orderable;
         } else {
           $.ajax({
             url: element.attributes.orderable.urls.update_url,
             method: 'PUT',
             data: element.attributes.orderable,
             success: (result) => {
-              this.elements[index].orderable = result;
+              this.elements[index].attributes.orderable = result.data.attributes;
             }
           }).error(() => {
             HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');

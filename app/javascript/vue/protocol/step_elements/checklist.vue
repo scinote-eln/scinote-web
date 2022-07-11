@@ -8,10 +8,12 @@
         <InlineEdit
           v-if="element.attributes.orderable.urls.update_url"
           :value="element.attributes.orderable.name"
+          :sa_value="element.attributes.orderable.sa_name"
           :characterLimit="255"
           :placeholder="''"
           :allowBlank="false"
           :autofocus="editingName"
+          :smartAnnotation="true"
           :attributeName="`${i18n.t('Checklist')} ${i18n.t('name')}`"
           @editingEnabled="editingName = true"
           @editingDisabled="editingName = false"
@@ -149,13 +151,16 @@
       },
       saveItem(item) {
         if (item.attributes.id) {
-          this.checklistItems.splice(
-            item.attributes.position, 1, item
-          );
           $.ajax({
             url: item.attributes.urls.update_url,
             type: 'PATCH',
             data: item,
+            success: (result) => {
+              let updatedItem = this.checklistItems[item.attributes.position]
+              updatedItem.attributes = result.data.attributes
+              updatedItem.attributes.id = item.attributes.id
+              this.$set(this.checklistItems, item.attributes.position, updatedItem)
+            },
             error: () => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')
           });
         } else {

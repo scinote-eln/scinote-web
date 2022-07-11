@@ -5,27 +5,20 @@
   position: relative;
   width: calc(100% + 16px);
 
-  .action-container {
-    cursor: pointer;
-    height: 100%;
-    left: 0;
-    position: absolute;
-    width: 100%;
-    z-index: 100;
 
-    .buttons-container {
-      background: linear-gradient(
-        90deg,
-        transparent 0%,
-        $color-concrete 25%,
-        $color-concrete 100%
-      );
-      display: none;
-      padding-left: 2em;
-      position: absolute;
-      right: 0;
-    }
+  .buttons-container {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      $color-concrete 25%,
+      $color-concrete 100%
+    );
+    display: none;
+    padding-left: 2em;
+    position: absolute;
+    right: 0;
   }
+
 
   .element-grip {
     align-items: center;
@@ -66,7 +59,8 @@
   }
 
   &.edit {
-    .action-container {
+    .buttons-container,
+    .element-grip {
       display: none;
     }
   }

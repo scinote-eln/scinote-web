@@ -1,21 +1,18 @@
 <template>
   <div class="step-text-container" :class="{ 'edit': inEditMode }" @keyup.enter="enableEditMode($event)" tabindex="0">
-    <div ref="actionContainer" class="action-container" @click="enableEditMode($event)">
-      <div v-if="reorderElementUrl" class="element-grip" @click="$emit('reorder')">
-        <i class="fas fa-grip-vertical"></i>
-      </div>
-      <div class="buttons-container">
-        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" tabindex="-1">
-          <i class="fas fa-pen"></i>
-        </button>
-        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
-          <i class="fas fa-trash"></i>
-        </button>
-      </div>
+    <div v-if="reorderElementUrl" class="element-grip" @click="$emit('reorder')">
+      <i class="fas fa-grip-vertical"></i>
+    </div>
+    <div class="buttons-container">
+      <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" tabindex="-1" @click="enableEditMode($event)">
+        <i class="fas fa-pen"></i>
+      </button>
+      <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
+        <i class="fas fa-trash"></i>
+      </button>
     </div>
     <Tinymce
       v-if="element.attributes.orderable.urls.update_url"
-      :inEditMode="inEditMode"
       :value="element.attributes.orderable.text"
       :value_html="element.attributes.orderable.text_view"
       :placeholder="i18n.t('protocols.steps.text.placeholder')"
@@ -26,6 +23,7 @@
       :lastUpdated="element.attributes.orderable.updated_at"
       @update="update"
       @editingDisabled="disableEditMode"
+      @editingEnabled="enableEditMode"
     />
     <div v-else v-html="element.attributes.orderable.text_view"></div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement($event)" @cancel="closeDeleteModal"/>
@@ -70,10 +68,6 @@
     },
     methods: {
       enableEditMode() {
-        if (
-          $(this.$refs.actionContainer).hasClass('fas fa-grip-vertical') ||
-          $(this.$refs.actionContainer).hasClass('element-grip')
-        ) return
         if (!this.element.attributes.orderable.urls.update_url) return
         if (this.inEditMode == true) return
         this.inEditMode = true
