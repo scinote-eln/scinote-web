@@ -21,6 +21,7 @@
       :objectId="element.attributes.orderable.id"
       :fieldName="'step_text[text]'"
       :lastUpdated="element.attributes.orderable.updated_at"
+      :characterLimit="100000"
       @update="update"
       @editingDisabled="disableEditMode"
       @editingEnabled="enableEditMode"

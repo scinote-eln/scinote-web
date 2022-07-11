@@ -8,6 +8,7 @@
 
   .sci-inline-edit__content {
     border: $border-transparent;
+    border-radius: 4px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -15,6 +16,7 @@
     margin-left: -.25em;
     min-height: 36px;
     padding-left: .25em;
+    position: relative;
     width: 100%;
 
     .sci-inline-edit__view {
@@ -40,22 +42,35 @@
       &:focus {
         outline: none;
       }
-
-      &.error {
-        border-color: $brand-danger;
-      }
     }
 
     .sci-inline-edit__error {
+      bottom: -16px;
       color: $brand-danger;
-      font-size: .8em;
+      font-size: 12px;
+      font-weight: normal;
+      line-height: 12px;
+      position: absolute;
     }
   }
 
   &.editing {
 
     .sci-inline-edit__content {
+      background-color: $color-white;
       border-color: $brand-focus;
+
+      &.error {
+        border-color: $brand-danger;
+        margin-bottom: 16px;
+      }
+    }
+
+    .sci-inline-edit__control {
+      &.btn-disabled {
+        background: $color-silver-chalice;
+        color: $color-concrete;
+      }
     }
   }
 }

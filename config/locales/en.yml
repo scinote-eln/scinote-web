@@ -3001,6 +3001,7 @@ en:
       upload_failure: "File upload error. Try again or contact the administrator."
       file_name_too_long: 'is too long (maximum is %{limit} characters, with extension)'
     text:
+      name: "Text"
       not_blank: "can't be blank"
       length_too_long_general: "is too long"
       length_too_long: "is too long (maximum is %{max_length} characters)"
