@@ -15,7 +15,7 @@
       <div class="step-element-header">
         <div class="step-controls">
           <div v-if="reorderStepUrl" class="step-element-grip" @click="$emit('reorder')">
-            <i class="fas fa-grip-vertical"></i>
+            <i class="fas fas-rotated-90 fa-exchange-alt"></i>
           </div>
           <a class="step-collapse-link"
             :href="'#stepBody' + step.id"

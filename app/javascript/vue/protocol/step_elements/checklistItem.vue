@@ -9,6 +9,7 @@
           <input ref="checkbox"
                  type="checkbox"
                  class="sci-checkbox"
+                 :disabled="checklistItem.attributes.isNew"
                  :checked="checklistItem.attributes.checked" @change="toggleChecked($event)" />
           <span class="sci-checkbox-label" >
           </span>
@@ -24,7 +25,7 @@
             :autofocus="editingText"
             :attributeName="`${i18n.t('ChecklistItem')} ${i18n.t('name')}`"
             :multilinePaste="true"
-            :editOnload="newItem()"
+            :editOnload="checklistItem.attributes.isNew"
             :smartAnnotation="true"
             @editingEnabled="enableTextEdit"
             @editingDisabled="disableTextEdit"
@@ -41,23 +42,21 @@
         <button v-if="!checklistItem.attributes.urls || updateUrl" class="btn icon-btn btn-light" @click="enableTextEdit" tabindex="-1">
           <i class="fas fa-pen"></i>
         </button>
-        <button v-if="!checklistItem.attributes.urls || deleteUrl" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
+        <button v-if="!checklistItem.attributes.urls || deleteUrl" class="btn icon-btn btn-light" @click="deleteElement" tabindex="-1">
           <i class="fas fa-trash"></i>
         </button>
       </div>
     </div>
-    <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @cancel="closeDeleteModal"/>
   </div>
 </template>
 
  <script>
   import DeleteMixin from 'vue/protocol/mixins/components/delete.js'
-  import deleteElementModal from 'vue/protocol/modals/delete_element.vue'
   import InlineEdit from 'vue/shared/inline_edit.vue'
 
   export default {
     name: 'ChecklistItem',
-    components: { deleteElementModal, InlineEdit },
+    components: { InlineEdit },
     mixins: [DeleteMixin],
     props: {
       checklistItem: {
@@ -107,6 +106,10 @@
         this.$emit('editStart');
       },
       disableTextEdit() {
+        if (this.checklistItem.attributes.isNew) {
+          this.removeItem();
+          return;
+        }
         this.editingText = false;
         this.$emit('editEnd');
       },
@@ -130,9 +133,6 @@
         } else {
           this.$emit('removeItem', this.checklistItem.attributes.position);
         }
-      },
-      newItem(){
-        return this.checklistItem.attributes.text === ''
       },
       update() {
         this.$emit('update', this.checklistItem);
