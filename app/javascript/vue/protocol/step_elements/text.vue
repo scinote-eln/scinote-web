@@ -1,7 +1,7 @@
 <template>
   <div class="step-text-container" :class="{ 'edit': inEditMode }" @keyup.enter="enableEditMode($event)" tabindex="0">
     <div v-if="reorderElementUrl" class="element-grip" @click="$emit('reorder')">
-      <i class="fas fa-grip-vertical"></i>
+      <i class="fas fas-rotated-90 fa-exchange-alt"></i>
     </div>
     <div class="buttons-container">
       <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" tabindex="-1" @click="enableEditMode($event)">
