@@ -12,6 +12,18 @@
   .portocol-header-left-part {
     align-items: baseline;
     display: flex;
+
+    .task-section-caret {
+      padding-right: .25em;
+    }
+
+    .status-label {
+      margin: 2px 0 0;
+    }
+
+    .status-info {
+      padding-left: 4px;
+    }
   }
 
   .insert-step {

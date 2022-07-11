@@ -877,6 +877,7 @@ en:
       protocol_status_bar:
         private_parent: "private"
         unlinked: "unlinked"
+        linked: "linked"
         no_description: "No protocol description"
         enter_name: "Enter protocol name"
         empty_description_edit_label: "Click here to enter Protocol Description (optional)"
@@ -895,7 +896,7 @@ en:
           revert: "Revert protocol"
           revert_title: "Revert the protocol to the repository version. This will discard any local changes."
           save_to_repository: "Save to protocol repository"
-          save_a_copy_to_repository: "Save a copy to protocol repository"
+          save_a_copy_to_repository: "Save a copy to repository"
           save_to_repository_title: "Copy this protocol to repository"
           update_self: "Update from repository"
           update_self_title: "Update this protocol with the version stored in the repository"
