@@ -123,6 +123,7 @@ var TinyMCE = (function() {
   // returns a public API for TinyMCE editor
   return Object.freeze({
     init: function(selector, onSaveCallback) {
+      var editorInstancePromise;
       var tinyMceContainer;
       var tinyMceInitSize;
       var plugins;
@@ -142,7 +143,7 @@ var TinyMCE = (function() {
           document.location.hash = textAreaObject.data('objectType') + '_' + textAreaObject.data('objectId');
         }
 
-        tinyMCE.init({
+        editorInstancePromise = tinyMCE.init({
           cache_suffix: '?v=4.9.10', // This suffix should be changed any time library is updated
           selector: selector,
           convert_urls: false,
@@ -354,6 +355,8 @@ var TinyMCE = (function() {
             });
 
             editor.on('blur', function(e) {
+              if (editor.blurDisabled) return false;
+
               if ($('.atwho-view:visible').length || $('#MarvinJsModal:visible').length) return false;
               setTimeout(() => {
                 if (editor.isNotDirty === false) {
@@ -373,6 +376,8 @@ var TinyMCE = (function() {
           save_onsavecallback: function(editor) { saveAction(editor); }
         });
       }
+
+      return editorInstancePromise;
     },
     destroyAll: function() {
       _.each(tinyMCE.editors, function(editor) {

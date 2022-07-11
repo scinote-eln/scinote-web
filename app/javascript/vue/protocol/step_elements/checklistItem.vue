@@ -17,6 +17,7 @@
           <InlineEdit
             v-if="!checklistItem.attributes.urls || updateUrl"
             :value="checklistItem.attributes.text"
+            :sa_value="checklistItem.attributes.sa_text"
             :characterLimit="10000"
             :placeholder="'Add a checklist item...'"
             :allowBlank="true"
@@ -24,6 +25,7 @@
             :attributeName="`${i18n.t('ChecklistItem')} ${i18n.t('name')}`"
             :multilinePaste="true"
             :editOnload="newItem()"
+            :smartAnnotation="true"
             @editingEnabled="enableTextEdit"
             @editingDisabled="disableTextEdit"
             @update="updateText"
