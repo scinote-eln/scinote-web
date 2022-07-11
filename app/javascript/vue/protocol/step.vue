@@ -26,18 +26,20 @@
              @click="changeState"
              @keyup.enter="changeState"
              tabindex="0"
+             :title="step.attributes.completed ? i18n.t('protocols.steps.status.uncomplete') : i18n.t('protocols.steps.status.complete')"
         ></div>
       </div>
       <div class="step-position">
         {{ step.attributes.position + 1 }}.
       </div>
-      <div class="step-name-container">
+      <div class="step-name-container" :class="{'strikethrough': step.attributes.completed}">
         <InlineEdit
           v-if="urls.update_url"
           :value="step.attributes.name"
           :characterLimit="255"
           :allowBlank="false"
           :attributeName="`${i18n.t('Step')} ${i18n.t('name')}`"
+          :editOnload="step.newStep == true"
           @update="updateName"
         />
         <span v-else>
@@ -269,10 +271,16 @@
         if (!this.urls.state_url) return;
 
         this.step.attributes.completed = !this.step.attributes.completed;
-        this.$emit('step:update', this.step.attributes)
+        this.$emit('step:update', {
+          completed: this.step.attributes.completed,
+          position: this.step.attributes.position
+        });
         $.post(this.urls.state_url, {completed: this.step.attributes.completed}).error(() => {
           this.step.attributes.completed = !this.step.attributes.completed;
-          this.$emit('step:update', this.step.attributes)
+          this.$emit('step:update', {
+            completed: this.step.attributes.completed,
+            position: this.step.attributes.position
+          });
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         })
       },
@@ -290,14 +298,14 @@
         let index = this.elements.findIndex((e) => e.id === element.id);
 
         if (skipRequest) {
-          this.elements[index].orderable = element;
+          this.elements[index].attributes.orderable = element.attributes.orderable;
         } else {
           $.ajax({
             url: element.attributes.orderable.urls.update_url,
             method: 'PUT',
             data: element.attributes.orderable,
             success: (result) => {
-              this.elements[index].orderable = result;
+              this.elements[index].attributes.orderable = result.data.attributes;
             }
           }).error(() => {
             HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
@@ -338,7 +346,10 @@
           type: 'PATCH',
           data: {step: {name: newName}},
           success: (result) => {
-            this.$emit('step:update', result.data.attributes)
+            this.$emit('step:update', {
+              name: result.data.attributes.name,
+              position: this.step.attributes.position
+            })
           }
         });
       },

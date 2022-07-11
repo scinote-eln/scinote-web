@@ -2526,6 +2526,9 @@ en:
       drop_message: "Drop file to add to step %{position}"
       space_used_label: '%{used} / %{limit} space used.'
       space_used_label_unlimited: '%{used} / unlimited space used.'
+      status:
+        complete: "Mark as done"
+        uncomplete: "Unmark as done"
       options_dropdown:
         title: 'Step options'
         rearrange: 'Rearrange step content'
