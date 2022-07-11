@@ -84,7 +84,7 @@
     },
     methods: {
       handleAutofocus() {
-        if (this.autofocus || !this.placeholder && this.isBlank) {
+        if (this.autofocus || !this.placeholder && this.isBlank || this.editOnload && this.isBlank) {
           this.enableEdit();
           setTimeout(this.focus, 50);
         }

@@ -19,11 +19,12 @@
             :value="checklistItem.attributes.text"
             :sa_value="checklistItem.attributes.sa_text"
             :characterLimit="10000"
-            :placeholder="''"
+            :placeholder="'Add a checklist item...'"
             :allowBlank="true"
             :autofocus="editingText"
             :attributeName="`${i18n.t('ChecklistItem')} ${i18n.t('name')}`"
             :multilinePaste="true"
+            :editOnload="newItem()"
             :smartAnnotation="true"
             @editingEnabled="enableTextEdit"
             @editingDisabled="disableTextEdit"
@@ -129,6 +130,9 @@
         } else {
           this.$emit('removeItem', this.checklistItem.attributes.position);
         }
+      },
+      newItem(){
+        return this.checklistItem.attributes.text === ''
       },
       update() {
         this.$emit('update', this.checklistItem);
