@@ -2,7 +2,7 @@
   <div class="step-checklist-container">
     <div class="step-element-header" :class="{ 'locked': locked, 'editing-name': editingName }">
       <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
-        <i class="fas fa-grip-vertical"></i>
+        <i class="fas fas-rotated-90 fa-exchange-alt"></i>
       </div>
       <div class="step-element-name">
         <InlineEdit

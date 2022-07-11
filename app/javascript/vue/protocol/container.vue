@@ -82,7 +82,7 @@
            @click="startStepReorder"
            @keyup.enter="startStepReorder"
            tabindex="0" >
-            <span class="fas fa-arrows-alt-v" aria-hidden="true"></span>
+            <i class="fas fas-rotated-90 fa-exchange-alt" aria-hidden="true"></i>
             <span>{{ i18n.t("protocols.reorder_steps.button") }}</span>
         </a>
       </div>
