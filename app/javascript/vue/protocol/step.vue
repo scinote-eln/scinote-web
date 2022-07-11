@@ -8,8 +8,8 @@
        :class="{ 'draging-file': dragingFile, 'showing-comments': showCommentsSidebar }"
   >
     <div class="drop-message">
-      {{ i18n.t('protocols.steps.drop_message', { position: step.attributes.position }) }}
-      <StorageUsage v-if="step.attributes.storage_limit" :step="step"/>
+      {{ i18n.t('protocols.steps.drop_message', { position: step.attributes.position + 1 }) }}
+      <StorageUsage v-if="stepHaveElements() && !this.isCollapsed && step.attributes.storage_limit" :step="step"/>
     </div>
     <div class="step-header step-element-header">
       <div v-if="reorderStepUrl" class="step-element-grip" @click="$emit('reorder')">
@@ -18,7 +18,8 @@
       <a class="step-collapse-link"
          :href="'#stepBody' + step.id"
          data-toggle="collapse"
-         data-remote="true">
+         data-remote="true"
+         @click="toggleCollapsed">
           <span class="fas fa-caret-right"></span>
       </a>
       <div v-if="!inRepository" class="step-complete-container">
@@ -205,7 +206,8 @@
         showClipboardPasteModal: false,
         showCommentsSidebar: false,
         dragingFile: false,
-        reordering: false
+        reordering: false,
+        isCollapsed: false
       }
     },
     mixins: [UtilsMixin, AttachmentsMixin],
@@ -247,6 +249,12 @@
         $.get(this.urls.elements_url, (result) => {
           this.elements = result.data
         });
+      },
+      stepHaveElements() {
+        return this.elements.length || this.attachments.length;
+      },
+      toggleCollapsed() {
+        this.isCollapsed = !this.isCollapsed;
       },
       showDeleteModal() {
         this.confirmingDelete = true;

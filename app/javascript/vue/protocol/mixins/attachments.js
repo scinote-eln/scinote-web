@@ -47,6 +47,7 @@ export default {
 
           const upload = new ActiveStorage.DirectUpload(file, this.step.attributes.urls.direct_upload_url, fileObject);
 
+          fileObject.isNewUpload = true;
           this.attachments.push(fileObject);
 
           upload.create((error, blob) => {
