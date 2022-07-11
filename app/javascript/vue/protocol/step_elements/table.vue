@@ -4,6 +4,7 @@
       <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
         <i class="fas fas-rotated-90 fa-exchange-alt"></i>
       </div>
+      <div v-else class="step-element-grip-placeholder"></div>
       <div class="step-element-name">
         <InlineEdit
           v-if="element.attributes.orderable.urls.update_url"

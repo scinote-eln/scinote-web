@@ -2,7 +2,7 @@
   <div v-if="attachments.length" class="step-attachments">
     <div class="attachments-actions">
       <div class="title">
-        <h4>{{ i18n.t('protocols.steps.files', {count: attachments.length}) }}</h4>
+        <h3>{{ i18n.t('protocols.steps.files', {count: attachments.length}) }}</h3>
       </div>
       <div class="actions">
         <div class="dropdown sci-dropdown">

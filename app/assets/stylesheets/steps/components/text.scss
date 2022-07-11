@@ -1,7 +1,7 @@
 .step-text-container {
   display: block;
   margin-bottom: 16px;
-  padding-left: 1.5em;
+  padding-left: var(--left-component-padding);
   position: relative;
   width: calc(100% + 16px);
 

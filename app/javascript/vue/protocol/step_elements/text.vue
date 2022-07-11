@@ -3,6 +3,7 @@
     <div v-if="reorderElementUrl" class="element-grip" @click="$emit('reorder')">
       <i class="fas fas-rotated-90 fa-exchange-alt"></i>
     </div>
+    <div v-else class="step-element-grip-placeholder"></div>
     <div class="buttons-container">
       <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" tabindex="-1" @click="enableEditMode($event)">
         <i class="fas fa-pen"></i>
