@@ -25,6 +25,7 @@
         @include font-small;
         color: $color-silver-chalice;
         padding-left: 1em;
+        pointer-events: none;
       }
 
       a {

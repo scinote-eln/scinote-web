@@ -2539,7 +2539,7 @@ en:
         table: 'Add table'
         text: 'Add text'
         checklist: 'Add checklist'
-        attachment: 'Add file'
+        attachment: 'File from your PC'
         checklist_item: 'Add a new checklist item...'
       table:
         default_name: 'Table %{position}'
