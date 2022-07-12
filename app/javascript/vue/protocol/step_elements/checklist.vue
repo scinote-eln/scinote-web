@@ -94,6 +94,10 @@
       },
       reorderElementUrl: {
         type: String
+      },
+      isNew: {
+        type: Boolean,
+        default: false
       }
     },
     data() {
@@ -109,6 +113,10 @@
       this.checklistItems = this.element.attributes.orderable.checklist_items.map((item, index) => {
         return { attributes: {...item, position: index } }
       });
+
+      if (this.isNew) {
+        this.addItem();
+      }
     },
     computed: {
       orderedChecklistItems() {
@@ -177,7 +185,8 @@
             attributes: {
               text: '',
               checked: false,
-              position: this.checklistItems.length
+              position: this.checklistItems.length,
+              isNew: true
             }
           }
         );
@@ -212,7 +221,7 @@
       },
       handleMultilinePaste(data) {
         this.linesToPaste = data.length;
-        let nextPosition = this.checklistItems.length;
+        let nextPosition = this.checklistItems.length - 1;
 
         // we need to post items to API in the right order, to avoid positions breaking
         let synchronousPost = (index) => {
