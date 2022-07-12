@@ -4,6 +4,7 @@
 @import "components/*";
 
 .step-container {
+  --left-component-padding: 24px;
   border: $border-transparent;
   margin: 6px 0 6px -1.5em;
   padding: 8px 24px 8px 0;
@@ -58,44 +59,31 @@
 
     .step-name-container {
       flex-grow: 1;
+      font-size: 16px;
       font-weight: bold;
 
       textarea {
         text-decoration: initial;
       }
+    }
 
-      .step-state {
-        border: 2px solid $color-alto;
-        border-radius: 50%;
-        cursor: pointer;
-        height: 24px;
-        text-align: center;
-        width: 24px;
+    .step-state {
+      border: 2px solid $color-alto;
+      border-radius: 50%;
+      cursor: pointer;
+      height: 24px;
+      text-align: center;
+      width: 24px;
 
-        &.completed {
-          background: $brand-success;
-          border: 2px solid $brand-success;
+      &.completed {
+        background: $brand-success;
+        border: 2px solid $brand-success;
 
-          &::after {
-            @include font-awesome;
-            color: $color-white;
-            content: $font-fas-check;
-          }
+        &::after {
+          @include font-awesome;
+          color: $color-white;
+          content: $font-fas-check;
         }
-      }
-
-      .step-position {
-        @include font-main;
-        flex-shrink: 0;
-        font-weight: bold;
-        line-height: 24px;
-        margin: 0 4px;
-      }
-
-      .step-name-container {
-        flex-grow: 1;
-        font-size: 16px;
-        font-weight: bold;
       }
     }
 
@@ -146,7 +134,12 @@
   }
 
   .step-elements {
-    padding-left: 24px;
+    padding-left: calc(var(--left-component-padding) * 2);
+
+    .step-element-grip-placeholder {
+      height: 24px;
+      width: 28px;
+    }
   }
 
   .comments-counter {
