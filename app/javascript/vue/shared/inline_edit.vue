@@ -11,6 +11,7 @@
         @keydown="handleKeypress"
         @paste="handlePaste"
         @blur="handleBlur"
+        @keyup.escape="cancelEdit"
       ></textarea>
       <div v-else @click="enableEdit($event)" class="sci-inline-edit__view" v-html="sa_value || value || placeholder" :class="{ 'blank': isBlank }"></div>
       <div v-if="editing && error" class="sci-inline-edit__error">
@@ -84,7 +85,7 @@
     },
     methods: {
       handleAutofocus() {
-        if (this.autofocus || !this.placeholder && this.isBlank) {
+        if (this.autofocus || !this.placeholder && this.isBlank || this.editOnload && this.isBlank) {
           this.enableEdit();
           setTimeout(this.focus, 50);
         }

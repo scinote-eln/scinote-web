@@ -7,6 +7,10 @@
 }
 
 .step-container {
+  .step-attachments {
+    padding-left: 28px;
+  }
+
   .attachments-actions {
     align-items: center;
     display: flex;
@@ -87,8 +91,13 @@
       justify-content: center;
       padding: 2em;
 
-      .title {
+      .btn.title {
         cursor: pointer;
+        font-size: 1em;
+
+        &:hover {
+          background-color: $color-alto;
+        }
 
         .fas {
           margin: 0 .5em;

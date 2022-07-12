@@ -129,6 +129,14 @@ en:
           attributes:
             team_id:
               same_team: "Inventory can't be shared to the same team as it belongs to"
+        protocol:
+          attributes:
+            step_order:
+              invalid: "Invalid step order."
+        step:
+          attributes:
+            step_orderable_element_order:
+              invalid: "Invalid step element order"
         my_module:
           attributes:
             my_module_status_id:
@@ -1967,7 +1975,7 @@ en:
         subject: "You've received a What's new notification"
         intro_paragraph: "Hi %{user_name}, you've received What's new notification in SciNote:"
       index:
-        whats_new: "What's New"
+        whats_new_html: "What's New"
         more_notifications: "Show more notifications"
         no_notifications: "No more notifications"
         settings: "Settings"
