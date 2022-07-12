@@ -82,7 +82,7 @@
            class="open-comments-sidebar btn icon-btn btn-light"
            data-turbolinks="false"
            data-object-type="Step"
-           @click="showCommentsSidebar = true"
+           @click="openCommentsSidebar"
            :data-object-id="step.id">
           <i class="fas fa-comment"></i>
           <span class="comments-counter"
@@ -230,6 +230,7 @@
     },
     mounted() {
       $(this.$refs.comments).data('closeCallback', this.closeCommentsSidebar);
+      $(this.$refs.comments).data('openCallback', this.closeCommentsSidebar);
       $(this.$refs.actionsDropdownButton).on('shown.bs.dropdown hidden.bs.dropdown', this.handleDropdownPosition);
     },
     computed: {
@@ -366,6 +367,10 @@
       },
       addAttachment(attachment) {
         this.attachments.push(attachment);
+      },
+      openCommentsSidebar() {
+        $('.comments-sidebar .close-btn').click();
+        this.showCommentsSidebar = true
       },
       closeCommentsSidebar() {
         this.showCommentsSidebar = false

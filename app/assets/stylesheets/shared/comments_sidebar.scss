@@ -35,6 +35,7 @@
 
       .comments-subject-title {
         @include font-h3;
+        flex-basis: calc(100% - 36px);
         flex-grow: 1;
         height: 2em;
         line-height: 2em;
@@ -211,7 +212,9 @@
         justify-content: flex-end;
 
         .user-avatar {
+          border-radius: 50%;
           order: 3;
+          overflow: hidden;
         }
       }
     }
