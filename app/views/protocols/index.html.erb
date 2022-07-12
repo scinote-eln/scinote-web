@@ -50,11 +50,12 @@
             <% end %>
           </div>
           <div id="import-export-protocols" class="sci-btn-group" role="group">
-          <button class="btn btn-light btn-open-file <%= 'disabled hidden' unless can_create_protocols_in_repository?(@current_team) %>"
+            <button class="btn btn-light btn-open-file <%= 'disabled hidden' unless can_create_protocols_in_repository?(@current_team) %>"
                   data-toggle="dropdown"
                   aria-haspopup="true"
                   aria-expanded="false">
-            <span class="fas fa-download"></span><span class="hidden-xs">&nbsp;<%= t("protocols.index.import") %></span></button>
+              <span class="fas fa-download"></span><span class="hidden-xs">&nbsp;<%= t("protocols.index.import") %></span>
+            </button>
             <% if can_create_protocols_in_repository?(@current_team) %>
               <ul class="dropdown-menu">
                 <li>

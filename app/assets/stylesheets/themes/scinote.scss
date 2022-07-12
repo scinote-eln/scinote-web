@@ -514,6 +514,10 @@ a[data-toggle="tooltip"] {
 
   > .sci-btn-group {
     margin-right: 30px;
+
+    form.button_to {
+      float: left;
+    }
   }
 }
 @media(max-width:768px) {

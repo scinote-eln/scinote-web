@@ -103,7 +103,7 @@
           </div>
         </template>
       </div>
-      <button v-if="urls.add_step_url" class="btn btn-primary" @click="addStep(steps.length)">
+      <button v-if="steps.length > 0 && urls.add_step_url" class="btn btn-primary" @click="addStep(steps.length)">
         <i class="fas fa-plus"></i>
         {{ i18n.t("protocols.steps.new_step") }}
       </button>
