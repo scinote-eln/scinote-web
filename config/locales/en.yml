@@ -129,6 +129,14 @@ en:
           attributes:
             team_id:
               same_team: "Inventory can't be shared to the same team as it belongs to"
+        protocol:
+          attributes:
+            step_order:
+              invalid: "Invalid step order."
+        step:
+          attributes:
+            step_orderable_element_order:
+              invalid: "Invalid step element order"
         my_module:
           attributes:
             my_module_status_id:
