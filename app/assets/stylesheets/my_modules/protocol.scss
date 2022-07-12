@@ -1,11 +1,4 @@
 .task-protocol {
-  .protocol-name {
-    .sci-inline-edit__view.blank,
-    textarea {
-      font-weight: bold;
-    }
-  }
-
   .protocol-step-actions {
     margin-left: -6px;
   }
@@ -19,6 +12,18 @@
   .portocol-header-left-part {
     align-items: baseline;
     display: flex;
+
+    .task-section-caret {
+      padding-right: .25em;
+    }
+
+    .status-label {
+      margin: 2px 0 0;
+    }
+
+    .status-info {
+      padding-left: 4px;
+    }
   }
 
   .insert-step {

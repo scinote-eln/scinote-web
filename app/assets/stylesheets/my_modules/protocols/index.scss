@@ -9,9 +9,10 @@
 .content-pane.my-modules-protocols-index {
   background-color: $color-alto;
   margin: 0 -16px;
+  min-height: calc(100vh - var(--navbar-height) * 2);
   overflow: hidden;
   padding: 36px 10px 10px;
-  width: calc(100% + 31px) ;
+  width: calc(100% + 31px);
 
   .my-module-position-container {
     background-color: $color-white;
@@ -33,6 +34,7 @@
   .task-section-caret {
     color: $color-volcano;
     display: inline-block;
+    padding: .5em;
     text-decoration: none;
 
     .fas {
@@ -399,6 +401,7 @@
   .status-info {
     @include font-h2;
     color: inherit;
+    padding: .5em;
     text-decoration: none;
 
     &:hover,
@@ -635,6 +638,8 @@
       width: 300px;
 
       .dropdown-footer {
+        display: block;
+
         .btn {
           float: left !important;
           margin: 5px 0;

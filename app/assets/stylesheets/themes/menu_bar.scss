@@ -63,10 +63,6 @@
     padding-bottom: 16px;
     position: fixed;
     width: inherit;
-
-    .academy-color {
-      color: $brand-academy-dark;
-    }
   }
 
   .dropup {
@@ -99,12 +95,6 @@
       padding: 3px;
       position: absolute
     }
-  }
-
-
-  #support-link,
-  #knowledge-center-link {
-    color: $brand-primary;
   }
 }
 

@@ -4,16 +4,18 @@
     <%= render partial: "search/results/partials/step_text.html.erb", locals: { step: step, query: search_query, target: nil } %>
   </h5>
 
-  <% if step.description.present? %>
-    <p>
-      <span>
-        <%=t "search.index.description" %>
-        <%= highlight custom_auto_link(step.tinymce_render(:description),
-                             simple_format: false,
-                             tags: %w(img),
-                             team: current_team), search_query.strip.split(/\s+/) %>
-      </span>
-    <p>
+  <% if step.step_texts.present? %>
+    <% step.step_texts.each do |step_text| %>
+      <p>
+        <span>
+          <%= t('search.index.text') %>
+          <%= highlight custom_auto_link(step_text.tinymce_render(:text),
+                                         simple_format: false,
+                                         tags: %w(img),
+                                         team: current_team), search_query.strip.split(/\s+/) %>
+        </span>
+      <p>
+    <% end %>
   <% end %>
 
   <p>

@@ -2,8 +2,9 @@
   <div class="step-table-container">
      <div class="step-element-header" :class="{ 'editing-name': editingName }">
       <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
-        <i class="fas fa-grip-vertical"></i>
+        <i class="fas fas-rotated-90 fa-exchange-alt"></i>
       </div>
+      <div v-else class="step-element-grip-placeholder"></div>
       <div class="step-element-name">
         <InlineEdit
           v-if="element.attributes.orderable.urls.update_url"
@@ -22,15 +23,15 @@
         </span>
       </div>
       <div class="step-element-controls">
-        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="enableNameEdit">
+        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="enableNameEdit" tabindex="-1">
           <i class="fas fa-pen"></i>
         </button>
-        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal">
+        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
           <i class="fas fa-trash"></i>
         </button>
       </div>
     </div>
-    <div :class="'step-table ' + (editingTable ? 'edit' : 'view')">
+    <div :class="'step-table ' + (editingTable ? 'edit' : 'view')" tabindex="0" @keyup.enter="enableTableEdit">
       <div  class="enable-edit-mode" v-if="!editingTable && element.attributes.orderable.urls.update_url" @click="enableTableEdit">
         <i class="fas fa-pen"></i>
       </div>
@@ -72,6 +73,9 @@
       },
       reorderElementUrl: {
         type: String
+      },
+      isNew: {
+        type: Boolean, default: false
       }
     },
     data() {
@@ -89,10 +93,13 @@
     },
     mounted() {
       this.loadTableData();
+
+      if (this.isNew) this.enableTableEdit();
     },
     methods: {
       enableTableEdit() {
         this.editingTable = true;
+        this.$nextTick(() => this.tableObject.selectCell(0,0));
       },
       disableTableEdit() {
         this.editingTable = false;
@@ -128,7 +135,8 @@
           colHeaders: true,
           contextMenu: this.editingTable,
           formulas: true,
-          readOnly: !this.editingTable
+          readOnly: !this.editingTable,
+          afterUnlisten: this.updateTable
         });
       }
     }

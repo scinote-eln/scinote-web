@@ -2,16 +2,19 @@
   <div class="step-checklist-container">
     <div class="step-element-header" :class="{ 'locked': locked, 'editing-name': editingName }">
       <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
-        <i class="fas fa-grip-vertical"></i>
+        <i class="fas fas-rotated-90 fa-exchange-alt"></i>
       </div>
+      <div v-else class="step-element-grip-placeholder"></div>
       <div class="step-element-name">
         <InlineEdit
           v-if="element.attributes.orderable.urls.update_url"
           :value="element.attributes.orderable.name"
-          :characterLimit="255"
+          :sa_value="element.attributes.orderable.sa_name"
+          :characterLimit="10000"
           :placeholder="''"
           :allowBlank="false"
           :autofocus="editingName"
+          :smartAnnotation="true"
           :attributeName="`${i18n.t('Checklist')} ${i18n.t('name')}`"
           @editingEnabled="editingName = true"
           @editingDisabled="editingName = false"
@@ -22,10 +25,10 @@
         </span>
       </div>
       <div class="step-element-controls">
-        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="editingName = true">
+        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="editingName = true" tabindex="-1">
           <i class="fas fa-pen"></i>
         </button>
-        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal">
+        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
           <i class="fas fa-trash"></i>
         </button>
       </div>
@@ -56,7 +59,11 @@
           @multilinePaste="handleMultilinePaste"
         />
       </Draggable>
-      <div v-if="element.attributes.orderable.urls.create_item_url" class="btn btn-light step-checklist-add-item" @click="addItem">
+      <div v-if="element.attributes.orderable.urls.create_item_url"
+           class="btn btn-light step-checklist-add-item"
+           tabindex="0"
+           @keyup.enter="addItem"
+           @click="addItem">
         <i class="fas fa-plus"></i>
         {{ i18n.t('protocols.steps.insert.checklist_item') }}
       </div>
@@ -87,6 +94,10 @@
       },
       reorderElementUrl: {
         type: String
+      },
+      isNew: {
+        type: Boolean,
+        default: false
       }
     },
     data() {
@@ -102,6 +113,10 @@
       this.checklistItems = this.element.attributes.orderable.checklist_items.map((item, index) => {
         return { attributes: {...item, position: index } }
       });
+
+      if (this.isNew) {
+        this.addItem();
+      }
     },
     computed: {
       orderedChecklistItems() {
@@ -145,13 +160,16 @@
       },
       saveItem(item) {
         if (item.attributes.id) {
-          this.checklistItems.splice(
-            item.attributes.position, 1, item
-          );
           $.ajax({
             url: item.attributes.urls.update_url,
             type: 'PATCH',
             data: item,
+            success: (result) => {
+              let updatedItem = this.checklistItems[item.attributes.position]
+              updatedItem.attributes = result.data.attributes
+              updatedItem.attributes.id = item.attributes.id
+              this.$set(this.checklistItems, item.attributes.position, updatedItem)
+            },
             error: () => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')
           });
         } else {
@@ -167,7 +185,8 @@
             attributes: {
               text: '',
               checked: false,
-              position: this.checklistItems.length
+              position: this.checklistItems.length,
+              isNew: true
             }
           }
         );
@@ -202,7 +221,7 @@
       },
       handleMultilinePaste(data) {
         this.linesToPaste = data.length;
-        let nextPosition = this.checklistItems.length;
+        let nextPosition = this.checklistItems.length - 1;
 
         // we need to post items to API in the right order, to avoid positions breaking
         let synchronousPost = (index) => {

@@ -30,7 +30,9 @@ module StepElements
     end
 
     def update
-      @checklist_item.assign_attributes(checklist_item_params)
+      @checklist_item.assign_attributes(
+        checklist_item_params.merge(last_modified_by: current_user)
+      )
 
       if @checklist_item.save!
         if @checklist_item.saved_change_to_attribute?(:checked)

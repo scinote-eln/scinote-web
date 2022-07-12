@@ -43,6 +43,13 @@ class RepositoryDatatableService
 
     repository_rows = fetch_rows(search_value)
 
+    # Aliased my_module_repository_rows join for consistent assigned counts
+    repository_rows =
+      repository_rows.joins(
+        'LEFT OUTER JOIN "my_module_repository_rows" AS "all_my_module_repository_rows" ON '\
+        '"all_my_module_repository_rows"."repository_row_id" = "repository_rows"."id"'
+      )
+
     # Adding assigned counters
     if @my_module
       if @assigned_view
@@ -67,7 +74,7 @@ class RepositoryDatatableService
     end
     repository_rows = repository_rows
                       .left_outer_joins(my_module_repository_rows: { my_module: :experiment })
-                      .select('COUNT(my_module_repository_rows.id) AS "assigned_my_modules_count"')
+                      .select('COUNT(DISTINCT all_my_module_repository_rows.id) AS "assigned_my_modules_count"')
                       .select('COUNT(DISTINCT my_modules.experiment_id) AS "assigned_experiments_count"')
                       .select('COUNT(DISTINCT experiments.project_id) AS "assigned_projects_count"')
     repository_rows = repository_rows.preload(Extends::REPOSITORY_ROWS_PRELOAD_RELATIONS)

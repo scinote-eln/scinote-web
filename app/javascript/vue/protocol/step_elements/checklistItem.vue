@@ -9,6 +9,7 @@
           <input ref="checkbox"
                  type="checkbox"
                  class="sci-checkbox"
+                 :disabled="checklistItem.attributes.isNew"
                  :checked="checklistItem.attributes.checked" @change="toggleChecked($event)" />
           <span class="sci-checkbox-label" >
           </span>
@@ -17,16 +18,19 @@
           <InlineEdit
             v-if="!checklistItem.attributes.urls || updateUrl"
             :value="checklistItem.attributes.text"
+            :sa_value="checklistItem.attributes.sa_text"
             :characterLimit="10000"
-            :placeholder="''"
+            :placeholder="'Add a checklist item...'"
             :allowBlank="true"
             :autofocus="editingText"
             :attributeName="`${i18n.t('ChecklistItem')} ${i18n.t('name')}`"
             :multilinePaste="true"
+            :editOnload="checklistItem.attributes.isNew"
+            :smartAnnotation="true"
             @editingEnabled="enableTextEdit"
             @editingDisabled="disableTextEdit"
             @update="updateText"
-            @delete="checklistItem.attributes.id ? deleteElement() : removeItem()"
+            @delete="removeItem()"
             @multilinePaste="(data) => { $emit('multilinePaste', data) && removeItem() }"
           />
           <span v-else>
@@ -35,26 +39,24 @@
         </div>
       </div>
       <div class="step-element-controls">
-        <button v-if="!checklistItem.attributes.urls || updateUrl" class="btn icon-btn btn-light" @click="enableTextEdit">
+        <button v-if="!checklistItem.attributes.urls || updateUrl" class="btn icon-btn btn-light" @click="enableTextEdit" tabindex="-1">
           <i class="fas fa-pen"></i>
         </button>
-        <button v-if="!checklistItem.attributes.urls || deleteUrl" class="btn icon-btn btn-light" @click="showDeleteModal">
+        <button v-if="!checklistItem.attributes.urls || deleteUrl" class="btn icon-btn btn-light" @click="deleteElement" tabindex="-1">
           <i class="fas fa-trash"></i>
         </button>
       </div>
     </div>
-    <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @cancel="closeDeleteModal"/>
   </div>
 </template>
 
  <script>
   import DeleteMixin from 'vue/protocol/mixins/components/delete.js'
-  import deleteElementModal from 'vue/protocol/modals/delete_element.vue'
   import InlineEdit from 'vue/shared/inline_edit.vue'
 
   export default {
-    name: 'Checklist',
-    components: { deleteElementModal, InlineEdit },
+    name: 'ChecklistItem',
+    components: { InlineEdit },
     mixins: [DeleteMixin],
     props: {
       checklistItem: {
@@ -104,6 +106,10 @@
         this.$emit('editStart');
       },
       disableTextEdit() {
+        if (this.checklistItem.attributes.isNew) {
+          this.removeItem();
+          return;
+        }
         this.editingText = false;
         this.$emit('editEnd');
       },
@@ -115,14 +121,18 @@
       updateText(text) {
         if (text.length === 0) {
           this.disableTextEdit();
-          this.deleteElement();
+          this.removeItem();
         } else {
           this.checklistItem.attributes.text = text;
           this.update();
         }
       },
       removeItem() {
-        this.$emit('removeItem', this.checklistItem.attributes.position);
+        if (this.deleteUrl) {
+          this.deleteElement();
+        } else {
+          this.$emit('removeItem', this.checklistItem.attributes.position);
+        }
       },
       update() {
         this.$emit('update', this.checklistItem);

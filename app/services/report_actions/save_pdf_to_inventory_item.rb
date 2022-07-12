@@ -68,7 +68,7 @@ module ReportActions
       Activities::CreateActivityService
         .call(activity_type: :edit_item_inventory,
               owner: @user,
-              subject: @repository,
+              subject: @repository_row,
               team: @team,
               message_items: {
                 repository_row: @repository_row.id,

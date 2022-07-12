@@ -21,7 +21,7 @@
                @dragover.prevent
           >
             <input type="file" class="hidden" ref=fileSelector @change="uploadFiles" multiple />
-            <div class="title btn btn-light" @click="$refs.fileSelector.click()">
+            <div class="title btn btn-light" @click="$refs.fileSelector.click()" tabindex="0" @keyup.enter="$refs.fileSelector.click()">
               <i class="fas fa-upload"></i>
               {{ i18n.t("protocols.steps.attachments.file_modal.drag_zone_title") }}
             </div>
@@ -45,6 +45,8 @@
                 :data-marvin-url="step.attributes.marvinjs_context.marvin_js_asset_url"
                 data-object-type="Step"
                 @click="openMarvinJsModal"
+                tabindex="0"
+                @keyup.enter="openMarvinJsModal"
               >
                 <span class="new-marvinjs-upload-icon">
                   <img :src="step.attributes.marvinjs_context.icon"/>
@@ -53,7 +55,7 @@
               </a>
             </div>
             <div class="integration-block wopi" v-if="step.attributes.wopi_enabled">
-              <a @click="openWopiFileModal" class="create-wopi-file-btn btn btn-light">
+              <a @click="openWopiFileModal" class="create-wopi-file-btn btn btn-light" tabindex="0" @keyup.enter="openWopiFileModal">
                 <img :src="step.attributes.wopi_context.icon"/>
                 {{ i18n.t('assets.create_wopi_file.button_text') }}
               </a>
@@ -90,12 +92,26 @@
         this.$nextTick(this.cancel);
       });
       $(this.$refs.modal).on('hidden.bs.modal', () => {
+        global.removeEventListener('paste', this.onImageFilePaste, false);
         this.$emit('cancel');
       });
+      global.addEventListener('paste', this.onImageFilePaste, false);
     },
     methods: {
       cancel() {
         $(this.$refs.modal).modal('hide');
+      },
+      onImageFilePaste (pasteEvent) {
+        if (pasteEvent.clipboardData !== false) {
+          let items = pasteEvent.clipboardData.items
+          for (let i = 0; i < items.length; i += 1) {
+            if (items[i].type.indexOf('image') !== -1) {
+              this.$emit('copyPasteImageModal', items[i]);
+              $(this.$refs.modal).modal('hide');
+              return
+            }
+          }
+        }
       },
       dropFile(e) {
         if (e.dataTransfer && e.dataTransfer.files.length) {

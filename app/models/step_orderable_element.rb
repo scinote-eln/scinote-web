@@ -15,7 +15,7 @@ class StepOrderableElement < ApplicationRecord
     if step != orderable.step
       errors.add(
         :step_orderable_element,
-        I18n.t('activerecord.errors.models.step_orderable_elements.attributes.step.wrong_step')
+        I18n.t('activerecord.errors.models.step_orderable_element.attributes.step.wrong_step')
       )
     end
   end

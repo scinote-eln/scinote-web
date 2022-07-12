@@ -8,6 +8,7 @@
         data-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="true"
+        tabindex="0"
       >
         <span class="fas fa-cog"></span>
         <span>{{ i18n.t("my_modules.protocol.options_dropdown.title") }}</span>
@@ -66,7 +67,7 @@
         <li v-if="canDeleteSteps">
           <a
             data-turbolinks="false"
-            @click.prevent="openStepsDeletingModal()()"
+            @click.prevent="openStepsDeletingModal()"
           >
             <span class="fas fa-trash"></span>
             <span>{{
@@ -105,6 +106,7 @@ export default {
   mounted() {
     // Legacy global functions from app/assets/javascripts/my_modules/protocols.js
     initLoadFromRepository();
+    initCopyToRepository();
     initImport();
   },
   methods: {

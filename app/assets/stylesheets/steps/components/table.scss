@@ -3,7 +3,7 @@
 
   .step-table {
     border: $border-transparent;
-    margin-left: 20px;
+    margin-left: var(--left-component-padding);
     padding: 4px;
     position: relative;
 

@@ -1,21 +1,19 @@
 <template>
-  <div class="step-text-container" :class="{ 'edit': inEditMode }">
-    <div class="action-container" @click="enableEditMode($event)">
-      <div v-if="reorderElementUrl" class="element-grip" @click="$emit('reorder')">
-        <i class="fas fa-grip-vertical"></i>
-      </div>
-      <div class="buttons-container">
-        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light">
-          <i class="fas fa-pen"></i>
-        </button>
-        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal">
-          <i class="fas fa-trash"></i>
-        </button>
-      </div>
+  <div class="step-text-container" :class="{ 'edit': inEditMode }" @keyup.enter="enableEditMode($event)" tabindex="0">
+    <div v-if="reorderElementUrl" class="element-grip" @click="$emit('reorder')">
+      <i class="fas fas-rotated-90 fa-exchange-alt"></i>
+    </div>
+    <div v-else class="step-element-grip-placeholder"></div>
+    <div class="buttons-container">
+      <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" tabindex="-1" @click="enableEditMode($event)">
+        <i class="fas fa-pen"></i>
+      </button>
+      <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
+        <i class="fas fa-trash"></i>
+      </button>
     </div>
     <Tinymce
       v-if="element.attributes.orderable.urls.update_url"
-      :inEditMode="inEditMode"
       :value="element.attributes.orderable.text"
       :value_html="element.attributes.orderable.text_view"
       :placeholder="i18n.t('protocols.steps.text.placeholder')"
@@ -24,8 +22,10 @@
       :objectId="element.attributes.orderable.id"
       :fieldName="'step_text[text]'"
       :lastUpdated="element.attributes.orderable.updated_at"
+      :characterLimit="100000"
       @update="update"
       @editingDisabled="disableEditMode"
+      @editingEnabled="enableEditMode"
     />
     <div v-else v-html="element.attributes.orderable.text_view"></div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement($event)" @cancel="closeDeleteModal"/>
@@ -52,6 +52,10 @@
       },
       reorderElementUrl: {
         type: String
+      },
+      isNew: {
+        type: Boolean,
+        default: false
       }
     },
     data() {
@@ -59,10 +63,15 @@
         inEditMode: false,
       }
     },
+    mounted() {
+      if (this.isNew) {
+        this.enableEditMode()
+      }
+    },
     methods: {
-      enableEditMode(e) {
-        if ($(e.target).hasClass('fas fa-grip-vertical') || $(e.target).hasClass('element-grip')) return
+      enableEditMode() {
         if (!this.element.attributes.orderable.urls.update_url) return
+        if (this.inEditMode == true) return
         this.inEditMode = true
       },
       disableEditMode() {

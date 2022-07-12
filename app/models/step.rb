@@ -60,8 +60,9 @@ class Step < ApplicationRecord
                            .pluck(:id)
 
     new_query = Step.distinct
+                    .left_outer_joins(:step_texts)
                     .where(steps: { protocol_id: protocol_ids })
-                    .where_attributes_like(%i(name description), query, options)
+                    .where_attributes_like(['name', 'step_texts.text'], query, options)
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT
@@ -69,6 +70,13 @@ class Step < ApplicationRecord
     else
       new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
     end
+  end
+
+  def self.filter_by_teams(teams = [])
+    return self if teams.blank?
+
+    joins(protocol: { my_module: { experiment: :project } })
+      .where(protocol: { my_modules: { experiments: { projects: { team: teams } } } })
   end
 
   def default_view_state

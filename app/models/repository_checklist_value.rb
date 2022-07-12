@@ -114,7 +114,7 @@ class RepositoryChecklistValue < ApplicationRecord
       checklist_item = column.repository_checklist_items.find { |item| item.data == item_text }
 
       if checklist_item.blank?
-        checklist_item = column.repository_checklist_items.new(data: text,
+        checklist_item = column.repository_checklist_items.new(data: item_text,
                                                                created_by: value.created_by,
                                                                last_modified_by: value.last_modified_by)
 

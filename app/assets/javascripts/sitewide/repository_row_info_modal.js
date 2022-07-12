@@ -10,6 +10,11 @@
       url: that.attr('href'),
       dataType: 'json'
     }).done(function(xhr, settings, data) {
+      if ($('#modal-info-repository-row').length) {
+        $('#modal-info-repository-row').find('.modal-body #repository_row-info-table').DataTable().destroy();
+        $('#modal-info-repository-row').remove();
+        $('.modal-backdrop').remove();
+      }
       $('body').append($.parseHTML(data.responseJSON.html));
       $('#modal-info-repository-row').modal('show', {
         backdrop: true,
@@ -75,4 +80,4 @@
       });
     });
   });
-})();
+}());
