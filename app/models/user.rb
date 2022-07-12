@@ -509,6 +509,21 @@ class User < ApplicationRecord
       .find_by(user_identities: { provider: provider_conf['provider_name'], uid: token_payload[:sub] })
   end
 
+  def self.from_api_key(api_key)
+    where('api_key_expires_at > ?', Time.current).find_by(api_key: api_key)
+  end
+
+  def regenerate_api_key!
+    update!(
+      api_key: SecureRandom.urlsafe_base64(33),
+      api_key_expires_at: Constants::API_KEY_EXPIRES_IN.from_now
+    )
+  end
+
+  def revoke_api_key!
+    update!(api_key: nil, api_key_expires_at: nil)
+  end
+
   def has_linked_account?(provider)
     user_identities.exists?(provider: provider)
   end
