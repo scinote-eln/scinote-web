@@ -207,6 +207,18 @@ class Users::RegistrationsController < Devise::RegistrationsController
     render json: { qr_code: qr_code.as_svg(module_size: 4) }
   end
 
+  def regenerate_api_key
+    current_user.regenerate_api_key!
+
+    redirect_to edit_user_registration_path
+  end
+
+  def revoke_api_key
+    current_user.revoke_api_key!
+
+    redirect_to edit_user_registration_path
+  end
+
   protected
 
   # Called upon creating User (before .save). Permits parameters and extracts

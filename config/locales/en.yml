@@ -2083,6 +2083,13 @@ en:
         2fa_errors:
           wrong_submit_code: "Not correct code"
           wrong_password: "Not correct password"
+        api_key:
+          title: "API Key"
+          description: "Generate or revoke an API key for use with the SciNote API. Regenerating the API key will invalidate the old one."
+          generate: "Generate"
+          regenerate: "Regenerate"
+          revoke: "Revoke"
+          expired: "This key has expired!"
       new:
         head_title: "Sign up"
         team_name_label: "Team name"
@@ -3031,6 +3038,8 @@ en:
   api:
     core:
       status_ok: "Ok"
+      invalid_api_key: "API key is invalid or expired"
+      invalid_api_key_detail: "The API key you are using does not exist or has expired."
       expired_token: "Token is expired"
       invalid_token: "Token is invalid"
       missing_token: "Core: No token in the header"
