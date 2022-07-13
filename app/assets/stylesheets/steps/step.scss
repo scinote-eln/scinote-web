@@ -17,15 +17,20 @@
     .step-element-header {
       border-radius: 4px;
       flex-basis: 80%;
+      position: relative;
 
       .step-name-edit-icon {
         display: none;
+        position: absolute;
+        right: -8px;
+        top: -6px;
       }
 
       &:hover .step-name-edit-icon {
         cursor: pointer;
         display: inline-block;
         margin-right: 16px;
+        margin-top: 16px;
       }
 
       .step-collapse-link {
@@ -223,7 +228,7 @@
 }
 
 .step-element-header {
-  align-items: center;
+  align-items: flex-start;
   display: flex;
   min-height: 40px;
   position: relative;
