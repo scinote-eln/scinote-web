@@ -126,7 +126,8 @@
       initCharacterCount() {
         this.characterCount = $(this.editorInstance.getContent()).text().length
 
-        this.editorInstance.on('input', (e) => {
+        this.editorInstance.on('input paste', (e) => {
+          console.log("input")
           this.characterCount = e.currentTarget.innerText.length
         });
 
