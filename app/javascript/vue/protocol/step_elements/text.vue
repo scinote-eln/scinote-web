@@ -16,7 +16,7 @@
       v-if="element.attributes.orderable.urls.update_url"
       :value="element.attributes.orderable.text"
       :value_html="element.attributes.orderable.text_view"
-      :placeholder="i18n.t('protocols.steps.text.placeholder')"
+      :placeholder="element.attributes.orderable.placeholder"
       :updateUrl="element.attributes.orderable.urls.update_url"
       :objectType="'StepText'"
       :objectId="element.attributes.orderable.id"

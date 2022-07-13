@@ -2540,7 +2540,7 @@ en:
         uncomplete: "Unmark as done"
       options_dropdown:
         title: 'Step options'
-        rearrange: 'Rearrange step content'
+        rearrange: 'Rearrange content'
         delete: 'Delete'
       insert:
         button: 'Insert'
@@ -2574,7 +2574,7 @@ en:
           description_2: 'Are you sure you want to delete them?'
           confirm: 'Delete forever'
         reorder_elements:
-          title: 'Rearrange %{step_name} content'
+          title: 'Rearrange step %{step_position} content'
       options:
         up_arrow_title: "Move step up"
         down_arrow_title: "Move step down"
