@@ -95,7 +95,7 @@
         <div v-if="urls.update_url" class="step-actions-container">
           <div class="dropdown">
             <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'stepInserMenu_' + step.id" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="true">
-              <i class="fas fa-ellipsis-v"></i>
+              <i class="fas fa-ellipsis-h"></i>
             </button>
             <ul class="dropdown-menu dropdown-menu-right insert-element-dropdown" :aria-labelledby="'stepInserMenu_' + step.id">
               <li class="title">
