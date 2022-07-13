@@ -1,13 +1,12 @@
 <template>
-  <div class="step-container"
+  <div ref="stepContainer" class="step-container"
        :id="`stepContainer${step.id}`"
        @drop.prevent="dropFile"
        @dragenter.prevent="!showFileModal ? dragingFile = true : null"
-       @dragleave.self="onDragLeave($event)"
        @dragover.prevent
        :class="{ 'draging-file': dragingFile, 'showing-comments': showCommentsSidebar, 'editing-name': editingName }"
   >
-    <div class="drop-message">
+    <div class="drop-message" @dragleave.prevent="!showFileModal ? dragingFile = false : null">
       {{ i18n.t('protocols.steps.drop_message', { position: step.attributes.position + 1 }) }}
       <StorageUsage v-if="stepHaveElements() && !this.isCollapsed && step.attributes.storage_limit" :step="step"/>
     </div>
@@ -210,8 +209,7 @@
         dragingFile: false,
         reordering: false,
         isCollapsed: false,
-        editingName: false,
-        counter: 0
+        editingName: false
       }
     },
     mixins: [UtilsMixin, AttachmentsMixin],
@@ -244,9 +242,6 @@
       }
     },
     methods: {
-      onDragLeave(event) {
-        this.dragingFile = false;
-      },
       loadAttachments() {
         $.get(this.urls.attachments_url, (result) => {
           this.attachments = result.data

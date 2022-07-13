@@ -174,7 +174,6 @@
     height: 100%;
     justify-content: center;
     left: 0;
-    pointer-events: none;
     position: absolute;
     top: 0;
     width: 100%;
@@ -187,6 +186,10 @@
     .drop-message {
       display: flex;
       flex-direction: column;
+
+      .storage-usage {
+        pointer-events: none;
+      }
     }
 
     > *:not(.drop-message) {
