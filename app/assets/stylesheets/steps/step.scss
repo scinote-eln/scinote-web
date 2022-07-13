@@ -97,6 +97,11 @@
       justify-content: flex-end;
       flex-basis: 20%;
 
+      .disabled {
+        color: $color-silver-chalice;
+        pointer-events: none;
+      }
+
       .dropdown-menu {
         white-space: nowrap;
       }
@@ -140,11 +145,11 @@
 
   .step-elements {
     padding-left: calc(var(--left-component-padding) * 2);
+  }
 
-    .step-element-grip-placeholder {
-      height: 24px;
-      width: 28px;
-    }
+  .step-element-grip-placeholder {
+    height: 24px;
+    width: 28px;
   }
 
   .comments-counter {
@@ -247,6 +252,7 @@
     font-weight: bold;
     width: 100%;
 
+
     .step-element-number {
       display: inline-block;
       margin-right: 8px;
@@ -305,6 +311,13 @@
 
     .step-element-name {
       font-weight: normal;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .step-element-name-placeholder {
+      color: $color-silver-chalice;
     }
 
     .fas {

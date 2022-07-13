@@ -17,6 +17,7 @@
           <div v-if="reorderStepUrl" class="step-element-grip" @click="$emit('reorder')">
             <i class="fas fas-rotated-90 fa-exchange-alt"></i>
           </div>
+          <div v-else class="step-element-grip-placeholder"></div>
           <a class="step-collapse-link"
             :href="'#stepBody' + step.id"
             data-toggle="collapse"
@@ -153,7 +154,7 @@
                          @cancel="showClipboardPasteModal = false"
     />
     <ReorderableItemsModal v-if="reordering"
-      :title="i18n.t('protocols.steps.modals.reorder_elements.title', { step_name: step.attributes.name })"
+      :title="i18n.t('protocols.steps.modals.reorder_elements.title', { step_position: step.attributes.position + 1 })"
       :items="reorderableElements"
       @reorder="updateElementOrder"
       @close="closeReorderModal"
@@ -194,7 +195,6 @@
         required: true
       },
       reorderStepUrl: {
-        type: String,
         required: true
       }
     },

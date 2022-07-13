@@ -6,10 +6,14 @@ class StepTextSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :id, :text, :urls, :text_view, :updated_at, :icon, :name
+  attributes :id, :text, :urls, :text_view, :updated_at, :icon, :name, :placeholder
 
   def updated_at
     object.updated_at.to_i
+  end
+
+  def placeholder
+    I18n.t('protocols.steps.text.placeholder')
   end
 
   def text_view
