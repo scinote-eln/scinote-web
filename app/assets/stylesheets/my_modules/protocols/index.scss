@@ -519,8 +519,16 @@
     width: 100%;
   }
 
-  .status-buttons div > .btn {
-    min-width: 230px;
+  .status-buttons {
+    .status-flow-dropdown[data-status-changing=true] {
+      .caret.pull-right {
+        display: none;
+      }
+    }
+
+    > div > .btn {
+      min-width: 115px;
+    }
   }
 
   .task-flows {
@@ -535,12 +543,16 @@
     .status-label {
       @include font-small;
       flex-basis: 40%;
-      font-weight: bold;
+      font-weight: 700;
       margin-right: .5em;
       text-align: right;
 
       .status-note {
         font-weight: normal;
+      }
+
+      .pull-right {
+        font-weight: 400;
       }
     }
 
