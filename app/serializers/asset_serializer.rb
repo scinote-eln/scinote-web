@@ -110,7 +110,7 @@ class AssetSerializer < ActiveModel::Serializer
         delete: asset_destroy_path(object)
       )
     end
-    if wopi && can_manage_asset?(@asset)
+    if wopi && can_manage_asset?(object)
       urls[:wopi_action] = object.get_action_url(@instance_options[:user], 'embedview')
     end
     urls[:blob] = rails_blob_path(object.file, disposition: 'attachment') if object.file.attached?

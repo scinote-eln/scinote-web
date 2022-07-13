@@ -17,15 +17,20 @@
     .step-element-header {
       border-radius: 4px;
       flex-basis: 80%;
+      position: relative;
 
       .step-name-edit-icon {
         display: none;
+        position: absolute;
+        right: -8px;
+        top: -6px;
       }
 
       &:hover .step-name-edit-icon {
         cursor: pointer;
         display: inline-block;
         margin-right: 16px;
+        margin-top: 16px;
       }
 
       .step-collapse-link {
@@ -92,6 +97,11 @@
       justify-content: flex-end;
       flex-basis: 20%;
 
+      .disabled {
+        color: $color-silver-chalice;
+        pointer-events: none;
+      }
+
       .dropdown-menu {
         white-space: nowrap;
       }
@@ -135,11 +145,11 @@
 
   .step-elements {
     padding-left: calc(var(--left-component-padding) * 2);
+  }
 
-    .step-element-grip-placeholder {
-      height: 24px;
-      width: 28px;
-    }
+  .step-element-grip-placeholder {
+    height: 24px;
+    width: 28px;
   }
 
   .comments-counter {
@@ -218,7 +228,7 @@
 }
 
 .step-element-header {
-  align-items: center;
+  align-items: flex-start;
   display: flex;
   min-height: 40px;
   position: relative;
@@ -241,6 +251,7 @@
   .step-element-name {
     font-weight: bold;
     width: 100%;
+
 
     .step-element-number {
       display: inline-block;
@@ -300,6 +311,13 @@
 
     .step-element-name {
       font-weight: normal;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .step-element-name-placeholder {
+      color: $color-silver-chalice;
     }
 
     .fas {
