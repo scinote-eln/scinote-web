@@ -174,8 +174,7 @@
           });
         } else {
           // create item, then append next one
-          this.postItem(item);
-          this.addItem();
+          this.postItem(item, this.addItem);
         }
         this.update();
       },
