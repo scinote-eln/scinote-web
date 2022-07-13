@@ -3,7 +3,7 @@
        :id="`stepContainer${step.id}`"
        @drop.prevent="dropFile"
        @dragenter.prevent="!showFileModal ? dragingFile = true : null"
-       @dragleave.prevent="!showFileModal ? dragingFile = false : null"
+       @dragleave.self="onDragLeave($event)"
        @dragover.prevent
        :class="{ 'draging-file': dragingFile, 'showing-comments': showCommentsSidebar, 'editing-name': editingName }"
   >
@@ -209,11 +209,9 @@
         showCommentsSidebar: false,
         dragingFile: false,
         reordering: false,
-<<<<<<< HEAD
-        isCollapsed: false
-=======
-        editingName: false
->>>>>>> cb86fe0e0668973e5a4e5821cd5c203148c4c2af
+        isCollapsed: false,
+        editingName: false,
+        counter: 0
       }
     },
     mixins: [UtilsMixin, AttachmentsMixin],
@@ -246,6 +244,9 @@
       }
     },
     methods: {
+      onDragLeave(event) {
+        this.dragingFile = false;
+      },
       loadAttachments() {
         $.get(this.urls.attachments_url, (result) => {
           this.attachments = result.data
