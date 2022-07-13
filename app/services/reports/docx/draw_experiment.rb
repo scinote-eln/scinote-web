@@ -8,7 +8,12 @@ module Reports::Docx::DrawExperiment
     experiment = subject.experiment
     return unless can_read_experiment?(@user, experiment)
 
-    @docx.h2 experiment.name, size: Constants::REPORT_DOCX_EXPERIMENT_TITLE_SIZE
+    @docx.h2 do
+      link  experiment.name,
+            scinote_url + Rails.application.routes.url_helpers.canvas_experiment_path(experiment),
+            link_style
+    end
+
     @docx.p do
       text I18n.t('projects.reports.elements.experiment.user_time',
                   code: experiment.code, timestamp: I18n.l(experiment.created_at, format: :full)), color: color[:gray]
@@ -16,10 +21,6 @@ module Reports::Docx::DrawExperiment
         text ' | '
         text I18n.t('search.index.archived'), color: color[:gray]
       end
-      text ' | '
-      link  I18n.t('projects.reports.elements.all.scinote_link'),
-            scinote_url + Rails.application.routes.url_helpers.canvas_experiment_path(experiment),
-            link_style
     end
     html = custom_auto_link(experiment.description, team: @report_team)
     Reports::HtmlToWordConverter.new(@docx, { scinote_url: scinote_url,
