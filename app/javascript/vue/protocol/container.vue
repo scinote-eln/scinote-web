@@ -78,7 +78,7 @@
           <span class="fas fa-caret-down"></span>
           {{ i18n.t("protocols.steps.expand_label") }}
         </button>
-        <a v-if="urls.reorder_steps_url" class="btn btn-light" data-toggle="modal"
+        <a v-if="urls.reorder_steps_url && steps.length > 1" class="btn btn-light" data-toggle="modal"
            @click="startStepReorder"
            @keyup.enter="startStepReorder"
            tabindex="0" >
