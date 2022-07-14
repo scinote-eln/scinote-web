@@ -2372,6 +2372,8 @@ en:
       keywords: "Keywords:"
       authors: "Authors:"
       no_authors: "No authors"
+      add_authors: "+ Add authors"
+      add_keywords: "+ Add keywords"
       description: "Description"
       no_description: "No description"
       keywords_modal: "Input one or multiple keywords, confirm each keyword with ENTER key"
