@@ -8,7 +8,7 @@
   >
     <div class="drop-message" @dragleave.prevent="!showFileModal ? dragingFile = false : null">
       {{ i18n.t('protocols.steps.drop_message', { position: step.attributes.position + 1 }) }}
-      <StorageUsage v-if="stepHaveElements() && !this.isCollapsed && step.attributes.storage_limit" :step="step"/>
+      <StorageUsage v-if="showStorageUsage()" :step="step"/>
     </div>
     <div class="step-header">
       <div class="step-element-header">
@@ -252,8 +252,8 @@
           this.elements = result.data
         });
       },
-      stepHaveElements() {
-        return this.elements.length || this.attachments.length;
+      showStorageUsage() {
+        return (this.elements.length || this.attachments.length) && !this.isCollapsed && this.step.attributes.storage_limit;
       },
       toggleCollapsed() {
         this.isCollapsed = !this.isCollapsed;
