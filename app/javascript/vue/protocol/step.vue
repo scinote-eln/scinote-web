@@ -53,7 +53,7 @@
             {{ step.attributes.name }}
           </span>
         </div>
-        <i v-if="!editingName" class="step-name-edit-icon fas fa-pen" @click="editingName = true"></i>
+        <i v-if="urls.update_url && !editingName" class="step-name-edit-icon fas fa-pen" @click="editingName = true"></i>
       </div>
       <div class="step-actions-container">
         <div ref="actionsDropdownButton" v-if="urls.update_url"  class="dropdown">
@@ -201,7 +201,7 @@
         required: true
       },
       reorderStepUrl: {
-        required: true
+        required: false
       }
     },
     data() {

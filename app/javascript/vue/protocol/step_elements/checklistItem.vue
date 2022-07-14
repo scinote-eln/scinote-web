@@ -5,7 +5,7 @@
         <i class="fas fa-grip-vertical"></i>
       </div>
       <div class="step-element-name" :class="{ 'done': checklistItem.attributes.checked }">
-        <div class="sci-checkbox-container" :class="{ 'disabled': !updateUrl || inRepository}">
+        <div class="sci-checkbox-container" :class="{ 'disabled': !toggleUrl || inRepository}">
           <input ref="checkbox"
                  type="checkbox"
                  class="sci-checkbox"
@@ -94,6 +94,11 @@
 
         return this.checklistItem.attributes.urls.update_url;
       },
+      toggleUrl() {
+        if (!this.checklistItem.attributes.urls) return
+
+        return this.checklistItem.attributes.urls.toggle_url;
+      },
       deleteUrl() {
         if (!this.checklistItem.attributes.urls) return
 
@@ -114,9 +119,9 @@
         this.$emit('editEnd');
       },
       toggleChecked(e) {
-        if (!this.updateUrl) return
+        if (!this.toggleUrl) return
         this.checklistItem.attributes.checked = this.$refs.checkbox.checked;
-        this.update();
+        this.$emit('toggle', this.checklistItem);
       },
       updateText(text) {
         if (text.length === 0) {

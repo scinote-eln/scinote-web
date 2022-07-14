@@ -4,7 +4,7 @@
       <div class="title">
         <h3>{{ i18n.t('protocols.steps.files', {count: attachments.length}) }}</h3>
       </div>
-      <div class="actions">
+      <div class="actions" v-if="step.attributes.attachments_manageble">
         <div class="dropdown sci-dropdown">
           <button class="btn btn-light dropdown-toggle" type="button" id="dropdownAttachmentsOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <span>{{ i18n.t("protocols.steps.attachments.manage") }}</span>

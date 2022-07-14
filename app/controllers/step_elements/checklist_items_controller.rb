@@ -5,7 +5,8 @@ module StepElements
     include ApplicationHelper
 
     before_action :load_vars
-    before_action :load_checklist, only: %i(update destroy)
+    before_action :load_checklist_item, only: %i(update toggle destroy)
+    before_action :check_toggle_permissions, only: %i(toggle)
     before_action :check_manage_permissions, only: %i(create update destroy)
 
     def create
@@ -35,26 +36,38 @@ module StepElements
       )
 
       if @checklist_item.save!
-        if @checklist_item.saved_change_to_attribute?(:checked)
-          completed_items = @checklist_item.checklist.checklist_items.where(checked: true).count
-          all_items = @checklist_item.checklist.checklist_items.count
-          text_activity = smart_annotation_parser(@checklist_item.text).gsub(/\s+/, ' ')
-          type_of = if @checklist_item.saved_change_to_attribute(:checked).last
-                      :check_step_checklist_item
-                    else
-                      :uncheck_step_checklist_item
-                    end
-          log_activity(type_of,
-                       checkbox: text_activity,
-                       num_completed: completed_items.to_s,
-                       num_all: all_items.to_s)
-        else
-          log_activity(
-            "#{@step.protocol.in_module? ? :task : :protocol}_step_checklist_item_edited",
-            checklist_item: @checklist_item.text,
-            checklist_name: @checklist.name
-          )
-        end
+        log_activity(
+          "#{@step.protocol.in_module? ? :task : :protocol}_step_checklist_item_edited",
+          checklist_item: @checklist_item.text,
+          checklist_name: @checklist.name
+        )
+      end
+
+      render json: @checklist_item, serializer: ChecklistItemSerializer, user: current_user
+    rescue ActiveRecord::RecordInvalid
+      render json: @checklist_item, serializer: ChecklistItemSerializer,
+                                    user: current_user,
+                                    status: :unprocessable_entity
+    end
+
+    def toggle
+      @checklist_item.assign_attributes(
+        checklist_toggle_item_params.merge(last_modified_by: current_user)
+      )
+
+      if @checklist_item.save!
+        completed_items = @checklist_item.checklist.checklist_items.where(checked: true).count
+        all_items = @checklist_item.checklist.checklist_items.count
+        text_activity = smart_annotation_parser(@checklist_item.text).gsub(/\s+/, ' ')
+        type_of = if @checklist_item.saved_change_to_attribute(:checked).last
+                    :check_step_checklist_item
+                  else
+                    :uncheck_step_checklist_item
+                  end
+        log_activity(type_of,
+                     checkbox: text_activity,
+                     num_completed: completed_items.to_s,
+                     num_all: all_items.to_s)
       end
 
       render json: @checklist_item, serializer: ChecklistItemSerializer, user: current_user
@@ -91,12 +104,24 @@ module StepElements
 
     private
 
+    def check_toggle_permissions
+      if ActiveModel::Type::Boolean.new.cast(checklist_toggle_item_params[:checked])
+        render_403 unless can_check_my_module_steps?(@step.protocol.my_module)
+      else
+        render_403 unless can_uncheck_my_module_steps?(@step.protocol.my_module)
+      end
+    end
+
     def check_manage_permissions
       render_403 unless can_manage_step?(@step)
     end
 
     def checklist_item_params
-      params.require(:attributes).permit(:checked, :text, :position)
+      params.require(:attributes).permit(:text, :position)
+    end
+
+    def checklist_toggle_item_params
+      params.require(:attributes).permit(:checked)
     end
 
     def load_vars
@@ -107,7 +132,7 @@ module StepElements
       return render_404 unless @checklist
     end
 
-    def load_checklist
+    def load_checklist_item
       @checklist_item = @checklist.checklist_items.find_by(id: params[:id])
       return render_404 unless @checklist_item
     end
