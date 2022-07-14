@@ -23,7 +23,8 @@
               <div class="step-element-name">
                 <strong v-if="includeNumbers" class="step-element-number">{{ index + 1 }}</strong>
                 <i v-if="item.attributes.icon" class="fas" :class="item.attributes.icon"></i>
-                {{ item.attributes.name }}
+                <span v-if="item.attributes.name">{{ item.attributes.name }}</span>
+                <span v-else class="step-element-name-placeholder">{{ item.attributes.placeholder }}</span>
               </div>
             </div>
           </Draggable>

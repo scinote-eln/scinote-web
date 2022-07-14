@@ -78,9 +78,12 @@
           <span class="fas fa-caret-down"></span>
           {{ i18n.t("protocols.steps.expand_label") }}
         </button>
-        <a v-if="urls.reorder_steps_url && steps.length > 1" class="btn btn-light" data-toggle="modal"
+        <a v-if="urls.reorder_steps_url"
+           class="btn btn-light"
+           data-toggle="modal"
            @click="startStepReorder"
            @keyup.enter="startStepReorder"
+           :class="{'disabled': steps.length == 1}"
            tabindex="0" >
             <i class="fas fas-rotated-90 fa-exchange-alt" aria-hidden="true"></i>
             <span>{{ i18n.t("protocols.reorder_steps.button") }}</span>
@@ -98,7 +101,7 @@
               :inRepository="inRepository"
               @step:delete="updateStepsPosition"
               @step:update="updateStep"
-              :reorderStepUrl="urls.reorder_steps_url"
+              :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
             />
           </div>
         </template>
