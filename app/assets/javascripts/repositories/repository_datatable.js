@@ -134,6 +134,7 @@ var RepositoryDatatable = (function(global) {
     currentMode = 'viewMode';
     // Table specific stuff
     TABLE.button(0).enable(true);
+    $('#saveRecord').attr('disabled', false);
     $(TABLE_WRAPPER_ID).find('tr').removeClass('blocked');
     updateButtons();
     disableCheckboxToggleOnCheckboxPreview();
@@ -271,7 +272,7 @@ var RepositoryDatatable = (function(global) {
   function initSaveButton() {
     $(TABLE_WRAPPER_ID).on('click', '#saveRecord', function() {
       var $table = $(TABLE_ID);
-      RepositoryDatatableRowEditor.validateAndSubmit($table);
+      RepositoryDatatableRowEditor.validateAndSubmit($table, $('#saveRecord'));
     });
   }
 
