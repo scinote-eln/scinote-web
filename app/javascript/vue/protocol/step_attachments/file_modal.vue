@@ -114,6 +114,7 @@
         }
       },
       dropFile(e) {
+        e.stopPropagation();
         if (e.dataTransfer && e.dataTransfer.files.length) {
           $(this.$refs.modal).modal('hide');
           this.$emit('files', e.dataTransfer.files);

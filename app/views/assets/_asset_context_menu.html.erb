@@ -61,6 +61,12 @@
               <%= t('assets.file_preview.edit_in_scinote') %>
             </a>
           </li>
+          <li>
+            <a class="btn btn-light file-download-link" href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>" data-turbolinks="false">
+              <span class="fas fa-download"></span>
+              <%= t('Download') %>
+            </a>
+          </li>
           <li role="separator" class="divider"></li>
         <% end %>
       <% end %>
