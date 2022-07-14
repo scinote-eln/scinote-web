@@ -25,13 +25,18 @@
               <span class="fas fa-caret-right"></span>
           </a>
           <div v-if="!inRepository" class="step-complete-container">
-            <div :class="`step-state ${step.attributes.completed ? 'completed' : ''}`" @click="changeState"></div>
+            <div :class="`step-state ${step.attributes.completed ? 'completed' : ''}`"
+                 @click="changeState"
+                 @keyup.enter="changeState"
+                 tabindex="0"
+                 :title="step.attributes.completed ? i18n.t('protocols.steps.status.uncomplete') : i18n.t('protocols.steps.status.complete')"
+            ></div>
           </div>
           <div class="step-position">
             {{ step.attributes.position + 1 }}.
           </div>
         </div>
-        <div class="step-name-container">
+        <div class="step-name-container" :class="{'strikethrough': step.attributes.completed}">
           <InlineEdit
             v-if="urls.update_url"
             :value="step.attributes.name"
@@ -41,6 +46,7 @@
             :autofocus="editingName"
             @editingEnabled="editingName = true"
             @editingDisabled="editingName = false"
+            :editOnload="step.newStep == true"
             @update="updateName"
           />
           <span v-else>
