@@ -52,6 +52,7 @@ var CommentsSidebar = (function() {
     $(document).on('click', `${SIDEBAR} .scroll-page-with-anchor`, function(e) {
       e.preventDefault();
       $($(this).attr('href'))[0].scrollIntoView();
+      window.scrollBy(0, -130);
     });
   }
 
