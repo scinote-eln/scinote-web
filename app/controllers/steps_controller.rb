@@ -210,9 +210,16 @@ class StepsController < ApplicationController
     if @step.update(step_params)
       # Generate activity
       if @protocol.in_module?
-        log_activity(:edit_step, @my_module.experiment.project, my_module: @my_module.id)
+        log_activity(
+          :edit_step, @my_module.experiment.project,
+          { my_module: @my_module.id }.merge(step_message_items)
+        )
       else
-        log_activity(:edit_step_in_protocol_repository, nil, protocol: @protocol.id)
+        log_activity(
+          :edit_step_in_protocol_repository,
+          nil,
+          { protocol: @protocol.id }.merge(step_message_items)
+        )
       end
       render json: @step, serializer: StepSerializer, user: current_user
     else
@@ -652,5 +659,18 @@ class StepsController < ApplicationController
             team: current_team,
             project: project,
             message_items: message_items)
+  end
+
+  def step_message_items
+    {
+      step: {
+        id: @step.id,
+        value_for: 'name'
+      },
+      step_position: {
+        id: @step.id,
+        value_for: 'position_plus_one'
+      }
+    }
   end
 end

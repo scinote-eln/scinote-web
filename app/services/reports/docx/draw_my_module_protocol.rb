@@ -7,7 +7,7 @@ module Reports::Docx::DrawMyModuleProtocol
     @docx.h4 protocol.name, italic: false
 
     if protocol.description.present?
-
+      @docx.h4 protocol.name if my_module.results.any?
       @docx.p I18n.t 'projects.reports.elements.module.protocol.user_time',
                      timestamp: I18n.l(protocol.created_at, format: :full)
       @docx.hr

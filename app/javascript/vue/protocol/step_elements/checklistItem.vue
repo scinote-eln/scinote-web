@@ -5,10 +5,11 @@
         <i class="fas fa-grip-vertical"></i>
       </div>
       <div class="step-element-name" :class="{ 'done': checklistItem.attributes.checked }">
-        <div class="sci-checkbox-container" :class="{ 'disabled': !updateUrl || inRepository}">
+        <div class="sci-checkbox-container" :class="{ 'disabled': !toggleUrl || inRepository}">
           <input ref="checkbox"
                  type="checkbox"
                  class="sci-checkbox"
+                 :disabled="checklistItem.attributes.isNew"
                  :checked="checklistItem.attributes.checked" @change="toggleChecked($event)" />
           <span class="sci-checkbox-label" >
           </span>
@@ -24,7 +25,7 @@
             :autofocus="editingText"
             :attributeName="`${i18n.t('ChecklistItem')} ${i18n.t('name')}`"
             :multilinePaste="true"
-            :editOnload="newItem()"
+            :editOnload="checklistItem.attributes.isNew"
             :smartAnnotation="true"
             @editingEnabled="enableTextEdit"
             @editingDisabled="disableTextEdit"
@@ -41,23 +42,21 @@
         <button v-if="!checklistItem.attributes.urls || updateUrl" class="btn icon-btn btn-light" @click="enableTextEdit" tabindex="-1">
           <i class="fas fa-pen"></i>
         </button>
-        <button v-if="!checklistItem.attributes.urls || deleteUrl" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
+        <button v-if="!checklistItem.attributes.urls || deleteUrl" class="btn icon-btn btn-light" @click="deleteElement" tabindex="-1">
           <i class="fas fa-trash"></i>
         </button>
       </div>
     </div>
-    <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @cancel="closeDeleteModal"/>
   </div>
 </template>
 
  <script>
   import DeleteMixin from 'vue/protocol/mixins/components/delete.js'
-  import deleteElementModal from 'vue/protocol/modals/delete_element.vue'
   import InlineEdit from 'vue/shared/inline_edit.vue'
 
   export default {
     name: 'ChecklistItem',
-    components: { deleteElementModal, InlineEdit },
+    components: { InlineEdit },
     mixins: [DeleteMixin],
     props: {
       checklistItem: {
@@ -95,6 +94,11 @@
 
         return this.checklistItem.attributes.urls.update_url;
       },
+      toggleUrl() {
+        if (!this.checklistItem.attributes.urls) return
+
+        return this.checklistItem.attributes.urls.toggle_url;
+      },
       deleteUrl() {
         if (!this.checklistItem.attributes.urls) return
 
@@ -107,13 +111,17 @@
         this.$emit('editStart');
       },
       disableTextEdit() {
+        if (this.checklistItem.attributes.isNew) {
+          this.removeItem();
+          return;
+        }
         this.editingText = false;
         this.$emit('editEnd');
       },
       toggleChecked(e) {
-        if (!this.updateUrl) return
+        if (!this.toggleUrl) return
         this.checklistItem.attributes.checked = this.$refs.checkbox.checked;
-        this.update();
+        this.$emit('toggle', this.checklistItem);
       },
       updateText(text) {
         if (text.length === 0) {
@@ -130,9 +138,6 @@
         } else {
           this.$emit('removeItem', this.checklistItem.attributes.position);
         }
-      },
-      newItem(){
-        return this.checklistItem.attributes.text === ''
       },
       update() {
         this.$emit('update', this.checklistItem);

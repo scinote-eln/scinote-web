@@ -4,6 +4,7 @@
 @import "components/*";
 
 .step-container {
+  --left-component-padding: 24px;
   border: $border-transparent;
   margin: 6px 0 6px -1.5em;
   padding: 8px 24px 8px 0;
@@ -16,15 +17,20 @@
     .step-element-header {
       border-radius: 4px;
       flex-basis: 80%;
+      position: relative;
 
       .step-name-edit-icon {
         display: none;
+        position: absolute;
+        right: -8px;
+        top: -6px;
       }
 
       &:hover .step-name-edit-icon {
         cursor: pointer;
         display: inline-block;
         margin-right: 16px;
+        margin-top: 16px;
       }
 
       .step-collapse-link {
@@ -58,44 +64,31 @@
 
     .step-name-container {
       flex-grow: 1;
+      font-size: 16px;
       font-weight: bold;
 
       textarea {
         text-decoration: initial;
       }
+    }
 
-      .step-state {
-        border: 2px solid $color-alto;
-        border-radius: 50%;
-        cursor: pointer;
-        height: 24px;
-        text-align: center;
-        width: 24px;
+    .step-state {
+      border: 2px solid $color-alto;
+      border-radius: 50%;
+      cursor: pointer;
+      height: 24px;
+      text-align: center;
+      width: 24px;
 
-        &.completed {
-          background: $brand-success;
-          border: 2px solid $brand-success;
+      &.completed {
+        background: $brand-success;
+        border: 2px solid $brand-success;
 
-          &::after {
-            @include font-awesome;
-            color: $color-white;
-            content: $font-fas-check;
-          }
+        &::after {
+          @include font-awesome;
+          color: $color-white;
+          content: $font-fas-check;
         }
-      }
-
-      .step-position {
-        @include font-main;
-        flex-shrink: 0;
-        font-weight: bold;
-        line-height: 24px;
-        margin: 0 4px;
-      }
-
-      .step-name-container {
-        flex-grow: 1;
-        font-size: 16px;
-        font-weight: bold;
       }
     }
 
@@ -103,6 +96,11 @@
       display: flex;
       justify-content: flex-end;
       flex-basis: 20%;
+
+      .disabled {
+        color: $color-silver-chalice;
+        pointer-events: none;
+      }
 
       .dropdown-menu {
         white-space: nowrap;
@@ -146,7 +144,12 @@
   }
 
   .step-elements {
-    padding-left: 24px;
+    padding-left: calc(var(--left-component-padding) * 2);
+  }
+
+  .step-element-grip-placeholder {
+    height: 24px;
+    width: 28px;
   }
 
   .comments-counter {
@@ -181,7 +184,6 @@
     height: 100%;
     justify-content: center;
     left: 0;
-    pointer-events: none;
     position: absolute;
     top: 0;
     width: 100%;
@@ -194,6 +196,10 @@
     .drop-message {
       display: flex;
       flex-direction: column;
+
+      .storage-usage {
+        pointer-events: none;
+      }
     }
 
     > *:not(.drop-message) {
@@ -225,7 +231,7 @@
 }
 
 .step-element-header {
-  align-items: center;
+  align-items: flex-start;
   display: flex;
   min-height: 40px;
   position: relative;
@@ -249,6 +255,7 @@
     font-weight: bold;
     width: 100%;
 
+
     .step-element-number {
       display: inline-block;
       margin-right: 8px;
@@ -266,6 +273,7 @@
     margin-left: auto;
     position: absolute;
     right: 0;
+    top: 0;
 
     .fas {
       font-size: 14px;
@@ -275,6 +283,7 @@
   .step-element-grip {
     color: $color-silver-chalice;
     cursor: grab;
+    margin: auto;
     padding: .5em;
   }
 
@@ -307,6 +316,13 @@
 
     .step-element-name {
       font-weight: normal;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .step-element-name-placeholder {
+      color: $color-silver-chalice;
     }
 
     .fas {

@@ -6,9 +6,21 @@ class StepSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include CommentHelper
 
-  attributes :name, :position, :completed, :urls, :assets_view_mode, :assets_order,
-             :marvinjs_enabled, :marvinjs_context, :wopi_enabled, :wopi_context, :comments_count, :unseen_comments,
-             :storage_limit
+  attributes :name, :position, :completed, :attachments_manageble, :urls, :assets_view_mode, :assets_order,
+             :marvinjs_enabled, :bio_eddie_service_enabled, :bio_eddie_context, :marvinjs_context,
+             :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit
+
+  def bio_eddie_service_enabled
+    BioEddieService.enabled?(@instance_options[:user])
+  end
+
+  def bio_eddie_context
+    if bio_eddie_service_enabled
+      {
+        marvin_js_asset_url: marvin_js_assets_path
+      }
+    end
+  end
 
   def marvinjs_enabled
     MarvinJsService.enabled?
@@ -52,16 +64,21 @@ class StepSerializer < ActiveModel::Serializer
     object.current_view_state(@instance_options[:user]).state.dig('assets', 'sort') unless object.destroyed?
   end
 
+  def attachments_manageble
+    can_manage_step?(object)
+  end
+
   def urls
     urls_list = {
       elements_url: elements_step_path(object),
       attachments_url: attachments_step_path(object)
     }
 
+    urls_list[:state_url] = toggle_step_state_step_path(object) if can_complete_my_module_steps?(object.my_module)
+
     if can_manage_step?(object)
       urls_list.merge!({
         delete_url: step_path(object),
-        state_url: toggle_step_state_step_path(object),
         update_url: step_path(object),
         create_table_url: step_tables_path(object),
         create_text_url: step_texts_path(object),

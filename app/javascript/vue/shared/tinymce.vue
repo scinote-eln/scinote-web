@@ -106,6 +106,11 @@
         return false
       }
     },
+    mounted() {
+      if (this.inEditMode) {
+        this.initTinymce();
+      }
+    },
     methods: {
       initTinymce() {
         let textArea = `#${this.objectType}_textarea_${this.objectId}`;
@@ -126,7 +131,7 @@
       initCharacterCount() {
         this.characterCount = $(this.editorInstance.getContent()).text().length
 
-        this.editorInstance.on('input', (e) => {
+        this.editorInstance.on('input paste', (e) => {
           this.characterCount = e.currentTarget.innerText.length
         });
 

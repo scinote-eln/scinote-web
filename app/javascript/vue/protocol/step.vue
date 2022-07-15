@@ -1,36 +1,42 @@
 <template>
-  <div class="step-container"
+  <div ref="stepContainer" class="step-container"
        :id="`stepContainer${step.id}`"
        @drop.prevent="dropFile"
        @dragenter.prevent="!showFileModal ? dragingFile = true : null"
-       @dragleave.prevent="!showFileModal ? dragingFile = false : null"
        @dragover.prevent
        :class="{ 'draging-file': dragingFile, 'showing-comments': showCommentsSidebar, 'editing-name': editingName }"
   >
-    <div class="drop-message">
-      {{ i18n.t('protocols.steps.drop_message', { position: step.attributes.position }) }}
-      <StorageUsage v-if="step.attributes.storage_limit" :step="step"/>
+    <div class="drop-message" @dragleave.prevent="!showFileModal ? dragingFile = false : null">
+      {{ i18n.t('protocols.steps.drop_message', { position: step.attributes.position + 1 }) }}
+      <StorageUsage v-if="showStorageUsage()" :step="step"/>
     </div>
     <div class="step-header">
       <div class="step-element-header">
         <div class="step-controls">
           <div v-if="reorderStepUrl" class="step-element-grip" @click="$emit('reorder')">
-            <i class="fas fa-grip-vertical"></i>
+            <i class="fas fas-rotated-90 fa-exchange-alt"></i>
           </div>
+          <div v-else class="step-element-grip-placeholder"></div>
           <a class="step-collapse-link"
             :href="'#stepBody' + step.id"
             data-toggle="collapse"
-            data-remote="true">
+            data-remote="true"
+            @click="toggleCollapsed">
               <span class="fas fa-caret-right"></span>
           </a>
           <div v-if="!inRepository" class="step-complete-container">
-            <div :class="`step-state ${step.attributes.completed ? 'completed' : ''}`" @click="changeState"></div>
+            <div :class="`step-state ${step.attributes.completed ? 'completed' : ''}`"
+                 @click="changeState"
+                 @keyup.enter="changeState"
+                 tabindex="0"
+                 :title="step.attributes.completed ? i18n.t('protocols.steps.status.uncomplete') : i18n.t('protocols.steps.status.complete')"
+            ></div>
           </div>
           <div class="step-position">
             {{ step.attributes.position + 1 }}.
           </div>
         </div>
-        <div class="step-name-container">
+        <div class="step-name-container" :class="{'strikethrough': step.attributes.completed}">
           <InlineEdit
             v-if="urls.update_url"
             :value="step.attributes.name"
@@ -40,13 +46,14 @@
             :autofocus="editingName"
             @editingEnabled="editingName = true"
             @editingDisabled="editingName = false"
+            :editOnload="step.newStep == true"
             @update="updateName"
           />
           <span v-else>
             {{ step.attributes.name }}
           </span>
         </div>
-        <i v-if="!editingName" class="step-name-edit-icon fas fa-pen" @click="editingName = true"></i>
+        <i v-if="urls.update_url && !editingName" class="step-name-edit-icon fas fa-pen" @click="editingName = true"></i>
       </div>
       <div class="step-actions-container">
         <div ref="actionsDropdownButton" v-if="urls.update_url"  class="dropdown">
@@ -82,7 +89,7 @@
            class="open-comments-sidebar btn icon-btn btn-light"
            data-turbolinks="false"
            data-object-type="Step"
-           @click="showCommentsSidebar = true"
+           @click="openCommentsSidebar"
            :data-object-id="step.id">
           <i class="fas fa-comment"></i>
           <span class="comments-counter"
@@ -95,7 +102,7 @@
         <div v-if="urls.update_url" class="step-actions-container">
           <div class="dropdown">
             <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'stepInserMenu_' + step.id" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="true">
-              <i class="fas fa-ellipsis-v"></i>
+              <i class="fas fa-ellipsis-h"></i>
             </button>
             <ul class="dropdown-menu dropdown-menu-right insert-element-dropdown" :aria-labelledby="'stepInserMenu_' + step.id">
               <li class="title">
@@ -153,7 +160,7 @@
                          @cancel="showClipboardPasteModal = false"
     />
     <ReorderableItemsModal v-if="reordering"
-      :title="i18n.t('protocols.steps.modals.reorder_elements.title', { step_name: step.attributes.name })"
+      :title="i18n.t('protocols.steps.modals.reorder_elements.title', { step_position: step.attributes.position + 1 })"
       :items="reorderableElements"
       @reorder="updateElementOrder"
       @close="closeReorderModal"
@@ -194,8 +201,7 @@
         required: true
       },
       reorderStepUrl: {
-        type: String,
-        required: true
+        required: false
       }
     },
     data() {
@@ -208,6 +214,7 @@
         showCommentsSidebar: false,
         dragingFile: false,
         reordering: false,
+        isCollapsed: false,
         editingName: false
       }
     },
@@ -230,6 +237,7 @@
     },
     mounted() {
       $(this.$refs.comments).data('closeCallback', this.closeCommentsSidebar);
+      $(this.$refs.comments).data('openCallback', this.closeCommentsSidebar);
       $(this.$refs.actionsDropdownButton).on('shown.bs.dropdown hidden.bs.dropdown', this.handleDropdownPosition);
     },
     computed: {
@@ -250,6 +258,12 @@
         $.get(this.urls.elements_url, (result) => {
           this.elements = result.data
         });
+      },
+      showStorageUsage() {
+        return (this.elements.length || this.attachments.length) && !this.isCollapsed && this.step.attributes.storage_limit;
+      },
+      toggleCollapsed() {
+        this.isCollapsed = !this.isCollapsed;
       },
       showDeleteModal() {
         this.confirmingDelete = true;
@@ -366,6 +380,10 @@
       },
       addAttachment(attachment) {
         this.attachments.push(attachment);
+      },
+      openCommentsSidebar() {
+        $('.comments-sidebar .close-btn').click();
+        this.showCommentsSidebar = true
       },
       closeCommentsSidebar() {
         this.showCommentsSidebar = false

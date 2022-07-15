@@ -21,7 +21,7 @@
                @dragover.prevent
           >
             <input type="file" class="hidden" ref=fileSelector @change="uploadFiles" multiple />
-            <div class="title" @click="$refs.fileSelector.click()" tabindex="0" @keyup.enter="$refs.fileSelector.click()">
+            <div class="title btn btn-light" @click="$refs.fileSelector.click()" tabindex="0" @keyup.enter="$refs.fileSelector.click()">
               <i class="fas fa-upload"></i>
               {{ i18n.t("protocols.steps.attachments.file_modal.drag_zone_title") }}
             </div>
@@ -114,6 +114,7 @@
         }
       },
       dropFile(e) {
+        e.stopPropagation();
         if (e.dataTransfer && e.dataTransfer.files.length) {
           $(this.$refs.modal).modal('hide');
           this.$emit('files', e.dataTransfer.files);

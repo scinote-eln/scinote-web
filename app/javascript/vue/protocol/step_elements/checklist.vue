@@ -4,6 +4,7 @@
       <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
         <i class="fas fas-rotated-90 fa-exchange-alt"></i>
       </div>
+      <div v-else class="step-element-grip-placeholder"></div>
       <div class="step-element-name">
         <InlineEdit
           v-if="element.attributes.orderable.urls.update_url"
@@ -53,6 +54,7 @@
           @editStart="editingItem = true"
           @editEnd="editingItem = false"
           @update="saveItem"
+          @toggle="saveItemChecked"
           @removeItem="removeItem"
           @component:delete="removeItem"
           @multilinePaste="handleMultilinePaste"
@@ -93,6 +95,10 @@
       },
       reorderElementUrl: {
         type: String
+      },
+      isNew: {
+        type: Boolean,
+        default: false
       }
     },
     data() {
@@ -108,6 +114,10 @@
       this.checklistItems = this.element.attributes.orderable.checklist_items.map((item, index) => {
         return { attributes: {...item, position: index } }
       });
+
+      if (this.isNew) {
+        this.addItem();
+      }
     },
     computed: {
       orderedChecklistItems() {
@@ -165,10 +175,23 @@
           });
         } else {
           // create item, then append next one
-          this.postItem(item);
-          this.addItem();
+          this.postItem(item, this.addItem);
         }
         this.update();
+      },
+      saveItemChecked(item) {
+        $.ajax({
+          url: item.attributes.urls.toggle_url,
+          type: 'PATCH',
+          data: { attributes: { checked: item.attributes.checked } },
+          success: (result) => {
+            let updatedItem = this.checklistItems[item.attributes.position]
+            updatedItem.attributes = result.data.attributes
+            updatedItem.attributes.id = item.attributes.id
+            this.$set(this.checklistItems, item.attributes.position, updatedItem)
+          },
+          error: () => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')
+        });
       },
       addItem() {
         this.checklistItems.push(
@@ -176,7 +199,8 @@
             attributes: {
               text: '',
               checked: false,
-              position: this.checklistItems.length
+              position: this.checklistItems.length,
+              isNew: true
             }
           }
         );
@@ -211,7 +235,7 @@
       },
       handleMultilinePaste(data) {
         this.linesToPaste = data.length;
-        let nextPosition = this.checklistItems.length;
+        let nextPosition = this.checklistItems.length - 1;
 
         // we need to post items to API in the right order, to avoid positions breaking
         let synchronousPost = (index) => {

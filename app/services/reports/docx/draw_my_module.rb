@@ -9,7 +9,12 @@ module Reports::Docx::DrawMyModule
     tags = my_module.tags
     return unless can_read_my_module?(@user, my_module)
 
-    @docx.h3 my_module.name, italic: false, size: Constants::REPORT_DOCX_MY_MODULE_TITLE_SIZE
+    @docx.h3 do
+      link  my_module.name,
+            scinote_url + Rails.application.routes.url_helpers.protocols_my_module_path(my_module),
+            link_style
+    end
+
     @docx.p do
       text I18n.t('projects.reports.elements.module.user_time',
                   timestamp: I18n.l(my_module.created_at, format: :full)), color: color[:gray]
@@ -17,10 +22,6 @@ module Reports::Docx::DrawMyModule
         text ' | '
         text I18n.t('search.index.archived'), color: color[:gray]
       end
-      text ' | '
-      link  I18n.t('projects.reports.elements.all.scinote_link'),
-            scinote_url + Rails.application.routes.url_helpers.protocols_my_module_path(my_module),
-            link_style
     end
 
     @docx.p do
@@ -78,6 +79,7 @@ module Reports::Docx::DrawMyModule
       draw_step(step)
     end
 
+    @docx.h4 I18n.t('Results') if my_module.results.any?
     order_results_for_report(my_module.results, @settings.dig('task', 'result_order')).each do |result|
       if result.is_asset && @settings.dig('task', 'file_results')
         draw_result_asset(result)

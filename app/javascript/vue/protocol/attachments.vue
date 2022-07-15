@@ -2,9 +2,9 @@
   <div v-if="attachments.length" class="step-attachments">
     <div class="attachments-actions">
       <div class="title">
-        <h4>{{ i18n.t('protocols.steps.files', {count: attachments.length}) }}</h4>
+        <h3>{{ i18n.t('protocols.steps.files', {count: attachments.length}) }}</h3>
       </div>
-      <div class="actions">
+      <div class="actions" v-if="step.attributes.attachments_manageble">
         <div class="dropdown sci-dropdown">
           <button class="btn btn-light dropdown-toggle" type="button" id="dropdownAttachmentsOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <span>{{ i18n.t("protocols.steps.attachments.manage") }}</span>
@@ -17,8 +17,33 @@
             <li class="divider-label">{{ i18n.t("protocols.steps.attachments.add") }}</li>
             <li>
               <a class="action-link .attachments-view-mode {" @click="$emit('attachments:openFileModal')">
-                <i class="fas fa-paperclip"></i>
+                <i class="fas fa-upload"></i>
                 {{ i18n.t('protocols.steps.insert.attachment') }}
+              </a>
+            </li>
+            <li v-if="step.attributes.marvinjs_enabled">
+              <a
+                class="new-marvinjs-upload-button"
+                :data-object-id="step.id"
+                data-object-type="Step"
+                :data-marvin-url="step.attributes.marvinjs_context.marvin_js_asset_url"
+                :data-sketch-container="`.attachments[data-step-id=${step.id}]`"
+              >
+                <span class="new-marvinjs-upload-icon">
+                  <img v-bind:src="marvinjsIcon">
+                </span>
+                  {{ i18n.t('marvinjs.new_li_button') }}
+              </a>
+            </li>
+            <li v-if="step.attributes.bio_eddie_service_enabled">
+              <a
+                class="new-bio-eddie-upload-button"
+                :data-object-id="step.id"
+                data-object-type="Step"
+                :data-assets-container="`.attachments[data-step-id=${step.id}]`"
+              >
+                <img v-bind:src="bioEddieIcon">
+                {{ i18n.t('bio_eddie.new_button') }}
               </a>
             </li>
             <li role="separator" class="divider"></li>
@@ -66,7 +91,8 @@
   import inlineAttachment from 'vue/protocol/step_attachments/inline.vue'
   import thumbnailAttachment from 'vue/protocol/step_attachments/thumbnail.vue'
   import uploadingAttachment from 'vue/protocol/step_attachments/uploading.vue'
-
+  import marvinjsIcon from 'images/icon_small/marvinjs.svg'
+  import bioEddieIcon from 'images/icon_small/bio_eddie.png'
 
   export default {
     name: 'Attachments',
@@ -82,6 +108,8 @@
     },
     data() {
       return {
+        marvinjsIcon,
+        bioEddieIcon,
         viewModeOptions: ['inline', 'thumbnail', 'list'],
         orderOptions: ['new', 'old', 'atoz', 'ztoa'],
       }

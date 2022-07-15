@@ -2372,6 +2372,8 @@ en:
       keywords: "Keywords:"
       authors: "Authors:"
       no_authors: "No authors"
+      add_authors: "+ Add authors"
+      add_keywords: "+ Add keywords"
       description: "Description"
       no_description: "No description"
       keywords_modal: "Input one or multiple keywords, confirm each keyword with ENTER key"
@@ -2540,7 +2542,7 @@ en:
         uncomplete: "Unmark as done"
       options_dropdown:
         title: 'Step options'
-        rearrange: 'Rearrange step content'
+        rearrange: 'Rearrange content'
         delete: 'Delete'
       insert:
         button: 'Insert'
@@ -2548,7 +2550,7 @@ en:
         table: 'Add table'
         text: 'Add text'
         checklist: 'Add checklist'
-        attachment: 'Add file'
+        attachment: 'File from your PC'
         checklist_item: 'Add a new checklist item...'
       table:
         default_name: 'Table %{position}'
@@ -2574,7 +2576,7 @@ en:
           description_2: 'Are you sure you want to delete them?'
           confirm: 'Delete forever'
         reorder_elements:
-          title: 'Rearrange %{step_name} content'
+          title: 'Rearrange step %{step_position} content'
       options:
         up_arrow_title: "Move step up"
         down_arrow_title: "Move step down"
@@ -2599,6 +2601,7 @@ en:
           drag_zone_notification: "Drop files to add to step %{position}"
           or: "OR"
         new:
+          description: 'New'
           uploading: 'Uploading'
           file_too_big: 'Failed to upload: File size is too big'
           general_error: 'Failed to upload: Something went wrong, please try again'

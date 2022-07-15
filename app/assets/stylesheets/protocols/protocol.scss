@@ -64,6 +64,21 @@
 
   .protocol-description {
     margin-bottom: 2em;
+
+    img {
+      border-radius: 50%;
+      height: 24px;
+      width: 24px;
+    }
+
+    .fas.block-icon {
+      margin-right: 6px;
+
+      &.fa-graduation-cap,
+      &.fa-font {
+        margin-right: 10px;
+      }
+    }
   }
 
   .protocol-step-actions {
@@ -76,6 +91,7 @@
 .protocol-content {
   .protocol-name {
     font-size: 1.7em;
+    font-weight: bold;
     margin-bottom: 32px;
     margin-top: 28px;
   }
