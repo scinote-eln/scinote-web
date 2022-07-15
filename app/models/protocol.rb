@@ -651,6 +651,7 @@ class Protocol < ApplicationRecord
     # Link protocols if neccesary
     if link_protocols
       reload
+      self.name = clone.name
       self.record_timestamps = false
       self.added_by = current_user
       self.parent = clone
