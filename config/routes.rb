@@ -25,6 +25,7 @@ Rails.application.routes.draw do
 
     get 'forbidden', to: 'application#forbidden', as: 'forbidden'
     get 'not_found', to: 'application#not_found', as: 'not_found'
+    get 'unprocessable_entity', to: 'application#respond_422', as: 'unprocessable_entity'
 
     # JS backend helpers
     get 'helpers/to_user_date_format',

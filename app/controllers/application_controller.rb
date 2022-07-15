@@ -13,21 +13,16 @@ class ApplicationController < ActionController::Base
     redirect_to root_path
   end
 
-  def respond_422(message = t('client_api.permission_error'))
-    respond_to do |format|
-      format.json do
-        render json: { message: message },
-               status: 422
-      end
-    end
-  end
-
   def forbidden
     render_403
   end
 
   def not_found
     render_404
+  end
+
+  def respond_422(message = t('client_api.permission_error'))
+    render_422(message)
   end
 
   def is_current_page_root?
@@ -75,6 +70,20 @@ class ApplicationController < ActionController::Base
       end
       format.any do
         render plain: 'NOT FOUND', status: :not_found
+      end
+    end
+  end
+
+  def render_422(message = t('client_api.permission_error'))
+    respond_to do |format|
+      format.html do
+        render file: 'public/422.html', status: :unprocessable_entity, layout: false
+      end
+      format.json do
+        render json: { message: message }, status: :unprocessable_entity
+      end
+      format.any do
+        render plain: 'UNPROCESSABLE ENTITY', status: :unprocessable_entity
       end
     end
   end
