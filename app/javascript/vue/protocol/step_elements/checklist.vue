@@ -54,6 +54,7 @@
           @editStart="editingItem = true"
           @editEnd="editingItem = false"
           @update="saveItem"
+          @toggle="saveItemChecked"
           @removeItem="removeItem"
           @component:delete="removeItem"
           @multilinePaste="handleMultilinePaste"
@@ -177,6 +178,20 @@
           this.postItem(item, this.addItem);
         }
         this.update();
+      },
+      saveItemChecked(item) {
+        $.ajax({
+          url: item.attributes.urls.toggle_url,
+          type: 'PATCH',
+          data: { attributes: { checked: item.attributes.checked } },
+          success: (result) => {
+            let updatedItem = this.checklistItems[item.attributes.position]
+            updatedItem.attributes = result.data.attributes
+            updatedItem.attributes.id = item.attributes.id
+            this.$set(this.checklistItems, item.attributes.position, updatedItem)
+          },
+          error: () => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')
+        });
       },
       addItem() {
         this.checklistItems.push(

@@ -456,6 +456,7 @@ Rails.application.routes.draw do
       resources :texts, controller: 'step_elements/texts', only: %i(create destroy update)
       resources :checklists, controller: 'step_elements/checklists', only: %i(create destroy update) do
         resources :checklist_items, controller: 'step_elements/checklist_items', only: %i(create update destroy) do
+          patch :toggle, on: :member
           post :reorder, on: :collection
         end
       end
