@@ -1,6 +1,6 @@
 <template>
   <div class="step-checklist-container" :class="{ 'step-element--locked': !element.attributes.orderable.urls.update_url }">
-    <div class="step-element-header" :class="{ 'locked': locked, 'editing-name': editingName }">
+    <div class="step-element-header" :class="{ 'editing-name': editingName }">
       <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
         <i class="fas fas-rotated-90 fa-exchange-alt"></i>
       </div>
@@ -29,7 +29,7 @@
         </button>
       </div>
     </div>
-    <div class="step-checklist-items">
+    <div v-if="element.attributes.orderable.urls.create_item_url || orderedChecklistItems.length > 0" class="step-checklist-items">
       <Draggable
         v-model="checklistItems"
         :ghostClass="'step-checklist-item-ghost'"
@@ -65,6 +65,9 @@
         <i class="fas fa-plus"></i>
         {{ i18n.t('protocols.steps.insert.checklist_item') }}
       </div>
+    </div>
+    <div v-else class="empty-checklist-element">
+      {{ i18n.t("protocols.steps.checklist.empty_checklist") }}
     </div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @cancel="closeDeleteModal"/>
   </div>
@@ -126,7 +129,7 @@
         return this.linesToPaste > 0;
       },
       locked() {
-        return this.reordering || this.editingName
+        return this.reordering || this.editingName || !this.element.attributes.orderable.urls.update_url
       }
     },
     methods: {

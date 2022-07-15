@@ -28,7 +28,10 @@
       @editingDisabled="disableEditMode"
       @editingEnabled="enableEditMode"
     />
-    <div v-else v-html="element.attributes.orderable.text_view"></div>
+    <div v-else-if="element.attributes.orderable.text_view" v-html="element.attributes.orderable.text_view"></div>
+    <div v-else class="empty-text-element">
+      {{ i18n.t("protocols.steps.text.empty_text") }}
+    </div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement($event)" @cancel="closeDeleteModal"/>
   </div>
 </template>

@@ -27,7 +27,10 @@
         </button>
       </div>
     </div>
-    <div :class="'step-table ' + (editingTable ? 'edit' : 'view')" tabindex="0" @keyup.enter="!editingTable && enableTableEdit()">
+    <div class="step-table"
+         :class="{'edit': editingTable, 'view': !editingTable, 'locked': !element.attributes.orderable.urls.update_url}"
+         tabindex="0"
+         @keyup.enter="!editingTable && enableTableEdit()">
       <div  class="enable-edit-mode" v-if="!editingTable && element.attributes.orderable.urls.update_url" @click="enableTableEdit">
         <div class="enable-edit-mode__icon">
           <i class="fas fa-pen"></i>
@@ -113,6 +116,8 @@
         this.update();
       },
       updateTable() {
+        if (this.editingTable == false) return;
+
         let tableData = JSON.stringify({data: this.tableObject.getData()});
         this.element.attributes.orderable.contents = tableData;
         this.update();

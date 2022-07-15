@@ -62,7 +62,9 @@
             @update="updateDescription"
           />
         </div>
-        <div v-else v-html="protocol.attributes.description_view">
+        <div v-else-if="protocol.attributes.description_view" v-html="protocol.attributes.description_view"></div>
+        <div v-else class="empty-protocol-description">
+          {{ i18n.t("protocols.no_text_placeholder") }}
         </div>
       </div>
       <a v-if="urls.add_step_url && protocol.attributes.in_repository" class="btn btn-primary" @click="addStep(steps.length)">
