@@ -17,7 +17,7 @@
           <p><strong>{{i18n.t('assets.from_clipboard.file_name')}}</strong></p>
           <div class="input-group">
             <input id="clipboardImageName" type="text" class="form-control"
-                    :placeholder="i18n.t('assets.from_clipboard.file_name_placeholder')" aria-describedby="image-name">      
+                    :placeholder="i18n.t('assets.from_clipboard.file_name_placeholder')" aria-describedby="image-name">
               <span class="input-group-addon" id="image-name"></span>
           </div>
         </div>

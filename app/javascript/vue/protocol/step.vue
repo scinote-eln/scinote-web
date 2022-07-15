@@ -139,6 +139,7 @@
         <Attachments :step="step"
                     :attachments="attachments"
                     @attachments:openFileModal="showFileModal = true"
+                    @attachment:deleted="attachmentDeleted"
                     @attachments:order="changeAttachmentsOrder"
                     @attachments:viewMode="changeAttachmentsViewMode"
                     @attachment:viewMode="updateAttachmentViewMode"/>
@@ -310,12 +311,14 @@
           return e;
         })
         this.reorderElements(unorderedElements)
+        this.$emit('stepUpdated')
       },
       updateElement(element, skipRequest=false) {
         let index = this.elements.findIndex((e) => e.id === element.id);
 
         if (skipRequest) {
           this.elements[index].attributes.orderable = element.attributes.orderable;
+          this.$emit('stepUpdated');
         } else {
           $.ajax({
             url: element.attributes.orderable.urls.update_url,
@@ -323,6 +326,7 @@
             data: element.attributes.orderable,
             success: (result) => {
               this.elements[index].attributes.orderable = result.data.attributes;
+              this.$emit('stepUpdated');
             }
           }).error(() => {
             HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
@@ -384,6 +388,9 @@
       openCommentsSidebar() {
         $('.comments-sidebar .close-btn').click();
         this.showCommentsSidebar = true
+      },
+      attachmentDeleted() {
+        this.$emit('stepUpdated');
       },
       closeCommentsSidebar() {
         this.showCommentsSidebar = false

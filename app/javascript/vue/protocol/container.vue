@@ -101,6 +101,7 @@
               :inRepository="inRepository"
               @step:delete="updateStepsPosition"
               @step:update="updateStep"
+              @stepUpdated="refreshProtocolStatus"
               :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
             />
           </div>

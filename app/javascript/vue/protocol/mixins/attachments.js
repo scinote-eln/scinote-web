@@ -64,6 +64,7 @@ export default {
               });
               filesUploadedCntr += 1;
               if (filesUploadedCntr === filesToUploadCntr) {
+                this.$emit('stepUpdated');
                 resolve('done');
               }
             }
