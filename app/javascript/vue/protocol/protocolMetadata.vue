@@ -1,28 +1,28 @@
 <template>
   <div class="protocol-metadata">
     <p class="data-block">
-      <span class="fas block-icon fa-calendar-alt"></span>
+      <span class="fas block-icon fa-calendar-alt fa-fw"></span>
       {{ i18n.t("protocols.header.created_at") }}
       <b>{{ protocol.attributes.created_at_formatted }}</b>
     </p>
     <p class="data-block">
-      <span class="fas block-icon fa-user"></span>
+      <span class="fas block-icon fa-user fa-fw"></span>
       {{ i18n.t("protocols.header.added_by") }}
       <img :src="protocol.attributes.added_by.avatar"/>
       {{ protocol.attributes.added_by.name }}
     </p>
     <p class="data-block">
-      <span class="fas block-icon fa-edit"></span>
+      <span class="fas block-icon fa-edit fa-fw"></span>
       {{ i18n.t("protocols.header.updated_at") }}
       <b>{{ protocol.attributes.updated_at_formatted }}</b>
     </p>
     <p class="data-block authors-data">
-      <span class="fas block-icon fa-graduation-cap"></span>
+      <span class="fas block-icon fa-graduation-cap fa-fw"></span>
       <span>{{ i18n.t("protocols.header.authors") }}</span>
       <span class="authors-list" v-if="protocol.attributes.urls.update_protocol_authors_url">
         <InlineEdit
           :value="protocol.attributes.authors"
-          :placeholder="i18n.t('protocols.header.no_authors')"
+          :placeholder="i18n.t('protocols.header.add_authors')"
           :allowBlank="true"
           :attributeName="`${i18n.t('Protocol')} ${i18n.t('authors')}`"
           @update="updateAuthors"
@@ -33,12 +33,13 @@
       </span>
     </p>
     <p class="data-block keywords-data">
-      <span class="fas block-icon fa-font"></span>
+      <span class="fas block-icon fa-font fa-fw"></span>
       <span>{{ i18n.t("protocols.header.keywords") }}</span>
       <span class="keywords-list">
         <DropdownSelector
           :inputTagMode="true"
           :options="this.protocol.attributes.keywords"
+          :placeholder="i18n.t('protocols.header.add_keywords')"
           :selectorId="'keywordsSelector'"
           :singleSelect="false"
           :closeOnSelect="false"
