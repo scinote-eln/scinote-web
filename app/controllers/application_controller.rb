@@ -25,10 +25,6 @@ class ApplicationController < ActionController::Base
     render_422(message)
   end
 
-  def internal_server_error
-    render_500
-  end
-
   def is_current_page_root?
     controller_name == 'projects' && action_name == 'index'
   end
@@ -88,20 +84,6 @@ class ApplicationController < ActionController::Base
       end
       format.any do
         render plain: 'UNPROCESSABLE ENTITY', status: :unprocessable_entity
-      end
-    end
-  end
-
-  def render_500
-    respond_to do |format|
-      format.html do
-        render file: 'public/500.html', status: :internal_server_error, layout: false
-      end
-      format.json do
-        render json: {}, status: :internal_server_error
-      end
-      format.any do
-        render plain: 'INTERNAL SERVER ERROR', status: :internal_server_error
       end
     end
   end
