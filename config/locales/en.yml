@@ -2601,6 +2601,7 @@ en:
           drag_zone_notification: "Drop files to add to step %{position}"
           or: "OR"
         new:
+          description: 'New'
           uploading: 'Uploading'
           file_too_big: 'Failed to upload: File size is too big'
           general_error: 'Failed to upload: Something went wrong, please try again'

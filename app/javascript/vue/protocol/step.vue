@@ -1,15 +1,14 @@
 <template>
-  <div class="step-container"
+  <div ref="stepContainer" class="step-container"
        :id="`stepContainer${step.id}`"
        @drop.prevent="dropFile"
        @dragenter.prevent="!showFileModal ? dragingFile = true : null"
-       @dragleave.prevent="!showFileModal ? dragingFile = false : null"
        @dragover.prevent
        :class="{ 'draging-file': dragingFile, 'showing-comments': showCommentsSidebar, 'editing-name': editingName }"
   >
-    <div class="drop-message">
-      {{ i18n.t('protocols.steps.drop_message', { position: step.attributes.position }) }}
-      <StorageUsage v-if="step.attributes.storage_limit" :step="step"/>
+    <div class="drop-message" @dragleave.prevent="!showFileModal ? dragingFile = false : null">
+      {{ i18n.t('protocols.steps.drop_message', { position: step.attributes.position + 1 }) }}
+      <StorageUsage v-if="showStorageUsage()" :step="step"/>
     </div>
     <div class="step-header">
       <div class="step-element-header">
@@ -21,7 +20,8 @@
           <a class="step-collapse-link"
             :href="'#stepBody' + step.id"
             data-toggle="collapse"
-            data-remote="true">
+            data-remote="true"
+            @click="toggleCollapsed">
               <span class="fas fa-caret-right"></span>
           </a>
           <div v-if="!inRepository" class="step-complete-container">
@@ -214,6 +214,7 @@
         showCommentsSidebar: false,
         dragingFile: false,
         reordering: false,
+        isCollapsed: false,
         editingName: false
       }
     },
@@ -257,6 +258,12 @@
         $.get(this.urls.elements_url, (result) => {
           this.elements = result.data
         });
+      },
+      showStorageUsage() {
+        return (this.elements.length || this.attachments.length) && !this.isCollapsed && this.step.attributes.storage_limit;
+      },
+      toggleCollapsed() {
+        this.isCollapsed = !this.isCollapsed;
       },
       showDeleteModal() {
         this.confirmingDelete = true;

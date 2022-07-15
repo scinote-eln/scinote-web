@@ -14,6 +14,9 @@
         >
           {{ attachment.attributes.file_name }}
         </a>
+        <span v-if="attachment.isNewUpload" class="attachment-label-new">
+          {{ i18n.t('protocols.steps.attachments.new.description') }}
+        </span>
         <div class="file-metadata">
           <span>
             {{ i18n.t('assets.placeholder.modified_label') }}
