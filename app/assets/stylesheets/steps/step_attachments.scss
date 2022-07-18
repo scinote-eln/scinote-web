@@ -72,6 +72,14 @@
     grid-template-columns: repeat(auto-fill, minmax(var(--attachment-column-width), 1fr));
     margin: 1em 0;
 
+    .asset-context-menu {
+      .marvinjs-edit-button img {
+        margin-left: -.6em;
+        margin-right: 0;
+        width: 2em;
+      }
+    }
+
     &[data-preview="true"] {
       .asset-context-menu {
         display: none;
