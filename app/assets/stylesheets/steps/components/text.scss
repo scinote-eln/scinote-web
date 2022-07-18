@@ -1,10 +1,13 @@
 .step-text-container {
-  display: block;
+  display: flex;
   margin-bottom: 16px;
   padding-left: var(--left-component-padding);
   position: relative;
   width: calc(100% + 16px);
 
+  .step-element-grip-placeholder {
+    flex: 0;
+  }
 
   .buttons-container {
     background: linear-gradient(
