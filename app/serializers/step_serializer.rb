@@ -74,7 +74,9 @@ class StepSerializer < ActiveModel::Serializer
       attachments_url: attachments_step_path(object)
     }
 
-    urls_list[:state_url] = toggle_step_state_step_path(object) if can_complete_my_module_steps?(object.my_module)
+    if object.my_module && can_complete_my_module_steps?(object.my_module)
+      urls_list[:state_url] = toggle_step_state_step_path(object)
+    end
 
     if can_manage_step?(object)
       urls_list.merge!({
