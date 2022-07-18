@@ -71,11 +71,7 @@ var RepositoryDatatable = (function(global) {
         $('#editDeleteCopy').hide();
         $('#toolbarPrintLabel').hide();
       } else {
-        if (rowsSelected.length === 1) {
-          $('#editRepositoryRecord').prop('disabled', false);
-        } else {
-          $('#editRepositoryRecord').prop('disabled', true);
-        }
+        $('#editRepositoryRecord').prop('disabled', false);
         $('#exportRepositoriesButton').removeClass('disabled');
         $('#archiveRepositoryRecordsButton').prop('disabled', false);
         $('#copyRepositoryRecords').prop('disabled', false);
@@ -142,10 +138,8 @@ var RepositoryDatatable = (function(global) {
 
   function changeToEditMode() {
     currentMode = 'editMode';
-    // Table specific stuff
-    TABLE.button(0).enable(false);
+
     clearRowSelection();
-    $(TABLE_WRAPPER_ID).find('tr:not(.editing)').addClass('blocked');
     updateButtons();
   }
 
@@ -262,9 +256,8 @@ var RepositoryDatatable = (function(global) {
 
       checkAvailableColumns();
 
-      $(TABLE_ID).find('.repository-row-edit-icon').remove();
-
       RepositoryDatatableRowEditor.switchRowToEditMode(row);
+
       changeToEditMode();
     });
   }
@@ -542,6 +535,17 @@ var RepositoryDatatable = (function(global) {
         $('#repository-table_info').append('<span id="selected_info"></span>');
         $('#selected_info').html(' (' + rowsSelected.length + ' entries selected)');
         checkArchivedColumnsState();
+
+        // Hide edit button if not all selected rows are on the current page
+        let visibleRowIds = $(
+          `#repository-table-${$(TABLE_ID).data('repository-id')} tbody tr`
+        ).toArray().map((r) => parseInt(r.id, 10));
+
+        if (rowsSelected.every(r => visibleRowIds.includes(r))) {
+          $('#editRepositoryRecord').show();
+        } else {
+          $('#editRepositoryRecord').hide();
+        }
       },
       preDrawCallback: function() {
         var archived = $('.repository-show').hasClass('archived');
@@ -769,15 +773,12 @@ var RepositoryDatatable = (function(global) {
     .on('click', '#editRepositoryRecord', function() {
       checkAvailableColumns();
 
-      if (rowsSelected.length !== 1) {
-        return;
-      }
-
-      let row = TABLE.row('#' + rowsSelected[0]);
-
       $(TABLE_ID).find('.repository-row-edit-icon').remove();
 
-      RepositoryDatatableRowEditor.switchRowToEditMode(row);
+      rowsSelected.forEach(function(rowNumber) {
+        RepositoryDatatableRowEditor.switchRowToEditMode(TABLE.row('#' + rowNumber));
+      });
+
       changeToEditMode();
       adjustTableHeader();
     })

@@ -345,6 +345,13 @@
             opacity: 1;
           }
         }
+
+        &.editing {
+          .assigned-column .repository-row-edit-icon {
+            opacity: 0;
+            pointer-events: none;
+          }
+        }
       }
 
       .editing {
@@ -363,10 +370,6 @@
 
         tr:hover {
           .assigned-column {
-            .repository-row-edit-icon {
-              opacity: 0;
-            }
-
             .assign-counter-container {
               background-color: transparent;
             }

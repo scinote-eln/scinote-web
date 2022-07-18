@@ -1699,7 +1699,7 @@ en:
     create:
       success_flash: "Successfully added item <strong>%{record}</strong> to inventory <strong>%{repository}</strong>"
     update:
-      success_flash: "Successfully updated item <strong>%{record}</strong> in inventory <strong>%{repository}</strong>"
+      success_flash: "Inventory items were successfully updated."
     destroy:
       success_flash: "%{records_number} item(s) successfully deleted."
       contains_other_records_flash: "%{records_number} item(s) successfully deleted. %{other_records_number} of the selected item(s) were created by other users and were not deleted."
