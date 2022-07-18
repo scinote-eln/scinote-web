@@ -28,7 +28,7 @@
       display: flex;
 
       .authors-list {
-        flex-basis: calc(100% - 70px);
+        flex-basis: calc(100% - 90px);
         flex-grow: 1;
         margin-left: .5em;
       }
@@ -47,11 +47,23 @@
         flex-grow: 1;
         margin-left: .5em;
 
-        .input-field {
-          border-color: transparent;
+        .dropdown-selector-container {
+          padding-right: 10px;
 
-          &:hover {
-            border-color: initial;
+          &:not(.active) {
+            .input-field {
+              border-color: transparent;
+
+              &:hover {
+                border: 1px solid $color-alto;
+              }
+            }
+          }
+
+          &.active {
+            .input-field {
+              border: 1px solid $color-alto;
+            }
           }
         }
       }
