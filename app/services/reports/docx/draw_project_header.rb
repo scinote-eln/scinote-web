@@ -5,6 +5,7 @@ module Reports::Docx::DrawProjectHeader
     project = subject.project
     link_style = @link_style
     scinote_url = @scinote_url
+    color = @color
 
     return unless project && can_read_project?(@user, project)
 
@@ -16,7 +17,7 @@ module Reports::Docx::DrawProjectHeader
 
     @docx.p do
       text I18n.t('projects.reports.elements.project_header.user_time',
-                  timestamp: I18n.l(project.created_at, format: :full))
+                  timestamp: I18n.l(project.created_at, format: :full)), color: color[:gray]
       br
       br
       br
