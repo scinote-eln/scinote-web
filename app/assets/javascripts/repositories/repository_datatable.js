@@ -46,8 +46,12 @@ var RepositoryDatatable = (function(global) {
   function updateButtons() {
     if (currentMode === 'viewMode') {
       $(TABLE_WRAPPER_ID).removeClass('editing');
+      $('.repository-save-changes-link').off('click');
+      $('.repository-edit-overlay').hide();
       $('#saveCancel').hide();
       $('.manage-repo-column-index').prop('disabled', false);
+      $('#shareRepoBtn').removeClass('disabled');
+      $('#viewSwitchButton').removeClass('disabled');
       $('#addRepositoryRecord').prop('disabled', false);
       $('.dataTables_length select').prop('disabled', false);
       $('#repository-acitons-dropdown').prop('disabled', false);
@@ -88,6 +92,9 @@ var RepositoryDatatable = (function(global) {
       }
     } else if (currentMode === 'editMode') {
       $(TABLE_WRAPPER_ID).addClass('editing');
+      $('.repository-save-changes-link').on('click', function() {
+        $('#saveRecord').click();
+      });
       $('#importRecordsButton').hide();
       $('#editDeleteCopy').hide();
       $('#addRepositoryRecord').hide();
@@ -97,6 +104,8 @@ var RepositoryDatatable = (function(global) {
       }
       $('#saveCancel').show();
       $('.manage-repo-column-index').prop('disabled', true);
+      $('#shareRepoBtn').addClass('disabled');
+      $('#viewSwitchButton').addClass('disabled');
       $('#repository-acitons-dropdown').prop('disabled', true);
       $('.dataTables_length select').prop('disabled', true);
       $('#addRepositoryRecord').prop('disabled', true);
@@ -109,6 +118,7 @@ var RepositoryDatatable = (function(global) {
       $('.repository-row-selector').prop('disabled', true);
       $('.dataTables_filter input').prop('disabled', true);
       $('#toolbarPrintLabel').hide();
+      $('.repository-edit-overlay').show();
     }
 
     $('#toolbarPrintLabel').data('rows', JSON.stringify(rowsSelected));
