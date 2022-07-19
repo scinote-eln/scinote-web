@@ -1,31 +1,31 @@
 class CanvasController < ApplicationController
   before_action :load_vars
 
-  before_action :check_view_canvas, only: [:edit, :full_zoom, :medium_zoom, :small_zoom]
-  before_action :check_edit_canvas, only: [:edit, :update]
+  before_action :check_view_canvas, except: %i(edit update)
+  before_action :check_edit_canvas, only: %i(edit update)
 
   def edit
     render partial: 'canvas/edit',
-      locals: { experiment: @experiment, my_modules: @my_modules },
-      :content_type => 'text/html'
+      locals: {
+        experiment: @experiment,
+        my_modules: @my_modules
+      }, content_type: 'text/html'
   end
 
   def full_zoom
-    render partial: 'canvas/full_zoom',
-      locals: { experiment: @experiment, my_modules: @my_modules },
-      :content_type => 'text/html'
+    @my_modules = @my_modules.left_outer_joins(:designated_users, :task_comments)
+                             .select('COUNT(DISTINCT users.id) as designated_users_count')
+                             .select('COUNT(DISTINCT comments.id) as task_comments_count')
+                             .select('my_modules.*').group(:id)
+    render partial: 'canvas/full_zoom', locals: { experiment: @experiment, my_modules: @my_modules }
   end
 
   def medium_zoom
-    render partial: 'canvas/medium_zoom',
-      locals: { experiment: @experiment, my_modules: @my_modules },
-      :content_type => 'text/html'
+    render partial: 'canvas/medium_zoom', locals: { experiment: @experiment, my_modules: @my_modules }
   end
 
   def small_zoom
-    render partial: 'canvas/small_zoom',
-      locals: { experiment: @experiment, my_modules: @my_modules },
-      :content_type => 'text/html'
+    render partial: 'canvas/small_zoom', locals: { experiment: @experiment, my_modules: @my_modules }
   end
 
   def update
@@ -193,7 +193,7 @@ class CanvasController < ApplicationController
   end
 
   def load_vars
-    @experiment = Experiment.find_by_id(params[:id])
+    @experiment = Experiment.preload(user_assignments: %i(user user_role)).find_by(id: params[:id])
     unless @experiment
       respond_to do |format|
         format.html { render_404 and return }
@@ -201,11 +201,15 @@ class CanvasController < ApplicationController
       end
     end
 
-    @my_modules = @experiment.my_modules.active
+    @my_modules = @experiment.my_modules
+                             .active
+                             .preload(:tags, outputs: :to, user_assignments: %i(user user_role))
+                             .preload(:my_module_status, :my_module_group)
   end
 
   def check_edit_canvas
-    render_403 and return unless can_manage_experiment?(@experiment)
+    @experiment_managable = can_manage_experiment?(@experiment)
+    return render_403 unless @experiment_managable
   end
 
   def check_view_canvas

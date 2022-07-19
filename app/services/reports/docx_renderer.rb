@@ -127,7 +127,7 @@ module Reports
               elsif content[:type] == 'table'
                 Reports::DocxRenderer.render_table_element(c, content, options)
               elsif content[:type] == 'image'
-                Reports::DocxRenderer.render_img_element(c, content, table: { columns: row.children.length / 3 })
+                Reports::DocxRenderer.render_img_element(c, content, table: { columns: row[:data].length })
               end
             end
           end

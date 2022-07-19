@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class RepositoryRow < ApplicationRecord
+  include ActionView::Helpers::NumberHelper
   include SearchableModel
   include SearchableByNameModel
   include ArchivableModel
@@ -148,5 +149,18 @@ class RepositoryRow < ApplicationRecord
 
     repository_cells.each { |cell| cell.snapshot!(row_snapshot) }
     row_snapshot
+  end
+
+  def row_consumption(stock_consumption)
+    if repository_stock_cell.present?
+      consumed_stock = number_with_precision(
+        stock_consumption || 0,
+        precision: (repository.repository_stock_column.metadata['decimals'].to_i || 0),
+        strip_insignificant_zeros: true
+      )
+      "#{consumed_stock} #{repository_stock_value&.repository_stock_unit_item&.data}"
+    else
+      '-'
+    end
   end
 end

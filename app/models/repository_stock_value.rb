@@ -4,7 +4,7 @@ class RepositoryStockValue < ApplicationRecord
   include RepositoryValueWithReminders
   include ActionView::Helpers::NumberHelper
 
-  attr_accessor :comment
+  attribute :comment, :text
 
   belongs_to :repository_stock_unit_item, optional: true
   belongs_to :created_by, class_name: 'User', optional: true, inverse_of: :created_repository_stock_values
@@ -16,6 +16,7 @@ class RepositoryStockValue < ApplicationRecord
   validates :repository_cell, presence: true
   validates :low_stock_threshold, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 
+  before_save :update_consumption_stock_units, if: :repository_stock_unit_item_id_changed?
   after_create do
     next if is_a?(RepositoryStockConsumptionValue)
 
@@ -111,12 +112,13 @@ class RepositoryStockValue < ApplicationRecord
                                       .find(new_data[:unit_item_id])
     self.last_modified_by = user
     delta = new_data[:amount].to_d - amount.to_d
+    self.comment = new_data[:comment].presence
     repository_ledger_records.create!(
       user: last_modified_by,
       amount: delta,
       balance: amount,
       reference: repository_cell.repository_column.repository,
-      comment: new_data[:comment].presence
+      comment: comment
     )
     self.amount = BigDecimal(new_data[:amount].to_s)
     save!
@@ -185,4 +187,12 @@ class RepositoryStockValue < ApplicationRecord
   end
 
   alias export_formatted formatted
+
+  private
+
+  def update_consumption_stock_units
+    repository_cell.repository_row
+                   .my_module_repository_rows
+                   .update_all(repository_stock_unit_item_id: repository_stock_unit_item_id)
+  end
 end

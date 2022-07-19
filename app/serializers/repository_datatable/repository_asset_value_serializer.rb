@@ -13,6 +13,8 @@ module RepositoryDatatable
         file_name: asset.file_name,
         icon_html: FileIconsHelper.file_extension_icon_html(asset)
       }
+    rescue StandardError => e
+      Rails.logger.error e.message
     end
   end
 end

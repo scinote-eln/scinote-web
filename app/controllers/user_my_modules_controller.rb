@@ -57,7 +57,7 @@ class UserMyModulesController < ApplicationController
     @um.assigned_by = current_user
 
     if @um.save
-      log_activity(:designate_user_to_my_module)
+      @um.log_activity(:designate_user_to_my_module, current_user)
 
       respond_to do |format|
         format.json do
@@ -84,7 +84,7 @@ class UserMyModulesController < ApplicationController
 
   def destroy
     if @um.destroy
-      log_activity(:undesignate_user_from_my_module)
+      @um.log_activity(:undesignate_user_from_my_module, current_user)
 
       respond_to do |format|
         format.json do
@@ -139,16 +139,5 @@ class UserMyModulesController < ApplicationController
 
   def um_params
     params.require(:user_my_module).permit(:user_id, :my_module_id)
-  end
-
-  def log_activity(type_of)
-    Activities::CreateActivityService
-      .call(activity_type: type_of,
-            owner: current_user,
-            team: @um.my_module.experiment.project.team,
-            project: @um.my_module.experiment.project,
-            subject: @um.my_module,
-            message_items: { my_module: @my_module.id,
-                             user_target: @um.user.id })
   end
 end
