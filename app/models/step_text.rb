@@ -8,7 +8,7 @@ class StepText < ApplicationRecord
   validates :text, length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
 
   belongs_to :step, inverse_of: :step_texts, touch: true
-  has_many :step_orderable_elements, as: :orderable, dependent: :destroy
+  has_one :step_orderable_element, as: :orderable, dependent: :destroy
 
   scope :asc, -> { order('step_texts.created_at ASC') }
 

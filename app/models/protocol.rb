@@ -279,8 +279,6 @@ class Protocol < ApplicationRecord
       )
       step2.save!
 
-      position = 0
-
       # Copy texts
       step.step_texts.each do |step_text|
         step_text2 = StepText.new(
@@ -290,11 +288,9 @@ class Protocol < ApplicationRecord
         step_text2.save!
 
         step2.step_orderable_elements.create!(
-          position: position,
+          position: step_text.step_orderable_element.position,
           orderable: step_text2
         )
-
-        position += 1
       end
 
       # Copy checklists
@@ -318,11 +314,9 @@ class Protocol < ApplicationRecord
         end
 
         step2.step_orderable_elements.create!(
-          position: position,
+          position: checklist.step_orderable_element.position,
           orderable: checklist2
         )
-
-        position += 1
       end
 
       # "Shallow" Copy assets
@@ -345,11 +339,9 @@ class Protocol < ApplicationRecord
         )
 
         step2.step_orderable_elements.create!(
-          position: position,
+          position: table.step_table.step_orderable_element.position,
           orderable: table2.step_table
         )
-
-        position += 1
       end
 
       # Copy steps tinyMce assets
@@ -713,7 +705,10 @@ class Protocol < ApplicationRecord
   def destroy_contents
     # Calculate total space taken by the protocol
     st = space_taken
-    steps.order(position: :desc).destroy_all
+    steps.order(position: :desc).each do |step|
+      step.step_orderable_elements.delete_all
+      step.destroy!
+    end
 
     # Release space taken by the step
     team.release_space(st)

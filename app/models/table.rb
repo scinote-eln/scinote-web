@@ -25,7 +25,6 @@ class Table < ApplicationRecord
   has_one :result_table, inverse_of: :table
   has_one :result, through: :result_table
   has_many :report_elements, inverse_of: :table, dependent: :destroy
-  has_many :step_orderable_elements, as: :orderable, dependent: :destroy
 
   after_save :update_ts_index
   after_save { result&.touch; step&.touch }
