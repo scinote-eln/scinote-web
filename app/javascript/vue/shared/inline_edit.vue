@@ -125,13 +125,13 @@
       },
       handlePaste(e) {
         if (!this.multilinePaste) return;
-        e.clipboardData.items[0].getAsString((data) => {
-          let lines = data.split(/[\n\r]/);
-          if (lines.length > 1) {
-            this.newValue = lines[0];
-            this.$emit('multilinePaste', lines);
-          }
-        })
+        let lines = (e.originalEvent || e).clipboardData.getData('text/plain').split(/[\n\r]/);
+        lines = lines.filter((l) => l).map((l) => l.trim());
+
+        if (lines.length > 1) {
+          this.newValue = lines[0];
+          this.$emit('multilinePaste', lines);
+        }
       },
       handleInput() {
         this.newValue = this.newValue.replace(/^[\n\r]+|[\n\r]+$/g, '');
@@ -148,6 +148,8 @@
         }
       },
       resize() {
+        if (!this.$refs.input) return;
+
         this.$refs.input.style.height = "auto";
         this.$refs.input.style.height = (this.$refs.input.scrollHeight) + "px";
       },
