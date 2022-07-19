@@ -80,7 +80,7 @@
           :attachment.sync="attachmentsOrdered[index]"
           :stepId="parseInt(step.id)"
           @attachment:viewMode="updateAttachmentViewMode"
-          @attachment:delete="attachments.splice(index, 1)"
+          @attachment:delete="deleteAttachment"
         />
       </template>
     </div>
@@ -155,7 +155,11 @@
           return 'uploadingAttachment'
         }
         return `${attachment.attributes.view_mode}Attachment`
-      }
+      },
+      deleteAttachment(index) {
+        this.attachments.splice(index, 1)
+        this.$emit('attachment:deleted')
+      },
     }
   }
 </script>
