@@ -8,6 +8,10 @@
 
   &.editing .sci-inline-edit__content {
     background-color: $color-white;
+
+    .sci-inline-edit__content {
+      padding-top: 0;
+    }
   }
 
   .sci-inline-edit__content {
@@ -15,10 +19,10 @@
     border-radius: 4px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     margin-left: -.25em;
     min-height: 36px;
     padding-left: .25em;
+    padding-top: .3em;
     position: relative;
     width: 100%;
 
