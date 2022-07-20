@@ -6,6 +6,16 @@ module Reports::Docx::DrawStepAsset
     asset_url = Rails.application.routes.url_helpers.asset_download_url(asset)
     color = @color
     @docx.p
+
+    begin
+      Reports::DocxRenderer.render_asset_image(@docx, asset) if asset.previewable? && !asset.list?
+    rescue StandardError => e
+      Rails.logger.error e.message
+      @docx.p do
+        text I18n.t('projects.reports.index.generation.file_preview_generation_error'), italic: true
+      end
+    end
+
     @docx.p do
       text (I18n.t 'projects.reports.elements.step_asset.file_name', file: asset.file_name), italic: true
       text ' '
@@ -15,15 +25,6 @@ module Reports::Docx::DrawStepAsset
       text ' '
       text I18n.t('projects.reports.elements.step_asset.user_time',
                   timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
-    end
-
-    begin
-      Reports::DocxRenderer.render_asset_image(@docx, asset) if asset.previewable? && !asset.list?
-    rescue StandardError => e
-      Rails.logger.error e.message
-      @docx.p do
-        text I18n.t('projects.reports.index.generation.file_preview_generation_error'), italic: true
-      end
     end
   end
 end
