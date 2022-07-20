@@ -80,6 +80,10 @@
       text-align: center;
       width: 24px;
 
+      &:hover {
+        border-color: $brand-success;
+      }
+
       &.completed {
         background: $brand-success;
         border: 2px solid $brand-success;
