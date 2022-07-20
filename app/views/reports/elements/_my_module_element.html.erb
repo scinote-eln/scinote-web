@@ -3,12 +3,12 @@
 <% export_all = defined?(export_all) && export_all %>
 <div class="report-element report-module-element">
   <div class="report-element-body">
-    <div class="module-name">
+    <h4 class="module-name">
       <%= link_to my_module.name, protocols_my_module_url(my_module), target: :_blank %>
       <% if my_module.archived? %>
         <span class="label label-warning"><%= t('search.index.archived') %></span>
       <% end %>
-    </div>
+    </h4>
     <div class="user-time">
       <%= t('projects.reports.elements.module.user_time', timestamp: l(timestamp, format: :full)) %>
     </div>
@@ -68,9 +68,10 @@
     <% end %>
 
 
-    <div class="pull-left results-title-name">
+    <div class="results-title-name">
       <%= t('projects.reports.elements.module.results') %>
     </div><br>
+
     <% order_results_for_report(my_module.results, @settings.dig('task', 'result_order')).each do |result| %>
       <% if result.is_asset && @settings.dig('task', 'file_results') %>
         <%= render partial: 'reports/elements/my_module_result_asset_element.html.erb', locals: { result: result, report: report, export_all: export_all } %>
@@ -80,7 +81,7 @@
         <%= render partial: 'reports/elements/my_module_result_text_element.html.erb', locals: { result: result, export_all: export_all } %>
       <% end %>
     <% end %>
-  </div>
+  </div><br>
 
   <% if defined?(children) %>
     <div class="report-element-children">

@@ -1,12 +1,12 @@
 <% project ||= report_element.project %>
 <div class="report-element report-project-header-element">
   <div class="report-element-body" data-hook="report-project-header-element">
-    <div class=" project-name">
+    <h2 class="project-name">
       <%= link_to t('projects.reports.elements.project_header.title', project: project.name), project_url(project), target: :_blank %>
       <% if project.archived? %>
         <span class="label label-warning"><%= t('search.index.archived') %></span>
       <% end %>
-    </div>
+    </h2>
     <div class="user-time">
       <%= t('projects.reports.elements.project_header.user_time', timestamp: l(project.created_at, format: :full)) %>
     </div>
