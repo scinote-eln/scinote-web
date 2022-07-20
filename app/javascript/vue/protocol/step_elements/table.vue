@@ -33,7 +33,9 @@
     </div>
     <div :class="'step-table ' + (editingTable ? 'edit' : 'view')" tabindex="0" @keyup.enter="!editingTable && enableTableEdit()">
       <div  class="enable-edit-mode" v-if="!editingTable && element.attributes.orderable.urls.update_url" @click="enableTableEdit">
-        <i class="fas fa-pen"></i>
+        <div class="enable-edit-mode__icon">
+          <i class="fas fa-pen"></i>
+        </div>
       </div>
       <div ref="hotTable" class="hot-table-container">
       </div>
