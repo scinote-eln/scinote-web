@@ -2,7 +2,7 @@
   <div ref="stepContainer" class="step-container"
        :id="`stepContainer${step.id}`"
        @drop.prevent="dropFile"
-       @dragenter.prevent="!showFileModal ? dragingFile = true : null"
+       @dragenter.prevent="dragEnter($event)"
        @dragover.prevent
        :class="{ 'draging-file': dragingFile, 'showing-comments': showCommentsSidebar, 'editing-name': editingName }"
   >
@@ -250,6 +250,16 @@
       }
     },
     methods: {
+      dragEnter(e) {
+        if (this.showFileModal) return;
+
+        // Detect if dragged element is a file
+        // https://stackoverflow.com/a/8494918
+        let dt = e.dataTransfer;
+        if (dt.types && (dt.types.indexOf ? dt.types.indexOf('Files') != -1 : dt.types.contains('Files'))) {
+          this.dragingFile = true;
+        }
+      },
       loadAttachments() {
         $.get(this.urls.attachments_url, (result) => {
           this.attachments = result.data
