@@ -145,6 +145,18 @@
 
   .step-elements {
     padding-left: calc(var(--left-component-padding) * 2);
+
+    .step-element-name {
+      .sci-inline-edit__view {
+        margin-bottom: .25em;
+        padding-top: .25em;
+      }
+
+      .sci-inline-edit__content textarea {
+        margin-bottom: .25em;
+        margin-top: .25em;
+      }
+    }
   }
 
   .step-element-grip-placeholder {
@@ -232,6 +244,7 @@
 
 .step-element-header {
   align-items: flex-start;
+  border-radius: 4px;
   display: flex;
   min-height: 40px;
   position: relative;
@@ -281,13 +294,6 @@
     }
   }
 
-  .step-element-grip {
-    color: $color-silver-chalice;
-    cursor: grab;
-    margin: auto;
-    padding: .5em;
-  }
-
   .step-element-controls,
   .step-element-grip {
     opacity: 0;
@@ -300,6 +306,17 @@
     .step-element-controls {
       opacity: 1;
     }
+  }
+}
+
+.step-element-grip {
+  color: $color-silver-chalice;
+  cursor: pointer;
+  margin: auto;
+  padding: .5em;
+
+  &.step-element-grip--draggable {
+    cursor: grab;
   }
 }
 

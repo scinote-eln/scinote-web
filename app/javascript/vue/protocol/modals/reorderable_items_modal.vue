@@ -17,7 +17,7 @@
             :handle="'.step-element-grip'"
           >
             <div v-for="(item, index) in reorderedItems" :key="item.id" class="step-element-header">
-              <div class="step-element-grip">
+              <div class="step-element-grip step-element-grip--draggable">
                 <i class="fas fa-grip-vertical"></i>
               </div>
               <div class="step-element-name">

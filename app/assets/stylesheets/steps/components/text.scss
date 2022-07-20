@@ -1,5 +1,6 @@
 .step-text-container {
   display: flex;
+  border-radius: 4px;
   margin-bottom: 16px;
   padding-left: var(--left-component-padding);
   position: relative;
@@ -23,7 +24,7 @@
   }
 
 
-  .element-grip {
+  .step-element-grip {
     align-items: center;
     color: $color-silver-chalice;
     display: none;
@@ -41,14 +42,14 @@
       display: flex;
     }
 
-    .element-grip {
+    .step-element-grip {
       display: flex;
     }
   }
 
   &.edit {
     .buttons-container,
-    .element-grip {
+    .step-element-grip {
       display: none;
     }
   }

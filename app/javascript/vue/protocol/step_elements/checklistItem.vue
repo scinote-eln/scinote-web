@@ -1,7 +1,7 @@
 <template>
   <div class="step-checklist-item">
     <div class="step-element-header" :class="{ 'locked': locked || editingText, 'editing-name': editingText }">
-      <div v-if="reorderChecklistItemUrl" class="step-element-grip">
+      <div v-if="reorderChecklistItemUrl" class="step-element-grip step-element-grip--draggable">
         <i class="fas fa-grip-vertical"></i>
       </div>
       <div class="step-element-name" :class="{ 'done': checklistItem.attributes.checked }">
