@@ -1,5 +1,5 @@
 <template>
-  <div v-if="attachments.length" class="step-attachments">
+  <div class="step-attachments">
     <div class="attachments-actions">
       <div class="title">
         <h3>{{ i18n.t('protocols.steps.files', {count: attachments.length}) }}</h3>
@@ -111,7 +111,7 @@
         marvinjsIcon,
         bioEddieIcon,
         viewModeOptions: ['inline', 'thumbnail', 'list'],
-        orderOptions: ['new', 'old', 'atoz', 'ztoa'],
+        orderOptions: ['new', 'old', 'atoz', 'ztoa']
       }
     },
     components: {
@@ -140,6 +140,9 @@
         })
       }
     },
+    mounted() {
+      this.initMarvinJS();
+    },
     methods: {
       changeAttachmentsOrder(order) {
         this.$emit('attachments:order', order)
@@ -160,6 +163,13 @@
         this.attachments.splice(index, 1)
         this.$emit('attachment:deleted')
       },
+      initMarvinJS() {
+        // legacy logic from app/assets/javascripts/sitewide/marvinjs_editor.js
+        MarvinJsEditor.initNewButton(
+          `#stepContainer${this.step.id} .new-marvinjs-upload-button`,
+          () => this.$emit('attachment:uploaded')
+        );
+      }
     }
   }
 </script>
