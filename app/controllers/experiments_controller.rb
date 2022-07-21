@@ -67,8 +67,13 @@ class ExperimentsController < ApplicationController
   def canvas
     redirect_to module_archive_experiment_path(@experiment) if @experiment.archived_branch?
     @project = @experiment.project
-    @active_modules = @experiment.my_modules.active.order(:name).includes(:tags, :inputs, :outputs)
-    current_team_switch(@project.team)
+    @active_modules = @experiment.my_modules.active.order(:name)
+                                 .left_outer_joins(:designated_users, :task_comments)
+                                 .preload(:tags, outputs: :to)
+                                 .preload(:my_module_status, :my_module_group, user_assignments: %i(user user_role))
+                                 .select('COUNT(DISTINCT users.id) as designated_users_count')
+                                 .select('COUNT(DISTINCT comments.id) as task_comments_count')
+                                 .select('my_modules.*').group(:id)
   end
 
   def edit
@@ -254,6 +259,12 @@ class ExperimentsController < ApplicationController
   def module_archive
     @my_modules = @experiment.archived_branch? ? @experiment.my_modules : @experiment.my_modules.archived
     @my_modules = @my_modules.with_granted_permissions(current_user, MyModulePermissions::READ_ARCHIVED)
+                             .left_outer_joins(:designated_users, :task_comments)
+                             .preload(:tags, outputs: :to)
+                             .preload(:my_module_status, :my_module_group, user_assignments: %i(user user_role))
+                             .select('COUNT(DISTINCT users.id) as designated_users_count')
+                             .select('COUNT(DISTINCT comments.id) as task_comments_count')
+                             .select('my_modules.*').group(:id)
   end
 
   def fetch_workflow_img
@@ -290,7 +301,7 @@ class ExperimentsController < ApplicationController
   private
 
   def load_experiment
-    @experiment = Experiment.find_by(id: params[:id])
+    @experiment = Experiment.preload(user_assignments: %i(user user_role)).find_by(id: params[:id])
     render_404 unless @experiment
   end
 

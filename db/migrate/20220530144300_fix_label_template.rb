@@ -1,22 +1,8 @@
 # frozen_string_literal: true
 
-class CreateLabelTemplates < ActiveRecord::Migration[6.1]
-  class LabelTemplate < ApplicationRecord
-    enum language_type: { zpl: 0 }
-  end
-
+class FixLabelTemplate < ActiveRecord::Migration[6.1]
   def change
-    create_table :label_templates do |t|
-      t.string :name, null: false
-      t.text :content, null: false
-      t.integer :language_type, index: true
-      t.boolean :default, default: false, null: false
-      t.string :size
-
-      t.timestamps
-    end
-
-    LabelTemplate.create(
+    LabelTemplate.last.update(
       name: 'SciNote Item',
       size: '1" x 0.5" / 25.4mm x 12.7mm',
       language_type: :zpl,

@@ -56,6 +56,15 @@ class MyModulesController < ApplicationController
     end
   end
 
+  def canvas_dropdown_menu
+    @experiment_managable = can_manage_experiment?(@experiment)
+    @group_my_modules = @my_module.my_module_group&.my_modules&.preload(user_assignments: %i(user user_role))
+    render json: {
+      html: render_to_string({ partial: 'canvas/edit/my_module_dropdown_menu',
+                               locals: { my_module: @my_module } })
+    }
+  end
+
   def activities
     params[:subjects] = {
       MyModule: [@my_module.id]
@@ -327,7 +336,7 @@ class MyModulesController < ApplicationController
   private
 
   def load_vars
-    @my_module = MyModule.find_by_id(params[:id])
+    @my_module = MyModule.preload(user_assignments: %i(user user_role)).find_by(id: params[:id])
     if @my_module
       @experiment = @my_module.experiment
       @project = @my_module.experiment.project if @experiment

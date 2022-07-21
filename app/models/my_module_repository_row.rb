@@ -1,8 +1,8 @@
 class MyModuleRepositoryRow < ApplicationRecord
   include ActionView::Helpers::NumberHelper
 
-  attr_accessor :last_modified_by
-  attr_accessor :comment
+  attribute :last_modified_by, :integer
+  attribute :comment, :text
 
   belongs_to :assigned_by,
              foreign_key: 'assigned_by_id',

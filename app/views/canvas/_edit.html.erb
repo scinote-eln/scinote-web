@@ -1,15 +1,15 @@
 <div id="update-canvas"
-  data-can-create-modules="<%= can_manage_experiment?(@experiment) ? "yes" : "no" %>"
-  data-can-edit-modules="<%= can_manage_experiment?(@experiment) ? "yes" : "no" %>"
-  data-can-clone-modules="<%= can_manage_experiment?(@experiment) ? "yes" : "no" %>"
-  data-can-move-modules="<%= can_manage_experiment?(@experiment) ? "yes" : "no" %>"
-  data-can-delete-modules="<%= can_manage_experiment?(@experiment) ? "yes" : "no" %>"
-  data-can-reposition-modules="<%= can_manage_experiment?(@experiment) ? "yes" : "no" %>"
-  data-can-edit-connections="<%= can_manage_experiment?(@experiment) ? "yes" : "no" %>"
+  data-can-create-modules="<%= @experiment_managable ? "yes" : "no" %>"
+  data-can-edit-modules="<%= @experiment_managable ? "yes" : "no" %>"
+  data-can-clone-modules="<%= @experiment_managable ? "yes" : "no" %>"
+  data-can-move-modules="<%= @experiment_managable ? "yes" : "no" %>"
+  data-can-delete-modules="<%= @experiment_managable ? "yes" : "no" %>"
+  data-can-reposition-modules="<%= @experiment_managable ? "yes" : "no" %>"
+  data-can-edit-connections="<%= @experiment_managable ? "yes" : "no" %>"
   data-unsaved-work-text="<%=t "experiments.canvas.edit.unsaved_work" %>"
 >
   <%= bootstrap_form_tag url: canvas_experiment_url, method: "post", html: {class: "canvas-header"} do |f| %>
-    <% if can_manage_experiment?(@experiment) %>
+    <% if @experiment_managable %>
       <%=link_to "", type: "button", class: "btn btn-primary", id: "canvas-new-module" do %>
         <span class="hbtn-default">
           <span class="fas fa-credit-card"></span>
@@ -71,7 +71,7 @@
   </span>
 </div>
 <div id="diagram-container">
-  <% if can_manage_experiment?(@experiment) %>
+  <% if @experiment_managable %>
     <div id="diagram" class="diagram">
       <% my_modules.each do |my_module| %>
         <% if can_read_my_module?(my_module) %>
@@ -85,7 +85,7 @@
 </div>
 
 <%-# Since we need to preload modals, we just check permission for experiment, instead of permissions for every module and module group -%>
-<% if can_manage_experiment?(@experiment) %>
+<% if @experiment_managable %>
   <%= render partial: "canvas/edit/modal/new_module", locals: {experiment: @experiment} %>
   <%= render partial: "canvas/edit/modal/edit_module", locals: {experiment: @experiment } %>
   <%= render partial: "canvas/edit/modal/move_module", locals: {experiment: @experiment } %>

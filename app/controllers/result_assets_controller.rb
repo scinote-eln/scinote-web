@@ -58,6 +58,7 @@ class ResultAssetsController < ApplicationController
       if update_params.dig(:asset_attributes, :signed_blob_id)
         @result.asset.last_modified_by = current_user
         @result.asset.update(file: update_params[:asset_attributes][:signed_blob_id])
+        @result.asset.file_pdf_preview.purge if @result.asset.file_pdf_preview.attached?
         update_params.delete(:asset_attributes)
       end
 

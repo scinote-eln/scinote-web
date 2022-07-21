@@ -7,12 +7,12 @@
       <span class="fas fa-tag"></span>
     </div>
   <% end %>
-  <% if tags2.count == 0 %>
+  <% if tags2.length.zero? %>
     <div class="add-tag last"><span class="fas fa-tag"></span></div>
   <% end %>
-  <% if my_module.tags.count > 0 %>
+  <% if my_module.tags.size.positive? %>
     <span class="badge badge-indicator">
-      <%= my_module.tags.count %>
+      <%= my_module.tags.size %>
     </span>
   <% else %>
     <span class="badge badge-indicator <%= "invisible" unless can_manage_my_module?(my_module) %>">
