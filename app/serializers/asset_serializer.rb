@@ -93,6 +93,7 @@ class AssetSerializer < ActiveModel::Serializer
   end
 
   def urls
+    @user = scope[:user] || @instance_options[:user]
     urls = {
       preview: asset_file_preview_path(object),
       download: rails_blob_path(object.file, disposition: 'attachment'),
@@ -101,7 +102,7 @@ class AssetSerializer < ActiveModel::Serializer
       marvin_js: marvin_js_asset_path(object),
       marvin_js_icon: image_path('icon_small/marvinjs.svg')
     }
-    if can_manage_asset?(object)
+    if can_manage_asset?(@user, object)
       urls.merge!(
         toggle_view_mode: toggle_view_mode_path(object),
         edit_asset: edit_asset_path(object),
@@ -110,7 +111,7 @@ class AssetSerializer < ActiveModel::Serializer
         delete: asset_destroy_path(object)
       )
     end
-    if wopi && can_manage_asset?(object)
+    if wopi && can_manage_asset?(@user, object)
       urls[:wopi_action] = object.get_action_url(@instance_options[:user], 'embedview')
     end
     urls[:blob] = rails_blob_path(object.file, disposition: 'attachment') if object.file.attached?
