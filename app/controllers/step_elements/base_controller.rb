@@ -30,7 +30,7 @@ module StepElements
     end
 
     def render_step_orderable_element(orderable)
-      step_orderable_element = orderable.step_orderable_elements.find_by!(step: @step)
+      step_orderable_element = orderable.step_orderable_element
       render json: step_orderable_element, serializer: StepOrderableElementSerializer, user: current_user
     end
 

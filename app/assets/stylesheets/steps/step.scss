@@ -322,6 +322,11 @@
   &.step-element-grip--draggable {
     cursor: grab;
   }
+
+  &.step-element-grip--disabled {
+    pointer-events: none;
+    .fas { opacity: 0; }
+  }
 }
 
 .sci-reorderable-items {

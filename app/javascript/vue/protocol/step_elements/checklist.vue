@@ -40,7 +40,7 @@
         :dragClass="'step-checklist-item-drag'"
         :chosenClass="'step-checklist-item-chosen'"
         :handle="'.step-element-grip'"
-        :disabled="editingItem && !element.attributes.orderable.urls.reorder_url"
+        :disabled="editingItem || checklistItems.length < 2 || !element.attributes.orderable.urls.reorder_url"
         @start="startReorder"
         @end="endReorder"
       >
@@ -51,6 +51,7 @@
           :locked="locked"
           :reorderChecklistItemUrl="element.attributes.orderable.urls.reorder_url"
           :inRepository="inRepository"
+          :draggable="checklistItems.length > 1"
           @editStart="editingItem = true"
           @editEnd="editingItem = false"
           @update="saveItem"
