@@ -11,7 +11,7 @@
       <StorageUsage v-if="showStorageUsage()" :step="step"/>
     </div>
     <div class="step-header">
-      <div class="step-element-header">
+      <div class="step-element-header" :class="{ 'step-element--locked': !urls.update_url }">
         <div class="step-controls">
           <div v-if="reorderStepUrl" class="step-element-grip" @click="$emit('reorder')">
             <i class="fas fas-rotated-90 fa-exchange-alt"></i>
@@ -38,7 +38,6 @@
         </div>
         <div class="step-name-container" :class="{'strikethrough': step.attributes.completed}">
           <InlineEdit
-            v-if="urls.update_url"
             :value="step.attributes.name"
             :characterLimit="255"
             :allowBlank="false"
@@ -49,9 +48,6 @@
             :editOnload="step.newStep == true"
             @update="updateName"
           />
-          <span v-else>
-            {{ step.attributes.name }}
-          </span>
         </div>
         <i v-if="urls.update_url && !editingName" class="step-name-edit-icon fas fa-pen" @click="editingName = true"></i>
       </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="step-table-container">
+  <div class="step-table-container" :class="{ 'step-element--locked': !element.attributes.orderable.urls.update_url }">
      <div class="step-element-header" :class="{ 'editing-name': editingName }">
       <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
         <i class="fas fas-rotated-90 fa-exchange-alt"></i>
@@ -7,7 +7,6 @@
       <div v-else class="step-element-grip-placeholder"></div>
       <div class="step-element-name">
         <InlineEdit
-          v-if="element.attributes.orderable.urls.update_url"
           :value="element.attributes.orderable.name"
           :characterLimit="255"
           :placeholder="''"
@@ -18,9 +17,6 @@
           @editingDisabled="disableNameEdit"
           @update="updateName"
         />
-        <span v-else>
-          {{ element.attributes.orderable.name }}
-        </span>
       </div>
       <div class="step-element-controls">
         <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="enableNameEdit" tabindex="-1">
