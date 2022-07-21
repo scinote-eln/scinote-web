@@ -87,13 +87,12 @@
     components: {StorageUsage},
     mounted() {
       $(this.$refs.modal).modal('show');
-      MarvinJsEditor.initNewButton('.new-marvinjs-upload-button', () => {
+      MarvinJsEditor.initNewButton('.add-file-modal .new-marvinjs-upload-button', () => {
         this.$emit('attachmentsChanged');
         this.$nextTick(this.cancel);
       });
       $(this.$refs.modal).on('hidden.bs.modal', () => {
         global.removeEventListener('paste', this.onImageFilePaste, false);
-        this.$emit('cancel');
       });
       global.addEventListener('paste', this.onImageFilePaste, false);
     },

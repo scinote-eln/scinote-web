@@ -136,10 +136,12 @@
             @reorder="openReorderModal"
           />
         </template>
-        <Attachments :step="step"
+        <Attachments v-if="attachments.length"
+                    :step="step"
                     :attachments="attachments"
                     @attachments:openFileModal="showFileModal = true"
                     @attachment:deleted="attachmentDeleted"
+                    @attachment:uploaded="loadAttachments"
                     @attachments:order="changeAttachmentsOrder"
                     @attachments:viewMode="changeAttachmentsViewMode"
                     @attachment:viewMode="updateAttachmentViewMode"/>
@@ -264,6 +266,7 @@
         $.get(this.urls.attachments_url, (result) => {
           this.attachments = result.data
         });
+        this.showFileModal = false;
       },
       loadElements() {
         $.get(this.urls.elements_url, (result) => {
@@ -394,6 +397,7 @@
       },
       addAttachment(attachment) {
         this.attachments.push(attachment);
+        this.showFileModal = false;
       },
       openCommentsSidebar() {
         $('.comments-sidebar .close-btn').click();
