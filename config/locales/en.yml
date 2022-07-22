@@ -1366,6 +1366,11 @@ en:
       shared_read: "Shared inventory (owned by %{team_name}). You can view."
     bmt_singleton_error: "Only one BMT inventory can be present."
     index:
+      active_reminders:
+        label: "Active reminders"
+        short_label: "Reminders…"
+        description: "Show only active reminderss"
+        checked_description: "Show all items"
       head_title: "Inventories"
       title: "Inventories"
       empty_title: "Your team has no inventories yet"
