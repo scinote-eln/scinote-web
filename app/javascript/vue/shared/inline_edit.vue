@@ -40,6 +40,8 @@
       characterLimit: { type: Number },
       placeholder: { type: String },
       autofocus: { type: Boolean, default: false },
+      saveOnEnter: { type: Boolean, default: true },
+      allowNewLine: { type: Boolean, default: false },
       multilinePaste: { type: Boolean, default: false },
       smartAnnotation: { type: Boolean, default: false },
       editOnload: { type: Boolean, default: false }
@@ -134,17 +136,16 @@
         }
       },
       handleInput() {
-        this.newValue = this.newValue.replace(/^[\n\r]+|[\n\r]+$/g, '');
+        if (!this.allowNewLine) {
+          this.newValue = this.newValue.replace(/^[\n\r]+|[\n\r]+$/g, '');
+        }
         this.$nextTick(this.resize);
       },
       handleKeypress(e) {
-        switch(e.key) {
-          case 'Escape':
-            this.cancelEdit();
-            break;
-          case 'Enter':
-            this.update();
-            break;
+        if (e.key == 'Escape') {
+          this.cancelEdit();
+        } else if (e.key == 'Enter' && this.saveOnEnter) {
+          this.update();
         }
       },
       resize() {

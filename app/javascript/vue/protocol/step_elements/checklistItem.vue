@@ -26,6 +26,8 @@
             :multilinePaste="true"
             :editOnload="checklistItem.attributes.isNew"
             :smartAnnotation="true"
+            :saveOnEnter="false"
+            :allowNewLine="true"
             @editingEnabled="enableTextEdit"
             @editingDisabled="disableTextEdit"
             @update="updateText"
