@@ -10,6 +10,10 @@
     flex: 0;
   }
 
+  .empty-text-element {
+    color: $color-silver-chalice;
+  }
+
   .buttons-container {
     background: linear-gradient(
       90deg,
@@ -36,7 +40,7 @@
     position: absolute;
   }
 
-  &:hover:not(.edit) {
+  &:hover:not(.edit):not(.locked) {
     background: $color-concrete;
 
     .buttons-container {

@@ -4,8 +4,9 @@
       <div v-if="reorderChecklistItemUrl" class="step-element-grip step-element-grip--draggable" :class="{ 'step-element-grip--disabled': !draggable }">
         <i class="fas fa-grip-vertical"></i>
       </div>
+      <div v-else class="step-element-grip-placeholder"></div>
       <div class="step-element-name" :class="{ 'done': checklistItem.attributes.checked }">
-        <div class="sci-checkbox-container" :class="{ 'disabled': !toggleUrl || inRepository}">
+        <div v-if="toggleUrl" class="sci-checkbox-container" :class="{ 'disabled': inRepository}">
           <input ref="checkbox"
                  type="checkbox"
                  class="sci-checkbox"
@@ -14,6 +15,7 @@
           <span class="sci-checkbox-label" >
           </span>
         </div>
+        <div v-else class="sci-checkbox-view-mode"></div>
         <div class="step-checklist-text">
           <InlineEdit
             :value="checklistItem.attributes.text"

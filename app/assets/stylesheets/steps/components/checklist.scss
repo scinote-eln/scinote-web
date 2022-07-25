@@ -37,6 +37,15 @@
     }
   }
 
+  .sci-checkbox-view-mode {
+    align-self: center;
+    background-color: $color-black;
+    border-radius: 50%;
+    height: 4px;
+    margin-right: .5em;
+    width: 4px;
+  }
+
   .step-checklist-add-item {
     margin-left: 12px;
 
@@ -50,10 +59,17 @@
   }
 
   .sci-checkbox-container {
-    margin: 16px 0;
+    margin: 12px 0;
 
     &.disabled {
       pointer-events: none;
     }
+  }
+}
+
+.step-checklist-container {
+  .empty-checklist-element {
+    color: $color-silver-chalice;
+    margin-left: 3em;
   }
 }
