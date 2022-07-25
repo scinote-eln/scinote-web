@@ -28,6 +28,7 @@
 
     .sci-inline-edit__view {
       cursor: pointer;
+      white-space: pre-wrap;
       width: 100%;
 
       &.blank {
