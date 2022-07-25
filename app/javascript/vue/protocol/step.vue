@@ -324,6 +324,7 @@
       },
       updateElement(element, skipRequest=false) {
         let index = this.elements.findIndex((e) => e.id === element.id);
+        this.elements[index].isNew = false;
 
         if (skipRequest) {
           this.elements[index].attributes.orderable = element.attributes.orderable;
