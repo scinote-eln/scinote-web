@@ -15,7 +15,7 @@ export default {
           HelperModule.flashAlertMsg(result.flash, 'success');
         },
         error: () => {
-          HelperModule.flashAlertMsg(i18n.t('general.no_permissions'), 'danger');
+          HelperModule.flashAlertMsg(this.i18n.t('general.no_permissions'), 'danger');
         }
       });
     }

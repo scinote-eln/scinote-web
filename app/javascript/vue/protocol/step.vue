@@ -400,7 +400,8 @@
         $('.comments-sidebar .close-btn').click();
         this.showCommentsSidebar = true
       },
-      attachmentDeleted() {
+      attachmentDeleted(id) {
+        this.attachments = this.attachments.filter((a) => a.id !== id );
         this.$emit('stepUpdated');
       },
       closeCommentsSidebar() {
