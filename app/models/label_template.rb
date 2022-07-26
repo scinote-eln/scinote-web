@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class LabelTemplate < ApplicationRecord
+  include SearchableModel
+
   enum language_type: { zpl: 0 }
   validates :name, presence: true
   validates :size, presence: true

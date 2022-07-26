@@ -91,6 +91,7 @@ Rails.application.config.assets.precompile += %w(sidebar_toggle.js)
 Rails.application.config.assets.precompile += %w(reports/reports_datatable.js)
 Rails.application.config.assets.precompile += %w(reports/save_pdf_to_inventory.js)
 Rails.application.config.assets.precompile += %w(reports/content.js)
+Rails.application.config.assets.precompile += %w(label_templates/label_templates_datatable.js)
 
 # Libraries needed for Handsontable formulas
 Rails.application.config.assets.precompile += %w(jquery.js)
