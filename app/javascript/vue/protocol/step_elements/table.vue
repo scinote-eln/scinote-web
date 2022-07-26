@@ -36,7 +36,7 @@
           <i class="fas fa-pen"></i>
         </div>
       </div>
-      <div ref="hotTable" class="hot-table-container">
+      <div ref="hotTable" class="hot-table-container" @click="!editingTable && enableTableEdit()">
       </div>
       <div v-if="editingTable" class="edit-message">
         {{ i18n.t('protocols.steps.table.edit_message') }}

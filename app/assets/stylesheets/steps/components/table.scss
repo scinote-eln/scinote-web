@@ -11,13 +11,11 @@
     .enable-edit-mode {
       cursor: pointer;
       display: none;
-      height: 100%;
       justify-content: flex-end;
-      left: 0;
       padding: 12px;
       position: absolute;
+      right: 0;
       top: 0;
-      width: 100%;
       z-index: 200;
     }
 
