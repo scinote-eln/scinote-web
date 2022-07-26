@@ -487,8 +487,7 @@ var RepositoryDatatable = (function(global) {
           }
           return data;
         }
-      },
-      {
+      }, {
         targets: 'row-stock',
         className: 'item-stock',
         sWidth: '1%',
@@ -541,7 +540,9 @@ var RepositoryDatatable = (function(global) {
         // Show number of selected rows near pages info
         $('#repository-table_info').append('<span id="selected_info"></span>');
         $('#selected_info').html(' (' + rowsSelected.length + ' entries selected)');
-        checkArchivedColumnsState();
+        if ($('.repository-show').hasClass('archived')) {
+          TABLE.columns([6, 7]).visible(true);
+        }
       },
       preDrawCallback: function() {
         var archived = $('.repository-show').hasClass('archived');
@@ -867,15 +868,6 @@ var RepositoryDatatable = (function(global) {
 
     $('#wrapper').on('sideBar::hidden sideBar::shown', function() {
       adjustTableHeader();
-    });
-  }
-
-  function checkArchivedColumnsState() {
-    var archived = $('.repository-show').hasClass('archived');
-    $.each(TABLE.context[0].aoColumns, function(i, column) {
-      if (['archived-on', 'archived-by'].includes(column.nTh.id)) {
-        TABLE.column(column.idx).visible(archived);
-      }
     });
   }
 

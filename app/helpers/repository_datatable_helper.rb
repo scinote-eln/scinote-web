@@ -4,17 +4,18 @@ module RepositoryDatatableHelper
   include InputSanitizeHelper
 
   def prepare_row_columns(repository_rows, repository, columns_mappings, team, options = {})
-    reminder_row_ids = repository_reminder_row_ids(repository_rows, repository)
     has_stock_management = repository.has_stock_management?
+    reminders_enabled = Repository.reminders_enabled?
+    reminder_row_ids = reminders_enabled ? repository_reminder_row_ids(repository_rows, repository) : []
 
     repository_rows.map do |record|
       default_cells = public_send("#{repository.class.name.underscore}_default_columns", record)
       row = {
-        'DT_RowId': record.id,
-        'DT_RowAttr': { 'data-state': row_style(record) },
-        'recordInfoUrl': Rails.application.routes.url_helpers.repository_repository_row_path(repository, record),
-        'hasActiveReminders': reminder_row_ids.include?(record.id),
-        'rowRemindersUrl':
+        DT_RowId: record.id,
+        DT_RowAttr: { 'data-state': row_style(record) },
+        recordInfoUrl: Rails.application.routes.url_helpers.repository_repository_row_path(repository, record),
+        hasActiveReminders: reminder_row_ids.include?(record.id),
+        rowRemindersUrl:
           Rails.application.routes.url_helpers
                .active_reminder_repository_cells_repository_repository_row_url(
                  repository,
@@ -51,7 +52,7 @@ module RepositoryDatatableHelper
 
       custom_cells.each do |cell|
         row[columns_mappings[cell.repository_column.id]] =
-          display_cell_value(cell, team, repository)
+          display_cell_value(cell, team, repository, reminders_enabled: reminders_enabled)
       end
 
       stock_cell = record.repository_cells.find { |cell| cell.value_type == 'RepositoryStockValue' }
@@ -67,7 +68,7 @@ module RepositoryDatatableHelper
 
       row['stock']['value_type'] = 'RepositoryStockValue'
 
-      if options[:include_stock_consumption] && record.repository.has_stock_management? && options[:my_module]
+      if options[:include_stock_consumption] && has_stock_management && options[:my_module]
         consumption_managable = stock_consumption_managable?(record, repository, options[:my_module])
         consumed_stock_formatted =
           number_with_precision(
@@ -97,7 +98,9 @@ module RepositoryDatatableHelper
   end
 
   def prepare_simple_view_row_columns(repository_rows, repository, my_module, options = {})
-    reminder_row_ids = repository_reminder_row_ids(repository_rows, repository)
+    has_stock_management = repository.has_stock_management?
+    reminders_enabled = Repository.reminders_enabled?
+    reminder_row_ids = reminders_enabled ? repository_reminder_row_ids(repository_rows, repository) : []
 
     repository_rows.map do |record|
       row = {
@@ -105,8 +108,8 @@ module RepositoryDatatableHelper
         DT_RowAttr: { 'data-state': row_style(record) },
         '0': escape_input(record.name),
         recordInfoUrl: Rails.application.routes.url_helpers.repository_repository_row_path(record.repository, record),
-        'hasActiveReminders': reminder_row_ids.include?(record.id),
-        'rowRemindersUrl':
+        hasActiveReminders: reminder_row_ids.include?(record.id),
+        rowRemindersUrl:
           Rails.application.routes.url_helpers
                .active_reminder_repository_cells_repository_repository_row_url(
                  record.repository,
@@ -114,7 +117,7 @@ module RepositoryDatatableHelper
                )
       }
 
-      if options[:include_stock_consumption] && record.repository.has_stock_management?
+      if has_stock_management
         stock_present = record.repository_stock_cell.present?
         # Always disabled in a simple view
         stock_managable = false
@@ -164,6 +167,7 @@ module RepositoryDatatableHelper
   end
 
   def prepare_snapshot_row_columns(repository_rows, columns_mappings, team, repository_snapshot, options = {})
+    has_stock_management = repository_snapshot.has_stock_management?
     repository_rows.map do |record|
       row = {
         'DT_RowId': record.id,
@@ -180,7 +184,7 @@ module RepositoryDatatableHelper
         row[columns_mappings[cell.repository_column.id]] = display_cell_value(cell, team, repository_snapshot)
       end
 
-      if options[:include_stock_consumption] && repository_snapshot.has_stock_management?
+      if has_stock_management
         row['stock'] = if record.repository_stock_cell.present?
                          display_cell_value(record.repository_stock_cell, team, repository_snapshot)
                        else
@@ -251,7 +255,7 @@ module RepositoryDatatableHelper
     }
   end
 
-  def display_cell_value(cell, team, repository)
+  def display_cell_value(cell, team, repository, options = {})
     serializer_class = "RepositoryDatatable::#{cell.repository_column.data_type}Serializer".constantize
     serializer_class.new(
       cell.value,
@@ -259,7 +263,8 @@ module RepositoryDatatableHelper
         team: team,
         user: current_user,
         column: cell.repository_column,
-        repository: repository
+        repository: repository,
+        options: options
       }
     ).serializable_hash
   end
@@ -271,9 +276,6 @@ module RepositoryDatatableHelper
   end
 
   def repository_reminder_row_ids(repository_rows, repository)
-    # don't load reminders if the stock management feature is disabled
-    return [] unless RepositoryBase.stock_management_enabled?
-
     # don't load reminders for archived repositories
     return [] if repository_rows.blank? || repository.archived?
 
