@@ -76,6 +76,8 @@ class ProtocolsController < ApplicationController
 
   before_action :set_importer, only: %i(load_from_file import)
 
+  layout 'fluid'
+
   def index; end
 
   def datatable

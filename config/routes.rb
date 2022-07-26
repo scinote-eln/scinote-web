@@ -54,6 +54,8 @@ Rails.application.routes.draw do
       get :update_progress_modal, on: :member
     end
 
+    resources :label_templates
+
     get 'users/settings/account/connected_accounts',
         to: 'users/settings/account/connected_accounts#index',
         as: 'connected_accounts'

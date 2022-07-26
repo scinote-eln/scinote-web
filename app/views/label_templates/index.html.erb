@@ -1,0 +1,8 @@
+<% if current_team %>
+  <% provide(:sidebar_title, t('sidebar.templates.sidebar_title')) %>
+  <%= content_for :sidebar do %>
+   <%= render partial: "/shared/sidebar/templates_sidebar", locals: {active: :label} %>
+  <% end %>
+  <div class="content-pane flexible">
+  </div>
+<% end %>

@@ -14,7 +14,8 @@ module LeftMenuBarHelper
 
   def templates_are_selected?
     # TODO
-    controller_name == 'protocols'
+    controller_name == 'protocols' ||
+      controller_name == 'label_templates'
   end
 
   def reports_are_selected?
