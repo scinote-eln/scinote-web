@@ -76,11 +76,11 @@
       <template v-for="(attachment, index) in attachmentsOrdered">
         <component
           :is="attachment_view_mode(attachmentsOrdered[index])"
-          :key="index"
-          :attachment.sync="attachmentsOrdered[index]"
+          :key="attachment.id"
+          :attachment="attachment"
           :stepId="parseInt(step.id)"
           @attachment:viewMode="updateAttachmentViewMode"
-          @attachment:delete="deleteAttachment"
+          @attachment:delete="deleteAttachment(attachment.id)"
         />
       </template>
     </div>
@@ -159,9 +159,8 @@
         }
         return `${attachment.attributes.view_mode}Attachment`
       },
-      deleteAttachment(index) {
-        this.attachments.splice(index, 1)
-        this.$emit('attachment:deleted')
+      deleteAttachment(id) {
+        this.$emit('attachment:deleted', id)
       },
       initMarvinJS() {
         // legacy logic from app/assets/javascripts/sitewide/marvinjs_editor.js
