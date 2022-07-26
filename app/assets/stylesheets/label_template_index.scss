@@ -4,7 +4,12 @@
   .search-label-templates-container {
     float: right;
     margin-right: 2em;
+    padding-bottom: 16px;
     width: 200px;
+
+    .fa-search {
+      padding-bottom: 16px;
+    }
   }
 
   .toolbar-row.label-templates-toolbar {
@@ -19,6 +24,7 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    width: 100%;
 
     .dataTables_scroll {
       display: flex;
@@ -35,4 +41,14 @@
       flex-shrink: 0;
     }
   }
+}
+
+.label-template-name {
+  align-items: center;
+  display: flex;
+}
+
+.label-template-icon {
+  padding-bottom: 2px;
+  padding-right: 4px;
 }

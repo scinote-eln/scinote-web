@@ -813,11 +813,14 @@ en:
   label_templates:
     index:
       head_title: "Label templates"
-      new: "New template"
       search_templates: "Filter templates"
       thead_name: "Name"
+      format: 'Format'
+      description: 'Description'
+      updated_by: 'Last updated by'
+      updated_at: 'Last updated on'
+      created_by: 'Created by'
       created_at: 'Created on'
-      updated_at: 'Last updated at'
 
 
   label_printers:

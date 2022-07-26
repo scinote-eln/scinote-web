@@ -5,19 +5,19 @@
 
   var LABEL_TEMPLATE_TABLE;
 
-  function renderCheckboxHTML(data) {
-    return `<div class="sci-checkbox-container">
+  function renderCheckboxHTML(data, type, row) {
+    return row.manage_permission ? `<div class="sci-checkbox-container">
               <input type="checkbox" class="sci-checkbox" data-action='toggle' data-label-template-id="${data}">
               <span class="sci-checkbox-label"></span>
-            </div>`;
+            </div>` : '';
   }
 
   function renderDefaultTemplateHTML(data) {
     return data ? '<i class="fas fa-thumbtack"></i>' : '';
   }
 
-  function renderNameHTML(data) {
-    return `${data.icon_url} ${data.name}`;
+  function renderNameHTML(data, type, row) {
+    return `${data.icon_url}<a href='${row.recordInfoUrl}' class='record-info-link'>${data.name}</a>`;
   }
 
   function addAttributesToRow(row, data) {
@@ -79,11 +79,11 @@
         targets: 1,
         searchable: false,
         orderable: false,
-        className: 'dt-body-center',
         sWidth: '1%',
         render: renderDefaultTemplateHTML
       }, {
         targets: 2,
+        className: 'label-template-name',
         render: renderNameHTML
       }],
       oLanguage: {
