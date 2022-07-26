@@ -253,9 +253,10 @@ class Protocol < ApplicationRecord
     end
   end
 
-  def self.clone_contents(src, dest, current_user, clone_keywords)
+  def self.clone_contents(src, dest, current_user, clone_keywords, only_contents = false)
     assets_to_clone = []
-    dest.update(description: src.description, name: src.name)
+    dest.update(description: src.description, name: src.name) unless only_contents
+
     src.clone_tinymce_assets(dest, dest.team)
 
     # Update keywords
@@ -736,7 +737,7 @@ class Protocol < ApplicationRecord
 
     raise ActiveRecord::RecordNotSaved unless success
 
-    Protocol.clone_contents(self, clone, current_user, true)
+    Protocol.clone_contents(self, clone, current_user, true, true)
 
     clone.reload
     clone
