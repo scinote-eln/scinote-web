@@ -1,0 +1,12 @@
+<ul class="sidebar-branch">
+  <li class="sidebar-leaf">
+    <%= link_to t('sidebar.templates.protocol_templates'),
+                protocols_path,
+                class: "sidebar-link #{'selected' if active == :protocol}" %>
+  </li>
+  <li class="sidebar-leaf">
+    <%= link_to t('sidebar.templates.label_templates'),
+                label_templates_path,
+                class: "sidebar-link #{'selected' if active == :label}" %>
+  </li>
+</ul>

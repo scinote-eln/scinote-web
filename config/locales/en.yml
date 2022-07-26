@@ -240,7 +240,7 @@ en:
     dashboard: "Overview"
     projects: "Projects"
     repositories: "Inventories"
-    templates: "Protocols"
+    templates: "Templates"
     reports: "Reports"
     settings: "Settings"
     activities: "Activities"
@@ -283,6 +283,10 @@ en:
       archive: "Archived results"
     repositories:
       sidebar_title: "INVENTORIES"
+    templates:
+      sidebar_title: "TEMPLATES"
+      protocol_templates: "Protocol templates"
+      label_templates: "Label Templates"
 
   nav2:
     all_projects:
