@@ -809,6 +809,19 @@ en:
       select_user_role: "Please select a user role."
       add_user_generic_error: "An error occurred. "
       can_add_user_to_project: "Can not add user to the project."
+  
+  label_templates:
+    index:
+      head_title: 'Label templates'
+      search_templates: 'Filter templates'
+      thead_name: 'Name'
+      format: 'Format'
+      description: 'Description'
+      updated_by: 'Last updated by'
+      updated_at: 'Last updated on'
+      created_by: 'Created by'
+      created_at: 'Created on'
+
 
   label_printers:
     create:

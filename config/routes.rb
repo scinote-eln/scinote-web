@@ -45,6 +45,9 @@ Rails.application.routes.draw do
         to: 'users/settings/account/addons#index',
         as: 'addons'
 
+    resources :label_templates, only: %i(index new)
+    get 'label_templates/datatable', to: 'label_templates#datatable'
+
     resources :label_printers, except: :show, path: 'users/settings/account/addons/label_printers' do
       post :create_fluics, on: :collection
     end
@@ -53,8 +56,6 @@ Rails.application.routes.draw do
       post :print, on: :member
       get :update_progress_modal, on: :member
     end
-
-    resources :label_templates
 
     get 'users/settings/account/connected_accounts',
         to: 'users/settings/account/connected_accounts#index',
