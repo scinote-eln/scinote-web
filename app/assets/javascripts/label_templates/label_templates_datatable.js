@@ -6,10 +6,11 @@
   var LABEL_TEMPLATE_TABLE;
 
   function renderCheckboxHTML(data, type, row) {
-    return row.manage_permission ? `<div class="sci-checkbox-container">
-              <input type="checkbox" class="sci-checkbox" data-action='toggle' data-label-template-id="${data}">
+    return `<div class="sci-checkbox-container">
+              <input type="checkbox" class="sci-checkbox" data-action='toggle' 
+               data-label-template-id="${data}" ${row.manage_permission ? '' : 'disabled'}>
               <span class="sci-checkbox-label"></span>
-            </div>` : '';
+            </div>`;
   }
 
   function renderDefaultTemplateHTML(data) {

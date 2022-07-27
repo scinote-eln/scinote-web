@@ -812,9 +812,9 @@ en:
   
   label_templates:
     index:
-      head_title: "Label templates"
-      search_templates: "Filter templates"
-      thead_name: "Name"
+      head_title: 'Label templates'
+      search_templates: 'Filter templates'
+      thead_name: 'Name'
       format: 'Format'
       description: 'Description'
       updated_by: 'Last updated by'

@@ -1,5 +1,6 @@
 <% if current_team %>
   <% provide(:sidebar_title, t('sidebar.templates.sidebar_title')) %>
+  <% provide(:container_class, "no-second-nav-container") %>
   <%= content_for :sidebar do %>
    <%= render partial: "/shared/sidebar/templates_sidebar", locals: {active: :label} %>
   <% end %>
@@ -40,9 +41,8 @@
               <tr>
                 <th id="select-all">
                   <div class="sci-checkbox-container">
-                    <% if can_manage_label_templates?(current_team) %>
-                      <input name="select_all" type="checkbox" class="sci-checkbox">
-                    <% end %>
+                  <input name="select_all" type="checkbox" class="sci-checkbox" 
+                   <%= can_manage_label_templates?(current_team) ? '' : 'disabled' %>>
                     <span class="sci-checkbox-label"></span>
                   </div>
                 </th>

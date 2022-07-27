@@ -4,7 +4,7 @@ class LabelTemplatesController < ApplicationController
   include InputSanitizeHelper
 
   before_action :check_view_permissions
-  before_action :load_label_templates, only: :index
+  before_action :load_label_templates, only: %i(index datatable)
 
   layout 'fluid'
 
@@ -16,7 +16,7 @@ class LabelTemplatesController < ApplicationController
         render json: ::LabelTemplateDatatable.new(
           view_context,
           can_manage_label_templates?(current_team),
-          LabelTemplate.all
+          @label_templates
         )
       end
     end
@@ -33,6 +33,6 @@ class LabelTemplatesController < ApplicationController
   end
 
   def load_label_templates
-    @label_templates = LabelTemplate.all
+    @label_templates = LabelTemplate.where(team_id: current_team.id)
   end
 end
