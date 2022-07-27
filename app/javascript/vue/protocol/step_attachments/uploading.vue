@@ -7,8 +7,8 @@
       <i v-if="attachment.error" class="fas fa-exclamation-triangle"></i>
     </div>
     <div class="file-name">
-      <span v-if="!attachment.error">{{ i18n.t("protocols.steps.attachments.new.uploading") }}</span>
-      <span>{{ attachment.attributes.file_name }}</span>
+      <div v-if="!attachment.error">{{ i18n.t("protocols.steps.attachments.new.uploading") }}</div>
+      <div>{{ attachment.attributes.file_name }}</div>
     </div>
     <div v-if="!attachment.error" class="progress-container">
       <div class="progress-bar" :style="`width: ${attachment.attributes.progress}%`"></div>

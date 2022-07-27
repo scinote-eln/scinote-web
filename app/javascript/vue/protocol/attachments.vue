@@ -16,7 +16,7 @@
           >
             <li class="divider-label">{{ i18n.t("protocols.steps.attachments.add") }}</li>
             <li>
-              <a class="action-link .attachments-view-mode {" @click="$emit('attachments:openFileModal')">
+              <a class="action-link attachments-view-mode" @click="$emit('attachments:openFileModal')">
                 <i class="fas fa-upload"></i>
                 {{ i18n.t('protocols.steps.insert.attachment') }}
               </a>
