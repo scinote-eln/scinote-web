@@ -11,9 +11,9 @@
       <StorageUsage v-if="showStorageUsage()" :step="step"/>
     </div>
     <div class="step-header">
-      <div class="step-element-header" :class="{ 'step-element--locked': !(urls.update_url || urls.state_url) }">
+      <div class="step-element-header">
         <div class="step-controls">
-          <div v-if="reorderStepUrl" class="step-element-grip" @click="$emit('reorder')">
+          <div v-if="reorderStepUrl" class="step-element-grip" @click="$emit('reorder')" :class="{ 'step-element--locked': !urls.update_url }">
             <i class="fas fas-rotated-90 fa-exchange-alt"></i>
           </div>
           <div v-else class="step-element-grip-placeholder"></div>
@@ -24,7 +24,7 @@
             @click="toggleCollapsed">
               <span class="fas fa-caret-right"></span>
           </a>
-          <div v-if="!inRepository && (urls.state_url || step.attributes.completed)" class="step-complete-container">
+          <div class="step-complete-container" :class="{ 'step-element--locked': inRepository || !urls.state_url }">
             <div :class="`step-state ${step.attributes.completed ? 'completed' : ''}`"
                  @click="changeState"
                  @keyup.enter="changeState"
@@ -36,7 +36,7 @@
             {{ step.attributes.position + 1 }}.
           </div>
         </div>
-        <div class="step-name-container" :class="{'strikethrough': step.attributes.completed}">
+        <div class="step-name-container" :class="{'strikethrough': step.attributes.completed, 'step-element--locked': !urls.update_url}">
           <InlineEdit
             :value="step.attributes.name"
             :class="{ 'step-element--locked': !urls.update_url }"
