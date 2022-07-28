@@ -3,13 +3,13 @@
     <div class="progress-container">
       <div class="progress-bar" :style="`width:${storagePrecentage}%`"></div>
     </div>
-    <span v-if="this.step.attributes.storage_limit.total > 0">
+    <span class="progress-message" v-if="this.step.attributes.storage_limit.total > 0">
       {{ i18n.t('protocols.steps.space_used_label', {
                   used: this.step.attributes.storage_limit.used_human,
                   limit: this.step.attributes.storage_limit.total_human
       }) }}
     </span>
-    <span v-else>
+    <span class="progress-message" v-else>
       {{ i18n.t('protocols.steps.space_used_label_unlimited', {used: this.step.attributes.storage_limit.used_human}) }}
     </span>
   </div>

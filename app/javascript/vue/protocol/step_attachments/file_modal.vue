@@ -38,6 +38,12 @@
             {{ i18n.t("protocols.steps.attachments.file_modal.or") }}
           </div>
           <div class="integrations-container">
+            <div class="integration-block wopi" v-if="step.attributes.wopi_enabled">
+              <a @click="openWopiFileModal" class="create-wopi-file-btn btn btn-light" tabindex="0" @keyup.enter="openWopiFileModal">
+                <img :src="step.attributes.wopi_context.icon"/>
+                {{ i18n.t('assets.create_wopi_file.button_text') }}
+              </a>
+            </div>
             <div class="integration-block marvinjs" v-if="step.attributes.marvinjs_enabled">
               <a
                 class="new-marvinjs-upload-button btn btn-light"
@@ -52,12 +58,6 @@
                   <img :src="step.attributes.marvinjs_context.icon"/>
                 </span>
                 {{ i18n.t('marvinjs.new_button') }}
-              </a>
-            </div>
-            <div class="integration-block wopi" v-if="step.attributes.wopi_enabled">
-              <a @click="openWopiFileModal" class="create-wopi-file-btn btn btn-light" tabindex="0" @keyup.enter="openWopiFileModal">
-                <img :src="step.attributes.wopi_context.icon"/>
-                {{ i18n.t('assets.create_wopi_file.button_text') }}
               </a>
             </div>
           </div>

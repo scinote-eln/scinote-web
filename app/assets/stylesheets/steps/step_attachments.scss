@@ -152,7 +152,8 @@
     }
 
     .divider {
-      @include font-h3;
+      @include font-small;
+      font-weight: bold;
       padding: 1em 0;
       text-align: center;
     }
