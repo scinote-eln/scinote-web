@@ -149,6 +149,10 @@ en:
               different_flow: "Should belong to the same flow"
             previous_status:
               different_flow: "Should belong to the same flow"
+        label_template:
+          attributes:
+            default:
+              already_exist: "Default template already exist"
         asset:
           attributes:
             file:
@@ -809,7 +813,7 @@ en:
       select_user_role: "Please select a user role."
       add_user_generic_error: "An error occurred. "
       can_add_user_to_project: "Can not add user to the project."
-  
+
   label_templates:
     index:
       head_title: 'Label templates'
@@ -821,7 +825,18 @@ en:
       updated_at: 'Last updated on'
       created_by: 'Created by'
       created_at: 'Created on'
-
+      templates_duplicated: '[%{count}] Label template(s) successfully copied'
+      templates_deleted: 'Successfully deleted Label template(s)'
+      template_set_as_default: 'Successfully set template as default'
+      toolbar:
+        new: 'New template'
+        edit: 'Edit'
+        duplicate: 'Duplicate'
+        delete: 'Delete'
+        set_default: 'Set Default'
+      delete_modal:
+        title: 'Delete Label template(s)'
+        description: 'Are you sure you want to delete the selected Label template(s)?'
 
   label_printers:
     create:

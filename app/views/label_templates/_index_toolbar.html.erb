@@ -1,0 +1,28 @@
+<template id="labelTemplatesToolbar">
+  <% if can_manage_label_templates?(current_team) %>
+  <a href="<%= new_label_template_path %>" title="<%= t('label_templates.index.toolbar.new') %>"
+     class="btn btn-primary  auto-shrink-button" id="newLabelTemplate" target="_blank">
+    <i class="fas fa-plus"></i>
+    <span class="button-text"><%= t('label_templates.index.toolbar.new') %></span>
+  </a>
+  <div class="btn btn-light hidden selected-actions  auto-shrink-button" id="editLabelTemplate"  title="<%= t('label_templates.index.toolbar.edit') %>">
+    <i class="fas fa-pen"></i>
+    <span class="button-text"><%= t('label_templates.index.toolbar.edit') %></span>
+  </div>
+  <div class="btn btn-light hidden selected-actions  auto-shrink-button"
+       title="<%= t('label_templates.index.toolbar.duplicate') %>"
+       data-url="<%= duplicate_label_templates_path %>"
+       id="duplicateLabelTemplate">
+    <i class="fas fa-clone"></i>
+    <span class="button-text"><%= t('label_templates.index.toolbar.duplicate') %></span>
+  </div>
+  <div class="btn btn-light hidden selected-actions  auto-shrink-button"  id="setDefaultLabelTemplate"  title="<%= t('label_templates.index.toolbar.set_default') %>">
+    <i class="fas fa-thumbtack"></i>
+    <span class="button-text"><%= t('label_templates.index.toolbar.set_default') %></span>
+  </div>
+  <div class="btn btn-light hidden selected-actions  auto-shrink-button"  id="deleteLabelTemplate"  title="<%= t('label_templates.index.toolbar.delete') %>">
+    <i class="fas fa-trash"></i>
+    <span class="button-text"><%= t('label_templates.index.toolbar.delete') %></span>
+  </div>
+  <% end%>
+</template>

@@ -19,17 +19,6 @@
         <%= t('label_templates.index.head_title') %>
       </h1>
     </div>
-    <div id="toolbarWrapper" class="toolbar-row label-templates-toolbar">
-      <div class="sci-input-container left-icon search-label-templates-container">
-        <input type="text"
-               class="sci-input-field label-templates-search"
-               placeholder="<%= t("label_templates.index.search_templates") %>">
-        </input>
-        <i class="fas fa-search"></i>
-      </div>
-    </div>
-
-
   <div id="content-label-templates-index">
     <div class="row">
       <div class="col-md-12">
@@ -41,7 +30,7 @@
               <tr>
                 <th id="select-all">
                   <div class="sci-checkbox-container">
-                  <input name="select_all" type="checkbox" class="sci-checkbox" 
+                  <input name="select_all" type="checkbox" class="sci-checkbox"
                    <%= can_manage_label_templates?(current_team) ? '' : 'disabled' %>>
                     <span class="sci-checkbox-label"></span>
                   </div>
@@ -54,7 +43,7 @@
                 <th id="label-template-updated-at"><%= t('label_templates.index.updated_at') %></th>
                 <th id="label-template-created-by"><%= t('label_templates.index.created_by') %></th>
                 <th id="label-template-created-at"><%= t('label_templates.index.created_at') %></th>
-                
+
               </tr>
             </thead>
             <tbody></tbody>
@@ -63,6 +52,9 @@
       </div>
     </div>
   </div>
+</div>
 
+  <%= render partial: "index_toolbar" %>
+  <%= render partial: "delete_modal" %>
   <%= javascript_include_tag 'label_templates/label_templates_datatable' %>
 <% end %>

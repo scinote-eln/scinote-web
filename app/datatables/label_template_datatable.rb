@@ -43,6 +43,10 @@ class LabelTemplateDatatable < CustomDatatable
         '7' => sanitize_input(record.created_by_user),
         '8' => I18n.l(record.created_at, format: :full),
         'recordInfoUrl' => '',
+        'DT_RowAttr': {
+          'data-edit-url': edit_label_template_path(record),
+          'data-set-default-url': set_default_label_template_path(record)
+        },
         'manage_permission' => @manage_template
       }
     end
