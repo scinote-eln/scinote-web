@@ -18,7 +18,13 @@
             <li>
               <a class="action-link attachments-view-mode" @click="$emit('attachments:openFileModal')">
                 <i class="fas fa-upload"></i>
-                {{ i18n.t('protocols.steps.insert.attachment') }}
+                {{ i18n.t('protocols.steps.attachments.menu.file_from_pc') }}
+              </a>
+            </li>
+            <li>
+              <a @click="openWopiFileModal" class="create-wopi-file-btn" tabindex="0" @keyup.enter="openWopiFileModal">
+                <img :src="step.attributes.wopi_context.icon"/>
+                {{ i18n.t('protocols.steps.attachments.menu.office_file') }}
               </a>
             </li>
             <li v-if="step.attributes.marvinjs_enabled">
@@ -32,7 +38,7 @@
                 <span class="new-marvinjs-upload-icon">
                   <img v-bind:src="marvinjsIcon">
                 </span>
-                  {{ i18n.t('marvinjs.new_li_button') }}
+                  {{ i18n.t('protocols.steps.attachments.menu.chemical_drawing') }}
               </a>
             </li>
             <li v-if="step.attributes.bio_eddie_service_enabled">
@@ -94,6 +100,8 @@
   import marvinjsIcon from 'images/icon_small/marvinjs.svg'
   import bioEddieIcon from 'images/icon_small/bio_eddie.png'
 
+  import WopiFileModal from './step_attachments/mixins/wopi_file_modal.js'
+
   export default {
     name: 'Attachments',
     props: {
@@ -114,6 +122,7 @@
         orderOptions: ['new', 'old', 'atoz', 'ztoa']
       }
     },
+    mixins: [WopiFileModal],
     components: {
       thumbnailAttachment,
       inlineAttachment,
@@ -168,6 +177,15 @@
           `#stepContainer${this.step.id} .new-marvinjs-upload-button`,
           () => this.$emit('attachment:uploaded')
         );
+      },
+      openWopiFileModal() {
+        this.initWopiFileModal(this.step, (_e, data, status) => {
+          if (status === 'success') {
+            this.$emit('attachment:uploaded', data);
+          } else {
+            HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+          }
+        });
       }
     }
   }

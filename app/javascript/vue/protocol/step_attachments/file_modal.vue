@@ -74,6 +74,8 @@
  <script>
   import StorageUsage from '../storage_usage.vue'
 
+  import WopiFileModal from './mixins/wopi_file_modal.js'
+
   export default {
     name: 'fileModal',
     props: {
@@ -81,24 +83,32 @@
     },
     data() {
       return {
-        dragingFile: false
+        dragingFile: false,
+        attachmentsChanged: false
       }
     },
     components: {StorageUsage},
+    mixins: [WopiFileModal],
     mounted() {
       $(this.$refs.modal).modal('show');
       MarvinJsEditor.initNewButton('.add-file-modal .new-marvinjs-upload-button', () => {
-        this.$emit('attachmentsChanged');
-        this.$nextTick(this.cancel);
+        this.attachmentsChanged = true;
+        $(this.$refs.modal).modal('hide');
       });
       $(this.$refs.modal).on('hidden.bs.modal', () => {
         global.removeEventListener('paste', this.onImageFilePaste, false);
+
+        if (this.attachmentsChanged) {
+          this.$emit('attachmentsChanged');
+        } else {
+          this.cancel();
+        }
       });
       global.addEventListener('paste', this.onImageFilePaste, false);
     },
     methods: {
       cancel() {
-        $(this.$refs.modal).modal('hide');
+        this.$nextTick(() => this.$emit('cancel'));
       },
       onImageFilePaste (pasteEvent) {
         if (pasteEvent.clipboardData !== false) {
@@ -115,41 +125,24 @@
       dropFile(e) {
         e.stopPropagation();
         if (e.dataTransfer && e.dataTransfer.files.length) {
-          $(this.$refs.modal).modal('hide');
           this.$emit('files', e.dataTransfer.files);
+          $(this.$refs.modal).modal('hide');
         }
       },
       uploadFiles() {
-        $(this.$refs.modal).modal('hide');
         this.$emit('files', this.$refs.fileSelector.files);
+        $(this.$refs.modal).modal('hide');
       },
       openMarvinJsModal() {
-        // hide regular file modal
-        $(this.$refs.modal).modal('hide');
       },
       openWopiFileModal() {
-        // hide regular file modal
-        $(this.$refs.modal).modal('hide');
-
-        // handle legacy wopi file modal
-        let $wopiModal = $('#new-office-file-modal')
-        $wopiModal.find('#element_id').val(this.step.id);
-        $wopiModal.find('#element_type').val('Step');
-        $wopiModal.modal('show');
-
-        $wopiModal.find('form').on('ajax:success',
-          (_e, data, status) => {
-            if (status === 'success') {
-              $wopiModal.modal('hide');
-              this.$emit('attachmentUploaded', data);
-
-              // cancel and remove regular file modal
-              this.$nextTick(() => this.cancel());
-            } else {
-              HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
-            }
+        this.initWopiFileModal(this.step, (_e, data, status) => {
+          if (status === 'success') {
+            this.$emit('attachmentUploaded', data);
+          } else {
+            HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
           }
-        );
+        });
       }
     }
   }
