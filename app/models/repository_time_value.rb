@@ -60,7 +60,7 @@ class RepositoryTimeValue < RepositoryDateTimeValueBase
         false
       end
     end
-    RepositoryRow.where(id: filtered_data.pluck(:id))
+    repository_rows.where(id: filtered_data.pluck(:id))
   end
 
   def self.new_with_payload(payload, attributes)

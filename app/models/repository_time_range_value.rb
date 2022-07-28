@@ -59,13 +59,13 @@ class RepositoryTimeRangeValue < RepositoryDateTimeRangeValueBase
         when 'between'
           time_value_start > filter_time_start && time_value_end < filter_time_end
         else
-          raise ArgumentError, 'Wrong operator for RepositoryTimeValue!'
+          raise ArgumentError, 'Wrong operator for RepositoryTimeRangeValue!'
         end
       else
         false
       end
     end
-    RepositoryRow.where(id: filtered_data.pluck(:id))
+    repository_rows.where(id: filtered_data.pluck(:id))
   end
 
   def self.new_with_payload(payload, attributes)
