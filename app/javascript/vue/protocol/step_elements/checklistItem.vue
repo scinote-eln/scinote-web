@@ -118,6 +118,7 @@
       disableTextEdit() {
         if (this.checklistItem.attributes.isNew) {
           this.removeItem();
+          this.$emit('editEnd');
           return;
         }
         this.editingText = false;
