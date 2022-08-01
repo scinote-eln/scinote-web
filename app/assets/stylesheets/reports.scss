@@ -339,11 +339,6 @@ label {
 
   .report-element-header {
     border-bottom: none;
-    height: 0;
-
-    .result-name-container {
-      max-width: 570px;
-    }
 
     .result-icon {
       display: inline-block;
@@ -351,8 +346,8 @@ label {
 
     .result-name {
       @include font-main;
-      display: inline-block;
       font-weight: bold;
+      overflow-wrap: break-word;
     }
 
     .user-time {
