@@ -15,9 +15,47 @@
   .toolbar-row.label-templates-toolbar {
     border-bottom: 0;
   }
+
+  .label-toolbar {
+    align-items: center;
+    display: flex;
+    margin: 1em 0;
+
+    .label-search-container {
+      margin-left: auto;
+    }
+
+    .label-buttons-container {
+      align-items: center;
+      column-gap: .5em;
+      display: grid;
+      grid-template-columns: repeat(5, auto);
+    }
+  }
+
+  @media (max-width: 1299px) {
+    .label-toolbar {
+
+      .btn:not(.prevent-shrink) {
+        padding: 7px;
+        width: 36px;
+
+        .button-text {
+          display: none;
+        }
+      }
+
+      .auto-shrink-button {
+        .fas {
+          margin: 0;
+        }
+      }
+    }
+  }
 }
 
 .label-templates-datatable {
+  --content-header-size: 5em;
   height: calc(100vh - var(--navbar-height) - var(--content-header-size));
 
   #label-templates-table_wrapper {

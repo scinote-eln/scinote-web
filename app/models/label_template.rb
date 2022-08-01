@@ -9,9 +9,20 @@ class LabelTemplate < ApplicationRecord
   validates :size, presence: true
   validates :content, presence: true
 
+  validate :default_template
+
   def render(locals)
     locals.reduce(content.dup) do |rendered_content, (key, value)|
       rendered_content.gsub!(/\{\{#{key}\}\}/, value.to_s)
+    end
+  end
+
+  private
+
+  def default_template
+    if default && LabelTemplate.where(team_id: team_id, default: true, language_type: language_type)
+                               .where.not(id: id).any?
+      errors.add(:default, I18n.t('activerecord.errors.models.label_template.attributes.default.already_exist'))
     end
   end
 end

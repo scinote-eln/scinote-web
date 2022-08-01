@@ -3,8 +3,10 @@
 class LabelTemplatesController < ApplicationController
   include InputSanitizeHelper
 
-  before_action :check_view_permissions
+  before_action :check_view_permissions, only: %i(index datatable)
+  before_action :check_manage_permissions, only: %i(new duplicate set_default delete)
   before_action :load_label_templates, only: %i(index datatable)
+  before_action :load_label_template, only: %i(edit set_default)
 
   layout 'fluid'
 
@@ -22,8 +24,47 @@ class LabelTemplatesController < ApplicationController
     end
   end
 
-  def new
-    render_404
+  def new; end
+
+  def edit; end
+
+  def duplicate
+    ActiveRecord::Base.transaction do
+      LabelTemplate.where(team_id: current_team.id, id: params[:selected_ids]).each do |template|
+        new_template = template.dup
+        new_template.default = false
+        new_template.name = template.name + '(1)'
+        new_template.save!
+      end
+      render json: { message: I18n.t('label_templates.index.templates_duplicated',
+                                     count: params[:selected_ids].length) }
+    rescue ActiveRecord::RecordInvalid => e
+      Rails.logger.error e.message
+      render json: { error: I18n.t('errors.general') }, status: :unprocessable_entity
+    end
+  end
+
+  def delete
+    ActiveRecord::Base.transaction do
+      LabelTemplate.where(team_id: current_team.id, id: params[:selected_ids]).each(&:destroy!)
+      render json: { message: I18n.t('label_templates.index.templates_deleted') }
+    end
+  rescue ActiveRecord::RecordNotDestroyed => e
+    Rails.logger.error e.message
+    render json: { error: I18n.t('errors.general') }, status: :unprocessable_entity
+  end
+
+  def set_default
+    ActiveRecord::Base.transaction do
+      LabelTemplate.find_by(team_id: current_team.id,
+                            language_type: @label_template.language_type,
+                            default: true)&.update!(default: false)
+      @label_template.update!(default: true)
+      render json: { message: I18n.t('label_templates.index.template_set_as_default') }
+    end
+  rescue ActiveRecord::RecordInvalid => e
+    Rails.logger.error e.message
+    render json: { error: I18n.t('errors.general') }, status: :unprocessable_entity
   end
 
   private
@@ -32,7 +73,15 @@ class LabelTemplatesController < ApplicationController
     render_403 unless can_view_label_templates?(current_team)
   end
 
+  def check_manage_permissions
+    render_403 unless can_manage_label_templates?(current_team)
+  end
+
   def load_label_templates
     @label_templates = LabelTemplate.where(team_id: current_team.id)
+  end
+
+  def load_label_template
+    @label_template = LabelTemplate.where(team_id: current_team.id).find(params[:id])
   end
 end
