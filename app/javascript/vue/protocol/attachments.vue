@@ -21,7 +21,7 @@
                 {{ i18n.t('protocols.steps.attachments.menu.file_from_pc') }}
               </a>
             </li>
-            <li>
+            <li v-if="step.attributes.wopi_enabled">
               <a @click="openWopiFileModal" class="create-wopi-file-btn" tabindex="0" @keyup.enter="openWopiFileModal">
                 <img :src="step.attributes.wopi_context.icon"/>
                 {{ i18n.t('protocols.steps.attachments.menu.office_file') }}
