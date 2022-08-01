@@ -4,6 +4,7 @@
   column-gap: .25em;
   display: grid;
   grid-template-columns: auto repeat(2, max-content);
+  margin-top: .3em;
   transition: .4s $timing-function-sharp;
 
   &.editing .sci-inline-edit__content {
@@ -22,7 +23,6 @@
     margin-left: -.25em;
     min-height: 36px;
     padding-left: .25em;
-    padding-top: .3em;
     position: relative;
     width: 100%;
 
