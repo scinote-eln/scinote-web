@@ -2558,7 +2558,7 @@ en:
         table: 'Add table'
         text: 'Add text'
         checklist: 'Add checklist'
-        attachment: 'File from your PC'
+        attachment: 'Add file'
         checklist_item: 'Add a new checklist item...'
       table:
         default_name: 'Table %{position}'
@@ -2599,6 +2599,10 @@ en:
         complete_title: "Complete step"
         uncomplete_title: "Restart step"
       attachments:
+        menu:
+          office_file: "New Office file"
+          chemical_drawing: "New chemical drawing"
+          file_from_pc: "File from your PC"
         modified_label: "Modified:"
         manage: "Manage"
         add: "ADD"
