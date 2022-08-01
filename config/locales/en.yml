@@ -2618,6 +2618,7 @@ en:
           description: 'New'
           uploading: 'Uploading'
           file_too_big: 'Failed to upload: File size is too big'
+          no_more_space: 'Failed to upload: You ran out of space'
           general_error: 'Failed to upload: Something went wrong, please try again'
           leaving_warning: 'Your changes will be lost if you navigate away'
 

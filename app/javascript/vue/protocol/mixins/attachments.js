@@ -45,6 +45,12 @@ export default {
             return;
           }
 
+          if (this.step.attributes.storage_limit && (this.step.attributes.storage_limit.used >= this.step.attributes.storage_limit.total)) {
+            fileObject.error = I18n.t('protocols.steps.attachments.new.no_more_space');
+            this.attachments.push(fileObject);
+            return;
+          }
+
           const upload = new ActiveStorage.DirectUpload(file, this.step.attributes.urls.direct_upload_url, fileObject);
 
           fileObject.isNewUpload = true;
@@ -61,6 +67,8 @@ export default {
               }, (result) => {
                 fileObject.id = result.data.id;
                 fileObject.attributes = result.data.attributes;
+              }).error(() => {
+                fileObject.error = I18n.t('protocols.steps.attachments.new.general_error');
               });
               filesUploadedCntr += 1;
               if (filesUploadedCntr === filesToUploadCntr) {
