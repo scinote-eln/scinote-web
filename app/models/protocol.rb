@@ -288,6 +288,9 @@ class Protocol < ApplicationRecord
         )
         step_text2.save!
 
+        # Copy steps tinyMce assets
+        step_text.clone_tinymce_assets(step_text2, dest.team)
+
         step2.step_orderable_elements.create!(
           position: step_text.step_orderable_element.position,
           orderable: step_text2
@@ -344,9 +347,6 @@ class Protocol < ApplicationRecord
           orderable: table2.step_table
         )
       end
-
-      # Copy steps tinyMce assets
-      step.clone_tinymce_assets(step2, dest.team)
     end
     # Call clone helper
     Protocol.delay(queue: :assets).deep_clone_assets(assets_to_clone)
