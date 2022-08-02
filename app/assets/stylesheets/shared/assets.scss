@@ -364,8 +364,20 @@
   .file-name {
     text-align: center;
 
-    div {
+    &:not(.one-line) div {
       margin-bottom: .5em;
+    }
+
+    &.one-line {
+      align-items: center;
+      display: flex;
+
+      .file-name-text {
+        margin-left: .25em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
   }
 

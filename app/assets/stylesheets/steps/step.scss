@@ -313,7 +313,7 @@
     opacity: 0;
   }
 
-  &:hover:not(.locked) {
+  &:hover:not(.locked):not(.no-hover) {
     background: $color-concrete;
 
     .step-element-grip,

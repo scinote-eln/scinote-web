@@ -1,6 +1,6 @@
 <template>
   <div class="step-checklist-container" >
-    <div class="step-element-header" :class="{ 'editing-name': editingName }">
+    <div class="step-element-header" :class="{ 'editing-name': editingName, 'no-hover': !element.attributes.orderable.urls.update_url }">
       <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
         <i class="fas fas-rotated-90 fa-exchange-alt"></i>
       </div>
