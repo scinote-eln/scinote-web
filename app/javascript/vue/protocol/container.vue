@@ -67,7 +67,7 @@
           {{ i18n.t("protocols.no_text_placeholder") }}
         </div>
       </div>
-      <a v-if="urls.add_step_url && protocol.attributes.in_repository" class="btn btn-primary" @click="addStep(steps.length)">
+      <a v-if="urls.add_step_url && protocol.attributes.in_repository" class="btn btn-primary repository-new-step" @click="addStep(steps.length)">
         <span class="fas fa-plus" aria-hidden="true"></span>
         <span>{{ i18n.t("protocols.steps.new_step") }}</span>
       </a>
