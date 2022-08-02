@@ -838,6 +838,14 @@ en:
         title: 'Delete Label template(s)'
         description: 'Are you sure you want to delete the selected Label template(s)?'
 
+    promo:
+      head_title: 'Label templates'
+      promo_title: 'Label all your tubes & containers by your own standards'
+      description_0: 'Easily track your inventory items with labels'
+      description_1: 'Print labels fast & easy'
+      description_2: 'Always have 100% accurate standard output'
+      action_button: 'Try Label templates'
+
   label_printers:
     create:
       success: "Successfully added %{printer_name}"
