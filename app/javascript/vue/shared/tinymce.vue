@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="tinymce-wrapper">
     <div class="tinymce-container" :class="{ 'error': error }">
       <form class="tiny-mce-editor" role="form" :action="updateUrl" accept-charset="UTF-8" data-remote="true" method="post">
         <input type="hidden" name="_method" value="patch">
@@ -29,7 +29,6 @@
         <div class="form-group">
           <textarea :id="`${objectType}_textarea_${objectId}`"
                     class="form-control hidden"
-                    :placeholder="placeholder"
                     autocomplete="off"
                     :data-tinymce-object="`tinymce-${objectType}-description-${objectId}`"
                     :data-object-type="objectType"
@@ -47,13 +46,15 @@
         </div>
       </form>
     </div>
-    <div v-if="error" class="tinymce-error">
+    <div v-if="active && error" class="tinymce-error">
       {{ error }}
     </div>
   </div>
 </template>
 
 <script>
+  import UtilsMixin from 'vue/mixins/utils.js';
+
   export default {
     name: 'Tinymce',
     props: {
@@ -75,13 +76,15 @@
       return {
         editorInstance: null,
         characterCount: 0,
-        blurEventHandler: null
+        blurEventHandler: null,
+        active: false
       }
     },
+    mixins: [ UtilsMixin ],
     watch: {
       inEditMode() {
         if (this.inEditMode) {
-          this.initTinymce()
+          this.initTinymce();
         }
       },
       characterCount() {
@@ -98,7 +101,10 @@
           return(
             this.i18n.t(
               'inline_edit.errors.over_limit',
-              { attribute: this.i18n.t('general.text.name'), limit: this.characterLimit }
+              {
+                attribute: this.i18n.t('general.text.name'),
+                limit: this.numberWithSpaces(this.characterLimit)
+              }
             )
           )
         }
@@ -121,6 +127,7 @@
           this.$emit('editingDisabled')
         }).then((editorInstance) => {
           this.editorInstance = editorInstance[0]; // TinyMCE initialization returns an array
+          this.active = true;
           this.initCharacterCount();
         });
         this.$emit('editingEnabled')
@@ -129,11 +136,15 @@
         return $(`meta[name=\'${name}\']`).attr('content');
       },
       initCharacterCount() {
+        if (!this.editorInstance) return;
+
         this.characterCount = $(this.editorInstance.getContent()).text().length
 
-        this.editorInstance.on('input paste', (e) => {
-          this.characterCount = e.currentTarget.innerText.length
+        this.editorInstance.on('input change paste keydown', (e) => {
+          e.currentTarget && (this.characterCount = (e.currentTarget).innerText.length);
         });
+
+        this.editorInstance.on('remove', () => this.active = false)
 
         // clear error on cancel
         $(this.editorInstance.container).find('.tinymce-cancel-button').on('click', ()=> {

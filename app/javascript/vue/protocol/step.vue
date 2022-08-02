@@ -185,7 +185,7 @@
   import clipboardPasteModal from 'vue/protocol/step_attachments/clipboard_paste_modal.vue'
   import ReorderableItemsModal from 'vue/protocol/modals/reorderable_items_modal.vue'
 
-  import UtilsMixin from 'vue/protocol/mixins/utils.js'
+  import UtilsMixin from 'vue/mixins/utils.js'
   import AttachmentsMixin from 'vue/protocol/mixins/attachments.js'
   import StorageUsage from 'vue/protocol/storage_usage.vue'
 

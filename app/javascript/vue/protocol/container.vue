@@ -134,7 +134,7 @@
   import Tinymce from 'vue/shared/tinymce.vue'
   import ReorderableItemsModal from 'vue/protocol/modals/reorderable_items_modal.vue'
 
-  import UtilsMixin from 'vue/protocol/mixins/utils.js'
+  import UtilsMixin from 'vue/mixins/utils.js'
 
   export default {
     name: 'ProtocolContainer',
