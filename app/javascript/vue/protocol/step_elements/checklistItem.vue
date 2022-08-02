@@ -119,6 +119,7 @@
         if (this.checklistItem.attributes.isNew) {
           this.removeItem();
           this.$emit('editEnd');
+          this.editingText = false;
           return;
         }
         this.editingText = false;
