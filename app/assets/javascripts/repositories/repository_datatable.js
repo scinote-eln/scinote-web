@@ -1,7 +1,7 @@
 /*
   globals I18n _ SmartAnnotation FilePreviewModal animateSpinner DataTableHelpers
   HelperModule RepositoryDatatableRowEditor prepareRepositoryHeaderForExport
-  initAssignedTasksDropdown initBMTFilter initReminderDropdown
+  initAssignedTasksDropdown initBMTFilter initReminderDropdown initBSTooltips
 */
 
 //= require jquery-ui/widgets/sortable
@@ -285,6 +285,8 @@ var RepositoryDatatable = (function(global) {
         $('#saveRepositoryFilters').removeClass('hidden');
       }
       if (typeof initBMTFilter === 'function') initBMTFilter();
+
+      initBSTooltips();
     });
 
     TABLE.ajax.reload(null, false);
@@ -598,6 +600,7 @@ var RepositoryDatatable = (function(global) {
         initItemEditIcon();
         initSaveButton();
         initCancelButton();
+        initBSTooltips();
 
         DataTableHelpers.initLengthAppearance($(TABLE_ID).closest('.dataTables_wrapper'));
 

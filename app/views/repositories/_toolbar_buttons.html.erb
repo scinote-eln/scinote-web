@@ -9,13 +9,13 @@
         </div>
       <% end %>
       <% if can_create_repository_rows?(@repository) %>
-        <button type="button" title="<%= t('repositories.show.button_tooltip.new') %>"
+        <button type="button" data-toggle="tooltip" data-placement="bottom" title="<%= t('repositories.show.button_tooltip.new') %>"
                 class="btn btn-primary editAdd auto-shrink-button"
                 id="addRepositoryRecord" data-view-mode="active">
           <span class="fas fa-plus"></span>
           <span class="button-text"><%= t("repositories.add_new_record") %></span>
         </button>
-        <button type="button" title="<%= t('repositories.show.button_tooltip.import') %>"
+        <button type="button" data-toggle="tooltip" data-placement="bottom" title="<%= t('repositories.show.button_tooltip.import') %>"
                 class="btn btn-light editImport auto-shrink-button"
                 id="importRecordsButton" data-view-mode="active">
           <span class="fas fa-upload"></span>
@@ -24,7 +24,7 @@
       <% end %>
       <%= render partial: 'repositories/toolbar/row_actions' %>
       <% if @repository.repository_rows.with_active_reminders(current_user).any? %>
-        <button type="button" title="<%= t("repositories.hide_reminders") %>"
+        <button type="button" data-toggle="tooltip" data-placement="bottom" title="<%= t("repositories.hide_reminders") %>"
                 class="btn btn-light auto-shrink-button"
                 id="hideRepositoryReminders"
                 data-view-mode="active"
