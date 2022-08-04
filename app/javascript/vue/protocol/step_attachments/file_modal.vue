@@ -108,6 +108,7 @@
     },
     methods: {
       cancel() {
+        $(this.$refs.modal).modal('hide');
         this.$nextTick(() => this.$emit('cancel'));
       },
       onImageFilePaste (pasteEvent) {
