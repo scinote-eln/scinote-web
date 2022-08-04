@@ -815,6 +815,7 @@ en:
       can_add_user_to_project: "Can not add user to the project."
 
   label_templates:
+    new_label_template: 'New label'
     index:
       head_title: 'Label templates'
       search_templates: 'Filter templates'
@@ -837,6 +838,18 @@ en:
       delete_modal:
         title: 'Delete Label template(s)'
         description: 'Are you sure you want to delete the selected Label template(s)?'
+    show:
+      breadcrumb_index: 'Label templates'
+      name_error_prefix: 'Label template name'
+      description_error_prefix: 'Label template description'
+      description_title: 'Template description'
+      description_placeholder: 'Enter the template description (optional)'
+      content_title: '%{format} template code'
+      preview_title: 'Template preview'
+      view_content_tooltip: 'Click to edit template code'
+      buttons:
+        refresh: 'Refresh preview'
+        save: 'Save template code'
 
   label_printers:
     create:

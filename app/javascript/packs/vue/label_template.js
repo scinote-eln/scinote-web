@@ -1,5 +1,3 @@
-/* global I18n */
-
 import TurbolinksAdapter from 'vue-turbolinks';
 import Vue from 'vue/dist/vue.esm';
 import LabelTemplateContainer from '../../vue/label_template/container.vue';
@@ -17,7 +15,8 @@ window.initLabelTemplateComponent = () => {
     data() {
       return {
         labelTemplateUrl: $('#labelTemplateContainer').data('label-template-url'),
-        labelTemplatesUrl: $('#labelTemplateContainer').data('label-templates-url')
+        labelTemplatesUrl: $('#labelTemplateContainer').data('label-templates-url'),
+        newLabel: $('#labelTemplateContainer').data('new-label')
       };
     }
   });

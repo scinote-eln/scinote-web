@@ -1,14 +1,10 @@
 <template id="labelTemplatesToolbar">
   <% if can_manage_label_templates?(current_team) %>
-  <a href="" title="<%= t('label_templates.index.toolbar.new') %>"
-     class="btn btn-primary  auto-shrink-button" id="newLabelTemplate" target="_blank">
+  <button data-url="<%= label_templates_path %>" title="<%= t('label_templates.index.toolbar.new') %>"
+     class="btn btn-primary  auto-shrink-button" id="newLabelTemplate">
     <i class="fas fa-plus"></i>
     <span class="button-text"><%= t('label_templates.index.toolbar.new') %></span>
-  </a>
-  <div class="btn btn-light hidden selected-actions  auto-shrink-button" id="editLabelTemplate"  title="<%= t('label_templates.index.toolbar.edit') %>">
-    <i class="fas fa-pen"></i>
-    <span class="button-text"><%= t('label_templates.index.toolbar.edit') %></span>
-  </div>
+  </button>
   <div class="btn btn-light hidden selected-actions  auto-shrink-button"
        title="<%= t('label_templates.index.toolbar.duplicate') %>"
        data-url="<%= duplicate_label_templates_path %>"

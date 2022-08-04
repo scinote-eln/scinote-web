@@ -4,7 +4,7 @@ class LabelTemplatesController < ApplicationController
   include InputSanitizeHelper
 
   before_action :check_view_permissions, only: %i(index datatable)
-  before_action :check_manage_permissions, only: %i(duplicate set_default delete update)
+  before_action :check_manage_permissions, only: %i(create duplicate set_default delete update)
   before_action :load_label_templates, only: %i(index datatable)
   before_action :load_label_template, only: %i(show set_default update)
 
@@ -29,6 +29,19 @@ class LabelTemplatesController < ApplicationController
       format.json { render json: @label_template, serializer: LabelTemplateSerializer, user: current_user }
       format.html
     end
+  end
+
+  def create
+    label_template = LabelTemplate.create!(
+      team_id: current_team.id,
+      name: I18n.t('label_templates.new_label_template'),
+      language_type: :zpl,
+      format: 'ZPL',
+      size: '1" x 0.5" / 25.4mm x 12.7mm',
+      content: Extends::DEFAULT_LABEL_TEMPLATE[:zpl]
+    )
+
+    redirect_to label_template_path(label_template, new_label: true)
   end
 
   def update

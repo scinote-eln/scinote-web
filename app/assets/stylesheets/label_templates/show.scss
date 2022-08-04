@@ -21,10 +21,69 @@
 
   .template-descripiton {
     @include font-button;
-    margin-top: 1em;
+    margin: 1em 0;
 
     .title {
       font-weight: bold;
     }
+  }
+
+  .label-template-container {
+    display: flex;
+
+    .title {
+      font-weight: bold;
+    }
+
+    .label-edit-container {
+      flex-basis: 60%;
+      padding-right: 1em;
+
+      .button-container {
+        display: flex;
+
+        .refresh-preview {
+          margin-right: auto;
+        }
+
+        .save-template {
+          margin-left: .25em;
+        }
+      }
+    }
+
+    .label-preview-container {
+      flex-basis: 40%;
+      padding-left: 1em;
+    }
+  }
+
+  .label-view-container {
+    cursor: pointer;
+    padding: .5em;
+    position: relative;
+    white-space: pre;
+
+    .fa-pen {
+      display: none;
+      padding: 1em;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+
+    &:hover {
+      background-color: $color-concrete;
+
+      .fa-pen {
+        display: inline-block;
+      }
+    }
+  }
+
+  .label-textarea {
+    min-height: 240px;
+    padding: .5em;
+    width: 100%;
   }
 }

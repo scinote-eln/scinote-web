@@ -3,7 +3,7 @@
 class LabelTemplateSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
 
-  attributes :name, :description, :language_type, :icon_url, :urls
+  attributes :name, :description, :language_type, :icon_url, :urls, :content
 
   def urls
     {

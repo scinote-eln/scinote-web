@@ -490,6 +490,24 @@ class Extends
   )
 
   STI_PRELOAD_CLASSES = %w(LinkedRepository BmtRepository)
+
+  DEFAULT_LABEL_TEMPLATE = {
+    zpl:
+      <<~HEREDOC
+        ^XA
+        ^MTT
+        ^MUD,300,300
+        ^PR2
+        ^MD30
+        ^LH20,20
+        ^PW310
+        ^CF0,23
+        ^FO0,0^FD{{item_id}}^FS
+        ^FO0,20^BQN,2,4^FDMA,{{item_id}}^FS
+        ^FO95,30^FB180,4,0,L^FD{{item_name}}^FS^FS
+        ^XZ
+      HEREDOC
+  }
 end
 
 # rubocop:enable Style/MutableConstant

@@ -45,7 +45,7 @@ Rails.application.routes.draw do
         to: 'users/settings/account/addons#index',
         as: 'addons'
 
-    resources :label_templates, only: %i(index show update) do
+    resources :label_templates, only: %i(index show update create) do
       member do
         post :set_default
       end
