@@ -23,7 +23,11 @@
   }
 
   function renderNameHTML(data, type, row) {
-    return `${data.icon_url}<a href='${row.recordInfoUrl}' class='record-info-link'>${data.name}</a>`;
+    return `${data.icon_url}<a
+      href='${row.DT_RowAttr['data-edit-url']}'
+      class='record-info-link'
+      onclick='window.open(this.href, "_self")'
+    >${data.name}</a>`;
   }
 
   function addAttributesToRow(row, data) {

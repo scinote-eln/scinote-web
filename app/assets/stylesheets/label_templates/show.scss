@@ -1,0 +1,30 @@
+// scss-lint:disable SelectorDepth NestingDepth ImportantRule
+
+.label-templates-show {
+  .title-row {
+    height: unset !important;
+
+    .label-template-icon {
+      flex-shrink: 0;
+      margin-bottom: auto;
+      margin-right: 5px;
+      margin-top: 13px;
+      width: 32px;
+    }
+
+    .sci-inline-edit {
+      @include font-h1;
+      flex-grow: 1;
+      max-width: calc(100% - 50px);
+    }
+  }
+
+  .template-descripiton {
+    @include font-button;
+    margin-top: 1em;
+
+    .title {
+      font-weight: bold;
+    }
+  }
+}

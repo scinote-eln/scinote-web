@@ -4,9 +4,9 @@ class LabelTemplatesController < ApplicationController
   include InputSanitizeHelper
 
   before_action :check_view_permissions, only: %i(index datatable)
-  before_action :check_manage_permissions, only: %i(new duplicate set_default delete)
+  before_action :check_manage_permissions, only: %i(duplicate set_default delete update)
   before_action :load_label_templates, only: %i(index datatable)
-  before_action :load_label_template, only: %i(edit set_default)
+  before_action :load_label_template, only: %i(show set_default update)
 
   layout 'fluid'
 
@@ -24,9 +24,20 @@ class LabelTemplatesController < ApplicationController
     end
   end
 
-  def new; end
+  def show
+    respond_to do |format|
+      format.json { render json: @label_template, serializer: LabelTemplateSerializer, user: current_user }
+      format.html
+    end
+  end
 
-  def edit; end
+  def update
+    if @label_template.update(label_template_params)
+      render json: @label_template, serializer: LabelTemplateSerializer, user: current_user
+    else
+      render json: { error: @label_template.errors.messages }, status: :unprocessable_entity
+    end
+  end
 
   def duplicate
     ActiveRecord::Base.transaction do
@@ -83,5 +94,9 @@ class LabelTemplatesController < ApplicationController
 
   def load_label_template
     @label_template = LabelTemplate.where(team_id: current_team.id).find(params[:id])
+  end
+
+  def label_template_params
+    params.require(:label_template).permit(:name, :description, :content)
   end
 end
