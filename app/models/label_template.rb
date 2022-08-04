@@ -21,6 +21,13 @@ class LabelTemplate < ApplicationRecord
     end
   end
 
+  def icon_url
+    case language_type
+    when 'zpl'
+      '/images/label_template_icons/zpl.svg'
+    end
+  end
+
   private
 
   def default_template

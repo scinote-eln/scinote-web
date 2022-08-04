@@ -45,16 +45,16 @@ Rails.application.routes.draw do
         to: 'users/settings/account/addons#index',
         as: 'addons'
 
-    resources :label_templates, only: %i(index new edit) do
+    resources :label_templates, only: %i(index show update create) do
       member do
         post :set_default
       end
       collection do
         post :duplicate
         post :delete
+        get :datatable
       end
     end
-    get 'label_templates/datatable', to: 'label_templates#datatable'
 
     resources :label_printers, except: :show, path: 'users/settings/account/addons/label_printers' do
       post :create_fluics, on: :collection

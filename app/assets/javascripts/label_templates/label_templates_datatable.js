@@ -23,7 +23,11 @@
   }
 
   function renderNameHTML(data, type, row) {
-    return `${data.icon_url}<a href='${row.recordInfoUrl}' class='record-info-link'>${data.name}</a>`;
+    return `${data.icon_url}<a
+      href='${row.DT_RowAttr['data-edit-url']}'
+      class='record-info-link'
+      onclick='window.open(this.href, "_self")'
+    >${data.name}</a>`;
   }
 
   function addAttributesToRow(row, data) {
@@ -43,11 +47,9 @@
     });
   }
 
-  function initEditButton() {
-    $('#editLabelTemplate').on('click', function() {
-      if (rowsSelected.length === 1) {
-        window.open(editUrl, '_blank');
-      }
+  function initCreateButton() {
+    $('#newLabelTemplate').on('click', function() {
+      $.post(this.dataset.url);
     });
   }
 
@@ -249,7 +251,7 @@
 
         let toolBar = $($('#labelTemplatesToolbar').html());
         $('.label-buttons-container').html(toolBar);
-        initEditButton();
+        initCreateButton();
         initSetDefaultButton();
         initDuplicateButton();
         initDeleteModal();

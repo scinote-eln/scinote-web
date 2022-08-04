@@ -5,9 +5,9 @@ class LabelTemplatesController < ApplicationController
 
   before_action :check_feature_enabled
   before_action :check_view_permissions, only: %i(index datatable)
-  before_action :check_manage_permissions, only: %i(new duplicate set_default delete)
+  before_action :check_manage_permissions, only: %i(create duplicate set_default delete update)
   before_action :load_label_templates, only: %i(index datatable)
-  before_action :load_label_template, only: %i(edit set_default)
+  before_action :load_label_template, only: %i(show set_default update)
 
   layout 'fluid'
 
@@ -25,9 +25,33 @@ class LabelTemplatesController < ApplicationController
     end
   end
 
-  def new; end
+  def show
+    respond_to do |format|
+      format.json { render json: @label_template, serializer: LabelTemplateSerializer, user: current_user }
+      format.html
+    end
+  end
 
-  def edit; end
+  def create
+    label_template = LabelTemplate.create!(
+      team_id: current_team.id,
+      name: I18n.t('label_templates.new_label_template'),
+      language_type: :zpl,
+      format: 'ZPL',
+      size: '1" x 0.5" / 25.4mm x 12.7mm',
+      content: Extends::DEFAULT_LABEL_TEMPLATE[:zpl]
+    )
+
+    redirect_to label_template_path(label_template, new_label: true)
+  end
+
+  def update
+    if @label_template.update(label_template_params)
+      render json: @label_template, serializer: LabelTemplateSerializer, user: current_user
+    else
+      render json: { error: @label_template.errors.messages }, status: :unprocessable_entity
+    end
+  end
 
   def duplicate
     ActiveRecord::Base.transaction do
@@ -88,5 +112,9 @@ class LabelTemplatesController < ApplicationController
 
   def load_label_template
     @label_template = LabelTemplate.where(team_id: current_team.id).find(params[:id])
+  end
+
+  def label_template_params
+    params.require(:label_template).permit(:name, :description, :content)
   end
 end

@@ -1,0 +1,89 @@
+// scss-lint:disable SelectorDepth NestingDepth ImportantRule
+
+.label-templates-show {
+  .title-row {
+    height: unset !important;
+
+    .label-template-icon {
+      flex-shrink: 0;
+      margin-bottom: auto;
+      margin-right: 5px;
+      margin-top: 13px;
+      width: 32px;
+    }
+
+    .sci-inline-edit {
+      @include font-h1;
+      flex-grow: 1;
+      max-width: calc(100% - 50px);
+    }
+  }
+
+  .template-descripiton {
+    @include font-button;
+    margin: 1em 0;
+
+    .title {
+      font-weight: bold;
+    }
+  }
+
+  .label-template-container {
+    display: flex;
+
+    .title {
+      font-weight: bold;
+    }
+
+    .label-edit-container {
+      flex-basis: 60%;
+      padding-right: 1em;
+
+      .button-container {
+        display: flex;
+
+        .refresh-preview {
+          margin-right: auto;
+        }
+
+        .save-template {
+          margin-left: .25em;
+        }
+      }
+    }
+
+    .label-preview-container {
+      flex-basis: 40%;
+      padding-left: 1em;
+    }
+  }
+
+  .label-view-container {
+    cursor: pointer;
+    padding: .5em;
+    position: relative;
+    white-space: pre;
+
+    .fa-pen {
+      display: none;
+      padding: 1em;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+
+    &:hover {
+      background-color: $color-concrete;
+
+      .fa-pen {
+        display: inline-block;
+      }
+    }
+  }
+
+  .label-textarea {
+    min-height: 240px;
+    padding: .5em;
+    width: 100%;
+  }
+}
