@@ -60,6 +60,10 @@ Rails.application.routes.draw do
       post :create_fluics, on: :collection
     end
 
+    get 'users/settings/account/addons/label_printers/settings_zebra',
+        to: 'label_printers#index_zebra',
+        as: 'zebra_settings'
+
     resources :label_printers, only: [] do
       post :print, on: :member
       get :update_progress_modal, on: :member

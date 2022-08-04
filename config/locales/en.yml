@@ -2188,8 +2188,13 @@ en:
           fluics_printer:
             title: "FLUICS Print"
             description: "Truly a plug & play label printing solution."
+          zebra_printer:
+            title: 'Zebra label printers'
+            description: 'Print labels of custom styles and sizes in seconds flat from your PC or Mac via your Zebra printer connected via USB, Internet or LAN.'
+            details: 'Details'
         label_printer:
           fluics_printer: "FLUICS Print: Label printers"
+          zebra_printer: 'Zebra label printers'
           instructions: "Instructions"
           fluics_instruction:
             p1: "To make it work, please follow these steps:"
@@ -2197,6 +2202,12 @@ en:
             p3: "2. Plug the online printer to a power outlet and connect it to the internet with a LAN cable."
             p4: "3. Enter the API key into the field below."
             p5: "4. SciNote will find your printer and connect to it automatically. You can start printing labels."
+          zebra_instruction:
+            p1: 'To make it work, please follow these steps:'
+            p2_html: "1. Install the Zebra BROWSER PRINT application: <a href='%{link}' target='_blank'>official downloads page.</a>"
+            p3: '2. Install the printer drivers required by your operating system.'
+            p4: '3. Allow SciNote to connect to your Zebra printers.'
+            p5: 'Make sure that Zebra Connect shows the printer status as Connected.'
           settings: "Settings"
           api_key_label: "API key"
           api_key_warning: "API key change will lead to printer list refresh"
@@ -2205,6 +2216,7 @@ en:
           saved: "Saved"
           update_printers: "Update printers"
           no_printers_available: "No printers available"
+          looking_for_printers: "Looking for connected printers…"
 
 
         connected_accounts:
