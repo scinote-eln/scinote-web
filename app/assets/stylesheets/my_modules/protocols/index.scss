@@ -381,6 +381,10 @@
 
   .task-notes-content {
     margin-left: 10px;
+
+    .form-group.has-error {
+      border: 1px solid $brand-danger;
+    }
   }
 }
 

@@ -30,6 +30,8 @@
 </template>
 
 <script>
+  import UtilsMixin from 'vue/mixins/utils.js';
+
   export default {
     name: 'InlineEdit',
     props: {
@@ -52,6 +54,7 @@
         newValue: ''
       }
     },
+    mixins: [UtilsMixin],
     created( ){
       this.newValue = this.value || '';
     },
@@ -77,7 +80,10 @@
         if(this.characterLimit && this.newValue.length > this.characterLimit) {
           return(
             this.i18n.t('inline_edit.errors.over_limit',
-              { attribute: this.attributeName, limit: this.characterLimit }
+              {
+                attribute: this.attributeName,
+                limit: this.numberWithSpaces(this.characterLimit)
+              }
             )
           )
         }
