@@ -11,6 +11,10 @@ class LabelTemplate < ApplicationRecord
 
   validate :default_template
 
+  def self.enabled?
+    ApplicationSettings.instance.values['label_templates_enabled']
+  end
+
   def render(locals)
     locals.reduce(content.dup) do |rendered_content, (key, value)|
       rendered_content.gsub!(/\{\{#{key}\}\}/, value.to_s)

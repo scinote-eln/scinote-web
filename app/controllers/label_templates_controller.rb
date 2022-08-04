@@ -3,6 +3,7 @@
 class LabelTemplatesController < ApplicationController
   include InputSanitizeHelper
 
+  before_action :check_feature_enabled
   before_action :check_view_permissions, only: %i(index datatable)
   before_action :check_manage_permissions, only: %i(new duplicate set_default delete)
   before_action :load_label_templates, only: %i(index datatable)
@@ -68,6 +69,10 @@ class LabelTemplatesController < ApplicationController
   end
 
   private
+
+  def check_feature_enabled
+    render :promo unless LabelTemplate.enabled?
+  end
 
   def check_view_permissions
     render_403 unless can_view_label_templates?(current_team)
