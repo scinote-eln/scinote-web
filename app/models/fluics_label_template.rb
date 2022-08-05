@@ -10,7 +10,7 @@ class FluicsLabelTemplate < LabelTemplate
     )
   end
 
-  def format
+  def label_format
     'Fluics'
   end
 
