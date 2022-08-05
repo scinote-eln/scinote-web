@@ -59,7 +59,7 @@ class LabelTemplateDatatable < CustomDatatable
           "label_template_icons/#{record.icon}.svg",
           class: 'label-template-icon'
         ),
-      name: record.name
+      name: sanitize_input(record.name)
     }
   end
 

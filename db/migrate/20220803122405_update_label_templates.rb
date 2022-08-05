@@ -12,7 +12,7 @@ class UpdateLabelTemplates < ActiveRecord::Migration[6.1]
     end
 
     # Remove our original default template
-    LabelTemplate.order(created_at: :asc).where(default: true).first&.destroy
+    LabelTemplate.order(created_at: :asc).find_by(default: true)&.destroy
 
     Team.find_each { |t| t.__send__(:create_default_label_templates) }
   end
