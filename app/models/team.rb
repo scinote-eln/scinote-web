@@ -42,7 +42,7 @@ class Team < ApplicationRecord
   has_many :assets, inverse_of: :team, dependent: :destroy
   has_many :team_repositories, inverse_of: :team, dependent: :destroy
   has_many :shared_repositories, through: :team_repositories, source: :repository
-  has_many :label_templates
+  has_many :label_templates, dependent: :destroy
 
   attr_accessor :without_templates
 
