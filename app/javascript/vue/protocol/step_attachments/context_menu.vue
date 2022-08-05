@@ -32,7 +32,9 @@
           {{ i18n.t('assets.file_preview.edit_in_marvinjs') }}
         </a>
       </li>
-      <li v-if="attachment.attributes.image_editable && attachment.attributes.urls.start_edit_image">
+      <li v-if="attachment.attributes.asset_type != 'marvinjs'
+               && attachment.attributes.image_editable
+               && attachment.attributes.urls.start_edit_image">
         <a class="image-edit-button"
            :data-image-id="attachment.id"
            :data-image-name="attachment.attributes.file_name"
