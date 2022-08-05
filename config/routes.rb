@@ -53,6 +53,7 @@ Rails.application.routes.draw do
         post :duplicate
         post :delete
         get :datatable
+        get :template_tags
       end
     end
 
