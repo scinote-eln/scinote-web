@@ -33,7 +33,7 @@ class LabelTemplatesController < ApplicationController
   end
 
   def create
-    label_template = ZebraLabelTemplate.create_default!
+    label_template = ZebraLabelTemplate.default.save!
 
     redirect_to label_template_path(label_template, new_label: true)
   end
