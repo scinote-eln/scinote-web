@@ -502,11 +502,16 @@ class Extends
         ^LH20,20
         ^PW310
         ^CF0,23
-        ^FO0,0^FD{{item_id}}^FS
-        ^FO0,20^BQN,2,4^FDMA,{{item_id}}^FS
-        ^FO95,30^FB180,4,0,L^FD{{item_name}}^FS^FS
+        ^FO0,0^FD{{ITEM_ID}}^FS
+        ^FO0,20^BQN,2,4^FDMA,{{ITEM_ID}}^FS
+        ^FO95,30^FB180,4,0,L^FD{{NAME}}^FS^FS
         ^XZ
       HEREDOC
+  }
+
+  LABEL_TEMPLATE_FORMAT_MAP = {
+    'ZebraLabelTemplate' => 'ZPL',
+    'FluicsLabelTemplate' => 'Fluics'
   }
 end
 

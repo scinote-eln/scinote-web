@@ -3,13 +3,13 @@
 class LabelTemplate < ApplicationRecord
   include SearchableModel
 
-  enum language_type: { zpl: 0 }
+  belongs_to :team
+
   validates :name, presence: true, length: { minimum: Constants::NAME_MIN_LENGTH,
                                              maximum: Constants::NAME_MAX_LENGTH }
-  validates :size, presence: true
   validates :content, presence: true
 
-  validate :default_template
+  validate :ensure_single_default_template!
 
   def self.enabled?
     ApplicationSettings.instance.values['label_templates_enabled']
@@ -21,18 +21,27 @@ class LabelTemplate < ApplicationRecord
     end
   end
 
-  def icon_url
-    case language_type
-    when 'zpl'
-      '/images/label_template_icons/zpl.svg'
-    end
+  def icon
+    'zpl'
+  end
+
+  def language_type
+    'zpl'
+  end
+
+  def read_only?
+    false
+  end
+
+  def label_format
+    Extends::LABEL_TEMPLATE_FORMAT_MAP[type]
   end
 
   private
 
-  def default_template
-    if default && LabelTemplate.where(team_id: team_id, default: true, language_type: language_type)
-                               .where.not(id: id).any?
+  def ensure_single_default_template!
+    if default && self.class.where(team_id: team_id, default: true, language_type: language_type)
+                      .where.not(id: id).any?
       errors.add(:default, I18n.t('activerecord.errors.models.label_template.attributes.default.already_exist'))
     end
   end
