@@ -118,8 +118,13 @@
       }
     },
     methods: {
-      initTinymce() {
+      initTinymce(e) {
         let textArea = `#${this.objectType}_textarea_${this.objectId}`;
+
+        if (e && $(e.target).hasClass('atwho-user-popover')) return
+        if (e && $(e.target).hasClass('record-info-link')) return
+        if (e && $(e.target).parent().hasClass('atwho-inserted')) return
+
         TinyMCE.init(textArea, (data) => {
           if (data) {
             this.$emit('update', data)
