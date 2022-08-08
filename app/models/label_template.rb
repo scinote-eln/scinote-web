@@ -40,7 +40,7 @@ class LabelTemplate < ApplicationRecord
   private
 
   def ensure_single_default_template!
-    if default && self.class.where(team_id: team_id, default: true, language_type: language_type)
+    if default && self.class.where(team_id: team_id, default: true, type: type)
                       .where.not(id: id).any?
       errors.add(:default, I18n.t('activerecord.errors.models.label_template.attributes.default.already_exist'))
     end
