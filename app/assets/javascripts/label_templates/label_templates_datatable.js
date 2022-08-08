@@ -6,9 +6,22 @@
 
   var LABEL_TEMPLATE_TABLE;
   var rowsSelected = [];
-  var defaultSelected = false;
-  var editUrl;
-  var setDefaultUrl;
+
+  function rowsSelectedIDs() {
+    return rowsSelected.map(i => i.id);
+  }
+
+  function defaultSelected() {
+    return rowsSelected.findIndex(v => v.default === 'true') >= 0;
+  }
+
+  function labelFormats() {
+    let uniqueFormats = rowsSelected.map(i => i.format).filter((v, i, a) => a.indexOf(v) === i);
+    if (uniqueFormats.length > 1) {
+      return 'mixed';
+    }
+    return uniqueFormats[0];
+  }
 
   function renderCheckboxHTML(data, type, row) {
     return `<div class="sci-checkbox-container">
@@ -54,9 +67,9 @@
   }
 
   function initSetDefaultButton() {
-    $('#setDefaultLabelTemplate').on('click', function() {
+    $('#setZplDefaultLabelTemplate, #setFluicsDefaultLabelTemplate').on('click', function() {
       if (rowsSelected.length === 1) {
-        $.post(setDefaultUrl, function(response) {
+        $.post(rowsSelected[0].setDefaultUrl, function(response) {
           reloadTable();
           HelperModule.flashAlertMsg(response.message, 'success');
         }).error((response) => {
@@ -69,7 +82,7 @@
   function initDuplicateButton() {
     $('#duplicateLabelTemplate').on('click', function() {
       if (rowsSelected.length > 0) {
-        $.post(this.dataset.url, { selected_ids: rowsSelected }, function(response) {
+        $.post(this.dataset.url, { selected_ids: rowsSelectedIDs() }, function(response) {
           reloadTable();
           HelperModule.flashAlertMsg(response.message, 'success');
         }).error((response) => {
@@ -88,7 +101,7 @@
   function initDeleteButton() {
     $('#confirmLabeleDeletion').on('click', function() {
       if (rowsSelected.length > 0) {
-        $.post(this.dataset.url, { selected_ids: rowsSelected }, function(response) {
+        $.post(this.dataset.url, { selected_ids: rowsSelectedIDs() }, function(response) {
           reloadTable();
           HelperModule.flashAlertMsg(response.message, 'success');
           $('#deleteLabelTemplatesModal').modal('hide');
@@ -108,11 +121,26 @@
   function updateButtons() {
     if (rowsSelected.length === 0) {
       $('.selected-actions').addClass('hidden');
+      $('.nonselected-actions').removeClass('hidden');
+      $('.fluics-warning').addClass('hidden');
     } else {
+      $('.fluics-warning').addClass('hidden');
       $('.selected-actions').removeClass('hidden');
-      $('#editLabelTemplate').attr('disabled', rowsSelected.length > 1);
-      $('#deleteLabelTemplate').attr('disabled', defaultSelected);
-      $('#setDefaultLabelTemplate').attr('disabled', (rowsSelected.length > 1 || defaultSelected));
+      $('.nonselected-actions').addClass('hidden');
+      if (labelFormats() === 'ZPL') {
+        $('#deleteLabelTemplate').toggleClass('hidden', defaultSelected());
+        $('#setZplDefaultLabelTemplate').toggleClass('hidden', (rowsSelected.length > 1 || defaultSelected()));
+        $('#setFluicsDefaultLabelTemplate').addClass('hidden');
+      } else if (labelFormats() === 'Fluics') {
+        $('#duplicateLabelTemplate').addClass('hidden');
+        $('#deleteLabelTemplate').addClass('hidden');
+        $('#setZplDefaultLabelTemplate').addClass('hidden');
+        $('#setFluicsDefaultLabelTemplate').toggleClass('hidden', (rowsSelected.length > 1 || defaultSelected()));
+        $('.fluics-warning').toggleClass('hidden', (rowsSelected.length === 1 && !defaultSelected()));
+      } else {
+        $('.fluics-warning').removeClass('hidden');
+        $('.selected-actions').addClass('hidden');
+      }
     }
   }
 
@@ -152,32 +180,28 @@
     }
   }
 
-  function checkDefaultSelection() {
-    $.each($('.label-template-row .fa-thumbtack'), function(i, defaultLabel) {
-      let rowId = ($(defaultLabel).closest('.label-template-row').data('id')).toString();
-      let index = $.inArray(rowId, rowsSelected);
-      if (index >= 0) {
-        defaultSelected = true;
-        return;
-      }
-      defaultSelected = false;
-    });
-  }
-
   function initRowSelection() {
     // Handle clicks on checkbox
     $('#label-templates-table').on('change', '.label-row-checkbox', function(ev) {
       var rowId;
       var index;
+      var row;
 
       rowId = this.dataset.labelTemplateId;
+      row = $(this).closest('tr')[0];
 
       // Determine whether row ID is in the list of selected row IDs
-      index = $.inArray(rowId, rowsSelected);
+      index = rowsSelected.findIndex(v => v.id === rowId);
 
       // If checkbox is checked and row ID is not in list of selected row IDs
       if (this.checked && index === -1) {
-        rowsSelected.push(rowId);
+        rowsSelected.push({
+          id: rowId,
+          default: row.dataset.default,
+          editUrl: row.dataset.editUrl,
+          setDefaultUrl: row.dataset.setDefaultUrl,
+          format: row.dataset.format
+        });
       // Otherwise, if checkbox is not checked and row ID is in list of selected row IDs
       } else if (!this.checked && index !== -1) {
         rowsSelected.splice(index, 1);
@@ -189,14 +213,7 @@
         $(this).closest('.label-template-row').removeClass('selected');
       }
 
-      if (rowsSelected.length === 1) {
-        editUrl = $(`.label-template-row[data-id="${rowsSelected[0]}"]`).data('edit-url');
-        setDefaultUrl = $(`.label-template-row[data-id="${rowsSelected[0]}"]`).data('set-default-url');
-      }
-
-
       updateDataTableSelectAllCtrl();
-      checkDefaultSelection();
 
       ev.stopPropagation();
       updateButtons();

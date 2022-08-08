@@ -839,10 +839,13 @@ en:
       template_set_as_default: 'Successfully set template as default'
       toolbar:
         new: 'New template'
+        check_for_updates: 'Check for updates'
         edit: 'Edit'
         duplicate: 'Duplicate'
         delete: 'Delete'
-        set_default: 'Set Default'
+        set_zpl_default: 'Set as default ZPL label'
+        set_fluics_default: 'Set as default Fluics label'
+        fluics_warning: 'Built-in FLUICS templates can’t be edited, deleted or duplicated'
       delete_modal:
         title: 'Delete Label template(s)'
         description: 'Are you sure you want to delete the selected Label template(s)?'

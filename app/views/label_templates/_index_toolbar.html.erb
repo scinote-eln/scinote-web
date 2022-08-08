@@ -5,6 +5,11 @@
     <i class="fas fa-plus"></i>
     <span class="button-text"><%= t('label_templates.index.toolbar.new') %></span>
   </button>
+  <button title="<%= t('label_templates.index.toolbar.check_for_updates') %>"
+     class="btn btn-light auto-shrink-button nonselected-actions " id="checkFluicsUpdates">
+    <%= image_tag 'label_template_icons/fluics_update' %>
+    <span class="button-text"><%= t('label_templates.index.toolbar.check_for_updates') %></span>
+  </button>
   <div class="btn btn-light hidden selected-actions  auto-shrink-button"
        title="<%= t('label_templates.index.toolbar.duplicate') %>"
        data-url="<%= duplicate_label_templates_path %>"
@@ -12,13 +17,20 @@
     <i class="fas fa-clone"></i>
     <span class="button-text"><%= t('label_templates.index.toolbar.duplicate') %></span>
   </div>
-  <div class="btn btn-light hidden selected-actions  auto-shrink-button"  id="setDefaultLabelTemplate"  title="<%= t('label_templates.index.toolbar.set_default') %>">
+  <div class="btn btn-light hidden selected-actions  auto-shrink-button"  id="setZplDefaultLabelTemplate"  title="<%= t('label_templates.index.toolbar.set_zpl_default') %>">
     <i class="fas fa-thumbtack"></i>
-    <span class="button-text"><%= t('label_templates.index.toolbar.set_default') %></span>
+    <span class="button-text"><%= t('label_templates.index.toolbar.set_zpl_default') %></span>
+  </div>
+  <div class="btn btn-light hidden selected-actions  auto-shrink-button"  id="setFluicsDefaultLabelTemplate"  title="<%= t('label_templates.index.toolbar.set_fluics_default') %>">
+    <i class="fas fa-thumbtack"></i>
+    <span class="button-text"><%= t('label_templates.index.toolbar.set_fluics_default') %></span>
   </div>
   <div class="btn btn-light hidden selected-actions  auto-shrink-button"  id="deleteLabelTemplate"  title="<%= t('label_templates.index.toolbar.delete') %>">
     <i class="fas fa-trash"></i>
     <span class="button-text"><%= t('label_templates.index.toolbar.delete') %></span>
+  </div>
+  <div class="fluics-warning hidden">
+    <%= t('label_templates.index.toolbar.fluics_warning') %>
   </div>
   <% end%>
 </template>
