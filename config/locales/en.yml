@@ -2525,6 +2525,7 @@ en:
           success_flash: 'Protocol <strong>%{name}</strong> successfully imported to %{type}.'
 
     steps:
+      placeholder: 'Enter step name'
       default_name: 'Untitled step'
       completed: 'Completed'
       uncompleted: 'Uncompleted'
