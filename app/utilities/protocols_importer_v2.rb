@@ -61,9 +61,11 @@ class ProtocolsImporterV2
   def populate_protocol(protocol, protocol_json)
     protocol.reload
     protocol.description = populate_rte(protocol_json, protocol)
+    protocol.name = protocol_json['name'].presence
     protocol.save!
     asset_ids = []
     step_pos = 0
+
     # Check if protocol has steps
     protocol_json['steps']&.values&.each do |step_json|
       step = Step.create!(
