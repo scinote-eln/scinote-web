@@ -45,7 +45,9 @@ class LabelTemplateDatatable < CustomDatatable
         'recordInfoUrl' => '',
         'DT_RowAttr': {
           'data-edit-url': label_template_path(record),
-          'data-set-default-url': set_default_label_template_path(record)
+          'data-set-default-url': set_default_label_template_path(record),
+          'data-default': record.default,
+          'data-format': record.label_format
         },
         'manage_permission' => @manage_template
       }
