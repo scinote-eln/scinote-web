@@ -44,6 +44,8 @@
             :allowBlank="false"
             :attributeName="`${i18n.t('Step')} ${i18n.t('name')}`"
             :autofocus="editingName"
+            :placeholder="i18n.t('protocols.steps.placeholder')"
+            :defaultValue="i18n.t('protocols.steps.default_name')"
             @editingEnabled="editingName = true"
             @editingDisabled="editingName = false"
             :editOnload="step.newStep == true"

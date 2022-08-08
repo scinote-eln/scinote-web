@@ -46,7 +46,8 @@
       allowNewLine: { type: Boolean, default: false },
       multilinePaste: { type: Boolean, default: false },
       smartAnnotation: { type: Boolean, default: false },
-      editOnload: { type: Boolean, default: false }
+      editOnload: { type: Boolean, default: false },
+      defaultValue: { type: String, default: '' }
     },
     data() {
       return {
@@ -126,6 +127,9 @@
         this.editing = true;
         this.focus();
         this.$nextTick(() => {
+          if (this.$refs.input.value === this.defaultValue) {
+            this.$refs.input.select();
+          }
           if (this.smartAnnotation) {
             SmartAnnotation.init($(this.$refs.input));
           }
