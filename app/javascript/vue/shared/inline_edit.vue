@@ -175,7 +175,7 @@
           this.editing = false;
           this.$emit('editingDisabled');
           this.$emit('update', this.newValue);
-        }, 10) // due to clicking 'x' also triggering a blur event
+        }, 100) // due to clicking 'x' also triggering a blur event
       }
     }
   }
