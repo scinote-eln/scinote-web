@@ -703,6 +703,8 @@ Rails.application.routes.draw do
       get 'users/sign_up_provider' => 'users/registrations#new_with_provider'
       get 'users/two_factor_recovery' => 'users/sessions#two_factor_recovery'
       get 'users/two_factor_auth' => 'users/sessions#two_factor_auth'
+      get 'users/expire_in' => 'users/sessions#expire_in'
+      post 'users/revive_session' => 'users/sessions#revive_session'
       post 'users/authenticate_with_two_factor' => 'users/sessions#authenticate_with_two_factor'
       post 'users/authenticate_with_recovery_code' => 'users/sessions#authenticate_with_recovery_code'
       post 'users/complete_sign_up_provider' => 'users/registrations#create_with_provider'
