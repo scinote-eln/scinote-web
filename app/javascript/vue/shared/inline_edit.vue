@@ -67,6 +67,9 @@
     watch: {
       autofocus() {
         this.handleAutofocus();
+      },
+      value() {
+        this.newValue = this.value;
       }
     },
     computed: {
