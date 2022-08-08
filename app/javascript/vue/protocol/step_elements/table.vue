@@ -139,7 +139,7 @@
           contextMenu: this.editingTable,
           formulas: true,
           readOnly: !this.editingTable,
-          afterUnlisten: this.updateTable
+          afterUnlisten: () => setTimeout(this.updateTable, 100) // delay makes cancel button work
         });
       }
     }
