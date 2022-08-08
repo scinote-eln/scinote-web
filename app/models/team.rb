@@ -11,6 +11,7 @@ class Team < ApplicationRecord
   include ActionView::Helpers::NumberHelper
 
   after_create :generate_template_project
+  after_create :create_default_label_templates
   scope :teams_select, -> { select(:id, :name).order(name: :asc) }
   scope :ordered, -> { order('LOWER(name)') }
 
@@ -41,6 +42,7 @@ class Team < ApplicationRecord
   has_many :assets, inverse_of: :team, dependent: :destroy
   has_many :team_repositories, inverse_of: :team, dependent: :destroy
   has_many :shared_repositories, through: :team_repositories, source: :repository
+  has_many :label_templates, dependent: :destroy
 
   attr_accessor :without_templates
 
@@ -169,5 +171,10 @@ class Team < ApplicationRecord
   def generate_template_project
     return if without_templates
     TemplatesService.new.delay(queue: :templates).update_team(self)
+  end
+
+  def create_default_label_templates
+    ZebraLabelTemplate.default.update(team: self, default: true)
+    FluicsLabelTemplate.default.update(team: self, default: true)
   end
 end

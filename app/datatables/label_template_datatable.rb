@@ -35,8 +35,8 @@ class LabelTemplateDatatable < CustomDatatable
       {
         '0' => record.id,
         '1' => record.default,
-        '2' => append_format_icon(sanitize_input(record.name)),
-        '3' => sanitize_input(record.format),
+        '2' => append_format_icon(record),
+        '3' => sanitize_input(record.label_format),
         '4' => sanitize_input(record.description),
         '5' => sanitize_input(record.modified_by),
         '6' => I18n.l(record.updated_at, format: :full),
@@ -52,9 +52,15 @@ class LabelTemplateDatatable < CustomDatatable
     end
   end
 
-  def append_format_icon(data)
-    { icon_url: ActionController::Base.helpers.image_tag('label_template_icons/zpl.svg', class: 'label-template-icon'),
-      name: data }
+  def append_format_icon(record)
+    {
+      icon_image_tag:
+        ActionController::Base.helpers.image_tag(
+          "label_template_icons/#{record.icon}.svg",
+          class: 'label-template-icon'
+        ),
+      name: sanitize_input(record.name)
+    }
   end
 
   def get_raw_records
@@ -67,12 +73,16 @@ class LabelTemplateDatatable < CustomDatatable
     ).select('label_templates.* AS label_templates')
                           .select('creators.full_name AS created_by_user')
                           .select('modifiers.full_name AS modified_by')
+                          .select(
+                            "('#{Extends::LABEL_TEMPLATE_FORMAT_MAP.to_json}'::jsonb -> label_templates.type)::text "\
+                            "AS label_format"
+                          )
     LabelTemplate.from(res, :label_templates)
   end
 
   def filter_records(records)
     records.where_attributes_like(
-      ['label_templates.name', 'label_templates.format', 'label_templates.description',
+      ['label_templates.name', 'label_templates.label_format', 'label_templates.description',
        'label_templates.modified_by', 'label_templates.created_by_user'],
       dt_params.dig(:search, :value)
     )

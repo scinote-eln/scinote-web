@@ -802,6 +802,12 @@ en:
         normal_user: "Normal user"
         admin: "Administrator"
 
+  label_templates:
+    repository_row:
+      errors:
+        unsupported_key: "Key %{key} is not supported by this label template renderer."
+        column_not_found: "Column '%{column}' not found on inventory item."
+
   user_projects:
     view_users:
       modal_title: "Members of %{name}"
@@ -815,6 +821,8 @@ en:
       can_add_user_to_project: "Can not add user to the project."
 
   label_templates:
+    default_zebra_name: 'SciNote Item (ZPL)'
+    default_fluics_name: 'SciNote Item (Fluics)'
     new_label_template: 'New label'
     index:
       head_title: 'Label templates'

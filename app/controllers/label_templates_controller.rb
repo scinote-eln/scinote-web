@@ -33,14 +33,7 @@ class LabelTemplatesController < ApplicationController
   end
 
   def create
-    label_template = LabelTemplate.create!(
-      team_id: current_team.id,
-      name: I18n.t('label_templates.new_label_template'),
-      language_type: :zpl,
-      format: 'ZPL',
-      size: '1" x 0.5" / 25.4mm x 12.7mm',
-      content: Extends::DEFAULT_LABEL_TEMPLATE[:zpl]
-    )
+    label_template = ZebraLabelTemplate.default.save!
 
     redirect_to label_template_path(label_template, new_label: true)
   end
@@ -82,7 +75,7 @@ class LabelTemplatesController < ApplicationController
   def set_default
     ActiveRecord::Base.transaction do
       LabelTemplate.find_by(team_id: current_team.id,
-                            language_type: @label_template.language_type,
+                            type: @label_template.type,
                             default: true)&.update!(default: false)
       @label_template.update!(default: true)
       render json: { message: I18n.t('label_templates.index.template_set_as_default') }

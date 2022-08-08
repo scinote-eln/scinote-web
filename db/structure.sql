@@ -698,11 +698,16 @@ CREATE TABLE public.label_templates (
     id bigint NOT NULL,
     name character varying NOT NULL,
     content text NOT NULL,
-    language_type integer,
     "default" boolean DEFAULT false NOT NULL,
-    size character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    description character varying,
+    last_modified_by_id integer,
+    created_by_id integer,
+    team_id bigint,
+    type character varying,
+    width_mm double precision,
+    height_mm double precision
 );
 
 
@@ -5165,10 +5170,24 @@ CREATE INDEX index_hidden_repository_cell_reminders_on_user_id ON public.hidden_
 
 
 --
--- Name: index_label_templates_on_language_type; Type: INDEX; Schema: public; Owner: -
+-- Name: index_label_templates_on_created_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_label_templates_on_language_type ON public.label_templates USING btree (language_type);
+CREATE INDEX index_label_templates_on_created_by_id ON public.label_templates USING btree (created_by_id);
+
+
+--
+-- Name: index_label_templates_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_label_templates_on_last_modified_by_id ON public.label_templates USING btree (last_modified_by_id);
+
+
+--
+-- Name: index_label_templates_on_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_label_templates_on_team_id ON public.label_templates USING btree (team_id);
 
 
 --
@@ -5816,10 +5835,10 @@ CREATE INDEX index_repository_cells_on_repository_row_id ON public.repository_ce
 
 
 --
--- Name: index_repository_cells_on_value; Type: INDEX; Schema: public; Owner: -
+-- Name: index_repository_cells_on_value_type_and_value_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_repository_cells_on_value ON public.repository_cells USING btree (value_type, value_id);
+CREATE INDEX index_repository_cells_on_value_type_and_value_id ON public.repository_cells USING btree (value_type, value_id);
 
 
 --
@@ -6845,10 +6864,10 @@ CREATE INDEX index_view_states_on_user_id ON public.view_states USING btree (use
 
 
 --
--- Name: index_view_states_on_viewable; Type: INDEX; Schema: public; Owner: -
+-- Name: index_view_states_on_viewable_type_and_viewable_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_view_states_on_viewable ON public.view_states USING btree (viewable_type, viewable_id);
+CREATE INDEX index_view_states_on_viewable_type_and_viewable_id ON public.view_states USING btree (viewable_type, viewable_id);
 
 
 --
@@ -6944,6 +6963,14 @@ ALTER TABLE ONLY public.assets
 
 
 --
+-- Name: label_templates fk_rails_09d7cc0c34; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.label_templates
+    ADD CONSTRAINT fk_rails_09d7cc0c34 FOREIGN KEY (team_id) REFERENCES public.teams(id);
+
+
+--
 -- Name: user_assignments fk_rails_0b13c65ab0; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7005,6 +7032,14 @@ ALTER TABLE ONLY public.zip_exports
 
 ALTER TABLE ONLY public.user_assignments
     ADD CONSTRAINT fk_rails_19dca62dfc FOREIGN KEY (user_role_id) REFERENCES public.user_roles(id);
+
+
+--
+-- Name: label_templates fk_rails_1aa41d1093; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.label_templates
+    ADD CONSTRAINT fk_rails_1aa41d1093 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
 --
@@ -8088,6 +8123,14 @@ ALTER TABLE ONLY public.experiments
 
 
 --
+-- Name: label_templates fk_rails_d6ac71e421; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.label_templates
+    ADD CONSTRAINT fk_rails_d6ac71e421 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: protocols fk_rails_d8007e2f63; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8516,6 +8559,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220429083335'),
 ('20220530144300'),
 ('20220602120714'),
-('20220705091621');
+('20220705091621'),
+('20220726133419'),
+('20220803122405');
 
 
