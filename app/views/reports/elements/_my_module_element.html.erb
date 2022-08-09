@@ -59,9 +59,7 @@
     </div>
   </div>
   <div class="report-element-children">
-    <% if @settings.dig('task', 'protocol', 'description') %>
-      <%= render partial: 'reports/elements/my_module_protocol_element.html.erb', locals: { protocol: my_module.protocol } %>
-    <% end %>
+    <%= render partial: 'reports/elements/my_module_protocol_element.html.erb', locals: { protocol: my_module.protocol } %>
 
     <% filter_steps_for_report(my_module.protocol.steps, @settings).order(:position).each do |step| %>
       <%= render partial: 'reports/elements/my_module_step_element.html.erb', locals: { step: step, export_all: export_all } %>
