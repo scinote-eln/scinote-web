@@ -369,7 +369,8 @@
           data: JSON.stringify(elementPositions),
           contentType: "application/json",
           dataType: "json",
-          error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger'))
+          error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')),
+          success: (() => this.$emit('stepUpdated'))
         });
 
         this.reorderElements(this.elements);

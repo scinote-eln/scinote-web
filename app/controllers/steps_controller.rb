@@ -458,7 +458,7 @@ class StepsController < ApplicationController
   end
 
   def reorder
-    ActiveRecord::Base.transaction do
+    @protocol.with_lock do
       params[:step_positions].each do |id, position|
         @protocol.steps.find(id).update_column(:position, position)
       end
@@ -468,6 +468,7 @@ class StepsController < ApplicationController
       else
         log_activity(:protocol_steps_rearranged, nil, protocol: @protocol.id)
       end
+      @protocol.touch
     end
 
     render json: {

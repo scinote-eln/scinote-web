@@ -267,10 +267,9 @@
           data: JSON.stringify(stepPositions),
           contentType: "application/json",
           dataType: "json",
-          error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger'))
+          error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')),
+          success: (() => this.reorderSteps(this.steps))
         });
-
-        this.reorderSteps(this.steps);
       },
       startStepReorder() {
         this.reordering = true;

@@ -93,10 +93,11 @@ module StepElements
     end
 
     def reorder
-      ActiveRecord::Base.transaction do
+      @checklist.with_lock do
         params[:checklist_item_positions].each do |id, position|
           @checklist.checklist_items.find(id).update_column(:position, position)
         end
+        @checklist.touch
       end
 
       render json: params[:checklist_item_positions], status: :ok
