@@ -31,10 +31,6 @@
       white-space: pre-wrap;
       width: 100%;
 
-      &:focus {
-          box-shadow: 0px 0px 5px 5px rgba(0, 0, 255, 1);
-        }
-
       &.blank {
         color: $color-silver-chalice;
       }
