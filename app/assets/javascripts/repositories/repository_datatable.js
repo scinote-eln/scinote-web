@@ -276,6 +276,22 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
+  function initActiveRemindersFilter() {
+    $(TABLE_WRAPPER_ID).find('#only_reminders').on('change', function() {
+      var $activeRemindersFilter = $(this).closest('.active-reminders-filter');
+
+      $(TABLE_WRAPPER_ID).find('table').attr('data-only-reminders', $(this).is(':checked'));
+
+      if ($(this).is(':checked')) {
+        $activeRemindersFilter.attr('title', $activeRemindersFilter.data('checkedTitle'));
+      } else {
+        $activeRemindersFilter.attr('title', $activeRemindersFilter.data('uncheckedTitle'));
+      }
+
+      TABLE.ajax.reload();
+    });
+  }
+
   function resetTableView() {
     var filterSaveButtonVisible = !$('#saveRepositoryFilters').hasClass('hidden');
     $.getJSON($(TABLE_ID).data('toolbar-url'), (data) => {
@@ -430,6 +446,11 @@ var RepositoryDatatable = (function(global) {
           if ($('[data-repository-filter-json]').attr('data-repository-filter-json')) {
             d.advanced_search = JSON.parse($('[data-repository-filter-json]').attr('data-repository-filter-json'));
           }
+
+          if ($('[data-only-reminders]').attr('data-only-reminders') === 'true') {
+            d.only_reminders = true;
+          }
+
           return JSON.stringify(d);
         },
         global: false,
@@ -622,6 +643,8 @@ var RepositoryDatatable = (function(global) {
 
         initAssignedTasksDropdown(TABLE_ID);
         initReminderDropdown(TABLE_ID);
+
+        initActiveRemindersFilter();
         renderFiltersDropdown();
         setTimeout(function() {
           adjustTableHeader();

@@ -46,6 +46,20 @@
 
   <!-- RIGHT TOOLBAR BLOCK -->
   <div class="toolbar-right-block">
+    <div class="active-reminders-filter"
+         title="<%= t('repositories.index.active_reminders.description') %>"
+         data-checked-title="<%= t('repositories.index.active_reminders.checked_description')  =%>"
+         data-unchecked-title="<%= t('repositories.index.active_reminders.description')  =%>"
+    >
+      <div class="sci-checkbox-container">
+        <input id="only_reminders" type="checkbox" class="sci-checkbox" value="1">
+        <span class="sci-checkbox-label"></span>
+      </div>
+      <span data-click-target="#only_reminders">
+        <span class="active-reminders-label"><%= t('repositories.index.active_reminders.label') %></span>
+        <span class="active-reminders-short-label"><%= t('repositories.index.active_reminders.short_label') %></span>
+      </span>
+    </div>
     <div class="toolbar-filters"></div>
     <% if @repository.is_a?(BmtRepository) %>
       <div class="toolbar-bmt-filters">
