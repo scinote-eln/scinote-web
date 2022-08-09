@@ -22,7 +22,7 @@ Canaid::Permissions.register_for(Asset) do
     when Step
       can_manage_step?(user, object)
     when Result
-      can_manage_result?(object)
+      can_manage_result?(user, object)
     when RepositoryCell
       if object.repository_column.repository.is_a?(RepositorySnapshot)
         false
