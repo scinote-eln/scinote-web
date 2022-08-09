@@ -48,6 +48,7 @@
       </div>
     </template>
     <template v-else-if="attachment.attributes.pdf_previewable">
+      <PdfViewer :pdf="attachment.attributes.pdf" />
     </template>
     <template v-else-if="attachment.attributes.large_preview !== null">
       <div class="image-container">
@@ -67,13 +68,14 @@
 </template>
 
 <script>
-  import ContextMenuMixin from './mixins/context_menu.js'
-  import ContextMenu from './context_menu.vue'
+  import ContextMenuMixin from './mixins/context_menu.js';
+  import ContextMenu from './context_menu.vue';
+  import PdfViewer from '../../shared/pdf_viewer.vue';
 
   export default {
     name: 'inlineAttachment',
     mixins: [ContextMenuMixin],
-    components: { ContextMenu },
+    components: { ContextMenu, PdfViewer },
     props: {
       attachment: {
         type: Object,

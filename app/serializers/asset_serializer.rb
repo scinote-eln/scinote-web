@@ -3,6 +3,7 @@
 class AssetSerializer < ActiveModel::Serializer
   include Canaid::Helpers::PermissionsHelper
   include Rails.application.routes.url_helpers
+  include Webpacker::Helper
   include FileIconsHelper
   include ActionView::Helpers::NumberHelper
   include ApplicationHelper
@@ -10,7 +11,7 @@ class AssetSerializer < ActiveModel::Serializer
   attributes :file_name, :view_mode, :icon, :urls, :updated_at_formatted,
              :file_size, :medium_preview, :large_preview, :asset_type, :wopi,
              :wopi_context, :pdf_previewable, :file_size_formatted, :asset_order,
-             :updated_at, :metadata, :image_editable, :image_context
+             :updated_at, :metadata, :image_editable, :image_context, :pdf
 
   def icon
     file_fa_icon_class(object)
@@ -66,6 +67,16 @@ class AssetSerializer < ActiveModel::Serializer
 
   def pdf_previewable
     object.pdf_previewable? if object.file.attached?
+  end
+
+  def pdf
+    return unless asset.pdf?
+
+    {
+      url: object.pdf? ? asset_download_path(object) : asset_pdf_preview_path(object),
+      size: !object.pdf? && object.pdf_preview_ready? ? object.file_pdf_preview&.blob&.byte_size : object.file_size,
+      worker_url: asset_pack_path('pdfjs/pdf_js_worker.js')
+    }
   end
 
   def image_editable
