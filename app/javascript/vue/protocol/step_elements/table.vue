@@ -1,11 +1,11 @@
 <template>
-  <div class="step-table-container" :class="{ 'step-element--locked': !element.attributes.orderable.urls.update_url }">
+  <div class="step-table-container" :class="{ 'step-element--locked': locked }">
      <div class="step-element-header" :class="{ 'editing-name': editingName }">
       <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
         <i class="fas fas-rotated-90 fa-exchange-alt"></i>
       </div>
       <div v-else class="step-element-grip-placeholder"></div>
-      <div class="step-element-name">
+      <div v-if="!locked || element.attributes.orderable.name" class="step-element-name">
         <InlineEdit
           :value="element.attributes.orderable.name"
           :characterLimit="255"
@@ -84,6 +84,11 @@
         editingName: false,
         editingTable: false,
         tableObject: null
+      }
+    },
+    computed: {
+      locked() {
+        return !this.element.attributes.orderable.urls.update_url
       }
     },
     updated() {
