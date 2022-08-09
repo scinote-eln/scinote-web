@@ -37,6 +37,10 @@
             border: $border-focus;
           }
         }
+
+        .sci-inline-edit__content {
+          padding-top: .35em;
+        }
       }
 
       * {
