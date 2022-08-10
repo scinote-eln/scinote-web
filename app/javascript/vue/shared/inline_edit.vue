@@ -13,7 +13,7 @@
         @blur="handleBlur"
         @keyup.escape="cancelEdit"
       ></textarea>
-      <div v-else @click="enableEdit($event)" class="sci-inline-edit__view" v-html="newValue || sa_value || value || placeholder" :class="{ 'blank': isBlank }"></div>
+      <div v-else @click="enableEdit($event)" class="sci-inline-edit__view" v-html="(smartAnnotation ? sa_value : value) || placeholder" :class="{ 'blank': isBlank }"></div>
       <div v-if="editing && error" class="sci-inline-edit__error">
         {{ error }}
       </div>
@@ -187,7 +187,6 @@
           if(!this.$refs.input) return;
           this.newValue = this.$refs.input.value // Fix for smart annotation
           this.newValue = this.newValue.trim();
-          this.dirty = false;
           this.editing = false;
           this.$emit('editingDisabled');
           this.$emit('update', this.newValue);
