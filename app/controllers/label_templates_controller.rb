@@ -85,6 +85,10 @@ class LabelTemplatesController < ApplicationController
     render json: { error: I18n.t('errors.general') }, status: :unprocessable_entity
   end
 
+  def template_tags
+    render json: LabelTemplates::TagService.new(current_team).tags
+  end
+
   private
 
   def check_feature_enabled
