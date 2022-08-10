@@ -87,10 +87,12 @@
   .protocol-description {
     margin-bottom: 2em;
 
-    img {
-      border-radius: 50%;
-      height: 24px;
-      width: 24px;
+    .data-block {
+      img {
+        border-radius: 50%;
+        height: 24px;
+        width: 24px;
+      }
     }
 
     .fas.block-icon {
