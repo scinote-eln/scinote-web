@@ -157,14 +157,10 @@
     padding-left: calc(var(--left-component-padding) * 2);
 
     .step-element-name {
-      .sci-inline-edit__view {
-        margin-bottom: .25em;
-        padding-top: .25em;
-      }
-
-      .sci-inline-edit__content textarea {
-        margin-bottom: .25em;
-        margin-top: .25em;
+      .sci-inline-edit__view,
+      textarea {
+        padding-bottom: .1em;
+        padding-top: .5em;
       }
     }
   }

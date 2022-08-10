@@ -4,20 +4,15 @@
   column-gap: .25em;
   display: grid;
   grid-template-columns: auto repeat(2, max-content);
-  margin-top: .3em;
-  transition: .4s $timing-function-sharp;
+  transition: .4s $timing-function-sharp border;
 
   &.editing .sci-inline-edit__content {
-    background-color: $color-white;
-
     .sci-inline-edit__content {
       padding-top: 0;
     }
   }
 
   .sci-inline-edit__content {
-    border: $border-transparent;
-    border-radius: 4px;
     display: flex;
     flex-direction: column;
     margin-left: -.25em;
@@ -26,7 +21,14 @@
     position: relative;
     width: 100%;
 
+    textarea,
     .sci-inline-edit__view {
+      min-height: 36px;
+      padding: .3em .2em .2em;
+    }
+
+    .sci-inline-edit__view {
+      border: 1px solid transparent;
       cursor: pointer;
       white-space: pre-wrap;
       width: 100%;
@@ -37,12 +39,11 @@
     }
 
     textarea {
-      background: transparent;
-      border: 0;
-      min-height: 1em;
+      background-color: $color-white;
+      border: 1px solid $brand-focus;
+      border-radius: 4px;
       outline: none;
       overflow: hidden;
-      padding: 0;
       width: 100%;
 
       &:focus {
@@ -61,14 +62,16 @@
   }
 
   &.editing {
+    margin-top: 0;
 
     .sci-inline-edit__content {
-      background-color: $color-white;
-      border-color: $brand-focus;
-
       &.error {
         border-color: $brand-danger;
         margin-bottom: 16px;
+
+        textarea {
+          border-color: $brand-danger;
+        }
       }
     }
 
