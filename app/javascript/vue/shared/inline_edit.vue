@@ -13,7 +13,7 @@
         @blur="handleBlur"
         @keyup.escape="cancelEdit"
       ></textarea>
-      <div v-else @click="enableEdit($event)" class="sci-inline-edit__view" v-html="sa_value || value || placeholder" :class="{ 'blank': isBlank }"></div>
+      <div v-else @click="enableEdit($event)" class="sci-inline-edit__view" v-html="(smartAnnotation ? sa_value : value) || placeholder" :class="{ 'blank': isBlank }"></div>
       <div v-if="editing && error" class="sci-inline-edit__error">
         {{ error }}
       </div>
@@ -52,6 +52,7 @@
     data() {
       return {
         editing: false,
+        dirty: false,
         newValue: ''
       }
     },
@@ -142,6 +143,8 @@
         this.$emit('editingDisabled');
       },
       handlePaste(e) {
+        this.dirty = true;
+
         if (!this.multilinePaste) return;
         let lines = (e.originalEvent || e).clipboardData.getData('text/plain').split(/[\n\r]/);
         lines = lines.filter((l) => l).map((l) => l.trim());
@@ -152,6 +155,7 @@
         }
       },
       handleInput() {
+        this.dirty = true;
         if (!this.allowNewLine) {
           this.newValue = this.newValue.replace(/^[\n\r]+|[\n\r]+$/g, '');
         }
@@ -162,6 +166,8 @@
           this.cancelEdit();
         } else if (e.key == 'Enter' && this.saveOnEnter) {
           this.update();
+        } else {
+          this.dirty = true;
         }
       },
       resize() {
@@ -171,9 +177,14 @@
         this.$refs.input.style.height = (this.$refs.input.scrollHeight) + "px";
       },
       update() {
+        if (!this.dirty && !this.isBlank) {
+          this.editing = false;
+          return;
+        }
+
         setTimeout(() => {
           if(this.error) return;
-          if(!this.editing) return;
+          if(!this.$refs.input) return;
           this.newValue = this.$refs.input.value // Fix for smart annotation
           this.newValue = this.newValue.trim();
           this.editing = false;
