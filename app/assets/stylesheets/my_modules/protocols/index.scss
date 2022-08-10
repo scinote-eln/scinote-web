@@ -486,6 +486,11 @@
     .dropdown-footer {
       display: flex;
       padding: 16px;
+
+      .button-container {
+        margin-left: auto;
+        margin-right: auto;
+      }
     }
   }
 }
@@ -588,36 +593,6 @@
   }
 }
 
-.task-information .expanded {
-  align-items: flex-start;
-  height: 50px;
-
-  .task-flows,
-  .status-label,
-  .status-buttons {
-    display: block;
-    max-width: 230px;
-  }
-
-  .status-label {
-    margin: 0;
-    text-align: left;
-  }
-
-  .status-flow-dropdown {
-    margin: 0;
-  }
-
-  .status-buttons > :not(:first-child):not(.dropdown-menu) {
-    margin-left: 0;
-    margin-top: .5em;
-  }
-
-  .modal .modal-footer .btn {
-    margin-top: 0;
-  }
-}
-
 @media (max-width: 810px) {
   .task-information .task-section-header {
     display: block;
@@ -656,10 +631,13 @@
       .dropdown-footer {
         display: block;
 
-        .btn {
-          float: left !important;
-          margin: 5px 0;
-          width: auto;
+        .button-container {
+          display: flex;
+
+          .btn {
+            margin: 5px auto;
+            width: 230px;
+          }
         }
       }
     }

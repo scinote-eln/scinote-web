@@ -52,7 +52,9 @@
             @update="updateName"
           />
         </div>
-        <i v-if="urls.update_url && !editingName" class="step-name-edit-icon fas fa-pen" @click="editingName = true"></i>
+        <button v-if="urls.update_url && !editingName" class="step-name-edit-icon btn icon-btn btn-light  " @click="editingName = true">
+          <i class="fas fa-pen"></i>
+        </button>
       </div>
       <div class="step-actions-container">
         <div ref="actionsDropdownButton" v-if="urls.update_url"  class="dropdown">

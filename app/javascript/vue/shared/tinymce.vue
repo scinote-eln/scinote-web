@@ -36,6 +36,7 @@
                     :data-highlightjs-path="this.getStaticUrl('highlightjs-url')"
                     :data-last-updated="lastUpdated * 1000"
                     :data-tinymce-asset-path="this.getStaticUrl('tiny-mce-assets-url')"
+                    :placeholder="placeholder"
                     :value="value"
                     cols="120"
                     rows="10"

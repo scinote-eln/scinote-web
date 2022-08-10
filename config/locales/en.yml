@@ -353,6 +353,7 @@ en:
     empty_state:
       title: "No comments here"
       description: "Nobody has commented yet. Be the first by using the box below."
+    placeholder: "Add a new comment..."
     options_dropdown:
       header: "Comment options"
       edit: "Edit"
@@ -910,7 +911,7 @@ en:
           unlink_title: "Unlink this protocol from the parent in the repository"
           revert: "Revert protocol"
           revert_title: "Revert the protocol to the repository version. This will discard any local changes."
-          save_to_repository: "Save to protocol repository"
+          save_to_repository: "Save to repository"
           save_a_copy_to_repository: "Save a copy to repository"
           save_to_repository_title: "Copy this protocol to repository"
           update_self: "Update from repository"
@@ -2801,7 +2802,7 @@ en:
       button_text: 'Create an MS Office file'
       li_text: "Office file"
       modal_title: 'Create new MS Office document'
-      text_field_label: 'Document name'
+      text_field_label: 'Document name & type'
       type_select_label: 'Document type'
       text_field_placeholder: 'Enter document name...'
       ms_word: 'Word<br/>Online'
