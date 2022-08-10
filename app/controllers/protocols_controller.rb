@@ -277,6 +277,9 @@ class ProtocolsController < ApplicationController
             step_position: { id: step.id, value_for: 'position_plus_one' })
         end
 
+        # skip adjusting positions after destroy as this is a bulk delete
+        step.skip_position_adjust = true
+
         step.destroy!
       end
 
