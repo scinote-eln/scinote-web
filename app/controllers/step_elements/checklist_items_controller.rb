@@ -139,22 +139,25 @@ module StepElements
     end
 
     def log_activity(type_of, message_items = {})
-      default_items = {
-        my_module: (@step.protocol.in_module? ? @step.protocol.my_module.id : nil),
-        step: @step.id,
-        step_position: { id: @step.id, value_for: 'position_plus_one' }
-      }
-
-      message_items = default_items.merge(message_items)
-
       Activities::CreateActivityService.call(
         activity_type: type_of,
         owner: current_user,
         subject: @step.protocol,
         team: @step.protocol.team,
         project: @step.protocol.in_module? ? @step.protocol.my_module.experiment.project : nil,
-        message_items: message_items
+        message_items: message_items.merge(step_message_items)
       )
+    end
+
+    def step_message_items
+      items = {
+        step: @step.id,
+        step_position: { id: @step.id, value_for: 'position_plus_one' }
+      }
+
+      items[:my_module] = @step.protocol.my_module.id if @step.protocol.in_module?
+
+      items
     end
   end
 end

@@ -112,12 +112,15 @@
       }
     },
     created() {
-      this.checklistItems = this.element.attributes.orderable.checklist_items.map((item, index) => {
-        return { attributes: {...item, position: index } }
-      });
+      this.initChecklistItems();
 
       if (this.isNew) {
         this.addItem();
+      }
+    },
+    watch: {
+      element() {
+        this.initChecklistItems();
       }
     },
     computed: {
@@ -134,16 +137,21 @@
       }
     },
     methods: {
+      initChecklistItems() {
+        this.checklistItems = this.element.attributes.orderable.checklist_items.map((item, index) => {
+          return { attributes: {...item, position: index } }
+        });
+      },
       updateName(name) {
         this.element.attributes.orderable.name = name;
         this.editingName = false;
-        this.update();
+        this.update(false);
       },
-      update() {
+      update(skipRequest = true) {
         this.element.attributes.orderable.checklist_items =
           this.checklistItems.map((i) => i.attributes);
 
-        this.$emit('update', this.element);
+        this.$emit('update', this.element, skipRequest);
       },
       postItem(item, callback) {
         $.post(this.element.attributes.orderable.urls.create_item_url, item).success((result) => {
@@ -178,7 +186,7 @@
           // create item, then append next one
           this.postItem(item, this.addItem);
         }
-        this.update();
+        this.update(true);
       },
       saveItemChecked(item) {
         $.ajax({
