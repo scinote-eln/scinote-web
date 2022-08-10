@@ -217,13 +217,7 @@ class ProtocolsController < ApplicationController
           log_activity(:edit_description_in_protocol_repository, nil, protocol: @protocol.id)
           TinyMceAsset.update_images(@protocol, params[:tiny_mce_images], current_user)
           protocol_annotation_notification(old_description)
-          render json: {
-            html: custom_auto_link(
-              @protocol.tinymce_render(:description),
-              simple_format: false,
-              tags: %w(img),
-              team: current_team)
-          }
+          render json: @protocol, serializer: ProtocolSerializer, user: current_user
         else
           render json: @protocol.errors, status: :unprocessable_entity
         end
