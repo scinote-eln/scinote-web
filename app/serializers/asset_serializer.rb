@@ -70,7 +70,7 @@ class AssetSerializer < ActiveModel::Serializer
   end
 
   def pdf
-    return unless asset.pdf?
+    return unless object.pdf?
 
     {
       url: object.pdf? ? asset_download_path(object) : asset_pdf_preview_path(object),
