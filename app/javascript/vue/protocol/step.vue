@@ -24,7 +24,7 @@
             @click="toggleCollapsed">
               <span class="fas fa-caret-right"></span>
           </a>
-          <div class="step-complete-container" :class="{ 'step-element--locked': inRepository || !urls.state_url }">
+          <div v-if="!inRepository" class="step-complete-container" :class="{ 'step-element--locked': !urls.state_url }">
             <div :class="`step-state ${step.attributes.completed ? 'completed' : ''}`"
                  @click="changeState"
                  @keyup.enter="changeState"

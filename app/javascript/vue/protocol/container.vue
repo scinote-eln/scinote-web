@@ -39,7 +39,7 @@
             :value="protocol.attributes.name"
             :characterLimit="255"
             :placeholder="i18n.t('my_modules.protocols.protocol_status_bar.enter_name')"
-            :allowBlank="true"
+            :allowBlank="!inRepository"
             :attributeName="`${i18n.t('Protocol')} ${i18n.t('name')}`"
             @update="updateName"
           />
