@@ -14,6 +14,8 @@ export default {
         (e, data, status) => {
           if (status === 'success') {
             $wopiModal.modal('hide');
+            window.open(data.edit_url, '_blank');
+            window.focus();
           } else {
             HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
           }

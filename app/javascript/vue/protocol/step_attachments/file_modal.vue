@@ -139,6 +139,7 @@
       openWopiFileModal() {
         this.initWopiFileModal(this.step, (_e, data, status) => {
           if (status === 'success') {
+            $(this.$refs.modal).modal('hide');
             this.$emit('attachmentUploaded', data);
           } else {
             HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
