@@ -203,6 +203,7 @@ class ProtocolsController < ApplicationController
 
   def update_name
     if @protocol.update(name: params.require(:protocol)[:name])
+      log_activity(:edit_protocol_name_in_repository, nil, protocol: @protocol.id)
       render json: {}, status: :ok
     else
       render json: @protocol.errors, status: :unprocessable_entity
