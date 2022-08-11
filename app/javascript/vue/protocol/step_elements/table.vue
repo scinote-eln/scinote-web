@@ -51,32 +51,7 @@
       </button>
     </div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @cancel="closeDeleteModal"/>
-
-    <div ref="nameModal" class="modal" :id="`tableNameModal${element.attributes.orderable.id}`" tabindex="-1" role="dialog">
-      <div class="modal-dialog modal-md" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="modal-destroy-team-label">
-              {{ i18n.t('protocols.steps.table.name_modal.title')}}
-            </h4>
-          </div>
-          <div class="modal-body">
-            <p>{{ i18n.t('protocols.steps.table.name_modal.description')}}</p>
-            <div class="sci-input-container" :class="{ 'error': nameModalError }">
-              <input ref="nameModalInput" v-model="newName" type="text" class="sci-input-field" @keyup.enter="!nameModalError && updateName(newName)" required="true" />
-              <div v-if="nameModalError" class="table-name-error">
-                {{ i18n.t('protocols.steps.table.name_modal.error') }}
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" @click="updateName(newName)">{{ i18n.t('protocols.steps.table.name_modal.save')}}</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <tableNameModal v-if="nameModalOpen" :element="element" @update="updateEmptyName" @cancel="nameModalOpen = false" />
   </div>
 </template>
 
@@ -84,10 +59,11 @@
   import DeleteMixin from 'vue/protocol/mixins/components/delete.js'
   import deleteElementModal from 'vue/protocol/modals/delete_element.vue'
   import InlineEdit from 'vue/shared/inline_edit.vue'
+  import TableNameModal from 'vue/protocol/modals/table_name_modal.vue'
 
   export default {
     name: 'StepTable',
-    components: { deleteElementModal, InlineEdit },
+    components: { deleteElementModal, InlineEdit, TableNameModal },
     mixins: [DeleteMixin],
     props: {
       element: {
@@ -110,19 +86,13 @@
         editingName: false,
         editingTable: false,
         tableObject: null,
-        newName: null,
+        nameModalOpen: false,
         reloadHeader: 0
       }
     },
     computed: {
       locked() {
         return !this.element.attributes.orderable.urls.update_url
-      },
-      defaultName() {
-        return this.i18n.t('protocols.steps.table.default_name', { position: this.element.attributes.position + 1 });
-      },
-      nameModalError() {
-        return !this.newName;
       }
     },
     updated() {
@@ -133,16 +103,13 @@
     },
     mounted() {
       this.loadTableData();
-      this.initNameModal();
 
       if (this.isNew) this.enableTableEdit();
     },
     methods: {
       enableTableEdit() {
-        // if name is not present, open name modal
         if (!this.element.attributes.orderable.name) {
-          this.tableObject.deselectCell();
-          $(this.$refs.nameModal).modal('show');
+          this.openNameModal();
           return;
         }
 
@@ -160,19 +127,23 @@
       },
       updateName(name) {
         this.element.attributes.orderable.name = name;
+        this.update();
+      },
+      openNameModal() {
+        this.tableObject.deselectCell();
+        this.nameModalOpen = true;
+      },
+      updateEmptyName(name) {
+        this.disableNameEdit();
 
-        if ($(this.$refs.nameModal).hasClass('in')) {
-          // if name was updated from modal, hide it and put table in edit mode
-          $(this.$refs.nameModal).modal('hide');
-          this.disableNameEdit();
+        // force reload header to properly reset name inline edit
+        this.reloadHeader = this.reloadHeader + 1;
 
-          // force reload header to properly reset name inline edit
-          this.reloadHeader = this.reloadHeader + 1;
-
-          this.update(this.enableTableEdit)
-        } else {
-          this.update();
-        }
+        this.element.attributes.orderable.name = name;
+        this.$emit('update', this.element, false, () => {
+          this.nameModalOpen = false;
+          this.enableTableEdit();
+        });
       },
       updateTable() {
         if (this.editingTable == false) return;
@@ -182,8 +153,8 @@
         this.update();
         this.editingTable = false;
       },
-      update(callback) {
-        this.$emit('update', this.element, false, callback)
+      update() {
+        this.$emit('update', this.element)
       },
       loadTableData() {
         let container = this.$refs.hotTable;
@@ -199,12 +170,6 @@
           formulas: true,
           readOnly: !this.editingTable,
           afterUnlisten: () => setTimeout(this.updateTable, 100) // delay makes cancel button work
-        });
-      },
-      initNameModal() {
-        this.newName = this.defaultName;
-        $(this.$refs.nameModal).on('shown.bs.modal', () => {
-          $(this.$refs.nameModalInput).focus();
         });
       }
     }
