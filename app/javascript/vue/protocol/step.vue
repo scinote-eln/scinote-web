@@ -327,7 +327,7 @@
         this.reorderElements(unorderedElements)
         this.$emit('stepUpdated')
       },
-      updateElement(element, skipRequest=false) {
+      updateElement(element, skipRequest=false, callback) {
         let index = this.elements.findIndex((e) => e.id === element.id);
         this.elements[index].isNew = false;
 
@@ -342,6 +342,11 @@
             success: (result) => {
               this.elements[index].attributes.orderable = result.data.attributes;
               this.$emit('stepUpdated');
+
+              // optional callback after successful update
+              if(typeof callback === 'function') {
+                callback();
+              }
             }
           }).error(() => {
             HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
