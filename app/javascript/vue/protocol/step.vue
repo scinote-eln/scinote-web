@@ -62,7 +62,7 @@
             {{ i18n.t('protocols.steps.insert.button') }}
             <span class="caret"></span>
           </button>
-          <ul ref="actionsDropdown" class="dropdown-menu insert-element-dropdown" :aria-labelledby="'stepInserMenu_' + step.id">
+          <ul ref="actionsDropdown" class="dropdown-menu insert-element-dropdown dropdown-menu-right" :aria-labelledby="'stepInserMenu_' + step.id">
             <li class="title">
               {{ i18n.t('protocols.steps.insert.title') }}
             </li>
