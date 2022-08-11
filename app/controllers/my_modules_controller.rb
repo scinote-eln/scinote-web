@@ -281,9 +281,9 @@ class MyModulesController < ApplicationController
     ActiveRecord::Base.transaction do
       protocol.update!(protocol_params)
       log_activity(:protocol_name_in_task_edited) if protocol.saved_change_to_name?
+      TinyMceAsset.update_images(protocol, params[:tiny_mce_images], current_user)
     end
 
-    TinyMceAsset.update_images(protocol, params[:tiny_mce_images], current_user)
     render json: protocol, serializer: ProtocolSerializer, user: current_user
   rescue ActiveRecord::RecordInvalid
     head :unprocessable_entity
