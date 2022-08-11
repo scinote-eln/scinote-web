@@ -277,13 +277,16 @@ class MyModulesController < ApplicationController
 
   def update_protocol
     protocol = @my_module.protocol
-    old_protocol_name = protocol.name
-    protocol.update!(protocol_params)
 
-    log_activity(:protocol_name_in_task_edited) if old_protocol_name != protocol.name
+    ActiveRecord::Base.transaction do
+      protocol.update!(protocol_params)
+      log_activity(:protocol_name_in_task_edited) if protocol.saved_change_to_name?
+    end
+
     TinyMceAsset.update_images(protocol, params[:tiny_mce_images], current_user)
-
     render json: protocol, serializer: ProtocolSerializer, user: current_user
+  rescue ActiveRecord::RecordInvalid
+    head :unprocessable_entity
   end
 
   def results
