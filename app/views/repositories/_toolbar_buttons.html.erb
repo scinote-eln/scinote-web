@@ -33,6 +33,8 @@
           <span class="button-text"><%= t("repositories.hide_reminders") %></span>
         </button>
       <% end %>
+    <% else %>
+      <%= render partial: 'repositories/toolbar/print_label_button' %>
     <% end %>
     <div class="archived-label" data-view-mode="archived">
       <%= render partial: 'repositories/toolbar/archive_label' %>
