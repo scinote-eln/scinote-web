@@ -2570,6 +2570,11 @@ en:
       table:
         default_name: 'Table %{position}'
         edit_message: 'Use right click for table options'
+        name_modal:
+          title: 'Please enter the table title'
+          description: 'Tables have become content blocks and require a name. To be able to edit the table, please add the name now:'
+          save: 'Save table title'
+          error: "Table name can't be empty"
       checklist:
         default_name: 'Checklist %{position}'
         empty_checklist: 'Doesn’t contain any checklist items'

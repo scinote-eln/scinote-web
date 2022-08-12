@@ -5,7 +5,7 @@
         <i class="fas fas-rotated-90 fa-exchange-alt"></i>
       </div>
       <div v-else class="step-element-grip-placeholder"></div>
-      <div v-if="!locked || element.attributes.orderable.name" class="step-element-name">
+      <div v-if="!locked || element.attributes.orderable.name" :key="reloadHeader" class="step-element-name">
         <InlineEdit
           :value="element.attributes.orderable.name"
           :characterLimit="255"
@@ -51,6 +51,7 @@
       </button>
     </div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @cancel="closeDeleteModal"/>
+    <tableNameModal v-if="nameModalOpen" :element="element" @update="updateEmptyName" @cancel="nameModalOpen = false" />
   </div>
 </template>
 
@@ -58,10 +59,11 @@
   import DeleteMixin from 'vue/protocol/mixins/components/delete.js'
   import deleteElementModal from 'vue/protocol/modals/delete_element.vue'
   import InlineEdit from 'vue/shared/inline_edit.vue'
+  import TableNameModal from 'vue/protocol/modals/table_name_modal.vue'
 
   export default {
     name: 'StepTable',
-    components: { deleteElementModal, InlineEdit },
+    components: { deleteElementModal, InlineEdit, TableNameModal },
     mixins: [DeleteMixin],
     props: {
       element: {
@@ -83,7 +85,9 @@
       return {
         editingName: false,
         editingTable: false,
-        tableObject: null
+        tableObject: null,
+        nameModalOpen: false,
+        reloadHeader: 0
       }
     },
     computed: {
@@ -104,6 +108,11 @@
     },
     methods: {
       enableTableEdit() {
+        if (!this.element.attributes.orderable.name) {
+          this.openNameModal();
+          return;
+        }
+
         this.editingTable = true;
         this.$nextTick(() => this.tableObject.selectCell(0,0));
       },
@@ -119,6 +128,22 @@
       updateName(name) {
         this.element.attributes.orderable.name = name;
         this.update();
+      },
+      openNameModal() {
+        this.tableObject.deselectCell();
+        this.nameModalOpen = true;
+      },
+      updateEmptyName(name) {
+        this.disableNameEdit();
+
+        // force reload header to properly reset name inline edit
+        this.reloadHeader = this.reloadHeader + 1;
+
+        this.element.attributes.orderable.name = name;
+        this.$emit('update', this.element, false, () => {
+          this.nameModalOpen = false;
+          this.enableTableEdit();
+        });
       },
       updateTable() {
         if (this.editingTable == false) return;
