@@ -543,7 +543,7 @@
   .task-flows {
     align-items: center;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
 
     #dropdownTaskFlowList {
       min-width: 230px;
@@ -551,7 +551,7 @@
 
     .status-label {
       @include font-small;
-      flex-basis: 40%;
+      flex-basis: 50%;
       font-weight: 700;
       margin-right: .5em;
       text-align: right;
@@ -572,9 +572,7 @@
     }
 
     .status-buttons {
-      align-items: flex-end;
       display: flex;
-      flex-grow: 1;
 
       > :not(:first-child):not(.dropdown-menu) {
         margin-left: .5em;
