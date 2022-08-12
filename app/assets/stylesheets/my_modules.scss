@@ -138,12 +138,6 @@
       width: 100%;
     }
   }
-
-  form:not([novalidate]):invalid {
-    .control-label {
-      color: $brand-danger;
-    }
-  }
 }
 
 // Mobile view
