@@ -3,10 +3,10 @@
 module LabelTemplates
   class TagService
     DEFAULT_COLUMNS = [
-      { key: :item_id, tag: '{{ITEM_ID}}' },
-      { key: :added_by, tag: '{{ADDED_BY}}' },
-      { key: :added_on, tag: '{{ADDED_ON}}' },
-      { key: :name, tag: '{{NAME}}' }
+      { key: 'Item ID', tag: '{{ITEM_ID}}' },
+      { key: 'Name', tag: '{{NAME}}' },
+      { key: 'Added on', tag: '{{ADDED_ON}}' },
+      { key: 'Added by', tag: '{{ADDED_BY}}' }
     ].freeze
 
     def initialize(team)
@@ -17,7 +17,7 @@ module LabelTemplates
       {
         default: DEFAULT_COLUMNS,
         common: repository_tags.pluck(:tags).reduce(:&),
-        repository: repository_tags
+        repositories: repository_tags
       }
     end
 

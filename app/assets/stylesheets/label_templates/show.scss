@@ -35,6 +35,15 @@
       font-weight: bold;
     }
 
+    .label-edit-header {
+      align-items: center;
+      display: flex;
+
+      .title {
+        margin-right: auto;
+      }
+    }
+
     .label-edit-container {
       flex-basis: 60%;
       padding-right: 1em;
@@ -85,5 +94,83 @@
     min-height: 240px;
     padding: .5em;
     width: 100%;
+  }
+
+  .inser-field-dropdown {
+    .open-dropdown-button:not(.collapsed) {
+      .fas {
+        @include rotate(-180deg);
+      }
+    }
+
+    .dropdown-menu {
+      @include font-button;
+      padding: 16px;
+      width: 300px;
+    }
+
+    .search-container {
+      margin-bottom: .25em;
+
+      .close-dropdown {
+        float: right;
+      }
+    }
+
+    .fields-container {
+      max-height: 40vh;
+      overflow-y: auto;
+    }
+
+    .field-element {
+      align-items: center;
+      cursor: pointer;
+      display: flex;
+      padding: 10px 10px 10px 24px;
+
+      .fas {
+        @include font-main;
+        display: none;
+        margin-left: auto;
+      }
+
+      &:hover {
+        background-color: $color-concrete;
+
+        .fas {
+          display: inline-block;
+        }
+      }
+    }
+
+    .block-title {
+      @include font-small;
+      align-items: center;
+      color: $color-silver-chalice;
+      display: flex;
+      padding: 7px 8px;
+
+      &::after {
+        background-color: $color-silver-chalice;
+        content: "";
+        flex-grow: 1;
+        height: 1px;
+        margin-left: .25em;
+        margin-top: 3px;
+      }
+
+      &::before {
+        background-color: $color-silver-chalice;
+        content: "";
+        flex-basis: 5px;
+        height: 1px;
+        margin-right: .25em;
+        margin-top: 3px;
+      }
+    }
+
+    .no-results {
+      color: $color-silver-chalice;
+    }
   }
 }

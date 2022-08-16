@@ -44,8 +44,11 @@
 
     <div v-if="labelTemplate.id" class="label-template-container">
       <div class="label-edit-container">
-        <div class="title">
-          {{ i18n.t('label_templates.show.content_title', { format: labelTemplate.attributes.language_type.toUpperCase() }) }}
+        <div class="label-edit-header">
+          <div class="title">
+            {{ i18n.t('label_templates.show.content_title', { format: labelTemplate.attributes.language_type.toUpperCase() }) }}
+          </div>
+          <InsertFieldDropdown :labelTemplate="labelTemplate" />
         </div>
         <template v-if="editingContent">
           <div class="label-textarea-container">
@@ -88,6 +91,7 @@
  <script>
 
  import InlineEdit from 'vue/shared/inline_edit.vue'
+ import InsertFieldDropdown from 'vue/label_template/insert_field_dropdown.vue'
 
   export default {
     name: 'LabelTemplateContainer',
@@ -107,9 +111,8 @@
         newContent: ''
       }
     },
-    components: {InlineEdit},
+    components: {InlineEdit, InsertFieldDropdown},
     created() {
-      console.log(this.newLabel)
       $.get(this.labelTemplateUrl, (result) => {
         this.labelTemplate = result.data
         this.newContent = this.labelTemplate.attributes.content

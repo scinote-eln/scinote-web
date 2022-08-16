@@ -11,7 +11,8 @@ class LabelTemplateSerializer < ActiveModel::Serializer
 
   def urls
     {
-      update: label_template_path(object)
+      update: label_template_path(object),
+      fields: template_tags_label_templates_path
     }
   end
 end

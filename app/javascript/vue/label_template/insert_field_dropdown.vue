@@ -1,0 +1,125 @@
+<template>
+  <div ref="dropdown" class="inser-field-dropdown dropdown">
+    <a class="open-dropdown-button collapsed" role="button" data-toggle="dropdown" id="fieldsContainer" aria-expanded="false">
+      Insert field code
+      <i class="fas fa-chevron-down"></i>
+    </a>
+    <div class="dropdown-menu" aria-labelledby="fieldsContainer">
+      <div class="search-container sci-input-container">
+        <label>
+          Insert field code
+        </label>
+        <a class="close-dropdown" data-toggle="dropdown">{{ i18n.t('general.cancel')}}</a>
+        <input v-model="searchValue" type="text" class="sci-input-field" placeholder="Type to search…">
+      </div>
+      <div class="fields-container">
+        <div :key="`default_${index}`" v-for="(field, index) in filteredFields.default"
+            data-toggle="tooltip"
+            data-placement="right"
+            class="field-element"
+            :title="`Field code: ${field.tag}`"
+        >
+          {{ field.key }}
+          <i class="fas fa-plus-square"></i>
+        </div>
+        <div v-if="filteredFields.common.length" class="block-title">
+          Common custom fields
+        </div>
+        <div :key="`common_${index}`" v-for="(field, index) in filteredFields.common"
+            data-toggle="tooltip"
+            data-placement="right"
+            class="field-element"
+            :title="`Field code: ${field.tag}`"
+        >
+          {{ field.key }}
+          <i class="fas fa-plus-square"></i>
+        </div>
+        <template v-for="(repository, index) in filteredFields.repositories">
+          <div :key="`repository_${index}`" class="block-title">
+            {{ repository.repository_name }}
+          </div>
+          <div :key="`repository_${index}_${index1}`" v-for="(field, index1) in repository.tags"
+            data-toggle="tooltip"
+            data-placement="right"
+            class="field-element"
+            :title="`Field code: ${field.tag}`"
+          >
+            {{ field.key }}
+            <i class="fas fa-plus-square"></i>
+          </div>
+        </template>
+        <div class="no-results" v-if="this.noResults">
+          Nothing found…
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  export default {
+    name: 'InsertFieldDropdown',
+    props: {
+      labelTemplate: {
+        type: Object,
+        required: true
+      }
+    },
+    data() {
+      return {
+        fields: {
+          default: [],
+          common: [],
+          repositories: []
+        },
+        searchValue: ''
+      }
+    },
+    computed: {
+      filteredFields() {
+        let result = {};
+        if (this.searchValue.length == 0) {
+          result = this.fields;
+        } else {
+          let filteredRepositories = this.filterArray(this.fields.repositories, 'repository_name');
+          filteredRepositories = filteredRepositories.map((repo) => {
+            repo.tags = this.filterArray(repo.tags, 'key');
+            return repo;
+          });
+
+          result = {
+            default: this.filterArray(this.fields.default, 'key'),
+            common: this.filterArray(this.fields.common, 'key'),
+            repositories: filteredRepositories,
+          };
+        }
+
+        this.$nextTick(() => {
+          $('[data-toggle="tooltip"]').tooltip();
+        });
+        return result;
+      },
+      noResults() {
+        return this.filteredFields.default.concat(this.filteredFields.common, this.filteredFields.repositories).length === 0;
+      }
+    },
+    mounted() {
+      $.get(this.labelTemplate.attributes.urls.fields, (result) => {
+        this.fields = result;
+        this.$nextTick(() => {
+          $('[data-toggle="tooltip"]').tooltip();
+        });
+      });
+      this.$nextTick(() => {
+        $(this.$refs.dropdown).on('show.bs.dropdown', () => {
+          this.searchValue = '';
+        });
+      });
+    },
+    methods: {
+      filterArray(array, key) {
+        return array.filter(field => field[key].toLowerCase().indexOf(this.searchValue.toLowerCase()) !== -1)
+      }
+    }
+  }
+</script>
