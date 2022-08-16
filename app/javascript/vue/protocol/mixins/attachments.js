@@ -55,10 +55,15 @@ export default {
 
           fileObject.isNewUpload = true;
           this.attachments.push(fileObject);
+          const filePosition = this.attachments.length - 1;
 
           upload.create((error, blob) => {
             if (error) {
               fileObject.error = I18n.t('protocols.steps.attachments.new.general_error');
+              this.attachments.splice(filePosition, 1);
+              setTimeout(() => {
+                this.attachments.push(fileObject);
+              }, 0);
               reject(error);
             } else {
               const signedId = blob.signed_id;
@@ -69,6 +74,10 @@ export default {
                 fileObject.attributes = result.data.attributes;
               }).error(() => {
                 fileObject.error = I18n.t('protocols.steps.attachments.new.general_error');
+                this.attachments.splice(filePosition, 1);
+                setTimeout(() => {
+                  this.attachments.push(fileObject);
+                }, 0);
               });
               filesUploadedCntr += 1;
               if (filesUploadedCntr === filesToUploadCntr) {
