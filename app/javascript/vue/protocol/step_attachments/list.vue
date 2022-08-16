@@ -11,7 +11,11 @@
        :data-gallery-view-id="stepId"
        :data-preview-url="attachment.attributes.urls.preview"
     >
-      {{ attachment.attributes.file_name }}
+      <span data-toggle="tooltip" 
+           data-placement="bottom" 
+           :title="`${ attachment.attributes.file_name }`">
+        {{ attachment.attributes.file_name }}
+      </span>
     </a>
     <span v-if="attachment.isNewUpload" class="attachment-label-new">
       {{ i18n.t('protocols.steps.attachments.new.description') }}
