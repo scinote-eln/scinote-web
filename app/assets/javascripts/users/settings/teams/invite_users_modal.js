@@ -66,6 +66,18 @@
       }
     });
 
+    modal.find('.search-field').on('paste', function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      let inputField = $(this);
+
+      $.each(event.originalEvent.clipboardData.getData('text').split(/[ ,]+/), function(_, value) {
+        inputField.val(value);
+        inputField.trigger($.Event('keypress', { keyCode: 13 }));
+      });
+    });
+
     dropdownSelector.init('#role', {
       noEmptyOption: true,
       singleSelect: true,

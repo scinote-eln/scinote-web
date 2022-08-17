@@ -201,6 +201,11 @@ module Api
         raise PermissionError.new(Protocol, :read) unless can_read_protocol_in_module?(@step.protocol)
       end
 
+      def load_step_text(key = :step_text_id)
+        @step_text = @step.step_texts.find(params.require(key))
+        raise PermissionError.new(Protocol, :read) unless can_read_protocol_in_module?(@step.protocol)
+      end
+
       def load_checklist_item(key = :checklist_item_id)
         @checklist_item = @checklist.checklist_items.find(params.require(key))
         raise PermissionError.new(Protocol, :read) unless can_read_protocol_in_module?(@step.protocol)

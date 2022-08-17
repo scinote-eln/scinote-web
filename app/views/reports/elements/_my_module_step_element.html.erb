@@ -2,56 +2,33 @@
 <% step_type_str = step.completed ? 'completed' : 'uncompleted' %>
 <% user = step.completed? && step.last_modified_by || step.user %>
 <% timestamp = step.completed ? step.completed_on : step.created_at %>
-<% tables = step.tables %>
 <% assets = step.assets %>
-<% checklists = step.checklists %>
 <% export_all = defined?(export_all) && export_all %>
 <div class="report-element report-step-element">
-  <div class="report-element-header">
-    <div class="row">
-      <div class="pull-left user-time">
-        <%= t("projects.reports.elements.step.#{step_type_str}.user_time", user: user.full_name , timestamp: l(timestamp, format: :full)) %>
-      </div>
-    </div>
-  </div>
   <div class="report-element-body">
-    <div class="row">
-      <div class="pull-left step-name">
-        <h5>
-          <span class="fas fa-arrow-circle-right"></span>
-          <b><%= t('projects.reports.elements.step.step_pos', pos: (step.position_plus_one)) %></b>&nbsp;<%= step.name %>
-          <%= step_status_label(step) %>
-        </h5>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-xs-12 ql-editor">
-        <% if step.description.present? %>
-          <%= custom_auto_link(step.prepare_for_report(:description, export_all),
-                               team: current_team,
-                               simple_format: false,
-                               tags: %w(img),
-                               base64_encoded_imgs: export_all) %>
-        <% else %>
-          <em><%= t('projects.reports.elements.step.no_description') %></em>
-        <% end %>
-      </div>
+    <h5 class="step-name">
+      <b><%= t('projects.reports.elements.step.step_pos', pos: (step.position_plus_one)) %></b>&nbsp;<%= step.name %>
+      <%= step_status_label(step) %>
+    </h5>
+    <div class="user-time">
+      <%= t("projects.reports.elements.step.#{step_type_str}.user_time", user: user.full_name , timestamp: l(timestamp, format: :full)) %>
     </div>
   </div>
   <div class="report-element-children">
-    <% if @settings.dig('task', 'protocol', 'step_tables') %>
-      <% tables.each do |table| %>
-        <%= render partial: 'reports/elements/step_table_element.html.erb', locals: { table: table, export_all: export_all } %>
+    <% step.step_orderable_elements.order(:position).each do |e| %>
+      <% if e.orderable_type == 'StepTable' && @settings.dig('task', 'protocol', 'step_tables') %>
+        <%= render partial: 'reports/elements/step_table_element.html.erb', locals: { table: e.orderable.table, export_all: export_all } %>
+      <% end %>
+      <% if e.orderable_type == 'Checklist' && @settings.dig('task', 'protocol', 'step_checklists') %>
+        <%= render partial: 'reports/elements/step_checklist_element.html.erb', locals: { checklist: e.orderable, export_all: export_all } %>
+      <% end %>
+      <% if e.orderable_type == 'StepText' && @settings.dig('task', 'protocol', 'step_texts') %>
+        <%= render partial: 'reports/elements/step_text_element.html.erb', locals: { step_text: e.orderable, export_all: export_all } %>
       <% end %>
     <% end %>
     <% if @settings.dig('task', 'protocol', 'step_files') %>
       <% assets.each do |asset| %>
         <%= render partial: 'reports/elements/step_asset_element.html.erb', locals: { asset: asset, export_all: export_all } %>
-      <% end %>
-    <% end %>
-    <% if @settings.dig('task', 'protocol', 'step_checklists') %>
-      <% checklists.each do |checklist| %>
-        <%= render partial: 'reports/elements/step_checklist_element.html.erb', locals: { checklist: checklist, export_all: export_all } %>
       <% end %>
     <% end %>
     <% if @settings.dig('task', 'protocol', 'step_comments') %>

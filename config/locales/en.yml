@@ -129,6 +129,14 @@ en:
           attributes:
             team_id:
               same_team: "Inventory can't be shared to the same team as it belongs to"
+        protocol:
+          attributes:
+            step_order:
+              invalid: "Invalid step order."
+        step:
+          attributes:
+            step_orderable_element_order:
+              invalid: "Invalid step element order"
         my_module:
           attributes:
             my_module_status_id:
@@ -145,6 +153,10 @@ en:
           attributes:
             file:
               too_big: "is too big"
+        step_orderable_element:
+          attributes:
+            step:
+              wrong_step: "connected to the wrong step"
         repository_snapshot:
           attributes:
             selected:
@@ -174,8 +186,10 @@ en:
           attributes:
             output_id:
               creates_cycle: "mustn't create cycle"
-      storage:
-        limit_reached: "Storage limit has been reached."
+  errors:
+    general: "Something went wrong."
+  storage:
+    limit_reached: "Storage limit has been reached."
   helpers:
     label:
       team:
@@ -305,6 +319,7 @@ en:
       authors: "Authors: "
       description: "Description: "
       no_description: "No description"
+      text: "Text"
       team: "Team: "
       folder: "Folders: "
       repository: "Inventory: "
@@ -338,12 +353,14 @@ en:
     empty_state:
       title: "No comments here"
       description: "Nobody has commented yet. Be the first by using the box below."
+    placeholder: "Add a new comment..."
     options_dropdown:
       header: "Comment options"
       edit: "Edit"
       delete: "Delete"
     delete_confirm: "Are you sure you wish to delete this comment?"
     delete_error: "Error occurred while deleting comment."
+    step_url: "Go to step"
 
   projects:
     index:
@@ -595,6 +612,7 @@ en:
           protocol_step: "Protocol steps"
           completed_steps: "Completed steps"
           uncompleted_steps: "Uncompleted steps"
+          step_texts: "Step texts"
           step_checklists: "Step checklists"
           step_files: "Step files"
           step_tables: "Step tables"
@@ -705,26 +723,28 @@ en:
           no_description: "No description"
           tags_header: "Task tags:"
           no_tags: "No tags"
+          results: "Results"
           protocol:
+            name: 'Protocol'
             user_time: "Protocol created on %{timestamp}."
         experiment:
           user_time: "Experiment %{code} created on %{timestamp}."
           no_description: "No description"
           no_tags: "No tags"
         module_activity:
-          name: "Activity of task %{my_module}"
+          name: "Task activity"
           sidebar_name: "Activity"
           no_activity: "No activities"
         module_repository:
           name: "%{repository} of task %{my_module}"
-          table_name: "[ %{name} ]"
+          table_name: "%{name}"
           no_items: "No items"
         result_asset:
-          file_name: "[ %{file} ]"
+          file_name: "%{file}"
           user_time: "Uploaded by %{user} on %{timestamp}."
           full_preview_attached: "[full document attached to report]"
         result_table:
-          table_name: "[ %{name} ]"
+          table_name: "%{name}"
           user_time: "Created by %{user} on %{timestamp}."
         result_text:
           user_time: "Created by %{user} on %{timestamp}."
@@ -737,24 +757,24 @@ en:
           uncompleted:
             user_time: "Created by %{user} on %{timestamp}."
         step_table:
-          table_name: "[ %{name} ]"
+          table_name: "%{name}"
           user_time: "Table created on %{timestamp}."
         step_asset:
+          file_name: "%{file}"
           sidebar_name: "File %{file}"
-          file_name: "[ %{file} ]"
           user_time: "File uploaded on %{timestamp}."
         step_checklist:
-          checklist_name: "[ %{name} ]"
+          checklist_name: "%{name}"
           user_time: "Checklist created on %{timestamp}."
           checked: "checked"
         result_comments:
           sidebar_name: "Comments"
-          name: "Comments for result %{result}"
+          name: "Result comments"
           no_comments: "No comments"
           comment_prefix: "%{user} on %{date} at %{time}:"
         step_comments:
           sidebar_name: "Comments"
-          name: "Comments for step %{step}"
+          name: "Step comments"
           no_comments: "No comments"
           comment_prefix: "%{user} on %{date} at %{time}:"
     experiment_archive:
@@ -838,6 +858,7 @@ en:
         import: "Import protocol"
         export: "Export protocol"
         save_to_repo: "Save to repository"
+        delete_steps: "Delete all steps"
     description:
       title: "Edit task %{module} description"
       label: "Description"
@@ -868,31 +889,35 @@ en:
       error_flash: "Failed to restore task(s)."
     protocols:
       head_title: "%{project} | %{module} | Protocols"
+      protocol: "Protocol"
       protocol_status_bar:
         private_parent: "private"
         unlinked: "unlinked"
+        linked: "linked"
         no_description: "No protocol description"
+        enter_name: "Enter protocol name"
         empty_description_edit_label: "Click here to enter Protocol Description (optional)"
         keywords: "Keywords"
         no_keywords: "no keywords"
         protocol_created: "Protocol created:"
-        template_updated: "Template updated on:"
+        template_updated: "Protocol template updated on:"
         protocol_updated: "Protocol updated on:"
         messages:
           template_updated_html: "There is a new version of this protocol available in the protocol repository.<br>Would you like to update it?"
           protocol_updated: "The version of this protocol in the task is modified, do you wish to save it as a new protocol template?"
           unlinked: "This protocol is not linked to the repository."
         btns:
-          unlink: "Unlink template"
+          unlink: "Unlink protocol template"
           unlink_title: "Unlink this protocol from the parent in the repository"
           revert: "Revert protocol"
           revert_title: "Revert the protocol to the repository version. This will discard any local changes."
           save_to_repository: "Save to repository"
+          save_a_copy_to_repository: "Save a copy to repository"
           save_to_repository_title: "Copy this protocol to repository"
           update_self: "Update from repository"
           update_self_title: "Update this protocol with the version stored in the repository"
       confirm_link_update_modal:
-        unlink_title: "Unlink template"
+        unlink_title: "Unlink protocol template"
         unlink_message: "Are you sure you want to unlink the task protocol from the repository version? This will stop any tracking of changes."
         unlink_btn_text: "Unlink"
         revert_title: "Revert protocol"
@@ -943,7 +968,7 @@ en:
         type_public: "Team protocols"
         type_private: "My protocols"
         type_text: "You can make a copy of a protocol and save it to Team protocols or My protocols. Team protocols are visible to all team members, My protocols are for personal usage only."
-        link_label: "Link task to this protocol repository"
+        link_label: "Link task to this protocol in repository"
         link_text: "<strong>Warning!</strong>&nbsp;This will unlink the currently linked protocol."
         error_400: "Due to unknown error, protocol could not be copied to repository."
         confirm: "Save"
@@ -1342,6 +1367,11 @@ en:
       shared_read: "Shared inventory (owned by %{team_name}). You can view."
     bmt_singleton_error: "Only one BMT inventory can be present."
     index:
+      active_reminders:
+        label: "Active reminders"
+        short_label: "Reminders…"
+        description: "Show only active reminderss"
+        checked_description: "Show all items"
       head_title: "Inventories"
       title: "Inventories"
       empty_title: "Your team has no inventories yet"
@@ -1958,7 +1988,7 @@ en:
         subject: "You've received a What's new notification"
         intro_paragraph: "Hi %{user_name}, you've received What's new notification in SciNote:"
       index:
-        whats_new: "What's New"
+        whats_new_html: "What's New"
         more_notifications: "Show more notifications"
         no_notifications: "No more notifications"
         settings: "Settings"
@@ -2246,6 +2276,11 @@ en:
       unchangable_error_message: "Predefined roles can not be changed!"
 
   protocols:
+    no_text_placeholder: 'No protocol description'
+    reorder_steps:
+        button: "Rearrange steps"
+        modal:
+          title: "Rearrange protocol steps"
     print:
       title: "Print protocol"
       button: "Print"
@@ -2345,12 +2380,14 @@ en:
         row_success: "Exported"
         row_failed: "Failed"
     header:
-      created_at: "Created at"
-      updated_at: "Last modified at"
-      added_by: "Added by"
-      keywords: "Keywords"
-      authors: "Authors"
+      created_at: "Created at:"
+      updated_at: "Last modified at:"
+      added_by: "Added by:"
+      keywords: "Keywords:"
+      authors: "Authors:"
       no_authors: "No authors"
+      add_authors: "+ Add authors"
+      add_keywords: "+ Add keywords"
       description: "Description"
       no_description: "No description"
       keywords_modal: "Input one or multiple keywords, confirm each keyword with ENTER key"
@@ -2368,6 +2405,7 @@ en:
         label: "Description"
     index:
       head_title: "Protocol management"
+      default_name: 'New protocol'
       navigation:
         public: "Team protocols"
         private: "My protocols"
@@ -2493,6 +2531,8 @@ en:
           success_flash: 'Protocol <strong>%{name}</strong> successfully imported to %{type}.'
 
     steps:
+      placeholder: 'Enter step name'
+      default_name: 'Untitled step'
       completed: 'Completed'
       uncompleted: 'Uncompleted'
       expand_label: "Expand All"
@@ -2509,6 +2549,56 @@ en:
       comments: "Comments"
       empty_checklist: "No items"
       comment_title: "%{user} at %{time}:"
+      drop_message: "Drop file to add to step %{position}"
+      space_used_label: '%{used} / %{limit} space used.'
+      space_used_label_unlimited: '%{used} / unlimited space used.'
+      status:
+        complete: "Mark as done"
+        uncomplete: "Unmark as done"
+      options_dropdown:
+        title: 'Step options'
+        rearrange: 'Rearrange content'
+        delete: 'Delete'
+      insert:
+        button: 'Insert'
+        title: 'Insert step content'
+        table: 'Add table'
+        text: 'Add text'
+        checklist: 'Add checklist'
+        attachment: 'Add file'
+        checklist_item: 'Add a new checklist item...'
+      table:
+        default_name: 'Table %{position}'
+        edit_message: 'Use right click for table options'
+        name_modal:
+          title: 'Please enter the table title'
+          description: 'Tables have become content blocks and require a name. To be able to edit the table, please add the name now:'
+          save: 'Save table title'
+          error: "Table name can't be empty"
+      checklist:
+        default_name: 'Checklist %{position}'
+        empty_checklist: 'Doesn’t contain any checklist items'
+      text:
+        placeholder: 'Enter step text'
+        empty_text: 'No text entered'
+      modals:
+        delete_element:
+          title: 'Delete content'
+          description_1: 'You’re about to delete a content block from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'
+          description_2: 'Are you sure you want to delete it?'
+          confirm: 'Delete forever'
+        delete_step:
+          title: 'Delete step'
+          description_1: 'You’re about to delete a whole step from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'
+          description_2: 'Are you sure you want to delete it?'
+          confirm: 'Delete forever'
+        delete_steps:
+          title: 'Delete all protocol steps'
+          description_1: 'You’re about to delete all protocol steps from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'
+          description_2: 'Are you sure you want to delete them?'
+          confirm: 'Delete forever'
+        reorder_elements:
+          title: 'Rearrange step %{step_position} content'
       options:
         up_arrow_title: "Move step up"
         down_arrow_title: "Move step down"
@@ -2521,11 +2611,29 @@ en:
         complete_title: "Complete step"
         uncomplete_title: "Restart step"
       attachments:
+        menu:
+          office_file: "New Office file"
+          chemical_drawing: "New chemical drawing"
+          file_from_pc: "File from your PC"
         modified_label: "Modified:"
         manage: "Manage"
         add: "ADD"
         sort_by: "SORT BY"
         attachments_view_mode: "ALL ATTACHMENTS VIEW SIZE"
+        file_modal:
+          title: "Add file"
+          drag_zone_title: "Upload a file from your PC"
+          drag_zone_description: "You can also drag & drop files to here or into steps to upload"
+          drag_zone_notification: "Drop files to add to step %{position}"
+          or: "OR"
+        new:
+          description: 'New'
+          uploading: 'Uploading'
+          file_too_big: 'Failed to upload: File size is too big'
+          no_more_space: 'Failed to upload: You ran out of space'
+          general_error: 'Failed to upload: Something went wrong, please try again'
+          leaving_warning: 'Your changes will be lost if you navigate away'
+
         sort:
           new_html: "Newest first &#8595;"
           old_html: "Oldest first &#8593;"
@@ -2696,15 +2804,16 @@ en:
     wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel Online.'
     wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in PowerPoint Online.'
     create_wopi_file:
-      button_text: 'New Office file'
+      button_text: 'Create an MS Office file'
       li_text: "Office file"
       modal_title: 'Create new Microsoft Office Online document'
-      text_field_label: 'Document name & type'
-      text_field_placeholder: 'New Document'
+      text_field_label: 'Document name'
+      type_select_label: 'Document type'
+      text_field_placeholder: 'Enter document name...'
       ms_word: 'Word<br/>Online'
       ms_excel: 'Excel<br/>Online'
       ms_powerpoint: 'PowerPoint<br/>Online'
-      create_document_button: 'Create Document'
+      create_document_button: 'Create document'
       errors:
         forbidden: 'You do not have permission to add files.'
         not_found: 'Element not found.'
@@ -2931,6 +3040,7 @@ en:
       upload_failure: "File upload error. Try again or contact the administrator."
       file_name_too_long: 'is too long (maximum is %{limit} characters, with extension)'
     text:
+      name: "Text"
       not_blank: "can't be blank"
       length_too_long_general: "is too long"
       length_too_long: "is too long (maximum is %{max_length} characters)"
@@ -3038,6 +3148,7 @@ en:
   Protocol: "Protocol"
   Protocols: "Protocols"
   Checklist: "Checklist"
+  ChecklistItem: "Checklist item"
   Checklists: "Checklists"
   Table: "Table"
   Tables: "Tables"
@@ -3053,6 +3164,7 @@ en:
   More: "More"
   Added: 'Added'
   by: 'by'
+  name: 'name'
 
   client_api:
     permission_error: "You don't have permission for this action."
@@ -3122,3 +3234,7 @@ en:
     show_btn:
      one: "Show results"
     clear_btn: "Clear"
+  inline_edit:
+    errors:
+      over_limit: "%{attribute} is too long (maximum number is %{limit} characters)"
+      blank: "%{attribute} can't be empty"

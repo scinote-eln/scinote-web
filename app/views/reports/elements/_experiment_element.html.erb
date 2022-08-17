@@ -2,35 +2,19 @@
 <% timestamp = experiment.created_at %>
 <% export_all = defined?(export_all) && export_all %>
 <div class="report-element report-experiment-element">
-  <div class="report-element-header">
-    <div class="row">
-      <div class="pull-left user-time">
-        <%= t('projects.reports.elements.experiment.user_time', code: experiment.code, timestamp: l(timestamp, format: :full)) %>
-        <b><%= link_to t('projects.reports.elements.all.scinote_link'),canvas_experiment_url(experiment), target: :_blank %></b>
-      </div>
-    </div>
-  </div>
   <div class="report-element-body" data-hook="report-experiment-element">
-    <div class="row">
-      <div class="pull-left experiment-name">
-        <h4>
-          <i class="fas fa-flask"></i>
-          <%= experiment.name %>
-          <% if experiment.archived? %>
-            <span class="label label-warning"><%= t('search.index.archived') %></span>
-          <% end %>
-        </h4>
-      </div>
+    <h3 class="experiment-name">
+      <%= link_to experiment.name, canvas_experiment_url(experiment), target: :_blank %>
+      <% if experiment.archived? %>
+        <span class="label label-warning"><%= t('search.index.archived') %></span>
+      <% end %>
+    </h3>
+    <div class="user-time">
+      <%= t('projects.reports.elements.experiment.user_time', code: experiment.code, timestamp: l(timestamp, format: :full)) %>
     </div>
-    <div class="row">
-      <div class="col-xs-12">
-        <% if experiment.description.present? %>
-          <%= custom_auto_link(experiment.description, team: current_team, base64_encoded_imgs: export_all) %>
-        <% else %>
-           <em><%= t('projects.reports.elements.experiment.no_description') %></em>
-        <% end %>
-      </div>
-    </div>
+    <% if experiment.description.present? %>
+      <%= custom_auto_link(experiment.description, team: current_team, base64_encoded_imgs: export_all) %>
+    <% end %>
   </div>
   <% if defined?(children) %>
     <div class="report-element-children">

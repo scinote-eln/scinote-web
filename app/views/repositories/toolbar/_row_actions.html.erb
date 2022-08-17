@@ -1,7 +1,10 @@
 <% if can_manage_repository_rows?(@repository) %>
   <span id="editDeleteCopy" data-toggle="buttons" style="display:none">
     <%if can_update_repository_rows?(@repository) %>
-      <button type="button" title="<%= t('repositories.show.button_tooltip.edit') %>"
+      <button type="button"
+              data-toggle="tooltip"
+              data-placement="bottom"
+              title="<%= t('repositories.show.button_tooltip.edit') %>"
               class="btn btn-light editAdd auto-shrink-button"
               id="editRepositoryRecord" disabled data-view-mode="active">
         <span class="fas fa-pencil-alt"></span>
@@ -11,7 +14,10 @@
 
 
     <% if can_create_repository_rows?(@repository) %>
-      <button type="button" title="<%= t('repositories.show.button_tooltip.duplicate') %>"
+      <button type="button"
+              data-toggle="tooltip"
+              data-placement="bottom"
+              title="<%= t('repositories.show.button_tooltip.duplicate') %>"
               class="btn btn-light copyRow auto-shrink-button"
               id="copyRepositoryRecords" disabled data-view-mode="active">
         <span class="fas fa-copy"></span>
@@ -19,21 +25,19 @@
       </button>
     <% end %>
     <button class="btn btn-light auto-shrink-button"
+            data-toggle="tooltip"
+            data-placement="bottom"
             title="<%= t('repositories.show.button_tooltip.export') %>"
             id="exportRepositoriesButton">
       <span class="fas fa-download"></span>
       <span class="button-text"><%= t("repositories.index.options_dropdown.export_items") %></span>
     </button>
-    <button type="button" id="toolbarPrintLabel"
-            title="<%= t('repositories.show.button_tooltip.print_label') %>"
-            class="btn btn-light print-label-button auto-shrink-button"
-            data-dismiss="modal" data-url="<%= print_modal_repository_repository_rows_path(@repository)  %>"
-            data-rows="[]" style="display: none">
-      <span class="fas fa-print"></span>
-      <span class="button-text"><%= t('repository_row.modal_print_label.print_label') %></span>
-    </button>
+    <%= render partial: 'repositories/toolbar/print_label_button' %>
     <% if can_delete_repository_rows?(@repository) %>
-      <button type="button" title="<%= t('repositories.show.button_tooltip.archive') %>"
+      <button type="button"
+              data-toggle="tooltip"
+              data-placement="bottom"
+              title="<%= t('repositories.show.button_tooltip.archive') %>"
               class="btn btn-light auto-shrink-button"
               id="archiveRepositoryRecordsButton"  disabled data-view-mode="active">
         <span class="fas fa-archive"></span>
@@ -63,5 +67,8 @@
     </button>
   </span>
 <% elsif @repository.shared_with_read?(current_team) %>
+  <%= render partial: 'repositories/toolbar/print_label_button' %>
   <p class="view-only-label"><%= t('repositories.index.view_only_permission_label') %></p>
+<% elsif can_read_repository?(@repository) %>
+  <%= render partial: 'repositories/toolbar/print_label_button' %>
 <% end %>

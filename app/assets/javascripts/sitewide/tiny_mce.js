@@ -123,6 +123,7 @@ var TinyMCE = (function() {
   // returns a public API for TinyMCE editor
   return Object.freeze({
     init: function(selector, onSaveCallback) {
+      var editorInstancePromise;
       var tinyMceContainer;
       var tinyMceInitSize;
       var plugins;
@@ -142,7 +143,7 @@ var TinyMCE = (function() {
           document.location.hash = textAreaObject.data('objectType') + '_' + textAreaObject.data('objectId');
         }
 
-        tinyMCE.init({
+        editorInstancePromise = tinyMCE.init({
           cache_suffix: '?v=4.9.10', // This suffix should be changed any time library is updated
           selector: selector,
           convert_urls: false,
@@ -278,7 +279,7 @@ var TinyMCE = (function() {
                 editorForm.find('.tinymce-view').html(data.html).removeClass('hidden');
                 editor.plugins.autosave.removeDraft();
                 removeDraft(editor, textAreaObject);
-                if (onSaveCallback) { onSaveCallback(); }
+                if (onSaveCallback) { onSaveCallback(data); }
               }).on('ajax:error', function(ev, data) {
                 var model = editor.getElement().dataset.objectType;
                 $(this).renderFormErrors(model, data.responseJSON);
@@ -294,6 +295,9 @@ var TinyMCE = (function() {
               .clone()
               .appendTo(menuBar)
               .on('click', function(event) {
+                $(editorForm).find('.form-group').removeClass('has-error');
+                $(editorForm).find('.help-block').remove();
+
                 event.preventDefault();
                 if (editor.isDirty()) {
                   editor.setContent($(selector).val());
@@ -301,7 +305,9 @@ var TinyMCE = (function() {
                 editorForm.find('.tinymce-status-badge').addClass('hidden');
                 editorForm.find('.tinymce-view').removeClass('hidden');
                 editor.remove();
+
                 updateScrollPosition(editorForm);
+                if (onSaveCallback) { onSaveCallback(); }
               })
               .removeClass('hidden');
 
@@ -353,6 +359,8 @@ var TinyMCE = (function() {
             });
 
             editor.on('blur', function(e) {
+              if (editor.blurDisabled) return false;
+
               if ($('.atwho-view:visible').length || $('#MarvinJsModal:visible').length) return false;
               setTimeout(() => {
                 if (editor.isNotDirty === false) {
@@ -372,6 +380,8 @@ var TinyMCE = (function() {
           save_onsavecallback: function(editor) { saveAction(editor); }
         });
       }
+
+      return editorInstancePromise;
     },
     destroyAll: function() {
       _.each(tinyMCE.editors, function(editor) {

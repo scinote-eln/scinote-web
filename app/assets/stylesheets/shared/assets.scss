@@ -194,6 +194,10 @@
     width: 100%;
   }
 
+  .file-info {
+    line-height: 1.5em;
+  }
+
   .image-container,
   .general-file-container {
     align-items: center;
@@ -285,6 +289,7 @@
     display: grid;
     grid-column-gap: 1em;
     grid-template-columns: max-content max-content;
+    margin-left: auto;
   }
 
   .asset-context-menu {
@@ -328,10 +333,7 @@
       &:hover {
         background: $color-concrete;
       }
-    }
 
-    .change-preview-type,
-    .delete-asset {
       .fas {
         width: 1.5em;
       }
@@ -347,6 +349,101 @@
   }
 }
 
+.uploading-attachment-container {
+  align-items: center;
+  background-color: $color-concrete;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+
+  .icon {
+    font-size: 2em;
+  }
+
+  .file-name {
+    text-align: center;
+
+    &:not(.one-line) div {
+      margin-bottom: .5em;
+    }
+
+    &.one-line {
+      align-items: center;
+      display: flex;
+
+      .file-name-text {
+        margin-left: .25em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .remove-button {
+    color: $color-silver-chalice;
+    cursor: pointer;
+    margin: .75em 1em;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  .progress-container {
+    background-color: $color-white;
+    flex-basis: 4px;
+    margin-top: 1em;
+    position: relative;
+    width: 60%;
+
+    .progress-bar {
+      background-color: $brand-primary;
+      height: 100%;
+      position: relative;
+      transition: 1s $timing-function-sharp;
+    }
+  }
+
+  &.list-attachment-container {
+    flex-direction: row;
+
+    .icon {
+      font-size: 1em;
+    }
+
+    .progress-container {
+      border-radius: 50%;
+      flex-basis: 30%;
+      height: 4px;
+      margin-left: auto;
+      margin-top: 0;
+    }
+  }
+
+  &.error {
+    background: $color-white;
+    border-color: $brand-danger;
+
+    .icon {
+      color: $brand-danger;
+    }
+
+    .error-container {
+      color: $brand-danger;
+      margin-top: 1em;
+      padding: 0 1em;
+      text-align: center;
+    }
+
+    &.list-attachment-container {
+      .error-container {
+        margin-left: auto;
+        margin-top: 0;
+      }
+    }
+  }
+}
 
 .asset-icon {
   display: inline-block;
@@ -361,4 +458,16 @@
   &.fa-image {
     color: $brand-primary;
   }
+}
+
+.attachment-label-new {
+  align-items: center;
+  background-color: $brand-primary;
+  border-radius: 2px;
+  color: $color-concrete;
+  font-size: 12px;
+  margin-left: .25em;
+  margin-right: 1em;
+  padding: 4px 8px;
+  white-space: nowrap;
 }

@@ -1,36 +1,27 @@
 <% step ||= report_element.step %>
 <% comments = step.step_comments.order(created_at: :desc) %>
 <% export_all = defined?(export_all) && export_all %>
-<div class="report-element report-comments-element report-step-comments-element">
-  <div class="report-element-header">
-    <div class="row">
-      <div class="pull-left comments-icon">
-          <span class="fas fa-comment"></span>
-      </div>
+<% if comments.present? %>
+  <div class="report-element report-comments-element report-step-comments-element">
+    <div class="report-element-header">
       <div class="pull-left comments-name">
-        <%= t('projects.reports.elements.step_comments.name', step: step.name) %>
+        <%= t('projects.reports.elements.step_comments.name') %>
       </div>
     </div>
-  </div>
-  <div class="report-element-body">
-    <div class="row">
-      <div class="col-xs-12 comments-container simple">
-        <% if comments.present? %>
-          <ul class="no-style content-comments">
-            <% comments.each do |comment| %>
-              <%= render partial: 'shared/comments/item.html.erb',
-                         locals: { comment: comment, readonly: true, report: true, export_all: export_all } %>
-            <% end %>
-          </ul>
-        <% else %>
-          <em><%= t('projects.reports.elements.step_comments.no_comments') %></em>
-        <% end %>
+    <div class="report-element-body">
+      <div class="comments-container simple">
+        <ul class="no-style content-comments">
+          <% comments.each do |comment| %>
+            <%= render partial: 'shared/comments/item.html.erb',
+                        locals: { comment: comment, readonly: true, report: true, export_all: export_all } %>
+          <% end %>
+        </ul>
       </div>
     </div>
+    <% if defined?(children) %>
+      <div class="report-element-children">
+        <%= children %>
+      </div>
+    <% end %>
   </div>
-  <% if defined?(children) %>
-    <div class="report-element-children">
-      <%= children %>
-    </div>
-  <% end %>
-</div>
+<% end %>

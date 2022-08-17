@@ -70,6 +70,10 @@
             <li id="results-nav-tab" class="<%= "active" if is_module_results? %>">
               <a href="<%= results_my_module_url(@my_module) %>" title="<%=t "nav2.modules.results" %>">
                 <%=t "nav2.modules.results" %>
+                <% @active_results_size = @my_module.results.where(archived:false).size %>
+                <% if @active_results_size.positive? %>
+                  <sup class="navigation-results-counter"><%= @my_module.archived_branch? ? @my_module.results.size : @active_results_size %></sup>
+                <% end %>
               </a>
             </li>
             <li id="activities-nav-tab" class="<%= "active" if is_module_activities? %>">
@@ -84,6 +88,10 @@
             <li id="archive-nav-tab" class="<%= "active" if is_module_archive? %>">
               <a href="<%= archive_my_module_url(@my_module) %>" title="<%= t'nav2.modules.archive' %>">
                 <%=t "nav2.modules.archive" %>
+                <% @archived_results_size = @my_module.results.where(archived:true).size %>
+                <% if @archived_results_size.positive? %>
+                  <sup class="navigation-results-counter"><%= @archived_results_size %></sup>
+                <% end %>
               </a>
             </li>
           <% end %>

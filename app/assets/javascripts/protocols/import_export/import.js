@@ -80,6 +80,10 @@ function importProtocolFromFile(
     element.find("[data-toggle='" + name + "']").hide();
   }
 
+  function showPartOfElement(element, name) {
+    element.find("[data-toggle='" + name + "']").show();
+  }
+
   function newAssetElement(folder, stepGuid, fileRef, fileName, fileType) {
     var html = '<li>';
     var assetBytes;
@@ -214,20 +218,7 @@ function importProtocolFromFile(
       tableNodes = node.find('elnTables > elnTable');
       if (tableNodes.length > 0) {
         tableNodes.each(function() {
-          var tableId = $(this).attr('id');
-          var tableName = $(this).children('name').text();
-          var tableContent = $(this).children('contents').text();
-
-          // Generate table element
-          var tableEl = newPreviewElement(
-            'table',
-            { name: tableName }
-          );
-          var elnTableEl = generateElnTable(tableId, tableContent);
-          addChildToPreviewElement(tableEl, 'table', elnTableEl);
-
-          // Now, append table element to step
-          addChildToPreviewElement(stepEl, 'tables', tableEl);
+          addTablePreview(stepEl, this);
         });
       } else {
         hidePartOfElement(stepEl, 'tables');
@@ -237,41 +228,99 @@ function importProtocolFromFile(
       checklistNodes = node.find('checklists > checklist');
       if (checklistNodes.length > 0) {
         checklistNodes.each(function() {
-          var checklistId = $(this).attr('id');
-          var checklistName = $(this).children('name').text();
-
-          var checklistEl = newPreviewElement(
-            'checklist',
-            { name: checklistName }
-          );
-
-          // Iterate through checklist items
-          $(this).find('items > item').each(function() {
-            var itemId = $(this).attr('id');
-            var itemText = $(this).children('text').text();
-
-            var itemEl = newPreviewElement(
-              'checklist-item',
-              { text: itemText }
-            );
-            addChildToPreviewElement(checklistEl, 'checklist-items', itemEl);
-          });
-
-          // Now, add checklist item to step
-          addChildToPreviewElement(stepEl, 'checklists', checklistEl);
+          addChecklistPreview(stepEl, this);
         });
       }
+
+      // Parse step elements
+      $(this).find('stepElements > stepElement').each(function() {
+        $element = $(this);
+        switch ($(this).attr('type')) {
+          case 'Checklist':
+            addChecklistPreview(stepEl, $(this).find('checklist'));
+            showPartOfElement(stepEl, 'checklists');
+            break;
+          case 'StepTable':
+            addTablePreview(stepEl, $(this).find('elnTable'));
+            showPartOfElement(stepEl, 'tables');
+            break;
+          case 'StepText':
+            addStepTextPreview(stepEl, $(this).find('stepText'), protocolFolders[position], stepGuid);
+            showPartOfElement(stepEl, 'step-texts');
+            break;
+          default:
+            // nothing to do
+            break;
+        }
+      });
 
       // Append step element to preview container
       previewContainer.append(stepEl);
     });
   }
 
+  function addTablePreview(stepEl, tableNode) {
+    var tableId = $(tableNode).attr('id');
+    var tableName = $(tableNode).children('name').text();
+    var tableContent = $(tableNode).children('contents').text();
+
+    // Generate table element
+    var tableEl = newPreviewElement(
+      'table',
+      { name: tableName }
+    );
+    var elnTableEl = generateElnTable(tableId, tableContent);
+    addChildToPreviewElement(tableEl, 'table', elnTableEl);
+
+    // Now, append table element to step
+    addChildToPreviewElement(stepEl, 'tables', tableEl);
+  }
+
+  function addChecklistPreview(stepEl, checklistNode) {
+    var checklistId = $(checklistNode).attr('id');
+    var checklistName = $(checklistNode).children('name').text();
+
+    var checklistEl = newPreviewElement(
+      'checklist',
+      { name: checklistName }
+    );
+
+    // Iterate through checklist items
+    $(checklistNode).find('items > item').each(function() {
+      var itemId = $(this).attr('id');
+      var itemText = $(this).children('text').text();
+
+      var itemEl = newPreviewElement(
+        'checklist-item',
+        { text: itemText }
+      );
+      addChildToPreviewElement(checklistEl, 'checklist-items', itemEl);
+    });
+
+    // Now, add checklist item to step
+    addChildToPreviewElement(stepEl, 'checklists', checklistEl);
+  }
+
+  function addStepTextPreview(stepEl, stepTextNode, folder, stepGuid) {
+    var itemId = $(stepTextNode).attr('id');
+
+    var itemText = displayTinyMceAssetInDescription(stepTextNode, folder, stepGuid);
+
+    var textEl = newPreviewElement(
+      'step-text',
+      { text: itemText }
+    );
+
+    addChildToPreviewElement(stepEl, 'step-texts', textEl);
+  }
+
   // display tiny_mce_assets in step description
   function displayTinyMceAssetInDescription(node, folder, stepGuid) {
-    var description;
+    var description = node.children('description').html() || node.children('contents').html();
+
+    if (!description) return '';
+
     if (node.children('descriptionAssets').length === 0) {
-      description = node.children('description').html();
       return $('<div></div>').html(
         description.replace(/\[~tiny_mce_id:([0-9a-zA-Z]+)\]/,
           '<strong>Can\'t import image</strong>')
@@ -281,7 +330,7 @@ function importProtocolFromFile(
           .replace('  ]]&gt;', '')
       ).html();
     }
-    description = node.children('description').html();
+
     description = description.replace('<!--[CDATA[  ', '')
       .replace('  ]]--&gt;', '')
       .replace('  ]]-->', '')
@@ -518,6 +567,76 @@ function importProtocolFromFile(
     return result;
   }
 
+  function stepTextJson(stepTextNode, folderIndex, stepGuid) {
+    var json = {};
+
+    json.contents = $('<div></div>').html(
+      stepTextNode.children('contents')
+        .html()
+        .replace('<!--[CDATA[', '')
+        .replace('  ]]-->', '')
+        .replace(']]&gt;', '')
+    ).html();
+
+    json.descriptionAssets = prepareTinyMceAssets(stepTextNode, folderIndex, stepGuid);
+
+    return json;
+  }
+
+  function stepTableJson(tableNode) {
+    var json = {};
+    var contents = tableNode.children('contents').text();
+    json.id = tableNode.attr('id');
+    json.name = tableNode.children('name').text();
+    contents = hex2a(contents);
+    contents = window.btoa(contents);
+    json.contents = contents;
+
+    return json;
+  }
+
+  function checklistJson(checklistNode) {
+    var json = {};
+    var itemsJson = [];
+    json.id = checklistNode.attr('id');
+    json.name = checklistNode.children('name').text();
+
+    // Iterate through checklist items
+    checklistNode.find('items > item').each(function() {
+      var itemJson = {};
+      itemJson.id = $(this).attr('id');
+      itemJson.position = $(this).attr('position');
+      itemJson.text = $(this).children('text').text();
+      itemsJson.push(itemJson);
+    });
+    json.items = itemsJson;
+
+    return json;
+  }
+
+  function stepElementJson(stepElementNode, folderIndex, stepGuid) {
+    var json = {
+      type: stepElementNode.attr('type')
+    };
+
+    switch (json.type) {
+      case 'Checklist':
+        json.checklist = checklistJson(stepElementNode.find('checklist'));
+        break;
+      case 'StepTable':
+        json.elnTable = stepTableJson(stepElementNode.find('elnTable'));
+        break;
+      case 'StepText':
+        json.stepText = stepTextJson(stepElementNode.find('stepText'), folderIndex, stepGuid);
+        break;
+      default:
+        // nothing to do
+        break;
+    }
+
+    return json;
+  }
+
   function importSingleProtocol(index, replaceVals, resultCallback) {
     // Retrieve general protocol info
     var name;
@@ -551,6 +670,7 @@ function importProtocolFromFile(
 
     // Allright, let's construct the huge,
     // messy-pot of a protocol JSON
+    protocolJson.elnVersion = $(protocolXmls[index]).attr('version');
     protocolJson.name = name;
     protocolJson.description = protocolDescription;
     protocolJson.authors = authors;
@@ -571,14 +691,16 @@ function importProtocolFromFile(
       stepJson.position = $(this).attr('position');
       stepJson.name = $(this).children('name').text();
       // I know is crazy but is the only way I found to pass valid HTML
-      stepJson.description = $('<div></div>').html($(this)
-        .children('description')
-        .html()
-        .replace('<!--[CDATA[', '')
-        .replace('  ]]-->', '')
-        .replace(']]&gt;', ''))
-        .html();
-      // Iterage throug tiny_mce_assets
+      if ($(this).children('description').html()) {
+        stepJson.description = $('<div></div>').html($(this)
+          .children('description')
+          .html()
+          .replace('<!--[CDATA[', '')
+          .replace('  ]]-->', '')
+          .replace(']]&gt;', ''))
+          .html();
+      }
+      // Iterate through tiny_mce_assets
       stepJson.descriptionAssets = prepareTinyMceAssets(this, index, stepGuid);
       // Iterate through assets
 
@@ -608,38 +730,22 @@ function importProtocolFromFile(
 
       // Iterate through step tables
       $(this).find('elnTables > elnTable').each(function() {
-        var stepTableJson = {};
-        var contents = $(this).children('contents').text();
-        stepTableJson.id = $(this).attr('id');
-        stepTableJson.name = $(this).children('name').text();
-        contents = hex2a(contents);
-        contents = window.btoa(contents);
-        stepTableJson.contents = contents;
-
-        stepTablesJson.push(stepTableJson);
+        stepTablesJson.push(stepTableJson($(this)));
       });
       stepJson.tables = stepTablesJson;
 
       // Iterate through checklists
       $(this).find('checklists > checklist').each(function() {
-        var stepChecklistJson = {};
-        var itemsJson = [];
-        stepChecklistJson.id = $(this).attr('id');
-        stepChecklistJson.name = $(this).children('name').text();
-
-        // Iterate through checklist items
-        $(this).find('items > item').each(function() {
-          var itemJson = {};
-          itemJson.id = $(this).attr('id');
-          itemJson.position = $(this).attr('position');
-          itemJson.text = $(this).children('text').text();
-          itemsJson.push(itemJson);
-        });
-        stepChecklistJson.items = itemsJson;
-
-        stepChecklistsJson.push(stepChecklistJson);
+        stepChecklistsJson.push(checklistJson($(this)));
       });
       stepJson.checklists = stepChecklistsJson;
+
+      // Parse step elements
+      stepJson.stepElements = [];
+
+      $(this).find('stepElements > stepElement').each(function() {
+        stepJson.stepElements.push(stepElementJson($(this), index, stepGuid));
+      });
 
       stepsJson.push(stepJson);
     });
