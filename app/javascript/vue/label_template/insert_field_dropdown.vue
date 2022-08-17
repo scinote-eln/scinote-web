@@ -22,6 +22,7 @@
             :data-template="tooltipTemplate"
             class="field-element"
             :title="i18n.t('label_templates.show.insert_dropdown.field_code', {code: field.tag})"
+            @click="$emit('insertField', field.tag)"
         >
           {{ field.key }}
           <i class="fas fa-plus-square"></i>
@@ -35,6 +36,7 @@
             :data-template="tooltipTemplate"
             class="field-element"
             :title="i18n.t('label_templates.show.insert_dropdown.field_code', {code: field.tag})"
+            @click="$emit('insertField', field.tag)"
         >
           {{ field.key }}
           <i class="fas fa-plus-square"></i>
@@ -49,6 +51,7 @@
             :data-template="tooltipTemplate"
             class="field-element"
             :title="i18n.t('label_templates.show.insert_dropdown.field_code', {code: field.tag})"
+            @click="$emit('insertField', field.tag)"
           >
             {{ field.key }}
             <i class="fas fa-plus-square"></i>
