@@ -16,7 +16,7 @@ if User.count.zero?
   else
     admin_name = 'Daniel Young'
     admin_email = 'young.daniel@epa.gov'
-    admin_password = '***REMOVED***'
+    admin_password = 'default_pw_CHANGE_THIS_IF_SET'
   end
 
   # Create admin user
