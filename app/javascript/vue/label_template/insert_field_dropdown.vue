@@ -1,35 +1,40 @@
 <template>
   <div ref="dropdown" class="inser-field-dropdown dropdown">
     <a class="open-dropdown-button collapsed" role="button" data-toggle="dropdown" id="fieldsContainer" aria-expanded="false">
-      Insert field code
+      {{ i18n.t('label_templates.show.insert_dropdown.button') }}
       <i class="fas fa-chevron-down"></i>
     </a>
-    <div class="dropdown-menu" aria-labelledby="fieldsContainer">
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="fieldsContainer">
       <div class="search-container sci-input-container">
         <label>
-          Insert field code
+          {{ i18n.t('label_templates.show.insert_dropdown.button') }}
         </label>
         <a class="close-dropdown" data-toggle="dropdown">{{ i18n.t('general.cancel')}}</a>
-        <input v-model="searchValue" type="text" class="sci-input-field" placeholder="Type to search…">
+        <input v-model="searchValue"
+               type="text"
+               class="sci-input-field"
+               :placeholder="i18n.t('label_templates.show.insert_dropdown.search_placeholder')" />
       </div>
       <div class="fields-container">
         <div :key="`default_${index}`" v-for="(field, index) in filteredFields.default"
             data-toggle="tooltip"
             data-placement="right"
+            :data-template="tooltipTemplate"
             class="field-element"
-            :title="`Field code: ${field.tag}`"
+            :title="i18n.t('label_templates.show.insert_dropdown.field_code', {code: field.tag})"
         >
           {{ field.key }}
           <i class="fas fa-plus-square"></i>
         </div>
         <div v-if="filteredFields.common.length" class="block-title">
-          Common custom fields
+          {{ i18n.t('label_templates.show.insert_dropdown.common_fields') }}
         </div>
         <div :key="`common_${index}`" v-for="(field, index) in filteredFields.common"
             data-toggle="tooltip"
             data-placement="right"
+            :data-template="tooltipTemplate"
             class="field-element"
-            :title="`Field code: ${field.tag}`"
+            :title="i18n.t('label_templates.show.insert_dropdown.field_code', {code: field.tag})"
         >
           {{ field.key }}
           <i class="fas fa-plus-square"></i>
@@ -41,15 +46,16 @@
           <div :key="`repository_${index}_${index1}`" v-for="(field, index1) in repository.tags"
             data-toggle="tooltip"
             data-placement="right"
+            :data-template="tooltipTemplate"
             class="field-element"
-            :title="`Field code: ${field.tag}`"
+            :title="i18n.t('label_templates.show.insert_dropdown.field_code', {code: field.tag})"
           >
             {{ field.key }}
             <i class="fas fa-plus-square"></i>
           </div>
         </template>
         <div class="no-results" v-if="this.noResults">
-          Nothing found…
+          {{ i18n.t('label_templates.show.insert_dropdown.nothing_found') }}
         </div>
       </div>
     </div>
@@ -76,6 +82,14 @@
       }
     },
     computed: {
+      tooltipTemplate() {
+        return `<div class="tooltip" role="tooltip">
+                  <div class="tooltip-arrow"></div>
+                  <div class="tooltip-body">
+                    <div class="tooltip-inner"></div>
+                  </div>
+                </div>`
+      },
       filteredFields() {
         let result = {};
         if (this.searchValue.length == 0) {
@@ -95,6 +109,7 @@
         }
 
         this.$nextTick(() => {
+          $('.tooltip').remove();
           $('[data-toggle="tooltip"]').tooltip();
         });
         return result;

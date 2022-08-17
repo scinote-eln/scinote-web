@@ -172,5 +172,15 @@
     .no-results {
       color: $color-silver-chalice;
     }
+
+    .tooltip-body {
+      display: flex;
+      width: 350px;
+
+      .tooltip-inner {
+        max-width: 350px;
+        text-align: left;
+      }
+    }
   }
 }

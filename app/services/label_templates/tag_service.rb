@@ -3,10 +3,10 @@
 module LabelTemplates
   class TagService
     DEFAULT_COLUMNS = [
-      { key: 'Item ID', tag: '{{ITEM_ID}}' },
-      { key: 'Name', tag: '{{NAME}}' },
-      { key: 'Added on', tag: '{{ADDED_ON}}' },
-      { key: 'Added by', tag: '{{ADDED_BY}}' }
+      { key: I18n.t('label_templates.default_columns.item_id'), tag: '{{ITEM_ID}}' },
+      { key: I18n.t('label_templates.default_columns.name'), tag: '{{NAME}}' },
+      { key: I18n.t('label_templates.default_columns.added_on'), tag: '{{ADDED_ON}}' },
+      { key: I18n.t('label_templates.default_columns.added_by'), tag: '{{ADDED_BY}}' }
     ].freeze
 
     def initialize(team)

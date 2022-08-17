@@ -858,9 +858,20 @@ en:
       content_title: '%{format} template code'
       preview_title: 'Template preview'
       view_content_tooltip: 'Click to edit template code'
+      insert_dropdown:
+        button: 'Insert field code'
+        common_fields: 'Common custom fields'
+        nothing_found: 'Nothing found…'
+        field_code: 'Field code: %{code}'
+        search_placeholder: 'Type to search…'
       buttons:
         refresh: 'Refresh preview'
         save: 'Save template code'
+    default_columns:
+      item_id: 'Item ID'
+      name: 'Name'
+      added_on: 'Added On'
+      added_by: 'Added by'
 
     promo:
       head_title: 'Label templates'
