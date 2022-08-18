@@ -864,11 +864,7 @@ en:
 
     promo:
       head_title: 'Label templates'
-      promo_title: 'Label all your tubes & containers by your own standards'
-      description_0: 'Easily track your inventory items with labels'
-      description_1: 'Print labels fast & easy'
-      description_2: 'Always have 100% accurate standard output'
-      action_button: 'Try Label templates'
+      promo_title: 'This feature is disabled by default in open source SciNote'
 
   label_printers:
     create:
