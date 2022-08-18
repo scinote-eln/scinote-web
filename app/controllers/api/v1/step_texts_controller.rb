@@ -22,7 +22,14 @@ module Api
       def create
         raise PermissionError.new(Protocol, :create) unless can_manage_protocol_in_module?(@protocol)
 
-        step_text = @step.step_texts.create!(step_text_params)
+        step_text = @step.step_texts.new(step_text_params)
+        @step.with_lock do
+          step_text.save!
+          @step.step_orderable_elements.create!(
+            position: @step.step_orderable_elements.size,
+            orderable: step_text
+          )
+        end
 
         render jsonapi: step_text, serializer: StepTextSerializer, status: :created
       end
