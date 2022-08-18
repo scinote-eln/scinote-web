@@ -45,7 +45,10 @@ export default {
             return;
           }
 
-          if (this.step.attributes.storage_limit && (this.step.attributes.storage_limit.used >= this.step.attributes.storage_limit.total)) {
+          const storageLimit = this.step.attributes.storage_limit &&
+                               this.step.attributes.storage_limit.total > 0 &&
+                               this.step.attributes.storage_limit.used >= this.step.attributes.storage_limit.total;
+          if (storageLimit) {
             fileObject.error = I18n.t('protocols.steps.attachments.new.no_more_space');
             this.attachments.push(fileObject);
             return;
