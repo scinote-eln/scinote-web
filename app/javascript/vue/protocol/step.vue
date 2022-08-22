@@ -36,7 +36,7 @@
             {{ step.attributes.position + 1 }}.
           </div>
         </div>
-        <div class="step-name-container" :class="{'strikethrough': step.attributes.completed, 'step-element--locked': !urls.update_url}">
+        <div class="step-name-container" :class="{'step-element--locked': !urls.update_url}">
           <InlineEdit
             :value="step.attributes.name"
             :class="{ 'step-element--locked': !urls.update_url }"
