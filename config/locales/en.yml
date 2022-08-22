@@ -861,7 +861,16 @@ en:
       buttons:
         refresh: 'Refresh preview'
         save: 'Save template code'
-
+    label_preview:
+      title: 'Preview'
+      options: 'Options'
+      units: 'Measurement units'
+      height: 'Height'
+      width: 'Width'
+      density: 'Density'
+      refresh_preview: 'Refresh preview'
+      mm: 'Millimeters (mm) 1 cm = 10 mm'
+      in: 'Inches (in)'
     promo:
       head_title: 'Label templates'
       promo_title: 'Label all your tubes & containers by your own standards'

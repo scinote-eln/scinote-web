@@ -16,6 +16,7 @@ window.initLabelTemplateComponent = () => {
       return {
         labelTemplateUrl: $('#labelTemplateContainer').data('label-template-url'),
         labelTemplatesUrl: $('#labelTemplateContainer').data('label-templates-url'),
+        previewUrl: $('#labelTemplateContainer').data('preview-url'),
         newLabel: $('#labelTemplateContainer').data('new-label')
       };
     }
