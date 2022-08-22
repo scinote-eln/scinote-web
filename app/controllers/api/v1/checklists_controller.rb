@@ -22,7 +22,14 @@ module Api
       def create
         raise PermissionError.new(Protocol, :create) unless can_manage_protocol_in_module?(@protocol)
 
-        checklist = @step.checklists.create!(checklist_params.merge!(created_by: current_user))
+        checklist = @step.checklists.new(checklist_params.merge!(created_by: current_user))
+        @step.with_lock do
+          checklist.save!
+          @step.step_orderable_elements.create!(
+            position: @step.step_orderable_elements.size,
+            orderable: checklist
+          )
+        end
 
         render jsonapi: checklist, serializer: ChecklistSerializer, status: :created
       end

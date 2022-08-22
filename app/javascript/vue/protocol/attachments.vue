@@ -5,12 +5,12 @@
         <h3>{{ i18n.t('protocols.steps.files', {count: attachments.length}) }}</h3>
       </div>
       <div class="actions" v-if="step.attributes.attachments_manageble">
-        <div class="dropdown sci-dropdown">
+        <div ref="actionsDropdownButton" class="dropdown sci-dropdown">
           <button class="btn btn-light dropdown-toggle" type="button" id="dropdownAttachmentsOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <span>{{ i18n.t("protocols.steps.attachments.manage") }}</span>
             <span class="caret pull-right"></span>
           </button>
-          <ul class="dropdown-menu dropdown-menu-right dropdown-attachment-options"
+          <ul ref="actionsDropdown" class="dropdown-menu dropdown-menu-right dropdown-attachment-options"
               aria-labelledby="dropdownAttachmentsOptions"
               :data-step-id="step.id"
           >
@@ -151,6 +151,7 @@
     },
     mounted() {
       this.initMarvinJS();
+      $(this.$refs.actionsDropdownButton).on('shown.bs.dropdown hidden.bs.dropdown', this.handleDropdownPosition);
     },
     methods: {
       changeAttachmentsOrder(order) {
@@ -186,7 +187,20 @@
             HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
           }
         });
-      }
+      },
+      handleDropdownPosition() {
+        this.$refs.actionsDropdownButton.classList.toggle("dropup", !this.isInViewport(this.$refs.actionsDropdown));
+      },
+      isInViewport(el) {
+          let rect = el.getBoundingClientRect();
+
+          return (
+              rect.top >= 0 &&
+              rect.left >= 0 &&
+              rect.bottom <= (window.innerHeight || $(window).height()) &&
+              rect.right <= (window.innerWidth || $(window).width())
+          );
+      },
     }
   }
 </script>

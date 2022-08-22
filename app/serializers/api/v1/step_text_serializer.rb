@@ -3,7 +3,7 @@
 module Api
   module V1
     class StepTextSerializer < ActiveModel::Serializer
-      type :tables
+      type :step_texts
       attributes :id, :text
 
       include TimestampableModel
