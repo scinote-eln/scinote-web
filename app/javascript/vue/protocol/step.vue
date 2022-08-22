@@ -135,6 +135,7 @@
             @component:delete="deleteElement"
             @update="updateElement"
             @reorder="openReorderModal"
+            @component:insert="insertElement"
           />
         </template>
         <Attachments v-if="attachments.length"
@@ -440,6 +441,17 @@
       copyPasteImageModal(pasteImages) {
         this.pasteImages = pasteImages;
         this.showClipboardPasteModal = true;
+      },
+      insertElement(element) {
+        let position = element.attributes.position;
+        let elements = this.elements.map( s => {
+          if (s.attributes.position >= position) {
+              s.attributes.position += 1;
+          }
+          return s;
+        })
+        elements.push(element);
+        this.reorderElements(elements);
       }
     }
   }

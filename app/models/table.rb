@@ -129,4 +129,21 @@ class Table < ApplicationRecord
      end
     end
   end
+
+  def duplicate(step, user, position = nil)
+    new_table = step.tables.create!(
+      name: name,
+      contents: contents.encode('UTF-8', 'UTF-8'),
+      team: step.protocol.team,
+      created_by: user,
+      last_modified_by: user
+    )
+
+    step.step_orderable_elements.create!(
+      position: position || step.step_orderable_elements.length,
+      orderable: new_table.step_table
+    )
+
+    new_table
+  end
 end

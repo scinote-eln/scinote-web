@@ -282,45 +282,12 @@ class Protocol < ApplicationRecord
 
       # Copy texts
       step.step_texts.each do |step_text|
-        step_text2 = StepText.new(
-          text: step_text.text,
-          step: step2
-        )
-        step_text2.save!
-
-        # Copy steps tinyMce assets
-        step_text.clone_tinymce_assets(step_text2, dest.team)
-
-        step2.step_orderable_elements.create!(
-          position: step_text.step_orderable_element.position,
-          orderable: step_text2
-        )
+        step_text.duplicate(step2, step_text.step_orderable_element.position)
       end
 
       # Copy checklists
       step.checklists.asc.each do |checklist|
-        checklist2 = Checklist.create!(
-          name: checklist.name,
-          step: step2,
-          created_by: current_user,
-          last_modified_by: current_user
-        )
-
-        checklist.checklist_items.each do |item|
-          ChecklistItem.create!(
-            text: item.text,
-            checked: false,
-            checklist: checklist2,
-            position: item.position,
-            created_by: current_user,
-            last_modified_by: current_user
-          )
-        end
-
-        step2.step_orderable_elements.create!(
-          position: checklist.step_orderable_element.position,
-          orderable: checklist2
-        )
+        checklist.duplicate(step2, current_user, checklist.step_orderable_element.position)
       end
 
       # "Shallow" Copy assets
@@ -333,19 +300,7 @@ class Protocol < ApplicationRecord
 
       # Copy tables
       step.tables.each do |table|
-        table2 = Table.create!(
-          name: table.name,
-          step: step2,
-          contents: table.contents.encode('UTF-8', 'UTF-8'),
-          team: dest.team,
-          created_by: current_user,
-          last_modified_by: current_user
-        )
-
-        step2.step_orderable_elements.create!(
-          position: table.step_table.step_orderable_element.position,
-          orderable: table2.step_table
-        )
+        table.duplicate(step2, current_user, table.step_table.step_orderable_element.position)
       end
     end
     # Call clone helper
