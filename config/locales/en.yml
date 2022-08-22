@@ -825,9 +825,16 @@ en:
       can_add_user_to_project: "Can not add user to the project."
 
   label_templates:
+    types:
+      fluics_label_template: 'Fluics'
+      zebra_label_template: 'ZPL'
     default_zebra_name: 'SciNote Item (ZPL)'
     default_fluics_name: 'SciNote Item (Fluics)'
     new_label_template: 'New label'
+    repository_row:
+      errors:
+        unsupported_key: "Key %{key} is not supported by this label template renderer."
+        column_not_found: "Column '%{column}' not found on inventory item."
     index:
       head_title: 'Label templates'
       search_templates: 'Filter templates'

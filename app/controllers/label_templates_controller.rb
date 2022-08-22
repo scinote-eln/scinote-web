@@ -33,17 +33,29 @@ class LabelTemplatesController < ApplicationController
   end
 
   def create
-    label_template = ZebraLabelTemplate.default.save!
-
-    redirect_to label_template_path(label_template, new_label: true)
+    ActiveRecord::Base.transaction do
+      label_template = ZebraLabelTemplate.default
+      label_template.team = current_team
+      label_template.save!
+      log_activity(:label_template_created, label_template)
+      redirect_to label_template_path(label_template, new_label: true)
+    end
+  rescue StandardError => e
+    Rails.logger.error(e.message)
+    Rails.logger.error(e.backtrace.join("\n"))
+    flash[:error] = I18n.t('errors.general')
+    redirect_to label_templates_path
   end
 
   def update
-    if @label_template.update(label_template_params)
-      render json: @label_template, serializer: LabelTemplateSerializer, user: current_user
-    else
-      render json: { error: @label_template.errors.messages }, status: :unprocessable_entity
+    @label_template.transaction do
+      @label_template.update!(label_template_params)
+      log_activity(:label_template_edited, @label_template)
     end
+    render json: @label_template, serializer: LabelTemplateSerializer, user: current_user
+  rescue StandardError => e
+    Rails.logger.error e.message
+    render json: { error: @label_template.errors.messages }, status: :unprocessable_entity
   end
 
   def duplicate
@@ -53,22 +65,32 @@ class LabelTemplatesController < ApplicationController
         new_template.default = false
         new_template.name = template.name + '(1)'
         new_template.save!
+        log_activity(
+          :label_template_copied,
+          new_template,
+          message_items: { label_template_new: new_template.id, label_template_original: template.id }
+        )
       end
       render json: { message: I18n.t('label_templates.index.templates_duplicated',
                                      count: params[:selected_ids].length) }
-    rescue ActiveRecord::RecordInvalid => e
-      Rails.logger.error e.message
-      render json: { error: I18n.t('errors.general') }, status: :unprocessable_entity
     end
+  rescue StandardError => e
+    Rails.logger.error(e.message)
+    Rails.logger.error(e.backtrace.join("\n"))
+    render json: { error: I18n.t('errors.general') }, status: :unprocessable_entity
   end
 
   def delete
     ActiveRecord::Base.transaction do
-      LabelTemplate.where(team_id: current_team.id, id: params[:selected_ids]).each(&:destroy!)
+      LabelTemplate.where(team_id: current_team.id, id: params[:selected_ids]).each do |template|
+        log_activity(:label_template_deleted, template)
+        template.destroy!
+      end
       render json: { message: I18n.t('label_templates.index.templates_deleted') }
     end
-  rescue ActiveRecord::RecordNotDestroyed => e
-    Rails.logger.error e.message
+  rescue StandardError => e
+    Rails.logger.error(e.message)
+    Rails.logger.error(e.backtrace.join("\n"))
     render json: { error: I18n.t('errors.general') }, status: :unprocessable_entity
   end
 
@@ -80,8 +102,9 @@ class LabelTemplatesController < ApplicationController
       @label_template.update!(default: true)
       render json: { message: I18n.t('label_templates.index.template_set_as_default') }
     end
-  rescue ActiveRecord::RecordInvalid => e
-    Rails.logger.error e.message
+  rescue StandardError => e
+    Rails.logger.error(e.message)
+    Rails.logger.error(e.backtrace.join("\n"))
     render json: { error: I18n.t('errors.general') }, status: :unprocessable_entity
   end
 
@@ -133,5 +156,16 @@ class LabelTemplatesController < ApplicationController
 
   def label_template_params
     params.require(:label_template).permit(:name, :description, :content)
+  end
+
+  def log_activity(type_of, label_template = @label_template, message_items: {})
+    message_items = { label_template: label_template.id } if message_items.blank?
+    message_items[:type] = I18n.t("label_templates.types.#{label_template.class.name.underscore}")
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: label_template,
+            team: label_template.team,
+            message_items: message_items)
   end
 end
