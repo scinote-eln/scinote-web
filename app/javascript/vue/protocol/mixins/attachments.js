@@ -22,6 +22,8 @@ export default {
       let filesUploadedCntr = 0;
       this.showFileModal = false;
 
+      if (!this.step.attributes.urls.upload_attachment_url) return false;
+
       return new Promise((resolve, reject) => {
         $(files).each((_, file) => {
           const fileObject = {
