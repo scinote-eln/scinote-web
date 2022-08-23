@@ -482,6 +482,7 @@ Rails.application.routes.draw do
         put 'move_up'
         post 'update_view_state'
         post 'update_asset_view_mode'
+        post 'duplicate'
       end
     end
 

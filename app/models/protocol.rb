@@ -254,7 +254,6 @@ class Protocol < ApplicationRecord
   end
 
   def self.clone_contents(src, dest, current_user, clone_keywords, only_contents = false)
-    assets_to_clone = []
     dest.update(description: src.description, name: src.name) unless only_contents
 
     src.clone_tinymce_assets(dest, dest.team)
@@ -271,40 +270,8 @@ class Protocol < ApplicationRecord
 
     # Copy steps
     src.steps.each do |step|
-      step2 = Step.new(
-        name: step.name,
-        position: step.position,
-        completed: false,
-        user: current_user,
-        protocol: dest
-      )
-      step2.save!
-
-      # Copy texts
-      step.step_texts.each do |step_text|
-        step_text.duplicate(step2, step_text.step_orderable_element.position)
-      end
-
-      # Copy checklists
-      step.checklists.asc.each do |checklist|
-        checklist.duplicate(step2, current_user, checklist.step_orderable_element.position)
-      end
-
-      # "Shallow" Copy assets
-      step.assets.each do |asset|
-        asset2 = asset.dup
-        asset2.save!
-        step2.assets << asset2
-        assets_to_clone << [asset.id, asset2.id]
-      end
-
-      # Copy tables
-      step.tables.each do |table|
-        table.duplicate(step2, current_user, table.step_table.step_orderable_element.position)
-      end
+      step.duplicate(dest, current_user, step.position)
     end
-    # Call clone helper
-    Protocol.delay(queue: :assets).deep_clone_assets(assets_to_clone)
   end
 
   def in_repository_active?

@@ -2558,6 +2558,7 @@ en:
       options_dropdown:
         title: 'Step options'
         rearrange: 'Rearrange content'
+        duplicate: 'Duplicate'
         delete: 'Delete'
       insert:
         button: 'Insert'

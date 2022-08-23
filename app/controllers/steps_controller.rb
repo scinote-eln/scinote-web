@@ -5,7 +5,8 @@ class StepsController < ApplicationController
   include MarvinJsActions
 
   before_action :load_vars, only: %i(edit update destroy show toggle_step_state checklistitem_state update_view_state
-                                     move_up move_down update_asset_view_mode elements attachments upload_attachment)
+                                     move_up move_down update_asset_view_mode elements
+                                     attachments upload_attachment duplicate)
   before_action :load_vars_nested, only:  %i(new create index reorder)
   before_action :convert_table_contents_to_utf8, only: %i(create update)
 
@@ -229,6 +230,19 @@ class StepsController < ApplicationController
     else
       render json: {}, status: :unprocessable_entity
     end
+  end
+
+  def duplicate
+    ActiveRecord::Base.transaction do
+      position = @step.position
+      @protocol.steps.where('position > ?', position).order(position: :desc).each do |step|
+        step.update(position: step.position + 1)
+      end
+      new_step = @step.duplicate(@protocol, current_user, position + 1)
+      render json: new_step, serializer: StepSerializer, user: current_user
+    end
+  rescue ActiveRecord::RecordInvalid
+    head :unprocessable_entity
   end
 
   def update_old

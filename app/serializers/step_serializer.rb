@@ -89,7 +89,8 @@ class StepSerializer < ActiveModel::Serializer
         update_view_state_step_url: update_view_state_step_path(object),
         direct_upload_url: rails_direct_uploads_url,
         upload_attachment_url: upload_attachment_step_path(object),
-        reorder_elements_url: reorder_step_step_orderable_elements_path(step_id: object.id)
+        reorder_elements_url: reorder_step_step_orderable_elements_path(step_id: object.id),
+        duplicate_step_url: duplicate_step_path(object)
       })
     end
 

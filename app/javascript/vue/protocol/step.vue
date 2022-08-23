@@ -113,6 +113,10 @@
                 <i class="fas fas-rotated-90 fa-exchange-alt"></i>
                 {{ i18n.t('protocols.steps.options_dropdown.rearrange') }}
               </li>
+              <li v-if="urls.duplicate_step_url" class="action" @click="duplicateStep">
+                <i class="fas fa-clone"></i>
+                {{ i18n.t('protocols.steps.options_dropdown.duplicate') }}
+              </li>
               <li v-if="urls.delete_url" class="action" @click="showDeleteModal">
                 <i class="fas fa-trash"></i>
                 {{ i18n.t('protocols.steps.options_dropdown.delete') }}
@@ -452,6 +456,11 @@
         })
         elements.push(element);
         this.reorderElements(elements);
+      },
+      duplicateStep() {
+        $.post(this.urls.duplicate_step_url, (result) => {
+          this.$emit('step:insert', result.data);
+        });
       }
     }
   }
