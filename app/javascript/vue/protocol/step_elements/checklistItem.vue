@@ -6,7 +6,7 @@
       </div>
       <div v-else class="step-element-grip-placeholder"></div>
       <div class="step-element-name" :class="{ 'done': checklistItem.attributes.checked }">
-        <div v-if="!inRepository" class="sci-checkbox-container" :class="{ 'disabled': locked }">
+        <div v-if="!inRepository" class="sci-checkbox-container" :class="{ 'disabled': !toggleUrl }">
           <input ref="checkbox"
                  type="checkbox"
                  class="sci-checkbox"
@@ -16,7 +16,7 @@
           </span>
         </div>
         <div v-else class="sci-checkbox-view-mode"></div>
-        <div class="step-checklist-text">
+        <div class="step-checklist-text" :class="{ 'step-element--locked': !checklistItem.attributes.isNew && !updateUrl }">
           <InlineEdit
             :value="checklistItem.attributes.text"
             :sa_value="checklistItem.attributes.sa_text"
