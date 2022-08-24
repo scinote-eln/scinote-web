@@ -89,6 +89,7 @@ gem 'underscore-rails'
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-heroku', '2.12.5'
 
+gem 'aws-sdk-lambda'
 gem 'aws-sdk-rails'
 gem 'aws-sdk-s3'
 gem 'delayed_job_active_record'

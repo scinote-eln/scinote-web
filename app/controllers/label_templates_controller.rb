@@ -4,7 +4,7 @@ class LabelTemplatesController < ApplicationController
   include InputSanitizeHelper
 
   before_action :check_feature_enabled
-  before_action :check_view_permissions, only: %i(index datatable)
+  before_action :check_view_permissions, except: %i(create duplicate set_default delete update)
   before_action :check_manage_permissions, only: %i(create duplicate set_default delete update)
   before_action :load_label_templates, only: %i(index datatable)
   before_action :load_label_template, only: %i(show set_default update)
@@ -87,6 +87,17 @@ class LabelTemplatesController < ApplicationController
 
   def template_tags
     render json: LabelTemplates::TagService.new(current_team).tags
+  end
+
+  def zpl_preview
+    service = LabelTemplatesPreviewService.new(params, current_user)
+    payload = service.generate_zpl_preview!
+
+    if service.error.blank?
+      render json: { base64_preview: payload }
+    else
+      render json: { error: I18n.t('errors.general') }, status: :unprocessable_entity
+    end
   end
 
   private

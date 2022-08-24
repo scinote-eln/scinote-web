@@ -81,9 +81,7 @@
       </div>
 
       <div class="label-preview-container">
-        <div class="title">
-          {{ i18n.t('label_templates.show.preview_title') }}
-        </div>
+        <LabelPreview :zpl='labelTemplate.attributes.content' :previewUrl="previewUrl" />
       </div>
     </div>
   </div>
@@ -94,12 +92,14 @@
 
  import InlineEdit from 'vue/shared/inline_edit.vue'
  import InsertFieldDropdown from 'vue/label_template/insert_field_dropdown.vue'
+ import LabelPreview from './components/label_preview.vue'
 
   export default {
     name: 'LabelTemplateContainer',
     props: {
       labelTemplateUrl: String,
       labelTemplatesUrl: String,
+      previewUrl: String,
       newLabel: Boolean
     },
     data() {
@@ -114,7 +114,7 @@
         cursorPos: 0
       }
     },
-    components: {InlineEdit, InsertFieldDropdown},
+    components: {InlineEdit, InsertFieldDropdown, LabelPreview},
     created() {
       $.get(this.labelTemplateUrl, (result) => {
         this.labelTemplate = result.data

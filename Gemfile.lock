@@ -137,6 +137,9 @@ GEM
     aws-sdk-kms (1.41.0)
       aws-sdk-core (~> 3, >= 3.109.0)
       aws-sigv4 (~> 1.1)
+    aws-sdk-lambda (1.57.0)
+      aws-sdk-core (~> 3, >= 3.109.0)
+      aws-sigv4 (~> 1.1)
     aws-sdk-rails (3.6.0)
       aws-record (~> 2)
       aws-sdk-ses (~> 1)
@@ -634,6 +637,7 @@ DEPENDENCIES
   auto_strip_attributes (~> 2.1)
   autosize-rails
   awesome_print
+  aws-sdk-lambda
   aws-sdk-rails
   aws-sdk-s3
   base62
