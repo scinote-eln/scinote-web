@@ -44,8 +44,13 @@
 
     <div v-if="labelTemplate.id" class="label-template-container">
       <div class="label-edit-container">
-        <div class="title">
-          {{ i18n.t('label_templates.show.content_title', { format: labelTemplate.attributes.language_type.toUpperCase() }) }}
+        <div class="label-edit-header">
+          <div class="title">
+            {{ i18n.t('label_templates.show.content_title', { format: labelTemplate.attributes.language_type.toUpperCase() }) }}
+          </div>
+          <InsertFieldDropdown :labelTemplate="labelTemplate"
+                               @insertField="insertField"
+           />
         </div>
         <template v-if="editingContent">
           <div class="label-textarea-container">
@@ -70,7 +75,7 @@
             </div>
           </div>
         </template>
-        <div v-else class="label-view-container" :title="i18n.t('label_templates.show.view_content_tooltip')" @click="editingContent = true">{{ labelTemplate.attributes.content}}
+        <div v-else class="label-view-container" :title="i18n.t('label_templates.show.view_content_tooltip')" @click="enableContentEdit">{{ labelTemplate.attributes.content}}
           <i class="fas fa-pen"></i>
         </div>
       </div>
@@ -86,6 +91,7 @@
  <script>
 
  import InlineEdit from 'vue/shared/inline_edit.vue'
+ import InsertFieldDropdown from 'vue/label_template/insert_field_dropdown.vue'
  import LabelPreview from './components/label_preview.vue'
 
   export default {
@@ -104,18 +110,26 @@
         editingName: false,
         editingDescription: false,
         editingContent: false,
-        newContent: ''
+        newContent: '',
+        cursorPos: 0
       }
     },
-    components: { InlineEdit, LabelPreview },
+    components: {InlineEdit, InsertFieldDropdown, LabelPreview},
     created() {
-      console.log(this.newLabel)
       $.get(this.labelTemplateUrl, (result) => {
         this.labelTemplate = result.data
         this.newContent = this.labelTemplate.attributes.content
       })
     },
     methods: {
+      enableContentEdit() {
+        this.editingContent = true
+        this.$nextTick(() => {
+          this.$refs.contentInput.focus();
+          $(this.$refs.contentInput).prop('selectionStart', this.cursorPos)
+          $(this.$refs.contentInput).prop('selectionEnd', this.cursorPos)
+        });
+      },
       updateName(newName) {
         $.ajax({
           url: this.labelTemplate.attributes.urls.update,
@@ -137,6 +151,7 @@
         });
       },
       updateContent() {
+        this.cursorPos = $(this.$refs.contentInput).prop('selectionStart')
         $.ajax({
           url: this.labelTemplate.attributes.urls.update,
           type: 'PATCH',
@@ -147,6 +162,13 @@
           }
         });
       },
+      insertField(field) {
+        this.enableContentEdit();
+        let textBefore = this.newContent.substring(0,  this.cursorPos);
+        let textAfter  = this.newContent.substring(this.cursorPos, this.newContent.length);
+        this.newContent = textBefore + field + textAfter;
+        this.cursorPos = this.cursorPos + field.length;
+      }
     }
   }
  </script>
