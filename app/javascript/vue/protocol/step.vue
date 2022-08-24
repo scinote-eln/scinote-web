@@ -460,6 +460,9 @@
       duplicateStep() {
         $.post(this.urls.duplicate_step_url, (result) => {
           this.$emit('step:insert', result.data);
+          HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.step_duplicated'), 'success');
+        }).error(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.step_duplication_failed'), 'danger');
         });
       }
     }

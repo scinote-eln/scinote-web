@@ -78,6 +78,10 @@ class StepSerializer < ActiveModel::Serializer
       urls_list[:state_url] = toggle_step_state_step_path(object)
     end
 
+    if can_manage_protocol_in_module?(object.protocol) || can_manage_protocol_in_repository?(object.protocol)
+      urls_list[:duplicate_step_url] = duplicate_step_path(object)
+    end
+
     if can_manage_step?(object)
       urls_list.merge!({
         delete_url: step_path(object),
@@ -89,8 +93,7 @@ class StepSerializer < ActiveModel::Serializer
         update_view_state_step_url: update_view_state_step_path(object),
         direct_upload_url: rails_direct_uploads_url,
         upload_attachment_url: upload_attachment_step_path(object),
-        reorder_elements_url: reorder_step_step_orderable_elements_path(step_id: object.id),
-        duplicate_step_url: duplicate_step_path(object)
+        reorder_elements_url: reorder_step_step_orderable_elements_path(step_id: object.id)
       })
     end
 

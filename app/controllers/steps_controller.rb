@@ -238,7 +238,21 @@ class StepsController < ApplicationController
       @protocol.steps.where('position > ?', position).order(position: :desc).each do |step|
         step.update(position: step.position + 1)
       end
-      new_step = @step.duplicate(@protocol, current_user, position + 1)
+      new_step = @step.duplicate(@protocol, current_user, step_position: position + 1, step_name: @step.name + ' (1)')
+
+      if @protocol.in_module?
+        log_activity(
+          :task_step_duplicated, @my_module.experiment.project,
+          { my_module: @my_module.id }.merge(step_message_items)
+        )
+      else
+        log_activity(
+          :protocol_step_duplicated,
+          nil,
+          { protocol: @protocol.id }.merge(step_message_items)
+        )
+      end
+
       render json: new_step, serializer: StepSerializer, user: current_user
     end
   rescue ActiveRecord::RecordInvalid

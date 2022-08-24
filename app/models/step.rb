@@ -151,11 +151,11 @@ class Step < ApplicationRecord
     step_texts.order(created_at: :asc).first
   end
 
-  def duplicate(protocol, user, step_position = 0)
+  def duplicate(protocol, user, step_position: nil, step_name: nil)
     assets_to_clone = []
 
     new_step = protocol.steps.new(
-      name: name,
+      name: step_name || name,
       position: step_position || protocol.steps.length,
       completed: false,
       user: user

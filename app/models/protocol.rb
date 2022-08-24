@@ -270,7 +270,7 @@ class Protocol < ApplicationRecord
 
     # Copy steps
     src.steps.each do |step|
-      step.duplicate(dest, current_user, step.position)
+      step.duplicate(dest, current_user, step_position: step.position)
     end
   end
 
