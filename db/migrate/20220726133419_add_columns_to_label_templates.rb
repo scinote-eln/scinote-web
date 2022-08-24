@@ -17,11 +17,13 @@ class AddColumnsToLabelTemplates < ActiveRecord::Migration[6.1]
     add_reference :label_templates, :team, index: true, foreign_key: true
 
     if Team.count.positive?
-      LabelTemplate.first.update(
+      # rubocop:disable Rails/SkipsModelValidations
+      LabelTemplate.first.update_columns(
         created_by_id: Team.first.created_by_id,
         last_modified_by_id: Team.first.created_by_id,
         team_id: Team.first.id
       )
+      # rubocop:enable Rails/SkipsModelValidations
     end
   end
 

@@ -76,9 +76,7 @@
       </div>
 
       <div class="label-preview-container">
-        <div class="title">
-          {{ i18n.t('label_templates.show.preview_title') }}
-        </div>
+        <LabelPreview :zpl='labelTemplate.attributes.content' :previewUrl="previewUrl" />
       </div>
     </div>
   </div>
@@ -88,12 +86,14 @@
  <script>
 
  import InlineEdit from 'vue/shared/inline_edit.vue'
+ import LabelPreview from './components/label_preview.vue'
 
   export default {
     name: 'LabelTemplateContainer',
     props: {
       labelTemplateUrl: String,
       labelTemplatesUrl: String,
+      previewUrl: String,
       newLabel: Boolean
     },
     data() {
@@ -107,7 +107,7 @@
         newContent: ''
       }
     },
-    components: {InlineEdit},
+    components: { InlineEdit, LabelPreview },
     created() {
       console.log(this.newLabel)
       $.get(this.labelTemplateUrl, (result) => {
