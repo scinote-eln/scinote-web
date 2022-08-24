@@ -254,7 +254,7 @@
     },
     methods: {
       dragEnter(e) {
-        if (this.showFileModal) return;
+        if (this.showFileModal || !this.urls.upload_attachment_url) return;
 
         // Detect if dragged element is a file
         // https://stackoverflow.com/a/8494918
