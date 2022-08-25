@@ -40,6 +40,10 @@
     position: absolute;
   }
 
+  img {
+    max-width: 100%;
+  }
+
   &:hover:not(.edit):not(.locked) {
     background: $color-concrete;
 
