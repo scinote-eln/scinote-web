@@ -1,56 +1,58 @@
 <template>
-<div class="content-pane flexible label-templates-show">
-  <div class="content-header">
-    <div id="breadcrumbsWrapper">
-      <div class="breadcrumbs-container">
-        <a :href="labelTemplatesUrl" class="breadcrumbs-link">
-          {{ i18n.t('label_templates.show.breadcrumb_index') }}
-        </a>
-        <span class="delimiter">/</span>
+  <div class="label-templates-show">
+    <div class="header">
+      <div id="breadcrumbsWrapper">
+        <div class="breadcrumbs-container">
+          <a :href="labelTemplatesUrl" class="breadcrumbs-link">
+            {{ i18n.t('label_templates.show.breadcrumb_index') }}
+          </a>
+          <span class="delimiter">/</span>
+        </div>
+      </div>
+      <div v-if="labelTemplate.id" class="title-row">
+        <img :src="labelTemplate.attributes.icon_url" class="label-template-icon"/>
+        <InlineEdit
+          :value="labelTemplate.attributes.name"
+          :characterLimit="255"
+          :allowBlank="false"
+          :attributeName="i18n.t('label_templates.show.name_error_prefix')"
+          :autofocus="editingName"
+          :editOnload="newLabel"
+          @editingEnabled="editingName = true"
+          @editingDisabled="editingName = false"
+          @update="updateName"
+        />
       </div>
     </div>
-    <div v-if="labelTemplate.id" class="title-row">
-      <img :src="labelTemplate.attributes.icon_url" class="label-template-icon"/>
-      <InlineEdit
-        :value="labelTemplate.attributes.name"
-        :characterLimit="255"
-        :allowBlank="false"
-        :attributeName="i18n.t('label_templates.show.name_error_prefix')"
-        :autofocus="editingName"
-        :editOnload="newLabel"
-        @editingEnabled="editingName = true"
-        @editingDisabled="editingName = false"
-        @update="updateName"
-      />
-    </div>
-  </div>
-  <div id="content-label-templates-show">
     <div v-if="labelTemplate.id" class="template-descripiton">
       <div class="title">
         {{ i18n.t('label_templates.show.description_title') }}
       </div>
-      <InlineEdit
-        :value="labelTemplate.attributes.description"
-        :characterLimit="255"
-        :allowBlank="true"
-        :attributeName="i18n.t('label_templates.show.description_error_prefix')"
-        :placeholder="i18n.t('label_templates.show.description_placeholder')"
-        :autofocus="editingDescription"
-        @editingEnabled="editingDescription = true"
-        @editingDisabled="editingDescription = false"
-        @update="updateDescription"
-      />
+      <div class="description">
+        <InlineEdit
+          :value="labelTemplate.attributes.description"
+          :characterLimit="255"
+          :allowBlank="true"
+          :attributeName="i18n.t('label_templates.show.description_error_prefix')"
+          :placeholder="i18n.t('label_templates.show.description_placeholder')"
+          :autofocus="editingDescription"
+          @editingEnabled="editingDescription = true"
+          @editingDisabled="editingDescription = false"
+          @update="updateDescription"
+        />
+      </div>
     </div>
-
     <div v-if="labelTemplate.id" class="label-template-container">
       <div class="label-edit-container">
         <div class="label-edit-header">
           <div class="title">
             {{ i18n.t('label_templates.show.content_title', { format: labelTemplate.attributes.language_type.toUpperCase() }) }}
           </div>
-          <InsertFieldDropdown :labelTemplate="labelTemplate"
-                               @insertField="insertField"
-           />
+          <InsertFieldDropdown
+            v-if="editingContent"
+            :labelTemplate="labelTemplate"
+            @insertField="insertField"
+          />
         </div>
         <template v-if="editingContent">
           <div class="label-textarea-container">
@@ -66,7 +68,7 @@
               <i class="fas fa-sync"></i>
               {{ i18n.t('label_templates.show.buttons.refresh') }}
             </div>
-            <div class="btn btn-secondary" @click="editingContent = false">
+            <div class="btn btn-secondary" @mousedown="disableContentEdit">
               {{ i18n.t('general.cancel') }}
             </div>
             <div class="btn btn-primary save-template" @click="updateContent">
@@ -75,17 +77,16 @@
             </div>
           </div>
         </template>
-        <div v-else class="label-view-container" :title="i18n.t('label_templates.show.view_content_tooltip')" @click="enableContentEdit">{{ labelTemplate.attributes.content}}
+        <div v-else class="label-view-container" :title="i18n.t('label_templates.show.view_content_tooltip')" @click="enableContentEdit">
+          {{ labelTemplate.attributes.content}}
           <i class="fas fa-pen"></i>
         </div>
       </div>
-
       <div class="label-preview-container">
         <LabelPreview :zpl='labelTemplate.attributes.content' :previewUrl="previewUrl" />
       </div>
     </div>
   </div>
-</div>
 </template>
 
  <script>
@@ -123,12 +124,16 @@
     },
     methods: {
       enableContentEdit() {
-        this.editingContent = true
+        this.editingContent = true;
         this.$nextTick(() => {
           this.$refs.contentInput.focus();
-          $(this.$refs.contentInput).prop('selectionStart', this.cursorPos)
-          $(this.$refs.contentInput).prop('selectionEnd', this.cursorPos)
+          $(this.$refs.contentInput).prop('selectionStart', this.cursorPos);
+          $(this.$refs.contentInput).prop('selectionEnd', this.cursorPos);
         });
+      },
+      disableContentEdit() {
+        this.editingContent = false;
+        this.newContent = this.labelTemplate.attributes.content;
       },
       updateName(newName) {
         $.ajax({
@@ -151,14 +156,14 @@
         });
       },
       updateContent() {
-        this.cursorPos = $(this.$refs.contentInput).prop('selectionStart')
+        this.cursorPos = $(this.$refs.contentInput).prop('selectionStart');
         $.ajax({
           url: this.labelTemplate.attributes.urls.update,
           type: 'PATCH',
           data: {label_template: {content: this.newContent}},
           success: (result) => {
-            this.labelTemplate.attributes.content = result.data.attributes.content
-            this.editingContent = false
+            this.labelTemplate.attributes.content = result.data.attributes.content;
+            this.editingContent = false;
           }
         });
       },
