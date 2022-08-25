@@ -48,8 +48,10 @@
           <div class="title">
             {{ i18n.t('label_templates.show.content_title', { format: labelTemplate.attributes.language_type.toUpperCase() }) }}
           </div>
-          <InsertFieldDropdown :labelTemplate="labelTemplate"
-                               @insertField="insertField"
+          <InsertFieldDropdown
+            v-if="editingContent"
+            :labelTemplate="labelTemplate"
+            @insertField="insertField"
           />
         </div>
         <template v-if="editingContent">
@@ -66,7 +68,7 @@
               <i class="fas fa-sync"></i>
               {{ i18n.t('label_templates.show.buttons.refresh') }}
             </div>
-            <div class="btn btn-secondary" @click="editingContent = false">
+            <div class="btn btn-secondary" @mousedown="disableContentEdit">
               {{ i18n.t('general.cancel') }}
             </div>
             <div class="btn btn-primary save-template" @click="updateContent">
@@ -122,12 +124,16 @@
     },
     methods: {
       enableContentEdit() {
-        this.editingContent = true
+        this.editingContent = true;
         this.$nextTick(() => {
           this.$refs.contentInput.focus();
-          $(this.$refs.contentInput).prop('selectionStart', this.cursorPos)
-          $(this.$refs.contentInput).prop('selectionEnd', this.cursorPos)
+          $(this.$refs.contentInput).prop('selectionStart', this.cursorPos);
+          $(this.$refs.contentInput).prop('selectionEnd', this.cursorPos);
         });
+      },
+      disableContentEdit() {
+        this.editingContent = false;
+        this.newContent = this.labelTemplate.attributes.content;
       },
       updateName(newName) {
         $.ajax({
@@ -150,14 +156,14 @@
         });
       },
       updateContent() {
-        this.cursorPos = $(this.$refs.contentInput).prop('selectionStart')
+        this.cursorPos = $(this.$refs.contentInput).prop('selectionStart');
         $.ajax({
           url: this.labelTemplate.attributes.urls.update,
           type: 'PATCH',
           data: {label_template: {content: this.newContent}},
           success: (result) => {
-            this.labelTemplate.attributes.content = result.data.attributes.content
-            this.editingContent = false
+            this.labelTemplate.attributes.content = result.data.attributes.content;
+            this.editingContent = false;
           }
         });
       },

@@ -7,7 +7,7 @@
       <div class="label-preview__options-button" @click="optionsOpen = !optionsOpen">
         {{ i18n.t('label_templates.label_preview.options') }}
 
-        <i class="fas" :class="{ 'fa-angle-down': !optionsOpen, 'fa-angle-up': optionsOpen }"></i>
+        <i class="fas" :class="{ 'fa-chevron-down': !optionsOpen, 'fa-chevron-up': optionsOpen }"></i>
       </div>
     </div>
     <div class="label-preview__controls" :class="{'open': optionsOpen}">
