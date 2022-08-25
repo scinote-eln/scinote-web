@@ -16,6 +16,11 @@ module Api
                unless: -> { object.protocol_keywords.blank? }
       has_many :steps, serializer: StepSerializer, if: -> { object.steps.any? }
       belongs_to :parent, serializer: ProtocolSerializer, if: -> { object.parent.present? }
+      has_many :linked_my_modules,
+               key: :linked_tasks,
+               serializer: TaskSerializer,
+               class_name: 'MyModule',
+               if: -> { object.in_repository_published? }
 
       include TimestampableModel
 

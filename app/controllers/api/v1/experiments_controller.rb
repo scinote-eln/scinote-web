@@ -11,9 +11,8 @@ module Api
       before_action :load_experiment_for_managing, only: %i(update)
 
       def index
-        experiments = @project.experiments
-                              .page(params.dig(:page, :number))
-                              .per(params.dig(:page, :size))
+        experiments = archived_filter(@project.experiments).page(params.dig(:page, :number))
+                                                           .per(params.dig(:page, :size))
         render jsonapi: experiments, each_serializer: ExperimentSerializer
       end
 
