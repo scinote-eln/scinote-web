@@ -99,6 +99,7 @@ var InfiniteScroll = (function() {
     let eventTarget = $($container.data('config').eventTarget) || $container;
     $container.data('config', null);
     $container.data('next-page', null);
+    $container.removeClass('last-page');
     eventTarget.off('scroll');
   }
 
