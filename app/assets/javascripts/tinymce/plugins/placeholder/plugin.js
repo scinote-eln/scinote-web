@@ -1,4 +1,5 @@
 /* global tinymce */
+
 tinymce.PluginManager.add('placeholder', function(editor) {
   var Label = function() {
     var editorForm = $(editor.getContainer()).closest('form');

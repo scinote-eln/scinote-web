@@ -3,13 +3,13 @@
     <div class="tinymce-container" :class="{ 'error': error }">
       <form class="tiny-mce-editor" role="form" :action="updateUrl" accept-charset="UTF-8" data-remote="true" method="post">
         <input type="hidden" name="_method" value="patch">
-        <div class="hidden tinymce-cancel-button mce-widget mce-btn mce-menubtn mce-flow-layout-item mce-btn-has-text pull-right" tabindex="-1">
+        <div class="hidden tinymce-cancel-button tox-mbtn" tabindex="-1">
           <button type="button" tabindex="-1">
             <span class="fas fa-times"></span>
             <span class="mce-txt">{{ i18n.t('general.cancel')  }}</span>
           </button>
         </div>
-        <div class="hidden tinymce-save-button mce-widget mce-btn mce-menubtn mce-flow-layout-item mce-btn-has-text mce-last pull-right" tabindex="-1">
+        <div class="hidden tinymce-save-button tox-mbtn" tabindex="-1">
           <button type="button" tabindex="-1">
             <span class="fas fa-check"></span>
             <span class="mce-txt">{{ i18n.t('general.save') }}</span>

@@ -101,10 +101,6 @@ gem 'rufus-scheduler', '~> 3.5'
 gem 'discard', '~> 1.0'
 
 gem 'graphviz'
-gem 'tinymce-rails', '~> 4.9.10' # Rich text editor - SEE BELOW
-# Any time you update tinymce-rails Gem, also update the cache_suffix parameter
-# in sitewide/tiny_mce.js - to prevent browsers from loading old, cached .js
-# TinyMCE files which might cause errors
 
 gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'
