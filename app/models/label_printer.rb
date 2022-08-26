@@ -11,7 +11,7 @@ class LabelPrinter < ApplicationRecord
     }
   ).freeze
 
-  enum type_of: { fluics: 0 }
+  enum type_of: { fluics: 0, zebra: 1 }
   enum language_type: { zpl: 0 }
   enum status: { ready: 0, busy: 1, out_of_labels: 2, unreachable: 3, error: 4 }
 

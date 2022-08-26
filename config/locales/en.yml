@@ -2000,6 +2000,7 @@ en:
       head_title_multiple: "Print label - %{repository_rows} rows"
       id_label: "ID: %{repository_row_id}"
       printer: "Printer"
+      label: "Label template"
       number_of_copies: "Number of copies"
       print_label: "Print label"
       no_printers:

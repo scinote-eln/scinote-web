@@ -82,6 +82,7 @@ class RepositoryRowsController < ApplicationController
   def print_modal
     @repository_rows = @repository.repository_rows.where(id: params[:rows])
     @printers = LabelPrinter.all
+    @label_templates = LabelTemplate.where(team_id: current_team).order(:name)
     respond_to do |format|
       format.json do
         render json: {
