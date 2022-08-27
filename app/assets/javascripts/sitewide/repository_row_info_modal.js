@@ -92,8 +92,6 @@
         }
       });
 
-<<<<<<< HEAD
-=======
       dropdownSelector.init('#modal-print-repository-row-label ' + LABEL_TEMPLATE_SELECTOR, {
         noEmptyOption: true,
         singleSelect: true,
@@ -114,7 +112,6 @@
         }
       });
 
->>>>>>> 185bf0b19723fe963dbbbeb23e0f9d212819e32f
       dropdownSelector.init('#modal-print-repository-row-label ' + LABEL_PRINTER_SELECTOR, {
         noEmptyOption: true,
         singleSelect: true,
@@ -135,7 +132,6 @@
             }
           }
         }
-<<<<<<< HEAD
       });
 
       ZEBRA_PRINTERS = zebraPrint.init($('#label_printer_id'), {
@@ -179,8 +175,6 @@
           return false;
         }
         return true;
-=======
->>>>>>> 185bf0b19723fe963dbbbeb23e0f9d212819e32f
       });
     });
   });
