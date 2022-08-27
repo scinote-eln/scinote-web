@@ -1,4 +1,4 @@
-/* global dropdownSelector bwipjs zebraPrint I18n */
+/* global dropdownSelector bwipjs zebraPrint */
 
 (function() {
   'use strict';
@@ -129,11 +129,13 @@
             ${device.name} • ${device.status}</option>`);
 
           if ($('.printers-available').hasClass('hidden')) {
-            dropdownSelector.setData('#modal-print-repository-row-label ' + LABEL_PRINTER_SELECTOR,
+            dropdownSelector.setData(
+              '#modal-print-repository-row-label ' + LABEL_PRINTER_SELECTOR,
               [{
                 label: `${device.name} • ${device.status}`,
                 params: `{"type": "zebra", "name": "${device.name}"}`
-              }]);
+              }]
+            );
             $('.printers-available').removeClass('hidden');
             $('.no-printers-available').addClass('hidden');
           }
@@ -143,11 +145,13 @@
       $('.print-label-form').on('submit', function() {
         var selectedPrinter = JSON.parse($('option:selected', LABEL_PRINTER_SELECTOR).attr('data-params'));
         if (selectedPrinter.type === ZEBRA_LABEL) {
-          ZEBRA_PRINTERS.print($(this).data('zebra-progress'),
+          ZEBRA_PRINTERS.print(
+            $(this).data('zebra-progress'),
             '.label-printing-progress-modal',
             '#modal-print-repository-row-label',
             selectedPrinter.name,
-            $('.print-copies-input').val());
+            $('.print-copies-input').val()
+          );
           return false;
         }
         return true;

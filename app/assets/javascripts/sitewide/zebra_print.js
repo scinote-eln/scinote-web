@@ -128,13 +128,15 @@ var zebraPrint = (function() {
       updateProgressModalData(progressModal, printerName, PRINTER_STATUS_READY, PRINTER_STATUS_PRINTING);
       for (counter = 0; counter < numberOfCopies; counter += 1) {
         if (counter + 1 === parseInt(numberOfCopies, 10)) {
-          device.sendThenRead(label,
+          device.sendThenRead(
+            label,
             () => {
               updateProgressModalData(progressModal, printerName, PRINTER_STATUS_READY, PRINTER_STATUS_DONE);
             },
             (error)=> {
               updateProgressModalData(progressModal, printerName, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
-            });
+            }
+          );
         } else {
           device.send(label, ()=>{}, (error)=> {
             updateProgressModalData(progressModal, printerName, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
