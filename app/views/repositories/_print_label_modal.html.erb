@@ -1,8 +1,9 @@
 <div class="modal fade" id="modal-print-repository-row-label" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <% if @printers.size > 0 %>
-        <%= form_tag print_repository_repository_rows_path, { class: 'print-label-form', data: { remote: true } } do %>
+      <div class="printers-available <%='hidden' if @printers.nil? || @printers&.size == 0 %>">
+        <%= form_tag print_repository_repository_rows_path, { class: "print-label-form",
+            data: { remote: true, zebra_progress: zebra_progress_modal_repository_repository_rows_path } } do %>
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">
@@ -22,8 +23,12 @@
             <% end %>
             <div class=printers-container>
               <label><%= t('repository_row.modal_print_label.printer') %></label>
+              <% if @printers%>
               <%= select_tag :label_printer_id, options_for_select(@printers.map { |p| [p.display_name, p.id, 
-                                                                    {'data-params' => {type: p.type_of}.to_json}] }) %>
+                                                                    {'data-params' => {type: p.type_of, name:p.display_name}.to_json}] }) %>
+              <% else %>
+                <%= select_tag :label_printer_id, {} %>
+              <% end %>
             </div>
 
             <div class=labels-container>
@@ -40,7 +45,8 @@
             <%= submit_tag t('repository_row.modal_print_label.print_label'), class: 'btn btn-primary' %>
           </div>
         <% end %>
-      <% else %>
+      </div>
+      <div class="no-printers-available <%='hidden' if !@printers.nil? || (@printers && @printers.size > 0) %>">
         <div class="modal-body no-printers-container">
           <button type="button" class="close modal-absolute-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <%= image_tag 'printers/no_available_printers.png' %>
@@ -54,7 +60,7 @@
         <div class="modal-footer">
           <%= link_to t('repository_row.modal_print_label.no_printers.visit_blog'), Constants::SCINOTE_FLUICS_URL, class: "btn btn-primary", target: "_blank" %>
         </div>
-      <% end %>
+      </div>
     </div>
   </div>
 </div>

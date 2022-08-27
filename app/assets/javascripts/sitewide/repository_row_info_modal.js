@@ -1,12 +1,13 @@
-/* global dropdownSelector bwipjs */
+/* global dropdownSelector bwipjs zebraPrint I18n */
 
 (function() {
   'use strict';
 
   var LABEL_TEMPLATE_SELECTOR = '#label_template_id';
   var LABEL_PRINTER_SELECTOR = '#label_printer_id';
-  var ZEBRA_LABEL = 'zebra';
-  var FLUICS_LABEL = 'fluics';
+  const ZEBRA_LABEL = 'zebra';
+  const FLUICS_LABEL = 'fluics';
+  var ZEBRA_PRINTERS;
 
   $(document).on('click', '.record-info-link', function(e) {
     var that = $(this);
@@ -70,12 +71,6 @@
       dataType: 'json'
     }).done(function(xhr, settings, data) {
       $('body').append($.parseHTML(data.responseJSON.html));
-      $('#modal-print-repository-row-label').modal('show', {
-        backdrop: true,
-        keyboard: false
-      }).on('hidden.bs.modal', function() {
-        $(this).remove();
-      });
 
       dropdownSelector.init('#modal-print-repository-row-label ' + LABEL_TEMPLATE_SELECTOR, {
         noEmptyOption: true,
@@ -117,6 +112,45 @@
             }
           }
         }
+      });
+
+      ZEBRA_PRINTERS = zebraPrint.init($('#label_printer_id'), {
+        clearSelectorOnFirstDevice: false,
+        showModal: function() {
+          $('#modal-print-repository-row-label').modal('show', {
+            backdrop: true,
+            keyboard: false
+          }).on('hidden.bs.modal', function() {
+            $(this).remove();
+          });
+        },
+        appendDevice: function(device) {
+          $('#label_printer_id').append(`<option data-params='{"type": "zebra", "name": "${device.name}"}'>
+            ${device.name} • ${device.status}</option>`);
+
+          if ($('.printers-available').hasClass('hidden')) {
+            dropdownSelector.setData('#modal-print-repository-row-label ' + LABEL_PRINTER_SELECTOR,
+              [{
+                label: `${device.name} • ${device.status}`,
+                params: `{"type": "zebra", "name": "${device.name}"}`
+              }]);
+            $('.printers-available').removeClass('hidden');
+            $('.no-printers-available').addClass('hidden');
+          }
+        }
+      });
+
+      $('.print-label-form').on('submit', function() {
+        var selectedPrinter = JSON.parse($('option:selected', LABEL_PRINTER_SELECTOR).attr('data-params'));
+        if (selectedPrinter.type === ZEBRA_LABEL) {
+          ZEBRA_PRINTERS.print($(this).data('zebra-progress'),
+            '.label-printing-progress-modal',
+            '#modal-print-repository-row-label',
+            selectedPrinter.name,
+            $('.print-copies-input').val());
+          return false;
+        }
+        return true;
       });
     });
   });
