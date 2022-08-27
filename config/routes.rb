@@ -54,6 +54,7 @@ Rails.application.routes.draw do
         post :delete
         get :datatable
         get :template_tags
+        get :zpl_preview
       end
     end
 

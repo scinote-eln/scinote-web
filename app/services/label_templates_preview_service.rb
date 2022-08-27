@@ -5,8 +5,7 @@ class LabelTemplatesPreviewService
 
   attr_reader :error, :preview
 
-  def initialize(zpl, user, params)
-    @zpl = zpl
+  def initialize(params, user)
     @user = user
     @params = params
   end
@@ -17,13 +16,18 @@ class LabelTemplatesPreviewService
       function_name: 'BinaryKitsZplViewer',
       invocation_type: 'RequestResponse',
       log_type: 'Tail',
-      payload: "{ \"content\": #{@zpl.to_json} }"
+      payload:
+        "{ \"content\": #{@params[:zpl].to_json},"\
+        "\"width\": #{@params[:width]},"\
+        "\"height\": #{@params[:height]},"\
+        "\"density\": #{@params[:density]} "\
+        "}"
     )
 
     if resp.function_error.nil?
-      @preview = resp.payload
+      @preview = resp.payload.string.delete('"')
     else
-      @error = resp.function_error
+      @error = resp.function_error.string
     end
   end
 end

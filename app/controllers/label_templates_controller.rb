@@ -7,7 +7,7 @@ class LabelTemplatesController < ApplicationController
   before_action :check_view_permissions, except: %i(create duplicate set_default delete update)
   before_action :check_manage_permissions, only: %i(create duplicate set_default delete update)
   before_action :load_label_templates, only: %i(index datatable)
-  before_action :load_label_template, only: %i(show set_default update zpl_preview)
+  before_action :load_label_template, only: %i(show set_default update)
 
   layout 'fluid'
 
@@ -90,11 +90,11 @@ class LabelTemplatesController < ApplicationController
   end
 
   def zpl_preview
-    service = LabelTemplatesPreviewService.new(@label_template.content, current_user, {})
+    service = LabelTemplatesPreviewService.new(params, current_user)
     payload = service.generate_zpl_preview!
 
     if service.error.blank?
-      render json: { base64_preview: payload.string }
+      render json: { base64_preview: payload }
     else
       render json: { error: I18n.t('errors.general') }, status: :unprocessable_entity
     end
