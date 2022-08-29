@@ -75,7 +75,6 @@
     },
     data() {
       return {
-        editorInstance: null,
         characterCount: 0,
         blurEventHandler: null,
         active: false
@@ -97,6 +96,9 @@
       }
     },
     computed: {
+      editorInstance() {
+        return tinyMCE.editors[0];
+      },
       error() {
         if(this.characterLimit && this.characterCount > this.characterLimit) {
           return(
@@ -131,8 +133,7 @@
             this.$emit('update', data)
           }
           this.$emit('editingDisabled')
-        }).then((editorInstance) => {
-          this.editorInstance = editorInstance[0]; // TinyMCE initialization returns an array
+        }).then(() => {
           this.active = true;
           this.initCharacterCount();
         });
