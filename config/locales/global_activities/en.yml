@@ -245,6 +245,13 @@ en:
       protocol_step_checklist_item_deleted_html: "%{user} deleted checklist item <strong>%{checklist_item}</strong> in  checklist <strong>%{checklist_name}</strong> in protocol's step %{step_position} <strong>%{step}</strong> in Protocol repository"
       task_step_duplicated_html: "%{user} duplicated step <strong>%{step}</strong> on task %{my_module}."
       protocol_step_duplicated_html: "%{user} duplicated step <strong>%{step}</strong> in protocol %{protocol} in Protocol repository."
+      task_step_text_duplicated_html: "%{user} duplicated text <strong>%{text_name}</strong> in protocol’s step %{step_position} <strong>%{step}</strong> on task %{my_module}."
+      task_step_table_duplicated_html: "%{user} duplicated table <strong>%{table_name}</strong> in protocol’s step %{step_position} <strong>%{step}</strong> on task %{my_module}."
+      task_step_checklist_duplicated_html: "%{user} duplicated checklist <strong>%{checklist_name}</strong> in protocol’s step %{step_position} <strong>%{step}</strong> on task %{my_module}."
+      protocol_step_text_duplicated_html: "%{user} duplicated text <strong>%{text_name}</strong> in protocol’s step %{step_position} <strong>%{step}</strong> in protocol %{protocol} in Protocol repository."
+      protocol_step_table_duplicated_html: "%{user} duplicated table <strong>%{table_name}</strong> in protocol’s step %{step_position} <strong>%{step}</strong> in protocol %{protocol} in Protocol repository."
+      protocol_step_checklist_duplicated_html: "%{user} duplicated checklist <strong>%{checklist_name}</strong> in protocol’s step %{step_position} <strong>%{step}</strong> in protocol %{protocol} in Protocol repository."
+
     activity_name:
       create_project: "Project created"
       rename_project: "Project renamed"
@@ -443,6 +450,12 @@ en:
       protocol_step_checklist_item_deleted: "Protocol step checklist item deleted"
       task_step_duplicated: "Task step duplicated"
       protocol_step_duplicated: "Step duplicated"
+      task_step_text_duplicated: "Task step text duplicated"
+      task_step_table_duplicated: "Task step table duplicated"
+      task_step_checklist_duplicated: "Task step checklist duplicated"
+      protocol_step_text_duplicated: "Protocol step text duplicated"
+      protocol_step_table_duplicated: "Protocol step table duplicated"
+      protocol_step_checklist_duplicated: "Protocol step checklist duplicated"
 
 
 

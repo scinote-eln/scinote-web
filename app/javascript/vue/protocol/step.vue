@@ -128,7 +128,7 @@
     </div>
     <div class="collapse in" :id="'stepBody' + step.id">
       <div class="step-elements">
-        <template v-for="(element, index) in elements">
+        <template v-for="(element, index) in orderedElements">
           <component
             :is="elements[index].attributes.orderable_type"
             :key="index"
@@ -251,7 +251,10 @@
     },
     computed: {
       reorderableElements() {
-        return this.elements.map((e) => { return { id: e.id, attributes: e.attributes.orderable } })
+        return this.orderedElements.map((e) => { return { id: e.id, attributes: e.attributes.orderable } })
+      },
+      orderedElements() {
+        return this.elements.sort((a, b) => a.attributes.position - b.attributes.position);
       },
       urls() {
         return this.step.attributes.urls || {}
@@ -329,7 +332,6 @@
           }
           return e;
         })
-        this.reorderElements(unorderedElements)
         this.$emit('stepUpdated')
       },
       updateElement(element, skipRequest=false, callback) {
@@ -358,9 +360,6 @@
           })
         }
       },
-      reorderElements(elements) {
-        this.elements = elements.sort((a, b) => a.attributes.position - b.attributes.position);
-      },
       updateElementOrder(orderedElements) {
         orderedElements.forEach((element, position) => {
           let index = this.elements.findIndex((e) => e.id === element.id);
@@ -384,8 +383,6 @@
           error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')),
           success: (() => this.$emit('stepUpdated'))
         });
-
-        this.reorderElements(this.elements);
       },
       updateName(newName) {
         $.ajax({
@@ -448,14 +445,13 @@
       },
       insertElement(element) {
         let position = element.attributes.position;
-        let elements = this.elements.map( s => {
+        this.elements = this.elements.map( s => {
           if (s.attributes.position >= position) {
               s.attributes.position += 1;
           }
           return s;
         })
-        elements.push(element);
-        this.reorderElements(elements);
+        this.elements.push(element);
       },
       duplicateStep() {
         $.post(this.urls.duplicate_step_url, (result) => {

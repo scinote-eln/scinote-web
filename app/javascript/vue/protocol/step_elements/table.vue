@@ -60,6 +60,7 @@
 
  <script>
   import DeleteMixin from 'vue/protocol/mixins/components/delete.js'
+  import DuplicateMixin from 'vue/protocol/mixins/components/duplicate.js'
   import deleteElementModal from 'vue/protocol/modals/delete_element.vue'
   import InlineEdit from 'vue/shared/inline_edit.vue'
   import TableNameModal from 'vue/protocol/modals/table_name_modal.vue'
@@ -67,7 +68,7 @@
   export default {
     name: 'StepTable',
     components: { deleteElementModal, InlineEdit, TableNameModal },
-    mixins: [DeleteMixin],
+    mixins: [DeleteMixin, DuplicateMixin],
     props: {
       element: {
         type: Object,
@@ -173,11 +174,6 @@
           formulas: true,
           readOnly: !this.editingTable,
           afterUnlisten: () => setTimeout(this.updateTable, 100) // delay makes cancel button work
-        });
-      },
-      duplicateElement() {
-        $.post(this.element.attributes.orderable.urls.duplicate_url, (result) => {
-          this.$emit('component:insert', result.data);
         });
       }
     }

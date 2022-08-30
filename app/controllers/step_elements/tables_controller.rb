@@ -49,6 +49,7 @@ module StepElements
           element.update(position: element.position + 1)
         end
         new_table = @table.duplicate(@step, current_user, position + 1)
+        log_step_activity(:table_duplicated, { table_name: new_table.name })
         render_step_orderable_element(new_table.step_table)
       end
     rescue ActiveRecord::RecordInvalid

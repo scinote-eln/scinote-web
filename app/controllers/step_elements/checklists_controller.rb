@@ -44,6 +44,7 @@ module StepElements
           element.update(position: element.position + 1)
         end
         new_checklist = @checklist.duplicate(@step, current_user, position + 1)
+        log_step_activity(:checklist_duplicated, { checklist_name: @checklist.name })
         render_step_orderable_element(new_checklist)
       end
     rescue ActiveRecord::RecordInvalid

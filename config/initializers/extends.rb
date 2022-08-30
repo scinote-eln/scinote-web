@@ -419,7 +419,13 @@ class Extends
     edit_protocol_name_in_repository: 216,
     protocol_name_in_task_edited: 217,
     task_step_duplicated: 218,
-    protocol_step_duplicated: 219
+    protocol_step_duplicated: 219,
+    task_step_text_duplicated: 220,
+    task_step_table_duplicated: 221,
+    task_step_checklist_duplicated: 222,
+    protocol_step_text_duplicated: 223,
+    protocol_step_table_duplicated: 224,
+    protocol_step_checklist_duplicated: 225
   }
 
   ACTIVITY_GROUPS = {
@@ -428,7 +434,7 @@ class Extends
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
            *146..148, 166],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
-                    217, 168, 171, 177, 184, 185, 188, 189, *192..203, 218],
+                    217, 168, 171, 177, 184, 185, 188, 189, *192..203, 218, 220, 221, 222],
     task_inventory: [55, 56, 146, 147, 183],
     experiment: [*27..31, 57, 141, 165],
     reports: [48, 50, 49, 163, 164],
@@ -436,7 +442,7 @@ class Extends
                   78, 96, 107, 113, 114, *133..136, 180, 181, 182],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 170, 173, 179, 187, 186,
-                          190, 191, *204..216, 219],
+                          190, 191, *204..216, 219, 223, 224, 225],
     team: [92, 94, 93, 97, 104]
   }
 

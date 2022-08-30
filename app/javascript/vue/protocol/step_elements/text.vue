@@ -41,13 +41,14 @@
 
  <script>
   import DeleteMixin from 'vue/protocol/mixins/components/delete.js'
+  import DuplicateMixin from 'vue/protocol/mixins/components/duplicate.js'
   import deleteElementModal from 'vue/protocol/modals/delete_element.vue'
   import Tinymce from 'vue/shared/tinymce.vue'
 
   export default {
     name: 'StepText',
     components: { deleteElementModal, Tinymce },
-    mixins: [DeleteMixin],
+    mixins: [DeleteMixin, DuplicateMixin],
     props: {
       element: {
         type: Object,
@@ -90,11 +91,6 @@
         this.element.attributes.orderable.name = data.data.attributes.name
         this.element.attributes.orderable.updated_at = data.data.attributes.updated_at
         this.$emit('update', this.element, true)
-      },
-      duplicateElement() {
-        $.post(this.element.attributes.orderable.urls.duplicate_url, (result) => {
-          this.$emit('component:insert', result.data);
-        });
       }
     }
   }

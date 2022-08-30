@@ -45,6 +45,7 @@ module StepElements
           element.update(position: element.position + 1)
         end
         new_step_text = @step_text.duplicate(@step, position + 1)
+        log_step_activity(:text_duplicated, { text_name: new_step_text.name })
         render_step_orderable_element(new_step_text)
       end
     rescue ActiveRecord::RecordInvalid

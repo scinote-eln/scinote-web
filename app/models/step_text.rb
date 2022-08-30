@@ -19,18 +19,20 @@ class StepText < ApplicationRecord
   end
 
   def duplicate(step, position = nil)
-    new_step_text = step.step_texts.create!(
-      text: text
-    )
+    ActiveRecord::Base.transaction do
+      new_step_text = step.step_texts.create!(
+        text: text
+      )
 
-    # Copy steps tinyMce assets
-    clone_tinymce_assets(new_step_text, step.protocol.team)
+      # Copy steps tinyMce assets
+      clone_tinymce_assets(new_step_text, step.protocol.team)
 
-    step.step_orderable_elements.create!(
-      position: position || step.step_orderable_elements.length,
-      orderable: new_step_text
-    )
+      step.step_orderable_elements.create!(
+        position: position || step.step_orderable_elements.length,
+        orderable: new_step_text
+      )
 
-    new_step_text
+      new_step_text
+    end
   end
 end
