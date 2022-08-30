@@ -75,7 +75,7 @@
     "js-yaml": "^3.12.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
-    "moment-timezone": "^0.5.21",
+    "moment-timezone": "^0.5.35",
     "node-gyp": "^3.8.0",
     "node-sass": "^4.13.1",
     "path-complete-extname": "^0.1.0",
