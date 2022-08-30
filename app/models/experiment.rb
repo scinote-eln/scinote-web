@@ -15,6 +15,7 @@ class Experiment < ApplicationRecord
   before_save -> { report_elements.destroy_all }, if: -> { !new_record? && project_id_changed? }
 
   belongs_to :project, inverse_of: :experiments, touch: true
+  delegate :team, to: :project
   belongs_to :created_by,
              class_name: 'User'
   belongs_to :last_modified_by,

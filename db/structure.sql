@@ -2834,7 +2834,8 @@ CREATE TABLE public.user_assignments (
     assigned_by_id bigint,
     assigned integer DEFAULT 0 NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    team_id bigint
 );
 
 
@@ -6469,6 +6470,13 @@ CREATE INDEX index_user_assignments_on_assigned_by_id ON public.user_assignments
 
 
 --
+-- Name: index_user_assignments_on_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_assignments_on_team_id ON public.user_assignments USING btree (team_id);
+
+
+--
 -- Name: index_user_assignments_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7073,6 +7081,14 @@ ALTER TABLE ONLY public.projects
 
 ALTER TABLE ONLY public.result_assets
     ADD CONSTRAINT fk_rails_48803d79ff FOREIGN KEY (asset_id) REFERENCES public.assets(id);
+
+
+--
+-- Name: user_assignments fk_rails_4a5764985b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_assignments
+    ADD CONSTRAINT fk_rails_4a5764985b FOREIGN KEY (team_id) REFERENCES public.teams(id);
 
 
 --
@@ -8371,6 +8387,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220321122111'),
 ('20220325101011'),
 ('20220328164215'),
-('20220516111152');
+('20220516111152'),
+('20220621153016');
 
 
