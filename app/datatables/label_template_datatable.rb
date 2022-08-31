@@ -6,7 +6,8 @@ class LabelTemplateDatatable < CustomDatatable
 
   TABLE_COLUMNS = %w(
     label_templates.name
-    label_templates.format
+    label_templates.default
+    label_templates.type
     label_templates.description
     label_templates.modified_by
     label_templates.updated_at
