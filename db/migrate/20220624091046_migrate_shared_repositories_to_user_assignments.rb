@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 class MigrateSharedRepositoriesToUserAssignments < ActiveRecord::Migration[6.1]
+  class TeamRepository < ApplicationRecord
+    self.table_name = 'team_repositories'
+    enum permission_level: { not_shared: 0, shared_read: 1, shared_write: 2 }
+    belongs_to :team
+    belongs_to :repository
+  end
+
   def up
     viewer_role = UserRole.find_by(name: UserRole.public_send('viewer_role').name)
     normal_user_role = UserRole.find_by(name: UserRole.public_send('normal_user_role').name)
@@ -23,9 +30,34 @@ class MigrateSharedRepositoriesToUserAssignments < ActiveRecord::Migration[6.1]
         UserAssignment.import(user_assignments)
       end
     end
+
+    remove_index :repositories, :permission_level
+    remove_index :team_repositories, :permission_level
+    remove_index :team_repositories, :repository_id
+    remove_index :team_repositories, %i(team_id repository_id), unique: true
+    rename_table :team_repositories, :team_shared_objects
+    rename_column :team_shared_objects, :repository_id, :shared_object_id
+    add_column :team_shared_objects, :shared_object_type, :string
+    execute("UPDATE team_shared_objects SET shared_object_type = 'RepositoryBase'")
+    add_index :team_shared_objects,
+              %i(shared_object_type shared_object_id team_id),
+              name: 'index_team_shared_objects_on_shared_type_and_id_and_team_id',
+              unique: true
   end
 
   def down
+    remove_index :team_shared_objects,
+                 %i(shared_object_type shared_object_id team_id),
+                 name: 'index_team_shared_objects_on_shared_type_and_id_and_team_id',
+                 unique: true
+    remove_column :team_shared_objects, :shared_object_type
+    rename_column :team_shared_objects, :shared_object_id, :repository_id
+    rename_table :team_shared_objects, :team_repositories
+    add_index :team_repositories, %i(team_id repository_id), unique: true
+    add_index :team_repositories, :repository_id
+    add_index :team_repositories, :permission_level
+    add_index :repositories, :permission_level
+
     UserAssignment.joins("INNER JOIN repositories ON user_assignments.assignable_id = repositories.id "\
                          "AND user_assignments.assignable_type = 'RepositoryBase' "\
                          "AND user_assignments.team_id != repositories.team_id")

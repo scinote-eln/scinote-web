@@ -27,7 +27,7 @@ describe Repository, type: :model do
     it { should have_many :repository_rows }
     it { should have_many :repository_table_states }
     it { should have_many :report_elements }
-    it { should have_many(:team_repositories).dependent(:destroy) }
+    it { should have_many(:team_shared_objects).dependent(:destroy) }
     it { should have_many(:teams_shared_with) }
   end
 

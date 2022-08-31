@@ -48,7 +48,12 @@ class Team < ApplicationRecord
   has_many :reports, inverse_of: :team, dependent: :destroy
   has_many :activities, inverse_of: :team, dependent: :destroy
   has_many :assets, inverse_of: :team, dependent: :destroy
-  has_many :team_repositories, inverse_of: :team, dependent: :destroy
+  has_many :team_shared_objects, inverse_of: :team, dependent: :destroy
+  has_many :team_shared_repositories,
+           -> { where(shared_object_type: 'RepositoryBase') },
+           class_name: 'TeamSharedObject',
+           inverse_of: :team
+  has_many :shared_repositories, through: :team_shared_objects, source: :shared_object, source_type: 'RepositoryBase'
   has_many :repository_sharing_user_assignments,
            (lambda do |team|
              joins(
@@ -59,7 +64,7 @@ class Team < ApplicationRecord
              .where.not('user_assignments.team_id = repositories.team_id')
            end),
            class_name: 'UserAssignment'
-  has_many :shared_repositories,
+  has_many :shared_by_user_repositories,
            through: :repository_sharing_user_assignments,
            source: :assignable,
            source_type: 'RepositoryBase'
