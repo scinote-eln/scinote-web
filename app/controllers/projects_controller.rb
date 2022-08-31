@@ -17,7 +17,6 @@ class ProjectsController < ApplicationController
   before_action :check_view_permissions, only: %i(show notifications sidebar experiments_cards view_type)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
-  before_action :set_inline_name_editing, only: %i(show)
   before_action :load_exp_sort_var, only: :show
   before_action :reset_invalid_view_state, only: %i(index cards show)
   before_action :set_folder_inline_name_editing, only: %i(index cards)
@@ -85,7 +84,7 @@ class ProjectsController < ApplicationController
     @current_sort = @project.current_view_state(current_user).state.dig('experiments', params[:view_mode], 'sort')
     render json: {
       html: render_to_string(
-        partial: 'shared/sidebar/experiments.html.erb', locals: {
+        partial: 'shared/sidebar/experiments', locals: {
           project: @project,
           view_mode: experiments_view_mode(@project)
         }
@@ -288,15 +287,20 @@ class ProjectsController < ApplicationController
     view_state = @project.current_view_state(current_user)
     @current_sort = view_state.state.dig('experiments', experiments_view_mode(@project), 'sort') || 'atoz'
     @current_view_type = view_state.state.dig('experiments', 'view_type')
+    @project_is_managable = can_manage_project?(@project)
+    set_inline_name_editing if @project_is_managable
   end
 
   def experiments_cards
     overview_service = ExperimentsOverviewService.new(@project, current_user, params)
-    cards = overview_service.experiments.page(params[:page] || 1).per(Constants::DEFAULT_ELEMENTS_PER_PAGE)
+    cards = overview_service.experiments
+                            .preload(my_modules: { my_module_status: :my_module_status_implications })
+                            .page(params[:page] || 1)
+                            .per(Constants::DEFAULT_ELEMENTS_PER_PAGE)
     render json: {
       next_page: cards.next_page,
       cards_html: render_to_string(
-        partial: 'projects/show/experiments_list.html.erb',
+        partial: 'projects/show/experiments_list',
         locals: { cards: cards,
                   filters_included: filters_included? }
       )
@@ -377,8 +381,6 @@ class ProjectsController < ApplicationController
   end
 
   def set_inline_name_editing
-    return unless can_manage_project?(@project)
-
     @inline_editable_title_config = {
       name: 'title',
       params_group: 'project',
