@@ -1,5 +1,7 @@
+<% user= nil %>
 <% comments.each do |comment| %>
   <%= render partial: 'shared/comments/comment.html.erb',
-             locals: { comment: comment } %>
+             locals: { comment: comment, skip_header: user == comment.user } %>
+  <% user = comment.user %>
 <% end %>
-<% comments.mark_as_seen_by(current_user) && @commentable.touch %>
+<% comments.mark_as_seen_by(current_user, @commentable) %>

@@ -31,18 +31,28 @@ module Api
       def create
         raise PermissionError.new(Protocol, :create) unless can_manage_protocol_in_module?(@protocol)
 
-        step = @protocol.steps.create!(step_params.merge!(completed: false,
-                                                          user: current_user,
-                                                          position: @protocol.number_of_steps,
-                                                          last_modified_by_id: current_user.id))
+        step = @protocol.steps.create!(
+          step_params.except(:description)
+                     .merge!(completed: false,
+                             user: current_user,
+                             position: @protocol.number_of_steps,
+                             last_modified_by_id: current_user.id)
+        )
+        step.step_texts.create!(text: step_params[:description]) if step_params[:description]
 
         render jsonapi: step, serializer: StepSerializer, status: :created
       end
 
       def update
         @step.assign_attributes(
-          step_params.merge!(last_modified_by_id: current_user.id)
+          step_params.except(:description).merge!(last_modified_by_id: current_user.id)
         )
+
+        if step_params[:description]
+          (@step.description_step_text || @step.step_texts.create!).update!(
+            text: step_params[:description]
+          )
+        end
 
         if @step.changed? && @step.save!
           if @step.saved_change_to_attribute?(:completed)

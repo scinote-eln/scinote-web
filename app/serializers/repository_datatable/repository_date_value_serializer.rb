@@ -8,7 +8,7 @@ module RepositoryDatatable
         datetime: object.data.strftime('%Y/%m/%d %H:%M')
       }
 
-      if RepositoryBase.reminders_enabled?
+      if scope.dig(:options, :reminders_enabled)
         reminder_delta = scope[:column].metadata['reminder_delta']
         if !scope[:repository].is_a?(RepositorySnapshot) && reminder_delta
           data[:reminder] = DateTime.now + reminder_delta.to_i.seconds >= object.data

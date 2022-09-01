@@ -1,0 +1,57 @@
+.protocol-content {
+  .tinymce-container {
+    align-items: center;
+    border-radius: 4px;
+    display: flex;
+    min-height: 36px;
+    width: 100%;
+
+    form > .form-group {
+      margin-bottom: 0;
+
+      > .mce-tinymce {
+        border: 1px solid $color-silver-chalice;
+        box-shadow: none;
+      }
+    }
+
+    &.error {
+      .form-group > .mce-tinymce {
+        border-color: $brand-danger;
+      }
+
+      .tinymce-save-button {
+        opacity: .5;
+        pointer-events: none;
+      }
+    }
+
+    .mce-tinymce.mce-container.mce-panel {
+      border-radius: 4px;
+    }
+
+    .mce-menubar.mce-toolbar.mce-first {
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+    }
+
+    .mce-statusbar {
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
+
+    .tinymce-status-badge {
+      display: none;
+    }
+
+    .tinymce-view {
+      border-color: transparent;
+    }
+  }
+
+  .tinymce-error {
+    color: $brand-danger;
+    font-size: 12px;
+    margin-top: 2px;
+  }
+}

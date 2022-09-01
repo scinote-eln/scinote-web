@@ -412,11 +412,13 @@ a[data-toggle="tooltip"] {
 }
 
 .navbar-secondary {
+  min-height: 77px;
   transition: .4s $timing-function-sharp;
 }
 
 .navbar-without-sidebar{
   margin-left: 0px;
+  min-height: 77px;
   padding-left: 0;
   transition: .4s $timing-function-sharp;
 }
@@ -512,6 +514,10 @@ a[data-toggle="tooltip"] {
 
   > .sci-btn-group {
     margin-right: 30px;
+
+    form.button_to {
+      float: left;
+    }
   }
 }
 @media(max-width:768px) {
@@ -712,9 +718,9 @@ ul.double-line > li {
     }
 
     .badge-indicator {
-      background: $brand-primary;
+      background: $brand-accent;
       border-radius: $border-radius-tag;
-      color: $color-white;
+      color: $color-black;
       font-size: 10px;
       margin-left: -8px;
     }

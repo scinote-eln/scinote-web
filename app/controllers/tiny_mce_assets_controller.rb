@@ -96,8 +96,8 @@ class TinyMceAssetsController < ApplicationController
 
     @assoc = @asset.object
 
-    if @assoc.class == Step
-      @protocol = @assoc.protocol
+    if @assoc.class == StepText
+      @protocol = @assoc.step.protocol
     elsif @assoc.class == Protocol
       @protocol = @assoc
     elsif @assoc.class == MyModule
@@ -108,7 +108,7 @@ class TinyMceAssetsController < ApplicationController
   end
 
   def check_read_permission
-    if @assoc.class == Step || @assoc.class == Protocol
+    if @assoc.class == StepText || @assoc.class == Protocol
       return render_403 unless can_read_protocol_in_module?(@protocol) ||
                                can_read_protocol_in_repository?(@protocol)
     elsif @assoc.class == ResultText || @assoc.class == MyModule
@@ -122,12 +122,15 @@ class TinyMceAssetsController < ApplicationController
 
   def check_edit_permission
     if @assoc.nil?
-      return render_403 unless current_team == @asset.team
+      if current_team == @asset.team
+        return
+      else
+        return render_403
+      end
     end
-
     case @assoc
-    when Step
-      return render_403 unless can_manage_step?(@assoc)
+    when StepText
+      return render_403 unless can_manage_step?(@assoc.step)
     when Protocol
       return render_403 unless can_manage_protocol_in_module?(@protocol) ||
                                can_manage_protocol_in_repository?(@protocol)

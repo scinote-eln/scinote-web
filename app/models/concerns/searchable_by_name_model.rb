@@ -20,37 +20,6 @@ module SearchableByNameModel
 
       sql_q.limit(Constants::SEARCH_LIMIT)
     end
-
-    def self.filter_by_teams(teams = [])
-      return self if teams.blank?
-
-      if column_names.include? 'team_id'
-        where(team_id: teams)
-      else
-        valid_subjects = Extends::ACTIVITY_SUBJECT_CHILDREN
-        parent_array = [to_s.underscore]
-        find_parent = true
-        # Trying to build parent array
-        while find_parent
-          possible_parent = valid_subjects.find { |_sub, ch| ((ch || []).include? parent_array[-1].pluralize.to_sym) }
-          possible_parent = { Project: nil } if parent_array[-1] == 'experiment'
-          if possible_parent
-            parent_array.push(possible_parent.flatten[0].to_s.underscore)
-          else
-            find_parent = false
-          end
-        end
-        parent_array.shift
-        # Now we will go from parent to child direction
-        last_parent = parent_array.reverse!.shift
-        query = last_parent.to_s.camelize.constantize.where(team_id: teams)
-        parent_array.each do |child|
-          query = child.to_s.camelize.constantize.where("#{last_parent}_id" => query)
-          last_parent = child
-        end
-        where("#{last_parent}_id" => query)
-      end
-    end
   end
   # rubocop:enable Metrics/BlockLength
 end

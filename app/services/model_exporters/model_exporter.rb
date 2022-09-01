@@ -43,13 +43,24 @@ module ModelExporters
       @assets_to_copy.push(step.assets.to_a) if step.assets.present?
       {
         step: step,
-        checklists: step.checklists.map { |c| checklist(c) },
+        step_orderable_elements: step.step_orderable_elements.map { |e| step_orderable_element(e) },
         step_comments: step.step_comments,
         step_assets: step.step_assets,
         assets: step.assets.map { |a| assets_data(a) },
-        step_tables: step.step_tables,
-        tables: step.tables.map { |t| table(t) }
       }
+    end
+
+    def step_orderable_element(element)
+      element_json = element.as_json
+      case element.orderable_type
+      when 'StepText'
+        element_json['step_text'] = element.orderable.as_json
+      when 'Checklist'
+        element_json['checklist'] = checklist(element.orderable)
+      when 'StepTable'
+        element_json['table'] = table(element.orderable.table)
+      end
+      element_json
     end
 
     def assets_data(asset)

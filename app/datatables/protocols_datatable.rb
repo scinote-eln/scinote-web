@@ -10,7 +10,7 @@ class ProtocolsDatatable < CustomDatatable
   def_delegator :@view, :can_clone_protocol_in_repository?
   def_delegator :@view, :clone_protocol_path
   def_delegator :@view, :linked_children_protocol_path
-  def_delegator :@view, :preview_protocol_path
+  def_delegator :@view, :protocol_path
 
   def initialize(view, team, type, user)
     super(view)
@@ -176,10 +176,7 @@ class ProtocolsDatatable < CustomDatatable
   end
 
   def name_html(record)
-    "<a href='#' data-action='protocol-preview'" \
-      "data-url='#{preview_protocol_path(record)}'>" \
-      "#{escape_input(record.name)}" \
-      "</a>"
+    "<a href='#{protocol_path(record)}'>#{escape_input(record.name)}</a>"
   end
 
   def keywords_html(record)

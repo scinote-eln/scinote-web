@@ -114,26 +114,26 @@ module ApplicationHelper
   def smart_annotation_parser(text, team = nil, base64_encoded_imgs = false, preview_repository = false)
     # sometimes happens that the "team" param gets wrong data: "{nil, []}"
     # so we have to check if the "team" param is kind of Team object
-    team = nil unless team.is_a? Team
-    new_text = smart_annotation_filter_resources(text, team, preview_repository)
-    new_text = smart_annotation_filter_users(new_text, team, base64_encoded_imgs)
-    new_text
+    team = nil unless team.is_a?(Team)
+    new_text = smart_annotation_filter_resources(text, team, preview_repository: preview_repository)
+    smart_annotation_filter_users(new_text, team, base64_encoded_imgs: base64_encoded_imgs)
   end
 
   # Check if text have smart annotations of resources
   # and outputs a link to resource
-  def smart_annotation_filter_resources(text, team, preview_repository = false)
+  def smart_annotation_filter_resources(text, team, preview_repository: false)
     user = if !defined?(current_user) && @user
              @user
            else
              current_user
            end
+    team ||= defined?(current_team) ? current_team : nil
     SmartAnnotations::TagToHtml.new(user, team, text, preview_repository).html
   end
 
   # Check if text have smart annotations of users
   # and outputs a popover with user information
-  def smart_annotation_filter_users(text, team, base64_encoded_imgs = false)
+  def smart_annotation_filter_users(text, team, base64_encoded_imgs: false)
     sa_user = /\[\@(.*?)~([0-9a-zA-Z]+)\]/
     new_text = text.gsub(sa_user) do |el|
       match = el.match(sa_user)

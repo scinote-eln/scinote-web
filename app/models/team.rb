@@ -154,6 +154,8 @@ class Team < ApplicationRecord
       case obj.class.name
       when 'Protocol'
         obj.team_id
+      when 'StepText'
+        obj.step.protocol.team_id
       when 'MyModule', 'Step'
         obj.protocol.team_id
       when 'ResultText'

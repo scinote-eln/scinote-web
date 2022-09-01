@@ -14,9 +14,18 @@ class CommentsController < ApplicationController
 
   def index
     comments = @commentable.comments.order(created_at: :asc)
+    object_url = nil
+    case @commentable
+    when Step
+      object_name = "#{@commentable.position + 1} #{@commentable.name}"
+      object_url = link_to(t('comments.step_url'), "#stepContainer#{@commentable.id}", class: 'scroll-page-with-anchor')
+    else
+      object_name = @commentable.name
+    end
 
     render json: {
-      object_name: @commentable.name,
+      object_name: object_name,
+      object_url: object_url,
       comment_addable: comment_addable?(@commentable),
       comments: render_to_string(partial: 'shared/comments/comments_list.html.erb',
                                  locals: { comments: comments })

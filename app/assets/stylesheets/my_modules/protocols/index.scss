@@ -7,7 +7,20 @@
 @import "mixins";
 
 .content-pane.my-modules-protocols-index {
-  padding: 10px;
+  background-color: $color-alto;
+  margin: 0 -16px;
+  min-height: calc(100vh - var(--navbar-height) * 2);
+  overflow: hidden;
+  padding: 36px 10px 10px;
+  width: calc(100% + 31px);
+
+  .my-module-position-container {
+    background-color: $color-white;
+    box-shadow: $flyout-shadow;
+    margin: 0 auto;
+    max-width: 900px;
+    padding: 10px;
+  }
 }
 
 .content-pane.protocols-repository-edit-view {
@@ -15,13 +28,13 @@
 }
 
 .task-section {
-  border-left: 3px solid $color-concrete;
   margin: 16px 0;
   padding-left: 16px;
 
   .task-section-caret {
     color: $color-volcano;
     display: inline-block;
+    padding: .5em;
     text-decoration: none;
 
     .fas {
@@ -68,7 +81,7 @@
 
       .repositories-assign-container {
         flex-grow: 1;
-        max-width: 200px;
+        max-width: 150px;
 
         .btn {
           text-align: left;
@@ -368,6 +381,10 @@
 
   .task-notes-content {
     margin-left: 10px;
+
+    .form-group.has-error {
+      border: 1px solid $brand-danger;
+    }
   }
 }
 
@@ -388,6 +405,7 @@
   .status-info {
     @include font-h2;
     color: inherit;
+    padding: .5em;
     text-decoration: none;
 
     &:hover,
@@ -466,7 +484,13 @@
     }
 
     .dropdown-footer {
+      display: flex;
       padding: 16px;
+
+      .button-container {
+        margin-left: auto;
+        margin-right: auto;
+      }
     }
   }
 }
@@ -475,7 +499,7 @@
   .task-details-button {
     @include font-h2;
     color: inherit;
-    margin: 0 3px;
+    margin-left: -5px;
     text-decoration: none;
   }
 
@@ -496,26 +520,63 @@
 }
 
 .task-information {
-  column-gap: 1em;
-  display: grid;
-  grid-template-columns: auto minmax(max-content, 18em);
-
   .task-section-header {
-    grid-column: 1 / span 1;
+    align-items: center;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    width: 100%;
   }
 
-  .task-details {
-    grid-column: 1 / span 1;
-    grid-row: 2 / span 1;
+  .status-buttons {
+    .status-flow-dropdown[data-status-changing=true] {
+      .caret.pull-right {
+        display: none;
+      }
+    }
+
+    > div > .btn {
+      min-width: 115px;
+    }
   }
 
   .task-flows {
-    grid-column: 2 / span 1;
-    grid-row: 1 / span 2;
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+
+    #dropdownTaskFlowList {
+      min-width: 230px;
+    }
 
     .status-label {
       @include font-small;
-      font-weight: bold;
+      flex-basis: 50%;
+      font-weight: 700;
+      margin-right: .5em;
+      text-align: right;
+
+      .status-note {
+        font-weight: normal;
+      }
+
+      .pull-right {
+        font-weight: 400;
+      }
+    }
+
+    .status-flow-dropdown {
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+
+    .status-buttons {
+      display: flex;
+
+      > :not(:first-child):not(.dropdown-menu) {
+        margin-left: .5em;
+      }
     }
 
     .status-transition-error {
@@ -530,17 +591,51 @@
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 810px) {
+  .task-information .task-section-header {
+    display: block;
+
+    .task-flows,
+    .status-label,
+    .status-buttons {
+      display: block;
+      max-width: 230px;
+    }
+
+    .status-label {
+      margin: 0;
+      text-align: left;
+    }
+
+    .status-buttons > :not(:first-child):not(.dropdown-menu) {
+      margin-left: 0;
+      margin-top: .5em;
+    }
+  }
+
+  .task-information .expanded {
+    height: auto;
+  }
+
+  .content-pane.my-modules-protocols-index {
+    padding: 10px 0 0 0;
+  }
+
   .my-module-protocol-status {
     .status-info-dropdown {
       left: -75px;
       width: 300px;
 
       .dropdown-footer {
-        .btn {
-          float: left !important;
-          margin: 5px 0;
-          width: auto;
+        display: block;
+
+        .button-container {
+          display: flex;
+
+          .btn {
+            margin: 5px auto;
+            width: 230px;
+          }
         }
       }
     }

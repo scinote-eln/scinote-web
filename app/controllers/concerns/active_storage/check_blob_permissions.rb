@@ -65,9 +65,9 @@ module ActiveStorage
                           can_read_protocol_in_repository?(asset.object)
       when 'ResultText'
         render_403 unless can_read_experiment?(asset.object.result.my_module.experiment)
-      when 'Step'
-        render_403 unless can_read_protocol_in_module?(asset.object.protocol) ||
-                          can_read_protocol_in_repository?(asset.object.protocol)
+      when 'StepText'
+        render_403 unless can_read_protocol_in_module?(asset.object.step.protocol) ||
+                          can_read_protocol_in_repository?(asset.object.step.protocol)
       else
         render_403
       end
