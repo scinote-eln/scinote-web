@@ -128,12 +128,17 @@
         if (e && $(e.target).hasClass('record-info-link')) return
         if (e && $(e.target).parent().hasClass('atwho-inserted')) return
 
-        TinyMCE.init(textArea, (data) => {
-          if (data) {
-            this.$emit('update', data)
+        TinyMCE.init(
+          textArea,
+          {
+            onSaveCallback() {
+              if (data) {
+                this.$emit('update', data)
+              }
+              this.$emit('editingDisabled');
+            }
           }
-          this.$emit('editingDisabled')
-        }).then(() => {
+        ).then(() => {
           this.active = true;
           this.initCharacterCount();
         });

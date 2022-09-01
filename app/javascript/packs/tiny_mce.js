@@ -3,18 +3,15 @@ import 'tinymce/models/dom';
 import 'tinymce/icons/default';
 import 'tinymce/themes/silver';
 
-//import 'tinymce/plugins/custom_image_toolbar';
 import 'tinymce/plugins/table';
 import 'tinymce/plugins/autosave';
 import 'tinymce/plugins/autoresize';
-//import 'tinymce/plugins/customimageuploader';
 import 'tinymce/plugins/link';
 import 'tinymce/plugins/advlist';
 import 'tinymce/plugins/codesample';
 import 'tinymce/plugins/autolink';
 import 'tinymce/plugins/lists';
 import 'tinymce/plugins/charmap';
-//import 'tinymce/plugins/hr';
 import 'tinymce/plugins/anchor';
 import 'tinymce/plugins/searchreplace';
 import 'tinymce/plugins/wordcount';
@@ -24,11 +21,6 @@ import 'tinymce/plugins/insertdatetime';
 import 'tinymce/plugins/nonbreaking';
 import 'tinymce/plugins/save';
 import 'tinymce/plugins/directionality';
-//import 'tinymce/plugins/paste';
-//import 'tinymce/plugins/textcolor';
-//import 'tinymce/plugins/colorpicker';
-//import 'tinymce/plugins/textpattern';
-//import 'tinymce/plugins/placeholder';
 
 window.TinyMCE = (function() {
   'use strict';
@@ -152,7 +144,7 @@ window.TinyMCE = (function() {
 
   // returns a public API for TinyMCE editor
   return Object.freeze({
-    init: function(selector, onSaveCallback) {
+    init: function(selector, options) {
       var editorInstancePromise;
       var tinyMceContainer;
       var tinyMceInitSize;
@@ -182,6 +174,7 @@ window.TinyMCE = (function() {
           toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link | forecolor backcolor | codesample',
           plugins: plugins,
           autoresize_bottom_margin: 20,
+          placeholder: options.placeholder,
           skin: false,
           content_css: false,
           content_style: "body { font-family: Lato, sans-serif; }",
@@ -316,7 +309,7 @@ window.TinyMCE = (function() {
                 editorForm.find('.tinymce-view').html(data.html).removeClass('hidden');
                 editor.plugins.autosave.removeDraft();
                 removeDraft(editor, textAreaObject);
-                if (onSaveCallback) { onSaveCallback(data); }
+                if (options.onSaveCallback) { options.onSaveCallback(data); }
               }).on('ajax:error', function(ev, data) {
                 var model = editor.getElement().dataset.objectType;
                 $(this).renderFormErrors(model, data.responseJSON);
@@ -344,7 +337,7 @@ window.TinyMCE = (function() {
                 editor.remove();
 
                 updateScrollPosition(editorForm);
-                if (onSaveCallback) { onSaveCallback(); }
+                if (options.onSaveCallback) { options.onSaveCallback(); }
               })
               .removeClass('hidden');
 
