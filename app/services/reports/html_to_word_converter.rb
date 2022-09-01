@@ -112,7 +112,7 @@ module Reports
         end
 
         if elem.name == 'sub'
-           elements.push(sub_element(elem))
+          elements.push(sub_element(elem))
           next
         end
 

@@ -14,11 +14,11 @@ module Reports
           elsif text_el[:type] == 'a'
             Reports::DocxRenderer.render_link_element(self, text_el, options)
           elsif text_el[:type] == 'sup'
-            text text_el[:value] do 
+            text text_el[:value] do
               vertical_align 'superscript'
             end
           elsif text_el[:type] == 'sub'
-            text text_el[:value] do 
+            text text_el[:value] do
               vertical_align 'subscript'
             end
           end
