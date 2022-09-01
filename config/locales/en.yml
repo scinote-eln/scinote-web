@@ -803,6 +803,10 @@ en:
         admin: "Administrator"
 
   label_templates:
+    fluics:
+      sync:
+        success: 'Refresh successful'
+        error: 'Refresh unsuccessful'
     repository_row:
       errors:
         unsupported_key: "Key %{key} is not supported by this label template renderer."
