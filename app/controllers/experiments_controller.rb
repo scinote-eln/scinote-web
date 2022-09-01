@@ -278,7 +278,7 @@ class ExperimentsController < ApplicationController
       format.json do
         render json: {
           workflowimg: render_to_string(
-            partial: 'projects/show/workflow_img.html.erb',
+            partial: 'projects/show/workflow_img',
             locals: { experiment: @experiment }
           )
         }
