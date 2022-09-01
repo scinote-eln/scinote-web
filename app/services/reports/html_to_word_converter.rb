@@ -58,7 +58,7 @@ module Reports
             temp_p = []
           end
           elements.push(elem)
-        elsif %w(br text a).include? elem[:type]
+        elsif %w(br text a sup sub).include? elem[:type]
           temp_p.push(elem)
         end
       end
@@ -103,6 +103,16 @@ module Reports
 
         if elem.name == 'table'
           elements.push(tiny_mce_table_element(elem))
+          next
+        end
+
+        if elem.name == 'sup'
+          elements.push(sup_element(elem))
+          next
+        end
+
+        if elem.name == 'sub'
+           elements.push(sub_element(elem))
           next
         end
 
@@ -256,6 +266,14 @@ module Reports
         { type: 'tr', data: cells }
       end.reject(&:blank?)
       { type: 'table', data: rows }
+    end
+
+    def sup_element(element)
+      { type: 'sup', value: element.text }
+    end
+
+    def sub_element(element)
+      { type: 'sub', value: element.text }
     end
   end
 end
