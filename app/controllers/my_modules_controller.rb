@@ -281,6 +281,7 @@ class MyModulesController < ApplicationController
     ActiveRecord::Base.transaction do
       protocol.update!(protocol_params)
       log_activity(:protocol_name_in_task_edited) if protocol.saved_change_to_name?
+      log_activity(:protocol_description_in_task_edited) if protocol.saved_change_to_description?
       TinyMceAsset.update_images(protocol, params[:tiny_mce_images], current_user)
     end
 
