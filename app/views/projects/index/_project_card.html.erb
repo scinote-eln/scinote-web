@@ -27,7 +27,14 @@
     <% end %>
   </div>
   <div class="actions actions-cell table-cell">
-    <%= render partial: 'projects/index/project_actions_dropdown.html.erb', locals: { project: project, view: 'cards' } %>
+    <div
+      class="dropdown dropdown-async project-actions-menu  <%= 'new-comments' if has_unseen_comments?(project) %>"
+      data-dropdown-url="<%= actions_dropdown_project_path(project) %>">
+      <button class="btn btn-light dropdown-toggle icon-btn" type="button" id="projectActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <i class="fas fa-ellipsis-h"></i>
+      </button>
+      <ul></ul>
+    </div>
   </div>
 
   <div class="data-row start-date-cell table-cell">
