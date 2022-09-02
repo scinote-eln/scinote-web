@@ -302,6 +302,7 @@ Rails.application.routes.draw do
         get 'notifications'
         get 'experiments_cards'
         get 'sidebar'
+        get 'actions_dropdown'
         put 'view_type'
       end
 
