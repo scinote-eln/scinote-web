@@ -7,7 +7,7 @@
 // - refresh project users tab after manage user modal is closed
 // - refactor view handling using library, ex. backbone.js
 
-/* global HelperModule dropdownSelector Sidebar Turbolinks filterDropdown InfiniteScroll GLOBAL_CONSTANTS */
+/* global HelperModule dropdownSelector Sidebar Turbolinks filterDropdown InfiniteScroll AsyncDropdown GLOBAL_CONSTANTS */
 /* eslint-disable no-use-before-define */
 
 var ProjectsIndex = (function() {
@@ -655,6 +655,7 @@ var ProjectsIndex = (function() {
     initProjectsFilters();
     initArchiveRestoreButton();
     loadCardsView();
+    AsyncDropdown.init($(projectsWrapper));
 
     $(projectsWrapper).on('click', '.folder-card-selector', function() {
       let folderCard = $(this).closest('.folder-card');

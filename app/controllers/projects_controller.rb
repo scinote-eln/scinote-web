@@ -12,9 +12,11 @@ class ProjectsController < ApplicationController
   helper_method :current_folder
 
   before_action :switch_team_with_param, only: :index
-  before_action :load_vars, only: %i(show edit update notifications sidebar experiments_cards view_type actions_dropdown)
+  before_action :load_vars, only: %i(show edit update notifications
+                                     sidebar experiments_cards view_type actions_dropdown)
   before_action :load_current_folder, only: %i(index cards new show)
-  before_action :check_view_permissions, only: %i(show notifications sidebar experiments_cards view_type actions_dropdown)
+  before_action :check_view_permissions, only: %i(show notifications sidebar
+                                                  experiments_cards view_type actions_dropdown)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
   before_action :load_exp_sort_var, only: :show
@@ -340,15 +342,13 @@ class ProjectsController < ApplicationController
   end
 
   def actions_dropdown
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'projects/index/project_actions_dropdown.html.erb',
-            locals: { project: @project, view: @project.current_view_state(current_user) }
-          )
-        }
-      end
+    if stale?(@project)
+      render json: {
+        html: render_to_string(
+          partial: 'projects/index/project_actions_dropdown.html.erb',
+          locals: { project: @project }
+        )
+      }
     end
   end
 
