@@ -310,6 +310,17 @@ class ExperimentsController < ApplicationController
     end
   end
 
+  def actions_dropdown
+    if stale?([@experiment, @experiment.project])
+      render json: {
+        html: render_to_string(
+          partial: 'projects/show/experiment_actions_dropdown',
+          locals: { experiment: @experiment }
+        )
+      }
+    end
+  end
+
   private
 
   def load_experiment
