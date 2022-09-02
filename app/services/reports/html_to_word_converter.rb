@@ -33,7 +33,6 @@ module Reports
               color style[:color]
               bold style[:bold]
               italic style[:italic]
-              underline true
             end
           end
         elsif elem[:type] == 'image'
