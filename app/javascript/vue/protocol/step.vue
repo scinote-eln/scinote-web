@@ -78,7 +78,7 @@
               <i class="fas fa-font"></i>
               {{ i18n.t('protocols.steps.insert.text') }}
             </li>
-            <li class="action"  @click="showFileModal = true">
+            <li v-if="attachmentsReady" class="action"  @click="showFileModal = true">
               <i class="fas fa-paperclip"></i>
               {{ i18n.t('protocols.steps.insert.attachment') }}
             </li>
@@ -145,6 +145,7 @@
         <Attachments v-if="attachments.length"
                     :step="step"
                     :attachments="attachments"
+                    :attachmentsReady="attachmentsReady"
                     @attachments:openFileModal="showFileModal = true"
                     @attachment:deleted="attachmentDeleted"
                     @attachment:uploaded="loadAttachments"
@@ -217,6 +218,7 @@
       return {
         elements: [],
         attachments: [],
+        attachmentsReady: false,
         confirmingDelete: false,
         showFileModal: false,
         showClipboardPasteModal: false,
@@ -272,8 +274,18 @@
         }
       },
       loadAttachments() {
+        this.attachmentsReady = false
+
         $.get(this.urls.attachments_url, (result) => {
           this.attachments = result.data
+
+          if (this.attachments.findIndex((e) => e.attributes.attached === false) >= 0) {
+            setTimeout(() => {
+              this.loadAttachments()
+            }, 10000)
+          } else {
+            this.attachmentsReady = true
+          }
         });
         this.showFileModal = false;
       },
