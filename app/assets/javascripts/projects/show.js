@@ -1,4 +1,4 @@
-/* global animateSpinner filterDropdown Sidebar Turbolinks HelperModule InfiniteScroll GLOBAL_CONSTANTS */
+/* global animateSpinner filterDropdown Sidebar Turbolinks HelperModule InfiniteScroll AsyncDropdown GLOBAL_CONSTANTS */
 /* eslint-disable no-use-before-define */
 (function() {
   const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable', 'duplicable'];
@@ -374,6 +374,7 @@
     initEditMoveDuplicateToolbarButton();
     initNewExperimentToolbarButton();
     initSelectAllCheckbox();
+    AsyncDropdown.init($('#content-wrapper'));
   }
 
   init();

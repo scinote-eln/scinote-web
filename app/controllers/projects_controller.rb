@@ -356,7 +356,7 @@ class ProjectsController < ApplicationController
     if stale?(@project)
       render json: {
         html: render_to_string(
-          partial: 'projects/index/project_actions_dropdown.html.erb',
+          partial: 'projects/index/project_actions_dropdown',
           locals: { project: @project }
         )
       }

@@ -336,6 +336,7 @@ Rails.application.routes.draw do
       end
       member do
         get 'permissions'
+        get 'actions_dropdown'
         get 'canvas' # Overview/structure for single experiment
         # AJAX-loaded canvas edit mode (from canvas)
         get 'canvas/edit', to: 'canvas#edit'
