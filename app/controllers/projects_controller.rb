@@ -12,10 +12,10 @@ class ProjectsController < ApplicationController
   helper_method :current_folder
 
   before_action :switch_team_with_param, only: :index
-  before_action :load_vars, only: %i(show edit update notifications
+  before_action :load_vars, only: %i(show permissions edit update notifications
                                      sidebar experiments_cards view_type actions_dropdown)
   before_action :load_current_folder, only: %i(index cards new show)
-  before_action :check_view_permissions, only: %i(show notifications sidebar
+  before_action :check_view_permissions, only: %i(show permissions notifications sidebar
                                                   experiments_cards view_type actions_dropdown)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
@@ -78,6 +78,17 @@ class ProjectsController < ApplicationController
           partial: 'projects/index/team_projects.html.erb',
           locals: { cards: cards }
         )
+      }
+    end
+  end
+
+  def permissions
+    if stale?([@product, current_team])
+      render json: {
+        editable: can_manage_project?(@project),
+        moveable: can_update_team?(current_team),
+        archivable: can_archive_project?(@project),
+        restorable: can_restore_project?(@project)
       }
     end
   end

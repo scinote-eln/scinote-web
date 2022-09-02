@@ -220,7 +220,17 @@
         $(this).closest('.experiment-card').removeClass('selected');
         selectedExperiments.splice(index, 1);
       }
-      updateExperimentsToolbar();
+
+      if (this.checked) {
+        $.get(card.data('permissions-url'), function(result) {
+          PERMISSIONS.forEach((permission) => {
+            card.data(permission, result[permission]);
+          });
+          updateExperimentsToolbar();
+        });
+      } else {
+        updateExperimentsToolbar();
+      }
     });
   }
 

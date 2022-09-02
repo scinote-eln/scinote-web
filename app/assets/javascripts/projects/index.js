@@ -689,7 +689,16 @@ var ProjectsIndex = (function() {
         selectedProjects.splice(index, 1);
       }
 
-      updateProjectsToolbar();
+      if (this.checked) {
+        $.get(projectCard.data('permissions-url'), function(result) {
+          PERMISSIONS.forEach((permission) => {
+            projectCard.data(permission, result[permission]);
+          });
+          updateProjectsToolbar();
+        });
+      } else {
+        updateProjectsToolbar();
+      }
     });
   }
 
