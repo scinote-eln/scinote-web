@@ -1,10 +1,7 @@
 <div class="card project-card"
      data-id="<%= project.id %>"
      data-edit-url="<%= edit_project_path(project) %>"
-     data-editable="<%= can_manage_project?(project) %>"
-     data-moveable="<%= can_update_team?(current_team) %>"
-     data-archivable="<%= project.active? && can_archive_project?(project) %>"
-     data-restorable="<%= project.archived? && can_restore_project?(project) %>">
+     data-permissions-url="<%= permissions_project_path(project) %>">
   <div class="checkbox-cell table-cell">
     <div class="sci-checkbox-container">
       <input value="1" type="checkbox" class="sci-checkbox project-card-selector">

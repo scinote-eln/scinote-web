@@ -1,11 +1,7 @@
 <div class="card experiment-card"
      data-id="<%= experiment.id %>"
      data-edit-url=""
-     data-editable="<%= can_manage_experiment?(experiment) %>"
-     data-moveable="<%= can_move_experiment?(experiment) %>"
-     data-archivable="<%= experiment.active? && can_archive_experiment?(experiment) %>"
-     data-restorable="<%= experiment.archived? && can_restore_experiment?(experiment) %>"
-     data-duplicable="<%= can_clone_experiment?(experiment) %>">
+     data-permissions-url="<%= permissions_experiment_path(experiment) %>">
   <div class="checkbox-cell table-cell">
     <% if project_is_managable %>
       <div class="sci-checkbox-container">

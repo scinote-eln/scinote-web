@@ -64,6 +64,18 @@ class ExperimentsController < ApplicationController
     }
   end
 
+  def permissions
+    if stale?([@experiment, @experiment.project])
+      render json: {
+        editable: can_manage_experiment?(@experiment),
+        moveable: can_move_experiment?(@experiment),
+        archivable: can_archive_experiment?(@experiment),
+        restorable: can_restore_experiment?(@experiment),
+        duplicable: can_clone_experiment?(@experiment)
+      }
+    end
+  end
+
   def canvas
     redirect_to module_archive_experiment_path(@experiment) if @experiment.archived_branch?
     @project = @experiment.project
@@ -278,7 +290,7 @@ class ExperimentsController < ApplicationController
       format.json do
         render json: {
           workflowimg: render_to_string(
-            partial: 'projects/show/workflow_img',
+            partial: 'projects/show/workflow_img.html.erb',
             locals: { experiment: @experiment }
           )
         }
