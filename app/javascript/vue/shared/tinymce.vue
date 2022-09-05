@@ -3,13 +3,13 @@
     <div class="tinymce-container" :class="{ 'error': error }">
       <form class="tiny-mce-editor" role="form" :action="updateUrl" accept-charset="UTF-8" data-remote="true" method="post">
         <input type="hidden" name="_method" value="patch">
-        <div class="hidden tinymce-cancel-button mce-widget mce-btn mce-menubtn mce-flow-layout-item mce-btn-has-text pull-right" tabindex="-1">
+        <div class="hidden tinymce-cancel-button tox-mbtn" tabindex="-1">
           <button type="button" tabindex="-1">
             <span class="fas fa-times"></span>
             <span class="mce-txt">{{ i18n.t('general.cancel')  }}</span>
           </button>
         </div>
-        <div class="hidden tinymce-save-button mce-widget mce-btn mce-menubtn mce-flow-layout-item mce-btn-has-text mce-last pull-right" tabindex="-1">
+        <div class="hidden tinymce-save-button tox-mbtn" tabindex="-1">
           <button type="button" tabindex="-1">
             <span class="fas fa-check"></span>
             <span class="mce-txt">{{ i18n.t('general.save') }}</span>
@@ -128,12 +128,17 @@
         if (e && $(e.target).hasClass('record-info-link')) return
         if (e && $(e.target).parent().hasClass('atwho-inserted')) return
 
-        TinyMCE.init(textArea, (data) => {
-          if (data) {
-            this.$emit('update', data)
+        TinyMCE.init(
+          textArea,
+          {
+            onSaveCallback() {
+              if (data) {
+                this.$emit('update', data)
+              }
+              this.$emit('editingDisabled');
+            }
           }
-          this.$emit('editingDisabled')
-        }).then(() => {
+        ).then(() => {
           this.active = true;
           this.initCharacterCount();
         });

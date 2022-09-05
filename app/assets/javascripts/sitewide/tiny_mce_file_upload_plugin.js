@@ -2,12 +2,14 @@
 /* eslint no-use-before-define: "off" */
 /* eslint no-restricted-syntax: ["off", "BinaryExpression[operator='in']"] */
 /* global tinymce I18n HelperModule validateFileSize */
+
+/*
 (function() {
   'use strict';
 
   tinymce.PluginManager.requireLangPack('customimageuploader');
 
-  tinymce.create('tinymce.plugins.CustomImageUploader', {
+  tinymce.add('tinymce.plugins.CustomImageUploader', {
     CustomImageUploader: function(ed) {
       var iframe;
       var editor = ed;
@@ -68,8 +70,8 @@
       }
 
       function buildHTML(image) {
-        return `<img src="${image.url}" 
-                     data-mce-token="${image.token}" 
+        return `<img src="${image.url}"
+                     data-mce-token="${image.token}"
                      alt="description-${image.token}" />`;
       }
 
@@ -131,3 +133,4 @@
     tinymce.plugins.CustomImageUploader
   );
 }());
+*/

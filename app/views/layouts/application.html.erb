@@ -8,10 +8,11 @@
     <meta name="tiny-mce-assets-url" content="<%= tiny_mce_assets_path %>">
     <meta name="highlightjs-url" content="<%= asset_path('highlightjs-github-theme.css') %>">
     <%= stylesheet_link_tag 'application', media: 'all' %>
+
+
+    <%= javascript_include_tag 'jquery_bundle' %>
     <%= javascript_include_tag 'application' %>
     <%= javascript_pack_tag 'application' %>
-
-
 
     <% if MarvinJsService.enabled? && ENV['MARVINJS_API_KEY'] %>
       <script src="https://marvinjs.chemicalize.com/v1/<%= ENV['MARVINJS_API_KEY'] %>/client-settings.js"></script>

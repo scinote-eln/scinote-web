@@ -281,13 +281,13 @@ var MarvinJsEditorApi = (function() {
 });
 
 // TinyMCE plugin
-
+/*
 (function() {
   'use strict';
 
   tinymce.PluginManager.requireLangPack('MarvinJsPlugin');
 
-  tinymce.create('tinymce.plugins.MarvinJsPlugin', {
+  tinymce.add('tinymce.plugins.MarvinJsPlugin', {
     MarvinJsPlugin: function(ed) {
       var editor = ed;
 
@@ -320,6 +320,7 @@ var MarvinJsEditorApi = (function() {
     tinymce.plugins.MarvinJsPlugin
   );
 })();
+*/
 
 // Initialization
 $(document).on('click', '.marvinjs-edit-button', function() {
@@ -337,7 +338,7 @@ $(document).on('click', '.marvinjs-edit-button', function() {
 $(document).on('turbolinks:load', function() {
   MarvinJsEditor = MarvinJsEditorApi();
   if (MarvinJsEditor.enabled()) {
-    if ($('#marvinjs-editor')[0].dataset.marvinjsMode === 'remote' && typeof(ChemicalizeMarvinJs) !== 'undefined') {
+    if ($('#marvinjs-editor')[0].dataset.marvinjsMode === 'remote' && typeof (ChemicalizeMarvinJs) !== 'undefined') {
       ChemicalizeMarvinJs.createEditor('#marvinjs-sketch').then(function(marvin) {
         marvin.setDisplaySettings({ toolbars: 'reporting' });
         marvinJsRemoteEditor = marvin;
