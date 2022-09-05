@@ -68,7 +68,7 @@
           targets: 1,
           className: 'item-name',
           render: function(value, type, row) {
-            return `<a href="${row.repositoryUrl}">${value}</a>`;
+            return `<a title="Inventory: ${value}" href="${row.repositoryUrl}">${value}</a>`;
           }
         }, {
           targets: 5,

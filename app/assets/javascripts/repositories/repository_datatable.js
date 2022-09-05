@@ -465,7 +465,7 @@ var RepositoryDatatable = (function(global) {
         className: 'dt-body-center',
         sWidth: '1%',
         render: function(data, type, row) {
-          return `<input class='repository-row-selector sci-checkbox' type='checkbox' data-editable="${row.recordEditable}">
+          return `<input class='repository-row-selector sci-checkbox' type='checkbox' title="repository row checkbox ${row[2]}" data-editable="${row.recordEditable}">
                   <span class='sci-checkbox-label'></span>`;
         }
       }, {
@@ -495,7 +495,7 @@ var RepositoryDatatable = (function(global) {
         visible: true,
         render: function(data, type, row) {
           return "<a href='" + row.recordInfoUrl + "'"
-                 + "class='record-info-link'>" + data + '</a>';
+                 + "class='record-info-link' title='inventory item: " + data + "'>" + data + '</a>';
         }
       }, {
         // Added on column
