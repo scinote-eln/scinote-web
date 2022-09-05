@@ -4,7 +4,8 @@ require 'rails_helper'
 
 describe RepositoryActions::DuplicateRows do
   let!(:user) { create :user }
-  let!(:repository) { create :repository }
+  let!(:team) { create :team, created_by: user }
+  let!(:repository) { create :repository, team: team, created_by: user }
   let!(:list_column) do
     create(:repository_column, name: 'list',
                                repository: repository,
@@ -62,7 +63,7 @@ describe RepositoryActions::DuplicateRows do
     end
 
     it 'prevents to duplicate items that do not already belong to repository' do
-      new_repository = create :repository, name: 'new repo'
+      new_repository = create :repository, name: 'new repo', team: team, created_by: user
       new_row = create :repository_row, name: 'other row',
                                         repository: new_repository
       described_class.new(user, repository, [new_row.id]).call

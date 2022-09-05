@@ -26,7 +26,7 @@ class Repository < RepositoryBase
            class_name: 'RepositorySnapshot',
            foreign_key: :parent_id,
            inverse_of: :original_repository
-  has_many :repository_ledger_records, as: :references, dependent: :nullify
+  has_many :repository_ledger_records, as: :reference, dependent: :nullify
   has_many :repository_table_filters, dependent: :destroy
 
   before_save :sync_name_with_snapshots, if: :name_changed?
@@ -99,6 +99,10 @@ class Repository < RepositoryBase
     else
       repository_rows.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
     end
+  end
+
+  def permission_parent
+    team
   end
 
   def default_table_state

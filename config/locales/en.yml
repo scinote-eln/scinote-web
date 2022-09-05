@@ -2606,6 +2606,7 @@ en:
   date:
     formats:
       full: "%{date_format}"
+      full_date: "%{date_format}"
   time:
     formats:
       full_js: "D.M.YYYY HH:mm"

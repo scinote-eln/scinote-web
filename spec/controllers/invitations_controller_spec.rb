@@ -5,18 +5,15 @@ require 'rails_helper'
 describe Users::InvitationsController, type: :controller do
   login_user
 
-  let(:user) { subject.current_user }
-  let!(:team) { create :team, created_by: user }
-  let!(:user_team) { create :user_team, :admin, user: user, team: team }
+  include_context 'reference_project_structure'
 
   describe 'POST invite_users' do
     let(:invited_user) { create :user }
-    let(:team) { create :team }
     let(:params) do
       {
         team_ids: [team.id],
         emails: [invited_user.email],
-        role: 'guest'
+        role_id: viewer_role.id
       }
     end
     let(:action) { post :invite_users, params: params, format: :json }
@@ -35,9 +32,9 @@ describe Users::InvitationsController, type: :controller do
           .to(change { Activity.count })
       end
 
-      it 'adds user_team record in DB' do
+      it 'adds user team assignment record in DB' do
         expect { action }
-          .to(change { UserTeam.count })
+          .to(change { UserAssignment.count })
       end
     end
   end

@@ -5,7 +5,7 @@ require 'rails_helper'
 describe MyModuleCommentsController, type: :controller do
   login_user
   include_context 'reference_project_structure' , {
-    role: :normal_user,
+    team_role: :normal_user,
     my_module_comment: true
   }
 

@@ -12,8 +12,6 @@ RSpec.describe 'Api::V1::AssetsController', type: :request do
     @protocol = create(:protocol, my_module: @task)
     @step = create(:step, protocol: @protocol)
 
-    create(:user_team, user: @user, team: @team)
-
     create_user_assignment(@task, UserRole.find_by(name: I18n.t('user_roles.predefined.owner')), @user)
 
     @valid_headers =
