@@ -161,9 +161,8 @@ var MarvinJsEditorApi = (function() {
       } else if (config.objectType === 'Result') {
         location.reload();
       } else if (config.objectType === 'TinyMceAsset') {
-        json = tinymce.util.JSON.parse(result);
+        json = JSON.parse(result);
         config.editor.execCommand('mceInsertContent', false, TinyMceBuildHTML(json));
-        TinyMCE.updateImages(config.editor);
       }
       $(marvinJsModal).modal('hide');
       config.button.dataset.inProgress = false;
@@ -279,48 +278,6 @@ var MarvinJsEditorApi = (function() {
     }
   };
 });
-
-// TinyMCE plugin
-/*
-(function() {
-  'use strict';
-
-  tinymce.PluginManager.requireLangPack('MarvinJsPlugin');
-
-  tinymce.add('tinymce.plugins.MarvinJsPlugin', {
-    MarvinJsPlugin: function(ed) {
-      var editor = ed;
-
-      function openMarvinJs() {
-        MarvinJsEditor.open({
-          mode: 'new-tinymce',
-          marvinUrl: '/tiny_mce_assets/marvinjs',
-          editor: editor
-        });
-      }
-      // Add a button that opens a window
-      editor.addButton('marvinjsplugin', {
-        tooltip: I18n.t('marvinjs.new_button'),
-        icon: 'marvinjs',
-        onclick: openMarvinJs
-      });
-
-      // Adds a menu item to the tools menu
-      editor.addMenuItem('marvinjsplugin', {
-        text: I18n.t('marvinjs.new_button'),
-        icon: 'marvinjs',
-        context: 'insert',
-        onclick: openMarvinJs
-      });
-    }
-  });
-
-  tinymce.PluginManager.add(
-    'marvinjsplugin',
-    tinymce.plugins.MarvinJsPlugin
-  );
-})();
-*/
 
 // Initialization
 $(document).on('click', '.marvinjs-edit-button', function() {
