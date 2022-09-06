@@ -485,6 +485,11 @@ var ProjectsIndex = (function() {
         if (viewContainer.find('.no-results-container').length) {
           viewContainer.addClass('no-results');
         }
+
+        if (!data.next_page) {
+          $(cardsWrapper).addClass('last-page');
+        }
+
         selectedProjects.length = 0;
         selectedProjectFolders.length = 0;
         updateProjectsToolbar();
@@ -497,6 +502,7 @@ var ProjectsIndex = (function() {
             placeholderTemplate: '#projectPlaceholder',
             endOfListTemplate: '#projectEndOfList',
             pageSize: pageSize,
+            lastPage: !!data.next_page,
             customResponse: (response) => {
               $(response.cards_html).appendTo(cardsWrapper);
             },
