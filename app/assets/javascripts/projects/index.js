@@ -486,10 +486,6 @@ var ProjectsIndex = (function() {
           viewContainer.addClass('no-results');
         }
 
-        if (!data.next_page) {
-          $(cardsWrapper).addClass('last-page');
-        }
-
         selectedProjects.length = 0;
         selectedProjectFolders.length = 0;
         updateProjectsToolbar();
