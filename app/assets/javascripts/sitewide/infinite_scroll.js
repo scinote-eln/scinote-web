@@ -46,6 +46,11 @@ var InfiniteScroll = (function() {
     var $container = $(object);
     $container.data('next-page', 2);
     $container.data('config', config);
+
+    if (config.lastPage) {
+      $container.addClass('last-page');
+    }
+
     if (config.loadFirstPage) {
       loadData($container, 1);
     }
