@@ -21,6 +21,7 @@ import 'tinymce/plugins/insertdatetime';
 import 'tinymce/plugins/nonbreaking';
 import 'tinymce/plugins/save';
 import 'tinymce/plugins/directionality';
+import './tinymce/marvinjs/plugin';
 
 window.TinyMCE = (function() {
   'use strict';
@@ -157,7 +158,7 @@ window.TinyMCE = (function() {
         $(selector).closest('.form-group')
           .before('<div class="tinymce-placeholder" style="height:' + tinyMceInitSize + 'px"></div>');
         tinyMceContainer.addClass('hidden');
-        plugins = 'table autosave autoresize link advlist codesample autolink lists charmap anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality';
+        plugins = 'table autosave autoresize link advlist codesample autolink lists charmap anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality marvinjs';
 
         // if (typeof (MarvinJsEditor) !== 'undefined') plugins += ' marvinjsplugin';
 
@@ -171,10 +172,10 @@ window.TinyMCE = (function() {
           selector: selector,
           convert_urls: false,
           menubar: 'file edit view insert format table',
-          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link | forecolor backcolor | codesample',
+          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link | forecolor backcolor | codesample | marvinjs',
           plugins: plugins,
           autoresize_bottom_margin: 20,
-          placeholder: options.placeholder,
+          // placeholder: options.placeholder,
           skin: false,
           content_css: false,
           content_style: "body { font-family: Lato, sans-serif; }",
