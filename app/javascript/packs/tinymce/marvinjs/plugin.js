@@ -30,7 +30,7 @@ tinymce.PluginManager.add('marvinjs', (editor) => {
     text: I18n.t('marvinjs.new_button'),
     icon: 'marvinjs',
     context: 'insert',
-    onclick: openMarvinJs
+    onAction: openMarvinJs
   });
 
   return {
