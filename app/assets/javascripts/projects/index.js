@@ -498,7 +498,7 @@ var ProjectsIndex = (function() {
             placeholderTemplate: '#projectPlaceholder',
             endOfListTemplate: '#projectEndOfList',
             pageSize: pageSize,
-            lastPage: !!data.next_page,
+            lastPage: !data.next_page,
             customResponse: (response) => {
               $(response.cards_html).appendTo(cardsWrapper);
             },
