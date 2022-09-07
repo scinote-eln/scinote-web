@@ -1,4 +1,4 @@
-// scss-lint:disable ImportantRule
+// scss-lint:disable ImportantRule SelectorDepth
 @import "constants";
 
 @font-face {
@@ -156,25 +156,6 @@
   &::after {
     display: none;
   }
-
-  .mce-container-body.mce-abs-layout {
-    background: $brand-primary;
-    position: relative;
-    top: -10px;
-
-    .mce-container,
-    .mce-widget {
-      background: transparent !important;
-    }
-
-    .mce-btn:hover {
-      border-color: transparent;
-    }
-
-    .mce-ico {
-      color: $color-white;
-    }
-  }
 }
 
 .mce-window {
@@ -202,4 +183,29 @@
   display: flex !important;
 }
 
-// scss-lint:enable ImportantRule
+
+
+.tox .tox-pop {
+  margin-top: -12px;
+
+  &::after,
+  &::before {
+    display: none !important;
+  }
+
+  .tox-pop__dialog {
+    border: 0;
+    border-radius: 0 0 3px 3px;
+    box-shadow: none;
+  }
+
+  .tox-toolbar {
+    background: $brand-primary !important;
+    top: -10px;
+
+    .tox-icon svg {
+      fill: $color-white;
+    }
+  }
+}
+// scss-lint:enable ImportantRule SelectorDepth

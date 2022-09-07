@@ -22,6 +22,7 @@ import 'tinymce/plugins/nonbreaking';
 import 'tinymce/plugins/save';
 import 'tinymce/plugins/directionality';
 import './tinymce/marvinjs/plugin';
+import './tinymce/image_toolbar/plugin';
 
 window.TinyMCE = (function() {
   'use strict';
@@ -87,13 +88,13 @@ window.TinyMCE = (function() {
   }
 
   function initImageToolBar(editor) {
-    var editorIframe = $('#' + editor.id).prev().find('.mce-edit-area iframe');
+    var editorIframe = $('#' + editor.id).next().find('.tox-edit-area iframe');
     var primaryColor = '#104da9';
     editorIframe.contents().find('head').append(`<style type="text/css">
         img::-moz-selection{background:0 0}
         img::selection{background:0 0}
         .mce-content-body img[data-mce-selected]{outline:2px solid ${primaryColor}}
-        .mce-content-body div.mce-resizehandle{background:transparent;border-color:transparent;box-sizing:border-box;height:10px;width:10px}
+        .mce-content-body div.mce-resizehandle{background:transparent;border-color:transparent;box-sizing:border-box;height:10px;width:10px; position:absolute}
         .mce-content-body div.mce-resizehandle:hover{background:transparent}
         .mce-content-body div#mceResizeHandlenw{border-left: 2px solid ${primaryColor}; border-top: 2px solid ${primaryColor}}
         .mce-content-body div#mceResizeHandlene{border-right: 2px solid ${primaryColor}; border-top: 2px solid ${primaryColor}}
@@ -158,7 +159,7 @@ window.TinyMCE = (function() {
         $(selector).closest('.form-group')
           .before('<div class="tinymce-placeholder" style="height:' + tinyMceInitSize + 'px"></div>');
         tinyMceContainer.addClass('hidden');
-        plugins = 'table autosave autoresize link advlist codesample autolink lists charmap anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality marvinjs';
+        plugins = 'table autosave autoresize link advlist codesample autolink lists charmap anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality marvinjs custom_image_toolbar';
 
         // if (typeof (MarvinJsEditor) !== 'undefined') plugins += ' marvinjsplugin';
 
