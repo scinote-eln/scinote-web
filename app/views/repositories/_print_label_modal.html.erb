@@ -4,7 +4,7 @@
       <% if @printers.size > 0 %>
         <%= form_tag print_repository_repository_rows_path, { class: 'print-label-form', data: { remote: true } } do %>
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <button title="close print label modal"type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">
               <% if @repository_rows.size == 1 %>
                 <%= t('repository_row.modal_print_label.head_title', repository_row: @repository_rows.first.name) %>
@@ -35,7 +35,7 @@
         <% end %>
       <% else %>
         <div class="modal-body no-printers-container">
-          <button type="button" class="close modal-absolute-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <button title="close print label modal footer" type="button" class="close modal-absolute-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <%= image_tag 'printers/no_available_printers.png' %>
           <p class="no-printer-title">
             <%= t('repository_row.modal_print_label.no_printers.title') %>
@@ -44,7 +44,7 @@
             <%= t('repository_row.modal_print_label.no_printers.description') %>
           </p>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer" title="visit print label modal">
           <%= link_to t('repository_row.modal_print_label.no_printers.visit_blog'), Constants::SCINOTE_FLUICS_URL, class: "btn btn-primary", target: "_blank" %>
         </div>
       <% end %>

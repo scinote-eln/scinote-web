@@ -68,7 +68,7 @@
           targets: 1,
           className: 'item-name',
           render: function(value, type, row) {
-            return `<a href="${row.repositoryUrl}">${value}</a>`;
+            return `<a title="inventory: ${value}" href="${row.repositoryUrl}">${value}</a>`;
           }
         }, {
           targets: 5,
@@ -202,3 +202,4 @@
   }
   initRepositoryViewSwitcher();
 }());
+
