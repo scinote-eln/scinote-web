@@ -23,6 +23,7 @@ import 'tinymce/plugins/save';
 import 'tinymce/plugins/directionality';
 import './tinymce/marvinjs/plugin';
 import './tinymce/image_toolbar/plugin';
+import './tinymce/placeholder/plugin';
 
 window.TinyMCE = (function() {
   'use strict';
@@ -146,7 +147,7 @@ window.TinyMCE = (function() {
 
   // returns a public API for TinyMCE editor
   return Object.freeze({
-    init: function(selector, options) {
+    init: function(selector, options = {}) {
       var editorInstancePromise;
       var tinyMceContainer;
       var tinyMceInitSize;
@@ -159,8 +160,7 @@ window.TinyMCE = (function() {
         $(selector).closest('.form-group')
           .before('<div class="tinymce-placeholder" style="height:' + tinyMceInitSize + 'px"></div>');
         tinyMceContainer.addClass('hidden');
-        plugins = 'table autosave autoresize link advlist codesample autolink lists charmap anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality marvinjs custom_image_toolbar';
-
+        plugins = 'table autosave autoresize link advlist codesample autolink lists charmap anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality marvinjs placeholder custom_image_toolbar';
         // if (typeof (MarvinJsEditor) !== 'undefined') plugins += ' marvinjsplugin';
 
         if (textAreaObject.data('objectType') === 'step'

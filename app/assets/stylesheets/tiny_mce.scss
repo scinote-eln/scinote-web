@@ -183,8 +183,6 @@
   display: flex !important;
 }
 
-
-
 .tox .tox-pop {
   margin-top: -12px;
 
@@ -208,4 +206,10 @@
     }
   }
 }
+
+.tox-edit-area__iframe {
+  background-color: transparent !important;
+  z-index: 1;
+}
+
 // scss-lint:enable ImportantRule SelectorDepth
