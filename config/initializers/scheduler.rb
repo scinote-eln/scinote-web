@@ -33,7 +33,7 @@ if Rails.application.secrets.system_notifications_uri.present? &&
   end
 end
 
-if LabelPrinter.fluics.any?
+if ENV['ENABLE_FLUICS_SYNC'] && LabelPrinter.fluics.any?
   scheduler.every '24h' do
     LabelPrinters::Fluics::SyncService.new.sync_templates!
   end
