@@ -9,7 +9,7 @@
      <div class="modal-dialog" role="document">
        <div class="modal-content">
          <div class="modal-header">
-           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+           <button title="close export repository modal" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
            <h4 class="modal-title"><%=t 'zip_export.modal_label' %></h4>
          </div>
          <div class="modal-body">
@@ -18,8 +18,8 @@
            <div><%=t 'zip_export.repository_footer_html' %></div>
          </div>
          <div class="modal-footer">
-           <button type='button' class='btn btn-default' data-dismiss='modal' id='close-modal-export-repositories'><%= t('general.cancel')%></button>
-           <%= f.submit t('my_modules.repository.export'), id: "export-repositories", class: "btn btn-success" %>
+           <button title="close export repositor modal footer" type='button' class='btn btn-default' data-dismiss='modal' id='close-modal-export-repositories'><%= t('general.cancel')%></button>
+           <%= f.submit t('my_modules.repository.export'), id: "export-repositories", class: "btn btn-success", title: "export repositories" %>
          </div>
        </div>
      </div>

@@ -55,6 +55,7 @@ var DateTimeHelper = (function() {
 
     hiddenField = `
       <input class="repository-cell-value"
+             title="date time column hidden field"
              type="hidden"
              form="${formId}"
              name="repository_cells[${columnId}]"
@@ -90,6 +91,7 @@ var DateTimeHelper = (function() {
 
     hiddenField = `
       <input class="repository-cell-value"
+             title="date time column ranged hidden field"
              type="hidden"
              form="${formId}"
              name="repository_cells[${columnId}]"
@@ -136,6 +138,7 @@ var DateTimeHelper = (function() {
     return `
       <div class="sci-input-container date-container right-icon">
         <input class="calendar-input date-part sci-input-field"
+                title="date input field"
                 type="datetime"
                 placeholder="${formatJS}"
                 data-datetime-part="date"
@@ -150,6 +153,7 @@ var DateTimeHelper = (function() {
     return `
       <div class="sci-input-container time-container right-icon">
         <input class="time-part sci-input-field"
+               title="time input field"
                type="text"
                data-mask-type="time"
                value='${value}'
@@ -238,7 +242,7 @@ var DateTimeHelper = (function() {
     let endDateDataValue = getDateOrDefault($endSpan, mode);
 
     let inputFields = `
-    <div class="form-group datetime-container range-type ${mode}"
+    <div title="date time input fields" class="form-group datetime-container range-type ${mode}"
          data-form-id="${formId}"
          data-column-id="${columnId}"
          data-type="${columnType}"

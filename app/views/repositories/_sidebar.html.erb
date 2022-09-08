@@ -3,6 +3,7 @@
     <li class="sidebar-leaf" title="<%= repository.name %>">
       <%= link_to repository_path(repository),
           class: "sidebar-link repository-link #{ 'selected' if current_page?(repository_path(repository)) }",
+          title: "#{repository.name} repository link",
           data: {type: 'repository', id: repository.id } do %>
         <% if repository.archived? %>
           <i class="fas fa-archive"></i>&nbsp;

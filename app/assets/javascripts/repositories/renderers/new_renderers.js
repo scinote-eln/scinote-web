@@ -7,6 +7,7 @@ $.fn.dataTable.render.newRowName = function(formId, $cell) {
   $cell.html(`
     <div class="sci-input-container text-field error-icon">
       <input class="sci-input-field"
+             title="new row: ${$cell}"
              form="${formId}"
              type="text"
              name="repository_row[name]"
@@ -25,6 +26,7 @@ $.fn.dataTable.render.newRepositoryTextValue = function(formId, columnId, $cell)
   $cell.html(`
     <div class="sci-input-container text-field  error-icon">
       <input class="sci-input-field"
+             title="new repository text value: ${$cell}"
              form="${formId}"
              type="text"
              name="repository_cells[${columnId}]"
@@ -54,6 +56,7 @@ $.fn.dataTable.render.newRepositoryNumberValue = function(formId, columnId, $cel
   $cell.html(`
     <div class="sci-input-container text-field  error-icon">
       <input class="sci-input-field"
+             title="new repository number value: ${decimals}"
              form="${formId}"
              type="text"
              oninput="this.value = this.value.replace(/[^0-9.]/g, '');
