@@ -202,4 +202,9 @@
   display: flex !important;
 }
 
+.tox-edit-area__iframe {
+  background-color: transparent !important;
+  z-index: 1;
+}
+
 // scss-lint:enable ImportantRule
