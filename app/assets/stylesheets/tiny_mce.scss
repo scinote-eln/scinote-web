@@ -212,4 +212,16 @@
   z-index: 1;
 }
 
+.tox-sidebar-wrap {
+  flex-direction: column !important;
+
+  .restore-draft-notification {
+    flex-basis: 30px;
+  }
+}
+
+.tox-editor-header {
+  z-index: 2 !important;
+}
+
 // scss-lint:enable ImportantRule SelectorDepth

@@ -163,6 +163,7 @@ var MarvinJsEditorApi = (function() {
       } else if (config.objectType === 'TinyMceAsset') {
         json = JSON.parse(result);
         config.editor.execCommand('mceInsertContent', false, TinyMceBuildHTML(json));
+        TinyMCE.updateImages(config.editor);
       }
       $(marvinJsModal).modal('hide');
       config.button.dataset.inProgress = false;
