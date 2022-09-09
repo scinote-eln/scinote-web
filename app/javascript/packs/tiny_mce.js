@@ -23,6 +23,7 @@ import 'tinymce/plugins/insertdatetime';
 import 'tinymce/plugins/nonbreaking';
 import 'tinymce/plugins/save';
 import 'tinymce/plugins/directionality';
+import './tinymce/custom_image_uploader/plugin';
 import './tinymce/marvinjs/plugin';
 import './tinymce/image_toolbar/plugin';
 import './tinymce/placeholder/plugin';
@@ -156,7 +157,7 @@ window.TinyMCE = (() => {
         $(selector).closest('.form-group')
           .before(`<div class="tinymce-placeholder" style="height:${tinyMceInitSize}px"></div>`);
         tinyMceContainer.addClass('hidden');
-        const plugins = 'table autosave autoresize link advlist codesample autolink lists charmap anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality marvinjs placeholder custom_image_toolbar';
+        const plugins = 'table autosave autoresize link advlist codesample autolink lists charmap anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality customimageuploader marvinjs placeholder custom_image_toolbar';
         // if (typeof (MarvinJsEditor) !== 'undefined') plugins += ' marvinjsplugin';
 
         if (textAreaObject.data('objectType') === 'step'
@@ -168,8 +169,11 @@ window.TinyMCE = (() => {
           cache_suffix: '?v=6.1.2', // This suffix should be changed any time library is updated
           selector,
           convert_urls: false,
+          menu: {
+            insert: { title: 'Insert', items: 'link codesample inserttable | charmap hr | nonbreaking anchor | insertdatetime customimageuploader marvinjs' },
+          },
           menubar: 'file edit view insert format table',
-          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link | forecolor backcolor | codesample | marvinjs',
+          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link | forecolor backcolor | codesample | customimageuploader marvinjs',
           plugins,
           autoresize_bottom_margin: 20,
           // placeholder: options.placeholder,
