@@ -25,15 +25,16 @@
       <div class="label-preview__controls__size">
         <div class="sci-input-container">
           <label>{{ i18n.t('label_templates.label_preview.height') }}</label>
-          <input v-model="height" type="text" class="sci-input-field" />
+          <input v-model="height" type="number" class="sci-input-field" />
         </div>
         <div class="sci-input-container">
           <label>{{ i18n.t('label_templates.label_preview.width') }}</label>
-          <input v-model="width" type="text" class="sci-input-field" />
+          <input v-model="width" type="number" class="sci-input-field" />
         </div>
         <div class="sci-input-container">
           <label>{{ i18n.t('label_templates.label_preview.density') }}</label>
           <DropdownSelector
+              v-if="density"
               :key="unit"
               :disableSearch="true"
               :options="unit === 'in' ? DPI_RESOLUTION_OPTIONS : DPMM_RESOLUTION_OPTIONS"
@@ -55,17 +56,17 @@
 
  <script>
   const DPI_RESOLUTION_OPTIONS = [
-    { value: 6, label: '6 dpi' },
-    { value: 8, label: '8 dpi', selected: true },
-    { value: 12, label: '12 dpi'},
-    { value: 24, label: '24 dpi' }
+    { value: 6, label: '152 dpi' },
+    { value: 8, label: '203 dpi' },
+    { value: 12, label: '300 dpi'},
+    { value: 24, label: '600 dpi' }
   ]
 
   const DPMM_RESOLUTION_OPTIONS = [
-    { value: 6, label: '152 dpmm (6 dpi)' },
-    { value: 8, label: '203 dpmm (8 dpi)', selected: true },
-    { value: 12, label: '300 dpmm (12 dpi)' },
-    { value: 24, label: '600 dpmm (24 dpi)' }
+    { value: 6, label: '6 dpmm (152 dpi)' },
+    { value: 8, label: '8 dpmm (203 dpi)' },
+    { value: 12, label: '12 dpmm (300 dpi)' },
+    { value: 24, label: '24 dpmm (600 dpi)' }
   ]
 
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
@@ -82,8 +83,8 @@
         DPMM_RESOLUTION_OPTIONS,
         DPI_RESOLUTION_OPTIONS,
         optionsOpen: false,
-        width: null,
-        height: null,
+        width: 2,
+        height: 1,
         unit: 'in',
         density: 8,
         base64Image: null,
@@ -101,7 +102,26 @@
         return this.unit === 'in' ? this.height * 25.4 : this.height;
       }
     },
+    watch: {
+      unit() {
+        if (this.unit === 'in') {
+          this.width /= 25.4;
+          this.height /= 25.4;
+        } else {
+          this.width *= 25.4;
+          this.height *= 25.4;
+        }
+
+        this.setDefaults();
+      }
+    },
     methods: {
+      setDefaults() {
+        !this.unit && (this.unit = 'in');
+        !this.density && (this.density = 8);
+        !this.width && (this.width = this.unit === 'in' ? 2 : 50.8);
+        !this.height && (this.height = this.unit === 'in' ? 1 : 25.4);
+      },
       refreshPreview() {
         $.ajax({
           url: this.previewUrl,

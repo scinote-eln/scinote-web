@@ -79,6 +79,14 @@
       flex-shrink: 0;
     }
   }
+
+  #label-template-selected {
+    padding-right: 0;
+
+    &::after {
+      display: none;
+    }
+  }
 }
 
 .label-template-name {
