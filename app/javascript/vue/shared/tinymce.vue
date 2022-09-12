@@ -43,7 +43,7 @@
                     :name="fieldName"
                     aria-hidden="true">
           </textarea>
-          <input type="hidden" id="tiny-mce-images" name="tiny_mce_images" value="[]">
+          <input type="hidden" class="tiny-mce-images" name="tiny_mce_images" value="[]">
         </div>
       </form>
     </div>
@@ -97,7 +97,7 @@
     },
     computed: {
       editorInstance() {
-        return tinyMCE.editors[0];
+        return tinyMCE.activeEditor;
       },
       error() {
         if(this.characterLimit && this.characterCount > this.characterLimit) {
@@ -123,6 +123,8 @@
     methods: {
       initTinymce(e) {
         let textArea = `#${this.objectType}_textarea_${this.objectId}`;
+        const vueTinyMce = this;
+
 
         if (e && $(e.target).hasClass('atwho-user-popover')) return
         if (e && $(e.target).hasClass('record-info-link')) return
@@ -131,11 +133,11 @@
         TinyMCE.init(
           textArea,
           {
-            onSaveCallback() {
+            onSaveCallback(data) {
               if (data) {
-                this.$emit('update', data)
+                vueTinyMce.$emit('update', data)
               }
-              this.$emit('editingDisabled');
+              vueTinyMce.$emit('editingDisabled');
             }
           }
         ).then(() => {

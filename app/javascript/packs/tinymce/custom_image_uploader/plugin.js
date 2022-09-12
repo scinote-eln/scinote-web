@@ -3,8 +3,6 @@
 /* eslint no-restricted-syntax: ["off", "BinaryExpression[operator='in']"] */
 /* global tinymce I18n HelperModule validateFileSize */
 
-tinymce.PluginManager.requireLangPack('customimageuploader');
-
 tinymce.PluginManager.add('customimageuploader', (editor) => {
   var iframe;
   var textAreaElement = $('#' + editor.id);
@@ -56,7 +54,7 @@ tinymce.PluginManager.add('customimageuploader', (editor) => {
       handleError(response.errors.join('<br>'));
     } else {
       response.images.forEach(el => editor.execCommand('mceInsertContent', false, buildHTML(el)));
-      updateActiveImages(editor);
+      updateActiveImages();
     }
   }
 
@@ -72,18 +70,15 @@ tinymce.PluginManager.add('customimageuploader', (editor) => {
 
   // Create hidden field for images
   function createImageHiddenField() {
-    textAreaElement.parent().find('input#tiny-mce-images').remove();
-    $('<input type="hidden" id="tiny-mce-images" name="tiny_mce_images" value="[]">').insertAfter(textAreaElement);
+    textAreaElement.parent().find('input.tiny-mce-images').remove();
+    $('<input type="hidden" class="tiny-mce-images" name="tiny_mce_images" value="[]">').appendTo(textAreaElement.parent());
   }
 
   // Finding images in text
   function updateActiveImages() {
-    var images;
-    var imageContainer = $('#' + editor.id).next()[0];
-    iframe = $('#' + editor.id).prev().find('.mce-edit-area iframe').contents();
-    images = $.map($('img', iframe), e => {
-      return e.dataset.mceToken;
-    });
+    const imageContainer = $(`#${editor.id}`).parent().find('input.tiny-mce-images');
+    iframe = $(`#${editor.id}`).next().find('.tox-edit-area iframe').contents();
+    const images = $.map($('img', iframe), e => e.dataset.mceToken);
     if (imageContainer === undefined) {
       createImageHiddenField();
     }
@@ -91,7 +86,7 @@ tinymce.PluginManager.add('customimageuploader', (editor) => {
     // Small fix for ResultText when you cancel after change MarvinJS
     if (imageContainer === undefined) return [];
 
-    imageContainer.value = JSON.stringify(images);
+    imageContainer.val(JSON.stringify(images));
     return JSON.stringify(images);
   }
 
@@ -113,7 +108,7 @@ tinymce.PluginManager.add('customimageuploader', (editor) => {
   editor.on('NodeChange', function() {
     // Check editor status
     if (this.initialized) {
-      updateActiveImages(editor);
+      updateActiveImages();
     }
   });
 
