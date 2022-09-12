@@ -19,6 +19,12 @@ class LabelPrinter < ApplicationRecord
   validates :type_of, presence: true
   validates :language_type, presence: true
 
+  def self.available_printers
+    printers = all
+    printers = printers.where.not(type_of: :zebra) unless Rails.configuration.x.zebra_print_enabled
+    printers
+  end
+
   def display_name
     "#{name} • #{description}"
   end
