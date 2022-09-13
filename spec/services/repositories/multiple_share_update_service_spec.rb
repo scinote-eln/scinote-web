@@ -4,11 +4,10 @@ require 'rails_helper'
 
 describe Repositories::MultipleShareUpdateService do
   let(:user) { create :user }
-  let!(:user_team) { create :user_team, :admin, user: user, team: team }
-  let(:team) { create :team }
-  let(:team2) { create :team }
-  let(:team3) { create :team }
-  let(:repository) { create :repository, team: team }
+  let(:team) { create :team, created_by: user }
+  let(:team2) { create :team, created_by: user }
+  let(:team3) { create :team, created_by: user }
+  let(:repository) { create :repository, team: team, created_by: user }
 
   context 'when share' do
     let(:service_call) do

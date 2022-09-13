@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe Reports::HtmlToWordConverter do
   let(:user) { create :user }
-  let(:team) { create :team }
+  let(:team) { create :team, created_by: user }
   let(:docx) { double('docx') }
   let(:report) { described_class.new(docx) }
 

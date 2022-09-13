@@ -155,11 +155,11 @@
         switch (type) {
           case 'invite_to_team':
             data.team_ids = [modal.attr('data-team-id')];
-            data.role = $(this).attr('data-team-role');
+            data.role_id = $(this).attr('data-team-role-id');
             break;
           case 'invite_to_team_with_role':
             data.team_ids = [modal.attr('data-team-id')];
-            data.role = modal.attr('data-team-role');
+            data.role_id = modal.attr('data-team-role-id');
             break;
           case 'invite':
             data.team_ids = [];
@@ -167,13 +167,13 @@
           case 'invite_with_team_selector':
             if (teamSelectorCheckbox.is(':checked')) {
               data.team_ids = [teamSelectorDropdown.val()];
-              data.role = $(this).attr('data-team-role');
+              data.role_id = $(this).attr('data-team-role-id');
             }
             break;
           case 'invite_with_team_selector_and_role':
             if (teamSelectorCheckbox.is(':checked')) {
               data.team_ids = [teamSelectorDropdown.val()];
-              data.role = modal.attr('data-team-role');
+              data.role_id = modal.attr('data-team-role-id');
             }
             break;
           default:

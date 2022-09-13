@@ -8,7 +8,7 @@
       <div class="modal-body"></div>
       <div class="modal-footer">
         <span class="pull-left">
-          <% if current_user.is_admin_of_team?(@experiment.project.team) %>
+          <% if can_manage_team_users(@experiment.project.team) %>
             <%= link_to t("experiments.canvas.full_zoom.modal_manage_users.invite_users_link"), team_path(@experiment.project.team.id) %>
             <span><%=t "experiments.canvas.full_zoom.modal_manage_users.invite_users_details", team: @experiment.project.team.name %></span>
           <% else %>

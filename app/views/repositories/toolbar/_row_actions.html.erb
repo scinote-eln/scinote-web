@@ -1,6 +1,6 @@
 <% if can_manage_repository_rows?(@repository) %>
   <span id="editDeleteCopy" data-toggle="buttons" style="display:none">
-    <%if can_update_repository_rows?(@repository) %>
+    <% if can_manage_repository_rows?(@repository) %>
       <button type="button" title="<%= t('repositories.show.button_tooltip.edit') %>"
               class="btn btn-light editAdd auto-shrink-button"
               id="editRepositoryRecord" disabled data-view-mode="active">
