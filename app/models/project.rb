@@ -7,7 +7,7 @@ class Project < ApplicationRecord
   include PermissionExtends
   include Assignable
 
-  ID_PREFIX = 'PR'
+  ID_PREFIX = 'PR'.freeze
   include PrefixedIdModel
 
   enum visibility: { hidden: 0, visible: 1 }

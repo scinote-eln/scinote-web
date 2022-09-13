@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddProjectCodeIndex < ActiveRecord::Migration[6.1]
   def up
     ActiveRecord::Base.connection.execute(
