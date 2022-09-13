@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Project < ApplicationRecord
   include ArchivableModel
   include SearchableModel
@@ -7,7 +9,7 @@ class Project < ApplicationRecord
   include PermissionExtends
   include Assignable
 
-  ID_PREFIX = 'PR'.freeze
+  ID_PREFIX = 'PR'
   include PrefixedIdModel
 
   enum visibility: { hidden: 0, visible: 1 }
