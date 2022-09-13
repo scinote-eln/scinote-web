@@ -308,6 +308,10 @@ class Project < ApplicationRecord
     report.destroy if report.present?
   end
 
+  def code 
+    "PR#{id}"
+  end
+
   private
 
   def project_folder_team

@@ -854,7 +854,7 @@ li.module-hover {
       }
 
       &.list {
-        grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 3), minmax(100px, auto)) max-content max-content;
+        grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 2), minmax(100px, auto)) max-content max-content;
 
         .projects-group {
           display: contents;
@@ -932,23 +932,28 @@ li.module-hover {
               }
             }
 
-            .start-date-cell {
+            .project-code-cell {
               grid-column: 3;
             }
 
-            .visibility-cell {
+            .start-date-cell {
               grid-column: 4;
             }
 
-            .user-cell {
+            .visibility-cell {
               grid-column: 5;
+            }
+
+            .user-cell {
+              grid-column: 6;
             }
 
             .actions-cell {
               align-items: center;
               display: flex;
-              grid-column: 6;
+              grid-column: 7;
               position: initial;
+              display: block;
             }
           }
 
@@ -1046,11 +1051,12 @@ li.module-hover {
         }
 
         &.list {
-          --list-columns-number: 7;
+          --list-columns-number: 8;
           grid-auto-rows: 3em 1px;
           grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 2), minmax(100px, auto)) max-content;
 
           .card {
+            
             &.folder-card {
               .name {
                 grid-column: 6 span;
@@ -1058,11 +1064,11 @@ li.module-hover {
             }
 
             .archived-date-cell {
-              grid-column: 6;
+              grid-column: 7;
             }
 
             .actions-cell {
-              grid-column: 7;
+              grid-column: 8;
               position: initial;
             }
           }

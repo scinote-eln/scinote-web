@@ -30,6 +30,10 @@
     <%= render partial: 'projects/index/project_actions_dropdown.html.erb', locals: { project: project, view: 'cards' } %>
   </div>
 
+  <div class="project-code-cell table-cell">
+    <span><%= project.code %></span>
+  </div>
+
   <div class="data-row start-date-cell table-cell">
     <span class="card-label"><%= t('projects.index.card.start_date') %></span>
     <span class="value card-value"> <%= l(project.created_at, format: :full_date) %></span>
