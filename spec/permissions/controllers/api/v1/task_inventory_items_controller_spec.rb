@@ -18,6 +18,13 @@ describe Api::V1::TaskInventoryItemsController, type: :controller do
       experiment_id: 1,
       task_id: 1,
       id: 1
+    },
+    update: {
+      team_id: 1,
+      project_id: 1,
+      experiment_id: 1,
+      task_id: 1,
+      id: 1
     }
   }, [],
   :unauthorized

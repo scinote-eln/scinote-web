@@ -7,23 +7,23 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
     MyModuleStatusFlow.ensure_default
 
     @user = create(:user)
-    @teams = create_list(:team, 2, created_by: @user)
-    create(:user_team, user: @user, team: @teams.first, role: 2)
-    @owner_role = UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))
+    @another_user = create(:user)
+    @team1 = create(:team, created_by: @user)
+    @team2 = create(:team, created_by: @another_user)
     @valid_project = create(:project, name: Faker::Name.unique.name,
-                            created_by: @user, team: @teams.first)
+                            created_by: @user, team: @team1)
 
     @unaccessible_project = create(:project, name: Faker::Name.unique.name,
-                                   created_by: @user, team: @teams.second)
+                                   created_by: @another_user, team: @team2)
 
     @valid_experiment = create(:experiment, created_by: @user,
-      last_modified_by: @user, project: @valid_project)
-    @unaccessible_experiment = create(:experiment, created_by: @user,
-      last_modified_by: @user, project: @unaccessible_project)
+      last_modified_by: @another_user, project: @valid_project)
+    @unaccessible_experiment = create(:experiment, created_by: @another_user,
+      last_modified_by: @another_user, project: @unaccessible_project)
     create_list(:my_module, 3, :with_due_date, created_by: @user,
                 last_modified_by: @user, experiment: @valid_experiment)
-    create_list(:my_module, 3, :with_due_date, created_by: @user,
-                last_modified_by: @user, experiment: @unaccessible_experiment)
+    create_list(:my_module, 3, :with_due_date, created_by: @another_user,
+                last_modified_by: @another_user, experiment: @unaccessible_experiment)
 
     @valid_headers =
       { 'Authorization': 'Bearer ' + generate_token(@user.id) }
@@ -33,7 +33,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
     it 'Response with correct tasks' do
       hash_body = nil
       get api_v1_team_project_experiment_tasks_path(
-        team_id: @teams.first.id,
+        team_id: @team1.id,
         project_id: @valid_project,
         experiment_id: @valid_experiment
       ), headers: @valid_headers
@@ -50,7 +50,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
     it 'When invalid request, experiment from another project' do
       hash_body = nil
       get api_v1_team_project_experiment_tasks_path(
-        team_id: @teams.first.id,
+        team_id: @team1.id,
         project_id: @valid_project,
         experiment_id: @unaccessible_experiment
       ), headers: @valid_headers
@@ -62,7 +62,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
     it 'When invalid request, user in not member of the team' do
       hash_body = nil
       get api_v1_team_project_experiment_tasks_path(
-        team_id: @teams.second.id,
+        team_id: @team2.id,
         project_id: @unaccessible_project,
         experiment_id: @unaccessible_experiment
       ), headers: @valid_headers
@@ -74,7 +74,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
     it 'When invalid request, non existing experiment' do
       hash_body = nil
       get api_v1_team_project_experiment_tasks_path(
-        team_id: @teams.first.id,
+        team_id: @team1.id,
         project_id: @valid_project,
         experiment_id: -1
       ), headers: @valid_headers
@@ -88,7 +88,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
     it 'When valid request, user can read task' do
       hash_body = nil
       get api_v1_team_project_experiment_task_path(
-        team_id: @teams.first.id,
+        team_id: @team1.id,
         project_id: @valid_project,
         experiment_id: @valid_experiment,
         id: @valid_experiment.my_modules.first.id
@@ -106,7 +106,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
     it 'When invalid request, user in not member of the team' do
       hash_body = nil
       get api_v1_team_project_experiment_task_path(
-        team_id: @teams.second.id,
+        team_id: @team2.id,
         project_id: @valid_project,
         experiment_id: @valid_experiment,
         id: @valid_experiment.my_modules.first.id
@@ -119,7 +119,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
     it 'When invalid request, non existing task' do
       hash_body = nil
       get api_v1_team_project_experiment_task_path(
-        team_id: @teams.first.id,
+        team_id: @team1.id,
         project_id: @valid_project,
         experiment_id: @valid_experiment,
         id: -1
@@ -132,7 +132,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
     it 'When invalid request, task from unaccessible experiment' do
       hash_body = nil
       get api_v1_team_project_experiment_task_path(
-        team_id: @teams.first.id,
+        team_id: @team1.id,
         project_id: @valid_project,
         experiment_id: @valid_experiment,
         id: @unaccessible_experiment.my_modules.first.id
@@ -165,7 +165,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
     context 'when has valid params' do
       let(:action) do
         post(api_v1_team_project_experiment_tasks_path(
-               team_id: @teams.first.id,
+               team_id: @team1.id,
                project_id: @valid_project.id,
                experiment_id: @valid_experiment.id
              ),
@@ -201,7 +201,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
     context 'when has not valid params' do
       it 'renders 404 when project not found' do
         post(api_v1_team_project_experiment_tasks_path(
-               team_id: @teams.first.id,
+               team_id: @team1.id,
                project_id: -1,
                experiment_id: @valid_experiment.id
              ),
@@ -213,7 +213,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
 
       it 'renders 403 when user is not member of the team' do
         post(api_v1_team_project_experiment_tasks_path(
-               team_id: @teams.second.id,
+               team_id: @team2.id,
                project_id: @valid_project.id,
                experiment_id: @valid_experiment.id
              ),
@@ -224,12 +224,11 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
       end
 
       it 'renders 403 for use with view permissions' do
-        user_assignment = UserAssignment.where(user: @user, assignable: @valid_experiment)
-                                        .first
+        user_assignment = UserAssignment.where(user: @user, assignable: @valid_experiment).first
         user_assignment.update!(user_role: create(:viewer_role))
 
         post(api_v1_team_project_experiment_tasks_path(
-               team_id: @teams.first.id,
+               team_id: @team1.id,
                project_id: @valid_project.id,
                experiment_id: @valid_experiment.id
              ),

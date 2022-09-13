@@ -26,9 +26,9 @@ describe ProtocolsController, type: :controller do
   end
 
   describe 'GET export' do
-    let(:protocol) { create :protocol, :in_public_repository, team: team }
+    let(:protocol) { create :protocol, :in_public_repository, team: team, added_by: user }
     let(:second_protocol) do
-      create :protocol, :in_public_repository, team: team
+      create :protocol, :in_public_repository, team: team, added_by: user
     end
     let(:params) { { protocol_ids: [protocol.id, second_protocol.id] } }
     let(:action) { get :export, params: params }
@@ -48,7 +48,7 @@ describe ProtocolsController, type: :controller do
   end
 
   describe 'GET export from MyModule' do
-    let(:protocol) { create :protocol, :in_public_repository, team: team }
+    let(:protocol) { create :protocol, :in_public_repository, team: team, added_by: user }
     let(:params) { { protocol_ids: [protocol.id], my_module_id: my_module.id } }
     let(:action) { get :export, params: params }
 

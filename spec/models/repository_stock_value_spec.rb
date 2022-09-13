@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 describe RepositoryStockValue, type: :model do
-  let(:repository_stock_value) { build :repository_stock_value }
-  let(:repository) { build :repository }
   let(:user) { build :user }
+  let(:repository) { build :repository }
+  let(:repository_stock_value) { build :repository_stock_value }
 
 
   it 'is valid' do
@@ -36,21 +36,27 @@ describe RepositoryStockValue, type: :model do
 
 
   describe 'Saving stock value' do
-    let(:repository_stock_value1) { build :repository_stock_value }
     it 'Save stock value' do
       expect { repository_stock_value.save }.to change(RepositoryStockValue, :count).by(1)
     end
 
     it 'Updating stock value' do
+      repository_stock_unit_item =
+        create :repository_stock_unit_item, repository_column: repository_stock_value.repository_cell.repository_column
+      repository_stock_value.repository_cell.repository_column.reload
       repository_stock_value.save
-      expect { repository_stock_value.update_data!({amount: 10, low_stock_threshold:''}, user) }
-        .to change(RepositoryStockValue, :count).by(0)
+      expect { repository_stock_value.update_data!(
+        { amount: 10, low_stock_threshold: '', unit_item_id: repository_stock_unit_item.id }, user
+      ) }
+      .to change(RepositoryStockValue, :count).by(0)
     end
 
     it 'Updating stock value with ledger' do
-      repository_stock_value.save
-      expect { repository_stock_value.update_stock_with_ledger!(10, repository, "") }
-        .to (change(RepositoryLedgerRecord, :count).by(1))
+      repository_stock_unit_item =
+        create :repository_stock_unit_item, repository_column: repository_stock_value.repository_cell.repository_column
+      repository_stock_unit_item.save
+      repository_stock_value.repository_stock_unit_item = repository_stock_unit_item
+      expect { repository_stock_value.save }.to (change(RepositoryLedgerRecord, :count).by(1))
     end
   end
 end
