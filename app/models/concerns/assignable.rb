@@ -42,7 +42,8 @@ module Assignable
 
     def create_users_assignments
       return if skip_user_assignments
-      role = if is_a?(Project)
+
+      role = if is_a?(Project) || is_a?(Team)
                UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))
              else
                permission_parent.user_assignments.find_by(user: created_by).user_role
@@ -54,8 +55,6 @@ module Assignable
         assigned: is_a?(Project) ? :manually : :automatically,
         user_role: role
       )
-
-      UserAssignments::GenerateUserAssignmentsJob.perform_later(self, created_by)
     end
   end
 end

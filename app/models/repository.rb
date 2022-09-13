@@ -3,6 +3,8 @@
 class Repository < RepositoryBase
   include SearchableModel
   include SearchableByNameModel
+  include Assignable
+  include PermissionCheckableModel
   include RepositoryImportParser
   include ArchivableModel
 
@@ -18,8 +20,8 @@ class Repository < RepositoryBase
              class_name: 'User',
              inverse_of: :restored_repositories,
              optional: true
-  has_many :team_repositories, inverse_of: :repository, dependent: :destroy
-  has_many :teams_shared_with, through: :team_repositories, source: :team
+  has_many :team_shared_objects, as: :shared_object, dependent: :destroy
+  has_many :teams_shared_with, through: :team_shared_objects, source: :team
   has_many :repository_snapshots,
            class_name: 'RepositorySnapshot',
            foreign_key: :parent_id,
@@ -101,6 +103,10 @@ class Repository < RepositoryBase
 
   def self.filter_by_teams(teams = [])
     teams.blank? ? self : where(team: teams)
+  end
+
+  def permission_parent
+    team
   end
 
   def default_table_state
