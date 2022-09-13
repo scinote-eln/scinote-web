@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-undef */
-/* global */
+/* global I18n */
 /* eslint-disable no-unused-vars, no-use-before-define */
 
 /* config = {
@@ -12,7 +12,7 @@
 */
 
 var zebraPrint = (function() {
-  var DEVICES = [];
+  var devices = [];
   var CONFIG = {};
   var SELECTOR = '';
   const PRINTER_STATUS_READY = 'ready';
@@ -24,22 +24,30 @@ var zebraPrint = (function() {
     return new Promise((resolve) => {
       try {
         new Zebra.Printer(device).getStatus(function(status) {
-          device.status = status.getMessage() === 'Ready' ? 'Ready' : 'Offline';
+          device.status = status.getMessage() === I18n.t('label_printers.modal_printing_status.printer_status.ready')
+            ? I18n.t('label_printers.modal_printing_status.printer_status.ready')
+            : I18n.t('label_printers.modal_printing_status.printer_status.offline');
           resolve(device);
         }, function() {
-          device.status = 'Offline';
+          device.status = I18n.t('label_printers.modal_printing_status.printer_status.offline');
           resolve(device);
         });
       } catch (error) {
         if (device) {
-          device.status = 'Offline';
+          device.status = I18n.t('label_printers.modal_printing_status.printer_status.offline');
         } else {
-          device = { status: 'Offline' };
+          device = { status: I18n.t('label_printers.modal_printing_status.printer_status.offline') };
         }
         resolve(device);
       }
     });
   };
+
+  function stripPrinterNameHtml(html) {
+    let tmp = document.createElement('DIV');
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || '';
+  }
 
   function noDevices() {
     if (CONFIG && 'noDevices' in CONFIG) {
@@ -66,25 +74,25 @@ var zebraPrint = (function() {
   }
 
   function clearSelector(clearSelectorOnFirstDevice) {
-    if (clearSelectorOnFirstDevice && DEVICES.length === 0) {
+    if (clearSelectorOnFirstDevice && devices.length === 0) {
       SELECTOR.empty();
     }
   }
 
   function addNewDevice(device, clearSelectorOnFirstDevice) {
     clearSelector(clearSelectorOnFirstDevice);
-    if (DEVICES.length === 0) showModal();
-    if (!DEVICES.some(function(el) {
+    if (devices.length === 0) showModal();
+    if (!devices.some(function(el) {
       return el.name === device.name;
     })) {
-      DEVICES.push(device);
+      devices.push(device);
       appendDevice(device);
     }
   }
 
   function searchZebraPrinters() {
     var clearSelectorOnFirstDevice = CONFIG.clearSelectorOnFirstDevice;
-    DEVICES = [];
+    devices = [];
     try {
       beforeRefresh();
       BrowserPrint.getLocalDevices(function(deviceList) {
@@ -107,12 +115,12 @@ var zebraPrint = (function() {
   }
 
   function findDevice(deviceName) {
-    var selectedDevice = DEVICES.filter(function(device) { return device.name === deviceName; });
+    var selectedDevice = devices.filter(function(device) { return device.name === deviceName; });
     return selectedDevice && selectedDevice.length ? selectedDevice[0] : null;
   }
 
   function updateProgressModalData(progressModal, printerName, printerStatus, printingStatus, numberOfCopies) {
-    $(progressModal + ' .title').html(printerName);
+    $(progressModal + ' .title').html(stripPrinterNameHtml(printerName));
     $(progressModal + ' .printer-status').attr('data-status', printerStatus);
     $(progressModal + ' .printer-status').html(I18n.t('label_printers.modal_printing_status.printer_status.'
       + printerStatus));

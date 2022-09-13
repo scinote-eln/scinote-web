@@ -3,11 +3,20 @@
 (function() {
   'use strict';
 
-  var LABEL_TEMPLATE_SELECTOR = '#label_template_id';
-  var LABEL_PRINTER_SELECTOR = '#label_printer_id';
+  const LABEL_TEMPLATE_SELECTOR = '#label_template_id';
+  const LABEL_PRINTER_SELECTOR = '#label_printer_id';
   const ZEBRA_LABEL = 'zebra';
   const FLUICS_LABEL = 'fluics';
-  var ZEBRA_PRINTERS;
+  var zebraPrinters;
+
+  function showPrintModal(selector) {
+    $(selector).modal('show', {
+      backdrop: true,
+      keyboard: false
+    }).on('hidden.bs.modal', function() {
+      $(this).remove();
+    });
+  }
 
   $(document).on('click', '.record-info-link', function(e) {
     var that = $(this);
@@ -114,15 +123,13 @@
         }
       });
 
-      ZEBRA_PRINTERS = zebraPrint.init($('#label_printer_id'), {
+      zebraPrinters = zebraPrint.init($('#label_printer_id'), {
         clearSelectorOnFirstDevice: false,
         showModal: function() {
-          $('#modal-print-repository-row-label').modal('show', {
-            backdrop: true,
-            keyboard: false
-          }).on('hidden.bs.modal', function() {
-            $(this).remove();
-          });
+          showPrintModal('#modal-print-repository-row-label');
+        },
+        noDevices: function() {
+          showPrintModal('#modal-print-repository-row-label');
         },
         appendDevice: function(device) {
           $('#label_printer_id').append(`<option data-params='{"type": "zebra", "name": "${device.name}"}'>
@@ -145,7 +152,7 @@
       $('.print-label-form').on('submit', function() {
         var selectedPrinter = JSON.parse($('option:selected', LABEL_PRINTER_SELECTOR).attr('data-params'));
         if (selectedPrinter.type === ZEBRA_LABEL) {
-          ZEBRA_PRINTERS.print(
+          zebraPrinters.print(
             $(this).data('zebra-progress'),
             '.label-printing-progress-modal',
             '#modal-print-repository-row-label',

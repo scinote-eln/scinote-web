@@ -2,11 +2,11 @@
 /* global I18n zebraPrint */
 
 (function() {
-  var ZEBRA_PRINTER;
+  var zebraPrinter;
 
   function initZebraPrinterList() {
     var zebraContainer = $('.zebra-printers');
-    ZEBRA_PRINTER = zebraPrint.init(
+    zebraPrinter = zebraPrint.init(
       zebraContainer,
       {
         clearSelectorOnFirstDevice: true,
@@ -29,7 +29,7 @@
   }
 
   $('.zebra-printer-refresh').on('click', function() {
-    ZEBRA_PRINTER.refreshList();
+    zebraPrinter.refreshList();
   });
 
   initZebraPrinterList();
