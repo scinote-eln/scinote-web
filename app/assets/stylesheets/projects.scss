@@ -953,7 +953,6 @@ li.module-hover {
               display: flex;
               grid-column: 7;
               position: initial;
-              display: block;
             }
           }
 
@@ -1056,7 +1055,6 @@ li.module-hover {
           grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 2), minmax(100px, auto)) max-content;
 
           .card {
-            
             &.folder-card {
               .name {
                 grid-column: 6 span;
