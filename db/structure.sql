@@ -5305,6 +5305,13 @@ CREATE INDEX index_my_modules_on_last_modified_by_id ON public.my_modules USING 
 
 
 --
+-- Name: index_my_modules_on_my_module_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_my_modules_on_my_module_code ON public.my_modules USING gin ((('TA'::text || id)) public.gin_trgm_ops);
+
+
+--
 -- Name: index_my_modules_on_my_module_group_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5816,10 +5823,10 @@ CREATE INDEX index_repository_cells_on_repository_row_id ON public.repository_ce
 
 
 --
--- Name: index_repository_cells_on_value; Type: INDEX; Schema: public; Owner: -
+-- Name: index_repository_cells_on_value_type_and_value_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_repository_cells_on_value ON public.repository_cells USING btree (value_type, value_id);
+CREATE INDEX index_repository_cells_on_value_type_and_value_id ON public.repository_cells USING btree (value_type, value_id);
 
 
 --
@@ -6845,10 +6852,10 @@ CREATE INDEX index_view_states_on_user_id ON public.view_states USING btree (use
 
 
 --
--- Name: index_view_states_on_viewable; Type: INDEX; Schema: public; Owner: -
+-- Name: index_view_states_on_viewable_type_and_viewable_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_view_states_on_viewable ON public.view_states USING btree (viewable_type, viewable_id);
+CREATE INDEX index_view_states_on_viewable_type_and_viewable_id ON public.view_states USING btree (viewable_type, viewable_id);
 
 
 --
@@ -8517,6 +8524,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220530144300'),
 ('20220602120714'),
 ('20220705091621'),
-('20220818094636');
+('20220818094636'),
+('20220913095453');
 
 
