@@ -53,7 +53,8 @@ class Report < ApplicationRecord
       text_results: true,
       result_comments: true,
       result_order: 'atoz',
-      activities: true
+      activities: true,
+      repositories: []
     }
   }.freeze
 

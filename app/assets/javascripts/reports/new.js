@@ -1020,7 +1020,7 @@ function reportHandsonTableConverter() {
     });
 
     // Project content
-    reportData.project_content = { experiments: [], repositories: [] };
+    reportData.project_content = { experiments: [] };
     $.each($('.project-contents-container .experiment-element'), function(i, experiment) {
       let expCheckbox = $(experiment).find('.report-experiment-checkbox');
       if (!expCheckbox.prop('checked') && !expCheckbox.prop('indeterminate')) return;
@@ -1034,10 +1034,6 @@ function reportHandsonTableConverter() {
       reportData.project_content.experiments.push(experimentData);
     });
 
-    $.each($('.task-contents-container .repositories-contents .repositories-setting:checked'), function(i, e) {
-      reportData.project_content.repositories.push(parseInt(e.value, 10));
-    });
-
     // Settings
     reportData.report.settings.template = dropdownSelector.getValues('#templateSelector');
     reportData.report.settings.all_tasks = $('.project-contents-container .select-all-my-modules-checkbox')
@@ -1047,6 +1043,10 @@ function reportHandsonTableConverter() {
     });
     $.each($('.task-contents-container .content-element .task-setting'), function(i, e) {
       reportData.report.settings.task[e.value] = e.checked;
+    });
+    reportData.report.settings.task.repositories = [];
+    $.each($('.task-contents-container .repositories-contents .repositories-setting:checked'), function(i, e) {
+      reportData.report.settings.task.repositories.push(parseInt(e.value, 10));
     });
 
     reportData.report.settings.task.result_order = dropdownSelector.getValues('#taskResultsOrder');
