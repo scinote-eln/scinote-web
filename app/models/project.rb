@@ -7,6 +7,9 @@ class Project < ApplicationRecord
   include PermissionExtends
   include Assignable
 
+  ID_PREFIX = 'PR'
+  include PrefixedIdModel
+
   enum visibility: { hidden: 0, visible: 1 }
 
   auto_strip_attributes :name, nullify: false
@@ -306,10 +309,6 @@ class Project < ApplicationRecord
     )
   ensure
     report.destroy if report.present?
-  end
-
-  def code
-    "PR#{id}"
   end
 
   private
