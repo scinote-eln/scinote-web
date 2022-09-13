@@ -121,9 +121,9 @@
         });
       },
       enableEdit(e) {
-        if (e && $(e.target).hasClass('atwho-user-popover')) return
-        if (e && $(e.target).hasClass('record-info-link')) return
-        if (e && $(e.target).parent().hasClass('atwho-inserted')) return
+        if (e && $(e.target).hasClass('atwho-user-popover')) return;
+        if (e && $(e.target).hasClass('sa-link')) return;
+        if (e && $(e.target).parent().hasClass('atwho-inserted')) return;
 
         this.editing = true;
         this.focus();
