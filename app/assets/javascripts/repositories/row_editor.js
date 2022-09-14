@@ -1,7 +1,8 @@
 /*
-  globals HelperModule animateSpinner SmartAnnotation AssetColumnHelper GLOBAL_CONSTANTS
+  globals HelperModule animateSpinner SmartAnnotation AssetColumnHelper GLOBAL_CONSTANTS I18n
 */
-/* eslint-disable no-unused-vars */
+/* eslint-disable no-alert no-unused-vars */
+/* eslint-disable no-alert */
 
 var RepositoryDatatableRowEditor = (function() {
   const NAME_COLUMN_ID = 'row-name';
@@ -20,7 +21,7 @@ var RepositoryDatatableRowEditor = (function() {
     });
   }
 
-  function validateAndSubmit($table) {
+  function validateAndSubmit($table, $submitButton) {
     let $form = $table.find(`.${EDIT_FORM_CLASS_NAME}`);
     let $row = $form.closest('tr');
     let valid = true;
@@ -38,7 +39,7 @@ var RepositoryDatatableRowEditor = (function() {
     });
 
     if (!valid) return false;
-
+    $submitButton.attr('disabled', true);
     animateSpinner($table, true);
     // DirectUpload here
     let uploadPromise = AssetColumnHelper.uploadFiles($files, directUrl);
@@ -49,7 +50,10 @@ var RepositoryDatatableRowEditor = (function() {
         $form.submit();
         return false;
       }).catch((reason) => {
-        alert(reason);
+        if (reason.includes('Status: 403')) {
+          HelperModule.flashAlertMsg(I18n.t('activerecord.errors.storage.limit_reached'), 'danger');
+        } else alert(reason);
+        animateSpinner($table, false);
         return false;
       });
 

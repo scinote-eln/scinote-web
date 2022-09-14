@@ -25,8 +25,10 @@ class Step < ApplicationRecord
   belongs_to :user, inverse_of: :steps
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User', optional: true
   belongs_to :protocol, inverse_of: :steps, touch: true
+  has_many :step_orderable_elements, inverse_of: :step, dependent: :destroy
   has_many :checklists, inverse_of: :step, dependent: :destroy
   has_many :step_comments, foreign_key: :associated_id, dependent: :destroy
+  has_many :step_texts, inverse_of: :step, dependent: :destroy
   has_many :step_assets, inverse_of: :step, dependent: :destroy
   has_many :assets, through: :step_assets
   has_many :step_tables, inverse_of: :step, dependent: :destroy
@@ -45,6 +47,9 @@ class Step < ApplicationRecord
                                 },
                                 allow_destroy: true
 
+  scope :in_order, -> { order(position: :asc) }
+  scope :desc_order, -> { order(position: :desc) }
+
   def self.search(user,
                   include_archived,
                   query = nil,
@@ -55,8 +60,9 @@ class Step < ApplicationRecord
                            .pluck(:id)
 
     new_query = Step.distinct
+                    .left_outer_joins(:step_texts)
                     .where(steps: { protocol_id: protocol_ids })
-                    .where_attributes_like(%i(name description), query, options)
+                    .where_attributes_like(['name', 'step_texts.text'], query, options)
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT
@@ -64,6 +70,13 @@ class Step < ApplicationRecord
     else
       new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
     end
+  end
+
+  def self.filter_by_teams(teams = [])
+    return self if teams.blank?
+
+    joins(protocol: { my_module: { experiment: :project } })
+      .where(protocol: { my_modules: { experiments: { projects: { team: teams } } } })
   end
 
   def default_view_state
@@ -130,6 +143,10 @@ class Step < ApplicationRecord
 
   def comments
     step_comments
+  end
+
+  def description_step_text
+    step_texts.order(created_at: :asc).first
   end
 
   private

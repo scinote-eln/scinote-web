@@ -47,7 +47,8 @@ module CommentHelper
         html: render_to_string(
           partial: "/shared/comments/#{partial}.html.erb",
           locals: {
-            comment: comment
+            comment: comment,
+            skip_header: false
           }
         )
       }
@@ -108,7 +109,8 @@ module CommentHelper
           html: render_to_string(
             partial: "/shared/comments/#{partial}.html.erb",
             locals: {
-              comment: comment
+              comment: comment,
+              skip_header: false
             }
           )
         }

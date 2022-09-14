@@ -50,6 +50,8 @@ CREATE FUNCTION public.trim_html_tags(input text, OUT output text) RETURNS text
 
 SET default_tablespace = '';
 
+SET default_table_access_method = heap;
+
 --
 -- Name: active_storage_attachments; Type: TABLE; Schema: public; Owner: -
 --
@@ -698,11 +700,16 @@ CREATE TABLE public.label_templates (
     id bigint NOT NULL,
     name character varying NOT NULL,
     content text NOT NULL,
-    language_type integer,
     "default" boolean DEFAULT false NOT NULL,
-    size character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    description character varying,
+    last_modified_by_id integer,
+    created_by_id integer,
+    team_id bigint,
+    type character varying,
+    width_mm double precision,
+    height_mm double precision
 );
 
 
@@ -2487,6 +2494,40 @@ ALTER SEQUENCE public.step_assets_id_seq OWNED BY public.step_assets.id;
 
 
 --
+-- Name: step_orderable_elements; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.step_orderable_elements (
+    id bigint NOT NULL,
+    step_id bigint NOT NULL,
+    "position" integer,
+    orderable_type character varying,
+    orderable_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: step_orderable_elements_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.step_orderable_elements_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: step_orderable_elements_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.step_orderable_elements_id_seq OWNED BY public.step_orderable_elements.id;
+
+
+--
 -- Name: step_tables; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2515,6 +2556,38 @@ CREATE SEQUENCE public.step_tables_id_seq
 --
 
 ALTER SEQUENCE public.step_tables_id_seq OWNED BY public.step_tables.id;
+
+
+--
+-- Name: step_texts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.step_texts (
+    id bigint NOT NULL,
+    step_id bigint NOT NULL,
+    text character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: step_texts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.step_texts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: step_texts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.step_texts_id_seq OWNED BY public.step_texts.id;
 
 
 --
@@ -3816,10 +3889,24 @@ ALTER TABLE ONLY public.step_assets ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: step_orderable_elements id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.step_orderable_elements ALTER COLUMN id SET DEFAULT nextval('public.step_orderable_elements_id_seq'::regclass);
+
+
+--
 -- Name: step_tables id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.step_tables ALTER COLUMN id SET DEFAULT nextval('public.step_tables_id_seq'::regclass);
+
+
+--
+-- Name: step_texts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.step_texts ALTER COLUMN id SET DEFAULT nextval('public.step_texts_id_seq'::regclass);
 
 
 --
@@ -4535,11 +4622,27 @@ ALTER TABLE ONLY public.step_assets
 
 
 --
+-- Name: step_orderable_elements step_orderable_elements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.step_orderable_elements
+    ADD CONSTRAINT step_orderable_elements_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: step_tables step_tables_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.step_tables
     ADD CONSTRAINT step_tables_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: step_texts step_texts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.step_texts
+    ADD CONSTRAINT step_texts_pkey PRIMARY KEY (id);
 
 
 --
@@ -5071,10 +5174,24 @@ CREATE INDEX index_hidden_repository_cell_reminders_on_user_id ON public.hidden_
 
 
 --
--- Name: index_label_templates_on_language_type; Type: INDEX; Schema: public; Owner: -
+-- Name: index_label_templates_on_created_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_label_templates_on_language_type ON public.label_templates USING btree (language_type);
+CREATE INDEX index_label_templates_on_created_by_id ON public.label_templates USING btree (created_by_id);
+
+
+--
+-- Name: index_label_templates_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_label_templates_on_last_modified_by_id ON public.label_templates USING btree (last_modified_by_id);
+
+
+--
+-- Name: index_label_templates_on_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_label_templates_on_team_id ON public.label_templates USING btree (team_id);
 
 
 --
@@ -5715,10 +5832,10 @@ CREATE INDEX index_repository_cells_on_repository_row_id ON public.repository_ce
 
 
 --
--- Name: index_repository_cells_on_value; Type: INDEX; Schema: public; Owner: -
+-- Name: index_repository_cells_on_value_type_and_value_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_repository_cells_on_value ON public.repository_cells USING btree (value_type, value_id);
+CREATE INDEX index_repository_cells_on_value_type_and_value_id ON public.repository_cells USING btree (value_type, value_id);
 
 
 --
@@ -6240,10 +6357,38 @@ CREATE INDEX index_step_assets_on_step_id_and_asset_id ON public.step_assets USI
 
 
 --
+-- Name: index_step_orderable_elements_on_orderable; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_step_orderable_elements_on_orderable ON public.step_orderable_elements USING btree (orderable_type, orderable_id);
+
+
+--
+-- Name: index_step_orderable_elements_on_step_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_step_orderable_elements_on_step_id ON public.step_orderable_elements USING btree (step_id);
+
+
+--
 -- Name: index_step_tables_on_step_id_and_table_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_step_tables_on_step_id_and_table_id ON public.step_tables USING btree (step_id, table_id);
+
+
+--
+-- Name: index_step_texts_on_step_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_step_texts_on_step_id ON public.step_texts USING btree (step_id);
+
+
+--
+-- Name: index_step_texts_on_text; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_step_texts_on_text ON public.step_texts USING gin (public.trim_html_tags((text)::text) public.gin_trgm_ops);
 
 
 --
@@ -6709,10 +6854,10 @@ CREATE INDEX index_view_states_on_user_id ON public.view_states USING btree (use
 
 
 --
--- Name: index_view_states_on_viewable; Type: INDEX; Schema: public; Owner: -
+-- Name: index_view_states_on_viewable_type_and_viewable_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_view_states_on_viewable ON public.view_states USING btree (viewable_type, viewable_id);
+CREATE INDEX index_view_states_on_viewable_type_and_viewable_id ON public.view_states USING btree (viewable_type, viewable_id);
 
 
 --
@@ -6808,6 +6953,14 @@ ALTER TABLE ONLY public.assets
 
 
 --
+-- Name: label_templates fk_rails_09d7cc0c34; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.label_templates
+    ADD CONSTRAINT fk_rails_09d7cc0c34 FOREIGN KEY (team_id) REFERENCES public.teams(id);
+
+
+--
 -- Name: user_assignments fk_rails_0b13c65ab0; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6869,6 +7022,14 @@ ALTER TABLE ONLY public.zip_exports
 
 ALTER TABLE ONLY public.user_assignments
     ADD CONSTRAINT fk_rails_19dca62dfc FOREIGN KEY (user_role_id) REFERENCES public.user_roles(id);
+
+
+--
+-- Name: label_templates fk_rails_1aa41d1093; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.label_templates
+    ADD CONSTRAINT fk_rails_1aa41d1093 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
 --
@@ -6941,6 +7102,14 @@ ALTER TABLE ONLY public.activities
 
 ALTER TABLE ONLY public.my_modules
     ADD CONSTRAINT fk_rails_2c8021ee5f FOREIGN KEY (archived_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: step_texts fk_rails_2cc1715bcd; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.step_texts
+    ADD CONSTRAINT fk_rails_2cc1715bcd FOREIGN KEY (step_id) REFERENCES public.steps(id);
 
 
 --
@@ -7920,6 +8089,14 @@ ALTER TABLE ONLY public.activities
 
 
 --
+-- Name: step_orderable_elements fk_rails_d3d1eee15c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.step_orderable_elements
+    ADD CONSTRAINT fk_rails_d3d1eee15c FOREIGN KEY (step_id) REFERENCES public.steps(id);
+
+
+--
 -- Name: notifications fk_rails_d44c385bb8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7941,6 +8118,14 @@ ALTER TABLE ONLY public.repository_stock_unit_items
 
 ALTER TABLE ONLY public.experiments
     ADD CONSTRAINT fk_rails_d683124fa4 FOREIGN KEY (restored_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: label_templates fk_rails_d6ac71e421; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.label_templates
+    ADD CONSTRAINT fk_rails_d6ac71e421 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
 
 
 --
@@ -8367,8 +8552,16 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220321122111'),
 ('20220325101011'),
 ('20220328164215'),
+('20220414095100'),
+('20220414143955'),
+('20220429083335'),
 ('20220516111152'),
+('20220530144300'),
+('20220602120714'),
 ('20220621153016'),
-('20220624091046');
+('20220624091046'),
+('20220705091621'),
+('20220726133419'),
+('20220803122405');
 
 

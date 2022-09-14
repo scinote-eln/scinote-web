@@ -146,8 +146,8 @@ class TinyMceAsset < ApplicationRecord
   def clone_tinymce_asset(obj)
     begin
       # It will trigger only for Step or ResultText
-      team_id = if obj.class.name == 'Step'
-                  obj.protocol.team_id
+      team_id = if obj.class.name == 'StepText'
+                  obj.step.protocol.team_id
                 else
                   obj.result.my_module.protocol.team_id
                 end

@@ -5,6 +5,7 @@ module RepositoryDatatableHelper
 
   def prepare_row_columns(repository_rows, repository, columns_mappings, team, options = {})
     reminder_row_ids = repository_reminder_row_ids(repository_rows, repository)
+    has_stock_management = repository.has_stock_management?
 
     repository_rows.map do |record|
       default_cells = public_send("#{repository.class.name.underscore}_default_columns", record)
@@ -21,7 +22,7 @@ module RepositoryDatatableHelper
                )
       }.merge(default_cells)
 
-      if record.repository.has_stock_management?
+      if has_stock_management
         row['manageStockUrl'] = if record.has_stock?
                                   Rails.application.routes.url_helpers
                                        .edit_repository_stock_repository_repository_row_url(
@@ -46,21 +47,23 @@ module RepositoryDatatableHelper
       row['0'] = record[:row_assigned] if options[:my_module]
 
       # Add custom columns
-      custom_cells = record.repository_cells.where.not(value_type: 'RepositoryStockValue')
+      custom_cells = record.repository_cells.filter { |cell| cell.value_type != 'RepositoryStockValue' }
 
       custom_cells.each do |cell|
         row[columns_mappings[cell.repository_column.id]] =
           display_cell_value(cell, team, repository)
       end
 
-      stock_present = record.repository_stock_cell.present?
-      stock_managable = !options[:disable_stock_management] && can_manage_repository_stock?(record.repository)
+      stock_cell = record.repository_cells.find { |cell| cell.value_type == 'RepositoryStockValue' }
+      stock_managable = has_stock_management &&
+                        !options[:disable_stock_management] &&
+                        can_manage_repository_stock?(record.repository)
 
       # always add stock cell, even if empty
-      row['stock'] = stock_present ? display_cell_value(record.repository_stock_cell, team, repository) : {}
+      row['stock'] = stock_cell.present? ? display_cell_value(record.repository_stock_cell, team, repository) : {}
       row['stock'][:stock_managable] = stock_managable
       row['stock']['displayWarnings'] = display_stock_warnings?(repository)
-      row['stock'][:stock_status] = record.repository_stock_cell&.value&.status
+      row['stock'][:stock_status] = stock_cell&.value&.status
 
       row['stock']['value_type'] = 'RepositoryStockValue'
 
@@ -73,7 +76,7 @@ module RepositoryDatatableHelper
             strip_insignificant_zeros: true
           )
         row['consumedStock'] = {
-          stock_present: stock_present,
+          stock_present: stock_cell.present?,
           consumptionPermitted: stock_consumption_permitted?(repository, options[:my_module]),
           consumptionManagable: consumption_managable,
           updateStockConsumptionUrl: Rails.application.routes.url_helpers.consume_modal_my_module_repository_path(

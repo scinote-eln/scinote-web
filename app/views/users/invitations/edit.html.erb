@@ -8,40 +8,40 @@
 
   <%= f.hidden_field :invitation_token %>
 
-  <div class="form-group">
+  <p class="sci-input-container">
     <%= f.label :full_name %>
     <%= f.text_field :full_name,
                      value: (params[:user] ? params[:user][:full_name] : ''),
                      autofocus: true,
-                     class: 'form-control' %>
-  </div>
+                     class: 'sci-input-field' %>
+  </p>
 
-  <div class="form-group">
+  <p class="sci-input-container">
     <%= f.label :password %>
     <% if @minimum_password_length %>
     <em>(<%= @minimum_password_length %> characters minimum)</em>
     <% end %>
-    <%= f.password_field :password, autocomplete: "off", class: "form-control" %>
-  </div>
+    <%= f.password_field :password, autocomplete: "off", class: "sci-input-field" %>
+  </p>
 
-  <div class="form-group">
+  <p class="sci-input-container">
     <%= f.label :password_confirmation %>
-    <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control" %>
-  </div>
+    <%= f.password_field :password_confirmation, autocomplete: "off", class: "sci-input-field" %>
+  </p>
 
   <% if Rails.configuration.x.new_team_on_signup %>
-  <div class="form-group"
+  <p class="sci-input-container"
        data-hook="confirm-invitation-team-name">
     <%= label :team, :name, t('users.registrations.new.team_name_label') %>
     <% if @team %>
-    <%= text_field :team, :name, class: 'form-control', value: @team.name %>
+    <%= text_field :team, :name, class: 'sci-input-field', value: @team.name %>
     <% else %>
     <%= text_field :team,
                    :name,
                    class: 'form-control',
                    value: (params[:team] ? params[:team][:name] : '') %>
     <% end %>
-  </div>
+  </p>
   <% end %>
   <%= recaptcha_input_tag %>
 

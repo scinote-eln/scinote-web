@@ -28,6 +28,7 @@ class RepositoryRowsController < ApplicationController
     @repository_rows = datatable_service.repository_rows
                                         .preload(:repository_columns,
                                                  :created_by,
+                                                 :archived_by,
                                                  repository_cells: { value: @repository.cell_preload_includes })
                                         .page(page)
                                         .per(per_page)
@@ -82,7 +83,8 @@ class RepositoryRowsController < ApplicationController
 
   def print_modal
     @repository_rows = @repository.repository_rows.where(id: params[:rows])
-    @printers = LabelPrinter.all
+    @printers = LabelPrinter.available_printers
+    @label_templates = LabelTemplate.where(team_id: current_team).order(:name)
     respond_to do |format|
       format.json do
         render json: {
@@ -406,7 +408,7 @@ class RepositoryRowsController < ApplicationController
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
-            subject: @repository,
+            subject: repository_row,
             team: current_team,
             message_items: {
               repository_row: repository_row.id,

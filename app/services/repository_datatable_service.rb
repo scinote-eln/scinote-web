@@ -7,6 +7,7 @@ module RepositoryFilters
 end
 
 class RepositoryDatatableService
+  include MyModulesHelper
   attr_reader :repository_rows, :all_count, :mappings
 
   PREDEFINED_COLUMNS = %w(row_id row_name added_on added_by archived_on archived_by assigned).freeze
@@ -16,6 +17,7 @@ class RepositoryDatatableService
     @user = user
     @my_module = my_module
     @params = params
+    @assigned_view =  @params[:assigned].in?(%w(assigned assigned_simple))
     @sortable_columns = build_sortable_columns
     create_columns_mappings
     @repository_rows = process_query
@@ -41,14 +43,21 @@ class RepositoryDatatableService
 
     repository_rows = fetch_rows(search_value)
 
+    # Aliased my_module_repository_rows join for consistent assigned counts
+    repository_rows =
+      repository_rows.joins(
+        'LEFT OUTER JOIN "my_module_repository_rows" AS "all_my_module_repository_rows" ON '\
+        '"all_my_module_repository_rows"."repository_row_id" = "repository_rows"."id"'
+      )
+
     # Adding assigned counters
     if @my_module
-      if @params[:assigned] == 'assigned'
+      if @assigned_view
         repository_rows = repository_rows.joins(:my_module_repository_rows)
                                          .where(my_module_repository_rows: { my_module_id: @my_module })
         if @repository.has_stock_management?
           repository_rows = repository_rows
-                            .select('SUM(my_module_repository_rows.stock_consumption) AS "consumed_stock"')
+                            .select('SUM(DISTINCT my_module_repository_rows.stock_consumption) AS "consumed_stock"')
         end
       else
         repository_rows = repository_rows
@@ -65,7 +74,7 @@ class RepositoryDatatableService
     end
     repository_rows = repository_rows
                       .left_outer_joins(my_module_repository_rows: { my_module: :experiment })
-                      .select('COUNT(my_module_repository_rows.id) AS "assigned_my_modules_count"')
+                      .select('COUNT(DISTINCT all_my_module_repository_rows.id) AS "assigned_my_modules_count"')
                       .select('COUNT(DISTINCT my_modules.experiment_id) AS "assigned_experiments_count"')
                       .select('COUNT(DISTINCT experiments.project_id) AS "assigned_projects_count"')
     repository_rows = repository_rows.preload(Extends::REPOSITORY_ROWS_PRELOAD_RELATIONS)
@@ -80,7 +89,7 @@ class RepositoryDatatableService
     end
 
     @all_count =
-      if @my_module && @params[:assigned] == 'assigned'
+      if @my_module && @assigned_view
         repository_rows.joins(:my_module_repository_rows)
                        .where(my_module_repository_rows: { my_module_id: @my_module })
                        .count
@@ -409,7 +418,22 @@ class RepositoryDatatableService
     @repository.repository_columns.count.times do
       array << 'repository_cell.value'
     end
+
+    array << 'consumed_stock' if @repository.has_stock_management? && @assigned_view
     array
+  end
+
+  def map_simple_view_column(index)
+    return assigned_repository_simple_view_name_column_id(@repository) unless @repository.has_stock_management?
+
+    case index
+    when 0
+      assigned_repository_simple_view_name_column_id(@repository)
+    when 1
+      @mappings[@repository.repository_stock_column.id]
+    when 2
+      @sortable_columns.length
+    end
   end
 
   def sort_rows(column_obj, records)
@@ -420,11 +444,16 @@ class RepositoryDatatableService
     column_index = column_obj[:column]
     service = RepositoryTableStateService.new(@user, @repository)
     col_order = service.load_state.state['ColReorder']
-    column_id = col_order[column_index].to_i
+    column_id = case @params[:assigned]
+                when 'assigned_simple'
+                  map_simple_view_column(column_index).to_i
+                else
+                  @params[:draw].to_i == 1 ? column_index.to_i : col_order[column_index].to_i
+                end
 
     case @sortable_columns[column_id - 1]
     when 'assigned'
-      return records if @my_module && @params[:assigned] == 'assigned'
+      return records if @my_module && @assigned_view
 
       records.order("assigned_my_modules_count #{dir}")
     when 'repository_cell.value'
@@ -459,6 +488,8 @@ class RepositoryDatatableService
              .order("values.value #{dir}")
     when 'users.full_name'
       records.group('users.full_name').order("users.full_name #{dir}")
+    when 'consumed_stock'
+      records.order("#{@sortable_columns[column_id - 1]} #{dir}")
     else
       records.group(@sortable_columns[column_id - 1]).order("#{@sortable_columns[column_id - 1]} #{dir}")
     end

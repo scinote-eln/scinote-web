@@ -16,6 +16,15 @@
     }
   }
 
+  .processing-error {
+    color: $brand-danger;
+    margin-left: 2px;
+
+    .fa-exclamation-triangle {
+      margin-right: 5px;
+    }
+  }
+
   .repository-table-error {
     background: $color-white;
     display: none;

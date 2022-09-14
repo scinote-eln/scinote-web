@@ -1,0 +1,89 @@
+.task-protocol {
+  .protocol-step-actions {
+    margin-left: -6px;
+    padding-left: 1em;
+  }
+
+  .protocol-buttons-group {
+    column-gap: .25em;
+    display: grid;
+    grid-template-columns: auto auto auto;
+  }
+
+  .portocol-header-left-part {
+    align-items: baseline;
+    display: flex;
+
+    .task-section-caret {
+      padding-right: .25em;
+    }
+
+    .status-label {
+      margin: 2px 0 0;
+    }
+
+    .status-info {
+      padding-left: 4px;
+    }
+  }
+
+  .insert-step {
+    align-items: center;
+    color: $color-concrete;
+    cursor: pointer;
+    display: flex;
+
+    &::before,
+    &::after {
+      background-color: $color-concrete;
+      content: "";
+      display: inline-block;
+      flex-grow: 1;
+      height: 3px;
+    }
+
+    .fa-plus {
+      margin: 0 .5em;
+    }
+
+    &:hover {
+      color: $brand-primary;
+
+      &::before,
+      &::after {
+        background-color: $brand-primary;
+      }
+    }
+  }
+  .protocol-description {
+    margin-bottom: 2em;
+    padding-left: 1.5em;
+  }
+
+  .protocol-steps {
+    padding-left: .75em;
+  }
+
+  .empty-protocol-description {
+    color: $color-silver-chalice;
+  }
+
+  .protocol-options-dropdown {
+    a {
+      cursor: pointer;
+
+      &.disabled {
+        cursor: default;
+        pointer-events: none;
+      }
+    }
+  }
+  .tinymce-container {
+    display: flex;
+    width: 100%;
+
+    .tiny-mce-editor {
+      flex-basis: 100%;
+    }
+  }
+}

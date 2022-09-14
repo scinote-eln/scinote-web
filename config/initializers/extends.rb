@@ -180,7 +180,7 @@ class Extends
   FILE_FA_ICON_MAPPINGS = {}
 
   # Mapping of rich text fileds to specific model
-  RICH_TEXT_FIELD_MAPPINGS = { 'Step' => :description,
+  RICH_TEXT_FIELD_MAPPINGS = { 'StepText' => :text,
                                'ResultText' => :text,
                                'Protocol' => :description,
                                'MyModule' => :description }
@@ -193,7 +193,7 @@ class Extends
 
   ACTIVITY_SUBJECT_TYPES = %w(
     Team RepositoryBase Project Experiment MyModule Result Protocol Report RepositoryRow
-    ProjectFolder Asset Step
+    ProjectFolder Asset Step LabelTemplate
   ).freeze
 
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
@@ -201,7 +201,7 @@ class Extends
   ).freeze
 
   ACTIVITY_SUBJECT_CHILDREN = {
-    repository: [:repository_rows],
+    repository_base: [:repository_rows],
     repository_row: nil,
     report: nil,
     project: nil,
@@ -383,7 +383,43 @@ class Extends
     inventory_item_stock_set: 180,
     inventory_item_stock_add: 181,
     inventory_item_stock_remove: 182,
-    task_inventory_item_stock_consumed: 183
+    task_inventory_item_stock_consumed: 183,
+    task_steps_rearranged: 184,
+    task_step_content_rearranged: 185,
+    protocol_steps_rearranged: 186,
+    protocol_step_content_rearranged: 187,
+    task_step_file_added: 188,
+    task_step_file_deleted: 189,
+    protocol_step_file_added: 190,
+    protocol_step_file_deleted: 191,
+    task_step_text_added: 192,
+    task_step_text_edited: 193,
+    task_step_text_deleted: 194,
+    task_step_table_added: 195,
+    task_step_table_edited: 196,
+    task_step_table_deleted: 197,
+    task_step_checklist_added: 198,
+    task_step_checklist_edited: 199,
+    task_step_checklist_deleted: 200,
+    task_step_checklist_item_added: 201,
+    task_step_checklist_item_edited: 202,
+    task_step_checklist_item_deleted: 203,
+    protocol_step_text_added: 204,
+    protocol_step_text_edited: 205,
+    protocol_step_text_deleted: 206,
+    protocol_step_table_added: 207,
+    protocol_step_table_edited: 208,
+    protocol_step_table_deleted: 209,
+    protocol_step_checklist_added: 210,
+    protocol_step_checklist_edited: 211,
+    protocol_step_checklist_deleted: 212,
+    protocol_step_checklist_item_added: 213,
+    protocol_step_checklist_item_edited: 214,
+    protocol_step_checklist_item_deleted: 215,
+    label_template_created: 216,
+    label_template_edited: 217,
+    label_template_deleted: 218,
+    label_template_copied: 219
   }
 
   ACTIVITY_GROUPS = {
@@ -392,15 +428,17 @@ class Extends
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
            *146..148, 166],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
-                    168, 171, 177],
+                    168, 171, 177, 184, 185, 188, 189, *192..203],
     task_inventory: [55, 56, 146, 147, 183],
     experiment: [*27..31, 57, 141, 165],
     reports: [48, 50, 49, 163, 164],
     inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77,
                   78, 96, 107, 113, 114, *133..136, 180, 181, 182],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
-                          83, 101, 112, 123, 125, 117, 119, 129, 131, 170, 173, 179],
-    team: [92, 94, 93, 97, 104]
+                          83, 101, 112, 123, 125, 117, 119, 129, 131, 170, 173, 179, 187, 186,
+                          190, 191, *204..215],
+    team: [92, 94, 93, 97, 104],
+    label_repository: [*216..219]
   }
 
   SHARED_INVENTORIES_PERMISSION_LEVELS = {
@@ -463,6 +501,29 @@ class Extends
   )
 
   STI_PRELOAD_CLASSES = %w(LinkedRepository BmtRepository)
+
+  DEFAULT_LABEL_TEMPLATE = {
+    zpl:
+      <<~HEREDOC
+        ^XA
+        ^MTT
+        ^MUD,300,300
+        ^PR2
+        ^MD30
+        ^LH20,20
+        ^PW310
+        ^CF0,23
+        ^FO0,0^FD{{ITEM_ID}}^FS
+        ^FO0,20^BQN,2,4^FDMA,{{ITEM_ID}}^FS
+        ^FO95,30^FB180,4,0,L^FD{{NAME}}^FS^FS
+        ^XZ
+      HEREDOC
+  }
+
+  LABEL_TEMPLATE_FORMAT_MAP = {
+    'ZebraLabelTemplate' => 'ZPL',
+    'FluicsLabelTemplate' => 'Fluics'
+  }
 end
 
 # rubocop:enable Style/MutableConstant

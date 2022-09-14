@@ -5,9 +5,12 @@
     <title><%=t "head.title", title: (yield :head_title) %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="max-file-size" content="<%= Rails.configuration.x.file_max_size_mb %>">
+    <meta name="tiny-mce-assets-url" content="<%= tiny_mce_assets_path %>">
+    <meta name="highlightjs-url" content="<%= asset_path('highlightjs-github-theme.css') %>">
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
     <%= javascript_pack_tag 'application' %>
+
 
 
     <% if MarvinJsService.enabled? && ENV['MARVINJS_API_KEY'] %>
@@ -78,6 +81,8 @@
         <%= yield :content %>
       <% end %>
     </div>
+
+    <span style="display: none;" data-hook="application-body-end-html"></span>
 
     <script data-hook="footer-js">
       // GLOBALS

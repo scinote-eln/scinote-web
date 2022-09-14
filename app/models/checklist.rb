@@ -23,6 +23,7 @@ class Checklist < ApplicationRecord
   has_many :report_elements,
     inverse_of: :checklist,
     dependent: :destroy
+  has_one :step_orderable_element, as: :orderable, dependent: :destroy
 
   accepts_nested_attributes_for :checklist_items,
     reject_if: :all_blank,

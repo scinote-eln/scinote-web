@@ -8,7 +8,9 @@ class MyModulesController < ApplicationController
 
   before_action :load_vars, except: %i(restore_group)
   before_action :check_archive_permissions, only: %i(update)
-  before_action :check_manage_permissions, only: %i(description due_date update_description update_protocol_description)
+  before_action :check_manage_permissions, only: %i(
+    description due_date update_description update_protocol_description update_protocol
+  )
   before_action :check_read_permissions, except: %i(update update_description update_protocol_description restore_group)
   before_action :check_update_state_permissions, only: :update_state
   before_action :set_inline_name_editing, only: %i(protocols results activities archive)
@@ -269,6 +271,18 @@ class MyModulesController < ApplicationController
     current_team_switch(@protocol.team)
   end
 
+  def protocol
+    render json: @my_module.protocol, serializer: ProtocolSerializer, user: current_user
+  end
+
+  def update_protocol
+    protocol = @my_module.protocol
+    protocol.update!(protocol_params)
+    TinyMceAsset.update_images(protocol, params[:tiny_mce_images], current_user)
+
+    render json: protocol, serializer: ProtocolSerializer, user: current_user
+  end
+
   def results
     current_team_switch(@my_module
                                 .experiment
@@ -396,6 +410,10 @@ class MyModulesController < ApplicationController
     end
 
     update_params
+  end
+
+  def protocol_params
+    params.require(:protocol).permit(:name, :description)
   end
 
   def update_status_params

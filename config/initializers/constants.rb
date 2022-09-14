@@ -126,8 +126,9 @@ class Constants
   REPORT_DOCX_TABLE_BORDER_SIZE = 4
 
   # All font size in half points
-  REPORT_DOCX_EXPERIMENT_TITLE_SIZE = 28
-  REPORT_DOCX_MY_MODULE_TITLE_SIZE = 24
+  REPORT_DOCX_REPORT_TITLE_SIZE = 36
+  REPORT_DOCX_EXPERIMENT_TITLE_SIZE = 32
+  REPORT_DOCX_MY_MODULE_TITLE_SIZE = 28
   REPORT_DOCX_STEP_TITLE_SIZE = 22
   REPORT_DOCX_STEP_ELEMENTS_TITLE_SIZE = 20
 
@@ -235,6 +236,7 @@ class Constants
   }
 
   SCINOTE_FLUICS_URL = 'https://www.scinote.net/fluics/'.freeze
+  SCINOTE_ZEBRA_URL = 'https://www.zebra.com/us/en/products/software/barcode-printers/link-os/browser-print.html'.freeze
   TWO_FACTOR_RECOVERY_CODE_COUNT = 6
   TWO_FACTOR_RECOVERY_CODE_LENGTH = 12
 

@@ -10,6 +10,6 @@
   data-module-y="<%= my_module.y %>"
   data-module-conns="<%= construct_module_connections(my_module) %>">
   <span>
-    <%= link_to_if can_read_experiment?(my_module.experiment), my_module.name[0], protocols_my_module_path(my_module) %>
+    <%= link_to_if can_read_experiment?(experiment), my_module.name[0], protocols_my_module_path(my_module), title: my_module.name %>
   </span>
 </div>

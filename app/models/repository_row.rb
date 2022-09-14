@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class RepositoryRow < ApplicationRecord
+  include ActionView::Helpers::NumberHelper
   include SearchableModel
   include SearchableByNameModel
   include ArchivableModel
@@ -98,6 +99,12 @@ class RepositoryRow < ApplicationRecord
     where(repository: Repository.viewable_by_user(user, teams))
   end
 
+  def self.filter_by_teams(teams = [])
+    return self if teams.blank?
+
+    joins(:repository).where(repository: { team: teams })
+  end
+
   def self.name_like(query)
     where('repository_rows.name ILIKE ?', "%#{query}%")
   end
@@ -148,5 +155,18 @@ class RepositoryRow < ApplicationRecord
 
     repository_cells.each { |cell| cell.snapshot!(row_snapshot) }
     row_snapshot
+  end
+
+  def row_consumption(stock_consumption)
+    if repository_stock_cell.present?
+      consumed_stock = number_with_precision(
+        stock_consumption || 0,
+        precision: (repository.repository_stock_column.metadata['decimals'].to_i || 0),
+        strip_insignificant_zeros: true
+      )
+      "#{consumed_stock} #{repository_stock_value&.repository_stock_unit_item&.data}"
+    else
+      '-'
+    end
   end
 end

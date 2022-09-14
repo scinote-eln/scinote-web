@@ -1,0 +1,365 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
+@import "components/*";
+
+.step-container {
+  --left-component-padding: 24px;
+  border: $border-transparent;
+  margin: 6px 0 6px -1.5em;
+  padding: 8px 24px 8px 0;
+
+  .step-header {
+    align-items: flex-start;
+    display: flex;
+    margin-bottom: 1.2em;
+
+    .step-element-header {
+      border-radius: 4px;
+      flex-basis: 80%;
+      position: relative;
+
+      .step-name-edit-icon {
+        display: none;
+        position: absolute;
+        right: -8px;
+        top: -6px;
+      }
+
+      &:hover .step-name-edit-icon {
+        cursor: pointer;
+        display: inline-block;
+        margin-right: 16px;
+        margin-top: 16px;
+      }
+
+      .step-collapse-link {
+        display: inline-block;
+        flex-shrink: 0;
+        line-height: 24px;
+        text-align: center;
+        width: 24px;
+
+        &:not(.collapsed) {
+          @include rotate(90deg);
+        }
+      }
+    }
+
+    .strikethrough {
+      text-decoration: line-through;
+
+      &:hover {
+        text-decoration: initial;
+      }
+    }
+
+    .step-position {
+      @include font-main;
+      flex-shrink: 0;
+      font-weight: bold;
+      line-height: 24px;
+      margin: 0 4px;
+    }
+
+    .step-name-container {
+      flex-grow: 1;
+      font-size: 16px;
+      font-weight: bold;
+
+      textarea {
+        text-decoration: initial;
+      }
+    }
+
+    .step-state {
+      border: 2px solid $color-alto;
+      border-radius: 50%;
+      cursor: pointer;
+      height: 24px;
+      text-align: center;
+      width: 24px;
+
+      &:hover {
+        border-color: $brand-success;
+      }
+
+      &.completed {
+        background: $brand-success;
+        border: 2px solid $brand-success;
+
+        &::after {
+          @include font-awesome;
+          color: $color-white;
+          content: $font-fas-check;
+        }
+      }
+    }
+
+    .step-actions-container {
+      display: flex;
+      justify-content: flex-end;
+      flex-basis: 20%;
+
+      .disabled {
+        color: $color-silver-chalice;
+        pointer-events: none;
+      }
+
+      .dropdown-menu {
+        white-space: nowrap;
+      }
+
+      .insert-button {
+        .caret {
+          margin-left: .5em;
+        }
+      }
+
+      .insert-element-dropdown {
+        @include font-button;
+
+        min-width: 230px;
+        padding: 0;
+
+        li {
+          padding: .5em 1em;
+
+          &.action {
+            cursor: pointer;
+
+            &:hover {
+              background: $color-concrete;
+            }
+
+            .fas {
+              margin-right: .5em;
+            }
+          }
+
+          &.title {
+            @include font-small;
+            color: $color-alto;
+            text-transform: uppercase;
+          }
+        }
+      }
+    }
+  }
+
+  .step-elements {
+    padding-left: calc(var(--left-component-padding) * 2);
+
+    .step-element-name {
+      .sci-inline-edit__view {
+        margin-bottom: .25em;
+        padding-top: .25em;
+      }
+
+      .sci-inline-edit__content textarea {
+        margin-bottom: .25em;
+        margin-top: .25em;
+      }
+    }
+  }
+
+  .step-element-grip-placeholder {
+    height: 24px;
+    width: 28px;
+  }
+
+  .comments-counter {
+    @include font-small;
+    align-items: center;
+    background-color: $color-concrete;
+    border: 2px solid $color-white;
+    border-radius: 8px;
+    display: flex;
+    height: 16px;
+    justify-content: center;
+    margin: 2px;
+    min-width: 16px;
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    &.unseen {
+      background-color: $brand-complementary;
+    }
+  }
+
+  &.showing-comments {
+    border: 1px dotted $brand-primary;
+  }
+
+  .drop-message {
+    @include font-h3;
+    align-items: center;
+    color: $brand-primary;
+    display: none;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  &.draging-file {
+    background-color: $brand-focus-light;
+    position: relative;
+
+    .drop-message {
+      display: flex;
+      flex-direction: column;
+
+      .storage-usage {
+        pointer-events: none;
+      }
+    }
+
+    > *:not(.drop-message) {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  .storage-usage {
+    @include font-small;
+    color: $color-black;
+
+    .progress-container {
+      background-color: $color-white;
+      border-radius: 2px;
+      height: 4px;
+      margin: 1em 0;
+      overflow: hidden;
+      position: relative;
+
+      .progress-bar {
+        background-color: $brand-primary;
+        height: 100%;
+        position: relative;
+        transition: 1s $timing-function-sharp;
+      }
+    }
+  }
+}
+
+.step-element-header {
+  align-items: flex-start;
+  border-radius: 4px;
+  display: flex;
+  min-height: 40px;
+  overflow: hidden;
+  position: relative;
+
+  &.editing-name {
+    .step-element-controls {
+      display: none;
+    }
+  }
+
+  .step-controls {
+    display: flex;
+    align-items: center;
+    min-height: 35px;
+  }
+
+  .sci-inline-edit {
+    width: 100%;
+  }
+
+  .step-element-name {
+    font-weight: bold;
+    width: 100%;
+
+
+    .step-element-number {
+      display: inline-block;
+      margin-right: 8px;
+    }
+  }
+
+  .step-element-controls {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      $color-concrete 15%,
+      $color-concrete 100%
+    );
+    display: flex;
+    margin-left: auto;
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    .fas {
+      font-size: 14px;
+    }
+  }
+
+  .step-element-controls,
+  .step-element-grip {
+    opacity: 0;
+  }
+
+  &:hover:not(.locked) {
+    background: $color-concrete;
+
+    .step-element-grip,
+    .step-element-controls {
+      opacity: 1;
+    }
+  }
+}
+
+.step-element-grip {
+  color: $color-silver-chalice;
+  cursor: pointer;
+  margin: auto;
+  padding: .5em;
+
+  &.step-element-grip--draggable {
+    cursor: grab;
+  }
+
+  &.step-element-grip--disabled {
+    pointer-events: none;
+    .fas { opacity: 0; }
+  }
+}
+
+.sci-reorderable-items {
+  .modal-body {
+    padding-top: 0;
+  }
+
+  .step-element-header {
+    align-items: center;
+    border-bottom: 1px solid $color-concrete;
+
+    &:hover:not(.locked) {
+      background-color: $color-white;
+    }
+
+    .step-element-name {
+      font-weight: normal;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .step-element-name-placeholder {
+      color: $color-silver-chalice;
+    }
+
+    .fas {
+      margin-right: 0.5em;
+    }
+  }
+}
+
+.step-element--locked {
+  pointer-events: none;
+}

@@ -204,6 +204,23 @@ class Protocol < ApplicationRecord
                    user_id: user.id))
   end
 
+
+  def self.filter_by_teams(teams = [])
+    teams.blank? ? self : where(team: teams)
+  end
+
+  def insert_step(step, position)
+    ActiveRecord::Base.transaction do
+      steps.where('position >= ?', position).desc_order.each do |s|
+        s.update!(position: s.position + 1)
+      end
+      step.position = position
+      step.protocol = self
+      step.save!
+    end
+    step
+  end
+
   def created_by
     in_module? ? my_module.created_by : added_by
   end
@@ -249,7 +266,7 @@ class Protocol < ApplicationRecord
 
   def self.clone_contents(src, dest, current_user, clone_keywords)
     assets_to_clone = []
-    dest.update(description: src.description)
+    dest.update(description: src.description, name: src.name)
     src.clone_tinymce_assets(dest, dest.team)
 
     # Update keywords
@@ -266,7 +283,6 @@ class Protocol < ApplicationRecord
     src.steps.each do |step|
       step2 = Step.new(
         name: step.name,
-        description: step.description,
         position: step.position,
         completed: false,
         user: current_user,
@@ -274,29 +290,44 @@ class Protocol < ApplicationRecord
       )
       step2.save!
 
-      # Copy checklists
-      step.checklists.asc.each do |checklist|
-        checklist2 = Checklist.new(
-          name: checklist.name,
+      # Copy texts
+      step.step_texts.each do |step_text|
+        step_text2 = StepText.new(
+          text: step_text.text,
           step: step2
         )
-        checklist2.created_by = current_user
-        checklist2.last_modified_by = current_user
-        checklist2.save!
+        step_text2.save!
+
+        step2.step_orderable_elements.create!(
+          position: step_text.step_orderable_element.position,
+          orderable: step_text2
+        )
+      end
+
+      # Copy checklists
+      step.checklists.asc.each do |checklist|
+        checklist2 = Checklist.create!(
+          name: checklist.name,
+          step: step2,
+          created_by: current_user,
+          last_modified_by: current_user
+        )
 
         checklist.checklist_items.each do |item|
-          item2 = ChecklistItem.new(
+          ChecklistItem.create!(
             text: item.text,
             checked: false,
             checklist: checklist2,
-            position: item.position
+            position: item.position,
+            created_by: current_user,
+            last_modified_by: current_user
           )
-          item2.created_by = current_user
-          item2.last_modified_by = current_user
-          item2.save!
         end
 
-        step2.checklists << checklist2
+        step2.step_orderable_elements.create!(
+          position: checklist.step_orderable_element.position,
+          orderable: checklist2
+        )
       end
 
       # "Shallow" Copy assets
@@ -309,14 +340,19 @@ class Protocol < ApplicationRecord
 
       # Copy tables
       step.tables.each do |table|
-        table2 = Table.new(
+        table2 = Table.create!(
           name: table.name,
-          contents: table.contents.encode('UTF-8', 'UTF-8')
+          step: step2,
+          contents: table.contents.encode('UTF-8', 'UTF-8'),
+          team: dest.team,
+          created_by: current_user,
+          last_modified_by: current_user
         )
-        table2.created_by = current_user
-        table2.last_modified_by = current_user
-        table2.team = dest.team
-        step2.tables << table2
+
+        step2.step_orderable_elements.create!(
+          position: table.step_table.step_orderable_element.position,
+          orderable: table2.step_table
+        )
       end
 
       # Copy steps tinyMce assets
@@ -583,6 +619,7 @@ class Protocol < ApplicationRecord
 
     # Lastly, update the metadata
     reload
+    self.name = source.name
     self.record_timestamps = false
     self.updated_at = source.updated_at
     self.parent = source
@@ -617,6 +654,7 @@ class Protocol < ApplicationRecord
     # Link protocols if neccesary
     if link_protocols
       reload
+      self.name = clone.name
       self.record_timestamps = false
       self.added_by = current_user
       self.parent = clone
@@ -678,7 +716,10 @@ class Protocol < ApplicationRecord
   def destroy_contents
     # Calculate total space taken by the protocol
     st = space_taken
-    steps.order(position: :desc).destroy_all
+    steps.order(position: :desc).each do |step|
+      step.step_orderable_elements.delete_all
+      step.destroy!
+    end
 
     # Release space taken by the step
     team.release_space(st)

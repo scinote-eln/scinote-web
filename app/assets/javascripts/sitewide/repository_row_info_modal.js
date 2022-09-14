@@ -3,6 +3,11 @@
 (function() {
   'use strict';
 
+  var LABEL_TEMPLATE_SELECTOR = '#label_template_id';
+  var LABEL_PRINTER_SELECTOR = '#label_printer_id';
+  var ZEBRA_LABEL = 'zebra';
+  var FLUICS_LABEL = 'fluics';
+
   $(document).on('click', '.record-info-link', function(e) {
     var that = $(this);
     $.ajax({
@@ -10,6 +15,11 @@
       url: that.attr('href'),
       dataType: 'json'
     }).done(function(xhr, settings, data) {
+      if ($('#modal-info-repository-row').length) {
+        $('#modal-info-repository-row').find('.modal-body #repository_row-info-table').DataTable().destroy();
+        $('#modal-info-repository-row').remove();
+        $('.modal-backdrop').remove();
+      }
       $('body').append($.parseHTML(data.responseJSON.html));
       $('#modal-info-repository-row').modal('show', {
         backdrop: true,
@@ -67,12 +77,47 @@
         $(this).remove();
       });
 
-      dropdownSelector.init('#modal-print-repository-row-label #label_printer_id', {
+      dropdownSelector.init('#modal-print-repository-row-label ' + LABEL_TEMPLATE_SELECTOR, {
         noEmptyOption: true,
         singleSelect: true,
         closeOnSelect: true,
-        selectAppearance: 'simple'
+        selectAppearance: 'simple',
+        localFilter: function(options) {
+          var printerType = JSON.parse($('option:selected', LABEL_PRINTER_SELECTOR).attr('data-params')).type;
+          return options.filter(function(option, value) {
+            var labelType = JSON.parse($(value).attr('data-params')).type;
+            var showLabel = false;
+            if (printerType === FLUICS_LABEL) {
+              showLabel = [FLUICS_LABEL, ZEBRA_LABEL].some(el => labelType.toLowerCase().includes(el));
+            } else if (printerType === ZEBRA_LABEL) {
+              showLabel = labelType.toLowerCase().includes(ZEBRA_LABEL);
+            }
+            return showLabel;
+          });
+        }
+      });
+
+      dropdownSelector.init('#modal-print-repository-row-label ' + LABEL_PRINTER_SELECTOR, {
+        noEmptyOption: true,
+        singleSelect: true,
+        closeOnSelect: true,
+        selectAppearance: 'simple',
+        onChange: function() {
+          var printerType = JSON.parse($('option:selected', LABEL_PRINTER_SELECTOR).attr('data-params')).type;
+          var optionsLabel = $(LABEL_TEMPLATE_SELECTOR).find('option');
+          var index;
+          var value;
+          var labelType;
+          for (index = 0; index < optionsLabel.length; index += 1) {
+            value = optionsLabel[index];
+            labelType = JSON.parse($(value).attr('data-params')).type;
+            if (labelType.toLowerCase().includes(printerType) && JSON.parse($(value).attr('data-params')).default) {
+              dropdownSelector.selectValues(LABEL_TEMPLATE_SELECTOR, $(value).attr('value'));
+              break;
+            }
+          }
+        }
       });
     });
   });
-})();
+}());

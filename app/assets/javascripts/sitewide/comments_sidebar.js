@@ -3,6 +3,7 @@
 var CommentsSidebar = (function() {
   const SIDEBAR = '.comments-sidebar';
   var commentsCounter;
+  var closeCallback;
 
   function loadCommentsList() {
     var commentsUrl = $(SIDEBAR).data('comments-url');
@@ -12,7 +13,9 @@ var CommentsSidebar = (function() {
     }, function(result) {
       $(SIDEBAR).removeClass('loading');
       $(SIDEBAR).find('.comments-subject-title').text(result.object_name);
+      $(SIDEBAR).find('.comments-subject-url').html(result.object_url);
       $(SIDEBAR).find('.comments-list').html(result.comments);
+
       if (result.comment_addable) {
         $(SIDEBAR).find('.comment-input-container').removeClass('hidden');
       } else {
@@ -30,15 +33,26 @@ var CommentsSidebar = (function() {
   }
 
   function initOpenButton() {
-    $(document).on('click', '.open-comments-sidebar', function() {
+    $(document).on('click', '.open-comments-sidebar', function(e) {
       commentsCounter = $(`#comment-count-${$(this).data('objectId')}`);
+      closeCallback = $(this).data('closeCallback');
       CommentsSidebar.open($(this).data('objectType'), $(this).data('objectId'));
+      e.preventDefault();
     });
   }
 
   function initCloseButton() {
     $(document).on('click', `${SIDEBAR} .close-btn`, function() {
       CommentsSidebar.close();
+      if (closeCallback) closeCallback();
+    });
+  }
+
+  function initScrollButton() {
+    $(document).on('click', `${SIDEBAR} .scroll-page-with-anchor`, function(e) {
+      e.preventDefault();
+      $($(this).attr('href'))[0].scrollIntoView();
+      window.scrollBy(0, -130);
     });
   }
 
@@ -133,6 +147,7 @@ var CommentsSidebar = (function() {
       initDeleteButton();
       initEditButton();
       initCancelButton();
+      initScrollButton();
     },
     open: function(objectType, objectId) {
       $(SIDEBAR).find('.comments-subject-title').empty();

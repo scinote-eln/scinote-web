@@ -1,33 +1,28 @@
 <% result ||= report_element.result %>
 <% table = result.table %>
 <% timestamp = table.created_at %>
-<div class="report-element report-result-element report-result-table-element">
+<% name = result.name %>
+<% export_all = defined?(export_all) && export_all %>
+<div class="report-element report-result-element report-result-text-element">
   <div class="report-element-header">
-    <div class="row">
-      <div class="pull-left result-name-container">
-        <div class="pull-left result-icon">
-          <span class="fas fa-table"></span>
-        </div>
-        <div class="pull-left result-name">
-          <%= result.name %>
-          <% if result.archived? %>
-            <span class="label label-warning"><%= t('search.index.archived') %></span>
-          <% end %>
-        </div>
-        <% if defined? export_all and export_all %>
-          <div class="pull-left table-name">
-            <% file_link = @obj_filenames.dig(:tables, table.id, :file) %>
-            <a href="<%= file_link %>">
-              <em><%=t "projects.reports.elements.result_table.table_name", name: file_link&.split('/')&.last %></em>
-            </a>
-          </div>
-        <% end %>
-        <div class="pull-left user-time">
-          <%= t('projects.reports.elements.result_table.user_time', user: result.user.full_name , timestamp: l(timestamp, format: :full)) %>
-        </div>
-      </div>
+    <div class="result-name">
+      <%= name %>
+      <% if result.archived? %>
+        <span class="label label-warning"><%= t('search.index.archived') %></span>
+      <% end %>
     </div>
-  </div>
+    <% if defined? export_all and export_all %>
+      <div class="table-name">
+        <% file_link = @obj_filenames.dig(:tables, table.id, :file) %>
+        <a href="<%= file_link %>">
+          <em><%= file_link&.split('/')&.last %></em>
+        </a>
+      </div>
+    <% end %>
+    <div class="user-time">
+      <%= t('projects.reports.elements.result_table.user_time', user: result.user.full_name, timestamp: l(timestamp, format: :full)) %>
+    </div>
+  </div><br>
   <div class="report-element-body">
     <input type="hidden" class="hot-table-contents" value="<%= table.contents_utf_8 %>" />
     <div class="hot-table-container"></div>

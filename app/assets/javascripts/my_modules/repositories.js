@@ -222,8 +222,7 @@ var MyModuleRepositories = (function() {
         url: $(tableContainer).data('source'),
         contentType: 'application/json',
         data: function(d) {
-          d.order[0].column = tableContainer.data('name-column-id');
-          d.assigned = 'assigned';
+          d.assigned = 'assigned_simple';
           d.view_mode = true;
           d.simple_view = true;
           return JSON.stringify(d);
@@ -333,6 +332,10 @@ var MyModuleRepositories = (function() {
             json.state.columns[7].visible = false;
           }
           if (json.state.search) delete json.state.search;
+          if ($(tableContainer).data('stockConsumptionColumn')) {
+            json.state.columns.push({});
+            json.state.ColReorder.push(json.state.ColReorder.length);
+          }
           callback(json.state);
         });
       },
@@ -598,6 +601,7 @@ var MyModuleRepositories = (function() {
 
       renderFullViewRepositoryName(repositoryNameObject.text());
       FULL_VIEW_MODAL.modal('show');
+      initCloseFullViewModal();
       $.getJSON($(this).data('table-url'), (data) => {
         FULL_VIEW_MODAL.find('.table-container').html(data.html);
         renderFullViewTable(FULL_VIEW_MODAL.find('.table'), { assigned: true, skipCheckbox: true });
@@ -685,6 +689,7 @@ var MyModuleRepositories = (function() {
       var assignUrlModal = $(this).data('assign-url-modal');
       var updateUrlModal = $(this).data('update-url-modal');
       FULL_VIEW_MODAL.modal('show');
+      initCloseFullViewModal();
       $.get($(this).data('table-url'), (data) => {
         FULL_VIEW_MODAL.find('.table-container').html(data.html);
         FULL_VIEW_MODAL.data('assign-url-modal', assignUrlModal);
@@ -809,6 +814,14 @@ var MyModuleRepositories = (function() {
       }).error((response) => {
         HelperModule.flashAlertMsg(response.responseJSON.message, 'danger');
       });
+    });
+  }
+
+  function initCloseFullViewModal() {
+    $(FULL_VIEW_MODAL).on('keyup', function(e) {
+      if (e.key === 'Escape') {
+        FULL_VIEW_MODAL.modal('hide');
+      }
     });
   }
 

@@ -34,14 +34,14 @@
              aria-expanded="false"
              data-href="<%= system_notifications_url(format: :json) %>">
             <i class="fas fa-gift"></i>
-            <span class="visible-xs-inline visible-sm-inline"><%= t("system_notifications.index.whats_new") %></span>
+            <span class="visible-xs-inline visible-sm-inline"><%= t("system_notifications.index.whats_new_html") %></span>
             <span id="count-system-notifications"
                   data-href="<%= unseen_counter_system_notifications_url %>">
             </span>
           </a>
           <ul class="dropdown-menu dropdown-system-notifications">
             <li class="system-notifications-dropdown-header">
-              <span class="pull-left"><%= t("system_notifications.index.whats_new") %></span>
+              <span class="pull-left"><%= t("system_notifications.index.whats_new_html") %></span>
               <span class="show-all">
                 <%= link_to t('system_notifications.index.see_all'), system_notifications_path %>
               </span>

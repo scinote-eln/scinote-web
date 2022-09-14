@@ -809,27 +809,39 @@ class TeamImporter
         step_comment.save!
       end
 
-      step_json['tables'].each do |table_json|
-        table = Table.new(table_json)
-        orig_table_id = table.id
-        table.id = nil
-        table.created_by_id = user_id || find_user(table.created_by_id)
-        table.last_modified_by_id =
-          user_id || find_user(table.last_modified_by_id)
-        table.team = protocol.team
-        table.contents = Base64.decode64(table.contents)
-        table.data_vector = Base64.decode64(table.data_vector)
-        table.save!
-        @table_mappings[orig_table_id] = table.id
-        StepTable.create!(step: step, table: table)
+      step_json['step_orderable_elements'].each do |element_json|
+        if element_json['step_text']
+          orderable = StepText.new(element_json['step_text'])
+          orderable.step_id = step.id
+          orderable.id = nil
+          orderable.save!
+        elsif element_json['table']
+          table = Table.new(element_json['table'])
+          orig_table_id = table.id
+          table.id = nil
+          table.created_by_id = user_id || find_user(table.created_by_id)
+          table.last_modified_by_id =
+            user_id || find_user(table.last_modified_by_id)
+          table.team = protocol.team
+          table.contents = Base64.decode64(table.contents)
+          table.data_vector = Base64.decode64(table.data_vector)
+          table.save!
+          @table_mappings[orig_table_id] = table.id
+          orderable = StepTable.create!(step: step, table: table)
+        elsif element_json['checklist']
+          orderable = create_step_checklist(element_json['checklist'], step, user_id)
+        end
+        StepOrderableElement.create!(
+          position: element_json['position'],
+          step: step,
+          orderable: orderable
+        )
       end
 
       step_json['assets'].each do |asset_json|
         asset = create_asset(asset_json, protocol.team, user_id)
         StepAsset.create!(step: step, asset: asset)
       end
-
-      create_step_checklists(step_json['checklists'], step, user_id)
     end
   end
 
@@ -916,8 +928,7 @@ class TeamImporter
     asset
   end
 
-  def create_step_checklists(step_checklists_json, step, user_id = nil)
-    step_checklists_json.each do |checklist_json|
+  def create_step_checklist(checklist_json, step, user_id = nil)
       checklist = Checklist.new(checklist_json['checklist'])
       orig_checklist_id = checklist.id
       checklist.id = nil
@@ -938,7 +949,7 @@ class TeamImporter
           user_id || find_user(checklist_item.last_modified_by_id)
         checklist_item.save!
       end
-    end
+      checklist
   end
 
   def create_reports(reports_json, team)

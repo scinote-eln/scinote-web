@@ -50,6 +50,14 @@ Canaid::Permissions.register_for(Team) do
   can :create_reports do |user, team|
     team.permission_granted?(user, TeamPermissions::REPORTS_CREATE)
   end
+
+  can :view_label_templates do |user, team|
+    user.is_normal_user_or_admin_of_team?(team)
+  end
+
+  can :manage_label_templates do |user, team|
+    user.is_admin_of_team?(team)
+  end
 end
 
 Canaid::Permissions.register_for(ProjectFolder) do

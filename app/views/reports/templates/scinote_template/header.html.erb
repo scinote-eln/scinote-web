@@ -1,5 +1,6 @@
 <style>
  .print-header {
+    border-bottom: 2px solid #a0a0a8;
     line-height: 50px;
   }
 
@@ -21,7 +22,11 @@
 </style>
 <div class="print-header">
   <div class="logo-img">
-    <%= wicked_pdf_image_tag logo %>
+    <% if logo == 'logo.png' %>
+      <%= image_tag wicked_pdf_asset_base64(logo) %>
+    <%else%>
+      <%= wicked_pdf_image_tag logo %>
+    <% end %>
   </div>
   <div class="page-numbers pagination" data-page-offset="0">
     Page <span class="page"></span> of <span class="topage"></span>

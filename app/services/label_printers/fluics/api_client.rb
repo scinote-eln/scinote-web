@@ -10,7 +10,7 @@ module LabelPrinters
       class BadRequestError < StandardError; end
 
       include HTTParty
-      base_uri 'https://print-api.fluics.com/latest'
+      base_uri 'https://print-api.fluics.com/v3'
 
       def initialize(api_key)
         self.class.headers(
@@ -40,6 +40,11 @@ module LabelPrinters
             body: zpl
           }
         )
+      end
+
+      def list_templates
+        group_name = ENV['FLUICS_TEMPLATES_GROUP'] || ''
+        do_request(:get, '/get_templates', params: { query: { templateGroups: group_name } })
       end
 
       private

@@ -87,6 +87,12 @@ class Experiment < ApplicationRecord
       .where(project: Project.viewable_by_user(user, teams))
   end
 
+  def self.filter_by_teams(teams = [])
+    return self if teams.blank?
+
+    joins(:project).where(project: { team: teams })
+  end
+
   def connections
     Connection.joins(
       'LEFT JOIN my_modules AS inputs ON input_id = inputs.id'

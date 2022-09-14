@@ -104,6 +104,10 @@ class Repository < RepositoryBase
     end
   end
 
+  def self.filter_by_teams(teams = [])
+    teams.blank? ? self : where(team: teams)
+  end
+
   def permission_parent
     team
   end

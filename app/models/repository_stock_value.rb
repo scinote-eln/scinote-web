@@ -4,7 +4,7 @@ class RepositoryStockValue < ApplicationRecord
   include RepositoryValueWithReminders
   include ActionView::Helpers::NumberHelper
 
-  attr_accessor :comment
+  attribute :comment, :text
 
   belongs_to :repository_stock_unit_item, optional: true
   belongs_to :created_by, class_name: 'User', optional: true, inverse_of: :created_repository_stock_values
@@ -112,12 +112,13 @@ class RepositoryStockValue < ApplicationRecord
                                       .find(new_data[:unit_item_id])
     self.last_modified_by = user
     delta = new_data[:amount].to_d - amount.to_d
+    self.comment = new_data[:comment].presence
     repository_ledger_records.create!(
       user: last_modified_by,
       amount: delta,
       balance: amount,
       reference: repository_cell.repository_column.repository,
-      comment: new_data[:comment].presence
+      comment: comment
     )
     self.amount = BigDecimal(new_data[:amount].to_s)
     save!

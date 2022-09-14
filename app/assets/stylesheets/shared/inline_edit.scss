@@ -1,0 +1,83 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+.sci-inline-edit {
+  column-gap: .25em;
+  display: grid;
+  grid-template-columns: auto repeat(2, max-content);
+  transition: .4s $timing-function-sharp;
+
+  &.editing .sci-inline-edit__content {
+    background-color: $color-white;
+
+    .sci-inline-edit__content {
+      padding-top: 0;
+    }
+  }
+
+  .sci-inline-edit__content {
+    border: $border-transparent;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    margin-left: -.25em;
+    min-height: 36px;
+    padding-left: .25em;
+    padding-top: .3em;
+    position: relative;
+    width: 100%;
+
+    .sci-inline-edit__view {
+      cursor: pointer;
+      white-space: pre-wrap;
+      width: 100%;
+
+      &.blank {
+        color: $color-silver-chalice;
+      }
+    }
+
+    textarea,
+    input {
+      background: transparent;
+      border: 0;
+      min-height: 1em;
+      outline: none;
+      overflow: hidden;
+      padding: 0;
+      width: 100%;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    .sci-inline-edit__error {
+      bottom: -16px;
+      color: $brand-danger;
+      font-size: 12px;
+      font-weight: normal;
+      line-height: 12px;
+      position: absolute;
+    }
+  }
+
+  &.editing {
+
+    .sci-inline-edit__content {
+      background-color: $color-white;
+      border-color: $brand-focus;
+
+      &.error {
+        border-color: $brand-danger;
+        margin-bottom: 16px;
+      }
+    }
+
+    .sci-inline-edit__control {
+      &.btn-disabled {
+        background: $color-silver-chalice;
+        color: $color-concrete;
+      }
+    }
+  }
+}

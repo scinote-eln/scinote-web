@@ -1,0 +1,73 @@
+.step-table-container {
+  margin-bottom: 1em;
+
+  .step-table {
+    border: $border-transparent;
+    border-radius: 4px;
+    margin-left: var(--left-component-padding);
+    padding: 4px;
+    position: relative;
+
+    .enable-edit-mode {
+      cursor: pointer;
+      display: none;
+      height: 100%;
+      justify-content: flex-end;
+      left: 0;
+      padding: 12px;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      z-index: 200;
+    }
+
+    .enable-edit-mode__icon {
+      background: linear-gradient(
+          90deg,
+          transparent 0%,
+          $color-concrete 25%,
+          $color-concrete 100%
+        );
+      padding: 4px 8px;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+
+    .edit-message {
+      @include font-small;
+      color: $color-silver-chalice;
+      padding: 12px 0 8px;
+    }
+
+    td,
+    th {
+      color: $color-black;
+    }
+
+    &.view:not(.locked) {
+      &:hover {
+        background-color: $color-concrete;
+
+        .enable-edit-mode {
+          display: flex;
+        }
+      }
+    }
+
+    &.edit {
+      border: $border-default;
+      border-radius: 4px;
+    }
+  }
+
+  .edit-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: .5em;
+
+    .btn {
+      margin-left: .5em;
+    }
+  }
+}

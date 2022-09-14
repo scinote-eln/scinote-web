@@ -304,7 +304,7 @@ class TeamZipExport < ZipExport
     end
 
     # Generate CSV
-    csv_data = RepositoryZipExport.to_csv(repo.repository_rows, col_ids, @user, @team, handle_name_func)
+    csv_data = RepositoryZipExport.to_csv(repo.repository_rows, col_ids, @user, repo, handle_name_func)
     File.open(csv_file, 'wb') { |f| f.write(csv_data) }
 
     # Save all attachments (it doesn't work directly in callback function

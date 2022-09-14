@@ -27,6 +27,14 @@ $color-module-hover: $brand-primary;
 
   .actions-button {
     margin-right: 15px;
+
+    .fas {
+      margin-right: .4em;
+    }
+
+    a {
+      padding: .5em 1em;
+    }
   }
 
   .toolbarButtons {

@@ -16,7 +16,7 @@ gem 'rails', '~> 6.1.5'
 gem 'psych', '< 4.0'
 gem 'view_component', require: 'view_component/engine'
 gem 'recaptcha', require: 'recaptcha/rails'
-gem 'sanitize', '~> 5.2'
+gem 'sanitize', '~> 6.0'
 gem 'sassc-rails'
 gem 'webpacker', '~> 4.0.0'
 gem 'yomu', git: 'https://github.com/biosistemika/yomu', branch: 'master'
@@ -73,7 +73,7 @@ gem 'i18n-js', '~> 3.6' # Localization in javascript files
 gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'logging', '~> 2.0.0'
 gem 'nested_form_fields'
-gem 'nokogiri', '~> 1.13.4' # HTML/XML parser
+gem 'nokogiri', '~> 1.13.6' # HTML/XML parser
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'rgl' # Graph framework for project diagram calculations
 gem 'roo', '~> 2.8.2' # Spreadsheet parser
@@ -89,6 +89,7 @@ gem 'underscore-rails'
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-heroku', '2.12.5'
 
+gem 'aws-sdk-lambda'
 gem 'aws-sdk-rails'
 gem 'aws-sdk-s3'
 gem 'delayed_job_active_record'
