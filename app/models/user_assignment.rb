@@ -28,6 +28,14 @@ class UserAssignment < ApplicationRecord
         assignable: team_shared_repository.shared_object
       )
     end
+
+    Repository.globally_shared.find_each do |repository|
+      assignable.repository_sharing_user_assignments.create!(
+        user: user,
+        user_role: repository.shared_write? ? normal_user_role : viewer_role,
+        assignable: repository
+      )
+    end
   end
 
   def unassign_shared_inventories
