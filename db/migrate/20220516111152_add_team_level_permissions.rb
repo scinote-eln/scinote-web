@@ -77,7 +77,7 @@ class AddTeamLevelPermissions < ActiveRecord::Migration[6.1]
         @viewer_role.permissions = @viewer_role.permissions - VIEWER_PERMISSIONS
         @viewer_role.save(validate: false)
 
-        UserAssignment.where(assignable_type: %w(Team Protocol Report Repository)).delete_all
+        UserAssignment.where(assignable_type: %w(Team Protocol Report RepositoryBase)).delete_all
       end
     end
   end
