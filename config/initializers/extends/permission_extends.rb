@@ -10,6 +10,8 @@ module PermissionExtends
       INVENTORIES_CREATE
       PROTOCOLS_CREATE
       REPORTS_CREATE
+      LABEL_TEMPLATES_READ
+      LABEL_TEMPLATES_MANAGE
     ).each { |permission| const_set(permission, "team_#{permission.underscore}") }
   end
 
@@ -132,6 +134,8 @@ module PermissionExtends
       TeamPermissions::PROJECTS_CREATE,
       TeamPermissions::PROTOCOLS_CREATE,
       TeamPermissions::REPORTS_CREATE,
+      TeamPermissions::LABEL_TEMPLATES_READ,
+      TeamPermissions::LABEL_TEMPLATES_MANAGE,
       ProtocolPermissions::READ,
       ProtocolPermissions::MANAGE,
       ReportPermissions::READ,
@@ -222,6 +226,7 @@ module PermissionExtends
     ]
 
     VIEWER_PERMISSIONS = [
+      TeamPermissions::LABEL_TEMPLATES_READ,
       ProtocolPermissions::READ,
       ReportPermissions::READ,
       ProjectPermissions::READ,
