@@ -42,11 +42,11 @@ class Repository < RepositoryBase
   scope :archived, -> { where(archived: true) }
 
   scope :accessible_by_teams, lambda { |teams|
-    accessible_repositories = left_outer_joins(:team_repositories)
+    accessible_repositories = left_outer_joins(:team_shared_objects)
     accessible_repositories =
       accessible_repositories
       .where(team: teams)
-      .or(accessible_repositories.where(team_repositories: { team: teams }))
+      .or(accessible_repositories.where(team_shared_objects: { team: teams }))
       .or(accessible_repositories
             .where(permission_level: [Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:shared_read],
                                       Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:shared_write]]))
@@ -130,7 +130,7 @@ class Repository < RepositoryBase
   end
 
   def shared_with_anybody?
-    (!not_shared? || team_repositories.any?)
+    (!not_shared? || team_shared_objects.any?)
   end
 
   def shared_with?(team)
@@ -148,15 +148,15 @@ class Repository < RepositoryBase
   def shared_with_read?(team)
     return false if self.team == team
 
-    shared_read? || team_repositories.where(team: team, permission_level: :shared_read).any?
+    shared_read? || team_shared_objects.where(team: team, permission_level: :shared_read).any?
   end
 
   def private_shared_with?(team)
-    team_repositories.where(team: team).any?
+    team_shared_objects.where(team: team).any?
   end
 
   def private_shared_with_write?(team)
-    team_repositories.where(team: team, permission_level: :shared_write).any?
+    team_shared_objects.where(team: team, permission_level: :shared_write).any?
   end
 
   def self.viewable_by_user(_user, teams)
