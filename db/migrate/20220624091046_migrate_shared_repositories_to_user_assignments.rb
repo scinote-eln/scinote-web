@@ -29,6 +29,25 @@ class MigrateSharedRepositoriesToUserAssignments < ActiveRecord::Migration[6.1]
         end
         UserAssignment.import(user_assignments)
       end
+
+      Repository.globally_shared.find_each do |repository|
+        user_role = if repository.shared_read?
+                      viewer_role
+                    elsif repository.shared_write?
+                      normal_user_role
+                    end
+
+        Team.where.not(id: repository.team.id).find_each do |team|
+          team.users.find_in_batches(batch_size: 100) do |users_batch|
+            user_assignments = []
+            users_batch.each do |user|
+              user_assignments << UserAssignment.new(user: user, assignable: repository,
+                                                     user_role: user_role, team: team)
+            end
+            UserAssignment.import(user_assignments)
+          end
+        end
+      end
     end
 
     remove_index :repositories, :permission_level

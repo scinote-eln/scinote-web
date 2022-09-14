@@ -30,8 +30,10 @@ class Repository < RepositoryBase
   has_many :repository_table_filters, dependent: :destroy
 
   before_save :sync_name_with_snapshots, if: :name_changed?
-  after_save :unassign_unshared_items, if: :saved_change_to_permission_level
+  before_save :assign_globally_shared_inventories, if: -> { permission_level_changed? && globally_shared? }
+  before_save :unassign_globally_shared_inventories, if: -> { permission_level_changed? && !globally_shared? }
   before_destroy :refresh_report_references_on_destroy, prepend: true
+  after_save :unassign_unshared_items, if: :saved_change_to_permission_level
 
   validates :name,
             presence: true,
@@ -40,6 +42,7 @@ class Repository < RepositoryBase
 
   scope :active, -> { where(archived: false) }
   scope :archived, -> { where(archived: true) }
+  scope :globally_shared, -> { where(permission_level: %i(shared_read shared_write)) }
 
   scope :accessible_by_teams, lambda { |teams|
     accessible_repositories = left_outer_joins(:team_shared_objects)
@@ -127,6 +130,10 @@ class Repository < RepositoryBase
 
   def i_shared?(team)
     shared_with_anybody? && self.team == team
+  end
+
+  def globally_shared?
+    shared_read? || shared_write?
   end
 
   def shared_with_anybody?
@@ -238,6 +245,27 @@ class Repository < RepositoryBase
 
   def sync_name_with_snapshots
     repository_snapshots.update(name: name)
+  end
+
+  def assign_globally_shared_inventories
+    viewer_role = UserRole.find_by(name: UserRole.public_send('viewer_role').name)
+    normal_user_role = UserRole.find_by(name: UserRole.public_send('normal_user_role').name)
+
+    team_shared_objects.find_each(&:destroy!)
+
+    Team.where.not(id: team.id).find_each do |team|
+      team.users.find_each do |user|
+        team.repository_sharing_user_assignments.create!(
+          user: user,
+          user_role: shared_write? ? normal_user_role : viewer_role,
+          assignable: self
+        )
+      end
+    end
+  end
+
+  def unassign_globally_shared_inventories
+    user_assignments.where.not(team: team).find_each(&:destroy!)
   end
 
   def refresh_report_references_on_destroy
