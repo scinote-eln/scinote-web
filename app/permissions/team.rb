@@ -52,11 +52,11 @@ Canaid::Permissions.register_for(Team) do
   end
 
   can :view_label_templates do |user, team|
-    user.is_normal_user_or_admin_of_team?(team)
+    team.permission_granted?(user, TeamPermissions::LABEL_TEMPLATES_READ)
   end
 
   can :manage_label_templates do |user, team|
-    user.is_admin_of_team?(team)
+    team.permission_granted?(user, TeamPermissions::LABEL_TEMPLATES_MANAGE)
   end
 end
 
