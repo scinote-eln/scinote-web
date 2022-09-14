@@ -96,7 +96,7 @@ describe Api::V1::StepsController, type: :controller do
 
     it_behaves_like "a controller action with permissions checking", :put, :update do
       let(:testable) { my_module }
-      let(:permissions) { [MyModulePermissions::PROTOCOL_MANAGE] }
+      let(:permissions) { [MyModulePermissions::STEPS_MANAGE] }
       let(:action_params) {
         {
           team_id: team.id,

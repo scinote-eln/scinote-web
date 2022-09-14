@@ -3,6 +3,7 @@
 class TeamSharedObject < ApplicationRecord
   enum permission_level: Extends::SHARED_OBJECTS_PERMISSION_LEVELS.except(:not_shared)
 
+
   after_create :assign_shared_inventories, if: -> { shared_object.is_a?(Repository) }
   before_destroy :unassign_unshared_items, if: -> { shared_object.is_a?(Repository) }
   before_destroy :unassign_unshared_inventories, if: -> { shared_object.is_a?(Repository) }
@@ -31,7 +32,7 @@ class TeamSharedObject < ApplicationRecord
   def not_globally_shared
     errors.add(:shared_object_id, :is_globally_shared) if shared_object.globally_shared?
   end
-
+  
   def assign_shared_inventories
     viewer_role = UserRole.find_by(name: UserRole.public_send('viewer_role').name)
     normal_user_role = UserRole.find_by(name: UserRole.public_send('normal_user_role').name)

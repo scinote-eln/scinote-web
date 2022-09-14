@@ -204,6 +204,14 @@ class Protocol < ApplicationRecord
                    user_id: user.id))
   end
 
+  def created_by
+    in_module? ? my_module.created_by : added_by
+  end
+
+  def permission_parent
+    in_module? ? my_module : team
+  end
+
   def linked_modules
     MyModule.joins(:protocols).where('protocols.parent_id = ?', id)
   end

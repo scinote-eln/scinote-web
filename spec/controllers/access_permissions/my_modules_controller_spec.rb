@@ -7,7 +7,6 @@ describe AccessPermissions::MyModulesController, type: :controller do
 
   let!(:user) { subject.current_user }
   let!(:team) { create :team, created_by: user }
-  let!(:user_team) { create :user_team, :admin, user: user, team: team }
   let!(:experiment) { create :experiment, project: project, created_by: user }
   let!(:owner_role) { UserRole.find_by(name: I18n.t('user_roles.predefined.owner')) }
   let!(:viewer_user_role) { create :viewer_role }
@@ -15,11 +14,12 @@ describe AccessPermissions::MyModulesController, type: :controller do
   let!(:project) { create :project, team: team, created_by: user }
   let!(:user_project) { create :user_project, user: user, project: project }
   let!(:viewer_user) { create :user, confirmed_at: Time.zone.now }
-  let!(:normal_user_team) { create :user_team, :normal_user, user: viewer_user, team: team }
   let!(:viewer_user_project) { create :user_project, user: viewer_user, project: project }
   let!(:my_module) { create :my_module, experiment: experiment, created_by: experiment.created_by, created_by: user }
 
   before do
+    create_user_assignment(team, owner_role, user)
+    create_user_assignment(team, viewer_user_role, viewer_user)
     create_user_assignment(my_module, owner_role, user)
     create_user_assignment(my_module, viewer_user_role, viewer_user)
   end

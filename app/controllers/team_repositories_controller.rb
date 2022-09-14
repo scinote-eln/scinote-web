@@ -6,16 +6,19 @@ class TeamRepositoriesController < ApplicationController
 
   # DELETE :team_id/repositories/:repository_id/team_repositories/:id
   def destroy
-    team_shared_object = @repository.team_shared_objects.find_by(id: destory_params[:id])
-
-    if team_shared_object
+    team_shared_object = @repository.team_shared_objects.find(destory_params[:id])
+    ActiveRecord::Base.transaction do
       log_activity(:unshare_inventory, team_shared_object)
       team_shared_object.destroy!
-      render json: {}, status: :no_content
-    else
-      render json: { message: I18n.t('repositories.multiple_share_service.nothing_to_delete') },
-             status: :unprocessable_entity
     end
+    render json: {}, status: :no_content
+  rescue ActiveRecord::RecordNotFound
+    render json: { message: I18n.t('repositories.multiple_share_service.nothing_to_delete') },
+           status: :unprocessable_entity
+  rescue StandardError => e
+    Rails.logger.error(e.message)
+    Rails.logger.error(e.backtrace.join("\n"))
+    render json: { message: I18n.t('general.error') }, status: :unprocessable_entity
   end
 
   # POST :team_id/repositories/:repository_id/update

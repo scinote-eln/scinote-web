@@ -87,6 +87,14 @@ class Report < ApplicationRecord
     where(project: Project.viewable_by_user(user, teams))
   end
 
+  def created_by
+    user
+  end
+
+  def permission_parent
+    team
+  end
+
   def root_elements
     report_elements.active.where(parent: nil).order(:position)
   end

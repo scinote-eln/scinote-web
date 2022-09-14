@@ -51,14 +51,16 @@ module Repositories
       end
 
       @team_ids_for_unshare.each do |team_id|
-        team_shared_object = @repository.team_shared_objects.find_by(team_id: team_id)
-
-        if team_shared_object
+        @repository.transaction do
+          team_shared_object = @repository.team_shared_objects.find_by!(team_id: team_id)
           log_activity(:unshare_inventory, team_shared_object)
           team_shared_object.destroy!
-        else
+        rescue StandardError => e
+          Rails.logger.error(e.message)
+          Rails.logger.error(e.backtrace.join("\n"))
           warnings << I18n.t('repositories.multiple_share_service.unable_to_unshare',
                              repository: @repository.name, team: team_id)
+          raise ActiveRecord::Rollback
         end
       end
 

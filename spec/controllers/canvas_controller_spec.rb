@@ -83,13 +83,6 @@ describe CanvasController do
       }
     end
 
-    before do
-      8.times do |i|
-        create_user_assignment(public_send("task#{i+1}"), role, user)
-      end
-      create_user_assignment(experiment2, role, user)
-    end
-
     context 'when have a lot changes on canvas' do
       it 'everything goes right, redirected to canvas' do
         action
