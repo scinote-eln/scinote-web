@@ -224,7 +224,7 @@ class AssetsController < ApplicationController
           )
         else
           log_step_activity(
-            :protocol_file_deleted,
+            :protocol_step_file_deleted,
             @assoc,
             nil,
             protocol: @assoc.protocol.id,

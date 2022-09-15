@@ -325,7 +325,7 @@ class Project < ApplicationRecord
     UserAssignments::GroupAssignmentJob.perform_now(
       team,
       self,
-      created_by
+      last_modified_by || created_by
     )
   end
 

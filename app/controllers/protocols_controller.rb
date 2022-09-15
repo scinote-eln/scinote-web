@@ -205,6 +205,7 @@ class ProtocolsController < ApplicationController
 
   def update_name
     if @protocol.update(name: params.require(:protocol)[:name])
+      log_activity(:edit_protocol_name_in_repository, nil, protocol: @protocol.id)
       render json: {}, status: :ok
     else
       render json: @protocol.errors, status: :unprocessable_entity
@@ -219,13 +220,7 @@ class ProtocolsController < ApplicationController
           log_activity(:edit_description_in_protocol_repository, nil, protocol: @protocol.id)
           TinyMceAsset.update_images(@protocol, params[:tiny_mce_images], current_user)
           protocol_annotation_notification(old_description)
-          render json: {
-            html: custom_auto_link(
-              @protocol.tinymce_render(:description),
-              simple_format: false,
-              tags: %w(img),
-              team: current_team)
-          }
+          render json: @protocol, serializer: ProtocolSerializer, user: current_user
         else
           render json: @protocol.errors, status: :unprocessable_entity
         end
@@ -278,6 +273,9 @@ class ProtocolsController < ApplicationController
           log_activity(:delete_step_in_protocol_repository, nil, step: step.id,
             step_position: { id: step.id, value_for: 'position_plus_one' })
         end
+
+        # skip adjusting positions after destroy as this is a bulk delete
+        step.skip_position_adjust = true
 
         step.destroy!
       end

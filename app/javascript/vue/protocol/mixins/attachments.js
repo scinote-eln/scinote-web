@@ -22,6 +22,8 @@ export default {
       let filesUploadedCntr = 0;
       this.showFileModal = false;
 
+      if (!this.step.attributes.urls.upload_attachment_url) return false;
+
       return new Promise((resolve, reject) => {
         $(files).each((_, file) => {
           const fileObject = {
@@ -45,14 +47,28 @@ export default {
             return;
           }
 
+          const storageLimit = this.step.attributes.storage_limit &&
+                               this.step.attributes.storage_limit.total > 0 &&
+                               this.step.attributes.storage_limit.used >= this.step.attributes.storage_limit.total;
+          if (storageLimit) {
+            fileObject.error = I18n.t('protocols.steps.attachments.new.no_more_space');
+            this.attachments.push(fileObject);
+            return;
+          }
+
           const upload = new ActiveStorage.DirectUpload(file, this.step.attributes.urls.direct_upload_url, fileObject);
 
           fileObject.isNewUpload = true;
           this.attachments.push(fileObject);
+          const filePosition = this.attachments.length - 1;
 
           upload.create((error, blob) => {
             if (error) {
               fileObject.error = I18n.t('protocols.steps.attachments.new.general_error');
+              this.attachments.splice(filePosition, 1);
+              setTimeout(() => {
+                this.attachments.push(fileObject);
+              }, 0);
               reject(error);
             } else {
               const signedId = blob.signed_id;
@@ -61,6 +77,12 @@ export default {
               }, (result) => {
                 fileObject.id = result.data.id;
                 fileObject.attributes = result.data.attributes;
+              }).error(() => {
+                fileObject.error = I18n.t('protocols.steps.attachments.new.general_error');
+                this.attachments.splice(filePosition, 1);
+                setTimeout(() => {
+                  this.attachments.push(fileObject);
+                }, 0);
               });
               filesUploadedCntr += 1;
               if (filesUploadedCntr === filesToUploadCntr) {

@@ -6,8 +6,8 @@
     margin-top: 2px;
 
     .sci-inline-edit__content {
-      padding-bottom: 7px;
-      padding-top: 7px;
+      margin-bottom: 7px;
+      margin-left: 0;
     }
   }
 
@@ -18,17 +18,14 @@
   .step-element-header {
     .step-element-name {
       align-items: flex-start;
-      column-gap: .5em;
+      column-gap: .25em;
       display: grid;
       font-weight: normal;
       grid-template-columns: max-content auto;
 
       .step-checklist-text {
+        margin-top: -.1em;
         width: 100%;
-      }
-
-      &.done .step-checklist-text {
-        text-decoration: line-through;
       }
 
       &:hover.done .step-checklist-text {
@@ -38,11 +35,12 @@
   }
 
   .sci-checkbox-view-mode {
-    align-self: center;
+    align-self: flex-start;
     background-color: $color-black;
     border-radius: 50%;
     height: 4px;
     margin-right: .5em;
+    margin-top: 1.3em;
     width: 4px;
   }
 
@@ -59,7 +57,7 @@
   }
 
   .sci-checkbox-container {
-    margin: 12px 0;
+    margin: 11px 0;
 
     &.disabled {
       pointer-events: none;

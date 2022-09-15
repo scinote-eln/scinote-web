@@ -9,7 +9,6 @@ class RepositoriesController < ApplicationController
   include RepositoriesDatatableHelper
   include MyModulesHelper
 
-  before_action :switch_team_with_param, only: :show
   before_action :load_repository, except: %i(index create create_modal sidebar archive restore)
   before_action :load_repositories, only: %i(index show sidebar)
   before_action :load_repositories_for_archiving, only: :archive
@@ -47,6 +46,7 @@ class RepositoriesController < ApplicationController
   end
 
   def show
+    current_team_switch(@repository.team) unless @repository.shared_with?(current_team)
     @display_edit_button = can_create_repository_rows?(@repository)
     @display_delete_button = can_delete_repository_rows?(@repository)
     @display_duplicate_button = can_create_repository_rows?(@repository)
@@ -425,7 +425,7 @@ class RepositoriesController < ApplicationController
 
   def load_repository
     repository_id = params[:id] || params[:repository_id]
-    @repository = Repository.accessible_by_teams(current_team).find_by(id: repository_id)
+    @repository = Repository.accessible_by_teams(current_user.teams).find_by(id: repository_id)
     render_404 unless @repository
   end
 

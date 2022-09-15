@@ -62,6 +62,7 @@ class ProtocolsImporter
   def populate_protocol(protocol, protocol_json)
     protocol.reload
     protocol.description = populate_rte(protocol_json, protocol)
+    protocol.name = protocol_json['name'].presence
     protocol.save!
     asset_ids = []
     step_pos = 0

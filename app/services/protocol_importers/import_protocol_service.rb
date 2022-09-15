@@ -20,6 +20,8 @@ module ProtocolImporters
       ActiveRecord::Base.transaction do
         @protocol = Protocol.create!(@protocol_params.merge!(added_by: @user, team: @team))
 
+        TinyMceAsset.update_images(@protocol, '[]', @user)
+
         @steps_params.map do |step_params|
           step_params.symbolize_keys!
 
@@ -34,6 +36,8 @@ module ProtocolImporters
             position: 0,
             orderable: step_text
           )
+
+          TinyMceAsset.update_images(step_text, '[]', @user)
 
           # 'Manually' create assets here. "Accept nasted attributes" won't work for assets
           step.assets << AttachmentsBuilder.generate(step_params.deep_symbolize_keys, user: @user, team: @team)

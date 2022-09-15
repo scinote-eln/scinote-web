@@ -363,6 +363,7 @@ en:
     empty_state:
       title: "No comments here"
       description: "Nobody has commented yet. Be the first by using the box below."
+    placeholder: "Add a new comment..."
     options_dropdown:
       header: "Comment options"
       edit: "Edit"
@@ -1003,7 +1004,7 @@ en:
           unlink_title: "Unlink this protocol from the parent in the repository"
           revert: "Revert protocol"
           revert_title: "Revert the protocol to the repository version. This will discard any local changes."
-          save_to_repository: "Save to protocol repository"
+          save_to_repository: "Save to repository"
           save_a_copy_to_repository: "Save a copy to repository"
           save_to_repository_title: "Copy this protocol to repository"
           update_self: "Update from repository"
@@ -1459,6 +1460,11 @@ en:
       shared_read: "Shared inventory (owned by %{team_name}). You can view."
     bmt_singleton_error: "Only one BMT inventory can be present."
     index:
+      active_reminders:
+        label: "Active reminders"
+        short_label: "Reminders…"
+        description: "Show only active reminderss"
+        checked_description: "Show all items"
       head_title: "Inventories"
       title: "Inventories"
       empty_title: "Your team has no inventories yet"
@@ -2631,6 +2637,7 @@ en:
           success_flash: 'Protocol <strong>%{name}</strong> successfully imported to %{type}.'
 
     steps:
+      placeholder: 'Enter step name'
       default_name: 'Untitled step'
       completed: 'Completed'
       uncompleted: 'Uncompleted'
@@ -2664,11 +2671,16 @@ en:
         table: 'Add table'
         text: 'Add text'
         checklist: 'Add checklist'
-        attachment: 'File from your PC'
+        attachment: 'Add file'
         checklist_item: 'Add a new checklist item...'
       table:
         default_name: 'Table %{position}'
         edit_message: 'Use right click for table options'
+        name_modal:
+          title: 'Please enter the table title'
+          description: 'Tables have become content blocks and require a name. To be able to edit the table, please add the name now:'
+          save: 'Save table title'
+          error: "Table name can't be empty"
       checklist:
         default_name: 'Checklist %{position}'
         empty_checklist: 'Doesn’t contain any checklist items'
@@ -2705,6 +2717,10 @@ en:
         complete_title: "Complete step"
         uncomplete_title: "Restart step"
       attachments:
+        menu:
+          office_file: "New Office file"
+          chemical_drawing: "New chemical drawing"
+          file_from_pc: "File from your PC"
         modified_label: "Modified:"
         manage: "Manage"
         add: "ADD"
@@ -2720,6 +2736,7 @@ en:
           description: 'New'
           uploading: 'Uploading'
           file_too_big: 'Failed to upload: File size is too big'
+          no_more_space: 'Failed to upload: You ran out of space'
           general_error: 'Failed to upload: Something went wrong, please try again'
           leaving_warning: 'Your changes will be lost if you navigate away'
 
@@ -2775,8 +2792,8 @@ en:
         description: "Invite people to your organization to start using SciNote"
         input_placeholder: "jsmith@someemail.com"
         input_label: "New member emails"
-        input_subtitle: "You can enter one or more emails. To confirm each one press the ENTER key."
-    input_subtitle: "You can enter one or more emails. To confirm each one press the ENTER key."
+        input_subtitle: "You can enter one or more emails."
+    input_subtitle: "You can enter one or more emails."
     invite_to_team_heading: "Invite users to my team:"
     invite_btn: "Invite members"
     invite_as: "As %{role}"
@@ -2897,10 +2914,10 @@ en:
     create_wopi_file:
       button_text: 'Create an MS Office file'
       li_text: "Office file"
-      modal_title: 'Create new MS Office document'
+      modal_title: 'Create new Microsoft Office Online document'
       text_field_label: 'Document name'
       type_select_label: 'Document type'
-      text_field_placeholder: 'New Document'
+      text_field_placeholder: 'Enter document name...'
       ms_word: 'Word<br/>Online'
       ms_excel: 'Excel<br/>Online'
       ms_powerpoint: 'PowerPoint<br/>Online'

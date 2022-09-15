@@ -295,6 +295,9 @@ var TinyMCE = (function() {
               .clone()
               .appendTo(menuBar)
               .on('click', function(event) {
+                $(editorForm).find('.form-group').removeClass('has-error');
+                $(editorForm).find('.help-block').remove();
+
                 event.preventDefault();
                 if (editor.isDirty()) {
                   editor.setContent($(selector).val());
@@ -302,6 +305,7 @@ var TinyMCE = (function() {
                 editorForm.find('.tinymce-status-badge').addClass('hidden');
                 editorForm.find('.tinymce-view').removeClass('hidden');
                 editor.remove();
+
                 updateScrollPosition(editorForm);
                 if (onSaveCallback) { onSaveCallback(); }
               })

@@ -12,11 +12,13 @@
         </div>
         <div class="modal-body">
           <p><%= t("protocols.print.modal.content") %></p>
-          <div class="sci-checkbox-container">
-            <%= check_box_tag :include_comments, 1, true, { class: "sci-checkbox" } %>
-            <span class="sci-checkbox-label"></span>
-          </div>
-          <small><%= t("protocols.print.modal.include_comments") %></small>
+          <% if comments_enabled %>
+            <div class="sci-checkbox-container">
+              <%= check_box_tag :include_comments, 1, true, { class: "sci-checkbox" } %>
+              <span class="sci-checkbox-label"></span>
+            </div>
+            <small><%= t("protocols.print.modal.include_comments") %></small>
+          <% end %>
         </div>
         <div class="modal-footer">
           <div class="pull-right">

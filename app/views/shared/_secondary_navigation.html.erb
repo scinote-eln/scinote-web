@@ -72,7 +72,7 @@
                 <%=t "nav2.modules.results" %>
                 <% @active_results_size = @my_module.results.where(archived:false).size %>
                 <% if @active_results_size.positive? %>
-                  <sup class="navigation-results-counter"><%= @active_results_size %></sup>
+                  <sup class="navigation-results-counter"><%= @my_module.archived_branch? ? @my_module.results.size : @active_results_size %></sup>
                 <% end %>
               </a>
             </li>

@@ -64,7 +64,7 @@ module Reports::Docx::DrawMyModule
                                                 link_style: link_style }).html_to_word_converter(html)
     end
 
-    draw_my_module_protocol(my_module) if @settings.dig('task', 'protocol', 'description')
+    draw_my_module_protocol(my_module)
 
     filter_steps_for_report(my_module.protocol.steps, @settings).order(:position).each do |step|
       draw_step(step)

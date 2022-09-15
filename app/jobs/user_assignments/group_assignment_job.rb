@@ -9,7 +9,7 @@ module UserAssignments
       @assigned_by = assigned_by
 
       ActiveRecord::Base.transaction do
-        team.users.where.not(id: assigned_by.id).find_each do |user|
+        team.users.where.not(id: assigned_by).find_each do |user|
           user_assignment = UserAssignment.find_or_initialize_by(
             user: user,
             assignable: project

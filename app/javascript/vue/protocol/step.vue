@@ -11,9 +11,9 @@
       <StorageUsage v-if="showStorageUsage()" :step="step"/>
     </div>
     <div class="step-header">
-      <div class="step-element-header" :class="{ 'step-element--locked': !urls.update_url }">
+      <div class="step-element-header" :class="{ 'no-hover': !urls.update_url }">
         <div class="step-controls">
-          <div v-if="reorderStepUrl" class="step-element-grip" @click="$emit('reorder')">
+          <div v-if="reorderStepUrl" class="step-element-grip" @click="$emit('reorder')" :class="{ 'step-element--locked': !urls.update_url }">
             <i class="fas fas-rotated-90 fa-exchange-alt"></i>
           </div>
           <div v-else class="step-element-grip-placeholder"></div>
@@ -24,7 +24,7 @@
             @click="toggleCollapsed">
               <span class="fas fa-caret-right"></span>
           </a>
-          <div v-if="!inRepository && (urls.state_url || step.attributes.completed)" class="step-complete-container">
+          <div v-if="!inRepository" class="step-complete-container" :class="{ 'step-element--locked': !urls.state_url }">
             <div :class="`step-state ${step.attributes.completed ? 'completed' : ''}`"
                  @click="changeState"
                  @keyup.enter="changeState"
@@ -36,20 +36,25 @@
             {{ step.attributes.position + 1 }}.
           </div>
         </div>
-        <div class="step-name-container" :class="{'strikethrough': step.attributes.completed}">
+        <div class="step-name-container" :class="{'step-element--locked': !urls.update_url}">
           <InlineEdit
             :value="step.attributes.name"
+            :class="{ 'step-element--locked': !urls.update_url }"
             :characterLimit="255"
             :allowBlank="false"
             :attributeName="`${i18n.t('Step')} ${i18n.t('name')}`"
             :autofocus="editingName"
+            :placeholder="i18n.t('protocols.steps.placeholder')"
+            :defaultValue="i18n.t('protocols.steps.default_name')"
             @editingEnabled="editingName = true"
             @editingDisabled="editingName = false"
             :editOnload="step.newStep == true"
             @update="updateName"
           />
         </div>
-        <i v-if="urls.update_url && !editingName" class="step-name-edit-icon fas fa-pen" @click="editingName = true"></i>
+        <button v-if="urls.update_url && !editingName" class="step-name-edit-icon btn icon-btn btn-light  " @click="editingName = true">
+          <i class="fas fa-pen"></i>
+        </button>
       </div>
       <div class="step-actions-container">
         <div ref="actionsDropdownButton" v-if="urls.update_url"  class="dropdown">
@@ -57,7 +62,7 @@
             {{ i18n.t('protocols.steps.insert.button') }}
             <span class="caret"></span>
           </button>
-          <ul ref="actionsDropdown" class="dropdown-menu insert-element-dropdown" :aria-labelledby="'stepInserMenu_' + step.id">
+          <ul ref="actionsDropdown" class="dropdown-menu insert-element-dropdown dropdown-menu-right" :aria-labelledby="'stepInserMenu_' + step.id">
             <li class="title">
               {{ i18n.t('protocols.steps.insert.title') }}
             </li>
@@ -97,10 +102,10 @@
         </a>
         <div v-if="urls.update_url" class="step-actions-container">
           <div class="dropdown">
-            <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'stepInserMenu_' + step.id" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="true">
+            <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'stepOptionsMenu_' + step.id" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="true">
               <i class="fas fa-ellipsis-h"></i>
             </button>
-            <ul class="dropdown-menu dropdown-menu-right insert-element-dropdown" :aria-labelledby="'stepInserMenu_' + step.id">
+            <ul class="dropdown-menu dropdown-menu-right insert-element-dropdown" :aria-labelledby="'stepOptionsMenu_' + step.id">
               <li class="title">
                 {{ i18n.t('protocols.steps.options_dropdown.title') }}
               </li>
@@ -184,7 +189,7 @@
   import clipboardPasteModal from 'vue/protocol/step_attachments/clipboard_paste_modal.vue'
   import ReorderableItemsModal from 'vue/protocol/modals/reorderable_items_modal.vue'
 
-  import UtilsMixin from 'vue/protocol/mixins/utils.js'
+  import UtilsMixin from 'vue/mixins/utils.js'
   import AttachmentsMixin from 'vue/protocol/mixins/attachments.js'
   import StorageUsage from 'vue/protocol/storage_usage.vue'
 
@@ -249,7 +254,7 @@
     },
     methods: {
       dragEnter(e) {
-        if (this.showFileModal) return;
+        if (this.showFileModal || !this.urls.upload_attachment_url) return;
 
         // Detect if dragged element is a file
         // https://stackoverflow.com/a/8494918
@@ -322,7 +327,7 @@
         this.reorderElements(unorderedElements)
         this.$emit('stepUpdated')
       },
-      updateElement(element, skipRequest=false) {
+      updateElement(element, skipRequest=false, callback) {
         let index = this.elements.findIndex((e) => e.id === element.id);
         this.elements[index].isNew = false;
 
@@ -337,6 +342,11 @@
             success: (result) => {
               this.elements[index].attributes.orderable = result.data.attributes;
               this.$emit('stepUpdated');
+
+              // optional callback after successful update
+              if(typeof callback === 'function') {
+                callback();
+              }
             }
           }).error(() => {
             HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
@@ -366,7 +376,8 @@
           data: JSON.stringify(elementPositions),
           contentType: "application/json",
           dataType: "json",
-          error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger'))
+          error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')),
+          success: (() => this.$emit('stepUpdated'))
         });
 
         this.reorderElements(this.elements);
@@ -400,7 +411,8 @@
         $('.comments-sidebar .close-btn').click();
         this.showCommentsSidebar = true
       },
-      attachmentDeleted() {
+      attachmentDeleted(id) {
+        this.attachments = this.attachments.filter((a) => a.id !== id );
         this.$emit('stepUpdated');
       },
       closeCommentsSidebar() {

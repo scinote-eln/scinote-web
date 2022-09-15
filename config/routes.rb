@@ -317,8 +317,10 @@ Rails.application.routes.draw do
       member do
         # Notifications popup for individual project in projects index
         get 'notifications'
+        get 'permissions'
         get 'experiments_cards'
         get 'sidebar'
+        get 'actions_dropdown'
         put 'view_type'
       end
 
@@ -350,6 +352,8 @@ Rails.application.routes.draw do
         get 'move_modal', action: :move_modal
       end
       member do
+        get 'permissions'
+        get 'actions_dropdown'
         get 'canvas' # Overview/structure for single experiment
         # AJAX-loaded canvas edit mode (from canvas)
         get 'canvas/edit', to: 'canvas#edit'

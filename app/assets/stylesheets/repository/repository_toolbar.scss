@@ -28,6 +28,11 @@
           margin-left: 0;
         }
       }
+
+      .view-only-label {
+        align-items: center;
+        margin: auto 0;
+      }
     }
 
     .toolbar-right-block {
@@ -39,6 +44,31 @@
 
         &:nth-last-child(1) {
           margin-right: 0;
+        }
+      }
+
+      .active-reminders-filter {
+        align-items: center;
+        cursor: pointer;
+        display: flex;
+        margin-right: 1em;
+
+        .sci-checkbox-container {
+          margin-right: .5em;
+        }
+
+        .active-reminders-short-label {
+          display: none;
+        }
+
+        @media(max-width:770px) {
+          .active-reminders-short-label {
+            display: inline;
+          }
+
+          .active-reminders-label {
+            display: none;
+          }
         }
       }
     }

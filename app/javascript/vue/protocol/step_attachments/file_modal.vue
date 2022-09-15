@@ -38,6 +38,12 @@
             {{ i18n.t("protocols.steps.attachments.file_modal.or") }}
           </div>
           <div class="integrations-container">
+            <div class="integration-block wopi" v-if="step.attributes.wopi_enabled">
+              <a @click="openWopiFileModal" class="create-wopi-file-btn btn btn-light" tabindex="0" @keyup.enter="openWopiFileModal">
+                <img :src="step.attributes.wopi_context.icon"/>
+                {{ i18n.t('assets.create_wopi_file.button_text') }}
+              </a>
+            </div>
             <div class="integration-block marvinjs" v-if="step.attributes.marvinjs_enabled">
               <a
                 class="new-marvinjs-upload-button btn btn-light"
@@ -54,12 +60,6 @@
                 {{ i18n.t('marvinjs.new_button') }}
               </a>
             </div>
-            <div class="integration-block wopi" v-if="step.attributes.wopi_enabled">
-              <a @click="openWopiFileModal" class="create-wopi-file-btn btn btn-light" tabindex="0" @keyup.enter="openWopiFileModal">
-                <img :src="step.attributes.wopi_context.icon"/>
-                {{ i18n.t('assets.create_wopi_file.button_text') }}
-              </a>
-            </div>
           </div>
         </div>
         <div class="modal-footer">
@@ -74,6 +74,8 @@
  <script>
   import StorageUsage from '../storage_usage.vue'
 
+  import WopiFileModal from './mixins/wopi_file_modal.js'
+
   export default {
     name: 'fileModal',
     props: {
@@ -81,24 +83,33 @@
     },
     data() {
       return {
-        dragingFile: false
+        dragingFile: false,
+        attachmentsChanged: false
       }
     },
     components: {StorageUsage},
+    mixins: [WopiFileModal],
     mounted() {
       $(this.$refs.modal).modal('show');
       MarvinJsEditor.initNewButton('.add-file-modal .new-marvinjs-upload-button', () => {
-        this.$emit('attachmentsChanged');
-        this.$nextTick(this.cancel);
+        this.attachmentsChanged = true;
+        $(this.$refs.modal).modal('hide');
       });
       $(this.$refs.modal).on('hidden.bs.modal', () => {
         global.removeEventListener('paste', this.onImageFilePaste, false);
+
+        if (this.attachmentsChanged) {
+          this.$emit('attachmentsChanged');
+        } else {
+          this.cancel();
+        }
       });
       global.addEventListener('paste', this.onImageFilePaste, false);
     },
     methods: {
       cancel() {
         $(this.$refs.modal).modal('hide');
+        this.$nextTick(() => this.$emit('cancel'));
       },
       onImageFilePaste (pasteEvent) {
         if (pasteEvent.clipboardData !== false) {
@@ -115,41 +126,25 @@
       dropFile(e) {
         e.stopPropagation();
         if (e.dataTransfer && e.dataTransfer.files.length) {
-          $(this.$refs.modal).modal('hide');
           this.$emit('files', e.dataTransfer.files);
+          $(this.$refs.modal).modal('hide');
         }
       },
       uploadFiles() {
-        $(this.$refs.modal).modal('hide');
         this.$emit('files', this.$refs.fileSelector.files);
+        $(this.$refs.modal).modal('hide');
       },
       openMarvinJsModal() {
-        // hide regular file modal
-        $(this.$refs.modal).modal('hide');
       },
       openWopiFileModal() {
-        // hide regular file modal
-        $(this.$refs.modal).modal('hide');
-
-        // handle legacy wopi file modal
-        let $wopiModal = $('#new-office-file-modal')
-        $wopiModal.find('#element_id').val(this.step.id);
-        $wopiModal.find('#element_type').val('Step');
-        $wopiModal.modal('show');
-
-        $wopiModal.find('form').on('ajax:success',
-          (_e, data, status) => {
-            if (status === 'success') {
-              $wopiModal.modal('hide');
-              this.$emit('attachmentUploaded', data);
-
-              // cancel and remove regular file modal
-              this.$nextTick(() => this.cancel());
-            } else {
-              HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
-            }
+        this.initWopiFileModal(this.step, (_e, data, status) => {
+          if (status === 'success') {
+            $(this.$refs.modal).modal('hide');
+            this.$emit('attachmentUploaded', data);
+          } else {
+            HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
           }
-        );
+        });
       }
     }
   }

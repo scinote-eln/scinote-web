@@ -364,7 +364,8 @@ var ImageEditorModal = (function() {
         contentType: false,
         processData: false,
         success: function(res) {
-          $(`.asset[data-asset-id=${data.id}]`).replaceWith(res.html);
+          $(`.asset[data-asset-id=${data.id}] .image-container img`).replaceWith($(res.html).find('.image-container img'));
+          $(`.asset[data-asset-id=${data.id}] .attachment-preview img`).replaceWith($(res.html).find('attachment-preview img'));
           $(`.asset[data-asset-id=${data.id}]`).closest('.attachments').trigger('reorder');
           closeEditor();
         }

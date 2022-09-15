@@ -4,6 +4,8 @@ class Step < ApplicationRecord
   include TinyMceImages
   include ViewableModel
 
+  attr_accessor :skip_position_adjust # to be used in bulk deletion
+
   enum assets_view_mode: { thumbnail: 0, list: 1, inline: 2 }
 
   auto_strip_attributes :name, :description, nullify: false
@@ -20,7 +22,7 @@ class Step < ApplicationRecord
   before_validation :set_completed_on, if: :completed_changed?
   before_save :set_last_modified_by
   before_destroy :cascade_before_destroy
-  after_destroy :adjust_positions_after_destroy
+  after_destroy :adjust_positions_after_destroy, unless: -> { skip_position_adjust }
 
   belongs_to :user, inverse_of: :steps
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User', optional: true

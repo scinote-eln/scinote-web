@@ -264,9 +264,10 @@ class Protocol < ApplicationRecord
     end
   end
 
-  def self.clone_contents(src, dest, current_user, clone_keywords)
+  def self.clone_contents(src, dest, current_user, clone_keywords, only_contents = false)
     assets_to_clone = []
-    dest.update(description: src.description, name: src.name)
+    dest.update(description: src.description, name: src.name) unless only_contents
+
     src.clone_tinymce_assets(dest, dest.team)
 
     # Update keywords
@@ -297,6 +298,9 @@ class Protocol < ApplicationRecord
           step: step2
         )
         step_text2.save!
+
+        # Copy steps tinyMce assets
+        step_text.clone_tinymce_assets(step_text2, dest.team)
 
         step2.step_orderable_elements.create!(
           position: step_text.step_orderable_element.position,
@@ -354,9 +358,6 @@ class Protocol < ApplicationRecord
           orderable: table2.step_table
         )
       end
-
-      # Copy steps tinyMce assets
-      step.clone_tinymce_assets(step2, dest.team)
     end
     # Call clone helper
     Protocol.delay(queue: :assets).deep_clone_assets(assets_to_clone)
@@ -747,7 +748,7 @@ class Protocol < ApplicationRecord
 
     raise ActiveRecord::RecordNotSaved unless success
 
-    Protocol.clone_contents(self, clone, current_user, true)
+    Protocol.clone_contents(self, clone, current_user, true, true)
 
     clone.reload
     clone

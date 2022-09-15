@@ -58,14 +58,6 @@
       }
     });
 
-    modal.find('.search-field').focusout(function() {
-      if ($(this).val()) {
-        $(this).trigger(
-          $.Event('keypress', { keyCode: 13 })
-        );
-      }
-    });
-
     modal.find('.search-field').on('paste', function(event) {
       event.preventDefault();
       event.stopPropagation();
