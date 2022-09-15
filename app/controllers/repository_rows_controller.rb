@@ -9,7 +9,9 @@ class RepositoryRowsController < ApplicationController
   before_action :load_repository, except: %i(show print_modal print)
   before_action :load_repository_or_snapshot, only: %i(print_modal print)
   before_action :load_repository_row, only: %i(update assigned_task_list active_reminder_repository_cells)
-  before_action :check_read_permissions, except: %i(show create update delete_records copy_records reminder_repository_cells)
+  before_action :check_read_permissions, except: %i(show create update delete_records
+                                                    copy_records reminder_repository_cells
+                                                    delete_records archive_records restore_records)
   before_action :check_snapshotting_status, only: %i(create update delete_records copy_records)
   before_action :check_create_permissions, only: :create
   before_action :check_delete_permissions, only: %i(delete_records archive_records restore_records)
@@ -81,7 +83,8 @@ class RepositoryRowsController < ApplicationController
 
   def print_modal
     @repository_rows = @repository.repository_rows.where(id: params[:rows])
-    @printers = LabelPrinter.all
+    @printers = LabelPrinter.available_printers
+    @label_templates = LabelTemplate.where(team_id: current_team).order(:name)
     respond_to do |format|
       format.json do
         render json: {

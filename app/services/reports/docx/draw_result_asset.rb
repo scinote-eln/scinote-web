@@ -23,7 +23,7 @@ module Reports::Docx::DrawResultAsset
       link I18n.t('projects.reports.elements.download'), asset_url do
         italic true
       end
-      text ' ' + I18n.t('search.index.archived'), color: color[:gray] if result.archived?
+      text "  #{I18n.t('search.index.archived')} ", bold: true if result.archived?
       text ' ' + I18n.t('projects.reports.elements.result_asset.file_name', file: asset.file_name)
       text ' ' + I18n.t('projects.reports.elements.result_asset.user_time',
                         user: result.user.full_name, timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]

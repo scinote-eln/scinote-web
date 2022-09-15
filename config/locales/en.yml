@@ -125,10 +125,12 @@ en:
               not_unique: "State already exists for this user and parent object"
             state:
               wrong_state: "Wrong parameters"
-        team_repository:
+        team_shared_object:
           attributes:
             team_id:
               same_team: "Inventory can't be shared to the same team as it belongs to"
+            shared_object_id:
+              is_globally_shared: "Inventory is already globally shared"
         protocol:
           attributes:
             step_order:
@@ -361,6 +363,7 @@ en:
     empty_state:
       title: "No comments here"
       description: "Nobody has commented yet. Be the first by using the box below."
+    placeholder: "Add a new comment..."
     options_dropdown:
       header: "Comment options"
       edit: "Edit"
@@ -803,6 +806,10 @@ en:
         admin: "Administrator"
 
   label_templates:
+    fluics:
+      sync:
+        success: 'Refresh successful'
+        error: 'Refresh unsuccessful'
     repository_row:
       errors:
         unsupported_key: "Key %{key} is not supported by this label template renderer."
@@ -821,9 +828,16 @@ en:
       can_add_user_to_project: "Can not add user to the project."
 
   label_templates:
+    types:
+      fluics_label_template: 'Fluics'
+      zebra_label_template: 'ZPL'
     default_zebra_name: 'SciNote Item (ZPL)'
     default_fluics_name: 'SciNote Item (Fluics)'
     new_label_template: 'New label'
+    repository_row:
+      errors:
+        unsupported_key: "Key %{key} is not supported by this label template renderer."
+        column_not_found: "Column '%{column}' not found on inventory item."
     index:
       head_title: 'Label templates'
       search_templates: 'Filter templates'
@@ -858,17 +872,33 @@ en:
       content_title: '%{format} template code'
       preview_title: 'Template preview'
       view_content_tooltip: 'Click to edit template code'
+      insert_dropdown:
+        button: 'Insert field code'
+        common_fields: 'Common custom fields'
+        nothing_found: 'Nothing found…'
+        field_code: 'Field code: %{code}'
+        search_placeholder: 'Type to search…'
       buttons:
         refresh: 'Refresh preview'
         save: 'Save template code'
-
+    default_columns:
+      item_id: 'Item ID'
+      name: 'Name'
+      added_on: 'Added On'
+      added_by: 'Added by'
+    label_preview:
+      title: 'Preview'
+      options: 'Options'
+      units: 'Measurement units'
+      height: 'Height'
+      width: 'Width'
+      density: 'Density'
+      refresh_preview: 'Refresh preview'
+      mm: 'Millimeters (mm) 1 cm = 10 mm'
+      in: 'Inches (in)'
     promo:
       head_title: 'Label templates'
-      promo_title: 'Label all your tubes & containers by your own standards'
-      description_0: 'Easily track your inventory items with labels'
-      description_1: 'Print labels fast & easy'
-      description_2: 'Always have 100% accurate standard output'
-      action_button: 'Try Label templates'
+      promo_title: 'This feature is disabled by default in open source SciNote'
 
   label_printers:
     create:
@@ -974,7 +1004,7 @@ en:
           unlink_title: "Unlink this protocol from the parent in the repository"
           revert: "Revert protocol"
           revert_title: "Revert the protocol to the repository version. This will discard any local changes."
-          save_to_repository: "Save to protocol repository"
+          save_to_repository: "Save to repository"
           save_a_copy_to_repository: "Save a copy to repository"
           save_to_repository_title: "Copy this protocol to repository"
           update_self: "Update from repository"
@@ -1430,6 +1460,11 @@ en:
       shared_read: "Shared inventory (owned by %{team_name}). You can view."
     bmt_singleton_error: "Only one BMT inventory can be present."
     index:
+      active_reminders:
+        label: "Active reminders"
+        short_label: "Reminders…"
+        description: "Show only active reminderss"
+        checked_description: "Show all items"
       head_title: "Inventories"
       title: "Inventories"
       empty_title: "Your team has no inventories yet"
@@ -1980,6 +2015,7 @@ en:
       head_title_multiple: "Print label - %{repository_rows} rows"
       id_label: "ID: %{repository_row_id}"
       printer: "Printer"
+      label: "Label template"
       number_of_copies: "Number of copies"
       print_label: "Print label"
       no_printers:
@@ -2601,6 +2637,7 @@ en:
           success_flash: 'Protocol <strong>%{name}</strong> successfully imported to %{type}.'
 
     steps:
+      placeholder: 'Enter step name'
       default_name: 'Untitled step'
       completed: 'Completed'
       uncompleted: 'Uncompleted'
@@ -2634,11 +2671,16 @@ en:
         table: 'Add table'
         text: 'Add text'
         checklist: 'Add checklist'
-        attachment: 'File from your PC'
+        attachment: 'Add file'
         checklist_item: 'Add a new checklist item...'
       table:
         default_name: 'Table %{position}'
         edit_message: 'Use right click for table options'
+        name_modal:
+          title: 'Please enter the table title'
+          description: 'Tables have become content blocks and require a name. To be able to edit the table, please add the name now:'
+          save: 'Save table title'
+          error: "Table name can't be empty"
       checklist:
         default_name: 'Checklist %{position}'
         empty_checklist: 'Doesn’t contain any checklist items'
@@ -2675,6 +2717,10 @@ en:
         complete_title: "Complete step"
         uncomplete_title: "Restart step"
       attachments:
+        menu:
+          office_file: "New Office file"
+          chemical_drawing: "New chemical drawing"
+          file_from_pc: "File from your PC"
         modified_label: "Modified:"
         manage: "Manage"
         add: "ADD"
@@ -2690,6 +2736,7 @@ en:
           description: 'New'
           uploading: 'Uploading'
           file_too_big: 'Failed to upload: File size is too big'
+          no_more_space: 'Failed to upload: You ran out of space'
           general_error: 'Failed to upload: Something went wrong, please try again'
           leaving_warning: 'Your changes will be lost if you navigate away'
 
@@ -2745,10 +2792,11 @@ en:
         description: "Invite people to your organization to start using SciNote"
         input_placeholder: "jsmith@someemail.com"
         input_label: "New member emails"
-        input_subtitle: "You can enter one or more emails. To confirm each one press the ENTER key."
-    input_subtitle: "You can enter one or more emails. To confirm each one press the ENTER key."
+        input_subtitle: "You can enter one or more emails."
+    input_subtitle: "You can enter one or more emails."
     invite_to_team_heading: "Invite users to my team:"
     invite_btn: "Invite members"
+    invite_as: "As %{role}"
     invite_guest: "As Guests"
     invite_user: "As Normal Users"
     invite_admin: "As Administrators"
@@ -2774,6 +2822,7 @@ en:
   date:
     formats:
       full: "%{date_format}"
+      full_date: "%{date_format}"
   time:
     formats:
       full_js: "D.M.YYYY HH:mm"
@@ -2865,10 +2914,10 @@ en:
     create_wopi_file:
       button_text: 'Create an MS Office file'
       li_text: "Office file"
-      modal_title: 'Create new MS Office document'
+      modal_title: 'Create new Microsoft Office Online document'
       text_field_label: 'Document name'
       type_select_label: 'Document type'
-      text_field_placeholder: 'New Document'
+      text_field_placeholder: 'Enter document name...'
       ms_word: 'Word<br/>Online'
       ms_excel: 'Excel<br/>Online'
       ms_powerpoint: 'PowerPoint<br/>Online'

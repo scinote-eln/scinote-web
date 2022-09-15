@@ -18,7 +18,10 @@
             style='opacity: 0' />
         <i  v-else class="fas" :class="attachment.attributes.icon"></i>
       </div>
-      <div class="attachment-label">
+      <div class="attachment-label" 
+           data-toggle="tooltip" 
+           data-placement="bottom" 
+           :title="`${ attachment.attributes.file_name }`">
         {{ attachment.attributes.file_name }}
         <span v-if="attachment.isNewUpload" class="attachment-label-new">
           {{ i18n.t('protocols.steps.attachments.new.description') }}

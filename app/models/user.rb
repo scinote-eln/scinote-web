@@ -4,7 +4,6 @@ class User < ApplicationRecord
   include SearchableModel
   include SettingsModel
   include VariablesModel
-  include User::TeamRoles
   include TeamBySubjectModel
   include InputSanitizeHelper
   include ActiveStorageConcerns
@@ -60,9 +59,9 @@ class User < ApplicationRecord
   # Relations
   has_many :user_identities, inverse_of: :user
   has_many :user_teams, inverse_of: :user
-  has_many :teams, through: :user_teams
   has_many :user_assignments, dependent: :destroy
   has_many :user_projects, inverse_of: :user
+  has_many :teams, through: :user_assignments, source: :assignable, source_type: 'Team'
   has_many :projects, through: :user_assignments, source: :assignable, source_type: 'Project'
   has_many :user_my_modules, inverse_of: :user
   has_many :my_modules, through: :user_assignments, source: :assignable, source_type: 'MyModule'
@@ -387,6 +386,10 @@ class User < ApplicationRecord
       )
       .references(:user_identities)
       .take
+  end
+
+  def member_of_team?(team)
+    team.user_assignments.exists?(user: self)
   end
 
   # Search all active users for username & email. Can

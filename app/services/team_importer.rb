@@ -782,6 +782,7 @@ class TeamImporter
       end
       protocol.id = nil
       protocol.added_by_id = find_user(protocol.added_by_id)
+      protocol.added_by_id ||= my_module.present? ? my_module.created_by_id : team.created_by_id
       protocol.team = team || my_module.experiment.project.team
       protocol.archived_by_id = find_user(protocol.archived_by_id)
       protocol.restored_by_id = find_user(protocol.restored_by_id)

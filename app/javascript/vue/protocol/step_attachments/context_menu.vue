@@ -21,7 +21,7 @@
         </a>
       </li>
       <li v-if="attachment.attributes.asset_type == 'marvinjs' && attachment.attributes.urls.marvin_js_start_edit">
-        <a class="btn btn-light marvinjs-edit-button"
+        <a class="marvinjs-edit-button"
            :data-sketch-id="attachment.id"
            :data-update-url="attachment.attributes.urls.marvin_js"
            :data-sketch-start-edit-url="attachment.attributes.urls.marvin_js_start_edit"
@@ -32,8 +32,10 @@
           {{ i18n.t('assets.file_preview.edit_in_marvinjs') }}
         </a>
       </li>
-      <li v-if="attachment.attributes.image_editable && attachment.attributes.urls.start_edit_image">
-        <a class="btn btn-light image-edit-button"
+      <li v-if="attachment.attributes.asset_type != 'marvinjs'
+               && attachment.attributes.image_editable
+               && attachment.attributes.urls.start_edit_image">
+        <a class="image-edit-button"
            :data-image-id="attachment.id"
            :data-image-name="attachment.attributes.file_name"
            :data-image-url="attachment.attributes.urls.asset_file"

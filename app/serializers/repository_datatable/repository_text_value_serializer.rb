@@ -10,7 +10,7 @@ module RepositoryDatatable
       @user = scope[:user]
       {
         view: custom_auto_link(object.data, simple_format: true, team: scope[:team]),
-        edit: sanitize_input(object.data)
+        edit: object.data
       }
     end
   end

@@ -4,12 +4,8 @@ class LabelTemplate < ApplicationRecord
   include SearchableModel
 
   belongs_to :team
-  belongs_to :created_by,
-             class_name: 'User',
-             optional: true
-  belongs_to :last_modified_by,
-             class_name: 'User',
-             optional: true
+  belongs_to :created_by, class_name: 'User', optional: true
+  belongs_to :last_modified_by, class_name: 'User', optional: true
 
   validates :name, presence: true, length: { minimum: Constants::NAME_MIN_LENGTH,
                                              maximum: Constants::NAME_MAX_LENGTH }

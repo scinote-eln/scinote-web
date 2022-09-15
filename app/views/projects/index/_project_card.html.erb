@@ -1,10 +1,7 @@
 <div class="card project-card"
      data-id="<%= project.id %>"
      data-edit-url="<%= edit_project_path(project) %>"
-     data-editable="<%= can_manage_project?(project) %>"
-     data-moveable="<%= can_update_team?(current_team) %>"
-     data-archivable="<%= project.active? && can_archive_project?(project) %>"
-     data-restorable="<%= project.archived? && can_restore_project?(project) %>">
+     data-permissions-url="<%= permissions_project_path(project) %>">
   <div class="checkbox-cell table-cell">
     <div class="sci-checkbox-container">
       <input value="1" type="checkbox" class="sci-checkbox project-card-selector">
@@ -27,7 +24,14 @@
     <% end %>
   </div>
   <div class="actions actions-cell table-cell">
-    <%= render partial: 'projects/index/project_actions_dropdown.html.erb', locals: { project: project, view: 'cards' } %>
+    <div
+      class="dropdown dropdown-async project-actions-menu  <%= 'new-comments' if has_unseen_comments?(project) %>"
+      data-dropdown-url="<%= actions_dropdown_project_path(project) %>">
+      <button class="btn btn-light dropdown-toggle icon-btn" type="button" id="projectActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <i class="fas fa-ellipsis-h"></i>
+      </button>
+      <ul></ul>
+    </div>
   </div>
 
   <div class="data-row start-date-cell table-cell">

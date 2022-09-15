@@ -39,7 +39,7 @@
             :value="protocol.attributes.name"
             :characterLimit="255"
             :placeholder="i18n.t('my_modules.protocols.protocol_status_bar.enter_name')"
-            :allowBlank="true"
+            :allowBlank="!inRepository"
             :attributeName="`${i18n.t('Protocol')} ${i18n.t('name')}`"
             @update="updateName"
           />
@@ -67,7 +67,7 @@
           {{ i18n.t("protocols.no_text_placeholder") }}
         </div>
       </div>
-      <a v-if="urls.add_step_url && protocol.attributes.in_repository" class="btn btn-primary" @click="addStep(steps.length)">
+      <a v-if="urls.add_step_url && protocol.attributes.in_repository" class="btn btn-primary repository-new-step" @click="addStep(steps.length)">
         <span class="fas fa-plus" aria-hidden="true"></span>
         <span>{{ i18n.t("protocols.steps.new_step") }}</span>
       </a>
@@ -134,7 +134,7 @@
   import Tinymce from 'vue/shared/tinymce.vue'
   import ReorderableItemsModal from 'vue/protocol/modals/reorderable_items_modal.vue'
 
-  import UtilsMixin from 'vue/protocol/mixins/utils.js'
+  import UtilsMixin from 'vue/mixins/utils.js'
 
   export default {
     name: 'ProtocolContainer',
@@ -267,10 +267,9 @@
           data: JSON.stringify(stepPositions),
           contentType: "application/json",
           dataType: "json",
-          error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger'))
+          error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')),
+          success: (() => this.reorderSteps(this.steps))
         });
-
-        this.reorderSteps(this.steps);
       },
       startStepReorder() {
         this.reordering = true;

@@ -16,7 +16,9 @@
   </div>
 <% end %>
 
-<div class="content-pane flexible empty-repositories" data-readonly="<%= !current_user.is_admin_of_team?(current_team) %>">
+<%= render "view_archived_btn" %>
+
+<div class="content-pane flexible empty-repositories" data-readonly="<%= !can_manage_team?(current_team) %>">
   <div class="content-header">
     <h1 data-view-mode="active"><%= t('libraries.index.head_title') %></h1>
   </div>
@@ -38,3 +40,4 @@
 </div>
 
 <%= javascript_include_tag 'repositories/index' %>
+

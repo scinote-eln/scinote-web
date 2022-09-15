@@ -122,9 +122,12 @@ class TinyMceAssetsController < ApplicationController
 
   def check_edit_permission
     if @assoc.nil?
-      return render_403 unless current_team == @asset.team
+      if current_team == @asset.team
+        return
+      else
+        return render_403
+      end
     end
-
     case @assoc
     when StepText
       return render_403 unless can_manage_step?(@assoc.step)

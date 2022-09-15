@@ -5,7 +5,7 @@ class GenerateStepOrderableRelation < ActiveRecord::Migration[6.1]
   include DatabaseHelper
 
   def up
-    Step.find_in_batches(batch_size: 100) do |steps|
+    Step.preload(:step_texts, :step_tables, :checklists).find_in_batches(batch_size: 100) do |steps|
       steps.each do |step|
         position = 0
         orderable_elements = []

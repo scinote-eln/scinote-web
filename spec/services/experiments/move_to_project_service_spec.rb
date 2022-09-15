@@ -3,8 +3,8 @@
 require 'rails_helper'
 
 describe Experiments::MoveToProjectService do
-  let(:team) { create :team, :with_members }
   let(:user) { create :user }
+  let(:team) { create :team, created_by: user }
   let(:project) do
     create :project, team: team, created_by: user
   end
@@ -91,7 +91,7 @@ describe Experiments::MoveToProjectService do
     end
 
     it 'returns error if teams is not the same' do
-      t = create :team, :with_members
+      t = create :team
       project.update(team: t)
 
       expect(service_call.errors).to have_key(:target_project_not_valid)

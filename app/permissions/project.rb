@@ -20,21 +20,27 @@ Canaid::Permissions.register_for(Project) do
      export_project)
     .each do |perm|
     can perm do |user, project|
-      user.is_admin_of_team?(project.team) || project.permission_granted?(user, ProjectPermissions::READ)
+      project.permission_granted?(user, ProjectPermissions::READ)
     end
   end
 
   can :manage_project do |user, project|
-    project.permission_granted?(user, ProjectPermissions::MANAGE) &&
-      project.experiments.each do |experiment|
-        experiment.my_modules.all? do |my_module|
-          if my_module.my_module_status
-            my_module.my_module_status.my_module_status_implications.all? { |implication| implication.call(my_module) }
-          else
-            true
-          end
+    next false unless project.permission_granted?(user, ProjectPermissions::MANAGE)
+
+    experiments = project.experiments
+    unless project.association(:experiments).loaded?
+      experiments = experiments.preload(my_modules: { my_module_status: :my_module_status_implications })
+    end
+
+    experiments.all? do |experiment|
+      experiment.my_modules.all? do |my_module|
+        if my_module.my_module_status
+          my_module.my_module_status.my_module_status_implications.all? { |implication| implication.call(my_module) }
+        else
+          true
         end
       end
+    end
   end
 
   can :read_project_users do |user, project|
@@ -46,7 +52,7 @@ Canaid::Permissions.register_for(Project) do
   end
 
   can :manage_project_users do |user, project|
-    user.is_admin_of_team?(project.team) || project.permission_granted?(user, ProjectPermissions::USERS_MANAGE)
+    project.permission_granted?(user, ProjectPermissions::USERS_MANAGE)
   end
 
   can :archive_project do |user, project|

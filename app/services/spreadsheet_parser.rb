@@ -51,11 +51,13 @@ class SpreadsheetParser
     return header, columns
   end
 
-  def self.parse_row(row, sheet, header: false)
+  def self.parse_row(row, sheet, header: false, date_format: nil)
     if sheet.is_a?(Roo::Excelx) && !header
       row.map do |cell|
         if cell.is_a?(Roo::Excelx::Cell::Number) && cell.format == 'General'
           cell&.value&.to_d
+        elsif date_format && cell&.value.is_a?(Date)
+          cell&.value&.strftime(date_format)
         else
           cell&.formatted_value
         end

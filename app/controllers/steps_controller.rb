@@ -98,9 +98,9 @@ class StepsController < ApplicationController
     @step = @protocol.insert_step(@step, params[:position])
     # Generate activity
     if @protocol.in_module?
-      log_activity(:create_step, @my_module.experiment.project, my_module: @my_module.id)
+      log_activity(:create_step, @my_module.experiment.project, { my_module: @my_module.id }.merge(step_message_items))
     else
-      log_activity(:add_step_to_protocol_repository, nil, protocol: @protocol.id)
+      log_activity(:add_step_to_protocol_repository, nil, { protocol: @protocol.id }.merge(step_message_items))
     end
     render json: @step, serializer: StepSerializer, user: current_user
   end
@@ -156,9 +156,13 @@ class StepsController < ApplicationController
 
       # Generate activity
       if @protocol.in_module?
-        log_activity(:create_step, @my_module.experiment.project, my_module: @my_module.id)
+        log_activity(
+          :create_step,
+          @my_module.experiment.project,
+          { my_module: @my_module.id }.merge(step_message_items)
+        )
       else
-        log_activity(:add_step_to_protocol_repository, nil, protocol: @protocol.id)
+        log_activity(:add_step_to_protocol_repository, nil, { protocol: @protocol.id }.merge(step_message_items))
       end
     end
 
@@ -346,9 +350,13 @@ class StepsController < ApplicationController
 
       # Generate activity
       if @protocol.in_module?
-        log_activity(:destroy_step, @my_module.experiment.project, my_module: @my_module.id)
+        log_activity(
+          :destroy_step,
+          @my_module.experiment.project,
+          { my_module: @my_module.id }.merge(step_message_items)
+        )
       else
-        log_activity(:delete_step_in_protocol_repository, nil, protocol: @protocol.id)
+        log_activity(:delete_step_in_protocol_repository, nil, { protocol: @protocol.id }.merge(step_message_items))
       end
 
       # Destroy the step
@@ -420,11 +428,15 @@ class StepsController < ApplicationController
         # module protocols, so my_module is always
         # not nil; nonetheless, check if my_module is present
         if @protocol.in_module?
-          log_activity(type_of,
-                       @protocol.my_module.experiment.project,
-                       my_module: @my_module.id,
-                       num_completed: completed_steps.to_s,
-                       num_all: all_steps.to_s)
+          log_activity(
+            type_of,
+            @protocol.my_module.experiment.project,
+            {
+              my_module: @my_module.id,
+              num_completed: completed_steps.to_s,
+              num_all: all_steps.to_s
+            }.merge(step_message_items)
+          )
         end
       end
       render json: @step, serializer: StepSerializer, user: current_user
@@ -458,7 +470,7 @@ class StepsController < ApplicationController
   end
 
   def reorder
-    ActiveRecord::Base.transaction do
+    @protocol.with_lock do
       params[:step_positions].each do |id, position|
         @protocol.steps.find(id).update_column(:position, position)
       end
@@ -468,6 +480,7 @@ class StepsController < ApplicationController
       else
         log_activity(:protocol_steps_rearranged, nil, protocol: @protocol.id)
       end
+      @protocol.touch
     end
 
     render json: {

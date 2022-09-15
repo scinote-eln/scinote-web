@@ -1,12 +1,13 @@
 <template>
-  <div class="step-checklist-container" :class="{ 'step-element--locked': !element.attributes.orderable.urls.update_url }">
-    <div class="step-element-header" :class="{ 'editing-name': editingName }">
+  <div class="step-checklist-container" >
+    <div class="step-element-header" :class="{ 'editing-name': editingName, 'no-hover': !element.attributes.orderable.urls.update_url }">
       <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
         <i class="fas fas-rotated-90 fa-exchange-alt"></i>
       </div>
       <div v-else class="step-element-grip-placeholder"></div>
       <div class="step-element-name">
         <InlineEdit
+          :class="{ 'step-element--locked': !element.attributes.orderable.urls.update_url }"
           :value="element.attributes.orderable.name"
           :sa_value="element.attributes.orderable.sa_name"
           :characterLimit="10000"
@@ -111,12 +112,15 @@
       }
     },
     created() {
-      this.checklistItems = this.element.attributes.orderable.checklist_items.map((item, index) => {
-        return { attributes: {...item, position: index } }
-      });
+      this.initChecklistItems();
 
       if (this.isNew) {
         this.addItem();
+      }
+    },
+    watch: {
+      element() {
+        this.initChecklistItems();
       }
     },
     computed: {
@@ -133,16 +137,21 @@
       }
     },
     methods: {
+      initChecklistItems() {
+        this.checklistItems = this.element.attributes.orderable.checklist_items.map((item, index) => {
+          return { attributes: {...item, position: index } }
+        });
+      },
       updateName(name) {
         this.element.attributes.orderable.name = name;
         this.editingName = false;
-        this.update();
+        this.update(false);
       },
-      update() {
+      update(skipRequest = true) {
         this.element.attributes.orderable.checklist_items =
           this.checklistItems.map((i) => i.attributes);
 
-        this.$emit('update', this.element);
+        this.$emit('update', this.element, skipRequest);
       },
       postItem(item, callback) {
         $.post(this.element.attributes.orderable.urls.create_item_url, item).success((result) => {
@@ -177,7 +186,7 @@
           // create item, then append next one
           this.postItem(item, this.addItem);
         }
-        this.update();
+        this.update(true);
       },
       saveItemChecked(item) {
         $.ajax({
@@ -230,7 +239,8 @@
           data: JSON.stringify(checklistItemPositions),
           contentType: "application/json",
           dataType: "json",
-          error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger'))
+          error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')),
+          success: (() => this.update())
         });
       },
       handleMultilinePaste(data) {

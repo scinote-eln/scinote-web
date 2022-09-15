@@ -15,6 +15,7 @@ module Api
             @protocol.steps.find(order['id']).update_column(:position, order['position'])
             # rubocop:enable Rails/SkipsModelValidations
           end
+          @protocol.touch
         rescue StandardError
           head :bad_request
         end

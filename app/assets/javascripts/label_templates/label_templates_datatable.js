@@ -225,7 +225,7 @@
     var $table = $('#label-templates-table');
     LABEL_TEMPLATE_TABLE = $table.DataTable({
       dom: "R<'label-toolbar'<'label-buttons-container'><'label-search-container'f>>t<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
-      order: [[2, 'desc']],
+      order: [[1, 'asc']],
       sScrollX: '100%',
       sScrollXInner: '100%',
       processing: true,
@@ -245,7 +245,7 @@
       }, {
         targets: 1,
         searchable: false,
-        orderable: false,
+        orderable: true,
         sWidth: '1%',
         render: renderDefaultTemplateHTML
       }, {

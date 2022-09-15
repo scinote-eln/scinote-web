@@ -10,7 +10,6 @@
   background-color: $color-alto;
   margin: 0 -16px;
   min-height: calc(100vh - var(--navbar-height) * 2);
-  overflow: hidden;
   padding: 36px 10px 10px;
   width: calc(100% + 31px);
 
@@ -381,6 +380,10 @@
 
   .task-notes-content {
     margin-left: 10px;
+
+    .form-group.has-error {
+      border: 1px solid $brand-danger;
+    }
   }
 }
 
@@ -482,6 +485,11 @@
     .dropdown-footer {
       display: flex;
       padding: 16px;
+
+      .button-container {
+        margin-left: auto;
+        margin-right: auto;
+      }
     }
   }
 }
@@ -490,7 +498,7 @@
   .task-details-button {
     @include font-h2;
     color: inherit;
-    margin: 0 3px;
+    margin-left: -5px;
     text-decoration: none;
   }
 
@@ -534,7 +542,7 @@
   .task-flows {
     align-items: center;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
 
     #dropdownTaskFlowList {
       min-width: 230px;
@@ -542,7 +550,7 @@
 
     .status-label {
       @include font-small;
-      flex-basis: 40%;
+      flex-basis: 50%;
       font-weight: 700;
       margin-right: .5em;
       text-align: right;
@@ -563,9 +571,7 @@
     }
 
     .status-buttons {
-      align-items: flex-end;
       display: flex;
-      flex-grow: 1;
 
       > :not(:first-child):not(.dropdown-menu) {
         margin-left: .5em;
@@ -581,36 +587,6 @@
         margin-right: .5em;
       }
     }
-  }
-}
-
-.task-information .expanded {
-  align-items: flex-start;
-  height: 50px;
-
-  .task-flows,
-  .status-label,
-  .status-buttons {
-    display: block;
-    max-width: 230px;
-  }
-
-  .status-label {
-    margin: 0;
-    text-align: left;
-  }
-
-  .status-flow-dropdown {
-    margin: 0;
-  }
-
-  .status-buttons > :not(:first-child):not(.dropdown-menu) {
-    margin-left: 0;
-    margin-top: .5em;
-  }
-
-  .modal .modal-footer .btn {
-    margin-top: 0;
   }
 }
 
@@ -652,10 +628,13 @@
       .dropdown-footer {
         display: block;
 
-        .btn {
-          float: left !important;
-          margin: 5px 0;
-          width: auto;
+        .button-container {
+          display: flex;
+
+          .btn {
+            margin: 5px auto;
+            width: 230px;
+          }
         }
       }
     }
