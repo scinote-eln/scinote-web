@@ -421,7 +421,7 @@ class Extends
     label_template_deleted: 218,
     label_template_copied: 219,
     edit_protocol_name_in_repository: 220,
-    protocol_name_in_task_edited: 221
+    protocol_name_in_task_edited: 221,
     task_step_duplicated: 222,
     protocol_step_duplicated: 223,
     task_step_text_duplicated: 224,
