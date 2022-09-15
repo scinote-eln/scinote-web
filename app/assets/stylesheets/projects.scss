@@ -682,7 +682,6 @@ li.module-hover {
           }
         }
 
-        
         &.project-card {
           border-radius: 4px;
           box-shadow: $flyout-shadow;
@@ -694,7 +693,6 @@ li.module-hover {
             margin-left: -55px;
             margin-top: 10px;
             
-
             a {
               color: inherit;
             }
@@ -1097,7 +1095,7 @@ li.module-hover {
     .project-name-cell {
       position: relative;
       top: 12%;
-      
+
       a {
         color: inherit;
       }
@@ -1125,8 +1123,5 @@ li.module-hover {
         color: gray !important;
       }
     }
-    
-
-  
   }
 }
