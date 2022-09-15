@@ -57,7 +57,7 @@ module Scinote
 
     config.x.webhooks_enabled = ENV['ENABLE_WEBHOOKS'] == 'true'
 
-    config.x.zebra_print_enabled = ENV['ENABLE_ZEBRA_PRINTERS'] == 'true'
+    config.x.zebra_print_enabled = false
 
     # Logging
     config.log_formatter = proc do |severity, datetime, progname, msg|
