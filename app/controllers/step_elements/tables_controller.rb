@@ -2,7 +2,7 @@
 
 module StepElements
   class TablesController < BaseController
-    before_action :load_table, only: %i(update destroy)
+    before_action :load_table, only: %i(update destroy duplicate)
 
     def create
       step_table = @step.step_tables.new(table:
@@ -41,6 +41,22 @@ module StepElements
         head :unprocessable_entity
       end
     end
+
+    def duplicate
+      ActiveRecord::Base.transaction do
+        position = @table.step_table.step_orderable_element.position
+        @step.step_orderable_elements.where('position > ?', position).order(position: :desc).each do |element|
+          element.update(position: element.position + 1)
+        end
+        new_table = @table.duplicate(@step, current_user, position + 1)
+        log_step_activity(:table_duplicated, { table_name: new_table.name })
+        render_step_orderable_element(new_table.step_table)
+      end
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
+    end
+
+    private
 
     def table_params
       params.permit(:name, :contents)

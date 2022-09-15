@@ -2658,12 +2658,17 @@ en:
       drop_message: "Drop file to add to step %{position}"
       space_used_label: '%{used} / %{limit} space used.'
       space_used_label_unlimited: '%{used} / unlimited space used.'
+      step_duplicated: "Step duplicated successfully."
+      component_duplicated: "Step content duplicated successfully."
+      step_duplication_failed: "Step could not be duplicated, try again later."
+      component_duplication_failed: "Step content could not be duplicated, try again later."
       status:
         complete: "Mark as done"
         uncomplete: "Unmark as done"
       options_dropdown:
         title: 'Step options'
         rearrange: 'Rearrange content'
+        duplicate: 'Duplicate'
         delete: 'Delete'
       insert:
         button: 'Insert'

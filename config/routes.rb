@@ -474,9 +474,20 @@ Rails.application.routes.draw do
       resources :step_comments,
                 path: '/comments',
                 only: %i(create index update destroy)
-      resources :tables, controller: 'step_elements/tables', only: %i(create destroy update)
-      resources :texts, controller: 'step_elements/texts', only: %i(create destroy update)
+      resources :tables, controller: 'step_elements/tables', only: %i(create destroy update) do
+        member do
+          post :duplicate
+        end
+      end
+      resources :texts, controller: 'step_elements/texts', only: %i(create destroy update) do
+        member do
+          post :duplicate
+        end
+      end
       resources :checklists, controller: 'step_elements/checklists', only: %i(create destroy update) do
+        member do
+          post :duplicate
+        end
         resources :checklist_items, controller: 'step_elements/checklist_items', only: %i(create update destroy) do
           patch :toggle, on: :member
           post :reorder, on: :collection
@@ -492,6 +503,7 @@ Rails.application.routes.draw do
         put 'move_up'
         post 'update_view_state'
         post 'update_asset_view_mode'
+        post 'duplicate'
       end
     end
 
