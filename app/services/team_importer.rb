@@ -34,6 +34,7 @@ class TeamImporter
     @protocol_counter = 0
     @step_counter = 0
     @report_counter = 0
+    @label_template_counter = 0
     @my_module_counter = 0
     @notification_counter = 0
     @result_counter = 0
@@ -82,6 +83,8 @@ class TeamImporter
       create_project_folders(team_json['project_folders'], team)
       create_projects(team_json['projects'], team)
       create_repositories(team_json['repositories'], team)
+      create_label_templates(team_json['label_templates'], team)
+
 
       # Second run, we needed it because of some models should be created
 
@@ -150,6 +153,7 @@ class TeamImporter
       puts "Imported results: #{@result_counter}"
       puts "Imported assets: #{@asset_counter}"
       puts "Imported tinyMCE assets: #{@mce_asset_counter}"
+      puts "Imported label templates: #{@label_template_counter}"
 
       MyModule.set_callback(:create, :before, :create_blank_protocol)
       Protocol.set_callback(:save, :after, :update_linked_children)
@@ -304,6 +308,21 @@ class TeamImporter
       connection.input_id = @my_module_mappings[connection.input_id]
       connection.output_id = @my_module_mappings[connection.output_id]
       connection.save!
+    end
+  end
+
+  def create_label_templates(label_templates_json, team)
+    # Destroy default templates generated on team creation
+    team.label_templates.where.not(type: 'FluicsLabelTemplate').destroy_all
+    label_templates_json.each do |template_json|
+      template = LabelTemplate.new(template_json)
+      template.id = nil
+      template.team_id = team.id
+      template.created_by_id = find_user(template.created_by_id) if template.created_by_id
+      template.last_modified_by_id = find_user(template.last_modified_by_id) if template.last_modified_by_id
+      template.save!
+
+      @label_template_counter += 1
     end
   end
 

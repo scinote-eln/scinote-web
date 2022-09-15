@@ -36,6 +36,8 @@ class LabelTemplatesController < ApplicationController
     ActiveRecord::Base.transaction do
       label_template = ZebraLabelTemplate.default
       label_template.team = current_team
+      label_template.created_by = current_user
+      label_template.last_modified_by = current_user
       label_template.save!
       log_activity(:label_template_created, label_template)
       redirect_to label_template_path(label_template, new_label: true)
@@ -63,6 +65,8 @@ class LabelTemplatesController < ApplicationController
       LabelTemplate.where(team_id: current_team.id, id: params[:selected_ids]).each do |template|
         new_template = template.dup
         new_template.default = false
+        new_template.created_by = current_user
+        new_template.last_modified_by = current_user
         new_template.name = template.name + '(1)'
         new_template.save!
         log_activity(
