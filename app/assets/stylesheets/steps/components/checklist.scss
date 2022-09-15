@@ -28,10 +28,6 @@
         width: 100%;
       }
 
-      &.done .step-checklist-text {
-        text-decoration: line-through;
-      }
-
       &:hover.done .step-checklist-text {
         text-decoration: none;
       }
@@ -44,7 +40,7 @@
     border-radius: 50%;
     height: 4px;
     margin-right: .5em;
-    margin-top: 1em;
+    margin-top: 1.3em;
     width: 4px;
   }
 

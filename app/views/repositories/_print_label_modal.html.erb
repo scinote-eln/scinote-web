@@ -22,7 +22,14 @@
             <% end %>
             <div class=printers-container>
               <label><%= t('repository_row.modal_print_label.printer') %></label>
-              <%= select_tag :label_printer_id, options_for_select(@printers.map { |p| [p.display_name, p.id] }) %>
+              <%= select_tag :label_printer_id, options_for_select(@printers.map { |p| [p.display_name, p.id, 
+                                                                    {'data-params' => {type: p.type_of}.to_json}] }) %>
+            </div>
+
+            <div class=labels-container>
+              <label><%= t('repository_row.modal_print_label.label') %></label>
+              <%= select_tag :label_template_id, options_for_select(@label_templates.map { |p| [p.name, p.id,
+                                                                    {'data-params' => {type: p.type, default: p.default}.to_json}] }) %>
             </div>
             <p class="sci-input-container">
               <label><%= t('repository_row.modal_print_label.number_of_copies') %></label>

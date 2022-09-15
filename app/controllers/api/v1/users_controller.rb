@@ -12,9 +12,9 @@ module Api
       private
 
       def load_user
-        @user = User.joins(:user_teams)
-                    .where('user_teams.team': current_user.teams)
-                    .find_by_id(params[:id])
+        @user = User.joins(:teams)
+                    .where(user_assignments: { assignable: current_user.teams })
+                    .find_by(id: params[:id])
         raise PermissionError.new(User, :read) unless @user
       end
     end

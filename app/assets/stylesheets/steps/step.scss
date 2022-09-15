@@ -52,14 +52,6 @@
       }
     }
 
-    .strikethrough {
-      text-decoration: line-through;
-
-      &:hover {
-        text-decoration: initial;
-      }
-    }
-
     .step-position {
       @include font-main;
       flex-shrink: 0;

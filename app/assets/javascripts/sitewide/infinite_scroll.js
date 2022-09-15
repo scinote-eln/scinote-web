@@ -26,7 +26,7 @@ var InfiniteScroll = (function() {
         $container.data('next-page', result.next_page);
       } else {
         $container.addClass('last-page');
-        if ($container.data('config').endOfListTemplate && page > 2) {
+        if ($container.data('config').endOfListTemplate && page >= 2) {
           $($($container.data('config').endOfListTemplate).html()).appendTo($container);
         }
       }
@@ -46,6 +46,11 @@ var InfiniteScroll = (function() {
     var $container = $(object);
     $container.data('next-page', 2);
     $container.data('config', config);
+
+    if (config.lastPage) {
+      $container.addClass('last-page');
+    }
+
     if (config.loadFirstPage) {
       loadData($container, 1);
     }
@@ -60,6 +65,10 @@ var InfiniteScroll = (function() {
     if (scrollNotVisible($container)) {
       loadData($container, $container.data('next-page'));
     }
+
+    $(document).one('turbolinks:before-visit', $container.data('config').eventTarget, function() {
+      removeScroll($container);
+    });
   }
 
   // support functions
@@ -99,6 +108,7 @@ var InfiniteScroll = (function() {
     let eventTarget = $($container.data('config').eventTarget) || $container;
     $container.data('config', null);
     $container.data('next-page', null);
+    $container.removeClass('last-page');
     eventTarget.off('scroll');
   }
 

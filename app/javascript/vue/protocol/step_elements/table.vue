@@ -1,6 +1,6 @@
 <template>
-  <div class="step-table-container" :class="{ 'step-element--locked': locked }">
-     <div class="step-element-header" :class="{ 'editing-name': editingName }">
+  <div class="step-table-container">
+     <div class="step-element-header" :class="{ 'editing-name': editingName, 'step-element--locked': locked }">
       <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
         <i class="fas fas-rotated-90 fa-exchange-alt"></i>
       </div>
@@ -112,6 +112,10 @@
     },
     methods: {
       enableTableEdit() {
+        if(this.locked) {
+          return;
+        }
+
         if (!this.element.attributes.orderable.name) {
           this.openNameModal();
           return;

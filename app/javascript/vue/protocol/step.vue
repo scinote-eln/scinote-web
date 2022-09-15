@@ -36,7 +36,7 @@
             {{ step.attributes.position + 1 }}.
           </div>
         </div>
-        <div class="step-name-container" :class="{'strikethrough': step.attributes.completed, 'step-element--locked': !urls.update_url}">
+        <div class="step-name-container" :class="{'step-element--locked': !urls.update_url}">
           <InlineEdit
             :value="step.attributes.name"
             :class="{ 'step-element--locked': !urls.update_url }"
@@ -264,7 +264,7 @@
     },
     methods: {
       dragEnter(e) {
-        if (this.showFileModal) return;
+        if (this.showFileModal || !this.urls.upload_attachment_url) return;
 
         // Detect if dragged element is a file
         // https://stackoverflow.com/a/8494918

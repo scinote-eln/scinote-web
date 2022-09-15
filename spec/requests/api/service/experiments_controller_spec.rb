@@ -6,8 +6,6 @@ RSpec.describe "Api::Service::ExperimentsController", type: :request do
   before :all do
     @user = create(:user)
     @team = create(:team, created_by: @user)
-    create(:user_team, user: @user, team: @team, role: 2)
-
     @valid_project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @team)
     @unaccessible_project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @team)
     @unaccessible_project.user_assignments.destroy_all

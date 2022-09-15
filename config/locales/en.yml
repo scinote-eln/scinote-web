@@ -125,10 +125,12 @@ en:
               not_unique: "State already exists for this user and parent object"
             state:
               wrong_state: "Wrong parameters"
-        team_repository:
+        team_shared_object:
           attributes:
             team_id:
               same_team: "Inventory can't be shared to the same team as it belongs to"
+            shared_object_id:
+              is_globally_shared: "Inventory is already globally shared"
         protocol:
           attributes:
             step_order:
@@ -149,6 +151,10 @@ en:
               different_flow: "Should belong to the same flow"
             previous_status:
               different_flow: "Should belong to the same flow"
+        label_template:
+          attributes:
+            default:
+              already_exist: "Default template already exist"
         asset:
           attributes:
             file:
@@ -240,7 +246,7 @@ en:
     dashboard: "Overview"
     projects: "Projects"
     repositories: "Inventories"
-    templates: "Protocols"
+    templates: "Templates"
     reports: "Reports"
     settings: "Settings"
     activities: "Activities"
@@ -283,6 +289,10 @@ en:
       archive: "Archived results"
     repositories:
       sidebar_title: "INVENTORIES"
+    templates:
+      sidebar_title: "TEMPLATES"
+      protocol_templates: "Protocol templates"
+      label_templates: "Label Templates"
 
   nav2:
     all_projects:
@@ -795,6 +805,16 @@ en:
         normal_user: "Normal user"
         admin: "Administrator"
 
+  label_templates:
+    fluics:
+      sync:
+        success: 'Refresh successful'
+        error: 'Refresh unsuccessful'
+    repository_row:
+      errors:
+        unsupported_key: "Key %{key} is not supported by this label template renderer."
+        column_not_found: "Column '%{column}' not found on inventory item."
+
   user_projects:
     view_users:
       modal_title: "Members of %{name}"
@@ -806,6 +826,79 @@ en:
       select_user_role: "Please select a user role."
       add_user_generic_error: "An error occurred. "
       can_add_user_to_project: "Can not add user to the project."
+
+  label_templates:
+    types:
+      fluics_label_template: 'Fluics'
+      zebra_label_template: 'ZPL'
+    default_zebra_name: 'SciNote Item (ZPL)'
+    default_fluics_name: 'SciNote Item (Fluics)'
+    new_label_template: 'New label'
+    repository_row:
+      errors:
+        unsupported_key: "Key %{key} is not supported by this label template renderer."
+        column_not_found: "Column '%{column}' not found on inventory item."
+    index:
+      head_title: 'Label templates'
+      search_templates: 'Filter templates'
+      thead_name: 'Name'
+      format: 'Format'
+      description: 'Description'
+      updated_by: 'Last updated by'
+      updated_at: 'Last updated on'
+      created_by: 'Created by'
+      created_at: 'Created on'
+      templates_duplicated: '[%{count}] Label template(s) successfully copied'
+      templates_deleted: 'Successfully deleted Label template(s)'
+      template_set_as_default: 'Successfully set template as default'
+      toolbar:
+        new: 'New template'
+        check_for_updates: 'Check for updates'
+        edit: 'Edit'
+        duplicate: 'Duplicate'
+        delete: 'Delete'
+        set_zpl_default: 'Set as default ZPL label'
+        set_fluics_default: 'Set as default Fluics label'
+        fluics_warning: 'Built-in FLUICS templates can’t be edited, deleted or duplicated'
+      delete_modal:
+        title: 'Delete Label template(s)'
+        description: 'Are you sure you want to delete the selected Label template(s)?'
+    show:
+      breadcrumb_index: 'Label templates'
+      name_error_prefix: 'Label template name'
+      description_error_prefix: 'Label template description'
+      description_title: 'Template description'
+      description_placeholder: 'Enter the template description (optional)'
+      content_title: '%{format} template code'
+      preview_title: 'Template preview'
+      view_content_tooltip: 'Click to edit template code'
+      insert_dropdown:
+        button: 'Insert field code'
+        common_fields: 'Common custom fields'
+        nothing_found: 'Nothing found…'
+        field_code: 'Field code: %{code}'
+        search_placeholder: 'Type to search…'
+      buttons:
+        refresh: 'Refresh preview'
+        save: 'Save template code'
+    default_columns:
+      item_id: 'Item ID'
+      name: 'Name'
+      added_on: 'Added On'
+      added_by: 'Added by'
+    label_preview:
+      title: 'Preview'
+      options: 'Options'
+      units: 'Measurement units'
+      height: 'Height'
+      width: 'Width'
+      density: 'Density'
+      refresh_preview: 'Refresh preview'
+      mm: 'Millimeters (mm) 1 cm = 10 mm'
+      in: 'Inches (in)'
+    promo:
+      head_title: 'Label templates'
+      promo_title: 'This feature is disabled by default in open source SciNote'
 
   label_printers:
     create:
@@ -1922,6 +2015,7 @@ en:
       head_title_multiple: "Print label - %{repository_rows} rows"
       id_label: "ID: %{repository_row_id}"
       printer: "Printer"
+      label: "Label template"
       number_of_copies: "Number of copies"
       print_label: "Print label"
       no_printers:
@@ -2154,8 +2248,13 @@ en:
           fluics_printer:
             title: "FLUICS Print"
             description: "Truly a plug & play label printing solution."
+          zebra_printer:
+            title: 'Zebra label printers'
+            description: 'Print labels of custom styles and sizes in seconds flat from your PC or Mac via your Zebra printer connected via USB, Internet or LAN.'
+            details: 'Details'
         label_printer:
           fluics_printer: "FLUICS Print: Label printers"
+          zebra_printer: 'Zebra label printers'
           instructions: "Instructions"
           fluics_instruction:
             p1: "To make it work, please follow these steps:"
@@ -2163,6 +2262,12 @@ en:
             p3: "2. Plug the online printer to a power outlet and connect it to the internet with a LAN cable."
             p4: "3. Enter the API key into the field below."
             p5: "4. SciNote will find your printer and connect to it automatically. You can start printing labels."
+          zebra_instruction:
+            p1: 'To make it work, please follow these steps:'
+            p2_html: "1. Install the Zebra BROWSER PRINT application: <a href='%{link}' target='_blank'>official downloads page.</a>"
+            p3: '2. Install the printer drivers required by your operating system.'
+            p4: '3. Allow SciNote to connect to your Zebra printers.'
+            p5: 'Make sure that Zebra Connect shows the printer status as Connected.'
           settings: "Settings"
           api_key_label: "API key"
           api_key_warning: "API key change will lead to printer list refresh"
@@ -2171,6 +2276,7 @@ en:
           saved: "Saved"
           update_printers: "Update printers"
           no_printers_available: "No printers available"
+          looking_for_printers: "Looking for connected printers…"
 
 
         connected_accounts:
@@ -2691,10 +2797,11 @@ en:
         description: "Invite people to your organization to start using SciNote"
         input_placeholder: "jsmith@someemail.com"
         input_label: "New member emails"
-        input_subtitle: "You can enter one or more emails. To confirm each one press the ENTER key."
-    input_subtitle: "You can enter one or more emails. To confirm each one press the ENTER key."
+        input_subtitle: "You can enter one or more emails."
+    input_subtitle: "You can enter one or more emails."
     invite_to_team_heading: "Invite users to my team:"
     invite_btn: "Invite members"
+    invite_as: "As %{role}"
     invite_guest: "As Guests"
     invite_user: "As Normal Users"
     invite_admin: "As Administrators"
@@ -2720,6 +2827,7 @@ en:
   date:
     formats:
       full: "%{date_format}"
+      full_date: "%{date_format}"
   time:
     formats:
       full_js: "D.M.YYYY HH:mm"

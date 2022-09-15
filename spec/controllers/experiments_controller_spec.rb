@@ -70,10 +70,6 @@ describe ExperimentsController, type: :controller do
         }
       end
 
-      before do
-        create_user_assignment(archived_experiment, role, user)
-      end
-
       it 'calls create activity for unarchiving experiment' do
         expect(Activities::CreateActivityService)
           .to(receive(:call)

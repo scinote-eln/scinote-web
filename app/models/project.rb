@@ -4,7 +4,6 @@ class Project < ApplicationRecord
   include SearchableByNameModel
   include ViewableModel
   include PermissionCheckableModel
-  include PermissionExtends
   include Assignable
 
   enum visibility: { hidden: 0, visible: 1 }
@@ -59,7 +58,7 @@ class Project < ApplicationRecord
                                 reject_if: :all_blank
 
   scope :visible_to, (lambda do |user, team|
-                        unless user.is_admin_of_team?(team)
+                        unless team.permission_granted?(user, TeamPermissions::MANAGE)
                           left_outer_joins(user_assignments: :user_role)
                             .where(user_assignments: { user: user })
                             .where('? = ANY(user_roles.permissions)', ProjectPermissions::READ)
@@ -326,7 +325,7 @@ class Project < ApplicationRecord
     UserAssignments::GroupAssignmentJob.perform_now(
       team,
       self,
-      created_by
+      last_modified_by || created_by
     )
   end
 
