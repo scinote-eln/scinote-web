@@ -517,7 +517,13 @@ var ProjectsIndex = (function() {
 
     $(projectsPageSelector)
       .on('ajax:success', '.change-projects-view-type-form', function(ev, data) {
-        $(cardsWrapper).removeClass('list').addClass(data.cards_view_type_class);
+        // $(cardsWrapper).removeClass('list').addClass(data.cards_view_type_class);
+        if (data.cards_view_type_class =='list') {
+          $(cardsWrapper).removeClass('cards').addClass(data.cards_view_type_class);
+        }
+        else if (data.cards_view_type_class =='cards') {
+          $(cardsWrapper).removeClass('list').addClass(data.cards_view_type_class);
+        }
         $(projectsPageSelector).find('.cards-switch .button-to').removeClass('selected');
         $(ev.target).find('.button-to').addClass('selected');
         $(ev.target).parents('.dropdown.view-switch').removeClass('open');

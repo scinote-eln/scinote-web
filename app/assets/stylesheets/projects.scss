@@ -682,25 +682,24 @@ li.module-hover {
           }
         }
 
+        
         &.project-card {
           border-radius: 4px;
           box-shadow: $flyout-shadow;
-
+          
           .project-name-cell {
             align-items: center;
             display: flex;
-            height: 2em;
-            margin: 0 1.75em;
             overflow: hidden;
+            margin-left: -55px;
+            margin-top: 10px;
+            
 
             a {
               color: inherit;
-              overflow: hidden;
-              white-space: nowrap;
             }
 
             .name {
-              line-height: 2em;
               margin: 0;
               overflow: hidden;
               text-overflow: ellipsis;
@@ -902,7 +901,7 @@ li.module-hover {
             }
 
             .name {
-              grid-column: 5 span;
+              grid-column: 6 span;
               line-height: 3em;
 
               &:before {
@@ -1057,7 +1056,7 @@ li.module-hover {
           .card {
             &.folder-card {
               .name {
-                grid-column: 6 span;
+                grid-column: 7 span;
               }
             }
 
@@ -1084,5 +1083,50 @@ li.module-hover {
 
   .sci-input-container.left-icon {
     margin: 1em 0;
+  }
+}
+
+
+
+
+
+.cards-wrapper.last-page.cards {
+  grid-gap: 25px;
+
+  .project-card {
+    .project-name-cell {
+      position: relative;
+      top: 12%;
+      
+      a {
+        color: inherit;
+      }
+      
+      .name {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        max-width: 200px;
+      }
+    }
+
+    .project-code-cell {
+      position: relative;
+      padding-left: 10%;
+      margin-top:4px;
+      height: min-content;
+    }
+
+    .data-row {
+      position: relative;
+      top: 5%;
+      .card-label {
+        color: gray !important;
+      }
+    }
+    
+
+  
   }
 }
