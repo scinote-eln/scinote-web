@@ -1,3 +1,7 @@
+<% provide(:sidebar_title, t('sidebar.templates.sidebar_title')) %>
+<%= content_for :sidebar do %>
+  <%= render partial: "/shared/sidebar/templates_sidebar", locals: {active: :protocol} %>
+<% end %>
 <div class="content-pane protocols-show" >
   <div class="protocol-position-container">
      <div class="protocol-actions">

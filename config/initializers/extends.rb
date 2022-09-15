@@ -193,7 +193,7 @@ class Extends
 
   ACTIVITY_SUBJECT_TYPES = %w(
     Team RepositoryBase Project Experiment MyModule Result Protocol Report RepositoryRow
-    ProjectFolder Asset Step
+    ProjectFolder Asset Step LabelTemplate
   ).freeze
 
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
@@ -416,8 +416,12 @@ class Extends
     protocol_step_checklist_item_added: 213,
     protocol_step_checklist_item_edited: 214,
     protocol_step_checklist_item_deleted: 215,
-    edit_protocol_name_in_repository: 216,
-    protocol_name_in_task_edited: 217
+    label_template_created: 216,
+    label_template_edited: 217,
+    label_template_deleted: 218,
+    label_template_copied: 219,
+    edit_protocol_name_in_repository: 220,
+    protocol_name_in_task_edited: 221
   }
 
   ACTIVITY_GROUPS = {
@@ -434,11 +438,18 @@ class Extends
                   78, 96, 107, 113, 114, *133..136, 180, 181, 182],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 170, 173, 179, 187, 186,
-                          190, 191, *204..216],
-    team: [92, 94, 93, 97, 104]
+                          190, 191, *204..215, 220, 221],
+    team: [92, 94, 93, 97, 104],
+    label_repository: [*216..219]
   }
 
   SHARED_INVENTORIES_PERMISSION_LEVELS = {
+    not_shared: 0,
+    shared_read: 1,
+    shared_write: 2
+  }.freeze
+
+  SHARED_OBJECTS_PERMISSION_LEVELS = {
     not_shared: 0,
     shared_read: 1,
     shared_write: 2
@@ -492,6 +503,29 @@ class Extends
   )
 
   STI_PRELOAD_CLASSES = %w(LinkedRepository BmtRepository)
+
+  DEFAULT_LABEL_TEMPLATE = {
+    zpl:
+      <<~HEREDOC
+        ^XA
+        ^MTT
+        ^MUD,300,300
+        ^PR2
+        ^MD30
+        ^LH20,20
+        ^PW310
+        ^CF0,23
+        ^FO0,0^FD{{ITEM_ID}}^FS
+        ^FO0,20^BQN,2,4^FDMA,{{ITEM_ID}}^FS
+        ^FO95,30^FB180,4,0,L^FD{{NAME}}^FS^FS
+        ^XZ
+      HEREDOC
+  }
+
+  LABEL_TEMPLATE_FORMAT_MAP = {
+    'ZebraLabelTemplate' => 'ZPL',
+    'FluicsLabelTemplate' => 'Fluics'
+  }
 end
 
 # rubocop:enable Style/MutableConstant

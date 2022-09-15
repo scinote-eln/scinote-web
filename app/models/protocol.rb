@@ -4,6 +4,8 @@ class Protocol < ApplicationRecord
   include SearchableModel
   include RenamingUtil
   include SearchableByNameModel
+  include Assignable
+  include PermissionCheckableModel
   include TinyMceImages
 
   after_save :update_linked_children
@@ -202,6 +204,7 @@ class Protocol < ApplicationRecord
                    user_id: user.id))
   end
 
+
   def self.filter_by_teams(teams = [])
     teams.blank? ? self : where(team: teams)
   end
@@ -216,6 +219,14 @@ class Protocol < ApplicationRecord
       step.save!
     end
     step
+  end
+
+  def created_by
+    in_module? ? my_module.created_by : added_by
+  end
+
+  def permission_parent
+    in_module? ? my_module : team
   end
 
   def linked_modules

@@ -45,9 +45,26 @@ Rails.application.routes.draw do
         to: 'users/settings/account/addons#index',
         as: 'addons'
 
+    resources :label_templates, only: %i(index show update create) do
+      member do
+        post :set_default
+      end
+      collection do
+        post :duplicate
+        post :delete
+        get :datatable
+        get :template_tags
+        get :zpl_preview
+      end
+    end
+
     resources :label_printers, except: :show, path: 'users/settings/account/addons/label_printers' do
       post :create_fluics, on: :collection
     end
+
+    get 'users/settings/account/addons/label_printers/settings_zebra',
+        to: 'label_printers#index_zebra',
+        as: 'zebra_settings'
 
     resources :label_printers, only: [] do
       post :print, on: :member

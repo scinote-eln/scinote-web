@@ -1,7 +1,7 @@
 module TeamsHelper
   # resets the current team if needed
   def current_team_switch(team)
-    if team != current_team && current_user.is_member_of_team?(team)
+    if team != current_team && current_user.member_of_team?(team)
       current_user.current_team_id = team.id
       current_user.save
       update_current_team
