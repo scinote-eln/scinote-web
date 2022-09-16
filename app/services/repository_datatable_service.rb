@@ -39,9 +39,13 @@ class RepositoryDatatableService
   def process_query
     search_value = @params[:search][:value]
     order_params = @params[:order].first
+
     order_by_column = { column: order_params[:column].to_i, dir: order_params[:dir] }
 
     repository_rows = fetch_rows(search_value)
+
+    # filter only rows with reminders if filter param is present
+    repository_rows = repository_rows.with_active_reminders(@user) if @params[:only_reminders]
 
     # Aliased my_module_repository_rows join for consistent assigned counts
     repository_rows =

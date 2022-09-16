@@ -14,6 +14,7 @@ module Api
             @step.step_orderable_elements.find(order['id']).update_column(:position, order['position'])
             # rubocop:enable Rails/SkipsModelValidations
           end
+          @step.touch
         rescue StandardError
           head :bad_request
         end

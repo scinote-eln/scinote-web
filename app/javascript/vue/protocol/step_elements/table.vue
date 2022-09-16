@@ -1,11 +1,11 @@
 <template>
-  <div class="step-table-container" :class="{ 'step-element--locked': !element.attributes.orderable.urls.update_url }">
-     <div class="step-element-header" :class="{ 'editing-name': editingName }">
+  <div class="step-table-container">
+     <div class="step-element-header" :class="{ 'editing-name': editingName, 'step-element--locked': locked }">
       <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
         <i class="fas fas-rotated-90 fa-exchange-alt"></i>
       </div>
       <div v-else class="step-element-grip-placeholder"></div>
-      <div class="step-element-name">
+      <div v-if="!locked || element.attributes.orderable.name" :key="reloadHeader" class="step-element-name">
         <InlineEdit
           :value="element.attributes.orderable.name"
           :characterLimit="255"
@@ -21,6 +21,9 @@
       <div class="step-element-controls">
         <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="enableNameEdit" tabindex="-1">
           <i class="fas fa-pen"></i>
+        </button>
+        <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light" tabindex="-1" @click="duplicateElement">
+          <i class="fas fa-clone"></i>
         </button>
         <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
           <i class="fas fa-trash"></i>
@@ -51,18 +54,21 @@
       </button>
     </div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @cancel="closeDeleteModal"/>
+    <tableNameModal v-if="nameModalOpen" :element="element" @update="updateEmptyName" @cancel="nameModalOpen = false" />
   </div>
 </template>
 
  <script>
   import DeleteMixin from 'vue/protocol/mixins/components/delete.js'
+  import DuplicateMixin from 'vue/protocol/mixins/components/duplicate.js'
   import deleteElementModal from 'vue/protocol/modals/delete_element.vue'
   import InlineEdit from 'vue/shared/inline_edit.vue'
+  import TableNameModal from 'vue/protocol/modals/table_name_modal.vue'
 
   export default {
     name: 'StepTable',
-    components: { deleteElementModal, InlineEdit },
-    mixins: [DeleteMixin],
+    components: { deleteElementModal, InlineEdit, TableNameModal },
+    mixins: [DeleteMixin, DuplicateMixin],
     props: {
       element: {
         type: Object,
@@ -83,7 +89,14 @@
       return {
         editingName: false,
         editingTable: false,
-        tableObject: null
+        tableObject: null,
+        nameModalOpen: false,
+        reloadHeader: 0
+      }
+    },
+    computed: {
+      locked() {
+        return !this.element.attributes.orderable.urls.update_url
       }
     },
     updated() {
@@ -99,6 +112,15 @@
     },
     methods: {
       enableTableEdit() {
+        if(this.locked) {
+          return;
+        }
+
+        if (!this.element.attributes.orderable.name) {
+          this.openNameModal();
+          return;
+        }
+
         this.editingTable = true;
         this.$nextTick(() => this.tableObject.selectCell(0,0));
       },
@@ -114,6 +136,22 @@
       updateName(name) {
         this.element.attributes.orderable.name = name;
         this.update();
+      },
+      openNameModal() {
+        this.tableObject.deselectCell();
+        this.nameModalOpen = true;
+      },
+      updateEmptyName(name) {
+        this.disableNameEdit();
+
+        // force reload header to properly reset name inline edit
+        this.reloadHeader = this.reloadHeader + 1;
+
+        this.element.attributes.orderable.name = name;
+        this.$emit('update', this.element, false, () => {
+          this.nameModalOpen = false;
+          this.enableTableEdit();
+        });
       },
       updateTable() {
         if (this.editingTable == false) return;
@@ -139,7 +177,7 @@
           contextMenu: this.editingTable,
           formulas: true,
           readOnly: !this.editingTable,
-          afterUnlisten: this.updateTable
+          afterUnlisten: () => setTimeout(this.updateTable, 100) // delay makes cancel button work
         });
       }
     }

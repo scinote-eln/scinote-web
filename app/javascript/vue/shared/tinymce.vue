@@ -36,6 +36,7 @@
                     :data-highlightjs-path="this.getStaticUrl('highlightjs-url')"
                     :data-last-updated="lastUpdated * 1000"
                     :data-tinymce-asset-path="this.getStaticUrl('tiny-mce-assets-url')"
+                    :placeholder="placeholder"
                     :value="value"
                     cols="120"
                     rows="10"
@@ -74,7 +75,6 @@
     },
     data() {
       return {
-        editorInstance: null,
         characterCount: 0,
         blurEventHandler: null,
         active: false
@@ -88,10 +88,8 @@
         }
       },
       characterCount() {
-        if(this.error) {
-          this.editorInstance.blurDisabled = true;
-        } else {
-          this.editorInstance.blurDisabled = false;
+        if (this.editorInstance()) {
+          this.editorInstance().blurDisabled = this.error != false ;
         }
       }
     },
@@ -118,38 +116,46 @@
       }
     },
     methods: {
-      initTinymce() {
+      initTinymce(e) {
         let textArea = `#${this.objectType}_textarea_${this.objectId}`;
+
+        if (this.active) return
+        if (e && $(e.target).hasClass('atwho-user-popover')) return
+        if (e && $(e.target).hasClass('record-info-link')) return
+        if (e && $(e.target).parent().hasClass('atwho-inserted')) return
+
         TinyMCE.init(textArea, (data) => {
+
           if (data) {
             this.$emit('update', data)
           }
           this.$emit('editingDisabled')
-        }).then((editorInstance) => {
-          this.editorInstance = editorInstance[0]; // TinyMCE initialization returns an array
+        }).then(() => {
           this.active = true;
           this.initCharacterCount();
+          this.$emit('editingEnabled');
         });
-        this.$emit('editingEnabled')
       },
       getStaticUrl(name) {
         return $(`meta[name=\'${name}\']`).attr('content');
       },
       initCharacterCount() {
-        if (!this.editorInstance) return;
+        if (!this.editorInstance()) return;
 
-        this.characterCount = $(this.editorInstance.getContent()).text().length
-
-        this.editorInstance.on('input change paste keydown', (e) => {
+        this.characterCount = $(this.editorInstance().getContent()).text().length;
+        this.editorInstance().on('input change paste keydown', (e) => {
           e.currentTarget && (this.characterCount = (e.currentTarget).innerText.length);
         });
 
-        this.editorInstance.on('remove', () => this.active = false)
+        this.editorInstance().on('remove', () => this.active = false);
 
         // clear error on cancel
-        $(this.editorInstance.container).find('.tinymce-cancel-button').on('click', ()=> {
+        $(this.editorInstance().container).find('.tinymce-cancel-button').on('click', ()=> {
           this.characterCount = 0;
         });
+      },
+      editorInstance() {
+        return tinyMCE.editors[0];
       }
     }
   }

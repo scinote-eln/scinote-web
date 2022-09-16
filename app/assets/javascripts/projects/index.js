@@ -7,7 +7,7 @@
 // - refresh project users tab after manage user modal is closed
 // - refactor view handling using library, ex. backbone.js
 
-/* global HelperModule dropdownSelector Sidebar Turbolinks filterDropdown InfiniteScroll GLOBAL_CONSTANTS */
+/* global HelperModule dropdownSelector Sidebar Turbolinks filterDropdown InfiniteScroll AsyncDropdown GLOBAL_CONSTANTS */
 /* eslint-disable no-use-before-define */
 
 var ProjectsIndex = (function() {
@@ -485,6 +485,7 @@ var ProjectsIndex = (function() {
         if (viewContainer.find('.no-results-container').length) {
           viewContainer.addClass('no-results');
         }
+
         selectedProjects.length = 0;
         selectedProjectFolders.length = 0;
         updateProjectsToolbar();
@@ -497,6 +498,7 @@ var ProjectsIndex = (function() {
             placeholderTemplate: '#projectPlaceholder',
             endOfListTemplate: '#projectEndOfList',
             pageSize: pageSize,
+            lastPage: !data.next_page,
             customResponse: (response) => {
               $(response.cards_html).appendTo(cardsWrapper);
             },
@@ -655,6 +657,7 @@ var ProjectsIndex = (function() {
     initProjectsFilters();
     initArchiveRestoreButton();
     loadCardsView();
+    AsyncDropdown.init($(projectsWrapper));
 
     $(projectsWrapper).on('click', '.folder-card-selector', function() {
       let folderCard = $(this).closest('.folder-card');
@@ -688,7 +691,16 @@ var ProjectsIndex = (function() {
         selectedProjects.splice(index, 1);
       }
 
-      updateProjectsToolbar();
+      if (this.checked) {
+        $.get(projectCard.data('permissions-url'), function(result) {
+          PERMISSIONS.forEach((permission) => {
+            projectCard.data(permission, result[permission]);
+          });
+          updateProjectsToolbar();
+        });
+      } else {
+        updateProjectsToolbar();
+      }
     });
   }
 

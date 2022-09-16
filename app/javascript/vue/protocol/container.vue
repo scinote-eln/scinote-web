@@ -39,7 +39,7 @@
             :value="protocol.attributes.name"
             :characterLimit="255"
             :placeholder="i18n.t('my_modules.protocols.protocol_status_bar.enter_name')"
-            :allowBlank="true"
+            :allowBlank="!inRepository"
             :attributeName="`${i18n.t('Protocol')} ${i18n.t('name')}`"
             @update="updateName"
           />
@@ -104,6 +104,7 @@
               @step:delete="updateStepsPosition"
               @step:update="updateStep"
               @stepUpdated="refreshProtocolStatus"
+              @step:insert="updateStepsPosition"
               :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
             />
           </div>
@@ -267,10 +268,9 @@
           data: JSON.stringify(stepPositions),
           contentType: "application/json",
           dataType: "json",
-          error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger'))
+          error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')),
+          success: (() => this.reorderSteps(this.steps))
         });
-
-        this.reorderSteps(this.steps);
       },
       startStepReorder() {
         this.reordering = true;

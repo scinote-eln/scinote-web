@@ -2,7 +2,7 @@
 
 module StepElements
   class TextsController < BaseController
-    before_action :load_step_text, only: %i(update destroy)
+    before_action :load_step_text, only: %i(update destroy duplicate)
 
     def create
       step_text = @step.step_texts.build
@@ -36,6 +36,20 @@ module StepElements
       else
         head :unprocessable_entity
       end
+    end
+
+    def duplicate
+      ActiveRecord::Base.transaction do
+        position = @step_text.step_orderable_element.position
+        @step.step_orderable_elements.where('position > ?', position).order(position: :desc).each do |element|
+          element.update(position: element.position + 1)
+        end
+        new_step_text = @step_text.duplicate(@step, position + 1)
+        log_step_activity(:text_duplicated, { text_name: new_step_text.name })
+        render_step_orderable_element(new_step_text)
+      end
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
     end
 
     private

@@ -45,9 +45,26 @@ Rails.application.routes.draw do
         to: 'users/settings/account/addons#index',
         as: 'addons'
 
+    resources :label_templates, only: %i(index show update create) do
+      member do
+        post :set_default
+      end
+      collection do
+        post :duplicate
+        post :delete
+        get :datatable
+        get :template_tags
+        get :zpl_preview
+      end
+    end
+
     resources :label_printers, except: :show, path: 'users/settings/account/addons/label_printers' do
       post :create_fluics, on: :collection
     end
+
+    get 'users/settings/account/addons/label_printers/settings_zebra',
+        to: 'label_printers#index_zebra',
+        as: 'zebra_settings'
 
     resources :label_printers, only: [] do
       post :print, on: :member
@@ -300,8 +317,10 @@ Rails.application.routes.draw do
       member do
         # Notifications popup for individual project in projects index
         get 'notifications'
+        get 'permissions'
         get 'experiments_cards'
         get 'sidebar'
+        get 'actions_dropdown'
         put 'view_type'
       end
 
@@ -333,6 +352,8 @@ Rails.application.routes.draw do
         get 'move_modal', action: :move_modal
       end
       member do
+        get 'permissions'
+        get 'actions_dropdown'
         get 'canvas' # Overview/structure for single experiment
         # AJAX-loaded canvas edit mode (from canvas)
         get 'canvas/edit', to: 'canvas#edit'
@@ -453,9 +474,20 @@ Rails.application.routes.draw do
       resources :step_comments,
                 path: '/comments',
                 only: %i(create index update destroy)
-      resources :tables, controller: 'step_elements/tables', only: %i(create destroy update)
-      resources :texts, controller: 'step_elements/texts', only: %i(create destroy update)
+      resources :tables, controller: 'step_elements/tables', only: %i(create destroy update) do
+        member do
+          post :duplicate
+        end
+      end
+      resources :texts, controller: 'step_elements/texts', only: %i(create destroy update) do
+        member do
+          post :duplicate
+        end
+      end
       resources :checklists, controller: 'step_elements/checklists', only: %i(create destroy update) do
+        member do
+          post :duplicate
+        end
         resources :checklist_items, controller: 'step_elements/checklist_items', only: %i(create update destroy) do
           patch :toggle, on: :member
           post :reorder, on: :collection
@@ -471,6 +503,7 @@ Rails.application.routes.draw do
         put 'move_up'
         post 'update_view_state'
         post 'update_asset_view_mode'
+        post 'duplicate'
       end
     end
 

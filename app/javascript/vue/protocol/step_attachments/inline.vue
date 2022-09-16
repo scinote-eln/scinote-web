@@ -12,7 +12,11 @@
           :data-gallery-view-id="stepId"
           :data-preview-url="attachment.attributes.urls.preview"
         >
-          {{ attachment.attributes.file_name }}
+          <span data-toggle="tooltip" 
+               data-placement="bottom" 
+               :title="`${ attachment.attributes.file_name }`">
+            {{ attachment.attributes.file_name }}
+          </span>
         </a>
         <span v-if="attachment.isNewUpload" class="attachment-label-new">
           {{ i18n.t('protocols.steps.attachments.new.description') }}
@@ -48,6 +52,7 @@
       </div>
     </template>
     <template v-else-if="attachment.attributes.pdf_previewable">
+      <PdfViewer :pdf="attachment.attributes.pdf" />
     </template>
     <template v-else-if="attachment.attributes.large_preview !== null">
       <div class="image-container">
@@ -67,13 +72,14 @@
 </template>
 
 <script>
-  import ContextMenuMixin from './mixins/context_menu.js'
-  import ContextMenu from './context_menu.vue'
+  import ContextMenuMixin from './mixins/context_menu.js';
+  import ContextMenu from './context_menu.vue';
+  import PdfViewer from '../../shared/pdf_viewer.vue';
 
   export default {
     name: 'inlineAttachment',
     mixins: [ContextMenuMixin],
-    components: { ContextMenu },
+    components: { ContextMenu, PdfViewer },
     props: {
       attachment: {
         type: Object,

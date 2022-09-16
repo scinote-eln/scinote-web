@@ -12,7 +12,7 @@
     <% end %>
     <div class="comments-list">
       <%= render partial: 'shared/comments/list.html.erb', locals: { comments: comments} %>
-      <% comments.mark_as_seen_by(current_user) %>
+      <% comments.mark_as_seen_by(current_user, object) %>
     </div>
   </div>
   <% if can_create_comments %>

@@ -25,6 +25,9 @@
         <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="editingName = true" tabindex="-1">
           <i class="fas fa-pen"></i>
         </button>
+        <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light" tabindex="-1" @click="duplicateElement">
+          <i class="fas fa-clone"></i>
+        </button>
         <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
           <i class="fas fa-trash"></i>
         </button>
@@ -76,6 +79,7 @@
 
  <script>
   import DeleteMixin from 'vue/protocol/mixins/components/delete.js'
+  import DuplicateMixin from 'vue/protocol/mixins/components/duplicate.js'
   import deleteElementModal from 'vue/protocol/modals/delete_element.vue'
   import InlineEdit from 'vue/shared/inline_edit.vue'
   import ChecklistItem from 'vue/protocol/step_elements/checklistItem.vue'
@@ -84,7 +88,7 @@
   export default {
     name: 'Checklist',
     components: { deleteElementModal, InlineEdit, ChecklistItem, Draggable },
-    mixins: [DeleteMixin],
+    mixins: [DeleteMixin, DuplicateMixin],
     props: {
       element: {
         type: Object,
@@ -112,12 +116,15 @@
       }
     },
     created() {
-      this.checklistItems = this.element.attributes.orderable.checklist_items.map((item, index) => {
-        return { attributes: {...item, position: index } }
-      });
+      this.initChecklistItems();
 
       if (this.isNew) {
         this.addItem();
+      }
+    },
+    watch: {
+      element() {
+        this.initChecklistItems();
       }
     },
     computed: {
@@ -134,16 +141,21 @@
       }
     },
     methods: {
+      initChecklistItems() {
+        this.checklistItems = this.element.attributes.orderable.checklist_items.map((item, index) => {
+          return { attributes: {...item, position: index } }
+        });
+      },
       updateName(name) {
         this.element.attributes.orderable.name = name;
         this.editingName = false;
-        this.update();
+        this.update(false);
       },
-      update() {
+      update(skipRequest = true) {
         this.element.attributes.orderable.checklist_items =
           this.checklistItems.map((i) => i.attributes);
 
-        this.$emit('update', this.element);
+        this.$emit('update', this.element, skipRequest);
       },
       postItem(item, callback) {
         $.post(this.element.attributes.orderable.urls.create_item_url, item).success((result) => {
@@ -178,7 +190,7 @@
           // create item, then append next one
           this.postItem(item, this.addItem);
         }
-        this.update();
+        this.update(true);
       },
       saveItemChecked(item) {
         $.ajax({
@@ -231,7 +243,8 @@
           data: JSON.stringify(checklistItemPositions),
           contentType: "application/json",
           dataType: "json",
-          error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger'))
+          error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')),
+          success: (() => this.update())
         });
       },
       handleMultilinePaste(data) {

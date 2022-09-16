@@ -17,4 +17,22 @@ class StepText < ApplicationRecord
 
     strip_tags(text.truncate(64))
   end
+
+  def duplicate(step, position = nil)
+    ActiveRecord::Base.transaction do
+      new_step_text = step.step_texts.create!(
+        text: text
+      )
+
+      # Copy steps tinyMce assets
+      clone_tinymce_assets(new_step_text, step.protocol.team)
+
+      step.step_orderable_elements.create!(
+        position: position || step.step_orderable_elements.length,
+        orderable: new_step_text
+      )
+
+      new_step_text
+    end
+  end
 end

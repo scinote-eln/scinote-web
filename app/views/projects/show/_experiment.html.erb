@@ -51,7 +51,7 @@
         <%= link_to canvas_experiment_path(experiment), class: 'no-workflowimg' do %>
           <% if experiment.workflowimg.attached? %>
             <div class="workflowimg-container" data-workflowimg-present="true">
-              <%= render partial: 'projects/show/workflow_img.html.erb', locals: { experiment: experiment } %>
+              <%= render partial: 'projects/show/workflow_img', locals: { experiment: experiment } %>
             </div>
           <% else %>
             <div class="workflowimg-container"

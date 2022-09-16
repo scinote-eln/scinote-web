@@ -83,6 +83,15 @@
   }
 }
 
+
+.quick-start-buttons {
+  display: flex;
+
+  .btn {
+    margin-right: .25em;
+  }
+}
+
 @media (max-width: 1100px) {
   .dashboard-container {
     --dashboard-widgets-gap: 15px;

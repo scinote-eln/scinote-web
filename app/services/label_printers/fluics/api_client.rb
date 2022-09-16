@@ -42,6 +42,11 @@ module LabelPrinters
         )
       end
 
+      def list_templates
+        group_name = ENV['FLUICS_TEMPLATES_GROUP'] || ''
+        do_request(:get, '/get_templates', params: { query: { templateGroups: group_name } })
+      end
+
       private
 
       def do_request(http_method, path, params: {})

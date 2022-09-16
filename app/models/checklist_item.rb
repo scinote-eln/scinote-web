@@ -8,7 +8,8 @@ class ChecklistItem < ApplicationRecord
   validates :position, uniqueness: { scope: :checklist }, unless: -> { position.nil? }
 
   belongs_to :checklist,
-             inverse_of: :checklist_items
+             inverse_of: :checklist_items,
+             touch: true
   belongs_to :created_by,
              foreign_key: 'created_by_id',
              class_name: 'User',

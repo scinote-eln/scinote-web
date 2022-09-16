@@ -64,6 +64,18 @@ class ExperimentsController < ApplicationController
     }
   end
 
+  def permissions
+    if stale?([@experiment, @experiment.project])
+      render json: {
+        editable: can_manage_experiment?(@experiment),
+        moveable: can_move_experiment?(@experiment),
+        archivable: can_archive_experiment?(@experiment),
+        restorable: can_restore_experiment?(@experiment),
+        duplicable: can_clone_experiment?(@experiment)
+      }
+    end
+  end
+
   def canvas
     redirect_to module_archive_experiment_path(@experiment) if @experiment.archived_branch?
     @project = @experiment.project
@@ -295,6 +307,17 @@ class ExperimentsController < ApplicationController
           )
         }
       end
+    end
+  end
+
+  def actions_dropdown
+    if stale?([@experiment, @experiment.project])
+      render json: {
+        html: render_to_string(
+          partial: 'projects/show/experiment_actions_dropdown',
+          locals: { experiment: @experiment }
+        )
+      }
     end
   end
 

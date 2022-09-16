@@ -91,7 +91,7 @@ module ProtocolsExporterV2
           "<!--[CDATA[  #{Nokogiri::HTML::DocumentFragment.parse(step_text.text)}  ]]-->"\
           "</contents>\n"
 
-    xml << get_tiny_mce_assets(step_text.text)
+    xml << get_tiny_mce_assets(step_text.text) if step_text.text.present?
 
     xml << "</stepText>\n"
   end
