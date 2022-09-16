@@ -38,10 +38,14 @@
   }
 
   function expirationInTime() {
+    var timeString;
     if (expireIn > 0) {
-      document.title = newTimerStr(expireIn) + ' ' + originalTitle;
-      $('.expiring').text(I18n.t('devise.sessions.expire_modal.session_end_in.header',
-        { time: newTimerStr(expireIn) }));
+      timeString = newTimerStr(expireIn);
+      document.title = timeString + ' ' + String.fromCodePoint(0x1F62A) + ' ' + originalTitle;
+      $('.expiring').text(
+        I18n.t('devise.sessions.expire_modal.session_end_in.header',
+          { time: timeString })
+      );
       expireIn -= 1;
       if (!$('#session-expire').hasClass('in')) {
         $('#session-expire').modal().off('hide.bs.modal').on('hide.bs.modal', function() {
