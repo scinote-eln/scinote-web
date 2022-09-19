@@ -10,6 +10,9 @@ class MyModule < ApplicationRecord
   include PermissionCheckableModel
   include Assignable
 
+  ID_PREFIX = 'TA'
+  include PrefixedIdModel
+
   attr_accessor :transition_error_rollback
 
   enum state: Extends::TASKS_STATES
