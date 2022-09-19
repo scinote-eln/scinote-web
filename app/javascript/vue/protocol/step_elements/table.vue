@@ -176,6 +176,7 @@
           colHeaders: true,
           contextMenu: this.editingTable,
           formulas: true,
+          preventOverflow: 'horizontal',
           readOnly: !this.editingTable,
           afterUnlisten: () => setTimeout(this.updateTable, 100) // delay makes cancel button work
         });
