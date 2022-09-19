@@ -51,6 +51,10 @@
     <div v-if="base64Image" class="label-preview__image">
       <img :src="`data:image/png;base64,${base64Image}`" />
     </div>
+    <div class="label-preview__error" v-html="i18n.t('label_templates.label_preview.error_html')"
+         v-else-if="base64Image != null && base64Image.length === 0">
+    </div>
+
   </div>
 </template>
 
@@ -113,6 +117,9 @@
         }
 
         this.setDefaults();
+      },
+      zpl() {
+        this.refreshPreview();
       }
     },
     methods: {
@@ -123,6 +130,8 @@
         !this.height && (this.height = this.unit === 'in' ? 1 : 25.4);
       },
       refreshPreview() {
+        if (this.zpl.length === 0) return;
+
         $.ajax({
           url: this.previewUrl,
           type: 'GET',
@@ -134,7 +143,17 @@
           },
           success: (result) => {
             this.base64Image = result.base64_preview;
+            if (this.base64Image.length > 0) {
+              this.$emit('preview:valid');
+            } else {
+              this.$emit('preview:invalid');
+            }
+          },
+          error: (result) => {
+            this.base64Image = '';
+            this.$emit('preview:invalid');
           }
+
         });
       },
       updateUnit(unit) {

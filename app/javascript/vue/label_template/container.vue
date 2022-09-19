@@ -55,23 +55,26 @@
           />
         </div>
         <template v-if="editingContent">
-          <div class="label-textarea-container">
+          <div class="label-textarea-container" :class="{'error': hasError }">
             <textarea
               ref="contentInput"
               v-model="newContent"
               class="label-textarea"
-              @blur="updateContent"
+              @blur="saveCursorPosition"
             ></textarea>
+            <div class="error-message">
+              {{ codeErrorMessage }}
+            </div>
           </div>
           <div class="button-container">
-            <div class="btn btn-secondary refresh-preview">
+            <div class="btn btn-secondary refresh-preview" @click="generatePreview(true)">
               <i class="fas fa-sync"></i>
               {{ i18n.t('label_templates.show.buttons.refresh') }}
             </div>
             <div class="btn btn-secondary" @mousedown="disableContentEdit">
               {{ i18n.t('general.cancel') }}
             </div>
-            <div class="btn btn-primary save-template" @click="updateContent">
+            <div class="btn btn-primary save-template" :disabled="hasError && previewValid" @click="generatePreview(false)">
               <i class="fas fa-save"></i>
               {{ i18n.t('label_templates.show.buttons.save') }}
             </div>
@@ -83,7 +86,7 @@
         </div>
       </div>
       <div class="label-preview-container">
-        <LabelPreview :zpl='labelTemplate.attributes.content' :previewUrl="previewUrl" />
+        <LabelPreview :zpl='previewContent' :previewUrl="previewUrl" @preview:valid="updateContent" @preview:invalid="invalidPreview" />
       </div>
     </div>
   </div>
@@ -112,7 +115,24 @@
         editingDescription: false,
         editingContent: false,
         newContent: '',
+        previewContent: '',
+        previewValid: false,
+        skipSave: false,
+        codeErrorMessage: '',
         cursorPos: 0
+      }
+    },
+    watch: {
+      newContent() {
+        this.showErrors();
+      },
+      previewValid() {
+        this.showErrors();
+      }
+    },
+    computed: {
+      hasError() {
+        return this.codeErrorMessage.length > 0
       }
     },
     components: {InlineEdit, InsertFieldDropdown, LabelPreview},
@@ -120,6 +140,7 @@
       $.get(this.labelTemplateUrl, (result) => {
         this.labelTemplate = result.data
         this.newContent = this.labelTemplate.attributes.content
+        this.previewContent = this.labelTemplate.attributes.content
       })
     },
     methods: {
@@ -134,6 +155,7 @@
       disableContentEdit() {
         this.editingContent = false;
         this.newContent = this.labelTemplate.attributes.content;
+        this.previewContent = this.labelTemplate.attributes.content;
       },
       updateName(newName) {
         $.ajax({
@@ -156,16 +178,44 @@
         });
       },
       updateContent() {
-        this.cursorPos = $(this.$refs.contentInput).prop('selectionStart');
-        $.ajax({
-          url: this.labelTemplate.attributes.urls.update,
-          type: 'PATCH',
-          data: {label_template: {content: this.newContent}},
-          success: (result) => {
-            this.labelTemplate.attributes.content = result.data.attributes.content;
-            this.editingContent = false;
-          }
+        this.previewValid = true;
+
+        if (!this.editingContent) return;
+
+        if (this.skipSave) {
+          this.skipSave = false;
+          return;
+        }
+
+        this.$nextTick(() => {
+          if (this.hasError) return;
+
+          $.ajax({
+            url: this.labelTemplate.attributes.urls.update,
+            type: 'PATCH',
+            data: {label_template: {content: this.newContent}},
+            success: (result) => {
+              this.labelTemplate.attributes.content = result.data.attributes.content;
+              this.editingContent = false;
+            }
+          });
         });
+      },
+      generatePreview(skipSave = false) {
+        this.skipSave = skipSave;
+        if (!skipSave && this.previewContent === this.newContent && this.previewValid) {
+          this.updateContent();
+        } else {
+          this.previewContent = this.newContent;
+        }
+
+      },
+      invalidPreview() {
+        this.previewValid = false;
+        this.skipSave = false;
+      },
+      saveCursorPosition() {
+        this.cursorPos = $(this.$refs.contentInput).prop('selectionStart');
       },
       insertField(field) {
         this.enableContentEdit();
@@ -173,6 +223,21 @@
         let textAfter  = this.newContent.substring(this.cursorPos, this.newContent.length);
         this.newContent = textBefore + field + textAfter;
         this.cursorPos = this.cursorPos + field.length;
+      },
+      showErrors() {
+        if (this.editingContent) {
+          if (this.newContent.length === 0) {
+            this.codeErrorMessage = this.i18n.t('label_templates.show.code_errors.empty')
+          } else if (this.newContent.length > 10000) {
+            this.codeErrorMessage = this.i18n.t('label_templates.show.code_errors.too_long')
+          } else if (!this.previewValid) {
+            this.codeErrorMessage = this.i18n.t('label_templates.show.code_errors.invalid')
+          } else {
+            this.codeErrorMessage = ''
+          }
+        } else {
+          this.codeErrorMessage = ''
+        }
       }
     }
   }

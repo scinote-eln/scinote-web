@@ -872,6 +872,10 @@ en:
       content_title: '%{format} template code'
       preview_title: 'Template preview'
       view_content_tooltip: 'Click to edit template code'
+      code_errors:
+        empty: 'ZPL template code cannot be empty'
+        too_long: 'ZPL template code has exceeded the maximum of 10.000 characters'
+        invalid: 'ZPL template code invalid'
       insert_dropdown:
         button: 'Insert field code'
         common_fields: 'Common custom fields'
@@ -896,6 +900,7 @@ en:
       refresh_preview: 'Refresh preview'
       mm: 'Millimeters (mm) 1 cm = 10 mm'
       in: 'Inches (in)'
+      error_html: 'Label cannot be previewed:<br>the ZPL code might be invalid, or the preview generator is down. Please double-check your code, save it and reload the page.'
     promo:
       head_title: 'Label templates'
       promo_title: 'This feature is disabled by default in open source SciNote'
