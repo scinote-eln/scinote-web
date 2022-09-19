@@ -32,7 +32,7 @@ describe Api::V1::ProjectsController, type: :controller do
     login_api_user
 
     include_context 'reference_project_structure', {
-      team_role: :guest
+      team_role: :viewer
     }
 
     it_behaves_like "a controller action with permissions checking", :get, :show do
@@ -48,7 +48,7 @@ describe Api::V1::ProjectsController, type: :controller do
 
     it_behaves_like "a controller action with permissions checking", :post, :create do
       let(:testable) { project }
-      let(:permissions) { [] }
+      let(:permissions) { [TeamPermissions::PROJECTS_CREATE] }
       let(:action_params) {
         {
           team_id: team.id,

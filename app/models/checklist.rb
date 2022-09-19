@@ -52,4 +52,31 @@ class Checklist < ApplicationRecord
       new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
+
+  def duplicate(step, user, position = nil)
+    ActiveRecord::Base.transaction do
+      new_checklist = step.checklists.create!(
+        name: name,
+        created_by: user,
+        last_modified_by: user
+      )
+
+      checklist_items.each do |item|
+        new_checklist.checklist_items.create!(
+          text: item.text,
+          checked: false,
+          position: item.position,
+          created_by: user,
+          last_modified_by: user
+        )
+      end
+
+      step.step_orderable_elements.create!(
+        position: position || step.step_orderable_elements.length,
+        orderable: new_checklist
+      )
+
+      new_checklist
+    end
+  end
 end

@@ -78,7 +78,7 @@ module ClientApi
 
       def check_update_team_permission
         @team = Team.find_by_id(params[:team_id])
-        unless can_update_team?(@team)
+        unless can_manage_team?(@team)
           respond_422(t('client_api.teams.update_permission_error'))
         end
       end
