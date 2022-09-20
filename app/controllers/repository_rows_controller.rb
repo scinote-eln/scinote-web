@@ -6,8 +6,8 @@ class RepositoryRowsController < ApplicationController
 
   MAX_PRINTABLE_ITEM_NAME_LENGTH = 64
 
-  before_action :load_repository, except: %i(show print_modal print)
-  before_action :load_repository_or_snapshot, only: %i(print_modal print)
+  before_action :load_repository, except: %i(show print_modal print zebra_progress_modal)
+  before_action :load_repository_or_snapshot, only: %i(print_modal print zebra_progress_modal)
   before_action :load_repository_row, only: %i(update assigned_task_list active_reminder_repository_cells)
   before_action :check_read_permissions, except: %i(show create update delete_records
                                                     copy_records reminder_repository_cells
@@ -125,6 +125,17 @@ class RepositoryRowsController < ApplicationController
                   label_printer: label_printer }
       )
     }
+  end
+
+  def zebra_progress_modal
+    render(
+      json: {
+        html:
+          render_to_string(
+            partial: 'label_printers/print_zebra_progress_modal'
+          )
+      }
+    )
   end
 
   def update

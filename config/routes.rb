@@ -654,6 +654,7 @@ Rails.application.routes.draw do
         collection do
           get :print_modal
           post :print
+          get :zebra_progress_modal
         end
         member do
           get :assigned_task_list

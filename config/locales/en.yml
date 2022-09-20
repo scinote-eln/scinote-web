@@ -2044,6 +2044,7 @@ en:
         out_of_labels: "Out of labels"
         error: "Printer error"
         unreachable: "Printer offline"
+        offline: "Offline"
       multiple_items: "%{item_count}/%{starting_item_count} labels"
       printing_status:
         done: "Done"
