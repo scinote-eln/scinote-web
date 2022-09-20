@@ -465,7 +465,7 @@ var RepositoryDatatable = (function(global) {
         className: 'dt-body-center',
         sWidth: '1%',
         render: function(data, type, row) {
-          return `<input title="repository row checkbox ${row[2]}" 
+          return `<input title="repository row checkbox" 
                          class='repository-row-selector sci-checkbox' 
                          type='checkbox' 
                          data-editable="${row.recordEditable}">
@@ -485,7 +485,8 @@ var RepositoryDatatable = (function(global) {
           if (!row.recordEditable) {
             icon = `<i class="repository-row-lock-icon fas fa-lock" title="${I18n.t('repositories.table.locked_item')}"></i>`;
           } else if (EDITABLE) {
-            icon = `<i title="editable content: ${content}"
+            // var editingData = document.getElementsByClassName('sorting_1')[0].innerHTML;
+            icon = `<i title="edit repository column: ${row[3]} button"
                        class="repository-row-edit-icon fas fa-pencil-alt" 
                        data-view-mode="active"></i>`;
           } else {

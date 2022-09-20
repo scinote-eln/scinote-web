@@ -201,7 +201,7 @@ $.fn.dataTable.render.AssignedTasksValue = function(data, row) {
               </div>
             </div>`;
   } else {
-    tasksLinkHTML = "<div class='assign-counter-container'><span class='assign-counter'>0</span></div>";
+    tasksLinkHTML = "<div class='assign-counter-container'><span class='assign-counter' title='assign counter item'>0</span></div>";
   }
   if (row.hasActiveReminders) {
     return `<div class="dropdown row-reminders-dropdown" data-row-reminders-url="${row.rowRemindersUrl}" tabindex='-1'>

@@ -7,7 +7,7 @@ $.fn.dataTable.render.newRowName = function(formId, $cell) {
   $cell.html(`
     <div class="sci-input-container text-field error-icon">
       <input class="sci-input-field"
-             title="new row: ${$cell}"
+             title="new repository text row input field"
              form="${formId}"
              type="text"
              name="repository_row[name]"

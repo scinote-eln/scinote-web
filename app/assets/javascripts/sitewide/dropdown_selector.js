@@ -316,7 +316,7 @@ var dropdownSelector = (function() {
     $(`
       <div class="dropdown-container"></div>
       <div class="input-field">
-        <input type="text" class="search-field" data-options-selected=0 placeholder="${selectElement.data('placeholder') || ''}"></input>
+        <input title="new dropdown row input field for ${selectElement.data('placeholder') || ''}" type="text" class="search-field" data-options-selected=0 placeholder="${selectElement.data('placeholder') || ''}"></input>
         ${prepareCustomDropdownIcon(selector, config)}
       </div>
       <input type="hidden" class="data-field" value="[]">

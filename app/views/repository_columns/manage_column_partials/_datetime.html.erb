@@ -5,7 +5,7 @@
   <% if RepositoryBase.reminders_enabled? %>
     <div class="col-sm-9 checkbox-selector">
       <span class="sci-checkbox-container">
-        <%= check_box_tag 'range', '', column&.metadata['reminder_delta'], { id: 'datetime-reminder', class: 'sci-checkbox', disabled: column&.repository_date_time_range_value? } %>
+        <%= check_box_tag 'range', '', column&.metadata['reminder_delta'], { id: 'datetime-reminder', title: "repository manage column modal datetime reminder checkbox", class: 'sci-checkbox', disabled: column&.repository_date_time_range_value? } %>
         <span class="sci-checkbox-label"></span>
       </span>
       <span class="reminder-label">
@@ -16,7 +16,7 @@
   <div class="col-sm-3"></div>
   <div class="col-sm-9 checkbox-selector">
     <span class="sci-checkbox-container">
-      <%= check_box_tag 'range', '', column&.repository_date_time_range_value?, { id: 'datetime-range', class: 'sci-checkbox', disabled: !column.new_record? } %>
+      <%= check_box_tag 'range', '', column&.repository_date_time_range_value?, { id: 'datetime-range', title: "repository manage column modal datetime checkbox", class: 'sci-checkbox', disabled: !column.new_record? } %>
       <span class="sci-checkbox-label"></span>
     </span>
     <span class="range-label"><%= t('libraries.manange_modal_column.datetime_type.range_label') %></span>

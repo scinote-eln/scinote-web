@@ -24,6 +24,7 @@ var DataTableHelpers = (function() {
 
     initSearchField: function(dataTableWraper, searchText) {
       var tableFilterInput = $(dataTableWraper).find('.dataTables_filter input');
+      $(tableFilterInput).prop('title', 'filter repository item input field');
       tableFilterInput.attr('placeholder', searchText)
         .addClass('sci-input-field search-field')
         .css('margin', 0);
@@ -32,7 +33,7 @@ var DataTableHelpers = (function() {
                   title="${I18n.t('repositories.show.button_tooltip.search')}">
             <i class="fas fa-search"></i>
           </button>
-          <div class="sci-input-container left-icon search-container">
+          <div class="sci-input-container left-icon search-container" title="filter repository item input field container">
             <i class="fas fa-search"></i>
           </div>`).find('.sci-input-container').prepend(tableFilterInput);
       $('.dataTables_filter').find('label').remove();
