@@ -55,6 +55,24 @@
 
     .label-textarea-container {
       height: calc(100% - 6em);
+
+      .label-textarea {
+        height: 100%;
+        margin-top: .5em;
+        padding: .5em;
+        width: 100%;
+      }
+
+      &.error {
+        .label-textarea {
+          border: 1px solid $brand-danger;
+          height: calc(100% - 2em);
+        }
+
+        .error-message {
+          color: $brand-danger;
+        }
+      }
     }
 
     .label-edit-header {
@@ -113,13 +131,6 @@
         display: inline-block;
       }
     }
-  }
-
-  .label-textarea {
-    height: 100%;
-    margin-top: .5em;
-    padding: .5em;
-    width: 100%;
   }
 
   .inser-field-dropdown {
