@@ -4,9 +4,11 @@
   display: flex;
   flex-direction: column;
   height: calc(100vh - var(--navbar-height));
+  padding-left: 1.5em;
 
   .title-row {
-    align-items: center;
+    @include font-h1;
+    align-items: end;
     background: $color-white;
     border-bottom: $border-tertiary;
     display: flex;
@@ -23,7 +25,6 @@
     }
 
     .sci-inline-edit {
-      @include font-h1;
       flex-grow: 1;
       max-width: calc(100% - 50px);
     }
@@ -47,6 +48,7 @@
   .label-template-container {
     display: flex;
     flex-grow: 1;
+    margin-top: 1em;
 
     .title {
       font-weight: bold;
@@ -124,7 +126,7 @@
       top: 0;
     }
 
-    &:hover {
+    &:hover:not(.read-only) {
       background-color: $color-concrete;
 
       .fa-pen {
