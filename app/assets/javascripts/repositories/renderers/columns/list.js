@@ -4,7 +4,7 @@
 var ListColumnHelper = (function() {
   function listSelect(select, url, value) {
     var selectedOption = '';
-    var selectObject = $(`<select title="object selector"
+    var selectObject = $(`<select title="repository list column select"
                                   id="${select}" 
                                   data-placeholder = "${I18n.t('repositories.table.list.select_item')}"
                                   data-ajax-url = "${url}" >${selectedOption}</select>`);
@@ -20,7 +20,7 @@ var ListColumnHelper = (function() {
   function listHiddenField(formId, columnId, value) {
     var originalValue = value ? value.value : '';
     return $(`<input form="${formId}"
-             title="list column value: ${value}"
+             title="repository list column value: ${value}"
              type="hidden"
              name="repository_cells[${columnId}]"
              value="${originalValue}"

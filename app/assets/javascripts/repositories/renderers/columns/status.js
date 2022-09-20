@@ -4,7 +4,7 @@
 var StatusColumnHelper = (function() {
   function statusSelect(select, url, value) {
     var selectedOption = '';
-    var selectObject = $(`<select title="select status: ${value}"
+    var selectObject = $(`<select title="repository status select: ${value}"
                                   id="${select}" 
                                   data-placeholder = "${I18n.t('repositories.table.status.set_status')}"
                                   data-ajax-url = "${url}" ></select>`);
