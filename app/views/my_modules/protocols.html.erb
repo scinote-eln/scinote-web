@@ -101,7 +101,7 @@
         <div class="actions-block">
           <% if can_assign_my_module_repository_rows?(@my_module) %>
             <div class="dropdown repositories-assign-container sci-dropdown" data-repositories-url="<%= my_module_repositories_dropdown_list_path(@my_module) %>">
-              <a href="#" id="repositories-assign-button" class="btn btn-secondary btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <a href="#" title="assign from repositories button" id="repositories-assign-button" class="btn btn-secondary btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                 <span class="fas fa-file-signature"></span>
                 <span><%= t('my_modules.assigned_items.assign_from') %></span>
                 <span class="caret pull-right"></span>

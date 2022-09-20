@@ -34,7 +34,7 @@
           <%= t('assets.file_preview.edit_in_bio_eddie') %>
         </button>
       <% elsif asset.editable_image? %>
-        <button class="btn btn-light image-edit-button"
+        <button class="btn btn-light image-edit-button" title="file preview edit in scinote button"
           data-image-id="<%= asset.id %>"
           data-image-name="<%= asset.file_name %>"
           data-image-url="<%= asset_file_url_path(asset) %>"
@@ -48,11 +48,11 @@
       <% end %>
     <% end %>
     <% if asset.file.metadata[:asset_type] == 'bio_eddie' %>
-      <a class="btn btn-light file-download-link" href="data:text/plain;charset=utf-8,<%= asset.file.metadata[:description] %>" download="<%= asset.file.metadata[:name] %>.helm" data-turbolinks="false">
+      <a class="btn btn-light file-download-link" title="file preview modal download button" href="data:text/plain;charset=utf-8,<%= asset.file.metadata[:description] %>" download="<%= asset.file.metadata[:name] %>.helm" data-turbolinks="false">
         <span class="fas fa-download"></span> <%= t('Download')%>
       </a>
     <% else %>
-      <a class="btn btn-light file-download-link" href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>" data-turbolinks="false">
+      <a class="btn btn-light file-download-link" title="file preview modal download button" href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>" data-turbolinks="false">
         <span class="fas fa-download"></span> <%= t('Download')%>
       </a>
     <% end %>
@@ -72,6 +72,7 @@
       <% else %>
         <%= image_tag asset.large_preview,
             onerror: 'ActiveStoragePreviews.reCheckPreview(event)',
+            title: "file preview image container",
             onload: 'ActiveStoragePreviews.showPreview(event)',
             style: 'opacity: 0' %>
       <% end %>

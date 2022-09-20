@@ -67,7 +67,7 @@ var AssetColumnHelper = (function() {
                data-type="RepositoryAssetValue">
         <div class="file-upload-button ${empty ? 'new-file' : ''}">
           <i class="fas fa-paperclip icon"></i>
-          <label data-placeholder="${placeholder}" for="repository_file_${columnId}">${fileName}</label>
+          <label title="new repository file row input field" data-placeholder="${placeholder}" for="repository_file_${columnId}">${fileName}</label>
           <span class="delete-action fas fa-trash"> </span>
         </div>
       </div>`);

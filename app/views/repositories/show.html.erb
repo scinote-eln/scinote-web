@@ -66,7 +66,7 @@
         </button>
           <% unless @repository.is_a?(BmtRepository) %>
             <%= render layout: "shared/view_switch", locals: {disabled: @repository.archived?} do %>
-              <li class="view-switch-archived" data-view-mode="active">
+              <li class="view-switch-archived" title="view switch archived button"  data-view-mode="active">
                 <i class="fas fa-archive button-icon"></i>
                 <%= t('repositories.show.show_archived_items') %>
               </li>

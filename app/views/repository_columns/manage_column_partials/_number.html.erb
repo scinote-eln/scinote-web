@@ -7,6 +7,7 @@
   <div class="col-sm-3">
     <%= number_field_tag('decimals', selected_decimals, between: 0...Constants::REPOSITORY_NUMBER_TYPE_MAX_DECIMALS,
                          class: 'form-control',
+                         title: 'repository manage column modal decimal input',
                          oninput: "this.value = numberMinMaxValidator(this.value, 0, #{Constants::REPOSITORY_NUMBER_TYPE_MAX_DECIMALS})" ) %>
   </div>
 </div>
