@@ -18,6 +18,12 @@
     });
   }
 
+  function getReposotryRowsIds() {
+    return $('[id="repository_row_ids_"]').map(function() {
+      return this.value;
+    }).get();
+  }
+
   $(document).on('click', '.record-info-link', function(e) {
     var that = $(this);
     $.ajax({
@@ -99,14 +105,12 @@
             return showLabel;
           });
         },
-        onChange: function() {
+        onSelect: function() {
           $.post(
             $('.print-label-form').data('valid-columns'),
             {
-              template_id: dropdownSelector.getValues(LABEL_TEMPLATE_SELECTOR),
-              repository_row_ids: $('[id="repository_row_ids_"]').map(function() {
-                return this.value;
-              }).get()
+              label_template_id: dropdownSelector.getValues(LABEL_TEMPLATE_SELECTOR),
+              repository_row_ids: getReposotryRowsIds()
             }
           )
             // eslint-disable-next-line no-shadow
@@ -175,13 +179,21 @@
       $('.print-label-form').on('submit', function() {
         var selectedPrinter = JSON.parse($('option:selected', LABEL_PRINTER_SELECTOR).attr('data-params'));
         if (selectedPrinter.type === ZEBRA_LABEL) {
-          zebraPrinters.print(
-            $(this).data('zebra-progress'),
-            '.label-printing-progress-modal',
-            '#modal-print-repository-row-label',
-            selectedPrinter.name,
-            $('.print-copies-input').val()
-          );
+          try {
+            zebraPrinters.print(
+              $(this).data('zebra-progress'),
+              '.label-printing-progress-modal',
+              '#modal-print-repository-row-label',
+              {
+                printer_name: selectedPrinter.name,
+                number_of_copies: $('.print-copies-input').val(),
+                label_template_id: dropdownSelector.getValues(LABEL_TEMPLATE_SELECTOR),
+                repository_row_ids: getReposotryRowsIds()
+              }
+            );
+          } catch (error) {
+            return false;
+          }
           return false;
         }
         return true;
