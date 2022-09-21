@@ -655,7 +655,7 @@ Rails.application.routes.draw do
           get :print_modal
           post :print
           get :zebra_progress_modal
-          post :check_label_template_columns
+          post :validate_label_template_columns
         end
         member do
           get :assigned_task_list

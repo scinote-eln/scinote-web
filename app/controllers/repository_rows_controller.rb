@@ -81,7 +81,7 @@ class RepositoryRowsController < ApplicationController
     end
   end
 
-  def check_label_template_columns
+  def validate_label_template_columns
     LabelTemplates::RepositoryRowService.new(LabelTemplate.find_by(id: params[:template_id]),
                                              RepositoryRow.find_by(id: params[:repository_row_ids].first)).render
     render json: {}
