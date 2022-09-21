@@ -446,4 +446,20 @@
       width: 100%;
     }
   }
+
+  &.warning {
+    .input-field {
+      border-color: $brand-warning;
+    }
+
+    &::after {
+      @include font-small;
+      color: $brand-warning;
+      content: attr(data-warning-text);
+      left: 0;
+      position: relative;
+      white-space: normal;
+      width: 100%;
+    }
+  }
 }

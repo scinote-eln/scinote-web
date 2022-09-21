@@ -6,6 +6,8 @@ module LabelTemplates
 
     class ColumnNotFoundError < StandardError; end
 
+    class LogoNotFoundError < StandardError; end
+
     def initialize(label_template, repository_row)
       @label_template = label_template
       @repository_row = repository_row
@@ -23,14 +25,14 @@ module LabelTemplates
 
     def fetch_value(key)
       case key
-      when /^COLUMN_\[(.*)\]/
+      when /^c_.*/
         name = Regexp.last_match(1)
         repository_cell = @repository_row.repository_cells.joins(:repository_column).find_by(
           repository_columns: { name: name }
         )
 
         unless repository_cell
-          raise UnsupportedKeyError, I18n.t('label_templates.repository_row.errors.column_not_found', column: name)
+          raise ColumnNotFoundError, I18n.t('label_templates.repository_row.errors.column_not_found')
         end
 
         repository_cell.value.formatted
@@ -42,9 +44,15 @@ module LabelTemplates
         @repository_row.created_by.full_name
       when 'ADDED_ON'
         @repository_row.created_at.to_s
+      when 'LOGO'
+        logo
       else
-        raise UnsupportedKeyError, I18n.t('label_templates.repository_row.errors.unsupported_key', key: key)
+        raise ColumnNotFoundError, I18n.t('label_templates.repository_row.errors.column_not_found')
       end
+    end
+
+    def logo
+      raise LogoNotFoundError, I18n.t('label_templates.repository_row.errors.logo_not_supported')
     end
   end
 end

@@ -1062,6 +1062,20 @@ var dropdownSelector = (function() {
       if ($(selector).length === 0) return false;
       container.removeClass('error');
       return this;
+    },
+
+    showWarning: function(selector, warning) {
+      var container = $(selector).next();
+      if ($(selector).length === 0) return false;
+      container.addClass('warning').attr('data-warning-text', warning);
+      return this;
+    },
+
+    hideWarning: function(selector) {
+      var container = $(selector).next();
+      if ($(selector).length === 0) return false;
+      container.removeClass('warning');
+      return this;
     }
   };
 }());

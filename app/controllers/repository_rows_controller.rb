@@ -81,6 +81,14 @@ class RepositoryRowsController < ApplicationController
     end
   end
 
+  def check_label_template_columns
+    LabelTemplates::RepositoryRowService.new(LabelTemplate.find_by(id: params[:template_id]),
+                                             RepositoryRow.find_by(id: params[:repository_row_ids].first)).render
+    render json: {}
+  rescue StandardError => e
+    render json: { error: e }
+  end
+
   def print_modal
     @repository_rows = @repository.repository_rows.where(id: params[:rows])
     @printers = LabelPrinter.available_printers
