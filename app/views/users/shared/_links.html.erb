@@ -2,15 +2,15 @@
   <%- if controller_name != 'sessions' %>
     <% login = t("devise.links.login") %>
     <% login = t("devise.links.login_with_provider") if action_name.in? %w(new_with_provider create_with_provider) %>
-    <%= link_to login, new_session_path(resource_name) %><br />
+    <%= link_to login, new_session_path(resource_name), title: 'log in link' %><br />
   <% end -%>
 
   <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
-    <%= link_to t("devise.links.forgot"), new_password_path(resource_name), class: 'forgot-password-link' %><br />
+    <%= link_to t("devise.links.forgot"), new_password_path(resource_name), class: 'forgot-password-link', title: 'forgot password link' %><br />
   <% end -%>
 
   <%- if devise_mapping.registerable? && Rails.configuration.x.enable_user_registration && controller_name != 'registrations' %>
-    <%= link_to t("devise.links.signup"), new_registration_path(resource_name), class: 'signup-link' %><br />
+    <%= link_to t("devise.links.signup"), new_registration_path(resource_name), class: 'signup-link', title: 'sign up link' %><br />
   <% end -%>
 
   <%- if Rails.configuration.x.enable_email_confirmations && devise_mapping.confirmable? && controller_name != 'confirmations' %>

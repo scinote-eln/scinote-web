@@ -1,6 +1,6 @@
 <div role="tabpanel" class="tab-pane" id="2fa-step-4">
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+    <button type="button" class="close" title="close 2fa recovery codes modal" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
     <h2 class="modal-title"><%= t("users.registrations.edit.2fa_modal.step_4.title") %></h2>
   </div>
   <div class="modal-body">
@@ -9,7 +9,7 @@
     <div class="recovery-codes"></div>
   </div>
   <div class="modal-footer">
-    <a href download="scinote_recovery_codes.txt" class="btn btn-secondary download-recovery-codes">
+    <a href download="scinote_recovery_codes.txt" title="download recovery codes" class="btn btn-secondary download-recovery-codes">
       <%= t("users.registrations.edit.2fa_modal.step_4.download_codes") %>
     </a>
   </div>
