@@ -13,7 +13,7 @@
     <%= f.text_field :full_name,
                      value: (params[:user] ? params[:user][:full_name] : ''),
                      autofocus: true,
-                     class: 'sci-input-field' %>
+                     class: 'sci-input-field', title: 'full name invitation form' %>
   </p>
 
   <p class="sci-input-container">
@@ -21,12 +21,12 @@
     <% if @minimum_password_length %>
     <em>(<%= @minimum_password_length %> characters minimum)</em>
     <% end %>
-    <%= f.password_field :password, autocomplete: "off", class: "sci-input-field" %>
+    <%= f.password_field :password, autocomplete: "off", class: "sci-input-field", title: 'password invitation form' %>
   </p>
 
   <p class="sci-input-container">
     <%= f.label :password_confirmation %>
-    <%= f.password_field :password_confirmation, autocomplete: "off", class: "sci-input-field" %>
+    <%= f.password_field :password_confirmation, autocomplete: "off", class: "sci-input-field", title: 'password confirmation invitation form' %>
   </p>
 
   <% if Rails.configuration.x.new_team_on_signup %>
@@ -34,19 +34,19 @@
        data-hook="confirm-invitation-team-name">
     <%= label :team, :name, t('users.registrations.new.team_name_label') %>
     <% if @team %>
-    <%= text_field :team, :name, class: 'sci-input-field', value: @team.name %>
+    <%= text_field :team, :name, class: 'sci-input-field', value: @team.name, title: 'team invitation form' %>
     <% else %>
     <%= text_field :team,
                    :name,
                    class: 'form-control',
-                   value: (params[:team] ? params[:team][:name] : '') %>
+                   value: (params[:team] ? params[:team][:name] : ''), title: 'team invitation form' %>
     <% end %>
   </p>
   <% end %>
   <%= recaptcha_input_tag %>
 
   <div class="form-group" data-hook="confirm-invitation-form-submit">
-    <%= f.submit "Sign Up", class: "btn btn-primary" %>
+    <%= f.submit "Sign Up", class: "btn btn-primary", title: 'sign up invitation button' %>
   </div>
 
 <% end %>
