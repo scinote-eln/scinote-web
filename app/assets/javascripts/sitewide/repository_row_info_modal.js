@@ -100,15 +100,15 @@
           });
         },
         onChange: function() {
-          $.post($('.print-label-form').data('valid-columns'),
+          $.post(
+            $('.print-label-form').data('valid-columns'),
             {
               template_id: dropdownSelector.getValues(LABEL_TEMPLATE_SELECTOR),
-              repository_row_ids: $('[id="repository_row_ids_"]').map(
-                function() {
-                  return this.value;
-                }
-              ).get()
-            })
+              repository_row_ids: $('[id="repository_row_ids_"]').map(function() {
+                return this.value;
+              }).get()
+            }
+          )
             // eslint-disable-next-line no-shadow
             .done(function(data) {
               if (data && data.error) {
