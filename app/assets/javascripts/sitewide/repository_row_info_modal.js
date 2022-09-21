@@ -103,16 +103,20 @@
           $.post($('.print-label-form').data('valid-columns'),
             {
               template_id: dropdownSelector.getValues(LABEL_TEMPLATE_SELECTOR),
-              repository_row_ids: $('[id="repository_row_ids_"]').map(function() {
-                return this.value;
-              }).get()
+              repository_row_ids: $('[id="repository_row_ids_"]').map(
+                function() {
+                  return this.value;
+                }
+              ).get()
             })
             // eslint-disable-next-line no-shadow
             .done(function(data) {
               if (data && data.error) {
-                dropdownSelector.showWarning(LABEL_TEMPLATE_SELECTOR, data.error);
+                $('.label-template-warning').text(data.error);
+                dropdownSelector.showWarning(LABEL_TEMPLATE_SELECTOR);
                 $('.print-button').val(I18n.t('repository_row.modal_print_label.print_anyway'));
               } else {
+                $('.label-template-warning').empty();
                 dropdownSelector.hideWarning(LABEL_TEMPLATE_SELECTOR);
                 $('.print-button').val(I18n.t('repository_row.modal_print_label.print_label'));
               }

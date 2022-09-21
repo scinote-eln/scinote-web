@@ -36,6 +36,7 @@
               <label><%= t('repository_row.modal_print_label.label') %></label>
               <%= select_tag :label_template_id, options_for_select(@label_templates.map { |p| [p.name, p.id,
                                                                     {'data-params' => {type: p.type, default: p.default}.to_json}] }) %>
+              <div class="label-template-warning"></div>
             </div>
             <p class="sci-input-container">
               <label><%= t('repository_row.modal_print_label.number_of_copies') %></label>

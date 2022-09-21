@@ -30,13 +30,8 @@
     }
   }
 
-  .error-test {
+  .label-template-warning {
     @include font-small;
     color: $brand-warning;
-    content: attr(data-warning-text);
-    left: 0;
-    position: relative;
-    white-space: normal;
-    width: 100%;
   }
 }

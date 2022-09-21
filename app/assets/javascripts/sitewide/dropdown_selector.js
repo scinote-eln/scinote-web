@@ -1064,10 +1064,10 @@ var dropdownSelector = (function() {
       return this;
     },
 
-    showWarning: function(selector, warning) {
+    showWarning: function(selector) {
       var container = $(selector).next();
       if ($(selector).length === 0) return false;
-      container.addClass('warning').attr('data-warning-text', warning);
+      container.addClass('warning');
       return this;
     },
 
