@@ -22,6 +22,8 @@ import 'tinymce/plugins/visualchars';
 import 'tinymce/plugins/insertdatetime';
 import 'tinymce/plugins/nonbreaking';
 import 'tinymce/plugins/save';
+import 'tinymce/plugins/help';
+import 'tinymce/plugins/quickbars';
 import 'tinymce/plugins/directionality';
 import './tinymce/custom_image_uploader/plugin';
 import './tinymce/marvinjs/plugin';
@@ -161,7 +163,12 @@ window.TinyMCE = (() => {
         $(selector).closest('.form-group')
           .before(`<div class="tinymce-placeholder" style="height:${tinyMceInitSize}px"></div>`);
         tinyMceContainer.addClass('hidden');
-        const plugins = 'table autosave autoresize link advlist codesample autolink lists charmap anchor searchreplace wordcount visualblocks visualchars insertdatetime nonbreaking save directionality customimageuploader marvinjs placeholder custom_image_toolbar';
+        const plugins = `
+          table autosave autoresize link advlist codesample autolink lists
+          charmap anchor searchreplace wordcount visualblocks visualchars
+          insertdatetime nonbreaking save directionality customimageuploader
+          marvinjs placeholder custom_image_toolbar help quickbars
+        `;
         // if (typeof (MarvinJsEditor) !== 'undefined') plugins += ' marvinjsplugin';
 
         if (textAreaObject.data('objectType') === 'step'
@@ -183,7 +190,7 @@ window.TinyMCE = (() => {
             insert: { title: 'Insert', items: 'link codesample inserttable | charmap hr | nonbreaking anchor | insertdatetime customimageuploader marvinjs' },
           },
           menubar: 'file edit view insert format table',
-          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link | forecolor backcolor | codesample | customimageuploader marvinjs',
+          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link | forecolor backcolor | codesample | customimageuploader marvinjs | help',
           plugins,
           autoresize_bottom_margin: 20,
           // placeholder: options.placeholder,
@@ -216,6 +223,7 @@ window.TinyMCE = (() => {
           removed_menuitems: 'newdocument',
           object_resizing: true,
           elementpath: false,
+          quickbars_insert_toolbar: false,
           forced_root_block: 'div',
           default_link_target: '_blank',
           target_list: [

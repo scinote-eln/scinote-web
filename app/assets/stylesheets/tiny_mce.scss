@@ -201,6 +201,10 @@
     background: $brand-primary !important;
     top: -10px;
 
+    button {
+      color: $color-white;
+    }
+
     .tox-icon svg {
       fill: $color-white;
     }
@@ -222,6 +226,14 @@
 
 .tox-editor-header {
   z-index: 2 !important;
+}
+
+.tox-dialog-wrap {
+  .tox-dialog__body-nav {
+    .tox-dialog__body-nav-item:nth-child(3) {
+      display: none;
+    }
+  }
 }
 
 // scss-lint:enable ImportantRule SelectorDepth
