@@ -5328,13 +5328,6 @@ CREATE INDEX index_my_modules_on_last_modified_by_id ON public.my_modules USING 
 
 
 --
--- Name: index_my_modules_on_my_module_code; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_my_modules_on_my_module_code ON public.my_modules USING gin ((('TA'::text || id)) public.gin_trgm_ops);
-
-
---
 -- Name: index_my_modules_on_my_module_group_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -8571,5 +8564,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220726133419'),
 ('20220803122405'),
 ('20220818094636'),
-('20220913095453'),
 ('20220914124900');
+
+
