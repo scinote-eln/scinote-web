@@ -563,6 +563,7 @@ en:
         thead_last_modified_by: "Last modified by"
         thead_created_at: "Creation date"
         thead_updated_at: "Last update date"
+        thead_id: "ID"
         no_reports: "No reports!"
         pdf: "PDF"
         docx: "DOCX"

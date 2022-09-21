@@ -7,6 +7,7 @@ class ReportDatatable < CustomDatatable
   TABLE_COLUMNS = %w(
     Report.project_name
     Report.name
+    Report.code
     Report.pdf_file
     Report.docx_file
     Report.created_by
@@ -54,12 +55,13 @@ class ReportDatatable < CustomDatatable
         '0' => record.id,
         '1' => sanitize_input(record.project_name),
         '2' => sanitize_input(record.name),
-        '3' => pdf_file(record),
-        '4' => docx_file(record),
-        '5' => sanitize_input(record.created_by),
-        '6' => sanitize_input(record.modified_by),
-        '7' => I18n.l(record.created_at, format: :full),
-        '8' => I18n.l(record.updated_at, format: :full),
+        '3' => sanitize_input(record.code),
+        '4' => pdf_file(record),
+        '5' => docx_file(record),
+        '6' => sanitize_input(record.created_by),
+        '7' => sanitize_input(record.modified_by),
+        '8' => I18n.l(record.created_at, format: :full),
+        '9' => I18n.l(record.updated_at, format: :full),
         'archived' => record.project.archived?,
         'edit' => edit_project_report_path(record.project_id, record.id),
         'status' => status_project_report_path(record.project_id, record.id),
@@ -106,7 +108,7 @@ class ReportDatatable < CustomDatatable
 
   def filter_records(records)
     records.where_attributes_like(
-      ['project_name', 'reports.name', 'reports.description'],
+      ['project_name', 'reports.name', 'reports.description', "('RP' || reports.id)"],
       dt_params.dig(:search, :value)
     )
   end
