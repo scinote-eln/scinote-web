@@ -1,11 +1,11 @@
 <template>
   <div class="step-table-container">
      <div class="step-element-header" :class="{ 'editing-name': editingName, 'step-element--locked': locked }">
-      <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
+      <div v-if="reorderElementUrl" :title="`table ${element.id} grip`" class="step-element-grip" @click="$emit('reorder')">
         <i class="fas fas-rotated-90 fa-exchange-alt"></i>
       </div>
       <div v-else class="step-element-grip-placeholder"></div>
-      <div v-if="!locked || element.attributes.orderable.name" :key="reloadHeader" class="step-element-name">
+      <div :title="`table ${element.id} name`" v-if="!locked || element.attributes.orderable.name" :key="reloadHeader" class="step-element-name">
         <InlineEdit
           :value="element.attributes.orderable.name"
           :characterLimit="255"
@@ -22,7 +22,7 @@
         <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="enableNameEdit" tabindex="-1">
           <i class="fas fa-pen"></i>
         </button>
-        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
+        <button :title="`delete table ${element.id}`" v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
           <i class="fas fa-trash"></i>
         </button>
       </div>

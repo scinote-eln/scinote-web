@@ -400,7 +400,8 @@ class MyModulesController < ApplicationController
       params_group: 'my_module',
       item_id: @my_module.id,
       field_to_udpate: 'name',
-      path_to_update: my_module_path(@my_module)
+      path_to_update: my_module_path(@my_module),
+      title: 'edit task name'
     }
   end
 
