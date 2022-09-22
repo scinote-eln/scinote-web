@@ -1,15 +1,16 @@
 <template>
   <div class="step-checklist-item" :class="{ 'step-element--locked': !checklistItem.attributes.isNew && !(updateUrl || toggleUrl) }">
     <div class="step-element-header" :class="{ 'locked': locked || editingText, 'editing-name': editingText }">
-      <div v-if="reorderChecklistItemUrl" class="step-element-grip step-element-grip--draggable" :class="{ 'step-element-grip--disabled': !draggable }">
+      <div :title="`checklist item ${checklistItem.id} grip`" v-if="reorderChecklistItemUrl" class="step-element-grip step-element-grip--draggable" :class="{ 'step-element-grip--disabled': !draggable }">
         <i class="fas fa-grip-vertical"></i>
       </div>
       <div v-else class="step-element-grip-placeholder"></div>
-      <div class="step-element-name" :class="{ 'done': checklistItem.attributes.checked }">
+      <div :title="`checklist item ${checklistItem.attributes.id || 'new'} name`" class="step-element-name" :class="{ 'done': checklistItem.attributes.checked }">
         <div v-if="!inRepository" class="sci-checkbox-container" :class="{ 'disabled': !toggleUrl }">
           <input ref="checkbox"
                  type="checkbox"
                  class="sci-checkbox"
+                 :title="`checklist item ${checklistItem.attributes.id} checkbox`"
                  :disabled="checklistItem.attributes.isNew"
                  :checked="checklistItem.attributes.checked" @change="toggleChecked($event)" />
           <span class="sci-checkbox-label" >
@@ -42,7 +43,7 @@
         <button v-if="!checklistItem.attributes.urls || updateUrl" class="btn icon-btn btn-light" @click="enableTextEdit" tabindex="-1">
           <i class="fas fa-pen"></i>
         </button>
-        <button v-if="!checklistItem.attributes.urls || deleteUrl" class="btn icon-btn btn-light" @click="deleteElement" tabindex="-1">
+        <button :title="`delete checklist item ${checklistItem.attributes.id || 'new'}`" v-if="!checklistItem.attributes.urls || deleteUrl" class="btn icon-btn btn-light" @click="deleteElement" tabindex="-1">
           <i class="fas fa-trash"></i>
         </button>
       </div>

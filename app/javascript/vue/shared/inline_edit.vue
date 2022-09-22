@@ -1,6 +1,6 @@
 <template>
   <div class="sci-inline-edit" :class="{ 'editing': editing }" tabindex="0" @keyup.enter="enableEdit($event)">
-    <div class="sci-inline-edit__content" :class="{ 'error': error }">
+    <div :title="'Edit ' + attributeName" class="sci-inline-edit__content" :class="{ 'error': error }">
       <textarea
         ref="input"
         rows="1"
@@ -19,10 +19,10 @@
       </div>
     </div>
     <template v-if="editing">
-      <div :class="{ 'btn-primary': !error, 'btn-disabled': error }" class="sci-inline-edit__control btn icon-btn" @click="update">
+      <div title="inline edit save" :class="{ 'btn-primary': !error, 'btn-disabled': error }" class="sci-inline-edit__control btn icon-btn" @click="update">
         <i class="fas fa-check"></i>
       </div>
-      <div class="sci-inline-edit__control btn btn-light icon-btn" @mousedown="cancelEdit">
+      <div title="inline edit cancel" class="sci-inline-edit__control btn btn-light icon-btn" @mousedown="cancelEdit">
         <i class="fas fa-times"></i>
       </div>
     </template>

@@ -20,6 +20,7 @@
           <span>{{ i18n.t('tiny_mce.saved_label') }}</span>
         </div>
         <div :id="`${objectType}_view_${objectId}`"
+             :title="`${objectType} ${objectId} RTE field for ${fieldName}`"
             @click="initTinymce"
             v-html="value_html"
             class="ql-editor tinymce-view"

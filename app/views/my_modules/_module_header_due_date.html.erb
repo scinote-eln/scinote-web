@@ -8,6 +8,7 @@
     <div class="datetime-picker-container" id="due-date">
       <span class="fas fa-calendar-alt"></span>
       <input id="calendarDueDate"
+             title="add task due date"
              type="datetime"
              data-toggle='date-time-picker'
              class="form-control calendar-input"
@@ -19,6 +20,6 @@
              data-date-orientation="left"
              value="<%= my_module.due_date ? l(my_module.due_date, format: :full) : '' %>"/>
     </div>
-    <span class="fas fa-times clear-date" data-toggle='clear-date-time-picker' data-target='calendarDueDate'></span>
+    <span title="clear task due date" class="fas fa-times clear-date" data-toggle='clear-date-time-picker' data-target='calendarDueDate'></span>
   <% end %>
 </span>
