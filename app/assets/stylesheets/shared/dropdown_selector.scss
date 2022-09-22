@@ -446,4 +446,10 @@
       width: 100%;
     }
   }
+
+  &.warning {
+    .input-field {
+      border-color: $brand-warning;
+    }
+  }
 }

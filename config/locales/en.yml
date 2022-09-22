@@ -837,7 +837,9 @@ en:
     repository_row:
       errors:
         unsupported_key: "Key %{key} is not supported by this label template renderer."
-        column_not_found: "Column '%{column}' not found on inventory item."
+        column_not_found: "This Label template contains placeholders for inventory columns that are not present in this Inventory. Some data might not be printed on the label. Please check the label preview and label template before printing."
+        logo_not_supported: "The company logo cannot be printed on the label, as it is not set up in your SciNote. Please upload company logo in Settings."
+
     index:
       head_title: 'Label templates'
       search_templates: 'Filter templates'
@@ -2023,6 +2025,7 @@ en:
       label: "Label template"
       number_of_copies: "Number of copies"
       print_label: "Print label"
+      print_anyway: "Print anyway"
       no_printers:
         title: "There seems to be no printer available"
         description: "To learn more about printing labels and label printers please visit our blog."

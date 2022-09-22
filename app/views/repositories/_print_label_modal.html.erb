@@ -3,7 +3,8 @@
     <div class="modal-content">
       <div class="printers-available <%='hidden' if @printers.blank? %>">
         <%= form_tag print_repository_repository_rows_path, { class: "print-label-form",
-            data: { remote: true, zebra_progress: zebra_progress_modal_repository_repository_rows_path } } do %>
+            data: { remote: true, zebra_progress: print_zpl_repository_repository_rows_path,
+                    valid_columns: validate_label_template_columns_repository_repository_rows_path } } do %>
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <p class="modal-title">
@@ -35,6 +36,7 @@
               <label><%= t('repository_row.modal_print_label.label') %></label>
               <%= select_tag :label_template_id, options_for_select(@label_templates.map { |p| [p.name, p.id,
                                                                     {'data-params' => {type: p.type, default: p.default}.to_json}] }) %>
+              <div class="label-template-warning"></div>
             </div>
             <p class="sci-input-container">
               <label><%= t('repository_row.modal_print_label.number_of_copies') %></label>
@@ -42,7 +44,8 @@
             </p>
           </div>
           <div class="modal-footer">
-            <%= submit_tag t('repository_row.modal_print_label.print_label'), class: 'btn btn-primary' %>
+            <button type='button' class='btn btn-default' data-dismiss='modal'><%= t('general.cancel')%></button>
+            <%= submit_tag t('repository_row.modal_print_label.print_label'), class: 'btn btn-primary print-button' %>
           </div>
         <% end %>
       </div>

@@ -129,28 +129,29 @@ var zebraPrint = (function() {
       + printingStatus));
   }
 
-  function print(device, progressModal, numberOfCopies, printerName) {
+  function print(device, progressModal, numberOfCopies, printerName, labels) {
     var counter = 0;
-    var label = '^XA ^FX First section with bar code. ^BY5,2,270 ^FO100,50^BC^FD12345678^FS^XZ';
     try {
       updateProgressModalData(progressModal, printerName, PRINTER_STATUS_READY, PRINTER_STATUS_PRINTING);
-      for (counter = 0; counter < numberOfCopies; counter += 1) {
-        if (counter + 1 === parseInt(numberOfCopies, 10)) {
-          device.sendThenRead(
-            label,
-            () => {
-              updateProgressModalData(progressModal, printerName, PRINTER_STATUS_READY, PRINTER_STATUS_DONE);
-            },
-            (error)=> {
+      labels.forEach(function(label) {
+        for (counter = 0; counter < numberOfCopies; counter += 1) {
+          if (counter + 1 === parseInt(numberOfCopies, 10)) {
+            device.sendThenRead(
+              label,
+              () => {
+                updateProgressModalData(progressModal, printerName, PRINTER_STATUS_READY, PRINTER_STATUS_DONE);
+              },
+              (error)=> {
+                updateProgressModalData(progressModal, printerName, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
+              }
+            );
+          } else {
+            device.send(label, ()=>{}, (error)=> {
               updateProgressModalData(progressModal, printerName, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
-            }
-          );
-        } else {
-          device.send(label, ()=>{}, (error)=> {
-            updateProgressModalData(progressModal, printerName, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
-          });
+            });
+          }
         }
-      }
+      });
     } catch (error) {
       updateProgressModalData(progressModal, printerName, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
     }
@@ -170,13 +171,23 @@ var zebraPrint = (function() {
     refreshList: function() {
       searchZebraPrinters();
     },
-    print: function(modalUrl, progressModal, printModal, printerName, numberOfCopies) {
+
+    /*
+      printData: {
+        printer_name: string,
+        number_of_copies: int,
+        label_template_id: int,
+        repository_row_ids: array[]
+      }
+    */
+    print: function(modalUrl, progressModal, printModal, printData) {
       var modal = $(progressModal);
-      device = findDevice(printerName);
+      device = findDevice(printData.printer_name);
       new Zebra.Printer(device).isPrinterReady(function() {
         $.ajax({
           method: 'GET',
           url: modalUrl,
+          data: printData,
           dataType: 'json'
         }).done(function(xhr, settings, dataZebra) {
           if (modal.length) {
@@ -190,10 +201,13 @@ var zebraPrint = (function() {
           });
 
           $(printModal).modal('hide');
-          print(device, progressModal, numberOfCopies, printerName);
+          print(
+            device, progressModal, printData.number_of_copies,
+            printData.printer_name, dataZebra.responseJSON.labels
+          );
         });
       }, function() {
-        updateProgressModalData(progressModal, printerName, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
+        updateProgressModalData(progressModal, printData.printer_name, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
       });
     }
   };

@@ -4,10 +4,8 @@ class RepositoryRowsController < ApplicationController
   include ApplicationHelper
   include MyModulesHelper
 
-  MAX_PRINTABLE_ITEM_NAME_LENGTH = 64
-
-  before_action :load_repository, except: %i(show print_modal print zebra_progress_modal)
-  before_action :load_repository_or_snapshot, only: %i(print_modal print zebra_progress_modal)
+  before_action :load_repository, except: %i(show print_modal print print_zpl)
+  before_action :load_repository_or_snapshot, only: %i(print_modal print print_zpl)
   before_action :load_repository_row, only: %i(update assigned_task_list active_reminder_repository_cells)
   before_action :check_read_permissions, except: %i(show create update delete_records
                                                     copy_records reminder_repository_cells
@@ -81,6 +79,33 @@ class RepositoryRowsController < ApplicationController
     end
   end
 
+  def validate_label_template_columns
+    LabelTemplates::RepositoryRowService.new(LabelTemplate.find_by(id: params[:label_template_id]),
+                                             RepositoryRow.find_by(id: params[:repository_row_ids].first)).render
+    render json: {}
+  rescue StandardError => e
+    render json: { error: e }
+  end
+
+  def print_zpl
+    label_template = LabelTemplate.find_by(id: params[:label_template_id])
+    labels = RepositoryRow.where(id: params[:repository_row_ids]).flat_map do |repository_row|
+      LabelTemplates::RepositoryRowService.new(label_template,
+                                               repository_row,
+                                               true).render
+    end
+
+    render(
+      json: {
+        html:
+          render_to_string(
+            partial: 'label_printers/print_zebra_progress_modal'
+          ),
+        labels: labels
+      }
+    )
+  end
+
   def print_modal
     @repository_rows = @repository.repository_rows.where(id: params[:rows])
     @printers = LabelPrinter.available_printers
@@ -104,14 +129,14 @@ class RepositoryRowsController < ApplicationController
     # rubocop:enable Rails/SkipsModelValidations
 
     label_printer = LabelPrinter.find(params[:label_printer_id])
+    label_template = LabelTemplate.find_by(id: params[:label_template_id])
 
     job_ids = RepositoryRow.where(id: params[:repository_row_ids]).flat_map do |repository_row|
       LabelPrinters::PrintJob.perform_later(
         label_printer,
-        LabelTemplate.first.render( # Currently we will only use the default template
-          item_id: repository_row.code,
-          item_name: repository_row.name.truncate(MAX_PRINTABLE_ITEM_NAME_LENGTH)
-        ),
+        LabelTemplates::RepositoryRowService.new(label_template,
+                                                 repository_row,
+                                                 true).render,
         params[:copies].to_i
       ).job_id
     end
@@ -125,17 +150,6 @@ class RepositoryRowsController < ApplicationController
                   label_printer: label_printer }
       )
     }
-  end
-
-  def zebra_progress_modal
-    render(
-      json: {
-        html:
-          render_to_string(
-            partial: 'label_printers/print_zebra_progress_modal'
-          )
-      }
-    )
   end
 
   def update

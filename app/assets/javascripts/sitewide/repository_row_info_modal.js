@@ -1,4 +1,4 @@
-/* global dropdownSelector bwipjs zebraPrint */
+/* global dropdownSelector bwipjs zebraPrint I18n*/
 
 (function() {
   'use strict';
@@ -16,6 +16,12 @@
     }).on('hidden.bs.modal', function() {
       $(this).remove();
     });
+  }
+
+  function getReposotryRowsIds() {
+    return $('[id="repository_row_ids_"]').map(function() {
+      return this.value;
+    }).get();
   }
 
   $(document).on('click', '.record-info-link', function(e) {
@@ -98,6 +104,27 @@
             }
             return showLabel;
           });
+        },
+        onSelect: function() {
+          $.post(
+            $('.print-label-form').data('valid-columns'),
+            {
+              label_template_id: dropdownSelector.getValues(LABEL_TEMPLATE_SELECTOR),
+              repository_row_ids: getReposotryRowsIds()
+            }
+          )
+            // eslint-disable-next-line no-shadow
+            .done(function(data) {
+              if (data && data.error) {
+                $('.label-template-warning').text(data.error);
+                dropdownSelector.showWarning(LABEL_TEMPLATE_SELECTOR);
+                $('.print-button').val(I18n.t('repository_row.modal_print_label.print_anyway'));
+              } else {
+                $('.label-template-warning').empty();
+                dropdownSelector.hideWarning(LABEL_TEMPLATE_SELECTOR);
+                $('.print-button').val(I18n.t('repository_row.modal_print_label.print_label'));
+              }
+            });
         }
       });
 
@@ -152,13 +179,21 @@
       $('.print-label-form').on('submit', function() {
         var selectedPrinter = JSON.parse($('option:selected', LABEL_PRINTER_SELECTOR).attr('data-params'));
         if (selectedPrinter.type === ZEBRA_LABEL) {
-          zebraPrinters.print(
-            $(this).data('zebra-progress'),
-            '.label-printing-progress-modal',
-            '#modal-print-repository-row-label',
-            selectedPrinter.name,
-            $('.print-copies-input').val()
-          );
+          try {
+            zebraPrinters.print(
+              $(this).data('zebra-progress'),
+              '.label-printing-progress-modal',
+              '#modal-print-repository-row-label',
+              {
+                printer_name: selectedPrinter.name,
+                number_of_copies: $('.print-copies-input').val(),
+                label_template_id: dropdownSelector.getValues(LABEL_TEMPLATE_SELECTOR),
+                repository_row_ids: getReposotryRowsIds()
+              }
+            );
+          } catch (error) {
+            return false;
+          }
           return false;
         }
         return true;
