@@ -1,4 +1,4 @@
-/* global dropdownSelector bwipjs zebraPrint I18n*/
+/* global bwipjs PrintModalComponent RepositoryDatatable */
 
 (function() {
   'use strict';
@@ -9,14 +9,14 @@
   const FLUICS_LABEL = 'fluics';
   var zebraPrinters;
 
-  function showPrintModal(selector) {
+  /* function showPrintModal(selector) {
     $(selector).modal('show', {
       backdrop: true,
       keyboard: false
     }).on('hidden.bs.modal', function() {
       $(this).remove();
     });
-  }
+  } */
 
   function getReposotryRowsIds() {
     return $('[id="repository_row_ids_"]').map(function() {
@@ -78,6 +78,12 @@
     return false;
   });
 
+  $(document).on('click', '.print-label-button', function() {
+    PrintModalComponent.showModal = true;
+    PrintModalComponent.row_ids = RepositoryDatatable.selectedRows();
+  });
+
+  /*
   $(document).on('click', '.print-label-button', function() {
     $.ajax({
       method: 'GET',
@@ -200,4 +206,5 @@
       });
     });
   });
+  */
 }());

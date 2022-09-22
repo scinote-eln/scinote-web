@@ -652,7 +652,7 @@ Rails.application.routes.draw do
       resources :repository_table_filters, only: %i(index show create update destroy)
       resources :repository_rows, only: %i(create show update) do
         collection do
-          get :print_modal
+          get :rows_to_print
           post :print
           get :print_zpl
           post :validate_label_template_columns

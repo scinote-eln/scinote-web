@@ -114,8 +114,6 @@ var RepositoryDatatable = (function(global) {
       $('.dataTables_filter input').prop('disabled', true);
       $('#toolbarPrintLabel').hide();
     }
-
-    $('#toolbarPrintLabel').data('rows', JSON.stringify(rowsSelected));
   }
 
   function clearRowSelection() {
@@ -911,6 +909,7 @@ var RepositoryDatatable = (function(global) {
       TABLE.ajax.reload();
       clearRowSelection();
     },
+    selectedRows: () => { return rowsSelected; },
     redrawTableOnSidebarToggle: redrawTableOnSidebarToggle,
     checkAvailableColumns: checkAvailableColumns
   });

@@ -84,6 +84,24 @@
   <div class="toolbar-filter-buttons" style="display:none">
   </div>
 
+  <div class="print-label-modal-container"
+    data-print-url="<%= print_repository_repository_rows_path(repository_id: @repository) %>"
+    data-zebra-progress-url="<%= print_repository_repository_rows_path(repository_id: @repository) %>"
+    data-printers-url="<%= label_printers_path(format: :json) %>"
+    data-label-templates-url="<%= label_templates_path(format: :json) %>"
+    data-rows-url="<%= rows_to_print_repository_repository_rows_path(repository_id: @repository) %>"
+    data-fluics-info-url="<%= Constants::SCINOTE_FLUICS_URL %>"
+  >
+      <print-modal-container
+        :show-modal = "showModal"
+        :row_ids = "row_ids"
+        :urls = "urls"
+        @close="closeModal"
+      ></print-modal-container>
+  </div>
+
+  <%= javascript_pack_tag 'vue/repository_print_modal' %>
+
   <%= render partial: "repositories/repository_table",
              locals: {
                repository: @repository,
