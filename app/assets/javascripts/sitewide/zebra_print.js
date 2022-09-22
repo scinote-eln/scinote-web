@@ -201,8 +201,10 @@ var zebraPrint = (function() {
           });
 
           $(printModal).modal('hide');
-          print(device, progressModal, printData.number_of_copies,
-            printData.printer_name, dataZebra.responseJSON.labels);
+          print(
+            device, progressModal, printData.number_of_copies,
+            printData.printer_name, dataZebra.responseJSON.labels
+          );
         });
       }, function() {
         updateProgressModalData(progressModal, printData.printer_name, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
