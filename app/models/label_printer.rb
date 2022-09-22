@@ -11,19 +11,13 @@ class LabelPrinter < ApplicationRecord
     }
   ).freeze
 
-  enum type_of: { fluics: 0, zebra: 1 }
+  enum type_of: { fluics: 0 }
   enum language_type: { zpl: 0 }
   enum status: { ready: 0, busy: 1, out_of_labels: 2, unreachable: 3, error: 4 }
 
   validates :name, presence: true
   validates :type_of, presence: true
   validates :language_type, presence: true
-
-  def self.available_printers
-    printers = all
-    printers = printers.where.not(type_of: :zebra) unless Rails.configuration.x.zebra_print_enabled
-    printers
-  end
 
   def display_name
     "#{name} • #{description}"
