@@ -57,6 +57,11 @@
 //= require sidebar
 //= require turbolinks
 
+<% if Rails.configuration.x.zebra_print_enabled %>
+  //= require 'BrowserPrint-3.0.216.min'
+  //= require 'BrowserPrint-Zebra-1.0.216.min'
+<% end %>
+
 // Initialize links for submitting forms. This is useful for submitting
 // forms with clicking on links outside form in cases when other than
 // GET method is used.
