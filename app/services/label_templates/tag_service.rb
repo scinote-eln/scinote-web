@@ -32,7 +32,7 @@ module LabelTemplates
             tags: repository.repository_columns.pluck(:name).map do |name|
               {
                 key: name,
-                tag: "{{COLUMN_[#{name}]}}"
+                tag: "{{c_#{name}}}"
               }
             end
           }
