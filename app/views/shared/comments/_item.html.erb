@@ -3,6 +3,7 @@
 <% edit_mode = (!readonly && comment_editable?(comment)) %>
   <div
     class="comment-container <%= edit_mode ? 'inline-init-handler' : '' %> <%= report ? 'report' : '' %>"
+    title="comment container"
     data-field-to-update="message"
     data-params-group="comment"
     data-path-to-update="<%= comment_action_url(comment) %>"
@@ -28,12 +29,13 @@
         <% if edit_mode %>
           <div class="comment-actions">
             <div class="edit-buttons">
-              <span class="save-button"><i class="fas fa-save"></i><%= t('general.save') %></span>
-              <span class="cancel-button"><i class="fas fa-times"></i></span>
+              <span title="save edited comment" class="save-button"><i class="fas fa-save"></i><%= t('general.save') %></span>
+              <span title="cancel editing comment" class="cancel-button"><i class="fas fa-times"></i></span>
             </div>
             <div class="view-buttons">
-              <span class="edit-button"><i class="fas fa-pen"></i><%= t('general.edit') %></span>
+              <span title="edit comment" class="edit-button"><i class="fas fa-pen"></i><%= t('general.edit') %></span>
               <a href="#"
+                title="delete comment"
                 class="delete-button"
                 data-url="<%= comment_action_url(comment) %>"
                 data-confirm-message="<%= t('comments.delete_confirm') %>"

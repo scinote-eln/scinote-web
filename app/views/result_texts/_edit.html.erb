@@ -2,10 +2,11 @@
   <%= bootstrap_form_for(@result, url: result_text_path(format: :json),
                                   data: { 'name-max-length': Constants::NAME_MAX_LENGTH, 'rich-text-max-length': Constants::RICH_TEXT_MAX_LENGTH },
                                   remote: :true) do |f| %>
-    <%= f.text_field :name, style: "margin-top: 10px;" %><br />
+    <%= f.text_field :name, style: "margin-top: 10px;", title: 'edit result text name field' %><br />
     <%= f.fields_for :result_text do |ff| %>
       <%= ff.tiny_mce_editor(:text,
                              id: :result_text_attributes_textarea,
+                             title: 'edit result text body field',
                              value: @result.result_text.tinymce_render(:text),
                              autocomplete: 'off',
                              data: { object_type: 'result_text',
@@ -14,11 +15,12 @@
                                      last_updated: @result.updated_at.to_i * 1000 }) %>
     <% end %><br />
     <div class="align-right">
-      <button type="button" class="btn btn-secondary cancel-edit">
+      <button type="button" title="cancel result text editing" class="btn btn-secondary cancel-edit">
         <%= t("general.cancel")%>
       </button>
       <%= f.button t("general.save"),
                    class: 'btn btn-primary save-result',
+                   title: 'save edited result text',
                    onclick: "Results.processResult(event, Results.ResultTypeEnum.TEXT);" %>
     </div>
   <% end %>

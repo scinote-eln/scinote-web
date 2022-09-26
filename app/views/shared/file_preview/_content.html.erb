@@ -12,6 +12,7 @@
           } %>
       <% elsif asset.file.metadata[:asset_type] == 'marvinjs' %>
         <button class="btn btn-light marvinjs-edit-button"
+          title="file preview drawing marvinjs edit button"
           data-sketch-id="<%= asset.id %>"
           data-update-url="<%= marvin_js_asset_path(asset) %>"
           data-sketch-start-edit-url="<%= start_editing_marvin_js_asset_path(asset) %>"
@@ -24,6 +25,7 @@
 
       <% elsif asset.bio_eddie? && BioEddieService.enabled?(current_user) %>
         <button class="btn btn-light bio-eddie-edit-button"
+          title="filew preview bio eddie edit button"
           data-molecule-id="<%= asset.id %>"
           data-update-url="<%= bio_eddie_asset_path(asset) %>"
           data-edit-url="<%= start_editing_bio_eddie_asset_path(asset) %>"
@@ -48,18 +50,18 @@
       <% end %>
     <% end %>
     <% if asset.file.metadata[:asset_type] == 'bio_eddie' %>
-      <a class="btn btn-light file-download-link" title="file preview modal download button" href="data:text/plain;charset=utf-8,<%= asset.file.metadata[:description] %>" download="<%= asset.file.metadata[:name] %>.helm" data-turbolinks="false">
+      <a class="btn btn-light file-download-link" title="file preview bio eddie download button" href="data:text/plain;charset=utf-8,<%= asset.file.metadata[:description] %>" download="<%= asset.file.metadata[:name] %>.helm" data-turbolinks="false">
         <span class="fas fa-download"></span> <%= t('Download')%>
       </a>
     <% else %>
-      <a class="btn btn-light file-download-link" title="file preview modal download button" href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>" data-turbolinks="false">
+      <a class="btn btn-light file-download-link" title="file preview download button" href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>" data-turbolinks="false">
         <span class="fas fa-download"></span> <%= t('Download')%>
       </a>
     <% end %>
     <% if (asset.step || asset.result) && !preview %>
       <%= render partial: 'assets/asset_context_menu.html.erb', locals: { asset: asset, deletable: false, editable: false } %>
     <% end %>
-    <button type="button" class="btn icon-btn btn-light" data-dismiss="modal"><span class="fas fa-times"></span></button>
+    <button type="button" title="file preview close button" class="btn icon-btn btn-light" data-dismiss="modal"><span class="fas fa-times"></span></button>
   </div>
 </div>
 <div class="modal-body">
@@ -89,6 +91,7 @@
       <% if previous_asset && can_read_asset?(previous_asset) %>
         <%= link_to asset_file_preview_path(previous_asset),
           class: "previous-asset gallery-switcher",
+          title: "file preview previous asset button",
           data: {id: previous_asset.id, gallery_elements: gallery} do %>
           <% if previous_asset.previewable? %>
             <%= image_tag previous_asset.medium_preview,
@@ -108,6 +111,7 @@
       <% if next_asset && can_read_asset?(next_asset) %>
         <%= link_to asset_file_preview_path(next_asset),
           class: "next-asset gallery-switcher",
+          title: "file preview next asset button",
           data: {id: next_asset.id, gallery_elements: gallery} do %>
           <span class="file-name"><%= next_asset.file_name %></span>
           <i class="fas fa-angle-right"></i>

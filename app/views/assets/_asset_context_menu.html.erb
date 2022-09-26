@@ -1,6 +1,6 @@
 <% if can_manage_asset?(asset) %>
   <div class="dropdown asset-context-menu">
-    <button class="btn btn-light dropdown-toggle icon-btn" type="button" id="dropdownAssetContextMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    <button title="asset dropdown context menu" class="btn btn-light dropdown-toggle icon-btn" type="button" id="dropdownAssetContextMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
       <i class="fas fa-ellipsis-h"></i>
     </button>
     <ul class="dropdown-menu dropdown-menu-right"
@@ -22,6 +22,7 @@
         <% elsif asset.file.metadata[:asset_type] == 'marvinjs' %>
           <li>
             <a class="btn btn-light marvinjs-edit-button"
+              title="edit asset in marvinjs"
               data-sketch-id="<%= asset.id %>"
               data-update-url="<%= marvin_js_asset_path(asset) %>"
               data-sketch-start-edit-url="<%= start_editing_marvin_js_asset_path(asset) %>"
@@ -36,6 +37,7 @@
         <% elsif asset.bio_eddie? && BioEddieService.enabled?(current_user) %>
           <li>
             <a class="btn btn-light bio-eddie-edit-button"
+              title="bio eddie edit button"
               data-molecule-id="<%= asset.id %>"
               data-update-url="<%= bio_eddie_asset_path(asset) %>"
               data-edit-url="<%= start_editing_bio_eddie_asset_path(asset) %>"
@@ -50,6 +52,7 @@
         <% elsif asset.editable_image? %>
           <li>
             <a class="btn btn-light image-edit-button"
+              title="asset image edit button"
               data-image-id="<%= asset.id %>"
               data-image-name="<%= asset.file_name %>"
               data-image-url="<%= asset_file_url_path(asset) %>"
@@ -62,7 +65,7 @@
             </a>
           </li>
           <li>
-            <a class="btn btn-light file-download-link" href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>" data-turbolinks="false">
+            <a title="asset file download button" class="btn btn-light file-download-link" href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>" data-turbolinks="false">
               <span class="fas fa-download"></span>
               <%= t('Download') %>
             </a>
@@ -73,7 +76,7 @@
       <li class="divider-label"><%= t("assets.context_menu.set_view_size") %></li>
       <% ['inline', 'thumbnail', 'list'].each do |view_mode| %>
         <li>
-          <a class="change-preview-type <%= 'selected' if view_mode == asset.view_mode %>"  data-preview-type="<%= view_mode %>">
+          <a title="change asset view type to <%= view_mode %>" class="change-preview-type <%= 'selected' if view_mode == asset.view_mode %>"  data-preview-type="<%= view_mode %>">
             <%= t("assets.context_menu.#{view_mode}_html") %>
           </a>
         </li>
@@ -81,7 +84,7 @@
       <% if deletable %>
         <li role="separator" class="divider"></li>
         <li>
-          <a class="delete-asset" href="<%= asset_destroy_path(asset) %>" data-file-name="<%= asset.render_file_name %>">
+          <a title="delete asset" class="delete-asset" href="<%= asset_destroy_path(asset) %>" data-file-name="<%= asset.render_file_name %>">
             <i class="fas fa-trash"></i>
             <%= t("assets.context_menu.delete") %>
           </a>
