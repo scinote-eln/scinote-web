@@ -46,7 +46,7 @@
           <li class="divider-label"><%= t("protocols.steps.attachments.attachments_view_mode") %></li>
           <% ['inline', 'thumbnail', 'list'].each do |view_mode| %>
           <li>
-            <a title="aaa"class="attachments-view-mode action-link <%= 'selected' if view_mode == step.assets_view_mode %>"  data-assets-view-mode="<%= view_mode %>">
+            <a class="attachments-view-mode action-link <%= 'selected' if view_mode == step.assets_view_mode %>"  data-assets-view-mode="<%= view_mode %>">
               <%= t("protocols.steps.attachments.view_mode.#{view_mode}_html") %>
             </a>
           </li>
