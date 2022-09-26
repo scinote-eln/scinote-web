@@ -9,7 +9,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" title="create wopi file modal close button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
 
@@ -24,25 +24,25 @@
 
             <div class="form-group">
               <label class="control-label" for="new-wopi-file-name"><%= t('assets.create_wopi_file.text_field_label') %></label>
-              <input autofocus="autofocus" required="required" placeholder="<%= t('assets.create_wopi_file.text_field_placeholder') %>" id="new-wopi-file-name" class="form-control" name="file_name" type="text">
+              <input autofocus="autofocus" title="document name field for new wopi file" required="required" placeholder="<%= t('assets.create_wopi_file.text_field_placeholder') %>" id="new-wopi-file-name" class="form-control" name="file_name" type="text">
               <div class="input-error-message"><%= t('general.text.not_blank') %></div>
             </div>
           <label><%= t('assets.create_wopi_file.type_select_label') %></label>
           <div class="btn-group btn-group-toggle btn-group-justified"
                data-toggle="buttons">
-            <label class="btn btn-default active" id="word-btn">
+            <label class="btn btn-default active" id="word-btn" title="word button create wopi modal">
               <%= image_tag 'office/ms-word-active.svg', class: 'act' %>
               <%= image_tag 'office/ms-word-inactive.svg', class: 'inactive' %>
-              <input type="radio" name="file_type" value='docx' checked>
+              <input  type="radio" name="file_type" value='docx' checked>
               <span><%= t('assets.create_wopi_file.ms_word').html_safe %></span>
             </label>
-            <label class="btn btn-default" id="excel-btn">
+            <label class="btn btn-default" id="excel-btn" title="excel button create wopi modal">
               <%= image_tag 'office/ms-excel-active.svg', class: 'act' %>
               <%= image_tag 'office/ms-excel-inactive.svg', class: 'inactive' %>
               <input type="radio" name="file_type" value='xlsx'>
               <span><%= t('assets.create_wopi_file.ms_excel').html_safe %></span>
             </label>
-            <label class="btn btn-default" id='powerpoint-btn'>
+            <label class="btn btn-default" id='powerpoint-btn' title="powerpoint button create wopi modal">
               <%= image_tag 'office/ms-pwrpt-active.svg', class: 'act' %>
               <%= image_tag 'office/ms-pwrpt-inactive.svg', class: 'inactive' %>
               <input type="radio" name="file_type" value='pptx'>
@@ -57,7 +57,7 @@
             <div class='col-md-4'></div>
             <div class='col-md-4' id='submit-btn-cont'>
               <%= f.submit t('assets.create_wopi_file.create_document_button'),
-                class: 'btn btn-primary' %>
+                class: 'btn btn-primary', title: 'create button wopi file modal' %>
             </div>
           </div>
         </div>
