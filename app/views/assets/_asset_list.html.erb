@@ -8,6 +8,7 @@
   <%= link_to rails_blob_path(asset.file, disposition: 'attachment'),
     class: "file-preview-link file-name",
     id: "modal_link#{asset.id}",
+    title: "preview link for attached file: #{asset.render_file_name}",
     data: {
       no_turbolink: true,
       id: asset.id,

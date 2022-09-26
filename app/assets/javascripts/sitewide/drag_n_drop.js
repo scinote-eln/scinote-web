@@ -517,14 +517,14 @@
                       ${I18n.t('assets.drag_n_drop.file_label')}
                       <div class="pull-right">
                         <a data-item-id="${asset.uuid}" href="#">
-                          <span class="fas fa-times"></span>
+                          <span title="close new result file upload modal" class="fas fa-times"></span>
                         </a>
                       </div>
                     </div>
                     <div class="panel-body">
                       <div class="form-group">
                         <label class="control-label">Name</label>
-                        <input type="text" class="form-control" onChange="DragNDropResults.validateTextSize(this)"
+                        <input type="text" title="new result file name field" class="form-control" onChange="DragNDropResults.validateTextSize(this)"
                                rel="results[name]" name="results[name][${i}]">
                       </div>
                       <div class="form-group">

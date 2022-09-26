@@ -7,15 +7,16 @@
         <%= file_extension_icon(ff.object) %>
         <%= ff.object.file_name %>
       </p>
-      <%= ff.file_field :file, direct_upload: true %>
+      <%= ff.file_field :file, direct_upload: true, title: 'upload new result asset to edit' %>
     <% end %>
     <hr>
     <div class="align-right">
-      <button type="button" class="btn btn-secondary cancel-edit">
+      <button type="button" title="cancel editing result asset" class="btn btn-secondary cancel-edit">
         <%= t("general.cancel")%>
       </button>
       <%= f.button t("general.save"),
                    class: 'btn btn-primary save-result',
+                   title: 'save editd result asset',
                    onclick: "Results.processResult(event, Results.ResultTypeEnum.FILE);" %>
     </div>
   <% end %>

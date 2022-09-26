@@ -18,9 +18,10 @@
   <% if can_create_comments %>
   <div class="new-message-container" data-create-url="<%= create_url %>">
     <%= text_area_tag 'message', '',  placeholder: t('general.comment_placeholder_new'),
+                                      title: 'add new comment field',
                                       class: 'form-control  smart-text-area textarea-sm',
                                       data: { 'atwho-edit' => '' } %>
-    <i class="fas fa-paper-plane new-comment-button"></i>
+    <i title="save new comment" class="fas fa-paper-plane new-comment-button"></i>
     <span class="new-message-error"></span>
   </div>
   <% end %>
