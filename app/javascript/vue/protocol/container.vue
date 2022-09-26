@@ -72,11 +72,11 @@
         <span>{{ i18n.t("protocols.steps.new_step") }}</span>
       </a>
       <div v-if="steps.length > 0" class="protocol-step-actions">
-        <button class="btn btn-light" @click="collapseSteps" tabindex="0">
+        <button :title="`collapse steps`" class="btn btn-light" @click="collapseSteps" tabindex="0">
           <span class="fas fa-caret-up"></span>
           {{ i18n.t("protocols.steps.collapse_label") }}
         </button>
-        <button class="btn btn-light" @click="expandSteps" tabindex="0">
+        <button :title="`expand steps`" class="btn btn-light" @click="expandSteps" tabindex="0">
           <span class="fas fa-caret-down"></span>
           {{ i18n.t("protocols.steps.expand_label") }}
         </button>

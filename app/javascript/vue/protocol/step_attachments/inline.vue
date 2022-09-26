@@ -1,5 +1,6 @@
 <template>
   <div class="inline-attachment-container asset"
+       :title="`attachment ${attachment.id} inline`"
        :data-asset-id="attachment.id"
   >
     <div class="header">
@@ -12,8 +13,8 @@
           :data-gallery-view-id="stepId"
           :data-preview-url="attachment.attributes.urls.preview"
         >
-          <span data-toggle="tooltip" 
-               data-placement="bottom" 
+          <span data-toggle="tooltip"
+               data-placement="bottom"
                :title="`${ attachment.attributes.file_name }`">
             {{ attachment.attributes.file_name }}
           </span>
