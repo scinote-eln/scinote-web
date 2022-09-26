@@ -8,7 +8,7 @@
       <%= f.label t("users.registrations.edit.email_label") %>
       <div class="user-attribute">
         <%= @user.email %>
-        <a href="#" class="btn btn-default" data-action="edit"><%= t("general.change") %></a>
+        <a href="#" class="btn btn-default" title="change email button" data-action="edit"><%= t("general.change") %></a>
       </div>
       <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
         <div class="alert alert-info" style="margin-top: 15px;" role="alert">
@@ -23,15 +23,15 @@
       <h4><%=t "users.registrations.edit.email_title" %></h4>
       <div class="form-group sci-input-container">
         <%= f.label :email, t("users.registrations.edit.new_email_label") %>
-        <%= f.email_field :email, class: "form-control sci-input-field", "data-role" => "edit" %>
+        <%= f.email_field :email, class: "form-control sci-input-field", "data-role" => "edit", title: "new email settings form" %>
       </div>
       <div class="form-group sci-input-container">
         <%= f.label :current_password, t("users.registrations.edit.current_password_label") %> <i><%=t "users.registrations.edit.password_explanation" %></i>
-        <%= f.password_field :current_password, autocomplete: "off", class: "form-control sci-input-field", "data-role" => "clear", id: 'edit-email-current-password' %>
+        <%= f.password_field :current_password, autocomplete: "off", class: "form-control sci-input-field", "data-role" => "clear", id: 'edit-email-current-password', title: 'settings password confirmation field for changing email' %>
       </div>
       <div class="align-right">
-        <a href="#" class="btn btn-light" data-action="cancel"><%=t "general.cancel" %></a>
-        <%= f.button t("general.save"), class: "btn btn-success" %>
+        <a href="#" class="btn btn-light" title="cancel email change button" data-action="cancel"><%=t "general.cancel" %></a>
+        <%= f.button t("general.save"), class: "btn btn-success", title: "save changed email button" %>
       </div>
     </div>
   </div>

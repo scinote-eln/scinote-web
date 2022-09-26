@@ -29,23 +29,24 @@
     <thead>
       <tr>
         <th id="checkbox" data-unmanageable="true">
-            <input name="select_all" value="1" type="checkbox" class="sci-checkbox">
+            <input title="select all repository checkbox" name="select_all" value="1" type="checkbox" class="sci-checkbox">
             <span class="sci-checkbox-label"></span>
         </th>
-        <th id="assigned" data-unmanageable="true"><%= t("repositories.table.assigned") %></th>
+        <th title="repository column: assigned" id="assigned" data-unmanageable="true"><%= t("repositories.table.assigned") %></th>
         <% if @repository.is_a?(LinkedRepository) %>
           <th id="row-external-id"><%= t('repositories.table.external_id') %></th>
         <% end %>
-        <th id="row-id"><%= t("repositories.table.id") %></th>
-        <th id="row-name"><%= t("repositories.table.row_name") %></th>
-        <th id="added-on" ><%= t("repositories.table.added_on") %></th>
-        <th id="added-by" ><%= t("repositories.table.added_by") %></th>
-        <th id="archived-on"><%= t("repositories.table.archived_on") %></th>
-        <th id="archived-by"><%= t("repositories.table.archived_by") %></th>
+        <th title="repository column: row id" id="row-id"><%= t("repositories.table.id") %></th>
+        <th title="repository column: row name" id="row-name"><%= t("repositories.table.row_name") %></th>
+        <th title="repository column: added on" id="added-on" ><%= t("repositories.table.added_on") %></th>
+        <th title="repository column: added by" id="added-by" ><%= t("repositories.table.added_by") %></th>
+        <th title="repository column: archived on" id="archived-on"><%= t("repositories.table.archived_on") %></th>
+        <th title="repository column: archived by" id="archived-by"><%= t("repositories.table.archived_by") %></th>
         <% repository.repository_columns.order(:id).each do |column| %>
           <th
             class="repository-column <%= 'row-stock item-stock' if column.data_type == 'RepositoryStockValue' %>"
             id="<%= column.id %>"
+            title="new repository column: <%= column.id %>"
             data-type="<%= column.data_type %>"
             data-edit-column-url="<%= edit_repository_repository_column_path(repository, column) %>"
             data-destroy-column-url="<%= repository_columns_destroy_html_path(repository, column) %>"

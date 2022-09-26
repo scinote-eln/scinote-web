@@ -10,6 +10,7 @@ $.fn.dataTable.render.editRowName = function(formId, cell) {
   $cell.html(`
     <div class="sci-input-container text-field error-icon">
       <input class="sci-input-field"
+             title="edit repository item name: ${$cell}"
              form="${formId}"
              type="text"
              name="repository_row[name]"
@@ -32,6 +33,7 @@ $.fn.dataTable.render.editRepositoryTextValue = function(formId, columnId, cell)
   $cell.html(`
     <div class="sci-input-container text-field  error-icon">
       <input class="sci-input-field"
+             title="edit repository text column: ${text}"
              form="${formId}"
              type="text"
              name="repository_cells[${columnId}]"
@@ -124,6 +126,7 @@ $.fn.dataTable.render.editRepositoryNumberValue = function(formId, columnId, cel
   $cell.html(`
     <div class="sci-input-container text-field  error-icon">
       <input class="sci-input-field"
+             title="edit repository number column: ${number}"
              form="${formId}"
              type="text"
              oninput="regexp = ${decimals} === 0 ? /[^0-9]/g : /[^0-9.]/g

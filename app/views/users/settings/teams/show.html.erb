@@ -82,7 +82,7 @@
     <div class="users-datatable">
       <% if can_invite_team_users?(@team) %>
         <div id="add-new-team-members-button" class="hidden">
-          <a href="#" class="btn btn-primary" data-trigger="invite-users" data-turbolinks="false" data-modal-id="team-invite-users-modal">
+          <a href="#" class="btn btn-primary" title="add new organization team member from team page" data-trigger="invite-users" data-turbolinks="false" data-modal-id="team-invite-users-modal">
             <span class="fas fa-plus"></span>
             <%= I18n.t('users.settings.teams.edit.add_user') %>
           </a>

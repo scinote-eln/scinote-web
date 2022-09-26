@@ -36,7 +36,7 @@
             {{ step.attributes.position + 1 }}.
           </div>
         </div>
-        <div class="step-name-container" :class="{'step-element--locked': !urls.update_url}">
+        <div :title="`step ${step.id} name`" class="step-name-container" :class="{'step-element--locked': !urls.update_url}">
           <InlineEdit
             :value="step.attributes.name"
             :class="{ 'step-element--locked': !urls.update_url }"
@@ -66,19 +66,19 @@
             <li class="title">
               {{ i18n.t('protocols.steps.insert.title') }}
             </li>
-            <li class="action" @click="createElement('table')">
+            <li :title="`insert step ${step.id} table`" class="action" @click="createElement('table')">
               <i class="fas fa-table"></i>
               {{ i18n.t('protocols.steps.insert.table') }}
             </li>
-            <li class="action" @click="createElement('checklist')">
+            <li :title="`insert step ${step.id} checklist`" class="action" @click="createElement('checklist')">
               <i class="fas fa-list"></i>
               {{ i18n.t('protocols.steps.insert.checklist') }}
             </li>
-            <li class="action"  @click="createElement('text')">
+            <li :title="`insert step ${step.id} text`" class="action"  @click="createElement('text')">
               <i class="fas fa-font"></i>
               {{ i18n.t('protocols.steps.insert.text') }}
             </li>
-            <li class="action"  @click="showFileModal = true">
+            <li :title="`insert step ${step.id} attachment`" class="action"  @click="showFileModal = true">
               <i class="fas fa-paperclip"></i>
               {{ i18n.t('protocols.steps.insert.attachment') }}
             </li>

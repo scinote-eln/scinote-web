@@ -5,7 +5,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onClick="pageReload()"><span aria-hidden="true">&times;</span></button>
+        <button title="close parse records modal" type="button" class="close" data-dismiss="modal" aria-label="Close" onClick="pageReload()"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="parse-modal-title"><%= t('repositories.modal_parse.title') %></h4>
       </div>
       <%= bootstrap_form_tag(url: import_records_repository_path(@import_data.repository, format: :json),
@@ -22,7 +22,7 @@
                 <p style="margin-bottom: 0px"><%= t("repositories.parse_sheet.file_columns") %></p>
               </th>
               <% @import_data.header.each.with_index do |th, index| %>
-                <th style="min-width: 150px" title="<%= th %>">
+                <th style="min-width: 150px" title="repository import items modal dropdown name elements">
                   <%= f.select("mappings[#{index.to_s}]",
                                options_from_collection_for_select(@import_data.available_fields,
                                                                   :first,
@@ -70,8 +70,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal" onClick="pageReload()"><%= t('general.cancel')%></button>
-        <input type="submit" class="btn btn-success" value="<%= t('repositories.modal_parse.import') %>">
+        <button title="close parse records modal footer" type="button" class="btn btn-default" data-dismiss="modal" onClick="pageReload()"><%= t('general.cancel')%></button>
+        <input title="save parse records modal" type="submit" class="btn btn-success" value="<%= t('repositories.modal_parse.import') %>">
       </div>
       <% end %>
     </div>

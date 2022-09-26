@@ -4,20 +4,20 @@
 <% provide(:container_class, 'no-second-nav-container') %>
 
 <%= content_for :sidebar do %>
-  <%= render partial: 'shared/sidebar/experiments.html.erb', locals: { project: @project, view_mode: experiments_view_mode(@project)} %>
+  <%= render partial: 'shared/sidebar/experiments', locals: { project: @project, view_mode: experiments_view_mode(@project)} %>
 <% end %>
 
 <div id="projectShowWrapper" class="content-pane flexible projects-show <%= experiments_view_mode(@project) %>" data-view-mode="<%= experiments_view_mode(@project) %>">
   <%= render partial: 'projects/show/header' %>
 
   <div class="project-show-container">
-    <div class="cards-wrapper <%= 'readonly' unless can_manage_project?(@project) %> <%= cards_view_type_class(@current_view_type) %>"
+    <div class="cards-wrapper <%= 'readonly' unless @project_is_managable %> <%= cards_view_type_class(@current_view_type) %>"
          id="cardsWrapper"
          data-experiments-cards-url="<%= experiments_cards_project_path(@project) %>">
       <!-- list -->
       <div class="table-header">
         <div class="table-header-cell select-all-checkboxes">
-          <% if can_manage_project?(@project) %>
+          <% if @project_is_managable %>
             <div class="sci-checkbox-container">
               <input value="1" type="checkbox" class="sci-checkbox select-all">
               <span class="sci-checkbox-label"></span>

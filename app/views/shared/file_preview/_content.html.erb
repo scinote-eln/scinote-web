@@ -36,8 +36,7 @@
           <%= t('assets.file_preview.edit_in_bio_eddie') %>
         </button>
       <% elsif asset.editable_image? %>
-        <button class="btn btn-light image-edit-button"
-          title="file preview image edit button"
+        <button class="btn btn-light image-edit-button" title="file preview edit in scinote button"
           data-image-id="<%= asset.id %>"
           data-image-name="<%= asset.file_name %>"
           data-image-url="<%= asset_file_url_path(asset) %>"
@@ -75,6 +74,7 @@
       <% else %>
         <%= image_tag asset.large_preview,
             onerror: 'ActiveStoragePreviews.reCheckPreview(event)',
+            title: "file preview image container",
             onload: 'ActiveStoragePreviews.showPreview(event)',
             style: 'opacity: 0' %>
       <% end %>

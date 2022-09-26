@@ -7,27 +7,8 @@
   <%= content_for :sidebar do %>
    <%= render partial: "sidebar", locals: { repositories: @repositories, archived: params[:archived] } %>
   <% end %>
-  <div class="content-pane flexible <%= params[:archived] ? :archived : :active %> repositories-index"
-       data-readonly="<%= !current_user.is_admin_of_team?(current_team) %>">
-    <div class="content-header">
-      <div class="title-row">
-        <h1 data-view-mode="active"><%= t('libraries.index.head_title') %></h1>
-        <h1 data-view-mode="archived"><i class="fas fa-archive"></i>&nbsp;<%= t('libraries.index.head_title_archived') %></h1>
-        <%= render layout: "shared/view_switch", locals: { disabled: false } do %>
-          <li class="view-switch-archived" data-view-mode="active">
-            <i class="fas fa-archive button-icon"></i>
-            <%= t('libraries.index.switch_view.archived') %>
-          </li>
-          <li class="view-switch-active" data-view-mode="archived">
-            <i class="fas fa-rocket button-icon"></i>
-            <%= t('libraries.index.switch_view.active') %>
-          </li>
-        <% end %>
-      </div>
-    </div>
-    <div class="content-body">
-    </div>
-  </div>
+  
+  <%= render "view_archived_btn"%>
 <% end %>
 
 <!-- table template -->
@@ -38,7 +19,7 @@
       <tr>
         <th>
           <div class="sci-checkbox-container">
-            <input value="1" type="checkbox" class="sci-checkbox select-all-checkbox">
+            <input value="1" type="checkbox" class="sci-checkbox select-all-checkbox" title="repository all row selector checkbox">
             <span class="sci-checkbox-label"></span>
           </div>
         </th>
@@ -59,6 +40,7 @@
 <template id="repositoriesListButtons">
 <% if can_create_repositories?(current_team) %>
   <a id="createRepoBtn" class="btn btn-primary"
+    title="create new repository"
     data-remote="true"
     data-view-mode="active"
     href="<%= create_modal_team_repositories_path(current_team) %>">
@@ -66,17 +48,18 @@
     <span class="hidden-xs"><%= t('libraries.index.no_libraries.create_new_button') %></span>
   </a>
 <% end %>
-  <a id="renameRepoBtn" class="btn btn-light disabled hidden" data-view-mode="active" href="#" data-action-mode="single" data-remote="true">
+  <a title="rename selected repository" id="renameRepoBtn" class="btn btn-light disabled hidden" data-view-mode="active" href="#" data-action-mode="single" data-remote="true">
     <span class="fas fa-pencil-alt"></span>
     <%= t('libraries.index.buttons.edit') %>
   </a>
   <% if can_create_repositories?(current_team) %>
-    <a id="copyRepoBtn" class="btn btn-light disabled hidden" data-view-mode="active" href="#" data-action-mode="single" data-remote="true">
+    <a title="copy selected repository" id="copyRepoBtn" class="btn btn-light disabled hidden" data-view-mode="active" href="#" data-action-mode="single" data-remote="true">
       <span class="fas fa-copy"></span>
       <%= t('libraries.index.buttons.duplicate') %>
     </a>
   <% end %>
   <a id="archiveRepoBtn"
+     title="archive selected repository"
      class="btn btn-light disabled hidden"
      data-view-mode="active"
      data-action-mode="multiple"
@@ -85,6 +68,7 @@
     <%= t('libraries.index.buttons.archive') %>
   </a>
   <a id="restoreRepoBtn"
+     title="restore selected repository"
      class="btn btn-light disabled hidden"
      data-view-mode="archived"
      data-action-mode="multiple"

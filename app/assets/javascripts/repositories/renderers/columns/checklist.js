@@ -5,6 +5,7 @@ var ChecklistColumnHelper = (function() {
   function checklistSelect(select, url, values) {
     var selectedOptions = '';
     var selectObject = $(`<select id="${select}"
+                                  title="repository checklist values to select"
                                   data-placeholder = "${I18n.t('repositories.table.checklist.set_checklist')}"
                                   data-ajax-url = "${url}"
                                   data-combine-tags="true"
@@ -31,6 +32,7 @@ var ChecklistColumnHelper = (function() {
       idList = '';
     }
     return $(`<input form="${formId}"
+             title="repository checklist hidden field"
              type="hidden"
              name="repository_cells[${columnId}]"
              value="${JSON.stringify(idList)}"

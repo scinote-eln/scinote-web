@@ -8,6 +8,7 @@
     <div class="datetime-picker-container" id="start-date">
       <span class="fas fa-calendar-alt"></span>
       <input id="calendarStartDate"
+             title="add task start date"
              type="datetime"
              data-toggle='date-time-picker'
              class="form-control calendar-input"
@@ -18,6 +19,6 @@
              data-date-use-current="false"
              value="<%= my_module.started_on ? l(my_module.started_on, format: :full) : '' %>"/>
     </div>
-    <span class="fas fa-times clear-date" data-toggle='clear-date-time-picker' data-target='calendarStartDate'></span>
+    <span title="clear task start date" class="fas fa-times clear-date" data-toggle='clear-date-time-picker' data-target='calendarStartDate'></span>
   <% end %>
 </span>
