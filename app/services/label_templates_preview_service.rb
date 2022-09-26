@@ -39,6 +39,6 @@ class LabelTemplatesPreviewService
   private
 
   def sanitize_zpl_code(zpl_code)
-    zpl_code.gsub!('_', '_5F')
+    zpl_code.gsub('_', '_5F')
   end
 end
