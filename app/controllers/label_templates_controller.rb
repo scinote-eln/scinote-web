@@ -3,7 +3,7 @@
 class LabelTemplatesController < ApplicationController
   include InputSanitizeHelper
 
-  before_action :check_feature_enabled
+  before_action :check_feature_enabled, except: :index
   before_action :check_view_permissions, except: %i(create duplicate set_default delete update)
   before_action :check_manage_permissions, only: %i(create duplicate set_default delete update)
   before_action :load_label_templates, only: %i(index datatable)
@@ -11,7 +11,20 @@ class LabelTemplatesController < ApplicationController
 
   layout 'fluid'
 
-  def index; end
+  def index
+    respond_to do |format|
+      format.json do
+        render json: @label_templates, each_serializer: LabelTemplateSerializer, user: current_user
+      end
+      format.html do
+        unless LabelTemplate.enabled?
+          render :promo
+          return
+        end
+        render 'index'
+      end
+    end
+  end
 
   def datatable
     respond_to do |format|

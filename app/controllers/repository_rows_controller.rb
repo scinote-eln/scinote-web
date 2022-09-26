@@ -4,8 +4,9 @@ class RepositoryRowsController < ApplicationController
   include ApplicationHelper
   include MyModulesHelper
 
-  before_action :load_repository, except: %i(show print_modal print print_zpl)
-  before_action :load_repository_or_snapshot, only: %i(print_modal print print_zpl)
+  MAX_PRINTABLE_ITEM_NAME_LENGTH = 64
+  before_action :load_repository, except: %i(show print_modal print rows_to_print print_zpl)
+  before_action :load_repository_or_snapshot, only: %i(print_modal print rows_to_print print_zpl)
   before_action :load_repository_row, only: %i(update assigned_task_list active_reminder_repository_cells)
   before_action :check_read_permissions, except: %i(show create update delete_records
                                                     copy_records reminder_repository_cells
@@ -119,6 +120,12 @@ class RepositoryRowsController < ApplicationController
         }
       end
     end
+  end
+
+  def rows_to_print
+    @repository_rows = @repository.repository_rows.where(id: params[:rows])
+
+    render json: @repository_rows, each_serializer: RepositoryRowSerializer, user: current_user
   end
 
   def print

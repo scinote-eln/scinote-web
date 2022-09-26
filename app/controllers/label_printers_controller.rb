@@ -10,7 +10,14 @@ class LabelPrintersController < ApplicationController
     @label_printers = LabelPrinter.all
     @fluics_api_key = @label_printers.any? ? @label_printers.first.fluics_api_key : nil
     @printer_type = 'fluics'
-    render 'index'
+    respond_to do |format|
+      format.json do
+        render json: @label_printers, each_serializer: LabelPrinterSerializer, user: current_user
+      end
+      format.html do
+        render 'index'
+      end
+    end
   end
 
   def index_zebra
