@@ -55,6 +55,7 @@ Rails.application.routes.draw do
         get :datatable
         get :template_tags
         get :zpl_preview
+        post :sync_fluics_templates
       end
     end
 

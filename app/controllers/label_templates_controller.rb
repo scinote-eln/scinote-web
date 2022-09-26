@@ -144,7 +144,7 @@ class LabelTemplatesController < ApplicationController
     sync_service = LabelPrinters::Fluics::SyncService.new(current_user, current_team)
     sync_service.sync_templates!
     render json: { message: t('label_templates.fluics.sync.success') }
-  rescue ActiveRecord::RecordInvalid => e
+  rescue StandardError => e
     Rails.logger.error e.message
     render json: { error: t('label_templates.fluics.sync.error') }, status: :unprocessable_entity
   end

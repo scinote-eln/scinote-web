@@ -6,7 +6,7 @@
     <span class="button-text"><%= t('label_templates.index.toolbar.new') %></span>
   </button>
   <button title="<%= t('label_templates.index.toolbar.check_for_updates') %>"
-     class="btn btn-light auto-shrink-button nonselected-actions " id="checkFluicsUpdates">
+          class="btn btn-light auto-shrink-button nonselected-actions" id="syncFluicsTemplates" data-url="<%= sync_fluics_templates_label_templates_path %>">
     <%= image_tag 'label_template_icons/fluics_update.svg' %>
     <span class="button-text"><%= t('label_templates.index.toolbar.check_for_updates') %></span>
   </button>
