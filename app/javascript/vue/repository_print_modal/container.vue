@@ -155,7 +155,7 @@
       submitPrint() {
         if (this.selectedPrinter.attributes.type_of === 'zebra') {
           zebraPrinters.print(
-            this.ulrs.zebraProgress,
+            this.urls.zebraProgress,
             '.label-printing-progress-modal',
             '#modal-print-repository-row-label',
             {
