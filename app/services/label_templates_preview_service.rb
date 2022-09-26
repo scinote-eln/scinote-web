@@ -27,7 +27,12 @@ class LabelTemplatesPreviewService
     if resp.function_error.nil?
       @preview = resp.payload.string.delete('"')
     else
-      @error = resp.function_error.string
+      begin
+        error_response = JSON.parse(resp.payload.string)
+        @error = error_response['errorMessage']
+      rescue JSON::ParserError
+        @error = resp.function_error
+      end
     end
   end
 

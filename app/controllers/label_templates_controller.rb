@@ -136,7 +136,7 @@ class LabelTemplatesController < ApplicationController
     if service.error.blank?
       render json: { base64_preview: payload }
     else
-      render json: { error: I18n.t('errors.general') }, status: :unprocessable_entity
+      render json: { error: service.error }, status: :unprocessable_entity
     end
   end
 
