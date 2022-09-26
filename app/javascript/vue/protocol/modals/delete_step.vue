@@ -14,8 +14,8 @@
 
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" @click="cancel">{{ i18n.t('general.cancel') }}</button>
-          <button class="btn btn-danger" @click="confirm">{{ i18n.t('protocols.steps.modals.delete_step.confirm')}}</button>
+          <button title="cancel step delete" class="btn btn-secondary" @click="cancel">{{ i18n.t('general.cancel') }}</button>
+          <button title="confirm step delete" class="btn btn-danger" @click="confirm">{{ i18n.t('protocols.steps.modals.delete_step.confirm')}}</button>
         </div>
       </div>
     </div>

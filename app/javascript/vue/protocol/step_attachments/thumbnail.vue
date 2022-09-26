@@ -1,5 +1,6 @@
 <template>
   <div class="attachment-container asset"
+       :title="`attachment ${attachment.id} thumbnail`"
        :data-asset-id="attachment.id"
   >
     <a  :href="attachment.attributes.urls.blob"
@@ -18,9 +19,9 @@
             style='opacity: 0' />
         <i  v-else class="fas" :class="attachment.attributes.icon"></i>
       </div>
-      <div class="attachment-label" 
-           data-toggle="tooltip" 
-           data-placement="bottom" 
+      <div class="attachment-label"
+           data-toggle="tooltip"
+           data-placement="bottom"
            :title="`${ attachment.attributes.file_name }`">
         {{ attachment.attributes.file_name }}
         <span v-if="attachment.isNewUpload" class="attachment-label-new">

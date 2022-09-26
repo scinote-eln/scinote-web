@@ -140,6 +140,6 @@
             class="btn btn-default"
             tabindex="7"
             data-dismiss="modal"><%=t 'general.cancel' %></button>
-    <%= submit_tag t('repository_stock_values.manage_modal.save_stock'), class: "btn btn-primary update-repository-stock", tabindex: "6" %>
+    <%= submit_tag t('repository_stock_values.manage_modal.save_stock'), class: "btn btn-primary update-repository-stock", tabindex: "6", title: "save item #{repository_row.id} stock" %>
   </div>
 <% end %>

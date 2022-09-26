@@ -1,5 +1,6 @@
 <template>
   <div class="list-attachment-container asset"
+       :title="`attachment ${attachment.id} list item`"
        :data-asset-id="attachment.id"
   >
     <i class="fas asset-icon" :class="attachment.attributes.icon"></i>
@@ -11,8 +12,8 @@
        :data-gallery-view-id="stepId"
        :data-preview-url="attachment.attributes.urls.preview"
     >
-      <span data-toggle="tooltip" 
-           data-placement="bottom" 
+      <span data-toggle="tooltip"
+           data-placement="bottom"
            :title="`${ attachment.attributes.file_name }`">
         {{ attachment.attributes.file_name }}
       </span>

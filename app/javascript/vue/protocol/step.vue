@@ -13,11 +13,12 @@
     <div class="step-header">
       <div class="step-element-header" :class="{ 'no-hover': !urls.update_url }">
         <div class="step-controls">
-          <div v-if="reorderStepUrl" class="step-element-grip" @click="$emit('reorder')" :class="{ 'step-element--locked': !urls.update_url }">
+          <div :title="`reorder step ${step.id}`" v-if="reorderStepUrl" class="step-element-grip" @click="$emit('reorder')" :class="{ 'step-element--locked': !urls.update_url }">
             <i class="fas fas-rotated-90 fa-exchange-alt"></i>
           </div>
           <div v-else class="step-element-grip-placeholder"></div>
           <a class="step-collapse-link"
+            :title="`toggle collapse step ${step.id}`"
             :href="'#stepBody' + step.id"
             data-toggle="collapse"
             data-remote="true"
@@ -87,6 +88,7 @@
         <a href="#"
            v-if="!inRepository"
            ref="comments"
+           :title="`open step ${step.id} comments`"
            class="open-comments-sidebar btn icon-btn btn-light"
            data-turbolinks="false"
            data-object-type="Step"
