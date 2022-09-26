@@ -12,6 +12,7 @@
       <div v-if="labelTemplate.id" class="title-row">
         <img :src="labelTemplate.attributes.icon_url" class="label-template-icon"/>
         <InlineEdit
+          v-if="canManage"
           :value="labelTemplate.attributes.name"
           :characterLimit="255"
           :allowBlank="false"
@@ -22,14 +23,18 @@
           @editingDisabled="editingName = false"
           @update="updateName"
         />
+        <template v-else>
+          {{ labelTemplate.attributes.name }}
+        </template>
       </div>
     </div>
-    <div v-if="labelTemplate.id" class="template-descripiton">
+    <div v-if="labelTemplate.id && notFluics" class="template-descripiton">
       <div class="title">
         {{ i18n.t('label_templates.show.description_title') }}
       </div>
       <div class="description">
         <InlineEdit
+          v-if="canManage"
           :value="labelTemplate.attributes.description"
           :characterLimit="255"
           :allowBlank="true"
@@ -40,10 +45,13 @@
           @editingDisabled="editingDescription = false"
           @update="updateDescription"
         />
+        <template v-else>
+          {{ labelTemplate.attributes.description }}
+        </template>
       </div>
     </div>
     <div v-if="labelTemplate.id" class="label-template-container">
-      <div class="label-edit-container">
+      <div class="label-edit-container" v-if="notFluics">
         <div class="label-edit-header">
           <div class="title">
             {{ i18n.t('label_templates.show.content_title', { format: labelTemplate.attributes.language_type.toUpperCase() }) }}
@@ -80,9 +88,12 @@
             </div>
           </div>
         </template>
-        <div v-else class="label-view-container" :title="i18n.t('label_templates.show.view_content_tooltip')" @click="enableContentEdit">
+        <div v-else-if="canManage" class="label-view-container" :title="i18n.t('label_templates.show.view_content_tooltip')" @click="enableContentEdit">
           {{ labelTemplate.attributes.content}}
           <i class="fas fa-pen"></i>
+        </div>
+        <div v-else class="label-view-container read-only" :title="i18n.t('label_templates.show.view_content_tooltip')">
+          {{ labelTemplate.attributes.content}}
         </div>
       </div>
       <div class="label-preview-container">
@@ -133,6 +144,12 @@
     computed: {
       hasError() {
         return this.codeErrorMessage.length > 0
+      },
+      canManage() {
+        return this.labelTemplate.attributes.urls.update && this.notFluics
+      },
+      notFluics() {
+        return this.labelTemplate.attributes.type !== "FluicsLabelTemplate"
       }
     },
     components: {InlineEdit, InsertFieldDropdown, LabelPreview},
