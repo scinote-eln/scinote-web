@@ -85,7 +85,8 @@
     props: {
       showModal: Boolean,
       row_ids: Array,
-      urls: Object
+      urls: Object,
+      zebraEnabled: Boolean
     },
     data() {
       return {
@@ -114,7 +115,9 @@
         this.$emit('close');
       });
 
-      this.initZebraPrinter();
+      if (this.zebraEnabled) {
+        this.initZebraPrinter();
+      }
     },
     computed: {
       templates_dropdown() {
