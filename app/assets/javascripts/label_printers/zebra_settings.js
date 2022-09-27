@@ -21,8 +21,11 @@
         },
         beforeRefresh: function() {
           zebraContainer.empty();
-          zebraContainer.append(`<li>
-            ${I18n.t('users.settings.account.label_printer.looking_for_printers')}</li>`);
+          zebraContainer.append(`
+          <li class="searching-printers">
+            <img src="/images/medium/loading.svg"></img>
+            ${I18n.t('users.settings.account.label_printer.looking_for_printers')}
+          </li>`);
         }
       }
     );
