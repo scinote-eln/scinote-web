@@ -27,52 +27,54 @@
       <% end %>
       <%= step.position + 1 %>. <%= step.name %>
     </h2>
-    <div>
-      <% if step.description.blank? %>
-        <em><%= t('protocols.steps.no_description') %></em>
-      <% else %>
-        <div class="ql-editor">
-          <%= custom_auto_link(step.tinymce_render(:description),
+
+    <% step.step_orderable_elements.order(position: :asc).each do |step_element| %>
+      <% case step_element.orderable_type %>
+      <% when 'StepText' %>
+        <% step_text = step_element.orderable %>
+        <div class="print-step-text">
+          <div class="ql-editor">
+          <%= custom_auto_link(step_text.tinymce_render(:text),
                                 simple_format: false,
                                 tags: %w(img),
                                 team: current_team,
                                 preview_repository: true) %>
         </div>
-      <% end %>
-    </div>
-
-    <% step.checklists.each do |checklist| %>
-      <div class="print-checklist">
-      <h3><%= smart_annotation_parser(checklist.name, current_team).html_safe %></h3>
-        <% checklist.checklist_items.order(position: :asc).each do |checklist_item| %>
-          <div class="print-checklist-item">
-            <span class="checklist-checkbox checked">
-              <% if checklist_item.checked %>
-                <%= image_tag "check-square-solid.svg" %>
-              <% else %>
-                <span class="checklist-checkbox not-checked"></span>
-              <% end %>
-              <%= smart_annotation_parser(checklist_item.text, current_team).html_safe %>
-            </span>
-          </div>
-        <% end %>
-      </div>
-    <% end %>
-
-    <% step.tables.each do |table| %>
-      <div class="print-table">
-        <strong>
-          <%= auto_link(simple_format(table.name),
-                              link: :urls,
-                              html: { target: '_blank' }) %>
-        </strong>
-        <div class="page-break"></div>
-        <div data-role="hot-table" class="hot-table">
-          <%= hidden_field(table, :contents, value: table.contents_utf_8, class: "hot-contents") %>
-          <div data-role="step-hot-table" class="step-result-hot-table"></div>
         </div>
-      </div>
+      <% when 'StepTable' %>
+        <% table = step_element.orderable.table %>
+        <div class="print-table">
+          <strong>
+            <%= auto_link(simple_format(table.name),
+                                link: :urls,
+                                html: { target: '_blank' }) %>
+          </strong>
+          <div class="page-break"></div>
+          <div data-role="hot-table" class="hot-table">
+            <%= hidden_field(table, :contents, value: table.contents_utf_8, class: "hot-contents") %>
+            <div data-role="step-hot-table" class="step-result-hot-table"></div>
+          </div>
+        </div>
+      <% when 'Checklist' %>
+        <% checklist = step_element.orderable %>
+        <div class="print-checklist">
+          <h3><%= smart_annotation_parser(checklist.name, current_team).html_safe %></h3>
+          <% checklist.checklist_items.order(position: :asc).each do |checklist_item| %>
+            <div class="print-checklist-item">
+              <span class="checklist-checkbox checked">
+                <% if checklist_item.checked %>
+                  <%= image_tag "check-square-solid.svg" %>
+                <% else %>
+                  <span class="checklist-checkbox not-checked"></span>
+                <% end %>
+                <%= smart_annotation_parser(checklist_item.text, current_team).html_safe %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
     <% end %>
+
     <% step.assets.where(view_mode: "inline").each do |asset| %>
         <div class="print-asset inline">
           <div class="print-asset-image">

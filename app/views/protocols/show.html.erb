@@ -1,0 +1,32 @@
+<div class="content-pane protocols-show" >
+  <div class="protocol-position-container">
+     <div class="protocol-actions">
+      <a class="btn btn-secondary pull-right" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
+        <span class="fas fa-print" aria-hidden="true"></span>
+        <span><%= t("protocols.print.button") %></span>
+      </a>
+    </div>
+    <div
+      id="protocolContainer"
+      data-protocol-url="<%= protocol_path(@protocol) %>"
+      data-date-format="<%= datetime_picker_format_date_only %>"
+      data-user-utc-offset="<%= ActiveSupport::TimeZone.find_tzinfo(current_user.time_zone).utc_offset %>"
+    >
+      <protocol-container
+      :protocol-url="protocolUrl"
+      />
+    </div>
+  </div>
+</div>
+
+<!-- Create new office file modal -->
+<%= render partial: 'assets/wopi/create_wopi_file_modal.html.erb' %>
+
+<%= render partial: "my_modules/protocols/print_protocol_modal", locals: { protocol: @protocol, comments_enabled: false } %>
+
+<%= javascript_include_tag "handsontable.full" %>
+<%= render partial: "shared/formulas_libraries.html.erb" %>
+<%= javascript_pack_tag 'pdfjs/pdf_js' %>
+<%= stylesheet_pack_tag 'pdfjs/pdf_js_styles' %>
+
+<%= javascript_pack_tag 'vue/protocol' %>

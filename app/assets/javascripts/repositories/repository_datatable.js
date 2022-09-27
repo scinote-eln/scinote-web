@@ -1,7 +1,7 @@
 /*
   globals I18n _ SmartAnnotation FilePreviewModal animateSpinner DataTableHelpers
   HelperModule RepositoryDatatableRowEditor prepareRepositoryHeaderForExport
-  initAssignedTasksDropdown initBMTFilter initReminderDropdown
+  initAssignedTasksDropdown initBMTFilter initReminderDropdown initBSTooltips
 */
 
 //= require jquery-ui/widgets/sortable
@@ -134,6 +134,7 @@ var RepositoryDatatable = (function(global) {
     currentMode = 'viewMode';
     // Table specific stuff
     TABLE.button(0).enable(true);
+    $('#saveRecord').attr('disabled', false);
     $(TABLE_WRAPPER_ID).find('tr').removeClass('blocked');
     updateButtons();
     disableCheckboxToggleOnCheckboxPreview();
@@ -271,7 +272,23 @@ var RepositoryDatatable = (function(global) {
   function initSaveButton() {
     $(TABLE_WRAPPER_ID).on('click', '#saveRecord', function() {
       var $table = $(TABLE_ID);
-      RepositoryDatatableRowEditor.validateAndSubmit($table);
+      RepositoryDatatableRowEditor.validateAndSubmit($table, $('#saveRecord'));
+    });
+  }
+
+  function initActiveRemindersFilter() {
+    $(TABLE_WRAPPER_ID).find('#only_reminders').on('change', function() {
+      var $activeRemindersFilter = $(this).closest('.active-reminders-filter');
+
+      $(TABLE_WRAPPER_ID).find('table').attr('data-only-reminders', $(this).is(':checked'));
+
+      if ($(this).is(':checked')) {
+        $activeRemindersFilter.attr('title', $activeRemindersFilter.data('checkedTitle'));
+      } else {
+        $activeRemindersFilter.attr('title', $activeRemindersFilter.data('uncheckedTitle'));
+      }
+
+      TABLE.ajax.reload();
     });
   }
 
@@ -284,6 +301,8 @@ var RepositoryDatatable = (function(global) {
         $('#saveRepositoryFilters').removeClass('hidden');
       }
       if (typeof initBMTFilter === 'function') initBMTFilter();
+
+      initBSTooltips();
     });
 
     TABLE.ajax.reload(null, false);
@@ -427,6 +446,11 @@ var RepositoryDatatable = (function(global) {
           if ($('[data-repository-filter-json]').attr('data-repository-filter-json')) {
             d.advanced_search = JSON.parse($('[data-repository-filter-json]').attr('data-repository-filter-json'));
           }
+
+          if ($('[data-only-reminders]').attr('data-only-reminders') === 'true') {
+            d.only_reminders = true;
+          }
+
           return JSON.stringify(d);
         },
         global: false,
@@ -486,8 +510,7 @@ var RepositoryDatatable = (function(global) {
           }
           return data;
         }
-      },
-      {
+      }, {
         targets: 'row-stock',
         className: 'item-stock',
         sWidth: '1%',
@@ -540,7 +563,9 @@ var RepositoryDatatable = (function(global) {
         // Show number of selected rows near pages info
         $('#repository-table_info').append('<span id="selected_info"></span>');
         $('#selected_info').html(' (' + rowsSelected.length + ' entries selected)');
-        checkArchivedColumnsState();
+        if ($('.repository-show').hasClass('archived')) {
+          TABLE.columns([6, 7]).visible(true);
+        }
       },
       preDrawCallback: function() {
         var archived = $('.repository-show').hasClass('archived');
@@ -596,6 +621,7 @@ var RepositoryDatatable = (function(global) {
         initItemEditIcon();
         initSaveButton();
         initCancelButton();
+        initBSTooltips();
 
         DataTableHelpers.initLengthAppearance($(TABLE_ID).closest('.dataTables_wrapper'));
 
@@ -617,6 +643,8 @@ var RepositoryDatatable = (function(global) {
 
         initAssignedTasksDropdown(TABLE_ID);
         initReminderDropdown(TABLE_ID);
+
+        initActiveRemindersFilter();
         renderFiltersDropdown();
         setTimeout(function() {
           adjustTableHeader();
@@ -866,15 +894,6 @@ var RepositoryDatatable = (function(global) {
 
     $('#wrapper').on('sideBar::hidden sideBar::shown', function() {
       adjustTableHeader();
-    });
-  }
-
-  function checkArchivedColumnsState() {
-    var archived = $('.repository-show').hasClass('archived');
-    $.each(TABLE.context[0].aoColumns, function(i, column) {
-      if (['archived-on', 'archived-by'].includes(column.nTh.id)) {
-        TABLE.column(column.idx).visible(archived);
-      }
     });
   }
 

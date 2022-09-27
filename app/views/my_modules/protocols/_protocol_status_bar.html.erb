@@ -1,7 +1,7 @@
 <div class="dropdown my-module-protocol-status">
   <% if @protocol.linked? %>
     <span class="status-label linked">
-      [<%= protocol_name(@protocol.parent) %>]
+      [<%= t("my_modules.protocols.protocol_status_bar.linked") %>]
     </span>
   <% else %>
     <span class="status-label">
@@ -51,8 +51,8 @@
         </div>
       <% end %>
     </div>
-    <div class="dropdown-footer row">
-      <div class="col-sm-4 button-container no-padding">
+    <div class="dropdown-footer">
+      <div class="button-container no-padding">
         <% if @protocol.linked? && can_manage_protocol_in_module?(@protocol) %>
           <%= link_to unlink_modal_protocol_path(@protocol, format: :json), remote: true,
             title: t("my_modules.protocols.protocol_status_bar.btns.unlink_title"),
@@ -63,7 +63,7 @@
           <% end %>
         <% end %>
       </div>
-      <div class="col-sm-4 button-container no-padding">
+      <div class="button-container no-padding">
         <% if can_read_protocol_in_module?(@protocol) && can_create_protocols_in_repository?(@protocol.team) && (@protocol.newer_than_parent? || @protocol.parent_and_self_newer? || @protocol.unlinked?) %>
           <%= link_to copy_to_repository_modal_protocol_path(@protocol, format: :json), remote: true,
             title: t("my_modules.protocols.protocol_status_bar.btns.save_to_repository_title"),
@@ -73,11 +73,15 @@
               hook: "protocol-copy-to-repository"
             } do %>
             <i class="fas fa-save"></i>
-            <%= t("my_modules.protocols.protocol_status_bar.btns.save_to_repository") %>
+            <% if @protocol.newer_than_parent? || @protocol.parent_and_self_newer? %>
+              <%= t("my_modules.protocols.protocol_status_bar.btns.save_a_copy_to_repository") %>
+            <% else %>
+              <%= t("my_modules.protocols.protocol_status_bar.btns.save_to_repository") %>
+            <% end %>
           <% end %>
         <% end %>
       </div>
-      <div class="col-sm-4 button-container no-padding">
+      <div class="button-container no-padding">
         <% if @protocol.linked? && can_manage_protocol_in_module?(@protocol) %>
           <% if @protocol.parent_newer? || @protocol.parent_and_self_newer? %>
             <%= link_to update_from_parent_modal_protocol_path(@protocol, format: :json), remote: true,

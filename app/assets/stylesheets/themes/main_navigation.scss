@@ -21,7 +21,6 @@
   #count-notifications {
     background-color: $brand-accent;
     border-radius: 8px;
-    color: $color-concrete;
     display: none;
     font-size: 11px;
     font-weight: bold;
@@ -424,9 +423,8 @@
   }
 
   #count-system-notifications {
-    background-color: $brand-primary;
+    background-color: $brand-accent;
     border-radius: 5px;
-    color: $color-concrete;
     display: none;
     font-size: 11px;
     font-weight: bold;

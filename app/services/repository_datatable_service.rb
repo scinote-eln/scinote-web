@@ -39,9 +39,20 @@ class RepositoryDatatableService
   def process_query
     search_value = @params[:search][:value]
     order_params = @params[:order].first
+
     order_by_column = { column: order_params[:column].to_i, dir: order_params[:dir] }
 
     repository_rows = fetch_rows(search_value)
+
+    # filter only rows with reminders if filter param is present
+    repository_rows = repository_rows.with_active_reminders(@user) if @params[:only_reminders]
+
+    # Aliased my_module_repository_rows join for consistent assigned counts
+    repository_rows =
+      repository_rows.joins(
+        'LEFT OUTER JOIN "my_module_repository_rows" AS "all_my_module_repository_rows" ON '\
+        '"all_my_module_repository_rows"."repository_row_id" = "repository_rows"."id"'
+      )
 
     # Adding assigned counters
     if @my_module
@@ -50,7 +61,7 @@ class RepositoryDatatableService
                                          .where(my_module_repository_rows: { my_module_id: @my_module })
         if @repository.has_stock_management?
           repository_rows = repository_rows
-                            .select('SUM(my_module_repository_rows.stock_consumption) AS "consumed_stock"')
+                            .select('SUM(DISTINCT my_module_repository_rows.stock_consumption) AS "consumed_stock"')
         end
       else
         repository_rows = repository_rows
@@ -67,7 +78,7 @@ class RepositoryDatatableService
     end
     repository_rows = repository_rows
                       .left_outer_joins(my_module_repository_rows: { my_module: :experiment })
-                      .select('COUNT(my_module_repository_rows.id) AS "assigned_my_modules_count"')
+                      .select('COUNT(DISTINCT all_my_module_repository_rows.id) AS "assigned_my_modules_count"')
                       .select('COUNT(DISTINCT my_modules.experiment_id) AS "assigned_experiments_count"')
                       .select('COUNT(DISTINCT experiments.project_id) AS "assigned_projects_count"')
     repository_rows = repository_rows.preload(Extends::REPOSITORY_ROWS_PRELOAD_RELATIONS)

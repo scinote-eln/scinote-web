@@ -202,9 +202,9 @@ class AssetsController < ApplicationController
 
     # Prepare file preview in advance
     asset.medium_preview.processed && asset.large_preview.processed
-
-    # Return edit url
+    # Return edit url and asset info
     render json: {
+      attributes: AssetSerializer.new(asset, scope: { user: current_user }).as_json,
       success: true,
       edit_url: edit_url
     }, status: :ok
@@ -215,13 +215,20 @@ class AssetsController < ApplicationController
       case @assoc
       when Step
         if @assoc.protocol.in_module?
-          log_step_activity(:edit_step, @assoc, @assoc.my_module.experiment.project, my_module: @assoc.my_module.id)
+          log_step_activity(
+            :task_step_file_deleted,
+            @assoc,
+            @assoc.my_module.experiment.project,
+            my_module: @assoc.my_module.id,
+            file: @asset.file_name
+          )
         else
           log_step_activity(
-            :edit_step_in_protocol_repository,
+            :protocol_step_file_deleted,
             @assoc,
             nil,
-            protocol: @assoc.protocol.id
+            protocol: @assoc.protocol.id,
+            file: @asset.file_name
           )
         end
       when Result

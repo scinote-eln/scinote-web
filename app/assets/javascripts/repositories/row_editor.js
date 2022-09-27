@@ -21,7 +21,7 @@ var RepositoryDatatableRowEditor = (function() {
     });
   }
 
-  function validateAndSubmit($table) {
+  function validateAndSubmit($table, $submitButton) {
     let $form = $table.find(`.${EDIT_FORM_CLASS_NAME}`);
     let $row = $form.closest('tr');
     let valid = true;
@@ -39,7 +39,7 @@ var RepositoryDatatableRowEditor = (function() {
     });
 
     if (!valid) return false;
-
+    $submitButton.attr('disabled', true);
     animateSpinner($table, true);
     // DirectUpload here
     let uploadPromise = AssetColumnHelper.uploadFiles($files, directUrl);

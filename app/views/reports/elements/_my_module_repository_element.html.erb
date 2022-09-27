@@ -5,23 +5,18 @@
   <% rows_json = my_module.repository_json_hot(repository, :desc) %>
   <div class="report-element report-module-repository-element">
     <div class="report-element-header">
-      <div class="row">
-        <div class="pull-left repository-icon">
-          <i class="fas fa-list-alt"></i>
-        </div>
-        <div class="pull-left repository-name">
-          <%= t('projects.reports.elements.module_repository.name', repository: repository.name, my_module: my_module.name) %>
-          <i><%= t('projects.reports.index.deleted') if repository.is_a?(RepositorySnapshot) && !repository.original_repository %></i>
-        </div>
-        <% if defined?(export_all) && export_all %>
-          <div class="pull-left table-name">
-              <% file_link = @obj_filenames.dig(:repositories, repository.id, :file) %>
-              <a href="<%= file_link %>">
-                <em><%= t('projects.reports.elements.module_repository.table_name', name: file_link&.split('/')&.last) %></em>
-              </a>
-          </div>
-        <% end %>
+      <div class="pull-left repository-name">
+        <%= repository.name %>
+        <i><%= t('projects.reports.index.deleted') if repository.is_a?(RepositorySnapshot) && !repository.original_repository %></i>
       </div>
+      <% if defined?(export_all) && export_all %>
+        <div class="pull-left table-name">
+            <% file_link = @obj_filenames.dig(:repositories, repository.id, :file) %>
+            <a href="<%= file_link %>">
+              <em><%= t('projects.reports.elements.module_repository.table_name', name: file_link&.split('/')&.last) %></em>
+            </a>
+        </div>
+      <% end %>
     </div>
     <div class="report-element-body">
       <% if rows_json[:data].count > 0 %>

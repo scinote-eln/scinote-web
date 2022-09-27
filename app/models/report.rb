@@ -41,6 +41,7 @@ class Report < ApplicationRecord
         description: true,
         completed_steps: true,
         uncompleted_steps: true,
+        step_texts: true,
         step_checklists: true,
         step_files: true,
         step_tables: true,
@@ -82,6 +83,10 @@ class Report < ApplicationRecord
 
   def self.viewable_by_user(user, teams)
     where(project: Project.viewable_by_user(user, teams))
+  end
+
+  def self.filter_by_teams(teams = [])
+    teams.blank? ? self : where(team: teams)
   end
 
   def root_elements

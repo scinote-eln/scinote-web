@@ -45,7 +45,7 @@
         <% end %>
       </div>
       <div class="comment-message">
-           <div class="view-mode"><%= custom_auto_link(comment.message, team: current_team, simple_format: true).html_safe %></div>
+           <div class="view-mode"><%= custom_auto_link(comment.message, team: current_team, simple_format: true) %></div>
             <% if edit_mode %>
               <%= text_area_tag 'message', comment.message, disabled: true, class: 'smart-text-area hidden' %>
             <% end %>

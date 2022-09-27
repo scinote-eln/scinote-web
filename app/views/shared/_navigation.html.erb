@@ -26,7 +26,7 @@
         <% end %>
         <%= yield :open_mobile_app_button %>
 
-      </div>
+    </div>
 
       <% if user_signed_in? %>
       <div class="collapse navbar-collapse" id="main-menu">
@@ -43,14 +43,14 @@
               aria-expanded="false"
               data-href="<%= system_notifications_url(format: :json) %>">
               <i class="fas fa-gift white-text"></i>
-              <span class="visible-xs-inline visible-sm-inline white-text"><%= t("system_notifications.index.whats_new") %></span>
+              <span class="visible-xs-inline visible-sm-inline white-text"><%= t("system_notifications.index.whats_new_html") %></span>
               <span id="count-system-notifications" class="white-text"
                     data-href="<%= unseen_counter_system_notifications_url %>">
               </span>
             </a>
             <ul class="dropdown-menu dropdown-system-notifications white-text">
               <li class="system-notifications-dropdown-header white-text">
-                <span class="pull-left white-text"><%= t("system_notifications.index.whats_new") %></span>
+                <span class="pull-left white-text"><%= t("system_notifications.index.whats_new_html") %></span>
                 <span class="show-all white-text">
                   <%= link_to t('system_notifications.index.see_all'), system_notifications_path %>
                 </span>

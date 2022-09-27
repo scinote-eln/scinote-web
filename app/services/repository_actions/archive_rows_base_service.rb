@@ -52,7 +52,7 @@ module RepositoryActions
       Activities::CreateActivityService
         .call(activity_type: type,
               owner: @user,
-              subject: row.repository,
+              subject: row,
               team: @team,
               message_items: {
                 repository_row: row.id

@@ -1,4 +1,4 @@
-/* global animateSpinner filterDropdown Sidebar Turbolinks HelperModule InfiniteScroll GLOBAL_CONSTANTS */
+/* global animateSpinner filterDropdown Sidebar Turbolinks HelperModule InfiniteScroll AsyncDropdown GLOBAL_CONSTANTS */
 /* eslint-disable no-use-before-define */
 (function() {
   const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable', 'duplicable'];
@@ -115,6 +115,7 @@
           placeholderTemplate: '#experimentPlaceholder',
           endOfListTemplate: '#experimentEndOfList',
           pageSize: pageSize,
+          lastPage: !data.next_page,
           customResponse: (response) => {
             $(response.cards_html).appendTo(cardsWrapper);
           },
@@ -220,7 +221,17 @@
         $(this).closest('.experiment-card').removeClass('selected');
         selectedExperiments.splice(index, 1);
       }
-      updateExperimentsToolbar();
+
+      if (this.checked) {
+        $.get(card.data('permissions-url'), function(result) {
+          PERMISSIONS.forEach((permission) => {
+            card.data(permission, result[permission]);
+          });
+          updateExperimentsToolbar();
+        });
+      } else {
+        updateExperimentsToolbar();
+      }
     });
   }
 
@@ -364,6 +375,7 @@
     initEditMoveDuplicateToolbarButton();
     initNewExperimentToolbarButton();
     initSelectAllCheckbox();
+    AsyncDropdown.init($('#content-wrapper'));
   }
 
   init();

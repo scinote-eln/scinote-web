@@ -104,6 +104,10 @@ class Project < ApplicationRecord
             .distinct
   end
 
+  def self.filter_by_teams(teams = [])
+    teams.blank? ? self : where(team: teams)
+  end
+
   def permission_parent
     nil
   end
@@ -322,7 +326,7 @@ class Project < ApplicationRecord
     UserAssignments::GroupAssignmentJob.perform_now(
       team,
       self,
-      created_by
+      last_modified_by || created_by
     )
   end
 
