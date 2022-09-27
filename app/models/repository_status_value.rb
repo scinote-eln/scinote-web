@@ -19,6 +19,12 @@ class RepositoryStatusValue < ApplicationRecord
     data
   end
 
+  def formatted_status
+    return nil unless repository_status_item
+
+    repository_status_item.status
+  end
+
   def self.add_filter_condition(repository_rows, join_alias, filter_element)
     items_join_alias = "#{join_alias}_status_items"
     repository_rows =
