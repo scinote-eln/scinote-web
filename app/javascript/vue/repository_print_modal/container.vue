@@ -177,12 +177,11 @@
         }
       },
       initZebraPrinter() {
-        let containerScope = this;
         this.zebraPrinters = zebraPrint.init($('#LabelPrinterSelector'), {
           clearSelectorOnFirstDevice: false,
-          appendDevice: function(device) {
-            containerScope.printers.push({
-              id: `zebra${containerScope.printers.length}`,
+          appendDevice: (device) => {
+            this.printers.push({
+              id: `zebra${this.printers.length}`,
               attributes: {
                 name: device.name,
                 type_of: 'zebra'
