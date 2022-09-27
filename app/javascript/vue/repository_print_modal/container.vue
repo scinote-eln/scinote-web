@@ -154,7 +154,7 @@
       },
       submitPrint() {
         if (this.selectedPrinter.attributes.type_of === 'zebra') {
-          zebraPrinters.print(
+          this.zebraPrinters.print(
             this.urls.zebraProgress,
             '.label-printing-progress-modal',
             '#modal-print-repository-row-label',
@@ -179,7 +179,7 @@
       initZebraPrinter() {
         this.zebraPrinters = zebraPrint.init($('#LabelPrinterSelector'), {
           clearSelectorOnFirstDevice: false,
-          appendDevice: function(device) {
+          appendDevice: (device) => {
             this.printers.push({
               id: `zebra${this.printers.length}`,
               attributes: {
