@@ -34,4 +34,12 @@
     @include font-small;
     color: $brand-warning;
   }
+
+  .label-preview-container {
+    background-color: $color-concrete;
+    display: flex;
+    justify-content: center;
+    min-height: 200px;
+    padding: .5em 0;
+  }
 }
