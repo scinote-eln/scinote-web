@@ -86,7 +86,7 @@ class ProjectsController < ApplicationController
     if stale?([@product, current_team])
       render json: {
         editable: can_manage_project?(@project),
-        moveable: can_update_team?(current_team),
+        moveable: can_manage_team?(current_team),
         archivable: can_archive_project?(@project),
         restorable: can_restore_project?(@project)
       }

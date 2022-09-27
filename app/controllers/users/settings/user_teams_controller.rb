@@ -85,7 +85,7 @@ module Users
 
         unless invalid
           begin
-            UserTeam.transaction do
+            @user_assignment.transaction do
               # If user leaves on his/her own accord,
               # new owner for projects is the first
               # administrator of team

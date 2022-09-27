@@ -64,7 +64,7 @@ module Users
           break
         end
 
-        result = { email: email, user_teams: [] }
+        result = { email: email }
         unless Constants::BASIC_EMAIL_REGEX.match?(email)
           result[:status] = :user_invalid
           @invite_results << result
@@ -75,7 +75,6 @@ module Users
 
         if user
           result[:status] = :user_exists
-          result[:user] = user
         else
           user = User.invite!(
             full_name: email,
@@ -86,7 +85,6 @@ module Users
           user.update(invited_by: @user)
 
           result[:status] = :user_created
-          result[:user] = user
 
           # Sending email invitation is done in background job to prevent
           # issues with email delivery. Also invite method must be call
