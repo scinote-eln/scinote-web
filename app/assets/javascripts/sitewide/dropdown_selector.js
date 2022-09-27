@@ -734,7 +734,7 @@ var dropdownSelector = (function() {
                     data-ds-tag-group="${data.group}"
                     data-ds-tag-id="${data.value}">
                   </div>
-                  <i class="fas fa-times ${selector.data('config').singleSelect ? 'hidden' : ''}"></i>
+                  <i title="remove user from field" class="fas fa-times ${selector.data('config').singleSelect ? 'hidden' : ''}"></i>
                 </div>`).insertBefore(container.find('.input-field .search-field'));
 
       if (selector.data('config').labelHTML) {

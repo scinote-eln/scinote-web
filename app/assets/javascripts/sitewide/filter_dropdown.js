@@ -107,8 +107,10 @@ var filterDropdown = (function() {
     toggleFilterMark: function(filterContainer, filtersEnabled) {
       if (filtersEnabled) {
         filterContainer.addClass('filters-applied');
+        // add title whenever filter is on
       } else {
         filterContainer.removeClass('filters-applied');
+        // remove title similarly here
       }
     }
 

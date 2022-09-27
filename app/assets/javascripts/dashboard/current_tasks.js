@@ -40,10 +40,13 @@ var DasboardCurrentTasksWidget = (function() {
   }
 
   function markAppliedFilters() {
+    var currentTaskFilterButton = $('.filter-container');
     if (!filtersEnabled()) {
       resetMarkAppliedFilters();
+      currentTaskFilterButton.prop('title', 'current task filter is not applied');
     } else {
-      $('.filter-container').addClass('filters-applied');
+      currentTaskFilterButton.addClass('filters-applied');
+      currentTaskFilterButton.prop('title', 'current task filter is applied');
     }
   }
 

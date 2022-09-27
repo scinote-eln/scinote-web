@@ -46,7 +46,7 @@
           <%= render partial: 'my_modules/status_flow/task_flow_button', locals: { my_module: @my_module } if @my_module.my_module_status_flow %>
         </div>
         <div class="task-details-container">
-          <a class="task-section-caret collapsed" role="button" data-toggle="collapse" href="#details-container" aria-expanded="false" aria-controls="details-container">
+          <a class="task-section-caret collapsed" title="module details title button" role="button" data-toggle="collapse" href="#details-container" aria-expanded="false" aria-controls="details-container">
             <i class="fas fa-caret-right"></i>
             <span id="taskDetailsLabel" class="task-section-title">
               <h2>
