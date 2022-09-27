@@ -125,7 +125,7 @@ ALTER SEQUENCE public.active_storage_blobs_id_seq OWNED BY public.active_storage
 
 CREATE TABLE public.active_storage_variant_records (
     id bigint NOT NULL,
-    blob_id integer NOT NULL,
+    blob_id bigint NOT NULL,
     variation_digest character varying NOT NULL
 );
 
@@ -800,7 +800,7 @@ ALTER SEQUENCE public.my_module_repository_rows_id_seq OWNED BY public.my_module
 
 CREATE TABLE public.my_module_status_conditions (
     id bigint NOT NULL,
-    my_module_status_id integer,
+    my_module_status_id bigint,
     type character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -832,7 +832,7 @@ ALTER SEQUENCE public.my_module_status_conditions_id_seq OWNED BY public.my_modu
 
 CREATE TABLE public.my_module_status_consequences (
     id bigint NOT NULL,
-    my_module_status_id integer,
+    my_module_status_id bigint,
     type character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -867,9 +867,9 @@ CREATE TABLE public.my_module_status_flows (
     name character varying NOT NULL,
     description character varying,
     visibility integer DEFAULT 0,
-    team_id integer,
-    created_by_id integer,
-    last_modified_by_id integer,
+    team_id bigint,
+    created_by_id bigint,
+    last_modified_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -900,7 +900,7 @@ ALTER SEQUENCE public.my_module_status_flows_id_seq OWNED BY public.my_module_st
 
 CREATE TABLE public.my_module_status_implications (
     id bigint NOT NULL,
-    my_module_status_id integer,
+    my_module_status_id bigint,
     type character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -935,10 +935,10 @@ CREATE TABLE public.my_module_statuses (
     name character varying NOT NULL,
     description character varying,
     color character varying NOT NULL,
-    my_module_status_flow_id integer,
-    previous_status_id integer,
-    created_by_id integer,
-    last_modified_by_id integer,
+    my_module_status_flow_id bigint,
+    previous_status_id bigint,
+    created_by_id bigint,
+    last_modified_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -1021,9 +1021,9 @@ CREATE TABLE public.my_modules (
     state smallint DEFAULT 0,
     completed_on timestamp without time zone,
     started_on timestamp without time zone,
-    my_module_status_id integer,
+    my_module_status_id bigint,
     status_changing boolean DEFAULT false,
-    changing_from_my_module_status_id integer,
+    changing_from_my_module_status_id bigint,
     last_transition_error jsonb
 );
 
@@ -1199,14 +1199,14 @@ ALTER SEQUENCE public.oauth_applications_id_seq OWNED BY public.oauth_applicatio
 CREATE TABLE public.project_folders (
     id bigint NOT NULL,
     name character varying NOT NULL,
-    team_id integer NOT NULL,
-    parent_folder_id integer,
+    team_id bigint NOT NULL,
+    parent_folder_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     archived boolean DEFAULT false,
-    archived_by_id integer,
+    archived_by_id bigint,
     archived_on timestamp without time zone,
-    restored_by_id integer,
+    restored_by_id bigint,
     restored_on timestamp without time zone
 );
 
@@ -1524,12 +1524,12 @@ CREATE TABLE public.repositories (
     parent_id bigint,
     status integer,
     selected boolean,
-    my_module_id integer,
+    my_module_id bigint,
     archived boolean DEFAULT false NOT NULL,
     archived_on timestamp without time zone,
     restored_on timestamp without time zone,
-    archived_by_id integer,
-    restored_by_id integer
+    archived_by_id bigint,
+    restored_by_id bigint
 );
 
 
@@ -1628,9 +1628,9 @@ ALTER SEQUENCE public.repository_cells_id_seq OWNED BY public.repository_cells.i
 CREATE TABLE public.repository_checklist_items (
     id bigint NOT NULL,
     data character varying NOT NULL,
-    repository_column_id integer NOT NULL,
-    created_by_id integer,
-    last_modified_by_id integer,
+    repository_column_id bigint NOT NULL,
+    created_by_id bigint,
+    last_modified_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -1661,8 +1661,8 @@ ALTER SEQUENCE public.repository_checklist_items_id_seq OWNED BY public.reposito
 
 CREATE TABLE public.repository_checklist_items_values (
     id bigint NOT NULL,
-    repository_checklist_value_id integer,
-    repository_checklist_item_id integer,
+    repository_checklist_value_id bigint,
+    repository_checklist_item_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -1693,8 +1693,8 @@ ALTER SEQUENCE public.repository_checklist_items_values_id_seq OWNED BY public.r
 
 CREATE TABLE public.repository_checklist_values (
     id bigint NOT NULL,
-    created_by_id integer,
-    last_modified_by_id integer,
+    created_by_id bigint,
+    last_modified_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -1764,8 +1764,8 @@ CREATE TABLE public.repository_date_time_range_values (
     id bigint NOT NULL,
     start_time timestamp without time zone,
     end_time timestamp without time zone,
-    last_modified_by_id integer,
-    created_by_id integer,
+    last_modified_by_id bigint,
+    created_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     type character varying,
@@ -1940,8 +1940,8 @@ ALTER SEQUENCE public.repository_list_values_id_seq OWNED BY public.repository_l
 CREATE TABLE public.repository_number_values (
     id bigint NOT NULL,
     data numeric,
-    last_modified_by_id integer,
-    created_by_id integer,
+    last_modified_by_id bigint,
+    created_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -1982,8 +1982,8 @@ CREATE TABLE public.repository_rows (
     archived boolean DEFAULT false NOT NULL,
     archived_on timestamp without time zone,
     restored_on timestamp without time zone,
-    archived_by_id integer,
-    restored_by_id integer,
+    archived_by_id bigint,
+    restored_by_id bigint,
     external_id character varying
 );
 
@@ -2016,9 +2016,9 @@ CREATE TABLE public.repository_status_items (
     id bigint NOT NULL,
     status character varying NOT NULL,
     icon character varying NOT NULL,
-    repository_column_id integer NOT NULL,
-    created_by_id integer,
-    last_modified_by_id integer,
+    repository_column_id bigint NOT NULL,
+    created_by_id bigint,
+    last_modified_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -2049,9 +2049,9 @@ ALTER SEQUENCE public.repository_status_items_id_seq OWNED BY public.repository_
 
 CREATE TABLE public.repository_status_values (
     id bigint NOT NULL,
-    created_by_id integer,
-    last_modified_by_id integer,
-    repository_status_item_id integer NOT NULL,
+    created_by_id bigint,
+    last_modified_by_id bigint,
+    repository_status_item_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -2083,9 +2083,9 @@ ALTER SEQUENCE public.repository_status_values_id_seq OWNED BY public.repository
 CREATE TABLE public.repository_stock_unit_items (
     id bigint NOT NULL,
     data character varying NOT NULL,
-    repository_column_id integer NOT NULL,
-    created_by_id integer,
-    last_modified_by_id integer,
+    repository_column_id bigint NOT NULL,
+    created_by_id bigint,
+    last_modified_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -3254,7 +3254,7 @@ ALTER SEQUENCE public.view_states_id_seq OWNED BY public.view_states.id;
 
 CREATE TABLE public.webhooks (
     id bigint NOT NULL,
-    activity_filter_id integer NOT NULL,
+    activity_filter_id bigint NOT NULL,
     active boolean DEFAULT true NOT NULL,
     url character varying NOT NULL,
     http_method integer NOT NULL,
@@ -5816,10 +5816,10 @@ CREATE INDEX index_repository_cells_on_repository_row_id ON public.repository_ce
 
 
 --
--- Name: index_repository_cells_on_value; Type: INDEX; Schema: public; Owner: -
+-- Name: index_repository_cells_on_value_type_and_value_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_repository_cells_on_value ON public.repository_cells USING btree (value_type, value_id);
+CREATE INDEX index_repository_cells_on_value_type_and_value_id ON public.repository_cells USING btree (value_type, value_id);
 
 
 --
@@ -6845,10 +6845,10 @@ CREATE INDEX index_view_states_on_user_id ON public.view_states USING btree (use
 
 
 --
--- Name: index_view_states_on_viewable; Type: INDEX; Schema: public; Owner: -
+-- Name: index_view_states_on_viewable_type_and_viewable_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_view_states_on_viewable ON public.view_states USING btree (viewable_type, viewable_id);
+CREATE INDEX index_view_states_on_viewable_type_and_viewable_id ON public.view_states USING btree (viewable_type, viewable_id);
 
 
 --

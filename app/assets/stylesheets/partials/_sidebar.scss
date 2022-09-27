@@ -23,6 +23,9 @@
 }
 
 .sidebar-container {
+  // @@@09272022JS
+
+  // end changes
   background-color: $color-concrete;
   display: flex;
   flex-direction: column;
@@ -61,7 +64,7 @@
 
   .sidebar-body {
     background: linear-gradient($color-concrete 30%, hsla(0, 0%, 100%, 0)),
-                linear-gradient(rgba(0, 0, 0, .1), transparent 70%);
+      linear-gradient(rgba(0, 0, 0, .1), transparent 70%);
     background-attachment: local, scroll;
     background-repeat: no-repeat;
     background-size: 100% 1em, 100% .5em;
@@ -131,12 +134,12 @@
       text-align: center;
       width: 1.5em;
 
-      &:hover ~ .sidebar-link:not(.selected) {
+      &:hover~.sidebar-link:not(.selected) {
         background: $color-alto;
 
       }
 
-      &.collapsed ~ .sidebar-branch {
+      &.collapsed~.sidebar-branch {
         display: none;
       }
     }
