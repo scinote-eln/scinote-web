@@ -10,6 +10,12 @@
     flex: 0;
   }
 
+  .view-text-element {
+    a {
+      pointer-events: initial;
+    }
+  }
+
   .empty-text-element {
     color: $color-silver-chalice;
   }

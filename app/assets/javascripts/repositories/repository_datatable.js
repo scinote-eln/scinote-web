@@ -15,7 +15,7 @@ var RepositoryDatatable = (function(global) {
   var TABLE_WRAPPER_ID = '.repository-table';
   var TABLE = null;
   var EDITABLE = false;
-  var SELECT_ALL_SELECTOR = '#checkbox > input[name=select_all]';
+  var SELECT_ALL_SELECTOR = '#checkbox input[name=select_all]';
   const STATUS_POLLING_INTERVAL = 10000;
 
   var rowsSelected = [];
@@ -465,8 +465,10 @@ var RepositoryDatatable = (function(global) {
         className: 'dt-body-center',
         sWidth: '1%',
         render: function(data, type, row) {
-          return `<input class='repository-row-selector sci-checkbox' type='checkbox' data-editable="${row.recordEditable}">
-                  <span class='sci-checkbox-label'></span>`;
+          return `<div class="sci-checkbox-container">
+                    <input class='repository-row-selector sci-checkbox' type='checkbox' data-editable="${row.recordEditable}">
+                    <span class='sci-checkbox-label'></span>
+                  </div>`;
         }
       }, {
         // Assigned column is not searchable
