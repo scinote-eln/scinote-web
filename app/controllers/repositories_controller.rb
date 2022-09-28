@@ -46,7 +46,7 @@ class RepositoriesController < ApplicationController
   end
 
   def show
-    current_team_switch(@repository.team)
+    current_team_switch(@repository.team) unless @repository.shared_with?(current_team)
     @display_edit_button = can_create_repository_rows?(@repository)
     @display_delete_button = can_delete_repository_rows?(@repository)
     @display_duplicate_button = can_create_repository_rows?(@repository)

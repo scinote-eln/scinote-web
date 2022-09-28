@@ -2,10 +2,10 @@
   <% flash.each do |type, message| %>
     <% next unless displayable_flash_type?(type) %>
 
-    <div id="alert-flash" class="alert <%= flash_alert_class(type) %> alert-dismissable alert-floating">
+    <div id="alert-flash" title="alert flash" class="alert <%= flash_alert_class(type) %> alert-dismissable alert-floating">
         <span class="fas <%= flash_icon_class(type) %>"></span>
         <span class="message"><%= sanitize_input(message) %></span>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <button type="button" class="close" title="close alert flash" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
     </div>
   <% end %>
 </div>

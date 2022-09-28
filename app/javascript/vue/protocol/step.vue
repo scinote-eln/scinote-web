@@ -13,11 +13,12 @@
     <div class="step-header">
       <div class="step-element-header" :class="{ 'no-hover': !urls.update_url }">
         <div class="step-controls">
-          <div v-if="reorderStepUrl" class="step-element-grip" @click="$emit('reorder')" :class="{ 'step-element--locked': !urls.update_url }">
+          <div :title="`reorder step ${step.id}`" v-if="reorderStepUrl" class="step-element-grip" @click="$emit('reorder')" :class="{ 'step-element--locked': !urls.update_url }">
             <i class="fas fas-rotated-90 fa-exchange-alt"></i>
           </div>
           <div v-else class="step-element-grip-placeholder"></div>
           <a class="step-collapse-link"
+            :title="`toggle collapse step ${step.id}`"
             :href="'#stepBody' + step.id"
             data-toggle="collapse"
             data-remote="true"
@@ -36,7 +37,7 @@
             {{ step.attributes.position + 1 }}.
           </div>
         </div>
-        <div class="step-name-container" :class="{'step-element--locked': !urls.update_url}">
+        <div :title="`step ${step.id} name`" class="step-name-container" :class="{'step-element--locked': !urls.update_url}">
           <InlineEdit
             :value="step.attributes.name"
             :class="{ 'step-element--locked': !urls.update_url }"
@@ -66,19 +67,19 @@
             <li class="title">
               {{ i18n.t('protocols.steps.insert.title') }}
             </li>
-            <li class="action" @click="createElement('table')">
+            <li :title="`insert step ${step.id} table`" class="action" @click="createElement('table')">
               <i class="fas fa-table"></i>
               {{ i18n.t('protocols.steps.insert.table') }}
             </li>
-            <li class="action" @click="createElement('checklist')">
+            <li :title="`insert step ${step.id} checklist`" class="action" @click="createElement('checklist')">
               <i class="fas fa-list"></i>
               {{ i18n.t('protocols.steps.insert.checklist') }}
             </li>
-            <li class="action"  @click="createElement('text')">
+            <li :title="`insert step ${step.id} text`" class="action"  @click="createElement('text')">
               <i class="fas fa-font"></i>
               {{ i18n.t('protocols.steps.insert.text') }}
             </li>
-            <li class="action"  @click="showFileModal = true">
+            <li :title="`insert step ${step.id} attachment`" class="action"  @click="showFileModal = true">
               <i class="fas fa-paperclip"></i>
               {{ i18n.t('protocols.steps.insert.attachment') }}
             </li>
@@ -87,6 +88,7 @@
         <a href="#"
            v-if="!inRepository"
            ref="comments"
+           :title="`open step ${step.id} comments`"
            class="open-comments-sidebar btn icon-btn btn-light"
            data-turbolinks="false"
            data-object-type="Step"

@@ -13,7 +13,7 @@
             gallery_view_id: gallery_view_id,
             preview_url: asset_file_preview_path(asset)
           } do %>
-    <div class="attachment-preview <%= asset.file.attached? ? asset.file.metadata['asset_type'] : '' %>">
+    <div title="asset preview link" class="attachment-preview <%= asset.file.attached? ? asset.file.metadata['asset_type'] : '' %>">
       <% if asset.previewable? %>
         <%= image_tag asset.medium_preview,
             onerror: 'ActiveStoragePreviews.reCheckPreview(event)',

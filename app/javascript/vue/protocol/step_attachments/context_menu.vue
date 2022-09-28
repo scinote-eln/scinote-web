@@ -48,7 +48,7 @@
         </a>
       </li>
       <li>
-        <a :href="attachment.attributes.urls.download" data-turbolinks="false">
+        <a :title="`download attachment ${attachment.id}`" :href="attachment.attributes.urls.download" data-turbolinks="false">
           <span class="fas fa-download"></span>
           {{ i18n.t('Download') }}
         </a>
@@ -62,6 +62,7 @@
           <a
             class="change-preview-type"
             :class="viewMode == attachment.attributes.view_mode ? 'selected' : ''"
+            :title="`change attachment ${attachment.id} view to ${viewMode}`"
             @click.prevent.stop="changeViewMode(viewMode)"
             v-html="i18n.t(`assets.context_menu.${viewMode}_html`)"
           ></a>
@@ -70,7 +71,7 @@
       <template v-if="attachment.attributes.urls.delete">
         <li role="separator" class="divider"></li>
         <li>
-          <a @click.prevent.stop="deleteModal = true">
+          <a @click.prevent.stop="deleteModal = true" :title="`delete attachment ${attachment.id}`">
             <i class="fas fa-trash"></i>
             {{ i18n.t("assets.context_menu.delete") }}
           </a>

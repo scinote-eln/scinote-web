@@ -4,7 +4,8 @@
 var StatusColumnHelper = (function() {
   function statusSelect(select, url, value) {
     var selectedOption = '';
-    var selectObject = $(`<select id="${select}" 
+    var selectObject = $(`<select title="repository status select: ${value}"
+                                  id="${select}" 
                                   data-placeholder = "${I18n.t('repositories.table.status.set_status')}"
                                   data-ajax-url = "${url}" ></select>`);
 
@@ -19,6 +20,7 @@ var StatusColumnHelper = (function() {
   function statusHiddenField(formId, columnId, value) {
     var originalValue = value ? value.value : '';
     return $(`<input form="${formId}"
+             title="hidden status field: ${originalValue}"
              type="hidden"
              name="repository_cells[${columnId}]"
              value="${originalValue}"

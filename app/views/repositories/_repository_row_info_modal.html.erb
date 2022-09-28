@@ -2,7 +2,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button title="close repository row info modal" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">
           <%= t('repository_row.modal_info.head_title', repository_row: @repository_row.name) %>
           <%= @repository_row.archived? ? I18n.t('atwho.res.archived') : '' %>
@@ -112,8 +112,8 @@
         <% end %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.close')%></button>
-        <button type="button" class="btn btn-primary print-label-button" data-dismiss="modal" data-url="<%= print_modal_repository_repository_rows_path(@repository_row.repository) %>"  data-rows="[<%= @repository_row.id %>]"><%= t('repository_row.modal_print_label.print_label') %></button>
+        <button title="close repository row info modal" type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.close')%></button>
+        <button title="save repository row info modal" type="button" class="btn btn-primary print-label-button" data-dismiss="modal" data-url="<%= print_modal_repository_repository_rows_path(@repository_row.repository) %>"  data-rows="[<%= @repository_row.id %>]"><%= t('repository_row.modal_print_label.print_label') %></button>
 
       </div>
     </div>

@@ -281,6 +281,7 @@ class MyModulesController < ApplicationController
     ActiveRecord::Base.transaction do
       protocol.update!(protocol_params)
       log_activity(:protocol_name_in_task_edited) if protocol.saved_change_to_name?
+      log_activity(:protocol_description_in_task_edited) if protocol.saved_change_to_description?
       TinyMceAsset.update_images(protocol, params[:tiny_mce_images], current_user)
     end
 
@@ -399,7 +400,8 @@ class MyModulesController < ApplicationController
       params_group: 'my_module',
       item_id: @my_module.id,
       field_to_udpate: 'name',
-      path_to_update: my_module_path(@my_module)
+      path_to_update: my_module_path(@my_module),
+      title: 'edit task name'
     }
   end
 

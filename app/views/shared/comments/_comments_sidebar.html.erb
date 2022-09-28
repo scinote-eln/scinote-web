@@ -27,11 +27,11 @@
     </div>
     <div class="sidebar-footer">
       <div class="comment-input-container">
-        <textarea class="comment-input-field smart-text-area textarea-sm" 
+        <textarea title="comment input" class="comment-input-field smart-text-area textarea-sm"
                   placeholder="<%= t('comments.placeholder') %>"></textarea>
-        <i class="fas fa-paper-plane send-comment"></i>
+        <i title="submit comment" class="fas fa-paper-plane send-comment"></i>
       </div>
-      <div class="error-container"></div>
+      <div title="comment error" class="error-container"></div>
       <div class="update-buttons sci-btn-group">
         <button class="btn btn-secondary cancel-button"><%= t('general.cancel') %></button>
         <button class="btn btn-primary update-comment"><%= t('comments.save_changes') %></button>

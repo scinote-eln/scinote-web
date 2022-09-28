@@ -5,7 +5,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button title="close copy repository modal" type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
           <h3 class="modal-title"><%= t("repositories.index.modal_copy.title_html", name: @repository.name ) %></h3>
@@ -19,13 +19,14 @@
                                  help: t("repositories.index.modal_copy.description"),
                                  autofocus: true,
                                  class: "sci-input-field",
+                                 title: "copy repository modal name",
                                  placeholder: t("repositories.index.modal_copy.name_placeholder") %>
               </div>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <%= f.submit t("repositories.index.modal_copy.copy"), class: "btn btn-success" %>
+          <%= f.submit t("repositories.index.modal_copy.copy"), class: "btn btn-success", title: "copy repository" %>
         </div>
       </div>
     </div>

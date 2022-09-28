@@ -316,7 +316,7 @@ var dropdownSelector = (function() {
     $(`
       <div class="dropdown-container"></div>
       <div class="input-field">
-        <input type="text" class="search-field" data-options-selected=0 placeholder="${selectElement.data('placeholder') || ''}"></input>
+        <input title="new dropdown row input field for ${selectElement.data('placeholder') || ''}" type="text" class="search-field" data-options-selected=0 placeholder="${selectElement.data('placeholder') || ''}"></input>
         ${prepareCustomDropdownIcon(selector, config)}
       </div>
       <input type="hidden" class="data-field" value="[]">
@@ -734,7 +734,7 @@ var dropdownSelector = (function() {
                     data-ds-tag-group="${data.group}"
                     data-ds-tag-id="${data.value}">
                   </div>
-                  <i title="remove user from field" class="fas fa-times ${selector.data('config').singleSelect ? 'hidden' : ''}"></i>
+                  <i title="${(data.params && data.params.tooltip) || $('<span>' + label + '</span>').text().trim()} close icon" class="fas fa-times ${selector.data('config').singleSelect ? 'hidden' : ''}"></i>
                 </div>`).insertBefore(container.find('.input-field .search-field'));
 
       if (selector.data('config').labelHTML) {

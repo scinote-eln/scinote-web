@@ -14,7 +14,7 @@
       </div>
       <div class="actions-block">
         <div class="protocol-buttons-group">
-          <a v-if="urls.add_step_url" class="btn btn-primary" @click="addStep(steps.length)" tabindex="0">
+          <a title="new step button" v-if="urls.add_step_url" class="btn btn-primary" @click="addStep(steps.length)" tabindex="0">
               <span class="fas fa-plus" aria-hidden="true"></span>
               <span>{{ i18n.t("protocols.steps.new_step") }}</span>
           </a>
@@ -74,11 +74,11 @@
         <span>{{ i18n.t("protocols.steps.new_step") }}</span>
       </a>
       <div v-if="steps.length > 0" class="protocol-step-actions">
-        <button class="btn btn-light" @click="collapseSteps" tabindex="0">
+        <button :title="`collapse steps`" class="btn btn-light" @click="collapseSteps" tabindex="0">
           <span class="fas fa-caret-up"></span>
           {{ i18n.t("protocols.steps.collapse_label") }}
         </button>
-        <button class="btn btn-light" @click="expandSteps" tabindex="0">
+        <button :title="`expand steps`" class="btn btn-light" @click="expandSteps" tabindex="0">
           <span class="fas fa-caret-down"></span>
           {{ i18n.t("protocols.steps.expand_label") }}
         </button>
@@ -96,7 +96,7 @@
       <div class="protocol-steps">
         <template v-for="(step, index) in steps">
           <div class="step-block" :key="step.id">
-            <div v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)">
+            <div title="insert step" v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)">
               <i class="fas fa-plus"></i>
             </div>
             <Step
@@ -111,7 +111,7 @@
           </div>
         </template>
       </div>
-      <button v-if="steps.length > 0 && urls.add_step_url" class="btn btn-primary" @click="addStep(steps.length)">
+      <button title="append step" v-if="steps.length > 0 && urls.add_step_url" class="btn btn-primary" @click="addStep(steps.length)">
         <i class="fas fa-plus"></i>
         {{ i18n.t("protocols.steps.new_step") }}
       </button>

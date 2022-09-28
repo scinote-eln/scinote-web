@@ -20,6 +20,7 @@
           <span>{{ i18n.t('tiny_mce.saved_label') }}</span>
         </div>
         <div :id="`${objectType}_view_${objectId}`"
+             :title="`${objectType} ${objectId} RTE field for ${fieldName}`"
             @click="initTinymce"
             v-html="value_html"
             class="ql-editor tinymce-view"
@@ -88,17 +89,12 @@
         }
       },
       characterCount() {
-        if(this.error) {
-          this.editorInstance.blurDisabled = true;
-        } else {
-          this.editorInstance.blurDisabled = false;
+        if (this.editorInstance()) {
+          this.editorInstance().blurDisabled = this.error != false ;
         }
       }
     },
     computed: {
-      editorInstance() {
-        return tinyMCE.editors[0];
-      },
       error() {
         if(this.characterLimit && this.characterCount > this.characterLimit) {
           return(
@@ -124,11 +120,13 @@
       initTinymce(e) {
         let textArea = `#${this.objectType}_textarea_${this.objectId}`;
 
+        if (this.active) return
         if (e && $(e.target).hasClass('atwho-user-popover')) return
         if (e && $(e.target).hasClass('record-info-link')) return
         if (e && $(e.target).parent().hasClass('atwho-inserted')) return
 
         TinyMCE.init(textArea, (data) => {
+
           if (data) {
             this.$emit('update', data)
           }
@@ -136,27 +134,29 @@
         }).then(() => {
           this.active = true;
           this.initCharacterCount();
+          this.$emit('editingEnabled');
         });
-        this.$emit('editingEnabled')
       },
       getStaticUrl(name) {
         return $(`meta[name=\'${name}\']`).attr('content');
       },
       initCharacterCount() {
-        if (!this.editorInstance) return;
+        if (!this.editorInstance()) return;
 
-        this.characterCount = $(this.editorInstance.getContent()).text().length
-
-        this.editorInstance.on('input change paste keydown', (e) => {
+        this.characterCount = $(this.editorInstance().getContent()).text().length;
+        this.editorInstance().on('input change paste keydown', (e) => {
           e.currentTarget && (this.characterCount = (e.currentTarget).innerText.length);
         });
 
-        this.editorInstance.on('remove', () => this.active = false)
+        this.editorInstance().on('remove', () => this.active = false);
 
         // clear error on cancel
-        $(this.editorInstance.container).find('.tinymce-cancel-button').on('click', ()=> {
+        $(this.editorInstance().container).find('.tinymce-cancel-button').on('click', ()=> {
           this.characterCount = 0;
         });
+      },
+      editorInstance() {
+        return tinyMCE.editors[0];
       }
     }
   }

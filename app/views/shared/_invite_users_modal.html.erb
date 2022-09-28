@@ -44,7 +44,7 @@ invite_with_team_selector = type.in?(%w(invite_new_members invite_with_team_sele
     <div class="modal-content">
 
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" title="organization users modal x button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">
           <% if text_title %>
             <%= text_title %>
@@ -79,13 +79,13 @@ invite_with_team_selector = type.in?(%w(invite_new_members invite_with_team_sele
             </h4>
             <div class="emails-selector" >
               <div class="select-container">
-                <select name="emails[]" class="emails-input"></select>
+                <select name="emails[]" title="organization new members email input" class="emails-input"></select>
               </div>
               <p><small><%= t('invite_users.new_members.input_subtitle') %></small></p>
             </div>
           <% else %>
             <div class="user-selector">
-              <select class="emails-input" multiple data-role="tags-input" name="emails[]">
+              <select class="emails-input" title="organization new members email input" multiple data-role="tags-input" name="emails[]">
               </select>
               <h4><%= t('invite_users.input_subtitle') %></h4>
             </div>
@@ -100,6 +100,7 @@ invite_with_team_selector = type.in?(%w(invite_new_members invite_with_team_sele
               <div class="team-selector filter-block small-left">
                 <div class="select-container select-container--with-search select-container--with-blank">
                   <select class="teams-input" name="teams[]"
+                    title="organization new members team selector"
                     data-placeholder = "<%= t('invite_users.select_team_blank') %>"
                     data-blank = "<%= t('invite_users.select_team_blank') %>"
                     data-select-all = "false"
@@ -136,19 +137,20 @@ invite_with_team_selector = type.in?(%w(invite_new_members invite_with_team_sele
 
       <div class="modal-footer">
         <div data-role="step-form">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          <button type="button" title="close organization invite users modal" class="btn btn-secondary" data-dismiss="modal">
             <%= t('general.cancel') %>
           </button>
 
           <!-- Invite buttons -->
           <button type="button" class="btn btn-primary"
                   data-role="invite-btn" data-action="invite"
+                  title="organization invite users disabled button"
                   disabled="disabled">
             <%= t('invite_users.invite_btn') %>
           </button>
 
           <div class="btn-group" data-role="invite-with-role-div">
-            <button type="button" class="btn btn-primary dropdown-toggle"
+            <button type="button" class="btn btn-primary dropdown-toggle" title="organization invite users with role button"
                     data-toggle="dropdown" data-id="invite-btn" aria-haspopup="true"
                     aria-expanded="false" data-role="invite-with-role-btn"
                     disabled="disabled">
@@ -157,20 +159,20 @@ invite_with_team_selector = type.in?(%w(invite_new_members invite_with_team_sele
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-              <li>
+              <li title="invite user as guest">
                 <%= link_to t('invite_users.invite_guest'), '#', data: { action: 'invite', 'team-role' => 'guest', remote: true } %>
               </li>
-              <li>
+              <li title="invite user as normal user">
                 <%= link_to t('invite_users.invite_user'), '#', data: { action: 'invite', 'team-role' => 'normal_user', remote: true } %>
               </li>
-              <li>
+              <li title="invite user as admin">
                 <%= link_to t('invite_users.invite_admin'), '#', data: { action: 'invite', 'team-role' => 'admin', remote: true } %>
               </li>
             </ul>
           </div>
         </div>
         <div data-role="step-results">
-          <button type="button" class="btn btn-default" data-dismiss="modal">
+          <button type="button" title="close organization invite users modal" class="btn btn-default" data-dismiss="modal">
             <%= t('general.close') %>
           </button>
         </div>

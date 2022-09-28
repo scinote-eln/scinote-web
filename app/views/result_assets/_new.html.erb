@@ -4,7 +4,7 @@
       <span>
         <%= t('assets.drag_n_drop.label_html') %>
         <label>
-          <span class="btn btn-default new-asset-upload-button">
+          <span class="btn btn-default new-asset-upload-button" title="new result asset upload file button">
             <span class="fas fa-file-upload new-asset-upload-icon"></span>
             <%= t('assets.drag_n_drop.browse_label') %>
           </span>
@@ -21,9 +21,11 @@
     <div class="align-right">
       <%= f.button t('general.cancel'),
                    class: 'btn btn-secondary cancel-new',
-                   onclick: 'DragNDropResults.destroyAll();' %>
+                   onclick: 'DragNDropResults.destroyAll();',
+                   title: 'cancel new result file upload' %>
       <%= f.button t('result_assets.new.create'),
                    class: 'btn btn-primary save-result',
+                   title: 'save new result file upload',
                    onclick: 'DragNDropResults.processResult(event);',
                    disabled: true,
                    data: { href: my_module_result_assets_path(page: params[:page], order: params[:order], format: :json) } %>
