@@ -3,7 +3,7 @@
     <div class="modal-content">
       <%= bootstrap_form_for [@project, @experiment], remote: true, html: { class: 'experiment-action-form' } do |f| %>
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>"><span aria-hidden="true">&times;</span></button>
+          <button title="close edit experiment modal" type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="edit-eperiment-modal-label">
             <%= t('experiments.edit.modal_title', experiment: @experiment.name ) %>
           </h4>
@@ -12,8 +12,8 @@
           <%= render partial: 'form.html.erb', locals: { form: f } %>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.cancel') %></button>
-          <%= f.submit t('experiments.edit.modal_create'), class: 'btn btn-primary' %>
+          <button title="cancel button for edit experiment modal" ype="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.cancel') %></button>
+          <%= f.submit t('experiments.edit.modal_create'), class: 'btn btn-primary', title: 'save button for edit experiment modal' %>
         </div>
       <% end %>
     </div>

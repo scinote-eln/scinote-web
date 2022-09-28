@@ -7,7 +7,7 @@
      data-restorable="<%= project.archived? && can_restore_project?(project) %>">
   <div class="checkbox-cell table-cell">
     <div class="sci-checkbox-container">
-      <input value="1" type="checkbox" class="sci-checkbox project-card-selector">
+      <input title="checkbox for project: <%= project.id %>" value="1" type="checkbox" class="sci-checkbox project-card-selector">
       <span class="sci-checkbox-label"></span>
     </div>
   </div>

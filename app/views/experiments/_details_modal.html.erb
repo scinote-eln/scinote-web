@@ -2,7 +2,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>"><span aria-hidden="true">&times;</span></button>
+        <button title="close experiment details modal" type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="experimentDetailsModalLabel">
           <%= t('experiments.index.details_modal.description', name: @experiment.name) %>
         </h4>
@@ -13,7 +13,7 @@
         </p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal"><%= t('general.close') %></button>
+        <button title="close button for experiment details modal" type="button" class="btn btn-primary" data-dismiss="modal"><%= t('general.close') %></button>
       </div>
     </div>
   </div>

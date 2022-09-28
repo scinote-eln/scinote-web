@@ -26,6 +26,7 @@
           <%= button_to(view_type_project_path(@project, format: :json),
                         method: :put,
                         remote: true,
+                        title: 'switch experiment view to cards',
                         class: "btn btn-light button-to #{ @current_view_type == 'cards' ? 'selected' : ''}",
                         form_class: 'change-experiments-view-type-form',
                         params: { project: { view_type: 'cards', project_id: @project.id } }) do %>
@@ -38,6 +39,7 @@
           <%= button_to(view_type_project_path(@project, format: :json),
                         method: :put,
                         remote: true,
+                        title: 'switch experiment view to table',
                         class: "btn btn-light button-to #{ @current_view_type == 'table' ? 'selected' : ''}",
                         form_class: 'change-experiments-view-type-form',
                         params: { project: { view_type: 'table', project_id: @project.id } }) do %>
@@ -47,11 +49,11 @@
         </li>
 
         <div role="separator" class="divider"></div>
-        <li class="view-switch-active archive-switch" data-view-mode="archived" data-url="<%= project_path(@project) %>">
+        <li title="go to active experiments" class="view-switch-active archive-switch" data-view-mode="archived" data-url="<%= project_path(@project) %>">
           <i class="fas fa-rocket button-icon"></i> <%= t('experiments.header.active_experiments') %>
         </li>
 
-        <li class="view-switch-archived archive-switch" data-view-mode="active" data-url="<%= project_path(@project, view_mode: 'archived') %>">
+        <li title="go to archived experiments" class="view-switch-archived archive-switch" data-view-mode="active" data-url="<%= project_path(@project, view_mode: 'archived') %>">
           <i class="fas fa-archive button-icon"></i> <%= t('experiments.header.archived_experiments') %>
         </li>
       <% end %>

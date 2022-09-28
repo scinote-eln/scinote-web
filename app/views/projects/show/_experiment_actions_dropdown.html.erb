@@ -1,6 +1,6 @@
 <% cache [current_user, experiment.project, experiment] do %>
   <div class="dropdown experiment-actions-menu">
-    <button class="btn btn-light dropdown-toggle icon-btn" type="button" id="experimentActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    <button title="experiment actions dropdown" class="btn btn-light dropdown-toggle icon-btn" type="button" id="experimentActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
       <i class="fas fa-ellipsis-h"></i>
     </button>
     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="experimentActionsDropdown">
@@ -9,6 +9,7 @@
         <li>
           <%= link_to edit_experiment_url(experiment),
                       remote: true,
+                      title: 'toolbar: edit experiment details',
                       class: 'edit-experiment experiment-action-link' do %>
             <i class="fas fa-pen"></i>
             <span><%= t('experiments.index.edit_option') %></span>
@@ -20,6 +21,7 @@
         <li>
           <%= link_to clone_modal_experiment_url(experiment),
                       remote: true, type: 'button',
+                      title: 'toolbar: duplicate experiment as template',
                       class: 'clone-experiment experiment-action-link' do %>
             <i class="fas fa-copy"></i>
             <span><%= t('experiments.index.clone_option') %></span>
@@ -31,6 +33,7 @@
         <li>
           <%= link_to move_modal_experiment_url(experiment),
                       remote: true,
+                      title: 'toolbar: move experiment',
                       class: 'move-experiment experiment-action-link' do %>
             <i class="fas fa-arrow-right"></i>
             <span><%= t('experiments.index.move_option') %></span>
@@ -40,14 +43,14 @@
       <!-- Set or view user experiment assignments -->
       <% if can_manage_experiment_users?(experiment) %>
         <li class="form-dropdown-item">
-          <%= link_to edit_access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'} do %>
+          <%= link_to edit_access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'}, title: 'toolbar: experiment access' do %>
             <i class="fas fa-door-open"></i>
             <span><%= t('experiments.index.experiment_access') %></span>
           <% end %>
         </li>
       <% else %>
         <li class="form-dropdown-item">
-          <%= link_to access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'} do %>
+          <%= link_to access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'}, title: 'toolbar: experiment access' do %>
             <i class="fas fa-door-open"></i>
             <span><%= t('experiments.index.experiment_access') %></span>
           <% end %>
@@ -60,6 +63,7 @@
                         method: :post,
                         remote: true,
                         class: 'btn btn-light',
+                        title: 'toolbar: archive experiment',
                         form_class: 'experiment-action-form',
                         data: { confirm: t('experiments.index.archive_confirm') } ) do %>
             <i class="fas fa-archive"></i>
@@ -72,6 +76,7 @@
                         method: :put,
                         remote: true,
                         class: 'btn btn-light',
+                        title: 'toolbar: restore experiment',
                         form_class: 'experiment-action-form',
                         params: { experiment: { archived: false } }) do %>
             <i class="fas fa-undo"></i>
@@ -81,7 +86,7 @@
       <% end %>
       <li class="form-dropdown-item">
         <div class="form-dropdown-item-info">
-          <small><%= t('experiments.experiment_id') %>: <strong><%= experiment.code %></strong></small>
+          <small title="experiment id: <%= experiment.code %>" ><%= t('experiments.experiment_id') %>: <strong><%= experiment.code %></strong></small>
         </div>
       </li>
     </ul>
