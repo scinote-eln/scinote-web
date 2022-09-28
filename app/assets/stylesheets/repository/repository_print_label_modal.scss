@@ -1,4 +1,8 @@
 #modal-print-repository-row-label {
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    margin-left: 8px;
+  }
 
   .id-label {
     margin-left: .5em;
@@ -17,7 +21,8 @@
 
   .print-copies-input {
     margin-left: .5em;
-    width: 50px;
+    text-align: right;
+    width: 100px;
   }
 
   .no-printers-container {
