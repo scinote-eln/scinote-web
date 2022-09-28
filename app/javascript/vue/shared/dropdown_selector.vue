@@ -126,6 +126,9 @@
           'dropdown:changed',
           value
         );
+      },
+      selectValues(value) {
+        dropdownSelector.selectValues(`#${this.selectorId}`, value);
       }
     }
   }
