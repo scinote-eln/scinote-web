@@ -24,7 +24,10 @@
               </label>
               <DropdownSelector
                 :disableSearch="true"
+                :labelHTML="true"
                 :options="printers_dropdown"
+                :optionLabel="printerOptionLabel"
+                :tagLabel="printerOptionLabel"
                 :selectorId="`LabelPrinterSelector`"
                 @dropdown:changed="selectPrinter"
               />
@@ -157,7 +160,14 @@
       },
       printers_dropdown() {
         return this.printers.map(i => {
-          return {value: i.id, label: i.attributes.name}
+          return {
+            value: i.id,
+            label: i.attributes.display_name,
+            params: {
+              status: i.attributes.status,
+              display_status: i.attributes.display_status
+            }
+          }
         })
       }
     },
@@ -176,7 +186,7 @@
     methods: {
       selectDefaultLabelTemplate() {
         if (this.selectedPrinter && this.templates) {
-          let template = this.templates.find(i => i.attributes.default 
+          let template = this.templates.find(i => i.attributes.default
             && i.type.includes(this.selectedPrinter.attributes.type_of));
           if (template) {
             this.$nextTick(() => {
@@ -249,6 +259,9 @@
             ${option.label}
           </div>
         `
+      },
+      printerOptionLabel(option) {
+        return `${option.label} <span class="status-${option.params.status}"> • ${option.params.display_status}`
       },
       initTooltip() {
         $('[data-toggle="tooltip"]').tooltip();
