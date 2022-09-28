@@ -1345,6 +1345,16 @@ en:
       view: 'View'
       head_title: "%{project} | Overview"
       canvas_edit: "Edit workflow"
+      new_my_module: "New task"
+      new_my_module_modal:
+        title: "Add a new task"
+        name: "Task name"
+        name_placeholder: "e.g. My task"
+        due_date: "Due date (optional)"
+        due_date_placeholder: "+ Add due date"
+        tags: "Add tags (optional)"
+        create: "Create"
+      canvas_edit: "Edit Experiment"
       zoom: "Zoom: "
       reload_on_submit: "Save action is running. Reloading this page may cause unexpected behavior."
       modal_manage_tags:
