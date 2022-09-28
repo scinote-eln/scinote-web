@@ -2,7 +2,7 @@
 <a class="current-task-item" href="<%= protocols_my_module_path(task.id) %>">
   <div class="current-task-breadcrumbs"><%= task.experiment.project.name %>
     <span class="slash">/</span><%= task.experiment.name %></div>
-  <div class="task-name row-border">
+  <div class="task-name row-border" title="current task: <%= task.name %>">
     <%= task.name %>
   </div>
   <div class="task-due-date row-border <%= task_date[:span_class]%>">

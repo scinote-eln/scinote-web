@@ -8,7 +8,8 @@
       <%= label_tag :projectSelector, t('projects.reports.wizard.first_step.select_project') %>
       <%= select_tag :projectSelector,
                      options_from_collection_for_select(@visible_projects, :id, :name, report.project_id),
-                     prompt: t('projects.reports.wizard.first_step.select_project') %>
+                     prompt: t('projects.reports.wizard.first_step.select_project'),
+                     title: 'new report select project field' %>
     </div>
 
     <div class='template-selector'>
@@ -21,13 +22,14 @@
                        placeholder: t('projects.reports.wizard.first_step.select_template'),
                        selected_template: report.settings[:template],
                        values_editor_path: reports_new_template_values_path(report_id: report.id)
-                     } %>
+                     },
+                     title: 'new report select template field' %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="sci-input-container">
       <%= label_tag :projectDescription, t('projects.reports.wizard.first_step.report_description') %>
-      <%= text_area_tag :projectDescription, report.description, placeholder: t('projects.reports.wizard.first_step.report_description_placeholder'), class: 'sci-input-field' %>
+      <%= text_area_tag :projectDescription, report.description, placeholder: t('projects.reports.wizard.first_step.report_description_placeholder'), class: 'sci-input-field', title: 'new report description field' %>
     </div>
   </div>
 </div>
