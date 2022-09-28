@@ -42,4 +42,13 @@
     min-height: 200px;
     padding: .5em 0;
   }
+
+  .label-template-option {
+    align-items: center;
+    display: flex;
+
+    img {
+      margin-right: .25em;
+    }
+  }
 }
