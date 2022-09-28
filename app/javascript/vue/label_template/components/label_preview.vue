@@ -1,6 +1,6 @@
 <template>
   <div ref="labelPreview" class="label-preview">
-    <div class="label-preview__header">
+    <div v-if="!viewOnly" class="label-preview__header">
       <div class="title">
         {{ i18n.t('label_templates.show.preview_title') }}
       </div>
@@ -10,7 +10,7 @@
         <i class="fas" :class="{ 'fa-chevron-down': !optionsOpen, 'fa-chevron-up': optionsOpen }"></i>
       </div>
     </div>
-    <div class="label-preview__controls" :class="{'open': optionsOpen}">
+    <div v-if="!viewOnly" class="label-preview__controls" :class="{'open': optionsOpen}">
       <div class="label-preview__controls__units">
         <div class="sci-input-container">
           <label>{{ i18n.t('label_templates.label_preview.units') }}</label>
@@ -80,7 +80,11 @@
     components: { DropdownSelector },
     props: {
       zpl: { type: String, required: true },
-      previewUrl: { type: String, required: true }
+      previewUrl: { type: String, required: true },
+      viewOnly: {
+        type: Boolean,
+        default: false
+      }
     },
     data() {
       return {

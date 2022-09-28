@@ -41,6 +41,9 @@
                 :selectorId="`LabelTemplateSelector`"
                 @dropdown:changed="selectTemplate"
               />
+              <div v-if="labelTemplateError" class="label-template-warning">
+                {{ labelTemplateError }}
+              </div>
             </div>
             <p class="sci-input-container">
               <label>
@@ -48,6 +51,12 @@
               </label>
               <input v-model="copies" type=number class="sci-input-field print-copies-input" min="1">
             </p>
+            <div class="label-preview-title">
+              {{ i18n.t('repository_row.modal_print_label.label_preview') }}
+            </div>
+            <div class="label-preview-container">
+              <LabelPreview v-if="labelTemplateCode" :zpl='labelTemplateCode' :previewUrl="urls.labelPreview" :viewOnly="true"/>
+            </div>
           </div>
           <div class="modal-footer">
             <button class="btn btn-primary" @click="submitPrint" :disabled="!selectedPrinter || !selectedTemplate">
@@ -79,6 +88,7 @@
 
 <script>
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
+  import LabelPreview from 'vue/label_template/components/label_preview.vue'
 
   export default {
     name: 'PrintModalContainer',
@@ -96,11 +106,14 @@
         selectedPrinter: null,
         selectedTemplate: null,
         copies: 1,
-        zebraPrinters: null
+        zebraPrinters: null,
+        labelTemplateError: null,
+        labelTemplateCode: null
       }
     },
     components: {
-      DropdownSelector
+      DropdownSelector,
+      LabelPreview
     },
     mounted() {
       $.get(this.urls.labelTemplates, (result) => {
@@ -150,10 +163,22 @@
     },
     methods: {
       selectPrinter(value) {
-        this.selectedPrinter = this.printers.find(i => i.id === value)
+        this.selectedPrinter = this.printers.find(i => i.id === value);
       },
       selectTemplate(value) {
-        this.selectedTemplate = this.templates.find(i => i.id === value)
+        this.selectedTemplate = this.templates.find(i => i.id === value);
+        this.validateTemplate();
+      },
+      validateTemplate() {
+        if (!this.selectedTemplate || this.row_ids.length == 0) return;
+
+        $.post(this.urls.printValidation, {label_template_id: this.selectedTemplate.id, rows: this.row_ids}, (result) => {
+          this.labelTemplateError = null;
+          this.labelTemplateCode = result.label_code;
+        }).error((result) => {
+          this.labelTemplateError = result.responseJSON.error;
+          this.labelTemplateCode = result.responseJSON.label_code;
+        })
       },
       submitPrint() {
         if (this.selectedPrinter.attributes.type_of === 'zebra') {

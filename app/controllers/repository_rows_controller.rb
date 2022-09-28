@@ -81,11 +81,14 @@ class RepositoryRowsController < ApplicationController
   end
 
   def validate_label_template_columns
-    LabelTemplates::RepositoryRowService.new(LabelTemplate.find_by(id: params[:label_template_id]),
-                                             RepositoryRow.find_by(id: params[:repository_row_ids].first)).render
-    render json: {}
+    label_template = LabelTemplate.where(team_id: current_team.id).find(params[:label_template_id])
+    repository_rows = @repository.repository_rows.where(id: params[:rows])
+
+    label_code = LabelTemplates::RepositoryRowService.new(label_template, repository_rows.first).render
+    render json: { label_code: label_code }
   rescue StandardError => e
-    render json: { error: e }
+    label_code = LabelTemplates::RepositoryRowService.new(label_template, repository_rows.first, true).render
+    render json: { error: e, label_code: label_code }, status: :unprocessable_entity
   end
 
   def print_zpl

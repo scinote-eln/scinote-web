@@ -24,7 +24,9 @@ function initPrintModalComponent() {
           printers: container.data('printers-url'),
           labelTemplates: container.data('label-templates-url'),
           rows: container.data('rows-url'),
-          fluicsInfo: container.data('fluics-info-url')
+          fluicsInfo: container.data('fluics-info-url'),
+          printValidation: container.data('print-validation-url'),
+          labelPreview: container.data('label-preview-url')
         }
       };
     },
