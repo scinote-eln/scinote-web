@@ -39,6 +39,8 @@
                 :disableSearch="true"
                 :options="templates_dropdown"
                 :selectorId="`LabelTemplateSelector`"
+                :optionLabel="templateOption"
+                :onOpen="initTooltip"
                 @dropdown:changed="selectTemplate"
               />
               <div v-if="labelTemplateError" class="label-template-warning">
@@ -140,7 +142,14 @@
         }
 
         return templates.map(i => {
-          return {value: i.id, label: i.attributes.name}
+          return {
+            value: i.id,
+            label: i.attributes.name,
+            params: {
+              icon: i.attributes.icon_url,
+              description: i.attributes.description || ''
+            }
+          }
         })
       },
       printers_dropdown() {
@@ -217,6 +226,17 @@
             })
           }
         });
+      },
+      templateOption(option) {
+        return `
+          <div class="label-template-option" data-toggle="tooltip" data-placement="right" title="${option.params.description}">
+            <img src="${option.params.icon}"></img>
+            ${option.label}
+          </div>
+        `
+      },
+      initTooltip() {
+        $('[data-toggle="tooltip"]').tooltip();
       }
     }
   }
