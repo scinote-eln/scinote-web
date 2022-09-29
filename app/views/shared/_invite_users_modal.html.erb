@@ -157,15 +157,13 @@ invite_with_team_selector = type.in?(%w(invite_new_members invite_with_team_sele
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-              <li>
-                <%= link_to t('invite_users.invite_guest'), '#', data: { action: 'invite', 'team-role' => 'guest', remote: true } %>
-              </li>
-              <li>
-                <%= link_to t('invite_users.invite_user'), '#', data: { action: 'invite', 'team-role' => 'normal_user', remote: true } %>
-              </li>
-              <li>
-                <%= link_to t('invite_users.invite_admin'), '#', data: { action: 'invite', 'team-role' => 'admin', remote: true } %>
-              </li>
+              <% team_user_roles_collection.each do |user_role| %>
+                <li>
+                  <%= link_to '#', data: { action: 'invite', 'team-role-id' => user_role.id, remote: true } do %>
+                    <%= t('invite_users.invite_as', role: user_role.name.pluralize) %>
+                  <% end %>
+                </li>
+              <% end %>
             </ul>
           </div>
         </div>

@@ -5,11 +5,12 @@ class RepositoryRowsController < ApplicationController
   include MyModulesHelper
 
   MAX_PRINTABLE_ITEM_NAME_LENGTH = 64
-
-  before_action :load_repository, except: %i(show print_modal print)
-  before_action :load_repository_or_snapshot, only: %i(print_modal print)
+  before_action :load_repository, except: %i(show print_modal print rows_to_print print_zpl)
+  before_action :load_repository_or_snapshot, only: %i(print_modal print rows_to_print print_zpl)
   before_action :load_repository_row, only: %i(update assigned_task_list active_reminder_repository_cells)
-  before_action :check_read_permissions, except: %i(show create update delete_records copy_records reminder_repository_cells)
+  before_action :check_read_permissions, except: %i(show create update delete_records
+                                                    copy_records reminder_repository_cells
+                                                    delete_records archive_records restore_records)
   before_action :check_snapshotting_status, only: %i(create update delete_records copy_records)
   before_action :check_create_permissions, only: :create
   before_action :check_delete_permissions, only: %i(delete_records archive_records restore_records)
@@ -79,9 +80,40 @@ class RepositoryRowsController < ApplicationController
     end
   end
 
+  def validate_label_template_columns
+    label_template = LabelTemplate.where(team_id: current_team.id).find(params[:label_template_id])
+    repository_rows = @repository.repository_rows.where(id: params[:rows])
+
+    label_code = LabelTemplates::RepositoryRowService.new(label_template, repository_rows.first).render
+    render json: { label_code: label_code }
+  rescue StandardError => e
+    label_code = LabelTemplates::RepositoryRowService.new(label_template, repository_rows.first, true).render
+    render json: { error: e, label_code: label_code }, status: :unprocessable_entity
+  end
+
+  def print_zpl
+    label_template = LabelTemplate.find_by(id: params[:label_template_id])
+    labels = RepositoryRow.where(id: params[:repository_row_ids]).flat_map do |repository_row|
+      LabelTemplates::RepositoryRowService.new(label_template,
+                                               repository_row,
+                                               true).render
+    end
+
+    render(
+      json: {
+        html:
+          render_to_string(
+            partial: 'label_printers/print_zebra_progress_modal'
+          ),
+        labels: labels
+      }
+    )
+  end
+
   def print_modal
     @repository_rows = @repository.repository_rows.where(id: params[:rows])
     @printers = LabelPrinter.all
+    @label_templates = LabelTemplate.where(team_id: current_team).order(:name)
     respond_to do |format|
       format.json do
         render json: {
@@ -93,6 +125,12 @@ class RepositoryRowsController < ApplicationController
     end
   end
 
+  def rows_to_print
+    @repository_rows = @repository.repository_rows.where(id: params[:rows])
+
+    render json: @repository_rows, each_serializer: RepositoryRowSerializer, user: current_user
+  end
+
   def print
     # reset all potential error states for printers and discard all jobs
 
@@ -101,14 +139,14 @@ class RepositoryRowsController < ApplicationController
     # rubocop:enable Rails/SkipsModelValidations
 
     label_printer = LabelPrinter.find(params[:label_printer_id])
+    label_template = LabelTemplate.find_by(id: params[:label_template_id])
 
     job_ids = RepositoryRow.where(id: params[:repository_row_ids]).flat_map do |repository_row|
       LabelPrinters::PrintJob.perform_later(
         label_printer,
-        LabelTemplate.first.render( # Currently we will only use the default template
-          item_id: repository_row.code,
-          item_name: repository_row.name.truncate(MAX_PRINTABLE_ITEM_NAME_LENGTH)
-        ),
+        LabelTemplates::RepositoryRowService.new(label_template,
+                                                 repository_row,
+                                                 true).render,
         params[:copies].to_i
       ).job_id
     end

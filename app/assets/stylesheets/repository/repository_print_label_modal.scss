@@ -10,13 +10,14 @@
     min-height: 4em;
   }
 
+  .labels-container {
+    margin-bottom: 1em;
+    min-height: 4em;
+  }
+
   .print-copies-input {
     margin-left: .5em;
     width: 50px;
-  }
-
-  .modal-footer {
-    text-align: center;
   }
 
   .no-printers-container {
@@ -27,5 +28,18 @@
       @include font-h3;
       margin-top: 1em;
     }
+  }
+
+  .label-template-warning {
+    @include font-small;
+    color: $brand-warning;
+  }
+
+  .label-preview-container {
+    background-color: $color-concrete;
+    display: flex;
+    justify-content: center;
+    min-height: 200px;
+    padding: .5em 0;
   }
 }

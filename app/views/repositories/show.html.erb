@@ -49,7 +49,7 @@
       </div>
       <div class="repo-datatables-buttons">
         <div class="share-repository-button" data-view-mode="active">
-          <% if can_share_repository?(@repository) && current_user.teams.count > 1 %>
+          <% if can_share_repository?(@repository) %>
             <%= link_to team_repository_share_modal_path(current_team, repository_id: @repository),
                         class: 'btn btn-light share-repo-option', remote: true, id: 'shareRepoBtn' do %>
               <span class="fas fa-user-plus"></span>
@@ -83,6 +83,28 @@
   <!-- These buttons are appended to table in javascript, after table initialization -->
   <div class="toolbar-filter-buttons" style="display:none">
   </div>
+
+  <div class="print-label-modal-container"
+    data-print-url="<%= print_repository_repository_rows_path(repository_id: @repository) %>"
+    data-zebra-progress-url="<%= print_zpl_repository_repository_rows_path(repository_id: @repository)%>"
+    data-printers-url="<%= label_printers_path(format: :json) %>"
+    data-label-templates-url="<%= label_templates_path(format: :json) %>"
+    data-rows-url="<%= rows_to_print_repository_repository_rows_path(repository_id: @repository) %>"
+    data-print-validation-url="<%= validate_label_template_columns_repository_repository_rows_path(repository_id: @repository) %>"
+    data-label-preview-url="<%= zpl_preview_label_templates_path %>"
+    data-fluics-info-url="<%= Constants::SCINOTE_FLUICS_URL %>"
+    data-zebra-enabled="<%= Rails.configuration.x.zebra_print_enabled %>"
+  >
+      <print-modal-container
+        :show-modal = "showModal"
+        :row_ids = "row_ids"
+        :urls = "urls"
+        :zebra-enabled = "zebraEnabled"
+        @close="closeModal"
+      ></print-modal-container>
+  </div>
+
+  <%= javascript_pack_tag 'vue/repository_print_modal' %>
 
   <%= render partial: "repositories/repository_table",
              locals: {

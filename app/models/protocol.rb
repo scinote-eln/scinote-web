@@ -4,6 +4,8 @@ class Protocol < ApplicationRecord
   include SearchableModel
   include RenamingUtil
   include SearchableByNameModel
+  include Assignable
+  include PermissionCheckableModel
   include TinyMceImages
 
   after_save :update_linked_children
@@ -202,6 +204,7 @@ class Protocol < ApplicationRecord
                    user_id: user.id))
   end
 
+
   def self.filter_by_teams(teams = [])
     teams.blank? ? self : where(team: teams)
   end
@@ -216,6 +219,14 @@ class Protocol < ApplicationRecord
       step.save!
     end
     step
+  end
+
+  def created_by
+    in_module? ? my_module.created_by : added_by
+  end
+
+  def permission_parent
+    in_module? ? my_module : team
   end
 
   def linked_modules
@@ -254,7 +265,6 @@ class Protocol < ApplicationRecord
   end
 
   def self.clone_contents(src, dest, current_user, clone_keywords, only_contents = false)
-    assets_to_clone = []
     dest.update(description: src.description, name: src.name) unless only_contents
 
     src.clone_tinymce_assets(dest, dest.team)
@@ -271,85 +281,8 @@ class Protocol < ApplicationRecord
 
     # Copy steps
     src.steps.each do |step|
-      step2 = Step.new(
-        name: step.name,
-        position: step.position,
-        completed: false,
-        user: current_user,
-        protocol: dest
-      )
-      step2.save!
-
-      # Copy texts
-      step.step_texts.each do |step_text|
-        step_text2 = StepText.new(
-          text: step_text.text,
-          step: step2
-        )
-        step_text2.save!
-
-        # Copy steps tinyMce assets
-        step_text.clone_tinymce_assets(step_text2, dest.team)
-
-        step2.step_orderable_elements.create!(
-          position: step_text.step_orderable_element.position,
-          orderable: step_text2
-        )
-      end
-
-      # Copy checklists
-      step.checklists.asc.each do |checklist|
-        checklist2 = Checklist.create!(
-          name: checklist.name,
-          step: step2,
-          created_by: current_user,
-          last_modified_by: current_user
-        )
-
-        checklist.checklist_items.each do |item|
-          ChecklistItem.create!(
-            text: item.text,
-            checked: false,
-            checklist: checklist2,
-            position: item.position,
-            created_by: current_user,
-            last_modified_by: current_user
-          )
-        end
-
-        step2.step_orderable_elements.create!(
-          position: checklist.step_orderable_element.position,
-          orderable: checklist2
-        )
-      end
-
-      # "Shallow" Copy assets
-      step.assets.each do |asset|
-        asset2 = asset.dup
-        asset2.save!
-        step2.assets << asset2
-        assets_to_clone << [asset.id, asset2.id]
-      end
-
-      # Copy tables
-      step.tables.each do |table|
-        table2 = Table.create!(
-          name: table.name,
-          step: step2,
-          contents: table.contents.encode('UTF-8', 'UTF-8'),
-          team: dest.team,
-          created_by: current_user,
-          last_modified_by: current_user
-        )
-
-        step2.step_orderable_elements.create!(
-          position: table.step_table.step_orderable_element.position,
-          orderable: table2.step_table
-        )
-      end
+      step.duplicate(dest, current_user, step_position: step.position)
     end
-    # Call clone helper
-    Protocol.delay(queue: :assets).deep_clone_assets(assets_to_clone)
   end
 
   def in_repository_active?

@@ -78,7 +78,7 @@
               <i class="fas fa-font"></i>
               {{ i18n.t('protocols.steps.insert.text') }}
             </li>
-            <li class="action"  @click="showFileModal = true">
+            <li v-if="attachmentsReady" class="action"  @click="showFileModal = true">
               <i class="fas fa-paperclip"></i>
               {{ i18n.t('protocols.steps.insert.attachment') }}
             </li>
@@ -113,6 +113,10 @@
                 <i class="fas fas-rotated-90 fa-exchange-alt"></i>
                 {{ i18n.t('protocols.steps.options_dropdown.rearrange') }}
               </li>
+              <li v-if="urls.duplicate_step_url" class="action" @click="duplicateStep">
+                <i class="fas fa-clone"></i>
+                {{ i18n.t('protocols.steps.options_dropdown.duplicate') }}
+              </li>
               <li v-if="urls.delete_url" class="action" @click="showDeleteModal">
                 <i class="fas fa-trash"></i>
                 {{ i18n.t('protocols.steps.options_dropdown.delete') }}
@@ -124,7 +128,7 @@
     </div>
     <div class="collapse in" :id="'stepBody' + step.id">
       <div class="step-elements">
-        <template v-for="(element, index) in elements">
+        <template v-for="(element, index) in orderedElements">
           <component
             :is="elements[index].attributes.orderable_type"
             :key="index"
@@ -135,11 +139,13 @@
             @component:delete="deleteElement"
             @update="updateElement"
             @reorder="openReorderModal"
+            @component:insert="insertElement"
           />
         </template>
         <Attachments v-if="attachments.length"
                     :step="step"
                     :attachments="attachments"
+                    :attachmentsReady="attachmentsReady"
                     @attachments:openFileModal="showFileModal = true"
                     @attachment:deleted="attachmentDeleted"
                     @attachment:uploaded="loadAttachments"
@@ -212,6 +218,7 @@
       return {
         elements: [],
         attachments: [],
+        attachmentsReady: false,
         confirmingDelete: false,
         showFileModal: false,
         showClipboardPasteModal: false,
@@ -246,7 +253,10 @@
     },
     computed: {
       reorderableElements() {
-        return this.elements.map((e) => { return { id: e.id, attributes: e.attributes.orderable } })
+        return this.orderedElements.map((e) => { return { id: e.id, attributes: e.attributes.orderable } })
+      },
+      orderedElements() {
+        return this.elements.sort((a, b) => a.attributes.position - b.attributes.position);
       },
       urls() {
         return this.step.attributes.urls || {}
@@ -264,8 +274,18 @@
         }
       },
       loadAttachments() {
+        this.attachmentsReady = false
+
         $.get(this.urls.attachments_url, (result) => {
           this.attachments = result.data
+
+          if (this.attachments.findIndex((e) => e.attributes.attached === false) >= 0) {
+            setTimeout(() => {
+              this.loadAttachments()
+            }, 10000)
+          } else {
+            this.attachmentsReady = true
+          }
         });
         this.showFileModal = false;
       },
@@ -324,7 +344,6 @@
           }
           return e;
         })
-        this.reorderElements(unorderedElements)
         this.$emit('stepUpdated')
       },
       updateElement(element, skipRequest=false, callback) {
@@ -353,9 +372,6 @@
           })
         }
       },
-      reorderElements(elements) {
-        this.elements = elements.sort((a, b) => a.attributes.position - b.attributes.position);
-      },
       updateElementOrder(orderedElements) {
         orderedElements.forEach((element, position) => {
           let index = this.elements.findIndex((e) => e.id === element.id);
@@ -379,8 +395,6 @@
           error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')),
           success: (() => this.$emit('stepUpdated'))
         });
-
-        this.reorderElements(this.elements);
       },
       updateName(newName) {
         $.ajax({
@@ -440,6 +454,24 @@
       copyPasteImageModal(pasteImages) {
         this.pasteImages = pasteImages;
         this.showClipboardPasteModal = true;
+      },
+      insertElement(element) {
+        let position = element.attributes.position;
+        this.elements = this.elements.map( s => {
+          if (s.attributes.position >= position) {
+              s.attributes.position += 1;
+          }
+          return s;
+        })
+        this.elements.push(element);
+      },
+      duplicateStep() {
+        $.post(this.urls.duplicate_step_url, (result) => {
+          this.$emit('step:insert', result.data);
+          HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.step_duplicated'), 'success');
+        }).error(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.step_duplication_failed'), 'danger');
+        });
       }
     }
   }

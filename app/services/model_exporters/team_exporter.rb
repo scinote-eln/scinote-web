@@ -57,7 +57,8 @@ module ModelExporters
         protocol_keywords: team.protocol_keywords,
         project_folders: team.project_folders,
         projects: team.projects.map { |p| project(p) },
-        activities: team.activities.where(project_id: nil)
+        activities: team.activities.where(project_id: nil),
+        label_templates: label_templates(team.label_templates)
       }
     end
 
@@ -68,6 +69,14 @@ module ModelExporters
                                           .read_attribute('type_of'))
                                      .to_s
       notification_json
+    end
+
+    def label_templates(templates)
+      templates.where.not(type: 'FluicsLabelTemplate').map do |template|
+        template_json = template.as_json
+        template_json['type'] = template.type # as_json ignore 'type' column
+        template_json
+      end
     end
 
     def user(user)

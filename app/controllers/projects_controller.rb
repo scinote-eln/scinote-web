@@ -86,7 +86,7 @@ class ProjectsController < ApplicationController
     if stale?([@product, current_team])
       render json: {
         editable: can_manage_project?(@project),
-        moveable: can_update_team?(current_team),
+        moveable: can_manage_team?(current_team),
         archivable: can_archive_project?(@project),
         restorable: can_restore_project?(@project)
       }
@@ -123,13 +123,6 @@ class ProjectsController < ApplicationController
     @project.created_by = current_user
     @project.last_modified_by = current_user
     if @project.save
-      # Create user-project association
-      user_project = UserProject.new(
-        role: :owner,
-        user: current_user,
-        project: @project
-      )
-      user_project.save
       log_activity(:create_project)
 
       message = t('projects.create.success_flash', name: escape_input(@project.name))
@@ -415,7 +408,7 @@ class ProjectsController < ApplicationController
   end
 
   def set_folder_inline_name_editing
-    return if !can_update_team?(current_team) || @current_folder.nil?
+    return if !can_manage_team?(current_team) || @current_folder.nil?
 
     @inline_editable_title_config = {
       name: 'title',

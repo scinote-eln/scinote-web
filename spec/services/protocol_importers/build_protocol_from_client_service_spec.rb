@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe ProtocolImporters::BuildProtocolFromClientService do
   let(:user) { create :user }
-  let(:team) { create :team }
+  let(:team) { create :team, created_by: user }
   let(:service_call) do
     ProtocolImporters::BuildProtocolFromClientService
       .call(protocol_client_id: 'id', protocol_source: 'protocolsio/v3', user_id: user.id, team_id: team.id)

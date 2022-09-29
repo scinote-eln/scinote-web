@@ -24,9 +24,11 @@ module PermissionCheckableModel
 
   def load_user_role_permissions(user)
     if user_assignments.loaded?
-      user_assignments.detect { |user_assignment| user_assignment.user == user }&.user_role&.permissions
+      user_assignments.detect do |user_assignment|
+        user_assignment.user == user && user_assignment.team == user.current_team
+      end&.user_role&.permissions
     else
-      user_assignments.find_by(user: user)&.user_role&.permissions
+      user_assignments.find_by(user: user, team: user.current_team)&.user_role&.permissions
     end
   end
 end
