@@ -34,8 +34,8 @@ var TinyMCE = (function() {
     var lastDraftTime = parseInt(tinyMCE.util.LocalStorage.getItem(prefix + 'time'), 10);
     var lastUpdated = $(selector).data('last-updated');
     var notificationBar;
-    var restoreBtn = $('<button class="btn restore-draft-btn">Restore Draft</button>');
-    var cancelBtn = $('<span class="fas fa-times"></span>');
+    var restoreBtn = $('<button class="btn restore-draft-btn" title="restore tinymce changed draft">Restore Draft</button>');
+    var cancelBtn = $('<span title="close tinymce changed draft"class="fas fa-times"></span>');
 
     // Check whether we have draft stored
     if (editor.plugins.autosave.hasDraft()) {
@@ -179,8 +179,8 @@ var TinyMCE = (function() {
           force_p_newlines: false,
           default_link_target: '_blank',
           target_list: [
-            { title: 'New page', value: '_blank' },
-            { title: 'Same page', value: '_self' }
+            { title: 'New page', value: '_blank', title: 'insert on new page' },
+            { title: 'Same page', value: '_self', title: 'insert on same page' }
           ],
           style_formats: [
             {

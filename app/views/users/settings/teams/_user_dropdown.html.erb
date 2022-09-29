@@ -8,6 +8,7 @@
   <div class="dropdown dropdown-teams-user">
     <div class="btn btn-default btn-xs"
          type="button"
+         title="organization team <%= id %> button"
          id="<%= id %>"
          data-toggle="dropdown"
          aria-haspopup="true"
@@ -26,7 +27,7 @@
                              data: { id: 'update-role-form' } do |f| %>
         <input type="hidden" name="user_team[role]" data-field="role" value="" %>
       <% end %>
-      <li class="user-team-role <%= 'disabled' if user_team.guest? %>">
+      <li title="user dropdown guest item" class="user-team-role <%= 'disabled' if user_team.guest? %>">
         <% if user_team.guest? %>
           <span class="fas fa-check"></span>
           <%= UserTeam.new(role: 0).role_str %>
@@ -37,7 +38,7 @@
           </a>
         <% end %>
       </li>
-      <li class="user-team-role <%= 'disabled' if user_team.normal_user? %>">
+      <li title="user dropdown normal user item" class="user-team-role <%= 'disabled' if user_team.normal_user? %>">
         <% if user_team.normal_user? %>
           <span class="fas fa-check"></span>
           <%= UserTeam.new(role: 1).role_str %>
@@ -48,7 +49,7 @@
           </a>
         <% end %>
       </li>
-      <li class="user-team-role <%= 'disabled' if user_team.admin? %>">
+      <li title="user dropdown admin item" class="user-team-role <%= 'disabled' if user_team.admin? %>">
         <% if user_team.admin? %>
           <span class="fas fa-check"></span>
           <%= UserTeam.new(role: 2).role_str %>
@@ -60,7 +61,7 @@
         <% end %>
       </li>
       <li role="separator" class="divider"></li>
-      <li>
+      <li title="user dropdown remove user item">
         <%= destroy_uo_link %>
       </li>
     </ul>

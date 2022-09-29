@@ -8,18 +8,18 @@
       <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
 
         <% if resource.errors.present? %>
-          <div class="alert alert-danger" id="alert-flash">
+          <div class="alert alert-danger" id="alert-flash" title="reset password error flash">
             <%= devise_error_messages! %>
           </div>
         <% end %>
 
         <div class="form-group sci-input-container">
           <%= f.label :email %><br />
-          <%= f.email_field :email, autofocus: true, class: "form-control sci-input-field" %>
+          <%= f.email_field :email, autofocus: true, class: "form-control sci-input-field", title: 'email forgot password form' %>
         </div>
 
         <div class="form-group">
-          <%= f.button t("devise.passwords.new.submit"), class: "btn btn-primary" %>
+          <%= f.button t("devise.passwords.new.submit"), class: "btn btn-primary", title: 'reset password button' %>
         </div>
       <% end %>
 

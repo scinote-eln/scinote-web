@@ -10,6 +10,12 @@
     flex: 0;
   }
 
+  .view-text-element {
+    a {
+      pointer-events: initial;
+    }
+  }
+
   .empty-text-element {
     color: $color-silver-chalice;
   }
@@ -38,6 +44,10 @@
     left: 0;
     padding: .5em;
     position: absolute;
+  }
+
+  img {
+    max-width: 100%;
   }
 
   &:hover:not(.edit):not(.locked) {

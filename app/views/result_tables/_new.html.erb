@@ -2,20 +2,21 @@
 	<%= bootstrap_form_for(@result, url: my_module_result_tables_path(format: :json, page: params[:page], order: params[:order]),
 																			 data: { 'name-max-length': Constants::NAME_MAX_LENGTH },
 																			 remote: true) do |f| %>
-		<%= f.text_field :name, style: "margin-top: 10px;" %><br />
+		<%= f.text_field :name, style: "margin-top: 10px;", title: 'new result table name field' %><br />
 		<div class="editable-table" style="margin-bottom: 25px;">
 			<%= f.fields_for :table do |ff| %>
-				<%= ff.hidden_field(:contents, value: ff.object.contents, class: "hot-contents" ) %>
+				<%= ff.hidden_field(:contents, value: ff.object.contents, class: "hot-contents", title: 'new result table table field' ) %>
 				<div class="hot">
 				</div>
 			<% end %>
 		</div>
 		<div class="align-right">
-			<button type="button" class="btn btn-secondary cancel-new">
+			<button type="button" class="btn btn-secondary cancel-new" title="new result table cancel button">
 				<%= t("general.cancel")%>
 			</button>
 			<%= f.button t("result_tables.new.create"),
 									 class: 'btn btn-primary save-result',
+									 title: 'new result table save button',
 									 onclick: "Results.processResult(event, Results.ResultTypeEnum.TABLE);" %>
     </div>
 	<% end %>

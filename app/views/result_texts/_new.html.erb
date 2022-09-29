@@ -2,10 +2,11 @@
   <%= bootstrap_form_for(@result, url: my_module_result_texts_path(format: :json, page: params[:page], order: params[:order]),
                                   data: { 'name-max-length': Constants::NAME_MAX_LENGTH, 'rich-text-max-length': Constants::RICH_TEXT_MAX_LENGTH },
                                   remote: true) do |f| %>
-    <%= f.text_field :name, style: "margin-top: 10px;" %><br />
+    <%= f.text_field :name, style: "margin-top: 10px;", title: 'new result text name field' %><br />
     <%= f.fields_for :result_text do |ff| %>
-      <%= ff.tiny_mce_editor(:text,
+      <%= ff.tiny_mce_editor(:text, 
                              id: :result_text_attributes_textarea,
+                             title: 'new result text body field',
                              autocomplete: 'off',
                              data: { object_type: 'result_text',
                                      object_id: @result.result_text.id,
@@ -13,11 +14,12 @@
                                      last_updated: @result.updated_at.to_i * 1000 }) %>
     <% end %><br />
     <div class="align-right">
-      <button type="button" class="btn btn-secondary cancel-new">
+      <button title="cancel new result text addition button" type="button" class="btn btn-secondary cancel-new">
         <%= t("general.cancel")%>
       </button>
       <%= f.button t("result_texts.new.create"),
                    class: 'btn btn-primary save-result',
+                   title: 'add new result text button',
                    onclick: "Results.processResult(event, Results.ResultTypeEnum.TEXT);" %>
     </div>
   <% end %>

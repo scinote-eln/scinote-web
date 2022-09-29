@@ -1,10 +1,10 @@
 <div class="content-pane flexible reports-new">
   <div class="reports-new-header">
     <div class="sci-input-container report-name-container">
-      <input type="text" class="sci-input-field report-name" placeholder="<%= t("projects.reports.new.report_name_placeholder") %>" value="<%= @report.name %>"></input>
+      <input type="text" title="new report name field" class="sci-input-field report-name" placeholder="<%= t("projects.reports.new.report_name_placeholder") %>" value="<%= @report.name %>"></input>
 
     </div>
-    <button class="btn btn-secondary cancel-button" data-toggle="modal" data-target="#reportWizardExitWarning">
+    <button class="btn btn-secondary cancel-button" title="new report cancel button" data-toggle="modal" data-target="#reportWizardExitWarning">
       <%= t("general.cancel") %>
     </button>
   </div>
@@ -54,7 +54,7 @@
       <% end %>
     </div>
     <div class="next-button-container">
-      <button class="btn btn-primary continue-button" disabled>
+      <button title="new report continue button" class="btn btn-primary continue-button" disabled>
         <%= t("projects.reports.new.continue_button") %>
       </button>
       <% if @edit %>
@@ -79,7 +79,7 @@
           </ul>
         </div>
       <% else %>
-        <button class="btn btn-primary generate-button"  data-create-url="<%= reports_path %>" disabled>
+        <button title="new report generate button" class="btn btn-primary generate-button"  data-create-url="<%= reports_path %>" disabled>
           <%= t("projects.reports.new.generate_button") %>
         </button>
       <% end %>
@@ -91,7 +91,7 @@
   <div class="modal-dialog modal-sm" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" title="reports exit modal close button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">
           <%= t("projects.reports.new.exit_modal.title_#{@edit ? 'edit' : 'new'}") %>
         </h4>
@@ -105,10 +105,10 @@
         </p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+        <button type="button" title="reports exit modal no button" class="btn btn-secondary" data-dismiss="modal">
           <%= t('general.no') %>
         </button>
-        <%= link_to t('general.yes'), reports_path, class: "btn btn-primary" %>
+        <%= link_to t('general.yes'), reports_path, class: "btn btn-primary", title: "reports exit modal yes button" %>
       </div>
     </div>
   </div>

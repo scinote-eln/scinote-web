@@ -94,6 +94,7 @@ var RepositoryDatatableRowEditor = (function() {
         $input
           .prev('.file-hidden-field-container')
           .html(`<input type="hidden"
+                     title="repository delete hidden field"
                      form="${$input.attr('form')}"
                      name="repository_cells[${$input.data('col-id')}]"
                      value=""/>`);
@@ -129,6 +130,7 @@ var RepositoryDatatableRowEditor = (function() {
     let rowForm = $(`
       <td>
         <form id="${formId}"
+              title="new row added: ${$row}"
               class="${EDIT_FORM_CLASS_NAME} ${GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME}"
               action="${actionUrl}"
               method="post"
@@ -178,6 +180,7 @@ var RepositoryDatatableRowEditor = (function() {
     let requestUrl = $(TABLE.table().node()).data('current-uri');
     let rowForm = $(`
       <form id="${formId}"
+            title="repository switched row: ${row}"
             class="${EDIT_FORM_CLASS_NAME} ${GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME}"
             action="${row.data().recordUpdateUrl}"
             method="patch"

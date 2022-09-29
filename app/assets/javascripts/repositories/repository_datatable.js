@@ -15,7 +15,7 @@ var RepositoryDatatable = (function(global) {
   var TABLE_WRAPPER_ID = '.repository-table';
   var TABLE = null;
   var EDITABLE = false;
-  var SELECT_ALL_SELECTOR = '#checkbox > input[name=select_all]';
+  var SELECT_ALL_SELECTOR = '#checkbox input[name=select_all]';
   const STATUS_POLLING_INTERVAL = 10000;
 
   var rowsSelected = [];
@@ -465,8 +465,10 @@ var RepositoryDatatable = (function(global) {
         className: 'dt-body-center',
         sWidth: '1%',
         render: function(data, type, row) {
-          return `<input class='repository-row-selector sci-checkbox' type='checkbox' data-editable="${row.recordEditable}">
-                  <span class='sci-checkbox-label'></span>`;
+          return `<div class="sci-checkbox-container">
+                    <input title='repository row checkbox' class='repository-row-selector sci-checkbox' type='checkbox' data-editable="${row.recordEditable}">
+                    <span class='sci-checkbox-label'></span>
+                  </div>`;
         }
       }, {
         // Assigned column is not searchable
@@ -482,7 +484,10 @@ var RepositoryDatatable = (function(global) {
           if (!row.recordEditable) {
             icon = `<i class="repository-row-lock-icon fas fa-lock" title="${I18n.t('repositories.table.locked_item')}"></i>`;
           } else if (EDITABLE) {
-            icon = '<i class="repository-row-edit-icon fas fa-pencil-alt" data-view-mode="active"></i>';
+            // var editingData = document.getElementsByClassName('sorting_1')[0].innerHTML;
+            icon = `<i title="edit repository column: ${row[3]} button"
+                       class="repository-row-edit-icon fas fa-pencil-alt"
+                       data-view-mode="active"></i>`;
           } else {
             icon = '';
           }
@@ -494,7 +499,7 @@ var RepositoryDatatable = (function(global) {
         targets: 3,
         visible: true,
         render: function(data, type, row) {
-          return "<a href='" + row.recordInfoUrl + "'"
+          return "<a title='repository item: " + data + "' href='" + row.recordInfoUrl + "'"
                  + "class='record-info-link'>" + data + '</a>';
         }
       }, {
@@ -625,7 +630,8 @@ var RepositoryDatatable = (function(global) {
 
         DataTableHelpers.initLengthAppearance($(TABLE_ID).closest('.dataTables_wrapper'));
 
-        $('<img class="barcode-scanner" src="/images/icon_small/barcode.png"></img>').appendTo($('.search-container'));
+        $('<img title="barcode image" class="barcode-scanner" src="/images/icon_small/barcode.png"></img>')
+          .appendTo($('.search-container'));
 
         if ($('.repository-show').length) {
           $('.dataTables_scrollBody, .dataTables_scrollHead').css('overflow', '');

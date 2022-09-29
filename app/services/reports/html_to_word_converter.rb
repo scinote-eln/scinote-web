@@ -58,7 +58,7 @@ module Reports
             temp_p = []
           end
           elements.push(elem)
-        elsif %w(br text a).include? elem[:type]
+        elsif %w(br text a sup sub).include? elem[:type]
           temp_p.push(elem)
         end
       end
@@ -103,6 +103,11 @@ module Reports
 
         if elem.name == 'table'
           elements.push(tiny_mce_table_element(elem))
+          next
+        end
+
+        if %w(sup sub).include?(elem.name)
+          elements.push(text_formatting_element(elem))
           next
         end
 
@@ -186,7 +191,7 @@ module Reports
       result[:style] = elem.name if elem.name.include? 'h'
       result[:bold] = true if elem.name == 'strong'
       result[:italic] = true if elem.name == 'em'
-      style_keys = %w(text-align color)
+      style_keys = %w(text-align color text-decoration)
 
       if style
         style_keys.each do |key|
@@ -194,10 +199,13 @@ module Reports
           next unless style_el
 
           value = style_el.split(':')[1].strip if style_el
+
           if key == 'text-align'
             result[:align] = value.to_sym
           elsif key == 'color' && Reports::Utils.calculate_color_hsp(value) < 190
             result[:color] = value.delete('#')
+          elsif key == 'text-decoration' && value == 'underline'
+            result[:underline] = true
           end
         end
       end
@@ -256,6 +264,10 @@ module Reports
         { type: 'tr', data: cells }
       end.reject(&:blank?)
       { type: 'table', data: rows }
+    end
+
+    def text_formatting_element(element)
+      { type: element.name, value: element.text }
     end
   end
 end

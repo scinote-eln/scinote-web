@@ -3,7 +3,7 @@
     <div class="modal-content">
       <% if current_user.two_factor_auth_enabled? %>
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+          <button type="button" title="close 2fa registration modal"class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
           <h2 class="modal-title"><%= t("users.registrations.edit.2fa_modal.disable.title") %></h2>
         </div>
         <%= form_with(url: main_app.users_2fa_disable_path, method: "post", class: "2fa-disable-form") do %>
@@ -11,11 +11,11 @@
             <p><%= t("users.registrations.edit.2fa_modal.disable.description") %></p>
             <div class="sci-input-container password-field">
               <%= label_tag :password, t("users.registrations.edit.2fa_modal.disable.password_label") %>
-              <%= password_field_tag :password, '', class: "sci-input-field" %>
+              <%= password_field_tag :password, '', class: "sci-input-field", title: 'password 2fa registration form' %>
             </div>
           </div>
           <div class="modal-footer">
-            <%= button_tag t("users.registrations.edit.2fa_modal.disable.disable_2fa"), type: 'submit', class: "btn btn-danger" %>
+            <%= button_tag t("users.registrations.edit.2fa_modal.disable.disable_2fa"), type: 'submit', class: "btn btn-danger", title: 'disable 2fa' %>
           </div>
         <% end %>
       <% else %>

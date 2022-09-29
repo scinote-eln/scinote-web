@@ -1,6 +1,6 @@
 <template>
   <div class="step-text-container" :class="{ 'edit': inEditMode, 'step-element--locked': !element.attributes.orderable.urls.update_url }" @keyup.enter="enableEditMode($event)" tabindex="0">
-    <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
+    <div v-if="reorderElementUrl" :title="`text ${element.id} grip`" class="step-element-grip" @click="$emit('reorder')">
       <i class="fas fas-rotated-90 fa-exchange-alt"></i>
     </div>
     <div v-else class="step-element-grip-placeholder"></div>
@@ -8,7 +8,7 @@
       <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" tabindex="-1" @click="enableEditMode($event)">
         <i class="fas fa-pen"></i>
       </button>
-      <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
+      <button :title="`delete text ${element.id}`" v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
         <i class="fas fa-trash"></i>
       </button>
     </div>
@@ -28,7 +28,7 @@
       @editingDisabled="disableEditMode"
       @editingEnabled="enableEditMode"
     />
-    <div v-else-if="element.attributes.orderable.text_view" v-html="element.attributes.orderable.text_view"></div>
+    <div class="view-text-element" v-else-if="element.attributes.orderable.text_view" v-html="element.attributes.orderable.text_view"></div>
     <div v-else class="empty-text-element">
       {{ i18n.t("protocols.steps.text.empty_text") }}
     </div>

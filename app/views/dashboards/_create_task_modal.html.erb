@@ -2,7 +2,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+          <button type="button" title="create class close button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
           <h2 class="modal-title">
             <%= t("dashboard.create_task_modal.title") %>
           </h2>
@@ -14,6 +14,7 @@
           <div class="select-block" data-error-object="Project" data-error="">
             <label><%= t("dashboard.create_task_modal.project") %></label>
             <select class="project-filter"
+                    title="create task modal project field"
                     data-ajax-url="<%= dashboard_quick_start_project_filter_path %>"
                     data-placeholder="<%= t("dashboard.create_task_modal.project_placeholder") %>"></select>
           </div>
@@ -22,11 +23,11 @@
             <div class="project-visibility-container">
               <div class="project-visibility-title"><%= t("dashboard.create_task_modal.project_visibility_label") %></div>
               <div class="sci-toggles-group" data-toggle="buttons">
-                <input type="radio" name="projects-visibility-selector" class="sci-toggle-item" value="hidden" checked="checked">
+                <input type="radio" title="create task modal project visibility for members" name="projects-visibility-selector" class="sci-toggle-item" value="hidden" checked="checked">
                 <label class="sci-toggle-item-label">
                   <%= t("dashboard.create_task_modal.project_visibility_members") %>
                 </label>
-                <input type="radio" name="projects-visibility-selector" class="sci-toggle-item" value="visible">
+                <input type="radio" title="create task modal project visibility for everyone" name="projects-visibility-selector" class="sci-toggle-item" value="visible">
                 <label class="sci-toggle-item-label">
                   <%= t("dashboard.create_task_modal.project_visibility_all") %>
                 </label>
@@ -36,6 +37,7 @@
           <div class="select-block" data-error-object="Experiment" data-error="">
             <label><%= t("dashboard.create_task_modal.experiment") %></label>
             <select class="experiment-filter"
+                    title="create task modal experiment field"
                     data-ajax-url="<%= dashboard_quick_start_experiment_filter_path %>"
                     data-disable-on-load="true"
                     data-disable-placeholder="<%= t("dashboard.create_task_modal.experiment_disabled_placeholder") %>"
@@ -44,6 +46,7 @@
         </div>
         <div class="modal-footer">
           <button type="button"
+                  title="create task modal create button"
                   class="create-task-button btn btn-primary"
                   data-ajax-url="<%= dashboard_quick_start_create_task_path %>"
                   data-dismiss="modal"

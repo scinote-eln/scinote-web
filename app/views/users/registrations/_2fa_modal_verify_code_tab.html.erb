@@ -1,6 +1,6 @@
 <div role="tabpanel" class="tab-pane" id="2fa-step-3">
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+    <button type="button" class="close" title="close 2fa code verification modal" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
     <h2 class="modal-title"><%= t("users.registrations.edit.2fa_modal.step_3.title") %></h2>
   </div>
   <%= form_with(url: main_app.users_2fa_enable_path, method: "post", class: "2fa-enable-form") do %>
@@ -8,11 +8,11 @@
       <p><%= t("users.registrations.edit.2fa_modal.step_3.description") %></p>
       <p class="sci-input-container submit-code-field">
         <%= label_tag :submit_code, t("users.registrations.edit.2fa_modal.step_3.enter_code") %>
-        <%= text_field_tag :submit_code, '', class: "sci-input-field" %>
+        <%= text_field_tag :submit_code, '', class: "sci-input-field", title: 'input 2fa qr code' %>
       </p>
     </div>
     <div class="modal-footer">
-      <%= button_tag t("users.registrations.edit.2fa_modal.step_3.verify"), class: 'btn btn-primary', type: :submit %>
+      <%= button_tag t("users.registrations.edit.2fa_modal.step_3.verify"), class: 'btn btn-primary', type: :submit, title: 'verify authentication code for 2fa' %>
     </div>
   <% end %>
 </div>

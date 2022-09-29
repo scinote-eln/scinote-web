@@ -8,6 +8,7 @@ $.fn.dataTable.render.RepositoryAssetValue = function(data) {
         ${asset.icon_html}
         <div>
           <a  class="file-preview-link"
+            title="repository asset value: ${asset}"
             id="modal_link${asset.id}"
             data-no-turbolink="true"
             data-id="true"
@@ -21,7 +22,7 @@ $.fn.dataTable.render.RepositoryAssetValue = function(data) {
       </div>
     `;
   }
-  return `<div class="processing-error">
+  return `<div title="repository processing error image" class="processing-error">
             <i class="fas fa-exclamation-triangle"></i>
             ${I18n.t('my_modules.repository.full_view.error')}
           </div>`;
@@ -69,6 +70,7 @@ $.fn.dataTable.render.defaultRepositoryDateValue = function() {
 $.fn.dataTable.render.RepositoryDateValue = function(data) {
   let reminderClass = data.value.reminder ? 'reminder' : '';
   return `<span class="${reminderClass}
+                title="repository date: ${data}"
                 date-cell-value" data-datetime="${data.value.datetime}"
                 data-date="${data.value.formatted}">${data.value.formatted}</span>`;
 };
@@ -80,6 +82,7 @@ $.fn.dataTable.render.defaultRepositoryDateTimeValue = function() {
 $.fn.dataTable.render.RepositoryDateTimeValue = function(data) {
   let reminderClass = data.value.reminder ? 'reminder' : '';
   return `<span class="${reminderClass} date-time-cell-value"
+                title="repository date time value: ${data}"
                 data-time="${data.value.time_formatted}"
                 data-datetime="${data.value.datetime}"
                 data-date="${data.value.date_formatted}">${data.value.formatted}</span>`;
@@ -91,6 +94,7 @@ $.fn.dataTable.render.defaultRepositoryTimeValue = function() {
 
 $.fn.dataTable.render.RepositoryTimeValue = function(data) {
   return `<span data-time="${data.value.formatted}"
+                title="repository time value: ${data}"
                 data-datetime="${data.value.datetime}">${data.value.formatted}</span>`;
 };
 
@@ -99,9 +103,11 @@ $.fn.dataTable.render.defaultRepositoryTimeRangeValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryTimeRangeValue = function(data) {
-  return `<span data-time="${data.value.start_time.formatted}"
+  return `<span title="repository time start: ${data.value.start_time.formatted}"
+                data-time="${data.value.start_time.formatted}"
                 data-datetime="${data.value.start_time.datetime}">${data.value.start_time.formatted}</span> -
-          <span data-time="${data.value.end_time.formatted}"
+          <span title="repository time end: ${data.value.end_time.formatted}"
+                data-time="${data.value.end_time.formatted}"
                 data-datetime="${data.value.end_time.datetime}">${data.value.end_time.formatted}</span>`;
 };
 
@@ -110,10 +116,12 @@ $.fn.dataTable.render.defaultRepositoryDateTimeRangeValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryDateTimeRangeValue = function(data) {
-  return `<span data-time="${data.value.start_time.time_formatted}"
+  return `<span title="repository datetime start: ${data.value.start_time.time_formatted}"
+                data-time="${data.value.start_time.time_formatted}"
                 data-datetime="${data.value.start_time.datetime}"
                 data-date="${data.value.start_time.date_formatted}">${data.value.start_time.formatted}</span> -
-          <span data-time="${data.value.end_time.time_formatted}"
+          <span title="repository datetime end: ${data.value.end_time.time_formatted}"
+                data-time="${data.value.end_time.time_formatted}"
                 data-datetime="${data.value.end_time.datetime}"
                 data-date="${data.value.end_time.date_formatted}">${data.value.end_time.formatted}</span>`;
 };
@@ -123,9 +131,11 @@ $.fn.dataTable.render.defaultRepositoryDateRangeValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryDateRangeValue = function(data) {
-  return `<span data-datetime="${data.value.start_time.datetime}"
+  return `<span title="repository date start: ${data.value.start_time.formatted}"
+                data-datetime="${data.value.start_time.datetime}"
                 data-date="${data.value.start_time.formatted}">${data.value.start_time.formatted}</span> -
-          <span data-datetime="${data.value.end_time.datetime}"
+          <span title="repository date end: ${data.value.end_time.formatted}"
+                data-datetime="${data.value.end_time.datetime}"
                 data-date="${data.value.end_time.formatted}">${data.value.end_time.formatted}</span>`;
 };
 
@@ -144,7 +154,7 @@ $.fn.dataTable.render.RepositoryChecklistValue = function(data) {
     });
 
     render = `
-      <span class="dropdown checklist-dropdown">
+      <span title="repository checklist dropdown" class="dropdown checklist-dropdown">
         <span data-toggle="dropdown" class="checklist-options" aria-haspopup="true" data-checklist-items='${JSON.stringify(options)}'>
           ${options.length} ${I18n.t('libraries.manange_modal_column.checklist_type.multiple_options')}
         </span>
@@ -179,11 +189,11 @@ $.fn.dataTable.render.AssignedTasksValue = function(data, row) {
     });
     tasksLinkHTML = `<div class="assign-counter-container dropdown" title="${tooltip}"
             data-task-list-url="${data.task_list_url}">
-              <a href="#" class="assign-counter has-assigned"
+              <a title="repository assigned count" href="#" class="assign-counter has-assigned"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">${data.tasks}</a>
               <div class="dropdown-menu" role="menu">
                 <div class="sci-input-container right-icon">
-                  <input type="text" class="sci-input-field search-tasks"
+                  <input title="repository assigned task search" type="text" class="sci-input-field search-tasks"
                     placeholder="${I18n.t('repositories.table.assigned_search')}"></input>
                   <i class="fas fa-times-circle clear-search"></i>
                 </div>
@@ -191,7 +201,7 @@ $.fn.dataTable.render.AssignedTasksValue = function(data, row) {
               </div>
             </div>`;
   } else {
-    tasksLinkHTML = "<div class='assign-counter-container'><span class='assign-counter'>0</span></div>";
+    tasksLinkHTML = "<div class='assign-counter-container'><span class='assign-counter' title='assign counter item'>0</span></div>";
   }
   if (row.hasActiveReminders) {
     return `<div class="dropdown row-reminders-dropdown" data-row-reminders-url="${row.rowRemindersUrl}" tabindex='-1'>
@@ -210,23 +220,24 @@ $.fn.dataTable.render.RepositoryStockValue = function(data) {
   if (data) {
     if (data.value) {
       if (data.stock_managable) {
-        return `<a class="manage-repository-stock-value-link stock-value-view-render stock-${data.stock_status}">
+        return `<a title="repository stock value: ${data.value}" 
+                   class="manage-repository-stock-value-link stock-value-view-render stock-${data.stock_status}">
                   ${data.value.stock_formatted}
                   </a>`;
       }
-      return `<span class="stock-value-view-render
+      return `<span title="render stock value ${data.value}" class="stock-value-view-render
                            ${data.displayWarnings ? `stock-${data.stock_status}` : ''}">
                 ${data.value.stock_formatted}
                 </span>`;
     }
     if (data.stock_managable) {
-      return `<a class="manage-repository-stock-value-link not-assigned-stock">
+      return `<a title="unassigned stock data: ${data}" class="manage-repository-stock-value-link not-assigned-stock">
                 <i class="fas fa-box-open"></i>
                 ${I18n.t('libraries.manange_modal_column.stock_type.add_stock')}
               </a>`;
     }
   }
-  return `<span class="empty-stock-render">
+  return `<span title="repository empty stock" class="empty-stock-render">
             ${I18n.t('libraries.manange_modal_column.stock_type.no_item_stock')}
           </span>`;
 };
@@ -238,26 +249,34 @@ $.fn.dataTable.render.defaultRepositoryStockValue = function() {
 $.fn.dataTable.render.RepositoryStockConsumptionValue = function(data = {}) {
   // covers case of snapshots
   if (!data.stock_present && data.value && data.value.consumed_stock !== null) {
-    return `<span class="empty-consumed-stock-render">${data.value.consumed_stock_formatted}</span>`;
+    return `<span title="empty stock render" 
+                  class="empty-consumed-stock-render">
+                  ${data.value.consumed_stock_formatted}
+            </span>`;
   }
   if (!data.stock_present) {
-    return '<span class="empty-consumed-stock-render"> - </span>';
+    return '<span title="empty stock and data" class="empty-consumed-stock-render"> - </span>';
   }
   if (!data.consumptionManagable && data.value && !data.value.consumed_stock) {
-    return `<span class="consumption-locked">
+    return `<span title="locked consumption" class="consumption-locked">
     ${I18n.t('libraries.manange_modal_column.stock_type.stock_consumption_locked')}
     </span>`;
   }
   if (!data.consumptionPermitted || !data.consumptionManagable) {
-    return `<span class="empty-consumed-stock-render">${data.value.consumed_stock_formatted}</span>`;
+    return `<span title="repository unpermitted and not managable stock" 
+                  class="empty-consumed-stock-render">
+                  ${data.value.consumed_stock_formatted}
+            </span>`;
   }
   if (!data.value.consumed_stock) {
-    return `<a href="${data.updateStockConsumptionUrl}" class="manage-repository-consumed-stock-value-link">
+    return `<a title="repository consumed stock manager" 
+               href="${data.updateStockConsumptionUrl}" 
+               class="manage-repository-consumed-stock-value-link">
               <i class="fas fa-vial"></i>
               ${I18n.t('libraries.manange_modal_column.stock_type.add_stock_consumption')}
             </a>`;
   }
-  return `<a href="${data.updateStockConsumptionUrl}"
+  return `<a title="repository consumed stock render" href="${data.updateStockConsumptionUrl}"
                 class="manage-repository-consumed-stock-value-link stock-value-view-render">
               ${data.value.consumed_stock_formatted}
             </a>`;

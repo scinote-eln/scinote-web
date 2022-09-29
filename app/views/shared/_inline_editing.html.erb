@@ -10,10 +10,10 @@
   data-placeholder='<%= config[:placeholder] %>'
 >
   <div class="view-mode" data-placeholder="<%= config[:placeholder] %>"><%= initial_value %></div>
-  <input placeholder="<%= config[:placeholder] %>" class="hidden input-field" type="text" value="<%= initial_value %>" disabled/>
+  <input title="<%= config[:title] %>" placeholder="<%= config[:placeholder] %>" class="hidden input-field" type="text" value="<%= initial_value %>" disabled/>
   <div class="button-container">
-    <span title="save button for inline editing objects name" class="save-button"><i class="fas fa-check"></i></span>
-    <span title="cancel button for inline editing projects name" lass="cancel-button"><i class="fas fa-times"></i></span>
+    <span title="<%= config[:title] %> save" class="save-button"><i class="fas fa-check"></i></span>
+    <span title="<%= config[:title] %> cancel" class="cancel-button"><i class="fas fa-times"></i></span>
   </div>
   <span class="error-block"></span>
 </div>

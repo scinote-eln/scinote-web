@@ -60,7 +60,7 @@
           orderable: false,
           render: function() {
             return `<div class="sci-checkbox-container">
-                      <input class='repository-row-selector sci-checkbox' type='checkbox'>
+                      <input title="repository row selector checkbox" class='repository-row-selector sci-checkbox' type='checkbox'>
                       <span class='sci-checkbox-label'></span>
                     </div>`;
           }
@@ -68,7 +68,7 @@
           targets: 1,
           className: 'item-name',
           render: function(value, type, row) {
-            return `<a href="${row.repositoryUrl}">${value}</a>`;
+            return `<a title="inventory: ${value}" href="${row.repositoryUrl}">${value}</a>`;
           }
         }, {
           targets: 5,
@@ -202,3 +202,4 @@
   }
   initRepositoryViewSwitcher();
 }());
+
