@@ -14,27 +14,27 @@
     min-height: 4em;
 
     .status-ready {
-
-    }
-
-    .status-ready {
-      color: #2DBE61;
+      color: $brand-success;
     }
 
     .status-busy {
-      color: #231F20;
+      color: $color-silver-chalice;
     }
 
     .status-out-of-labels {
-      color: #231F20;
+      color: $color-silver-chalice;
     }
 
     .status-unreachable {
-      color: #231F20;
+      color: $color-silver-chalice;
     }
 
     .status-error {
-      color: #231F20;
+      color: $color-silver-chalice;
+    }
+
+    .status-offline {
+      color: $color-silver-chalice;
     }
   }
 
