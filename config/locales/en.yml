@@ -871,6 +871,7 @@ en:
       description_error_prefix: 'Label template description'
       description_title: 'Template description'
       description_placeholder: 'Enter the template description (optional)'
+      description_empty: 'No template description'
       content_title: '%{format} template code'
       preview_title: 'Template preview'
       view_content_tooltip: 'Click to edit template code'
