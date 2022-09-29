@@ -7,20 +7,30 @@ module UserAssignments
     def perform(project)
       ActiveRecord::Base.transaction do
         user_assignments = project.user_assignments.where(assigned: :automatically)
-        users = User.find(user_assignments.pluck(:user_id))
+        users = User.where(id: user_assignments.select(:user_id))
 
-        remove_users_from_experiments_and_my_modules(project, users)
-        UserAssignment.where(user: users, assignable: project).destroy_all
+        remove_users_from_my_modules(project, users)
+        remove_users_from_experiments(project, users)
+        user_assignments.destroy_all
       end
     end
 
-    def remove_users_from_experiments_and_my_modules(project, users)
-      project.experiments.each do |experiment|
-        experiment.my_modules.each do |my_module|
-          UserAssignment.where(user: users, assignable: my_module).destroy_all
-        end
-        UserAssignment.where(user: users, assignable: experiment).destroy_all
-      end
+    def remove_users_from_experiments(project, users)
+      experiments = project.experiments.joins(:user_assignments).where(user_assignments: { user: users })
+      # rubocop:disable Rails/SkipsModelValidations
+      UserAssignment.where(assignable_type: 'Experiment', assignable_id: experiments, user: users).delete_all
+      experiments.update_all(updated_at: Time.current)
+      # rubocop:enable Rails/SkipsModelValidations
+    end
+
+    def remove_users_from_my_modules(project, users)
+      my_modules = MyModule.joins(:user_assignments, experiment: :project)
+                           .where(user_assignments: { user: users })
+                           .where(projects: project)
+      # rubocop:disable Rails/SkipsModelValidations
+      UserAssignment.where(assignable_type: 'MyModule', assignable_id: my_modules, user: users).delete_all
+      my_modules.update_all(updated_at: Time.current)
+      # rubocop:enable Rails/SkipsModelValidations
     end
   end
 end

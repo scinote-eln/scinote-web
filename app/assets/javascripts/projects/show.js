@@ -115,6 +115,7 @@
           placeholderTemplate: '#experimentPlaceholder',
           endOfListTemplate: '#experimentEndOfList',
           pageSize: pageSize,
+          lastPage: !data.next_page,
           customResponse: (response) => {
             $(response.cards_html).appendTo(cardsWrapper);
           },

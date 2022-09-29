@@ -15,7 +15,7 @@ var RepositoryDatatable = (function(global) {
   var TABLE_WRAPPER_ID = '.repository-table';
   var TABLE = null;
   var EDITABLE = false;
-  var SELECT_ALL_SELECTOR = '#checkbox > input[name=select_all]';
+  var SELECT_ALL_SELECTOR = '#checkbox input[name=select_all]';
   const STATUS_POLLING_INTERVAL = 10000;
 
   var rowsSelected = [];
@@ -465,11 +465,10 @@ var RepositoryDatatable = (function(global) {
         className: 'dt-body-center',
         sWidth: '1%',
         render: function(data, type, row) {
-          return `<input title="repository row checkbox" 
-                         class='repository-row-selector sci-checkbox' 
-                         type='checkbox' 
-                         data-editable="${row.recordEditable}">
-                  <span class='sci-checkbox-label'></span>`;
+          return `<div class="sci-checkbox-container">
+                    <input title='repository row checkbox' class='repository-row-selector sci-checkbox' type='checkbox' data-editable="${row.recordEditable}">
+                    <span class='sci-checkbox-label'></span>
+                  </div>`;
         }
       }, {
         // Assigned column is not searchable
@@ -487,7 +486,7 @@ var RepositoryDatatable = (function(global) {
           } else if (EDITABLE) {
             // var editingData = document.getElementsByClassName('sorting_1')[0].innerHTML;
             icon = `<i title="edit repository column: ${row[3]} button"
-                       class="repository-row-edit-icon fas fa-pencil-alt" 
+                       class="repository-row-edit-icon fas fa-pencil-alt"
                        data-view-mode="active"></i>`;
           } else {
             icon = '';
