@@ -136,7 +136,7 @@
         $('#deleteLabelTemplate').addClass('hidden');
         $('#setZplDefaultLabelTemplate').addClass('hidden');
         $('#setFluicsDefaultLabelTemplate').toggleClass('hidden', (rowsSelected.length > 1 || defaultSelected()));
-        $('.fluics-warning').toggleClass('hidden', (rowsSelected.length === 1 && !defaultSelected()));
+        $('.fluics-warning').removeClass('hidden');
       } else {
         $('.fluics-warning').removeClass('hidden');
         $('.selected-actions').addClass('hidden');
@@ -275,6 +275,12 @@
       }
     });
   }
+
+  $('#wrapper').on('sideBar::shown sideBar::hidden', function() {
+    if (LABEL_TEMPLATE_TABLE) {
+      LABEL_TEMPLATE_TABLE.columns.adjust();
+    }
+  });
 
   initDatatable();
   initDeleteButton();
