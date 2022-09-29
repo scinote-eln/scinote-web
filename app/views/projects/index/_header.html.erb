@@ -66,13 +66,14 @@
           <label><%= t("projects.index.filters_modal.members.label") %></label>
           <select class="members-filter"
                   data-ajax-url="<%= users_filter_projects_path %>"
+                  title="members field for filters"
                   data-placeholder="<%= t('projects.index.filters_modal.members.placeholder') %>">
           </select>
         </div>
         <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'archived-on-filter', label: t("filters_modal.archived_on.label"), view_mode: 'archived' } %>
         <div class="select-block folders">
           <span class="sci-checkbox-container">
-            <%= check_box_tag :folder_search, 'accepted', false, {class: "sci-checkbox"} %>
+            <%= check_box_tag :folder_search, 'accepted', false, {class: "sci-checkbox", title: 'look inside folders checkbox for filters'} %>
             <span class="sci-checkbox-label"></span>
           </span>
           <span class="folder-search-label"><%= t("projects.index.filters_modal.folders.label") %></span>

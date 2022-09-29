@@ -70,7 +70,7 @@
       <% end %>
       <!-- Sort menu dropdown -->
       <div class="dropdown sort-menu">
-        <button class="btn btn-light icon-btn dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <button title="sort experiments" class="btn btn-light icon-btn dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           <i class="fas fa-sort-amount-up"></i>
         </button>
         <ul id="sortMenuDropdown" class="dropdown-menu sort-experiments-menu dropdown-menu-right" aria-labelledby="sortMenu">
@@ -78,7 +78,7 @@
               <% if i.even? && i.positive? %>
                 <li class="divider" <%= i > 3 ? 'data-view-mode=archived' : '' %>></li>
               <% end %>
-              <li <%= %w(archived_new archived_old).include?(sort) ? 'data-view-mode=archived' : '' %>>
+              <li title="experiment sorting option: <%= sort %>" <%= %w(archived_new archived_old).include?(sort) ? 'data-view-mode=archived' : '' %>>
                 <a class="<%= 'selected' if @current_sort == sort %>"
                    data-sort="<%= sort %>" >
                   <%= t("general.sort.#{sort}_html") %>

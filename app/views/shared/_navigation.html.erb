@@ -118,11 +118,12 @@
                        role: 'search' do %>
               <div class="input-group">
                 <input class="form-control"
+                       title="global search field"
                        type="text"
                        name="q"
                        placeholder="<%= t('nav.search') %>" />
                 <span class="input-group-btn">
-                  <button class="btn btn-default" type="submit"><%= t 'nav.search_button' %></button>
+                  <button title="go button for global search" class="btn btn-default" type="submit"><%= t 'nav.search_button' %></button>
                 </span>
               </div>
           <% end %>

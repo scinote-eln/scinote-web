@@ -1,6 +1,6 @@
 <% cache [current_user, experiment.project, experiment] do %>
   <div class="dropdown experiment-actions-menu">
-    <button title="experiment actions dropdown" class="btn btn-light dropdown-toggle icon-btn" type="button" id="experimentActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    <button title="actions dropdown for experiment: <%= experiment.id %>" class="btn btn-light dropdown-toggle icon-btn" type="button" id="experimentActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
       <i class="fas fa-ellipsis-h"></i>
     </button>
     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="experimentActionsDropdown">

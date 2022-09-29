@@ -19,7 +19,7 @@
   <% end %>
   <% if view_mode == 'active' %>
     <li class="sidebar-leaf">
-      <%= link_to project_path(@project, view_mode: 'archived'), class: 'sidebar-link' do %>
+      <%= link_to project_path(@project, view_mode: 'archived'), class: 'sidebar-link', title: 'sidebar: archived experiments' do %>
         <i class="fas fa-archive"></i>
         <%= t('sidebar.experiments.archived_experiments') %>
       <% end %>

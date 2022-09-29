@@ -60,6 +60,7 @@
 
   <%= button_to restore_group_project_experiments_path(@project),
                 class: 'btn btn-light restore-experiments-btn multiple-object-action hidden',
+                title: 'restore experiment button',
                 form_class: 'restore-experiments-form',
                 data: { for: :restorable, view_mode: 'archived' },
                 remote: true,
