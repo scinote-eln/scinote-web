@@ -40,8 +40,13 @@
                 :disableSearch="true"
                 :options="templates_dropdown"
                 :selectorId="`LabelTemplateSelector`"
+                :optionLabel="templateOption"
+                :onOpen="initTooltip"
                 @dropdown:changed="selectTemplate"
               />
+              <div v-if="labelTemplateError" class="label-template-warning">
+                {{ labelTemplateError }}
+              </div>
             </div>
             <p class="sci-input-container">
               <label>
@@ -49,8 +54,15 @@
               </label>
               <input v-model="copies" type=number class="sci-input-field print-copies-input" min="1">
             </p>
+            <div class="label-preview-title">
+              {{ i18n.t('repository_row.modal_print_label.label_preview') }}
+            </div>
+            <div class="label-preview-container">
+              <LabelPreview v-if="labelTemplateCode" :zpl='labelTemplateCode' :previewUrl="urls.labelPreview" :viewOnly="true"/>
+            </div>
           </div>
           <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal"> {{ i18n.t('general.cancel') }}</button>
             <button class="btn btn-primary" @click="submitPrint" :disabled="!selectedPrinter || !selectedTemplate">
               {{ i18n.t('repository_row.modal_print_label.print_label') }}
             </button>
@@ -80,6 +92,7 @@
 
 <script>
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
+  import LabelPreview from 'vue/label_template/components/label_preview.vue'
 
   export default {
     name: 'PrintModalContainer',
@@ -97,11 +110,14 @@
         selectedPrinter: null,
         selectedTemplate: null,
         copies: 1,
-        zebraPrinters: null
+        zebraPrinters: null,
+        labelTemplateError: null,
+        labelTemplateCode: null
       }
     },
     components: {
-      DropdownSelector
+      DropdownSelector,
+      LabelPreview
     },
     mounted() {
       $.get(this.urls.labelTemplates, (result) => {
@@ -129,7 +145,14 @@
         }
 
         return templates.map(i => {
-          return {value: i.id, label: i.attributes.name}
+          return {
+            value: i.id,
+            label: i.attributes.name,
+            params: {
+              icon: i.attributes.icon_url,
+              description: i.attributes.description || ''
+            }
+          }
         })
       },
       printers_dropdown() {
@@ -167,7 +190,19 @@
         this.selectDefaultLabelTemplate();
       },
       selectTemplate(value) {
-        this.selectedTemplate = this.templates.find(i => i.id === value)
+        this.selectedTemplate = this.templates.find(i => i.id === value);
+        this.validateTemplate();
+      },
+      validateTemplate() {
+        if (!this.selectedTemplate || this.row_ids.length == 0) return;
+
+        $.post(this.urls.printValidation, {label_template_id: this.selectedTemplate.id, rows: this.row_ids}, (result) => {
+          this.labelTemplateError = null;
+          this.labelTemplateCode = result.label_code;
+        }).error((result) => {
+          this.labelTemplateError = result.responseJSON.error;
+          this.labelTemplateCode = result.responseJSON.label_code;
+        })
       },
       submitPrint() {
         if (this.selectedPrinter.attributes.type_of === 'zebra') {
@@ -206,6 +241,17 @@
             })
           }
         });
+      },
+      templateOption(option) {
+        return `
+          <div class="label-template-option" data-toggle="tooltip" data-placement="right" title="${option.params.description}">
+            <img src="${option.params.icon}"></img>
+            ${option.label}
+          </div>
+        `
+      },
+      initTooltip() {
+        $('[data-toggle="tooltip"]').tooltip();
       }
     }
   }

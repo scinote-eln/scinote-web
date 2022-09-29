@@ -2026,6 +2026,7 @@ en:
       number_of_copies: "Number of copies"
       print_label: "Print label"
       print_anyway: "Print anyway"
+      label_preview: "Label preview"
       no_printers:
         title: "There seems to be no printer available"
         description: "To learn more about printing labels and label printers please visit our blog."
