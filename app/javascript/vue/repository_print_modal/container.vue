@@ -36,9 +36,12 @@
               </label>
 
               <DropdownSelector
+                ref="labelTemplateDropdown"
                 :disableSearch="true"
                 :options="templates_dropdown"
                 :selectorId="`LabelTemplateSelector`"
+                :optionLabel="templateOption"
+                :onOpen="initTooltip"
                 @dropdown:changed="selectTemplate"
               />
               <div v-if="labelTemplateError" class="label-template-warning">
@@ -59,6 +62,7 @@
             </div>
           </div>
           <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal"> {{ i18n.t('general.cancel') }}</button>
             <button class="btn btn-primary" @click="submitPrint" :disabled="!selectedPrinter || !selectedTemplate">
               {{ i18n.t('repository_row.modal_print_label.print_label') }}
             </button>
@@ -118,6 +122,7 @@
     mounted() {
       $.get(this.urls.labelTemplates, (result) => {
         this.templates = result.data
+        this.selectDefaultLabelTemplate();
       })
 
       $.get(this.urls.printers, (result) => {
@@ -140,7 +145,14 @@
         }
 
         return templates.map(i => {
-          return {value: i.id, label: i.attributes.name}
+          return {
+            value: i.id,
+            label: i.attributes.name,
+            params: {
+              icon: i.attributes.icon_url,
+              description: i.attributes.description || ''
+            }
+          }
         })
       },
       printers_dropdown() {
@@ -162,8 +174,20 @@
       }
     },
     methods: {
+      selectDefaultLabelTemplate() {
+        if (this.selectedPrinter && this.templates) {
+          let template = this.templates.find(i => i.attributes.default 
+            && i.type.includes(this.selectedPrinter.attributes.type_of));
+          if (template) {
+            this.$nextTick(() => {
+              this.$refs.labelTemplateDropdown.selectValues(template.id);
+            });
+          }
+        }
+      },
       selectPrinter(value) {
-        this.selectedPrinter = this.printers.find(i => i.id === value);
+        this.selectedPrinter = this.printers.find(i => i.id === value)
+        this.selectDefaultLabelTemplate();
       },
       selectTemplate(value) {
         this.selectedTemplate = this.templates.find(i => i.id === value);
@@ -217,6 +241,17 @@
             })
           }
         });
+      },
+      templateOption(option) {
+        return `
+          <div class="label-template-option" data-toggle="tooltip" data-placement="right" title="${option.params.description}">
+            <img src="${option.params.icon}"></img>
+            ${option.label}
+          </div>
+        `
+      },
+      initTooltip() {
+        $('[data-toggle="tooltip"]').tooltip();
       }
     }
   }

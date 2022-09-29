@@ -93,6 +93,9 @@
       optionLabel: {
         type: Function
       },
+      onOpen: {
+        type: Function
+      },
       inputTagMode: {
         type: Boolean,
         default: false
@@ -114,6 +117,7 @@
         closeOnSelect: this.closeOnSelect,
         selectAppearance: this.selectAppearance,
         disableSearch: this.disableSearch,
+        onOpen: this.onOpen,
         onChange: () => {
           if (this.onChange) this.onChange();
           this.selectChanged(dropdownSelector.getValues(`#${this.selectorId}`))
@@ -126,6 +130,9 @@
           'dropdown:changed',
           value
         );
+      },
+      selectValues(value) {
+        dropdownSelector.selectValues(`#${this.selectorId}`, value);
       }
     }
   }
