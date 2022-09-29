@@ -10,6 +10,7 @@ function initPrintModalComponent() {
 
   window.PrintModalComponent = new Vue({
     el: '.print-label-modal-container',
+    name: 'PrintModalComponent',
     components: {
       'print-modal-container': PrintModalContainer
     },

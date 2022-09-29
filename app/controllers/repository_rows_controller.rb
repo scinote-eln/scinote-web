@@ -5,8 +5,9 @@ class RepositoryRowsController < ApplicationController
   include MyModulesHelper
 
   MAX_PRINTABLE_ITEM_NAME_LENGTH = 64
-  before_action :load_repository, except: %i(show print_modal print rows_to_print print_zpl)
-  before_action :load_repository_or_snapshot, only: %i(print_modal print rows_to_print print_zpl)
+  before_action :load_repository, except: %i(show print rows_to_print print_zpl validate_label_template_columns)
+  before_action :load_repository_row_print, only: %i(print rows_to_print print_zpl validate_label_template_columns)
+  before_action :load_repository_or_snapshot, only: %i(print rows_to_print print_zpl validate_label_template_columns)
   before_action :load_repository_row, only: %i(update assigned_task_list active_reminder_repository_cells)
   before_action :check_read_permissions, except: %i(show create update delete_records
                                                     copy_records reminder_repository_cells
@@ -82,18 +83,17 @@ class RepositoryRowsController < ApplicationController
 
   def validate_label_template_columns
     label_template = LabelTemplate.where(team_id: current_team.id).find(params[:label_template_id])
-    repository_rows = @repository.repository_rows.where(id: params[:rows])
 
-    label_code = LabelTemplates::RepositoryRowService.new(label_template, repository_rows.first).render
+    label_code = LabelTemplates::RepositoryRowService.new(label_template, @repository_row.first).render
     render json: { label_code: label_code }
   rescue StandardError => e
-    label_code = LabelTemplates::RepositoryRowService.new(label_template, repository_rows.first, true).render
+    label_code = LabelTemplates::RepositoryRowService.new(label_template, @repository_row.first, true).render
     render json: { error: e, label_code: label_code }, status: :unprocessable_entity
   end
 
   def print_zpl
     label_template = LabelTemplate.find_by(id: params[:label_template_id])
-    labels = RepositoryRow.where(id: params[:repository_row_ids]).flat_map do |repository_row|
+    labels = @repository_row.flat_map do |repository_row|
       LabelTemplates::RepositoryRowService.new(label_template,
                                                repository_row,
                                                true).render
@@ -110,25 +110,8 @@ class RepositoryRowsController < ApplicationController
     )
   end
 
-  def print_modal
-    @repository_rows = @repository.repository_rows.where(id: params[:rows])
-    @printers = LabelPrinter.all
-    @label_templates = LabelTemplate.where(team_id: current_team).order(:name)
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'repositories/print_label_modal.html.erb'
-          )
-        }
-      end
-    end
-  end
-
   def rows_to_print
-    @repository_rows = @repository.repository_rows.where(id: params[:rows])
-
-    render json: @repository_rows, each_serializer: RepositoryRowSerializer, user: current_user
+    render json: @repository_row, each_serializer: RepositoryRowSerializer, user: current_user
   end
 
   def print
@@ -141,7 +124,7 @@ class RepositoryRowsController < ApplicationController
     label_printer = LabelPrinter.find(params[:label_printer_id])
     label_template = LabelTemplate.find_by(id: params[:label_template_id])
 
-    job_ids = RepositoryRow.where(id: params[:repository_row_ids]).flat_map do |repository_row|
+    job_ids = @repository_row.flat_map do |repository_row|
       LabelPrinters::PrintJob.perform_later(
         label_printer,
         LabelTemplates::RepositoryRowService.new(label_template,
@@ -318,9 +301,15 @@ class RepositoryRowsController < ApplicationController
     render_404 unless @repository
   end
 
+  def load_repository_row_print
+    @repository_row = RepositoryRow.where(id: params[:rows])
+
+    render_404 unless @repository_row
+  end
+
   def load_repository_or_snapshot
-    @repository = Repository.accessible_by_teams(current_team).find_by(id: params[:repository_id])
-    @repository ||= RepositorySnapshot.find_by(id: params[:repository_id])
+    @repository = Repository.accessible_by_teams(current_team).find_by(id: @repository_row.first.repository_id)
+    @repository ||= RepositorySnapshot.find_by(id: @repository_row.first.repository_id)
 
     render_404 unless @repository
   end
