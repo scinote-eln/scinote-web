@@ -36,6 +36,7 @@
               </label>
 
               <DropdownSelector
+                ref="labelTemplateDropdown"
                 :disableSearch="true"
                 :options="templates_dropdown"
                 :selectorId="`LabelTemplateSelector`"
@@ -121,6 +122,7 @@
     mounted() {
       $.get(this.urls.labelTemplates, (result) => {
         this.templates = result.data
+        this.selectDefaultLabelTemplate();
       })
 
       $.get(this.urls.printers, (result) => {
@@ -172,8 +174,20 @@
       }
     },
     methods: {
+      selectDefaultLabelTemplate() {
+        if (this.selectedPrinter && this.templates) {
+          let template = this.templates.find(i => i.attributes.default 
+            && i.type.includes(this.selectedPrinter.attributes.type_of));
+          if (template) {
+            this.$nextTick(() => {
+              this.$refs.labelTemplateDropdown.selectValues(template.id);
+            });
+          }
+        }
+      },
       selectPrinter(value) {
-        this.selectedPrinter = this.printers.find(i => i.id === value);
+        this.selectedPrinter = this.printers.find(i => i.id === value)
+        this.selectDefaultLabelTemplate();
       },
       selectTemplate(value) {
         this.selectedTemplate = this.templates.find(i => i.id === value);
