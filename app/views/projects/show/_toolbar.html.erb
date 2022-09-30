@@ -6,6 +6,7 @@
                   form_class: 'new-experiment-form',
                   data: {view_mode: :active},
                   id: 'new-experiment',
+                  title: 'new experiment',
                   method: :get,
                   class: 'btn btn-primary' do %>
       <span class="fas fa-plus" aria-hidden="true"></span>
@@ -18,6 +19,7 @@
                 form_class: 'edit-experiments-form',
                 data: { for: :editable, view_mode: 'active' },
                 remote: true,
+                title: 'edit experiment details',
                 method: :get do %>
     <span class="fas fa-pencil-alt" aria-hidden="true"></span>
     <span class="hidden-xs"><%= t('experiments.toolbar.edit_button') %></span>
@@ -28,6 +30,7 @@
                 form_class: 'clone-experiments-form',
                 data: { for: :duplicable, view_mode: 'active' },
                 remote: true,
+                title: 'duplicate experiment',
                 method: :get do %>
     <span class="fas fa-copy" aria-hidden="true"></span>
     <span class="hidden-xs"><%= t('experiments.toolbar.duplicate_button') %></span>
@@ -38,6 +41,7 @@
                 form_class: 'move-experiments-form',
                 data: { for: :moveable, view_mode: 'active' },
                 remote: true,
+                title: 'move experiment',
                 method: :get do %>
     <span class="fas fa-arrow-right" aria-hidden="true"></span>
     <span class="hidden-xs"><%= t('experiments.toolbar.move_button') %></span>
@@ -48,6 +52,7 @@
                 form_class: 'archive-experiments-form',
                 data: { for: :archivable, view_mode: 'active' },
                 remote: true,
+                title: 'archive experiment',
                 method: :post do %>
     <span class="fas fa-archive" aria-hidden="true"></span>
     <span class="hidden-xs"><%= t('projects.index.archive_button') %></span>
@@ -55,6 +60,7 @@
 
   <%= button_to restore_group_project_experiments_path(@project),
                 class: 'btn btn-light restore-experiments-btn multiple-object-action hidden',
+                title: 'restore experiment button',
                 form_class: 'restore-experiments-form',
                 data: { for: :restorable, view_mode: 'archived' },
                 remote: true,

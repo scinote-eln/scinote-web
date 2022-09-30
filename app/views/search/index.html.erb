@@ -13,6 +13,7 @@
           <div class="form-group">
             <div class="input-group">
               <input class="form-control"
+                     title="search input field for index"
                      type="text"
                      name="q"
                      placeholder="<%= t('nav.search') %>"
@@ -24,13 +25,13 @@
               </span>
             </div>
             <label class="checkbox-inline">
-              <input id="search_whole_word" type="checkbox" name="whole_word" value="true" <%= 'checked' if @search_whole_word %>><%= I18n.t('search.whole_word') %>
+              <input title="checkbox for matching whole word" id="search_whole_word" type="checkbox" name="whole_word" value="true" <%= 'checked' if @search_whole_word %>><%= I18n.t('search.whole_word') %>
             </label>
             <label class="checkbox-inline">
-              <input id="search_whole_phrase" type="checkbox" name="whole_phrase" value="true" <%= 'checked' if @search_whole_phrase %>><%= I18n.t('search.whole_phrase') %>
+              <input title="checkbox for matching whole phrase" id="search_whole_phrase" type="checkbox" name="whole_phrase" value="true" <%= 'checked' if @search_whole_phrase %>><%= I18n.t('search.whole_phrase') %>
             </label>
             <label class="checkbox-inline">
-              <input id="search_match_case" type="checkbox" name="match_case" value="true" <%= 'checked' if @search_case %>><%= I18n.t('search.match_case') %>
+              <input title="checkbox for matching case sensitivity" id="search_match_case" type="checkbox" name="match_case" value="true" <%= 'checked' if @search_case %>><%= I18n.t('search.match_case') %>
             </label>
           </div>
         <% end %>
@@ -78,7 +79,7 @@
             <%= "active" if @search_category.present? and @search_category == :experiments %>
             <%= "disabled" if @experiment_search_count == 0 %>"
           >
-            <a href="?<%= {category: 'experiments', q: @search_query,
+            <a title="search results for experiments" href="?<%= {category: 'experiments', q: @search_query,
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">

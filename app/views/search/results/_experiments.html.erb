@@ -1,5 +1,5 @@
 <% results.each do |experiment| %>
-  <h5>
+  <h5 title="searched result for experiment: <%= experiment.id %>">
     <i class="fas fa-flask"></i>
     <%= render partial: "search/results/partials/experiment_text.html.erb",
                locals: { experiment: experiment, query: search_query } %>
@@ -11,21 +11,21 @@
       <%=l experiment.created_at, format: :full %>
     </span>
     <br>
-    <span>
+    <span title="project: <%= experiment.project.id %> for experiment: <%= experiment.id %>">
       <%=t "search.index.project" %>
       <%= render partial: "search/results/partials/project_text.html.erb",
                   locals: { project: experiment.project, link_to_page: :show } %>
     </span>
     <br>
     <% if experiment.project.project_folder %>
-      <span>
+      <span title="project folder: <%= experiment.project.project_folder.id %> for experiment: <%= experiment.id %>">
         <%=t "search.index.folder" %>
         <%= render partial: "search/results/partials/project_folders_text.html.erb",
                    locals: { folder: experiment.project.project_folder } %>
       </span>
       <br>
     <% end %>
-    <span>
+    <span title="team: <%= experiment.project.team.id %> for experiment: <%= experiment.id %>">
       <%=t "search.index.team" %>
       <%= render partial: "search/results/partials/team_text.html.erb",
                  locals: { team: experiment.project.team } %>

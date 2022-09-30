@@ -1,16 +1,16 @@
-<div class="filter-container dropdown <%= container_class + '-dropdown' %>">
-      <button class="btn btn-light icon-btn filter-button" data-toggle="dropdown"><i class="fas fa-filter"></i></button>
+<div class="filter-container dropdown <%= container_class + '-dropdown' %>" title="filter is not applied">
+      <button title="filter button" class="btn btn-light icon-btn filter-button" data-toggle="dropdown"><i class="fas fa-filter"></i></button>
       <div class="dropdown-menu dropdown-menu-right filter-dropdown <%= container_class %>" role="menu" data-team-id="<%= current_team.id %>" data-search-field-history-key="<%= search_field_history_key %>">
         <div class="header">
           <div class="title"><%= dropdown_title %></div>
-          <div class="btn btn-light clear-button">
+          <div class="btn btn-light clear-button" title="clear button for filters">
             <i class="fas fa-times-circle"></i><%= t("filters_modal.clear_btn") %></div>
         </div>
         <div class="body">
           <%= yield %>
         </div>
         <div class="footer">
-          <div class="btn btn-primary apply-filters"><%= t("filters_modal.show_btn.one") %></div>
+          <div class="btn btn-primary apply-filters" title="show results button for filters"><%= t("filters_modal.show_btn.one") %></div>
         </div>
       </div>
     </div>

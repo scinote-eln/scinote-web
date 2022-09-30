@@ -6,6 +6,7 @@
         <%= link_to new_project_path(project_folder_id: current_folder),
                     class: 'btn btn-primary new-project-btn',
                     data: { view_mode: 'active' },
+                    title: 'new project button',
                     remote: true do %>
           <span class="fas fa-plus" aria-hidden="true"></span>
           <span class="hidden-xs"><%= t('projects.index.new') %></span>
@@ -15,16 +16,17 @@
       <% if current_team && can_create_project_folders?(current_team) %>
         <%= link_to new_project_folder_path(project_folder_id: current_folder, view_mode: projects_view_mode),
                     class: 'btn btn-light new-project-folder-btn',
+                    title: 'create folder for project',
                     remote: true do %>
           <span class="fas fa-folder" aria-hidden="true"></span>
           <span class="hidden-xs"><%= t('projects.index.new_folder') %></span>
         <% end %>
       <% end %>
-      <a href="#" class="btn btn-light edit-btn single-object-action hidden" data-for="editable">
+      <a href="#" title="edit project button" class="btn btn-light edit-btn single-object-action hidden" data-for="editable">
         <span class="fas fa-pencil-alt" aria-hidden="true"></span>
         <span class="hidden-xs"><%= t('projects.index.edit_button') %></span>
       </a>
-      <a href="#" class="btn btn-light move-projects-btn multiple-object-action hidden" data-for="moveable" data-url="<%= move_to_modal_project_folders_url %>">
+      <a href="#" title="move project button" class="btn btn-light move-projects-btn multiple-object-action hidden" data-for="moveable" data-url="<%= move_to_modal_project_folders_url %>">
         <span class="fas fa-arrow-right" aria-hidden="true"></span>
         <span class="hidden-xs"><%= t('projects.index.move_button') %></span>
       </a>
@@ -33,6 +35,7 @@
                     form_class: 'archive-projects-form',
                     data: { for: :archivable, view_mode: 'active' },
                     remote: true,
+                    title: 'archive project button',
                     method: :post do %>
         <span class="fas fa-archive" aria-hidden="true"></span>
         <span class="hidden-xs"><%= t('projects.index.archive_button') %></span>
@@ -42,6 +45,7 @@
                     form_class: 'restore-projects-form',
                     data: { for: :restorable, view_mode: 'archived' },
                     remote: true,
+                    title: 'restore project button',
                     method: :post do %>
         <span class="fas fa-undo" aria-hidden="true"></span>
         <span class="hidden-xs"><%= t('projects.index.restore_button') %></span>
@@ -51,12 +55,13 @@
                     form_class: 'delete-folders-btn',
                     data: { for: :deletable },
                     remote: true,
+                    title: 'delete project button',
                     method: :post do %>
         <span class="fas fa-trash" aria-hidden="true"></span>
         <span class="hidden-xs"><%= t('projects.index.delete_button') %></span>
       <% end %>
       <!-- export projects button -->
-      <a href="#" class="btn btn-light export-projects-btn multiple-object-action hidden"
+      <a href="#" title="export project button" class="btn btn-light export-projects-btn multiple-object-action hidden"
                   data-export-projects-modal-url="<%= export_projects_modal_team_path(current_team) %>">
         <span class="fas fa-file-export"></span>
         <span class="hidden-xs-custom"><%= t('projects.export_projects.export_button') %></span>

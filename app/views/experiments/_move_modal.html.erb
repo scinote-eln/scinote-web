@@ -11,14 +11,14 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <button title="close move modal" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="move-experiment-modal-label"><%= t("experiments.move.modal_title", experiment: @experiment.name ) %></h5>
         </div>
         <div class="modal-body">
           <p><small><%= t("experiments.move.notice") %></small></p>
           <% if @projects.any? && can_manage_all_experiment_my_modules?(@experiment) %>
             <%= f.select :project_id, options_for_select(@projects.collect { |p| [ p.name, p.id ] }),
-                        { label: t("experiments.move.target_project") }, { class: "form-control selectpicker", "data-role" => "clear" } %>
+                        { label: t("experiments.move.target_project") }, { class: "form-control selectpicker", "data-role" => "clear", title: "project selection for moving" } %>
           <% else %>
             <div class="warning-message">
               <i class="fas fa-exclamation-triangle"></i>
@@ -31,9 +31,9 @@
           <% end %>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
+          <button title="cancel button for move modal" type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
           <% if @projects.any? && can_manage_all_experiment_my_modules?(@experiment) %>
-            <%= f.submit t("experiments.move.modal_submit"), class: "btn btn-primary" %>
+            <%= f.submit t("experiments.move.modal_submit"), class: "btn btn-primary", title: 'move button for move modal' %>
           <% end %>
         </div>
       </div>

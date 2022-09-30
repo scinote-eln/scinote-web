@@ -107,8 +107,10 @@ var filterDropdown = (function() {
     toggleFilterMark: function(filterContainer, filtersEnabled) {
       if (filtersEnabled) {
         filterContainer.addClass('filters-applied');
+        filterContainer.prop('title', 'filter is applied');
       } else {
         filterContainer.removeClass('filters-applied');
+        filterContainer.prop('title', 'filter is not applied');
       }
     }
 

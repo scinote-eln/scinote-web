@@ -6,15 +6,15 @@
                              method: :post,
                              html: { class: 'experiment-action-form' } do |f| %>
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>"><span aria-hidden="true">&times;</span></button>
+          <button title="close new experiment modal" type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="new-eperiment-modal-label"><%= t("experiments.new.modal_title") %></h4>
         </div>
         <div class="modal-body">
           <%= render partial: 'form.html.erb', locals: { form: f } %>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.cancel') %></button>
-          <%= f.submit t('experiments.new.modal_create'), class: 'btn btn-primary' %>
+          <button title="cancel button for new experiment modal" type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.cancel') %></button>
+          <%= f.submit t('experiments.new.modal_create'), class: 'btn btn-primary', title: 'create button for new experiment modal' %>
         </div>
       <% end %>
     </div>
