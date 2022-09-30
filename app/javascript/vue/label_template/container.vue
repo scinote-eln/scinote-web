@@ -46,7 +46,7 @@
           @update="updateDescription"
         />
         <template v-else>
-          {{ labelTemplate.attributes.description }}
+          {{ labelTemplate.attributes.description || i18n.t('label_templates.show.description_empty') }}
         </template>
       </div>
     </div>
@@ -240,6 +240,11 @@
         let textAfter  = this.newContent.substring(this.cursorPos, this.newContent.length);
         this.newContent = textBefore + field + textAfter;
         this.cursorPos = this.cursorPos + field.length;
+
+        this.$nextTick(() => {
+          $(this.$refs.contentInput).prop('selectionStart', this.cursorPos);
+          $(this.$refs.contentInput).prop('selectionEnd', this.cursorPos);
+        });
       },
       showErrors() {
         if (this.editingContent) {

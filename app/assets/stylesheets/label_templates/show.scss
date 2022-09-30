@@ -13,7 +13,7 @@
     border-bottom: $border-tertiary;
     display: flex;
     margin-left: -2em;
-    padding: .5em 2em;
+    padding: .25em 2em;
     width: calc(100% + 4em);
 
     .label-template-icon {
@@ -32,7 +32,7 @@
 
   .template-descripiton {
     @include font-button;
-    margin: 1em 0;
+    margin: .5em 0;
 
     .title {
       font-weight: bold;
@@ -124,6 +124,10 @@
       position: absolute;
       right: 0;
       top: 0;
+    }
+
+    &.read-only {
+      cursor: initial;
     }
 
     &:hover:not(.read-only) {
