@@ -58,7 +58,7 @@
               {{ i18n.t('repository_row.modal_print_label.label_preview') }}
             </div>
             <div class="label-preview-container">
-              <LabelPreview v-if="labelTemplateCode" :zpl='labelTemplateCode' :previewUrl="urls.labelPreview" :viewOnly="true"/>
+              <LabelPreview v-if="labelTemplateCode" :zpl='labelTemplateCode' :template="selectedTemplate" :previewUrl="urls.labelPreview" :viewOnly="true"/>
             </div>
           </div>
           <div class="modal-footer">
@@ -176,7 +176,7 @@
     methods: {
       selectDefaultLabelTemplate() {
         if (this.selectedPrinter && this.templates) {
-          let template = this.templates.find(i => i.attributes.default 
+          let template = this.templates.find(i => i.attributes.default
             && i.type.includes(this.selectedPrinter.attributes.type_of));
           if (template) {
             this.$nextTick(() => {

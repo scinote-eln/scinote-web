@@ -172,7 +172,7 @@ class LabelTemplatesController < ApplicationController
   end
 
   def label_template_params
-    params.require(:label_template).permit(:name, :description, :content)
+    params.require(:label_template).permit(:name, :description, :content, :width_mm, :height_mm)
   end
 
   def log_activity(type_of, label_template = @label_template, message_items: {})
