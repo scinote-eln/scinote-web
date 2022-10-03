@@ -1,0 +1,22 @@
+<div class="modal" id="manage-module-users-modal" tabindex="-1" role="dialog" aria-labelledby="manage-module-users-modal-label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="manage-module-users-modal-label"><%= t("experiments.canvas.full_zoom.modal_manage_users.modal_title") %> <span id="manage-module-users-modal-module"></span></h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <span class="pull-left">
+          <% if current_user.is_admin_of_team?(@experiment.project.team) %>
+            <%= link_to t("experiments.canvas.full_zoom.modal_manage_users.invite_users_link"), team_path(@experiment.project.team.id) %>
+            <span><%=t "experiments.canvas.full_zoom.modal_manage_users.invite_users_details", team: @experiment.project.team.name %></span>
+          <% else %>
+            <i><%=t "experiments.canvas.full_zoom.modal_manage_users.contact_admins", team: @experiment.project.team.name %></i>
+          <% end %>
+        </span>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.close" %></button>
+      </div>
+    </div>
+  </div>
+</div>

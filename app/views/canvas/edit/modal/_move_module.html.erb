@@ -2,7 +2,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button title="close move task modal" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="modal-move-module-label"><%=t "experiments.canvas.edit.modal_move_module.title" %></h4>
       </div>
       <div class="modal-body">
@@ -23,9 +23,9 @@
         <% end %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
+        <button title="cancel button for move task modal" type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
         <% if experiments.count > 1 %>
-          <button type="button" class="btn btn-primary" data-action="confirm">
+          <button title="move button for move task modal" type="button" class="btn btn-primary" data-action="confirm">
             <%=t "experiments.canvas.edit.modal_move_module.confirm" %>
           </button>
         <% end %>

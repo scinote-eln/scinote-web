@@ -1,5 +1,6 @@
 <div class="panel panel-default module-large
   <%= get_task_alert_color(my_module) %>"
+  title="task <%= my_module.id %> full size card"
   id="<%= my_module.id %>"
   data-module-id="<%= my_module.id %>"
   data-module-name="<%= my_module.name %>"
@@ -33,7 +34,7 @@
   <% unless my_module.experiment.archived_branch? || !can_restore_my_module?(my_module) %>
     <div class="task-selector-container pull-left " data-view-mode="archived" data-task-id="<%= my_module.id %>">
       <div class="sci-checkbox-container">
-        <input value="1" type="checkbox" class="sci-checkbox task-selector">
+        <input title="checkbox for task: <%= my_module.id %>" value="1" type="checkbox" class="sci-checkbox task-selector">
         <span class="sci-checkbox-label"></span>
       </div>
     </div>
@@ -84,8 +85,8 @@
     <ul class="nav nav-tabs nav-tabs-less" role="tablist">
       <li role="presentation">
         <a class="btn btn-link task-card-view-users" href="<%= index_old_my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_users" role="tab" data-remote="true">
-          <span class="fas fa-users" aria-hidden="true"></span>
-          <span class="badge badge-indicator users-badge-indicator <%= 'hidden' unless my_module.designated_users_count.positive? %>"
+          <span title="task <%= my_module.id %> assigned to" class="fas fa-users" aria-hidden="true"></span>
+          <span title="task <%= my_module.id %> assigned to" class="badge badge-indicator users-badge-indicator <%= 'hidden' unless my_module.designated_users_count.positive? %>"
                 data-linked-id="<%= my_module.id %>">
             <%= my_module.designated_users_count %>
           </span>
@@ -93,12 +94,12 @@
       </li>
       <li role="presentation">
         <a class="btn btn-link task-card-view-activities" href="<%= activities_my_module_url(id: my_module.id) %>" aria-controls="<%= my_module.id %>_activities" role="tab">
-          <span class="fas fa-list" aria-hidden="true"></span>
+          <span title="task <%= my_module.id %> activities" class="fas fa-list" aria-hidden="true"></span>
         </a>
       </li>
       <li role="presentation">
         <a class="btn btn-link task-card-view-comments" href="<%= my_module_my_module_comments_url(my_module_id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_comments" role="tab" data-remote="true">
-          <span class="fas fa-comment" aria-hidden="true"></span>
+          <span title="task <%= my_module.id %> comments" class="fas fa-comment" aria-hidden="true"></span>
           <span id="comment-counter-<%= my_module.id %>" class="badge badge-indicator comments-badge-indicator <%= 'hidden' unless my_module.task_comments_count.positive? %>"
                 data-linked-id="<%= my_module.id %>">
             <%= my_module.task_comments_count %>

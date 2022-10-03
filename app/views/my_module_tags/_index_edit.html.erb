@@ -4,7 +4,7 @@
 <% else %>
   <ul class="list-group">
     <% @my_module_tags.each_with_index do |mmt, i| tag = mmt.tag %>
-      <li class="list-group-item" style="background-color: <%= tag.color %>" data-color="<%= tag.color %>" data-tag-id="<%= tag.id %>" data-name="<%= tag.name %>">
+      <li title="tag <%= tag.id %> with color <%= tag.color %>" class="list-group-item" style="background-color: <%= tag.color %>" data-color="<%= tag.color %>" data-tag-id="<%= tag.id %>" data-name="<%= tag.name %>">
 
         <div class="row tag-show">
           <div class="col-xs-6 col-lg-8">
@@ -29,11 +29,11 @@
         <div class="row tag-edit" style="display: none;">
           <%= bootstrap_form_for tag, remote: true, url: project_tag_path(@my_module.experiment.project, tag, format: :json), method: :put, html: { class: "edit-tag-form" }, data: {tag_id: tag.id} do |f| %>
             <%= hidden_field_tag :my_module_id, @my_module.id %>
-            <div class="col-xs-7">
-              <%= f.text_field :name, hide_label: true %>
+            <div class="col-xs-7" title="zdarova">
+              <%= f.text_field :name, hide_label: true, title: 'tag new name field'%>
             </div>
             <div class="pull-right">
-              <%= f.color_picker_select :color, Constants::TAG_COLORS, class: "edit-tag-color" %>
+              <%= f.color_picker_select :color, Constants::TAG_COLORS, class: "edit-tag-color"%>
               <%= f.button class: "btn btn-link save-tag-link", title: t("experiments.canvas.modal_manage_tags.save_tag") do %>
                 <span class="fas fa-check"></span>
               <% end %>
@@ -61,7 +61,7 @@
                                 :name,
                                 {},
                                 { class: 'selectpicker' }) %>
-          <%= f.button class: 'btn btn-primary' do %>
+          <%= f.button class: 'btn btn-primary', title: "add tag to task #{@my_module.id}" do %>
             <span><%= t("experiments.canvas.modal_manage_tags.create") %></span>
           <% end %>
         </div>
@@ -73,7 +73,7 @@
         <%= f.hidden_field :project_id, :value => @my_module.experiment.project.id %>
         <%= f.hidden_field :name, :value => t("tags.create.new_name") %>
         <%= f.hidden_field :color, :value => Constants::TAG_COLORS[0] %>
-        <%= f.button class: "btn btn-primary" do %>
+        <%= f.button class: "btn btn-primary", title: "new badge button for task #{@my_module.id}" do %>
           <span class="fas fa-plus"></span>
           <span class="hidden-xs"><%=t "experiments.canvas.modal_manage_tags.create_new" %></span>
         <% end %>
