@@ -28,7 +28,7 @@
       var selectColor = this.$select.find("option:selected").data("color");
 
       var $markupUl = $("<ul>").addClass("dropdown-menu").addClass("dropdown-caret");
-      var $markupDiv = $("<div>").addClass("dropdown").addClass("dropdown-colorselector");
+      var $markupDiv = $("<div>").addClass("dropdown").addClass("dropdown-colorselector").prop('title', 'color picker');
       var $markupSpan = $("<span>").addClass("btn-colorselector").css("background-color", selectColor);
       var $markupA = $("<a>").attr("data-toggle", "dropdown").addClass("dropdown-toggle").attr("href", "#").append($markupSpan);
 

@@ -36,12 +36,12 @@ module BootstrapFormHelper
 
       res << "<div class='input-group date'>" if options[:clear]
 
-      res << "<input type='datetime' class='form-control' name='#{input_name}' id='#{id}' "\
+      res << "<input title='#{id} field' type='datetime' class='form-control' name='#{input_name}' id='#{id}' "\
              "readonly value='#{value}' data-toggle='date-time-picker' data-date-format='#{js_format}' " \
              "data-date-locale='#{js_locale}' data-date-show-today-button='#{options[:today].present?}'/>"
 
       if options[:clear]
-        res << "<span class='input-group-addon' data-toggle='clear-date-time-picker' data-target='#{id}'>" \
+        res << "<span title='#{id} clear due date' class='input-group-addon' data-toggle='clear-date-time-picker' data-target='#{id}'>" \
                "<i class='fas fa-times'></i></span></div>"
       end
 
