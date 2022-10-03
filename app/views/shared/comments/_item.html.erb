@@ -33,9 +33,9 @@
               <span title="cancel editing comment" class="cancel-button"><i class="fas fa-times"></i></span>
             </div>
             <div class="view-buttons">
-              <span title="edit comment" class="edit-button"><i class="fas fa-pen"></i><%= t('general.edit') %></span>
+              <span title="edit comment <%= comment.id %>" class="edit-button"><i class="fas fa-pen"></i><%= t('general.edit') %></span>
               <a href="#"
-                title="delete comment"
+                title="delete comment <%= comment.id %>"
                 class="delete-button"
                 data-url="<%= comment_action_url(comment) %>"
                 data-confirm-message="<%= t('comments.delete_confirm') %>"

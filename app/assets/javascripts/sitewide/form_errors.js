@@ -41,7 +41,7 @@ var renderFormError = function(ev, input, errMsgs, clearErr, errAttributes) {
       $formGroup.addClass('has-error');
     }
 
-    var $errSpan = "<span class='help-block'" +
+    var $errSpan = "<span title='error text message' class='help-block'" +
       errAttributes + '>' + errorText + '</span>';
     $(input).after($errSpan);
   }

@@ -11,7 +11,7 @@
   <% if @my_modules.present? %>
     <% if can_manage_experiment?(@experiment) %>
       <div class="restore-button-container collapse">
-        <%= button_to restore_my_modules_experiment_path(@experiment), class: 'btn btn-light', method: :post do %>
+        <%= button_to restore_my_modules_experiment_path(@experiment), class: 'btn btn-light', title: 'restore button for archived tasks', method: :post do %>
           <span class="fas fa-undo"></span>
           <%= t('experiments.module_archive.restore_option') %>
         <% end %>
