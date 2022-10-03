@@ -74,6 +74,13 @@
         type: Boolean,
         default: false
       },
+      labelHTML: {
+        type: Boolean,
+        default: false
+      },
+      tagLabel: {
+        type: Function
+      },
       optionClass: {
         type: String,
         default: ''
@@ -117,6 +124,8 @@
         closeOnSelect: this.closeOnSelect,
         selectAppearance: this.selectAppearance,
         disableSearch: this.disableSearch,
+        tagLabel: this.tagLabel,
+        labelHTML: this.labelHTML,
         onOpen: this.onOpen,
         onChange: () => {
           if (this.onChange) this.onChange();

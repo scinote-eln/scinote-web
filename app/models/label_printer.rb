@@ -19,10 +19,6 @@ class LabelPrinter < ApplicationRecord
   validates :type_of, presence: true
   validates :language_type, presence: true
 
-  def display_name
-    "#{name} • #{description}"
-  end
-
   def done?
     current_print_job_ids.blank? && ready?
   end

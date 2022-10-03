@@ -12,6 +12,30 @@
   .printers-container {
     margin-bottom: 1em;
     min-height: 4em;
+
+    .status-ready {
+
+    }
+
+    .status-ready {
+      color: #2DBE61;
+    }
+
+    .status-busy {
+      color: #231F20;
+    }
+
+    .status-out-of-labels {
+      color: #231F20;
+    }
+
+    .status-unreachable {
+      color: #231F20;
+    }
+
+    .status-error {
+      color: #231F20;
+    }
   }
 
   .labels-container {
