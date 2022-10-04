@@ -132,7 +132,10 @@ var MyModuleRepositories = (function() {
     } else {
       columnDefs.push({
         targets: 2,
-        className: 'item-name'
+        className: 'item-name',
+        render: function(data, type, row) {
+          return `<span title="repository item name: ${data}">${data}</span>`;
+        }
       });
     }
 
@@ -183,7 +186,7 @@ var MyModuleRepositories = (function() {
       targets: 0,
       className: 'item-name',
       render: function(data, type, row) {
-        var recordName = "<a href='" + row.recordInfoUrl + "'"
+        var recordName = "<a href='" + row.recordInfoUrl + "' title='open item: " + data + "'"
                          + "class='record-info-link'>" + data + '</a>';
         if (row.hasActiveReminders) {
           recordName = `<div class="dropdown row-reminders-dropdown"
