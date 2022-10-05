@@ -95,10 +95,14 @@ class Project < ApplicationRecord
     # Admins see all projects in the team
     # Member of the projects can view
     # If project is visible everyone from the team can view it
+    owner_role = UserRole.find_predefined_owner_role
     projects = Project.where(team: teams)
-                      .left_outer_joins(team: :user_teams)
-                      .left_outer_joins(user_assignments: :user_role)
-    projects.where('projects.visibility = 1 OR (user_teams.user_id = ? AND user_teams.role = 2)', user)
+                      .left_outer_joins(:team, user_assignments: :user_role)
+                      .joins("LEFT OUTER JOIN user_assignments team_user_assignments "\
+                             "ON team_user_assignments.assignable_type = 'Team' "\
+                             "AND team_user_assignments.assignable_id = team.id")
+    projects.where(visibility: visibilities[:visible])
+            .or(projects.where(team: { team_user_assignments: { user_id: user, user_role_id: owner_role } }))
             .or(projects.with_granted_permissions(user, ProjectPermissions::READ))
             .distinct
   end
