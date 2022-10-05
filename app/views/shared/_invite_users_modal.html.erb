@@ -44,7 +44,7 @@ invite_with_team_selector = type.in?(%w(invite_new_members invite_with_team_sele
     <div class="modal-content">
 
       <div class="modal-header">
-        <button type="button" class="close" title="organization users modal x button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" title="close button for invite users modal at <%= request.env['PATH_INFO'] %>" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">
           <% if text_title %>
             <%= text_title %>
@@ -137,20 +137,20 @@ invite_with_team_selector = type.in?(%w(invite_new_members invite_with_team_sele
 
       <div class="modal-footer">
         <div data-role="step-form">
-          <button type="button" title="close organization invite users modal" class="btn btn-secondary" data-dismiss="modal">
+          <button type="button" title="cancel button for invite users modal at <%= request.env['PATH_INFO'] %>" class="btn btn-secondary" data-dismiss="modal">
             <%= t('general.cancel') %>
           </button>
 
           <!-- Invite buttons -->
           <button type="button" class="btn btn-primary"
                   data-role="invite-btn" data-action="invite"
-                  title="organization invite users disabled button"
+                  title="invite users modal disabled button at <%= request.env['PATH_INFO'] %>"
                   disabled="disabled">
             <%= t('invite_users.invite_btn') %>
           </button>
 
           <div class="btn-group" data-role="invite-with-role-div">
-            <button type="button" class="btn btn-primary dropdown-toggle" title="organization invite users with role button"
+            <button type="button" class="btn btn-primary dropdown-toggle" title="invite users modal invite button at <%= request.env['PATH_INFO'] %>"
                     data-toggle="dropdown" data-id="invite-btn" aria-haspopup="true"
                     aria-expanded="false" data-role="invite-with-role-btn"
                     disabled="disabled">
@@ -172,7 +172,7 @@ invite_with_team_selector = type.in?(%w(invite_new_members invite_with_team_sele
           </div>
         </div>
         <div data-role="step-results">
-          <button type="button" title="close organization invite users modal" class="btn btn-default" data-dismiss="modal">
+          <button type="button" title="close button for invite users modal <%= request.env['PATH_INFO'] %>" class="btn btn-default" data-dismiss="modal">
             <%= t('general.close') %>
           </button>
         </div>
