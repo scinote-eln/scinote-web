@@ -50,7 +50,11 @@ class UserRole < ApplicationRecord
   end
 
   def owner?
-    name == I18n.t('user_roles.predefined.owner')
+    predefined? && name == I18n.t('user_roles.predefined.owner')
+  end
+
+  def viewer?
+    predefined? && name == I18n.t('user_roles.predefined.viewer')
   end
 
   private
