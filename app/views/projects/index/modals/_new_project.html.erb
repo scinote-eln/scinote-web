@@ -10,16 +10,17 @@
           <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
               <%= f.hidden_field :project_folder_id %>
-              <%= f.text_field :name, label: t('projects.index.modal_new_project.name'), placeholder: t('projects.index.modal_new_project.name_placeholder') %>
+              <%= f.text_field :name, label: t('projects.index.modal_new_project.name'), placeholder: t('projects.index.modal_new_project.name_placeholder'), title: "new project name" %>
             </div>
           </div>
           <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
               <div class="checkbox">
                 <%= f.check_box :visibility,
-                                { label: t('projects.index.modal_new_project.visibility_html'), data: { action: 'toggle-visibility', target: 'role_select_wrapper' } },
+                                { label: t('projects.index.modal_new_project.visibility_html'), data: { action: 'toggle-visibility', target: 'role_select_wrapper' }, title: "toggle project visibility" },
                                 :visible,
-                                :hidden %>
+                                :hidden
+                %>
               </div>
             </div>
           </div>
@@ -27,13 +28,14 @@
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
               <%= f.select :default_public_user_role_id,
                            options_for_select(user_roles_collection, UserRole.find_by(name: I18n.t('user_roles.predefined.viewer')).id),
-                           class: 'form-control selectpicker'%>
+                           {},
+                           { class: 'form-control', title: "select public user role" }%>
             </div>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.cancel') %></button>
-          <%= f.button t('projects.index.modal_new_project.create'), class: "btn btn-primary" %>
+          <%= f.button t('projects.index.modal_new_project.create'), title: "create new project button", class: "btn btn-primary" %>
         </div>
       </div>
     </div>

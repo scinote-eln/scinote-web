@@ -8,7 +8,7 @@
      data-deletable="<%= can_delete_project_folder?(folder) && can_update_team?(current_team) %>">
   <div class="checkbox-cell table-cell">
     <div class="sci-checkbox-container">
-      <input value="1" type="checkbox" class="sci-checkbox folder-card-selector">
+      <input value="1" type="checkbox" class="sci-checkbox folder-card-selector" title="folder <%= folder.name %> checkbox">
       <span class="sci-checkbox-label"></span>
     </div>
   </div>

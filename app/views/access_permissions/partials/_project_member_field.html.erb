@@ -23,7 +23,7 @@
       </div>
       <div class="user-assignment-remove">
         <% unless project_member.last_project_owner? %>
-          <%= link_to access_permissions_project_path(project, user_id: user), remote: true, method: :delete, class: 'btn btn-secondary', data: { action: 'remote-destroy', target: "##{item_id}" } do %>
+          <%= link_to access_permissions_project_path(project, user_id: user), remote: true, method: :delete, class: 'btn btn-secondary', data: { action: 'remote-destroy', target: "##{item_id}" }, title: "remove user #{user.email}" do %>
             <span class="fas fa-times"></span>
             <%= t 'general.remove' %>
           <% end %>
