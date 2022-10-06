@@ -25,6 +25,7 @@
       <%= render layout: 'shared/view_switch', locals: { disabled: false } do %>
         <li class="view-switch-list cards-switch form-dropdown-item">
           <%= button_to(view_type_projects_path(format: :json),
+                        title: "view project cards",
                         method: :put,
                         remote: true,
                         class: "btn btn-light button-to #{ @current_view_type == 'cards' ? 'selected' : ''}",
@@ -37,6 +38,7 @@
 
         <li class="view-switch-list cards-switch form-dropdown-item">
           <%= button_to(view_type_projects_path(format: :json),
+                        title: "view project list",
                         method: :put,
                         remote: true,
                         class: "btn btn-light button-to #{ @current_view_type == 'table' ? 'selected' : ''}",
@@ -47,11 +49,11 @@
           <% end %>
         </li>
         <div role="separator" class="divider"></div>
-        <li class="view-switch-active archive-switch" data-view-mode="archived" data-url="<%= projects_path %>">
+        <li title="view active projects" class="view-switch-active archive-switch" data-view-mode="archived" data-url="<%= projects_path %>">
           <i class="fas fa-rocket button-icon"></i> <%= t('projects.index.header.active_projects') %>
         </li>
 
-        <li class="view-switch-archived archive-switch" data-view-mode="active" data-url="<%= projects_path(view_mode: 'archived') %>">
+        <li title="view archived projects" class="view-switch-archived archive-switch" data-view-mode="active" data-url="<%= projects_path(view_mode: 'archived') %>">
           <i class="fas fa-archive button-icon"></i> <%= t('projects.index.header.archived_projects') %>
         </li>
       <% end %>
@@ -94,7 +96,7 @@
                 <li class="divider" <%= i > 3 ? 'data-view-mode=archived' : '' %>></li>
               <% end %>
               <li <%= %w(archived_new archived_old).include?(sort) ? 'data-view-mode=archived' : '' %>>
-                <a class="<%= 'selected' if @current_sort == sort %>"
+                <a title="sort projects by <%= sort %>" lass="<%= 'selected' if @current_sort == sort %>"
                    data-sort="<%= sort %>" >
                   <%= t("general.sort.#{sort}_html") %>
                 </a>

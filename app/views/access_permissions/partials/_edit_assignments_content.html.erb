@@ -13,7 +13,7 @@
   </div>
 
   <div class="modal-footer">
-    <%= link_to new_resource_path, class: 'btn btn-default pull-left', data: { action: 'swap-remote-container', target: '#user_assignments_modal' } do %>
+    <%= link_to new_resource_path, class: 'btn btn-default pull-left', data: { action: 'swap-remote-container', target: '#user_assignments_modal' }, title: "grant access to project" do %>
       <i class="fas fa-plus"></i>
       <%= t '.new_resource_assignments', resource: project.model_name.human.downcase %>
     <% end %>
