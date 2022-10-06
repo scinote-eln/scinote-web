@@ -234,8 +234,10 @@
             label_printer_id: this.selectedPrinter.id,
             label_template_id: this.selectedTemplate.id,
             copies: this.copies
-          }, () => {
+          }, (data) => {
+            $(this.$refs.modal).modal('hide');
             this.$emit('close');
+            PrintProgressModal.init(data);
           })
         }
       },
