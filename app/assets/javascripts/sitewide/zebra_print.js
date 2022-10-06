@@ -96,7 +96,7 @@ var zebraPrint = (function() {
     try {
       beforeRefresh();
       BrowserPrint.getLocalDevices(function(deviceList) {
-        if (deviceList.printer && deviceList.printer.length !== 0) {
+        if (deviceList && deviceList.printer && deviceList.printer.length !== 0) {
           for (i = 0; i < deviceList.printer.length; i += 1) {
             getPrinterStatus(deviceList.printer[i]).then((device) => {
               addNewDevice(device, clearSelectorOnFirstDevice);
