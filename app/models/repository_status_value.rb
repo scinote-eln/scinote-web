@@ -20,8 +20,6 @@ class RepositoryStatusValue < ApplicationRecord
   end
 
   def formatted_status
-    return nil unless repository_status_item
-
     repository_status_item&.status
   end
 
