@@ -246,6 +246,7 @@
             this.printers.push({
               id: `zebra${this.printers.length}`,
               attributes: {
+                name: device.name,
                 display_name: device.name,
                 type_of: 'zebra',
                 status: device.status.toLowerCase(),
