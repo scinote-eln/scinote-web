@@ -22,7 +22,7 @@ class RepositoryStatusValue < ApplicationRecord
   def formatted_status
     return nil unless repository_status_item
 
-    repository_status_item.status
+    repository_status_item&.status
   end
 
   def self.add_filter_condition(repository_rows, join_alias, filter_element)
