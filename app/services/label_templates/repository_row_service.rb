@@ -31,6 +31,19 @@ module LabelTemplates
 
     private
 
+    def fetch_custom_column_value(name)
+      repository_cell = @repository_row.repository_cells.joins(:repository_column).find_by(
+        repository_columns: { name: name }
+      )
+      return '' unless repository_cell
+
+      if repository_cell.value_type == 'RepositoryStatusValue'
+        repository_cell.value.formatted_status
+      else
+        repository_cell.value.formatted
+      end
+    end
+
     def fetch_value(key)
       case key
       when /^c_(.*)/
@@ -41,10 +54,7 @@ module LabelTemplates
 
         return '' unless @print_mode
 
-        repository_cell = @repository_row.repository_cells.joins(:repository_column).find_by(
-          repository_columns: { name: name }
-        )
-        repository_cell ? repository_cell.value.formatted : ''
+        fetch_custom_column_value(name)
       when 'ITEM_ID'
         @repository_row.code
       when 'NAME'
