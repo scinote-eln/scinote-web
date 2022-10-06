@@ -25,11 +25,13 @@
       <div class="label-preview__controls__size">
         <div class="sci-input-container">
           <label>{{ i18n.t('label_templates.label_preview.height') }}</label>
-          <input v-model="height" type="number" class="sci-input-field" />
+          <input v-model="height" type="number" class="sci-input-field"
+                 @change="$emit('height:update', (unit === 'in' ? height * 25.4 : height))"  />
         </div>
         <div class="sci-input-container">
           <label>{{ i18n.t('label_templates.label_preview.width') }}</label>
-          <input v-model="width" type="number" class="sci-input-field" />
+          <input v-model="width" type="number" class="sci-input-field"
+                 @change="$emit('width:update', (unit === 'in' ? width * 25.4 : width))" />
         </div>
         <div class="sci-input-container">
           <label>{{ i18n.t('label_templates.label_preview.density') }}</label>
@@ -79,6 +81,7 @@
     name: 'LabelPreview',
     components: { DropdownSelector },
     props: {
+      template: { type: Object, required: true},
       zpl: { type: String, required: true },
       previewUrl: { type: String, required: true },
       viewOnly: {
@@ -101,6 +104,9 @@
     },
     mounted() {
       this.refreshPreview();
+      this.width = this.template.attributes.width_mm
+      this.height = this.template.attributes.height_mm
+      if (this.width && this.height) this.recalculateUnits();
     },
     computed: {
       widthMm() {
@@ -112,14 +118,7 @@
     },
     watch: {
       unit() {
-        if (this.unit === 'in') {
-          this.width /= 25.4;
-          this.height /= 25.4;
-        } else {
-          this.width *= 25.4;
-          this.height *= 25.4;
-        }
-
+        this.recalculateUnits();
         this.setDefaults();
       },
       zpl() {
@@ -132,6 +131,15 @@
         !this.density && (this.density = 8);
         !this.width && (this.width = this.unit === 'in' ? 2 : 50.8);
         !this.height && (this.height = this.unit === 'in' ? 1 : 25.4);
+      },
+      recalculateUnits() {
+        if (this.unit === 'in') {
+          this.width /= 25.4;
+          this.height /= 25.4;
+        } else {
+          this.width *= 25.4;
+          this.height *= 25.4;
+        }
       },
       refreshPreview() {
         if (this.zpl.length === 0) return;

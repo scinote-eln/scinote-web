@@ -97,7 +97,15 @@
         </div>
       </div>
       <div class="label-preview-container">
-        <LabelPreview :zpl='previewContent' :previewUrl="previewUrl" @preview:valid="updateContent" @preview:invalid="invalidPreview" />
+        <LabelPreview
+          :zpl='previewContent'
+          :template="labelTemplate"
+          :previewUrl="previewUrl"
+          @preview:valid="updateContent"
+          @preview:invalid="invalidPreview"
+          @height:update="setNewHeight"
+          @width:update="setNewWidth"
+        />
       </div>
     </div>
   </div>
@@ -126,6 +134,8 @@
         editingDescription: false,
         editingContent: false,
         newContent: '',
+        newLabelWidth: null,
+        newLabelHeight: null,
         previewContent: '',
         previewValid: false,
         skipSave: false,
@@ -158,9 +168,17 @@
         this.labelTemplate = result.data
         this.newContent = this.labelTemplate.attributes.content
         this.previewContent = this.labelTemplate.attributes.content
+        this.newLabelWidth = this.labelTemplate.attributes.width_mm
+        this.newLabelHeight = this.labelTemplate.attributes.height_mm
       })
     },
     methods: {
+      setNewHeight(val) {
+        this.newLabelHeight = val;
+      },
+      setNewWidth(val) {
+        this.newLabelWidth = val;
+      },
       enableContentEdit() {
         this.editingContent = true;
         this.$nextTick(() => {
@@ -210,9 +228,15 @@
           $.ajax({
             url: this.labelTemplate.attributes.urls.update,
             type: 'PATCH',
-            data: {label_template: {content: this.newContent}},
+            data: {label_template: {
+              content: this.newContent,
+              width_mm: this.newLabelHeight,
+              height_mm: this.newLabelWidth
+            }},
             success: (result) => {
               this.labelTemplate.attributes.content = result.data.attributes.content;
+              this.labelTemplate.attributes.width_mm = result.data.attributes.width_mm;
+              this.labelTemplate.attributes.height_mm = result.data.attributes.height_mm;
               this.editingContent = false;
             }
           });
