@@ -49,6 +49,10 @@ class UserRole < ApplicationRecord
     )
   end
 
+  def self.find_predefined_owner_role
+    predefined.find_by(name: UserRole.public_send('owner_role').name)
+  end
+
   def owner?
     name == I18n.t('user_roles.predefined.owner')
   end

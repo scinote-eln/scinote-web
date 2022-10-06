@@ -63,7 +63,7 @@ end
 Canaid::Permissions.register_for(ProjectFolder) do
   # ProjectFolder: delete
   can :delete_project_folder do |user, project_folder|
-    can_manage_team?(user, team) &&
+    can_manage_team?(user, project_folder.team) &&
       project_folder.projects.none? &&
       project_folder.project_folders.none?
   end
