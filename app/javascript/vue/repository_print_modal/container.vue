@@ -225,12 +225,12 @@
               printer_name: this.selectedPrinter.attributes.name,
               number_of_copies: this.copies,
               label_template_id: this.selectedTemplate.id,
-              repository_row_ids: this.row_ids
+              rows: this.row_ids
             }
           );
         } else {
           $.post(this.urls.print, {
-            repository_row_ids: this.row_ids,
+            rows: this.row_ids,
             label_printer_id: this.selectedPrinter.id,
             label_template_id: this.selectedTemplate.id,
             copies: this.copies

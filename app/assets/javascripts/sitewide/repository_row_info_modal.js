@@ -16,13 +16,13 @@
     }).on('hidden.bs.modal', function() {
       $(this).remove();
     });
-  } */
+  }
 
   function getReposotryRowsIds() {
     return $('[id="repository_row_ids_"]').map(function() {
       return this.value;
     }).get();
-  }
+  } */
 
   $(document).on('click', '.record-info-link', function(e) {
     var that = $(this);
@@ -79,8 +79,14 @@
   });
 
   $(document).on('click', '.print-label-button', function() {
+    var selectedRows = $(this).data('rows');
     PrintModalComponent.showModal = true;
-    PrintModalComponent.row_ids = RepositoryDatatable.selectedRows();
+    if (selectedRows.length) {
+      $('#modal-info-repository-row').modal('hide');
+      PrintModalComponent.row_ids = selectedRows;
+    } else {
+      PrintModalComponent.row_ids = RepositoryDatatable.selectedRows();
+    }
   });
 
   /*

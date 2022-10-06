@@ -7,9 +7,9 @@ Vue.prototype.i18n = window.I18n;
 
 function initPrintModalComponent() {
   const container = $('.print-label-modal-container');
-
   window.PrintModalComponent = new Vue({
     el: '.print-label-modal-container',
+    name: 'PrintModalComponent',
     components: {
       'print-modal-container': PrintModalContainer
     },

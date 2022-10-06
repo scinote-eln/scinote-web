@@ -600,6 +600,15 @@ Rails.application.routes.draw do
 
     resources :comments, only: %i(index create update destroy)
 
+    resources :repository_rows, only: %i() do
+      member do
+        get :rows_to_print
+        post :print
+        get :print_zpl
+        post :validate_label_template_columns
+      end
+    end
+
     resources :repositories do
       post 'repository_index',
            to: 'repository_rows#index',
@@ -651,12 +660,6 @@ Rails.application.routes.draw do
       end
       resources :repository_table_filters, only: %i(index show create update destroy)
       resources :repository_rows, only: %i(create show update) do
-        collection do
-          get :rows_to_print
-          post :print
-          get :print_zpl
-          post :validate_label_template_columns
-        end
         member do
           get :assigned_task_list
           get :active_reminder_repository_cells
