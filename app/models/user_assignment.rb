@@ -3,7 +3,9 @@
 class UserAssignment < ApplicationRecord
   before_validation -> { self.team ||= (assignable.is_a?(Team) ? assignable : assignable.team) }
   after_create :assign_shared_inventories, if: -> { assignable.is_a?(Team) }
+  after_create :assign_public_projects, if: -> { assignable.is_a?(Team) }
   before_destroy :unassign_shared_inventories, if: -> { assignable.is_a?(Team) }
+  before_destroy :unassign_public_projects, if: -> { assignable.is_a?(Team) }
 
   belongs_to :assignable, polymorphic: true, touch: true
   belongs_to :user_role
@@ -38,7 +40,21 @@ class UserAssignment < ApplicationRecord
     end
   end
 
+  def assign_public_projects
+    assignable.projects.visible.find_each do |project|
+      UserAssignments::GroupAssignmentJob.perform_later(
+        assignable,
+        project,
+        assigned_by
+      )
+    end
+  end
+
   def unassign_shared_inventories
     assignable.repository_sharing_user_assignments.where(user: user).find_each(&:destroy!)
+  end
+
+  def unassign_public_projects
+    UserAssignments::RemoveUserAssignmentJob.perform_now(user, assignable)
   end
 end
