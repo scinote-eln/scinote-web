@@ -67,7 +67,7 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal"> {{ i18n.t('general.cancel') }}</button>
             <button class="btn btn-primary" @click="submitPrint" :disabled="!selectedPrinter || !selectedTemplate">
-              {{ i18n.t('repository_row.modal_print_label.print_label') }}
+              {{ i18n.t(`repository_row.modal_print_label.${labelTemplateError ? 'print_anyway' : 'print_label'}`) }}
             </button>
           </div>
         </div>
