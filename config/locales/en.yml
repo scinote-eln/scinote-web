@@ -805,16 +805,6 @@ en:
         normal_user: "Normal user"
         admin: "Administrator"
 
-  label_templates:
-    fluics:
-      sync:
-        success: 'Refresh successful'
-        error: 'Refresh unsuccessful'
-    repository_row:
-      errors:
-        unsupported_key: "Key %{key} is not supported by this label template renderer."
-        column_not_found: "Column '%{column}' not found on inventory item."
-
   user_projects:
     view_users:
       modal_title: "Members of %{name}"
@@ -834,12 +824,15 @@ en:
     default_zebra_name: 'SciNote Item (ZPL)'
     default_fluics_name: 'SciNote Item (Fluics)'
     new_label_template: 'New label'
+    fluics:
+      sync:
+        success: 'Fluics label templates successfully updated'
+        error: 'Update of Fluics label templates was unsuccessful'
     repository_row:
       errors:
         unsupported_key: "Key %{key} is not supported by this label template renderer."
         column_not_found: "This Label template contains placeholders for inventory columns that are not present in this Inventory. Some data might not be printed on the label. Please check the label preview and label template before printing."
         logo_not_supported: "The company logo cannot be printed on the label, as it is not set up in your SciNote. Please upload company logo in Settings."
-
     index:
       head_title: 'Label templates'
       search_templates: 'Filter templates'
