@@ -466,7 +466,7 @@ var RepositoryDatatable = (function(global) {
         sWidth: '1%',
         render: function(data, type, row) {
           return `<div class="sci-checkbox-container">
-                    <input title='repository row checkbox' class='repository-row-selector sci-checkbox' type='checkbox' data-editable="${row.recordEditable}">
+                    <input title='repository row checkbox for ${row[3]}' class='repository-row-selector sci-checkbox' type='checkbox' data-editable="${row.recordEditable}">
                     <span class='sci-checkbox-label'></span>
                   </div>`;
         }

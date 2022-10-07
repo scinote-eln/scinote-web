@@ -60,7 +60,7 @@
           orderable: false,
           render: function() {
             return `<div class="sci-checkbox-container">
-                      <input title="repository row selector checkbox" class='repository-row-selector sci-checkbox' type='checkbox'>
+                      <input title="repository row selector checkbox ${data[0][1]}" class='repository-row-selector sci-checkbox' type='checkbox'>
                       <span class='sci-checkbox-label'></span>
                     </div>`;
           }

@@ -307,7 +307,7 @@ var RepositoryColumns = (function() {
         let destroyButton = '';
 
         if (destroyUrl) {
-          destroyButton = `<button title="delete repository column: ${colId} trash icon button " class="btn icon-btn btn-light delete-repo-column manage-repo-column"
+          destroyButton = `<button title="delete repository column: ${thederName} trash icon button " class="btn icon-btn btn-light delete-repo-column manage-repo-column"
                               data-action="destroy"
                               data-modal-url="${destroyUrl}">
                               <span class="fas fa-trash" title="Delete"></span>
@@ -315,14 +315,14 @@ var RepositoryColumns = (function() {
         }
 
         let listItem = `<li class="col-list-el ${visLi} ${customColumn} ${editableRow}" data-position="${colIndex}" data-id="${colId}">
-          <i class="grippy" title="drag & drop dots for column: ${colId}"></i>
+          <i class="grippy" title="drag & drop dots for column: ${thederName}"></i>
           <span class="vis-controls">
-            <span class="vis fas ${visClass}" title="visibility icon for column: ${colId}"></span>
+            <span class="vis fas ${visClass}" title="visibility icon for column: ${thederName}"></span>
           </span>
-          <span class="text">${generateColumnNameTooltip(thederName)}</span>
+          <span title="repository column: ${thederName}" class="text">${generateColumnNameTooltip(thederName)}</span>
           <span class="column-type pull-right">${getColumnTypeText(el, colId)}</span>
           <span class="sci-btn-group manage-controls pull-right" data-view-mode="active">
-            <button title="edit repository column: ${colId} edit icon" class="btn icon-btn btn-light edit-repo-column manage-repo-column"
+            <button title="edit repository column: ${thederName} edit icon" class="btn icon-btn btn-light edit-repo-column manage-repo-column"
                     data-action="edit"
                     data-modal-url="${editUrl}">
               <span class="fas fa-pencil-alt" title="Edit"></span>
