@@ -6,7 +6,8 @@ module Users
       include UserRolesHelper
 
       before_action :load_user_assignment, only: %i(update leave_html destroy_html destroy)
-      before_action :check_manage_permissions
+      before_action :check_manage_permissions, except: %i(leave_html destroy_html destroy)
+      before_action :check_destroy_permissions, only: %i(leave_html destroy_html destroy)
 
       def update
         respond_to do |format|
@@ -162,6 +163,14 @@ module Users
 
       def check_manage_permissions
         render_403 unless can_manage_team_users?(@user_assignment.assignable)
+      end
+
+      def check_destroy_permissions
+        if params[:leave]
+          render_403 unless @user_assignment.user == current_user
+        else
+          render_403 unless can_manage_team_users?(@user_assignment.assignable)
+        end
       end
 
       def update_params
