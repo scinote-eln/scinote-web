@@ -18,7 +18,7 @@
             <div class="all-teams">
               <span class="team-selector" title="<%= t("repositories.index.modal_share.all_teams_tooltip") %>">
                 <span class="sci-checkbox-container">
-                  <%= check_box_tag 'select_all_teams', 0, @repository.shared_read? || @repository.shared_write?, { class: 'sci-checkbox' } %>
+                  <%= check_box_tag 'select_all_teams', 0, @repository.shared_read? || @repository.shared_write?, { class: 'sci-checkbox', title: 'checkbox for selecting all teams' } %>
                   <span class="sci-checkbox-label"></span>
                 </span>
                 <%= t("repositories.index.modal_share.all_teams") %>
@@ -35,7 +35,7 @@
               <div class="team-container">
                 <div class="team-selector">
                   <span class="sci-checkbox-container">
-                    <%= check_box_tag 'share_team_ids[]', t.id, @repository.private_shared_with?(t), {id: "shared_#{t.id}", class: "sci-checkbox"} %>
+                    <%= check_box_tag 'share_team_ids[]', t.id, @repository.private_shared_with?(t), {id: "shared_#{t.id}", class: "sci-checkbox", title: "checkbox for sharing with #{t.name}"} %>
                     <span class="sci-checkbox-label"></span>
                   </span>
                   <%= t.name %>
@@ -44,7 +44,8 @@
                   <span class="sci-toggle-checkbox-container">
                     <%= check_box_tag 'write_permissions[]', t.id, @repository.private_shared_with_write?(t), {
                       id: "editable_#{t.id}",
-                      class: (@repository.private_shared_with?(t) ? 'sci-toggle-checkbox' : 'sci-toggle-checkbox hidden')
+                      class: (@repository.private_shared_with?(t) ? 'sci-toggle-checkbox' : 'sci-toggle-checkbox hidden'),
+                      title: "permission selector checkbox for #{t.name}"
                     }.compact %>
                     <span class="sci-toggle-checkbox-label"></span>
                   </span>
@@ -56,7 +57,7 @@
         </div>
         <%= hidden_field_tag 'permission_changes', '{}' %>
         <div class="modal-footer">
-          <%= f.submit t("repositories.index.modal_share.submit"), class: "btn btn-primary" %>
+          <%= f.submit t("repositories.index.modal_share.submit"), class: "btn btn-primary", title: 'save sharing options' %>
         </div>
       </div>
     </div>

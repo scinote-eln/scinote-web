@@ -312,11 +312,12 @@ var dropdownSelector = (function() {
     // Save config info to select element
     selectElement.data('config', config);
     let domain = $(document.body).context.baseURI.replace(/https?:\/\/[^\/]+/i, "");
+
     // Draw main elements
     $(`
       <div class="dropdown-container"></div>
       <div class="input-field">
-        <input title="${selector.context ? selector.context.className  + selector.selector + ' for ' + domain : ''}" type="text" class="search-field" data-options-selected=0 placeholder="${selectElement.data('placeholder') || ''}"></input>
+        <input id="sitewideDropdownContainer" title="${selector.context ? selector.context.className  + selector.selector + ' for ' + domain : 'sitewide dropdown container input'}" type="text" class="search-field" data-options-selected=0 placeholder="${selectElement.data('placeholder') || ''}"></input>
         ${prepareCustomDropdownIcon(selector, config)}
       </div>
       <input type="hidden" class="data-field" value="[]">

@@ -107,7 +107,7 @@ var MyModuleRepositories = (function() {
       render: function(data) {
         var checked = data ? 'checked' : '';
         return `<div class="sci-checkbox-container">
-                  <input class='repository-row-selector sci-checkbox' type='checkbox' ${checked}>
+                  <input title="assign from inventory item checkbox" class='repository-row-selector sci-checkbox' type='checkbox' ${checked}>
                   <span class='sci-checkbox-label'></span>
                 </div>`;
       }

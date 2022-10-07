@@ -23,14 +23,14 @@
             <span class="sci-checkbox-label"></span>
           </div>
         </th>
-        <th><%= t('libraries.index.table.name') %></th>
-        <th><%= t('libraries.index.table.number_of_items') %></th>
-        <th><%= t('libraries.index.table.shared') %></th>
-        <th><%= t('libraries.index.table.ownership') %></th>
-        <th><%= t('libraries.index.table.added_on') %></th>
-        <th><%= t('libraries.index.table.added_by') %></th>
-        <th><%= t('libraries.index.table.archived_on') %></th>
-        <th><%= t('libraries.index.table.archived_by') %></th>
+        <th title="inventory column: name"><%= t('libraries.index.table.name') %></th>
+        <th title="inventory column: no. of items"><%= t('libraries.index.table.number_of_items') %></th>
+        <th title="inventory column: shared"><%= t('libraries.index.table.shared') %></th>
+        <th title="inventory column: ownership"><%= t('libraries.index.table.ownership') %></th>
+        <th title="inventory column: added on"><%= t('libraries.index.table.added_on') %></th>
+        <th title="inventory column: added by"><%= t('libraries.index.table.added_by') %></th>
+        <th title="inventory column: archived on"><%= t('libraries.index.table.archived_on') %></th>
+        <th title="inventory column: archived by"><%= t('libraries.index.table.archived_by') %></th>
       </tr>
     </thead>
   </table>
@@ -76,7 +76,7 @@
     <span class="fas fa-undo"></span>
     <%= t('libraries.index.buttons.restore') %>
   </a>
-  <a id="deleteRepoBtn" class="btn btn-light disabled hidden" data-view-mode="archived" href="#" data-action-mode="single" data-remote="true">
+  <a title="delete selected repository" id="deleteRepoBtn" class="btn btn-light disabled hidden" data-view-mode="archived" href="#" data-action-mode="single" data-remote="true">
     <span class="fas fa-trash"></span>
     <%= t('libraries.index.buttons.delete') %>
   </a>
