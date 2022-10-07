@@ -113,11 +113,13 @@ invite_with_team_selector = type.in?(%w(invite_new_members invite_with_team_sele
                     <span><%= t('invite_users.select_team_role') %></span>
                   </h4>
                   <div class="form-select">
+                    <% normal_user_role = UserRole.find_predefined_normal_user_role %>
                     <%= select_tag "role",
-                      options_for_select(UserTeam.roles.keys
-                        .map { |k| [k.humanize + (k == 'normal_user' ? " (#{t('invite_users.default')})" : ''), k] }, 'normal_user'),
-                      disabled: true, class: "role-input from-control"
-                    %>
+                      options_for_select(
+                        team_user_roles_for_select
+                          .map { |name, id| [id == normal_user_role.id ? "#{name} (#{t('invite_users.default')})" : name, id] },
+                          normal_user_role.id
+                      ), disabled: true, class: "role-input from-control" %>
                   </div>
                 </div>
               </div>

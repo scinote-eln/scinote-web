@@ -2,9 +2,7 @@
 
 module UserRolesHelper
   def user_roles_collection
-    Rails.cache.fetch([current_user, 'available_user_roles']) do
-      @user_roles_collection ||= UserRole.order(id: :asc).pluck(:name, :id)
-    end
+    UserRole.order(id: :asc).pluck(:name, :id)
   end
 
   def team_user_roles_collection
@@ -15,6 +13,10 @@ module UserRolesHelper
     UserRole.where('permissions && ARRAY[?]::varchar[]', team_permissions)
             .sort_by { |user_role| (user_role.permissions & team_permissions).length }
             .reverse!
+  end
+
+  def team_user_roles_for_select
+    team_user_roles_collection.pluck(:name, :id)
   end
 
   def managing_team_user_roles_collection
