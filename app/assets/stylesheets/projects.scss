@@ -1093,6 +1093,7 @@ li.module-hover {
 
   .project-card {
     .project-name-cell {
+      align-items: start !important;
       position: relative;
       top: 12%;
       min-height: 35px;
