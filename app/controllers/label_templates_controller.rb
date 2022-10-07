@@ -31,7 +31,6 @@ class LabelTemplatesController < ApplicationController
       format.json do
         render json: ::LabelTemplateDatatable.new(
           view_context,
-          can_manage_label_templates?(current_team),
           @label_templates
         )
       end

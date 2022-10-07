@@ -23,10 +23,10 @@
     return uniqueFormats[0];
   }
 
-  function renderCheckboxHTML(data, type, row) {
+  function renderCheckboxHTML(data) {
     return `<div class="sci-checkbox-container">
               <input type="checkbox" class="sci-checkbox label-row-checkbox" data-action='toggle'
-               data-label-template-id="${data}" ${row.manage_permission ? '' : 'disabled'}>
+               data-label-template-id="${data}">
               <span class="sci-checkbox-label"></span>
             </div>`;
   }
