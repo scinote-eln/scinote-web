@@ -176,6 +176,7 @@
       showModal() {
         if (this.showModal) {
           $(this.$refs.modal).modal('show');
+          this.validateTemplate();
         }
       },
       row_ids() {
