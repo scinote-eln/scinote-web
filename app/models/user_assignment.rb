@@ -4,8 +4,9 @@ class UserAssignment < ApplicationRecord
   before_validation -> { self.team ||= (assignable.is_a?(Team) ? assignable : assignable.team) }
   after_create :assign_shared_inventories, if: -> { assignable.is_a?(Team) }
   after_create :assign_public_projects, if: -> { assignable.is_a?(Team) }
+  after_update :update_team_children_assignments, if: -> { assignable.is_a?(Team) && saved_change_to_user_role_id? }
   before_destroy :unassign_shared_inventories, if: -> { assignable.is_a?(Team) }
-  before_destroy :unassign_public_projects, if: -> { assignable.is_a?(Team) }
+  before_destroy :unassign_team_child_objects, if: -> { assignable.is_a?(Team) }
 
   belongs_to :assignable, polymorphic: true, touch: true
   belongs_to :user_role
@@ -50,11 +51,15 @@ class UserAssignment < ApplicationRecord
     end
   end
 
+  def update_team_children_assignments
+    UserAssignments::UpdateTeamUserAssignmentService.new(user, assignable, user_role).call
+  end
+
   def unassign_shared_inventories
     assignable.repository_sharing_user_assignments.where(user: user).find_each(&:destroy!)
   end
 
-  def unassign_public_projects
-    UserAssignments::RemoveUserAssignmentJob.perform_now(user, assignable)
+  def unassign_team_child_objects
+    UserAssignments::RemoveTeamUserAssignmentService.new(user, assignable).call
   end
 end

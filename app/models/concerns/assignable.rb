@@ -9,6 +9,10 @@ module Assignable
     attr_accessor :skip_user_assignments
 
     has_many :user_assignments, as: :assignable, dependent: :destroy
+    has_many :automatic_user_assignments, -> { automatically_assigned },
+             as: :assignable,
+             class_name: 'UserAssignment',
+             inverse_of: :assignable
 
     scope :readable_by_user, lambda { |user|
       joins(user_assignments: :user_role)
