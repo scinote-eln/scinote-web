@@ -64,9 +64,15 @@ class TeamsDatatable < CustomDatatable
         records.reverse
       end
     elsif sort_column(order_params) == 'user_roles.name'
-      records_with_role = records.where(user_assignments: { user: @user })
+      records_with_role = records.joins(user_assignments: :user)
+                                 .where(user_assignments: { user: @user })
                                  .sort_by(&proc { |team| current_user_team_role(team)&.name })
-      records_with_no_role = records.where.not(user_assignments: { user: @user })
+      records_with_no_role =
+        records.joins("LEFT OUTER JOIN user_assignments AS current_user_assignments "\
+                      "ON current_user_assignments.assignable_type = 'Team' "\
+                      "AND current_user_assignments.assignable_id = teams.id "\
+                      "AND current_user_assignments.user_id = #{@user.id}")
+               .where(current_user_assignments: { id: nil })
       records = records_with_no_role + records_with_role
       if order_params['dir'] == 'asc'
         records
