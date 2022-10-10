@@ -361,7 +361,7 @@ class ReportsController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 unless can_create_reports?(@project.team)
+    render_403 unless can_create_reports?(current_team)
   end
 
   def check_manage_permissions
