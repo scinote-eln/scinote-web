@@ -3,9 +3,9 @@
 																			 data: { 'name-max-length': Constants::NAME_MAX_LENGTH },
 																			 remote: true) do |f| %>
 		<%= f.text_field :name, style: "margin-top: 10px;", title: 'new result table name field' %><br />
-		<div class="editable-table" style="margin-bottom: 25px;">
+		<div class="editable-table" title="new result table table field" style="margin-bottom: 25px;">
 			<%= f.fields_for :table do |ff| %>
-				<%= ff.hidden_field(:contents, value: ff.object.contents, class: "hot-contents", title: 'new result table table field' ) %>
+				<%= ff.hidden_field(:contents, value: ff.object.contents, class: "hot-contents" ) %>
 				<div class="hot">
 				</div>
 			<% end %>

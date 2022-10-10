@@ -1,7 +1,7 @@
 <div class="panel panel-default panel-archive">
 
   <div class="dropdown pull-right">
-    <button title="archived result dropdown menu" class="btn btn-link dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    <button title="archived result <%= result.name %> dropdown menu" class="btn btn-link dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
@@ -10,13 +10,13 @@
         <% if result.is_asset %>
           <%= link_to t('protocols.index.archive_results.preview'), rails_blob_path(result.asset.file, disposition: 'attachment'),
               class: 'file-preview-link',
-              title: "archived result asset preview button",
+              title: "archived result  #{result.name} asset preview button",
               id: "modal_link#{result.asset.id}",
               data: { turbolinks: false, id: true, status: 'asset-present', 'preview-url': asset_file_preview_path(result.asset) } %>
         <% elsif result.is_text %>
-          <%= link_to option_text, result_text_download_path(result.result_text_id), data: { turbolinks: false }, title: "archived text result download button" %>
+          <%= link_to option_text, result_text_download_path(result.result_text_id), data: { turbolinks: false }, title: "archived text result #{result.name} download button" %>
         <% elsif result.is_table %>
-          <%= link_to option_text, result_table_download_path(result.result_table_id), data: { turbolinks: false }, title: "archived table result download button"%>
+          <%= link_to option_text, result_table_download_path(result.result_table_id), data: { turbolinks: false }, title: "archived table result #{result.name} download button"%>
         <% end %>
       </li>
       <% if can_delete_result?(result) && can_manage_my_module?(@my_module) %>
@@ -27,7 +27,7 @@
                           no_turbolink: true ,
                           confirm: t('my_modules.module_archive.confirm_delete')
                         },
-                    title: 'archived result delete button',
+                    title: "archived result #{result.name} delete button",
                     method: :delete %>
       </li>
       <% end %>
