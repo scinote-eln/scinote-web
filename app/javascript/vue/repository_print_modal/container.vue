@@ -216,30 +216,32 @@
         })
       },
       submitPrint() {
-        if (this.selectedPrinter.attributes.type_of === 'zebra') {
-          this.zebraPrinters.print(
-            this.urls.zebraProgress,
-            '.label-printing-progress-modal',
-            '#modal-print-repository-row-label',
-            {
-              printer_name: this.selectedPrinter.attributes.name,
-              number_of_copies: this.copies,
+        this.$nextTick(() => {
+          if (this.selectedPrinter.attributes.type_of === 'zebra') {
+            this.zebraPrinters.print(
+              this.urls.zebraProgress,
+              '.label-printing-progress-modal',
+              '#modal-print-repository-row-label',
+              {
+                printer_name: this.selectedPrinter.attributes.name,
+                number_of_copies: this.copies,
+                label_template_id: this.selectedTemplate.id,
+                rows: this.row_ids
+              }
+            );
+          } else {
+            $.post(this.urls.print, {
+              rows: this.row_ids,
+              label_printer_id: this.selectedPrinter.id,
               label_template_id: this.selectedTemplate.id,
-              rows: this.row_ids
-            }
-          );
-        } else {
-          $.post(this.urls.print, {
-            rows: this.row_ids,
-            label_printer_id: this.selectedPrinter.id,
-            label_template_id: this.selectedTemplate.id,
-            copies: this.copies
-          }, (data) => {
-            $(this.$refs.modal).modal('hide');
-            this.$emit('close');
-            PrintProgressModal.init(data);
-          })
-        }
+              copies: this.copies
+            }, (data) => {
+              $(this.$refs.modal).modal('hide');
+              this.$emit('close');
+              PrintProgressModal.init(data);
+            })
+          }
+        });
       },
       initZebraPrinter() {
         this.zebraPrinters = zebraPrint.init($('#LabelPrinterSelector'), {
