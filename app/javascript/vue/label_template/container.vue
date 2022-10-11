@@ -105,6 +105,8 @@
           @preview:invalid="invalidPreview"
           @height:update="setNewHeight"
           @width:update="setNewWidth"
+          @density:update="setNewDensity"
+          @unit:update="setNewUnit"
         />
       </div>
     </div>
@@ -136,6 +138,8 @@
         newContent: '',
         newLabelWidth: null,
         newLabelHeight: null,
+        newLabelDensity: null,
+        newLabelUnit: null,
         previewContent: '',
         previewValid: false,
         skipSave: false,
@@ -170,6 +174,8 @@
         this.previewContent = this.labelTemplate.attributes.content
         this.newLabelWidth = this.labelTemplate.attributes.width_mm
         this.newLabelHeight = this.labelTemplate.attributes.height_mm
+        this.newLabelDensity = this.labelTemplate.attributes.newDensity
+        this.newLabelUnit = this.labelTemplate.attributes.unit
       })
     },
     methods: {
@@ -178,6 +184,12 @@
       },
       setNewWidth(val) {
         this.newLabelWidth = val;
+      },
+      setNewDensity(val) {
+        this.newLabelDensity = val;
+      },
+      setNewUnit(val) {
+        this.newLabelUnit = val;
       },
       enableContentEdit() {
         this.editingContent = true;
@@ -230,8 +242,10 @@
             type: 'PATCH',
             data: {label_template: {
               content: this.newContent,
-              width_mm: this.newLabelHeight,
-              height_mm: this.newLabelWidth
+              width_mm: this.newLabelWidth,
+              height_mm: this.newLabelHeight,
+              density: this.newLabelDensity,
+              unit: this.newLabelUnit
             }},
             success: (result) => {
               this.labelTemplate.attributes.content = result.data.attributes.content;
