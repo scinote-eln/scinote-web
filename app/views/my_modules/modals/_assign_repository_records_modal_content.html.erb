@@ -51,11 +51,11 @@
     <%= t('general.cancel') %>
   </a>
   <% if downstream %>
-    <a class="btn btn-primary downstream-action">
+    <a title="assign <%= repository.name %> items to <%= my_module.name %> and downstream" class="btn btn-primary downstream-action">
       <%= t('my_modules.modals.assign_repository_record.task_and_downstream') %>
     </a>
   <% else %>
-    <a class="btn btn-primary task-action">
+    <a title="assign <%= repository.name %> items to <%= my_module.name %>" class="btn btn-primary task-action">
       <%= t('my_modules.modals.assign_repository_record.task') %>
     </a>
   <% end %>

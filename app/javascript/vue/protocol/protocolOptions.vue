@@ -4,6 +4,7 @@
       <button
         class="btn btn-secondary dropdown-toggle"
         type="button"
+        title="protocol options button"
         id="dropdownProtocolOptions"
         data-toggle="dropdown"
         aria-haspopup="true"
@@ -22,6 +23,7 @@
           <a
             ref="loadProtocol"
             data-action="load-from-repository"
+            title="load protocol"
             @click="loadProtocol"
             :class="{ disabled: !protocol.attributes.urls.load_from_repo_url }"
           >
@@ -33,6 +35,7 @@
           <a
             ref="saveProtocol"
             data-action="copy-to-repository"
+            title="save protocol to repository"
             @click="saveProtocol"
             :class="{ disabled: !protocol.attributes.urls.save_to_repo_url }"
           >
@@ -44,17 +47,19 @@
         </li>
         <li>
           <a data-action="load-from-file"
+              title="load protocol from file"
               class="btn-open-file"
               :data-import-url="protocol.attributes.urls.import_url"
               :class="{ disabled: !protocol.attributes.urls.import_url }">
             <span class="fas fa-download"></span>
             <span>{{ i18n.t("my_modules.protocol.options_dropdown.import") }}</span>
-            <input type="file" value="" accept=".eln" data-turbolinks="false">
+            <input title="upload protocol from file" type="file" value="" accept=".eln" data-turbolinks="false">
           </a>
         </li>
         <li>
           <a
             data-turbolinks="false"
+            title="export protocol"
             :href="protocol.attributes.urls.export_url"
             :class="{ disabled: !protocol.attributes.urls.export_url }"
           >
@@ -66,6 +71,7 @@
         </li>
         <li v-if="canDeleteSteps">
           <a
+            title="delete protocol"
             data-turbolinks="false"
             @click.prevent="openStepsDeletingModal()"
           >

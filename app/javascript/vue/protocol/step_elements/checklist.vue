@@ -22,10 +22,10 @@
         />
       </div>
       <div class="step-element-controls">
-        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="editingName = true" tabindex="-1">
+        <button :title="`edit checklist ${element.attributes.orderable.name} name`" v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="editingName = true" tabindex="-1">
           <i class="fas fa-pen"></i>
         </button>
-        <button :title="`delete checklist ${element.id}`" v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
+        <button :title="`delete checklist ${element.attributes.orderable.name}`" v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
           <i class="fas fa-trash"></i>
         </button>
       </div>

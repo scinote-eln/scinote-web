@@ -107,7 +107,7 @@ var MyModuleRepositories = (function() {
       render: function(data) {
         var checked = data ? 'checked' : '';
         return `<div class="sci-checkbox-container">
-                  <input title="assign from inventory item checkbox" class='repository-row-selector sci-checkbox' type='checkbox' ${checked}>
+                  <input title="assign from inventory item checkbox [NAME]" class='repository-row-selector sci-checkbox' type='checkbox' ${checked}>
                   <span class='sci-checkbox-label'></span>
                 </div>`;
       }
@@ -126,7 +126,7 @@ var MyModuleRepositories = (function() {
         targets: 3,
         className: 'item-name',
         render: function(data, type, row) {
-          return "<a href='" + row.recordInfoUrl + "' class='record-info-link'>" + data + '</a>';
+          return "<a title='item name (" + data + ")' href='" + row.recordInfoUrl + "' class='record-info-link'>" + data + '</a>';
         }
       });
     } else {
@@ -189,7 +189,7 @@ var MyModuleRepositories = (function() {
         var recordName = "<a href='" + row.recordInfoUrl + "' title='open item: " + data + "'"
                          + "class='record-info-link'>" + data + '</a>';
         if (row.hasActiveReminders) {
-          recordName = `<div class="dropdown row-reminders-dropdown"
+          recordName = `<div title="row reminders for ${data}" class="dropdown row-reminders-dropdown"
                           data-row-reminders-url="${row.rowRemindersUrl}" tabindex='-1'>
                           <i class="fas fa-bell dropdown-toggle row-reminders-icon"
                              data-toggle="dropdown" id="rowReminders${row.DT_RowId}}"></i>
@@ -301,6 +301,13 @@ var MyModuleRepositories = (function() {
         }
         initAssignedTasksDropdown(tableContainer);
         initReminderDropdown(tableContainer);
+
+        // update checkbox titles
+        $('.repository-row-selector').each(function() {
+          $(this).attr('title', $(this).attr('title').replace(
+            /\[NAME\]/, $(this).parents('tr').find('.item-name').text()
+          ));
+        });
       },
 
       drawCallback: function() {

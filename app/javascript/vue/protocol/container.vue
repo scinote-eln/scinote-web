@@ -18,7 +18,7 @@
               <span class="fas fa-plus" aria-hidden="true"></span>
               <span>{{ i18n.t("protocols.steps.new_step") }}</span>
           </a>
-          <a class="btn btn-secondary" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
+          <a title="print protocol button" class="btn btn-secondary" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
             <span class="fas fa-print" aria-hidden="true"></span>
             <span>{{ i18n.t("protocols.print.button") }}</span>
           </a>
@@ -83,6 +83,7 @@
           {{ i18n.t("protocols.steps.expand_label") }}
         </button>
         <a v-if="urls.reorder_steps_url"
+           title="rearrange steps"
            class="btn btn-light"
            data-toggle="modal"
            @click="startStepReorder"

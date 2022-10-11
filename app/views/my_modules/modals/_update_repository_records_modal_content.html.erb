@@ -82,14 +82,14 @@
     <%= t('general.cancel') %>
   </a>
   <% if downstream %>
-    <a class="btn btn-primary next-step" >
+    <a title="<%= repository.name %> items to <%= my_module.name %> next"  class="btn btn-primary next-step" >
       <%= t('my_modules.modals.update_repository_record.next') %>
     </a>
-    <a class="btn btn-primary downstream-action hidden" >
+    <a title="update <%= repository.name %> items for <%= my_module.name %> and downstream"  class="btn btn-primary downstream-action hidden" >
       <%= t('my_modules.modals.update_repository_record.task_and_downstream') %>
     </a>
   <% else %>
-    <a class="btn btn-primary task-action">
+    <a title="update <%= repository.name %> items for <%= my_module.name %>" class="btn btn-primary task-action">
       <%= t('my_modules.modals.update_repository_record.task') %>
     </a>
   <% end %>

@@ -7,7 +7,8 @@
 </div>
 <div class="list-group repository-versions-list">
   <% if @repository.present? && live_items_present %>
-    <a href="#" id="selectLiveVersionButton" class="list-group-item live-version-item version-button"
+    <a title="view live version for <%= @repository.name %> in <%= @my_module.name %>" href="#" id="selectLiveVersionButton" class="list-group-item live-version-item version-button"
+
        data-id="<%= @repository.id %>"
        data-selected="<%= @repository_snapshots.select{ |s| s.selected == true }.blank? %>"
        data-table-url="<%= full_view_table_my_module_repository_path(@my_module, @repository, include_stock_consumption: true) %>"
@@ -37,7 +38,7 @@
       <p class="info <%= 'hidden' unless @repository_snapshots.blank? %>">
         <%= t('my_modules.repository.snapshots.full_view.no_snapshots_label') %>
       </p>
-      <button id="createRepositorySnapshotButton" class="btn btn-secondary" data-action-path="<%= my_module_repository_snapshots_path(@my_module, @repository) %>">
+      <button title="create snapshot for <%= @repository.name %> in <%= @my_module.name %>" id="createRepositorySnapshotButton" class="btn btn-secondary" data-action-path="<%= my_module_repository_snapshots_path(@my_module, @repository) %>">
         <i class="fas fa-camera"></i>
         <%= t('my_modules.repository.snapshots.full_view.create_button') %>
       </button>

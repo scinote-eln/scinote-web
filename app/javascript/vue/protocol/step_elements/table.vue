@@ -5,7 +5,7 @@
         <i class="fas fas-rotated-90 fa-exchange-alt"></i>
       </div>
       <div v-else class="step-element-grip-placeholder"></div>
-      <div :title="`table ${element.id} name`" v-if="!locked || element.attributes.orderable.name" :key="reloadHeader" class="step-element-name">
+      <div :title="`table ${element.attributes.name} name`" v-if="!locked || element.attributes.orderable.name" :key="reloadHeader" class="step-element-name">
         <InlineEdit
           :value="element.attributes.orderable.name"
           :characterLimit="255"
@@ -19,10 +19,10 @@
         />
       </div>
       <div class="step-element-controls">
-        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="enableNameEdit" tabindex="-1">
+        <button :title="`edit table ${element.attributes.orderable.name} name`" v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="enableNameEdit" tabindex="-1">
           <i class="fas fa-pen"></i>
         </button>
-        <button :title="`delete table ${element.id}`" v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
+        <button :title="`delete table ${element.attributes.orderable.name}`" v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
           <i class="fas fa-trash"></i>
         </button>
       </div>
@@ -31,7 +31,7 @@
          :class="{'edit': editingTable, 'view': !editingTable, 'locked': !element.attributes.orderable.urls.update_url}"
          tabindex="0"
          @keyup.enter="!editingTable && enableTableEdit()">
-      <div  class="enable-edit-mode" v-if="!editingTable && element.attributes.orderable.urls.update_url" @click="enableTableEdit">
+      <div :title="`edit table ${element.attributes.orderable.name}`" class="enable-edit-mode" v-if="!editingTable && element.attributes.orderable.urls.update_url" @click="enableTableEdit">
         <div class="enable-edit-mode__icon">
           <i class="fas fa-pen"></i>
         </div>

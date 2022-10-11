@@ -204,7 +204,7 @@ $.fn.dataTable.render.AssignedTasksValue = function(data, row) {
     tasksLinkHTML = "<div class='assign-counter-container'><span class='assign-counter' title='assign counter item'>0</span></div>";
   }
   if (row.hasActiveReminders) {
-    return `<div class="dropdown row-reminders-dropdown" data-row-reminders-url="${row.rowRemindersUrl}" tabindex='-1'>
+    return `<div title="full table row reminders for ${row[3]}" class="dropdown row-reminders-dropdown" data-row-reminders-url="${row.rowRemindersUrl}" tabindex='-1'>
               <i class="fas fa-bell dropdown-toggle row-reminders-icon" data-toggle="dropdown"
                 id="rowReminders${row.DT_RowId}}"></i>
               <ul class="dropdown-menu" role="menu" aria-labelledby="rowReminders${row.DT_RowId}">
@@ -220,12 +220,12 @@ $.fn.dataTable.render.RepositoryStockValue = function(data) {
   if (data) {
     if (data.value) {
       if (data.stock_managable) {
-        return `<a title="repository stock value: ${data.value}" 
+        return `<a title="repository stock value: ${data.value}"
                    class="manage-repository-stock-value-link stock-value-view-render stock-${data.stock_status}">
                   ${data.value.stock_formatted}
                   </a>`;
       }
-      return `<span title="render stock value ${data.value}" class="stock-value-view-render
+      return `<span title="render stock value ${data.value.stock_formatted}" class="stock-value-view-render
                            ${data.displayWarnings ? `stock-${data.stock_status}` : ''}">
                 ${data.value.stock_formatted}
                 </span>`;
@@ -249,7 +249,7 @@ $.fn.dataTable.render.defaultRepositoryStockValue = function() {
 $.fn.dataTable.render.RepositoryStockConsumptionValue = function(data = {}) {
   // covers case of snapshots
   if (!data.stock_present && data.value && data.value.consumed_stock !== null) {
-    return `<span title="empty stock render" 
+    return `<span title="empty stock render"
                   class="empty-consumed-stock-render">
                   ${data.value.consumed_stock_formatted}
             </span>`;
@@ -263,20 +263,20 @@ $.fn.dataTable.render.RepositoryStockConsumptionValue = function(data = {}) {
     </span>`;
   }
   if (!data.consumptionPermitted || !data.consumptionManagable) {
-    return `<span title="repository unpermitted and not managable stock" 
+    return `<span title="repository unpermitted and not managable stock"
                   class="empty-consumed-stock-render">
                   ${data.value.consumed_stock_formatted}
             </span>`;
   }
   if (!data.value.consumed_stock) {
-    return `<a title="repository consumed stock manager" 
-               href="${data.updateStockConsumptionUrl}" 
+    return `<a title="repository consumed stock manager (${data.value.consumed_stock_formatted})"
+               href="${data.updateStockConsumptionUrl}"
                class="manage-repository-consumed-stock-value-link">
               <i class="fas fa-vial"></i>
               ${I18n.t('libraries.manange_modal_column.stock_type.add_stock_consumption')}
             </a>`;
   }
-  return `<a title="repository consumed stock render" href="${data.updateStockConsumptionUrl}"
+  return `<a title="repository consumed stock render ${data.value.consumed_stock_formatted}" href="${data.updateStockConsumptionUrl}"
                 class="manage-repository-consumed-stock-value-link stock-value-view-render">
               ${data.value.consumed_stock_formatted}
             </a>`;
