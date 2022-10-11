@@ -94,19 +94,16 @@
         DPMM_RESOLUTION_OPTIONS,
         DPI_RESOLUTION_OPTIONS,
         optionsOpen: false,
-        width: 2,
-        height: 1,
-        unit: 'in',
-        density: 8,
+        width: this.template.attributes.unit == 'in' ? this.template.attributes.width_mm / 25.4 : this.template.attributes.width_mm ,
+        height: this.template.attributes.unit == 'in' ? this.template.attributes.height_mm / 25.4 : this.template.attributes.height_mm,
+        unit: this.template.attributes.unit,
+        density: this.template.attributes.density,
         base64Image: null,
         imageStyle: ''
       }
     },
     mounted() {
       this.refreshPreview();
-      this.width = this.template.attributes.width_mm
-      this.height = this.template.attributes.height_mm
-      if (this.width && this.height) this.recalculateUnits();
     },
     computed: {
       widthMm() {
@@ -170,9 +167,11 @@
       },
       updateUnit(unit) {
         this.unit = unit;
+        this.$emit('unit:update', this.unit);
       },
       updateDensity(density) {
         this.density = density;
+        this.$emit('density:update', this.density);
       }
     }
   }
