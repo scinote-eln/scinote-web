@@ -1,28 +1,6 @@
 # frozen_string_literal: true
 
 class UpdateLabelTemplates < ActiveRecord::Migration[6.1]
-  class ::FluicsLabelTemplate < LabelTemplate
-    def self.default
-      FluicsLabelTemplate.new(
-        name: I18n.t('label_templates.default_fluics_name'),
-        width_mm: 25.4,
-        height_mm: 12.7,
-        content: Extends::DEFAULT_LABEL_TEMPLATE[:zpl]
-      )
-    end
-  end
-
-  class ::ZebraLabelTemplate < LabelTemplate
-    def self.default
-      ZebraLabelTemplate.new(
-        name: I18n.t('label_templates.default_zebra_name'),
-        width_mm: 25.4,
-        height_mm: 12.7,
-        content: Extends::DEFAULT_LABEL_TEMPLATE[:zpl]
-      )
-    end
-  end
-
   def up
     change_table :label_templates, bulk: true do |t|
       t.string :type
@@ -38,7 +16,23 @@ class UpdateLabelTemplates < ActiveRecord::Migration[6.1]
     # Remove our original default template
     LabelTemplate.order(created_at: :asc).find_by(default: true)&.destroy
 
-    Team.find_each { |t| t.__send__(:create_default_label_templates) }
+    Team.find_each do |team|
+      FluicsLabelTemplate.create!(
+        name: I18n.t('label_templates.default_fluics_name'),
+        width_mm: 25.4,
+        height_mm: 12.7,
+        content: Extends::DEFAULT_LABEL_TEMPLATE[:zpl],
+        team: team
+      )
+
+      ZebraLabelTemplate.create!(
+        name: I18n.t('label_templates.default_zebra_name'),
+        width_mm: 25.4,
+        height_mm: 12.7,
+        content: Extends::DEFAULT_LABEL_TEMPLATE[:zpl],
+        team: team
+      )
+    end
   end
 
   def down
