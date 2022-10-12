@@ -133,6 +133,13 @@ function initProtocolsTable() {
 function initRowSelection() {
   let protocolsTableScrollHead = protocolsTableEl.closest('.dataTables_scroll').find('.dataTables_scrollHead');
 
+  // update checkbox titles
+  $('thead th:first-child .sci-checkbox').attr('title', 'select all protocols');
+
+  $('tbody td:first-child .sci-checkbox').each(function() {
+    $(this).attr('title', 'select protocol ' + $(this).parents('tr').find('td:nth-child(2)').text());
+  });
+
   // Handle click on table cells with checkboxes
   protocolsTableEl.on("click", "tbody td, thead th:first-child", function(e) {
     $(this).parent().find("input[type='checkbox']").trigger("click");
@@ -181,6 +188,8 @@ function initRowSelection() {
 }
 
 function initKeywordFiltering() {
+  $('#protocols-table_filter input').attr('title', 'protocol search input');
+
   protocolsTableEl.find("tbody").on("click", "a[data-action='filter']", function(e) {
     var link = $(this);
     var searchInput = $("#protocols-table_wrapper input[type='search']");
@@ -191,6 +200,7 @@ function initKeywordFiltering() {
 
     // Don't propagate this further up
     e.stopPropagation();
+
     return false;
   });
 }
