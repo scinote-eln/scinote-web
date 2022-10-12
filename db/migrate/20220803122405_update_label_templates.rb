@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UpdateLabelTemplates < ActiveRecord::Migration[6.1]
-  class FluicsLabelTemplate < LabelTemplate
+  class ::FluicsLabelTemplate < LabelTemplate
     def self.default
       FluicsLabelTemplate.new(
         name: I18n.t('label_templates.default_fluics_name'),
@@ -12,7 +12,7 @@ class UpdateLabelTemplates < ActiveRecord::Migration[6.1]
     end
   end
 
-  class ZebraLabelTemplate < LabelTemplate
+  class ::ZebraLabelTemplate < LabelTemplate
     def self.default
       ZebraLabelTemplate.new(
         name: I18n.t('label_templates.default_zebra_name'),
