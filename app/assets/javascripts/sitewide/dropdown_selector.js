@@ -542,9 +542,10 @@ var dropdownSelector = (function() {
       var customLabel = selector2.data('config').optionLabel;
       var customClass = params.optionClass || selector2.data('config').optionClass || '';
       var customStyle = selector2.data('config').optionStyle;
+
       return $(`
         <div class="dropdown-option ${customClass}" style="${customStyle ? customStyle(option) : ''}"
-          title="${(option.params && option.params.tooltip) || ''}"
+          title="${(option.params && option.params.tooltip) || option.label || ''}"
           data-params='${JSON.stringify(option.params || {})}'
           data-label="${option.label}"
           data-group="${group ? group.value : ''}"

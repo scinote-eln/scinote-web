@@ -266,6 +266,15 @@
         $('.report-row.processing').each(function() {
           setTimeout(() => { checkProcessingStatus($(this).data('id')); }, START_POLLING_INTERVAL);
         });
+
+        // add qa titles
+        $('#reports-table tr').each(function() {
+          var reportName = $(this).find('td:nth-child(3)').text();
+          $(this).find('td:nth-child(1)').attr('title', `select report ${reportName}`);
+          $(this).find('td:nth-child(3)').attr('title', `report name (${reportName})`);
+          $(this).find('td:nth-child(4) a').attr('title', `report (${reportName}) pdf link`);
+          $(this).find('td:nth-child(5) a').attr('title', `report (${reportName}) docx link`);
+        });
       }
     });
   }
