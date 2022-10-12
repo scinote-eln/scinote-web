@@ -24,10 +24,7 @@
               </label>
               <DropdownSelector
                 :disableSearch="true"
-                :labelHTML="true"
                 :options="printers_dropdown"
-                :optionLabel="printerOptionLabel"
-                :tagLabel="printerOptionLabel"
                 :selectorId="`LabelPrinterSelector`"
                 @dropdown:changed="selectPrinter"
               />
@@ -66,8 +63,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal"> {{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" @click="submitPrint" :disabled="!selectedPrinter || !selectedTemplate 
-              || selectedPrinter.attributes.status !== 'ready'">
+            <button class="btn btn-primary" @click="submitPrint">
               {{ i18n.t(`repository_row.modal_print_label.${labelTemplateError ? 'print_anyway' : 'print_label'}`) }}
             </button>
           </div>
@@ -163,11 +159,7 @@
         return this.printers.map(i => {
           return {
             value: i.id,
-            label: i.attributes.display_name,
-            params: {
-              status: i.attributes.status,
-              display_status: i.attributes.display_status
-            }
+            label: i.attributes.display_name
           }
         })
       }
@@ -253,13 +245,11 @@
               attributes: {
                 name: device.name,
                 display_name: device.name,
-                type_of: 'zebra',
-                status: device.status.toLowerCase(),
-                display_status: device.status
+                type_of: 'zebra'
               }
             })
           }
-        });
+        }, false);
       },
       templateOption(option) {
         return `
@@ -268,9 +258,6 @@
             ${option.label}
           </div>
         `
-      },
-      printerOptionLabel(option) {
-        return `${option.label}<span class="status-${option.params.status}">&nbsp•&nbsp${option.params.display_status}`
       },
       initTooltip() {
         $('[data-toggle="tooltip"]').tooltip();

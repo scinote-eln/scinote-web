@@ -90,7 +90,7 @@ var zebraPrint = (function() {
     }
   }
 
-  function searchZebraPrinters() {
+  function searchZebraPrinters(getStatus) {
     var clearSelectorOnFirstDevice = CONFIG.clearSelectorOnFirstDevice;
     devices = [];
     try {
@@ -98,9 +98,13 @@ var zebraPrint = (function() {
       BrowserPrint.getLocalDevices(function(deviceList) {
         if (deviceList && deviceList.printer && deviceList.printer.length !== 0) {
           for (i = 0; i < deviceList.printer.length; i += 1) {
-            getPrinterStatus(deviceList.printer[i]).then((device) => {
-              addNewDevice(device, clearSelectorOnFirstDevice);
-            });
+            if (getStatus) {
+              getPrinterStatus(deviceList.printer[i]).then((device) => {
+                addNewDevice(device, clearSelectorOnFirstDevice);
+              });
+            } else {
+              addNewDevice(deviceList.printer[i], clearSelectorOnFirstDevice);
+            }
           }
         } else {
           showModal();
@@ -157,19 +161,19 @@ var zebraPrint = (function() {
     }
   }
 
-  function initializeZebraPrinters(selector, config) {
+  function initializeZebraPrinters(selector, config, getStatus) {
     CONFIG = config;
     SELECTOR = selector;
-    searchZebraPrinters();
+    searchZebraPrinters(getStatus);
   }
 
   return {
-    init: function(selector, config) {
-      initializeZebraPrinters(selector, config);
+    init: function(selector, config, getStatus) {
+      initializeZebraPrinters(selector, config, getStatus);
       return this;
     },
     refreshList: function() {
-      searchZebraPrinters();
+      searchZebraPrinters(true);
     },
 
     /*
