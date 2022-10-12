@@ -13,23 +13,24 @@
   <% end %>
 <% else %>
   <% if can_read_experiment?(my_module.experiment) %>
+    <% title = "task search result link #{my_module.name}" %>
     <% case link_to_page %>
       <% when :repositories %>
         <%= route_to_other_team protocols_my_module_path(my_module),
                                 my_module.experiment.project.team,
-                                text %>
+                                text, title: title %>
       <% when :protocols %>
         <%= route_to_other_team protocols_my_module_path(my_module),
                                 my_module.experiment.project.team,
-                                text %>
+                                text, title: title %>
       <% when :canvas %>
         <%= route_to_other_team canvas_experiment_path(my_module.experiment),
                                 my_module.experiment.project.team,
-                                text %>
+                                text, title: title %>
       <% when :results %>
         <%= route_to_other_team results_my_module_path(my_module),
                                 my_module.experiment.project.team,
-                                text %>
+                                text, title: title %>
       <% else %>
         <%= text %>
     <% end %>

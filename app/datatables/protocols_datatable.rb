@@ -176,7 +176,7 @@ class ProtocolsDatatable < CustomDatatable
   end
 
   def name_html(record)
-    "<a href='#{protocol_path(record)}'>#{escape_input(record.name)}</a>"
+    "<a title='edit protocol #{record.name}' href='#{protocol_path(record)}'>#{escape_input(record.name)}</a>"
   end
 
   def keywords_html(record)
@@ -187,7 +187,7 @@ class ProtocolsDatatable < CustomDatatable
       res = []
       kws.sort_by{ |word| word.downcase }.each do |kw|
         sanitized_kw = sanitize_input(kw)
-        res << "<a href='#' data-action='filter' " \
+        res << "<a title='protocol #{record.name} keyword #{sanitized_kw} link' href='#' data-action='filter' " \
           "data-param='#{sanitized_kw}'>#{sanitized_kw}</a>"
       end
       res.join(', ')
@@ -195,7 +195,7 @@ class ProtocolsDatatable < CustomDatatable
   end
 
   def modules_html(record)
-    "<a href='#' data-action='load-linked-children'" \
+    "<a title='protocol " + record.name + " linked tasks' href='#' data-action='load-linked-children'" \
       "data-url='#{linked_children_protocol_path(record)}'>" \
       "#{record.nr_of_linked_children}"  \
       "</a>"

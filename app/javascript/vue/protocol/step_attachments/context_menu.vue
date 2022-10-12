@@ -1,6 +1,6 @@
 <template>
   <div class="dropdown asset-context-menu" ref="menu">
-    <button class="btn btn-light dropdown-toggle icon-btn" type="button" id="dropdownAssetContextMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    <button :title="`attachment ${attachment.attributes.file_name} menu`" class="btn btn-light dropdown-toggle icon-btn" type="button" id="dropdownAssetContextMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
       <i class="fas fa-ellipsis-h"></i>
     </button>
 
@@ -48,7 +48,7 @@
         </a>
       </li>
       <li>
-        <a :title="`download attachment ${attachment.id}`" :href="attachment.attributes.urls.download" data-turbolinks="false">
+        <a :title="`download attachment ${attachment.attributes.file_name}`" :href="attachment.attributes.urls.download" data-turbolinks="false">
           <span class="fas fa-download"></span>
           {{ i18n.t('Download') }}
         </a>
@@ -62,7 +62,7 @@
           <a
             class="change-preview-type"
             :class="viewMode == attachment.attributes.view_mode ? 'selected' : ''"
-            :title="`change attachment ${attachment.id} view to ${viewMode}`"
+            :title="`change attachment ${attachment.attributes.file_name} view to ${viewMode}`"
             @click.prevent.stop="changeViewMode(viewMode)"
             v-html="i18n.t(`assets.context_menu.${viewMode}_html`)"
           ></a>
@@ -71,7 +71,7 @@
       <template v-if="attachment.attributes.urls.delete">
         <li role="separator" class="divider"></li>
         <li>
-          <a @click.prevent.stop="deleteModal = true" :title="`delete attachment ${attachment.id}`">
+          <a @click.prevent.stop="deleteModal = true" :title="`delete attachment ${attachment.attributes.file_name}`">
             <i class="fas fa-trash"></i>
             {{ i18n.t("assets.context_menu.delete") }}
           </a>

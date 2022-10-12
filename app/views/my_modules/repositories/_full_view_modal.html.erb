@@ -21,7 +21,7 @@
         <template id="repositoryToolbarButtonsTemplate">
           <div class="">
             <div class="pull-left sci-btn-group">
-              <button id="showVersionsSidebar" type="button" class="btn btn-secondary">
+              <button title="view assigned item versions for <%= @my_module.name %>" id="showVersionsSidebar" type="button" class="btn btn-secondary">
                 <span class="fas fa-eye"></span>
                 <%= t('my_modules.repository.snapshots.full_view.versions_sidebar_button') %>
               </button>
@@ -52,13 +52,13 @@
 </template>
 
 <template id="my-module-repository-full-view-update-button">
-   <button type="button" class="btn btn-primary assign-button" id="updateRepositoryRecords" disabled>
+   <button title="update assigned records" type="button" class="btn btn-primary assign-button" id="updateRepositoryRecords" disabled>
       <%= t('repositories.update_records_to_module') %>
    </button>
 </template>
 
 <template id="my-module-repository-full-view-update-downstream-button">
-   <button type="button" class="btn btn-secondary assign-button" id="updateRepositoryRecordsDownstream" disabled>
+   <button title="update assigned records and downstream" type="button" class="btn btn-secondary assign-button" id="updateRepositoryRecordsDownstream" disabled>
       Update task & downstream
    </button>
 </template>

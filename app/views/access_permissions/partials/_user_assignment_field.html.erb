@@ -13,7 +13,8 @@
       <%= f.check_box :assign,
                         name: "access_permissions_new_user_project_form[resource_members][#{user.id}][assign]",
                         data: { action: 'toggle-visibility', target: id },
-                        class: "sci-checkbox"
+                        class: "sci-checkbox",
+                        title: "select user #{user.email}"
         %>
       <span class="sci-checkbox-label"></span>
     </div>

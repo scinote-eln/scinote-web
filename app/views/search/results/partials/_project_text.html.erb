@@ -10,13 +10,15 @@
     <% if link_to_page == :show %>
       <%= route_to_other_team project_path(project),
                               project.team,
-                              text %>
+                              text,
+                              title: "project search result show link #{project.name}" %>
     <%  else %>
       <%= route_to_other_team root_path,
                               project.team,
-                              text %>
+                              text,
+                              title: "project search result link #{project.name}" %>
     <% end %>
   <% else %>
-    <%= text %>
+    <span title="project search result text <%= @project.name %>"><%= text %></span>
   <% end %>
 <% end %>

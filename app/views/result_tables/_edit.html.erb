@@ -17,7 +17,7 @@
 			</button>
 			<%= f.button t("general.save"),
 									 class: 'btn btn-primary save-result',
-									 title: 'save edited result table',
+									 title: "save edited result table #{@result.name}",
 									 onclick: "Results.processResult(event, Results.ResultTypeEnum.TABLE);" %>
 		</div>
 	<% end %>

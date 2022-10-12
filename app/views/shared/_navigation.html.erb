@@ -80,6 +80,7 @@
                     <% current_user.teams.ordered.each do |team| %>
                       <li class="team-name-item">
                         <a href="#"
+                          title="change team to <%= team.name %>"
                           data-id="<%= team.id %>"
                           class="text-center change-team"
                           data-turbolinks="false">

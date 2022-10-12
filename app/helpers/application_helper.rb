@@ -158,7 +158,7 @@ module ApplicationHelper
        alt='thumb'></div><div class='col-xs-8'>
       <div class='row'><div class='col-xs-9 text-left'><h5>
       #{user.full_name}</h5></div><div class='col-xs-3 text-right'>
-      <span class='fas fa-times' aria-hidden='true'></span>
+      <span title='close #{user.email} popover' class='fas fa-times' aria-hidden='true'></span>
       </div></div><div class='row'><div class='col-xs-12'>
       <p class='silver'>#{user.email}</p>)
     if user_still_in_team
@@ -195,7 +195,7 @@ module ApplicationHelper
       raw(user_description) + raw('" >') + user_name + raw('</a>')
 
     html << " #{I18n.t('atwho.res.removed')}" unless skip_user_status || user_still_in_team
-    html = '<span class="atwho-user-container">' + html + '</span>'
+    html = '<span class="atwho-user-container" title="' + user_name + ' user annotation">' + html + '</span>'
     html
   end
 

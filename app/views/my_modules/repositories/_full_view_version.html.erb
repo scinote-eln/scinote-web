@@ -14,7 +14,7 @@
           <%= t('my_modules.repository.snapshots.full_view.created_by', full_name: repository_snapshot.created_by.full_name) %>
         </p>
       <% else %>
-        <a class="version-button select-snapshot-button <%= 'disabled' if repository_snapshot.provisioning? %> <%= 'failed' if repository_snapshot.failed? %>"
+        <a title="view snapshot version for <%= repository_snapshot.name %> in <%= @my_module.name %>" class="version-button select-snapshot-button <%= 'disabled' if repository_snapshot.provisioning? %> <%= 'failed' if repository_snapshot.failed? %>"
            href="#"
            data-status="<%= repository_snapshot.status %>"
            data-table-url="<%= full_view_table_my_module_repository_snapshot_path(@my_module, repository_snapshot) %>">

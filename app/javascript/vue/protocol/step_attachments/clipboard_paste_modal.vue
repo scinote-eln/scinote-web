@@ -16,14 +16,14 @@
           <canvas style="border:1px solid grey;max-width:400px;max-height:300px" id="clipboardPreview" />
           <p><strong>{{i18n.t('assets.from_clipboard.file_name')}}</strong></p>
           <div class="input-group">
-            <input id="clipboardImageName" type="text" class="form-control"
+            <input title="pasted file name" id="clipboardImageName" type="text" class="form-control"
                     :placeholder="i18n.t('assets.from_clipboard.file_name_placeholder')" aria-describedby="image-name">
               <span class="input-group-addon" id="image-name"></span>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" @click="cancel">{{i18n.t('general.cancel')}}</button>
-          <button type="button" class="btn btn-success" @click="uploadImage">{{i18n.t('assets.from_clipboard.add_image')}}</button>
+          <button title="cancel pasted image" type="button" class="btn btn-default" @click="cancel">{{i18n.t('general.cancel')}}</button>
+          <button title="add pasted image" type="button" class="btn btn-success" @click="uploadImage">{{i18n.t('assets.from_clipboard.add_image')}}</button>
         </div>
       </div>
     </div>

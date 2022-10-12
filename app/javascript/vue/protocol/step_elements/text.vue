@@ -5,7 +5,7 @@
     </div>
     <div v-else class="step-element-grip-placeholder"></div>
     <div class="buttons-container">
-      <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" tabindex="-1" @click="enableEditMode($event)">
+      <button :title="`edit text ${element.id}`" v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" tabindex="-1" @click="enableEditMode($event)">
         <i class="fas fa-pen"></i>
       </button>
       <button :title="`delete text ${element.id}`" v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
