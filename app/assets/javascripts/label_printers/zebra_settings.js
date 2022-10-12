@@ -27,7 +27,8 @@
             ${I18n.t('users.settings.account.label_printer.looking_for_printers')}
           </li>`);
         }
-      }
+      },
+      true
     );
   }
 
