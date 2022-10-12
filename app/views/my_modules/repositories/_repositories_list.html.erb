@@ -1,5 +1,5 @@
 <% @assigned_repositories.each do |repository| %>
-  <div class="assigned-repository panel" data-repository-id="<%= repository.id %>">
+  <div title="expand simple assigned items table for <%= repository.name %>" class="assigned-repository panel" data-repository-id="<%= repository.id %>">
     <a class="assigned-repository-caret collapsed"
        role="button"
        data-toggle="collapse"
@@ -16,7 +16,7 @@
         </span>
       <% end %>
       <div class="action-buttons">
-        <button class="btn btn-light icon-btn full-screen" data-table-url="<%= assigned_repository_full_view_table_path(@my_module, repository) %>?include_stock_consumption=true">
+        <button title="view full assigned items table for <%= repository.name %>" class="btn btn-light icon-btn full-screen" data-table-url="<%= assigned_repository_full_view_table_path(@my_module, repository) %>?include_stock_consumption=true">
           <i class="fas fa-expand"></i>
         </button>
       </div>

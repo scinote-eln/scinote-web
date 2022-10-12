@@ -5,12 +5,12 @@
         <i class="fas fa-grip-vertical"></i>
       </div>
       <div v-else class="step-element-grip-placeholder"></div>
-      <div :title="`checklist item ${checklistItem.attributes.id || 'new'} name`" class="step-element-name" :class="{ 'done': checklistItem.attributes.checked }">
+      <div :title="`checklist item ${checklistItem.attributes.text || 'new'} name`" class="step-element-name" :class="{ 'done': checklistItem.attributes.checked }">
         <div v-if="!inRepository" class="sci-checkbox-container" :class="{ 'disabled': !toggleUrl }">
           <input ref="checkbox"
                  type="checkbox"
                  class="sci-checkbox"
-                 :title="`checklist item ${checklistItem.attributes.id} checkbox`"
+                 :title="`checklist item ${checklistItem.attributes.text} checkbox`"
                  :disabled="checklistItem.attributes.isNew"
                  :checked="checklistItem.attributes.checked" @change="toggleChecked($event)" />
           <span class="sci-checkbox-label" >

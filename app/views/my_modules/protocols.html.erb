@@ -93,7 +93,7 @@
         <a class="task-section-caret" role="button" data-toggle="collapse" href="#assigned-items-container" aria-expanded="true" aria-controls="assigned-items-container">
           <i class="fas fa-caret-right"></i>
           <span class="task-section-title ">
-            <h2 class="assigned-items-title" data-assigned-items-count="<%= @assigned_repositories.map(&:assigned_rows_count).sum %>">
+            <h2 title="assigned task items" class="assigned-items-title" data-assigned-items-count="<%= @assigned_repositories.map(&:assigned_rows_count).sum %>">
               <%= t('my_modules.assigned_items.title') %>
             </h2>
           </span>

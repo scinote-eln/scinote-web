@@ -13,12 +13,12 @@
     <div class="step-header">
       <div class="step-element-header" :class="{ 'no-hover': !urls.update_url }">
         <div class="step-controls">
-          <div :title="`reorder step ${step.id}`" v-if="reorderStepUrl" class="step-element-grip" @click="$emit('reorder')" :class="{ 'step-element--locked': !urls.update_url }">
+          <div :title="`reorder step ${step.attributes.name}`" v-if="reorderStepUrl" class="step-element-grip" @click="$emit('reorder')" :class="{ 'step-element--locked': !urls.update_url }">
             <i class="fas fas-rotated-90 fa-exchange-alt"></i>
           </div>
           <div v-else class="step-element-grip-placeholder"></div>
           <a class="step-collapse-link"
-            :title="`toggle collapse step ${step.id}`"
+            :title="`toggle collapse step ${step.attributes.name}`"
             :href="'#stepBody' + step.id"
             data-toggle="collapse"
             data-remote="true"
@@ -37,7 +37,7 @@
             {{ step.attributes.position + 1 }}.
           </div>
         </div>
-        <div :title="`step ${step.id} name`" class="step-name-container" :class="{'step-element--locked': !urls.update_url}">
+        <div :title="`step ${step.attributes.name} name`" class="step-name-container" :class="{'step-element--locked': !urls.update_url}">
           <InlineEdit
             :value="step.attributes.name"
             :class="{ 'step-element--locked': !urls.update_url }"
@@ -59,7 +59,7 @@
       </div>
       <div class="step-actions-container">
         <div ref="actionsDropdownButton" v-if="urls.update_url"  class="dropdown">
-          <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'stepInserMenu_' + step.id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <button :title="`step ${step.attributes.name} insert menu`" class="btn btn-light dropdown-toggle insert-button" type="button" :id="'stepInserMenu_' + step.id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             {{ i18n.t('protocols.steps.insert.button') }}
             <span class="caret"></span>
           </button>
@@ -67,19 +67,19 @@
             <li class="title">
               {{ i18n.t('protocols.steps.insert.title') }}
             </li>
-            <li :title="`insert step ${step.id} table`" class="action" @click="createElement('table')">
+            <li :title="`insert step ${step.attributes.name} table`" class="action" @click="createElement('table')">
               <i class="fas fa-table"></i>
               {{ i18n.t('protocols.steps.insert.table') }}
             </li>
-            <li :title="`insert step ${step.id} checklist`" class="action" @click="createElement('checklist')">
+            <li :title="`insert step ${step.attributes.name} checklist`" class="action" @click="createElement('checklist')">
               <i class="fas fa-list"></i>
               {{ i18n.t('protocols.steps.insert.checklist') }}
             </li>
-            <li :title="`insert step ${step.id} text`" class="action"  @click="createElement('text')">
+            <li :title="`insert step ${step.attributes.name} text`" class="action"  @click="createElement('text')">
               <i class="fas fa-font"></i>
               {{ i18n.t('protocols.steps.insert.text') }}
             </li>
-            <li :title="`insert step ${step.id} attachment`" class="action"  @click="showFileModal = true">
+            <li :title="`insert step ${step.attributes.name} attachment`" class="action"  @click="showFileModal = true">
               <i class="fas fa-paperclip"></i>
               {{ i18n.t('protocols.steps.insert.attachment') }}
             </li>
@@ -88,7 +88,7 @@
         <a href="#"
            v-if="!inRepository"
            ref="comments"
-           :title="`open step ${step.id} comments`"
+           :title="`open step ${step.attributes.name} comments`"
            class="open-comments-sidebar btn icon-btn btn-light"
            data-turbolinks="false"
            data-object-type="Step"
@@ -104,18 +104,18 @@
         </a>
         <div v-if="urls.update_url" class="step-actions-container">
           <div class="dropdown">
-            <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'stepOptionsMenu_' + step.id" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="true">
+            <button :title="`step ${step.attributes.name} options menu`" class="btn btn-light dropdown-toggle insert-button" type="button" :id="'stepOptionsMenu_' + step.id" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="true">
               <i class="fas fa-ellipsis-h"></i>
             </button>
             <ul class="dropdown-menu dropdown-menu-right insert-element-dropdown" :aria-labelledby="'stepOptionsMenu_' + step.id">
               <li class="title">
                 {{ i18n.t('protocols.steps.options_dropdown.title') }}
               </li>
-              <li v-if="urls.reorder_elements_url" class="action"  @click="openReorderModal" :class="{ 'disabled': elements.length < 2 }">
+              <li :title="`rearrange step ${step.attributes.name} content`" v-if="urls.reorder_elements_url" class="action"  @click="openReorderModal" :class="{ 'disabled': elements.length < 2 }">
                 <i class="fas fas-rotated-90 fa-exchange-alt"></i>
                 {{ i18n.t('protocols.steps.options_dropdown.rearrange') }}
               </li>
-              <li v-if="urls.delete_url" class="action" @click="showDeleteModal">
+              <li :title="`delete step ${step.attributes.name}`" v-if="urls.delete_url" class="action" @click="showDeleteModal">
                 <i class="fas fa-trash"></i>
                 {{ i18n.t('protocols.steps.options_dropdown.delete') }}
               </li>

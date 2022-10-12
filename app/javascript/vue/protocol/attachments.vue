@@ -6,7 +6,7 @@
       </div>
       <div class="actions" v-if="step.attributes.attachments_manageble">
         <div ref="actionsDropdownButton" class="dropdown sci-dropdown">
-          <button class="btn btn-light dropdown-toggle" type="button" id="dropdownAttachmentsOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <button :title="`manage step ${step.attributes.name} attachments`" class="btn btn-light dropdown-toggle" type="button" id="dropdownAttachmentsOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <span>{{ i18n.t("protocols.steps.attachments.manage") }}</span>
             <span class="caret pull-right"></span>
           </button>
@@ -56,7 +56,7 @@
             <li class="divider-label">{{ i18n.t("protocols.steps.attachments.sort_by") }}</li>
             <li v-for="(orderOption, index) in orderOptions" :key="`orderOption_${index}`">
               <a class="action-link change-order"
-                :title="`sort step ${step.id} attachments by ${orderOption}`"
+                :title="`sort step ${step.attributes.name} attachments by ${orderOption}`"
                 @click="changeAttachmentsOrder(orderOption)"
                 :class="step.attributes.assets_order == orderOption ? 'selected' : ''"
               >
@@ -70,7 +70,7 @@
                 <a
                   class="attachments-view-mode action-link"
                   :class="viewMode == step.attributes.assets_view_mode ? 'selected' : ''"
-                  :title="`change step ${step.id} attachments view to ${viewMode}`"
+                  :title="`change step ${step.attributes.name} attachments view to ${viewMode}`"
                   @click="changeAttachmentsViewMode(viewMode)"
                   v-html="i18n.t(`protocols.steps.attachments.view_mode.${viewMode}_html`)"
                 ></a>
