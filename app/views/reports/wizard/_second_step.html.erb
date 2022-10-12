@@ -23,7 +23,7 @@
   </div>
   <div class="select-all-my-modules">
     <span class="sci-checkbox-container">
-      <input type="checkbox" class="sci-checkbox select-all-my-modules-checkbox" <%= 'checked' if report.settings.dig(:all_tasks) %>/>
+      <input title="select all tasks" type="checkbox" class="sci-checkbox select-all-my-modules-checkbox" <%= 'checked' if report.settings.dig(:all_tasks) %>/>
       <span class="sci-checkbox-label"></span>
     </span>
     <%= t("projects.reports.wizard.second_step.select_all_tasks") %>

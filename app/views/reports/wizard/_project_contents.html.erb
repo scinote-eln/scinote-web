@@ -3,7 +3,7 @@
     <li class="experiment-element">
       <div class="experiment-block">
         <span class="sci-checkbox-container">
-          <input type="checkbox" value="<%= experiment.id %>" class="sci-checkbox report-experiment-checkbox"
+          <input title="select report experiment <%= experiment.name %>" type="checkbox" type="checkbox" value="<%= experiment.id %>" class="sci-checkbox report-experiment-checkbox"
           <%= 'checked' if !report || @project_contents[:experiments].include?(experiment.id)
           %>/>
           <span class="sci-checkbox-label"></span>
@@ -25,7 +25,7 @@
         <% experiment.my_modules.viewable_by_user(current_user, current_team).active.sort_by { |m| @project_contents[:my_modules].index(m.id) || @project_contents[:my_modules].length if report }.each do |my_module| %>
           <li class="experiment-my-module">
             <span class="sci-checkbox-container">
-              <input type="checkbox" value="<%= my_module.id %>" class="sci-checkbox report-my-module-checkbox"
+              <input title="select report task <%= my_module.name %>" type="checkbox" value="<%= my_module.id %>" class="sci-checkbox report-my-module-checkbox"
               <%= 'checked' if !report || @project_contents[:my_modules].include?(my_module.id)
               %>/>
               <span class="sci-checkbox-label"></span>
@@ -33,7 +33,7 @@
             <span class="my-module-name" title="<%= my_module.name %>">
               <%= my_module.name %>
             </span>
-            <i class="fas fa-grip-vertical"></i>
+            <i title="report task <%= my_module.name %> grip" class="fas fa-grip-vertical"></i>
           </li>
         <% end %>
       </ul>
