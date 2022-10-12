@@ -22,7 +22,8 @@ class UpdateLabelTemplates < ActiveRecord::Migration[6.1]
         width_mm: 25.4,
         height_mm: 12.7,
         content: Extends::DEFAULT_LABEL_TEMPLATE[:zpl],
-        team: team
+        team: team,
+        default: true
       )
 
       ZebraLabelTemplate.create!(
@@ -30,7 +31,8 @@ class UpdateLabelTemplates < ActiveRecord::Migration[6.1]
         width_mm: 25.4,
         height_mm: 12.7,
         content: Extends::DEFAULT_LABEL_TEMPLATE[:zpl],
-        team: team
+        team: team,
+        default: true
       )
     end
   end
