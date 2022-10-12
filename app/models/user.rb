@@ -686,6 +686,12 @@ class User < ApplicationRecord
     false
   end
 
+  def after_database_authentication
+    if Rails.application.config.x.disable_local_passwords
+      throw(:warden, message: I18n.t('devise.failure.auth_method_disabled'))
+    end
+  end
+
   protected
 
   def confirmation_required?
