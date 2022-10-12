@@ -1121,6 +1121,7 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
   .attr("id", id)
   .attr("data-module-id", id)
   .attr("data-module-name", name)
+  .attr("title", name)
   .css("z-index", 20);
 
   var panelHeading = module.find(".panel-heading");
@@ -1149,6 +1150,7 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
   .addClass("fas")
   .addClass("fa-caret-down")
   .attr("aria-hidden", "true")
+  .attr("title", "dropdown options for new task")
   .appendTo(dropdownToggle);
 
   var dropdownMenu = document.createElement("ul");
@@ -1174,6 +1176,7 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
     $(editModuleLink)
     .attr("href", "")
     .attr("data-module-id", id)
+    .attr("title", "edit module " + name)
     .addClass("edit-module")
     .html($("#edit-link-placeholder").text().trim())
     .appendTo(editModuleItem);
@@ -1188,6 +1191,7 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
     $(cloneModuleLink)
     .attr("href", "")
     .attr("data-module-id", id)
+    .attr("title", "clone module " + name)
     .addClass("clone-module")
     .html($("#clone-link-placeholder").text().trim())
     .appendTo(cloneModuleItem);
@@ -1200,6 +1204,7 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
     $(cloneModuleGroupLink)
     .attr("href", "")
     .attr("data-module-id", id)
+    .attr("title", "clone module group " + name)
     .addClass("clone-module-group")
     .html($("#clone-group-link-placeholder").text().trim())
     .appendTo(cloneModuleGroupItem);
@@ -1216,6 +1221,7 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
     $(moveModuleLink)
     .attr("href", "")
     .attr("data-module-id", id)
+    .attr("title", "move module " + name)
     .addClass("move-module")
     .html($("#move-link-placeholder").text().trim())
     .appendTo(moveModuleItem);
@@ -1229,6 +1235,7 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
     $(moveModuleGroupLink)
     .attr("href", "")
     .attr("data-module-id", id)
+    .attr("title", "move module group " + name)
     .addClass("move-module-group")
     .html($("#move-group-link-placeholder").text().trim())
     .appendTo(moveModuleGroupItem);
@@ -1243,6 +1250,7 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
     $(deleteModuleLink)
     .attr("href", "")
     .attr("data-module-id", id)
+    .attr("title", "delete module " + name)
     .addClass("delete-module")
     .html($("#delete-link-placeholder").text().trim())
     .appendTo(deleteModuleItem);
@@ -1255,6 +1263,7 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
     $(deleteModuleGroupLink)
     .attr("href", "")
     .attr("data-module-id", id)
+    .attr("title", "delete module group " + name)
     .addClass("delete-module-group")
     .html($("#delete-group-link-placeholder").text().trim())
     .appendTo(deleteModuleGroupItem);
@@ -2832,11 +2841,17 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
         module = $(m);
         outs = graph.successors(module.attr("data-module-id"));
         _.each(outs, function(out) {
-          instance.connect({source: module, target: $("div[data-module-id=" + out + "]")})
+          var connection = instance.connect({source: module, target: $("div[data-module-id=" + out + "]")})
+          setTimeout(function() {
+            var inTaskName = module.find('.panel-title').text();
+            var outTaskName = $("div[data-module-id=" + out + "]").find('.panel-title').text();
+            if(connection.getOverlays().__label) $(connection.getOverlays().__label.canvas).attr('title', `remove connection ${inTaskName} to ${outTaskName}`);
+          }, 50)
         });
       });
     });
   }
+
 
   // Enable/disable connection endpoints
   /*

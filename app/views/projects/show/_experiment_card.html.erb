@@ -5,7 +5,7 @@
   <div class="checkbox-cell table-cell">
     <% if project_is_managable %>
       <div class="sci-checkbox-container">
-        <input title="checkbox for experiment: <%= experiment.id %>" value="1" type="checkbox" class="sci-checkbox experiment-card-selector">
+        <input title="checkbox for experiment: <%= experiment.name %>" value="1" type="checkbox" class="sci-checkbox experiment-card-selector">
         <span class="sci-checkbox-label"></span>
       </div>
     <% end %>
@@ -26,7 +26,7 @@
   </div>
   <div class="actions actions-cell table-cell">
     <div class="dropdown dropdown-async experiment-actions-menu" data-dropdown-url="<%= actions_dropdown_experiment_path(experiment) %>">
-      <button title="experiment: <%= experiment.id %> actions dropdown" class="btn btn-light dropdown-toggle icon-btn" type="button" id="experimentActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      <button title="experiment: <%= experiment.name %> actions dropdown" class="btn btn-light dropdown-toggle icon-btn" type="button" id="experimentActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
         <i class="fas fa-ellipsis-h"></i>
       </button>
       <ul></ul>
@@ -78,7 +78,7 @@
       <%= link_to t('experiments.card.more'),
             experiment_path(experiment),
             class: 'more-button experiment-action-link',
-            title: "read more about experiment: #{experiment.id} description",
+            title: "read more about experiment: #{experiment.name} description",
             remote: true %>
     <% end %>
   </div>

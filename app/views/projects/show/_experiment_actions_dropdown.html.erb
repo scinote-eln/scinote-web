@@ -4,7 +4,7 @@
     <li>
       <%= link_to edit_experiment_url(experiment),
                   remote: true,
-                  title: "toolbar: edit experiment: #{experiment.id} details",
+                  title: "toolbar: edit experiment: #{experiment.name} details",
                   class: 'edit-experiment experiment-action-link' do %>
         <i class="fas fa-pen"></i>
         <span><%= t('experiments.index.edit_option') %></span>
@@ -16,7 +16,7 @@
     <li>
       <%= link_to clone_modal_experiment_url(experiment),
                   remote: true, type: 'button',
-                  title: "toolbar: duplicate experiment: #{experiment.id} as template",
+                  title: "toolbar: duplicate experiment: #{experiment.name} as template",
                   class: 'clone-experiment experiment-action-link' do %>
         <i class="fas fa-copy"></i>
         <span><%= t('experiments.index.clone_option') %></span>
@@ -28,7 +28,7 @@
     <li>
       <%= link_to move_modal_experiment_url(experiment),
                   remote: true,
-                  title: "toolbar: move experiment: #{experiment.id}",
+                  title: "toolbar: move experiment: #{experiment.name}",
                   class: 'move-experiment experiment-action-link' do %>
         <i class="fas fa-arrow-right"></i>
         <span><%= t('experiments.index.move_option') %></span>
@@ -38,14 +38,14 @@
   <!-- Set or view user experiment assignments -->
   <% if can_manage_experiment_users?(experiment) %>
     <li class="form-dropdown-item">
-      <%= link_to edit_access_permissions_project_experiment_path(experiment.project, experiment), data: { action: 'remote-modal'}, title: "toolbar: edit experiment: #{experiment.id} access" do %>
+      <%= link_to edit_access_permissions_project_experiment_path(experiment.project, experiment), data: { action: 'remote-modal'}, title: "toolbar: edit experiment: #{experiment.name} access" do %>
         <i class="fas fa-door-open"></i>
         <span><%= t('experiments.index.experiment_access') %></span>
       <% end %>
     </li>
   <% else %>
     <li class="form-dropdown-item">
-      <%= link_to access_permissions_project_experiment_path(experiment.project, experiment), data: { action: 'remote-modal'}, title: "toolbar: experiment: #{experiment.id} access" do %>
+      <%= link_to access_permissions_project_experiment_path(experiment.project, experiment), data: { action: 'remote-modal'}, title: "toolbar: experiment: #{experiment.name} access" do %>
         <i class="fas fa-door-open"></i>
         <span><%= t('experiments.index.experiment_access') %></span>
       <% end %>
@@ -58,7 +58,7 @@
                     method: :post,
                     remote: true,
                     class: 'btn btn-light',
-                    title: "toolbar: archive experiment: #{experiment.id}",
+                    title: "toolbar: archive experiment: #{experiment.name}",
                     form_class: 'experiment-action-form',
                     data: { confirm: t('experiments.index.archive_confirm') } ) do %>
         <i class="fas fa-archive"></i>
@@ -71,7 +71,7 @@
                     method: :put,
                     remote: true,
                     class: 'btn btn-light',
-                    title: "toolbar: restore experiment: #{experiment.id}",
+                    title: "toolbar: restore experiment: #{experiment.name}",
                     form_class: 'experiment-action-form',
                     params: { experiment: { archived: false } }) do %>
         <i class="fas fa-undo"></i>

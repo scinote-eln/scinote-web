@@ -10,12 +10,12 @@
 >
   <%= bootstrap_form_tag url: canvas_experiment_url, method: "post", html: {class: "canvas-header"} do |f| %>
     <% if @experiment_managable %>
-      <%=link_to "", type: "button", class: "btn btn-primary", title: 'new task button', id: "canvas-new-module" do %>
-        <span class="hbtn-default">
+      <%=link_to "", type: "button", class: "btn btn-primary", id: "canvas-new-module" do %>
+        <span title="<%= t("experiments.canvas.edit.new_module") %>" class="hbtn-default">
           <span class="fas fa-credit-card"></span>
           <%= t("experiments.canvas.edit.new_module") %>
         </span>
-        <span class="hbtn-hover">
+        <span title="<%= t("experiments.canvas.edit.new_module") %>" class="hbtn-hover">
           <span class="fas fa-credit-card"></span>
           <em class="hidden-xs"><%= t("experiments.canvas.edit.new_module_hover") %></em>
           <span class="visible-xs-inline"><%= t("experiments.canvas.edit.new_module") %></span>
@@ -42,31 +42,31 @@
     <%= hidden_field_tag 'remove', '' %>
     <%= hidden_field_tag 'module-groups', '{}' %>
   <% end %>
-  <span style="display: none;" id="dropdown-header-placeholder">
+  <span title="options new task dropdown option" style="display: none;" id="dropdown-header-placeholder">
     <%=t "experiments.canvas.edit.options_header" %>
   </span>
-  <span style="display: none;" id="edit-link-placeholder">
+  <span title="rename new task dropdown option" style="display: none;" id="edit-link-placeholder">
     <%=t "experiments.canvas.edit.edit_module" %>
   </span>
-  <span style="display: none;" id="clone-link-placeholder">
+  <span title="clone new task dropdown option" style="display: none;" id="clone-link-placeholder">
     <%=t "experiments.canvas.edit.clone_module" %>
   </span>
-  <span style="display: none;" id="clone-group-link-placeholder">
+  <span title="clone group new task dropdown option" style="display: none;" id="clone-group-link-placeholder">
     <%=t "experiments.canvas.edit.clone_module_group" %>
   </span>
-  <span style="display: none;" id="move-link-placeholder">
+  <span title="move new task dropdown option" style="display: none;" id="move-link-placeholder">
     <%=t "experiments.canvas.edit.move_module" %>
   </span>
-  <span style="display: none;" id="move-group-link-placeholder">
+  <span title="move group new task dropdown option" style="display: none;" id="move-group-link-placeholder">
     <%=t "experiments.canvas.edit.move_module_group" %>
   </span>
-  <span style="display: none;" id="delete-link-placeholder">
+  <span title="delete new task dropdown option" style="display: none;" id="delete-link-placeholder">
     <%=t "experiments.canvas.edit.delete_module" %>
   </span>
-  <span style="display: none;" id="delete-group-link-placeholder">
+  <span title="delete group new task dropdown option" style="display: none;" id="delete-group-link-placeholder">
     <%=t "experiments.canvas.edit.delete_module_group" %>
   </span>
-  <span style="display: none;" id="drag-connections-placeholder">
+  <span title="drag connections new task dropdown option" style="display: none;" id="drag-connections-placeholder">
     <%=t "experiments.canvas.edit.drag_connections" %>
   </span>
 </div>

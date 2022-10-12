@@ -8,7 +8,7 @@
                   remote: true,
                   type: 'button',
                   data: { id: experiment.id },
-                  class: 'edit-experiment', title: "edit experiment #{experiment.id} details" do %>
+                  class: 'edit-experiment', title: "edit experiment #{experiment.name} details" do %>
         <i class="fas fa-pen"></i>
         <span><%= t('experiments.edit.label_title') %></span>
       <% end %>          
@@ -19,7 +19,7 @@
     <li>
       <%= link_to clone_modal_experiment_url(experiment),
                   remote: true, type: 'button',
-                  class: 'clone-experiment', title: "clone experiment #{experiment.id}" do %>
+                  class: 'clone-experiment', title: "clone experiment #{experiment.name}" do %>
         <i class="fas fa-copy"></i>
         <span><%= t('experiments.clone.label_title') %></span>
       <% end %>   
@@ -29,7 +29,7 @@
     <li>
       <%= link_to move_modal_experiment_url(experiment),
                   remote: true, type: 'button',
-                  class: 'move-experiment', title: "move experiment #{experiment.id} details" do %>
+                  class: 'move-experiment', title: "move experiment #{experiment.name} details" do %>
         <i class="fas fa-arrow-right"></i>
         <span><%= t('experiments.move.label_title') %></span>
       <% end %>   
@@ -38,14 +38,14 @@
   <!-- Set or view user experiment assignments -->
   <% if can_manage_experiment_users?(experiment) %>
     <li >
-      <%= link_to edit_access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'}, title: "edit experiment #{experiment.id} access permissions" do %>
+      <%= link_to edit_access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'}, title: "edit experiment #{experiment.name} access permissions" do %>
         <i class="fas fa-door-open"></i>
         <span><%= t('experiments.index.experiment_access') %></span>
       <% end %>
     </li>
   <% else %>
     <li>
-      <%= link_to access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'}, title: "experiment #{experiment.id} access permissions" do %>
+      <%= link_to access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'}, title: "experiment #{experiment.name} access permissions" do %>
         <i class="fas fa-door-open"></i>
         <span><%= t('experiments.index.experiment_access') %></span>
       <% end %>
@@ -56,7 +56,7 @@
       <%= link_to archive_experiment_url(experiment),
                   type: 'button',
                   method: :post,
-                  data: { confirm: t('experiments.canvas.archive_confirm') }, title: "archive experiment #{experiment.id}" do %>
+                  data: { confirm: t('experiments.canvas.archive_confirm') }, title: "archive experiment #{experiment.name}" do %>
         <i class="fas fa-archive"></i>
         <span><%= t('experiments.archive.label_title') %></span>
       <% end %>   
@@ -68,12 +68,12 @@
       <% experiment_form = f %>
       <%= f.hidden_field :archived, value: false %>
     <% end %>
-    <li><a title="restore <%= experiment.id %> details" href="#" class="form-submit-link" data-turbolinks="false" data-submit-form="<%= experiment_form.options[:html][:id] %>">
+    <li><a title="restore <%= experiment.name %> details" href="#" class="form-submit-link" data-turbolinks="false" data-submit-form="<%= experiment_form.options[:html][:id] %>">
           <i class="fas fa-undo"></i><%= t "projects.experiment_archive.restore_option" %></a></li>
   <% end %>
   <li class="form-dropdown-item">
     <div class="form-dropdown-item-info">
-      <small title="experiment <%= experiment.id %>"><%= t('experiments.experiment_id') %>: <strong><%= experiment.code %></strong></small>
+      <small title="experiment <%= experiment.name %>"><%= t('experiments.experiment_id') %>: <strong><%= experiment.code %></strong></small>
     </div>
   </li>
 </ul>
