@@ -11,11 +11,11 @@
     <div class="add-tag last"><span class="fas fa-tag"></span></div>
   <% end %>
   <% if my_module.tags.size.positive? %>
-    <span title="task <%= my_module.id %> tags, count: <%= my_module.tags.size %>" class="badge badge-indicator">
+    <span title="task <%= my_module.name %> tags, count: <%= my_module.tags.size %>" class="badge badge-indicator">
       <%= my_module.tags.size %>
     </span>
   <% else %>
-    <span title="task <%= my_module.id %> tags"  class="badge badge-indicator <%= "invisible" unless can_manage_my_module?(my_module) %>">
+    <span title="task <%= my_module.name %> tags"  class="badge badge-indicator <%= "invisible" unless can_manage_my_module?(my_module) %>">
       +
     </span>
   <% end %>

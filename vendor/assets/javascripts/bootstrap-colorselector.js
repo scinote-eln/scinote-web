@@ -38,7 +38,6 @@
         var option = $(this);
         var value = option.attr("value");
         var color = option.data("color");
-        var title = option.text();
 
         // create a-tag
         var $markupA = $("<a>").addClass("color-btn");
@@ -46,7 +45,7 @@
           $markupA.addClass("selected");
         }
         $markupA.css("background-color", color);
-        $markupA.attr("href", "#").attr("data-color", color).attr("data-value", value).attr("title", title);
+        $markupA.attr("href", "#").attr("data-color", color).attr("data-value", value).attr("title", color);
 
         // create li-tag
         $markupUl.append($("<li>").append($markupA));
