@@ -299,6 +299,8 @@ Devise.setup do |config|
     config.omniauth :linkedin, ENV['LINKEDIN_KEY'], ENV['LINKEDIN_SECRET'], scope: 'r_liteprofile r_emailaddress'
   end
 
+  Rails.application.config.x.disable_local_passwords = ENV['DISABLE_LOCAL_PASSWORDS'] == 'true'
+
   if [ENV['OKTA_CLIENT_ID'], ENV['OKTA_CLIENT_SECRET'], ENV['OKTA_DOMAIN'], ENV['OKTA_AUTH_SERVER_ID']].all?(&:present?)
     config.omniauth(
       :okta,
