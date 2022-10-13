@@ -188,12 +188,7 @@ class MyModule < ApplicationRecord
   end
 
   def unassigned_tags
-    Tag.find_by_sql(
-      "SELECT DISTINCT tags.id, tags.name, tags.color FROM tags " +
-      "INNER JOIN experiments ON experiments.project_id = tags.project_id " +
-      "WHERE experiments.id = #{experiment_id.to_s} AND tags.id NOT IN " +
-      "(SELECT DISTINCT tag_id FROM my_module_tags WHERE my_module_tags.my_module_id = #{id.to_s})"
-      )
+    experiment.project.tags.where.not(id: tags)
   end
 
   def last_activities(count = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
