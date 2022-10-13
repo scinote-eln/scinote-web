@@ -10,7 +10,7 @@
                   class: 'sidebar-link',
                   data: { module_id: my_module.id } %>
       <% if action_name == 'canvas' %>
-        <i class="fas fa-map-marker-alt canvas-center-on" data-module-id="<%= my_module.id %>"></i>
+        <i title="find <%= my_module.name %>" class="fas fa-map-marker-alt canvas-center-on" data-module-id="<%= my_module.id %>"></i>
       <% end %>
     </li>
   <% end %>

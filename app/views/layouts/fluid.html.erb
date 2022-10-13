@@ -6,9 +6,9 @@
           <div class="sidebar-title">
             <%= yield :sidebar_title %>
           </div>
-          <i class="fas fa-times close-sidebar"></i>
+          <i title="close <%= (yield :sidebar_title).downcase %> sidebar" class="fas fa-times close-sidebar"></i>
         </div>
-        <div class="fas fa-angle-double-right show-sidebar"></div>
+        <div title="show <%= (yield :sidebar_title).downcase %> sidebar" class="fas fa-angle-double-right show-sidebar"></div>
         <div class="sidebar-body">
           <%= yield :sidebar %>
         </div>

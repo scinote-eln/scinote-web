@@ -9,7 +9,7 @@
   <%= render partial: 'shared/sidebar/projects_tree_branch.html.erb', locals: { records: sidebar_folders_tree(team, current_user, sort) } %>
   <% if !projects_view_mode_archived? %>
     <li class="sidebar-leaf">
-      <%= link_to projects_path(view_mode: :archived), class: "sidebar-link" do %>
+      <%= link_to projects_path(view_mode: :archived), class: "sidebar-link", title: 'archived projects' do %>
         <span class="fas fa-archive"></span>
         <%= t('projects.index.navigation_archived_projects') %>
       <% end %>
