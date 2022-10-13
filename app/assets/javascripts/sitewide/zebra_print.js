@@ -61,12 +61,6 @@ var zebraPrint = (function() {
     }
   }
 
-  function showModal() {
-    if (CONFIG && 'showModal' in CONFIG) {
-      CONFIG.showModal();
-    }
-  }
-
   function beforeRefresh() {
     if (CONFIG && 'beforeRefresh' in CONFIG) {
       CONFIG.beforeRefresh();
@@ -81,7 +75,6 @@ var zebraPrint = (function() {
 
   function addNewDevice(device, clearSelectorOnFirstDevice) {
     clearSelector(clearSelectorOnFirstDevice);
-    if (devices.length === 0) showModal();
     if (!devices.some(function(el) {
       return el.name === device.name;
     })) {
@@ -107,7 +100,6 @@ var zebraPrint = (function() {
             }
           }
         } else {
-          showModal();
           noDevices();
         }
       }, () => {
