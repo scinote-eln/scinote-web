@@ -11,43 +11,50 @@
       </div>
     </div>
     <div v-if="!viewOnly" class="label-preview__controls" :class="{'open': optionsOpen}">
-      <div class="label-preview__controls__units">
-        <div class="sci-input-container">
-          <label>{{ i18n.t('label_templates.label_preview.units') }}</label>
-          <DropdownSelector
-            :disableSearch="true"
-            :options="[{ value: 'in', label: i18n.t(`label_templates.label_preview.in`) }, { value: 'mm', label: i18n.t(`label_templates.label_preview.mm`) }]"
-            :selectorId="'UnitSelector'"
-            :selectedValue="unit"
-            @dropdown:changed="updateUnit" />
-        </div>
-      </div>
-      <div class="label-preview__controls__size">
-        <div class="sci-input-container">
-          <label>{{ i18n.t('label_templates.label_preview.height') }}</label>
-          <input v-model="height" type="number" class="sci-input-field"
-                 @change="$emit('height:update', (unit === 'in' ? height * 25.4 : height))"  />
-        </div>
-        <div class="sci-input-container">
-          <label>{{ i18n.t('label_templates.label_preview.width') }}</label>
-          <input v-model="width" type="number" class="sci-input-field"
-                 @change="$emit('width:update', (unit === 'in' ? width * 25.4 : width))" />
-        </div>
-        <div class="sci-input-container">
-          <label>{{ i18n.t('label_templates.label_preview.density') }}</label>
-          <DropdownSelector
-              v-if="density"
-              :key="unit"
+      <div v-if="canManage">
+        <div class="label-preview__controls__units">
+          <div class="sci-input-container">
+            <label>{{ i18n.t('label_templates.label_preview.units') }}</label>
+            <DropdownSelector
               :disableSearch="true"
-              :options="unit === 'in' ? DPI_RESOLUTION_OPTIONS : DPMM_RESOLUTION_OPTIONS"
-              :selectorId="'DensitySelector'"
-              :selectedValue="density"
-              @dropdown:changed="updateDensity" />
+              :options="[{ value: 'in', label: i18n.t(`label_templates.label_preview.in`) }, { value: 'mm', label: i18n.t(`label_templates.label_preview.mm`) }]"
+              :selectorId="'UnitSelector'"
+              :selectedValue="unit"
+              @dropdown:changed="updateUnit" />
+          </div>
+        </div>
+        <div class="label-preview__controls__size">
+          <div class="sci-input-container">
+            <label>{{ i18n.t('label_templates.label_preview.height') }}</label>
+            <input v-model="height" type="number" class="sci-input-field"
+                  @change="$emit('height:update', (unit === 'in' ? height * 25.4 : height))"  />
+          </div>
+          <div class="sci-input-container">
+            <label>{{ i18n.t('label_templates.label_preview.width') }}</label>
+            <input v-model="width" type="number" class="sci-input-field"
+                  @change="$emit('width:update', (unit === 'in' ? width * 25.4 : width))" />
+          </div>
+          <div class="sci-input-container">
+            <label>{{ i18n.t('label_templates.label_preview.density') }}</label>
+            <DropdownSelector
+                v-if="density"
+                :key="unit"
+                :disableSearch="true"
+                :options="unit === 'in' ? DPI_RESOLUTION_OPTIONS : DPMM_RESOLUTION_OPTIONS"
+                :selectorId="'DensitySelector'"
+                :selectedValue="density"
+                @dropdown:changed="updateDensity" />
+          </div>
+        </div>
+        <div class="label-preview__refresh" @click="refreshPreview">
+          <i class="fas fa-sync"></i>
+          {{ i18n.t('label_templates.label_preview.refresh_preview') }}
         </div>
       </div>
-      <div class="label-preview__refresh" @click="refreshPreview">
-        <i class="fas fa-sync"></i>
-        {{ i18n.t('label_templates.label_preview.refresh_preview') }}
+      <div v-else>
+        <div>{{ i18n.t('label_templates.label_preview.height') }}: {{ height }} {{ unit }} </div>
+        <div>{{ i18n.t('label_templates.label_preview.width') }}: {{ width }} {{ unit }} </div>
+        <div>{{ i18n.t('label_templates.label_preview.density') }}: {{ densityLabel() }}</div>
       </div>
     </div>
     <div v-if="base64Image" class="label-preview__image">
@@ -111,6 +118,9 @@
       },
       heightMm() {
         return this.unit === 'in' ? this.height * 25.4 : this.height;
+      },
+      canManage() {
+        return this.template.attributes.urls.update;
       }
     },
     watch: {
@@ -172,6 +182,12 @@
       updateDensity(density) {
         this.density = density;
         this.$emit('density:update', this.density);
+      },
+      densityLabel() {
+        let resolutions = this.unit === 'in' ? DPI_RESOLUTION_OPTIONS :  DPMM_RESOLUTION_OPTIONS;
+        return resolutions.find(element => {
+          return element.value === this.density;
+        }).label;
       }
     }
   }
