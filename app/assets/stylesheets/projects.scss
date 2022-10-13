@@ -930,6 +930,8 @@ li.module-hover {
             }
 
             .project-code-cell {
+              display: flex;
+              align-items: center;
               grid-column: 3;
             }
 
