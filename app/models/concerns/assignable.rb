@@ -59,6 +59,8 @@ module Assignable
         assigned: is_a?(Project) ? :manually : :automatically,
         user_role: role
       )
+
+      UserAssignments::GenerateUserAssignmentsJob.perform_later(self, created_by)
     end
   end
 end
