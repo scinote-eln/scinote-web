@@ -787,6 +787,7 @@ class TeamImporter
       protocol.archived_by_id = find_user(protocol.archived_by_id)
       protocol.restored_by_id = find_user(protocol.restored_by_id)
       protocol.my_module = my_module unless protocol.my_module_id.nil?
+      protocol.skip_user_assignments = true
       protocol.parent_id = @protocol_mappings[protocol.parent_id] unless protocol.parent_id.nil?
       protocol.save!
       @protocol_counter += 1

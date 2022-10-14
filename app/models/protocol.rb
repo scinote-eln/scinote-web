@@ -8,8 +8,9 @@ class Protocol < ApplicationRecord
   include PermissionCheckableModel
   include TinyMceImages
 
-  after_save :update_linked_children
   after_destroy :decrement_linked_children
+  after_save :update_linked_children
+  skip_callback :create, :after, :create_users_assignments, if: -> { in_module? }
 
   enum protocol_type: {
     unlinked: 0,

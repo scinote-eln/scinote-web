@@ -48,7 +48,7 @@ module Assignable
       return if skip_user_assignments
 
       role = if is_a?(Project) || is_a?(Team)
-               UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))
+               UserRole.find_predefined_owner_role
              else
                permission_parent.user_assignments.find_by(user: created_by).user_role
              end
