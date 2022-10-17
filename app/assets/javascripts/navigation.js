@@ -57,6 +57,7 @@
         notificationCount.html('');
         if (data.notificationNmber > 0) {
           notificationCount.html(data.notificationNmber);
+          notificationCount.prop('title', `${data.notificationNmber} unread notification`)
           notificationCount.show();
           toggleNotificationBellPosition(element, icon);
         } else {
