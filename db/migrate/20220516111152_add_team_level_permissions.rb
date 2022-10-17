@@ -110,7 +110,10 @@ class AddTeamLevelPermissions < ActiveRecord::Migration[6.1]
               .find_in_batches(batch_size: 100) do |user_team_batch|
       user_assignments = []
       user_team_batch.each do |user_team|
-        user_assignments << new_user_assignment(user_team.user, user_team.team, user_role, :manually)
+        team_user_assignment = new_user_assignment(user_team.user, user_team.team, user_role, :manually)
+        team_user_assignment.assign_attributes(created_at: user_team.created_at,
+                                               updated_at: user_team.updated_at)
+        user_assignments << team_user_assignment
         user_team.team.repositories.each do |repository|
           user_assignments << new_user_assignment(user_team.user, repository, user_role, :automatically)
         end
