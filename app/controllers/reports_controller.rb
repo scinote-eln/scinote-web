@@ -10,11 +10,13 @@ class ReportsController < ApplicationController
                                             generate_docx new_template_values project_contents)
   before_action :load_wizard_vars, only: %i(new edit)
   before_action :load_available_repositories, only: %i(index save_pdf_to_inventory_modal available_repositories)
+  before_action :check_project_read_permissions, only: %i(create edit update generate_pdf
+                                                          generate_docx new_template_values project_contents)
   before_action :check_read_permissions, except: %i(index datatable new create edit update destroy generate_pdf
-                                                    generate_docx new_template_values project_contents)
+                                                    generate_docx new_template_values project_contents
+                                                    available_repositories)
   before_action :check_create_permissions, only: %i(new create)
-  before_action :check_manage_permissions, only: %i(edit update generate_pdf
-                                                    generate_docx new_template_values project_contents)
+  before_action :check_manage_permissions, only: %i(edit update generate_pdf generate_docx)
   before_action :switch_team_with_param, only: :index
   after_action :generate_pdf_report, only: %i(create update generate_pdf)
 
@@ -47,7 +49,13 @@ class ReportsController < ApplicationController
     end
 
     report = current_team.reports.where(project: @project).find_by(id: params[:report_id])
-    report ||= current_team.reports.new(project: @project)
+    if report.present?
+      return render_403 unless can_manage_report?(report)
+    else
+      return render_403 unless can_create_reports?(current_team)
+
+      report = current_team.reports.new(project: @project)
+    end
 
     respond_to do |format|
       format.json do
@@ -335,7 +343,6 @@ class ReportsController < ApplicationController
   def load_vars_nested
     @project = current_team.projects.find_by(id: params[:project_id])
     render_404 unless @project
-    render_403 unless can_read_project?(@project)
   end
 
   def load_wizard_vars
@@ -354,6 +361,10 @@ class ReportsController < ApplicationController
                                     .merge(MyModule.active)
                                     .group(:id)
                                     .select(:id, :name)
+  end
+
+  def check_project_read_permissions
+    render_403 unless can_read_project?(@project)
   end
 
   def check_read_permissions
