@@ -202,7 +202,7 @@ class ExperimentsController < ApplicationController
 
   # GET: clone_modal_experiment_path(id)
   def clone_modal
-    @projects = @experiment.project.team.projects
+    @projects = @experiment.project.team.projects.active
                            .with_user_permission(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
     respond_to do |format|
       format.json do
