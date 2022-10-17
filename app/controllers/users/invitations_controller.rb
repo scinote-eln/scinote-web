@@ -93,7 +93,7 @@ module Users
         end
 
         if @teams.any? && user
-          @user_role ||= UserRole.find_by(name: UserRole.public_send('normal_user_role').name)
+          @user_role ||= UserRole.find_predefined_normal_user_role
           @teams.each do |team|
             if team.user_assignments.exists?(user: user)
               result[:status] = :user_exists_and_in_team
