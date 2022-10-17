@@ -174,7 +174,7 @@
         this.previewContent = this.labelTemplate.attributes.content
         this.newLabelWidth = this.labelTemplate.attributes.width_mm
         this.newLabelHeight = this.labelTemplate.attributes.height_mm
-        this.newLabelDensity = this.labelTemplate.attributes.newDensity
+        this.newLabelDensity = this.labelTemplate.attributes.density
         this.newLabelUnit = this.labelTemplate.attributes.unit
       })
     },
@@ -227,6 +227,8 @@
       updateContent() {
         this.previewValid = true;
 
+        this.saveLabelDimensions();
+
         if (!this.editingContent) return;
 
         if (this.skipSave) {
@@ -242,18 +244,37 @@
             type: 'PATCH',
             data: {label_template: {
               content: this.newContent,
-              width_mm: this.newLabelWidth,
-              height_mm: this.newLabelHeight,
-              density: this.newLabelDensity,
-              unit: this.newLabelUnit
             }},
             success: (result) => {
               this.labelTemplate.attributes.content = result.data.attributes.content;
-              this.labelTemplate.attributes.width_mm = result.data.attributes.width_mm;
-              this.labelTemplate.attributes.height_mm = result.data.attributes.height_mm;
               this.editingContent = false;
             }
           });
+        });
+      },
+      saveLabelDimensions() {
+        if (this.newLabelWidth == this.labelTemplate.attributes.width_mm &&
+            this.newLabelHeight == this.labelTemplate.attributes.height_mm &&
+            this.newLabelDensity == this.labelTemplate.attributes.density &&
+            this.newLabelUnit == this.labelTemplate.attributes.unit) {
+          return
+        }
+
+        $.ajax({
+          url: this.labelTemplate.attributes.urls.update,
+          type: 'PATCH',
+          data: {label_template: {
+            width_mm: this.newLabelWidth,
+            height_mm: this.newLabelHeight,
+            density: this.newLabelDensity,
+            unit: this.newLabelUnit
+          }},
+          success: (result) => {
+            this.labelTemplate.attributes.width_mm = result.data.attributes.width_mm;
+            this.labelTemplate.attributes.height_mm = result.data.attributes.height_mm;
+            this.labelTemplate.attributes.density = result.data.attributes.density;
+            this.labelTemplate.attributes.unit = result.data.attributes.unit;
+          }
         });
       },
       generatePreview(skipSave = false) {
