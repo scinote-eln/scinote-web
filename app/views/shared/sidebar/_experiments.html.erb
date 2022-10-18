@@ -1,11 +1,11 @@
 <ul class="sidebar-branch">
   <li class="sidebar-leaf">
     <% if @project.archived? %>
-      <%= link_to t('sidebar.experiments.back_archived_projects'), projects_path(view_mode: :archived), class: 'sidebar-link back-button' %>
+      <%= link_to t('sidebar.experiments.back_archived_projects'), projects_path(view_mode: :archived), class: 'sidebar-link back-button', title: 'back to archived projects' %>
     <% elsif view_mode == 'archived' %>
-      <%= link_to t('sidebar.experiments.back_active_experiments'), project_url(@project), class: 'sidebar-link back-button' %>
+      <%= link_to t('sidebar.experiments.back_active_experiments'), project_url(@project), class: 'sidebar-link back-button', title: 'back to active experiments' %>
     <% else %>
-      <%= link_to t('sidebar.experiments.back_button'), projects_path, class: 'sidebar-link back-button' %>
+      <%= link_to t('sidebar.experiments.back_button'), projects_path, class: 'sidebar-link back-button', title: 'back to projects' %>
     <% end %>
   </li>
   <% project.sorted_experiments(current_user, @current_sort, view_mode == 'archived').each do |experiment| %>
