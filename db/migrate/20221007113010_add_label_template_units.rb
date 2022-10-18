@@ -4,7 +4,7 @@ class AddLabelTemplateUnits < ActiveRecord::Migration[6.1]
   def up
     change_table :label_templates, bulk: true do |t|
       t.integer :unit, default: 0
-      t.integer :density, default: 8
+      t.integer :density, default: 12
     end
   end
 

@@ -135,7 +135,7 @@
     methods: {
       setDefaults() {
         !this.unit && (this.unit = 'in');
-        !this.density && (this.density = 8);
+        !this.density && (this.density = 12);
         !this.width && (this.width = this.unit === 'in' ? 2 : 50.8);
         !this.height && (this.height = this.unit === 'in' ? 1 : 25.4);
       },

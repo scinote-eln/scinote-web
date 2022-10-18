@@ -712,7 +712,7 @@ CREATE TABLE public.label_templates (
     height_mm double precision,
     height_mm double precision,
     unit integer DEFAULT 0,
-    density integer DEFAULT 8
+    density integer DEFAULT 12
 );
 
 
