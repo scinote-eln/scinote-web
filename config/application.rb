@@ -72,5 +72,9 @@ module Scinote
       # Only Authorization endpoint
       Doorkeeper::AuthorizationsController.layout 'sign_in_halt'
     end
+
+    config.action_view.field_error_proc = Proc.new { |html_tag, instance|
+      "<div class=\"field_with_errors sci-input-container\">#{html_tag}</div>".html_safe
+    }
   end
 end
