@@ -178,32 +178,34 @@ var zebraPrint = (function() {
     */
     print: function(modalUrl, progressModal, printModal, printData) {
       var modal = $(progressModal);
-      device = findDevice(printData.printer_name);
-      new Zebra.Printer(device).isPrinterReady(function() {
-        $.ajax({
-          method: 'GET',
-          url: modalUrl,
-          data: printData,
-          dataType: 'json'
-        }).done(function(xhr, settings, dataZebra) {
-          if (modal.length) {
-            modal.replaceWith(dataZebra.responseJSON.html);
-          } else {
-            $('body').append($(dataZebra.responseJSON.html));
-          }
+      $.ajax({
+        method: 'GET',
+        url: modalUrl,
+        data: printData,
+        dataType: 'json'
+      }).done(function(xhr, settings, dataZebra) {
+        $(printModal).modal('hide');
 
+        if (modal.length) {
+          modal.replaceWith(dataZebra.responseJSON.html);
+        } else {
+          $('body').append($(dataZebra.responseJSON.html));
+        }
+
+        updateProgressModalData(progressModal, printData.printer_name, PRINTER_STATUS_READY, PRINTER_STATUS_PRINTING);
+        device = findDevice(printData.printer_name);
+        new Zebra.Printer(device).isPrinterReady(function() {
           $(document).on('click', progressModal, function() {
             $(this).closest(progressModal).remove();
           });
 
-          $(printModal).modal('hide');
           print(
             device, progressModal, printData.number_of_copies,
             printData.printer_name, dataZebra.responseJSON.labels
           );
+        }, function() {
+          updateProgressModalData(progressModal, printData.printer_name, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
         });
-      }, function() {
-        updateProgressModalData(progressModal, printData.printer_name, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
       });
     }
   };
