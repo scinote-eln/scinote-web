@@ -1294,9 +1294,9 @@ en:
       no_projects: 'No projects: You don’t have edit access to any other projects.'
     canvas:
       archive_confirm: "Are you sure to archive this experiment?"
-      actions: 'Actions'
+      actions: 'Experiment'
       head_title: "%{project} | Overview"
-      canvas_edit: "Edit Experiment"
+      canvas_edit: "Edit workflow"
       zoom: "Zoom: "
       reload_on_submit: "Save action is running. Reloading this page may cause unexpected behavior."
       modal_manage_tags:

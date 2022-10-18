@@ -1,0 +1,23 @@
+// scss-lint:disable SelectorDepth NestingDepth IdSelector
+
+#experiment-canvas {
+  [data-view-mode="archived"] {
+    display: none;
+  }
+
+  .toolbar-row {
+    align-items: center;
+    display: flex;
+    margin: 10px 0;
+
+    .toolbar-right-block {
+      align-items: center;
+      display: flex;
+      margin-left: auto;
+    }
+
+    .zoom-text {
+      margin-right: .5em;
+    }
+  }
+}
