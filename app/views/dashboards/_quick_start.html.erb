@@ -1,10 +1,14 @@
 <div class="quick-start-buttons">
   <div class="new-task btn btn-secondary"><i class="fas fa-plus"></i><%= t("dashboard.quick_start.new_task") %></div>
-  <%= link_to protocols_path, {class: "new-protocol btn btn-secondary"} do %>
-    <i class="fas fa-edit"></i><%= t("dashboard.quick_start.new_protocol") %>
+  <% if can_create_protocols_in_repository?(current_team) %>
+    <%= link_to protocols_path, {class: "new-protocol btn btn-secondary"} do %>
+      <i class="fas fa-edit"></i><%= t("dashboard.quick_start.new_protocol") %>
+    <% end %>
   <% end %>
-  <%= link_to new_report_path, {class: "new-report btn btn-secondary"} do %>
-    <i class="fas fa-clipboard-check"></i><%= t("dashboard.quick_start.new_report") %>
+  <% if can_create_reports?(current_team) %>
+    <%= link_to new_report_path, {class: "new-report btn btn-secondary"} do %>
+      <i class="fas fa-clipboard-check"></i><%= t("dashboard.quick_start.new_report") %>
+    <% end %>
   <% end %>
 </div>
 <%= render "create_task_modal" %>

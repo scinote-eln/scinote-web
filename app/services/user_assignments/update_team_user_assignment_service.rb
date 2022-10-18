@@ -23,7 +23,7 @@ module UserAssignments
            .where(automatic_user_assignments: { user: @user, team: @team })
            .find_each do |repository|
         repository.automatic_user_assignments
-                  .select { |assignment| assignment.user_id == @user.id && assignment.team_id == @team.id }
+                  .select { |assignment| assignment[:user_id] == @user.id && assignment[:team_id] == @team.id }
                   .each { |assignment| assignment.update!(user_role: @user_role) }
       end
     end
