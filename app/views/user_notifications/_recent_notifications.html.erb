@@ -7,7 +7,7 @@
                  formats: [:html] %>
     </div>
 
-    <div class="col-xs-10">
+    <div title="<%= "#{notification.title} created at: #{l(notification.created_at, format: :full)}" %>" class="col-xs-10">
       <strong><%= sanitize_input(notification.title) %></strong> <br>
       <% if notification.deliver? %>
       <%= I18n.t('notifications.deliver.download_text') %></br>
