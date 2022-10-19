@@ -1,0 +1,37 @@
+<div class="content-header sticky-header">
+  <div id="breadcrumbsWrapper">
+    <%= render partial: 'projects/index/breadcrumbs', locals: {target_folder: @experiment.project.project_folder, project: @experiment.project, experiment: @experiment} %>
+  </div>
+  <div class="title-row">
+    <h1 class="project-name">
+      <% if @experiment.archived? %>
+        <i class="fas fa-archive" data-view-mode="archived"></i>
+      <% end %>
+      <% if @inline_editable_title_config.present? %>
+              <%= render partial: "shared/inline_editing",
+                         locals: {
+                            initial_value: @experiment.name,
+                            config: @inline_editable_title_config
+                         } %>
+      <% else %>
+        <div class="name-readonly-placeholder">
+          <%= @experiment.name %>
+        </div>
+      <% end %>
+    </h1>
+    <div class="header-actions">
+      <% if can_manage_experiment?(@experiment) || can_clone_experiment?(@experiment)  %>
+        <!-- experiment actions -->
+        <span class="dropdown actions-button">
+          <button class="btn btn-light dropdown-toggle" type="button" id="exActionsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <span class="hidden-xs"><%= t('experiments.canvas.actions') %></span>
+            <span class="visible-xs-inline"><i class="fas fa-sort"></i></span>
+            <span class="caret"></span>
+          </button>
+          <%= render partial: 'experiments/dropdown_actions.html.erb',
+                              locals: { project: @project, experiment: @experiment } %>
+        </span>
+      <% end %>
+    </div>
+  </div>
+</div>

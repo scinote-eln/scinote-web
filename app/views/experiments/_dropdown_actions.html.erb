@@ -1,4 +1,4 @@
-<ul class="dropdown-menu dropdown-experiment-actions"
+<ul class="dropdown-menu dropdown-menu-right dropdown-experiment-actions"
   aria-labelledby="exActionsMenu-<%= experiment.id %>"
   data-id="<%= experiment.id %>">
 
@@ -11,7 +11,7 @@
                   class: 'edit-experiment' do %>
         <i class="fas fa-pen"></i>
         <span><%= t('experiments.edit.label_title') %></span>
-      <% end %>          
+      <% end %>
     </li>
   <% end %>
   <li data-hook="experiment-actions-second-child"></li>
@@ -22,7 +22,7 @@
                   class: 'clone-experiment' do %>
         <i class="fas fa-copy"></i>
         <span><%= t('experiments.clone.label_title') %></span>
-      <% end %>   
+      <% end %>
     </li>
   <% end %>
   <% if can_move_experiment?(experiment) %>
@@ -32,7 +32,7 @@
                   class: 'move-experiment' do %>
         <i class="fas fa-arrow-right"></i>
         <span><%= t('experiments.move.label_title') %></span>
-      <% end %>   
+      <% end %>
     </li>
   <% end %>
   <!-- Set or view user experiment assignments -->
@@ -59,7 +59,7 @@
                   data: { confirm: t('experiments.canvas.archive_confirm') } do %>
         <i class="fas fa-archive"></i>
         <span><%= t('experiments.archive.label_title') %></span>
-      <% end %>   
+      <% end %>
     </li>
   <% end %>
   <% if can_restore_experiment?(experiment) %>
