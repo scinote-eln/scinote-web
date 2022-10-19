@@ -85,18 +85,18 @@ class RepositoryRowsController < ApplicationController
     label_template = LabelTemplate.where(team_id: current_team.id).find(params[:label_template_id])
 
     label_code = LabelTemplates::RepositoryRowService.new(label_template, @repository_row.first).render
-    render json: { label_code: label_code }
-  rescue StandardError => e
-    label_code = LabelTemplates::RepositoryRowService.new(label_template, @repository_row.first, true).render
-    render json: { error: e, label_code: label_code }, status: :unprocessable_entity
+    if label_code[:error].empty?
+      render json: { label_code: label_code[:label] }
+    else
+      render json: { error: label_code[:error].first, label_code: label_code[:label] }, status: :unprocessable_entity
+    end
   end
 
   def print_zpl
     label_template = LabelTemplate.find_by(id: params[:label_template_id])
     labels = @repository_row.flat_map do |repository_row|
       LabelTemplates::RepositoryRowService.new(label_template,
-                                               repository_row,
-                                               true).render
+                                               repository_row).render[:label]
     end
 
     render(
@@ -128,8 +128,7 @@ class RepositoryRowsController < ApplicationController
       LabelPrinters::PrintJob.perform_later(
         label_printer,
         LabelTemplates::RepositoryRowService.new(label_template,
-                                                 repository_row,
-                                                 true).render,
+                                                 repository_row).render[:label],
         params[:copies].to_i
       ).job_id
     end
