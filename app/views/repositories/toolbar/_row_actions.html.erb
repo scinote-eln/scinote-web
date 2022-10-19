@@ -64,8 +64,8 @@
     </button>
   </span>
 <% elsif @repository.shared_with_read?(current_team) %>
-  <%= render partial: 'repositories/toolbar/print_label_button' %>
   <p class="view-only-label"><%= t('repositories.index.view_only_permission_label') %></p>
+  <%= render partial: 'repositories/toolbar/print_label_button' %>
 <% elsif can_read_repository?(@repository) %>
   <%= render partial: 'repositories/toolbar/print_label_button' %>
 <% end %>
