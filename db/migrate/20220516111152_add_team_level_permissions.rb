@@ -118,15 +118,9 @@ class AddTeamLevelPermissions < ActiveRecord::Migration[6.1]
           user_assignments << new_user_assignment(user_team.user, repository, user_role, :automatically)
         end
         user_team.team.repository_protocols.each do |protocol|
-          if protocol.in_repository_private? && user_team.user_id == protocol.added_by_id
+          if user_team.user_id == protocol.added_by_id
             user_assignments << new_user_assignment(user_team.user, protocol, @owner_role, :automatically)
-          elsif protocol.in_repository_archived?
-            if user_team.user_id == protocol.added_by_id
-              user_assignments << new_user_assignment(user_team.user, protocol, @owner_role, :automatically)
-            elsif protocol.published_on.present?
-              user_assignments << new_user_assignment(user_team.user, protocol, @viewer_role, :automatically)
-            end
-          elsif protocol.in_repository_public?
+          elsif (protocol.in_repository_archived? && protocol.published_on.present?) || protocol.in_repository_public?
             user_assignments << new_user_assignment(user_team.user, protocol, @viewer_role, :automatically)
           end
         end
