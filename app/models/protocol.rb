@@ -8,6 +8,7 @@ class Protocol < ApplicationRecord
   include PermissionCheckableModel
   include TinyMceImages
 
+  after_update :update_user_assignments, if: -> { saved_change_to_protocol_type? && in_repository? }
   after_destroy :decrement_linked_children
   after_save :update_linked_children
   skip_callback :create, :after, :create_users_assignments, if: -> { in_module? }
@@ -657,7 +658,28 @@ class Protocol < ApplicationRecord
     steps.map(&:can_destroy?).all?
   end
 
+  def add_team_users_as_viewers!(assigned_by)
+    viewer_role = UserRole.find_predefined_viewer_role
+    team.user_assignments.where.not(user: assigned_by).find_each do |user_assignment|
+      new_user_assignment = UserAssignment.find_or_initialize_by(user: user_assignment.user, assignable: self)
+      new_user_assignment.user_role = viewer_role
+      new_user_assignment.assigned_by = assigned_by
+      new_user_assignment.assigned = :automatically
+      new_user_assignment.save!
+    end
+  end
+
   private
+
+  def update_user_assignments
+    case protocol_type
+    when 'in_repository_public'
+      assigned_by = protocol_type_was == 'in_repository_archived' && restored_by || added_by
+      add_team_users_as_viewers!(assigned_by)
+    when 'in_repository_private', 'in_repository_archived'
+      automatic_user_assignments.where.not(user: added_by).destroy_all
+    end
+  end
 
   def deep_clone(clone, current_user)
     # Save cloned protocol first

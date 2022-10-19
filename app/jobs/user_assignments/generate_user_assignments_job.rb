@@ -14,6 +14,8 @@ module UserAssignments
           assign_users_to_my_module(object)
         when Repository
           assign_users_to_repository(object)
+        when Protocol
+          assign_users_to_protocol(object)
         end
       end
     end
@@ -39,6 +41,12 @@ module UserAssignments
       team.user_assignments.find_each do |user_assignment|
         create_or_update_user_assignment(user_assignment, repository)
       end
+    end
+
+    def assign_users_to_protocol(protocol)
+      return unless protocol.in_repository_public?
+
+      protocol.add_team_users_as_viewers!(@assigned_by)
     end
 
     def create_or_update_user_assignment(parent_user_assignment, object)
