@@ -60,7 +60,7 @@ module LabelTemplates
       when 'ADDED_BY'
         @repository_row.created_by.full_name
       when 'ADDED_ON'
-        @repository_row.created_at.to_s
+        I18n.l(@repository_row.created_at, format: :full)
       when 'LOGO'
         logo
       else
