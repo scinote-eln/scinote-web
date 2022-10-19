@@ -10,23 +10,23 @@ module LabelTemplates
 
     MAX_PRINTABLE_ITEM_NAME_LENGTH = 64
 
-    def initialize(label_template, repository_row, print_mode=false)
+    def initialize(label_template, repository_row)
       @label_template = label_template
       @repository_row = repository_row
-      @print_mode = print_mode
       @repository_columns = RepositoryColumn.where(repository_id: @repository_row.repository_id).pluck(:name)
     end
 
     def render
+      errors = []
       keys = @label_template.content.scan(/(?<=\{\{).*?(?=\}\})/).uniq
-
-      keys.reduce(@label_template.content.dup) do |rendered_content, key|
+      label = keys.reduce(@label_template.content.dup) do |rendered_content, key|
         rendered_content.gsub!(/\{\{#{key}\}\}/, fetch_value(key))
       rescue ColumnNotFoundError, LogoNotFoundError => e
-        raise e unless @print_mode
-
+        errors.push(e)
         rendered_content
       end
+
+      { label: label, error: errors }
     end
 
     private
@@ -51,8 +51,6 @@ module LabelTemplates
         unless @repository_columns.include?(name)
           raise ColumnNotFoundError, I18n.t('label_templates.repository_row.errors.column_not_found')
         end
-
-        return '' unless @print_mode
 
         fetch_custom_column_value(name)
       when 'ITEM_ID'
