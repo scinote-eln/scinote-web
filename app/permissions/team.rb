@@ -72,9 +72,7 @@ end
 Canaid::Permissions.register_for(Protocol) do
   # protocol in repository: read, export, read step, read/download step asset
   can :read_protocol_in_repository do |user, protocol|
-    user.member_of_team?(protocol.team) &&
-      (protocol.in_repository_public? ||
-      protocol.in_repository_private? && user == protocol.added_by)
+    protocol.in_repository_active? && protocol.permission_granted?(user, ProtocolPermissions::READ)
   end
 
   # protocol in repository: update, create/update/delete/reorder step,
