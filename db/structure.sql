@@ -50,8 +50,6 @@ CREATE FUNCTION public.trim_html_tags(input text, OUT output text) RETURNS text
 
 SET default_tablespace = '';
 
-SET default_table_access_method = heap;
-
 --
 -- Name: active_storage_attachments; Type: TABLE; Schema: public; Owner: -
 --
@@ -3199,7 +3197,8 @@ CREATE TABLE public.users (
     otp_recovery_codes jsonb,
     failed_attempts integer DEFAULT 0 NOT NULL,
     locked_at timestamp without time zone,
-    unlock_token character varying
+    unlock_token character varying,
+    qr_auth_code character varying
 );
 
 
@@ -5500,6 +5499,13 @@ CREATE INDEX index_projects_on_last_modified_by_id ON public.projects USING btre
 --
 
 CREATE INDEX index_projects_on_name ON public.projects USING gin (public.trim_html_tags((name)::text) public.gin_trgm_ops);
+
+
+--
+-- Name: index_projects_on_project_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_projects_on_project_code ON public.projects USING gin ((('PR'::text || id)) public.gin_trgm_ops);
 
 
 --
@@ -8564,6 +8570,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220726133419'),
 ('20220803122405'),
 ('20220818094636'),
-('20220914124900');
+('20220913100826'),
+('20220914124900'),
+('20221020091336');
 
 
