@@ -70,6 +70,10 @@
     justify-content: center;
     min-height: 200px;
     padding: .5em 0;
+
+    img {
+      max-width: 100%;
+    }
   }
 
   .label-template-option {
