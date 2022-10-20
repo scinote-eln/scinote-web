@@ -130,6 +130,14 @@
       },
       zpl() {
         this.refreshPreview();
+      },
+      template() {
+        this.width = this.template.attributes.unit == 'in' ? this.template.attributes.width_mm / 25.4 : this.template.attributes.width_mm
+        this.height = this.template.attributes.unit == 'in' ? this.template.attributes.height_mm / 25.4 : this.template.attributes.height_mm
+        this.unit = this.template.attributes.unit
+        this.density = this.template.attributes.density
+
+        this.refreshPreview()
       }
     },
     methods: {
