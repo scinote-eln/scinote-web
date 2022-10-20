@@ -85,7 +85,8 @@ class Report < ApplicationRecord
   end
 
   def self.viewable_by_user(user, teams)
-    where(project: Project.viewable_by_user(user, teams))
+    with_granted_permissions(user, ReportPermissions::READ)
+      .where(project: Project.viewable_by_user(user, teams))
   end
 
   def self.filter_by_teams(teams = [])

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 module UserAssignments
-  class UpdateTeamUserAssignmentService
-    def initialize(user, team, user_role)
-      @user = user
-      @team = team
+  class UpdateTeamUserAssignmentsService
+    def initialize(team_user_assignment)
+      @user = team_user_assignment.user
+      @team = team_user_assignment.assignable
       @user_role = user_role
     end
 
@@ -34,7 +34,7 @@ module UserAssignments
            .where(automatic_user_assignments: { user: @user })
            .find_each do |report|
         report.automatic_user_assignments
-              .select { |assignment| assignment.user_id == @user.id && assignment.automatically_assigned? }
+              .select { |assignment| assignment.user_id == @user.id }
               .each { |assignment| assignment.update!(user_role: @user_role) }
       end
     end

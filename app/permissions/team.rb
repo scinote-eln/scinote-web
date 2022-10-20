@@ -94,11 +94,11 @@ end
 
 Canaid::Permissions.register_for(Report) do
   can :read_report do |user, report|
-    report.permission_granted?(user, ReportPermissions::READ)
+    can_read_project?(report.project) && report.permission_granted?(user, ReportPermissions::READ)
   end
 
   can :manage_report do |user, report|
-    report.permission_granted?(user, ReportPermissions::MANAGE)
+    can_read_project?(report.project) && report.permission_granted?(user, ReportPermissions::MANAGE)
   end
 
   can :manage_report_users do |user, report|

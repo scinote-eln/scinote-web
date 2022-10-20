@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 module UserAssignments
-  class RemoveTeamUserAssignmentJob < ApplicationJob
+  class RemoveTeamUserAssignmentsJob < ApplicationJob
     queue_as :high_priority
 
     def perform(user, team)
       ActiveRecord::Base.transaction do
-        RemoveTeamUserAssignmentService.new(user, team).call
+        RemoveTeamUserAssignmentsService.new(user, team).call
       end
     end
   end
