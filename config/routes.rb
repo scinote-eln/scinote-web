@@ -19,7 +19,7 @@ Rails.application.routes.draw do
 
     root 'dashboards#show'
 
-    get 'qrcode', to: 'qr_auth#index'
+    get 'qr_auth', to: 'qr_auth#index'
     resources :activities, only: [:index]
 
     get '/jobs/:id/status', to: 'active_jobs#status'

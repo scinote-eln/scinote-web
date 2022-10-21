@@ -6,6 +6,10 @@ end
 
 MyModuleStatusFlow.ensure_default
 
+if Doorkeeper::Application.count.zero?
+  Doorkeeper::Application.create!(name: 'QR Authentication POC', redirect_uri: 'urn:ietf:wg:oauth:2.0:oob', scopes: '')
+end
+
 if User.count.zero?
   if ENV['ADMIN_NAME'].present? &&
      ENV['ADMIN_EMAIL'].present? &&
