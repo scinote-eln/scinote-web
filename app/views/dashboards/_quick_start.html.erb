@@ -1,7 +1,7 @@
 <div class="quick-start-buttons">
   <div class="new-task btn btn-secondary"><i class="fas fa-plus"></i><%= t("dashboard.quick_start.new_task") %></div>
   <% if can_create_protocols_in_repository?(current_team) %>
-    <%= link_to protocols_path, {class: "new-protocol btn btn-secondary"} do %>
+    <%= button_to protocols_path(type: :public), class: 'btn btn-secondary' do %>
       <i class="fas fa-edit"></i><%= t("dashboard.quick_start.new_protocol") %>
     <% end %>
   <% end %>
