@@ -1,6 +1,6 @@
 $(document).on('turbolinks:load', function() {
   $.each($('input[type="password"]'), function(i, e) {
-    $('<i class="fas fa-eye show-password" title="show password eye icon" style="cursor: pointer; z-index: 10"></i>').insertAfter(e);
+    $('<i class="fas fa-eye show-password" style="cursor: pointer; z-index: 10"></i>').prop("title", `show password eye icon for ${e.title}`).insertAfter(e);
     $(e).parent().addClass('right-icon');
   });
 });
