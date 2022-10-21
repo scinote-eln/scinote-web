@@ -4,12 +4,6 @@ Rails.application.routes.draw do
   end
 
   # Addons
-  mount Scinote::Common::Engine => '/'
-  mount Scinote::Enterprise::ElectronicSignatures::Engine => '/'
-  mount Scinote::Enterprise::OrganizationManagement::Engine => '/'
-  #mount Scinote::Core::Gamification::Engine => '/'
-  #mount Scinote::Core::Billing::Engine => '/'
-  mount Scinote::Enterprise::AuditTrails::Engine => '/'
 
   def draw(routes_name)
     instance_eval(File.read(Rails.root.join("config/routes/#{routes_name}.rb")))
