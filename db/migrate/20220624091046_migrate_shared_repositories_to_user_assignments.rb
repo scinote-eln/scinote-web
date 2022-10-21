@@ -9,43 +9,25 @@ class MigrateSharedRepositoriesToUserAssignments < ActiveRecord::Migration[6.1]
   end
 
   def up
-    viewer_role = UserRole.find_by(name: UserRole.public_send('viewer_role').name)
-    normal_user_role = UserRole.find_by(name: UserRole.public_send('normal_user_role').name)
-
     TeamRepository.where(permission_level: %i(shared_read shared_write))
                   .preload(:team, :repository)
                   .find_each do |team_repository|
-      user_role = if team_repository.shared_read?
-                    viewer_role
-                  elsif team_repository.shared_write?
-                    normal_user_role
-                  end
-
-      team_repository.team.users.find_in_batches(batch_size: 100) do |users_batch|
-        user_assignments = []
-        users_batch.each do |user|
-          user_assignments << UserAssignment.new(user: user, assignable: team_repository.repository,
-                                                 user_role: user_role, team: team_repository.team)
-        end
-        UserAssignment.import(user_assignments)
+      team_repository.team
+                     .user_assignments
+                     .preload(:user, :user_role)
+                     .find_each do |user_assignment|
+        UserAssignment.create!(user: user_assignment.user, assignable: team_repository.repository,
+                               user_role: user_assignment.user_role, team: team_repository.team)
       end
+    end
 
-      Repository.globally_shared.find_each do |repository|
-        user_role = if repository.shared_read?
-                      viewer_role
-                    elsif repository.shared_write?
-                      normal_user_role
-                    end
-
-        Team.where.not(id: repository.team.id).find_each do |team|
-          team.users.find_in_batches(batch_size: 100) do |users_batch|
-            user_assignments = []
-            users_batch.each do |user|
-              user_assignments << UserAssignment.new(user: user, assignable: repository,
-                                                     user_role: user_role, team: team)
-            end
-            UserAssignment.import(user_assignments)
-          end
+    Repository.globally_shared.find_each do |repository|
+      Team.where.not(id: repository.team.id).find_each do |team|
+        team.user_assignments
+            .preload(:user, :user_role)
+            .find_each do |user_assignment|
+          UserAssignment.create!(user: user_assignment.user, assignable: repository,
+                                 user_role: user_assignment.user_role, team: team)
         end
       end
     end

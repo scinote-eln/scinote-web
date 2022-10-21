@@ -32,15 +32,12 @@ class TeamSharedObject < ApplicationRecord
   def not_globally_shared
     errors.add(:shared_object_id, :is_globally_shared) if shared_object.globally_shared?
   end
-  
-  def assign_shared_inventories
-    viewer_role = UserRole.find_by(name: UserRole.public_send('viewer_role').name)
-    normal_user_role = UserRole.find_by(name: UserRole.public_send('normal_user_role').name)
 
-    team.users.find_each do |user|
+  def assign_shared_inventories
+    team.user_assignments.find_each do |user_assignment|
       shared_object.user_assignments.create!(
-        user: user,
-        user_role: shared_write? ? normal_user_role : viewer_role,
+        user: user_assignment.user,
+        user_role: user_assignment.user_role,
         team: team
       )
     end

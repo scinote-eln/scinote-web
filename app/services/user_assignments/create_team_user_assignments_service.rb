@@ -8,7 +8,6 @@ module UserAssignments
       @user_role = team_user_assignment.user_role
       @assigned_by = team_user_assignment.assigned_by
       @viewer_role = UserRole.find_predefined_viewer_role
-      @normal_user_role = UserRole.find_predefined_normal_user_role
     end
 
     def call
@@ -38,16 +37,18 @@ module UserAssignments
       @team.team_shared_repositories.find_each do |team_shared_repository|
         @team.repository_sharing_user_assignments.create!(
           user: @user,
-          user_role: team_shared_repository.shared_write? ? @normal_user_role : @viewer_role,
-          assignable: team_shared_repository.shared_object
+          user_role: @user_role,
+          assignable: team_shared_repository.shared_object,
+          assigned: :automatically
         )
       end
 
       Repository.globally_shared.where.not(team: @team).find_each do |repository|
         @team.repository_sharing_user_assignments.create!(
           user: @user,
-          user_role: repository.shared_write? ? @normal_user_role : @viewer_role,
-          assignable: repository
+          user_role: @user_role,
+          assignable: repository,
+          assigned: :automatically
         )
       end
     end
