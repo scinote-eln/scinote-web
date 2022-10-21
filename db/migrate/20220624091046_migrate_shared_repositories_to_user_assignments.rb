@@ -12,6 +12,8 @@ class MigrateSharedRepositoriesToUserAssignments < ActiveRecord::Migration[6.1]
     TeamRepository.where(permission_level: %i(shared_read shared_write))
                   .preload(:team, :repository)
                   .find_each do |team_repository|
+      next if team_repository.repository.blank?
+
       team_repository.team
                      .user_assignments
                      .preload(:user, :user_role)

@@ -4,9 +4,9 @@ module UserAssignments
   class RemoveTeamUserAssignmentsJob < ApplicationJob
     queue_as :high_priority
 
-    def perform(user, team)
+    def perform(team_user_assignment)
       ActiveRecord::Base.transaction do
-        RemoveTeamUserAssignmentsService.new(user, team).call
+        RemoveTeamUserAssignmentsService.new(team_user_assignment).call
       end
     end
   end

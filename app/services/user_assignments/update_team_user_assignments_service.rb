@@ -5,7 +5,7 @@ module UserAssignments
     def initialize(team_user_assignment)
       @user = team_user_assignment.user
       @team = team_user_assignment.assignable
-      @user_role = user_role
+      @user_role = team_user_assignment.user_role
     end
 
     def call
