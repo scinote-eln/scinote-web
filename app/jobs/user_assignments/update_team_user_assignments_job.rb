@@ -4,9 +4,9 @@ module UserAssignments
   class UpdateTeamUserAssignmentsJob < ApplicationJob
     queue_as :high_priority
 
-    def perform(user, team, user_role)
+    def perform(team_user_assignment)
       ActiveRecord::Base.transaction do
-        UpdateTeamUserAssignmentsService.new(user, team, user_role).call
+        UpdateTeamUserAssignmentsService.new(team_user_assignment).call
       end
     end
   end
