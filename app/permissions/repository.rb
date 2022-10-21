@@ -30,7 +30,7 @@ Canaid::Permissions.register_for(Repository) do
      delete_repository_rows)
     .each do |perm|
     can perm do |user, repository|
-      next false if repository.shared_with?(user.current_team) && !repository.shared_with_write?(user.current_team)
+      repository.shared_with?(user.current_team) ? repository.shared_with_write?(user.current_team) : true
     end
   end
 
