@@ -11,43 +11,50 @@
       </div>
     </div>
     <div v-if="!viewOnly" class="label-preview__controls" :class="{'open': optionsOpen}">
-      <div class="label-preview__controls__units">
-        <div class="sci-input-container">
-          <label>{{ i18n.t('label_templates.label_preview.units') }}</label>
-          <DropdownSelector
-            :disableSearch="true"
-            :options="[{ value: 'in', label: i18n.t(`label_templates.label_preview.in`) }, { value: 'mm', label: i18n.t(`label_templates.label_preview.mm`) }]"
-            :selectorId="'UnitSelector'"
-            :selectedValue="unit"
-            @dropdown:changed="updateUnit" />
-        </div>
-      </div>
-      <div class="label-preview__controls__size">
-        <div class="sci-input-container">
-          <label>{{ i18n.t('label_templates.label_preview.height') }}</label>
-          <input v-model="height" type="number" class="sci-input-field"
-                 @change="$emit('height:update', (unit === 'in' ? height * 25.4 : height))"  />
-        </div>
-        <div class="sci-input-container">
-          <label>{{ i18n.t('label_templates.label_preview.width') }}</label>
-          <input v-model="width" type="number" class="sci-input-field"
-                 @change="$emit('width:update', (unit === 'in' ? width * 25.4 : width))" />
-        </div>
-        <div class="sci-input-container">
-          <label>{{ i18n.t('label_templates.label_preview.density') }}</label>
-          <DropdownSelector
-              v-if="density"
-              :key="unit"
+      <div v-if="canManage">
+        <div class="label-preview__controls__units">
+          <div class="sci-input-container">
+            <label>{{ i18n.t('label_templates.label_preview.units') }}</label>
+            <DropdownSelector
               :disableSearch="true"
-              :options="unit === 'in' ? DPI_RESOLUTION_OPTIONS : DPMM_RESOLUTION_OPTIONS"
-              :selectorId="'DensitySelector'"
-              :selectedValue="density"
-              @dropdown:changed="updateDensity" />
+              :options="[{ value: 'in', label: i18n.t(`label_templates.label_preview.in`) }, { value: 'mm', label: i18n.t(`label_templates.label_preview.mm`) }]"
+              :selectorId="'UnitSelector'"
+              :selectedValue="unit"
+              @dropdown:changed="updateUnit" />
+          </div>
+        </div>
+        <div class="label-preview__controls__size">
+          <div class="sci-input-container">
+            <label>{{ i18n.t('label_templates.label_preview.height') }}</label>
+            <input v-model="height" type="number" class="sci-input-field"
+                  @change="$emit('height:update', (unit === 'in' ? height * 25.4 : height))"  />
+          </div>
+          <div class="sci-input-container">
+            <label>{{ i18n.t('label_templates.label_preview.width') }}</label>
+            <input v-model="width" type="number" class="sci-input-field"
+                  @change="$emit('width:update', (unit === 'in' ? width * 25.4 : width))" />
+          </div>
+          <div class="sci-input-container">
+            <label>{{ i18n.t('label_templates.label_preview.density') }}</label>
+            <DropdownSelector
+                v-if="density"
+                :key="unit"
+                :disableSearch="true"
+                :options="unit === 'in' ? DPI_RESOLUTION_OPTIONS : DPMM_RESOLUTION_OPTIONS"
+                :selectorId="'DensitySelector'"
+                :selectedValue="density"
+                @dropdown:changed="updateDensity" />
+          </div>
+        </div>
+        <div class="label-preview__refresh" @click="refreshPreview">
+          <i class="fas fa-sync"></i>
+          {{ i18n.t('label_templates.label_preview.refresh_preview') }}
         </div>
       </div>
-      <div class="label-preview__refresh" @click="refreshPreview">
-        <i class="fas fa-sync"></i>
-        {{ i18n.t('label_templates.label_preview.refresh_preview') }}
+      <div v-else>
+        <div>{{ i18n.t('label_templates.label_preview.height') }}: {{ height }} {{ unit }} </div>
+        <div>{{ i18n.t('label_templates.label_preview.width') }}: {{ width }} {{ unit }} </div>
+        <div>{{ i18n.t('label_templates.label_preview.density') }}: {{ densityLabel() }}</div>
       </div>
     </div>
     <div v-if="base64Image" class="label-preview__image">
@@ -94,19 +101,16 @@
         DPMM_RESOLUTION_OPTIONS,
         DPI_RESOLUTION_OPTIONS,
         optionsOpen: false,
-        width: 2,
-        height: 1,
-        unit: 'in',
-        density: 8,
+        width: this.template.attributes.unit == 'in' ? this.template.attributes.width_mm / 25.4 : this.template.attributes.width_mm ,
+        height: this.template.attributes.unit == 'in' ? this.template.attributes.height_mm / 25.4 : this.template.attributes.height_mm,
+        unit: this.template.attributes.unit,
+        density: this.template.attributes.density,
         base64Image: null,
         imageStyle: ''
       }
     },
     mounted() {
       this.refreshPreview();
-      this.width = this.template.attributes.width_mm
-      this.height = this.template.attributes.height_mm
-      if (this.width && this.height) this.recalculateUnits();
     },
     computed: {
       widthMm() {
@@ -114,6 +118,9 @@
       },
       heightMm() {
         return this.unit === 'in' ? this.height * 25.4 : this.height;
+      },
+      canManage() {
+        return this.template.attributes.urls.update;
       }
     },
     watch: {
@@ -123,12 +130,20 @@
       },
       zpl() {
         this.refreshPreview();
+      },
+      template() {
+        this.width = this.template.attributes.unit == 'in' ? this.template.attributes.width_mm / 25.4 : this.template.attributes.width_mm
+        this.height = this.template.attributes.unit == 'in' ? this.template.attributes.height_mm / 25.4 : this.template.attributes.height_mm
+        this.unit = this.template.attributes.unit
+        this.density = this.template.attributes.density
+
+        this.refreshPreview()
       }
     },
     methods: {
       setDefaults() {
         !this.unit && (this.unit = 'in');
-        !this.density && (this.density = 8);
+        !this.density && (this.density = 12);
         !this.width && (this.width = this.unit === 'in' ? 2 : 50.8);
         !this.height && (this.height = this.unit === 'in' ? 1 : 25.4);
       },
@@ -170,9 +185,17 @@
       },
       updateUnit(unit) {
         this.unit = unit;
+        this.$emit('unit:update', this.unit);
       },
       updateDensity(density) {
         this.density = density;
+        this.$emit('density:update', this.density);
+      },
+      densityLabel() {
+        let resolutions = this.unit === 'in' ? DPI_RESOLUTION_OPTIONS :  DPMM_RESOLUTION_OPTIONS;
+        return resolutions.find(element => {
+          return element.value === this.density;
+        }).label;
       }
     }
   }

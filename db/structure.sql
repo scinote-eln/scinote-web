@@ -707,7 +707,10 @@ CREATE TABLE public.label_templates (
     team_id bigint,
     type character varying,
     width_mm double precision,
-    height_mm double precision
+    height_mm double precision,
+    height_mm double precision,
+    unit integer DEFAULT 0,
+    density integer DEFAULT 12
 );
 
 
@@ -8564,6 +8567,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220803122405'),
 ('20220818094636'),
 ('20220914124900'),
+('20221007113010');
 ('20221020091336');
 
 

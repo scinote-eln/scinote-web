@@ -53,8 +53,20 @@ class UserRole < ApplicationRecord
     predefined.find_by(name: UserRole.public_send('owner_role').name)
   end
 
+  def self.find_predefined_normal_user_role
+    predefined.find_by(name: UserRole.public_send('normal_user_role').name)
+  end
+
+  def self.find_predefined_viewer_role
+    predefined.find_by(name: UserRole.public_send('viewer_role').name)
+  end
+
   def owner?
-    name == I18n.t('user_roles.predefined.owner')
+    predefined? && name == I18n.t('user_roles.predefined.owner')
+  end
+
+  def viewer?
+    predefined? && name == I18n.t('user_roles.predefined.viewer')
   end
 
   private

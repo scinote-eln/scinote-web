@@ -7,7 +7,7 @@ class MyModuleTagsController < ApplicationController
 
   def index_edit
     @my_module_tags = @my_module.my_module_tags.order(:id)
-    @unassigned_tags = @my_module.unassigned_tags
+    @unassigned_tags = @my_module.unassigned_tags.order(:id)
     @new_mmt = MyModuleTag.new(my_module: @my_module)
     @new_tag = Tag.new(project: @my_module.experiment.project)
 

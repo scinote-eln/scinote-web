@@ -110,20 +110,17 @@ class AddTeamLevelPermissions < ActiveRecord::Migration[6.1]
               .find_in_batches(batch_size: 100) do |user_team_batch|
       user_assignments = []
       user_team_batch.each do |user_team|
-        user_assignments << new_user_assignment(user_team.user, user_team.team, user_role, :manually)
+        team_user_assignment = new_user_assignment(user_team.user, user_team.team, user_role, :manually)
+        team_user_assignment.assign_attributes(created_at: user_team.created_at,
+                                               updated_at: user_team.updated_at)
+        user_assignments << team_user_assignment
         user_team.team.repositories.each do |repository|
           user_assignments << new_user_assignment(user_team.user, repository, user_role, :automatically)
         end
         user_team.team.repository_protocols.each do |protocol|
-          if protocol.in_repository_private? && user_team.user_id == protocol.added_by_id
+          if user_team.user_id == protocol.added_by_id
             user_assignments << new_user_assignment(user_team.user, protocol, @owner_role, :automatically)
-          elsif protocol.in_repository_archived?
-            if user_team.user_id == protocol.added_by_id
-              user_assignments << new_user_assignment(user_team.user, protocol, @owner_role, :automatically)
-            elsif protocol.published_on.present?
-              user_assignments << new_user_assignment(user_team.user, protocol, @viewer_role, :automatically)
-            end
-          elsif protocol.in_repository_public?
+          elsif (protocol.in_repository_archived? && protocol.published_on.present?) || protocol.in_repository_public?
             user_assignments << new_user_assignment(user_team.user, protocol, @viewer_role, :automatically)
           end
         end

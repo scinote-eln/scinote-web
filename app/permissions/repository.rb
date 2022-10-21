@@ -24,6 +24,16 @@ Canaid::Permissions.register_for(Repository) do
     end
   end
 
+  %i(create_repository_rows
+     manage_repository_rows
+     manage_repository_assets
+     delete_repository_rows)
+    .each do |perm|
+    can perm do |user, repository|
+      next false if repository.shared_with?(user.current_team) && !repository.shared_with_write?(user.current_team)
+    end
+  end
+
   # repository: update, delete
   can :manage_repository do |user, repository|
     !repository.shared_with?(user.current_team) && repository.permission_granted?(user, RepositoryPermissions::MANAGE)
@@ -61,12 +71,7 @@ Canaid::Permissions.register_for(Repository) do
     next false if repository.is_a?(BmtRepository)
     next false if repository.archived?
 
-    if repository.shared_with?(user.current_team)
-      repository.shared_with_write?(user.current_team) &&
-        repository.permission_granted?(user, RepositoryPermissions::ROWS_CREATE)
-    else
-      repository.permission_granted?(user, RepositoryPermissions::ROWS_CREATE)
-    end
+    repository.permission_granted?(user, RepositoryPermissions::ROWS_CREATE)
   end
 
   can :manage_repository_assets do |user, repository|

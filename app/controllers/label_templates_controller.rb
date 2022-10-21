@@ -31,7 +31,6 @@ class LabelTemplatesController < ApplicationController
       format.json do
         render json: ::LabelTemplateDatatable.new(
           view_context,
-          can_manage_label_templates?(current_team),
           @label_templates
         )
       end
@@ -144,7 +143,7 @@ class LabelTemplatesController < ApplicationController
     sync_service = LabelPrinters::Fluics::SyncService.new(current_user, current_team)
     sync_service.sync_templates!
     render json: { message: t('label_templates.fluics.sync.success') }
-  rescue ActiveRecord::RecordInvalid => e
+  rescue StandardError => e
     Rails.logger.error e.message
     render json: { error: t('label_templates.fluics.sync.error') }, status: :unprocessable_entity
   end
@@ -172,7 +171,7 @@ class LabelTemplatesController < ApplicationController
   end
 
   def label_template_params
-    params.require(:label_template).permit(:name, :description, :content, :width_mm, :height_mm)
+    params.require(:label_template).permit(:name, :description, :content, :width_mm, :height_mm, :unit, :density)
   end
 
   def log_activity(type_of, label_template = @label_template, message_items: {})

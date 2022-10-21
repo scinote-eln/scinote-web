@@ -23,10 +23,10 @@
     return uniqueFormats[0];
   }
 
-  function renderCheckboxHTML(data, type, row) {
+  function renderCheckboxHTML(data) {
     return `<div class="sci-checkbox-container">
               <input type="checkbox" class="sci-checkbox label-row-checkbox" data-action='toggle'
-               data-label-template-id="${data}" ${row.manage_permission ? '' : 'disabled'}>
+               data-label-template-id="${data}">
               <span class="sci-checkbox-label"></span>
             </div>`;
   }
@@ -113,7 +113,18 @@
     });
   }
 
-  function tableDrowCallback() {
+  function initRefreshFluicsButton() {
+    $('#syncFluicsTemplates').on('click', function() {
+      $.post(this.dataset.url, function(response) {
+        reloadTable();
+        HelperModule.flashAlertMsg(response.message, 'success');
+      }).error((response) => {
+        HelperModule.flashAlertMsg(response.responseJSON.error, 'danger');
+      });
+    });
+  }
+
+  function tableDrawCallback() {
     initToggleAllCheckboxes();
     initRowSelection();
   }
@@ -256,7 +267,7 @@
       oLanguage: {
         sSearch: I18n.t('general.filter')
       },
-      fnDrawCallback: tableDrowCallback,
+      fnDrawCallback: tableDrawCallback,
       createdRow: addAttributesToRow,
       fnInitComplete: function() {
         DataTableHelpers.initLengthAppearance($table.closest('.dataTables_wrapper'));
@@ -272,6 +283,7 @@
         initSetDefaultButton();
         initDuplicateButton();
         initDeleteModal();
+        initRefreshFluicsButton();
       }
     });
   }

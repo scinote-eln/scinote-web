@@ -7,6 +7,8 @@ class LabelTemplate < ApplicationRecord
   belongs_to :created_by, class_name: 'User', optional: true
   belongs_to :last_modified_by, class_name: 'User', optional: true
 
+  enum unit: { in: 0, mm: 1 }
+
   validates :name, presence: true, length: { minimum: Constants::NAME_MIN_LENGTH,
                                              maximum: Constants::NAME_MAX_LENGTH }
   validates :content, presence: true
