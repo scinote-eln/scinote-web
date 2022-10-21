@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module UserAssignments
-  class GroupUnAssignmentJob < ApplicationJob
+  class ProjectGroupUnAssignmentJob < ApplicationJob
     queue_as :high_priority
 
     def perform(project)

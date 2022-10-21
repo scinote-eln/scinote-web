@@ -326,7 +326,7 @@ class Project < ApplicationRecord
   def auto_assign_project_members
     return if skip_user_assignments
 
-    UserAssignments::GroupAssignmentJob.perform_now(
+    UserAssignments::ProjectGroupAssignmentJob.perform_now(
       team,
       self,
       last_modified_by || created_by
@@ -345,7 +345,7 @@ class Project < ApplicationRecord
     if visible?
       auto_assign_project_members
     else
-      UserAssignments::GroupUnAssignmentJob.perform_now(self)
+      UserAssignments::ProjectGroupUnAssignmentJob.perform_now(self)
     end
   end
 end
