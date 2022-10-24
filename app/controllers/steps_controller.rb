@@ -7,7 +7,7 @@ class StepsController < ApplicationController
   before_action :load_vars, only: %i(update destroy show toggle_step_state update_view_state
                                      update_asset_view_mode elements
                                      attachments upload_attachment duplicate)
-  before_action :load_vars_nested, only:  %i(create index reorder)
+  before_action :load_vars_nested, only: %i(create index reorder)
   before_action :convert_table_contents_to_utf8, only: %i(create update)
 
   before_action :check_protocol_manage_permissions, only: %i(reorder)
