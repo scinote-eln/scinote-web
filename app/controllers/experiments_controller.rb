@@ -88,6 +88,17 @@ class ExperimentsController < ApplicationController
                                  .select('my_modules.*').group(:id)
   end
 
+  def table
+    redirect_to module_archive_experiment_path(@experiment) if @experiment.archived_branch?
+    @project = @experiment.project
+    @active_modules = @experiment.my_modules.active.order(:name)
+  end
+
+  def load_table
+    active_modules = @experiment.my_modules.active
+    render json: Experiments::TableViewService.new(active_modules).call
+  end
+
   def edit
     respond_to do |format|
       format.json do

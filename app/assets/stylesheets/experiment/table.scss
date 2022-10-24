@@ -1,0 +1,85 @@
+// scss-lint:disable SelectorDepth NestingDepth IdSelector
+
+#experimentTable {
+  .experiment-table-container {
+    margin-top: 1em;
+    overflow-x: scroll;
+  }
+
+  .experiment-table {
+    display: grid;
+    grid-auto-rows: 3em 1px;
+    grid-template-columns: max-content repeat(calc(var(--columns-count)), minmax(max-content, auto)) max-content;
+    min-width: 100%;
+
+    .table-header-cell {
+      align-items: center;
+      background-color: $color-concrete;
+      border: 1px solid $color-white;
+      display: flex;
+      height: 3em;
+      padding: 0 .5em;
+      //position: sticky;
+      //position: -webkit-sticky;
+      //top: calc(var(--content-header-size) + var(--navbar-height));
+      z-index: 2;
+
+      &.select-all-checkboxes {
+        justify-content: center;
+      }
+
+      .fa-comment {
+        color: $color-silver-chalice;
+      }
+    }
+
+    .table-header {
+      display: contents;
+
+      &::after {
+        content: "";
+        grid-column: 1/-1;
+      }
+    }
+
+    .table-body {
+      display: contents;
+    }
+
+    .table-body-cell {
+      align-items: center;
+      display: flex;
+      padding: 0 .5em;
+    }
+
+    .table-row {
+      display: contents;
+
+      &:hover {
+        .table-body-cell {
+          background-color: $color-concrete;
+        }
+      }
+
+      &::after {
+        background: $color-concrete;
+        content: "";
+        display: inline-block;
+        grid-column: 1/-1;
+        height: 1px;
+      }
+    }
+
+    .my-module-status {
+      color: $color-white;
+      display: inline-block;
+      margin: 3px 0;
+      max-width: 100%;
+      overflow: hidden;
+      padding: 2px 8px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+  }
+}

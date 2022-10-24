@@ -1292,6 +1292,18 @@ en:
       error_flash: ' Could not move the experiment. Experiment name is already in use. '
       task_permission: 'No permission: You don’t have edit access to all experiment tasks.'
       no_projects: 'No projects: You don’t have edit access to any other projects.'
+    table:
+      head_title: "%{experiment} | Overview"
+      column:
+        id_html: 'ID'
+        task_name_html: 'Task name'
+        due_date_html: 'Due date'
+        age_html: 'Age'
+        results_html: 'Results'
+        status_html: 'Status'
+        assigned_html: 'Assigned to'
+        tags_html: 'Tags'
+        comments_html: '<i class="fas fa-comment"></i>'
     canvas:
       archive_confirm: "Are you sure to archive this experiment?"
       actions: 'Experiment'
