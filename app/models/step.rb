@@ -125,24 +125,6 @@ class Step < ApplicationRecord
     st
   end
 
-  def asset_position(asset)
-    assets.order(:updated_at).each_with_index do |step_asset, i|
-      return { count: assets.count, pos: i } if asset.id == step_asset.id
-    end
-  end
-
-  def move_up
-    return if position.zero?
-
-    move_in_protocol(:up)
-  end
-
-  def move_down
-    return if position == protocol.steps.count - 1
-
-    move_in_protocol(:down)
-  end
-
   def comments
     step_comments
   end
@@ -193,32 +175,6 @@ class Step < ApplicationRecord
     end
   end
   private
-
-  def move_in_protocol(direction)
-    transaction do
-      re_index_following_steps
-
-      case direction
-      when :up
-        new_position = position - 1
-      when :down
-        new_position = position + 1
-      else
-        return
-      end
-
-      step_to_swap = protocol.steps.find_by(position: new_position)
-      position_to_swap = position
-
-      if step_to_swap
-        step_to_swap.update!(position: -1)
-        update!(position: new_position)
-        step_to_swap.update!(position: position_to_swap)
-      else
-        update!(position: new_position)
-      end
-    end
-  end
 
   def adjust_positions_after_destroy
     re_index_following_steps
