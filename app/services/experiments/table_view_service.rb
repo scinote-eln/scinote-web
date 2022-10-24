@@ -4,6 +4,9 @@ module Experiments
   class TableViewService
     include Rails.application.routes.url_helpers
     include ActionView::Helpers::DateHelper
+    include ProjectsHelper
+    include InputSanitizeHelper
+    include Canaid::Helpers::PermissionsHelper
 
     COLUMNS = %i(
       task_name
@@ -15,16 +18,20 @@ module Experiments
       assigned
       tags
       comments
-    ).freeze
+    )
 
-    PRELOAD = %i(
-      results
-      my_module_status
-    ).freeze
+    PRELOAD = {
+      results: {},
+      my_module_status: {},
+      tags: {},
+      task_comments: {},
+      user_assignments: :user
+    }
 
-    def initialize(my_modules, _page = 1)
+    def initialize(my_modules, user, page = 1)
       @my_modules = my_modules
-      @page = 1
+      @page = page
+      @user = user
     end
 
     def call
@@ -83,10 +90,34 @@ module Experiments
       }
     end
 
-    def assigned_presenter(my_module); end
+    def assigned_presenter(my_module)
+      user_assignments = my_module.user_assignments
+      result = {
+        count: user_assignments.length,
+        users: []
+      }
+      user_assignments[0..3].each do |ua|
+        result[:users].push({
+                              image_url: avatar_path(ua.user, :icon_small),
+                              title: user_name_with_role(ua)
+                            })
+      end
 
-    def tags_presenter(my_module); end
+      result[:more_users_title] = user_names_with_roles(user_assignments[4..].to_a) if user_assignments.length > 3
 
-    def comments_presenter(my_module); end
+      if can_manage_my_module_users?(@user, my_module)
+        result[:manage_url] = index_old_my_module_user_my_modules_url(my_module_id: my_module.id, format: :json)
+      end
+
+      result
+    end
+
+    def tags_presenter(my_module)
+      my_module.tags.length
+    end
+
+    def comments_presenter(my_module)
+      my_module.task_comments.length
+    end
   end
 end

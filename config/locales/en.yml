@@ -1304,6 +1304,7 @@ en:
         assigned_html: 'Assigned to'
         tags_html: 'Tags'
         comments_html: '<i class="fas fa-comment"></i>'
+      add_tag: '+ Add tag'
     canvas:
       archive_confirm: "Are you sure to archive this experiment?"
       actions: 'Experiment'
