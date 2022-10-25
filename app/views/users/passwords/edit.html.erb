@@ -6,7 +6,7 @@
   <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
 
     <% if resource.errors.present? %>
-      <div class="alert alert-danger" id="alert-flash">
+      <div class="alert alert-danger" id="alert-flash", title="<%= devise_error_messages! %>">
         <%= devise_error_messages! %>
       </div>
     <% end %>
@@ -18,16 +18,16 @@
       <% if @minimum_password_length %>
       <em><%= t("devise.passwords.edit.password_length", min_length: @minimum_password_length) %></em>
       <% end %><br />
-      <%= f.password_field :password, autofocus: true, autocomplete: "off", class: "sci-input-field" %>
+      <%= f.password_field :password, autofocus: true, autocomplete: "off", class: "sci-input-field", title: t("devise.passwords.edit.password") %>
     </p>
 
     <p class="sci-input-container">
       <%= f.label :password_confirmation, t("devise.passwords.edit.password_confirm") %>
-      <%= f.password_field :password_confirmation, autocomplete: "off", class: "sci-input-field" %>
+      <%= f.password_field :password_confirmation, autocomplete: "off", class: "sci-input-field", title: t("devise.passwords.edit.password_confirm") %>
     </p>
 
     <div class="form-group">
-      <%= f.button t("devise.passwords.edit.submit"), class: "btn btn-primary" %>
+      <%= f.button t("devise.passwords.edit.submit"), class: "btn btn-primary", title: t("devise.passwords.edit.submit") %>
     </div>
   <% end %>
 
