@@ -2,7 +2,7 @@
   <div ref="modal" class="modal fade" id="modal-print-repository-row-label" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
-        <div v-if="printers_dropdown.length > 0" class="printers-available">
+        <div v-if="availablePrinters.length > 0" class="printers-available">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <p class="modal-title">
@@ -24,7 +24,7 @@
               </label>
               <DropdownSelector
                 :disableSearch="true"
-                :options="printers_dropdown"
+                :options="availablePrinters"
                 :selectorId="`LabelPrinterSelector`"
                 @dropdown:changed="selectPrinter"
               />
@@ -38,7 +38,7 @@
               <DropdownSelector
                 ref="labelTemplateDropdown"
                 :disableSearch="true"
-                :options="templates_dropdown"
+                :options="availableTemplates"
                 :selectorId="`LabelTemplateSelector`"
                 :optionLabel="templateOption"
                 :onOpen="initTooltip"
@@ -138,7 +138,7 @@
       }
     },
     computed: {
-      templates_dropdown() {
+      availableTemplates() {
         let templates = this.templates;
         if (this.selectedPrinter && this.selectedPrinter.attributes.type_of === 'zebra') {
           templates = templates.filter(i => i.attributes.type === 'ZebraLabelTemplate')
@@ -155,7 +155,7 @@
           }
         })
       },
-      printers_dropdown() {
+      availablePrinters() {
         return this.printers.map(i => {
           return {
             value: i.id,
