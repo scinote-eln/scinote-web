@@ -16,7 +16,7 @@
       <h1 class="printer-title">
         <% if @printer_type == 'fluics' %>
           <%= t("users.settings.account.label_printer.fluics_printer") %>
-        <% elsif @printer_type == 'zebra' && Rails.configuration.x.zebra_print_enabled %>
+        <% elsif @printer_type == 'zebra' && LabelPrinter.zebra_print_enabled? %>
           <%= t("users.settings.account.label_printer.zebra_printer") %>
         <% end %>
       </h1>
@@ -25,7 +25,7 @@
 
   <% if @printer_type == 'fluics' %>
     <%= render "fluics_settings" %>
-  <% elsif @printer_type == 'zebra' && Rails.configuration.x.zebra_print_enabled %>
+  <% elsif @printer_type == 'zebra' && LabelPrinter.zebra_print_enabled? %>
      <%= render "zebra_settings" %>
   <% end %>
 </div>
