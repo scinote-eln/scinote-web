@@ -2273,11 +2273,26 @@ en:
             p4: "3. Enter the API key into the field below."
             p5: "4. SciNote will find your printer and connect to it automatically. You can start printing labels."
           zebra_instruction:
-            p1: 'To make it work, please follow these steps:'
-            p2_html: "1. Install the Zebra BROWSER PRINT application: <a href='%{link}' target='_blank'>official downloads page.</a>"
-            p3: '2. Install the printer drivers required by your operating system.'
-            p4: '3. Allow SciNote to connect to your Zebra printers.'
-            p5: 'Make sure that Zebra Connect shows the printer status as Connected.'
+            general_html: "Make sure your Zebra printer model is supported by Zebra Browser print technology on the official Zebra page: <a href='%{link}' target='_blank'>official Browser print page.</a>"
+            contact_html: "For more detailed instructions please check the <a href='%{link_blog}' target='_blank'>SciNote blog post</a> and <a href='%{link_zebra_support}' target='_blank'>Zebra printer support.</a>"
+            usb:
+              header: 'Connect a Zebra printer via USB cable'
+              p1: 'Make sure your Zebra printer is connected to power, turned on, and connected to the computer by USB cable.'
+              p2_html: "In order to print labels from SciNote, you need to download and install the Zebra Browser Print application according to your operating system: <a href='%{link}' target='_blank'>official downloads page.</a>. During installation, you might be prompted to install a specific Zebra printer driver."
+              p3: 'Update printers with the “Update printers” option on the right side of this SciNote screen.'
+              p4: 'Your Zebra printer should now be listed in SciNote.'
+              p5: 'Go to inventories, select a label template and start printing.'
+            network:
+              header: 'Connect a Zebra printer via network (LAN or WiFi)'
+              disclaimer: 'Some Zebra printers support connection via LAN or WiFi network. Check your printer documentation or official Zebra product page for this information.'
+              p1: 'Make sure your Zebra printer is connected to power and turned on.'
+              p2: 'Make sure your computer and Zebra printer are connected to the local network (by LAN or Wi-fi).'
+              p3_html: "In order to print labels from SciNote, you need to download the Zebra Browser Print application according to your operating system: <a href='%{link}' target='_blank'>official downloads page.</a>"
+              p4: 'Install the Zebra Browser Print application.'
+              p5: 'Open the Zebra Browser Print application and set the IP address and Port number of the printer. The printer IP address should be set as “Static” (you might need to contact your IT administrator for help).'
+              p6: 'Update printers with the “Update printers” option on the right side of this SciNote screen.'
+              p7: 'Your Zebra printer should now be listed in SciNote.'
+              p8: 'Go to inventories, set the label content, and start printing.'
           settings: "Settings"
           api_key_label: "API key"
           api_key_warning: "API key change will lead to printer list refresh"
