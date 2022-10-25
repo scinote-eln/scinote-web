@@ -1307,6 +1307,7 @@ en:
     canvas:
       archive_confirm: "Are you sure to archive this experiment?"
       actions: 'Experiment'
+      view: 'View'
       head_title: "%{project} | Overview"
       canvas_edit: "Edit workflow"
       zoom: "Zoom: "
