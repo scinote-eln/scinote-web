@@ -429,6 +429,8 @@ var dropdownSelector = (function() {
       }
     });
 
+    $('.dropdown-selector-container').prop('title', 'dropdown selector container button');
+
     // Add click event to input field
     dropdownContainer.find('.input-field').click(() => {
       // Now we can have only one dropdown opened at same time
@@ -544,8 +546,7 @@ var dropdownSelector = (function() {
       var customStyle = selector2.data('config').optionStyle;
 
       return $(`
-        <div class="dropdown-option ${customClass}" style="${customStyle ? customStyle(option) : ''}"
-          title="${(option.params && option.params.tooltip) || option.label || ''}"
+        <div title="${option.label}" class="dropdown-option ${customClass}" style="${customStyle ? customStyle(option) : ''}"
           data-params='${JSON.stringify(option.params || {})}'
           data-label="${option.label}"
           data-group="${group ? group.value : ''}"

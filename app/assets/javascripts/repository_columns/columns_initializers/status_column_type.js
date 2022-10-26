@@ -8,12 +8,12 @@ var RepositoryStatusColumnType = (function() {
   function statusTemplate() {
     return `
     <div class="status-item-container loading">
-      <div class="status-item-icon"></div>
+      <div title="status item icon" class="status-item-icon"></div>
       <input placeholder=${I18n.t('libraries.manange_modal_column.name_placeholder')}
              title="repository manage column modal status items input"
              class="status-item-field"
              type="text"/>
-      <span class="status-item-icon-trash fas fa-trash"></span>
+      <span title="status item icon trash" class="status-item-icon-trash fas fa-trash"></span>
     </div>`;
   }
 

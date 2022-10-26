@@ -135,10 +135,11 @@ var DateTimeHelper = (function() {
 
 
   function dateInputField(value, dateDataValue) {
+    console.log(dateDataValue)
     return `
       <div class="sci-input-container date-container right-icon">
         <input class="calendar-input date-part sci-input-field"
-                title="date input field"
+                title="date input field ${value}"
                 type="datetime"
                 title="new repository date row input field"
                 placeholder="${formatJS}"
@@ -154,9 +155,8 @@ var DateTimeHelper = (function() {
     return `
       <div class="sci-input-container time-container right-icon">
         <input class="time-part sci-input-field"
-               title="time input field"
+               title="time input field ${value}"
                type="text"
-               title="new repository time row input field"
                data-mask-type="time"
                value='${value}'
                placeholder="HH:mm"/>
