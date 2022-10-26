@@ -8,6 +8,16 @@ Rails.application.configure do
     app_name = name.sub('_AZURE_AD_APP_ID', '')
     config.x.azure_ad_apps[value] = {}
 
+    tenant_id = ENV["#{app_name}_AZURE_AD_TENANT_ID"]
+    raise StandardError, "No Tenant ID for #{app_name} Azure app" unless tenant_id
+
+    config.x.azure_ad_apps[value][:tenant_id] = tenant_id
+
+    client_secret = ENV["#{app_name}_AZURE_AD_CLIENT_SECRET"]
+    raise StandardError, "No Client Secret for #{app_name} Azure app" unless client_secret
+
+    config.x.azure_ad_apps[value][:client_secret] = client_secret
+
     iss = ENV["#{app_name}_AZURE_AD_ISS"]
     raise StandardError, "No ISS for #{app_name} Azure app" unless iss
 
@@ -45,6 +55,12 @@ Rails.application.configure do
         app_config = {}
         app_id = azure_ad_app['app_id']
         Rails.logger.error('No app_id present for the entry in Azure app settings') && next unless app_id
+
+        app_config[:tenant_id] = azure_ad_app['tenant_id']
+        Rails.logger.error("No tenant id for #{app_id} Azure app") && next unless app_config[:tenant_id]
+
+        app_config[:client_secret] = azure_ad_app['client_secret']
+        Rails.logger.error("No client secret for #{app_id} Azure app") && next unless app_config[:client_secret]
 
         app_config[:iss] = azure_ad_app['iss']
         Rails.logger.error("No iss for #{app_id} Azure app") && next unless app_config[:iss]

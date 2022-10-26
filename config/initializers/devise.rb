@@ -301,19 +301,32 @@ Devise.setup do |config|
 
   Rails.application.config.x.disable_local_passwords = ENV['DISABLE_LOCAL_PASSWORDS'] == 'true'
 
-  if [ENV['OKTA_CLIENT_ID'], ENV['OKTA_CLIENT_SECRET'], ENV['OKTA_DOMAIN'], ENV['OKTA_AUTH_SERVER_ID']].all?(&:present?)
+  if [ENV['OKTA_CLIENT_ID'], ENV['OKTA_CLIENT_SECRET'], ENV['OKTA_DOMAIN']].all?(&:present?)
+    OKTA_OAUTH2_BASE_URL =
+      if ENV['OKTA_AUTH_SERVER_ID'].blank?
+        "https://#{ENV['OKTA_DOMAIN']}/oauth2"
+      else
+        "https://#{ENV['OKTA_DOMAIN']}/oauth2/#{ENV['OKTA_AUTH_SERVER_ID']}"
+      end
+    client_options = {
+      site: "https://#{ENV['OKTA_DOMAIN']}",
+      authorize_url: "#{OKTA_OAUTH2_BASE_URL}/v1/authorize",
+      token_url: "#{OKTA_OAUTH2_BASE_URL}/v1/token",
+      user_info_url: "#{OKTA_OAUTH2_BASE_URL}/v1/userinfo"
+    }
+    client_options[:audience] = ENV['OKTA_CLIENT_ID'] if ENV['OKTA_AUDIENCE'].present?
+    if ENV['OKTA_AUTH_SERVER_ID'].present?
+      client_options[:authorization_server] = ENV['OKTA_AUTH_SERVER_ID']
+    else
+      client_options[:use_org_auth_server] = true
+    end
     config.omniauth(
       :okta,
       ENV['OKTA_CLIENT_ID'],
       ENV['OKTA_CLIENT_SECRET'],
       scope: 'openid profile email',
       fields: %w(profile email),
-      client_options: {
-        site: "https://#{ENV['OKTA_DOMAIN']}",
-        authorize_url: "https://#{ENV['OKTA_DOMAIN']}/oauth2/#{ENV['OKTA_AUTH_SERVER_ID']}/v1/authorize",
-        token_url: "https://#{ENV['OKTA_DOMAIN']}/oauth2/#{ENV['OKTA_AUTH_SERVER_ID']}/v1/token",
-        user_info_url: "https://#{ENV['OKTA_DOMAIN']}/oauth2/#{ENV['OKTA_AUTH_SERVER_ID']}/v1/userinfo"
-      },
+      client_options: client_options,
       strategy_class: OmniAuth::Strategies::Okta
     )
   end

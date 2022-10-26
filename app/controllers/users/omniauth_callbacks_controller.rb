@@ -17,7 +17,7 @@ module Users
 
     def customazureactivedirectory
       auth = request.env['omniauth.auth']
-      provider_id = auth.dig(:extra, :raw_info, :id_token_claims, :aud)
+      provider_id = auth.dig(:extra, :raw_info, :aud)
       provider_conf = Rails.configuration.x.azure_ad_apps[provider_id]
       raise StandardError, 'No matching Azure AD provider config found' if provider_conf.blank?
 
