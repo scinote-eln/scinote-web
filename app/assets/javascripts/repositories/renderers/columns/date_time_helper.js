@@ -135,7 +135,6 @@ var DateTimeHelper = (function() {
 
 
   function dateInputField(value, dateDataValue) {
-    console.log(dateDataValue)
     return `
       <div class="sci-input-container date-container right-icon">
         <input class="calendar-input date-part sci-input-field"
