@@ -62,7 +62,12 @@ ExperimnetTable.render.tags = function(data) {
 };
 
 ExperimnetTable.render.comments = function(data) {
-  return data;
+  return `<a href="#" 
+    class="open-comments-sidebar" id="comment-count-${data.id}" 
+    data-object-type="MyModule" data-object-id="${data.id}">
+      ${data.count > 0 ? data.count : '+'}
+      ${data.count_unseen > 0 ? `<span class="unseen-comments"> ${data.count_unseen} </span>` : ''}
+  </a>`;
 };
 
 ExperimnetTable.init();

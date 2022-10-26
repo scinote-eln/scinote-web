@@ -4,6 +4,7 @@ module Experiments
   class TableViewService
     include Rails.application.routes.url_helpers
     include ActionView::Helpers::DateHelper
+    include CommentHelper
 
     COLUMNS = %i(
       task_name
@@ -22,7 +23,8 @@ module Experiments
       my_module_status
     ).freeze
 
-    def initialize(my_modules, _page = 1)
+    def initialize(my_modules, user, _page = 1)
+      @user = user
       @my_modules = my_modules
       @page = 1
     end
@@ -87,6 +89,12 @@ module Experiments
 
     def tags_presenter(my_module); end
 
-    def comments_presenter(my_module); end
+    def comments_presenter(my_module)
+      {
+        id: my_module.id,
+        count: my_module.comments.count,
+        count_unseen: count_unseen_comments(my_module, @user)
+      }
+    end
   end
 end
