@@ -4,8 +4,8 @@ require 'rails_helper'
 
 describe RepositoryActions::ArchiveRowsService do
   let(:user) { create :user }
-  let(:team) { create :team }
-  let(:repository) { create :repository, team: team }
+  let(:team) { create :team, created_by: user }
+  let(:repository) { create :repository, team: team, created_by: user }
   let(:row_1) { create :repository_row, repository: repository }
   let(:row_2) { create :repository_row, repository: repository }
   let(:row_3) { create :repository_row, repository: repository }
@@ -41,7 +41,7 @@ describe RepositoryActions::ArchiveRowsService do
 
   context 'when have invalid item' do
     let(:invalid_row) do
-      r = create :repository_row, repository: repository
+      r = create :repository_row, repository: repository, created_by: user
       r.name = ''
       r.save(validate: false)
       r

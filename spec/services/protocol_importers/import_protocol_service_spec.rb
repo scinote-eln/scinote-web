@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe ProtocolImporters::ImportProtocolService do
   let(:user) { create :user }
-  let(:team) { create :team }
+  let(:team) { create :team, created_by: user }
   let(:protocol_params) { attributes_for :protocol, :in_public_repository }
   let(:steps_params) do
     [

@@ -173,17 +173,10 @@ describe MyModulesController, type: :controller do
         my_modules_ids: [task1.id, task2.id, task3.id]
       }
     end
-    let(:experiment) { create :experiment }
     let(:task1) { create :my_module, :archived, experiment: experiment, created_by: experiment.created_by }
     let(:task2) { create :my_module, :archived, experiment: experiment, created_by: experiment.created_by }
     let(:task3) { create :my_module, :archived, experiment: experiment, created_by: experiment.created_by }
     let(:user) { controller.current_user }
-
-    before do
-      3.times do |i|
-        create_user_assignment(public_send("task#{i+1}"), role, user)
-      end
-    end
 
     context 'when tasks are restored' do
       it 'tasks are active' do

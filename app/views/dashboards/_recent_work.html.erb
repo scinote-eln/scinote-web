@@ -26,12 +26,7 @@
 
 <template id="recent-work-no-results-template">
   <div class="widget-placeholder">
-    <% if current_user.is_guest_of_team?(current_team) %>
-      <p class="widget-placeholder-title"><%= t('dashboard.recent_work.no_results_guest.title') %></p>
-      <p class="widget-placeholder-description"><%= t('dashboard.recent_work.no_results_guest.description') %></p>
-    <% else %>
-      <p class="widget-placeholder-title"><%= t('dashboard.recent_work.no_results.title') %></p>
-      <p class="widget-placeholder-description"><%= t('dashboard.recent_work.no_results.description') %></p>
-    <% end %>
+    <p class="widget-placeholder-title"><%= t('dashboard.recent_work.no_results.title') %></p>
+    <p class="widget-placeholder-description"><%= t('dashboard.recent_work.no_results.description') %></p>
    </div>
 </template>

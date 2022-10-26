@@ -18,7 +18,7 @@ class CustomDatatable < AjaxDatatablesRails::Base
 
   def fetch_records
     records = get_raw_records
-    records = filter_records(records) if dt_params[:search].present?
+    records = filter_records(records) if dt_params.dig(:search, :value).present?
     records = sort_records(records) if order_params.present?
     records = paginate_records(records) unless dt_params[:length].present? &&
                                                dt_params[:length] == '-1'

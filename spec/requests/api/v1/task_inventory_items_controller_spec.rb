@@ -11,13 +11,9 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
 
     @user = create(:user)
     @team = create(:team, created_by: @user)
-    create(:user_team, user: @user, team: @team, role: 1)
-    @owner_role = UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))
-    @project = create(:project, name: Faker::Name.unique.name,
-                            created_by: @user, team: @team)
+    @project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @team)
 
-    @experiment = create(:experiment, created_by: @user,
-      last_modified_by: @user, project: @project)
+    @experiment = create(:experiment, created_by: @user, last_modified_by: @user, project: @project)
 
     @my_module = create(
       :my_module,
@@ -27,14 +23,17 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
       experiment: @experiment
     )
 
-    @repository = create(:repository)
-    create(:user_team, user: @user, team: @repository.team, role: 1)
-    #@repository_stock_column = create(:repository_column, :stock_type, repository: @repository)
+    @repository = create(:repository, created_by: @user, team: @team)
+    @repository_stock_column = create(:repository_column, :stock_type, repository: @repository)
     @repository_row = create(:repository_row, name: 'Test row', repository: @repository)
-    @repository_stock_cell = create(
-      :repository_cell,
-      :stock_value,
-      repository_row: @repository_row
+    @repository_stock_unit_item = create(:repository_stock_unit_item, created_by: @user,
+                                                                       last_modified_by: @user,
+                                                                       repository_column: @repository_stock_column)
+    @repository_stock_value = create(
+      :repository_stock_value,
+      amount: 100,
+      repository_stock_unit_item: @repository_stock_unit_item,
+      repository_cell_attributes: { repository_row: @repository_row, repository_column: @repository_stock_column }
     )
 
     @my_module_repository_row = create(

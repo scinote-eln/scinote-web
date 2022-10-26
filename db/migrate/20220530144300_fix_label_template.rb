@@ -2,7 +2,8 @@
 
 class FixLabelTemplate < ActiveRecord::Migration[6.1]
   def change
-    LabelTemplate.last.update(
+    # rubocop:disable Rails/SkipsModelValidations
+    LabelTemplate.last.update_columns(
       name: 'SciNote Item',
       size: '1" x 0.5" / 25.4mm x 12.7mm',
       language_type: :zpl,
@@ -23,5 +24,6 @@ class FixLabelTemplate < ActiveRecord::Migration[6.1]
           ^XZ
         HEREDOC
     )
+    # rubocop:enable Rails/SkipsModelValidations
   end
 end

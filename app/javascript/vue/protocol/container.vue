@@ -104,6 +104,7 @@
               @step:delete="updateStepsPosition"
               @step:update="updateStep"
               @stepUpdated="refreshProtocolStatus"
+              @step:insert="updateStepsPosition"
               :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
             />
           </div>

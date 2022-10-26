@@ -114,8 +114,6 @@ var RepositoryDatatable = (function(global) {
       $('.dataTables_filter input').prop('disabled', true);
       $('#toolbarPrintLabel').hide();
     }
-
-    $('#toolbarPrintLabel').data('rows', JSON.stringify(rowsSelected));
   }
 
   function clearRowSelection() {
@@ -156,7 +154,6 @@ var RepositoryDatatable = (function(global) {
     var $chkboxAll = $('.repository-row-selector', $table);
     var $chkboxChecked = $('.repository-row-selector:checked', $table);
     var chkboxSelectAll = $(SELECT_ALL_SELECTOR, $header).get(0);
-
     // If none of the checkboxes are checked
     if ($chkboxChecked.length === 0) {
       chkboxSelectAll.checked = false;
@@ -912,6 +909,7 @@ var RepositoryDatatable = (function(global) {
       TABLE.ajax.reload();
       clearRowSelection();
     },
+    selectedRows: () => { return rowsSelected; },
     redrawTableOnSidebarToggle: redrawTableOnSidebarToggle,
     checkAvailableColumns: checkAvailableColumns
   });

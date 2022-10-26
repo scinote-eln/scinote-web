@@ -17,7 +17,7 @@ describe WopiController, type: :controller do
   end
 
 
-  let(:protocol_in_repository) { create :protocol, :in_public_repository, team: team }
+  let(:protocol_in_repository) { create :protocol, :in_public_repository, team: team, added_by: user }
   let(:step_in_repository) { create :step, protocol: protocol_in_repository, user: user }
 
   let!(:asset) { create :asset }
@@ -81,7 +81,6 @@ describe WopiController, type: :controller do
     describe 'Step asset in repository' do
       before do
         step_asset_in_repository
-        user_team
       end
 
       it 'calls create activity for finish wopi editing' do

@@ -4,7 +4,7 @@ FactoryBot.define do
   factory :repository do
     sequence(:name) { |n| "My repository-#{n}" }
     created_by { create :user }
-    team
+    team { association :team, created_by: created_by }
     trait :write_shared do
       permission_level { :shared_write }
     end
