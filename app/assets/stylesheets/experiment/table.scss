@@ -50,6 +50,39 @@
       align-items: center;
       display: flex;
       padding: 0 .5em;
+
+      .my-module-users-link {
+        color: $color-silver-chalice;
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+
+      .global-avatar-container {
+        color: $color-silver-chalice;
+        height: 2em;
+        line-height: 2em;
+        margin-right: .25em;
+        width: 2em;
+      }
+
+      .more-users {
+        background: $color-volcano;
+        border-radius: 50%;
+        color: $color-white;
+        height: 2em;
+        line-height: 2em;
+        margin-right: .25em;
+        text-align: center;
+        text-decoration: none;
+        width: 2em;
+      }
+
+      .new-user {
+        background: $color-concrete;
+        text-align: center;
+      }
     }
 
     .table-row {
