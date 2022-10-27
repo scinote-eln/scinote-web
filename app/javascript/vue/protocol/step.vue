@@ -57,12 +57,12 @@
         </button>
       </div>
       <div class="step-actions-container">
-        <div ref="actionsDropdownButton" v-if="urls.update_url"  class="dropdown">
+        <div ref="elementsDropdownButton" v-if="urls.update_url"  class="dropdown">
           <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'stepInserMenu_' + step.id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             {{ i18n.t('protocols.steps.insert.button') }}
             <span class="caret"></span>
           </button>
-          <ul ref="actionsDropdown" class="dropdown-menu insert-element-dropdown dropdown-menu-right" :aria-labelledby="'stepInserMenu_' + step.id">
+          <ul ref="elementsDropdown" class="dropdown-menu insert-element-dropdown dropdown-menu-right" :aria-labelledby="'stepInserMenu_' + step.id">
             <li class="title">
               {{ i18n.t('protocols.steps.insert.title') }}
             </li>
@@ -101,11 +101,11 @@
           </span>
         </a>
         <div v-if="urls.update_url" class="step-actions-container">
-          <div class="dropdown">
+          <div ref="actionsDropdownButton" class="dropdown">
             <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'stepOptionsMenu_' + step.id" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="true">
               <i class="fas fa-ellipsis-h"></i>
             </button>
-            <ul class="dropdown-menu dropdown-menu-right insert-element-dropdown" :aria-labelledby="'stepOptionsMenu_' + step.id">
+            <ul ref="actionsDropdown" class="dropdown-menu dropdown-menu-right insert-element-dropdown" :aria-labelledby="'stepOptionsMenu_' + step.id">
               <li class="title">
                 {{ i18n.t('protocols.steps.options_dropdown.title') }}
               </li>
@@ -249,7 +249,12 @@
     mounted() {
       $(this.$refs.comments).data('closeCallback', this.closeCommentsSidebar);
       $(this.$refs.comments).data('openCallback', this.closeCommentsSidebar);
-      $(this.$refs.actionsDropdownButton).on('shown.bs.dropdown hidden.bs.dropdown', this.handleDropdownPosition);
+      $(this.$refs.actionsDropdownButton).on('shown.bs.dropdown hidden.bs.dropdown', () => {
+        this.handleDropdownPosition(this.$refs.actionsDropdownButton, this.$refs.actionsDropdown)
+      });
+      $(this.$refs.elementsDropdownButton).on('shown.bs.dropdown hidden.bs.dropdown', () => {
+        this.handleDropdownPosition(this.$refs.elementsDropdownButton, this.$refs.elementsDropdown)
+      });
     },
     computed: {
       reorderableElements() {
@@ -438,8 +443,8 @@
       closeReorderModal() {
         this.reordering = false;
       },
-      handleDropdownPosition() {
-        this.$refs.actionsDropdownButton.classList.toggle("dropup", !this.isInViewport(this.$refs.actionsDropdown));
+      handleDropdownPosition(refButton, refDropdown) {
+        refButton.classList.toggle("dropup", !this.isInViewport(refDropdown));
       },
       isInViewport(el) {
           let rect = el.getBoundingClientRect();
