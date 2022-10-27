@@ -332,6 +332,8 @@ function initializeFullZoom() {
     commentMenu.position({ top: $(this).parent().position().top });
     commentMenu.offset({ top: $(this).parent().offset().top + <%= Constants::DROPDOWN_TOP_OFFSET_PX %> });
   });
+
+  initializeCanvasViewNavigator();
 }
 
 function destroyFullZoom() {
@@ -370,6 +372,7 @@ function initializeMediumZoom() {
 
   // Restore draggable position
   restoreDraggablePosition($("#diagram"), $("#canvas-container"));
+  initializeCanvasViewNavigator();
 }
 
 function destroyMediumZoom() {
@@ -397,6 +400,7 @@ function initializeSmallZoom() {
 
   // Restore draggable position
   restoreDraggablePosition($("#diagram"), $("#canvas-container"));
+  initializeCanvasViewNavigator();
 }
 
 function destroySmallZoom() {
@@ -2661,6 +2665,9 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
       y_pos = y_el + (fastOffsetY - y_start);
       x_start = fastOffsetX;
       y_start = fastOffsetY;
+
+      drawRectangleCanvasNavigatorView(-x_pos, -y_pos)
+
       if (draggable !== null) {
         elLeft(draggable, x_pos);
         elTop(draggable, y_pos);
@@ -2912,6 +2919,45 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
     $("#edit-canvas-button").click();
   }
 })();
+
+function initializeCanvasViewNavigator() {
+  var canvasImage = $('.canvas-preview-img')[0];
+  var canvasRect = $('.canvas-preview-rect')[0];
+  var canvasImageTx = canvasImage.getContext('2d');
+  var canvasRectTx = canvasRect.getContext('2d');
+  var image = new Image();
+
+  image.onload = function() {
+    canvasImageTx.drawImage(image, 0, 0, canvasImage.width, canvasImage.height);
+    drawRectangleCanvasNavigatorView(-(draggable.offset().left - draggable.parent().offset().left),
+      -(draggable.offset().top - draggable.parent().offset().top));
+    canvasRectTx.stroke();
+  };
+  image.src = $('.canvas-preview-img').data('image-url');
+}
+
+function drawRectangleCanvasNavigatorView(xPos, yPos) {
+  var adjustFactor = 10;
+  var canvasSize = calculateDraggableSize(draggable);
+  var ratioX = xPos / canvasSize.width;
+  var ratioY = yPos / canvasSize.height;
+
+  var canvasPreviewRect = $('.canvas-preview-rect')[0];
+  var canvasRectTx = canvasPreviewRect.getContext('2d');
+  var canvasWidth = canvasRectTx.canvas.width;
+  var canvasHeight = canvasRectTx.canvas.height;
+  var previewWidth = canvasWidth * ($('#diagram-container').width() / canvasSize.width);
+  var previewHeight = canvasHeight * ($('#diagram-container').height() / canvasSize.height);
+
+  canvasRectTx.clearRect(0, 0, canvasWidth, canvasHeight);
+  canvasRectTx.beginPath();
+  canvasRectTx.lineWidth = 4;
+  canvasRectTx.strokeStyle = '#104DA9';
+  canvasRectTx.rect(canvasWidth * ratioX + adjustFactor, canvasHeight * ratioY + adjustFactor,
+    previewWidth - adjustFactor, previewHeight - adjustFactor);
+  canvasRectTx.stroke();
+  canvasRectTx.closePath();
+}
 
 /** prevent reload page */
 var preventCanvasReloadOnSave = (function() {

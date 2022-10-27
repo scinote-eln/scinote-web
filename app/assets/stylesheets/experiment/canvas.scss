@@ -44,3 +44,17 @@
 #canvas-container {
   margin: 10px -28px 0;
 }
+
+.canvas-preview-img,
+.canvas-preview-rect {
+  border-radius: 4px;
+  bottom: 16px;
+  box-shadow: inset 0 0 0 8px $color-white;
+  display: flex;
+  height: 80px;
+  padding: 8px;
+  position: absolute;
+  right: 16px;
+  width: 84px;
+  z-index: 999999;
+}
