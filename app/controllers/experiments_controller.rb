@@ -95,8 +95,13 @@ class ExperimentsController < ApplicationController
   end
 
   def load_table
-    active_modules = @experiment.my_modules.active
-    render json: Experiments::TableViewService.new(active_modules).call
+    table_rows = @experiment.my_modules.active
+                            .page(params[:page] || 1)
+                            .per(1)
+    render json: {
+      next_page: table_rows.next_page,
+      data: Experiments::TableViewService.new(table_rows).call
+    }
   end
 
   def edit

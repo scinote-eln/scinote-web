@@ -12,6 +12,7 @@
 
   <div class="experiment-table-container">
     <div class="experiment-table"
+         id="cardsWrapper"
          style="--columns-count: <%= Experiments::TableViewService::COLUMNS.length%>"
          data-my-modules-url= <%= load_table_experiment_path(@experiment) %>
     >
@@ -33,6 +34,27 @@
     </div>
   </div>
 </div>
+
+<template id="experimentTablePlaceholder">
+  <div class="table-row-placeholder table-row">
+    <div class="header"></div>
+    <% 6.times do |i| %>
+      <div class="placeholder-cell line-<%= i %>"></div>
+    <% end %>
+    <div class="placeholder-cell circle-0"></div>
+    <% 2.times do |i| %>
+      <div class="placeholder-cell line-<%= 6 + i %>"></div>
+    <% end %>
+  </div>
+</template>
+
+<template id="experimentTableEndOfList">
+  <div class="experiment-table-list-end-placeholder">
+    <i class="fas fa-flag-checkered"></i>
+    <span><%= t('projects.index.end_of_list_placeholder') %></span>
+    <i class="fas fa-flag-checkered"></i>
+  </div>
+</template>
 
 
 <%= javascript_include_tag("experiments/table") %>
