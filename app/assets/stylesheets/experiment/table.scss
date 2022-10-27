@@ -115,4 +115,25 @@
     }
 
   }
+
+  .unseen-comments {
+    @include font-small;
+    align-items: center;
+    background-color: $brand-complementary;
+    border: 2px solid $color-white;
+    border-radius: 50%;
+    color: $color-black;
+    display: flex;
+    font-weight: bold;
+    height: 16px;
+    justify-content: center;
+    margin-bottom: 10px;
+    margin-left: -1px;
+    min-width: 16px;
+  }
+
+  .open-comments-sidebar {
+    display: contents;
+    margin-bottom: 0;
+  }
 }

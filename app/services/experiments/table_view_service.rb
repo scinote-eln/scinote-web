@@ -4,6 +4,7 @@ module Experiments
   class TableViewService
     include Rails.application.routes.url_helpers
     include ActionView::Helpers::DateHelper
+    include CommentHelper
     include ProjectsHelper
     include InputSanitizeHelper
     include Canaid::Helpers::PermissionsHelper
@@ -117,7 +118,11 @@ module Experiments
     end
 
     def comments_presenter(my_module)
-      my_module.task_comments.length
+      {
+        id: my_module.id,
+        count: my_module.comments.count,
+        count_unseen: count_unseen_comments(my_module, @user)
+      }
     end
   end
 end

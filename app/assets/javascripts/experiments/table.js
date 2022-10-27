@@ -93,8 +93,12 @@ ExperimnetTable.render.tags = function(data) {
 };
 
 ExperimnetTable.render.comments = function(data) {
-  const value = parseInt(data, 10) === 0 ? '+' : data;
-  return `<a href="">${value}</a>`;
+  return `<a href="#" 
+    class="open-comments-sidebar" id="comment-count-${data.id}" 
+    data-object-type="MyModule" data-object-id="${data.id}">
+      ${data.count > 0 ? data.count : '+'}
+      ${data.count_unseen > 0 ? `<span class="unseen-comments"> ${data.count_unseen} </span>` : ''}
+  </a>`;
 };
 
 ExperimnetTable.init();
