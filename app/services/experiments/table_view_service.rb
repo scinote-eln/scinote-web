@@ -78,7 +78,7 @@ module Experiments
 
     def results_presenter(my_module)
       {
-        count: my_module.results.length,
+        count: my_module.results.active.length,
         url: results_my_module_path(my_module)
       }
     end
