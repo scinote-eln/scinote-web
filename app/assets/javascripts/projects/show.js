@@ -51,7 +51,7 @@
     });
     $(experimentsPage).attr('data-toolbar-visible', toolbarVisible);
   }
-  console.log(12)
+
   function initProjectsViewModeSwitch() {
     $(experimentsPage)
       .on('ajax:success', '.change-experiments-view-type-form', function(ev, data) {

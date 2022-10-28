@@ -10,13 +10,16 @@
       </div>
     <% end %>
   </div>
-    <div class="experiment-code-cell table-cell">
+  
+  <div class="experiment-code-cell table-cell">
     <span><%= experiment.code %></span>
   </div>
-      <div class="data-row modified-date-cell table-cell">
-        <span class="card-label" cards-render="true"><%= t('experiments.card.modified_date') %></span>
-        <span class="card-value"><%= l(experiment.updated_at, format: :full_date) %></span>
-      </div>
+  
+  <div class="data-row modified-date-cell table-cell">
+    <span class="card-label" cards-render="true"><%= t('experiments.card.modified_date') %></span>
+    <span class="card-value"><%= l(experiment.updated_at, format: :full_date) %></span>
+  </div>
+  
   <div class="experiment-name-cell table-cell">
     <div class="workflow-img-wrapper" list-render="true">
       <%= render partial: 'projects/show/experiment_workflow_image_container', locals: { experiment: experiment } %>
@@ -27,9 +30,6 @@
       <%= link_to experiment.name, canvas_experiment_path(experiment), title: experiment.name, class: 'name-link' %>
     <% end %>
   </div>
-  
-
-  
   <div class="actions actions-cell table-cell">
     <div class="dropdown dropdown-async experiment-actions-menu" data-dropdown-url="<%= actions_dropdown_experiment_path(experiment) %>">
       <button class="btn btn-light dropdown-toggle icon-btn" type="button" id="experimentActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">

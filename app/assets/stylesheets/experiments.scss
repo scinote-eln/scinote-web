@@ -542,18 +542,33 @@
     }
   }
 }
+
 .cards-wrapper.last-page.cards {
   .experiment-card {
-    // background-color: red;
-
     .experiment-name-cell {
       right: 28px;
-      top: 20px;
+      top: -11px;
+    }
+
+    .data-row {
+      .card-label {
+        color: $color-silver-chalice;
+      }
     }
 
     .modified-date-cell {
       color: $color-silver-chalice;
+      position: relative;
+      top: -2px;
+      left: 80px;
+      margin-left: auto;
+      margin-right: 114px;
+    }
 
+    .experiment-code-cell {
+      position: relative;
+      top: 5px;
+      left: 20px;
     }
   }
 }
