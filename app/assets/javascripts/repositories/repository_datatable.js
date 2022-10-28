@@ -15,7 +15,7 @@ var RepositoryDatatable = (function(global) {
   var TABLE_WRAPPER_ID = '.repository-table';
   var TABLE = null;
   var EDITABLE = false;
-  var SELECT_ALL_SELECTOR = '#checkbox > input[name=select_all]';
+  var SELECT_ALL_SELECTOR = '#checkbox input[name=select_all]';
   const STATUS_POLLING_INTERVAL = 10000;
 
   var rowsSelected = [];
@@ -114,8 +114,6 @@ var RepositoryDatatable = (function(global) {
       $('.dataTables_filter input').prop('disabled', true);
       $('#toolbarPrintLabel').hide();
     }
-
-    $('#toolbarPrintLabel').data('rows', JSON.stringify(rowsSelected));
   }
 
   function clearRowSelection() {
@@ -156,7 +154,6 @@ var RepositoryDatatable = (function(global) {
     var $chkboxAll = $('.repository-row-selector', $table);
     var $chkboxChecked = $('.repository-row-selector:checked', $table);
     var chkboxSelectAll = $(SELECT_ALL_SELECTOR, $header).get(0);
-
     // If none of the checkboxes are checked
     if ($chkboxChecked.length === 0) {
       chkboxSelectAll.checked = false;
@@ -465,8 +462,10 @@ var RepositoryDatatable = (function(global) {
         className: 'dt-body-center',
         sWidth: '1%',
         render: function(data, type, row) {
-          return `<input class='repository-row-selector sci-checkbox' type='checkbox' data-editable="${row.recordEditable}">
-                  <span class='sci-checkbox-label'></span>`;
+          return `<div class="sci-checkbox-container">
+                    <input class='repository-row-selector sci-checkbox' type='checkbox' data-editable="${row.recordEditable}">
+                    <span class='sci-checkbox-label'></span>
+                  </div>`;
         }
       }, {
         // Assigned column is not searchable
@@ -910,6 +909,7 @@ var RepositoryDatatable = (function(global) {
       TABLE.ajax.reload();
       clearRowSelection();
     },
+    selectedRows: () => { return rowsSelected; },
     redrawTableOnSidebarToggle: redrawTableOnSidebarToggle,
     checkAvailableColumns: checkAvailableColumns
   });

@@ -5,15 +5,15 @@ require 'rails_helper'
 RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
   before :all do
     @user = create(:user)
+    @another_user = create(:user)
     @team = create(:team, created_by: @user)
-    @wrong_team = create(:team, created_by: @user)
-    create(:user_team, user: @user, team: @team, role: 2)
+    @wrong_team = create(:team, created_by: @another_user)
 
     # valid_inventory
     @valid_inventory = create(:repository, name: Faker::Name.unique.name, created_by: @user, team: @team)
 
     # unaccessable_inventory
-    @wrong_inventory = create(:repository, name: Faker::Name.unique.name, created_by: @user, team: @wrong_team)
+    @wrong_inventory = create(:repository, name: Faker::Name.unique.name, created_by: @another_user, team: @wrong_team)
 
     create(:repository_row, repository: @wrong_inventory)
 
@@ -42,11 +42,11 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
     @date_time_range_column = create(:repository_column,
                                      repository: @valid_inventory, data_type: :RepositoryDateTimeRangeValue)
     @number_column = create(:repository_column, repository: @valid_inventory, data_type: :RepositoryNumberValue)
-    @stock_column = create(:repository_column, name: Faker::Name.unique.name, 
+    @stock_column = create(:repository_column, name: Faker::Name.unique.name,
                            data_type: :RepositoryStockValue, repository: @valid_inventory)
     @repository_stock_unit_item = create( :repository_stock_unit_item, created_by: @user,
                                                                        last_modified_by: @user,
-                                                                       repository_column: @stock_column)  
+                                                                       repository_column: @stock_column)
 
     @valid_item = create(:repository_row, repository: @valid_inventory)
 
@@ -1170,7 +1170,7 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
 
   describe 'DELETE inventory_cells, #destroy' do
     it 'Destroys inventory cell' do
-      deleted_id = @valid_item.repository_cells.where(repository_column: @number_column).first.id 
+      deleted_id = @valid_item.repository_cells.where(repository_column: @number_column).first.id
       delete api_v1_team_inventory_item_cell_path(
         id: deleted_id,
         team_id: @team.id,
@@ -1182,15 +1182,15 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
     end
 
     it 'Destroys stock inventory cell' do
-      deleted_id = @valid_item.repository_cells.where(repository_column: @stock_column).first.id 
+      deleted_id = @valid_item.repository_cells.where(repository_column: @stock_column).first.id
       delete api_v1_team_inventory_item_cell_path(
         id: deleted_id,
         team_id: @team.id,
         inventory_id: @valid_inventory.id,
         item_id: @valid_item.id
       ), headers: @valid_headers
-      expect(response).to have_http_status(400)
-      expect(RepositoryCell.where(id: deleted_id)).to exist
+      expect(response).to have_http_status(200)
+      expect(RepositoryCell.where(id: deleted_id)).to_not exist
     end
 
     it 'Invalid request, non existing inventory item' do

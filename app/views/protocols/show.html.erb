@@ -1,3 +1,7 @@
+<% provide(:sidebar_title, t('sidebar.templates.sidebar_title')) %>
+<%= content_for :sidebar do %>
+  <%= render partial: "/shared/sidebar/templates_sidebar", locals: {active: :protocol} %>
+<% end %>
 <div class="content-pane protocols-show" >
   <div class="protocol-position-container">
      <div class="protocol-actions">
@@ -30,3 +34,4 @@
 <%= stylesheet_pack_tag 'pdfjs/pdf_js_styles' %>
 
 <%= javascript_pack_tag 'vue/protocol' %>
+<%= render partial: 'label_printers/label_printer_modal' %>

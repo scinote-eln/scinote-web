@@ -39,11 +39,21 @@
         "state": "uncompleted",
         "completed_on": null
       },
-      "outputs": [],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "outputs": [
+
+      ],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -66,13 +76,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 5264,
                 "name": "Probing with antibodies and detection of the bands",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p><strong>Blocking buffer: </strong></p>\n<ul>\n<li>\n<strong>1-3% BSA in PBS-T: </strong>Bovine serum albumin (BSA) is used as a blocking agent.</li>\n<li>\n<strong>1-5% skim milk in PBS-T </strong>Skim milk is more effective in blocking and used frequently. However, it can interfere with specific antigen-antibody reactions. <em><strong>Skim milk contains the </strong><strong>phosphoprotein </strong><strong>casein and therefore is not suitable for the detection of phosphoproteins.</strong></em>\n</li>\n</ul>\n</body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -82,98 +93,107 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3905
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p><strong>Blocking buffer: </strong></p>\n<ul>\n<li>\n<strong>1-3% BSA in PBS-T: </strong>Bovine serum albumin (BSA) is used as a blocking agent.</li>\n<li>\n<strong>1-5% skim milk in PBS-T </strong>Skim milk is more effective in blocking and used frequently. However, it can interfere with specific antigen-antibody reactions. <em><strong>Skim milk contains the </strong><strong>phosphoprotein </strong><strong>casein and therefore is not suitable for the detection of phosphoproteins.</strong></em>\n</li>\n</ul>\n</body></html>"
+                  },
+                  "position": 0
+                },
                 {
                   "checklist": {
-                    "id": 974,
-                    "name": "Guidelines",
-                    "step_id": 5264,
-                    "created_at": "2018-12-24T13:33:23.308Z",
-                    "updated_at": "2018-12-24T13:33:23.308Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
+                    "checklist": {
+                      "id": 974,
+                      "name": "Guidelines",
+                      "step_id": 5264,
+                      "created_at": "2018-12-24T13:33:23.308Z",
+                      "updated_at": "2018-12-24T13:33:23.308Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 4013,
+                        "text": "Place the membrane in blocking buffer and incubate at room temperature for 1 hour (or at 4°C overnight) with shaking.",
+                        "checked": false,
+                        "checklist_id": 974,
+                        "created_at": "2018-12-24T13:33:23.310Z",
+                        "updated_at": "2018-12-24T13:33:23.310Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 4014,
+                        "text": "Wash the membrane with washing buffer 3 times (5 minutes each time).",
+                        "checked": false,
+                        "checklist_id": 974,
+                        "created_at": "2018-12-24T13:33:23.316Z",
+                        "updated_at": "2018-12-24T13:33:23.316Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 4015,
+                        "text": "Place the membrane in primary antibody solution diluted in 1% BSA in Tween PBS, pH 7.2, and incubate at room temperature for 1 hour with shaking.",
+                        "checked": false,
+                        "checklist_id": 974,
+                        "created_at": "2018-12-24T13:33:23.321Z",
+                        "updated_at": "2018-12-24T13:33:23.321Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      },
+                      {
+                        "id": 4016,
+                        "text": "Wash the membrane with washing buffer 3 times (10 minutes each time).",
+                        "checked": false,
+                        "checklist_id": 974,
+                        "created_at": "2018-12-24T13:33:23.327Z",
+                        "updated_at": "2018-12-24T13:33:23.327Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 3
+                      },
+                      {
+                        "id": 4017,
+                        "text": "Place the membrane in secondary antibody diluted in 1% BSA in Tween PBS, pH 7.2, and incubate at room temperature for 1 hour with shaking.",
+                        "checked": false,
+                        "checklist_id": 974,
+                        "created_at": "2018-12-24T13:33:23.332Z",
+                        "updated_at": "2018-12-24T13:33:23.332Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 4
+                      },
+                      {
+                        "id": 4018,
+                        "text": "Wash the membrane with washing buffer 3 times (10 minutes each time).",
+                        "checked": false,
+                        "checklist_id": 974,
+                        "created_at": "2018-12-24T13:33:23.337Z",
+                        "updated_at": "2018-12-24T13:33:23.337Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 5
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 4013,
-                      "text": "Place the membrane in blocking buffer and incubate at room temperature for 1 hour (or at 4°C overnight) with shaking.",
-                      "checked": false,
-                      "checklist_id": 974,
-                      "created_at": "2018-12-24T13:33:23.310Z",
-                      "updated_at": "2018-12-24T13:33:23.310Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 4014,
-                      "text": "Wash the membrane with washing buffer 3 times (5 minutes each time).",
-                      "checked": false,
-                      "checklist_id": 974,
-                      "created_at": "2018-12-24T13:33:23.316Z",
-                      "updated_at": "2018-12-24T13:33:23.316Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 4015,
-                      "text": "Place the membrane in primary antibody solution diluted in 1% BSA in Tween PBS, pH 7.2, and incubate at room temperature for 1 hour with shaking.",
-                      "checked": false,
-                      "checklist_id": 974,
-                      "created_at": "2018-12-24T13:33:23.321Z",
-                      "updated_at": "2018-12-24T13:33:23.321Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    },
-                    {
-                      "id": 4016,
-                      "text": "Wash the membrane with washing buffer 3 times (10 minutes each time).",
-                      "checked": false,
-                      "checklist_id": 974,
-                      "created_at": "2018-12-24T13:33:23.327Z",
-                      "updated_at": "2018-12-24T13:33:23.327Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 3
-                    },
-                    {
-                      "id": 4017,
-                      "text": "Place the membrane in secondary antibody diluted in 1% BSA in Tween PBS, pH 7.2, and incubate at room temperature for 1 hour with shaking.",
-                      "checked": false,
-                      "checklist_id": 974,
-                      "created_at": "2018-12-24T13:33:23.332Z",
-                      "updated_at": "2018-12-24T13:33:23.332Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 4
-                    },
-                    {
-                      "id": 4018,
-                      "text": "Wash the membrane with washing buffer 3 times (10 minutes each time).",
-                      "checked": false,
-                      "checklist_id": 974,
-                      "created_at": "2018-12-24T13:33:23.337Z",
-                      "updated_at": "2018-12-24T13:33:23.337Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 5
-                    }
-                  ]
+                  "position": 1
                 }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              ]
             },
             {
               "step": {
                 "id": 5262,
                 "name": "Transfer of proteins to a membrane",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Soak a piece of <strong>PVDF membrane</strong> slightly larger than the gel in methanol for <strong>1 minute</strong> (pre-wetting), and then equilibrate in transfer buffer. Also, equilibrate two pieces of filter paper slightly larger than the PVDF membrane in transfer buffer. There is no need for pre-wetting a nitrocellulose membrane. Skip using methanol, and equilibrate the membrane in transfer buffer.<br><br><strong>Transfer buffer:</strong></p>\n<ul>\n<li>25 mM Tris-HCl</li>\n<li>192 mM glycine</li>\n<li>20% MeOH</li>\n</ul>\n<br>Equilibrate the gel in transfer buffer after electrophoresis. <br><br>Place a piece of equilibrated filter paper on the anode plate, and place the membrane, gel, and another piece of filter paper without any air bubbles. All of these should be sandwiched between two sponges.</body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -183,14 +203,8 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3905
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [
-                {
-                  "id": 3074,
-                  "step_id": 5262,
-                  "asset_id": 3736
-                }
+              "step_comments": [
+
               ],
               "assets": [
                 {
@@ -212,14 +226,19 @@
                   }
                 }
               ],
-              "step_tables": [],
-              "tables": []
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Soak a piece of <strong>PVDF membrane</strong> slightly larger than the gel in methanol for <strong>1 minute</strong> (pre-wetting), and then equilibrate in transfer buffer. Also, equilibrate two pieces of filter paper slightly larger than the PVDF membrane in transfer buffer. There is no need for pre-wetting a nitrocellulose membrane. Skip using methanol, and equilibrate the membrane in transfer buffer.<br><br><strong>Transfer buffer:</strong></p>\n<ul>\n<li>25 mM Tris-HCl</li>\n<li>192 mM glycine</li>\n<li>20% MeOH</li>\n</ul>\n<br>Equilibrate the gel in transfer buffer after electrophoresis. <br><br>Place a piece of equilibrated filter paper on the anode plate, and place the membrane, gel, and another piece of filter paper without any air bubbles. All of these should be sandwiched between two sponges.</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 5263,
                 "name": "Blotting",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Connect <strong>the plus electrode to the anode plate</strong> and connect the <strong>negative electrode to the cathode plate</strong>.<br>Turn on the power supply and transfer for <strong>1 hour</strong> at <strong>50 mA</strong> (for one gel).<br><br>Turn off the power supply, remove the membrane, and temporarily stain to check the efficiency of transfer and to visualize the molecular weight markers to confirm their positions.<br><strong>Ponceau S</strong> is commonly used for this purpose because the membrane is easily destained, and it does not interfere with subsequent probing with antibodies.<br><br><strong>Ponceau S solution: </strong></p>\n<ul>\n<li>1g Ponceau S</li>\n<li>50mL acetic acid</li>\n<li>Make up to 1L with ddH2O</li>\n</ul>\n</body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -229,18 +248,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3905
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Connect <strong>the plus electrode to the anode plate</strong> and connect the <strong>negative electrode to the cathode plate</strong>.<br>Turn on the power supply and transfer for <strong>1 hour</strong> at <strong>50 mA</strong> (for one gel).<br><br>Turn off the power supply, remove the membrane, and temporarily stain to check the efficiency of transfer and to visualize the molecular weight markers to confirm their positions.<br><strong>Ponceau S</strong> is commonly used for this purpose because the membrane is easily destained, and it does not interfere with subsequent probing with antibodies.<br><br><strong>Ponceau S solution: </strong></p>\n<ul>\n<li>1g Ponceau S</li>\n<li>50mL acetic acid</li>\n<li>Make up to 1L with ddH2O</li>\n</ul>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 5265,
                 "name": "Chemiluminescence method",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Prepare the chemiluminescence detection reagent according to the instruction manual. Place the membrane on a piece of plastic wrap, and add the reagent to the membrane. Allow it to stand for <strong>1 minute</strong>, and remove the reagent using a pipette. <br>Wrap the membrane in a piece of plastic wrap, remove any air bubbles, and place it under a chemiluminescence detection apparatus (e.g., CCD camera) for viewing.</p></body></html>",
                 "position": 3,
                 "completed": false,
                 "completed_on": null,
@@ -250,14 +276,8 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3905
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [
-                {
-                  "id": 3075,
-                  "step_id": 5265,
-                  "asset_id": 3737
-                }
+              "step_comments": [
+
               ],
               "assets": [
                 {
@@ -279,13 +299,21 @@
                   }
                 }
               ],
-              "step_tables": [],
-              "tables": []
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Prepare the chemiluminescence detection reagent according to the instruction manual. Place the membrane on a piece of plastic wrap, and add the reagent to the membrane. Allow it to stand for <strong>1 minute</strong>, and remove the reagent using a pipette. <br>Wrap the membrane in a piece of plastic wrap, remove any air bubbles, and place it under a chemiluminescence detection apparatus (e.g., CCD camera) for viewing.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -310,11 +338,21 @@
         "state": "uncompleted",
         "completed_on": null
       },
-      "outputs": [],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "outputs": [
+
+      ],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -337,13 +375,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 5260,
                 "name": "Destain",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<strong>Destain solution</strong>: Add <strong>500mL</strong> of HPLC- grade methanol to <strong>300 mL</strong> of HPLC grade water. Add <strong>100 mL</strong> of reagent grade acetic acid and, after mixing, adjust the total volume to <strong>1000mL</strong> with water. The final concentrations are <strong>50%</strong> (v/v) methanol in water with <strong>10%</strong> (v/v) acetic acid. <br><br>Cover the gel with<strong> ~250mL</strong> of the destain solution and allow the gel to destain with gentle agitation. The destain solution should be changed several times, removing it at each change by aspiration. Continue the destaining until the protein bands are seen without background staining of the gel.</body></html>",
                 "position": 3,
                 "completed": false,
                 "completed_on": null,
@@ -353,18 +392,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3904
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<strong>Destain solution</strong>: Add <strong>500mL</strong> of HPLC- grade methanol to <strong>300 mL</strong> of HPLC grade water. Add <strong>100 mL</strong> of reagent grade acetic acid and, after mixing, adjust the total volume to <strong>1000mL</strong> with water. The final concentrations are <strong>50%</strong> (v/v) methanol in water with <strong>10%</strong> (v/v) acetic acid. <br><br>Cover the gel with<strong> ~250mL</strong> of the destain solution and allow the gel to destain with gentle agitation. The destain solution should be changed several times, removing it at each change by aspiration. Continue the destaining until the protein bands are seen without background staining of the gel.</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 5258,
                 "name": "Washing of the gel",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Cover the gel with <strong>500mL</strong> of the gel-washing solution.  <br><br><strong>Gel-washing solution:</strong> Add <strong>500mL</strong> of HPLC-grade methanol to <strong>300 mL</strong> of HPLC grade water. Add <strong>100mL</strong> of reagent grade acetic acid and adjust the total volume to <strong>1000 mL</strong> with HPLC grade water. The final concentrations are <strong>50%</strong> (v/v) methanol in water with <strong>10%</strong> (v/v) acetic acid. <br><br>Continue to fix the proteins in the gel by incubating overnight at room temperature with gentle agitation. The gel should be covered during this process to avoid contamination and to prevent the evaporation of the solution. At the end of this time, remove the solution by aspiration.</p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -374,18 +420,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3904
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Cover the gel with <strong>500mL</strong> of the gel-washing solution.  <br><br><strong>Gel-washing solution:</strong> Add <strong>500mL</strong> of HPLC-grade methanol to <strong>300 mL</strong> of HPLC grade water. Add <strong>100mL</strong> of reagent grade acetic acid and adjust the total volume to <strong>1000 mL</strong> with HPLC grade water. The final concentrations are <strong>50%</strong> (v/v) methanol in water with <strong>10%</strong> (v/v) acetic acid. <br><br>Continue to fix the proteins in the gel by incubating overnight at room temperature with gentle agitation. The gel should be covered during this process to avoid contamination and to prevent the evaporation of the solution. At the end of this time, remove the solution by aspiration.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 5259,
                 "name": "Comassie staining",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p><strong>Comassie Stain:</strong> Dissolve <strong>0.4g</strong> of Coomassie blue R350 in <strong>200 mL</strong> of <strong>40%</strong> (v/v) HPLC grade methanol in water with stirring as needed. Filter the solution to remove any insoluble material. Add <strong>200mL</strong> of <strong>20%</strong> (v/v) acetic acid in water. The final concentration is <strong>0.1%</strong> (w/v) Coomassie blue R350, <strong>20%</strong> (v/v) methanol, and <strong>10%</strong> (v/v) acetic acid.<br><br>Cover the gel with <strong>400mL</strong> of the Coomassie stain. Stain the gel at room temperature for <strong>3 to 4 hours</strong> with gentle agitation. The Coomassie stain is removed by aspiration after staining.</p></body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -395,18 +448,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3904
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p><strong>Comassie Stain:</strong> Dissolve <strong>0.4g</strong> of Coomassie blue R350 in <strong>200 mL</strong> of <strong>40%</strong> (v/v) HPLC grade methanol in water with stirring as needed. Filter the solution to remove any insoluble material. Add <strong>200mL</strong> of <strong>20%</strong> (v/v) acetic acid in water. The final concentration is <strong>0.1%</strong> (w/v) Coomassie blue R350, <strong>20%</strong> (v/v) methanol, and <strong>10%</strong> (v/v) acetic acid.<br><br>Cover the gel with <strong>400mL</strong> of the Coomassie stain. Stain the gel at room temperature for <strong>3 to 4 hours</strong> with gentle agitation. The Coomassie stain is removed by aspiration after staining.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 5257,
                 "name": "Gel fixation",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<strong>Gel-fixing solution:</strong> Add <strong>500mL</strong> of USP-grade <strong>95% (v/v)</strong> ethanol to <strong>300 mL</strong> of HPLC grade water. Add <strong>100 mL</strong> of reagent grade acetic acid and adjust the total volume to <strong>1000 mL</strong> with water. The final concentrations are <strong>50%</strong> (v/v) ethanol in water with <strong>10%</strong> (v/v) acetic acid.<br><br>After electrophoresis, the gel is washed off the glass plates with<strong> 500 mL</strong> of the gel-fixing solution and soaked in that solution for <strong>1 hour.</strong><br><br>The purpose of this step is to gently remove the gel from the plate and begin washing the SDS-containing gel buffers out of the gel. At the end of this time, remove the solution by aspiration.</body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -416,18 +476,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3904
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<strong>Gel-fixing solution:</strong> Add <strong>500mL</strong> of USP-grade <strong>95% (v/v)</strong> ethanol to <strong>300 mL</strong> of HPLC grade water. Add <strong>100 mL</strong> of reagent grade acetic acid and adjust the total volume to <strong>1000 mL</strong> with water. The final concentrations are <strong>50%</strong> (v/v) ethanol in water with <strong>10%</strong> (v/v) acetic acid.<br><br>After electrophoresis, the gel is washed off the glass plates with<strong> 500 mL</strong> of the gel-fixing solution and soaked in that solution for <strong>1 hour.</strong><br><br>The purpose of this step is to gently remove the gel from the plate and begin washing the SDS-containing gel buffers out of the gel. At the end of this time, remove the solution by aspiration.</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 5261,
                 "name": "Storage of gels",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<strong>Storage solution:</strong> Add <strong>25mL</strong> of reagent grade acetic acid to <strong>400mL</strong> of HPLC grade water. After mixing, adjust the final volume to <strong>500mL</strong> with water. The final concentration of acetic acid is <strong>5%</strong> (v/v).<br><br>Equilibrate the gel in the <strong>500mL</strong> of the storage solution for at least <strong>1 hour</strong>. The gel should return to its original dimensions during this process. Store the gel in the storage solution as needed. It might be convenient to carefully transfer the gel to a heat-sealable bag for longer-term storage.</body></html>",
                 "position": 4,
                 "completed": false,
                 "completed_on": null,
@@ -437,17 +504,27 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3904
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<strong>Storage solution:</strong> Add <strong>25mL</strong> of reagent grade acetic acid to <strong>400mL</strong> of HPLC grade water. After mixing, adjust the final volume to <strong>500mL</strong> with water. The final concentration of acetic acid is <strong>5%</strong> (v/v).<br><br>Equilibrate the gel in the <strong>500mL</strong> of the storage solution for at least <strong>1 hour</strong>. The gel should return to its original dimensions during this process. Store the gel in the storage solution as needed. It might be convenient to carefully transfer the gel to a heat-sealable bag for longer-term storage.</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -484,10 +561,18 @@
           "output_id": 2386
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -510,13 +595,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 5254,
                 "name": "Sample loading",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Remove air bubbles and small pieces of gel from the wells and under the gel using a syringe.<br>Load prepared samples into wells and make sure not to overflow. Don't forget loading <strong>protein marker into the first lane</strong>. Then cover the top and connect the anodes.</p></body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -526,14 +612,8 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3903
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [
-                {
-                  "id": 3072,
-                  "step_id": 5254,
-                  "asset_id": 3734
-                }
+              "step_comments": [
+
               ],
               "assets": [
                 {
@@ -555,14 +635,19 @@
                   }
                 }
               ],
-              "step_tables": [],
-              "tables": []
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Remove air bubbles and small pieces of gel from the wells and under the gel using a syringe.<br>Load prepared samples into wells and make sure not to overflow. Don't forget loading <strong>protein marker into the first lane</strong>. Then cover the top and connect the anodes.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 5256,
                 "name": "Remove the gel",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Remove the gel assembly from the electrophoresis apparatus. Remove the gel from the glass plates using a spatula, and prepare for subsequent analysis.</p></body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -572,18 +657,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3903
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Remove the gel assembly from the electrophoresis apparatus. Remove the gel from the glass plates using a spatula, and prepare for subsequent analysis.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 5255,
                 "name": "Electrophoresis",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Set an appropriate voltage and run the electrophoresis when everything's done.<br><br>As for the <strong>total running time</strong>, stop SDS-PAGE running when the downmost sign of the protein marker (if no visible sign, inquire the manufacturer) almost reaches the foot line of the glass plate. Generally, about <strong>1 hour</strong> for a <strong>120V</strong> voltage and a <strong>12%</strong> separating gel. For a separating gel possessing a higher percentage of acylamide, the time will be longer.</p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -593,14 +685,8 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3903
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [
-                {
-                  "id": 3073,
-                  "step_id": 5255,
-                  "asset_id": 3735
-                }
+              "step_comments": [
+
               ],
               "assets": [
                 {
@@ -622,13 +708,21 @@
                   }
                 }
               ],
-              "step_tables": [],
-              "tables": []
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Set an appropriate voltage and run the electrophoresis when everything's done.<br><br>As for the <strong>total running time</strong>, stop SDS-PAGE running when the downmost sign of the protein marker (if no visible sign, inquire the manufacturer) almost reaches the foot line of the glass plate. Generally, about <strong>1 hour</strong> for a <strong>120V</strong> voltage and a <strong>12%</strong> separating gel. For a separating gel possessing a higher percentage of acylamide, the time will be longer.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -660,10 +754,18 @@
           "output_id": 2385
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -686,13 +788,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 5248,
                 "name": "Preparation of the equipment",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<div style=\"text-align: justify;\">Gather combs, glass plates, spacer (silicone tubing), and binder clips. <em><strong>A comb is used to make wells (lanes) to load samples.</strong></em> Use an appropriate comb depending on the sample size. Thoroughly clean the glass plates with ethanol, and assemble the gel casting mold, taking care to not leave any space.</div>\n<div style=\"text-align: justify;\">\n<br><strong>Example:</strong> Use an <strong>8-lane</strong> comb for <strong>7 samples</strong> and molecular weight markers.</div>\n</body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -702,18 +805,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3902
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<div style=\"text-align: justify;\">Gather combs, glass plates, spacer (silicone tubing), and binder clips. <em><strong>A comb is used to make wells (lanes) to load samples.</strong></em> Use an appropriate comb depending on the sample size. Thoroughly clean the glass plates with ethanol, and assemble the gel casting mold, taking care to not leave any space.</div>\n<div style=\"text-align: justify;\">\n<br><strong>Example:</strong> Use an <strong>8-lane</strong> comb for <strong>7 samples</strong> and molecular weight markers.</div>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 5249,
                 "name": "Make the separating gel",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>The acrylamide percentage in SDS PAGE gel depends on the size of the target protein in the sample. Using a higher acrylamide concentration produces a gel with a smaller mesh size suitable for the separation of small proteins. </p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -723,97 +833,103 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3902
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>The acrylamide percentage in SDS PAGE gel depends on the size of the target protein in the sample. Using a higher acrylamide concentration produces a gel with a smaller mesh size suitable for the separation of small proteins. </p></body></html>"
+                  },
+                  "position": 0
+                },
+                {
+                  "table": {
+                    "id": 685,
+                    "created_at": "2018-12-24T11:20:43.674Z",
+                    "updated_at": "2019-01-29T10:02:55.216Z",
+                    "created_by_id": 202,
+                    "last_modified_by_id": 202,
+                    "name": "For 10 mL separating gel:",
+                    "team_id": 1,
+                    "contents": "eyJkYXRhIjpbWyJBY3lsYW1pZGUgcGVyY2VudGFnZSIsIjYlIiwiOCUiLCIx\nMCUiLCIxMiUiLCIxNSUiXSxbIkgyTyAobUwpIiwiNS4yIiwiNC42IiwiMy44\nIiwiMy4yIiwiMi4yIl0sWyJBY3J5bGFtaWRlL0Jpcy1hY3J5bGFtaWRlICAo\nbUwpIiwiMiIsIjIuNiIsIjMuNCIsIjQiLCI1Il0sWyIxLjVNIFRyaXM7IHBI\nPTguOCAobUwpIiwiMi42IiwiMi42IiwiMi42IiwiMi42IiwiMi42Il0sWyIx\nMCUgKHcvdilTRFMgKG1MKSIsIjAuMSIsIjAuMSIsIjAuMSIsIjAuMSIsIjAu\nMSJdLFsiMTAlICh3L3YpIGFtbW9uaXVtIHBlcnN1bGZhdGUgKEFQKSAozrxs\nKSIsIjEwMCIsIjEwMCIsIjEwMCIsIjEwMCIsIjEwMCJdLFsiVEVNRUQgKM68\nbCkiLCIxMCIsIjEwIiwiMTAiLCIxMCIsIjEwIl1dfQ==\n",
+                    "data_vector": "JzAuMSc6MzcsMzgsMzksNDAsNDEgJzEuNSc6MjIgJzEwJzo1LDMzLDQyLDU3\nLDU4LDU5LDYwLDYxICcxMDAnOjQ5LDUwLDUxLDUyLDUzICcxMic6NiAnMTUn\nOjcgJzInOjE3ICcyLjInOjE0ICcyLjYnOjE4LDI4LDI5LDMwLDMxLDMyICcy\nNzRsJzo0OCw1NiAnMy4yJzoxMyAnMy40JzoxOSAnMy44JzoxMiAnMzE2Jzo0\nNyw1NSAnNCc6MjAgJzQuNic6MTEgJzUnOjIxICc1LjInOjEwICc2JzozICc4\nJzo0ICc4LjgnOjI2ICdhY3J5bGFtaWRlL2Jpcy1hY3J5bGFtaWRlJzoxNSAn\nYWN5bGFtaWRlJzoxICdhbW1vbml1bSc6NDQgJ2FwJzo0NiAnaDJvJzo4ICdt\nJzoyMyAnbWwnOjksMTYsMjcsMzYgJ3BlcmNlbnRhZ2UnOjIgJ3BlcnN1bGZh\ndGUnOjQ1ICdwaCc6MjUgJ3Nkcyc6MzUgJ3RlbWVkJzo1NCAndHJpcyc6MjQg\nJ3cvdic6MzQsNDM=\n"
+                  },
+                  "position": 1
+                },
                 {
                   "checklist": {
-                    "id": 972,
-                    "name": "Guideline:",
-                    "step_id": 5249,
-                    "created_at": "2018-12-24T11:23:58.433Z",
-                    "updated_at": "2018-12-24T11:23:58.433Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
+                    "checklist": {
+                      "id": 972,
+                      "name": "Guideline:",
+                      "step_id": 5249,
+                      "created_at": "2018-12-24T11:23:58.433Z",
+                      "updated_at": "2018-12-24T11:23:58.433Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 4002,
+                        "text": "Prepare the gel solution in a small beaker. AP and TEMED must be added right before each use.",
+                        "checked": false,
+                        "checklist_id": 972,
+                        "created_at": "2018-12-24T11:23:58.434Z",
+                        "updated_at": "2018-12-24T11:23:58.434Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 4003,
+                        "text": "Swirl the solution gently but thoroughly.",
+                        "checked": false,
+                        "checklist_id": 972,
+                        "created_at": "2018-12-24T11:23:58.442Z",
+                        "updated_at": "2018-12-24T11:23:58.442Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 4004,
+                        "text": "Pipette appropriate amount of separating gel solution (listed above) into the gap between the glass plates.",
+                        "checked": false,
+                        "checklist_id": 972,
+                        "created_at": "2018-12-24T11:23:58.448Z",
+                        "updated_at": "2018-12-24T11:23:58.448Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      },
+                      {
+                        "id": 4005,
+                        "text": "To make the top of the separating gel be horizontal, fill in water (either isopropanol) into the gap until a overflow. Water also prevents contact with oxygen, which inhibits polymerization.",
+                        "checked": false,
+                        "checklist_id": 972,
+                        "created_at": "2018-12-24T11:23:58.453Z",
+                        "updated_at": "2018-12-24T11:26:09.996Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 3
+                      },
+                      {
+                        "id": 4006,
+                        "text": "Wait for 20-30min to let it gelate.",
+                        "checked": false,
+                        "checklist_id": 972,
+                        "created_at": "2018-12-24T11:23:58.459Z",
+                        "updated_at": "2018-12-24T11:23:58.459Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 4
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 4002,
-                      "text": "Prepare the gel solution in a small beaker. AP and TEMED must be added right before each use.",
-                      "checked": false,
-                      "checklist_id": 972,
-                      "created_at": "2018-12-24T11:23:58.434Z",
-                      "updated_at": "2018-12-24T11:23:58.434Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 4003,
-                      "text": "Swirl the solution gently but thoroughly.",
-                      "checked": false,
-                      "checklist_id": 972,
-                      "created_at": "2018-12-24T11:23:58.442Z",
-                      "updated_at": "2018-12-24T11:23:58.442Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 4004,
-                      "text": "Pipette appropriate amount of separating gel solution (listed above) into the gap between the glass plates.",
-                      "checked": false,
-                      "checklist_id": 972,
-                      "created_at": "2018-12-24T11:23:58.448Z",
-                      "updated_at": "2018-12-24T11:23:58.448Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    },
-                    {
-                      "id": 4005,
-                      "text": "To make the top of the separating gel be horizontal, fill in water (either isopropanol) into the gap until a overflow. Water also prevents contact with oxygen, which inhibits polymerization.",
-                      "checked": false,
-                      "checklist_id": 972,
-                      "created_at": "2018-12-24T11:23:58.453Z",
-                      "updated_at": "2018-12-24T11:26:09.996Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 3
-                    },
-                    {
-                      "id": 4006,
-                      "text": "Wait for 20-30min to let it gelate.",
-                      "checked": false,
-                      "checklist_id": 972,
-                      "created_at": "2018-12-24T11:23:58.459Z",
-                      "updated_at": "2018-12-24T11:23:58.459Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 4
-                    }
-                  ]
-                }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [
-                {
-                  "id": 548,
-                  "step_id": 5249,
-                  "table_id": 685
-                }
-              ],
-              "tables": [
-                {
-                  "id": 685,
-                  "created_at": "2018-12-24T11:20:43.674Z",
-                  "updated_at": "2019-01-29T10:02:55.216Z",
-                  "created_by_id": 202,
-                  "last_modified_by_id": 202,
-                  "name": "For 10 mL separating gel:",
-                  "team_id": 1,
-                  "contents": "eyJkYXRhIjpbWyJBY3lsYW1pZGUgcGVyY2VudGFnZSIsIjYlIiwiOCUiLCIx\nMCUiLCIxMiUiLCIxNSUiXSxbIkgyTyAobUwpIiwiNS4yIiwiNC42IiwiMy44\nIiwiMy4yIiwiMi4yIl0sWyJBY3J5bGFtaWRlL0Jpcy1hY3J5bGFtaWRlICAo\nbUwpIiwiMiIsIjIuNiIsIjMuNCIsIjQiLCI1Il0sWyIxLjVNIFRyaXM7IHBI\nPTguOCAobUwpIiwiMi42IiwiMi42IiwiMi42IiwiMi42IiwiMi42Il0sWyIx\nMCUgKHcvdilTRFMgKG1MKSIsIjAuMSIsIjAuMSIsIjAuMSIsIjAuMSIsIjAu\nMSJdLFsiMTAlICh3L3YpIGFtbW9uaXVtIHBlcnN1bGZhdGUgKEFQKSAozrxs\nKSIsIjEwMCIsIjEwMCIsIjEwMCIsIjEwMCIsIjEwMCJdLFsiVEVNRUQgKM68\nbCkiLCIxMCIsIjEwIiwiMTAiLCIxMCIsIjEwIl1dfQ==\n",
-                  "data_vector": "JzAuMSc6MzcsMzgsMzksNDAsNDEgJzEuNSc6MjIgJzEwJzo1LDMzLDQyLDU3\nLDU4LDU5LDYwLDYxICcxMDAnOjQ5LDUwLDUxLDUyLDUzICcxMic6NiAnMTUn\nOjcgJzInOjE3ICcyLjInOjE0ICcyLjYnOjE4LDI4LDI5LDMwLDMxLDMyICcy\nNzRsJzo0OCw1NiAnMy4yJzoxMyAnMy40JzoxOSAnMy44JzoxMiAnMzE2Jzo0\nNyw1NSAnNCc6MjAgJzQuNic6MTEgJzUnOjIxICc1LjInOjEwICc2JzozICc4\nJzo0ICc4LjgnOjI2ICdhY3J5bGFtaWRlL2Jpcy1hY3J5bGFtaWRlJzoxNSAn\nYWN5bGFtaWRlJzoxICdhbW1vbml1bSc6NDQgJ2FwJzo0NiAnaDJvJzo4ICdt\nJzoyMyAnbWwnOjksMTYsMjcsMzYgJ3BlcmNlbnRhZ2UnOjIgJ3BlcnN1bGZh\ndGUnOjQ1ICdwaCc6MjUgJ3Nkcyc6MzUgJ3RlbWVkJzo1NCAndHJpcyc6MjQg\nJ3cvdic6MzQsNDM=\n"
+                  "position": 2
                 }
               ]
             },
@@ -821,7 +937,6 @@
               "step": {
                 "id": 5250,
                 "name": "Make the stacking gel",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Proteins are highly concentrated when they migrate through a stacking gel prior to entering a separating gel. The concentration occurs due to the difference in the rate of migration of glycine ion, chloride ion, and proteins.<strong><br><br>5mL stacking gel:</strong></p>\n<ul>\n<li>H2O 2.975 mL</li>\n<li>0.5 M Tris-HCl, pH 6.8 1.25 mL</li>\n<li>10% (w/v) SDS 0.05 mL</li>\n<li>Acrylamide/Bis-acrylamide (30%/0.8% w/v) 0.67 mL</li>\n<li>10% (w/v) ammonium persulfate (AP) 0.05 mL</li>\n<li>TEMED 0.005 mL</li>\n</ul>\n<strong><strong>1x Running buffer:<br></strong></strong>\n<ul>\n<li>25 mM Tris-HCl</li>\n<li>200 mM Glycine</li>\n<li>0.1% (w/v) SDS</li>\n</ul>\n</body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -831,94 +946,8 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3902
               },
-              "checklists": [
-                {
-                  "checklist": {
-                    "id": 973,
-                    "name": "Guideline",
-                    "step_id": 5250,
-                    "created_at": "2018-12-24T11:30:55.053Z",
-                    "updated_at": "2018-12-24T11:30:55.053Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
-                  },
-                  "checklist_items": [
-                    {
-                      "id": 4007,
-                      "text": "Discard the water and you can see separating gel left.",
-                      "checked": false,
-                      "checklist_id": 973,
-                      "created_at": "2018-12-24T11:30:55.054Z",
-                      "updated_at": "2018-12-24T11:30:55.054Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 4008,
-                      "text": "Pipette in stacking gel until an overflow.",
-                      "checked": false,
-                      "checklist_id": 973,
-                      "created_at": "2018-12-24T11:30:55.060Z",
-                      "updated_at": "2018-12-24T11:30:55.060Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 4009,
-                      "text": "Insert the well-forming comb without trapping air under the teeth. Wait for 20-30min to let it gelate.",
-                      "checked": false,
-                      "checklist_id": 973,
-                      "created_at": "2018-12-24T11:30:55.065Z",
-                      "updated_at": "2018-12-24T11:30:55.065Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    },
-                    {
-                      "id": 4010,
-                      "text": "Make sure a complete gelation of the stacking gel and take out the comb.",
-                      "checked": false,
-                      "checklist_id": 973,
-                      "created_at": "2018-12-24T11:30:55.071Z",
-                      "updated_at": "2018-12-24T11:30:55.071Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 3
-                    },
-                    {
-                      "id": 4011,
-                      "text": "Take the glass plates out of the casting frame and set them in the cell buffer dam.",
-                      "checked": false,
-                      "checklist_id": 973,
-                      "created_at": "2018-12-24T11:30:55.076Z",
-                      "updated_at": "2018-12-24T11:30:55.076Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 4
-                    },
-                    {
-                      "id": 4012,
-                      "text": "Pour the running buffer (electrophoresis buffer) into the inner chamber and keep pouring after overflow untill the buffer surface reaches the required level in the outer chamber.",
-                      "checked": false,
-                      "checklist_id": 973,
-                      "created_at": "2018-12-24T11:30:55.081Z",
-                      "updated_at": "2018-12-24T11:30:55.081Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 5
-                    }
-                  ]
-                }
-              ],
-              "step_comments": [],
-              "step_assets": [
-                {
-                  "id": 3071,
-                  "step_id": 5250,
-                  "asset_id": 3733
-                }
+              "step_comments": [
+
               ],
               "assets": [
                 {
@@ -940,13 +969,103 @@
                   }
                 }
               ],
-              "step_tables": [],
-              "tables": []
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Proteins are highly concentrated when they migrate through a stacking gel prior to entering a separating gel. The concentration occurs due to the difference in the rate of migration of glycine ion, chloride ion, and proteins.<strong><br><br>5mL stacking gel:</strong></p>\n<ul>\n<li>H2O 2.975 mL</li>\n<li>0.5 M Tris-HCl, pH 6.8 1.25 mL</li>\n<li>10% (w/v) SDS 0.05 mL</li>\n<li>Acrylamide/Bis-acrylamide (30%/0.8% w/v) 0.67 mL</li>\n<li>10% (w/v) ammonium persulfate (AP) 0.05 mL</li>\n<li>TEMED 0.005 mL</li>\n</ul>\n<strong><strong>1x Running buffer:<br></strong></strong>\n<ul>\n<li>25 mM Tris-HCl</li>\n<li>200 mM Glycine</li>\n<li>0.1% (w/v) SDS</li>\n</ul>\n</body></html>"
+                  },
+                  "position": 0
+                },
+                {
+                  "checklist": {
+                    "checklist": {
+                      "id": 973,
+                      "name": "Guideline",
+                      "step_id": 5250,
+                      "created_at": "2018-12-24T11:30:55.053Z",
+                      "updated_at": "2018-12-24T11:30:55.053Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 4007,
+                        "text": "Discard the water and you can see separating gel left.",
+                        "checked": false,
+                        "checklist_id": 973,
+                        "created_at": "2018-12-24T11:30:55.054Z",
+                        "updated_at": "2018-12-24T11:30:55.054Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 4008,
+                        "text": "Pipette in stacking gel until an overflow.",
+                        "checked": false,
+                        "checklist_id": 973,
+                        "created_at": "2018-12-24T11:30:55.060Z",
+                        "updated_at": "2018-12-24T11:30:55.060Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 4009,
+                        "text": "Insert the well-forming comb without trapping air under the teeth. Wait for 20-30min to let it gelate.",
+                        "checked": false,
+                        "checklist_id": 973,
+                        "created_at": "2018-12-24T11:30:55.065Z",
+                        "updated_at": "2018-12-24T11:30:55.065Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      },
+                      {
+                        "id": 4010,
+                        "text": "Make sure a complete gelation of the stacking gel and take out the comb.",
+                        "checked": false,
+                        "checklist_id": 973,
+                        "created_at": "2018-12-24T11:30:55.071Z",
+                        "updated_at": "2018-12-24T11:30:55.071Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 3
+                      },
+                      {
+                        "id": 4011,
+                        "text": "Take the glass plates out of the casting frame and set them in the cell buffer dam.",
+                        "checked": false,
+                        "checklist_id": 973,
+                        "created_at": "2018-12-24T11:30:55.076Z",
+                        "updated_at": "2018-12-24T11:30:55.076Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 4
+                      },
+                      {
+                        "id": 4012,
+                        "text": "Pour the running buffer (electrophoresis buffer) into the inner chamber and keep pouring after overflow untill the buffer surface reaches the required level in the outer chamber.",
+                        "checked": false,
+                        "checklist_id": 973,
+                        "created_at": "2018-12-24T11:30:55.081Z",
+                        "updated_at": "2018-12-24T11:30:55.081Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 5
+                      }
+                    ]
+                  },
+                  "position": 1
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -978,10 +1097,18 @@
           "output_id": 2384
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -1004,13 +1131,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 5253,
                 "name": "Centrifugation",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<strong>Centrifuge:</strong><br><br>\n<ul>\n<li>15,000 rpm</li>\n<li>1 minute</li>\n<li>4°C</li>\n</ul>\n<br>Use <strong>the supernatant</strong> for SDS-PAGE.</body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -1020,18 +1148,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3901
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<strong>Centrifuge:</strong><br><br>\n<ul>\n<li>15,000 rpm</li>\n<li>1 minute</li>\n<li>4°C</li>\n</ul>\n<br>Use <strong>the supernatant</strong> for SDS-PAGE.</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 5252,
                 "name": "Heat the samples",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Heat the samples at <strong>100°C</strong> for <strong>3 minutes</strong> in a heat block.</p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -1041,18 +1176,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3901
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Heat the samples at <strong>100°C</strong> for <strong>3 minutes</strong> in a heat block.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 5251,
                 "name": "Mix samples with buffer",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Make sure your target protein is <strong>dissolved in the liquid phase</strong>, and <strong>no inappropriate ingredients are present</strong> (e.g. guanidine hydrochloride can interact with SDS and cause precipitation). Generally, to treat your unprepared sample, you can use sonicator, lysis buffer or both to sufficiently make your target protein released, and centrifuge to make supernatant and pellet separated.<br><br><br>Mix samples with loading buffer. Mix by flicking the tube.<strong><br><br>5X Sample buffer (Loading buffer):</strong></p>\n<ul>\n<li>10% w/v SDS</li>\n<li>10 mM Dithiothreitol, or beta-mercapto-ethanol</li>\n<li>20 % v/v Glycerol</li>\n<li>0.2 M Tris-HCl; pH 6.8</li>\n<li>0.05% w/v Bromophenolblue</li>\n</ul>\n<strong><br><br><br><br><br><br><br></strong>\n</body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -1062,17 +1204,27 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3901
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Make sure your target protein is <strong>dissolved in the liquid phase</strong>, and <strong>no inappropriate ingredients are present</strong> (e.g. guanidine hydrochloride can interact with SDS and cause precipitation). Generally, to treat your unprepared sample, you can use sonicator, lysis buffer or both to sufficiently make your target protein released, and centrifuge to make supernatant and pellet separated.<br><br><br>Mix samples with loading buffer. Mix by flicking the tube.<strong><br><br>5X Sample buffer (Loading buffer):</strong></p>\n<ul>\n<li>10% w/v SDS</li>\n<li>10 mM Dithiothreitol, or beta-mercapto-ethanol</li>\n<li>20 % v/v Glycerol</li>\n<li>0.2 M Tris-HCl; pH 6.8</li>\n<li>0.05% w/v Bromophenolblue</li>\n</ul>\n<strong><br><br><br><br><br><br><br></strong>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     }
   ],
   "my_module_groups": [

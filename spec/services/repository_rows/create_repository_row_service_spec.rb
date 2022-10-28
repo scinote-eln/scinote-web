@@ -4,7 +4,8 @@ require 'rails_helper'
 
 describe RepositoryRows::CreateRepositoryRowService do
   let(:user) { create :user }
-  let(:repository) { create :repository }
+  let(:team) { create :team, created_by: user }
+  let(:repository) { create :repository, team: team, created_by: user }
   let!(:column) { create :repository_column, :text_type, repository: repository }
   let!(:date_column) { create :repository_column, :date_type, repository: repository }
   let(:service_call) do

@@ -3,7 +3,8 @@ require 'rails_helper'
 describe RepositoryImportParser::Importer do
   let(:user) { create :user }
   let(:team) { create :team, created_by: user }
-  let(:user_team) { create :user_team, user: user, team: team }
+  let!(:owner_role) { UserRole.find_by(name: I18n.t('user_roles.predefined.owner')) }
+  let!(:team_assignment) { create_user_assignment(team, owner_role, user) }
   let(:repository) { create :repository, team: team, created_by: user }
   let!(:sample_group_column) do
     create :repository_column, repository: repository,

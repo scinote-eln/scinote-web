@@ -162,14 +162,12 @@ module ApplicationHelper
       </div></div><div class='row'><div class='col-xs-12'>
       <p class='silver'>#{user.email}</p>)
     if user_still_in_team
-      user_t = user.user_teams
-                   .where('user_teams.team_id = ?', team)
-                   .first
+      user_team_assignment = user.user_assignments.find_by(assignable: team)
       user_description += %(<p>
         #{I18n.t('atwho.users.popover_html',
-                 role: user_t.role.capitalize,
-                 team: user_t.team.name,
-                 time: I18n.l(user_t.created_at, format: :full_date))}
+                 role: user_team_assignment.user_role.name.capitalize,
+                 team: user_team_assignment.assignable.name,
+                 time: I18n.l(user_team_assignment.created_at, format: :full_date))}
         </p></div></div></div>)
     else
       user_description += %(<p></p></div></div></div>)

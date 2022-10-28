@@ -53,10 +53,10 @@
 
     <% if user_signed_in? %>
       <%= render "shared/about_modal" %>
-      <%= render "shared/file_preview/modal.html.erb" %>
-      <%= render "shared/file_edit_modal.html.erb" %>
-      <%= render "shared/marvinjs_modal.html.erb" %>
-      <%= render "shared/comments/comments_sidebar.html.erb" %>
+      <%= render "shared/file_preview/modal" %>
+      <%= render "shared/file_edit_modal" %>
+      <%= render "shared/marvinjs_modal" %>
+      <%= render "shared/comments/comments_sidebar" %>
     <% end %>
 
     <% if user_signed_in? && flash[:system_notification_modal] && current_user.show_login_system_notification? %>

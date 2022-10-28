@@ -3,8 +3,8 @@
 require 'rails_helper'
 
 describe RepositoryTableStateService do
-  let!(:team) { create :team }
   let!(:user) { create :user, email: 'user_one@asdf.com' }
+  let!(:team) { create :team, created_by: user }
   let!(:repository) do
     create :repository, name: 'my repo',
                         created_by: user,

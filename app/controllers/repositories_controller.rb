@@ -46,7 +46,7 @@ class RepositoriesController < ApplicationController
   end
 
   def show
-    current_team_switch(@repository.team)
+    current_team_switch(@repository.team) unless @repository.shared_with?(current_team)
     @display_edit_button = can_create_repository_rows?(@repository)
     @display_delete_button = can_delete_repository_rows?(@repository)
     @display_duplicate_button = can_create_repository_rows?(@repository)
@@ -490,7 +490,7 @@ class RepositoriesController < ApplicationController
   end
 
   def check_share_permissions
-    render_403 if !can_share_repository?(@repository) || current_user.teams.count <= 1
+    render_403 unless can_share_repository?(@repository)
   end
 
   def repository_params

@@ -43,6 +43,7 @@ class MyModule < ApplicationRecord
   belongs_to :restored_by, foreign_key: 'restored_by_id', class_name: 'User', optional: true
   belongs_to :experiment, inverse_of: :my_modules, touch: true
   has_one :project, through: :experiment, autosave: false
+  delegate :team, to: :project
   belongs_to :my_module_group, inverse_of: :my_modules, optional: true
   belongs_to :my_module_status, optional: true
   belongs_to :changing_from_my_module_status, optional: true, class_name: 'MyModuleStatus'
@@ -187,12 +188,7 @@ class MyModule < ApplicationRecord
   end
 
   def unassigned_tags
-    Tag.find_by_sql(
-      "SELECT DISTINCT tags.id, tags.name, tags.color FROM tags " +
-      "INNER JOIN experiments ON experiments.project_id = tags.project_id " +
-      "WHERE experiments.id = #{experiment_id.to_s} AND tags.id NOT IN " +
-      "(SELECT DISTINCT tag_id FROM my_module_tags WHERE my_module_tags.my_module_id = #{id.to_s})"
-      )
+    experiment.project.tags.where.not(id: tags)
   end
 
   def last_activities(count = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
