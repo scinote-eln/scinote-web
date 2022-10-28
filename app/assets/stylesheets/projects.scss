@@ -690,8 +690,6 @@ li.module-hover {
             align-items: center;
             display: flex;
             overflow: hidden;
-            margin-left: -55px;
-            margin-top: 10px;
             
             a {
               color: inherit;
@@ -1096,9 +1094,11 @@ li.module-hover {
   .project-card {
     .project-name-cell {
       align-items: start !important;
-      position: relative;
       top: 12%;
       min-height: 35px;
+      position: absolute;
+      left: 14px;
+      top: 42px;
 
       a {
         color: inherit;
@@ -1115,9 +1115,9 @@ li.module-hover {
 
     .project-code-cell {
       position: relative;
-      padding-left: 10%;
+      padding-left: 20px;
       margin-top:4px;
-      height: min-content;
+      height: min-content; 
     }
 
     .data-row {
