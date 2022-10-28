@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <button title="manage column modal x button" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span title="manage column modal x button" aria-hidden="true">&times;</span></button>
   <button class="btn icon-btn btn-light manage-repo-column-index back-to-column-modal"
           data-modal-url="<%= repository_repository_columns_path(@repository) %>"
           data-action="new">
@@ -22,9 +22,8 @@
         <%= t('libraries.manange_modal_column.name') %>
       </label>
       <div class="col-sm-9">
-        <div class="sci-input-container" data-error-text="<%= t('libraries.manange_modal_column.empty_name_error') %>">
+        <div title="column name for add new column modal" class="sci-input-container" data-error-text="<%= t('libraries.manange_modal_column.empty_name_error') %>">
           <input placeholder="<%= t('libraries.manange_modal_column.name_placeholder') %>"
-                  title="repository add new column name input field"
                   class="sci-input-field"
                   type="text"
                   name="repository_column[name]"
@@ -36,7 +35,7 @@
       <label class="control-label col-sm-3" for="repository-column-data-type">
         <%= t('libraries.manange_modal_column.colum_type') %>
       </label>
-      <div class="col-sm-9" title="repository column type selecting dropdown menu">
+      <div class="col-sm-9">
         <select class="form-control" name="repository_column[data_type]" id="repository-column-data-type"
                 <%= 'data-disable-on-load="true" disable' unless @repository_column.new_record? %>>
           <option title="add new column modal column type text" data-create-url="<%= repository_repository_columns_text_columns_path(@repository) %>"

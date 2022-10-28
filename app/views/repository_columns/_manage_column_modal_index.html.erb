@@ -14,12 +14,12 @@
 <div class="modal-footer">
   <% if can_create_repository_columns?(@repository)%>
     <button id="new-repo-column-modal"
-            title="repository add column button"
             data-view-mode="active"
+            title="repository add column button"
             class="btn btn-secondary manage-repo-column"
             data-modal-url="<%= new_repository_repository_column_path(@repository) %>"
             data-action="new">
-      <span class="fas fa-plus"></span>&nbsp;<%=t 'libraries.manange_modal_column_index.add_column' %>
+      <span title="repository add column text" class="fas fa-plus"></span>&nbsp;<%=t 'libraries.manange_modal_column_index.add_column' %>
     </button>
   <% end %>
 </div>
