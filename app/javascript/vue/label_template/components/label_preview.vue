@@ -101,7 +101,7 @@
         DPMM_RESOLUTION_OPTIONS,
         DPI_RESOLUTION_OPTIONS,
         optionsOpen: false,
-        width: this.template.attributes.unit == 'in' ? this.template.attributes.width_mm / 25.4 : this.template.attributes.width_mm ,
+        width: this.template.attributes.unit == 'in' ? this.template.attributes.width_mm / 25.4 : this.template.attributes.width_mm,
         height: this.template.attributes.unit == 'in' ? this.template.attributes.height_mm / 25.4 : this.template.attributes.height_mm,
         unit: this.template.attributes.unit,
         density: this.template.attributes.density,
@@ -125,19 +125,16 @@
     },
     watch: {
       unit() {
-        this.recalculateUnits();
         this.setDefaults();
       },
       zpl() {
         this.refreshPreview();
       },
       template() {
+        this.unit = this.template.attributes.unit
         this.width = this.template.attributes.unit == 'in' ? this.template.attributes.width_mm / 25.4 : this.template.attributes.width_mm
         this.height = this.template.attributes.unit == 'in' ? this.template.attributes.height_mm / 25.4 : this.template.attributes.height_mm
-        this.unit = this.template.attributes.unit
         this.density = this.template.attributes.density
-
-        this.refreshPreview()
       }
     },
     methods: {
@@ -158,6 +155,8 @@
       },
       refreshPreview() {
         if (this.zpl.length === 0) return;
+
+        this.base64Image = null;
 
         $.ajax({
           url: this.previewUrl,
@@ -184,7 +183,9 @@
         });
       },
       updateUnit(unit) {
+        if (this.unit === unit) return;
         this.unit = unit;
+        this.recalculateUnits();
         this.$emit('unit:update', this.unit);
       },
       updateDensity(density) {

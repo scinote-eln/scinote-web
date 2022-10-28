@@ -5,7 +5,11 @@ class StepText < ApplicationRecord
   include ActionView::Helpers::TextHelper
 
   auto_strip_attributes :text, nullify: false
-  validates :text, length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
+  validates :text, length:
+    {
+      maximum:
+       ENV['STEP_TEXT_MAX_LENGTH'].present? ? ENV['STEP_TEXT_MAX_LENGTH'].to_i : Constants::RICH_TEXT_MAX_LENGTH
+    }
 
   belongs_to :step, inverse_of: :step_texts, touch: true
   has_one :step_orderable_element, as: :orderable, dependent: :destroy

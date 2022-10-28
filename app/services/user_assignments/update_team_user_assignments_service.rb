@@ -5,7 +5,7 @@ module UserAssignments
     def initialize(team_user_assignment)
       @user = team_user_assignment.user
       @team = team_user_assignment.assignable
-      @user_role = user_role
+      @user_role = team_user_assignment.user_role
     end
 
     def call
@@ -24,6 +24,9 @@ module UserAssignments
         repository.automatic_user_assignments
                   .select { |assignment| assignment[:user_id] == @user.id && assignment[:team_id] == @team.id }
                   .each { |assignment| assignment.update!(user_role: @user_role) }
+      end
+      @team.repository_sharing_user_assignments.where(user: @user).find_each do |assignment|
+        assignment.update!(user_role: @user_role)
       end
     end
 
