@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Report < ApplicationRecord
+  ID_PREFIX = 'RP'
+  SEARCHABLE_ATTRIBUTES = ['reports.name', 'reports.description', PREFIXED_ID_SQL].freeze
+
+  include PrefixedIdModel
   include SettingsModel
   include Assignable
   include PermissionCheckableModel
@@ -74,7 +78,7 @@ class Report < ApplicationRecord
 
     new_query = Report.distinct
                       .where(reports: { project_id: project_ids })
-                      .where_attributes_like(%i(name description), query, options)
+                      .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT
