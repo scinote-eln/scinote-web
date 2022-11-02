@@ -51,7 +51,7 @@
           <span class="card-value"><%= l(experiment.archived_on || project.archived_on, format: :full_date) %></span>
         </div>
       <% end %>
-      <div class="data-row" cards-render="true" data-view-mode="active">
+      <div class="data-row" cards-render="true">
         <span class="card-label"><%= t('experiments.card.completed_task') %></span>
         <span class="card-value"><%= t('experiments.card.completed_value', completed: experiment.completed_task_count, all: experiment.task_count) %></span>
       </div>
