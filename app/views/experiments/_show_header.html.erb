@@ -19,7 +19,13 @@
         </div>
       <% end %>
     </h1>
-    <div class="header-actions">
+    <div class="header-actions experiment-header">
+      <span class="dropdown actions-button">
+        <button class="btn btn-light dropdown-toggle" type="button" id="exViewMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <span><%= t('experiments.canvas.view') %></span>
+          <span class="caret"></span>
+        </button>
+      </span>
       <% if can_manage_experiment?(@experiment) || can_clone_experiment?(@experiment)  %>
         <!-- experiment actions -->
         <span class="dropdown actions-button">

@@ -97,10 +97,10 @@ class ExperimentsController < ApplicationController
   def load_table
     table_rows = @experiment.my_modules.active
                             .page(params[:page] || 1)
-                            .per(1)
+                            .per(Constants::DEFAULT_ELEMENTS_PER_PAGE)
     render json: {
       next_page: table_rows.next_page,
-      data: Experiments::TableViewService.new(table_rows).call
+      data: Experiments::TableViewService.new(table_rows, current_user).call
     }
   end
 

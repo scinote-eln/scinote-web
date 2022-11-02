@@ -1,4 +1,4 @@
-/* global GLOBAL_CONSTANTS InfiniteScroll */
+/* global I18n GLOBAL_CONSTANTS InfiniteScroll */
 
 const ExperimnetTable = {
   selectedId: [],
@@ -81,15 +81,49 @@ ExperimnetTable.render.status = function(data) {
 };
 
 ExperimnetTable.render.assigned = function(data) {
-  return data;
+  let users = '';
+  $.each(data.users, (_i, user) => {
+    users += `
+      <span class="global-avatar-container">
+        <img src=${user.image_url} title=${user.title}>
+      </span>
+    `;
+  });
+
+  if (data.length > 3) {
+    users += `
+    <span class="more-users" title="${data.more_users_title}">
+        +${data.length - 3}
+    </span>
+    `;
+  }
+
+  if (data.manage_url) {
+    users = `
+      <a href="${data.manage_url}" class= 'my-module-users-link', data-action='remote-modal'>
+        ${users}
+        <span class="new-user global-avatar-container">
+          <i class="fas fa-plus"></i>
+        </span>
+      </a>
+    `;
+  }
+
+  return users;
 };
 
 ExperimnetTable.render.tags = function(data) {
-  return data;
+  const value = parseInt(data, 10) === 0 ? I18n.t('experiments.table.add_tag') : data;
+  return `<a href="">${value}</a>`;
 };
 
 ExperimnetTable.render.comments = function(data) {
-  return data;
+  return `<a href="#" 
+    class="open-comments-sidebar" id="comment-count-${data.id}" 
+    data-object-type="MyModule" data-object-id="${data.id}">
+      ${data.count > 0 ? data.count : '+'}
+      ${data.count_unseen > 0 ? `<span class="unseen-comments"> ${data.count_unseen} </span>` : ''}
+  </a>`;
 };
 
 ExperimnetTable.init();
