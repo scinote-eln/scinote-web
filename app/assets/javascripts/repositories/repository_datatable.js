@@ -7,6 +7,7 @@
 //= require jquery-ui/widgets/sortable
 //= require repositories/row_editor.js
 
+var repositoryRowName = undefined;
 
 var RepositoryDatatable = (function(global) {
   'use strict';
@@ -499,6 +500,7 @@ var RepositoryDatatable = (function(global) {
         targets: 3,
         visible: true,
         render: function(data, type, row) {
+          repositoryRowName = data;
           return "<a title='repository item: " + data + "' href='" + row.recordInfoUrl + "'"
                  + "class='record-info-link'>" + data + '</a>';
         }
