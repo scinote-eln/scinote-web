@@ -114,7 +114,11 @@ module Experiments
     end
 
     def tags_presenter(my_module)
-      my_module.tags.length
+      {
+        my_module_id: my_module.id,
+        tags: my_module.tags.length,
+        edit_url: my_module_tags_edit_path(my_module, format: :json)
+      }
     end
 
     def comments_presenter(my_module)
