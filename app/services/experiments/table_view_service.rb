@@ -37,7 +37,11 @@ module Experiments
 
     def call
       result = {}
-      @my_modules.includes(PRELOAD).each do |my_module|
+
+      my_module_list = @my_modules.includes(PRELOAD)
+                                  .page(@page || 1)
+                                  .per(Constants::DEFAULT_ELEMENTS_PER_PAGE)
+      my_module_list.each do |my_module|
         prepared_my_module = []
         COLUMNS.each do |col|
           column_data = {
@@ -49,7 +53,11 @@ module Experiments
 
         result[my_module.id] = prepared_my_module
       end
-      result
+
+      {
+        next_page: my_module_list.next_page,
+        data: result
+      }
     end
 
     private
