@@ -1,9 +1,11 @@
 /* global I18n GLOBAL_CONSTANTS InfiniteScroll */
 
-const ExperimnetTable = {
+var ExperimnetTable = {
+  permissions: ['editable', 'archivable', 'restorable', 'moveable'],
   selectedId: [],
   table: '.experiment-table',
   render: {},
+  selectedMyModules: [],
   pageSize: GLOBAL_CONSTANTS.DEFAULT_ELEMENTS_PER_PAGE,
   loadPlaceholder: function() {
     let placeholder = '';
@@ -17,10 +19,10 @@ const ExperimnetTable = {
       // Checkbox selector
       let row = `
         <div class="table-body-cell">
-        <div class="sci-checkbox-container">
-          <input type="checkbox" class="sci-checkbox">
-          <span class="sci-checkbox-label"></span>
-        </div>
+          <div class="sci-checkbox-container">
+            <input type="checkbox" class="sci-checkbox my-module-selector" data-my-module="${id}">
+            <span class="sci-checkbox-label"></span>
+          </div>
         </div>`;
       // Task columns
       $.each(data, (_i, cell) => {
@@ -32,12 +34,77 @@ const ExperimnetTable = {
       });
       // Menu
       row += '<div class="table-body-cell"></div>';
-      $(`<div class="table-row">${row}</div>`).appendTo(`${this.table} .table-body`);
+      $(`<div class="table-row" data-id="${id}">${row}</div>`).appendTo(`${this.table} .table-body`);
+    });
+  },
+  checkActionPermission: function(permission) {
+    let allMyModules;
+
+    allMyModules = this.selectedMyModules.every((id) => {
+      return $(`.table-row[data-id="${id}"]`).data(permission);
+    });
+
+    return allMyModules;
+  },
+  initSelectAllCheckbox: function() {
+    $(this.table).on('click', '.select-all-checkboxes .sci-checkbox', (e1) => {
+      $.each($('.my-module-selector'), (_i, e2) => {
+        if (e1.target.checked !== e2.checked) e2.click();
+      });
+    });
+  },
+  initSelector: function() {
+    $(this.table).on('click', '.my-module-selector', (e) => {
+      let checkbox = e.target;
+      let myModuleId = checkbox.dataset.myModule;
+      let row = $(`.table-row[data-id="${myModuleId}"]`);
+      let index = $.inArray(myModuleId, this.selectedMyModules);
+
+      // If checkbox is checked and row ID is not in list of selected project IDs
+      if (checkbox.checked && index === -1) {
+        $(checkbox).closest('.table-row').addClass('selected');
+        this.selectedMyModules.push(myModuleId);
+      // Otherwise, if checkbox is not checked and ID is in list of selected IDs
+      } else if (!this.checked && index !== -1) {
+        $(checkbox).closest('.table-row').removeClass('selected');
+        this.selectedMyModules.splice(index, 1);
+      }
+
+      if (checkbox.checked) {
+        $.get($(`.table-row[data-id="${myModuleId}"] .my-module-urls`).data('url-permissions'), (result) => {
+          this.permissions.forEach((permission) => {
+            row.data(permission, result[permission]);
+          });
+          this.updateExperimentToolbar();
+        });
+      } else {
+        this.updateExperimentToolbar();
+      }
+    });
+  },
+  updateExperimentToolbar: function() {
+    let experimentToolbar = $('.toolbar-row');
+
+    if (this.selectedMyModules.length === 0) {
+      experimentToolbar.find('.single-object-action, .multiple-object-action').addClass('hidden');
+    } else if (this.selectedMyModules.length === 1) {
+      experimentToolbar.find('.single-object-action, .multiple-object-action').removeClass('hidden');
+    } else {
+      experimentToolbar.find('.single-object-action').addClass('hidden');
+      experimentToolbar.find('.multiple-object-action').removeClass('hidden');
+    }
+
+    this.permissions.forEach((permission) => {
+      if (!this.checkActionPermission(permission)) {
+        experimentToolbar.find(`.btn[data-for="${permission}"]`).addClass('hidden');
+      }
     });
   },
   init: function() {
     var dataUrl = $(this.table).data('my-modules-url');
     this.loadPlaceholder();
+    this.initSelector();
+    this.initSelectAllCheckbox();
     $.get(dataUrl, (result) => {
       $(this.table).find('.table-row').remove();
       this.appendRows(result.data);
@@ -61,7 +128,11 @@ ExperimnetTable.render.task_name = function(data) {
 };
 
 ExperimnetTable.render.id = function(data) {
-  return data;
+  let element = $(`<div class="my-module-urls">${data.id}</div>`);
+  $.each(data.urls, (name, url) => {
+    element.attr(`data-url-${name}`, url);
+  });
+  return element.prop('outerHTML');
 };
 
 ExperimnetTable.render.due_date = function(data) {
@@ -114,7 +185,10 @@ ExperimnetTable.render.assigned = function(data) {
 
 ExperimnetTable.render.tags = function(data) {
   const value = parseInt(data.tags, 10) === 0 ? I18n.t('experiments.table.add_tag') : data.tags;
-  return `<a href="${data.edit_url}" id="myModuleTags${data.my_module_id}" data-remote="true" class="edit-tags-link">${value}</a>`;
+  return `<a href="${data.edit_url}"
+             id="myModuleTags${data.my_module_id}"
+             data-remote="true"
+             class="edit-tags-link">${value}</a>`;
 };
 
 ExperimnetTable.render.comments = function(data) {

@@ -354,6 +354,17 @@ class MyModulesController < ApplicationController
     end
   end
 
+  def permissions
+    if stale?([@my_module])
+      render json: {
+        editable: can_manage_my_module?(@my_module),
+        moveable: can_move_my_module?(@my_module),
+        archivable: can_archive_my_module?(@my_module),
+        restorable: can_restore_my_module?(@my_module)
+      }
+    end
+  end
+
   private
 
   def load_vars

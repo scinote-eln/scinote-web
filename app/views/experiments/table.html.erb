@@ -9,7 +9,7 @@
 
 <div class="content-pane flexible" id="experimentTable">
   <%= render partial: 'experiments/show_header' %>
-
+  <%= render partial: 'experiments/table_toolbar' %>
   <div class="experiment-table-container">
     <div class="experiment-table"
          style="--columns-count: <%= Experiments::TableViewService::COLUMNS.length%>"
