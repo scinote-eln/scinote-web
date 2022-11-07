@@ -3,7 +3,7 @@
 require 'fileutils'
 
 module ModelExporters
-  class ModelExporter
+  class
     attr_accessor :assets_to_copy
     attr_accessor :tiny_mce_assets_to_copy
 

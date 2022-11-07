@@ -113,13 +113,13 @@ ExperimnetTable.render.assigned = function(data) {
 };
 
 ExperimnetTable.render.tags = function(data) {
-  const value = parseInt(data, 10) === 0 ? I18n.t('experiments.table.add_tag') : data;
-  return `<a href="">${value}</a>`;
+  const value = parseInt(data.tags, 10) === 0 ? I18n.t('experiments.table.add_tag') : data.tags;
+  return `<a href="${data.edit_url}" id="myModuleTags${data.my_module_id}" data-remote="true" class="edit-tags-link">${value}</a>`;
 };
 
 ExperimnetTable.render.comments = function(data) {
-  return `<a href="#" 
-    class="open-comments-sidebar" id="comment-count-${data.id}" 
+  return `<a href="#"
+    class="open-comments-sidebar" id="comment-count-${data.id}"
     data-object-type="MyModule" data-object-id="${data.id}">
       ${data.count > 0 ? data.count : '+'}
       ${data.count_unseen > 0 ? `<span class="unseen-comments"> ${data.count_unseen} </span>` : ''}
