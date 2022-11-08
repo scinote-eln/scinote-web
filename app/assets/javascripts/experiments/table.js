@@ -1,4 +1,4 @@
-/* global I18n GLOBAL_CONSTANTS InfiniteScroll */
+/* global I18n GLOBAL_CONSTANTS InfiniteScroll initBSTooltips*/
 
 const ExperimnetTable = {
   selectedId: [],
@@ -33,6 +33,41 @@ const ExperimnetTable = {
       // Menu
       row += '<div class="table-body-cell"></div>';
       $(`<div class="table-row">${row}</div>`).appendTo(`${this.table} .table-body`);
+      this.initDueDatePicker(`#calendarDueDate${data.filter(k => k.column_type === 'id')[0].data}`);
+    });
+  },
+  initDueDatePicker: function(element) {
+    let dueDateContainer = $(element).closest('#dueDateContainer');
+    let dateText = $(element).closest('.date-text');
+    let clearDate = $(element).closest('.datetime-container').find('.clear-date');
+
+    $(element).on('dp.change', function() {
+      $.ajax({
+        url: dueDateContainer.data('update-url'),
+        type: 'PATCH',
+        dataType: 'json',
+        data: { my_module: { due_date: $(element).val() } },
+        success: function(result) {
+          dueDateContainer.find('#dueDateLabelContainer').html(result.tabel_due_date_label.html);
+          dateText.data('due-status', result.tabel_due_date_label.due_status);
+
+          if ($(result.tabel_due_date_label.html).data('due-date')) {
+            clearDate.addClass('open');
+          }
+        }
+      });
+    });
+
+    $(element).on('dp.hide', function() {
+      dateText.attr('data-original-title', dateText.data('due-status'));
+      clearDate.removeClass('open');
+    });
+
+    $(element).on('dp.show', function() {
+      dateText.attr('data-original-title', '').tooltip('hide');
+      if (dueDateContainer.find('.due-date-label').data('due-date')) {
+        clearDate.addClass('open');
+      }
     });
   },
   init: function() {
@@ -52,6 +87,7 @@ const ExperimnetTable = {
           this.appendRows(response.data);
         }
       });
+      initBSTooltips();
     });
   }
 };
@@ -65,7 +101,7 @@ ExperimnetTable.render.id = function(data) {
 };
 
 ExperimnetTable.render.due_date = function(data) {
-  return data;
+  return data.data;
 };
 
 ExperimnetTable.render.age = function(data) {

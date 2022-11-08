@@ -7,6 +7,8 @@ module Experiments
     include CommentHelper
     include ProjectsHelper
     include InputSanitizeHelper
+    include BootstrapFormHelper
+    include MyModulesHelper
     include Canaid::Helpers::PermissionsHelper
 
     COLUMNS = %i(
@@ -74,11 +76,18 @@ module Experiments
     end
 
     def due_date_presenter(my_module)
-      if my_module.due_date
-        I18n.l(my_module.due_date, format: :full_date)
-      else
-        ''
-      end
+      {
+        id: my_module.id,
+        data: ActionController::Base.new.render_to_string(
+          partial: 'experiments/table_due_date.html.erb',
+          locals: { my_module: my_module,
+                    update_path: my_module_path(my_module, @user, format: :json),
+                    due_date_editable: can_update_my_module_due_date?(@user, my_module),
+                    alert_color: get_task_alert_color(my_module),
+                    due_status: my_module_due_status(my_module),
+                    datetime_format: datetime_picker_format_full }
+        )
+      }
     end
 
     def age_presenter(my_module)

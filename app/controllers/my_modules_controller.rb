@@ -5,6 +5,7 @@ class MyModulesController < ApplicationController
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
+  include MyModulesHelper
 
   before_action :load_vars, except: %i(restore_group)
   before_action :check_archive_permissions, only: %i(update)
@@ -195,6 +196,13 @@ class MyModulesController < ApplicationController
               partial: 'my_modules/card_due_date_label.html.erb',
               locals: { my_module: @my_module }
             ),
+            tabel_due_date_label: {
+              html: render_to_string(partial: 'experiments/table_due_date_label.html.erb',
+                                     locals: { my_module: @my_module,
+                                               due_date_editable: can_update_my_module_due_date?(@my_module),
+                                               alert_color: get_task_alert_color(@my_module) }),
+              due_status: my_module_due_status(@my_module)
+          },
             module_header_due_date: render_to_string(
               partial: 'my_modules/module_header_due_date.html.erb',
               locals: { my_module: @my_module }
