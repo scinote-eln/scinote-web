@@ -38,16 +38,16 @@
       </div>
       <div ref="hotTable" class="hot-table-container" @click="!editingTable && enableTableEdit()">
       </div>
-      <div v-if="editingTable" class="edit-message">
+      <div v-if="editingTable" class="edit-message" :title="`${i18n.t('protocols.steps.table.edit_message')}`">
         {{ i18n.t('protocols.steps.table.edit_message') }}
       </div>
     </div>
     <div class="edit-buttons" v-if="editingTable">
       <button class="btn icon-btn btn-primary" @click="updateTable">
-        <i class="fas fa-check"></i>
+        <i :title="`save edited table ${element.attributes.orderable.name}`" class="fas fa-check"></i>
       </button>
       <button class="btn icon-btn btn-light" @click="disableTableEdit">
-        <i class="fas fa-times"></i>
+        <i :title="`cancel editing table ${element.attributes.orderable.name}`" class="fas fa-times"></i>
       </button>
     </div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @cancel="closeDeleteModal"/>

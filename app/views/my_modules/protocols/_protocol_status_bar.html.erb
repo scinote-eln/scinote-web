@@ -12,7 +12,7 @@
     <%= 'parent-newer' if @protocol.parent_newer? || @protocol.parent_and_self_newer? %>
     <%= 'protocol-newer' if @protocol.newer_than_parent? %>
     " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    <i class="fas fa-info-circle"></i>
+    <i class="fas fa-info-circle" title="protocol <%= @protocol.name %> info"></i>
   </a>
   <div class="dropdown-menu status-info-dropdown" aria-labelledby="my-module-protocol-info-button">
     <div class="dropdown-body">

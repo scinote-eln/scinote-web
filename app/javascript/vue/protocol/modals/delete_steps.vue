@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-sm" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span title="close deleting all protocol steps modal"aria-hidden="true">&times;</span></button>
           <h4 class="modal-title">
             {{ i18n.t('protocols.steps.modals.delete_steps.title')}}
           </h4>
@@ -14,8 +14,8 @@
 
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" @click="cancel">{{ i18n.t('general.cancel') }}</button>
-          <button class="btn btn-danger" @click="confirm">{{ i18n.t('protocols.steps.modals.delete_steps.confirm')}}</button>
+          <button title="cancel deleting all protocol steps" class="btn btn-secondary" @click="cancel">{{ i18n.t('general.cancel') }}</button>
+          <button title="confirm deleting all protocol steps" class="btn btn-danger" @click="confirm">{{ i18n.t('protocols.steps.modals.delete_steps.confirm')}}</button>
         </div>
       </div>
     </div>

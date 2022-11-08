@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-sm" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span title="close step delete modal" aria-hidden="true">&times;</span></button>
           <h4 class="modal-title">
             {{ i18n.t('protocols.steps.modals.delete_step.title')}}
           </h4>

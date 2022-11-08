@@ -19,11 +19,11 @@
       </div>
     </div>
     <template v-if="editing">
-      <div title="inline edit save" :class="{ 'btn-primary': !error, 'btn-disabled': error }" class="sci-inline-edit__control btn icon-btn" @click="update">
-        <i class="fas fa-check"></i>
+      <div :class="{ 'btn-primary': !error, 'btn-disabled': error }" class="sci-inline-edit__control btn icon-btn" @click="update">
+        <i title="inline edit save" class="fas fa-check"></i>
       </div>
-      <div title="inline edit cancel" class="sci-inline-edit__control btn btn-light icon-btn" @mousedown="cancelEdit">
-        <i class="fas fa-times"></i>
+      <div class="sci-inline-edit__control btn btn-light icon-btn" @mousedown="cancelEdit">
+        <i title="inline edit cancel" class="fas fa-times"></i>
       </div>
     </template>
   </div>
