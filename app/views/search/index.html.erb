@@ -167,7 +167,7 @@
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
-              <span class="badge pull-right" title="%= @step_search_count %>"><%= @step_search_count %></span>
+              <span class="badge pull-right" title="<%= @step_search_count %>"><%= @step_search_count %></span>
               <span class="fas fa-arrow-circle-right"></span>
               <%= t'Steps' %>
             </a>
