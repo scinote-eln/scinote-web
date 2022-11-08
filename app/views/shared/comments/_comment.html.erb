@@ -3,7 +3,7 @@
   <% unless skip_header%>
     <div class="comment-header">
       <%= image_tag avatar_path(comment.user, :icon_small), class: 'user-avatar' %>
-      <div class="user-name">
+      <div class="user-name" title="<%= user == current_user ? 'You' : comment.user.full_name %>">
         <%= user == current_user ? 'You' : comment.user.full_name %>
       </div>
     </div>

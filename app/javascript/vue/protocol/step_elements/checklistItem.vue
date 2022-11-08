@@ -10,10 +10,10 @@
           <input ref="checkbox"
                  type="checkbox"
                  class="sci-checkbox"
-                 :title="`checklist item ${checklistItem.attributes.text} checkbox`"
+                 :title="`checklist item ${checklistItem.attributes.checked ? 'checked' : 'unchecked'} checkbox`"
                  :disabled="checklistItem.attributes.isNew"
                  :checked="checklistItem.attributes.checked" @change="toggleChecked($event)" />
-          <span class="sci-checkbox-label" >
+          <span  class="sci-checkbox-label" >
           </span>
         </div>
         <div v-else class="sci-checkbox-view-mode"></div>
@@ -41,10 +41,10 @@
       </div>
       <div class="step-element-controls">
         <button v-if="!checklistItem.attributes.urls || updateUrl" class="btn icon-btn btn-light" @click="enableTextEdit" tabindex="-1">
-          <i class="fas fa-pen"></i>
+          <i :title="`edit checklist item ${checklistItem.attributes.text}`" class="fas fa-pen"></i>
         </button>
-        <button :title="`delete checklist item ${checklistItem.attributes.id || 'new'}`" v-if="!checklistItem.attributes.urls || deleteUrl" class="btn icon-btn btn-light" @click="deleteElement" tabindex="-1">
-          <i class="fas fa-trash"></i>
+        <button v-if="!checklistItem.attributes.urls || deleteUrl" class="btn icon-btn btn-light" @click="deleteElement" tabindex="-1">
+          <i :title="`delete checklist item ${checklistItem.attributes.text}`" class="fas fa-trash"></i>
         </button>
       </div>
     </div>

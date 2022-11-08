@@ -1,15 +1,15 @@
 <template>
   <div class="step-text-container" :class="{ 'edit': inEditMode, 'step-element--locked': !element.attributes.orderable.urls.update_url }" @keyup.enter="enableEditMode($event)" tabindex="0">
-    <div v-if="reorderElementUrl" :title="`text ${element.id} grip`" class="step-element-grip" @click="$emit('reorder')">
-      <i class="fas fas-rotated-90 fa-exchange-alt"></i>
+    <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
+      <i :title="`text ${element.id} grip`" class="fas fas-rotated-90 fa-exchange-alt"></i>
     </div>
     <div v-else class="step-element-grip-placeholder"></div>
     <div class="buttons-container">
-      <button :title="`edit text ${element.id}`" v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" tabindex="-1" @click="enableEditMode($event)">
-        <i class="fas fa-pen"></i>
+      <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" tabindex="-1" @click="enableEditMode($event)">
+        <i :title="`edit text ${element.id}`" class="fas fa-pen"></i>
       </button>
-      <button :title="`delete text ${element.id}`" v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
-        <i class="fas fa-trash"></i>
+      <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
+        <i :title="`delete text ${element.id}`" class="fas fa-trash"></i>
       </button>
     </div>
     <Tinymce

@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-sm" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span title="close destroy protocol content modal" aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="modal-destroy-team-label">
             {{ i18n.t('protocols.steps.modals.delete_element.title')}}
           </h4>
@@ -14,8 +14,8 @@
 
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" @click="cancel">{{ i18n.t('general.cancel') }}</button>
-          <button class="btn btn-danger" @click="confirm">{{ i18n.t('protocols.steps.modals.delete_element.confirm')}}</button>
+          <button title="cancel destroying protocol content" class="btn btn-secondary" @click="cancel">{{ i18n.t('general.cancel') }}</button>
+          <button title="confirm destroying protocol content" class="btn btn-danger" @click="confirm">{{ i18n.t('protocols.steps.modals.delete_element.confirm')}}</button>
         </div>
       </div>
     </div>

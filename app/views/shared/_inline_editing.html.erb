@@ -12,8 +12,8 @@
   <div class="view-mode" data-placeholder="<%= config[:placeholder] %>"><%= initial_value %></div>
   <input title="<%= config[:title] %>" placeholder="<%= config[:placeholder] %>" class="hidden input-field" type="text" value="<%= initial_value %>" disabled/>
   <div class="button-container">
-    <span title="<%= config[:title] %> save" class="save-button"><i class="fas fa-check"></i></span>
-    <span title="<%= config[:title] %> cancel" class="cancel-button"><i class="fas fa-times"></i></span>
+    <span class="save-button"><i title="<%= config[:title] %> save" class="fas fa-check"></i></span>
+    <span class="cancel-button"><i title="<%= config[:title] %> cancel" class="fas fa-times"></i></span>
   </div>
   <span class="error-block"></span>
 </div>

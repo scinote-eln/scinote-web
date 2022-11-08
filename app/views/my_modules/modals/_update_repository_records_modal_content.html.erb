@@ -4,7 +4,7 @@
 %>
 <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-    <span aria-hidden="true">×</span>
+    <span title="close update repository records modal" aria-hidden="true">×</span>
   </button>
   <h4 class="modal-title">
     <% if downstream %>
@@ -77,7 +77,7 @@
   <% end %>
 </div>
 <div class="modal-footer">
-  <a class="btn btn-light" data-dismiss="modal">
+  <a title="cancel updating repository" class="btn btn-light" data-dismiss="modal">
     <i class="fas fa-times"></i>
     <%= t('general.cancel') %>
   </a>
