@@ -70,7 +70,12 @@ module Experiments
     end
 
     def id_presenter(my_module)
-      my_module.id
+      {
+        id: my_module.id,
+        urls: {
+          permissions: permissions_my_module_path(my_module)
+        }
+      }
     end
 
     def due_date_presenter(my_module)

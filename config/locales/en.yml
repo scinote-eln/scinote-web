@@ -1304,6 +1304,14 @@ en:
         assigned_html: 'Assigned to'
         tags_html: 'Tags'
         comments_html: '<i class="fas fa-comment"></i>'
+      toolbar:
+        new: 'New task'
+        edit: 'Edit'
+        archive: 'Archive'
+        move: 'Move'
+        duplicate: 'Duplicate'
+        manage_access: 'Manage access'
+        task_data: 'Task data display'
       add_tag: '+ Add tag'
     canvas:
       archive_confirm: "Are you sure to archive this experiment?"

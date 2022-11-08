@@ -1,0 +1,38 @@
+<div class="toolbar-row">
+  <div class="toolbar-left-block">
+    <% if can_manage_experiment?(@experiment) %>
+      <button id="createTask" class="btn btn-primary">
+        <i class="fas fa-plus"></i>
+        <%= t("experiments.table.toolbar.new") %>
+      </button>
+    <% end %>
+    <button id="editTask" class="btn btn-light single-object-action hidden" data-for="editable">
+      <i class="fas fa-pen"></i>
+      <%= t("experiments.table.toolbar.edit") %>
+    </button>
+    <% if can_manage_experiment?(@experiment) %>
+      <button id="duplicateTask" class="btn btn-light multiple-object-action hidden">
+        <i class="fas fa-copy"></i>
+        <%= t("experiments.table.toolbar.duplicate") %>
+      </button>
+    <% end %>
+    <button id="moveTask" class="btn btn-light multiple-object-action hidden" data-for="moveable">
+      <i class="fas fa-arrow-right"></i>
+      <%= t("experiments.table.toolbar.move") %>
+    </button>
+    <button id="manageTaskAccess" class="btn btn-light single-object-action hidden">
+      <i class="fas fa-door-open"></i>
+      <%= t("experiments.table.toolbar.manage_access") %>
+    </button>
+    <button id="archiveTask" class="btn btn-light multiple-object-action hidden"  data-for="archivable">
+      <i class="fas fa-archive"></i>
+      <%= t("experiments.table.toolbar.archive") %>
+    </button>
+  </div>
+  <div class="toolbar-right-block">
+    <button id="taskDataDisplay" class="btn btn-light">
+      <i class="fas fa-eye"></i>
+      <%= t("experiments.table.toolbar.task_data") %>
+    </button>
+  </div>
+</div>

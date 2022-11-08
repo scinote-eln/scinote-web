@@ -1,9 +1,31 @@
 // scss-lint:disable SelectorDepth NestingDepth IdSelector
 
 #experimentTable {
+  --content-header-size: 5em;
+  --toolbar-height: 4.5em;
+  position: relative;
+
   .experiment-table-container {
-    margin-top: 1em;
-    overflow-x: scroll;
+    height: calc(100vh - var(--content-header-size) - var(--navbar-height) - var(--toolbar-height));
+    overflow: auto;
+  }
+
+  .toolbar-row {
+    align-items: center;
+    display: flex;
+    height: var(--toolbar-height);
+
+    .toolbar-left-block {
+      display: flex;
+
+      .btn {
+        margin-right: .25em;
+      }
+    }
+
+    .toolbar-right-block {
+      margin-left: auto;
+    }
   }
 
   .experiment-table {
@@ -19,9 +41,9 @@
       display: flex;
       height: 3em;
       padding: 0 .5em;
-      //position: sticky;
-      //position: -webkit-sticky;
-      //top: calc(var(--content-header-size) + var(--navbar-height));
+      position: sticky;
+      position: -webkit-sticky;
+      top: 0;
       z-index: 2;
 
       &.select-all-checkboxes {
@@ -35,6 +57,7 @@
 
     .table-header {
       display: contents;
+      height: 10px;
 
       &::after {
         content: "";
