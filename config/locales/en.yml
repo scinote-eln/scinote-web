@@ -1312,6 +1312,10 @@ en:
         duplicate: 'Duplicate'
         manage_access: 'Manage access'
         task_data: 'Task data display'
+      view:
+        canvas: 'Canvas'
+        table: 'Table'
+        archived_tasks: 'Go to Archived tasks'
       add_tag: '+ Add tag'
     canvas:
       archive_confirm: "Are you sure to archive this experiment?"
