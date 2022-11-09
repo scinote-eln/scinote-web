@@ -20,12 +20,28 @@
       <% end %>
     </h1>
     <div class="header-actions experiment-header">
-      <span class="dropdown actions-button">
-        <button class="btn btn-light dropdown-toggle" type="button" id="exViewMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-          <span><%= t('experiments.canvas.view') %></span>
-          <span class="caret"></span>
-        </button>
-      </span>
+      <%= render layout: 'shared/view_switch', locals: { disabled: false } do %>
+        <li>
+          <%= link_to canvas_experiment_path(@experiment), class: ('selected' if action_name == 'canvas') do %>
+            <i class="fas fa-dice-four button-icon"></i>
+            <%= t('experiments.table.view.canvas') %>
+          <% end %>
+        </li>
+        <li>
+          <%= link_to table_experiment_path(@experiment), class: ('selected' if action_name == 'table') do %>
+            <i class="fas fa-list button-icon"></i>
+            <%= t('experiments.table.view.table') %>
+          <% end %>
+        </li>
+        <div role="separator" class="divider"></div>
+        <li>
+          <%= link_to module_archive_experiment_path(@experiment) do %>
+            <i class="fas fa-archive button-icon"></i>
+            <%= t('experiments.table.view.archived_tasks') %>
+          <% end %>
+        </li>
+      <% end %>
+
       <% if can_manage_experiment?(@experiment) || can_clone_experiment?(@experiment)  %>
         <!-- experiment actions -->
         <span class="dropdown actions-button">
