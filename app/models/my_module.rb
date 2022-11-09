@@ -13,7 +13,6 @@ class MyModule < ApplicationRecord
   include PermissionCheckableModel
   include Assignable
 
-
   attr_accessor :transition_error_rollback
 
   enum state: Extends::TASKS_STATES
