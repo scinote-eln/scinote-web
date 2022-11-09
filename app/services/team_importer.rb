@@ -27,6 +27,8 @@ class TeamImporter
     @checklist_mappings = {}
     @table_mappings = {}
     @report_mappings = {}
+    @label_template_mappings = {}
+    @step_text_mappings = {}
 
     @project_counter = 0
     @repository_counter = 0
@@ -59,25 +61,18 @@ class TeamImporter
       team_last_modified_by = team.last_modified_by_id
       team.last_modified_by_id = nil
       team.without_templates = true
+      team.skip_user_assignments = true
       team.save!
+      @team_id = team.id
 
       create_users(team_json['users'], team)
+      puts 'Assigning users to the team...'
+      create_user_assignments(team_json['user_assignments'], team)
 
       # Find new id of the first admin in the team
       @admin_id = @user_mappings[team_json['default_admin_id']]
 
       create_notifications(team_json['notifications'])
-
-      puts 'Assigning users to the team...'
-      team_json['user_teams'].each do |user_team_json|
-        user_team = UserTeam.new(user_team_json)
-        user_team.id = nil
-        user_team.user_id = find_user(user_team.user_id)
-        user_team.team_id = team.id
-        user_team.assigned_by_id = find_user(user_team.assigned_by_id)
-        user_team.save!
-      end
-
       create_protocol_keywords(team_json['protocol_keywords'], team)
       create_protocols(team_json['protocols'], nil, team)
       create_project_folders(team_json['project_folders'], team)
@@ -316,6 +311,7 @@ class TeamImporter
     team.label_templates.where.not(type: 'FluicsLabelTemplate').destroy_all
     label_templates_json.each do |template_json|
       template = LabelTemplate.new(template_json)
+      orig_template_id = template.id
       template.id = nil
       template.team_id = team.id
       template.created_by_id = find_user(template.created_by_id) if template.created_by_id
@@ -323,6 +319,7 @@ class TeamImporter
       template.save!
 
       @label_template_counter += 1
+      @label_template_mappings[orig_template_id] = template.id
     end
   end
 
@@ -457,7 +454,11 @@ class TeamImporter
       repository.archived_by_id = find_user(repository.archived_by_id)
       repository.restored_by_id = find_user(repository.restored_by_id)
       repository.discarded_by_id = find_user(repository.discarded_by_id)
+      repository.skip_user_assignments = true
       repository.save!
+
+      create_user_assignments(repository_json['user_assignments'], repository)
+
       @repository_mappings[orig_repository_id] = repository.id
       @repository_counter += 1
       repository_json['repository_columns'].each do |repository_column_json|
@@ -790,6 +791,9 @@ class TeamImporter
       protocol.skip_user_assignments = true
       protocol.parent_id = @protocol_mappings[protocol.parent_id] unless protocol.parent_id.nil?
       protocol.save!
+
+      create_user_assignments(protocol_json['user_assignments'], protocol) if protocol.in_repository?
+
       @protocol_counter += 1
       @protocol_mappings[orig_protocol_id] = protocol.id
 
@@ -832,9 +836,11 @@ class TeamImporter
       step_json['step_orderable_elements'].each do |element_json|
         if element_json['step_text']
           orderable = StepText.new(element_json['step_text'])
+          orig_step_text_id = orderable.id
           orderable.step_id = step.id
           orderable.id = nil
           orderable.save!
+          @step_text_mappings[orig_step_text_id] = orderable.id
         elsif element_json['table']
           table = Table.new(element_json['table'])
           orig_table_id = table.id
@@ -983,7 +989,11 @@ class TeamImporter
       report.user_id = find_user(report.user_id)
       report.last_modified_by_id = find_user(report.last_modified_by_id)
       report.team_id = team.id
+      report.skip_user_assignments = true
       report.save!
+
+      create_user_assignments(report_json['user_assignments'], report)
+
       @report_mappings[orig_report_id] = report.id
       @report_counter += 1
       report_json['report_elements'].each do |report_element_json|
@@ -1057,6 +1067,7 @@ class TeamImporter
       user_assignment.user_id = find_user(user_assignment_json['user_id'])
       user_assignment.assigned = user_assignment_json['assigned']
       user_assignment.assigned_by_id = find_user(user_assignment_json['assigned_by_id'])
+      user_assignment.team_id = @team_id
       user_assignment.save!
     end
   end
