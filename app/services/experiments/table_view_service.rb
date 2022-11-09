@@ -26,21 +26,29 @@ module Experiments
       my_module_status: {},
       tags: {},
       task_comments: {},
-      user_assignments: :user
+      user_assignments: :user,
+      designated_users: {}
     }
 
-    def initialize(my_modules, user, page = 1)
+    def initialize(my_modules, user, params)
       @my_modules = my_modules
-      @page = page
+      @page = params[:page] || 1
       @user = user
+      @filters = params[:filters] || []
     end
 
     def call
       result = {}
+      my_module_list = @my_modules
+      @filters.each do |name, value|
+        my_module_list = __send__("#{name}_filter", my_module_list, value) if value.present?
+      end
 
-      my_module_list = @my_modules.includes(PRELOAD)
-                                  .page(@page || 1)
-                                  .per(Constants::DEFAULT_ELEMENTS_PER_PAGE)
+      my_module_list = my_module_list.includes(PRELOAD)
+                                     .select('my_modules.*')
+                                     .group('my_modules.id')
+                                     .page(@page || 1)
+                                     .per(Constants::DEFAULT_ELEMENTS_PER_PAGE)
       my_module_list.each do |my_module|
         prepared_my_module = []
         COLUMNS.each do |col|
@@ -105,19 +113,19 @@ module Experiments
     end
 
     def assigned_presenter(my_module)
-      user_assignments = my_module.user_assignments
+      users = my_module.designated_users
       result = {
-        count: user_assignments.length,
+        count: users.length,
         users: []
       }
-      user_assignments[0..3].each do |ua|
+      users[0..3].each do |user|
         result[:users].push({
-                              image_url: avatar_path(ua.user, :icon_small),
-                              title: user_name_with_role(ua)
+                              image_url: avatar_path(user, :icon_small),
+                              title: user.full_name
                             })
       end
 
-      result[:more_users_title] = user_names_with_roles(user_assignments[4..].to_a) if user_assignments.length > 3
+      result[:more_users_title] = user_names_with_roles(users[4..].to_a) if users.length > 3
 
       if can_manage_my_module_users?(@user, my_module)
         result[:manage_url] = index_old_my_module_user_my_modules_url(my_module_id: my_module.id, format: :json)
@@ -140,6 +148,26 @@ module Experiments
         count: my_module.comments.count,
         count_unseen: count_unseen_comments(my_module, @user)
       }
+    end
+
+    def name_filter(my_modules, value)
+      my_modules.where_attributes_like('my_modules.name', value)
+    end
+
+    def due_date_from_filter(my_modules, value)
+      my_modules.where('my_modules.due_date >= ?', value)
+    end
+
+    def due_date_to_filter(my_modules, value)
+      my_modules.where('my_modules.due_date <= ?', value)
+    end
+
+    def assigned_users_filter(my_modules, value)
+      my_modules.joins(:user_my_modules).where(user_my_modules: { user_id: value })
+    end
+
+    def statuses_filter(my_modules, value)
+      my_modules.where('my_module_status_id IN (?)', value)
     end
   end
 end

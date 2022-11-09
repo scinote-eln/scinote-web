@@ -375,6 +375,7 @@ Rails.application.routes.draw do
         get 'fetch_workflow_img' # Get udated workflow img
         post 'restore_my_modules', to: 'my_modules#restore_group'
         get 'sidebar'
+        get :assigned_users_to_tasks
       end
     end
 

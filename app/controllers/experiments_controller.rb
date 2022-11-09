@@ -96,7 +96,7 @@ class ExperimentsController < ApplicationController
 
   def load_table
     active_modules = @experiment.my_modules.active
-    render json: Experiments::TableViewService.new(active_modules, current_user, params[:page]).call
+    render json: Experiments::TableViewService.new(active_modules, current_user, params).call
   end
 
   def edit
@@ -330,6 +330,15 @@ class ExperimentsController < ApplicationController
         )
       }
     end
+  end
+
+  def assigned_users_to_tasks
+    users = current_team.users.where(id: @experiment.my_modules.joins(:user_my_modules).select(:user_id))
+                        .search(false, params[:query]).map do |u|
+      { value: u.id, label: sanitize_input(u.name), params: { avatar_url: avatar_path(u, :icon_small) } }
+    end
+
+    render json: users, status: :ok
   end
 
   private
