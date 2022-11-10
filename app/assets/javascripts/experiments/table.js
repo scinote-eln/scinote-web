@@ -1,4 +1,4 @@
-/* global I18n GLOBAL_CONSTANTS InfiniteScroll */
+/* global I18n GLOBAL_CONSTANTS InfiniteScroll filterDropdown dropdownSelector */
 
 var ExperimnetTable = {
   permissions: ['editable', 'archivable', 'restorable', 'moveable'],
@@ -6,6 +6,8 @@ var ExperimnetTable = {
   table: '.experiment-table',
   render: {},
   selectedMyModules: [],
+  activeFilters: {},
+  filters: [], // Filter {name: '', init(), closeFilter(), apply(), active(), clearFilter()}
   pageSize: GLOBAL_CONSTANTS.DEFAULT_ELEMENTS_PER_PAGE,
   loadPlaceholder: function() {
     let placeholder = '';
@@ -100,12 +102,52 @@ var ExperimnetTable = {
       }
     });
   },
-  init: function() {
+  selectDate: function($field) {
+    var datePicker = $field.data('DateTimePicker');
+    if (datePicker && datePicker.date()) {
+      return datePicker.date()._d.toUTCString();
+    }
+    return null;
+  },
+  initFilters: function() {
+    this.filterDropdown = filterDropdown.init();
+    let $experimentFilter = $('#experimentTable .my-modules-filters');
+
+    $.each(this.filters, (_i, filter) => {
+      filter.init($experimentFilter);
+    });
+
+    this.filterDropdown.on('filter:apply', () => {
+      $.each(this.filters, (_i, filter) => {
+        this.activeFilters[filter.name] = filter.apply($experimentFilter);
+      });
+
+      filterDropdown.toggleFilterMark(
+        this.filterDropdown,
+        this.filters.some((filter) => {
+          return filter.active(this.activeFilters[filter.name]);
+        })
+      );
+
+      this.loadTable();
+    });
+
+    this.filterDropdown.on('filter:clickBody', () => {
+      $.each(this.filters, (_i, filter) => {
+        filter.closeFilter($experimentFilter);
+      });
+    });
+
+    this.filterDropdown.on('filter:clear', () => {
+      $.each(this.filters, (_i, filter) => {
+        filter.clearFilter($experimentFilter);
+      });
+    });
+  },
+  loadTable: function() {
     var dataUrl = $(this.table).data('my-modules-url');
     this.loadPlaceholder();
-    this.initSelector();
-    this.initSelectAllCheckbox();
-    $.get(dataUrl, (result) => {
+    $.get(dataUrl, { filters: this.activeFilters }, (result) => {
       $(this.table).find('.table-row').remove();
       this.appendRows(result.data);
       InfiniteScroll.init(this.table, {
@@ -117,9 +159,18 @@ var ExperimnetTable = {
         lastPage: !result.next_page,
         customResponse: (response) => {
           this.appendRows(response.data);
+        },
+        customParams: (params) => {
+          return { ...params, ...{ filters: this.activeFilters } };
         }
       });
     });
+  },
+  init: function() {
+    this.initSelector();
+    this.initSelectAllCheckbox();
+    this.initFilters();
+    this.loadTable();
   }
 };
 
@@ -199,5 +250,101 @@ ExperimnetTable.render.comments = function(data) {
       ${data.count_unseen > 0 ? `<span class="unseen-comments"> ${data.count_unseen} </span>` : ''}
   </a>`;
 };
+
+// Filters
+
+ExperimnetTable.filters.push({
+  name: 'name',
+  init: () => {},
+  closeFilter: ($container) => {
+    $('#textSearchFilterHistory').hide();
+    $('#textSearchFilterInput', $container).closest('.dropdown').removeClass('open');
+  },
+  apply: ($container) => {
+    return $('#textSearchFilterInput', $container).val();
+  },
+  active: (value) => { return value; },
+  clearFilter: ($container) => {
+    $('#textSearchFilterInput', $container).val('');
+  }
+});
+
+ExperimnetTable.filters.push({
+  name: 'due_date_from',
+  init: () => {},
+  closeFilter: () => {},
+  apply: ($container) => {
+    return ExperimnetTable.selectDate($('.due-date-filter .from-date', $container));
+  },
+  active: (value) => { return value; },
+  clearFilter: ($container) => {
+    if ($('.due-date-filter .from-date', $container).data('DateTimePicker')) {
+      $('.due-date-filter .from-date', $container).data('DateTimePicker').clear();
+    }
+  }
+});
+
+ExperimnetTable.filters.push({
+  name: 'due_date_to',
+  init: () => {},
+  closeFilter: () => {},
+  apply: ($container) => {
+    return ExperimnetTable.selectDate($('.due-date-filter .to-date', $container));
+  },
+  active: (value) => { return value; },
+  clearFilter: ($container) => {
+    if ($('.due-date-filter .to-date', $container).data('DateTimePicker')) {
+      $('.due-date-filter .to-date', $container).data('DateTimePicker').clear();
+    }
+  }
+});
+
+ExperimnetTable.filters.push({
+  name: 'assigned_users',
+  init: ($container) => {
+    dropdownSelector.init($('.assigned-filter', $container), {
+      optionClass: 'checkbox-icon users-dropdown-list',
+      optionLabel: (data) => {
+        return `<img class="item-avatar" src="${data.params.avatar_url}"/> ${data.label}`;
+      },
+      tagLabel: (data) => {
+        return `<img class="item-avatar" src="${data.params.avatar_url}"/> ${data.label}`;
+      },
+      labelHTML: true,
+      tagClass: 'users-dropdown-list'
+    });
+  },
+  closeFilter: ($container) => {
+    dropdownSelector.closeDropdown($('.assigned-filter', $container));
+  },
+  apply: ($container) => {
+    return dropdownSelector.getValues($('.assigned-filter', $container));
+  },
+  active: (value) => { return value && value.length !== 0; },
+  clearFilter: ($container) => {
+    dropdownSelector.clearData($('.assigned-filter', $container));
+  }
+});
+
+ExperimnetTable.filters.push({
+  name: 'statuses',
+  init: ($container) => {
+    dropdownSelector.init($('.status-filter', $container), {
+      singleSelect: true,
+      closeOnSelect: true,
+      selectAppearance: 'simple'
+    });
+  },
+  closeFilter: ($container) => {
+    dropdownSelector.closeDropdown($('.status-filter', $container));
+  },
+  apply: ($container) => {
+    return dropdownSelector.getValues($('.status-filter', $container));
+  },
+  active: (value) => { return value && value.length !== 0; },
+  clearFilter: ($container) => {
+    dropdownSelector.clearData($('.status-filter', $container));
+  }
+});
 
 ExperimnetTable.init();

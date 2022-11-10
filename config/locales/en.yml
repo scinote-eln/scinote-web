@@ -1312,6 +1312,13 @@ en:
         duplicate: 'Duplicate'
         manage_access: 'Manage access'
         task_data: 'Task data display'
+      filters:
+        name: 'Task name'
+        due_date: 'Due date'
+        status: 'Status'
+        status_placeholder: 'Select task flow status'
+        assigned: 'Assigned to'
+        assigned_placeholder: 'Select user'
       view:
         canvas: 'Canvas'
         table: 'Table'

@@ -54,6 +54,9 @@
                               locals: { project: @project, experiment: @experiment } %>
         </span>
       <% end %>
+      <% if action_name == 'table' %>
+        <%= render partial: 'table_filters.html.erb' %>
+      <% end %>
     </div>
   </div>
 </div>
