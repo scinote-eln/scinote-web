@@ -49,6 +49,17 @@ en:
         not_correct_code: "Not correct recovery code"
       create:
         team_name: "%{user}'s projects"
+      expire_modal:
+        why_see_this: 'Why am I seeing this?'
+        session_end_in:
+          header: 'Your session will end in %{time}'
+          description: 'To keep the data you entered into the fields without clicking the Save button, please revive your session and save them.'
+          paragraph1: 'To keep your work secure, SciNote times out sessions after 3 hours of inactivity. '
+          paragraph2: 'To proceed working after the session ends, you’ll have to log in again, starting a new working session.'
+          revive_session: 'Revive my session'
+        session_ended:
+          header: 'To proceed working, please log in again'
+          description: 'If you have any unsaved data, please close this message, copy your text, and paste it back after you log in again.'
     unlocks:
       new:
         head_title: "Resend unlock instructions"
