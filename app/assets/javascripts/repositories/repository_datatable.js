@@ -565,7 +565,6 @@ var RepositoryDatatable = (function(global) {
         // Show number of selected rows near pages info
         $('#repository-table_info').append('<span id="selected_info"></span>');
         $('#selected_info').html(' (' + rowsSelected.length + ' entries selected)');
-        checkArchivedColumnsState();
 
         // Hide edit button if not all selected rows are on the current page
         let visibleRowIds = $(
@@ -577,7 +576,7 @@ var RepositoryDatatable = (function(global) {
         } else {
           $('#editRepositoryRecord').hide();
         }
-        
+
         if ($('.repository-show').hasClass('archived')) {
           TABLE.columns([6, 7]).visible(true);
         }
