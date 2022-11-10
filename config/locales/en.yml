@@ -1760,7 +1760,8 @@ en:
         errors:
           too_long: "Item name is too long (maximum is %{max_length} characters)"
           is_empty: "Item name should be filled"
-
+    pagination_edit_overlay_html: "Please <a class=\"repository-save-changes-link\">save your changes</a> before you go to another page"
+    toolbar_edit_overlay_html: "Please <a class=\"repository-save-changes-link\">save your changes</a> first before using filters"
     add_new_record: "New item"
     parse_sheet:
       help_text: "Match the columns of your uploaded file with already existing columns in database."
@@ -1838,7 +1839,7 @@ en:
     create:
       success_flash: "Successfully added item <strong>%{record}</strong> to inventory <strong>%{repository}</strong>"
     update:
-      success_flash: "Successfully updated item <strong>%{record}</strong> in inventory <strong>%{repository}</strong>"
+      success_flash: "Inventory items were successfully updated."
     destroy:
       success_flash: "%{records_number} item(s) successfully deleted."
       contains_other_records_flash: "%{records_number} item(s) successfully deleted. %{other_records_number} of the selected item(s) were created by other users and were not deleted."

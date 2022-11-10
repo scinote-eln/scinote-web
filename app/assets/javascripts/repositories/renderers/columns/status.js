@@ -4,7 +4,7 @@
 var StatusColumnHelper = (function() {
   function statusSelect(select, url, value) {
     var selectedOption = '';
-    var selectObject = $(`<select id="${select}" 
+    var selectObject = $(`<select id="${select}"
                                   data-placeholder = "${I18n.t('repositories.table.status.set_status')}"
                                   data-ajax-url = "${url}" ></select>`);
 
@@ -26,7 +26,7 @@ var StatusColumnHelper = (function() {
   }
 
   function initialStatusEditMode(formId, columnId, cell, value = null) {
-    var select = 'status-list-' + columnId;
+    var select = `status-list-${columnId}-${cell.parent()[0].id}`;
     var listUrl = $('.repository-column#' + columnId).data('items-url');
     var $select = statusSelect(select, listUrl, value);
     var $hiddenField = statusHiddenField(formId, columnId, value);

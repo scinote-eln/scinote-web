@@ -1,4 +1,7 @@
 <template id="repositoryToolbar">
+  <div class="repository-edit-overlay repository-edit-overlay--toolbar">
+    <%= t('repositories.toolbar_edit_overlay_html') %>
+  </div>
   <!-- LEFT TOOLBAR BLOCK -->
   <div class="toolbar-left-block">
     <% if @repository.active? %>

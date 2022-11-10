@@ -541,3 +541,47 @@
     }
   }
 }
+
+.repository-table {
+  .repository-edit-overlay {
+    background: $color-white;
+    color: $color-silver-chalice;
+    display: none;
+    z-index: 1000;
+
+    .repository-save-changes-link {
+      cursor: pointer;
+    }
+  }
+
+  .repository-edit-overlay--toolbar {
+    height: 3em;
+    line-height: 2em;
+    padding: .5em 1em .5em .5em;
+    position: absolute;
+    right: 0;
+    text-align: right;
+    top: 2em;
+    width: 50%;
+  }
+
+  .repository-edit-overlay--pagination {
+    bottom: 0;
+    height: 5em;
+    line-height: 5em;
+    padding: .5em;
+    position: fixed;
+    text-align: center;
+    width: calc(100% - var(--repository-sidebar-margin));
+
+    hr {
+      margin-top: -2.5em;
+    }
+
+    span {
+      background: $color-white;
+      display: inline-block;
+      padding: 0 .5em;
+    }
+  }
+}
