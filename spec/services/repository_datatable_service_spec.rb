@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe RepositoryDatatableService do
-  let!(:team) { create :team }
+  let!(:team) { create :team, created_by: user }
   let!(:user) { create :user, email: 'user_one@asdf.com' }
   let!(:repository) do
     create :repository, name: 'my repo',

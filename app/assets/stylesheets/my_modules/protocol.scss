@@ -64,6 +64,9 @@
     padding-left: .75em;
   }
 
+  .empty-protocol-description {
+    color: $color-silver-chalice;
+  }
 
   .protocol-options-dropdown {
     a {
@@ -74,6 +77,9 @@
         pointer-events: none;
       }
     }
+  }
+  .tinymce-wrapper {
+    width: 100%;
   }
   .tinymce-container {
     display: flex;

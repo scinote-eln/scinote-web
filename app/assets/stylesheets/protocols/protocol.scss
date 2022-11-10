@@ -30,7 +30,17 @@
       .authors-list {
         flex-basis: calc(100% - 90px);
         flex-grow: 1;
-        margin-left: .5em;
+        margin-left: .75em;
+
+        &:hover:not(.editing) {
+          .sci-inline-edit__content {
+            border: $border-focus;
+          }
+        }
+
+        .sci-inline-edit__content {
+          padding-top: .35em;
+        }
       }
 
       * {
@@ -77,10 +87,12 @@
   .protocol-description {
     margin-bottom: 2em;
 
-    img {
-      border-radius: 50%;
-      height: 24px;
-      width: 24px;
+    .data-block {
+      img {
+        border-radius: 50%;
+        height: 24px;
+        width: 24px;
+      }
     }
 
     .fas.block-icon {
@@ -106,6 +118,10 @@
     font-weight: bold;
     margin-bottom: 32px;
     margin-top: 28px;
+  }
+
+  .repository-new-step {
+    margin-left: 1.5em;
   }
 }
 

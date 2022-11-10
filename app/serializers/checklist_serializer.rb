@@ -6,11 +6,16 @@ class ChecklistSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :id, :name, :urls, :icon, :sa_name
-  has_many :checklist_items, serializer: ChecklistItemSerializer
+  attributes :id, :name, :urls, :icon, :sa_name, :checklist_items
 
   def icon
     'fa-list-ul'
+  end
+
+  def checklist_items
+    object.checklist_items.map do |item|
+      ChecklistItemSerializer.new(item, scope: { user: scope[:user] || @instance_options[:user] }).as_json
+    end
   end
 
   def sa_name
@@ -25,6 +30,7 @@ class ChecklistSerializer < ActiveModel::Serializer
     return {} if object.destroyed? || !can_manage_step?(scope[:user] || @instance_options[:user], object.step)
 
     {
+      duplicate_url: duplicate_step_checklist_path(object.step, object),
       delete_url: step_checklist_path(object.step, object),
       update_url: step_checklist_path(object.step, object),
       reorder_url: reorder_step_checklist_checklist_items_path(object.step, object),

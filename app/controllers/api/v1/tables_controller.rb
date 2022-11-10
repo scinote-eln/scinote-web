@@ -22,7 +22,14 @@ module Api
       def create
         raise PermissionError.new(Protocol, :create) unless can_manage_protocol_in_module?(@protocol)
 
-        table = @step.tables.create!(table_params.merge!(team: @team, created_by: current_user))
+        table = @step.tables.new(table_params.merge!(team: @team, created_by: current_user))
+        @step.with_lock do
+          table.save!
+          @step.step_orderable_elements.create!(
+            position: @step.step_orderable_elements.size,
+            orderable: table.step_table
+          )
+        end
 
         render jsonapi: table, serializer: TableSerializer, status: :created
       end

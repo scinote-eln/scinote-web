@@ -6,7 +6,8 @@ RSpec.describe 'Api::V1::WrokflowsController', type: :request do
   before :all do
     @user = create(:user)
     @teams = create_list(:team, 2, created_by: @user)
-    create(:user_team, user: @user, team: @teams.first, role: 2)
+    @owner_role = UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))
+    create_user_assignment(@teams.first, @owner_role, @user)
     @valid_headers =
       { 'Authorization': 'Bearer ' + generate_token(@user.id) }
     MyModuleStatusFlow.ensure_default

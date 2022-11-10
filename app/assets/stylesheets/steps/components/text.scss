@@ -1,5 +1,6 @@
 .step-text-container {
   display: flex;
+  border-radius: 4px;
   margin-bottom: 16px;
   padding-left: var(--left-component-padding);
   position: relative;
@@ -9,6 +10,16 @@
     flex: 0;
   }
 
+  .view-text-element {
+    a {
+      pointer-events: initial;
+    }
+  }
+
+  .empty-text-element {
+    color: $color-silver-chalice;
+  }
+
   .buttons-container {
     background: linear-gradient(
       90deg,
@@ -16,6 +27,7 @@
       $color-concrete 25%,
       $color-concrete 100%
     );
+    border-radius: 4px;
     display: none;
     padding-left: 2em;
     position: absolute;
@@ -23,7 +35,7 @@
   }
 
 
-  .element-grip {
+  .step-element-grip {
     align-items: center;
     color: $color-silver-chalice;
     display: none;
@@ -34,21 +46,25 @@
     position: absolute;
   }
 
-  &:hover:not(.edit) {
+  img {
+    max-width: 100%;
+  }
+
+  &:hover:not(.edit):not(.locked) {
     background: $color-concrete;
 
     .buttons-container {
       display: flex;
     }
 
-    .element-grip {
+    .step-element-grip {
       display: flex;
     }
   }
 
   &.edit {
     .buttons-container,
-    .element-grip {
+    .step-element-grip {
       display: none;
     }
   }

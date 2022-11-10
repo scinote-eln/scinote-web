@@ -23,13 +23,6 @@ module Reports::Docx::DrawStep
         timestamp: I18n.l(timestamp, format: :full)
       ), color: color[:gray]
     end
-    if step.description.present?
-      html = custom_auto_link(step.description, team: @report_team)
-      Reports::HtmlToWordConverter.new(@docx, { scinote_url: @scinote_url,
-                                                link_style: @link_style }).html_to_word_converter(html)
-    else
-      @docx.p I18n.t 'projects.reports.elements.step.no_description'
-    end
 
     step.step_orderable_elements.order(:position).each do |e|
       if e.orderable_type == 'StepTable' && @settings.dig('task', 'protocol', 'step_tables')

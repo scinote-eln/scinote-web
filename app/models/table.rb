@@ -25,7 +25,6 @@ class Table < ApplicationRecord
   has_one :result_table, inverse_of: :table
   has_one :result, through: :result_table
   has_many :report_elements, inverse_of: :table, dependent: :destroy
-  has_many :step_orderable_elements, as: :orderable, dependent: :destroy
 
   after_save :update_ts_index
   after_save { result&.touch; step&.touch }
@@ -128,6 +127,25 @@ class Table < ApplicationRecord
      data.each do |row|
        csv << row
      end
+    end
+  end
+
+  def duplicate(step, user, position = nil)
+    ActiveRecord::Base.transaction do
+      new_table = step.tables.create!(
+        name: name,
+        contents: contents.encode('UTF-8', 'UTF-8'),
+        team: step.protocol.team,
+        created_by: user,
+        last_modified_by: user
+      )
+
+      step.step_orderable_elements.create!(
+        position: position || step.step_orderable_elements.length,
+        orderable: new_table.step_table
+      )
+
+      new_table
     end
   end
 end

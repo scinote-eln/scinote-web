@@ -1,7 +1,7 @@
 /*
   globals I18n _ SmartAnnotation FilePreviewModal animateSpinner DataTableHelpers
   HelperModule RepositoryDatatableRowEditor prepareRepositoryHeaderForExport
-  initAssignedTasksDropdown initBMTFilter initReminderDropdown
+  initAssignedTasksDropdown initBMTFilter initReminderDropdown initBSTooltips
 */
 
 //= require jquery-ui/widgets/sortable
@@ -15,7 +15,7 @@ var RepositoryDatatable = (function(global) {
   var TABLE_WRAPPER_ID = '.repository-table';
   var TABLE = null;
   var EDITABLE = false;
-  var SELECT_ALL_SELECTOR = '#checkbox > input[name=select_all]';
+  var SELECT_ALL_SELECTOR = '#checkbox input[name=select_all]';
   const STATUS_POLLING_INTERVAL = 10000;
 
   var rowsSelected = [];
@@ -120,8 +120,6 @@ var RepositoryDatatable = (function(global) {
       $('#toolbarPrintLabel').hide();
       $('.repository-edit-overlay').show();
     }
-
-    $('#toolbarPrintLabel').data('rows', JSON.stringify(rowsSelected));
   }
 
   function clearRowSelection() {
@@ -160,7 +158,6 @@ var RepositoryDatatable = (function(global) {
     var $chkboxAll = $('.repository-row-selector', $table);
     var $chkboxChecked = $('.repository-row-selector:checked', $table);
     var chkboxSelectAll = $(SELECT_ALL_SELECTOR, $header).get(0);
-
     // If none of the checkboxes are checked
     if ($chkboxChecked.length === 0) {
       chkboxSelectAll.checked = false;
@@ -279,6 +276,22 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
+  function initActiveRemindersFilter() {
+    $(TABLE_WRAPPER_ID).find('#only_reminders').on('change', function() {
+      var $activeRemindersFilter = $(this).closest('.active-reminders-filter');
+
+      $(TABLE_WRAPPER_ID).find('table').attr('data-only-reminders', $(this).is(':checked'));
+
+      if ($(this).is(':checked')) {
+        $activeRemindersFilter.attr('title', $activeRemindersFilter.data('checkedTitle'));
+      } else {
+        $activeRemindersFilter.attr('title', $activeRemindersFilter.data('uncheckedTitle'));
+      }
+
+      TABLE.ajax.reload();
+    });
+  }
+
   function resetTableView() {
     var filterSaveButtonVisible = !$('#saveRepositoryFilters').hasClass('hidden');
     $.getJSON($(TABLE_ID).data('toolbar-url'), (data) => {
@@ -288,6 +301,8 @@ var RepositoryDatatable = (function(global) {
         $('#saveRepositoryFilters').removeClass('hidden');
       }
       if (typeof initBMTFilter === 'function') initBMTFilter();
+
+      initBSTooltips();
     });
 
     TABLE.ajax.reload(null, false);
@@ -431,6 +446,11 @@ var RepositoryDatatable = (function(global) {
           if ($('[data-repository-filter-json]').attr('data-repository-filter-json')) {
             d.advanced_search = JSON.parse($('[data-repository-filter-json]').attr('data-repository-filter-json'));
           }
+
+          if ($('[data-only-reminders]').attr('data-only-reminders') === 'true') {
+            d.only_reminders = true;
+          }
+
           return JSON.stringify(d);
         },
         global: false,
@@ -445,8 +465,10 @@ var RepositoryDatatable = (function(global) {
         className: 'dt-body-center',
         sWidth: '1%',
         render: function(data, type, row) {
-          return `<input class='repository-row-selector sci-checkbox' type='checkbox' data-editable="${row.recordEditable}">
-                  <span class='sci-checkbox-label'></span>`;
+          return `<div class="sci-checkbox-container">
+                    <input class='repository-row-selector sci-checkbox' type='checkbox' data-editable="${row.recordEditable}">
+                    <span class='sci-checkbox-label'></span>
+                  </div>`;
         }
       }, {
         // Assigned column is not searchable
@@ -490,8 +512,7 @@ var RepositoryDatatable = (function(global) {
           }
           return data;
         }
-      },
-      {
+      }, {
         targets: 'row-stock',
         className: 'item-stock',
         sWidth: '1%',
@@ -556,6 +577,10 @@ var RepositoryDatatable = (function(global) {
         } else {
           $('#editRepositoryRecord').hide();
         }
+        
+        if ($('.repository-show').hasClass('archived')) {
+          TABLE.columns([6, 7]).visible(true);
+        }
       },
       preDrawCallback: function() {
         var archived = $('.repository-show').hasClass('archived');
@@ -611,6 +636,7 @@ var RepositoryDatatable = (function(global) {
         initItemEditIcon();
         initSaveButton();
         initCancelButton();
+        initBSTooltips();
 
         DataTableHelpers.initLengthAppearance($(TABLE_ID).closest('.dataTables_wrapper'));
 
@@ -632,6 +658,8 @@ var RepositoryDatatable = (function(global) {
 
         initAssignedTasksDropdown(TABLE_ID);
         initReminderDropdown(TABLE_ID);
+
+        initActiveRemindersFilter();
         renderFiltersDropdown();
         setTimeout(function() {
           adjustTableHeader();
@@ -881,15 +909,6 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
-  function checkArchivedColumnsState() {
-    var archived = $('.repository-show').hasClass('archived');
-    $.each(TABLE.context[0].aoColumns, function(i, column) {
-      if (['archived-on', 'archived-by'].includes(column.nTh.id)) {
-        TABLE.column(column.idx).visible(archived);
-      }
-    });
-  }
-
   function renderFiltersDropdown() {
     let dropdown = $('#repositoryFilterTemplate').html();
     $('.toolbar-filters').html(dropdown);
@@ -903,6 +922,7 @@ var RepositoryDatatable = (function(global) {
       TABLE.ajax.reload();
       clearRowSelection();
     },
+    selectedRows: () => { return rowsSelected; },
     redrawTableOnSidebarToggle: redrawTableOnSidebarToggle,
     checkAvailableColumns: checkAvailableColumns
   });

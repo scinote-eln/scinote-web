@@ -74,9 +74,6 @@ en:
       no_results:
         title: "You have not worked on anything recently."
         description: "All tasks, projects, inventories protocols and reports, you last worked on will appear here, when you make some changes."
-      no_results_guest:
-        title: "No recent work."
-        description: "As a guest in this team you cannot make or change anything."
       modes:
         all: "All"
         projects: "PROJECTS"

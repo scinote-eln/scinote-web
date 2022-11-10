@@ -1,12 +1,15 @@
 <template>
-  <div class="step-text-container" :class="{ 'edit': inEditMode }" @keyup.enter="enableEditMode($event)" tabindex="0">
-    <div v-if="reorderElementUrl" class="element-grip" @click="$emit('reorder')">
+  <div class="step-text-container" :class="{ 'edit': inEditMode, 'step-element--locked': !element.attributes.orderable.urls.update_url }" @keyup.enter="enableEditMode($event)" tabindex="0">
+    <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
       <i class="fas fas-rotated-90 fa-exchange-alt"></i>
     </div>
     <div v-else class="step-element-grip-placeholder"></div>
     <div class="buttons-container">
       <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" tabindex="-1" @click="enableEditMode($event)">
         <i class="fas fa-pen"></i>
+      </button>
+      <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light" tabindex="-1" @click="duplicateElement">
+        <i class="fas fa-clone"></i>
       </button>
       <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
         <i class="fas fa-trash"></i>
@@ -28,20 +31,24 @@
       @editingDisabled="disableEditMode"
       @editingEnabled="enableEditMode"
     />
-    <div v-else v-html="element.attributes.orderable.text_view"></div>
+    <div class="view-text-element" v-else-if="element.attributes.orderable.text_view" v-html="element.attributes.orderable.text_view"></div>
+    <div v-else class="empty-text-element">
+      {{ i18n.t("protocols.steps.text.empty_text") }}
+    </div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement($event)" @cancel="closeDeleteModal"/>
   </div>
 </template>
 
  <script>
   import DeleteMixin from 'vue/protocol/mixins/components/delete.js'
+  import DuplicateMixin from 'vue/protocol/mixins/components/duplicate.js'
   import deleteElementModal from 'vue/protocol/modals/delete_element.vue'
   import Tinymce from 'vue/shared/tinymce.vue'
 
   export default {
     name: 'StepText',
     components: { deleteElementModal, Tinymce },
-    mixins: [DeleteMixin],
+    mixins: [DeleteMixin, DuplicateMixin],
     props: {
       element: {
         type: Object,

@@ -4,6 +4,8 @@ class Step < ApplicationRecord
   include TinyMceImages
   include ViewableModel
 
+  attr_accessor :skip_position_adjust # to be used in bulk deletion
+
   enum assets_view_mode: { thumbnail: 0, list: 1, inline: 2 }
 
   auto_strip_attributes :name, :description, nullify: false
@@ -20,7 +22,7 @@ class Step < ApplicationRecord
   before_validation :set_completed_on, if: :completed_changed?
   before_save :set_last_modified_by
   before_destroy :cascade_before_destroy
-  after_destroy :adjust_positions_after_destroy
+  after_destroy :adjust_positions_after_destroy, unless: -> { skip_position_adjust }
 
   belongs_to :user, inverse_of: :steps
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User', optional: true
@@ -149,6 +151,47 @@ class Step < ApplicationRecord
     step_texts.order(created_at: :asc).first
   end
 
+  def duplicate(protocol, user, step_position: nil, step_name: nil)
+    ActiveRecord::Base.transaction do
+      assets_to_clone = []
+
+      new_step = protocol.steps.new(
+        name: step_name || name,
+        position: step_position || protocol.steps.length,
+        completed: false,
+        user: user
+      )
+      new_step.save!
+
+      # Copy texts
+      step_texts.each do |step_text|
+        step_text.duplicate(new_step, step_text.step_orderable_element.position)
+      end
+
+      # Copy checklists
+      checklists.asc.each do |checklist|
+        checklist.duplicate(new_step, user, checklist.step_orderable_element.position)
+      end
+
+      # "Shallow" Copy assets
+      assets.each do |asset|
+        new_asset = asset.dup
+        new_asset.save!
+        new_step.assets << new_asset
+        assets_to_clone << [asset.id, new_asset.id]
+      end
+
+      # Copy tables
+      tables.each do |table|
+        table.duplicate(new_step, user, table.step_table.step_orderable_element.position)
+      end
+
+      # Call clone helper
+      Protocol.delay(queue: :assets).deep_clone_assets(assets_to_clone)
+
+      new_step
+    end
+  end
   private
 
   def move_in_protocol(direction)

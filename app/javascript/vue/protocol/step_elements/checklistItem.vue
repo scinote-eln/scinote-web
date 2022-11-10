@@ -1,11 +1,12 @@
 <template>
-  <div class="step-checklist-item">
+  <div class="step-checklist-item" :class="{ 'step-element--locked': !checklistItem.attributes.isNew && !(updateUrl || toggleUrl) }">
     <div class="step-element-header" :class="{ 'locked': locked || editingText, 'editing-name': editingText }">
-      <div v-if="reorderChecklistItemUrl" class="step-element-grip">
+      <div v-if="reorderChecklistItemUrl" class="step-element-grip step-element-grip--draggable" :class="{ 'step-element-grip--disabled': !draggable }">
         <i class="fas fa-grip-vertical"></i>
       </div>
+      <div v-else class="step-element-grip-placeholder"></div>
       <div class="step-element-name" :class="{ 'done': checklistItem.attributes.checked }">
-        <div class="sci-checkbox-container" :class="{ 'disabled': !toggleUrl || inRepository}">
+        <div v-if="!inRepository" class="sci-checkbox-container" :class="{ 'disabled': !toggleUrl }">
           <input ref="checkbox"
                  type="checkbox"
                  class="sci-checkbox"
@@ -14,9 +15,9 @@
           <span class="sci-checkbox-label" >
           </span>
         </div>
-        <div class="step-checklist-text">
+        <div v-else class="sci-checkbox-view-mode"></div>
+        <div class="step-checklist-text" :class="{ 'step-element--locked': !checklistItem.attributes.isNew && !updateUrl }">
           <InlineEdit
-            v-if="!checklistItem.attributes.urls || updateUrl"
             :value="checklistItem.attributes.text"
             :sa_value="checklistItem.attributes.sa_text"
             :characterLimit="10000"
@@ -27,15 +28,14 @@
             :multilinePaste="true"
             :editOnload="checklistItem.attributes.isNew"
             :smartAnnotation="true"
+            :saveOnEnter="false"
+            :allowNewLine="true"
             @editingEnabled="enableTextEdit"
             @editingDisabled="disableTextEdit"
             @update="updateText"
             @delete="removeItem()"
             @multilinePaste="(data) => { $emit('multilinePaste', data) && removeItem() }"
           />
-          <span v-else>
-            {{ checklistItem.attributes.text }}
-          </span>
         </div>
       </div>
       <div class="step-element-controls">
@@ -64,6 +64,10 @@
         required: true
       },
       locked: {
+        type: Boolean,
+        default: false
+      },
+      draggable: {
         type: Boolean,
         default: false
       },
@@ -113,6 +117,8 @@
       disableTextEdit() {
         if (this.checklistItem.attributes.isNew) {
           this.removeItem();
+          this.$emit('editEnd');
+          this.editingText = false;
           return;
         }
         this.editingText = false;

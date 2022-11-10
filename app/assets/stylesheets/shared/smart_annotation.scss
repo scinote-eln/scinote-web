@@ -184,3 +184,9 @@
     cursor: pointer;
   }
 }
+
+.atwho-inserted,
+.atwho-user-popover,
+.sa-link {
+  pointer-events: initial;
+}

@@ -17,13 +17,13 @@
             :handle="'.step-element-grip'"
           >
             <div v-for="(item, index) in reorderedItems" :key="item.id" class="step-element-header">
-              <div class="step-element-grip">
+              <div class="step-element-grip step-element-grip--draggable">
                 <i class="fas fa-grip-vertical"></i>
               </div>
               <div class="step-element-name">
                 <strong v-if="includeNumbers" class="step-element-number">{{ index + 1 }}</strong>
                 <i v-if="item.attributes.icon" class="fas" :class="item.attributes.icon"></i>
-                <span v-if="item.attributes.name">{{ item.attributes.name }}</span>
+                <span :title="item.attributes.name" v-if="item.attributes.name">{{ item.attributes.name }}</span>
                 <span v-else class="step-element-name-placeholder">{{ item.attributes.placeholder }}</span>
               </div>
             </div>

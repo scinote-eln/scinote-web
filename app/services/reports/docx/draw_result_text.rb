@@ -8,7 +8,7 @@ module Reports::Docx::DrawResultText
     @docx.p
     @docx.p do
       text result.name, italic: true
-      text ' ' + I18n.t('search.index.archived'), color: color[:gray] if result.archived?
+      text "  #{I18n.t('search.index.archived')} ", bold: true if result.archived?
       text ' '
       text I18n.t('projects.reports.elements.result_table.user_time',
                   timestamp: I18n.l(timestamp, format: :full), user: result.user.full_name), color: color[:gray]

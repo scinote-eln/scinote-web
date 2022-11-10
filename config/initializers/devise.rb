@@ -202,7 +202,11 @@ Devise.setup do |config|
   # ==> Configuration for :timeoutable
   # The time you want to timeout the user session without activity. After this
   # time the user will be asked for credentials again. Default is 30 minutes.
-  config.timeout_in = 3.hours
+  config.timeout_in = if ENV['SCINOTE_SESSION_TIMEOUTS_IN'].present?
+                        ENV['SCINOTE_SESSION_TIMEOUTS_IN'].to_i.seconds
+                      else
+                        3.hours
+                      end
 
   # If true, expires auth token on session timeout.
   # config.expire_auth_token_on_timeout = false
@@ -294,6 +298,8 @@ Devise.setup do |config|
   if Rails.configuration.x.enable_user_registration
     config.omniauth :linkedin, ENV['LINKEDIN_KEY'], ENV['LINKEDIN_SECRET'], scope: 'r_liteprofile r_emailaddress'
   end
+
+  Rails.application.config.x.disable_local_passwords = ENV['DISABLE_LOCAL_PASSWORDS'] == 'true'
 
   if [ENV['OKTA_CLIENT_ID'], ENV['OKTA_CLIENT_SECRET'], ENV['OKTA_DOMAIN'], ENV['OKTA_AUTH_SERVER_ID']].all?(&:present?)
     config.omniauth(

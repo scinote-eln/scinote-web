@@ -6,7 +6,7 @@ module Reports::Docx::DrawMyModule
     link_style = @link_style
     scinote_url = @scinote_url
     my_module = subject.my_module
-    tags = my_module.tags
+    tags = my_module.tags.order(:id)
     return unless can_read_my_module?(@user, my_module)
 
     @docx.h3 do
@@ -24,21 +24,17 @@ module Reports::Docx::DrawMyModule
       end
     end
 
-    @docx.p do
-      if my_module.started_on.present?
+    if my_module.started_on.present?
+      @docx.p do
         text I18n.t('projects.reports.elements.module.started_on',
                     started_on: I18n.l(my_module.started_on, format: :full))
-      else
-        text I18n.t('projects.reports.elements.module.no_due_date')
       end
     end
 
-    @docx.p do
-      if my_module.due_date.present?
+    if my_module.due_date.present?
+      @docx.p do
         text I18n.t('projects.reports.elements.module.due_date',
                     due_date: I18n.l(my_module.due_date, format: :full))
-      else
-        text I18n.t('projects.reports.elements.module.no_due_date')
       end
     end
 
@@ -52,16 +48,13 @@ module Reports::Docx::DrawMyModule
       end
     end
 
-    @docx.p do
-      text I18n.t('projects.reports.elements.module.tags_header')
-      if tags.any?
-        my_module.tags.each do |tag|
+    if tags.present?
+      @docx.p do
+        text I18n.t('projects.reports.elements.module.tags_header')
+        tags.each do |tag|
           text ' '
           text "[#{tag.name}]", color: tag.color.delete('#')
         end
-      else
-        text ' '
-        text I18n.t('projects.reports.elements.module.no_tags')
       end
     end
 
@@ -69,11 +62,9 @@ module Reports::Docx::DrawMyModule
       html = custom_auto_link(my_module.description, team: @report_team)
       Reports::HtmlToWordConverter.new(@docx, { scinote_url: scinote_url,
                                                 link_style: link_style }).html_to_word_converter(html)
-    else
-      @docx.p I18n.t('projects.reports.elements.module.no_description')
     end
 
-    draw_my_module_protocol(my_module) if @settings.dig('task', 'protocol', 'description')
+    draw_my_module_protocol(my_module)
 
     filter_steps_for_report(my_module.protocol.steps, @settings).order(:position).each do |step|
       draw_step(step)

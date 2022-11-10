@@ -202,10 +202,9 @@ class AssetsController < ApplicationController
 
     # Prepare file preview in advance
     asset.medium_preview.processed && asset.large_preview.processed
-
     # Return edit url and asset info
     render json: {
-      attributes: AssetSerializer.new(asset, user: current_user).as_json,
+      attributes: AssetSerializer.new(asset, scope: { user: current_user }).as_json,
       success: true,
       edit_url: edit_url
     }, status: :ok
@@ -225,7 +224,7 @@ class AssetsController < ApplicationController
           )
         else
           log_step_activity(
-            :protocol_file_deleted,
+            :protocol_step_file_deleted,
             @assoc,
             nil,
             protocol: @assoc.protocol.id,

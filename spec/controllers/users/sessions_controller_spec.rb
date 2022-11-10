@@ -57,6 +57,18 @@ RSpec.describe Users::SessionsController, type: :controller do
           expect { action }.not_to(change { subject.current_user })
         end
       end
+
+      context 'when local passwords disabled' do
+        it 'returns error message' do
+          Rails.application.config.x.disable_local_passwords = true
+          action
+          expect(flash[:alert]).to eq(I18n.t('devise.failure.auth_method_disabled'))
+        end
+
+        it 'does not set current user' do
+          expect { action }.not_to(change { subject.current_user })
+        end
+      end
     end
   end
 

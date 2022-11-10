@@ -5,7 +5,7 @@ class StepOrderableElementsController < ApplicationController
   before_action :check_manage_permissions
 
   def reorder
-    ActiveRecord::Base.transaction do
+    @step.with_lock do
       params[:step_orderable_element_positions].each do |id, position|
         @step.step_orderable_elements.find(id).update_column(:position, position)
       end
@@ -15,6 +15,7 @@ class StepOrderableElementsController < ApplicationController
       else
         log_activity(:protocol_step_content_rearranged, nil, protocol: @protocol.id)
       end
+      @step.touch
     end
 
     render json: params[:step_orderable_element_positions], status: :ok

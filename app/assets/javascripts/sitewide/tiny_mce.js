@@ -282,6 +282,11 @@ var TinyMCE = (function() {
                 if (onSaveCallback) { onSaveCallback(data); }
               }).on('ajax:error', function(ev, data) {
                 var model = editor.getElement().dataset.objectType;
+                if (data.status === 422 && 'description' in data.responseJSON) {
+                  // eslint-disable-next-line no-param-reassign
+                  data.responseJSON.description = data.responseJSON.description.toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+                }
                 $(this).renderFormErrors(model, data.responseJSON);
                 editor.setProgressState(0);
                 if (data.status === 403) {
@@ -295,6 +300,9 @@ var TinyMCE = (function() {
               .clone()
               .appendTo(menuBar)
               .on('click', function(event) {
+                $(editorForm).find('.form-group').removeClass('has-error');
+                $(editorForm).find('.help-block').remove();
+
                 event.preventDefault();
                 if (editor.isDirty()) {
                   editor.setContent($(selector).val());
@@ -302,6 +310,7 @@ var TinyMCE = (function() {
                 editorForm.find('.tinymce-status-badge').addClass('hidden');
                 editorForm.find('.tinymce-view').removeClass('hidden');
                 editor.remove();
+
                 updateScrollPosition(editorForm);
                 if (onSaveCallback) { onSaveCallback(); }
               })

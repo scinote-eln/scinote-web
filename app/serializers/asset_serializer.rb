@@ -3,6 +3,7 @@
 class AssetSerializer < ActiveModel::Serializer
   include Canaid::Helpers::PermissionsHelper
   include Rails.application.routes.url_helpers
+  include Webpacker::Helper
   include FileIconsHelper
   include ActionView::Helpers::NumberHelper
   include ApplicationHelper
@@ -10,7 +11,7 @@ class AssetSerializer < ActiveModel::Serializer
   attributes :file_name, :view_mode, :icon, :urls, :updated_at_formatted,
              :file_size, :medium_preview, :large_preview, :asset_type, :wopi,
              :wopi_context, :pdf_previewable, :file_size_formatted, :asset_order,
-             :updated_at, :metadata, :image_editable, :image_context
+             :updated_at, :metadata, :image_editable, :image_context, :pdf, :attached
 
   def icon
     file_fa_icon_class(object)
@@ -26,6 +27,10 @@ class AssetSerializer < ActiveModel::Serializer
 
   def updated_at_formatted
     I18n.l(object.updated_at, format: :full_date) if object.updated_at
+  end
+
+  def attached
+    object.file.attached?
   end
 
   def file_size_formatted
@@ -68,6 +73,16 @@ class AssetSerializer < ActiveModel::Serializer
     object.pdf_previewable? if object.file.attached?
   end
 
+  def pdf
+    return unless object.pdf?
+
+    {
+      url: object.pdf? ? asset_download_path(object) : asset_pdf_preview_path(object),
+      size: !object.pdf? && object.pdf_preview_ready? ? object.file_pdf_preview&.blob&.byte_size : object.file_size,
+      worker_url: asset_pack_path('pdfjs/pdf_js_worker.js')
+    }
+  end
+
   def image_editable
     object.editable_image?
   end
@@ -95,13 +110,14 @@ class AssetSerializer < ActiveModel::Serializer
   def urls
     urls = {
       preview: asset_file_preview_path(object),
-      download: rails_blob_path(object.file, disposition: 'attachment'),
+      download: (rails_blob_path(object.file, disposition: 'attachment') if attached),
       load_asset: load_asset_path(object),
       asset_file: asset_file_url_path(object),
       marvin_js: marvin_js_asset_path(object),
       marvin_js_icon: image_path('icon_small/marvinjs.svg')
     }
-    if can_manage_asset?(object)
+    user = scope[:user] || @instance_options[:user]
+    if can_manage_asset?(user, object)
       urls.merge!(
         toggle_view_mode: toggle_view_mode_path(object),
         edit_asset: edit_asset_path(object),
@@ -110,9 +126,7 @@ class AssetSerializer < ActiveModel::Serializer
         delete: asset_destroy_path(object)
       )
     end
-    if wopi && can_manage_asset?(object)
-      urls[:wopi_action] = object.get_action_url(@instance_options[:user], 'embedview')
-    end
+    urls[:wopi_action] = object.get_action_url(user, 'embedview') if wopi && can_manage_asset?(user, object)
     urls[:blob] = rails_blob_path(object.file, disposition: 'attachment') if object.file.attached?
 
     urls

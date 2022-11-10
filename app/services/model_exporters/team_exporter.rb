@@ -4,7 +4,7 @@ module ModelExporters
   class TeamExporter < ModelExporter
     def initialize(team_id)
       super()
-      @team = Team.includes(:user_teams).find(team_id)
+      @team = Team.find(team_id)
     end
 
     def export_to_dir
@@ -42,9 +42,11 @@ module ModelExporters
       @tiny_mce_assets_to_copy.push(team.tiny_mce_assets) if team.tiny_mce_assets.present?
       {
         team: team,
-        default_admin_id: team.user_teams.where(role: 2).first.user.id,
+        default_admin_id: team.user_assignments.where(user_role: UserRole.find_predefined_owner_role).first.user.id,
         users: team.users.map { |u| user(u) },
-        user_teams: team.user_teams,
+        user_assignments: team.user_assignments.map do |ua|
+          user_assignment(ua)
+        end,
         notifications: Notification
           .includes(:user_notifications)
           .where('user_notifications.user_id': team.users)
@@ -52,12 +54,17 @@ module ModelExporters
         repositories: team.repositories.map { |r| repository(r) },
         tiny_mce_assets: team.tiny_mce_assets.map { |tma| tiny_mce_asset_data(tma) },
         protocols: team.protocols.where(my_module: nil).map do |pr|
-          protocol(pr)
+          protocol(pr).merge(
+            user_assignments: pr.user_assignments.map do |ua|
+              user_assignment(ua)
+            end
+          )
         end,
         protocol_keywords: team.protocol_keywords,
         project_folders: team.project_folders,
         projects: team.projects.map { |p| project(p) },
-        activities: team.activities.where(project_id: nil)
+        activities: team.activities.where(project_id: nil),
+        label_templates: label_templates(team.label_templates)
       }
     end
 
@@ -68,6 +75,14 @@ module ModelExporters
                                           .read_attribute('type_of'))
                                      .to_s
       notification_json
+    end
+
+    def label_templates(templates)
+      templates.where.not(type: 'FluicsLabelTemplate').map do |template|
+        template_json = template.as_json
+        template_json['type'] = template.type # as_json ignore 'type' column
+        template_json
+      end
     end
 
     def user(user)
@@ -115,13 +130,17 @@ module ModelExporters
         user_id: user_assignment.user_id,
         assigned_by_id: user_assignment.assigned_by_id,
         role_name: user_assignment.user_role.name,
-        assigned: user_assignment.assigned
+        assigned: user_assignment.assigned,
+        team_id: user_assignment.team_id
       }
     end
 
     def report(report)
       {
         report: report,
+        user_assignments: report.user_assignments.map do |ua|
+          user_assignment(ua)
+        end,
         report_elements: report.report_elements
       }
     end
@@ -137,6 +156,10 @@ module ModelExporters
         end
       }
       unless repository.is_a?(RepositorySnapshot)
+        result[:user_assignments] =
+          repository.user_assignments.where(team: repository.team, user: repository.team.users).map do |ua|
+            user_assignment(ua)
+          end
         result[:repository_snapshots] = repository.repository_snapshots.map { |r| repository(r) }
       end
       result

@@ -4,10 +4,14 @@ class Protocol < ApplicationRecord
   include SearchableModel
   include RenamingUtil
   include SearchableByNameModel
+  include Assignable
+  include PermissionCheckableModel
   include TinyMceImages
 
-  after_save :update_linked_children
+  after_update :update_user_assignments, if: -> { saved_change_to_protocol_type? && in_repository? }
   after_destroy :decrement_linked_children
+  after_save :update_linked_children
+  skip_callback :create, :after, :create_users_assignments, if: -> { in_module? }
 
   enum protocol_type: {
     unlinked: 0,
@@ -202,6 +206,7 @@ class Protocol < ApplicationRecord
                    user_id: user.id))
   end
 
+
   def self.filter_by_teams(teams = [])
     teams.blank? ? self : where(team: teams)
   end
@@ -216,6 +221,14 @@ class Protocol < ApplicationRecord
       step.save!
     end
     step
+  end
+
+  def created_by
+    in_module? ? my_module.created_by : added_by
+  end
+
+  def permission_parent
+    in_module? ? my_module : team
   end
 
   def linked_modules
@@ -253,9 +266,9 @@ class Protocol < ApplicationRecord
     end
   end
 
-  def self.clone_contents(src, dest, current_user, clone_keywords)
-    assets_to_clone = []
-    dest.update(description: src.description, name: src.name)
+  def self.clone_contents(src, dest, current_user, clone_keywords, only_contents = false)
+    dest.update(description: src.description, name: src.name) unless only_contents
+
     src.clone_tinymce_assets(dest, dest.team)
 
     # Update keywords
@@ -270,93 +283,8 @@ class Protocol < ApplicationRecord
 
     # Copy steps
     src.steps.each do |step|
-      step2 = Step.new(
-        name: step.name,
-        position: step.position,
-        completed: false,
-        user: current_user,
-        protocol: dest
-      )
-      step2.save!
-
-      position = 0
-
-      # Copy texts
-      step.step_texts.each do |step_text|
-        step_text2 = StepText.new(
-          text: step_text.text,
-          step: step2
-        )
-        step_text2.save!
-
-        step2.step_orderable_elements.create!(
-          position: position,
-          orderable: step_text2
-        )
-
-        position += 1
-      end
-
-      # Copy checklists
-      step.checklists.asc.each do |checklist|
-        checklist2 = Checklist.create!(
-          name: checklist.name,
-          step: step2,
-          created_by: current_user,
-          last_modified_by: current_user
-        )
-
-        checklist.checklist_items.each do |item|
-          ChecklistItem.create!(
-            text: item.text,
-            checked: false,
-            checklist: checklist2,
-            position: item.position,
-            created_by: current_user,
-            last_modified_by: current_user
-          )
-        end
-
-        step2.step_orderable_elements.create!(
-          position: position,
-          orderable: checklist2
-        )
-
-        position += 1
-      end
-
-      # "Shallow" Copy assets
-      step.assets.each do |asset|
-        asset2 = asset.dup
-        asset2.save!
-        step2.assets << asset2
-        assets_to_clone << [asset.id, asset2.id]
-      end
-
-      # Copy tables
-      step.tables.each do |table|
-        table2 = Table.create!(
-          name: table.name,
-          step: step2,
-          contents: table.contents.encode('UTF-8', 'UTF-8'),
-          team: dest.team,
-          created_by: current_user,
-          last_modified_by: current_user
-        )
-
-        step2.step_orderable_elements.create!(
-          position: position,
-          orderable: table2.step_table
-        )
-
-        position += 1
-      end
-
-      # Copy steps tinyMce assets
-      step.clone_tinymce_assets(step2, dest.team)
+      step.duplicate(dest, current_user, step_position: step.position)
     end
-    # Call clone helper
-    Protocol.delay(queue: :assets).deep_clone_assets(assets_to_clone)
   end
 
   def in_repository_active?
@@ -713,7 +641,10 @@ class Protocol < ApplicationRecord
   def destroy_contents
     # Calculate total space taken by the protocol
     st = space_taken
-    steps.order(position: :desc).destroy_all
+    steps.order(position: :desc).each do |step|
+      step.step_orderable_elements.delete_all
+      step.destroy!
+    end
 
     # Release space taken by the step
     team.release_space(st)
@@ -727,7 +658,28 @@ class Protocol < ApplicationRecord
     steps.map(&:can_destroy?).all?
   end
 
+  def add_team_users_as_viewers!(assigned_by)
+    viewer_role = UserRole.find_predefined_viewer_role
+    team.user_assignments.where.not(user: assigned_by).find_each do |user_assignment|
+      new_user_assignment = UserAssignment.find_or_initialize_by(user: user_assignment.user, assignable: self)
+      new_user_assignment.user_role = viewer_role
+      new_user_assignment.assigned_by = assigned_by
+      new_user_assignment.assigned = :automatically
+      new_user_assignment.save!
+    end
+  end
+
   private
+
+  def update_user_assignments
+    case protocol_type
+    when 'in_repository_public'
+      assigned_by = protocol_type_was == 'in_repository_archived' && restored_by || added_by
+      add_team_users_as_viewers!(assigned_by)
+    when 'in_repository_private', 'in_repository_archived'
+      automatic_user_assignments.where.not(user: added_by).destroy_all
+    end
+  end
 
   def deep_clone(clone, current_user)
     # Save cloned protocol first
@@ -741,7 +693,7 @@ class Protocol < ApplicationRecord
 
     raise ActiveRecord::RecordNotSaved unless success
 
-    Protocol.clone_contents(self, clone, current_user, true)
+    Protocol.clone_contents(self, clone, current_user, true, true)
 
     clone.reload
     clone

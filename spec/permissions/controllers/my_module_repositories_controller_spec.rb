@@ -13,17 +13,17 @@ describe MyModuleRepositoriesController, type: :controller do
     repositories_list_html: { my_module_id: 1 },
     full_view_table: { my_module_id: 1, id: 1 },
     repositories_dropdown_list: { my_module_id: 1 },
-    export_repository: { my_module_id: 1, id: 1 }
+    export_repository: { my_module_id: 1, id: 1 },
+    consume_modal: { my_module_id: 1, id: 1 },
+    update_consumption: { my_module_id: 1, id: 1 }
   }, []
 
   login_user
 
   describe 'permissions checking' do
-    include_context 'reference_project_structure', {
-      team_role: :normal_user
-    }
+    include_context 'reference_project_structure'
 
-    let(:repository) { create :repository, team: team }
+    let(:repository) { create :repository, team: team, created_by: user }
     let (:repository_row) { create :repository_row, repository: repository, created_by: user, last_modified_by: user }
 
 
