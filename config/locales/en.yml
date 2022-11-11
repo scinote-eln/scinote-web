@@ -958,6 +958,7 @@ en:
       manage_tags: "Manage tags"
       create_new_tag: "create new"
       recent_protocols_from_repository: "Recent protocols from the Repository"
+      code: "ID: "
     notes:
       title: "Notes"
       no_description: "No task description"
