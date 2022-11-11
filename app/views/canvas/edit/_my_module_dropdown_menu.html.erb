@@ -1,41 +1,41 @@
 <% if can_manage_my_module?(my_module) %>
   <li>
-    <a title="rename task dropdown option" class="edit-module" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.edit_module') %></a>
+    <a title="rename task <%= my_module.name %> dropdown option" class="edit-module" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.edit_module') %></a>
   </li>
 <% end %>
 <% if @experiment_managable %>
   <li>
-    <a title="copy task dropdown option" class="clone-module" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.clone_module') %></a>
+    <a title="copy task <%= my_module.name %> dropdown option" class="clone-module" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.clone_module') %></a>
   </li>
 <% end %>
 <% if can_move_my_module?(my_module) %>
   <li>
-    <a title="move task dropdown option" class="move-module" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.move_module') %></a>
+    <a title="move task <%= my_module.name %> dropdown option" class="move-module" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.move_module') %></a>
   </li>
 <% end %>
 <li>
   <%= link_to t('experiments.canvas.edit.task_access'),
               can_manage_my_module_users?(my_module) ? edit_access_permissions_project_experiment_my_module_path(my_module.experiment.project, my_module.experiment, my_module) : access_permissions_project_experiment_my_module_path(my_module.experiment.project, my_module.experiment, my_module),
-              data: { action: 'remote-modal'}, title: 'task access dropdown option' %>
+              data: { action: 'remote-modal'}, title: "task #{my_module.name} access dropdown option" %>
 </li>
 <% if can_archive_my_module?(my_module) %>
   <li>
-    <a title="archive task dropdown option" class="delete-module" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.delete_module') %></a>
+    <a title="archive task <%= my_module.name %> dropdown option" class="delete-module" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.delete_module') %></a>
   </li>
 <% end %>
 <% if @experiment_managable %>
   <li <%= 'style=display:none;' if my_module.my_module_group.blank? %>>
-    <a title="clone workflow as template task option" class="clone-module-group" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.clone_module_group') %></a>
+    <a title="clone <%= my_module.name %> workflow as template task option" class="clone-module-group" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.clone_module_group') %></a>
   </li>
 <% end %>
 <% if @group_my_modules&.all? { |my_module| can_move_my_module?(my_module) } %>
   <li>
-    <a title="move workflow dropdown option" class="move-module-group" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.move_module_group') %></a>
+    <a title="move <%= my_module.name %> workflow dropdown option" class="move-module-group" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.move_module_group') %></a>
   </li>
 <% end %>
 
 <% if @group_my_modules&.all? { |my_module| can_archive_my_module?(my_module) } %>
   <li data-hook="archive-module-group">
-    <a title="archive workflow dropdown option" class="delete-module-group" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.delete_module_group') %></a>
+    <a title="archive <%= my_module.name %> workflow dropdown option" class="delete-module-group" href="" data-module-id="<%= my_module.id %>"><%= t('experiments.canvas.edit.delete_module_group') %></a>
   </li>
 <% end %>
