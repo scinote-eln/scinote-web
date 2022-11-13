@@ -9,6 +9,9 @@ var ExperimnetTable = {
   activeFilters: {},
   filters: [], // Filter {name: '', init(), closeFilter(), apply(), active(), clearFilter()}
   pageSize: GLOBAL_CONSTANTS.DEFAULT_ELEMENTS_PER_PAGE,
+  getUrls: function(id) {
+    return $(`.table-row[data-id="${id}"] .my-module-urls`).data('urls');
+  },
   loadPlaceholder: function() {
     let placeholder = '';
     $.each(Array(this.pageSize), function() {
@@ -37,6 +40,41 @@ var ExperimnetTable = {
       // Menu
       row += '<div class="table-body-cell"></div>';
       $(`<div class="table-row" data-id="${id}">${row}</div>`).appendTo(`${this.table} .table-body`);
+    });
+  },
+  initRenameModal: function() {
+    $('#editTask').on('click', () => {
+      $('#modal-edit-module').modal('show');
+      $('#edit-module-name-input').val($(`#taskName${this.selectedMyModules[0]}`).data('full-name'));
+    });
+    $('#modal-edit-module').on('click', 'button[data-action="confirm"]', () => {
+      let newValue = $('#edit-module-name-input').val();
+
+      if (newValue === $(`#taskName${this.selectedMyModules[0]}`).data('full-name')) {
+        $('#modal-edit-module').modal('hide');
+        return false;
+      }
+      $.ajax({
+        url: this.getUrls(this.selectedMyModules[0]).name_update,
+        type: 'PATCH',
+        dataType: 'json',
+        data: { my_module: { name: $('#edit-module-name-input').val() } },
+        success: () => {
+          $(`#taskName${this.selectedMyModules[0]}`).text(newValue);
+          $(`#taskName${this.selectedMyModules[0]}`).data('full-name', newValue);
+          $('#edit-module-name-input').closest('.sci-input-container').removeClass('error');
+          $('#modal-edit-module').modal('hide');
+        },
+        error: function(response) {
+          let error = response.responseJSON.name.join(', ');
+          $('#edit-module-name-input')
+            .closest('.sci-input-container')
+            .addClass('error')
+            .attr('data-error-text', error);
+        }
+      });
+
+      return true;
     });
   },
   checkActionPermission: function(permission) {
@@ -73,7 +111,7 @@ var ExperimnetTable = {
       }
 
       if (checkbox.checked) {
-        $.get($(`.table-row[data-id="${myModuleId}"] .my-module-urls`).data('url-permissions'), (result) => {
+        $.get(this.getUrls(myModuleId).permissions, (result) => {
           this.permissions.forEach((permission) => {
             row.data(permission, result[permission]);
           });
@@ -171,19 +209,16 @@ var ExperimnetTable = {
     this.initSelectAllCheckbox();
     this.initFilters();
     this.loadTable();
+    this.initRenameModal();
   }
 };
 
 ExperimnetTable.render.task_name = function(data) {
-  return `<a href="${data.url}">${data.name}</a>`;
+  return `<a href="${data.url}" id="taskName${data.id}" data-full-name="${data.name}">${data.name}</a>`;
 };
 
 ExperimnetTable.render.id = function(data) {
-  let element = $(`<div class="my-module-urls">${data.id}</div>`);
-  $.each(data.urls, (name, url) => {
-    element.attr(`data-url-${name}`, url);
-  });
-  return element.prop('outerHTML');
+  return `<div class="my-module-urls" data-urls='${JSON.stringify(data.urls)}'>${data.id}</div>`;
 };
 
 ExperimnetTable.render.due_date = function(data) {

@@ -72,6 +72,7 @@ module Experiments
 
     def task_name_presenter(my_module)
       {
+        id: my_module.id,
         name: my_module.name,
         url: protocols_my_module_path(my_module)
       }
@@ -81,7 +82,8 @@ module Experiments
       {
         id: my_module.id,
         urls: {
-          permissions: permissions_my_module_path(my_module)
+          permissions: permissions_my_module_path(my_module),
+          name_update: my_module_path(my_module)
         }
       }
     end
