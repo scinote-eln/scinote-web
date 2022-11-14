@@ -341,6 +341,28 @@ class ExperimentsController < ApplicationController
     render json: users, status: :ok
   end
 
+  def archive_my_modules
+    my_modules = @experiment.my_modules.where(id: params[:my_modules])
+    counter = 0
+    my_modules.each do |my_module|
+      next unless can_archive_my_module?(my_module)
+
+      my_module.transaction do
+        my_module.archive!(current_user)
+        log_my_module_activity(:archive_module, my_module)
+        counter += 1
+      rescue StandardError => e
+        Rails.logger.error e.message
+        raise ActiveRecord::Rollback
+      end
+    end
+    if counter.positive?
+      render json: { message: t('experiments.table.archive_group.success_flash', number: counter) }
+    else
+      render json: { message: t('experiments.table.archive_group.error_flash') }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def load_experiment
@@ -433,5 +455,15 @@ class ExperimentsController < ApplicationController
             project: experiment.project,
             subject: experiment,
             message_items: { experiment: experiment.id })
+  end
+
+  def log_my_module_activity(type_of, my_module)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            team: my_module.experiment.project.team,
+            project: my_module.experiment.project,
+            subject: my_module,
+            message_items: { my_module: my_module.id })
   end
 end

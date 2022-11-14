@@ -1324,6 +1324,9 @@ en:
         table: 'Table'
         archived_tasks: 'Go to Archived tasks'
       add_tag: '+ Add tag'
+      archive_group:
+        success_flash: "<strong>%{number}</strong> task(s) successfully archived."
+        error_flash: "Failed to archive task(s)."
     canvas:
       archive_confirm: "Are you sure to archive this experiment?"
       actions: 'Experiment'

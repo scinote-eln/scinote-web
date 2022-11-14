@@ -376,6 +376,7 @@ Rails.application.routes.draw do
         post 'restore_my_modules', to: 'my_modules#restore_group'
         get 'sidebar'
         get :assigned_users_to_tasks
+        post :archive_my_modules
       end
     end
 

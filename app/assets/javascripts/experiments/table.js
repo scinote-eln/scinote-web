@@ -1,4 +1,4 @@
-/* global I18n GLOBAL_CONSTANTS InfiniteScroll filterDropdown dropdownSelector */
+/* global I18n GLOBAL_CONSTANTS InfiniteScroll filterDropdown dropdownSelector HelperModule */
 
 var ExperimnetTable = {
   permissions: ['editable', 'archivable', 'restorable', 'moveable'],
@@ -40,6 +40,16 @@ var ExperimnetTable = {
       // Menu
       row += '<div class="table-body-cell"></div>';
       $(`<div class="table-row" data-id="${id}">${row}</div>`).appendTo(`${this.table} .table-body`);
+    });
+  },
+  initArchiveMyModules: function() {
+    $('#archiveTask').on('click', (e) => {
+      $.post(e.target.dataset.url, { my_modules: this.selectedMyModules }, (data) => {
+        HelperModule.flashAlertMsg(data.message, 'success');
+        this.loadTable();
+      }).error((data) => {
+        HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+      });
     });
   },
   initAccessModal: function() {
@@ -216,6 +226,7 @@ var ExperimnetTable = {
     this.loadTable();
     this.initRenameModal();
     this.initAccessModal();
+    this.initArchiveMyModules();
   }
 };
 
