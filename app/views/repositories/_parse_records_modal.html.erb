@@ -22,7 +22,7 @@
                 <p style="margin-bottom: 0px"><%= t("repositories.parse_sheet.file_columns") %></p>
               </th>
               <% @import_data.header.each.with_index do |th, index| %>
-                <th style="min-width: 150px" onload="giga()" title="repository import items modal dropdown name elements">
+                <th style="min-width: 150px" title="repository import items modal dropdown name elements">
                   <%= f.select("mappings[#{index.to_s}]",
                                options_from_collection_for_select(@import_data.available_fields,
                                                                   :first,
