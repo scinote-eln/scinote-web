@@ -83,7 +83,7 @@ $.fn.dataTable.render.defaultRepositoryDateTimeValue = function() {
 $.fn.dataTable.render.RepositoryDateTimeValue = function(data) {
   let reminderClass = data.value.reminder ? 'reminder' : '';
   return `<span class="${reminderClass} date-time-cell-value"
-                title="repository date time value: ${data}"
+                title="repository date time value: ${data.value.datetime}"
                 data-time="${data.value.time_formatted}"
                 data-datetime="${data.value.datetime}"
                 data-date="${data.value.date_formatted}">${data.value.formatted}</span>`;
@@ -232,7 +232,7 @@ $.fn.dataTable.render.RepositoryStockValue = function(data) {
                 </span>`;
     }
     if (data.stock_managable) {
-      return `<a title="unassigned stock data: ${data}" class="manage-repository-stock-value-link not-assigned-stock">
+      return `<a title="unassigned stock data for ${repositoryRowName}" class="manage-repository-stock-value-link not-assigned-stock">
                 <i class="fas fa-box-open"></i>
                 ${I18n.t('libraries.manange_modal_column.stock_type.add_stock')}
               </a>`;

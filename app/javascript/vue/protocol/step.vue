@@ -33,7 +33,7 @@
                  :title="step.attributes.completed ? i18n.t('protocols.steps.status.uncomplete') : i18n.t('protocols.steps.status.complete')"
             ></div>
           </div>
-          <div class="step-position">
+          <div class="step-position" :title="step.attributes.position + 1">
             {{ step.attributes.position + 1 }}.
           </div>
         </div>
@@ -54,7 +54,7 @@
           />
         </div>
         <button v-if="urls.update_url && !editingName" class="step-name-edit-icon btn icon-btn btn-light  " @click="editingName = true">
-          <i class="fas fa-pen"></i>
+          <i :title="`edit step name ${step.attributes.name}`" class="fas fa-pen"></i>
         </button>
       </div>
       <div class="step-actions-container">
@@ -96,6 +96,7 @@
            :data-object-id="step.id">
           <i class="fas fa-comment"></i>
           <span class="comments-counter"
+                :title="`${step.attributes.comments_count}`"
                 :id="`comment-count-${step.id}`"
                 :class="{'unseen': step.attributes.unseen_comments}"
           >

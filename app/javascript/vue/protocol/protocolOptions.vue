@@ -4,7 +4,6 @@
       <button
         class="btn btn-secondary dropdown-toggle"
         type="button"
-        title="protocol options button"
         id="dropdownProtocolOptions"
         data-toggle="dropdown"
         aria-haspopup="true"
@@ -12,7 +11,7 @@
         tabindex="0"
       >
         <span class="fas fa-cog"></span>
-        <span>{{ i18n.t("my_modules.protocol.options_dropdown.title") }}</span>
+        <span title="protocol options button">{{ i18n.t("my_modules.protocol.options_dropdown.title") }}</span>
         <span class="caret"></span>
       </button>
       <ul

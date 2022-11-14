@@ -7,7 +7,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+            <span title="close file uploading on step" aria-hidden="true">&times;</span>
           </button>
           <h2 class="modal-title">
             {{ i18n.t("protocols.steps.attachments.file_modal.title") }}
@@ -39,7 +39,7 @@
           </div>
           <div class="integrations-container">
             <div class="integration-block wopi" v-if="step.attributes.wopi_enabled">
-              <a @click="openWopiFileModal" class="create-wopi-file-btn btn btn-light" tabindex="0" @keyup.enter="openWopiFileModal">
+              <a :title="`${ i18n.t('assets.create_wopi_file.button_text') }`"@click="openWopiFileModal" class="create-wopi-file-btn btn btn-light" tabindex="0" @keyup.enter="openWopiFileModal">
                 <img :src="step.attributes.wopi_context.icon"/>
                 {{ i18n.t('assets.create_wopi_file.button_text') }}
               </a>
@@ -48,6 +48,7 @@
               <a
                 class="new-marvinjs-upload-button btn btn-light"
                 :data-object-id="step.id"
+                :title="`${ i18n.t('marvinjs.new_button') }`"
                 :data-marvin-url="step.attributes.marvinjs_context.marvin_js_asset_url"
                 data-object-type="Step"
                 @click="openMarvinJsModal"
@@ -63,7 +64,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type='button' class='btn btn-default' @click="cancel">
+          <button title="cancel file uploading on step" type='button' class='btn btn-default' @click="cancel">
             {{ i18n.t('general.cancel') }}
           </button>
         </div>

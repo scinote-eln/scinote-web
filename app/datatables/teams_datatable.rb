@@ -28,7 +28,7 @@ class TeamsDatatable < CustomDatatable
       {
         'DT_RowId': record.id,
         '0': if record.admin?
-               link_to(escape_input(record.team.name), team_path(record.team))
+               link_to(escape_input(record.team.name), team_path(record.team), title: record.team.name)
              else
                escape_input(record.team.name)
              end,
