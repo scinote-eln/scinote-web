@@ -19,7 +19,7 @@
           />
         </div>
       </div>
-      <button class="btn btn-light clear-filters-btn prevent-shrink" @click="clearFilters()">
+      <button class="btn btn-light clear-filters-btn prevent-shrink" @click="clearFilters()" title="close filter modal">
         <i class="fas fa-times-circle"></i>
         {{ i18n.t('repositories.show.filters.clear') }}
       </button>
@@ -36,7 +36,7 @@
     </div>
     <div class="footer">
       <div id="filtersColumnsDropdown" class="dropup filters-columns-dropdown" @click="toggleColumnsFilters">
-        <button class="btn btn-secondary add-filter prevent-shrink" >
+        <button class="btn btn-secondary add-filter prevent-shrink" title="add filter">
           <i class="fas fa-plus"></i>
           {{ i18n.t('repositories.show.filters.add_filter') }}
         </button>
@@ -50,7 +50,7 @@
           />
         </div>
       </div>
-      <button @click="$emit('filters:apply')" class="btn btn-primary apply-button prevent-shrink">
+      <button @click="$emit('filters:apply')" class="btn btn-primary apply-button prevent-shrink" title="show results">
         {{ i18n.t('repositories.show.filters.apply') }}
       </button>
     </div>

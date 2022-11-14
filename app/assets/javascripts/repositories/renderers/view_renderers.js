@@ -35,6 +35,7 @@ $.fn.dataTable.render.defaultRepositoryAssetValue = function() {
 $.fn.dataTable.render.RepositoryTextValue = function(data) {
   var text = $(`<span class="text-value">${data.value.view}</span>`);
   text.attr('data-edit-value', data.value.edit);
+  text.prop('title', data.value.edit)
   return text.prop('outerHTML');
 };
 
