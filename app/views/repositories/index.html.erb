@@ -7,7 +7,7 @@
   <%= content_for :sidebar do %>
    <%= render partial: "sidebar", locals: { repositories: @repositories, archived: params[:archived] } %>
   <% end %>
-  
+
   <%= render "view_archived_btn" %>
 <% end %>
 
@@ -84,3 +84,7 @@
 
 <%= javascript_include_tag "repositories/index" %>
 <%= stylesheet_link_tag 'datatables' %>
+
+<script>
+  console.log(REPOSITORIES_TABLE)
+</script>

@@ -33,7 +33,7 @@
   <div class="col-sm-9">
     <%= text_area_tag 'items-textarea', column.repository_checklist_items.pluck(:data).join(selected_delimiter_char), rows: 10, class: 'form-control items-textarea', title: 'repository manage column modal checklist items input' %>
     <% unless column.new_record? %>
-      <div class="bg-danger hidden changing-existing-list-items-warning">
+      <div title="change multi select items warning for checklist" class="bg-danger hidden changing-existing-list-items-warning">
         <%= t('libraries.manange_modal_column.change_multi_select_items_warning') %>
       </div>
     <% end %>

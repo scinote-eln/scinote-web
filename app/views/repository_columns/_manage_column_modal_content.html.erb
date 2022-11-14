@@ -1,9 +1,9 @@
 <div class="modal-header">
-  <button title="manage column modal x button" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span title="manage column modal x button" aria-hidden="true">&times;</span></button>
   <button class="btn icon-btn btn-light manage-repo-column-index back-to-column-modal"
           data-modal-url="<%= repository_repository_columns_path(@repository) %>"
           data-action="new">
-    <span class="fas fa-arrow-left"></span>
+    <span title="back index for manage column modal" class="fas fa-arrow-left"></span>
   </button>
   <h4 class="modal-title">
     <% if @repository_column.new_record? %>

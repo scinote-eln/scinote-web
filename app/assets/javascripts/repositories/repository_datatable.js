@@ -465,6 +465,9 @@ var RepositoryDatatable = (function(global) {
         className: 'dt-body-center',
         sWidth: '1%',
         render: function(data, type, row) {
+          if (document.getElementById('deleteRepositoryRecords')) {
+            document.getElementById('deleteRepositoryRecords').title = `delete repository item ${row[3]}`
+          }
           return `<div class="sci-checkbox-container">
                     <input title='repository row checkbox for ${row[3]}' class='repository-row-selector sci-checkbox' type='checkbox' data-editable="${row.recordEditable}">
                     <span class='sci-checkbox-label'></span>
