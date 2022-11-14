@@ -20,7 +20,7 @@ class LabelPrinter < ApplicationRecord
   validates :language_type, presence: true
 
   def self.zebra_print_enabled?
-    RepositoryBase.stock_management_enabled?
+    RepositoryBase.stock_management_enabled?.present?
   end
 
   def done?
