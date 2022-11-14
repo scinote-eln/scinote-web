@@ -42,6 +42,11 @@ var ExperimnetTable = {
       $(`<div class="table-row" data-id="${id}">${row}</div>`).appendTo(`${this.table} .table-body`);
     });
   },
+  initAccessModal: function() {
+    $('#manageTaskAccess').on('click', () => {
+      $(`.table-row[data-id="${this.selectedMyModules[0]}"] .open-access-modal`).click();
+    });
+  },
   initRenameModal: function() {
     $('#editTask').on('click', () => {
       $('#modal-edit-module').modal('show');
@@ -210,6 +215,7 @@ var ExperimnetTable = {
     this.initFilters();
     this.loadTable();
     this.initRenameModal();
+    this.initAccessModal();
   }
 };
 
@@ -218,7 +224,10 @@ ExperimnetTable.render.task_name = function(data) {
 };
 
 ExperimnetTable.render.id = function(data) {
-  return `<div class="my-module-urls" data-urls='${JSON.stringify(data.urls)}'>${data.id}</div>`;
+  return `
+    <div class="my-module-urls" data-urls='${JSON.stringify(data.urls)}'>${data.id}</div>
+    <a class="hidden open-access-modal" data-action="remote-modal" href="${data.urls.access}"></a>
+  `; // In ticket with task menu move this access link to menu
 };
 
 ExperimnetTable.render.due_date = function(data) {

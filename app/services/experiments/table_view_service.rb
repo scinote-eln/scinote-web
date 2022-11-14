@@ -27,7 +27,8 @@ module Experiments
       tags: {},
       task_comments: {},
       user_assignments: :user,
-      designated_users: {}
+      designated_users: {},
+      experiment: :project
     }
 
     def initialize(my_modules, user, params)
@@ -79,11 +80,14 @@ module Experiments
     end
 
     def id_presenter(my_module)
+      experiment = my_module.experiment
+      project = experiment.project
       {
         id: my_module.id,
         urls: {
           permissions: permissions_my_module_path(my_module),
-          name_update: my_module_path(my_module)
+          name_update: my_module_path(my_module),
+          access: edit_access_permissions_project_experiment_my_module_path(project, experiment, my_module)
         }
       }
     end
