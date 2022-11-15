@@ -9,11 +9,11 @@
         </div>
       <% end %>
       <% if can_create_repository_rows?(@repository) %>
-        <button title="<%= t('repositories.show.button_tooltip.new') %>" type="button" data-toggle="tooltip" data-placement="bottom"
+        <button type="button" data-toggle="tooltip" data-placement="bottom"
                 class="btn btn-primary editAdd auto-shrink-button"
                 id="addRepositoryRecord" data-view-mode="active">
           <span class="fas fa-plus"></span>
-          <span class="button-text"><%= t("repositories.add_new_record") %></span>
+          <span class="button-text" title="<%= t('repositories.show.button_tooltip.new') %>"><%= t("repositories.add_new_record") %></span>
         </button>
         <button type="button" data-toggle="tooltip" data-placement="bottom" title="<%= t('repositories.show.button_tooltip.import') %>"
                 class="btn btn-light editImport auto-shrink-button"
