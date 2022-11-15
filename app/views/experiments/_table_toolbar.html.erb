@@ -24,7 +24,7 @@
       <i class="fas fa-door-open"></i>
       <%= t("experiments.table.toolbar.manage_access") %>
     </button>
-    <button id="archiveTask" class="btn btn-light multiple-object-action hidden"  data-for="archivable">
+    <button id="archiveTask" class="btn btn-light multiple-object-action hidden" data-url="<%= archive_my_modules_experiment_path(@experiment) %>"  data-for="archivable">
       <i class="fas fa-archive"></i>
       <%= t("experiments.table.toolbar.archive") %>
     </button>
