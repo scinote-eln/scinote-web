@@ -272,3 +272,33 @@
     margin-bottom: 0;
   }
 }
+
+.table-display-modal {
+  .column-container {
+    align-items: center;
+    border-bottom: $border-default;
+    display: flex;
+    padding: .5em 1em;
+
+    &:not(.visible) {
+      color: $color-alto;
+    }
+
+    &:last-child {
+      border: 0;
+    }
+
+    .fas {
+      cursor: pointer;
+      margin-right: 1em;
+    }
+
+    &.task_name {
+      padding-left: 3em;
+
+      .fas {
+        display: none;
+      }
+    }
+  }
+}

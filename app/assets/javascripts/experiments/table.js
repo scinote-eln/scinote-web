@@ -31,8 +31,12 @@ var ExperimnetTable = {
         </div>`;
       // Task columns
       $.each(data, (_i, cell) => {
+        let hidden = '';
+        if ($(`.table-display-modal .fa-eye-slash[data-column="${cell.column_type}"]`).length === 1) {
+          hidden = 'hidden';
+        }
         row += `
-          <div class="table-body-cell">
+          <div class="table-body-cell ${cell.column_type}-column ${hidden}">
             ${ExperimnetTable.render[cell.column_type](cell.data)}
           </div>
         `;
@@ -162,6 +166,30 @@ var ExperimnetTable = {
     }
     return null;
   },
+  initManageColumnsModal: function() {
+    $.each($('.table-display-modal .fa-eye-slash'), (_i, column) => {
+      $(column).parent().removeClass('visible');
+    });
+    $('.experiment-table')[0].style.setProperty('--columns-count', $('.table-display-modal .fa-eye').length + 1);
+
+    $('.table-display-modal').on('click', '.column-container .fas', (e) => {
+      let icon = $(e.target);
+      if (icon.hasClass('fa-eye')) {
+        $(`.experiment-table .${icon.data('column')}-column`).addClass('hidden');
+        icon.removeClass('fa-eye').addClass('fa-eye-slash');
+        icon.parent().removeClass('visible');
+      } else {
+        $(`.experiment-table .${icon.data('column')}-column`).removeClass('hidden');
+        icon.addClass('fa-eye').removeClass('fa-eye-slash');
+        icon.parent().addClass('visible');
+      }
+
+      let visibleColumns = $('.table-display-modal .fa-eye').map((_i, col) => col.dataset.column).toArray();
+      // Update columns on backend - $.post('', { columns: visibleColumns }, () => {});
+
+      $('.experiment-table')[0].style.setProperty('--columns-count', $('.table-display-modal .fa-eye').length + 1);
+    });
+  },
   initFilters: function() {
     this.filterDropdown = filterDropdown.init();
     let $experimentFilter = $('#experimentTable .my-modules-filters');
@@ -227,6 +255,7 @@ var ExperimnetTable = {
     this.initRenameModal();
     this.initAccessModal();
     this.initArchiveMyModules();
+    this.initManageColumnsModal();
   }
 };
 

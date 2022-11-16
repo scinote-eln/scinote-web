@@ -1304,6 +1304,18 @@ en:
         assigned_html: 'Assigned to'
         tags_html: 'Tags'
         comments_html: '<i class="fas fa-comment"></i>'
+      column_display_modal:
+        title: 'Task data display'
+        description: 'Click the eye buttons to hide or show columns in the table'
+        id: 'ID'
+        task_name: 'Task name'
+        due_date: 'Due date'
+        age: 'Age'
+        results: 'Results'
+        status: 'Status'
+        assigned: 'Assigned to'
+        tags: 'Tags'
+        comments: 'Comments'
       toolbar:
         new: 'New task'
         edit: 'Edit'
