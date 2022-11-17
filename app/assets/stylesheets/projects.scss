@@ -685,12 +685,12 @@ li.module-hover {
         &.project-card {
           border-radius: 4px;
           box-shadow: $flyout-shadow;
-          
+
           .project-name-cell {
             align-items: center;
             display: flex;
             overflow: hidden;
-            
+
             a {
               color: inherit;
             }
@@ -1018,6 +1018,7 @@ li.module-hover {
       display: none !important;
     }
 
+
     .projects-container {
       .project-actions-menu {
         .btn-light:hover {
@@ -1027,6 +1028,56 @@ li.module-hover {
 
       .cards-wrapper {
         grid-auto-rows: 2.5em;
+
+        .visibility-cell {
+          .value {
+            color: $color-black;
+          }
+        }
+
+        .start-date-cell {
+          .value {
+            color: $color-black;
+          }
+        }
+
+        .archived-date-cell {
+          .value {
+            color: $color-black;;
+          }
+        }
+
+        &.last-page.cards {
+          .project-card {
+            .start-date-cell {
+              top: 36px;
+
+              .value {
+                color: $color-black;
+              }
+            }
+
+            .archived-date-cell {
+              top: 26px;
+
+              .value {
+                color: $color-black;
+              }
+            }
+
+            .visibility-cell {
+              top: 16px;
+
+              .value {
+                color: $color-black;
+              }
+            }
+
+            .user-cell {
+              top: 6px;
+            }
+          }
+        }
 
         .card.project-card {
           .data-row {
@@ -1103,7 +1154,7 @@ li.module-hover {
       a {
         color: inherit;
       }
-      
+
       .name {
         overflow: hidden;
         display: -webkit-box;
@@ -1116,8 +1167,8 @@ li.module-hover {
     .project-code-cell {
       position: relative;
       padding-left: 20px;
-      margin-top:4px;
-      height: min-content; 
+      margin-top:5px;
+      height: min-content;
     }
 
     .data-row {
@@ -1125,6 +1176,18 @@ li.module-hover {
       top: 5%;
       .card-label {
         color: gray !important;
+      }
+
+      &.start-date-cell {
+        top: 30px;
+      }
+
+      &.visibility-cell {
+        top: 18px;
+      }
+
+      &.user-cell {
+        top: 5px;
       }
     }
   }
