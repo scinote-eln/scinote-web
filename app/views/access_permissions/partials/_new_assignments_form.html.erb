@@ -2,7 +2,7 @@
 
 <div class="modal-content" id="user_assignments_modal" data-action="modal-close" data-target="<%= projects_path %>">
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span title="close new asignments modal" aria-hidden="true">&times;</span></button>
     <h4 class="modal-title">
       <%= link_to resource_path, remote: true, class: 'pull-left spacer', data: { action: 'swap-remote-container', target: '#user_assignments_modal' } do %>
         <i class="fas fa-arrow-left"></i>
@@ -23,7 +23,7 @@
       <% end %>
     </div>
     <div class="modal-footer">
-      <%= f.submit t('.submit'), class: "btn btn-primary", disabled: true, data: { 'label-default' =>  t('.submit'),  'label-singular' => t('.submit_singular'), 'label-plural' => t('.submit_plural') }%>
+      <%= f.submit t('.submit'), class: "btn btn-primary", disabled: true, data: { 'label-default' =>  t('.submit'),  'label-singular' => t('.submit_singular'), 'label-plural' => t('.submit_plural') }, title: 'grant access to users' %>
     </div>
   <% end %>
 </div>

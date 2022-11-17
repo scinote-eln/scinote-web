@@ -6,7 +6,7 @@
     <li class="sidebar-leaf">
       <%= link_to my_module.name,
                   protocols_my_module_url(my_module),
-                  title: my_module.name,
+                  title: "sidebar: #{my_module.name}",
                   class: 'sidebar-link',
                   data: { module_id: my_module.id } %>
       <% if action_name == 'canvas' %>

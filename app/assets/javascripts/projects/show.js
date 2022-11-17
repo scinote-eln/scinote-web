@@ -380,3 +380,13 @@
 
   init();
 }());
+
+function addTitlesToOptions() {
+  var select = document.getElementsByClassName('dropdown-menu inner')[0]
+  var length = select.getElementsByTagName('li').length
+
+  for (var i = 0; i < length; i++) {
+    var option = select.getElementsByTagName('li')[i]
+    option.title = option.textContent
+  }
+}

@@ -16,9 +16,9 @@
       <%= render partial: 'projects/show/experiment_workflow_image_container', locals: { experiment: experiment } %>
     </div>
     <% if experiment.archived_branch? %>
-      <%= link_to experiment.name, module_archive_experiment_path(experiment), title: experiment.name, class: 'name-link' %>
+      <%= link_to experiment.name, module_archive_experiment_path(experiment), title: "archived experiment: #{experiment.name}, id: #{experiment.code}", class: 'name-link' %>
     <% else %>
-      <%= link_to experiment.name, canvas_experiment_path(experiment), title: experiment.name, class: 'name-link' %>
+      <%= link_to experiment.name, canvas_experiment_path(experiment), title: "experiment: #{experiment.name}, id: #{experiment.code}", class: 'name-link' %>
     <% end %>
   </div>
   <div class="experiment-code-cell table-cell">
