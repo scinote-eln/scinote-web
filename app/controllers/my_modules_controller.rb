@@ -268,7 +268,6 @@ class MyModulesController < ApplicationController
   def protocols
     @protocol = @my_module.protocol
     @assigned_repositories = @my_module.live_and_snapshot_repositories_list
-    current_team_switch(@protocol.team)
   end
 
   def protocol
@@ -291,11 +290,6 @@ class MyModulesController < ApplicationController
   end
 
   def results
-    current_team_switch(@my_module
-                                .experiment
-                                .project
-                                .team)
-
     @results_order = params[:order] || 'new'
 
     @results = @my_module.archived_branch? ? @my_module.results : @my_module.results.active
@@ -311,7 +305,6 @@ class MyModulesController < ApplicationController
 
   def archive
     @archived_results = @my_module.archived_results
-    current_team_switch(@my_module.experiment.project.team)
   end
 
   def restore_group
@@ -383,6 +376,7 @@ class MyModulesController < ApplicationController
   end
 
   def check_read_permissions
+    current_team_switch(@project.team) if current_team != @project.team
     render_403 unless can_read_my_module?(@my_module)
   end
 
