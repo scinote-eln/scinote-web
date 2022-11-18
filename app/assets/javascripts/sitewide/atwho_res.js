@@ -39,6 +39,7 @@ var SmartAnnotation = (function() {
     function generateFilterMenu() {
       var menu = '';
       $.ajax({
+        async: false,
         dataType: 'json',
         url: $(document.body).attr('data-atwho-repositories-url'),
         success: function(data) {
