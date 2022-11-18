@@ -13,7 +13,7 @@
     </div>
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <div class="checkbox" title="project visibility checkbox in edit modal">
+        <div class="checkbox" id="allTeamsVisibility" title="project visibility checkbox in edit modal">
           <%= f.check_box :visibility,
                           { label: t('projects.index.modal_new_project.visibility_html'),
                             data: { action: 'toggle-visibility', target: 'role_select_wrapper' },
@@ -37,3 +37,16 @@
     <button title="save button in edit project modal" class="btn btn-primary" type="submit"><%=t "projects.index.modal_edit_project.submit" %></button>
   </div>
 <% end %>
+
+<script>
+  $("#allTeamsVisibility").click(function() {
+    var select = document.getElementsByClassName('dropdown-menu inner')[0]
+
+    var length = select.getElementsByTagName('li').length
+
+    for (var i = 0; i < length; i++) {
+      var option = select.getElementsByTagName('li')[i]
+      option.title = option.textContent
+    }
+  });
+</script>

@@ -27,7 +27,7 @@
     <div
       class="dropdown dropdown-async project-actions-menu  <%= 'new-comments' if has_unseen_comments?(project) %>"
       data-dropdown-url="<%= actions_dropdown_project_path(project) %>">
-      <button title="project <%= project.id %> action dropdown" class="btn btn-light dropdown-toggle icon-btn" type="button" id="projectActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      <button title="project <%= project.name %> action dropdown" class="btn btn-light dropdown-toggle icon-btn" type="button" id="projectActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
         <i class="fas fa-ellipsis-h"></i>
       </button>
       <ul></ul>

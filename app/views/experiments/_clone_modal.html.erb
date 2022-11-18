@@ -3,10 +3,10 @@
     <div class="modal-content">
       <%= bootstrap_form_for @experiment, url: clone_experiment_path(@experiment), method: :post do |f| %>
         <div class="modal-header">
-          <button title="close clone modal" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" title="close clone modal">&times;</span></button>
           <h4 class="modal-title" id="clone-experiment-modal-label"><%= t("experiments.clone.modal_title", experiment: @experiment.name ) %></h5>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" onclick="addTitlesToOptions()" id="zd">
           <%= f.select :project_id,
                        options_for_select(
                          @projects.collect do |p|
