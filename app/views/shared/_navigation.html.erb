@@ -58,7 +58,7 @@
         <% if current_user.teams.length > 0 %>
           <li id="team-switch">
             <div class="btn-group">
-              <button type="button" class="btn btn-default selected-team" data-toggle="dropdown">
+              <button title="<%= current_team.name %>" type="button" class="btn btn-default selected-team" data-toggle="dropdown">
                 <%= current_team.name %>
               </button>
               <button type="button"
@@ -95,7 +95,7 @@
                   </div>
                 <% end %>
                 <% if can_create_teams? %>
-                  <li class="new-team">
+                  <li class="new-team" title="new team">
                     <%= link_to new_team_path do %>
                       <span class="fas fa-plus"></span>
                       <%= t('users.settings.teams.index.new_team') %>

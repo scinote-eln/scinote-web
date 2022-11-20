@@ -15,10 +15,10 @@
       </small>
     </div>
   </div>
-  <div class="user-assignment-controls" onclick="addTitlesToOptions()">
+  <div class="user-assignment-controls" onclick="addTitlesToOptions(this.getElementsByClassName('dropdown-menu inner')[0])">
     <div class="user-assignment-role">
       <% if editable %>
-        <%= f.select :default_public_user_role_id, options_for_select(user_roles_collection, selected: f.object.default_public_user_role_id), {}, class: 'form-control selectpicker', title: t('user_assignment.change_project_role'), data: { 'selected-text-format' => 'static' } %>
+        <%= f.select :default_public_user_role_id, options_for_select(user_roles_collection, selected: f.object.default_public_user_role_id), {}, class: 'form-control selectpicker', title: "change project role for user #{user.full_name}", data: { 'selected-text-format' => 'static' } %>
       <% end %>
     </div>
     <div class="user-assignment-remove">

@@ -25,7 +25,7 @@
       <%= current_assignee_name(user) %>
     </div>
   </div>
-  <div class="user-assignment-controls" onclick="addTitlesToOptions()">
+  <div class="user-assignment-controls" onclick="addTitlesToOptions(this.getElementsByClassName('dropdown-menu inner')[0])">
     <div class="user-assignment-role hidden" id="<%= id %>">
       <%= f.select :user_role_id,
                 options_for_select(user_roles_collection),

@@ -11,7 +11,6 @@
     <% end %>
     <%= render('access_permissions/partials/default_public_user_role_form', project: project, editable: true) if project.visible? %>
   </div>
-
   <div class="modal-footer">
     <%= link_to new_resource_path, class: 'btn btn-default pull-left', data: { action: 'swap-remote-container', target: '#user_assignments_modal' }, title: "grant access to project" do %>
       <i class="fas fa-plus"></i>
