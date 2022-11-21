@@ -944,6 +944,7 @@ en:
         out_of_labels: "Waiting for labels. Please, insert labels."
         error: "There is an issue with the printer."
         unreachable: "Printer is offline"
+        search: "Checking printer status"
 
   my_modules:
     details:
