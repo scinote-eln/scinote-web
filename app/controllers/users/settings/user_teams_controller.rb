@@ -196,6 +196,8 @@ module Users
           protocol.archived_by = new_owner unless protocol.archived_by.nil?
           protocol.restored_by = new_owner unless protocol.restored_by.nil?
           protocol.save!
+          protocol.user_assignments.find_by(user: new_owner)&.destroy!
+          protocol.user_assignments.create!(user: new_owner, user_role: UserRole.find_predefined_owner_role)
         end
 
         # Make new owner author of all inventory items that were added
