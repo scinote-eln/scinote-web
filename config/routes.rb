@@ -373,6 +373,8 @@ Rails.application.routes.draw do
         get 'move_modal' # return modal with move options
         post 'move' # move experiment
         get 'fetch_workflow_img' # Get udated workflow img
+        get 'modules/new', to: 'my_modules#new'
+        post 'modules', to: 'my_modules#create'
         post 'restore_my_modules', to: 'my_modules#restore_group'
         get 'sidebar'
         get :assigned_users_to_tasks
