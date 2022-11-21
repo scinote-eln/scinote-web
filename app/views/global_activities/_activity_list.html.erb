@@ -2,6 +2,7 @@
   <div class="activities-day" data-date="<%= date %>">
     <div class="date-container">
       <a class="activities-group-expand-button"
+         title="expand/collapse activities at <%= l(Time.parse(date), format: :full_date) %>"
          href="javascript:void(0);"
          id="activities-group-<%= date %>-button"
          data-toggle="collapse"

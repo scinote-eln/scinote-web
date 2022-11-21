@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <button title="close edit project modal" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" title="close edit project modal">&times;</span></button>
   <h4 class="modal-title" id="edit-project-modal-label">
     <%= t('projects.index.modal_edit_project.modal_title', project: @project.name) %>
   </h4>
@@ -13,11 +13,11 @@
     </div>
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <div class="checkbox" id="allTeamsVisibility" title="project visibility checkbox in edit modal">
+        <div class="checkbox" id="allTeamsVisibility">
           <%= f.check_box :visibility,
                           { label: t('projects.index.modal_new_project.visibility_html'),
                             data: { action: 'toggle-visibility', target: 'role_select_wrapper' },
-                            checked: f.object.visible? },
+                            checked: f.object.visible?, title: 'project visibility checkbox in edit modal' },
                           :visible,
                           :hidden %>
         </div>

@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" title="close move to modal contents">&times;</span></button>
   <h4 class="modal-title">
     <%= t('projects.index.modal_move_folder.title', items: items_label) %>
   </h4>
@@ -9,7 +9,7 @@
   <%= t('projects.index.modal_move_folder.description', items: items_label) %>
 
   <div class="sci-input-container left-icon">
-    <input type="search" class="form-control sci-input-field" id="searchFolderTree" placeholder="Find a folder"/>
+    <input type="search" title="movable content search field" class="form-control sci-input-field" id="searchFolderTree" placeholder="Find a folder"/>
     <i class="fas fa-search"></i>
   </div>
 
@@ -28,7 +28,7 @@
 </div>
 
 <div class="modal-footer">
-  <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
+  <button type="button" title="cancel moving folders" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
   <%= button_to(t('projects.index.modal_move_folder.submit'),
                 move_to_project_folders_url,
                 class: 'btn btn-primary',

@@ -11,7 +11,7 @@
     </h4>
   </div>
   <%= form_with(model: form_object, url: create_path, method: :post, remote: true, html: { id: 'new-user-assignment-to-project-form', data: { action: 'replace-form', target: '#user_assignments_modal', object_type: resource.class.to_s.downcase} }) do |f| %>
-    <div class="modal-body">
+    <div class="modal-body" onclick="setAccessButtonTitle()">
       <div class="sci-input-container left-icon">
         <%= text_field_tag :search_users, '', placeholder: t('.find_people_html'), class: 'sci-input-field', data: { action: 'filter-list', target: 'new-user-assignment-to-project-form' }, title: 'search assignable users' %>
         <i class="fas fa-search"></i>
@@ -23,7 +23,15 @@
       <% end %>
     </div>
     <div class="modal-footer">
-      <%= f.submit t('.submit'), class: "btn btn-primary", disabled: true, data: { 'label-default' =>  t('.submit'),  'label-singular' => t('.submit_singular'), 'label-plural' => t('.submit_plural') }, title: 'grant access to users' %>
+      <%= f.submit t('.submit'), class: "btn btn-primary", disabled: true, data: { 'label-default' =>  t('.submit'),  'label-singular' => t('.submit_singular'), 'label-plural' => t('.submit_plural') }, id: 'grantAccessButton' %>
     </div>
   <% end %>
 </div>
+
+<script>
+  function setAccessButtonTitle() {
+    var accessButton = document.getElementById('grantAccessButton');
+    accessButton.title = accessButton.value;
+  }
+
+</script>

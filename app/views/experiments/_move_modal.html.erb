@@ -14,7 +14,7 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" title="close move modal">&times;</span></button>
           <h4 class="modal-title" id="move-experiment-modal-label"><%= t("experiments.move.modal_title", experiment: @experiment.name ) %></h5>
         </div>
-        <div class="modal-body" onclick="addTitlesToOptions()">
+        <div class="modal-body" onclick="addTitlesToOptions(this.getElementsByClassName('dropdown-menu inner')[0])">
           <p><small><%= t("experiments.move.notice") %></small></p>
           <% if @projects.any? && can_manage_all_experiment_my_modules?(@experiment) %>
             <%= f.select :project_id, options_for_select(@projects.collect { |p| [ p.name, p.id ] }),
