@@ -572,9 +572,9 @@ var RepositoryDatatable = (function(global) {
         ).toArray().map((r) => parseInt(r.id, 10));
 
         if (rowsSelected.every(r => visibleRowIds.includes(r))) {
-          $('#editRepositoryRecord').show();
+          $('#editRepositoryRecord').prop('disabled', false);
         } else {
-          $('#editRepositoryRecord').hide();
+          $('#editRepositoryRecord').prop('disabled', true);
         }
 
         if ($('.repository-show').hasClass('archived')) {
