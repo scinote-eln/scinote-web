@@ -144,10 +144,10 @@ module Experiments
                             })
       end
 
-      result[:more_users_title] = user_names_with_roles(users[4..].to_a) if users.length > 3
-
+      result[:more_users_title] = users[4..].map(&:full_name).join('&#013;') if users.length > 4
+      result[:list_url] = search_my_module_user_my_module_path(my_module, my_module_id: my_module.id)
       if can_manage_my_module_users?(@user, my_module)
-        result[:manage_url] = index_old_my_module_user_my_modules_url(my_module_id: my_module.id, format: :json)
+        result[:create_url] = my_module_user_my_modules_path(my_module_id: my_module.id)
       end
 
       result

@@ -124,6 +124,30 @@ var ExperimnetTable = {
       return true;
     });
   },
+  initManageUsersDropdown: function() {
+    $(this.table).on('show.bs.dropdown', '.assign-users-dropdown', (e) => {
+      let usersList = $(e.target).find('.users-list');
+      usersList.find('.user-container').remove();
+      $.get(usersList.data('list-url'), (result) => {
+        $.each(result, (_i, user) => {
+          $(`
+            <div class="user-container">
+              <div class="sci-checkbox-container">
+                <input type="checkbox" class="sci-checkbox user-selector" value="${user.value}">
+                <span class="sci-checkbox-label"></span>
+              </div>
+              <div class="user-avatar">
+                <img src="${user.params.avatar_url}"></img>
+              </div>
+              <div class="user-name">
+                ${user.label}
+              </div>
+            </div>
+          `).appendTo(usersList);
+        });
+      });
+    });
+  },
   checkActionPermission: function(permission) {
     let allMyModules;
 
@@ -299,6 +323,7 @@ var ExperimnetTable = {
     this.initNewTaskModal(this);
     this.initMyModuleActions();
     this.updateExperimentToolbar();
+    this.initManageUsersDropdown();
   }
 };
 
@@ -334,34 +359,48 @@ ExperimnetTable.render.status = function(data) {
 
 ExperimnetTable.render.assigned = function(data) {
   let users = '';
-  $.each(data.users, (_i, user) => {
+
+  $.each(data.users, (i, user) => {
     users += `
-      <span class="global-avatar-container">
+      <span class="avatar-container" style="z-index: ${5 - i}">
         <img src=${user.image_url} title=${user.title}>
       </span>
     `;
   });
 
-  if (data.length > 3) {
+  if (data.count > 4) {
     users += `
-    <span class="more-users" title="${data.more_users_title}">
-        +${data.length - 3}
+    <span class="more-users avatar-container" title="${data.more_users_title}">
+        +${data.count - 4}
     </span>
     `;
   }
 
-  if (data.manage_url) {
-    users = `
-      <a href="${data.manage_url}" class= 'my-module-users-link', data-action='remote-modal'>
-        ${users}
-        <span class="new-user global-avatar-container">
-          <i class="fas fa-plus"></i>
-        </span>
-      </a>
+  if (data.create_url) {
+    users += `
+      <span class="new-user avatar-container">
+        <i class="fas fa-plus"></i>
+      </span>
     `;
   }
 
-  return users;
+  return `
+    <div ref="dropdown"
+         class="assign-users-dropdown dropdown"
+    >
+      <div class="assigned-users-container" data-toggle="dropdown" >
+        ${users}
+      </div>
+      <div class="dropdown-menu dropdown-menu-right">
+        <div class="sci-input-container left-icon">
+          <input type="text" class="sci-input-field" placeholder="${I18n.t('experiments.table.search')}"></input>
+          <i class="fas fa-search"></i>
+        </div>
+        <div class="users-list" data-list-url="${data.list_url}">
+        </div>
+      </div>
+    </div>
+  `;
 };
 
 ExperimnetTable.render.tags = function(data) {
