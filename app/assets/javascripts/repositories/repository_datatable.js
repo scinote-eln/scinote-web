@@ -732,6 +732,7 @@ var RepositoryDatatable = (function(global) {
       checkAvailableColumns();
       RepositoryDatatableRowEditor.addNewRow(TABLE);
       changeToEditMode();
+      $('.tooltip').remove();
     })
     .on('click', '#copyRepositoryRecords', function() {
       animateSpinner();
