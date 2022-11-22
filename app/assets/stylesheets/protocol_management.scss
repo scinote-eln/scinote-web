@@ -344,7 +344,6 @@
     .preview-holder {
       height: calc(100% - 40px);
       margin: 0 21px 40px;
-      max-width: 900px;
       overflow: hidden;
       position: absolute;
       width: calc(100% - 42px);
@@ -396,21 +395,6 @@
         height: calc(100% - 200px);
         position: relative;
         width: 100%;
-      }
-    }
-  }
-}
-
-@media (min-width: 1520px) {
-  .external-protocols-tab {
-
-    .main-protocol-panel {
-
-      .protocol-preview-panel {
-
-        .preview-holder {
-          margin: 0 calc(50% - 450px) 40px;
-        }
       }
     }
   }
