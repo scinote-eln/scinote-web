@@ -37,9 +37,9 @@ class Users::SessionsController < Devise::SessionsController
 
   def expire_in
     if current_user.remember_created_at.nil?
-      render plain: Devise.timeout_in.to_i - (Time.now.to_i - user_session['last_request_at']).round
+      render plain: (Devise.timeout_in.to_i - (Time.now.to_i - user_session['last_request_at']).round) * 1000
     else
-      render plain: Devise.remember_for - (Time.now.to_i - current_user.remember_created_at.to_i).round
+      render plain: (Devise.remember_for - (Time.now.to_i - current_user.remember_created_at.to_i).round) * 1000
     end
   end
 
