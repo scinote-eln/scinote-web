@@ -1,6 +1,8 @@
+// scss-lint:disable SelectorDepth NestingDepth
+
 .bootstrap-datetimepicker-widget {
   .glyphicon-calendar {
-    margin: 0 !important;
+    margin: 0;
   }
 
   .timepicker-picker {
@@ -22,11 +24,12 @@
       }
     }
 
-    .glyphicon-chevron-up, .glyphicon-chevron-down {
+    .glyphicon-chevron-up,
+    .glyphicon-chevron-down {
       align-items: center;
       display: flex;
-      justify-content: center;
       height: 100%;
+      justify-content: center;
       line-height: 1;
     }
 
