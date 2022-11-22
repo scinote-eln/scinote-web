@@ -1324,6 +1324,13 @@ en:
         duplicate: 'Duplicate'
         manage_access: 'Manage access'
         task_data: 'Task data display'
+      my_module_actions:
+        title: 'TASK ACTIONS'
+        edit: 'Edit'
+        duplicate: 'Duplicate as template'
+        move: 'Move to another experiment'
+        access: 'Task access'
+        archive: 'Archive'
       filters:
         name: 'Task name'
         due_date: 'Due date'
