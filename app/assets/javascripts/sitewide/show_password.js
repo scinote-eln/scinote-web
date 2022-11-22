@@ -1,4 +1,5 @@
-$(document).on('turbolinks:load', function() {
+function initShowPassword() {
+  $('.fas.fa-eye.show-password').remove();
   $.each($('input[type="password"]'), function(i, e) {
     $(`<i class="fas fa-eye show-password"
           style="
@@ -8,6 +9,10 @@ $(document).on('turbolinks:load', function() {
           "></i>`).insertAfter(e);
     $(e).parent().addClass('right-icon');
   });
+}
+
+$(document).on('turbolinks:load', function() {
+  initShowPassword()
 });
 
 $(document).on('click', '.show-password', function() {
