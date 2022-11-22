@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Protocol < ApplicationRecord
+  ID_PREFIX = 'PT'
+
+  include PrefixedIdModel
   include SearchableModel
   include RenamingUtil
   include SearchableByNameModel

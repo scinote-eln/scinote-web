@@ -2559,6 +2559,7 @@ en:
       publish: "Move to Team protocols"
       archive_action: "Archive"
       thead_name: "Name"
+      thead_code: "ID"
       thead_keywords: "Keywords"
       thead_nr_of_linked_children: "No. of linked tasks"
       thead_published_by: "Published by"
