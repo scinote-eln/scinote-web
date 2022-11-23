@@ -93,7 +93,7 @@
         .repositories-dropdown-menu {
           max-height: 250px;
           overflow: auto;
-          
+
           .repository {
             @include font-button;
             cursor: pointer;
@@ -430,9 +430,29 @@
     max-width: 100vw;
     width: 650px;
 
+    .dropdown-header,
+    .dropdown-body {
+      padding: 10px 32px;
+    }
+
+    .dropdown-header {
+      background: $color-white;
+      border-bottom: $border-tertiary;
+
+      .protocol-name {
+        color: $color-black;
+        margin-top: 0;
+      }
+
+      .protocol-header-info {
+        color: $color-black;
+        font-size: .875em;
+        font-weight: 400;
+      }
+    }
+
     .dropdown-body {
       border-bottom: $border-tertiary;
-      padding: 10px 32px;
 
       .info-line {
         align-items: center;
