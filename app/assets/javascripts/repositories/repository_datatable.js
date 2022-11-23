@@ -90,7 +90,7 @@ var RepositoryDatatable = (function(global) {
         $('#editDeleteCopy').show();
         $('#toolbarPrintLabel').show();
       }
-      $('#team-switch').css({ 'pointer-events': 'visible', opacity: 1 });
+      $('#team-switch').css({ 'pointer-events': 'auto', opacity: 1 });
       $('#navigationGoBtn').prop('disabled', false);
     } else if (currentMode === 'editMode') {
       $(TABLE_WRAPPER_ID).addClass('editing');
