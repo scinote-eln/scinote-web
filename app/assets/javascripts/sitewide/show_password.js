@@ -12,7 +12,7 @@ function initShowPassword() {
 }
 
 $(document).on('turbolinks:load', function() {
-  initShowPassword()
+  initShowPassword();
 });
 
 $(document).on('click', '.show-password', function() {
