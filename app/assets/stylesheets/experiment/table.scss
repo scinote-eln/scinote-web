@@ -271,6 +271,40 @@
     display: contents;
     margin-bottom: 0;
   }
+
+  .my-module-menu {
+    .dropdown-menu {
+      .divider-label {
+        @include font-small;
+        color: $color-silver-chalice;
+        padding: .25em 1em;
+      }
+
+      li {
+        @include font-button;
+        cursor: pointer;
+        padding: .5em 1em;
+        white-space: nowrap;
+
+        .fas {
+          display: inline-block;
+          margin-right: .25em;
+          width: 18px;
+        }
+
+        &:hover:not(.divider-label) {
+          background: $color-concrete;
+        }
+
+        a {
+          display: inline-block;
+          margin: -.5em -1em;
+          padding: .5em 1em;
+          width: calc(100% + 2em);
+        }
+      }
+    }
+  }
 }
 
 .table-display-modal {

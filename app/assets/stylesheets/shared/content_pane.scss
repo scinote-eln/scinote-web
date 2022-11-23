@@ -87,7 +87,7 @@
               margin-right: .5em;
             }
 
-            &:hover {
+            &:hover:not(.divider-label) {
               background: $color-concrete;
             }
 
