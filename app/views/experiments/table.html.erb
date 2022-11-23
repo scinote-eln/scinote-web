@@ -7,7 +7,7 @@
   <%= render partial: 'shared/sidebar/my_modules.html.erb', locals: { experiment: @experiment, my_modules: @active_modules } %>
 <% end %>
 
-<div class="content-pane flexible" id="experimentTable">
+<div class="content-pane flexible experiment-new-my_module" id="experimentTable">
   <%= render partial: 'experiments/show_header' %>
   <%= render partial: 'experiments/table_toolbar' %>
   <div class="experiment-table-container">

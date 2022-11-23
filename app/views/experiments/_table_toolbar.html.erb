@@ -1,10 +1,15 @@
 <div class="toolbar-row">
   <div class="toolbar-left-block">
     <% if can_manage_experiment?(@experiment) %>
-      <button id="createTask" class="btn btn-primary">
-        <i class="fas fa-plus"></i>
-        <%= t("experiments.table.toolbar.new") %>
-      </button>
+
+      <%= link_to modules_new_experiment_path(@experiment, view_mode:'table'),
+                    class: 'btn btn-primary new-my-module-button',
+                    id: 'createTask',
+                    data: { view_mode: 'active' },
+                    remote: true do %>
+                <span class="fas fa-plus"></span>
+                <span class="hidden-xs"><%= t('experiments.canvas.new_my_module') %></span>
+        <% end %>
     <% end %>
     <button id="editTask" class="btn btn-light single-object-action hidden" data-for="editable">
       <i class="fas fa-pen"></i>

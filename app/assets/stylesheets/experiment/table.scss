@@ -273,6 +273,15 @@
   }
 }
 
+.datetime-picker-container {
+  width: 45%;
+
+  .fa-calendar-alt {
+    color: $color-volcano !important;
+  }
+}
+
+
 .table-display-modal {
   .column-container {
     align-items: center;

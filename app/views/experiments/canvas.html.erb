@@ -7,12 +7,12 @@
   <%= render partial: 'shared/sidebar/my_modules.html.erb', locals: { experiment: @experiment, my_modules: @active_modules } %>
 <% end %>
 
-<div class="content-pane flexible" id="experiment-canvas">
+<div class="content-pane flexible experiment-new-my_module" id="experiment-canvas">
   <%= render partial: 'experiments/show_header' %>
   <div class="toolbar-row" id="diagram-buttons">
     <div id="toolbar-left-block">
       <% if can_manage_experiment?(@experiment) %>
-        <%= link_to modules_new_experiment_path(@experiment),
+        <%= link_to modules_new_experiment_path(@experiment, view_mode: 'canvas'),
                     class: 'btn btn-primary new-my-module-button',
                     data: { view_mode: 'active' },
                     remote: true do %>
