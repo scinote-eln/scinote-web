@@ -90,7 +90,7 @@ var RepositoryDatatable = (function(global) {
         $('#editDeleteCopy').show();
         $('#toolbarPrintLabel').show();
       }
-      $("#team-switch").css({ 'pointer-events': 'visible', opacity: 1 });
+      $('#team-switch').css({ 'pointer-events': 'visible', opacity: 1 });
       $('#navigationGoBtn').prop('disabled', false);
     } else if (currentMode === 'editMode') {
       $(TABLE_WRAPPER_ID).addClass('editing');
@@ -121,7 +121,7 @@ var RepositoryDatatable = (function(global) {
       $('.dataTables_filter input').prop('disabled', true);
       $('#toolbarPrintLabel').hide();
       $('.repository-edit-overlay').show();
-      $("#team-switch").css({ 'pointer-events': 'none', opacity: 0.6 });
+      $('#team-switch').css({ 'pointer-events': 'none', opacity: 0.6 });
       $('#navigationGoBtn').prop('disabled', true);
     }
   }
