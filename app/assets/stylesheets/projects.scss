@@ -21,7 +21,7 @@ $color-module-hover: $brand-primary;
   align-items: center;
   display: flex;
 
-  #edit-canvas-button {
+  #edit-canvas-button, .new-my-module-button {
     margin-right: 5px;
   }
 
@@ -48,9 +48,8 @@ $color-module-hover: $brand-primary;
 }
 
 #update-canvas {
-
   .canvas-header {
-    margin-bottom: 5px;
+    padding: 1em 2em;
   }
 }
 

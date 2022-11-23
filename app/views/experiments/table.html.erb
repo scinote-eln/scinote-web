@@ -9,7 +9,7 @@
 
 <div class="content-pane flexible" id="experimentTable">
   <%= render partial: 'experiments/show_header' %>
-
+  <%= render partial: 'experiments/table_toolbar' %>
   <div class="experiment-table-container">
     <div class="experiment-table"
          style="--columns-count: <%= Experiments::TableViewService::COLUMNS.length%>"
@@ -23,7 +23,7 @@
           </div>
         </div>
         <% Experiments::TableViewService::COLUMNS.each do |col| %>
-          <div class="table-header-cell">
+          <div class="table-header-cell <%= col %>-column">
             <%= t("experiments.table.column.#{col}_html") %>
           </div>
         <% end %>
@@ -56,6 +56,8 @@
 </template>
 
 <%= render partial: "my_modules/modals/manage_module_tags_modal", locals: { my_module: nil } %>
+<%= render partial: "canvas/edit/modal/edit_module" %>
+<%= render partial: "experiments/table_display_modal"%>
 
 <%= javascript_include_tag("my_modules/tags") %>
 <%= javascript_include_tag("experiments/table") %>

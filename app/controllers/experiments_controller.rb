@@ -96,7 +96,7 @@ class ExperimentsController < ApplicationController
 
   def load_table
     active_modules = @experiment.my_modules.active
-    render json: Experiments::TableViewService.new(active_modules, current_user, params[:page]).call
+    render json: Experiments::TableViewService.new(active_modules, current_user, params).call
   end
 
   def edit
@@ -332,6 +332,37 @@ class ExperimentsController < ApplicationController
     end
   end
 
+  def assigned_users_to_tasks
+    users = current_team.users.where(id: @experiment.my_modules.joins(:user_my_modules).select(:user_id))
+                        .search(false, params[:query]).map do |u|
+      { value: u.id, label: sanitize_input(u.name), params: { avatar_url: avatar_path(u, :icon_small) } }
+    end
+
+    render json: users, status: :ok
+  end
+
+  def archive_my_modules
+    my_modules = @experiment.my_modules.where(id: params[:my_modules])
+    counter = 0
+    my_modules.each do |my_module|
+      next unless can_archive_my_module?(my_module)
+
+      my_module.transaction do
+        my_module.archive!(current_user)
+        log_my_module_activity(:archive_module, my_module)
+        counter += 1
+      rescue StandardError => e
+        Rails.logger.error e.message
+        raise ActiveRecord::Rollback
+      end
+    end
+    if counter.positive?
+      render json: { message: t('experiments.table.archive_group.success_flash', number: counter) }
+    else
+      render json: { message: t('experiments.table.archive_group.error_flash') }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def load_experiment
@@ -424,5 +455,15 @@ class ExperimentsController < ApplicationController
             project: experiment.project,
             subject: experiment,
             message_items: { experiment: experiment.id })
+  end
+
+  def log_my_module_activity(type_of, my_module)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            team: my_module.experiment.project.team,
+            project: my_module.experiment.project,
+            subject: my_module,
+            message_items: { my_module: my_module.id })
   end
 end

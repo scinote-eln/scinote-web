@@ -1305,13 +1305,64 @@ en:
         assigned_html: 'Assigned to'
         tags_html: 'Tags'
         comments_html: '<i class="fas fa-comment"></i>'
+      column_display_modal:
+        title: 'Task data display'
+        description: 'Click the eye buttons to hide or show columns in the table'
+        id: 'ID'
+        task_name: 'Task name'
+        due_date: 'Due date'
+        age: 'Age'
+        results: 'Results'
+        status: 'Status'
+        assigned: 'Assigned to'
+        tags: 'Tags'
+        comments: 'Comments'
+      toolbar:
+        new: 'New task'
+        edit: 'Edit'
+        archive: 'Archive'
+        move: 'Move'
+        duplicate: 'Duplicate'
+        manage_access: 'Manage access'
+        task_data: 'Task data display'
+      my_module_actions:
+        title: 'TASK ACTIONS'
+        edit: 'Edit'
+        duplicate: 'Duplicate as template'
+        move: 'Move to another experiment'
+        access: 'Task access'
+        archive: 'Archive'
+      filters:
+        name: 'Task name'
+        due_date: 'Due date'
+        status: 'Status'
+        status_placeholder: 'Select task flow status'
+        assigned: 'Assigned to'
+        assigned_placeholder: 'Select user'
+      view:
+        canvas: 'Canvas'
+        table: 'Table'
+        archived_tasks: 'Go to Archived tasks'
       add_tag: '+ Add tag'
+      archive_group:
+        success_flash: "<strong>%{number}</strong> task(s) successfully archived."
+        error_flash: "Failed to archive task(s)."
     canvas:
       archive_confirm: "Are you sure to archive this experiment?"
       actions: 'Experiment'
       view: 'View'
       head_title: "%{project} | Overview"
       canvas_edit: "Edit workflow"
+      new_my_module: "New task"
+      new_my_module_modal:
+        title: "Add a new task"
+        name: "Task name"
+        name_placeholder: "e.g. My task"
+        due_date: "Due date (optional)"
+        due_date_placeholder: "+ Add due date"
+        tags: "Add tags (optional)"
+        create: "Create"
+      canvas_edit: "Edit Experiment"
       zoom: "Zoom: "
       reload_on_submit: "Save action is running. Reloading this page may cause unexpected behavior."
       modal_manage_tags:

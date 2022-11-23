@@ -373,14 +373,22 @@ Rails.application.routes.draw do
         get 'move_modal' # return modal with move options
         post 'move' # move experiment
         get 'fetch_workflow_img' # Get udated workflow img
+        get 'modules/new', to: 'my_modules#new'
+        post 'modules', to: 'my_modules#create'
         post 'restore_my_modules', to: 'my_modules#restore_group'
         get 'sidebar'
+        get :assigned_users_to_tasks
+        post :archive_my_modules
       end
     end
 
     # Show action is a popup (JSON) for individual module in full-zoom canvas,
     # as well as 'module info' page for single module (HTML)
     resources :my_modules, path: '/modules', only: [:show, :update] do
+      member do
+        get :permissions
+        get :actions_dropdown
+      end
       resources :my_module_tags, path: '/tags', only: [:index, :create, :destroy] do
         collection do
           get :search_tags

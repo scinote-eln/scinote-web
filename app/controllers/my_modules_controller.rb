@@ -8,9 +8,10 @@ class MyModulesController < ApplicationController
   include MyModulesHelper
 
   before_action :load_vars, except: %i(restore_group)
+  before_action :check_create_permissions, only: %i(new create)
   before_action :check_archive_permissions, only: %i(update)
   before_action :check_manage_permissions, only: %i(
-    description due_date update_description update_protocol_description update_protocol
+    create description due_date update_description update_protocol_description update_protocol
   )
   before_action :check_read_permissions, except: %i(update update_description update_protocol_description restore_group)
   before_action :check_update_state_permissions, only: :update_state
@@ -18,6 +19,28 @@ class MyModulesController < ApplicationController
   before_action :load_experiment_my_modules, only: %i(protocols results activities archive)
 
   layout 'fluid'.freeze
+
+  def new
+    @my_module = @experiment.my_modules.new
+    render json: {
+      html: render_to_string(
+        partial: 'my_modules/modals/new_modal.html.erb'
+      )
+    }
+  end
+
+  def create
+    max_xy = @experiment.my_modules.select('MAX("my_modules"."x") AS x, MAX("my_modules"."y") AS y').take
+    x = max_xy ? (max_xy.x + 10) : 1
+    y = max_xy ? (max_xy.y + 10) : 1
+    @my_module = @experiment.my_modules.new(my_module_params)
+    @my_module.assign_attributes(created_by: current_user, last_modified_by: current_user, x: x, y: y)
+    if @my_module.save
+      redirect_to canvas_experiment_path(@experiment)
+    else
+      render json: @my_module.errors, status: :unprocessable_entity
+    end
+  end
 
   def show
     respond_to do |format|
@@ -362,6 +385,28 @@ class MyModulesController < ApplicationController
     end
   end
 
+  def permissions
+    if stale?(@my_module)
+      render json: {
+        editable: can_manage_my_module?(@my_module),
+        moveable: can_move_my_module?(@my_module),
+        archivable: can_archive_my_module?(@my_module),
+        restorable: can_restore_my_module?(@my_module)
+      }
+    end
+  end
+
+  def actions_dropdown
+    if stale?(@my_module)
+      render json: {
+        html: render_to_string(
+          partial: 'experiments/table_row_actions',
+          locals: { my_module: @my_module }
+        )
+      }
+    end
+  end
+
   private
 
   def load_vars
@@ -380,6 +425,10 @@ class MyModulesController < ApplicationController
                              else
                                @my_module.experiment.my_modules.where(archived: @my_module.archived?).order(:name)
                              end
+  end
+
+  def check_create_permissions
+    render_403 && return unless can_manage_experiment?(@experiment)
   end
 
   def check_manage_permissions
@@ -413,18 +462,18 @@ class MyModulesController < ApplicationController
   end
 
   def my_module_params
-    update_params = params.require(:my_module).permit(:name, :description, :started_on, :due_date, :archived)
+    permitted_params = params.require(:my_module).permit(:name, :description, :started_on, :due_date, :archived)
 
-    if update_params[:started_on].present?
-      update_params[:started_on] =
-        Time.zone.strptime(update_params[:started_on], I18n.backend.date_format.dup.gsub(/%-/, '%') + ' %H:%M')
+    if permitted_params[:started_on].present?
+      permitted_params[:started_on] =
+        Time.zone.strptime(permitted_params[:started_on], I18n.backend.date_format.dup.gsub(/%-/, '%') + ' %H:%M')
     end
-    if update_params[:due_date].present?
-      update_params[:due_date] =
-        Time.zone.strptime(update_params[:due_date], I18n.backend.date_format.dup.gsub(/%-/, '%') + ' %H:%M')
+    if permitted_params[:due_date].present?
+      permitted_params[:due_date] =
+        Time.zone.strptime(permitted_params[:due_date], I18n.backend.date_format.dup.gsub(/%-/, '%') + ' %H:%M')
     end
 
-    update_params
+    permitted_params
   end
 
   def protocol_params

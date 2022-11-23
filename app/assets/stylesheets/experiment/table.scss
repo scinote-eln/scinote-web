@@ -1,9 +1,31 @@
 // scss-lint:disable SelectorDepth NestingDepth IdSelector
 
 #experimentTable {
+  --content-header-size: 5em;
+  --toolbar-height: 4.5em;
+  position: relative;
+
   .experiment-table-container {
-    margin-top: 1em;
-    overflow-x: scroll;
+    height: calc(100vh - var(--content-header-size) - var(--navbar-height) - var(--toolbar-height));
+    overflow: auto;
+  }
+
+  .toolbar-row {
+    align-items: center;
+    display: flex;
+    height: var(--toolbar-height);
+
+    .toolbar-left-block {
+      display: flex;
+
+      .btn {
+        margin-right: .25em;
+      }
+    }
+
+    .toolbar-right-block {
+      margin-left: auto;
+    }
   }
 
   .experiment-table {
@@ -19,9 +41,9 @@
       display: flex;
       height: 3em;
       padding: 0 .5em;
-      //position: sticky;
-      //position: -webkit-sticky;
-      //top: calc(var(--content-header-size) + var(--navbar-height));
+      position: sticky;
+      position: -webkit-sticky;
+      top: 0;
       z-index: 2;
 
       &.select-all-checkboxes {
@@ -35,6 +57,7 @@
 
     .table-header {
       display: contents;
+      height: 10px;
 
       &::after {
         content: "";
@@ -248,6 +271,69 @@
     display: contents;
     margin-bottom: 0;
   }
+  .my-module-menu {
+    .dropdown-menu {
+      .divider-label {
+        @include font-small;
+        color: $color-silver-chalice;
+        padding: .25em 1em;
+      }
+
+      li {
+        @include font-button;
+        cursor: pointer;
+        padding: .5em 1em;
+        white-space: nowrap;
+
+        .fas {
+          display: inline-block;
+          margin-right: .25em;
+          width: 18px;
+        }
+
+        &:hover:not(.divider-label) {
+          background: $color-concrete;
+        }
+
+        a {
+          display: inline-block;
+          margin: -.5em -1em;
+          padding: .5em 1em;
+          width: calc(100% + 2em);
+        }
+      }
+    }
+  }
+}
+
+.table-display-modal {
+  .column-container {
+    align-items: center;
+    border-bottom: $border-default;
+    display: flex;
+    padding: .5em 1em;
+
+    &:not(.visible) {
+      color: $color-alto;
+    }
+
+    &:last-child {
+      border: 0;
+    }
+
+    .fas {
+      cursor: pointer;
+      margin-right: 1em;
+    }
+
+    &.task_name {
+      padding-left: 3em;
+
+      .fas {
+        display: none;
+      }
+    }
+  }
 
   .datetime-container {
     width: 100%;
@@ -296,6 +382,7 @@
       .date-text[data-editable=true] {
         background-color: $color-concrete;
         border-radius: 4px;
+
       }
     }
   }

@@ -12,6 +12,13 @@
   <div class="toolbar-row" id="diagram-buttons">
     <div id="toolbar-left-block">
       <% if can_manage_experiment?(@experiment) %>
+        <%= link_to modules_new_experiment_path(@experiment),
+                    class: 'btn btn-primary new-my-module-button',
+                    data: { view_mode: 'active' },
+                    remote: true do %>
+                <span class="fas fa-plus"></span>
+                <span class="hidden-xs"><%= t('experiments.canvas.new_my_module') %></span>
+        <% end %>
         <%=link_to canvas_edit_experiment_url(@experiment),
               remote: true,
               type: 'button',
@@ -52,6 +59,8 @@
 
 <!-- Initialize dropdown actions -->
 <%= javascript_include_tag("experiments/dropdown_actions") %>
+
+<%= javascript_include_tag("experiments/show") %>
 
 <!-- Include all the neccesary JS libraries -->
 <%= javascript_include_tag("eventPause-min") %>
