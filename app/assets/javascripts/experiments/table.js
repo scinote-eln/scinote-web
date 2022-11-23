@@ -55,7 +55,7 @@ var ExperimnetTable = {
         </div>`;
       $(`<div class="table-row" data-urls='${JSON.stringify(data.urls)}' data-id="${id}">${row}</div>`)
         .appendTo(`${this.table} .table-body`);
-      this.initDueDatePicker(`#calendarDueDate${data.filter(k => k.column_type === 'id')[0].data}`);
+      this.initDueDatePicker(`#calendarDueDate${data.columns.filter(k => k.column_type === 'id')[0].data.id}`);
     });
   },
   initDueDatePicker: function(element) {
