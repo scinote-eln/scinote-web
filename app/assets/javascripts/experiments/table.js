@@ -190,6 +190,11 @@ var ExperimnetTable = {
       $('.experiment-table')[0].style.setProperty('--columns-count', $('.table-display-modal .fa-eye').length + 1);
     });
   },
+  initNewTaskModal: function(table) {
+    $('.experiment-new-my_module').on('ajax:success', '#new-my-module-modal', function() {
+      table.loadTable();
+    });
+  },
   initFilters: function() {
     this.filterDropdown = filterDropdown.init();
     let $experimentFilter = $('#experimentTable .my-modules-filters');
@@ -256,6 +261,7 @@ var ExperimnetTable = {
     this.initAccessModal();
     this.initArchiveMyModules();
     this.initManageColumnsModal();
+    this.initNewTaskModal(this);
   }
 };
 

@@ -8,7 +8,7 @@
                     data: { view_mode: 'active' },
                     remote: true do %>
                 <span class="fas fa-plus"></span>
-                <span class="hidden-xs"><%= t('experiments.canvas.new_my_module') %></span>
+                <span class="hidden-xs"><%= t('experiments.table.toolbar.new') %></span>
         <% end %>
     <% end %>
     <button id="editTask" class="btn btn-light single-object-action hidden" data-for="editable">
@@ -41,3 +41,5 @@
     </button>
   </div>
 </div>
+
+<%= javascript_include_tag("experiments/show") %>

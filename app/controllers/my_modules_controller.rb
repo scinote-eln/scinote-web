@@ -36,7 +36,6 @@ class MyModulesController < ApplicationController
     @my_module.assign_attributes(created_by: current_user, last_modified_by: current_user, x: x, y: y)
     if @my_module.save
       redirect_to canvas_experiment_path(@experiment) if params[:my_module][:view_mode] == 'canvas'
-      redirect_to table_experiment_path(@experiment) if params[:my_module][:view_mode] == 'table'
     else
       render json: @my_module.errors, status: :unprocessable_entity
     end
