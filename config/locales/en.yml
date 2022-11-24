@@ -951,6 +951,8 @@ en:
       no_start_date_placeholder: "+ Add starting date"
       due_date: "Due date:"
       no_due_date_placeholder: "+ Add due date"
+      overdue: "Overdue"
+      due_soon: "Due soon"
       no_due_date: "not set"
       assigned_users: "Assigned to:"
       no_assigned_users: "+ Assign task to a project member"
