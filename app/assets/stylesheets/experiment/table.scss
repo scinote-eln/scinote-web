@@ -321,6 +321,16 @@
   }
 }
 
+.datetime-picker-container {
+  width: 45%;
+
+  .fa-calendar-alt {
+    color: $color-volcano !important;
+    font-size: 14px !important;
+  }
+}
+
+
 .table-display-modal {
   .column-container {
     align-items: center;

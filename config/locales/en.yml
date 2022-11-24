@@ -1364,6 +1364,7 @@ en:
         due_date_placeholder: "+ Add due date"
         tags: "Add tags (optional)"
         create: "Create"
+        enter_placeholder: 'Enter...'
       canvas_edit: "Edit Experiment"
       zoom: "Zoom: "
       reload_on_submit: "Save action is running. Reloading this page may cause unexpected behavior."

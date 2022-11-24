@@ -23,7 +23,7 @@ class MyModulesController < ApplicationController
     @my_module = @experiment.my_modules.new
     render json: {
       html: render_to_string(
-        partial: 'my_modules/modals/new_modal.html.erb'
+        partial: 'my_modules/modals/new_modal.html.erb', locals: { view_mode: params[:view_mode] }
       )
     }
   end
@@ -35,7 +35,7 @@ class MyModulesController < ApplicationController
     @my_module = @experiment.my_modules.new(my_module_params)
     @my_module.assign_attributes(created_by: current_user, last_modified_by: current_user, x: x, y: y)
     if @my_module.save
-      redirect_to canvas_experiment_path(@experiment)
+      redirect_to canvas_experiment_path(@experiment) if params[:my_module][:view_mode] == 'canvas'
     else
       render json: @my_module.errors, status: :unprocessable_entity
     end
