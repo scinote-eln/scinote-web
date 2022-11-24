@@ -16,6 +16,7 @@ module Experiments
       age
       results
       status
+      archived
       assigned
       tags
       comments
@@ -99,6 +100,14 @@ module Experiments
     def due_date_presenter(my_module)
       if my_module.due_date
         I18n.l(my_module.due_date, format: :full_date)
+      else
+        ''
+      end
+    end
+
+    def archived_presenter(my_module)
+      if my_module.archived?
+        I18n.l(my_module.archived_on, format: :full_date)
       else
         ''
       end

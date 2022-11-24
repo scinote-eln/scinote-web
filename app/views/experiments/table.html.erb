@@ -7,13 +7,13 @@
   <%= render partial: 'shared/sidebar/my_modules.html.erb', locals: { experiment: @experiment, my_modules: @active_modules } %>
 <% end %>
 
-<div class="content-pane flexible" id="experimentTable">
+<div class="content-pane flexible <%= params[:view_mode] %>" id="experimentTable">
   <%= render partial: 'experiments/show_header' %>
   <%= render partial: 'experiments/table_toolbar' %>
   <div class="experiment-table-container">
     <div class="experiment-table"
          style="--columns-count: <%= Experiments::TableViewService::COLUMNS.length%>"
-         data-my-modules-url= <%= load_table_experiment_path(@experiment) %>
+         data-my-modules-url= <%= load_table_experiment_path(@experiment, view_mode: params[:view_mode]) %>
     >
       <div class="table-header">
         <div class="table-header-cell select-all-checkboxes">
