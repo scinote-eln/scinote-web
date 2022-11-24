@@ -456,8 +456,8 @@ class MyModulesController < ApplicationController
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
-            team: my_module.experiment.project.team,
-            project: my_module.experiment.project,
+            team: my_module.team,
+            project: my_module.project,
             subject: my_module,
             message_items: message_items)
   end

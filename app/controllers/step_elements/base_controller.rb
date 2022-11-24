@@ -40,8 +40,8 @@ module StepElements
       Activities::CreateActivityService.call(
         activity_type: "#{!@step.protocol.in_module? ? 'protocol_step_' : 'task_step_'}#{element_type_of}",
         owner: current_user,
-        team: @protocol.in_module? ? @protocol.my_module.experiment.project.team : @protocol.team,
-        project: @protocol.in_module? ? @protocol.my_module.experiment.project : nil,
+        team: @protocol.team,
+        project: @protocol.in_module? ? @protocol.my_module.project : nil,
         subject: @protocol,
         message_items: {
           step: @step.id,

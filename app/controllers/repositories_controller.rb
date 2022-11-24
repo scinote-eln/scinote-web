@@ -521,7 +521,7 @@ class RepositoriesController < ApplicationController
       .call(activity_type: type_of,
             owner: current_user,
             subject: @repository,
-            team: current_team,
+            team: @repository.team,
             message_items: message_items)
   end
 end

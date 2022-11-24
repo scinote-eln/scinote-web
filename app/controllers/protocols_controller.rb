@@ -622,7 +622,7 @@ class ProtocolsController < ApplicationController
           .call(activity_type: :import_protocol_in_repository,
                 owner: current_user,
                 subject: protocol,
-                team: current_team,
+                team: protocol.team,
                 message_items: {
                   protocol: protocol.id
                 })
@@ -820,15 +820,15 @@ class ProtocolsController < ApplicationController
           file_name = 'protocols.eln'
         end
 
-        @protocols.each do |p|
+        @protocols.each do |protocol|
           if params[:my_module_id]
             my_module = MyModule.find(params[:my_module_id])
             Activities::CreateActivityService
               .call(activity_type: :export_protocol_from_task,
                     owner: current_user,
-                    project: my_module.experiment.project,
+                    project: my_module.project,
                     subject: my_module,
-                    team: current_team,
+                    team: my_module.team,
                     message_items: {
                       my_module: params[:my_module_id].to_i
                     })
@@ -836,10 +836,10 @@ class ProtocolsController < ApplicationController
             Activities::CreateActivityService
               .call(activity_type: :export_protocol_in_repository,
                     owner: current_user,
-                    subject: p,
-                    team: current_team,
+                    subject: protocol,
+                    team: protocol.team,
                     message_items: {
-                      protocol: p.id
+                      protocol: protocol.id
                     })
           end
         end
@@ -1232,7 +1232,7 @@ class ProtocolsController < ApplicationController
       .call(activity_type: type_of,
             owner: current_user,
             subject: @protocol,
-            team: current_team,
+            team: @protocol.team,
             project: project,
             message_items: message_items)
   end
