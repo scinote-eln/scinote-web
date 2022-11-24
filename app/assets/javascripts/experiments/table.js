@@ -10,7 +10,7 @@ var ExperimnetTable = {
   filters: [], // Filter {name: '', init(), closeFilter(), apply(), active(), clearFilter()}
   pageSize: GLOBAL_CONSTANTS.DEFAULT_ELEMENTS_PER_PAGE,
   getUrls: function(id) {
-    return $(`.table-row[data-id="${id}"] .my-module-urls`).data('urls');
+    return $(`.table-row[data-id="${id}"]`).data('urls');
   },
   loadPlaceholder: function() {
     let placeholder = '';
@@ -30,7 +30,7 @@ var ExperimnetTable = {
           </div>
         </div>`;
       // Task columns
-      $.each(data, (_i, cell) => {
+      $.each(data.columns, (_i, cell) => {
         let hidden = '';
         if ($(`.table-display-modal .fa-eye-slash[data-column="${cell.column_type}"]`).length === 1) {
           hidden = 'hidden';
@@ -42,18 +42,46 @@ var ExperimnetTable = {
         `;
       });
       // Menu
-      row += '<div class="table-body-cell"></div>';
-      $(`<div class="table-row" data-id="${id}">${row}</div>`).appendTo(`${this.table} .table-body`);
+      row += `
+        <div class="table-body-cell">
+          <div ref="dropdown" class="dropdown my-module-menu" data-url="${data.urls.actions_dropdown}">
+            <div class="btn btn-ligh icon-btn" data-toggle="dropdown" >
+              <i class="fas fa-ellipsis-h"></i>
+            </div>
+            <div class="dropdown-menu dropdown-menu-right">
+              <a class="open-access-modal hidden" data-action="remote-modal" href="${data.urls.access}"></a>
+            </div>
+          </div>
+        </div>`;
+      $(`<div class="table-row" data-urls='${JSON.stringify(data.urls)}' data-id="${id}">${row}</div>`)
+        .appendTo(`${this.table} .table-body`);
+    });
+  },
+  initMyModuleActions: function() {
+    $(this.table).on('show.bs.dropdown', '.my-module-menu', (e) => {
+      let menu = $(e.target).find('.dropdown-menu');
+      $.get(e.target.dataset.url, (result) => {
+        $(menu).find('li').remove();
+        $(result.html).appendTo(menu);
+      });
+    });
+
+    $(this.table).on('click', '.archive-my-module', (e) => {
+      e.preventDefault();
+      this.archiveMyModules(e.target.href, e.target.dataset.id);
     });
   },
   initArchiveMyModules: function() {
     $('#archiveTask').on('click', (e) => {
-      $.post(e.target.dataset.url, { my_modules: this.selectedMyModules }, (data) => {
-        HelperModule.flashAlertMsg(data.message, 'success');
-        this.loadTable();
-      }).error((data) => {
-        HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
-      });
+      this.archiveMyModules(e.target.dataset.url, this.selectedMyModules);
+    });
+  },
+  archiveMyModules: function(url, ids) {
+    $.post(url, { my_modules: ids }, (data) => {
+      HelperModule.flashAlertMsg(data.message, 'success');
+      this.loadTable();
+    }).error((data) => {
+      HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
   },
   initAccessModal: function() {
@@ -112,11 +140,19 @@ var ExperimnetTable = {
       });
     });
   },
+  loadPermission: function(id) {
+    let row = $(`.table-row[data-id="${id}"]`);
+    $.get(this.getUrls(id).permissions, (result) => {
+      this.permissions.forEach((permission) => {
+        row.data(permission, result[permission]);
+      });
+      this.updateExperimentToolbar();
+    });
+  },
   initSelector: function() {
     $(this.table).on('click', '.my-module-selector', (e) => {
       let checkbox = e.target;
       let myModuleId = checkbox.dataset.myModule;
-      let row = $(`.table-row[data-id="${myModuleId}"]`);
       let index = $.inArray(myModuleId, this.selectedMyModules);
 
       // If checkbox is checked and row ID is not in list of selected project IDs
@@ -130,12 +166,7 @@ var ExperimnetTable = {
       }
 
       if (checkbox.checked) {
-        $.get(this.getUrls(myModuleId).permissions, (result) => {
-          this.permissions.forEach((permission) => {
-            row.data(permission, result[permission]);
-          });
-          this.updateExperimentToolbar();
-        });
+        this.loadPermission(myModuleId);
       } else {
         this.updateExperimentToolbar();
       }
@@ -262,6 +293,7 @@ var ExperimnetTable = {
     this.initArchiveMyModules();
     this.initManageColumnsModal();
     this.initNewTaskModal(this);
+    this.initMyModuleActions();
   }
 };
 
@@ -271,9 +303,8 @@ ExperimnetTable.render.task_name = function(data) {
 
 ExperimnetTable.render.id = function(data) {
   return `
-    <div class="my-module-urls" data-urls='${JSON.stringify(data.urls)}'>${data.id}</div>
-    <a class="hidden open-access-modal" data-action="remote-modal" href="${data.urls.access}"></a>
-  `; // In ticket with task menu move this access link to menu
+    <div>${data.id}</div>
+  `;
 };
 
 ExperimnetTable.render.due_date = function(data) {

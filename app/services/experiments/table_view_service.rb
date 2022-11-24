@@ -60,7 +60,18 @@ module Experiments
           prepared_my_module.push(column_data)
         end
 
-        result[my_module.id] = prepared_my_module
+        experiment = my_module.experiment
+        project = experiment.project
+
+        result[my_module.id] = {
+          columns: prepared_my_module,
+          urls: {
+            permissions: permissions_my_module_path(my_module),
+            actions_dropdown: actions_dropdown_my_module_path(my_module),
+            name_update: my_module_path(my_module),
+            access: edit_access_permissions_project_experiment_my_module_path(project, experiment, my_module)
+          }
+        }
       end
 
       {
@@ -80,15 +91,8 @@ module Experiments
     end
 
     def id_presenter(my_module)
-      experiment = my_module.experiment
-      project = experiment.project
       {
-        id: my_module.id,
-        urls: {
-          permissions: permissions_my_module_path(my_module),
-          name_update: my_module_path(my_module),
-          access: edit_access_permissions_project_experiment_my_module_path(project, experiment, my_module)
-        }
+        id: my_module.id
       }
     end
 

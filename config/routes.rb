@@ -387,6 +387,7 @@ Rails.application.routes.draw do
     resources :my_modules, path: '/modules', only: [:show, :update] do
       member do
         get :permissions
+        get :actions_dropdown
       end
       resources :my_module_tags, path: '/tags', only: [:index, :create, :destroy] do
         collection do

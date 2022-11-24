@@ -378,12 +378,23 @@ class MyModulesController < ApplicationController
   end
 
   def permissions
-    if stale?([@my_module])
+    if stale?(@my_module)
       render json: {
         editable: can_manage_my_module?(@my_module),
         moveable: can_move_my_module?(@my_module),
         archivable: can_archive_my_module?(@my_module),
         restorable: can_restore_my_module?(@my_module)
+      }
+    end
+  end
+
+  def actions_dropdown
+    if stale?(@my_module)
+      render json: {
+        html: render_to_string(
+          partial: 'experiments/table_row_actions',
+          locals: { my_module: @my_module }
+        )
       }
     end
   end
