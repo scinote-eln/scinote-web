@@ -1298,6 +1298,7 @@ en:
         id_html: 'ID'
         task_name_html: 'Task name'
         due_date_html: 'Due date'
+        archived_html: 'Archived'
         age_html: 'Age'
         results_html: 'Results'
         status_html: 'Status'
@@ -1310,6 +1311,7 @@ en:
         id: 'ID'
         task_name: 'Task name'
         due_date: 'Due date'
+        archived: 'Archived'
         age: 'Age'
         results: 'Results'
         status: 'Status'
@@ -1342,6 +1344,7 @@ en:
         canvas: 'Canvas'
         table: 'Table'
         archived_tasks: 'Go to Archived tasks'
+        active_tasks: 'Go to Active tasks'
       add_tag: '+ Add tag'
       archive_group:
         success_flash: "<strong>%{number}</strong> task(s) successfully archived."

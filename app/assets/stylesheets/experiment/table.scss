@@ -108,6 +108,10 @@
       }
     }
 
+    .archived-column {
+      display: none;
+    }
+
     .table-row {
       display: contents;
 
@@ -303,6 +307,16 @@
           width: calc(100% + 2em);
         }
       }
+    }
+  }
+
+  &.archived {
+    .table-body-cell {
+      background-color: $color-concrete;
+    }
+
+    .archived-column {
+      display: flex;
     }
   }
 }

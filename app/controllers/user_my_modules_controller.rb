@@ -104,15 +104,19 @@ class UserMyModulesController < ApplicationController
 
   def search
     users = @my_module.users
-                      .where.not(id: @my_module.designated_users.select(:id))
+                      .joins("LEFT OUTER JOIN user_my_modules ON user_my_modules.user_id = users.id "\
+                             "AND user_my_modules.my_module_id = #{@my_module.id}")
                       .search(false, params[:query])
                       .limit(Constants::SEARCH_LIMIT)
+                      .select('users.*')
+                      .select('CASE WHEN user_my_modules.id IS NOT NULL '\
+                              'THEN true ELSE false END as designated')
 
     users = users.map do |user|
       {
         value: user.id,
         label: sanitize_input(user.full_name),
-        params: { avatar_url: avatar_path(user, :icon_small) }
+        params: { avatar_url: avatar_path(user, :icon_small), designated: user.designated }
       }
     end
 

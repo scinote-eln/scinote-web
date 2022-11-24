@@ -1,9 +1,8 @@
 <div class="toolbar-row">
   <div class="toolbar-left-block">
     <% if can_manage_experiment?(@experiment) %>
-
       <%= link_to modules_new_experiment_path(@experiment, view_mode:'table'),
-                    class: 'btn btn-primary new-my-module-button',
+                    class: 'btn btn-primary new-my-module-button only-active',
                     id: 'createTask',
                     data: { view_mode: 'active' },
                     remote: true do %>
@@ -11,17 +10,17 @@
                 <span class="hidden-xs"><%= t('experiments.table.toolbar.new') %></span>
         <% end %>
     <% end %>
-    <button id="editTask" class="btn btn-light single-object-action hidden" data-for="editable">
+    <button id="editTask" class="btn btn-light single-object-action hidden only-active" data-for="editable" >
       <i class="fas fa-pen"></i>
       <%= t("experiments.table.toolbar.edit") %>
     </button>
     <% if can_manage_experiment?(@experiment) %>
-      <button id="duplicateTask" class="btn btn-light multiple-object-action hidden">
+      <button id="duplicateTask" class="btn btn-light multiple-object-action hidden only-active">
         <i class="fas fa-copy"></i>
         <%= t("experiments.table.toolbar.duplicate") %>
       </button>
     <% end %>
-    <button id="moveTask" class="btn btn-light multiple-object-action hidden" data-for="moveable">
+    <button id="moveTask" class="btn btn-light multiple-object-action hidden only-active" data-for="moveable">
       <i class="fas fa-arrow-right"></i>
       <%= t("experiments.table.toolbar.move") %>
     </button>
@@ -29,7 +28,7 @@
       <i class="fas fa-door-open"></i>
       <%= t("experiments.table.toolbar.manage_access") %>
     </button>
-    <button id="archiveTask" class="btn btn-light multiple-object-action hidden" data-url="<%= archive_my_modules_experiment_path(@experiment) %>"  data-for="archivable">
+    <button id="archiveTask" class="btn btn-light multiple-object-action hidden only-active" data-url="<%= archive_my_modules_experiment_path(@experiment) %>"  data-for="archivable">
       <i class="fas fa-archive"></i>
       <%= t("experiments.table.toolbar.archive") %>
     </button>

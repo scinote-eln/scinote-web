@@ -189,6 +189,10 @@ var ExperimnetTable = {
         experimentToolbar.find(`.btn[data-for="${permission}"]`).addClass('hidden');
       }
     });
+
+    if ($('#experimentTable').hasClass('archived')) {
+      experimentToolbar.find('.only-active').addClass('hidden');
+    }
   },
   selectDate: function($field) {
     var datePicker = $field.data('DateTimePicker');
@@ -294,6 +298,7 @@ var ExperimnetTable = {
     this.initManageColumnsModal();
     this.initNewTaskModal(this);
     this.initMyModuleActions();
+    this.updateExperimentToolbar();
   }
 };
 
@@ -308,6 +313,10 @@ ExperimnetTable.render.id = function(data) {
 };
 
 ExperimnetTable.render.due_date = function(data) {
+  return data;
+};
+
+ExperimnetTable.render.archived = function(data) {
   return data;
 };
 
