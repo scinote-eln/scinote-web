@@ -7,7 +7,7 @@
     </a>
   </li>
 <% end %>
-<% if can_manage_experiment?(my_module.experiment) %>
+<% if can_manage_experiment?(my_module.experiment) && my_module.active? %>
 <li>
   <a href="" class="duplicate-my-module">
     <i class="fas fa-copy"></i>
