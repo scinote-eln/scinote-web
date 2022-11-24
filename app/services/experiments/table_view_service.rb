@@ -10,6 +10,7 @@ module Experiments
     include BootstrapFormHelper
     include MyModulesHelper
     include Canaid::Helpers::PermissionsHelper
+    include Rails.application.routes.url_helpers
 
     COLUMNS = %i(
       task_name
@@ -101,14 +102,10 @@ module Experiments
     def due_date_presenter(my_module)
       {
         id: my_module.id,
-        data: ActionController::Base.new.render_to_string(
+        data: ApplicationController.renderer.render(
           partial: 'experiments/table_due_date.html.erb',
           locals: { my_module: my_module,
-                    user: @user,
-                    due_date_editable: can_update_my_module_due_date?(@user, my_module),
-                    alert_color: get_task_alert_color(my_module),
-                    due_status: my_module_due_status(my_module),
-                    datetime_format: datetime_picker_format_full }
+                    user: @user }
         )
       }
     end

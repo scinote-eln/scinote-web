@@ -1,3 +1,6 @@
+<% due_date_editable = can_update_my_module_due_date?(user, my_module)%>
+<% due_status = my_module_due_status(my_module) %>
+
 <div id="dueDateContainer" class="datetime-container"
      data-update-url="<%= my_module_path(my_module, user, format: :json) %>">
   <span class="date-text" data-editable="<%= due_date_editable %>"
@@ -5,7 +8,7 @@
     <span id="dueDateLabelContainer" class="view-block" >
       <%= render partial: "experiments/table_due_date_label.html.erb" , 
                  locals: { my_module: my_module, due_date_editable: due_date_editable, 
-                           alert_color: alert_color, due_status: due_status } %>
+                           alert_color: get_task_alert_color(my_module), due_status: due_status } %>
     </span>
     <% if due_date_editable %>
       <div class="datetime-picker-container" id="due-date">
@@ -15,7 +18,7 @@
                 class="form-control calendar-input calendarDueDate"
                 readonly
                 placeholder="<%= t('my_modules.details.no_due_date_placeholder') %>"
-                data-date-format="<%= datetime_format %>"
+                data-date-format="<%= datetime_picker_format_full %>"
                 data-date-locale="<%= I18n.locale %>"
                 data-date-use-current="false"
                 data-date-orientation="left"

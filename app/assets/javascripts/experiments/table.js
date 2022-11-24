@@ -55,41 +55,44 @@ var ExperimnetTable = {
         </div>`;
       $(`<div class="table-row" data-urls='${JSON.stringify(data.urls)}' data-id="${id}">${row}</div>`)
         .appendTo(`${this.table} .table-body`);
-      this.initDueDatePicker(`#calendarDueDate${id}`);
     });
   },
-  initDueDatePicker: function(element) {
-    let dueDateContainer = $(element).closest('#dueDateContainer');
-    let dateText = $(element).closest('.date-text');
-    let clearDate = $(element).closest('.datetime-container').find('.clear-date');
+  initDueDatePicker: function(data) {
+    // eslint-disable-next-line no-unused-vars
+    $.each(data, (id, _) => {
+      let element = `#calendarDueDate${id}`;
+      let dueDateContainer = $(element).closest('#dueDateContainer');
+      let dateText = $(element).closest('.date-text');
+      let clearDate = $(element).closest('.datetime-container').find('.clear-date');
 
-    $(element).on('dp.change', function() {
-      $.ajax({
-        url: dueDateContainer.data('update-url'),
-        type: 'PATCH',
-        dataType: 'json',
-        data: { my_module: { due_date: $(element).val() } },
-        success: function(result) {
-          dueDateContainer.find('#dueDateLabelContainer').html(result.tabel_due_date_label.html);
-          dateText.data('due-status', result.tabel_due_date_label.due_status);
+      $(element).on('dp.change', function() {
+        $.ajax({
+          url: dueDateContainer.data('update-url'),
+          type: 'PATCH',
+          dataType: 'json',
+          data: { my_module: { due_date: $(element).val() } },
+          success: function(result) {
+            dueDateContainer.find('#dueDateLabelContainer').html(result.tabel_due_date_label.html);
+            dateText.data('due-status', result.tabel_due_date_label.due_status);
 
-          if ($(result.tabel_due_date_label.html).data('due-date')) {
-            clearDate.addClass('open');
+            if ($(result.tabel_due_date_label.html).data('due-date')) {
+              clearDate.addClass('open');
+            }
           }
+        });
+      });
+
+      $(element).on('dp.hide', function() {
+        dateText.attr('data-original-title', dateText.data('due-status'));
+        clearDate.removeClass('open');
+      });
+
+      $(element).on('dp.show', function() {
+        dateText.attr('data-original-title', '').tooltip('hide');
+        if (dueDateContainer.find('.due-date-label').data('due-date')) {
+          clearDate.addClass('open');
         }
       });
-    });
-
-    $(element).on('dp.hide', function() {
-      dateText.attr('data-original-title', dateText.data('due-status'));
-      clearDate.removeClass('open');
-    });
-
-    $(element).on('dp.show', function() {
-      dateText.attr('data-original-title', '').tooltip('hide');
-      if (dueDateContainer.find('.due-date-label').data('due-date')) {
-        clearDate.addClass('open');
-      }
     });
   },
   initMyModuleActions: function() {
@@ -297,6 +300,7 @@ var ExperimnetTable = {
     $.get(dataUrl, { filters: this.activeFilters }, (result) => {
       $(this.table).find('.table-row').remove();
       this.appendRows(result.data);
+      this.initDueDatePicker(result.data);
       InfiniteScroll.init(this.table, {
         url: dataUrl,
         eventTarget: window,
@@ -306,6 +310,7 @@ var ExperimnetTable = {
         lastPage: !result.next_page,
         customResponse: (response) => {
           this.appendRows(response.data);
+          this.initDueDatePicker(response.data);
         },
         customParams: (params) => {
           return { ...params, ...{ filters: this.activeFilters } };
