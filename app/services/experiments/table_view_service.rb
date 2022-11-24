@@ -104,7 +104,7 @@ module Experiments
         data: ActionController::Base.new.render_to_string(
           partial: 'experiments/table_due_date.html.erb',
           locals: { my_module: my_module,
-                    update_path: my_module_path(my_module, @user, format: :json),
+                    user: @user,
                     due_date_editable: can_update_my_module_due_date?(@user, my_module),
                     alert_color: get_task_alert_color(my_module),
                     due_status: my_module_due_status(my_module),

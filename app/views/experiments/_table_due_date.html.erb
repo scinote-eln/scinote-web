@@ -1,5 +1,5 @@
 <div id="dueDateContainer" class="datetime-container"
-     data-update-url="<%= update_path %>">
+     data-update-url="<%= my_module_path(my_module, user, format: :json) %>">
   <span class="date-text" data-editable="<%= due_date_editable %>"
         data-toggle="tooltip" data-placement="top" title="<%= due_status %>" data-due-status="<%= due_status %>">
     <span id="dueDateLabelContainer" class="view-block" >
