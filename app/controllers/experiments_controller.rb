@@ -281,6 +281,7 @@ class ExperimentsController < ApplicationController
   end
 
   def module_archive
+    @project = @experiment.project
     @my_modules = @experiment.archived_branch? ? @experiment.my_modules : @experiment.my_modules.archived
     @my_modules = @my_modules.with_granted_permissions(current_user, MyModulePermissions::READ_ARCHIVED)
                              .left_outer_joins(:designated_users, :task_comments)

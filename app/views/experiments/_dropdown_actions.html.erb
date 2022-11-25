@@ -1,8 +1,9 @@
+<% archived = params[:view_mode] == 'archived' || action_name == 'module_archive' %>
 <ul class="dropdown-menu dropdown-menu-right dropdown-experiment-actions"
   aria-labelledby="exActionsMenu-<%= experiment.id %>"
   data-id="<%= experiment.id %>">
 
-  <% if can_manage_experiment?(experiment) %>
+  <% if can_manage_experiment?(experiment) && !archived %>
     <li>
       <%= link_to edit_experiment_url(experiment),
                   remote: true,
@@ -15,7 +16,7 @@
     </li>
   <% end %>
   <li data-hook="experiment-actions-second-child"></li>
-  <% if can_clone_experiment?(experiment) %>
+  <% if can_clone_experiment?(experiment) && !archived %>
     <li>
       <%= link_to clone_modal_experiment_url(experiment),
                   remote: true, type: 'button',
@@ -25,7 +26,7 @@
       <% end %>
     </li>
   <% end %>
-  <% if can_move_experiment?(experiment) %>
+  <% if can_move_experiment?(experiment) && !archived %>
     <li>
       <%= link_to move_modal_experiment_url(experiment),
                   remote: true, type: 'button',
@@ -51,7 +52,7 @@
       <% end %>
     </li>
   <% end %>
-  <% if can_archive_experiment?(experiment) %>
+  <% if can_archive_experiment?(experiment) && !archived %>
     <li>
       <%= link_to archive_experiment_url(experiment),
                   type: 'button',
