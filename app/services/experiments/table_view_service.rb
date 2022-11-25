@@ -80,16 +80,11 @@ module Experiments
 
       {
         next_page: my_module_list.next_page,
-        has_provisioning_my_modules: has_provisioning_my_modules?(my_module_list),
         data: result
       }
     end
 
     private
-
-    def has_provisioning_my_modules?(my_modules)
-      my_modules.exists?(provisioning_status: :in_progress)
-    end
 
     def task_name_presenter(my_module)
       {
