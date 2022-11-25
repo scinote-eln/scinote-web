@@ -42,6 +42,14 @@ var RepositoryDatatable = (function(global) {
       return value;
     });
 
+  function allSelectedRowsAreOnPage() {
+    let visibleRowIds = $(
+      `#repository-table-${$(TABLE_ID).data('repository-id')} tbody tr`
+    ).toArray().map((r) => parseInt(r.id, 10));
+
+    return rowsSelected.every(r => visibleRowIds.includes(r));
+  }
+
   // Enable/disable edit button
   function updateButtons() {
     if (currentMode === 'viewMode') {
@@ -75,7 +83,7 @@ var RepositoryDatatable = (function(global) {
         $('#editDeleteCopy').hide();
         $('#toolbarPrintLabel').hide();
       } else {
-        $('#editRepositoryRecord').prop('disabled', false);
+        $('#editRepositoryRecord').prop('disabled', !allSelectedRowsAreOnPage());
         $('#exportRepositoriesButton').removeClass('disabled');
         $('#archiveRepositoryRecordsButton').prop('disabled', false);
         $('#copyRepositoryRecords').prop('disabled', false);
@@ -567,15 +575,7 @@ var RepositoryDatatable = (function(global) {
         $('#selected_info').html(' (' + rowsSelected.length + ' entries selected)');
 
         // Hide edit button if not all selected rows are on the current page
-        let visibleRowIds = $(
-          `#repository-table-${$(TABLE_ID).data('repository-id')} tbody tr`
-        ).toArray().map((r) => parseInt(r.id, 10));
-
-        if (rowsSelected.every(r => visibleRowIds.includes(r))) {
-          $('#editRepositoryRecord').prop('disabled', false);
-        } else {
-          $('#editRepositoryRecord').prop('disabled', true);
-        }
+        $('#editRepositoryRecord').prop('disabled', !allSelectedRowsAreOnPage());
 
         if ($('.repository-show').hasClass('archived')) {
           TABLE.columns([6, 7]).visible(true);
