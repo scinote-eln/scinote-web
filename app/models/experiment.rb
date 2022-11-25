@@ -11,6 +11,7 @@ class Experiment < ApplicationRecord
   include SearchableByNameModel
   include PermissionCheckableModel
   include Assignable
+  include Cloneable
 
   before_save -> { report_elements.destroy_all }, if: -> { !new_record? && project_id_changed? }
 
@@ -222,6 +223,10 @@ class Experiment < ApplicationRecord
            .where.not(id: project_id)
            .where(archived: false)
            .with_granted_permissions(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
+  end
+
+  def parent
+    project
   end
 
   def permission_parent

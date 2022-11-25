@@ -12,7 +12,7 @@ class ExperimentsController < ApplicationController
   before_action :check_read_permissions, except: %i(edit archive clone move new create archive_group restore_group)
   before_action :check_canvas_read_permissions, only: %i(canvas)
   before_action :check_create_permissions, only: %i(new create)
-  before_action :check_manage_permissions, only: %i(edit)
+  before_action :check_manage_permissions, only: %i(edit batch_clone_my_modules)
   before_action :check_update_permissions, only: %i(update)
   before_action :check_archive_permissions, only: :archive
   before_action :check_clone_permissions, only: %i(clone_modal clone)
@@ -362,6 +362,28 @@ class ExperimentsController < ApplicationController
     else
       render json: { message: t('experiments.table.archive_group.error_flash') }, status: :unprocessable_entity
     end
+  end
+
+  def batch_clone_my_modules
+    MyModule.transaction do
+      @my_modules = MyModule.where(id: params[:my_module_ids])
+      @my_modules.find_each do |my_module|
+        new_my_module = my_module.dup
+        new_my_module.update!(
+          {
+            provisioning_status: :in_progress,
+            name: my_module.next_clone_name
+          }.merge(new_my_module.get_new_position)
+        )
+        MyModules::CopyContentJob.perform_later(current_user, my_module.id, new_my_module.id)
+      end
+    end
+
+    render(
+      json: {
+        provisioning_status_urls: @my_modules.map { |m| provisioning_status_my_module_url(m) }
+      }
+    )
   end
 
   private

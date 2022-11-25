@@ -82,6 +82,16 @@
         }
       }
 
+      .my-module-provisioning-spinner {
+        width: 1.5em;
+        height: 1.5em;
+
+        .loading-overlay::after {
+          cursor: default;
+          background-size: 1.5em;
+        }
+      }
+
       .global-avatar-container {
         color: $color-silver-chalice;
         height: 2em;
@@ -330,6 +340,9 @@
   }
 }
 
+.task_name-column span {
+  color: $color-silver-chalice;
+}
 
 .table-display-modal {
   .column-container {
