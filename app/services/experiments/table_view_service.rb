@@ -66,6 +66,7 @@ module Experiments
 
         result[my_module.id] = {
           columns: prepared_my_module,
+          provisioning_status: my_module.provisioning_status,
           urls: {
             permissions: permissions_my_module_path(my_module),
             actions_dropdown: actions_dropdown_my_module_path(my_module),

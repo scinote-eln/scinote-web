@@ -22,9 +22,7 @@ var ExperimnetTable = {
   appendRows: function(result) {
     $.each(result, (id, data) => {
       let row;
-      let idColumnData = data.find((column) => column.column_type === 'id').data;
-      let provisioningStatus = idColumnData.provisioning_status;
-      let provisioningStatusUrl = idColumnData.urls.provisioning_status;
+      let provisioningStatus = data.provisioning_status;
 
       // Checkbox selector or provisioning spinner
       if (provisioningStatus === 'in_progress') {
@@ -314,7 +312,8 @@ var ExperimnetTable = {
   },
   initProvisioningStatusPolling: function() {
     let provisioningStatusUrls = $('[data-urls]').toArray()
-      .map((u) => $(u).data('urls').provisioning_status_url).filter((u) => u);
+      .map((u) => $(u).data('urls').provisioning_status).filter((u) => u);
+
     this.provisioningMyModulesCount = provisioningStatusUrls.length;
 
     if (this.provisioningMyModulesCount > 0) this.pollProvisioningStatuses(provisioningStatusUrls);
