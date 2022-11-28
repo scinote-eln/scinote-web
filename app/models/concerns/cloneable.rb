@@ -13,6 +13,6 @@ module Cloneable
             .order(clone_number: :asc)
             .last&.clone_number
 
-    "Clone #{(last_clone_number || 0) + 1} - #{name}"
+    "Clone #{(last_clone_number || 0) + 1} - #{name}".truncate(Constants::NAME_MAX_LENGTH)
   end
 end
