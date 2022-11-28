@@ -122,8 +122,10 @@ var SmartAnnotation = (function() {
     }
 
     function init() {
-      $(field)
-        .on('shown.atwho', function() {
+      $(field).on('focus', function() {
+        if ($(this).data('atwho-initialized')) return;
+
+        $(field).on('shown.atwho', function() {
           var $currentAtWho = $('.atwho-view[style]:not(.old)');
           var atWhoId = $currentAtWho.find('.atwho-header-res').data('at-who-key');
           $currentAtWho.addClass('old').attr('data-at-who-id', atWhoId);
@@ -157,8 +159,7 @@ var SmartAnnotation = (function() {
             }
             $currentAtWho.find(`.${filterType}`).click();
           }
-        })
-        .on('reposition.atwho', function(event, flag, query) {
+        }).on('reposition.atwho', function(event, flag, query) {
           let inputFieldLeft = query.$inputor.offset().left;
           if (inputFieldLeft > $(window).width()) {
             let leftPosition;
@@ -172,8 +173,7 @@ var SmartAnnotation = (function() {
           if ($('.repository-show').length) {
             query.$el.find('.atwho-view').css('top', flag.top + 'px');
           }
-        })
-        .atwho({
+        }).atwho({
           at: '@',
           callbacks: {
             remoteFilter: function(query, callback) {
@@ -197,11 +197,14 @@ var SmartAnnotation = (function() {
           acceptSpaceBar: true,
           displayTimeout: 120000
         })
-        .atwho(atWhoSettings('#'));
-      // .atwho(atWhoSettings('task#', FilterTypeEnum.TASK))   Waiting for better times
-      // .atwho(atWhoSettings('project#', FilterTypeEnum.PROJECT))
-      // .atwho(atWhoSettings('experiment#', FilterTypeEnum.EXPERIMENT))
-      // .atwho(atWhoSettings('sample#', FilterTypeEnum.REPOSITORY));
+          .atwho(atWhoSettings('#'));
+        // .atwho(atWhoSettings('task#', FilterTypeEnum.TASK))   Waiting for better times
+        // .atwho(atWhoSettings('project#', FilterTypeEnum.PROJECT))
+        // .atwho(atWhoSettings('experiment#', FilterTypeEnum.EXPERIMENT))
+        // .atwho(atWhoSettings('sample#', FilterTypeEnum.REPOSITORY));
+
+        $(this).data('atwho-initialized', true);
+      });
     }
 
     return {
