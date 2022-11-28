@@ -48,6 +48,10 @@ module ProjectsHelper
                 records.sort_by { |c| c.name.downcase }
               when 'ztoa'
                 records.sort_by { |c| c.name.downcase }.reverse!
+              when 'id_asc'
+                records.sort_by(&:id)
+              when 'id_desc'
+                records.sort_by(&:id).reverse!
               when 'archived_old'
                 records.sort_by(&:archived_on)
               when 'archived_new'
