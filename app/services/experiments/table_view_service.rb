@@ -84,8 +84,7 @@ module Experiments
                             name_update: my_module_path(my_module),
                             access: edit_access_permissions_project_experiment_my_module_path(project,
                                                                                               experiment, my_module)
-                          }
-                       }
+                          } }
       end
 
       {

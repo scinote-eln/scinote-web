@@ -235,6 +235,7 @@ var ExperimnetTable = {
     $('#sortMenuDropdown a').click(function() {
       if (table.myModulesCurrentSort !== $(this).data('sort')) {
         $('#sortMenuDropdown a').removeClass('selected');
+        // eslint-disable-next-line no-param-reassign
         table.myModulesCurrentSort = $(this).data('sort');
         table.loadTable();
         $(this).addClass('selected');
