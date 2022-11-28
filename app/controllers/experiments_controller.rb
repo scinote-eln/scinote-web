@@ -366,7 +366,11 @@ class ExperimentsController < ApplicationController
 
   def batch_clone_my_modules
     MyModule.transaction do
-      @my_modules = MyModule.where(id: params[:my_module_ids])
+      @my_modules =
+        @experiment.my_modules
+                   .readable_by_user(current_user)
+                   .where(id: params[:my_module_ids])
+
       @my_modules.find_each do |my_module|
         new_my_module = my_module.dup
         new_my_module.update!(
