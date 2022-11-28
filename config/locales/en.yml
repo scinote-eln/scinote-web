@@ -3208,6 +3208,8 @@ en:
       ztoa_html: "<i class=\"fas fa-sort-alpha-up\"></i>&nbsp;&nbsp;Name Z to A"
       archived_new_html: "<span class=\"fa-stack\"><i class=\"fas fa-long-arrow-alt-up\"></i><i class=\"fas fa-archive\"></i></span>Archived last"
       archived_old_html: "<span class=\"fa-stack\"><i class=\"fas fa-long-arrow-alt-down\"></i><i class=\"fas fa-archive\"></i></span>Archived first"
+      due_first_html: "<i class=\"fas fa-sort-numeric-up\"></i>&nbsp;&nbsp;Due first"
+      due_last_html: "<i class=\"fas fa-sort-numeric-up\"></i>&nbsp;&nbsp;Due last"
     sort_new:
       new: "Newest"
       old: "Oldest"

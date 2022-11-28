@@ -9,6 +9,7 @@ class Experiment < ApplicationRecord
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
+  include ViewableModel
   include PermissionCheckableModel
   include Assignable
 
@@ -92,6 +93,17 @@ class Experiment < ApplicationRecord
 
     joins(:project).where(project: { team: teams })
   end
+
+  def default_view_state
+    {
+      my_modules: {
+        active: { sort: 'atoz' },
+        archived: { sort: 'atoz' }
+      }
+    }
+  end
+
+  def validate_view_state(view_state) end
 
   def connections
     Connection.joins(

@@ -37,14 +37,26 @@ module Experiments
       @page = params[:page] || 1
       @user = user
       @filters = params[:filters] || []
+
+      if @my_modules&.first&.experiment
+        @view_state = @my_modules.first.experiment.current_view_state(@user)
+        @sort = @view_state.state.dig('my_modules', 'active', 'sort') || 'atoz'
+        if params[:sort] && @sort != params[:sort] && %w(due_first due_last atoz ztoa).include?(params[:sort])
+          @view_state.state['my_modules'].merge!(Hash['active', { 'sort': params[:sort] }.stringify_keys])
+          @view_state.save!
+          @sort = @view_state.state.dig('my_modules', 'active', 'sort')
+        end
+      end
     end
 
     def call
-      result = {}
+      result = []
       my_module_list = @my_modules
       @filters.each do |name, value|
         my_module_list = __send__("#{name}_filter", my_module_list, value) if value.present?
       end
+
+      my_module_list = sort_records(my_module_list)
 
       my_module_list = my_module_list.includes(PRELOAD)
                                      .select('my_modules.*')
@@ -64,15 +76,17 @@ module Experiments
         experiment = my_module.experiment
         project = experiment.project
 
-        result[my_module.id] = {
-          columns: prepared_my_module,
-          urls: {
-            permissions: permissions_my_module_path(my_module),
-            actions_dropdown: actions_dropdown_my_module_path(my_module),
-            name_update: my_module_path(my_module),
-            access: edit_access_permissions_project_experiment_my_module_path(project, experiment, my_module)
-          }
-        }
+        result.push({
+                      id: my_module.id,
+                      columns: prepared_my_module,
+                      urls: {
+                        permissions: permissions_my_module_path(my_module),
+                        actions_dropdown: actions_dropdown_my_module_path(my_module),
+                        name_update: my_module_path(my_module),
+                        access: edit_access_permissions_project_experiment_my_module_path(project,
+                                                                                          experiment, my_module)
+                      }
+                    })
       end
 
       {
@@ -187,6 +201,21 @@ module Experiments
 
     def statuses_filter(my_modules, value)
       my_modules.where('my_module_status_id IN (?)', value)
+    end
+
+    def sort_records(records)
+      case @sort
+      when 'due_first'
+        records.order(:due_date)
+      when 'due_last'
+        records.order(Arel.sql("COALESCE(due_date, DATE '1900-01-01') DESC"))
+      when 'atoz'
+        records.order(:name)
+      when 'ztoa'
+        records.order(name: :desc)
+      else
+        records
+      end
     end
   end
 end

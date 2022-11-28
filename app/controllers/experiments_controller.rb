@@ -90,6 +90,10 @@ class ExperimentsController < ApplicationController
 
   def table
     redirect_to module_archive_experiment_path(@experiment) if @experiment.archived_branch?
+
+    view_state = @experiment.current_view_state(current_user)
+    @current_sort = view_state.state.dig('my_modules', 'active', 'sort') || 'atoz'
+
     @project = @experiment.project
     @active_modules = @experiment.my_modules.active.order(:name)
   end
