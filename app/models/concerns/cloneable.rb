@@ -8,7 +8,7 @@ module Cloneable
 
     last_clone_number =
       parent.public_send(self.class.table_name)
-            .select("substring(#{self.class.table_name}.name, '(?:^Clone )(\\d)')::int AS clone_number")
+            .select("substring(#{self.class.table_name}.name, '(?:^Clone )(\\d+)')::int AS clone_number")
             .where('name ~ ?', "^Clone \\d+ - #{name}$")
             .order(clone_number: :asc)
             .last&.clone_number
