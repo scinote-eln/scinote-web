@@ -21,7 +21,7 @@ module Experiments
 
       ActiveRecord::Base.transaction do
         @c_exp = Experiment.new(
-          name: next_clone_name,
+          name: @exp.next_clone_name,
           description: @exp.description,
           created_by: @user,
           last_modified_by: @user,
