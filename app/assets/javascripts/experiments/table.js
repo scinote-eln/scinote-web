@@ -22,7 +22,6 @@ var ExperimnetTable = {
   },
   appendRows: function(result) {
     $.each(result, (_i, data) => {
-      console.log(data);
       // Checkbox selector
       let row = `
         <div class="table-body-cell">
@@ -287,7 +286,6 @@ var ExperimnetTable = {
     this.loadPlaceholder();
     $.get(dataUrl, tableParams, (result) => {
       $(this.table).find('.table-row').remove();
-      console.log(result)
       this.appendRows(result.data);
       InfiniteScroll.init(this.table, {
         url: dataUrl,

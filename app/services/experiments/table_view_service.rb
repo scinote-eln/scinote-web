@@ -32,25 +32,25 @@ module Experiments
       experiment: :project
     }
 
-    def initialize(my_modules, user, params)
+    def initialize(experiment, my_modules, user, params)
       @my_modules = my_modules
       @page = params[:page] || 1
       @user = user
       @filters = params[:filters] || []
 
-      if @my_modules&.first&.experiment
-        @view_state = @my_modules.first.experiment.current_view_state(@user)
-        @sort = @view_state.state.dig('my_modules', 'active', 'sort') || 'atoz'
-        if params[:sort] && @sort != params[:sort] && %w(due_first due_last atoz ztoa).include?(params[:sort])
-          @view_state.state['my_modules'].merge!(Hash['active', { 'sort': params[:sort] }.stringify_keys])
-          @view_state.save!
-          @sort = @view_state.state.dig('my_modules', 'active', 'sort')
-        end
+      @view_state = experiment.current_view_state(@user)
+      @view_mode = params[:view_mode] || 'active'
+      @sort = @view_state.state.dig('my_modules', @view_mode, 'sort') || 'atoz'
+      if params[:sort] && @sort != params[:sort] && %w(due_first due_last atoz ztoa
+                                                       archived_old archived_new).include?(params[:sort])
+        @view_state.state['my_modules'].merge!(Hash[@view_mode, { 'sort': params[:sort] }.stringify_keys])
+        @view_state.save!
+        @sort = @view_state.state.dig('my_modules', @view_mode, 'sort')
       end
     end
 
     def call
-      result = []
+      result = {}
       my_module_list = @my_modules
       @filters.each do |name, value|
         my_module_list = __send__("#{name}_filter", my_module_list, value) if value.present?
@@ -63,7 +63,7 @@ module Experiments
                                      .group('my_modules.id')
                                      .page(@page || 1)
                                      .per(Constants::DEFAULT_ELEMENTS_PER_PAGE)
-      my_module_list.each do |my_module|
+      my_module_list.each_with_index do |my_module, index|
         prepared_my_module = []
         COLUMNS.each do |col|
           column_data = {
@@ -76,17 +76,16 @@ module Experiments
         experiment = my_module.experiment
         project = experiment.project
 
-        result.push({
-                      id: my_module.id,
-                      columns: prepared_my_module,
-                      urls: {
-                        permissions: permissions_my_module_path(my_module),
-                        actions_dropdown: actions_dropdown_my_module_path(my_module),
-                        name_update: my_module_path(my_module),
-                        access: edit_access_permissions_project_experiment_my_module_path(project,
-                                                                                          experiment, my_module)
-                      }
-                    })
+        result[index] = { id: my_module.id,
+                          columns: prepared_my_module,
+                          urls: {
+                            permissions: permissions_my_module_path(my_module),
+                            actions_dropdown: actions_dropdown_my_module_path(my_module),
+                            name_update: my_module_path(my_module),
+                            access: edit_access_permissions_project_experiment_my_module_path(project,
+                                                                                              experiment, my_module)
+                          }
+                       }
       end
 
       {
@@ -213,6 +212,10 @@ module Experiments
         records.order(:name)
       when 'ztoa'
         records.order(name: :desc)
+      when 'archived_old'
+        records.order(Arel.sql('COALESCE(my_modules.archived_on, my_modules.archived_on) ASC'))
+      when 'archived_new'
+        records.order(Arel.sql('COALESCE(my_modules.archived_on, my_modules.archived_on) DESC'))
       else
         records
       end

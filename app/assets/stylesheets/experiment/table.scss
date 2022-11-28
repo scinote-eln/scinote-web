@@ -5,6 +5,22 @@
   --toolbar-height: 4.5em;
   position: relative;
 
+  .title-row {
+    .header-actions {
+      &.experiment-header {
+        column-gap: .25em;
+      }
+
+      .sort-task-menu {
+        &:not(.archived) {
+          [data-view-mode="archived"] {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
   .experiment-table-container {
     height: calc(100vh - var(--content-header-size) - var(--navbar-height) - var(--toolbar-height));
     overflow: auto;

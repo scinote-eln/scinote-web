@@ -49,10 +49,6 @@
         display: flex;
         flex-shrink: 0;
         margin-left: auto;
-
-        &.experiment-header {
-          column-gap: .25em;
-        }
       }
 
       .view-switch {
