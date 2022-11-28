@@ -842,6 +842,7 @@ var RepositoryDatatable = (function(global) {
         success: function() {
           $('#hideRepositoryReminders').remove();
           TABLE.ajax.reload();
+          $('.tooltip').remove();
         }
       });
     });
