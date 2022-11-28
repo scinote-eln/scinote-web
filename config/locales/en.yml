@@ -1322,6 +1322,7 @@ en:
         new: 'New task'
         edit: 'Edit'
         archive: 'Archive'
+        restore: 'Restore'
         move: 'Move'
         duplicate: 'Duplicate'
         manage_access: 'Manage access'
@@ -1333,6 +1334,7 @@ en:
         move: 'Move to another experiment'
         access: 'Task access'
         archive: 'Archive'
+        restore: 'Restore'
       filters:
         name: 'Task name'
         due_date: 'Due date'

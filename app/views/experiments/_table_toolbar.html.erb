@@ -32,6 +32,10 @@
       <i class="fas fa-archive"></i>
       <%= t("experiments.table.toolbar.archive") %>
     </button>
+    <button id="restoreTask" class="btn btn-light multiple-object-action hidden only-archive" data-url="<%= restore_my_modules_experiment_path(@experiment) %>"  data-for="restorable">
+      <i class="fas fa-undo"></i>
+      <%= t("experiments.table.toolbar.restore") %>
+    </button>
   </div>
   <div class="toolbar-right-block">
     <button id="taskDataDisplay" class="btn btn-light" data-toggle="modal" data-target="#tableDisplayModal">

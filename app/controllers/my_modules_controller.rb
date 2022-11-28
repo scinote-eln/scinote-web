@@ -362,7 +362,12 @@ class MyModulesController < ApplicationController
     else
       flash[:error] = t('my_modules.restore_group.error_flash')
     end
-    redirect_to module_archive_experiment_path(experiment)
+
+    if params[:view] == 'table'
+      redirect_to table_experiment_path(experiment, view_mode: :archived)
+    else
+      redirect_to module_archive_experiment_path(experiment)
+    end
   end
 
   def update_state

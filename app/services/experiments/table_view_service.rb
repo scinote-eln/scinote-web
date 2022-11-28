@@ -70,7 +70,8 @@ module Experiments
             permissions: permissions_my_module_path(my_module),
             actions_dropdown: actions_dropdown_my_module_path(my_module),
             name_update: my_module_path(my_module),
-            access: edit_access_permissions_project_experiment_my_module_path(project, experiment, my_module)
+            access: edit_access_permissions_project_experiment_my_module_path(project, experiment, my_module),
+            restore: restore_my_modules_experiment_path(experiment)
           }
         }
       end
