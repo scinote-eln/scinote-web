@@ -6,13 +6,15 @@ class MyModulesController < ApplicationController
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
 
-  before_action :load_vars, except: %i(restore_group)
+  before_action :load_vars, except: %i(restore_group create new)
+  before_action :load_experiment, only: %i(create new)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_archive_permissions, only: %i(update)
   before_action :check_manage_permissions, only: %i(
-    create description due_date update_description update_protocol_description update_protocol
+    description due_date update_description update_protocol_description update_protocol
   )
-  before_action :check_read_permissions, except: %i(update update_description update_protocol_description restore_group)
+  before_action :check_read_permissions, except: %i(create new update update_description
+                                                    update_protocol_description restore_group)
   before_action :check_update_state_permissions, only: :update_state
   before_action :set_inline_name_editing, only: %i(protocols results activities archive)
   before_action :load_experiment_my_modules, only: %i(protocols results activities archive)
@@ -21,9 +23,17 @@ class MyModulesController < ApplicationController
 
   def new
     @my_module = @experiment.my_modules.new
+
+    assigned_users = @experiment.project.manually_assigned_users
+
+    if @experiment.project.visible?
+      assigned_users += @experiment.project.team.users.order(full_name: :asc).where.not(id: assigned_users.select(:id))
+    end
+
     render json: {
       html: render_to_string(
-        partial: 'my_modules/modals/new_modal.html.erb', locals: { view_mode: params[:view_mode] }
+        partial: 'my_modules/modals/new_modal.html.erb', locals: { view_mode: params[:view_mode],
+                                                                   users: assigned_users }
       )
     }
   end
@@ -417,6 +427,11 @@ class MyModulesController < ApplicationController
     else
       render_404
     end
+  end
+
+  def load_experiment
+    @experiment = Experiment.preload(user_assignments: %i(user user_role)).find_by(id: params[:id])
+    render_404 unless @experiment
   end
 
   def load_experiment_my_modules

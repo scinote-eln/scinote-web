@@ -1363,6 +1363,7 @@ en:
         name_placeholder: "e.g. My task"
         due_date: "Due date (optional)"
         due_date_placeholder: "+ Add due date"
+        assigned_users: "Assign task to (optional)"
         tags: "Add tags (optional)"
         create: "Create"
         enter_placeholder: 'Enter...'
