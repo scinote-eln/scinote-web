@@ -23,10 +23,10 @@
     return uniqueFormats[0];
   }
 
-  function renderCheckboxHTML(data, type, row) {
+  function renderCheckboxHTML(data) {
     return `<div class="sci-checkbox-container">
               <input type="checkbox" class="sci-checkbox label-row-checkbox" data-action='toggle'
-               data-label-template-id="${data}" ${row.manage_permission ? '' : 'disabled'}>
+               data-label-template-id="${data}">
               <span class="sci-checkbox-label"></span>
             </div>`;
   }
@@ -39,7 +39,7 @@
     return `${data.icon_image_tag}<a
       href='${row.DT_RowAttr['data-edit-url']}'
       class='record-info-link'
-      onclick='window.open(this.href, "_self")'
+      onclick='window.open(this.href, "_blank")'
     >${data.name}</a>`;
   }
 
@@ -113,7 +113,18 @@
     });
   }
 
-  function tableDrowCallback() {
+  function initRefreshFluicsButton() {
+    $('#syncFluicsTemplates').on('click', function() {
+      $.post(this.dataset.url, function(response) {
+        reloadTable();
+        HelperModule.flashAlertMsg(response.message, 'success');
+      }).error((response) => {
+        HelperModule.flashAlertMsg(response.responseJSON.error, 'danger');
+      });
+    });
+  }
+
+  function tableDrawCallback() {
     initToggleAllCheckboxes();
     initRowSelection();
   }
@@ -136,7 +147,7 @@
         $('#deleteLabelTemplate').addClass('hidden');
         $('#setZplDefaultLabelTemplate').addClass('hidden');
         $('#setFluicsDefaultLabelTemplate').toggleClass('hidden', (rowsSelected.length > 1 || defaultSelected()));
-        $('.fluics-warning').toggleClass('hidden', (rowsSelected.length === 1 && !defaultSelected()));
+        $('.fluics-warning').removeClass('hidden');
       } else {
         $('.fluics-warning').removeClass('hidden');
         $('.selected-actions').addClass('hidden');
@@ -225,7 +236,7 @@
     var $table = $('#label-templates-table');
     LABEL_TEMPLATE_TABLE = $table.DataTable({
       dom: "R<'label-toolbar'<'label-buttons-container'><'label-search-container'f>>t<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
-      order: [[1, 'asc']],
+      order: [[1, 'desc']],
       sScrollX: '100%',
       sScrollXInner: '100%',
       processing: true,
@@ -256,7 +267,7 @@
       oLanguage: {
         sSearch: I18n.t('general.filter')
       },
-      fnDrawCallback: tableDrowCallback,
+      fnDrawCallback: tableDrawCallback,
       createdRow: addAttributesToRow,
       fnInitComplete: function() {
         DataTableHelpers.initLengthAppearance($table.closest('.dataTables_wrapper'));
@@ -272,9 +283,16 @@
         initSetDefaultButton();
         initDuplicateButton();
         initDeleteModal();
+        initRefreshFluicsButton();
       }
     });
   }
+
+  $('#wrapper').on('sideBar::shown sideBar::hidden', function() {
+    if (LABEL_TEMPLATE_TABLE) {
+      LABEL_TEMPLATE_TABLE.columns.adjust();
+    }
+  });
 
   initDatatable();
   initDeleteButton();

@@ -84,6 +84,8 @@
   <div class="toolbar-filter-buttons" style="display:none">
   </div>
 
+  <%= render partial: 'label_printers/label_printer_modal' %>
+
   <%= render partial: "repositories/repository_table",
              locals: {
                repository: @repository,

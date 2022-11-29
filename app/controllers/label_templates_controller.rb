@@ -3,7 +3,7 @@
 class LabelTemplatesController < ApplicationController
   include InputSanitizeHelper
 
-  before_action :check_feature_enabled
+  before_action :check_feature_enabled, except: :index
   before_action :check_view_permissions, except: %i(create duplicate set_default delete update)
   before_action :check_manage_permissions, only: %i(create duplicate set_default delete update)
   before_action :load_label_templates, only: %i(index datatable)
@@ -11,14 +11,26 @@ class LabelTemplatesController < ApplicationController
 
   layout 'fluid'
 
-  def index; end
+  def index
+    respond_to do |format|
+      format.json do
+        render json: @label_templates, each_serializer: LabelTemplateSerializer, user: current_user
+      end
+      format.html do
+        unless LabelTemplate.enabled?
+          render :promo
+          return
+        end
+        render 'index'
+      end
+    end
+  end
 
   def datatable
     respond_to do |format|
       format.json do
         render json: ::LabelTemplateDatatable.new(
           view_context,
-          can_manage_label_templates?(current_team),
           @label_templates
         )
       end
@@ -118,12 +130,14 @@ class LabelTemplatesController < ApplicationController
 
   def zpl_preview
     service = LabelTemplatesPreviewService.new(params, current_user)
-    payload = service.generate_zpl_preview!
+
+    # only render last generated label image
+    payload = service.generate_zpl_preview!.split.last
 
     if service.error.blank?
       render json: { base64_preview: payload }
     else
-      render json: { error: I18n.t('errors.general') }, status: :unprocessable_entity
+      render json: { error: service.error }, status: :unprocessable_entity
     end
   end
 
@@ -131,7 +145,7 @@ class LabelTemplatesController < ApplicationController
     sync_service = LabelPrinters::Fluics::SyncService.new(current_user, current_team)
     sync_service.sync_templates!
     render json: { message: t('label_templates.fluics.sync.success') }
-  rescue ActiveRecord::RecordInvalid => e
+  rescue StandardError => e
     Rails.logger.error e.message
     render json: { error: t('label_templates.fluics.sync.error') }, status: :unprocessable_entity
   end
@@ -159,7 +173,7 @@ class LabelTemplatesController < ApplicationController
   end
 
   def label_template_params
-    params.require(:label_template).permit(:name, :description, :content)
+    params.require(:label_template).permit(:name, :description, :content, :width_mm, :height_mm, :unit, :density)
   end
 
   def log_activity(type_of, label_template = @label_template, message_items: {})

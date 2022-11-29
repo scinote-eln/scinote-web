@@ -5,8 +5,8 @@ class LabelTemplateDatatable < CustomDatatable
   include Rails.application.routes.url_helpers
 
   TABLE_COLUMNS = %w(
-    label_templates.name
     label_templates.default
+    label_templates.name
     label_templates.type
     label_templates.description
     label_templates.modified_by
@@ -15,9 +15,8 @@ class LabelTemplateDatatable < CustomDatatable
     label_templates.created_at
   ).freeze
 
-  def initialize(view, can_manage_templates, label_templates)
+  def initialize(view, label_templates)
     super(view)
-    @manage_template = can_manage_templates
     @label_templates = label_templates
   end
 
@@ -49,8 +48,7 @@ class LabelTemplateDatatable < CustomDatatable
           'data-set-default-url': set_default_label_template_path(record),
           'data-default': record.default,
           'data-format': record.label_format
-        },
-        'manage_permission' => @manage_template
+        }
       }
     end
   end

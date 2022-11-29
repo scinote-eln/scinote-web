@@ -806,16 +806,6 @@ en:
         normal_user: "Normal user"
         admin: "Administrator"
 
-  label_templates:
-    fluics:
-      sync:
-        success: 'Refresh successful'
-        error: 'Refresh unsuccessful'
-    repository_row:
-      errors:
-        unsupported_key: "Key %{key} is not supported by this label template renderer."
-        column_not_found: "Column '%{column}' not found on inventory item."
-
   user_projects:
     view_users:
       modal_title: "Members of %{name}"
@@ -835,10 +825,15 @@ en:
     default_zebra_name: 'SciNote Item (ZPL)'
     default_fluics_name: 'SciNote Item (Fluics)'
     new_label_template: 'New label'
+    fluics:
+      sync:
+        success: 'Fluics label templates successfully updated'
+        error: 'Update of Fluics label templates was unsuccessful'
     repository_row:
       errors:
         unsupported_key: "Key %{key} is not supported by this label template renderer."
-        column_not_found: "Column '%{column}' not found on inventory item."
+        column_not_found: "This Label template contains placeholders for inventory columns that are not present in this Inventory. Some data might not be printed on the label. Please check the label preview and label template before printing."
+        logo_not_supported: "The company logo cannot be printed on the label, as it is not set up in your SciNote. Please upload company logo in Settings."
     index:
       head_title: 'Label templates'
       search_templates: 'Filter templates'
@@ -870,6 +865,7 @@ en:
       description_error_prefix: 'Label template description'
       description_title: 'Template description'
       description_placeholder: 'Enter the template description (optional)'
+      description_empty: 'No template description'
       content_title: '%{format} template code'
       preview_title: 'Template preview'
       view_content_tooltip: 'Click to edit template code'
@@ -916,7 +912,28 @@ en:
     delete:
       success: "Successfully deleted %{printer_name}."
       error: "Could not delete %{printer_name}."
-
+    fluics:
+      statuses:
+        ready: 'Ready'
+        busy: 'Busy'
+        out_of_labels: 'Out of labels'
+        unreachable: 'Offline'
+        error: 'Error'
+    modal_printing_status:
+      printer_status:
+        ready: "Ready"
+        not_ready: "Not Ready"
+        out_of_labels: "Out of labels"
+        error: "Printer error"
+        unreachable: "Printer offline"
+        offline: "Offline"
+      multiple_items: "%{item_count}/%{starting_item_count} labels"
+      printing_status:
+        done: "Done"
+        printing: "Printing"
+        out_of_labels: "Waiting for labels. Please, insert labels."
+        error: "There is an issue with the printer."
+        unreachable: "Printer is offline"
 
   my_modules:
     details:
@@ -942,6 +959,7 @@ en:
       manage_tags: "Manage tags"
       create_new_tag: "create new"
       recent_protocols_from_repository: "Recent protocols from the Repository"
+      code: "ID: "
     notes:
       title: "Notes"
       no_description: "No task description"
@@ -2024,6 +2042,8 @@ en:
       label: "Label template"
       number_of_copies: "Number of copies"
       print_label: "Print label"
+      print_anyway: "Print anyway"
+      label_preview: "Label preview"
       no_printers:
         title: "There seems to be no printer available"
         description: "To learn more about printing labels and label printers please visit our blog."
@@ -2037,22 +2057,6 @@ en:
       date_expiration_html: "This item is expiring in <strong>%{date_expiration}</strong>."
       item_expired: "This item has expired."
       day: "day"
-  label_printers:
-    modal_printing_status:
-      printer_status:
-        ready: "Ready"
-        not_ready: "Not Ready"
-        out_of_labels: "Out of labels"
-        error: "Printer error"
-        unreachable: "Printer offline"
-        offline: "Offline"
-      multiple_items: "%{item_count}/%{starting_item_count} labels"
-      printing_status:
-        done: "Done"
-        printing: "Printing"
-        out_of_labels: "Waiting for labels. Please, insert labels."
-        error: "There is an issue with the printer."
-        unreachable: "Printer is offline"
   activities:
     index:
       global_activities_title: "Global activities"
@@ -2250,6 +2254,7 @@ en:
             ready: "Ready"
             not_ready: "Not ready"
             printer_details: "Printer details"
+            details: "Details"
             enter_api_key: "Enter API key"
             enabled: "Enabled"
           fluics_printer:
@@ -2270,11 +2275,26 @@ en:
             p4: "3. Enter the API key into the field below."
             p5: "4. SciNote will find your printer and connect to it automatically. You can start printing labels."
           zebra_instruction:
-            p1: 'To make it work, please follow these steps:'
-            p2_html: "1. Install the Zebra BROWSER PRINT application: <a href='%{link}' target='_blank'>official downloads page.</a>"
-            p3: '2. Install the printer drivers required by your operating system.'
-            p4: '3. Allow SciNote to connect to your Zebra printers.'
-            p5: 'Make sure that Zebra Connect shows the printer status as Connected.'
+            general_html: "Make sure your Zebra printer model is supported by Zebra Browser print technology on the official Zebra page: <a href='%{link}' target='_blank'>official Browser print page.</a>"
+            contact_html: "For more detailed instructions please check the <a href='%{link_blog}' target='_blank'>SciNote blog post</a> and <a href='%{link_zebra_support}' target='_blank'>Zebra printer support.</a>"
+            usb:
+              header: 'Connect a Zebra printer via USB cable'
+              p1: 'Make sure your Zebra printer is connected to power, turned on, and connected to the computer by USB cable.'
+              p2_html: "In order to print labels from SciNote, you need to download and install the Zebra Browser Print application according to your operating system: <a href='%{link}' target='_blank'>official downloads page.</a>. During installation, you might be prompted to install a specific Zebra printer driver."
+              p3: 'Update printers with the “Update printers” option on the right side of this SciNote screen.'
+              p4: 'Your Zebra printer should now be listed in SciNote.'
+              p5: 'Go to inventories, select a label template and start printing.'
+            network:
+              header: 'Connect a Zebra printer via network (LAN or WiFi)'
+              disclaimer: 'Some Zebra printers support connection via LAN or WiFi network. Check your printer documentation or official Zebra product page for this information.'
+              p1: 'Make sure your Zebra printer is connected to power and turned on.'
+              p2: 'Make sure your computer and Zebra printer are connected to the local network (by LAN or Wi-fi).'
+              p3_html: "In order to print labels from SciNote, you need to download the Zebra Browser Print application according to your operating system: <a href='%{link}' target='_blank'>official downloads page.</a>"
+              p4: 'Install the Zebra Browser Print application.'
+              p5: 'Open the Zebra Browser Print application and set the IP address and Port number of the printer. The printer IP address should be set as “Static” (you might need to contact your IT administrator for help).'
+              p6: 'Update printers with the “Update printers” option on the right side of this SciNote screen.'
+              p7: 'Your Zebra printer should now be listed in SciNote.'
+              p8: 'Go to inventories, set the label content, and start printing.'
           settings: "Settings"
           api_key_label: "API key"
           api_key_warning: "API key change will lead to printer list refresh"
@@ -2540,6 +2560,7 @@ en:
       publish: "Move to Team protocols"
       archive_action: "Archive"
       thead_name: "Name"
+      thead_code: "ID"
       thead_keywords: "Keywords"
       thead_nr_of_linked_children: "No. of linked tasks"
       thead_published_by: "Published by"
@@ -3136,6 +3157,8 @@ en:
       ztoa_html: "<i class=\"fas fa-sort-alpha-up\"></i>&nbsp;&nbsp;Name Z to A"
       archived_new_html: "<span class=\"fa-stack\"><i class=\"fas fa-long-arrow-alt-up\"></i><i class=\"fas fa-archive\"></i></span>Archived last"
       archived_old_html: "<span class=\"fa-stack\"><i class=\"fas fa-long-arrow-alt-down\"></i><i class=\"fas fa-archive\"></i></span>Archived first"
+      id_asc_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;ID ascending"
+      id_desc_html: "<i class=\"fas fa-sort-numeric-up\"></i>&nbsp;&nbsp;ID descending"
     sort_new:
       new: "Newest"
       old: "Oldest"

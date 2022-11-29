@@ -95,10 +95,14 @@ class Project < ApplicationRecord
     # Admins see all projects in the team
     # Member of the projects can view
     # If project is visible everyone from the team can view it
+    owner_role = UserRole.find_predefined_owner_role
     projects = Project.where(team: teams)
-                      .left_outer_joins(team: :user_teams)
-                      .left_outer_joins(user_assignments: :user_role)
-    projects.where('projects.visibility = 1 OR (user_teams.user_id = ? AND user_teams.role = 2)', user)
+                      .left_outer_joins(:team, user_assignments: :user_role)
+                      .joins("LEFT OUTER JOIN user_assignments team_user_assignments "\
+                             "ON team_user_assignments.assignable_type = 'Team' "\
+                             "AND team_user_assignments.assignable_id = team.id")
+    projects.where(visibility: visibilities[:visible])
+            .or(projects.where(team: { team_user_assignments: { user_id: user, user_role_id: owner_role } }))
             .or(projects.with_granted_permissions(user, ProjectPermissions::READ))
             .distinct
   end
@@ -123,8 +127,8 @@ class Project < ApplicationRecord
 
   def validate_view_state(view_state)
     if %w(cards table).exclude?(view_state.state.dig('experiments', 'view_type')) ||
-       %w(new old atoz ztoa).exclude?(view_state.state.dig('experiments', 'active', 'sort')) ||
-       %w(new old atoz ztoa archived_new archived_old).exclude?(view_state.state.dig('experiments', 'archived', 'sort'))
+       %w(new old atoz ztoa id_asc id_desc).exclude?(view_state.state.dig('experiments', 'active', 'sort')) ||
+       %w(new old atoz ztoa id_asc id_desc archived_new archived_old).exclude?(view_state.state.dig('experiments', 'archived', 'sort'))
       view_state.errors.add(:state, :wrong_state)
     end
   end
@@ -167,6 +171,8 @@ class Project < ApplicationRecord
            when 'old' then { created_at: :asc }
            when 'atoz' then { name: :asc }
            when 'ztoa' then { name: :desc }
+           when 'id_asc' then { id: :asc }
+           when 'id_desc' then { id: :desc }
            when 'archived_new' then { archived_on: :desc }
            when 'archived_old' then { archived_on: :asc }
            else { created_at: :desc }
@@ -322,7 +328,7 @@ class Project < ApplicationRecord
   def auto_assign_project_members
     return if skip_user_assignments
 
-    UserAssignments::GroupAssignmentJob.perform_now(
+    UserAssignments::ProjectGroupAssignmentJob.perform_now(
       team,
       self,
       last_modified_by || created_by
@@ -341,7 +347,7 @@ class Project < ApplicationRecord
     if visible?
       auto_assign_project_members
     else
-      UserAssignments::GroupUnAssignmentJob.perform_now(self)
+      UserAssignments::ProjectGroupUnAssignmentJob.perform_now(self)
     end
   end
 end

@@ -42,7 +42,7 @@ class TeamUsersDatatable < CustomDatatable
       casted_column = ::Arel::Nodes::NamedFunction.new(
         'CAST',
         [Arel.sql(
-          "to_char( users.created_at, '#{formated_date}' ) AS VARCHAR"
+          "to_char( user_assignments.created_at, '#{formated_date}' ) AS VARCHAR"
         )]
       )
     else
@@ -97,7 +97,7 @@ class TeamUsersDatatable < CustomDatatable
   # Query database for records (this will be later paginated and filtered)
   # after that "data" function will return json
   def get_raw_records
-    @team.user_assignments.includes(:user)
+    @team.user_assignments.joins(:user)
   end
 
   def sort_records(records)

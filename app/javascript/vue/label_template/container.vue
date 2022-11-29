@@ -12,6 +12,7 @@
       <div v-if="labelTemplate.id" class="title-row">
         <img :src="labelTemplate.attributes.icon_url" class="label-template-icon"/>
         <InlineEdit
+          v-if="canManage"
           :value="labelTemplate.attributes.name"
           :characterLimit="255"
           :allowBlank="false"
@@ -22,14 +23,18 @@
           @editingDisabled="editingName = false"
           @update="updateName"
         />
+        <template v-else>
+          {{ labelTemplate.attributes.name }}
+        </template>
       </div>
     </div>
-    <div v-if="labelTemplate.id" class="template-descripiton">
+    <div v-if="labelTemplate.id && notFluics" class="template-descripiton">
       <div class="title">
         {{ i18n.t('label_templates.show.description_title') }}
       </div>
       <div class="description">
         <InlineEdit
+          v-if="canManage"
           :value="labelTemplate.attributes.description"
           :characterLimit="255"
           :allowBlank="true"
@@ -40,10 +45,13 @@
           @editingDisabled="editingDescription = false"
           @update="updateDescription"
         />
+        <template v-else>
+          {{ labelTemplate.attributes.description || i18n.t('label_templates.show.description_empty') }}
+        </template>
       </div>
     </div>
     <div v-if="labelTemplate.id" class="label-template-container">
-      <div class="label-edit-container">
+      <div class="label-edit-container" v-if="notFluics">
         <div class="label-edit-header">
           <div class="title">
             {{ i18n.t('label_templates.show.content_title', { format: labelTemplate.attributes.language_type.toUpperCase() }) }}
@@ -80,13 +88,26 @@
             </div>
           </div>
         </template>
-        <div v-else class="label-view-container" :title="i18n.t('label_templates.show.view_content_tooltip')" @click="enableContentEdit">
+        <div v-else-if="canManage" class="label-view-container" :title="i18n.t('label_templates.show.view_content_tooltip')" @click="enableContentEdit">
           {{ labelTemplate.attributes.content}}
           <i class="fas fa-pen"></i>
         </div>
+        <div v-else class="label-view-container read-only" :title="i18n.t('label_templates.show.view_content_tooltip')">
+          {{ labelTemplate.attributes.content}}
+        </div>
       </div>
       <div class="label-preview-container">
-        <LabelPreview :zpl='previewContent' :previewUrl="previewUrl" @preview:valid="updateContent" @preview:invalid="invalidPreview" />
+        <LabelPreview
+          :zpl='previewContent'
+          :template="labelTemplate"
+          :previewUrl="previewUrl"
+          @preview:valid="updateContent"
+          @preview:invalid="invalidPreview"
+          @height:update="setNewHeight"
+          @width:update="setNewWidth"
+          @density:update="setNewDensity"
+          @unit:update="setNewUnit"
+        />
       </div>
     </div>
   </div>
@@ -115,6 +136,10 @@
         editingDescription: false,
         editingContent: false,
         newContent: '',
+        newLabelWidth: null,
+        newLabelHeight: null,
+        newLabelDensity: null,
+        newLabelUnit: null,
         previewContent: '',
         previewValid: false,
         skipSave: false,
@@ -133,6 +158,12 @@
     computed: {
       hasError() {
         return this.codeErrorMessage.length > 0
+      },
+      canManage() {
+        return this.labelTemplate.attributes.urls.update && this.notFluics
+      },
+      notFluics() {
+        return this.labelTemplate.attributes.type !== "FluicsLabelTemplate"
       }
     },
     components: {InlineEdit, InsertFieldDropdown, LabelPreview},
@@ -141,9 +172,25 @@
         this.labelTemplate = result.data
         this.newContent = this.labelTemplate.attributes.content
         this.previewContent = this.labelTemplate.attributes.content
+        this.newLabelWidth = this.labelTemplate.attributes.width_mm
+        this.newLabelHeight = this.labelTemplate.attributes.height_mm
+        this.newLabelDensity = this.labelTemplate.attributes.density
+        this.newLabelUnit = this.labelTemplate.attributes.unit
       })
     },
     methods: {
+      setNewHeight(val) {
+        this.newLabelHeight = val;
+      },
+      setNewWidth(val) {
+        this.newLabelWidth = val;
+      },
+      setNewDensity(val) {
+        this.newLabelDensity = val;
+      },
+      setNewUnit(val) {
+        this.newLabelUnit = val;
+      },
       enableContentEdit() {
         this.editingContent = true;
         this.$nextTick(() => {
@@ -180,6 +227,8 @@
       updateContent() {
         this.previewValid = true;
 
+        this.saveLabelDimensions();
+
         if (!this.editingContent) return;
 
         if (this.skipSave) {
@@ -193,12 +242,39 @@
           $.ajax({
             url: this.labelTemplate.attributes.urls.update,
             type: 'PATCH',
-            data: {label_template: {content: this.newContent}},
+            data: {label_template: {
+              content: this.newContent,
+            }},
             success: (result) => {
               this.labelTemplate.attributes.content = result.data.attributes.content;
               this.editingContent = false;
             }
           });
+        });
+      },
+      saveLabelDimensions() {
+        if (this.newLabelWidth == this.labelTemplate.attributes.width_mm &&
+            this.newLabelHeight == this.labelTemplate.attributes.height_mm &&
+            this.newLabelDensity == this.labelTemplate.attributes.density &&
+            this.newLabelUnit == this.labelTemplate.attributes.unit) {
+          return
+        }
+
+        $.ajax({
+          url: this.labelTemplate.attributes.urls.update,
+          type: 'PATCH',
+          data: {label_template: {
+            width_mm: this.newLabelWidth,
+            height_mm: this.newLabelHeight,
+            density: this.newLabelDensity,
+            unit: this.newLabelUnit
+          }},
+          success: (result) => {
+            this.labelTemplate.attributes.width_mm = result.data.attributes.width_mm;
+            this.labelTemplate.attributes.height_mm = result.data.attributes.height_mm;
+            this.labelTemplate.attributes.density = result.data.attributes.density;
+            this.labelTemplate.attributes.unit = result.data.attributes.unit;
+          }
         });
       },
       generatePreview(skipSave = false) {
@@ -223,6 +299,11 @@
         let textAfter  = this.newContent.substring(this.cursorPos, this.newContent.length);
         this.newContent = textBefore + field + textAfter;
         this.cursorPos = this.cursorPos + field.length;
+
+        this.$nextTick(() => {
+          $(this.$refs.contentInput).prop('selectionStart', this.cursorPos);
+          $(this.$refs.contentInput).prop('selectionEnd', this.cursorPos);
+        });
       },
       showErrors() {
         if (this.editingContent) {

@@ -70,7 +70,7 @@
       });
     });
 
-    dropdownSelector.init('#role', {
+    dropdownSelector.init(roleInput, {
       noEmptyOption: true,
       singleSelect: true,
       closeOnSelect: true,
@@ -138,7 +138,7 @@
         var data = {
           emails: dropdownSelector.getValues(emailsInput),
           team_ids: dropdownSelector.getValues(teamsInput),
-          role: dropdownSelector.getValues(roleInput),
+          role_id: dropdownSelector.getValues(roleInput),
           'g-recaptcha-response': $('.g-recaptcha-response').val()
         };
 

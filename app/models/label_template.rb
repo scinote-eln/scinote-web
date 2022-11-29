@@ -7,6 +7,8 @@ class LabelTemplate < ApplicationRecord
   belongs_to :created_by, class_name: 'User', optional: true
   belongs_to :last_modified_by, class_name: 'User', optional: true
 
+  enum unit: { in: 0, mm: 1 }
+
   validates :name, presence: true, length: { minimum: Constants::NAME_MIN_LENGTH,
                                              maximum: Constants::NAME_MAX_LENGTH }
   validates :content, presence: true
@@ -14,13 +16,7 @@ class LabelTemplate < ApplicationRecord
   validate :ensure_single_default_template!
 
   def self.enabled?
-    ApplicationSettings.instance.values['label_templates_enabled']
-  end
-
-  def render(locals)
-    locals.reduce(content.dup) do |rendered_content, (key, value)|
-      rendered_content.gsub!(/\{\{#{key}\}\}/, value.to_s)
-    end
+    RepositoryBase.stock_management_enabled?
   end
 
   def icon

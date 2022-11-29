@@ -10,8 +10,8 @@ class ReportDatatable < CustomDatatable
     Report.code
     Report.pdf_file
     Report.docx_file
-    Report.created_by
-    Report.modified_by
+    Report.created_by_name
+    Report.modified_by_name
     Report.created_at
     Report.updated_at
   ).freeze
@@ -58,8 +58,8 @@ class ReportDatatable < CustomDatatable
         '3' => sanitize_input(record.code),
         '4' => pdf_file(record),
         '5' => docx_file(record),
-        '6' => sanitize_input(record.created_by),
-        '7' => sanitize_input(record.modified_by),
+        '6' => sanitize_input(record.created_by_name),
+        '7' => sanitize_input(record.modified_by_name),
         '8' => I18n.l(record.created_at, format: :full),
         '9' => I18n.l(record.updated_at, format: :full),
         'archived' => record.project.archived?,
@@ -101,8 +101,8 @@ class ReportDatatable < CustomDatatable
                   )
                   .select('reports.* AS reports')
                   .select('projects.name AS project_name')
-                  .select('creators.full_name AS created_by')
-                  .select('modifiers.full_name AS modified_by')
+                  .select('creators.full_name AS created_by_name')
+                  .select('modifiers.full_name AS modified_by_name')
     Report.from(res, :reports)
   end
 

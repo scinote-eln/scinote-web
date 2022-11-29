@@ -61,12 +61,6 @@ var zebraPrint = (function() {
     }
   }
 
-  function showModal() {
-    if (CONFIG && 'showModal' in CONFIG) {
-      CONFIG.showModal();
-    }
-  }
-
   function beforeRefresh() {
     if (CONFIG && 'beforeRefresh' in CONFIG) {
       CONFIG.beforeRefresh();
@@ -81,7 +75,6 @@ var zebraPrint = (function() {
 
   function addNewDevice(device, clearSelectorOnFirstDevice) {
     clearSelector(clearSelectorOnFirstDevice);
-    if (devices.length === 0) showModal();
     if (!devices.some(function(el) {
       return el.name === device.name;
     })) {
@@ -90,20 +83,23 @@ var zebraPrint = (function() {
     }
   }
 
-  function searchZebraPrinters() {
+  function searchZebraPrinters(getStatus) {
     var clearSelectorOnFirstDevice = CONFIG.clearSelectorOnFirstDevice;
     devices = [];
     try {
       beforeRefresh();
       BrowserPrint.getLocalDevices(function(deviceList) {
-        if (deviceList.printer && deviceList.printer.length !== 0) {
+        if (deviceList && deviceList.printer && deviceList.printer.length !== 0) {
           for (i = 0; i < deviceList.printer.length; i += 1) {
-            getPrinterStatus(deviceList.printer[i]).then((device) => {
-              addNewDevice(device, clearSelectorOnFirstDevice);
-            });
+            if (getStatus) {
+              getPrinterStatus(deviceList.printer[i]).then((device) => {
+                addNewDevice(device, clearSelectorOnFirstDevice);
+              });
+            } else {
+              addNewDevice(deviceList.printer[i], clearSelectorOnFirstDevice);
+            }
           }
         } else {
-          showModal();
           noDevices();
         }
       }, () => {
@@ -129,71 +125,87 @@ var zebraPrint = (function() {
       + printingStatus));
   }
 
-  function print(device, progressModal, numberOfCopies, printerName) {
+  function print(device, progressModal, numberOfCopies, printerName, labels) {
     var counter = 0;
-    var label = '^XA ^FX First section with bar code. ^BY5,2,270 ^FO100,50^BC^FD12345678^FS^XZ';
     try {
       updateProgressModalData(progressModal, printerName, PRINTER_STATUS_READY, PRINTER_STATUS_PRINTING);
-      for (counter = 0; counter < numberOfCopies; counter += 1) {
-        if (counter + 1 === parseInt(numberOfCopies, 10)) {
-          device.sendThenRead(
-            label,
-            () => {
-              updateProgressModalData(progressModal, printerName, PRINTER_STATUS_READY, PRINTER_STATUS_DONE);
-            },
-            (error)=> {
+      labels.forEach(function(label) {
+        for (counter = 0; counter < numberOfCopies; counter += 1) {
+          if (counter + 1 === parseInt(numberOfCopies, 10)) {
+            device.sendThenRead(
+              label,
+              () => {
+                updateProgressModalData(progressModal, printerName, PRINTER_STATUS_READY, PRINTER_STATUS_DONE);
+              },
+              (error)=> {
+                updateProgressModalData(progressModal, printerName, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
+              }
+            );
+          } else {
+            device.send(label, ()=>{}, (error)=> {
               updateProgressModalData(progressModal, printerName, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
-            }
-          );
-        } else {
-          device.send(label, ()=>{}, (error)=> {
-            updateProgressModalData(progressModal, printerName, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
-          });
+            });
+          }
         }
-      }
+      });
     } catch (error) {
       updateProgressModalData(progressModal, printerName, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
     }
   }
 
-  function initializeZebraPrinters(selector, config) {
+  function initializeZebraPrinters(selector, config, getStatus) {
     CONFIG = config;
     SELECTOR = selector;
-    searchZebraPrinters();
+    searchZebraPrinters(getStatus);
   }
 
   return {
-    init: function(selector, config) {
-      initializeZebraPrinters(selector, config);
+    init: function(selector, config, getStatus) {
+      initializeZebraPrinters(selector, config, getStatus);
       return this;
     },
     refreshList: function() {
-      searchZebraPrinters();
+      searchZebraPrinters(true);
     },
-    print: function(modalUrl, progressModal, printModal, printerName, numberOfCopies) {
-      var modal = $(progressModal);
-      device = findDevice(printerName);
-      new Zebra.Printer(device).isPrinterReady(function() {
-        $.ajax({
-          method: 'GET',
-          url: modalUrl,
-          dataType: 'json'
-        }).done(function(xhr, settings, dataZebra) {
-          if (modal.length) {
-            modal.replaceWith(dataZebra.responseJSON.html);
-          } else {
-            $('body').append($(dataZebra.responseJSON.html));
-          }
 
+    /*
+      printData: {
+        printer_name: string,
+        number_of_copies: int,
+        label_template_id: int,
+        repository_row_ids: array[]
+      }
+    */
+    print: function(modalUrl, progressModal, printModal, printData) {
+      var modal = $(progressModal);
+      $.ajax({
+        method: 'GET',
+        url: modalUrl,
+        data: printData,
+        dataType: 'json'
+      }).done(function(xhr, settings, dataZebra) {
+        $(printModal).modal('hide');
+
+        if (modal.length) {
+          modal.replaceWith(dataZebra.responseJSON.html);
+        } else {
+          $('body').append($(dataZebra.responseJSON.html));
+        }
+
+        updateProgressModalData(progressModal, printData.printer_name, PRINTER_STATUS_READY, PRINTER_STATUS_PRINTING);
+        device = findDevice(printData.printer_name);
+        new Zebra.Printer(device).isPrinterReady(function() {
           $(document).on('click', progressModal, function() {
             $(this).closest(progressModal).remove();
           });
 
-          $(printModal).modal('hide');
-          print(device, progressModal, numberOfCopies, printerName);
+          print(
+            device, progressModal, printData.number_of_copies,
+            printData.printer_name, dataZebra.responseJSON.labels
+          );
+        }, function() {
+          updateProgressModalData(progressModal, printData.printer_name, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
         });
-      }, function() {
-        updateProgressModalData(progressModal, printerName, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
       });
     }
   };
