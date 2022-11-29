@@ -40,7 +40,7 @@ $.fn.dataTable.render.editRepositoryTextValue = function(formId, columnId, cell)
              data-type="RepositoryTextValue">
     </div>`);
   $cell.find('input').val(text);
-  SmartAnnotation.init($cell.find('input'));
+  SmartAnnotation.init($cell.find('input'), true);
 };
 
 $.fn.dataTable.render.editRepositoryListValue = function(formId, columnId, cell) {
