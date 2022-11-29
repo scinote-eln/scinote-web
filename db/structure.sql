@@ -5744,14 +5744,6 @@ CREATE INDEX index_reports_on_project_id ON public.reports USING btree (project_
 
 
 --
--- Name: index_reports_on_report_code; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_reports_on_report_code ON public.reports USING gin ((('RP'::text || id)) public.gin_trgm_ops);
-
-
-
---
 -- Name: index_reports_on_team_id; Type: INDEX; Schema: public; Owner: -
 --
 
