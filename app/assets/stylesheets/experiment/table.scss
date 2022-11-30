@@ -137,7 +137,7 @@
       }
 
       .users-list {
-        max-height: 400px;
+        max-height: 300px;
         overflow: auto;
       }
 
@@ -148,6 +148,10 @@
 
         .user-avatar {
           padding: 0 .75em;
+
+          img {
+            border-radius: 50%;
+          }
         }
       }
 

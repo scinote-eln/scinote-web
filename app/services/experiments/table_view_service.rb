@@ -132,25 +132,10 @@ module Experiments
     end
 
     def assigned_presenter(my_module)
-      users = my_module.designated_users
-      result = {
-        count: users.length,
-        users: []
-      }
-      users[0..3].each do |user|
-        result[:users].push({
-                              image_url: avatar_path(user, :icon_small),
-                              title: user.full_name
-                            })
-      end
-
-      result[:more_users_title] = users[4..].map(&:full_name).join('&#013;') if users.length > 4
-      result[:list_url] = search_my_module_user_my_module_path(my_module, my_module_id: my_module.id)
-      if can_manage_my_module_users?(@user, my_module)
-        result[:create_url] = my_module_user_my_modules_path(my_module_id: my_module.id)
-      end
-
-      result
+      { html: ApplicationController.renderer.render(
+        partial: 'experiments/assigned_users.html.erb',
+        locals: { my_module: my_module, user: @user }
+      ) }
     end
 
     def tags_presenter(my_module)
