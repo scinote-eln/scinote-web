@@ -721,10 +721,10 @@ en:
           remove: "Remove report element from the report"
           scinote_link: "SciNote link"
         project_header:
-          user_time: "Project created on %{timestamp}."
+          user_time: "Project %{code} created on %{timestamp}."
           title: "Report for project %{project}"
         module:
-          user_time: "Task created on %{timestamp}."
+          user_time: "Task %{code} created on %{timestamp}."
           started_on: "Start date: %{started_on}"
           status: "Status:"
           no_start_date: "No start date"
@@ -736,7 +736,7 @@ en:
           results: "Results"
           protocol:
             name: 'Protocol'
-            user_time: "Protocol created on %{timestamp}."
+            user_time: "Protocol %{code} created on %{timestamp}."
         experiment:
           user_time: "Experiment %{code} created on %{timestamp}."
           no_description: "No description"

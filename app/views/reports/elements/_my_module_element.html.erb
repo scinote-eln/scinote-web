@@ -10,7 +10,7 @@
       <% end %>
     </h4>
     <div class="user-time">
-      <%= t('projects.reports.elements.module.user_time', timestamp: l(timestamp, format: :full)) %>
+      <%= t('projects.reports.elements.module.user_time', code: my_module.code, timestamp: l(timestamp, format: :full)) %>
     </div>
     <p class="module-start-date">
       <% if my_module.started_on.present? %>

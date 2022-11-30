@@ -1,4 +1,9 @@
+# frozen_string_literal: true
+
 class Project < ApplicationRecord
+  ID_PREFIX = 'PR'
+
+  include PrefixedIdModel
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
