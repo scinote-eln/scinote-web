@@ -5,7 +5,7 @@
   } do %>
     <%= render partial: 'shared/filter_dropdown/text_search', locals: {container_class: 'task-name-filter', label_text: t('experiments.table.filters.name')} %>
     <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'due-date-filter', label: t('experiments.table.filters.due_date'), view_mode: nil } %>
-    <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'archived-on-filter', label: t("filters_modal.archived_on.label"), view_mode: 'archived' } if params[:view_mode] %>
+    <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'archived-on-filter', label: t("filters_modal.archived_on.label"), view_mode: 'archived' } if params[:view_mode] == 'archived' %>
 
     <div class="select-block status-container">
       <label><%= t('experiments.table.filters.status') %></label>
