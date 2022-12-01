@@ -88,6 +88,14 @@ $color-module-hover: $brand-primary;
   overflow: hidden;
   // for IE10+ touch devices
   touch-action: none;
+
+  .empty-canvas {
+    color: $color-volcano;
+    display: flex;
+    font-size: 22px;
+    justify-content: center;
+    margin-top: 48px;
+  }
 }
 
 .diagram {

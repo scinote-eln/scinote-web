@@ -95,8 +95,9 @@ class ExperimentsController < ApplicationController
   end
 
   def load_table
-    active_modules = @experiment.my_modules.active
-    render json: Experiments::TableViewService.new(active_modules, current_user, params).call
+    my_modules = @experiment.my_modules
+    my_modules = params[:view_mode] == 'archived' ? my_modules.archived : my_modules.active
+    render json: Experiments::TableViewService.new(my_modules, current_user, params).call
   end
 
   def edit
@@ -280,6 +281,7 @@ class ExperimentsController < ApplicationController
   end
 
   def module_archive
+    @project = @experiment.project
     @my_modules = @experiment.archived_branch? ? @experiment.my_modules : @experiment.my_modules.archived
     @my_modules = @my_modules.with_granted_permissions(current_user, MyModulePermissions::READ_ARCHIVED)
                              .left_outer_joins(:designated_users, :task_comments)

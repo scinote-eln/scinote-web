@@ -1,6 +1,6 @@
 (function() {
   function initNewMyModuleModal() {
-    let experimentWrapper = '#experiment-canvas';
+    let experimentWrapper = '.experiment-new-my_module';
     let newMyModuleModal = '#new-my-module-modal';
 
     // Modal's submit handler function

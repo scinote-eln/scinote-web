@@ -162,6 +162,83 @@ var ExperimnetTable = {
       return true;
     });
   },
+  initManageUsersDropdown: function() {
+    $(this.table).on('show.bs.dropdown', '.assign-users-dropdown', (e) => {
+      let usersList = $(e.target).find('.users-list');
+      usersList.find('.user-container').remove();
+      $.get(usersList.data('list-url'), (result) => {
+        $.each(result, (_i, user) => {
+          $(`
+            <div class="user-container">
+              <div class="sci-checkbox-container">
+                <input type="checkbox"
+                       class="sci-checkbox user-selector"
+                       ${user.params.designated ? 'checked' : ''}
+                       value="${user.value}"
+                       data-assign-url="${user.params.assign_url}"
+                       data-unassign-url="${user.params.unassign_url}"
+                >
+                <span class="sci-checkbox-label"></span>
+              </div>
+              <div class="user-avatar">
+                <img src="${user.params.avatar_url}"></img>
+              </div>
+              <div class="user-name">
+                ${user.label}
+              </div>
+            </div>
+          `).appendTo(usersList);
+        });
+      });
+    });
+    $(this.table).on('click', '.dropdown-menu', (e) => {
+      if (e.target.tagName === 'INPUT') return;
+      e.preventDefault();
+      e.stopPropagation();
+    });
+    $(this.table).on('change keyup', '.assign-users-dropdown .user-search', (e) => {
+      let query = e.target.value;
+      let usersList = $(e.target).closest('.dropdown-menu').find('.user-container');
+      $.each(usersList, (_i, user) => {
+        $(user).removeClass('hidden');
+        if (query.length && !$(user).find('.user-name').text().toLowerCase()
+          .includes(query.toLowerCase())) {
+          $(user).addClass('hidden');
+        }
+      });
+    });
+    $(this.table).on('change', '.assign-users-dropdown .user-selector', (e) => {
+      let checkbox = e.target;
+      if (checkbox.checked) {
+        $.post(checkbox.dataset.assignUrl, {
+          table: true,
+          user_my_module: {
+            my_module_id: $(checkbox).closest('.table-row').data('id'),
+            user_id: checkbox.value
+          }
+        }, (result) => {
+          checkbox.dataset.unassignUrl = result.unassign_url;
+          $(checkbox).closest('.table-row').find('.assigned-users-container')
+            .replaceWith($(result.html).find('.assigned-users-container'));
+        }).error((data) => {
+          HelperModule.flashAlertMsg(data.responseJSON.errors, 'danger');
+        });
+      } else {
+        $.ajax({
+          url: checkbox.dataset.unassignUrl,
+          method: 'DELETE',
+          data: { table: true },
+          success: (result) => {
+            $(checkbox).closest('.table-row').find('.assigned-users-container')
+              .replaceWith($(result.html).find('.assigned-users-container'));
+          },
+          error: (data) => {
+            HelperModule.flashAlertMsg(data.responseJSON.errors, 'danger');
+          }
+        });
+      }
+    });
+  },
   checkActionPermission: function(permission) {
     let allMyModules;
 
@@ -227,6 +304,10 @@ var ExperimnetTable = {
         experimentToolbar.find(`.btn[data-for="${permission}"]`).addClass('hidden');
       }
     });
+
+    if ($('#experimentTable').hasClass('archived')) {
+      experimentToolbar.find('.only-active').addClass('hidden');
+    }
   },
   selectDate: function($field) {
     var datePicker = $field.data('DateTimePicker');
@@ -257,6 +338,11 @@ var ExperimnetTable = {
       // Update columns on backend - $.post('', { columns: visibleColumns }, () => {});
 
       $('.experiment-table')[0].style.setProperty('--columns-count', $('.table-display-modal .fa-eye').length + 1);
+    });
+  },
+  initNewTaskModal: function(table) {
+    $('.experiment-new-my_module').on('ajax:success', '#new-my-module-modal', function() {
+      table.loadTable();
     });
   },
   initFilters: function() {
@@ -328,7 +414,10 @@ var ExperimnetTable = {
     this.initAccessModal();
     this.initArchiveMyModules();
     this.initManageColumnsModal();
+    this.initNewTaskModal(this);
     this.initMyModuleActions();
+    this.updateExperimentToolbar();
+    this.initManageUsersDropdown();
   }
 };
 
@@ -346,6 +435,10 @@ ExperimnetTable.render.due_date = function(data) {
   return data.data;
 };
 
+ExperimnetTable.render.archived = function(data) {
+  return data;
+};
+
 ExperimnetTable.render.age = function(data) {
   return data;
 };
@@ -359,35 +452,7 @@ ExperimnetTable.render.status = function(data) {
 };
 
 ExperimnetTable.render.assigned = function(data) {
-  let users = '';
-  $.each(data.users, (_i, user) => {
-    users += `
-      <span class="global-avatar-container">
-        <img src=${user.image_url} title=${user.title}>
-      </span>
-    `;
-  });
-
-  if (data.length > 3) {
-    users += `
-    <span class="more-users" title="${data.more_users_title}">
-        +${data.length - 3}
-    </span>
-    `;
-  }
-
-  if (data.manage_url) {
-    users = `
-      <a href="${data.manage_url}" class= 'my-module-users-link', data-action='remote-modal'>
-        ${users}
-        <span class="new-user global-avatar-container">
-          <i class="fas fa-plus"></i>
-        </span>
-      </a>
-    `;
-  }
-
-  return users;
+  return data.html;
 };
 
 ExperimnetTable.render.tags = function(data) {
@@ -451,6 +516,36 @@ ExperimnetTable.filters.push({
   clearFilter: ($container) => {
     if ($('.due-date-filter .to-date', $container).data('DateTimePicker')) {
       $('.due-date-filter .to-date', $container).data('DateTimePicker').clear();
+    }
+  }
+});
+
+ExperimnetTable.filters.push({
+  name: 'archived_on_from',
+  init: () => {},
+  closeFilter: () => {},
+  apply: ($container) => {
+    return ExperimnetTable.selectDate($('.archived-on-filter .from-date', $container));
+  },
+  active: (value) => { return value; },
+  clearFilter: ($container) => {
+    if ($('.archived-on-filter .from-date', $container).data('DateTimePicker')) {
+      $('.archived-on-filter .from-date', $container).data('DateTimePicker').clear();
+    }
+  }
+});
+
+ExperimnetTable.filters.push({
+  name: 'archived_on_to',
+  init: () => {},
+  closeFilter: () => {},
+  apply: ($container) => {
+    return ExperimnetTable.selectDate($('.archived-on-filter  .to-date', $container));
+  },
+  active: (value) => { return value; },
+  clearFilter: ($container) => {
+    if ($('.archived-on-filter .to-date', $container).data('DateTimePicker')) {
+      $('.archived-on-filter  .to-date', $container).data('DateTimePicker').clear();
     }
   }
 });

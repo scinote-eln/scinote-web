@@ -7,6 +7,7 @@
           <h4 class="modal-title"><%= t('experiments.canvas.new_my_module_modal.title') %></h4>
         </div>
         <div class="modal-body">
+          <%= f.hidden_field :view_mode, value: view_mode%>
           <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
               <%= f.text_field :name, label: t('experiments.canvas.new_my_module_modal.name'), placeholder: t('experiments.canvas.new_my_module_modal.name_placeholder') %>
@@ -24,7 +25,7 @@
                          data-toggle='date-time-picker'
                          class="form-control calendar-input"
                          readonly
-                         placeholder="<%= t('experiments.canvas.new_my_module_modal.due_date_placeholder') %>"
+                         placeholder="<%= t('experiments.canvas.new_my_module_modal.enter_placeholder') %>"
                          data-date-format="<%= datetime_picker_format_full %>"
                          data-date-locale="<%= I18n.locale %>"
                          data-date-use-current="false"

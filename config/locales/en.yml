@@ -1301,6 +1301,7 @@ en:
         id_html: 'ID'
         task_name_html: 'Task name'
         due_date_html: 'Due date'
+        archived_html: 'Archived'
         age_html: 'Age'
         results_html: 'Results'
         status_html: 'Status'
@@ -1313,6 +1314,7 @@ en:
         id: 'ID'
         task_name: 'Task name'
         due_date: 'Due date'
+        archived: 'Archived'
         age: 'Age'
         results: 'Results'
         status: 'Status'
@@ -1345,7 +1347,9 @@ en:
         canvas: 'Canvas'
         table: 'Table'
         archived_tasks: 'Go to Archived tasks'
+        active_tasks: 'Go to Active tasks'
       add_tag: '+ Add tag'
+      search: 'Search...'
       archive_group:
         success_flash: "<strong>%{number}</strong> task(s) successfully archived."
         error_flash: "Failed to archive task(s)."
@@ -1355,6 +1359,7 @@ en:
       view: 'View'
       head_title: "%{project} | Overview"
       canvas_edit: "Edit workflow"
+      canvas_empty: "It's empty here. Please add some tasks"
       new_my_module: "New task"
       new_my_module_modal:
         title: "Add a new task"
@@ -1364,6 +1369,7 @@ en:
         due_date_placeholder: "+ Add due date"
         tags: "Add tags (optional)"
         create: "Create"
+        enter_placeholder: 'Enter...'
       canvas_edit: "Edit Experiment"
       zoom: "Zoom: "
       reload_on_submit: "Save action is running. Reloading this page may cause unexpected behavior."
