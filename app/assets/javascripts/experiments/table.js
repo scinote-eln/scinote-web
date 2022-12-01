@@ -21,14 +21,18 @@ var ExperimnetTable = {
   },
   appendRows: function(result) {
     $.each(result, (id, data) => {
+      let row;
+
       // Checkbox selector
-      let row = `
-        <div class="table-body-cell">
-          <div class="sci-checkbox-container">
-            <input type="checkbox" class="sci-checkbox my-module-selector" data-my-module="${id}">
-            <span class="sci-checkbox-label"></span>
-          </div>
-        </div>`;
+      row = `
+            <div class="table-body-cell">
+              <div class="sci-checkbox-container">
+                <div class="loading-overlay"></div>
+                <input type="checkbox" class="sci-checkbox my-module-selector" data-my-module="${id}">
+                <span class="sci-checkbox-label"></span>
+              </div>
+            </div>`;
+
       // Task columns
       $.each(data.columns, (_i, cell) => {
         let hidden = '';
@@ -53,7 +57,9 @@ var ExperimnetTable = {
             </div>
           </div>
         </div>`;
-      $(`<div class="table-row" data-urls='${JSON.stringify(data.urls)}' data-id="${id}">${row}</div>`)
+
+      let tableRowClass = `table-row ${data.provisioning_status === 'in_progress' ? 'table-row-provisioning' : ''}`;
+      $(`<div class="${tableRowClass}" data-urls='${JSON.stringify(data.urls)}' data-id="${id}">${row}</div>`)
         .appendTo(`${this.table} .table-body`);
     });
   },
@@ -69,6 +75,15 @@ var ExperimnetTable = {
     $(this.table).on('click', '.archive-my-module', (e) => {
       e.preventDefault();
       this.archiveMyModules(e.target.href, e.target.dataset.id);
+    });
+  },
+  initDuplicateMyModules: function() {
+    $('#duplicateTasks').on('click', (e) => {
+      $.post(e.target.dataset.url, { my_module_ids: this.selectedMyModules }, () => {
+        this.loadTable();
+      }).error((data) => {
+        HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+      });
     });
   },
   initArchiveMyModules: function() {
@@ -391,7 +406,42 @@ var ExperimnetTable = {
           return { ...params, ...{ filters: this.activeFilters } };
         }
       });
+
+      this.initProvisioningStatusPolling();
     });
+  },
+  initProvisioningStatusPolling: function() {
+    let provisioningStatusUrls = $('.table-row-provisioning').toArray()
+      .map((u) => $(u).data('urls').provisioning_status);
+
+    this.provisioningMyModulesCount = provisioningStatusUrls.length;
+
+    if (this.provisioningMyModulesCount > 0) this.pollProvisioningStatuses(provisioningStatusUrls);
+  },
+  pollProvisioningStatuses: function(provisioningStatusUrls) {
+    let remainingUrls = [];
+
+    provisioningStatusUrls.forEach((url) => {
+      jQuery.ajax({
+        url: url,
+        success: (data) => {
+          if (data.provisioning_status === 'in_progress') remainingUrls.push(url);
+        },
+        async: false
+      });
+    });
+
+    if (remainingUrls.length > 0) {
+      setTimeout(() => {
+        this.pollProvisioningStatuses(remainingUrls);
+      }, 10000);
+    } else {
+      HelperModule.flashAlertMsg(
+        I18n.t('experiments.duplicate_tasks.success', { count: this.provisioningMyModulesCount }),
+        'success'
+      );
+      this.loadTable();
+    }
   },
   init: function() {
     this.initSelector();
@@ -400,6 +450,7 @@ var ExperimnetTable = {
     this.loadTable();
     this.initRenameModal();
     this.initAccessModal();
+    this.initDuplicateMyModules();
     this.initMoveModulesModal();
     this.initArchiveMyModules();
     this.initManageColumnsModal();
@@ -411,6 +462,10 @@ var ExperimnetTable = {
 };
 
 ExperimnetTable.render.task_name = function(data) {
+  if (data.provisioning_status === 'in_progress') {
+    return `<span data-full-name="${data.name}">${data.name}</span>`;
+  }
+
   return `<a href="${data.url}" id="taskName${data.id}" data-full-name="${data.name}">${data.name}</a>`;
 };
 

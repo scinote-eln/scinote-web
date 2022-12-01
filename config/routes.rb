@@ -381,6 +381,7 @@ Rails.application.routes.draw do
         get 'sidebar'
         get :assigned_users_to_tasks
         post :archive_my_modules
+        post :batch_clone_my_modules
       end
     end
 
@@ -390,6 +391,7 @@ Rails.application.routes.draw do
       member do
         get :permissions
         get :actions_dropdown
+        get :provisioning_status
       end
       resources :my_module_tags, path: '/tags', only: [:index, :create, :destroy] do
         collection do
