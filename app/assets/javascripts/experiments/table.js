@@ -469,6 +469,36 @@ ExperimnetTable.filters.push({
 });
 
 ExperimnetTable.filters.push({
+  name: 'archived_on_from',
+  init: () => {},
+  closeFilter: () => {},
+  apply: ($container) => {
+    return ExperimnetTable.selectDate($('.archived-on-filter .from-date', $container));
+  },
+  active: (value) => { return value; },
+  clearFilter: ($container) => {
+    if ($('.archived-on-filter .from-date', $container).data('DateTimePicker')) {
+      $('.archived-on-filter .from-date', $container).data('DateTimePicker').clear();
+    }
+  }
+});
+
+ExperimnetTable.filters.push({
+  name: 'archived_on_to',
+  init: () => {},
+  closeFilter: () => {},
+  apply: ($container) => {
+    return ExperimnetTable.selectDate($('.archived-on-filter  .to-date', $container));
+  },
+  active: (value) => { return value; },
+  clearFilter: ($container) => {
+    if ($('.archived-on-filter .to-date', $container).data('DateTimePicker')) {
+      $('.archived-on-filter  .to-date', $container).data('DateTimePicker').clear();
+    }
+  }
+});
+
+ExperimnetTable.filters.push({
   name: 'assigned_users',
   init: ($container) => {
     dropdownSelector.init($('.assigned-filter', $container), {

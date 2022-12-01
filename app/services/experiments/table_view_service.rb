@@ -181,6 +181,14 @@ module Experiments
       my_modules.where('my_modules.due_date <= ?', value)
     end
 
+    def archived_on_from_filter(my_modules, value)
+      my_modules.where('my_modules.archived_on >= ?', value)
+    end
+
+    def archived_on_to_filter(my_modules, value)
+      my_modules.where('my_modules.archived_on <= ?', value)
+    end
+
     def assigned_users_filter(my_modules, value)
       my_modules.joins(:user_my_modules).where(user_my_modules: { user_id: value })
     end
