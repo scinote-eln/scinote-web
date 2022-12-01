@@ -357,6 +357,8 @@ Rails.application.routes.draw do
         get 'actions_dropdown'
         get :table
         get :load_table
+        get :move_modules_modal
+        post :move_modules
         get 'canvas' # Overview/structure for single experiment
         # AJAX-loaded canvas edit mode (from canvas)
         get 'canvas/edit', to: 'canvas#edit'

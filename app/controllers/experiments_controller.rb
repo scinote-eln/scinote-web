@@ -280,6 +280,43 @@ class ExperimentsController < ApplicationController
     render json: { message: message, path: path }, status: status
   end
 
+  def move_modules_modal
+    @experiments = @experiment.project.experiments.active.where.not(id: @experiment)
+                              .managable_by_user(current_user).order(name: :asc)
+    render json: {
+      html: render_to_string(
+        partial: 'move_modules_modal.html.erb'
+      )
+    }
+  end
+
+  def move_modules
+    modules_to_move = {}
+    dst_experiment = @experiment.project.experiments.find(params[:to_experiment_id])
+    return render_403 unless can_manage_experiment?(dst_experiment)
+
+    @experiment.with_lock do
+      params[:my_module_ids].each do |id|
+        my_module = @experiment.my_modules.find(id)
+        return render_403 unless can_move_my_module?(my_module)
+
+        modules_to_move[id] = dst_experiment.id
+      end
+      @experiment.move_modules(modules_to_move, current_user)
+      render json: { message: t('experiments.table.modal_move_modules.success_flash',
+                                experiment: sanitize_input(dst_experiment.name)) }
+    rescue StandardError => e
+      Rails.logger.error(e.message)
+      Rails.logger.error(e.backtrace.join("\n"))
+      render json: {
+        message: t('experiments.table.modal_move_modules.error_flash', experiment: sanitize_input(dst_experiment.name))
+      }, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
+    end
+  rescue ActiveRecord::RecordNotFound
+    render_404
+  end
+
   def module_archive
     @project = @experiment.project
     @my_modules = @experiment.archived_branch? ? @experiment.my_modules : @experiment.my_modules.archived
