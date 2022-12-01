@@ -69,6 +69,31 @@
       display: contents;
     }
 
+    .loading-overlay {
+      display: none;
+    }
+
+    .table-row-provisioning {
+      .loading-overlay {
+        display: block;
+      }
+
+      .sci-checkbox-container {
+        height: 1.5em;
+        width: 1.5em;
+
+        .loading-overlay::after {
+          background-size: 1.5em;
+          cursor: default;
+        }
+
+        .sci-checkbox,
+        .sci-checkbox-label {
+          display: none;
+        }
+      }
+    }
+
     .table-body-cell {
       align-items: center;
       display: flex;
@@ -79,16 +104,6 @@
 
         &:hover {
           text-decoration: none;
-        }
-      }
-
-      .my-module-provisioning-spinner {
-        height: 1.5em;
-        width: 1.5em;
-
-        .loading-overlay::after {
-          background-size: 1.5em;
-          cursor: default;
         }
       }
 

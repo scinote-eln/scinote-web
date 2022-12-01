@@ -22,25 +22,17 @@ var ExperimnetTable = {
   appendRows: function(result) {
     $.each(result, (id, data) => {
       let row;
-      let provisioningStatus = data.provisioning_status;
 
-      // Checkbox selector or provisioning spinner
-      if (provisioningStatus === 'in_progress') {
-        row = `
-              <div class="table-body-cell">
-                <div class="sci-checkbox-container my-module-provisioning-spinner">
-                  <div class="loading-overlay"></div>
-                </div>
-              </div>`;
-      } else {
-        row = `
-              <div class="table-body-cell">
-                <div class="sci-checkbox-container">
-                  <input type="checkbox" class="sci-checkbox my-module-selector" data-my-module="${id}">
-                  <span class="sci-checkbox-label"></span>
-                </div>
-              </div>`;
-      }
+      // Checkbox selector
+      row = `
+            <div class="table-body-cell">
+              <div class="sci-checkbox-container">
+                <div class="loading-overlay"></div>
+                <input type="checkbox" class="sci-checkbox my-module-selector" data-my-module="${id}">
+                <span class="sci-checkbox-label"></span>
+              </div>
+            </div>`;
+
       // Task columns
       $.each(data.columns, (_i, cell) => {
         let hidden = '';
@@ -65,7 +57,9 @@ var ExperimnetTable = {
             </div>
           </div>
         </div>`;
-      $(`<div class="table-row" data-urls='${JSON.stringify(data.urls)}' data-id="${id}">${row}</div>`)
+
+      let tableRowClass = `table-row ${data.provisioning_status === 'in_progress' ? 'table-row-provisioning' : ''}`;
+      $(`<div class="${tableRowClass}" data-urls='${JSON.stringify(data.urls)}' data-id="${id}">${row}</div>`)
         .appendTo(`${this.table} .table-body`);
     });
   },
@@ -311,8 +305,8 @@ var ExperimnetTable = {
     });
   },
   initProvisioningStatusPolling: function() {
-    let provisioningStatusUrls = $('[data-urls]').toArray()
-      .map((u) => $(u).data('urls').provisioning_status).filter((u) => u);
+    let provisioningStatusUrls = $('.table-row-provisioning').toArray()
+      .map((u) => $(u).data('urls').provisioning_status);
 
     this.provisioningMyModulesCount = provisioningStatusUrls.length;
 
@@ -334,7 +328,7 @@ var ExperimnetTable = {
     if (remainingUrls.length > 0) {
       setTimeout(() => {
         this.pollProvisioningStatuses(remainingUrls);
-      }, 5000);
+      }, 10000);
     } else {
       HelperModule.flashAlertMsg(
         I18n.t('experiments.duplicate_tasks.success', { count: this.provisioningMyModulesCount }),
