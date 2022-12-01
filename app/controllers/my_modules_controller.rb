@@ -296,10 +296,12 @@ class MyModulesController < ApplicationController
     @results = @results.page(params[:page]).per(Constants::RESULTS_PER_PAGE_LIMIT)
 
     @results = case @results_order
-               when 'old' then @results.order(updated_at: :asc)
+               when 'old' then @results.order(created_at: :asc)
+               when 'old_updated' then @results.order(updated_at: :asc)
+               when 'new_updated' then @results.order(updated_at: :desc)
                when 'atoz' then @results.order(name: :asc)
                when 'ztoa' then @results.order(name: :desc)
-               else @results.order(updated_at: :desc)
+               else @results.order(created_at: :desc)
                end
   end
 
