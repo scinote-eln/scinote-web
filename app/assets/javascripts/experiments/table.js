@@ -133,7 +133,13 @@ var ExperimnetTable = {
           $(`
             <div class="user-container">
               <div class="sci-checkbox-container">
-                <input type="checkbox" class="sci-checkbox user-selector" value="${user.value}">
+                <input type="checkbox"
+                       class="sci-checkbox user-selector"
+                       ${user.params.designated ? 'checked' : ''}
+                       value="${user.value}"
+                       data-assign-url="${user.params.assign_url}"
+                       data-unassign-url="${user.params.unassign_url}"
+                >
                 <span class="sci-checkbox-label"></span>
               </div>
               <div class="user-avatar">
@@ -146,6 +152,53 @@ var ExperimnetTable = {
           `).appendTo(usersList);
         });
       });
+    });
+    $(this.table).on('click', '.dropdown-menu', (e) => {
+      if (e.target.tagName === 'INPUT') return;
+      e.preventDefault();
+      e.stopPropagation();
+    });
+    $(this.table).on('change keyup', '.assign-users-dropdown .user-search', (e) => {
+      let query = e.target.value;
+      let usersList = $(e.target).closest('.dropdown-menu').find('.user-container');
+      $.each(usersList, (_i, user) => {
+        $(user).removeClass('hidden');
+        if (query.length && !$(user).find('.user-name').text().toLowerCase()
+          .includes(query.toLowerCase())) {
+          $(user).addClass('hidden');
+        }
+      });
+    });
+    $(this.table).on('change', '.assign-users-dropdown .user-selector', (e) => {
+      let checkbox = e.target;
+      if (checkbox.checked) {
+        $.post(checkbox.dataset.assignUrl, {
+          table: true,
+          user_my_module: {
+            my_module_id: $(checkbox).closest('.table-row').data('id'),
+            user_id: checkbox.value
+          }
+        }, (result) => {
+          checkbox.dataset.unassignUrl = result.unassign_url;
+          $(checkbox).closest('.table-row').find('.assigned-users-container')
+            .replaceWith($(result.html).find('.assigned-users-container'));
+        }).error((data) => {
+          HelperModule.flashAlertMsg(data.responseJSON.errors, 'danger');
+        });
+      } else {
+        $.ajax({
+          url: checkbox.dataset.unassignUrl,
+          method: 'DELETE',
+          data: { table: true },
+          success: (result) => {
+            $(checkbox).closest('.table-row').find('.assigned-users-container')
+              .replaceWith($(result.html).find('.assigned-users-container'));
+          },
+          error: (data) => {
+            HelperModule.flashAlertMsg(data.responseJSON.errors, 'danger');
+          }
+        });
+      }
     });
   },
   checkActionPermission: function(permission) {
@@ -358,49 +411,7 @@ ExperimnetTable.render.status = function(data) {
 };
 
 ExperimnetTable.render.assigned = function(data) {
-  let users = '';
-
-  $.each(data.users, (i, user) => {
-    users += `
-      <span class="avatar-container" style="z-index: ${5 - i}">
-        <img src=${user.image_url} title=${user.title}>
-      </span>
-    `;
-  });
-
-  if (data.count > 4) {
-    users += `
-    <span class="more-users avatar-container" title="${data.more_users_title}">
-        +${data.count - 4}
-    </span>
-    `;
-  }
-
-  if (data.create_url) {
-    users += `
-      <span class="new-user avatar-container">
-        <i class="fas fa-plus"></i>
-      </span>
-    `;
-  }
-
-  return `
-    <div ref="dropdown"
-         class="assign-users-dropdown dropdown"
-    >
-      <div class="assigned-users-container" data-toggle="dropdown" >
-        ${users}
-      </div>
-      <div class="dropdown-menu dropdown-menu-right">
-        <div class="sci-input-container left-icon">
-          <input type="text" class="sci-input-field" placeholder="${I18n.t('experiments.table.search')}"></input>
-          <i class="fas fa-search"></i>
-        </div>
-        <div class="users-list" data-list-url="${data.list_url}">
-        </div>
-      </div>
-    </div>
-  `;
+  return data.html;
 };
 
 ExperimnetTable.render.tags = function(data) {
