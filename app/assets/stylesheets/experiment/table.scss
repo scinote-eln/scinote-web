@@ -365,8 +365,9 @@
       left: 0;
       position: absolute;
       top: 0;
+      width: 100%;
 
-      .calendarDueDate {
+      .calendar-due-date {
         opacity: 0;
       }
     }

@@ -72,10 +72,10 @@ var ExperimnetTable = {
           dataType: 'json',
           data: { my_module: { due_date: $(element).val() } },
           success: function(result) {
-            dueDateContainer.find('#dueDateLabelContainer').html(result.tabel_due_date_label.html);
-            dateText.data('due-status', result.tabel_due_date_label.due_status);
+            dueDateContainer.find('#dueDateLabelContainer').html(result.table_due_date_label.html);
+            dateText.data('due-status', result.table_due_date_label.due_status);
 
-            if ($(result.tabel_due_date_label.html).data('due-date')) {
+            if ($(result.table_due_date_label.html).data('due-date')) {
               clearDate.addClass('open');
             }
           }

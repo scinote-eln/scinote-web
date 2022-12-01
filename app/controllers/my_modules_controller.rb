@@ -227,11 +227,9 @@ class MyModulesController < ApplicationController
               partial: 'my_modules/card_due_date_label.html.erb',
               locals: { my_module: @my_module }
             ),
-            tabel_due_date_label: {
+            table_due_date_label: {
               html: render_to_string(partial: 'experiments/table_due_date_label.html.erb',
-                                     locals: { my_module: @my_module,
-                                               due_date_editable: can_update_my_module_due_date?(@my_module),
-                                               alert_color: get_task_alert_color(@my_module) }),
+                                     locals: { my_module: @my_module, user: current_user }),
               due_status: my_module_due_status(@my_module)
             },
             module_header_due_date: render_to_string(
