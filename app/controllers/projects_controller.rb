@@ -287,9 +287,6 @@ class ProjectsController < ApplicationController
   end
 
   def show
-    # This is the "info" view
-    current_team_switch(@project.team)
-
     view_state = @project.current_view_state(current_user)
     @current_sort = view_state.state.dig('experiments', experiments_view_mode(@project), 'sort') || 'atoz'
     @current_view_type = view_state.state.dig('experiments', 'view_type')
@@ -386,6 +383,7 @@ class ProjectsController < ApplicationController
   end
 
   def check_view_permissions
+    current_team_switch(@project.team) if current_team != @project.team
     render_403 unless can_read_project?(@project)
   end
 

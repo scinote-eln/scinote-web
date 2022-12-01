@@ -3,6 +3,7 @@
 module StepElements
   class ChecklistItemsController < ApplicationController
     include ApplicationHelper
+    include StepsActions
 
     before_action :load_vars
     before_action :load_checklist_item, only: %i(update toggle destroy)
@@ -21,6 +22,7 @@ module StepElements
             checklist_name: @checklist.name
           }
         )
+        checklist_item_annotation(@step, checklist_item)
       end
 
       render json: checklist_item, serializer: ChecklistItemSerializer, user: current_user
@@ -31,6 +33,7 @@ module StepElements
     end
 
     def update
+      old_text = @checklist_item.text
       @checklist_item.assign_attributes(
         checklist_item_params.merge(last_modified_by: current_user)
       )
@@ -41,6 +44,7 @@ module StepElements
           checklist_item: @checklist_item.text,
           checklist_name: @checklist.name
         )
+        checklist_item_annotation(@step, @checklist_item, old_text)
       end
 
       render json: @checklist_item, serializer: ChecklistItemSerializer, user: current_user
@@ -128,6 +132,8 @@ module StepElements
     def load_vars
       @step = Step.find_by(id: params[:step_id])
       return render_404 unless @step
+
+      @protocol = @step.protocol
 
       @checklist = @step.checklists.find_by(id: params[:checklist_id])
       return render_404 unless @checklist

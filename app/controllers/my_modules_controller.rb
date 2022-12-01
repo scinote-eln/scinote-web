@@ -276,12 +276,14 @@ class MyModulesController < ApplicationController
 
   def update_protocol
     protocol = @my_module.protocol
+    old_description = protocol.description
 
     ActiveRecord::Base.transaction do
       protocol.update!(protocol_params)
       log_activity(:protocol_name_in_task_edited) if protocol.saved_change_to_name?
       log_activity(:protocol_description_in_task_edited) if protocol.saved_change_to_description?
       TinyMceAsset.update_images(protocol, params[:tiny_mce_images], current_user)
+      protocol_annotation_notification(old_description)
     end
 
     render json: protocol, serializer: ProtocolSerializer, user: current_user
