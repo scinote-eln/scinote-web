@@ -34,10 +34,18 @@ class MyModulesController < ApplicationController
     y = max_xy ? (max_xy.y + 10) : 1
     @my_module = @experiment.my_modules.new(my_module_params)
     @my_module.assign_attributes(created_by: current_user, last_modified_by: current_user, x: x, y: y)
-    if @my_module.save
+    @my_module.transaction do
+      if my_module_tags_params[:tag_ids].present?
+        @my_module.tags << @experiment.project.tags.where(id: my_module_tags_params[:tag_ids])
+      end
+      if my_module_designated_users_params[:user_ids].present?
+        @my_module.designated_users << @experiment.users.where(id: my_module_designated_users_params[:user_ids])
+      end
+      @my_module.save!
       redirect_to canvas_experiment_path(@experiment) if params[:my_module][:view_mode] == 'canvas'
-    else
+    rescue ActiveRecord::RecordInvalid
       render json: @my_module.errors, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
     end
   end
 
@@ -470,6 +478,14 @@ class MyModulesController < ApplicationController
     end
 
     permitted_params
+  end
+
+  def my_module_tags_params
+    params.require(:my_module).permit(tag_ids: [])
+  end
+
+  def my_module_designated_users_params
+    params.require(:my_module).permit(user_ids: [])
   end
 
   def protocol_params

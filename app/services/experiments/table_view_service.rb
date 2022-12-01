@@ -136,25 +136,10 @@ module Experiments
     end
 
     def assigned_presenter(my_module)
-      users = my_module.designated_users
-      result = {
-        count: users.length,
-        users: []
-      }
-      users[0..3].each do |user|
-        result[:users].push({
-                              image_url: avatar_path(user, :icon_small),
-                              title: user.full_name
-                            })
-      end
-
-      result[:more_users_title] = user_names_with_roles(users[4..].to_a) if users.length > 3
-
-      if can_manage_my_module_users?(@user, my_module)
-        result[:manage_url] = index_old_my_module_user_my_modules_url(my_module_id: my_module.id, format: :json)
-      end
-
-      result
+      { html: ApplicationController.renderer.render(
+        partial: 'experiments/assigned_users.html.erb',
+        locals: { my_module: my_module, user: @user }
+      ) }
     end
 
     def tags_presenter(my_module)
@@ -183,6 +168,14 @@ module Experiments
 
     def due_date_to_filter(my_modules, value)
       my_modules.where('my_modules.due_date <= ?', value)
+    end
+
+    def archived_on_from_filter(my_modules, value)
+      my_modules.where('my_modules.archived_on >= ?', value)
+    end
+
+    def archived_on_to_filter(my_modules, value)
+      my_modules.where('my_modules.archived_on <= ?', value)
     end
 
     def assigned_users_filter(my_modules, value)

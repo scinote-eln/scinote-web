@@ -233,8 +233,6 @@ class Experiment < ApplicationRecord
     project
   end
 
-  private
-
   # Archive all modules. Receives an array of module integer IDs
   # and current user.
   def archive_modules(module_ids, current_user)
@@ -524,6 +522,8 @@ class Experiment < ApplicationRecord
     my_module_groups.reload
     true
   end
+
+  private
 
   def log_activity(type_of, current_user, my_module)
     Activities::CreateActivityService
