@@ -17,7 +17,7 @@
   <%= render partial: 'projects/index/modals/export_projects' %>
 
   <div class="projects-container">
-    <div class="cards-wrapper last-page <%= cards_view_type_class(@current_view_type) %>"
+    <div class="cards-wrapper <%= cards_view_type_class(@current_view_type) %>"
          id="cardsWrapper"
          data-projects-cards-url="<%= @current_folder ? project_folder_cards_url(@current_folder) : cards_projects_url %>">
       <div class="table-header">
