@@ -1127,7 +1127,7 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
 
   module.find(".panel-title").html(name);
 
-  module.find(".ep").html($("#drag-connections-placeholder").text().trim());
+  module.find(".ep").html($("#drag-connections-placeholder").html());
 
   // Add dropdown
   var dropdown = document.createElement("div");

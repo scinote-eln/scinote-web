@@ -1316,6 +1316,7 @@ en:
         create: "Add"
         create_new: "New"
       edit:
+        id: "ID:"
         new_module: "New task"
         new_module_hover: "Drag me onto canvas"
         save: "Save workflow"
@@ -1323,6 +1324,7 @@ en:
         cancel: "Cancel"
         unsaved_work: "Are you sure you want to leave this page? All unsaved data will be lost."
         drag_connections: "Drag connection/s from here"
+        no_module_id: "to be assigned after saving"
         options_header: "Options"
         edit_module: "Rename task"
         task_access: "Task access"

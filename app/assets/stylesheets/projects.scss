@@ -192,12 +192,24 @@ path, ._jsPlumb_endpoint {
       left: 0;
     }
   }
+
   .panel-body {
     height: 90px;
   }
 
   .ep {
     font-style: italic;
+
+    .task-card-code {
+      color: $color-volcano;
+      font-style: normal;
+      font-weight: 400;
+      margin-bottom: 4px;
+
+      .new-my-module-canvas {
+        color: $color-silver-chalice;
+      }
+    }
   }
 
   .dropdown {
