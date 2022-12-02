@@ -487,6 +487,11 @@
     .fas {
       cursor: pointer;
       margin-right: 1em;
+
+      &.disabled {
+        color: $color-alto;
+        pointer-events: none;
+      }
     }
 
     &.task_name {
