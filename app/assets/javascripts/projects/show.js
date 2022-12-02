@@ -55,11 +55,7 @@
   function initProjectsViewModeSwitch() {
     $(experimentsPage)
       .on('ajax:success', '.change-experiments-view-type-form', function(ev, data) {
-        if (data.cards_view_type_class === 'list') {
-          $(cardsWrapper).removeClass('cards').addClass(data.cards_view_type_class);
-        } else if (data.cards_view_type_class === 'cards') {
-          $(cardsWrapper).removeClass('list').addClass(data.cards_view_type_class);
-        }
+        $(cardsWrapper).removeClass('list cards').addClass(data.cards_view_type_class);
         $(experimentsPage).find('.cards-switch .button-to').removeClass('selected');
         $(ev.target).find('.button-to').addClass('selected');
         $(ev.target).parents('.dropdown.view-switch').removeClass('open');
