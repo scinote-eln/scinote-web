@@ -2,7 +2,7 @@
 
 module StepElements
   class ChecklistsController < BaseController
-    before_action :load_checklist, only: %i(update destroy)
+    before_action :load_checklist, only: %i(update destroy duplicate)
 
     def create
       checklist = @step.checklists.build(
@@ -35,6 +35,20 @@ module StepElements
       else
         head :unprocessable_entity
       end
+    end
+
+    def duplicate
+      ActiveRecord::Base.transaction do
+        position = @checklist.step_orderable_element.position
+        @step.step_orderable_elements.where('position > ?', position).order(position: :desc).each do |element|
+          element.update(position: element.position + 1)
+        end
+        new_checklist = @checklist.duplicate(@step, current_user, position + 1)
+        log_step_activity(:checklist_duplicated, { checklist_name: @checklist.name })
+        render_step_orderable_element(new_checklist)
+      end
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
     end
 
     private

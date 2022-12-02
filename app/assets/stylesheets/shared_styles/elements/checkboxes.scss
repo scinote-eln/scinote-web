@@ -28,6 +28,8 @@ input[type="checkbox"].sci-checkbox {
     height: var(--sci-checkbox-size);
     margin-left: calc(var(--sci-checkbox-size) * -1);
     position: absolute;
+    right: 0;
+    top: 0;
     width: var(--sci-checkbox-size);
 
     &::before {

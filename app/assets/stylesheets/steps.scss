@@ -10,28 +10,6 @@
 @import "constants";
 @import "mixins";
 
-#new_step,
-.panel-step-attachment {
-  ul {
-    list-style: none;
-
-    li {
-      > div > span.pull-left {
-        margin-top: 10px;
-      }
-    }
-  }
-
-  .checklist-name-container,
-  .table-name-container {
-    align-items: center;
-    display: flex;
-
-    .remove-container {
-      padding-top: 10px;
-    }
-  }
-}
 
 #steps {
   // hack only for firefox

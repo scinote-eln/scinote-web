@@ -19,6 +19,10 @@ class RepositoryStatusValue < ApplicationRecord
     data
   end
 
+  def formatted_status
+    repository_status_item&.status
+  end
+
   def self.add_filter_condition(repository_rows, join_alias, filter_element)
     repository_rows
       .joins(

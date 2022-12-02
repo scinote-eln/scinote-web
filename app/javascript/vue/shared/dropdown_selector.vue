@@ -8,9 +8,23 @@
             :data-placeholder="placeholder"
             :data-view-mode="viewMode"
     >
-      <optgroup v-if="groupSelector" v-for="group in this.options" :label="group.label">
-        <option v-for="option in group.options"
-          :key="option.label"
+      <template v-if="groupSelector">
+        <optgroup v-for="group in this.options" :label="group.label" :key="group.label">
+          <option v-for="option in group.options"
+            :key="option.value"
+            :value="option.value"
+            :selected="option.value == selectedValue || (Array.isArray(selectedValue) && selectedValue.some(e => e == option.value))"
+            :data-selected="option.value == selectedValue || (Array.isArray(selectedValue) && selectedValue.some(e => e == option.value))"
+            :data-params="JSON.stringify(option.params)"
+            :data-group="group.label">
+            {{ option.label }}
+          </option>
+        </optgroup>
+      </template>
+      <template v-else>
+        <option
+          v-for="option in this.options"
+          :key="option.value"
           :value="option.value"
           :selected="option.value == selectedValue || (Array.isArray(selectedValue) && selectedValue.some(e => e == option.value))"
           :data-selected="option.value == selectedValue || (Array.isArray(selectedValue) && selectedValue.some(e => e == option.value))"
@@ -69,6 +83,13 @@
         type: Boolean,
         default: false
       },
+      labelHTML: {
+        type: Boolean,
+        default: false
+      },
+      tagLabel: {
+        type: Function
+      },
       optionClass: {
         type: String,
         default: ''
@@ -86,6 +107,9 @@
         default: ''
       },
       optionLabel: {
+        type: Function
+      },
+      onOpen: {
         type: Function
       },
       inputTagMode: {
@@ -109,6 +133,9 @@
         closeOnSelect: this.closeOnSelect,
         selectAppearance: this.selectAppearance,
         disableSearch: this.disableSearch,
+        tagLabel: this.tagLabel,
+        labelHTML: this.labelHTML,
+        onOpen: this.onOpen,
         onChange: () => {
           if (this.onChange) this.onChange();
           this.selectChanged(dropdownSelector.getValues(`#${this.selectorId}`))
@@ -121,6 +148,9 @@
           'dropdown:changed',
           value
         );
+      },
+      selectValues(value) {
+        dropdownSelector.selectValues(`#${this.selectorId}`, value);
       }
     }
   }

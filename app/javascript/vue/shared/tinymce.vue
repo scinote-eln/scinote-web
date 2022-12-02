@@ -120,6 +120,7 @@
         let textArea = `#${this.objectType}_textarea_${this.objectId}`;
 
         if (this.active) return
+        if (e && $(e.target).prop("tagName") === 'A') return
         if (e && $(e.target).hasClass('atwho-user-popover')) return
         if (e && $(e.target).hasClass('record-info-link')) return
         if (e && $(e.target).parent().hasClass('atwho-inserted')) return

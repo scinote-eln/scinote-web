@@ -12,6 +12,12 @@ module UserAssignments
           assign_users_to_experiment(object)
         when MyModule
           assign_users_to_my_module(object)
+        when Repository
+          assign_users_to_repository(object)
+        when Protocol
+          assign_users_to_protocol(object)
+        when Report
+          assign_users_to_report(object)
         end
       end
     end
@@ -29,6 +35,26 @@ module UserAssignments
       experiment = my_module.experiment
       experiment.user_assignments.find_each do |user_assignment|
         create_or_update_user_assignment(user_assignment, my_module)
+      end
+    end
+
+    def assign_users_to_repository(repository)
+      team = repository.team
+      team.user_assignments.find_each do |user_assignment|
+        create_or_update_user_assignment(user_assignment, repository)
+      end
+    end
+
+    def assign_users_to_protocol(protocol)
+      return unless protocol.in_repository_public?
+
+      protocol.add_team_users_as_viewers!(@assigned_by)
+    end
+
+    def assign_users_to_report(report)
+      team = report.team
+      team.user_assignments.find_each do |user_assignment|
+        create_or_update_user_assignment(user_assignment, report)
       end
     end
 

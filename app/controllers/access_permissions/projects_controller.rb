@@ -83,7 +83,7 @@ module AccessPermissions
 
     def update_default_public_user_role
       @project.update!(permitted_default_public_user_role_params)
-      UserAssignments::GroupAssignmentJob.perform_later(current_team, @project, current_user)
+      UserAssignments::ProjectGroupAssignmentJob.perform_later(current_team, @project, current_user)
     end
 
     private

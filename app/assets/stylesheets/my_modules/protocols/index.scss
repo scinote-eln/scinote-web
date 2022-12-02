@@ -91,6 +91,9 @@
         }
 
         .repositories-dropdown-menu {
+          max-height: 250px;
+          overflow: auto;
+          
           .repository {
             @include font-button;
             cursor: pointer;
@@ -129,16 +132,6 @@
         }
       }
     }
-  }
-}
-
-.complete-button-container {
-  display: inline;
-  float: right;
-  width: 260px;
-
-  .my_module-state-buttons {
-    padding-top: 0;
   }
 }
 

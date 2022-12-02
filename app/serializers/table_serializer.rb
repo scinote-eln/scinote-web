@@ -22,6 +22,7 @@ class TableSerializer < ActiveModel::Serializer
     return {} unless can_manage_step?(scope[:user] || @instance_options[:user], object.step)
 
     {
+      duplicate_url: duplicate_step_table_path(object.step, object),
       delete_url: step_table_path(object.step, object),
       update_url: step_table_path(object.step, object)
     }

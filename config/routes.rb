@@ -45,9 +45,27 @@ Rails.application.routes.draw do
         to: 'users/settings/account/addons#index',
         as: 'addons'
 
+    resources :label_templates, only: %i(index show update create) do
+      member do
+        post :set_default
+      end
+      collection do
+        post :duplicate
+        post :delete
+        get :datatable
+        get :template_tags
+        get :zpl_preview
+        post :sync_fluics_templates
+      end
+    end
+
     resources :label_printers, except: :show, path: 'users/settings/account/addons/label_printers' do
       post :create_fluics, on: :collection
     end
+
+    get 'users/settings/account/addons/label_printers/settings_zebra',
+        to: 'label_printers#index_zebra',
+        as: 'zebra_settings'
 
     resources :label_printers, only: [] do
       post :print, on: :member
@@ -450,16 +468,27 @@ Rails.application.routes.draw do
       get 'users/edit', to: 'user_my_modules#index_edit'
     end
 
-    resources :steps, only: %i(index edit update destroy show) do
+    resources :steps, only: %i(index update destroy show) do
       resources :step_orderable_elements do
         post :reorder, on: :collection
       end
       resources :step_comments,
                 path: '/comments',
                 only: %i(create index update destroy)
-      resources :tables, controller: 'step_elements/tables', only: %i(create destroy update)
-      resources :texts, controller: 'step_elements/texts', only: %i(create destroy update)
+      resources :tables, controller: 'step_elements/tables', only: %i(create destroy update) do
+        member do
+          post :duplicate
+        end
+      end
+      resources :texts, controller: 'step_elements/texts', only: %i(create destroy update) do
+        member do
+          post :duplicate
+        end
+      end
       resources :checklists, controller: 'step_elements/checklists', only: %i(create destroy update) do
+        member do
+          post :duplicate
+        end
         resources :checklist_items, controller: 'step_elements/checklist_items', only: %i(create update destroy) do
           patch :toggle, on: :member
           post :reorder, on: :collection
@@ -469,12 +498,10 @@ Rails.application.routes.draw do
         get 'elements'
         get 'attachments'
         post 'upload_attachment'
-        post 'checklistitem_state'
         post 'toggle_step_state'
-        put 'move_down'
-        put 'move_up'
         post 'update_view_state'
         post 'update_asset_view_mode'
+        post 'duplicate'
       end
     end
 
@@ -516,7 +543,7 @@ Rails.application.routes.draw do
       as: :result_table_download
 
     resources :protocols, only: %i(index show edit create update) do
-      resources :steps, only: [:new, :create] do
+      resources :steps, only: [:create] do
         post :reorder, on: :collection
       end
       member do
@@ -571,6 +598,15 @@ Rails.application.routes.draw do
 
     resources :comments, only: %i(index create update destroy)
 
+    resources :repository_rows, only: %i() do
+      member do
+        get :rows_to_print
+        post :print
+        get :print_zpl
+        post :validate_label_template_columns
+      end
+    end
+
     resources :repositories do
       post 'repository_index',
            to: 'repository_rows#index',
@@ -622,10 +658,6 @@ Rails.application.routes.draw do
       end
       resources :repository_table_filters, only: %i(index show create update destroy)
       resources :repository_rows, only: %i(create show update) do
-        collection do
-          get :print_modal
-          post :print
-        end
         member do
           get :assigned_task_list
           get :active_reminder_repository_cells
@@ -707,6 +739,8 @@ Rails.application.routes.draw do
       get 'users/sign_up_provider' => 'users/registrations#new_with_provider'
       get 'users/two_factor_recovery' => 'users/sessions#two_factor_recovery'
       get 'users/two_factor_auth' => 'users/sessions#two_factor_auth'
+      get 'users/expire_in' => 'users/sessions#expire_in'
+      post 'users/revive_session' => 'users/sessions#revive_session'
       post 'users/authenticate_with_two_factor' => 'users/sessions#authenticate_with_two_factor'
       post 'users/authenticate_with_recovery_code' => 'users/sessions#authenticate_with_recovery_code'
       post 'users/complete_sign_up_provider' => 'users/registrations#create_with_provider'

@@ -1,0 +1,40 @@
+// scss-lint:disable SelectorDepth NestingDepth
+
+.bootstrap-datetimepicker-widget {
+  .glyphicon-calendar {
+    margin: 0;
+  }
+
+  .timepicker-picker {
+    padding: 0 60px;
+
+    td {
+      height: initial;
+      line-height: initial;
+
+      a {
+        padding: 0;
+      }
+
+      .timepicker-hour,
+      .timepicker-minute {
+        height: initial;
+        line-height: initial;
+        padding: 6px 0;
+      }
+    }
+
+    .glyphicon-chevron-up,
+    .glyphicon-chevron-down {
+      align-items: center;
+      display: flex;
+      height: 100%;
+      justify-content: center;
+      line-height: 1;
+    }
+
+    .separator {
+      width: 10px;
+    }
+  }
+}

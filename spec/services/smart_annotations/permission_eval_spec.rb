@@ -6,9 +6,10 @@ describe SmartAnnotations::PermissionEval do
   let(:subject) { described_class }
   let(:user) { create :user }
   let(:another_user) { create :user }
-  let(:team) { create :team }
+  let(:team) { create :team, created_by: user }
   let(:another_team) { create :team }
-  let!(:user_team) { create :user_team, user: user, team: team, role: :admin }
+  let!(:owner_role) { UserRole.find_by(name: I18n.t('user_roles.predefined.owner')) }
+  let!(:team_assignment) { create_user_assignment(team, owner_role, user) }
   let(:project) { create :project, name: 'my project', team: team }
   let!(:user_project) { create :user_project, project: project, user: user }
   let!(:user_assignment) do
@@ -98,7 +99,7 @@ describe SmartAnnotations::PermissionEval do
     context 'when user can access repository from another team, but not with the current' do
       it do
         # Add anoteher user also as a member of team whos owes repository with this item
-        create :user_team, team: team, user: another_user, role: :admin
+        create_user_assignment(team, owner_role, another_user)
 
         value = subject.__send__(:validate_rep_item_permissions, another_user, another_team, repository_item)
         expect(value).to be false

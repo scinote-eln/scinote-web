@@ -22,6 +22,9 @@
         <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="enableNameEdit" tabindex="-1">
           <i class="fas fa-pen"></i>
         </button>
+        <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light" tabindex="-1" @click="duplicateElement">
+          <i class="fas fa-clone"></i>
+        </button>
         <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
           <i class="fas fa-trash"></i>
         </button>
@@ -57,6 +60,7 @@
 
  <script>
   import DeleteMixin from 'vue/protocol/mixins/components/delete.js'
+  import DuplicateMixin from 'vue/protocol/mixins/components/duplicate.js'
   import deleteElementModal from 'vue/protocol/modals/delete_element.vue'
   import InlineEdit from 'vue/shared/inline_edit.vue'
   import TableNameModal from 'vue/protocol/modals/table_name_modal.vue'
@@ -64,7 +68,7 @@
   export default {
     name: 'StepTable',
     components: { deleteElementModal, InlineEdit, TableNameModal },
-    mixins: [DeleteMixin],
+    mixins: [DeleteMixin, DuplicateMixin],
     props: {
       element: {
         type: Object,
@@ -172,6 +176,7 @@
           colHeaders: true,
           contextMenu: this.editingTable,
           formulas: true,
+          preventOverflow: 'horizontal',
           readOnly: !this.editingTable,
           afterUnlisten: () => setTimeout(this.updateTable, 100) // delay makes cancel button work
         });

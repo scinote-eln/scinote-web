@@ -1,0 +1,81 @@
+<ul>
+  <li class="zebra-settings-collapse">
+    <div class="collapse-row">
+      <i class="fas fa-caret-down collapsed" data-toggle="collapse" href="#zebraInstructionsSection" aria-expanded="false"></i>
+      <div class="row-title"><%= t("users.settings.account.label_printer.instructions") %></div>
+    </div>
+    <ul class="collapse" id="zebraInstructionsSection">
+      <li>
+        <%= t("users.settings.account.label_printer.zebra_instruction.general_html", link: Constants::SCINOTE_ZEBRA_DOWNLOAD_URL) %>
+      </li>
+      <h3><%= t("users.settings.account.label_printer.zebra_instruction.usb.header") %></h3>
+      <ol>
+        <li>
+          <%= t("users.settings.account.label_printer.zebra_instruction.usb.p1") %>
+        </li>
+        <li>
+          <%= t("users.settings.account.label_printer.zebra_instruction.usb.p2_html", link: Constants::SCINOTE_ZEBRA_DOWNLOAD_URL) %>
+        </li>
+        <li>
+          <%= t("users.settings.account.label_printer.zebra_instruction.usb.p3") %>
+        </li>
+        <li>
+          <%= t("users.settings.account.label_printer.zebra_instruction.usb.p4") %>
+        </li>
+        <li>
+          <%= t("users.settings.account.label_printer.zebra_instruction.usb.p5") %>
+        </li>
+      </ol>
+      <h3><%= t("users.settings.account.label_printer.zebra_instruction.network.header") %></h3>
+      <li>
+        <%= t("users.settings.account.label_printer.zebra_instruction.network.disclaimer") %>
+      </li>
+      <ol>
+        <li>
+          <%= t("users.settings.account.label_printer.zebra_instruction.network.p1") %>
+        </li>
+        <li>
+          <%= t("users.settings.account.label_printer.zebra_instruction.network.p2") %>
+        </li>
+        <li>
+          <%= t("users.settings.account.label_printer.zebra_instruction.network.p3_html", link: Constants::SCINOTE_ZEBRA_DOWNLOAD_URL) %>
+        </li>
+        <li>
+          <%= t("users.settings.account.label_printer.zebra_instruction.network.p4") %>
+        </li>
+        <li>
+          <%= t("users.settings.account.label_printer.zebra_instruction.network.p5") %>
+        </li>
+        <li>
+          <%= t("users.settings.account.label_printer.zebra_instruction.network.p6") %>
+        </li>
+        <li>
+          <%= t("users.settings.account.label_printer.zebra_instruction.network.p7") %>
+        </li>
+        <li>
+          <%= t("users.settings.account.label_printer.zebra_instruction.network.p8") %>
+        </li>
+      </ol>
+      <li>
+        <%= t("users.settings.account.label_printer.zebra_instruction.contact_html", {link_blog: Constants::SCINOTE_ZEBRA_BLOG_URL, link_zebra_support: Constants::SCINOTE_ZEBRA_SUPPORT_URL}) %>
+      </li>
+    </ul>
+  </li>
+
+  <li class="zebra-settings-collapse">
+    <div class="collapse-row">
+      <i class="fas fa-caret-down" data-toggle="collapse" href="#PrintersSection" aria-expanded="false"></i>
+      <div class="row-title">Printers</div>
+        <div class="update-printers">
+          <%= button_tag type: 'submit', class: "btn btn-light zebra-printer-refresh" do %>
+            <i class="fas fa-sync"></i>
+            <%= t("users.settings.account.label_printer.update_printers") %>
+          <% end %>
+        </div>
+    </div>
+    <ul class="collapse in zebra-printers" id="PrintersSection"></ul>
+  </li>
+</ul>
+
+<%= render partial: 'label_printers/zebra_printer_library' %>
+<%= javascript_include_tag "label_printers/zebra_settings" %>

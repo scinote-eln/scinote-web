@@ -241,7 +241,7 @@ module Dashboard
       when 'Project'
         project_path(object_id)
       when 'Protocol'
-        edit_protocol_path(object_id)
+        protocol_path(object_id)
       when 'RepositoryBase'
         repository_path(object_id)
       when 'Report'

@@ -202,7 +202,7 @@ class ExperimentsController < ApplicationController
 
   # GET: clone_modal_experiment_path(id)
   def clone_modal
-    @projects = @experiment.project.team.projects
+    @projects = @experiment.project.team.projects.active
                            .with_user_permission(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
     respond_to do |format|
       format.json do
@@ -342,6 +342,7 @@ class ExperimentsController < ApplicationController
   end
 
   def check_read_permissions
+    current_team_switch(@experiment.project.team) if current_team != @experiment.project.team
     render_403 unless can_read_experiment?(@experiment) ||
                       @experiment.archived? && can_read_archived_experiment?(@experiment)
   end

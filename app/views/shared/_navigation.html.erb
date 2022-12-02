@@ -5,19 +5,20 @@
       <!-- This was <nav> -->
       <div class="nav main-nav">
         <div class="nav__inner"></div>
-      <!-- This was <nav> -->
       </div>
+      <!-- This was <nav> -->
     </div>
 
     <div class="row custom-pl-2">
+
       <!-- header -->
       <div class="navbar-header">
         <% if user_signed_in? %>
-          <button type="button" class="navbar-toggle collapsed white-text" data-toggle="collapse" data-target="#main-menu" aria-expanded="false">
-            <span class="sr-only white-text">Toggle navigation</span>
-            <span class="icon-bar white-text"></span>
-            <span class="icon-bar white-text"></span>
-            <span class="icon-bar white-text"></span>
+        <button type="button" class="navbar-toggle collapsed white-text" data-toggle="collapse" data-target="#main-menu" aria-expanded="false">
+          <span class="sr-only white-text">Toggle navigation</span>
+          <span class="icon-bar white-text"></span>
+          <span class="icon-bar white-text"></span>
+          <span class="icon-bar white-text"></span>
           </button>
         <% end %>
         <%= link_to(root_path, class: 'navbar-brand', title: t('nav.label.scinote')) do %>
@@ -25,8 +26,7 @@
           <span class="visible-lg-block"><%= image_tag('/images/scinote_icon.svg', id: 'logo') %></span>
         <% end %>
         <%= yield :open_mobile_app_button %>
-
-    </div>
+      </div>
 
       <% if user_signed_in? %>
       <div class="collapse navbar-collapse" id="main-menu">
@@ -90,8 +90,7 @@
                         <li class="team-name-item">
                           <a href="#"
                             data-id="<%= team.id %>"
-                            class="text-center change-team"
-                            data-turbolinks="false">
+                            class="text-center change-team">
                             <% if current_team == team %>
                               <span class="fas fa-check-circle"></span> <strong><%= team.name %></strong>
                             <% else %>
@@ -131,7 +130,7 @@
                         name="q"
                         placeholder="<%= t('nav.search') %>" />
                   <span class="input-group-btn">
-                    <button class="btn btn-default" type="submit"><%= t 'nav.search_button' %></button>
+                    <button class="btn btn-default" id="navigationGoBtn" type="submit"><%= t 'nav.search_button' %></button>
                   </span>
                 </div>
             <% end %>

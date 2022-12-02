@@ -6,7 +6,7 @@ module Reports::Docx::DrawMyModule
     link_style = @link_style
     scinote_url = @scinote_url
     my_module = subject.my_module
-    tags = my_module.tags
+    tags = my_module.tags.order(:id)
     return unless can_read_my_module?(@user, my_module)
 
     @docx.h3 do
@@ -48,10 +48,10 @@ module Reports::Docx::DrawMyModule
       end
     end
 
-    if tags.any?
+    if tags.present?
       @docx.p do
         text I18n.t('projects.reports.elements.module.tags_header')
-        my_module.tags.each do |tag|
+        tags.each do |tag|
           text ' '
           text "[#{tag.name}]", color: tag.color.delete('#')
         end
