@@ -15,7 +15,7 @@
       <%= t("experiments.table.toolbar.edit") %>
     </button>
     <% if can_manage_experiment?(@experiment) %>
-      <button id="duplicateTask" class="btn btn-light multiple-object-action hidden only-active">
+      <button id="duplicateTasks" class="btn btn-light multiple-object-action hidden only-active" data-url="<%= batch_clone_my_modules_experiment_path(@experiment) %>">
         <i class="fas fa-copy"></i>
         <%= t("experiments.table.toolbar.duplicate") %>
       </button>

@@ -5,6 +5,7 @@ class MyModulesController < ApplicationController
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
+  include MyModulesHelper
 
   before_action :load_vars, except: %i(restore_group)
   before_action :check_create_permissions, only: %i(new create)
@@ -34,10 +35,18 @@ class MyModulesController < ApplicationController
     y = max_xy ? (max_xy.y + 10) : 1
     @my_module = @experiment.my_modules.new(my_module_params)
     @my_module.assign_attributes(created_by: current_user, last_modified_by: current_user, x: x, y: y)
-    if @my_module.save
+    @my_module.transaction do
+      if my_module_tags_params[:tag_ids].present?
+        @my_module.tags << @experiment.project.tags.where(id: my_module_tags_params[:tag_ids])
+      end
+      if my_module_designated_users_params[:user_ids].present?
+        @my_module.designated_users << @experiment.users.where(id: my_module_designated_users_params[:user_ids])
+      end
+      @my_module.save!
       redirect_to canvas_experiment_path(@experiment) if params[:my_module][:view_mode] == 'canvas'
-    else
+    rescue ActiveRecord::RecordInvalid
       render json: @my_module.errors, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
     end
   end
 
@@ -218,6 +227,11 @@ class MyModulesController < ApplicationController
               partial: 'my_modules/card_due_date_label.html.erb',
               locals: { my_module: @my_module }
             ),
+            table_due_date_label: {
+              html: render_to_string(partial: 'experiments/table_due_date_label.html.erb',
+                                     locals: { my_module: @my_module, user: current_user }),
+              due_status: my_module_due_status(@my_module)
+            },
             module_header_due_date: render_to_string(
               partial: 'my_modules/module_header_due_date.html.erb',
               locals: { my_module: @my_module }
@@ -404,6 +418,10 @@ class MyModulesController < ApplicationController
     end
   end
 
+  def provisioning_status
+    render json: { provisioning_status: @my_module.provisioning_status }
+  end
+
   private
 
   def load_vars
@@ -471,6 +489,14 @@ class MyModulesController < ApplicationController
     end
 
     permitted_params
+  end
+
+  def my_module_tags_params
+    params.require(:my_module).permit(tag_ids: [])
+  end
+
+  def my_module_designated_users_params
+    params.require(:my_module).permit(user_ids: [])
   end
 
   def protocol_params

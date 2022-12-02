@@ -15,7 +15,7 @@
     dt.data('DateTimePicker').show();
   });
 
-  $(document).on('click', '[data-toggle="clear-date-time-picker"]', function() {
+  $(document).on('mousedown', '[data-toggle="clear-date-time-picker"]', function() {
     let dt = $(`#${$(this).data('target')}`);
     if (!dt.data('DateTimePicker')) dt.datetimepicker({ useCurrent: false });
     dt.data('DateTimePicker').clear();
