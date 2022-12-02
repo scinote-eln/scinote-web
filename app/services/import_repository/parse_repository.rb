@@ -1,15 +1,18 @@
+# frozen_string_literal: true
+
 module ImportRepository
   class ParseRepository
     include ActionView::Helpers::TextHelper
     def initialize(options)
       @file = options.fetch(:file)
+      @date_format = options[:date_format]
       @repository = options.fetch(:repository)
       @session = options.fetch(:session)
       @sheet = SpreadsheetParser.open_spreadsheet(@file)
     end
 
     def data
-      header, columns = SpreadsheetParser.first_two_rows(@sheet)
+      header, columns = SpreadsheetParser.first_two_rows(@sheet, date_format: @date_format)
       # Fill in fields for dropdown
       @repository.importable_repository_fields.transform_values! do |name|
         truncate(name, length: Constants::NAME_TRUNCATION_LENGTH_DROPDOWN)
