@@ -24,16 +24,6 @@
             <%= f.password_field :password, autocomplete: "off", class: "form-control sci-input-field", placeholder: t("devise.sessions.new.password_placeholder") %>
           </div>
 
-          <% if devise_mapping.rememberable? && !@simple_sign_in %>
-            <div class="field remember-me">
-              <div class="sci-checkbox-container">
-                <%= f.check_box :remember_me, class: "sci-checkbox" %>
-                <span class="sci-checkbox-label"></span>
-              </div>
-              <%= f.label :remember_me, t("devise.sessions.new.remember_me") %>
-            </div>
-          <% end %>
-
           <%= hidden_field_tag(:simple_sign_in, @simple_sign_in) %>
 
           <div class="actions" style="margin-top: 10px; margin-bottom: 10px;">
