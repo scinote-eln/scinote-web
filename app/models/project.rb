@@ -2,6 +2,7 @@
 
 class Project < ApplicationRecord
   ID_PREFIX = 'PR'
+  SEARCHABLE_ATTRIBUTES = ['projects.name', PREFIXED_ID_SQL].freeze
 
   include PrefixedIdModel
   include ArchivableModel
@@ -85,7 +86,7 @@ class Project < ApplicationRecord
   )
 
     new_query = Project.viewable_by_user(user, current_team || user.teams)
-                       .where_attributes_like('projects.name', query, options)
+                       .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
     new_query = new_query.active unless include_archived
 
     # Show all results if needed
