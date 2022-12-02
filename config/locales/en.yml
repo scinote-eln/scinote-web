@@ -1285,6 +1285,8 @@ en:
       success_flash: 'Successfully duplicated experiment %{experiment} as template.'
       error_flash: 'Could not duplicate the experiment as template.'
       current_project: '(current project)'
+    duplicate_tasks:
+      success: 'Successfully duplicated %{count} task(s) as template.'
     move:
       modal_title: 'Move experiment %{experiment}'
       notice: 'Moving is possible to projects, where you have permissions to create experiments and tasks.'
@@ -1308,6 +1310,12 @@ en:
         assigned_html: 'Assigned to'
         tags_html: 'Tags'
         comments_html: '<i class="fas fa-comment"></i>'
+      modal_move_modules:
+        title: "Move task(s) to experiment"
+        confirm: "Move"
+        no_experiments: "No experiments to move this task to."
+        success_flash: "Successfully moved task(s) to experiment %{experiment}."
+        error_flash: "Failed to move task(s) to experiment %{experiment}."
       column_display_modal:
         title: 'Task data display'
         description: 'Click the eye buttons to hide or show columns in the table'
@@ -3197,6 +3205,7 @@ en:
     create: 'Create'
     change: "Change"
     remove: "Remove"
+    clone_label: "Clone"
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"

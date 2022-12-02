@@ -413,6 +413,10 @@ class MyModulesController < ApplicationController
     end
   end
 
+  def provisioning_status
+    render json: { provisioning_status: @my_module.provisioning_status }
+  end
+
   private
 
   def load_vars

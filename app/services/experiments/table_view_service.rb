@@ -69,10 +69,13 @@ module Experiments
 
         result[my_module.id] = {
           columns: prepared_my_module,
+          provisioning_status: my_module.provisioning_status,
           urls: {
             permissions: permissions_my_module_path(my_module),
             actions_dropdown: actions_dropdown_my_module_path(my_module),
             name_update: my_module_path(my_module),
+            provisioning_status:
+              my_module.provisioning_status == 'in_progress' && provisioning_status_my_module_url(my_module),
             access: edit_access_permissions_project_experiment_my_module_path(project, experiment, my_module)
           }
         }
@@ -90,6 +93,7 @@ module Experiments
       {
         id: my_module.id,
         name: my_module.name,
+        provisioning_status: my_module.provisioning_status,
         url: protocols_my_module_path(my_module)
       }
     end
@@ -185,7 +189,7 @@ module Experiments
     end
 
     def statuses_filter(my_modules, value)
-      my_modules.where('my_module_status_id IN (?)', value)
+      my_modules.where(my_module_status_id: value)
     end
   end
 end
