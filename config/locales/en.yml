@@ -447,6 +447,7 @@ en:
       more_comments: "More Comments"
       card:
         start_date: "Start date"
+        id: "ID"
         visibility: "Visible to"
         users: "Members"
         name: "Project name"
@@ -1231,6 +1232,7 @@ en:
       restore_button: "Restore"
     card:
       name: "Experiment"
+      id: "ID"
       start_date: "Start date"
       modified_date: "Modified date"
       archived_date: "Archived date"

@@ -12,6 +12,9 @@ class Project < ApplicationRecord
   include PermissionCheckableModel
   include Assignable
 
+  ID_PREFIX = 'PR'
+  include PrefixedIdModel
+
   enum visibility: { hidden: 0, visible: 1 }
 
   auto_strip_attributes :name, nullify: false
