@@ -7,7 +7,10 @@ module Experiments
     include CommentHelper
     include ProjectsHelper
     include InputSanitizeHelper
+    include BootstrapFormHelper
+    include MyModulesHelper
     include Canaid::Helpers::PermissionsHelper
+    include Rails.application.routes.url_helpers
 
     COLUMNS = %i(
       task_name
@@ -102,11 +105,14 @@ module Experiments
     end
 
     def due_date_presenter(my_module)
-      if my_module.due_date
-        I18n.l(my_module.due_date, format: :full_date)
-      else
-        ''
-      end
+      {
+        id: my_module.id,
+        data: ApplicationController.renderer.render(
+          partial: 'experiments/table_due_date.html.erb',
+          locals: { my_module: my_module,
+                    user: @user }
+        )
+      }
     end
 
     def archived_presenter(my_module)

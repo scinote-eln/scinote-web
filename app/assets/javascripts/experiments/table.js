@@ -1,4 +1,4 @@
-/* global I18n GLOBAL_CONSTANTS InfiniteScroll filterDropdown dropdownSelector HelperModule */
+/* global I18n GLOBAL_CONSTANTS InfiniteScroll initBSTooltips filterDropdown dropdownSelector HelperModule */
 
 var ExperimnetTable = {
   permissions: ['editable', 'archivable', 'restorable', 'moveable'],
@@ -61,6 +61,44 @@ var ExperimnetTable = {
       let tableRowClass = `table-row ${data.provisioning_status === 'in_progress' ? 'table-row-provisioning' : ''}`;
       $(`<div class="${tableRowClass}" data-urls='${JSON.stringify(data.urls)}' data-id="${id}">${row}</div>`)
         .appendTo(`${this.table} .table-body`);
+    });
+  },
+  initDueDatePicker: function(data) {
+    // eslint-disable-next-line no-unused-vars
+    $.each(data, (id, _) => {
+      let element = `#calendarDueDate${id}`;
+      let dueDateContainer = $(element).closest('#dueDateContainer');
+      let dateText = $(element).closest('.date-text');
+      let clearDate = $(element).closest('.datetime-container').find('.clear-date');
+
+      $(element).on('dp.change', function() {
+        $.ajax({
+          url: dueDateContainer.data('update-url'),
+          type: 'PATCH',
+          dataType: 'json',
+          data: { my_module: { due_date: $(element).val() } },
+          success: function(result) {
+            dueDateContainer.find('#dueDateLabelContainer').html(result.table_due_date_label.html);
+            dateText.data('due-status', result.table_due_date_label.due_status);
+
+            if ($(result.table_due_date_label.html).data('due-date')) {
+              clearDate.addClass('open');
+            }
+          }
+        });
+      });
+
+      $(element).on('dp.hide', function() {
+        dateText.attr('data-original-title', dateText.data('due-status'));
+        clearDate.removeClass('open');
+      });
+
+      $(element).on('dp.show', function() {
+        dateText.attr('data-original-title', '').tooltip('hide');
+        if (dueDateContainer.find('.due-date-label').data('due-date')) {
+          clearDate.addClass('open');
+        }
+      });
     });
   },
   initMyModuleActions: function() {
@@ -392,6 +430,7 @@ var ExperimnetTable = {
     $.get(dataUrl, { filters: this.activeFilters }, (result) => {
       $(this.table).find('.table-row').remove();
       this.appendRows(result.data);
+      this.initDueDatePicker(result.data);
       InfiniteScroll.init(this.table, {
         url: dataUrl,
         eventTarget: window,
@@ -401,12 +440,14 @@ var ExperimnetTable = {
         lastPage: !result.next_page,
         customResponse: (response) => {
           this.appendRows(response.data);
+          this.initDueDatePicker(response.data);
         },
         customParams: (params) => {
           return { ...params, ...{ filters: this.activeFilters } };
         }
       });
 
+      initBSTooltips();
       this.initProvisioningStatusPolling();
     });
   },
@@ -476,7 +517,7 @@ ExperimnetTable.render.id = function(data) {
 };
 
 ExperimnetTable.render.due_date = function(data) {
-  return data;
+  return data.data;
 };
 
 ExperimnetTable.render.archived = function(data) {
