@@ -11,6 +11,9 @@ class Report < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
 
+  ID_PREFIX = 'RP'
+  include PrefixedIdModel
+
   enum pdf_file_status: { pdf_empty: 0, pdf_processing: 1, pdf_ready: 2, pdf_error: 3 }
   enum docx_file_status: { docx_empty: 0, docx_processing: 1, docx_ready: 2, docx_error: 3 }
 
