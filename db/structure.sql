@@ -5506,13 +5506,6 @@ CREATE INDEX index_projects_on_name ON public.projects USING gin (public.trim_ht
 
 
 --
--- Name: index_projects_on_project_code; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_projects_on_project_code ON public.projects USING gin ((('PR'::text || id)) public.gin_trgm_ops);
-
-
---
 -- Name: index_projects_on_project_folder_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -8571,8 +8564,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220621153016'),
 ('20220624091046'),
 ('20220705091621'),
-('20220818094636'),
-('20220913100826');
 ('20220726133419'),
 ('20220803122405'),
 ('20220818094636'),

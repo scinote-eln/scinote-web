@@ -1135,10 +1135,6 @@ li.module-hover {
   }
 }
 
-
-
-
-
 .cards-wrapper.last-page.cards {
   grid-gap: 25px;
 
@@ -1156,26 +1152,27 @@ li.module-hover {
       }
 
       .name {
-        overflow: hidden;
+        -webkit-box-orient: vertical;
         display: -webkit-box;
         -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
         max-width: 200px;
+        overflow: hidden;
       }
     }
 
     .project-code-cell {
-      position: relative;
-      padding-left: 20px;
-      margin-top: 5px;
       height: min-content;
+      margin-top: 5px;
+      padding-left: 20px;
+      position: relative;
     }
 
     .data-row {
       position: relative;
       top: 5%;
+
       .card-label {
-        color: gray !important;
+        color: #808080 !important;
       }
 
       &.start-date-cell {
