@@ -37,3 +37,11 @@
     </a>
   </li>
 <% end %>
+<% if can_restore_my_module?(my_module) %>
+  <li>
+    <a href="<%= restore_my_modules_experiment_path(my_module.experiment) %>" class="restore-my-module" data-id="<%= my_module.id %>">
+      <i class="fas fa-undo"></i>
+      <%= t("experiments.table.my_module_actions.restore") %>
+    </a>
+  </li>
+<% end %>

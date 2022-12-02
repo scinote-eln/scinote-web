@@ -115,6 +115,12 @@ var ExperimnetTable = {
       this.archiveMyModules(e.target.href, e.target.dataset.id);
     });
 
+
+    $(this.table).on('click', '.restore-my-module', (e) => {
+      e.preventDefault();
+      this.restoreMyModules(e.target.href, e.target.dataset.id);
+    });
+    
     $(this.table).on('click', '.duplicate-my-module', (e) => {
       e.preventDefault();
       this.duplicateMyModules($('#duplicateTasks').data('url'), e.target.dataset.id);
@@ -156,6 +162,14 @@ var ExperimnetTable = {
     }).error((data) => {
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
+  },
+  initRestoreMyModules: function() {
+    $('#restoreTask').on('click', (e) => {
+      this.restoreMyModules(e.target.dataset.url, this.selectedMyModules);
+    });
+  },
+  restoreMyModules: function(url, ids) {
+    $.post(url, { my_modules_ids: ids, view: 'table' });
   },
   initAccessModal: function() {
     $('#manageTaskAccess').on('click', () => {
@@ -525,6 +539,7 @@ var ExperimnetTable = {
     this.initNewTaskModal(this);
     this.initMyModuleActions();
     this.updateExperimentToolbar();
+    this.initRestoreMyModules();
     this.initManageUsersDropdown();
   }
 };
