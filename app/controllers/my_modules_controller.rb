@@ -5,6 +5,7 @@ class MyModulesController < ApplicationController
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
+  include MyModulesHelper
 
   before_action :load_vars, except: %i(restore_group create new)
   before_action :load_experiment, only: %i(create new)
@@ -236,6 +237,11 @@ class MyModulesController < ApplicationController
               partial: 'my_modules/card_due_date_label.html.erb',
               locals: { my_module: @my_module }
             ),
+            table_due_date_label: {
+              html: render_to_string(partial: 'experiments/table_due_date_label.html.erb',
+                                     locals: { my_module: @my_module, user: current_user }),
+              due_status: my_module_due_status(@my_module)
+            },
             module_header_due_date: render_to_string(
               partial: 'my_modules/module_header_due_date.html.erb',
               locals: { my_module: @my_module }
@@ -380,7 +386,12 @@ class MyModulesController < ApplicationController
     else
       flash[:error] = t('my_modules.restore_group.error_flash')
     end
-    redirect_to module_archive_experiment_path(experiment)
+
+    if params[:view] == 'table'
+      redirect_to table_experiment_path(experiment, view_mode: :archived)
+    else
+      redirect_to module_archive_experiment_path(experiment)
+    end
   end
 
   def update_state
@@ -415,6 +426,10 @@ class MyModulesController < ApplicationController
         )
       }
     end
+  end
+
+  def provisioning_status
+    render json: { provisioning_status: @my_module.provisioning_status }
   end
 
   private
