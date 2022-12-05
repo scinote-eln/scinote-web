@@ -1,5 +1,5 @@
 //= require protocols/import_export/import
-/* global ProtocolRepositoryHeader PdfPreview */
+/* global ProtocolRepositoryHeader PdfPreview DataTableHelpers */
 
 // Global variables
 var rowsSelected = [];
@@ -27,7 +27,7 @@ function initProtocolsTable() {
 
   protocolsDatatable = protocolsTableEl.DataTable({
     order: [[1, "asc"]],
-    dom: "RB<'main-actions'lf>t<'pagination-row'ip>",
+    dom: "R<'main-actions hidden'<'toolbar'><'filter-container'f>>t<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
     stateSave: true,
     sScrollX: '100%',
     sScrollXInner: '100%',
@@ -110,6 +110,12 @@ function initProtocolsTable() {
         JSON.stringify(data)
       );
     },
+    fnInitComplete: function(e) {
+      var dataTableWrapper = $(e.nTableWrapper);
+      DataTableHelpers.initLengthAppearance(dataTableWrapper);
+      DataTableHelpers.initSearchField(dataTableWrapper, 'Enter...');
+      dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
+    },
     stateLoadCallback: function (settings) {
       // Load the table state for the current team
       var state = localStorage.getItem(
@@ -121,6 +127,12 @@ function initProtocolsTable() {
         return JSON.parse(state);
       }
       return null;
+    }
+  });
+
+  $('#wrapper').on('sideBar::shown sideBar::hidden', function() {
+    if (protocolsDatatable) {
+      protocolsDatatable.columns.adjust();
     }
   });
 }
