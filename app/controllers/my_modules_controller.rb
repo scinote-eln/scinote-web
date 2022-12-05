@@ -24,12 +24,7 @@ class MyModulesController < ApplicationController
 
   def new
     @my_module = @experiment.my_modules.new
-
-    assigned_users = @experiment.project.manually_assigned_users
-
-    if @experiment.project.visible?
-      assigned_users += @experiment.project.team.users.order(full_name: :asc).where.not(id: assigned_users.select(:id))
-    end
+    assigned_users = User.where(id: @experiment.user_assignments.select(:user_id))
 
     render json: {
       html: render_to_string(

@@ -17,10 +17,10 @@
       .on('submit', newMyModuleModal, function() {
         // To submit correct assigned user ids to new modal
         // Clear default selected user in dropdown
-        $(myModuleUserSelector + ' option[value=' + $('#new-my-module-modal').data('user-id') + ']')
+        $(`${myModuleUserSelector} option[value=${$('#new-my-module-modal').data('user-id')}]`)
           .prop('selected', false);
         $.map(dropdownSelector.getValues(myModuleUserSelector), function(val) {
-          $(myModuleUserSelector + ' option[value=' + val + ']').prop('selected', true);
+          $(`${myModuleUserSelector} option[value=${val}]`).prop('selected', true);
         });
       })
       .on('ajax:success', '.new-my-module-button', function(ev, result) {
