@@ -1,0 +1,26 @@
+// scss-lint:disable IdSelector
+
+.protocols-index {
+  .protocols-datatable {
+    --content-header-size: 5em;
+    height: calc(100vh - var(--navbar-height) - var(--content-header-size));
+
+    #protocols-table_wrapper {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      width: 100%;
+    }
+
+    .dataTables_scroll {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      height: calc(100% - var(--datatable-pagination-row));
+    }
+
+    .dataTables_scrollBody {
+      height: 100%;
+    }
+  }
+}
