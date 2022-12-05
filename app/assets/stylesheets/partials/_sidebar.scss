@@ -165,9 +165,12 @@
         font-weight: bold;
       }
 
+      .fas {
+        margin-right: .5em;
+      }
+
       .fa-folder {
         color: $brand-primary-light;
-        margin-right: .5em;
       }
 
       &.back-button::before {
