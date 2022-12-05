@@ -1,4 +1,5 @@
-<div class="modal" id="new-my-module-modal" tabindex="-1" role="dialog" data-create-url="<%= modules_experiment_path(@experiment) %>">
+<div class="modal" id="new-my-module-modal" tabindex="-1" role="dialog" 
+     data-create-url="<%= modules_experiment_path(@experiment) %>" data-user-id="<%= current_user.id %>">
   <%= bootstrap_form_for @my_module, url: modules_experiment_path(@experiment), remote: true do |f| %>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -35,6 +36,26 @@
               </div>
             </div>
           </div>
+          
+          <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <%= f.select 'user_ids',
+                            options_for_select(users.map{ |user|
+                              [
+                                user.full_name,
+                                user.id,
+                                {'data-params' => {avatar_url: avatar_path(user, :icon_small) }.to_json}
+                              ]
+                            }),
+                            {
+                              id: 'new-modal-assigned-users-selector',
+                              label:  t('experiments.canvas.new_my_module_modal.assigned_users') 
+                            }, {
+                              :multiple => true
+                            } %>
+            </div>
+          </div>
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">
