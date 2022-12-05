@@ -9,6 +9,7 @@ class Experiment < ApplicationRecord
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
+  include ViewableModel
   include PermissionCheckableModel
   include Assignable
   include Cloneable
@@ -92,6 +93,23 @@ class Experiment < ApplicationRecord
     return self if teams.blank?
 
     joins(:project).where(project: { team: teams })
+  end
+
+  def default_view_state
+    {
+      my_modules: {
+        active: { sort: 'atoz' },
+        archived: { sort: 'atoz' }
+      }
+    }
+  end
+
+  def validate_view_state(view_state)
+    if %w(atoz ztoa due_first due_last).exclude?(view_state.state.dig('my_modules', 'active', 'sort')) ||
+       %w(atoz ztoa due_first due_last
+          archived_old archived_new).exclude?(view_state.state.dig('my_modules', 'archived', 'sort'))
+      view_state.errors.add(:state, :wrong_state)
+    end
   end
 
   def connections

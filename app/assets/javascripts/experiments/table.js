@@ -8,6 +8,7 @@ var ExperimnetTable = {
   selectedMyModules: [],
   activeFilters: {},
   filters: [], // Filter {name: '', init(), closeFilter(), apply(), active(), clearFilter()}
+  myModulesCurrentSort: '',
   pageSize: GLOBAL_CONSTANTS.DEFAULT_ELEMENTS_PER_PAGE,
   getUrls: function(id) {
     return $(`.table-row[data-id="${id}"]`).data('urls');
@@ -20,7 +21,7 @@ var ExperimnetTable = {
     $(placeholder).insertAfter($(this.table).find('.table-body'));
   },
   appendRows: function(result) {
-    $.each(result, (id, data) => {
+    $.each(result, (_j, data) => {
       let row;
 
       // Checkbox selector
@@ -28,7 +29,7 @@ var ExperimnetTable = {
             <div class="table-body-cell">
               <div class="sci-checkbox-container">
                 <div class="loading-overlay"></div>
-                <input type="checkbox" class="sci-checkbox my-module-selector" data-my-module="${id}">
+                <input type="checkbox" class="sci-checkbox my-module-selector" data-my-module="${data.id}">
                 <span class="sci-checkbox-label"></span>
               </div>
             </div>`;
@@ -59,7 +60,7 @@ var ExperimnetTable = {
         </div>`;
 
       let tableRowClass = `table-row ${data.provisioning_status === 'in_progress' ? 'table-row-provisioning' : ''}`;
-      $(`<div class="${tableRowClass}" data-urls='${JSON.stringify(data.urls)}' data-id="${id}">${row}</div>`)
+      $(`<div class="${tableRowClass}" data-urls='${JSON.stringify(data.urls)}' data-id="${data.id}">${row}</div>`)
         .appendTo(`${this.table} .table-body`);
     });
   },
@@ -430,6 +431,18 @@ var ExperimnetTable = {
       table.loadTable();
     });
   },
+  initSorting: function(table) {
+    $('#sortMenuDropdown a').click(function() {
+      if (table.myModulesCurrentSort !== $(this).data('sort')) {
+        $('#sortMenuDropdown a').removeClass('selected');
+        // eslint-disable-next-line no-param-reassign
+        table.myModulesCurrentSort = $(this).data('sort');
+        table.loadTable();
+        $(this).addClass('selected');
+        $('#sortMenu').dropdown('toggle');
+      }
+    });
+  },
   initFilters: function() {
     this.filterDropdown = filterDropdown.init();
     let $experimentFilter = $('#experimentTable .my-modules-filters');
@@ -466,9 +479,13 @@ var ExperimnetTable = {
     });
   },
   loadTable: function() {
+    var tableParams = {
+      filters: this.activeFilters,
+      sort: this.myModulesCurrentSort
+    };
     var dataUrl = $(this.table).data('my-modules-url');
     this.loadPlaceholder();
-    $.get(dataUrl, { filters: this.activeFilters }, (result) => {
+    $.get(dataUrl, tableParams, (result) => {
       $(this.table).find('.table-row').remove();
       this.appendRows(result.data);
       this.initDueDatePicker(result.data);
@@ -484,7 +501,7 @@ var ExperimnetTable = {
           this.initDueDatePicker(response.data);
         },
         customParams: (params) => {
-          return { ...params, ...{ filters: this.activeFilters } };
+          return { ...params, ...tableParams };
         }
       });
 
@@ -529,6 +546,7 @@ var ExperimnetTable = {
     this.initSelector();
     this.initSelectAllCheckbox();
     this.initFilters();
+    this.initSorting(this);
     this.loadTable();
     this.initRenameModal();
     this.initAccessModal();

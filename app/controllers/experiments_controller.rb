@@ -90,6 +90,10 @@ class ExperimentsController < ApplicationController
 
   def table
     redirect_to module_archive_experiment_path(@experiment) if @experiment.archived_branch?
+    view_state = @experiment.current_view_state(current_user)
+    view_mode = params[:view_mode] || 'active'
+    @current_sort = view_state.state.dig('my_modules', view_mode, 'sort') || 'atoz'
+
     @project = @experiment.project
     @active_modules = @experiment.my_modules.active.order(:name)
   end
@@ -97,7 +101,7 @@ class ExperimentsController < ApplicationController
   def load_table
     my_modules = @experiment.my_modules.readable_by_user(current_user)
     my_modules = params[:view_mode] == 'archived' ? my_modules.archived : my_modules.active
-    render json: Experiments::TableViewService.new(my_modules, current_user, params).call
+    render json: Experiments::TableViewService.new(@experiment, my_modules, current_user, params).call
   end
 
   def edit

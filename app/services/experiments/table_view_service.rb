@@ -35,19 +35,23 @@ module Experiments
       experiment: :project
     }
 
-    def initialize(my_modules, user, params)
+    def initialize(experiment, my_modules, user, params)
       @my_modules = my_modules
       @page = params[:page] || 1
       @user = user
       @filters = params[:filters] || []
+      @params = params
+      initialize_table_sorting(experiment)
     end
 
     def call
-      result = {}
+      result = []
       my_module_list = @my_modules
       @filters.each do |name, value|
         my_module_list = __send__("#{name}_filter", my_module_list, value) if value.present?
       end
+
+      my_module_list = sort_records(my_module_list)
 
       my_module_list = my_module_list.includes(PRELOAD)
                                      .select('my_modules.*')
@@ -67,20 +71,20 @@ module Experiments
         experiment = my_module.experiment
         project = experiment.project
 
-        result[my_module.id] = {
-          columns: prepared_my_module,
-          provisioning_status: my_module.provisioning_status,
-          urls: {
-            permissions: permissions_my_module_path(my_module),
-            actions_dropdown: actions_dropdown_my_module_path(my_module),
-            name_update: my_module_path(my_module),
-            restore: restore_my_modules_experiment_path(experiment),
-            provisioning_status:
-              my_module.provisioning_status == 'in_progress' && provisioning_status_my_module_url(my_module),
-            access: edit_access_permissions_project_experiment_my_module_path(project, experiment, my_module)
-
-          }
-        }
+        result.push({ id: my_module.id,
+                      columns: prepared_my_module,
+                      provisioning_status: my_module.provisioning_status,
+                      urls: {
+                        permissions: permissions_my_module_path(my_module),
+                        actions_dropdown: actions_dropdown_my_module_path(my_module),
+                        name_update: my_module_path(my_module),
+                        restore: restore_my_modules_experiment_path(experiment),
+                        provisioning_status:
+                          my_module.provisioning_status == 'in_progress' &&
+                            provisioning_status_my_module_url(my_module),
+                        access: edit_access_permissions_project_experiment_my_module_path(project,
+                                                                                          experiment, my_module)
+                      } })
       end
 
       {
@@ -192,6 +196,37 @@ module Experiments
 
     def statuses_filter(my_modules, value)
       my_modules.where(my_module_status_id: value)
+    end
+
+    def initialize_table_sorting(experiment)
+      @view_state = experiment.current_view_state(@user)
+      @view_mode = @params[:view_mode] || 'active'
+      @sort = @view_state.state.dig('my_modules', @view_mode, 'sort') || 'atoz'
+      if @params[:sort] && @sort != @params[:sort] && %w(due_first due_last atoz ztoa
+                                                         archived_old archived_new).include?(@params[:sort])
+        @view_state.state['my_modules'].merge!(Hash[@view_mode, { 'sort': @params[:sort] }.stringify_keys])
+        @view_state.save!
+        @sort = @view_state.state.dig('my_modules', @view_mode, 'sort')
+      end
+    end
+
+    def sort_records(records)
+      case @sort
+      when 'due_first'
+        records.order(:due_date)
+      when 'due_last'
+        records.order(Arel.sql("COALESCE(due_date, DATE '1900-01-01') DESC"))
+      when 'atoz'
+        records.order(:name)
+      when 'ztoa'
+        records.order(name: :desc)
+      when 'archived_old'
+        records.order(Arel.sql('COALESCE(my_modules.archived_on, my_modules.archived_on) ASC'))
+      when 'archived_new'
+        records.order(Arel.sql('COALESCE(my_modules.archived_on, my_modules.archived_on) DESC'))
+      else
+        records
+      end
     end
   end
 end
