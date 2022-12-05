@@ -95,6 +95,7 @@ class ExperimentsController < ApplicationController
     @current_sort = view_state.state.dig('my_modules', view_mode, 'sort') || 'atoz'
 
     @project = @experiment.project
+    @archived_modules = @experiment.my_modules.archived.order(:name)
     @active_modules = @experiment.my_modules.active.order(:name)
   end
 

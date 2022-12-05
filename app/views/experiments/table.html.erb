@@ -3,8 +3,14 @@
 <% provide(:sidebar_url, sidebar_experiment_path(@experiment)) %>
 <% provide(:container_class, 'no-second-nav-container') %>
 
-<%= content_for :sidebar do %>
-  <%= render partial: 'shared/sidebar/my_modules.html.erb', locals: { experiment: @experiment, my_modules: @active_modules } %>
+<% if params[:view_mode] == "archived" %>
+  <%= content_for :sidebar do %>
+    <%= render partial: 'shared/sidebar/archived_my_modules.html.erb', locals: { experiment: @experiment, my_modules: @archived_modules } %>
+  <% end %>
+<% else %>
+  <%= content_for :sidebar do %>
+    <%= render partial: 'shared/sidebar/my_modules.html.erb', locals: { experiment: @experiment, my_modules: @active_modules } %>
+  <% end %>
 <% end %>
 
 <div class="content-pane flexible experiment-new-my_module <%= params[:view_mode] %>" id="experimentTable">
