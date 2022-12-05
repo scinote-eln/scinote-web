@@ -36,8 +36,8 @@ class MyModulesController < ApplicationController
 
   def create
     max_xy = @experiment.my_modules.select('MAX("my_modules"."x") AS x, MAX("my_modules"."y") AS y').take
-    x = max_xy ? (max_xy.x + 10) : 1
-    y = max_xy ? (max_xy.y + 10) : 1
+    x = max_xy.x ? (max_xy.x + 10) : 1
+    y = max_xy.y ? (max_xy.y + 10) : 1
     @my_module = @experiment.my_modules.new(my_module_params)
     @my_module.assign_attributes(created_by: current_user, last_modified_by: current_user, x: x, y: y)
     @my_module.transaction do
