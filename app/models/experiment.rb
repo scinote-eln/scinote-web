@@ -12,6 +12,7 @@ class Experiment < ApplicationRecord
   include ViewableModel
   include PermissionCheckableModel
   include Assignable
+  include Cloneable
 
   before_save -> { report_elements.destroy_all }, if: -> { !new_record? && project_id_changed? }
 
@@ -242,11 +243,13 @@ class Experiment < ApplicationRecord
            .with_granted_permissions(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
   end
 
-  def permission_parent
+  def parent
     project
   end
 
-  private
+  def permission_parent
+    project
+  end
 
   # Archive all modules. Receives an array of module integer IDs
   # and current user.
@@ -537,6 +540,8 @@ class Experiment < ApplicationRecord
     my_module_groups.reload
     true
   end
+
+  private
 
   def log_activity(type_of, current_user, my_module)
     Activities::CreateActivityService

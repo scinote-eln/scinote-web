@@ -1,4 +1,4 @@
-/* global I18n GLOBAL_CONSTANTS InfiniteScroll filterDropdown dropdownSelector HelperModule */
+/* global I18n GLOBAL_CONSTANTS InfiniteScroll initBSTooltips filterDropdown dropdownSelector HelperModule */
 
 var ExperimnetTable = {
   permissions: ['editable', 'archivable', 'restorable', 'moveable'],
@@ -21,15 +21,19 @@ var ExperimnetTable = {
     $(placeholder).insertAfter($(this.table).find('.table-body'));
   },
   appendRows: function(result) {
-    $.each(result, (_i, data) => {
+    $.each(result, (_j, data) => {
+      let row;
+
       // Checkbox selector
-      let row = `
-        <div class="table-body-cell">
-          <div class="sci-checkbox-container">
-            <input type="checkbox" class="sci-checkbox my-module-selector" data-my-module="${data.id}">
-            <span class="sci-checkbox-label"></span>
-          </div>
-        </div>`;
+      row = `
+            <div class="table-body-cell">
+              <div class="sci-checkbox-container">
+                <div class="loading-overlay"></div>
+                <input type="checkbox" class="sci-checkbox my-module-selector" data-my-module="${data.id}">
+                <span class="sci-checkbox-label"></span>
+              </div>
+            </div>`;
+
       // Task columns
       $.each(data.columns, (_i, cell) => {
         let hidden = '';
@@ -54,8 +58,48 @@ var ExperimnetTable = {
             </div>
           </div>
         </div>`;
-      $(`<div class="table-row" data-urls='${JSON.stringify(data.urls)}' data-id="${data.id}">${row}</div>`)
+
+      let tableRowClass = `table-row ${data.provisioning_status === 'in_progress' ? 'table-row-provisioning' : ''}`;
+      $(`<div class="${tableRowClass}" data-urls='${JSON.stringify(data.urls)}' data-id="${data.id}">${row}</div>`)
         .appendTo(`${this.table} .table-body`);
+    });
+  },
+  initDueDatePicker: function(data) {
+    // eslint-disable-next-line no-unused-vars
+    $.each(data, (id, _) => {
+      let element = `#calendarDueDate${id}`;
+      let dueDateContainer = $(element).closest('#dueDateContainer');
+      let dateText = $(element).closest('.date-text');
+      let clearDate = $(element).closest('.datetime-container').find('.clear-date');
+
+      $(element).on('dp.change', function() {
+        $.ajax({
+          url: dueDateContainer.data('update-url'),
+          type: 'PATCH',
+          dataType: 'json',
+          data: { my_module: { due_date: $(element).val() } },
+          success: function(result) {
+            dueDateContainer.find('#dueDateLabelContainer').html(result.table_due_date_label.html);
+            dateText.data('due-status', result.table_due_date_label.due_status);
+
+            if ($(result.table_due_date_label.html).data('due-date')) {
+              clearDate.addClass('open');
+            }
+          }
+        });
+      });
+
+      $(element).on('dp.hide', function() {
+        dateText.attr('data-original-title', dateText.data('due-status'));
+        clearDate.removeClass('open');
+      });
+
+      $(element).on('dp.show', function() {
+        dateText.attr('data-original-title', '').tooltip('hide');
+        if (dueDateContainer.find('.due-date-label').data('due-date')) {
+          clearDate.addClass('open');
+        }
+      });
     });
   },
   initMyModuleActions: function() {
@@ -71,6 +115,41 @@ var ExperimnetTable = {
       e.preventDefault();
       this.archiveMyModules(e.target.href, e.target.dataset.id);
     });
+
+
+    $(this.table).on('click', '.restore-my-module', (e) => {
+      e.preventDefault();
+      this.restoreMyModules(e.target.href, e.target.dataset.id);
+    });
+    
+    $(this.table).on('click', '.duplicate-my-module', (e) => {
+      e.preventDefault();
+      this.duplicateMyModules($('#duplicateTasks').data('url'), e.target.dataset.id);
+    });
+
+    $(this.table).on('click', '.move-my-module', (e) => {
+      e.preventDefault();
+      this.openMoveModulesModal([e.target.dataset.id]);
+    });
+
+    $(this.table).on('click', '.edit-my-module', (e) => {
+      e.preventDefault();
+      $('#modal-edit-module').modal('show');
+      $('#modal-edit-module').data('id', e.target.dataset.id);
+      $('#edit-module-name-input').val($(`#taskName${$('#modal-edit-module').data('id')}`).data('full-name'));
+    });
+  },
+  initDuplicateMyModules: function() {
+    $('#duplicateTasks').on('click', (e) => {
+      this.duplicateMyModules(e.target.dataset.url, this.selectedMyModules);
+    });
+  },
+  duplicateMyModules: function(url, ids) {
+    $.post(url, { my_module_ids: ids }, () => {
+      this.loadTable();
+    }).error((data) => {
+      HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+    });
   },
   initArchiveMyModules: function() {
     $('#archiveTask').on('click', (e) => {
@@ -85,6 +164,14 @@ var ExperimnetTable = {
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
   },
+  initRestoreMyModules: function() {
+    $('#restoreTask').on('click', (e) => {
+      this.restoreMyModules(e.target.dataset.url, this.selectedMyModules);
+    });
+  },
+  restoreMyModules: function(url, ids) {
+    $.post(url, { my_modules_ids: ids, view: 'table' });
+  },
   initAccessModal: function() {
     $('#manageTaskAccess').on('click', () => {
       $(`.table-row[data-id="${this.selectedMyModules[0]}"] .open-access-modal`).click();
@@ -93,23 +180,25 @@ var ExperimnetTable = {
   initRenameModal: function() {
     $('#editTask').on('click', () => {
       $('#modal-edit-module').modal('show');
-      $('#edit-module-name-input').val($(`#taskName${this.selectedMyModules[0]}`).data('full-name'));
+      $('#modal-edit-module').data('id', this.selectedMyModules[0]);
+      $('#edit-module-name-input').val($(`#taskName${$('#modal-edit-module').data('id')}`).data('full-name'));
     });
     $('#modal-edit-module').on('click', 'button[data-action="confirm"]', () => {
+      let id = $('#modal-edit-module').data('id');
       let newValue = $('#edit-module-name-input').val();
 
-      if (newValue === $(`#taskName${this.selectedMyModules[0]}`).data('full-name')) {
+      if (newValue === $(`#taskName${id}`).data('full-name')) {
         $('#modal-edit-module').modal('hide');
         return false;
       }
       $.ajax({
-        url: this.getUrls(this.selectedMyModules[0]).name_update,
+        url: this.getUrls(id).name_update,
         type: 'PATCH',
         dataType: 'json',
         data: { my_module: { name: $('#edit-module-name-input').val() } },
         success: () => {
-          $(`#taskName${this.selectedMyModules[0]}`).text(newValue);
-          $(`#taskName${this.selectedMyModules[0]}`).data('full-name', newValue);
+          $(`#taskName${id}`).text(newValue);
+          $(`#taskName${id}`).data('full-name', newValue);
           $('#edit-module-name-input').closest('.sci-input-container').removeClass('error');
           $('#modal-edit-module').modal('hide');
         },
@@ -123,6 +212,115 @@ var ExperimnetTable = {
       });
 
       return true;
+    });
+  },
+  initManageUsersDropdown: function() {
+    $(this.table).on('show.bs.dropdown', '.assign-users-dropdown', (e) => {
+      let usersList = $(e.target).find('.users-list');
+      usersList.find('.user-container').remove();
+      $.get(usersList.data('list-url'), (result) => {
+        $.each(result, (_i, user) => {
+          $(`
+            <div class="user-container">
+              <div class="sci-checkbox-container">
+                <input type="checkbox"
+                       class="sci-checkbox user-selector"
+                       ${user.params.designated ? 'checked' : ''}
+                       value="${user.value}"
+                       data-assign-url="${user.params.assign_url}"
+                       data-unassign-url="${user.params.unassign_url}"
+                >
+                <span class="sci-checkbox-label"></span>
+              </div>
+              <div class="user-avatar">
+                <img src="${user.params.avatar_url}"></img>
+              </div>
+              <div class="user-name">
+                ${user.label}
+              </div>
+            </div>
+          `).appendTo(usersList);
+        });
+      });
+    });
+    $(this.table).on('click', '.dropdown-menu', (e) => {
+      if (e.target.tagName === 'INPUT') return;
+      e.preventDefault();
+      e.stopPropagation();
+    });
+    $(this.table).on('change keyup', '.assign-users-dropdown .user-search', (e) => {
+      let query = e.target.value;
+      let usersList = $(e.target).closest('.dropdown-menu').find('.user-container');
+      $.each(usersList, (_i, user) => {
+        $(user).removeClass('hidden');
+        if (query.length && !$(user).find('.user-name').text().toLowerCase()
+          .includes(query.toLowerCase())) {
+          $(user).addClass('hidden');
+        }
+      });
+    });
+    $(this.table).on('change', '.assign-users-dropdown .user-selector', (e) => {
+      let checkbox = e.target;
+      if (checkbox.checked) {
+        $.post(checkbox.dataset.assignUrl, {
+          table: true,
+          user_my_module: {
+            my_module_id: $(checkbox).closest('.table-row').data('id'),
+            user_id: checkbox.value
+          }
+        }, (result) => {
+          checkbox.dataset.unassignUrl = result.unassign_url;
+          $(checkbox).closest('.table-row').find('.assigned-users-container')
+            .replaceWith($(result.html).find('.assigned-users-container'));
+        }).error((data) => {
+          HelperModule.flashAlertMsg(data.responseJSON.errors, 'danger');
+        });
+      } else {
+        $.ajax({
+          url: checkbox.dataset.unassignUrl,
+          method: 'DELETE',
+          data: { table: true },
+          success: (result) => {
+            $(checkbox).closest('.table-row').find('.assigned-users-container')
+              .replaceWith($(result.html).find('.assigned-users-container'));
+          },
+          error: (data) => {
+            HelperModule.flashAlertMsg(data.responseJSON.errors, 'danger');
+          }
+        });
+      }
+    });
+  },
+  initMoveModulesModal: function() {
+    $('#moveTask').on('click', () => {
+      this.openMoveModulesModal(this.selectedMyModules);
+    });
+  },
+  openMoveModulesModal: function(ids) {
+    let table = $(this.table);
+    $.get(table.data('move-modules-modal-url'), (modalData) => {
+      if ($('#modal-move-modules').length > 0) {
+        $('#modal-move-modules').replaceWith(modalData.html);
+      } else {
+        $('#experimentTable').append(modalData.html);
+      }
+      $('#modal-move-modules').on('shown.bs.modal', function() {
+        $(this).find('.selectpicker').selectpicker().focus();
+      });
+      $('#modal-move-modules').on('click', 'button[data-action="confirm"]', () => {
+        let moveParams = {
+          to_experiment_id: $('#modal-move-modules').find('.selectpicker').val(),
+          my_module_ids: ids
+        };
+        $.post(table.data('move-modules-url'), moveParams, (data) => {
+          HelperModule.flashAlertMsg(data.message, 'success');
+          this.loadTable();
+        }).error((data) => {
+          HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+        });
+        $('#modal-move-modules').modal('hide');
+      });
+      $('#modal-move-modules').modal('show');
     });
   },
   checkActionPermission: function(permission) {
@@ -206,7 +404,8 @@ var ExperimnetTable = {
     $.each($('.table-display-modal .fa-eye-slash'), (_i, column) => {
       $(column).parent().removeClass('visible');
     });
-    $('.experiment-table')[0].style.setProperty('--columns-count', $('.table-display-modal .fa-eye').length + 1);
+    $('.experiment-table')[0].style
+      .setProperty('--columns-count', $('.table-display-modal .fa-eye:not(.disabled)').length + 1);
 
     $('.table-display-modal').on('click', '.column-container .fas', (e) => {
       let icon = $(e.target);
@@ -223,7 +422,8 @@ var ExperimnetTable = {
       let visibleColumns = $('.table-display-modal .fa-eye').map((_i, col) => col.dataset.column).toArray();
       // Update columns on backend - $.post('', { columns: visibleColumns }, () => {});
 
-      $('.experiment-table')[0].style.setProperty('--columns-count', $('.table-display-modal .fa-eye').length + 1);
+      $('.experiment-table')[0].style
+        .setProperty('--columns-count', $('.table-display-modal .fa-eye:not(.disabled)').length + 1);
     });
   },
   initNewTaskModal: function(table) {
@@ -288,6 +488,7 @@ var ExperimnetTable = {
     $.get(dataUrl, tableParams, (result) => {
       $(this.table).find('.table-row').remove();
       this.appendRows(result.data);
+      this.initDueDatePicker(result.data);
       InfiniteScroll.init(this.table, {
         url: dataUrl,
         eventTarget: window,
@@ -297,12 +498,49 @@ var ExperimnetTable = {
         lastPage: !result.next_page,
         customResponse: (response) => {
           this.appendRows(response.data);
+          this.initDueDatePicker(response.data);
         },
         customParams: (params) => {
           return { ...params, ...tableParams };
         }
       });
+
+      initBSTooltips();
+      this.initProvisioningStatusPolling();
     });
+  },
+  initProvisioningStatusPolling: function() {
+    let provisioningStatusUrls = $('.table-row-provisioning').toArray()
+      .map((u) => $(u).data('urls').provisioning_status);
+
+    this.provisioningMyModulesCount = provisioningStatusUrls.length;
+
+    if (this.provisioningMyModulesCount > 0) this.pollProvisioningStatuses(provisioningStatusUrls);
+  },
+  pollProvisioningStatuses: function(provisioningStatusUrls) {
+    let remainingUrls = [];
+
+    provisioningStatusUrls.forEach((url) => {
+      jQuery.ajax({
+        url: url,
+        success: (data) => {
+          if (data.provisioning_status === 'in_progress') remainingUrls.push(url);
+        },
+        async: false
+      });
+    });
+
+    if (remainingUrls.length > 0) {
+      setTimeout(() => {
+        this.pollProvisioningStatuses(remainingUrls);
+      }, 10000);
+    } else {
+      HelperModule.flashAlertMsg(
+        I18n.t('experiments.duplicate_tasks.success', { count: this.provisioningMyModulesCount }),
+        'success'
+      );
+      this.loadTable();
+    }
   },
   init: function() {
     this.initSelector();
@@ -312,15 +550,23 @@ var ExperimnetTable = {
     this.loadTable();
     this.initRenameModal();
     this.initAccessModal();
+    this.initDuplicateMyModules();
+    this.initMoveModulesModal();
     this.initArchiveMyModules();
     this.initManageColumnsModal();
     this.initNewTaskModal(this);
     this.initMyModuleActions();
     this.updateExperimentToolbar();
+    this.initRestoreMyModules();
+    this.initManageUsersDropdown();
   }
 };
 
 ExperimnetTable.render.task_name = function(data) {
+  if (data.provisioning_status === 'in_progress') {
+    return `<span data-full-name="${data.name}">${data.name}</span>`;
+  }
+
   return `<a href="${data.url}" id="taskName${data.id}" data-full-name="${data.name}">${data.name}</a>`;
 };
 
@@ -331,7 +577,7 @@ ExperimnetTable.render.id = function(data) {
 };
 
 ExperimnetTable.render.due_date = function(data) {
-  return data;
+  return data.data;
 };
 
 ExperimnetTable.render.archived = function(data) {
@@ -351,35 +597,7 @@ ExperimnetTable.render.status = function(data) {
 };
 
 ExperimnetTable.render.assigned = function(data) {
-  let users = '';
-  $.each(data.users, (_i, user) => {
-    users += `
-      <span class="global-avatar-container">
-        <img src=${user.image_url} title=${user.title}>
-      </span>
-    `;
-  });
-
-  if (data.length > 3) {
-    users += `
-    <span class="more-users" title="${data.more_users_title}">
-        +${data.length - 3}
-    </span>
-    `;
-  }
-
-  if (data.manage_url) {
-    users = `
-      <a href="${data.manage_url}" class= 'my-module-users-link', data-action='remote-modal'>
-        ${users}
-        <span class="new-user global-avatar-container">
-          <i class="fas fa-plus"></i>
-        </span>
-      </a>
-    `;
-  }
-
-  return users;
+  return data.html;
 };
 
 ExperimnetTable.render.tags = function(data) {
@@ -443,6 +661,36 @@ ExperimnetTable.filters.push({
   clearFilter: ($container) => {
     if ($('.due-date-filter .to-date', $container).data('DateTimePicker')) {
       $('.due-date-filter .to-date', $container).data('DateTimePicker').clear();
+    }
+  }
+});
+
+ExperimnetTable.filters.push({
+  name: 'archived_on_from',
+  init: () => {},
+  closeFilter: () => {},
+  apply: ($container) => {
+    return ExperimnetTable.selectDate($('.archived-on-filter .from-date', $container));
+  },
+  active: (value) => { return value; },
+  clearFilter: ($container) => {
+    if ($('.archived-on-filter .from-date', $container).data('DateTimePicker')) {
+      $('.archived-on-filter .from-date', $container).data('DateTimePicker').clear();
+    }
+  }
+});
+
+ExperimnetTable.filters.push({
+  name: 'archived_on_to',
+  init: () => {},
+  closeFilter: () => {},
+  apply: ($container) => {
+    return ExperimnetTable.selectDate($('.archived-on-filter  .to-date', $container));
+  },
+  active: (value) => { return value; },
+  clearFilter: ($container) => {
+    if ($('.archived-on-filter .to-date', $container).data('DateTimePicker')) {
+      $('.archived-on-filter  .to-date', $container).data('DateTimePicker').clear();
     }
   }
 });

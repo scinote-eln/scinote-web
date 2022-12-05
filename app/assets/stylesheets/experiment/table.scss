@@ -85,6 +85,31 @@
       display: contents;
     }
 
+    .loading-overlay {
+      display: none;
+    }
+
+    .table-row-provisioning {
+      .loading-overlay {
+        display: block;
+      }
+
+      .sci-checkbox-container {
+        height: 1.5em;
+        width: 1.5em;
+
+        .loading-overlay::after {
+          background-size: 1.5em;
+          cursor: default;
+        }
+
+        .sci-checkbox,
+        .sci-checkbox-label {
+          display: none;
+        }
+      }
+    }
+
     .table-body-cell {
       align-items: center;
       display: flex;
@@ -143,6 +168,63 @@
         display: inline-block;
         grid-column: 1/-1;
         height: 1px;
+      }
+    }
+
+    .assign-users-dropdown {
+      .dropdown-menu {
+        padding: .5em;
+        width: 280px;
+      }
+
+      .users-list {
+        max-height: 300px;
+        overflow: auto;
+      }
+
+      .user-container {
+        align-items: center;
+        display: flex;
+        padding: .5em;
+
+        .user-avatar {
+          padding: 0 .75em;
+
+          img {
+            border-radius: 50%;
+          }
+        }
+      }
+
+      .assigned-users-container {
+        cursor: pointer;
+        display: flex;
+      }
+
+      .avatar-container {
+        border: 1px solid $color-white;
+        border-radius: 50%;
+        display: inline-block;
+        height: 26px;
+        margin-right: -5px;
+        width: 26px;
+
+        img {
+          border-radius: 50%;
+          max-height: 100%;
+          max-width: 100%;
+        }
+      }
+
+      .more-users {
+        font-size: 10px;
+        line-height: 24px;
+      }
+
+      .new-user {
+        color: $color-silver-chalice;
+        line-height: 24px;
+        margin-left: 5px;
       }
     }
 
@@ -287,6 +369,59 @@
     min-width: 16px;
   }
 
+  .datetime-container {
+    width: 100%;
+
+    .clear-date {
+      cursor: pointer;
+      left: 90%;
+      position: absolute;
+      text-align: center;
+      top: 0;
+      visibility: hidden;
+      width: 16px;
+      z-index: 999;
+
+      &.open {
+        visibility: visible;
+      }
+    }
+
+    .date-text {
+      display: block;
+      position: relative;
+
+      .alert-yellow {
+        color: $brand-warning;
+        margin-left: 4px;
+      }
+
+      .alert-red {
+        color: $brand-danger;
+        margin-left: 4px;
+      }
+    }
+
+    .datetime-picker-container {
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+
+      .calendar-due-date {
+        opacity: 0;
+      }
+    }
+
+    &:hover {
+      .date-text[data-editable=true] {
+        background-color: $color-concrete;
+        border-radius: 4px;
+
+      }
+    }
+  }
+
   .open-comments-sidebar {
     display: contents;
     margin-bottom: 0;
@@ -346,6 +481,9 @@
   }
 }
 
+.task_name-column span {
+  color: $color-silver-chalice;
+}
 
 .table-display-modal {
   .column-container {
@@ -365,6 +503,11 @@
     .fas {
       cursor: pointer;
       margin-right: 1em;
+
+      &.disabled {
+        color: $color-alto;
+        pointer-events: none;
+      }
     }
 
     &.task_name {
