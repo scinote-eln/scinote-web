@@ -93,9 +93,13 @@ module ReportsHelper
     when 'ztoa'
       results.order(name: :desc)
     when 'new'
+      results.order(created_at: :desc)
+    when 'old_updated'
+      results.order(updated_at: :asc)
+    when 'new_updated'
       results.order(updated_at: :desc)
     else
-      results.order(updated_at: :asc)
+      results.order(created_at: :asc)
     end
   end
 

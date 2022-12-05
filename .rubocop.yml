@@ -273,7 +273,7 @@ Style/SymbolArray:
   EnforcedStyle: percent
 
 Style/SymbolProc:
-  IgnoredMethods:
+  AllowedMethods:
     - respond_to
     - define_method
 
@@ -352,7 +352,7 @@ Metrics/AbcSize:
   Enabled: false
 
 Metrics/BlockLength:
-  IgnoredMethods: ['describe', 'context']
+  AllowedMethods: ['describe', 'context']
 
 Metrics/ClassLength:
   Enabled: false
