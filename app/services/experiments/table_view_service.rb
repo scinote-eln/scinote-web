@@ -80,7 +80,8 @@ module Experiments
                         name_update: my_module_path(my_module),
                         restore: restore_my_modules_experiment_path(experiment),
                         provisioning_status:
-                          my_module.provisioning_status == 'in_progress' && provisioning_status_my_module_url(my_module),
+                          my_module.provisioning_status == 'in_progress' &&
+                            provisioning_status_my_module_url(my_module),
                         access: edit_access_permissions_project_experiment_my_module_path(project,
                                                                                           experiment, my_module)
                       } })
