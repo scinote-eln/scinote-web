@@ -41,6 +41,9 @@ class ReportDatatable < CustomDatatable
       records.left_joins(:pdf_file_attachment)
              .order(active_storage_attachments: sort_direction(order_params))
              .order(pdf_file_status: sort_direction(order_params) == 'ASC' ? :desc : :asc)
+    when 'reports.code'
+      sort_by = "reports.id #{sort_direction(order_params)}"
+      records.order(sort_by)
     else
       sort_by = "#{sort_column(order_params)} #{sort_direction(order_params)}"
       records.order(sort_by)
