@@ -2,18 +2,15 @@
 
 class Project < ApplicationRecord
   ID_PREFIX = 'PR'
+  include PrefixedIdModel
   SEARCHABLE_ATTRIBUTES = ['projects.name', PREFIXED_ID_SQL].freeze
 
-  include PrefixedIdModel
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
   include ViewableModel
   include PermissionCheckableModel
   include Assignable
-
-  ID_PREFIX = 'PR'
-  include PrefixedIdModel
 
   enum visibility: { hidden: 0, visible: 1 }
 

@@ -2,10 +2,10 @@
 
 class Protocol < ApplicationRecord
   ID_PREFIX = 'PT'
+  include PrefixedIdModel
   SEARCHABLE_ATTRIBUTES = ['protocols.name', 'protocols.description',
                            'protocols.authors', 'protocol_keywords.name', PREFIXED_ID_SQL].freeze
 
-  include PrefixedIdModel
   include SearchableModel
   include RenamingUtil
   include SearchableByNameModel

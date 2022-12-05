@@ -2,9 +2,9 @@
 
 class MyModule < ApplicationRecord
   ID_PREFIX = 'TA'
-  SEARCHABLE_ATTRIBUTES = ['my_modules.name', 'my_modules.description', PREFIXED_ID_SQL].freeze
- 
   include PrefixedIdModel
+  SEARCHABLE_ATTRIBUTES = ['my_modules.name', 'my_modules.description', PREFIXED_ID_SQL].freeze
+
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
