@@ -6,13 +6,13 @@ class MyModulesController < ApplicationController
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
 
-  before_action :load_vars, except: %i(restore_group)
+  before_action :load_vars, except: %i(restore_group save_table_state)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_archive_permissions, only: %i(update)
   before_action :check_manage_permissions, only: %i(
     create description due_date update_description update_protocol_description update_protocol
   )
-  before_action :check_read_permissions, except: %i(update update_description update_protocol_description restore_group)
+  before_action :check_read_permissions, except: %i(update update_description update_protocol_description restore_group save_table_state)
   before_action :check_update_state_permissions, only: :update_state
   before_action :set_inline_name_editing, only: %i(protocols results activities archive)
   before_action :load_experiment_my_modules, only: %i(protocols results activities archive)
@@ -30,8 +30,8 @@ class MyModulesController < ApplicationController
 
   def create
     max_xy = @experiment.my_modules.select('MAX("my_modules"."x") AS x, MAX("my_modules"."y") AS y').take
-    x = max_xy ? (max_xy.x + 10) : 1
-    y = max_xy ? (max_xy.y + 10) : 1
+    x = max_xy.x ? (max_xy.x + 10) : 1
+    y = max_xy.y ? (max_xy.y + 10) : 1
     @my_module = @experiment.my_modules.new(my_module_params)
     @my_module.assign_attributes(created_by: current_user, last_modified_by: current_user, x: x, y: y)
     @my_module.transaction do
@@ -75,6 +75,11 @@ class MyModulesController < ApplicationController
         }
       }
     end
+  end
+
+  def save_table_state
+    current_user.settings.update(visible_my_module_table_columns: params[:columns])
+    current_user.save!
   end
 
   def status_state

@@ -13,7 +13,7 @@
   <div class="experiment-table-container">
     <div class="experiment-table"
          style="--columns-count: <%= Experiments::TableViewService::COLUMNS.length%>"
-         data-my-modules-url= <%= load_table_experiment_path(@experiment, view_mode: params[:view_mode]) %>
+         data-my-modules-url="<%= load_table_experiment_path(@experiment, view_mode: params[:view_mode]) %>"
     >
       <div class="table-header">
         <div class="table-header-cell select-all-checkboxes">
@@ -23,7 +23,7 @@
           </div>
         </div>
         <% Experiments::TableViewService::COLUMNS.each do |col| %>
-          <div class="table-header-cell <%= col %>-column">
+          <div class="table-header-cell <%= col %>-column <%= 'hidden' unless col.to_s.in?(@my_module_visible_table_columns) || col == :task_name %>">
             <%= t("experiments.table.column.#{col}_html") %>
           </div>
         <% end %>
