@@ -21,6 +21,7 @@ class ProtocolsController < ApplicationController
     preview
     linked_children
     linked_children_datatable
+    permissions
   )
   before_action :switch_team_with_param, only: :index
   before_action :check_view_all_permissions, only: %i(
@@ -1021,6 +1022,16 @@ class ProtocolsController < ApplicationController
           })
         }
       end
+    end
+  end
+
+  def permissions
+    if stale?(@protocol)
+      render json: {
+        copyable: can_clone_protocol_in_repository?(@protocol),
+        archivable: can_manage_protocol_in_repository?(@protocol),
+        restorable: can_restore_protocol_in_repository?(@protocol)
+      }
     end
   end
 

@@ -2,6 +2,7 @@ class ProtocolsDatatable < CustomDatatable
   # Needed for sanitize_sql_like method
   include ActiveRecord::Sanitization::ClassMethods
   include InputSanitizeHelper
+  include Rails.application.routes.url_helpers
 
   def_delegator :@view, :can_read_protocol_in_repository?
   def_delegator :@view, :can_manage_protocol_in_repository?
@@ -81,17 +82,9 @@ class ProtocolsDatatable < CustomDatatable
       protocol = Protocol.find(record.id)
       result_data << {
         'DT_RowId': record.id,
-        'DT_CanClone': can_clone_protocol_in_repository?(protocol),
-        'DT_CloneUrl': if can_clone_protocol_in_repository?(protocol)
-                         clone_protocol_path(protocol,
-                                             team: @team,
-                                             type: @type)
-                       end,
-        'DT_CanMakePrivate': can_manage_protocol_in_repository?(protocol),
-        'DT_CanPublish': can_manage_protocol_in_repository?(protocol),
-        'DT_CanArchive': can_manage_protocol_in_repository?(protocol),
-        'DT_CanRestore': can_restore_protocol_in_repository?(protocol),
-        'DT_CanExport': can_read_protocol_in_repository?(protocol),
+        'DT_RowAttr': {
+          'data-permissions-url': permissions_protocol_path(protocol)
+        },
         '1': if protocol.in_repository_archived?
                escape_input(record.name)
              else
