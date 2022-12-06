@@ -92,7 +92,7 @@ class ExperimentsController < ApplicationController
     redirect_to module_archive_experiment_path(@experiment) if @experiment.archived_branch?
     @project = @experiment.project
     @active_modules = @experiment.my_modules.active.order(:name)
-    @my_module_visible_table_columns = current_user.settings["visible_my_module_table_columns"].present? ? current_user.settings["visible_my_module_table_columns"] : []
+    @my_module_visible_table_columns = current_user.settings["visible_my_module_table_columns"].presence || []
   end
 
   def load_table

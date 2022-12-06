@@ -386,7 +386,7 @@ Rails.application.routes.draw do
     # as well as 'module info' page for single module (HTML)
     resources :my_modules, path: '/modules', only: [:show, :update] do
       post 'save_table_state', on: :collection, defaults: { format: 'json' }
-      
+
       member do
         get :permissions
         get :actions_dropdown

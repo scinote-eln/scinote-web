@@ -12,7 +12,9 @@ class MyModulesController < ApplicationController
   before_action :check_manage_permissions, only: %i(
     create description due_date update_description update_protocol_description update_protocol
   )
-  before_action :check_read_permissions, except: %i(update update_description update_protocol_description restore_group save_table_state)
+  before_action :check_read_permissions, except: %i(
+    update update_description update_protocol_description restore_group save_table_state
+  )
   before_action :check_update_state_permissions, only: :update_state
   before_action :set_inline_name_editing, only: %i(protocols results activities archive)
   before_action :load_experiment_my_modules, only: %i(protocols results activities archive)
