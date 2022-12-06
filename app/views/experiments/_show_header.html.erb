@@ -50,7 +50,7 @@
           <% end %>
 
           <% if (action_name == 'module_archive' || params[:view_mode] == 'archived') %>
-            <% unless @experiment.my_modules.active.count.zero? %>
+            <% unless @experiment.archived_branch? %>
               <div role="separator" class="divider"></div>
               <li>
                 <%= link_to action_name == 'table' ? table_experiment_path(@experiment) : canvas_experiment_path(@experiment) do %>
