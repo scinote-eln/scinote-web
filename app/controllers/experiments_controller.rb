@@ -12,7 +12,7 @@ class ExperimentsController < ApplicationController
   before_action :check_read_permissions, except: %i(edit archive clone move new create archive_group restore_group)
   before_action :check_canvas_read_permissions, only: %i(canvas)
   before_action :check_create_permissions, only: %i(new create)
-  before_action :check_manage_permissions, only: %i(edit)
+  before_action :check_manage_permissions, only: %i(edit batch_clone_my_modules)
   before_action :check_update_permissions, only: %i(update)
   before_action :check_archive_permissions, only: :archive
   before_action :check_clone_permissions, only: %i(clone_modal clone)
@@ -90,15 +90,19 @@ class ExperimentsController < ApplicationController
 
   def table
     redirect_to module_archive_experiment_path(@experiment) if @experiment.archived_branch?
+    view_state = @experiment.current_view_state(current_user)
+    view_mode = params[:view_mode] || 'active'
+    @current_sort = view_state.state.dig('my_modules', view_mode, 'sort') || 'atoz'
+
     @project = @experiment.project
     @active_modules = @experiment.my_modules.active.order(:name)
     @my_module_visible_table_columns = current_user.settings["visible_my_module_table_columns"].presence || []
   end
 
   def load_table
-    my_modules = @experiment.my_modules
+    my_modules = @experiment.my_modules.readable_by_user(current_user)
     my_modules = params[:view_mode] == 'archived' ? my_modules.archived : my_modules.active
-    render json: Experiments::TableViewService.new(my_modules, current_user, params).call
+    render json: Experiments::TableViewService.new(@experiment, my_modules, current_user, params).call
   end
 
   def edit
@@ -281,6 +285,43 @@ class ExperimentsController < ApplicationController
     render json: { message: message, path: path }, status: status
   end
 
+  def move_modules_modal
+    @experiments = @experiment.project.experiments.active.where.not(id: @experiment)
+                              .managable_by_user(current_user).order(name: :asc)
+    render json: {
+      html: render_to_string(
+        partial: 'move_modules_modal.html.erb'
+      )
+    }
+  end
+
+  def move_modules
+    modules_to_move = {}
+    dst_experiment = @experiment.project.experiments.find(params[:to_experiment_id])
+    return render_403 unless can_manage_experiment?(dst_experiment)
+
+    @experiment.with_lock do
+      params[:my_module_ids].each do |id|
+        my_module = @experiment.my_modules.find(id)
+        return render_403 unless can_move_my_module?(my_module)
+
+        modules_to_move[id] = dst_experiment.id
+      end
+      @experiment.move_modules(modules_to_move, current_user)
+      render json: { message: t('experiments.table.modal_move_modules.success_flash',
+                                experiment: sanitize_input(dst_experiment.name)) }
+    rescue StandardError => e
+      Rails.logger.error(e.message)
+      Rails.logger.error(e.backtrace.join("\n"))
+      render json: {
+        message: t('experiments.table.modal_move_modules.error_flash', experiment: sanitize_input(dst_experiment.name))
+      }, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
+    end
+  rescue ActiveRecord::RecordNotFound
+    render_404
+  end
+
   def module_archive
     @project = @experiment.project
     @my_modules = @experiment.archived_branch? ? @experiment.my_modules : @experiment.my_modules.archived
@@ -364,6 +405,32 @@ class ExperimentsController < ApplicationController
     else
       render json: { message: t('experiments.table.archive_group.error_flash') }, status: :unprocessable_entity
     end
+  end
+
+  def batch_clone_my_modules
+    MyModule.transaction do
+      @my_modules =
+        @experiment.my_modules
+                   .readable_by_user(current_user)
+                   .where(id: params[:my_module_ids])
+
+      @my_modules.find_each do |my_module|
+        new_my_module = my_module.dup
+        new_my_module.update!(
+          {
+            provisioning_status: :in_progress,
+            name: my_module.next_clone_name
+          }.merge(new_my_module.get_new_position)
+        )
+        MyModules::CopyContentJob.perform_later(current_user, my_module.id, new_my_module.id)
+      end
+    end
+
+    render(
+      json: {
+        provisioning_status_urls: @my_modules.map { |m| provisioning_status_my_module_url(m) }
+      }
+    )
   end
 
   private

@@ -15,7 +15,7 @@
       <%= t("experiments.table.toolbar.edit") %>
     </button>
     <% if can_manage_experiment?(@experiment) %>
-      <button id="duplicateTask" class="btn btn-light multiple-object-action hidden only-active">
+      <button id="duplicateTasks" class="btn btn-light multiple-object-action hidden only-active" data-url="<%= batch_clone_my_modules_experiment_path(@experiment) %>">
         <i class="fas fa-copy"></i>
         <%= t("experiments.table.toolbar.duplicate") %>
       </button>
@@ -31,6 +31,10 @@
     <button id="archiveTask" class="btn btn-light multiple-object-action hidden only-active" data-url="<%= archive_my_modules_experiment_path(@experiment) %>"  data-for="archivable">
       <i class="fas fa-archive"></i>
       <%= t("experiments.table.toolbar.archive") %>
+    </button>
+    <button id="restoreTask" class="btn btn-light multiple-object-action hidden only-archive" data-url="<%= restore_my_modules_experiment_path(@experiment) %>"  data-for="restorable">
+      <i class="fas fa-undo"></i>
+      <%= t("experiments.table.toolbar.restore") %>
     </button>
   </div>
   <div class="toolbar-right-block">

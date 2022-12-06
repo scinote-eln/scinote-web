@@ -5,6 +5,22 @@
   --toolbar-height: 4.5em;
   position: relative;
 
+  .title-row {
+    .header-actions {
+      &.experiment-header {
+        column-gap: .25em;
+      }
+
+      .sort-task-menu {
+        &:not(.archived) {
+          [data-view-mode="archived"] {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
   .experiment-table-container {
     height: calc(100vh - var(--content-header-size) - var(--navbar-height) - var(--toolbar-height));
     overflow: auto;
@@ -67,6 +83,31 @@
 
     .table-body {
       display: contents;
+    }
+
+    .loading-overlay {
+      display: none;
+    }
+
+    .table-row-provisioning {
+      .loading-overlay {
+        display: block;
+      }
+
+      .sci-checkbox-container {
+        height: 1.5em;
+        width: 1.5em;
+
+        .loading-overlay::after {
+          background-size: 1.5em;
+          cursor: default;
+        }
+
+        .sci-checkbox,
+        .sci-checkbox-label {
+          display: none;
+        }
+      }
     }
 
     .table-body-cell {
@@ -137,7 +178,7 @@
       }
 
       .users-list {
-        max-height: 400px;
+        max-height: 300px;
         overflow: auto;
       }
 
@@ -148,6 +189,10 @@
 
         .user-avatar {
           padding: 0 .75em;
+
+          img {
+            border-radius: 50%;
+          }
         }
       }
 
@@ -324,6 +369,59 @@
     min-width: 16px;
   }
 
+  .datetime-container {
+    width: 100%;
+
+    .clear-date {
+      cursor: pointer;
+      left: 90%;
+      position: absolute;
+      text-align: center;
+      top: 0;
+      visibility: hidden;
+      width: 16px;
+      z-index: 999;
+
+      &.open {
+        visibility: visible;
+      }
+    }
+
+    .date-text {
+      display: block;
+      position: relative;
+
+      .alert-yellow {
+        color: $brand-warning;
+        margin-left: 4px;
+      }
+
+      .alert-red {
+        color: $brand-danger;
+        margin-left: 4px;
+      }
+    }
+
+    .datetime-picker-container {
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+
+      .calendar-due-date {
+        opacity: 0;
+      }
+    }
+
+    &:hover {
+      .date-text[data-editable=true] {
+        background-color: $color-concrete;
+        border-radius: 4px;
+
+      }
+    }
+  }
+
   .open-comments-sidebar {
     display: contents;
     margin-bottom: 0;
@@ -374,15 +472,9 @@
   }
 }
 
-.datetime-picker-container {
-  width: 45%;
-
-  .fa-calendar-alt {
-    color: $color-volcano !important;
-    font-size: 14px !important;
-  }
+.task_name-column span {
+  color: $color-silver-chalice;
 }
-
 
 .table-display-modal {
   .column-container {
@@ -402,6 +494,11 @@
     .fas {
       cursor: pointer;
       margin-right: 1em;
+
+      &.disabled {
+        color: $color-alto;
+        pointer-events: none;
+      }
     }
 
     &.task_name {
