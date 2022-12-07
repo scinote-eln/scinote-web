@@ -1,4 +1,4 @@
-/* global dropdownSelector */
+/* global dropdownSelector initBSTooltips */
 
 (function() {
   function initNewMyModuleModal() {
@@ -56,6 +56,7 @@
 
         dropdownSelector.selectValues(myModuleUserSelector, $('#new-my-module-modal').data('user-id'));
       });
+    initBSTooltips();
   }
 
   initNewMyModuleModal();
