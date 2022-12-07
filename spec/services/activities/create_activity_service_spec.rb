@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe Activities::CreateActivityService do
   let(:user) { create :user }
-  let(:team) { create :team, :with_members }
+  let(:team) { create :team, created_by: user }
   let(:project) do
     create :project, team: team, user_projects: []
   end

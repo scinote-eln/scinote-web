@@ -64,6 +64,18 @@ class ExperimentsController < ApplicationController
     }
   end
 
+  def permissions
+    if stale?([@experiment, @experiment.project])
+      render json: {
+        editable: can_manage_experiment?(@experiment),
+        moveable: can_move_experiment?(@experiment),
+        archivable: can_archive_experiment?(@experiment),
+        restorable: can_restore_experiment?(@experiment),
+        duplicable: can_clone_experiment?(@experiment)
+      }
+    end
+  end
+
   def canvas
     redirect_to module_archive_experiment_path(@experiment) if @experiment.archived_branch?
     @project = @experiment.project
@@ -190,7 +202,7 @@ class ExperimentsController < ApplicationController
 
   # GET: clone_modal_experiment_path(id)
   def clone_modal
-    @projects = @experiment.project.team.projects
+    @projects = @experiment.project.team.projects.active
                            .with_user_permission(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
     respond_to do |format|
       format.json do
@@ -298,6 +310,17 @@ class ExperimentsController < ApplicationController
     end
   end
 
+  def actions_dropdown
+    if stale?([@experiment, @experiment.project])
+      render json: {
+        html: render_to_string(
+          partial: 'projects/show/experiment_actions_dropdown',
+          locals: { experiment: @experiment }
+        )
+      }
+    end
+  end
+
   private
 
   def load_experiment
@@ -319,6 +342,7 @@ class ExperimentsController < ApplicationController
   end
 
   def check_read_permissions
+    current_team_switch(@experiment.project.team) if current_team != @experiment.project.team
     render_403 unless can_read_experiment?(@experiment) ||
                       @experiment.archived? && can_read_archived_experiment?(@experiment)
   end

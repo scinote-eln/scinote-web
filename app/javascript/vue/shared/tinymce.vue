@@ -88,10 +88,8 @@
         }
       },
       characterCount() {
-        if(this.error) {
-          this.editorInstance.blurDisabled = true;
-        } else {
-          this.editorInstance.blurDisabled = false;
+        if (this.editorInstance()) {
+          this.editorInstance().blurDisabled = this.error != false ;
         }
       }
     },
@@ -126,6 +124,8 @@
         const vueTinyMce = this;
 
 
+        if (this.active) return
+        if (e && $(e.target).prop("tagName") === 'A') return
         if (e && $(e.target).hasClass('atwho-user-popover')) return
         if (e && $(e.target).hasClass('record-info-link')) return
         if (e && $(e.target).parent().hasClass('atwho-inserted')) return
@@ -143,27 +143,29 @@
         ).then(() => {
           this.active = true;
           this.initCharacterCount();
+          this.$emit('editingEnabled');
         });
-        this.$emit('editingEnabled')
       },
       getStaticUrl(name) {
         return $(`meta[name=\'${name}\']`).attr('content');
       },
       initCharacterCount() {
-        if (!this.editorInstance) return;
+        if (!this.editorInstance()) return;
 
-        this.characterCount = $(this.editorInstance.getContent()).text().length
-
-        this.editorInstance.on('input change paste keydown', (e) => {
+        this.characterCount = $(this.editorInstance().getContent()).text().length;
+        this.editorInstance().on('input change paste keydown', (e) => {
           e.currentTarget && (this.characterCount = (e.currentTarget).innerText.length);
         });
 
-        this.editorInstance.on('remove', () => this.active = false)
+        this.editorInstance().on('remove', () => this.active = false);
 
         // clear error on cancel
-        $(this.editorInstance.container).find('.tinymce-cancel-button').on('click', ()=> {
+        $(this.editorInstance().container).find('.tinymce-cancel-button').on('click', ()=> {
           this.characterCount = 0;
         });
+      },
+      editorInstance() {
+        return tinyMCE.editors[0];
       }
     }
   }

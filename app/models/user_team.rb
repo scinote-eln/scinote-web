@@ -57,7 +57,7 @@ class UserTeam < ApplicationRecord
 
   def assign_user_to_visible_projects
     team.projects.visible.each do |project|
-      UserAssignments::GroupAssignmentJob.perform_later(
+      UserAssignments::ProjectGroupAssignmentJob.perform_later(
         team,
         project,
         assigned_by

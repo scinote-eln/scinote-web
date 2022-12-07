@@ -188,7 +188,6 @@ en:
       export_inventory_snapshot_items_assigned_to_task_html: "%{user} exported inventory item(s) assigned to task %{my_module} from inventory %{repository_snapshot}: Snapshot of %{created_at}."
       change_status_on_task_flow_html: "%{user} changed status from <strong>%{my_module_status_old}</strong> to <strong>%{my_module_status_new}</strong> for task %{my_module}."
       move_project_html: "%{user} moved project %{project} from folder %{project_folder_from} to folder %{project_folder_to}."
-
       create_project_folder_html: "%{user} created project folder %{project_folder}."
       rename_project_folder_html: "%{user} renamed project folder %{project_folder}."
       delete_project_folder_html: "%{user} deleted project folder %{project_folder}."
@@ -243,6 +242,18 @@ en:
       protocol_step_checklist_item_added_html: "%{user} created checklist item <strong>%{checklist_item}</strong> in checklist <strong>%{checklist_name}</strong> in protocol's step %{step_position} <strong>%{step}</strong> in Protocol repository"
       protocol_step_checklist_item_edited_html: "%{user} edited checklist item <strong>%{checklist_item}</strong> in checklist <strong>%{checklist_name}</strong> in protocol's step %{step_position} <strong>%{step}</strong> in Protocol repository"
       protocol_step_checklist_item_deleted_html: "%{user} deleted checklist item <strong>%{checklist_item}</strong> in  checklist <strong>%{checklist_name}</strong> in protocol's step %{step_position} <strong>%{step}</strong> in Protocol repository"
+      task_step_duplicated_html: "%{user} duplicated step <strong>%{step}</strong> on task %{my_module}."
+      protocol_step_duplicated_html: "%{user} duplicated step <strong>%{step}</strong> in protocol %{protocol} in Protocol repository."
+      task_step_text_duplicated_html: "%{user} duplicated text <strong>%{text_name}</strong> in protocol’s step %{step_position} <strong>%{step}</strong> on task %{my_module}."
+      task_step_table_duplicated_html: "%{user} duplicated table <strong>%{table_name}</strong> in protocol’s step %{step_position} <strong>%{step}</strong> on task %{my_module}."
+      task_step_checklist_duplicated_html: "%{user} duplicated checklist <strong>%{checklist_name}</strong> in protocol’s step %{step_position} <strong>%{step}</strong> on task %{my_module}."
+      protocol_step_text_duplicated_html: "%{user} duplicated text <strong>%{text_name}</strong> in protocol’s step %{step_position} <strong>%{step}</strong> in Protocol repository."
+      protocol_step_table_duplicated_html: "%{user} duplicated table <strong>%{table_name}</strong> in protocol’s step %{step_position} <strong>%{step}</strong> in Protocol repository."
+      protocol_step_checklist_duplicated_html: "%{user} duplicated checklist <strong>%{checklist_name}</strong> in protocol’s step %{step_position} <strong>%{step}</strong> in Protocol repository."
+      label_template_created_html: "%{user} created %{type} label template %{label_template} in Label templates."
+      label_template_edited_html: "%{user} edited %{type} label template %{label_template} in Label templates."
+      label_template_deleted_html: "%{user} deleted %{type} label template %{label_template} in Label templates."
+      label_template_copied_html: "%{user} copied %{type} label template %{label_template_new} from %{label_template_original} in Label templates."
     activity_name:
       create_project: "Project created"
       rename_project: "Project renamed"
@@ -439,6 +450,18 @@ en:
       protocol_step_checklist_item_added: "Protocol step checklist item added"
       protocol_step_checklist_item_edited: "Protocol step checklist item edited"
       protocol_step_checklist_item_deleted: "Protocol step checklist item deleted"
+      task_step_duplicated: "Task step duplicated"
+      protocol_step_duplicated: "Step duplicated"
+      task_step_text_duplicated: "Task step text duplicated"
+      task_step_table_duplicated: "Task step table duplicated"
+      task_step_checklist_duplicated: "Task step checklist duplicated"
+      protocol_step_text_duplicated: "Protocol step text duplicated"
+      protocol_step_table_duplicated: "Protocol step table duplicated"
+      protocol_step_checklist_duplicated: "Protocol step checklist duplicated"
+      label_template_created: "Label template created"
+      label_template_edited: "Label template edited"
+      label_template_deleted: "Label template deleted"
+      label_template_copied: "Label template copied"
 
 
 
@@ -454,6 +477,7 @@ en:
       protocol_repository: "Protocol repository"
       team: "Team"
       exports: "Exports"
+      label_repository: "Label repository"
     subject_name:
       repository: "Inventory"
       project: "Project"

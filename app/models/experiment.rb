@@ -15,6 +15,7 @@ class Experiment < ApplicationRecord
   before_save -> { report_elements.destroy_all }, if: -> { !new_record? && project_id_changed? }
 
   belongs_to :project, inverse_of: :experiments, touch: true
+  delegate :team, to: :project
   belongs_to :created_by,
              class_name: 'User'
   belongs_to :last_modified_by,
@@ -90,6 +91,16 @@ class Experiment < ApplicationRecord
     return self if teams.blank?
 
     joins(:project).where(project: { team: teams })
+  end
+
+  def connections
+    Connection.joins(
+      'LEFT JOIN my_modules AS inputs ON input_id = inputs.id'
+    ).joins(
+      'LEFT JOIN my_modules AS outputs ON output_id = outputs.id'
+    ).where(
+      'inputs.experiment_id = ? OR outputs.experiment_id = ?', id, id
+    )
   end
 
   def archived_branch?

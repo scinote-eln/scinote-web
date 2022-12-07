@@ -108,7 +108,7 @@
                 <span><%= t('my_modules.assigned_items.assign_from') %></span>
                 <span class="caret pull-right"></span>
               </a>
-              <ul class="dropdown-menu repositories-dropdown-menu" aria-labelledby="repositories-assign-button">
+              <ul class="dropdown-menu repositories-dropdown-menu perfect-scrollbar" aria-labelledby="repositories-assign-button">
               </ul>
             </div>
           <% end %>
@@ -120,6 +120,7 @@
       </div>
       <%= render partial: "my_modules/repositories/full_view_modal" %>
       <%= render partial: "my_modules/modals/update_repository_records_modal" %>
+      <%= render partial: 'label_printers/label_printer_modal' %>
     </div>
     <!-- Protocol -->
     <div class="task-section">

@@ -1,0 +1,45 @@
+// scss-lint:disable SelectorDepth NestingDepth
+.content-label-templates-promo {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+
+  .promo-container {
+    margin-top: 2em;
+    max-width: 800px;
+    position: relative;
+  }
+
+  .promo-image {
+    left: 0;
+    position: absolute;
+    top: 0;
+
+    img {
+      max-width: 60vw;
+    }
+  }
+
+  .promo-text {
+    margin-left: 420px;
+    margin-top: 150px;
+
+    .title {
+      margin-bottom: 1em;
+    }
+
+    .description-item {
+      align-items: center;
+      display: flex;
+      margin-bottom: 1em;
+
+      img {
+        margin-right: 1em;
+      }
+    }
+
+    .btn {
+      margin-top: 1em;
+    }
+  }
+}

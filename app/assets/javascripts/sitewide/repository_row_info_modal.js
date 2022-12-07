@@ -1,4 +1,4 @@
-/* global dropdownSelector bwipjs */
+/* global bwipjs PrintModalComponent RepositoryDatatable */
 
 (function() {
   'use strict';
@@ -58,26 +58,15 @@
   });
 
   $(document).on('click', '.print-label-button', function() {
-    $.ajax({
-      method: 'GET',
-      url: $(this).data('url'),
-      data: { rows: JSON.parse($(this).data('rows')) },
-      dataType: 'json'
-    }).done(function(xhr, settings, data) {
-      $('body').append($.parseHTML(data.responseJSON.html));
-      $('#modal-print-repository-row-label').modal('show', {
-        backdrop: true,
-        keyboard: false
-      }).on('hidden.bs.modal', function() {
-        $(this).remove();
-      });
-
-      dropdownSelector.init('#modal-print-repository-row-label #label_printer_id', {
-        noEmptyOption: true,
-        singleSelect: true,
-        closeOnSelect: true,
-        selectAppearance: 'simple'
-      });
-    });
+    var selectedRows = $(this).data('rows');
+    if (typeof PrintModalComponent !== 'undefined') {
+      PrintModalComponent.showModal = true;
+      if (selectedRows.length) {
+        $('#modal-info-repository-row').modal('hide');
+        PrintModalComponent.row_ids = selectedRows;
+      } else {
+        PrintModalComponent.row_ids = RepositoryDatatable.selectedRows();
+      }
+    }
   });
 }());

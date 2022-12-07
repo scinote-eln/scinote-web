@@ -18,14 +18,20 @@ Canaid::Permissions.register_for(Experiment) do
   # module: create, copy, reposition, create/update/delete connection,
   #         assign/reassign/unassign tags
   can :manage_experiment do |user, experiment|
-    experiment.permission_granted?(user, ExperimentPermissions::MANAGE) &&
-      experiment.my_modules.preload(my_module_status: :my_module_status_implications).all? do |my_module|
-        if my_module.my_module_status
-          my_module.my_module_status.my_module_status_implications.all? { |implication| implication.call(my_module) }
-        else
-          true
-        end
+    next false unless experiment.permission_granted?(user, ExperimentPermissions::MANAGE)
+
+    my_modules = experiment.my_modules
+    unless experiment.association(:my_modules).loaded?
+      my_modules = my_modules.preload(my_module_status: :my_module_status_implications)
+    end
+
+    my_modules.all? do |my_module|
+      if my_module.my_module_status
+        my_module.my_module_status.my_module_status_implications.all? { |implication| implication.call(my_module) }
+      else
+        true
       end
+    end
   end
 
   can :read_experiment do |user, experiment|

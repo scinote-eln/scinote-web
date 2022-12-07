@@ -143,55 +143,6 @@ describe StepsController, type: :controller do
     end
   end
 
-  describe 'POST checklistitem_state' do
-    let(:checklist) { create :checklist, step: step }
-    let(:action) { post :checklistitem_state, params: params, format: :json }
-
-    context 'when checking checklist item' do
-      let(:checklist_item) do
-        create :checklist_item, checklist: checklist, checked: false
-      end
-      let(:params) do
-        { id: step.id, checklistitem_id: checklist_item.id, checked: true }
-      end
-
-      it 'calls create activity for checking checklist item on step' do
-        expect(Activities::CreateActivityService)
-          .to(receive(:call)
-                .with(hash_including(activity_type:
-                                       :check_step_checklist_item)))
-        action
-      end
-
-      it 'adds activity in DB' do
-        expect { action }
-          .to(change { Activity.count })
-      end
-    end
-
-    context 'when unchecking checklist item' do
-      let(:checklist_item) do
-        create :checklist_item, checklist: checklist, checked: true
-      end
-      let(:params) do
-        { id: step.id, checklistitem_id: checklist_item.id, checked: false }
-      end
-
-      it 'calls create activity for unchecking checklist item on step' do
-        expect(Activities::CreateActivityService)
-          .to(receive(:call)
-                .with(hash_including(activity_type:
-                                       :uncheck_step_checklist_item)))
-        action
-      end
-
-      it 'adds activity in DB' do
-        expect { action }
-          .to(change { Activity.count })
-      end
-    end
-  end
-
   describe 'POST toggle_step_state' do
     let(:action) { post :toggle_step_state, params: params, format: :json }
 
