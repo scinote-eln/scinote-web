@@ -16,12 +16,16 @@ module LabelTemplates
     def tags
       {
         default: DEFAULT_COLUMNS,
-        common: repository_tags.pluck(:tags).reduce(:&),
+        common: common_columns + repository_tags.pluck(:tags).reduce(:&),
         repositories: repository_tags
       }
     end
 
     private
+
+    def common_columns
+      @common_columns ||= []
+    end
 
     def repository_tags
       @repository_tags ||=
