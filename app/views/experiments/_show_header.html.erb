@@ -58,7 +58,7 @@
             <span class="caret"></span>
           </button>
           <%= render partial: 'experiments/dropdown_actions.html.erb',
-                              locals: { project: @project, experiment: @experiment } %>
+                              locals: { project: @project, experiment: @experiment, action_name: action_name } %>
         </span>
       <% end %>
       <% if action_name == 'table' %>
