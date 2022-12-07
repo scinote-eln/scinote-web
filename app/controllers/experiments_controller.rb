@@ -224,7 +224,8 @@ class ExperimentsController < ApplicationController
       format.json do
         render json: {
           html: render_to_string(
-            partial: 'clone_modal.html.erb'
+            partial: 'clone_modal.html.erb',
+            locals: { view_mode: params[:view_mode] }
           )
         }
       end
@@ -243,7 +244,8 @@ class ExperimentsController < ApplicationController
     if service.succeed?
       flash[:success] = t('experiments.clone.success_flash',
                           experiment: @experiment.name)
-      redirect_to canvas_experiment_path(service.cloned_experiment)
+      redirect_to canvas_experiment_path(service.cloned_experiment) if params[:view_mode] == 'canvas'
+      redirect_to table_experiment_path(service.cloned_experiment) if params[:view_mode] == 'table'
     else
       flash[:error] = t('experiments.clone.error_flash',
                         experiment: @experiment.name)
@@ -274,14 +276,13 @@ class ExperimentsController < ApplicationController
     if service.succeed?
       flash[:success] = t('experiments.move.success_flash',
                           experiment: @experiment.name)
-      path = canvas_experiment_url(@experiment)
       status = :ok
     else
       message = service.errors.values.join(', ')
       status = :unprocessable_entity
     end
 
-    render json: { message: message, path: path }, status: status
+    render json: { message: message }, status: status
   end
 
   def move_modules_modal
