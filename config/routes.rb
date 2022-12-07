@@ -357,6 +357,8 @@ Rails.application.routes.draw do
         get 'actions_dropdown'
         get :table
         get :load_table
+        get :move_modules_modal
+        post :move_modules
         get 'canvas' # Overview/structure for single experiment
         # AJAX-loaded canvas edit mode (from canvas)
         get 'canvas/edit', to: 'canvas#edit'
@@ -379,6 +381,7 @@ Rails.application.routes.draw do
         get 'sidebar'
         get :assigned_users_to_tasks
         post :archive_my_modules
+        post :batch_clone_my_modules
       end
     end
 
@@ -390,6 +393,7 @@ Rails.application.routes.draw do
       member do
         get :permissions
         get :actions_dropdown
+        get :provisioning_status
       end
       resources :my_module_tags, path: '/tags', only: [:index, :create, :destroy] do
         collection do
