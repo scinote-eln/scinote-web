@@ -1,7 +1,9 @@
 //= require protocols/import_export/import
+/* eslint-disable no-use-before-define */
 /* global ProtocolRepositoryHeader PdfPreview DataTableHelpers */
 
 // Global variables
+var PERMISSIONS = ['archivable', 'restorable', 'copyable'];
 var rowsSelected = [];
 var protocolsTableEl = null;
 var protocolsDatatable = null;
@@ -27,7 +29,7 @@ function initProtocolsTable() {
 
   protocolsDatatable = protocolsTableEl.DataTable({
     order: [[1, "asc"]],
-    dom: "R<'main-actions hidden'<'toolbar'><'filter-container'f>>t<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
+    dom: "R<'main-actions hidden'<'toolbar'><'filter-container'f>>t<'pagination-row hidden'<'actions-toolbar'><'pagination-info'li><'pagination-actions'p>>",
     stateSave: true,
     sScrollX: '100%',
     sScrollXInner: '100%',
@@ -115,6 +117,9 @@ function initProtocolsTable() {
       DataTableHelpers.initLengthAppearance(dataTableWrapper);
       DataTableHelpers.initSearchField(dataTableWrapper, 'Enter...');
       dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
+
+      let actionToolBar = $($('#protocolActionToolbar').html());
+      $('.protocols-container .actions-toolbar').html(actionToolBar);
     },
     stateLoadCallback: function (settings) {
       // Load the table state for the current team
@@ -134,6 +139,26 @@ function initProtocolsTable() {
     if (protocolsDatatable) {
       protocolsDatatable.columns.adjust();
     }
+  });
+}
+
+function checkActionPermission(permission) {
+  let allProtocols;
+
+  allProtocols = rowsSelected.every((id) => {
+    return protocolsTableEl.find(`tbody tr#${id}`).data(permission);
+  });
+
+  return allProtocols;
+}
+
+function loadPermission(id) {
+  let row = protocolsTableEl.find(`tbody tr#${id}`);
+  $.get(row.data('permissions-url'), (result) => {
+    PERMISSIONS.forEach((permission) => {
+      row.data(permission, result[permission]);
+    });
+    updateButtons();
   });
 }
 
@@ -163,15 +188,16 @@ function initRowSelection() {
       rowsSelected.splice(index, 1);
     }
 
+    updateDataTableSelectAllCheckbox();
     if (this.checked) {
-      row.addClass("selected");
+      loadPermission(rowId);
+      row.addClass('selected');
     } else {
-      row.removeClass("selected");
+      row.removeClass('selected');
+      updateButtons();
     }
 
-    updateDataTableSelectAllCheckbox();
     e.stopPropagation();
-    updateButtons();
   });
 
   // Handle click on "Select all" control
@@ -391,6 +417,34 @@ function updateDataTableSelectAllCheckbox() {
 }
 
 function updateButtons() {
+  let actionToolbar = $('.protocols-container .actions-toolbar');
+  $('.dataTables_wrapper').addClass('show-actions');
+
+  if (rowsSelected.length === 0) {
+    $('.dataTables_wrapper').removeClass('show-actions');
+  } else if (rowsSelected.length === 1) {
+    actionToolbar.find('.single-object-action, .multiple-object-action').removeClass('hidden');
+  } else {
+    actionToolbar.find('.single-object-action').addClass('hidden');
+    actionToolbar.find('.multiple-object-action').removeClass('hidden');
+  }
+
+  PERMISSIONS.forEach((permission) => {
+    if (!checkActionPermission(permission)) {
+      actionToolbar.find(`.btn[data-for="${permission}"]`).addClass('hidden');
+    }
+  });
+
+  if (protocolsDatatable) protocolsDatatable.columns.adjust();
+
+  actionToolbar.find('.btn').addClass('notransition');
+  actionToolbar.find('.btn').removeClass('btn-primary').addClass('btn-light');
+  actionToolbar.find('.btn:visible').first().addClass('btn-primary').removeClass('btn-light');
+  actionToolbar.find('.btn').removeClass('notransition');
+}
+
+/*
+function updateButtons() {
   var cloneBtn = $("[data-action='clone']");
   var makePrivateBtn = $("[data-action='make-private']");
   var publishBtn = $("[data-action='publish']");
@@ -506,6 +560,7 @@ function updateButtons() {
     }
   }
 }
+*/
 
 function exportProtocols(ids) {
   if (ids.length > 0) {

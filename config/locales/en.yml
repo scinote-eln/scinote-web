@@ -2555,6 +2555,13 @@ en:
         private: "My protocols"
         external_protocols: "External protocols"
         archive: "Archive"
+      action_toolbar:
+        versions: "Versions"
+        access: "Manage Access"
+        duplicate: "Duplicate"
+        export: "Export"
+        archive: "Archive"
+        restore: "Restore"
       public_description: "Team protocols are visible and can be used by everyone from the team."
       private_description: "My protocols are only visible to you."
       create_new: "New"
