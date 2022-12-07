@@ -694,7 +694,7 @@ class User < ApplicationRecord
 
   def my_module_visible_table_columns
     settings['visible_my_module_table_columns'].presence ||
-    %w(id due_date age results status archived assigned tags comments)
+      %w(id due_date age results status archived assigned tags comments)
   end
 
   protected
