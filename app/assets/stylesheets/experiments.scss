@@ -53,7 +53,7 @@
         grid-row: span 7;
 
         .experiment-code-cell {
-          display: none;
+          display: block;
         }
 
         &.experiment-card {
@@ -93,6 +93,8 @@
             overflow: hidden;
             text-overflow: ellipsis;
             width: 100%;
+            position: relative;
+
 
             a {
               color: inherit;
@@ -531,6 +533,36 @@
     .experiments-filters {
       max-height: calc(100vh - var(--navbar-height) - var(--content-header-size));
       overflow: auto;
+    }
+  }
+}
+
+.cards-wrapper.last-page.cards {
+  .experiment-card {
+    .experiment-name-cell {
+      right: 28px;
+      top: -11px;
+    }
+
+    .data-row {
+      .card-label {
+        color: $color-silver-chalice;
+      }
+    }
+
+    .modified-date-cell {
+      color: $color-silver-chalice;
+      left: 80px;
+      margin-left: auto;
+      margin-right: 114px;
+      position: relative;
+      top: -2px;
+    }
+
+    .experiment-code-cell {
+      left: 20px;
+      position: relative;
+      top: 5px;
     }
   }
 }

@@ -93,10 +93,11 @@ module Dashboard
 
       ordered_query = Activity.from("(#{query.to_sql}) AS activities").where.not(group_id: nil)
                               .select(:group_id,
+                                      :subject_id,
                                       :name,
                                       'MAX(last_change) AS last_change',
                                       'MAX(report_project_id) AS report_project_id')
-                              .group(:group_id, :name)
+                              .group(:group_id, :subject_id, :name)
                               .order('MAX(last_change) DESC').limit(Constants::SEARCH_LIMIT)
 
       query_filter = "(group_id LIKE 'tsk%' OR group_id LIKE 'exp%' OR group_id LIKE 'pro%')" if @mode == 'projects'
@@ -106,6 +107,7 @@ module Dashboard
       ordered_query = ordered_query.where(query_filter) unless @mode == 'all'
 
       recent_objects = ordered_query.as_json.map do |recent_object|
+        object_class = override_subject_type(recent_object).constantize
         recent_object.deep_symbolize_keys!
         recent_object.delete_if { |_k, v| v.nil? }
 
@@ -115,6 +117,10 @@ module Dashboard
         )
         recent_object[:subject_type] = override_subject_type(recent_object)
         recent_object[:name] = escape_input(recent_object[:name])
+        recent_object[:type] = I18n.t("activerecord.models.#{object_class.name.underscore}")
+        if object_class.include?(PrefixedIdModel)
+          recent_object[:code] = object_class::ID_PREFIX + recent_object[:subject_id].to_s
+        end
         recent_object[:url] = generate_url(recent_object)
         recent_object
       end
@@ -231,7 +237,7 @@ module Dashboard
     end
 
     def generate_url(recent_object)
-      object_id = recent_object[:group_id].gsub(/[^0-9]/, '')
+      object_id = recent_object.with_indifferent_access[:group_id].gsub(/[^0-9]/, '')
 
       case recent_object[:subject_type]
       when 'MyModule'
@@ -250,17 +256,19 @@ module Dashboard
     end
 
     def override_subject_type(recent_object)
-      if recent_object[:group_id].include?('pro')
+      group_id = recent_object.with_indifferent_access[:group_id]
+
+      if group_id.include?('pro')
         'Project'
-      elsif recent_object[:group_id].include?('exp')
+      elsif group_id.include?('exp')
         'Experiment'
-      elsif recent_object[:group_id].include?('tsk')
+      elsif group_id.include?('tsk')
         'MyModule'
-      elsif recent_object[:group_id].include?('prt')
+      elsif group_id.include?('prt')
         'Protocol'
-      elsif recent_object[:group_id].include?('inv')
+      elsif group_id.include?('inv')
         'RepositoryBase'
-      elsif recent_object[:group_id].include?('rpt')
+      elsif group_id.include?('rpt')
         'Report'
       end
     end

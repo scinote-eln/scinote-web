@@ -53,7 +53,7 @@ function initProtocolsTable() {
                 </div>`;
       }
     }, {
-      targets: [ 1, 2, 3, 4, 5 ],
+      targets: [ 1, 2, 3, 4, 5, 6 ],
       searchable: true,
       orderable: true
     }],
@@ -61,13 +61,14 @@ function initProtocolsTable() {
       { data: "0" },
       { data: "1" },
       { data: "2" },
+      { data: "3" },
       {
-        data: "3",
+        data: "4",
         visible: repositoryType != "archive"
       },
-      { data: "4" },
       { data: "5" },
-      { data: "6" }
+      { data: "6" },
+      { data: "7" }
     ],
     oLanguage: {
       sSearch: I18n.t('general.filter')

@@ -50,8 +50,6 @@ CREATE FUNCTION public.trim_html_tags(input text, OUT output text) RETURNS text
 
 SET default_tablespace = '';
 
-SET default_table_access_method = heap;
-
 --
 -- Name: active_storage_attachments; Type: TABLE; Schema: public; Owner: -
 --
@@ -709,7 +707,6 @@ CREATE TABLE public.label_templates (
     team_id bigint,
     type character varying,
     width_mm double precision,
-    height_mm double precision,
     height_mm double precision,
     unit integer DEFAULT 0,
     density integer DEFAULT 12
@@ -5331,6 +5328,13 @@ CREATE INDEX index_my_modules_on_last_modified_by_id ON public.my_modules USING 
 
 
 --
+-- Name: index_my_modules_on_my_module_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_my_modules_on_my_module_code ON public.my_modules USING gin ((('TA'::text || id)) public.gin_trgm_ops);
+
+
+--
 -- Name: index_my_modules_on_my_module_group_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5506,6 +5510,13 @@ CREATE INDEX index_projects_on_name ON public.projects USING gin (public.trim_ht
 
 
 --
+-- Name: index_projects_on_project_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_projects_on_project_code ON public.projects USING gin ((('PR'::text || id)) public.gin_trgm_ops);
+
+
+--
 -- Name: index_projects_on_project_folder_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5601,6 +5612,13 @@ CREATE INDEX index_protocols_on_name ON public.protocols USING gin (public.trim_
 --
 
 CREATE INDEX index_protocols_on_parent_id ON public.protocols USING btree (parent_id);
+
+
+--
+-- Name: index_protocols_on_protocol_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_protocols_on_protocol_code ON public.protocols USING gin ((('PT'::text || id)) public.gin_trgm_ops);
 
 
 --
@@ -5741,6 +5759,13 @@ CREATE INDEX index_reports_on_name ON public.reports USING gin (public.trim_html
 --
 
 CREATE INDEX index_reports_on_project_id ON public.reports USING btree (project_id);
+
+
+--
+-- Name: index_reports_on_report_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reports_on_report_code ON public.reports USING gin ((('RP'::text || id)) public.gin_trgm_ops);
 
 
 --
@@ -8568,6 +8593,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220803122405'),
 ('20220818094636'),
 ('20220914124900'),
-('20221007113010');
+('20221007113010'),
+('20221028085051');
 
 

@@ -117,6 +117,10 @@ en:
       project: "Project"
       my_module: "Task"
       experiment: "Experiment"
+      repository: "Inventory"
+      repository_base: "Inventory"
+      protocol: "Protocol"
+      report: "Report"
     errors:
       models:
         project:
@@ -454,6 +458,7 @@ en:
       more_comments: "More Comments"
       card:
         start_date: "Start date"
+        id: "ID"
         visibility: "Visible to"
         users: "Members"
         name: "Project name"
@@ -574,6 +579,7 @@ en:
         thead_last_modified_by: "Last modified by"
         thead_created_at: "Creation date"
         thead_updated_at: "Last update date"
+        thead_id: "ID"
         no_reports: "No reports!"
         pdf: "PDF"
         docx: "DOCX"
@@ -734,10 +740,10 @@ en:
           remove: "Remove report element from the report"
           scinote_link: "SciNote link"
         project_header:
-          user_time: "Project created on %{timestamp}."
+          user_time: "Project %{code} created on %{timestamp}."
           title: "Report for project %{project}"
         module:
-          user_time: "Task created on %{timestamp}."
+          user_time: "Task %{code} created on %{timestamp}."
           started_on: "Start date: %{started_on}"
           status: "Status:"
           no_start_date: "No start date"
@@ -749,7 +755,7 @@ en:
           results: "Results"
           protocol:
             name: 'Protocol'
-            user_time: "Protocol created on %{timestamp}."
+            user_time: "Protocol %{code} created on %{timestamp}."
         experiment:
           user_time: "Experiment %{code} created on %{timestamp}."
           no_description: "No description"
@@ -971,6 +977,8 @@ en:
       no_tags: "+ Add tags"
       manage_tags: "Manage tags"
       create_new_tag: "create new"
+      recent_protocols_from_repository: "Recent protocols from the Repository"
+      code: "ID: "
       recent_protocols_from_repository: "Recent protocols from the Templates"
     notes:
       title: "Notes"
@@ -1239,6 +1247,7 @@ en:
       restore_button: "Restore"
     card:
       name: "Experiment"
+      id: "ID"
       start_date: "Start date"
       modified_date: "Modified date"
       archived_date: "Archived date"
@@ -1325,6 +1334,7 @@ en:
         create: "Add"
         create_new: "New"
       edit:
+        id: "ID:"
         new_module: "New task"
         new_module_hover: "Drag me onto canvas"
         save: "Save workflow"
@@ -1332,6 +1342,7 @@ en:
         cancel: "Cancel"
         unsaved_work: "Are you sure you want to leave this page? All unsaved data will be lost."
         drag_connections: "Drag connection/s from here"
+        no_module_id: "to be assigned after saving"
         options_header: "Options"
         edit_module: "Rename task"
         task_access: "Task access"
@@ -2573,6 +2584,7 @@ en:
       publish: "Move to Team protocols"
       archive_action: "Archive"
       thead_name: "Name"
+      thead_code: "ID"
       thead_keywords: "Keywords"
       thead_nr_of_linked_children: "No. of linked tasks"
       thead_published_by: "Published by"
@@ -3163,12 +3175,14 @@ en:
     comment_placeholder_new: "Add new comment…"
     archived: "Archived"
     sort:
-      new_html: "<i class=\"fas fa-sort-numeric-up\"></i>&nbsp;&nbsp;Started last"
+      new_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;Started last"
       old_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Started first"
       atoz_html: "<i class=\"fas fa-sort-alpha-down\"></i>&nbsp;&nbsp;Name A to Z"
-      ztoa_html: "<i class=\"fas fa-sort-alpha-up\"></i>&nbsp;&nbsp;Name Z to A"
+      ztoa_html: "<i class=\"fas fa-sort-alpha-down-alt\"></i>&nbsp;&nbsp;Name Z to A"
       archived_new_html: "<span class=\"fa-stack\"><i class=\"fas fa-long-arrow-alt-up\"></i><i class=\"fas fa-archive\"></i></span>Archived last"
       archived_old_html: "<span class=\"fa-stack\"><i class=\"fas fa-long-arrow-alt-down\"></i><i class=\"fas fa-archive\"></i></span>Archived first"
+      id_asc_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;ID ascending"
+      id_desc_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;ID descending"
     sort_new:
       new: "Added last"
       old: "Added first"

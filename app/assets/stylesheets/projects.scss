@@ -192,12 +192,24 @@ path, ._jsPlumb_endpoint {
       left: 0;
     }
   }
+
   .panel-body {
     height: 90px;
   }
 
   .ep {
     font-style: italic;
+
+    .task-card-code {
+      color: $color-volcano;
+      font-style: normal;
+      font-weight: 400;
+      margin-bottom: 4px;
+
+      .new-my-module-canvas {
+        color: $color-silver-chalice;
+      }
+    }
   }
 
   .dropdown {
@@ -689,18 +701,13 @@ li.module-hover {
           .project-name-cell {
             align-items: center;
             display: flex;
-            height: 2em;
-            margin: 0 1.75em;
             overflow: hidden;
 
             a {
               color: inherit;
-              overflow: hidden;
-              white-space: nowrap;
             }
 
             .name {
-              line-height: 2em;
               margin: 0;
               overflow: hidden;
               text-overflow: ellipsis;
@@ -854,7 +861,7 @@ li.module-hover {
       }
 
       &.list {
-        grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 3), minmax(100px, auto)) max-content max-content;
+        grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 2), minmax(100px, auto)) max-content max-content;
 
         .projects-group {
           display: contents;
@@ -902,7 +909,7 @@ li.module-hover {
             }
 
             .name {
-              grid-column: 5 span;
+              grid-column: 6 span;
               line-height: 3em;
 
               &:before {
@@ -932,22 +939,28 @@ li.module-hover {
               }
             }
 
-            .start-date-cell {
+            .project-code-cell {
+              display: flex;
+              align-items: center;
               grid-column: 3;
             }
 
-            .visibility-cell {
+            .start-date-cell {
               grid-column: 4;
             }
 
-            .user-cell {
+            .visibility-cell {
               grid-column: 5;
+            }
+
+            .user-cell {
+              grid-column: 6;
             }
 
             .actions-cell {
               align-items: center;
               display: flex;
-              grid-column: 6;
+              grid-column: 7;
               position: initial;
             }
           }
@@ -1017,6 +1030,7 @@ li.module-hover {
       display: none !important;
     }
 
+
     .projects-container {
       .project-actions-menu {
         .btn-light:hover {
@@ -1026,6 +1040,56 @@ li.module-hover {
 
       .cards-wrapper {
         grid-auto-rows: 2.5em;
+
+        .visibility-cell {
+          .value {
+            color: $color-black;
+          }
+        }
+
+        .start-date-cell {
+          .value {
+            color: $color-black;
+          }
+        }
+
+        .archived-date-cell {
+          .value {
+            color: $color-black;
+          }
+        }
+
+        &.last-page.cards {
+          .project-card {
+            .start-date-cell {
+              top: 36px;
+
+              .value {
+                color: $color-black;
+              }
+            }
+
+            .archived-date-cell {
+              top: 26px;
+
+              .value {
+                color: $color-black;
+              }
+            }
+
+            .visibility-cell {
+              top: 16px;
+
+              .value {
+                color: $color-black;
+              }
+            }
+
+            .user-cell {
+              top: 6px;
+            }
+          }
+        }
 
         .card.project-card {
           .data-row {
@@ -1046,23 +1110,23 @@ li.module-hover {
         }
 
         &.list {
-          --list-columns-number: 7;
+          --list-columns-number: 8;
           grid-auto-rows: 3em 1px;
           grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 2), minmax(100px, auto)) max-content;
 
           .card {
             &.folder-card {
               .name {
-                grid-column: 6 span;
+                grid-column: 7 span;
               }
             }
 
             .archived-date-cell {
-              grid-column: 6;
+              grid-column: 7;
             }
 
             .actions-cell {
-              grid-column: 7;
+              grid-column: 8;
               position: initial;
             }
           }
@@ -1080,5 +1144,60 @@ li.module-hover {
 
   .sci-input-container.left-icon {
     margin: 1em 0;
+  }
+}
+
+.cards-wrapper.cards {
+  grid-gap: 25px;
+
+  .project-card {
+    .project-name-cell {
+      align-items: start !important;
+      top: 12%;
+      min-height: 35px;
+      position: absolute;
+      left: 14px;
+      top: 42px;
+
+      a {
+        color: inherit;
+      }
+
+      .name {
+        -webkit-box-orient: vertical;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        max-width: 200px;
+        overflow: hidden;
+      }
+    }
+
+    .project-code-cell {
+      height: min-content;
+      margin-top: 5px;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .data-row {
+      position: relative;
+      top: 5%;
+
+      .card-label {
+        color: #808080 !important;
+      }
+
+      &.start-date-cell {
+        top: 30px;
+      }
+
+      &.visibility-cell {
+        top: 18px;
+      }
+
+      &.user-cell {
+        top: 5px;
+      }
+    }
   }
 }

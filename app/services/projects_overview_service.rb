@@ -16,7 +16,7 @@ class ProjectsOverviewService
     # Update sort if chanhed
     @sort = @view_state.state.dig('projects', @view_mode, 'sort') || 'atoz'
     if @params[:sort] && @sort != @params[:sort] &&
-       %w(new old atoz ztoa archived_old archived_new).include?(@params[:sort])
+       %w(new old atoz ztoa id_asc id_desc archived_old archived_new).include?(@params[:sort])
       @view_state.state['projects'].merge!(Hash[@view_mode, { 'sort': @params[:sort] }.stringify_keys])
       @view_state.save!
       @sort = @view_state.state.dig('projects', @view_mode, 'sort')
@@ -140,6 +140,10 @@ class ProjectsOverviewService
       records.order(:name)
     when 'ztoa'
       records.order(name: :desc)
+    when 'id_asc'
+      records.order(id: :asc)
+    when 'id_desc'
+      records.order(id: :desc)
     when 'archived_old'
       records.order(archived_on: :asc)
     when 'archived_new'
@@ -159,6 +163,10 @@ class ProjectsOverviewService
       records.sort_by { |c| c.name.downcase }
     when 'ztoa'
       records.sort_by { |c| c.name.downcase }.reverse!
+    when 'id_asc'
+      records.sort_by(&:id)
+    when 'id_desc'
+      records.sort_by(&:id).reverse!
     when 'archived_old'
       records.sort_by(&:archived_on)
     when 'archived_new'

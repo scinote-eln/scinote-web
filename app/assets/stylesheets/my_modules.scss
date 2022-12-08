@@ -61,6 +61,20 @@
     word-break: break-all;
     word-wrap: break-word;
   }
+
+  .task-card-code {
+    bottom: 5px;
+    color: $color-volcano;
+    font-weight: 400;
+    position: absolute;
+    right: 5px;
+  }
+}
+
+.archived-task-card-code {
+  bottom: 30px;
+  position: absolute;
+  right: 25px;
 }
 
 // Create wopi file
