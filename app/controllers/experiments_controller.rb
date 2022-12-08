@@ -17,7 +17,7 @@ class ExperimentsController < ApplicationController
   before_action :check_archive_permissions, only: :archive
   before_action :check_clone_permissions, only: %i(clone_modal clone)
   before_action :check_move_permissions, only: %i(move_modal move)
-  before_action :set_inline_name_editing, only: %i(canvas module_archive)
+  before_action :set_inline_name_editing, only: %i(canvas table module_archive)
 
   layout 'fluid'
 
