@@ -59,12 +59,14 @@
 
   $(document).on('click', '.print-label-button', function() {
     var selectedRows = $(this).data('rows');
-    PrintModalComponent.showModal = true;
-    if (selectedRows.length) {
-      $('#modal-info-repository-row').modal('hide');
-      PrintModalComponent.row_ids = selectedRows;
-    } else {
-      PrintModalComponent.row_ids = RepositoryDatatable.selectedRows();
+    if (typeof PrintModalComponent !== 'undefined') {
+      PrintModalComponent.showModal = true;
+      if (selectedRows.length) {
+        $('#modal-info-repository-row').modal('hide');
+        PrintModalComponent.row_ids = selectedRows;
+      } else {
+        PrintModalComponent.row_ids = RepositoryDatatable.selectedRows();
+      }
     }
   });
 }());

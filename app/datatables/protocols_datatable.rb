@@ -85,12 +85,6 @@ class ProtocolsDatatable < CustomDatatable
       protocol = Protocol.find(record.id)
       result_data << {
         'DT_RowId': record.id,
-        'DT_CanEdit': can_manage_protocol_in_repository?(protocol),
-        'DT_EditUrl': if can_manage_protocol_in_repository?(protocol)
-                        edit_protocol_path(protocol,
-                                           team: @team,
-                                           type: @type)
-                      end,
         'DT_CanClone': can_clone_protocol_in_repository?(protocol),
         'DT_CloneUrl': if can_clone_protocol_in_repository?(protocol)
                          clone_protocol_path(protocol,

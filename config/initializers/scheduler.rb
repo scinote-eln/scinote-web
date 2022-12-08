@@ -4,7 +4,7 @@ require 'rufus-scheduler'
 
 scheduler = Rufus::Scheduler.singleton
 
-if ENV['ENABLE_TEMPLATES_SYNC']
+if ENV['ENABLE_TEMPLATES_SYNC'] == 'true'
   # Templates sync periodic task
   scheduler.every '12h' do
     Rails.logger.info('Templates, syncing all template projects')
@@ -33,8 +33,8 @@ if Rails.application.secrets.system_notifications_uri.present? &&
   end
 end
 
-if ENV['ENABLE_FLUICS_SYNC'] && LabelPrinter.fluics.any?
+if ENV['ENABLE_FLUICS_SYNC'] == 'true'
   scheduler.every '24h' do
-    LabelPrinters::Fluics::SyncService.new.sync_templates!
+    LabelPrinters::Fluics::SyncService.new.sync_templates! if LabelPrinter.fluics.any?
   end
 end

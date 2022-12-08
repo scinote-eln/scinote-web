@@ -25,7 +25,7 @@
         margin-bottom: 24px;
       }
 
-      .sci-input-container {
+      .sci-input-container:not(.field_with_errors) {
         margin-bottom: 24px;
 
         .minimum-password-length {

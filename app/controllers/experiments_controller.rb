@@ -342,6 +342,7 @@ class ExperimentsController < ApplicationController
   end
 
   def check_read_permissions
+    current_team_switch(@experiment.project.team) if current_team != @experiment.project.team
     render_403 unless can_read_experiment?(@experiment) ||
                       @experiment.archived? && can_read_archived_experiment?(@experiment)
   end

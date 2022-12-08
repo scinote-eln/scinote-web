@@ -3,12 +3,10 @@
      data-edit-url=""
      data-permissions-url="<%= permissions_experiment_path(experiment) %>">
   <div class="checkbox-cell table-cell">
-    <% if project_is_managable %>
-      <div class="sci-checkbox-container">
-        <input value="1" type="checkbox" class="sci-checkbox experiment-card-selector">
-        <span class="sci-checkbox-label"></span>
-      </div>
-    <% end %>
+    <div class="sci-checkbox-container">
+      <input value="1" type="checkbox" class="sci-checkbox experiment-card-selector">
+      <span class="sci-checkbox-label"></span>
+    </div>
   </div>
   
   <div class="experiment-code-cell table-cell">

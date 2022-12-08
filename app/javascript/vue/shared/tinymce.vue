@@ -85,6 +85,8 @@
       inEditMode() {
         if (this.inEditMode) {
           this.initTinymce();
+        } else {
+          this.wrapTables();
         }
       },
       characterCount() {
@@ -113,6 +115,8 @@
     mounted() {
       if (this.inEditMode) {
         this.initTinymce();
+      } else {
+        this.wrapTables();
       }
     },
     methods: {
@@ -130,7 +134,7 @@
           if (data) {
             this.$emit('update', data)
           }
-          this.$emit('editingDisabled')
+          this.$emit('editingDisabled');
         }).then(() => {
           this.active = true;
           this.initCharacterCount();
@@ -139,6 +143,9 @@
       },
       getStaticUrl(name) {
         return $(`meta[name=\'${name}\']`).attr('content');
+      },
+      wrapTables() {
+        $(this.$el).find('.tinymce-view table').wrapAll('<div style="overflow: auto"></div>');
       },
       initCharacterCount() {
         if (!this.editorInstance()) return;

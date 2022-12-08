@@ -468,7 +468,7 @@ Rails.application.routes.draw do
       get 'users/edit', to: 'user_my_modules#index_edit'
     end
 
-    resources :steps, only: %i(index edit update destroy show) do
+    resources :steps, only: %i(index update destroy show) do
       resources :step_orderable_elements do
         post :reorder, on: :collection
       end
@@ -498,10 +498,7 @@ Rails.application.routes.draw do
         get 'elements'
         get 'attachments'
         post 'upload_attachment'
-        post 'checklistitem_state'
         post 'toggle_step_state'
-        put 'move_down'
-        put 'move_up'
         post 'update_view_state'
         post 'update_asset_view_mode'
         post 'duplicate'
@@ -546,7 +543,7 @@ Rails.application.routes.draw do
       as: :result_table_download
 
     resources :protocols, only: %i(index show edit create update) do
-      resources :steps, only: [:new, :create] do
+      resources :steps, only: [:create] do
         post :reorder, on: :collection
       end
       member do
@@ -742,6 +739,8 @@ Rails.application.routes.draw do
       get 'users/sign_up_provider' => 'users/registrations#new_with_provider'
       get 'users/two_factor_recovery' => 'users/sessions#two_factor_recovery'
       get 'users/two_factor_auth' => 'users/sessions#two_factor_auth'
+      get 'users/expire_in' => 'users/sessions#expire_in'
+      post 'users/revive_session' => 'users/sessions#revive_session'
       post 'users/authenticate_with_two_factor' => 'users/sessions#authenticate_with_two_factor'
       post 'users/authenticate_with_recovery_code' => 'users/sessions#authenticate_with_recovery_code'
       post 'users/complete_sign_up_provider' => 'users/registrations#create_with_provider'
