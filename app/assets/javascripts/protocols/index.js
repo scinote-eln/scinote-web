@@ -119,7 +119,9 @@ function initProtocolsTable() {
       dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
 
       let actionToolBar = $($('#protocolActionToolbar').html());
+      let generalToolbar = $($('#protocolGeneralToolbar').html());
       $('.protocols-container .actions-toolbar').html(actionToolBar);
+      $('.protocols-container .toolbar').html(generalToolbar);
     },
     stateLoadCallback: function (settings) {
       // Load the table state for the current team
