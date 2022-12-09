@@ -897,6 +897,12 @@ en:
         nothing_found: 'Nothing found…'
         field_code: 'Field code: %{code}'
         search_placeholder: 'Type to search…'
+        logo_modal:
+          title: 'Insert logo into the label'
+          description: 'Please specify width or height, another dimension will adjust proportionally'
+          width: 'Width (%{unit})'
+          height: 'Height (%{unit})'
+          insert: 'Insert'
       buttons:
         refresh: 'Refresh preview'
         save: 'Save template code'
