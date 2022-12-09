@@ -1201,7 +1201,7 @@ body > .loading-overlay {
 }
 
 /* Loading animation for ajax events, inspired by Codrops */
-#loading-animation {
+#loading-animation, .loading-animation {
   position: fixed;
   top: 0;
   left: 0;
@@ -1214,7 +1214,7 @@ body > .loading-overlay {
   pointer-events: none;
 }
 
-#loading-animation.animate {
+#loading-animation.animate, .loading-animation.animate {
   z-index: 10000000;
   opacity: 0;
   -webkit-transition: -webkit-transform 5s ease-in, opacity 1s 5s;

@@ -38,6 +38,16 @@
   position: relative !important;
 }
 
+.tox.tox-tinymce {
+  position: absolute;
+  left: -100000px;
+
+  &.tox-tinymce--loaded {
+    position: relative;
+    left: 0;
+  }
+}
+
 .tinymce-placeholder {
   background: $color-concrete;
   opacity: .7;
@@ -45,14 +55,25 @@
   width: 100%;
 }
 
-.tinymce-save-button,
-.tinymce-cancel-button {
+.tox-edit-area {
+  label {
+    padding: 5px !important;
+    color: $color-silver-chalice !important;
+  }
+}
+
+.tinymce-save-button.tox-mbtn,
+.tinymce-cancel-button.tox-mbtn {
   cursor: pointer;
 
   .fas {
     font-family: "Font Awesome 5 Free";
     font-weight: 900;
     margin-top: 3px;
+  }
+
+  &:hover {
+    background: transparent !important;
   }
 }
 

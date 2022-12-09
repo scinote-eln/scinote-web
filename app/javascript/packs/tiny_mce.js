@@ -183,9 +183,10 @@ window.TinyMCE = (() => {
         }
 
         return tinyMCE.init({
-          cache_suffix: '?v=6.1.2', // This suffix should be changed any time library is updated
+          cache_suffix: '?v=6.3.1', // This suffix should be changed any time library is updated
           selector,
           convert_urls: false,
+          promotion: false,
           menu: {
             insert: { title: 'Insert', items: 'link codesample inserttable | charmap hr | nonbreaking anchor | insertdatetime customimageuploader marvinjs' },
           },
@@ -193,7 +194,7 @@ window.TinyMCE = (() => {
           toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link | forecolor backcolor | codesample | customimageuploader marvinjs | help',
           plugins,
           autoresize_bottom_margin: 20,
-          // placeholder: options.placeholder,
+          placeholder: options.placeholder,
           skin: false,
           content_css: false,
           toolbar_sticky: true,
@@ -272,13 +273,14 @@ window.TinyMCE = (() => {
             }
           ],
           init_instance_callback: (editor) => {
-            const editorForm = $(editor.getContainer()).closest('form');
+
+            const editorContainer = $(editor.getContainer());
+            const editorForm = editorContainer.closest('form');
             const menuBar = editorForm.find('.tox-menubar');
 
             $('.tinymce-placeholder').css('height', `${$(editor.editorContainer).height()}px`);
-            $(editor.editorContainer).css('max-height', '0').css('opacity', '0')
             setTimeout(() => {
-              $(editor.editorContainer).css('max-height', '').css('opacity', '')
+              editorContainer.addClass('tox-tinymce--loaded');
               $('.tinymce-placeholder').remove();
             }, 400);
 
@@ -351,6 +353,8 @@ window.TinyMCE = (() => {
             SmartAnnotation.init($(editor.contentDocument.activeElement));
             SmartAnnotation.preventPropagation('.atwho-user-popover');
             initHighlightjsIframe($(editor.iframeElement).contents());
+
+            if (options.afterInitCallback) { options.afterInitCallback() }
           },
           setup: (editor) => {
             editor.on('keydown', (e) => {

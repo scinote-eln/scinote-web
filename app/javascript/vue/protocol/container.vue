@@ -204,7 +204,7 @@
         });
       },
       updateDescription(protocol) {
-        this.protocol.attributes = protocol.data.attributes
+        this.protocol.attributes = protocol.attributes
       },
       addStep(position) {
         $.post(this.urls.add_step_url, {position: position}, (result) => {

@@ -26,7 +26,7 @@
       :objectId="element.attributes.orderable.id"
       :fieldName="'step_text[text]'"
       :lastUpdated="element.attributes.orderable.updated_at"
-      :characterLimit="100000"
+      :characterLimit="10"
       @update="update"
       @editingDisabled="disableEditMode"
       @editingEnabled="enableEditMode"
@@ -79,17 +79,17 @@
     methods: {
       enableEditMode() {
         if (!this.element.attributes.orderable.urls.update_url) return
-        if (this.inEditMode == true) return
+        if (this.inEditMode) return
         this.inEditMode = true
       },
       disableEditMode() {
         this.inEditMode = false
       },
       update(data) {
-        this.element.attributes.orderable.text_view = data.data.attributes.text_view
-        this.element.attributes.orderable.text = data.data.attributes.text
-        this.element.attributes.orderable.name = data.data.attributes.name
-        this.element.attributes.orderable.updated_at = data.data.attributes.updated_at
+        this.element.attributes.orderable.text_view = data.attributes.text_view
+        this.element.attributes.orderable.text = data.attributes.text
+        this.element.attributes.orderable.name = data.attributes.name
+        this.element.attributes.orderable.updated_at = data.attributes.updated_at
         this.$emit('update', this.element, true)
       }
     }
