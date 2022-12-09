@@ -432,6 +432,8 @@
       .protocol-name {
         color: $color-black;
         margin-top: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .protocol-header-info {
