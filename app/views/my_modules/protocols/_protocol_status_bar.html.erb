@@ -20,7 +20,7 @@
         <%= @protocol.parent&.name || @protocol.name %>
       </h2>
       <div class="protocol-header-info">
-        <span>ID: <%= @protocol.code %></span>
+        <span>ID: <%= @protocol.parent&.code || @protocol.code %></span>
       </div>
     </div>
     <div class="dropdown-body">
