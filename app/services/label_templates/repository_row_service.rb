@@ -61,14 +61,14 @@ module LabelTemplates
         @repository_row.created_by.full_name
       when 'ADDED_ON'
         I18n.l(@repository_row.created_at, format: :full)
-      when 'LOGO'
-        logo
+      when /^LOGO/
+        logo(key)
       else
         raise ColumnNotFoundError, I18n.t('label_templates.repository_row.errors.column_not_found')
       end
     end
 
-    def logo
+    def logo(_key)
       raise LogoNotFoundError, I18n.t('label_templates.repository_row.errors.logo_not_supported')
     end
   end

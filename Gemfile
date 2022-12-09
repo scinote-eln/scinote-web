@@ -97,6 +97,7 @@ gem 'devise-async',
     git: 'https://github.com/mhfs/devise-async.git',
     branch: 'devise-4.x'
 gem 'image_processing', '~> 1.12'
+gem 'img2zpl', git: 'https://github.com/scinote-eln/img2zpl'
 gem 'rufus-scheduler', '~> 3.5'
 
 gem 'discard', '~> 1.0'
