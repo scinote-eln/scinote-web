@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 class Protocol < ApplicationRecord
+  ID_PREFIX = 'PT'
+
   include ArchivableModel
+  include PrefixedIdModel
   include SearchableModel
   include RenamingUtil
   include SearchableByNameModel
@@ -18,8 +21,9 @@ class Protocol < ApplicationRecord
   enum protocol_type: {
     unlinked: 0,
     linked: 1,
-    in_repository_published: 2,
-    in_repository_draft: 3
+    in_repository_published_original: 2,
+    in_repository_draft: 3,
+    in_repository_published_version: 4
   }
 
   auto_strip_attributes :name, :description, nullify: false
@@ -28,9 +32,9 @@ class Protocol < ApplicationRecord
   validates :description, length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
   validates :team, presence: true
   validates :protocol_type, presence: true
-  validate :prevent_update, on: :update, if: :in_repository_published?
-  # Only one draft can exist for each protocol
-  validates :previous_version_id, uniqueness: true, if: -> { in_repository_draft? && previous_version_id.present? }
+  validate :prevent_update,
+           on: :update,
+           if: -> { in_repository_published? && !protocol_type_changed?(from: 'in_repository_draft') }
 
   with_options if: :in_module? do
     validates :my_module, presence: true
@@ -38,20 +42,27 @@ class Protocol < ApplicationRecord
     validates :archived_on, absence: true
   end
   with_options if: :linked? do
-    validate :parent_type_constrain
+    validate :linked_parent_type_constrain
     validates :added_by, presence: true
     validates :parent, presence: true
     validates :parent_updated_at, presence: true
   end
   with_options if: :in_repository? do
     validates :name, presence: true
-    validate :versions_same_name_constrain
     validates :added_by, presence: true
     validates :my_module, absence: true
-    validates :parent, absence: true
     validates :parent_updated_at, absence: true
   end
-  with_options if: -> { in_repository? && active? && !previous_version } do |protocol|
+  with_options if: :in_repository_published_version? do
+    validates :parent, presence: true
+    validate :versions_same_name_constrain
+  end
+  with_options if: :in_repository_draft? do
+    # Only one draft can exist for each protocol
+    validates :parent_id, uniqueness: true, if: -> { parent_id.present? }
+    validate :versions_same_name_constrain
+  end
+  with_options if: -> { in_repository? && active? && !parent } do |protocol|
     # Active protocol must have unique name inside its team
     protocol
       .validates_uniqueness_of :name, case_sensitive: false,
@@ -59,7 +70,7 @@ class Protocol < ApplicationRecord
                                conditions: lambda {
                                  active.where(
                                    protocol_type: [
-                                     Protocol.protocol_types[:in_repository_published],
+                                     Protocol.protocol_types[:in_repository_published_original],
                                      Protocol.protocol_types[:in_repository_draft]
                                    ]
                                  )
@@ -73,7 +84,7 @@ class Protocol < ApplicationRecord
                                conditions: lambda {
                                  archived.where(
                                    protocol_type: [
-                                     Protocol.protocol_types[:in_repository_published],
+                                     Protocol.protocol_types[:in_repository_published_original],
                                      Protocol.protocol_types[:in_repository_draft]
                                    ]
                                  )
@@ -285,11 +296,15 @@ class Protocol < ApplicationRecord
   end
 
   def in_repository_active?
-    in_repository && active?
+    in_repository? && active?
   end
 
   def in_repository?
     in_repository_published? || in_repository_draft?
+  end
+
+  def in_repository_published?
+    in_repository_published_original? || in_repository_published_version?
   end
 
   def in_module?
@@ -725,14 +740,26 @@ class Protocol < ApplicationRecord
     errors.add(:base, I18n.t('activerecord.errors.models.protocol.unchangable'))
   end
 
-  def parent_type_constrain
+  def linked_parent_type_constrain
     unless parent.in_repository_published?
       errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_parent_type'))
     end
   end
 
+  def version_parent_type_constrain
+    unless parent.in_repository_published_original?
+      errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_parent_type'))
+    end
+  end
+
+  def draft_parent_type_constrain
+    unless parent.in_repository_published_original?
+      errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_parent_type'))
+    end
+  end
+
   def versions_same_name_constrain
-    if previous_version.present? && !previous_version.name.eql?(name)
+    if parent.present? && !parent.name.eql?(name)
       errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_version_name'))
     end
   end

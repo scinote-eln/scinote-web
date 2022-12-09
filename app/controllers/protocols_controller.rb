@@ -232,7 +232,7 @@ class ProtocolsController < ApplicationController
   def create
     @protocol = Protocol.new(
       team: @current_team,
-      protocol_type: Protocol.protocol_types[@type == :public ? :in_repository_public : :in_repository_private],
+      protocol_type: Protocol.protocol_types[:in_repository_draft],
       added_by: current_user,
       name: t('protocols.index.default_name')
     )
@@ -1102,7 +1102,7 @@ class ProtocolsController < ApplicationController
   def load_team_and_type
     @current_team = current_team
     # :public, :private or :archive
-    @type = (params[:type] || 'public').to_sym
+    @type = (params[:type] || 'active').to_sym
   end
 
   def check_view_all_permissions
