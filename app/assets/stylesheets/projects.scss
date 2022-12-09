@@ -678,7 +678,6 @@ li.module-hover {
             font-weight: bold;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap;
             width: 100%;
           }
 
@@ -720,6 +719,8 @@ li.module-hover {
             top: .2em;
 
             .project-actions-menu {
+              height: 40px;
+
               a {
                 @include font-button;
                 padding: .5em 1em;
@@ -782,6 +783,7 @@ li.module-hover {
                 height: 2em;
                 line-height: 2em;
                 margin-right: .25em;
+                position: unset;
                 width: 2em;
               }
 
@@ -861,6 +863,7 @@ li.module-hover {
       }
 
       &.list {
+        grid-auto-rows: minmax(3em, auto) 1px;
         grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 2), minmax(100px, auto)) max-content max-content;
 
         .projects-group {
@@ -933,6 +936,11 @@ li.module-hover {
               grid-column: 2;
               height: 100%;
               margin: 0;
+              padding: 5px 0;
+
+              h3 {
+                line-height: 1.25em;
+              }
 
               a:hover {
                 color: $brand-primary-light;
@@ -1033,6 +1041,8 @@ li.module-hover {
 
     .projects-container {
       .project-actions-menu {
+        height: 40px;
+
         .btn-light:hover {
           background: $color-alto;
         }
@@ -1054,6 +1064,8 @@ li.module-hover {
         }
 
         .archived-date-cell {
+          z-index: 2;
+
           .value {
             color: $color-black;
           }
@@ -1111,8 +1123,8 @@ li.module-hover {
 
         &.list {
           --list-columns-number: 8;
-          grid-auto-rows: 3em 1px;
-          grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 2), minmax(100px, auto)) max-content;
+          grid-auto-rows: minmax(3em, auto) 1px;
+          grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 3), minmax(100px, auto)) max-content max-content;
 
           .card {
             &.folder-card {
@@ -1121,13 +1133,21 @@ li.module-hover {
               }
             }
 
-            .archived-date-cell {
+            .user-cell {
               grid-column: 7;
+            }
+
+            .archived-date-cell {
+              grid-column: 5;
             }
 
             .actions-cell {
               grid-column: 8;
               position: initial;
+            }
+
+            .visibility-cell {
+              grid-column: 6;
             }
           }
         }
@@ -1167,7 +1187,6 @@ li.module-hover {
         -webkit-box-orient: vertical;
         display: -webkit-box;
         -webkit-line-clamp: 2;
-        max-width: 200px;
         overflow: hidden;
       }
     }
