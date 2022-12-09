@@ -8,16 +8,16 @@
       <span class="sci-checkbox-label"></span>
     </div>
   </div>
-  
+
   <div class="experiment-code-cell table-cell">
     <span><%= experiment.code %></span>
   </div>
-  
+
   <div class="data-row modified-date-cell table-cell">
     <span class="card-label" cards-render="true"><%= t('experiments.card.modified_date') %></span>
     <span class="card-value"><%= l(experiment.updated_at, format: :full_date) %></span>
   </div>
-  
+
   <div class="experiment-name-cell table-cell">
     <div class="workflow-img-wrapper" list-render="true">
       <%= render partial: 'projects/show/experiment_workflow_image_container', locals: { experiment: experiment } %>

@@ -99,7 +99,7 @@
             a {
               color: inherit;
               display: inline-block;
-              line-height: 21px;
+              line-height: 1.25em;
             }
           }
 
@@ -250,7 +250,7 @@
       }
 
       &.list {
-        grid-auto-rows: 1px 5em;
+        grid-auto-rows: 1px minmax(5em, auto);
         grid-template-columns: max-content minmax(100px, auto) minmax(80px, max-content) repeat(calc(var(--list-columns-number) - 4), minmax(100px, auto)) max-content;
         grid-template-rows: 3em;
 
@@ -300,7 +300,7 @@
               grid-column: 2;
               height: 100%;
               margin: 0;
-              padding: .25em 0;
+              padding: .5em 0;
 
               a {
                 overflow: hidden;
@@ -310,6 +310,8 @@
             .experiment-code-cell {
               display: block;
               grid-column: 3;
+              line-height: 1.25em;
+              padding-top: .5em;
             }
 
             .start-date-cell {
@@ -470,7 +472,10 @@
       .cards-wrapper {
         .card.experiment-card {
           .workflow-img-wrapper {
+            align-items: center;
             background-color: $color-alto;
+            display: flex;
+            justify-content: center;
           }
 
           .progress-bar {
