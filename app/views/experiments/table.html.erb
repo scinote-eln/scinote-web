@@ -25,7 +25,7 @@
           </div>
         </div>
         <% Experiments::TableViewService::COLUMNS.each do |col| %>
-          <div class="table-header-cell <%= col %>-column">
+          <div class="table-header-cell <%= col %>-column <%= 'hidden' unless col.to_s.in?(@my_module_visible_table_columns) || col == :task_name %>">
             <%= t("experiments.table.column.#{col}_html") %>
           </div>
         <% end %>

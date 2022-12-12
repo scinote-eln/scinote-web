@@ -96,6 +96,7 @@ class ExperimentsController < ApplicationController
 
     @project = @experiment.project
     @active_modules = @experiment.my_modules.active.order(:name)
+    @my_module_visible_table_columns = current_user.my_module_visible_table_columns
   end
 
   def load_table

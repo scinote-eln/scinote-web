@@ -421,6 +421,7 @@ var ExperimnetTable = {
 
       let visibleColumns = $('.table-display-modal .fa-eye').map((_i, col) => col.dataset.column).toArray();
       // Update columns on backend - $.post('', { columns: visibleColumns }, () => {});
+      $.post($('.table-display-modal').data('column-state-url'), { columns: visibleColumns }, () => {});
 
       $('.experiment-table')[0].style
         .setProperty('--columns-count', $('.table-display-modal .fa-eye:not(.disabled)').length + 1);

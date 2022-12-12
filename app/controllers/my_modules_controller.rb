@@ -7,7 +7,7 @@ class MyModulesController < ApplicationController
   include ApplicationHelper
   include MyModulesHelper
 
-  before_action :load_vars, except: %i(restore_group create new)
+  before_action :load_vars, except: %i(restore_group create new save_table_state)
   before_action :load_experiment, only: %i(create new)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_archive_permissions, only: %i(update)
@@ -15,7 +15,7 @@ class MyModulesController < ApplicationController
     description due_date update_description update_protocol_description update_protocol
   )
   before_action :check_read_permissions, except: %i(create new update update_description
-                                                    update_protocol_description restore_group)
+                                                    update_protocol_description restore_group save_table_state)
   before_action :check_update_state_permissions, only: :update_state
   before_action :set_inline_name_editing, only: %i(protocols results activities archive)
   before_action :load_experiment_my_modules, only: %i(protocols results activities archive)
@@ -81,6 +81,11 @@ class MyModulesController < ApplicationController
         }
       }
     end
+  end
+
+  def save_table_state
+    current_user.settings.update(visible_my_module_table_columns: params[:columns])
+    current_user.save!
   end
 
   def status_state
