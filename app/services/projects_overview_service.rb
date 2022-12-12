@@ -110,7 +110,9 @@ class ProjectsOverviewService
   def filter_project_records(records)
     records = records.archived if @view_mode == 'archived'
     records = records.active if @view_mode == 'active'
-    records = records.where_attributes_like('projects.name', @params[:search]) if @params[:search].present?
+    if @params[:search].present?
+      records = records.where_attributes_like(['projects.name', Project::PREFIXED_ID_SQL], @params[:search])
+    end
     if @params[:members].present?
       records = records.joins(:user_assignments).where(user_assignments: { user_id: @params[:members] })
     end
