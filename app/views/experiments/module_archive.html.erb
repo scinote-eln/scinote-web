@@ -20,7 +20,7 @@
 
     <div class="row" style="margin-top: 10px;">
       <% @my_modules.each_with_index do |my_module, i| %>
-        <div class="module-container col-lg-3 col-md-4 col-sm-12">
+        <div class="module-container col-lg-4 col-md-5 col-sm-12">
           <%= render partial: 'canvas/full_zoom/my_module', locals: {experiment: @experiment, my_module: my_module} %>
         </div>
       <% end %>
