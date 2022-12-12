@@ -1,4 +1,4 @@
-<div class="modal table-display-modal" id="tableDisplayModal" tabindex="-1" role="dialog">
+<div class="modal table-display-modal" id="tableDisplayModal" tabindex="-1" role="dialog" data-column-state-url="<%= save_table_state_my_modules_path %>">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -14,7 +14,7 @@
             <% if col == :archived && params[:view_mode] != 'archived' %>
               <i class="fas fa-eye disabled" data-column="<%= col %>"></i>
             <% elsif col != :task_name %>
-              <i class="fas fa-eye" data-column="<%= col %>"></i>
+              <i class="fas fa-<%= col.to_s.in?(@my_module_visible_table_columns) ? 'eye' : 'eye-slash' %>" data-column="<%= col %>"></i>
             <% end %>
             <%= t("experiments.table.column_display_modal.#{col}") %>
           </div>

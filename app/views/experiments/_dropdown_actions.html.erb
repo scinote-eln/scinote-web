@@ -3,6 +3,10 @@
   aria-labelledby="exActionsMenu-<%= experiment.id %>"
   data-id="<%= experiment.id %>">
 
+  <div class="divider-label">
+    <%= t('experiments.experiment_actions') %>
+  </div>
+
   <% if can_manage_experiment?(experiment) && !archived %>
     <li>
       <%= link_to edit_experiment_url(experiment),
@@ -15,10 +19,10 @@
       <% end %>
     </li>
   <% end %>
-  <li data-hook="experiment-actions-second-child"></li>
+
   <% if can_clone_experiment?(experiment) && !archived %>
     <li>
-      <%= link_to clone_modal_experiment_url(experiment),
+      <%= link_to clone_modal_experiment_url(experiment, :view_mode=>action_name),
                   remote: true, type: 'button',
                   class: 'clone-experiment' do %>
         <i class="fas fa-copy"></i>
@@ -72,9 +76,8 @@
     <li><a href="#" class="form-submit-link" data-turbolinks="false" data-submit-form="<%= experiment_form.options[:html][:id] %>">
           <i class="fas fa-undo"></i><%= t "projects.experiment_archive.restore_option" %></a></li>
   <% end %>
-  <li class="form-dropdown-item">
-    <div class="form-dropdown-item-info">
-      <small><%= t('experiments.experiment_id') %>: <strong><%= experiment.code %></strong></small>
-    </div>
-  </li>
+
+  <div class="divider-label footer">
+    <%= t('experiments.experiment_id') %>: <strong><%= experiment.code %></strong>
+  </div>
 </ul>

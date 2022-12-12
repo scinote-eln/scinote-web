@@ -1214,6 +1214,7 @@ en:
   experiments:
     id: "ID"
     experiment_id: "Experiment ID"
+    experiment_actions: "EXPERIMENT ACTIONS"
     header:
       cards: "Cards"
       table: "Table"

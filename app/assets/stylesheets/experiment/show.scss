@@ -46,3 +46,41 @@
     }
   }
 }
+
+.dropdown-experiment-actions,
+.my-module-menu {
+  .divider-label {
+    @include font-small;
+    color: $color-silver-chalice;
+    padding: .25em 1em;
+
+    &.footer {
+      border-top: 1px solid $color-concrete;
+      padding-top: .5em;
+    }
+  }
+
+  li {
+    @include font-button;
+    cursor: pointer;
+    padding: .5em 1em;
+    white-space: nowrap;
+
+    .fas {
+      display: inline-block;
+      margin-right: .25em;
+      width: 18px;
+    }
+
+    &:hover:not(.divider-label) {
+      background: $color-concrete;
+    }
+
+    a {
+      display: inline-block;
+      margin: -.5em -1em;
+      padding: .5em 1em;
+      width: calc(100% + 2em);
+    }
+  }
+}
