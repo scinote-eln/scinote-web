@@ -23,7 +23,7 @@
               <div class="step-element-name">
                 <strong v-if="includeNumbers" class="step-element-number">{{ index + 1 }}</strong>
                 <i v-if="item.attributes.icon" class="fas" :class="item.attributes.icon"></i>
-                {{ item.attributes.name }}
+                {{ item.attributes.name || getTitle(item) }}
               </div>
             </div>
           </Draggable>
@@ -72,6 +72,15 @@
         this.$nextTick(() => {
           $(this.$refs.modal).modal('hide');
         });
+      },
+      getTitle(item) {
+        let nameRegex = /<(.*?)>(.*?)<\/(.*?)>/gi;
+        if (item.attributes.name === "" && item.attributes.text.match(nameRegex) !== null) {
+            return item.attributes.name = item.attributes.text.match(nameRegex).map((itm, idx) => {
+              if(!itm.includes('<img'))
+                  return itm
+              }).sort(function(a,b){ return b.length - a.length})[0].replace('<div>', '').replace('</div>', '').substring(0, 56)
+        }
       }
     }
   }
