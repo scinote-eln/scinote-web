@@ -74,13 +74,10 @@
         });
       },
       getTitle(item) {
-        let nameRegex = /<(.*?)>(.*?)<\/(.*?)>/gi;
-        if (item.attributes.name === "" && item.attributes.text.match(nameRegex) !== null) {
-            return item.attributes.name = item.attributes.text.match(nameRegex).map((itm, idx) => {
-              if(!itm.includes('<img'))
-                  return itm
-              }).sort(function(a,b){ return b.length - a.length})[0].replace('<div>', '').replace('</div>', '').substring(0, 56)
-        }
+        let $item_html = $(item.attributes.text);
+        $item_html.remove('table, img');
+        let str = $item_html.text().trim();
+        return str.length > 56 ? str.slice(0, 56) + "..." : str
       }
     }
   }
