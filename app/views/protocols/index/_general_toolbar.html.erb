@@ -2,7 +2,7 @@
   <div class="left-general-toolbar">
     <%= button_to protocols_path(type: @type), disabled: !can_create_protocols_in_repository?(@current_team), class: 'btn btn-primary' do %>
       <span class="fas fa-plus"></span>
-      <span class="hidden-xs">&nbsp;<%= t("protocols.index.create_new") %></span>
+      <span class="hidden-xs"><%= t("protocols.index.create_new") %></span>
     <% end %>
 
     <div id="protocol-import-group" class="sci-btn-group" role="group">
@@ -10,7 +10,7 @@
         data-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false">
-        <span class="fas fa-download"></span><span class="hidden-xs">&nbsp;<%= t("protocols.index.import") %></span>
+        <span class="fas fa-download"></span><span class="hidden-xs"><%= t("protocols.index.import") %></span>
       </button>
       <% if can_create_protocols_in_repository?(@current_team) %>
         <ul class="dropdown-menu">
@@ -24,7 +24,7 @@
             </a>
           </li>
           <li>
-          <%= link_to t("protocols.index.import_protocols_io"), protocols_path(team: @current_team, type: :external_protocols) %>
+            <%= link_to t("protocols.index.import_protocols_io"), protocolsio_protocols_path() %>
           </li>
         </ul>
       <% end %>

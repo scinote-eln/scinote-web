@@ -2553,7 +2553,7 @@ en:
       navigation:
         public: "Team protocols"
         private: "My protocols"
-        external_protocols: "External protocols"
+        protocolsio: "External protocols"
         archive: "Archive"
       action_toolbar:
         versions: "Versions"
@@ -2661,7 +2661,7 @@ en:
         row_failed: "Failed"
         row_in_repository_public: "%{protocol} - <i>into Team protocols</i>"
         row_in_repository_private: "%{protocol} - <i>into My protocols</i>"
-      external_protocols:
+      protocolsio:
         search_bar_placeholder: 'Search for protocols'
         protocolsio_title: 'Protocols.io'
         sort_by:
