@@ -143,6 +143,10 @@ en:
             shared_object_id:
               is_globally_shared: "Inventory is already globally shared"
         protocol:
+          unchangable: "Published protocols can not be changed!"
+          wrong_parent_type: "Protocol can only be linked to published protocol!"
+          wrong_version_name: "Protocol versions should have same name!"
+          wrong_version_number: "Protocol version number should be sequential!"
           attributes:
             step_order:
               invalid: "Invalid step order."

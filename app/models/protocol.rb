@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Protocol < ApplicationRecord
+  include ArchivableModel
   include SearchableModel
   include RenamingUtil
   include SearchableByNameModel
@@ -8,6 +9,7 @@ class Protocol < ApplicationRecord
   include PermissionCheckableModel
   include TinyMceImages
 
+  before_validation :assign_version_number, on: :update, if: -> { protocol_type_changed? && in_repository_published? }
   after_update :update_user_assignments, if: -> { saved_change_to_protocol_type? && in_repository? }
   after_destroy :decrement_linked_children
   after_save :update_linked_children
@@ -16,9 +18,8 @@ class Protocol < ApplicationRecord
   enum protocol_type: {
     unlinked: 0,
     linked: 1,
-    in_repository_private: 2,
-    in_repository_public: 3,
-    in_repository_archived: 4
+    in_repository_published: 2,
+    in_repository_draft: 3
   }
 
   auto_strip_attributes :name, :description, nullify: false
@@ -27,63 +28,54 @@ class Protocol < ApplicationRecord
   validates :description, length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
   validates :team, presence: true
   validates :protocol_type, presence: true
+  validate :prevent_update, on: :update, if: :in_repository_published?
+  # Only one draft can exist for each protocol
+  validates :previous_version_id, uniqueness: true, if: -> { in_repository_draft? && previous_version_id.present? }
 
-  with_options if: :in_module? do |protocol|
-    protocol.validates :my_module, presence: true
-    protocol.validates :published_on, absence: true
-    protocol.validates :archived_by, absence: true
-    protocol.validates :archived_on, absence: true
+  with_options if: :in_module? do
+    validates :my_module, presence: true
+    validates :archived_by, absence: true
+    validates :archived_on, absence: true
   end
-  with_options if: :linked? do |protocol|
-    protocol.validates :added_by, presence: true
-    protocol.validates :parent, presence: true
-    protocol.validates :parent_updated_at, presence: true
+  with_options if: :linked? do
+    validate :parent_type_constrain
+    validates :added_by, presence: true
+    validates :parent, presence: true
+    validates :parent_updated_at, presence: true
   end
-
-  with_options if: :in_repository? do |protocol|
-    protocol.validates :name, presence: true
-    protocol.validates :added_by, presence: true
-    protocol.validates :my_module, absence: true
-    protocol.validates :parent, absence: true
-    protocol.validates :parent_updated_at, absence: true
+  with_options if: :in_repository? do
+    validates :name, presence: true
+    validate :versions_same_name_constrain
+    validates :added_by, presence: true
+    validates :my_module, absence: true
+    validates :parent, absence: true
+    validates :parent_updated_at, absence: true
   end
-  with_options if: :in_repository_public? do |protocol|
-    # Public protocol must have unique name inside its team
+  with_options if: -> { in_repository? && active? && !previous_version } do |protocol|
+    # Active protocol must have unique name inside its team
     protocol
       .validates_uniqueness_of :name, case_sensitive: false,
                                scope: :team,
                                conditions: lambda {
-                                 where(
-                                   protocol_type:
-                                     Protocol
-                                      .protocol_types[:in_repository_public]
-                                 )
-                               }
-    protocol.validates :published_on, presence: true
-  end
-  with_options if: :in_repository_private? do |protocol|
-    # Private protocol must have unique name inside its team & user scope
-    protocol
-      .validates_uniqueness_of :name, case_sensitive: false,
-                               scope: %i(team added_by),
-                               conditions: lambda {
-                                 where(
-                                   protocol_type:
-                                     Protocol
-                                       .protocol_types[:in_repository_private]
+                                 active.where(
+                                   protocol_type: [
+                                     Protocol.protocol_types[:in_repository_published],
+                                     Protocol.protocol_types[:in_repository_draft]
+                                   ]
                                  )
                                }
   end
-  with_options if: :in_repository_archived? do |protocol|
-    # Archived protocol must have unique name inside its team & user scope
+  with_options if: -> { in_repository? && archived? && !previous_version } do |protocol|
+    # Archived protocol must have unique name inside its team
     protocol
       .validates_uniqueness_of :name, case_sensitive: false,
-                               scope: %i(team added_by),
+                               scope: :team,
                                conditions: lambda {
-                                 where(
-                                   protocol_type:
-                                    Protocol
-                                      .protocol_types[:in_repository_archived]
+                                 archived.where(
+                                   protocol_type: [
+                                     Protocol.protocol_types[:in_repository_published],
+                                     Protocol.protocol_types[:in_repository_draft]
+                                   ]
                                  )
                                }
     protocol.validates :archived_by, presence: true
@@ -91,7 +83,6 @@ class Protocol < ApplicationRecord
   end
 
   belongs_to :added_by,
-             foreign_key: 'added_by_id',
              class_name: 'User',
              inverse_of: :added_protocols,
              optional: true
@@ -99,21 +90,27 @@ class Protocol < ApplicationRecord
              inverse_of: :protocols,
              optional: true
   belongs_to :team, inverse_of: :protocols
+  belongs_to :previous_version,
+             class_name: 'Protocol',
+             inverse_of: :next_version,
+             optional: true
   belongs_to :parent,
-             foreign_key: 'parent_id',
              class_name: 'Protocol',
              optional: true
   belongs_to :archived_by,
-             foreign_key: 'archived_by_id',
              class_name: 'User',
              inverse_of: :archived_protocols, optional: true
   belongs_to :restored_by,
-             foreign_key: 'restored_by_id',
              class_name: 'User',
              inverse_of: :restored_protocols, optional: true
   has_many :linked_children,
            class_name: 'Protocol',
            foreign_key: 'parent_id'
+  has_one  :next_version,
+           class_name: 'Protocol',
+           foreign_key: 'previous_version_id',
+           inverse_of: :previous_version,
+           dependent: :destroy
   has_many :protocol_protocol_keywords,
            inverse_of: :protocol,
            dependent: :destroy
@@ -288,11 +285,11 @@ class Protocol < ApplicationRecord
   end
 
   def in_repository_active?
-    in_repository_private? || in_repository_public?
+    in_repository && active?
   end
 
   def in_repository?
-    in_repository_active? || in_repository_archived?
+    in_repository_published? || in_repository_draft?
   end
 
   def in_module?
@@ -716,5 +713,33 @@ class Protocol < ApplicationRecord
 
   def decrement_linked_children
     parent.decrement!(:nr_of_linked_children) if parent.present?
+  end
+
+  def assign_version_number
+    return if previous_version.blank?
+
+    self.version_number = previous_version.version_number + 1
+  end
+
+  def prevent_update
+    errors.add(:base, I18n.t('activerecord.errors.models.protocol.unchangable'))
+  end
+
+  def parent_type_constrain
+    unless parent.in_repository_published?
+      errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_parent_type'))
+    end
+  end
+
+  def versions_same_name_constrain
+    if previous_version.present? && !previous_version.name.eql?(name)
+      errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_version_name'))
+    end
+  end
+
+  def version_number_constrain
+    if previous_version.present? && version_number != previous_version.version_number + 1
+      errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_version_number'))
+    end
   end
 end

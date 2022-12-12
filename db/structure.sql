@@ -50,8 +50,6 @@ CREATE FUNCTION public.trim_html_tags(input text, OUT output text) RETURNS text
 
 SET default_tablespace = '';
 
-SET default_table_access_method = heap;
-
 --
 -- Name: active_storage_attachments; Type: TABLE; Schema: public; Owner: -
 --
@@ -709,7 +707,6 @@ CREATE TABLE public.label_templates (
     team_id bigint,
     type character varying,
     width_mm double precision,
-    height_mm double precision,
     height_mm double precision,
     unit integer DEFAULT 0,
     density integer DEFAULT 12
@@ -1374,7 +1371,10 @@ CREATE TABLE public.protocols (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     published_on timestamp without time zone,
-    nr_of_linked_children integer DEFAULT 0
+    nr_of_linked_children integer DEFAULT 0,
+    archived boolean DEFAULT false NOT NULL,
+    version_number integer DEFAULT 1,
+    previous_version_id bigint
 );
 
 
@@ -5562,6 +5562,13 @@ CREATE INDEX index_protocols_on_added_by_id ON public.protocols USING btree (add
 
 
 --
+-- Name: index_protocols_on_archived; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_protocols_on_archived ON public.protocols USING btree (archived);
+
+
+--
 -- Name: index_protocols_on_archived_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5601,6 +5608,13 @@ CREATE INDEX index_protocols_on_name ON public.protocols USING gin (public.trim_
 --
 
 CREATE INDEX index_protocols_on_parent_id ON public.protocols USING btree (parent_id);
+
+
+--
+-- Name: index_protocols_on_previous_version_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_protocols_on_previous_version_id ON public.protocols USING btree (previous_version_id);
 
 
 --
@@ -7868,6 +7882,14 @@ ALTER TABLE ONLY public.repository_list_items
 
 
 --
+-- Name: protocols fk_rails_ae930efae7; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.protocols
+    ADD CONSTRAINT fk_rails_ae930efae7 FOREIGN KEY (previous_version_id) REFERENCES public.protocols(id);
+
+
+--
 -- Name: my_module_statuses fk_rails_b024d15104; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8568,6 +8590,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220803122405'),
 ('20220818094636'),
 ('20220914124900'),
-('20221007113010');
+('20221007113010'),
+('20221125133611');
 
 
