@@ -85,21 +85,20 @@
 
           .experiment-name-cell {
             @include font-h3;
-            -webkit-box-orient: vertical;
-            display: -webkit-box;
             height: 3em;
-            -webkit-line-clamp: 2;
             margin: .25em 1.75em -.25em;
-            overflow: hidden;
-            text-overflow: ellipsis;
             width: 100%;
             position: relative;
 
 
             a {
+              -webkit-box-orient: vertical;
               color: inherit;
-              display: inline-block;
-              line-height: 1.25em;
+              display: -webkit-box;
+              height: 3em;
+              -webkit-line-clamp: 2;
+              overflow: hidden;
+              text-overflow: ellipsis;
             }
           }
 
