@@ -170,8 +170,8 @@ class Repository < RepositoryBase
     team_shared_objects.where(team: team, permission_level: :shared_write).any?
   end
 
-  def self.viewable_by_user(_user, teams)
-    accessible_by_teams(teams)
+  def self.viewable_by_user(user, teams)
+    accessible_by_teams(teams).with_granted_permissions(user, RepositoryPermissions::READ)
   end
 
   def self.name_like(query)
