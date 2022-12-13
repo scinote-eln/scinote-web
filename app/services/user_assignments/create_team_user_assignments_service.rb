@@ -35,6 +35,8 @@ module UserAssignments
       end
 
       @team.team_shared_repositories.find_each do |team_shared_repository|
+        next if team_shared_repository.shared_object.blank?
+
         @team.repository_sharing_user_assignments.create!(
           user: @user,
           user_role: @user_role,
