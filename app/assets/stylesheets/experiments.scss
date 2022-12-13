@@ -48,9 +48,10 @@
     .cards-wrapper {
       --card-min-width: 350px;
       --list-columns-number: 8;
+      grid-auto-rows: auto;
 
       .card {
-        grid-row: span 7;
+        align-items: center;
 
         .experiment-code-cell {
           display: block;
@@ -86,9 +87,8 @@
           .experiment-name-cell {
             @include font-h3;
             height: 3em;
-            margin: .25em 1.75em -.25em;
+            margin-bottom: 1em;
             width: 100%;
-            position: relative;
 
 
             a {
@@ -102,15 +102,9 @@
             }
           }
 
-          .actions {
-            position: absolute;
-            right: .2em;
-            top: .2em;
-          }
-
           .dates-and-img-container {
             display: flex;
-            height: 7em;
+            height: 6em;
             width: 100%;
 
             .dates-container {
@@ -118,16 +112,29 @@
             }
           }
 
+          .actions-cell {
+            height: 36px;
+            margin-left: .5em;
+          }
+
           .data-row {
             display: flex;
-            line-height: 34px;
 
             .card-label {
+              color: $color-silver-chalice;
               width: 7em;
             }
 
             .card-value {
               font-weight: 600;
+            }
+          }
+
+          .modified-date-cell {
+            margin-left: auto;
+
+            .card-label {
+              color: $color-silver-chalice;
             }
           }
 
@@ -150,7 +157,7 @@
             .description-text {
               -webkit-box-orient: vertical;
               display: -webkit-box;
-              height: 3em;
+              height: 4.5em;
               -webkit-line-clamp: 2;
               overflow: hidden;
               padding-top: .25em;
@@ -537,36 +544,6 @@
     .experiments-filters {
       max-height: calc(100vh - var(--navbar-height) - var(--content-header-size));
       overflow: auto;
-    }
-  }
-}
-
-.cards-wrapper.last-page.cards {
-  .experiment-card {
-    .experiment-name-cell {
-      right: 28px;
-      top: -11px;
-    }
-
-    .data-row {
-      .card-label {
-        color: $color-silver-chalice;
-      }
-    }
-
-    .modified-date-cell {
-      color: $color-silver-chalice;
-      left: 80px;
-      margin-left: auto;
-      margin-right: 114px;
-      position: relative;
-      top: -2px;
-    }
-
-    .experiment-code-cell {
-      left: 20px;
-      position: relative;
-      top: 5px;
     }
   }
 }
