@@ -73,7 +73,7 @@
     },
     mounted() {
       if (this.isNew) {
-        this.enableEditMode()
+        this.enableEditMode();
       }
     },
     methods: {
