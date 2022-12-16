@@ -1,7 +1,7 @@
 <template>
   <div class="step-checklist-container" >
     <div class="step-element-header" :class="{ 'editing-name': editingName, 'no-hover': !element.attributes.orderable.urls.update_url }">
-      <div v-if="reorderElementUrl" :title="`checklist ${element.id} grip`" class="step-element-grip" @click="$emit('reorder')">
+      <div v-if="reorderElementUrl" :title="`checklist ${element} grip`" class="step-element-grip" @click="$emit('reorder')">
         <i class="fas fas-rotated-90 fa-exchange-alt"></i>
       </div>
       <div v-else class="step-element-grip-placeholder"></div>
@@ -60,7 +60,7 @@
       </Draggable>
       <div v-if="element.attributes.orderable.urls.create_item_url"
            class="btn btn-light step-checklist-add-item"
-           :title="`add checklist ${element.id} item`"
+           :title="`add checklist ${element.attributes.orderable.name} item`"
            tabindex="0"
            @keyup.enter="addItem"
            @click="addItem">

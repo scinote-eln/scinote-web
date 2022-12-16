@@ -4,7 +4,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+            <span aria-hidden="true" title="close delete attachments modal">&times;</span>
           </button>
           <h2 class="modal-title">{{ i18n.t('assets.delete_file_modal.title') }}</h2>
         </div>
@@ -13,10 +13,10 @@
           <p>{{ i18n.t('assets.delete_file_modal.description_2') }}</p>
         </div>
         <div class="modal-footer">
-          <button type='button' class='btn btn-default' @click="cancel">
+          <button title="cancel deleting attachment modal" type='button' class='btn btn-default' @click="cancel">
             {{ i18n.t('general.cancel') }}
           </button>
-          <button type='button' class='btn btn-danger' @click="confirm">
+          <button title="delete button for attachment modal" type='button' class='btn btn-danger' @click="confirm">
             {{ i18n.t('assets.delete_file_modal.confirm_button') }}
           </button>
         </div>

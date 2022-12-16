@@ -3,7 +3,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button @click="close" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <button @click="close" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" title="close reordable items modal">&times;</span></button>
           <h4 class="modal-title">
             {{ title }}
           </h4>
@@ -17,7 +17,7 @@
             :handle="'.step-element-grip'"
           >
             <div v-for="(item, index) in reorderedItems" :key="item.id" class="step-element-header">
-              <div :title="`reorder item ${item.id}`" class="step-element-grip step-element-grip--draggable">
+              <div :title="`reorder item ${item.attributes.name || item.attributes.placeholder}`" class="step-element-grip step-element-grip--draggable">
                 <i class="fas fa-grip-vertical"></i>
               </div>
               <div class="step-element-name">

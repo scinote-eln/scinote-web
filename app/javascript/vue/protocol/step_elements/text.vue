@@ -6,10 +6,10 @@
     <div v-else class="step-element-grip-placeholder"></div>
     <div class="buttons-container">
       <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" tabindex="-1" @click="enableEditMode($event)">
-        <i :title="`edit text ${element.id}`" class="fas fa-pen"></i>
+        <i :title="`edit text ${element.attributes.orderable.name || element.attributes.orderable.text}`" class="fas fa-pen"></i>
       </button>
       <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
-        <i :title="`delete text ${element.id}`" class="fas fa-trash"></i>
+        <i :title="`delete text ${element.attributes.orderable.name || element.attributes.orderable.text}`" class="fas fa-trash"></i>
       </button>
     </div>
     <Tinymce
