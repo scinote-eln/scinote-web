@@ -24,7 +24,8 @@
                 <strong v-if="includeNumbers" class="step-element-number">{{ index + 1 }}</strong>
                 <i v-if="item.attributes.icon" class="fas" :class="item.attributes.icon"></i>
                 <span :title="item.attributes.name" v-if="item.attributes.name">{{ item.attributes.name }}</span>
-                <span v-else :title="getTitle(item)">{{ getTitle(item) }}</span>
+                <span :title="getTitle(item)" v-else-if="item.attributes.name == ''">{{ getTitle(item) }}</span>
+                <span :title="item.attributes.placeholder" v-else class="step-element-name-placeholder">{{ item.attributes.placeholder }}</span>
               </div>
             </div>
           </Draggable>
