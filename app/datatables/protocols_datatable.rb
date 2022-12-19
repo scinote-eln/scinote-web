@@ -83,6 +83,9 @@ class ProtocolsDatatable < CustomDatatable
     records.map do |record|
       {
         DT_RowId: record.id,
+        DT_RowAttr: {
+          'data-permissions-url': permissions_protocol_path(record)
+        },
         DT_CanClone: can_clone_protocol_in_repository?(record),
         DT_CloneUrl: if can_clone_protocol_in_repository?(record)
                        clone_protocol_path(record, team: @team, type: @type)
