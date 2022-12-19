@@ -1,4 +1,6 @@
 // scss-lint:disable IdSelector
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
 
 .protocols-index {
   .protocols-datatable {
@@ -11,6 +13,27 @@
       flex-direction: column;
       height: 100%;
       width: 100%;
+    }
+
+    .toolbar {
+      display: flex;
+
+      .left-general-toolbar {
+        align-items: center;
+        column-gap: .5em;
+        display: flex;
+      }
+
+      .right-general-toolbar {
+        align-items: center;
+        display: flex;
+        margin-left: auto;
+        margin-right: .5em;
+      }
+
+      .dropdown-menu {
+        min-width: 150px;
+      }
     }
 
     .dataTables_scroll {

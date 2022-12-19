@@ -2557,7 +2557,7 @@ en:
       navigation:
         public: "Team protocols"
         private: "My protocols"
-        external_protocols: "External protocols"
+        protocolsio: "External protocols"
         archive: "Archive"
       action_toolbar:
         versions: "Versions"
@@ -2568,12 +2568,12 @@ en:
         restore: "Restore"
       public_description: "Team protocols are visible and can be used by everyone from the team."
       private_description: "My protocols are only visible to you."
-      create_new: "New"
+      create_new: "New protocol"
       edit: "Edit"
       clone_btn: "Copy"
       import: "Import"
-      import_alt: " from SciNote protocol file(.eln)"
-      import_json: " from protocols.io file"
+      import_alt: "From local file"
+      import_protocols_io: "From Protocols.io"
       modal_import_json_upload: "Upload"
       modal_import_json_title: "Import protocols.io file"
       modal_import_json_notice: "Upload your protocols.io protocol file"
@@ -2665,7 +2665,7 @@ en:
         row_failed: "Failed"
         row_in_repository_public: "%{protocol} - <i>into Team protocols</i>"
         row_in_repository_private: "%{protocol} - <i>into My protocols</i>"
-      external_protocols:
+      protocolsio:
         search_bar_placeholder: 'Search for protocols'
         protocolsio_title: 'Protocols.io'
         sort_by:

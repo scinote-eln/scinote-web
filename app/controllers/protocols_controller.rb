@@ -23,9 +23,10 @@ class ProtocolsController < ApplicationController
     linked_children_datatable
     permissions
   )
-  before_action :switch_team_with_param, only: :index
+  before_action :switch_team_with_param, only: %i(index protocolsio_index)
   before_action :check_view_all_permissions, only: %i(
     index
+    protocolsio_index
     datatable
   )
   # For update_from_parent and update_from_parent_modal we don't need to check
@@ -594,6 +595,8 @@ class ProtocolsController < ApplicationController
       end
     end
   end
+
+  def protocolsio_index; end
 
   def import
     protocol = nil

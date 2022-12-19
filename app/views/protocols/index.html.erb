@@ -18,77 +18,6 @@
       </div>
     </div>
     <div class="protocols-container">
-      <!-- Refactor with new toolbar
-      <div class="sci-btn-group" role="group">
-        <%= button_to protocols_path(type: @type), disabled: !can_create_protocols_in_repository?(@current_team), class: 'btn btn-primary' do %>
-          <span class="fas fa-plus"></span>
-          <span class="hidden-xs">&nbsp;<%= t("protocols.index.create_new") %></span>
-        <% end %>
-        <button class="btn btn-light disabled hidden" data-action="clone">
-          <span class="fas fa-copy"></span>
-          <span class="hidden-xs">&nbsp;<%= t("protocols.index.clone_btn") %></span>
-        </button>
-        <% if @type == :public %>
-          <button class="btn btn-light disabled hidden" data-action="make-private" data-url="<%= make_private_protocols_path %>">
-            <span class="fas fa-eye-slash"></span>
-            <span class="hidden-xs">&nbsp;<%= t("protocols.index.make_private") %></span>
-          </button>
-        <% elsif @type == :private %>
-          <button class="btn btn-light disabled hidden" data-action="publish" data-url="<%= publish_protocols_path %>">
-            <span class="fas fa-eye"></span>
-            <span class="hidden-xs">&nbsp;<%= t("protocols.index.publish") %></span>
-          </button>
-        <% end %>
-      </div>
-      <div id="import-export-protocols" class="sci-btn-group" role="group">
-        <button class="btn btn-light btn-open-file <%= 'disabled hidden' unless can_create_protocols_in_repository?(@current_team) %>"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false">
-          <span class="fas fa-download"></span><span class="hidden-xs">&nbsp;<%= t("protocols.index.import") %></span>
-        </button>
-        <% if can_create_protocols_in_repository?(@current_team) %>
-          <ul class="dropdown-menu">
-            <li>
-              <a class="btn-link-alt btn-default-link btn-open-file" <%= can_create_protocols_in_repository?(@current_team) ? 'data-action="import"' : 'disabled="disabled"' %>>
-                <span class="fas fa-paperclip"></span>
-                <span class="hidden-xs"><%= t("protocols.index.import_alt") %></span>
-                <input type="file" value="" accept=".eln" data-role="import-file-input"
-                data-team-id="<%= @current_team.id %>"
-                data-type="<%= @type %>" data-import-url="<%= import_protocols_path %>"
-                <%= 'disabled="disabled"' unless can_create_protocols_in_repository?(@current_team) %>>
-              </a>
-            </li>
-            <li>
-            <%= link_to "#modal-import-json-protocol", data: { toggle: 'modal' } do %>
-              <span class="fas fa-paperclip"></span>
-              <span class="hidden-xs"><%= t("protocols.index.import_json") %></span>
-            <% end %>
-            </li>
-          </ul>
-        <% end %>
-        <button class="btn btn-light disabled hidden" data-action="export" data-export-url="<%= export_protocols_path() %>">
-          <span class="fas fa-upload"></span>
-          <span class="hidden-xs">&nbsp;<%= t("protocols.index.export") %></span>
-        </button>
-      </div>
-
-      <div class="sci-btn-group" role="group">
-        <button class="btn btn-light disabled hidden" data-action="archive" data-url="<%= archive_protocols_path %>">
-          <span class="fas fa-archive"></span>
-          <span class="hidden-xs">&nbsp;<%= t("protocols.index.archive_action") %></span>
-        </button>
-      </div>
-      <div class="protocols-description">
-        <%= t("protocols.index.archive.description") %>
-      </div>
-      <div class="sci-btn-group" role="group">
-        <button class="btn btn-light disabled hidden" data-action="restore" data-url="<%= restore_protocols_path %>">
-          <span class="fas fa-sync-alt"></span>
-          <span class="hidden-xs">&nbsp;<%= t("protocols.index.restore") %></span>
-        </button>
-      </div>
-      -->
       <%= render partial: "protocols/index/protocols_datatable.html.erb" %>
     </div>
   </div>
@@ -96,6 +25,7 @@
 
 <div id="protocolsio-preview-modal-target"></div>
 <%= render partial: "protocols/import_export/import_json_protocol_modal.html.erb" %>
+<%= render partial: "protocols/index/general_toolbar.html.erb" %>
 <%= render partial: "protocols/index/action_toolbar.html.erb" %>
 <%= render partial: "protocols/index/make_private_results_modal.html.erb" %>
 <%= render partial: "protocols/index/publish_results_modal.html.erb" %>
@@ -104,7 +34,6 @@
 <%= render partial: "protocols/index/restore_results_modal.html.erb" %>
 <%= render partial: "protocols/index/import_results_modal.html.erb" %>
 <%= render partial: "protocols/index/linked_children_modal.html.erb" %>
-<%= render partial: "protocols/index/protocol_preview_modal.html.erb" %>
 
 <%= render partial: "protocols/import_export/import_elements.html.erb" %>
 
@@ -116,6 +45,5 @@
 <%= stylesheet_link_tag 'datatables' %>
 <%= javascript_include_tag "assets/wopi/create_wopi_file" %>
 <%= javascript_include_tag "protocols/index" %>
-<%= javascript_include_tag "protocols/steps" %>
 <%= javascript_pack_tag 'pdfjs/pdf_js' %>
 <%= stylesheet_pack_tag 'pdfjs/pdf_js_styles' %>
