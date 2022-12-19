@@ -36,6 +36,35 @@
       max-width: 20px;
     }
   }
+  .dropdown-selector-container {
+    .my-module-white-tags {
+      color: $color-white;
+    }
+
+    .my-module-tags-color {
+      border-radius: 8px;
+      display: inline-block;
+      height: 16px;
+      margin-right: 5px;
+      width: 16px;
+    }
+
+    .my-module-tags-create-new {
+      opacity: .6;
+    }
+
+    &.open {
+      .input-field {
+        border: 1px solid $color-alto;
+      }
+    }
+
+    &:not(.view-mode):hover {
+      .input-field {
+        border: 1px solid $color-alto;
+      }
+    }
+  }
 
   .datetime-picker-container {
     width: 45%;

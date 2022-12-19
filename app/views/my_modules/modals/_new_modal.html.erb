@@ -1,4 +1,4 @@
-<div class="modal" id="new-my-module-modal" tabindex="-1" role="dialog" 
+<div class="modal" id="new-my-module-modal" tabindex="-1" role="dialog"
      data-create-url="<%= modules_experiment_path(@experiment) %>" data-user-id="<%= current_user.id %>">
   <%= bootstrap_form_for @my_module, url: modules_experiment_path(@experiment), remote: true do |f| %>
     <div class="modal-dialog" role="document">
@@ -36,7 +36,23 @@
               </div>
             </div>
           </div>
-          
+
+          <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <%= f.select 'tag_ids', options_for_select([]),
+                                    {
+                                      id: 'module-tags-selector',
+                                      label: t('experiments.canvas.new_my_module_modal.assigned_tags_label')
+                                    },
+                                    data: {
+                                            'tags-create-url': project_create_tag_path(project_id: @experiment.project_id),
+                                            'ajax-url': search_tags_experiment_path,
+                                            'placeholder': t('experiments.canvas.new_my_module_modal.assigned_tags_placeholder')
+                                    },
+                                    multiple: true %>
+              </div>
+          </div>
+
           <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
               <%= f.select 'user_ids',
@@ -49,7 +65,7 @@
                             }),
                             {
                               id: 'new-modal-assigned-users-selector',
-                              label:  t('experiments.canvas.new_my_module_modal.assigned_users') 
+                              label:  t('experiments.canvas.new_my_module_modal.assigned_users')
                             }, {
                               :multiple => true
                             } %>
