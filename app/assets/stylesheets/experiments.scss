@@ -114,7 +114,7 @@
 
           .actions-cell {
             height: 36px;
-            margin-left: .5em;
+            margin-left: auto;
           }
 
           .data-row {
@@ -127,14 +127,6 @@
 
             .card-value {
               font-weight: 600;
-            }
-          }
-
-          .modified-date-cell {
-            margin-left: auto;
-
-            .card-label {
-              color: $color-silver-chalice;
             }
           }
 
