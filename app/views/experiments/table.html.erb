@@ -4,7 +4,7 @@
 <% provide(:container_class, 'no-second-nav-container') %>
 
 <%= content_for :sidebar do %>
-  <%= render partial: 'shared/sidebar/my_modules.html.erb', locals: { experiment: @experiment, my_modules: @active_modules } %>
+  <%= render partial: 'shared/sidebar/my_modules.html.erb', locals: { experiment: @experiment, my_modules: @my_modules } %>
 <% end %>
 
 <div class="content-pane flexible experiment-new-my_module <%= params[:view_mode] %>" id="experimentTable">

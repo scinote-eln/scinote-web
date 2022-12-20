@@ -21,34 +21,54 @@
     </h1>
     <div class="header-actions experiment-header">
       <%= render layout: 'shared/view_switch', locals: { disabled: false } do %>
-        <li>
-          <%= link_to canvas_experiment_path(@experiment), class: ('selected' if action_name == 'canvas') do %>
-            <i class="fas fa-dice-four button-icon"></i>
-            <%= t('experiments.table.view.canvas') %>
+          <% if params[:view_mode] == 'archived' || params[:action] == "module_archive" %>
+            <li>
+              <%= link_to module_archive_experiment_path(@experiment), class: ('selected' if action_name == 'module_archive') do %>
+                <i class="fas fa-th-large fa-fw"></i>&nbsp;
+                <%= t('experiments.table.view.cards') %>
+              <% end %>
+            </li>
+            <li>
+              <%= link_to table_experiment_path(@experiment, view_mode: :archived), class: ('selected' if action_name == 'table')  do %>
+                <i class="fas fa-list fa-fw"></i>&nbsp;
+                <%= t('experiments.table.view.table') %>
+              <% end %>
+            </li>
+          <% else %>
+            <li>
+              <%= link_to canvas_experiment_path(@experiment), class: ('selected' if action_name == 'canvas') do %>
+                <i class="fas fa-dice-four button-icon"></i>
+                <%= t('experiments.table.view.canvas') %>
+              <% end %>
+            </li>
+            <li>
+              <%= link_to table_experiment_path(@experiment), class: ('selected' if action_name == 'table') do %>
+                <i class="fas fa-list button-icon"></i>
+                <%= t('experiments.table.view.table') %>
+              <% end %>
+            </li>
           <% end %>
-        </li>
-        <li>
-          <%= link_to table_experiment_path(@experiment), class: ('selected' if action_name == 'table') do %>
-            <i class="fas fa-list button-icon"></i>
-            <%= t('experiments.table.view.table') %>
-          <% end %>
-        </li>
-        <div role="separator" class="divider"></div>
-        <li>
-          <% if action_name == 'module_archive' || params[:view_mode] == 'archived' %>
-            <%= link_to action_name == 'table' ? table_experiment_path(@experiment) : canvas_experiment_path(@experiment) do %>
-              <i class="fas fa-rocket button-icon"></i>
-              <%= t('experiments.table.view.active_tasks') %>
+
+          <% if (action_name == 'module_archive' || params[:view_mode] == 'archived') %>
+            <% unless @experiment.archived_branch? %>
+              <div role="separator" class="divider"></div>
+              <li>
+                <%= link_to action_name == 'table' ? table_experiment_path(@experiment) : canvas_experiment_path(@experiment) do %>
+                  <i class="fas fa-rocket button-icon"></i>
+                  <%= t('experiments.table.view.active_tasks') %>
+                <% end %>
+              </li>
             <% end %>
           <% else %>
-            <%= link_to action_name == 'table' ? table_experiment_path(@experiment, view_mode: :archived) : module_archive_experiment_path(@experiment) do %>
-              <i class="fas fa-archive button-icon"></i>
-              <%= t('experiments.table.view.archived_tasks') %>
-            <% end %>
+            <div role="separator" class="divider"></div>
+            <li>
+              <%= link_to action_name == 'table' ? table_experiment_path(@experiment, view_mode: :archived) : module_archive_experiment_path(@experiment) do %>
+                <i class="fas fa-archive button-icon"></i>
+                <%= t('experiments.table.view.archived_tasks') %>
+              <% end %>
+            </li>
           <% end %>
-        </li>
       <% end %>
-
       <% if can_manage_experiment?(@experiment) || can_clone_experiment?(@experiment)  %>
         <!-- experiment actions -->
         <span class="dropdown actions-button">

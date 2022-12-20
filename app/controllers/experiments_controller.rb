@@ -89,13 +89,16 @@ class ExperimentsController < ApplicationController
   end
 
   def table
-    redirect_to module_archive_experiment_path(@experiment) if @experiment.archived_branch?
     view_state = @experiment.current_view_state(current_user)
     view_mode = params[:view_mode] || 'active'
     @current_sort = view_state.state.dig('my_modules', view_mode, 'sort') || 'atoz'
 
     @project = @experiment.project
-    @active_modules = @experiment.my_modules.active.order(:name)
+    if params[:view_mode] == 'archived'
+      @my_modules = @experiment.my_modules.archived.order(:name)
+    else
+      @my_modules = @experiment.my_modules.active.order(:name)
+    end
     @my_module_visible_table_columns = current_user.my_module_visible_table_columns
   end
 
