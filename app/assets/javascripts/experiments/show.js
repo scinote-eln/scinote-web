@@ -27,9 +27,7 @@
         // For submitting correct id values of the chosen tags
         $.map(dropdownSelector.getValues(myModuleTagsSelector), function(val) {
           if ($(`${myModuleTagsSelector} option[value=${val}]`).length === 0) {
-            $(myModuleTagsSelector).append(
-              $(`<option selected="true" value="${val}">${val}</option>`)
-            );
+            $(myModuleTagsSelector).append($(`<option selected="true" value="${val}">${val}</option>`));
           } else {
             $(`${myModuleTagsSelector} option[value=${val}]`).prop('selected', true);
           }
@@ -100,9 +98,6 @@
 
             if (lastTagId > 0) {
               newTag = { my_module_tag: { tag_id: lastTagId } };
-                (function() {
-                  dropdownSelector.removeValue(myModuleTagsSelector, lastTagId, '', true);
-                });
             } else {
               newTag = {
                 tag: {
@@ -113,32 +108,21 @@
                 my_module_id: selectElement.data('module-id'),
                 simple_creation: true
               };
-              $.post(selectElement.data('tags-create-url'), newTag, function(result) {
+              $.post(selectElement.data('tags-create-url'), newTag, function(res) {
                 dropdownSelector.removeValue(myModuleTagsSelector, 0, '', true);
                 dropdownSelector.addValue(myModuleTagsSelector, {
-                  value: result.tag.id,
-                  label: result.tag.name,
+                  value: res.tag.id,
+                  label: res.tag.name,
                   params: {
-                    color: result.tag.color
+                    color: res.tag.color
                   }
                 }, true);
               }).fail(function() {
                 dropdownSelector.removeValue(myModuleTagsSelector, lastTagId, '', true);
               });
             }
-          },
-          onUnSelect: (id) => {
-            $.post(`${$(myModuleTagsSelector).data('update-module-tags-url')}/${id}/destroy_by_tag_id`)
-              .success(function() {
-                dropdownSelector.closeDropdown(myModuleTagsSelector);
-              })
-              .fail(function(r) {
-                if (r.status === 403) {
-                  HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
-                }
-              });
           }
-        })
+        });
       });
   }
 

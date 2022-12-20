@@ -264,15 +264,14 @@ class ProjectsController < ApplicationController
     end
   end
 
-
   def create_tag
     render_403 unless can_manage_project_tags?(@project)
 
     @tag = @project.tags.create(tag_params.merge({
-      created_by: current_user,
-      last_modified_by: current_user,
-      color: Constants::TAG_COLORS.sample
-    }))
+                                                   created_by: current_user,
+                                                   last_modified_by: current_user,
+                                                   color: Constants::TAG_COLORS.sample
+                                                 }))
 
     render json: {
       tag: {
