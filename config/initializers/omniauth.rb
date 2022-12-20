@@ -24,10 +24,11 @@ AZURE_SETUP_PROC = lambda do |env|
 
   provider_id ||= providers.keys.first
   provider_conf = providers[provider_id]
-
-  env['omniauth.strategy'].options[:client_id] = provider_id
-  env['omniauth.strategy'].options[:openid_config_url] = provider_conf[:conf_url]
+  env['omniauth.strategy'].options[:client_id] = provider_id.to_s
+  env['omniauth.strategy'].options[:client_secret] = provider_conf[:client_secret]
+  env['omniauth.strategy'].options[:tenant_id] = provider_conf[:tenant_id]
   env['omniauth.strategy'].options[:sign_in_policy] = provider_conf[:sign_in_policy]
+  env['omniauth.strategy'].options[:name] = 'customazureactivedirectory'
 end
 
 Rails.application.config.middleware.use OmniAuth::Builder do
