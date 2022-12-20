@@ -296,6 +296,8 @@ Rails.application.routes.draw do
       # as well as all activities page for single project (HTML)
       resources :project_activities, path: '/activities', only: [:index]
       resources :tags, only: [:create, :update, :destroy]
+      post :create_tag
+
       resources :reports,
                 path: '/reports',
                 only: %i(edit update create) do
@@ -382,6 +384,7 @@ Rails.application.routes.draw do
         get :assigned_users_to_tasks
         post :archive_my_modules
         post :batch_clone_my_modules
+        get :search_tags
       end
     end
 

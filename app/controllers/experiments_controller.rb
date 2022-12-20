@@ -268,6 +268,23 @@ class ExperimentsController < ApplicationController
     end
   end
 
+  def search_tags
+    assigned_tags = []
+    all_tags = @experiment.project.tags
+    tags = all_tags.where.not(id: assigned_tags)
+                   .where_attributes_like(:name, params[:query])
+                   .select(:id, :name, :color)
+
+    tags = tags.map do |tag|
+      { value: tag.id, label: sanitize_input(tag.name), params: { color: sanitize_input(tag.color) } }
+    end
+
+    if params[:query].present? && tags.select { |tag| tag[:label] == params[:query] }.blank?
+      tags << { value: 0, label: sanitize_input(params[:query]), params: { color: nil } }
+    end
+    render json: tags
+  end
+
   # POST: move_experiment(id)
   def move
     service = Experiments::MoveToProjectService
