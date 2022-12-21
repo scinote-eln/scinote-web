@@ -55,21 +55,24 @@ function initProtocolsTable() {
                 </div>`;
       }
     }, {
-      targets: [ 1, 2, 3, 4, 5 ],
+      targets: [1, 2, 3, 4, 5, 6, 7, 8, 9],
       searchable: true,
       orderable: true
     }],
     columns: [
-      { data: "0" },
-      { data: "1" },
-      { data: "2" },
+      { data: '0' },
+      { data: '1' },
+      { data: '2' },
+      { data: '3' },
+      { data: '4' },
       {
-        data: "3",
-        visible: repositoryType != "archive"
+        data: '5',
+        visible: repositoryType !== 'archived'
       },
-      { data: "4" },
-      { data: "5" },
-      { data: "6" }
+      { data: '6' },
+      { data: '7' },
+      { data: '8' },
+      { data: '9' }
     ],
     oLanguage: {
       sSearch: I18n.t('general.filter')
@@ -232,7 +235,7 @@ function initKeywordFiltering() {
 
 function initProtocolPreviewModal() {
   // Only do this if the repository is public/private
-  if (repositoryType !== "archive") {
+  if (repositoryType !== 'archived') {
     // If you are in protocol repository
     var protocolsEl = protocolsTableEl;
     // If you are in search results
@@ -271,7 +274,7 @@ function initProtocolPreviewModal() {
 
 function initLinkedChildrenModal() {
   // Only do this if the repository is public/private
-  if (repositoryType !== "archive") {
+  if (repositoryType !== "archived") {
     protocolsTableEl.on("click", "a[data-action='load-linked-children']", function(e) {
       var link = $(this);
       $.ajax({

@@ -70,20 +70,34 @@ Canaid::Permissions.register_for(ProjectFolder) do
 end
 
 Canaid::Permissions.register_for(Protocol) do
+  %i(read_protocol_in_repository
+     manage_protocol_in_repository
+     manage_protocol_users)
+    .each do |perm|
+    can perm do |_, protocol|
+      protocol.active?
+    end
+  end
+
   # protocol in repository: read, export, read step, read/download step asset
   can :read_protocol_in_repository do |user, protocol|
-    protocol.in_repository_active? && protocol.permission_granted?(user, ProtocolPermissions::READ)
+    protocol.permission_granted?(user, ProtocolPermissions::READ)
   end
 
   # protocol in repository: update, create/update/delete/reorder step,
   #                         toggle private/public visibility, archive
   can :manage_protocol_in_repository do |user, protocol|
-    protocol.in_repository_active? && protocol.permission_granted?(user, ProtocolPermissions::MANAGE)
+    protocol.permission_granted?(user, ProtocolPermissions::MANAGE)
+  end
+
+  can :manage_protocol_users do |user, protocol|
+    protocol.permission_granted?(user, ProtocolPermissions::USERS_MANAGE) ||
+      protocol.team.permission_granted?(user, TeamPermissions::MANAGE)
   end
 
   # protocol in repository: restore
   can :restore_protocol_in_repository do |user, protocol|
-    protocol.in_repository_archived? && protocol.permission_granted?(user, ProtocolPermissions::MANAGE)
+    protocol.archived? && protocol.permission_granted?(user, ProtocolPermissions::MANAGE)
   end
 
   # protocol in repository: copy

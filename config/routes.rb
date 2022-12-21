@@ -286,6 +286,7 @@ Rails.application.routes.draw do
           resources :my_modules, only: %i(show update edit)
         end
       end
+      resources :protocols, only: %i(show update edit)
     end
 
     resources :projects, except: [:destroy] do
@@ -551,6 +552,7 @@ Rails.application.routes.draw do
         get 'linked_children', to: 'protocols#linked_children'
         post 'linked_children_datatable',
              to: 'protocols#linked_children_datatable'
+        get 'versions_modal', to: 'protocols#versions_modal'
         get 'preview', to: 'protocols#preview'
         patch 'description', to: 'protocols#update_description'
         patch 'name', to: 'protocols#update_name'
