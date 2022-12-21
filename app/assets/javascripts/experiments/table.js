@@ -66,8 +66,8 @@ var ExperimnetTable = {
   },
   initDueDatePicker: function(data) {
     // eslint-disable-next-line no-unused-vars
-    $.each(data, (id, _) => {
-      let element = `#calendarDueDate${id}`;
+    $.each(data, (_, row) => {
+      let element = `#calendarDueDate${row.id}`;
       let dueDateContainer = $(element).closest('#dueDateContainer');
       let dateText = $(element).closest('.date-text');
       let clearDate = $(element).closest('.datetime-container').find('.clear-date');
