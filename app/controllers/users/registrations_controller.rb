@@ -1,4 +1,6 @@
 class Users::RegistrationsController < Devise::RegistrationsController
+  include ::ApplicationHelper
+
   prepend_before_action :check_captcha, only: [:create]
   before_action :registration_enabled?,
                 only: %i(new create new_with_provider create_with_provider)
@@ -183,8 +185,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def two_factor_enable
-    if current_user.valid_otp?(params[:submit_code])
-      recovery_codes = current_user.enable_2fa!
+    user = current_user || User.find_by(id: session[:otp_user_id])
+    if user.valid_otp?(params[:submit_code])
+      recovery_codes = user.enable_2fa!
+      sign_in(user) unless current_user
       render json: { recovery_codes: recovery_codes }
     else
       render json: { error: t('users.registrations.edit.2fa_errors.wrong_submit_code') }, status: :unprocessable_entity
@@ -201,10 +205,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def two_factor_qr_code
-    current_user.assign_2fa_token!
-    qr_code_url = ROTP::TOTP.new(current_user.otp_secret, issuer: 'SciNote').provisioning_uri(current_user.email)
-    qr_code = RQRCode::QRCode.new(qr_code_url)
-    render json: { qr_code: qr_code.as_svg(module_size: 4) }
+    render json: { qr_code: create_2fa_qr_code(current_user) }
   end
 
   protected

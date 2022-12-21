@@ -28,7 +28,7 @@ class Users::SessionsController < Devise::SessionsController
         sign_out
         session[:otp_user_id] = user.id
         store_location_for(:user, initial_page)
-        redirect_to users_two_factor_auth_path
+        redirect_to redirect_to_two_factor_auth
         return
       end
     end
@@ -135,5 +135,9 @@ class Users::SessionsController < Devise::SessionsController
 
   def redirect_to_two_factor_auth?(user)
     user.two_factor_auth_enabled? && !bypass_two_factor_auth?
+  end
+
+  def redirect_to_two_factor_auth
+    users_two_factor_auth_path
   end
 end
