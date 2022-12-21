@@ -91,7 +91,6 @@
       <% if previous_asset && can_read_asset?(previous_asset) %>
         <%= link_to asset_file_preview_path(previous_asset),
           class: "previous-asset gallery-switcher",
-          title: "file preview previous asset button (#{previous_asset.file_name})",
           data: {id: previous_asset.id, gallery_elements: gallery} do %>
           <% if previous_asset.previewable? %>
             <%= image_tag previous_asset.medium_preview,
@@ -102,7 +101,7 @@
             <i class="fas <%= file_fa_icon_class(previous_asset) if previous_asset.file_name %>"></i>
           <% end %>
           <i title="file preview left arrow <%= previous_asset.file_name %>" class="fas fa-angle-left"></i>
-          <span class="file-name"><%= previous_asset.file_name %></span>
+          <span class="file-name" title="<%= previous_asset.file_name %>"><%= previous_asset.file_name %></span>
         <% end %>
       <% end %>
       <span class="file-counter">
@@ -111,9 +110,8 @@
       <% if next_asset && can_read_asset?(next_asset) %>
         <%= link_to asset_file_preview_path(next_asset),
           class: "next-asset gallery-switcher",
-          title: "file preview next asset button (#{next_asset.file_name})",
           data: {id: next_asset.id, gallery_elements: gallery} do %>
-          <span class="file-name"><%= next_asset.file_name %></span>
+          <span class="file-name" title="<%= next_asset.file_name %>"><%= next_asset.file_name %></span>
           <i title="file preview right arrow <%= next_asset.file_name %>" class="fas fa-angle-right"></i>
           <% if next_asset.previewable? %>
             <%= image_tag next_asset.medium_preview,

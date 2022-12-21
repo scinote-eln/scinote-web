@@ -1,5 +1,5 @@
 <% results.each do |checklist| %>
-  <h5>
+  <h5 title="<%= checklist.name %>">
     <span class="fas fa-check-square"></span>
     <%= highlight checklist.name, search_query.strip.split(/\s+/) %>
   </h5>

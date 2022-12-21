@@ -379,7 +379,7 @@
         if (data.params.avatar_url) {
           return `<span class="global-avatar-container" style="margin-top: 10px">
                   <img src="${data.params.avatar_url}" alt="${data.label}"/></span>
-                  <span style="margin-left: 10px">${data.label}</span>`;
+                  <span style="margin-left: 10px" title="${data.label}">${data.label}</span>`;
         }
 
         return data.label;

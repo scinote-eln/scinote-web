@@ -26,7 +26,7 @@
 
       var selectValue = this.$select.val();
       var selectColor = this.$select.find("option:selected").data("color");
-
+      console.log(this)
       var $markupUl = $("<ul>").addClass("dropdown-menu").addClass("dropdown-caret");
       var $markupDiv = $("<div>").addClass("dropdown").addClass("dropdown-colorselector").prop('title', 'color picker');
       var $markupSpan = $("<span>").addClass("btn-colorselector").css("background-color", selectColor);
@@ -58,7 +58,7 @@
 
       // hide the select
       this.$select.hide();
-      
+
       // insert the colorselector
       this.$selector = $($markupDiv).insertAfter(this.$select);
 
@@ -74,7 +74,7 @@
         $(this).next().find("ul").find("li").find("a[data-color='" + color + "']").addClass("selected");
 
         $(this).next().find(".btn-colorselector").css("background-color", color);
-        
+
         callback(value, color, title);
       });
 

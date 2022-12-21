@@ -1,7 +1,7 @@
 <template>
   <div class="dropdown asset-context-menu" ref="menu">
-    <button :title="`attachment ${attachment.attributes.file_name} menu`" class="btn btn-light dropdown-toggle icon-btn" type="button" id="dropdownAssetContextMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-      <i class="fas fa-ellipsis-h"></i>
+    <button class="btn btn-light dropdown-toggle icon-btn" type="button" id="dropdownAssetContextMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      <i class="fas fa-ellipsis-h" :title="`attachment ${attachment.attributes.file_name} menu`"></i>
     </button>
 
     <ul class="dropdown-menu dropdown-menu-right"

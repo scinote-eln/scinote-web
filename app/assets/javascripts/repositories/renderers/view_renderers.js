@@ -188,9 +188,9 @@ $.fn.dataTable.render.AssignedTasksValue = function(data, row) {
       experiments: data.experiments,
       projects: data.projects
     });
-    tasksLinkHTML = `<div class="assign-counter-container dropdown" title="${tooltip}"
+    tasksLinkHTML = `<div class="assign-counter-container dropdown"
             data-task-list-url="${data.task_list_url}">
-              <a title="repository assigned count" href="#" class="assign-counter has-assigned"
+              <a title="repository assigned count ${data.tasks}" href="#" class="assign-counter has-assigned"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">${data.tasks}</a>
               <div class="dropdown-menu" role="menu">
                 <div class="sci-input-container right-icon">

@@ -9,7 +9,7 @@
     </div>
   <% end %>
   <div class="comment-body">
-    <div class="comment-message">
+    <div class="comment-message" title="<%= comment.message %>">
       <%= custom_auto_link(comment.message, team: current_team, simple_format: false) %>
     </div>
     <div class="comment-footer">

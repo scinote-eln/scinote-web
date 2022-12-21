@@ -30,7 +30,7 @@
                  @click="changeState"
                  @keyup.enter="changeState"
                  tabindex="0"
-                 :title="step.attributes.completed ? i18n.t('protocols.steps.status.uncomplete') : i18n.t('protocols.steps.status.complete')"
+                 :title="step.attributes.completed ? i18n.t('protocols.steps.status.uncomplete') + step.attributes.name : i18n.t('protocols.steps.status.complete') + ' ' + step.attributes.name"
             ></div>
           </div>
           <div class="step-position" :title="step.attributes.position + 1">
@@ -105,8 +105,8 @@
         </a>
         <div v-if="urls.update_url" class="step-actions-container">
           <div class="dropdown">
-            <button :title="`step ${step.attributes.name} options menu`" class="btn btn-light dropdown-toggle insert-button" type="button" :id="'stepOptionsMenu_' + step.id" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="true">
-              <i class="fas fa-ellipsis-h"></i>
+            <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'stepOptionsMenu_' + step.id" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="true">
+              <i class="fas fa-ellipsis-h" :title="`step ${step.attributes.name} options menu`"></i>
             </button>
             <ul class="dropdown-menu dropdown-menu-right insert-element-dropdown" :aria-labelledby="'stepOptionsMenu_' + step.id">
               <li class="title">

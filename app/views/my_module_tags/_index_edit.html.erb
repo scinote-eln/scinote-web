@@ -1,25 +1,25 @@
 <h5><%=t "experiments.canvas.modal_manage_tags.subtitle", module: @my_module.name %></h5>
 <% if @my_module_tags.size == 0 then %>
-  <div class="row"><div class="col-xs-4"><em><%= t 'experiments.canvas.modal_manage_tags.no_tags' %></em></div></div>
+  <div class="row"><div class="col-xs-4"><em title="No tags!"><%= t 'experiments.canvas.modal_manage_tags.no_tags' %></em></div></div>
 <% else %>
   <ul class="list-group">
     <% @my_module_tags.each_with_index do |mmt, i| tag = mmt.tag %>
-      <li title="tag <%= tag.id %> with color <%= tag.color %>" class="list-group-item" style="background-color: <%= tag.color %>" data-color="<%= tag.color %>" data-tag-id="<%= tag.id %>" data-name="<%= tag.name %>">
+      <li title="tag <%= tag.name %> with color <%= tag.color %>" class="list-group-item" style="background-color: <%= tag.color %>" data-color="<%= tag.color %>" data-tag-id="<%= tag.id %>" data-name="<%= tag.name %>">
 
         <div class="row tag-show">
           <div class="col-xs-6 col-lg-8">
             <h4><%= tag.name %></h4>
           </div>
             <div class="pull-right" data-view-mode="active">
-              <%= link_to "", remote: true, class: 'btn btn-link edit-tag-link', title: t("experiments.canvas.modal_manage_tags.edit_tag") do %>
-                <span class="fas fa-pencil-alt"></span>
+              <%= link_to "", remote: true, class: 'btn btn-link edit-tag-link' do %>
+                <span class="fas fa-pencil-alt" title="edit tag <%= tag.name %>"></span>
               <% end %>
-              <%= link_to my_module_my_module_tag_path(@my_module, mmt, format: :json), method: :delete, remote: true, class: 'btn btn-link remove-tag-link', title: t("experiments.canvas.modal_manage_tags.remove_tag", module: @my_module.name), data: {tag_id: tag.id} do %>
-                <span class="fas fa-times"></span>
+              <%= link_to my_module_my_module_tag_path(@my_module, mmt, format: :json), method: :delete, remote: true, class: 'btn btn-link remove-tag-link', data: {tag_id: tag.id} do %>
+                <span class="fas fa-times" title="remove tag <%= tag.name %> from task <%= @my_module.name %>"></span>
               <% end %>
               <%= bootstrap_form_for tag, remote: true, url: project_tag_path(@my_module.experiment.project, tag, format: :json), data: {tag_id: tag.id}, method: :delete, html: { class: "delete-tag-form"} do |f| %>
                 <%= hidden_field_tag :my_module_id, @my_module.id %>
-                <%= f.button class: 'btn btn-link delete-tag-link', title: t("experiments.canvas.modal_manage_tags.delete_tag") do %>
+                <%= f.button class: 'btn btn-link delete-tag-link', title: t("experiments.canvas.modal_manage_tags.delete_tag") + tag.name do %>
                   <span class="fas fa-trash-alt"></span>
                 <% end %>
               <% end %>
@@ -30,14 +30,14 @@
           <%= bootstrap_form_for tag, remote: true, url: project_tag_path(@my_module.experiment.project, tag, format: :json), method: :put, html: { class: "edit-tag-form" }, data: {tag_id: tag.id} do |f| %>
             <%= hidden_field_tag :my_module_id, @my_module.id %>
             <div class="col-xs-7">
-              <%= f.text_field :name, hide_label: true, title: 'tag new name field'%>
+              <%= f.text_field :name, hide_label: true, title: "tag #{tag.name} new name field"%>
             </div>
             <div class="pull-right">
               <%= f.color_picker_select :color, Constants::TAG_COLORS, class: "edit-tag-color"%>
-              <%= f.button class: "btn btn-link save-tag-link", title: t("experiments.canvas.modal_manage_tags.save_tag") do %>
+              <%= f.button class: "btn btn-link save-tag-link", title: t("experiments.canvas.modal_manage_tags.save_tag") + tag.name do %>
                 <span class="fas fa-check"></span>
               <% end %>
-              <%= link_to "", remote: true, class: 'btn btn-link cancel-tag-link', title: t("experiments.canvas.modal_manage_tags.cancel_tag") do %>
+              <%= link_to "", remote: true, class: 'btn btn-link cancel-tag-link', title: t("experiments.canvas.modal_manage_tags.cancel_tag") + tag.name do %>
                 <span class="fas fa-times"></span>
               <% end %>
             </div>
