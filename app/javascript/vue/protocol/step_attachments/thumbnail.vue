@@ -1,6 +1,6 @@
 <template>
   <div class="attachment-container asset"
-       :title="`attachment ${attachment.id} thumbnail`"
+       :title="`attachment ${attachment.attributes.file_name} thumbnail`"
        :data-asset-id="attachment.id"
   >
     <a  :href="attachment.attributes.urls.blob"

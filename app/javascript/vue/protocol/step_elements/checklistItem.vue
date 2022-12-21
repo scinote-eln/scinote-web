@@ -1,11 +1,11 @@
 <template>
   <div class="step-checklist-item" :class="{ 'step-element--locked': !checklistItem.attributes.isNew && !(updateUrl || toggleUrl) }">
     <div class="step-element-header" :class="{ 'locked': locked || editingText, 'editing-name': editingText }">
-      <div :title="`checklist item ${checklistItem.id} grip`" v-if="reorderChecklistItemUrl" class="step-element-grip step-element-grip--draggable" :class="{ 'step-element-grip--disabled': !draggable }">
+      <div :title="`checklist item ${checklistItem.attributes.text} grip`" v-if="reorderChecklistItemUrl" class="step-element-grip step-element-grip--draggable" :class="{ 'step-element-grip--disabled': !draggable }">
         <i class="fas fa-grip-vertical"></i>
       </div>
       <div v-else class="step-element-grip-placeholder"></div>
-      <div :title="`checklist item ${checklistItem.attributes.text || 'new'} name`" class="step-element-name" :class="{ 'done': checklistItem.attributes.checked }">
+      <div class="step-element-name" :class="{ 'done': checklistItem.attributes.checked }">
         <div v-if="!inRepository" class="sci-checkbox-container" :class="{ 'disabled': !toggleUrl }">
           <input ref="checkbox"
                  type="checkbox"
@@ -19,6 +19,7 @@
         <div v-else class="sci-checkbox-view-mode"></div>
         <div class="step-checklist-text" :class="{ 'step-element--locked': !checklistItem.attributes.isNew && !updateUrl }">
           <InlineEdit
+            :title="`checklist item ${checklistItem.attributes.text || 'new'} name`"
             :value="checklistItem.attributes.text"
             :sa_value="checklistItem.attributes.sa_text"
             :characterLimit="10000"
