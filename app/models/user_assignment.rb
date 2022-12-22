@@ -16,6 +16,10 @@ class UserAssignment < ApplicationRecord
 
   validates :user, uniqueness: { scope: %i(assignable team_id) }
 
+  def last_assignable_owner?
+    assignable_owners.count == 1 && user_role.owner?
+  end
+
   private
 
   def assign_team_child_objects
@@ -28,5 +32,11 @@ class UserAssignment < ApplicationRecord
 
   def unassign_team_child_objects
     UserAssignments::RemoveTeamUserAssignmentsService.new(self).call
+  end
+
+  def assignable_owners
+    @assignable_owners ||= assignable.user_assignments
+                                     .includes(:user_role)
+                                     .where(user_roles: { name: I18n.t('user_roles.predefined.owner') })
   end
 end
