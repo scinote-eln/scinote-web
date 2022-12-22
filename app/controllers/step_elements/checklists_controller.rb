@@ -43,6 +43,7 @@ module StepElements
         @step.step_orderable_elements.where('position > ?', position).order(position: :desc).each do |element|
           element.update(position: element.position + 1)
         end
+        @checklist.name += ' (1)'
         new_checklist = @checklist.duplicate(@step, current_user, position + 1)
         log_step_activity(:checklist_duplicated, { checklist_name: @checklist.name })
         render_step_orderable_element(new_checklist)
