@@ -42,7 +42,7 @@ class MyModulesController < ApplicationController
     @my_module.assign_attributes(created_by: current_user, last_modified_by: current_user, x: x, y: y)
     @my_module.transaction do
       if my_module_tags_params[:tag_ids].present?
-        @my_module.tags << @experiment.project.tags.where(id: my_module_tags_params[:tag_ids])
+        @my_module.tags << @experiment.project.tags.where(id: JSON.parse(my_module_tags_params[:tag_ids]))
       end
       if my_module_designated_users_params[:user_ids].present?
         @my_module.designated_users << @experiment.users.where(id: my_module_designated_users_params[:user_ids])
@@ -503,7 +503,7 @@ class MyModulesController < ApplicationController
   end
 
   def my_module_tags_params
-    params.require(:my_module).permit(tag_ids: [])
+    params.require(:my_module).permit(:tag_ids)
   end
 
   def my_module_designated_users_params
