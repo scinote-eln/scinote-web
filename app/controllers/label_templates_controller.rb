@@ -130,7 +130,9 @@ class LabelTemplatesController < ApplicationController
 
   def zpl_preview
     service = LabelTemplatesPreviewService.new(params, current_user)
-    payload = service.generate_zpl_preview!
+
+    # only render last generated label image
+    payload = service.generate_zpl_preview!.split.last
 
     if service.error.blank?
       render json: { base64_preview: payload }

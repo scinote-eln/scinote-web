@@ -427,6 +427,10 @@ var ExperimnetTable = {
         .setProperty('--columns-count', $('.table-display-modal .fa-eye:not(.disabled)').length + 1);
     });
   },
+  clearRowTaskSelection: function() {
+    this.selectedMyModules = [];
+    this.updateExperimentToolbar();
+  },
   initNewTaskModal: function(table) {
     $('.experiment-new-my_module').on('ajax:success', '#new-my-module-modal', function() {
       table.loadTable();
@@ -507,6 +511,7 @@ var ExperimnetTable = {
       });
 
       initBSTooltips();
+      this.clearRowTaskSelection();
       this.initProvisioningStatusPolling();
     });
   },
@@ -557,7 +562,6 @@ var ExperimnetTable = {
     this.initManageColumnsModal();
     this.initNewTaskModal(this);
     this.initMyModuleActions();
-    this.updateExperimentToolbar();
     this.initRestoreMyModules();
     this.initManageUsersDropdown();
   }

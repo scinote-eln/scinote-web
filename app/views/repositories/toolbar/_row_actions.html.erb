@@ -3,7 +3,7 @@
     <% if can_manage_repository_rows?(@repository) %>
       <button type="button" title="<%= t('repositories.show.button_tooltip.edit') %>"
               class="btn btn-light editAdd auto-shrink-button"
-              id="editRepositoryRecord" disabled data-view-mode="active">
+              id="editRepositoryRecord" data-view-mode="active">
         <span class="fas fa-pencil-alt"></span>
         <span class="button-text"><%= t("repositories.edit_record") %></span>
       </button>
@@ -64,8 +64,8 @@
     </button>
   </span>
 <% elsif @repository.shared_with_read?(current_team) %>
-  <%= render partial: 'repositories/toolbar/print_label_button' %>
   <p class="view-only-label"><%= t('repositories.index.view_only_permission_label') %></p>
+  <%= render partial: 'repositories/toolbar/print_label_button' %>
 <% elsif can_read_repository?(@repository) %>
   <%= render partial: 'repositories/toolbar/print_label_button' %>
 <% end %>

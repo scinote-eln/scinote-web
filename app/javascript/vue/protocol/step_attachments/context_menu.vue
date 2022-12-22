@@ -79,7 +79,7 @@
     </ul>
     <deleteAttachmentModal
         v-if="deleteModal"
-        fileName="attachment.attributes.file_name"
+        :fileName="attachment.attributes.file_name"
         @confirm="deleteAttachment"
         @cancel="deleteModal = false"
     />

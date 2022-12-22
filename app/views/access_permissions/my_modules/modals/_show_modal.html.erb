@@ -10,6 +10,7 @@
       <div class="modal-body">
         <% users.order(full_name: :asc).each do |user| %>
           <% user_assignment = my_module.user_assignments.find_by(user: user) %>
+          <% next if user_assignment.blank? %>
           <%= render partial: 'access_permissions/partials/user_assignment', locals: { user_assignment: user_assignment, user: user, resource: my_module } %>
         <% end %>
         <%= render('access_permissions/partials/default_public_user_role_form',

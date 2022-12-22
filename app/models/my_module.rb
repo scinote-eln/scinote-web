@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class MyModule < ApplicationRecord
-  SEARCHABLE_ATTRIBUTES = ['my_modules.name', 'my_modules.description']
+  ID_PREFIX = 'TA'
+  include PrefixedIdModel
+  SEARCHABLE_ATTRIBUTES = ['my_modules.name', 'my_modules.description', PREFIXED_ID_SQL].freeze
 
   include ArchivableModel
   include SearchableModel
@@ -10,6 +12,9 @@ class MyModule < ApplicationRecord
   include PermissionCheckableModel
   include Assignable
   include Cloneable
+
+  ID_PREFIX = 'TA'
+  include PrefixedIdModel
 
   attr_accessor :transition_error_rollback
 

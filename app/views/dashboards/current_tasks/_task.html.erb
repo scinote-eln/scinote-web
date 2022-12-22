@@ -1,7 +1,11 @@
 <% task_date = current_task_date(task) %>
 <a class="current-task-item" href="<%= protocols_my_module_path(task.id) %>">
   <div class="current-task-breadcrumbs"><%= task.experiment.project.name %>
-    <span class="slash">/</span><%= task.experiment.name %></div>
+    <span class="slash">/</span>
+    <%= task.experiment.name %>
+    <span class="slash">/</span>
+    <%= task.code %>
+  </div>
   <div class="task-name row-border">
     <%= task.name %>
   </div>

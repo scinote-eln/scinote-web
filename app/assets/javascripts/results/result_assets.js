@@ -23,7 +23,7 @@
             _formAjaxResultAsset($form);
             Results.initCancelFormButton($form, initNewResultAsset);
             Results.toggleResultEditButtons(false);
-            dragNdropAssetsInit('results');
+            dragNdropAssetsInit();
           },
           error: function(xhr, status, e) {
             $(this).renderFormErrors('result', xhr.responseJSON, true, e);

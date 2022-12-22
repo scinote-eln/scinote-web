@@ -16,7 +16,7 @@ class LabelTemplate < ApplicationRecord
   validate :ensure_single_default_template!
 
   def self.enabled?
-    ApplicationSettings.instance.values['label_templates_enabled']
+    RepositoryBase.stock_management_enabled?
   end
 
   def icon

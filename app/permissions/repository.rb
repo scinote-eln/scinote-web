@@ -4,7 +4,7 @@ Canaid::Permissions.register_for(RepositoryBase) do
   # repository: read/export
   can :read_repository do |user, repository|
     if repository.is_a?(RepositorySnapshot)
-      user.teams.include?(repository.team)
+      can_read_my_module?(user, repository.my_module)
     else
       user.teams.include?(repository.team) || repository.shared_with?(user.current_team)
     end
@@ -21,6 +21,16 @@ Canaid::Permissions.register_for(Repository) do
     .each do |perm|
     can perm do |_, repository|
       repository.active? && repository.repository_snapshots.provisioning.none?
+    end
+  end
+
+  %i(create_repository_rows
+     manage_repository_rows
+     manage_repository_assets
+     delete_repository_rows)
+    .each do |perm|
+    can perm do |user, repository|
+      repository.shared_with?(user.current_team) ? repository.shared_with_write?(user.current_team) : true
     end
   end
 
@@ -61,12 +71,7 @@ Canaid::Permissions.register_for(Repository) do
     next false if repository.is_a?(BmtRepository)
     next false if repository.archived?
 
-    if repository.shared_with?(user.current_team)
-      repository.shared_with_write?(user.current_team) &&
-        repository.permission_granted?(user, RepositoryPermissions::ROWS_CREATE)
-    else
-      repository.permission_granted?(user, RepositoryPermissions::ROWS_CREATE)
-    end
+    repository.permission_granted?(user, RepositoryPermissions::ROWS_CREATE)
   end
 
   can :manage_repository_assets do |user, repository|

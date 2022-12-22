@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 module UserAssignments
-  class RemoveTeamUserAssignmentService
-    def initialize(user, team)
-      @user = user
-      @team = team
+  class RemoveTeamUserAssignmentsService
+    def initialize(team_user_assignment)
+      @user = team_user_assignment.user
+      @team = team_user_assignment.assignable
     end
 
     def call
@@ -28,6 +28,7 @@ module UserAssignments
                   .select { |assignment| assignment.user_id == @user.id && assignment.team_id == @team.id }
                   .each(&:destroy!)
       end
+      @team.repository_sharing_user_assignments.where(user: @user).find_each(&:destroy!)
     end
 
     def remove_protocols_assignments

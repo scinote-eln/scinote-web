@@ -234,6 +234,7 @@ var TinyMCE = (function() {
             setTimeout(() => {
               $(editor.editorContainer).addClass('show');
               $('.tinymce-placeholder').remove();
+              updateScrollPosition($(editor.editorContainer).closest('.tinymce-container'));
             }, 400);
 
             // Init saved status label
@@ -310,7 +311,6 @@ var TinyMCE = (function() {
                 editorForm.find('.tinymce-status-badge').addClass('hidden');
                 editorForm.find('.tinymce-view').removeClass('hidden');
                 editor.remove();
-
                 updateScrollPosition(editorForm);
                 if (onSaveCallback) { onSaveCallback(); }
               })

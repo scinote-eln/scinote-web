@@ -16,7 +16,7 @@ module Reports::Docx::DrawMyModule
     end
 
     @docx.p do
-      text I18n.t('projects.reports.elements.module.user_time',
+      text I18n.t('projects.reports.elements.module.user_time', code: my_module.code,
                   timestamp: I18n.l(my_module.created_at, format: :full)), color: color[:gray]
       if my_module.archived?
         text ' | '

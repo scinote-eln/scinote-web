@@ -48,6 +48,7 @@ module StepElements
         @step.step_orderable_elements.where('position > ?', position).order(position: :desc).each do |element|
           element.update(position: element.position + 1)
         end
+        @table.name += ' (1)'
         new_table = @table.duplicate(@step, current_user, position + 1)
         log_step_activity(:table_duplicated, { table_name: new_table.name })
         render_step_orderable_element(new_table.step_table)
