@@ -12,12 +12,12 @@ class ExperimentsController < ApplicationController
   before_action :check_read_permissions, except: %i(edit archive clone move new create archive_group restore_group)
   before_action :check_canvas_read_permissions, only: %i(canvas)
   before_action :check_create_permissions, only: %i(new create)
-  before_action :check_manage_permissions, only: %i(edit)
+  before_action :check_manage_permissions, only: %i(edit batch_clone_my_modules)
   before_action :check_update_permissions, only: %i(update)
   before_action :check_archive_permissions, only: :archive
   before_action :check_clone_permissions, only: %i(clone_modal clone)
   before_action :check_move_permissions, only: %i(move_modal move)
-  before_action :set_inline_name_editing, only: %i(canvas module_archive)
+  before_action :set_inline_name_editing, only: %i(canvas table module_archive)
 
   layout 'fluid'
 
@@ -86,6 +86,26 @@ class ExperimentsController < ApplicationController
                                  .select('COUNT(DISTINCT users.id) as designated_users_count')
                                  .select('COUNT(DISTINCT comments.id) as task_comments_count')
                                  .select('my_modules.*').group(:id)
+  end
+
+  def table
+    view_state = @experiment.current_view_state(current_user)
+    view_mode = params[:view_mode] || 'active'
+    @current_sort = view_state.state.dig('my_modules', view_mode, 'sort') || 'atoz'
+
+    @project = @experiment.project
+    if params[:view_mode] == 'archived'
+      @my_modules = @experiment.my_modules.archived.order(:name)
+    else
+      @my_modules = @experiment.my_modules.active.order(:name)
+    end
+    @my_module_visible_table_columns = current_user.my_module_visible_table_columns
+  end
+
+  def load_table
+    my_modules = @experiment.my_modules.readable_by_user(current_user)
+    my_modules = params[:view_mode] == 'archived' ? my_modules.archived : my_modules.active
+    render json: Experiments::TableViewService.new(@experiment, my_modules, current_user, params).call
   end
 
   def edit
@@ -208,7 +228,8 @@ class ExperimentsController < ApplicationController
       format.json do
         render json: {
           html: render_to_string(
-            partial: 'clone_modal.html.erb'
+            partial: 'clone_modal.html.erb',
+            locals: { view_mode: params[:view_mode] }
           )
         }
       end
@@ -227,7 +248,8 @@ class ExperimentsController < ApplicationController
     if service.succeed?
       flash[:success] = t('experiments.clone.success_flash',
                           experiment: @experiment.name)
-      redirect_to canvas_experiment_path(service.cloned_experiment)
+      redirect_to canvas_experiment_path(service.cloned_experiment) if params[:view_mode] == 'canvas'
+      redirect_to table_experiment_path(service.cloned_experiment) if params[:view_mode] == 'table'
     else
       flash[:error] = t('experiments.clone.error_flash',
                         experiment: @experiment.name)
@@ -249,6 +271,23 @@ class ExperimentsController < ApplicationController
     end
   end
 
+  def search_tags
+    assigned_tags = []
+    all_tags = @experiment.project.tags
+    tags = all_tags.where.not(id: assigned_tags)
+                   .where_attributes_like(:name, params[:query])
+                   .select(:id, :name, :color)
+
+    tags = tags.map do |tag|
+      { value: tag.id, label: sanitize_input(tag.name), params: { color: sanitize_input(tag.color) } }
+    end
+
+    if params[:query].present? && tags.select { |tag| tag[:label] == params[:query] }.blank?
+      tags << { value: 0, label: sanitize_input(params[:query]), params: { color: nil } }
+    end
+    render json: tags
+  end
+
   # POST: move_experiment(id)
   def move
     service = Experiments::MoveToProjectService
@@ -258,17 +297,54 @@ class ExperimentsController < ApplicationController
     if service.succeed?
       flash[:success] = t('experiments.move.success_flash',
                           experiment: @experiment.name)
-      path = canvas_experiment_url(@experiment)
       status = :ok
     else
       message = service.errors.values.join(', ')
       status = :unprocessable_entity
     end
 
-    render json: { message: message, path: path }, status: status
+    render json: { message: message }, status: status
+  end
+
+  def move_modules_modal
+    @experiments = @experiment.project.experiments.active.where.not(id: @experiment)
+                              .managable_by_user(current_user).order(name: :asc)
+    render json: {
+      html: render_to_string(
+        partial: 'move_modules_modal.html.erb'
+      )
+    }
+  end
+
+  def move_modules
+    modules_to_move = {}
+    dst_experiment = @experiment.project.experiments.find(params[:to_experiment_id])
+    return render_403 unless can_manage_experiment?(dst_experiment)
+
+    @experiment.with_lock do
+      params[:my_module_ids].each do |id|
+        my_module = @experiment.my_modules.find(id)
+        return render_403 unless can_move_my_module?(my_module)
+
+        modules_to_move[id] = dst_experiment.id
+      end
+      @experiment.move_modules(modules_to_move, current_user)
+      render json: { message: t('experiments.table.modal_move_modules.success_flash',
+                                experiment: sanitize_input(dst_experiment.name)) }
+    rescue StandardError => e
+      Rails.logger.error(e.message)
+      Rails.logger.error(e.backtrace.join("\n"))
+      render json: {
+        message: t('experiments.table.modal_move_modules.error_flash', experiment: sanitize_input(dst_experiment.name))
+      }, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
+    end
+  rescue ActiveRecord::RecordNotFound
+    render_404
   end
 
   def module_archive
+    @project = @experiment.project
     @my_modules = @experiment.archived_branch? ? @experiment.my_modules : @experiment.my_modules.archived
     @my_modules = @my_modules.with_granted_permissions(current_user, MyModulePermissions::READ_ARCHIVED)
                              .left_outer_joins(:designated_users, :task_comments)
@@ -319,6 +395,63 @@ class ExperimentsController < ApplicationController
         )
       }
     end
+  end
+
+  def assigned_users_to_tasks
+    users = current_team.users.where(id: @experiment.my_modules.joins(:user_my_modules).select(:user_id))
+                        .search(false, params[:query]).map do |u|
+      { value: u.id, label: sanitize_input(u.name), params: { avatar_url: avatar_path(u, :icon_small) } }
+    end
+
+    render json: users, status: :ok
+  end
+
+  def archive_my_modules
+    my_modules = @experiment.my_modules.where(id: params[:my_modules])
+    counter = 0
+    my_modules.each do |my_module|
+      next unless can_archive_my_module?(my_module)
+
+      my_module.transaction do
+        my_module.archive!(current_user)
+        log_my_module_activity(:archive_module, my_module)
+        counter += 1
+      rescue StandardError => e
+        Rails.logger.error e.message
+        raise ActiveRecord::Rollback
+      end
+    end
+    if counter.positive?
+      render json: { message: t('experiments.table.archive_group.success_flash', number: counter) }
+    else
+      render json: { message: t('experiments.table.archive_group.error_flash') }, status: :unprocessable_entity
+    end
+  end
+
+  def batch_clone_my_modules
+    MyModule.transaction do
+      @my_modules =
+        @experiment.my_modules
+                   .readable_by_user(current_user)
+                   .where(id: params[:my_module_ids])
+
+      @my_modules.find_each do |my_module|
+        new_my_module = my_module.dup
+        new_my_module.update!(
+          {
+            provisioning_status: :in_progress,
+            name: my_module.next_clone_name
+          }.merge(new_my_module.get_new_position)
+        )
+        MyModules::CopyContentJob.perform_later(current_user, my_module.id, new_my_module.id)
+      end
+    end
+
+    render(
+      json: {
+        provisioning_status_urls: @my_modules.map { |m| provisioning_status_my_module_url(m) }
+      }
+    )
   end
 
   private
@@ -414,5 +547,15 @@ class ExperimentsController < ApplicationController
             project: experiment.project,
             subject: experiment,
             message_items: { experiment: experiment.id })
+  end
+
+  def log_my_module_activity(type_of, my_module)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            team: my_module.experiment.project.team,
+            project: my_module.experiment.project,
+            subject: my_module,
+            message_items: { my_module: my_module.id })
   end
 end

@@ -100,4 +100,14 @@ module MyModulesHelper
       my_module.experiment.project.archived_on
     end
   end
+
+  def my_module_due_status(my_module, datetime = DateTime.current)
+    if my_module.is_overdue?(datetime)
+      I18n.t('my_modules.details.overdue')
+    elsif my_module.is_one_day_prior?(datetime)
+      I18n.t('my_modules.details.due_soon')
+    else
+      ''
+    end
+  end
 end

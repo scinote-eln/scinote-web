@@ -13,7 +13,7 @@ class ProjectsController < ApplicationController
 
   before_action :switch_team_with_param, only: :index
   before_action :load_vars, only: %i(show permissions edit update notifications
-                                     sidebar experiments_cards view_type actions_dropdown)
+                                     sidebar experiments_cards view_type actions_dropdown create_tag)
   before_action :load_current_folder, only: %i(index cards new show)
   before_action :check_view_permissions, except: %i(index cards new create edit update archive_group restore_group
                                                     users_filter actions_dropdown)
@@ -264,6 +264,24 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def create_tag
+    render_403 unless can_manage_project_tags?(@project)
+
+    @tag = @project.tags.create(tag_params.merge({
+                                                   created_by: current_user,
+                                                   last_modified_by: current_user,
+                                                   color: Constants::TAG_COLORS.sample
+                                                 }))
+
+    render json: {
+      tag: {
+        id: @tag.id,
+        name: @tag.name,
+        color: @tag.color
+      }
+    }
+  end
+
   def restore_group
     projects = current_team.projects.archived.where(id: params[:projects_ids])
     counter = 0
@@ -372,9 +390,13 @@ class ProjectsController < ApplicationController
   end
 
   def load_vars
-    @project = Project.find_by(id: params[:id])
+    @project = Project.find_by(id: params[:id] || params[:project_id])
 
     render_404 unless @project
+  end
+
+  def tag_params
+    params.require(:tag).permit(:name)
   end
 
   def load_current_folder
