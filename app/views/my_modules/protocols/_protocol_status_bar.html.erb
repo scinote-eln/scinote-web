@@ -15,6 +15,14 @@
     <i class="fas fa-info-circle"></i>
   </a>
   <div class="dropdown-menu status-info-dropdown" aria-labelledby="my-module-protocol-info-button">
+    <div class="dropdown-header">
+      <h2 class="protocol-name">
+        <%= @protocol.parent&.name || @protocol.name %>
+      </h2>
+      <div class="protocol-header-info">
+        <span>ID: <%= @protocol.parent&.code || @protocol.code %></span>
+      </div>
+    </div>
     <div class="dropdown-body">
       <div class="info-line">
         <div class="description"><%= t("my_modules.protocols.protocol_status_bar.protocol_created") %></div>

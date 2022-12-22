@@ -99,7 +99,7 @@ module Users
               result[:status] = :user_exists_and_in_team
             else
               # Also generate user team relation
-              team.user_assignments.create(user: user, user_role: @user_role, assigned_by: current_user)
+              team.user_assignments.create!(user: user, user_role: @user_role, assigned_by: current_user)
 
               generate_notification(
                 @user,

@@ -1,16 +1,15 @@
 # frozen_string_literal: true
 
 module UserAssignments
-  class UpdateTeamUserAssignmentService
-    def initialize(user, team, user_role)
-      @user = user
-      @team = team
-      @user_role = user_role
+  class UpdateTeamUserAssignmentsService
+    def initialize(team_user_assignment)
+      @user = team_user_assignment.user
+      @team = team_user_assignment.assignable
+      @user_role = team_user_assignment.user_role
     end
 
     def call
       update_repositories_assignments
-      update_protocols_assignments
       update_reports_assignments
     end
 
@@ -26,17 +25,8 @@ module UserAssignments
                   .select { |assignment| assignment[:user_id] == @user.id && assignment[:team_id] == @team.id }
                   .each { |assignment| assignment.update!(user_role: @user_role) }
       end
-    end
-
-    def update_protocols_assignments
-      @team.repository_protocols
-           .joins(:automatic_user_assignments)
-           .preload(:automatic_user_assignments)
-           .where(automatic_user_assignments: { user: @user })
-           .find_each do |protocol|
-        protocol.automatic_user_assignments
-                .select { |assignment| assignment.user_id == @user.id }
-                .each { |assignment| assignment.update!(user_role: @user_role) }
+      @team.repository_sharing_user_assignments.where(user: @user).find_each do |assignment|
+        assignment.update!(user_role: @user_role)
       end
     end
 
@@ -47,7 +37,7 @@ module UserAssignments
            .where(automatic_user_assignments: { user: @user })
            .find_each do |report|
         report.automatic_user_assignments
-              .select { |assignment| assignment.user_id == @user.id && assignment.automatically_assigned? }
+              .select { |assignment| assignment.user_id == @user.id }
               .each { |assignment| assignment.update!(user_role: @user_role) }
       end
     end

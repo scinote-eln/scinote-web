@@ -1,0 +1,39 @@
+<div class="modal session-modal" id="session-finished" tabindex="-1" role="dialog"
+    aria-labelledby="session_expire" data-role="session_expire-modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><%= t('devise.sessions.expire_modal.session_ended.header' ) %></h4>
+      </div>
+      <div class="modal-body">
+        <ul>
+          <li><%= t('devise.sessions.expire_modal.session_ended.description') %></li>
+          <li>
+            <a class="collapse-row">
+              <div class="row-title">
+                <div class="instruction-session-collapse collapsed" data-toggle="collapse" href="#InstructionsSectionFinished" aria-expanded="false">
+                  <%= t('devise.sessions.expire_modal.why_see_this') %>
+                  <i class="fas fa-angle-up"></i>
+                </div>
+              </div>
+            </a>
+            <ul class="collapse" id="InstructionsSectionFinished">
+                <li><%= t('devise.sessions.expire_modal.session_end_in.paragraph1') %></li>
+                <li><%= t('devise.sessions.expire_modal.session_end_in.paragraph2') %></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+          <%= t('general.close' ) %>
+        </button>
+        <button type="button" class="btn btn-primary session-login">
+          <%= t('devise.sessions.new.submit' ) %>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

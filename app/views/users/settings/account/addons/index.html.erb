@@ -20,7 +20,7 @@
     <div class="row printer-settings">
       <div class="col-xs-12 col-sm-12">
         <h2 class="addons-subtitle"><%= t('users.settings.account.addons.label_printers') %></h2>
-        <% if Rails.configuration.x.zebra_print_enabled %>
+        <% if LabelPrinter.zebra_print_enabled? %>
           <div class="printers-container">
             <div class="printer">
               <div class="header">

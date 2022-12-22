@@ -403,7 +403,7 @@ class User < ApplicationRecord
     result = result.where.not(confirmed_at: nil) if active_only
 
     if team_to_ignore.present?
-      ignored_ids = UserTeam.select(:user_id).where(team_id: team_to_ignore.id)
+      ignored_ids = UserAssignment.select(:user_id).where(assignable: team_to_ignore)
       result = result.where.not(users: { id: ignored_ids })
     end
 
@@ -629,7 +629,7 @@ class User < ApplicationRecord
     query_teams = teams.pluck(:id)
     query_teams &= filters[:teams].map(&:to_i) if filters[:teams]
     query_teams &= User.team_by_subject(filters[:subjects]) if filters[:subjects]
-    User.where(id: UserTeam.where(team_id: query_teams).select(:user_id))
+    User.where(id: UserAssignment.where(assignable_id: query_teams, assignable_type: 'Team').select(:user_id))
         .search(false, search_query)
         .select(:full_name, :id)
         .map { |i| { label: escape_input(i[:full_name]), value: i[:id] } }

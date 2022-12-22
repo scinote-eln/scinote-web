@@ -34,6 +34,18 @@
     }
   }
 
+  ol {
+    padding-left: 0;
+
+    li {
+      padding: .5em 0;
+    }
+
+    .indented_row {
+      padding-left: 4px;
+    }
+  }
+
   .zebra-settings-collapse {
     border-left: 3px solid $color-concrete;
     margin-top: 14px;
@@ -42,6 +54,10 @@
 
     .collapse {
       padding-left: 2.5em;
+
+      ol {
+        padding-left: 1.5em;
+      }
     }
 
     .collapse-row {
@@ -99,6 +115,7 @@
   .row-title {
     @include font-h2;
     margin-left: .5em;
+    margin-top: .25em;
   }
 
   .api-key-container {

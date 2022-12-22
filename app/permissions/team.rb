@@ -72,9 +72,7 @@ end
 Canaid::Permissions.register_for(Protocol) do
   # protocol in repository: read, export, read step, read/download step asset
   can :read_protocol_in_repository do |user, protocol|
-    user.member_of_team?(protocol.team) &&
-      (protocol.in_repository_public? ||
-      protocol.in_repository_private? && user == protocol.added_by)
+    protocol.in_repository_active? && protocol.permission_granted?(user, ProtocolPermissions::READ)
   end
 
   # protocol in repository: update, create/update/delete/reorder step,
@@ -96,11 +94,11 @@ end
 
 Canaid::Permissions.register_for(Report) do
   can :read_report do |user, report|
-    report.permission_granted?(user, ReportPermissions::READ)
+    can_read_project?(report.project) && report.permission_granted?(user, ReportPermissions::READ)
   end
 
   can :manage_report do |user, report|
-    report.permission_granted?(user, ReportPermissions::MANAGE)
+    can_read_project?(report.project) && report.permission_granted?(user, ReportPermissions::MANAGE)
   end
 
   can :manage_report_users do |user, report|

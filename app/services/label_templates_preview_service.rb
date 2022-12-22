@@ -17,7 +17,7 @@ class LabelTemplatesPreviewService
       invocation_type: 'RequestResponse',
       log_type: 'Tail',
       payload:
-        "{ \"content\": #{sanitize_zpl_code(@params[:zpl]).to_json},"\
+        "{ \"content\": #{@params[:zpl].to_json},"\
         "\"width\": #{@params[:width]},"\
         "\"height\": #{@params[:height]},"\
         "\"density\": #{@params[:density]} "\
@@ -34,11 +34,5 @@ class LabelTemplatesPreviewService
         @error = resp.function_error
       end
     end
-  end
-
-  private
-
-  def sanitize_zpl_code(zpl_code)
-    zpl_code.gsub('_', '_5F')
   end
 end
