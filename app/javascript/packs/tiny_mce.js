@@ -354,7 +354,7 @@ window.TinyMCE = (() => {
             SmartAnnotation.preventPropagation('.atwho-user-popover');
             initHighlightjsIframe($(editor.iframeElement).contents());
 
-            if (options.afterInitCallback) { options.afterInitCallback() }
+            if (options.afterInitCallback) { options.afterInitCallback(); }
           },
           setup: (editor) => {
             editor.on('keydown', (e) => {

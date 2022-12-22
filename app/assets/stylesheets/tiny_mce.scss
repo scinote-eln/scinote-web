@@ -39,12 +39,12 @@
 }
 
 .tox.tox-tinymce {
-  position: absolute;
   left: -100000px;
+  position: absolute;
 
   &.tox-tinymce--loaded {
-    position: relative;
     left: 0;
+    position: relative;
   }
 }
 
@@ -57,8 +57,8 @@
 
 .tox-edit-area {
   label {
-    padding: 5px !important;
     color: $color-silver-chalice !important;
+    padding: 5px !important;
   }
 }
 

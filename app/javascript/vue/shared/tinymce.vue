@@ -44,7 +44,7 @@
                     :name="fieldName"
                     aria-hidden="true">
           </textarea>
-          <input type="hidden" id="tiny-mce-images" name="tiny_mce_images" value="[]">
+          <input type="hidden" class="tiny-mce-images" name="tiny_mce_images" value="[]">
         </div>
       </form>
     </div>
