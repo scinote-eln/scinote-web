@@ -876,7 +876,7 @@ en:
         fluics_warning: 'Built-in FLUICS templates can’t be edited, deleted or duplicated'
       delete_modal:
         title: 'Delete Label template(s)'
-        description: 'Are you sure you want to delete the selected Label template(s)?'
+        description: 'Are you sure you want to delete the selected label template(s)?'
     show:
       breadcrumb_index: 'Label templates'
       name_error_prefix: 'Label template name'
