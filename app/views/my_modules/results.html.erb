@@ -18,9 +18,9 @@
   <div id="results-toolbar">
     <% if can_manage_my_module?(@my_module) %>
       <div class="add-result-dropdown dropdown sci-dropdown">
-        <a href="#" title="add new result button" id="add-result-button" class="btn btn-secondary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <a href="#" id="add-result-button" class="btn btn-secondary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           <span class="fas fa-plus"></span>
-          <span><%= t("my_modules.results.add_label") %></span>
+          <span title="add new result button"><%= t("my_modules.results.add_label") %></span>
           <span class="caret pull-right"></span>
         </a>
         <ul class="dropdown-menu add-result-dropdown" aria-labelledby="add-result-button">

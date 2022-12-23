@@ -29,8 +29,8 @@
         <% if edit_mode %>
           <div class="comment-actions">
             <div class="edit-buttons">
-              <span title="save edited comment" class="save-button"><i class="fas fa-save"></i><%= t('general.save') %></span>
-              <span title="cancel editing comment" class="cancel-button"><i class="fas fa-times"></i></span>
+              <span title="save edited comment <%= comment.message %>" class="save-button"><i class="fas fa-save"></i><%= t('general.save') %></span>
+              <span title="cancel editing comment <%= comment.message %>" class="cancel-button"><i class="fas fa-times"></i></span>
             </div>
             <div class="view-buttons">
               <span title="edit comment <%= comment.message %>" class="edit-button"><i class="fas fa-pen"></i><%= t('general.edit') %></span>
@@ -40,7 +40,7 @@
                 data-url="<%= comment_action_url(comment) %>"
                 data-confirm-message="<%= t('comments.delete_confirm') %>"
                 data-turbolinks="false">
-                <span class="fas fa-trash action-icon-delete"></span>
+                <span title="delete comment <%= comment.message %>"class="fas fa-trash action-icon-delete"></span>
               </a>
             </div>
           </div>
@@ -49,7 +49,7 @@
       <div class="comment-message">
            <div class="view-mode"><%= custom_auto_link(comment.message, team: current_team, simple_format: true) %></div>
             <% if edit_mode %>
-              <%= text_area_tag 'message', comment.message, disabled: true, class: 'smart-text-area hidden' %>
+              <%= text_area_tag 'message', comment.message, disabled: true, class: 'smart-text-area hidden', title: "edit comment #{comment.message}"%>
             <% end %>
       </div>
       <div class="error-block"></div>

@@ -7,7 +7,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true" title="close protocol import io modal">&times;</span>
         </button>
         <h4 class="modal-title"><%= t('protocols.index.modal_import_json_title') %></h4>
         <%= t("protocols.index.modal_import_json_notice") %>
@@ -23,8 +23,8 @@
       </div>
       <% end %>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('general.cancel')%></button>
-        <%= submit_tag t('protocols.index.modal_import_json_upload'), class: "btn btn-success", id: "pio_submit_btn_id" %>
+        <button type="button" class="btn btn-default" data-dismiss="modal" title="cancel importing protocol io file"><%= t('general.cancel')%></button>
+        <%= submit_tag t('protocols.index.modal_import_json_upload'), class: "btn btn-success", id: "pio_submit_btn_id", title: "submit protocol io file" %>
       </div>
 
 

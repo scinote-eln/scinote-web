@@ -77,3 +77,14 @@
     </div>
   </div>
 </div>
+
+<script>
+    var e = document.getElementsByName("mappings[0]")[0]
+    e.title = e.options[e.selectedIndex].text;
+    
+    var select = document.getElementById("mappings[0]");
+    for (var i = 0; i < select.length; i++){
+      var option = select.options[i];
+      option.title = option.text;
+    }
+</script>

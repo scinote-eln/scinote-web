@@ -1,6 +1,5 @@
 <% @repositories.each do |repository| %>
   <li class="repository"
-      title="assign from dropdown item: <%= repository.name %>"
       data-table-url="<%= full_view_table_my_module_repository_path(@my_module, repository) %>"
       data-assign-url-modal="<%= assign_modal_my_module_repository_path(@my_module, repository) %>"
       data-update-url-modal="<%= update_modal_my_module_repository_path(@my_module, repository)%>" data-repository-id="<%= repository.id %>"
@@ -10,7 +9,7 @@
         <i class="fas fa-users"></i>
       </span>
     <% end %>
-    <span class="name" data-rows-count="<%= repository.rows_count %>"><%= repository.name %></span>
+    <span title="assign from dropdown item: <%= repository.name %>"class="name" data-rows-count="<%= repository.rows_count %>"><%= repository.name %></span>
     <% if repository.rows_count.positive? %>
       <span class="assigned-items">
         <i class="fas fa-file-signature"></i>

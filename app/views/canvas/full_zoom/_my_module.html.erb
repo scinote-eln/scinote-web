@@ -1,6 +1,6 @@
 <div class="panel panel-default module-large
   <%= get_task_alert_color(my_module) %>"
-  title="task <%= my_module.id %> full size card"
+  title="task <%= my_module.name %> full size card"
   id="<%= my_module.id %>"
   data-module-id="<%= my_module.id %>"
   data-module-name="<%= my_module.name %>"
@@ -86,7 +86,7 @@
       <li role="presentation">
         <a class="btn btn-link task-card-view-users" href="<%= index_old_my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_users" role="tab" data-remote="true">
           <span title="task <%= my_module.name %> assigned to" class="fas fa-users" aria-hidden="true"></span>
-          <span title="task <%= my_module.name %> assigned to" class="badge badge-indicator users-badge-indicator <%= 'hidden' unless my_module.designated_users_count.positive? %>"
+          <span title="<%= my_module.designated_users_count %>" class="badge badge-indicator users-badge-indicator <%= 'hidden' unless my_module.designated_users_count.positive? %>"
                 data-linked-id="<%= my_module.id %>">
             <%= my_module.designated_users_count %>
           </span>

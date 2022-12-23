@@ -7,6 +7,7 @@
 //= require jquery-ui/widgets/sortable
 //= require repositories/row_editor.js
 
+var repositoryRowName = undefined;
 
 var RepositoryDatatable = (function(global) {
   'use strict';
@@ -465,6 +466,9 @@ var RepositoryDatatable = (function(global) {
         className: 'dt-body-center',
         sWidth: '1%',
         render: function(data, type, row) {
+          if (document.getElementById('deleteRepositoryRecords')) {
+            document.getElementById('deleteRepositoryRecords').title = `delete repository item ${row[3]}`
+          }
           return `<div class="sci-checkbox-container">
                     <input title='repository row checkbox for ${row[3]}' class='repository-row-selector sci-checkbox' type='checkbox' data-editable="${row.recordEditable}">
                     <span class='sci-checkbox-label'></span>
@@ -499,6 +503,7 @@ var RepositoryDatatable = (function(global) {
         targets: 3,
         visible: true,
         render: function(data, type, row) {
+          repositoryRowName = data;
           return "<a title='repository item: " + data + "' href='" + row.recordInfoUrl + "'"
                  + "class='record-info-link'>" + data + '</a>';
         }

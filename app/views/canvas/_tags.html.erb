@@ -2,16 +2,15 @@
   <% tags2 = my_module.tags[0..3] %>
   <% tags2.each do |tag| %>
     <div style="color: <%= tag.color %>"
-         class="<%= "last" if tag == tags2[-1] %>"
-         title="<%= tag.name %>">
-      <span class="fas fa-tag"></span>
+         class="<%= "last" if tag == tags2[-1] %>">
+      <span class="fas fa-tag" title="<%= tag.name %>"></span>
     </div>
   <% end %>
   <% if tags2.length.zero? %>
     <div class="add-tag last"><span class="fas fa-tag"></span></div>
   <% end %>
   <% if my_module.tags.size.positive? %>
-    <span title="task <%= my_module.name %> tags, count: <%= my_module.tags.size %>" class="badge badge-indicator">
+    <span title="task <%= my_module.name %> tags" class="badge badge-indicator">
       <%= my_module.tags.size %>
     </span>
   <% else %>

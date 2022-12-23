@@ -185,7 +185,7 @@ var RepositoryColumns = (function() {
             disableSearch: true,
             labelHTML: true,
             optionLabel: function(option) {
-              return `<div class="column-type-option" data-disabled="${option.params.disabled}">
+              return `<div title="${option.label}" class="column-type-option" data-disabled="${option.params.disabled}">
                         <span>${option.label}</span>
                         <span class="text-description">${option.params.text_description || ''}</span>
                       </div>`
@@ -310,7 +310,7 @@ var RepositoryColumns = (function() {
           destroyButton = `<button title="delete repository column: ${thederName} trash icon button " class="btn icon-btn btn-light delete-repo-column manage-repo-column"
                               data-action="destroy"
                               data-modal-url="${destroyUrl}">
-                              <span class="fas fa-trash" title="Delete"></span>
+                              <span class="fas fa-trash" title="Delete ${thederName}"></span>
                           </button>`;
         }
 
@@ -325,7 +325,7 @@ var RepositoryColumns = (function() {
             <button title="edit repository column: ${thederName} edit icon" class="btn icon-btn btn-light edit-repo-column manage-repo-column"
                     data-action="edit"
                     data-modal-url="${editUrl}">
-              <span class="fas fa-pencil-alt" title="Edit"></span>
+              <span class="fas fa-pencil-alt" title="Edit ${thederName}"></span>
             </button>
             ${destroyButton}
           </span>

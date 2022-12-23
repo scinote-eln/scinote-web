@@ -189,6 +189,7 @@ module ApplicationHelper
     html =
       raw(html) +
       raw('<a onClick="$(this).popover(\'show\')" ' \
+        "title='#{user_name}'" \
         'class="atwho-user-popover" data-container="body" ' \
         'data-html="true" tabindex="0" data-trigger="focus" ' \
         'data-placement="top" data-toggle="popover" data-content="') +

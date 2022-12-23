@@ -17,7 +17,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>">
-          <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true" title="close consume stock modal">&times;</span>
         </button>
         <h4 class="modal-title">
           <%= t('my_modules.repository.stock_warning_modal.title') %>
@@ -28,8 +28,8 @@
       <div class="modal-footer">
         <button type="button"
                 id="cancel"
-                class="btn btn-default cancel-consumption"><%=t('general.cancel') %></button>
-        <%= submit_tag t('my_modules.repository.stock_warning_modal.consume_anyway'), class: "btn btn-primary confirm-consumption-button"%>
+                class="btn btn-default cancel-consumption" title="cancel button for consume stock"><%=t('general.cancel') %></button>
+        <%= submit_tag t('my_modules.repository.stock_warning_modal.consume_anyway'), class: "btn btn-primary confirm-consumption-button", title: "consume anyway button" %>
       </div>
     </div>
   </div>

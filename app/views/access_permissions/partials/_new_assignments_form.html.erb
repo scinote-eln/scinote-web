@@ -2,7 +2,7 @@
 
 <div class="modal-content" id="user_assignments_modal" data-action="modal-close" data-target="<%= projects_path %>">
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span title="close new asignments modal" aria-hidden="true">&times;</span></button>
     <h4 class="modal-title">
       <%= link_to resource_path, remote: true, class: 'pull-left spacer', data: { action: 'swap-remote-container', target: '#user_assignments_modal' } do %>
         <i class="fas fa-arrow-left"></i>
@@ -11,7 +11,7 @@
     </h4>
   </div>
   <%= form_with(model: form_object, url: create_path, method: :post, remote: true, html: { id: 'new-user-assignment-to-project-form', data: { action: 'replace-form', target: '#user_assignments_modal', object_type: resource.class.to_s.downcase} }) do |f| %>
-    <div class="modal-body">
+    <div class="modal-body" onclick="setAccessButtonTitle()">
       <div class="sci-input-container left-icon">
         <%= text_field_tag :search_users, '', placeholder: t('.find_people_html'), class: 'sci-input-field', data: { action: 'filter-list', target: 'new-user-assignment-to-project-form' }, title: 'search assignable users' %>
         <i class="fas fa-search"></i>
@@ -23,7 +23,15 @@
       <% end %>
     </div>
     <div class="modal-footer">
-      <%= f.submit t('.submit'), class: "btn btn-primary", disabled: true, data: { 'label-default' =>  t('.submit'),  'label-singular' => t('.submit_singular'), 'label-plural' => t('.submit_plural') }%>
+      <%= f.submit t('.submit'), class: "btn btn-primary", disabled: true, data: { 'label-default' =>  t('.submit'),  'label-singular' => t('.submit_singular'), 'label-plural' => t('.submit_plural') }, id: 'grantAccessButton' %>
     </div>
   <% end %>
 </div>
+
+<script>
+  function setAccessButtonTitle() {
+    var accessButton = document.getElementById('grantAccessButton');
+    accessButton.title = accessButton.value;
+  }
+
+</script>

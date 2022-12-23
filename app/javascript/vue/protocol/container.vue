@@ -14,9 +14,9 @@
       </div>
       <div class="actions-block">
         <div class="protocol-buttons-group">
-          <a title="new step button" v-if="urls.add_step_url" class="btn btn-primary" @click="addStep(steps.length)" tabindex="0">
+          <a v-if="urls.add_step_url" class="btn btn-primary" @click="addStep(steps.length)" tabindex="0">
               <span class="fas fa-plus" aria-hidden="true"></span>
-              <span>{{ i18n.t("protocols.steps.new_step") }}</span>
+              <span title="new step button">{{ i18n.t("protocols.steps.new_step") }}</span>
           </a>
           <a title="print protocol button" class="btn btn-secondary" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
             <span class="fas fa-print" aria-hidden="true"></span>
@@ -71,7 +71,7 @@
       </div>
       <a v-if="urls.add_step_url && protocol.attributes.in_repository" class="btn btn-primary repository-new-step" @click="addStep(steps.length)">
         <span class="fas fa-plus" aria-hidden="true"></span>
-        <span>{{ i18n.t("protocols.steps.new_step") }}</span>
+        <span title="new protocol step">{{ i18n.t("protocols.steps.new_step") }}</span>
       </a>
       <div v-if="steps.length > 0" class="protocol-step-actions">
         <button :title="`collapse steps`" class="btn btn-light" @click="collapseSteps" tabindex="0">
@@ -97,8 +97,8 @@
       <div class="protocol-steps">
         <template v-for="(step, index) in steps">
           <div class="step-block" :key="step.id">
-            <div title="insert step" v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)">
-              <i class="fas fa-plus"></i>
+            <div v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)">
+              <i :title="'insert step' + index" class="fas fa-plus"></i>
             </div>
             <Step
               :step.sync="steps[index]"

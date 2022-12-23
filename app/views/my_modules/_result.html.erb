@@ -18,11 +18,10 @@
         <% end %>
         <% if can_manage_result?(result) %>
           <a href="#"
-             title="archive result button <%= result.name %>"
+             title="archive result <%= result.name %>"
              class="btn btn-light icon-btn form-submit-link"
              data-form-id="result-archive-form-<%= result.id %>"
              data-confirm-text="<%= t('my_modules.results.archive_confirm') %>"
-             title="<%= t'my_modules.results.options.archive_title' %>"
              onclick="Results.archive(event, this);">
             <span class="fas fa-briefcase" title="archive result button <%= result.name %>"></span>
           </a>

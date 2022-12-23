@@ -57,6 +57,7 @@
           <span class="dropdown task-details-dropdown-container">
             <a href="#"
               id="taskDetailsButton"
+              title="task <%= @my_module.name %> details button"
               class="block-icon task-details-button dropdown-toggle"
               data-toggle="dropdown"
               aria-haspopup="true"
@@ -78,7 +79,7 @@
       <div class="task-section-header">
         <a class="task-section-caret" role="button" data-toggle="collapse" href="#notes-container" aria-expanded="true" aria-controls="notes-container">
           <i class="fas fa-caret-right"></i>
-          <span class="task-section-title">
+          <span title="<%= t('my_modules.notes.title') %>" class="task-section-title">
             <h2><%= t('my_modules.notes.title') %></h2>
           </span>
         </a>
@@ -101,9 +102,9 @@
         <div class="actions-block">
           <% if can_assign_my_module_repository_rows?(@my_module) %>
             <div class="dropdown repositories-assign-container sci-dropdown" data-repositories-url="<%= my_module_repositories_dropdown_list_path(@my_module) %>">
-              <a href="#" title="assign from repositories button" id="repositories-assign-button" class="btn btn-secondary btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <a href="#" id="repositories-assign-button" class="btn btn-secondary btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                 <span class="fas fa-file-signature"></span>
-                <span><%= t('my_modules.assigned_items.assign_from') %></span>
+                <span title="assign from repositories button"><%= t('my_modules.assigned_items.assign_from') %></span>
                 <span class="caret pull-right"></span>
               </a>
               <ul class="dropdown-menu repositories-dropdown-menu" aria-labelledby="repositories-assign-button">

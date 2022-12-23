@@ -46,6 +46,7 @@
       <div class="panel-options pull-right">
         <% if !preview && @protocol.my_module %>
           <button data-action="uncomplete-step"
+                  title="<%= t("protocols.steps.options.uncomplete_title") %>"
                   data-link-url="<%= toggle_step_state_step_path(step)%>"
                   class="btn btn-secondary button-step-complete
                   <%= 'hidden' if !step.completed? || !can_complete_or_checkbox_step?(@protocol) || preview %>">
@@ -53,6 +54,7 @@
             <%= t("protocols.steps.options.uncomplete_title") %>
           </button>
           <button data-action="complete-step"
+                  title="<%= t("protocols.steps.options.complete_title") %>"
                   data-link-url="<%= toggle_step_state_step_path(step)%>"
                   class="btn btn-secondary button-step-complete
                   <%= 'hidden' if step.completed? || !can_complete_or_checkbox_step?(@protocol) || preview %>">

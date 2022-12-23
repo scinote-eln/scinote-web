@@ -3,7 +3,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>"><span aria-hidden="true" title="close new project folder modal">&times;</span></button>
           <h4 class="modal-title" id="new-project-folder-modal-label">
             <%= t('projects.index.modal_new_project_folder.modal_title') %>
           </h4>
@@ -17,7 +17,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.cancel') %></button>
+          <button title="cancel button fo new project folder modal" type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.cancel') %></button>
           <%= f.submit t('projects.index.modal_new_project_folder.create'), class: 'btn btn-primary', title: "confirm new project folder" %>
         </div>
       </div>

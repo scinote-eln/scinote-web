@@ -35,6 +35,7 @@ $.fn.dataTable.render.defaultRepositoryAssetValue = function() {
 $.fn.dataTable.render.RepositoryTextValue = function(data) {
   var text = $(`<span class="text-value">${data.value.view}</span>`);
   text.attr('data-edit-value', data.value.edit);
+  text.prop('title', data.value.edit)
   return text.prop('outerHTML');
 };
 
@@ -82,7 +83,7 @@ $.fn.dataTable.render.defaultRepositoryDateTimeValue = function() {
 $.fn.dataTable.render.RepositoryDateTimeValue = function(data) {
   let reminderClass = data.value.reminder ? 'reminder' : '';
   return `<span class="${reminderClass} date-time-cell-value"
-                title="repository date time value: ${data}"
+                title="repository date time value: ${data.value.datetime}"
                 data-time="${data.value.time_formatted}"
                 data-datetime="${data.value.datetime}"
                 data-date="${data.value.date_formatted}">${data.value.formatted}</span>`;
@@ -187,9 +188,9 @@ $.fn.dataTable.render.AssignedTasksValue = function(data, row) {
       experiments: data.experiments,
       projects: data.projects
     });
-    tasksLinkHTML = `<div class="assign-counter-container dropdown" title="${tooltip}"
+    tasksLinkHTML = `<div class="assign-counter-container dropdown"
             data-task-list-url="${data.task_list_url}">
-              <a title="repository assigned count" href="#" class="assign-counter has-assigned"
+              <a title="repository assigned count ${data.tasks}" href="#" class="assign-counter has-assigned"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">${data.tasks}</a>
               <div class="dropdown-menu" role="menu">
                 <div class="sci-input-container right-icon">
@@ -231,7 +232,7 @@ $.fn.dataTable.render.RepositoryStockValue = function(data) {
                 </span>`;
     }
     if (data.stock_managable) {
-      return `<a title="unassigned stock data: ${data}" class="manage-repository-stock-value-link not-assigned-stock">
+      return `<a title="unassigned stock data for ${repositoryRowName}" class="manage-repository-stock-value-link not-assigned-stock">
                 <i class="fas fa-box-open"></i>
                 ${I18n.t('libraries.manange_modal_column.stock_type.add_stock')}
               </a>`;

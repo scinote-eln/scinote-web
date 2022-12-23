@@ -6,12 +6,12 @@
   <h6 class="date clear"><%= t('global_activities.index.clear') %></h6>
   <div class="date-selector">
     <div class="hot-buttons">
-      <div class="hot-button btn btn-default" data-period="today"><%= t('global_activities.index.today') %></div>
-      <div class="hot-button btn btn-default" data-period="yesterday"><%= t('global_activities.index.yesterday') %></div>
-      <div class="hot-button btn btn-default" data-period="this_week"><%= t('global_activities.index.this_week') %></div>
-      <div class="hot-button btn btn-default" data-period="last_week"><%= t('global_activities.index.last_week') %></div>
-      <div class="hot-button btn btn-default" data-period="this_month"><%= t('global_activities.index.this_month') %></div>
-      <div class="hot-button btn btn-default" data-period="last_month"><%= t('global_activities.index.last_month') %></div>
+      <div title="today" class="hot-button btn btn-default" data-period="today"><%= t('global_activities.index.today') %></div>
+      <div title="yesterday" class="hot-button btn btn-default" data-period="yesterday"><%= t('global_activities.index.yesterday') %></div>
+      <div title="this week" class="hot-button btn btn-default" data-period="this_week"><%= t('global_activities.index.this_week') %></div>
+      <div title="last week" class="hot-button btn btn-default" data-period="last_week"><%= t('global_activities.index.last_week') %></div>
+      <div title="this month" class="hot-button btn btn-default" data-period="this_month"><%= t('global_activities.index.this_month') %></div>
+      <div title="last month" class="hot-button btn btn-default" data-period="last_month"><%= t('global_activities.index.last_month') %></div>
     </div>
     <div class="to">
       <%= render partial: "global_activities/date_picker", locals: { id: 'to-date', use_current: 'false', placeholder: t('global_activities.index.to_label'), label: nil } %>
@@ -28,13 +28,13 @@
   <h6 class="activity clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container group-activity">
     <%= select_tag "group_activity", options_for_select(@activity_types.map{|k,v| [k,k]}),{
-      'data-placeholder': t('global_activities.index.select_activity_groups')
+      'data-placeholder': t('global_activities.index.select_activity_groups'), title: 'select activity groups'
     } %>
   </div>
   <div class="select-container activity">
     <%= select_tag "activity", grouped_options_for_select(@activity_types),{
       'data-select-by-group': 'true',
-      'data-placeholder': t('global_activities.index.select_activity_types')
+      'data-placeholder': t('global_activities.index.select_activity_types'), title: 'select activity types'
     } %>
   </div>
 </div>
@@ -43,7 +43,7 @@
   <h4 class="title"><%= t('global_activities.index.user') %></h4>
   <h6 class="user clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container">
-    <select name="user"
+    <select name="user" title="select users"
       data-placeholder = "<%= t('global_activities.index.select_users') %>"
       data-ajax-url = "<%= user_filter_global_activities_path(my_module_id: @my_module.id) %>"
     ></select>

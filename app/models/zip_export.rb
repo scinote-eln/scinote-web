@@ -78,7 +78,7 @@ class ZipExport < ApplicationRecord
     notification = Notification.create(
       type_of: :deliver,
       title: I18n.t('zip_export.notification_title'),
-      message:  "<a data-id='#{id}' " \
+      message:  "<a title='#{zip_file_name}' data-id='#{id}' " \
                 "data-turbolinks='false' " \
                 "href='#{Rails.application
                               .routes

@@ -15,7 +15,7 @@
             <span class="repository-version"></span>
           </div>
         </div>
-        <button type="button" title="assign from inventory x button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" title="assign from inventory x button">&times;</span></button>
       </div>
       <div class="modal-body">
         <template id="repositoryToolbarButtonsTemplate">
@@ -25,7 +25,7 @@
                 <span class="fas fa-eye"></span>
                 <%= t('my_modules.repository.snapshots.full_view.versions_sidebar_button') %>
               </button>
-              <button id="exportAssignedItems" type="button" class="btn btn-secondary">
+              <button title="export items" id="exportAssignedItems" type="button" class="btn btn-secondary">
                 <span class="fas fa-upload"></span>
                 <%= t('my_modules.repository.snapshots.full_view.export_button') %>
               </button>

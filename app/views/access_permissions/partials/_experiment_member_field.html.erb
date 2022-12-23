@@ -18,7 +18,7 @@
     </div>
   </div>
   <% unless user == current_user %>
-    <div class="user-assignment-controls">
+    <div class="user-assignment-controls" onclick="addTitlesToOptions(this.getElementsByClassName('dropdown-menu inner')[0])">
       <div class="user-assignment-role">
         <%= f.select :user_role_id, nil, {}, id: "experiment_member_#{experiment_member.user.id}_user_role_id", class: 'form-control selectpicker', title: t('user_assignment.change_experiment_role'), data: { 'selected-text-format' => 'static' } do %>
           <option data-content="<span title='<%= t('.reset_description') %>'><%= t('.reset') %></span>" value="reset"><%= t('.reset') %></option>

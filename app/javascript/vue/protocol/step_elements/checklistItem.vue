@@ -1,24 +1,25 @@
 <template>
   <div class="step-checklist-item" :class="{ 'step-element--locked': !checklistItem.attributes.isNew && !(updateUrl || toggleUrl) }">
     <div class="step-element-header" :class="{ 'locked': locked || editingText, 'editing-name': editingText }">
-      <div :title="`checklist item ${checklistItem.id} grip`" v-if="reorderChecklistItemUrl" class="step-element-grip step-element-grip--draggable" :class="{ 'step-element-grip--disabled': !draggable }">
+      <div :title="`checklist item ${checklistItem.attributes.text} grip`" v-if="reorderChecklistItemUrl" class="step-element-grip step-element-grip--draggable" :class="{ 'step-element-grip--disabled': !draggable }">
         <i class="fas fa-grip-vertical"></i>
       </div>
       <div v-else class="step-element-grip-placeholder"></div>
-      <div :title="`checklist item ${checklistItem.attributes.text || 'new'} name`" class="step-element-name" :class="{ 'done': checklistItem.attributes.checked }">
+      <div class="step-element-name" :class="{ 'done': checklistItem.attributes.checked }">
         <div v-if="!inRepository" class="sci-checkbox-container" :class="{ 'disabled': !toggleUrl }">
           <input ref="checkbox"
                  type="checkbox"
                  class="sci-checkbox"
-                 :title="`checklist item ${checklistItem.attributes.text} checkbox`"
+                 :title="`checklist item ${checklistItem.attributes.text} ${checklistItem.attributes.checked ? 'checked' : 'unchecked'} checkbox`"
                  :disabled="checklistItem.attributes.isNew"
                  :checked="checklistItem.attributes.checked" @change="toggleChecked($event)" />
-          <span class="sci-checkbox-label" >
+          <span  class="sci-checkbox-label" >
           </span>
         </div>
         <div v-else class="sci-checkbox-view-mode"></div>
         <div class="step-checklist-text" :class="{ 'step-element--locked': !checklistItem.attributes.isNew && !updateUrl }">
           <InlineEdit
+            :title="`checklist item ${checklistItem.attributes.text || 'new'} name`"
             :value="checklistItem.attributes.text"
             :sa_value="checklistItem.attributes.sa_text"
             :characterLimit="10000"
@@ -41,10 +42,10 @@
       </div>
       <div class="step-element-controls">
         <button v-if="!checklistItem.attributes.urls || updateUrl" class="btn icon-btn btn-light" @click="enableTextEdit" tabindex="-1">
-          <i class="fas fa-pen"></i>
+          <i :title="`edit checklist item ${checklistItem.attributes.text}`" class="fas fa-pen"></i>
         </button>
-        <button :title="`delete checklist item ${checklistItem.attributes.id || 'new'}`" v-if="!checklistItem.attributes.urls || deleteUrl" class="btn icon-btn btn-light" @click="deleteElement" tabindex="-1">
-          <i class="fas fa-trash"></i>
+        <button v-if="!checklistItem.attributes.urls || deleteUrl" class="btn icon-btn btn-light" @click="deleteElement" tabindex="-1">
+          <i :title="`delete checklist item ${checklistItem.attributes.text}`" class="fas fa-trash"></i>
         </button>
       </div>
     </div>

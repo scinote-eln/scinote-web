@@ -51,11 +51,11 @@
             <%= "active" if @search_category.present? and @search_category == :projects %>
             <%= "disabled" if @project_search_count == 0 %>"
           >
-            <a href="?<%= {category: 'projects', q: @search_query,
+            <a title="projects" href="?<%= {category: 'projects', q: @search_query,
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
-              <span class="badge pull-right"><%= @project_search_count %></span>
+              <span class="badge pull-right" title="project count <%= @project_search_count %>"><%= @project_search_count %></span>
               <span class="fas fa-folder"></span>
               <%= t'Projects' %>
             </a>
@@ -65,11 +65,11 @@
             <%= "active" if @search_category.present? and @search_category == :project_folders %>
             <%= "disabled" if @project_folder_search_count == 0 %>"
           >
-            <a href="?<%= { category: 'project_folders', q: @search_query,
+            <a title="project folders" href="?<%= { category: 'project_folders', q: @search_query,
                             whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                             match_case: @search_case, utf8: '✓',
                             search_id: @search_id }.to_query %>">
-              <span class="badge pull-right"><%= @project_folder_search_count %></span>
+              <span class="badge pull-right" title="project folder count <%= @project_folder_search_count %>"><%= @project_folder_search_count %></span>
               <span class="fas fa-folder"></span>
               <%= t('ProjectFolders') %>
             </a>
@@ -83,7 +83,7 @@
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
-              <span class="badge pull-right"><%= @experiment_search_count %></span>
+              <span class="badge pull-right" title="experiment count <%= @experiment_search_count %>"><%= @experiment_search_count %></span>
               <i class="fas fa-flask"></i>
               <%= t'Experiments' %>
             </a>
@@ -93,11 +93,11 @@
             <%= "active" if @search_category.present? and @search_category == :modules %>
             <%= "disabled" if @module_search_count == 0 %>"
           >
-            <a href="?<%= {category: 'modules', q: @search_query,
+            <a title="modules" href="?<%= {category: 'modules', q: @search_query,
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
-              <span class="badge pull-right"><%= @module_search_count %></span>
+              <span class="badge pull-right" title="module count <%= @module_search_count %>"><%= @module_search_count %></span>
               <span class="fas fa-credit-card"></span>
               <%= t'Modules' %>
             </a>
@@ -107,11 +107,11 @@
             <%= "active" if @search_category.present? and @search_category == :results %>
             <%= "disabled" if @result_search_count == 0 %>"
           >
-            <a href="?<%= {category: 'results', q: @search_query,
+            <a title="results" href="?<%= {category: 'results', q: @search_query,
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
-              <span class="badge pull-right"><%= @result_search_count %></span>
+              <span class="badge pull-right" title="result count <%= @result_search_count %>"><%= @result_search_count %></span>
               <span class="fas fa-columns"></span>
               <%= t'Results' %>
             </a>
@@ -121,11 +121,11 @@
             <%= "active" if @search_category.present? and @search_category == :tags %>
             <%= "disabled" if @tag_search_count == 0 %>"
           >
-            <a href="?<%= {category: 'tags', q: @search_query,
+            <a title="tags" href="?<%= {category: 'tags', q: @search_query,
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
-              <span class="badge pull-right"><%= @tag_search_count %></span>
+              <span class="badge pull-right" title="tag count <%= @tag_search_count %>"><%= @tag_search_count %></span>
               <span class="fas fa-tags"></span>
               <%= t'Tags' %>
             </a>
@@ -135,11 +135,11 @@
             <%= "active" if @search_category.present? and @search_category == :reports %>
             <%= "disabled" if @report_search_count == 0 %>"
           >
-            <a href="?<%= {category: 'reports', q: @search_query,
+            <a title="reports" href="?<%= {category: 'reports', q: @search_query,
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
-              <span class="badge pull-right"><%= @report_search_count %></span>
+              <span class="badge pull-right" title="report count <%= @report_search_count %>"><%= @report_search_count %></span>
               <span class="fas fa-clipboard-check"></span>
               <%= t'Reports' %>
             </a>
@@ -149,11 +149,11 @@
             <%= "active" if @search_category.present? and @search_category == :protocols %>
             <%= "disabled" if @protocol_search_count == 0 %>"
           >
-            <a href="?<%= {category: 'protocols', q: @search_query,
+            <a title="protocols" href="?<%= {category: 'protocols', q: @search_query,
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
-              <span class="badge pull-right"><%= @protocol_search_count %></span>
+              <span class="badge pull-right" title="protocol count <%= @protocol_search_count %>"><%= @protocol_search_count %></span>
               <span class="fas fa-edit"></span>
               <%= t'Protocols' %>
             </a>
@@ -163,11 +163,11 @@
             <%= "active" if @search_category.present? and @search_category == :steps %>
             <%= "disabled" if @step_search_count == 0 %>"
           >
-            <a href="?<%= {category: 'steps', q: @search_query,
+            <a title="steps" href="?<%= {category: 'steps', q: @search_query,
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
-              <span class="badge pull-right"><%= @step_search_count %></span>
+              <span class="badge pull-right" title="step count <%= @step_search_count %>"><%= @step_search_count %></span>
               <span class="fas fa-arrow-circle-right"></span>
               <%= t'Steps' %>
             </a>
@@ -177,11 +177,11 @@
             <%= "active" if @search_category.present? and @search_category == :checklists %>
             <%= "disabled" if @checklist_search_count == 0 %>"
           >
-            <a href="?<%= {category: 'checklists', q: @search_query,
+            <a title="checklists" href="?<%= {category: 'checklists', q: @search_query,
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
-              <span class="badge pull-right"><%= @checklist_search_count %></span>
+              <span class="badge pull-right" title="checklist count <%= @checklist_search_count %>"><%= @checklist_search_count %></span>
               <span class="fas fa-tasks"></span>
               <%= t'Checklists' %>
             </a>
@@ -192,11 +192,11 @@
             <%= "active" if @search_category.present? and @search_category == :assets %>
             <%= "disabled" if @asset_search_count == 0 %>"
           >
-            <a href="?<%= {category: 'assets', q: @search_query,
+            <a title="assets" href="?<%= {category: 'assets', q: @search_query,
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
-              <span class="badge pull-right"><%= @asset_search_count %></span>
+              <span class="badge pull-right" title="asset count <%= @asset_search_count %>"><%= @asset_search_count %></span>
               <span class="fas fa-paperclip"></span>
               <%= t'Assets' %>
             </a>
@@ -206,11 +206,11 @@
             <%= "active" if @search_category.present? and @search_category == :tables %>
             <%= "disabled" if @table_search_count == 0 %>"
           >
-            <a href="?<%= {category: 'tables', q: @search_query,
+            <a title="tables" href="?<%= {category: 'tables', q: @search_query,
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
-              <span class="badge pull-right"><%= @table_search_count %></span>
+              <span class="badge pull-right" title="table count <%= @table_search_count %>"><%= @table_search_count %></span>
               <span class="fas fa-table"></span>
               <%= t'Tables' %>
             </a>
@@ -220,11 +220,11 @@
             <%= "active" if @search_category.present? and @search_category == :comments %>
             <%= "disabled" if @comment_search_count == 0 %>"
           >
-            <a href="?<%= {category: 'comments', q: @search_query,
+            <a title="comments" href="?<%= {category: 'comments', q: @search_query,
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
-              <span class="badge pull-right"><%= @comment_search_count %></span>
+              <span class="badge pull-right" title="comment count <%= @comment_search_count %>"><%= @comment_search_count %></span>
               <span class="fas fa-comment"></span>
               <%= t'Comments' %>
             </a>
@@ -241,12 +241,12 @@
                   <%= "active" if @search_category == :repositories && @repository.id == values[:id] %>
                   <%= "disabled" if values[:count] == 0 %> repository-search"
               >
-                <a href="?<%= {category: 'repositories',
+                <a title="repositories" href="?<%= {category: 'repositories',
                                repository: values[:id], q: @search_query,
                                whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                                match_case: @search_case, utf8: '✓',
                                search_id: @search_id}.to_query %>">
-                  <span class="badge pull-right"><%= values[:count] %></span>
+                  <span class="badge pull-right" title="repositories count <%= values[:count] %>"><%= values[:count] %></span>
                   <%= repository %>
                   <%= inventory_shared_status_icon(values[:repository], results[:team]) %>
                 </a>

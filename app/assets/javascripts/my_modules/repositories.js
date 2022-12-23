@@ -191,7 +191,7 @@ var MyModuleRepositories = (function() {
         if (row.hasActiveReminders) {
           recordName = `<div title="row reminders for ${data}" class="dropdown row-reminders-dropdown"
                           data-row-reminders-url="${row.rowRemindersUrl}" tabindex='-1'>
-                          <i class="fas fa-bell dropdown-toggle row-reminders-icon"
+                          <i class="fas fa-bell dropdown-toggle row-reminders-icon" title="rowReminders${row.DT_RowId}}"
                              data-toggle="dropdown" id="rowReminders${row.DT_RowId}}"></i>
                           <ul class="dropdown-menu" role="menu" aria-labelledby="rowReminders${row.DT_RowId}">
                           </ul>
@@ -675,6 +675,10 @@ var MyModuleRepositories = (function() {
     var version;
     var repositoryName = name || FULL_VIEW_MODAL.find('.repository-title').data('repository-name');
 
+    for (var i = 3; i < document.getElementsByTagName('tr').length; i++) {
+      document.getElementsByTagName('tr')[i].title =
+      document.getElementsByTagName('tr')[i].getElementsByClassName('item-name')[0].innerHTML;
+    }
     if (assignMode) {
       title = I18n.t('my_modules.repository.full_view.assign_modal_header', {
         repository_name: repositoryName

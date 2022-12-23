@@ -1,19 +1,19 @@
 <ul class="sidebar-branch">
   <li class="sidebar-leaf">
     <% if @project.archived? %>
-      <%= link_to t('sidebar.experiments.back_archived_projects'), projects_path(view_mode: :archived), class: 'sidebar-link back-button' %>
+      <%= link_to t('sidebar.experiments.back_archived_projects'), projects_path(view_mode: :archived), class: 'sidebar-link back-button', title: 'back to archived projects' %>
     <% elsif view_mode == 'archived' %>
-      <%= link_to t('sidebar.experiments.back_active_experiments'), project_url(@project), class: 'sidebar-link back-button' %>
+      <%= link_to t('sidebar.experiments.back_active_experiments'), project_url(@project), class: 'sidebar-link back-button', title: 'back to active experiments' %>
     <% else %>
-      <%= link_to t('sidebar.experiments.back_button'), projects_path, class: 'sidebar-link back-button' %>
+      <%= link_to t('sidebar.experiments.back_button'), projects_path, class: 'sidebar-link back-button', title: 'back to projects' %>
     <% end %>
   </li>
   <% project.sorted_experiments(current_user, @current_sort, view_mode == 'archived').each do |experiment| %>
     <li class="sidebar-leaf">
       <% if view_mode == 'archived'  %>
-        <%= link_to experiment.name, module_archive_experiment_path(experiment), title: experiment.name, class: 'sidebar-link' %>
+        <%= link_to experiment.name, module_archive_experiment_path(experiment), title: 'sidebar: ' + experiment.name, class: 'sidebar-link' %>
       <% else %>
-        <%= link_to experiment.name, canvas_experiment_path(experiment), title: experiment.name, class: 'sidebar-link' %>
+        <%= link_to experiment.name, canvas_experiment_path(experiment), title: 'sidebar: ' + experiment.name, class: 'sidebar-link' %>
       <% end %>
     </li>
   <% end %>

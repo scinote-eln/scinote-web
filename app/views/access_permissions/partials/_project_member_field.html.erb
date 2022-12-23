@@ -4,7 +4,6 @@
   project_member = ProjectMember.new(user, project)
   item_id = dom_id(user, :project_member)
 %>
-
 <%= form_with(model: project_member, url: update_path, method: :put, remote: true, html: { class: 'row member-item', id: item_id, data: { action: 'replace-form autosave-form', object_type: :project } }) do |f| %>
   <%= f.hidden_field :user_id, value: f.object.user.id %>
     <div class="user-assignment-info">
@@ -17,7 +16,7 @@
         <small class="text-muted"><%= user_assignment_resource_role_name(user, project) %></small>
       </div>
     </div>
-    <div class="user-assignment-controls">
+    <div class="user-assignment-controls" onclick="addTitlesToOptions(this.getElementsByClassName('dropdown-menu inner')[0])">
       <div class="user-assignment-role">
         <%= f.select :user_role_id, options_for_select(user_roles_collection, selected: f.object.user_role.id), {}, class: 'form-control selectpicker', title: t('user_assignment.change_project_role'), data: { 'selected-text-format' => 'static' } %>
       </div>
