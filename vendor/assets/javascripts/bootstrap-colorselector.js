@@ -26,7 +26,6 @@
 
       var selectValue = this.$select.val();
       var selectColor = this.$select.find("option:selected").data("color");
-      console.log(this)
       var $markupUl = $("<ul>").addClass("dropdown-menu").addClass("dropdown-caret");
       var $markupDiv = $("<div>").addClass("dropdown").addClass("dropdown-colorselector").prop('title', 'color picker');
       var $markupSpan = $("<span>").addClass("btn-colorselector").css("background-color", selectColor);
