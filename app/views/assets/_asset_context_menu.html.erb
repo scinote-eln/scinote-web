@@ -1,6 +1,6 @@
 <% if can_manage_asset?(asset) %>
   <div class="dropdown asset-context-menu">
-    <button title="asset dropdown context menu" class="btn btn-light dropdown-toggle icon-btn" type="button" id="dropdownAssetContextMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    <button title="asset dropdown context menu <%= asset.name %>" class="btn btn-light dropdown-toggle icon-btn" type="button" id="dropdownAssetContextMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
       <i class="fas fa-ellipsis-h"></i>
     </button>
     <ul class="dropdown-menu dropdown-menu-right"
@@ -52,7 +52,7 @@
         <% elsif asset.editable_image? %>
           <li>
             <a class="btn btn-light image-edit-button"
-              title="asset image edit button"
+              title="asset image edit button <%= asset.name %>"
               data-image-id="<%= asset.id %>"
               data-image-name="<%= asset.file_name %>"
               data-image-url="<%= asset_file_url_path(asset) %>"
@@ -65,7 +65,7 @@
             </a>
           </li>
           <li>
-            <a title="asset file download button" class="btn btn-light file-download-link" href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>" data-turbolinks="false">
+            <a title="asset file download button <%= asset.name %>" class="btn btn-light file-download-link" href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>" data-turbolinks="false">
               <span class="fas fa-download"></span>
               <%= t('Download') %>
             </a>
@@ -76,7 +76,7 @@
       <li class="divider-label"><%= t("assets.context_menu.set_view_size") %></li>
       <% ['inline', 'thumbnail', 'list'].each do |view_mode| %>
         <li>
-          <a title="change asset view type to <%= view_mode %>" class="change-preview-type <%= 'selected' if view_mode == asset.view_mode %>"  data-preview-type="<%= view_mode %>">
+          <a title="change asset view type to <%= view_mode %> <%= asset.name %>" class="change-preview-type <%= 'selected' if view_mode == asset.view_mode %>"  data-preview-type="<%= view_mode %>">
             <%= t("assets.context_menu.#{view_mode}_html") %>
           </a>
         </li>
@@ -84,7 +84,7 @@
       <% if deletable %>
         <li role="separator" class="divider"></li>
         <li>
-          <a title="delete asset" class="delete-asset" href="<%= asset_destroy_path(asset) %>" data-file-name="<%= asset.render_file_name %>">
+          <a title="delete asset <%= asset.name %>" class="delete-asset" href="<%= asset_destroy_path(asset) %>" data-file-name="<%= asset.render_file_name %>">
             <i class="fas fa-trash"></i>
             <%= t("assets.context_menu.delete") %>
           </a>

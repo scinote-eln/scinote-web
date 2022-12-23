@@ -264,7 +264,7 @@
       if (fileSize > fileMaxSize) {
         file.isValid = false;
         disableSubmitButton();
-        return "<p class='dnd-error'>" + I18n.t('general.file.size_exceeded', { file_size: fileMaxSizeMb }) + '</p>';
+        return "<p class='dnd-error' title='file size error'>" + I18n.t('general.file.size_exceeded', { file_size: fileMaxSizeMb }) + '</p>';
       }
       return '';
     }
@@ -275,7 +275,7 @@
         disableSubmitButton();
         $.each($('.attachment-placeholder.new'), function() {
           if (!$(this).find('p').hasClass('dnd-error')) {
-            $(this).append("<p class='dnd-total-error'>" + I18n.t('general.file.total_size', { size: fileMaxSizeMb }) + '</p>');
+            $(this).append("<p class='dnd-total-error' title='file size total error'>" + I18n.t('general.file.total_size', { size: fileMaxSizeMb }) + '</p>');
           }
         });
       } else {
@@ -408,7 +408,7 @@
           if (!$(this).find('p').hasClass('dnd-total-error')) {
             $(this)
               .find('.panel-body')
-              .append("<p class='dnd-total-error'>" + I18n.t('general.file.total_size', { size: fileMaxSizeMb }) + '</p>');
+              .append("<p class='dnd-total-error' title='file size total error'>" + I18n.t('general.file.total_size', { size: fileMaxSizeMb }) + '</p>');
           }
         });
       } else {
@@ -466,7 +466,7 @@
               if (!$(this).find('p').hasClass('dnd-total-error')) {
                 $(this)
                   .find('.panel-body')
-                  .append("<p class='dnd-total-error'>" + I18n.t('general.file.upload_failure') + '</p>');
+                  .append("<p class='dnd-total-error' title='file size total error'>" + I18n.t('general.file.upload_failure') + '</p>');
               }
             });
             animateSpinner(null, false);
@@ -494,7 +494,7 @@
       if (fileSize > fileMaxSize) {
         file.isValid = false;
         disableSubmitButton();
-        return "<p class='dnd-error'>" + I18n.t('general.file.size_exceeded', { file_size: fileMaxSizeMb }) + '</p>';
+        return "<p class='dnd-error' title='file size error'>" + I18n.t('general.file.size_exceeded', { file_size: fileMaxSizeMb }) + '</p>';
       }
       return '';
     }
@@ -502,7 +502,7 @@
     function validateTextSize(input) {
       if (input.value.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH) {
         $(input).parent().find('.dnd-error').remove();
-        $(input).after("<p class='dnd-error'>" + I18n.t('general.text.length_too_long', { max_length: GLOBAL_CONSTANTS.NAME_MAX_LENGTH }) + '</p>');
+        $(input).after("<p class='dnd-error' title='file size error'>" + I18n.t('general.text.length_too_long', { max_length: GLOBAL_CONSTANTS.NAME_MAX_LENGTH }) + '</p>');
         isValid = false;
       } else {
         $(input).parent().find('.dnd-error').remove();
