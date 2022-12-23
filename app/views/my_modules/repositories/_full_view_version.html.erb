@@ -18,7 +18,7 @@
            href="#"
            data-status="<%= repository_snapshot.status %>"
            data-table-url="<%= full_view_table_my_module_repository_snapshot_path(@my_module, repository_snapshot) %>">
-          <h4 class="list-group-item-heading">
+          <h4 class="list-group-item-heading" title="<%= l(repository_snapshot.created_at, format: :full) %>">
             <%= repository_snapshot.failed? ? t("repositories.snapshot_failed") : l(repository_snapshot.created_at, format: :full) %>
           </h4>
           <p class="list-group-item-text">
@@ -29,7 +29,7 @@
     </div>
     <div class="col-xs-4">
       <% if can_delete_snapshot %>
-      <a title="delete snapshot" class="pull-right btn btn-light icon-btn version-button delete-snapshot-button" href="#" data-action-path="<%= my_module_repository_snapshot_path(@my_module, repository_snapshot) %>">
+      <a title="delete snapshot created at <%= l(repository_snapshot.created_at, format: :full) %>" class="pull-right btn btn-light icon-btn version-button delete-snapshot-button" href="#" data-action-path="<%= my_module_repository_snapshot_path(@my_module, repository_snapshot) %>">
         <i class="fas fa-trash"></i>
       </a>
       <% end %>

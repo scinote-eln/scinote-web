@@ -10,7 +10,7 @@
           <input ref="checkbox"
                  type="checkbox"
                  class="sci-checkbox"
-                 :title="`checklist item ${checklistItem.attributes.checked ? 'checked' : 'unchecked'} checkbox`"
+                 :title="`checklist item ${checklistItem.attributes.text} ${checklistItem.attributes.checked ? 'checked' : 'unchecked'} checkbox`"
                  :disabled="checklistItem.attributes.isNew"
                  :checked="checklistItem.attributes.checked" @change="toggleChecked($event)" />
           <span  class="sci-checkbox-label" >

@@ -28,13 +28,13 @@
   <h6 class="activity clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container group-activity">
     <%= select_tag "group_activity", options_for_select(@activity_types.map{|k,v| [k,k]}),{
-      'data-placeholder': t('global_activities.index.select_activity_groups')
+      'data-placeholder': t('global_activities.index.select_activity_groups'), title: 'select activity groups'
     } %>
   </div>
   <div class="select-container activity">
     <%= select_tag "activity", grouped_options_for_select(@activity_types),{
       'data-select-by-group': 'true',
-      'data-placeholder': t('global_activities.index.select_activity_types')
+      'data-placeholder': t('global_activities.index.select_activity_types'), title: 'select activity types'
     } %>
   </div>
 </div>
@@ -43,7 +43,7 @@
   <h4 class="title"><%= t('global_activities.index.user') %></h4>
   <h6 class="user clear"><%= t('global_activities.index.clear') %></h6>
   <div class="select-container">
-    <select name="user"
+    <select name="user" title="select users"
       data-placeholder = "<%= t('global_activities.index.select_users') %>"
       data-ajax-url = "<%= user_filter_global_activities_path(my_module_id: @my_module.id) %>"
     ></select>

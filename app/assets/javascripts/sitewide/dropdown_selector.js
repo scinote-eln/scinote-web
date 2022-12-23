@@ -311,13 +311,13 @@ var dropdownSelector = (function() {
 
     // Save config info to select element
     selectElement.data('config', config);
-    let domain = $(document.body).context.baseURI.replace(/https?:\/\/[^\/]+/i, "");
-
+    let domain = $(document.body).context.baseURI.replace(/https?:\/\/[^\/]+/i, "").replaceAll("/", "");
+    let dropdownTitle = selector.context ? selector.context[0] || selector.selector + ' for ' + domain : 'sitewide dropdown container input';
     // Draw main elements
     $(`
       <div class="dropdown-container"></div>
       <div class="input-field">
-        <input id="sitewideDropdownContainer" title="${selector.context ? selector.context.className  + selector.selector + ' for ' + domain : 'sitewide dropdown container input'}" type="text" class="search-field" data-options-selected=0 placeholder="${selectElement.data('placeholder') || ''}"></input>
+        <input id="sitewideDropdownContainer" title="${dropdownTitle.replaceAll("#", "")}" type="text" class="search-field" data-options-selected=0 placeholder="${selectElement.data('placeholder') || ''}"></input>
         ${prepareCustomDropdownIcon(selector, config)}
       </div>
       <input type="hidden" class="data-field" value="[]">
@@ -429,7 +429,6 @@ var dropdownSelector = (function() {
       }
     });
 
-    $('.dropdown-selector-container').prop('title', 'dropdown selector container button');
 
     // Add click event to input field
     dropdownContainer.find('.input-field').click(() => {
@@ -544,9 +543,8 @@ var dropdownSelector = (function() {
       var customLabel = selector2.data('config').optionLabel;
       var customClass = params.optionClass || selector2.data('config').optionClass || '';
       var customStyle = selector2.data('config').optionStyle;
-
       return $(`
-        <div title="${option.label}" class="dropdown-option ${customClass}" style="${customStyle ? customStyle(option) : ''}"
+        <div title="option ${option.label}" class="dropdown-option ${customClass}" style="${customStyle ? customStyle(option) : ''}"
           data-params='${JSON.stringify(option.params || {})}'
           data-label="${option.label}"
           data-group="${group ? group.value : ''}"

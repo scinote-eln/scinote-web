@@ -51,7 +51,7 @@
             <%= "active" if @search_category.present? and @search_category == :projects %>
             <%= "disabled" if @project_search_count == 0 %>"
           >
-            <a href="?<%= {category: 'projects', q: @search_query,
+            <a title="projects" href="?<%= {category: 'projects', q: @search_query,
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
@@ -65,7 +65,7 @@
             <%= "active" if @search_category.present? and @search_category == :project_folders %>
             <%= "disabled" if @project_folder_search_count == 0 %>"
           >
-            <a href="?<%= { category: 'project_folders', q: @search_query,
+            <a title="project folders" href="?<%= { category: 'project_folders', q: @search_query,
                             whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                             match_case: @search_case, utf8: '✓',
                             search_id: @search_id }.to_query %>">
@@ -93,7 +93,7 @@
             <%= "active" if @search_category.present? and @search_category == :modules %>
             <%= "disabled" if @module_search_count == 0 %>"
           >
-            <a href="?<%= {category: 'modules', q: @search_query,
+            <a title="modules" href="?<%= {category: 'modules', q: @search_query,
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
@@ -107,7 +107,7 @@
             <%= "active" if @search_category.present? and @search_category == :results %>
             <%= "disabled" if @result_search_count == 0 %>"
           >
-            <a href="?<%= {category: 'results', q: @search_query,
+            <a title="results" href="?<%= {category: 'results', q: @search_query,
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
@@ -121,7 +121,7 @@
             <%= "active" if @search_category.present? and @search_category == :tags %>
             <%= "disabled" if @tag_search_count == 0 %>"
           >
-            <a href="?<%= {category: 'tags', q: @search_query,
+            <a title="tags" href="?<%= {category: 'tags', q: @search_query,
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
@@ -135,7 +135,7 @@
             <%= "active" if @search_category.present? and @search_category == :reports %>
             <%= "disabled" if @report_search_count == 0 %>"
           >
-            <a href="?<%= {category: 'reports', q: @search_query,
+            <a title="reports" href="?<%= {category: 'reports', q: @search_query,
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
@@ -149,7 +149,7 @@
             <%= "active" if @search_category.present? and @search_category == :protocols %>
             <%= "disabled" if @protocol_search_count == 0 %>"
           >
-            <a href="?<%= {category: 'protocols', q: @search_query,
+            <a title="protocols" href="?<%= {category: 'protocols', q: @search_query,
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
@@ -163,7 +163,7 @@
             <%= "active" if @search_category.present? and @search_category == :steps %>
             <%= "disabled" if @step_search_count == 0 %>"
           >
-            <a href="?<%= {category: 'steps', q: @search_query,
+            <a title="steps" href="?<%= {category: 'steps', q: @search_query,
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
@@ -177,7 +177,7 @@
             <%= "active" if @search_category.present? and @search_category == :checklists %>
             <%= "disabled" if @checklist_search_count == 0 %>"
           >
-            <a href="?<%= {category: 'checklists', q: @search_query,
+            <a title="checklists" href="?<%= {category: 'checklists', q: @search_query,
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
@@ -192,7 +192,7 @@
             <%= "active" if @search_category.present? and @search_category == :assets %>
             <%= "disabled" if @asset_search_count == 0 %>"
           >
-            <a href="?<%= {category: 'assets', q: @search_query,
+            <a title="assets" href="?<%= {category: 'assets', q: @search_query,
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
@@ -206,7 +206,7 @@
             <%= "active" if @search_category.present? and @search_category == :tables %>
             <%= "disabled" if @table_search_count == 0 %>"
           >
-            <a href="?<%= {category: 'tables', q: @search_query,
+            <a title="tables" href="?<%= {category: 'tables', q: @search_query,
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
@@ -220,7 +220,7 @@
             <%= "active" if @search_category.present? and @search_category == :comments %>
             <%= "disabled" if @comment_search_count == 0 %>"
           >
-            <a href="?<%= {category: 'comments', q: @search_query,
+            <a title="comments" href="?<%= {category: 'comments', q: @search_query,
                            whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
@@ -241,7 +241,7 @@
                   <%= "active" if @search_category == :repositories && @repository.id == values[:id] %>
                   <%= "disabled" if values[:count] == 0 %> repository-search"
               >
-                <a href="?<%= {category: 'repositories',
+                <a title="repositories" href="?<%= {category: 'repositories',
                                repository: values[:id], q: @search_query,
                                whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                                match_case: @search_case, utf8: '✓',
