@@ -241,4 +241,10 @@ module ApplicationHelper
     end
     return edit_supported, title
   end
+
+  def create_2fa_qr_code(user)
+    user.assign_2fa_token!
+    qr_code_url = ROTP::TOTP.new(user.otp_secret, issuer: 'SciNote').provisioning_uri(user.email)
+    RQRCode::QRCode.new(qr_code_url).as_svg(module_size: 4)
+  end
 end
