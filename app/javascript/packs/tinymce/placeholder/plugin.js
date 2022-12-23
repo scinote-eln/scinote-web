@@ -6,7 +6,7 @@ tinymce.PluginManager.add('placeholder', (editor) => {
     // const editorToolbar = editorForm.find('.tox-editor-header');
     const placeholderText = editor.getElement().getAttribute('placeholder');
     const placeholderAttrs = {
-      style: {
+      style: `
         position: 'absolute',
         top: '0px',
         left: '0px',
@@ -15,7 +15,7 @@ tinymce.PluginManager.add('placeholder', (editor) => {
         width: 'calc(100% - 50px)',
         overflow: 'hidden',
         'white-space': 'pre-wrap'
-      }
+      `
     };
     const contentAreaContainer = editor.getContentAreaContainer();
 

@@ -4,13 +4,13 @@
       <form class="tiny-mce-editor" role="form" :action="updateUrl" accept-charset="UTF-8" data-remote="true" method="post">
         <input type="hidden" name="_method" value="patch">
         <div class="hidden tinymce-cancel-button tox-mbtn" tabindex="-1">
-          <button type="button" tabindex="-1">
-            <span class="fas fa-times"></span>
-            <span class="mce-txt">{{ i18n.t('general.cancel')  }}</span>
-          </button>
+        <button type="button" tabindex="-1">
+          <span class="fas fa-times"></span>
+          <span class="mce-txt">{{ i18n.t('general.cancel') }}</span>
+        </button>
         </div>
         <div class="hidden tinymce-save-button tox-mbtn" tabindex="-1">
-          <button type="button" tabindex="-1">
+          <button type="button" tabindex="-1" >
             <span class="fas fa-check"></span>
             <span class="mce-txt">{{ i18n.t('general.save') }}</span>
           </button>
@@ -19,6 +19,7 @@
           <i class="fas fa-check-circle"></i>
           <span>{{ i18n.t('tiny_mce.saved_label') }}</span>
         </div>
+
         <div :id="`${objectType}_view_${objectId}`"
             @click="initTinymce"
             v-html="value_html"
@@ -85,6 +86,8 @@
       inEditMode() {
         if (this.inEditMode) {
           this.initTinymce();
+        } else {
+          this.wrapTables();
         }
       },
       characterCount() {
@@ -94,9 +97,6 @@
       }
     },
     computed: {
-      editorInstance() {
-        return tinyMCE.activeEditor;
-      },
       error() {
         if(this.characterLimit && this.characterCount > this.characterLimit) {
           return(
@@ -116,13 +116,13 @@
     mounted() {
       if (this.inEditMode) {
         this.initTinymce();
+      } else {
+        this.wrapTables();
       }
     },
     methods: {
       initTinymce(e) {
         let textArea = `#${this.objectType}_textarea_${this.objectId}`;
-        const vueTinyMce = this;
-
 
         if (this.active) return
         if (e && $(e.target).prop("tagName") === 'A') return
@@ -130,31 +130,34 @@
         if (e && $(e.target).hasClass('record-info-link')) return
         if (e && $(e.target).parent().hasClass('atwho-inserted')) return
 
-        TinyMCE.init(
-          textArea,
-          {
-            onSaveCallback(data) {
-              if (data) {
-                vueTinyMce.$emit('update', data)
+        TinyMCE.init(textArea, {
+            onSaveCallback: (data) => {
+              if (data.data) {
+                this.$emit('update', data.data)
               }
-              vueTinyMce.$emit('editingDisabled');
-            }
+              this.$emit('editingDisabled');
+            },
+            afterInitCallback: () => {
+              this.active = true;
+              this.initCharacterCount();
+              this.$emit('editingEnabled');
+            },
+            placeholder: this.placeholder
           }
-        ).then(() => {
-          this.active = true;
-          this.initCharacterCount();
-          this.$emit('editingEnabled');
-        });
+        )
       },
       getStaticUrl(name) {
         return $(`meta[name=\'${name}\']`).attr('content');
       },
+      wrapTables() {
+        $(this.$el).find('.tinymce-view table').wrapAll('<div style="overflow: auto"></div>');
+      },
       initCharacterCount() {
         if (!this.editorInstance()) return;
 
-        this.characterCount = $(this.editorInstance().getContent()).text().length;
+        this.characterCount = this.editorInstance().plugins.wordcount.body.getCharacterCount();
         this.editorInstance().on('input change paste keydown', (e) => {
-          e.currentTarget && (this.characterCount = (e.currentTarget).innerText.length);
+          e.currentTarget && (this.characterCount = this.editorInstance().plugins.wordcount.body.getCharacterCount());
         });
 
         this.editorInstance().on('remove', () => this.active = false);
@@ -165,7 +168,7 @@
         });
       },
       editorInstance() {
-        return tinyMCE.editors[0];
+        return tinyMCE.activeEditor;
       }
     }
   }
