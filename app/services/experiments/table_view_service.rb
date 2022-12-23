@@ -150,7 +150,9 @@ module Experiments
     def assigned_presenter(my_module)
       { html: ApplicationController.renderer.render(
         partial: 'experiments/assigned_users.html.erb',
-        locals: { my_module: my_module, user: @user }
+        locals: { my_module: my_module,
+                  user: @user,
+                  skip_unassigned: @params[:view_mode] == 'archived' }
       ) }
     end
 

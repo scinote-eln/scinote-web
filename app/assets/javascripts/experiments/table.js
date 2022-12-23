@@ -217,22 +217,28 @@ var ExperimnetTable = {
   initManageUsersDropdown: function() {
     $(this.table).on('show.bs.dropdown', '.assign-users-dropdown', (e) => {
       let usersList = $(e.target).find('.users-list');
+      let isArchivedView = $('#experimentTable').hasClass('archived');
+      let checkbox = '';
       usersList.find('.user-container').remove();
       $.get(usersList.data('list-url'), (result) => {
         $.each(result, (_i, user) => {
+          if (!isArchivedView) {
+            checkbox = `<div class="sci-checkbox-container">
+                          <input type="checkbox"
+                                class="sci-checkbox user-selector"
+                                ${user.params.designated ? 'checked' : ''}
+                                value="${user.value}"
+                                data-assign-url="${user.params.assign_url}"
+                                data-unassign-url="${user.params.unassign_url}"
+                          >
+                          <span class="sci-checkbox-label"></span>
+                        </div>`;
+          }
+
           $(`
             <div class="user-container">
-              <div class="sci-checkbox-container">
-                <input type="checkbox"
-                       class="sci-checkbox user-selector"
-                       ${user.params.designated ? 'checked' : ''}
-                       value="${user.value}"
-                       data-assign-url="${user.params.assign_url}"
-                       data-unassign-url="${user.params.unassign_url}"
-                >
-                <span class="sci-checkbox-label"></span>
-              </div>
-              <div class="user-avatar">
+              ${checkbox}
+              <div class="user-avatar ${isArchivedView ? 'archived' : ''}">
                 <img src="${user.params.avatar_url}"></img>
               </div>
               <div class="user-name">

@@ -22,7 +22,8 @@
       <input type="text" class="sci-input-field user-search" placeholder="<%= I18n.t('experiments.table.search') %>">
       <i class="fas fa-search"></i>
     </div>
-    <div class="users-list" data-list-url="<%= search_my_module_user_my_module_path(my_module, my_module_id: my_module.id) %>">
+    <div class="users-list" 
+         data-list-url="<%= search_my_module_user_my_module_path(my_module, my_module_id: my_module.id, skip_unassigned: skip_unassigned) %>">
     </div>
   </div>
 </div>
