@@ -12,7 +12,6 @@
           <% user_assignment = protocol.user_assignments.find_by(user: user) %>
           <%= render partial: 'access_permissions/partials/user_assignment', locals: { user_assignment: user_assignment, user: user, resource: protocol } %>
         <% end %>
-        <%= render('access_permissions/partials/default_public_user_role_form', protocol: protocol, editable: false) if protocol.visible? %>
       </div>
     </div>
   </div>

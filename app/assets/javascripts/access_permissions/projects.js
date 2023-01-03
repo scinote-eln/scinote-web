@@ -2,7 +2,7 @@
   'use strict';
 
   function initNewUserAssignmentFormListener() {
-    $(document).on('change', 'form#new-user-assignment-to-project-form', function() {
+    $(document).on('change', 'form#new-user-assignment-to-project-form, form#new-user-assignment-to-protocol-form', function() {
       let values = [];
       let count = 0;
       let submitBtn = $(this).find('input[type="submit"]');

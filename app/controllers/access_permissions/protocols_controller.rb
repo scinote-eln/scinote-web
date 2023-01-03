@@ -7,6 +7,8 @@ module AccessPermissions
     before_action :check_manage_permissions, except: %i(show)
 
     def new
+      @user_assignment = UserAssignment.new(assignable: @project, assigned_by: current_user)
+
       respond_to do |format|
         format.json
       end
@@ -35,11 +37,22 @@ module AccessPermissions
     end
 
     def create
-      respond_to do |format|
-        if @form.save
-          @message = t('access_permissions.create.success', count: @form.new_members_count)
+      ActiveRecord::Base.transaction do
+        permitted_create_params[:resource_members].each do |_k, user_assignment_params|
+          next unless user_assignment_params[:assign] == '1'
+
+          user_assignment = UserAssignment.new(user_assignment_params)
+          user_assignment.assignable = @protocol
+          user_assignment.assigned_by = current_user
+          user_assignment.save!
+        end
+
+        respond_to do |format|
+          @message = t('access_permissions.create.success', count: @protocol.user_assignments.count)
           format.json { render :edit }
-        else
+        end
+      rescue ActiveRecord::RecordInvalid
+        respond_to do |format|
           @message = t('access_permissions.create.failure')
           format.json { render :new }
         end
@@ -47,8 +60,10 @@ module AccessPermissions
     end
 
     def destroy
+      user = @protocol.assigned_users.find(params[:user_id])
+      user_assignment = @protocol.user_assignments.find_by(user_id: params[:user_id])
       respond_to do |format|
-        if project_member.destroy
+        if user_assignment.destroy
           format.json do
             render json: { flash: t('access_permissions.destroy.success', member_name: user.full_name) },
                    status: :ok
@@ -62,15 +77,7 @@ module AccessPermissions
       end
     end
 
-    def update_default_public_user_role
-      @protocol.update!(permitted_default_public_user_role_params)
-    end
-
     private
-
-    def permitted_default_public_user_role_params
-      params.require(:protocol).permit(:default_public_user_role_id)
-    end
 
     def permitted_update_params
       params.require(:user_assignment)
@@ -93,7 +100,7 @@ module AccessPermissions
     end
 
     def check_read_permissions
-      render_403 unless can_read_protocol?(@protocol)
+      render_403 unless can_read_protocol_in_repository?(@protocol)
     end
   end
 end

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UserAssignment < ApplicationRecord
+  attr_accessor :assign
+
   before_validation -> { self.team ||= (assignable.is_a?(Team) ? assignable : assignable.team) }
   after_create :assign_team_child_objects, if: -> { assignable.is_a?(Team) }
   after_update :update_team_children_assignments, if: -> { assignable.is_a?(Team) && saved_change_to_user_role_id? }

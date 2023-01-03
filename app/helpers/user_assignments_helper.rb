@@ -12,7 +12,7 @@ module UserAssignmentsHelper
 
   def user_assignment_resource_role_name(user, resource, inherit = '')
     user_assignment = resource.user_assignments.find_by(user: user)
-    if resource.class != Project && user_assignment.automatically_assigned?
+    if ![Project, Protocol].include?(resource.class) && user_assignment.automatically_assigned?
       parent = resource.permission_parent
       return user_assignment_resource_role_name(user, parent, '_inherit')
     end

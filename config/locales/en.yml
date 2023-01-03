@@ -3070,6 +3070,12 @@ en:
         submit_singular: "Grant access to 1 user"
         submit_plural: "Grant access to {num} users"
         find_people_html: "Find people"
+      new_protocol_assignments_form:
+        title: "Select members"
+        submit: "Grant access"
+        submit_singular: "Grant access to 1 user"
+        submit_plural: "Grant access to {num} users"
+        find_people_html: "Find people"
       experiment_member_field:
         reset: "Inherit role"
         reset_description: "The inherited role from project will be applied"
