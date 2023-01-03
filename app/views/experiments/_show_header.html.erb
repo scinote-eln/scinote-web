@@ -3,7 +3,7 @@
     <%= render partial: 'projects/index/breadcrumbs', locals: {target_folder: @experiment.project.project_folder, project: @experiment.project, experiment: @experiment} %>
   </div>
   <div class="title-row">
-    <h1 class="project-name" data-toggle="tooltip" data-placement="bottom" title="<%= @experiment.name %>">
+    <h1 class="experimnet-name" data-toggle="tooltip" data-placement="bottom" title="<%= @experiment.name %>">
       <% if @experiment.archived? %>
         <i class="fas fa-archive" data-view-mode="archived"></i>
       <% end %>

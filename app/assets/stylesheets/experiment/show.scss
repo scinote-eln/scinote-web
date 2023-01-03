@@ -1,5 +1,12 @@
 // scss-lint:disable SelectorDepth NestingDepth IdSelector
 
+#experimentTable,
+#experiment-canvas {
+  .experimnet-name {
+    max-width: calc(100% - 300px);
+  }
+}
+
 #experiment-canvas {
   [data-view-mode="archived"] {
     display: none;
