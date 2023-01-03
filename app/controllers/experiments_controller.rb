@@ -272,11 +272,9 @@ class ExperimentsController < ApplicationController
   end
 
   def search_tags
-    assigned_tags = []
-    all_tags = @experiment.project.tags
-    tags = all_tags.where.not(id: assigned_tags)
-                   .where_attributes_like(:name, params[:query])
-                   .select(:id, :name, :color)
+    tags = @experiment.project.tags.where.not(id: JSON.parse(params[:selected_tags]))
+                      .where_attributes_like(:name, params[:query])
+                      .select(:id, :name, :color)
 
     tags = tags.map do |tag|
       { value: tag.id, label: sanitize_input(tag.name), params: { color: sanitize_input(tag.color) } }

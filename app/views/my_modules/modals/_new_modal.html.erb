@@ -39,11 +39,9 @@
 
           <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-              <%= f.select 'tag_ids', options_for_select([]),
-                                    {
-                                      id: 'module-tags-selector',
-                                      label: t('experiments.canvas.new_my_module_modal.assigned_tags_label')
-                                    },
+              <%= f.hidden_field :tag_ids%>
+              <label><%= t('experiments.canvas.new_my_module_modal.assigned_tags_label') %></label>
+              <%= select_tag 'module-tags-selector', options_for_select([]),
                                     data: {
                                             'tags-create-url': project_create_tag_path(project_id: @experiment.project_id),
                                             'ajax-url': search_tags_experiment_path,
