@@ -541,7 +541,7 @@ class ExperimentsController < ApplicationController
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
-            team: experiment.project.team,
+            team: experiment.team,
             project: experiment.project,
             subject: experiment,
             message_items: { experiment: experiment.id })

@@ -144,7 +144,7 @@ module StepElements
         owner: current_user,
         subject: @step.protocol,
         team: @step.protocol.team,
-        project: @step.protocol.in_module? ? @step.protocol.my_module.experiment.project : nil,
+        project: @step.protocol.in_module? ? @step.protocol.my_module.project : nil,
         message_items: message_items.merge(step_message_items)
       )
     end

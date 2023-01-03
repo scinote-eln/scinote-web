@@ -109,7 +109,7 @@ class MyModuleRepositorySnapshotsController < ApplicationController
         activity_type: :export_inventory_snapshot_items_assigned_to_task,
         owner: current_user,
         subject: @my_module,
-        team: current_team,
+        team: @my_module.team,
         message_items: {
           my_module: @my_module.id,
           repository_snapshot: @repository_snapshot.id,
