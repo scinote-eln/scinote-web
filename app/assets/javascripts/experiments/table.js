@@ -174,7 +174,7 @@ var ExperimnetTable = {
   },
   initAccessModal: function() {
     $('#manageTaskAccess').on('click', () => {
-      $(`.table-row[data-id="${this.selectedMyModules[0]}"] .open-access-modal`).click();
+      $(`.table-row[data-id="${this.selectedMyModules[0]}"] .open-access-modal`)[0].click();
     });
   },
   initRenameModal: function() {
@@ -243,7 +243,7 @@ var ExperimnetTable = {
         });
       });
     });
-    $(this.table).on('click', '.dropdown-menu', (e) => {
+    $(this.table).on('click', '.assign-users-dropdown .dropdown-menu', (e) => {
       if (e.target.tagName === 'INPUT') return;
       e.preventDefault();
       e.stopPropagation();
