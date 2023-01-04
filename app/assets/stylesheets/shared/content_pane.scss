@@ -83,8 +83,23 @@
               margin-right: .5em;
             }
 
-            &:hover {
+            &:hover:not(.divider-label) {
               background: $color-concrete;
+            }
+
+            a {
+              display: inline-block;
+              margin: -1em;
+              padding: 1em;
+              width: calc(100% + 2em);
+
+              &.selected::after {
+                @include font-awesome;
+                content: $font-fas-check;
+                margin-left: auto;
+                position: absolute;
+                right: 1em;
+              }
             }
           }
         }

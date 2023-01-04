@@ -14,8 +14,8 @@ class ResultsController < ApplicationController
       .call(activity_type: :destroy_result,
             owner: current_user,
             subject: @result,
-            team: @my_module.experiment.project.team,
-            project: @my_module.experiment.project,
+            team: @my_module.team,
+            project: @my_module.project,
             message_items: { result: @result.id,
                              type_of_result: result_type })
     flash[:success] = t('my_modules.module_archive.delete_flash',

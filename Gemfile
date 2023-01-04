@@ -68,12 +68,12 @@ gem 'deface', '~> 1.0'
 gem 'down', '~> 5.0'
 gem 'faker' # Generate fake data
 gem 'fastimage' # Light gem to get image resolution
-gem 'httparty', '~> 0.17.3'
+gem 'httparty', '~> 0.21.0'
 gem 'i18n-js', '~> 3.6' # Localization in javascript files
 gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'logging', '~> 2.0.0'
 gem 'nested_form_fields'
-gem 'nokogiri', '~> 1.13.9' # HTML/XML parser
+gem 'nokogiri', '~> 1.13.10' # HTML/XML parser
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'rgl' # Graph framework for project diagram calculations
 gem 'roo', '~> 2.8.2' # Spreadsheet parser

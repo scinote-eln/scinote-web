@@ -71,6 +71,7 @@ var inlineEditing = (function() {
       data: params,
       success: function(result) {
         var viewData;
+        var parentContainer = container.parent();
         if (container.data('response-field')) {
           // If we want to modify preview element on backend
           // we can use this data field and we will take string from response
@@ -95,10 +96,14 @@ var inlineEditing = (function() {
           .attr('value', inputField(container).val());
         appendAfterLabel(container);
 
-        container.trigger('inlineEditing::updated', [inputField(container).val(), viewData])
+        container.trigger('inlineEditing::updated', [inputField(container).val(), viewData]);
 
         if (SIDEBAR_ITEM_TYPES.includes(paramsGroup)) {
           updateSideBarNav(paramsGroup, itemId, viewData);
+        }
+
+        if (parentContainer.attr('data-original-title')) {
+          parentContainer.attr('data-original-title', inputField(container).val());
         }
       },
       error: function(response) {
@@ -111,6 +116,7 @@ var inlineEditing = (function() {
         container.find('.error-block').html(error.join(', '));
         inputField(container).focus();
         container.data('disabled', false);
+        $('.tooltip').hide();
       }
     });
     return true;
@@ -147,6 +153,7 @@ var inlineEditing = (function() {
           .addClass('hidden')
           .closest('.inline_scroll_block')
           .scrollTop(container.offsetTop);
+        $('.tooltip').hide();
       }
       e.stopPropagation();
       return true;

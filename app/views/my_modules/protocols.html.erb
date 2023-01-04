@@ -69,6 +69,9 @@
               <%= render partial: "module_header_details_popover.html.erb" %>
             </div>
           </span>
+          <span class="task-details-code">
+            <%= @my_module.code %>
+          </span>
         </div>
       </div>
       <div id="details-container" class="task-details collapse">
@@ -173,6 +176,7 @@
 <%= render partial: "shared/formulas_libraries.html.erb" %>
 <%= javascript_include_tag("my_modules/protocols") %>
 <%= javascript_include_tag("my_modules/status_flow") %>
+<%= javascript_include_tag("my_modules/tags") %>
 <%= javascript_pack_tag 'emoji_button' %>
 <%= javascript_include_tag("my_modules/repositories") %>
 <%= javascript_include_tag("my_modules/pwa_mobile_app") %>

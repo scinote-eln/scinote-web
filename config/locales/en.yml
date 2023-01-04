@@ -117,6 +117,10 @@ en:
       project: "Project"
       my_module: "Task"
       experiment: "Experiment"
+      repository: "Inventory"
+      repository_base: "Inventory"
+      protocol: "Protocol"
+      report: "Report"
     errors:
       models:
         project:
@@ -454,6 +458,7 @@ en:
       more_comments: "More Comments"
       card:
         start_date: "Start date"
+        id: "ID"
         visibility: "Visible to"
         users: "Members"
         name: "Project name"
@@ -574,6 +579,7 @@ en:
         thead_last_modified_by: "Last modified by"
         thead_created_at: "Creation date"
         thead_updated_at: "Last update date"
+        thead_id: "ID"
         no_reports: "No reports!"
         pdf: "PDF"
         docx: "DOCX"
@@ -644,10 +650,12 @@ en:
           results: "Results"
           all_results: "Include all results"
           order_results: "Order results"
-          atoz: "Alphabetically A to Z"
-          ztoa: "Alphabetically Z to A"
-          new_results: "Newest first"
-          old_results: "Oldest first"
+          atoz: "Name A to Z"
+          ztoa: "Name Z to A"
+          new: "Added last"
+          old: "Added first"
+          new_updated: "Modified last"
+          old_updated: "Modified first"
           file_results: "File results"
           insert_pages_from_pdf: "Insert pages from PDF and docx files into the report"
           pdf_warning: "This may increase report generation time."
@@ -732,10 +740,10 @@ en:
           remove: "Remove report element from the report"
           scinote_link: "SciNote link"
         project_header:
-          user_time: "Project created on %{timestamp}."
+          user_time: "Project %{code} created on %{timestamp}."
           title: "Report for project %{project}"
         module:
-          user_time: "Task created on %{timestamp}."
+          user_time: "Task %{code} created on %{timestamp}."
           started_on: "Start date: %{started_on}"
           status: "Status:"
           no_start_date: "No start date"
@@ -747,7 +755,7 @@ en:
           results: "Results"
           protocol:
             name: 'Protocol'
-            user_time: "Protocol created on %{timestamp}."
+            user_time: "Protocol %{code} created on %{timestamp}."
         experiment:
           user_time: "Experiment %{code} created on %{timestamp}."
           no_description: "No description"
@@ -762,13 +770,13 @@ en:
           no_items: "No items"
         result_asset:
           file_name: "%{file}"
-          user_time: "Uploaded by %{user} on %{timestamp}."
+          user_time: "Added on %{timestamp} by %{user}."
           full_preview_attached: "[full document attached to report]"
         result_table:
           table_name: "%{name}"
-          user_time: "Created by %{user} on %{timestamp}."
+          user_time: "Added on %{timestamp} by %{user}."
         result_text:
-          user_time: "Created by %{user} on %{timestamp}."
+          user_time: "Added on %{timestamp} by %{user}."
         step:
           sidebar_name: "Step %{pos}: %{name}"
           step_pos: "Step %{pos}:"
@@ -868,7 +876,7 @@ en:
         fluics_warning: 'Built-in FLUICS templates can’t be edited, deleted or duplicated'
       delete_modal:
         title: 'Delete Label template(s)'
-        description: 'Are you sure you want to delete the selected Label template(s)?'
+        description: 'Are you sure you want to delete the selected label template(s)?'
     show:
       breadcrumb_index: 'Label templates'
       name_error_prefix: 'Label template name'
@@ -963,12 +971,17 @@ en:
       no_start_date_placeholder: "+ Add starting date"
       due_date: "Due date:"
       no_due_date_placeholder: "+ Add due date"
+      overdue: "Overdue"
+      due_soon: "Due soon"
+      no_due_date: "not set"
       assigned_users: "Assigned to:"
       no_assigned_users: "+ Assign task to a project member"
       tags: "Tags:"
       no_tags: "+ Add tags"
       manage_tags: "Manage tags"
       create_new_tag: "create new"
+      recent_protocols_from_repository: "Recent protocols from the Repository"
+      code: "ID: "
       recent_protocols_from_repository: "Recent protocols from the Templates"
     notes:
       title: "Notes"
@@ -1111,7 +1124,7 @@ en:
       new_text_result: "Text"
       new_table_result: "Table"
       new_asset_result: "File"
-      published_on: "Published on <em>%{timestamp}</em> by <em>%{user}</em>"
+      published_on_html: "Added on <em>%{timestamp}</em> by <em>%{user}</em>"
       published_table: "entered a table on %{timestamp}."
       published_text:  "entered a text on %{timestamp}."
       published_asset:  "uploaded a file on %{timestamp}."
@@ -1223,6 +1236,7 @@ en:
   experiments:
     id: "ID"
     experiment_id: "Experiment ID"
+    experiment_actions: "EXPERIMENT ACTIONS"
     header:
       cards: "Cards"
       table: "Table"
@@ -1237,6 +1251,7 @@ en:
       restore_button: "Restore"
     card:
       name: "Experiment"
+      id: "ID"
       start_date: "Start date"
       modified_date: "Modified date"
       archived_date: "Archived date"
@@ -1294,6 +1309,8 @@ en:
       success_flash: 'Successfully duplicated experiment %{experiment} as template.'
       error_flash: 'Could not duplicate the experiment as template.'
       current_project: '(current project)'
+    duplicate_tasks:
+      success: 'Successfully duplicated %{count} task(s) as template.'
     move:
       modal_title: 'Move experiment %{experiment}'
       notice: 'Moving is possible to projects, where you have permissions to create experiments and tasks.'
@@ -1304,10 +1321,93 @@ en:
       error_flash: ' Could not move the experiment. Experiment name is already in use. '
       task_permission: 'No permission: You don’t have edit access to all experiment tasks.'
       no_projects: 'No projects: You don’t have edit access to any other projects.'
+    table:
+      head_title: "%{experiment} | Overview"
+      column:
+        id_html: 'ID'
+        task_name_html: 'Task name'
+        due_date_html: 'Due date'
+        archived_html: 'Archived'
+        age_html: 'Age'
+        results_html: 'Results'
+        status_html: 'Status'
+        assigned_html: 'Assigned to'
+        tags_html: 'Tags'
+        comments_html: '<i class="fas fa-comment"></i>'
+      modal_move_modules:
+        title: "Move task(s) to experiment"
+        confirm: "Move"
+        no_experiments: "No experiments to move this task to."
+        success_flash: "Successfully moved task(s) to experiment %{experiment}."
+        error_flash: "Failed to move task(s) to experiment %{experiment}."
+      column_display_modal:
+        title: 'Task data display'
+        description: 'Click the eye buttons to hide or show columns in the table'
+        id: 'ID'
+        task_name: 'Task name'
+        due_date: 'Due date'
+        archived: 'Archived'
+        age: 'Age'
+        results: 'Results'
+        status: 'Status'
+        assigned: 'Assigned to'
+        tags: 'Tags'
+        comments: 'Comments'
+      toolbar:
+        new: 'New task'
+        edit: 'Edit'
+        archive: 'Archive'
+        restore: 'Restore'
+        move: 'Move'
+        duplicate: 'Duplicate'
+        manage_access: 'Manage access'
+        task_data: 'Task data display'
+      my_module_actions:
+        title: 'TASK ACTIONS'
+        edit: 'Edit'
+        duplicate: 'Duplicate as template'
+        move: 'Move to another experiment'
+        access: 'Task access'
+        archive: 'Archive'
+        restore: 'Restore'
+      filters:
+        name: 'Task name'
+        due_date: 'Due date'
+        status: 'Status'
+        status_placeholder: 'Select task flow status'
+        assigned: 'Assigned to'
+        assigned_placeholder: 'Select user'
+      view:
+        canvas: 'Canvas'
+        table: 'Table'
+        cards: 'Cards'
+        archived_tasks: 'Go to Archived tasks'
+        active_tasks: 'Go to Active tasks'
+      add_tag: '+ Add tag'
+      search: 'Search...'
+      archive_group:
+        success_flash: "<strong>%{number}</strong> task(s) successfully archived."
+        error_flash: "Failed to archive task(s)."
     canvas:
       archive_confirm: "Are you sure to archive this experiment?"
-      actions: 'Actions'
+      actions: 'Experiment'
+      view: 'View'
       head_title: "%{project} | Overview"
+      canvas_edit: "Edit workflow"
+      canvas_empty: "It's empty here. Please add some tasks"
+      new_my_module: "New task"
+      new_my_module_modal:
+        title: "Add a new task"
+        name: "Task name"
+        name_placeholder: "e.g. My task"
+        due_date: "Due date (optional)"
+        due_date_placeholder: "+ Add due date"
+        assigned_tags_label: "Add tags (optional)"
+        assigned_tags_placeholder: "Select tags for your task"
+        assigned_users: "Assign task to (optional)"
+        tags: "Add tags (optional)"
+        create: "Create"
+        enter_placeholder: 'Enter...'
       canvas_edit: "Edit Experiment"
       zoom: "Zoom: "
       reload_on_submit: "Save action is running. Reloading this page may cause unexpected behavior."
@@ -1323,6 +1423,7 @@ en:
         create: "Add"
         create_new: "New"
       edit:
+        id: "ID:"
         new_module: "New task"
         new_module_hover: "Drag me onto canvas"
         save: "Save workflow"
@@ -1330,6 +1431,7 @@ en:
         cancel: "Cancel"
         unsaved_work: "Are you sure you want to leave this page? All unsaved data will be lost."
         drag_connections: "Drag connection/s from here"
+        no_module_id: "to be assigned after saving"
         options_header: "Options"
         edit_module: "Rename task"
         task_access: "Task access"
@@ -2571,6 +2673,7 @@ en:
       publish: "Move to Team protocols"
       archive_action: "Archive"
       thead_name: "Name"
+      thead_code: "ID"
       thead_keywords: "Keywords"
       thead_nr_of_linked_children: "No. of linked tasks"
       thead_published_by: "Published by"
@@ -2918,6 +3021,7 @@ en:
     step_comment_annotation_title: "%{user} mentioned you in a comment on step %{step}."
     step_description_title: "%{user} mentioned you in a description on step %{step}."
     checklist_title: "%{user} mentioned you in a checklist on step %{step}."
+    step_text_title: "%{user} mentioned you in a text on step %{step}."
     step_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module} | Step: %{step}"
     result_annotation_title: "%{user} mentioned you in result %{result}."
     result_comment_annotation_title: "%{user} mentioned you in a comment on result %{result}."
@@ -3151,6 +3255,7 @@ en:
     create: 'Create'
     change: "Change"
     remove: "Remove"
+    clone_label: "Clone"
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"
@@ -3161,17 +3266,23 @@ en:
     comment_placeholder_new: "Add new comment…"
     archived: "Archived"
     sort:
-      new_html: "<i class=\"fas fa-sort-numeric-up\"></i>&nbsp;&nbsp;Started last"
+      new_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;Started last"
       old_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Started first"
       atoz_html: "<i class=\"fas fa-sort-alpha-down\"></i>&nbsp;&nbsp;Name A to Z"
-      ztoa_html: "<i class=\"fas fa-sort-alpha-up\"></i>&nbsp;&nbsp;Name Z to A"
-      archived_new_html: "<span class=\"fa-stack\"><i class=\"fas fa-long-arrow-alt-up\"></i><i class=\"fas fa-archive\"></i></span>Archived last"
-      archived_old_html: "<span class=\"fa-stack\"><i class=\"fas fa-long-arrow-alt-down\"></i><i class=\"fas fa-archive\"></i></span>Archived first"
+      ztoa_html: "<i class=\"fas fa-sort-alpha-down-alt\"></i>&nbsp;&nbsp;Name Z to A"
+      archived_new_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;Archived last"
+      archived_old_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Archived first"
+      id_asc_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;ID ascending"
+      id_desc_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;ID descending"
+      due_first_html: "<i class=\"fas fa-sort-numeric-up\"></i>&nbsp;&nbsp;Due first"
+      due_last_html: "<i class=\"fas fa-sort-numeric-up\"></i>&nbsp;&nbsp;Due last"
     sort_new:
-      new: "Newest"
-      old: "Oldest"
-      atoz: "A-Z"
-      ztoa: "Z-A"
+      new: "Added last"
+      old: "Added first"
+      new_updated: "Modified last"
+      old_updated: "Modified first"
+      atoz: "Name A to Z"
+      ztoa: "Name Z to A"
     module:
       one: "task"
       other: "tasks"

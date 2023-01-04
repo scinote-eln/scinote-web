@@ -117,8 +117,10 @@
                                options_for_select([
                                  [t('projects.reports.wizard.third_step.atoz'), 'atoz'],
                                  [t('projects.reports.wizard.third_step.ztoa'), 'ztoa'],
-                                 [t('projects.reports.wizard.third_step.new_results'), 'new'],
-                                 [t('projects.reports.wizard.third_step.old_results'), 'old']
+                                 [t('projects.reports.wizard.third_step.old'), 'old'],
+                                 [t('projects.reports.wizard.third_step.new'), 'new'],
+                                 [t('projects.reports.wizard.third_step.old_updated'), 'old_updated'],
+                                 [t('projects.reports.wizard.third_step.new_updated'), 'new_updated']
                                ], selected: report.settings.dig(:task, :result_order)),
                                class: 'order-results' %>
               </div>

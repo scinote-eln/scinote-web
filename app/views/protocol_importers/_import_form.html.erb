@@ -4,15 +4,15 @@
     <span class="has-error help-block"></span>
   </div>
 
-  <div class="form-group">
+  <div class="form-group sci-input-container">
     <%= f.label :name, t('protocols.import_export.import_modal.name_label') %>
-    <%= f.text_field :name, class: 'form-control', value: protocol.name %>
+    <%= f.text_field :name, class: 'form-control sci-input-field', value: protocol.name %>
     <span class="help-block"></span>
   </div>
 
-  <div class="form-group">
+  <div class="form-group sci-input-container">
     <%= f.label :authors, t('protocols.import_export.import_modal.authors_label') %>
-    <%= f.text_field :authors, class: 'form-control', value: protocol.authors %>
+    <%= f.text_field :authors, class: 'form-control sci-input-field', value: protocol.authors %>
   </div>
 
   <div class="import-protocol-preview-description">

@@ -28,7 +28,7 @@
       $color-concrete 100%
     );
     border-radius: 4px;
-    display: none;
+    opacity: 0;
     padding-left: 2em;
     position: absolute;
     right: 0;
@@ -55,6 +55,7 @@
 
     .buttons-container {
       display: flex;
+      opacity: 1;
     }
 
     .step-element-grip {

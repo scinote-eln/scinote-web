@@ -1,0 +1,14 @@
+<% if @experiment.my_modules.any?(&:active?) %>
+  <% if @experiment.workflowimg.attached? %>
+    <canvas class="canvas-preview-img" data-image-url=<%= url_for(@experiment.workflowimg) %>></canvas>
+    <canvas class="canvas-preview-rect"></canvas>
+  <% else %>
+    <canvas class="canvas-preview-img processing"
+            data-workflowimg-present="false"
+            data-workflowimg-url="<%= fetch_workflow_img_experiment_url(@experiment) %>"></canvas>
+    <canvas class="canvas-preview-rect"></canvas>
+  <% end %>
+<% else %>
+  <canvas class="canvas-preview-img empty"></canvas>
+  <canvas class="canvas-preview-rect"></canvas>
+<% end %>

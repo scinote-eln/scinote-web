@@ -14,7 +14,7 @@ module ProjectsHelper
   end
 
   def user_names_with_roles(user_assignments)
-    user_assignments.map { |up| user_name_with_role(up) }.join('&#013;').html_safe
+    user_assignments.map { |up| user_name_with_role(up) }.join('&#013;')
   end
 
   def user_name_with_role(user_assignment)
@@ -48,6 +48,10 @@ module ProjectsHelper
                 records.sort_by { |c| c.name.downcase }
               when 'ztoa'
                 records.sort_by { |c| c.name.downcase }.reverse!
+              when 'id_asc'
+                records.sort_by(&:id)
+              when 'id_desc'
+                records.sort_by(&:id).reverse!
               when 'archived_old'
                 records.sort_by(&:archived_on)
               when 'archived_new'

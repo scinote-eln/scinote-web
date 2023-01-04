@@ -210,6 +210,20 @@ var MarvinJsEditorApi = (function() {
     });
   }
 
+  function createNewMarvinContainer(dataset) {
+    var objectId = dataset.objectId;
+    var objectType = dataset.objectType;
+    var marvinUrl = dataset.marvinUrl;
+    var container = dataset.sketchContainer;
+    MarvinJsEditor.open({
+      mode: 'new',
+      objectId: objectId,
+      objectType: objectType,
+      marvinUrl: marvinUrl,
+      container: container
+    });
+  }
+
   // MarvinJS Methods
 
   return {
@@ -254,17 +268,13 @@ var MarvinJsEditorApi = (function() {
 
     initNewButton: function(selector, saveCallback) {
       $(selector).off('click').on('click', function() {
-        var objectId = this.dataset.objectId;
-        var objectType = this.dataset.objectType;
-        var marvinUrl = this.dataset.marvinUrl;
-        var container = this.dataset.sketchContainer;
-        MarvinJsEditor.open({
-          mode: 'new',
-          objectId: objectId,
-          objectType: objectType,
-          marvinUrl: marvinUrl,
-          container: container
-        });
+        createNewMarvinContainer(this.dataset);
+      });
+
+      $(selector).off('keypress').on('keypress', function(e) {
+        if (e.which === 13) {
+          createNewMarvinContainer(this.dataset);
+        }
       });
 
       MarvinJsEditor.saveCallback = saveCallback;
