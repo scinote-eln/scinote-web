@@ -1,6 +1,4 @@
-// scss-lint:disable IdSelector
-// scss-lint:disable SelectorDepth
-// scss-lint:disable NestingDepth
+// scss-lint:disable IdSelector SelectorDepth NestingDepth
 
 .protocols-index {
   .protocols-datatable {
@@ -45,6 +43,26 @@
 
     .dataTables_scrollBody {
       height: 100%;
+    }
+  }
+
+  .protocol-filters {
+    display: flex;
+    position: relative;
+
+    .filter-container {
+      margin-right: 1em;
+    }
+
+    .dropdown-option.users-dropdown-list {
+      padding: 8px 10px;
+
+      .item-avatar {
+        border-radius: 50%;
+        height: 32px;
+        margin: 0 16px 0 0;
+        width: 32px;
+      }
     }
   }
 }
