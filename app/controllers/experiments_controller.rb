@@ -94,17 +94,23 @@ class ExperimentsController < ApplicationController
     @current_sort = view_state.state.dig('my_modules', view_mode, 'sort') || 'atoz'
 
     @project = @experiment.project
-    if params[:view_mode] == 'archived'
-      @my_modules = @experiment.my_modules.archived.order(:name)
-    else
-      @my_modules = @experiment.my_modules.active.order(:name)
-    end
+    @my_modules = if @experiment.archived?
+                    @experiment.my_modules.order(:name)
+                  elsif params[:view_mode] == 'archived'
+                    @experiment.my_modules.archived.order(:name)
+                  else
+                    @experiment.my_modules.active.order(:name)
+                  end
     @my_module_visible_table_columns = current_user.my_module_visible_table_columns
   end
 
   def load_table
     my_modules = @experiment.my_modules.readable_by_user(current_user)
-    my_modules = params[:view_mode] == 'archived' ? my_modules.archived : my_modules.active
+
+    unless @experiment.archived?
+      my_modules = params[:view_mode] == 'archived' ? my_modules.archived : my_modules.active
+    end
+
     render json: Experiments::TableViewService.new(@experiment, my_modules, current_user, params).call
   end
 
