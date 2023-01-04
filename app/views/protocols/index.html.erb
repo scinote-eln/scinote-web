@@ -138,3 +138,15 @@
 <%= javascript_include_tag "protocols/steps" %>
 <%= javascript_pack_tag 'pdfjs/pdf_js' %>
 <%= stylesheet_pack_tag 'pdfjs/pdf_js_styles' %>
+<script>
+  function paginationTitles() {
+    var pagination = document.getElementsByClassName('paginate_button');
+    for (let i = 0; i < pagination.length; i++) {
+      pagination[i].title = pagination[i].querySelector('a').innerHTML;
+    }
+  }
+
+  window.addEventListener('load', function() {
+    paginationTitles();
+  });
+</script>
