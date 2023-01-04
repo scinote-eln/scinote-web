@@ -7,6 +7,7 @@
       <div class="file-info">
         <a :href="attachment.attributes.urls.blob"
           class="file-preview-link file-name"
+          :title="`file preview ${attachment.attachment.file_name}`"
           :id="`modal_link${attachment.id}`"
           data-no-turbolink="true"
           :data-id="attachment.id"

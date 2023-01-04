@@ -1,4 +1,4 @@
-<div class="ql-editor">
+<div class="ql-editor" title="<%= result.result_text.tinymce_render(:text).gsub(/<div.*?>|<\/div>/, '') %>">
   <%= custom_auto_link(result.result_text.tinymce_render(:text),
                        simple_format: false,
                        tags: %w(img),

@@ -13,7 +13,7 @@
             gallery_view_id: gallery_view_id,
             preview_url: asset_file_preview_path(asset)
           } do %>
-    <div title="asset preview link <%= asset.file_name %>" class="attachment-preview <%= asset.file.attached? ? asset.file.metadata['asset_type'] : '' %>">
+    <div class="attachment-preview <%= asset.file.attached? ? asset.file.metadata['asset_type'] : '' %>">
       <% if asset.previewable? %>
         <%= image_tag asset.medium_preview,
             onerror: 'ActiveStoragePreviews.reCheckPreview(event)',
@@ -23,7 +23,7 @@
         <i class="fas <%= file_fa_icon_class(asset) if asset.file_name %>"></i>
       <% end %>
     </div>
-    <div class="attachment-label">
+    <div class="attachment-label" title="asset preview link <%= asset.name %>">
       <%= asset.render_file_name %>
     </div>
     <div class="attachment-metadata">
