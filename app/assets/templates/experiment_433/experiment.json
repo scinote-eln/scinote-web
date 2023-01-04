@@ -46,10 +46,18 @@
           "output_id": 2150
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -72,13 +80,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 5192,
                 "name": "PCR genotyping",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>PCR conditions: </p>\n<ul>\n<li>95°C for 1 min</li>\n<li>35 cycles: 95°C for 15 s</li>\n<li>56°C for 15 s</li>\n<li>72°C for 22 s</li>\n</ul>\n<br>PCR products run at <strong>60 V</strong> for <strong>40 mins</strong> on a<strong> 2%</strong> agarose gel (<strong>0.5× TAE</strong>, stained with <strong>100 ng/μL</strong> EtBr).</body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -88,28 +97,32 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3488
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [
-                {
-                  "id": 531,
-                  "step_id": 5192,
-                  "table_id": 668
-                }
+              "step_comments": [
+
               ],
-              "tables": [
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
                 {
-                  "id": 668,
-                  "created_at": "2018-12-17T07:35:02.552Z",
-                  "updated_at": "2019-02-19T14:35:53.484Z",
-                  "created_by_id": 202,
-                  "last_modified_by_id": 202,
-                  "name": "PCR Mastermix",
-                  "team_id": 1,
-                  "contents": "eyJkYXRhIjpbWyJDb21wb25lbnQiLCJWb2x1bWUgKMK1bCkiLCJGaW5hbCBD\nb25jLiJdLFsiTXlUYXEgbWl4IiwiMyIsIjF4Il0sWyJGb3J3YXJkIHByaW1l\nciIsIjAsNCIsIjEwIM68TSJdLFsiUmV2ZXJzZSBwcmltZXIiLCIwLDQiLCIx\nMCDOvE0iXSxbIlRlbXBsYXRlIEROQSIsIjAsNSIsIjXigJM1MCBuZy/OvEwi\nXSxbIlVsdHJhcHVyZSB3YXRlciIsIjEsNyIsIiJdXX0=\n",
-                  "data_vector": "JzAnOjEzLDIwLDI3ICcxJzozOCAnMTAnOjE1LDIyICcxeCc6MTAgJzIwMCc6\nMzEgJzIyMzUwJzozMiAnMjY1bCc6NCAnMjc0bCc6MzUgJzI3NG0nOjE3LDI0\nICczJzo5ICczMDInOjMgJzMxNic6MTYsMjMsMzQgJzM0Mic6MzAgJzQnOjE0\nLDIxICc1JzoyOCwyOSAnNyc6MzkgJ2NvbXBvbmVudCc6MSAnY29uYyc6NiAn\nZG5hJzoyNiAnZmluYWwnOjUgJ2ZvcndhcmQnOjExICdtaXgnOjggJ215dGFx\nJzo3ICduZyc6MzMgJ3ByaW1lcic6MTIsMTkgJ3JldmVyc2UnOjE4ICd0ZW1w\nbGF0ZSc6MjUgJ3VsdHJhcHVyZSc6MzYgJ3ZvbHVtZSc6MiAnd2F0ZXInOjM3\n"
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>PCR conditions: </p>\n<ul>\n<li>95°C for 1 min</li>\n<li>35 cycles: 95°C for 15 s</li>\n<li>56°C for 15 s</li>\n<li>72°C for 22 s</li>\n</ul>\n<br>PCR products run at <strong>60 V</strong> for <strong>40 mins</strong> on a<strong> 2%</strong> agarose gel (<strong>0.5× TAE</strong>, stained with <strong>100 ng/μL</strong> EtBr).</body></html>"
+                  },
+                  "position": 0
+                },
+                {
+                  "table": {
+                    "id": 668,
+                    "created_at": "2018-12-17T07:35:02.552Z",
+                    "updated_at": "2019-02-19T14:35:53.484Z",
+                    "created_by_id": 202,
+                    "last_modified_by_id": 202,
+                    "name": "PCR Mastermix",
+                    "team_id": 1,
+                    "contents": "eyJkYXRhIjpbWyJDb21wb25lbnQiLCJWb2x1bWUgKMK1bCkiLCJGaW5hbCBD\nb25jLiJdLFsiTXlUYXEgbWl4IiwiMyIsIjF4Il0sWyJGb3J3YXJkIHByaW1l\nciIsIjAsNCIsIjEwIM68TSJdLFsiUmV2ZXJzZSBwcmltZXIiLCIwLDQiLCIx\nMCDOvE0iXSxbIlRlbXBsYXRlIEROQSIsIjAsNSIsIjXigJM1MCBuZy/OvEwi\nXSxbIlVsdHJhcHVyZSB3YXRlciIsIjEsNyIsIiJdXX0=\n",
+                    "data_vector": "JzAnOjEzLDIwLDI3ICcxJzozOCAnMTAnOjE1LDIyICcxeCc6MTAgJzIwMCc6\nMzEgJzIyMzUwJzozMiAnMjY1bCc6NCAnMjc0bCc6MzUgJzI3NG0nOjE3LDI0\nICczJzo5ICczMDInOjMgJzMxNic6MTYsMjMsMzQgJzM0Mic6MzAgJzQnOjE0\nLDIxICc1JzoyOCwyOSAnNyc6MzkgJ2NvbXBvbmVudCc6MSAnY29uYyc6NiAn\nZG5hJzoyNiAnZmluYWwnOjUgJ2ZvcndhcmQnOjExICdtaXgnOjggJ215dGFx\nJzo3ICduZyc6MzMgJ3ByaW1lcic6MTIsMTkgJ3JldmVyc2UnOjE4ICd0ZW1w\nbGF0ZSc6MjUgJ3VsdHJhcHVyZSc6MzYgJ3ZvbHVtZSc6MiAnd2F0ZXInOjM3\n"
+                  },
+                  "position": 1
                 }
               ]
             },
@@ -117,7 +130,6 @@
               "step": {
                 "id": 4422,
                 "name": "Shearing and size selection",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Libraries can be quantified by fluorimetry and calibrated by sequencing. </p></body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -127,77 +139,8 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3488
               },
-              "checklists": [
-                {
-                  "checklist": {
-                    "id": 960,
-                    "name": "Guidelines:",
-                    "step_id": 4422,
-                    "created_at": "2018-12-21T10:22:55.963Z",
-                    "updated_at": "2018-12-21T10:22:55.963Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
-                  },
-                  "checklist_items": [
-                    {
-                      "id": 3950,
-                      "text": "Size selection (100 to 800 bp) by agarose gel electrophoresis.",
-                      "checked": false,
-                      "checklist_id": 960,
-                      "created_at": "2018-12-21T10:22:55.965Z",
-                      "updated_at": "2018-12-21T10:22:55.965Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 3951,
-                      "text": "Gel purification, end repair, dA overhang addition, P2 paired-end adapter ligation and library amplification.",
-                      "checked": false,
-                      "checklist_id": 960,
-                      "created_at": "2018-12-21T10:22:55.972Z",
-                      "updated_at": "2018-12-21T10:22:55.972Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 3952,
-                      "text": "120 μL of each amplified library is size-selected (about 250 to 500 bp) by gel electrophoresis.",
-                      "checked": false,
-                      "checklist_id": 960,
-                      "created_at": "2018-12-21T10:22:55.981Z",
-                      "updated_at": "2018-12-21T10:22:55.981Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    },
-                    {
-                      "id": 3953,
-                      "text": "Final libraries are put through quality control and high-throughput sequencing.",
-                      "checked": false,
-                      "checklist_id": 960,
-                      "created_at": "2018-12-21T10:22:55.989Z",
-                      "updated_at": "2018-12-21T10:23:18.774Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 3
-                    }
-                  ]
-                }
-              ],
-              "step_comments": [],
-              "step_assets": [
-                {
-                  "id": 3084,
-                  "step_id": 4422,
-                  "asset_id": 3746
-                },
-                {
-                  "id": 3085,
-                  "step_id": 4422,
-                  "asset_id": 3747
-                }
+              "step_comments": [
+
               ],
               "assets": [
                 {
@@ -237,14 +180,79 @@
                   }
                 }
               ],
-              "step_tables": [],
-              "tables": []
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Libraries can be quantified by fluorimetry and calibrated by sequencing. </p></body></html>"
+                  },
+                  "position": 0
+                },
+                {
+                  "checklist": {
+                    "checklist": {
+                      "id": 960,
+                      "name": "Guidelines:",
+                      "step_id": 4422,
+                      "created_at": "2018-12-21T10:22:55.963Z",
+                      "updated_at": "2018-12-21T10:22:55.963Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3950,
+                        "text": "Size selection (100 to 800 bp) by agarose gel electrophoresis.",
+                        "checked": false,
+                        "checklist_id": 960,
+                        "created_at": "2018-12-21T10:22:55.965Z",
+                        "updated_at": "2018-12-21T10:22:55.965Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 3951,
+                        "text": "Gel purification, end repair, dA overhang addition, P2 paired-end adapter ligation and library amplification.",
+                        "checked": false,
+                        "checklist_id": 960,
+                        "created_at": "2018-12-21T10:22:55.972Z",
+                        "updated_at": "2018-12-21T10:22:55.972Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 3952,
+                        "text": "120 μL of each amplified library is size-selected (about 250 to 500 bp) by gel electrophoresis.",
+                        "checked": false,
+                        "checklist_id": 960,
+                        "created_at": "2018-12-21T10:22:55.981Z",
+                        "updated_at": "2018-12-21T10:22:55.981Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      },
+                      {
+                        "id": 3953,
+                        "text": "Final libraries are put through quality control and high-throughput sequencing.",
+                        "checked": false,
+                        "checklist_id": 960,
+                        "created_at": "2018-12-21T10:22:55.989Z",
+                        "updated_at": "2018-12-21T10:23:18.774Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 3
+                      }
+                    ]
+                  },
+                  "position": 1
+                }
+              ]
             },
             {
               "step": {
                 "id": 4420,
                 "name": "RAD library preparation",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p> The RAD library was prepared as originally described in <a href=\"https://www.ncbi.nlm.nih.gov/pubmed/18852878/\" target=\"_blank\" rel=\"noopener\">article</a>.<br><br>At least <strong>30</strong> specimens need to be chosen.<br><br><strong>Each sample is digested at 37°C for 40 min with restriction enzyme:</strong></p>\n<ul>\n<li>\n<strong>6 U</strong> <em>restriction enzyme</em> per μg genomic DNA in <strong>1×</strong> Reaction Buffer 4 at a final concentration of about <strong>1 μg</strong> DNA per <strong>50 μL</strong> reaction volume</li>\n<li>The samples are heat-inactivated at <strong>65°C</strong> for <strong>20 min</strong>.</li>\n</ul>\n<br><strong>Individual-specific P1 adapters, each with a unique 5 or 7 bp barcode is ligated to the digested DNA at 22°C for 15 min by adding:</strong><br><br>\n<ul>\n<li>0.6 μL (DNA samples) 100 nmol/L P1 adapter</li>\n<li>0.15 μL 100 mmol/L rATP </li>\n<li>0.25 μL 10× Reaction Buffer 2</li>\n<li>0.125 μL T4 ligase </li>\n<li>reaction volumes made up to 15 μL with nuclease-free water </li>\n</ul>\n<br>After heat-inactivation, the ligation reactions are slowly cooled to room temperature then combined in appropriate multiplex pools.</body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -254,14 +262,8 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3488
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [
-                {
-                  "id": 3083,
-                  "step_id": 4420,
-                  "asset_id": 3745
-                }
+              "step_comments": [
+
               ],
               "assets": [
                 {
@@ -283,13 +285,21 @@
                   }
                 }
               ],
-              "step_tables": [],
-              "tables": []
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p> The RAD library was prepared as originally described in <a href=\"https://www.ncbi.nlm.nih.gov/pubmed/18852878/\" target=\"_blank\" rel=\"noopener\">article</a>.<br><br>At least <strong>30</strong> specimens need to be chosen.<br><br><strong>Each sample is digested at 37°C for 40 min with restriction enzyme:</strong></p>\n<ul>\n<li>\n<strong>6 U</strong> <em>restriction enzyme</em> per μg genomic DNA in <strong>1×</strong> Reaction Buffer 4 at a final concentration of about <strong>1 μg</strong> DNA per <strong>50 μL</strong> reaction volume</li>\n<li>The samples are heat-inactivated at <strong>65°C</strong> for <strong>20 min</strong>.</li>\n</ul>\n<br><strong>Individual-specific P1 adapters, each with a unique 5 or 7 bp barcode is ligated to the digested DNA at 22°C for 15 min by adding:</strong><br><br>\n<ul>\n<li>0.6 μL (DNA samples) 100 nmol/L P1 adapter</li>\n<li>0.15 μL 100 mmol/L rATP </li>\n<li>0.25 μL 10× Reaction Buffer 2</li>\n<li>0.125 μL T4 ligase </li>\n<li>reaction volumes made up to 15 μL with nuclease-free water </li>\n</ul>\n<br>After heat-inactivation, the ligation reactions are slowly cooled to room temperature then combined in appropriate multiplex pools.</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -321,10 +331,18 @@
           "output_id": 2151
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -347,13 +365,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 4424,
                 "name": "RAD markers",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Reads of low quality must be discarded. <br>Retained reads are sorted into loci and genotypes using software developed for that purpose. It will assigns loci using a likelihood-based algorithm to separate actual SNPs from SNPs likely to have arisen from sequencing error. <br><br><strong>Parameters:</strong><br>\n</p>\n<ul>\n<li>De novo assembly parameters.</li>\n<li>Minimum stack depth of 5.</li>\n<li>Maximum of 2 mismatches.</li>\n<li>No more than 1 mismatch between alleles.</li>\n</ul>\n</body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -363,18 +382,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3489
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Reads of low quality must be discarded. <br>Retained reads are sorted into loci and genotypes using software developed for that purpose. It will assigns loci using a likelihood-based algorithm to separate actual SNPs from SNPs likely to have arisen from sequencing error. <br><br><strong>Parameters:</strong><br>\n</p>\n<ul>\n<li>De novo assembly parameters.</li>\n<li>Minimum stack depth of 5.</li>\n<li>Maximum of 2 mismatches.</li>\n<li>No more than 1 mismatch between alleles.</li>\n</ul>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 5194,
                 "name": "RAD library construction",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Sequencing data from filtered Informative RAD markers is combined into a single alignment of alleles in RAD library construction. Data analysis is carried out using R and an associated R/<em>adegenet</em> package for Principal Component Analysis (PCA) and Discriminant Analysis of Principal Components (DAPC).<em><strong> PCA creates simplified models of the total variation within the dataset.</strong> <strong>DAPC identifies clusters of genetically related individuals.</strong></em></p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -384,17 +410,27 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3489
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Sequencing data from filtered Informative RAD markers is combined into a single alignment of alleles in RAD library construction. Data analysis is carried out using R and an associated R/<em>adegenet</em> package for Principal Component Analysis (PCA) and Discriminant Analysis of Principal Components (DAPC).<em><strong> PCA creates simplified models of the total variation within the dataset.</strong> <strong>DAPC identifies clusters of genetically related individuals.</strong></em></p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -419,11 +455,21 @@
         "state": "uncompleted",
         "completed_on": null
       },
-      "outputs": [],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "outputs": [
+
+      ],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -446,13 +492,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 4428,
                 "name": "Genotype assignment",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Reading the fluorescence emission of the FAM and HEX fluorophores for each sample, in comparison to no-template control reactions, using a Real Time PCR Thermal Cycler and Quansoft endpoint genotyping software.</p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -462,18 +509,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3492
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Reading the fluorescence emission of the FAM and HEX fluorophores for each sample, in comparison to no-template control reactions, using a Real Time PCR Thermal Cycler and Quansoft endpoint genotyping software.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4427,
                 "name": "SNP assays",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>SNP of interest at a given locus need to be at least <strong>20 bp</strong> from the end of a given sequence, to allow for primer design. SNP assays were designed and manufactured for use with KASP genotyping technology.<br><br><strong>Optimisation assay conditions:</strong></p>\n<ul>\n<li>94°C for 15 min;</li>\n<li>10 cycles 94°C for 20 s, 61–55°C for 120 s (0.6°C drop per cycle)</li>\n<li>40 cycles 94°C for 20 s, 55°C for 120 s </li>\n</ul>\n</body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -483,14 +537,8 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3492
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [
-                {
-                  "id": 3086,
-                  "step_id": 4427,
-                  "asset_id": 3748
-                }
+              "step_comments": [
+
               ],
               "assets": [
                 {
@@ -512,31 +560,35 @@
                   }
                 }
               ],
-              "step_tables": [
+              "step_orderable_elements": [
                 {
-                  "id": 455,
-                  "step_id": 4427,
-                  "table_id": 573
-                }
-              ],
-              "tables": [
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>SNP of interest at a given locus need to be at least <strong>20 bp</strong> from the end of a given sequence, to allow for primer design. SNP assays were designed and manufactured for use with KASP genotyping technology.<br><br><strong>Optimisation assay conditions:</strong></p>\n<ul>\n<li>94°C for 15 min;</li>\n<li>10 cycles 94°C for 20 s, 61–55°C for 120 s (0.6°C drop per cycle)</li>\n<li>40 cycles 94°C for 20 s, 55°C for 120 s </li>\n</ul>\n</body></html>"
+                  },
+                  "position": 0
+                },
                 {
-                  "id": 573,
-                  "created_at": "2018-11-12T15:20:07.148Z",
-                  "updated_at": "2019-02-20T07:37:09.513Z",
-                  "created_by_id": 202,
-                  "last_modified_by_id": 202,
-                  "name": "Reaction mastermix",
-                  "team_id": 1,
-                  "contents": "eyJkYXRhIjpbWyJDb21wb25lbnQiLCJWb2x1bWUiXSxbIjLDlyBLQVNQIE1h\nc3RlciBNaXgiLCIyLjUgzrxMIl0sWyJLQVNQIEFzc2F5IE1peCIsIjAuMDcg\nzrxMIl0sWyJUZW1wbGF0ZSBETkEiLCIwLjQgzrxMIl0sWyJVbHRyYXB1cmUg\nd2F0ZXIiLCIyLjEgzrxMIl1dfQ==\n",
-                  "data_vector": "JzAuMDcnOjE1ICcwLjQnOjIwICcyJzozICcyLjEnOjI1ICcyLjUnOjkgJzIy\nNyc6NSAnMjc0bCc6MTEsMTcsMjIsMjcgJzMwMyc6NCAnMzE2JzoxMCwxNiwy\nMSwyNiAnYXNzYXknOjEzICdjb21wb25lbnQnOjEgJ2RuYSc6MTkgJ2thc3An\nOjYsMTIgJ21hc3Rlcic6NyAnbWl4Jzo4LDE0ICd0ZW1wbGF0ZSc6MTggJ3Vs\ndHJhcHVyZSc6MjMgJ3ZvbHVtZSc6MiAnd2F0ZXInOjI0\n"
+                  "table": {
+                    "id": 573,
+                    "created_at": "2018-11-12T15:20:07.148Z",
+                    "updated_at": "2019-02-20T07:37:09.513Z",
+                    "created_by_id": 202,
+                    "last_modified_by_id": 202,
+                    "name": "Reaction mastermix",
+                    "team_id": 1,
+                    "contents": "eyJkYXRhIjpbWyJDb21wb25lbnQiLCJWb2x1bWUiXSxbIjLDlyBLQVNQIE1h\nc3RlciBNaXgiLCIyLjUgzrxMIl0sWyJLQVNQIEFzc2F5IE1peCIsIjAuMDcg\nzrxMIl0sWyJUZW1wbGF0ZSBETkEiLCIwLjQgzrxMIl0sWyJVbHRyYXB1cmUg\nd2F0ZXIiLCIyLjEgzrxMIl1dfQ==\n",
+                    "data_vector": "JzAuMDcnOjE1ICcwLjQnOjIwICcyJzozICcyLjEnOjI1ICcyLjUnOjkgJzIy\nNyc6NSAnMjc0bCc6MTEsMTcsMjIsMjcgJzMwMyc6NCAnMzE2JzoxMCwxNiwy\nMSwyNiAnYXNzYXknOjEzICdjb21wb25lbnQnOjEgJ2RuYSc6MTkgJ2thc3An\nOjYsMTIgJ21hc3Rlcic6NyAnbWl4Jzo4LDE0ICd0ZW1wbGF0ZSc6MTggJ3Vs\ndHJhcHVyZSc6MjMgJ3ZvbHVtZSc6MiAnd2F0ZXInOjI0\n"
+                  },
+                  "position": 1
                 }
               ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -568,10 +620,18 @@
           "output_id": 2149
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -594,13 +654,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 4416,
                 "name": "Protein extraction and RNAse treatment",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Here are the guidelines for protein extraction: </p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -610,76 +671,85 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3487
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Here are the guidelines for protein extraction: </p></body></html>"
+                  },
+                  "position": 0
+                },
                 {
                   "checklist": {
-                    "id": 958,
-                    "name": "Guidelines:",
-                    "step_id": 4416,
-                    "created_at": "2018-12-21T09:50:59.139Z",
-                    "updated_at": "2018-12-21T09:50:59.139Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
+                    "checklist": {
+                      "id": 958,
+                      "name": "Guidelines:",
+                      "step_id": 4416,
+                      "created_at": "2018-12-21T09:50:59.139Z",
+                      "updated_at": "2018-12-21T09:50:59.139Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3939,
+                        "text": "Add 1 volume of chloroform: Isoamyl alcohol to the solution and mix by inversion for 5 min. Centrifuge the sample for 10 min at 5000 × g and pipette the upper aqueous phase into a new Falcon tube.",
+                        "checked": false,
+                        "checklist_id": 958,
+                        "created_at": "2018-12-21T09:50:59.141Z",
+                        "updated_at": "2018-12-21T09:50:59.141Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 3940,
+                        "text": "Add 5 μL of RNAse A to the solution and incubate at 37°C for 15 min with periodic, gentle mixing.",
+                        "checked": false,
+                        "checklist_id": 958,
+                        "created_at": "2018-12-21T09:50:59.149Z",
+                        "updated_at": "2018-12-21T09:50:59.149Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 3941,
+                        "text": "After incubation, add 1 volume of chloroform: Isoamyl alcohol to the solution and mix by inversion for 5 min.",
+                        "checked": false,
+                        "checklist_id": 958,
+                        "created_at": "2018-12-21T09:50:59.156Z",
+                        "updated_at": "2018-12-21T09:50:59.156Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      },
+                      {
+                        "id": 3942,
+                        "text": "Centrifuge the solution for 10 min at 5000 × g and pipette the aqueous phase into a new Falcon tube.",
+                        "checked": false,
+                        "checklist_id": 958,
+                        "created_at": "2018-12-21T09:50:59.163Z",
+                        "updated_at": "2018-12-21T09:50:59.163Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 3
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 3939,
-                      "text": "Add 1 volume of chloroform: Isoamyl alcohol to the solution and mix by inversion for 5 min. Centrifuge the sample for 10 min at 5000 × g and pipette the upper aqueous phase into a new Falcon tube.",
-                      "checked": false,
-                      "checklist_id": 958,
-                      "created_at": "2018-12-21T09:50:59.141Z",
-                      "updated_at": "2018-12-21T09:50:59.141Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 3940,
-                      "text": "Add 5 μL of RNAse A to the solution and incubate at 37°C for 15 min with periodic, gentle mixing.",
-                      "checked": false,
-                      "checklist_id": 958,
-                      "created_at": "2018-12-21T09:50:59.149Z",
-                      "updated_at": "2018-12-21T09:50:59.149Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 3941,
-                      "text": "After incubation, add 1 volume of chloroform: Isoamyl alcohol to the solution and mix by inversion for 5 min.",
-                      "checked": false,
-                      "checklist_id": 958,
-                      "created_at": "2018-12-21T09:50:59.156Z",
-                      "updated_at": "2018-12-21T09:50:59.156Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    },
-                    {
-                      "id": 3942,
-                      "text": "Centrifuge the solution for 10 min at 5000 × g and pipette the aqueous phase into a new Falcon tube.",
-                      "checked": false,
-                      "checklist_id": 958,
-                      "created_at": "2018-12-21T09:50:59.163Z",
-                      "updated_at": "2018-12-21T09:50:59.163Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 3
-                    }
-                  ]
+                  "position": 1
                 }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              ]
             },
             {
               "step": {
                 "id": 4418,
                 "name": "DNA quality and quantity assessment",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Looking for a single absorbance peak at <strong>260 nm</strong>, a <strong>260/280</strong> absorbance ratio of <strong>1.8-2.0</strong> and no evidence of substantial band shearing or contamination (either RNA or polysaccharide).<br><br></p>\n<p><strong>Assess the quality of the extracted DNA:</strong></p>\n<ol>\n<li>NanoDrop UV/Vis spectrophotometer</li>\n<li>0.7% (w/v) agarose gel electrophoresis</li>\n</ol>\n</body></html>",
                 "position": 3,
                 "completed": false,
                 "completed_on": null,
@@ -689,18 +759,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3487
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Looking for a single absorbance peak at <strong>260 nm</strong>, a <strong>260/280</strong> absorbance ratio of <strong>1.8-2.0</strong> and no evidence of substantial band shearing or contamination (either RNA or polysaccharide).<br><br></p>\n<p><strong>Assess the quality of the extracted DNA:</strong></p>\n<ol>\n<li>NanoDrop UV/Vis spectrophotometer</li>\n<li>0.7% (w/v) agarose gel electrophoresis</li>\n</ol>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4414,
                 "name": "Preparation",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Guidelines for samples preparation below. </p></body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -710,87 +787,96 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3487
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Guidelines for samples preparation below. </p></body></html>"
+                  },
+                  "position": 0
+                },
                 {
                   "checklist": {
-                    "id": 957,
-                    "name": "Guidelines",
-                    "step_id": 4414,
-                    "created_at": "2018-12-21T09:43:55.386Z",
-                    "updated_at": "2018-12-21T09:43:55.386Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
+                    "checklist": {
+                      "id": 957,
+                      "name": "Guidelines",
+                      "step_id": 4414,
+                      "created_at": "2018-12-21T09:43:55.386Z",
+                      "updated_at": "2018-12-21T09:43:55.386Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3934,
+                        "text": "Samples are stored in 95% ethanol solution at -20°C.",
+                        "checked": false,
+                        "checklist_id": 957,
+                        "created_at": "2018-12-21T09:43:55.389Z",
+                        "updated_at": "2018-12-21T09:43:55.389Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 3935,
+                        "text": "Pre-heat water baths (65°C and 37°C).",
+                        "checked": false,
+                        "checklist_id": 957,
+                        "created_at": "2018-12-21T09:43:55.396Z",
+                        "updated_at": "2018-12-21T09:43:55.396Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 3936,
+                        "text": "Prepare 10 mL (per 1 g of sample) extraction buffer by adding 0.3% (v/v) β-mercaptoethanol in a 50 mL Falcon tube, and pre-heat in the 65°C water bath.",
+                        "checked": false,
+                        "checklist_id": 957,
+                        "created_at": "2018-12-21T09:43:55.403Z",
+                        "updated_at": "2018-12-21T09:43:55.403Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      },
+                      {
+                        "id": 3937,
+                        "text": "Put the sample into the 65°C water bath and mix by inversion every 10 min for 30-60 minutes.",
+                        "checked": false,
+                        "checklist_id": 957,
+                        "created_at": "2018-12-21T09:43:55.412Z",
+                        "updated_at": "2018-12-21T09:43:55.412Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 3
+                      },
+                      {
+                        "id": 3938,
+                        "text": "After incubation, centrifuge the sample tube for 5 min at 5000 × g and decant the supernatant into a new 50 mL Falcon tube.",
+                        "checked": false,
+                        "checklist_id": 957,
+                        "created_at": "2018-12-21T09:43:55.419Z",
+                        "updated_at": "2018-12-21T09:43:55.419Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 4
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 3934,
-                      "text": "Samples are stored in 95% ethanol solution at -20°C.",
-                      "checked": false,
-                      "checklist_id": 957,
-                      "created_at": "2018-12-21T09:43:55.389Z",
-                      "updated_at": "2018-12-21T09:43:55.389Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 3935,
-                      "text": "Pre-heat water baths (65°C and 37°C).",
-                      "checked": false,
-                      "checklist_id": 957,
-                      "created_at": "2018-12-21T09:43:55.396Z",
-                      "updated_at": "2018-12-21T09:43:55.396Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 3936,
-                      "text": "Prepare 10 mL (per 1 g of sample) extraction buffer by adding 0.3% (v/v) β-mercaptoethanol in a 50 mL Falcon tube, and pre-heat in the 65°C water bath.",
-                      "checked": false,
-                      "checklist_id": 957,
-                      "created_at": "2018-12-21T09:43:55.403Z",
-                      "updated_at": "2018-12-21T09:43:55.403Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    },
-                    {
-                      "id": 3937,
-                      "text": "Put the sample into the 65°C water bath and mix by inversion every 10 min for 30-60 minutes.",
-                      "checked": false,
-                      "checklist_id": 957,
-                      "created_at": "2018-12-21T09:43:55.412Z",
-                      "updated_at": "2018-12-21T09:43:55.412Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 3
-                    },
-                    {
-                      "id": 3938,
-                      "text": "After incubation, centrifuge the sample tube for 5 min at 5000 × g and decant the supernatant into a new 50 mL Falcon tube.",
-                      "checked": false,
-                      "checklist_id": 957,
-                      "created_at": "2018-12-21T09:43:55.419Z",
-                      "updated_at": "2018-12-21T09:43:55.419Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 4
-                    }
-                  ]
+                  "position": 1
                 }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              ]
             },
             {
               "step": {
                 "id": 4417,
                 "name": "Precipitation",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>If you are precipitating small volumes of DNA, and you can fit the required amount of solvent into the sample tube, then ice-cold ethanol is the preferred choice. You can chill it (in liquid nitrogen or at <strong>–80°C</strong>) to accelerate the precipitation without the risk of precipitating excess salt. Afterwards, you need to wash the pellet with <strong>70%</strong> ethanol to remove any salt present.</p></body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -800,108 +886,120 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3487
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>If you are precipitating small volumes of DNA, and you can fit the required amount of solvent into the sample tube, then ice-cold ethanol is the preferred choice. You can chill it (in liquid nitrogen or at <strong>–80°C</strong>) to accelerate the precipitation without the risk of precipitating excess salt. Afterwards, you need to wash the pellet with <strong>70%</strong> ethanol to remove any salt present.</p></body></html>"
+                  },
+                  "position": 0
+                },
                 {
                   "checklist": {
-                    "id": 959,
-                    "name": "Guidelines:",
-                    "step_id": 4417,
-                    "created_at": "2018-12-21T09:54:21.494Z",
-                    "updated_at": "2018-12-21T09:54:21.494Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
+                    "checklist": {
+                      "id": 959,
+                      "name": "Guidelines:",
+                      "step_id": 4417,
+                      "created_at": "2018-12-21T09:54:21.494Z",
+                      "updated_at": "2018-12-21T09:54:21.494Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3943,
+                        "text": "Add a ½ volume of 5 M NaCl to the sample and mix gently by inversion.",
+                        "checked": false,
+                        "checklist_id": 959,
+                        "created_at": "2018-12-21T09:54:21.496Z",
+                        "updated_at": "2018-12-21T09:54:21.496Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 3944,
+                        "text": "Then, add 3 volumes of cold 95% ethanol and mix gently by inversion.",
+                        "checked": false,
+                        "checklist_id": 959,
+                        "created_at": "2018-12-21T09:54:21.503Z",
+                        "updated_at": "2018-12-21T09:54:21.503Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 3945,
+                        "text": "Place the tubes into a -20°C freezer and incubate for 1 h.",
+                        "checked": false,
+                        "checklist_id": 959,
+                        "created_at": "2018-12-21T09:54:21.509Z",
+                        "updated_at": "2018-12-21T09:54:21.509Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      },
+                      {
+                        "id": 3946,
+                        "text": "After incubation, centrifuge the Falcon tube for 10 min at 5000 × g to pellet the DNA.",
+                        "checked": false,
+                        "checklist_id": 959,
+                        "created_at": "2018-12-21T09:54:21.516Z",
+                        "updated_at": "2018-12-21T09:54:21.516Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 3
+                      },
+                      {
+                        "id": 3947,
+                        "text": "Carefully decant away the supernatant and wash the DNA pellet with 3 mL of 70% ethanol.",
+                        "checked": false,
+                        "checklist_id": 959,
+                        "created_at": "2018-12-21T09:54:21.522Z",
+                        "updated_at": "2018-12-21T09:54:21.522Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 4
+                      },
+                      {
+                        "id": 3948,
+                        "text": "Gently swirl the solution and centrifuge again for 10 min at 5000 × g.",
+                        "checked": false,
+                        "checklist_id": 959,
+                        "created_at": "2018-12-21T09:54:21.529Z",
+                        "updated_at": "2018-12-21T09:54:21.529Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 5
+                      },
+                      {
+                        "id": 3949,
+                        "text": "Carefully decant the supernatant and air-dry DNA pellet for 15 min at room temperature. Once dried, suspend DNA in 200 μL of TE buffer.",
+                        "checked": false,
+                        "checklist_id": 959,
+                        "created_at": "2018-12-21T09:54:21.535Z",
+                        "updated_at": "2018-12-21T09:54:21.535Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 6
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 3943,
-                      "text": "Add a ½ volume of 5 M NaCl to the sample and mix gently by inversion.",
-                      "checked": false,
-                      "checklist_id": 959,
-                      "created_at": "2018-12-21T09:54:21.496Z",
-                      "updated_at": "2018-12-21T09:54:21.496Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 3944,
-                      "text": "Then, add 3 volumes of cold 95% ethanol and mix gently by inversion.",
-                      "checked": false,
-                      "checklist_id": 959,
-                      "created_at": "2018-12-21T09:54:21.503Z",
-                      "updated_at": "2018-12-21T09:54:21.503Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 3945,
-                      "text": "Place the tubes into a -20°C freezer and incubate for 1 h.",
-                      "checked": false,
-                      "checklist_id": 959,
-                      "created_at": "2018-12-21T09:54:21.509Z",
-                      "updated_at": "2018-12-21T09:54:21.509Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    },
-                    {
-                      "id": 3946,
-                      "text": "After incubation, centrifuge the Falcon tube for 10 min at 5000 × g to pellet the DNA.",
-                      "checked": false,
-                      "checklist_id": 959,
-                      "created_at": "2018-12-21T09:54:21.516Z",
-                      "updated_at": "2018-12-21T09:54:21.516Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 3
-                    },
-                    {
-                      "id": 3947,
-                      "text": "Carefully decant away the supernatant and wash the DNA pellet with 3 mL of 70% ethanol.",
-                      "checked": false,
-                      "checklist_id": 959,
-                      "created_at": "2018-12-21T09:54:21.522Z",
-                      "updated_at": "2018-12-21T09:54:21.522Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 4
-                    },
-                    {
-                      "id": 3948,
-                      "text": "Gently swirl the solution and centrifuge again for 10 min at 5000 × g.",
-                      "checked": false,
-                      "checklist_id": 959,
-                      "created_at": "2018-12-21T09:54:21.529Z",
-                      "updated_at": "2018-12-21T09:54:21.529Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 5
-                    },
-                    {
-                      "id": 3949,
-                      "text": "Carefully decant the supernatant and air-dry DNA pellet for 15 min at room temperature. Once dried, suspend DNA in 200 μL of TE buffer.",
-                      "checked": false,
-                      "checklist_id": 959,
-                      "created_at": "2018-12-21T09:54:21.535Z",
-                      "updated_at": "2018-12-21T09:54:21.535Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 6
-                    }
-                  ]
+                  "position": 1
                 }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     }
   ],
   "my_module_groups": [

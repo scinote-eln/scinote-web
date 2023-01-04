@@ -11,7 +11,7 @@ class AssetSerializer < ActiveModel::Serializer
   attributes :file_name, :view_mode, :icon, :urls, :updated_at_formatted,
              :file_size, :medium_preview, :large_preview, :asset_type, :wopi,
              :wopi_context, :pdf_previewable, :file_size_formatted, :asset_order,
-             :updated_at, :metadata, :image_editable, :image_context, :pdf
+             :updated_at, :metadata, :image_editable, :image_context, :pdf, :attached
 
   def icon
     file_fa_icon_class(object)
@@ -27,6 +27,10 @@ class AssetSerializer < ActiveModel::Serializer
 
   def updated_at_formatted
     I18n.l(object.updated_at, format: :full_date) if object.updated_at
+  end
+
+  def attached
+    object.file.attached?
   end
 
   def file_size_formatted
@@ -106,7 +110,7 @@ class AssetSerializer < ActiveModel::Serializer
   def urls
     urls = {
       preview: asset_file_preview_path(object),
-      download: rails_blob_path(object.file, disposition: 'attachment'),
+      download: (rails_blob_path(object.file, disposition: 'attachment') if attached),
       load_asset: load_asset_path(object),
       asset_file: asset_file_url_path(object),
       marvin_js: marvin_js_asset_path(object),

@@ -1,4 +1,8 @@
 #modal-print-repository-row-label {
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    margin-left: 8px;
+  }
 
   .id-label {
     margin-left: .5em;
@@ -8,15 +12,41 @@
   .printers-container {
     margin-bottom: 1em;
     min-height: 4em;
+
+    .status-ready {
+      color: $brand-success;
+    }
+
+    .status-busy {
+      color: $color-silver-chalice;
+    }
+
+    .status-out-of-labels {
+      color: $color-silver-chalice;
+    }
+
+    .status-unreachable {
+      color: $color-silver-chalice;
+    }
+
+    .status-error {
+      color: $color-silver-chalice;
+    }
+
+    .status-offline {
+      color: $color-silver-chalice;
+    }
+  }
+
+  .labels-container {
+    margin-bottom: 1em;
+    min-height: 4em;
   }
 
   .print-copies-input {
     margin-left: .5em;
-    width: 50px;
-  }
-
-  .modal-footer {
-    text-align: center;
+    text-align: right;
+    width: 100px;
   }
 
   .no-printers-container {
@@ -26,6 +56,34 @@
     .no-printer-title {
       @include font-h3;
       margin-top: 1em;
+    }
+  }
+
+  .label-template-warning {
+    @include font-small;
+    color: $brand-warning;
+  }
+
+  .label-preview-container {
+    background-color: $color-concrete;
+    display: flex;
+    justify-content: center;
+    max-height: 300px;
+    min-height: 200px;
+    overflow-y: auto;
+    padding: .5em 0;
+
+    img {
+      max-width: 100%;
+    }
+  }
+
+  .label-template-option {
+    align-items: center;
+    display: flex;
+
+    img {
+      margin-right: .25em;
     }
   }
 }

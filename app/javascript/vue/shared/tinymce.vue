@@ -85,6 +85,8 @@
       inEditMode() {
         if (this.inEditMode) {
           this.initTinymce();
+        } else {
+          this.wrapTables();
         }
       },
       characterCount() {
@@ -113,6 +115,8 @@
     mounted() {
       if (this.inEditMode) {
         this.initTinymce();
+      } else {
+        this.wrapTables();
       }
     },
     methods: {
@@ -120,6 +124,7 @@
         let textArea = `#${this.objectType}_textarea_${this.objectId}`;
 
         if (this.active) return
+        if (e && $(e.target).prop("tagName") === 'A') return
         if (e && $(e.target).hasClass('atwho-user-popover')) return
         if (e && $(e.target).hasClass('record-info-link')) return
         if (e && $(e.target).parent().hasClass('atwho-inserted')) return
@@ -129,7 +134,7 @@
           if (data) {
             this.$emit('update', data)
           }
-          this.$emit('editingDisabled')
+          this.$emit('editingDisabled');
         }).then(() => {
           this.active = true;
           this.initCharacterCount();
@@ -138,6 +143,11 @@
       },
       getStaticUrl(name) {
         return $(`meta[name=\'${name}\']`).attr('content');
+      },
+      wrapTables() {
+        this.$nextTick(() => {
+          $(this.$el).find('.tinymce-view table').css('float', 'none').wrapAll('<div style="overflow: auto"></div>');
+        });
       },
       initCharacterCount() {
         if (!this.editorInstance()) return;

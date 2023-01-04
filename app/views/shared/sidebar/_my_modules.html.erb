@@ -1,3 +1,9 @@
+<% if params[:action] == 'table' %>
+  <% @view_mode_link = table_experiment_path(@experiment, view_mode: 'archived') %>
+<% else %>
+  <% @view_mode_link = module_archive_experiment_url(experiment) %>
+<% end %>
+
 <ul class="sidebar-branch">
   <li class="sidebar-leaf">
     <%= link_to t('sidebar.my_modules.back_button'), project_url(experiment.project), class: 'sidebar-link back-button' %>
@@ -15,7 +21,7 @@
     </li>
   <% end %>
   <li class="sidebar-leaf">
-    <%= link_to module_archive_experiment_url(experiment), class: 'sidebar-link' do %>
+    <%= link_to @view_mode_link, class: 'sidebar-link' do %>
       <i class="fas fa-archive"></i>&nbsp;
       <%= t('sidebar.my_modules.archived_button') %>
     <% end%>

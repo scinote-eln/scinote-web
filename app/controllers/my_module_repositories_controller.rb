@@ -135,7 +135,7 @@ class MyModuleRepositoriesController < ApplicationController
         activity_type: :export_inventory_items_assigned_to_task,
         owner: current_user,
         subject: @my_module,
-        team: current_team,
+        team: @repository.team,
         message_items: {
           my_module: @my_module.id,
           repository: @repository.id
@@ -251,7 +251,7 @@ class MyModuleRepositoriesController < ApplicationController
             owner: current_user,
             subject: @my_module,
             team: @repository.team,
-            project: @my_module.experiment.project,
+            project: @my_module.project,
             message_items: {
               repository: @repository.id,
               repository_row: module_repository_row.repository_row_id,

@@ -10,6 +10,12 @@
     flex: 0;
   }
 
+  .view-text-element {
+    a {
+      pointer-events: initial;
+    }
+  }
+
   .empty-text-element {
     color: $color-silver-chalice;
   }
@@ -22,7 +28,7 @@
       $color-concrete 100%
     );
     border-radius: 4px;
-    display: none;
+    opacity: 0;
     padding-left: 2em;
     position: absolute;
     right: 0;
@@ -49,6 +55,7 @@
 
     .buttons-container {
       display: flex;
+      opacity: 1;
     }
 
     .step-element-grip {

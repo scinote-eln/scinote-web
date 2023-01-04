@@ -3,6 +3,8 @@
 module Reports
   class Utils
     def self.link_prepare(scinote_url, link)
+      return link if scinote_url.blank?
+
       link[0] == '/' ? scinote_url + link : link
     end
 

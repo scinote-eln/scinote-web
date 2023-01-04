@@ -38,14 +38,12 @@ module UsersGenerator
     # needs to be sent with his/her password & email?
 
     # Create user's own team of needed
-    if private_team_name.present?
-      create_private_user_team(nu, private_team_name)
-    end
+    Team.create!(name: private_team_name, created_by: nu) if private_team_name.present?
 
     # Assign user to additional teams
     team_ids.each do |team_id|
-      team = Team.find_by_id(team_id)
-      UserTeam.create(user: nu, team: team, role: :admin) if team.present?
+      team = Team.find(team_id)
+      UserAssignment.create!(user: nu, assignable: team, user_role: UserRole.owner_role) if team.present?
     end
 
     # Assign user team as user current team
@@ -54,11 +52,6 @@ module UsersGenerator
 
     nu.reload
     nu
-  end
-
-  def create_private_user_team(user, private_team_name)
-    no = Team.create(name: private_team_name, created_by: user)
-    UserTeam.create(user: user, team: no, role: :admin)
   end
 
   def print_user(user, password)

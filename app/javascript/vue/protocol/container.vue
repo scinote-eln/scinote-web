@@ -14,14 +14,18 @@
       </div>
       <div class="actions-block">
         <div class="protocol-buttons-group">
-          <a v-if="urls.add_step_url" class="btn btn-primary" @click="addStep(steps.length)" tabindex="0">
+          <a v-if="urls.add_step_url"
+             class="btn btn-primary"
+             @keyup.enter="addStep(steps.length)"
+             @click="addStep(steps.length)"
+             tabindex="0">
               <span class="fas fa-plus" aria-hidden="true"></span>
               <span>{{ i18n.t("protocols.steps.new_step") }}</span>
           </a>
-          <a class="btn btn-secondary" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
+          <button class="btn btn-secondary" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
             <span class="fas fa-print" aria-hidden="true"></span>
             <span>{{ i18n.t("protocols.print.button") }}</span>
-          </a>
+          </button>
           <ProtocolOptions
             v-if="protocol.attributes && protocol.attributes.urls"
             :protocol="protocol"
@@ -67,7 +71,8 @@
           {{ i18n.t("protocols.no_text_placeholder") }}
         </div>
       </div>
-      <a v-if="urls.add_step_url && protocol.attributes.in_repository" class="btn btn-primary repository-new-step" @click="addStep(steps.length)">
+      <a v-if="urls.add_step_url && protocol.attributes.in_repository" class="btn btn-primary repository-new-step"
+          @keyup.enter="addStep(steps.length)" @click="addStep(steps.length)" tabindex="0">
         <span class="fas fa-plus" aria-hidden="true"></span>
         <span>{{ i18n.t("protocols.steps.new_step") }}</span>
       </a>
@@ -104,6 +109,7 @@
               @step:delete="updateStepsPosition"
               @step:update="updateStep"
               @stepUpdated="refreshProtocolStatus"
+              @step:insert="updateStepsPosition"
               :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
             />
           </div>

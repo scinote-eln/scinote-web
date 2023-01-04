@@ -28,6 +28,66 @@
     li {
       padding: .5em 0;
     }
+
+    .indented_row {
+      padding-left: 4px;
+    }
+  }
+
+  ol {
+    padding-left: 0;
+
+    li {
+      padding: .5em 0;
+    }
+
+    .indented_row {
+      padding-left: 4px;
+    }
+  }
+
+  .zebra-settings-collapse {
+    border-left: 3px solid $color-concrete;
+    margin-top: 14px;
+    padding-bottom: 0;
+    padding-top: 0;
+
+    .collapse {
+      padding-left: 2.5em;
+
+      ol {
+        padding-left: 1.5em;
+      }
+    }
+
+    .collapse-row {
+      padding-left: 1em;
+    }
+
+    li:last-child {
+      padding-bottom: 0;
+    }
+  }
+
+  .zebra-status-tag {
+    align-items: center;
+    border-radius: 2px;
+    font-size: 12px;
+    margin-left: 1em;
+    margin-right: 1em;
+    padding: 4px 8px;
+    white-space: nowrap;
+
+    &.ready {
+      background-color: $brand-success;
+      color: $color-white;
+    }
+
+    &.offline {
+      background-color: $color-white;
+      border: 1px solid $color-gray;
+      color: $color-gray;
+    }
   }
 
   .collapse {
@@ -55,6 +115,7 @@
   .row-title {
     @include font-h2;
     margin-left: .5em;
+    margin-top: .25em;
   }
 
   .api-key-container {
@@ -85,5 +146,11 @@
 
   .update-printers {
     margin-left: auto;
+  }
+
+  .searching-printers {
+    img {
+      margin-right: .5em;
+    }
   }
 }

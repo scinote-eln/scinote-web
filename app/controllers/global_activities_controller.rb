@@ -133,7 +133,7 @@ class GlobalActivitiesController < ApplicationController
       end
     filter_teams =
       if subject_search_params[:users].present?
-        User.where(id: subject_search_params[:users]).joins(:user_teams).group(:team_id).pluck(:team_id)
+        User.where(id: subject_search_params[:users]).joins(:teams).group(:team_id).pluck(:team_id)
       elsif subject_search_params[:teams].present?
         subject_search_params[:teams]
       else
@@ -145,6 +145,7 @@ class GlobalActivitiesController < ApplicationController
                      .order(name: :asc)
 
     selected_subject = subject_search_params[:subjects]
+    matched = matched.where(my_module: nil) if subject == Protocol
     matched = matched.where(project_id: selected_subject['Project']) if subject == Experiment
     matched = matched.where(experiment_id: selected_subject['Experiment']) if subject == MyModule
     matched = matched.where(repository_id: selected_subject['RepositoryBase']) if subject == RepositoryRow

@@ -13,48 +13,6 @@ module StepsActions
     end
   end
 
-  def fetch_new_checklists_data
-    checklists = []
-    new_checklists = step_params[:checklists_attributes]
-
-    if new_checklists
-      new_checklists.to_h.each do |e|
-        list = PreviousChecklist.new(
-          e.second[:id].to_i,
-          e.second[:name]
-        )
-        if e.second[:checklist_items_attributes]
-          e.second[:checklist_items_attributes].each do |el|
-            list.add_checklist(
-              PreviousChecklistItem.new(el.second[:id].to_i, el.second[:text])
-            )
-          end
-        end
-        checklists << list
-      end
-    end
-    checklists
-  end
-
-  def fetch_old_checklists_data(step)
-    checklists = []
-    if step.checklists
-      step.checklists.each do |e|
-        list = PreviousChecklist.new(
-          e.id,
-          e.name
-        )
-        e.checklist_items.each do |el|
-          list.add_checklist(
-            PreviousChecklistItem.new(el.id, el.text)
-          )
-        end
-        checklists << list
-      end
-    end
-    checklists
-  end
-
   # used for step update action it traverse through the input params and
   # generates notifications
   def update_annotation_notifications(step,
@@ -91,6 +49,17 @@ module StepsActions
       old_text: old_text,
       new_text: checklist_item.text,
       title: t('notifications.checklist_title',
+               user: current_user.full_name,
+               step: step.name),
+      message: annotation_message(step)
+    )
+  end
+
+  def step_text_annotation(step, step_text, old_text = nil)
+    smart_annotation_notification(
+      old_text: old_text,
+      new_text: step_text.text,
+      title: t('notifications.step_text_title',
                user: current_user.full_name,
                step: step.name),
       message: annotation_message(step)

@@ -490,7 +490,7 @@ class RepositoriesController < ApplicationController
   end
 
   def check_share_permissions
-    render_403 if !can_share_repository?(@repository) || current_user.teams.count <= 1
+    render_403 unless can_share_repository?(@repository)
   end
 
   def repository_params
@@ -521,7 +521,7 @@ class RepositoriesController < ApplicationController
       .call(activity_type: type_of,
             owner: current_user,
             subject: @repository,
-            team: current_team,
+            team: @repository.team,
             message_items: message_items)
   end
 end

@@ -1,10 +1,10 @@
-<%= bootstrap_form_for user_team,
-                       url: destroy_user_team_path(user_team, format: :json),
+<%= bootstrap_form_for @user_assignment,
+                       url: destroy_user_team_path(@user_assignment, format: :json),
                        remote: :true,
                        method: :delete,
                        data: { id: 'leave-user-team-form' } do |f| %>
   <%= hidden_field_tag :leave, true %>
-  <p><%= t("users.settings.user_teams.leave_uo_message", team: user_team.team.name) %></p>
+  <p><%= t("users.settings.user_teams.leave_uo_message", team: @user_assignment.team.name) %></p>
   <div class="alert alert-danger" role="alert">
     <span class="fas fa-exclamation-triangle"></span>
     &nbsp;

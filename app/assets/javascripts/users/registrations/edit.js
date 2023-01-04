@@ -8,7 +8,7 @@
    * false to set form to view mode.
    */
 
-  /* global _ filesValidator animateSpinner FileTypeEnum */
+  /* global _ filesValidator animateSpinner FileTypeEnum initShowPassword */
 
   var forms = $('form[data-for]');
 
@@ -18,6 +18,7 @@
       form.find("[data-part='view']").hide();
       form.find("[data-part='edit']").show();
       form.find("[data-part='edit'] input:not([type='file']):not([type='submit']):first").focus();
+      initShowPassword();
     } else {
       form.find("[data-part='view']").show();
       form.find("[data-part='edit'] input").blur();

@@ -10,7 +10,7 @@
       <% end %>
     </h4>
     <div class="user-time">
-      <%= t('projects.reports.elements.module.user_time', timestamp: l(timestamp, format: :full)) %>
+      <%= t('projects.reports.elements.module.user_time', code: my_module.code, timestamp: l(timestamp, format: :full)) %>
     </div>
     <p class="module-start-date">
       <% if my_module.started_on.present? %>
@@ -39,8 +39,8 @@
       <div class="pull-left">
         <%= t('projects.reports.elements.module.tags_header') %>
       </div>
-      <% if my_module.tags.present? %>
-        <% my_module.tags.each do |tag| %>
+      <% if (tags = my_module.tags.order(:id)).present? %>
+        <% tags.each do |tag| %>
           <div class="pull-left module-tag" style="background-color: <%= tag.color %>;">
             <%= tag.name %>
           </div>

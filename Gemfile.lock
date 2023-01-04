@@ -137,6 +137,9 @@ GEM
     aws-sdk-kms (1.41.0)
       aws-sdk-core (~> 3, >= 3.109.0)
       aws-sigv4 (~> 1.1)
+    aws-sdk-lambda (1.57.0)
+      aws-sdk-core (~> 3, >= 3.109.0)
+      aws-sigv4 (~> 1.1)
     aws-sdk-rails (3.6.0)
       aws-record (~> 2)
       aws-sdk-ses (~> 1)
@@ -354,7 +357,7 @@ GEM
     logging (2.0.0)
       little-plugger (~> 1.1)
       multi_json (~> 1.10)
-    loofah (2.18.0)
+    loofah (2.19.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.1)
@@ -381,7 +384,7 @@ GEM
       rails (>= 3.2.0)
     newrelic_rpm (6.15.0)
     nio4r (2.5.8)
-    nokogiri (1.13.7)
+    nokogiri (1.13.10)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     oauth2 (1.4.4)
@@ -438,7 +441,7 @@ GEM
     puma (5.6.4)
       nio4r (~> 2.0)
     raabro (1.4.0)
-    racc (1.6.0)
+    racc (1.6.1)
     rack (2.2.4)
     rack-attack (6.4.0)
       rack (>= 1.0, < 3)
@@ -470,8 +473,8 @@ GEM
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
-    rails-html-sanitizer (1.4.3)
-      loofah (~> 2.3)
+    rails-html-sanitizer (1.4.4)
+      loofah (~> 2.19, >= 2.19.1)
     rails_12factor (0.0.3)
       rails_serve_static_assets
       rails_stdout_logging
@@ -634,6 +637,7 @@ DEPENDENCIES
   auto_strip_attributes (~> 2.1)
   autosize-rails
   awesome_print
+  aws-sdk-lambda
   aws-sdk-rails
   aws-sdk-s3
   base62
@@ -685,7 +689,7 @@ DEPENDENCIES
   momentjs-rails (~> 2.17.1)
   nested_form_fields
   newrelic_rpm
-  nokogiri (~> 1.13.6)
+  nokogiri (~> 1.13.10)
   omniauth
   omniauth-azure-activedirectory
   omniauth-linkedin-oauth2

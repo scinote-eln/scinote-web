@@ -1,5 +1,5 @@
 <div class="content-pane flexible <%= params[:archived] ? :archived : :active %> repositories-index"
-      data-readonly="<%= !current_user.is_admin_of_team?(current_team) %>">
+      data-readonly="<%= !can_manage_team?(current_team) %>">
   <div class="content-header">
     <div class="title-row">
       <h1 data-view-mode="active"><%= t('libraries.index.head_title') %></h1>

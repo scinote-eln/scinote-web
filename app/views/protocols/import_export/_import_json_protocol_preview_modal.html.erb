@@ -26,20 +26,20 @@
       <div class="modal-body">
 
         <!-- General protocol info -->
-        <div class="form-group">
+        <div class="form-group sci-input-container">
 
           <label><%= t('protocols.import_export.import_modal.name_label') %></label>
 
           <%= f.text_field :name, :value => pio_eval_title_len(sanitize_input(not_null(@json_object['title']))), class:
-          "form-control" %>
+          "sci-input-field" %>
         </div>
-        <div class="form-group">
+        <div class="form-group sci-input-container">
           <label>
             <span class="fas fa-user">
             </span>&nbsp;<%= t('protocols.import_export.import_modal.authors_label') %>
           </label>
           <%= f.text_field :authors, :value => pio_eval_authors(not_null(@json_object['authors'])), class:
-          "form-control" %>
+          "sci-input-field" %>
 
         </div>
         <div class="form-group">

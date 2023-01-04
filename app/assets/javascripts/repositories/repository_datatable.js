@@ -15,7 +15,7 @@ var RepositoryDatatable = (function(global) {
   var TABLE_WRAPPER_ID = '.repository-table';
   var TABLE = null;
   var EDITABLE = false;
-  var SELECT_ALL_SELECTOR = '#checkbox > input[name=select_all]';
+  var SELECT_ALL_SELECTOR = '#checkbox input[name=select_all]';
   const STATUS_POLLING_INTERVAL = 10000;
 
   var rowsSelected = [];
@@ -42,12 +42,24 @@ var RepositoryDatatable = (function(global) {
       return value;
     });
 
+  function allSelectedRowsAreOnPage() {
+    let visibleRowIds = $(
+      `#repository-table-${$(TABLE_ID).data('repository-id')} tbody tr`
+    ).toArray().map((r) => parseInt(r.id, 10));
+
+    return rowsSelected.every(r => visibleRowIds.includes(r));
+  }
+
   // Enable/disable edit button
   function updateButtons() {
     if (currentMode === 'viewMode') {
       $(TABLE_WRAPPER_ID).removeClass('editing');
+      $('.repository-save-changes-link').off('click');
+      $('.repository-edit-overlay').hide();
       $('#saveCancel').hide();
       $('.manage-repo-column-index').prop('disabled', false);
+      $('#shareRepoBtn').removeClass('disabled');
+      $('#viewSwitchButton').removeClass('disabled');
       $('#addRepositoryRecord').prop('disabled', false);
       $('.dataTables_length select').prop('disabled', false);
       $('#repository-acitons-dropdown').prop('disabled', false);
@@ -71,11 +83,7 @@ var RepositoryDatatable = (function(global) {
         $('#editDeleteCopy').hide();
         $('#toolbarPrintLabel').hide();
       } else {
-        if (rowsSelected.length === 1) {
-          $('#editRepositoryRecord').prop('disabled', false);
-        } else {
-          $('#editRepositoryRecord').prop('disabled', true);
-        }
+        $('#editRepositoryRecord').prop('disabled', !allSelectedRowsAreOnPage());
         $('#exportRepositoriesButton').removeClass('disabled');
         $('#archiveRepositoryRecordsButton').prop('disabled', false);
         $('#copyRepositoryRecords').prop('disabled', false);
@@ -90,8 +98,13 @@ var RepositoryDatatable = (function(global) {
         $('#editDeleteCopy').show();
         $('#toolbarPrintLabel').show();
       }
+      $('#team-switch').css({ 'pointer-events': 'auto', opacity: 1 });
+      $('#navigationGoBtn').prop('disabled', false);
     } else if (currentMode === 'editMode') {
       $(TABLE_WRAPPER_ID).addClass('editing');
+      $('.repository-save-changes-link').on('click', function() {
+        $('#saveRecord').click();
+      });
       $('#importRecordsButton').hide();
       $('#editDeleteCopy').hide();
       $('#addRepositoryRecord').hide();
@@ -101,6 +114,8 @@ var RepositoryDatatable = (function(global) {
       }
       $('#saveCancel').show();
       $('.manage-repo-column-index').prop('disabled', true);
+      $('#shareRepoBtn').addClass('disabled');
+      $('#viewSwitchButton').addClass('disabled');
       $('#repository-acitons-dropdown').prop('disabled', true);
       $('.dataTables_length select').prop('disabled', true);
       $('#addRepositoryRecord').prop('disabled', true);
@@ -113,9 +128,10 @@ var RepositoryDatatable = (function(global) {
       $('.repository-row-selector').prop('disabled', true);
       $('.dataTables_filter input').prop('disabled', true);
       $('#toolbarPrintLabel').hide();
+      $('.repository-edit-overlay').show();
+      $('#team-switch').css({ 'pointer-events': 'none', opacity: 0.6 });
+      $('#navigationGoBtn').prop('disabled', true);
     }
-
-    $('#toolbarPrintLabel').data('rows', JSON.stringify(rowsSelected));
   }
 
   function clearRowSelection() {
@@ -142,10 +158,8 @@ var RepositoryDatatable = (function(global) {
 
   function changeToEditMode() {
     currentMode = 'editMode';
-    // Table specific stuff
-    TABLE.button(0).enable(false);
+
     clearRowSelection();
-    $(TABLE_WRAPPER_ID).find('tr:not(.editing)').addClass('blocked');
     updateButtons();
   }
 
@@ -156,7 +170,6 @@ var RepositoryDatatable = (function(global) {
     var $chkboxAll = $('.repository-row-selector', $table);
     var $chkboxChecked = $('.repository-row-selector:checked', $table);
     var chkboxSelectAll = $(SELECT_ALL_SELECTOR, $header).get(0);
-
     // If none of the checkboxes are checked
     if ($chkboxChecked.length === 0) {
       chkboxSelectAll.checked = false;
@@ -262,9 +275,8 @@ var RepositoryDatatable = (function(global) {
 
       checkAvailableColumns();
 
-      $(TABLE_ID).find('.repository-row-edit-icon').remove();
-
       RepositoryDatatableRowEditor.switchRowToEditMode(row);
+
       changeToEditMode();
     });
   }
@@ -465,8 +477,10 @@ var RepositoryDatatable = (function(global) {
         className: 'dt-body-center',
         sWidth: '1%',
         render: function(data, type, row) {
-          return `<input class='repository-row-selector sci-checkbox' type='checkbox' data-editable="${row.recordEditable}">
-                  <span class='sci-checkbox-label'></span>`;
+          return `<div class="sci-checkbox-container">
+                    <input class='repository-row-selector sci-checkbox' type='checkbox' data-editable="${row.recordEditable}">
+                    <span class='sci-checkbox-label'></span>
+                  </div>`;
         }
       }, {
         // Assigned column is not searchable
@@ -563,6 +577,10 @@ var RepositoryDatatable = (function(global) {
         // Show number of selected rows near pages info
         $('#repository-table_info').append('<span id="selected_info"></span>');
         $('#selected_info').html(' (' + rowsSelected.length + ' entries selected)');
+
+        // Hide edit button if not all selected rows are on the current page
+        $('#editRepositoryRecord').prop('disabled', !allSelectedRowsAreOnPage());
+
         if ($('.repository-show').hasClass('archived')) {
           TABLE.columns([6, 7]).visible(true);
         }
@@ -718,6 +736,7 @@ var RepositoryDatatable = (function(global) {
       checkAvailableColumns();
       RepositoryDatatableRowEditor.addNewRow(TABLE);
       changeToEditMode();
+      $('.tooltip').remove();
     })
     .on('click', '#copyRepositoryRecords', function() {
       animateSpinner();
@@ -796,15 +815,12 @@ var RepositoryDatatable = (function(global) {
     .on('click', '#editRepositoryRecord', function() {
       checkAvailableColumns();
 
-      if (rowsSelected.length !== 1) {
-        return;
-      }
-
-      let row = TABLE.row('#' + rowsSelected[0]);
-
       $(TABLE_ID).find('.repository-row-edit-icon').remove();
 
-      RepositoryDatatableRowEditor.switchRowToEditMode(row);
+      rowsSelected.forEach(function(rowNumber) {
+        RepositoryDatatableRowEditor.switchRowToEditMode(TABLE.row('#' + rowNumber));
+      });
+
       changeToEditMode();
       adjustTableHeader();
     })
@@ -826,6 +842,7 @@ var RepositoryDatatable = (function(global) {
         success: function() {
           $('#hideRepositoryReminders').remove();
           TABLE.ajax.reload();
+          $('.tooltip').remove();
         }
       });
     });
@@ -910,6 +927,7 @@ var RepositoryDatatable = (function(global) {
       TABLE.ajax.reload();
       clearRowSelection();
     },
+    selectedRows: () => { return rowsSelected; },
     redrawTableOnSidebarToggle: redrawTableOnSidebarToggle,
     checkAvailableColumns: checkAvailableColumns
   });

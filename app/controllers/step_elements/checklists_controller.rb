@@ -2,8 +2,9 @@
 
 module StepElements
   class ChecklistsController < BaseController
-    before_action :load_checklist, only: %i(update destroy)
-
+    include ApplicationHelper
+    include StepsActions
+    before_action :load_checklist, only: %i(update destroy duplicate)
     def create
       checklist = @step.checklists.build(
         name: t('protocols.steps.checklist.default_name', position: @step.checklists.length + 1)
@@ -11,6 +12,7 @@ module StepElements
       ActiveRecord::Base.transaction do
         create_in_step!(@step, checklist)
         log_step_activity(:checklist_added, { checklist_name: checklist.name })
+        checklist_name_annotation(@step, checklist)
       end
       render_step_orderable_element(checklist)
     rescue ActiveRecord::RecordInvalid
@@ -18,9 +20,11 @@ module StepElements
     end
 
     def update
+      old_name = @checklist.name
       ActiveRecord::Base.transaction do
         @checklist.update!(checklist_params)
         log_step_activity(:checklist_edited, { checklist_name: @checklist.name })
+        checklist_name_annotation(@step, @checklist, old_name)
       end
 
       render json: @checklist, serializer: ChecklistSerializer, user: current_user
@@ -35,6 +39,21 @@ module StepElements
       else
         head :unprocessable_entity
       end
+    end
+
+    def duplicate
+      ActiveRecord::Base.transaction do
+        position = @checklist.step_orderable_element.position
+        @step.step_orderable_elements.where('position > ?', position).order(position: :desc).each do |element|
+          element.update(position: element.position + 1)
+        end
+        @checklist.name += ' (1)'
+        new_checklist = @checklist.duplicate(@step, current_user, position + 1)
+        log_step_activity(:checklist_duplicated, { checklist_name: @checklist.name })
+        render_step_orderable_element(new_checklist)
+      end
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
     end
 
     private

@@ -5,11 +5,18 @@ var DasboardRecentWorkWidget = (function() {
   function renderRecentWorkItem(data, container) {
     $.each(data, (i, item) => {
       var recentWorkItem = $($('#recent-work-item-template').html());
+      var recentWorkItemType = recentWorkItem.find('.object-type span');
       recentWorkItem.attr('href', item.url);
       recentWorkItem.find('.object-name').html(item.name);
-      recentWorkItem.find('.object-type').html(I18n.t('dashboard.recent_work.subject_type.' + item.subject_type));
+      recentWorkItemType.html(item.code || item.type);
       recentWorkItem.find('.object-changed').html(item.last_change);
       container.append(recentWorkItem);
+
+      if (item.code) {
+        recentWorkItemType.attr('data-toggle', 'tooltip');
+        recentWorkItemType.attr('title', `${item.type} ID: ${item.code}`);
+        recentWorkItemType.tooltip();
+      }
     });
   }
 

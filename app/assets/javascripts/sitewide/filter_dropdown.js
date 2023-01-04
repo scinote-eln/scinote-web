@@ -52,10 +52,10 @@ var filterDropdown = (function() {
     $textFilter.click(function(e) {
       e.stopPropagation();
       $('#textSearchFilterHistory').toggle();
-      $(this).closest('.dropdown').toggleClass('open');
-    }).on('input', () => {
+      $(e.target).closest('.dropdown').toggleClass('open');
+    }).on('input', (e) => {
       $('#textSearchFilterHistory').hide();
-      $(this).closest('.dropdown').removeClass('open');
+      $(e.target).closest('.dropdown').removeClass('open');
     });
 
     $filterContainer.on('click', '.projects-search-keyword', function(e) {

@@ -3,10 +3,13 @@
 require 'rails_helper'
 
 describe TeamRepository, type: :model do
-  let(:team_repository) { build :team_repository, :read }
+  let(:user) { create :user }
+  let(:team) { create :team, created_by: user }
+  let(:another_team) { create :team, created_by: user }
+  let(:repository) { create :repository, team: team, created_by: user }
+  let(:team_repository) { build :team_repository, :read, team: another_team, repository: repository }
 
   it 'is valid' do
-    team_repository.team = create :team
     expect(team_repository).to be_valid
   end
 
@@ -21,7 +24,7 @@ describe TeamRepository, type: :model do
       it { expect(team_repository).to validate_uniqueness_of(:repository).scoped_to(:team_id) }
 
       it 'invalid when repo team is same as sharring team' do
-        repo = create :repository
+        repo = create :repository, team: team, created_by: user
         invalid_team_repository = build :team_repository, :read, repository: repo, team: repo.team
 
         expect(invalid_team_repository).to be_invalid

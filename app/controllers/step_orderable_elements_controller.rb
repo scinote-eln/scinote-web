@@ -48,7 +48,7 @@ class StepOrderableElementsController < ApplicationController
       .call(activity_type: type_of,
             owner: current_user,
             subject: @protocol,
-            team: current_team,
+            team: @protocol.team,
             project: project,
             message_items: message_items)
   end
