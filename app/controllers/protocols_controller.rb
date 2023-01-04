@@ -16,6 +16,7 @@ class ProtocolsController < ApplicationController
   before_action :check_clone_permissions, only: [:clone]
   before_action :check_view_permissions, only: %i(
     show
+    edit
     protocol_status_bar
     updated_at_label
     preview
@@ -30,7 +31,6 @@ class ProtocolsController < ApplicationController
   # For update_from_parent and update_from_parent_modal we don't need to check
   # read permission for the parent protocol
   before_action :check_manage_permissions, only: %i(
-    edit
     update_keywords
     update_description
     update_name
@@ -161,13 +161,10 @@ class ProtocolsController < ApplicationController
   end
 
   def edit
-    # Switch to correct team
-    current_team_switch(@protocol.team)
+    render :show
   end
 
   def show
-    # Switch to correct team
-    current_team_switch(@protocol.team)
 
     respond_to do |format|
       format.json { render json: @protocol, serializer: ProtocolSerializer, user: current_user }
@@ -1102,6 +1099,7 @@ class ProtocolsController < ApplicationController
 
   def check_view_permissions
     @protocol = Protocol.find_by_id(params[:id])
+    current_team_switch(@protocol.team) if current_team != @protocol.team
     unless @protocol.present? &&
            (can_read_protocol_in_module?(@protocol) ||
            can_read_protocol_in_repository?(@protocol))
@@ -1245,7 +1243,7 @@ class ProtocolsController < ApplicationController
                user: current_user.full_name,
                protocol: @protocol.name),
       message: t('notifications.protocol_description_annotation_message_html',
-                 protocol: link_to(@protocol.name, edit_protocol_url(@protocol)))
+                 protocol: link_to(@protocol.name, protocol_url(@protocol)))
     )
   end
 end
