@@ -34,8 +34,10 @@ var TinyMCE = (function() {
     var lastDraftTime = parseInt(tinyMCE.util.LocalStorage.getItem(prefix + 'time'), 10);
     var lastUpdated = $(selector).data('last-updated');
     var notificationBar;
-    var restoreBtn = $(`<button class="btn restore-draft-btn" title="restore tinymce changed draft ${editor.startContent}">Restore Draft</button>`);
-    var cancelBtn = $(`<span title="close tinymce changed draft ${editor.startContent}" class="fas fa-times"></span>`);
+    var restoreBtn = $(`<button class="btn restore-draft-btn">Restore Draft</button>`);
+    var cancelBtn = $(`<span class="fas fa-times"></span>`);
+    restoreBtn.prop('title', `restore tinymce changed draft ${editor.startContent}`);
+    cancelBtn.prop('title', `cancel tinymce changed draft${editor.startContent}`);
     // Check whether we have draft stored
     if (editor.plugins.autosave.hasDraft()) {
       notificationBar = $('<div class="restore-draft-notification"></div>');
