@@ -57,6 +57,7 @@ var RepositoryStockValues = (function() {
             closeOnSelect: true,
             noEmptyOption: true,
             selectAppearance: 'simple',
+            title: 'stock unit select',
             onChange: function() {
               let unit = '';
               if (dropdownSelector.getValues(UNIT_SELECTOR) > 0) {

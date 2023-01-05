@@ -167,7 +167,8 @@ var RepositoryColumns = (function() {
         tagClass: 'delimiter-icon-dropdown',
         tagLabel: delimiterOptionsRender,
         disableSearch: true,
-        labelHTML: true
+        labelHTML: true,
+        title: 'delimiter select'
       };
       $.get(modalUrl, (data) => {
         $manageModal.find('.modal-content').html(data.html)
@@ -184,9 +185,10 @@ var RepositoryColumns = (function() {
             selectAppearance: 'simple',
             disableSearch: true,
             labelHTML: true,
+            title: 'repository column data type select',
             optionLabel: function(option) {
-              return `<div title="${option.label}" class="column-type-option" data-disabled="${option.params.disabled}">
-                        <span>${option.label}</span>
+              return `<div class="column-type-option" data-disabled="${option.params.disabled}">
+                        <span title="${option.label}">${option.label}</span>
                         <span class="text-description">${option.params.text_description || ''}</span>
                       </div>`
             }
@@ -319,7 +321,7 @@ var RepositoryColumns = (function() {
           <span class="vis-controls">
             <span class="vis fas ${visClass}" title="visibility icon for column: ${thederName}"></span>
           </span>
-          <span title="repository column: ${thederName}" class="text">${generateColumnNameTooltip(thederName)}</span>
+          <span title="manage repository colum: ${thederName}" class="text">${generateColumnNameTooltip(thederName)}</span>
           <span class="column-type pull-right">${getColumnTypeText(el, colId)}</span>
           <span class="sci-btn-group manage-controls pull-right" data-view-mode="active">
             <button title="edit repository column: ${thederName} edit icon" class="btn icon-btn btn-light edit-repo-column manage-repo-column"

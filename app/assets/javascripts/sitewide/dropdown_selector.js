@@ -429,6 +429,9 @@ var dropdownSelector = (function() {
       }
     });
 
+    // E2E
+    dropdownContainer.find('.input-field').prop('title', config.title + ' input' || 'dropdown selector container input');
+    dropdownContainer.find('.fas.fa-caret-down.right-icon').prop('title', config.title + ' arrow' || 'dropdown selector container arrow');
 
     // Add click event to input field
     dropdownContainer.find('.input-field').click(() => {

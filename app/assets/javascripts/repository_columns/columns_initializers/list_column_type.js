@@ -12,7 +12,8 @@ var RepositoryListColumnType = (function() {
       noEmptyOption: true,
       singleSelect: true,
       selectAppearance: 'simple',
-      closeOnSelect: true
+      closeOnSelect: true,
+      title: 'dropdown preview select'
     });
   }
 

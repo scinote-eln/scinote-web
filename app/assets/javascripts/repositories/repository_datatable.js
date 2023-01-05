@@ -405,6 +405,10 @@ var RepositoryDatatable = (function(global) {
       .on('shown.bs.dropdown hidden.bs.dropdown', function() {
         TABLE.columns.adjust();
       });
+
+    // E2E
+    $('.dataTables_empty').attr('title', 'table empty');
+    $('.dataTables_scrollBody th').removeAttr('title');
   }
 
   function checkSnapshottingStatus() {
@@ -567,6 +571,11 @@ var RepositoryDatatable = (function(global) {
         changeToViewMode();
         updateDataTableSelectAllCtrl();
 
+        // E2E
+        $('.dataTables_empty').attr('title', 'table empty');
+        $('.dataTables_scrollBody th').removeAttr('title');
+
+
         // Prevent row toggling when selecting user smart annotation link
         SmartAnnotation.preventPropagation('.atwho-user-popover');
 
@@ -632,6 +641,11 @@ var RepositoryDatatable = (function(global) {
         initSaveButton();
         initCancelButton();
         initBSTooltips();
+
+        // reassign titles (E2E tests)
+        $('[data-original-title]').each(function() {
+          $(this).attr('title', $(this).attr('data-original-title'));
+        });
 
         DataTableHelpers.initLengthAppearance($(TABLE_ID).closest('.dataTables_wrapper'));
 

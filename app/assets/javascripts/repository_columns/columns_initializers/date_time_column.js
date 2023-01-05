@@ -8,7 +8,8 @@ var RepositoryDateTimeColumnType = (function() {
       noEmptyOption: true,
       singleSelect: true,
       selectAppearance: 'simple',
-      closeOnSelect: true
+      closeOnSelect: true,
+      title: 'datetime reminder unit select'
     });
   }
 
