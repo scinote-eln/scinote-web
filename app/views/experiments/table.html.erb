@@ -41,7 +41,7 @@
 </div>
 
 <template id="experimentTablePlaceholder">
-  <div class="table-row-placeholder table-row">
+  <div class="table-row-placeholder">
     <div class="header"></div>
     <% 6.times do |i| %>
       <div class="placeholder-cell line-<%= i %>"></div>
@@ -51,6 +51,7 @@
       <div class="placeholder-cell line-<%= 6 + i %>"></div>
     <% end %>
   </div>
+  <div class="table-row-placeholder-divider"></div>
 </template>
 
 <template id="experimentTableEndOfList">

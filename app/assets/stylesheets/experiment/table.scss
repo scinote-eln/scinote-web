@@ -239,12 +239,21 @@
       white-space: nowrap;
     }
 
+    .table-row-placeholder-divider {
+      background: $color-concrete;
+      display: inline-block;
+      grid-column: 1/-1;
+      height: 1px;
+    }
+
     .table-row-placeholder {
       align-items: center;
       background-color: $color-white;
       border-radius: $border-radius-default;
       box-shadow: $flyout-shadow;
-      display: contents;
+      display: grid;
+      grid-column: 1 / -1;
+      grid-template-columns: 32px repeat(9, minmax(max-content, auto));
 
       .placeholder-cell {
         animation-duration: 2s;
@@ -252,63 +261,14 @@
         animation-name: placeholder-pulsing;
         background-color: $color-alto;
         border-radius: $border-radius-default;
+        display: block;
         height: 18px;
         margin: auto;
-
-        &.line-0 {
-          display: block;
-          grid-column: 2;
-          width: 90%;
-        }
-
-        &.line-1 {
-          display: block;
-          grid-column: 3;
-          width: 90%;
-        }
-
-        &.line-2 {
-          display: block;
-          grid-column: 4;
-          width: 90%;
-        }
-
-        &.line-3 {
-          display: block;
-          grid-column: 5;
-          width: 90%;
-        }
-
-        &.line-4 {
-          display: block;
-          grid-column: 6;
-          width: 90%;
-        }
-
-        &.line-5 {
-          display: block;
-          grid-column: 7;
-          width: 90%;
-        }
-
-        &.line-6 {
-          display: block;
-          grid-column: 9;
-          width: 90%;
-        }
-
-        &.line-7 {
-          display: block;
-          grid-column: 10;
-          width: 90%;
-        }
+        width: 90%;
 
         &.circle-0 {
           border-radius: 100%;
-          display: block;
-          grid-column: 8;
           height: 24px;
-          margin-left: 8px;
           width: 24px;
         }
 

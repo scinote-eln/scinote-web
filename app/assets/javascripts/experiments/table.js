@@ -130,7 +130,7 @@ var ExperimnetTable = {
       e.preventDefault();
       this.restoreMyModules(e.target.href, e.target.dataset.id);
     });
-    
+
     $(this.table).on('click', '.duplicate-my-module', (e) => {
       e.preventDefault();
       this.duplicateMyModules($('#duplicateTasks').data('url'), e.target.dataset.id);
@@ -498,9 +498,10 @@ var ExperimnetTable = {
       sort: this.myModulesCurrentSort
     };
     var dataUrl = $(this.table).data('my-modules-url');
+    $(this.table).find('.table-row').remove();
     this.loadPlaceholder();
     $.get(dataUrl, tableParams, (result) => {
-      $(this.table).find('.table-row').remove();
+      $(this.table).find('.table-row-placeholder, .table-row-placeholder-divider').remove();
       this.appendRows(result.data);
       this.initDueDatePicker(result.data);
       InfiniteScroll.init(this.table, {
