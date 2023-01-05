@@ -190,6 +190,10 @@
         .user-avatar {
           padding: 0 .75em;
 
+          &.archived {
+            padding-left: 0;
+          }
+
           img {
             border-radius: 50%;
           }
