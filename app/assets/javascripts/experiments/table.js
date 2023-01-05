@@ -66,8 +66,8 @@ var ExperimnetTable = {
   },
   initDueDatePicker: function(data) {
     // eslint-disable-next-line no-unused-vars
-    $.each(data, (id, _) => {
-      let element = `#calendarDueDate${id}`;
+    $.each(data, (_, row) => {
+      let element = `#calendarDueDate${row.id}`;
       let dueDateContainer = $(element).closest('#dueDateContainer');
       let dateText = $(element).closest('.date-text');
       let clearDate = $(element).closest('.datetime-container').find('.clear-date');
@@ -95,6 +95,15 @@ var ExperimnetTable = {
       });
 
       $(element).on('dp.show', function() {
+        var datePicker = $('.bootstrap-datetimepicker-widget.dropdown-menu')[0];
+
+        // show full datepicker menu for due date
+        if (datePicker.getBoundingClientRect().bottom > window.innerHeight) {
+          datePicker.scrollIntoView(false);
+        } else if (datePicker.getBoundingClientRect().top < 0) {
+          datePicker.scrollIntoView();
+        }
+
         dateText.attr('data-original-title', '').tooltip('hide');
         if (dueDateContainer.find('.due-date-label').data('due-date')) {
           clearDate.addClass('open');
