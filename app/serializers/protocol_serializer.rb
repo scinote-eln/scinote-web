@@ -7,10 +7,14 @@ class ProtocolSerializer < ActiveModel::Serializer
   include ActionView::Helpers::TextHelper
 
   attributes :name, :id, :urls, :description, :description_view, :updated_at, :in_repository,
-             :created_at_formatted, :updated_at_formatted, :added_by, :authors, :keywords
+             :created_at_formatted, :updated_at_formatted, :added_by, :authors, :keywords, :version, :code
 
   def updated_at
     object.updated_at.to_i
+  end
+
+  def version
+    object.protocol_type == 'in_repository_draft' ? I18n.t('protocols.header.draft') : object.version_number
   end
 
   def added_by

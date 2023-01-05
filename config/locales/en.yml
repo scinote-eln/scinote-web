@@ -2530,6 +2530,13 @@ en:
         row_success: "Exported"
         row_failed: "Failed"
     header:
+      details: 'Details'
+      versions: 'Versions'
+      protocol_description: 'Protocol description'
+      protocol_steps: 'Protocol steps'
+      publish: 'Publish'
+      version: "Version:"
+      draft: 'Draft'
       created_at: "Created at:"
       updated_at: "Last modified at:"
       added_by: "Added by:"

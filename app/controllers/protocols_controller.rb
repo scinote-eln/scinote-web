@@ -79,6 +79,8 @@ class ProtocolsController < ApplicationController
 
   before_action :set_importer, only: %i(load_from_file import)
 
+  before_action :set_inline_name_editing, only: :show
+
   layout 'fluid'
 
   def index; end
@@ -1101,6 +1103,18 @@ class ProtocolsController < ApplicationController
         end
       end
     end
+  end
+
+  def set_inline_name_editing
+    return unless can_manage_protocol_in_repository?(@protocol)
+
+    @inline_editable_title_config = {
+      name: 'title',
+      params_group: 'protocol',
+      item_id: @protocol.id,
+      field_to_udpate: 'name',
+      path_to_update: name_protocol_path(@protocol)
+    }
   end
 
   def load_team_and_type
