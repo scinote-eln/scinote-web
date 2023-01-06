@@ -635,6 +635,7 @@ ExperimnetTable.render.tags = function(data) {
 };
 
 ExperimnetTable.render.comments = function(data) {
+  if (data.count === 0 && !data.can_create) return '<span class="disabled">0</span>';
   return `<a href="#"
     class="open-comments-sidebar" id="comment-count-${data.id}"
     data-object-type="MyModule" data-object-id="${data.id}">
