@@ -106,7 +106,7 @@ module Experiments
 
     def id_presenter(my_module)
       {
-        id: my_module.id
+        id: my_module.code
       }
     end
 
