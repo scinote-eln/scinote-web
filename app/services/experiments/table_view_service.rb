@@ -169,6 +169,7 @@ module Experiments
       {
         id: my_module.id,
         count: my_module.comments.count,
+        can_create: can_create_my_module_comments?(@user, my_module),
         count_unseen: count_unseen_comments(my_module, @user)
       }
     end

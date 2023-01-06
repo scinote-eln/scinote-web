@@ -153,6 +153,10 @@
       display: none;
     }
 
+    .comments-column .disabled {
+      color: $color-silver-chalice;
+    }
+
     .table-row {
       display: contents;
 
