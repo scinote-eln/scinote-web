@@ -21,6 +21,14 @@
     }
   }
 
+  .project-show-toolbar {
+    display: flex;
+
+    .btn {
+      margin-right: .25em;
+    }
+  }
+
   .content-header {
     .project-name {
       align-items: center;
