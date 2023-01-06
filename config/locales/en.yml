@@ -1393,7 +1393,7 @@ en:
       actions: 'Experiment'
       view: 'View'
       head_title: "%{project} | Overview"
-      canvas_edit: "Edit workflow"
+      canvas_edit: "Edit Workflow"
       canvas_empty: "It's empty here. Please add some tasks"
       new_my_module: "New task"
       new_my_module_modal:
@@ -1408,7 +1408,6 @@ en:
         tags: "Add tags (optional)"
         create: "Create"
         enter_placeholder: 'Enter...'
-      canvas_edit: "Edit Experiment"
       zoom: "Zoom: "
       reload_on_submit: "Save action is running. Reloading this page may cause unexpected behavior."
       modal_manage_tags:
