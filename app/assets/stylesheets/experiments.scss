@@ -541,3 +541,28 @@
     }
   }
 }
+
+.tasks-no-results-container {
+  grid-column: 1 / -1;
+  grid-row: 8;
+  display: none;
+}
+
+.no-results-img {
+  display: block;
+  margin: auto;
+  max-height: 230px;
+}
+
+.no-results-title {
+  @include font-h1;
+  margin-bottom: .25em;
+  margin-top: 1.25em;
+  text-align: center;
+}
+
+.no-results-description {
+  @include font-main;
+  color: $color-silver-chalice;
+  text-align: center;
+}
