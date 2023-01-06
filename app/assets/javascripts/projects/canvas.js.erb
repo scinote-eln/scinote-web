@@ -2954,6 +2954,8 @@ function initializeCanvasViewNavigator() {
 }
 
 function drawRoundRectangle(ctx, xPos, yPos, width, height, radius) {
+  width = Math.max(width, 0)
+  height = Math.max(height, 0)
   if (width < 2 * radius) radius = width / 2;
   if (height < 2 * radius) radius = height / 2;
   
@@ -2976,16 +2978,19 @@ function drawRectangleCanvasNavigatorView(xPos, yPos) {
   var ratioY = yPos / canvasSize.height;
 
   var canvasPreviewRect = $('.canvas-preview-rect')[0];
-  var canvasRectTx = canvasPreviewRect.getContext('2d');
-  var canvasWidth = canvasRectTx.canvas.width;
-  var canvasHeight = canvasRectTx.canvas.height;
-  var previewWidth = canvasWidth * ($('#diagram-container').width() / canvasSize.width);
-  var previewHeight = canvasHeight * ($('#diagram-container').height() / canvasSize.height);
 
-  canvasRectTx.clearRect(0, 0, canvasWidth, canvasHeight);
-  canvasRectTx.beginPath();
-  drawRoundRectangle(canvasRectTx, canvasWidth * ratioX + adjustFactor, canvasHeight * ratioY + adjustFactor,
-    previewWidth - adjustFactor, previewHeight - adjustFactor, 4)
+  if (canvasPreviewRect) {
+    var canvasRectTx = canvasPreviewRect.getContext('2d');
+    var canvasWidth = canvasRectTx.canvas.width;
+    var canvasHeight = canvasRectTx.canvas.height;
+    var previewWidth = canvasWidth * ($('#diagram-container').width() / canvasSize.width);
+    var previewHeight = canvasHeight * ($('#diagram-container').height() / canvasSize.height);
+
+    canvasRectTx.clearRect(0, 0, canvasWidth, canvasHeight);
+    canvasRectTx.beginPath();
+    drawRoundRectangle(canvasRectTx, canvasWidth * ratioX + adjustFactor, canvasHeight * ratioY + adjustFactor,
+      previewWidth - adjustFactor, previewHeight - adjustFactor, 4)
+  }
 }
 
 /** prevent reload page */
