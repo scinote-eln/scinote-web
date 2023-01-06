@@ -227,11 +227,12 @@ var ExperimnetTable = {
     $(this.table).on('show.bs.dropdown', '.assign-users-dropdown', (e) => {
       let usersList = $(e.target).find('.users-list');
       let isArchivedView = $('#experimentTable').hasClass('archived');
+      let viewOnly = $(e.target).data('view-only');
       let checkbox = '';
       usersList.find('.user-container').remove();
       $.get(usersList.data('list-url'), (result) => {
         $.each(result, (_i, user) => {
-          if (!isArchivedView) {
+          if (!isArchivedView && !viewOnly) {
             checkbox = `<div class="sci-checkbox-container">
                           <input type="checkbox"
                                 class="sci-checkbox user-selector"

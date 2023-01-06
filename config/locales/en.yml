@@ -1385,6 +1385,7 @@ en:
         active_tasks: 'Go to Active tasks'
       add_tag: '+ Add tag'
       search: 'Search...'
+      not_set: 'not set'
       archive_group:
         success_flash: "<strong>%{number}</strong> task(s) successfully archived."
         error_flash: "Failed to archive task(s)."

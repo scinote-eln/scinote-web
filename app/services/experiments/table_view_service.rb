@@ -152,7 +152,8 @@ module Experiments
         partial: 'experiments/assigned_users.html.erb',
         locals: { my_module: my_module,
                   user: @user,
-                  skip_unassigned: @params[:view_mode] == 'archived' }
+                  skip_unassigned: @params[:view_mode] == 'archived' ||
+                                   !can_manage_my_module_designated_users?(@user, my_module) }
       ) }
     end
 
