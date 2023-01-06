@@ -449,6 +449,7 @@ class ExperimentsController < ApplicationController
         )
         MyModules::CopyContentJob.perform_later(current_user, my_module.id, new_my_module.id)
       end
+      @experiment.workflowimg.purge
     end
 
     render(
