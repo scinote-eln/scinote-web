@@ -121,7 +121,7 @@ var ExperimnetTable = {
       e.preventDefault();
       this.restoreMyModules(e.target.href, e.target.dataset.id);
     });
-    
+
     $(this.table).on('click', '.duplicate-my-module', (e) => {
       e.preventDefault();
       this.duplicateMyModules($('#duplicateTasks').data('url'), e.target.dataset.id);
@@ -457,6 +457,11 @@ var ExperimnetTable = {
     });
 
     this.filterDropdown.on('filter:apply', () => {
+      var tableRowLength = document.getElementsByClassName('table-row').length;
+      document.getElementById('tasksNoResultsContainer').style.display = 'none';
+      if (tableRowLength === 0) {
+        document.getElementById('tasksNoResultsContainer').style.display = 'block';
+      }
       $.each(this.filters, (_i, filter) => {
         this.activeFilters[filter.name] = filter.apply($experimentFilter);
       });
