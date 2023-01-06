@@ -228,7 +228,10 @@
       .new-user {
         color: $color-silver-chalice;
         line-height: 24px;
-        margin-left: 5px;
+
+        &:not(:first-child) {
+          margin-left: 5px;
+        }
       }
     }
 
