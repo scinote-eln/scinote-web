@@ -333,6 +333,8 @@ class ExperimentsController < ApplicationController
         modules_to_move[id] = dst_experiment.id
       end
       @experiment.move_modules(modules_to_move, current_user)
+      @experiment.workflowimg.purge
+
       render json: { message: t('experiments.table.modal_move_modules.success_flash',
                                 experiment: sanitize_input(dst_experiment.name)) }
     rescue StandardError => e
