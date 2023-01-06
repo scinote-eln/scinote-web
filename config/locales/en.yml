@@ -1405,6 +1405,7 @@ en:
         assigned_tags_label: "Add tags (optional)"
         assigned_tags_placeholder: "Select tags for your task"
         assigned_users: "Assign task to (optional)"
+        assigned_users_placeholder: "Select users"
         tags: "Add tags (optional)"
         create: "Create"
         enter_placeholder: 'Enter...'
