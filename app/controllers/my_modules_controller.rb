@@ -35,11 +35,14 @@ class MyModulesController < ApplicationController
   end
 
   def create
-    max_xy = @experiment.my_modules.select('MAX("my_modules"."x") AS x, MAX("my_modules"."y") AS y').take
-    x = max_xy.x ? (max_xy.x + 14) : 1
-    y = max_xy.y ? (max_xy.y + 14) : 1
     @my_module = @experiment.my_modules.new(my_module_params)
-    @my_module.assign_attributes(created_by: current_user, last_modified_by: current_user, x: x, y: y)
+    new_pos = @my_module.get_new_position
+    @my_module.assign_attributes(
+      created_by: current_user,
+      last_modified_by: current_user,
+      x: new_pos[:x],
+      y: new_pos[:y]
+    )
     @my_module.transaction do
       if my_module_tags_params[:tag_ids].present?
         @my_module.tags << @experiment.project.tags.where(id: JSON.parse(my_module_tags_params[:tag_ids]))
