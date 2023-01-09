@@ -82,8 +82,7 @@ module Experiments
                         provisioning_status:
                           my_module.provisioning_status == 'in_progress' &&
                             provisioning_status_my_module_url(my_module),
-                        access: edit_access_permissions_project_experiment_my_module_path(project,
-                                                                                          experiment, my_module)
+                        access: access_url(project, experiment, my_module)
                       } })
       end
 
@@ -94,6 +93,14 @@ module Experiments
     end
 
     private
+
+    def access_url(project, experiment, my_module)
+      if my_module.archived_branch?
+        access_permissions_project_experiment_my_module_path(project, experiment, my_module)
+      else
+        edit_access_permissions_project_experiment_my_module_path(project, experiment, my_module)
+      end
+    end
 
     def task_name_presenter(my_module)
       {
