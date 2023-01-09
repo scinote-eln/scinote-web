@@ -441,6 +441,7 @@ class ExperimentsController < ApplicationController
 
       @my_modules.find_each do |my_module|
         new_my_module = my_module.dup
+        new_my_module.my_module_status = MyModuleStatus.first
         new_my_module.update!(
           {
             provisioning_status: :in_progress,
