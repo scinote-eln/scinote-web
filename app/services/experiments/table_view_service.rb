@@ -161,6 +161,7 @@ module Experiments
       {
         my_module_id: my_module.id,
         tags: my_module.tags.length,
+        can_create: can_manage_my_module_tags?(@user, my_module),
         edit_url: my_module_tags_edit_path(my_module, format: :json)
       }
     end

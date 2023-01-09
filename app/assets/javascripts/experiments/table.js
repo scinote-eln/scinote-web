@@ -629,6 +629,11 @@ ExperimnetTable.render.assigned = function(data) {
 
 ExperimnetTable.render.tags = function(data) {
   const value = parseInt(data.tags, 10) === 0 ? I18n.t('experiments.table.add_tag') : data.tags;
+
+  if (data.tags === 0 && !data.can_create) {
+    return `<span class="disabled">${I18n.t('experiments.table.not_set')}</span>`;
+  }
+
   return `<a href="${data.edit_url}"
              id="myModuleTags${data.my_module_id}"
              data-remote="true"
