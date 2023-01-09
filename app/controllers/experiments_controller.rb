@@ -94,7 +94,7 @@ class ExperimentsController < ApplicationController
     @current_sort = view_state.state.dig('my_modules', view_mode, 'sort') || 'atoz'
 
     @project = @experiment.project
-    @my_modules = if @experiment.archived?
+    @my_modules = if @experiment.archived_branch?
                     @experiment.my_modules.order(:name)
                   elsif params[:view_mode] == 'archived'
                     @experiment.my_modules.archived.order(:name)
@@ -107,7 +107,7 @@ class ExperimentsController < ApplicationController
   def load_table
     my_modules = @experiment.my_modules.readable_by_user(current_user)
 
-    unless @experiment.archived?
+    unless @experiment.archived_branch?
       my_modules = params[:view_mode] == 'archived' ? my_modules.archived : my_modules.active
     end
 
