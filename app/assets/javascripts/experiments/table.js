@@ -196,6 +196,8 @@ var ExperimnetTable = {
       let id = $('#modal-edit-module').data('id');
       let newValue = $('#edit-module-name-input').val();
 
+      $(`.my-module-selector[data-my-module="${id}"]`).click();
+
       if (newValue === $(`#taskName${id}`).data('full-name')) {
         $('#modal-edit-module').modal('hide');
         return false;
@@ -445,6 +447,7 @@ var ExperimnetTable = {
   },
   clearRowTaskSelection: function() {
     this.selectedMyModules = [];
+    $('.select-all-checkboxes .sci-checkbox').prop('checked', false);
     this.updateExperimentToolbar();
   },
   initNewTaskModal: function(table) {
