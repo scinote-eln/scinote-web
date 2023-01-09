@@ -114,6 +114,21 @@ class ExperimentsController < ApplicationController
     render json: Experiments::TableViewService.new(@experiment, my_modules, current_user, params).call
   end
 
+  def list_modules
+    view_state = @experiment.current_view_state(current_user)
+    view_type = view_state.state['my_modules']['view_type'] || 'canvas'
+
+    redirect_to view_mode_redirect_url(view_type)
+  end
+
+  def view_type
+    view_state = @experiment.current_view_state(current_user)
+    view_state.state['my_modules']['view_type'] = view_type_params
+    view_state.save!
+
+    redirect_to view_mode_redirect_url(view_type_params)
+  end
+
   def edit
     respond_to do |format|
       format.json do
@@ -482,6 +497,10 @@ class ExperimentsController < ApplicationController
     params.require(:experiment).require(:project_id)
   end
 
+  def view_type_params
+    params.require(:experiment).require(:view_type)
+  end
+
   def check_read_permissions
     current_team_switch(@experiment.project.team) if current_team != @experiment.project.team
     render_403 unless can_read_experiment?(@experiment) ||
@@ -565,5 +584,16 @@ class ExperimentsController < ApplicationController
             project: my_module.experiment.project,
             subject: my_module,
             message_items: { my_module: my_module.id })
+  end
+
+  def view_mode_redirect_url(view_type)
+    if view_type == 'canvas'
+      return module_archive_experiment_path(@experiment) if @experiment.archived_branch? ||
+                                                            params[:view_mode] == 'archived'
+
+      canvas_experiment_path(@experiment)
+    else
+      table_experiment_path(@experiment, view_mode: params[:view_mode])
+    end
   end
 end

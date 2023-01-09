@@ -22,27 +22,47 @@
     <div class="header-actions experiment-header">
       <%= render layout: 'shared/view_switch', locals: { disabled: false } do %>
           <% if params[:view_mode] == 'archived' || params[:action] == "module_archive" %>
-            <li>
-              <%= link_to module_archive_experiment_path(@experiment), class: ('selected' if action_name == 'module_archive') do %>
+            <li class="form-dropdown-item">
+              <%= button_to(view_type_experiment_path(@experiment, view_mode: 'archived'),
+                            method: :put,
+                            remote: true,
+                            class: "btn btn-light button-to #{ 'selected' if action_name == 'module_archive' }",
+                            form_class: 'change-my-modules-view-type-form',
+                            params: { experiment: { view_type: 'canvas', id: @experiment.id } }) do %>
                 <i class="fas fa-th-large fa-fw"></i>&nbsp;
                 <%= t('experiments.table.view.cards') %>
               <% end %>
             </li>
-            <li>
-              <%= link_to table_experiment_path(@experiment, view_mode: :archived), class: ('selected' if action_name == 'table')  do %>
+            <li class="form-dropdown-item">
+              <%= button_to(view_type_experiment_path(@experiment, view_mode: 'archived'),
+                            method: :put,
+                            remote: true,
+                            class: "btn btn-light button-to #{ 'selected' if action_name == 'table' }",
+                            form_class: 'change-my-modules-view-type-form',
+                            params: { experiment: { view_type: 'table', id: @experiment.id  } }) do %>
                 <i class="fas fa-list fa-fw"></i>&nbsp;
                 <%= t('experiments.table.view.table') %>
               <% end %>
             </li>
           <% else %>
-            <li>
-              <%= link_to canvas_experiment_path(@experiment), class: ('selected' if action_name == 'canvas') do %>
+            <li class="form-dropdown-item">
+            <%= button_to(view_type_experiment_path(@experiment),
+                          method: :put,
+                          remote: true,
+                          class: "btn btn-light button-to #{'selected' if action_name == 'canvas'}",
+                          form_class: 'change-my-modules-view-type-form',
+                          params: { experiment: { view_type: 'canvas', id: @experiment.id } }) do %>
                 <i class="fas fa-dice-four button-icon"></i>
                 <%= t('experiments.table.view.canvas') %>
               <% end %>
             </li>
-            <li>
-              <%= link_to table_experiment_path(@experiment), class: ('selected' if action_name == 'table') do %>
+            <li class="form-dropdown-item">
+              <%= button_to(view_type_experiment_path(@experiment),
+                            method: :put,
+                            remote: true,
+                            class: "btn btn-light button-to #{ 'selected' if action_name == 'table' }",
+                            form_class: 'change-my-modules-view-type-form',
+                            params: { experiment: { view_type: 'table', id: @experiment.id  } }) do %>
                 <i class="fas fa-list button-icon"></i>
                 <%= t('experiments.table.view.table') %>
               <% end %>
