@@ -85,6 +85,14 @@ window.TinyMCE = (() => {
       $(notificationBar).append(restoreBtn).append(cancelBtn);
       $(editor.contentAreaContainer).before(notificationBar);
 
+      // Prevents save on blur if clicking draft notification
+      $('.restore-draft-notification').on('mousedown', () => {
+        editor.isBlurTempDisabled = true;
+        setTimeout(() => {
+          editor.isBlurTempDisabled = false;
+        }, 500);
+      });
+
       $(restoreBtn).click(() => {
         editor.plugins.autosave.restoreDraft();
         makeItDirty(editor);
@@ -357,6 +365,8 @@ window.TinyMCE = (() => {
             if (options.afterInitCallback) { options.afterInitCallback(); }
           },
           setup: (editor) => {
+            editor.isBlurTempDisabled = false;
+
             editor.on('keydown', (e) => {
               if (e.key === 'Enter' && $(editor.contentDocument.activeElement).atwho('isSelecting')) {
                 return false;
@@ -393,7 +403,7 @@ window.TinyMCE = (() => {
             });
 
             editor.on('blur', () => {
-              if (editor.blurDisabled) return false;
+              if (editor.isBlurTempDisabled || editor.blurDisabled) return false;
 
               if ($('.atwho-view:visible').length || $('#MarvinJsModal:visible').length) return false;
               setTimeout(() => {
