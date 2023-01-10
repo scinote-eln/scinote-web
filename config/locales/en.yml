@@ -3276,7 +3276,7 @@ en:
       archived_old_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Archived first"
       id_asc_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;ID ascending"
       id_desc_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;ID descending"
-      due_first_html: "<i class=\"fas fa-sort-numeric-up\"></i>&nbsp;&nbsp;Due first"
+      due_first_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Due first"
       due_last_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;Due last"
     sort_new:
       new: "Added last"
