@@ -1,4 +1,3 @@
-
 class ProtocolsController < ApplicationController
   include RenamingUtil
   include ActionView::Helpers::TextHelper
@@ -165,7 +164,6 @@ class ProtocolsController < ApplicationController
   end
 
   def show
-
     respond_to do |format|
       format.json { render json: @protocol, serializer: ProtocolSerializer, user: current_user }
       format.html
@@ -253,9 +251,7 @@ class ProtocolsController < ApplicationController
   end
 
   def delete_steps
-    @protocol.my_module.lock!
-
-    Protocol.transaction do
+    @protocol.with_lock do
       team = @protocol.team
       previous_size = 0
       @protocol.steps.each do |step|
@@ -273,7 +269,6 @@ class ProtocolsController < ApplicationController
 
         # skip adjusting positions after destroy as this is a bulk delete
         step.skip_position_adjust = true
-
         step.destroy!
       end
 

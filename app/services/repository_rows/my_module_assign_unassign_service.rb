@@ -86,23 +86,19 @@ module RepositoryRows
 
       return [] unless params[:rows_to_assign]
 
-      my_module.with_lock do
-        unassigned_rows = @repository.repository_rows
-                                     .active
-                                     .joins("LEFT OUTER JOIN my_module_repository_rows "\
-                                            "ON repository_rows.id = my_module_repository_rows.repository_row_id "\
-                                            "AND my_module_repository_rows.my_module_id = #{my_module.id.to_i}")
-                                     .where(my_module_repository_rows: { id: nil })
-                                     .where(id: @params[:rows_to_assign])
+      unassigned_rows = @repository.repository_rows
+                                   .active
+                                   .joins("LEFT OUTER JOIN my_module_repository_rows " \
+                                          "ON repository_rows.id = my_module_repository_rows.repository_row_id " \
+                                          "AND my_module_repository_rows.my_module_id = #{my_module.id.to_i}")
+                                   .where(my_module_repository_rows: { id: nil })
+                                   .where(id: @params[:rows_to_assign])
 
-        return [] unless unassigned_rows.any?
+      return [] unless unassigned_rows.any?
 
-        unassigned_rows.find_each do |repository_row|
-          MyModuleRepositoryRow.create!(my_module: my_module,
-                                        repository_row: repository_row,
-                                        assigned_by: @user)
-          assigned_names << repository_row.name
-        end
+      unassigned_rows.find_each do |repository_row|
+        my_module.my_module_repository_rows.create!(repository_row: repository_row, assigned_by: @user)
+        assigned_names << repository_row.name
       end
 
       return [] if assigned_names.blank?
