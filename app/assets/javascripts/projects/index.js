@@ -722,3 +722,11 @@ function addTitlesToOptions(select) {
     option.title = option.textContent
   }
 }
+
+function newProjectOptionTitles(select) {
+  var length = select.getElementsByTagName('option').length;
+  for (var i = 0; i < length; i++) {
+    var option = select.getElementsByTagName('option')[i]
+    option.title = option.textContent
+  }
+}

@@ -19,7 +19,7 @@
                      placeholder="<%= t('nav.search') %>"
                      value="<%= @display_query %>">
                <span class="input-group-btn">
-                <button class="btn btn-default" type="submit">
+                <button class="btn btn-default" type="submit" title="search">
                   <span class="fas fa-search"></span>
                 </button>
               </span>
@@ -231,7 +231,7 @@
           </li>
 
           <% @repository_search_count.each do |team, results| %>
-            <li class="repositories-team <%= 'active' if results[:count].positive? %>">
+            <li class="repositories-team <%= 'active' if results[:count].positive? %>" title="<%= t('Repositories_team', team: team) %>">
               <i class="fas fa-list-alt"></i>
               <%= t('Repositories_team', team: team) %>
             </li>
