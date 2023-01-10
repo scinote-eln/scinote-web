@@ -58,8 +58,8 @@
       align-items: center;
       display: flex;
       height: 2em;
-      justify-content: center;
-      width: 2em;
+      justify-content: left;
+      width: 1.5em;
     }
   }
 
@@ -111,6 +111,7 @@
 
       .checkbox-cell {
         grid-column: 1;
+        justify-content: center;
         position: initial;
       }
     }
