@@ -593,7 +593,7 @@ class ExperimentsController < ApplicationController
 
       canvas_experiment_path(@experiment)
     else
-      table_experiment_path(@experiment, view_mode: params[:view_mode])
+      table_experiment_path(@experiment, view_mode: params[:view_mode] || @experiment.archived_branch?)
     end
   end
 end

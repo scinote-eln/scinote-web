@@ -242,7 +242,7 @@ module Dashboard
       when 'MyModule'
         protocols_my_module_path(object_id)
       when 'Experiment'
-        canvas_experiment_path(object_id)
+        list_modules_experiment_path(object_id)
       when 'Project'
         project_path(object_id)
       when 'Protocol'
