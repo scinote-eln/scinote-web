@@ -23,12 +23,16 @@ var ExperimnetTable = {
   appendRows: function(result) {
     $.each(result, (_j, data) => {
       let row;
+      const isProvisioning = data.provisioning_status === 'in_progress';
+      const provisioningTooltipAttrs = `title="${I18n.t('experiments.duplicate_tasks.duplicating')}"
+        data-toggle="tooltip"`;
 
       // Checkbox selector
       row = `
             <div class="table-body-cell">
               <div class="sci-checkbox-container">
-                <div class="loading-overlay"></div>
+                <div title="${I18n.t('experiments.duplicate_tasks.duplicating')}"
+                  class="loading-overlay" data-toggle="tooltip" data-placement="right"></div>
                 <input type="checkbox" class="sci-checkbox my-module-selector" data-my-module="${data.id}">
                 <span class="sci-checkbox-label"></span>
               </div>
@@ -37,11 +41,14 @@ var ExperimnetTable = {
       // Task columns
       $.each(data.columns, (_i, cell) => {
         let hidden = '';
+
         if ($(`.table-display-modal .fa-eye-slash[data-column="${cell.column_type}"]`).length === 1) {
           hidden = 'hidden';
         }
+
         row += `
-          <div class="table-body-cell ${cell.column_type}-column ${hidden}">
+          <div class="table-body-cell ${cell.column_type}-column ${hidden}"
+            ${cell.column_type === 'task_name' && isProvisioning ? provisioningTooltipAttrs : ''}>
             ${ExperimnetTable.render[cell.column_type](cell.data)}
           </div>
         `;
@@ -59,7 +66,7 @@ var ExperimnetTable = {
           </div>
         </div>`;
 
-      let tableRowClass = `table-row ${data.provisioning_status === 'in_progress' ? 'table-row-provisioning' : ''}`;
+      let tableRowClass = `table-row ${isProvisioning ? 'table-row-provisioning' : ''}`;
       $(`<div class="${tableRowClass}" data-urls='${JSON.stringify(data.urls)}' data-id="${data.id}">${row}</div>`)
         .appendTo(`${this.table} .table-body`);
     });
@@ -542,7 +549,8 @@ var ExperimnetTable = {
   },
   initProvisioningStatusPolling: function() {
     let provisioningStatusUrls = $('.table-row-provisioning').toArray()
-      .map((u) => $(u).data('urls').provisioning_status);
+      .map((u) => $(u).data('urls').provisioning_status)
+      .filter((u) => !!u);
 
     this.provisioningMyModulesCount = provisioningStatusUrls.length;
 
