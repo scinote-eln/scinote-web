@@ -99,13 +99,15 @@ class Experiment < ApplicationRecord
     {
       my_modules: {
         active: { sort: 'atoz' },
-        archived: { sort: 'atoz' }
+        archived: { sort: 'atoz' },
+        view_type: 'canvas'
       }
     }
   end
 
   def validate_view_state(view_state)
-    if %w(atoz ztoa due_first due_last).exclude?(view_state.state.dig('my_modules', 'active', 'sort')) ||
+    if %w(canvas table).exclude?(view_state.state.dig('my_modules', 'view_type')) ||
+       %w(atoz ztoa due_first due_last).exclude?(view_state.state.dig('my_modules', 'active', 'sort')) ||
        %w(atoz ztoa due_first due_last
           archived_old archived_new).exclude?(view_state.state.dig('my_modules', 'archived', 'sort'))
       view_state.errors.add(:state, :wrong_state)

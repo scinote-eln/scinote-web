@@ -25,9 +25,9 @@
       <%= render partial: 'projects/show/experiment_workflow_image_container', locals: { experiment: experiment } %>
     </div>
     <% if experiment.archived_branch? %>
-      <%= link_to experiment.name, module_archive_experiment_path(experiment), title: experiment.name, class: 'name-link' %>
+      <%= link_to experiment.name, list_modules_experiment_path(experiment, view_mode: 'archived'), title: experiment.name, class: 'name-link' %>
     <% else %>
-      <%= link_to experiment.name, canvas_experiment_path(experiment), title: experiment.name, class: 'name-link' %>
+      <%= link_to experiment.name, list_modules_experiment_path(experiment), title: experiment.name, class: 'name-link' %>
     <% end %>
   </div>
   <div class="dates-and-img-container">
