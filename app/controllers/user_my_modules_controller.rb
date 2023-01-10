@@ -64,7 +64,7 @@ class UserMyModulesController < ApplicationController
           if params[:table]
             render json: {
               html: render_to_string(partial: 'experiments/assigned_users.html.erb',
-                                     locals: { my_module: @my_module, user: current_user }),
+                                     locals: { my_module: @my_module, user: current_user, skip_unassigned: false }),
               unassign_url: my_module_user_my_module_path(@my_module, @um)
             }
           else
@@ -99,7 +99,7 @@ class UserMyModulesController < ApplicationController
           if params[:table]
             render json: {
               html: render_to_string(partial: 'experiments/assigned_users.html.erb',
-                                    locals: { my_module: @my_module, user: current_user })
+                                     locals: { my_module: @my_module, user: current_user, skip_unassigned: false })
             }
           else
             render json: {}, status: :ok
@@ -130,6 +130,7 @@ class UserMyModulesController < ApplicationController
 
     users = users.map do |user|
       next if params[:skip_assigned] && user.designated
+      next if ActiveModel::Type::Boolean.new.cast(params[:skip_unassigned]) && !user.designated
 
       user_hash = {
         value: user.id,

@@ -1333,7 +1333,7 @@ en:
         status_html: 'Status'
         assigned_html: 'Assigned to'
         tags_html: 'Tags'
-        comments_html: '<i class="fas fa-comment"></i>'
+        comments_html: '<i data-toggle="tooltip" data-placement="left" title="Comments" class="fas fa-comment"></i>'
       modal_move_modules:
         title: "Move task(s) to experiment"
         confirm: "Move"
@@ -1385,6 +1385,7 @@ en:
         active_tasks: 'Go to Active tasks'
       add_tag: '+ Add tag'
       search: 'Search...'
+      not_set: 'not set'
       archive_group:
         success_flash: "<strong>%{number}</strong> task(s) successfully archived."
         error_flash: "Failed to archive task(s)."
@@ -1393,7 +1394,7 @@ en:
       actions: 'Experiment'
       view: 'View'
       head_title: "%{project} | Overview"
-      canvas_edit: "Edit workflow"
+      canvas_edit: "Edit Workflow"
       canvas_empty: "It's empty here. Please add some tasks"
       new_my_module: "New task"
       new_my_module_modal:
@@ -1405,10 +1406,10 @@ en:
         assigned_tags_label: "Add tags (optional)"
         assigned_tags_placeholder: "Select tags for your task"
         assigned_users: "Assign task to (optional)"
+        assigned_users_placeholder: "Select users"
         tags: "Add tags (optional)"
         create: "Create"
         enter_placeholder: 'Enter...'
-      canvas_edit: "Edit Experiment"
       zoom: "Zoom: "
       reload_on_submit: "Save action is running. Reloading this page may cause unexpected behavior."
       modal_manage_tags:
@@ -3275,7 +3276,7 @@ en:
       id_asc_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;ID ascending"
       id_desc_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;ID descending"
       due_first_html: "<i class=\"fas fa-sort-numeric-up\"></i>&nbsp;&nbsp;Due first"
-      due_last_html: "<i class=\"fas fa-sort-numeric-up\"></i>&nbsp;&nbsp;Due last"
+      due_last_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;Due last"
     sort_new:
       new: "Added last"
       old: "Added first"

@@ -55,6 +55,8 @@ module TinyMceImages
 
       description = read_attribute(object_field)
 
+      return unless description
+
       # Check tinymce for old format
       description = TinyMceAsset.update_old_tinymce(description, self)
 

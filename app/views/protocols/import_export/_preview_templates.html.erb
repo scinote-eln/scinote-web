@@ -17,40 +17,26 @@
       <div data-val="description" class="ql-editor"></div>
       <hr>
       <div class="row">
-        <div class="col-xs-12">
-          <div data-hold="step-texts"></div>
-        </div>
-        <div data-toggle="tables" class="col-xs-12">
-          <div data-hold="tables"></div>
-        </div>
-        <div data-toggle="assets" class="col-xs-12">
-          <strong><%= t("protocols.import_export.import_modal.assets_header") %></strong>
-          <ul data-hold="assets">
-          </ul>
-        </div>
-        <div class="col-xs-12">
-          <div data-hold="checklists"></div>
-        </div>
       </div>
     </div>
   </div>
 </div>
 
-<div data-template="table" style="display: none;">
+<div data-template="table" class="col-xs-12">
   <div>
     <strong data-val="name"></strong>
   </div>
   <div data-hold="table"></div>
 </div>
 
-<div data-template="checklist" style="display: none;">
+<div data-template="checklist" class="col-xs-12">
   <div>
     <strong data-val="name"></strong>
   </div>
   <div data-hold="checklist-items"></div>
 </div>
 
-<div data-template="checklist-item" style="display: none;">
+<div data-template="checklist-item">
   <div class="checkbox">
     <label>
       <input type="checkbox" disabled="disabled">
@@ -59,6 +45,11 @@
   </div>
 </div>
 
-<div data-template="step-text" style="display: none;">
+<div data-template="step-text" class="col-xs-12">
   <div data-val="text"></div>
+</div>
+
+
+<div data-template="asset-file-name">
+    <strong><%= t("protocols.import_export.import_modal.assets_header") %></strong>
 </div>

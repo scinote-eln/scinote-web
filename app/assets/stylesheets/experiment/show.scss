@@ -1,7 +1,8 @@
 // scss-lint:disable SelectorDepth NestingDepth IdSelector
 
 #experimentTable,
-#experiment-canvas {
+#experiment-canvas,
+#module-archive {
   .experimnet-name {
     max-width: calc(100% - 300px);
   }
@@ -30,8 +31,8 @@
 }
 
 #new-my-module-modal {
-  .form-control {
-    border-color: $color-silver-chalice;
+  .my-module-due-date-container {
+    max-width: 200px;
   }
 
   .my-module-user-tags {

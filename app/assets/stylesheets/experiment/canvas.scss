@@ -2,6 +2,10 @@
 
 #canvas-container,
 #module-archive {
+  .experimnet-name {
+    max-width: calc(100% - 300px);
+  }
+
   .panel-heading {
     padding: 10px 15px 4px;
   }

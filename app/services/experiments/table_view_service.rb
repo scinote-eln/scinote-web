@@ -106,7 +106,7 @@ module Experiments
 
     def id_presenter(my_module)
       {
-        id: my_module.id
+        id: my_module.code
       }
     end
 
@@ -150,7 +150,10 @@ module Experiments
     def assigned_presenter(my_module)
       { html: ApplicationController.renderer.render(
         partial: 'experiments/assigned_users.html.erb',
-        locals: { my_module: my_module, user: @user }
+        locals: { my_module: my_module,
+                  user: @user,
+                  skip_unassigned: @params[:view_mode] == 'archived' ||
+                                   !can_manage_my_module_designated_users?(@user, my_module) }
       ) }
     end
 
@@ -158,6 +161,7 @@ module Experiments
       {
         my_module_id: my_module.id,
         tags: my_module.tags.length,
+        can_create: can_manage_my_module_tags?(@user, my_module),
         edit_url: my_module_tags_edit_path(my_module, format: :json)
       }
     end
@@ -166,6 +170,7 @@ module Experiments
       {
         id: my_module.id,
         count: my_module.comments.count,
+        can_create: can_create_my_module_comments?(@user, my_module),
         count_unseen: count_unseen_comments(my_module, @user)
       }
     end

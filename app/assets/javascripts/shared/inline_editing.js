@@ -133,20 +133,28 @@ var inlineEditing = (function() {
 
   $(document)
     .off('click', editBlocks)
+    .off('keyup', `${editBlocks}`)
     .off('click', `${editBlocks} .save-button`)
     .off('click', `${editBlocks} .cancel-button`)
     .off('blur', `${editBlocks} textarea, ${editBlocks} input`)
+    .on('keyup', `${editBlocks}`, function(e) {
+      if (e.keyCode === 27) {
+        $(`${editBlocks} .cancel-button`).click();
+      } // Esc
+
+    })
     .on('click', editBlocks, function(e) {
     // 'A' mean that, if we click on <a></a> element we will not go in edit mode
       var container = $(this);
       if (e.target.tagName === 'A') return true;
       if (inputField(container).attr('disabled')) {
         saveAllEditFields();
-
-        inputField(container)
-          .attr('disabled', false)
+        let input = inputField(container);
+        input.attr('disabled', false)
           .removeClass('hidden')
           .focus();
+        input[0].selectionStart = input[0].value.length;
+        input[0].selectionEnd = input[0].value.length;
         container
           .attr('data-edit-mode', '1');
         container.find('.view-mode')

@@ -114,6 +114,21 @@ class ExperimentsController < ApplicationController
     render json: Experiments::TableViewService.new(@experiment, my_modules, current_user, params).call
   end
 
+  def list_modules
+    view_state = @experiment.current_view_state(current_user)
+    view_type = view_state.state['my_modules']['view_type'] || 'canvas'
+
+    redirect_to view_mode_redirect_url(view_type)
+  end
+
+  def view_type
+    view_state = @experiment.current_view_state(current_user)
+    view_state.state['my_modules']['view_type'] = view_type_params
+    view_state.save!
+
+    redirect_to view_mode_redirect_url(view_type_params)
+  end
+
   def edit
     respond_to do |format|
       format.json do
@@ -333,6 +348,8 @@ class ExperimentsController < ApplicationController
         modules_to_move[id] = dst_experiment.id
       end
       @experiment.move_modules(modules_to_move, current_user)
+      @experiment.workflowimg.purge
+
       render json: { message: t('experiments.table.modal_move_modules.success_flash',
                                 experiment: sanitize_input(dst_experiment.name)) }
     rescue StandardError => e
@@ -441,6 +458,7 @@ class ExperimentsController < ApplicationController
 
       @my_modules.find_each do |my_module|
         new_my_module = my_module.dup
+        new_my_module.my_module_status = MyModuleStatus.first
         new_my_module.update!(
           {
             provisioning_status: :in_progress,
@@ -449,6 +467,7 @@ class ExperimentsController < ApplicationController
         )
         MyModules::CopyContentJob.perform_later(current_user, my_module.id, new_my_module.id)
       end
+      @experiment.workflowimg.purge
     end
 
     render(
@@ -476,6 +495,10 @@ class ExperimentsController < ApplicationController
 
   def move_experiment_param
     params.require(:experiment).require(:project_id)
+  end
+
+  def view_type_params
+    params.require(:experiment).require(:view_type)
   end
 
   def check_read_permissions
@@ -561,5 +584,16 @@ class ExperimentsController < ApplicationController
             project: my_module.experiment.project,
             subject: my_module,
             message_items: { my_module: my_module.id })
+  end
+
+  def view_mode_redirect_url(view_type)
+    if view_type == 'canvas'
+      return module_archive_experiment_path(@experiment) if @experiment.archived_branch? ||
+                                                            params[:view_mode] == 'archived'
+
+      canvas_experiment_path(@experiment)
+    else
+      table_experiment_path(@experiment, view_mode: params[:view_mode])
+    end
   end
 end

@@ -19,6 +19,30 @@ RSpec.describe 'Api::V1::UsersController', type: :request do
       { 'Authorization': 'Bearer ' + generate_token(@user1.id) }
   end
 
+  describe 'GET users, #index' do
+    it 'When valid request, requested users are members of the team' do
+      hash_body = nil
+      get api_v1_team_users_path(team_id: @team1.id), headers: @valid_headers
+      expect { hash_body = json }.not_to raise_exception
+      pp hash_body[:data]
+      expect(hash_body[:data]).to match(
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@team1.users, each_serializer: Api::V1::UserSerializer)
+            .to_json
+        )['data']
+      )
+    end
+
+    it 'When invalid request, non existing team' do
+      hash_body = nil
+      get api_v1_team_users_path(team_id: -1), headers: @valid_headers
+      expect(response).to have_http_status(404)
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body['errors'][0]).to include('status': 404)
+    end
+  end
+
   describe 'GET user, #show' do
     it 'When valid request, requested user is member of the same teams' do
       hash_body = nil

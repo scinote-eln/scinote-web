@@ -66,8 +66,8 @@ var ExperimnetTable = {
   },
   initDueDatePicker: function(data) {
     // eslint-disable-next-line no-unused-vars
-    $.each(data, (id, _) => {
-      let element = `#calendarDueDate${id}`;
+    $.each(data, (_, row) => {
+      let element = `#calendarDueDate${row.id}`;
       let dueDateContainer = $(element).closest('#dueDateContainer');
       let dateText = $(element).closest('.date-text');
       let clearDate = $(element).closest('.datetime-container').find('.clear-date');
@@ -95,6 +95,15 @@ var ExperimnetTable = {
       });
 
       $(element).on('dp.show', function() {
+        var datePicker = $('.bootstrap-datetimepicker-widget.dropdown-menu')[0];
+
+        // show full datepicker menu for due date
+        if (datePicker.getBoundingClientRect().bottom > window.innerHeight) {
+          datePicker.scrollIntoView(false);
+        } else if (datePicker.getBoundingClientRect().top < 0) {
+          datePicker.scrollIntoView();
+        }
+
         dateText.attr('data-original-title', '').tooltip('hide');
         if (dueDateContainer.find('.due-date-label').data('due-date')) {
           clearDate.addClass('open');
@@ -121,7 +130,7 @@ var ExperimnetTable = {
       e.preventDefault();
       this.restoreMyModules(e.target.href, e.target.dataset.id);
     });
-    
+
     $(this.table).on('click', '.duplicate-my-module', (e) => {
       e.preventDefault();
       this.duplicateMyModules($('#duplicateTasks').data('url'), e.target.dataset.id);
@@ -174,7 +183,7 @@ var ExperimnetTable = {
   },
   initAccessModal: function() {
     $('#manageTaskAccess').on('click', () => {
-      $(`.table-row[data-id="${this.selectedMyModules[0]}"] .open-access-modal`).click();
+      $(`.table-row[data-id="${this.selectedMyModules[0]}"] .open-access-modal`)[0].click();
     });
   },
   initRenameModal: function() {
@@ -186,6 +195,8 @@ var ExperimnetTable = {
     $('#modal-edit-module').on('click', 'button[data-action="confirm"]', () => {
       let id = $('#modal-edit-module').data('id');
       let newValue = $('#edit-module-name-input').val();
+
+      $(`.my-module-selector[data-my-module="${id}"]`).click();
 
       if (newValue === $(`#taskName${id}`).data('full-name')) {
         $('#modal-edit-module').modal('hide');
@@ -217,22 +228,29 @@ var ExperimnetTable = {
   initManageUsersDropdown: function() {
     $(this.table).on('show.bs.dropdown', '.assign-users-dropdown', (e) => {
       let usersList = $(e.target).find('.users-list');
+      let isArchivedView = $('#experimentTable').hasClass('archived');
+      let viewOnly = $(e.target).data('view-only');
+      let checkbox = '';
       usersList.find('.user-container').remove();
       $.get(usersList.data('list-url'), (result) => {
         $.each(result, (_i, user) => {
+          if (!isArchivedView && !viewOnly) {
+            checkbox = `<div class="sci-checkbox-container">
+                          <input type="checkbox"
+                                class="sci-checkbox user-selector"
+                                ${user.params.designated ? 'checked' : ''}
+                                value="${user.value}"
+                                data-assign-url="${user.params.assign_url}"
+                                data-unassign-url="${user.params.unassign_url}"
+                          >
+                          <span class="sci-checkbox-label"></span>
+                        </div>`;
+          }
+
           $(`
             <div class="user-container">
-              <div class="sci-checkbox-container">
-                <input type="checkbox"
-                       class="sci-checkbox user-selector"
-                       ${user.params.designated ? 'checked' : ''}
-                       value="${user.value}"
-                       data-assign-url="${user.params.assign_url}"
-                       data-unassign-url="${user.params.unassign_url}"
-                >
-                <span class="sci-checkbox-label"></span>
-              </div>
-              <div class="user-avatar">
+              ${checkbox}
+              <div class="user-avatar ${isArchivedView ? 'archived' : ''}">
                 <img src="${user.params.avatar_url}"></img>
               </div>
               <div class="user-name">
@@ -243,7 +261,7 @@ var ExperimnetTable = {
         });
       });
     });
-    $(this.table).on('click', '.dropdown-menu', (e) => {
+    $(this.table).on('click', '.assign-users-dropdown .dropdown-menu', (e) => {
       if (e.target.tagName === 'INPUT') return;
       e.preventDefault();
       e.stopPropagation();
@@ -429,6 +447,7 @@ var ExperimnetTable = {
   },
   clearRowTaskSelection: function() {
     this.selectedMyModules = [];
+    $('.select-all-checkboxes .sci-checkbox').prop('checked', false);
     this.updateExperimentToolbar();
   },
   initNewTaskModal: function(table) {
@@ -457,6 +476,11 @@ var ExperimnetTable = {
     });
 
     this.filterDropdown.on('filter:apply', () => {
+      var tableRowLength = document.getElementsByClassName('table-row').length;
+      document.getElementById('tasksNoResultsContainer').style.display = 'none';
+      if (tableRowLength === 0) {
+        document.getElementById('tasksNoResultsContainer').style.display = 'block';
+      }
       $.each(this.filters, (_i, filter) => {
         this.activeFilters[filter.name] = filter.apply($experimentFilter);
       });
@@ -489,9 +513,10 @@ var ExperimnetTable = {
       sort: this.myModulesCurrentSort
     };
     var dataUrl = $(this.table).data('my-modules-url');
+    $(this.table).find('.table-row').remove();
     this.loadPlaceholder();
     $.get(dataUrl, tableParams, (result) => {
-      $(this.table).find('.table-row').remove();
+      $(this.table).find('.table-row-placeholder, .table-row-placeholder-divider').remove();
       this.appendRows(result.data);
       this.initDueDatePicker(result.data);
       InfiniteScroll.init(this.table, {
@@ -607,6 +632,11 @@ ExperimnetTable.render.assigned = function(data) {
 
 ExperimnetTable.render.tags = function(data) {
   const value = parseInt(data.tags, 10) === 0 ? I18n.t('experiments.table.add_tag') : data.tags;
+
+  if (data.tags === 0 && !data.can_create) {
+    return `<span class="disabled">${I18n.t('experiments.table.not_set')}</span>`;
+  }
+
   return `<a href="${data.edit_url}"
              id="myModuleTags${data.my_module_id}"
              data-remote="true"
@@ -614,6 +644,7 @@ ExperimnetTable.render.tags = function(data) {
 };
 
 ExperimnetTable.render.comments = function(data) {
+  if (data.count === 0 && !data.can_create) return '<span class="disabled">0</span>';
   return `<a href="#"
     class="open-comments-sidebar" id="comment-count-${data.id}"
     data-object-type="MyModule" data-object-id="${data.id}">
