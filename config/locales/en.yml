@@ -979,7 +979,7 @@ en:
       tags: "Tags:"
       no_tags: "+ Add tags"
       manage_tags: "Manage tags"
-      create_new_tag: "create new"
+      create_new_tag: "→ Create new"
       recent_protocols_from_repository: "Recent protocols from the Repository"
       code: "ID: "
       recent_protocols_from_repository: "Recent protocols from the Templates"
