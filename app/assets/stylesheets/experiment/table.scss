@@ -8,7 +8,7 @@
   .title-row {
     .header-actions {
       &.experiment-header {
-        column-gap: 0.25em;
+        column-gap: .25em;
       }
 
       .sort-task-menu {
@@ -22,10 +22,7 @@
   }
 
   .experiment-table-container {
-    height: calc(
-      100vh - var(--content-header-size) - var(--navbar-height) -
-        var(--toolbar-height)
-    );
+    height: calc(100vh - var(--content-header-size) - var(--navbar-height) - var(--toolbar-height));
     overflow: auto;
   }
 
@@ -38,7 +35,7 @@
       display: flex;
 
       .btn {
-        margin-right: 0.25em;
+        margin-right: .25em;
       }
     }
 
@@ -50,9 +47,7 @@
   .experiment-table {
     display: grid;
     grid-auto-rows: 3em 1px;
-    grid-template-columns:
-      max-content repeat(calc(var(--columns-count)), minmax(max-content, auto))
-      max-content;
+    grid-template-columns: max-content repeat(calc(var(--columns-count)), minmax(max-content, auto)) max-content;
     min-width: 100%;
 
     .table-header-cell {
@@ -61,7 +56,7 @@
       border: 1px solid $color-white;
       display: flex;
       height: 3em;
-      padding: 0 0.5em;
+      padding: 0 .5em;
       position: sticky;
       position: -webkit-sticky;
       top: 0;
@@ -118,7 +113,7 @@
     .table-body-cell {
       align-items: center;
       display: flex;
-      padding: 0 0.5em;
+      padding: 0 .5em;
 
       .my-module-users-link {
         color: $color-silver-chalice;
@@ -132,7 +127,7 @@
         color: $color-silver-chalice;
         height: 2em;
         line-height: 2em;
-        margin-right: 0.25em;
+        margin-right: .25em;
         width: 2em;
       }
 
@@ -142,7 +137,7 @@
         color: $color-white;
         height: 2em;
         line-height: 2em;
-        margin-right: 0.25em;
+        margin-right: .25em;
         text-align: center;
         text-decoration: none;
         width: 2em;
@@ -186,7 +181,7 @@
 
     .assign-users-dropdown {
       .dropdown-menu {
-        padding: 0.5em;
+        padding: .5em;
         width: 280px;
       }
 
@@ -198,10 +193,10 @@
       .user-container {
         align-items: center;
         display: flex;
-        padding: 0.5em;
+        padding: .5em;
 
         .user-avatar {
-          padding: 0 0.75em;
+          padding: 0 .75em;
 
           &.archived {
             padding-left: 0;
@@ -292,13 +287,14 @@
           width: 24px;
         }
 
+
         @keyframes placeholder-pulsing {
           0% {
             opacity: 1;
           }
 
           50% {
-            opacity: 0.5;
+            opacity: .5;
           }
 
           100% {
@@ -353,7 +349,7 @@
 
     .clear-date {
       cursor: pointer;
-      left: 90%;
+      left: calc(100% - 16px);
       position: absolute;
       text-align: center;
       top: 0;
@@ -384,7 +380,7 @@
       left: 0;
       position: absolute;
       top: 0;
-      width: 90%;
+      width: calc(100% - 16px);
 
       .calendar-due-date {
         opacity: 0;
@@ -392,9 +388,10 @@
     }
 
     &:hover {
-      .date-text[data-editable="true"] {
+      .date-text[data-editable=true] {
         background-color: $color-concrete;
         border-radius: 4px;
+
       }
     }
   }
@@ -423,7 +420,7 @@
     align-items: center;
     border-bottom: $border-default;
     display: flex;
-    padding: 0.5em 1em;
+    padding: .5em 1em;
 
     &:not(.visible) {
       color: $color-alto;
