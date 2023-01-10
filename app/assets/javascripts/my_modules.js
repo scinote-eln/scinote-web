@@ -148,9 +148,9 @@
           return `<span class="my-module-tags-color" style="background:${data.params.color}"></span>
                   ${data.label}`;
         }
-        return `<span class="my-module-tags-color"></span>
-                ${data.label + ' '}
-                <span class="my-module-tags-create-new"> (${I18n.t('my_modules.details.create_new_tag')})</span>`;
+        return `<span class="my-module-tags-color new"><i class="fas fa-plus"></i></span>
+                  ${data.label + ' '}
+                <span class="my-module-tags-create-new"> ${I18n.t('my_modules.details.create_new_tag')}</span>`;
       },
       onOpen: function() {
         $('.select-container .edit-button-container').removeClass('hidden');

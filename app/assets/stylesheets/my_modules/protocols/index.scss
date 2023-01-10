@@ -239,15 +239,21 @@
       }
 
       .my-module-tags-color {
+        align-items: center;
         border-radius: 8px;
-        display: inline-block;
+        display: inline-flex;
         height: 16px;
+        justify-content: center;
         margin-right: 5px;
         width: 16px;
+
+        &.new {
+          color: $color-silver-chalice;
+        }
       }
 
       .my-module-tags-create-new {
-        opacity: .6;
+        margin-left: 3px;
       }
 
       .input-field {
