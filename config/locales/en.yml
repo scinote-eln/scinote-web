@@ -1360,7 +1360,7 @@ en:
         restore: 'Restore'
         move: 'Move'
         duplicate: 'Duplicate'
-        manage_access: 'Manage access'
+        task_access: 'Task access'
         task_data: 'Task data display'
       my_module_actions:
         title: 'TASK ACTIONS'

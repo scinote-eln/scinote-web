@@ -23,8 +23,13 @@
     </a>
   </li>
 <% end %>
+<% if my_module.archived_branch? %>
+  <% task_access_path = access_permissions_project_experiment_my_module_path(my_module.experiment.project, my_module.experiment, my_module) %>
+<% else %>
+  <% task_access_path = edit_access_permissions_project_experiment_my_module_path(my_module.experiment.project, my_module.experiment, my_module) %>
+<% end %>
 <li>
-  <a class="open-access-modal" data-action="remote-modal" href="<%= edit_access_permissions_project_experiment_my_module_path(my_module.experiment.project, my_module.experiment, my_module) %>">
+  <a class="open-access-modal" data-action="remote-modal" href="<%= task_access_path %>">
     <i class="fas fa-door-open"></i>
     <%= t("experiments.table.my_module_actions.access") %>
   </a>
