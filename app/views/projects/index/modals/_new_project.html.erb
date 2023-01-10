@@ -15,7 +15,7 @@
           </div>
           <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-              <div class="checkbox">
+              <div class="checkbox" onclick="newProjectOptionTitles(document.getElementById('project_default_public_user_role_id'))">
                 <%= f.check_box :visibility,
                                 { label: t('projects.index.modal_new_project.visibility_html'), data: { action: 'toggle-visibility', target: 'role_select_wrapper' }, title: "toggle project visibility" },
                                 :visible,

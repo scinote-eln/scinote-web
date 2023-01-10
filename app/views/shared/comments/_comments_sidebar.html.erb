@@ -13,8 +13,8 @@
       </div>
       <div class="no-comments-placeholder">
         <%= image_tag 'comments/placeholder.svg', class: 'no-comments-image' %>
-        <h1><%= t('comments.empty_state.title') %></h1>
-        <p class="description"><%= t('comments.empty_state.description') %></p>
+        <h1 title="<%= t('comments.empty_state.title') %>"><%= t('comments.empty_state.title') %></h1>
+        <p class="description" title="<%= t('comments.empty_state.description') %>"><%= t('comments.empty_state.description') %></p>
       </div>
       <div class="loading-placeholder">
         <% 5.times do |i| %>
