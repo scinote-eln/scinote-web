@@ -175,6 +175,10 @@
       }
     }
 
+    .open-my-module-menu:focus {
+      box-shadow: 0 0 0 1px $brand-focus;
+    }
+
     .assign-users-dropdown {
       .dropdown-menu {
         padding: .5em;
@@ -393,7 +397,6 @@
   }
 
   .open-comments-sidebar {
-    display: contents;
     margin-bottom: 0;
   }
 

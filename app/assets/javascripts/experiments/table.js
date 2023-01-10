@@ -50,7 +50,8 @@ var ExperimnetTable = {
       row += `
         <div class="table-body-cell">
           <div ref="dropdown" class="dropdown my-module-menu" data-url="${data.urls.actions_dropdown}">
-            <div class="btn btn-ligh icon-btn" data-toggle="dropdown" >
+            <div class="btn btn-ligh icon-btn open-my-module-menu" tabindex="0"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" >
               <i class="fas fa-ellipsis-h"></i>
             </div>
             <div class="dropdown-menu dropdown-menu-right">
@@ -263,6 +264,11 @@ var ExperimnetTable = {
       if (e.target.tagName === 'INPUT') return;
       e.preventDefault();
       e.stopPropagation();
+    });
+    $(this.table).on('keyup', '.assigned-users-container, .open-my-module-menu, .calendar-input', (e) => {
+      if (e.keyCode === 13) { // Enter
+        e.target.click();
+      }
     });
     $(this.table).on('change keyup', '.assign-users-dropdown .user-search', (e) => {
       let query = e.target.value;
@@ -638,7 +644,7 @@ ExperimnetTable.render.tags = function(data) {
 ExperimnetTable.render.comments = function(data) {
   if (data.count === 0 && !data.can_create) return '<span class="disabled">0</span>';
   return `<a href="#"
-    class="open-comments-sidebar" id="comment-count-${data.id}"
+    class="open-comments-sidebar" tabindex=0 id="comment-count-${data.id}"
     data-object-type="MyModule" data-object-id="${data.id}">
       ${data.count > 0 ? data.count : '+'}
       ${data.count_unseen > 0 ? `<span class="unseen-comments"> ${data.count_unseen} </span>` : ''}
