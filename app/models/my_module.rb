@@ -404,7 +404,7 @@ class MyModule < ApplicationRecord
     target_my_module.reload
 
     # Update the cloned protocol if neccesary
-    clone_tinymce_assets(clone, target_my_module.experiment.project.team)
+    clone_tinymce_assets(target_my_module, target_my_module.experiment.project.team)
     target_my_module.protocols << protocol.deep_clone_my_module(self, current_user)
     target_my_module.reload
 
