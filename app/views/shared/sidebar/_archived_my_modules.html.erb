@@ -12,7 +12,7 @@
       <% end %>
     </li>
   <% end %>
-  <% my_modules.each do |my_module| %>
+  <% my_modules&.each do |my_module| %>
     <li class="sidebar-leaf">
       <%= link_to my_module.name,
                   protocols_my_module_url(my_module),
