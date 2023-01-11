@@ -457,13 +457,21 @@ var ExperimnetTable = {
     });
 
     this.filterDropdown.on('filter:apply', () => {
-      var tableRowLength = document.getElementsByClassName('table-row').length;
-      document.getElementById('tasksNoResultsContainer').style.display = 'none';
-      if (tableRowLength === 0) {
-        document.getElementById('tasksNoResultsContainer').style.display = 'block';
-      }
       $.each(this.filters, (_i, filter) => {
         this.activeFilters[filter.name] = filter.apply($experimentFilter);
+
+        // Prompt empty state when theres no filtered results
+        let values = Object.values(this.activeFilters);
+        let anyFilter = values.every(value => /^\s+$/.test(value) || value === null || value === undefined || value?.length === 0);
+        setTimeout(() => {
+          var tableRowLength = document.getElementsByClassName('table-row').length;
+          var emptyState = document.getElementById('tasksNoResultsContainer');
+          if (tableRowLength === 0 && !anyFilter) {
+            emptyState.style.display = 'block';
+          } else {
+            emptyState.style.display = 'none';
+          }
+         }, 250)
       });
 
       filterDropdown.toggleFilterMark(
