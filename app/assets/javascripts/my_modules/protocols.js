@@ -18,7 +18,6 @@ function initEditMyModuleDescription() {
     if ($(this).hasClass('record-info-link')) return;
     e.stopPropagation();
   });
-  TinyMCE.initIfHasDraft(viewObject);
 }
 
 function initEditProtocolDescription() {
@@ -30,7 +29,6 @@ function initEditProtocolDescription() {
     if ($(this).hasClass('record-info-link')) return;
     e.stopPropagation();
   });
-  TinyMCE.initIfHasDraft(viewObject);
 }
 
 function initCopyToRepository() {

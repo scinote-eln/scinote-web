@@ -456,20 +456,7 @@ window.TinyMCE = (() => {
     makeItDirty: (editor) => {
       makeItDirty(editor);
     },
-    highlight: initHighlightjs,
-    initIfHasDraft: (viewObject) => {
-      const storedDrafts = sessionStorage.getItem(draftLocation());
-      const draftName = viewObject.data('tinymce-init');
-      if (storedDrafts && JSON.parse(storedDrafts)[0] === draftName) {
-        const top = viewObject.offset().top;
-        setTimeout(() => {
-          viewObject.click();
-        }, 0);
-        setTimeout(() => {
-          window.scrollTo(0, top - 150);
-        }, 2000);
-      }
-    }
+    highlight: initHighlightjs
   };
 })();
 
