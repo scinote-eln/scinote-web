@@ -190,11 +190,6 @@ var ExperimnetTable = {
   restoreMyModules: function(url, ids) {
     $.post(url, { my_modules_ids: ids, view: 'table' });
   },
-  initAccessModal: function() {
-    $('#manageTaskAccess').on('click', () => {
-      $(`.table-row[data-id="${this.selectedMyModules[0]}"] .open-access-modal`)[0].click();
-    });
-  },
   initRenameModal: function() {
     $('#editTask').on('click', () => {
       $('#modal-edit-module').modal('show');
@@ -601,7 +596,6 @@ var ExperimnetTable = {
     this.initSorting(this);
     this.loadTable();
     this.initRenameModal();
-    this.initAccessModal();
     this.initDuplicateMyModules();
     this.initMoveModulesModal();
     this.initArchiveMyModules();
