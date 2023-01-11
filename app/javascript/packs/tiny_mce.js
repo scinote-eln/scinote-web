@@ -28,7 +28,6 @@ import 'tinymce/plugins/directionality';
 import './tinymce/custom_image_uploader/plugin';
 import './tinymce/marvinjs/plugin';
 import './tinymce/image_toolbar/plugin';
-import './tinymce/placeholder/plugin';
 
 // Content styles, including inline UI like fake cursors
 // All the above CSS files are loaded on to the page but these two must
@@ -184,7 +183,7 @@ window.TinyMCE = (() => {
           table autosave autoresize link advlist codesample autolink lists
           charmap anchor searchreplace wordcount visualblocks visualchars
           insertdatetime nonbreaking save directionality customimageuploader
-          marvinjs placeholder custom_image_toolbar help quickbars
+          marvinjs custom_image_toolbar help quickbars
         `;
         // if (typeof (MarvinJsEditor) !== 'undefined') plugins += ' marvinjsplugin';
 
