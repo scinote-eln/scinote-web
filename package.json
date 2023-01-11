@@ -86,6 +86,7 @@
     "precss": "^2.0.0",
     "prop-types": "^15.7.2",
     "rails-erb-loader": "^5.4.2",
+    "raw-loader": "^4.0.2",
     "react": "^16.8.6",
     "react-bootstrap": "^0.31.5",
     "react-bootstrap-table": "^4.3.1",

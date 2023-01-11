@@ -30,6 +30,15 @@ import './tinymce/marvinjs/plugin';
 import './tinymce/image_toolbar/plugin';
 import './tinymce/placeholder/plugin';
 
+// Content styles, including inline UI like fake cursors
+// All the above CSS files are loaded on to the page but these two must
+// be loaded into the editor iframe so they are loaded as strings and passed
+// to the init function.
+import 'raw-loader';
+import contentCss from '!!raw-loader!tinymce/skins/content/default/content.min.css';
+import contentUiCss from '!!raw-loader!tinymce/skins/ui/tinymce-5/content.min.css';
+const contentStyle  = [contentCss, contentUiCss].map((s) => s.toString() ).join("\n");
+
 window.TinyMCE = (() => {
   function initHighlightjs() {
     $('[class*=language]').each((i, block) => {
@@ -193,6 +202,9 @@ window.TinyMCE = (() => {
         return tinyMCE.init({
           cache_suffix: '?v=6.3.1', // This suffix should be changed any time library is updated
           selector,
+          skin: false,
+          content_css: false,
+          content_style: contentStyle,
           convert_urls: false,
           promotion: false,
           menu: {
@@ -203,11 +215,8 @@ window.TinyMCE = (() => {
           plugins,
           autoresize_bottom_margin: 20,
           placeholder: options.placeholder,
-          skin: false,
-          content_css: false,
           toolbar_sticky: true,
           toolbar_sticky_offset: editorToolbaroffset,
-          content_style: "body { font-family: Lato, sans-serif; }",
           codesample_languages: [
             { text: 'R', value: 'r' },
             { text: 'MATLAB', value: 'matlab' },
@@ -437,7 +446,7 @@ window.TinyMCE = (() => {
       this.destroyAll();
       this.init();
     },
-    getContent: () => tinyMCE.activeEditor.getContent(),
+    getContent: () => tinyMCE.activeEditor && tinyMCE.activeEditor.getContent(),
     updateImages: (editor) => {
       const iframe = $(`#${editor.id}`).next().find('.tox-edit-area iframe').contents();
       const images = $.map($('img', iframe), e => e.dataset.mceToken);
