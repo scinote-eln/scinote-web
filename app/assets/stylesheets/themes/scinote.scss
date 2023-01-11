@@ -201,16 +201,6 @@ mark,.mark {
   text-align: right;
 }
 
-a[data-toggle="tooltip"] {
-  color: inherit;
-  border-bottom: 1px dashed $color-emperor;
-
-  &:hover {
-    text-decoration: none;
-    cursor: help;
-  }
-}
-
 .nav-tabs {
   margin-bottom: 15px;
 

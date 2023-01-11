@@ -409,10 +409,20 @@
       display: flex;
     }
   }
-}
 
-.task_name-column span {
-  color: $color-silver-chalice;
+  .task_name-column {
+    a {
+      display: inline-block;
+      max-width: 320px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    span {
+      color: $color-silver-chalice;
+    }
+  }
 }
 
 .table-display-modal {
