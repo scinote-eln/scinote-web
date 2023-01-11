@@ -46,7 +46,7 @@ class ExperimentsController < ApplicationController
                           experiment: @experiment.name)
       respond_to do |format|
         format.json do
-          render json: { path: canvas_experiment_url(@experiment) }, status: :ok
+          render json: { path: my_modules_experiment_url(@experiment) }, status: :ok
         end
       end
     else
@@ -103,7 +103,7 @@ class ExperimentsController < ApplicationController
     render json: Experiments::TableViewService.new(@experiment, my_modules, current_user, params).call
   end
 
-  def list_modules
+  def my_modules
     view_state = @experiment.current_view_state(current_user)
     view_type = view_state.state['my_modules']['view_type'] || 'canvas'
 
@@ -401,7 +401,11 @@ class ExperimentsController < ApplicationController
       format.json do
         render json: {
           html: render_to_string(
-            partial: 'shared/sidebar/my_modules.html.erb', locals: { experiment: @experiment, my_modules: my_modules }
+            partial: if params[:view_mode] == 'archived'
+                       'shared/sidebar/archived_my_modules.html.erb'
+                     else
+                       'shared/sidebar/my_modules.html.erb'
+                     end, locals: { experiment: @experiment, my_modules: my_modules }
           )
         }
       end
@@ -563,7 +567,7 @@ class ExperimentsController < ApplicationController
                  project: link_to(@experiment.project.name,
                                   project_url(@experiment.project)),
                  experiment: link_to(@experiment.name,
-                                     canvas_experiment_url(@experiment)))
+                                     my_modules_experiment_url(@experiment)))
     )
   end
 
@@ -588,13 +592,15 @@ class ExperimentsController < ApplicationController
   end
 
   def view_mode_redirect_url(view_type)
-    if view_type == 'canvas'
-      return module_archive_experiment_path(@experiment) if @experiment.archived_branch? ||
-                                                            params[:view_mode] == 'archived'
-
-      canvas_experiment_path(@experiment)
+    if params[:view_mode] == 'archived' || @experiment.archived_branch?
+      case view_type
+      when 'canvas'
+        module_archive_experiment_path(@experiment)
+      else
+        table_experiment_path(@experiment, view_mode: :archived)
+      end
     else
-      table_experiment_path(@experiment, view_mode: params[:view_mode] || @experiment.archived_branch?)
+      view_type == 'canvas' ? canvas_experiment_path(@experiment) : table_experiment_path(@experiment)
     end
   end
 

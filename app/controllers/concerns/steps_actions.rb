@@ -96,7 +96,7 @@ module StepsActions
              ),
              experiment: link_to(
                step.my_module.experiment.name,
-               canvas_experiment_url(step.my_module.experiment)
+               my_modules_experiment_url(step.my_module.experiment)
              ),
              my_module: link_to(
                step.my_module.name,

@@ -4,7 +4,7 @@
   <%= image_tag 'icon_small/task.svg' %>
   <% if subject&.navigable? %>
     <% if subject.archived?
-        path = list_modules_experiment_path(subject.experiment, view_mode: :archived)
+        path = my_modules_experiment_path(subject.experiment, view_mode: :archived)
       else
         path = protocols_my_module_path(subject)
       end %>

@@ -73,7 +73,7 @@
             <% unless @experiment.archived_branch? %>
               <div role="separator" class="divider"></div>
               <li>
-                <%= link_to list_modules_experiment_path(@experiment) do %>
+                <%= link_to my_modules_experiment_path(@experiment) do %>
                   <i class="fas fa-rocket button-icon"></i>
                   <%= t('experiments.table.view.active_tasks') %>
                 <% end %>
@@ -82,7 +82,7 @@
           <% else %>
             <div role="separator" class="divider"></div>
             <li>
-              <%= link_to list_modules_experiment_path(@experiment, view_mode: :archived) do %>
+              <%= link_to my_modules_experiment_path(@experiment, view_mode: :archived) do %>
                 <i class="fas fa-archive button-icon"></i>
                 <%= t('experiments.table.view.archived_tasks') %>
               <% end %>
