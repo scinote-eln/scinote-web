@@ -89,18 +89,7 @@ class ExperimentsController < ApplicationController
   end
 
   def table
-    view_state = @experiment.current_view_state(current_user)
-    view_mode = params[:view_mode] || 'active'
-    @current_sort = view_state.state.dig('my_modules', view_mode, 'sort') || 'atoz'
-
     @project = @experiment.project
-    @my_modules = if @experiment.archived_branch?
-                    @experiment.my_modules.order(:name)
-                  elsif params[:view_mode] == 'archived'
-                    @experiment.my_modules.archived.order(:name)
-                  else
-                    @experiment.my_modules.active.order(:name)
-                  end
     @my_module_visible_table_columns = current_user.my_module_visible_table_columns
   end
 
@@ -396,11 +385,23 @@ class ExperimentsController < ApplicationController
   end
 
   def sidebar
+    view_state = @experiment.current_view_state(current_user)
+    view_mode = params[:view_mode].presence || 'active'
+    default_sort = view_state.state.dig('my_modules', view_mode, 'sort') || 'atoz'
+    my_modules = if @experiment.archived_branch?
+                   @experiment.my_modules
+                 elsif params[:view_mode] == 'archived'
+                   @experiment.my_modules.archived
+                 else
+                   @experiment.my_modules.active
+                 end
+
+    my_modules = sort_my_modules(my_modules, params[:sort].presence || default_sort)
     respond_to do |format|
       format.json do
         render json: {
           html: render_to_string(
-            partial: 'shared/sidebar/my_modules.html.erb', locals: { experiment: @experiment }
+            partial: 'shared/sidebar/my_modules.html.erb', locals: { experiment: @experiment, my_modules: my_modules }
           )
         }
       end
@@ -594,6 +595,25 @@ class ExperimentsController < ApplicationController
       canvas_experiment_path(@experiment)
     else
       table_experiment_path(@experiment, view_mode: params[:view_mode] || @experiment.archived_branch?)
+    end
+  end
+
+  def sort_my_modules(records, sort)
+    case sort
+    when 'due_first'
+      records.order(:due_date)
+    when 'due_last'
+      records.order(Arel.sql("COALESCE(due_date, DATE '1900-01-01') DESC"))
+    when 'atoz'
+      records.order(:name)
+    when 'ztoa'
+      records.order(name: :desc)
+    when 'archived_old'
+      records.order(Arel.sql('COALESCE(my_modules.archived_on, my_modules.archived_on) ASC'))
+    when 'archived_new'
+      records.order(Arel.sql('COALESCE(my_modules.archived_on, my_modules.archived_on) DESC'))
+    else
+      records
     end
   end
 end

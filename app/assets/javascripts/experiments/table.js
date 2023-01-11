@@ -1,4 +1,5 @@
-/* global I18n GLOBAL_CONSTANTS InfiniteScroll initBSTooltips filterDropdown dropdownSelector HelperModule */
+/* global I18n GLOBAL_CONSTANTS InfiniteScroll
+          initBSTooltips filterDropdown dropdownSelector Sidebar HelperModule */
 
 var ExperimnetTable = {
   permissions: ['editable', 'archivable', 'restorable', 'moveable'],
@@ -528,6 +529,12 @@ var ExperimnetTable = {
     var dataUrl = $(this.table).data('my-modules-url');
     $(this.table).find('.table-row').remove();
     this.loadPlaceholder();
+
+    Sidebar.reload({
+      sort: this.myModulesCurrentSort,
+      view_mode: $('#experimentTable').hasClass('archived') ? 'archived' : ''
+    });
+
     $.get(dataUrl, tableParams, (result) => {
       $(this.table).find('.table-row-placeholder, .table-row-placeholder-divider').remove();
       this.appendRows(result.data);

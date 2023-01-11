@@ -349,7 +349,7 @@
 
     .clear-date {
       cursor: pointer;
-      left: 90%;
+      left: calc(100% - 16px);
       position: absolute;
       text-align: center;
       top: 0;
@@ -380,7 +380,7 @@
       left: 0;
       position: absolute;
       top: 0;
-      width: 100%;
+      width: calc(100% - 16px);
 
       .calendar-due-date {
         opacity: 0;

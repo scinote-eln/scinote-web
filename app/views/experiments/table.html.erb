@@ -5,9 +5,9 @@
 
 <%= content_for :sidebar do %>
   <% if params[:view_mode] == 'archived' %>
-    <%= render partial: 'shared/sidebar/archived_my_modules.html.erb', locals: { experiment: @experiment, my_modules: @my_modules } %>
+    <%= render partial: 'shared/sidebar/archived_my_modules.html.erb', locals: { experiment: @experiment, my_modules: nil } %>
   <% else %>
-    <%= render partial: 'shared/sidebar/my_modules.html.erb', locals: { experiment: @experiment, my_modules: @my_modules } %>
+    <%= render partial: 'shared/sidebar/my_modules.html.erb', locals: { experiment: @experiment, my_modules: nil } %>
   <% end %>
 <% end %>
 
