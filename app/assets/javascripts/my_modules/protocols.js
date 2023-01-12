@@ -24,7 +24,7 @@ function initEditProtocolDescription() {
   var viewObject = $('#protocol_description_view');
   viewObject.on('click', function(e) {
     if ($(e.target).hasClass('record-info-link')) return;
-    TinyMCE.init('#protocol_description_textarea', refreshProtocolStatusBar);
+    TinyMCE.init('#protocol_description_textarea', { afterInitCallback: refreshProtocolStatusBar });
   }).on('click', 'a', function(e) {
     if ($(this).hasClass('record-info-link')) return;
     e.stopPropagation();

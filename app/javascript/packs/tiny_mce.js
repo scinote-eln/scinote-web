@@ -36,7 +36,7 @@ import './tinymce/image_toolbar/plugin';
 import 'raw-loader';
 import contentCss from '!!raw-loader!tinymce/skins/content/default/content.min.css';
 import contentUiCss from '!!raw-loader!tinymce/skins/ui/tinymce-5/content.min.css';
-const contentStyle  = [contentCss, contentUiCss].map((s) => s.toString() ).join("\n");
+const contentStyle = [contentCss, contentUiCss].map((s) => s.toString() ).join("\n");
 
 window.TinyMCE = (() => {
   function initHighlightjs() {
@@ -472,5 +472,5 @@ $(document).on('turbolinks:before-visit', (e) => {
     e.preventDefault();
     return false;
   }
-  return false;
+  return true;
 });
