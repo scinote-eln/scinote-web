@@ -470,6 +470,7 @@ class ExperimentsController < ApplicationController
           {
             provisioning_status: :in_progress,
             name: my_module.next_clone_name,
+            created_by: current_user,
             due_date: nil,
             started_on: nil,
             completed_on: nil
