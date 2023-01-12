@@ -384,10 +384,23 @@
 function addTitlesToOptions(select) {
   if (typeof(select) == "undefined")
     var select = document.getElementsByClassName('dropdown-menu inner')[0]
-    
+
   var length = select.getElementsByTagName('li').length
   for (var i = 0; i < length; i++) {
     var option = select.getElementsByTagName('li')[i]
     option.title = option.textContent
+  }
+}
+
+
+function addTitlesToOptionSpan(select) {
+  document.getElementsByClassName('filter-option pull-left')[0].title = 'Change experiment role'
+  if (typeof(select) == "undefined")
+    var select = document.getElementsByClassName('dropdown-menu inner')[0]
+
+  var length = select.getElementsByTagName('li').length
+  for (var i = 1; i < length; i++) {
+    var option = select.getElementsByTagName('li')[i]
+    option.querySelector('span.text').title = option.textContent
   }
 }
