@@ -1,5 +1,7 @@
 <span class="due-date-label" data-due-date="<%= my_module.due_date.present? %>" >
-  <% if my_module.is_one_day_prior? %>
+  <% if (my_module.archived_branch? || my_module.completed?) && my_module.due_date %>
+    <%= l(my_module.due_date, format: :full_date) %>
+  <% elsif my_module.is_one_day_prior? %>
     <%= l(my_module.due_date, format: :full_date) %>
     <span class="fas fa-exclamation-triangle <%= get_task_alert_color(my_module) %>"></span>
   <% elsif my_module.is_overdue? %>

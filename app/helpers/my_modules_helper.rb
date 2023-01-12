@@ -31,7 +31,7 @@ module MyModulesHelper
 
   def get_task_alert_color(my_module)
     alert = ''
-    if my_module.active? && !my_module.completed?
+    if !my_module.archived_branch? && !my_module.completed?
       alert = ' alert-yellow' if my_module.is_one_day_prior?
       alert = ' alert-red' if my_module.is_overdue?
     end
@@ -102,6 +102,8 @@ module MyModulesHelper
   end
 
   def my_module_due_status(my_module, datetime = DateTime.current)
+    return if my_module.archived_branch? || my_module.completed?
+
     if my_module.is_overdue?(datetime)
       I18n.t('my_modules.details.overdue')
     elsif my_module.is_one_day_prior?(datetime)
