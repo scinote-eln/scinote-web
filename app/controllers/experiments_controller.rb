@@ -305,12 +305,15 @@ class ExperimentsController < ApplicationController
       flash[:success] = t('experiments.move.success_flash',
                           experiment: @experiment.name)
       status = :ok
+      view_state = @experiment.current_view_state(current_user)
+      view_type = view_state.state['my_modules']['view_type'] || 'canvas'
+      path = view_mode_redirect_url(view_type)
     else
       message = service.errors.values.join(', ')
       status = :unprocessable_entity
     end
 
-    render json: { message: message }, status: status
+    render json: { message: message, path: path }, status: status
   end
 
   def move_modules_modal
