@@ -2068,7 +2068,9 @@ function cloneModule(originalModule, gridDistX, gridDistY, left, top) {
   var newModule = createVirtualModule();
   elLeft(newModule, left);
   elTop(newModule, top);
-  updateModuleHtml(newModule, id, originalModule.data("module-name"), gridDistX, gridDistY);
+  updateModuleHtml(newModule, id,
+                   `${I18n.t('experiments.canvas.edit.clone_prefix')} ${originalModule.data('module-name')}`,
+                   gridDistX, gridDistY);
   newModule.removeClass("new");
 
   // Add the cloned module id into the hidden input field
