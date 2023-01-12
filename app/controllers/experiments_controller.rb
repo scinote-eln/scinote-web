@@ -258,8 +258,7 @@ class ExperimentsController < ApplicationController
     if service.succeed?
       flash[:success] = t('experiments.clone.success_flash',
                           experiment: @experiment.name)
-      redirect_to canvas_experiment_path(service.cloned_experiment) if params[:view_mode] == 'canvas'
-      redirect_to table_experiment_path(service.cloned_experiment) if params[:view_mode] == 'table'
+      redirect_to canvas_experiment_path(service.cloned_experiment)
     else
       flash[:error] = t('experiments.clone.error_flash',
                         experiment: @experiment.name)
