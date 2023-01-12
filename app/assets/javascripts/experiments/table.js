@@ -1,5 +1,5 @@
 /* global I18n GLOBAL_CONSTANTS InfiniteScroll
-          initBSTooltips filterDropdown dropdownSelector Sidebar HelperModule */
+          initBSTooltips filterDropdown dropdownSelector Sidebar HelperModule notTurbolinksPreview */
 
 var ExperimnetTable = {
   permissions: ['editable', 'archivable', 'restorable', 'moveable'],
@@ -800,4 +800,6 @@ ExperimnetTable.filters.push({
   }
 });
 
-ExperimnetTable.init();
+if (notTurbolinksPreview()) {
+  ExperimnetTable.init();
+}
