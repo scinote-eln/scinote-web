@@ -8,11 +8,7 @@
         <%= render partial: 'projects/show/experiment_actions_dropdown.html.erb', locals: { experiment: experiment, view: 'cards', project: project } %>
       </div>
       <div class="panel-title">
-        <% if experiment.archived_branch? %>
-          <%= link_to experiment.name, module_archive_experiment_path(experiment) %>
-        <% else %>
-          <%= link_to experiment.name, canvas_experiment_path(experiment) %>
-        <% end %>
+        <%= link_to experiment.name, list_modules_experiment_pat(experiment) %>
       </div>
 
       <% if experiment.archived_branch? %>

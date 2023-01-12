@@ -95,10 +95,10 @@ module Experiments
     private
 
     def access_url(project, experiment, my_module)
-      if my_module.archived_branch?
-        access_permissions_project_experiment_my_module_path(project, experiment, my_module)
-      else
+      if can_manage_my_module?(@user, my_module)
         edit_access_permissions_project_experiment_my_module_path(project, experiment, my_module)
+      else
+        access_permissions_project_experiment_my_module_path(project, experiment, my_module)
       end
     end
 
@@ -225,9 +225,9 @@ module Experiments
     def sort_records(records)
       case @sort
       when 'due_first'
-        records.order(:due_date)
+        records.order(:due_date, :name)
       when 'due_last'
-        records.order(Arel.sql("COALESCE(due_date, DATE '1900-01-01') DESC"))
+        records.order(Arel.sql("COALESCE(due_date, DATE '2100-01-01') DESC"), :name)
       when 'atoz'
         records.order(:name)
       when 'ztoa'

@@ -31,7 +31,7 @@
 
     links.push({
       label: experiment.name,
-      url: canvas_experiment_path(experiment)
+      url: my_modules_experiment_path(experiment)
     }) if experiment
   %>
   <%= render partial: 'shared/breadcrumbs', locals: {links: links} %>

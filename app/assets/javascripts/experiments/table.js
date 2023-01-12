@@ -1,5 +1,5 @@
 /* global I18n GLOBAL_CONSTANTS InfiniteScroll
-          initBSTooltips filterDropdown dropdownSelector Sidebar HelperModule */
+          initBSTooltips filterDropdown dropdownSelector Sidebar HelperModule notTurbolinksPreview */
 
 var ExperimnetTable = {
   permissions: ['editable', 'archivable', 'restorable', 'moveable'],
@@ -189,11 +189,6 @@ var ExperimnetTable = {
   },
   restoreMyModules: function(url, ids) {
     $.post(url, { my_modules_ids: ids, view: 'table' });
-  },
-  initAccessModal: function() {
-    $('#manageTaskAccess').on('click', () => {
-      $(`.table-row[data-id="${this.selectedMyModules[0]}"] .open-access-modal`)[0].click();
-    });
   },
   initRenameModal: function() {
     $('#editTask').on('click', () => {
@@ -601,7 +596,6 @@ var ExperimnetTable = {
     this.initSorting(this);
     this.loadTable();
     this.initRenameModal();
-    this.initAccessModal();
     this.initDuplicateMyModules();
     this.initMoveModulesModal();
     this.initArchiveMyModules();
@@ -614,11 +608,17 @@ var ExperimnetTable = {
 };
 
 ExperimnetTable.render.task_name = function(data) {
+  let tooltip = ` title="${data.name}" data-toggle="tooltip" data-placement="bottom"`;
   if (data.provisioning_status === 'in_progress') {
-    return `<span data-full-name="${data.name}">${data.name}</span>`;
+    return `<span data-full-name="${data.name}" ${tooltip}>${data.name}</span>`;
   }
 
-  return `<a href="${data.url}" id="taskName${data.id}" data-full-name="${data.name}">${data.name}</a>`;
+  return `<a
+    href="${data.url}"
+    ${tooltip}
+    title="${data.name}"
+    id="taskName${data.id}"
+    data-full-name="${data.name}">${data.name}</a>`;
 };
 
 ExperimnetTable.render.id = function(data) {
@@ -800,4 +800,6 @@ ExperimnetTable.filters.push({
   }
 });
 
-ExperimnetTable.init();
+if (notTurbolinksPreview()) {
+  ExperimnetTable.init();
+}

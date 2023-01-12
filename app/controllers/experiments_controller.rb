@@ -46,7 +46,7 @@ class ExperimentsController < ApplicationController
                           experiment: @experiment.name)
       respond_to do |format|
         format.json do
-          render json: { path: canvas_experiment_url(@experiment) }, status: :ok
+          render json: { path: my_modules_experiment_url(@experiment) }, status: :ok
         end
       end
     else
@@ -103,7 +103,7 @@ class ExperimentsController < ApplicationController
     render json: Experiments::TableViewService.new(@experiment, my_modules, current_user, params).call
   end
 
-  def list_modules
+  def my_modules
     view_state = @experiment.current_view_state(current_user)
     view_type = view_state.state['my_modules']['view_type'] || 'canvas'
 
@@ -258,8 +258,7 @@ class ExperimentsController < ApplicationController
     if service.succeed?
       flash[:success] = t('experiments.clone.success_flash',
                           experiment: @experiment.name)
-      redirect_to canvas_experiment_path(service.cloned_experiment) if params[:view_mode] == 'canvas'
-      redirect_to table_experiment_path(service.cloned_experiment) if params[:view_mode] == 'table'
+      redirect_to canvas_experiment_path(service.cloned_experiment)
     else
       flash[:error] = t('experiments.clone.error_flash',
                         experiment: @experiment.name)
@@ -306,12 +305,15 @@ class ExperimentsController < ApplicationController
       flash[:success] = t('experiments.move.success_flash',
                           experiment: @experiment.name)
       status = :ok
+      view_state = @experiment.current_view_state(current_user)
+      view_type = view_state.state['my_modules']['view_type'] || 'canvas'
+      path = view_mode_redirect_url(view_type)
     else
       message = service.errors.values.join(', ')
       status = :unprocessable_entity
     end
 
-    render json: { message: message }, status: status
+    render json: { message: message, path: path }, status: status
   end
 
   def move_modules_modal
@@ -401,7 +403,11 @@ class ExperimentsController < ApplicationController
       format.json do
         render json: {
           html: render_to_string(
-            partial: 'shared/sidebar/my_modules.html.erb', locals: { experiment: @experiment, my_modules: my_modules }
+            partial: if params[:view_mode] == 'archived'
+                       'shared/sidebar/archived_my_modules.html.erb'
+                     else
+                       'shared/sidebar/my_modules.html.erb'
+                     end, locals: { experiment: @experiment, my_modules: my_modules }
           )
         }
       end
@@ -464,9 +470,13 @@ class ExperimentsController < ApplicationController
         new_my_module.update!(
           {
             provisioning_status: :in_progress,
-            name: my_module.next_clone_name
+            name: my_module.next_clone_name,
+            due_date: nil,
+            started_on: nil,
+            completed_on: nil
           }.merge(new_my_module.get_new_position)
         )
+        new_my_module.designated_users << current_user
         MyModules::CopyContentJob.perform_later(current_user, my_module.id, new_my_module.id)
       end
       @experiment.workflowimg.purge
@@ -564,7 +574,7 @@ class ExperimentsController < ApplicationController
                  project: link_to(@experiment.project.name,
                                   project_url(@experiment.project)),
                  experiment: link_to(@experiment.name,
-                                     canvas_experiment_url(@experiment)))
+                                     my_modules_experiment_url(@experiment)))
     )
   end
 
@@ -589,22 +599,24 @@ class ExperimentsController < ApplicationController
   end
 
   def view_mode_redirect_url(view_type)
-    if view_type == 'canvas'
-      return module_archive_experiment_path(@experiment) if @experiment.archived_branch? ||
-                                                            params[:view_mode] == 'archived'
-
-      canvas_experiment_path(@experiment)
+    if params[:view_mode] == 'archived' || @experiment.archived_branch?
+      case view_type
+      when 'canvas'
+        module_archive_experiment_path(@experiment)
+      else
+        table_experiment_path(@experiment, view_mode: :archived)
+      end
     else
-      table_experiment_path(@experiment, view_mode: params[:view_mode])
+      view_type == 'canvas' ? canvas_experiment_path(@experiment) : table_experiment_path(@experiment)
     end
   end
 
   def sort_my_modules(records, sort)
     case sort
     when 'due_first'
-      records.order(:due_date)
+      records.order(:due_date, :name)
     when 'due_last'
-      records.order(Arel.sql("COALESCE(due_date, DATE '1900-01-01') DESC"))
+      records.order(Arel.sql("COALESCE(due_date, DATE '2100-01-01') DESC"), :name)
     when 'atoz'
       records.order(:name)
     when 'ztoa'

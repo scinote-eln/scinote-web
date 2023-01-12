@@ -22,7 +22,7 @@
 
   <% if can_clone_experiment?(experiment) && !archived %>
     <li>
-      <%= link_to clone_modal_experiment_url(experiment, :view_mode=>action_name),
+      <%= link_to clone_modal_experiment_url(experiment),
                   remote: true, type: 'button',
                   class: 'clone-experiment' do %>
         <i class="fas fa-copy"></i>
