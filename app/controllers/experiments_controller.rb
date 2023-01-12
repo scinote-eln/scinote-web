@@ -466,11 +466,11 @@ class ExperimentsController < ApplicationController
       @my_modules.find_each do |my_module|
         new_my_module = my_module.dup
         new_my_module.my_module_status = MyModuleStatus.first
-        new_my_module.created_by = current_user
         new_my_module.update!(
           {
             provisioning_status: :in_progress,
             name: my_module.next_clone_name,
+            created_by: current_user,
             due_date: nil,
             started_on: nil,
             completed_on: nil
