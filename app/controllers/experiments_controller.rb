@@ -467,9 +467,13 @@ class ExperimentsController < ApplicationController
         new_my_module.update!(
           {
             provisioning_status: :in_progress,
-            name: my_module.next_clone_name
+            name: my_module.next_clone_name,
+            due_date: nil,
+            started_on: nil,
+            completed_on: nil
           }.merge(new_my_module.get_new_position)
         )
+        new_my_module.designated_users << current_user
         MyModules::CopyContentJob.perform_later(current_user, my_module.id, new_my_module.id)
       end
       @experiment.workflowimg.purge
