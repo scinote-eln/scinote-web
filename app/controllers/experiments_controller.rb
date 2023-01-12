@@ -90,6 +90,7 @@ class ExperimentsController < ApplicationController
 
   def table
     @project = @experiment.project
+    @experiment.current_view_state(current_user)
     @my_module_visible_table_columns = current_user.my_module_visible_table_columns
   end
 
