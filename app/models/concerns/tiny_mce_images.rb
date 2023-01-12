@@ -10,6 +10,7 @@ module TinyMceImages
              dependent: :destroy
 
     before_save :clean_tiny_mce_image_urls
+    before_save :extract_base64_images
 
     def prepare_for_report(field, base64_encoded_imgs = false)
       description = self[field]
@@ -161,6 +162,43 @@ module TinyMceImages
         image_changed = true
       end
       self[object_field] = parsed_description.to_html if image_changed
+    end
+
+    def extract_base64_images
+      # extracts and uploads any base64 encoded images,
+      # so they get stored as files instead of directly in the text
+
+      object_field = Extends::RICH_TEXT_FIELD_MAPPINGS[self.class.name]
+
+      text = public_send(object_field)
+
+      return unless text
+
+      ActiveRecord::Base.transaction do
+        text.scan(/src="(data:image\/[^;]+;base64[^"]+)"/i).flatten.each do |base64_src|
+          base64_data = base64_src.split('base64,').last
+
+          tiny_image = TinyMceAsset.create!(
+            team: @team,
+            object: self,
+            saved: true
+          )
+
+          tiny_image.image.attach(
+            io: StringIO.new(Base64.decode64(base64_data)),
+            filename: SecureRandom.hex(32)
+          )
+
+          encoded_id = Base62.encode(tiny_image.id)
+
+          text.gsub!(
+            "#{base64_src}\"",
+            "\" data-mce-token=\"#{encoded_id}\" alt=\"description-#{encoded_id}\""
+          )
+        end
+
+        assign_attributes(object_field => text)
+      end
     end
   end
 end

@@ -1,7 +1,6 @@
 class Step < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
-  include TinyMceImages
   include ViewableModel
 
   attr_accessor :skip_position_adjust # to be used in bulk deletion

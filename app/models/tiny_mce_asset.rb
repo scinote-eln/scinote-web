@@ -21,7 +21,14 @@ class TinyMceAsset < ApplicationRecord
   validates :estimated_size, presence: true
 
   def self.update_images(object, images, current_user)
-    images = JSON.parse(images)
+    # image ids that are present in text
+    text_images =
+      object.public_send(Extends::RICH_TEXT_FIELD_MAPPINGS[self.class.name])
+            .scan(/data-mce-token="([^"]+)"/)
+            .flatten
+
+    images = JSON.parse(images) + text_images
+
     current_images = object.tiny_mce_assets.pluck(:id)
     images_to_delete = current_images.reject do |x|
       (images.include? Base62.encode(x))
