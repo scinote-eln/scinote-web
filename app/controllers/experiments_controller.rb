@@ -613,9 +613,9 @@ class ExperimentsController < ApplicationController
   def sort_my_modules(records, sort)
     case sort
     when 'due_first'
-      records.order(:due_date)
+      records.order(:due_date, :name)
     when 'due_last'
-      records.order(Arel.sql("COALESCE(due_date, DATE '1900-01-01') DESC"))
+      records.order(Arel.sql("COALESCE(due_date, DATE '2100-01-01') DESC"), :name)
     when 'atoz'
       records.order(:name)
     when 'ztoa'
