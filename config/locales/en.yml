@@ -852,6 +852,7 @@ en:
         unsupported_key: "Key %{key} is not supported by this label template renderer."
         column_not_found: "This Label template contains placeholders for inventory columns that are not present in this Inventory. Some data might not be printed on the label. Please check the label preview and label template before printing."
         logo_not_supported: "The company logo cannot be printed on the label, as it is not set up in your SciNote. Please upload company logo in Settings."
+        logo_params_error: 'Failed to parse logo parameters!'
     index:
       head_title: 'Label templates'
       search_templates: 'Filter templates'
