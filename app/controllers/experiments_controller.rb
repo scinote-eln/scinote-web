@@ -442,10 +442,9 @@ class ExperimentsController < ApplicationController
       next unless can_archive_my_module?(my_module)
 
       my_module.transaction do
-        src_tasks = get_src_my_modules(my_module)
-        dest_tasks = get_dest_my_modules(my_module)
+        connect_my_modules_before_archive(my_module)
+
         my_module.archive!(current_user)
-        generate_two_by_two_connections(src_tasks, dest_tasks)
         log_my_module_activity(:archive_module, my_module)
         counter += 1
       rescue StandardError => e
@@ -634,21 +633,13 @@ class ExperimentsController < ApplicationController
     end
   end
 
-  def generate_two_by_two_connections(src_tasks, dest_tasks)
-    return if src_tasks.empty? || dest_tasks.empty?
+  def connect_my_modules_before_archive(my_module)
+    return if my_module.my_modules.empty? || my_module.my_module_antecessors.empty?
 
-    src_tasks.each do |src|
-      dest_tasks.each do |dest|
-        Connection.create!(input_id: dest.id, output_id: src.id)
+    my_module.my_modules.each do |destination_my_module|
+      my_module.my_module_antecessors.each do |source_my_module|
+        Connection.create!(input_id: destination_my_module.id, output_id: source_my_module.id)
       end
     end
-  end
-
-  def get_dest_my_modules(my_module)
-    MyModule.find(Connection.where('output_id = ?', my_module.id).pluck('input_id as id'))
-  end
-
-  def get_src_my_modules(my_module)
-    MyModule.find(Connection.where('input_id = ?', my_module.id).pluck('output_id as id'))
   end
 end
