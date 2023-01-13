@@ -636,6 +636,7 @@ class ExperimentsController < ApplicationController
 
   def generate_two_by_two_connections(src_tasks, dest_tasks)
     return if src_tasks.empty? || dest_tasks.empty?
+
     src_tasks.each do |src|
       dest_tasks.each do |dest|
         Connection.create!(input_id: dest.id, output_id: src.id)
