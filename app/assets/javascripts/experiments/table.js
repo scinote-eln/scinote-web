@@ -487,20 +487,11 @@ var ExperimnetTable = {
     this.filterDropdown.on('filter:apply', () => {
       $.each(this.filters, (_i, filter) => {
         this.activeFilters[filter.name] = filter.apply($experimentFilter);
-
-        // Prompt empty state when theres no filtered results
-        let values = Object.values(this.activeFilters);
-        let anyFilter = values.every(value => /^\s+$/.test(value) || value === null || value === undefined || value?.length === 0);
-        setTimeout(() => {
-          var tableRowLength = document.getElementsByClassName('table-row').length;
-          var emptyState = document.getElementById('tasksNoResultsContainer');
-          if (tableRowLength === 0 && !anyFilter) {
-            emptyState.style.display = 'block';
-          } else {
-            emptyState.style.display = 'none';
-          }
-         }, 250)
       });
+      
+      // filters are active if they have any non-empty value
+      let filtersEmpty = Object.values(this.activeFilters).every(value => /^\s+$/.test(value) || value === null || value === undefined || value && value.length === 0);
+      this.filtersActive = !filtersEmpty;
 
       filterDropdown.toggleFilterMark(
         this.filterDropdown,
@@ -542,6 +533,8 @@ var ExperimnetTable = {
       $(this.table).find('.table-row-placeholder, .table-row-placeholder-divider').remove();
       this.appendRows(result.data);
       this.initDueDatePicker(result.data);
+      this.handleNoResults();
+
       InfiniteScroll.init(this.table, {
         url: dataUrl,
         eventTarget: window,
@@ -571,6 +564,15 @@ var ExperimnetTable = {
     this.provisioningMyModulesCount = provisioningStatusUrls.length;
 
     if (this.provisioningMyModulesCount > 0) this.pollProvisioningStatuses(provisioningStatusUrls);
+  },
+  handleNoResults: function() {
+    let tableRowLength = document.getElementsByClassName('table-row').length;
+    let noResultsContainer = document.getElementById('tasksNoResultsContainer');
+    if (this.filtersActive && tableRowLength === 0) {
+      noResultsContainer.style.display = 'block';
+    } else {
+      noResultsContainer.style.display = 'none';
+    }
   },
   pollProvisioningStatuses: function(provisioningStatusUrls) {
     let remainingUrls = [];
