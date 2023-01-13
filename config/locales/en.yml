@@ -970,6 +970,7 @@ en:
       start_date: "Start date:"
       no_start_date_placeholder: "+ Add starting date"
       due_date: "Due date:"
+      completed_date: "Completed date:"
       no_due_date_placeholder: "+ Add due date"
       overdue: "Overdue"
       due_soon: "Due soon"
