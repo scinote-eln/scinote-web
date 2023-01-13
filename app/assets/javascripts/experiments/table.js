@@ -620,7 +620,7 @@ var ExperimnetTable = {
 ExperimnetTable.render.task_name = function(data) {
   let tooltip = ` title="${data.name}" data-toggle="tooltip" data-placement="bottom"`;
   if (data.provisioning_status === 'in_progress') {
-    return `<span data-full-name="${data.name}" ${tooltip}>${data.name}</span>`;
+    return `<span data-full-name="${data.name}">${data.name}</span>`;
   }
 
   return `<a
