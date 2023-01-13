@@ -435,7 +435,10 @@ class ExperimentsController < ApplicationController
       next unless can_archive_my_module?(my_module)
 
       my_module.transaction do
+        src_tasks = get_src_my_modules(my_module)
+        dest_tasks = get_dest_my_modules(my_module)
         my_module.archive!(current_user)
+        generate_two_by_two_connections(src_tasks, dest_tasks)
         log_my_module_activity(:archive_module, my_module)
         counter += 1
       rescue StandardError => e
@@ -505,7 +508,7 @@ class ExperimentsController < ApplicationController
   def check_read_permissions
     current_team_switch(@experiment.project.team) if current_team != @experiment.project.team
     render_403 unless can_read_experiment?(@experiment) ||
-                      @experiment.archived? && can_read_archived_experiment?(@experiment)
+                      (@experiment.archived? && can_read_archived_experiment?(@experiment))
   end
 
   def check_canvas_read_permissions
@@ -615,5 +618,22 @@ class ExperimentsController < ApplicationController
     else
       records
     end
+  end
+
+  def generate_two_by_two_connections(src_tasks, dest_tasks)
+    return if src_tasks.empty? || dest_tasks.empty?
+    src_tasks.each do |src|
+      dest_tasks.each do |dest|
+        Connection.create!(input_id: dest.id, output_id: src.id)
+      end
+    end
+  end
+
+  def get_dest_my_modules(my_module)
+    MyModule.find(Connection.where('output_id = ?', my_module.id).pluck('input_id as id'))
+  end
+
+  def get_src_my_modules(my_module)
+    MyModule.find(Connection.where('input_id = ?', my_module.id).pluck('output_id as id'))
   end
 end
