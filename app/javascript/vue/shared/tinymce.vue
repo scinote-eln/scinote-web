@@ -151,7 +151,9 @@
       },
       wrapTables() {
         this.$nextTick(() => {
-          $(this.$el).find('.tinymce-view table').css('float', 'none').wrapAll('<div style="overflow: auto"></div>');
+          $(this.$el).find('.tinymce-view table').toArray().forEach((table) => {
+            $(table).css('float', 'none').wrapAll('<div style="overflow: auto"></div>');
+          })
         });
       },
       initCharacterCount() {
