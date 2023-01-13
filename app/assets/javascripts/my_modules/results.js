@@ -140,7 +140,6 @@
     function processResult(ev, resultTypeEnum) {
       var $form = $(ev.target.form);
       $form.clearFormErrors();
-
       textValidator(ev, $form.find('#result_name'), 0, GLOBAL_CONSTANTS.NAME_MAX_LENGTH);
 
       switch (resultTypeEnum) {

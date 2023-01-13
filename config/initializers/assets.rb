@@ -113,3 +113,6 @@ Rails.application.config.assets.precompile += %w(ruleJS.js)
 Rails.application.config.assets.precompile += %w(handsontable.formula.js)
 Rails.application.config.assets.precompile += %w(handsontable.formula.css)
 Rails.application.config.assets.precompile += %w(big.min.js)
+
+# JQuery related includes
+Rails.application.config.assets.precompile += %w(jquery_bundle.js)
