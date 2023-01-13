@@ -27,6 +27,7 @@ class Step < ApplicationRecord
   # conditional touch excluding step completion updates
   after_destroy :touch_protocol
   after_save :touch_protocol
+  after_touch :touch_protocol
 
   belongs_to :user, inverse_of: :steps
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User', optional: true
