@@ -20,6 +20,20 @@
   </div>
 </div>
 
+<% if @my_module.completed? %>
+  <div class="flex-block date-block" >
+    <div class="flex-block-label">
+      <span class="fas block-icon fa-calendar-day"></span>
+      <span class="hidden-xs hidden-sm  hidden-md"><%= t('my_modules.details.completed_date') %></span>
+    </div>
+    <div class="datetime-container">
+      <span class="date-text">
+        <%= l(@my_module.completed_on, format: :full) %>
+      </span>
+    </div>
+  </div>
+<% end %>
+
 <div class="module-tags">
   <div class="tags-wrapper">
     <span class="fas block-icon fa-users"></span>

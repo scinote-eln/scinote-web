@@ -39,6 +39,13 @@ GIT
     devise-async (0.10.2)
       devise (>= 4.0)
 
+GIT
+  remote: https://github.com/scinote-eln/img2zpl
+  revision: 23d61cfc3e90ac4caa62dd08546fa0d7590a5140
+  specs:
+    img2zpl (1.0.1)
+      mini_magick (~> 4.9)
+
 GEM
   remote: http://rubygems.org/
   specs:

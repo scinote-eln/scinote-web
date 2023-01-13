@@ -897,6 +897,12 @@ en:
         nothing_found: 'Nothing found…'
         field_code: 'Field code: %{code}'
         search_placeholder: 'Type to search…'
+        logo_modal:
+          title: 'Insert logo into the label'
+          description: 'Please specify width or height, another dimension will adjust proportionally'
+          width: 'Width (%{unit})'
+          height: 'Height (%{unit})'
+          insert: 'Insert'
       buttons:
         refresh: 'Refresh preview'
         save: 'Save template code'
@@ -970,6 +976,7 @@ en:
       start_date: "Start date:"
       no_start_date_placeholder: "+ Add starting date"
       due_date: "Due date:"
+      completed_date: "Completed date:"
       no_due_date_placeholder: "+ Add due date"
       overdue: "Overdue"
       due_soon: "Due soon"
@@ -1399,27 +1406,27 @@ en:
       canvas_empty: "It's empty here. Please add some tasks"
       new_my_module: "New task"
       new_my_module_modal:
-        title: "Add a new task"
+        title: "Create new task"
         name: "Task name"
-        name_placeholder: "e.g. My task"
+        name_placeholder: "Enter…"
         due_date: "Due date (optional)"
-        due_date_placeholder: "+ Add due date"
+        due_date_placeholder: "Add due date"
         assigned_tags_label: "Add tags (optional)"
-        assigned_tags_placeholder: "Select tags for your task"
+        assigned_tags_placeholder: "Add tags"
         assigned_users: "Assign task to (optional)"
-        assigned_users_placeholder: "Select users"
-        tags: "Add tags (optional)"
-        create: "Create"
-        enter_placeholder: 'Enter...'
+        assigned_users_placeholder: "Assign task to a project member"
+        create: "Create task"
       zoom: "Zoom: "
       reload_on_submit: "Save action is running. Reloading this page may cause unexpected behavior."
       modal_manage_tags:
-        head_title: "Manage tags for"
+        head_title: "Manage tags"
         subtitle: "Showing tags of task %{module}"
         no_tags: "No tags!"
         edit_tag: "Edit tag."
         remove_tag: "Remove tag from task %{module}."
         delete_tag: "Permanently delete tag from all tasks."
+        delete_tag_confirmation: "Deleting a tag will remove it from all tagged tasks. Are you sure you wish to continue?"
+        explanatory_text: "Add a set of tags to mark the tasks inside this project. Changing the tag applies to all tagged tasks. Deleting a tag removes it from all tagged tasks."
         save_tag: "Save tag."
         cancel_tag: "Cancel changes to the tag."
         create: "Add"
@@ -1437,17 +1444,18 @@ en:
         options_header: "Options"
         edit_module: "Rename task"
         task_access: "Task access"
-        clone_module: "Copy task as template (only Protocols steps copied)"
-        clone_module_group: "Copy workflow as template (only Protocols steps copied)"
+        clone_module: "Duplicate task as template (only Protocols steps duplicated)"
+        clone_module_group: "Duplicate workflow as template (only Protocols steps duplicated)"
+        clone_prefix: "Clone -"
         move_module: "Move task to another experiment"
         move_module_group: "Move workflow to another experiment"
         delete_module: "Archive task"
         delete_module_group: "Archive workflow"
         modal_new_module:
-          title: "Add new task"
+          title: "Create new task"
           name: "Task name"
           name_placeholder: "My task"
-          confirm: "Add"
+          confirm: "Create task"
         modal_edit_module:
           title: "Rename task"
           name: "Task name"

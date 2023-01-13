@@ -23,6 +23,7 @@ class ChecklistItem < ApplicationRecord
   # conditional touch excluding checked updates
   after_destroy :touch_checklist
   after_save :touch_checklist
+  after_touch :touch_checklist
 
   private
 

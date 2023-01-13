@@ -240,7 +240,7 @@ class MyModuleRepositoriesController < ApplicationController
                user: current_user.full_name),
       message: t('notifications.my_module_consumption_comment_annotation_message_html',
                  project: link_to(@my_module.experiment.project.name, project_url(@my_module.experiment.project)),
-                 experiment: link_to(@my_module.experiment.name, canvas_experiment_url(@my_module.experiment)),
+                 experiment: link_to(@my_module.experiment.name, my_modules_experiment_url(@my_module.experiment)),
                  my_module: link_to(@my_module.name, protocols_my_module_url(@my_module)))
     )
   end

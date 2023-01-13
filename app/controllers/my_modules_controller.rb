@@ -51,6 +51,14 @@ class MyModulesController < ApplicationController
         @my_module.designated_users << @experiment.users.where(id: my_module_designated_users_params[:user_ids])
       end
       @my_module.save!
+      Activities::CreateActivityService.call(
+        activity_type: :create_module,
+        owner: current_user,
+        team: @my_module.experiment.project.team,
+        project: @my_module.experiment.project,
+        subject: @my_module,
+        message_items: { my_module: @my_module.id }
+      )
       redirect_to canvas_experiment_path(@experiment) if params[:my_module][:view_mode] == 'canvas'
     rescue ActiveRecord::RecordInvalid
       render json: @my_module.errors, status: :unprocessable_entity
@@ -579,7 +587,7 @@ class MyModulesController < ApplicationController
                user: current_user.full_name),
       message: t('notifications.my_module_description_annotation_message_html',
                  project: link_to(@my_module.experiment.project.name, project_url(@my_module.experiment.project)),
-                 experiment: link_to(@my_module.experiment.name, canvas_experiment_url(@my_module.experiment)),
+                 experiment: link_to(@my_module.experiment.name, my_modules_experiment_url(@my_module.experiment)),
                  my_module: link_to(@my_module.name, protocols_my_module_url(@my_module)))
     )
   end
@@ -593,7 +601,7 @@ class MyModulesController < ApplicationController
                user: current_user.full_name),
       message: t('notifications.my_module_protocol_annotation_message_html',
                  project: link_to(@my_module.experiment.project.name, project_url(@my_module.experiment.project)),
-                 experiment: link_to(@my_module.experiment.name, canvas_experiment_url(@my_module.experiment)),
+                 experiment: link_to(@my_module.experiment.name, my_modules_experiment_url(@my_module.experiment)),
                  my_module: link_to(@my_module.name, protocols_my_module_url(@my_module)))
     )
   end
