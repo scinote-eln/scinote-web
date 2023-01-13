@@ -51,6 +51,14 @@ class MyModulesController < ApplicationController
         @my_module.designated_users << @experiment.users.where(id: my_module_designated_users_params[:user_ids])
       end
       @my_module.save!
+      Activities::CreateActivityService.call(
+        activity_type: :create_module,
+        owner: current_user,
+        team: @my_module.experiment.project.team,
+        project: @my_module.experiment.project,
+        subject: @my_module,
+        message_items: { my_module: @my_module.id }
+      )
       redirect_to canvas_experiment_path(@experiment) if params[:my_module][:view_mode] == 'canvas'
     rescue ActiveRecord::RecordInvalid
       render json: @my_module.errors, status: :unprocessable_entity
