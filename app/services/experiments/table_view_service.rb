@@ -95,7 +95,7 @@ module Experiments
     private
 
     def access_url(project, experiment, my_module)
-      if can_manage_my_module?(@user, my_module)
+      if can_manage_my_module_users?(@user, my_module)
         edit_access_permissions_project_experiment_my_module_path(project, experiment, my_module)
       else
         access_permissions_project_experiment_my_module_path(project, experiment, my_module)
