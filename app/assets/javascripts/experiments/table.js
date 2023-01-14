@@ -196,7 +196,8 @@ var ExperimnetTable = {
       $('#modal-edit-module').data('id', this.selectedMyModules[0]);
       $('#edit-module-name-input').val($(`#taskName${$('#modal-edit-module').data('id')}`).data('full-name'));
     });
-    $('#modal-edit-module').on('click', 'button[data-action="confirm"]', () => {
+
+    const handleRenameModal = () => {
       let id = $('#modal-edit-module').data('id');
       let newValue = $('#edit-module-name-input').val();
 
@@ -227,6 +228,13 @@ var ExperimnetTable = {
       });
 
       return true;
+    };
+
+    $('#modal-edit-module').on('click', 'button[data-action="confirm"]', handleRenameModal);
+
+    $('#modal-edit-module').find('form').submit((e) => {
+      e.preventDefault();
+      handleRenameModal();
     });
   },
   initManageUsersDropdown: function() {
@@ -488,7 +496,7 @@ var ExperimnetTable = {
       $.each(this.filters, (_i, filter) => {
         this.activeFilters[filter.name] = filter.apply($experimentFilter);
       });
-      
+
       // filters are active if they have any non-empty value
       let filtersEmpty = Object.values(this.activeFilters).every(value => /^\s+$/.test(value) || value === null || value === undefined || value && value.length === 0);
       this.filtersActive = !filtersEmpty;
