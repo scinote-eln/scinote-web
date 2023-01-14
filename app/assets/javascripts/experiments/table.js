@@ -227,6 +227,10 @@ var ExperimnetTable = {
         }
       });
 
+      if ($(`.my-module-selector[data-my-module="${id}"]`).prop('checked')) {
+        $(`.my-module-selector[data-my-module="${id}"]`).click();
+      }
+
       return true;
     };
 
