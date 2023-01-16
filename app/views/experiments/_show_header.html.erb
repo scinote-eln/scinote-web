@@ -20,6 +20,18 @@
       <% end %>
     </h1>
     <div class="header-actions experiment-header">
+      <% if can_manage_experiment?(@experiment) || can_clone_experiment?(@experiment)  %>
+        <!-- experiment actions -->
+        <span class="dropdown actions-button">
+          <button class="btn btn-light dropdown-toggle" type="button" id="exActionsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <span class="hidden-xs"><%= t('experiments.canvas.actions') %></span>
+            <span class="visible-xs-inline"><i class="fas fa-sort"></i></span>
+            <span class="caret"></span>
+          </button>
+          <%= render partial: 'experiments/dropdown_actions.html.erb',
+                              locals: { project: @project, experiment: @experiment, action_name: action_name } %>
+      </span>
+      <% end %>
       <%= render layout: 'shared/view_switch', locals: { disabled: false } do %>
           <% if params[:view_mode] == 'archived' || params[:action] == "module_archive" %>
             <li class="form-dropdown-item">
@@ -88,18 +100,6 @@
               <% end %>
             </li>
           <% end %>
-      <% end %>
-      <% if can_manage_experiment?(@experiment) || can_clone_experiment?(@experiment)  %>
-        <!-- experiment actions -->
-        <span class="dropdown actions-button">
-          <button class="btn btn-light dropdown-toggle" type="button" id="exActionsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            <span class="hidden-xs"><%= t('experiments.canvas.actions') %></span>
-            <span class="visible-xs-inline"><i class="fas fa-sort"></i></span>
-            <span class="caret"></span>
-          </button>
-          <%= render partial: 'experiments/dropdown_actions.html.erb',
-                              locals: { project: @project, experiment: @experiment, action_name: action_name } %>
-        </span>
       <% end %>
       <% if action_name == 'table' %>
         <%= render partial: 'table_filters.html.erb' %>
