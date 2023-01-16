@@ -53,26 +53,26 @@
               </div>
             </div>
           </div>
-
-          <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-              <label><%= t('experiments.canvas.new_my_module_modal.assigned_users') %></label>
-              <%= select_tag 'my_module[user_ids]',
-                            options_for_select(users.map{ |user|
-                              [
-                                user.full_name,
-                                user.id,
-                                {'data-params' => {avatar_url: avatar_path(user, :icon_small) }.to_json}
-                              ]
-                            }),
-                            data: {
-                              'placeholder': t('experiments.canvas.new_my_module_modal.assigned_users_placeholder')
-                            },
-                            multiple: true
-              %>
+          <% if can_manage_my_module_designated_users?(@my_module)%>
+            <div class="row">
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <label><%= t('experiments.canvas.new_my_module_modal.assigned_users') %></label>
+                <%= select_tag 'my_module[user_ids]',
+                              options_for_select(users.map{ |user|
+                                [
+                                  user.full_name,
+                                  user.id,
+                                  {'data-params' => {avatar_url: avatar_path(user, :icon_small) }.to_json}
+                                ]
+                              }),
+                              data: {
+                                'placeholder': t('experiments.canvas.new_my_module_modal.assigned_users_placeholder')
+                              },
+                              multiple: true
+                %>
+              </div>
             </div>
-          </div>
-
+          <% end %>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">
