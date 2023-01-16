@@ -459,3 +459,12 @@
     }
   }
 }
+
+
+@media (max-width: 1000px) { 
+  .toolbar-row {
+    .button-text {
+      display: none;
+    }
+  }
+}
