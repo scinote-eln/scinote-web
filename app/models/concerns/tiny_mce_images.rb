@@ -169,10 +169,9 @@ module TinyMceImages
       # so they get stored as files instead of directly in the text
 
       object_field = Extends::RICH_TEXT_FIELD_MAPPINGS[self.class.name]
+      return unless object_field
 
       text = public_send(object_field)
-
-      return unless text
 
       ActiveRecord::Base.transaction do
         text.scan(/src="(data:image\/[^;]+;base64[^"]+)"/i).flatten.each do |base64_src|
