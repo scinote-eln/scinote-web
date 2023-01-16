@@ -11,10 +11,18 @@
     // Modal's submit handler function
     $(experimentWrapper)
       .on('ajax:success', newMyModuleModal, function() {
+        $(this).find('sci-input-container').removeClass('error');
         $(newMyModuleModal).modal('hide');
       })
       .on('ajax:error', newMyModuleModal, function(ev, data) {
-        $(this).renderFormErrors('my_module', data.responseJSON);
+        let errors = data.responseJSON;
+        $(this).find('sci-input-container').removeClass('error');
+        if (errors.name) {
+          $(this).find('#my_module_name')
+            .parent()
+            .addClass('error')
+            .attr('data-error-text', errors.name.join(', '));
+        }
       })
       .on('submit', newMyModuleModal, function() {
         // To submit correct assigned user ids to new modal

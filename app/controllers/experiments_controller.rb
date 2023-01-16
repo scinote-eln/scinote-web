@@ -474,6 +474,7 @@ class ExperimentsController < ApplicationController
             created_by: current_user,
             due_date: nil,
             started_on: nil,
+            state: 'uncompleted',
             completed_on: nil
           }.merge(new_my_module.get_new_position)
         )
