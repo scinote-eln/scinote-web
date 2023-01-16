@@ -134,6 +134,11 @@
     },
     mounted() {
       $.get(this.labelTemplate.attributes.urls.fields, (result) => {
+        result.default.map((value) =>  {
+          value.key = this.i18n.t(`label_templates.default_columns.${value.key}`)
+          return value;
+        });
+  
         this.fields = result;
         this.$nextTick(() => {
           $('[data-toggle="tooltip"]').tooltip();
