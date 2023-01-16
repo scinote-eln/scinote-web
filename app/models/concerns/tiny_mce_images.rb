@@ -172,6 +172,7 @@ module TinyMceImages
       return unless object_field
 
       text = public_send(object_field)
+      return unless text
 
       ActiveRecord::Base.transaction do
         text.scan(/src="(data:image\/[^;]+;base64[^"]+)"/i).flatten.each do |base64_src|
