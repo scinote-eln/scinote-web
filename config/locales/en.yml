@@ -1382,9 +1382,9 @@ en:
         name: 'Task name'
         due_date: 'Due date'
         status: 'Status'
-        status_placeholder: 'Select task flow status'
+        status_placeholder: 'Select task status'
         assigned: 'Assigned to'
-        assigned_placeholder: 'Select user'
+        assigned_placeholder: 'Select a person assigned to a task'
       view:
         canvas: 'Canvas'
         table: 'Table'
