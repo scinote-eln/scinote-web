@@ -15,9 +15,10 @@ module LabelTemplates
     end
 
     def tags
+      custom_common_columns = repository_tags.present? ? repository_tags.pluck(:tags).reduce(:&) : []
       {
         default: DEFAULT_COLUMNS,
-        common: common_columns + repository_tags.pluck(:tags).reduce(:&),
+        common: common_columns + custom_common_columns,
         repositories: repository_tags
       }
     end
