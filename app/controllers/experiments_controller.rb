@@ -442,6 +442,8 @@ class ExperimentsController < ApplicationController
       next unless can_archive_my_module?(my_module)
 
       my_module.transaction do
+        connect_my_modules_before_archive(my_module)
+
         my_module.archive!(current_user)
         log_my_module_activity(:archive_module, my_module)
         counter += 1
@@ -517,7 +519,7 @@ class ExperimentsController < ApplicationController
   def check_read_permissions
     current_team_switch(@experiment.project.team) if current_team != @experiment.project.team
     render_403 unless can_read_experiment?(@experiment) ||
-                      @experiment.archived? && can_read_archived_experiment?(@experiment)
+                      (@experiment.archived? && can_read_archived_experiment?(@experiment))
   end
 
   def check_canvas_read_permissions
@@ -628,6 +630,16 @@ class ExperimentsController < ApplicationController
       records.order(Arel.sql('COALESCE(my_modules.archived_on, my_modules.archived_on) DESC'))
     else
       records
+    end
+  end
+
+  def connect_my_modules_before_archive(my_module)
+    return if my_module.my_modules.empty? || my_module.my_module_antecessors.empty?
+
+    my_module.my_modules.each do |destination_my_module|
+      my_module.my_module_antecessors.each do |source_my_module|
+        Connection.create!(input_id: destination_my_module.id, output_id: source_my_module.id)
+      end
     end
   end
 end
