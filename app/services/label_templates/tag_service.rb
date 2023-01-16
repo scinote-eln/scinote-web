@@ -9,8 +9,9 @@ module LabelTemplates
       { key: 'added_by', tag: '{{ADDED_BY}}' }
     ].freeze
 
-    def initialize(team)
+    def initialize(team, label_template)
       @team = team
+      @label_template = label_template
     end
 
     def tags

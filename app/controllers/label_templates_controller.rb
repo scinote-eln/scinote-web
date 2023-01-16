@@ -7,7 +7,7 @@ class LabelTemplatesController < ApplicationController
   before_action :check_view_permissions, except: %i(create duplicate set_default delete update)
   before_action :check_manage_permissions, only: %i(create duplicate set_default delete update)
   before_action :load_label_templates, only: %i(index datatable)
-  before_action :load_label_template, only: %i(show set_default update)
+  before_action :load_label_template, only: %i(show set_default update template_tags)
 
   layout 'fluid'
 
@@ -125,7 +125,7 @@ class LabelTemplatesController < ApplicationController
   end
 
   def template_tags
-    render json: LabelTemplates::TagService.new(current_team).tags
+    render json: LabelTemplates::TagService.new(current_team, @label_template).tags
   end
 
   def zpl_preview
