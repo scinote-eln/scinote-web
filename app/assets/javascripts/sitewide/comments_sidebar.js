@@ -20,6 +20,7 @@ var CommentsSidebar = (function() {
         $(SIDEBAR).find('.comment-input-container').removeClass('hidden');
       } else {
         $(SIDEBAR).find('.comment-input-container').addClass('hidden');
+        $(SIDEBAR).find('.comment-input-container').addClass('update-only');
       }
     });
   }
@@ -29,6 +30,7 @@ var CommentsSidebar = (function() {
     if (commentsCounter.length) {
       // Replace the number in comment element
       commentsCounter.text(commentsCounter.text().replace(/[\d\\+]+/g, commentsAmount));
+      commentsCounter.removeClass('hidden');
     }
   }
 
@@ -87,6 +89,9 @@ var CommentsSidebar = (function() {
           }
           $(SIDEBAR).find('.comment-input-field').val('');
           $(SIDEBAR).find('.sidebar-footer').removeClass('update');
+          if ($(SIDEBAR).find('.comment-input-container').hasClass('update-only')) {
+            $(SIDEBAR).find('.comment-input-container').addClass('hidden');
+          }
           $('.error-container').empty();
           updateCounter();
         },
@@ -101,6 +106,9 @@ var CommentsSidebar = (function() {
     $(document).on('click', `${SIDEBAR} .cancel-button`, function() {
       $(SIDEBAR).find('.comment-input-field').val('');
       $(SIDEBAR).find('.sidebar-footer').removeClass('update');
+      if ($(SIDEBAR).find('.comment-input-container').hasClass('update-only')) {
+        $(SIDEBAR).find('.comment-input-container').addClass('hidden');
+      }
     });
   }
 
@@ -128,6 +136,9 @@ var CommentsSidebar = (function() {
       $('.comment-container').removeClass('edit');
       $(this).closest('.comment-container').addClass('edit');
       $(SIDEBAR).find('.sidebar-footer').addClass('update');
+      if ($(SIDEBAR).find('.comment-input-container').hasClass('hidden')) {
+        $(SIDEBAR).find('.comment-input-container').removeClass('hidden');
+      }
       $(SIDEBAR).find('.comment-input-field')
         .val($(this).data('comment-raw'))
         .data('update-url', $(this).data('update-url'));
