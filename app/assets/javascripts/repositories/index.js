@@ -60,7 +60,7 @@
           orderable: false,
           render: function() {
             return `<div class="sci-checkbox-container">
-                      <input title="repository row selector checkbox ${data[0][1]}" class='repository-row-selector sci-checkbox' type='checkbox'>
+                      <input onclick="checkedTitles()" title="repository row selector checkbox ${data[0][1]}" class='repository-row-selector sci-checkbox' type='checkbox'>
                       <span class='sci-checkbox-label'></span>
                     </div>`;
           }
@@ -128,6 +128,9 @@
           if (CHECKBOX_SELECTOR) CHECKBOX_SELECTOR.checkRowStatus(row);
         }
       });
+      var dataTablesEmpty = document.getElementsByClassName('dataTables_empty')[0];
+      if (dataTablesEmpty)
+        dataTablesEmpty.title = dataTablesEmpty.innerText
     });
   }
 

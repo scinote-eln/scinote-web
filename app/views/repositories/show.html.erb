@@ -126,3 +126,25 @@
 <script type="text/javascript" charset="utf-8">
   var formatJS = "<%= datetime_picker_format_date_only %>"
 </script>
+
+<script>
+  document.addEventListener("click", function(event) {
+      if (event.target.matches("input[type='checkbox']")) {
+        var checkedRows = checkedRows = document.querySelectorAll("tr td input[type='checkbox']:checked");
+        var checkedNames = []
+        for (var i = 0; i < checkedRows.length; i++) {
+          checkedNames.push(checkedRows[i].parentElement.parentElement.parentElement.getElementsByClassName('record-info-link')[0].innerText);
+        }
+        $('#exportRepositoriesButton').find('.button-text').prop('title', `Export these items: ${checkedNames}`)
+        $('#toolbarPrintLabel').find('.button-text').prop('title', `Print label these items: ${checkedNames}`)
+        $('#restoreRepositoryRecords').find('.button-text').prop('title', `Restore these items: ${checkedNames}`)
+        $('#deleteRepositoryRecords').find('.button-text').prop('title', `Delete these items: ${checkedNames}`)
+        $('#archiveRepositoryRecordsButton').find('.button-text').prop('title', `Archive these items: ${checkedNames}`)
+        $('#copyRepositoryRecords').find('.button-text').prop('title', `Copy these items: ${checkedNames}`)
+        $('#editRepositoryRecord').find('.button-text').prop('title', `Edit item: ${checkedNames}`)
+      }
+  });
+
+
+
+</script>

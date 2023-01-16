@@ -20,7 +20,7 @@
             <% if task.archived? %>
               <span class="archived"><%= t('general.archived') %></span>
             <% end %>
-            <%= link_to(task.name, protocols_my_module_path(task.id), { class: 'task-link', title: task.name, target: '_blank' }) %>
+            <%= link_to(task.name, protocols_my_module_path(task.id), { class: 'task-link', title: "assigned task #{task.name}", target: '_blank' }) %>
           </div>
         <% end %>
       </div>
