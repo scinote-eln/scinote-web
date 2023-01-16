@@ -23,14 +23,14 @@
             <span class="sci-checkbox-label"></span>
           </div>
         </th>
-        <th title="inventory column: name"><%= t('libraries.index.table.name') %></th>
-        <th title="inventory column: no. of items"><%= t('libraries.index.table.number_of_items') %></th>
-        <th title="inventory column: shared"><%= t('libraries.index.table.shared') %></th>
-        <th title="inventory column: ownership"><%= t('libraries.index.table.ownership') %></th>
-        <th title="inventory column: added on"><%= t('libraries.index.table.added_on') %></th>
-        <th title="inventory column: added by"><%= t('libraries.index.table.added_by') %></th>
-        <th title="inventory column: archived on"><%= t('libraries.index.table.archived_on') %></th>
-        <th title="inventory column: archived by"><%= t('libraries.index.table.archived_by') %></th>
+        <th onclick="setTitle(this)" title="inventory column: name"><%= t('libraries.index.table.name') %></th>
+        <th onclick="setTitle(this)" title="inventory column: no. of items"><%= t('libraries.index.table.number_of_items') %></th>
+        <th onclick="setTitle(this)" title="inventory column: shared"><%= t('libraries.index.table.shared') %></th>
+        <th onclick="setTitle(this)" title="inventory column: ownership"><%= t('libraries.index.table.ownership') %></th>
+        <th onclick="setTitle(this)" title="inventory column: added on"><%= t('libraries.index.table.added_on') %></th>
+        <th onclick="setTitle(this)" title="inventory column: added by"><%= t('libraries.index.table.added_by') %></th>
+        <th onclick="setTitle(this)" title="inventory column: archived on"><%= t('libraries.index.table.archived_on') %></th>
+        <th onclick="setTitle(this)" title="inventory column: archived by"><%= t('libraries.index.table.archived_by') %></th>
       </tr>
     </thead>
   </table>
@@ -83,3 +83,42 @@
 
 <%= javascript_include_tag "repositories/index" %>
 <%= stylesheet_link_tag 'datatables' %>
+
+
+<script>
+  function setTitle(element) {
+    if (element.title.includes(" sorted"))
+      element.title = element.title.replace(" sorted", "")
+    else
+      element.title = element.title.concat(" sorted")
+  }
+
+  document.addEventListener("click", function(event) {
+      if (event.target.matches("input[type='checkbox']")) {
+        var checkedRows = checkedRows = document.querySelectorAll("tr td input[type='checkbox']:checked");
+        var checkedNames = []
+        for (var i = 0; i < checkedRows.length; i++) {
+          checkedNames.push(checkedRows[i].parentElement.parentElement.parentElement.getElementsByClassName('record-info-link')[0].innerText);
+        }
+        $('#exportRepositoriesButton').find('.button-text').prop('title', `Export these items: ${checkedNames}`)
+        $('#toolbarPrintLabel').find('.button-text').prop('title', `Print label these items: ${checkedNames}`)
+        $('#restoreRepositoryRecords').find('.button-text').prop('title', `Restore these items: ${checkedNames}`)
+        $('#deleteRepositoryRecords').find('.button-text').prop('title', `Delete these items: ${checkedNames}`)
+        $('#archiveRepositoryRecordsButton').find('.button-text').prop('title', `Archive these items: ${checkedNames}`)
+        $('#copyRepositoryRecords').find('.button-text').prop('title', `Copy these items: ${checkedNames}`)
+        $('#editRepositoryRecord').find('.button-text').prop('title', `Edit item: ${checkedNames}`)
+      }
+  });
+
+  function checkedTitles() {
+    var checkedRows = checkedRows = document.querySelectorAll("tr td input[type='checkbox']:checked");
+    var checkedNames = []
+    for (var i = 0; i < checkedRows.length; i++) {
+      checkedNames.push(checkedRows[i].parentElement.parentElement.parentElement.getElementsByClassName('item-name')[0].innerText);
+    }
+    $('#renameRepoBtn').prop('title', `Rename ${checkedNames}`)
+    $('#copyRepoBtn').prop('title', `Duplicate ${checkedNames}`)
+    $('#archiveRepoBtn').prop('title', `Archive ${checkedNames}`)
+
+  }
+</script>
