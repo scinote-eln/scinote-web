@@ -23,7 +23,7 @@ class TinyMceAsset < ApplicationRecord
   def self.update_images(object, images, current_user)
     # image ids that are present in text
     text_images =
-      object.public_send(Extends::RICH_TEXT_FIELD_MAPPINGS[self.class.name])
+      object.public_send(Extends::RICH_TEXT_FIELD_MAPPINGS[object.class.name])
             .scan(/data-mce-token="([^"]+)"/)
             .flatten
 
