@@ -10,7 +10,7 @@ module TinyMceImages
              dependent: :destroy
 
     before_save :clean_tiny_mce_image_urls
-    before_save :extract_base64_images
+    before_validation :extract_base64_images
 
     def prepare_for_report(field, base64_encoded_imgs = false)
       description = self[field]
