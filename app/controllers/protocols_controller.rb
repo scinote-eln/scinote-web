@@ -78,7 +78,6 @@ class ProtocolsController < ApplicationController
                 only: %i(protocolsio_import_create protocolsio_import_save)
 
   before_action :set_importer, only: %i(load_from_file import)
-
   before_action :set_inline_name_editing, only: :show
 
   layout 'fluid'

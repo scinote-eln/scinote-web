@@ -2427,6 +2427,7 @@ en:
       unchangable_error_message: "Predefined roles can not be changed!"
 
   protocols:
+    draft: "Draft"
     no_text_placeholder: 'No protocol description'
     reorder_steps:
         button: "Rearrange steps"
@@ -2535,6 +2536,7 @@ en:
       protocol_description: 'Protocol description'
       protocol_steps: 'Protocol steps'
       publish: 'Publish'
+      save_as_draft: 'Save as draft'
       version: "Version:"
       draft: 'Draft'
       created_at: "Created at:"

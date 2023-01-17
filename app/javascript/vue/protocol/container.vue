@@ -226,7 +226,7 @@
         this.protocol.attributes.name = newName;
         this.refreshProtocolStatus();
         $.ajax({
-          type: 'PUT',
+          type: 'PATCH',
           url: this.urls.update_protocol_name_url,
           data: { protocol: { name: newName } }
         });
