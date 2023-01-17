@@ -10,9 +10,11 @@
         <div class="modal-body">
           <%= f.hidden_field :view_mode, value: view_mode%>
           <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 sci-input-container form-group">
-              <label><%= t('experiments.canvas.new_my_module_modal.name') %></label>
-              <%= text_field_tag 'my_module[name]', '', placeholder: t('experiments.canvas.new_my_module_modal.name_placeholder'), class: "sci-input-field" %>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <div class="sci-input-container form-group">
+                <label><%= t('experiments.canvas.new_my_module_modal.name') %></label>
+                <%= text_field_tag 'my_module[name]', '', placeholder: t('experiments.canvas.new_my_module_modal.name_placeholder'), class: "sci-input-field" %>
+              </div>
             </div>
           </div>
           <div class="row">
