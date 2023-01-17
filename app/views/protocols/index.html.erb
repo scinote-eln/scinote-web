@@ -62,7 +62,7 @@
                 <li>
                   <a title="import protocol from file" class="btn-link-alt btn-default-link btn-open-file" <%= can_create_protocols_in_repository?(@current_team) ? 'data-action="import"' : 'disabled="disabled"' %>>
                     <span class="fas fa-paperclip"></span>
-                    <span class="hidden-xs"><%= t("protocols.index.import_alt") %></span>
+                    <span class="hidden-xs" title="<%= t("protocols.index.import_alt") %>"><%= t("protocols.index.import_alt") %></span>
                     <input title="import protocol from file input" type="file" value="" accept=".eln" data-role="import-file-input"
                     data-team-id="<%= @current_team.id %>"
                     data-type="<%= @type %>" data-import-url="<%= import_protocols_path %>"
@@ -149,4 +149,13 @@
   window.addEventListener('load', function() {
     paginationTitles();
   });
+
+  $('#protocols-index').on('click', function() {
+    setTimeout(() => {
+      var pagination = document.getElementsByClassName('paginate_button');
+      for (let i = 0; i < pagination.length; i++) {
+        pagination[i].title = pagination[i].querySelector('a').innerHTML;
+      }
+    }, 500);
+  })
 </script>

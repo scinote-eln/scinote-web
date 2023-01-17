@@ -16,13 +16,13 @@
           >
             <li class="divider-label">{{ i18n.t("protocols.steps.attachments.add") }}</li>
             <li>
-              <a class="action-link attachments-view-mode" @click="$emit('attachments:openFileModal')">
+              <a class="action-link attachments-view-mode" title="Upload from your PC" @click="$emit('attachments:openFileModal')">
                 <i class="fas fa-upload"></i>
                 {{ i18n.t('protocols.steps.attachments.menu.file_from_pc') }}
               </a>
             </li>
             <li v-if="step.attributes.wopi_enabled">
-              <a @click="openWopiFileModal" class="create-wopi-file-btn" tabindex="0" @keyup.enter="openWopiFileModal">
+              <a @click="openWopiFileModal" class="create-wopi-file-btn" title="New Office file" tabindex="0" @keyup.enter="openWopiFileModal">
                 <img :src="step.attributes.wopi_context.icon"/>
                 {{ i18n.t('protocols.steps.attachments.menu.office_file') }}
               </a>
@@ -30,6 +30,7 @@
             <li v-if="step.attributes.marvinjs_enabled">
               <a
                 class="new-marvinjs-upload-button"
+                title="New chemical drawing"
                 :data-object-id="step.id"
                 data-object-type="Step"
                 :data-marvin-url="step.attributes.marvinjs_context.marvin_js_asset_url"

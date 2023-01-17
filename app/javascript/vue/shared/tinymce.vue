@@ -20,7 +20,7 @@
           <span>{{ i18n.t('tiny_mce.saved_label') }}</span>
         </div>
         <div :id="`${objectType}_view_${objectId}`"
-            :title="value_html"
+            :title="getTitle(value_html)"
             @click="initTinymce"
             v-html="value_html"
             class="ql-editor tinymce-view"
@@ -143,6 +143,9 @@
       },
       preTitle() {
         return document.getElementsByClassName("sci-inline-edit__view")[0].innerText;
+      },
+      getTitle(str) {
+        return str.replace(/<[^>]+>/g, "");
       },
       initCharacterCount() {
         if (!this.editorInstance()) return;
