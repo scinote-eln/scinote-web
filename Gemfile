@@ -64,7 +64,7 @@ gem 'aspector' # Aspect-oriented programming for Rails
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces AR
 gem 'bcrypt', '~> 3.1.10'
 gem 'caracal' # Build docx report
-gem 'deface', '~> 1.0'
+gem 'deface', '~> 1.9'
 gem 'down', '~> 5.0'
 gem 'faker' # Generate fake data
 gem 'fastimage' # Light gem to get image resolution
