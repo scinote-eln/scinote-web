@@ -138,10 +138,13 @@ var inlineEditing = (function() {
     .off('click', `${editBlocks} .cancel-button`)
     .off('blur', `${editBlocks} textarea, ${editBlocks} input`)
     .on('keyup', `${editBlocks}`, function(e) {
+      var container = $(this);
       if (e.keyCode === 27) {
         $(`${editBlocks} .cancel-button`).click();
       } // Esc
-
+      if (e.keyCode === 13 && !container.find('.view-mode').hasClass('hidden')) {
+        $(editBlocks).click();
+      }
     })
     .on('click', editBlocks, function(e) {
     // 'A' mean that, if we click on <a></a> element we will not go in edit mode
