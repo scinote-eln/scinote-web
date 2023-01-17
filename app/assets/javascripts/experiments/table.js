@@ -123,7 +123,7 @@ var ExperimnetTable = {
   initMyModuleActions: function() {
     $(this.table).on('show.bs.dropdown', '.my-module-menu', (e) => {
       let menu = $(e.target).find('.dropdown-menu');
-      $.get(e.target.dataset.url, (result) => {
+      $.get(e.currentTarget.dataset.url, (result) => {
         $(menu).find('li').remove();
         $(result.html).appendTo(menu);
       });
@@ -131,35 +131,35 @@ var ExperimnetTable = {
 
     $(this.table).on('click', '.archive-my-module', (e) => {
       e.preventDefault();
-      this.archiveMyModules(e.target.href, e.target.dataset.id);
+      this.archiveMyModules(e.currentTarget.href, e.currentTarget.dataset.id);
     });
 
 
     $(this.table).on('click', '.restore-my-module', (e) => {
       e.preventDefault();
-      this.restoreMyModules(e.target.href, e.target.dataset.id);
+      this.restoreMyModules(e.currentTarget.href, e.currentTarget.dataset.id);
     });
 
     $(this.table).on('click', '.duplicate-my-module', (e) => {
       e.preventDefault();
-      this.duplicateMyModules($('#duplicateTasks').data('url'), e.target.dataset.id);
+      this.duplicateMyModules($('#duplicateTasks').data('url'), e.currentTarget.dataset.id);
     });
 
     $(this.table).on('click', '.move-my-module', (e) => {
       e.preventDefault();
-      this.openMoveModulesModal([e.target.dataset.id]);
+      this.openMoveModulesModal([e.currentTarget.dataset.id]);
     });
 
     $(this.table).on('click', '.edit-my-module', (e) => {
       e.preventDefault();
       $('#modal-edit-module').modal('show');
-      $('#modal-edit-module').data('id', e.target.dataset.id);
+      $('#modal-edit-module').data('id', e.currentTarget.dataset.id);
       $('#edit-module-name-input').val($(`#taskName${$('#modal-edit-module').data('id')}`).data('full-name'));
     });
   },
   initDuplicateMyModules: function() {
     $('#duplicateTasks').on('click', (e) => {
-      this.duplicateMyModules(e.target.dataset.url, this.selectedMyModules);
+      this.duplicateMyModules(e.currentTarget.dataset.url, this.selectedMyModules);
     });
   },
   duplicateMyModules: function(url, ids) {
@@ -171,7 +171,7 @@ var ExperimnetTable = {
   },
   initArchiveMyModules: function() {
     $('#archiveTask').on('click', (e) => {
-      this.archiveMyModules(e.target.dataset.url, this.selectedMyModules);
+      this.archiveMyModules(e.currentTarget.dataset.url, this.selectedMyModules);
     });
   },
   archiveMyModules: function(url, ids) {
@@ -184,7 +184,7 @@ var ExperimnetTable = {
   },
   initRestoreMyModules: function() {
     $('#restoreTask').on('click', (e) => {
-      this.restoreMyModules(e.target.dataset.url, this.selectedMyModules);
+      this.restoreMyModules(e.currentTarget.dataset.url, this.selectedMyModules);
     });
   },
   restoreMyModules: function(url, ids) {
@@ -266,17 +266,17 @@ var ExperimnetTable = {
       });
     });
     $(this.table).on('click', '.assign-users-dropdown .dropdown-menu', (e) => {
-      if (e.target.tagName === 'INPUT') return;
+      if (e.currentTarget.tagName === 'INPUT') return;
       e.preventDefault();
       e.stopPropagation();
     });
     $(this.table).on('keyup', '.assigned-users-container, .open-my-module-menu, .calendar-input', (e) => {
       if (e.keyCode === 13) { // Enter
-        e.target.click();
+        e.currentTarget.click();
       }
     });
     $(this.table).on('change keyup', '.assign-users-dropdown .user-search', (e) => {
-      let query = e.target.value;
+      let query = e.currentTarget.value;
       let usersList = $(e.target).closest('.dropdown-menu').find('.user-container');
       $.each(usersList, (_i, user) => {
         $(user).removeClass('hidden');
@@ -488,7 +488,7 @@ var ExperimnetTable = {
       $.each(this.filters, (_i, filter) => {
         this.activeFilters[filter.name] = filter.apply($experimentFilter);
       });
-      
+
       // filters are active if they have any non-empty value
       let filtersEmpty = Object.values(this.activeFilters).every(value => /^\s+$/.test(value) || value === null || value === undefined || value && value.length === 0);
       this.filtersActive = !filtersEmpty;
