@@ -35,6 +35,10 @@ class TinyMceAsset < ApplicationRecord
     end
     images.each do |image|
       image_to_update = find_by(id: Base62.decode(image))
+
+      # if image was pasted from another object, create a copy
+      image_to_update = image_to_update.clone_tinymce_asset(object) if image_to_update.object != object
+
       next if image_to_update.object || image_to_update.team_id != Team.search_by_object(object).id
 
       image_to_update&.update(object: object, saved: true)
