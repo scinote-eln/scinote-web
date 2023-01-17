@@ -47,9 +47,9 @@ class MyModulesController < ApplicationController
       if my_module_tags_params[:tag_ids].present?
         @my_module.tags << @experiment.project.tags.where(id: JSON.parse(my_module_tags_params[:tag_ids]))
       end
-      if my_module_designated_users_params[:user_ids].present? && can_manage_my_module_designated_users?(@my_module)
+      if my_module_designated_users_params[:user_ids].present? && can_designate_users_to_new_task?(@experiment)
         @my_module.designated_users << @experiment.users.where(id: my_module_designated_users_params[:user_ids])
-      elsif !can_manage_my_module_designated_users?(@my_module)
+      elsif !can_designate_users_to_new_task?(@experiment)
         @my_module.designated_users << current_user
       end
       @my_module.save!

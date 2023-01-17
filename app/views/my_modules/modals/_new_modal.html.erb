@@ -53,7 +53,7 @@
               </div>
             </div>
           </div>
-          <% if can_manage_my_module_designated_users?(@my_module)%>
+          <% if can_designate_users_to_new_task?(@experiment) %>
             <div class="row">
               <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <label><%= t('experiments.canvas.new_my_module_modal.assigned_users') %></label>
