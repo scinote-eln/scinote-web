@@ -1,11 +1,11 @@
 <template>
   <div class="step-checklist-container" >
     <div class="step-element-header" :class="{ 'editing-name': editingName, 'no-hover': !element.attributes.orderable.urls.update_url }">
-      <div v-if="reorderElementUrl" :title="`checklist ${element} grip`" class="step-element-grip" @click="$emit('reorder')">
+      <div v-if="reorderElementUrl" :title="`checklist ${element.attributes.orderable.name} grip`" class="step-element-grip" @click="$emit('reorder')">
         <i class="fas fas-rotated-90 fa-exchange-alt"></i>
       </div>
       <div v-else class="step-element-grip-placeholder"></div>
-      <div :title="`checklist ${element.id} name`" class="step-element-name">
+      <div :title="`checklist ${element.attributes.orderable.name} name`" class="step-element-name">
         <InlineEdit
           :class="{ 'step-element--locked': !element.attributes.orderable.urls.update_url }"
           :value="element.attributes.orderable.name"

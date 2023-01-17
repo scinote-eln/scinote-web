@@ -1,7 +1,7 @@
 <template>
   <div class="step-table-container">
      <div class="step-element-header" :class="{ 'editing-name': editingName, 'step-element--locked': locked }">
-      <div v-if="reorderElementUrl" :title="`table ${element.id} grip`" class="step-element-grip" @click="$emit('reorder')">
+      <div v-if="reorderElementUrl" :title="`table ${element.attributes.orderable.name} grip`" class="step-element-grip" @click="$emit('reorder')">
         <i class="fas fas-rotated-90 fa-exchange-alt"></i>
       </div>
       <div v-else class="step-element-grip-placeholder"></div>

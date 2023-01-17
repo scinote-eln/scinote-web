@@ -1,7 +1,7 @@
 <template>
   <div class="step-text-container" :class="{ 'edit': inEditMode, 'step-element--locked': !element.attributes.orderable.urls.update_url }" @keyup.enter="enableEditMode($event)" tabindex="0">
     <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
-      <i :title="`text ${element.id} grip`" class="fas fas-rotated-90 fa-exchange-alt"></i>
+      <i :title="`text ${element.attributes.orderable.name || element.attributes.orderable.text} grip`" class="fas fas-rotated-90 fa-exchange-alt"></i>
     </div>
     <div v-else class="step-element-grip-placeholder"></div>
     <div class="buttons-container">
