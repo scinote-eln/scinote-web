@@ -179,7 +179,7 @@ module TinyMceImages
           base64_data = base64_src.split('base64,').last
 
           tiny_image = TinyMceAsset.create!(
-            team: @team,
+            team: Team.search_by_object(self),
             object: self,
             saved: true
           )
