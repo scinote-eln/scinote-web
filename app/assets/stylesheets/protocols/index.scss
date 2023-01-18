@@ -44,6 +44,58 @@
     .dataTables_scrollBody {
       height: 100%;
     }
+
+    // Cells
+
+    // User access
+    .users-access-cell {
+      .protocol-users-link {
+        align-items: center;
+        color: $color-silver-chalice;
+        display: flex;
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+
+      .global-avatar-container {
+        align-items: center;
+        border: 2px solid $color-white;
+        display: flex;
+        height: 32px;
+        justify-content: center;
+        line-height: 28px;
+        margin-right: -.5em;
+        width: 32px;
+      }
+
+      .more-users {
+        background: $color-volcano;
+        border: 2px solid $color-white;
+        border-radius: 50%;
+        color: $color-white;
+        height: 32px;
+        line-height: 28px;
+        margin-right: -.5em;
+        text-align: center;
+        text-decoration: none;
+        width: 32px;
+      }
+
+      .new-user {
+        background: $color-concrete;
+        margin-left: .75em;
+        text-align: center;
+      }
+    }
+
+    .selected {
+      .global-avatar-container,
+      .more-users {
+        border: 2px solid $color-alto;
+      }
+    }
   }
 
   .protocol-filters {
