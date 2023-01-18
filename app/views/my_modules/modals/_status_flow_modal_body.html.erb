@@ -6,12 +6,12 @@
     <% end %>
 
     <div class="status-container">
-      <div class="current-status">
+      <div class="current-status" title="current status">
         <% if status.id == @my_module.my_module_status_id %>
           <%= t('my_modules.modals.status_flow_modal.current_status') %><i class="fas fa-long-arrow-alt-right"></i>
         <% end %>
       </div>
-      <div class="status-block" style="background: <%= status[:color] %>">
+      <div class="status-block" style="background: <%= status[:color] %>" title="<%= status[:name] %>">
         <%= status[:name] %>
       </div>
       <div class="status-comment">

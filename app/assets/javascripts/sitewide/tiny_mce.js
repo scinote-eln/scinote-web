@@ -36,8 +36,8 @@ var TinyMCE = (function() {
     var notificationBar;
     var restoreBtn = $(`<button class="btn restore-draft-btn">Restore Draft</button>`);
     var cancelBtn = $(`<span class="fas fa-times"></span>`);
-    restoreBtn.prop('title', `restore tinymce changed draft ${editor.startContent}`);
-    cancelBtn.prop('title', `cancel tinymce changed draft${editor.startContent}`);
+    restoreBtn.prop('title', `restore tinymce changed draft ${getTitle(editor.startContent)}`);
+    cancelBtn.prop('title', `cancel tinymce changed draft${getTitle(editor.startContent)}`);
     // Check whether we have draft stored
     if (editor.plugins.autosave.hasDraft()) {
       notificationBar = $('<div class="restore-draft-notification"></div>');
@@ -440,3 +440,8 @@ $(document).on('turbolinks:before-visit', function(e) {
     return false;
   });
 });
+
+
+function getTitle(str) {
+  return str.replace(/<[^>]+>/g, "").substring(0, 10);
+}

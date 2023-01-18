@@ -1,23 +1,23 @@
 <% if my_module.completed? %>
   <%= t('my_modules.states.completed') %>
-  <span title="<%= my_module.name %> due date completed" class="due-date-label">
+  <span title="<%= my_module.name %> due date completed <%= l(my_module.completed_on, format: :full_date) %>" class="due-date-label">
     <%= l(my_module.completed_on, format: :full_date) %>
   </span>
 <% elsif my_module.is_one_day_prior? %>
   <%= t('my_modules.states.due_soon') %>
-  <span title="<%= my_module.name %> due date one day prior" class="due-date-label">
+  <span title="<%= my_module.name %> due date one day prior <%= l(my_module.due_date, format: :full_date) %>" class="due-date-label">
     <%= l(my_module.due_date, format: :full_date) %>
     <span class="fas fa-exclamation-triangle"></span>
   </span>
 <% elsif my_module.is_overdue? %>
   <%= t('my_modules.states.overdue') %>
-  <span title="<%= my_module.name %> due date overdue" class="due-date-label">
+  <span title="<%= my_module.name %> due date overdue <%= l(my_module.due_date, format: :full_date) %>" class="due-date-label">
     <%= l(my_module.due_date, format: :full_date) %>
     <span class="fas fa-exclamation-triangle"></span>
   </span>
 <% elsif my_module.due_date %>
   <%= t('experiments.canvas.full_zoom.due_date') %>
-  <span title="<%= my_module.name %> due date due" class="due-date-label">
+  <span title="<%= my_module.name %> due date due <%= l(my_module.due_date, format: :full_date) %>" class="due-date-label">
       <%= l(my_module.due_date, format: :full_date) %>
   </span>
 <% else %>
