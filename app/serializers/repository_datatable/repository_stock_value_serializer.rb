@@ -6,9 +6,9 @@ module RepositoryDatatable
 
     def value
       {
-        stock_formatted: object.formatted,
-        stock_amount: object.data,
-        low_stock_threshold: object.low_stock_threshold
+        stock_formatted: value_object.formatted,
+        stock_amount: value_object.data,
+        low_stock_threshold: value_object.low_stock_threshold
       }
     end
   end

@@ -412,10 +412,10 @@ var RepositoryDatatable = (function(global) {
   // Adjust columns width in table header
   function adjustTableHeader() {
     TABLE.columns.adjust();
-    $('.dropdown-menu').parent()
-      .on('shown.bs.dropdown hidden.bs.dropdown', function() {
-        TABLE.columns.adjust();
-      });
+    // $('.dropdown-menu').parent()
+    //   .on('shown.bs.dropdown hidden.bs.dropdown', function() {
+    //     TABLE.columns.adjust();
+    //   });
   }
 
   function checkSnapshottingStatus() {
@@ -664,9 +664,9 @@ var RepositoryDatatable = (function(global) {
 
         initActiveRemindersFilter();
         renderFiltersDropdown();
-        setTimeout(function() {
-          adjustTableHeader();
-        }, 500);
+        // setTimeout(function() {
+        //   adjustTableHeader();
+        // }, 500);
       }
     });
 
@@ -699,11 +699,11 @@ var RepositoryDatatable = (function(global) {
     })
 
     initRowSelection();
-    $(window).resize(() => {
-      setTimeout(() => {
-        adjustTableHeader();
-      }, 500);
-    });
+    // $(window).resize(() => {
+    //   setTimeout(() => {
+    //     adjustTableHeader();
+    //   }, 500);
+    // });
 
     return TABLE;
   }
@@ -822,7 +822,7 @@ var RepositoryDatatable = (function(global) {
       });
 
       changeToEditMode();
-      adjustTableHeader();
+      // adjustTableHeader();
     })
     .on('click', '#deleteRepositoryRecords', function() {
       $('#deleteRepositoryRecord').modal('show');
@@ -909,9 +909,9 @@ var RepositoryDatatable = (function(global) {
       document.documentElement.style.setProperty('--repository-sidebar-margin', '363px');
     });
 
-    $('#wrapper').on('sideBar::hidden sideBar::shown', function() {
-      adjustTableHeader();
-    });
+    // $('#wrapper').on('sideBar::hidden sideBar::shown', function() {
+    //   adjustTableHeader();
+    // });
   }
 
   function renderFiltersDropdown() {
