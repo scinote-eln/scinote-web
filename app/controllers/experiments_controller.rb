@@ -332,12 +332,18 @@ class ExperimentsController < ApplicationController
     dst_experiment = @experiment.project.experiments.find(params[:to_experiment_id])
     return render_403 unless can_manage_experiment?(dst_experiment)
 
-    @experiment.with_lock do
+    @experiment.transaction do
       params[:my_module_ids].each do |id|
         my_module = @experiment.my_modules.find(id)
         return render_403 unless can_move_my_module?(my_module)
 
         modules_to_move[id] = dst_experiment.id
+      end
+      # Make sure that locks are acquired always in the same order
+      if dst_experiment.id < @experiment.id
+        dst_experiment.lock! && @experiment.lock!
+      else
+        @experiment.lock! && dst_experiment.lock!
       end
       @experiment.move_modules(modules_to_move, current_user)
       @experiment.workflowimg.purge
