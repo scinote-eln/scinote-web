@@ -464,10 +464,12 @@ $(document).on('turbolinks:before-visit', (e) => {
 
   if (editor === null) return true;
 
-  if (editor.isNotDirty === false) {
+  if (editor.isDirty()) {
     // eslint-disable-next-line no-alert
     if (confirm(I18n.t('tiny_mce.leaving_warning'))) {
-      return false;
+      $('.atwho-container').remove();
+      tinyMCE.activeEditor.remove();
+      return true;
     }
     e.preventDefault();
     return false;
