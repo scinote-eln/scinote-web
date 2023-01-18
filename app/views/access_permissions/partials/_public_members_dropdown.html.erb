@@ -5,7 +5,8 @@
       <div class="title">
         <%= t('.title', team: team.name) %>
       </div>
-      <% team.users.order(full_name: :asc).where.not(id: project.manually_assigned_users.select(:id)).each do |user| %>
+      <% users_excluded_id = assignable.manually_assigned_users.select(:id) %>
+      <% team.users.order(full_name: :asc).where.not(id: users_excluded_id).each do |user| %>
         <div class="name">
           <%= user.full_name %>
         </div>

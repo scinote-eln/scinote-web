@@ -42,6 +42,10 @@ module Assignable
       User.joins(:user_assignments).where(user_assignments: { assigned: :manually, assignable: self })
     end
 
+    def assigned_users
+      User.joins(:user_assignments).where(user_assignments: { assignable: self })
+    end
+
     private
 
     def create_users_assignments
