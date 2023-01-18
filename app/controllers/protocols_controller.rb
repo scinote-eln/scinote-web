@@ -907,13 +907,11 @@ class ProtocolsController < ApplicationController
 
   def load_from_repository_datatable
     @protocol = Protocol.find_by_id(params[:id])
-    @type = (params[:type] || 'public').to_sym
     respond_to do |format|
       format.json do
         render json: ::LoadFromRepositoryProtocolsDatatable.new(
           view_context,
           @protocol.team,
-          @type,
           current_user
         )
       end

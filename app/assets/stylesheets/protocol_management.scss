@@ -26,6 +26,14 @@
 #protocols-index,
 #load-from-repository-modal {
 
+  tbody {
+    tr {
+      &:hover {
+        background-color: $color-concrete;
+      }
+    }
+  }
+
   .nav-tabs > li {
     text-transform: uppercase;
 
