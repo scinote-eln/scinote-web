@@ -6,13 +6,13 @@
         <div class="hidden tinymce-cancel-button mce-widget mce-btn mce-menubtn mce-flow-layout-item mce-btn-has-text pull-right" tabindex="-1">
           <button type="button" tabindex="-1">
             <span class="fas fa-times"></span>
-            <span :title="`cancel tinymce ${value_html || preTitle()} edit`" class="mce-txt">{{ i18n.t('general.cancel')  }}</span>
+            <span :title="`cancel tinymce ${getTitle(value_html)} edit`" class="mce-txt">{{ i18n.t('general.cancel')  }}</span>
           </button>
         </div>
         <div class="hidden tinymce-save-button mce-widget mce-btn mce-menubtn mce-flow-layout-item mce-btn-has-text mce-last pull-right" tabindex="-1">
           <button type="button" tabindex="-1">
             <span class="fas fa-check"></span>
-            <span :title="`save tinymce ${value_html || preTitle()} edit`" class="mce-txt">{{ i18n.t('general.save') }}</span>
+            <span :title="`save tinymce ${getTitle(value_html)} edit`" class="mce-txt">{{ i18n.t('general.save') }}</span>
           </button>
         </div>
         <div class="hidden tinymce-status-badge pull-right">
@@ -20,7 +20,7 @@
           <span>{{ i18n.t('tiny_mce.saved_label') }}</span>
         </div>
         <div :id="`${objectType}_view_${objectId}`"
-            :title="getTitle(value_html)"
+            :title="getTitle(value_html || placeholder)"
             @click="initTinymce"
             v-html="value_html"
             class="ql-editor tinymce-view"
@@ -145,7 +145,7 @@
         return document.getElementsByClassName("sci-inline-edit__view")[0].innerText;
       },
       getTitle(str) {
-        return str.replace(/<[^>]+>/g, "");
+        return str.replace(/<[^>]+>/g, "").substring(0, 10);
       },
       initCharacterCount() {
         if (!this.editorInstance()) return;

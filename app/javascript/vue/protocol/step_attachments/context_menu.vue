@@ -13,7 +13,7 @@
            id="wopi_file_edit_button"
            class="btn btn-light"
            :class="attachment.attributes.wopi_context.edit_supported ? '' : 'disabled'"
-           :title="attachment.attributes.wopi_context.title"
+           :title="attachment.attributes.wopi_context.button_text"
            target="_blank"
         >
           <img :src="attachment.attributes.wopi_context.wopi_icon"/>
@@ -35,7 +35,7 @@
       <li v-if="attachment.attributes.asset_type != 'marvinjs'
                && attachment.attributes.image_editable
                && attachment.attributes.urls.start_edit_image">
-        <a class="image-edit-button" title="Edit in SciNote"
+        <a class="image-edit-button"
            :data-image-id="attachment.id"
            :data-image-name="attachment.attributes.file_name"
            :data-image-url="attachment.attributes.urls.asset_file"

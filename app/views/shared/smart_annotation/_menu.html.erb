@@ -14,7 +14,7 @@
     <div class="tab-pane rep-tab" role="tabpanel" id="rep-tab-<%= at_who_key %>" data-object-type="REPOSITORY"><% if repositories.length > 1 %>
       <div class=sci-btn-group>
       <% repositories.each do |repository| %>
-        <button class="btn btn-light repository-object" data-object-id="<%= repository.id %>">
+        <button class="btn btn-light repository-object" data-object-id="<%= repository.id %>" title="<%= repository.name %>">
           <% if repository.shared_with?(current_team) %>
             <i class="fas fa-user-friends"></i>
           <% end %>

@@ -14,7 +14,7 @@
           <p><%= t("protocols.print.modal.content") %></p>
           <% if comments_enabled %>
             <div class="sci-checkbox-container">
-              <%= check_box_tag :include_comments, 1, true, { class: "sci-checkbox" } %>
+              <%= check_box_tag :include_comments, 1, true, { class: "sci-checkbox" , title: 'include comments checkbox'} %>
               <span class="sci-checkbox-label"></span>
             </div>
             <small><%= t("protocols.print.modal.include_comments") %></small>

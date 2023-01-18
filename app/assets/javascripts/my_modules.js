@@ -445,3 +445,6 @@
   initDueDatePicker();
   initAssignedUsersSelector();
 }());
+
+
+
