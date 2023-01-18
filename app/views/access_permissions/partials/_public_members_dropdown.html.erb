@@ -5,14 +5,8 @@
       <div class="title">
         <%= t('.title', team: team.name) %>
       </div>
-      <%
-        users_excluded = if defined? project
-                           project.manually_assigned_users.select(:id)
-                         elsif protocol
-                           protocol.manually_assigned_users.select(:id)
-                         end
-      %>
-      <% team.users.order(full_name: :asc).where.not(id: users_excluded).each do |user| %>
+      <% users_excluded_id = assignable.manually_assigned_users.select(:id) %>
+      <% team.users.order(full_name: :asc).where.not(id: users_excluded_id).each do |user| %>
         <div class="name">
           <%= user.full_name %>
         </div>
