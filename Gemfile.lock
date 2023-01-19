@@ -307,7 +307,7 @@ GEM
       raabro (~> 1.4)
     generator (0.0.1)
     gherkin (5.1.0)
-    globalid (1.0.0)
+    globalid (1.0.1)
       activesupport (>= 5.0)
     graphviz (1.2.1)
       process-pipeline
