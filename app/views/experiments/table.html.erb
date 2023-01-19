@@ -31,6 +31,7 @@
     </div>
     <%= render partial: 'experiments/no_task_results.html.erb' %>
   </div>
+  <%= render partial: "my_modules/modals/manage_module_tags_modal", locals: { my_module: nil } %>
 </div>
 
 <template id="experimentTablePlaceholder">
@@ -55,7 +56,6 @@
   </div>
 </template>
 
-<%= render partial: "my_modules/modals/manage_module_tags_modal", locals: { my_module: nil } %>
 <%= render partial: "canvas/edit/modal/edit_module" %>
 <%= render partial: "experiments/table_display_modal"%>
 
