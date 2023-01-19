@@ -202,8 +202,8 @@ module Reports
 
           if key == 'text-align'
             result[:align] = value.to_sym
-          elsif key == 'color' && Reports::Utils.calculate_color_hsp(value) < 190
-            result[:color] = value.delete('#')
+          elsif key == 'color' && Reports::Utils.calculate_color_hsp("##{normalized_hex_color(value)}") < 190
+            result[:color] = normalized_hex_color(value)
           elsif key == 'text-decoration' && value == 'underline'
             result[:underline] = true
           end
@@ -268,6 +268,12 @@ module Reports
 
     def text_formatting_element(element)
       { type: element.name, value: element.text }
+    end
+
+    def normalized_hex_color(color)
+      return color.delete('#') if color.start_with?('#')
+
+      color.scan(/\d+/).map(&:to_i).map { |c| c.to_s(16).rjust(2, '0').upcase }.join
     end
   end
 end
