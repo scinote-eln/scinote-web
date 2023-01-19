@@ -18,6 +18,10 @@ function initEditMyModuleDescription() {
     if ($(this).hasClass('record-info-link')) return;
     e.stopPropagation();
   });
+
+  setTimeout(function() {
+    TinyMCE.wrapTables(viewObject);
+  }, 100);
 }
 
 function initEditProtocolDescription() {
