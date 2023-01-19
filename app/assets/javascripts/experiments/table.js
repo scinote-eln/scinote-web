@@ -266,7 +266,7 @@ var ExperimnetTable = {
       });
     });
     $(this.table).on('click', '.assign-users-dropdown .dropdown-menu', (e) => {
-      if (e.currentTarget.tagName === 'INPUT') return;
+      if (e.target.tagName === 'INPUT') return;
       e.preventDefault();
       e.stopPropagation();
     });
