@@ -7,7 +7,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span title="close manage task access modal" aria-hidden="true">&times;</span></button>
         <h4 class="modal-title"><%= t '.title', resource_name: my_module.name %></h4>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" onclick="addTitlesToOptions(this.getElementsByClassName('dropdown-menu inner'))">
         <p class="user-assignments-description">
           <%= t '.description' %>
         </p>

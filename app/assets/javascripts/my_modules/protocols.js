@@ -474,3 +474,17 @@ function init() {
 }
 
 init();
+
+function addTitlesToOptions(select) {
+  if (typeof(select) == "undefined")
+    var select = document.getElementsByClassName('dropdown-menu inner')
+
+  for (let element of select) {
+    var length = element.getElementsByTagName('li').length
+
+    for (var i = 0; i < length; i++) {
+      var option = element.getElementsByTagName('li')[i]
+      option.title = option.textContent
+    }
+  }
+}

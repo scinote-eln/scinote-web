@@ -35,7 +35,7 @@
       <li v-if="attachment.attributes.asset_type != 'marvinjs'
                && attachment.attributes.image_editable
                && attachment.attributes.urls.start_edit_image">
-        <a class="image-edit-button" title="Edit in SciNote"
+        <a class="image-edit-button"
            :data-image-id="attachment.id"
            :data-image-name="attachment.attributes.file_name"
            :data-image-url="attachment.attributes.urls.asset_file"
