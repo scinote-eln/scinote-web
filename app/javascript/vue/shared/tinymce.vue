@@ -136,6 +136,7 @@
                 this.$emit('update', data.data)
               }
               this.$emit('editingDisabled');
+              this.wrapTables();
             },
             afterInitCallback: () => {
               this.active = true;
@@ -151,9 +152,7 @@
       },
       wrapTables() {
         this.$nextTick(() => {
-          $(this.$el).find('.tinymce-view table').toArray().forEach((table) => {
-            $(table).css('float', 'none').wrapAll('<div style="overflow: auto"></div>');
-          })
+          TinyMCE.wrapTables($(this.$el).find('.tinymce-view'));
         });
       },
       initCharacterCount() {

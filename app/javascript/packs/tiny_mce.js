@@ -1,4 +1,4 @@
-/* global I18n hljs GLOBAL_CONSTANTS HelperModule SmartAnnotation */
+/* global I18n hljs GLOBAL_CONSTANTS HelperModule SmartAnnotation TinyMCE */
 
 import tinyMCE from 'tinymce/tinymce';
 import 'tinymce/models/dom';
@@ -329,6 +329,7 @@ window.TinyMCE = (() => {
                 editorForm.find('.tinymce-status-badge').removeClass('hidden');
                 editor.remove();
                 editorForm.find('.tinymce-view').html(data.html).removeClass('hidden');
+                TinyMCE.wrapTables(editorForm.find('.tinymce-view'));
                 editor.plugins.autosave.removeDraft();
                 removeDraft(editor, textAreaObject);
                 if (options.onSaveCallback) { options.onSaveCallback(data); }
@@ -455,7 +456,16 @@ window.TinyMCE = (() => {
     makeItDirty: (editor) => {
       makeItDirty(editor);
     },
-    highlight: initHighlightjs
+    highlight: initHighlightjs,
+    wrapTables: (container) => {
+      container.find('table').toArray().forEach((table) => {
+        if ($(table).parent().hasClass('table-wrapper')) return;
+
+        $(table).css('float', 'none').wrapAll(`
+          <div class="table-wrapper" style="overflow: auto; width: ${container.width()}px"></div>
+        `);
+      });
+    }
   };
 })();
 
