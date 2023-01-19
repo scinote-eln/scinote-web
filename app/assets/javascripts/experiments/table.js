@@ -201,8 +201,6 @@ var ExperimnetTable = {
       let id = $('#modal-edit-module').data('id');
       let newValue = $('#edit-module-name-input').val();
 
-      $(`.my-module-selector[data-my-module="${id}"]`).click();
-
       if (newValue === $(`#taskName${id}`).data('full-name')) {
         $('#modal-edit-module').modal('hide');
         return false;
@@ -227,9 +225,7 @@ var ExperimnetTable = {
         }
       });
 
-      if ($(`.my-module-selector[data-my-module="${id}"]`).prop('checked')) {
-        $(`.my-module-selector[data-my-module="${id}"]`).click();
-      }
+      this.clearRowTaskSelection();
 
       return true;
     };
@@ -468,7 +464,7 @@ var ExperimnetTable = {
   },
   clearRowTaskSelection: function() {
     this.selectedMyModules = [];
-    $('.select-all-checkboxes .sci-checkbox').prop('checked', false);
+    $('.select-all-checkboxes, .sci-checkbox').prop('checked', false);
     this.updateExperimentToolbar();
   },
   initNewTaskModal: function(table) {
