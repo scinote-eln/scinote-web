@@ -230,12 +230,12 @@ var ExperimnetTable = {
       return true;
     };
 
-    $('#modal-edit-module').on('click', 'button[data-action="confirm"]', handleRenameModal);
-
-    $('#modal-edit-module').find('form').submit((e) => {
-      e.preventDefault();
-      handleRenameModal();
-    });
+    $('#modal-edit-module')
+      .on('click', 'button[data-action="confirm"]', handleRenameModal)
+      .on('submit', 'form', (e) => {
+        e.preventDefault();
+        handleRenameModal();
+      });
   },
   initManageUsersDropdown: function() {
     $(this.table).on('show.bs.dropdown', '.assign-users-dropdown', (e) => {
