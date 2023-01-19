@@ -262,7 +262,7 @@ class Repository < RepositoryBase
         team.repository_sharing_user_assignments.find_or_create_by(
           user: user,
           assignable: self
-        ).update(user_role: shared_write? ? normal_user_role : viewer_role)
+        ).update!(user_role: shared_write? ? normal_user_role : viewer_role)
       end
     end
   end
