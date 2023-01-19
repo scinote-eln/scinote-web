@@ -545,6 +545,7 @@ var ExperimnetTable = {
         customResponse: (response) => {
           this.appendRows(response.data);
           this.initDueDatePicker(response.data);
+          this.initProvisioningStatusPolling();
         },
         customParams: (params) => {
           return { ...params, ...tableParams };
