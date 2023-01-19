@@ -13,7 +13,7 @@
            id="wopi_file_edit_button"
            class="btn btn-light"
            :class="attachment.attributes.wopi_context.edit_supported ? '' : 'disabled'"
-           :title="attachment.attributes.wopi_context.title"
+           :title="`Edit in Word for the web ${attachment.attributes.file_name}`"
            target="_blank"
         >
           <img :src="attachment.attributes.wopi_context.wopi_icon"/>
