@@ -11,6 +11,7 @@ var ExperimnetTable = {
   filters: [], // Filter {name: '', init(), closeFilter(), apply(), active(), clearFilter()}
   myModulesCurrentSort: '',
   pageSize: GLOBAL_CONSTANTS.DEFAULT_ELEMENTS_PER_PAGE,
+  provisioningStatusTimeout: '',
   getUrls: function(id) {
     return $(`.table-row[data-id="${id}"]`).data('urls');
   },
@@ -589,7 +590,8 @@ var ExperimnetTable = {
     });
 
     if (remainingUrls.length > 0) {
-      setTimeout(() => {
+      clearTimeout(this.provisioningStatusTimeout);
+      this.provisioningStatusTimeout = setTimeout(() => {
         this.pollProvisioningStatuses(remainingUrls);
       }, 10000);
     } else {
