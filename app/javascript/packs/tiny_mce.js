@@ -36,7 +36,9 @@ import './tinymce/image_toolbar/plugin';
 import 'raw-loader';
 import contentCss from '!!raw-loader!tinymce/skins/content/default/content.min.css';
 import contentUiCss from '!!raw-loader!tinymce/skins/ui/tinymce-5/content.min.css';
-const contentStyle = [contentCss, contentUiCss].map((s) => s.toString() ).join("\n");
+
+const contentPStyle = 'p { margin: 0; padding: 0 }';
+const contentStyle = [contentCss, contentUiCss, contentPStyle].map((s) => s.toString()).join('\n');
 
 window.TinyMCE = (() => {
   function initHighlightjs() {
@@ -241,7 +243,6 @@ window.TinyMCE = (() => {
           object_resizing: true,
           elementpath: false,
           quickbars_insert_toolbar: false,
-          forced_root_block: 'div',
           default_link_target: '_blank',
           target_list: [
             { title: 'New page', value: '_blank' },
