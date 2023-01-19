@@ -9,8 +9,8 @@ module TinyMceImages
              class_name: :TinyMceAsset,
              dependent: :destroy
 
-    before_save :clean_tiny_mce_image_urls
     before_validation :extract_base64_images
+    before_save :clean_tiny_mce_image_urls
 
     def prepare_for_report(field, base64_encoded_imgs = false)
       description = self[field]
@@ -171,16 +171,17 @@ module TinyMceImages
       object_field = Extends::RICH_TEXT_FIELD_MAPPINGS[self.class.name]
       return unless object_field
 
-      text = public_send(object_field)
-      return unless text
+      sanitized_text = public_send(object_field)
+      return unless sanitized_text
 
       ActiveRecord::Base.transaction do
-        text.scan(/src="(data:image\/[^;]+;base64[^"]+)"/i).flatten.each do |base64_src|
+        sanitized_text.scan(/src="(data:image\/[^;]+;base64[^"]+)"/i).flatten.each do |base64_src|
           base64_data = base64_src.split('base64,').last
 
           tiny_image = TinyMceAsset.create!(
             team: Team.search_by_object(self),
-            object: self,
+            object_id: id,
+            object_type: self.class.name,
             saved: true
           )
 
@@ -191,13 +192,13 @@ module TinyMceImages
 
           encoded_id = Base62.encode(tiny_image.id)
 
-          text.gsub!(
+          sanitized_text.gsub!(
             "#{base64_src}\"",
             "\" data-mce-token=\"#{encoded_id}\" alt=\"description-#{encoded_id}\""
           )
         end
 
-        assign_attributes(object_field => text)
+        assign_attributes(object_field => sanitized_text)
       end
     end
   end
