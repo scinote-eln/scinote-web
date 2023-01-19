@@ -266,10 +266,10 @@ window.TinyMCE = (() => {
                 { title: 'Bold', icon: 'bold', format: 'bold' },
                 { title: 'Italic', icon: 'italic', format: 'italic' },
                 { title: 'Underline', icon: 'underline', format: 'underline' },
-                { title: 'Strikethrough', icon: 'strikethrough', format: 'strikethrough' },
+                { title: 'Strikethrough', icon: 'strike-through', format: 'strikethrough' },
                 { title: 'Superscript', icon: 'superscript', format: 'superscript' },
                 { title: 'Subscript', icon: 'subscript', format: 'subscript' },
-                { title: 'Code', icon: 'code', format: 'code' }
+                { title: 'Code', icon: 'sourcecode', format: 'code' }
               ]
             },
             {
@@ -282,10 +282,10 @@ window.TinyMCE = (() => {
             {
               title: 'Alignment',
               items: [
-                { title: 'Left', icon: 'alignleft', format: 'alignleft' },
-                { title: 'Center', icon: 'aligncenter', format: 'aligncenter' },
-                { title: 'Right', icon: 'alignright', format: 'alignright' },
-                { title: 'Justify', icon: 'alignjustify', format: 'alignjustify' }
+                { title: 'Left', icon: 'align-left', format: 'alignleft' },
+                { title: 'Center', icon: 'align-center', format: 'aligncenter' },
+                { title: 'Right', icon: 'align-right', format: 'alignright' },
+                { title: 'Justify', icon: 'align-justify', format: 'alignjustify' }
               ]
             }
           ],
