@@ -22,6 +22,11 @@
     color: $color-silver-chalice;
     content: attr(data-placeholder);
   }
+
+  p {
+    margin: 0;
+    padding: 0;
+  }
 }
 
 .mce-tinymce {
