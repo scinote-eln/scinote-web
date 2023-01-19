@@ -2,7 +2,7 @@
   <div class="sci-inline-edit" :class="{ 'editing': editing }" tabindex="0" @keyup.enter="enableEdit($event)">
     <div class="sci-inline-edit__content" :class="{ 'error': error }">
       <textarea
-        :title="placeholder || `Edit `+ newValue"
+        :title="`${placeholder} ${newValue}`"
         ref="input"
         rows="1"
         v-if="editing"
