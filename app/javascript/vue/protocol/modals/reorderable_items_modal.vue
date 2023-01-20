@@ -23,8 +23,7 @@
               <div class="step-element-name">
                 <strong v-if="includeNumbers" class="step-element-number">{{ index + 1 }}</strong>
                 <i v-if="item.attributes.icon" class="fas" :class="item.attributes.icon"></i>
-                <span :title="item.attributes.name" v-if="item.attributes.name">{{ item.attributes.name }}</span>
-                <span :title="getTitle(item)" v-else-if="item.attributes.name == ''">{{ getTitle(item) }}</span>
+                <span :title="nameWithFallbacks(item)" v-if="nameWithFallbacks(item)">{{ nameWithFallbacks(item) }}</span>
                 <span :title="item.attributes.placeholder" v-else class="step-element-name-placeholder">{{ item.attributes.placeholder }}</span>
               </div>
             </div>
@@ -80,6 +79,9 @@
         $item_html.remove('table, img');
         let str = $item_html.text().trim();
         return str.length > 56 ? str.slice(0, 56) + "..." : str;
+      },
+      nameWithFallbacks(item) {
+        return item.attributes.name || this.getTitle(item);
       }
     }
   }
