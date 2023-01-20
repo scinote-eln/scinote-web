@@ -665,12 +665,12 @@ ExperimnetTable.render.assigned = function(data) {
 };
 
 ExperimnetTable.render.tags = function(data) {
-  let value;
-  if (!data.can_create) {
-    value = parseInt(data.tags, 10) === 0 ? I18n.t('experiments.table.not_set') : data.tags;
-    return `<span class="disabled">${value}</span>`;
+  const value = parseInt(data.tags, 10) === 0 ? I18n.t('experiments.table.add_tag') : data.tags;
+
+  if (data.tags === 0 && !data.can_create) {
+    return `<span class="disabled">${I18n.t('experiments.table.not_set')}</span>`;
   }
-  value = parseInt(data.tags, 10) === 0 ? I18n.t('experiments.table.add_tag') : data.tags;
+
   return `<a href="${data.edit_url}"
              id="myModuleTags${data.my_module_id}"
              data-remote="true"

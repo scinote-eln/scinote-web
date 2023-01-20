@@ -8,6 +8,14 @@
   }
 }
 
+#experimentTable {
+  &.archived {
+    [data-view-mode="active"] {
+      display: none !important;
+    }
+  }
+}
+
 #experiment-canvas {
   [data-view-mode="archived"] {
     display: none;
