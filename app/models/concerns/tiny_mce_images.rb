@@ -95,7 +95,7 @@ module TinyMceImages
       target.reassign_tiny_mce_image_references(cloned_img_ids)
     end
 
-    def copy_unknown_tiny_mce_images
+    def copy_unknown_tiny_mce_images(user)
       asset_team_id = Team.search_by_object(self).id
       return unless asset_team_id
 
@@ -104,11 +104,11 @@ module TinyMceImages
       image_changed = false
       parsed_description = Nokogiri::HTML(read_attribute(object_field))
       parsed_description.css('img').each do |image|
-        if image['data-mce-token']
-          asset = TinyMceAsset.find_by_id(Base62.decode(image['data-mce-token']))
+        asset = image['data-mce-token'].presence && TinyMceAsset.find_by(id: Base62.decode(image['data-mce-token']))
 
-          next if asset && (asset.object == self || asset_team_id != asset.team_id)
-
+        if asset
+          next if asset.object == self
+          next unless asset.can_read?(user)
         else
           url = image['src']
           image_type = FastImage.type(url).to_s
@@ -131,7 +131,7 @@ module TinyMceImages
 
         new_asset.transaction do
           new_asset.save!
-          if image['data-mce-token']
+          if asset
             asset.duplicate_file(new_asset)
           else
             new_asset.image.attach(io: new_image, filename: new_image_filename)
@@ -187,7 +187,7 @@ module TinyMceImages
 
           tiny_image.image.attach(
             io: StringIO.new(Base64.decode64(base64_data)),
-            filename: SecureRandom.hex(32)
+            filename: "#{Asset.generate_unique_secure_token}.#{tiny_image.image.type}"
           )
 
           encoded_id = Base62.encode(tiny_image.id)

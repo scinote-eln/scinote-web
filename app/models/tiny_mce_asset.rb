@@ -4,6 +4,7 @@ class TinyMceAsset < ApplicationRecord
   extend ProtocolsExporter
   extend MarvinJsActions
   include ActiveStorageConcerns
+  include Canaid::Helpers::PermissionsHelper
 
   attr_accessor :reference
   before_create :set_reference
@@ -36,10 +37,12 @@ class TinyMceAsset < ApplicationRecord
     images.each do |image|
       image_to_update = find_by(id: Base62.decode(image))
 
-      # if image was pasted from another object, create a copy
-      image_to_update = image_to_update.clone_tinymce_asset(object) if image_to_update.object != object
+      # if image was pasted from another object, check permission and create a copy
+      if image_to_update.object != object && image_to_update.can_read?(current_user)
+        image_to_update = image_to_update.clone_tinymce_asset(object)
+      end
 
-      next if image_to_update.object || image_to_update.team_id != Team.search_by_object(object).id
+      next if image_to_update.object
 
       image_to_update&.update(object: object, saved: true)
       create_create_marvinjs_activity(image_to_update, current_user)
@@ -50,9 +53,10 @@ class TinyMceAsset < ApplicationRecord
       image_to_delete.destroy
     end
 
-    object.delay(queue: :assets).copy_unknown_tiny_mce_images
+    object.delay(queue: :assets).copy_unknown_tiny_mce_images(current_user)
   rescue StandardError => e
     Rails.logger.error e.message
+    Rails.logger.error e.backtrace.join("\n")
   end
 
   def self.generate_url(description, obj = nil)
@@ -155,17 +159,7 @@ class TinyMceAsset < ApplicationRecord
   end
 
   def clone_tinymce_asset(obj)
-    begin
-      # It will trigger only for Step or ResultText
-      team_id = if obj.class.name == 'StepText'
-                  obj.step.protocol.team_id
-                else
-                  obj.result.my_module.protocol.team_id
-                end
-    rescue StandardError => e
-      Rails.logger.error e.message
-      team_id = nil
-    end
+    team_id = Team.search_by_object(object)&.id
 
     return false unless team_id
 
@@ -209,6 +203,27 @@ class TinyMceAsset < ApplicationRecord
       to_asset.image.attach(to_blob)
     end
     TinyMceAsset.update_estimated_size(to_asset.id)
+  end
+
+  def can_read?(user)
+    case object_type
+    when 'MyModule'
+      can_read_my_module?(user, object)
+    when 'Protocol'
+      can_read_protocol_in_module?(user, object) ||
+        can_read_protocol_in_repository?(user, object)
+    when 'ResultText'
+      can_read_result?(user, object.result)
+    when 'StepText'
+      protocol = object.step_orderable_element.step.protocol
+      can_read_protocol_in_module?(user, protocol) ||
+        can_read_protocol_in_repository?(user, protocol)
+    when 'Step'
+      can_read_protocol_in_module?(user, step.protocol) ||
+        can_read_protocol_in_repository?(user, step.protocol)
+    else
+      false
+    end
   end
 
   private
