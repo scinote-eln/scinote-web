@@ -464,7 +464,7 @@ var ExperimnetTable = {
   },
   clearRowTaskSelection: function() {
     this.selectedMyModules = [];
-    $('.select-all-checkboxes, .sci-checkbox').prop('checked', false);
+    $('.select-all-checkboxes .sci-checkbox').prop('checked', false);
     this.updateExperimentToolbar();
   },
   initNewTaskModal: function(table) {
