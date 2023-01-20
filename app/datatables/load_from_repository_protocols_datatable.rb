@@ -70,7 +70,8 @@ class LoadFromRepositoryProtocolsDatatable < CustomDatatable
              'ON "protocol_protocol_keywords"."protocol_id" = "protocols"."id"')
       .joins('LEFT OUTER JOIN "protocol_keywords"'\
              'ON "protocol_protocol_keywords"."protocol_keyword_id" = "protocol_keywords"."id"')
-      .joins('LEFT OUTER JOIN users ON users.id = protocols.added_by_id')
+      .joins('LEFT OUTER JOIN users ON users.id = protocols.added_by_id').active
+
     records.group('"protocols"."id"')
   end
 
@@ -127,12 +128,12 @@ class LoadFromRepositoryProtocolsDatatable < CustomDatatable
         'CAST',
         [::Arel::Nodes::SqlLiteral.new("string_agg(\"protocol_keywords\".\"name\", ' ') AS #{typecast}")]
       ).matches("%#{sanitize_sql_like(search_val)}%").to_sql +
-      " OR " +
+      ' OR ' +
       ::Arel::Nodes::NamedFunction.new(
         'CAST',
         [::Arel::Nodes::SqlLiteral.new("max(\"users\".\"full_name\") AS #{typecast}")]
       ).matches("%#{sanitize_sql_like(search_val)}%").to_sql +
-      " OR " +
+      ' OR ' +
       ::Arel::Nodes::NamedFunction.new(
         'CAST',
         [::Arel::Nodes::SqlLiteral.new("COUNT(\"protocol_versions\".\"id\") + 1 AS #{typecast}")]
@@ -143,7 +144,6 @@ class LoadFromRepositoryProtocolsDatatable < CustomDatatable
     criteria = super(query)
 
     # Aight, now append another or
-    criteria = criteria.or(Protocol.arel_table[:id].in(records_having.arel))
-    criteria
+    criteria.or(Protocol.arel_table[:id].in(records_having.arel))
   end
 end

@@ -219,8 +219,10 @@ function initLoadFromRepositoryTable(content) {
     fnInitComplete: function(e) {
       var dataTableWrapper = $(e.nTableWrapper);
       DataTableHelpers.initLengthAppearance(dataTableWrapper);
-      DataTableHelpers.initSearchField(dataTableWrapper,
-        I18n.t('my_modules.protocols.load_from_repository_modal.filter_protocols'));
+      DataTableHelpers.initSearchField(
+        dataTableWrapper,
+        I18n.t('my_modules.protocols.load_from_repository_modal.filter_protocols')
+      );
 
       $('.toolbar').html(I18n.t('my_modules.protocols.load_from_repository_modal.text2'));
     }
