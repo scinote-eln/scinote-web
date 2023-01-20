@@ -59,7 +59,7 @@ class Protocol < ApplicationRecord
   end
   with_options if: :in_repository_draft? do
     # Only one draft can exist for each protocol
-    validates :parent_id, uniqueness: true, if: -> { parent_id.present? }
+    validates :parent_id, uniqueness: { scope: :protocol_type }, if: -> { parent_id.present? }
     validate :versions_same_name_constrain
   end
   with_options if: -> { in_repository? && active? && !parent } do |protocol|
@@ -97,6 +97,9 @@ class Protocol < ApplicationRecord
              class_name: 'User',
              inverse_of: :added_protocols,
              optional: true
+  belongs_to :last_modified_by,
+             class_name: 'User',
+             optional: true
   belongs_to :my_module,
              inverse_of: :protocols,
              optional: true
@@ -114,6 +117,9 @@ class Protocol < ApplicationRecord
   belongs_to :restored_by,
              class_name: 'User',
              inverse_of: :restored_protocols, optional: true
+  belongs_to :published_by,
+             class_name: 'User',
+             inverse_of: :published_protocols, optional: true
   has_many :linked_children,
            class_name: 'Protocol',
            foreign_key: 'parent_id'
@@ -233,6 +239,21 @@ class Protocol < ApplicationRecord
 
   def created_by
     in_module? ? my_module.created_by : added_by
+  end
+
+  def draft
+    return nil unless in_repository_published_original?
+
+    team.protocols.in_repository_draft.find_by(parent: self)
+  end
+
+  def published_versions
+    return self.class.none unless in_repository_published_original?
+
+    team.protocols
+        .in_repository_published_version
+        .where(parent: self)
+        .or(team.protocols.in_repository_published_original.where(id: id))
   end
 
   def permission_parent

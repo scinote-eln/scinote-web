@@ -35,6 +35,7 @@
     initLinkedChildrenModal();
     initModals();
     initImport();
+    initVersionsModal();
   }
 
   function selectDate($field) {
@@ -375,6 +376,25 @@
         return false;
       });
     }
+  }
+
+  function initVersionsModal() {
+    let protocolsContainer = '.protocols-container';
+    let versionsModal = '#protocol-versions-modal';
+
+    protocolsTableEl.on('click', '.protocol-versions-link', function(e) {
+      $.get(this.href, function(data) {
+        $(protocolsContainer).append($.parseHTML(data.html));
+        $(versionsModal).modal('show');
+
+        // Remove modal when it gets closed
+        $(versionsModal).on('hidden.bs.modal', function() {
+          $(versionsModal).remove();
+        });
+      });
+      e.stopPropagation();
+      e.preventDefault();
+    });
   }
 
   function initLinkedChildrenModal() {

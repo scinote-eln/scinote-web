@@ -66,3 +66,28 @@
     }
   }
 }
+
+#protocol-versions-modal {
+  .modal-body {
+    padding-bottom: 0;
+    padding-top: 0;
+  }
+
+  .modal-footer {
+    border: 0;
+  }
+  
+  .protocol-version-row {
+    border-bottom: 1px solid $color-concrete;
+    padding: 1em 0;
+  }
+
+  .protocol-version-link {
+    margin-right: 1em;
+  }
+
+  .protocol-version-comment-row {
+    padding-bottom: .5em;
+    padding-top: .5em;
+  }
+}
