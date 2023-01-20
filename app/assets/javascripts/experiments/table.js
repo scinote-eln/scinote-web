@@ -201,6 +201,8 @@ var ExperimnetTable = {
       let id = $('#modal-edit-module').data('id');
       let newValue = $('#edit-module-name-input').val();
 
+      $(`.my-module-selector[data-my-module="${id}"]`).trigger('click');
+
       if (newValue === $(`#taskName${id}`).data('full-name')) {
         $('#modal-edit-module').modal('hide');
         return false;
@@ -224,6 +226,10 @@ var ExperimnetTable = {
             .attr('data-error-text', error);
         }
       });
+
+      if ($(`.my-module-selector[data-my-module="${id}"]`).prop('checked')) {
+        $(`.my-module-selector[data-my-module="${id}"]`).trigger('click');
+      }
 
       this.clearRowTaskSelection();
 
