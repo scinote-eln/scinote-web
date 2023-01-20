@@ -1374,7 +1374,10 @@ CREATE TABLE public.protocols (
     nr_of_linked_children integer DEFAULT 0,
     archived boolean DEFAULT false NOT NULL,
     version_number integer DEFAULT 1,
-    previous_version_id bigint
+    version_comment character varying,
+    previous_version_id bigint,
+    last_modified_by_id bigint,
+    published_by_id bigint
 );
 
 
@@ -5590,6 +5593,13 @@ CREATE INDEX index_protocols_on_description ON public.protocols USING gin (publi
 
 
 --
+-- Name: index_protocols_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_protocols_on_last_modified_by_id ON public.protocols USING btree (last_modified_by_id);
+
+
+--
 -- Name: index_protocols_on_my_module_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5622,6 +5632,13 @@ CREATE INDEX index_protocols_on_previous_version_id ON public.protocols USING bt
 --
 
 CREATE INDEX index_protocols_on_protocol_type ON public.protocols USING btree (protocol_type);
+
+
+--
+-- Name: index_protocols_on_published_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_protocols_on_published_by_id ON public.protocols USING btree (published_by_id);
 
 
 --
@@ -7010,6 +7027,14 @@ ALTER TABLE ONLY public.repositories
 
 
 --
+-- Name: protocols fk_rails_139478354a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.protocols
+    ADD CONSTRAINT fk_rails_139478354a FOREIGN KEY (published_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: tables fk_rails_147b6eced4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7439,6 +7464,14 @@ ALTER TABLE ONLY public.oauth_access_tokens
 
 ALTER TABLE ONLY public.wopi_actions
     ADD CONSTRAINT fk_rails_736b4e5a7d FOREIGN KEY (wopi_app_id) REFERENCES public.wopi_apps(id);
+
+
+--
+-- Name: protocols fk_rails_73d601aab1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.protocols
+    ADD CONSTRAINT fk_rails_73d601aab1 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
 
 
 --

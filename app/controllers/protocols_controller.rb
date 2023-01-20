@@ -1,4 +1,3 @@
-
 class ProtocolsController < ApplicationController
   include RenamingUtil
   include ActionView::Helpers::TextHelper
@@ -16,6 +15,7 @@ class ProtocolsController < ApplicationController
   before_action :check_clone_permissions, only: [:clone]
   before_action :check_view_permissions, only: %i(
     show
+    versions_modal
     protocol_status_bar
     updated_at_label
     preview
@@ -112,6 +112,15 @@ class ProtocolsController < ApplicationController
         }
       end
     end
+  end
+
+  def versions_modal
+    return render_403 unless @protocol.in_repository_published_original?
+
+    @published_versions = @protocol.published_versions.order(version_number: :desc)
+    render json: {
+      html: render_to_string(partial: 'protocols/index/protocol_versions_modal.html.erb')
+    }
   end
 
   def print

@@ -1,4 +1,4 @@
-<%= link_to versions_modal_protocol_path(protocol), remote: true do %>
+<%= link_to versions_modal_protocol_path(protocol), class: 'protocol-versions-link', remote: true do %>
     <% if protocol.in_repository_published_original? %>
         <%= protocol.nr_of_versions %>
         <% if protocol.nr_of_drafts.positive? %>
