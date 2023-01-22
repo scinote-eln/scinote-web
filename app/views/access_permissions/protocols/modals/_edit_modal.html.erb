@@ -9,7 +9,12 @@
       </div>
       <div class="modal-body">
         <% protocol.assigned_users.order(full_name: :asc).each do |user| %>
-          <%= render('access_permissions/partials/protocol_member_field', user: user, protocol: protocol, update_path: update_path) %>
+          <%= render('access_permissions/partials/member_field',
+                     user: user,
+                     object: protocol,
+                     update_path: update_path,
+                     delete_path: access_permissions_protocol_path(protocol, user_id: user.id)
+                    ) %>
         <% end %>
       </div>
 

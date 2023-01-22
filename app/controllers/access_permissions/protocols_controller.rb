@@ -7,7 +7,7 @@ module AccessPermissions
     before_action :check_manage_permissions, except: %i(show)
 
     def new
-      @user_assignment = UserAssignment.new(assignable: @project, assigned_by: current_user)
+      @user_assignment = UserAssignment.new(assignable: @protocol, assigned_by: current_user)
 
       respond_to do |format|
         format.json
@@ -85,7 +85,7 @@ module AccessPermissions
     end
 
     def permitted_create_params
-      params.require(:access_permissions_new_user_protocol_form)
+      params.require(:access_permissions_new_user_form)
             .permit(resource_members: %i(assign user_id user_role_id))
     end
 

@@ -20,13 +20,32 @@ module AccessPermissions
     end
 
     def update
-      @experiment_member = ExperimentMember.new(current_user, @experiment, @project)
+      user_id = permitted_update_params[:user_id]
+      @user_assignment = UserAssignment.find_by(
+        assignable: @experiment,
+        user_id: user_id
+      )
 
       if permitted_update_params[:user_role_id] == 'reset'
-        @experiment_member.reset(permitted_update_params)
+        @user_assignment.update(
+          user_role_id: @project.user_assignments.find_by(user_id: user_id).user_role_id,
+          assigned: :automatically
+        )
       else
-        @experiment_member.update(permitted_update_params)
+        @user_assignment.update(
+          user_role_id: permitted_update_params[:user_role_id],
+          assigned: :manually
+        )
       end
+
+      UserAssignments::PropagateAssignmentJob.perform_later(
+        @experiment,
+        @user_assignment.user,
+        @user_assignment.user_role,
+        current_user
+      )
+
+      log_change_activity
 
       respond_to do |format|
         format.json do
@@ -38,7 +57,7 @@ module AccessPermissions
     private
 
     def permitted_update_params
-      params.require(:experiment_member)
+      params.require(:user_assignment)
             .permit(%i(user_role_id user_id))
     end
 
@@ -60,6 +79,21 @@ module AccessPermissions
 
     def check_read_permissions
       render_403 unless can_read_experiment?(@experiment)
+    end
+
+    def log_change_activity
+      Activities::CreateActivityService.call(
+        activity_type: :change_user_role_on_experiment,
+        owner: current_user,
+        subject: @experiment,
+        team: @project.team,
+        project: @project,
+        message_items: {
+          experiment: @experiment.id,
+          user_target: @user_assignment.user_id,
+          role: @user_assignment.user_role.name
+        }
+      )
     end
   end
 end

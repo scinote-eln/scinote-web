@@ -2,7 +2,7 @@
   'use strict';
 
   function initNewUserAssignmentFormListener() {
-    $(document).on('change', 'form#new-user-assignment-to-project-form, form#new-user-assignment-to-protocol-form', function() {
+    $(document).on('change', 'form#new-user-assignment-form', function() {
       let values = [];
       let count = 0;
       let submitBtn = $(this).find('input[type="submit"]');
@@ -38,6 +38,12 @@
         default:
           submitBtn.val(submitBtn.data('label-plural').replace('{num}', count));
       }
+    });
+
+    $(document).on('ajax:success', 'form#new-user-assignment-form', function(_e, data) {
+      $('.modal-backdrop').remove();
+      $('.user-assignments-modal').replaceWith(data.html);
+      $('.user-assignments-modal').modal('show');
     });
   }
 

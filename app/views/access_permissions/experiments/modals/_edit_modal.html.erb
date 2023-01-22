@@ -13,11 +13,11 @@
         </p>
         <hr />
         <% users.order(full_name: :asc).each do |user| %>
-          <%= render partial: 'access_permissions/partials/experiment_member_field',
+          <%= render partial: 'access_permissions/partials/member_field',
                       locals: {
                         user: user,
-                        project: project,
-                        experiment: experiment,
+                        with_inherit: true,
+                        object: experiment,
                         update_path: access_permissions_project_experiment_path(project, experiment)
                       } %>
         <% end %>
