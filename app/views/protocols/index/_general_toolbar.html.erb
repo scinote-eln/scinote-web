@@ -20,7 +20,7 @@
               <input type="file" value="" accept=".eln" data-role="import-file-input"
               data-team-id="<%= @current_team.id %>"
               data-type="<%= @type %>" data-import-url="<%= import_protocols_path %>"
-              <%= 'disabled="disabled"' unless false %>>
+              <%= 'disabled="disabled"' unless can_create_protocols_in_repository?(@current_team) %>>
             </a>
           </li>
           <li>
