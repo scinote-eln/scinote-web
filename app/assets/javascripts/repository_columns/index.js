@@ -159,7 +159,6 @@ var RepositoryColumns = (function() {
       };
       var delimiterDropdownConfig = {
         singleSelect: true,
-        id: "giga",
         noEmptyOption: true,
         selectAppearance: 'simple',
         closeOnSelect: true,
