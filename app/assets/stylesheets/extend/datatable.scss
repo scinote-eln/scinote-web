@@ -17,6 +17,10 @@
         overflow: hidden;
         white-space: nowrap;
 
+        &:not(#select-all){
+          cursor: url(image-path('icon_small/cursor-hover.svg')), pointer;
+        }
+
         .modal-tooltiptext {
           margin-left: -10px;
           margin-top: 10px;
