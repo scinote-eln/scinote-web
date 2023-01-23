@@ -28,18 +28,20 @@ class TinyMceAsset < ApplicationRecord
             .scan(/data-mce-token="([^"]+)"/)
             .flatten
 
-    images = JSON.parse(images) + text_images
+    images = JSON.parse(images) | text_images
 
     current_images = object.tiny_mce_assets.pluck(:id)
     images_to_delete = current_images.reject do |x|
       (images.include? Base62.encode(x))
     end
+
     images.each do |image|
       image_to_update = find_by(id: Base62.decode(image))
 
       # if image was pasted from another object, check permission and create a copy
       if image_to_update.object != object && image_to_update.can_read?(current_user)
-        image_to_update = image_to_update.clone_tinymce_asset(object)
+        image_to_update.clone_tinymce_asset(object)
+        image_to_update.reload
       end
 
       next if image_to_update.object
