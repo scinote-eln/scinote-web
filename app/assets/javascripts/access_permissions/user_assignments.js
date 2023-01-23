@@ -45,6 +45,12 @@
       $('.user-assignments-modal').replaceWith(data.html);
       $('.user-assignments-modal').modal('show');
     });
+
+    $(document).on('click', '.user-assignment-dropdown .user-role-selector', function() {
+      let roleId = $(this).data('role-id');
+      $(this).closest('.dropdown').find('#user_assignment_user_role_id').val(roleId);
+      $(this).closest('form').trigger('submit');
+    });
   }
 
   $(document).one('turbolinks:load', initNewUserAssignmentFormListener);

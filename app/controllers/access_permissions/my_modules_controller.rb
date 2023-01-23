@@ -22,18 +22,15 @@ module AccessPermissions
 
     def update
       user_id = permitted_update_params[:user_id]
-      @user_assignment = UserAssignment.find_by(
-        assignable: @my_module,
-        user_id: user_id
-      )
+      @user_assignment = @my_module.user_assignments.find_by(user_id: user_id, team: current_team)
 
       if permitted_update_params[:user_role_id] == 'reset'
-        @user_assignment.update(
-          user_role_id: @experiment.user_assignments.find_by(user_id: user_id).user_role_id,
+        @user_assignment.update!(
+          user_role_id: @experiment.user_assignments.find_by(user_id: user_id, team: current_team).user_role_id,
           assigned: :automatically
         )
       else
-        @user_assignment.update(
+        @user_assignment.update!(
           user_role_id: permitted_update_params[:user_role_id],
           assigned: :manually
         )

@@ -21,7 +21,5 @@
         <%= f.select :default_public_user_role_id, options_for_select(user_roles_collection, selected: project.default_public_user_role_id), {}, class: 'form-control selectpicker', title: t('user_assignment.change_project_role'), data: { 'selected-text-format' => 'static' } %>
       <% end %>
     </div>
-    <div class="user-assignment-remove">
-    </div>
   </div>
 <% end %>

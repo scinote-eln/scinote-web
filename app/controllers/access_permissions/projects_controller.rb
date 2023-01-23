@@ -8,7 +8,10 @@ module AccessPermissions
     before_action :available_users, only: %i(new create)
 
     def new
-      @user_assignment = UserAssignment.new(assignable: @protocol, assigned_by: current_user)
+      @user_assignment = @project.user_assignments.new(
+        assigned_by: current_user,
+        team: current_team
+      )
 
       respond_to do |format|
         format.json
@@ -28,7 +31,10 @@ module AccessPermissions
     end
 
     def update
-      @user_assignment = UserAssignment.find_by(user_id: permitted_update_params[:user_id], assignable: @project)
+      @user_assignment = @project.user_assignments.find_by(
+        user_id: permitted_update_params[:user_id],
+        team: current_team
+      )
       @user_assignment.update!(permitted_update_params)
 
       log_activity(:change_user_role_on_project, @user_assignment)
@@ -48,7 +54,8 @@ module AccessPermissions
 
           user_assignment = UserAssignment.find_or_initialize_by(
             assignable: @project,
-            user_id: user_assignment_params[:user_id]
+            user_id: user_assignment_params[:user_id],
+            team: current_team
           )
 
           user_assignment.update!(
@@ -75,7 +82,7 @@ module AccessPermissions
 
     def destroy
       user = @project.assigned_users.find(params[:user_id])
-      user_assignment = @project.user_assignments.find_by(user_id: params[:user_id])
+      user_assignment = @project.user_assignments.find_by(user: user, team: current_team)
 
       if @project.visible?
         user_assignment.update!(

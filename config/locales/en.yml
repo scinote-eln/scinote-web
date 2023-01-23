@@ -3054,6 +3054,8 @@ en:
   access_permissions:
     everyone_else: "Everyone else at %{team_name}"
     reset: "The inherited role will be applied"
+    remove_access: "Remove access"
+    grant_access: "Grant access"
     create:
       success:
         one: "You have successfully granted access to %{count} member to the project."
@@ -3102,18 +3104,14 @@ en:
       modals:
         show_modal:
           title: "Access to %{resource_name}"
-          new_resource_assignments: "Grant new access to %{resource}"
         edit_modal:
           title: "Manage access for %{resource_name}"
-          new_resource_assignments: "Grant new access to %{resource}"
     protocols:
       modals:
         show_modal:
           title: "Access to %{resource_name}"
-          new_resource_assignments: "Grant new access to %{resource}"
         edit_modal:
           title: "Manage access for %{resource_name}"
-          new_resource_assignments: "Grant new access to %{resource}"
     experiments:
       modals:
         show_modal:
