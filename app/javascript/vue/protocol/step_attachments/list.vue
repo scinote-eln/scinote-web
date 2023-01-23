@@ -1,6 +1,6 @@
 <template>
   <div class="list-attachment-container asset"
-       :title="`attachment ${attachment.id} list item`"
+       :title="`edit attachment ${attachment.attributes.file_name} list item`"
        :data-asset-id="attachment.id"
   >
     <i class="fas asset-icon" :class="attachment.attributes.icon"></i>

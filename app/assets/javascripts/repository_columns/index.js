@@ -185,7 +185,7 @@ var RepositoryColumns = (function() {
             selectAppearance: 'simple',
             disableSearch: true,
             labelHTML: true,
-            title: 'repository column data type select',
+            title: `repository column data type select ${columnType}`,
             optionLabel: function(option) {
               return `<div class="column-type-option" data-disabled="${option.params.disabled}">
                         <span title="${option.label}">${option.label}</span>

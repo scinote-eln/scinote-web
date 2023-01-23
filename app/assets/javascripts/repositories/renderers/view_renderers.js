@@ -8,7 +8,7 @@ $.fn.dataTable.render.RepositoryAssetValue = function(data) {
         ${asset.icon_html}
         <div>
           <a  class="file-preview-link"
-            title="repository asset value: ${asset}"
+            title="repository asset value: ${asset.file_name}"
             id="modal_link${asset.id}"
             data-no-turbolink="true"
             data-id="true"
@@ -83,7 +83,7 @@ $.fn.dataTable.render.defaultRepositoryDateTimeValue = function() {
 $.fn.dataTable.render.RepositoryDateTimeValue = function(data) {
   let reminderClass = data.value.reminder ? 'reminder' : '';
   return `<span class="${reminderClass} date-time-cell-value"
-                title="repository date time value: ${data.value.datetime}"
+                title="repository date time value: ${data.value.datetime} ${reminderClass}"
                 data-time="${data.value.time_formatted}"
                 data-datetime="${data.value.datetime}"
                 data-date="${data.value.date_formatted}">${data.value.formatted}</span>`;
@@ -95,7 +95,7 @@ $.fn.dataTable.render.defaultRepositoryTimeValue = function() {
 
 $.fn.dataTable.render.RepositoryTimeValue = function(data) {
   return `<span data-time="${data.value.formatted}"
-                title="repository time value: ${data}"
+                title="repository time value: ${data.value.formatted}"
                 data-datetime="${data.value.datetime}">${data.value.formatted}</span>`;
 };
 

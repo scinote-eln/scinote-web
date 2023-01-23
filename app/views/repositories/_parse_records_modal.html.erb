@@ -1,4 +1,5 @@
 <div class="modal fade"
+     onclick="parsedRecordTitles(<%= @import_data.header.length %>)"
      id="parse-records-modal"
      aria-labelledby="parse-modal-title"
      role="dialog">
@@ -79,12 +80,16 @@
 </div>
 
 <script>
-    var e = document.getElementsByName("mappings[0]")[0]
-    e.title = e.options[e.selectedIndex].text;
-    
-    var select = document.getElementById("mappings[0]");
-    for (var i = 0; i < select.length; i++){
-      var option = select.options[i];
-      option.title = option.text;
+    function parsedRecordTitles(len) {
+      for (var i = 0; i < len; i++) {
+        var e = document.getElementsByName(`mappings[${i}]`)[0]
+        e.title = e.options[e.selectedIndex].text;
+
+        var select = document.getElementById(`mappings[${i}]`);
+        for (var j = 0; j < select.length; j++){
+          var option = select.options[j];
+          option.title = option.text;
+        }
+      }
     }
 </script>

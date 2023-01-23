@@ -1,7 +1,7 @@
 <% if edit_supported %>
   <%= link_to edit_asset_url(id: asset),
           id: 'wopi_file_edit_button',
-          title: 'wopi file edit button',
+          title: "wopi file edit button #{asset.file_name}",
           class: 'btn btn-light',
           target: '_blank' do %>
     <%= file_application_icon(asset) %>

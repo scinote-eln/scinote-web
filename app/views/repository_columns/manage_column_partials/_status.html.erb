@@ -5,10 +5,11 @@
   <div class="col-sm-9 status-item-list">
     <% column.repository_status_items.each do |item| %>
       <div class="status-item-container" data-id="<%= item.id %>">
-        <div class="status-item-icon" emoji="<%= item.icon %>"><%= item.icon %></div>
+        <div class="status-item-icon" title="<%= item.icon %>" emoji="<%= item.icon %>"><%= item.icon %></div>
         <input placeholder="<%= t('libraries.manange_modal_column.name_placeholder') %>"
                class="status-item-field"
                type="text"
+               title="<%= item.status %>"
                value="<%= item.status %>"/>
         <span class="status-item-icon-trash fas fa-trash"></span>
       </div>
@@ -19,3 +20,11 @@
     </div>
   </div>
 </div>
+
+<script>
+  var emojis = document.getElementsByClassName('emoji')
+  var emoji_length = emojis.length
+  for (let i = 0; i < emoji_length; i++) {
+    emojis[i].title = emojis[i].alt;
+  }
+</script>

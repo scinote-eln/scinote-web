@@ -33,7 +33,7 @@
       <div class="sci-input-container reminder-value-container" data-error-text="<%= t('libraries.manange_modal_column.value_too_high_error', max_value: Constants::MAX_NUMBER_OF_REMINDER_WEEKS) %>">
         <input
           type="text" class="sci-input-field reminder-value"
-          title="reminder value container for datetime"
+          title="reminder value container for datetime <%= column&.metadata['reminder_value'] || Constants::REPOSITORY_DATETIME_REMINDER_PRESET %>"
           placeholder="<%= t('libraries.manange_modal_column.datetime_type.enter_amount') %>"
           data-max="<%= Constants::MAX_NUMBER_OF_REMINDER_WEEKS %>"
           value="<%= column&.metadata['reminder_value'] || Constants::REPOSITORY_DATETIME_REMINDER_PRESET %>"
@@ -56,7 +56,7 @@
     </label>
     <div class="col-sm-9">
       <div class="sci-input-container" data-error-text="<%= t('libraries.manange_modal_column.datetime_type.reminder_message_limit') %>">
-        <input title="reminder message container for datetime" id="datetime-reminder-message" type="text" class="sci-input-field reminder-message"
+        <input title="reminder message container for datetime <%= column&.metadata['reminder_message'] %>" id="datetime-reminder-message" type="text" class="sci-input-field reminder-message"
               placeholder="<%= t('libraries.manange_modal_column.datetime_type.enter_reminder_message')%>"
               value="<%= column&.metadata['reminder_message'] %>">
       </div>

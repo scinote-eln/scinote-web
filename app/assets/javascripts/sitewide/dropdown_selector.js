@@ -216,7 +216,7 @@ var dropdownSelector = (function() {
     if (config.customDropdownIcon) {
       return config.customDropdownIcon();
     }
-    return '<i class="fas fa-caret-down right-icon"></i><i class="fas fa-search right-icon simple-dropdown"></i>';
+    return '<i class="fas fa-caret-down right-icon" title="arrow"></i><i class="fas fa-search right-icon simple-dropdown"></i>';
   }
 
   // Set new data
@@ -430,8 +430,9 @@ var dropdownSelector = (function() {
     });
 
     // E2E
-    dropdownContainer.find('.input-field').prop('title', config.title + ' input' || 'dropdown selector container input');
-    dropdownContainer.find('.fas.fa-caret-down.right-icon').prop('title', config.title + ' arrow' || 'dropdown selector container arrow');
+    dropdownContainer.find('.input-field').prop('title', (config.title) + ' input' || 'dropdown selector container input');
+    console.log(    dropdownContainer.find('.input-field').prop('title', (config.title) + ' input' || 'dropdown selector container input').val()    )
+    dropdownContainer.find('.fas.fa-caret-down.right-icon').prop('title', (config.title || config.optionClass || '') + ' arrow' || 'dropdown selector container arrow');
 
     // Add click event to input field
     dropdownContainer.find('.input-field').click(() => {
