@@ -107,8 +107,11 @@
         height: 68px;
         justify-content: flex-end;
         position: relative;
-        row-gap: 8px;
         padding: 16px;
+
+        .clear-button {
+          margin-right: 8px;
+        }
       }
     }
 
