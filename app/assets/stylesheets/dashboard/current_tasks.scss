@@ -105,9 +105,10 @@
         border-top: $border-default;
         display: flex;
         height: 68px;
-        justify-content: center;
+        justify-content: flex-end;
         position: relative;
-        width: 100%;
+        gap: 8px;
+        padding: 16px;
       }
     }
 
