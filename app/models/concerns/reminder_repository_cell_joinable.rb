@@ -5,13 +5,16 @@ module ReminderRepositoryCellJoinable
 
   included do
     def self.reminder_repository_cells_scope(relation, user)
-      relation.joins( # datetime reminders
+      relation.joins(
+        'INNER JOIN repository_columns repository_reminder_columns ON ' \
+        'repository_reminder_columns.id = repository_cells.repository_column_id'
+      ).joins( # datetime reminders
         'LEFT OUTER JOIN "repository_date_time_values" ON '\
         '"repository_date_time_values"."id" = "repository_cells"."value_id" AND '\
         '"repository_cells"."value_type" = \'RepositoryDateTimeValueBase\' '\
-        'AND repository_columns.metadata ->> \'reminder_delta\' <> \'\' AND '\
+        'AND repository_reminder_columns.metadata ->> \'reminder_delta\' <> \'\' AND '\
         '(repository_date_time_values.data - NOW()) <= '\
-        '(repository_columns.metadata ->> \'reminder_delta\')::int * interval \'1 sec\''
+        '(repository_reminder_columns.metadata ->> \'reminder_delta\')::int * interval \'1 sec\''
       ).joins( # stock reminders
         'LEFT OUTER JOIN "repository_stock_values" ON '\
         '"repository_cells"."value_type" = \'RepositoryStockValue\' AND '\

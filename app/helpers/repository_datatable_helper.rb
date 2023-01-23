@@ -14,7 +14,6 @@ module RepositoryDatatableHelper
         DT_RowId: record.id,
         DT_RowAttr: { 'data-state': row_style(record) },
         recordInfoUrl: Rails.application.routes.url_helpers.repository_repository_row_path(repository, record),
-        hasActiveReminders: record.has_active_stock_reminders || record.has_active_datetime_reminders,
         rowRemindersUrl:
           Rails.application.routes.url_helpers
                .active_reminder_repository_cells_repository_repository_row_url(
@@ -22,6 +21,10 @@ module RepositoryDatatableHelper
                  record
                )
       )
+
+      if reminders_enabled
+        row['hasActiveReminders'] = record.has_active_stock_reminders || record.has_active_datetime_reminders
+      end
 
       if has_stock_management
         row['manageStockUrl'] = if record.has_stock?
@@ -108,7 +111,6 @@ module RepositoryDatatableHelper
         DT_RowAttr: { 'data-state': row_style(record) },
         '0': escape_input(record.name),
         recordInfoUrl: Rails.application.routes.url_helpers.repository_repository_row_path(record.repository, record),
-        hasActiveReminders: record.has_active_stock_reminders || record.has_active_datetime_reminders,
         rowRemindersUrl:
           Rails.application.routes.url_helpers
                .active_reminder_repository_cells_repository_repository_row_url(
@@ -116,6 +118,10 @@ module RepositoryDatatableHelper
                  record
                )
       }
+
+      if reminders_enabled
+        row['hasActiveReminders'] = record.has_active_stock_reminders || record.has_active_datetime_reminders
+      end
 
       if has_stock_management
         stock_present = record.repository_stock_cell.present?
@@ -276,11 +282,11 @@ module RepositoryDatatableHelper
   end
 
   def with_reminders_status(repository_rows, repository)
-    # don't load reminders for archived repositories
-    return repository_rows if repository.archived?
-
-    # don't load reminders for snapshots
-    return repository_rows if repository.is_a?(RepositorySnapshot)
+    # don't load reminders for archived repositories or snapshots
+    if repository.archived? || repository.is_a?(RepositorySnapshot)
+      return repository_rows.select('FALSE AS has_active_stock_reminders')
+                            .select('FALSE AS has_active_datetime_reminders')
+    end
 
     repository_cells = RepositoryCell.joins(
       "INNER JOIN repository_columns ON repository_columns.id = repository_cells.repository_column_id " \
