@@ -1,6 +1,6 @@
 <template>
   <div class="inline-attachment-container asset"
-       :title="`attachment ${attachment.id} inline`"
+       :title="`attachment ${attachment.attributes.file_name} inline`"
        :data-asset-id="attachment.id"
   >
     <div class="header">

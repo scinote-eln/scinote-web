@@ -2,7 +2,7 @@
   <div class="sci-inline-edit" :class="{ 'editing': editing }" tabindex="0" @keyup.enter="enableEdit($event)">
     <div class="sci-inline-edit__content" :class="{ 'error': error }">
       <textarea
-        :title="`${placeholder} ${newValue}`"
+        :title="`${newValue || placeholder}`"
         ref="input"
         rows="1"
         v-if="editing"
@@ -14,7 +14,7 @@
         @blur="handleBlur"
         @keyup.escape="cancelEdit"
       ></textarea>
-      <div v-else @click="enableEdit($event)" class="sci-inline-edit__view" :title="'Edit ' + ` (${newValue})`" v-html="(smartAnnotation ? sa_value : newValue) || placeholder" :class="{ 'blank': isBlank }"></div>
+      <div v-else @click="enableEdit($event)" class="sci-inline-edit__view" :title="newValue || placeholder" v-html="(smartAnnotation ? sa_value : newValue) || placeholder" :class="{ 'blank': isBlank }"></div>
       <div :title="`${attributeName} inline edit error`" v-if="editing && error" class="sci-inline-edit__error">
         {{ error }}
       </div>

@@ -50,6 +50,11 @@ var DataTableHelpers = (function() {
           $('.dataTables_filter .search-icon').removeClass('collapsed');
         }
       });
+
+      var pagination = document.getElementsByClassName('paginate_button');
+      for (let i = 0; i < pagination.length; i++) {
+        pagination[i].title = pagination[i].querySelector('a').innerHTML;
+      }
     }
   };
 }());

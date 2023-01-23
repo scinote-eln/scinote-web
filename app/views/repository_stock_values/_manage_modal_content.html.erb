@@ -1,7 +1,7 @@
 <%= form_tag update_repository_stock_repository_repository_row_path(@repository, @repository_row), method: :post, remote: true, novalidate: true do %>
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>">
-      <span aria-hidden="true">&times;</span>
+      <span aria-hidden="true" title="x button for manage stock modal">&times;</span>
     </button>
     <h4 class="modal-title" id="modal-delete-module-label">
       <% if repository_stock_value.new_record? %>
@@ -41,7 +41,7 @@
               <label><%= t('repository_stock_values.manage_modal.amount') %></label>
               <input id="stock-input-amount"
                      class="sci-input-field"
-                     title="stock amount input field"
+                     title="stock amount input field <%= repository_stock_value.amount %>"
                      type="text"
                      autocomplete="off"
                      name="input-amount"
@@ -120,16 +120,16 @@
           <div class="stock-update-view">
             <div class="stock-initial-container <%= 'negative' if repository_stock_value.amount.negative? %>">
               <span class="subtitle"><%= t('repository_stock_values.manage_modal.current_stock') %></span>
-              <span class="value"><%= repository_stock_value.formatted_value %></span>
-              <span class="units"><%= repository_stock_value.repository_stock_unit_item&.data %></span>
+              <span class="value" title="current stock value <%= repository_stock_value.formatted_value %>"><%= repository_stock_value.formatted_value %></span>
+              <span class="units" title="current stock unit <%= repository_stock_value.repository_stock_unit_item&.data %>"><%= repository_stock_value.repository_stock_unit_item&.data %></span>
             </div>
             <div class="stock-arrow">
               <i class="fas fa-arrow-right"></i>
             </div>
             <div class="stock-final-container <%= 'negative' if repository_stock_value.amount.negative? %> ">
               <span class="subtitle"><%= t('repository_stock_values.manage_modal.new_stock') %></span>
-              <span class="value"><%= repository_stock_value.formatted_value %></span>
-              <span class="units"><%= repository_stock_value.repository_stock_unit_item&.data %></span>
+              <span class="value" title="final stock value <%= repository_stock_value.formatted_value %>"><%= repository_stock_value.formatted_value %></span>
+              <span class="units" title="final stock unit <%= repository_stock_value.repository_stock_unit_item&.data %>" ><%= repository_stock_value.repository_stock_unit_item&.data %></span>
             </div>
           </div>
         </div>
@@ -143,6 +143,6 @@
             class="btn btn-default"
             tabindex="7"
             data-dismiss="modal"><%=t 'general.cancel' %></button>
-    <%= submit_tag t('repository_stock_values.manage_modal.save_stock'), class: "btn btn-primary update-repository-stock", tabindex: "6", title: "save item #{repository_row.id} stock" %>
+    <%= submit_tag t('repository_stock_values.manage_modal.save_stock'), class: "btn btn-primary update-repository-stock", tabindex: "6", title: "save item #{repository_row.name} stock" %>
   </div>
 <% end %>
