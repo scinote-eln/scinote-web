@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-json.modal controller.render_to_string(
+json.html controller.render_to_string(
   partial: 'access_permissions/protocols/modals/edit_modal',
   formats: [:html],
   locals: {

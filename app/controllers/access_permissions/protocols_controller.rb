@@ -7,7 +7,11 @@ module AccessPermissions
     before_action :check_manage_permissions, except: %i(show)
 
     def new
-      @user_assignment = UserAssignment.new(assignable: @project, assigned_by: current_user)
+      @user_assignment = UserAssignment.new(
+        assignable: @protocol,
+        assigned_by: current_user,
+        team: current_team
+      )
 
       respond_to do |format|
         format.json
@@ -27,7 +31,10 @@ module AccessPermissions
     end
 
     def update
-      @user_assignment = UserAssignment.find_by(user_id: permitted_update_params[:user_id], assignable: @protocol)
+      @user_assignment = @protocol.user_assignments.find_by(
+        user_id: permitted_update_params[:user_id],
+        team: current_team
+      )
       @user_assignment.update(permitted_update_params)
       respond_to do |format|
         format.json do
@@ -43,6 +50,7 @@ module AccessPermissions
 
           user_assignment = UserAssignment.new(user_assignment_params)
           user_assignment.assignable = @protocol
+          user_assignment.team = current_team
           user_assignment.assigned_by = current_user
           user_assignment.save!
         end
@@ -61,7 +69,7 @@ module AccessPermissions
 
     def destroy
       user = @protocol.assigned_users.find(params[:user_id])
-      user_assignment = @protocol.user_assignments.find_by(user_id: params[:user_id])
+      user_assignment = @protocol.user_assignments.find_by(user: user, team: current_team)
       respond_to do |format|
         if user_assignment.destroy
           format.json do
@@ -85,7 +93,7 @@ module AccessPermissions
     end
 
     def permitted_create_params
-      params.require(:access_permissions_new_user_protocol_form)
+      params.require(:access_permissions_new_user_form)
             .permit(resource_members: %i(assign user_id user_role_id))
     end
 

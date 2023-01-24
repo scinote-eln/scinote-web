@@ -10,15 +10,15 @@
       <%= t '.title', resource_name: resource.name %>
     </h4>
   </div>
-  <%= form_with(model: form_object, url: create_path, method: :post, remote: true, html: { id: 'new-user-assignment-to-project-form', data: { action: 'replace-form', target: '#user_assignments_modal', object_type: resource.class.to_s.downcase} }) do |f| %>
+  <%= form_with(url: create_path, method: :post, remote: true, html: { id: 'new-user-assignment-form', data: { action: 'replace-form', target: '#user_assignments_modal', object_type: resource.class.to_s.downcase} }) do |f| %>
     <div class="modal-body">
       <div class="sci-input-container left-icon">
         <%= text_field_tag :search_users, '', placeholder: t('.find_people_html'), class: 'sci-input-field', data: { action: 'filter-list', target: 'new-user-assignment-to-project-form' } %>
         <i class="fas fa-search"></i>
       </div>
-      <% f.object.resource_members.each do |member| %>
-        <%= f.fields_for :resource_members, member do |member_form| %>
-          <%= render 'access_permissions/partials/user_assignment_field.html.erb', f: member_form  %>
+      <% users.each do |user| %>
+        <%= f.fields_for :users, UserAssignment.new(user: user) do |user_form| %>
+          <%= render 'access_permissions/partials/user_assignment_field.html.erb', user_form: user_form  %>
         <% end %>
       <% end %>
     </div>

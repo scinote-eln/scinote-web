@@ -9,8 +9,8 @@
       ev.preventDefault();
 
       animateSpinner();
-      $.get(ev.currentTarget.getAttribute('href')).then(function({ modal }) {
-        $(modal)
+      $.get(ev.currentTarget.getAttribute('href')).then(function({ modal, html }) {
+        $(modal || html)
           .on('shown.bs.modal', function() {
             if ($(this).hasClass('project-assignments-modal')) {
               $(this).on('ajax:success', 'form', function() {

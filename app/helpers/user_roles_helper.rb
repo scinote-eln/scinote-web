@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 module UserRolesHelper
-  def user_roles_collection
-    UserRole.order(id: :asc).pluck(:name, :id)
+  def user_roles_collection(with_inherit: false)
+    roles = UserRole.order(id: :asc).pluck(:name, :id)
+    roles = [[t('access_permissions.reset'), 'reset']] + roles if with_inherit
+    roles
   end
 
   def team_user_roles_collection
