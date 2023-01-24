@@ -28,7 +28,7 @@ class TinyMceAsset < ApplicationRecord
             .scan(/data-mce-token="([^"]+)"/)
             .flatten
 
-    images = JSON.parse(images) | text_images
+    images = JSON.parse(images) + text_images
 
     current_images = object.tiny_mce_assets.pluck(:id)
     images_to_delete = current_images.reject do |x|
