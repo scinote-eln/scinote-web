@@ -1,11 +1,11 @@
 <template id="protocolGeneralToolbar">
   <div class="left-general-toolbar">
-    <%= button_to protocols_path(type: @type), disabled: !can_create_protocols_in_repository?(@current_team), class: 'btn btn-primary' do %>
+    <%= button_to protocols_path(type: @type), disabled: !can_create_protocols_in_repository?(@current_team), class: 'btn btn-primary only-active' do %>
       <span class="fas fa-plus"></span>
       <span class="hidden-xs"><%= t("protocols.index.create_new") %></span>
     <% end %>
 
-    <div id="protocol-import-group" class="sci-btn-group" role="group">
+    <div id="protocol-import-group" class="sci-btn-group  only-active" role="group">
       <button class="btn btn-light btn-open-file <%= 'disabled' unless can_create_protocols_in_repository?(@current_team) %>"
         data-toggle="dropdown"
         aria-haspopup="true"

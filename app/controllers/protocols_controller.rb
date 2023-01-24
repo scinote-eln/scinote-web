@@ -1038,13 +1038,13 @@ class ProtocolsController < ApplicationController
   end
 
   def permissions
-    #if stale?(@protocol)
+    if stale?(@protocol)
       render json: {
         copyable: can_clone_protocol_in_repository?(@protocol),
         archivable: can_manage_protocol_in_repository?(@protocol),
         restorable: can_restore_protocol_in_repository?(@protocol)
       }
-    #end
+    end
   end
 
   private

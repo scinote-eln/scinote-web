@@ -70,8 +70,7 @@ Canaid::Permissions.register_for(ProjectFolder) do
 end
 
 Canaid::Permissions.register_for(Protocol) do
-  %i(read_protocol_in_repository
-     manage_protocol_in_repository
+  %i(manage_protocol_in_repository
      manage_protocol_users)
     .each do |perm|
     can perm do |_, protocol|
