@@ -46,7 +46,7 @@ class RepositoryCell < ApplicationRecord
             unless: :importing
 
   scope :with_active_reminder, lambda { |user|
-    reminder_repository_cells_scope(joins(:repository_column), user)
+    reminder_repository_cells_scope(self, user)
   }
 
   def self.create_with_value!(row, column, data, user)
