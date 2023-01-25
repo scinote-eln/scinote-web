@@ -25,7 +25,7 @@
           <'page-info'i>
           <'page-selector'p>
         >`,
-      order: [[1, 'asc']],
+      order: [[0, 'asc']],
       stateSave: true,
       buttons: [],
       processing: true,
