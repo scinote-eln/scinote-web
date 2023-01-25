@@ -120,7 +120,6 @@ window.initRepositoryFilter = () => {
         this.reloadDataTable();
       },
       clearFilters() {
-        this.filters = [];
         this.filterName = null;
         this.dataTableElement.removeAttr('data-repository-filter-json');
         $('#modalSaveRepositoryTableFilter').data('repositoryTableFilterId', null);

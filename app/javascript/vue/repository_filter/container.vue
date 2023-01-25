@@ -24,16 +24,12 @@
         {{ i18n.t('repositories.show.filters.clear') }}
       </button>
     </div>
-    <div class="filters-list">
-      <FilterElement
-        v-for="(filter, index) in filters"
-        :key="filter.id"
-        :filter.sync="filters[index]"
-        :my_modules.sync= "my_modules"
-        @filter:update="updateFilter"
-        @filter:delete="filters.splice(index, 1)"
-      />
-    </div>
+    <FiltersList 
+      :filters.sync="filters" 
+      :my_modules.sync="my_modules" 
+      :key="filterListKey"
+      v-on:update-filter="updateFilter"
+      v-on:delete-filter="deleteFilter" />
     <div class="footer">
       <div id="filtersColumnsDropdown" class="dropup filters-columns-dropdown" @click="toggleColumnsFilters">
         <button class="btn btn-secondary add-filter prevent-shrink" >
@@ -59,7 +55,7 @@
 
  <script>
   import ColumnElement from 'vue/repository_filter/column.vue'
-  import FilterElement from 'vue/repository_filter/filter.vue'
+  import FiltersList from 'vue/repository_filter/filters_list.vue'
   import SavedFilterElement from 'vue/repository_filter/saved_filter.vue'
 
   export default {
@@ -76,10 +72,11 @@
     data() {
       return {
         filters: this.defaultFilters,
-        savedFilterScrollbar: null
+        savedFilterScrollbar: null,
+        filterListKey: true
       }
     },
-    components: { ColumnElement, FilterElement, SavedFilterElement },
+    components: { ColumnElement, FiltersList, SavedFilterElement },
     methods: {
       addFilter(column) {
         const id = this.filters.length ? this.filters[this.filters.length - 1].id + 1 : 1
@@ -92,8 +89,11 @@
         this.$emit("filters:update", this.filters);
       },
       clearFilters() {
-        this.filters = [];
+        this.filterListKey = !this.filterListKey;
         this.$emit('filters:clear');
+      },
+      deleteFilter(index) {
+        this.filters.splice(index, 1);
       },
       closeDropdowns() {
         this.closeColumnsFilters();
