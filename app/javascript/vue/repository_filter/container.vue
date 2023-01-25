@@ -21,11 +21,11 @@
       </div>
     </div>
     <FiltersList 
-      :filters.sync="filters" 
-      :my_modules.sync="my_modules" 
-      :key="filterListKey"
-      v-on:update-filter="updateFilter"
-      v-on:delete-filter="deleteFilter" />
+      :filters="filters" 
+      :my_modules="my_modules" 
+      :key="filterListKey ? 1 : 0"
+      @filter:update="updateFilter"
+      @filter:delete="deleteFilter" />
     <div class="footer">
       <div id="filtersColumnsDropdown" class="dropup filters-columns-dropdown" @click="toggleColumnsFilters">
         <button class="btn btn-secondary add-filter prevent-shrink" >
@@ -42,7 +42,7 @@
           />
         </div>
       </div>
-      <button class="btn btn-light clear-filters-btn prevent-shrink" @click="clearFilters()">
+      <button class="btn btn-light clear-filters-btn prevent-shrink" @click="clearFilters">
         {{ i18n.t('repositories.show.filters.clear') }}
       </button>
       <button @click="$emit('filters:apply')" class="btn btn-primary apply-button prevent-shrink">

@@ -3,10 +3,10 @@
     <FilterElement
       v-for="(filter, index) in filters"
       :key="filter.id"
-      :filter="filters[index]"
-      :my_modules="my_modules"
-      @filter:update="$emit('update-filter', filter)"
-      @filter:delete="$emit('delete-filter', index)"
+      :filter.sync="filters[index]"
+      :my_modules.sync="my_modules"
+      @filter:update="updateFilter"
+      @filter:delete="$emit('filter:delete', index)"
     />
   </div>
 </template>
@@ -22,5 +22,10 @@
       my_modules: Array,
     },
     components: {FilterElement},
+    methods: {
+      updateFilter(value) {
+        this.$emit('filter:update', value)
+      }
+    }
   }
 </script>
