@@ -81,6 +81,10 @@
   &.error {
     padding-bottom: 6px;
 
+    label {
+      color: $brand-danger;
+    }
+
     .sci-input-field {
       border: $border-danger;
     }

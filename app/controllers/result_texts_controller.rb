@@ -192,8 +192,8 @@ class ResultTextsController < ApplicationController
                                                    .experiment
                                                    .project)),
                  experiment: link_to(@result.my_module.experiment.name,
-                                     canvas_experiment_url(@result.my_module
-                                                                  .experiment)),
+                                     my_modules_experiment_url(@result.my_module
+                                                                      .experiment)),
                  my_module: link_to(@result.my_module.name,
                                     protocols_my_module_url(
                                       @result.my_module
@@ -206,8 +206,8 @@ class ResultTextsController < ApplicationController
       .call(activity_type: type_of,
             owner: current_user,
             subject: @result,
-            team: @my_module.experiment.project.team,
-            project: @my_module.experiment.project,
+            team: @my_module.team,
+            project: @my_module.project,
             message_items: {
               result: @result.id,
               type_of_result: t('activities.result_type.text')

@@ -167,7 +167,7 @@ class RepositoryColumnsController < ApplicationController
       .call(activity_type: type_of,
             owner: current_user,
             subject: @repository,
-            team: current_team,
+            team: @repository.team,
             message_items: {
               repository_column: @repository_column.id,
               repository: @repository.id

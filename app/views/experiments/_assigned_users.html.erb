@@ -1,0 +1,33 @@
+<% users = my_module.designated_users.order(:full_name) %>
+<% if users.empty? && !can_manage_my_module_designated_users?(user, my_module) %>
+  <%= I18n.t('experiments.table.not_set') %>
+<% else %>
+  <div ref="dropdown" class="assign-users-dropdown dropdown" data-view-only="<%= !can_manage_my_module_designated_users?(user, my_module) %>">
+    <div  class="assigned-users-container" tabindex="0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      <% users[0..3].each_with_index do |user, i| %>
+        <span class="avatar-container" style="z-index: <%= 5 - i %>">
+          <%= image_tag avatar_path(user, :icon_small), title: user.full_name %>
+        </span>
+      <% end %>
+      <% if users.length > 4 %>
+        <span class="more-users avatar-container" title="<%= sanitize_input(users[4..].map(&:full_name).join('&#013;')) %>">
+          +<%= users.length - 4 %>
+        </span>
+      <% end %>
+      <% if can_manage_my_module_designated_users?(user, my_module) %>
+        <span class="new-user avatar-container">
+          <i class="fas fa-plus"></i>
+        </span>
+      <% end %>
+    </div>
+    <div class="dropdown-menu">
+      <div class="sci-input-container left-icon">
+        <input type="text" class="sci-input-field user-search" placeholder="<%= I18n.t('experiments.table.search') %>">
+        <i class="fas fa-search"></i>
+      </div>
+      <div class="users-list"
+          data-list-url="<%= search_my_module_user_my_module_path(my_module, my_module_id: my_module.id, skip_unassigned: skip_unassigned) %>">
+      </div>
+    </div>
+  </div>
+<% end %>

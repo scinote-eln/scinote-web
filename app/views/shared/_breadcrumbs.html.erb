@@ -30,6 +30,14 @@
                 data: link[:data]) %>
     <span class="delimiter">/</span>
   <% end %>
+<% elsif params[:controller] == 'experiments' && %w(canvas table module_archive).include?(params[:action]) %>
+  <% links[0..-2].each do |link| %>
+    <%= link_to(link[:label], link[:url],
+                class: "breadcrumbs-link #{link[:class]}",
+                title: link[:label],
+                data: link[:data]) %>
+    <span class="delimiter">/</span>
+  <% end %>
 <% else %>
   <% links.each do |link| %>
     <%= link_to(link[:label], link[:url],

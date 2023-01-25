@@ -1,6 +1,6 @@
 <ul class="sidebar-branch">
   <li class="sidebar-leaf">
-    <%= link_to t('sidebar.my_module.back_button'), canvas_experiment_url(experiment), class: 'sidebar-link back-button' %>
+    <%= link_to t('sidebar.my_module.back_button'), my_modules_experiment_path(experiment), class: 'sidebar-link back-button' %>
   </li>
   <% my_modules.each do |my_module| %>
     <li class="sidebar-leaf">
@@ -12,7 +12,7 @@
     </li>
   <% end %>
   <li class="sidebar-leaf">
-    <%= link_to module_archive_experiment_url(experiment), class: 'sidebar-link' do %>
+    <%= link_to my_modules_experiment_path(experiment, view_mode: :archived), class: 'sidebar-link' do %>
       <i class="fas fa-archive"></i>&nbsp;
       <%= t('sidebar.my_modules.archived_button') %>
     <% end%>

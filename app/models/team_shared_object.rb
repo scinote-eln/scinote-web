@@ -3,7 +3,6 @@
 class TeamSharedObject < ApplicationRecord
   enum permission_level: Extends::SHARED_OBJECTS_PERMISSION_LEVELS.except(:not_shared)
 
-
   after_create :assign_shared_inventories, if: -> { shared_object.is_a?(Repository) }
   before_destroy :unassign_unshared_items, if: -> { shared_object.is_a?(Repository) }
   before_destroy :unassign_unshared_inventories, if: -> { shared_object.is_a?(Repository) }

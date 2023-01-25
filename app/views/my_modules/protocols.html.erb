@@ -1,3 +1,5 @@
+<%= render 'shared/tiny_mce_packs' %>
+
 <% if flash["repository_snapshot_error"] %>
   <%= render 'shared/dialog',
             id: "snapshot-error",
@@ -174,6 +176,7 @@
 <%= render partial: "shared/formulas_libraries.html.erb" %>
 <%= javascript_include_tag("my_modules/protocols") %>
 <%= javascript_include_tag("my_modules/status_flow") %>
+<%= javascript_include_tag("my_modules/tags") %>
 <%= javascript_pack_tag 'emoji_button' %>
 <%= javascript_include_tag("my_modules/repositories") %>
 <%= javascript_include_tag("my_modules/pwa_mobile_app") %>

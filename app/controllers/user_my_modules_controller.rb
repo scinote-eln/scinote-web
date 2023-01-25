@@ -61,14 +61,22 @@ class UserMyModulesController < ApplicationController
 
       respond_to do |format|
         format.json do
-          render json: {
-            user: {
-              id: @um.user.id,
-              full_name: @um.user.full_name,
-              avatar_url: avatar_path(@um.user, :icon_small),
-              user_module_id: @um.id
-            }, status: :ok
-          }
+          if params[:table]
+            render json: {
+              html: render_to_string(partial: 'experiments/assigned_users.html.erb',
+                                     locals: { my_module: @my_module, user: current_user, skip_unassigned: false }),
+              unassign_url: my_module_user_my_module_path(@my_module, @um)
+            }
+          else
+            render json: {
+              user: {
+                id: @um.user.id,
+                full_name: @um.user.full_name,
+                avatar_url: avatar_path(@um.user, :icon_small),
+                user_module_id: @um.id
+              }, status: :ok
+            }
+          end
         end
       end
     else
@@ -88,7 +96,14 @@ class UserMyModulesController < ApplicationController
 
       respond_to do |format|
         format.json do
-          render json: {}, status: :ok
+          if params[:table]
+            render json: {
+              html: render_to_string(partial: 'experiments/assigned_users.html.erb',
+                                     locals: { my_module: @my_module, user: current_user, skip_unassigned: false })
+            }
+          else
+            render json: {}, status: :ok
+          end
         end
       end
     else
@@ -104,19 +119,37 @@ class UserMyModulesController < ApplicationController
 
   def search
     users = @my_module.users
-                      .where.not(id: @my_module.designated_users.select(:id))
+                      .joins("LEFT OUTER JOIN user_my_modules ON user_my_modules.user_id = users.id "\
+                             "AND user_my_modules.my_module_id = #{@my_module.id}")
                       .search(false, params[:query])
+                      .order(:full_name)
                       .limit(Constants::SEARCH_LIMIT)
+                      .select('users.*', 'user_my_modules.id as user_my_module_id')
+                      .select('CASE WHEN user_my_modules.id IS NOT NULL '\
+                              'THEN true ELSE false END as designated')
 
     users = users.map do |user|
-      {
+      next if params[:skip_assigned] && user.designated
+      next if ActiveModel::Type::Boolean.new.cast(params[:skip_unassigned]) && !user.designated
+
+      user_hash = {
         value: user.id,
         label: sanitize_input(user.full_name),
-        params: { avatar_url: avatar_path(user, :icon_small) }
+        params: {
+          avatar_url: avatar_path(user, :icon_small),
+          designated: user.designated,
+          assign_url: my_module_user_my_modules_path(@my_module)
+        }
       }
+
+      if user.designated
+        user_hash[:params][:unassign_url] = my_module_user_my_module_path(@my_module, user.user_my_module_id)
+      end
+
+      user_hash
     end
 
-    render json: users
+    render json: users.compact
   end
 
   private

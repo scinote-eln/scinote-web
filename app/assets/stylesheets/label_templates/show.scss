@@ -139,7 +139,16 @@
     }
   }
 
-  .inser-field-dropdown {
+  .insert-field-dropdown {
+    .dimensions-container {
+      align-items: center;
+      display: flex;
+
+      img {
+        margin-top: 27px;
+      }
+    }
+
     .open-dropdown-button:not(.collapsed) {
       .fas {
         @include rotate(-180deg);
@@ -171,7 +180,12 @@
       display: flex;
       padding: 10px 10px 10px 24px;
 
-      .fas {
+      .fas:not(.fa-plus-square) {
+        margin-left: -1.25em;
+        margin-right: .25em;
+      }
+
+      .fa-plus-square {
         @include font-main;
         display: none;
         margin-left: auto;
@@ -180,7 +194,7 @@
       &:hover {
         background-color: $color-concrete;
 
-        .fas {
+        .fa-plus-square {
           display: inline-block;
         }
       }

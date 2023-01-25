@@ -5,18 +5,68 @@ class MyModulesController < ApplicationController
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
+  include MyModulesHelper
 
-  before_action :load_vars, except: %i(restore_group)
+  before_action :load_vars, except: %i(restore_group create new save_table_state)
+  before_action :load_experiment, only: %i(create new)
+  before_action :check_create_permissions, only: %i(new create)
   before_action :check_archive_permissions, only: %i(update)
   before_action :check_manage_permissions, only: %i(
     description due_date update_description update_protocol_description update_protocol
   )
-  before_action :check_read_permissions, except: %i(update update_description update_protocol_description restore_group)
+  before_action :check_read_permissions, except: %i(create new update update_description
+                                                    update_protocol_description restore_group save_table_state)
   before_action :check_update_state_permissions, only: :update_state
   before_action :set_inline_name_editing, only: %i(protocols results activities archive)
   before_action :load_experiment_my_modules, only: %i(protocols results activities archive)
 
   layout 'fluid'.freeze
+
+  def new
+    @my_module = @experiment.my_modules.new
+    assigned_users = User.where(id: @experiment.user_assignments.select(:user_id))
+
+    render json: {
+      html: render_to_string(
+        partial: 'my_modules/modals/new_modal.html.erb', locals: { view_mode: params[:view_mode],
+                                                                   users: assigned_users }
+      )
+    }
+  end
+
+  def create
+    @my_module = @experiment.my_modules.new(my_module_params)
+    new_pos = @my_module.get_new_position
+    @my_module.assign_attributes(
+      created_by: current_user,
+      last_modified_by: current_user,
+      x: new_pos[:x],
+      y: new_pos[:y]
+    )
+    @my_module.transaction do
+      if my_module_tags_params[:tag_ids].present?
+        @my_module.tags << @experiment.project.tags.where(id: JSON.parse(my_module_tags_params[:tag_ids]))
+      end
+      if my_module_designated_users_params[:user_ids].present? && can_designate_users_to_new_task?(@experiment)
+        @my_module.designated_users << @experiment.users.where(id: my_module_designated_users_params[:user_ids])
+      elsif !can_designate_users_to_new_task?(@experiment)
+        @my_module.designated_users << current_user
+      end
+      @my_module.save!
+      Activities::CreateActivityService.call(
+        activity_type: :create_module,
+        owner: current_user,
+        team: @my_module.experiment.project.team,
+        project: @my_module.experiment.project,
+        subject: @my_module,
+        message_items: { my_module: @my_module.id }
+      )
+      redirect_to canvas_experiment_path(@experiment) if params[:my_module][:view_mode] == 'canvas'
+    rescue ActiveRecord::RecordInvalid
+      render json: @my_module.errors, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
+    end
+  end
 
   def show
     respond_to do |format|
@@ -44,6 +94,11 @@ class MyModulesController < ApplicationController
         }
       }
     end
+  end
+
+  def save_table_state
+    current_user.settings.update(visible_my_module_table_columns: params[:columns])
+    current_user.save!
   end
 
   def status_state
@@ -195,6 +250,11 @@ class MyModulesController < ApplicationController
               partial: 'my_modules/card_due_date_label.html.erb',
               locals: { my_module: @my_module }
             ),
+            table_due_date_label: {
+              html: render_to_string(partial: 'experiments/table_due_date_label.html.erb',
+                                     locals: { my_module: @my_module, user: current_user }),
+              due_status: my_module_due_status(@my_module)
+            },
             module_header_due_date: render_to_string(
               partial: 'my_modules/module_header_due_date.html.erb',
               locals: { my_module: @my_module }
@@ -276,12 +336,14 @@ class MyModulesController < ApplicationController
 
   def update_protocol
     protocol = @my_module.protocol
+    old_description = protocol.description
 
     ActiveRecord::Base.transaction do
       protocol.update!(protocol_params)
       log_activity(:protocol_name_in_task_edited) if protocol.saved_change_to_name?
       log_activity(:protocol_description_in_task_edited) if protocol.saved_change_to_description?
       TinyMceAsset.update_images(protocol, params[:tiny_mce_images], current_user)
+      protocol_annotation_notification(old_description)
     end
 
     render json: protocol, serializer: ProtocolSerializer, user: current_user
@@ -334,7 +396,12 @@ class MyModulesController < ApplicationController
     else
       flash[:error] = t('my_modules.restore_group.error_flash')
     end
-    redirect_to module_archive_experiment_path(experiment)
+
+    if params[:view] == 'table'
+      redirect_to table_experiment_path(experiment, view_mode: :archived)
+    else
+      redirect_to module_archive_experiment_path(experiment)
+    end
   end
 
   def update_state
@@ -349,6 +416,32 @@ class MyModulesController < ApplicationController
     end
   end
 
+  def permissions
+    if stale?(@my_module)
+      render json: {
+        editable: can_manage_my_module?(@my_module),
+        moveable: can_move_my_module?(@my_module),
+        archivable: can_archive_my_module?(@my_module),
+        restorable: can_restore_my_module?(@my_module)
+      }
+    end
+  end
+
+  def actions_dropdown
+    if stale?(@my_module)
+      render json: {
+        html: render_to_string(
+          partial: 'experiments/table_row_actions',
+          locals: { my_module: @my_module }
+        )
+      }
+    end
+  end
+
+  def provisioning_status
+    render json: { provisioning_status: @my_module.provisioning_status }
+  end
+
   private
 
   def load_vars
@@ -361,12 +454,21 @@ class MyModulesController < ApplicationController
     end
   end
 
+  def load_experiment
+    @experiment = Experiment.preload(user_assignments: %i(user user_role)).find_by(id: params[:id])
+    render_404 unless @experiment
+  end
+
   def load_experiment_my_modules
     @experiment_my_modules = if @my_module.experiment.archived_branch?
                                @my_module.experiment.my_modules.order(:name)
                              else
                                @my_module.experiment.my_modules.where(archived: @my_module.archived?).order(:name)
                              end
+  end
+
+  def check_create_permissions
+    render_403 && return unless can_manage_experiment?(@experiment)
   end
 
   def check_manage_permissions
@@ -401,18 +503,26 @@ class MyModulesController < ApplicationController
   end
 
   def my_module_params
-    update_params = params.require(:my_module).permit(:name, :description, :started_on, :due_date, :archived)
+    permitted_params = params.require(:my_module).permit(:name, :description, :started_on, :due_date, :archived)
 
-    if update_params[:started_on].present?
-      update_params[:started_on] =
-        Time.zone.strptime(update_params[:started_on], I18n.backend.date_format.dup.gsub(/%-/, '%') + ' %H:%M')
+    if permitted_params[:started_on].present?
+      permitted_params[:started_on] =
+        Time.zone.strptime(permitted_params[:started_on], I18n.backend.date_format.dup.gsub(/%-/, '%') + ' %H:%M')
     end
-    if update_params[:due_date].present?
-      update_params[:due_date] =
-        Time.zone.strptime(update_params[:due_date], I18n.backend.date_format.dup.gsub(/%-/, '%') + ' %H:%M')
+    if permitted_params[:due_date].present?
+      permitted_params[:due_date] =
+        Time.zone.strptime(permitted_params[:due_date], I18n.backend.date_format.dup.gsub(/%-/, '%') + ' %H:%M')
     end
 
-    update_params
+    permitted_params
+  end
+
+  def my_module_tags_params
+    params.require(:my_module).permit(:tag_ids)
+  end
+
+  def my_module_designated_users_params
+    params.require(:my_module).permit(user_ids: [])
   end
 
   def protocol_params
@@ -458,8 +568,8 @@ class MyModulesController < ApplicationController
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
-            team: my_module.experiment.project.team,
-            project: my_module.experiment.project,
+            team: my_module.team,
+            project: my_module.project,
             subject: my_module,
             message_items: message_items)
   end
@@ -479,7 +589,7 @@ class MyModulesController < ApplicationController
                user: current_user.full_name),
       message: t('notifications.my_module_description_annotation_message_html',
                  project: link_to(@my_module.experiment.project.name, project_url(@my_module.experiment.project)),
-                 experiment: link_to(@my_module.experiment.name, canvas_experiment_url(@my_module.experiment)),
+                 experiment: link_to(@my_module.experiment.name, my_modules_experiment_url(@my_module.experiment)),
                  my_module: link_to(@my_module.name, protocols_my_module_url(@my_module)))
     )
   end
@@ -493,7 +603,7 @@ class MyModulesController < ApplicationController
                user: current_user.full_name),
       message: t('notifications.my_module_protocol_annotation_message_html',
                  project: link_to(@my_module.experiment.project.name, project_url(@my_module.experiment.project)),
-                 experiment: link_to(@my_module.experiment.name, canvas_experiment_url(@my_module.experiment)),
+                 experiment: link_to(@my_module.experiment.name, my_modules_experiment_url(@my_module.experiment)),
                  my_module: link_to(@my_module.name, protocols_my_module_url(@my_module)))
     )
   end

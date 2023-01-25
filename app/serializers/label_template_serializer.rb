@@ -15,7 +15,7 @@ class LabelTemplateSerializer < ActiveModel::Serializer
     return {} unless can_manage_label_templates?(object.team)
     {
       update: label_template_path(object),
-      fields: template_tags_label_templates_path
+      fields: template_tags_label_templates_path(id: object.id)
     }
   end
 end

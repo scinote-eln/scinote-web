@@ -1,12 +1,10 @@
 # frozen_string_literal: true
-
 module LabelTemplates
+  class ColumnNotFoundError < StandardError; end
+  class LogoNotFoundError < StandardError; end
+  class LogoParamsError < StandardError; end
+
   class RepositoryRowService
-    class UnsupportedKeyError < StandardError; end
-
-    class ColumnNotFoundError < StandardError; end
-
-    class LogoNotFoundError < StandardError; end
 
     MAX_PRINTABLE_ITEM_NAME_LENGTH = 64
 
@@ -21,7 +19,9 @@ module LabelTemplates
       keys = @label_template.content.scan(/(?<=\{\{).*?(?=\}\})/).uniq
       label = keys.reduce(@label_template.content.dup) do |rendered_content, key|
         rendered_content.gsub!(/\{\{#{key}\}\}/, fetch_value(key))
-      rescue ColumnNotFoundError, LogoNotFoundError => e
+      rescue LabelTemplates::ColumnNotFoundError,
+             LabelTemplates::LogoNotFoundError,
+             LabelTemplates::LogoParamsError => e
         errors.push(e)
         rendered_content
       end
@@ -49,7 +49,7 @@ module LabelTemplates
       when /^c_(.*)/
         name = Regexp.last_match(1)
         unless @repository_columns.include?(name)
-          raise ColumnNotFoundError, I18n.t('label_templates.repository_row.errors.column_not_found')
+          raise LabelTemplates::ColumnNotFoundError, I18n.t('label_templates.repository_row.errors.column_not_found')
         end
 
         fetch_custom_column_value(name)
@@ -61,15 +61,15 @@ module LabelTemplates
         @repository_row.created_by.full_name
       when 'ADDED_ON'
         I18n.l(@repository_row.created_at, format: :full)
-      when 'LOGO'
-        logo
+      when /^LOGO/
+        logo(key)
       else
-        raise ColumnNotFoundError, I18n.t('label_templates.repository_row.errors.column_not_found')
+        raise LabelTemplates::ColumnNotFoundError, I18n.t('label_templates.repository_row.errors.column_not_found')
       end
     end
 
-    def logo
-      raise LogoNotFoundError, I18n.t('label_templates.repository_row.errors.logo_not_supported')
+    def logo(_key)
+      raise LabelTemplates::LogoNotFoundError, I18n.t('label_templates.repository_row.errors.logo_not_supported')
     end
   end
 end

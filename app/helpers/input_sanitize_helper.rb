@@ -28,11 +28,14 @@ module InputSanitizeHelper
     base64_encoded_imgs = options.fetch(:base64_encoded_imgs, false)
     text = sanitize_input(text, tags)
     text = simple_format(text, {}, format_opt) if simple_f
+    if text =~ SmartAnnotations::TagToHtml::USER_REGEX || text =~ SmartAnnotations::TagToHtml::REGEX
+      text = smart_annotation_parser(text, team, base64_encoded_imgs, preview_repository)
+    end
     auto_link(
-      custom_link_open_new_tab(smart_annotation_parser(text, team, base64_encoded_imgs, preview_repository)),
+      text,
+      html: { target: '_blank' },
       link: :urls,
-      sanitize: false,
-      html: { target: '_blank' }
+      sanitize: false
     ).html_safe
   end
 end

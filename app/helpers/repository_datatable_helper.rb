@@ -6,22 +6,25 @@ module RepositoryDatatableHelper
   def prepare_row_columns(repository_rows, repository, columns_mappings, team, options = {})
     has_stock_management = repository.has_stock_management?
     reminders_enabled = Repository.reminders_enabled?
-    reminder_row_ids = reminders_enabled ? repository_reminder_row_ids(repository_rows, repository) : []
+    repository_rows = reminders_enabled ? with_reminders_status(repository_rows, repository) : repository_rows
 
     repository_rows.map do |record|
-      default_cells = public_send("#{repository.class.name.underscore}_default_columns", record)
-      row = {
+      row = public_send("#{repository.class.name.underscore}_default_columns", record)
+      row.merge!(
         DT_RowId: record.id,
         DT_RowAttr: { 'data-state': row_style(record) },
         recordInfoUrl: Rails.application.routes.url_helpers.repository_repository_row_path(repository, record),
-        hasActiveReminders: reminder_row_ids.include?(record.id),
         rowRemindersUrl:
           Rails.application.routes.url_helpers
                .active_reminder_repository_cells_repository_repository_row_url(
                  repository,
                  record
                )
-      }.merge(default_cells)
+      )
+
+      if reminders_enabled
+        row['hasActiveReminders'] = record.has_active_stock_reminders || record.has_active_datetime_reminders
+      end
 
       if has_stock_management
         row['manageStockUrl'] = if record.has_stock?
@@ -100,7 +103,7 @@ module RepositoryDatatableHelper
   def prepare_simple_view_row_columns(repository_rows, repository, my_module, options = {})
     has_stock_management = repository.has_stock_management?
     reminders_enabled = Repository.reminders_enabled?
-    reminder_row_ids = reminders_enabled ? repository_reminder_row_ids(repository_rows, repository) : []
+    repository_rows = reminders_enabled ? with_reminders_status(repository_rows, repository) : repository_rows
 
     repository_rows.map do |record|
       row = {
@@ -108,7 +111,6 @@ module RepositoryDatatableHelper
         DT_RowAttr: { 'data-state': row_style(record) },
         '0': escape_input(record.name),
         recordInfoUrl: Rails.application.routes.url_helpers.repository_repository_row_path(record.repository, record),
-        hasActiveReminders: reminder_row_ids.include?(record.id),
         rowRemindersUrl:
           Rails.application.routes.url_helpers
                .active_reminder_repository_cells_repository_repository_row_url(
@@ -116,6 +118,10 @@ module RepositoryDatatableHelper
                  record
                )
       }
+
+      if reminders_enabled
+        row['hasActiveReminders'] = record.has_active_stock_reminders || record.has_active_datetime_reminders
+      end
 
       if has_stock_management
         stock_present = record.repository_stock_cell.present?
@@ -275,14 +281,33 @@ module RepositoryDatatableHelper
     ''
   end
 
-  def repository_reminder_row_ids(repository_rows, repository)
-    # don't load reminders for archived repositories
-    return [] if repository_rows.blank? || repository.archived?
+  def with_reminders_status(repository_rows, repository)
+    # don't load reminders for archived repositories or snapshots
+    if repository.archived? || repository.is_a?(RepositorySnapshot)
+      return repository_rows.select('FALSE AS has_active_stock_reminders')
+                            .select('FALSE AS has_active_datetime_reminders')
+    end
 
-    # don't load reminders for snapshots
-    return [] if repository.is_a?(RepositorySnapshot)
+    repository_cells = RepositoryCell.joins(
+      "INNER JOIN repository_columns ON repository_columns.id = repository_cells.repository_column_id " \
+      "AND repository_columns.repository_id = #{repository.id}"
+    )
 
-    repository_rows.active.with_active_reminders(current_user).to_a.pluck(:id).uniq
+    repository_rows
+      .joins(
+        "LEFT OUTER JOIN (#{RepositoryCell.stock_reminder_repository_cells_scope(repository_cells, current_user)
+                                          .select(:id, :repository_row_id).to_sql}) " \
+        "AS repository_cells_with_active_stock_reminders " \
+        "ON repository_cells_with_active_stock_reminders.repository_row_id = repository_rows.id"
+      )
+      .joins(
+        "LEFT OUTER JOIN (#{RepositoryCell.date_time_reminder_repository_cells_scope(repository_cells, current_user)
+                                          .select(:id, :repository_row_id).to_sql}) " \
+        "AS repository_cells_with_active_datetime_reminders " \
+        "ON repository_cells_with_active_datetime_reminders.repository_row_id = repository_rows.id"
+      )
+      .select('COUNT(repository_cells_with_active_stock_reminders.id) > 0 AS has_active_stock_reminders')
+      .select('COUNT(repository_cells_with_active_datetime_reminders.id) > 0 AS has_active_datetime_reminders')
   end
 
   def stock_consumption_permitted?(repository, my_module)

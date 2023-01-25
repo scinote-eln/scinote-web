@@ -2,7 +2,7 @@
   <li class="sidebar-leaf">
     <%= link_to t('sidebar.my_modules.back_button'), project_url(experiment.project), class: 'sidebar-link back-button' %>
   </li>
-  <% my_modules.readable_by_user(current_user).each do |my_module| %>
+  <% my_modules&.readable_by_user(current_user)&.each do |my_module| %>
     <li class="sidebar-leaf">
       <%= link_to my_module.name,
                   protocols_my_module_url(my_module),
@@ -15,7 +15,7 @@
     </li>
   <% end %>
   <li class="sidebar-leaf">
-    <%= link_to module_archive_experiment_url(experiment), class: 'sidebar-link' do %>
+    <%= link_to my_modules_experiment_path(experiment, view_mode: :archived), class: 'sidebar-link' do %>
       <i class="fas fa-archive"></i>&nbsp;
       <%= t('sidebar.my_modules.archived_button') %>
     <% end%>

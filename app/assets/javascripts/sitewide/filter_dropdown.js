@@ -44,18 +44,20 @@ var filterDropdown = (function() {
       } catch (error) {
         console.error(error);
       }
-    }).on('hide.bs.dropdown', function() {
-      $('#textSearchFilterHistory').hide();
-      $('.apply-filters', $filterContainer).click();
+    }).on('hide.bs.dropdown', function(e) {
+      if (e.target === e.currentTarget) {
+        $('#textSearchFilterHistory').hide();
+        $('.apply-filters', $filterContainer).click();
+      }
     });
 
     $textFilter.click(function(e) {
       e.stopPropagation();
       $('#textSearchFilterHistory').toggle();
-      $(this).closest('.dropdown').toggleClass('open');
-    }).on('input', () => {
+      $(e.currentTarget).closest('.dropdown').toggleClass('open');
+    }).on('input', (e) => {
       $('#textSearchFilterHistory').hide();
-      $(this).closest('.dropdown').removeClass('open');
+      $(e.currentTarget).closest('.dropdown').removeClass('open');
     });
 
     $filterContainer.on('click', '.projects-search-keyword', function(e) {

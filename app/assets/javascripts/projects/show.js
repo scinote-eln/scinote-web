@@ -317,11 +317,16 @@
   function initNewExperimentToolbarButton() {
     let forms = '.new-experiment-form';
     $(experimentsPage)
+      .on('submit', forms, function() {
+        $(this).find("button[type='submit']").prop('disabled', true);
+      })
       .on('ajax:success', forms, function(ev, data) {
         appendActionModal($(data.html));
+        $(this).find("button[type='submit']").prop('disabled', false);
       })
       .on('ajax:error', forms, function(ev, data) {
         HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+        $(this).find("button[type='submit']").prop('disabled', false);
       });
   }
 

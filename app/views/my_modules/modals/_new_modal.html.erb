@@ -1,0 +1,88 @@
+<div class="modal" id="new-my-module-modal" tabindex="-1" role="dialog"
+     data-create-url="<%= modules_experiment_path(@experiment) %>" data-user-id="<%= current_user.id %>">
+  <%= bootstrap_form_for @my_module, url: modules_experiment_path(@experiment), remote: true do |f| %>
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" tabindex=0 ><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title"><%= t('experiments.canvas.new_my_module_modal.title') %></h4>
+        </div>
+        <div class="modal-body">
+          <%= f.hidden_field :view_mode, value: view_mode%>
+          <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <div class="sci-input-container form-group">
+                <label><%= t('experiments.canvas.new_my_module_modal.name') %></label>
+                <%= text_field_tag 'my_module[name]', '', placeholder: t('experiments.canvas.new_my_module_modal.name_placeholder'), class: "sci-input-field" %>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <div class="form-group">
+                <div class="sci-input-container right-icon my-module-due-date-container">
+                  <label for="my_module_due_date"><%= t('experiments.canvas.new_my_module_modal.due_date') %></label>
+                  <i class="fas fa-calendar-alt"></i>
+                  <input id="my_module_due_date"
+                         type="datetime"
+                         name="my_module[due_date]"
+                         data-toggle='date-time-picker'
+                         class="sci-input-field calendar-input"
+                         readonly
+                         placeholder="<%= t('experiments.canvas.new_my_module_modal.due_date_placeholder') %>"
+                         data-date-format="<%= datetime_picker_format_full %>"
+                         data-date-locale="<%= I18n.locale %>"
+                         data-date-use-current="false"
+                         data-date-orientation="left"
+                         value=""/>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <%= f.hidden_field :tag_ids%>
+              <div class="form-group">
+                <label><%= t('experiments.canvas.new_my_module_modal.assigned_tags_label') %></label>
+                <%= select_tag 'module-tags-selector', options_for_select([]),
+                                      data: {
+                                              'tags-create-url': project_create_tag_path(project_id: @experiment.project_id),
+                                              'ajax-url': search_tags_experiment_path,
+                                              'placeholder': t('experiments.canvas.new_my_module_modal.assigned_tags_placeholder')
+                                      },
+                                      multiple: true %>
+              </div>
+            </div>
+          </div>
+          <% if can_designate_users_to_new_task?(@experiment) %>
+            <div class="row">
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <label><%= t('experiments.canvas.new_my_module_modal.assigned_users') %></label>
+                <%= select_tag 'my_module[user_ids]',
+                              options_for_select(users.map{ |user|
+                                [
+                                  user.full_name,
+                                  user.id,
+                                  {'data-params' => {avatar_url: avatar_path(user, :icon_small) }.to_json}
+                                ]
+                              }),
+                              data: {
+                                'placeholder': t('experiments.canvas.new_my_module_modal.assigned_users_placeholder')
+                              },
+                              multiple: true
+                %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            <%= t('general.cancel') %>
+          </button>
+          <%= f.button t('experiments.canvas.new_my_module_modal.create'), class: "btn btn-primary" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

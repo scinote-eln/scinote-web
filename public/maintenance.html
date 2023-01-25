@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Maintenance</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+      div.navbar {
+        background: #FFFFFF;
+        box-shadow: 0px 1px 4px rgba(35, 31, 32, 0.15);
+        height: 52px;
+        left: 0%;
+        position: absolute;
+        right: 0%;
+        top: 0%;
+      }
+
+      div.navbar > img {
+        width: 121px;
+        height: 24px;
+        left: 21px;
+        position: absolute;
+        top: calc(50% - 24px/2 - 0px);
+      }
+
+      .maintenance-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0px;
+        gap: 32px;
+
+        position: absolute;
+        width: 320px;
+        height: 437.38px;
+        top: 116px;
+
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .maintenance-img {
+        width: 320px;
+        height: 172.38px;
+
+        flex: none;
+        order: 0;
+        flex-grow: 0;
+      }
+
+      .maintenance-title {
+        position: absolute;
+        width: 320px;
+        height: 60px;
+        left: 0px;
+        top: 204.38px;
+
+        font-family: 'Lato';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 125%;
+
+        color: #231F20;
+      }
+
+      .maintenance-message-head {
+        position: absolute;
+        width: 320px;
+        height: 22px;
+        left: 0px;
+        top: 287.38px;
+
+        font-family: 'Lato';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 22px;
+
+        color: #104DA9;
+      }
+
+      .maintenance-message-body {
+        position: absolute;
+        width: 320px;
+        height: 105px;
+        left: 0px;
+        top: 332.38px;
+
+        font-family: 'Lato';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 131%;
+
+        color: #000000;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- This file lives in public/maintenance.html -->
+    <div class="navbar">
+      <img id="logo" src="/images/scinote_icon.svg" title="SciNote">
+    </div>
+    <div class="maintenance-container">
+      <img src="/images/maintenance.png" class="maintenance-img">
+      <div class="maintenance-title">Scinote is temporarily offline for maintenance.</div>
+      <div class="maintenance-message-head">All your data is safe and sound.</div>
+      <div class="maintenance-message-body">We are currently improving the software for you. The maintenance will be done in 4 hours. You will be able to pick up where you left off. No worries! Thank you for your understanding.</div>
+    </div>
+  </body>
+</html>

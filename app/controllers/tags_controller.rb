@@ -168,7 +168,7 @@ class TagsController < ApplicationController
       .call(activity_type: type_of,
             owner: current_user,
             subject: subject,
-            team: current_team,
+            team: @tag.project.team,
             project: @tag.project,
             message_items: message_items)
   end

@@ -1,3 +1,4 @@
+<%= hidden_field_tag :tags_modal_my_module_id, @my_module.id %>
 <h5><%=t "experiments.canvas.modal_manage_tags.subtitle", module: @my_module.name %></h5>
 <% if @my_module_tags.size == 0 then %>
   <div class="row"><div class="col-xs-4"><em><%= t 'experiments.canvas.modal_manage_tags.no_tags' %></em></div></div>
@@ -19,7 +20,7 @@
               <% end %>
               <%= bootstrap_form_for tag, remote: true, url: project_tag_path(@my_module.experiment.project, tag, format: :json), data: {tag_id: tag.id}, method: :delete, html: { class: "delete-tag-form"} do |f| %>
                 <%= hidden_field_tag :my_module_id, @my_module.id %>
-                <%= f.button class: 'btn btn-link delete-tag-link', title: t("experiments.canvas.modal_manage_tags.delete_tag") do %>
+                <%= f.button class: 'btn btn-link delete-tag-link', title: t("experiments.canvas.modal_manage_tags.delete_tag"), data: { confirm: t("experiments.canvas.modal_manage_tags.delete_tag_confirmation") } do %>
                   <span class="fas fa-trash-alt"></span>
                 <% end %>
               <% end %>

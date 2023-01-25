@@ -11,13 +11,12 @@ class MyModule < ApplicationRecord
   include TinyMceImages
   include PermissionCheckableModel
   include Assignable
-
-  ID_PREFIX = 'TA'
-  include PrefixedIdModel
+  include Cloneable
 
   attr_accessor :transition_error_rollback
 
   enum state: Extends::TASKS_STATES
+  enum provisioning_status: { done: 0, in_progress: 1, failed: 2 }
 
   before_validation :archiving_and_restoring_extras, on: :update, if: :archived_changed?
   before_save -> { report_elements.destroy_all }, if: -> { !new_record? && experiment_id_changed? }
@@ -127,6 +126,10 @@ class MyModule < ApplicationRecord
     return self if teams.blank?
 
     joins(experiment: :project).where(experiment: { projects: { team: teams } })
+  end
+
+  def parent
+    experiment
   end
 
   def navigable?
@@ -386,25 +389,29 @@ class MyModule < ApplicationRecord
 
     clone.assign_user(current_user)
 
+    copy_content(current_user, clone)
+
+    clone
+  end
+
+  def copy_content(current_user, target_my_module)
     # Remove the automatically generated protocol,
     # & clone the protocol instead
-    clone.protocol.destroy
-    clone.reload
+    target_my_module.protocol.destroy
+    target_my_module.reload
 
     # Update the cloned protocol if neccesary
-    clone_tinymce_assets(clone, clone.experiment.project.team)
-    clone.protocols << protocol.deep_clone_my_module(self, current_user)
-    clone.reload
+    clone_tinymce_assets(target_my_module, target_my_module.experiment.project.team)
+    target_my_module.protocols << protocol.deep_clone_my_module(self, current_user)
+    target_my_module.reload
 
     # fixes linked protocols
-    clone.protocols.each do |protocol|
+    target_my_module.protocols.each do |protocol|
       next unless protocol.linked?
 
       protocol.updated_at = protocol.parent_updated_at
       protocol.save
     end
-
-    clone
   end
 
   # Find an empty position for the restored module. It's
