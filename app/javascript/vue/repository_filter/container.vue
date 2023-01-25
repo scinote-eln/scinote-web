@@ -19,10 +19,6 @@
           />
         </div>
       </div>
-      <button class="btn btn-light clear-filters-btn prevent-shrink" @click="clearFilters()">
-        <i class="fas fa-times-circle"></i>
-        {{ i18n.t('repositories.show.filters.clear') }}
-      </button>
     </div>
     <FiltersList 
       :filters.sync="filters" 
@@ -46,6 +42,9 @@
           />
         </div>
       </div>
+      <button class="btn btn-light clear-filters-btn prevent-shrink" @click="clearFilters()">
+        {{ i18n.t('repositories.show.filters.clear') }}
+      </button>
       <button @click="$emit('filters:apply')" class="btn btn-primary apply-button prevent-shrink">
         {{ i18n.t('repositories.show.filters.apply') }}
       </button>
