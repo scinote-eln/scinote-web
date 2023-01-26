@@ -92,6 +92,15 @@ class ExperimentsController < ApplicationController
     @project = @experiment.project
     @experiment.current_view_state(current_user)
     @my_module_visible_table_columns = current_user.my_module_visible_table_columns
+
+    view_state = @experiment.current_view_state(current_user)
+    @current_sort = view_state.state.dig('my_modules', my_modules_view_mode(@project), 'sort') || 'atoz'
+  end
+
+  def my_modules_view_mode(my_module)
+    return 'archived' if  my_module.archived?
+
+    params[:view_mode] == 'archived' ? 'archived' : 'active'
   end
 
   def load_table
