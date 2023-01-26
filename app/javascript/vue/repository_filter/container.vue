@@ -19,6 +19,9 @@
           />
         </div>
       </div>
+      <button type="button" class="close" @click="$emit('hide-modal')" aria-label="<%= t('general.close') %>">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
     <FiltersList 
       :filters="filters" 

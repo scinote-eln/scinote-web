@@ -131,6 +131,9 @@ window.initRepositoryFilter = () => {
       },
       updateCurrentFilterName(name) {
         this.filterName = name;
+      },
+      hideModal() {
+        $('#filtersDropdownButton').removeClass('open');
       }
     }
   });
