@@ -91,8 +91,8 @@
         this.$emit("filters:update", this.filters);
       },
       clearFilters() {
-        this.filterListKey = !this.filterListKey;
         this.$emit('filters:clear');
+        this.filterListKey = !this.filterListKey;
       },
       deleteFilter(index) {
         this.filters.splice(index, 1);

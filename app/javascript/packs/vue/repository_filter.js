@@ -2,7 +2,6 @@
 
 import TurbolinksAdapter from 'vue-turbolinks';
 import Vue from 'vue/dist/vue.esm';
-import { flattenMessages } from '../../src/config/locales/utils';
 import FilterContainer from '../../vue/repository_filter/container.vue';
 
 Vue.use(TurbolinksAdapter);
@@ -122,8 +121,8 @@ window.initRepositoryFilter = () => {
       },
       clearFilters() {
         this.filters.forEach(filter => {
-          filter.data.parameters = {}
-        })
+          filter.data.parameters = {};
+        });
         this.filterName = null;
         this.dataTableElement.removeAttr('data-repository-filter-json');
         $('#modalSaveRepositoryTableFilter').data('repositoryTableFilterId', null);
