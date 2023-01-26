@@ -21,7 +21,6 @@ Canaid::Permissions.register_for(MyModule) do
      update_my_module_description
      manage_my_module_tags
      update_my_module_status
-     move_my_module
      manage_my_module_steps
      complete_my_module_steps
      uncomplete_my_module_steps
