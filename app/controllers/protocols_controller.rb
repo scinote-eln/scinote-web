@@ -35,6 +35,7 @@ class ProtocolsController < ApplicationController
     edit
     update_keywords
     update_description
+    update_version_comment
     update_name
     update_authors
     edit_name_modal
@@ -1033,6 +1034,18 @@ class ProtocolsController < ApplicationController
             partial: "protocols/header/edit_description_modal_body.html.erb"
           })
         }
+      end
+    end
+  end
+
+  def update_version_comment
+    respond_to do |format|
+      format.json do
+        if @protocol.update(version_comment: params.require(:protocol)[:version_comment])
+          render json: { version_comment: @protocol.version_comment }
+        else
+          render json: @protocol.errors, status: :unprocessable_entity
+        end
       end
     end
   end

@@ -585,6 +585,7 @@ Rails.application.routes.draw do
         get 'edit_description_modal', to: 'protocols#edit_description_modal'
         post 'delete_steps'
         get :permissions
+        put :update_version_comment
       end
       collection do
         post 'datatable', to: 'protocols#datatable'
