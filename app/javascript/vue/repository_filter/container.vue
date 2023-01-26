@@ -42,7 +42,7 @@
           />
         </div>
       </div>
-      <button class="btn btn-light clear-filters-btn prevent-shrink" @click="clearFilters">
+      <button class="btn btn-secondary clear-filters-btn prevent-shrink" @click="clearFilters">
         {{ i18n.t('repositories.show.filters.clear') }}
       </button>
       <button @click="$emit('filters:apply')" class="btn btn-primary apply-button prevent-shrink">
