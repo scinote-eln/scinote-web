@@ -5,7 +5,7 @@
              html: { method: :put, "data-for" => "email", class: 'settings-page-email', id: 'user-email-field' }) do |f| %>
   <div data-part="view">
     <div class="form-group">
-      <%= f.label t("users.registrations.edit.email_label") %>
+      <h3><%= t("users.registrations.edit.email_label") %></h3>
       <div class="user-attribute">
         <%= @user.email %>
         <a href="#" class="btn btn-default" data-action="edit"><%= t("general.change") %></a>

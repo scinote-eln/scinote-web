@@ -22,12 +22,10 @@
 
 
   .two-factor-container {
-    border: $border-default;
     column-gap: 1em;
     display: grid;
     grid-template-columns:  auto fit-content;
     margin: 1em 0;
-    padding: 1em;
     row-gap: .5em;
 
 
@@ -39,12 +37,24 @@
       .enabled {
         @include font-button;
         color: $brand-success;
+        position: relative;
+        left: 10px;
+
+        .fa-check-circle {
+          position: relative;
+          right: 2px;
+        }
       }
     }
 
     .btn {
       align-self: end;
     }
+  }
+
+  .two-factor-auth-button {
+    padding-top: 20px;
+    padding-bottom: 30px;
   }
 }
 

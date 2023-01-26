@@ -2279,7 +2279,7 @@ en:
         email_label: "Email"
         email_title: "Change email"
         new_email_label: "New email"
-        external_id_label: 'External Id'
+        external_id_label: 'External ID'
         external_id_title: 'External Id'
         current_password_label: "Current password"
         password_explanation: "(we need your current password to confirm your changes)"
