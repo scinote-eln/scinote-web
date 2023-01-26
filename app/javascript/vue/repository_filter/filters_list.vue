@@ -12,7 +12,6 @@
 </template>
 
 <script>
-// @filter:delete="filters.splice(index, 1)"
   import FilterElement from 'vue/repository_filter/filter.vue'
 
     export default {

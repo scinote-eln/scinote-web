@@ -132,7 +132,7 @@ window.initRepositoryFilter = () => {
       updateCurrentFilterName(name) {
         this.filterName = name;
       },
-      hideModal() {
+      hideDropdown() {
         $('#filtersDropdownButton').removeClass('open');
       }
     }
