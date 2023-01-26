@@ -192,6 +192,8 @@ var inlineEditing = (function() {
       if (e.keyCode === 13) {
         updateField(container);
       }
+    }).on('blur', `${editBlocks} input`, function() {
+      $(`${editBlocks} .cancel-button`).click();
     });
 
   $(window).click((e) => {
