@@ -41,6 +41,7 @@
         aaData: data,
         dom: "R<'main-actions hidden'<'toolbar'><'filter-container'f>>t<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
         processing: true,
+        stateSave: true,
         pageLength: 25,
         colReorder: {
           enable: false
