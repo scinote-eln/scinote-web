@@ -32,23 +32,29 @@ class AtWhoController < ApplicationController
   end
 
   def rep_items
-    repository = Repository.find_by_id(params[:repository_id]) || Repository.active.accessible_by_teams(@team).first
-    items =
-      if repository && can_read_repository?(repository)
-        SmartAnnotation.new(current_user, current_team, @query)
-                       .repository_rows(repository)
+    repository =
+      if params[:repository_id].present?
+        Repository.find_by(id: params[:repository_id])
       else
-        []
+        Repository.active.accessible_by_teams(@team).first
       end
+    if repository && can_read_repository?(repository)
+      items = SmartAnnotation.new(current_user, current_team, @query)
+                             .repository_rows(repository)
+      repository_id = repository.id
+    else
+      items = []
+      repository_id = nil
+    end
     respond_to do |format|
       format.json do
         render json: {
-          res: [render_to_string(partial: 'shared/smart_annotation/repository_items.html.erb', locals: {
-                                 repository_rows: items
-                               })],
-          repository: repository.id,
-          team: current_team.id,
-          status: :ok
+          res: [
+            render_to_string(partial: 'shared/smart_annotation/repository_items.html.erb',
+                             locals: { repository_rows: items })
+          ],
+          repository: repository_id,
+          team: current_team.id
         }
       end
     end
