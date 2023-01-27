@@ -227,6 +227,7 @@
       dom: "Rt<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
       order: [[9, 'desc']],
       sScrollX: '100%',
+      stateSave: true,
       sScrollXInner: '100%',
       processing: true,
       serverSide: true,
