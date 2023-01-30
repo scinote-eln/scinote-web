@@ -431,7 +431,6 @@ var dropdownSelector = (function() {
 
     // E2E
     dropdownContainer.find('.input-field').prop('title', (config.title) + ' input' || 'dropdown selector container input');
-    console.log(    dropdownContainer.find('.input-field').prop('title', (config.title) + ' input' || 'dropdown selector container input').val()    )
     dropdownContainer.find('.fas.fa-caret-down.right-icon').prop('title', (config.title || config.optionClass || '') + ' arrow' || 'dropdown selector container arrow');
 
     // Add click event to input field

@@ -484,7 +484,7 @@ function addTitlesToOptions(select) {
 
     for (var i = 0; i < length; i++) {
       var option = element.getElementsByTagName('li')[i]
-      option.title = option.textContent
+      option.getElementsByTagName('span')[0].title = option.textContent
     }
   }
 }

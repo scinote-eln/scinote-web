@@ -11,10 +11,10 @@
     <div class="global-avatar-container">
       <%= image_tag avatar_path(user, :icon_small), title: current_assignee_name(user), class: 'img-circle pull-left' %>
     </div>
-    <div>
+    <div title="<%= my_module.name %> assigned <%= current_assignee_name(user) %> <%= user_assignment_resource_role_name(user, my_module)[0...10] %>">
       <%= current_assignee_name(user) %>
       <br>
-      <small class="text-muted"><%= user_assignment_resource_role_name(user, my_module) %></small>
+      <small class="text-muted" title="<%= user_assignment_resource_role_name(user, my_module)[0...10] %>"><%= user_assignment_resource_role_name(user, my_module) %></small>
     </div>
   </div>
   <% unless user == current_user %>

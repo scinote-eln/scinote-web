@@ -190,13 +190,13 @@ $.fn.dataTable.render.AssignedTasksValue = function(data, row) {
     });
     tasksLinkHTML = `<div class="assign-counter-container dropdown"
             data-task-list-url="${data.task_list_url}">
-              <a title="repository assigned count ${data.tasks}" href="#" class="assign-counter has-assigned"
+              <a title="repository assigned count ${data.tasks} ${row[3]}" href="#" class="assign-counter has-assigned"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">${data.tasks}</a>
               <div class="dropdown-menu" role="menu">
                 <div class="sci-input-container right-icon">
                   <input title="repository assigned task search" type="text" class="sci-input-field search-tasks"
                     placeholder="${I18n.t('repositories.table.assigned_search')}"></input>
-                  <i class="fas fa-times-circle clear-search"></i>
+                  <i class="fas fa-times-circle clear-search" title="clear search"></i>
                 </div>
                 <div class="tasks"></div>
               </div>
@@ -221,12 +221,12 @@ $.fn.dataTable.render.RepositoryStockValue = function(data) {
   if (data) {
     if (data.value) {
       if (data.stock_managable) {
-        return `<a title="repository stock value: ${data.value.stock_formatted}"
+        return `<a title="repository stock value: ${data.value.stock_formatted} for ${repositoryRowName}"
                    class="manage-repository-stock-value-link stock-value-view-render stock-${data.stock_status}">
                   ${data.value.stock_formatted}
                   </a>`;
       }
-      return `<span title="render stock value ${data.value.stock_formatted}" class="stock-value-view-render
+      return `<span title="render stock value ${data.value.stock_formatted} for ${repositoryRowName}" class="stock-value-view-render
                            ${data.displayWarnings ? `stock-${data.stock_status}` : ''}">
                 ${data.value.stock_formatted}
                 </span>`;
