@@ -3,7 +3,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true" title="x button for folder deleting modal">&times;</span>
         </button>
         <h2 class="modal-title"><%= t('projects.index.modal_delete_folders.title') %></h2>
       </div>
@@ -12,10 +12,11 @@
         <p><%= t('projects.index.modal_delete_folders.description_2') %></p>
       </div>
       <div class="modal-footer">
-        <button type='button' class='btn btn-default' data-dismiss='modal'><%= t('general.cancel')%></button>
+        <button type='button' class='btn btn-default' data-dismiss='modal' title="cancel deleting folder"><%= t('general.cancel')%></button>
         <%= button_to t('projects.index.modal_delete_folders.confirm_button'),
                       destroy_project_folders_path,
                       class: 'btn btn-danger',
+                      title: 'commence deleting folder',
                       form_class: 'delete-folders-form',
                       params: { project_folders_ids: project_folders_ids },
                       remote: true %>

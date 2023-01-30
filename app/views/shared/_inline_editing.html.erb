@@ -10,7 +10,7 @@
   data-placeholder='<%= config[:placeholder] %>'
 >
   <div class="view-mode" data-placeholder="<%= config[:placeholder] %>"><%= initial_value %></div>
-  <input title="<%= config[:title] %>" placeholder="<%= config[:placeholder] %>" class="hidden input-field" type="text" value="<%= initial_value %>" disabled/>
+  <input title="editing mode for <%= initial_value%>" placeholder="<%= config[:placeholder] %>" class="hidden input-field" type="text" value="<%= initial_value %>" disabled/>
   <div class="button-container">
     <span class="save-button"><i title="<%= config[:title] %> save" class="fas fa-check"></i></span>
     <span class="cancel-button"><i title="<%= config[:title] %> cancel" class="fas fa-times"></i></span>
