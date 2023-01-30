@@ -9,8 +9,8 @@
         <%= form_with(url: main_app.users_2fa_disable_path, method: "post", class: "2fa-disable-form") do %>
           <div class="modal-body">
             <p><%= t("users.registrations.edit.2fa_modal.disable.description") %></p>
+            <%= label_tag :password, t("users.registrations.edit.2fa_modal.disable.password_label") %>
             <div class="sci-input-container password-field">
-              <%= label_tag :password, t("users.registrations.edit.2fa_modal.disable.password_label") %>
               <%= password_field_tag :password, '', class: "sci-input-field" %>
             </div>
           </div>
