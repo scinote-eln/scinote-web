@@ -310,7 +310,7 @@ class ExperimentsController < ApplicationController
       view_type = view_state.state['my_modules']['view_type'] || 'canvas'
       path = view_mode_redirect_url(view_type)
     else
-      message = service.errors.values.join(', ')
+      message = "#{service.errors.values.join('. ')}."
       status = :unprocessable_entity
     end
 

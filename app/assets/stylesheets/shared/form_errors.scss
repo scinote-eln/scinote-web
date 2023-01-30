@@ -4,3 +4,10 @@
     color: $brand-danger;
   }
 }
+
+.form-group.has-error {
+  margin-bottom: 0;
+  div.form-control {
+    height: auto;
+  }
+}
