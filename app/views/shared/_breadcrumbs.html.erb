@@ -5,7 +5,7 @@
      last_links = links.pop(2) %>
   <%= link_to(first_link[:label], first_link[:url],
                 class: "breadcrumbs-link #{first_link[:class]}",
-                title: first_link[:label],
+                title: "breadcrumbs: #{first_link[:label]}",
                 data: first_link[:data]) %>
   <span class="delimiter">/</span>
   <span class="breadcrumbs-collapsed-container">
@@ -26,7 +26,7 @@
    <% last_links.each do |link| %>
     <%= link_to(link[:label], link[:url],
                 class: "breadcrumbs-link #{link[:class]}",
-                title: link[:label],
+                title: "breadcrumbs: #{link[:label]}",
                 data: link[:data]) %>
     <span class="delimiter">/</span>
   <% end %>
@@ -34,7 +34,7 @@
   <% links.each do |link| %>
     <%= link_to(link[:label], link[:url],
                 class: "breadcrumbs-link #{link[:class]}",
-                title: link[:label],
+                title: "breadcrumbs: #{link[:label]}",
                 data: link[:data]) %>
     <span class="delimiter">/</span>
   <% end %>

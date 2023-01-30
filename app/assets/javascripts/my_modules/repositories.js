@@ -686,14 +686,17 @@ var MyModuleRepositories = (function() {
     var version;
     var repositoryName = name || FULL_VIEW_MODAL.find('.repository-title').data('repository-name');
 
-    for (var i = 3; i < document.getElementsByTagName('tr').length; i++) {
-      var row = document.getElementsByTagName('tr')[i];
-      var length = row.getElementsByTagName('td').length;
-      for (var j = 0; j < length; j++) {
-          var cell = row.getElementsByTagName('td')[j];
-          cell.title = cell.innerText;
+    setTimeout(() => {
+      for (var i = 3; i < document.getElementsByTagName('tr').length; i++) {
+        var row = document.getElementsByTagName('tr')[i];
+        var length = row.getElementsByTagName('td').length;
+        for (var j = 0; j < length; j++) {
+            var cell = row.getElementsByTagName('td')[j];
+            cell.title = cell.innerText;
+        }
       }
-    }
+    }, 10);
+
     if (assignMode) {
       title = I18n.t('my_modules.repository.full_view.assign_modal_header', {
         repository_name: repositoryName
