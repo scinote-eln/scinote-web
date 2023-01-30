@@ -14,8 +14,8 @@
               <%= image_tag avatar_path(user, :icon_small), class: "img-circle pull-left" %>
             </span>
           </div>
-          <div class="col-xs-10" style="line-height: 15px">
-            <span><%= user.full_name %></span>
+          <div class="col-xs-10" style="line-height: 15px" title="<%= user_my_module.my_module.name %> assigned <%= current_assignee_name(user) %> <%= user_assignment_resource_role_name(user, user_my_module.my_module)[0...10] %>">
+            <span title="<%= user.full_name %>"><%= user.full_name %></span>
             <br>
             <span class="user-role">
               <small class="text-muted" title="<%= user_assignment_resource_role_name(user, user_my_module.my_module)[0..10] %>"><%= user_assignment_resource_role_name(user, user_my_module.my_module) %></small>

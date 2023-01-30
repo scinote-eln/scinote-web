@@ -191,7 +191,7 @@ var MyModuleRepositories = (function() {
         if (row.hasActiveReminders) {
           recordName = `<div title="row reminders for ${data}" class="dropdown row-reminders-dropdown"
                           data-row-reminders-url="${row.rowRemindersUrl}" tabindex='-1'>
-                          <i class="fas fa-bell dropdown-toggle row-reminders-icon" title="rowReminders${row.DT_RowId}}"
+                          <i class="fas fa-bell dropdown-toggle row-reminders-icon" title="row reminder for ${data}"
                              data-toggle="dropdown" id="rowReminders${row.DT_RowId}}"></i>
                           <ul class="dropdown-menu" role="menu" aria-labelledby="rowReminders${row.DT_RowId}">
                           </ul>
@@ -240,6 +240,7 @@ var MyModuleRepositories = (function() {
         repositoryContainer.find('.table.dataTable').removeClass('hidden');
         repositoryContainer.find('.dataTables_scrollBody').css('overflow', 'initial');
         repositoryContainer.find('.version-label').html(tableContainer.data('version-label'));
+        repositoryContainer.find('.version-label').attr('title', tableContainer.data('version-label'));
         SIMPLE_TABLE.columns.adjust();
       },
       createdRow: function(row, data) {
@@ -248,6 +249,15 @@ var MyModuleRepositories = (function() {
       fnInitComplete: function() {
         initReminderDropdown(tableContainer);
       }
+    });
+    var tableHeads = document.getElementsByTagName("th");
+    for (var i = 0; i < tableHeads.length; i++)
+      tableHeads[i].title = `sort items by ${tableHeads[i].textContent}`
+    $("th").click(function(){
+      if (this.title.includes(" sorted"))
+        this.title = this.title.replace(" sorted", "")
+      else
+        this.title = this.title.concat(" sorted")
     });
   }
 
@@ -668,6 +678,7 @@ var MyModuleRepositories = (function() {
   function updateFullViewRowsCount(value) {
     FULL_VIEW_MODAL.data('rows-count', value);
     FULL_VIEW_MODAL.find('.repository-version').attr('data-rows-count', value);
+    FULL_VIEW_MODAL.find('.repository-version').attr('title', `assigned item count ${value}`);
   }
 
   function renderFullViewRepositoryName(name, snapshotDate, assignMode) {
@@ -677,7 +688,12 @@ var MyModuleRepositories = (function() {
 
     setTimeout(() => {
       for (var i = 3; i < document.getElementsByTagName('tr').length; i++) {
-        document.getElementsByTagName('tr')[i].title = document.getElementsByTagName('tr')[i].getElementsByClassName('item-name')[0].innerHTML;
+        var row = document.getElementsByTagName('tr')[i];
+        var length = row.getElementsByTagName('td').length;
+        for (var j = 0; j < length; j++) {
+            var cell = row.getElementsByTagName('td')[j];
+            cell.title = cell.innerText;
+        }
       }
     }, 10);
 
@@ -698,6 +714,8 @@ var MyModuleRepositories = (function() {
     FULL_VIEW_MODAL.find('.repository-title').data('repository-name', repositoryName);
     FULL_VIEW_MODAL.find('.repository-title').html(title);
     FULL_VIEW_MODAL.find('.repository-version').html(version);
+    FULL_VIEW_MODAL.find('.repository-name-container').attr('title', `${title} ${version}`);
+
   }
 
   function initRepositoryAssignView() {
@@ -862,3 +880,14 @@ var MyModuleRepositories = (function() {
 }());
 
 MyModuleRepositories.init();
+function setPaginationTitles() {
+
+  setTimeout(function() {
+    var pagination = $('.pagination')[0].getElementsByTagName('li')
+    if (pagination)
+      for (let i = 0; i < pagination.length; i++) {
+        pagination[i].title = pagination[i].querySelector('a').innerHTML;
+      }
+  }, 1000);
+}
+

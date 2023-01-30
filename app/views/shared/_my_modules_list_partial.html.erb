@@ -27,7 +27,7 @@
     </div>
   <% end %>
   <% if defined?(private_modules_number) && private_modules_number.positive? %>
-    <div class="private-tasks-counter">
+    <div class="private-tasks-counter" title="assigned to <%= private_modules_number %> private task(s)">
       <%= t('my_modules.modules_list_partial.private_tasks_html', nr: private_modules_number) %>
     </div>
   <% end %>

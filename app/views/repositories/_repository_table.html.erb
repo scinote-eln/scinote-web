@@ -36,7 +36,7 @@
         </th>
         <th onclick="setTitle(this)" title="repository column: assigned" id="assigned" data-unmanageable="true"><%= t("repositories.table.assigned") %></th>
         <% if @repository.is_a?(LinkedRepository) %>
-          <th onclick="setTitle(this)" id="row-external-id"><%= t('repositories.table.external_id') %></th>
+          <th onclick="setTitle(this)" title="<%= t('repositories.table.external_id') %>" id="row-external-id"><%= t('repositories.table.external_id') %></th>
         <% end %>
         <th onclick="setTitle(this)" title="repository column: row id" id="row-id"><%= t("repositories.table.id") %></th>
         <th onclick="setTitle(this)" title="repository column: row name" id="row-name"><%= t("repositories.table.row_name") %></th>

@@ -1,5 +1,5 @@
 <% @assigned_repositories.each do |repository| %>
-  <div title="expand simple assigned items table for <%= repository.name %>" class="assigned-repository panel" data-repository-id="<%= repository.id %>">
+  <div onclick="setPaginationTitles()" class="assigned-repository panel" data-repository-id="<%= repository.id %>">
     <a class="assigned-repository-caret collapsed"
        role="button"
        data-toggle="collapse"
@@ -7,7 +7,7 @@
        data-parent="#assigned-items-container"
     >
       <i class="fas fa-caret-right"></i>
-      <span class="assigned-repository-title" data-rows-count="<%= repository.assigned_rows_count %>">
+      <span class="assigned-repository-title" title="assigned repository <%= repository.name %> count <%= repository.assigned_rows_count %>" data-rows-count="<%= repository.assigned_rows_count %>">
         <%= repository.name %>
       </span>
       <% if repository.is_a?(RepositorySnapshot) %>

@@ -20,20 +20,21 @@
           <span class="sci-checkbox-label"></span>
         </div>
       </th>
-      <th title="sort items by assigned" id="assigned"><%= t("repositories.table.assigned") %></th>
+      <th title="sort items by assigned" onclick="setTitle(this)" id="assigned"><%= t("repositories.table.assigned") %></th>
       <% if @repository.is_a?(LinkedRepository) %>
         <th id="row-external-id"><%= t('repositories.table.external_id') %></th>
       <% end %>
-      <th id="row-id" title="sort items by row-id"><%= t("repositories.table.id") %></th>
-      <th id="row-name" title="sort items by row-name"><%= t("repositories.table.row_name") %></th>
-      <th id="added-on" title="sort items by added-on"><%= t("repositories.table.added_on") %></th>
-      <th id="added-by" title="sort items by added-by"><%= t("repositories.table.added_by") %></th>
-      <th id="archived-on" title="sort items by archived-on"><%= t("repositories.table.archived_on") %></th>
-      <th id="archived-by" title="sort items by archived-by"><%= t("repositories.table.archived_by") %></th>
+      <th id="row-id" onclick="setTitle(this)" title="sort items by row-id"><%= t("repositories.table.id") %></th>
+      <th id="row-name" onclick="setTitle(this)" title="sort items by row-name"><%= t("repositories.table.row_name") %></th>
+      <th id="added-on" onclick="setTitle(this)" title="sort items by added-on"><%= t("repositories.table.added_on") %></th>
+      <th id="added-by" onclick="setTitle(this)" title="sort items by added-by"><%= t("repositories.table.added_by") %></th>
+      <th id="archived-on" onclick="setTitle(this)" title="sort items by archived-on"><%= t("repositories.table.archived_on") %></th>
+      <th id="archived-by" onclick="setTitle(this)" title="sort items by archived-by"><%= t("repositories.table.archived_by") %></th>
       <% @repository.repository_columns.order(:id).each do |column| %>
         <th
           class="repository-column <%= 'row-stock item-stock' if column.data_type == 'RepositoryStockValue' %>"
           id="<%= column.id %>"
+          onclick="setTitle(this)"
           title="sort items by <%= column.name %>"
           data-type="<%= column.data_type %>"
           <% column.metadata.each do |k, v| %>
@@ -50,3 +51,13 @@
   </thead>
   <tbody></tbody>
 </table>
+
+
+<script>
+  function setTitle(element) {
+    if (element.title.includes(" sorted"))
+      element.title = element.title.replace(" sorted", "")
+    else
+      element.title = element.title.concat(" sorted")
+  }
+</script>

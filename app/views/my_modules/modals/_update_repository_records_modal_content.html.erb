@@ -27,26 +27,26 @@
   <div class="rows-list-container <%= 'multiple' if rows_to_assign.values.any? && rows_to_unassign.values.any? %>">
     <% if rows_to_assign.values.any? %>
       <div class="rows-to-assign">
-        <p class="header">
+        <p class="header" title="+  <%= t('my_modules.modals.update_repository_record.newly_assigned_items') %>">
           <i class="fas fa-plus"></i>
           <%= t('my_modules.modals.update_repository_record.newly_assigned_items') %>
         </p>
         <ul class="rows-list">
           <% rows_to_assign.each do |row_id, row| %>
-            <li><%= row[:row_name] %></li>
+            <li title="add <%= row[:row_name] %>"><%= row[:row_name] %></li>
           <% end %>
         </ul>
       </div>
     <% end %>
     <% if rows_to_unassign.values.any? %>
       <div class="rows-to-unassign">
-        <p class="header">
+        <p class="header" title="- <%= t('my_modules.modals.update_repository_record.items_will_be_removed') %>">
           <i class="fas fa-minus"></i>
           <%= t('my_modules.modals.update_repository_record.items_will_be_removed') %>
         </p>
         <ul class="rows-list">
           <% rows_to_unassign.each do |row_id, row| %>
-            <li><%= row[:row_name] %></li>
+            <li title="remove <%= row[:row_name] %>"><%= row[:row_name] %></li>
           <% end %>
         </ul>
       </div>
@@ -58,7 +58,7 @@
          downstream_modules = my_module.downstream_modules
          downstream_modules.each do |m| %>
         <% if can_assign_my_module_repository_rows?(m) %>
-          <div class='my-module-to-assign'>
+          <div class='my-module-to-assign' title="current task: <%= m.name %>">
             <% if m == my_module %>
               <span class="current-task"><%= t('my_modules.modals.assign_repository_record.current_task') %></span>
             <% end %>
