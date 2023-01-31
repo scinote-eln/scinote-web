@@ -244,14 +244,16 @@ label {
 
 /* Project header element style */
 .report-project-header-element {
-  margin-bottom: 20px;
+  margin-bottom: 0;
 
   .report-element-header {
     border-bottom: none;
   }
+
   .report-element-body {
     .project-name {
       @include font-h1;
+      margin-top: 0;
     }
   }
 
@@ -617,7 +619,7 @@ label {
         margin: 3px 2px;
 
         .activity-prefix {
-          color: $color-emperor;
+          color: $color-silver-chalice;
         }
       }
     }

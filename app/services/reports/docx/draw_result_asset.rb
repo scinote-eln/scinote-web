@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 module Reports::Docx::DrawResultAsset
-  def draw_result_asset(result)
+  PREVIEW_EXTENSIONS = %w(docx pdf).freeze
+
+  def draw_result_asset(result, settings)
     asset = result.asset
     timestamp = asset.created_at
     asset_url = Rails.application.routes.url_helpers.asset_download_url(asset)
@@ -27,6 +29,11 @@ module Reports::Docx::DrawResultAsset
       text ' ' + I18n.t('projects.reports.elements.result_asset.file_name', file: asset.file_name)
       text ' ' + I18n.t('projects.reports.elements.result_asset.user_time',
                         user: result.user.full_name, timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
+
+      if settings.dig(:task, :file_results_previews) &&
+         PREVIEW_EXTENSIONS.include?(result.asset.file.blob.filename.extension)
+        text " #{I18n.t('projects.reports.elements.result_asset.full_preview_attached')}", color: color[:gray]
+      end
     end
 
     draw_result_comments(result) if @settings.dig('task', 'result_comments')
