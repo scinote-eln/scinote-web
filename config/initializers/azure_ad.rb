@@ -1,88 +1,58 @@
 # frozen_string_literal: true
 
-Rails.application.configure do
-  vars = ENV.select { |name, _| name =~ /^[[:alnum:]]*_AZURE_AD_APP_ID/ }
-  config.x.azure_ad_apps = HashWithIndifferentAccess.new if vars.present?
+begin
+  azure_app_ids = ENV.select { |name, _| name =~ /^[[:alnum:]]*_AZURE_AD_APP_ID/ }
+  settings = ApplicationSettings.instance
 
-  vars.each do |name, value|
+  azure_app_ids.each do |name, value|
     app_name = name.sub('_AZURE_AD_APP_ID', '')
-    config.x.azure_ad_apps[value] = {}
+    app_config = {}
+    app_config['app_id'] = value
 
-    tenant_id = ENV["#{app_name}_AZURE_AD_TENANT_ID"]
+    tenant_id = ENV.fetch("#{app_name}_AZURE_AD_TENANT_ID")
     raise StandardError, "No Tenant ID for #{app_name} Azure app" unless tenant_id
 
-    config.x.azure_ad_apps[value][:tenant_id] = tenant_id
+    app_config['tenant_id'] = tenant_id
 
-    client_secret = ENV["#{app_name}_AZURE_AD_CLIENT_SECRET"]
+    client_secret = ENV.fetch("#{app_name}_AZURE_AD_CLIENT_SECRET")
     raise StandardError, "No Client Secret for #{app_name} Azure app" unless client_secret
 
-    config.x.azure_ad_apps[value][:client_secret] = client_secret
+    app_config['client_secret'] = client_secret
 
-    iss = ENV["#{app_name}_AZURE_AD_ISS"]
+    iss = ENV.fetch("#{app_name}_AZURE_AD_ISS")
     raise StandardError, "No ISS for #{app_name} Azure app" unless iss
 
-    config.x.azure_ad_apps[value][:iss] = iss
+    app_config['iss'] = iss
 
-    conf_url = ENV["#{app_name}_AZURE_AD_CONF_URL"]
+    conf_url = ENV.fetch("#{app_name}_AZURE_AD_CONF_URL")
     raise StandardError, "No CONF_URL for #{app_name} Azure app" unless conf_url
 
-    config.x.azure_ad_apps[value][:conf_url] = conf_url
+    app_config['conf_url'] = conf_url
 
-    provider = ENV["#{app_name}_AZURE_AD_PROVIDER_NAME"]
+    provider = ENV.fetch("#{app_name}_AZURE_AD_PROVIDER_NAME")
     raise StandardError, "No PROVIDER_NAME for #{app_name} Azure app" unless provider
 
-    config.x.azure_ad_apps[value][:provider] = provider
+    app_config['provider_name'] = provider
 
-    config.x.azure_ad_apps[value][:enable_sign_in] = ENV["#{app_name}_AZURE_AD_ENABLE_SIGN_IN"] == 'true'
+    app_config['enable_sign_in'] = ENV["#{app_name}_AZURE_AD_ENABLE_SIGN_IN"] == 'true'
 
-    next unless config.x.azure_ad_apps[value][:enable_sign_in]
+    next unless app_config['enable_sign_in']
 
-    config.x.azure_ad_apps[value][:sign_in_label] = ENV["#{app_name}_AZURE_AD_SIGN_IN_LABEL"] || 'Sign in with Azure AD'
-    config.x.azure_ad_apps[value][:auto_link_on_sign_in] = ENV["#{app_name}_AZURE_AD_AUTO_LINK_ON_SIGN_IN"] == 'true'
+    app_config['sign_in_label'] = ENV.fetch("#{app_name}_AZURE_AD_SIGN_IN_LABEL")
+    app_config['auto_link_on_sign_in'] = ENV["#{app_name}_AZURE_AD_AUTO_LINK_ON_SIGN_IN"] == 'true'
 
     if ENV["#{app_name}_AZURE_AD_SIGN_IN_POLICY"]
-      config.x.azure_ad_apps[value][:sign_in_policy] = ENV["#{app_name}_AZURE_AD_SIGN_IN_POLICY"]
+      app_config['sign_in_policy'] = ENV["#{app_name}_AZURE_AD_SIGN_IN_POLICY"]
+    end
+
+    existing_index = settings.values['azure_ad_apps'].find_index { |v| v['app_id'] == value }
+    if existing_index
+      settings.values['azure_ad_apps'][existing_index] = app_config
+    else
+      settings.values['azure_ad_apps'] << app_config
     end
   end
-
-  # Checking additional configurations in ApplicationSettings JSON. Key and values should be strings there.
-  begin
-    if ApplicationSettings.instance.values['azure_ad_apps']&.is_a?(Array)
-      config.x.azure_ad_apps ||= HashWithIndifferentAccess.new
-      settings = ApplicationSettings.instance
-
-      settings.values['azure_ad_apps'].each do |azure_ad_app|
-        app_config = {}
-        app_id = azure_ad_app['app_id']
-        Rails.logger.error('No app_id present for the entry in Azure app settings') && next unless app_id
-
-        app_config[:tenant_id] = azure_ad_app['tenant_id']
-        Rails.logger.error("No tenant id for #{app_id} Azure app") && next unless app_config[:tenant_id]
-
-        app_config[:client_secret] = azure_ad_app['client_secret']
-        Rails.logger.error("No client secret for #{app_id} Azure app") && next unless app_config[:client_secret]
-
-        app_config[:iss] = azure_ad_app['iss']
-        Rails.logger.error("No iss for #{app_id} Azure app") && next unless app_config[:iss]
-
-        app_config[:conf_url] = azure_ad_app['conf_url']
-        Rails.logger.error("No conf_url for #{app_id} Azure app") && next unless app_config[:conf_url]
-
-        app_config[:provider] = azure_ad_app['provider_name']
-        Rails.logger.error("No provider_name for #{app_id} Azure app") && next unless app_config[:provider]
-
-        app_config[:enable_sign_in] = azure_ad_app['enable_sign_in'] == 'true'
-
-        if app_config[:enable_sign_in]
-          app_config[:sign_in_label] = azure_ad_app['sign_in_label'] || 'Sign in with Azure AD'
-          app_config[:auto_link_on_sign_in] = azure_ad_app['auto_link_on_sign_in'] == 'true'
-          app_config[:sign_in_policy] = azure_ad_app['sign_in_policy'] if azure_ad_app['sign_in_policy']
-        end
-
-        config.x.azure_ad_apps[app_id] = app_config
-      end
-    end
-  rescue ActiveRecord::ActiveRecordError, PG::ConnectionBad
-    Rails.logger.info('Not connected to database, skipping additional Azure AD configuration')
-  end
+  settings.save! if azure_app_ids.present?
+rescue ActiveRecord::ActiveRecordError, PG::ConnectionBad
+  Rails.logger.info('Not connected to database, skipping additional Azure AD configuration')
 end

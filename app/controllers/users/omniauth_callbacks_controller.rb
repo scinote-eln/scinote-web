@@ -18,10 +18,11 @@ module Users
     def customazureactivedirectory
       auth = request.env['omniauth.auth']
       provider_id = auth.dig(:extra, :raw_info, :aud)
-      provider_conf = Rails.configuration.x.azure_ad_apps[provider_id]
+      settings = ApplicationSettings.instance
+      provider_conf = settings.values['azure_ad_apps'].find { |v| v['enable_sign_in'] && v['app_id'] == provider_id }
       raise StandardError, 'No matching Azure AD provider config found' if provider_conf.blank?
 
-      auth.provider = provider_conf[:provider]
+      auth.provider = provider_conf['provider_name']
 
       return redirect_to connected_accounts_path if current_user
 

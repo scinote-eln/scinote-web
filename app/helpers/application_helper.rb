@@ -219,6 +219,14 @@ module ApplicationHelper
     'icon_small/missing.png'
   end
 
+  def okta_configured?
+    ApplicationSettings.instance.values['okta'].present?
+  end
+
+  def azure_ad_configured?
+    ApplicationSettings.instance.values['azure_ad_apps'].present?
+  end
+
   def wopi_enabled?
     ENV['WOPI_ENABLED'] == 'true'
   end
