@@ -10,7 +10,6 @@
 #   on the same page
 # * type:
 #   * 'invite_to_team' => params: team
-#   * 'invite_to_team_with_role_selector' => params: team
 #   * 'invite_to_team_with_role' => params: team, role
 #   * 'invite',
 #   * 'invite_with_team_selector',
@@ -23,7 +22,7 @@
 <%
 text_title ||= nil
 text_invite_heading ||= nil
-invite_to_team = type.in?(%w(invite_to_team invite_to_team_with_role invite_to_team_with_role_selector))
+invite_to_team = type.in?(%w(invite_to_team invite_to_team_with_role))
 invite_with_team_selector = type.in?(%w(invite_new_members invite_with_team_selector invite_with_team_selector_and_role))
 %>
 <div
@@ -126,24 +125,6 @@ invite_with_team_selector = type.in?(%w(invite_new_members invite_with_team_sele
               </div>
             </div>
           <% end %>
-          
-          <% if current_user && type == 'invite_to_team_with_role_selector'%>
-            <div id="role-select-container">
-              <h4 class="heading">
-                <span><%= t('invite_users.select_team_role') %></span>
-              </h4>
-              <div class="form-select">
-                <% normal_user_role = UserRole.find_predefined_normal_user_role %>
-                <%= select_tag "role-id",
-                  options_for_select(
-                    team_user_roles_for_select
-                      .map { |name, id| [id == normal_user_role.id ? "#{name} (#{t('invite_users.default')})" : name, id] },
-                      normal_user_role.id
-                  ), disabled: true, class: "role-input from-control" %>
-              </div>
-            </div>
-          <% end %>
-
           <% if ENV['ENABLE_RECAPTCHA'] == 'true' %>
             <%= recaptcha_input_tag include_description: false %>
             <div class="form-group has-error hidden" id="recaptcha-error-msg" >

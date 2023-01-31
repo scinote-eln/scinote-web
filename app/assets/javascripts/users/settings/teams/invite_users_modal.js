@@ -105,10 +105,6 @@
           inviteBtn.show();
           inviteWithRoleDiv.hide();
           break;
-        case 'invite_to_team_with_role_selector':
-          inviteBtn.show();
-          inviteWithRoleDiv.hide();
-          break;
         default:
           break;
       }
@@ -156,9 +152,6 @@
           case 'invite_to_team_with_role':
             data.team_ids = [modal.attr('data-team-id')];
             data.role_id = modal.attr('data-team-role-id');
-            break;
-          case 'invite_to_team_with_role_selector':
-            data.team_ids = [modal.attr('data-team-id')];
             break;
           case 'invite':
             data.team_ids = [];

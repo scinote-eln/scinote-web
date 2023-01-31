@@ -89,7 +89,7 @@
         </div>
         <%= render(partial: 'shared/invite_users_modal.html.erb',
                    locals: { modal_id: 'team-invite-users-modal',
-                             type: 'invite_to_team_with_role_selector',
+                             type: 'invite_to_team',
                              team: @team } ) %>
       <% end %>
       <table id="users-table" class="table" data-source="<%= team_users_datatable_path(@team, format: :json) %>">
