@@ -4,7 +4,7 @@
           dropdownSelector filterDropdown I18n animateSpinner initHandsOnTable */
 
 // Global variables
-(function() {
+var ProtocolsIndex = (function() {
   var PERMISSIONS = ['archivable', 'restorable', 'copyable'];
   var rowsSelected = [];
   var protocolsTableEl = null;
@@ -127,6 +127,12 @@
       $textFilter.closest('.dropdown').removeClass('open');
       dropdownSelector.closeDropdown($publishedByFilter);
       dropdownSelector.closeDropdown($accessByFilter);
+    });
+  }
+
+  function initManageAccessButton() {
+    $('.protocols-index').on('click', '#manageProtocolAccess', function() {
+      $(`tr[data-row-id=${rowsSelected[0]}] .protocol-users-link`).click();
     });
   }
 
@@ -912,4 +918,11 @@
   }
 
   init();
+  initManageAccessButton();
+
+  return {
+    reloadTable: function() {
+      protocolsDatatable.ajax.reload();
+    }
+  };
 }());

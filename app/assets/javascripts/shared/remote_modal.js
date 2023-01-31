@@ -1,4 +1,4 @@
-/* global animateSpinner */
+/* global animateSpinner ProtocolsIndex ProjectsIndex */
 (function() {
   'use strict';
 
@@ -15,6 +15,11 @@
             if ($(this).hasClass('project-assignments-modal')) {
               $(this).on('ajax:success', 'form', function() {
                 ProjectsIndex.loadCardsView();
+              });
+            }
+            if ($(this).hasClass('protocol-assignments-modal')) {
+              $(this).on('ajax:success', 'form', function() {
+                ProtocolsIndex.reloadTable();
               });
             }
             $(this).find('.selectpicker').selectpicker();
