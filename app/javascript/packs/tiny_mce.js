@@ -130,6 +130,9 @@ window.TinyMCE = (() => {
         .mce-content-body div#mceResizeHandlene{border-right: 2px solid ${primaryColor}; border-top: 2px solid ${primaryColor}}
         .mce-content-body div#mceResizeHandlesw{border-left: 2px solid ${primaryColor}; border-bottom: 2px solid ${primaryColor}}
         .mce-content-body div#mceResizeHandlese{border-right: 2px solid ${primaryColor}; border-bottom: 2px solid ${primaryColor}}
+        h1 {font-size: 24px !important }
+        h2 {font-size: 18px !important }
+        h3 {font-size: 16px !important }
       </style>`);
   }
 
@@ -211,6 +214,7 @@ window.TinyMCE = (() => {
           menu: {
             insert: { title: 'Insert', items: 'link codesample inserttable | charmap hr | nonbreaking anchor | insertdatetime customimageuploader marvinjs' },
           },
+          block_formats: 'Paragraph=p; Header 1=h1; Header 2=h2; Header 3=h3; Preformatted=pre',
           menubar: 'file edit view insert format table',
           toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link | forecolor backcolor | codesample | customimageuploader marvinjs | help',
           plugins,
@@ -254,10 +258,7 @@ window.TinyMCE = (() => {
               items: [
                 { title: 'Header 1', format: 'h1' },
                 { title: 'Header 2', format: 'h2' },
-                { title: 'Header 3', format: 'h3' },
-                { title: 'Header 4', format: 'h4' },
-                { title: 'Header 5', format: 'h5' },
-                { title: 'Header 6', format: 'h6' }
+                { title: 'Header 3', format: 'h3' }
               ]
             },
             {
