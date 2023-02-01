@@ -219,6 +219,10 @@ module ApplicationHelper
     'icon_small/missing.png'
   end
 
+  def sso_enabled?
+    ENV['SSO_ENABLED'] == 'true'
+  end
+
   def okta_configured?
     ApplicationSettings.instance.values['okta'].present?
   end
