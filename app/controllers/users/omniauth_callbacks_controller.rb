@@ -3,10 +3,12 @@
 module Users
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     include UsersGenerator
+    include ApplicationHelper
 
     skip_before_action :verify_authenticity_token
     before_action :sign_up_with_provider_enabled?,
                   only: :linkedin
+    before_action :check_sso_status, only: %i(customazureactivedirectory okta)
 
     # You should configure your model like this:
     # devise :omniauthable, omniauth_providers: [:twitter]
@@ -198,6 +200,10 @@ module Users
     def sign_up_with_provider_enabled?
       render_403 unless Rails.configuration.x.enable_user_registration
       render_403 unless Rails.configuration.x.linkedin_signin_enabled
+    end
+
+    def check_sso_status
+      render_403 unless sso_enabled?
     end
 
     def generate_initials(full_name)
