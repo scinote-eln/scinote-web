@@ -60,7 +60,7 @@
         dropdown_title: t("filters_modal.title"),
         search_field_history_key: 'experiment_filters_per_team'
       } do %>
-        <%= render partial: 'shared/filter_dropdown/text_search', locals: {container_class: ''} %>
+        <%= render partial: 'shared/filter_dropdown/text_search', locals: {container_class: '', label: t('filters_modal.text.label')} %>
         <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'started-on-filter', label: t("filters_modal.created_on.label"), view_mode: nil } %>
         <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'modified-on-filter', label: t("filters_modal.updated_on.label"), view_mode: nil } %>
         <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'archived-on-filter', label: t("filters_modal.archived_on.label"), view_mode: 'archived' } %>

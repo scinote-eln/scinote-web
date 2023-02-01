@@ -60,7 +60,7 @@
         dropdown_title: t("filters_modal.title"),
         search_field_history_key: 'project_filters_per_team'
       } do %>
-        <%= render partial: 'shared/filter_dropdown/text_search', locals: {container_class: ''} %>
+        <%= render partial: 'shared/filter_dropdown/text_search', locals: {container_class: '', label: t('filters_modal.text.label')} %>
         <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'created-on-filter', label: t("filters_modal.created_on.label"), view_mode: nil } %>
         <div class="select-block">
           <label><%= t("projects.index.filters_modal.members.label") %></label>

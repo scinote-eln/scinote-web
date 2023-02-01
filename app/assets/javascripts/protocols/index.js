@@ -105,6 +105,7 @@ var ProtocolsIndex = (function() {
       protocolsViewSearch = $textFilter.val();
 
       appliedFiltersMark();
+      initProtocolsTable();
     });
 
     // Clear filters
@@ -138,8 +139,25 @@ var ProtocolsIndex = (function() {
 
   // Initialize protocols DataTable
   function initProtocolsTable() {
+    var requestParams = {
+      published_on_from: publishedOnFromFilter,
+      published_on_to: publishedOnToFilter,
+      modified_on_from: modifiedOnFromFilter,
+      modified_on_to: modifiedOnToFilter,
+      published_by: publishedByFilter,
+      members: accessByFilter,
+      has_draft: hasDraftFilter,
+      archived_on_from: archivedOnFromFilter,
+      archived_on_to: archivedOnToFilter,
+      name_and_keywords: protocolsViewSearch
+
+    };
     protocolsTableEl = $('#protocols-table');
     repositoryType = protocolsTableEl.data('type');
+
+    if (protocolsDatatable) {
+      protocolsDatatable.destroy();
+    }
 
     protocolsDatatable = protocolsTableEl.DataTable({
       order: [[1, 'asc']],
@@ -152,7 +170,8 @@ var ProtocolsIndex = (function() {
       serverSide: true,
       ajax: {
         url: protocolsTableEl.data('source'),
-        type: 'POST'
+        type: 'POST',
+        data: { ...requestParams }
       },
       colReorder: {
         fixedColumnsLeft: 1000000 // Disable reordering
@@ -471,7 +490,7 @@ var ProtocolsIndex = (function() {
       modal.find('.modal-body').html('');
 
       // Simply re-render table
-      protocolsDatatable.ajax.reload();
+      initProtocolsTable();
     }
 
     // Make private modal hidden action
@@ -913,7 +932,7 @@ var ProtocolsIndex = (function() {
       importResultsModal.find('.modal-body').html('');
 
       // Also reload table
-      protocolsDatatable.ajax.reload();
+      initProtocolsTable();
     });
   }
 
@@ -922,7 +941,7 @@ var ProtocolsIndex = (function() {
 
   return {
     reloadTable: function() {
-      protocolsDatatable.ajax.reload();
+      initProtocolsTable();
     }
   };
 }());
