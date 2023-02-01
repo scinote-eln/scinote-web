@@ -34,7 +34,7 @@ module RepositoryColumns
     private
 
     def repository_column_params
-      params.require(:repository_column).permit(:name, :reminder_delta, :reminder_value, :reminder_unit, :reminder_message)
+      params.require(:repository_column).permit(:name, :reminder_value, :reminder_unit, :reminder_message)
     end
 
     def column_type_param
