@@ -3,10 +3,12 @@
 module Users
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     include UsersGenerator
+    include ApplicationHelper
 
     skip_before_action :verify_authenticity_token
     before_action :sign_up_with_provider_enabled?,
                   only: :linkedin
+    before_action :check_sso_status, only: %i(customazureactivedirectory okta)
 
     # You should configure your model like this:
     # devise :omniauthable, omniauth_providers: [:twitter]
@@ -17,11 +19,12 @@ module Users
 
     def customazureactivedirectory
       auth = request.env['omniauth.auth']
-      provider_id = auth.dig(:extra, :raw_info, :id_token_claims, :aud)
-      provider_conf = Rails.configuration.x.azure_ad_apps[provider_id]
+      provider_id = auth.dig(:extra, :raw_info, :aud)
+      settings = ApplicationSettings.instance
+      provider_conf = settings.values['azure_ad_apps'].find { |v| v['enable_sign_in'] && v['app_id'] == provider_id }
       raise StandardError, 'No matching Azure AD provider config found' if provider_conf.blank?
 
-      auth.provider = provider_conf[:provider]
+      auth.provider = provider_conf['provider_name']
 
       return redirect_to connected_accounts_path if current_user
 
@@ -197,6 +200,10 @@ module Users
     def sign_up_with_provider_enabled?
       render_403 unless Rails.configuration.x.enable_user_registration
       render_403 unless Rails.configuration.x.linkedin_signin_enabled
+    end
+
+    def check_sso_status
+      render_403 unless sso_enabled?
     end
 
     def generate_initials(full_name)
