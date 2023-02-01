@@ -2,6 +2,9 @@
 
 module StepElements
   class TextsController < BaseController
+    include ApplicationHelper
+    include StepsActions
+
     before_action :load_step_text, only: %i(update destroy duplicate)
 
     def create
@@ -18,10 +21,12 @@ module StepElements
     end
 
     def update
+      old_text = @step_text.text
       ActiveRecord::Base.transaction do
         @step_text.update!(step_text_params)
         TinyMceAsset.update_images(@step_text, params[:tiny_mce_images], current_user)
         log_step_activity(:text_edited, { text_name: @step_text.name })
+        step_text_annotation(@step, @step_text, old_text)
       end
 
       render json: @step_text, serializer: StepTextSerializer, user: current_user

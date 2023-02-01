@@ -332,6 +332,8 @@ function initializeFullZoom() {
     commentMenu.position({ top: $(this).parent().position().top });
     commentMenu.offset({ top: $(this).parent().offset().top + <%= Constants::DROPDOWN_TOP_OFFSET_PX %> });
   });
+
+  initializeCanvasViewNavigator();
 }
 
 function destroyFullZoom() {
@@ -370,6 +372,7 @@ function initializeMediumZoom() {
 
   // Restore draggable position
   restoreDraggablePosition($("#diagram"), $("#canvas-container"));
+  initializeCanvasViewNavigator();
 }
 
 function destroyMediumZoom() {
@@ -397,6 +400,7 @@ function initializeSmallZoom() {
 
   // Restore draggable position
   restoreDraggablePosition($("#diagram"), $("#canvas-container"));
+  initializeCanvasViewNavigator();
 }
 
 function destroySmallZoom() {
@@ -595,7 +599,7 @@ function resizeContainer() {
   if (cont.length > 0) {
     cont.css(
       "height",
-      ($(window).height() - cont.offset().top - 15) + "px"
+      ($(window).height() - cont.offset().top) + "px"
     );
   }
 }
@@ -2064,7 +2068,9 @@ function cloneModule(originalModule, gridDistX, gridDistY, left, top) {
   var newModule = createVirtualModule();
   elLeft(newModule, left);
   elTop(newModule, top);
-  updateModuleHtml(newModule, id, originalModule.data("module-name"), gridDistX, gridDistY);
+  updateModuleHtml(newModule, id,
+                   `${I18n.t('experiments.canvas.edit.clone_prefix')} ${originalModule.data('module-name')}`,
+                   gridDistX, gridDistY);
   newModule.removeClass("new");
 
   // Add the cloned module id into the hidden input field
@@ -2661,6 +2667,9 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
       y_pos = y_el + (fastOffsetY - y_start);
       x_start = fastOffsetX;
       y_start = fastOffsetY;
+
+      drawRectangleCanvasNavigatorView(-x_pos, -y_pos)
+
       if (draggable !== null) {
         elLeft(draggable, x_pos);
         elTop(draggable, y_pos);
@@ -2912,6 +2921,79 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
     $("#edit-canvas-button").click();
   }
 })();
+
+function drawCanvasViewNavigatorImage(image_src){
+  var canvasImage = $('.canvas-preview-img')[0];
+  var canvasRect = $('.canvas-preview-rect')[0];
+  var canvasImageTx = canvasImage.getContext('2d');
+  var canvasRectTx = canvasRect.getContext('2d');
+  var image = new Image();
+
+  image.onload = function() {
+    canvasImageTx.drawImage(image, 0, 0, canvasImage.width, canvasImage.height);
+    drawRectangleCanvasNavigatorView(-(draggable.offset().left - draggable.parent().offset().left),
+      -(draggable.offset().top - draggable.parent().offset().top));
+    canvasRectTx.stroke();
+  };
+  image.src = image_src;
+
+}
+
+function initializeCanvasViewNavigator() {
+  if ($('.canvas-preview-img').data('image-url')) {
+    drawCanvasViewNavigatorImage($('.canvas-preview-img').data('image-url'));
+  } else if ($('.canvas-preview-img').data('workflowimg-present') === false) {
+    let imgUrl = $('.canvas-preview-img').data('workflowimg-url');
+    $.ajax({
+      url: imgUrl,
+      type: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        drawCanvasViewNavigatorImage($(data.workflowimg).attr('src'));
+      }
+    });
+  }
+}
+
+function drawRoundRectangle(ctx, xPos, yPos, width, height, radius) {
+  width = Math.max(width, 0)
+  height = Math.max(height, 0)
+  if (width < 2 * radius) radius = width / 2;
+  if (height < 2 * radius) radius = height / 2;
+  
+  ctx.beginPath();
+  ctx.lineWidth = 4;
+  ctx.strokeStyle = '#104DA9';
+  ctx.moveTo(xPos + radius, yPos);
+  ctx.arcTo(xPos + width, yPos, xPos + width, yPos + height, radius);
+  ctx.arcTo(xPos + width, yPos + height, xPos, yPos + height, radius);
+  ctx.arcTo(xPos, yPos + height, xPos, yPos, radius);
+  ctx.arcTo(xPos, yPos, xPos + width, yPos, radius);
+  ctx.stroke();
+  ctx.closePath();
+}
+
+function drawRectangleCanvasNavigatorView(xPos, yPos) {
+  var adjustFactor = 10;
+  var canvasSize = calculateDraggableSize(draggable);
+  var ratioX = xPos / canvasSize.width;
+  var ratioY = yPos / canvasSize.height;
+
+  var canvasPreviewRect = $('.canvas-preview-rect')[0];
+
+  if (canvasPreviewRect) {
+    var canvasRectTx = canvasPreviewRect.getContext('2d');
+    var canvasWidth = canvasRectTx.canvas.width;
+    var canvasHeight = canvasRectTx.canvas.height;
+    var previewWidth = canvasWidth * ($('#diagram-container').width() / canvasSize.width);
+    var previewHeight = canvasHeight * ($('#diagram-container').height() / canvasSize.height);
+
+    canvasRectTx.clearRect(0, 0, canvasWidth, canvasHeight);
+    canvasRectTx.beginPath();
+    drawRoundRectangle(canvasRectTx, canvasWidth * ratioX + adjustFactor, canvasHeight * ratioY + adjustFactor,
+      previewWidth - adjustFactor, previewHeight - adjustFactor, 4)
+  }
+}
 
 /** prevent reload page */
 var preventCanvasReloadOnSave = (function() {

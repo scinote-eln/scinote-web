@@ -20,4 +20,6 @@ module ActiveStorageFileUtil
 
     previewable
   end
+
+  module_function :previewable_document?
 end

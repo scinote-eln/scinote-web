@@ -161,7 +161,7 @@ var MarvinJsEditorApi = (function() {
       } else if (config.objectType === 'Result') {
         location.reload();
       } else if (config.objectType === 'TinyMceAsset') {
-        json = tinymce.util.JSON.parse(result);
+        json = JSON.parse(result);
         config.editor.execCommand('mceInsertContent', false, TinyMceBuildHTML(json));
         TinyMCE.updateImages(config.editor);
       }
@@ -210,6 +210,20 @@ var MarvinJsEditorApi = (function() {
     });
   }
 
+  function createNewMarvinContainer(dataset) {
+    var objectId = dataset.objectId;
+    var objectType = dataset.objectType;
+    var marvinUrl = dataset.marvinUrl;
+    var container = dataset.sketchContainer;
+    MarvinJsEditor.open({
+      mode: 'new',
+      objectId: objectId,
+      objectType: objectType,
+      marvinUrl: marvinUrl,
+      container: container
+    });
+  }
+
   // MarvinJS Methods
 
   return {
@@ -254,17 +268,13 @@ var MarvinJsEditorApi = (function() {
 
     initNewButton: function(selector, saveCallback) {
       $(selector).off('click').on('click', function() {
-        var objectId = this.dataset.objectId;
-        var objectType = this.dataset.objectType;
-        var marvinUrl = this.dataset.marvinUrl;
-        var container = this.dataset.sketchContainer;
-        MarvinJsEditor.open({
-          mode: 'new',
-          objectId: objectId,
-          objectType: objectType,
-          marvinUrl: marvinUrl,
-          container: container
-        });
+        createNewMarvinContainer(this.dataset);
+      });
+
+      $(selector).off('keypress').on('keypress', function(e) {
+        if (e.which === 13) {
+          createNewMarvinContainer(this.dataset);
+        }
       });
 
       MarvinJsEditor.saveCallback = saveCallback;
@@ -279,47 +289,6 @@ var MarvinJsEditorApi = (function() {
     }
   };
 });
-
-// TinyMCE plugin
-
-(function() {
-  'use strict';
-
-  tinymce.PluginManager.requireLangPack('MarvinJsPlugin');
-
-  tinymce.create('tinymce.plugins.MarvinJsPlugin', {
-    MarvinJsPlugin: function(ed) {
-      var editor = ed;
-
-      function openMarvinJs() {
-        MarvinJsEditor.open({
-          mode: 'new-tinymce',
-          marvinUrl: '/tiny_mce_assets/marvinjs',
-          editor: editor
-        });
-      }
-      // Add a button that opens a window
-      editor.addButton('marvinjsplugin', {
-        tooltip: I18n.t('marvinjs.new_button'),
-        icon: 'marvinjs',
-        onclick: openMarvinJs
-      });
-
-      // Adds a menu item to the tools menu
-      editor.addMenuItem('marvinjsplugin', {
-        text: I18n.t('marvinjs.new_button'),
-        icon: 'marvinjs',
-        context: 'insert',
-        onclick: openMarvinJs
-      });
-    }
-  });
-
-  tinymce.PluginManager.add(
-    'marvinjsplugin',
-    tinymce.plugins.MarvinJsPlugin
-  );
-})();
 
 // Initialization
 $(document).on('click', '.marvinjs-edit-button', function() {
@@ -337,7 +306,7 @@ $(document).on('click', '.marvinjs-edit-button', function() {
 $(document).on('turbolinks:load', function() {
   MarvinJsEditor = MarvinJsEditorApi();
   if (MarvinJsEditor.enabled()) {
-    if ($('#marvinjs-editor')[0].dataset.marvinjsMode === 'remote' && typeof(ChemicalizeMarvinJs) !== 'undefined') {
+    if ($('#marvinjs-editor')[0].dataset.marvinjsMode === 'remote' && typeof (ChemicalizeMarvinJs) !== 'undefined') {
       ChemicalizeMarvinJs.createEditor('#marvinjs-sketch').then(function(marvin) {
         marvin.setDisplaySettings({ toolbars: 'reporting' });
         marvinJsRemoteEditor = marvin;

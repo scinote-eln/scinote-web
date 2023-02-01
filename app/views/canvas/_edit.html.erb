@@ -12,11 +12,10 @@
     <% if @experiment_managable %>
       <%=link_to "", type: "button", class: "btn btn-primary", id: "canvas-new-module" do %>
         <span class="hbtn-default">
-          <span class="fas fa-credit-card"></span>
+          <span class="fas fa-plus"></span>
           <%= t("experiments.canvas.edit.new_module") %>
         </span>
         <span class="hbtn-hover">
-          <span class="fas fa-credit-card"></span>
           <em class="hidden-xs"><%= t("experiments.canvas.edit.new_module_hover") %></em>
           <span class="visible-xs-inline"><%= t("experiments.canvas.edit.new_module") %></span>
         </span>

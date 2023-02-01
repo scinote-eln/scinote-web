@@ -46,14 +46,16 @@
           <% end %>
         </li>
 
-        <div role="separator" class="divider"></div>
-        <li class="view-switch-active archive-switch" data-view-mode="archived" data-url="<%= project_path(@project) %>">
-          <i class="fas fa-rocket button-icon"></i> <%= t('experiments.header.active_experiments') %>
-        </li>
+        <% unless @project.archived?%>
+          <div role="separator" class="divider"></div>
+          <li class="view-switch-active archive-switch" data-view-mode="archived" data-url="<%= project_path(@project) %>">
+            <i class="fas fa-rocket button-icon"></i> <%= t('experiments.header.active_experiments') %>
+          </li>
 
-        <li class="view-switch-archived archive-switch" data-view-mode="active" data-url="<%= project_path(@project, view_mode: 'archived') %>">
-          <i class="fas fa-archive button-icon"></i> <%= t('experiments.header.archived_experiments') %>
-        </li>
+          <li class="view-switch-archived archive-switch" data-view-mode="active" data-url="<%= project_path(@project, view_mode: 'archived') %>">
+            <i class="fas fa-archive button-icon"></i> <%= t('experiments.header.archived_experiments') %>
+          </li>
+        <% end %>
       <% end %>
       <%= render layout: 'shared/filter_dropdown', locals: {
         container_class: 'experiments-filters',

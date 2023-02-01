@@ -432,7 +432,7 @@ class RepositoryRowsController < ApplicationController
       .call(activity_type: type_of,
             owner: current_user,
             subject: repository_row,
-            team: current_team,
+            team: @repository.team,
             message_items: {
               repository_row: repository_row.id,
               repository: @repository.id

@@ -61,11 +61,11 @@ gem 'aspector' # Aspect-oriented programming for Rails
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces AR
 gem 'bcrypt', '~> 3.1.10'
 gem 'caracal' # Build docx report
-gem 'deface', '~> 1.0'
+gem 'deface', '~> 1.9'
 gem 'down', '~> 5.0'
 gem 'faker' # Generate fake data
 gem 'fastimage' # Light gem to get image resolution
-gem 'httparty', '~> 0.17.3'
+gem 'httparty', '~> 0.21.0'
 gem 'i18n-js', '~> 3.6' # Localization in javascript files
 gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'logging', '~> 2.0.0'
@@ -94,15 +94,12 @@ gem 'devise-async',
     git: 'https://github.com/mhfs/devise-async.git',
     branch: 'devise-4.x'
 gem 'image_processing', '~> 1.12'
+gem 'img2zpl', git: 'https://github.com/scinote-eln/img2zpl'
 gem 'rufus-scheduler', '~> 3.5'
 
 gem 'discard', '~> 1.0'
 
 gem 'graphviz'
-gem 'tinymce-rails', '~> 4.9.10' # Rich text editor - SEE BELOW
-# Any time you update tinymce-rails Gem, also update the cache_suffix parameter
-# in sitewide/tiny_mce.js - to prevent browsers from loading old, cached .js
-# TinyMCE files which might cause errors
 
 gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'

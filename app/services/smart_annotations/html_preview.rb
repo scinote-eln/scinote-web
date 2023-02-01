@@ -26,7 +26,9 @@ module SmartAnnotations
           return "<span class='sa-type'>Exp</span>#{object.name} #{I18n.t('atwho.res.archived')}"
         end
 
-        "<a class='sa-link' href='#{ROUTES.canvas_experiment_path(object)}'><span class='sa-type'>Exp</span>#{object.name}</a>"
+        "<a class='sa-link' href='#{ROUTES.my_modules_experiment_path(object)}'>
+          <span class='sa-type'>Exp</span>#{object.name}
+        </a>"
       end
 
       def generate_tsk_snippet(_, object)

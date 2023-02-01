@@ -51,7 +51,7 @@
     max-height: calc(100vh - 300px);
     min-height: 300px;
     padding: 0;
-    width: 460px;
+    width: 475px;
 
     .dropdown-selector,
     .users-filter-dropdown {
@@ -206,6 +206,7 @@
           display: grid;
           gap: .5em;
           grid-auto-flow: column;
+          grid-template-columns: minmax(52%, 100%);
         }
 
         .datetime-filter-attributes {

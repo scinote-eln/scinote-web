@@ -235,15 +235,14 @@
 }
 
 
-#experiment-canvas {
-  [data-view-mode="archived"] {
-    display: none;
-  }
-}
 
 #module-archive {
   [data-view-mode="active"] {
     display: none;
+  }
+
+  .toolbar {
+    margin-top: 1em;
   }
 
   .module-container {

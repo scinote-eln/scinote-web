@@ -21,7 +21,7 @@ $color-module-hover: $brand-primary;
   align-items: center;
   display: flex;
 
-  #edit-canvas-button {
+  #edit-canvas-button, .new-my-module-button {
     margin-right: 5px;
   }
 
@@ -48,9 +48,8 @@ $color-module-hover: $brand-primary;
 }
 
 #update-canvas {
-
   .canvas-header {
-    margin-bottom: 5px;
+    padding: 1em 2em;
   }
 }
 
@@ -89,6 +88,14 @@ $color-module-hover: $brand-primary;
   overflow: hidden;
   // for IE10+ touch devices
   touch-action: none;
+
+  .empty-canvas {
+    color: $color-volcano;
+    display: flex;
+    font-size: 22px;
+    justify-content: center;
+    margin-top: 48px;
+  }
 }
 
 .diagram {
@@ -542,6 +549,26 @@ li.module-hover {
     margin-right: 15px;
     margin-top: 10px;
   }
+
+  #manage-module-tags-modal-intro {
+    padding-left: 15px;
+    border-top: 0;
+    width: 568px;
+    height: 30px;
+
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 21px;
+
+    color: $color-volcano;
+
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+  }
 }
 
 
@@ -607,17 +634,6 @@ li.module-hover {
             width: 220px;
           }
         }
-      }
-    }
-
-    .dropdown-option.users-dropdown-list {
-      padding: 8px 10px;
-
-      .item-avatar {
-        border-radius: 50%;
-        height: 32px;
-        margin: 0 16px 0 0;
-        width: 32px;
       }
     }
   }
@@ -1193,8 +1209,7 @@ li.module-hover {
 
     .project-code-cell {
       height: min-content;
-      margin-top: 5px;
-      padding-left: 20px;
+      margin-top: 3px;
       position: relative;
     }
 

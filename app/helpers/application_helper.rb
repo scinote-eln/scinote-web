@@ -69,8 +69,10 @@ module ApplicationHelper
   def smart_annotation_notification(options = {})
     title = options.fetch(:title) { :title_must_be_present }
     message = options.fetch(:message) { :message_must_be_present }
-    new_text = options.fetch(:new_text) { :new_text_must_be_present }
     old_text = options[:old_text] || ''
+    new_text = options[:new_text]
+    return if new_text.blank?
+
     sa_user = /\[\@(.*?)~([0-9a-zA-Z]+)\]/
     # fetch user ids from the previous text
     old_user_ids = []

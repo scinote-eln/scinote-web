@@ -21,6 +21,14 @@
     }
   }
 
+  .project-show-toolbar {
+    display: flex;
+
+    .btn {
+      margin-right: .25em;
+    }
+  }
+
   .content-header {
     .project-name {
       align-items: center;
@@ -149,14 +157,14 @@
             .description-text {
               -webkit-box-orient: vertical;
               display: -webkit-box;
-              height: 4.5em;
+              height: 3em;
               -webkit-line-clamp: 2;
               overflow: hidden;
               padding-top: .25em;
 
               &::after {
                 background: linear-gradient(to right, $color-transparent, $color-white 50%);
-                bottom: .75em;
+                bottom: .4em;
                 content: "";
                 height: 1.75em;
                 position: absolute;
@@ -167,7 +175,7 @@
             }
 
             .more-button {
-              bottom: .8em;
+              bottom: .5em;
               position: absolute;
               right: 1em;
             }
@@ -248,7 +256,7 @@
       }
 
       &.list {
-        grid-auto-rows: 1px minmax(5em, auto);
+        grid-auto-rows: 1px minmax(3em, auto);
         grid-template-columns: max-content minmax(100px, auto) minmax(80px, max-content) repeat(calc(var(--list-columns-number) - 4), minmax(100px, auto)) max-content;
         grid-template-rows: 3em;
 
@@ -262,9 +270,10 @@
 
             .workflow-img-wrapper {
               flex-shrink: 0;
-              height: 3.5em;
-              margin: .25em 1em .25em .5em;
-              width: 3.5em;
+              height: 3em;
+              margin: 0 .75em 0 .25em;
+              padding: .25em;
+              width: 3em;
 
               .archived-icon-plceholder {
                 font-size: 2em;
@@ -275,7 +284,7 @@
                 text-align: center;
 
                 img {
-                  max-height: 3em;
+                  max-height: 2.5em;
                 }
               }
             }
@@ -298,7 +307,7 @@
               grid-column: 2;
               height: 100%;
               margin: 0;
-              padding: .5em 0;
+              padding: .25em 0;
 
               a {
                 overflow: hidden;
@@ -329,8 +338,8 @@
               position: relative;
 
               .description-text {
-                height: 4.5em;
-                -webkit-line-clamp: 3;
+                height: 3em;
+                -webkit-line-clamp: 2;
 
                 &::after {
                   bottom: .5em;
@@ -345,6 +354,7 @@
 
             .actions-cell {
               grid-column: 8;
+              height: 100%;
               padding-top: 3px;
               position: initial;
             }
@@ -538,4 +548,29 @@
       overflow: auto;
     }
   }
+}
+
+.tasks-no-results-container {
+  grid-column: 1 / -1;
+  grid-row: 8;
+  display: none;
+}
+
+.no-results-img {
+  display: block;
+  margin: auto;
+  max-height: 230px;
+}
+
+.no-results-title {
+  @include font-h1;
+  margin-bottom: .25em;
+  margin-top: 1.25em;
+  text-align: center;
+}
+
+.no-results-description {
+  @include font-main;
+  color: $color-silver-chalice;
+  text-align: center;
 }

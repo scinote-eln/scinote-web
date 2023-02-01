@@ -170,8 +170,8 @@ class Repository < RepositoryBase
     team_shared_objects.where(team: team, permission_level: :shared_write).any?
   end
 
-  def self.viewable_by_user(user, teams)
-    accessible_by_teams(teams).with_granted_permissions(user, RepositoryPermissions::READ)
+  def self.viewable_by_user(_user, teams)
+    accessible_by_teams(teams)
   end
 
   def self.name_like(query)
@@ -259,11 +259,10 @@ class Repository < RepositoryBase
 
     Team.where.not(id: team.id).find_each do |team|
       team.users.find_each do |user|
-        team.repository_sharing_user_assignments.create!(
+        team.repository_sharing_user_assignments.find_or_initialize_by(
           user: user,
-          user_role: shared_write? ? normal_user_role : viewer_role,
           assignable: self
-        )
+        ).update!(user_role: shared_write? ? normal_user_role : viewer_role)
       end
     end
   end

@@ -157,8 +157,7 @@ module CommentHelper
                                                    .experiment
                                                    .project)),
                  experiment: link_to(result.my_module.experiment.name,
-                                     canvas_experiment_url(result.my_module
-                                                                  .experiment)),
+                                     my_modules_experiment_url(result.my_module.experiment)),
                  my_module: link_to(result.my_module.name,
                                     protocols_my_module_url(
                                       result.my_module
@@ -193,8 +192,7 @@ module CommentHelper
                                                    .experiment
                                                    .project)),
                  experiment: link_to(step.my_module.experiment.name,
-                                     canvas_experiment_url(step.my_module
-                                                                .experiment)),
+                                     my_modules_experiment_url(step.my_module.experiment)),
                  my_module: link_to(step.my_module.name,
                                     protocols_my_module_url(
                                       step.my_module
@@ -218,8 +216,7 @@ module CommentHelper
                                               .experiment
                                               .project)),
                  experiment: link_to(my_module.experiment.name,
-                                     canvas_experiment_url(my_module
-                                                           .experiment)),
+                                     my_modules_experiment_url(my_module.experiment)),
                  my_module: link_to(my_module.name,
                                     protocols_my_module_url(
                                       my_module
@@ -277,5 +274,9 @@ module CommentHelper
 
   def has_unseen_comments?(commentable)
     commentable.comments.any? { |comment| comment.unseen_by.include?(current_user.id) }
+  end
+
+  def count_unseen_comments(commentable, current_user)
+    commentable.comments.count { |comment| comment.unseen_by.include?(current_user.id) }
   end
 end

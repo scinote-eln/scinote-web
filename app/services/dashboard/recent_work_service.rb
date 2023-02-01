@@ -93,11 +93,10 @@ module Dashboard
 
       ordered_query = Activity.from("(#{query.to_sql}) AS activities").where.not(group_id: nil)
                               .select(:group_id,
-                                      :subject_id,
                                       :name,
                                       'MAX(last_change) AS last_change',
                                       'MAX(report_project_id) AS report_project_id')
-                              .group(:group_id, :subject_id, :name)
+                              .group(:group_id, :name)
                               .order('MAX(last_change) DESC').limit(Constants::SEARCH_LIMIT)
 
       query_filter = "(group_id LIKE 'tsk%' OR group_id LIKE 'exp%' OR group_id LIKE 'pro%')" if @mode == 'projects'
@@ -119,7 +118,7 @@ module Dashboard
         recent_object[:name] = escape_input(recent_object[:name])
         recent_object[:type] = I18n.t("activerecord.models.#{object_class.name.underscore}")
         if object_class.include?(PrefixedIdModel)
-          recent_object[:code] = object_class::ID_PREFIX + recent_object[:subject_id].to_s
+          recent_object[:code] = object_class::ID_PREFIX + recent_object[:group_id][3..]
         end
         recent_object[:url] = generate_url(recent_object)
         recent_object
@@ -243,7 +242,7 @@ module Dashboard
       when 'MyModule'
         protocols_my_module_path(object_id)
       when 'Experiment'
-        canvas_experiment_path(object_id)
+        my_modules_experiment_path(object_id)
       when 'Project'
         project_path(object_id)
       when 'Protocol'

@@ -19,13 +19,13 @@
         />
       </div>
       <div class="step-element-controls">
-        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="enableNameEdit" tabindex="-1">
+        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="enableNameEdit" tabindex="0">
           <i class="fas fa-pen"></i>
         </button>
-        <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light" tabindex="-1" @click="duplicateElement">
+        <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light" tabindex="0" @click="duplicateElement">
           <i class="fas fa-clone"></i>
         </button>
-        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
+        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="0">
           <i class="fas fa-trash"></i>
         </button>
       </div>
@@ -35,7 +35,7 @@
          tabindex="0"
          @keyup.enter="!editingTable && enableTableEdit()">
       <div  class="enable-edit-mode" v-if="!editingTable && element.attributes.orderable.urls.update_url" @click="enableTableEdit">
-        <div class="enable-edit-mode__icon">
+        <div class="enable-edit-mode__icon" tabindex="0">
           <i class="fas fa-pen"></i>
         </div>
       </div>

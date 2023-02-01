@@ -48,6 +48,7 @@ class UserDataDeletion
             my_module.protocols.each do |protocol|
               destroy_protocol(protocol)
             end
+            my_module.user_assignments.destroy_all
             my_module.delete
           end
 
@@ -57,12 +58,14 @@ class UserDataDeletion
           experiment.activities.destroy_all
           experiment.report_elements.destroy_all
           experiment.my_module_groups.delete_all
+          experiment.user_assignments.destroy_all
           experiment.delete
         end
         project.user_projects.destroy_all
         project.tags.destroy_all
         project.project_comments.destroy_all
         project.report_elements.destroy_all
+        project.user_assignments.destroy_all
 
         project.delete
       end
@@ -76,6 +79,7 @@ class UserDataDeletion
         user.update(current_team_id: nil)
       end
       team.reports.destroy_all
+      team.user_assignments.destroy_all
       team.destroy!
       # raise ActiveRecord::Rollback
     end
@@ -93,6 +97,7 @@ class UserDataDeletion
       # Destroy step
       step.tables.destroy_all
       step.step_tables.delete_all
+      step.step_texts.destroy_all
       step.report_elements.destroy_all
       step.step_comments.destroy_all
       step.step_assets.destroy_all
@@ -104,7 +109,7 @@ class UserDataDeletion
     # Destroy protocol
     protocol.protocol_protocol_keywords.destroy_all
     protocol.protocol_keywords.destroy_all
-    protocol.delete
+    protocol.destroy
   end
 
   def self.destroy_notifications(user)

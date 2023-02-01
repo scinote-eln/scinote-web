@@ -2,13 +2,13 @@
 <% export_all = defined?(export_all) && export_all %>
 <div class="report-element report-module-protocol-element">
   <div class="report-element-body">
-    <div class="protocol-name">
+    <h4 class="protocol-name">
       <% if protocol.name.present? %>
         <%= protocol.name %>
       <% else %>
         <%= t('projects.reports.elements.module.protocol.name') %>
       <% end %>
-    </div>
+    </h4>
     <div class="user-time">
       <%= t('projects.reports.elements.module.protocol.user_time', code: protocol.code, timestamp: l(protocol.created_at, format: :full)) %>
     </div>

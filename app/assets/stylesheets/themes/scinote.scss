@@ -201,16 +201,6 @@ mark,.mark {
   text-align: right;
 }
 
-a[data-toggle="tooltip"] {
-  color: inherit;
-  border-bottom: 1px dashed $color-emperor;
-
-  &:hover {
-    text-decoration: none;
-    cursor: help;
-  }
-}
-
 .nav-tabs {
   margin-bottom: 15px;
 
@@ -683,47 +673,6 @@ ul.double-line > li {
   .panel-heading {
     background-color: darken($color-gainsboro, 5%);
     color: lighten($color-emperor, 15%);
-  }
-}
-
-#canvas-container,
-#module-archive {
-  .panel-heading {
-    padding: 10px 15px 4px;
-  }
-
-  .panel-body {
-    padding: 6px 15px;
-
-    .status-label {
-      background-color: var(--state-color);
-      color: $color-white;
-      display: inline-block;
-      margin: 3px 0;
-      max-width: 100%;
-      overflow: hidden;
-      padding: 2px 8px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-  }
-
-  .panel-footer {
-    .nav > li > a {
-      padding: 6px 15px;
-    }
-
-    .btn {
-      height: 30px;
-    }
-
-    .badge-indicator {
-      background: $brand-accent;
-      border-radius: $border-radius-tag;
-      color: $color-black;
-      font-size: 10px;
-      margin-left: -8px;
-    }
   }
 }
 

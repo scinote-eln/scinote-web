@@ -1,0 +1,133 @@
+// scss-lint:disable SelectorDepth NestingDepth IdSelector
+
+#experimentTable,
+#experiment-canvas,
+#module-archive {
+  .experimnet-name {
+    max-width: calc(100% - 300px);
+  }
+}
+
+#experimentTable {
+  &.archived {
+    [data-view-mode="active"] {
+      display: none !important;
+    }
+  }
+}
+
+#experiment-canvas {
+  [data-view-mode="archived"] {
+    display: none;
+  }
+
+  .toolbar-row {
+    align-items: center;
+    display: flex;
+    margin: 10px 0;
+
+    .toolbar-right-block {
+      align-items: center;
+      display: flex;
+      margin-left: auto;
+    }
+
+    .zoom-text {
+      margin-right: .5em;
+    }
+  }
+}
+
+#new-my-module-modal {
+  .my-module-user-tags {
+    img {
+      border-radius: 50%;
+      display: inline;
+      margin-right: .5em;
+      max-height: 20px;
+      max-width: 20px;
+    }
+  }
+  .dropdown-selector-container {
+    .my-module-white-tags {
+      color: $color-white;
+    }
+
+    .my-module-tags-color {
+      align-items: center;
+      border-radius: 8px;
+      display: inline-flex;
+      height: 16px;
+      justify-content: center;
+      margin-right: 5px;
+      width: 16px;
+
+      &.new {
+        color: $color-silver-chalice;
+      }
+    }
+
+    .my-module-tags-create-new {
+      margin-left: 3px;
+    }
+
+    &.open {
+      .input-field {
+        border: 1px solid $color-alto;
+      }
+    }
+
+    &:not(.view-mode):hover {
+      .input-field {
+        border: 1px solid $color-alto;
+      }
+    }
+  }
+
+  .datetime-picker-container {
+    width: 45%;
+
+    .fa-calendar-alt {
+      color: $color-volcano !important;
+      font-size: 14px !important;
+    }
+  }
+}
+
+.dropdown-experiment-actions,
+.my-module-menu {
+  .divider-label {
+    @include font-small;
+    color: $color-silver-chalice;
+    padding: .25em 1em;
+
+    &.footer {
+      border-top: 1px solid $color-concrete;
+      padding-top: .5em;
+    }
+  }
+
+  li {
+    @include font-button;
+    cursor: pointer;
+    padding: .5em 1em;
+    white-space: nowrap;
+
+    .fas {
+      display: inline-block;
+      margin-right: .25em;
+      width: 18px;
+    }
+
+    &:hover:not(.divider-label) {
+      background: $color-concrete;
+    }
+
+    a {
+      display: inline-block;
+      margin: -.5em -1em;
+      padding: .5em 1em;
+      width: calc(100% + 2em);
+    }
+  }
+}

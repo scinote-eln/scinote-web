@@ -14,9 +14,7 @@ module ReportActions
       @element_position = 0
       @report = report
       @template_values = template_values
-      @repositories = report.project
-                            .assigned_repositories_and_snapshots
-                            .select { |repository| @content['repositories'].include?(repository.id) }
+      @repositories = @settings.dig(:task, :repositories)
     end
 
     def save_with_content
@@ -84,6 +82,8 @@ module ReportActions
         my_module_element = save_element!({ 'my_module_id' => my_module.id }, :my_module, experiment_element)
 
         my_module.live_and_snapshot_repositories_list.each do |repository|
+          next unless @repositories.include?(repository.id)
+
           save_element!(
             { 'my_module_id' => my_module.id, 'repository_id' => repository.id },
             :my_module_repository,

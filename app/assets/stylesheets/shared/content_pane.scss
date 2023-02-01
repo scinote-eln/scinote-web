@@ -66,7 +66,7 @@
 
         .dropdown-menu {
           @include font-button;
-          min-width: auto;
+          min-width: 190px;
 
           .divider-label {
             @include font-small;
@@ -74,17 +74,40 @@
             padding: .25em 1em;
           }
 
+          .divider {
+            margin: 0;
+          }
+
           li {
             cursor: pointer;
-            padding: 1em;
+            padding: .5em 1em;
             white-space: nowrap;
 
             .button-icon {
               margin-right: .5em;
             }
 
-            &:hover {
+            &:hover:not(.divider-label) {
               background: $color-concrete;
+            }
+
+            .btn {
+              height: 36px;
+            }
+
+            a {
+              display: inline-block;
+              margin: -1em;
+              padding: .5em 1em;
+              width: calc(100% + 2em);
+
+              &.selected::after {
+                @include font-awesome;
+                content: $font-fas-check;
+                margin-left: auto;
+                position: absolute;
+                right: 1em;
+              }
             }
           }
         }

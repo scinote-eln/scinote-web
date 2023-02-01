@@ -853,6 +853,7 @@ en:
         unsupported_key: "Key %{key} is not supported by this label template renderer."
         column_not_found: "This Label template contains placeholders for inventory columns that are not present in this Inventory. Some data might not be printed on the label. Please check the label preview and label template before printing."
         logo_not_supported: "The company logo cannot be printed on the label, as it is not set up in your SciNote. Please upload company logo in Settings."
+        logo_params_error: 'Failed to parse logo parameters!'
     index:
       head_title: 'Label templates'
       search_templates: 'Filter templates'
@@ -877,7 +878,7 @@ en:
         fluics_warning: 'Built-in FLUICS templates can’t be edited, deleted or duplicated'
       delete_modal:
         title: 'Delete Label template(s)'
-        description: 'Are you sure you want to delete the selected Label template(s)?'
+        description: 'Are you sure you want to delete the selected label template(s)?'
     show:
       breadcrumb_index: 'Label templates'
       name_error_prefix: 'Label template name'
@@ -898,6 +899,12 @@ en:
         nothing_found: 'Nothing found…'
         field_code: 'Field code: %{code}'
         search_placeholder: 'Type to search…'
+        logo_modal:
+          title: 'Insert logo into the label'
+          description: 'Please specify width or height, another dimension will adjust proportionally'
+          width: 'Width (%{unit})'
+          height: 'Height (%{unit})'
+          insert: 'Insert'
       buttons:
         refresh: 'Refresh preview'
         save: 'Save template code'
@@ -971,13 +978,17 @@ en:
       start_date: "Start date:"
       no_start_date_placeholder: "+ Add starting date"
       due_date: "Due date:"
+      completed_date: "Completed date:"
       no_due_date_placeholder: "+ Add due date"
+      overdue: "Overdue"
+      due_soon: "Due soon"
+      no_due_date: "not set"
       assigned_users: "Assigned to:"
       no_assigned_users: "+ Assign task to a project member"
       tags: "Tags:"
       no_tags: "+ Add tags"
       manage_tags: "Manage tags"
-      create_new_tag: "create new"
+      create_new_tag: "→ Create new"
       recent_protocols_from_repository: "Recent protocols from the Repository"
       code: "ID: "
       recent_protocols_from_repository: "Recent protocols from the Templates"
@@ -1234,6 +1245,7 @@ en:
   experiments:
     id: "ID"
     experiment_id: "Experiment ID"
+    experiment_actions: "EXPERIMENT ACTIONS"
     header:
       cards: "Cards"
       table: "Table"
@@ -1306,6 +1318,9 @@ en:
       success_flash: 'Successfully duplicated experiment %{experiment} as template.'
       error_flash: 'Could not duplicate the experiment as template.'
       current_project: '(current project)'
+    duplicate_tasks:
+      success: 'Successfully duplicated %{count} task(s) as template.'
+      duplicating: 'Duplicating contents...'
     move:
       modal_title: 'Move experiment %{experiment}'
       notice: 'Moving is possible to projects, where you have permissions to create experiments and tasks.'
@@ -1316,20 +1331,104 @@ en:
       error_flash: ' Could not move the experiment. Experiment name is already in use. '
       task_permission: 'No permission: You don’t have edit access to all experiment tasks.'
       no_projects: 'No projects: You don’t have edit access to any other projects.'
+    table:
+      head_title: "%{experiment} | Overview"
+      column:
+        id_html: 'ID'
+        task_name_html: 'Task name'
+        due_date_html: 'Due date'
+        archived_html: 'Archived'
+        age_html: 'Age'
+        results_html: 'Results'
+        status_html: 'Status'
+        assigned_html: 'Assigned to'
+        tags_html: 'Tags'
+        comments_html: '<i data-toggle="tooltip" data-placement="left" title="Comments" class="fas fa-comment"></i>'
+      modal_move_modules:
+        title: "Move task(s) to experiment"
+        confirm: "Move"
+        no_experiments: "No experiments to move this task to."
+        success_flash: "Successfully moved task(s) to experiment %{experiment}."
+        error_flash: "Failed to move task(s) to experiment %{experiment}."
+      column_display_modal:
+        title: 'Task data display'
+        description: 'Click the eye buttons to hide or show columns in the table'
+        id: 'ID'
+        task_name: 'Task name'
+        due_date: 'Due date'
+        archived: 'Archived'
+        age: 'Age'
+        results: 'Results'
+        status: 'Status'
+        assigned: 'Assigned to'
+        tags: 'Tags'
+        comments: 'Comments'
+      toolbar:
+        new: 'New task'
+        edit: 'Edit'
+        archive: 'Archive'
+        restore: 'Restore'
+        move: 'Move'
+        duplicate: 'Duplicate'
+        task_access: 'Task access'
+        task_data: 'Task data display'
+      my_module_actions:
+        title: 'TASK ACTIONS'
+        edit: 'Edit'
+        duplicate: 'Duplicate as template'
+        move: 'Move to another experiment'
+        access: 'Task access'
+        archive: 'Archive'
+        restore: 'Restore'
+      filters:
+        name: 'Task name'
+        due_date: 'Due date'
+        status: 'Status'
+        status_placeholder: 'Select task status'
+        assigned: 'Assigned to'
+        assigned_placeholder: 'Select a person assigned to a task'
+      view:
+        canvas: 'Canvas'
+        table: 'Table'
+        cards: 'Cards'
+        archived_tasks: 'Go to Archived tasks'
+        active_tasks: 'Go to Active tasks'
+      add_tag: '+ Add tag'
+      search: 'Search...'
+      not_set: 'not set'
+      archive_group:
+        success_flash: "<strong>%{number}</strong> task(s) successfully archived."
+        error_flash: "Failed to archive task(s)."
     canvas:
       archive_confirm: "Are you sure to archive this experiment?"
-      actions: 'Actions'
+      actions: 'Experiment'
+      view: 'View'
       head_title: "%{project} | Overview"
-      canvas_edit: "Edit Experiment"
+      canvas_edit: "Edit workflow"
+      canvas_empty: "It's empty here. Please add some tasks"
+      new_my_module: "New task"
+      new_my_module_modal:
+        title: "Create new task"
+        name: "Task name"
+        name_placeholder: "Enter…"
+        due_date: "Due date (optional)"
+        due_date_placeholder: "Add due date"
+        assigned_tags_label: "Add tags (optional)"
+        assigned_tags_placeholder: "Add tags"
+        assigned_users: "Assign task to (optional)"
+        assigned_users_placeholder: "Assign task to a project member"
+        create: "Create task"
       zoom: "Zoom: "
       reload_on_submit: "Save action is running. Reloading this page may cause unexpected behavior."
       modal_manage_tags:
-        head_title: "Manage tags for"
+        head_title: "Manage tags"
         subtitle: "Showing tags of task %{module}"
         no_tags: "No tags!"
         edit_tag: "Edit tag."
         remove_tag: "Remove tag from task %{module}."
         delete_tag: "Permanently delete tag from all tasks."
+        delete_tag_confirmation: "Deleting a tag will remove it from all tagged tasks. Are you sure you wish to continue?"
+        explanatory_text: "Add a set of tags to mark the tasks inside this project. Changing the tag applies to all tagged tasks. Deleting a tag removes it from all tagged tasks."
         save_tag: "Save tag."
         cancel_tag: "Cancel changes to the tag."
         create: "Add"
@@ -1347,17 +1446,18 @@ en:
         options_header: "Options"
         edit_module: "Rename task"
         task_access: "Task access"
-        clone_module: "Copy task as template (only Protocols steps copied)"
-        clone_module_group: "Copy workflow as template (only Protocols steps copied)"
+        clone_module: "Duplicate task as template (only Protocols steps duplicated)"
+        clone_module_group: "Duplicate workflow as template (only Protocols steps duplicated)"
+        clone_prefix: "Clone -"
         move_module: "Move task to another experiment"
         move_module_group: "Move workflow to another experiment"
         delete_module: "Archive task"
         delete_module_group: "Archive workflow"
         modal_new_module:
-          title: "Add new task"
+          title: "Create new task"
           name: "Task name"
           name_placeholder: "My task"
-          confirm: "Add"
+          confirm: "Create task"
         modal_edit_module:
           title: "Rename task"
           name: "Task name"
@@ -2180,7 +2280,7 @@ en:
         email_label: "Email"
         email_title: "Change email"
         new_email_label: "New email"
-        external_id_label: 'External Id'
+        external_id_label: 'External ID'
         external_id_title: 'External Id'
         current_password_label: "Current password"
         password_explanation: "(we need your current password to confirm your changes)"
@@ -2933,6 +3033,7 @@ en:
     step_comment_annotation_title: "%{user} mentioned you in a comment on step %{step}."
     step_description_title: "%{user} mentioned you in a description on step %{step}."
     checklist_title: "%{user} mentioned you in a checklist on step %{step}."
+    step_text_title: "%{user} mentioned you in a text on step %{step}."
     step_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module} | Step: %{step}"
     result_annotation_title: "%{user} mentioned you in result %{result}."
     result_comment_annotation_title: "%{user} mentioned you in a comment on result %{result}."
@@ -3166,6 +3267,7 @@ en:
     create: 'Create'
     change: "Change"
     remove: "Remove"
+    clone_label: "Clone"
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"
@@ -3184,6 +3286,8 @@ en:
       archived_old_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Archived first"
       id_asc_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;ID ascending"
       id_desc_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;ID descending"
+      due_first_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Due first"
+      due_last_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;Due last"
     sort_new:
       new: "Added last"
       old: "Added first"

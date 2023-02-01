@@ -138,6 +138,7 @@
     }
 
     function processResult(ev, resultTypeEnum) {
+      var textWithoutImages;
       var $form = $(ev.target.form);
       $form.clearFormErrors();
 
@@ -153,9 +154,11 @@
             .removeClass(GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME);
           break;
         case ResultTypeEnum.TEXT:
+          textWithoutImages = TinyMCE.getContent().replaceAll(/src="(data:image\/[^;]+;base64[^"]+)"/i, '');
+
           textValidator(
             ev, $form.find('#result_text_attributes_textarea'), 1,
-            $form.data('rich-text-max-length'), false, TinyMCE.getContent()
+            $form.data('rich-text-max-length'), false, textWithoutImages
           );
           break;
         default:

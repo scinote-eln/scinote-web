@@ -1,21 +1,6 @@
 // turbolinks MUST BE THE LAST inclusion
-//= require jquery
-//= require jquery_ujs
-//= require jquery.mousewheel.min
-//= require jquery.scrollTo
-//= require jquery.autosize
-//= require jquery-ui/widget
-//= require jquery-ui/widgets/mouse
-//= require jquery-ui/widgets/draggable
-//= require jquery-ui/widgets/droppable
-//= require jquery.ui.touch-punch.min
-//= require jquery-ui/effects/effect-slide
-//= require jquery.caret.min
-//= require jquery.atwho.min
 //= require hammer
 //= require js.cookie
-//= require spin
-//= require jquery.spin
 //= require bootstrap-sprockets
 //= require moment
 //= require bootstrap-datetimepicker
@@ -25,8 +10,6 @@
 //= require typeahead.bundle.min
 //= require nested_form_fields
 //= require highlight.pack
-//= require tinymce-jquery
-//= require_tree ./tinymce/plugins
 //= require jsPlumb-2.0.4-min
 //= require jsnetworkx
 //= require bootstrap-select
@@ -257,9 +240,6 @@ var HelperModule = (function(){
   $(document).on('turbolinks:load', function() {
     /* Fix .selectpicker (bootstrap-select) to work with Turbolinks 5.x */
     $(window).trigger('load.bs.select.data-api');
-
-    /* Clean up TinyMCE */
-    tinymce.remove();
   });
 
   // Show warning if page has unsaved data

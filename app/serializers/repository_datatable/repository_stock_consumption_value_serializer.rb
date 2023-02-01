@@ -4,8 +4,8 @@ module RepositoryDatatable
   class RepositoryStockConsumptionValueSerializer < RepositoryBaseValueSerializer
     def value
       {
-        consumed_stock_formatted: object.formatted,
-        consumed_stock: object.data
+        consumed_stock_formatted: value_object.formatted,
+        consumed_stock: value_object.data
       }
     end
   end

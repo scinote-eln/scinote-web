@@ -14,7 +14,7 @@ module ProjectsHelper
   end
 
   def user_names_with_roles(user_assignments)
-    user_assignments.map { |up| user_name_with_role(up) }.join('&#013;').html_safe
+    user_assignments.map { |up| user_name_with_role(up) }.join('&#013;')
   end
 
   def user_name_with_role(user_assignment)
