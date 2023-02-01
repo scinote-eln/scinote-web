@@ -329,7 +329,6 @@
   }
 
   .unseen-comments {
-    @include font-small;
     align-items: center;
     background-color: $brand-complementary;
     border: 2px solid $color-white;
@@ -337,11 +336,14 @@
     color: $color-black;
     display: flex;
     font-weight: bold;
+    font-size: 11px;
     height: 16px;
     justify-content: center;
-    margin-bottom: 10px;
-    margin-left: -1px;
+    margin: -4px -14px 0 0;
     min-width: 16px;
+    right: 0;
+    position: absolute;
+    top: 0;
   }
 
   .datetime-container {
@@ -398,6 +400,7 @@
 
   .open-comments-sidebar {
     margin-bottom: 0;
+    position: relative;
   }
 
   &.archived {
