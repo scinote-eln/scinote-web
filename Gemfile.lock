@@ -16,15 +16,6 @@ GIT
       railties (> 3.1, < 7.0)
 
 GIT
-  remote: https://github.com/biosistemika/yomu
-  revision: 3baa161e76b433ede55142dd1bb7cc04159f93f0
-  branch: master
-  specs:
-    yomu (0.2.4)
-      json (>= 1.8)
-      mime-types (>= 1.23)
-
-GIT
   remote: https://github.com/einzige/sneaky-save
   revision: ee71d0a00cd4ecdd575bd2a9aa8b8693915f4871
   specs:
@@ -40,6 +31,13 @@ GIT
       devise (>= 4.0)
 
 GIT
+  remote: https://github.com/scinote-eln/img2zpl
+  revision: 23d61cfc3e90ac4caa62dd08546fa0d7590a5140
+  specs:
+    img2zpl (1.0.1)
+      mini_magick (~> 4.9)
+
+GIT
   remote: https://github.com/scinote-eln/omniauth-okta
   revision: fc4d833532dec050a3c6296691d631b64de1ee19
   branch: org_auth_server_support
@@ -49,11 +47,13 @@ GIT
       omniauth-oauth2 (~> 1.7, >= 1.7.1)
 
 GIT
-  remote: https://github.com/scinote-eln/img2zpl
-  revision: 23d61cfc3e90ac4caa62dd08546fa0d7590a5140
+  remote: https://github.com/scinote-eln/yomu
+  revision: d115f8964f76f2dd461b7af04f7a1f1a5317e725
+  branch: master
   specs:
-    img2zpl (1.0.1)
-      mini_magick (~> 4.9)
+    yomu (0.2.4)
+      json (>= 1.8)
+      mime-types (>= 1.23)
 
 GEM
   remote: http://rubygems.org/

@@ -19,7 +19,7 @@ gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 6.0'
 gem 'sassc-rails'
 gem 'webpacker', '~> 4.0.0'
-gem 'yomu', git: 'https://github.com/biosistemika/yomu', branch: 'tika_1_28_1'
+gem 'yomu', git: 'https://github.com/scinote-eln/yomu', branch: 'master'
 
 # Gems for OAuth2 subsystem
 gem 'doorkeeper', '>= 4.6'
