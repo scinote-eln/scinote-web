@@ -5,7 +5,7 @@
 <div class="content-pane protocols-show" >
   <div class="protocol-position-container">
      <div class="protocol-actions">
-      <a class="btn btn-secondary pull-right" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
+      <a class="btn btn-secondary pull-right" href="<%= print_protocol_path(@protocol) %>" target="_blank" tabindex="0">
         <span class="fas fa-print" aria-hidden="true"></span>
         <span><%= t("protocols.print.button") %></span>
       </a>
@@ -25,8 +25,6 @@
 
 <!-- Create new office file modal -->
 <%= render partial: 'assets/wopi/create_wopi_file_modal.html.erb' %>
-
-<%= render partial: "my_modules/protocols/print_protocol_modal", locals: { protocol: @protocol, comments_enabled: false } %>
 
 <%= javascript_include_tag "handsontable.full" %>
 <%= render partial: "shared/formulas_libraries.html.erb" %>

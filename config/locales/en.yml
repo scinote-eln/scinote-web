@@ -2433,8 +2433,7 @@ en:
       title: "Print protocol"
       button: "Print"
       modal:
-        title: "Print protocol"
-        content: "Select what to include in the printed version of this protocol."
+        title: "Print options"
         include_comments: "Include comments when printing"
       header:
         printed_from: "Printed from"
