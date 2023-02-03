@@ -3511,4 +3511,5 @@ en:
   inline_edit:
     errors:
       over_limit: "%{attribute} is too long (maximum number is %{limit} characters)"
+      below_limit: "%{attribute} is too short (minimum number is %{limit} characters)"
       blank: "%{attribute} can't be empty"
