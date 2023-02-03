@@ -117,11 +117,11 @@ $.fn.dataTable.render.defaultRepositoryDateTimeRangeValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryDateTimeRangeValue = function(data) {
-  return `<span title="repository datetime start: ${data.value.start_time.time_formatted}"
+  return `<span title="repository datetime start: ${data.value.start_time.datetime}"
                 data-time="${data.value.start_time.time_formatted}"
                 data-datetime="${data.value.start_time.datetime}"
                 data-date="${data.value.start_time.date_formatted}">${data.value.start_time.formatted}</span> -
-          <span title="repository datetime end: ${data.value.end_time.time_formatted}"
+          <span title="repository datetime end: ${data.value.end_time.datetime}"
                 data-time="${data.value.end_time.time_formatted}"
                 data-datetime="${data.value.end_time.datetime}"
                 data-date="${data.value.end_time.date_formatted}">${data.value.end_time.formatted}</span>`;
@@ -151,11 +151,11 @@ $.fn.dataTable.render.RepositoryChecklistValue = function(data) {
   } else if (options.length > 1) {
     optionsList = $(' <ul class="dropdown-menu checklist-dropdown-menu" role="menu"></ul');
     $.each(options, function(i, option) {
-      $(`<li class="checklist-item">${option.label}</li>`).appendTo(optionsList);
+      $(`<li class="checklist-item" title="${option.label}">${option.label}</li>`).appendTo(optionsList);
     });
 
     render = `
-      <span title="repository checklist dropdown" class="dropdown checklist-dropdown">
+      <span title="repository checklist dropdown ${options.length} selected" class="dropdown checklist-dropdown">
         <span data-toggle="dropdown" class="checklist-options" aria-haspopup="true" data-checklist-items='${JSON.stringify(options)}'>
           ${options.length} ${I18n.t('libraries.manange_modal_column.checklist_type.multiple_options')}
         </span>
@@ -196,7 +196,7 @@ $.fn.dataTable.render.AssignedTasksValue = function(data, row) {
                 <div class="sci-input-container right-icon">
                   <input title="repository assigned task search" type="text" class="sci-input-field search-tasks"
                     placeholder="${I18n.t('repositories.table.assigned_search')}"></input>
-                  <i class="fas fa-times-circle clear-search" title="clear search"></i>
+                  <i class="fas fa-times-circle clear-search" title="clear repository assigned task search ${row[3]}"></i>
                 </div>
                 <div class="tasks"></div>
               </div>

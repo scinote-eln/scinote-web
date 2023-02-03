@@ -18,7 +18,7 @@
             <span title="<%= user.full_name %>"><%= user.full_name %></span>
             <br>
             <span class="user-role">
-              <small class="text-muted" title="<%= user_assignment_resource_role_name(user, user_my_module.my_module)[0..10] %>"><%= user_assignment_resource_role_name(user, user_my_module.my_module) %></small>
+              <small class="text-muted" title="<%= user_my_module.my_module.name %> assigned <%= user.full_name %> <%= user_assignment_resource_role_name(user, user_my_module.my_module)[0..10] %>"><%= user_assignment_resource_role_name(user, user_my_module.my_module) %></small>
             </span>
           </div>
         </div>

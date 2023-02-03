@@ -240,7 +240,7 @@ var MyModuleRepositories = (function() {
         repositoryContainer.find('.table.dataTable').removeClass('hidden');
         repositoryContainer.find('.dataTables_scrollBody').css('overflow', 'initial');
         repositoryContainer.find('.version-label').html(tableContainer.data('version-label'));
-        repositoryContainer.find('.version-label').attr('title', tableContainer.data('version-label'));
+        repositoryContainer.find('.version-label').attr('title', `expand assigned items table for ${$('.assigned-repository-title').text().trim()} ${tableContainer.data('version-label')}`);
         SIMPLE_TABLE.columns.adjust();
       },
       createdRow: function(row, data) {

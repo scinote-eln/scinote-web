@@ -12,9 +12,9 @@
       <%= image_tag avatar_path(user, :icon_small), title: current_assignee_name(user), class: 'img-circle pull-left' %>
     </div>
     <div>
-      <%= current_assignee_name(user) %>
+      <span title="<%= experiment.name %> assigned <%= current_assignee_name(user) %> <%= user_assignment_resource_role_name(user, experiment)[0..10] %>"><%= current_assignee_name(user) %></span>
       <br>
-      <small class="text-muted"><%= user_assignment_resource_role_name(user, experiment) %></small>
+      <small class="text-muted" title="<%= user_assignment_resource_role_name(user, experiment)[0..10] %>"><%= user_assignment_resource_role_name(user, experiment) %></small>
     </div>
   </div>
   <% unless user == current_user %>
