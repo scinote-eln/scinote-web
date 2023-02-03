@@ -40,6 +40,7 @@
       allowBlank: { type: Boolean, default: true },
       attributeName: { type: String, required: true },
       characterLimit: { type: Number },
+      characterMinLimit: { type: Number },
       placeholder: { type: String },
       autofocus: { type: Boolean, default: false },
       saveOnEnter: { type: Boolean, default: true },
@@ -88,6 +89,16 @@
               {
                 attribute: this.attributeName,
                 limit: this.numberWithSpaces(this.characterLimit)
+              }
+            )
+          )
+        }
+        if (this.characterMinLimit && this.newValue.length < this.characterMinLimit) {
+          return (
+            this.i18n.t('inline_edit.errors.below_limit',
+              {
+                attribute: this.attributeName,
+                limit: this.numberWithSpaces(this.characterMinLimit)
               }
             )
           )
