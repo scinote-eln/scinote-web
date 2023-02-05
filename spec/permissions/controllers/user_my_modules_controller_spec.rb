@@ -6,7 +6,7 @@ describe UserMyModulesController, type: :controller do
   include PermissionExtends
 
   it_behaves_like "a controller with authentication", {
-    index_old: { my_module_id: 1 },
+    assignees: { my_module_id: 1 },
     index: { my_module_id: 1 },
     index_edit: { my_module_id: 1 },
     search: { my_module_id: 1, id: 1 },
@@ -21,7 +21,7 @@ describe UserMyModulesController, type: :controller do
       team_role: :normal_user
     }
 
-    it_behaves_like "a controller action with permissions checking", :get, :index_old do
+    it_behaves_like "a controller action with permissions checking", :get, :assignees do
       let(:testable) { my_module }
       let(:permissions) { [MyModulePermissions::READ] }
       let(:action_params) { { my_module_id: my_module.id } }
