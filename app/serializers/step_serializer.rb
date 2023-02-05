@@ -101,7 +101,7 @@ class StepSerializer < ActiveModel::Serializer
     urls_list
   end
 
-  def created_on
+  def created_at
     object.created_at.strftime('%B %d, %Y at %H:%M')
   end
 
