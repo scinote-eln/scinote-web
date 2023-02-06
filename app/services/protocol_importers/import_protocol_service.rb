@@ -39,12 +39,14 @@ module ProtocolImporters
 
           TinyMceAsset.update_images(step_text, '[]', @user)
 
-          # 'Manually' create assets here. "Accept nasted attributes" won't work for assets
+          # 'Manually' create assets here. "Accept nested attributes" won't work for assets
           step.assets << AttachmentsBuilder.generate(step_params.deep_symbolize_keys, user: @user, team: @team)
           step
         end
+      rescue ActiveRecord::RecordInvalid => invalid
+        @errors[:protocol] = invalid.record.errors
       rescue StandardError => e
-        @errors[:protocol] = format_error(e)
+        @errors[:protocol] = e.message
       end
 
       self
@@ -55,11 +57,6 @@ module ProtocolImporters
     end
 
     private
-
-    def format_error(err)
-      error_type, *error_message = err.message.split(': ')[1].split(' ')
-      { error_type.downcase.to_sym => [error_message.join(' ')] }
-    end
 
     def valid?
       unless [@protocol_params, @user, @team].all?
