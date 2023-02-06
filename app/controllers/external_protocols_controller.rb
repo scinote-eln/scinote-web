@@ -95,7 +95,7 @@ class ExternalProtocolsController < ApplicationController
       render json: { protocol: service_call.protocol,
                      message: message }
     else
-      render json: { errors: service_call.errors }, status: 400
+      render json: { validation_errors: service_call.errors }, status: 400
     end
   end
 
