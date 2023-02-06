@@ -8,7 +8,7 @@ class StepSerializer < ActiveModel::Serializer
 
   attributes :name, :position, :completed, :attachments_manageble, :urls, :assets_view_mode, :assets_order,
              :marvinjs_enabled, :bio_eddie_service_enabled, :bio_eddie_context, :marvinjs_context,
-             :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit, :created_on,
+             :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit, :created_at,
              :created_by
 
   def bio_eddie_service_enabled
