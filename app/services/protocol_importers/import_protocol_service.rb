@@ -56,9 +56,9 @@ module ProtocolImporters
 
     private
 
-    def format_error(e)
-      error_type, *error_message = e.message.split(': ')[1].split(' ')
-      {error_type.downcase.to_sym => [error_message.join(' ')]}
+    def format_error(err)
+      error_type, *error_message = err.message.split(': ')[1].split(' ')
+      { error_type.downcase.to_sym => [error_message.join(' ')] }
     end
 
     def valid?
