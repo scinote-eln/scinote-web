@@ -1031,7 +1031,8 @@ CREATE TABLE public.my_modules (
     my_module_status_id bigint,
     status_changing boolean DEFAULT false,
     changing_from_my_module_status_id bigint,
-    last_transition_error jsonb
+    last_transition_error jsonb,
+    provisioning_status integer
 );
 
 
@@ -2681,7 +2682,8 @@ CREATE TABLE public.tables (
     last_modified_by_id bigint,
     data_vector tsvector,
     name character varying DEFAULT ''::character varying,
-    team_id integer
+    team_id integer,
+    metadata jsonb
 );
 
 
@@ -8595,6 +8597,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220914124900'),
 ('20221007113010'),
 ('20221028085051'),
-('20221222123021');
+('20221122132857'),
+('20221222123021'),
+('20230206095817');
 
 
