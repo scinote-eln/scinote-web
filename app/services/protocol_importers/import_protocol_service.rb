@@ -44,7 +44,7 @@ module ProtocolImporters
           step
         end
       rescue StandardError => e
-        @errors[:protocol] = e.message
+        @errors[:protocol] = format_error(e)
       end
 
       self
@@ -55,6 +55,11 @@ module ProtocolImporters
     end
 
     private
+
+    def format_error(e)
+      error_type, *error_message = e.message.split(': ')[1].split(' ')
+      {error_type.downcase.to_sym => [error_message.join(' ')]}
+    end
 
     def valid?
       unless [@protocol_params, @user, @team].all?

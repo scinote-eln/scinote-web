@@ -195,7 +195,7 @@ function handleFormSubmit(modal) {
         HelperModule.flashAlertMsg(data.message, 'success');
       },
       error: function(data) {
-        showFormErrors(modal, data.responseJSON.errors);
+        showFormErrors(modal, data.responseJSON.validation_errors);
       },
       complete: function() {
         animateSpinner(modal, false);
