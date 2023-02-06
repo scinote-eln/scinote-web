@@ -43,8 +43,8 @@ module ProtocolImporters
           step.assets << AttachmentsBuilder.generate(step_params.deep_symbolize_keys, user: @user, team: @team)
           step
         end
-      rescue ActiveRecord::RecordInvalid => invalid
-        @errors[:protocol] = invalid.record.errors
+      rescue ActiveRecord::RecordInvalid => e
+        @errors[:protocol] = e.record.errors
       rescue StandardError => e
         @errors[:protocol] = e.message
       end
