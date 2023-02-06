@@ -984,11 +984,14 @@ en:
     protocol:
       title: "Protocol"
       options_dropdown:
-        title: "Protocol options"
+        title: "Protocol actions"
         load_from_repo: "Load from templates"
         import: "Import protocol"
         export: "Export protocol"
-        save_to_repo: "Save to templates"
+        unlink: "Unlink protocol"
+        revert_protocol: "Revert protocol"
+        update_protocol: "New version update"
+        save_to_repo: "Save as new template"
         delete_steps: "Delete all steps"
     description:
       title: "Edit task %{module} description"
