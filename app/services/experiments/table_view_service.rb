@@ -2,7 +2,6 @@
 
 module Experiments
   class TableViewService
-    include Rails.application.routes.url_helpers
     include ActionView::Helpers::DateHelper
     include CommentHelper
     include ProjectsHelper
