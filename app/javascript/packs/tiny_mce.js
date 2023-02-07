@@ -219,6 +219,7 @@ window.TinyMCE = (() => {
           menubar: 'file edit view insert format table',
           toolbar: window.customTinyMceToolbar || 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link | forecolor backcolor | codesample | customimageuploader marvinjs | help',
           plugins,
+          contextmenu: '',
           autoresize_bottom_margin: 20,
           placeholder: options.placeholder,
           toolbar_sticky: true,
