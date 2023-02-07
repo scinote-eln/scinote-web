@@ -53,7 +53,10 @@ module ProtocolImporters
                             end
             next_step_id = protocol_hash[:steps].find { |s| s[:previous_id] == first_step_id }.try(:[], :id)
             steps = normalized_data[:steps].map { |s| [s[:source_id], s] }.to_h
-            original_order = protocol_hash[:steps].map { |m| [m[:previous_id], m[:id]] }.to_h
+            original_order = protocol_hash[:steps].map { |m| [m[:previous_id], m[:id]] }
+
+            # Always select minimal id value for next step in case if protocol has multiple steps paths.
+            original_order = original_order.sort_by { |ids| ids[1] }.reverse!.to_h
 
             current_position = 0
             steps[first_step_id][:position] = current_position
@@ -66,11 +69,13 @@ module ProtocolImporters
                                original_order[next_step_id]
                              end
             end
-
+            # Remove steps without position
+            steps = steps.reject { |_, step| step[:position].nil? }
             # Check if step name are valid
             steps.each do |step|
               step[1][:name] = "Step #{(step[1][:position] + 1)}" if step[1][:name].blank?
             end
+            normalized_data[:steps] = steps.present? ? steps.values : []
           else
             normalized_data[:steps] = []
           end
