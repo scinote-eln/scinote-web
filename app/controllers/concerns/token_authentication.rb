@@ -17,7 +17,7 @@ module TokenAuthentication
     @token = request.headers['Authorization']&.sub('Bearer ', '')
     raise JWT::VerificationError, I18n.t('api.core.missing_token') unless @token
 
-    verify_token!
+    check_token_revocation!
 
     @token_iss = Api::CoreJwt.read_iss(@token)
     raise JWT::InvalidPayload, I18n.t('api.core.no_iss') unless @token_iss
@@ -37,7 +37,7 @@ module TokenAuthentication
     raise JWT::InvalidPayload, I18n.t('api.core.no_user_mapping') unless current_user
   end
 
-  def verify_token!
+  def check_token_revocation!
     if Doorkeeper::AccessToken.where.not(revoked_at: nil).exists?(token: @token)
       raise JWT::VerificationError, I18n.t('api.core.expired_token')
     end
