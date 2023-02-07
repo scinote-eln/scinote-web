@@ -37,8 +37,9 @@ import 'raw-loader';
 import contentCss from '!!raw-loader!tinymce/skins/content/default/content.min.css';
 import contentUiCss from '!!raw-loader!tinymce/skins/ui/tinymce-5/content.min.css';
 
-const contentPStyle = `p { margin: 0; padding: 0; font-family: 'Lato' }`;
-const contentStyle = [contentCss, contentUiCss, contentPStyle].map((s) => s.toString()).join('\n');
+const contentPStyle = `p { margin: 0; padding: 0;}`;
+const contentBodyStyle = `body { font-family: Lato, "Open Sans", Arial, Helvetica, sans-serif }`;
+const contentStyle = [contentCss, contentUiCss, contentBodyStyle, contentPStyle].map((s) => s.toString()).join('\n');
 
 // Optional pre-initialization method
 if (typeof(window.preTinyMceInit) === 'function') {
