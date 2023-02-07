@@ -12,6 +12,7 @@ class ProtocolsController < ApplicationController
   before_action :check_create_permissions, only: %i(
     create
   )
+  before_action :load_team_and_type, only: :show
   before_action :check_clone_permissions, only: [:clone]
   before_action :check_view_permissions, only: %i(
     show
@@ -164,6 +165,10 @@ class ProtocolsController < ApplicationController
   end
 
   def show
+    @names = Protocol.where(
+      team: @current_team,
+      protocol_type: Protocol.protocol_types[@type == :public ? :in_repository_public : :in_repository_private]
+    ).map(&:name)
     respond_to do |format|
       format.json { render json: @protocol, serializer: ProtocolSerializer, user: current_user }
       format.html

@@ -3511,6 +3511,7 @@ en:
     clear_btn: "Clear"
   inline_edit:
     errors:
+      already_exist: "%{attribute} already exist"
       over_limit: "%{attribute} is too long (maximum number is %{limit} characters)"
       below_limit: "%{attribute} is too short (minimum number is %{limit} characters)"
       blank: "%{attribute} can't be empty"

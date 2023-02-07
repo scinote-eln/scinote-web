@@ -48,7 +48,8 @@
       multilinePaste: { type: Boolean, default: false },
       smartAnnotation: { type: Boolean, default: false },
       editOnload: { type: Boolean, default: false },
-      defaultValue: { type: String, default: '' }
+      defaultValue: { type: String, default: '' },
+      names: {type: Array, default: () => []}
     },
     data() {
       return {
@@ -79,6 +80,9 @@
       isBlank() {
         return this.newValue.length === 0
       },
+      nameExists() {
+        return this.names.includes(this.newValue) && this.newValue !== this.value
+      },
       error() {
         if(!this.allowBlank && this.isBlank) {
           return this.i18n.t('inline_edit.errors.blank', { attribute: this.attributeName })
@@ -99,6 +103,15 @@
               {
                 attribute: this.attributeName,
                 limit: this.numberWithSpaces(this.characterMinLimit)
+              }
+            )
+          )
+        }
+        if (this.names.length && this.nameExists) {
+          return (
+            this.i18n.t('inline_edit.errors.already_exist',
+              {
+                attribute: this.attributeName
               }
             )
           )
