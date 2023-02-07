@@ -10,15 +10,9 @@
   data-module-y="<%= my_module.y %>"
   data-module-conns="<%= construct_module_connections(my_module) %>">
 
-  <% if can_manage_my_module?(my_module) %>
-    <a class="edit-tags-link pull-right" data-remote="true" href="<%= my_module_tags_edit_url(my_module, format: :json) %>">
-      <%= render partial: "canvas/tags.html.erb", locals: { my_module: my_module } %>
-    </a>
-  <% else %>
-    <span class="edit-tags-link pull-right">
-      <%= render partial: "canvas/tags.html.erb", locals: { my_module: my_module } %>
-    </span>
-  <% end %>
+  <a class="edit-tags-link pull-right" data-remote="true" href="<%= my_module_tags_edit_url(my_module, format: :json) %>">
+    <%= render partial: "canvas/tags.html.erb", locals: { my_module: my_module } %>
+  </a>
 
   <div class="panel-heading">
     <h3 class="panel-title">

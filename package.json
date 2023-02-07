@@ -20,6 +20,7 @@
     "flow": "flow",
     "lint": "eslint ."
   },
+  "postinstall": "./engines_yarn_install.js",
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@babel/plugin-transform-react-jsx-source": "^7.0.0",

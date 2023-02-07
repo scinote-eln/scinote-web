@@ -37,8 +37,13 @@ import 'raw-loader';
 import contentCss from '!!raw-loader!tinymce/skins/content/default/content.min.css';
 import contentUiCss from '!!raw-loader!tinymce/skins/ui/tinymce-5/content.min.css';
 
-const contentPStyle = 'p { margin: 0; padding: 0 }';
+const contentPStyle = `p { margin: 0; padding: 0; font-family: 'Lato' }`;
 const contentStyle = [contentCss, contentUiCss, contentPStyle].map((s) => s.toString()).join('\n');
+
+// Optional pre-initialization method
+if (typeof(window.preTinyMceInit) === 'function') {
+  window.preTinyMceInit();
+}
 
 window.TinyMCE = (() => {
   function initHighlightjs() {
@@ -185,7 +190,7 @@ window.TinyMCE = (() => {
           table autosave autoresize link advlist codesample autolink lists
           charmap anchor searchreplace wordcount visualblocks visualchars
           insertdatetime nonbreaking save directionality customimageuploader
-          marvinjs custom_image_toolbar help quickbars
+          marvinjs custom_image_toolbar help quickbars ${window.extraTinyMcePlugins ? window.extraTinyMcePlugins : ''}
         `;
         // if (typeof (MarvinJsEditor) !== 'undefined') plugins += ' marvinjsplugin';
 
@@ -212,7 +217,7 @@ window.TinyMCE = (() => {
             insert: { title: 'Insert', items: 'link codesample inserttable | charmap hr | nonbreaking anchor | insertdatetime customimageuploader marvinjs' },
           },
           menubar: 'file edit view insert format table',
-          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link | forecolor backcolor | codesample | customimageuploader marvinjs | help',
+          toolbar: window.customTinyMceToolbar || 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link | forecolor backcolor | codesample | customimageuploader marvinjs | help',
           plugins,
           autoresize_bottom_margin: 20,
           placeholder: options.placeholder,

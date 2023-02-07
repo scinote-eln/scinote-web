@@ -8,7 +8,8 @@ class StepSerializer < ActiveModel::Serializer
 
   attributes :name, :position, :completed, :attachments_manageble, :urls, :assets_view_mode, :assets_order,
              :marvinjs_enabled, :bio_eddie_service_enabled, :bio_eddie_context, :marvinjs_context,
-             :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit
+             :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit, :created_at,
+             :created_by
 
   def bio_eddie_service_enabled
     BioEddieService.enabled?(@instance_options[:user])
@@ -98,5 +99,13 @@ class StepSerializer < ActiveModel::Serializer
     end
 
     urls_list
+  end
+
+  def created_at
+    object.created_at.strftime('%B %d, %Y at %H:%M')
+  end
+
+  def created_by
+    object.user.full_name
   end
 end

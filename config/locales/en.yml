@@ -1405,7 +1405,7 @@ en:
       view: 'View'
       head_title: "%{project} | Overview"
       canvas_edit: "Edit workflow"
-      canvas_empty: "It's empty here. Please add some tasks"
+      canvas_empty: "It's empty here. Please add some tasks."
       new_my_module: "New task"
       new_my_module_modal:
         title: "Create new task"
@@ -2815,6 +2815,7 @@ en:
       component_duplicated: "Step content duplicated successfully."
       step_duplication_failed: "Step could not be duplicated, try again later."
       component_duplication_failed: "Step content could not be duplicated, try again later."
+      timestamp: "Created at %{date} by %{user}"
       status:
         complete: "Mark as done"
         uncomplete: "Unmark as done"
@@ -3511,4 +3512,5 @@ en:
   inline_edit:
     errors:
       over_limit: "%{attribute} is too long (maximum number is %{limit} characters)"
+      below_limit: "%{attribute} is too short (minimum number is %{limit} characters)"
       blank: "%{attribute} can't be empty"
