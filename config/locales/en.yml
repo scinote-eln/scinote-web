@@ -2815,7 +2815,7 @@ en:
       component_duplicated: "Step content duplicated successfully."
       step_duplication_failed: "Step could not be duplicated, try again later."
       component_duplication_failed: "Step content could not be duplicated, try again later."
-      timestamp: "Created at %{date} by %{user}"
+      timestamp: "Created on %{date} by %{user}"
       status:
         complete: "Mark as done"
         uncomplete: "Unmark as done"
