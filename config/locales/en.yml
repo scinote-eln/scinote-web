@@ -2675,10 +2675,13 @@ en:
         row_in_repository_private: "%{protocol} - <i>into My protocols</i>"
       versions:
         title: "%{protocol} versions"
-        draft: "Draft (from Version %{parent_version})"
+        draft_html: "<b>Draft</b> (from Version %{parent_version})"
         draft_modification_info: "Last modified: %{modified_on}, by %{modified_by}"
         revision: "Version %{version}"
         revision_publishing_info: "Published: %{published_on}, by %{published_by}"
+        publish: "Publish"
+        save_as_draft: "Save as draft"
+        comment_placeholder: "Click here to enter revision notes"
       protocolsio:
         search_bar_placeholder: 'Search for protocols'
         protocolsio_title: 'Protocols.io'

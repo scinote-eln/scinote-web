@@ -1,7 +1,7 @@
 //= require protocols/import_export/import
 /* eslint-disable no-use-before-define, no-underscore-dangle, max-len */
 /* global ProtocolRepositoryHeader PdfPreview DataTableHelpers importProtocolFromFile _
-          dropdownSelector filterDropdown I18n animateSpinner initHandsOnTable */
+          dropdownSelector filterDropdown I18n animateSpinner initHandsOnTable inlineEditing */
 
 // Global variables
 var ProtocolsIndex = (function() {
@@ -392,6 +392,8 @@ var ProtocolsIndex = (function() {
       $.get(this.href, function(data) {
         $(protocolsContainer).append($.parseHTML(data.html));
         $(versionsModal).modal('show');
+        inlineEditing.init();
+        $(versionsModal).find('[data-toggle="tooltip"]').tooltip();
 
         // Remove modal when it gets closed
         $(versionsModal).on('hidden.bs.modal', function() {
