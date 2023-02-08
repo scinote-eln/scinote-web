@@ -253,6 +253,7 @@ label {
   .report-element-body {
     .project-name {
       @include font-h1;
+      font-size: 18pt;
       margin-top: 0;
     }
   }
@@ -265,7 +266,7 @@ label {
 // Experiment element style
 .report-experiment-element {
   .experiment-name {
-    font-size: 21px;
+    font-size: 16pt;
     font-weight: bold;
   }
 }
@@ -273,7 +274,7 @@ label {
 // Protocol element style
 .report-module-protocol-element {
   .protocol-name {
-    @include font-main;
+    font-size: 12pt;
     font-weight: bold;
   }
 }
@@ -283,13 +284,13 @@ label {
   @include font-button;
 
   .results-title-name {
-    @include font-main;
+    font-size: 12pt;
     font-weight: bold;
   }
 
   .report-element-body {
     .module-name {
-      font-size: 19px;
+      font-size: 14pt;
       font-weight: bold;
     }
 
@@ -347,7 +348,7 @@ label {
     }
 
     .result-name {
-      @include font-main;
+      font-size: 12pt;
       font-weight: bold;
       overflow-wrap: break-word;
     }
@@ -372,7 +373,7 @@ label {
 .report-result-asset-element {
   .report-element-header {
     .file-name {
-      font-size: 13px;
+      font-size: 10pt;
       font-weight: bold;
     }
 
@@ -392,7 +393,7 @@ label {
 .report-result-table-element {
   .report-element-header {
     .table-name {
-      font-size: 13px;
+      font-size: 10pt;
       font-weight: bold;
     }
   }
@@ -415,7 +416,7 @@ label {
 /** Step element style  */
 .report-step-element {
   .step-name {
-    font-size: 15px;
+    font-size: 11pt;
     font-weight: bold;
   }
 
@@ -464,7 +465,7 @@ label {
 .report-step-table-element {
   .report-element-header {
     .table-name {
-      font-size: 13px;
+      font-size: 10pt;
       font-weight: bold;
     }
   }
@@ -481,7 +482,7 @@ label {
 .report-step-asset-element {
   .report-element-header {
     .file-name {
-      font-size: 13px;
+      font-size: 10pt;
       font-weight: bold;
       white-space: nowrap;
     }
@@ -500,7 +501,7 @@ label {
 .report-step-checklist-element {
   .report-element-header {
     .checklist-name {
-      font-size: 13px;
+      font-size: 10pt;
       font-weight: bold;
     }
   }
@@ -522,7 +523,7 @@ label {
 .report-comments-element {
   .comment-message {
     .view-mode {
-      @include font-small;
+      font-size: 10pt;
     }
   }
 
@@ -535,7 +536,7 @@ label {
 
     .comments-name {
       color: $color-emperor;
-      font-size: 13px;
+      font-size: 10pt;
       font-weight: bold;
     }
   }
@@ -580,7 +581,7 @@ label {
     border-bottom: 0;
 
     .repository-name {
-      @include font-main;
+      font-size: 12pt;
       font-weight: bold;
     }
   }
@@ -605,7 +606,7 @@ label {
     border-bottom: none;
 
     .activity-name {
-      @include font-main;
+      font-size: 12pt;
       font-weight: bold;
     }
   }
