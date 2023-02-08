@@ -45,7 +45,7 @@
             :placeholder="i18n.t('my_modules.protocols.protocol_status_bar.enter_name')"
             :allowBlank="!inRepository"
             :attributeName="`${i18n.t('Protocol')} ${i18n.t('name')}`"
-            :names="names"
+            :names="existingNames"
             @update="updateName"
           />
           <span v-else>
@@ -150,7 +150,7 @@
         type: String,
         required: true
       },
-      names: { type: Array, required: true }
+      existingNames: { type: Array, required: true }
     },
     components: { Step, InlineEdit, ProtocolModals, ProtocolOptions, Tinymce, ReorderableItemsModal, ProtocolMetadata },
     mixins: [UtilsMixin],

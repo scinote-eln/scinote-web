@@ -12,7 +12,6 @@ class ProtocolsController < ApplicationController
   before_action :check_create_permissions, only: %i(
     create
   )
-  before_action :load_team_and_type, only: :show
   before_action :check_clone_permissions, only: [:clone]
   before_action :check_view_permissions, only: %i(
     show
@@ -165,10 +164,7 @@ class ProtocolsController < ApplicationController
   end
 
   def show
-    @names = Protocol.where(
-      team: @current_team,
-      protocol_type: Protocol.protocol_types[@type == :public ? :in_repository_public : :in_repository_private]
-    ).map(&:name)
+    @existing_names = existing_protocol_names(@protocol)
     respond_to do |format|
       format.json { render json: @protocol, serializer: ProtocolSerializer, user: current_user }
       format.html
@@ -1246,4 +1242,14 @@ class ProtocolsController < ApplicationController
                  protocol: link_to(@protocol.name, protocol_url(@protocol)))
     )
   end
+
+  def existing_protocol_names(protocol)
+    team = protocol.team
+    type = protocol.protocol_type.to_sym == :in_repository_private ? :in_repository_private : :in_repository_public
+    Protocol.where(
+      team: team,
+      protocol_type: Protocol.protocol_types[type]
+    ).map(&:name)
+  end
+
 end
