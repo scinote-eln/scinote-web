@@ -1251,5 +1251,4 @@ class ProtocolsController < ApplicationController
       protocol_type: Protocol.protocol_types[type]
     ).map(&:name)
   end
-
 end
