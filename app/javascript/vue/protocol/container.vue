@@ -98,8 +98,8 @@
         </a>
       </div>
       <div class="protocol-steps">
-        <template v-for="(step, index) in steps">
-          <div class="step-block" :key="step.id">
+        <template v-for="(step, index) in steps" :key="step.id">
+          <div class="step-block">
             <div v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)">
               <i class="fas fa-plus"></i>
             </div>
