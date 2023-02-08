@@ -508,10 +508,6 @@ label {
 
   .report-element-body {
     padding-top: 0;
-
-    & > ul > li > span.checked {
-      /* Currently nothing */
-    }
   }
 
   &:hover > .report-element-header .checklist-name {
@@ -561,16 +557,6 @@ label {
       color: $brand-primary;
     }
   }
-}
-
-/** Result comments element style */
-.report-result-comments-element {
-
-}
-
-/** Step comments element style */
-.report-step-comments-element {
-
 }
 
 // Module repository element
