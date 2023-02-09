@@ -28,6 +28,10 @@
   .user-assignment-controls {
     align-items: center;
     display: flex;
+
+    .text-muted {
+      color: $color-silver-chalice;
+    }
   }
 
   .user-assignment-controls {
