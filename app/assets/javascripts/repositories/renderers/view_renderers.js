@@ -71,7 +71,7 @@ $.fn.dataTable.render.defaultRepositoryDateValue = function() {
 $.fn.dataTable.render.RepositoryDateValue = function(data) {
   let reminderClass = data.value.reminder ? 'reminder' : '';
   return `<span class="${reminderClass}"
-                title="repository date: ${data.value.datetime}"
+                title="repository date reminder: ${data.value.datetime}"
                 date-cell-value data-datetime="${data.value.datetime}"
                 data-date="${data.value.formatted}">${data.value.formatted}</span>`;
 };
@@ -221,12 +221,12 @@ $.fn.dataTable.render.RepositoryStockValue = function(data) {
   if (data) {
     if (data.value) {
       if (data.stock_managable) {
-        return `<a title="repository stock value: ${data.value.stock_formatted} for ${repositoryRowName}"
+        return `<a title="repository stock-${data.stock_status} value: ${data.value.stock_formatted} for ${repositoryRowName}"
                    class="manage-repository-stock-value-link stock-value-view-render stock-${data.stock_status}">
                   ${data.value.stock_formatted}
                   </a>`;
       }
-      return `<span title="render stock value ${data.value.stock_formatted} for ${repositoryRowName}" class="stock-value-view-render
+      return `<span title="render stock ${data.displayWarnings ? `-${data.stock_status}` : ''} value ${data.value.stock_formatted} for ${repositoryRowName}" class="stock-value-view-render
                            ${data.displayWarnings ? `stock-${data.stock_status}` : ''}">
                 ${data.value.stock_formatted}
                 </span>`;

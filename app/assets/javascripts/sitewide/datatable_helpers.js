@@ -51,6 +51,15 @@ var DataTableHelpers = (function() {
         }
       });
 
+      setTimeout(function() {
+        $(document).click(function(){
+          var pagination = document.getElementsByClassName('paginate_button');
+          for (let i = 0; i < pagination.length; i++) {
+            pagination[i].title = pagination[i].querySelector('a').innerHTML;
+          }
+        });
+      }, 500);
+
       var pagination = document.getElementsByClassName('paginate_button');
       for (let i = 0; i < pagination.length; i++) {
         pagination[i].title = pagination[i].querySelector('a').innerHTML;

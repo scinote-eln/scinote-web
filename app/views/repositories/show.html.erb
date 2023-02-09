@@ -60,17 +60,18 @@
 
         <button class="btn btn-light manage-repo-column-index"
                 title="manage repository columns"
+                id="manageRepositoryColumns"
                 data-modal-url="<%= repository_repository_columns_path(@repository) %>"
                 data-action="new">
           <span class="fas fa-cog"></span>&nbsp;<%= t('repositories.index.columns') %>
         </button>
           <% unless @repository.is_a?(BmtRepository) %>
             <%= render layout: "shared/view_switch", locals: {disabled: @repository.archived?} do %>
-              <li class="view-switch-archived" title="view switch archived button"  data-view-mode="active">
+              <li class="view-switch-archived" id="viewArchivedBtn" title="view switch archived button"  data-view-mode="active">
                 <i class="fas fa-archive button-icon"></i>
                 <%= t('repositories.show.show_archived_items') %>
               </li>
-              <li class="view-switch-active" data-view-mode="archived" title="show active items">
+              <li class="view-switch-active" id="viewActiveBtn" data-view-mode="archived" title="show active items">
                 <i class="fas fa-rocket button-icon"></i>
                 <%= t('repositories.show.show_active_items') %>
               </li>
@@ -128,6 +129,32 @@
 </script>
 
 <script>
+  $('#viewArchivedBtn').on('click', function(){
+      setTimeout(function() {
+      var pagination = document.getElementsByClassName('paginate_button');
+      for (let i = 0; i < pagination.length; i++) {
+        pagination[i].title = pagination[i].querySelector('a').innerHTML;
+      }
+    }, 500);
+    setTimeout(() => {
+      for (var i = 3; i < document.getElementsByTagName('tr').length; i++) {
+        var row = document.getElementsByTagName('tr')[i];
+        var length = row.getElementsByTagName('td').length;
+        for (var j = 0; j < length; j++) {
+            var cell = row.getElementsByTagName('td')[j];
+            cell.title = cell.innerText;
+        }
+      }
+    }, 1000);
+  });
+  $('#viewActiveBtn').on('click', function(){
+      setTimeout(function() {
+      var pagination = document.getElementsByClassName('paginate_button');
+      for (let i = 0; i < pagination.length; i++) {
+        pagination[i].title = pagination[i].querySelector('a').innerHTML;
+      }
+    }, 500);
+  });
   document.addEventListener("click", function(event) {
       if (event.target.matches("input[type='checkbox']")) {
         var checkedRows = checkedRows = document.querySelectorAll("tr td input[type='checkbox']:checked");

@@ -23,7 +23,7 @@
     <div class="printing-items">
       <%= t('label_printers.modal_printing_status.multiple_items', starting_item_count: starting_item_count,  item_count: starting_item_count - label_printer.current_print_job_ids.length) %>
     </div>
-    <div class="printing-status" data-status="<%= label_printer.printing_status %>">
+    <div class="printing-status" data-status="<%= label_printer.printing_status %>" title=" <%= t("label_printers.modal_printing_status.printing_status.#{label_printer.printing_status}") %>">
       <%= t("label_printers.modal_printing_status.printing_status.#{label_printer.printing_status}") %>
     </div>
   </div>
