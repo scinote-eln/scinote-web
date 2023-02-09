@@ -15,7 +15,7 @@
     <i class="fas fa-download"></i>
     <span class="button-text"><%= t("protocols.index.action_toolbar.export") %></span>
   </button>
-  <button id="archiveProtocol" class="btn btn-light multiple-object-action hidden only-active" data-for="archivable">
+  <button id="archiveProtocol" class="btn btn-light multiple-object-action hidden only-active" data-url="<%= archive_protocols_path %>" data-for="archivable">
     <i class="fas fa-archive"></i>
     <span class="button-text"><%= t("protocols.index.action_toolbar.archive") %></span>
   </button>

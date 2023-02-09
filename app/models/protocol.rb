@@ -445,20 +445,12 @@ class Protocol < ApplicationRecord
     self.archived_on = Time.now
     self.restored_by = nil
     self.restored_on = nil
-    self.protocol_type = Protocol.protocol_types[:in_repository_archived]
+    self.archived = true
     result = save
 
     # Update all module protocols that had
     # parent set to this protocol
     if result
-      Protocol.where(parent: self).find_each do |p|
-        p.update(
-          parent: nil,
-          parent_updated_at: nil,
-          protocol_type: :unlinked
-        )
-      end
-
       Activities::CreateActivityService
         .call(activity_type: :archive_protocol_in_repository,
               owner: user,

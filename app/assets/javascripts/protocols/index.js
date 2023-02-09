@@ -1,7 +1,7 @@
 //= require protocols/import_export/import
 /* eslint-disable no-use-before-define, no-underscore-dangle, max-len */
 /* global ProtocolRepositoryHeader PdfPreview DataTableHelpers importProtocolFromFile _
-          dropdownSelector filterDropdown I18n animateSpinner initHandsOnTable inlineEditing */
+          dropdownSelector filterDropdown I18n animateSpinner initHandsOnTable inlineEditing HelperModule */
 
 // Global variables
 var ProtocolsIndex = (function() {
@@ -407,6 +407,21 @@ var ProtocolsIndex = (function() {
       });
       e.stopPropagation();
       e.preventDefault();
+    });
+  }
+
+  function initArchiveMyModules() {
+    $('.protocols-index').on('click', '#archiveProtocol', function(e) {
+      archiveMyModules(e.currentTarget.dataset.url, rowsSelected);
+    });
+  }
+
+  function archiveMyModules(url, ids) {
+    $.post(url, { protocol_ids: ids }, (data) => {
+      HelperModule.flashAlertMsg(data.message, 'success');
+      protocolsDatatable.ajax.reload();
+    }).error((data) => {
+      HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
   }
 
@@ -926,6 +941,7 @@ var ProtocolsIndex = (function() {
 
   init();
   initManageAccessButton();
+  initArchiveMyModules();
 
   return {
     reloadTable: function() {
