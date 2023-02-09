@@ -873,12 +873,10 @@ var dropdownSelector = (function() {
   }
 
   function appendOptionToSelector(selector, value) {
-    $(selector).append(
-      `<option
+    $(selector).append(`<option
         data-params=${JSON.stringify(value.params)}
         value='${value.value}'
-        >${value.label}</option>`
-    );
+        >${value.label}</option>`);
   }
 
   function removeOptionFromSelector(selector, id) {
