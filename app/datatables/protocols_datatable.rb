@@ -30,7 +30,8 @@ class ProtocolsDatatable < CustomDatatable
       'Protocol.nr_of_linked_children',
       'nr_of_assigned_users',
       'full_username_str',
-      timestamp_db_column,
+      'Protocol.archived_on',
+      'Protocol.published_on',
       'Protocol.updated_at'
     ]
   end
@@ -38,7 +39,8 @@ class ProtocolsDatatable < CustomDatatable
   def searchable_columns
     @searchable_columns ||= [
       "Protocol.name",
-      timestamp_db_column,
+      'Protocol.archived_on',
+      'Protocol.published_on',
       "Protocol.updated_at"
     ]
   end
@@ -93,15 +95,17 @@ class ProtocolsDatatable < CustomDatatable
         DT_RowAttr: {
           'data-permissions-url': permissions_protocol_path(record)
         },
-        '1': record.archived? ? escape_input(record.name) : name_html(record),
+        '1': name_html(record),
         '2': record.code,
         '3': versions_html(record),
         '4': keywords_html(record),
         '5': modules_html(record),
         '6': access_html(record),
         '7': escape_input(record.full_username_str),
-        '8': timestamp_column_html(record),
-        '9': I18n.l(record.updated_at, format: :full)
+        '8': I18n.l(record.published_on || record.created_at, format: :full),
+        '9': I18n.l(record.updated_at, format: :full),
+        '10': escape_input(record.archived_full_username_str),
+        '11': (I18n.l(record.archived_on, format: :full) if record.archived_on)
       }
     end
   end
@@ -129,12 +133,11 @@ class ProtocolsDatatable < CustomDatatable
       .with_granted_permissions(@user, ProtocolPermissions::READ)
       .preload(user_assignments: %i(user user_role))
 
-    records =
-      if @type == :archived
-        records.joins('LEFT OUTER JOIN "users" ON "users"."id" = "protocols"."archived_by_id"').archived
-      else
-        records.joins('LEFT OUTER JOIN "users" ON "users"."id" = "protocols"."added_by_id"').active
-      end
+    records = records.joins('LEFT OUTER JOIN "users" "archived_users"
+                             ON "archived_users"."id" = "protocols"."archived_by_id"')
+    records = records.joins('LEFT OUTER JOIN "users" ON "users"."id" = "protocols"."added_by_id"')
+
+    records = @type == :archived ? records.archived : records.active
 
     records.group('"protocols"."id"')
   end
@@ -148,19 +151,12 @@ class ProtocolsDatatable < CustomDatatable
       'COUNT("protocol_versions"."id") + 1 AS "nr_of_versions"',
       'COUNT("protocol_drafts"."id") AS "nr_of_drafts"',
       'COUNT("user_assignments"."id") AS "nr_of_assigned_users"',
-      'MAX("users"."full_name") AS "full_username_str"' # "Hack" to get single username
+      'MAX("users"."full_name") AS "full_username_str"', # "Hack" to get single username
+      'MAX("archived_users"."full_name") AS "archived_full_username_str"'
     )
   end
 
   # Various helper methods
-
-  def timestamp_db_column
-    if @type == :archived
-      'Protocol.archived_on'
-    else
-      'Protocol.published_on'
-    end
-  end
 
   def name_html(record)
     "<a href='#{protocol_path(record)}'>#{escape_input(record.name)}</a>"

@@ -1,6 +1,13 @@
 // scss-lint:disable IdSelector SelectorDepth NestingDepth
 
 .protocols-index {
+
+  .title-row {
+    .fas {
+      margin-right: 16px;
+    }
+  }
+
   .protocols-datatable {
     --content-header-size: 5em;
     --protocol-toolbar-size: 4em;
@@ -115,6 +122,18 @@
         margin: 0 16px 0 0;
         width: 32px;
       }
+    }
+  }
+
+  &.archived {
+    .only-active {
+      display: none;
+    }
+  }
+
+  &:not(.archived) {
+    .only-archive {
+      display: none;
     }
   }
 }
