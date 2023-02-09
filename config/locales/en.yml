@@ -2584,6 +2584,7 @@ en:
       make_private: "Move to My Protocols"
       publish: "Move to Team protocols"
       archive_action: "Archive"
+      archive_flash_html: "<b>%{count} protocol</b> template(s) successfully archived."
       thead:
         name: "Name"
         id: "ID"

@@ -1080,26 +1080,10 @@ class ProtocolsController < ApplicationController
 
   def move_protocol(action)
     rollbacked = false
-    results = []
     begin
       Protocol.transaction do
         @protocols.find_each do |protocol|
-          result = {
-            name: protocol.name
-          }
-
-          success = protocol.method(action).call(current_user)
-
-          # Try renaming protocol
-          unless success
-            rename_record(protocol, :name)
-            success = protocol.method(action).call(current_user)
-          end
-
-          result[:new_name] = protocol.name
-          result[:type] = protocol.protocol_type
-          result[:success] = success
-          results << result
+          protocol.method(action).call(current_user)
         end
       end
     rescue
@@ -1113,12 +1097,7 @@ class ProtocolsController < ApplicationController
         end
       else
         format.json do
-          render json: {
-            html: render_to_string({
-              partial: "protocols/index/results_modal_body.html.erb",
-              locals: { results: results, en_action: "#{action}_results" }
-            })
-          }
+          render json: { message: t("protocols.index.#{action}_flash_html", count: @protocols.size) }
         end
       end
     end
