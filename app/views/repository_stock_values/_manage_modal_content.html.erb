@@ -99,7 +99,7 @@
           <span><%= t('repository_stock_values.manage_modal.reminder_at') %></span>
           <div class="sci-input-container" data-error-text="<%= t('repository_stock_values.manage_modal.enter_ammount') %>">
             <input type="text"
-                   title="repository stock reminders at input field"
+                   title="repository stock reminders at <%= repository_stock_value.formatted_treshold %> input field"
                    autocomplete="off"
                    id="low_stock_threshold"
                    name="repository_stock_value[low_stock_threshold]"
@@ -120,16 +120,16 @@
           <div class="stock-update-view">
             <div class="stock-initial-container <%= 'negative' if repository_stock_value.amount.negative? %>">
               <span class="subtitle"><%= t('repository_stock_values.manage_modal.current_stock') %></span>
-              <span class="value" title="current stock value <%= repository_stock_value.formatted_value %>"><%= repository_stock_value.formatted_value %></span>
-              <span class="units" title="current stock unit <%= repository_stock_value.repository_stock_unit_item&.data %>"><%= repository_stock_value.repository_stock_unit_item&.data %></span>
+              <span class="value" title="current stock <%= 'negative' if repository_stock_value.amount.negative? %> value <%= repository_stock_value.formatted_value %>"><%= repository_stock_value.formatted_value %></span>
+              <span class="units" title="current stock <%= 'negative' if repository_stock_value.amount.negative? %> unit <%= repository_stock_value.repository_stock_unit_item&.data %>"><%= repository_stock_value.repository_stock_unit_item&.data %></span>
             </div>
             <div class="stock-arrow">
               <i class="fas fa-arrow-right"></i>
             </div>
             <div class="stock-final-container <%= 'negative' if repository_stock_value.amount.negative? %> ">
               <span class="subtitle"><%= t('repository_stock_values.manage_modal.new_stock') %></span>
-              <span class="value" title="final stock value <%= repository_stock_value.formatted_value %>"><%= repository_stock_value.formatted_value %></span>
-              <span class="units" title="final stock unit <%= repository_stock_value.repository_stock_unit_item&.data %>" ><%= repository_stock_value.repository_stock_unit_item&.data %></span>
+              <span class="value" title="final stock <%= 'negative' if repository_stock_value.amount.negative? %> value <%= repository_stock_value.formatted_value %>"><%= repository_stock_value.formatted_value %></span>
+              <span class="units" title="final stock <%= 'negative' if repository_stock_value.amount.negative? %> unit <%= repository_stock_value.repository_stock_unit_item&.data %>" ><%= repository_stock_value.repository_stock_unit_item&.data %></span>
             </div>
           </div>
         </div>

@@ -37,8 +37,8 @@
         <div class="stock-update-view">
           <div class="stock-initial-container <%= 'negative' if @stock_value.amount < 0 %>">
             <span class="subtitle"><%= t('repository_stock_values.manage_modal.current_stock') %></span>
-            <span class="value" title="current stock value <%= @stock_value.formatted_value %>"><%= @stock_value.formatted_value %></span>
-            <span class="units" title="current stock unit <%= @stock_value.repository_stock_unit_item&.data %>"><%= @stock_value.repository_stock_unit_item&.data %></span>
+            <span class="value" title="current stock <%= 'negative' if @stock_value.amount < 0 %> value <%= @stock_value.formatted_value %>"><%= @stock_value.formatted_value %></span>
+            <span class="units" title="current stock <%= 'negative' if @stock_value.amount < 0 %> unit <%= @stock_value.repository_stock_unit_item&.data %>"><%= @stock_value.repository_stock_unit_item&.data %></span>
           </div>
           <div class="stock-arrow">
             <i class="fas fa-arrow-right"></i>
