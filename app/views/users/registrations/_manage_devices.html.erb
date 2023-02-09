@@ -30,7 +30,7 @@
                     <%= device[1] %>
                 </div>
                 <div class="table-body-cell">
-                  <button class="x-button" id="revokeDeviceBtn"><i class="fas fa-times"></i></button>
+                  <button class="x-button" id="revokeDeviceBtn" data-toggle="modal" data-target="#deviceRevocationModal"><i class="fas fa-times"></i></button>
                 </div>
               </div>
             <% end %>
@@ -42,3 +42,5 @@
     <p><%= t("users.registrations.edit.connected_devices.empty_state") %></p>
   <% end %>
 </div>
+
+<%= render partial: 'device_revocation_modal' %>
