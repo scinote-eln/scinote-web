@@ -159,14 +159,14 @@ invite_with_team_selector = type.in?(%w(invite_new_members invite_with_team_sele
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-              <li title="invite user as guest">
-                <%= link_to t('invite_users.invite_guest'), '#', data: { action: 'invite', 'team-role' => 'guest', remote: true } %>
+              <li>
+                <%= link_to t('invite_users.invite_guest'), '#', data: { action: 'invite', 'team-role' => 'guest', remote: true }, title:"invite user as guest" %>
               </li>
-              <li title="invite user as normal user">
-                <%= link_to t('invite_users.invite_user'), '#', data: { action: 'invite', 'team-role' => 'normal_user', remote: true } %>
+              <li>
+                <%= link_to t('invite_users.invite_user'), '#', data: { action: 'invite', 'team-role' => 'normal_user', remote: true }, title:"invite user as normal user" %>
               </li>
-              <li title="invite user as admin">
-                <%= link_to t('invite_users.invite_admin'), '#', data: { action: 'invite', 'team-role' => 'admin', remote: true } %>
+              <li>
+                <%= link_to t('invite_users.invite_admin'), '#', data: { action: 'invite', 'team-role' => 'admin', remote: true }, title:"invite user as admin" %>
               </li>
             </ul>
           </div>

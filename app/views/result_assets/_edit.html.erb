@@ -1,6 +1,6 @@
 <div class="well">
   <%= bootstrap_form_for(@result, url: result_asset_path(format: :json), remote: true) do |f| %>
-    <%= f.text_field :name, style: "margin-top: 10px;" %><br />
+    <%= f.text_field :name, style: "margin-top: 10px;", title: "edit result file name field" %><br />
     <%= f.fields_for :asset do |ff| %>
       <span><strong><%=t "result_assets.edit.uploaded_asset" %></strong></span>
       <p style="margin: 10px;">
