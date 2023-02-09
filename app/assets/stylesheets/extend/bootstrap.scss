@@ -121,15 +121,15 @@
 
 .modal-content {
   .modal-header {
+    border-bottom-color: transparent;
     position: relative;
     padding: 16px;
-    border-bottom-color: transparent;
 
     &::after {
-      position: absolute;
+      border-bottom: 1px solid $color-concrete;
       bottom: 0;
       left: 16px;
-      border-bottom: 1px solid $color-concrete;
+      position: absolute;
       width: calc(100% - 2*16px);
     }
 
@@ -149,15 +149,15 @@
   }
 
   .modal-footer {
-    position: relative;
-    padding: 16px;
     border-top-color: transparent;
+    padding: 16px;
+    position: relative;
 
     &::after {
+      border-top: 1px solid $color-concrete;
+      left: 16px;
       position: absolute;
       top: 0;
-      left: 16px;
-      border-top: 1px solid $color-concrete;
       width: calc(100% - 2*16px);
     }
   }
