@@ -76,7 +76,7 @@
       <li class="divider-label"><%= t("assets.context_menu.set_view_size") %></li>
       <% ['inline', 'thumbnail', 'list'].each do |view_mode| %>
         <li>
-          <a title="change asset view type to <%= view_mode %> <%= asset.name %>" class="change-preview-type <%= 'selected' if view_mode == asset.view_mode %>"  data-preview-type="<%= view_mode %>">
+          <a title="change asset view type to <%= view_mode %> <%= asset.name %> <%= 'selected' if view_mode == asset.view_mode %>"" class="change-preview-type <%= 'selected' if view_mode == asset.view_mode %>"  data-preview-type="<%= view_mode %>">
             <%= t("assets.context_menu.#{view_mode}_html") %>
           </a>
         </li>

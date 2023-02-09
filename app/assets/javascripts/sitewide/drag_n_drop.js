@@ -524,7 +524,7 @@
                     <div class="panel-body">
                       <div class="form-group">
                         <label class="control-label">Name</label>
-                        <input type="text" title="new result file name field" class="form-control" onChange="DragNDropResults.validateTextSize(this)"
+                        <input type="text" title="new result file name field ${truncateLongString(asset.name, GLOBAL_CONSTANTS.FILENAME_TRUNCATION_LENGTH)}" class="form-control" onChange="DragNDropResults.validateTextSize(this)"
                                rel="results[name]" name="results[name][${i}]">
                       </div>
                       <div class="form-group">

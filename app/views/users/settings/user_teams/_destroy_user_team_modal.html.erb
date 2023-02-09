@@ -6,15 +6,16 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" title="x button for destroy user team modal">&times;</span></button>
         <h4 class="modal-title" id="destroy-user-team-modal-label">
         </h4>
       </div>
       <div class="modal-body"></div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><%=t 'general.cancel' %></button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" title="cancel destroying user"><%=t 'general.cancel' %></button>
         <button type="button"
                 class="btn btn-danger"
+                title="commence destroying user"
                 data-action="submit"><%=t 'users.settings.user_teams.destroy_uo_confirm' %></button>
       </div>
     </div>

@@ -49,7 +49,7 @@
           role: t("user_teams.enums.role.#{result[:user_team].role}")) %>
 </div>
 <%   elsif result[:status] == :user_invalid %>
-  <div class="alert alert-danger" role="alert">
+  <div class="alert alert-danger" role="alert" title="<%= result[:email] %>  <%= t('invite_users.results.user_invalid') %>">
     <strong><%= result[:email] %></strong>
     &nbsp;-&nbsp;
     <%= t('invite_users.results.user_invalid') %>
