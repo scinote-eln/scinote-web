@@ -121,7 +121,17 @@
 
 .modal-content {
   .modal-header {
-    padding: 10px 15px;
+    position: relative;
+    padding: 16px;
+    border-bottom-color: transparent;
+
+    &::after {
+      position: absolute;
+      bottom: 0;
+      left: 16px;
+      border-bottom: 1px solid $color-concrete;
+      width: calc(100% - 2*16px);
+    }
 
     .modal-title {
       line-height: 25px;
@@ -135,6 +145,20 @@
         border: 0;
         outline: 0;
       }
+    }
+  }
+
+  .modal-footer {
+    position: relative;
+    padding: 16px;
+    border-top-color: transparent;
+
+    &::after {
+      position: absolute;
+      top: 0;
+      left: 16px;
+      border-top: 1px solid $color-concrete;
+      width: calc(100% - 2*16px);
     }
   }
 }
