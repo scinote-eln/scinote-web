@@ -1,3 +1,5 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
 @import 'constants';
 @import "mixins";
 
@@ -76,6 +78,8 @@ label {
   width: 100%;
 
   tr {
+    text-align: left;
+    vertical-align: top;
 
     td,
     th {
@@ -86,6 +90,27 @@ label {
         display: inline-block;
         min-height: 19px;
       }
+
+      &.htCenter {
+        text-align: center;
+      }
+
+      &.htRight {
+        text-align: right;
+      }
+
+      &.htJustify {
+        text-align: justify;
+      }
+
+      &.htMiddle {
+        vertical-align: middle;
+      }
+
+      &.htBottom {
+        vertical-align: bottom;
+      }
+
     }
 
     th {
