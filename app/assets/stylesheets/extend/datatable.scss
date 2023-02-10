@@ -64,6 +64,10 @@
         display: flex;
         justify-content: center;
       }
+
+      &:last-child {
+        display: table-cell;
+      }
     }
 
     .dt-body-center {
