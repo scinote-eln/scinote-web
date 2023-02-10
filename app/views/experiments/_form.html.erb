@@ -3,7 +3,7 @@
     <div  class="form-group">
       <%= form.text_field :name,
                           label: t('experiments.new.name'),
-                          title: 'new experiment name',
+                          title: 'edit new experiment name',
                           autofocus: true,
                           placeholder: t('experiments.new.name_placeholder'),
                           id: 'experiment-name' %>
@@ -16,7 +16,7 @@
     <div class="form-group">
       <%= form.smart_text_area :description,
                                label: t('experiments.new.description'),
-                               title: 'new experiment description',
+                               title: 'edit new experiment description',
                                id: 'experiment-description',
                                data: { 'atwho-edit' => '' } %>
     </div>

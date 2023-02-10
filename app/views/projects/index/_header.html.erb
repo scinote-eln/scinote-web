@@ -96,7 +96,7 @@
                 <li class="divider" <%= i > 3 ? 'data-view-mode=archived' : '' %>></li>
               <% end %>
               <li <%= %w(archived_new archived_old).include?(sort) ? 'data-view-mode=archived' : '' %>>
-                <a title="sort projects by <%= sort %>" lass="<%= 'selected' if @current_sort == sort %>"
+                <a title="sort projects by <%= sort %> <%= 'selected' if @current_sort == sort %>" class="<%= 'selected' if @current_sort == sort %>"
                    data-sort="<%= sort %>" >
                   <%= t("general.sort.#{sort}_html") %>
                 </a>
