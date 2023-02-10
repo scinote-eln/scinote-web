@@ -10,10 +10,10 @@
       <div class="global-avatar-container">
         <%= image_tag avatar_path(user, :icon_small), title: current_assignee_name(user), class: 'img-circle pull-left' %>
       </div>
-      <div>
+      <div title="<%= project.name %> assigned <%= current_assignee_name(user) %> <%= user_assignment_resource_role_name(user, project)[0..10] %>">
         <%= current_assignee_name(user) %>
         <br>
-        <small class="text-muted"><%= user_assignment_resource_role_name(user, project) %></small>
+        <small class="text-muted" title="<%= user_assignment_resource_role_name(user, project)[0..10] %>"><%= user_assignment_resource_role_name(user, project) %></small>
       </div>
     </div>
     <div class="user-assignment-controls" onclick="addTitlesToOptions(this.getElementsByClassName('dropdown-menu inner')[0])">
@@ -30,3 +30,14 @@
       </div>
     </div>
 <% end %>
+
+
+<script>
+  setTimeout(function() {
+    var buttons = document.getElementsByClassName('btn dropdown-toggle btn-default')
+    for (var i = 0; i < buttons.length; i++) {
+      if (buttons[i].title.indexOf(` ${i}`) === -1)
+        buttons[i].title = buttons[i].title + ` ${i}`
+    }
+  }, 500);
+</script>

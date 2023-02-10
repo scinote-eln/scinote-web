@@ -50,7 +50,7 @@
       <% end %>
       <div class="data-row" cards-render="true" data-view-mode="active">
         <span class="card-label"><%= t('experiments.card.completed_task') %></span>
-        <span class="card-value"><%= t('experiments.card.completed_value', completed: experiment.completed_task_count, all: experiment.task_count) %></span>
+        <span class="card-value" title="completed task <%= t('experiments.card.completed_value', completed: experiment.completed_task_count, all: experiment.task_count) %>"><%= t('experiments.card.completed_value', completed: experiment.completed_task_count, all: experiment.task_count) %></span>
       </div>
     </div>
     <div class="workflow-img-wrapper" cards-render="true">
@@ -58,7 +58,7 @@
     </div>
   </div>
   <div class="completed-task-cell table-cell" data-view-mode="active">
-    <span class="card-value" list-render="true"><%= t('experiments.card.completed_value', completed: experiment.completed_task_count, all: experiment.task_count) %></span>
+    <span class="card-value" list-render="true" title="completed task <%= t('experiments.card.completed_value', completed: experiment.completed_task_count, all: experiment.task_count) %>"><%= t('experiments.card.completed_value', completed: experiment.completed_task_count, all: experiment.task_count) %></span>
     <div class="progress-bar-container progress  ">
       <% percentage = experiment.task_count.positive? ? ((100/experiment.task_count) * experiment.completed_task_count) : 0 %>
       <div class="progress-bar"

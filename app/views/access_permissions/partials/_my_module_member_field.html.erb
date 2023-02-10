@@ -19,7 +19,7 @@
   </div>
   <% unless user == current_user %>
     <div class="user-assignment-controls">
-      <div class="user-assignment-role">
+      <div class="user-assignment-role" id="changeTaskUserRole" onclick="changeTaskRole(this)">
         <%= f.select :user_role_id, nil, {}, id: "my_module_member_#{my_module_member.user.id}_user_role_id", class: 'form-control selectpicker', title: t('user_assignment.change_my_module_role'), data: { 'selected-text-format' => 'static' } do %>
           <option data-content="<span title='<%= t('.reset_description') %>'><%= t('.reset') %></span>" value="reset"><%= t('.reset') %></option>
           <% user_roles_collection.each do |user_role| %>
@@ -30,3 +30,24 @@
     </div>
   <% end %>
 <% end %>
+
+<script>
+  setTimeout(function() {
+    var buttons = document.getElementsByClassName('btn dropdown-toggle bs-placeholder btn-default')
+    for (var i = 0; i < buttons.length; i++) {
+      if (buttons[i].title.indexOf(` ${i}`) === -1)
+        buttons[i].title = buttons[i].title + ` ${i}`
+    }
+  }, 500);
+
+  function changeTaskRole(select) {
+    var select = select.getElementsByClassName('dropdown-menu inner')[0]
+
+    var length = select.getElementsByTagName('li').length
+
+    for (var i = 0; i < length; i++) {
+      var option = select.getElementsByTagName('li')[i]
+      option.title = option.textContent
+    }
+  }
+</script>

@@ -3,7 +3,7 @@
   <% tags2.each do |tag| %>
     <div style="color: <%= tag.color %>"
          class="<%= "last" if tag == tags2[-1] %>">
-      <span class="fas fa-tag" title="<%= tag.name %>"></span>
+      <span class="fas fa-tag" title="<%= my_module.name %> tag <%= tag.name %>"></span>
     </div>
   <% end %>
   <% if tags2.length.zero? %>

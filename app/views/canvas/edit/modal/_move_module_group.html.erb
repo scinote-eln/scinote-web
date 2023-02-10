@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-move-module-group" tabindex="-1" role="dialog" aria-labelledby="modal-move-module-group-label">
+<div class="modal fade" onclick="addTitlesToOptions()" id="modal-move-module-group" tabindex="-1" role="dialog" aria-labelledby="modal-move-module-group-label">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -33,3 +33,22 @@
     </div>
   </div>
 </div>
+
+<script>
+  $("#modal-move-module-group").on("mouseover", function() {
+    setTimeout(function() {
+      addTitlesToOptions();
+    }, 500);
+  });
+
+
+function addTitlesToOptions() {
+  var select = document.getElementsByClassName('dropdown-menu inner')[0]
+  document.getElementsByClassName('caret')[2].title = `${document.getElementsByClassName('filter-option pull-left')[0].innerText} arrow`
+  var length = select.getElementsByTagName('li').length
+  for (var i = 0; i < length; i++) {
+    var option = select.getElementsByTagName('li')[i]
+    option.title = option.textContent
+  }
+}
+</script>

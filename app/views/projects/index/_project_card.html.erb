@@ -42,7 +42,7 @@
 
   <div class="data-row visibility-cell table-cell">
     <span class="card-label"><%= t('projects.index.card.visibility') %></span>
-    <span class="value">
+    <span class="value" title="<%= project.name %> <%= project.hidden? ? t('projects.index.hidden') : t('projects.index.visible') %>">
     <% if project.hidden? %>
       <%= t('projects.index.hidden') %>
     <% else %>

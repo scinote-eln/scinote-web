@@ -26,7 +26,7 @@
           <%= button_to(view_type_project_path(@project, format: :json),
                         method: :put,
                         remote: true,
-                        title: 'switch experiment view to cards',
+                        title: "switch experiment view to cards' #{ @current_view_type == 'cards' ? 'selected' : ''} ",
                         class: "btn btn-light button-to #{ @current_view_type == 'cards' ? 'selected' : ''}",
                         form_class: 'change-experiments-view-type-form',
                         params: { project: { view_type: 'cards', project_id: @project.id } }) do %>
@@ -39,7 +39,7 @@
           <%= button_to(view_type_project_path(@project, format: :json),
                         method: :put,
                         remote: true,
-                        title: 'switch experiment view to table',
+                        title: "switch experiment view to table #{ @current_view_type == 'table' ? 'selected' : ''}",
                         class: "btn btn-light button-to #{ @current_view_type == 'table' ? 'selected' : ''}",
                         form_class: 'change-experiments-view-type-form',
                         params: { project: { view_type: 'table', project_id: @project.id } }) do %>
@@ -78,7 +78,7 @@
               <% if i.even? && i.positive? %>
                 <li class="divider" <%= i > 3 ? 'data-view-mode=archived' : '' %>></li>
               <% end %>
-              <li title="experiment sorting option: <%= sort %>" <%= %w(archived_new archived_old).include?(sort) ? 'data-view-mode=archived' : '' %>>
+              <li title="experiment sorting option: <%= sort %> <%= 'selected' if @current_sort == sort %>" <%= %w(archived_new archived_old).include?(sort) ? 'data-view-mode=archived' : '' %>>
                 <a class="<%= 'selected' if @current_sort == sort %>"
                    data-sort="<%= sort %>" >
                   <%= t("general.sort.#{sort}_html") %>

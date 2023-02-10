@@ -30,3 +30,13 @@
     </div>
   <% end %>
 <% end %>
+
+<script>
+  setTimeout(function() {
+    var buttons = document.getElementsByClassName('btn dropdown-toggle bs-placeholder btn-default')
+    for (var i = 0; i < buttons.length; i++) {
+      if (buttons[i].title.indexOf(` ${i}`) === -1)
+        buttons[i].title = buttons[i].title + ` ${i}`
+    }
+  }, 500);
+</script>
