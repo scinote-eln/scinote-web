@@ -1372,9 +1372,11 @@ CREATE TABLE public.protocols (
     updated_at timestamp without time zone NOT NULL,
     published_on timestamp without time zone,
     nr_of_linked_children integer DEFAULT 0,
+    visibility integer DEFAULT 0,
     archived boolean DEFAULT false NOT NULL,
     version_number integer DEFAULT 1,
     version_comment character varying,
+    default_public_user_role_id bigint,
     previous_version_id bigint,
     last_modified_by_id bigint,
     published_by_id bigint
@@ -5586,6 +5588,13 @@ CREATE INDEX index_protocols_on_authors ON public.protocols USING gin (public.tr
 
 
 --
+-- Name: index_protocols_on_default_public_user_role_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_protocols_on_default_public_user_role_id ON public.protocols USING btree (default_public_user_role_id);
+
+
+--
 -- Name: index_protocols_on_description; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5653,6 +5662,13 @@ CREATE INDEX index_protocols_on_restored_by_id ON public.protocols USING btree (
 --
 
 CREATE INDEX index_protocols_on_team_id ON public.protocols USING btree (team_id);
+
+
+--
+-- Name: index_protocols_on_visibility; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_protocols_on_visibility ON public.protocols USING btree (visibility);
 
 
 --
@@ -7296,6 +7312,14 @@ ALTER TABLE ONLY public.experiments
 
 ALTER TABLE ONLY public.repository_stock_unit_items
     ADD CONSTRAINT fk_rails_4c20ff4c1f FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: protocols fk_rails_4c4d4f815a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.protocols
+    ADD CONSTRAINT fk_rails_4c4d4f815a FOREIGN KEY (default_public_user_role_id) REFERENCES public.user_roles(id);
 
 
 --
